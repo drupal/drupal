@@ -74,8 +74,9 @@ class QueryGroupByTest extends ViewUnitTestBase {
   /**
    * Provides a test helper which runs a view with some aggregation function.
    *
-   * @param string $aggregation_function
-   *   Which aggregation function should be used, for example sum or count.
+   * @param string|null $aggregation_function
+   *   Which aggregation function should be used, for example sum or count. If
+   *   NULL is passed the aggregation will be tested with no function.
    * @param array $values
    *   The expected views result.
    */
@@ -84,7 +85,16 @@ class QueryGroupByTest extends ViewUnitTestBase {
 
     $view = Views::getView('test_group_by_count');
     $view->setDisplay();
-    $view->displayHandlers->get('default')->options['fields']['id']['group_type'] = $aggregation_function;
+    // There is no need for a function in order to have aggregation.
+    if (empty($aggregation_function)) {
+      // The test table has 2 fields ('id' and 'name'). We'll remove 'id'
+      // because it's unique and will test aggregation on 'name'.
+      unset($view->displayHandlers->get('default')->options['fields']['id']);
+    }
+    else {
+      $view->displayHandlers->get('default')->options['fields']['id']['group_type'] = $aggregation_function;
+    }
+
     $this->executeView($view);
 
     $this->assertEqual(count($view->result), 2, 'Make sure the count of items is right.');
@@ -101,7 +111,7 @@ class QueryGroupByTest extends ViewUnitTestBase {
    * Helper method that creates some test entities.
    */
   protected function setupTestEntities() {
-    // Create 4 entities with name1 and 3 nodes with name2.
+    // Create 4 entities with name1 and 3 entities with name2.
     $entity_1 = array(
       'name' => 'name1',
     );
@@ -152,6 +162,13 @@ class QueryGroupByTest extends ViewUnitTestBase {
    */
   public function testGroupByMax() {
     $this->groupByTestHelper('max', array(4, 7));
+  }
+
+  /**
+   * Tests aggregation with no specific function.
+   */
+  public function testGroupByNone() {
+    $this->groupByTestHelper(NULL, array(1, 5));
   }
 
   /**

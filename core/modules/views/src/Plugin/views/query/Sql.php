@@ -1232,6 +1232,10 @@ class Sql extends QueryPluginBase {
     if (count($this->having)) {
       $this->hasAggregate = TRUE;
     }
+    elseif ($this->hasAggregate == FALSE) {
+      // Allow 'GROUP BY' even no aggregation function has been set.
+      $this->hasAggregate = $this->view->display_handler->getOption('group_by');
+    }
     $groupby = array();
     if ($this->hasAggregate && (!empty($this->groupby) || !empty($non_aggregates))) {
       $groupby = array_unique(array_merge($this->groupby, $non_aggregates));
