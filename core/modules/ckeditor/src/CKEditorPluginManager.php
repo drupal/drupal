@@ -175,7 +175,7 @@ class CKEditorPluginManager extends DefaultPluginManager {
         // just provides buttons, don't do this if it's a contextually enabled
         // CKEditor plugin. After all, in the latter case, we can't know when
         // its settings should be shown!
-        if ($plugin instanceof CKEditorPluginButtonsInterface and !$plugin instanceof CKEditorPluginContextualInterface) {
+        if ($plugin instanceof CKEditorPluginButtonsInterface && !$plugin instanceof CKEditorPluginContextualInterface) {
           $form['plugins'][$plugin_id]['#attributes']['data-ckeditor-buttons'] = implode(' ', array_keys($plugin->getButtons()));
         }
         $form['plugins'][$plugin_id] += $plugin->settingsForm($plugin_settings_form, $form_state, $editor);
