@@ -45,7 +45,7 @@ views.argument.vocabulary_vid:
       label: 'Exclude'
 
 
-"views.argument_validator.entity:taxonomy_term":
+views.argument_validator.entity:taxonomy_term:
   type: views.argument_validator_entity
   label: 'Taxonomy term'
 

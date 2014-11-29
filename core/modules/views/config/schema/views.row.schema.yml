@@ -3,7 +3,7 @@
 views.row.*:
   type: views_row
 
-"views.row.entity:*":
+views.row.entity:*:
   type: views_entity_row
   label: 'Entity options'
 
