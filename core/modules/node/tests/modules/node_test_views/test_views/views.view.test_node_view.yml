@@ -129,6 +129,7 @@ display:
           expose:
             operator: ''
           group: 1
+          plugin_id: boolean
       sorts:
         created:
           id: created
@@ -142,6 +143,7 @@ display:
           expose:
             label: ''
           granularity: second
+          plugin_id: date
       title: test_node_view
       header: {  }
       footer: {  }

@@ -18,6 +18,16 @@ use Drupal\content_translation\Tests\ContentTranslationUITest;
 class BlockContentTranslationUITest extends ContentTranslationUITest {
 
   /**
+   * Set to TRUE to strict check all configuration saved.
+   *
+   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
+   *
+   * @var bool
+   */
+  protected $strictConfigSchema = TRUE;
+
+
+  /**
    * Modules to enable.
    *
    * @var array

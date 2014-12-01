@@ -42,7 +42,6 @@ class TestItem extends FieldItemBase {
   public static function defaultFieldSettings() {
     return array(
       'test_field_setting' => 'dummy test string',
-      'test_cached_data' => FALSE,
     ) + parent::defaultFieldSettings();
   }
 

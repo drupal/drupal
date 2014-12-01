@@ -8,7 +8,6 @@
 namespace Drupal\content_translation\Tests;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
-use Drupal\config\Tests\SchemaCheckTestTrait;
 use Drupal\Core\Field\Entity\BaseFieldOverride;
 use Drupal\Core\Language\Language;
 use Drupal\field\Entity\FieldConfig;
@@ -21,7 +20,14 @@ use Drupal\simpletest\WebTestBase;
  */
 class ContentTranslationSettingsTest extends WebTestBase {
 
-  use SchemaCheckTestTrait;
+  /**
+   * Set to TRUE to strict check all configuration saved.
+   *
+   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
+   *
+   * @var bool
+   */
+  protected $strictConfigSchema = TRUE;
 
   /**
    * Modules to enable.
@@ -181,8 +187,6 @@ class ContentTranslationSettingsTest extends WebTestBase {
       $this->assertEqual($definitions['body']->isTranslatable(), $translatable, 'Field translatability correctly switched.');
       $this->assertEqual($field->isTranslatable(), $definitions['body']->isTranslatable(), 'Configurable field translatability correctly switched.');
     }
-
-    $this->assertConfigSchemas();
   }
 
   /**
@@ -272,24 +276,6 @@ class ContentTranslationSettingsTest extends WebTestBase {
    */
   protected function entityManager() {
     return $this->container->get('entity.manager');
-  }
-
-  /**
-   * Asserts all active configuration matches schemas.
-   */
-  protected function assertConfigSchemas() {
-    $names = $this->container->get('config.storage')->listAll();
-    $factory = $this->container->get('config.factory');
-    /** @var \Drupal\Core\Config\TypedConfigManagerInterface $typed_config */
-    $typed_config = $this->container->get('config.typed');
-    foreach ($names as $name) {
-      // It is not possible to provide schema due to https://www.drupal.org/node/2248709
-      // @todo Refactor settings in https://www.drupal.org/node/2363155
-      if ($name != 'content_translation.settings') {
-        $config = $factory->get($name);
-        $this->assertConfigSchema($typed_config, $name, $config->get());
-      }
-    }
   }
 
 }

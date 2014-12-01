@@ -44,3 +44,29 @@ field.widget.settings.link_default:
     placeholder_title:
       type: label
       label: 'Placeholder for link text'
+
+field.storage_settings.link:
+  type: mapping
+  label: 'Link settings'
+
+field.field_settings.link:
+  type: mapping
+  label: 'Link settings'
+  mapping:
+    title:
+      type: integer
+      label: 'Allow link text'
+    link_type:
+      type: integer
+      label: 'Allowed link type'
+
+field.link.value:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    title:
+      type: label
+      label: 'Link text'
+    url:
+      type: string
+      label: 'URL'

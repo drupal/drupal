@@ -19,6 +19,15 @@ use Drupal\system\Tests\Entity\EntityCacheTagsTestBase;
 class BlockContentCacheTagsTest extends EntityCacheTagsTestBase {
 
   /**
+   * Set to TRUE to strict check all configuration saved.
+   *
+   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
+   *
+   * @var bool
+   */
+  protected $strictConfigSchema = TRUE;
+
+  /**
    * {@inheritdoc}
    */
   public static $modules = array('block_content');

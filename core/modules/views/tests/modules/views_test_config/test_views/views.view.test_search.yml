@@ -91,13 +91,14 @@ display:
           hide_alter_empty: true
       filters:
         status:
-          value: '1'
+          value: true
           table: node_field_data
           field: status
           id: status
           expose:
             operator: ''
           group: 1
+          plugin_id: boolean
       sorts:
         created:
           id: created
@@ -111,6 +112,7 @@ display:
           expose:
             label: ''
           granularity: second
+          plugin_id: date
       title: ''
       header: {  }
       footer: {  }

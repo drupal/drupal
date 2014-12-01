@@ -146,6 +146,7 @@ display:
           expose:
             label: ''
           granularity: second
+          plugin_id: date
       title: 'Test field filters'
       header: {  }
       footer: {  }

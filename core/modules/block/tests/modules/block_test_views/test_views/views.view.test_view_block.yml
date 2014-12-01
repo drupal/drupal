@@ -46,8 +46,5 @@ display:
     display_title: Block
     position: null
     display_options:
-      field:
-        title:
-          link_to_node: true
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
