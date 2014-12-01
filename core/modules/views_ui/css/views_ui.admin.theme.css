@@ -743,45 +743,6 @@ td.group-title {
   margin-bottom: 15px;
 }
 
-/* @group Preview
- *
- * The preview controls and the preview pane
- */
-
-#edit-displays-preview-controls .details-wrapper > * {
-  float: left;
-}
-
-#edit-displays-preview-controls .details-wrapper > .form-item {
-  margin-top: 0.3333em;
-}
-
-#edit-displays-preview-controls .form-submit {
-  display: inline-block;
-  margin-right: 1em;
-}
-
-#edit-displays-preview-controls .form-type-textfield {
-  margin-left: 1em;
-  position: relative;
-}
-
-#edit-displays-preview-controls .form-type-textfield label {
-  border-left: 1px solid #999;
-  padding-left: 1em;
-  position: absolute;
-}
-
-#edit-displays-preview-controls .form-type-textfield label:after {
-  content: ":";
-}
-
-#edit-displays-preview-controls .form-type-textfield label ~ * {
-  margin-left: 105px;
-}
-
-/* @end */
-
 /* @group Modal dialog box
  *
  * The contents of the popup dialog on the views edit form.
@@ -929,29 +890,29 @@ td.group-title {
 
 /* @group Rearrange filter criteria */
 
-#views-ui-rearrange-filter-form table {
+.views-ui-rearrange-filter-form table {
   border-collapse: collapse;
 }
 
-#views-ui-rearrange-filter-form tr td[rowspan] {
+.views-ui-rearrange-filter-form tr td[rowspan] {
   border-color: #cdcdcd;
   border-style: solid;
   border-width: 0 1px 1px 1px;
 }
 
-#views-ui-rearrange-filter-form tr[id^="views-row"] {
+.views-ui-rearrange-filter-form tr[id^="views-row"] {
   border-right: 1px solid #cdcdcd;
 }
 
-#views-ui-rearrange-filter-form tr[id^="views-row"].even td {
+.views-ui-rearrange-filter-form tr[id^="views-row"].even td {
   background-color: #f3f4ed;
 }
 
-#views-ui-rearrange-filter-form .views-group-title {
+.views-ui-rearrange-filter-form .views-group-title {
   border-top: 1px solid #cdcdcd;
 }
 
-#views-ui-rearrange-filter-form .group-empty {
+.views-ui-rearrange-filter-form .group-empty {
   border-bottom: 1px solid #cdcdcd;
 }
 

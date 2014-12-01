@@ -50,12 +50,6 @@ details.fieldset-no-legend {
   margin-left: 0;
 }
 
-/* Override for a button on the edit display screen */
-#edit-displays-preview-controls .form-submit {
-  display: inline-block;
-  margin-right: 1em;
-}
-
 .form-radios > .form-item {
   margin-top: 3px;
 }
@@ -223,33 +217,33 @@ details.fieldset-no-legend {
 
 /* @group Rearrange filter criteria */
 
-#views-ui-rearrange-filter-form .action-links {
+.views-ui-rearrange-filter-form .action-links {
   margin: 0;
   padding: 0;
 }
 
-#views-ui-rearrange-filter-form table {
+.views-ui-rearrange-filter-form table {
   border: medium none;
 }
 
-#views-ui-rearrange-filter-form [id^="views-row"] {
+.views-ui-rearrange-filter-form [id^="views-row"] {
   border: medium none;
 }
 
-#views-ui-rearrange-filter-form tr td:last-child {
+.views-ui-rearrange-filter-form tr td:last-child {
   border-right: medium none;
 }
 
-#views-ui-rearrange-filter-form .filter-group-operator-row {
+.views-ui-rearrange-filter-form .filter-group-operator-row {
   border-left: 1px solid transparent !important;
   border-right: 1px solid transparent !important;
 }
 
-#views-ui-rearrange-filter-form tr.drag td {
+.views-ui-rearrange-filter-form tr.drag td {
   background-color: #FFEE77 !important;
 }
 
-#views-ui-rearrange-filter-form tr.drag-previous td {
+.views-ui-rearrange-filter-form tr.drag-previous td {
   background-color: #FFFFBB !important;
 }
 
