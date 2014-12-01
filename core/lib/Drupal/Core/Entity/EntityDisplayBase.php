@@ -187,16 +187,6 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   /**
    * {@inheritdoc}
    */
-  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
-    // Reset the render cache for the target entity type.
-    if (\Drupal::entityManager()->hasHandler($this->targetEntityType, 'view_builder')) {
-      \Drupal::entityManager()->getViewBuilder($this->targetEntityType)->resetCache();
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function toArray() {
     $properties = parent::toArray();
     // Do not store options for fields whose display is not set to be
