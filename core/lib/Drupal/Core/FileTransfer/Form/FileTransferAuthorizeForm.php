@@ -52,9 +52,6 @@ class FileTransferAuthorizeForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    // If possible, we want to post this form securely via HTTPS.
-    $form['#https'] = TRUE;
-
     // Get all the available ways to transfer files.
     if (empty($_SESSION['authorize_filetransfer_info'])) {
       drupal_set_message($this->t('Unable to continue, no available methods of file transfer'), 'error');

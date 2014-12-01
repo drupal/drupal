@@ -64,7 +64,7 @@ class SessionHttpsTest extends WebTestBase {
     // Check insecure cookie is not set.
     $this->assertFalse(isset($this->cookies[$insecure_session_name]));
     $ssid = $this->cookies[$secure_session_name]['value'];
-    $this->assertSessionIds($ssid, $ssid, 'Session has a non-empty SID and a correct secure SID.');
+    $this->assertSessionIds($ssid, 'Session has a non-empty SID and a correct secure SID.');
     $cookie = $secure_session_name . '=' . $ssid;
 
     // Verify that user is logged in on secure URL.
@@ -110,195 +110,10 @@ class SessionHttpsTest extends WebTestBase {
   }
 
   /**
-   * Tests sessions in SSL mixed mode.
-   */
-  protected function testMixedModeSslSession() {
-    if ($this->request->isSecure()) {
-      // The functionality does not make sense when running on HTTPS.
-      return;
-    }
-    else {
-      $secure_session_name = 'S' . $this->getSessionName();
-      $insecure_session_name = $this->getSessionName();
-    }
-
-    // Enable secure pages.
-    $this->settingsSet('mixed_mode_sessions', TRUE);
-    // Write that value also into the test settings.php file.
-    $settings['settings']['mixed_mode_sessions'] = (object) array(
-      'value' => TRUE,
-      'required' => TRUE,
-    );
-    $this->writeSettings($settings);
-
-    $user = $this->drupalCreateUser(array('access administration pages'));
-
-    $this->curlClose();
-    // Start an anonymous session on the insecure site.
-    $session_data = $this->randomMachineName();
-    $this->drupalGet('session-test/set/' . $session_data);
-    // Check secure cookie on insecure page.
-    $this->assertFalse(isset($this->cookies[$secure_session_name]), 'The secure cookie is not sent on insecure pages.');
-    // Check insecure cookie on insecure page.
-    $this->assertFalse($this->cookies[$insecure_session_name]['secure'], 'The insecure cookie does not have the secure attribute');
-
-    // Store the anonymous cookie so we can validate that its session is killed
-    // after login.
-    $anonymous_cookie = $insecure_session_name . '=' . $this->cookies[$insecure_session_name]['value'];
-
-    // Check that password request form action is not secure.
-    $this->drupalGet('user/password');
-    $form = $this->xpath('//form[@id="user-pass"]');
-    $this->assertNotEqual(substr($form[0]['action'], 0, 6), 'https:', 'Password request form action is not secure');
-    $form[0]['action'] = $this->httpsUrl('user/login');
-
-    // Check that user login form action is secure.
-    $this->drupalGet('user/login');
-    $form = $this->xpath('//form[@id="user-login-form"]');
-    $this->assertEqual(substr($form[0]['action'], 0, 6), 'https:', 'Login form action is secure');
-    $form[0]['action'] = $this->httpsUrl('user/login');
-
-    $edit = array(
-      'name' => $user->getUsername(),
-      'pass' => $user->pass_raw,
-    );
-    $this->drupalPostForm(NULL, $edit, t('Log in'));
-    // Check secure cookie on secure page.
-    $this->assertTrue($this->cookies[$secure_session_name]['secure'], 'The secure cookie has the secure attribute');
-    // Check insecure cookie on secure page.
-    $this->assertFalse($this->cookies[$insecure_session_name]['secure'], 'The insecure cookie does not have the secure attribute');
-
-    $sid = $this->cookies[$insecure_session_name]['value'];
-    $ssid = $this->cookies[$secure_session_name]['value'];
-    $this->assertSessionIds($sid, $ssid, 'Session has both secure and insecure SIDs');
-    $cookies = array(
-      'http' => $insecure_session_name . '=' . $sid,
-      'https' => $secure_session_name . '=' . $ssid,
-    );
-
-    // Test that session data saved before login is still available on the
-    // authenticated session.
-    $this->drupalGet('session-test/get');
-    $this->assertText($session_data, 'Session correctly returned the stored data set by the anonymous session.');
-
-    foreach ($cookies as $cookie_key => $cookie) {
-      foreach (array('http' => 'admin/config', 'https' => $this->httpsUrl('admin/config')) as $url_key => $url) {
-        $this->curlClose();
-        // The HTTPS setting needs to be set correctly on the request for the
-        // URL generator to work.
-        $this->request->server->set('HTTPS', $url_key == 'https' ? 'on' : 'off');
-
-        $this->drupalGet($url, array(), array('Cookie: ' . $cookie));
-        if ($cookie_key == $url_key) {
-          $this->assertText(t('Configuration'));
-          $this->assertResponse(200);
-        }
-        else {
-          $this->assertNoText(t('Configuration'));
-          $this->assertResponse(403);
-        }
-      }
-    }
-
-    // Test that session data saved before login is not available using the
-    // pre-login anonymous cookie.
-    $this->cookies = array();
-    $this->drupalGet('session-test/get', array(), array('Cookie: ' . $anonymous_cookie));
-    $this->assertNoText($session_data, 'Initial anonymous session is inactive after login.');
-
-    // Clear browser cookie jar.
-    $this->cookies = array();
-
-    // Start an anonymous session on the secure site.
-    $this->drupalGet($this->httpsUrl('session-test/set/1'));
-
-    // Mock a login to the secure site using the secure session cookie.
-    $this->drupalGet('user/login');
-    $form = $this->xpath('//form[@id="user-login-form"]');
-    $form[0]['action'] = $this->httpsUrl('user/login');
-    $this->drupalPostForm(NULL, $edit, t('Log in'));
-
-    // Test that the user is also authenticated on the insecure site.
-    $this->drupalGet("user/" . $user->id() . "/edit");
-    $this->assertResponse(200);
-  }
-
-  /**
-   * Ensure that a CSRF form token is shared in SSL mixed mode.
-   */
-  protected function testCsrfTokenWithMixedModeSsl() {
-    if ($this->request->isSecure()) {
-      $secure_session_name = $this->getSessionName();
-      $insecure_session_name = substr($this->getSessionName(), 1);
-    }
-    else {
-      $secure_session_name = 'S' . $this->getSessionName();
-      $insecure_session_name = $this->getSessionName();
-    }
-
-    // Enable mixed mode SSL.
-    $this->settingsSet('mixed_mode_sessions', TRUE);
-    // Write that value also into the test settings.php file.
-    $settings['settings']['mixed_mode_sessions'] = (object) array(
-      'value' => TRUE,
-      'required' => TRUE,
-    );
-    $this->writeSettings($settings);
-
-    $user = $this->drupalCreateUser(array('access administration pages'));
-
-    // Login using the HTTPS user-login form.
-    $this->drupalGet('user/login');
-    $form = $this->xpath('//form[@id="user-login-form"]');
-    $form[0]['action'] = $this->httpsUrl('user/login');
-    $edit = array('name' => $user->getUsername(), 'pass' => $user->pass_raw);
-    $this->drupalPostForm(NULL, $edit, t('Log in'));
-
-    // Collect session id cookies.
-    $sid = $this->cookies[$insecure_session_name]['value'];
-    $ssid = $this->cookies[$secure_session_name]['value'];
-    $this->assertSessionIds($sid, $ssid, 'Session has both secure and insecure SIDs');
-
-    // Retrieve the form via HTTP.
-    $this->curlClose();
-    $this->drupalGet($this->httpUrl('session-test/form'), array(), array('Cookie: ' . $insecure_session_name . '=' . $sid));
-    $http_token = $this->getFormToken();
-
-    // Verify that submitting form values via HTTPS to a form originally
-    // retrieved over HTTP works.
-    $form = $this->xpath('//form[@id="session-test-form"]');
-    $form[0]['action'] = $this->httpsUrl('session-test/form');
-    $edit = array('input' => $this->randomMachineName(32));
-    $this->curlClose();
-    $this->drupalPostForm(NULL, $edit, 'Save', array('Cookie: ' . $secure_session_name . '=' . $ssid));
-    $this->assertText(String::format('Ok: @input', array('@input' => $edit['input'])));
-
-    // Retrieve the same form via HTTPS.
-    $this->curlClose();
-    $this->drupalGet($this->httpsUrl('session-test/form'), array(), array('Cookie: ' . $secure_session_name . '=' . $ssid));
-    $https_token = $this->getFormToken();
-
-    // Verify that CSRF token values are the same for a form regardless of
-    // whether it was accessed via HTTP or HTTPS when SSL mixed mode is enabled.
-    $this->assertEqual($http_token, $https_token, 'Form token is the same on HTTP as well as HTTPS form');
-  }
-
-  /**
-   * Return the token of the current form.
-   */
-  protected function getFormToken() {
-    $token_fields = $this->xpath('//input[@name="form_token"]');
-    $this->assertEqual(count($token_fields), 1, 'One form token field on the page');
-    return (string) $token_fields[0]['value'];
-  }
-
-  /**
    * Test that there exists a session with two specific session IDs.
    *
    * @param $sid
    *   The insecure session ID to search for.
-   * @param $ssid
-   *   The secure session ID to search for.
    * @param $assertion_text
    *   The text to display when we perform the assertion.
    *
@@ -306,12 +121,11 @@ class SessionHttpsTest extends WebTestBase {
    *   The result of assertTrue() that there's a session in the system that
    *   has the given insecure and secure session IDs.
    */
-  protected function assertSessionIds($sid, $ssid, $assertion_text) {
+  protected function assertSessionIds($sid, $assertion_text) {
     $args = array(
       ':sid' => Crypt::hashBase64($sid),
-      ':ssid' => !empty($ssid) ? Crypt::hashBase64($ssid) : '',
     );
-    return $this->assertTrue(db_query('SELECT timestamp FROM {sessions} WHERE sid = :sid AND ssid = :ssid', $args)->fetchField(), $assertion_text);
+    return $this->assertTrue(db_query('SELECT timestamp FROM {sessions} WHERE sid = :sid', $args)->fetchField(), $assertion_text);
   }
 
   /**

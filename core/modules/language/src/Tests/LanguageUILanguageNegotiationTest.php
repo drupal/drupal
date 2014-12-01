@@ -468,13 +468,9 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     $this->assertEqual($italian_url, $correct_link, format_string('The _url() function returns the right URL (@url) in accordance with the chosen language', array('@url' => $italian_url)));
 
     // Test HTTPS via options.
-    $this->settingsSet('mixed_mode_sessions', TRUE);
-    $this->rebuildContainer();
-
     $italian_url = _url('admin', array('https' => TRUE, 'language' => $languages['it'], 'script' => ''));
     $correct_link = 'https://' . $link;
     $this->assertTrue($italian_url == $correct_link, format_string('The _url() function returns the right HTTPS URL (via options) (@url) in accordance with the chosen language', array('@url' => $italian_url)));
-    $this->settingsSet('mixed_mode_sessions', FALSE);
 
     // Test HTTPS via current URL scheme.
     $request = Request::create('', 'GET', array(), array(), array(), array('HTTPS' => 'on'));

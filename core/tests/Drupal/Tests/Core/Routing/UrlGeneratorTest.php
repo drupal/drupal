@@ -11,7 +11,6 @@ use Drupal\Core\PathProcessor\PathProcessorAlias;
 use Drupal\Core\PathProcessor\PathProcessorManager;
 use Drupal\Core\Routing\RequestContext;
 use Drupal\Core\Routing\UrlGenerator;
-use Drupal\Core\Site\Settings;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -31,13 +30,6 @@ class UrlGeneratorTest extends UnitTestCase {
    * @var \Drupal\Core\Routing\UrlGenerator
    */
   protected $generator;
-
-  /**
-   * A second url generator to test, set to assume mixed-mode sessions.
-   *
-   * @var \Drupal\Core\Routing\UrlGenerator
-   */
-  protected $generatorMixedMode;
 
   /**
    * The alias manager.
@@ -137,14 +129,9 @@ class UrlGeneratorTest extends UnitTestCase {
 
     $config_factory_stub = $this->getConfigFactoryStub(array('system.filter' => array('protocols' => array('http', 'https'))));
 
-    $generator = new UrlGenerator($provider, $processor_manager, $this->routeProcessorManager, $config_factory_stub, new Settings(array()), NULL, $this->requestStack);
+    $generator = new UrlGenerator($provider, $processor_manager, $this->routeProcessorManager, $config_factory_stub, NULL, $this->requestStack);
     $generator->setContext($context);
     $this->generator = $generator;
-
-    // Second generator for mixed-mode sessions.
-    $generator = new UrlGenerator($provider, $processor_manager, $this->routeProcessorManager, $config_factory_stub, new Settings(array('mixed_mode_sessions' => TRUE)), NULL, $this->requestStack);
-    $generator->setContext($context);
-    $this->generatorMixedMode = $generator;
   }
 
   /**
@@ -310,17 +297,12 @@ class UrlGeneratorTest extends UnitTestCase {
     $url = $this->generator->generate('test_4', array(), TRUE);
     $this->assertEquals('https://localhost/test/four', $url);
 
-    $this->routeProcessorManager->expects($this->exactly(2))
+    $this->routeProcessorManager->expects($this->exactly(1))
       ->method('processOutbound')
       ->with($this->anything());
 
     $options = array('absolute' => TRUE, 'https' => TRUE);
-    // Mixed-mode sessions are not enabled, so the https option is ignored.
     $url = $this->generator->generateFromRoute('test_1', array(), $options);
-    $this->assertEquals('http://localhost/hello/world', $url);
-
-    // Mixed-mode sessions are enabled, so the https option is obeyed.
-    $url = $this->generatorMixedMode->generateFromRoute('test_1', array(), $options);
     $this->assertEquals('https://localhost/hello/world', $url);
   }
 

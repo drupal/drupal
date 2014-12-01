@@ -20,7 +20,6 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
 use Drupal\Core\RouteProcessor\OutboundRouteProcessorInterface;
-use Drupal\Core\Site\Settings;
 
 /**
  * Generates URLs from route names and parameters.
@@ -49,13 +48,6 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
   protected $routeProcessor;
 
   /**
-   * Whether both secure and insecure session cookies can be used simultaneously.
-   *
-   * @var bool
-   */
-  protected $mixedModeSessions;
-
-  /**
    * Overrides characters that will not be percent-encoded in the path segment.
    *
    * @see \Symfony\Component\Routing\Generator\UrlGenerator
@@ -78,19 +70,16 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
    *   The route processor.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config
    *    The config factory.
-   * @param \Drupal\Core\Site\Settings $settings
-   *    The read only settings.
    * @param \Psr\Log\LoggerInterface $logger
    *   An optional logger for recording errors.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   A request stack object.
    */
-  public function __construct(RouteProviderInterface $provider, OutboundPathProcessorInterface $path_processor, OutboundRouteProcessorInterface $route_processor, ConfigFactoryInterface $config, Settings $settings, LoggerInterface $logger = NULL, RequestStack $request_stack) {
+  public function __construct(RouteProviderInterface $provider, OutboundPathProcessorInterface $path_processor, OutboundRouteProcessorInterface $route_processor, ConfigFactoryInterface $config, LoggerInterface $logger = NULL, RequestStack $request_stack) {
     parent::__construct($provider, $logger);
 
     $this->pathProcessor = $path_processor;
     $this->routeProcessor = $route_processor;
-    $this->mixedModeSessions = $settings->get('mixed_mode_sessions', FALSE);
     $allowed_protocols = $config->get('system.filter')->get('protocols') ?: array('http', 'https');
     UrlHelper::setAllowedProtocols($allowed_protocols);
     $this->requestStack = $request_stack;
@@ -190,7 +179,7 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
 
     // Prepare an absolute URL by getting the correct scheme, host and port from
     // the request context.
-    if (isset($options['https']) && $this->mixedModeSessions) {
+    if (isset($options['https'])) {
       $scheme = $options['https'] ? 'https' : 'http';
     }
     else {
@@ -262,7 +251,7 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
       if ($options['query']) {
         $path .= (strpos($path, '?') !== FALSE ? '&' : '?') . UrlHelper::buildQuery($options['query']);
       }
-      if (isset($options['https']) && $this->mixedModeSessions) {
+      if (isset($options['https'])) {
         if ($options['https'] === TRUE) {
           $path = str_replace('http://', 'https://', $path);
         }
@@ -282,7 +271,7 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
     }
     // The base_url might be rewritten from the language rewrite in domain mode.
     if (!isset($options['base_url'])) {
-      if (isset($options['https']) && $this->mixedModeSessions) {
+      if (isset($options['https'])) {
         if ($options['https'] === TRUE) {
           $options['base_url'] = str_replace('http://', 'https://', $current_base_url);
           $options['absolute'] = TRUE;

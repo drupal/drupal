@@ -120,8 +120,7 @@ class Url {
    *     current language for the language type LanguageInterface::TYPE_URL.
    *   - 'https': Whether this URL should point to a secure location. If not
    *     defined, the current scheme is used, so the user stays on HTTP or HTTPS
-   *     respectively. if mixed mode sessions are permitted, TRUE enforces HTTPS
-   *     and FALSE enforces HTTP.
+   *     respectively. TRUE enforces HTTPS and FALSE enforces HTTP.
    *
    * @see static::fromRoute()
    * @see static::fromUri()
@@ -161,8 +160,7 @@ class Url {
    *     current language for the language type LanguageInterface::TYPE_URL.
    *   - 'https': Whether this URL should point to a secure location. If not
    *     defined, the current scheme is used, so the user stays on HTTP or HTTPS
-   *     respectively. if mixed mode sessions are permitted, TRUE enforces HTTPS
-   *     and FALSE enforces HTTP.
+   *     respectively. TRUE enforces HTTPS and FALSE enforces HTTP.
    *
    * @return \Drupal\Core\Url
    *   A new Url object for a routed (internal to Drupal) URL.
@@ -216,8 +214,7 @@ class Url {
    *     current language for the language type LanguageInterface::TYPE_URL.
    *   - 'https': Whether this URL should point to a secure location. If not
    *     defined, the current scheme is used, so the user stays on HTTP or HTTPS
-   *     respectively. if mixed mode sessions are permitted, TRUE enforces HTTPS
-   *     and FALSE enforces HTTP.
+   *     respectively. TRUE enforces HTTPS and FALSE enforces HTTP.
    *
    * @return \Drupal\Core\Url
    *   A new Url object for an unrouted (non-Drupal) URL.

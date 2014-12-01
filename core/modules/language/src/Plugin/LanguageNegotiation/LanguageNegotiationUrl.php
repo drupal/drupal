@@ -169,7 +169,7 @@ class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements In
           $options['base_url'] .= ':' . $port;
         }
 
-        if (isset($options['https']) && !empty($options['mixed_mode_sessions'])) {
+        if (isset($options['https'])) {
           if ($options['https'] === TRUE) {
             $options['base_url'] = str_replace('http://', 'https://', $options['base_url']);
           }

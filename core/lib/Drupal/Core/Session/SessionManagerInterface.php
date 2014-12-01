@@ -50,28 +50,4 @@ interface SessionManagerInterface extends SessionStorageInterface {
    */
   public function enable();
 
-  /**
-   * Returns whether mixed mode SSL sessions are enabled in the session manager.
-   *
-   * @return bool
-   *   Value of the mixed mode SSL sessions flag.
-   */
-  public function isMixedMode();
-
-  /**
-   * Enables or disables mixed mode SSL sessions in the session manager.
-   *
-   * @param bool $mixed_mode
-   *   New value for the mixed mode SSL sessions flag.
-   */
-  public function setMixedMode($mixed_mode);
-
-  /**
-   * Returns the name of the insecure session when operating in mixed mode SSL.
-   *
-   * @return string
-   *   The name of the insecure session.
-   */
-  public function getInsecureName();
-
 }

@@ -414,14 +414,6 @@ if ($settings['hash_salt']) {
 # $settings['allow_authorize_operations'] = FALSE;
 
 /**
- * Mixed-mode sessions:
- *
- * Set to TRUE to create both secure and insecure sessions when using HTTPS.
- * Defaults to FALSE.
- */
-# $settings['mixed_mode_sessions'] = TRUE;
-
-/**
  * Default mode for for directories and files written by Drupal.
  *
  * Value should be in PHP Octal Notation, with leading zero.

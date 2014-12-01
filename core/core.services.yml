@@ -495,7 +495,7 @@ services:
       - { name: service_collector, tag: route_filter, call: addRouteFilter }
   url_generator:
     class: Drupal\Core\Routing\UrlGenerator
-    arguments: ['@router.route_provider', '@path_processor_manager', '@route_processor_manager', '@config.factory', '@settings', '@logger.channel.default', '@request_stack']
+    arguments: ['@router.route_provider', '@path_processor_manager', '@route_processor_manager', '@config.factory', '@logger.channel.default', '@request_stack']
     calls:
       - [setContext, ['@?router.request_context']]
   unrouted_url_assembler:

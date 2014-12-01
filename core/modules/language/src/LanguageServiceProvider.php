@@ -37,7 +37,6 @@ class LanguageServiceProvider extends ServiceProviderBase {
         ->addTag('path_processor_inbound', array('priority' => 300))
         ->addTag('path_processor_outbound', array('priority' => 100))
         ->addArgument(new Reference('config.factory'))
-        ->addArgument(new Reference('settings'))
         ->addArgument(new Reference('language_manager'))
         ->addArgument(new Reference('language_negotiator'))
         ->addArgument(new Reference('current_user'));

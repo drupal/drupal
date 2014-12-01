@@ -13,7 +13,6 @@ use Drupal\Core\PathProcessor\PathProcessorAlias;
 use Drupal\Core\PathProcessor\PathProcessorDecode;
 use Drupal\Core\PathProcessor\PathProcessorFront;
 use Drupal\Core\PathProcessor\PathProcessorManager;
-use Drupal\Core\Site\Settings;
 use Drupal\language\HttpKernel\PathProcessorLanguage;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Symfony\Component\HttpFoundation\Request;
@@ -151,7 +150,7 @@ class PathProcessorTest extends UnitTestCase {
     $alias_processor = new PathProcessorAlias($alias_manager);
     $decode_processor = new PathProcessorDecode();
     $front_processor = new PathProcessorFront($config_factory_stub);
-    $language_processor = new PathProcessorLanguage($config_factory_stub, new Settings(array()), $this->languageManager, $negotiator, $current_user);
+    $language_processor = new PathProcessorLanguage($config_factory_stub, $this->languageManager, $negotiator, $current_user);
 
     // First, test the processor manager with the processors in the incorrect
     // order. The alias processor will run before the language processor, meaning

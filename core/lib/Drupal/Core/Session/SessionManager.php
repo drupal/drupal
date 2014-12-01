@@ -31,17 +31,9 @@ use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
  *   necessary to subclass it at all. In order to reach the point where Drupal
  *   can use the Symfony session management unmodified, the code implemented
  *   here needs to be extracted either into a dedicated session handler proxy
- *   (e.g. mixed mode SSL, sid-hashing) or relocated to the authentication
- *   subsystem.
+ *   (e.g. sid-hashing) or relocated to the authentication subsystem.
  */
 class SessionManager extends NativeSessionStorage implements SessionManagerInterface {
-
-  /**
-   * Whether or not the session manager is operating in mixed mode SSL.
-   *
-   * @var bool
-   */
-  protected $mixedMode;
 
   /**
    * The request stack.
@@ -100,8 +92,6 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
 
     parent::__construct($options, $write_check_handler, $metadata_bag);
 
-    $this->setMixedMode($settings->get('mixed_mode_sessions', FALSE));
-
     // @todo When not using the Symfony Session object, the list of bags in the
     //   NativeSessionStorage will remain uninitialized. This will lead to
     //   errors in NativeSessionHandler::loadSession. Remove this after
@@ -121,10 +111,8 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
       return $this->started;
     }
 
-    $is_https = $this->requestStack->getCurrentRequest()->isSecure();
     $cookies = $this->requestStack->getCurrentRequest()->cookies;
-    $insecure_session_name = $this->getInsecureName();
-    if (($cookies->has($this->getName()) && ($session_name = $cookies->get($this->getName()))) || ($is_https && $this->isMixedMode() && ($cookies->has($insecure_session_name) && ($session_name = $cookies->get($insecure_session_name))))) {
+    if ($cookies->get($this->getName())) {
       // If a session cookie exists, initialize the session. Otherwise the
       // session is only started on demand in save(), making
       // anonymous users not use a session cookie unless something is stored in
@@ -144,10 +132,6 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
       //   default php session id instead of generating a custom one:
       //   https://www.drupal.org/node/2238561
       $this->setId(Crypt::randomBytesBase64());
-      if ($is_https && $this->isMixedMode()) {
-        $session_id = Crypt::randomBytesBase64();
-        $cookies->set($insecure_session_name, $session_id);
-      }
 
       // Initialize the session global and attach the Symfony session bags.
       $_SESSION = array();
@@ -214,13 +198,6 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
       // started.
       if (!$this->getSaveHandler()->isActive()) {
         $this->startNow();
-        if ($this->requestStack->getCurrentRequest()->isSecure() && $this->isMixedMode()) {
-          $insecure_session_name = $this->getInsecureName();
-          $params = session_get_cookie_params();
-          $expire = $params['lifetime'] ? REQUEST_TIME + $params['lifetime'] : 0;
-          $cookie_params = $this->requestStack->getCurrentRequest()->cookies;
-          setcookie($insecure_session_name, $cookie_params->get($insecure_session_name), $expire, $params['path'], $params['domain'], FALSE, $params['httponly']);
-        }
       }
       // Write the session data.
       parent::save();
@@ -246,22 +223,6 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
       throw new \InvalidArgumentException('The optional parameters $destroy and $lifetime of SessionManager::regenerate() are not supported currently');
     }
 
-    $is_https = $this->requestStack->getCurrentRequest()->isSecure();
-    $cookies = $this->requestStack->getCurrentRequest()->cookies;
-    $insecure_session_id = '';
-
-    if ($is_https && $this->isMixedMode()) {
-      $insecure_session_name = $this->getInsecureName();
-      $params = session_get_cookie_params();
-      $insecure_session_id = Crypt::randomBytesBase64();
-      // If a session cookie lifetime is set, the session will expire
-      // $params['lifetime'] seconds from the current request. If it is not set,
-      // it will expire when the browser is closed.
-      $expire = $params['lifetime'] ? REQUEST_TIME + $params['lifetime'] : 0;
-      setcookie($insecure_session_name, $insecure_session_id, $expire, $params['path'], $params['domain'], FALSE, $params['httponly']);
-      $cookies->set($insecure_session_name, $insecure_session_id);
-    }
-
     if ($this->isStarted()) {
       $old_session_id = $this->getId();
     }
@@ -273,7 +234,7 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
       $params = session_get_cookie_params();
       $expire = $params['lifetime'] ? REQUEST_TIME + $params['lifetime'] : 0;
       setcookie($this->getName(), $this->getId(), $expire, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
-      $this->migrateStoredSession($old_session_id, $is_https, $insecure_session_id);
+      $this->migrateStoredSession($old_session_id);
     }
 
     if (!$this->isStarted()) {
@@ -321,27 +282,6 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
   public function enable() {
     static::$enabled = TRUE;
     return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isMixedMode() {
-    return $this->mixedMode;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setMixedMode($mixed_mode) {
-    $this->mixedMode = (bool) $mixed_mode;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getInsecureName() {
-    return substr($this->getName(), 1);
   }
 
   /**
@@ -401,25 +341,12 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
    * @param string $old_session_id
    *   The old session id. The new session id is $this->getId() unless
    *   $new_insecure_session_id is not empty.
-   * @param bool $is_https
-   *   Whether this is a HTTPS request.
-   * @param string $new_insecure_session_id
-   *   If this is a HTTPS request and we are in mixed mode, this is the new
-   *   insecure session id. The secure session id is $this->getId().
    */
-  protected function migrateStoredSession($old_session_id, $is_https, $new_insecure_session_id) {
+  protected function migrateStoredSession($old_session_id) {
     $fields = array('sid' => Crypt::hashBase64($this->getId()));
-    if ($is_https) {
-      $fields['ssid'] = $fields['sid'];
-      // If the "secure pages" setting is enabled, use the newly-created
-      // insecure session identifier as the regenerated sid.
-      if ($this->isMixedMode()) {
-        $fields['sid'] = Crypt::hashBase64($new_insecure_session_id);
-      }
-    }
     $this->connection->update('sessions')
       ->fields($fields)
-      ->condition($is_https ? 'ssid' : 'sid', Crypt::hashBase64($old_session_id))
+      ->condition('sid', Crypt::hashBase64($old_session_id))
       ->execute();
   }
 
