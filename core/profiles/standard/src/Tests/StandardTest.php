@@ -90,6 +90,10 @@ class StandardTest extends WebTestBase {
     $this->assertText('Foobar');
     $this->assertNoText('Then she picked out two somebodies, Sally and me');
 
+    // Ensure block body exists.
+    $this->drupalGet('block/add');
+    $this->assertFieldByName('body[0][value]');
+
     // Now we have all configuration imported, test all of them for schema
     // conformance. Ensures all imported default configuration is valid when
     // standard profile modules are enabled.
