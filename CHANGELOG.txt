@@ -1,6 +1,8 @@
 
 Drupal 7.35, xxxx-xx-xx (development version)
 -----------------------
+- Prevented the form API from allowing arrays to be submitted for various form
+  elements (such as textfields, textareas, and password fields).
 - Fixed a bug in the Contact module which caused the global user object to have
   the incorrect name and e-mail address during the remainder of the page
   request after the contact form is submitted.

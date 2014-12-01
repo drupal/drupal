@@ -470,6 +470,64 @@ class FormsTestCase extends DrupalWebTestCase {
     $this->drupalPost(NULL, array('checkboxes[one]' => TRUE, 'checkboxes[two]' => TRUE), t('Submit'));
     $this->assertText('An illegal choice has been detected.', 'Input forgery was detected.');
   }
+
+  /**
+   * Tests that submitted values are converted to scalar strings for textfields.
+   */
+  public function testTextfieldStringValue() {
+    // Check multivalued submissions.
+    $multivalue = array('evil' => 'multivalue', 'not so' => 'good');
+    $this->checkFormValue('textfield', $multivalue, '');
+    $this->checkFormValue('password', $multivalue, '');
+    $this->checkFormValue('textarea', $multivalue, '');
+    $this->checkFormValue('machine_name', $multivalue, '');
+    $this->checkFormValue('password_confirm', $multivalue, array('pass1' => '', 'pass2' => ''));
+    // Check integer submissions.
+    $integer = 5;
+    $string = '5';
+    $this->checkFormValue('textfield', $integer, $string);
+    $this->checkFormValue('password', $integer, $string);
+    $this->checkFormValue('textarea', $integer, $string);
+    $this->checkFormValue('machine_name', $integer, $string);
+    $this->checkFormValue('password_confirm', array('pass1' => $integer, 'pass2' => $integer), array('pass1' => $string, 'pass2' => $string));
+    // Check that invalid array keys are ignored for password confirm elements.
+    $this->checkFormValue('password_confirm', array('pass1' => 'test', 'pass2' => 'test', 'extra' => 'invalid'), array('pass1' => 'test', 'pass2' => 'test'));
+  }
+
+  /**
+   * Checks that a given form input value is sanitized to the expected result.
+   *
+   * @param string $element_type
+   *   The form element type. Example: textfield.
+   * @param mixed $input_value
+   *   The submitted user input value for the form element.
+   * @param mixed $expected_value
+   *   The sanitized result value in the form state after calling
+   *   form_builder().
+   */
+  protected function checkFormValue($element_type, $input_value, $expected_value) {
+    $form_id = $this->randomName();
+    $form = array();
+    $form_state = form_state_defaults();
+    $form['op'] = array('#type' => 'submit', '#value' => t('Submit'));
+    $form[$element_type] = array(
+      '#type' => $element_type,
+      '#title' => 'test',
+    );
+
+    $form_state['input'][$element_type] = $input_value;
+    $form_state['input']['form_id'] = $form_id;
+    $form_state['method'] = 'post';
+    $form_state['values'] = array();
+    drupal_prepare_form($form_id, $form, $form_state);
+
+    // This is the main function we want to test: it is responsible for
+    // populating user supplied $form_state['input'] to sanitized
+    // $form_state['values'].
+    form_builder($form_id, $form, $form_state);
+
+    $this->assertIdentical($form_state['values'][$element_type], $expected_value, format_string('Form submission for the "@element_type" element type has been correctly sanitized.', array('@element_type' => $element_type)));
+  }
 }
 
 /**

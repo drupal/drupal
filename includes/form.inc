@@ -2451,6 +2451,17 @@ function form_type_password_confirm_value($element, $input = FALSE) {
     $element += array('#default_value' => array());
     return $element['#default_value'] + array('pass1' => '', 'pass2' => '');
   }
+  $value = array('pass1' => '', 'pass2' => '');
+  // Throw out all invalid array keys; we only allow pass1 and pass2.
+  foreach ($value as $allowed_key => $default) {
+    // These should be strings, but allow other scalars since they might be
+    // valid input in programmatic form submissions. Any nested array values
+    // are ignored.
+    if (isset($input[$allowed_key]) && is_scalar($input[$allowed_key])) {
+      $value[$allowed_key] = (string) $input[$allowed_key];
+    }
+  }
+  return $value;
 }
 
 /**
@@ -2495,6 +2506,27 @@ function form_type_select_value($element, $input = FALSE) {
 }
 
 /**
+ * Determines the value for a textarea form element.
+ *
+ * @param array $element
+ *   The form element whose value is being populated.
+ * @param mixed $input
+ *   The incoming input to populate the form element. If this is FALSE,
+ *   the element's default value should be returned.
+ *
+ * @return string
+ *   The data that will appear in the $element_state['values'] collection
+ *   for this element. Return nothing to use the default.
+ */
+function form_type_textarea_value($element, $input = FALSE) {
+  if ($input !== FALSE) {
+    // This should be a string, but allow other scalars since they might be
+    // valid input in programmatic form submissions.
+    return is_scalar($input) ? (string) $input : '';
+  }
+}
+
+/**
  * Determines the value for a textfield form element.
  *
  * @param $element
@@ -2509,9 +2541,12 @@ function form_type_select_value($element, $input = FALSE) {
  */
 function form_type_textfield_value($element, $input = FALSE) {
   if ($input !== FALSE && $input !== NULL) {
-    // Equate $input to the form value to ensure it's marked for
-    // validation.
-    return str_replace(array("\r", "\n"), '', $input);
+    // This should be a string, but allow other scalars since they might be
+    // valid input in programmatic form submissions.
+    if (!is_scalar($input)) {
+      $input = '';
+    }
+    return str_replace(array("\r", "\n"), '', (string) $input);
   }
 }
 
