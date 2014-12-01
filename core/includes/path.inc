@@ -38,31 +38,3 @@ function drupal_is_front_page() {
 function drupal_match_path($path, $patterns) {
   return \Drupal::service('path.matcher')->matchPath($path, $patterns);
 }
-
-/**
- * Determines whether a path is in the administrative section of the site.
- *
- * By default, paths are considered to be non-administrative. If a path does
- * not match any of the patterns in path_get_admin_paths(), or if it matches
- * both administrative and non-administrative patterns, it is considered
- * non-administrative.
- *
- * @param $path
- *   A Drupal path.
- *
- * @return
- *   TRUE if the path is administrative, FALSE otherwise.
- *
- * @deprecated Use \Drupal::service('router.admin_context')->isAdminRoute()
- *   service instead.
- */
-function path_is_admin($path) {
-  try {
-    $parameters = \Drupal::service('router')->match('/' . $path);
-    $route = $parameters[RouteObjectInterface::ROUTE_OBJECT];
-    return \Drupal::service('router.admin_context')->isAdminRoute($route);
-  }
-  catch (ParamNotConvertedException $e) {
-    return FALSE;
-  }
-}

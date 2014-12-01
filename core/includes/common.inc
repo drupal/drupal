@@ -1476,11 +1476,7 @@ function _drupal_add_js($data = NULL, $options = NULL) {
           $current_query = $request->query->all();
           _url('', array('script' => &$scriptPath, 'prefix' => &$pathPrefix));
           $current_path = \Drupal::routeMatch()->getRouteName() ? Url::fromRouteMatch(\Drupal::routeMatch())->getInternalPath() : '';
-          $current_path_is_admin = FALSE;
-          // The function path_is_admin() is not available on update.php pages.
-          if (!(defined('MAINTENANCE_MODE'))) {
-            $current_path_is_admin = \Drupal::service('router.admin_context')->isAdminRoute();
-          }
+          $current_path_is_admin = \Drupal::service('router.admin_context')->isAdminRoute();
           $path = array(
             'baseUrl' => $request->getBaseUrl() . '/',
             'scriptPath' => $scriptPath,
