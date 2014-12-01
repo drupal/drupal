@@ -72,26 +72,6 @@ function form_state_values_clean(FormStateInterface $form_state) {
 }
 
 /**
- * Allows PHP array processing of multiple select options with the same value.
- *
- * Used for form select elements which need to validate HTML option groups
- * and multiple options which may return the same value. Associative PHP arrays
- * cannot handle these structures, since they share a common key.
- *
- * @param $array
- *   The form options array to process.
- *
- * @return
- *   An array with all hierarchical elements flattened to a single array.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\Core\Form\OptGroup::flattenOptions().
- */
-function form_options_flatten($array) {
-  return OptGroup::flattenOptions($array);
-}
-
-/**
  * Prepares variables for select element templates.
  *
  * Default template: select.html.twig.
