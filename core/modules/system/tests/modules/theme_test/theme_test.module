@@ -164,3 +164,13 @@ function theme_test_system_info_alter(array &$info, Extension $file, $type) {
     $info['libraries'][] = 'core/backbone';
   }
 }
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function theme_test_theme_suggestions_node(array $variables) {
+  $xss = '<script type="text/javascript">alert(\'yo\');</script>';
+  $suggestions[] = 'node__' . $xss;
+
+  return $suggestions;
+}

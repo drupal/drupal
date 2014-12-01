@@ -48,8 +48,10 @@ class TwigDebugMarkupTest extends WebTestBase {
     $build = node_view($node);
     $output = drupal_render($build);
     $this->assertTrue(strpos($output, '<!-- THEME DEBUG -->') !== FALSE, 'Twig debug markup found in theme output when debug is enabled.');
+    $this->setRawContent($output);
     $this->assertTrue(strpos($output, "THEME HOOK: 'node'") !== FALSE, 'Theme call information found.');
     $this->assertTrue(strpos($output, '* node--1--full' . $extension  . PHP_EOL . '   x node--1' . $extension . PHP_EOL . '   * node--page--full' . $extension . PHP_EOL . '   * node--page' . $extension . PHP_EOL . '   * node--full' . $extension . PHP_EOL . '   * node' . $extension) !== FALSE, 'Suggested template files found in order and node ID specific template shown as current template.');
+    $this->assertEscaped('node--<script type="text/javascript">alert(\'yo\');</script>');
     $template_filename = $templates['node__1']['path'] . '/' . $templates['node__1']['template'] . $extension;
     $this->assertTrue(strpos($output, "BEGIN OUTPUT from '$template_filename'") !== FALSE, 'Full path to current template file found.');
 
@@ -67,7 +69,7 @@ class TwigDebugMarkupTest extends WebTestBase {
     $build += node_view($node3);
     $output = drupal_render($build);
     $this->assertTrue(strpos($output, "THEME HOOK: 'node__foo__bar'") !== FALSE, 'Theme call information found.');
-    $this->assertTrue(strpos($output, '* node--foo--bar' . $extension . PHP_EOL . '   * node--foo' . $extension . PHP_EOL . '   * node--3--full' . $extension . PHP_EOL . '   * node--3' . $extension . PHP_EOL . '   * node--page--full' . $extension . PHP_EOL . '   * node--page' . $extension . PHP_EOL . '   * node--full' . $extension . PHP_EOL . '   x node' . $extension) !== FALSE, 'Suggested template files found in order and base template shown as current template.');
+    $this->assertTrue(strpos($output, '* node--foo--bar' . $extension . PHP_EOL . '   * node--foo' . $extension . PHP_EOL . '   * node--&lt;script type=&quot;text/javascript&quot;&gt;alert(&#039;yo&#039;);&lt;/script&gt;' . $extension . PHP_EOL . '   * node--3--full' . $extension . PHP_EOL . '   * node--3' . $extension . PHP_EOL . '   * node--page--full' . $extension . PHP_EOL . '   * node--page' . $extension . PHP_EOL . '   * node--full' . $extension . PHP_EOL . '   x node' . $extension) !== FALSE, 'Suggested template files found in order and base template shown as current template.');
 
     // Disable debug, rebuild the service container, and clear all caches.
     $parameters = $this->container->getParameter('twig.config');
