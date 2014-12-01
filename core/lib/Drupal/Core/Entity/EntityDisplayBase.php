@@ -13,6 +13,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\FieldConfigInterface;
+use Drupal\Component\Utility\String;
 
 /**
  * Provides a common base class for entity view and form displays.
@@ -161,7 +162,9 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
     if ($bundle_entity_type_id != 'bundle') {
       // If the target entity type uses entities to manage its bundles then
       // depend on the bundle entity.
-      $bundle_entity = \Drupal::entityManager()->getStorage($bundle_entity_type_id)->load($this->bundle);
+      if (!$bundle_entity = \Drupal::entityManager()->getStorage($bundle_entity_type_id)->load($this->bundle)) {
+        throw new \LogicException(String::format('Missing bundle entity, entity type %type, entity id %bundle.', array('%type' => $bundle_entity_type_id, '%bundle' => $this->bundle)));
+      }
       $this->addDependency('config', $bundle_entity->getConfigDependencyName());
     }
     else {
