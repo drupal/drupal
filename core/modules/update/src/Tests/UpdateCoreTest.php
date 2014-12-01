@@ -314,7 +314,6 @@ class UpdateCoreTest extends UpdateTestBase {
 
     // Clear storage and try again.
     update_storage_clear();
-    drupal_static_reset('_update_create_fetch_task');
     update_create_fetch_task($projecta);
     $this->assertEqual($queue->numberOfItems(), 2, 'Queue contains two items');
   }

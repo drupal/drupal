@@ -30,26 +30,6 @@ function _update_refresh() {
 }
 
 /**
- * Adds a task to the queue for fetching release history data for a project.
- *
- * We only create a new fetch task if there's no task already in the queue for
- * this particular project (based on 'update_fetch_task' key-value collection).
- *
- * @param $project
- *   Associative array of information about a project as created by
- *   update_get_projects(), including keys such as 'name' (short name), and the
- *   'info' array with data from a .info.yml file for the project.
- *
- * @see \Drupal\update\UpdateFetcher::createFetchTask()
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::service('update.processor')->createFetchTask().
- */
-function _update_create_fetch_task($project) {
-  \Drupal::service('update.processor')->createFetchTask($project);
-}
-
-/**
  * Performs any notifications that should be done once cron fetches new data.
  *
  * This method checks the status of the site using the new data and, depending

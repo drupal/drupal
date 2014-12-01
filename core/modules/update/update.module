@@ -368,17 +368,21 @@ function update_get_available($refresh = FALSE) {
 }
 
 /**
- * Creates a new fetch task after loading the necessary include file.
+ * Adds a task to the queue for fetching release history data for a project.
+ *
+ * We only create a new fetch task if there's no task already in the queue for
+ * this particular project (based on 'update_fetch_task' key-value collection).
  *
  * @param $project
- *   Associative array of information about a project. See update_get_projects()
- *   for the keys used.
+ *   Associative array of information about a project as created by
+ *   update_get_projects(), including keys such as 'name' (short name), and the
+ *   'info' array with data from a .info.yml file for the project.
  *
- * @see _update_create_fetch_task()
+ * @see \Drupal\update\UpdateFetcher::createFetchTask()
+ *
  */
 function update_create_fetch_task($project) {
-  module_load_include('inc', 'update', 'update.fetch');
-  _update_create_fetch_task($project);
+  \Drupal::service('update.processor')->createFetchTask($project);
 }
 
 /**
