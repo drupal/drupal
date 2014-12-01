@@ -234,15 +234,4 @@ class FakeDatabaseSchema extends Schema {
     return $this->uniqueIdentifier;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Fake database schema',
-      'description' => 'Tests for fake database schema plugin.',
-      'group' => 'Migrate',
-    );
-  }
-
 }

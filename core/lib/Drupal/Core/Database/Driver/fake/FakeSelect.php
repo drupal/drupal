@@ -514,17 +514,6 @@ class FakeSelect extends Select {
   /**
    * {@inheritdoc}
    */
-  public static function getInfo() {
-    return array(
-      'name' => 'Fake select test',
-      'description' => 'Tests for fake select plugin.',
-      'group' => 'Migrate',
-    );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function fields($table_alias, array $fields = array()) {
     if (!$fields) {
       $table = $this->tables[$table_alias]['table'];

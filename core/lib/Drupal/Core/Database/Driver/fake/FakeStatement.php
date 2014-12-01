@@ -101,15 +101,4 @@ class FakeStatement extends \ArrayIterator implements StatementInterface {
     return $return === FALSE ? FALSE : (object) $return;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Fake statement test',
-      'description' => 'Tests for fake statement plugin.',
-      'group' => 'Migrate',
-    );
-  }
-
 }
