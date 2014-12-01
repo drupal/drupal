@@ -20,6 +20,27 @@ use Drupal\Core\Template\Attribute;
 class ContextualDynamicContextTest extends WebTestBase {
 
   /**
+   * A user with permission to access contextual links and edit content.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $editorUser;
+
+  /**
+   * An authenticated user with permission to access contextual links.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $authenticatedUser;
+
+  /**
+   * A simulated anonymous user with access only to node content.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $anonymousUser;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -32,9 +53,9 @@ class ContextualDynamicContextTest extends WebTestBase {
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
     $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
 
-    $this->editor_user = $this->drupalCreateUser(array('access content', 'access contextual links', 'edit any article content'));
-    $this->authenticated_user = $this->drupalCreateUser(array('access content', 'access contextual links'));
-    $this->anonymous_user = $this->drupalCreateUser(array('access content'));
+    $this->editorUser = $this->drupalCreateUser(array('access content', 'access contextual links', 'edit any article content'));
+    $this->authenticatedUser = $this->drupalCreateUser(array('access content', 'access contextual links'));
+    $this->anonymousUser = $this->drupalCreateUser(array('access content'));
   }
 
   /**
@@ -44,7 +65,7 @@ class ContextualDynamicContextTest extends WebTestBase {
    * not allowed to use contextual links.
    */
   function testDifferentPermissions() {
-    $this->drupalLogin($this->editor_user);
+    $this->drupalLogin($this->editorUser);
 
     // Create three nodes in the following order:
     // - An article, which should be user-editable.
@@ -80,7 +101,7 @@ class ContextualDynamicContextTest extends WebTestBase {
     $this->assertIdentical($json[$ids[3]], '');
 
     // Authenticated user: can access contextual links, cannot edit articles.
-    $this->drupalLogin($this->authenticated_user);
+    $this->drupalLogin($this->authenticatedUser);
     $this->drupalGet('node');
     for ($i = 0; $i < count($ids); $i++) {
       $this->assertContextualLinkPlaceHolder($ids[$i]);
@@ -97,7 +118,7 @@ class ContextualDynamicContextTest extends WebTestBase {
     $this->assertIdentical($json[$ids[3]], '');
 
     // Anonymous user: cannot access contextual links.
-    $this->drupalLogin($this->anonymous_user);
+    $this->drupalLogin($this->anonymousUser);
     $this->drupalGet('node');
     for ($i = 0; $i < count($ids); $i++) {
       $this->assertContextualLinkPlaceHolder($ids[$i]);
