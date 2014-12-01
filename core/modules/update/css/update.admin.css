@@ -164,3 +164,6 @@ th.update-project-name {
   width: 50%;
 }
 
+.versions table ul.links {
+  list-style-type: none;
+}
