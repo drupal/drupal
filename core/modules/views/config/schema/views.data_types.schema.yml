@@ -748,27 +748,28 @@ views_filter:
             - type: integer
               label: 'Default'
         group_items:
-          type: views.filter.group_items.[plugin_id]
+          type: sequence
           label: 'Group items'
+          sequence:
+            - type: views.filter.group_item.[%parent.%parent.%parent.plugin_id]
+              label: 'Group item'
     plugin_id:
       type: string
       label: 'Plugin ID'
 
-views_filter_group_items:
-  type: sequence
-  sequence:
-    - type: mapping
-      label: 'Group item'
-      mapping:
-        title:
-          type: label
-          label: 'Label'
-        operator:
-          type: string
-          label: 'Operator'
-        value:
-          type: label
-          label: 'Value'
+views_filter_group_item:
+  type: mapping
+  label: 'Group item'
+  mapping:
+    title:
+      type: label
+      label: 'Label'
+    operator:
+      type: string
+      label: 'Operator'
+    value:
+      type: label
+      label: 'Value'
 
 views_relationship:
   type: mapping

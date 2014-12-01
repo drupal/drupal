@@ -49,4 +49,16 @@ trait SchemaCheckTestTrait {
       }
     }
   }
+
+  /**
+   * Asserts configuration, specified by name, has a valid schema.
+   *
+   * @param string $config_name
+   *   The configuration name.
+   */
+  public function assertConfigSchemaByName($config_name) {
+    $config = \Drupal::config($config_name);
+    $this->assertConfigSchema(\Drupal::service('config.typed'), $config->getName(), $config->get());
+  }
+
 }

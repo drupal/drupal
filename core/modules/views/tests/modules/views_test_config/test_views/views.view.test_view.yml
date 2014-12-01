@@ -42,7 +42,6 @@ display:
         options:
           offset: 0
         type: none
-      pager_options: {  }
       sorts:
         id:
           field: id
