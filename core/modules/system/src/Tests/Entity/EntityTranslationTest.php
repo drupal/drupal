@@ -434,16 +434,26 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     $translation->type->value = strrev($type);
     $this->assertEqual($cloned->type->value, $translation->type->value, 'Untranslatable field references keep working after serializing and cloning the entity.');
 
-    // Check that per-language defaults are properly populated.
-    $entity = $this->reloadEntity($entity);
-    $field_id = implode('.', array($entity->getEntityTypeId(), $entity->bundle(), $this->field_name));
-    $field = $this->entityManager->getStorage('field_config')->load($field_id);
-    $field->default_value_callback = 'entity_test_field_default_value';
-    $field->save();
+    // Check that per-language defaults are properly populated. The
+    // 'entity_test_mul_default_value' entity type is translatable and uses
+    // entity_test_field_default_value() as a "default value callback" for its
+    // 'description' field.
+    $entity = $this->entityManager
+      ->getStorage('entity_test_mul_default_value')
+      ->create(array('name' => $this->randomMachineName(), 'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED));
     $translation = $entity->addTranslation($langcode2);
-    $field_storage = $translation->get($this->field_name);
-    $this->assertEqual($field_storage->value, $this->field_name . '_' . $langcode2, 'Language-aware default values correctly populated.');
-    $this->assertEqual($field_storage->getLangcode(), $langcode2, 'Field object has the expected langcode.');
+    $expected = array(
+      array(
+        'shape' => "shape:0:description_$langcode2",
+        'color' => "color:0:description_$langcode2",
+      ),
+      array(
+        'shape' => "shape:1:description_$langcode2",
+        'color' => "color:1:description_$langcode2",
+      ),
+    );
+    $this->assertEqual($translation->description->getValue(), $expected, 'Language-aware default values correctly populated.');
+    $this->assertEqual($translation->description->getLangcode(), $langcode2, 'Field object has the expected langcode.');
   }
 
   /**

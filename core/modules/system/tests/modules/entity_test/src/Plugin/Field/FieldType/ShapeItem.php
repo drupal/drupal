@@ -2,24 +2,22 @@
 
 /**
  * @file
- * Contains \Drupal\field_test\Plugin\Field\FieldType\ShapeItem.
+ * Contains \Drupal\entity_test\Plugin\Field\FieldType\ShapeItem.
  */
 
-namespace Drupal\field_test\Plugin\Field\FieldType;
+namespace Drupal\entity_test\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\Field\FieldItemBase;
 
 /**
- * Defines the 'shape_field' entity field item.
+ * Defines the 'shape' field type.
  *
  * @FieldType(
  *   id = "shape",
  *   label = @Translation("Shape"),
  *   description = @Translation("Another dummy field type."),
- *   default_widget = "test_field_widget",
- *   default_formatter = "field_test_default"
  * )
  */
 class ShapeItem extends FieldItemBase {

@@ -650,7 +650,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
 
     foreach ($entity as $name => $field) {
       if (!isset($values[$name]) && !$field->isEmpty()) {
-        $values[$name] = $field->value;
+        $values[$name] = $field->getValue();
       }
     }
 

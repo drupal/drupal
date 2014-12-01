@@ -443,7 +443,20 @@ function entity_test_entity_test_mul_translation_delete(EntityInterface $transla
  * @see \Drupal\field\Entity\FieldConfig::$default_value
  */
 function entity_test_field_default_value(FieldableEntityInterface $entity, FieldDefinitionInterface $definition) {
-  return array(array('value' => $definition->getName() . '_' . $entity->language()->getId()));
+  // Include the field name and entity language in the generated values to check
+  // that they are correctly passed.
+  $string = $definition->getName() . '_' . $entity->language()->getId();
+  // Return a "default value" with multiple items.
+  return array(
+    array(
+      'shape' => "shape:0:$string",
+      'color' => "color:0:$string",
+    ),
+    array(
+      'shape' => "shape:1:$string",
+      'color' => "color:1:$string",
+    ),
+  );
 }
 
 /**
