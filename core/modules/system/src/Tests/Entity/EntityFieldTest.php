@@ -265,6 +265,14 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $this->assertEqual(count(iterator_to_array($entity->name->getIterator())), count($entity->name), format_string('%entity_type: Count matches iterator count.', array('%entity_type' => $entity_type)));
     $this->assertTrue($entity->name->getValue() === array(0 => array('value' => NULL)), format_string('%entity_type: Name field value contains a NULL value.', array('%entity_type' => $entity_type)));
 
+    // Test using filterEmptyItems().
+    $entity->name = array(NULL, 'foo');
+    $this->assertEqual(count($entity->name), 2, format_string('%entity_type: List has 2 items.', array('%entity_type' => $entity_type)));
+    $entity->name->filterEmptyItems();
+    $this->assertEqual(count($entity->name), 1, format_string('%entity_type: The empty item was removed.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($entity->name[0]->value, 'foo', format_string('%entity_type: The items were renumbered.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($entity->name[0]->getName(), 0, format_string('%entity_type: The deltas were updated in the items.', array('%entity_type' => $entity_type)));
+
     // Test removing all list items by assigning an empty array.
     $entity->name = array();
     $this->assertIdentical(count($entity->name), 0, format_string('%entity_type: Name field contains no items.', array('%entity_type' => $entity_type)));

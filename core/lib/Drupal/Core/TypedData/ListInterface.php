@@ -80,4 +80,16 @@ interface ListInterface extends TraversableTypedDataInterface, \ArrayAccess, \Co
    */
   public function first();
 
+  /**
+   * Filters the items in the list using a custom callback.
+   *
+   * @param callable $callback
+   *   The callback to use for filtering. Like with array_filter(), the
+   *   callback is called for each item in the list. Only items for which the
+   *   callback returns TRUE are preserved.
+   *
+   * @return $this
+   */
+  public function filter($callback);
+
 }

@@ -89,4 +89,13 @@ class Sequence extends ArrayElement implements ListInterface {
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function filter($callback) {
+    $this->value = array_filter($this->value, $callback);
+    unset($this->elements);
+    return $this;
+  }
+
 }

@@ -230,6 +230,33 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function filter($callback) {
+    if (isset($this->list)) {
+      $removed = FALSE;
+      // Apply the filter, detecting if some items were actually removed.
+      $this->list = array_filter($this->list, function ($item) use ($callback, &$removed) {
+        if (call_user_func($callback, $item)) {
+          return TRUE;
+        }
+        else {
+          $removed = TRUE;
+        }
+      });
+      if ($removed) {
+        // Rekey the array using array_values().
+        $this->list = array_values($this->list);
+        // Manually update each item's delta.
+        foreach ($this->list as $delta => $item) {
+          $item->setContext($delta, $this);
+        }
+      }
+    }
+    return $this;
+  }
+
+  /**
    * Implements \Drupal\Core\TypedData\ListInterface::onChange().
    */
   public function onChange($delta) {

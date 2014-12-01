@@ -101,11 +101,9 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    * {@inheritdoc}
    */
   public function filterEmptyItems() {
-    if (isset($this->list)) {
-      $this->list = array_values(array_filter($this->list, function($item) {
-        return !$item->isEmpty();
-      }));
-    }
+    $this->filter(function ($item) {
+      return !$item->isEmpty();
+    });
   }
 
   /**

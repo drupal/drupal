@@ -11,6 +11,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\ListDataDefinition;
 use Drupal\Core\TypedData\MapDataDefinition;
+use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\Core\Datetime\DrupalDateTime;
 
@@ -318,7 +319,7 @@ class TypedDataTest extends DrupalUnitTestBase {
     // Test iterating.
     $count = 0;
     foreach ($typed_data as $item) {
-      $this->assertTrue($item instanceof \Drupal\Core\TypedData\TypedDataInterface);
+      $this->assertTrue($item instanceof TypedDataInterface);
       $count++;
     }
     $this->assertEqual($count, 3);
@@ -392,6 +393,43 @@ class TypedDataTest extends DrupalUnitTestBase {
     catch (\Exception $e) {
       $this->pass('Exception thrown:' . $e->getMessage());
     }
+  }
+
+  /**
+   * Tests the filter() method on typed data lists.
+   */
+  public function testTypedDataListsFilter() {
+    // Check that an all-pass filter leaves the list untouched.
+    $value = array('zero', 'one');
+    $typed_data = $this->createTypedData(ListDataDefinition::create('string'), $value);
+    $typed_data->filter(function(TypedDataInterface $item) {
+      return TRUE;
+    });
+    $this->assertEqual($typed_data->count(), 2);
+    $this->assertEqual($typed_data[0]->getValue(), 'zero');
+    $this->assertEqual($typed_data[0]->getName(), 0);
+    $this->assertEqual($typed_data[1]->getValue(), 'one');
+    $this->assertEqual($typed_data[1]->getName(), 1);
+
+    // Check that a none-pass filter empties the list.
+    $value = array('zero', 'one');
+    $typed_data = $this->createTypedData(ListDataDefinition::create('string'), $value);
+    $typed_data->filter(function(TypedDataInterface $item) {
+      return FALSE;
+    });
+    $this->assertEqual($typed_data->count(), 0);
+
+    // Check that filtering correctly renumbers elements.
+    $value = array('zero', 'one', 'two');
+    $typed_data = $this->createTypedData(ListDataDefinition::create('string'), $value);
+    $typed_data->filter(function(TypedDataInterface $item) {
+      return $item->getValue() !== 'one';
+    });
+    $this->assertEqual($typed_data->count(), 2);
+    $this->assertEqual($typed_data[0]->getValue(), 'zero');
+    $this->assertEqual($typed_data[0]->getName(), 0);
+    $this->assertEqual($typed_data[1]->getValue(), 'two');
+    $this->assertEqual($typed_data[1]->getName(), 1);
   }
 
   /**
