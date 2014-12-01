@@ -30,22 +30,6 @@ class Users extends WizardPluginBase {
   protected $createdColumn = 'created';
 
   /**
-   * Set default values for the path field options.
-   */
-  protected $pathField = array(
-    'id' => 'uid',
-    'table' => 'users',
-    'field' => 'uid',
-    'exclude' => TRUE,
-    'link_to_user' => FALSE,
-    'alter' => array(
-      'alter_text' => TRUE,
-      'text' => 'user/[uid]'
-    ),
-    'plugin_id' => 'user',
-  );
-
-  /**
    * Set default values for the filters.
    */
   protected $filters = array(

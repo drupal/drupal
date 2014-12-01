@@ -31,22 +31,6 @@ class Comment extends WizardPluginBase {
   protected $createdColumn = 'created';
 
   /**
-   * Set default values for the path field options.
-   */
-  protected $pathField = array(
-    'id' => 'cid',
-    'table' => 'comment',
-    'field' => 'cid',
-    'exclude' => TRUE,
-    'link_to_comment' => FALSE,
-    'alter' => array(
-      'alter_text' => TRUE,
-      'text' => 'comment/[cid]#comment-[cid]'
-    ),
-    'plugin_id' => 'comment',
-  );
-
-  /**
    * Set default values for the filters.
    */
   protected $filters = array(

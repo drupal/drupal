@@ -30,35 +30,6 @@ class NodeRevision extends WizardPluginBase {
   protected $createdColumn = 'changed';
 
   /**
-   * Set default values for the path field options.
-   */
-  protected $pathField = array(
-    'id' => 'vid',
-    'table' => 'node_revision',
-    'field' => 'vid',
-    'exclude' => TRUE,
-    'alter' => array(
-      'alter_text' => TRUE,
-      'text' => 'node/[nid]/revisions/[vid]/view'
-    ),
-    'plugin_id' => 'node_revision',
-  );
-
-  /**
-   * Set the additional information for the pathField property.
-   */
-  protected $pathFieldsSupplemental = array(
-    array(
-      'id' => 'nid',
-      'table' => 'node',
-      'field' => 'nid',
-      'exclude' => TRUE,
-      'link_to_node' => FALSE,
-      'plugin_id' => 'node',
-    )
-  );
-
-  /**
    * Set default values for the filters.
    */
   protected $filters = array(

@@ -21,21 +21,6 @@ use Drupal\views\Plugin\views\wizard\WizardPluginBase;
 class TaxonomyTerm extends WizardPluginBase {
 
   /**
-   * Set default values for the path field options.
-   */
-  protected $pathField = array(
-    'id' => 'tid',
-    'table' => 'taxonomy_term_data',
-    'field' => 'tid',
-    'exclude' => TRUE,
-    'alter' => array(
-      'alter_text' => TRUE,
-      'text' => 'taxonomy/term/[tid]'
-    ),
-    'plugin_id' => 'taxonomy',
-  );
-
-  /**
    * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::defaultDisplayOptions().
    */
   protected function defaultDisplayOptions() {

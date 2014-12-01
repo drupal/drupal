@@ -80,20 +80,6 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   protected $createdColumn;
 
   /**
-   * A views item configuration array used for a jump-menu field.
-   *
-   * @var array
-   */
-  protected $pathField = array();
-
-  /**
-   * Additional fields required to generate the pathField.
-   *
-   * @var array
-   */
-  protected $pathFieldsSupplemental = array();
-
-  /**
    * Views items configuration arrays for filters added by the wizard.
    *
    * @var array
@@ -153,30 +139,6 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    */
   public function getCreatedColumn() {
     return $this->createdColumn;
-  }
-
-  /**
-   * Gets the pathField property.
-   *
-   * @return array
-   *   The pathField array.
-   *
-   * @todo Rename this to be something about jump menus, and/or resolve this
-   *   dependency.
-   */
-  public function getPathField() {
-    return $this->pathField;
-  }
-
-  /**
-   * Gets the pathFieldsSupplemental property.
-   *
-   * @return array()
-   *
-   * @todo Rename this to be something about jump menus, and/or remove this.
-   */
-  public function getPathFieldsSupplemental() {
-    return $this->pathFieldsSupplemental;
   }
 
   /**

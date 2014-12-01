@@ -31,22 +31,6 @@ class Node extends WizardPluginBase {
   protected $createdColumn = 'node_field_data-created';
 
   /**
-   * Set default values for the path field options.
-   */
-  protected $pathField = array(
-    'id' => 'nid',
-    'table' => 'node',
-    'field' => 'nid',
-    'exclude' => TRUE,
-    'link_to_node' => FALSE,
-    'alter' => array(
-      'alter_text' => TRUE,
-      'text' => 'node/[nid]'
-    ),
-    'plugin_id' => 'node',
-  );
-
-  /**
    * Set default values for the filters.
    */
   protected $filters = array(
