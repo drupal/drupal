@@ -173,7 +173,7 @@ display:
         area:
           id: area
           table: views
-          field: area
+          field: area_text_custom
           empty: true
           content: 'This view is empty.'
           plugin_id: text_custom

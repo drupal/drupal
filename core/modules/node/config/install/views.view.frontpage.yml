@@ -34,7 +34,7 @@ display:
           relationship: none
           table: views
           tokenize: false
-          plugin_id: text
+          plugin_id: text_custom
         node_listing_empty:
           admin_label: ''
           empty: true

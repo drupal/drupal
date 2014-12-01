@@ -23,8 +23,12 @@ class Text extends TokenizeAreaPluginBase {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['content'] = array('default' => '', 'format_key' => 'format');
-    $options['format'] = array('default' => NULL);
+    $options['content'] = array(
+      'contains' => array(
+        'value' => array('default' => ''),
+        'format' => array('default' => NULL),
+      ),
+    );
     return $options;
   }
 
@@ -37,9 +41,9 @@ class Text extends TokenizeAreaPluginBase {
     $form['content'] = array(
       '#title' => $this->t('Content'),
       '#type' => 'text_format',
-      '#default_value' => $this->options['content'],
+      '#default_value' => $this->options['content']['value'],
       '#rows' => 6,
-      '#format' => isset($this->options['format']) ? $this->options['format'] : filter_default_format(),
+      '#format' => isset($this->options['content']['format']) ? $this->options['content']['format'] : filter_default_format(),
       '#editor' => FALSE,
     );
   }
@@ -47,22 +51,12 @@ class Text extends TokenizeAreaPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function submitOptionsForm(&$form, FormStateInterface $form_state) {
-    $content = $form_state->getValue(array('options', 'content'));
-    $form_state->setValue(array('options', 'format'), $content['format']);
-    $form_state->setValue(array('options', 'content'), $content['value']);
-    parent::submitOptionsForm($form, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function render($empty = FALSE) {
-    $format = isset($this->options['format']) ? $this->options['format'] : filter_default_format();
+    $format = isset($this->options['content']['format']) ? $this->options['content']['format'] : filter_default_format();
     if (!$empty || !empty($this->options['empty'])) {
       return array(
         '#type' => 'processed_text',
-        '#text' => $this->tokenizeValue($this->options['content']),
+        '#text' => $this->tokenizeValue($this->options['content']['value']),
         '#format' => $format,
       );
     }

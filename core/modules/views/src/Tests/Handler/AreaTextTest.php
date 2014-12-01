@@ -45,18 +45,20 @@ class AreaTextTest extends ViewUnitTestBase {
         'id' => 'area',
         'table' => 'views',
         'field' => 'area',
-        'content' => $string,
+        'content' => array(
+          'value' => $string,
+        ),
       ),
     ));
 
     // Execute the view.
     $this->executeView($view);
 
-    $view->display_handler->handlers['header']['area']->options['format'] = $this->randomString();
+    $view->display_handler->handlers['header']['area']->options['content']['format'] = $this->randomString();
     $build = $view->display_handler->handlers['header']['area']->render();
     $this->assertEqual('', drupal_render($build), 'Nonexistent format should return empty markup.');
 
-    $view->display_handler->handlers['header']['area']->options['format'] = filter_default_format();
+    $view->display_handler->handlers['header']['area']->options['content']['format'] = filter_default_format();
     $build = $view->display_handler->handlers['header']['area']->render();
     $this->assertEqual(check_markup($string), drupal_render($build), 'Existent format should return something');
 

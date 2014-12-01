@@ -26,11 +26,8 @@ views.area.text:
   label: 'Text'
   mapping:
     content:
-      type: text
-      label: 'The shown text of the area'
-    format:
-      type: string
-      label: 'The filter format the content is in'
+      type: text_format
+      label: 'The formatted text of the area'
     tokenize:
       type: boolean
       label: 'Should replacement tokens be used from the first row'
