@@ -1500,6 +1500,7 @@ input.form-url,
 input.form-search,
 input.form-number,
 input.form-color,
+input.form-file,
 textarea.form-textarea,
 select.form-select {
   border: 1px solid #ccc;
