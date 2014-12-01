@@ -871,10 +871,10 @@ function hook_page_top(array &$page_top) {
 /**
  * Add a renderable array to the bottom of the page.
  *
- * @param array $page_top
+ * @param array $page_bottom
  *   A renderable array representing the bottom of the page.
  */
-function hook_page_bottom(array &$page) {
+function hook_page_bottom(array &$page_bottom) {
   $page_bottom['mymodule'] = ['#markup' => 'This is the bottom.'];
 }
 
