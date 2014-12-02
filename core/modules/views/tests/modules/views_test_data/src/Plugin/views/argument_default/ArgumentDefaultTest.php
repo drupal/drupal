@@ -41,7 +41,7 @@ class ArgumentDefaultTest extends ArgumentDefaultPluginBase {
    */
   public function calculateDependencies() {
     return [
-      'test_dependency' => ['argument_default'],
+      'content' => ['ArgumentDefaultTest'],
     ];
   }
 

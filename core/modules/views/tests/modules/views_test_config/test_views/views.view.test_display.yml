@@ -52,7 +52,6 @@ display:
           order: DESC
           table: node_field_data
           plugin_id: date
-      style_plugin: default
       title: 'Test Display'
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
@@ -64,22 +63,16 @@ display:
     display_options:
       defaults:
         pager: false
-        pager_options: false
-        style_options: '0'
-        style_plugin: '0'
       fields:
         title:
-          link_to_node: '1'
+          link_to_node: true
           plugin_id: node
       pager:
         options:
           items_per_page: 5
         type: some
-      pager_options: {  }
       row:
         type: fields
-      style_options: {  }
-      style_plugin: default
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
     display_plugin: block

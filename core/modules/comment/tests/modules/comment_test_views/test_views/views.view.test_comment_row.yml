@@ -113,18 +113,20 @@ display:
           element_default_classes: true
           empty: ''
           hide_alter_empty: true
-          link_to_node: false
+          link_to_entity: false
+          plugin_id: comment
       filters:
         status:
-          value: '1'
+          value: true
           table: comment_field_data
           field: status
           id: status
           expose:
             operator: ''
           group: 1
+          plugin_id: boolean
         status_node:
-          value: '1'
+          value: true
           table: node_field_data
           field: status
           relationship: node
@@ -132,6 +134,7 @@ display:
           expose:
             operator: ''
           group: 1
+          plugin_id: boolean
       sorts: {  }
       title: test_comment_row
       header: {  }

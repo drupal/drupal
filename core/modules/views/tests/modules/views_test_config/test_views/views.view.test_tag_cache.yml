@@ -32,7 +32,7 @@ display:
             word_boundary: true
           empty_zero: false
           field: nid
-          group_type: {  }
+          group_type: group
           hide_empty: false
           id: nid
           table: node

@@ -24,13 +24,13 @@ display:
             identifier: type
             label: 'Content: Type'
             operator_id: type_op
-            reduce: '0'
+            reduce: false
             use_operator: false
           exposed: true
           field: type
           id: type
           table: node_field_data
-          plugin_id: string
+          plugin_id: in_operator
       pager:
         type: full
       style:

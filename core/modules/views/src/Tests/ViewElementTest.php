@@ -83,13 +83,8 @@ class ViewElementTest extends ViewTestBase {
     $view->displayHandlers->get('default')->overrideOption('arguments', array(
       'age' => array(
         'default_action' => 'ignore',
-        'style_plugin' => 'default_summary',
-        'style_options' => array(),
-        'wildcard' => 'all',
-        'wildcard_substitution' => 'All',
         'title' => '',
         'default_argument_type' => 'fixed',
-        'default_argument' => '',
         'validate' => array(
           'type' => 'none',
           'fail' => 'not found',
@@ -99,7 +94,6 @@ class ViewElementTest extends ViewTestBase {
         'id' => 'age',
         'table' => 'views_test_data',
         'field' => 'age',
-        'validate_user_argument_type' => 'uid',
       )
     ));
     $view->save();

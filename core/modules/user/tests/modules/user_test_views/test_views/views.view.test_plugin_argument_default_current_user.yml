@@ -22,9 +22,9 @@ display:
           default_argument_type: current_user
           field: 'null'
           id: 'null'
-          must_not_be: '0'
-          style_plugin: default_summary
+          must_not_be: false
           table: views
+          plugin_id: 'null'
       cache:
         type: none
       exposed_form:
@@ -43,8 +43,9 @@ display:
           field: title
           hide_empty: false
           id: title
-          link_to_node: '0'
+          link_to_node: false
           table: node_field_data
+          plugin_id: node
       pager:
         options:
           id: 0

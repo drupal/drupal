@@ -151,7 +151,7 @@ class QueryTest extends QueryPluginBase {
    */
   public function calculateDependencies() {
     return parent::calculateDependencies() + [
-      'test_dependency' => ['query'],
+      'content' => ['QueryTest'],
     ];
   }
 

@@ -28,12 +28,12 @@ display:
             identifier: type
             label: 'Content: Type'
             operator_id: type_op
-            reduce: '0'
+            reduce: false
           exposed: true
           field: type
           id: type
           table: node_field_data
-          plugin_id: node_type
+          plugin_id: in_operator
       pager:
         type: full
       query:

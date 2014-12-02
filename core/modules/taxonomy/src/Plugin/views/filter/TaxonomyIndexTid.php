@@ -48,7 +48,7 @@ class TaxonomyIndexTid extends ManyToOne {
     $options['type'] = array('default' => 'textfield');
     $options['limit'] = array('default' => TRUE);
     $options['vid'] = array('default' => '');
-    $options['hierarchy'] = array('default' => 0);
+    $options['hierarchy'] = array('default' => FALSE);
     $options['error_message'] = array('default' => TRUE);
 
     return $options;

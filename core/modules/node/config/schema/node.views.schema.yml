@@ -94,12 +94,12 @@ views.argument_validator.node:
       label: 'Filter value format'
 
 views.field.node_language:
-  type: views_field
+  type: views.field.node
   label: 'Node language'
   mapping:
-    link_to_node:
+    native_language:
       type: boolean
-      label: 'Link this field to the original piece of content'
+      label: 'Native language'
 
 views.field.node:
   type: views_field

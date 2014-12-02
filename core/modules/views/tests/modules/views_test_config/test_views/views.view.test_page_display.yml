@@ -16,7 +16,6 @@ display:
       defaults:
         fields: false
         pager: false
-        pager_options: false
         sorts: false
       fields:
         age:

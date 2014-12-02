@@ -49,7 +49,6 @@ display:
             html: false
           hide_empty: false
           empty_zero: false
-          link_to_node: '1'
       title: test_display_attachment
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null

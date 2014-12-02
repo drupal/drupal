@@ -4,10 +4,10 @@ dependencies:
   module:
     - comment
     - views_test_data
-  test_dependency:
-    - access
-    - row
-    - style
+  content:
+    - StaticTest
+    - RowTest
+    - StyleTest
 id: test_plugin_dependencies
 label: test_plugin_dependencies
 module: views
@@ -27,7 +27,6 @@ display:
           default_argument_type: fixed
           id: 'null'
           must_not_be: false
-          style_plugin: default_summary
           table: views
           field: null
           plugin_id: 'null'
@@ -49,7 +48,7 @@ display:
         type: full
       query:
         type: views_query
-      relationships: null
+      relationships: {  }
       sorts: {  }
       style:
         type: test_style

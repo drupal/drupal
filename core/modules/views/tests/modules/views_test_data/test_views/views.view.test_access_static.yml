@@ -3,8 +3,8 @@ status: true
 dependencies:
   module:
     - views_test_data
-  test_dependency:
-    - access
+  content:
+    - StaticTest
 id: test_access_static
 label: ''
 module: views

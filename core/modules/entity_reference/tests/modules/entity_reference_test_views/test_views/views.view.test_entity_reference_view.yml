@@ -16,7 +16,6 @@ display:
         fields: false
         relationships: false
         pager: false
-        pager_options: false
         sorts: false
       fields:
         id:
@@ -28,7 +27,6 @@ display:
         id_1:
           field: id
           id: id_1
-          order: ASC
           relationship: test_relationship
           table: entity_test
           plugin_id: numeric
@@ -36,7 +34,6 @@ display:
         options:
           offset: 0
         type: none
-      pager_options: {  }
       sorts:
         id:
           field: id

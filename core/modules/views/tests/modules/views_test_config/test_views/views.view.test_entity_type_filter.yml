@@ -72,6 +72,7 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+          plugin_id: node_type
       defaults:
         fields: false
         filters: false
@@ -85,5 +86,6 @@ display:
             all: all
             test_bundle: test_bundle
             test_bundle_2: test_bundle_2
+          plugin_id: bundle
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null

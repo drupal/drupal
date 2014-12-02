@@ -90,7 +90,7 @@ display:
         type: tab
         title: 'Test contextual link'
         description: ''
-        name: tools
+        menu_name: tools
         weight: 0
         context: '1'
       field_langcode: '***LANGUAGE_language_content***'

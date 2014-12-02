@@ -103,6 +103,7 @@ display:
           empty_zero: false
           hide_alter_empty: true
           link_to_node: true
+          plugin_id: node
       filters:
         uid_touch_tracker:
           id: uid_touch_tracker

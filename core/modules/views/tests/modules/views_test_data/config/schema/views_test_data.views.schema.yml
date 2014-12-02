@@ -1,0 +1,28 @@
+# Schema for the views plugins of the Views test data module.
+
+views.style.mapping_test:
+  type: views_style
+  label: 'Mapping test style'
+  mapping:
+    mapping:
+      type: mapping
+      label: 'Mapping'
+      mapping:
+        name_field:
+          type: string
+          label: 'Name field'
+        title_field:
+          type: string
+          label: 'Title field'
+        numeric_field:
+          type: sequence
+          label: 'Numeric fields'
+          sequence:
+            - type: string
+              label: 'Numeric field'
+        toggle_numeric_field:
+          type: boolean
+          label: 'Toggle numeric field'
+        toggle_title_field:
+          type: boolean
+          label: 'Toggle title field'

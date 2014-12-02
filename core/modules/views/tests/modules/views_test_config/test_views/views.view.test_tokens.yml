@@ -16,7 +16,6 @@ display:
       defaults:
         fields: false
         pager: false
-        pager_options: false
         sorts: false
       fields:
         age:
@@ -41,7 +40,6 @@ display:
         type: full
         options:
           items_per_page: 10
-      pager_options: {  }
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
     display_plugin: default

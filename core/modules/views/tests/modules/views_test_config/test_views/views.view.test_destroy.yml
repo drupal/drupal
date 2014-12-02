@@ -23,21 +23,18 @@ display:
           default_argument_type: fixed
           field: created_day
           id: created_day
-          style_plugin: default_summary
           table: node_field_data
           plugin_id: date_day
         created_fulldate:
           default_argument_type: fixed
           field: created_fulldate
           id: created_fulldate
-          style_plugin: default_summary
           table: node_field_data
           plugin_id: date_fulldate
         created_month:
           default_argument_type: fixed
           field: created_month
           id: created_month
-          style_plugin: default_summary
           table: node_field_data
           plugin_id: date_month
       cache:

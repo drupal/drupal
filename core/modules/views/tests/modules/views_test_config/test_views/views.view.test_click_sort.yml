@@ -2,7 +2,6 @@ langcode: und
 status: true
 dependencies: {  }
 id: test_click_sort
-label: {  }
 module: views
 description: ''
 tag: ''
@@ -31,11 +30,10 @@ display:
           field: created
           label: created
           plugin_id: date
-      display_options:
-        access:
-          type: none
-        cache:
-          type: none
+      access:
+        type: none
+      cache:
+        type: none
       style:
         type: table
         options:

@@ -154,6 +154,9 @@ views_display:
         exposed_form:
           type: boolean
           label: 'Exposed form style'
+        exposed_form_options:
+          type: boolean
+          label: 'Exposed form options'
         link_display:
           type: boolean
           label: 'Link display'
@@ -190,6 +193,12 @@ views_display:
         pager_options:
           type: boolean
           label: 'Pager options'
+        header:
+          type: boolean
+          label: 'Header'
+        footer:
+          type: boolean
+          label: 'Footer'
     relationships:
       type: sequence
       label: 'Relationships'
@@ -260,6 +269,9 @@ views_display:
         contexts:
           type: sequence
           label: 'Cache contexts'
+    exposed_block:
+      type: boolean
+      label: 'Put the exposed form in a block'
 
 views_sort:
   type: views_handler

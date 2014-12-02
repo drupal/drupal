@@ -99,10 +99,10 @@ class ViewEntityDependenciesTest extends ViewUnitTestBase {
         // The argument handler has an explicit dependency on views_test_data.
         'views_test_data',
       ],
-      'test_dependency' => [
-        'access',
-        'row',
-        'style',
+      'content' => [
+        'RowTest',
+        'StaticTest',
+        'StyleTest',
       ]
     ];
     foreach ($this::$testViews as $view_id) {

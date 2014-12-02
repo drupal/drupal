@@ -56,11 +56,10 @@ display:
           table: comment_field_data
           plugin_id: standard
         uid:
-          admin_label: ''
+          admin_label: 'Author'
           field: uid
           group_type: group
           id: uid
-          label: author
           relationship: node
           required: false
           table: node_field_data

@@ -21,13 +21,11 @@ display:
       defaults:
         fields: false
         pager: false
-        pager_options: false
         sorts: false
       pager:
         options:
           offset: 0
         type: none
-      pager_options: {  }
       row:
         type: 'entity:node'
         options:

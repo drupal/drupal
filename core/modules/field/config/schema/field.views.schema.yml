@@ -26,18 +26,24 @@ views.field.field:
     type:
       type: string
       label: 'Formatter'
-    field_api_classes:
-      type: boolean
-      label: 'Use field template'
+    settings:
+      type: sequence
+      label: 'Settings'
+      sequence:
+        - type: string
+          label: 'Setting'
+    group_column:
+      type: string
+      label: 'Group by column'
+    group_columns:
+      type: sequence
+      label: 'Group by columns'
+      sequence:
+        - type: string
+          label: 'Column'
     group_rows:
       type: boolean
       label: 'Display all values in the same row'
-    multi_type:
-      type: string
-      label: 'Display type'
-    separator:
-      type: label
-      label: 'Separator'
     delta_limit:
       type: string
       label: 'Field'
@@ -50,6 +56,15 @@ views.field.field:
     delta_first_last:
       type: boolean
       label: 'First and last only'
+    multi_type:
+      type: string
+      label: 'Display type'
+    separator:
+      type: label
+      label: 'Separator'
+    field_api_classes:
+      type: boolean
+      label: 'Use field template'
 
 views.filter.field_list:
   type: views.filter.many_to_one

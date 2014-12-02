@@ -3,8 +3,8 @@ status: true
 dependencies:
   module:
     - views_test_data
-  test_dependency:
-    - access
+  content:
+    - StaticTest
 id: test_page_display_route
 label: ''
 module: views
@@ -19,7 +19,6 @@ display:
       defaults:
         fields: false
         pager: false
-        pager_options: false
         sorts: false
       fields:
         id:

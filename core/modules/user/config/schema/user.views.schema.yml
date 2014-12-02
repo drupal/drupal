@@ -129,6 +129,17 @@ views.field.user_bulk_form:
   type: views_field_bulk_form
   label: 'User operations bulk form'
 
+views.field.user_data:
+  type: views_field
+  label: 'User data field'
+  mapping:
+    data_module:
+      type: string
+      label: 'Module name'
+    data_name:
+      type: string
+      label: 'Name'
+
 views.filter.user_current:
   type: views.filter.boolean
   label: 'Current user'

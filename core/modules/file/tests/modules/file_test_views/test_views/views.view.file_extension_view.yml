@@ -15,7 +15,6 @@ display:
       defaults:
         fields: false
         pager: false
-        pager_options: false
         sorts: false
       fields:
         age:
@@ -40,7 +39,6 @@ display:
         options:
           offset: 0
         type: none
-      pager_options: {  }
       sorts:
         id:
           field: id

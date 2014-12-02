@@ -15,7 +15,6 @@ display:
       defaults:
         fields: false
         pager: false
-        pager_options: false
         sorts: false
       fields:
         id:
@@ -28,7 +27,6 @@ display:
         options:
           offset: 0
         type: none
-      pager_options: {  }
       sorts:
         id:
           field: id
@@ -43,7 +41,7 @@ display:
           id: view
           table: views
           view_to_insert: 'test_simple_argument:default'
-          inherit_arguments: 1
+          inherit_arguments: true
           plugin_id: view
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null

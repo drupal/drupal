@@ -679,7 +679,6 @@ display:
       display_description: ''
       defaults:
         pager: true
-        pager_options: true
         relationships: false
       relationships:
         fid:
@@ -704,7 +703,6 @@ display:
       defaults:
         empty: false
         pager: false
-        pager_options: false
         filters: false
         filter_groups: false
         fields: false
@@ -732,7 +730,6 @@ display:
             items_per_page_options_all_label: '- All -'
             offset: false
             offset_label: Offset
-      pager_options: false
       filters: {  }
       filter_groups:
         operator: AND

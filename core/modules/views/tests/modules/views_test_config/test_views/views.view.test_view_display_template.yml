@@ -19,7 +19,6 @@ display:
     position: 1
     display_options:
       access: {  }
-      cache: {  }
       query: {  }
       pager: {  }
       style:

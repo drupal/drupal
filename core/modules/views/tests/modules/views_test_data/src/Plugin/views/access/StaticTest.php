@@ -47,7 +47,7 @@ class StaticTest extends AccessPluginBase {
    */
   public function calculateDependencies() {
     return [
-      'test_dependency' => ['access'],
+      'content' => ['StaticTest'],
     ];
   }
 

@@ -23,7 +23,6 @@ display:
           field: 'null'
           id: 'null'
           must_not_be: false
-          style_plugin: default_summary
           table: views
           plugin_id: 'null'
       cache:

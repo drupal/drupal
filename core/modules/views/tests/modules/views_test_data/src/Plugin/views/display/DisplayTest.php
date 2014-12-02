@@ -145,7 +145,7 @@ class DisplayTest extends DisplayPluginBase {
    */
   public function calculateDependencies() {
     return parent::calculateDependencies() + [
-      'test_dependency' => ['display'],
+      'content' => ['DisplayTest'],
     ];
   }
 

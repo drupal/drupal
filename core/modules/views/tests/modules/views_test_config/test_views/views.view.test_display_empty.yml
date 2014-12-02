@@ -15,7 +15,6 @@ display:
       defaults:
         fields: false
         pager: false
-        pager_options: false
         sorts: false
       fields:
         id:
@@ -28,7 +27,6 @@ display:
         options:
           offset: 0
         type: none
-      pager_options: {  }
       header:
         area:
           field: area

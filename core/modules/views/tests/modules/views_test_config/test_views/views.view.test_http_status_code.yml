@@ -49,16 +49,18 @@ display:
             html: false
           hide_empty: false
           empty_zero: false
-          link_to_node: '1'
+          link_to_node: true
+          plugin_id: node
       filters:
         status:
-          value: '1'
+          value: true
           table: node
           field: status
           id: status
           expose:
             operator: '0'
           group: 1
+          plugin_id: boolean
       sorts:
         created:
           id: created
@@ -75,7 +77,8 @@ display:
           admin_label: ''
           label: ''
           empty: true
-          status_code: '200'
+          status_code: 200
+          plugin_id: http_status_code
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
   page_1:

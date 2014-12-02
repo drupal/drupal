@@ -53,6 +53,7 @@ display:
           hide_empty: false
           empty_zero: false
           link_to_node: true
+          plugin_id: node
         timestamp:
           id: timestamp
           table: node_counter
@@ -104,6 +105,7 @@ display:
           date_format: html_year
           custom_date_format: ''
           timezone: ''
+          plugin_id: date
         totalcount:
           id: totalcount
           table: node_counter
@@ -153,7 +155,7 @@ display:
           empty_zero: false
           hide_alter_empty: true
           set_precision: false
-          precision: false
+          precision: 0
           decimal: .
           separator: ''
           format_plural: false
@@ -161,6 +163,7 @@ display:
           format_plural_plural: '@count'
           prefix: ''
           suffix: ''
+          plugin_id: numeric
         daycount:
           id: daycount
           table: node_counter
@@ -210,7 +213,7 @@ display:
           empty_zero: false
           hide_alter_empty: true
           set_precision: false
-          precision: false
+          precision: 0
           decimal: .
           separator: ''
           format_plural: false
@@ -218,6 +221,7 @@ display:
           format_plural_plural: '@count'
           prefix: ''
           suffix: ''
+          plugin_id: numeric
       filters:
         status:
           value: true
@@ -227,6 +231,7 @@ display:
           expose:
             operator: ''
           group: 1
+          plugin_id: boolean
       sorts:
         created:
           id: created

@@ -87,7 +87,7 @@ class RowTest extends RowPluginBase {
    */
   public function calculateDependencies() {
     return [
-      'test_dependency' => ['row'],
+      'content' => ['RowTest'],
     ];
   }
 

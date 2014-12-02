@@ -94,8 +94,9 @@ display:
           table: views
           field: area
           empty: true
-          content: 'No people available.'
-          format: plain_text
+          content:
+            value: 'No people available.'
+            format: plain_text
           plugin_id: text
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null

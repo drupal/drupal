@@ -30,7 +30,7 @@ display:
             word_boundary: true
           empty_zero: false
           field: id
-          group_type: {  }
+          group_type: group
           hide_empty: false
           id: id
           table: entity_test

@@ -23,6 +23,10 @@ views.filter.search:
       type: string
       label: 'On empty input'
 
+views.filter_value.search_keywords:
+  type: string
+  label: 'Search keywords'
+
 views.row.search_view:
   type: views_row
   label: 'Source link'

@@ -20,7 +20,8 @@ display:
     display_options:
       access:
         type: perm
-        perm: 'access user profiles'
+        options:
+          perm: 'access user profiles'
       cache:
         type: none
       query:

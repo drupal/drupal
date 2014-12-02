@@ -116,7 +116,7 @@ class StyleTest extends StylePluginBase {
    */
   public function calculateDependencies() {
     return [
-      'test_dependency' => ['style'],
+      'content' => ['StyleTest'],
     ];
   }
 

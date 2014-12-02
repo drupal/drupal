@@ -15,7 +15,6 @@ display:
       defaults:
         fields: false
         pager: false
-        pager_options: false
         sorts: false
         arguments: false
       fields:
@@ -38,7 +37,6 @@ display:
         options:
           offset: 0
         type: none
-      pager_options: {  }
       sorts:
         id:
           field: id
@@ -49,39 +47,18 @@ display:
       arguments:
         age:
           default_action: ignore
-          style_plugin: default_summary
-          style_options: {  }
-          wildcard: all
-          wildcard_substitution: All
           title: ''
           default_argument_type: fixed
-          default_argument: ''
           validate:
             type: none
             fail: 'not found'
           break_phrase: false
-          not: '0'
+          not: false
           id: age
           table: views_test_data
           field: age
-          validate_user_argument_type: uid
-          validate_user_roles:
-            2: '0'
           relationship: none
-          default_options_div_prefix: ''
-          default_argument_user: '0'
-          default_argument_fixed: ''
-          default_argument_php: ''
-          validate_argument_node_type:
-            page: '0'
-            story: '0'
-          validate_argument_node_access: '0'
-          validate_argument_nid_type: nid
-          validate_argument_vocabulary: {  }
-          validate_argument_type: tid
-          validate_argument_transform: '0'
-          validate_user_restrict_roles: '0'
-          validate_argument_php: ''
+          plugin_id: numeric
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
     display_plugin: default

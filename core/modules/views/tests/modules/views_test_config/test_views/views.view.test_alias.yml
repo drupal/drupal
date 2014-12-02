@@ -15,7 +15,8 @@ display:
   default:
     display_options:
       access:
-        perm: 'access user profiles'
+        options:
+          perm: 'access user profiles'
         type: perm
       cache:
         type: none
@@ -87,7 +88,6 @@ display:
         type: views_query
       row:
         type: fields
-      style_plugin: default
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
     display_plugin: default

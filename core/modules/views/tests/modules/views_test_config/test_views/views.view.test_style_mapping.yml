@@ -17,7 +17,6 @@ display:
       defaults:
         fields: false
         pager: false
-        pager_options: false
         sorts: false
       fields:
         age:
@@ -42,7 +41,6 @@ display:
         options:
           offset: 0
         type: none
-      pager_options: {  }
       sorts:
         id:
           field: id
@@ -59,8 +57,8 @@ display:
             numeric_field:
               age: age
             title_field: name
-            toggle_numeric_field: '1'
-            toggle_title_field: '1'
+            toggle_numeric_field: true
+            toggle_title_field: true
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
     display_plugin: default

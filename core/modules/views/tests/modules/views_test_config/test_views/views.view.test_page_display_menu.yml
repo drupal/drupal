@@ -15,7 +15,6 @@ display:
       defaults:
         fields: false
         pager: false
-        pager_options: false
         sorts: false
       fields:
         id:
@@ -101,7 +100,7 @@ display:
         title: 'Test child'
         parent: system.admin
         description: ''
-        name: tools
+        menu_name: tools
         weight: 0
         context: '0'
       defaults:
@@ -121,7 +120,7 @@ display:
         title: 'Test child'
         parent: system.admin
         description: ''
-        name: not-existing-menu-name
+        menu_name: not-existing-menu-name
         weight: 0
         context: '0'
       defaults:

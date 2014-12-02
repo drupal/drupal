@@ -42,11 +42,10 @@ display:
         type: views_query
       relationships:
         tid_representative:
-          admin_label: ''
+          admin_label: 'Representative node'
           field: tid_representative
           group_type: group
           id: tid_representative
-          label: 'Representative node'
           relationship: none
           required: false
           subquery_namespace: ''

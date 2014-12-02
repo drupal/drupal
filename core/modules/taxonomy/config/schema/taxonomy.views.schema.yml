@@ -79,17 +79,13 @@ views.argument_default.taxonomy_tid:
       sequence:
         - type: string
           label: 'Vocabulary'
+    anyall:
+      type: string
+      label: 'Multiple-value handling'
 
 views.field.taxonomy_term_language:
-  type: views_field
+  type: views.field.taxonomy
   label: 'Taxonomy language'
-  mapping:
-    link_to_taxonomy:
-      type: boolean
-      label: 'Link this field to its taxonomy term page'
-    convert_spaces:
-      type: boolean
-      label: 'Convert spaces in term names to hyphens'
 
 views.field.term_link_edit:
   type: views_field
@@ -109,7 +105,6 @@ views.field.taxonomy:
     convert_spaces:
       type: boolean
       label: 'Convert spaces in term names to hyphens'
-
 
 views.field.taxonomy_index_tid:
   type: views_field
@@ -135,18 +130,9 @@ views.field.taxonomy_index_tid:
           label: 'Vocabulary'
 
 views.filter.taxonomy_index_tid:
-  type: views.filter.in_operator
+  type: views.filter.many_to_one
   label: 'Taxonomy term ID'
   mapping:
-    operator:
-      type: string
-      label: 'Operator'
-    value:
-      type: sequence
-      label: 'Values'
-      sequence:
-        - type: string
-          label: 'Value'
     vid:
       type: string
       label: 'Vocabulary'
@@ -156,6 +142,12 @@ views.filter.taxonomy_index_tid:
     hierarchy:
       type: boolean
       label: 'Show hierarchy in dropdown'
+    limit:
+      type: boolean
+      label: 'Limit to vocabulary'
+    error_message:
+      type: boolean
+      label: 'Display error message'
 
 views.filter.taxonomy_index_tid_depth:
   type: views.filter.in_operator

@@ -16,7 +16,8 @@ display:
   default:
     display_options:
       access:
-        perm: 'access user profiles'
+        options:
+          perm: 'access user profiles'
         type: perm
       cache:
         type: none
@@ -52,11 +53,10 @@ display:
         type: views_query
       relationships:
         uid_representative:
-          admin_label: ''
+          admin_label: 'Representative node'
           field: uid_representative
           group_type: group
           id: uid_representative
-          label: 'Representative node'
           relationship: none
           required: false
           subquery_namespace: ''

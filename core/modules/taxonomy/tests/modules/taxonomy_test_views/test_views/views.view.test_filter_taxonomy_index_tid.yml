@@ -112,6 +112,7 @@ display:
           element_default_classes: true
           empty: ''
           hide_alter_empty: true
+          plugin_id: node
       filters:
         status:
           value: true
@@ -121,6 +122,7 @@ display:
           expose:
             operator: '0'
           group: 1
+          plugin_id: boolean
         tid:
           id: tid
           table: taxonomy_index

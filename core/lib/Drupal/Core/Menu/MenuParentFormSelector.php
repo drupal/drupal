@@ -84,18 +84,21 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
     $options = $this->getParentSelectOptions($id, $menus);
     // If no options were found, there is nothing to select.
     if ($options) {
+      $element = array(
+        '#type' => 'select',
+        '#options' => $options,
+      );
       if (!isset($options[$menu_parent])) {
-        // Try putting it at the top level in the current menu.
+        // The requested menu parent cannot be found in the menu anymore. Try
+        // setting it to the top level in the current menu.
         list($menu_name, $parent) = explode(':', $menu_parent, 2);
         $menu_parent = $menu_name . ':';
       }
       if (isset($options[$menu_parent])) {
-        return array(
-          '#type' => 'select',
-          '#options' => $options,
-          '#default_value' => $menu_parent,
-        );
+        // Only provide the default value if it is valid among the options.
+        $element += array('#default_value' => $menu_parent);
       }
+      return $element;
     }
     return array();
   }

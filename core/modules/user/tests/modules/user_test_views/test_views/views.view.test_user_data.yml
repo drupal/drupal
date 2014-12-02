@@ -20,7 +20,8 @@ display:
     display_options:
       access:
         type: perm
-        perm: 'access user profiles'
+        options:
+          perm: 'access user profiles'
       cache:
         type: none
       query:
@@ -50,9 +51,9 @@ display:
             html: false
           hide_empty: false
           empty_zero: false
-          link_to_user: '1'
-          overwrite_anonymous: '0'
-          plugin_id: string
+          link_to_user: true
+          overwrite_anonymous: false
+          plugin_id: user_name
         data:
           id: data
           table: users
@@ -107,7 +108,7 @@ display:
       filters:
         uid:
           value:
-            - '2'
+            value: '2'
           table: users
           field: uid
           id: uid
