@@ -28,6 +28,11 @@ function template_preprocess_views_view(&$variables) {
   $variables['css_name'] = Html::cleanCssIdentifier($id);
   $variables['id'] = $id;
   $variables['display_id'] = $view->current_display;
+  // Override the title to be empty by default. For example, if viewing a page
+  // view, 'title' will already be populated in $variables. This can still be
+  // overridden to use a title when needed. See views_ui_preprocess_views_view()
+  // for an example of this.
+  $variables['title'] = '';
 
   // Basic classes.
   $variables['attributes']['class'] = array();

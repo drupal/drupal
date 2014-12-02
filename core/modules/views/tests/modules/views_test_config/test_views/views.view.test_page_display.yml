@@ -12,6 +12,7 @@ core: '8'
 display:
   default:
     display_options:
+      title: 'Test page display'
       defaults:
         fields: false
         pager: false
