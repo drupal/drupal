@@ -265,11 +265,11 @@ function _module_build_dependencies($files) {
 /**
  * Determines whether a given module exists.
  *
- * @param $module
+ * @param string $module
  *   The name of the module (without the .module extension).
  *
- * @return
- *   TRUE if the module is both installed and enabled.
+ * @return bool
+ *   TRUE if the module is both installed and enabled, FALSE otherwise.
  */
 function module_exists($module) {
   $list = module_list();
