@@ -8,6 +8,7 @@
 namespace Drupal\Core\Extension;
 
 use Drupal\Component\Serialization\Yaml;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DrupalKernelInterface;
 
@@ -399,6 +400,14 @@ class ModuleInstaller implements ModuleInstallerInterface {
 
     // Let other modules react.
     $this->moduleHandler->invokeAll('modules_uninstalled', array($module_list));
+
+    // Flush all persistent caches.
+    // Any cache entry might implicitly depend on the uninstalled modules,
+    // so clear all of them explicitly.
+    $this->moduleHandler->invokeAll('cache_flush');
+    foreach (Cache::getBins() as $service_id => $cache_backend) {
+      $cache_backend->deleteAll();
+    }
 
     return TRUE;
   }

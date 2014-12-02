@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Module;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Component\Utility\String;
 use Drupal\simpletest\WebTestBase;
 
@@ -74,8 +75,19 @@ class UninstallTest extends WebTestBase {
       // labels.
       $this->assertRaw('<h3>' . $entity_type->getLabel() . '</h3>');
     }
+
+    // Set a unique cache entry to be able to test whether all caches are
+    // cleared during the uninstall.
+    \Drupal::cache()->set('uninstall_test', 'test_uninstall_page', Cache::PERMANENT);
+    $cached = \Drupal::cache()->get('uninstall_test');
+    $this->assertEqual($cached->data, 'test_uninstall_page', String::format('Cache entry found: @bin', array('@bin' => $cached->data)));
+
     $this->drupalPostForm(NULL, NULL, t('Uninstall'));
     $this->assertText(t('The selected modules have been uninstalled.'), 'Modules status has been updated.');
     $this->assertNoRaw('&lt;label', 'The page does not have double escaped HTML tags.');
+
+    // Make sure our unique cache entry is gone.
+    $cached = \Drupal::cache()->get('uninstall_test');
+    $this->assertFalse($cached, 'Cache entry not found');
   }
 }
