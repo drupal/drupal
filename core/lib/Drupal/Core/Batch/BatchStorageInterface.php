@@ -7,7 +7,9 @@
 
 namespace Drupal\Core\Batch;
 
-
+/**
+ * Defines a common interface for batch storage operations.
+ */
 interface BatchStorageInterface {
 
   /**
@@ -38,7 +40,7 @@ interface BatchStorageInterface {
   public function update(array $batch);
 
   /**
-   * Loads a batch.
+   * Deletes a batch.
    *
    * @param int $id
    *   The ID of the batch to delete.
