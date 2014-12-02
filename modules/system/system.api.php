@@ -1890,9 +1890,8 @@ function hook_init() {
 /**
  * Define image toolkits provided by this module.
  *
- * The file which includes each toolkit's functions must be declared as part of
- * the files array in the module .info file so that the registry will find and
- * parse it.
+ * The file which includes each toolkit's functions must be included in this
+ * hook.
  *
  * The toolkit's functions must be named image_toolkitname_operation().
  * where the operation may be:
