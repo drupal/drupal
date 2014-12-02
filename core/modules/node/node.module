@@ -138,10 +138,6 @@ function node_theme() {
     'node' => array(
       'render element' => 'elements',
     ),
-    'node_search_admin' => array(
-      'render element' => 'form',
-      'function' => 'theme_node_search_admin',
-    ),
     'node_add_list' => array(
       'variables' => array('content' => NULL),
       'file' => 'node.pages.inc',
@@ -727,40 +723,6 @@ function node_user_predelete($account) {
   foreach ($revisions as $revision) {
     node_revision_delete($revision);
   }
-}
-
-/**
- * Returns HTML for the content ranking part of the search settings admin page.
- *
- * @param $variables
- *   An associative array containing:
- *   - form: A render element representing the form.
- *
- * @see node_search_admin()
- * @ingroup themeable
- */
-function theme_node_search_admin($variables) {
-  $form = $variables['form'];
-
-  $output = drupal_render($form['info']);
-
-  $header = array(t('Factor'), t('Influence'));
-  foreach (Element::children($form['factors']) as $key) {
-    $row = array();
-    $row[] = $form['factors'][$key]['#title'];
-    $form['factors'][$key]['#title_display'] = 'invisible';
-    $row[] = drupal_render($form['factors'][$key]);
-    $rows[] = $row;
-  }
-  $table = array(
-    '#type' => 'table',
-    '#header' => $header,
-    '#rows' => $rows,
-  );
-  $output .= drupal_render($table);
-
-  $output .= drupal_render_children($form);
-  return $output;
 }
 
 /**

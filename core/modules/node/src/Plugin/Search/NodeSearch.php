@@ -597,19 +597,27 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       '#title' => t('Content ranking'),
       '#open' => TRUE,
     );
-    $form['content_ranking']['#theme'] = 'node_search_admin';
     $form['content_ranking']['info'] = array(
       '#markup' => '<p><em>' . $this->t('Influence is a numeric multiplier used in ordering search results. A higher number means the corresponding factor has more influence on search results; zero means the factor is ignored. Changing these numbers does not require the search index to be rebuilt. Changes take effect immediately.') . '</em></p>'
+    );
+    // Prepare table.
+    $header = [$this->t('Factor'), $this->t('Influence')];
+    $form['content_ranking']['rankings'] = array(
+      '#type' => 'table',
+      '#header' => $header,
     );
 
     // Note: reversed to reflect that higher number = higher ranking.
     $range = range(0, 10);
     $options = array_combine($range, $range);
     foreach ($this->getRankings() as $var => $values) {
-      $form['content_ranking']['factors']["rankings_$var"] = array(
-        '#title' => $values['title'],
+      $form['content_ranking']['rankings'][$var]['name'] = array(
+        '#markup' => $values['title'],
+      );
+      $form['content_ranking']['rankings'][$var]['value'] = array(
         '#type' => 'select',
         '#options' => $options,
+        '#attributes' => ['aria-label' => $this->t("Influence of '@title'", ['@title' => $values['title']])],
         '#default_value' => isset($this->configuration['rankings'][$var]) ? $this->configuration['rankings'][$var] : 0,
       );
     }
@@ -621,8 +629,8 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     foreach ($this->getRankings() as $var => $values) {
-      if (!$form_state->isValueEmpty("rankings_$var")) {
-        $this->configuration['rankings'][$var] = $form_state->getValue("rankings_$var");
+      if (!$form_state->isValueEmpty(['rankings', $var, 'value'])) {
+        $this->configuration['rankings'][$var] = $form_state->getValue(['rankings', $var, 'value']);
       }
       else {
         unset($this->configuration['rankings'][$var]);
