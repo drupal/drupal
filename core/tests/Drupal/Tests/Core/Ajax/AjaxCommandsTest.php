@@ -24,8 +24,6 @@ use Drupal\Core\Ajax\RemoveCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Ajax\RestripeCommand;
 use Drupal\Core\Ajax\SettingsCommand;
-use Drupal\Core\Ajax\OpenDialogCommand;
-use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Ajax\CloseDialogCommand;
 use Drupal\Core\Ajax\CloseModalDialogCommand;
 use Drupal\Core\Ajax\SetDialogOptionCommand;
@@ -299,10 +297,17 @@ class AjaxCommandsTest extends UnitTestCase {
    * Tests that OpenDialogCommand objects can be constructed and rendered.
    */
   public function testOpenDialogCommand() {
-    $command = new TestOpenDialogCommand('#some-dialog', 'Title', '<p>Text!</p>', array(
-      'url' => FALSE,
-      'width' => 500,
-    ));
+    $command = $this->getMockBuilder('Drupal\Core\Ajax\OpenDialogCommand')
+      ->setConstructorArgs(array(
+        '#some-dialog', 'Title', '<p>Text!</p>', array(
+          'url' => FALSE,
+          'width' => 500,
+        )
+      ))
+      // This method calls drupal_render which isn't available. We want it to do
+      // nothing so we mock it to return null.
+      ->setMethods(array('drupalAttachLibrary'))
+      ->getMock();
 
     $expected = array(
       'command' => 'openDialog',
@@ -323,10 +328,17 @@ class AjaxCommandsTest extends UnitTestCase {
    * Tests that OpenModalDialogCommand objects can be constructed and rendered.
    */
   public function testOpenModalDialogCommand() {
-    $command = new TestOpenModalDialogCommand('Title', '<p>Text!</p>', array(
-      'url' => 'example',
-      'width' => 500,
-    ));
+    $command = $this->getMockBuilder('Drupal\Core\Ajax\OpenModalDialogCommand')
+      ->setConstructorArgs(array(
+        'Title', '<p>Text!</p>', array(
+          'url' => 'example',
+          'width' => 500,
+        )
+      ))
+      // This method calls drupal_render which isn't available. We want it to do
+      // nothing so we mock it to return null.
+      ->setMethods(array('drupalAttachLibrary'))
+      ->getMock();
 
     $expected = array(
       'command' => 'openDialog',
@@ -412,30 +424,6 @@ class AjaxCommandsTest extends UnitTestCase {
     );
 
     $this->assertEquals($command->render(), $expected, "RedirectCommand::render() didn't return the expected command array.");
-  }
-
-}
-
-/**
- * Wraps OpenModalDialogCommand::drupalAttachLibrary().
- *
- * {@inheritdoc}
- */
-class TestOpenModalDialogCommand extends OpenModalDialogCommand {
-
-  protected function drupalAttachLibrary($name) {
-  }
-
-}
-
-/**
- * Wraps OpenDialogCommand::drupalAttachLibrary().
- *
- * {@inheritdoc}
- */
-class TestOpenDialogCommand extends OpenDialogCommand {
-
-  protected function drupalAttachLibrary($name) {
   }
 
 }
