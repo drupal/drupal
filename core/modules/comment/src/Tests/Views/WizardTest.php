@@ -68,7 +68,7 @@ class WizardTest extends WizardTestBase {
         $options[] = $item->attributes()->value;
       }
     }
-    $expected_options = array('comment', 'fields');
+    $expected_options = array('entity:comment', 'fields');
     $this->assertEqual($options, $expected_options);
 
     $view['id'] = strtolower($this->randomMachineName(16));

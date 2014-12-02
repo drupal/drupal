@@ -22,7 +22,7 @@ class RowPluginTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'comment');
+  public static $modules = array('node');
 
   /**
    * Views used by this test.
@@ -30,13 +30,6 @@ class RowPluginTest extends NodeTestBase {
    * @var array
    */
   public static $testViews = array('test_node_row_plugin');
-
-  /**
-   * Contains all comments keyed by node used by the test.
-   *
-   * @var array
-   */
-  protected $comments;
 
   /**
    * Contains all nodes used by this test.
@@ -49,10 +42,8 @@ class RowPluginTest extends NodeTestBase {
     parent::setUp();
 
     $this->drupalCreateContentType(array('type' => 'article'));
-    // Create comment field on article.
-    $this->container->get('comment.manager')->addDefaultField('node', 'article');
 
-    // Create two nodes, with 5 comments on all of them.
+    // Create two nodes.
     for ($i = 0; $i < 2; $i++) {
       $this->nodes[] = $this->drupalCreateNode(
         array(
@@ -67,36 +58,6 @@ class RowPluginTest extends NodeTestBase {
         )
       );
     }
-
-    foreach ($this->nodes as $node) {
-      for ($i = 0; $i < 5; $i++) {
-        $this->comments[$node->id()][] = $this->drupalCreateComment(array('entity_id' => $node->id()));
-      }
-    }
-  }
-
-  /**
-   * Helper function to create a random comment.
-   *
-   * @param array $settings
-   *   (optional) An associative array of settings for the comment, as used in
-   *   entity_create().
-   *
-   * @return \Drupal\comment\Entity\Comment
-   *   Returns the created and saved comment.
-   */
-  public function drupalCreateComment(array $settings = array()) {
-    $settings += array(
-      'subject' => $this->randomMachineName(),
-      'entity_id' => $settings['entity_id'],
-      'field_name' => 'comment',
-      'entity_type' => 'node',
-      'comment_body' => $this->randomMachineName(40),
-    );
-
-    $comment = entity_create('comment', $settings);
-    $comment->save();
-    return $comment;
   }
 
   /**

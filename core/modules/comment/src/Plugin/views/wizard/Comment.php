@@ -54,42 +54,9 @@ class Comment extends WizardPluginBase {
    */
   protected function rowStyleOptions() {
     $options = array();
-    $options['comment'] = $this->t('comments');
+    $options['entity:comment'] = $this->t('comments');
     $options['fields'] = $this->t('fields');
     return $options;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function pageDisplayOptions(array $form, FormStateInterface $form_state) {
-    $display_options = parent::pageDisplayOptions($form, $form_state);
-    $row_plugin = $form_state->getValue(array('page', 'style', 'row_plugin'));
-    $row_options = $form_state->getValue(array('page', 'style', 'row_options'), array());
-    $this->display_options_row($display_options, $row_plugin, $row_options);
-    return $display_options;
-  }
-
-  /**
-   * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::blockDisplayOptions().
-   */
-  protected function blockDisplayOptions(array $form, FormStateInterface $form_state) {
-    $display_options = parent::blockDisplayOptions($form, $form_state);
-    $row_plugin = $form_state->getValue(array('block', 'style', 'row_plugin'));
-    $row_options = $form_state->getValue(array('block', 'style', 'row_options'), array());
-    $this->display_options_row($display_options, $row_plugin, $row_options);
-    return $display_options;
-  }
-
-  /**
-   * Set the row style and row style plugins to the display_options.
-   */
-  protected  function display_options_row(&$display_options, $row_plugin, $row_options) {
-    switch ($row_plugin) {
-      case 'comment':
-        $display_options['row']['type'] = 'entity:comment';
-        break;
-    }
   }
 
   /**

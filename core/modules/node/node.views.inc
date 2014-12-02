@@ -22,17 +22,6 @@ function node_views_data_alter(&$data) {
 }
 
 /**
- * Implements hook_preprocess_node().
- */
-function node_row_node_view_preprocess_node(&$variables) {
-  $options = $variables['view']->rowPlugin->options;
-
-  if (!$options['links']) {
-    unset($variables['content']['links']);
-  }
-}
-
-/**
  * Implements hook_views_wizard().
  */
 function node_views_wizard() {

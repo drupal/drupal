@@ -227,7 +227,6 @@ function views_theme($existing, $type, $theme, $path) {
  * node portion of the theme registry.
  */
 function views_preprocess_node(&$variables) {
-  \Drupal::moduleHandler()->loadInclude('node', 'views.inc');
   // The 'view' attribute of the node is added in
   // \Drupal\views\Plugin\views\row\EntityRow::preRender().
   if (!empty($variables['node']->view) && $variables['node']->view->storage->id()) {
