@@ -34,7 +34,7 @@ function block_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dt>' . t('Controlling visibility') . '</dt>';
       $output .= '<dd>' . t('You can control the visibility of a block by restricting it to specific pages, content types, and/or roles by setting the appropriate options under <em>Visibility settings</em> of the block configuration.') . '</dd>';
       $output .= '<dt>' . t('Adding custom blocks') . '</dt>';
-      $output .= '<dd>' . t('You can add custom blocks, if the the <em>Custom Block</em> module is enabled on the <a href="!extend">Extend page</a>. For more information, see the <a href="!blockcontent-help">Custom Block help page</a>.', array('!extend' => \Drupal::url('system.modules_list'), '!blockcontent-help' => \Drupal::url('help.page', array('name' => 'block_content')))) . '</dd>';
+      $output .= '<dd>' . t('You can add custom blocks, if the <em>Custom Block</em> module is installed on the <a href="!extend">Extend page</a>. For more information, see the <a href="!blockcontent-help">Custom Block help page</a>.', array('!extend' => \Drupal::url('system.modules_list'), '!blockcontent-help' => \Drupal::url('help.page', array('name' => 'block_content')))) . '</dd>';
       $output .= '</dl>';
       return $output;
   }
@@ -108,7 +108,7 @@ function _block_rehash($theme = NULL) {
     // Disable blocks in invalid regions.
     if (!empty($region) && $region != BlockInterface::BLOCK_REGION_NONE && !isset($regions[$region]) && $status) {
       drupal_set_message(t('The block %info was assigned to the invalid region %region and has been disabled.', array('%info' => $block_id, '%region' => $region)), 'warning');
-      // Disabled modules are moved into the BlockInterface::BLOCK_REGION_NONE
+      // Disabled blocks are moved into the BlockInterface::BLOCK_REGION_NONE
       // later so no need to move the block to another region.
       $block->disable()->save();
     }

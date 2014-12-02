@@ -64,8 +64,9 @@ class BlockPluginCollection extends DefaultSingleLazyPluginCollection {
     }
     catch (PluginException $e) {
       $module = $this->configuration['provider'];
-      // Ignore blocks belonging to disabled modules, but re-throw valid
-      // exceptions when the module is enabled and the plugin is misconfigured.
+      // Ignore blocks belonging to uninstalled modules, but re-throw valid
+      // exceptions when the module is installed and the plugin is
+      // misconfigured.
       if (!$module || \Drupal::moduleHandler()->moduleExists($module)) {
         throw $e;
       }

@@ -15,7 +15,7 @@ namespace Drupal\block\Tests;
 class BlockSystemBrandingTest extends BlockTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

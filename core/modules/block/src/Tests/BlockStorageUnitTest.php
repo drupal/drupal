@@ -22,7 +22,7 @@ use Drupal\block\BlockInterface;
 class BlockStorageUnitTest extends DrupalUnitTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

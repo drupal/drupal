@@ -32,7 +32,7 @@ class DisplayBlockTest extends ViewTestBase {
   protected $strictConfigSchema = TRUE;
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

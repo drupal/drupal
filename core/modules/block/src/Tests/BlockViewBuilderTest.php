@@ -23,7 +23,7 @@ use Drupal\block\Entity\Block;
 class BlockViewBuilderTest extends DrupalUnitTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

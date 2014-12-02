@@ -19,7 +19,7 @@ use Drupal\simpletest\WebTestBase;
 class BlockLanguageCacheTest extends WebTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

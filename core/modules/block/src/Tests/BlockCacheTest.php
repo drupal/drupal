@@ -18,7 +18,7 @@ use Drupal\simpletest\WebTestBase;
 class BlockCacheTest extends WebTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

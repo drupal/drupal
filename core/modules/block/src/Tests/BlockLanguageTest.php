@@ -24,7 +24,7 @@ class BlockLanguageTest extends WebTestBase {
   protected $adminUser;
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

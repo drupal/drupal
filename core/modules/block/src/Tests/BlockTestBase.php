@@ -15,7 +15,7 @@ use Drupal\simpletest\WebTestBase;
 abstract class BlockTestBase extends WebTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

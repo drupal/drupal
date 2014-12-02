@@ -19,7 +19,7 @@ use Drupal\block\Entity\Block;
 class BlockInvalidRegionTest extends WebTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

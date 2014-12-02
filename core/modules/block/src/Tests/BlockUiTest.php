@@ -17,7 +17,7 @@ use Drupal\simpletest\WebTestBase;
 class BlockUiTest extends WebTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */
