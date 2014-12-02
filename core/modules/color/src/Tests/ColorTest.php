@@ -29,7 +29,7 @@ class ColorTest extends WebTestBase {
    *
    * @var \Drupal\user\UserInterface
    */
-  protected $big_user;
+  protected $bigUser;
 
   /**
    * An associative array of settings for themes.
@@ -55,7 +55,7 @@ class ColorTest extends WebTestBase {
     parent::setUp();
 
     // Create user.
-    $this->big_user = $this->drupalCreateUser(array('administer themes'));
+    $this->bigUser = $this->drupalCreateUser(array('administer themes'));
 
     // This tests the color module in Bartik.
     $this->themes = array(
@@ -110,7 +110,7 @@ class ColorTest extends WebTestBase {
       ->save();
     $settings_path = 'admin/appearance/settings/' . $theme;
 
-    $this->drupalLogin($this->big_user);
+    $this->drupalLogin($this->bigUser);
     $this->drupalGet($settings_path);
     $this->assertResponse(200);
     $this->assertUniqueText('Color set');
@@ -162,7 +162,7 @@ class ColorTest extends WebTestBase {
       ->save();
     $settings_path = 'admin/appearance/settings/bartik';
 
-    $this->drupalLogin($this->big_user);
+    $this->drupalLogin($this->bigUser);
     $edit['scheme'] = '';
 
     foreach ($this->colorTests as $color => $is_valid) {
