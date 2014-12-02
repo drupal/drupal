@@ -222,7 +222,7 @@ class ElementsTableSelectTest extends WebTestBase {
 
     \Drupal::formBuilder()->prepareForm($form_id, $form, $form_state);
 
-    drupal_process_form($form_id, $form, $form_state);
+    \Drupal::formBuilder()->processForm($form_id, $form, $form_state);
 
     $errors = $form_state->getErrors();
 

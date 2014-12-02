@@ -11,6 +11,7 @@ use Drupal\Core\Ajax\UpdateBuildIdCommand;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\system\FileAjaxForm;
+use Drupal\Core\Form\FormBuilderInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,13 +31,24 @@ class FormAjaxController implements ContainerInjectionInterface {
   protected $logger;
 
   /**
+   * The form builder.
+   *
+   * @var \Drupal\Core\Form\FormBuilderInterface
+   */
+  protected $formBuilder;
+
+  /**
    * Constructs a FormAjaxController object.
    *
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
+   *
+   * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
+   *   The form builder.
    */
-  public function __construct(LoggerInterface $logger) {
+  public function __construct(LoggerInterface $logger, FormBuilderInterface $form_builder) {
     $this->logger = $logger;
+    $this->formBuilder = $form_builder;
   }
 
   /**
@@ -44,7 +56,8 @@ class FormAjaxController implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('logger.factory')->get('ajax')
+      $container->get('logger.factory')->get('ajax'),
+      $container->get('form_builder')
     );
   }
 
@@ -71,7 +84,7 @@ class FormAjaxController implements ContainerInjectionInterface {
     $form_state = $ajaxForm->getFormState();
     $commands = $ajaxForm->getCommands();
 
-    drupal_process_form($form['#form_id'], $form, $form_state);
+    $this->formBuilder->processForm($form['#form_id'], $form, $form_state);
 
     // We need to return the part of the form (or some other content) that needs
     // to be re-rendered so the browser can update the page with changed content.
@@ -116,7 +129,7 @@ class FormAjaxController implements ContainerInjectionInterface {
     $form_build_id = $request->request->get('form_build_id');
 
     // Get the form from the cache.
-    $form = \Drupal::formBuilder()->getCache($form_build_id, $form_state);
+    $form = $this->formBuilder->getCache($form_build_id, $form_state);
     if (!$form) {
       // If $form cannot be loaded from the cache, the form_build_id must be
       // invalid, which means that someone performed a POST request onto

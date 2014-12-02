@@ -62,7 +62,7 @@ class FileWidgetAjaxController extends FormAjaxController {
     $current_file_count = isset($current_element['#file_upload_delta']) ? $current_element['#file_upload_delta'] : 0;
 
     // Process user input. $form and $form_state are modified in the process.
-    drupal_process_form($form['#form_id'], $form, $form_state);
+    $this->formBuilder->processForm($form['#form_id'], $form, $form_state);
 
     // Retrieve the element to be rendered.
     $form = NestedArray::getValue($form, $form_parents);
