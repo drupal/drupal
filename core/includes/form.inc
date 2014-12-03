@@ -31,25 +31,6 @@ function drupal_form_submit($form_arg, FormStateInterface $form_state) {
 }
 
 /**
- * Executes custom validation and submission handlers for a given form.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use either \Drupal::service('form_submitter')->executeSubmitHandlers() or
- *   \Drupal::service('form_validator')->executeValidateHandlers().
- *
- * @see \Drupal\Core\Form\FormSubmitterInterface::executeSubmitHandlers()
- * @see \Drupal\Core\Form\FormValidatorInterface::executeValidateHandlers()
- */
-function form_execute_handlers($type, &$form, FormStateInterface $form_state) {
-  if ($type == 'submit') {
-    \Drupal::service('form_submitter')->executeSubmitHandlers($form, $form_state);
-  }
-  elseif ($type == 'validate') {
-    \Drupal::service('form_validator')->executeValidateHandlers($form, $form_state);
-  }
-}
-
-/**
  * Removes internal Form API elements and buttons from submitted form values.
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
