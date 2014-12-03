@@ -31,18 +31,6 @@ function drupal_form_submit($form_arg, FormStateInterface $form_state) {
 }
 
 /**
- * Processes a form submission.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::formBuilder()->processForm().
- *
- * @see \Drupal\Core\Form\FormBuilderInterface::processForm().
- */
-function drupal_process_form($form_id, &$form, FormStateInterface $form_state) {
-  \Drupal::formBuilder()->processForm($form_id, $form, $form_state);
-}
-
-/**
  * Executes custom validation and submission handlers for a given form.
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
