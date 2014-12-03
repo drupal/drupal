@@ -1,4 +1,6 @@
 id: authenticated
-label: Authenticated user
+label: 'Authenticated user'
 weight: 1
 langcode: en
+status: true
+dependencies: {  }
