@@ -1111,6 +1111,7 @@ function install_select_profile(&$install_state) {
  * 3. A discovered profile that is a distribution.
  *    If multiple profiles are distributions, then the first discovered profile
  *    will be selected.
+ * 4. Only one visible profile is available.
  *
  * @param array $install_state
  *   The current installer state, containing a 'profiles' key, which is an
@@ -1137,6 +1138,16 @@ function _install_select_profile(&$install_state) {
     if (!empty($profile_info['distribution'])) {
       return $profile->getName();
     }
+  }
+
+  // Get all visible (not hidden) profiles.
+  $visible_profiles = array_filter($install_state['profiles'], function ($profile) {
+    $profile_info = install_profile_info($profile->getName());
+    return !isset($profile_info['hidden']) || !$profile_info['hidden'];
+  });
+
+  if (count($visible_profiles) == 1) {
+    return (key($visible_profiles));
   }
 }
 
