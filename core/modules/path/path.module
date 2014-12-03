@@ -42,22 +42,21 @@ function path_help($route_name, RouteMatchInterface $route_match) {
  */
 function path_form_node_form_alter(&$form, FormStateInterface $form_state) {
   $node = $form_state->getFormObject()->getEntity();
-  if ($node->hasField('path') && $node->get('path')->access('edit')) {
-    $form['path_settings'] = array(
-      '#type' => 'details',
-      '#title' => t('URL path settings'),
-      '#open' => !empty($form['path']['widget'][0]['alias']['#value']),
-      '#group' => 'advanced',
-      '#attributes' => array(
-        'class' => array('path-form'),
-      ),
-      '#attached' => array(
-        'library' => array('path/drupal.path'),
-      ),
-      '#weight' => 30,
-    );
-    $form['path']['#group'] = 'path_settings';
-  }
+  $form['path_settings'] = array(
+    '#type' => 'details',
+    '#title' => t('URL path settings'),
+    '#open' => !empty($form['path']['widget'][0]['alias']['#value']),
+    '#group' => 'advanced',
+    '#access' => !empty($form['path']['#access']) && $node->hasField('path') && $node->get('path')->access('edit'),
+    '#attributes' => array(
+      'class' => array('path-form'),
+    ),
+    '#attached' => array(
+      'library' => array('path/drupal.path'),
+    ),
+    '#weight' => 30,
+  );
+  $form['path']['#group'] = 'path_settings';
 }
 
 /**
