@@ -88,7 +88,6 @@ function system_requirements($phase) {
   $required_extensions = array(
     'date',
     'dom',
-    'fileinfo',
     'filter',
     'gd',
     'hash',
