@@ -395,8 +395,9 @@ function system_requirements($phase) {
   // defined, the installer will create a valid config directory later, but
   // during runtime we must always display an error.
   if (!empty($GLOBALS['config_directories'])) {
-    $directories[] = config_get_config_directory(CONFIG_ACTIVE_DIRECTORY);
-    $directories[] = config_get_config_directory(CONFIG_STAGING_DIRECTORY);
+    foreach ($GLOBALS['config_directories'] as $type => $directory) {
+      $directories[] = config_get_config_directory($type);
+    }
   }
   elseif ($phase != 'install') {
     $requirements['config directories'] = array(

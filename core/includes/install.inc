@@ -466,18 +466,22 @@ function drupal_install_config_directories() {
 
   // Add a randomized config directory name to settings.php, unless it was
   // manually defined in the existing already.
-  if (empty($config_directories)) {
-    $config_directories_hash = Crypt::randomBytesBase64(55);
-    $settings['config_directories'] = array(
-      CONFIG_ACTIVE_DIRECTORY => (object) array(
-        'value' => conf_path() . '/files/config_' . $config_directories_hash . '/active',
-        'required' => TRUE,
-      ),
-      CONFIG_STAGING_DIRECTORY => (object) array(
-        'value' => conf_path() . '/files/config_' . $config_directories_hash . '/staging',
-        'required' => TRUE,
-      ),
-    );
+  $settings = [];
+  $config_directories_hash = Crypt::randomBytesBase64(55);
+  if (empty($config_directories[CONFIG_ACTIVE_DIRECTORY])) {
+    $settings['config_directories'][CONFIG_ACTIVE_DIRECTORY] = (object) [
+      'value' => conf_path() . '/files/config_' . $config_directories_hash . '/active',
+      'required' => TRUE,
+    ];
+  }
+  if (empty($config_directories[CONFIG_STAGING_DIRECTORY])) {
+    $settings['config_directories'][CONFIG_STAGING_DIRECTORY] = (object) [
+      'value' => conf_path() . '/files/config_' . $config_directories_hash . '/staging',
+      'required' => TRUE,
+    ];
+  }
+
+  if (!empty($settings)) {
     // Rewrite settings.php, which also sets the value as global variable.
     drupal_rewrite_settings($settings);
   }
