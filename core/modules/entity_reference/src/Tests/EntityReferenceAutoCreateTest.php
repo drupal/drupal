@@ -20,15 +20,29 @@ class EntityReferenceAutoCreateTest extends WebTestBase {
 
   public static $modules = array('entity_reference', 'node');
 
+  /**
+   * The name of a content type that will reference $referencedType.
+   *
+   * @var string
+   */
+  protected $referencingType;
+
+  /**
+   * The name of a content type that will be referenced by $referencingType.
+   *
+   * @var string
+   */
+  protected $referencedType;
+
   protected function setUp() {
     parent::setUp();
 
     // Create "referencing" and "referenced" node types.
     $referencing = $this->drupalCreateContentType();
-    $this->referencing_type = $referencing->type;
+    $this->referencingType = $referencing->type;
 
     $referenced = $this->drupalCreateContentType();
-    $this->referenced_type = $referenced->type;
+    $this->referencedType = $referenced->type;
 
     entity_create('field_storage_config', array(
       'field_name' => 'test_field',
@@ -75,10 +89,10 @@ class EntityReferenceAutoCreateTest extends WebTestBase {
    * entity.
    */
   public function testAutoCreate() {
-    $user1 = $this->drupalCreateUser(array('access content', "create $this->referencing_type content"));
+    $user1 = $this->drupalCreateUser(array('access content', "create $this->referencingType content"));
     $this->drupalLogin($user1);
 
-    $this->drupalGet('node/add/' . $this->referencing_type);
+    $this->drupalGet('node/add/' . $this->referencingType);
     $this->assertFieldByXPath('//input[@id="edit-test-field-0-target-id" and contains(@class, "form-autocomplete")]', NULL, 'The autocomplete input element appears.');
 
     $new_title = $this->randomMachineName();
@@ -86,7 +100,7 @@ class EntityReferenceAutoCreateTest extends WebTestBase {
     // Assert referenced node does not exist.
     $base_query = \Drupal::entityQuery('node');
     $base_query
-      ->condition('type', $this->referenced_type)
+      ->condition('type', $this->referencedType)
       ->condition('title', $new_title);
 
     $query = clone $base_query;
@@ -97,7 +111,7 @@ class EntityReferenceAutoCreateTest extends WebTestBase {
       'title[0][value]' => $this->randomMachineName(),
       'test_field[0][target_id]' => $new_title,
     );
-    $this->drupalPostForm("node/add/$this->referencing_type", $edit, 'Save');
+    $this->drupalPostForm("node/add/$this->referencingType", $edit, 'Save');
 
     // Assert referenced node was created.
     $query = clone $base_query;
@@ -108,7 +122,7 @@ class EntityReferenceAutoCreateTest extends WebTestBase {
 
     // Assert the referenced node is associated with referencing node.
     $result = \Drupal::entityQuery('node')
-      ->condition('type', $this->referencing_type)
+      ->condition('type', $this->referencingType)
       ->execute();
 
     $referencing_nid = key($result);

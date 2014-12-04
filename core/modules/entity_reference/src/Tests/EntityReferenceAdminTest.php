@@ -27,6 +27,14 @@ class EntityReferenceAdminTest extends WebTestBase {
    */
   public static $modules = array('node', 'field_ui', 'entity_reference', 'path', 'taxonomy');
 
+
+  /**
+   * The name of the content type created for testing purposes.
+   *
+   * @var string
+   */
+  protected $type;
+
   protected function setUp() {
     parent::setUp();
 

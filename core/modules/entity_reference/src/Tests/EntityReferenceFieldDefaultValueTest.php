@@ -26,6 +26,13 @@ class EntityReferenceFieldDefaultValueTest extends WebTestBase {
    */
   public static $modules = array('entity_reference', 'field_ui', 'node');
 
+  /**
+   * A user with permission to administer content types, node fields, etc.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $adminUser;
+
   protected function setUp() {
     parent::setUp();
 
@@ -34,8 +41,8 @@ class EntityReferenceFieldDefaultValueTest extends WebTestBase {
     $this->drupalCreateContentType(array('type' => 'referenced_content'));
 
     // Create admin user.
-    $this->admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer node fields', 'administer node form display', 'bypass node access'));
-    $this->drupalLogin($this->admin_user);
+    $this->adminUser = $this->drupalCreateUser(array('access content', 'administer content types', 'administer node fields', 'administer node form display', 'bypass node access'));
+    $this->drupalLogin($this->adminUser);
   }
 
   /**
