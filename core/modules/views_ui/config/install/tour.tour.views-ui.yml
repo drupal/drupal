@@ -1,6 +1,6 @@
 id: views-ui
 module: views_ui
-label: 'Views ui'
+label: 'View edit page'
 langcode: en
 routes:
   - route_name: entity.view.edit_form
