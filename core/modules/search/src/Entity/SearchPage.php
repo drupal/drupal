@@ -57,14 +57,14 @@ class SearchPage extends ConfigEntityBase implements SearchPageInterface, Entity
    *
    * @var string
    */
-  public $id;
+  protected $id;
 
   /**
    * The label of the search page entity.
    *
    * @var string
    */
-  public $label;
+  protected $label;
 
   /**
    * The configuration of the search page entity.
