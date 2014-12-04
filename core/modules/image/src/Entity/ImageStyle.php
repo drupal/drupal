@@ -66,14 +66,14 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    *
    * @var string
    */
-  public $name;
+  protected $name;
 
   /**
    * The image style label.
    *
    * @var string
    */
-  public $label;
+  protected $label;
 
   /**
    * The array of image effects for this image style.

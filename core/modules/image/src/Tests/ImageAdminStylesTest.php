@@ -246,7 +246,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       'Effect with ID %uuid no longer found on image style %style',
       array(
         '%uuid' => $uuids['image_crop'],
-        '%style' => $style->label,
+        '%style' => $style->label(),
       )));
 
     // Additional test on Rotate effect, for transparent background.
