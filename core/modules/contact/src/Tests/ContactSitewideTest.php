@@ -10,6 +10,7 @@ namespace Drupal\contact\Tests;
 use Drupal\Component\Utility\Unicode;
 use Drupal\contact\Entity\ContactForm;
 use Drupal\Core\Mail\MailFormatHelper;
+use Drupal\field_ui\Tests\FieldUiTestTrait;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 
@@ -19,6 +20,8 @@ use Drupal\Core\Entity\EntityTypeInterface;
  * @group contact
  */
 class ContactSitewideTest extends WebTestBase {
+
+  use FieldUiTestTrait;
 
   /**
    * Set to TRUE to strict check all configuration saved.
@@ -255,15 +258,10 @@ class ContactSitewideTest extends WebTestBase {
     $this->assertResponse(200);
 
     // Create a simple textfield.
-    $edit = array(
-      'fields[_add_new_field][label]' => $field_label = $this->randomMachineName(),
-      'fields[_add_new_field][field_name]' => Unicode::strtolower($this->randomMachineName()),
-      'fields[_add_new_field][type]' => 'text',
-    );
-    $field_name = 'field_' . $edit['fields[_add_new_field][field_name]'];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->drupalPostForm(NULL, array(), t('Save field settings'));
-    $this->drupalPostForm(NULL, array(), t('Save settings'));
+    $field_name = Unicode::strtolower($this->randomMachineName());
+    $field_label = $this->randomMachineName();
+    $this->fieldUIAddNewField(NULL, $field_name, $field_label, 'text');
+    $field_name = 'field_' . $field_name;
 
     // Check that the field is displayed.
     $this->drupalGet('contact/' . $contact_form);

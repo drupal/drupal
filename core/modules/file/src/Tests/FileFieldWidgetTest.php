@@ -9,6 +9,7 @@ namespace Drupal\file\Tests;
 
 use Drupal\comment\Entity\Comment;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\field_ui\Tests\FieldUiTestTrait;
 
 /**
  * Tests the file field widget, single and multi-valued, with and without AJAX,
@@ -17,6 +18,8 @@ use Drupal\field\Entity\FieldConfig;
  * @group file
  */
 class FileFieldWidgetTest extends FileFieldTestBase {
+
+  use FieldUiTestTrait;
 
   /**
    * Modules to enable.
@@ -257,15 +260,11 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     // Create a new field.
     $this->container->get('comment.manager')->addDefaultField('node', 'article');
-    $edit = array(
-      'fields[_add_new_field][label]' => $label = $this->randomMachineName(),
-      'fields[_add_new_field][field_name]' => $name = strtolower($this->randomMachineName()),
-      'fields[_add_new_field][type]' => 'file',
-    );
-    $this->drupalPostForm('admin/structure/comment/manage/comment/fields', $edit, t('Save'));
-    $edit = array('field_storage[settings][uri_scheme]' => 'private');
-    $this->drupalPostForm(NULL, $edit, t('Save field settings'));
-    $this->drupalPostForm(NULL, array(), t('Save settings'));
+
+    $name = strtolower($this->randomMachineName());
+    $label = $this->randomMachineName();
+    $storage_edit = array('field_storage[settings][uri_scheme]' => 'private');
+    $this->fieldUIAddNewField('admin/structure/comment/manage/comment', $name, $label, 'file', $storage_edit);
 
     // Manually clear cache on the tester side.
     \Drupal::entityManager()->clearCachedFieldDefinitions();

@@ -2,77 +2,51 @@
 
 /**
  * @file
- * Contains \Drupal\field_ui\Tests\FieldUiTestBase.
+ * Contains \Drupal\field_ui\Tests\FieldUiTestTrait.
  */
 
 namespace Drupal\field_ui\Tests;
 
-use Drupal\Component\Utility\Unicode;
-use Drupal\Core\Language\LanguageInterface;
-use Drupal\simpletest\WebTestBase;
-
 /**
  * Provides common functionality for the Field UI test classes.
  */
-abstract class FieldUiTestBase extends WebTestBase {
-
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('node', 'field_ui', 'field_test', 'taxonomy', 'image');
-
-  protected function setUp() {
-    parent::setUp();
-
-    // Create test user.
-    $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer node fields', 'administer node form display', 'administer node display', 'administer taxonomy', 'administer taxonomy_term fields', 'administer taxonomy_term display', 'administer users', 'administer account settings', 'administer user display', 'bypass node access'));
-    $this->drupalLogin($admin_user);
-
-    // Create content type, with underscores.
-    $type_name = strtolower($this->randomMachineName(8)) . '_test';
-    $type = $this->drupalCreateContentType(array('name' => $type_name, 'type' => $type_name));
-    $this->type = $type->type;
-
-    // Create a default vocabulary.
-    $vocabulary = entity_create('taxonomy_vocabulary', array(
-      'name' => $this->randomMachineName(),
-      'description' => $this->randomMachineName(),
-      'vid' => Unicode::strtolower($this->randomMachineName()),
-      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-      'help' => '',
-      'nodes' => array('article' => 'article'),
-      'weight' => mt_rand(0, 10),
-    ));
-    $vocabulary->save();
-    $this->vocabulary = $vocabulary->id();
-  }
+trait FieldUiTestTrait {
 
   /**
    * Creates a new field through the Field UI.
    *
-   * @param $bundle_path
+   * @param string $bundle_path
    *   Admin path of the bundle that the new field is to be attached to.
-   * @param $initial_edit
-   *   $edit parameter for drupalPostForm() on the first step ('Manage fields'
-   *   screen).
-   * @param $storage_edit
-   *   $edit parameter for drupalPostForm() on the second step ('Storage
+   * @param string $field_name
+   *   The field name of the new field storage.
+   * @param string $label
+   *   (optional) The label of the new field. Defaults to a random string.
+   * @param string $field_type
+   *   (optional) The field type of the new field storage. Defaults to
+   *   'test_field'.
+   * @param array $storage_edit
+   *   (optional) $edit parameter for drupalPostForm() on the second step
+   *   ('Storage settings' form).
+   * @param array $field_edit
+   *   (optional) $edit parameter for drupalPostForm() on the third step ('Field
    *   settings' form).
-   * @param $field_edit
-   *   $edit parameter for drupalPostForm() on the third step ('Field settings'
-   *   form).
    */
-  function fieldUIAddNewField($bundle_path, $initial_edit, $storage_edit = array(), $field_edit = array()) {
-    // Use 'test_field' field type by default.
-    $initial_edit += array(
-      'fields[_add_new_field][type]' => 'test_field',
+  public function fieldUIAddNewField($bundle_path, $field_name, $label = NULL, $field_type = 'test_field', array $storage_edit = array(), array $field_edit = array()) {
+    $label = $label ?: $this->randomString();
+    $initial_edit = array(
+      'fields[_add_new_field][field_name]' => $field_name,
+      'fields[_add_new_field][type]' => $field_type,
+      'fields[_add_new_field][label]' => $label,
     );
-    $label = $initial_edit['fields[_add_new_field][label]'];
+
+    // Allow the caller to set a NULL path in case they navigated to the right
+    // page before calling this method.
+    if ($bundle_path !== NULL) {
+      $bundle_path = "$bundle_path/fields";
+    }
 
     // First step : 'Add new field' on the 'Manage fields' page.
-    $this->drupalPostForm("$bundle_path/fields",  $initial_edit, t('Save'));
+    $this->drupalPostForm($bundle_path,  $initial_edit, t('Save'));
     $this->assertRaw(t('These settings apply to the %label field everywhere it is used.', array('%label' => $label)), 'Storage settings page was displayed.');
     // Test Breadcrumbs.
     $this->assertLink($label, 0, 'Field label is correct in the breadcrumb of the storage settings page.');
@@ -92,17 +66,23 @@ abstract class FieldUiTestBase extends WebTestBase {
   /**
    * Adds an existing field through the Field UI.
    *
-   * @param $bundle_path
+   * @param string $bundle_path
    *   Admin path of the bundle that the field is to be attached to.
-   * @param $initial_edit
-   *   $edit parameter for drupalPostForm() on the first step ('Manage fields'
-   *   screen).
-   * @param $field_edit
-   *   $edit parameter for drupalPostForm() on the second step ('Field settings'
-   *   form).
+   * @param string $existing_field_name
+   *   The name of the existing field storage for which we want to add a new
+   *   field.
+   * @param string $label
+   *   (optional) The label of the new field. Defaults to a random string.
+   * @param array $field_edit
+   *   (optional) $edit parameter for drupalPostForm() on the second step
+   *   ('Field settings' form).
    */
-  function fieldUIAddExistingField($bundle_path, $initial_edit, $field_edit = array()) {
-    $label = $initial_edit['fields[_add_existing_field][label]'];
+  public function fieldUIAddExistingField($bundle_path, $existing_field_name, $label = NULL, array $field_edit = array()) {
+    $label = $label ?: $this->randomString();
+    $initial_edit = array(
+      'fields[_add_existing_field][label]' => $label,
+      'fields[_add_existing_field][field_name]' => $existing_field_name,
+    );
 
     // First step : 'Re-use existing field' on the 'Manage fields' page.
     $this->drupalPostForm("$bundle_path/fields", $initial_edit, t('Save'));
@@ -119,16 +99,16 @@ abstract class FieldUiTestBase extends WebTestBase {
   /**
    * Deletes a field through the Field UI.
    *
-   * @param $bundle_path
+   * @param string $bundle_path
    *   Admin path of the bundle that the field is to be deleted from.
-   * @param $field_name
+   * @param string $field_name
    *   The name of the field.
-   * @param $label
+   * @param string $label
    *   The label of the field.
-   * @param $bundle_label
+   * @param string $bundle_label
    *   The label of the bundle.
    */
-  function fieldUIDeleteField($bundle_path, $field_name, $label, $bundle_label) {
+  public function fieldUIDeleteField($bundle_path, $field_name, $label, $bundle_label) {
     // Display confirmation form.
     $this->drupalGet("$bundle_path/fields/$field_name/delete");
     $this->assertRaw(t('Are you sure you want to delete the field %label', array('%label' => $label)), 'Delete confirmation was found.');
@@ -143,4 +123,5 @@ abstract class FieldUiTestBase extends WebTestBase {
     // Check that the field does not appear in the overview form.
     $this->assertNoFieldByXPath('//table[@id="field-overview"]//span[@class="label-field"]', $label, 'Field does not appear in the overview page.');
   }
+
 }
