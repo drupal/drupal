@@ -7,6 +7,8 @@
 
 namespace Drupal\system\Tests\Ajax;
 
+use Drupal\Core\Url;
+
 /**
  * Performs tests on opening and manipulating dialogs via AJAX commands.
  *
@@ -154,6 +156,19 @@ class DialogTest extends AjaxTestBase {
 
     // Emulate going to the JS version of the form and check the JSON response.
     $ajax_result = $this->drupalGetAJAX('ajax-test/dialog-form', array(), array('Accept: application/vnd.drupal-modal'));
+    $expected_ajax_settings = [
+      'edit-preview' => [
+        'callback' => '::preview',
+        'event' => 'click',
+        'url' => Url::fromRoute('system.ajax')->toString(),
+        'accepts' => 'application/vnd.drupal-ajax',
+        'submit' => [
+          '_triggering_element_name' => 'op',
+          '_triggering_element_value' => 'Preview',
+        ],
+      ],
+    ];
+    $this->assertEqual($expected_ajax_settings, $ajax_result[0]['settings']['ajax']);
     $this->drupalSetContent($ajax_result[1]['data']);
     // Remove the data, the form build id and token will never match.
     unset($ajax_result[1]['data']);

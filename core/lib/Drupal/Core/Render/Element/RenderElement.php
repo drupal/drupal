@@ -137,9 +137,8 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
   /**
    * Adds Ajax information about an element to communicate with JavaScript.
    *
-   * If #ajax['url'] is set on an element, this additional JavaScript is added
-   * to the page header to attach the Ajax behaviors. See ajax.js for more
-   * information.
+   * If #ajax is set on an element, this additional JavaScript is added to the
+   * page header to attach the Ajax behaviors. See ajax.js for more information.
    *
    * @param array $element
    *   An associative array containing the properties of the element.
@@ -147,6 +146,7 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
    *   - #ajax['event']
    *   - #ajax['prevent']
    *   - #ajax['url']
+   *   - #ajax['callback']
    *   - #ajax['options']
    *   - #ajax['wrapper']
    *   - #ajax['parameters']
@@ -227,18 +227,18 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
 
       $settings = $element['#ajax'];
 
-      // Assign default settings. When 'path' is set to NULL, ajax.js submits the
+      // Assign default settings. When 'url' is set to NULL, ajax.js submits the
       // Ajax request to the same URL as the form or link destination is for
       // someone with JavaScript disabled. This is generally preferred as a way to
       // ensure consistent server processing for js and no-js users, and Drupal's
       // content negotiation takes care of formatting the response appropriately.
-      // However, 'path' and 'options' may be set when wanting server processing
+      // However, 'url' and 'options' may be set when wanting server processing
       // to be substantially different for a JavaScript triggered submission.
       // One such substantial difference is form elements that use
       // #ajax['callback'] for determining which part of the form needs
       // re-rendering. For that, we have a special 'system/ajax' route.
       $settings += array(
-        'path' => isset($settings['callback']) ? 'system/ajax' : NULL,
+        'url' => isset($settings['callback']) ? Url::fromRoute('system.ajax') : NULL,
         'options' => array(),
         'accepts' => 'application/vnd.drupal-ajax'
       );
@@ -248,7 +248,7 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
         $settings['method'] = 'replaceWith';
       }
 
-      // Change path to URL.
+      // Convert \Drupal\Core\Url object to string.
       if (isset($settings['url']) && $settings['url'] instanceof Url) {
         $settings['url'] = $settings['url']->setOptions($settings['options'])->toString();
       }
