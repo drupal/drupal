@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
+use Drupal\Component\Utility\String;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -69,7 +70,7 @@ class EntityResource extends ResourceBase {
    */
   public function post(EntityInterface $entity = NULL) {
     if ($entity == NULL) {
-      throw new BadRequestHttpException(t('No entity content received.'));
+      throw new BadRequestHttpException('No entity content received.');
     }
 
     if (!$entity->access('create')) {
@@ -79,16 +80,16 @@ class EntityResource extends ResourceBase {
     // Verify that the deserialized entity is of the type that we expect to
     // prevent security issues.
     if ($entity->getEntityTypeId() != $definition['entity_type']) {
-      throw new BadRequestHttpException(t('Invalid entity type'));
+      throw new BadRequestHttpException('Invalid entity type');
     }
     // POSTed entities must not have an ID set, because we always want to create
     // new entities here.
     if (!$entity->isNew()) {
-      throw new BadRequestHttpException(t('Only new entities can be created'));
+      throw new BadRequestHttpException('Only new entities can be created');
     }
     foreach ($entity as $field_name => $field) {
       if (!$field->access('create')) {
-        throw new AccessDeniedHttpException(t('Access denied on creating field @field.', array('@field' => $field_name)));
+        throw new AccessDeniedHttpException(String::format('Access denied on creating field ', array('@field' => $field_name)));
       }
     }
 
@@ -103,7 +104,7 @@ class EntityResource extends ResourceBase {
       return new ResourceResponse(NULL, 201, array('Location' => $url));
     }
     catch (EntityStorageException $e) {
-      throw new HttpException(500, t('Internal Server Error'), $e);
+      throw new HttpException(500, 'Internal Server Error', $e);
     }
   }
 
@@ -122,11 +123,11 @@ class EntityResource extends ResourceBase {
    */
   public function patch(EntityInterface $original_entity, EntityInterface $entity = NULL) {
     if ($entity == NULL) {
-      throw new BadRequestHttpException(t('No entity content received.'));
+      throw new BadRequestHttpException('No entity content received.');
     }
     $definition = $this->getPluginDefinition();
     if ($entity->getEntityTypeId() != $definition['entity_type']) {
-      throw new BadRequestHttpException(t('Invalid entity type'));
+      throw new BadRequestHttpException('Invalid entity type');
     }
     if (!$original_entity->access('update')) {
       throw new AccessDeniedHttpException();
@@ -143,11 +144,11 @@ class EntityResource extends ResourceBase {
           continue;
         }
         if ($field->isEmpty() && !$original_entity->get($field_name)->access('delete')) {
-          throw new AccessDeniedHttpException(t('Access denied on deleting field @field.', array('@field' => $field_name)));
+          throw new AccessDeniedHttpException(String::format('Access denied on deleting field ', array('@field' => $field_name)));
         }
         $original_entity->set($field_name, $field->getValue());
         if (!$original_entity->get($field_name)->access('update')) {
-          throw new AccessDeniedHttpException(t('Access denied on updating field @field.', array('@field' => $field_name)));
+          throw new AccessDeniedHttpException(String::format('Access denied on updating field ', array('@field' => $field_name)));
         }
       }
     }
@@ -162,7 +163,7 @@ class EntityResource extends ResourceBase {
       return new ResourceResponse(NULL, 204);
     }
     catch (EntityStorageException $e) {
-      throw new HttpException(500, t('Internal Server Error'), $e);
+      throw new HttpException(500, 'Internal Server Error', $e);
     }
   }
 
@@ -189,7 +190,7 @@ class EntityResource extends ResourceBase {
       return new ResourceResponse(NULL, 204);
     }
     catch (EntityStorageException $e) {
-      throw new HttpException(500, t('Internal Server Error'), $e);
+      throw new HttpException(500, 'Internal Server Error', $e);
     }
   }
 

@@ -79,7 +79,7 @@ class DataFieldRow extends RowPluginBase {
 
     $form['field_options'] = array(
       '#type' => 'table',
-      '#header' => array(t('Field'), $this->t('Alias'), $this->t('Raw output')),
+      '#header' => array($this->t('Field'), $this->t('Alias'), $this->t('Raw output')),
       '#empty' => $this->t('You have no fields. Add some to your view.'),
       '#tree' => TRUE,
     );
