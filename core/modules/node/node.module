@@ -121,7 +121,7 @@ function node_help($route_name, RouteMatchInterface $route_match) {
 
     case 'entity.node.edit_form':
       $node = $route_match->getParameter('node');
-      $type = $node->getType();
+      $type = NodeType::load($node->getType());
       return (!empty($type->help) ? Xss::filterAdmin($type->help) : '');
 
     case 'node.add':
