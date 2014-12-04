@@ -57,7 +57,7 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
    *
    * @var string
    */
-  public $label;
+  protected $label;
 
   /**
    * The direction of language, either DIRECTION_LTR or DIRECTION_RTL.
