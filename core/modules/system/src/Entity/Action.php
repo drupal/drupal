@@ -34,14 +34,14 @@ class Action extends ConfigEntityBase implements ActionConfigEntityInterface, En
    *
    * @var string
    */
-  public $id;
+  protected $id;
 
   /**
    * The label of the action.
    *
    * @var string
    */
-  public $label;
+  protected $label;
 
   /**
    * The action type.
