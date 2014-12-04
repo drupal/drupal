@@ -40,7 +40,6 @@ class DistributionProfileTest extends InstallerTestBase {
     $path = $this->siteDirectory . '/profiles/mydistro';
     mkdir($path, 0777, TRUE);
     file_put_contents("$path/mydistro.info.yml", Yaml::encode($this->info));
-    file_put_contents("$path/mydistro.profile", "<?php\n");
 
     parent::setUp();
   }
