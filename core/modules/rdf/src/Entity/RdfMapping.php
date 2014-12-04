@@ -30,21 +30,21 @@ class RdfMapping extends ConfigEntityBase implements RdfMappingInterface {
    *
    * @var string
    */
-  public $id;
+  protected $id;
 
   /**
    * Entity type to be mapped.
    *
    * @var string
    */
-  public $targetEntityType;
+  protected $targetEntityType;
 
   /**
    * Bundle to be mapped.
    *
    * @var string
    */
-  public $bundle;
+  protected $bundle;
 
   /**
    * The RDF type mapping for this bundle.
