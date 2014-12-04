@@ -194,18 +194,6 @@ class AjaxFormsTestCommandsForm extends FormBase {
       ),
     );
 
-    // Tests the 'settings' command with a callback which sets the same
-    // setting multiple times. This is used to check that settings are
-    // merged properly (e.g., array_merge_recursive() merges settings
-    // incorrectly, #1356170).
-    $form['settings_command_with_merging_example'] = array(
-      '#type' => 'submit',
-      '#value' => $this->t("AJAX 'settings' command with setting merging"),
-      '#ajax' => array(
-        'callback' => 'ajax_forms_test_advanced_commands_settings_with_merging_callback',
-      ),
-    );
-
     $form['submit'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Submit'),

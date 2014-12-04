@@ -96,10 +96,7 @@ class EditorManager extends DefaultPluginManager {
       return array();
     }
 
-    $attachments['js'][] = array(
-      'type' => 'setting',
-      'data' => $settings,
-    );
+    $attachments['drupalSettings'] = $settings;
 
     return $attachments;
   }

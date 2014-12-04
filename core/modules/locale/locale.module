@@ -535,13 +535,9 @@ function locale_library_alter(array &$library, $name) {
     $library['dependencies'][] = 'locale/drupal.locale.datepicker';
 
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
-    $settings['jquery']['ui']['datepicker'] = array(
+    $library['drupalSettings']['jquery']['ui']['datepicker'] = array(
       'isRTL' => $language_interface->getDirection() == LanguageInterface::DIRECTION_RTL,
       'firstDay' => \Drupal::config('system.date')->get('first_day'),
-    );
-    $library['js'][] = array(
-      'type' => 'setting',
-      'data' => $settings,
     );
   }
 }

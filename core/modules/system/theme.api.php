@@ -718,6 +718,27 @@ function hook_js_alter(&$javascript) {
 }
 
 /**
+ * Perform necessary alterations to the JavaScript settings (drupalSettings).
+ *
+ * @param array &$settings
+ *   An array of all JavaScript settings (drupalSettings) being presented on the
+ *   page.
+ *
+ * @see _drupal_add_js()
+ * @see drupal_get_js()
+ * @see drupal_js_defaults()
+ */
+function hook_js_settings_alter(array &$settings) {
+  // Add settings.
+  $settings['user']['uid'] = \Drupal::currentUser();
+
+  // Manipulate settings.
+  if (isset($settings['dialog'])) {
+    $settings['dialog']['autoResize'] = FALSE;
+  }
+}
+
+/**
  * Alters the JavaScript/CSS library registry.
  *
  * Allows certain, contributed modules to update libraries to newer versions
@@ -785,13 +806,9 @@ function hook_library_alter(array &$library, $name) {
     $library['dependencies'][] = 'locale/drupal.locale.datepicker';
 
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
-    $settings['jquery']['ui']['datepicker'] = array(
+    $library['drupalSettings']['jquery']['ui']['datepicker'] = array(
       'isRTL' => $language_interface->getDirection() == LanguageInterface::DIRECTION_RTL,
       'firstDay' => \Drupal::config('system.date')->get('first_day'),
-    );
-    $library['js'][] = array(
-      'type' => 'setting',
-      'data' => $settings,
     );
   }
 }

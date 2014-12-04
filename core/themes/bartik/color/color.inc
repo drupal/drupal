@@ -6,8 +6,7 @@
  */
 
 // Put the logo path into JavaScript for the live preview.
-$js = array('color' => array('logo' => theme_get_setting('logo.url', 'bartik')));
-$js_attached['#attached']['js'][] = array('data' => $js, 'type' => 'setting');
+$js_attached['#attached']['drupalSettings']['color']['logo'] = theme_get_setting('logo.url', 'bartik');
 drupal_render($js_attached);
 
 $info = array(

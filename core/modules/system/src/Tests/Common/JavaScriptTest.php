@@ -77,16 +77,14 @@ class JavaScriptTest extends DrupalUnitTestBase {
    */
   function testAddSetting() {
     // Add a file in order to test default settings.
-    $attached['#attached']['library'][] = 'core/drupalSettings';
-    $this->render($attached);
+    $build['#attached']['library'][] = 'core/drupalSettings';
+    drupal_process_attached($build);
     $javascript = _drupal_add_js();
-    $last_settings = reset($javascript['settings']['data']);
-    $this->assertTrue(array_key_exists('currentPath', $last_settings['path']), 'The current path JavaScript setting is set correctly.');
+    $this->assertTrue(array_key_exists('currentPath', $javascript['drupalSettings']['data']['path']), 'The current path JavaScript setting is set correctly.');
 
     $javascript = _drupal_add_js(array('drupal' => 'rocks', 'dries' => 280342800), 'setting');
-    $last_settings = end($javascript['settings']['data']);
-    $this->assertEqual(280342800, $last_settings['dries'], 'JavaScript setting is set correctly.');
-    $this->assertEqual('rocks', $last_settings['drupal'], 'The other JavaScript setting is set correctly.');
+    $this->assertEqual(280342800, $javascript['drupalSettings']['data']['dries'], 'JavaScript setting is set correctly.');
+    $this->assertEqual('rocks', $javascript['drupalSettings']['data']['drupal'], 'The other JavaScript setting is set correctly.');
   }
 
   /**
@@ -156,81 +154,11 @@ class JavaScriptTest extends DrupalUnitTestBase {
   function testHeaderSetting() {
     $attached = array();
     $attached['#attached']['library'][] = 'core/drupalSettings';
+    // Nonsensical value to verify if it's possible to override path settings.
+    $attached['#attached']['drupalSettings']['path']['pathPrefix'] = 'yarhar';
     $this->render($attached);
 
     $javascript = drupal_get_js('header');
-    $this->assertTrue(strpos($javascript, 'baseUrl') > 0, 'Rendered JavaScript header returns baseUrl setting.');
-    $this->assertTrue(strpos($javascript, 'scriptPath') > 0, 'Rendered JavaScript header returns scriptPath setting.');
-    $this->assertTrue(strpos($javascript, 'pathPrefix') > 0, 'Rendered JavaScript header returns pathPrefix setting.');
-    $this->assertTrue(strpos($javascript, 'currentPath') > 0, 'Rendered JavaScript header returns currentPath setting.');
-
-    // Only the second of these two entries should appear in drupalSettings.
-    $attached = array();
-    $attached['#attached']['js'][] = array(
-      'type' => 'setting',
-      'data' => array('commonTest' => 'commonTestShouldNotAppear'),
-    );
-    $attached['#attached']['js'][] = array(
-      'type' => 'setting',
-      'data' => array('commonTest' => 'commonTestShouldAppear'),
-    );
-    // Only the second of these entries should appear in drupalSettings.
-    $attached['#attached']['js'][] = array(
-      'type' => 'setting',
-      'data' => array('commonTestJsArrayLiteral' => array('commonTestJsArrayLiteralOldValue')),
-    );
-    $attached['#attached']['js'][] = array(
-      'type' => 'setting',
-      'data' => array('commonTestJsArrayLiteral' => array('commonTestJsArrayLiteralNewValue')),
-    );
-    // Only the second of these two entries should appear in drupalSettings.
-    $attached['#attached']['js'][] = array(
-      'type' => 'setting',
-      'data' => array('commonTestJsObjectLiteral' => array('key' => 'commonTestJsObjectLiteralOldValue')),
-    );
-    $attached['#attached']['js'][] = array(
-      'type' => 'setting',
-      'data' => array('commonTestJsObjectLiteral' => array('key' => 'commonTestJsObjectLiteralNewValue')),
-    );
-    // Real world test case: multiple elements in a render array are adding the
-    // same (or nearly the same) JavaScript settings. When merged, they should
-    // contain all settings and not duplicate some settings.
-    $settings_one = array('moduleName' => array('ui' => array('button A', 'button B'), 'magical flag' => 3.14159265359));
-    $attached['#attached']['js'][] = array(
-      'type' => 'setting',
-      'data' => array('commonTestRealWorldIdentical' => $settings_one),
-    );
-    $attached['#attached']['js'][] = array(
-      'type' => 'setting',
-      'data' => array('commonTestRealWorldIdentical' => $settings_one),
-    );
-    $settings_two = array('moduleName' => array('ui' => array('button A', 'button B'), 'magical flag' => 3.14159265359, 'thingiesOnPage' => array('id1' => array())));
-    $attached['#attached']['js'][] = array(
-      'type' => 'setting',
-      'data' => array('commonTestRealWorldAlmostIdentical' => $settings_two),
-    );
-    $settings_two = array('moduleName' => array('ui' => array('button C', 'button D'), 'magical flag' => 3.14, 'thingiesOnPage' => array('id2' => array())));
-    $attached['#attached']['js'][] = array(
-      'type' => 'setting',
-      'data' => array('commonTestRealWorldAlmostIdentical' => $settings_two),
-    );
-
-    $this->render($attached);
-    $javascript = drupal_get_js('header');
-
-    // Test whether _drupal_add_js can be used to override a previous setting.
-    $this->assertTrue(strpos($javascript, 'commonTestShouldAppear') > 0, 'Rendered JavaScript header returns custom setting.');
-    $this->assertTrue(strpos($javascript, 'commonTestShouldNotAppear') === FALSE, '_drupal_add_js() correctly overrides a custom setting.');
-
-    // Test whether _drupal_add_js can be used to add and override a JavaScript
-    // array literal (an indexed PHP array) values.
-    $array_override = strpos($javascript, 'commonTestJsArrayLiteralNewValue') > 0 && strpos($javascript, 'commonTestJsArrayLiteralOldValue') === FALSE;
-    $this->assertTrue($array_override, '_drupal_add_js() correctly overrides settings within an array literal (indexed array).');
-
-    // Test whether _drupal_add_js can be used to add and override a JavaScript
-    // object literal (an associate PHP array) values.
-    $associative_array_override = strpos($javascript, 'commonTestJsObjectLiteralNewValue') > 0 && strpos($javascript, 'commonTestJsObjectLiteralOldValue') === FALSE;
-    $this->assertTrue($associative_array_override, '_drupal_add_js() correctly overrides settings within an object literal (associative array).');
 
     // Parse the generated drupalSettings <script> back to a PHP representation.
     $startToken = 'drupalSettings = ';
@@ -240,10 +168,20 @@ class JavaScriptTest extends DrupalUnitTestBase {
     $json  = Unicode::substr($javascript, $start, $end - $start + 1);
     $parsed_settings = Json::decode($json);
 
-    // Test whether the two real world cases are handled correctly.
-    $settings_two['moduleName']['thingiesOnPage']['id1'] = array();
-    $this->assertIdentical($settings_one, $parsed_settings['commonTestRealWorldIdentical'], '_drupal_add_js handled real world test case 1 correctly.');
-    $this->assertEqual($settings_two, $parsed_settings['commonTestRealWorldAlmostIdentical'], '_drupal_add_js handled real world test case 2 correctly.');
+    // Test whether the settings for core/drupalSettings are available.
+    $this->assertTrue(isset($parsed_settings['path']['baseUrl']), 'drupalSettings.path.baseUrl is present.');
+    $this->assertTrue(isset($parsed_settings['path']['scriptPath']), 'drupalSettings.path.scriptPath is present.');
+    $this->assertIdentical($parsed_settings['path']['pathPrefix'], 'yarhar', 'drupalSettings.path.pathPrefix is present and has the correct (overridden) value.');
+    $this->assertIdentical($parsed_settings['path']['currentPath'], '', 'drupalSettings.path.currentPath is present and has the correct value.');
+    $this->assertIdentical($parsed_settings['path']['currentPathIsAdmin'], FALSE, 'drupalSettings.path.currentPathIsAdmin is present and has the correct value.');
+    $this->assertIdentical($parsed_settings['path']['isFront'], FALSE, 'drupalSettings.path.isFront is present and has the correct value.');
+    $this->assertIdentical($parsed_settings['path']['currentLanguage'], 'en', 'drupalSettings.path.currentLanguage is present and has the correct value.');
+
+    // Tests whether altering JavaScript settings via hook_js_settings_alter()
+    // is working as expected.
+    // @see common_test_js_settings_alter()
+    $this->assertIdentical($parsed_settings['locale']['pluralDelimiter'], '☃');
+    $this->assertIdentical($parsed_settings['foo'], 'bar');
   }
 
   /**

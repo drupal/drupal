@@ -1456,50 +1456,20 @@ function _drupal_add_js($data = NULL, $options = NULL) {
     switch ($options['type']) {
       case 'setting':
         // If the setting array doesn't exist, add defaults values.
-        if (!isset($javascript['settings'])) {
-          $javascript['settings'] = array(
+        if (!isset($javascript['drupalSettings'])) {
+          $javascript['drupalSettings'] = array(
             'type' => 'setting',
             'scope' => 'header',
             'group' => JS_SETTING,
             'every_page' => TRUE,
             'weight' => 0,
             'browsers' => array(),
-          );
-          // url() generates the script and prefix using hook_url_outbound_alter().
-          // Instead of running the hook_url_outbound_alter() again here, extract
-          // them from url().
-          // @todo Make this less hacky: http://drupal.org/node/1547376.
-          $request = \Drupal::request();
-          $scriptPath = $request->getScriptName();
-
-          $pathPrefix = '';
-          $current_query = $request->query->all();
-          _url('', array('script' => &$scriptPath, 'prefix' => &$pathPrefix));
-          $current_path = \Drupal::routeMatch()->getRouteName() ? Url::fromRouteMatch(\Drupal::routeMatch())->getInternalPath() : '';
-          $current_path_is_admin = \Drupal::service('router.admin_context')->isAdminRoute();
-          $path = array(
-            'baseUrl' => $request->getBaseUrl() . '/',
-            'scriptPath' => $scriptPath,
-            'pathPrefix' => $pathPrefix,
-            'currentPath' => $current_path,
-            'currentPathIsAdmin' => $current_path_is_admin,
-            'isFront' => drupal_is_front_page(),
-            'currentLanguage' => \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_URL)->getId(),
-          );
-          if (!empty($current_query)) {
-            ksort($current_query);
-            $path['currentQuery'] = (object) $current_query;
-          }
-          $javascript['settings']['data'][] = array(
-            'path' => $path,
-            'locale' => array(
-              'pluralDelimiter' => LOCALE_PLURAL_DELIMITER,
-            ),
+            'data' => array(),
           );
         }
         // All JavaScript settings are placed in the header of the page with
         // the library weight so that inline scripts appear afterwards.
-        $javascript['settings']['data'][] = $data;
+        $javascript['drupalSettings']['data'] = NestedArray::mergeDeepArray([$javascript['drupalSettings']['data'], $data], TRUE);
         break;
 
       case 'inline':
@@ -1603,21 +1573,21 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
     uasort($items, 'drupal_sort_css_js');
     // Don't add settings if there is no other JavaScript on the page, unless
     // this is an AJAX request.
-    if (!empty($items['settings']) || $is_ajax) {
+    if (!empty($items['drupalSettings']) || $is_ajax) {
       $theme_key = \Drupal::theme()->getActiveTheme()->getName();
       // Provide the page with information about the theme that's used, so that
       // a later AJAX request can be rendered using the same theme.
       // @see \Drupal\Core\Theme\AjaxBasePageNegotiator
-      $setting['ajaxPageState']['theme'] = $theme_key;
+      $ajaxPageState['theme'] = $theme_key;
       // Checks that the DB is available before filling theme_token.
       if (!defined('MAINTENANCE_MODE')) {
-        $setting['ajaxPageState']['theme_token'] = \Drupal::csrfToken()->get($theme_key);
+        $ajaxPageState['theme_token'] = \Drupal::csrfToken()->get($theme_key);
       }
 
       // Provide the page with information about the individual JavaScript files
       // used, information not otherwise available when aggregation is enabled.
-      $setting['ajaxPageState']['js'] = array_fill_keys(array_keys($javascript), 1);
-      unset($setting['ajaxPageState']['js']['settings']);
+      $ajaxPageState['js'] = array_fill_keys(array_keys($javascript), 1);
+      unset($ajaxPageState['js']['drupalSettings']);
 
       // Provide the page with information about the individual CSS files used,
       // information not otherwise available when CSS aggregation is enabled.
@@ -1631,21 +1601,33 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
       $css = _drupal_add_css();
       if (!empty($css)) {
         // Cast the array to an object to be on the safe side even if not empty.
-        $setting['ajaxPageState']['css'] = (object) array_fill_keys(array_keys($css), 1);
+        $ajaxPageState['css'] = (object) array_fill_keys(array_keys($css), 1);
       }
 
-      _drupal_add_js($setting, 'setting');
+      _drupal_add_js(['ajaxPageState' => $ajaxPageState], 'setting');
 
       // If we're outputting the header scope, then this might be the final time
       // that drupal_get_js() is running, so add the settings to this output as well
-      // as to the _drupal_add_js() cache. If $items['settings'] doesn't exist, it's
-      // because drupal_get_js() was intentionally passed a $javascript argument
-      // stripped of settings, potentially in order to override how settings get
-      // output, so in this case, do not add the setting to this output.
-      if ($scope == 'header' && isset($items['settings'])) {
-        $items['settings']['data'][] = $setting;
+      // as to the _drupal_add_js() cache. If $items['drupalSettings'] doesn't
+      // exist, it's because drupal_get_js() was intentionally passed a
+      // $javascript argument stripped of settings, potentially in order to
+      // override how settings get output, so in this case, do not add the
+      // setting to this output.
+      if ($scope == 'header' && isset($items['drupalSettings'])) {
+        $items['drupalSettings']['data']['ajaxPageState'] = $ajaxPageState;
       }
     }
+  }
+
+  // Process the 'drupalSettings' JavaScript asset, if any.
+  if (!empty($items['drupalSettings'])) {
+    $settings = $items['drupalSettings']['data'];
+
+    // Allow modules and themes to alter the JavaScript settings.
+    \Drupal::moduleHandler()->alter('js_settings', $settings);
+    \Drupal::theme()->alter('js_settings', $settings);
+
+    $items['drupalSettings']['data'] = $settings;
   }
 
   // Render the HTML needed to load the JavaScript.
@@ -1658,30 +1640,25 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
 }
 
 /**
- * Merges an array of settings arrays into a single settings array.
+ * Merges two #attached arrays.
  *
- * This function merges the items in the same way that
+ * The values under the 'drupalSettings' key are merged in a special way, to
+ * match the behavior of
  *
  * @code
  *   jQuery.extend(true, {}, $settings_items[0], $settings_items[1], ...)
  * @endcode
  *
- * would. This means integer indices are preserved just like string indices are,
+ * This means integer indices are preserved just like string indices are,
  * rather than re-indexed as is common in PHP array merging.
  *
  * Example:
  * @code
  * function module1_page_attachments(&$page) {
- *   $page['#attached']['js'][] = array(
- *     'type' => 'setting',
- *     'data' => array('foo' => array('a', 'b', 'c')),
- *   );
+ *   $page['a']['#attached']['drupalSettings']['foo'] = ['a', 'b', 'c'];
  * }
  * function module2_page_attachments(&$page) {
- *   $page['#attached']['js'][] = array(
- *     'type' => 'setting',
- *     'data' => array('foo' => array('d')),
- *   );
+ *   $page['#attached']['drupalSettings']['foo'] = ['d'];
  * }
  * // When the page is rendered after the above code, and the browser runs the
  * // resulting <SCRIPT> tags, the value of drupalSettings.foo is
@@ -1690,31 +1667,11 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
  *
  * By following jQuery.extend() merge logic rather than common PHP array merge
  * logic, the following are ensured:
- * - _drupal_add_js() is idempotent: calling it twice with the same parameters
- *   does not change the output sent to the browser.
+ * - Attaching JavaScript settings is idempotent: attaching the same settings
+ *   twice does not change the output sent to the browser.
  * - If pieces of the page are rendered in separate PHP requests and the
  *   returned settings are merged by JavaScript, the resulting settings are the
  *   same as if rendered in one PHP request and merged by PHP.
- *
- * @param $settings_items
- *   An array of settings arrays, as returned by:
- *   @code
- *     $js = _drupal_add_js();
- *     $settings_items = $js['settings']['data'];
- *   @endcode
- *
- * @return
- *   A merged $settings array, suitable for JSON encoding and returning to the
- *   browser.
- *
- * @see _drupal_add_js()
- */
-function drupal_merge_js_settings($settings_items) {
-  return NestedArray::mergeDeepArray($settings_items, TRUE);
-}
-
-/**
- * Merges two #attached arrays.
  *
  * @param array $a
  *   An #attached array.
@@ -1725,6 +1682,12 @@ function drupal_merge_js_settings($settings_items) {
  *   The merged #attached array.
  */
 function drupal_merge_attached(array $a, array $b) {
+  // If both #attached arrays contain drupalSettings, then merge them correctly;
+  // adding the same settings multiple times needs to behave idempotently.
+  if (!empty($a['drupalSettings']) && !empty($b['drupalSettings'])) {
+    $a['drupalSettings'] = NestedArray::mergeDeepArray([$a['drupalSettings'], $b['drupalSettings']], TRUE);
+    unset($b['drupalSettings']);
+  }
   return NestedArray::mergeDeep($a, $b);
 }
 
@@ -1818,6 +1781,13 @@ function drupal_process_attached($elements, $dependency_check = FALSE) {
       call_user_func('_drupal_add_' . $type, $data, $options);
     }
     unset($elements['#attached'][$type]);
+  }
+
+  // Convert every JavaScript settings asset into a regular JavaScript asset.
+  // @todo Clean this up in https://www.drupal.org/node/2382533
+  if (!empty($elements['#attached']['drupalSettings'])) {
+    _drupal_add_js($elements['#attached']['drupalSettings'], ['type' => 'setting']);
+    unset($elements['#attached']['drupalSettings']);
   }
 
   // Add additional types of attachments specified in the render() structure.
@@ -2027,6 +1997,9 @@ function _drupal_add_library($library_name, $every_page = NULL) {
         'js' => $library['js'],
         'css' => $library['css'],
       );
+      if (isset($library['drupalSettings'])) {
+        $elements['#attached']['drupalSettings'] = $library['drupalSettings'];
+      }
       foreach (array('js', 'css') as $type) {
         foreach ($elements['#attached'][$type] as $data => $options) {
           // Set the every_page flag if one was passed.
@@ -2186,7 +2159,7 @@ function drupal_attach_tabledrag(&$element, array $options) {
   // If a subgroup or source isn't set, assume it is the same as the group.
   $target = isset($options['subgroup']) ? $options['subgroup'] : $group;
   $source = isset($options['source']) ? $options['source'] : $target;
-  $settings['tableDrag'][$options['table_id']][$group][$tabledrag_id] = array(
+  $element['#attached']['drupalSettings'][$options['table_id']][$group][$tabledrag_id] = array(
     'target' => $target,
     'source' => $source,
     'relationship' => $options['relationship'],
@@ -2196,7 +2169,6 @@ function drupal_attach_tabledrag(&$element, array $options) {
   );
 
   $element['#attached']['library'][] = 'core/drupal.tabledrag';
-  $element['#attached']['js'][] = array('data' => $settings, 'type' => 'setting');
 }
 
 /**

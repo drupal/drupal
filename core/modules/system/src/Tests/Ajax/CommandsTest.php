@@ -118,10 +118,6 @@ class CommandsTest extends AjaxTestBase {
     $commands = $this->drupalPostAjaxForm($form_path, $edit, array('op' => t("AJAX 'settings' command")));
     $expected = new SettingsCommand(array('ajax_forms_test' => array('foo' => 42)));
     $this->assertCommand($commands, $expected->render(), "'settings' AJAX command issued with correct data.");
-
-    // Test that the settings command merges settings properly.
-    $commands = $this->drupalPostAjaxForm($form_path, $edit, array('op' => t("AJAX 'settings' command with setting merging")));
-    $expected = new SettingsCommand(array('ajax_forms_test' => array('foo' => 9001)), TRUE);
-    $this->assertCommand($commands, $expected->render(), "'settings' AJAX command with setting merging.");
   }
+
 }

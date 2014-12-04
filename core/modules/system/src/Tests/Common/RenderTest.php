@@ -493,7 +493,7 @@ class RenderTest extends DrupalUnitTestBase {
     $context = array('foo' => $this->randomContextValue());
     $test_element = array();
     $test_element['#markup'] = '';
-    $test_element['#attached']['js'][] = array('type' => 'setting', 'data' => array('foo' => 'bar'));
+    $test_element['#attached']['drupalSettings']['foo'] = 'bar';
     $test_element['#post_render_cache']['common_test_post_render_cache'] = array(
       $context
     );
@@ -504,11 +504,11 @@ class RenderTest extends DrupalUnitTestBase {
     $output = drupal_render_root($element);
     $this->assertIdentical($output, '<p>overridden</p>', 'Output is overridden.');
     $this->assertIdentical($element['#markup'], '<p>overridden</p>', '#markup is overridden.');
-    $expected_js = [
-      ['type' => 'setting', 'data' => ['foo' => 'bar']],
-      ['type' => 'setting', 'data' => ['common_test' => $context]],
+    $expected_js_settings = [
+      'foo' => 'bar',
+      'common_test' => $context,
     ];
-    $this->assertIdentical($element['#attached']['js'], $expected_js, '#attached is modified; both the original JavaScript setting and the one added by the #post_render_cache callback exist.');
+    $this->assertIdentical($element['#attached']['drupalSettings'], $expected_js_settings, '#attached is modified; both the original JavaScript setting and the one added by the #post_render_cache callback exist.');
 
     // The cache system is turned off for POST requests.
     $request_method = \Drupal::request()->getMethod();
@@ -522,11 +522,11 @@ class RenderTest extends DrupalUnitTestBase {
     $this->assertIdentical($output, '<p>overridden</p>', 'Output is overridden.');
     $this->assertTrue(isset($element['#printed']), 'No cache hit');
     $this->assertIdentical($element['#markup'], '<p>overridden</p>', '#markup is overridden.');
-    $expected_js = [
-      ['type' => 'setting', 'data' => ['foo' => 'bar']],
-      ['type' => 'setting', 'data' => ['common_test' => $context]],
+    $expected_js_settings = [
+      'foo' => 'bar',
+      'common_test' => $context,
     ];
-    $this->assertIdentical($element['#attached']['js'], $expected_js, '#attached is modified; both the original JavaScript setting and the one added by the #post_render_cache callback exist.');
+    $this->assertIdentical($element['#attached']['drupalSettings'], $expected_js_settings, '#attached is modified; both the original JavaScript setting and the one added by the #post_render_cache callback exist.');
 
     // GET request: validate cached data.
     $element = array('#cache' => array('cid' => 'post_render_cache_test_GET'));
@@ -546,11 +546,11 @@ class RenderTest extends DrupalUnitTestBase {
     $this->assertIdentical($output, '<p>overridden</p>', 'Output is overridden.');
     $this->assertFalse(isset($element['#printed']), 'Cache hit');
     $this->assertIdentical($element['#markup'], '<p>overridden</p>', '#markup is overridden.');
-    $expected_js = [
-      ['type' => 'setting', 'data' => ['foo' => 'bar']],
-      ['type' => 'setting', 'data' => ['common_test' => $context]],
+    $expected_js_settings = [
+      'foo' => 'bar',
+      'common_test' => $context,
     ];
-    $this->assertIdentical($element['#attached']['js'], $expected_js, '#attached is modified; both the original JavaScript setting and the one added by the #post_render_cache callback exist.');
+    $this->assertIdentical($element['#attached']['drupalSettings'], $expected_js_settings, '#attached is modified; both the original JavaScript setting and the one added by the #post_render_cache callback exist.');
 
     // Verify behavior when handling a non-GET request, e.g. a POST request:
     // also in that case, #post_render_cache callbacks must be called.
@@ -564,11 +564,11 @@ class RenderTest extends DrupalUnitTestBase {
     $this->assertIdentical($output, '<p>overridden</p>', 'Output is overridden.');
     $this->assertTrue(isset($element['#printed']), 'No cache hit');
     $this->assertIdentical($element['#markup'], '<p>overridden</p>', '#markup is overridden.');
-    $expected_js = [
-      ['type' => 'setting', 'data' => ['foo' => 'bar']],
-      ['type' => 'setting', 'data' => ['common_test' => $context]],
+    $expected_js_settings = [
+      'foo' => 'bar',
+      'common_test' => $context,
     ];
-    $this->assertIdentical($element['#attached']['js'], $expected_js, '#attached is modified; both the original JavaScript setting and the one added by the #post_render_cache callback exist.');
+    $this->assertIdentical($element['#attached']['drupalSettings'], $expected_js_settings, '#attached is modified; both the original JavaScript setting and the one added by the #post_render_cache callback exist.');
 
     // POST request: Ensure no data was cached.
     $element = array('#cache' => array('cid' => 'post_render_cache_test_POST'));
@@ -604,9 +604,9 @@ class RenderTest extends DrupalUnitTestBase {
       ),
       '#title' => 'Parent',
       '#attached' => array(
-        'js' => array(
-          array('type' => 'setting', 'data' => array('foo' => 'bar'))
-        ),
+        'drupalSettings' => [
+          'foo' => 'bar',
+        ],
       ),
     );
     $test_element['child'] = array(
@@ -628,22 +628,20 @@ class RenderTest extends DrupalUnitTestBase {
     $this->assertIdentical($output, '<p>overridden</p>', 'Output is overridden.');
     $this->assertTrue(isset($element['#printed']), 'No cache hit');
     $this->assertIdentical($element['#markup'], '<p>overridden</p>', '#markup is overridden.');
-    $expected_js = [
-      ['type' => 'setting', 'data' => ['foo' => 'bar']],
-      ['type' => 'setting', 'data' => ['common_test' => $context_1 ]],
-      ['type' => 'setting', 'data' => ['common_test' => $context_2 ]],
-      ['type' => 'setting', 'data' => ['common_test' => $context_3 ]],
+    $expected_js_settings = [
+      'foo' => 'bar',
+      'common_test' => $context_1 + $context_2 + $context_3,
     ];
-    $this->assertIdentical($element['#attached']['js'], $expected_js, '#attached is modified; both the original JavaScript setting and the ones added by each #post_render_cache callback exist.');
+    $this->assertIdentical($element['#attached']['drupalSettings'], $expected_js_settings, '#attached is modified; both the original JavaScript setting and the ones added by each #post_render_cache callback exist.');
 
     // GET request: validate cached data.
     $element = array('#cache' => $element['#cache']);
     $cached_element = \Drupal::cache('render')->get(drupal_render_cid_create($element))->data;
     $expected_element = array(
       '#attached' => array(
-        'js' => array(
-          array('type' => 'setting', 'data' => array('foo' => 'bar'))
-        ),
+        'drupalSettings' => [
+          'foo' => 'bar',
+        ],
         'library' => array(
           'core/drupal.collapse',
           'core/drupal.collapse',
@@ -675,7 +673,7 @@ class RenderTest extends DrupalUnitTestBase {
     $output = drupal_render_root($element);
     $this->assertIdentical($output, '<p>overridden</p>', 'Output is overridden.');
     $this->assertFalse(isset($element['#printed']), 'Cache hit');
-    $this->assertIdentical($element['#attached']['js'], $expected_js, '#attached is modified; both the original JavaScript setting and the ones added by each #post_render_cache callback exist.');
+    $this->assertIdentical($element['#attached']['drupalSettings'], $expected_js_settings, '#attached is modified; both the original JavaScript setting and the ones added by each #post_render_cache callback exist.');
 
     // Test case 2.
     // Use the exact same element, but now unset #cache.
@@ -684,7 +682,7 @@ class RenderTest extends DrupalUnitTestBase {
     $output = drupal_render_root($element);
     $this->assertIdentical($output, '<p>overridden</p>', 'Output is overridden.');
     $this->assertIdentical($element['#markup'], '<p>overridden</p>', '#markup is overridden.');
-    $this->assertIdentical($element['#attached']['js'], $expected_js, '#attached is modified; both the original JavaScript setting and the ones added by each #post_render_cache callback exist.');
+    $this->assertIdentical($element['#attached']['drupalSettings'], $expected_js_settings, '#attached is modified; both the original JavaScript setting and the ones added by each #post_render_cache callback exist.');
 
     // Test case 3.
     // Create an element with a child and subchild. Each element has the same
@@ -701,7 +699,7 @@ class RenderTest extends DrupalUnitTestBase {
     $this->assertIdentical($output, '<p>overridden</p>', 'Output is overridden.');
     $this->assertTrue(isset($element['#printed']), 'No cache hit');
     $this->assertIdentical($element['#markup'], '<p>overridden</p>', '#markup is overridden.');
-    $this->assertIdentical($element['#attached']['js'], $expected_js, '#attached is modified; both the original JavaScript setting and the ones added by each #post_render_cache callback exist.');
+    $this->assertIdentical($element['#attached']['drupalSettings'], $expected_js_settings, '#attached is modified; both the original JavaScript setting and the ones added by each #post_render_cache callback exist.');
 
     // GET request: validate cached data for both the parent and child.
     $element = $test_element;
@@ -711,9 +709,9 @@ class RenderTest extends DrupalUnitTestBase {
     $cached_child_element = \Drupal::cache('render')->get(drupal_render_cid_create($element['child']))->data;
     $expected_parent_element = array(
       '#attached' => array(
-        'js' => array(
-          array('type' => 'setting', 'data' => array('foo' => 'bar'))
-        ),
+        'drupalSettings' => [
+          'foo' => 'bar',
+        ],
         'library' => array(
           'core/drupal.collapse',
           'core/drupal.collapse',
@@ -771,7 +769,7 @@ class RenderTest extends DrupalUnitTestBase {
     $output = drupal_render_root($element);
     $this->assertIdentical($output, '<p>overridden</p>', 'Output is overridden.');
     $this->assertFalse(isset($element['#printed']), 'Cache hit');
-    $this->assertIdentical($element['#attached']['js'], $expected_js, '#attached is modified; both the original JavaScript setting and the ones added by each #post_render_cache callback exist.');
+    $this->assertIdentical($element['#attached']['drupalSettings'], $expected_js_settings, '#attached is modified; both the original JavaScript setting and the ones added by each #post_render_cache callback exist.');
 
     // GET request: #cache enabled, cache hit, child element.
     $element = $test_element;
@@ -780,11 +778,10 @@ class RenderTest extends DrupalUnitTestBase {
     $output = drupal_render_root($element);
     $this->assertIdentical($output, '<p>overridden</p>', 'Output is overridden.');
     $this->assertFalse(isset($element['#printed']), 'Cache hit');
-    $expected_js = [
-      ['type' => 'setting', 'data' => ['common_test' => $context_2 ]],
-      ['type' => 'setting', 'data' => ['common_test' => $context_3 ]],
+    $expected_js_settings = [
+      'common_test' => $context_2 + $context_3,
     ];
-    $this->assertIdentical($element['#attached']['js'], $expected_js, '#attached is modified; both the original JavaScript setting and the ones added by each #post_render_cache callback exist.');
+    $this->assertIdentical($element['#attached']['drupalSettings'], $expected_js_settings, '#attached is modified; both the original JavaScript setting and the ones added by each #post_render_cache callback exist.');
 
     // Restore the previous request method.
     \Drupal::request()->setMethod($request_method);
@@ -821,10 +818,10 @@ class RenderTest extends DrupalUnitTestBase {
     $element = $test_element;
     $output = drupal_render_root($element);
     $this->assertIdentical($output, $expected_output, 'Placeholder was replaced in output');
-    $expected_js = [
-      ['type' => 'setting', 'data' => ['common_test' => $context]],
+    $expected_js_settings = [
+      'common_test' => $context,
     ];
-    $this->assertIdentical($element['#attached']['js'], $expected_js, '#attached is modified; JavaScript setting is added to page.');
+    $this->assertIdentical($element['#attached']['drupalSettings'], $expected_js_settings, '#attached is modified; JavaScript setting is added to page.');
 
     // The cache system is turned off for POST requests.
     $request_method = \Drupal::request()->getMethod();
@@ -838,7 +835,7 @@ class RenderTest extends DrupalUnitTestBase {
     $this->assertTrue(isset($element['#printed']), 'No cache hit');
     $this->assertIdentical($element['#markup'], $expected_output, 'Placeholder was replaced in #markup.');
     $this->assertIdentical($output, $expected_output, 'Placeholder was replaced in output');
-    $this->assertIdentical($element['#attached']['js'], $expected_js, '#attached is modified; JavaScript setting is added to page.');
+    $this->assertIdentical($element['#attached']['drupalSettings'], $expected_js_settings, '#attached is modified; JavaScript setting is added to page.');
 
     // GET request: validate cached data.
     $expected_token = $context['token'];
@@ -874,7 +871,7 @@ class RenderTest extends DrupalUnitTestBase {
     $this->assertIdentical($output, $expected_output, 'Placeholder was replaced in output');
     $this->assertFalse(isset($element['#printed']), 'Cache hit');
     $this->assertIdentical($element['#markup'], $expected_output, 'Placeholder was replaced in #markup.');
-    $this->assertIdentical($element['#attached']['js'], $expected_js, '#attached is modified; JavaScript setting is added to page.');
+    $this->assertIdentical($element['#attached']['drupalSettings'], $expected_js_settings, '#attached is modified; JavaScript setting is added to page.');
 
     // Restore the previous request method.
     \Drupal::request()->setMethod($request_method);
@@ -913,10 +910,10 @@ class RenderTest extends DrupalUnitTestBase {
     $element = $test_element;
     $output = drupal_render_root($element);
     $this->assertIdentical($output, $expected_output, 'Placeholder was replaced in output');
-    $expected_js = [
-      ['type' => 'setting', 'data' => ['common_test' => $context]],
+    $expected_js_settings = [
+      'common_test' => $context,
     ];
-    $this->assertIdentical($element['#attached']['js'], $expected_js, '#attached is modified; JavaScript setting is added to page.');
+    $this->assertIdentical($element['#attached']['drupalSettings'], $expected_js_settings, '#attached is modified; JavaScript setting is added to page.');
 
     // The cache system is turned off for POST requests.
     $request_method = \Drupal::request()->getMethod();
@@ -931,7 +928,7 @@ class RenderTest extends DrupalUnitTestBase {
     $this->assertIdentical($output, $expected_output, 'Placeholder was replaced in output');
     $this->assertTrue(isset($element['#printed']), 'No cache hit');
     $this->assertIdentical($element['#markup'], $expected_output, 'Placeholder was replaced in #markup.');
-    $this->assertIdentical($element['#attached']['js'], $expected_js, '#attached is modified; JavaScript setting is added to page.');
+    $this->assertIdentical($element['#attached']['drupalSettings'], $expected_js_settings, '#attached is modified; JavaScript setting is added to page.');
 
     // GET request: validate cached data for child element.
     $expected_token = $context['token'];
@@ -1023,7 +1020,7 @@ class RenderTest extends DrupalUnitTestBase {
     $this->assertIdentical($output, $expected_output, 'Placeholder was replaced in output');
     $this->assertFalse(isset($element['#printed']), 'Cache hit');
     $this->assertIdentical($element['#markup'], $expected_output, 'Placeholder was replaced in #markup.');
-    $this->assertIdentical($element['#attached']['js'], $expected_js, '#attached is modified; JavaScript setting is added to page.');
+    $this->assertIdentical($element['#attached']['drupalSettings'], $expected_js_settings, '#attached is modified; JavaScript setting is added to page.');
 
     // Restore the previous request method.
     \Drupal::request()->setMethod($request_method);
@@ -1048,10 +1045,10 @@ class RenderTest extends DrupalUnitTestBase {
     $output = drupal_render_root($element);
     $this->assertEqual('<p>overridden</p>', $output, 'The output has been modified by the indirect, recursive #post_render_cache callback.');
     $this->assertIdentical($element['#markup'], '<p>overridden</p>', '#markup is overridden by the indirect, recursive #post_render_cache callback.');
-    $expected_js = [
-      ['type' => 'setting', 'data' => ['common_test' => $context]],
+    $expected_js_settings = [
+      'common_test' => $context,
     ];
-    $this->assertIdentical($element['#attached']['js'], $expected_js, '#attached is modified by the indirect, recursive #post_render_cache callback.');
+    $this->assertIdentical($element['#attached']['drupalSettings'], $expected_js_settings, '#attached is modified by the indirect, recursive #post_render_cache callback.');
   }
 
   /**
@@ -1073,12 +1070,7 @@ class RenderTest extends DrupalUnitTestBase {
       ),
       'child_asset' => array(
         '#attached' => array(
-          'js' => array(
-            array(
-              'type' => 'setting',
-              'data' => array('foo' => 'bar'),
-            )
-          ),
+          'drupalSettings' => array('foo' => 'bar'),
         ),
         '#markup' => 'Asset!',
       ),
@@ -1145,12 +1137,7 @@ class RenderTest extends DrupalUnitTestBase {
       $this->assertEqual('Cache tag!Asset!Post-render cache!barquxNested!Cached nested!', trim($output), 'Expected HTML generated.');
       $this->assertEqual(array('child:cache_tag'), $test_element['#cache']['tags'], 'Expected cache tags found.');
       $expected_attached = array(
-        'js' => array(
-          0 => array(
-            'type' => 'setting',
-            'data' => array('foo' => 'bar'),
-          ),
-        ),
+        'drupalSettings' => array('foo' => 'bar'),
       );
       $this->assertEqual($expected_attached, $test_element['#attached'], 'Expected assets found.');
       $this->assertEqual([], $test_element['#post_render_cache'], '#post_render_cache property is empty after rendering');

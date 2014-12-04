@@ -163,32 +163,6 @@ function ajax_forms_test_advanced_commands_add_css_callback($form, FormStateInte
 }
 
 /**
- * Ajax callback for 'settings' but with setting overrides.
- */
-function ajax_forms_test_advanced_commands_settings_with_merging_callback($form, FormStateInterface $form_state) {
-  $attached = array(
-    '#attached' => array(
-      'js' => array(
-        0 => array(
-          'type' => 'setting',
-          'data' => array('ajax_forms_test' => array('foo' => 42)),
-        ),
-        '1' => array(
-          'type' => 'setting',
-          'data' => array('ajax_forms_test' => array('foo' => 9001)),
-        ),
-      ),
-    ),
-  );
-  // @todo Why is this being tested via an explicit drupal_render() call?
-  drupal_render($attached);
-  drupal_process_attached($attached);
-
-  $response = new AjaxResponse();
-  return $response;
-}
-
-/**
  * Ajax form callback: Selects the 'drivertext' element of the validation form.
  */
 function ajax_forms_test_validation_form_callback($form, FormStateInterface $form_state) {

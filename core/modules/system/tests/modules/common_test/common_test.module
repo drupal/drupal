@@ -208,12 +208,10 @@ function common_test_post_render_cache(array $element, array $context) {
   $element['#markup'] = '<p>overridden</p>';
 
   // Extend #attached.
-  $element['#attached']['js'][] = array(
-    'type' => 'setting',
-    'data' => array(
-      'common_test' => $context
-    ),
-  );
+  if (!isset($element['#attached']['drupalSettings']['common_test'])) {
+    $element['#attached']['drupalSettings']['common_test'] = [];
+  }
+  $element['#attached']['drupalSettings']['common_test'] += $context;
 
   // Set new property.
   $element['#context_test'] = $context;
@@ -238,14 +236,9 @@ function common_test_post_render_cache_placeholder(array $element, array $contex
   $replace_element = array(
     '#markup' => '<bar>' . $context['bar'] . '</bar>',
     '#attached' => array(
-      'js' => array(
-        array(
-          'type' => 'setting',
-          'data' => array(
-            'common_test' => $context,
-          ),
-        ),
-      ),
+      'drupalSettings' => [
+        'common_test' => $context,
+      ],
     ),
   );
   $markup = drupal_render($replace_element);
@@ -324,4 +317,19 @@ function common_test_page_attachments_alter(array &$page) {
       '#markup' => 'test',
     ];
   }
+}
+
+/**
+ * Implements hook_js_settings_alter().
+ *
+ * @see \Drupal\system\Tests\Common\JavaScriptTest::testHeaderSetting()
+ */
+function common_test_js_settings_alter(&$settings) {
+  // Modify an existing setting.
+  if (array_key_exists('pluralDelimiter', $settings['locale'])) {
+    $settings['locale']['pluralDelimiter'] = '☃';
+  }
+
+  // Add a setting.
+  $settings['foo'] = 'bar';
 }

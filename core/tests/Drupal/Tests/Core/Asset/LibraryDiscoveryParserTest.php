@@ -285,8 +285,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     $this->assertEquals('file', $library['css'][0]['type']);
     $this->assertEquals($path . '/css/base.css', $library['css'][0]['data']);
 
-    $this->assertEquals('setting', $library['js'][1]['type']);
-    $this->assertEquals(array('key' => 'value'), $library['js'][1]['data']);
+    $this->assertEquals(array('key' => 'value'), $library['drupalSettings']);
   }
 
   /**

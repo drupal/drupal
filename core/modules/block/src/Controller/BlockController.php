@@ -59,17 +59,14 @@ class BlockController extends ControllerBase {
       '#title' => $this->themeHandler->getName($theme),
       '#type' => 'page',
       '#attached' => array(
-        'js' => array(
-          array(
-            // The block demonstration page is not marked as an administrative
-            // page by \Drupal::service('router.admin_context')->isAdminRoute()
-            // function in order to use the frontend theme. Since JavaScript
-            // relies on a proper separation of admin pages, it needs to know
-            // this is an actual administrative page.
-            'data' => array('path' => array('currentPathIsAdmin' => TRUE)),
-            'type' => 'setting',
-          )
-        ),
+        'drupalSettings' => [
+          // The block demonstration page is not marked as an administrative
+          // page by \Drupal::service('router.admin_context')->isAdminRoute()
+          // function in order to use the frontend theme. Since JavaScript
+          // relies on a proper separation of admin pages, it needs to know this
+          // is an actual administrative page.
+          'path' => ['currentPathIsAdmin' => TRUE],
+        ],
         'library' => array(
           'block/drupal.block.admin',
         ),

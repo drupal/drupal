@@ -163,17 +163,9 @@ class MachineName extends Textfield {
       NestedArray::setValue($form_state->getCompleteForm(), $parents, $source['#field_suffix']);
     }
 
-    $js_settings = array(
-      'type' => 'setting',
-      'data' => array(
-        'machineName' => array(
-          '#' . $source['#id'] => $element['#machine_name'],
-        ),
-        'langcode' => $language->getId(),
-      ),
-    );
     $element['#attached']['library'][] = 'core/drupal.machine-name';
-    $element['#attached']['js'][] = $js_settings;
+    $element['#attached']['drupalSettings']['machineName']['#' . $source['#id']] = $element['#machine_name'];
+    $element['#attached']['drupalSettings']['langcode'] = $language->getId();
 
     return $element;
   }

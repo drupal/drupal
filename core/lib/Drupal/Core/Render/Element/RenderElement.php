@@ -296,10 +296,7 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
         unset($settings['progress']['path']);
       }
 
-      $element['#attached']['js'][] = array(
-        'type' => 'setting',
-        'data' => array('ajax' => array($element['#id'] => $settings)),
-      );
+      $element['#attached']['drupalSettings']['ajax'][$element['#id']] = $settings;
 
       // Indicate that Ajax processing was successful.
       $element['#ajax_processed'] = TRUE;

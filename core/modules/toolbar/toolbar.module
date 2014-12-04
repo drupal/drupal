@@ -149,13 +149,10 @@ function toolbar_toolbar() {
   // script here with the hash parameter that is needed for that route.
   // @see toolbar_subtrees_jsonp()
   $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
-  $subtrees_attached['js'][] = array(
-    'type' => 'setting',
-    'data' => array('toolbar' => array(
-      'subtreesHash' => _toolbar_get_subtrees_hash($langcode),
-      'langcode' => $langcode,
-    )),
-  );
+  $subtrees_attached['drupalSettings']['toolbar'] = [
+    'subtreesHash' => _toolbar_get_subtrees_hash($langcode),
+    'langcode' => $langcode,
+  ];
 
   // The administration element has a link that is themed to correspond to
   // a toolbar tray. The tray contains the full administrative menu of the site.

@@ -1844,7 +1844,7 @@ abstract class WebTestBase extends TestBase {
       }
       switch ($command['command']) {
         case 'settings':
-          $drupal_settings = drupal_merge_js_settings(array($drupal_settings, $command['settings']));
+          $drupal_settings = NestedArray::mergeDeepArray([$drupal_settings, $command['settings']], TRUE);
           break;
 
         case 'insert':

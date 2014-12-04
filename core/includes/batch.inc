@@ -179,18 +179,13 @@ function _batch_progress_page() {
         ),
       ),
       // Adds JavaScript code and settings for clients where JavaScript is enabled.
-      'js' => array(
-        array(
-          'type' => 'setting',
-          'data' => array(
-            'batch' => array(
-              'errorMessage' => $current_set['error_message'] . '<br />' . $batch['error_message'],
-              'initMessage' => $current_set['init_message'],
-              'uri' => $url,
-            ),
-          ),
-        ),
-      ),
+      'drupalSettings' => [
+        'batch' => [
+          'errorMessage' => $current_set['error_message'] . '<br />' . $batch['error_message'],
+          'initMessage' => $current_set['init_message'],
+          'uri' => $url,
+        ],
+      ],
       'library' => array(
         'core/drupal.batch',
       ),

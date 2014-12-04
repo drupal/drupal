@@ -81,7 +81,7 @@ class FileWidgetAjaxController extends FormAjaxController {
     $output = drupal_render($form);
     drupal_process_attached($form);
     $js = _drupal_add_js();
-    $settings = drupal_merge_js_settings($js['settings']['data']);
+    $settings = $js['drupalSettings']['data'];
 
     $response = new AjaxResponse();
     foreach ($commands as $command) {

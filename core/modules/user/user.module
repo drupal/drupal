@@ -108,27 +108,17 @@ function user_theme() {
 }
 
 /**
- * Implements hook_js_alter().
+ * Implements hook_js_settings_alter().
  */
-function user_js_alter(&$javascript) {
-  // If >=1 JavaScript asset has declared a dependency on drupalSettings, the
-  // 'settings' key will exist. Thus when that key does not exist, return early.
-  if (!isset($javascript['settings'])) {
-    return;
-  }
-
+function user_js_settings_alter(&$settings) {
   // Provide the user ID in drupalSettings to allow JavaScript code to customize
   // the experience for the end user, rather than the server side, which would
   // break the render cache.
   // Similarly, provide a permissions hash, so that permission-dependent data
   // can be reliably cached on the client side.
   $user = \Drupal::currentUser();
-  $javascript['settings']['data'][] = array(
-    'user' => array(
-      'uid' => $user->id(),
-      'permissionsHash' => \Drupal::service('user.permissions_hash')->generate($user),
-    ),
-  );
+  $settings['user']['uid'] = $user->id();
+  $settings['user']['permissionsHash'] = \Drupal::service('user.permissions_hash')->generate($user);
 }
 
 /**
@@ -1363,17 +1353,8 @@ function user_form_process_password_confirm($element) {
     );
   }
 
-  $js_settings = array(
-    'password' => $password_settings,
-  );
-
   $element['#attached']['library'][] = 'user/drupal.user';
-  // Ensure settings are only added once per page.
-  static $already_added = FALSE;
-  if (!$already_added) {
-    $already_added = TRUE;
-    $element['#attached']['js'][] = array('data' => $js_settings, 'type' => 'setting');
-  }
+  $element['#attached']['drupalSettings']['password'] = $password_settings;
 
   return $element;
 }

@@ -129,8 +129,8 @@ class AjaxResponse extends JsonResponse {
     // HTML in the page. We pass TRUE as the $skip_alter argument to prevent the
     // data from being altered again, as we already altered it above. Settings
     // are handled separately, afterwards.
-    if (isset($items['js']['settings'])) {
-      unset($items['js']['settings']);
+    if (isset($items['js']['drupalSettings'])) {
+      unset($items['js']['drupalSettings']);
     }
     $styles = drupal_get_css($items['css'], TRUE);
     $scripts_footer = drupal_get_js('footer', $items['js'], TRUE, TRUE);
@@ -153,17 +153,15 @@ class AjaxResponse extends JsonResponse {
 
     // Prepend a command to merge changes and additions to drupalSettings.
     $scripts = _drupal_add_js();
-    if (!empty($scripts['settings'])) {
-      $settings = drupal_merge_js_settings($scripts['settings']['data']);
+    if (!empty($scripts['drupalSettings'])) {
+      $settings = $scripts['drupalSettings']['data'];
       // During Ajax requests basic path-specific settings are excluded from
       // new drupalSettings values. The original page where this request comes
-      // from already has the right values for the keys below. An Ajax request
-      // would update them with values for the Ajax request and incorrectly
-      // override the page's values.
+      // from already has the right values. An Ajax request would update them
+      // with values for the Ajax request and incorrectly override the page's
+      // values.
       // @see _drupal_add_js()
-      foreach (array('basePath', 'currentPath', 'scriptPath', 'pathPrefix') as $item) {
-        unset($settings[$item]);
-      }
+      unset($settings['path']);
       $this->addCommand(new SettingsCommand($settings, TRUE), TRUE);
     }
 

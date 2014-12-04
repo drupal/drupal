@@ -78,14 +78,7 @@ class Toolbar extends RenderElement {
         $media_queries[$id] = $breakpoint->getMediaQuery();
       }
 
-      $element['#attached']['js'][] = array(
-        'data' => array(
-          'toolbar' => array(
-            'breakpoints' => $media_queries,
-          )
-        ),
-        'type' => 'setting',
-      );
+      $element['#attached']['drupalSettings']['toolbar']['breakpoints'] = $media_queries;
     }
 
     $module_handler = static::moduleHandler();

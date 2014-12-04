@@ -54,7 +54,7 @@ function views_help($route_name, RouteMatchInterface $route_match) {
 function views_views_pre_render($view) {
   // If using AJAX, send identifying data about this view.
   if ($view->ajaxEnabled() && empty($view->is_attachment) && empty($view->live_preview)) {
-    $settings = array(
+    $view->element['#attached']['drupalSettings']['views'] = array(
       'views' => array(
         'ajax_path' => \Drupal::url('views.ajax'),
         'ajaxViews' => array(
@@ -72,7 +72,6 @@ function views_views_pre_render($view) {
         ),
       ),
     );
-    $view->element['#attached']['js'][] = array('type' => 'setting', 'data' => $settings);
     $view->element['#attached']['library'][] = 'views/views.ajax';
   }
 

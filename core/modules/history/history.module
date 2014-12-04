@@ -193,16 +193,7 @@ function history_user_delete($account) {
  *   The updated $element.
  */
 function history_attach_timestamp(array $element, array $context) {
-  $element['#attached']['js'][] = array(
-    'type' => 'setting',
-    'data' => array(
-      'history' => array(
-        'lastReadTimestamps' => array(
-          $context['node_id'] => (int) history_read($context['node_id']),
-        )
-      ),
-    ),
-  );
-
+  $node_id = $context['node_id'];
+  $element['#attached']['drupalSettings']['history']['lastReadTimestamps'][$node_id] = (int) history_read($node_id);
   return $element;
 }

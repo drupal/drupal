@@ -98,17 +98,10 @@ class SimpletestTestForm extends FormBase {
       '#title' => $this->t('Collapse'),
       '#suffix' => '<a href="#" class="simpletest-collapse">(' . $this->t('Collapse') . ')</a>',
     );
-    $form['tests']['#attached']['js'][] = array(
-      'type' => 'setting',
-      'data' => array(
-        'simpleTest' => array(
-          'images' => array(
-            drupal_render($image_collapsed),
-            drupal_render($image_extended),
-          ),
-        ),
-      ),
-    );
+    $form['tests']['#attached']['drupalSettings']['simpleTest']['images'] = [
+      drupal_render($image_collapsed),
+      drupal_render($image_extended),
+    ];
 
     // Generate the list of tests arranged by group.
     $groups = simpletest_test_get_all();

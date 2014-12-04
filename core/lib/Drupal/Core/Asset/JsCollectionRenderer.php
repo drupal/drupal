@@ -68,7 +68,7 @@ class JsCollectionRenderer implements AssetCollectionRendererInterface {
       switch ($js_asset['type']) {
         case 'setting':
           $element['#value_prefix'] = $embed_prefix;
-          $element['#value'] = 'var drupalSettings = ' . Json::encode(drupal_merge_js_settings($js_asset['data'])) . ";";
+          $element['#value'] = 'var drupalSettings = ' . Json::encode($js_asset['data']) . ";";
           $element['#value_suffix'] = $embed_suffix;
           break;
 

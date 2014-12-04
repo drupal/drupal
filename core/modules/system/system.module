@@ -630,6 +630,49 @@ function system_page_attachments(array &$page) {
 }
 
 /**
+ * Implements hook_js_settings_alter().
+ *
+ * Generates the values for the core/drupalSettings library.
+ */
+function system_js_settings_alter(&$settings) {
+  // url() generates the script and prefix using hook_url_outbound_alter().
+  // Instead of running the hook_url_outbound_alter() again here, extract
+  // them from url().
+  // @todo Make this less hacky: http://drupal.org/node/1547376.
+  $request = \Drupal::request();
+  $scriptPath = $request->getScriptName();
+
+  $pathPrefix = '';
+  $current_query = $request->query->all();
+  _url('', array('script' => &$scriptPath, 'prefix' => &$pathPrefix));
+  $current_path = \Drupal::routeMatch()->getRouteName() ? Url::fromRouteMatch(\Drupal::routeMatch())->getInternalPath() : '';
+  $current_path_is_admin = \Drupal::service('router.admin_context')->isAdminRoute();
+  $path_settings = [
+    'baseUrl' => $request->getBaseUrl() . '/',
+    'scriptPath' => $scriptPath,
+    'pathPrefix' => $pathPrefix,
+    'currentPath' => $current_path,
+    'currentPathIsAdmin' => $current_path_is_admin,
+    'isFront' => drupal_is_front_page(),
+    'currentLanguage' => \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_URL)->getId(),
+  ];
+  if (!empty($current_query)) {
+    ksort($current_query);
+    $path_settings['currentQuery'] = (object) $current_query;
+  }
+
+  // Only set core/drupalSettings values that haven't been set already.
+  foreach ($path_settings as $key => $value) {
+    if (!isset($settings['path'][$key])) {
+      $settings['path'][$key] = $value;
+    }
+  }
+  if (!isset($settings['locale']['pluralDelimiter'])) {
+    $settings['locale']['pluralDelimiter'] = LOCALE_PLURAL_DELIMITER;
+  }
+}
+
+/**
  * Implements hook_form_FORM_ID_alter().
  */
 function system_form_user_form_alter(&$form, FormStateInterface $form_state) {

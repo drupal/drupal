@@ -140,14 +140,11 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
       '#type' => 'container',
       '#attached' => array(
         'library' => array('ckeditor/drupal.ckeditor.admin'),
-        'js' => array(
-          array(
-            'type' => 'setting',
-            'data' => array('ckeditor' => array(
-              'toolbarAdmin' => drupal_render($ckeditor_settings_toolbar),
-            )),
-          )
-        ),
+        'drupalSettings' => [
+          'ckeditor' => [
+            'toolbarAdmin' => drupal_render($ckeditor_settings_toolbar),
+          ],
+        ],
       ),
       '#attributes' => array('class' => array('ckeditor-toolbar-configuration')),
     );
@@ -218,14 +215,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
     $form['hidden_ckeditor'] = array(
       '#markup' => '<div id="ckeditor-hidden" class="hidden"></div>',
       '#attached' => array(
-        'js' => array(
-          array(
-            'type' => 'setting',
-            'data' => array('ckeditor' => array(
-              'hiddenCKEditorConfig' => $config,
-            )),
-          ),
-        ),
+        'drupalSettings' => ['ckeditor' => ['hiddenCKEditorConfig' => $config]],
       ),
     );
 

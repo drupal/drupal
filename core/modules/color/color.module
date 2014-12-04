@@ -213,18 +213,13 @@ function color_scheme_form($complete_form, FormStateInterface $form_state, $them
         'color/admin',
       ),
       // Add custom JavaScript.
-      'js' => array(
-        array(
-          'data' => array(
-            'color' => array(
-              'reference' => color_get_palette($theme, TRUE),
-              'schemes' => $schemes,
-            ),
-            'gradients' => $info['gradients'],
-          ),
-          'type' => 'setting',
-        ),
-      ),
+      'drupalSettings' => [
+        'color' => [
+          'reference' => color_get_palette($theme, TRUE),
+          'schemes' => $schemes,
+        ],
+        'gradients' => $info['gradients'],
+      ],
     ),
   );
 

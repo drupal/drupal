@@ -84,7 +84,7 @@ class LibraryDiscoveryParser {
     }
 
     foreach ($libraries as $id => &$library) {
-      if (!isset($library['js']) && !isset($library['css']) && !isset($library['settings'])) {
+      if (!isset($library['js']) && !isset($library['css']) && !isset($library['drupalSettings'])) {
         throw new IncompleteLibraryDefinitionException(sprintf("Incomplete library definition for '%s' in %s", $id, $library_file));
       }
       $library += array('dependencies' => array(), 'js' => array(), 'css' => array());
@@ -198,14 +198,6 @@ class LibraryDiscoveryParser {
         }
       }
 
-      // @todo Introduce drupal_add_settings().
-      if (isset($library['settings'])) {
-        $library['js'][] = array(
-          'type' => 'setting',
-          'data' => $library['settings'],
-        );
-        unset($library['settings']);
-      }
       // @todo Convert all uses of #attached[library][]=array('provider','name')
       //   into #attached[library][]='provider/name' and remove this.
       foreach ($library['dependencies'] as $i => $dependency) {

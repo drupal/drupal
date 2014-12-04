@@ -4,5 +4,5 @@ example:
       css/base.css: {}
   js:
     js/example.js: {}
-  settings:
+  drupalSettings:
     key: value

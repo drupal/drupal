@@ -333,10 +333,10 @@ class OverviewTerms extends FormBase {
         'hidden' => FALSE,
       );
       $form['terms']['#attached']['library'][] = 'taxonomy/drupal.taxonomy';
-      $form['terms']['#attached']['js'][] = array(
-        'data' => array('taxonomy' => array('backStep' => $back_step, 'forwardStep' => $forward_step)),
-        'type' => 'setting',
-      );
+      $form['terms']['#attached']['drupalSettings']['taxonomy'] = [
+        'backStep' => $back_step,
+        'forwardStep' => $forward_step,
+      ];
     }
     $form['terms']['#tabledrag'][] = array(
       'action' => 'order',

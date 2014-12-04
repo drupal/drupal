@@ -210,10 +210,7 @@ abstract class OverviewBase extends FormBase {
       $elements['#regions'][$region_name]['rows_order'] = array_reduce($trees[$region_name], array($this, 'reduceOrder'));
     }
 
-    $elements['#attached']['js'][] = array(
-      'type' => 'setting',
-      'data' => array('fieldUIRowsData' => $js_settings),
-    );
+    $elements['#attached']['drupalSettings']['fieldUIRowsData'] = $js_settings;
 
     // If the custom #tabledrag is set and there is a HTML ID, add the table's
     // HTML ID to the options and attach the behavior.

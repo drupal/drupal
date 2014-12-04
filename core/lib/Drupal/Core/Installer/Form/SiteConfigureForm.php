@@ -123,8 +123,7 @@ class SiteConfigureForm extends FormBase {
     $form['#attached']['library'][] = 'core/drupal.timezone';
     // We add these strings as settings because JavaScript translation does not
     // work during installation.
-    $js = array('copyFieldValue' => array('edit-site-mail' => array('edit-account-mail')));
-    $form['#attached']['js'][] = array('data' => $js, 'type' => 'setting');
+    $form['#attached']['drupalSettings']['copyFieldValue']['edit-site-mail'] = ['edit-account-mail'];
 
     // Cache a fully-built schema. This is necessary for any invocation of
     // index.php because: (1) setting cache table entries requires schema

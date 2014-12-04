@@ -109,15 +109,12 @@ class ViewEditForm extends ViewFormBase {
     $form['#attached']['library'][] = 'views_ui/views_ui.admin';
     $form['#attached']['library'][] = 'views_ui/admin.styling';
 
-    $form['#attached']['js'][] = array(
-      'data' => array('views' => array('ajax' => array(
-        'id' => '#views-ajax-body',
-        'title' => '#views-ajax-title',
-        'popup' => '#views-ajax-popup',
-        'defaultForm' => $view->getDefaultAJAXMessage(),
-      ))),
-      'type' => 'setting',
-    );
+    $form['#attached']['drupalSettings']['views']['ajax'] = [
+      'id' => '#views-ajax-body',
+      'title' => '#views-ajax-title',
+      'popup' => '#views-ajax-popup',
+      'defaultForm' => $view->getDefaultAJAXMessage(),
+    ];
 
     $form += array(
       '#prefix' => '',

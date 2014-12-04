@@ -139,10 +139,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
     $placement = FALSE;
     if ($this->request->query->has('block-placement')) {
       $placement = $this->request->query->get('block-placement');
-      $form['#attached']['js'][] = array(
-        'type' => 'setting',
-        'data' => array('blockPlacement' => $placement),
-      );
+      $form['#attached']['drupalSettings']['blockPlacement'] = $placement;
     }
     $entities = $this->load();
     $form['#theme'] = array('block_list');

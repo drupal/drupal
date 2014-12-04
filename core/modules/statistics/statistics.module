@@ -40,10 +40,7 @@ function statistics_node_view(array &$build, EntityInterface $node, EntityViewDi
   if (!$node->isNew() && $view_mode == 'full' && node_is_page($node) && empty($node->in_preview)) {
     $build['statistics_content_counter']['#attached']['library'][] = 'statistics/drupal.statistics';
     $settings = array('data' => array('nid' => $node->id()), 'url' => _url(drupal_get_path('module', 'statistics') . '/statistics.php'));
-    $build['statistics_content_counter']['#attached']['js'][] = array(
-      'data' => array('statistics' => $settings),
-      'type' => 'setting',
-    );
+    $build['statistics_content_counter']['#attached']['drupalSettings']['statistics'] = $settings;
   }
 }
 
