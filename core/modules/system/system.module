@@ -9,10 +9,9 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
-use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\KeyValueStore\KeyValueDatabaseExpirableFactory;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\StringTranslation\TranslationWrapper;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Url;
@@ -1187,17 +1186,22 @@ function system_get_module_admin_tasks($module, array $info) {
 /**
  * Implements hook_cron().
  *
- * Remove older rows from flood and batch table. Remove old temporary files.
+ * Remove older rows from flood, batch cache and expirable keyvalue tables.
  */
 function system_cron() {
-  // Cleanup the flood.
+  // Clean up the flood.
   \Drupal::flood()->garbageCollection();
 
   foreach (Cache::getBins() as $cache_backend) {
     $cache_backend->garbageCollection();
   }
 
-  // Cleanup the queue for failed batches.
+  // Clean up the expirable key value database store.
+  if (\Drupal::service('keyvalue.expirable.database') instanceof KeyValueDatabaseExpirableFactory) {
+    \Drupal::service('keyvalue.expirable.database')->garbageCollection();
+  }
+
+  // Clean up the queue for failed batches.
   db_delete('queue')
     ->condition('created', REQUEST_TIME - 864000, '<')
     ->condition('name', 'drupal_batch:%', 'LIKE')

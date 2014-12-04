@@ -197,8 +197,6 @@ services:
   keyvalue.expirable.database:
     class: Drupal\Core\KeyValueStore\KeyValueDatabaseExpirableFactory
     arguments: ['@serialization.phpserialize', '@database']
-    tags:
-      - { name: needs_destruction }
   logger.factory:
     class: Drupal\Core\Logger\LoggerChannelFactory
     parent: container.trait

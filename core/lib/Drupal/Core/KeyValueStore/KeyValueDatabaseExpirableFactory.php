@@ -14,7 +14,7 @@ use Drupal\Core\Database\Connection;
 /**
  * Defines the key/value store factory for the database backend.
  */
-class KeyValueDatabaseExpirableFactory implements KeyValueExpirableFactoryInterface, DestructableInterface {
+class KeyValueDatabaseExpirableFactory implements KeyValueExpirableFactoryInterface {
 
   /**
    * Holds references to each instantiation so they can be terminated.
@@ -61,14 +61,11 @@ class KeyValueDatabaseExpirableFactory implements KeyValueExpirableFactoryInterf
   }
 
   /**
-   * {@inheritdoc}
+   * Deletes expired items.
    */
-  public function destruct() {
-    if (!empty($this->storages)) {
-      // Each instance does garbage collection for all collections, so we can
-      // optimize and only have to call the first, avoids multiple DELETE.
-      $storage = reset($this->storages);
-      $storage->destruct();
-    }
+  public function garbageCollection() {
+    $this->connection->delete('key_value_expire')
+      ->condition('expire', REQUEST_TIME, '<')
+      ->execute();
   }
 }

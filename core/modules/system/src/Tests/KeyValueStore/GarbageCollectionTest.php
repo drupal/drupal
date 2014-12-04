@@ -28,9 +28,10 @@ class GarbageCollectionTest extends KernelTestBase {
 
   protected function setUp() {
     parent::setUp();
-    $this->installSchema('system', array('key_value_expire'));
-  }
 
+    // These additional tables are necessary due to the call to system_cron().
+    $this->installSchema('system', array('key_value_expire', 'flood', 'queue'));
+  }
 
   /**
    * Tests garbage collection.
@@ -58,10 +59,10 @@ class GarbageCollectionTest extends KernelTestBase {
         ->execute();
     }
 
-    // Perform a new set operation and then manually destruct the object to
-    // trigger garbage collection.
+
+    // Perform a new set operation and then trigger garbage collection.
     $store->setWithExpire('autumn', 'winter', rand(500, 1000000));
-    $store->destruct();
+    system_cron();
 
     // Query the database and confirm that the stale records were deleted.
     $result = db_query(
@@ -69,7 +70,7 @@ class GarbageCollectionTest extends KernelTestBase {
       array(
         ':collection' => $collection,
       ))->fetchAll();
-    $this->assertIdentical(sizeof($result), 1, 'Only one item remains after garbage collection');
+    $this->assertIdentical(count($result), 1, 'Only one item remains after garbage collection');
 
   }
 
