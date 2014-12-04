@@ -485,6 +485,11 @@ function install_run_tasks(&$install_state) {
     $install_state['active_task'] = $task_name;
     $original_parameters = $install_state['parameters'];
     $output = install_run_task($task, $install_state);
+    // Ensure the maintenance theme is initialized. If the install task has
+    // rebuilt the container the active theme will not be set. This can occur if
+    // the task has installed a module.
+    drupal_maintenance_theme();
+
     $install_state['parameters_changed'] = ($install_state['parameters'] != $original_parameters);
     // Store this task as having been performed during the current request,
     // and save it to the database as completed, if we need to and if the
