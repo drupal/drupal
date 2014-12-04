@@ -18,12 +18,17 @@ use Drupal\field\Tests\String\StringFieldTest;
  */
 class TextFieldTest extends StringFieldTest {
 
-  protected $admin_user;
+  /**
+   * A user with relevant administrative privileges.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $adminUser;
 
   protected function setUp() {
     parent::setUp();
 
-    $this->admin_user = $this->drupalCreateUser(array('administer filters'));
+    $this->adminUser = $this->drupalCreateUser(array('administer filters'));
   }
 
   // Test fields.
@@ -106,13 +111,13 @@ class TextFieldTest extends StringFieldTest {
       ->save();
 
     // Disable all text formats besides the plain text fallback format.
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     foreach (filter_formats() as $format) {
       if (!$format->isFallbackFormat()) {
         $this->drupalPostForm('admin/config/content/formats/manage/' . $format->format . '/disable', array(), t('Disable'));
       }
     }
-    $this->drupalLogin($this->web_user);
+    $this->drupalLogin($this->webUser);
 
     // Display the creation form. Since the user only has access to one format,
     // no format selector will be displayed.
@@ -140,7 +145,7 @@ class TextFieldTest extends StringFieldTest {
 
     // Create a new text format that does not escape HTML, and grant the user
     // access to it.
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $edit = array(
       'format' => Unicode::strtolower($this->randomMachineName()),
       'name' => $this->randomMachineName(),
@@ -150,10 +155,10 @@ class TextFieldTest extends StringFieldTest {
     $format = entity_load('filter_format', $edit['format']);
     $format_id = $format->format;
     $permission = $format->getPermissionName();
-    $roles = $this->web_user->getRoles();
+    $roles = $this->webUser->getRoles();
     $rid = $roles[0];
     user_role_grant_permissions($rid, array($permission));
-    $this->drupalLogin($this->web_user);
+    $this->drupalLogin($this->webUser);
 
     // Display edition form.
     // We should now have a 'text format' selector.

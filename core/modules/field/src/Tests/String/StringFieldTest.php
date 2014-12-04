@@ -33,13 +33,18 @@ class StringFieldTest extends WebTestBase {
    */
   public static $modules = array('entity_test');
 
-  protected $web_user;
+  /**
+   * A user without any special permissions.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $webUser;
 
   protected function setUp() {
     parent::setUp();
 
-    $this->web_user = $this->drupalCreateUser(array('view test entity', 'administer entity_test content'));
-    $this->drupalLogin($this->web_user);
+    $this->webUser = $this->drupalCreateUser(array('view test entity', 'administer entity_test content'));
+    $this->drupalLogin($this->webUser);
   }
 
   // Test fields.
