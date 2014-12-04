@@ -205,6 +205,14 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     );
     $field = $this->createImageField($field_name, 'article', array(), $field_settings, $widget_settings);
 
+    // Verify that the min/max resolution set on the field are properly
+    // extracted, and displayed, on the image field's configuration form.
+    $this->drupalGet('admin/structure/types/manage/article/fields/' . $field->id());
+    $this->assertFieldByName('field[settings][max_resolution][x]', '100', 'Expected max resolution X value of 100.');
+    $this->assertFieldByName('field[settings][max_resolution][y]', '100', 'Expected max resolution Y value of 100.');
+    $this->assertFieldByName('field[settings][min_resolution][x]', '10', 'Expected min resolution X value of 10.');
+    $this->assertFieldByName('field[settings][min_resolution][y]', '10', 'Expected min resolution Y value of 10.');
+
     $this->drupalGet('node/add/article');
     $this->assertText(t('50 KB limit.'), 'Image widget max file size is displayed on article form.');
     $this->assertText(t('Allowed types: @extensions.', array('@extensions' => $test_image_extension)), 'Image widget allowed file types displayed on article form.');
