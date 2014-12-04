@@ -42,7 +42,8 @@ class FieldInstanceDefaults extends ProcessPluginBase {
 
       case 'date_select':
         if (!empty($widget_settings['default_value'])) {
-          $default['value'] = $widget_settings['default_value'];
+          $default['default_date_type'] = 'relative';
+          $default['default_date'] = $widget_settings['default_value'];
         }
         break;
 

@@ -20,6 +20,15 @@ use Drupal\link\LinkItemInterface;
 class MigrateFieldInstanceTest extends MigrateDrupalTestBase {
 
   /**
+   * Set to TRUE to strict check all configuration saved.
+   *
+   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
+   *
+   * @var bool
+   */
+  protected $strictConfigSchema = TRUE;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -144,7 +153,6 @@ class MigrateFieldInstanceTest extends MigrateDrupalTestBase {
     $this->assertEqual($field->getSettings(), $expected);
     $this->assertEqual('default link title', $entity->field_test_link->title, 'Field field_test_link default title is correct.');
     $this->assertEqual('http://drupal.org', $entity->field_test_link->url, 'Field field_test_link default title is correct.');
-
   }
 
   /**

@@ -60,7 +60,7 @@ field.field_settings.link:
       type: integer
       label: 'Allowed link type'
 
-field.link.value:
+field.value.link:
   type: mapping
   label: 'Default value'
   mapping:
