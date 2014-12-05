@@ -490,7 +490,7 @@ function hook_node_submit(\Drupal\node\NodeInterface $node, $form, \Drupal\Core\
  *   'recent', or 'comments'. The values should be arrays themselves, with the
  *   following keys available:
  *   - title: (required) The human readable name of the ranking mechanism.
- *   - join: (optional) The part of a query string to join to any additional
+ *   - join: (optional) An array with information to join any additional
  *     necessary table. This is not necessary if the table required is already
  *     joined to by the base query, such as for the {node} table. Other tables
  *     should use the full table name as an alias to avoid naming collisions.
@@ -514,7 +514,12 @@ function hook_ranking() {
         'title' => t('Average vote'),
         // Note that we use i.sid, the search index's search item id, rather than
         // n.nid.
-        'join' => 'LEFT JOIN {vote_node_data} vote_node_data ON vote_node_data.nid = i.sid',
+        'join' => array(
+          'type' => 'LEFT',
+          'table' => 'vote_node_data',
+          'alias' => 'vote_node_data',
+          'on' => 'vote_node_data.nid = i.sid',
+        ),
         // The highest possible score should be 1, and the lowest possible score,
         // always 0, should be 0.
         'score' => 'vote_node_data.average / CAST(%f AS DECIMAL)',
