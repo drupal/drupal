@@ -733,7 +733,6 @@ function system_user_timezone(&$form, FormStateInterface $form_state) {
   );
   $user_input = $form_state->getUserInput();
   if (!$account->getTimezone() && $account->id() == $user->id() && empty($user_input['timezone'])) {
-    $form['timezone']['#description'] = t('Your time zone setting will be automatically detected if possible. Confirm the selection and click save.');
     $form['timezone']['#attached']['library'][] = 'core/drupal.timezone';
     $form['timezone']['timezone']['#attributes'] = array('class' => array('timezone-detect'));
   }
