@@ -23,6 +23,20 @@ class CKEditorLoadingTest extends WebTestBase {
    */
   public static $modules = array('filter', 'editor', 'ckeditor', 'node');
 
+  /**
+   * An untrusted user with access to only the 'plain_text' format.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $untrustedUser;
+
+  /**
+   * A normal user with access to the 'plain_text' and 'filtered_html' formats.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $normalUser;
+
   protected function setUp() {
     parent::setUp();
 
@@ -56,11 +70,8 @@ class CKEditorLoadingTest extends WebTestBase {
       'name' => 'Article',
     ));
 
-    // Create 2 users, each with access to different text formats:
-    //   - "untrusted": plain_text
-    //   - "normal": plain_text, filtered_html
-    $this->untrusted_user = $this->drupalCreateUser(array('create article content', 'edit any article content'));
-    $this->normal_user = $this->drupalCreateUser(array('create article content', 'edit any article content', 'use text format filtered_html', 'use text format full_html'));
+    $this->untrustedUser = $this->drupalCreateUser(array('create article content', 'edit any article content'));
+    $this->normalUser = $this->drupalCreateUser(array('create article content', 'edit any article content', 'use text format filtered_html', 'use text format full_html'));
   }
 
   /**
@@ -70,7 +81,7 @@ class CKEditorLoadingTest extends WebTestBase {
     // The untrusted user:
     // - has access to 1 text format (plain_text);
     // - doesn't have access to the filtered_html text format, so: no text editor.
-    $this->drupalLogin($this->untrusted_user);
+    $this->drupalLogin($this->untrustedUser);
     $this->drupalGet('node/add/article');
     list($settings, $editor_settings_present, $editor_js_present, $body, $format_selector) = $this->getThingsToCheck();
     $this->assertFalse($editor_settings_present, 'No Text Editor module settings.');
@@ -88,7 +99,7 @@ class CKEditorLoadingTest extends WebTestBase {
     // The normal user:
     // - has access to 2 text formats;
     // - does have access to the filtered_html text format, so: CKEditor.
-    $this->drupalLogin($this->normal_user);
+    $this->drupalLogin($this->normalUser);
     $this->drupalGet('node/add/article');
     list($settings, $editor_settings_present, $editor_js_present, $body, $format_selector) = $this->getThingsToCheck();
     $ckeditor_plugin = $this->container->get('plugin.manager.editor')->createInstance('ckeditor');

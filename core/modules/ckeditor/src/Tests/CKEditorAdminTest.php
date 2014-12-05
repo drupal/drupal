@@ -25,6 +25,13 @@ class CKEditorAdminTest extends WebTestBase {
    */
   public static $modules = array('filter', 'editor', 'ckeditor');
 
+  /**
+   * A user with the 'administer filters' permission.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $adminUser;
+
   protected function setUp() {
     parent::setUp();
 
@@ -38,7 +45,7 @@ class CKEditorAdminTest extends WebTestBase {
     $filtered_html_format->save();
 
     // Create admin user.
-    $this->admin_user = $this->drupalCreateUser(array('administer filters'));
+    $this->adminUser = $this->drupalCreateUser(array('administer filters'));
   }
 
   /**
@@ -47,7 +54,7 @@ class CKEditorAdminTest extends WebTestBase {
   function testExistingFormat() {
     $ckeditor = $this->container->get('plugin.manager.editor')->createInstance('ckeditor');
 
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/config/content/formats/manage/filtered_html');
 
     // Ensure no Editor config entity exists yet.
@@ -192,7 +199,7 @@ class CKEditorAdminTest extends WebTestBase {
    * configuration form work; details are tested in testExistingFormat().
    */
   function testNewFormat() {
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/config/content/formats/add');
 
     // Verify the "Text Editor" <select> when a text editor is available.
