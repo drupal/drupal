@@ -28,17 +28,17 @@ class ContactFieldsTest extends ViewTestBase {
    *
    * @var \Drupal\field\Entity\FieldStorageConfig
    */
-  protected $field_storage;
+  protected $fieldStorage;
 
   protected function setUp() {
     parent::setUp();
 
-    $this->field_storage = entity_create('field_storage_config', array(
+    $this->fieldStorage = entity_create('field_storage_config', array(
       'field_name' => strtolower($this->randomMachineName()),
       'entity_type' => 'contact_message',
       'type' => 'text'
     ));
-    $this->field_storage->save();
+    $this->fieldStorage->save();
 
     entity_create('contact_form', array(
       'id' => 'contact_message',
@@ -46,7 +46,7 @@ class ContactFieldsTest extends ViewTestBase {
     ))->save();
 
     entity_create('field_config', array(
-      'field_storage' => $this->field_storage,
+      'field_storage' => $this->fieldStorage,
       'bundle' => 'contact_message',
     ))->save();
 
@@ -59,7 +59,7 @@ class ContactFieldsTest extends ViewTestBase {
   public function testViewsData() {
     // Test that the field is not exposed to views, since contact_message
     // entities have no storage.
-    $table_name = 'contact_message__' .  $this->field_storage->getName();
+    $table_name = 'contact_message__' .  $this->fieldStorage->getName();
     $data = $this->container->get('views.views_data')->get($table_name);
     $this->assertFalse($data, 'The field is not exposed to Views.');
   }
