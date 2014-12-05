@@ -154,9 +154,6 @@ views_display:
         exposed_form:
           type: boolean
           label: 'Exposed form style'
-        exposed_form_options:
-          type: boolean
-          label: 'Exposed form options'
         link_display:
           type: boolean
           label: 'Link display'
@@ -190,9 +187,6 @@ views_display:
         filter_groups:
           type: boolean
           label: 'Filter groups'
-        pager_options:
-          type: boolean
-          label: 'Pager options'
         header:
           type: boolean
           label: 'Header'
@@ -234,9 +228,6 @@ views_display:
     link_url:
       type: string
       label: 'Link URL'
-    pager_options:
-      type: boolean
-      label: 'Pager options'
     header:
       type: sequence
       label: 'Header'

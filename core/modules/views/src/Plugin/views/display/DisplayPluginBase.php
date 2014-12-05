@@ -469,11 +469,9 @@ abstract class DisplayPluginBase extends PluginBase {
       'style' => array('style', 'row'),
       'row' => array('style', 'row'),
 
-      'pager' => array('pager', 'pager_options'),
-      'pager_options' => array('pager', 'pager_options'),
+      'pager' => array('pager'),
 
-      'exposed_form' => array('exposed_form', 'exposed_form_options'),
-      'exposed_form_options' => array('exposed_form', 'exposed_form_options'),
+      'exposed_form' => array('exposed_form'),
 
       // These guys are special
       'header' => array('header'),
@@ -695,9 +693,6 @@ abstract class DisplayPluginBase extends PluginBase {
     );
 
     if (!$this->usesPager()) {
-      $options['defaults']['default']['use_pager'] = FALSE;
-      $options['defaults']['default']['items_per_page'] = FALSE;
-      $options['defaults']['default']['offset'] = FALSE;
       $options['defaults']['default']['pager'] = FALSE;
       $options['pager']['contains']['type']['default'] = 'some';
     }

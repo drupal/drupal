@@ -103,6 +103,12 @@ class PagerTest extends PluginTestBase {
     $this->assertText('10 items', 'The default value has been changed.');
     $this->drupalGet('admin/structure/views/view/test_store_pager_settings/edit/page_1');
     $this->assertText('20 items', 'The original value remains unchanged.');
+
+    // Test that the override element is only displayed on pager plugin selection form.
+    $this->drupalGet('admin/structure/views/nojs/display/test_store_pager_settings/page_1/pager');
+    $this->assertFieldByName('override[dropdown]', 'page_1', 'The override element is displayed on plugin selection form.');
+    $this->drupalGet('admin/structure/views/nojs/display/test_store_pager_settings/page_1/pager_options');
+    $this->assertNoFieldByName('override[dropdown]', NULL, 'The override element is not displayed on plugin settings form.');
   }
 
   /**
