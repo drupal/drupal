@@ -7,6 +7,11 @@ services:
     tags:
       - { name: normalizer }
     arguments: ['@entity.manager']
+  serializer.normalizer.content_entity:
+      class: Drupal\serialization\Normalizer\ContentEntityNormalizer
+      tags:
+        - { name: normalizer }
+      arguments: ['@entity.manager']
   serializer.normalizer.entity:
     class: Drupal\serialization\Normalizer\EntityNormalizer
     tags:

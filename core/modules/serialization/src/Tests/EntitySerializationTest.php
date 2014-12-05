@@ -9,6 +9,7 @@ namespace Drupal\serialization\Tests;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Component\Utility\String;
+use Drupal\user\Entity\User;
 
 /**
  * Tests that entities can be serialized to supported core formats.
@@ -48,6 +49,8 @@ class EntitySerializationTest extends NormalizerTestBase {
   protected function setUp() {
     parent::setUp();
 
+    // User create needs sequence table.
+    $this->installSchema('system', array('sequences'));
     // Create a test entity to serialize.
     $this->values = array(
       'name' => $this->randomMachineName(),
@@ -105,6 +108,17 @@ class EntitySerializationTest extends NormalizerTestBase {
       $this->assertEqual($expected[$fieldName], $normalized[$fieldName], "ComplexDataNormalizer produces expected array for $fieldName.");
     }
     $this->assertEqual(array_diff_key($normalized, $expected), array(), 'No unexpected data is added to the normalized array.');
+
+    // Test password isn't available.
+    $account = User::create([
+      'name' => 'foo',
+      'mail' => 'foo@example.com',
+      'pass' => '123456',
+    ]);
+    $account->save();
+    $normalized = $this->serializer->normalize($account);
+    $this->assertTrue(empty($normalized['pass']));
+    $this->assertTrue(empty($normalized['mail']));
   }
 
   /**

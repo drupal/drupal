@@ -40,6 +40,8 @@ class UpdateTest extends RESTTestBase {
     $account = $this->drupalCreateUser($permissions);
     $this->drupalLogin($account);
 
+    $context = ['account' => $account];
+
     // Create an entity and save it to the database.
     $entity = $this->entityCreate($entity_type);
     $entity->save();
@@ -52,7 +54,7 @@ class UpdateTest extends RESTTestBase {
     $patch_entity = entity_create($entity_type, $patch_values);
     // We don't want to overwrite the UUID.
     unset($patch_entity->uuid);
-    $serialized = $serializer->serialize($patch_entity, $this->defaultFormat);
+    $serialized = $serializer->serialize($patch_entity, $this->defaultFormat, $context);
 
     // Update the entity over the REST API.
     $this->httpRequest($entity->getSystemPath(), 'PATCH', $serialized, $this->defaultMimeType);
@@ -64,7 +66,7 @@ class UpdateTest extends RESTTestBase {
 
     // Make sure that the field does not get deleted if it is not present in the
     // PATCH request.
-    $normalized = $serializer->normalize($patch_entity, $this->defaultFormat);
+    $normalized = $serializer->normalize($patch_entity, $this->defaultFormat, $context);
     unset($normalized['field_test_text']);
     $serialized = $serializer->encode($normalized, $this->defaultFormat);
     $this->httpRequest($entity->getSystemPath(), 'PATCH', $serialized, $this->defaultMimeType);
@@ -100,8 +102,9 @@ class UpdateTest extends RESTTestBase {
     $this->assertEqual($entity->field_test_text->value, 'no delete access value', 'Text field was not deleted.');
 
     // Try to update an access protected field.
-    $patch_entity->get('field_test_text')->value = 'no access value';
-    $serialized = $serializer->serialize($patch_entity, $this->defaultFormat);
+    $normalized = $serializer->normalize($patch_entity, $this->defaultFormat, $context);
+    $normalized['field_test_text'][0]['value'] = 'no access value';
+    $serialized = $serializer->serialize($normalized, $this->defaultFormat, $context);
     $this->httpRequest($entity->getSystemPath(), 'PATCH', $serialized, $this->defaultMimeType);
     $this->assertResponse(403);
 
@@ -114,7 +117,7 @@ class UpdateTest extends RESTTestBase {
       'value' => 'test',
       'format' => 'full_html',
     ));
-    $serialized = $serializer->serialize($patch_entity, $this->defaultFormat);
+    $serialized = $serializer->serialize($patch_entity, $this->defaultFormat, $context);
     $this->httpRequest($entity->getSystemPath(), 'PATCH', $serialized, $this->defaultMimeType);
     $this->assertResponse(422);
 
@@ -139,7 +142,7 @@ class UpdateTest extends RESTTestBase {
     // Try to send invalid data to trigger the entity validation constraints.
     // Send a UUID that is too long.
     $entity->set('uuid', $this->randomMachineName(129));
-    $invalid_serialized = $serializer->serialize($entity, $this->defaultFormat);
+    $invalid_serialized = $serializer->serialize($entity, $this->defaultFormat, $context);
     $response = $this->httpRequest($entity->getSystemPath(), 'PATCH', $invalid_serialized, $this->defaultMimeType);
     $this->assertResponse(422);
     $error = Json::decode($response);

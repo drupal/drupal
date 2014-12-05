@@ -41,7 +41,7 @@ class CreateTest extends RESTTestBase {
 
       $entity_values = $this->entityValues($entity_type);
       $entity = entity_create($entity_type, $entity_values);
-      $serialized = $serializer->serialize($entity, $this->defaultFormat);
+      $serialized = $serializer->serialize($entity, $this->defaultFormat, ['account' => $account]);
       // Create the entity over the REST API.
       $this->httpRequest('entity/' . $entity_type, 'POST', $serialized, $this->defaultMimeType);
       $this->assertResponse(201);
@@ -68,23 +68,24 @@ class CreateTest extends RESTTestBase {
       // Try to create an entity with an access protected field.
       // @see entity_test_entity_field_access()
       if ($entity_type == 'entity_test') {
-        $entity->field_test_text->value = 'no access value';
-        $serialized = $serializer->serialize($entity, $this->defaultFormat);
-        $this->httpRequest('entity/' . $entity_type, 'POST', $serialized, $this->defaultMimeType);
+        $context = ['account' => $account];
+        $normalized = $serializer->normalize($entity, $this->defaultFormat, $context);
+        $normalized['field_test_text'][0]['value'] = 'no access value';
+        $this->httpRequest('entity/' . $entity_type, 'POST', $serializer->serialize($normalized, $this->defaultFormat, $context), $this->defaultMimeType);
         $this->assertResponse(403);
         $this->assertFalse(entity_load_multiple($entity_type, NULL, TRUE), 'No entity has been created in the database.');
 
         // Try to create a field with a text format this user has no access to.
         $entity->field_test_text->value = $entity_values['field_test_text'][0]['value'];
         $entity->field_test_text->format = 'full_html';
-        $serialized = $serializer->serialize($entity, $this->defaultFormat);
+        $serialized = $serializer->serialize($entity, $this->defaultFormat, $context);
         $this->httpRequest('entity/' . $entity_type, 'POST', $serialized, $this->defaultMimeType);
         $this->assertResponse(422);
         $this->assertFalse(entity_load_multiple($entity_type, NULL, TRUE), 'No entity has been created in the database.');
 
         // Restore the valid test value.
         $entity->field_test_text->format = 'plain_text';
-        $serialized = $serializer->serialize($entity, $this->defaultFormat);
+        $serialized = $serializer->serialize($entity, $this->defaultFormat, $context);
       }
 
       // Try to send invalid data that cannot be correctly deserialized.
@@ -98,7 +99,7 @@ class CreateTest extends RESTTestBase {
       // Try to send invalid data to trigger the entity validation constraints.
       // Send a UUID that is too long.
       $entity->set('uuid', $this->randomMachineName(129));
-      $invalid_serialized = $serializer->serialize($entity, $this->defaultFormat);
+      $invalid_serialized = $serializer->serialize($entity, $this->defaultFormat, $context);
       $response = $this->httpRequest('entity/' . $entity_type, 'POST', $invalid_serialized, $this->defaultMimeType);
       $this->assertResponse(422);
       $error = Json::decode($response);

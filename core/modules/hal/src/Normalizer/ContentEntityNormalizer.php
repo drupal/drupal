@@ -63,6 +63,11 @@ class ContentEntityNormalizer extends NormalizerBase {
    * Implements \Symfony\Component\Serializer\Normalizer\NormalizerInterface::normalize()
    */
   public function normalize($entity, $format = NULL, array $context = array()) {
+    $context += array(
+      'account' => NULL,
+      'included_fields' => NULL,
+    );
+
     // Create the array of normalized fields, starting with the URI.
     /** @var $entity \Drupal\Core\Entity\ContentEntityInterface */
     $normalized = array(
@@ -90,9 +95,12 @@ class ContentEntityNormalizer extends NormalizerBase {
     // Ignore the entity ID and revision ID.
     $exclude = array($entity->getEntityType()->getKey('id'), $entity->getEntityType()->getKey('revision'));
     foreach ($fields as $field) {
-      if (in_array($field->getFieldDefinition()->getName(), $exclude)) {
+      // Continue if this is an excluded field or the current user does not have
+      // access to view it.
+      if (in_array($field->getFieldDefinition()->getName(), $exclude) || !$field->access('view', $context['account'])) {
         continue;
       }
+
       $normalized_property = $this->serializer->normalize($field, $format, $context);
       $normalized = NestedArray::mergeDeep($normalized, $normalized_property);
     }
