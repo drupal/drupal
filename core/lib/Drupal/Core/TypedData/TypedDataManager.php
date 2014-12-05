@@ -8,7 +8,6 @@
 namespace Drupal\Core\TypedData;
 
 use Drupal\Component\Plugin\Exception\PluginException;
-use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -248,26 +247,33 @@ class TypedDataManager extends DefaultPluginManager {
    * @see \Drupal\Core\TypedData\TypedDataManager::create()
    */
   public function getPropertyInstance(TypedDataInterface $object, $property_name, $value = NULL) {
-    $definition = $object->getRoot()->getDataDefinition();
-    // If the definition is a list, we need to look at the data type and the
+    // For performance, try to reuse existing prototypes instead of
+    // constructing new objects when possible. A prototype is reused when
+    // creating a data object:
+    // - for a similar root object (same data type and settings),
+    // - at the same property path under that root object.
+    $root_definition = $object->getRoot()->getDataDefinition();
+    // If the root object is a list, we want to look at the data type and the
     // settings of its item definition.
-    if ($definition instanceof ListDataDefinition) {
-      $definition = $definition->getItemDefinition();
+    if ($root_definition instanceof ListDataDefinition) {
+      $root_definition = $root_definition->getItemDefinition();
     }
-    $key = $definition->getDataType();
-    if ($settings = $definition->getSettings()) {
-      $key .= ':' . Crypt::hashBase64(serialize($settings));
-    }
-    $key .= ':' . $object->getPropertyPath() . '.';
-    // If we are creating list items, we always use 0 in the key as all list
-    // items look the same.
-    $key .= is_numeric($property_name) ? 0 : $property_name;
 
-    // Make sure we have a prototype. Then, clone the prototype and set object
-    // specific values, i.e. the value and the context.
-    if (!isset($this->prototypes[$key]) || !$key) {
-      // Create the initial prototype. For that we need to fetch the definition
-      // of the to be created property instance from the parent.
+    // Root data type and settings.
+    $parts[] = $root_definition->getDataType();
+    if ($settings = $root_definition->getSettings()) {
+      // Hash the settings into a string. crc32 is the the fastest way to hash
+      // something for non-cryptographic purposes.
+      $parts[] = crc32(serialize($settings));
+    }
+    // Property path for the requested data object. When creating a list item,
+    // use 0 in the key as all items look the same.
+    $parts[] = $object->getPropertyPath() . '.' . (is_numeric($property_name) ? 0 : $property_name);
+    $key = implode(':', $parts);
+
+    // Create the prototype if needed.
+    if (!isset($this->prototypes[$key])) {
+      // Fetch the data definition for the child object from the parent.
       if ($object instanceof ComplexDataInterface) {
         $definition = $object->getDataDefinition()->getPropertyDefinition($property_name);
       }
@@ -277,17 +283,16 @@ class TypedDataManager extends DefaultPluginManager {
       else {
         throw new \InvalidArgumentException("The passed object has to either implement the ComplexDataInterface or the ListInterface.");
       }
-      // Make sure we have got a valid definition.
       if (!$definition) {
         throw new \InvalidArgumentException('Property ' . String::checkPlain($property_name) . ' is unknown.');
       }
-      // Now create the prototype using the definition, but do not pass the
-      // given value as it will serve as prototype for any further instance.
+      // Create the prototype without any value, but with initial parenting
+      // so that constructors can set up the objects correclty.
       $this->prototypes[$key] = $this->create($definition, NULL, $property_name, $object);
     }
 
-    // Clone from the prototype, then update the parent relationship and set the
-    // data value if necessary.
+    // Clone the prototype, update its parenting information, and assign the
+    // value.
     $property = clone $this->prototypes[$key];
     $property->setContext($property_name, $object);
     if (isset($value)) {
