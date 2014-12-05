@@ -202,7 +202,7 @@ class KeyValueEntityStorage extends EntityStorageBase {
   /**
    * {@inheritdoc}
    */
-  public function getQueryServicename() {
+  public function getQueryServiceName() {
     return 'entity.query.keyvalue';
   }
 

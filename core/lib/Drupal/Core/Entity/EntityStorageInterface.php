@@ -153,7 +153,7 @@ interface EntityStorageInterface {
    * @return string
    *   The name of the service for the query for this entity storage.
    */
-  public function getQueryServicename();
+  public function getQueryServiceName();
 
   /**
    * Returns an entity query instance.
@@ -166,7 +166,7 @@ interface EntityStorageInterface {
    * @return \Drupal\Core\Entity\Query\QueryInterface
    *   The query instance.
    *
-   * @see \Drupal\Core\Entity\EntityStorageInterface::getQueryServicename()
+   * @see \Drupal\Core\Entity\EntityStorageInterface::getQueryServiceName()
    */
   public function getQuery($conjunction = 'AND');
 
