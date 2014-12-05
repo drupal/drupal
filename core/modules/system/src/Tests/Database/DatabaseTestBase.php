@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\Database;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Base class for databases database tests.
@@ -15,7 +15,7 @@ use Drupal\simpletest\DrupalUnitTestBase;
  * Because all database tests share the same test data, we can centralize that
  * here.
  */
-abstract class DatabaseTestBase extends DrupalUnitTestBase {
+abstract class DatabaseTestBase extends KernelTestBase {
 
   public static $modules = array('database_test');
 

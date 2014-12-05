@@ -10,7 +10,7 @@ namespace Drupal\user\Tests;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EmailItem;
 use Drupal\Core\Render\Element\Email;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 
@@ -19,7 +19,7 @@ use Drupal\user\Entity\User;
  *
  * @group user
  */
-class UserValidationTest extends DrupalUnitTestBase {
+class UserValidationTest extends KernelTestBase {
 
   /**
    * Modules to enable.

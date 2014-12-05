@@ -10,14 +10,14 @@ namespace Drupal\config\Tests;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\StorageComparer;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests importing recreated configuration entities.
  *
  * @group config
  */
-class ConfigImportRecreateTest extends DrupalUnitTestBase {
+class ConfigImportRecreateTest extends KernelTestBase {
 
   /**
    * Config Importer object used for testing.

@@ -7,14 +7,14 @@
 
 namespace Drupal\system\Tests\System;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests the effectiveness of hook_system_info_alter().
  *
  * @group system
  */
-class InfoAlterTest extends DrupalUnitTestBase {
+class InfoAlterTest extends KernelTestBase {
 
   public static $modules = array('system');
 

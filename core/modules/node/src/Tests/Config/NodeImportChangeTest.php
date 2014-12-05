@@ -7,14 +7,14 @@
 
 namespace Drupal\node\Tests\Config;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Change content types during config create method invocation.
  *
  * @group node
  */
-class NodeImportChangeTest extends DrupalUnitTestBase {
+class NodeImportChangeTest extends KernelTestBase {
 
   /**
    * Modules to enable.

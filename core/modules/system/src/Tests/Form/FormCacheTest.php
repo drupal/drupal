@@ -9,7 +9,7 @@ namespace Drupal\system\Tests\Form;
 
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Session\UserSession;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests \Drupal::formBuilder()->setCache() and
@@ -17,7 +17,7 @@ use Drupal\simpletest\DrupalUnitTestBase;
  *
  * @group Form
  */
-class FormCacheTest extends DrupalUnitTestBase {
+class FormCacheTest extends KernelTestBase {
 
   /**
    * Modules to enable.

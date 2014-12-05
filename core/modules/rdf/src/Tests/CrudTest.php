@@ -7,14 +7,14 @@
 
 namespace Drupal\rdf\Tests;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests the RDF mapping CRUD functions.
  *
  * @group rdf
  */
-class CrudTest extends DrupalUnitTestBase {
+class CrudTest extends KernelTestBase {
 
   /**
    * Modules to enable.

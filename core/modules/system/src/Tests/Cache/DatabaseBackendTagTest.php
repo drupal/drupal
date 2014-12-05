@@ -9,7 +9,7 @@ namespace Drupal\system\Tests\Cache;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\Reference;
  *
  * @group Cache
  */
-class DatabaseBackendTagTest extends DrupalUnitTestBase {
+class DatabaseBackendTagTest extends KernelTestBase {
 
   /**
    * Modules to enable.

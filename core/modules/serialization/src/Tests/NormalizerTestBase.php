@@ -7,9 +7,9 @@
 
 namespace Drupal\serialization\Tests;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
-abstract class NormalizerTestBase extends DrupalUnitTestBase {
+abstract class NormalizerTestBase extends KernelTestBase {
 
   /**
    * Modules to enable.

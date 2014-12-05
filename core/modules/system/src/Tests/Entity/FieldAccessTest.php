@@ -8,14 +8,14 @@
 namespace Drupal\system\Tests\Entity;
 
 use Drupal\Core\Access\AccessResult;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests Field level access hooks.
  *
  * @group Entity
  */
-class FieldAccessTest extends DrupalUnitTestBase {
+class FieldAccessTest extends KernelTestBase {
 
   /**
    * Modules to load code from.

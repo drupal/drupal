@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\Common;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests the merging of attachments.
@@ -16,7 +16,7 @@ use Drupal\simpletest\DrupalUnitTestBase;
  *
  * @group Common
  */
-class MergeAttachmentsTest extends DrupalUnitTestBase {
+class MergeAttachmentsTest extends KernelTestBase {
 
   /**
    * Tests justs library asset merging.

@@ -8,14 +8,14 @@
 namespace Drupal\system\Tests\Common;
 
 use Drupal\Component\Utility\String;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests adding various cascading stylesheets to the page.
  *
  * @group Common
  */
-class CascadingStylesheetsTest extends DrupalUnitTestBase {
+class CascadingStylesheetsTest extends KernelTestBase {
 
   /**
    * Modules to enable.

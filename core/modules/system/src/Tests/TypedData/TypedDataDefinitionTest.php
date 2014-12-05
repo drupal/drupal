@@ -15,14 +15,14 @@ use Drupal\Core\TypedData\DataReferenceDefinitionInterface;
 use Drupal\Core\TypedData\ListDataDefinition;
 use Drupal\Core\TypedData\ListDataDefinitionInterface;
 use Drupal\Core\TypedData\MapDataDefinition;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests deriving metadata of core data types.
  *
  * @group TypedData
  */
-class TypedDataDefinitionTest extends DrupalUnitTestBase {
+class TypedDataDefinitionTest extends KernelTestBase {
 
   /**
    * The typed data manager to use.

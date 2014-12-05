@@ -9,7 +9,7 @@ namespace Drupal\system\Tests\Validation;
 
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\MapDataDefinition;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests ComplexData validation constraint with both valid and invalid values
@@ -17,7 +17,7 @@ use Drupal\simpletest\DrupalUnitTestBase;
  *
  * @group Validation
  */
-class ComplexDataConstraintValidatorTest extends DrupalUnitTestBase {
+class ComplexDataConstraintValidatorTest extends KernelTestBase {
 
   /**
    * The typed data manager to use.

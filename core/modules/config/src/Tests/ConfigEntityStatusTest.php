@@ -7,14 +7,14 @@
 
 namespace Drupal\config\Tests;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests configuration entity status functionality.
  *
  * @group config
  */
-class ConfigEntityStatusTest extends DrupalUnitTestBase {
+class ConfigEntityStatusTest extends KernelTestBase {
 
   /**
    * Modules to enable.

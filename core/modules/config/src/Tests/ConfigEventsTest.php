@@ -9,14 +9,14 @@ namespace Drupal\config\Tests;
 
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigEvents;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests events fired on configuration objects.
  *
  * @group config
  */
-class ConfigEventsTest extends DrupalUnitTestBase {
+class ConfigEventsTest extends KernelTestBase {
 
   /**
    * Modules to enable.

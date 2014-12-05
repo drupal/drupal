@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\Extension;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 use Drupal\Core\Extension\InfoParser;
 use Drupal\Core\Extension\InfoParserException;
 
@@ -20,7 +20,7 @@ use Drupal\Core\Extension\InfoParserException;
  *
  * @group Extension
  */
-class InfoParserUnitTest extends DrupalUnitTestBase {
+class InfoParserUnitTest extends KernelTestBase {
 
   /**
    * The InfoParser object.

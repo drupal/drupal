@@ -7,7 +7,7 @@
 
 namespace Drupal\config\Tests;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 use Drupal\Core\Config\ConfigDuplicateUUIDException;
 
 /**
@@ -16,7 +16,7 @@ use Drupal\Core\Config\ConfigDuplicateUUIDException;
  *
  * @group config
  */
-class ConfigEntityStorageTest extends DrupalUnitTestBase {
+class ConfigEntityStorageTest extends KernelTestBase {
 
   /**
    * Modules to enable.

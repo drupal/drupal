@@ -7,7 +7,7 @@
 
 namespace Drupal\config\Tests;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests installation of configuration objects in installation functionality.
@@ -15,7 +15,7 @@ use Drupal\simpletest\DrupalUnitTestBase;
  * @group config
  * @see \Drupal\Core\Config\ConfigInstaller
  */
-class ConfigInstallTest extends DrupalUnitTestBase {
+class ConfigInstallTest extends KernelTestBase {
   protected function setUp() {
     parent::setUp();
 

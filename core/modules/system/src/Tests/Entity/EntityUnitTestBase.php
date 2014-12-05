@@ -7,13 +7,13 @@
 
 namespace Drupal\system\Tests\Entity;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Defines an abstract test base for entity unit tests.
  */
-abstract class EntityUnitTestBase extends DrupalUnitTestBase {
+abstract class EntityUnitTestBase extends KernelTestBase {
 
   /**
    * Modules to enable.

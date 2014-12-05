@@ -8,14 +8,14 @@
 namespace Drupal\config\Tests;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Unit tests for configuration entity base methods.
  *
  * @group config
  */
-class ConfigEntityUnitTest extends DrupalUnitTestBase {
+class ConfigEntityUnitTest extends KernelTestBase {
 
   /**
    * Modules to enable.

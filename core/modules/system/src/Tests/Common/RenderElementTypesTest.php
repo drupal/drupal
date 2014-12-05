@@ -9,14 +9,14 @@ namespace Drupal\system\Tests\Common;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Url;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests the markup of core render element types passed to drupal_render().
  *
  * @group Common
  */
-class RenderElementTypesTest extends DrupalUnitTestBase {
+class RenderElementTypesTest extends KernelTestBase {
 
   /**
    * Modules to enable.

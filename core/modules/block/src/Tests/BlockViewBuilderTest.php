@@ -10,7 +10,7 @@ namespace Drupal\block\Tests;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\UrlCacheContext;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\block\Entity\Block;
@@ -20,7 +20,7 @@ use Drupal\block\Entity\Block;
  *
  * @group block
  */
-class BlockViewBuilderTest extends DrupalUnitTestBase {
+class BlockViewBuilderTest extends KernelTestBase {
 
   /**
    * Modules to install.

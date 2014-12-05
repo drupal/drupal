@@ -7,7 +7,7 @@
 
 namespace Drupal\content_translation\Tests;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 use Drupal\content_translation\FieldTranslationSynchronizer;
 
 /**
@@ -15,7 +15,7 @@ use Drupal\content_translation\FieldTranslationSynchronizer;
  *
  * @group content_translation
  */
-class ContentTranslationSyncUnitTest extends DrupalUnitTestBase {
+class ContentTranslationSyncUnitTest extends KernelTestBase {
 
   /**
    * The synchronizer class to be tested.

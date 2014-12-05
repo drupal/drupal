@@ -8,7 +8,7 @@
 namespace Drupal\block\Tests;
 
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 use Drupal\block_test\Plugin\Block\TestHtmlBlock;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\block\Entity\Block;
@@ -19,7 +19,7 @@ use Drupal\block\BlockInterface;
  *
  * @group block
  */
-class BlockStorageUnitTest extends DrupalUnitTestBase {
+class BlockStorageUnitTest extends KernelTestBase {
 
   /**
    * Modules to install.

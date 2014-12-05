@@ -8,7 +8,7 @@
 namespace Drupal\block\Tests;
 
 use Drupal\Core\Form\FormState;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 use Drupal\block\BlockInterface;
 
 /**
@@ -16,7 +16,7 @@ use Drupal\block\BlockInterface;
  *
  * @group block
  */
-class BlockInterfaceTest extends DrupalUnitTestBase {
+class BlockInterfaceTest extends KernelTestBase {
   public static $modules = array('system', 'block', 'block_test', 'user');
 
   /**

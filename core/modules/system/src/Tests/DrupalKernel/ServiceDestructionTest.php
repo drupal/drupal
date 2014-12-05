@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\DrupalKernel;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 
@@ -16,7 +16,7 @@ use Symfony\Component\HttpKernel\Event\PostResponseEvent;
  *
  * @group DrupalKernel
  */
-class ServiceDestructionTest extends DrupalUnitTestBase {
+class ServiceDestructionTest extends KernelTestBase {
 
   /**
    * Verifies that services are destructed when used.

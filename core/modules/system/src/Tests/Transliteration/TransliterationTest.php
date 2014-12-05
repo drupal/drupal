@@ -8,14 +8,14 @@
 namespace Drupal\system\Tests\Transliteration;
 
 use Drupal\Core\Transliteration\PHPTransliteration;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests Transliteration component functionality.
  *
  * @group Transliteration
  */
-class TransliterationTest extends DrupalUnitTestBase {
+class TransliterationTest extends KernelTestBase {
   /**
    * Modules to enable.
    *

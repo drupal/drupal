@@ -7,12 +7,12 @@
 
 namespace Drupal\quickedit\Tests;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Base class for testing Quick Edit functionality.
  */
-abstract class QuickEditTestBase extends DrupalUnitTestBase {
+abstract class QuickEditTestBase extends KernelTestBase {
 
   /**
    * Modules to enable.

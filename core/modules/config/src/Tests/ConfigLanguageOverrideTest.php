@@ -8,14 +8,14 @@
 namespace Drupal\config\Tests;
 
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Confirm that language overrides work.
  *
  * @group config
  */
-class ConfigLanguageOverrideTest extends DrupalUnitTestBase {
+class ConfigLanguageOverrideTest extends KernelTestBase {
 
   /**
    * Modules to enable.

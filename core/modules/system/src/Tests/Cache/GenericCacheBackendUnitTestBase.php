@@ -9,7 +9,7 @@ namespace Drupal\system\Tests\Cache;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests any cache backend.
@@ -21,7 +21,7 @@ use Drupal\simpletest\DrupalUnitTestBase;
  * @see DatabaseBackendUnitTestCase
  *   For a full working implementation.
  */
-abstract class GenericCacheBackendUnitTestBase extends DrupalUnitTestBase {
+abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
 
   /**
    * Array of objects implementing Drupal\Core\Cache\CacheBackendInterface.

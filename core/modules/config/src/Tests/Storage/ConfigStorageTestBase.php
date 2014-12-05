@@ -7,7 +7,7 @@
 
 namespace Drupal\config\Tests\Storage;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Base class for testing storage operations.
@@ -21,7 +21,7 @@ use Drupal\simpletest\DrupalUnitTestBase;
  * supply the necessary helper methods to interact with the raw/native storage
  * directly.
  */
-abstract class ConfigStorageTestBase extends DrupalUnitTestBase {
+abstract class ConfigStorageTestBase extends KernelTestBase {
 
   /**
    * @var \Drupal\Core\Config\StorageInterface;

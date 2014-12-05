@@ -7,14 +7,14 @@
 
 namespace Drupal\rdf\Tests;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests RDFa attribute generation from RDF mapping.
  *
  * @group rdf
  */
-class RdfaAttributesTest extends DrupalUnitTestBase {
+class RdfaAttributesTest extends KernelTestBase {
 
   /**
    * Modules to enable.

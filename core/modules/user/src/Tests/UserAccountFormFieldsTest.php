@@ -8,7 +8,7 @@
 namespace Drupal\user\Tests;
 
 use Drupal\Core\Form\FormState;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Verifies that the field order in user account forms is compatible with
@@ -16,7 +16,7 @@ use Drupal\simpletest\DrupalUnitTestBase;
  *
  * @group user
  */
-class UserAccountFormFieldsTest extends DrupalUnitTestBase {
+class UserAccountFormFieldsTest extends KernelTestBase {
 
   /**
    * Modules to enable.

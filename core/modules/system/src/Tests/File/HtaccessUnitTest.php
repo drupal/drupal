@@ -8,14 +8,14 @@
 namespace Drupal\system\Tests\File;
 
 use Drupal\Component\Utility\String;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests .htaccess file saving.
  *
  * @group File
  */
-class HtaccessUnitTest extends DrupalUnitTestBase {
+class HtaccessUnitTest extends KernelTestBase {
 
   /**
    * Tests file_save_htaccess().

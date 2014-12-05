@@ -10,14 +10,14 @@ namespace Drupal\system\Tests\Queue;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Queue\DatabaseQueue;
 use Drupal\Core\Queue\Memory;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Queues and dequeues a set of items to check the basic queue functionality.
  *
  * @group Queue
  */
-class QueueTest extends DrupalUnitTestBase {
+class QueueTest extends KernelTestBase {
 
   /**
    * The modules to enable.

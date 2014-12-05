@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\Action;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 use Drupal\Core\Action\ActionInterface;
 
 /**
@@ -15,7 +15,7 @@ use Drupal\Core\Action\ActionInterface;
  *
  * @group Action
  */
-class ActionUnitTest extends DrupalUnitTestBase {
+class ActionUnitTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}

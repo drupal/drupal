@@ -7,14 +7,14 @@
 
 namespace Drupal\config\Tests;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests for configuration dependencies.
  *
  * @group config
  */
-class ConfigDependencyTest extends DrupalUnitTestBase {
+class ConfigDependencyTest extends KernelTestBase {
 
   /**
    * Modules to enable.

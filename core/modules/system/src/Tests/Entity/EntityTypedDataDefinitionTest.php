@@ -15,14 +15,14 @@ use Drupal\Core\TypedData\ComplexDataDefinitionInterface;
 use Drupal\Core\TypedData\DataReferenceDefinition;
 use Drupal\Core\TypedData\DataReferenceDefinitionInterface;
 use Drupal\Core\TypedData\ListDataDefinitionInterface;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests deriving metadata of entity and field data types.
  *
  * @group Entity
  */
-class EntityTypedDataDefinitionTest extends DrupalUnitTestBase {
+class EntityTypedDataDefinitionTest extends KernelTestBase {
 
   /**
    * The typed data manager to use.

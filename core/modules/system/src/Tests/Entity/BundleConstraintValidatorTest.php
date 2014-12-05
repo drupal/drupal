@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Entity;
 
 use Drupal\Core\TypedData\DataDefinition;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 use Drupal\system\Tests\TypedData;
 
 /**
@@ -16,7 +16,7 @@ use Drupal\system\Tests\TypedData;
  *
  * @group Entity
  */
-class BundleConstraintValidatorTest extends DrupalUnitTestBase {
+class BundleConstraintValidatorTest extends KernelTestBase {
 
   /**
    * The typed data manager to use.

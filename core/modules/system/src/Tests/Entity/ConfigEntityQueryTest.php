@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\Entity;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests Config Entity Query functionality.
@@ -15,7 +15,7 @@ use Drupal\simpletest\DrupalUnitTestBase;
  * @group Entity
  * @see \Drupal\Core\Config\Entity\Query
  */
-class ConfigEntityQueryTest extends DrupalUnitTestBase {
+class ConfigEntityQueryTest extends KernelTestBase {
 
   /**
    * Modules to enable.

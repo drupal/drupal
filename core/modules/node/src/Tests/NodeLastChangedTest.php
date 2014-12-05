@@ -7,14 +7,14 @@
 
 namespace Drupal\node\Tests;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests the node_last_changed() function.
  *
  * @group node
  */
-class NodeLastChangedTest extends DrupalUnitTestBase {
+class NodeLastChangedTest extends KernelTestBase {
 
   /**
    * Modules to enable.

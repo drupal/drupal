@@ -9,7 +9,7 @@ namespace Drupal\system\Tests\Common;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Unicode;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 use Drupal\Component\Utility\Crypt;
 
 /**
@@ -17,7 +17,7 @@ use Drupal\Component\Utility\Crypt;
  *
  * @group Common
  */
-class JavaScriptTest extends DrupalUnitTestBase {
+class JavaScriptTest extends KernelTestBase {
 
   /**
    * Enable Language and SimpleTest in the test environment.

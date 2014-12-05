@@ -8,14 +8,14 @@
 namespace Drupal\node\Tests\Config;
 
 use Drupal\field\Entity\FieldConfig;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Create content types during config create method invocation.
  *
  * @group node
  */
-class NodeImportCreateTest extends DrupalUnitTestBase {
+class NodeImportCreateTest extends KernelTestBase {
 
   /**
    * Modules to enable.

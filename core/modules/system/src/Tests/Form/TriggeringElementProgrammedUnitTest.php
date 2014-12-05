@@ -11,14 +11,14 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests detection of triggering_element for programmed form submissions.
  *
  * @group Form
  */
-class TriggeringElementProgrammedUnitTest extends DrupalUnitTestBase implements FormInterface {
+class TriggeringElementProgrammedUnitTest extends KernelTestBase implements FormInterface {
 
   public static $modules = array('system');
 

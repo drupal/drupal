@@ -7,14 +7,14 @@
 
 namespace Drupal\tour\Tests;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests the functionality of tour plugins.
  *
  * @group tour
  */
-class TourPluginTest extends DrupalUnitTestBase {
+class TourPluginTest extends KernelTestBase {
 
   /**
    * Modules to enable.

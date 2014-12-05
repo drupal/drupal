@@ -8,14 +8,14 @@
 namespace Drupal\config\Tests;
 
 use Drupal\Core\Config\StorageComparer;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests config snapshot creation and updating.
  *
  * @group config
  */
-class ConfigSnapshotTest extends DrupalUnitTestBase {
+class ConfigSnapshotTest extends KernelTestBase {
 
   /**
    * Modules to enable.

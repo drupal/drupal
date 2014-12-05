@@ -7,14 +7,14 @@
 
 namespace Drupal\system\Tests\Database;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests the sequences API.
  *
  * @group Database
  */
-class NextIdTest extends DrupalUnitTestBase {
+class NextIdTest extends KernelTestBase {
 
   /**
    * The modules to enable.

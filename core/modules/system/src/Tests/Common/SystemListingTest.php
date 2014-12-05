@@ -8,14 +8,14 @@
 namespace Drupal\system\Tests\Common;
 
 use Drupal\Core\Extension\ExtensionDiscovery;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests scanning system directories in drupal_system_listing().
  *
  * @group Common
  */
-class SystemListingTest extends DrupalUnitTestBase {
+class SystemListingTest extends KernelTestBase {
   /**
    * Tests that files in different directories take precedence as expected.
    */

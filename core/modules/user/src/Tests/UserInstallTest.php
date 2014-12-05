@@ -7,14 +7,14 @@
 
 namespace Drupal\user\Tests;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests user_install().
  *
  * @group user
  */
-class UserInstallTest extends DrupalUnitTestBase {
+class UserInstallTest extends KernelTestBase {
 
   /**
    * Modules to enable.

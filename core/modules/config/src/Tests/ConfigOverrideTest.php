@@ -7,14 +7,14 @@
 
 namespace Drupal\config\Tests;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests configuration overrides via $config in settings.php.
  *
  * @group config
  */
-class ConfigOverrideTest extends DrupalUnitTestBase {
+class ConfigOverrideTest extends KernelTestBase {
 
   /**
    * Modules to enable.

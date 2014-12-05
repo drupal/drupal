@@ -12,7 +12,7 @@ use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\ListDataDefinition;
 use Drupal\Core\TypedData\MapDataDefinition;
 use Drupal\Core\TypedData\TypedDataInterface;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 use Drupal\Core\Datetime\DrupalDateTime;
 
 /**
@@ -20,7 +20,7 @@ use Drupal\Core\Datetime\DrupalDateTime;
  *
  * @group TypedData
  */
-class TypedDataTest extends DrupalUnitTestBase {
+class TypedDataTest extends KernelTestBase {
 
   /**
    * The typed data manager to use.

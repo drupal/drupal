@@ -8,7 +8,7 @@
 namespace Drupal\config\Tests;
 
 use Drupal\Core\Language\Language;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests that language, module and settings.php are applied in the correct
@@ -16,7 +16,7 @@ use Drupal\simpletest\DrupalUnitTestBase;
  *
  * @group config
  */
-class ConfigOverridesPriorityTest extends DrupalUnitTestBase {
+class ConfigOverridesPriorityTest extends KernelTestBase {
 
   public static $modules = array('system', 'config', 'config_override_test', 'language');
 

@@ -11,7 +11,7 @@ use Drupal\Component\PhpStorage\MTimeProtectedFileStorage;
 use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PublicStream;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 use Drupal\system\PhpStorage\MockPhpStorage;
 
 /**
@@ -20,7 +20,7 @@ use Drupal\system\PhpStorage\MockPhpStorage;
  * @group PhpStorage
  * @see \Drupal\Core\PhpStorage\PhpStorageFactory
  */
-class PhpStorageFactoryTest extends DrupalUnitTestBase {
+class PhpStorageFactoryTest extends KernelTestBase {
 
   /**
    * Tests the get() method with no settings.

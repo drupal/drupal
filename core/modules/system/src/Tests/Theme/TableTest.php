@@ -7,14 +7,14 @@
 
 namespace Drupal\system\Tests\Theme;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests built-in table theme functions.
  *
  * @group Theme
  */
-class TableTest extends DrupalUnitTestBase {
+class TableTest extends KernelTestBase {
 
   /**
    * Modules to enable.

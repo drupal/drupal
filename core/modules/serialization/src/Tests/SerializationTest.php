@@ -7,7 +7,7 @@
 
 namespace Drupal\serialization\Tests;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 
 /**
@@ -15,7 +15,7 @@ use Symfony\Component\Serializer\Exception\UnexpectedValueException;
  *
  * @group serialization
  */
-class SerializationTest extends DrupalUnitTestBase {
+class SerializationTest extends KernelTestBase {
 
   /**
    * Modules to enable.

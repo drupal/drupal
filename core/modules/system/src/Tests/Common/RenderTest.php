@@ -11,14 +11,14 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Performs functional tests on drupal_render().
  *
  * @group Common
  */
-class RenderTest extends DrupalUnitTestBase {
+class RenderTest extends KernelTestBase {
 
   /**
    * Modules to enable.

@@ -11,14 +11,14 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ConfigImporterException;
 use Drupal\Core\Config\StorageComparer;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests importing configuration from files into active configuration.
  *
  * @group config
  */
-class ConfigImporterTest extends DrupalUnitTestBase {
+class ConfigImporterTest extends KernelTestBase {
 
   /**
    * Config Importer object used for testing.

@@ -11,14 +11,14 @@ use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\TypedData\Type\IntegerInterface;
 use Drupal\Core\TypedData\Type\StringInterface;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests schema for configuration objects.
  *
  * @group config
  */
-class ConfigSchemaTest extends DrupalUnitTestBase {
+class ConfigSchemaTest extends KernelTestBase {
 
   /**
    * Modules to enable.

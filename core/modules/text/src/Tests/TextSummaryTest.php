@@ -7,14 +7,14 @@
 
 namespace Drupal\text\Tests;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests text_summary() with different strings and lengths.
  *
  * @group text
  */
-class TextSummaryTest extends DrupalUnitTestBase {
+class TextSummaryTest extends KernelTestBase {
 
   public static $modules = array('system', 'user', 'filter', 'text');
 

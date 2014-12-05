@@ -7,14 +7,14 @@
 
 namespace Drupal\config\Tests;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Calculating the difference between two sets of configuration.
  *
  * @group config
  */
-class ConfigDiffTest extends DrupalUnitTestBase {
+class ConfigDiffTest extends KernelTestBase {
 
   /**
    * Modules to enable.

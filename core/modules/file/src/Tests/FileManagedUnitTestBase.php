@@ -8,13 +8,13 @@
 namespace Drupal\file\Tests;
 
 use Drupal\file\FileInterface;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Base class for file unit tests that use the file_test module to test uploads and
  * hooks.
  */
-abstract class FileManagedUnitTestBase extends DrupalUnitTestBase {
+abstract class FileManagedUnitTestBase extends KernelTestBase {
 
   /**
    * Modules to enable.

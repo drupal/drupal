@@ -9,14 +9,14 @@ namespace Drupal\system\Tests\Extension;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Extension\ExtensionNameLengthException;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests installing and uninstalling of themes.
  *
  * @group Extension
  */
-class ThemeHandlerTest extends DrupalUnitTestBase {
+class ThemeHandlerTest extends KernelTestBase {
 
   /**
    * Modules to enable.

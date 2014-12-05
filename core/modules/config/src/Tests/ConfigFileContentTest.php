@@ -8,14 +8,14 @@
 namespace Drupal\config\Tests;
 
 use Drupal\Core\Config\FileStorage;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests reading and writing of configuration files.
  *
  * @group config
  */
-class ConfigFileContentTest extends DrupalUnitTestBase {
+class ConfigFileContentTest extends KernelTestBase {
   /**
    * Tests setting, writing, and reading of a configuration setting.
    */

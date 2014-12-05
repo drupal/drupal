@@ -20,13 +20,13 @@ use Drupal\rest\LinkManager\TypeLinkManager;
 use Drupal\serialization\EntityResolver\ChainEntityResolver;
 use Drupal\serialization\EntityResolver\TargetIdResolver;
 use Drupal\serialization\EntityResolver\UuidResolver;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 use Symfony\Component\Serializer\Serializer;
 
 /**
  * Test the HAL normalizer.
  */
-abstract class NormalizerTestBase extends DrupalUnitTestBase {
+abstract class NormalizerTestBase extends KernelTestBase {
 
   /**
    * Modules to enable.

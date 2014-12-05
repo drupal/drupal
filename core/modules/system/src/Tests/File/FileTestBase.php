@@ -7,13 +7,13 @@
 
 namespace Drupal\system\Tests\File;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Base class for file tests that adds some additional file specific
  * assertions and helper functions.
  */
-abstract class FileTestBase extends DrupalUnitTestBase {
+abstract class FileTestBase extends KernelTestBase {
 
   /**
    * Modules to enable.

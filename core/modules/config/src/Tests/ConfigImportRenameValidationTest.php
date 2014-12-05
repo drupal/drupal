@@ -13,14 +13,14 @@ use Drupal\Component\Uuid\Php;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ConfigImporterException;
 use Drupal\Core\Config\StorageComparer;
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests validating renamed configuration in a configuration import.
  *
  * @group config
  */
-class ConfigImportRenameValidationTest extends DrupalUnitTestBase {
+class ConfigImportRenameValidationTest extends KernelTestBase {
 
   /**
    * Config Importer object used for testing.

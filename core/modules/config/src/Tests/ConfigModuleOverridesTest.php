@@ -7,14 +7,14 @@
 
 namespace Drupal\config\Tests;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests module overrides of configuration using event subscribers.
  *
  * @group config
  */
-class ConfigModuleOverridesTest extends DrupalUnitTestBase {
+class ConfigModuleOverridesTest extends KernelTestBase {
 
   public static $modules = array('system', 'config', 'config_override_test');
 
