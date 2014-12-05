@@ -307,7 +307,7 @@ function drupal_page_cache_get_cid(Request $request) {
     $request->getUri(),
     \Drupal::service('content_negotiation')->getContentType($request),
   );
-  return sha1(implode(':', $cid_parts));
+  return implode(':', $cid_parts);
 }
 
 /**
