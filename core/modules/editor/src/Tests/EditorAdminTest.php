@@ -23,6 +23,13 @@ class EditorAdminTest extends WebTestBase {
    */
   public static $modules = array('filter', 'editor');
 
+  /**
+   * A user with the 'administer filters' permission.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $adminUser;
+
   protected function setUp() {
     parent::setUp();
 
@@ -36,14 +43,14 @@ class EditorAdminTest extends WebTestBase {
     $filtered_html_format->save();
 
     // Create admin user.
-    $this->admin_user = $this->drupalCreateUser(array('administer filters'));
+    $this->adminUser = $this->drupalCreateUser(array('administer filters'));
   }
 
   /**
    * Tests an existing format without any editors available.
    */
   public function testNoEditorAvailable() {
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/config/content/formats/manage/filtered_html');
 
     // Ensure the form field order is correct.
@@ -68,7 +75,7 @@ class EditorAdminTest extends WebTestBase {
    */
   public function testAddEditorToExistingFormat() {
     $this->enableUnicornEditor();
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/config/content/formats/manage/filtered_html');
     $edit = $this->selectUnicornEditor();
     // Configure Unicorn Editor's setting to another value.
@@ -82,7 +89,7 @@ class EditorAdminTest extends WebTestBase {
    */
   public function testAddEditorToNewFormat() {
     $this->enableUnicornEditor();
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/config/content/formats/add');
     // Configure the text format name.
     $edit = array(

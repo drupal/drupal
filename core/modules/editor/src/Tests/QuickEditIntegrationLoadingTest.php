@@ -29,7 +29,7 @@ class QuickEditIntegrationLoadingTest extends WebTestBase {
    *
    * @var array
    */
-  protected static $basic_permissions = array('access content', 'create article content', 'use text format filtered_html', 'access contextual links');
+  protected static $basicPermissions = array('access content', 'create article content', 'use text format filtered_html', 'access contextual links');
 
   protected function setUp() {
     parent::setUp();
@@ -74,9 +74,9 @@ class QuickEditIntegrationLoadingTest extends WebTestBase {
     // - the 'access in-place editing' permission
     // - the 'edit any article content' permission (necessary to edit node 1)
     $users = array(
-      $this->drupalCreateUser(static::$basic_permissions),
-      $this->drupalCreateUser(array_merge(static::$basic_permissions, array('edit any article content'))),
-      $this->drupalCreateUser(array_merge(static::$basic_permissions, array('access in-place editing')))
+      $this->drupalCreateUser(static::$basicPermissions),
+      $this->drupalCreateUser(array_merge(static::$basicPermissions, array('edit any article content'))),
+      $this->drupalCreateUser(array_merge(static::$basicPermissions, array('access in-place editing')))
     );
 
     // Now test with each of the 3 users with insufficient permissions.
@@ -98,7 +98,7 @@ class QuickEditIntegrationLoadingTest extends WebTestBase {
    * Test loading of untransformed text when a user does have access to it.
    */
   public function testUserWithPermission() {
-    $user = $this->drupalCreateUser(array_merge(static::$basic_permissions, array('edit any article content', 'access in-place editing')));
+    $user = $this->drupalCreateUser(array_merge(static::$basicPermissions, array('edit any article content', 'access in-place editing')));
     $this->drupalLogin($user);
     $this->drupalGet('node/1');
 

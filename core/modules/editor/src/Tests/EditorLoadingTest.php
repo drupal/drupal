@@ -23,6 +23,27 @@ class EditorLoadingTest extends WebTestBase {
    */
   public static $modules = array('filter', 'editor', 'editor_test', 'node');
 
+  /**
+   * An untrusted user, with access to the 'plain_text' format.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $untrustedUser;
+
+  /**
+   * A normal user with additional access to the 'filtered_html' format.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $normalUser;
+
+  /**
+   * A privileged user with additional access to the 'full_html' format.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $privilegedUser;
+
   protected function setUp() {
     parent::setUp();
 
@@ -48,13 +69,10 @@ class EditorLoadingTest extends WebTestBase {
       'name' => 'Article',
     ));
 
-    // Create 3 users, each with access to different text formats:
-    //   - "untrusted": plain_text
-    //   - "normal": plain_text, filtered_html
-    //   - "privileged": plain_text, filtered_html, full_html
-    $this->untrusted_user = $this->drupalCreateUser(array('create article content', 'edit any article content'));
-    $this->normal_user = $this->drupalCreateUser(array('create article content', 'edit any article content', 'use text format filtered_html'));
-    $this->privileged_user = $this->drupalCreateUser(array('create article content', 'edit any article content', 'use text format filtered_html', 'use text format full_html'));
+    // Create 3 users, each with access to different text formats.
+    $this->untrustedUser = $this->drupalCreateUser(array('create article content', 'edit any article content'));
+    $this->normalUser = $this->drupalCreateUser(array('create article content', 'edit any article content', 'use text format filtered_html'));
+    $this->privilegedUser = $this->drupalCreateUser(array('create article content', 'edit any article content', 'use text format filtered_html', 'use text format full_html'));
   }
 
   /**
@@ -71,19 +89,19 @@ class EditorLoadingTest extends WebTestBase {
     // The normal user:
     // - has access to 2 text formats;
     // - doesn't have access to the full_html text format, so: no text editor.
-    $this->drupalLogin($this->normal_user);
+    $this->drupalLogin($this->normalUser);
     $this->drupalGet('node/add/article');
     list( , $editor_settings_present, $editor_js_present, $body, $format_selector) = $this->getThingsToCheck();
     $this->assertFalse($editor_settings_present, 'No Text Editor module settings.');
     $this->assertFalse($editor_js_present, 'No Text Editor JavaScript.');
     $this->assertTrue(count($body) === 1, 'A body field exists.');
     $this->assertTrue(count($format_selector) === 0, 'No text format selector exists on the page because the user only has access to a single format.');
-    $this->drupalLogout($this->normal_user);
+    $this->drupalLogout($this->normalUser);
 
-    // The normal user:
+    // The privileged user:
     // - has access to 2 text formats (and the fallback format);
     // - does have access to the full_html text format, so: Unicorn text editor.
-    $this->drupalLogin($this->privileged_user);
+    $this->drupalLogin($this->privilegedUser);
     $this->drupalGet('node/add/article');
     list($settings, $editor_settings_present, $editor_js_present, $body, $format_selector) = $this->getThingsToCheck();
     $expected = array('formats' => array('full_html' => array(
@@ -100,7 +118,7 @@ class EditorLoadingTest extends WebTestBase {
     $this->assertTrue(count($format_selector) === 1, 'A single text format selector exists on the page.');
     $specific_format_selector = $this->xpath('//select[contains(@class, "filter-list") and contains(@class, "editor") and @data-editor-for="edit-body-0-value"]');
     $this->assertTrue(count($specific_format_selector) === 1, 'A single text format selector exists on the page and has the "editor" class and a "data-editor-for" attribute with the correct value.');
-    $this->drupalLogout($this->privileged_user);
+    $this->drupalLogout($this->privilegedUser);
 
     // Also associate a text editor with the "Plain Text" text format.
     $editor = entity_create('editor', array(
@@ -112,7 +130,7 @@ class EditorLoadingTest extends WebTestBase {
     // The untrusted user:
     // - has access to 1 text format (plain_text);
     // - has access to the plain_text text format, so: Unicorn text editor.
-    $this->drupalLogin($this->untrusted_user);
+    $this->drupalLogin($this->untrustedUser);
     $this->drupalGet('node/add/article');
     list($settings, $editor_settings_present, $editor_js_present, $body, $format_selector) = $this->getThingsToCheck();
     $expected = array('formats' => array('plain_text' => array(
