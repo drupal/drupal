@@ -89,11 +89,12 @@ class ViewElementTest extends ViewTestBase {
           'type' => 'none',
           'fail' => 'not found',
         ),
-        'break_phrase' => 0,
-        'not' => 0,
+        'break_phrase' => FALSE,
+        'not' => FALSE,
         'id' => 'age',
         'table' => 'views_test_data',
         'field' => 'age',
+        'plugin_id' => 'numeric',
       )
     ));
     $view->save();

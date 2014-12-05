@@ -73,7 +73,7 @@ display:
             html: false
           hide_empty: false
           empty_zero: false
-          link_to_node: 1
+          link_to_node: true
           relationship: none
           group_type: group
           admin_label: ''
@@ -88,6 +88,7 @@ display:
           element_default_classes: true
           empty: ''
           hide_alter_empty: true
+          plugin_id: node
       filters:
         status:
           value: true
@@ -97,6 +98,7 @@ display:
           expose:
             operator: ''
           group: 1
+          plugin_id: boolean
         title:
           id: title
           table: node_field_data
@@ -179,6 +181,7 @@ display:
           expose:
             operator: ''
           group: 1
+          plugin_id: boolean
         body_value:
           id: body_value
           table: node__body
@@ -243,6 +246,7 @@ display:
           expose:
             operator: ''
           group: 1
+          plugin_id: boolean
         body_value:
           id: body_value
           table: node__body
@@ -307,6 +311,7 @@ display:
           expose:
             operator: ''
           group: 1
+          plugin_id: boolean
         title:
           id: title
           table: node_field_data

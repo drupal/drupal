@@ -1,7 +1,5 @@
 # Schema for the views access plugins.
 
 views.access.none:
-  type: sequence
+  type: mapping
   label: 'None'
-  sequence:
-    - type: string

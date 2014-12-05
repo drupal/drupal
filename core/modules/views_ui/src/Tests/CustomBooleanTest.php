@@ -57,8 +57,10 @@ class CustomBooleanTest extends UITestBase {
         'table' => 'views_test_data',
         'field' => 'age',
         'relationship' => 'none',
+        'plugin_id' => 'boolean',
       ),
     ));
+    $view->save();
 
     $this->executeView($view);
 

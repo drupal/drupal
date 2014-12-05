@@ -100,6 +100,7 @@ display:
           empty: ''
           hide_alter_empty: true
           link_to_entity: false
+          plugin_id: comment
       filters:
         subject:
           id: subject

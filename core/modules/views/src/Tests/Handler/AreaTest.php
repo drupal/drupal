@@ -166,6 +166,7 @@ class AreaTest extends HandlerTestBase {
         'admin_label' => '',
         'empty' => '0',
         'title' => 'Overridden title',
+        'plugin_id' => 'title',
       ),
     ));
 

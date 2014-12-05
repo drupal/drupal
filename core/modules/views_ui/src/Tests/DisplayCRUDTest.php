@@ -17,6 +17,17 @@ use Drupal\views\Views;
 class DisplayCRUDTest extends UITestBase {
 
   /**
+   * Set to TRUE to strict check all configuration saved.
+   *
+   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
+   *
+   * @todo https://www.drupal.org/node/2387157
+   *
+   * @var bool
+   */
+  protected $strictConfigSchema = FALSE;
+
+  /**
    * Views used by this test.
    *
    * @var array

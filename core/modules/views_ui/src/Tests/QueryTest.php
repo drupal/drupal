@@ -8,6 +8,7 @@
 namespace Drupal\views_ui\Tests;
 
 use Drupal\views\Views;
+use Drupal\views\Entity\View;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views_test_data\Plugin\views\query\QueryTest as QueryTestPlugin;
 
@@ -39,6 +40,11 @@ class QueryTest extends UITestBase {
    * Tests query plugins settings.
    */
   public function testQueryUI() {
+    $view = View::load('test_view');
+    $display = &$view->getDisplay('default');
+    $display['display_options']['query'] = ['type' => 'query_test'];
+    $view->save();
+
     // Save some query settings.
     $query_settings_path = "admin/structure/views/nojs/display/test_view/default/query";
     $random_value = $this->randomMachineName();
