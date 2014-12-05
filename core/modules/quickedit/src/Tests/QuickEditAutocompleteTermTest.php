@@ -203,7 +203,7 @@ class QuickEditAutocompleteTermTest extends WebTestBase {
       'name' => $this->randomMachineName(),
       'description' => $this->randomMachineName(),
       // Use the first available text format.
-      'format' => $format->format,
+      'format' => $format->id(),
       'vid' => $this->vocabulary->id(),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ));

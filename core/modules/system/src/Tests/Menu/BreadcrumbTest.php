@@ -115,7 +115,7 @@ class BreadcrumbTest extends MenuTestBase {
     // Verify Filter text format administration breadcrumbs.
     $filter_formats = filter_formats();
     $format = reset($filter_formats);
-    $format_id = $format->format;
+    $format_id = $format->id();
     $trail = $config + array(
       'admin/config/content' => t('Content authoring'),
     );

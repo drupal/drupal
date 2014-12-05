@@ -69,7 +69,7 @@ abstract class TaxonomyTestBase extends WebTestBase {
       'description' => array(
         'value' => $this->randomMachineName(),
         // Use the first available text format.
-        'format' => $format->format,
+        'format' => $format->id(),
       ),
       'vid' => $vocabulary->id(),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,

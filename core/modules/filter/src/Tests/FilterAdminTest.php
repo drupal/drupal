@@ -244,13 +244,13 @@ class FilterAdminTest extends WebTestBase {
     filter_formats_reset();
     $format = entity_load('filter_format', $edit['format']);
     $this->assertNotNull($format, 'Format found in database.');
-    $this->drupalGet('admin/config/content/formats/manage/' . $format->format);
+    $this->drupalGet('admin/config/content/formats/manage/' . $format->id());
     $this->assertFieldByName('roles[' . DRUPAL_AUTHENTICATED_RID . ']', '', 'Role found.');
     $this->assertFieldByName('filters[' . $second_filter . '][status]', '', 'Line break filter found.');
     $this->assertFieldByName('filters[' . $first_filter . '][status]', '', 'Url filter found.');
 
     // Disable new filter.
-    $this->drupalPostForm('admin/config/content/formats/manage/' . $format->format . '/disable', array(), t('Disable'));
+    $this->drupalPostForm('admin/config/content/formats/manage/' . $format->id() . '/disable', array(), t('Disable'));
     $this->assertUrl('admin/config/content/formats');
     $this->assertRaw(t('Disabled text format %format.', array('%format' => $edit['name'])), 'Format successfully disabled.');
 
@@ -261,7 +261,7 @@ class FilterAdminTest extends WebTestBase {
     $edit['roles[' . DRUPAL_AUTHENTICATED_RID . ']'] = 1;
     $this->drupalPostForm('admin/config/content/formats/manage/' . $full, $edit, t('Save configuration'));
     $this->assertUrl('admin/config/content/formats');
-    $this->assertRaw(t('The text format %format has been updated.', array('%format' => $format->name)), 'Full HTML format successfully updated.');
+    $this->assertRaw(t('The text format %format has been updated.', array('%format' => $format->label())), 'Full HTML format successfully updated.');
 
     // Switch user.
     $this->drupalLogin($this->web_user);
@@ -319,7 +319,7 @@ class FilterAdminTest extends WebTestBase {
     $edit['roles[' . DRUPAL_AUTHENTICATED_RID . ']'] = FALSE;
     $this->drupalPostForm('admin/config/content/formats/manage/' . $full, $edit, t('Save configuration'));
     $this->assertUrl('admin/config/content/formats');
-    $this->assertRaw(t('The text format %format has been updated.', array('%format' => $format->name)), 'Full HTML format successfully reverted.');
+    $this->assertRaw(t('The text format %format has been updated.', array('%format' => $format->label())), 'Full HTML format successfully reverted.');
     $this->drupalGet('admin/config/content/formats/manage/' . $full);
     $this->assertFieldByName('roles[' . DRUPAL_AUTHENTICATED_RID . ']', $edit['roles[' . DRUPAL_AUTHENTICATED_RID . ']'], 'Changes reverted.');
 

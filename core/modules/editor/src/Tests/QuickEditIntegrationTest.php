@@ -95,7 +95,7 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
 
     // Associate text editor with text format.
     $editor = entity_create('editor', array(
-      'format' => $full_html_format->format,
+      'format' => $full_html_format->id(),
       'editor' => 'unicorn',
     ));
     $editor->save();

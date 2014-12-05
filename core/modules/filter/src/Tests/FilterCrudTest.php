@@ -29,8 +29,8 @@ class FilterCrudTest extends KernelTestBase {
   function testTextFormatCrud() {
     // Add a text format with minimum data only.
     $format = entity_create('filter_format');
-    $format->format = 'empty_format';
-    $format->name = 'Empty format';
+    $format->set('format', 'empty_format');
+    $format->set('name', 'Empty format');
     $format->save();
     $this->verifyTextFormat($format);
 
@@ -49,7 +49,7 @@ class FilterCrudTest extends KernelTestBase {
     $this->verifyTextFormat($format);
 
     // Alter some text format properties and save again.
-    $format->name = 'Altered format';
+    $format->set('name', 'Altered format');
     $format->setFilterConfig('filter_url', array(
       'status' => 0,
     ));
@@ -70,21 +70,21 @@ class FilterCrudTest extends KernelTestBase {
     $format->disable()->save();
 
     $formats = filter_formats();
-    $this->assertTrue(!isset($formats[$format->format]), 'filter_formats: Disabled text format no longer exists.');
+    $this->assertTrue(!isset($formats[$format->id()]), 'filter_formats: Disabled text format no longer exists.');
   }
 
   /**
    * Verifies that a text format is properly stored.
    */
   function verifyTextFormat($format) {
-    $t_args = array('%format' => $format->name);
+    $t_args = array('%format' => $format->label());
     $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
 
     // Verify the loaded filter has all properties.
-    $filter_format = entity_load('filter_format', $format->format);
-    $this->assertEqual($filter_format->format, $format->format, format_string('filter_format_load: Proper format id for text format %format.', $t_args));
-    $this->assertEqual($filter_format->name, $format->name, format_string('filter_format_load: Proper title for text format %format.', $t_args));
-    $this->assertEqual($filter_format->weight, $format->weight, format_string('filter_format_load: Proper weight for text format %format.', $t_args));
+    $filter_format = entity_load('filter_format', $format->id());
+    $this->assertEqual($filter_format->id(), $format->id(), format_string('filter_format_load: Proper format id for text format %format.', $t_args));
+    $this->assertEqual($filter_format->label(), $format->label(), format_string('filter_format_load: Proper title for text format %format.', $t_args));
+    $this->assertEqual($filter_format->get('weight'), $format->get('weight'), format_string('filter_format_load: Proper weight for text format %format.', $t_args));
     // Check that the filter was created in site default language.
     $this->assertEqual($format->language()->getId(), $default_langcode, format_string('filter_format_load: Proper language code for text format %format.', $t_args));
   }

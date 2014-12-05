@@ -156,7 +156,7 @@ function filter_formats(AccountInterface $account = NULL) {
     $formats['user'][$account_id] = array();
     foreach ($formats['all'] as $format) {
       if ($format->access('use', $account)) {
-        $formats['user'][$account_id][$format->format] = $format;
+        $formats['user'][$account_id][$format->id()] = $format;
       }
     }
   }
@@ -246,7 +246,7 @@ function filter_default_format(AccountInterface $account = NULL) {
   // available is the user's default format.
   $formats = filter_formats($account);
   $format = reset($formats);
-  return $format->format;
+  return $format->id();
 }
 
 /**
@@ -408,7 +408,7 @@ function template_preprocess_filter_guidelines(&$variables) {
   $format = $variables['format'];
   $variables['tips'] = array(
     '#theme' => 'filter_tips',
-    '#tips' => _filter_tips($format->format, FALSE),
+    '#tips' => _filter_tips($format->id(), FALSE),
   );
 }
 

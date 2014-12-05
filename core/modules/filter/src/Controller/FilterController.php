@@ -26,7 +26,7 @@ class FilterController {
    * @see template_preprocess_filter_tips()
    */
   function filterTips(FilterFormatInterface $filter_format = NULL) {
-    $tips = $filter_format ? $filter_format->format : -1;
+    $tips = $filter_format ? $filter_format->id() : -1;
 
     $build = array(
       '#theme' => 'filter_tips',

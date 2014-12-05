@@ -168,7 +168,7 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
     $term = entity_create('taxonomy_term', array(
       'name' => $properties['name'],
       'description' => $properties['description'],
-      'format' => $format->format,
+      'format' => $format->id(),
       'vid' => $this->vocabulary->id(),
       'langcode' => $properties['langcode'],
     ));

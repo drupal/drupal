@@ -158,7 +158,7 @@ class DefaultViewsTest extends ViewTestBase {
       'name' => $this->randomMachineName(),
       'description' => $this->randomMachineName(),
       // Use the first available text format.
-      'format' => $format->format,
+      'format' => $format->id(),
       'vid' => $vocabulary->id(),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ));

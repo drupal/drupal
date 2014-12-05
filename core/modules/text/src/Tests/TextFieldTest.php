@@ -114,7 +114,7 @@ class TextFieldTest extends StringFieldTest {
     $this->drupalLogin($this->adminUser);
     foreach (filter_formats() as $format) {
       if (!$format->isFallbackFormat()) {
-        $this->drupalPostForm('admin/config/content/formats/manage/' . $format->format . '/disable', array(), t('Disable'));
+        $this->drupalPostForm('admin/config/content/formats/manage/' . $format->id() . '/disable', array(), t('Disable'));
       }
     }
     $this->drupalLogin($this->webUser);
@@ -153,7 +153,7 @@ class TextFieldTest extends StringFieldTest {
     $this->drupalPostForm('admin/config/content/formats/add', $edit, t('Save configuration'));
     filter_formats_reset();
     $format = entity_load('filter_format', $edit['format']);
-    $format_id = $format->format;
+    $format_id = $format->id();
     $permission = $format->getPermissionName();
     $roles = $this->webUser->getRoles();
     $rid = $roles[0];

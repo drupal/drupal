@@ -53,7 +53,7 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
    *
    * @var string
    */
-  public $format;
+  protected $format;
 
   /**
    * Unique label of the text format.
@@ -66,7 +66,7 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
    *
    * @var string
    */
-  public $name;
+  protected $name;
 
   /**
    * Weight of this format in the text format selector.
@@ -76,7 +76,7 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
    *
    * @var int
    */
-  public $weight = 0;
+  protected $weight = 0;
 
   /**
    * List of user role IDs to grant access to use this format on initial creation.
