@@ -27,8 +27,9 @@ class ProjectServiceContainer extends Container
         $this->scopedServices =
         $this->scopeStacks = array();
         $this->parameters = array(
-            'empty_value' => '',
-            'some_string' => '-',
+            'foo' => ('wiz'.dirname(__DIR__)),
+            'bar' => __DIR__,
+            'baz' => (__DIR__.'/PhpDumperTest.php'),
         );
 
         $this->set('service_container', $this);
@@ -60,7 +61,7 @@ class ProjectServiceContainer extends Container
      */
     protected function getTestService()
     {
-        return $this->services['test'] = new \stdClass(array('only dot' => '.', 'concatenation as value' => '.\'\'.', 'concatenation from the start value' => '\'\'.', '.' => 'dot as a key', '.\'\'.' => 'concatenation as a key', '\'\'.' => 'concatenation from the start key', 'optimize concatenation' => 'string1-string2', 'optimize concatenation with empty string' => 'string1string2', 'optimize concatenation from the start' => 'start', 'optimize concatenation at the end' => 'end'));
+        return $this->services['test'] = new \stdClass(('wiz'.dirname(__DIR__)), array(('wiz'.dirname(__DIR__)) => ('wiz'.dirname(__DIR__))));
     }
 
     /**
