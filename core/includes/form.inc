@@ -31,16 +31,6 @@ function drupal_form_submit($form_arg, FormStateInterface $form_state) {
 }
 
 /**
- * Removes internal Form API elements and buttons from submitted form values.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
- *   Use $form_state->cleanValues().
- */
-function form_state_values_clean(FormStateInterface $form_state) {
-  $form_state->cleanValues();
-}
-
-/**
  * Prepares variables for select element templates.
  *
  * Default template: select.html.twig.
