@@ -26,3 +26,10 @@ error_test.trigger_pdo_exception:
     _controller: '\Drupal\error_test\Controller\ErrorTestController::triggerPDOException'
   requirements:
     _access: 'TRUE'
+
+error_test.trigger_renderer_exception:
+  path: '/error-test/trigger-renderer-exception'
+  defaults:
+    _controller: '\Drupal\error_test\Controller\ErrorTestController::triggerRendererException'
+  requirements:
+    _access: 'TRUE'

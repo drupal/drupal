@@ -84,6 +84,30 @@ class Renderer implements RendererInterface {
    * {@inheritdoc}
    */
   public function render(&$elements, $is_root_call = FALSE) {
+    // Since #pre_render, #post_render, #post_render_cache callbacks and theme
+    // functions/templates may be used for generating a render array's content,
+    // and we might be rendering the main content for the page, it is possible
+    // that any of them throw an exception that will cause a different page to
+    // be rendered (e.g. throwing
+    // \Symfony\Component\HttpKernel\Exception\NotFoundHttpException will cause
+    // the 404 page to be rendered). That page might also use Renderer::render()
+    // but if exceptions aren't caught here, the stack will be left in an
+    // inconsistent state.
+    // Hence, catch all exceptions and reset the stack and re-throw them.
+    try {
+      return $this->doRender($elements, $is_root_call);
+    }
+    catch (\Exception $e) {
+      // Reset stack and re-throw exception.
+      $this->resetStack();
+      throw $e;
+    }
+  }
+
+  /**
+   * See the docs for ::render().
+   */
+  protected function doRender(&$elements, $is_root_call = FALSE) {
     if (!isset($elements['#access']) && isset($elements['#access_callback'])) {
       if (is_string($elements['#access_callback']) && strpos($elements['#access_callback'], '::') === FALSE) {
         $elements['#access_callback'] = $this->controllerResolver->getControllerFromDefinition($elements['#access_callback']);
@@ -143,23 +167,7 @@ class Renderer implements RendererInterface {
         if (is_string($callable) && strpos($callable, '::') === FALSE) {
           $callable = $this->controllerResolver->getControllerFromDefinition($callable);
         }
-        // Since #pre_render callbacks may be used for generating a render
-        // array's content, and we might be rendering the main content for the
-        // page, it is possible that a #pre_render callback throws an exception
-        // that will cause a different page to be rendered (e.g. throwing
-        // \Symfony\Component\HttpKernel\Exception\NotFoundHttpException will
-        // cause the 404 page to be rendered). That page might also use
-        // drupal_render(), but if exceptions aren't caught here, the stack will
-        // be left in an inconsistent state.
-        // Hence, catch all exceptions and reset the stack and re-throw them.
-        try {
-          $elements = call_user_func($callable, $elements);
-        }
-        catch (\Exception $e) {
-          // Reset stack and re-throw exception.
-          $this->resetStack();
-          throw $e;
-        }
+        $elements = call_user_func($callable, $elements);
       }
     }
 
@@ -231,7 +239,7 @@ class Renderer implements RendererInterface {
     // same process as Renderer::render() but is inlined for speed.
     if ((!$theme_is_implemented || isset($elements['#render_children'])) && empty($elements['#children'])) {
       foreach ($children as $key) {
-        $elements['#children'] .= $this->render($elements[$key]);
+        $elements['#children'] .= $this->doRender($elements[$key]);
       }
       $elements['#children'] = SafeMarkup::set($elements['#children']);
     }

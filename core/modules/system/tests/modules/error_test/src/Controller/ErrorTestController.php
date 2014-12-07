@@ -72,4 +72,18 @@ class ErrorTestController extends ControllerBase {
     $this->database->query('SELECT * FROM bananas_are_awesome');
   }
 
+  /**
+   * Trigger an exception during rendering.
+   */
+  public function triggerRendererException() {
+    return [
+      '#type' => 'page',
+      '#post_render' => [
+        function () {
+          throw new \Exception('This is an exception that occurs during rendering');
+        }
+      ],
+    ];
+  }
+
 }
