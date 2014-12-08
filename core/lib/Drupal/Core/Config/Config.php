@@ -80,7 +80,6 @@ class Config extends StorableConfigBase {
     parent::initWithData($data);
     $this->settingsOverrides = array();
     $this->moduleOverrides = array();
-    $this->setData($data);
     return $this;
   }
 
@@ -109,8 +108,8 @@ class Config extends StorableConfigBase {
   /**
    * {@inheritdoc}
    */
-  public function setData(array $data) {
-    parent::setData($data);
+  public function setData(array $data, $validate_keys = TRUE) {
+    parent::setData($data, $validate_keys);
     $this->resetOverriddenData();
     return $this;
   }
