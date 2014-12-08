@@ -29,6 +29,7 @@ class FeedForm extends ContentEntityForm {
     // @todo: convert to a language selection widget defined in the base field.
     //   Blocked on https://drupal.org/node/2226493 which adds a generic
     //   language widget.
+    // Language module may expose or hide this element, see language_form_alter().
     $form['langcode'] = array(
       '#title' => $this->t('Language'),
       '#type' => 'language_select',

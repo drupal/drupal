@@ -11,7 +11,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Language\LanguageInterface;
+use Drupal\language\Entity\ContentLanguageSettings;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -76,11 +76,11 @@ class ContentLanguageSettingsForm extends ConfigFormBase {
 
       // Check whether we have any custom setting.
       foreach ($bundles[$entity_type_id] as $bundle => $bundle_info) {
-        $conf = language_get_default_configuration($entity_type_id, $bundle);
-        if (!empty($conf['language_show']) || $conf['langcode'] != LanguageInterface::LANGCODE_SITE_DEFAULT) {
+        $config = ContentLanguageSettings::loadByEntityTypeBundle($entity_type_id, $bundle);
+        if (!$config->isDefaultConfiguration()) {
           $default[$entity_type_id] = $entity_type_id;
         }
-        $language_configuration[$entity_type_id][$bundle] = $conf;
+        $language_configuration[$entity_type_id][$bundle] = $config;
       }
     }
 
@@ -145,16 +145,14 @@ class ContentLanguageSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $config = $this->config('language.settings');
     foreach ($form_state->getValue('settings') as $entity_type => $entity_settings) {
       foreach ($entity_settings as $bundle => $bundle_settings) {
-        $config->set(language_get_default_configuration_settings_key($entity_type, $bundle), array(
-          'langcode' => $bundle_settings['settings']['language']['langcode'],
-          'language_show' => $bundle_settings['settings']['language']['language_show'],
-        ));
+        $config = ContentLanguageSettings::loadByEntityTypeBundle($entity_type, $bundle);
+        $config->setDefaultLangcode($bundle_settings['settings']['language']['langcode'])
+          ->setLanguageAlterable($bundle_settings['settings']['language']['language_alterable'])
+          ->save();
       }
     }
-    $config->save();
     drupal_set_message($this->t('Settings successfully updated.'));
   }
 

@@ -266,7 +266,7 @@ function content_translation_form_language_content_settings_validate(array $form
         }
 
         $values = $bundle_settings['settings']['language'];
-        if (empty($values['language_show']) && \Drupal::languageManager()->isLanguageLocked($values['langcode'])) {
+        if (empty($values['language_alterable']) && \Drupal::languageManager()->isLanguageLocked($values['langcode'])) {
           foreach (\Drupal::languageManager()->getLanguages(LanguageInterface::STATE_LOCKED) as $language) {
             $locked_languages[] = $language->getName();
           }

@@ -15,6 +15,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
+use Drupal\language\Entity\ContentLanguageSettings;
 use Symfony\Component\HttpFoundation\Response;
 use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Database\Query\AlterableInterface;
@@ -378,8 +379,8 @@ function node_entity_extra_field_info() {
     // Visibility of the ordering of the language selector is the same as on the
     // node/add form.
     if ($module_language_enabled) {
-      $configuration = language_get_default_configuration('node', $bundle->type);
-      if ($configuration['language_show']) {
+      $configuration = ContentLanguageSettings::loadByEntityTypeBundle('node', $bundle->type);
+      if ($configuration->isLanguageAlterable()) {
         $extra['node'][$bundle->type]['form']['langcode'] = array(
           'label' => t('Language'),
           'description' => $description,

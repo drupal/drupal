@@ -17,6 +17,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\language\Entity\ContentLanguageSettings;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -161,13 +162,13 @@ class CommentForm extends ContentEntityForm {
       $form['author']['name']['#attributes']['data-drupal-default-value'] = $this->config('user.settings')->get('anonymous');
     }
 
-    $language_configuration = \Drupal::moduleHandler()->invoke('language', 'get_default_configuration', array('comment', $comment->getTypeId()));
     $form['langcode'] = array(
       '#title' => t('Language'),
       '#type' => 'language_select',
       '#default_value' => $comment->getUntranslated()->language()->getId(),
       '#languages' => Language::STATE_ALL,
-      '#access' => isset($language_configuration['language_show']) && $language_configuration['language_show'],
+      // Language module may expose or hide this element, see language_form_alter().
+      '#access' => FALSE,
     );
 
     // Add author email and homepage fields depending on the current user.

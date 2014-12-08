@@ -257,19 +257,13 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
       '#weight' => -2,
     );
 
-    $language_configuration = $this->moduleHandler->invoke('language', 'get_default_configuration', array('menu_link_content', 'menu_link_content'));
-    if ($this->entity->isNew()) {
-      $default_language = isset($language_configuration['langcode']) ? $language_configuration['langcode'] : $this->languageManager->getDefaultLanguage()->getId();
-    }
-    else {
-      $default_language = $this->entity->getUntranslated()->language()->getId();
-    }
     $form['langcode'] = array(
       '#title' => t('Language'),
       '#type' => 'language_select',
-      '#default_value' => $default_language,
+      '#default_value' =>  $this->entity->getUntranslated()->language()->getId(),
       '#languages' => Language::STATE_ALL,
-      '#access' => !empty($language_configuration['language_show']),
+      // Language module may expose or hide this element, see language_form_alter().
+      '#access' => FALSE,
     );
 
     $default = $this->entity->getMenuName() . ':' . $this->entity->getParentId();

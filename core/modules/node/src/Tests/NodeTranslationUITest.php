@@ -42,7 +42,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
 
     // Display the language selector.
     $this->drupalLogin($this->administrator);
-    $edit = array('language_configuration[language_show]' => TRUE);
+    $edit = array('language_configuration[language_alterable]' => TRUE);
     $this->drupalPostForm('admin/structure/types/manage/article', $edit, t('Save content type'));
     $this->drupalLogin($this->translator);
   }

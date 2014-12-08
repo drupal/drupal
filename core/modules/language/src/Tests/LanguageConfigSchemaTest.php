@@ -56,20 +56,20 @@ class LanguageConfigSchemaTest extends WebTestBase {
 
     // Enable translation for menu link.
     $edit['entity_types[menu_link_content]'] = TRUE;
-    $edit['settings[menu_link_content][menu_link_content][settings][language][language_show]'] = TRUE;
+    $edit['settings[menu_link_content][menu_link_content][settings][language][language_alterable]'] = TRUE;
 
     // Enable translation for user.
     $edit['entity_types[user]'] = TRUE;
-    $edit['settings[user][user][settings][language][language_show]'] = TRUE;
+    $edit['settings[user][user][settings][language][language_alterable]'] = TRUE;
     $edit['settings[user][user][settings][language][langcode]'] = 'en';
 
     $this->drupalPostForm($settings_path, $edit, t('Save configuration'));
 
-    $config_data = \Drupal::config('language.settings')->get();
+    $config_data = \Drupal::config('language.content_settings.menu_link_content.menu_link_content');
     // Make sure configuration saved correctly.
-    $this->assertTrue($config_data['entities']['menu_link_content']['menu_link_content']['language']['default_configuration']['language_show']);
+    $this->assertTrue($config_data->get('language_alterable'));
 
-    $this->assertConfigSchema(\Drupal::service('config.typed'), 'language.settings', $config_data);
+    $this->assertConfigSchema(\Drupal::service('config.typed'), $config_data->getName(), $config_data->get());
   }
 
 }

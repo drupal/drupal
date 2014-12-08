@@ -101,34 +101,30 @@ language.entity.*:
       type: boolean
       label: 'Locked'
 
-language.settings:
-  type: mapping
-  label: 'Language settings'
+language.content_settings.*.*:
+  type: config_entity
+  label: 'Content Language Settings'
   mapping:
-    entities:
+    id:
+      type: string
+      label: 'ID'
+    target_entity_type_id:
+      type: string
+      label: 'Entity Type ID'
+    target_bundle:
+      type:  string
+      label: 'Bundle'
+    default_langcode:
+      type: string
+      label: 'Default language'
+    language_alterable:
+      type: boolean
+      label: 'Allow to alter the language'
+    third_party_settings:
       type: sequence
-      label: 'Entity type'
+      label: 'Third party settings'
       sequence:
-        - type: sequence
-          label: 'Bundle'
-          sequence:
-            - type: mapping
-              label: 'Custom language settings'
-              mapping:
-                language:
-                  type: mapping
-                  label: 'Custom language settings'
-                  mapping:
-                    default_configuration:
-                      type: mapping
-                      label: 'Default language'
-                      mapping:
-                        langcode:
-                          type: string
-                          label: 'Default language'
-                        language_show:
-                          type: boolean
-                          label: 'Show language selector on create and edit pages'
+        - type: content_settings.third_party.[%key]
 
 condition.plugin.language:
   type: condition.plugin

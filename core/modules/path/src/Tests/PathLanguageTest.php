@@ -56,7 +56,7 @@ class PathLanguageTest extends PathTestBase {
       'settings[node][page][translatable]' => 1,
       'settings[node][page][fields][path]' => 1,
       'settings[node][page][fields][body]' => 1,
-      'settings[node][page][settings][language][language_show]' => 1,
+      'settings[node][page][settings][language][language_alterable]' => 1,
     );
     $this->drupalPostForm('admin/config/regional/content-language', $edit, t('Save configuration'));
 

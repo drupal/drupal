@@ -90,7 +90,7 @@
         var $settings = $bundleSettings.nextUntil('.bundle-settings');
         var $fieldSettings = $settings.filter('.field-settings');
         if ($target.is(':checked')) {
-          $bundleSettings.find('.operations :input[name$="[language_show]"]').prop('checked', true);
+          $bundleSettings.find('.operations :input[name$="[language_alterable]"]').prop('checked', true);
           $fieldSettings.find('.translatable :input').prop('checked', true);
           $settings.show();
         }

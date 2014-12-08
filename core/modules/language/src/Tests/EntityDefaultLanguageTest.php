@@ -8,6 +8,7 @@
 namespace Drupal\language\Tests;
 
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\simpletest\KernelTestBase;
 
 /**
@@ -110,10 +111,11 @@ class EntityDefaultLanguageTest extends KernelTestBase {
       'create_body' => FALSE,
     ));
     $content_type->save();
-    language_save_default_configuration('node', $name, array(
-      'langcode' => $langcode,
-      'language_show' => FALSE,
-    ));
+    ContentLanguageSettings::loadByEntityTypeBundle('node', $name)
+      ->setLanguageAlterable(FALSE)
+      ->setDefaultLangcode($langcode)
+      ->save();
+
   }
 
   /**

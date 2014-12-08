@@ -11,6 +11,7 @@ use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Field\Entity\BaseFieldOverride;
 use Drupal\Core\Language\Language;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -93,7 +94,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
     $edit = array(
       'entity_types[comment]' => TRUE,
       'settings[comment][comment_article][settings][language][langcode]' => Language::LANGCODE_NOT_SPECIFIED,
-      'settings[comment][comment_article][settings][language][language_show]' => FALSE,
+      'settings[comment][comment_article][settings][language][language_alterable]' => FALSE,
       'settings[comment][comment_article][translatable]' => TRUE,
       'settings[comment][comment_article][fields][comment_body]' => TRUE,
     );
@@ -105,7 +106,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
     $edit = array(
       'entity_types[comment]' => TRUE,
       'settings[comment][comment_article][settings][language][langcode]' => 'current_interface',
-      'settings[comment][comment_article][settings][language][language_show]' => TRUE,
+      'settings[comment][comment_article][settings][language][language_alterable]' => TRUE,
       'settings[comment][comment_article][translatable]' => TRUE,
       'settings[comment][comment_article][fields][comment_body]' => TRUE,
       // Override both comment subject fields to untranslatable.
@@ -137,9 +138,9 @@ class ContentTranslationSettingsTest extends WebTestBase {
     $this->assertTrue($definitions['name']->isTranslatable() && !$definitions['user_id']->isTranslatable(), 'Base field bundle overrides were correctly altered.');
 
     // Test that language settings are correctly stored.
-    $language_configuration = language_get_default_configuration('comment', 'comment_article');
-    $this->assertEqual($language_configuration['langcode'], 'current_interface', 'The default language for article comments is set to the current interface language.');
-    $this->assertTrue($language_configuration['language_show'], 'The language selector for article comments is shown.');
+    $language_configuration = ContentLanguageSettings::loadByEntityTypeBundle('comment', 'comment_article');
+    $this->assertEqual($language_configuration->getDefaultLangcode(), 'current_interface', 'The default language for article comments is set to the current interface language.');
+    $this->assertTrue($language_configuration->isLanguageAlterable(), 'The language selector for article comments is shown.');
 
     // Verify language widget appears on comment type form.
     $this->drupalGet('admin/structure/comment/manage/comment_article');
@@ -162,7 +163,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
     $edit = array(
       'entity_types[node]' => TRUE,
       'settings[node][article][settings][language][langcode]' => 'current_interface',
-      'settings[node][article][settings][language][language_show]' => TRUE,
+      'settings[node][article][settings][language][language_alterable]' => TRUE,
       'settings[node][article][translatable]' => TRUE,
       'settings[node][article][fields][title]' => TRUE
     );
@@ -259,7 +260,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
     // Note: this field is not translatable when enable bundle translatability.
     $edit = array(
       'entity_types[node]' => TRUE,
-      'settings[node][article][settings][language][language_show]' => TRUE,
+      'settings[node][article][settings][language][language_alterable]' => TRUE,
       'settings[node][article][translatable]' => TRUE,
       'settings[node][article][fields][article_text]' => TRUE,
     );

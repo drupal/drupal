@@ -11,6 +11,7 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\DynamicallyFieldableEntityStorageInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Render\Element;
+use Drupal\language\Entity\ContentLanguageSettings;
 
 /**
  * @defgroup entity_crud Entity CRUD, editing, and view hooks
@@ -1911,8 +1912,8 @@ function hook_entity_extra_field_info() {
     // Visibility of the ordering of the language selector is the same as on the
     // node/add form.
     if ($module_language_enabled) {
-      $configuration = language_get_default_configuration('node', $bundle->type);
-      if ($configuration['language_show']) {
+      $configuration = ContentLanguageSettings::loadByEntityTypeBundle('node', $bundle->type);
+      if ($configuration->isLanguageAlterable()) {
         $extra['node'][$bundle->type]['form']['language'] = array(
           'label' => t('Language'),
           'description' => $description,

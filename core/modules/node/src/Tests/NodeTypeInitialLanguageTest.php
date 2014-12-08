@@ -39,7 +39,7 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
   function testNodeTypeInitialLanguageDefaults() {
     $this->drupalGet('admin/structure/types/manage/article');
     $this->assertOptionSelected('edit-language-configuration-langcode', LanguageInterface::LANGCODE_SITE_DEFAULT, 'The default initial language is the site default.');
-    $this->assertNoFieldChecked('edit-language-configuration-language-show', 'Language selector is hidden by default.');
+    $this->assertNoFieldChecked('edit-language-configuration-language-alterable', 'Language selector is hidden by default.');
 
     // Tests if the language field cannot be rearranged on the manage fields tab.
     $this->drupalGet('admin/structure/types/manage/article/fields');
@@ -62,7 +62,7 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
     // Tests the initial language after changing the site default language.
     // First unhide the language selector.
     $edit = array(
-      'language_configuration[language_show]' => TRUE,
+      'language_configuration[language_alterable]' => TRUE,
     );
     $this->drupalPostForm('admin/structure/types/manage/article', $edit, t('Save content type'));
     $this->drupalGet('node/add/article');

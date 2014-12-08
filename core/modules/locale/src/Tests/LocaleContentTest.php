@@ -84,7 +84,7 @@ class LocaleContentTest extends WebTestBase {
     $this->drupalGet("admin/structure/types/manage/{$type2->type}");
     $this->assertText(t('Language settings'), 'Multilingual support widget present on content type configuration form.');
     $edit = array(
-      'language_configuration[language_show]' => TRUE,
+      'language_configuration[language_alterable]' => TRUE,
     );
     $this->drupalPostForm("admin/structure/types/manage/{$type2->type}", $edit, t('Save content type'));
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => $type2->name)));
@@ -156,7 +156,7 @@ class LocaleContentTest extends WebTestBase {
     // Set the content type to use multilingual support.
     $this->drupalGet("admin/structure/types/manage/{$type->type}");
     $edit = array(
-      'language_configuration[language_show]' => TRUE,
+      'language_configuration[language_alterable]' => TRUE,
     );
     $this->drupalPostForm("admin/structure/types/manage/{$type->type}", $edit, t('Save content type'));
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => $type->name)));

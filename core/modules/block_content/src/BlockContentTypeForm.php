@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\language\Entity\ContentLanguageSettings;
 
 /**
  * Base form for category edit forms.
@@ -65,7 +66,7 @@ class BlockContentTypeForm extends EntityForm {
         '#group' => 'additional_settings',
       );
 
-      $language_configuration = language_get_default_configuration('block_content', $block_type->id());
+      $language_configuration = ContentLanguageSettings::loadByEntityTypeBundle('block_content', $block_type->id());
       $form['language']['language_configuration'] = array(
         '#type' => 'language_configuration',
         '#entity_information' => array(

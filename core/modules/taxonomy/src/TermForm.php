@@ -10,6 +10,7 @@ namespace Drupal\taxonomy;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\language\Entity\ContentLanguageSettings;
 
 /**
  * Base for controller for taxonomy term edit forms.
@@ -28,13 +29,13 @@ class TermForm extends ContentEntityForm {
     $form_state->set(['taxonomy', 'parent'], $parent);
     $form_state->set(['taxonomy', 'vocabulary'], $vocabulary);
 
-    $language_configuration = $this->moduleHandler->moduleExists('language') ? language_get_default_configuration('taxonomy_term', $vocabulary->id()) : FALSE;
     $form['langcode'] = array(
       '#type' => 'language_select',
       '#title' => $this->t('Language'),
       '#languages' => LanguageInterface::STATE_ALL,
       '#default_value' => $term->getUntranslated()->language()->getId(),
-      '#access' => !empty($language_configuration['language_show']),
+      // Language module may expose or hide this element, see language_form_alter().
+      '#access' => FALSE,
     );
 
     $form['relations'] = array(

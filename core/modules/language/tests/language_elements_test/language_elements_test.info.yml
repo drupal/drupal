@@ -4,3 +4,5 @@ description: 'Support module for the language form elements tests.'
 core: 8.x
 package: Testing
 version: VERSION
+dependencies:
+  - entity_test

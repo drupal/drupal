@@ -98,13 +98,13 @@ class MessageForm extends ContentEntityForm {
       $form['preview']['message'] = $this->entityManager->getViewBuilder('contact_message')->view($message, 'full');
     }
 
-    $language_configuration = $this->moduleHandler->invoke('language', 'get_default_configuration', array('contact_message', $message->getContactForm()->id()));
     $form['langcode'] = array(
       '#title' => $this->t('Language'),
       '#type' => 'language_select',
       '#default_value' => $message->getUntranslated()->language()->getId(),
       '#languages' => Language::STATE_ALL,
-      '#access' => isset($language_configuration['language_show']) && $language_configuration['language_show'],
+      // Language module may expose or hide this element, see language_form_alter().
+      '#access' => FALSE,
     );
 
     $form['name'] = array(

@@ -13,6 +13,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\language\Entity\ContentLanguageSettings;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -166,7 +167,7 @@ class NodeTypeForm extends EntityForm {
         '#group' => 'additional_settings',
       );
 
-      $language_configuration = language_get_default_configuration('node', $type->id());
+      $language_configuration = ContentLanguageSettings::loadByEntityTypeBundle('node', $type->id());
       $form['language']['language_configuration'] = array(
         '#type' => 'language_configuration',
         '#entity_information' => array(

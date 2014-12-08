@@ -9,6 +9,7 @@ namespace Drupal\menu_ui\Tests;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\system\Entity\Menu;
 
 /**
@@ -60,7 +61,10 @@ class MenuLanguageTest extends MenuWebTestBase {
       'langcode' => 'aa',
     );
     $this->drupalPostForm('admin/structure/menu/add', $edit, t('Save'));
-    language_save_default_configuration('menu_link_content', 'menu_link_content',  array('langcode' => 'bb', 'language_show' => TRUE));
+    ContentLanguageSettings::loadByEntityTypeBundle('menu_link_content', 'menu_link_content')
+      ->setDefaultLangcode('bb')
+      ->setLanguageAlterable(TRUE)
+      ->save();
 
     // Check menu language.
     $this->assertOptionSelected('edit-langcode', $edit['langcode'], 'The menu language was correctly selected.');
@@ -85,7 +89,10 @@ class MenuLanguageTest extends MenuWebTestBase {
     ));
 
     // Edit menu link default, changing it to cc.
-    language_save_default_configuration('menu_link_content', 'menu_link_content',  array('langcode' => 'cc', 'language_show' => TRUE));
+    ContentLanguageSettings::loadByEntityTypeBundle('menu_link_content', 'menu_link_content')
+      ->setDefaultLangcode('cc')
+      ->setLanguageAlterable(TRUE)
+      ->save();
 
     // Add a menu link.
     $link_title = $this->randomString();
@@ -122,7 +129,10 @@ class MenuLanguageTest extends MenuWebTestBase {
     $this->assertOptionSelected('edit-langcode', 'bb', 'The menu link language was correctly selected.');
 
     // Edit menu to hide the language select on menu link item add.
-     language_save_default_configuration('menu_link_content', 'menu_link_content',  array('langcode' => 'cc', 'language_show' => FALSE));
+    ContentLanguageSettings::loadByEntityTypeBundle('menu_link_content', 'menu_link_content')
+      ->setDefaultLangcode('cc')
+      ->setLanguageAlterable(FALSE)
+      ->save();
 
     // Check that the language selector is not available on menu link add page.
     $this->drupalGet("admin/structure/menu/manage/$menu_name/add");

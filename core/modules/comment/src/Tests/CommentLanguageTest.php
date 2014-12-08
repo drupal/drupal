@@ -44,7 +44,7 @@ class CommentLanguageTest extends WebTestBase {
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
 
     // Set "Article" content type to use multilingual support.
-    $edit = array('language_configuration[language_show]' => TRUE);
+    $edit = array('language_configuration[language_alterable]' => TRUE);
     $this->drupalPostForm('admin/structure/types/manage/article', $edit, t('Save content type'));
 
     // Enable content language negotiation UI.

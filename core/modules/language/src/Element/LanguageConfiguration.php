@@ -10,6 +10,7 @@ namespace Drupal\language\Element;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element\FormElement;
+use Drupal\language\Entity\ContentLanguageSettings;
 
 /**
  * Provides language element configuration.
@@ -40,24 +41,26 @@ class LanguageConfiguration extends FormElement {
     // Avoid validation failure since we are moving the '#options' key in the
     // nested 'language' select element.
     unset($element['#options']);
+    /** @var ContentLanguageSettings $default_config */
+    $default_config = $element['#default_value'];
     $element['langcode'] = array(
       '#type' => 'select',
       '#title' => t('Default language'),
       '#options' => $options + static::getDefaultOptions(),
       '#description' => t('Explanation of the language options is found on the <a href="@languages_list_page">languages list page</a>.', array('@languages_list_page' => \Drupal::url('language.admin_overview'))),
-      '#default_value' => isset($element['#default_value']['langcode']) ? $element['#default_value']['langcode'] : NULL,
+      '#default_value' => ($default_config != NULL) ? $default_config->getDefaultLangcode() : LanguageInterface::LANGCODE_SITE_DEFAULT,
     );
 
-    $element['language_show'] = array(
+    $element['language_alterable'] = array(
       '#type' => 'checkbox',
       '#title' => t('Show language selector on create and edit pages'),
-      '#default_value' => isset($element['#default_value']['language_show']) ? $element['#default_value']['language_show'] : NULL,
+      '#default_value' => ($default_config != NULL) ? $default_config->isLanguageAlterable() : FALSE,
     );
 
     // Add the entity type and bundle information to the form if they are set.
     // They will be used, in the submit handler, to generate the names of the
-    // variables that will store the settings and are a way to uniquely identify
-    // the entity.
+    // configuration entities that will store the settings and are a way to uniquely
+    // identify the entity.
     $language = $form_state->get('language') ?: [];
     $language += array(
       $element['#name'] => array(

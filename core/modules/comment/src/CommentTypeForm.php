@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\language\Entity\ContentLanguageSettings;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -132,7 +133,7 @@ class CommentTypeForm extends EntityForm {
         '#group' => 'additional_settings',
       );
 
-      $language_configuration = language_get_default_configuration('comment', $comment_type->id());
+      $language_configuration = ContentLanguageSettings::loadByEntityTypeBundle('comment', $comment_type->id());
       $form['language']['language_configuration'] = array(
         '#type' => 'language_configuration',
         '#entity_information' => array(

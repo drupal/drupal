@@ -41,7 +41,7 @@ class TermLanguageTest extends TaxonomyTestBase {
   function testTermLanguage() {
     // Configure the vocabulary to not hide the language selector.
     $edit = array(
-      'default_language[language_show]' => TRUE,
+      'default_language[language_alterable]' => TRUE,
     );
     $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id(), $edit, t('Save'));
 
@@ -77,7 +77,7 @@ class TermLanguageTest extends TaxonomyTestBase {
     // default language of the terms fixed.
     $edit = array(
       'default_language[langcode]' => 'bb',
-      'default_language[language_show]' => TRUE,
+      'default_language[language_alterable]' => TRUE,
     );
     $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id(), $edit, t('Save'));
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
@@ -86,7 +86,7 @@ class TermLanguageTest extends TaxonomyTestBase {
     // Make the default language of the terms to be the current interface.
     $edit = array(
       'default_language[langcode]' => 'current_interface',
-      'default_language[language_show]' => TRUE,
+      'default_language[language_alterable]' => TRUE,
     );
     $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id(), $edit, t('Save'));
     $this->drupalGet('aa/admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
@@ -99,7 +99,7 @@ class TermLanguageTest extends TaxonomyTestBase {
     \Drupal::config('system.site')->set('langcode', 'cc')->save();
     $edit = array(
       'default_language[langcode]' => LanguageInterface::LANGCODE_SITE_DEFAULT,
-      'default_language[language_show]' => TRUE,
+      'default_language[language_alterable]' => TRUE,
     );
     $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id(), $edit, t('Save'));
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');

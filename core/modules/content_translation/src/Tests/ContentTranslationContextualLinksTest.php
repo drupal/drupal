@@ -9,6 +9,7 @@ namespace Drupal\content_translation\Tests;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\node\Entity\NodeType;
 use Drupal\simpletest\WebTestBase;
 
@@ -100,11 +101,10 @@ class ContentTranslationContextualLinksTest extends WebTestBase {
       ->save();
 
     // Enable content translation.
-    $configuration = array(
-      'langcode' => language_default()->getId(),
-      'language_show' => TRUE,
-    );
-    language_save_default_configuration('node', $this->bundle, $configuration);
+    ContentLanguageSettings::loadByEntityTypeBundle('node', $this->bundle)
+      ->setLanguageAlterable(TRUE)
+      ->setDefaultLangcode(\Drupal::languageManager()->getDefaultLanguage()->getId())
+      ->save();
     // Create a translator user.
     $permissions = array(
       'access contextual links',

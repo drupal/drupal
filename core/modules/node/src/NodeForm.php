@@ -12,6 +12,7 @@ use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\user\TempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\user\Entity\User;
@@ -108,13 +109,13 @@ class NodeForm extends ContentEntityForm {
       '#default_value' => $node->getChangedTime(),
     );
 
-    $language_configuration = \Drupal::moduleHandler()->invoke('language', 'get_default_configuration', array('node', $node->getType()));
     $form['langcode'] = array(
       '#title' => t('Language'),
       '#type' => 'language_select',
       '#default_value' => $node->getUntranslated()->language()->getId(),
       '#languages' => LanguageInterface::STATE_ALL,
-      '#access' => isset($language_configuration['language_show']) && $language_configuration['language_show'],
+      // Language module may expose or hide this element, see language_form_alter().
+      '#access' => FALSE,
     );
 
     $form['advanced'] = array(

@@ -8,6 +8,7 @@ namespace Drupal\language_elements_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\language\Entity\ContentLanguageSettings;
 
 /**
  * A form containing a language configuration element.
@@ -25,12 +26,12 @@ class LanguageConfigurationElement extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $conf = language_get_default_configuration('some_custom_type', 'some_bundle');
+    $conf = ContentLanguageSettings::loadByEntityTypeBundle('entity_test', 'some_bundle');
 
     $form['lang_configuration'] = array(
       '#type' => 'language_configuration',
       '#entity_information' => array(
-        'entity_type' => 'some_custom_type',
+        'entity_type' => 'entity_test',
         'bundle' => 'some_bundle',
       ),
       '#default_value' => $conf,

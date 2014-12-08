@@ -45,7 +45,7 @@ class SearchMultilingualTest extends ViewTestBase {
     // Create a content type and make it translatable.
     $type = $this->drupalCreateContentType();
     $edit = array(
-      'language_configuration[language_show]' => TRUE,
+      'language_configuration[language_alterable]' => TRUE,
     );
     $this->drupalPostForm('admin/structure/types/manage/' . $type->type, $edit, t('Save content type'));
     $edit = array(
