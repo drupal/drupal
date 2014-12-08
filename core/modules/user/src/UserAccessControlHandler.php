@@ -68,7 +68,7 @@ class UserAccessControlHandler extends EntityAccessControlHandler {
   protected function checkFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
     // Fields that are not implicitly allowed to administrative users.
     $explicit_check_fields = array(
-      'password',
+      'pass',
     );
 
     // Administrative users are allowed to edit and view all fields.

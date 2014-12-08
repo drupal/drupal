@@ -336,7 +336,7 @@ class UserAccessControlHandlerTest extends UnitTestCase {
       array(
         'viewer' => 'admin',
         'target' => 'owner',
-        'view' => TRUE,
+        'view' => FALSE,
         'edit' => TRUE,
       ),
     );
