@@ -20,21 +20,3 @@ use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 function drupal_is_front_page() {
   return \Drupal::service('path.matcher')->isFrontPage();
 }
-
-/**
- * Check if a path matches any pattern in a set of patterns.
- *
- * @param $path
- *   The path to match.
- * @param $patterns
- *   String containing a set of patterns separated by \n, \r or \r\n.
- *
- * @return
- *   Boolean value: TRUE if the path matches a pattern, FALSE otherwise.
- *
- * @deprecated as of Drupal 8.0. Use
- *   \Drupal\Core\Path\PathMatcherInterface::matchPath() instead.
- */
-function drupal_match_path($path, $patterns) {
-  return \Drupal::service('path.matcher')->matchPath($path, $patterns);
-}
