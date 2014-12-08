@@ -318,7 +318,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
         'widget' => $this,
         'items' => $items,
         'delta' => $delta,
-        'default' => !empty($entity->field_ui_default_value),
+        'default' => $this->isDefaultValueWidget($form_state),
       );
       \Drupal::moduleHandler()->alter(array('field_widget_form', 'field_widget_' . $this->getPluginId() . '_form'), $element, $form_state, $context);
     }
@@ -537,6 +537,19 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
   public static function isApplicable(FieldDefinitionInterface $field_definition) {
     // By default, widgets are available for all fields.
     return TRUE;
+  }
+
+  /**
+   * Returns whether the widget used for default value form.
+   *
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
+   * @return bool
+   *   TRUE if a widget used to input default value, FALSE otherwise.
+   */
+  protected function isDefaultValueWidget(FormStateInterface $form_state) {
+    return (bool) $form_state->get('default_value_widget');
   }
 
 }
