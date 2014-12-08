@@ -48,7 +48,7 @@ class StandardTest extends WebTestBase {
     $this->drupalGet('');
     $this->assertText('Main navigation');
 
-    // Verify we have role = aria on system_powered_by and system_help_block
+    // Verify we have role = aria on system_powered_by and help_block
     // blocks.
     $this->drupalGet('admin/structure/block');
     $elements = $this->xpath('//div[@role=:role and @id=:id]', array(

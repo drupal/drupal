@@ -19,7 +19,7 @@ class ImportOpmlTest extends AggregatorTestBase {
    *
    * @var array
    */
-  public static $modules = array('block');
+  public static $modules = array('block', 'help');
 
   protected function setUp() {
     parent::setUp();
@@ -33,7 +33,7 @@ class ImportOpmlTest extends AggregatorTestBase {
    */
   function openImportForm() {
     // Enable the help block.
-    $this->drupalPlaceBlock('system_help_block', array('region' => 'help'));
+    $this->drupalPlaceBlock('help_block', array('region' => 'help'));
 
     $this->drupalGet('admin/config/services/aggregator/add/opml');
     $this->assertText('A single OPML document may contain many feeds.', 'Found OPML help text.');

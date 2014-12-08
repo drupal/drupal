@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Block\BlockPluginInterface;
 
 /**
  * Implements hook_help().
@@ -30,11 +31,13 @@ function help_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.help':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Help module provides <a href="!help-page">Help reference pages</a> to guide you through the use and configuration of modules. It is a starting point for <a href="!handbook">Drupal.org online documentation</a> pages that contain more extensive and up-to-date information, are annotated with user-contributed comments, and serve as the definitive reference point for all Drupal documentation. For more information, see the <a href="!help">online documentation for the Help module</a>.', array('!help' => 'https://drupal.org/documentation/modules/help/', '!handbook' => 'https://drupal.org/documentation', '!help-page' => \Drupal::url('help.main'))) . '</p>';
+      $output .= '<p>' . t('The Help module generates <a href="!help-page">Help reference pages</a> to guide you through the use and configuration of modules, and provides a Help block with page-level help. The reference pages are a starting point for <a href="!handbook">Drupal.org online documentation</a> pages that contain more extensive and up-to-date information, are annotated with user-contributed comments, and serve as the definitive reference point for all Drupal documentation. For more information, see the <a href="!help">online documentation for the Help module</a>.', array('!help' => 'https://drupal.org/documentation/modules/help/', '!handbook' => 'https://drupal.org/documentation', '!help-page' => \Drupal::url('help.main'))) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Providing a help reference') . '</dt>';
       $output .= '<dd>' . t('The Help module displays explanations for using each module listed on the main <a href="!help">Help reference page</a>.', array('!help' => \Drupal::url('help.main'))) . '</dd>';
+      $output .= '<dt>' . t('Providing page-specific help') . '</dt>';
+      $output .= '<dd>' . t('Page-specific help text provided by modules is displayed in the Help block. This block can be placed and configured on the <a href="!blocks">Block layout page</a>.', array('!blocks' => (\Drupal::moduleHandler()->moduleExists('block')) ? \Drupal::url('block.admin_display') : '#')) . '</dd>';
       $output .= '</dl>';
       return $output;
   }
@@ -44,7 +47,16 @@ function help_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_preprocess_HOOK() for block templates.
  */
 function help_preprocess_block(&$variables) {
-  if ($variables['plugin_id'] == 'system_help_block') {
+  if ($variables['plugin_id'] == 'help_block') {
     $variables['attributes']['role'] = 'complementary';
   }
+}
+
+/**
+ * Implements hook_block_view_BASE_BLOCK_ID_alter().
+ */
+function help_block_view_help_block_alter(array &$build, BlockPluginInterface $block) {
+  // Assume that most users do not need or want to perform contextual actions on
+  // the help block, so don't needlessly draw attention to it.
+  unset($build['#contextual_links']);
 }

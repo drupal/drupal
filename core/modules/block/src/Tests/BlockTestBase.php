@@ -19,7 +19,7 @@ abstract class BlockTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'filter', 'test_page_test');
+  public static $modules = array('block', 'filter', 'test_page_test', 'help');
 
   /**
    * A list of theme regions to test.

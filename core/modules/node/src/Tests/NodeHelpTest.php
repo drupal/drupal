@@ -51,7 +51,7 @@ class NodeHelpTest extends WebTestBase {
     ));
 
     $this->drupalLogin($admin_user);
-    $this->drupalPlaceBlock('system_help_block');
+    $this->drupalPlaceBlock('help_block');
 
     $this->testType = 'type';
     $this->testText = t('Help text to find on node forms.');

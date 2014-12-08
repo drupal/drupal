@@ -4,15 +4,15 @@ weight: 0
 status: true
 langcode: en
 region: help
-plugin: system_help_block
+plugin: help_block
 settings:
-  id: system_help_block
-  label: 'System Help'
-  provider: system
+  id: help_block
+  label: 'Help'
+  provider: help
   label_display: '0'
 dependencies:
   module:
-    - system
+    - help
   theme:
     - seven
 visibility: {  }

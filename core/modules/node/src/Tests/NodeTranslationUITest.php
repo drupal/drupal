@@ -23,7 +23,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
    *
    * @var array
    */
-  public static $modules = array('block', 'language', 'content_translation', 'node', 'datetime', 'field_ui');
+  public static $modules = array('block', 'language', 'content_translation', 'node', 'datetime', 'field_ui', 'help');
 
   /**
    * The profile to install as a basis for testing.
@@ -38,7 +38,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
     parent::setUp();
 
     // Ensure the help message is shown even with prefixed paths.
-    $this->drupalPlaceBlock('system_help_block', array('region' => 'content'));
+    $this->drupalPlaceBlock('help_block', array('region' => 'content'));
 
     // Display the language selector.
     $this->drupalLogin($this->administrator);

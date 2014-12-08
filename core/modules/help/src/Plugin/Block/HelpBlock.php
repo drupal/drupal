@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\system\Plugin\Block\SystemHelpBlock.
+ * Contains \Drupal\help\Plugin\Block\HelpBlock.
  */
 
-namespace Drupal\system\Plugin\Block;
+namespace Drupal\help\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -16,14 +16,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Provides a 'System Help' block.
+ * Provides a 'Help' block.
  *
  * @Block(
- *   id = "system_help_block",
- *   admin_label = @Translation("System Help")
+ *   id = "help_block",
+ *   admin_label = @Translation("Help")
  * )
  */
-class SystemHelpBlock extends BlockBase implements ContainerFactoryPluginInterface {
+class HelpBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
    * Stores the help text associated with the active menu item.
@@ -54,7 +54,7 @@ class SystemHelpBlock extends BlockBase implements ContainerFactoryPluginInterfa
   protected $routeMatch;
 
   /**
-   * Creates a SystemHelpBlock instance.
+   * Creates a HelpBlock instance.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
@@ -128,8 +128,8 @@ class SystemHelpBlock extends BlockBase implements ContainerFactoryPluginInterfa
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    // Modify the default max age for the System Help block: help text is static
-    // for a given URL, except when a module is updated, in which case
+    // Modify the default max age for the Help block: help text is
+    // static for a given URL, except when a module is updated, in which case
     // update.php must be run, which clears all caches. Thus it's safe to cache
     // the output for this block forever on a per-URL basis.
     return array('cache' => array('max_age' => \Drupal\Core\Cache\Cache::PERMANENT));
@@ -139,7 +139,7 @@ class SystemHelpBlock extends BlockBase implements ContainerFactoryPluginInterfa
    * {@inheritdoc}
    */
   protected function getRequiredCacheContexts() {
-    // The "System Help" block must be cached per URL: help is defined for a
+    // The "Help" block must be cached per URL: help is defined for a
     // given path, and does not come with any access restrictions.
     return array('cache_context.url');
   }

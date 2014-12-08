@@ -21,7 +21,7 @@ class BlockUiTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'block_test');
+  public static $modules = array('block', 'block_test', 'help');
 
   protected $regions;
 
@@ -80,7 +80,7 @@ class BlockUiTest extends WebTestBase {
    * Test block demo page exists and functions correctly.
    */
   public function testBlockDemoUiPage() {
-    $this->drupalPlaceBlock('system_help_block', array('region' => 'help'));
+    $this->drupalPlaceBlock('help_block', array('region' => 'help'));
     $this->drupalGet('admin/structure/block');
     $this->clickLink(t('Demonstrate block regions (@theme)', array('@theme' => 'Classy')));
     $elements = $this->xpath('//div[contains(@class, "region-highlighted")]/div[contains(@class, "block-region") and contains(text(), :title)]', array(':title' => 'Highlighted'));

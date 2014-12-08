@@ -87,11 +87,9 @@ function system_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dd>' . t('In order for the site and its modules to continue to operate well, a set of routine administrative operations must run on a regular basis. The System module manages this task by making use of a system cron job. You can verify the status of cron tasks by visiting the <a href="@status">Status report page</a>. For more information, see the online handbook entry for <a href="@handbook">configuring cron jobs</a>. You can set up cron job by visiting <a href="@cron">Cron configuration</a> page', array('@status' => \Drupal::url('system.status'), '@handbook' => 'http://drupal.org/cron', '@cron' => \Drupal::url('system.cron_settings'))) . '</dd>';
       $output .= '<dt>' . t('Configuring basic site settings') . '</dt>';
       $output .= '<dd>' . t('The System module also handles basic configuration options for your site, including <a href="@date-time-settings">Date and time settings</a>, <a href="@file-system">File system settings</a>, <a href="@site-info">Site name and other information</a>, and a <a href="@maintenance-mode">Maintenance mode</a> for taking your site temporarily offline.', array('@date-time-settings' => \Drupal::url('system.date_format_list'), '@file-system' => \Drupal::url('system.file_system_settings'), '@site-info' => \Drupal::url('system.site_information_settings'), '@maintenance-mode' => \Drupal::url('system.site_maintenance_mode'))) . '</dd>';
-      $output .= '<dt>' . t('Providing administrative help') . '</dt>';
-      $output .= '<dd>' . t('Page-specific administrative help text that is provided by the System module and other modules is displayed in the System Help block. This block can be placed and configured on the <a href="!blocks">Block layout page</a>.', array('!blocks' => (\Drupal::moduleHandler()->moduleExists('block')) ? \Drupal::url('block.admin_display') : '#')) . '</dd>';
-      $output .= '</dl>';
       $output .= '<dt>' . t('Disabling drag-and-drop functionality') . '</dt>';
       $output .= '<dd>' . t('The default drag-and-drop user interface for ordering tables in Drupal presents a challenge for some users, including users of screen readers and other assistive technology. The drag-and-drop interface can be disabled in a table by clicking a link labeled "Show row weights" above the table. The replacement interface allows users to order the table by choosing numerical weights instead of dragging table rows.') . '</dd>';
+      $output .= '</dl>';
       return $output;
 
     case 'system.admin_index':
@@ -761,10 +759,6 @@ function system_preprocess_block(&$variables) {
     case 'system_powered_by_block':
       $variables['attributes']['role'] = 'complementary';
       break;
-
-    case 'system_help_block':
-      $variables['attributes']['role'] = 'complementary';
-      break;
   }
 }
 
@@ -1335,15 +1329,6 @@ function system_entity_type_build(array &$entity_types) {
 function system_block_view_system_main_block_alter(array &$build, BlockPluginInterface $block) {
   // Contextual links on the system_main block would basically duplicate the
   // tabs/local tasks, so reduce the clutter.
-  unset($build['#contextual_links']);
-}
-
-/**
- * Implements hook_block_view_BASE_BLOCK_ID_alter().
- */
-function system_block_view_system_help_block_alter(array &$build, BlockPluginInterface $block) {
-  // Assume that most users do not need or want to perform contextual actions on
-  // the help block, so don't needlessly draw attention to it.
   unset($build['#contextual_links']);
 }
 

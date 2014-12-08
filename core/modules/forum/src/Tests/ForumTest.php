@@ -99,7 +99,7 @@ class ForumTest extends WebTestBase {
       'skip comment approval',
       'access comments',
     ));
-    $this->drupalPlaceBlock('system_help_block', array('region' => 'help'));
+    $this->drupalPlaceBlock('help_block', array('region' => 'help'));
   }
 
   /**

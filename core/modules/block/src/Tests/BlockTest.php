@@ -215,7 +215,7 @@ class BlockTest extends BlockTestBase {
    */
   function testThemeName() {
     // Enable the help block.
-    $this->drupalPlaceBlock('system_help_block', array('region' => 'help'));
+    $this->drupalPlaceBlock('help_block', array('region' => 'help'));
     // Explicitly set the default and admin themes.
     $theme = 'block_test_specialchars_theme';
     \Drupal::service('theme_handler')->install(array($theme));
