@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\File\MimeType;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser as SymfonyMimeTypeGuesser;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface;
 
 /**
@@ -86,6 +88,20 @@ class MimeTypeGuesser implements MimeTypeGuesserInterface {
       $sorted = array_merge($sorted, $guesser);
     }
     return $sorted;
+  }
+
+  /**
+   * A helper function to register with Symfony's singleton mime type guesser.
+   *
+   * Symfony's default mimetype guessers have dependencies on PHP's fileinfo
+   * extension or being able to run the system command file. Drupal's guesser
+   * does not have these dependencies.
+   *
+   * @see \Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser
+   */
+  public static function registerWithSymfonyGuesser(ContainerInterface $container) {
+    $singleton = SymfonyMimeTypeGuesser::getInstance();
+    $singleton->register($container->get('file.mime_type.guesser'));
   }
 
 }

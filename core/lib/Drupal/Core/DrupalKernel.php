@@ -18,6 +18,7 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DependencyInjection\YamlFileLoader;
 use Drupal\Core\Extension\ExtensionDiscovery;
+use Drupal\Core\File\MimeType\MimeTypeGuesser;
 use Drupal\Core\Language\Language;
 use Drupal\Core\PageCache\RequestPolicyInterface;
 use Drupal\Core\PhpStorage\PhpStorageFactory;
@@ -458,6 +459,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $allowed_protocols = array('http', 'https');
     }
     UrlHelper::setAllowedProtocols($allowed_protocols);
+
+    // Override of Symfony's mime type guesser singleton.
+    MimeTypeGuesser::registerWithSymfonyGuesser($this->container);
   }
 
   /**
