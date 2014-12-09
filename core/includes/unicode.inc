@@ -111,21 +111,3 @@ function drupal_xml_parser_create(&$data) {
   xml_parser_set_option($xml_parser, XML_OPTION_TARGET_ENCODING, 'utf-8');
   return $xml_parser;
 }
-
-/**
- * Truncates a UTF-8-encoded string safely to a number of bytes.
- *
- * @param string $string
- *   The string to truncate.
- * @param int $len
- *   An upper limit on the returned string length.
- *
- * @return string
- *   The truncated string.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
- *   Use \Drupal\Component\Utility\Unicode::truncateBytes().
- */
-function drupal_truncate_bytes($string, $len) {
-  return Unicode::truncateBytes($string, $len);
-}
