@@ -7,6 +7,8 @@
 
 namespace Drupal\language\Tests;
 
+use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\simpletest\WebTestBase;
 
@@ -156,6 +158,69 @@ class LanguageSwitchingTest extends WebTestBase {
     $this->assertIdentical($links, array('active' => array('en'), 'inactive' => array('fr')), 'Only the current language list item is marked as active on the language switcher block.');
     $this->assertIdentical($anchors, array('active' => array('en'), 'inactive' => array('fr')), 'Only the current language anchor is marked as active on the language switcher block.');
     $this->assertIdentical($labels, array('English', 'français'), 'The language links labels are in their own language on the language switcher block.');
+  }
+
+  /**
+   * Test languge switcher links for domain based negotiation
+   */
+
+  function testLanguageBlockWithDomain() {
+    // Add the Italian language.
+    ConfigurableLanguage::createFromLangcode('it')->save();
+
+    // Rebuild the container so that the new language is picked up by services
+    // that hold a list of languages.
+    $this->rebuildContainer();
+
+    $languages = $this->container->get('language_manager')->getLanguages();
+
+    // Enable browser and URL language detection.
+    $edit = array(
+      'language_interface[enabled][language-url]' => TRUE,
+      'language_interface[weight][language-url]' => -10,
+    );
+    $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
+
+    // Do not allow blank domain.
+    $edit = array(
+      'language_negotiation_url_part' => LanguageNegotiationUrl::CONFIG_DOMAIN,
+      'domain[en]' => '',
+    );
+    $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
+    $this->assertText(t('The domain may not be left blank for English'), 'The form does not allow blank domains.');
+
+    // Change the domain for the Italian language.
+    $edit = array(
+      'language_negotiation_url_part' => LanguageNegotiationUrl::CONFIG_DOMAIN,
+      'domain[en]' => \Drupal::request()->getHost(),
+      'domain[it]' => 'it.example.com',
+    );
+    $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
+    $this->assertText(t('The configuration options have been saved'), 'Domain configuration is saved.');
+
+    // Enable the language switcher block.
+    $this->drupalPlaceBlock('language_block:' . LanguageInterface::TYPE_INTERFACE, array('id' => 'test_language_block'));
+
+    $this->drupalGet('');
+
+    /** @var \Drupal\Core\Routing\UrlGenerator $generator */
+    $generator = $this->container->get('url_generator');
+
+    // Verfify the English URL is correct
+    list($english_link) = $this->xpath('//div[@id=:id]/ul/li/a[@hreflang=:hreflang]', array(
+      ':id' => 'block-test-language-block',
+      ':hreflang' => 'en',
+    ));
+    $english_url = $generator->generateFromPath('user/2', array('language' => $languages['en']));
+    $this->assertEqual($english_url, (string) $english_link['href']);
+
+    // Verfify the Italian URL is correct
+    list($italian_link) = $this->xpath('//div[@id=:id]/ul/li/a[@hreflang=:hreflang]', array(
+      ':id' => 'block-test-language-block',
+      ':hreflang' => 'it',
+    ));
+    $italian_url = $generator->generateFromPath('user/2', array('language' => $languages['it']));
+    $this->assertEqual($italian_url, (string) $italian_link['href']);
   }
 
   /**

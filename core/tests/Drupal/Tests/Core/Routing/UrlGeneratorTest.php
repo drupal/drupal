@@ -291,6 +291,32 @@ class UrlGeneratorTest extends UnitTestCase {
   }
 
   /**
+   * Confirms that explicitly setting the base_url works with generated routes
+   */
+  public function testBaseURLGeneration() {
+    $options = array('base_url' => 'http://www.example.com:8888');
+    $url = $this->generator->generateFromRoute('test_1', array(), $options);
+    $this->assertEquals('http://www.example.com:8888/hello/world', $url);
+
+    $options = array('base_url' => 'http://www.example.com:8888', 'https' => TRUE);
+    $url = $this->generator->generateFromRoute('test_1', array(), $options);
+    $this->assertEquals('https://www.example.com:8888/hello/world', $url);
+
+    $options = array('base_url' => 'https://www.example.com:8888', 'https' => FALSE);
+    $url = $this->generator->generateFromRoute('test_1', array(), $options);
+    $this->assertEquals('http://www.example.com:8888/hello/world', $url);
+
+    $this->routeProcessorManager->expects($this->once())
+      ->method('processOutbound')
+      ->with($this->anything());
+
+    $options = array('base_url' => 'http://www.example.com:8888', 'fragment' => 'top');
+    // Extra parameters should appear in the query string.
+    $url = $this->generator->generateFromRoute('test_1', array('zoo' => '5'), $options);
+    $this->assertEquals('http://www.example.com:8888/hello/world?zoo=5#top', $url);
+  }
+
+  /**
    * Test that the 'scheme' route requirement is respected during url generation.
    */
   public function testUrlGenerationWithHttpsRequirement() {

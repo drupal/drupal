@@ -59,8 +59,8 @@ interface UrlGeneratorInterface extends VersatileGeneratorInterface {
    *   - 'https': Whether this URL should point to a secure location. If not
    *     defined, the current scheme is used, so the user stays on HTTP or HTTPS
    *     respectively. TRUE enforces HTTPS and FALSE enforces HTTP.
-   *   - 'base_url': Only used internally, to modify the base URL when a language
-   *     dependent URL requires so.
+   *   - 'base_url': Only used internally by a path processor, for example, to
+   *     modify the base URL when a language dependent URL requires so.
    *   - 'prefix': Only used internally, to modify the path when a language
    *     dependent URL requires so.
    *   - 'script': Added to the URL between the base path and the path prefix.
@@ -132,6 +132,8 @@ interface UrlGeneratorInterface extends VersatileGeneratorInterface {
    *   - 'https': Whether this URL should point to a secure location. If not
    *     defined, the current scheme is used, so the user stays on HTTP or HTTPS
    *     respectively. TRUE enforces HTTPS and FALSE enforces HTTP.
+   *   - 'base_url': Only used internally by a path processor, for example, to
+   *     modify the base URL when a language dependent URL requires so.
    *   - 'prefix': Only used internally, to modify the path when a language
    *     dependent URL requires so.
    *

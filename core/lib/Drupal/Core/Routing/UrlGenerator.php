@@ -148,7 +148,6 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
    */
   public function generateFromRoute($name, $parameters = array(), $options = array()) {
     $options += array('prefix' => '');
-    $absolute = !empty($options['absolute']);
     $route = $this->getRoute($name);
     $this->processRoute($name, $route, $parameters);
 
@@ -159,6 +158,7 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
 
     $path = $this->getInternalPathFromRoute($route, $parameters);
     $path = $this->processPath($path, $options);
+
     if (!empty($options['prefix'])) {
       $path = ltrim($path, '/');
       $prefix = empty($path) ? rtrim($options['prefix'], '/') : $options['prefix'];
@@ -172,7 +172,25 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
       }
     }
 
+    // The base_url might be rewritten from the language rewrite in domain mode.
+    if (isset($options['base_url'])) {
+      $base_url = $options['base_url'];
+
+      if (isset($options['https'])) {
+        if ($options['https'] === TRUE) {
+          $base_url = str_replace('http://', 'https://', $base_url);
+        }
+        elseif ($options['https'] === FALSE) {
+          $base_url = str_replace('https://', 'http://', $base_url);
+        }
+      }
+
+      return $base_url . $path . $fragment;
+    }
+
     $base_url = $this->context->getBaseUrl();
+
+    $absolute = !empty($options['absolute']);
     if (!$absolute || !$host = $this->context->getHost()) {
       return $base_url . $path . $fragment;
     }
