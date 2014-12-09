@@ -324,21 +324,28 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
       if (!$class) {
         throw new InvalidPluginDefinitionException($entity_type, sprintf('The "%s" entity type did not specify a %s handler.', $entity_type, $handler_type));
       }
-      if (is_subclass_of($class, 'Drupal\Core\Entity\EntityHandlerInterface')) {
-        $handler = $class::createInstance($this->container, $definition);
-      }
-      else {
-        $handler = new $class($definition);
-      }
-      if (method_exists($handler, 'setModuleHandler')) {
-        $handler->setModuleHandler($this->moduleHandler);
-      }
-      if (method_exists($handler, 'setStringTranslation')) {
-        $handler->setStringTranslation($this->translationManager);
-      }
-      $this->handlers[$handler_type][$entity_type] = $handler;
+      $this->handlers[$handler_type][$entity_type] = $this->createHandlerInstance($class, $definition);
     }
     return $this->handlers[$handler_type][$entity_type];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createHandlerInstance($class, EntityTypeInterface $definition = null) {
+    if (is_subclass_of($class, 'Drupal\Core\Entity\EntityHandlerInterface')) {
+      $handler = $class::createInstance($this->container, $definition);
+    }
+    else {
+      $handler = new $class($definition);
+    }
+    if (method_exists($handler, 'setModuleHandler')) {
+      $handler->setModuleHandler($this->moduleHandler);
+    }
+    if (method_exists($handler, 'setStringTranslation')) {
+      $handler->setStringTranslation($this->translationManager);
+    }
+    return $handler;
   }
 
   /**

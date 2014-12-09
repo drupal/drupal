@@ -1181,6 +1181,56 @@ class SqlContentEntityStorageTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::hasData
+   */
+  public function testHasData() {
+    $query = $this->getMock('Drupal\Core\Entity\Query\QueryInterface');
+    $query->expects(($this->once()))
+      ->method('accessCheck')
+      ->with(FALSE)
+      ->willReturn($query);
+    $query->expects(($this->once()))
+      ->method('range')
+      ->with(0, 1)
+      ->willReturn($query);
+    $query->expects(($this->once()))
+      ->method('execute')
+      ->willReturn(array(5));
+
+    $factory = $this->getMockBuilder('Drupal\Core\Entity\Query\QueryFactory')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $factory->expects($this->once())
+      ->method('get')
+      ->with($this->entityType, 'AND')
+      ->willReturn($query);
+
+    $this->container->set('entity.query.sql', $factory);
+
+    $database = $this->getMockBuilder('Drupal\Core\Database\Connection')
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $this->entityManager->expects($this->any())
+      ->method('getDefinition')
+      ->will($this->returnValue($this->entityType));
+
+    $this->entityManager->expects($this->any())
+      ->method('getFieldStorageDefinitions')
+      ->will($this->returnValue($this->fieldDefinitions));
+
+    $this->entityManager->expects($this->any())
+      ->method('getBaseFieldDefinitions')
+      ->will($this->returnValue($this->fieldDefinitions));
+
+    $this->entityStorage = new SqlContentEntityStorage($this->entityType, $database, $this->entityManager, $this->cache);
+
+    $result = $this->entityStorage->hasData();
+
+    $this->assertTrue($result, 'hasData returned TRUE');
+  }
+
+  /**
    * Tests entity ID sanitization.
    */
   public function testCleanIds() {

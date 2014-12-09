@@ -78,7 +78,7 @@ class ContentEntityNullStorage extends ContentEntityStorageBase {
   /**
    * {@inheritdoc}
    */
-  public function getQueryServiceName() {
+  protected function getQueryServiceName() {
     throw new QueryException('Null implementation can not be queried.');
   }
 
@@ -136,6 +136,13 @@ class ContentEntityNullStorage extends ContentEntityStorageBase {
    */
   public function countFieldData($storage_definition, $as_bool = FALSE) {
     return $as_bool ? FALSE : 0;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasData() {
+    return FALSE;
   }
 
 }

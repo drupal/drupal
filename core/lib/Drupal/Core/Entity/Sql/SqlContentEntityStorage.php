@@ -1198,7 +1198,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   /**
    * {@inheritdoc}
    */
-  public function getQueryServiceName() {
+  protected function getQueryServiceName() {
     return 'entity.query.sql';
   }
 

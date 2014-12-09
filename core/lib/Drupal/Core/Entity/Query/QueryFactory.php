@@ -13,6 +13,14 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
  * Factory class Creating entity query objects.
+ *
+ * Any implementation of this service must call getQuery()/getAggregateQuery()
+ * of the corresponding entity storage.
+ *
+ * @see \Drupal\Core\Entity\EntityStorageBase::getQuery()
+ *
+ * @todo https://www.drupal.org/node/2389335 remove entity.query service and
+ *   replace with using the entity storage's getQuery() method.
  */
 class QueryFactory implements ContainerAwareInterface {
 
@@ -48,8 +56,7 @@ class QueryFactory implements ContainerAwareInterface {
    *   The query object that can query the given entity type.
    */
   public function get($entity_type_id, $conjunction = 'AND') {
-    $service_name = $this->entityManager->getStorage($entity_type_id)->getQueryServiceName();
-    return $this->container->get($service_name)->get($this->entityManager->getDefinition($entity_type_id), $conjunction);
+    return $this->entityManager->getStorage($entity_type_id)->getQuery($conjunction);
   }
 
   /**
@@ -65,8 +72,7 @@ class QueryFactory implements ContainerAwareInterface {
    *   The aggregated query object that can query the given entity type.
    */
   public function getAggregate($entity_type_id, $conjunction = 'AND') {
-    $service_name = $this->entityManager->getStorage($entity_type_id)->getQueryServiceName();
-    return $this->container->get($service_name)->getAggregate($this->entityManager->getDefinition($entity_type_id), $conjunction);
+    return $this->entityManager->getStorage($entity_type_id)->getAggregateQuery($conjunction);
   }
 
 }

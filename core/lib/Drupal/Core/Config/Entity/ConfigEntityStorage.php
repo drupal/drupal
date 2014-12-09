@@ -334,9 +334,9 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityStorageInterface::getQueryServiceName().
+   * {@inheritdoc}
    */
-  public function getQueryServiceName() {
+  protected function getQueryServiceName() {
     return 'entity.query.config';
   }
 

@@ -178,23 +178,15 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    * {@inheritdoc}
    */
   public function requiresEntityDataMigration(EntityTypeInterface $entity_type, EntityTypeInterface $original) {
-    // If we're updating from NULL storage, then there's no stored data that
-    // requires migration.
-    // @todo Remove in https://www.drupal.org/node/2335879.
+    // If the original storage has existing entities, or it is impossible to
+    // determine if that is the case, require entity data to be migrated.
     $original_storage_class = $original->getStorageClass();
-    $null_storage_class = 'Drupal\Core\Entity\ContentEntityNullStorage';
-    if ($original_storage_class == $null_storage_class || is_subclass_of($original_storage_class, $null_storage_class)) {
-      return FALSE;
+    if (!class_exists($original_storage_class)) {
+      return TRUE;
     }
-
-    return
-      // If the original storage class is different, then there might be
-      // existing entities in that storage even if the new storage's base
-      // table is empty.
-      // @todo Ask the old storage handler rather than assuming:
-      //   https://www.drupal.org/node/2335879.
-      $entity_type->getStorageClass() != $original_storage_class ||
-      !$this->isTableEmpty($this->storage->getBaseTable());
+    // Use the original entity type since the storage has not been updated.
+    $original_storage = $this->entityManager->createHandlerInstance($original_storage_class, $original);
+    return $original_storage->hasData();
   }
 
   /**

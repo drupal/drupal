@@ -237,19 +237,36 @@ interface EntityManagerInterface extends PluginManagerInterface, EntityTypeListe
   public function hasHandler($entity_type, $handler_type);
 
   /**
-   * Creates a new handler instance.
+   * Creates a new handler instance for a entity type and handler type.
    *
    * @param string $entity_type
    *   The entity type for this controller.
    * @param string $handler_type
    *   The controller type to create an instance for.
    *
-   * @return mixed
+   * @return object
    *   A handler instance.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    */
   public function getHandler($entity_type, $handler_type);
+
+  /**
+   * Creates new handler instance.
+   *
+   * Usually \Drupal\Core\Entity\EntityManagerInterface::getHandler() is
+   * preferred since that method has additional checking that the class exists
+   * and has static caches.
+   *
+   * @param mixed $class
+   *   The handler class to instantiate.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $definition
+   *   The entity type definition.
+   *
+   * @return object
+   *   A handler instance.
+   */
+  public function createHandlerInstance($class, EntityTypeInterface $definition = null);
 
   /**
    * Get the bundle info of an entity type.

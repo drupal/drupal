@@ -85,6 +85,14 @@ interface DynamicallyFieldableEntityStorageInterface extends EntityStorageInterf
   public function countFieldData($storage_definition, $as_bool = FALSE);
 
   /**
+   * Determines if the storage contains any data.
+   *
+   * @return bool
+   *   TRUE if the storage contains data, FALSE if not.
+   */
+  public function hasData();
+
+  /**
    * Performs final cleanup after all data of a field has been purged.
    *
    * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition

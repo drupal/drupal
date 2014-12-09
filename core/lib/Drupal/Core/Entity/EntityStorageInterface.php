@@ -148,14 +148,6 @@ interface EntityStorageInterface {
   public function save(EntityInterface $entity);
 
   /**
-   * Gets the name of the service for the query for this entity storage.
-   *
-   * @return string
-   *   The name of the service for the query for this entity storage.
-   */
-  public function getQueryServiceName();
-
-  /**
    * Returns an entity query instance.
    *
    * @param string $conjunction
@@ -166,9 +158,24 @@ interface EntityStorageInterface {
    * @return \Drupal\Core\Entity\Query\QueryInterface
    *   The query instance.
    *
-   * @see \Drupal\Core\Entity\EntityStorageInterface::getQueryServiceName()
+   * @see \Drupal\Core\Entity\EntityStorageBase::getQueryServiceName()
    */
   public function getQuery($conjunction = 'AND');
+
+  /**
+   * Returns an aggregated query instance.
+   *
+   * @param string $conjunction
+   *   (optional) The logical operator for the query, either:
+   *   - AND: all of the conditions on the query need to match.
+   *   - OR: at least one of the conditions on the query need to match.
+   *
+   * @return \Drupal\Core\Entity\Query\QueryAggregateInterface
+   *   The aggregated query object that can query the given entity type.
+   *
+   * @see \Drupal\Core\Entity\EntityStorageBase::getQueryServiceName()
+   */
+  public function getAggregateQuery($conjunction = 'AND');
 
   /**
    * Returns the entity type ID.

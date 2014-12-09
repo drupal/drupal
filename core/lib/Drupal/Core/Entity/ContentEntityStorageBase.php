@@ -45,6 +45,16 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Dyn
   /**
    * {@inheritdoc}
    */
+  public function hasData() {
+    return (bool) $this->getQuery()
+      ->accessCheck(FALSE)
+      ->range(0, 1)
+      ->execute();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function doCreate(array $values) {
     // We have to determine the bundle first.
     $bundle = FALSE;
