@@ -73,6 +73,10 @@ const INSTALL_TASK_RUN_IF_NOT_COMPLETED = 3;
  * an error is thrown, (b) a new page needs to be displayed, or (c) the
  * installation finishes (whichever happens first).
  *
+ * @param $class_loader
+ *   The class loader. Normally Composer's ClassLoader, as included by the
+ *   front controller, but may also be decorated; e.g.,
+ *   \Symfony\Component\ClassLoader\ApcClassLoader.
  * @param $settings
  *   An optional array of installation settings. Leave this empty for a normal,
  *   interactive, browser-based installation intended to occur over multiple
@@ -84,7 +88,15 @@ const INSTALL_TASK_RUN_IF_NOT_COMPLETED = 3;
  *
  * @see install_state_defaults()
  */
-function install_drupal($settings = array()) {
+function install_drupal($class_loader, $settings = array()) {
+  // Support the old way of calling this function with just a settings array.
+  // @todo Remove this when Drush is updated in the Drupal testing
+  //   infrastructure in https://www.drupal.org/node/2389243
+  if (is_array($class_loader) && $settings === array()) {
+    $settings = $class_loader;
+    $class_loader = require __DIR__ . '/../vendor/autoload.php';
+  }
+
   global $install_state;
   // Initialize the installation state with the settings that were passed in,
   // as well as a boolean indicating whether or not this is an interactive
@@ -95,7 +107,7 @@ function install_drupal($settings = array()) {
   try {
     // Begin the page request. This adds information about the current state of
     // the Drupal installation to the passed-in array.
-    install_begin_request($install_state);
+    install_begin_request($class_loader, $install_state);
     // Based on the installation state, run the remaining tasks for this page
     // request, and collect any output.
     $output = install_run_tasks($install_state);
@@ -252,11 +264,15 @@ function install_state_defaults() {
  * This function performs commands that must run at the beginning of every page
  * request. It throws an exception if the installation should not proceed.
  *
+ * @param $class_loader
+ *   The class loader. Normally Composer's ClassLoader, as included by the
+ *   front controller, but may also be decorated; e.g.,
+ *   \Symfony\Component\ClassLoader\ApcClassLoader.
  * @param $install_state
  *   An array of information about the current installation state. This is
  *   modified with information gleaned from the beginning of the page request.
  */
-function install_begin_request(&$install_state) {
+function install_begin_request($class_loader, &$install_state) {
   $request = Request::createFromGlobals();
 
   // Add any installation parameters passed in via the URL.
@@ -286,7 +302,6 @@ function install_begin_request(&$install_state) {
   }
 
   $site_path = DrupalKernel::findSitePath($request, FALSE);
-  $class_loader = require __DIR__ . '/../vendor/autoload.php';
   Settings::initialize(dirname(dirname(__DIR__)), $site_path, $class_loader);
 
   // Ensure that procedural dependencies are loaded as early as possible,

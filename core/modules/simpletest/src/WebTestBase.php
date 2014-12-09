@@ -842,7 +842,7 @@ abstract class WebTestBase extends TestBase {
 
     // Execute the non-interactive installer.
     require_once DRUPAL_ROOT . '/core/includes/install.core.inc';
-    install_drupal($parameters);
+    install_drupal($class_loader, $parameters);
 
     // Import new settings.php written by the installer.
     Settings::initialize(DRUPAL_ROOT, $directory, $class_loader);
