@@ -15,6 +15,7 @@
     "symfony/routing": "2.6.*",
     "symfony/serializer": "2.6.*",
     "symfony/validator": "2.6.*",
+    "symfony/process": "2.6.*",
     "symfony/yaml": "2.6.*",
     "twig/twig": "1.16.*",
     "doctrine/common": "dev-master#a45d110f71c323e29f41eb0696fa230e3fa1b1b5",
