@@ -138,11 +138,8 @@ function history_node_view_alter(array &$build, EntityInterface $node, EntityVie
     // When the window's "load" event is triggered, mark the node as read.
     // This still allows for Drupal behaviors (which are triggered on the
     // "DOMContentReady" event) to add "new" and "updated" indicators.
-    $build['#attached']['js'][] = array(
-      'data' => 'window.addEventListener("load",function(){Drupal.history.markAsRead(' . $node->id() . ');},false);',
-      'type' => 'inline',
-    );
-    $build['#attached']['library'][] = 'history/drupal.history';
+    $build['#attached']['library'][] = 'history/mark-as-read';
+    $build['#attached']['drupalSettings']['history']['nodesToMarkAsRead'][$node->id()] = TRUE;
   }
 
 }

@@ -99,7 +99,8 @@ function quickedit_library_alter(array &$library, $name, $theme = NULL) {
       }
       if (isset($info['quickedit_stylesheets']) && is_array($info['quickedit_stylesheets'])) {
         foreach ($info['quickedit_stylesheets'] as $path) {
-          $library['css'][$theme_path . '/' . $path] = array(
+          $library['css'][] = array(
+            'data' => $theme_path . '/' . $path,
             'group' => CSS_AGGREGATE_THEME,
             'weight' => CSS_THEME,
           );

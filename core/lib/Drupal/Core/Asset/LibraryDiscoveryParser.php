@@ -197,12 +197,6 @@ class LibraryDiscoveryParser {
           $library[$type][] = $options;
         }
       }
-
-      // @todo Convert all uses of #attached[library][]=array('provider','name')
-      //   into #attached[library][]='provider/name' and remove this.
-      foreach ($library['dependencies'] as $i => $dependency) {
-        $library['dependencies'][$i] = $dependency;
-      }
     }
 
     return $libraries;

@@ -388,20 +388,20 @@ class ViewExecutable {
   /**
    * A render array container to store render related information.
    *
-   * For example you can alter the array and attach some css/js via the
-   * #attached key. This is the required way to add custom css/js.
+   * For example you can alter the array and attach some asset library or JS
+   * settings via the #attached key. This is the required way to add custom
+   * CSS or JS.
    *
    * @var array
    *
    * @see drupal_process_attached
    */
-  public $element = array(
-    '#attached' => array(
-      'css' => array(),
-      'js' => array(),
-      'library' => array(),
-    ),
-  );
+  public $element = [
+    '#attached' => [
+      'library' => [],
+      'drupalSettings' => [],
+    ]
+  ];
 
   /**
    * The current user.

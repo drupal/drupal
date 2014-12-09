@@ -1,0 +1,20 @@
+order:
+ drupalSettings:
+   ajax: test
+ dependencies:
+   - ajax_test/order-css-command
+   - ajax_test/order-js-command
+
+order-css-command:
+  css:
+     theme:
+       # Two CSS files (order should remain the same).
+       a.css: {}
+       b.css: {}
+
+order-js-command:
+  js:
+   # Two JavaScript files (first to the footer, should appear last).
+   footer.js: { scope: footer }
+   header.js: {}
+

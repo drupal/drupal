@@ -354,40 +354,35 @@ class RenderTest extends KernelTestBase {
     \Drupal::request()->setMethod('GET');
 
     // Create an element with a child and subchild. Each element loads a
-    // different JavaScript file using #attached.
-    $parent_js = drupal_get_path('module', 'user') . '/user.js';
-    $child_js = drupal_get_path('module', 'forum') . '/forum.js';
-    $subchild_js = drupal_get_path('module', 'book') . '/book.js';
+    // different library using #attached.
     $element = array(
-      '#type' => 'details',
-      '#open' => TRUE,
+      '#type' => 'container',
       '#cache' => array(
         'keys' => array('simpletest', 'drupal_render', 'children_attached'),
       ),
-      '#attached' => array('js' => array($parent_js)),
+      '#attached' => ['library' => ['test/parent']],
       '#title' => 'Parent',
     );
     $element['child'] = array(
-      '#type' => 'details',
-      '#open' => TRUE,
-      '#attached' => array('js' => array($child_js)),
+      '#type' => 'container',
+      '#attached' => ['library' => ['test/child']],
       '#title' => 'Child',
     );
     $element['child']['subchild'] = array(
-      '#attached' => array('js' => array($subchild_js)),
+      '#attached' => ['library' => ['test/subchild']],
       '#markup' => 'Subchild',
     );
 
     // Render the element and verify the presence of #attached JavaScript.
     drupal_render($element);
-    $expected_js = [$parent_js, $child_js, $subchild_js];
-    $this->assertEqual($element['#attached']['js'], $expected_js, 'The element, child and subchild #attached JavaScript are included.');
+    $expected_libraries = ['test/parent', 'test/child', 'test/subchild'];
+    $this->assertEqual($element['#attached']['library'], $expected_libraries, 'The element, child and subchild #attached libraries are included.');
 
     // Load the element from cache and verify the presence of the #attached
     // JavaScript.
     $element = array('#cache' => array('keys' => array('simpletest', 'drupal_render', 'children_attached')));
     $this->assertTrue(strlen(drupal_render($element)) > 0, 'The element was retrieved from cache.');
-    $this->assertEqual($element['#attached']['js'], $expected_js, 'The element, child and subchild #attached JavaScript are included.');
+    $this->assertEqual($element['#attached']['library'], $expected_libraries, 'The element, child and subchild #attached libraries are included.');
 
     // Restore the previous request method.
     \Drupal::request()->setMethod($request_method);

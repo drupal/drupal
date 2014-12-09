@@ -1,4 +1,4 @@
-drupal.history:
+api:
   version: VERSION
   js:
     js/history.js: {}
@@ -7,3 +7,10 @@ drupal.history:
     - core/drupalSettings
     - core/drupal
     - core/drupal.ajax
+
+mark-as-read:
+  version: VERSION
+  js:
+    js/mark-as-read.js: { scope: footer }
+  dependencies:
+    - history/api

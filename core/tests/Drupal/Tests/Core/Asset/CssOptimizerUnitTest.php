@@ -136,34 +136,6 @@ class CssOptimizerUnitTest extends UnitTestCase {
         ),
         file_get_contents($path . 'comment_hacks.css.optimized.css'),
       ),
-      // Inline. Preprocessing enabled.
-      3 => array(
-        array(
-          'group' => 0,
-          'every_page' => FALSE,
-          'type' => 'inline',
-          'weight' => 0.012,
-          'media' => 'all',
-          'preprocess' => TRUE,
-          'data' => '.girlfriend { display: none; }',
-          'browsers' => array('IE' => TRUE, '!IE' => TRUE),
-        ),
-        ".girlfriend{display:none;}\n",
-      ),
-      // Inline. Preprocessing disabled.
-      4 => array(
-        array(
-          'group' => 0,
-          'every_page' => FALSE,
-          'type' => 'inline',
-          'weight' => 0.013,
-          'media' => 'all',
-          'preprocess' => FALSE,
-          'data' => '#home body { position: fixed; }',
-          'browsers' => array('IE' => TRUE, '!IE' => TRUE),
-        ),
-        '#home body { position: fixed; }',
-      ),
       // File in subfolder. Tests:
       // - CSS import path is properly interpreted. (https://drupal.org/node/1198904)
       // - Don't adjust data URIs (https://drupal.org/node/2142441)
@@ -181,6 +153,37 @@ class CssOptimizerUnitTest extends UnitTestCase {
         ),
         str_replace('url(../images/icon.png)', 'url(' . file_create_url($path . 'images/icon.png') . ')', file_get_contents($path . 'css_subfolder/css_input_with_import.css.optimized.css')),
       ),
+      // File. Tests:
+      // - Any @charaset declaration at the beginning of a file should be
+      //   removed without breaking subsequent CSS.
+      6 => array(
+        array(
+          'group' => -100,
+          'every_page' => TRUE,
+          'type' => 'file',
+          'weight' => 0.013,
+          'media' => 'all',
+          'preprocess' => TRUE,
+          'data' => $path . 'charset_sameline.css',
+          'browsers' => array('IE' => TRUE, '!IE' => TRUE),
+          'basename' => 'charset_sameline.css',
+        ),
+        file_get_contents($path . 'charset.css.optimized.css'),
+      ),
+      7 => array(
+        array(
+          'group' => -100,
+          'every_page' => TRUE,
+          'type' => 'file',
+          'weight' => 0.013,
+          'media' => 'all',
+          'preprocess' => TRUE,
+          'data' => $path . 'charset_newline.css',
+          'browsers' => array('IE' => TRUE, '!IE' => TRUE),
+          'basename' => 'charset_newline.css',
+        ),
+        file_get_contents($path . 'charset.css.optimized.css'),
+      ),
     );
   }
 
@@ -191,38 +194,6 @@ class CssOptimizerUnitTest extends UnitTestCase {
    */
   function testOptimize($css_asset, $expected) {
     $this->assertEquals($expected, $this->optimizer->optimize($css_asset), 'Group of file CSS assets optimized correctly.');
-  }
-
-  /**
-   * Tests optimizing a CSS asset containing charset declaration.
-   */
-  function testOptimizeRemoveCharset() {
-    $cases = array(
-      array(
-        'asset' => array(
-          'type' => 'inline',
-          'data' => '@charset "UTF-8";html{font-family:"sans-serif";}',
-          'preprocess' => FALSE,
-        ),
-        'expected' => 'html{font-family:"sans-serif";}',
-      ),
-      array(
-        // This asset contains extra \n character.
-        'asset' => array(
-          'type' => 'inline',
-          'data' => "@charset 'UTF-8';\nhtml{font-family:'sans-serif';}",
-          'preprocess' => FALSE,
-        ),
-        'expected' => "\nhtml{font-family:'sans-serif';}",
-      ),
-    );
-    foreach ($cases as $case) {
-      $this->assertEquals(
-        $case['expected'],
-        $this->optimizer->optimize($case['asset']),
-        'CSS optimizing correctly removes the charset declaration.'
-      );
-    }
   }
 
   /**

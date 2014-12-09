@@ -158,21 +158,6 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
           }
           break;
 
-        // Output a STYLE tag for an inline CSS asset. The asset's 'data'
-        // property contains the CSS content.
-        case 'inline':
-          $element = $style_element_defaults;
-          $element['#value'] = $css_asset['data'];
-          $element['#attributes']['media'] = $css_asset['media'];
-          $element['#browsers'] = $css_asset['browsers'];
-          // For inline CSS to validate as XHTML, all CSS containing XHTML needs
-          // to be wrapped in CDATA. To make that backwards compatible with HTML
-          // 4, we need to comment out the CDATA-tag.
-          $element['#value_prefix'] = "\n/* <![CDATA[ */\n";
-          $element['#value_suffix'] = "\n/* ]]> */\n";
-          $elements[] = $element;
-          break;
-
         // Output a LINK tag for an external CSS asset. The asset's 'data'
         // property contains the full URL.
         case 'external':

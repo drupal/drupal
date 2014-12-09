@@ -30,7 +30,7 @@ drupal.comment-new-indicator:
     - core/jquery
     - core/jquery.once
     - core/drupal
-    - history/drupal.history
+    - history/api
     - core/drupal.displace
 
 drupal.node-new-comments-link:
@@ -41,4 +41,4 @@ drupal.node-new-comments-link:
     - core/jquery
     - core/jquery.once
     - core/drupal
-    - history/drupal.history
+    - history/api

@@ -47,29 +47,10 @@ function ajax_test_render() {
  */
 function ajax_test_order() {
   $response = new AjaxResponse();
-  $path = drupal_get_path('module', 'system');
   // HTML insertion command.
   $response->addCommand(new HtmlCommand('body', 'Hello, world!'));
-  $attached = array(
-    '#attached' => array(
-      'css' => array(
-        // Add two CSS files (order should remain the same).
-        $path . '/css/system.admin.css' => array(),
-        $path . '/css/system.maintenance.css' => array(),
-      ),
-      'js' => array(
-        // Add two JavaScript files (first to the footer, should appear last).
-        $path . '/system.modules.js' => array('scope' => 'footer'),
-        $path . '/system.js' => array(),
-      ),
-      // Finally, add a JavaScript setting.
-      'drupalSettings' => array(
-        'ajax' => 'test',
-      ),
-    ),
-  );
-
-  drupal_process_attached($attached);
+  $build['#attached']['library'][] = 'ajax_test/order';
+  drupal_process_attached($build);
 
   return $response;
 }

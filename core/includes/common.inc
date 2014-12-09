@@ -871,9 +871,7 @@ function _drupal_add_html_head_link($attributes, $header = FALSE) {
  * If CSS aggregation/compression is enabled, all cascading style sheets added
  * with $options['preprocess'] set to TRUE will be merged into one aggregate
  * file and compressed by removing all extraneous white space.
- * Preprocessed inline stylesheets will not be aggregated into this single file;
- * instead, they are just compressed upon output on the page. Externally hosted
- * stylesheets are never aggregated or compressed.
+ * Externally hosted stylesheets are never aggregated or compressed.
  *
  * The reason for aggregating the files is outlined quite thoroughly here:
  * http://www.die.net/musings/page_load_time/ "Load fewer external objects. Due
@@ -899,18 +897,15 @@ function _drupal_add_html_head_link($attributes, $header = FALSE) {
  *     override module-supplied CSS files based on their filenames, and this
  *     prefixing helps prevent confusing name collisions for theme developers.
  *     See drupal_get_css() where the overrides are performed.
- *   - 'inline': A string of CSS that should be placed in the given scope. Note
- *     that it is better practice to use 'file' stylesheets, rather than
- *     'inline', as the CSS would then be aggregated and cached.
  *   - 'external': The absolute path to an external CSS file that is not hosted
  *     on the local server. These files will not be aggregated if CSS
  *     aggregation is enabled.
  * @param $options
  *   (optional) A string defining the 'type' of CSS that is being added in the
- *   $data parameter ('file', 'inline', or 'external'), or an array which can
- *   have any or all of the following keys:
- *   - 'type': The type of stylesheet being added. Available options are 'file',
- *     'inline' or 'external'. Defaults to 'file'.
+ *   $data parameter ('file' or 'external'), or an array which can have any or
+ *   all of the following keys:
+ *   - 'type': The type of stylesheet being added. Available options are 'file'
+ *     or 'external'. Defaults to 'file'.
  *   - 'basename': Force a basename for the file being added. Modules are
  *     expected to use stylesheets with unique filenames, but integration of
  *     external libraries may make this impossible. The basename of
@@ -1027,12 +1022,6 @@ function _drupal_add_css($data = NULL, $options = NULL) {
 
     // Add the data to the CSS array depending on the type.
     switch ($options['type']) {
-      case 'inline':
-        // For inline stylesheets, we don't want to use the $data as the array
-        // key as $data could be a very long string of CSS.
-        $css[] = $options;
-        break;
-
       case 'file':
         // Local CSS files are keyed by basename; if a file with the same
         // basename is added more than once, it gets overridden.
@@ -1278,21 +1267,12 @@ function drupal_clean_id_identifier($id) {
 }
 
 /**
- * Adds a JavaScript file, setting, or inline code to the page.
+ * Adds a JavaScript file or setting to the page.
  *
  * The behavior of this function depends on the parameters it is called with.
- * Generally, it handles the addition of JavaScript to the page, either as
- * reference to an existing file or as inline code. The following actions can be
- * performed using this function:
+ * Generally, it handles the addition of JavaScript to the page. The following
+ * actions can be performed using this function:
  * - Add a file ('file'): Adds a reference to a JavaScript file to the page.
- * - Add inline JavaScript code ('inline'): Executes a piece of JavaScript code
- *   on the current page by placing the code directly in the page (for example,
- *   to tell the user that a new message arrived, by opening a pop up, alert
- *   box, etc.). This should only be used for JavaScript that cannot be executed
- *   from a file. When adding inline code, make sure that you are not relying on
- *   $() being the jQuery function. Wrap your code in
- *   @code (function ($) {... })(jQuery); @endcode
- *   or use jQuery() instead of $().
  * - Add external JavaScript ('external'): Allows the inclusion of external
  *   JavaScript files that are not hosted on the local server. Note that these
  *   external JavaScript references do not get aggregated when preprocessing is
@@ -1305,10 +1285,6 @@ function drupal_clean_id_identifier($id) {
  * @code
  *   _drupal_add_js('core/misc/collapse.js');
  *   _drupal_add_js('core/misc/collapse.js', 'file');
- *   _drupal_add_js('jQuery(document).ready(function () { alert("Hello!"); });', 'inline');
- *   _drupal_add_js('jQuery(document).ready(function () { alert("Hello!"); });',
- *     array('type' => 'inline', 'scope' => 'footer', 'weight' => 5)
- *   );
  *   _drupal_add_js('http://example.com/example.js', 'external');
  *   _drupal_add_js(array('myModule' => array('key' => 'value')), 'setting');
  * @endcode
@@ -1318,7 +1294,6 @@ function drupal_clean_id_identifier($id) {
  *
  * If JavaScript aggregation is enabled, all JavaScript files added with
  * $options['preprocess'] set to TRUE will be merged into one aggregate file.
- * Preprocessed inline JavaScript will not be aggregated into this single file.
  * Externally hosted JavaScripts are never aggregated.
  *
  * The reason for aggregating the files is outlined quite thoroughly here:
@@ -1338,7 +1313,6 @@ function drupal_clean_id_identifier($id) {
  *   (optional) If given, the value depends on the $options parameter, or
  *   $options['type'] if $options is passed as an associative array:
  *   - 'file': Path to the file relative to base_path().
- *   - 'inline': The JavaScript code that should be placed in the given scope.
  *   - 'external': The absolute path to an external JavaScript file that is not
  *     hosted on the local server. These files will not be aggregated if
  *     JavaScript aggregation is enabled.
@@ -1350,11 +1324,11 @@ function drupal_clean_id_identifier($id) {
  *     added to the existing settings array.
  * @param $options
  *   (optional) A string defining the type of JavaScript that is being added in
- *   the $data parameter ('file'/'setting'/'inline'/'external'), or an
- *   associative array. JavaScript settings should always pass the string
- *   'setting' only. Other types can have the following elements in the array:
+ *   the $data parameter ('file'/'setting'/'external'), or an associative array.
+ *   JavaScript settings should always pass the string 'setting' only. Other
+ *   types can have the following elements in the array:
  *   - type: The type of JavaScript that is to be added to the page. Allowed
- *     values are 'file', 'inline', 'external' or 'setting'. Defaults
+ *     values are 'file', 'external' or 'setting'. Defaults
  *     to 'file'.
  *   - scope: The location in which you want to place the script. Possible
  *     values are 'header' or 'footer'. If your theme implements different
@@ -1467,13 +1441,7 @@ function _drupal_add_js($data = NULL, $options = NULL) {
             'data' => array(),
           );
         }
-        // All JavaScript settings are placed in the header of the page with
-        // the library weight so that inline scripts appear afterwards.
         $javascript['drupalSettings']['data'] = NestedArray::mergeDeepArray([$javascript['drupalSettings']['data'], $data], TRUE);
-        break;
-
-      case 'inline':
-        $javascript[] = $options;
         break;
 
       default: // 'file' and 'external'
@@ -1515,8 +1483,8 @@ function drupal_js_defaults($data = NULL) {
  *
  * References to JavaScript files are placed in a certain order: first, all
  * 'core' files, then all 'module' and finally all 'theme' JavaScript files
- * are added to the page. Then, all settings are output, followed by 'inline'
- * JavaScript code. If running update.php, all preprocessing is disabled.
+ * are added to the page. Then, all settings are output. If running update.php,
+ * all preprocessing is disabled.
  *
  * Note that hook_js_alter(&$javascript) is called during this function call
  * to allow alterations of the JavaScript during its presentation. Calls to
@@ -1694,44 +1662,40 @@ function drupal_merge_attached(array $a, array $b) {
 /**
  * Adds attachments to a render() structure.
  *
- * Libraries, JavaScript, CSS and other types of custom structures are attached
- * to elements using the #attached property. The #attached property is an
- * associative array, where the keys are the the attachment types and the values
- * are the attached data. For example:
+ * Libraries, JavaScript settings, feeds, HTML <head> tags and HTML <head> links
+ * are attached to elements using the #attached property. The #attached property
+ * is an associative array, where the keys are the attachment types and the
+ * values are the attached data. For example:
  *
  * @code
- * $build['#attached'] = array(
- *   'library' => array(array('taxonomy', 'taxonomy')),
- *   'css' => array(drupal_get_path('module', 'taxonomy') . '/css/taxonomy.module.css'),
- * );
+ * $build['#attached'] = [
+ *   'library' => ['core/jquery']
+ * ];
  * @endcode
  *
- * 'js', 'css', and 'library' are types that get special handling. For any
- * other kind of attached data, the array key must be the full name of the
- * callback function and each value an array of arguments. For example:
+ * The available keys are:
+ * - 'library' (asset libraries)
+ * - 'drupalSettings' (JavaScript settings)
+ * - 'feed' (RSS feeds)
+ * - 'html_head' (tags in HTML <head>)
+ * - 'html_head_link' (<link> tags in HTML <head>)
+ * - 'http_header' (HTTP headers)
+ *
+ * For example:
  * @code
  * $build['#attached']['http_header'] = array(
  *   array('Content-Type', 'application/rss+xml; charset=utf-8'),
  * );
  * @endcode
  *
- * External 'js' and 'css' files can also be loaded. For example:
- * @code
- * $build['#attached']['js'] = array(
- *   'http://code.jquery.com/jquery-1.4.2.min.js' => array(
- *     'type' => 'external',
- *   ),
- * );
- * @endcode
- *
- * @param $elements
+ * @param array $elements
  *   The structured array describing the data being rendered.
- * @param $dependency_check
+ * @param bool $dependency_check
  *   When TRUE, will exit if a given library's dependencies are missing. When
  *   set to FALSE, will continue to add the libraries, even though one or more
  *   dependencies are missing. Defaults to FALSE.
  *
- * @return
+ * @return bool
  *   FALSE if there were any missing library dependencies; TRUE if all library
  *   dependencies were met.
  *
@@ -1740,12 +1704,10 @@ function drupal_merge_attached(array $a, array $b) {
  * @see _drupal_add_css()
  * @see drupal_render()
  */
-function drupal_process_attached($elements, $dependency_check = FALSE) {
+function drupal_process_attached(array $elements, $dependency_check = FALSE) {
   // Add defaults to the special attached structures that should be processed differently.
   $elements['#attached'] += array(
     'library' => array(),
-    'js' => array(),
-    'css' => array(),
   );
 
   // Add the libraries first.
@@ -1761,30 +1723,8 @@ function drupal_process_attached($elements, $dependency_check = FALSE) {
   }
   unset($elements['#attached']['library']);
 
-  // Add both the JavaScript and the CSS.
-  // The parameters for _drupal_add_js() and _drupal_add_css() require special
-  // handling.
-  foreach (array('js', 'css') as $type) {
-    foreach ($elements['#attached'][$type] as $data => $options) {
-      // If the value is not an array, it's a filename and passed as first
-      // (and only) argument.
-      if (!is_array($options)) {
-        $data = $options;
-        $options = NULL;
-      }
-      // In some cases, the first parameter ($data) is an array. Arrays can't be
-      // passed as keys in PHP, so we have to get $data from the value array.
-      if (is_numeric($data)) {
-        $data = $options['data'];
-        unset($options['data']);
-      }
-      call_user_func('_drupal_add_' . $type, $data, $options);
-    }
-    unset($elements['#attached'][$type]);
-  }
-
   // Convert every JavaScript settings asset into a regular JavaScript asset.
-  // @todo Clean this up in https://www.drupal.org/node/2382533
+  // @todo Clean this up in https://www.drupal.org/node/2368797
   if (!empty($elements['#attached']['drupalSettings'])) {
     _drupal_add_js($elements['#attached']['drupalSettings'], ['type' => 'setting']);
     unset($elements['#attached']['drupalSettings']);
@@ -1994,22 +1934,21 @@ function _drupal_add_library($library_name, $every_page = NULL) {
       // Add all components within the library.
       $elements['#attached'] = array(
         'library' => $library['dependencies'],
-        'js' => $library['js'],
-        'css' => $library['css'],
       );
       if (isset($library['drupalSettings'])) {
         $elements['#attached']['drupalSettings'] = $library['drupalSettings'];
       }
-      foreach (array('js', 'css') as $type) {
-        foreach ($elements['#attached'][$type] as $data => $options) {
-          // Set the every_page flag if one was passed.
-          if (isset($every_page)) {
-            $elements['#attached'][$type][$data]['every_page'] = $every_page;
-          }
-        }
-      }
-
       $added[$extension][$name] = drupal_process_attached($elements, TRUE);
+
+      // Add both the JavaScript and the CSS.
+      // The parameters for _drupal_add_js() and _drupal_add_css() require special
+      // handling.
+      foreach (array('js', 'css') as $type) {
+        foreach ($library[$type] as $options) {
+          call_user_func('_drupal_add_' . $type, $options['data'], $options);
+        }
+        unset($elements['#attached'][$type]);
+      }
     }
     else {
       // Requested library does not exist.

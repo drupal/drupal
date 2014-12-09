@@ -258,7 +258,7 @@
  *   normally preferable to use #theme or #type instead, so that the theme can
  *   customize the markup.
  *
- * JavaScript and CSS attributes are specified in the render array using the
+ * JavaScript and CSS assets are specified in the render array using the
  * #attached property (see @ref sec_attached).
  *
  * @section elements Render elements
@@ -286,18 +286,22 @@
  *
  * @section sec_attached Attaching libraries in render arrays
  *
- * The #attached property allows loading of CSS, JavaScript, libraries or custom
- * types. Specify an array of type => value pairs, where the type (most often
- * 'css', 'js', or 'library') determines the loading technique and the value
- * provides the options specified to the loader function. Example:
- * @code
- * $form['#attached']['css'] = array(
- *   drupal_get_path('module', 'ajax_example') . '/ajax_example.css',
- * );
  *
- * $form['#attached']['js'] = array(
- *  drupal_get_path('module', 'ajax_example') . '/ajax_example.js',
- * );
+ * Libraries, JavaScript settings, feeds, HTML <head> tags and HTML <head> links
+ * are attached to elements using the #attached property. The #attached property
+ * is an associative array, where the keys are the attachment types and the
+ * values are the attached data. For example:
+ *
+ * The #attached property allows loading of asset libraries (which may contain
+ * CSS assets, JavaScript assets, and JavaScript setting assets), JavaScript
+ * settings, feeds, HTML <head> tags and HTML <head> links. Specify an array of
+ * type => value pairs, where the type (most often 'library' — for libraries, or
+ * 'drupalSettings' — for JavaScript settings) to attach these response-level
+ * values. Example:
+ * @code
+ * $build['#attached']['library'][] = 'core/jquery';
+ * $build['#attached']['drupalSettings']['foo] = 'bar';
+ * $build['#attached']['feed'][] = ['aggregator/rss', $this->t('Feed title')];
  * @endcode
  *
  * See drupal_process_attached() for additional information.

@@ -179,6 +179,36 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
   }
 
   /**
+   * Tests the version property, and how it propagates to the contained assets.
+   *
+   * @covers ::buildByExtension
+   */
+  public function testVersion() {
+    $this->moduleHandler->expects($this->atLeastOnce())
+      ->method('moduleExists')
+      ->with('versions')
+      ->will($this->returnValue(TRUE));
+
+    $path = __DIR__ . '/library_test_files';
+    $path = substr($path, strlen($this->root) + 1);
+    $this->libraryDiscoveryParser->setPaths('module', 'versions', $path);
+
+    $libraries = $this->libraryDiscoveryParser->buildByExtension('versions');
+
+    $this->assertFalse(array_key_exists('version', $libraries['versionless']));
+    $this->assertEquals(-1, $libraries['versionless']['css'][0]['version']);
+    $this->assertEquals(-1, $libraries['versionless']['js'][0]['version']);
+
+    $this->assertEquals('9.8.7.6', $libraries['versioned']['version']);
+    $this->assertEquals('9.8.7.6', $libraries['versioned']['css'][0]['version']);
+    $this->assertEquals('9.8.7.6', $libraries['versioned']['js'][0]['version']);
+
+    $this->assertEquals(\Drupal::VERSION, $libraries['core-versioned']['version']);
+    $this->assertEquals(\Drupal::VERSION, $libraries['core-versioned']['css'][0]['version']);
+    $this->assertEquals(\Drupal::VERSION, $libraries['core-versioned']['js'][0]['version']);
+  }
+
+  /**
    * Tests that the version property of external libraries is handled.
    *
    * @covers ::buildByExtension
@@ -193,10 +223,11 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     $path = substr($path, strlen($this->root) + 1);
     $this->libraryDiscoveryParser->setPaths('module', 'external', $path);
 
-    $libraries = $this->libraryDiscoveryParser->buildByExtension('external', 'example_external');
+    $libraries = $this->libraryDiscoveryParser->buildByExtension('external');
     $library = $libraries['example_external'];
 
-    $this->assertEquals($path . '/css/example_external.css', $library['css'][0]['data']);
+    $this->assertEquals('http://example.com/css/example_external.css', $library['css'][0]['data']);
+    $this->assertEquals('http://example.com/example_external.js', $library['js'][0]['data']);
     $this->assertEquals('3.14', $library['version']);
   }
 
