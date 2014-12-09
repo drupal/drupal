@@ -132,7 +132,8 @@ class ConfigInstallWebTest extends WebTestBase {
     // Turn on the test module, which will attempt to replace the
     // configuration data. This attempt to replace the active configuration
     // should be ignored.
-    \Drupal::service('module_installer')->install(array('config_existing_default_config_test'));
+    $status = \Drupal::service('module_installer')->install(array('config_existing_default_config_test'));
+    $this->assertTrue($status, "The module config_existing_default_config_test was installed.");
 
     // Verify that the test module has not been able to change the data.
     $config = \Drupal::config($config_name);
