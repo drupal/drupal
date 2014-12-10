@@ -159,6 +159,8 @@ All arguments are long options.
               (e.g., 'node')
 
   --class     Run tests identified by specific class names, instead of group names.
+              A specific test method can be added, for example,
+              'Drupal\book\Tests\BookTest::testBookExport'.
 
   --file      Run tests identified by specific file names, instead of group names.
               Specify the path and the extension
@@ -625,10 +627,19 @@ function simpletest_script_run_one_test($test_id, $test_class) {
   global $args;
 
   try {
-    $test = new $test_class($test_id);
+    if (strpos($test_class, '::') > 0) {
+      list($class_name, $method) = explode('::', $test_class, 2);
+      $methods = [$method];
+    }
+    else {
+      $class_name = $test_class;
+      // Use empty array to run all the test methods.
+      $methods = array();
+    }
+    $test = new $class_name($test_id);
     $test->dieOnFail = (bool) $args['die-on-fail'];
     $test->verbose = (bool) $args['verbose'];
-    $test->run();
+    $test->run($methods);
 
     simpletest_script_reporter_display_summary($test_class, $test->results);
 
@@ -774,7 +785,8 @@ function simpletest_script_get_test_list() {
     if ($args['class']) {
       $test_list = array();
       foreach ($args['test_names'] as $test_class) {
-        if (class_exists($test_class)) {
+        list($class_name, ) = explode('::', $test_class, 2);
+        if (class_exists($class_name)) {
           $test_list[] = $test_class;
         }
         else {
@@ -783,8 +795,8 @@ function simpletest_script_get_test_list() {
           foreach ($groups as $group) {
             $all_classes = array_merge($all_classes, array_keys($group));
           }
-          simpletest_script_print_error('Test class not found: ' . $test_class);
-          simpletest_script_print_alternatives($test_class, $all_classes, 6);
+          simpletest_script_print_error('Test class not found: ' . $class_name);
+          simpletest_script_print_alternatives($class_name, $all_classes, 6);
           exit(1);
         }
       }
