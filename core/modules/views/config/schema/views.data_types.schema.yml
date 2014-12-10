@@ -263,6 +263,11 @@ views_display:
     exposed_block:
       type: boolean
       label: 'Put the exposed form in a block'
+    display_extenders:
+      type: sequence
+      label: 'Display extenders'
+      sequence:
+       - type: views.display_extender.[%key]
 
 views_sort:
   type: views_handler
@@ -850,3 +855,7 @@ views_cache:
     type:
       type: string
       label: 'Cache type'
+
+views_display_extender:
+  type: mapping
+  label: 'Display extender settings'

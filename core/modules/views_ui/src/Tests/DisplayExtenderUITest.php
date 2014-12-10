@@ -17,17 +17,6 @@ use Drupal\views\Views;
 class DisplayExtenderUITest extends UITestBase {
 
   /**
-   * Set to TRUE to strict check all configuration saved.
-   *
-   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
-   *
-   * @todo https://www.drupal.org/node/2387149
-   *
-   * @var bool
-   */
-  protected $strictConfigSchema = FALSE;
-
-  /**
    * Views used by this test.
    *
    * @var array
@@ -53,7 +42,8 @@ class DisplayExtenderUITest extends UITestBase {
     $this->drupalPostForm(NULL, array(), t('Save'));
     $view = Views::getView($view->storage->id());
     $view->initDisplay();
-    $this->assertEqual($view->display_handler->getOption('test_extender_test_option'), $random_text, 'Make sure that the display extender option got saved.');
+    $display_extender_options = $view->display_handler->getOption('display_extenders');
+    $this->assertEqual($display_extender_options['display_extender_test']['test_extender_test_option'], $random_text, 'Make sure that the display extender option got saved.');
   }
 
 }

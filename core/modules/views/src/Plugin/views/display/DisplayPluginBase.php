@@ -73,8 +73,10 @@ abstract class DisplayPluginBase extends PluginBase {
 
   /**
    * Stores all available display extenders.
+   *
+   * @var \Drupal\views\Plugin\views\display_extender\DisplayExtenderPluginBase[]
    */
-  var $extender = array();
+  protected $extenders = [];
 
   /**
    * Overrides Drupal\views\Plugin\Plugin::$usesOptions.
@@ -156,20 +158,26 @@ abstract class DisplayPluginBase extends PluginBase {
 
   public function initDisplay(ViewExecutable $view, array &$display, array &$options = NULL) {
     $this->view = $view;
-    $this->setOptionDefaults($this->options, $this->defineOptions());
-    $this->display = &$display;
 
     // Load extenders as soon as possible.
-    $this->extender = array();
+    $display['display_options'] += ['display_extenders' => []];
+    $this->extenders = array();
     if ($extenders = Views::getEnabledDisplayExtenders()) {
       $manager = Views::pluginManager('display_extender');
+      $display_extender_options = $display['display_options']['display_extenders'];
       foreach ($extenders as $extender) {
+        /** @var \Drupal\views\Plugin\views\display_extender\DisplayExtenderPluginBase $plugin */
         if ($plugin = $manager->createInstance($extender)) {
-          $plugin->init($this->view, $this);
-          $this->extender[$extender] = $plugin;
+          $extender_options = isset($display_extender_options[$plugin->getPluginId()]) ? $display_extender_options[$plugin->getPluginId()] : [];
+          $plugin->init($this->view, $this, $extender_options);
+          $this->extenders[$extender] = $plugin;
         }
       }
     }
+
+
+    $this->setOptionDefaults($this->options, $this->defineOptions());
+    $this->display = &$display;
 
     // Track changes that the user should know about.
     $changed = FALSE;
@@ -237,7 +245,7 @@ abstract class DisplayPluginBase extends PluginBase {
       unset($this->default_display);
     }
 
-    foreach ($this->extender as $extender) {
+    foreach ($this->extenders as $extender) {
       $extender->destroy();
     }
   }
@@ -491,7 +499,7 @@ abstract class DisplayPluginBase extends PluginBase {
       unset($sections['items_per_page']);
     }
 
-    foreach ($this->extender as $extender) {
+    foreach ($this->extenders as $extender) {
       $extender->defaultableSections($sections, $section);
     }
 
@@ -701,7 +709,14 @@ abstract class DisplayPluginBase extends PluginBase {
       unset($options['defaults']);
     }
 
-    foreach ($this->extender as $extender) {
+    $options['display_extenders'] = ['default' => []];
+    // First allow display extenders to provide new options.
+    foreach ($this->extenders as $extender_id => $extender) {
+      $options['display_extenders']['contains'][$extender_id]['contains'] = $extender->defineOptions();
+    }
+
+    // Then allow display extenders to alter existing default values.
+    foreach ($this->extenders as $extender) {
       $extender->defineOptionsAlter($options);
     }
 
@@ -1369,7 +1384,7 @@ abstract class DisplayPluginBase extends PluginBase {
       'desc' => $this->t('Change the CSS class name(s) that will be added to this display.'),
     );
 
-    foreach ($this->extender as $extender) {
+    foreach ($this->extenders as $extender) {
       $extender->optionsSummary($categories, $options);
     }
   }
@@ -1857,7 +1872,7 @@ abstract class DisplayPluginBase extends PluginBase {
         break;
     }
 
-    foreach ($this->extender as $extender) {
+    foreach ($this->extenders as $extender) {
       $extender->buildOptionsForm($form, $form_state);
     }
   }
@@ -1909,7 +1924,7 @@ abstract class DisplayPluginBase extends PluginBase {
       }
     }
 
-    foreach ($this->extender as $extender) {
+    foreach ($this->extenders as $extender) {
       $extender->validateOptionsForm($form, $form_state);
     }
   }
@@ -2012,9 +2027,14 @@ abstract class DisplayPluginBase extends PluginBase {
         break;
     }
 
-    foreach ($this->extender as $extender) {
+    $extender_options = $this->getOption('display_extenders');
+    foreach ($this->extenders as $extender) {
       $extender->submitOptionsForm($form, $form_state);
+
+      $plugin_id = $extender->getPluginId();
+      $extender_options[$plugin_id] = $extender->options;
     }
+    $this->setOption('display_extenders', $extender_options);
   }
 
   /**
@@ -2065,7 +2085,7 @@ abstract class DisplayPluginBase extends PluginBase {
    * Inject anything into the query that the display handler needs.
    */
   public function query() {
-    foreach ($this->extender as $extender) {
+    foreach ($this->extenders as $extender) {
       $extender->query();
     }
   }
@@ -2272,7 +2292,7 @@ abstract class DisplayPluginBase extends PluginBase {
       $exposed_form->preExecute();
     }
 
-    foreach ($this->extender as $extender) {
+    foreach ($this->extenders as $extender) {
       $extender->preExecute();
     }
   }
@@ -2640,6 +2660,15 @@ abstract class DisplayPluginBase extends PluginBase {
     }
 
     $this->setOption($types[$type]['plural'], $options);
+  }
+
+  /**
+   * Gets the display extenders.
+   *
+   * @return \Drupal\views\Plugin\views\display_extender\DisplayExtenderPluginBase[]
+   */
+  public function getExtenders() {
+    return $this->extenders;
   }
 
 }

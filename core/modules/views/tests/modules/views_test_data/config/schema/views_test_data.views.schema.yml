@@ -85,3 +85,13 @@ views.style.test_style:
     test_option:
       type: string
       label: 'Test option'
+
+views.display_extender.display_extender_test:
+  type: views_display_extender
+  mapping:
+    test_extender_test_option:
+      type: string
+      label: 'Test option'
+
+views.display_extender.display_extender_test2:
+  type: views.display_extender.display_extender_test
