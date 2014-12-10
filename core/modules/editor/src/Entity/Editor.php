@@ -80,12 +80,7 @@ class Editor extends ConfigEntityBase implements EditorInterface {
     parent::__construct($values, $entity_type);
 
     $plugin = $this->editorPluginManager()->createInstance($this->editor);
-
-    // Initialize settings, merging module-provided defaults.
-    $default_settings = $plugin->getDefaultSettings();
-    $default_settings += \Drupal::moduleHandler()->invokeAll('editor_default_settings', array($this->editor));
-    \Drupal::moduleHandler()->alter('editor_default_settings', $default_settings, $this->editor);
-    $this->settings += $default_settings;
+    $this->settings += $plugin->getDefaultSettings();
   }
 
   /**

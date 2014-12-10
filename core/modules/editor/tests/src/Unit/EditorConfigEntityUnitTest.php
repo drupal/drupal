@@ -53,13 +53,6 @@ class EditorConfigEntityUnitTest extends UnitTestCase {
   protected $editorPluginManager;
 
   /**
-   * The module handler used for testing.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $moduleHandler;
-
-  /**
    * Editor plugin ID.
    *
    * @var string
@@ -90,24 +83,11 @@ class EditorConfigEntityUnitTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $this->moduleHandler = $this->getMock('\Drupal\Core\Extension\ModuleHandlerInterface');
-    $this->moduleHandler->expects($this->once())
-      ->method('invokeAll')
-      ->with('editor_default_settings', array($this->editorId))
-      ->will($this->returnValue(array()));
-
-    $this->moduleHandler->expects($this->once())
-      ->method('alter')
-      ->with('editor_default_settings', array(), $this->editorId)
-      ->will($this->returnValue(array()));
-
     $container = new ContainerBuilder();
     $container->set('entity.manager', $this->entityManager);
     $container->set('uuid', $this->uuid);
     $container->set('plugin.manager.editor', $this->editorPluginManager);
-    $container->set('module_handler', $this->moduleHandler);
     \Drupal::setContainer($container);
-
   }
 
   /**

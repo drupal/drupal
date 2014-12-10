@@ -8,27 +8,6 @@
 use Drupal\filter\FilterFormatInterface;
 
 /**
- * Implements hook_editor_default_settings().
- */
-function editor_test_editor_default_settings($editor) {
-  if ($editor === 'unicorn') {
-    return array(
-      'rainbows' => TRUE,
-      'sparkles' => TRUE,
-    );
-  }
-}
-
-/**
- * Implements hook_editor_default_settings_alter().
- */
-function editor_test_editor_default_settings_alter(&$settings, $editor) {
-  if ($editor === 'unicorn' && isset($settings['sparkles'])) {
-    $settings['sparkles'] = FALSE;
-  }
-}
-
-/**
  * Implements hook_editor_js_settings_alter().
  */
 function editor_test_editor_js_settings_alter(&$settings) {
