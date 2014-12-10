@@ -294,10 +294,10 @@ display:
           type_custom_false: ''
           not: '0'
           plugin_id: boolean
-        rid:
-          id: rid
-          table: users_roles
-          field: rid
+        roles_target_id:
+          id: roles_target_id
+          table: user__roles
+          field: roles_target_id
           relationship: none
           group_type: group
           admin_label: ''
@@ -552,7 +552,7 @@ display:
             user_bulk_form: '0'
             name: '0'
             status: '0'
-            rid: '0'
+            roles_target_id: '0'
             created: '0'
             access: '0'
           destination: true
@@ -649,10 +649,10 @@ display:
             name: name
             mail: mail
           plugin_id: combine
-        rid:
-          id: rid
-          table: users_roles
-          field: rid
+        roles_target_id:
+          id: roles_target_id
+          table: user__roles
+          field: roles_target_id
           relationship: none
           group_type: group
           admin_label: ''
@@ -661,11 +661,11 @@ display:
           group: 1
           exposed: true
           expose:
-            operator_id: rid_op
+            operator_id: roles_target_id_op
             label: Role
             description: ''
             use_operator: false
-            operator: rid_op
+            operator: roles_target_id_op
             identifier: role
             required: false
             remember: false
@@ -691,7 +691,7 @@ display:
           plugin_id: user_roles
         permission:
           id: permission
-          table: users_roles
+          table: user__roles
           field: permission
           relationship: none
           group_type: group

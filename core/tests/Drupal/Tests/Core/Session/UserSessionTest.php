@@ -43,11 +43,14 @@ class UserSessionTest extends UnitTestCase {
    *
    * @param array $rids
    *   The rids of the user.
+   * @param bool $authenticated
+   *   TRUE if it is an authenticated user.
    *
    * @return \Drupal\Core\Session\AccountInterface
    *   The created user session.
    */
-  protected function createUserSession(array $rids = array()) {
+  protected function createUserSession(array $rids = array(), $authenticated = FALSE) {
+    array_unshift($rids, $authenticated ? DRUPAL_AUTHENTICATED_RID : DRUPAL_ANONYMOUS_RID);
     return new UserSession(array('roles' => $rids));
   }
 
@@ -82,6 +85,18 @@ class UserSessionTest extends UnitTestCase {
         array('last example permission', FALSE),
       )));
 
+    $roles['anonymous'] = $this->getMockBuilder('Drupal\user\Entity\Role')
+      ->disableOriginalConstructor()
+      ->setMethods(array('hasPermission'))
+      ->getMock();
+    $roles['anonymous']->expects($this->any())
+      ->method('hasPermission')
+      ->will($this->returnValueMap(array(
+        array('example permission', FALSE),
+        array('another example permission', FALSE),
+        array('last example permission', FALSE),
+      )));
+
     $role_storage = $this->getMockBuilder('Drupal\user\RoleStorage')
       ->disableOriginalConstructor()
       ->setMethods(array('loadMultiple'))
@@ -91,9 +106,10 @@ class UserSessionTest extends UnitTestCase {
       ->will($this->returnValueMap(array(
         array(array(), array()),
         array(NULL, $roles),
-        array(array('role_one'), array($roles['role_one'])),
-        array(array('role_two'), array($roles['role_two'])),
-        array(array('role_one', 'role_two'), array($roles['role_one'], $roles['role_two'])),
+        array(array('anonymous'), array($roles['anonymous'])),
+        array(array('anonymous', 'role_one'), array($roles['role_one'])),
+        array(array('anonymous', 'role_two'), array($roles['role_two'])),
+        array(array('anonymous', 'role_one', 'role_two'), array($roles['role_one'], $roles['role_two'])),
       )));
 
     $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
@@ -107,7 +123,7 @@ class UserSessionTest extends UnitTestCase {
 
     $this->users['user_one'] = $this->createUserSession(array('role_one'));
     $this->users['user_two'] = $this->createUserSession(array('role_one', 'role_two'));
-    $this->users['user_three'] = $this->createUserSession(array('role_two', 'authenticated'));
+    $this->users['user_three'] = $this->createUserSession(array('role_two'), TRUE);
     $this->users['user_last'] = $this->createUserSession();
   }
 
@@ -141,7 +157,7 @@ class UserSessionTest extends UnitTestCase {
    * @todo Move roles constants to a class/interface
    */
   public function testUserGetRoles() {
-    $this->assertEquals(array('role_two', DRUPAL_AUTHENTICATED_RID), $this->users['user_three']->getRoles());
+    $this->assertEquals(array(DRUPAL_AUTHENTICATED_RID, 'role_two'), $this->users['user_three']->getRoles());
     $this->assertEquals(array('role_two'), $this->users['user_three']->getRoles(TRUE));
   }
 

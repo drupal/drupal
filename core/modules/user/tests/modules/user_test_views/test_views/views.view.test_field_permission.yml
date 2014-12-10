@@ -85,7 +85,7 @@ display:
           plugin_id: user
         permission:
           id: permission
-          table: users_roles
+          table: user__roles
           field: permission
           relationship: none
           group_type: group

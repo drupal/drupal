@@ -90,10 +90,10 @@ display:
           anonymous_text: ''
           format_username: true
           plugin_id: user_name
-        rid:
-          id: rid
-          table: users_roles
-          field: rid
+        roles_target_id:
+          id: roles_target_id
+          table: user__roles
+          field: roles_target_id
           relationship: none
           group_type: group
           admin_label: ''

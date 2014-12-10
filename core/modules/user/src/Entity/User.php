@@ -73,18 +73,15 @@ class User extends ContentEntityBase implements UserInterface {
   /**
    * {@inheritdoc}
    */
-  static function preCreate(EntityStorageInterface $storage, array &$values) {
-    parent::preCreate($storage, $values);
-
-    // Users always have the authenticated user role.
-    $values['roles'][] = DRUPAL_AUTHENTICATED_RID;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function preSave(EntityStorageInterface $storage) {
     parent::preSave($storage);
+
+    // Make sure that the authenticated/anonymous roles are not persisted.
+    foreach ($this->get('roles') as $index => $item) {
+      if (in_array($item->target_id, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
+        $this->get('roles')->offsetUnset($index);
+      }
+    }
 
     // Update the user password if it has changed.
     if ($this->isNew() || ($this->pass->value && $this->pass->value != $this->original->pass->value)) {
@@ -129,12 +126,6 @@ class User extends ContentEntityBase implements UserInterface {
         }
       }
 
-      // Update user roles if changed.
-      if ($this->getRoles() != $this->original->getRoles()) {
-        $storage->deleteUserRoles(array($this->id()));
-        $storage->saveRoles($this);
-      }
-
       // If the user was blocked, delete the user's sessions to force a logout.
       if ($this->original->status->value != $this->status->value && $this->status->value == 0) {
         $session_manager->delete($this->id());
@@ -147,12 +138,6 @@ class User extends ContentEntityBase implements UserInterface {
         _user_mail_notify($op, $this);
       }
     }
-    else {
-      // Save user roles.
-      if (count($this->getRoles()) > 1) {
-        $storage->saveRoles($this);
-      }
-    }
   }
 
   /**
@@ -163,7 +148,6 @@ class User extends ContentEntityBase implements UserInterface {
 
     $uids = array_keys($entities);
     \Drupal::service('user.data')->delete(NULL, $uids);
-    $storage->deleteUserRoles($uids);
   }
 
   /**
@@ -172,8 +156,18 @@ class User extends ContentEntityBase implements UserInterface {
   public function getRoles($exclude_locked_roles = FALSE) {
     $roles = array();
 
+    // Users with an ID always have the authenticated user role.
+    if (!$exclude_locked_roles) {
+      if ($this->isAuthenticated()) {
+        $roles[] = DRUPAL_AUTHENTICATED_RID;
+      }
+      else {
+        $roles[] = DRUPAL_ANONYMOUS_RID;
+      }
+    }
+
     foreach ($this->get('roles') as $role) {
-      if (!($exclude_locked_roles && in_array($role->target_id, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID)))) {
+      if ($role->target_id) {
         $roles[] = $role->target_id;
       }
     }
@@ -223,7 +217,12 @@ class User extends ContentEntityBase implements UserInterface {
    * {@inheritdoc}
    */
   public function addRole($rid) {
-    $roles = $this->getRoles();
+
+    if (in_array($rid, [DRUPAL_AUTHENTICATED_RID, DRUPAL_ANONYMOUS_RID])) {
+      throw new \InvalidArgumentException('Anonymous or authenticated role ID must not be assigned manually.');
+    }
+
+    $roles = $this->getRoles(TRUE);
     $roles[] = $rid;
     $this->set('roles', array_unique($roles));
   }
@@ -232,7 +231,7 @@ class User extends ContentEntityBase implements UserInterface {
    * {@inheritdoc}
    */
   public function removeRole($rid) {
-    $this->set('roles', array_diff($this->getRoles(), array($rid)));
+    $this->set('roles', array_diff($this->getRoles(TRUE), array($rid)));
   }
 
   /**
@@ -531,7 +530,6 @@ class User extends ContentEntityBase implements UserInterface {
       ->setDefaultValue('');
 
     $fields['roles'] = BaseFieldDefinition::create('entity_reference')
-      ->setCustomStorage(TRUE)
       ->setLabel(t('Roles'))
       ->setCardinality(BaseFieldDefinition::CARDINALITY_UNLIMITED)
       ->setDescription(t('The roles the user has.'))

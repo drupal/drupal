@@ -28,10 +28,10 @@ class UserDeleteTest extends WebTestBase {
     $uids = array($user_a->id(), $user_b->id(), $user_c->id());
 
     // These users should have a role
-    $query = db_select('users_roles', 'r');
+    $query = db_select('user__roles', 'r');
     $roles_created = $query
-      ->fields('r', array('uid'))
-      ->condition('uid', $uids)
+      ->fields('r', array('entity_id'))
+      ->condition('entity_id', $uids)
       ->countQuery()
       ->execute()
       ->fetchField();
@@ -42,10 +42,10 @@ class UserDeleteTest extends WebTestBase {
     // Delete the users.
     user_delete_multiple($uids);
     // Test if the roles assignments are deleted.
-    $query = db_select('users_roles', 'r');
+    $query = db_select('user__roles', 'r');
     $roles_after_deletion = $query
-      ->fields('r', array('uid'))
-      ->condition('uid', $uids)
+      ->fields('r', array('entity_id'))
+      ->condition('entity_id', $uids)
       ->countQuery()
       ->execute()
       ->fetchField();

@@ -92,7 +92,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
     // active user.
     if ($values && $values['uid'] > 0 && $values['status'] == 1) {
       // Add roles element to $user.
-      $rids = $this->connection->query("SELECT ur.rid FROM {users_roles} ur WHERE ur.uid = :uid", array(
+      $rids = $this->connection->query("SELECT ur.roles_target_id as rid FROM {user__roles} ur WHERE ur.entity_id = :uid", array(
         ':uid' => $values['uid'],
       ))->fetchCol();
       $values['roles'] = array_merge(array(DRUPAL_AUTHENTICATED_RID), $rids);

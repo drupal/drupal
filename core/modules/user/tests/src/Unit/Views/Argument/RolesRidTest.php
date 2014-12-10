@@ -69,7 +69,7 @@ class RolesRidTest extends UnitTestCase {
     $container->set('entity.manager', $entity_manager);
     \Drupal::setContainer($container);
 
-    $roles_rid_argument = new RolesRid(array(), 'users_roles_rid', array(), $entity_manager);
+    $roles_rid_argument = new RolesRid(array(), 'user__roles_rid', array(), $entity_manager);
 
     $roles_rid_argument->value = array();
     $titles = $roles_rid_argument->title_query();

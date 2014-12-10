@@ -88,10 +88,10 @@ class UserRolesAssignmentTest extends WebTestBase {
   private function userLoadAndCheckRoleAssigned($account, $rid, $is_assigned = TRUE) {
     $account = user_load($account->id(), TRUE);
     if ($is_assigned) {
-      $this->assertTrue(array_search($rid, $account->getRoles()), 'The role is present in the user object.');
+      $this->assertFalse(array_search($rid, $account->getRoles()) === FALSE, 'The role is present in the user object.');
     }
     else {
-      $this->assertFalse(array_search($rid, $account->getRoles()), 'The role is not present in the user object.');
+      $this->assertTrue(array_search($rid, $account->getRoles()) === FALSE, 'The role is not present in the user object.');
     }
   }
 }

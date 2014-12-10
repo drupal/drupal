@@ -19,7 +19,7 @@ class UserTest extends UserSessionTest {
   /**
    * {@inheritdoc}
    */
-  protected function createUserSession(array $rids = array()) {
+  protected function createUserSession(array $rids = array(), $authenticated = FALSE) {
     $user = $this->getMockBuilder('Drupal\user\Entity\User')
       ->disableOriginalConstructor()
       ->setMethods(array('get', 'id'))
@@ -27,7 +27,7 @@ class UserTest extends UserSessionTest {
     $user->expects($this->any())
       ->method('id')
       // @todo Also test the uid = 1 handling.
-      ->will($this->returnValue(0));
+      ->will($this->returnValue($authenticated ? 2 : 0));
     $roles = array();
     foreach ($rids as $rid) {
       $roles[] = (object) array(
@@ -50,12 +50,12 @@ class UserTest extends UserSessionTest {
    */
   public function testUserGetRoles() {
     // Anonymous user.
-    $user = $this->createUserSession(array(DRUPAL_ANONYMOUS_RID));
+    $user = $this->createUserSession(array());
     $this->assertEquals(array(DRUPAL_ANONYMOUS_RID), $user->getRoles());
     $this->assertEquals(array(), $user->getRoles(TRUE));
 
     // Authenticated user.
-    $user = $this->createUserSession(array(DRUPAL_AUTHENTICATED_RID));
+    $user = $this->createUserSession(array(), TRUE);
     $this->assertEquals(array(DRUPAL_AUTHENTICATED_RID), $user->getRoles());
     $this->assertEquals(array(), $user->getRoles(TRUE));
   }

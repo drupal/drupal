@@ -23,7 +23,7 @@ views.argument.user_uid:
   type: views.argument.numeric
   label: 'User ID'
 
-views.argument.users_roles_rid:
+views.argument.user__roles_rid:
   type: views.argument.many_to_one
   label: 'Role ID'
 

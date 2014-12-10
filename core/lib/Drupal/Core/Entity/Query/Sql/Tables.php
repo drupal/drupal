@@ -8,11 +8,9 @@
 namespace Drupal\Core\Entity\Query\Sql;
 
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\Query\QueryException;
 use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
-use Drupal\field\FieldStorageConfigInterface;
 
 /**
  * Adds tables and fields to the SQL entity query.
@@ -80,12 +78,7 @@ class Tables implements TablesInterface {
     $propertyDefinitions = array();
     $entity_type = $this->entityManager->getDefinition($entity_type_id);
 
-    $field_storage_definitions = array();
-    // @todo Needed for menu links, make this implementation content entity
-    //   specific after https://drupal.org/node/2256521.
-    if ($entity_type instanceof ContentEntityTypeInterface) {
-      $field_storage_definitions = $this->entityManager->getFieldStorageDefinitions($entity_type_id);
-    }
+    $field_storage_definitions = $this->entityManager->getFieldStorageDefinitions($entity_type_id);
     for ($key = 0; $key <= $count; $key ++) {
       // If there is revision support and only the current revision is being
       // queried then use the revision id. Otherwise, the entity id will do.
@@ -110,12 +103,14 @@ class Tables implements TablesInterface {
       else {
         $field_storage = FALSE;
       }
-      // If we managed to retrieve a configurable field, process it.
-      if ($field_storage instanceof FieldStorageConfigInterface) {
+
+      /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
+      $table_mapping = $this->entityManager->getStorage($entity_type_id)->getTableMapping();
+
+      // Check whether this field is stored in a dedicated table.
+      if ($field_storage && $table_mapping->requiresDedicatedTableStorage($field_storage)) {
         // Find the field column.
         $column = $field_storage->getMainPropertyName();
-        /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
-        $table_mapping = $this->entityManager->getStorage($entity_type_id)->getTableMapping();
 
         if ($key < $count) {
           $next = $specifiers[$key + 1];
@@ -145,7 +140,7 @@ class Tables implements TablesInterface {
         $table = $this->ensureFieldTable($index_prefix, $field_storage, $type, $langcode, $base_table, $entity_id_field, $field_id_field);
         $sql_column = $table_mapping->getFieldColumnName($field_storage, $column);
       }
-      // This is an entity base field (non-configurable field).
+      // The field is stored in a shared table.
       else {
         // ensureEntityTable() decides whether an entity property will be
         // queried from the data table or the base table based on where it

@@ -143,7 +143,7 @@ class SearchCommentTest extends SearchTestBase {
   function testSearchResultsCommentAccess() {
     $comment_body = 'Test comment body';
     $this->comment_subject = 'Test comment subject';
-    $roles = $this->admin_user->getRoles();
+    $roles = $this->admin_user->getRoles(TRUE);
     $this->admin_role = $roles[0];
 
     // Create a node.

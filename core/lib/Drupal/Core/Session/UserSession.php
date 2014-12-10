@@ -126,7 +126,7 @@ class UserSession implements AccountInterface {
     $roles = $this->roles;
 
     if ($exclude_locked_roles) {
-      $roles = array_diff($roles, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID));
+      $roles = array_values(array_diff($roles, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID)));
     }
 
     return $roles;

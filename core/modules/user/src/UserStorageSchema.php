@@ -26,35 +26,6 @@ class UserStorageSchema extends SqlContentEntityStorageSchema {
       'user__name' => array('name', 'langcode'),
     );
 
-    $schema['users_roles'] = array(
-      'description' => 'Maps users to roles.',
-      'fields' => array(
-        'uid' => array(
-          'type' => 'int',
-          'unsigned' => TRUE,
-          'not null' => TRUE,
-          'default' => 0,
-          'description' => 'Primary Key: {users}.uid for user.',
-        ),
-        'rid' => array(
-          'type' => 'varchar',
-          'length' => 64,
-          'not null' => TRUE,
-          'description' => 'Primary Key: ID for the role.',
-        ),
-      ),
-      'primary key' => array('uid', 'rid'),
-      'indexes' => array(
-        'rid' => array('rid'),
-      ),
-      'foreign keys' => array(
-        'user' => array(
-          'table' => 'users',
-          'columns' => array('uid' => 'uid'),
-        ),
-      ),
-    );
-
     return $schema;
   }
 

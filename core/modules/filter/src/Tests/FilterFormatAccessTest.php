@@ -184,7 +184,7 @@ class FilterFormatAccessTest extends WebTestBase {
    */
   function testFormatRoles() {
     // Get the role ID assigned to the regular user.
-    $roles = $this->web_user->getRoles();
+    $roles = $this->web_user->getRoles(TRUE);
     $rid = $roles[0];
 
     // Check that this role appears in the list of roles that have access to an

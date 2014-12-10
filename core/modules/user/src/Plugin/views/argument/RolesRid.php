@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ingroup views_argument_handlers
  *
- * @ViewsArgument("users_roles_rid")
+ * @ViewsArgument("user__roles_rid")
  */
 class RolesRid extends ManyToOne {
 

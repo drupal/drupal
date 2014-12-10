@@ -5,6 +5,7 @@
  */
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\user\Entity\User;
 
 /**
  * Implements hook_install().
@@ -37,9 +38,9 @@ function standard_install() {
   $user_settings->set('admin_role', 'administrator')->save();
 
   // Assign user 1 the "administrator" role.
-  db_insert('users_roles')
-    ->fields(array('uid' => 1, 'rid' => 'administrator'))
-    ->execute();
+  $user = User::load(1);
+  $user->roles[] = 'administrator';
+  $user->save();
 
   // Enable the Contact link in the footer menu.
   /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */

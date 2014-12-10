@@ -78,6 +78,7 @@ class UserEntityReferenceTest extends EntityUnitTestBase {
     $user3->addRole($this->role2->id());
     $user3->save();
 
+
     /** @var \Drupal\entity_reference\EntityReferenceAutocomplete $autocomplete */
     $autocomplete = \Drupal::service('entity_reference.autocomplete');
 

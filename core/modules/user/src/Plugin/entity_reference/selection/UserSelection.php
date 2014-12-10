@@ -88,6 +88,12 @@ class UserSelection extends SelectionBase {
       $query->condition('name', $match, $match_operator);
     }
 
+    // Filter by role.
+    $handler_settings = $this->fieldDefinition->getSetting('handler_settings');
+    if (!empty($handler_settings['filter']['role'])) {
+      $query->condition('roles', $handler_settings['filter']['role'], 'IN');
+    }
+
     // Adding the permission check is sadly insufficient for users: core
     // requires us to also know about the concept of 'blocked' and 'active'.
     if (!\Drupal::currentUser()->hasPermission('administer users')) {
@@ -129,17 +135,6 @@ class UserSelection extends SelectionBase {
           );
           $query->condition($or);
         }
-      }
-    }
-
-    // Add the filter by role option.
-    if (!empty($this->fieldDefinition->getSetting('handler_settings')['filter'])) {
-      $filter_settings = $this->fieldDefinition->getSetting('handler_settings')['filter'];
-      if ($filter_settings['type'] == 'role') {
-        $tables = $query->getTables();
-        $base_table = $tables['base_table']['alias'];
-        $query->join('users_roles', 'ur', $base_table . '.uid = ur.uid');
-        $query->condition('ur.rid', $filter_settings['role']);
       }
     }
   }
