@@ -638,4 +638,14 @@ interface EntityTypeInterface {
    * @return string[]
    */
   public function getListCacheTags();
+
+  /**
+   * Gets the key that is used to store configuration dependencies.
+   *
+   * @return string
+   *   The key to be used in configuration dependencies when storing
+   *   dependencies on entities of this type.
+   */
+  public function getConfigDependencyKey();
+
 }

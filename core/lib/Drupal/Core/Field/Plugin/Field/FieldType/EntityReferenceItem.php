@@ -247,17 +247,15 @@ class EntityReferenceItem extends FieldItemBase {
    */
   public static function calculateDependencies(FieldDefinitionInterface $field_definition) {
     $dependencies = [];
-
     if (is_array($field_definition->default_value) && count($field_definition->default_value)) {
       $target_entity_type = \Drupal::entityManager()->getDefinition($field_definition->getFieldStorageDefinition()->getSetting('target_type'));
-      $key = $target_entity_type instanceof ConfigEntityType ? 'config' : 'content';
       foreach ($field_definition->default_value as $default_value) {
         if (is_array($default_value) && isset($default_value['target_uuid'])) {
           $entity = \Drupal::entityManager()->loadEntityByUuid($target_entity_type->id(), $default_value['target_uuid']);
           // If the entity does not exist do not create the dependency.
           // @see \Drupal\Core\Field\EntityReferenceFieldItemList::processDefaultValue()
           if ($entity) {
-            $dependencies[$key][] = $entity->getConfigDependencyName();
+            $dependencies[$target_entity_type->getConfigDependencyKey()][] = $entity->getConfigDependencyName();
           }
         }
       }

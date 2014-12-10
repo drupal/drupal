@@ -680,4 +680,14 @@ class EntityType implements EntityTypeInterface {
     return $this->list_cache_tags;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfigDependencyKey() {
+    // Return 'content' for the default implementation as important distinction
+    // is that dependencies on other configuration entities are hard
+    // dependencies and have to exist before creating the dependent entity.
+    return 'content';
+  }
+
 }

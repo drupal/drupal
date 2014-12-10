@@ -125,4 +125,11 @@ class ConfigEntityType extends EntityType {
     return FALSE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfigDependencyKey() {
+    return 'config';
+  }
+
 }
