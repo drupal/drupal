@@ -62,7 +62,7 @@ class FieldInstanceWidgetSettings extends ProcessPluginBase {
         'placeholder' => '',
       ),
       'link' => array(
-        'placeholder_uri' => '',
+        'placeholder_url' => '',
         'placeholder_title' => '',
       ),
       'filefield_widget' => array(

@@ -15,6 +15,15 @@ use Drupal\simpletest\KernelTestBase;
 abstract class QuickEditTestBase extends KernelTestBase {
 
   /**
+   * Set to TRUE to strict check all configuration saved.
+   *
+   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
+   *
+   * @var bool
+   */
+  protected $strictConfigSchema = TRUE;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -92,7 +101,6 @@ abstract class QuickEditTestBase extends KernelTestBase {
     entity_get_form_display('entity_test', 'entity_test', 'default')
       ->setComponent($field_name, array(
         'type' => $widget_type,
-        'label' => $label,
         'settings' => $widget_settings,
       ))
       ->save();

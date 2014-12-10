@@ -33,7 +33,7 @@ class LinkSeparateFormatter extends LinkFormatter {
    */
   public static function defaultSettings() {
     return array(
-      'trim_length' => '80',
+      'trim_length' => 80,
       'rel' => '',
       'target' => '',
     ) + parent::defaultSettings();

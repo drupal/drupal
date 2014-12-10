@@ -16,6 +16,15 @@ use Drupal\Component\Utility\Unicode;
 class EntityQueryRelationshipTest extends EntityUnitTestBase  {
 
   /**
+   * Set to TRUE to strict check all configuration saved.
+   *
+   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
+   *
+   * @var bool
+   */
+  protected $strictConfigSchema = TRUE;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -81,7 +90,9 @@ class EntityQueryRelationshipTest extends EntityUnitTestBase  {
       'type' => 'taxonomy_term_reference',
       'settings' => array(
         'allowed_values' => array(
-          'vocabulary' => $vocabulary->id(),
+          array(
+            'vocabulary' => $vocabulary->id(),
+          ),
         ),
       ),
     ))->save();

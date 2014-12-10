@@ -19,6 +19,15 @@ use Drupal\Core\Form\FormState;
 class FormTest extends FieldTestBase {
 
   /**
+   * Set to TRUE to strict check all configuration saved.
+   *
+   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
+   *
+   * @var bool
+   */
+  protected $strictConfigSchema = TRUE;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -587,7 +596,7 @@ class FormTest extends FieldTestBase {
 
     // Update the field to remove the default value, and switch to the default
     // widget.
-    $this->field->default_value = NULL;
+    $this->field->default_value = array();
     $this->field->save();
     entity_get_form_display($entity_type, $this->field->bundle, 'default')
       ->setComponent($this->field->getName(), array(

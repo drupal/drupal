@@ -5,3 +5,11 @@ entity_view_display.third_party.entity_test:
     foo:
       type: string
       label: 'Label for foo'
+
+field.storage_settings.shape:
+  type: mapping
+  label: 'Shape field storage settings'
+  mapping:
+    foreign_key_name:
+      type: string
+      label: 'Foreign key name'

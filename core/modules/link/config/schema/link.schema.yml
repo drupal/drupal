@@ -21,18 +21,8 @@ field.formatter.settings.link:
       label: 'Open link in new window'
 
 field.formatter.settings.link_separate:
-  type: mapping
+  type: field.formatter.settings.link
   label: 'Link format settings'
-  mapping:
-    trim_length:
-      type: integer
-      label: 'Trim link text length'
-    rel:
-      type: string
-      label: 'Add rel="nofollow" to links'
-    target:
-      type: string
-      label: 'Open link in new window'
 
 field.widget.settings.link_default:
   type: mapping

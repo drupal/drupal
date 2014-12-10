@@ -1,0 +1,9 @@
+# Schema for the configuration files of the Editor test module.
+
+editor.settings.unicorn:
+  type: mapping
+  label: 'Unicorn settings'
+  mapping:
+    ponies_too:
+      type: string
+      label: 'Ponies too'

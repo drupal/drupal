@@ -17,6 +17,15 @@ use Drupal\simpletest\KernelTestBase;
  */
 class EntityDisplayTest extends KernelTestBase {
 
+  /**
+   * Set to TRUE to strict check all configuration saved.
+   *
+   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
+   *
+   * @var bool
+   */
+  protected $strictConfigSchema = TRUE;
+
   public static $modules = array('field_ui', 'field', 'entity_test', 'user', 'text', 'field_test', 'node', 'system', 'entity_reference');
 
   protected function setUp() {
@@ -48,7 +57,7 @@ class EntityDisplayTest extends KernelTestBase {
     $this->assertEqual($display->getComponent('component_2'), $expected['component_2']);
 
     // Check that arbitrary options are correctly stored.
-    $expected['component_3'] = array('weight' => 10, 'foo' => 'bar');
+    $expected['component_3'] = array('weight' => 10, 'third_party_settings' => array('field_test' => array('foo' => 'bar')));
     $display->setComponent('component_3', $expected['component_3']);
     $this->assertEqual($display->getComponent('component_3'), $expected['component_3']);
 

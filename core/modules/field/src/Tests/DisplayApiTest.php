@@ -17,6 +17,15 @@ use Drupal\Core\Entity\Entity\EntityViewMode;
 class DisplayApiTest extends FieldUnitTestBase {
 
   /**
+   * Set to TRUE to strict check all configuration saved.
+   *
+   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
+   *
+   * @var bool
+   */
+  protected $strictConfigSchema = TRUE;
+
+  /**
    * The field name to use in this test.
    *
    * @var string

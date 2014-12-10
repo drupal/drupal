@@ -25,6 +25,4 @@ content:
     third_party_settings: {  }
 hidden:
   langcode: true
-third_party_settings:
-  entity_test:
-    foo: bar
+third_party_settings: {  }

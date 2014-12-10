@@ -25,6 +25,17 @@ use Symfony\Component\HttpFoundation\Request;
 class QuickEditIntegrationTest extends QuickEditTestBase {
 
   /**
+   * Set to TRUE to strict check all configuration saved.
+   *
+   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
+   *
+   * @todo Altering not schema compatible. https://www.drupal.org/node/2389697
+   *
+   * @var bool
+   */
+  protected $strictConfigSchema = FALSE;
+
+  /**
    * {@inheritdoc}
    */
   public static $modules = array('editor', 'editor_test');
