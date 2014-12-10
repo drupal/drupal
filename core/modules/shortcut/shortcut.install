@@ -12,7 +12,6 @@ use Drupal\Core\Language\Language;
  * Implements hook_schema().
  */
 function shortcut_schema() {
-
   $schema['shortcut_set_users'] = array(
     'description' => 'Maps users to shortcut sets.',
     'fields' => array(
@@ -48,4 +47,26 @@ function shortcut_schema() {
   );
 
   return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function shortcut_install() {
+  // Theme settings are not configuration entities and cannot depend on modules
+  // so to set a module-specific setting, we need to set it with logic.
+  if (\Drupal::service('theme_handler')->themeExists('seven')) {
+    \Drupal::config('seven.settings')->set('third_party_settings.shortcut.module_link', TRUE)->save();
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function shortcut_uninstall() {
+  // Theme settings are not configuration entities and cannot depend on modules
+  // so to unset a module-specific setting, we need to unset it with logic.
+  if (\Drupal::service('theme_handler')->themeExists('seven')) {
+    \Drupal::config('seven.settings')->clear('third_party_settings.shortcut.module_link')->save();
+  }
 }

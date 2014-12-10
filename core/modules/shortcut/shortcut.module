@@ -396,3 +396,16 @@ function shortcut_toolbar() {
 
   return $items;
 }
+
+/**
+ * Implements hook_themes_installed().
+ */
+function shortcut_themes_installed($theme_list) {
+  if (in_array('seven', $theme_list)) {
+    // Theme settings are not configuration entities and cannot depend on modules
+    // so to set a module-specific setting, we need to set it with logic.
+    if (\Drupal::moduleHandler()->moduleExists('shortcut')) {
+      \Drupal::config('seven.settings')->set('third_party_settings.shortcut.module_link', TRUE)->save();
+    }
+  }
+}

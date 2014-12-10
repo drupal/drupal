@@ -19,6 +19,15 @@ use Drupal\node\Entity\NodeType;
 class BreadcrumbTest extends MenuTestBase {
 
   /**
+   * Set to TRUE to strict check all configuration saved.
+   *
+   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
+   *
+   * @var bool
+   */
+  protected $strictConfigSchema = TRUE;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -41,7 +50,6 @@ class BreadcrumbTest extends MenuTestBase {
     // presence on the page, so we need to ensure that the Tools block will be
     // displayed in the admin theme.
     $this->drupalPlaceBlock('system_menu_block:tools', array(
-      'machine' => 'system_menu_tools',
       'region' => 'content',
       'theme' => \Drupal::config('system.theme')->get('admin'),
     ));

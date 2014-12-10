@@ -51,31 +51,27 @@ class RdfMapping extends ConfigEntityBase implements RdfMappingInterface {
    *
    * @var array
    */
-  protected $types;
+  protected $types = array();
 
   /**
    * The mappings for fields on this bundle.
    *
    * @var array
    */
-  protected $fieldMappings;
+  protected $fieldMappings = array();
 
   /**
    * {@inheritdoc}
    */
   public function getPreparedBundleMapping() {
-    $types = array();
-    if (isset($this->types)) {
-      $types = $this->types;
-    }
-    return array('types' => $types);
+    return array('types' => $this->types);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getBundleMapping() {
-    if (isset($this->types)) {
+    if (!empty($this->types)) {
       return array('types' => $this->types);
     }
     return array();
