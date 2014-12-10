@@ -9,6 +9,7 @@ namespace Drupal\entity_reference\Tests;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
 
@@ -226,6 +227,21 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
     $build = $this->buildRenderArray([$this->referencedEntity, $this->unsavedReferencedEntity], $formatter, array('link' => FALSE));
     $this->assertEqual($build[0]['#markup'], $this->referencedEntity->label(), sprintf('The markup returned by the %s formatter is correct for an item with a saved entity.', $formatter));
     $this->assertEqual($build[1]['#markup'], $this->unsavedReferencedEntity->label(), sprintf('The markup returned by the %s formatter is correct for an item with a unsaved entity.', $formatter));
+
+    // Test an entity type that doesn't have any link templates, which means
+    // \Drupal\Core\Entity\EntityInterface::urlInfo() will throw an exception
+    // and the label formatter will output only the label instead of a link.
+    $field_storage_config = FieldStorageConfig::loadByName($this->entityType, $this->fieldName);
+    $field_storage_config->settings['target_type'] = 'entity_test_label';
+    $field_storage_config->save();
+
+    $referenced_entity_with_no_link_template = entity_create('entity_test_label', array(
+      'name' => $this->randomMachineName(),
+    ));
+    $referenced_entity_with_no_link_template->save();
+
+    $build = $this->buildRenderArray([$referenced_entity_with_no_link_template], $formatter, array('link' => TRUE));
+    $this->assertEqual($build[0]['#markup'], $referenced_entity_with_no_link_template->label(), sprintf('The markup returned by the %s formatter is correct for an entity type with no valid link template.', $formatter));
   }
 
   /**

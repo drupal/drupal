@@ -8,6 +8,7 @@
 namespace Drupal\entity_reference\Plugin\Field\FieldFormatter;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Entity\Exception\UndefinedLinkTemplateException;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -61,12 +62,26 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
    */
   public function viewElements(FieldItemListInterface $items) {
     $elements = array();
+    $output_as_link = $this->getSetting('link');
 
     foreach ($this->getEntitiesToView($items) as $delta => $entity) {
       $label = $entity->label();
       // If the link is to be displayed and the entity has a uri, display a
       // link.
-      if ($this->getSetting('link') && !$entity->isNew() && $uri = $entity->urlInfo()) {
+      if ($output_as_link && !$entity->isNew()) {
+        try {
+          $uri = $entity->urlInfo();
+        }
+        catch (UndefinedLinkTemplateException $e) {
+          // This exception is thrown by \Drupal\Core\Entity\Entity::urlInfo()
+          // and it means that the entity type doesn't have a link template nor
+          // a valid "uri_callback", so don't bother trying to output a link for
+          // the rest of the referenced entities.
+          $output_as_link = FALSE;
+        }
+      }
+
+      if ($output_as_link && isset($uri) && !$entity->isNew()) {
         $elements[$delta] = [
           '#type' => 'link',
           '#title' => $label,
