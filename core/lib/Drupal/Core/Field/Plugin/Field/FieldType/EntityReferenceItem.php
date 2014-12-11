@@ -161,8 +161,8 @@ class EntityReferenceItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public function getValue($include_computed = FALSE) {
-    $values = parent::getValue($include_computed);
+  public function getValue() {
+    $values = parent::getValue();
 
     // If there is an unsaved entity, return it as part of the field item values
     // to ensure idempotency of getValue() / setValue().
