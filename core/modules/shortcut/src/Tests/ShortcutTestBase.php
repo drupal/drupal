@@ -26,16 +26,22 @@ abstract class ShortcutTestBase extends WebTestBase {
 
   /**
    * User with permission to administer shortcuts.
+   *
+   * @var \Drupal\user\UserInterface
    */
-  protected $admin_user;
+  protected $adminUser;
 
   /**
    * User with permission to use shortcuts, but not administer them.
+   *
+   * @var \Drupal\user\UserInterface
    */
-  protected $shortcut_user;
+  protected $shortcutUser;
 
   /**
    * Generic node used for testing.
+   *
+   * @var \Drupal\node\NodeInterface
    */
   protected $node;
 
@@ -73,16 +79,16 @@ abstract class ShortcutTestBase extends WebTestBase {
     }
 
     // Create users.
-    $this->admin_user = $this->drupalCreateUser(array('access toolbar', 'administer shortcuts', 'view the administration theme', 'create article content', 'create page content', 'access content overview', 'administer users', 'link to any page'));
-    $this->shortcut_user = $this->drupalCreateUser(array('customize shortcut links', 'switch shortcut sets', 'access shortcuts', 'access content'));
+    $this->adminUser = $this->drupalCreateUser(array('access toolbar', 'administer shortcuts', 'view the administration theme', 'create article content', 'create page content', 'access content overview', 'administer users', 'link to any page'));
+    $this->shortcutUser = $this->drupalCreateUser(array('customize shortcut links', 'switch shortcut sets', 'access shortcuts', 'access content'));
 
     // Create a node.
     $this->node = $this->drupalCreateNode(array('type' => 'article'));
 
     // Log in as admin and grab the default shortcut set.
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->set = ShortcutSet::load('default');
-    shortcut_set_assign_user($this->set, $this->admin_user);
+    shortcut_set_assign_user($this->set, $this->adminUser);
   }
 
   /**

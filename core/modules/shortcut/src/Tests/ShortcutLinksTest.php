@@ -77,7 +77,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
 
     // Login as non admin user, to check that access is checked when creating
     // shortcuts.
-    $this->drupalLogin($this->shortcut_user);
+    $this->drupalLogin($this->shortcutUser);
     $title = $this->randomMachineName();
     $form_data = [
       'title[0][value]' => $title,
