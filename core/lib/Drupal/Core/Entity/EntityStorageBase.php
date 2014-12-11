@@ -32,6 +32,11 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
   /**
    * Information about the entity type.
    *
+   * The following code returns the same object:
+   * @code
+   * \Drupal::entityManager()->getDefinition($this->entityTypeId)
+   * @endcode
+   *
    * @var \Drupal\Core\Entity\EntityTypeInterface
    */
   protected $entityType;
