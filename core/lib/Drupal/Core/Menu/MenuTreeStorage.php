@@ -171,20 +171,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
         $this->saveRecursive($id, $children, $links);
       }
     }
-    // Find any previously discovered menu links that no longer exist.
-    if ($definitions) {
-      $query = $this->connection->select($this->table, NULL, $this->options);
-      $query->addField($this->table, 'id');
-      $query->condition('discovered', 1);
-      $query->condition('id', array_keys($definitions), 'NOT IN');
-      // Starting from links with the greatest depth will minimize the amount
-      // of re-parenting done by the menu storage.
-      $query->orderBy('depth', 'DESC');
-      $result = $query->execute()->fetchCol();
-    }
-    else {
-      $result = array();
-    }
+    $result = $this->findNoLongerExistingLinks($definitions);
 
     // Remove all such items.
     if ($result) {
@@ -218,9 +205,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
         }
       }
     }
-    $query = $this->connection->delete($this->table, $this->options);
-    $query->condition('id', $ids, 'IN');
-    $query->execute();
+    $this->doDeleteMultiple($ids);
   }
 
   /**
@@ -431,9 +416,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
         $this->save($child);
       }
 
-      $this->connection->delete($this->table, $this->options)
-        ->condition('id', $id)
-        ->execute();
+      $this->doDeleteMultiple([$id]);
 
       $this->updateParentalStatus($item);
       // Many children may have moved.
@@ -1440,6 +1423,43 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     );
 
     return $schema;
+  }
+
+  /**
+   * Find any previously discovered menu links that no longer exist.
+   *
+   * @param array $definitions
+   *   The new menu link definitions.
+   * @return array
+   *   A list of menu link IDs that no longer exist.
+   */
+  protected function findNoLongerExistingLinks(array $definitions) {
+    if ($definitions) {
+      $query = $this->connection->select($this->table, NULL, $this->options);
+      $query->addField($this->table, 'id');
+      $query->condition('discovered', 1);
+      $query->condition('id', array_keys($definitions), 'NOT IN');
+      // Starting from links with the greatest depth will minimize the amount
+      // of re-parenting done by the menu storage.
+      $query->orderBy('depth', 'DESC');
+      $result = $query->execute()->fetchCol();
+    }
+    else {
+      $result = array();
+    }
+    return $result;
+  }
+
+  /**
+   * Purge menu links from the database.
+   *
+   * @param array $ids
+   *   A list of menu link IDs to be purged.
+   */
+  protected function doDeleteMultiple(array $ids) {
+    $this->connection->delete($this->table, $this->options)
+      ->condition('id', $ids, 'IN')
+      ->execute();
   }
 
 }
