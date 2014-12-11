@@ -22,7 +22,7 @@ class StatisticsReportsTest extends StatisticsTestBase {
     $this->container->get('plugin.manager.block')->clearCachedDefinitions();
 
     // Visit a node to have something show up in the block.
-    $node = $this->drupalCreateNode(array('type' => 'page', 'uid' => $this->blocking_user->id()));
+    $node = $this->drupalCreateNode(array('type' => 'page', 'uid' => $this->blockingUser->id()));
     $this->drupalGet('node/' . $node->id());
     // Manually calling statistics.php, simulating ajax behavior.
     $nid = $node->id();

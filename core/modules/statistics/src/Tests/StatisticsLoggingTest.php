@@ -27,6 +27,13 @@ class StatisticsLoggingTest extends WebTestBase {
   public static $modules = array('node', 'statistics', 'block');
 
   /**
+   * User with permissions to create and edit pages.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $authUser;
+
+  /**
    * The Guzzle HTTP client.
    *
    * @var \GuzzleHttp\ClientInterface;
@@ -41,10 +48,10 @@ class StatisticsLoggingTest extends WebTestBase {
       $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
     }
 
-    $this->auth_user = $this->drupalCreateUser(array('access content', 'create page content', 'edit own page content'));
+    $this->authUser = $this->drupalCreateUser(array('access content', 'create page content', 'edit own page content'));
 
     // Ensure we have a node page to access.
-    $this->node = $this->drupalCreateNode(array('title' => $this->randomMachineName(255), 'uid' => $this->auth_user->id()));
+    $this->node = $this->drupalCreateNode(array('title' => $this->randomMachineName(255), 'uid' => $this->authUser->id()));
 
     // Enable access logging.
     \Drupal::config('statistics.settings')

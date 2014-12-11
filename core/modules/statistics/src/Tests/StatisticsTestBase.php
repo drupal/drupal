@@ -21,6 +21,13 @@ abstract class StatisticsTestBase extends WebTestBase {
    */
   public static $modules = array('node', 'block', 'ban', 'statistics');
 
+  /**
+   * User with permissions to ban IP's.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $blockingUser;
+
   protected function setUp() {
     parent::setUp();
 
@@ -30,7 +37,7 @@ abstract class StatisticsTestBase extends WebTestBase {
     }
 
     // Create user.
-    $this->blocking_user = $this->drupalCreateUser(array(
+    $this->blockingUser = $this->drupalCreateUser(array(
       'access administration pages',
       'access site reports',
       'ban IP addresses',
@@ -38,7 +45,7 @@ abstract class StatisticsTestBase extends WebTestBase {
       'administer statistics',
       'administer users',
     ));
-    $this->drupalLogin($this->blocking_user);
+    $this->drupalLogin($this->blockingUser);
 
     // Enable logging.
     \Drupal::config('statistics.settings')
