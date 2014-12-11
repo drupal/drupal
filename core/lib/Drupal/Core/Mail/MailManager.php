@@ -117,8 +117,8 @@ class MailManager extends DefaultPluginManager implements MailManagerInterface {
    *
    * @param array $options
    *   An array with the following key/value pairs:
-   *   - module: (string) The module name which was used by drupal_mail() to
-   *     invoke hook_mail().
+   *   - module: (string) The module name which was used by
+   *     \Drupal\Core\Mail\MailManagerInterface->mail() to invoke hook_mail().
    *   - key: (string) A key to identify the email sent. The final message ID
    *     is a string represented as {$module}_{$key}.
    *

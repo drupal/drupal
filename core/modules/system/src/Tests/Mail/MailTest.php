@@ -60,7 +60,7 @@ class MailTest extends WebTestBase {
     \Drupal::state()->set('system.test_mail_collector', array());
 
     // Send a test message that simpletest_mail_alter should cancel.
-    drupal_mail('simpletest', 'cancel_test', 'cancel@example.com', $language_interface->getId());
+    \Drupal::service('plugin.manager.mail')->mail('simpletest', 'cancel_test', 'cancel@example.com', $language_interface->getId());
     // Retrieve sent message.
     $captured_emails = \Drupal::state()->get('system.test_mail_collector');
     $sent_message = end($captured_emails);
@@ -82,7 +82,7 @@ class MailTest extends WebTestBase {
     // Send an email with a reply-to address specified.
     $from_email = 'Drupal <simpletest@example.com>';
     $reply_email = 'someone_else@example.com';
-    drupal_mail('simpletest', 'from_test', 'from_test@example.com', $language, array(), $reply_email);
+    \Drupal::service('plugin.manager.mail')->mail('simpletest', 'from_test', 'from_test@example.com', $language, array(), $reply_email);
     // Test that the reply-to email is just the email and not the site name
     // and default sender email.
     $captured_emails = \Drupal::state()->get('system.test_mail_collector');
@@ -92,7 +92,7 @@ class MailTest extends WebTestBase {
     $this->assertFalse(isset($sent_message['headers']['Errors-To']), 'Errors-to header must not be set, it is deprecated.');
 
     // Send an email and check that the From-header contains the site name.
-    drupal_mail('simpletest', 'from_test', 'from_test@example.com', $language);
+    \Drupal::service('plugin.manager.mail')->mail('simpletest', 'from_test', 'from_test@example.com', $language);
     $captured_emails = \Drupal::state()->get('system.test_mail_collector');
     $sent_message = end($captured_emails);
     $this->assertEqual($from_email, $sent_message['headers']['From'], 'Message is sent from the site email account.');

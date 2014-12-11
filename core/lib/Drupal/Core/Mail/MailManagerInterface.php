@@ -48,7 +48,8 @@ interface MailManagerInterface extends PluginManagerInterface {
    *   function example_notify($accounts) {
    *     foreach ($accounts as $account) {
    *       $params['account'] = $account;
-   *       // example_mail() will be called based on the first \Drupal::service('plugin.manager.mail')->mail() parameter.
+   *       // example_mail() will be called based on the first
+   *       // MailManagerInterface->mail() parameter.
    *       \Drupal::service('plugin.manager.mail')->mail('example', 'notice', $account->mail, user_preferred_langcode($account), $params);
    *     }
    *   }
@@ -72,8 +73,8 @@ interface MailManagerInterface extends PluginManagerInterface {
    *   }
    * @endcode
    *
-   * Another example, which uses \Drupal::service('plugin.manager.mail')->mail()
-   * to format a message for sending later:
+   * Another example, which uses MailManagerInterface->mail() to format a
+   * message for sending later:
    *
    * @code
    *   $params = array('current_conditions' => $data);
@@ -108,9 +109,9 @@ interface MailManagerInterface extends PluginManagerInterface {
    * @param string|null $reply
    *   Optional email address to be used to answer.
    * @param bool $send
-   *   If TRUE, \Drupal::service('plugin.manager.mail')->mail() will call
-   *   \Drupal::service('plugin.manager.mail')->mail() to deliver the message,
-   *   and store the result in $message['result']. Modules implementing
+   *   If TRUE, call an implementation of
+   *   \Drupal\Core\Mail\MailInterface->mail() to deliver the message, and
+   *   store the result in $message['result']. Modules implementing
    *   hook_mail_alter() may cancel sending by setting $message['send'] to
    *   FALSE.
    *

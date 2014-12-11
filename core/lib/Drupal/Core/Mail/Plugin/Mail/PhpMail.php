@@ -53,7 +53,7 @@ class PhpMail implements MailInterface {
    *   TRUE if the mail was successfully accepted, otherwise FALSE.
    *
    * @see http://php.net/manual/en/function.mail.php
-   * @see drupal_mail()
+   * @see \Drupal\Core\Mail\MailManagerInterface::mail()
    */
   public function mail(array $message) {
     // If 'Return-Path' isn't already set in php.ini, we pass it separately

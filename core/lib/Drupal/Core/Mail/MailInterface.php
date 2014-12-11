@@ -17,7 +17,7 @@ namespace Drupal\Core\Mail;
 interface MailInterface {
 
   /**
-   * Formats a message composed by drupal_mail() prior sending.
+   * Formats a message prior to sending.
    *
    * Allows to preprocess, format, and postprocess a mail message before it is
    * passed to the sending system. By default, all messages may contain HTML and
@@ -32,11 +32,13 @@ interface MailInterface {
    *
    * @return array
    *   The formatted $message.
+   *
+   * @see \Drupal\Core\Mail\MailManagerInterface
    */
    public function format(array $message);
 
   /**
-   * Sends a message composed by drupal_mail().
+   * Sends a message composed by \Drupal\Core\Mail\MailManagerInterface->mail().
    *
    * @param array $message
    *   Message array with at least the following elements:

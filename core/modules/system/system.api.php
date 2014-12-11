@@ -297,23 +297,23 @@ function hook_contextual_links_plugins_alter(array &$contextual_links) {
 }
 
 /**
- * Alter an email message created with the drupal_mail() function.
+ * Alter an email message created with MailManagerInterface->mail().
  *
  * hook_mail_alter() allows modification of email messages created and sent
- * with drupal_mail(). Usage examples include adding and/or changing message
- * text, message fields, and message headers.
+ * with MailManagerInterface->mail(). Usage examples include adding and/or
+ * changing message text, message fields, and message headers.
  *
- * Email messages sent using functions other than drupal_mail() will not
- * invoke hook_mail_alter(). For example, a contributed module directly
- * calling the \Drupal::service('plugin.manager.mail')->mail() or PHP mail()
- * function will not invoke this hook. All core modules use drupal_mail() for
- * messaging, it is best practice but not mandatory in contributed modules.
+ * Email messages sent using functions other than MailManagerInterface->mail()
+ * will not invoke hook_mail_alter(). For example, a contributed module directly
+ * calling the MailInterface->mail() or PHP mail() function will not invoke
+ * this hook. All core modules use MailManagerInterface->mail() for messaging,
+ * it is best practice but not mandatory in contributed modules.
  *
  * @param $message
  *   An array containing the message data. Keys in this array include:
  *  - 'id':
- *     The drupal_mail() id of the message. Look at module source code or
- *     drupal_mail() for possible id values.
+ *     The MailManagerInterface->mail() id of the message. Look at module source
+ *     code or MailManagerInterface->mail() for possible id values.
  *  - 'to':
  *     The address or addresses the message will be sent to. The
  *     formatting of this string must comply with RFC 2822.
@@ -331,15 +331,16 @@ function hook_contextual_links_plugins_alter(array &$contextual_links) {
  *     Associative array containing mail headers, such as From, Sender,
  *     MIME-Version, Content-Type, etc.
  *  - 'params':
- *     An array of optional parameters supplied by the caller of drupal_mail()
- *     that is used to build the message before hook_mail_alter() is invoked.
+ *     An array of optional parameters supplied by the caller of
+ *     MailManagerInterface->mail() that is used to build the message before
+ *     hook_mail_alter() is invoked.
  *  - 'language':
  *     The language object used to build the message before hook_mail_alter()
  *     is invoked.
  *  - 'send':
  *     Set to FALSE to abort sending this email message.
  *
- * @see drupal_mail()
+ * @see \Drupal\Core\Mail\MailManagerInterface::mail()
  */
 function hook_mail_alter(&$message) {
   if ($message['id'] == 'modulename_messagekey') {
@@ -376,33 +377,38 @@ function hook_system_breadcrumb_alter(array &$breadcrumb, \Drupal\Core\Routing\R
 }
 
 /**
- * Prepare a message based on parameters; called from drupal_mail().
+ * Prepares a message based on parameters;
  *
- * Note that hook_mail(), unlike hook_mail_alter(), is only called on the
- * $module argument to drupal_mail(), not all modules.
+ * This hook is called from MailManagerInterface->mail(). Note that hook_mail(),
+ * unlike hook_mail_alter(), is only called on the $module argument to
+ * MailManagerInterface->mail(), not all modules.
  *
  * @param $key
  *   An identifier of the mail.
  * @param $message
  *   An array to be filled in. Elements in this array include:
- *   - id: An ID to identify the mail sent. Look at module source code
- *     or drupal_mail() for possible id values.
+ *   - id: An ID to identify the mail sent. Look at module source code or
+ *     MailManagerInterface->mail() for possible id values.
  *   - to: The address or addresses the message will be sent to. The
  *     formatting of this string must comply with RFC 2822.
  *   - subject: Subject of the email to be sent. This must not contain any
- *     newline characters, or the mail may not be sent properly. drupal_mail()
- *     sets this to an empty string when the hook is invoked.
+ *     newline characters, or the mail may not be sent properly.
+ *     MailManagerInterface->mail() sets this to an empty
+ *     string when the hook is invoked.
  *   - body: An array of lines containing the message to be sent. Drupal will
- *     format the correct line endings for you. drupal_mail() sets this to an
- *     empty array when the hook is invoked.
+ *     format the correct line endings for you. MailManagerInterface->mail()
+ *     sets this to an empty array when the hook is invoked.
  *   - from: The address the message will be marked as being from, which is
- *     set by drupal_mail() to either a custom address or the site-wide
- *     default email address when the hook is invoked.
+ *     set by MailManagerInterface->mail() to either a custom address or the
+ *     site-wide default email address when the hook is invoked.
  *   - headers: Associative array containing mail headers, such as From,
- *     Sender, MIME-Version, Content-Type, etc. drupal_mail() pre-fills
- *     several headers in this array.
+ *     Sender, MIME-Version, Content-Type, etc.
+ *     MailManagerInterface->mail() pre-fills several headers in this array.
  * @param $params
- *   An array of parameters supplied by the caller of drupal_mail().
+ *   An array of parameters supplied by the caller of
+ *   MailManagerInterface->mail().
+ *
+ * @see \Drupal\Core\Mail\MailManagerInterface->mail()
  */
 function hook_mail($key, &$message, $params) {
   $account = $params['account'];

@@ -62,7 +62,7 @@ function _update_cron_notify() {
         else {
           $target_langcode = $default_langcode;
         }
-        $message = drupal_mail('update', 'status_notify', $target, $target_langcode, $params);
+        $message = \Drupal::service('plugin.manager.mail')->mail('update', 'status_notify', $target, $target_langcode, $params);
         // Track when the last mail was successfully sent to avoid sending
         // too many emails.
         if ($message['result']) {

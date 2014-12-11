@@ -446,7 +446,7 @@ function update_fetch_data_finished($success, $results) {
  *   keys, and the status reason constant (UPDATE_NOT_SECURE, etc) for the
  *   values.
  *
- * @see drupal_mail()
+ * @see \Drupal\Core\Mail\MailManagerInterface::mail()
  * @see _update_cron_notify()
  * @see _update_message_text()
  */

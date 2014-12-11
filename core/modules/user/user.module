@@ -1257,7 +1257,7 @@ function user_role_revoke_permissions($rid, array $permissions = array()) {
  * operation happens on the given user account.
  *
  * @see user_mail_tokens()
- * @see drupal_mail()
+ * @see \Drupal\Core\Mail\MailManagerInterface::mail()
  *
  * @param $op
  *   The operation being performed on the account. Possible values:
@@ -1300,11 +1300,11 @@ function _user_mail_notify($op, $account, $langcode = NULL) {
     if (empty($site_mail)) {
       $site_mail = ini_get('sendmail_from');
     }
-    $mail = drupal_mail('user', $op, $account->getEmail(), $langcode, $params, $site_mail);
+    $mail = \Drupal::service('plugin.manager.mail')->mail('user', $op, $account->getEmail(), $langcode, $params, $site_mail);
     if ($op == 'register_pending_approval') {
       // If a user registered requiring admin approval, notify the admin, too.
       // We use the site default language for this.
-      drupal_mail('user', 'register_pending_approval_admin', $site_mail, \Drupal::languageManager()->getDefaultLanguage()->getId(), $params);
+      \Drupal::service('plugin.manager.mail')->mail('user', 'register_pending_approval_admin', $site_mail, \Drupal::languageManager()->getDefaultLanguage()->getId(), $params);
     }
   }
   return empty($mail) ? NULL : $mail['result'];
