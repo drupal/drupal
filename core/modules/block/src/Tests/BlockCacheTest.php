@@ -24,9 +24,26 @@ class BlockCacheTest extends WebTestBase {
    */
   public static $modules = array('block', 'block_test', 'test_page_test');
 
-  protected $admin_user;
-  protected $normal_user;
-  protected $normal_user_alt;
+  /**
+   * A user with permission to create and edit books and to administer blocks.
+   *
+   * @var object
+   */
+  protected $adminUser;
+
+  /**
+   * An authenticated user to test block caching.
+   *
+   * @var object
+   */
+  protected $normalUser;
+
+  /**
+   * Another authenticated user to test block caching.
+   *
+   * @var object
+   */
+  protected $normalUserAlt;
 
   /**
    * The block used by this test.
@@ -39,16 +56,16 @@ class BlockCacheTest extends WebTestBase {
     parent::setUp();
 
     // Create an admin user, log in and enable test blocks.
-    $this->admin_user = $this->drupalCreateUser(array('administer blocks', 'access administration pages'));
-    $this->drupalLogin($this->admin_user);
+    $this->adminUser = $this->drupalCreateUser(array('administer blocks', 'access administration pages'));
+    $this->drupalLogin($this->adminUser);
 
     // Create additional users to test caching modes.
-    $this->normal_user = $this->drupalCreateUser();
-    $this->normal_user_alt = $this->drupalCreateUser();
+    $this->normalUser = $this->drupalCreateUser();
+    $this->normalUserAlt = $this->drupalCreateUser();
     // Sync the roles, since drupalCreateUser() creates separate roles for
     // the same permission sets.
-    $this->normal_user_alt->roles = $this->normal_user->getRoles();
-    $this->normal_user_alt->save();
+    $this->normalUserAlt->roles = $this->normalUser->getRoles();
+    $this->normalUserAlt->save();
 
     // Enable our test block.
    $this->block = $this->drupalPlaceBlock('test_cache');
@@ -66,7 +83,7 @@ class BlockCacheTest extends WebTestBase {
     // Enable our test block. Set some content for it to display.
     $current_content = $this->randomMachineName();
     \Drupal::state()->set('block_test.content', $current_content);
-    $this->drupalLogin($this->normal_user);
+    $this->drupalLogin($this->normalUser);
     $this->drupalGet('');
     $this->assertText($current_content, 'Block content displays.');
 
@@ -91,15 +108,15 @@ class BlockCacheTest extends WebTestBase {
     $this->drupalGet('');
     $this->assertNoText($old_content, 'Anonymous user does not see content cached per-role for normal user.');
 
-    $this->drupalLogin($this->normal_user_alt);
+    $this->drupalLogin($this->normalUserAlt);
     $this->drupalGet('');
     $this->assertText($old_content, 'User with the same roles sees per-role cached content.');
 
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->drupalGet('');
     $this->assertNoText($old_content, 'Admin user does not see content cached per-role for normal user.');
 
-    $this->drupalLogin($this->normal_user);
+    $this->drupalLogin($this->normalUser);
     $this->drupalGet('');
     $this->assertText($old_content, 'Block is served from the per-role cache.');
   }
@@ -160,7 +177,7 @@ class BlockCacheTest extends WebTestBase {
 
     $current_content = $this->randomMachineName();
     \Drupal::state()->set('block_test.content', $current_content);
-    $this->drupalLogin($this->normal_user);
+    $this->drupalLogin($this->normalUser);
 
     $this->drupalGet('');
     $this->assertText($current_content, 'Block content displays.');
@@ -172,11 +189,11 @@ class BlockCacheTest extends WebTestBase {
     $this->drupalGet('');
     $this->assertText($old_content, 'Block is served from per-user cache.');
 
-    $this->drupalLogin($this->normal_user_alt);
+    $this->drupalLogin($this->normalUserAlt);
     $this->drupalGet('');
     $this->assertText($current_content, 'Per-user block cache is not served for other users.');
 
-    $this->drupalLogin($this->normal_user);
+    $this->drupalLogin($this->normalUser);
     $this->drupalGet('');
     $this->assertText($old_content, 'Per-user block cache is persistent.');
   }
