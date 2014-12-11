@@ -179,6 +179,34 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
   /**
    * {@inheritdoc}
    */
+  public function filterByDefinedOptions(array &$storage) {
+    $this->doFilterByDefinedOptions($storage, $this->defineOptions());
+  }
+
+  /**
+   * Do the work to filter out stored options depending on the defined options.
+   *
+   * @param array $storage
+   *   The stored options.
+   *
+   * @param array $options
+   *   The defined options.
+   */
+  protected function doFilterByDefinedOptions(array &$storage, array $options) {
+    foreach ($storage as $key => $sub_storage) {
+      if (!isset($options[$key])) {
+        unset($storage[$key]);
+      }
+
+      if (isset($options[$key]['contains'])) {
+        $this->doFilterByDefinedOptions($storage[$key], $options[$key]['contains']);
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function unpackOptions(&$storage, $options, $definition = NULL, $all = TRUE, $check = TRUE) {
     if ($check && !is_array($options)) {
       return;

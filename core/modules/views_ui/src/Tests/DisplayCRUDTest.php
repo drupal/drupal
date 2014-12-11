@@ -17,17 +17,6 @@ use Drupal\views\Views;
 class DisplayCRUDTest extends UITestBase {
 
   /**
-   * Set to TRUE to strict check all configuration saved.
-   *
-   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
-   *
-   * @todo https://www.drupal.org/node/2387157
-   *
-   * @var bool
-   */
-  protected $strictConfigSchema = FALSE;
-
-  /**
    * Views used by this test.
    *
    * @var array
@@ -114,6 +103,7 @@ class DisplayCRUDTest extends UITestBase {
   public function testDuplicateDisplay() {
     $view = $this->randomView();
     $path_prefix = 'admin/structure/views/view/' . $view['id'] .'/edit';
+    $path = $view['page[path]'];
 
     $this->drupalGet($path_prefix);
     $this->drupalPostForm(NULL, array(), 'Duplicate Page');
@@ -140,10 +130,12 @@ class DisplayCRUDTest extends UITestBase {
     $page_2 = $view->displayHandlers->get('page_2');
     $this->assertTrue($page_2, 'The new page display got saved.');
     $this->assertEqual($page_2->display['display_title'], 'Page');
+    $this->assertEqual($page_2->display['display_options']['path'], $path);
     $block_1 = $view->displayHandlers->get('block_1');
     $this->assertTrue($block_1, 'The new block display got saved.');
     $this->assertEqual($block_1->display['display_plugin'], 'block');
     $this->assertEqual($block_1->display['display_title'], 'Block', 'The new display title got generated as expected.');
+    $this->assertFalse(isset($block_1->display['display_options']['path']));
     $this->assertEqual($block_1->getOption('title'), $random_title, 'The overridden title option from the display got copied into the duplicate');
     $this->assertEqual($block_1->getOption('css_class'), $random_css, 'The overridden css_class option from the display got copied into the duplicate');
   }

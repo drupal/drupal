@@ -39,6 +39,14 @@ interface ViewsPluginInterface extends PluginInspectionInterface, DerivativeInsp
   public function usesOptions();
 
   /**
+   * Filter out stored options depending on the defined options.
+   *
+   * @param array $storage
+   *   The stored options.
+   */
+  public function filterByDefinedOptions(array &$storage);
+
+  /**
    * Validate the options form.
    */
   public function validateOptionsForm(&$form, FormStateInterface $form_state);

@@ -285,4 +285,39 @@ class PluginBaseTest extends UnitTestCase {
     return $test_parameters;
   }
 
+  /**
+   * Tests filterByDefinedOptions().
+   *
+   * @dataProvider providerTestFilterByDefinedOptions
+   */
+  public function testFilterByDefinedOptions($storage, $options, $expected_storage) {
+    $this->testHelperPlugin->setDefinedOptions($options);
+    $this->testHelperPlugin->filterByDefinedOptions($storage);
+    $this->assertEquals($expected_storage, $storage);
+  }
+
+  public function providerTestFilterByDefinedOptions() {
+    $data = [];
+
+    // A simple defined option.
+    $values_1 = ['key1' => 'value1'];
+    $options_1 = ['key1' => ['default' => '']];
+    $data[] = [$values_1, $options_1, $values_1];
+    // Multiple defined options .
+    $values_2 = ['key1' => 'value1', 'key2' => 'value2'];
+    $options_2 = ['key1' => ['default' => ''], 'key2' => ['default' => '']];
+    $data[] = [$values_2, $options_2, $values_2];
+
+    // Multiple options, just one defined.
+    $data[] = [$values_2, $options_1, $values_1];
+
+    // Nested options, all properly defined.
+    $data[] = [['sub1' => $values_2, 'sub2' => $values_2], ['sub1' => ['contains' => $options_2], 'sub2' => ['contains' => $options_2]], ['sub1' => $values_2, 'sub2' => $values_2]];
+
+    // Nested options, not all properly defined.
+    $data[] = [['sub1' => $values_2, 'sub2' => $values_2], ['sub1' => ['contains' => $options_2], 'sub2' => ['contains' => $options_1]], ['sub1' => $values_2, 'sub2' => $values_1]];
+
+    return $data;
+  }
+
 }

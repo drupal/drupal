@@ -1074,6 +1074,20 @@ class ViewUI implements ViewStorageInterface {
   /**
    * {@inheritdoc}
    */
+  public function getExecutable() {
+    return $this->storage->getExecutable();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function duplicateDisplayAsType($old_display_id, $new_display_type) {
+    return $this->storage->duplicateDisplayAsType($old_display_id, $new_display_type);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function mergeDefaultDisplaysOptions() {
     $this->storage->mergeDefaultDisplaysOptions();
   }
