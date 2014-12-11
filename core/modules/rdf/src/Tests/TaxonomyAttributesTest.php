@@ -23,6 +23,13 @@ class TaxonomyAttributesTest extends TaxonomyTestBase {
    */
   public static $modules = array('rdf', 'views');
 
+  /**
+   * Vocabulary created for testing purposes.
+   *
+   * @var \Drupal\taxonomy\VocabularyInterface
+   */
+  protected $vocabulary;
+
   protected function setUp() {
     parent::setUp();
 

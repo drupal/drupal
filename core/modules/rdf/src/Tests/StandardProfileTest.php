@@ -29,7 +29,7 @@ class StandardProfileTest extends WebTestBase {
   /**
    * @var string
    */
-  protected $base_uri;
+  protected $baseUri;
 
   /**
    * @var \Drupal\user\UserInterface
@@ -104,7 +104,7 @@ class StandardProfileTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->base_uri = \Drupal::url('<front>', [], ['absolute' => TRUE]);
+    $this->baseUri = \Drupal::url('<front>', [], ['absolute' => TRUE]);
 
     // Create two test users.
     $this->adminUser = $this->drupalCreateUser(array(
@@ -526,7 +526,7 @@ class StandardProfileTest extends WebTestBase {
   protected function getRdfGraph($path) {
     $parser = new \EasyRdf_Parser_Rdfa();
     $graph = new \EasyRdf_Graph();
-    $parser->parse($graph, $this->drupalGet($path), 'rdfa', $this->base_uri);
+    $parser->parse($graph, $this->drupalGet($path), 'rdfa', $this->baseUri);
     return $graph;
   }
 }

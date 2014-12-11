@@ -41,7 +41,7 @@ class EntityReferenceRdfaTest extends FieldRdfaTestBase {
    *
    * @var \Drupal\taxonomy\Entity\Term
    */
-  protected $target_entity;
+  protected $targetEntity;
 
   /**
    * {@inheritdoc}
@@ -62,13 +62,13 @@ class EntityReferenceRdfaTest extends FieldRdfaTestBase {
     ))->save();
 
     // Create the entity to be referenced.
-    $this->target_entity = entity_create($this->entityType, array('name' => $this->randomMachineName()));
-    $this->target_entity->save();
+    $this->targetEntity = entity_create($this->entityType, array('name' => $this->randomMachineName()));
+    $this->targetEntity->save();
 
     // Create the entity that will have the entity reference field.
     $this->entity = entity_create($this->entityType, array('name' => $this->randomMachineName()));
     $this->entity->save();
-    $this->entity->{$this->fieldName}->entity = $this->target_entity;
+    $this->entity->{$this->fieldName}->entity = $this->targetEntity;
     $this->entity->{$this->fieldName}->access = TRUE;
     $this->uri = $this->getAbsoluteUri($this->entity);
   }
@@ -77,7 +77,7 @@ class EntityReferenceRdfaTest extends FieldRdfaTestBase {
    * Tests all the entity reference formatters.
    */
   public function testAllFormatters() {
-    $entity_uri = $this->getAbsoluteUri($this->target_entity);
+    $entity_uri = $this->getAbsoluteUri($this->targetEntity);
 
     // Tests the label formatter.
     $this->assertFormatterRdfa(array('type' => 'entity_reference_label'), 'http://schema.org/knows', array('value' => $entity_uri, 'type' => 'uri'));
