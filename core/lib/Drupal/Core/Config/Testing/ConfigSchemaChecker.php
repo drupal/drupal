@@ -66,7 +66,17 @@ class ConfigSchemaChecker implements EventSubscriberInterface {
     $name = $saved_config->getName();
     $data = $saved_config->get();
     $checksum = crc32(serialize($data));
-    if (!isset($this->checked[$name . ':' . $checksum])) {
+    $exceptions = array(
+      // Following are used to test lack of or partial schema. Where partial
+      // schema is provided, that is explicitly tested in specific tests.
+      'config_schema_test.noschema',
+      'config_schema_test.someschema',
+      'config_schema_test.schema_data_types',
+      'config_schema_test.no_schema_data_types',
+      // Used to test application of schema to filtering of configuration.
+      'config_test.dynamic.system',
+    );
+    if (!in_array($name, $exceptions) && !isset($this->checked[$name . ':' . $checksum])) {
       $this->checked[$name . ':' . $checksum] = TRUE;
       $errors = $this->checkConfigSchema($this->typedManager, $name, $data);
       if ($errors === FALSE) {

@@ -16,6 +16,16 @@ use Drupal\simpletest\KernelTestBase;
  * @group config
  */
 class ConfigFileContentTest extends KernelTestBase {
+
+  /**
+   * Exempt from strict schema checking.
+   *
+   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
+   *
+   * @var bool
+   */
+  protected $strictConfigSchema = FALSE;
+
   /**
    * Tests setting, writing, and reading of a configuration setting.
    */

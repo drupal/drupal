@@ -20,7 +20,7 @@ class SchemaListenerController extends ControllerBase {
    */
   public function test() {
     try {
-      $this->config('config_schema_test.noschema')->set('foo', 'bar')->save();
+      $this->config('config_schema_test.schemaless')->set('foo', 'bar')->save();
     }
     catch (SchemaIncompleteException $e) {
       return [

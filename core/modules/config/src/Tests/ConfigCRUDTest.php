@@ -24,6 +24,15 @@ use Drupal\Core\Config\UnsupportedDataTypeConfigException;
 class ConfigCRUDTest extends KernelTestBase {
 
   /**
+   * Exempt from strict schema checking.
+   *
+   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
+   *
+   * @var bool
+   */
+  protected $strictConfigSchema = FALSE;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -178,7 +187,7 @@ class ConfigCRUDTest extends KernelTestBase {
       $config->save();
       $this->pass($message);
     }
-    catch (\Exception $e) {
+    catch (ConfigNameException $e) {
       $this->fail($message);
     }
 

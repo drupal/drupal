@@ -105,6 +105,44 @@ config_test.system:
     foo:
       type: string
       label: 'Foo'
+    baz:
+      type: string
+      label: 'Baz'
     '404':
       type: string
       label: '404'
+
+config_test.new:
+  type: mapping
+  label: 'Configuration test'
+  mapping:
+     key:
+       type: string
+       label: 'Test setting'
+     new_key:
+       type: string
+       label: 'Test setting'
+     uuid:
+       type: string
+       label: 'UUID'
+
+config_test.old:
+  type: config_test.new
+
+config_test.foo:
+  type: mapping
+  label: 'Configuration test'
+  mapping:
+     value:
+       type: mapping
+       label: 'Value'
+       mapping:
+         key:
+           type: string
+           label: 'Key'
+     label:
+       type: label
+       label: 'Label'
+
+config_test.bar:
+  type: config_test.foo

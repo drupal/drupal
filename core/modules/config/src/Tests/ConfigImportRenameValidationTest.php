@@ -23,6 +23,15 @@ use Drupal\simpletest\KernelTestBase;
 class ConfigImportRenameValidationTest extends KernelTestBase {
 
   /**
+   * Set to TRUE to strict check all configuration saved.
+   *
+   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
+   *
+   * @var bool
+   */
+  protected $strictConfigSchema = TRUE;
+
+  /**
    * Config Importer object used for testing.
    *
    * @var \Drupal\Core\Config\ConfigImporter

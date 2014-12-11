@@ -17,6 +17,16 @@ use Drupal\simpletest\KernelTestBase;
  * @group config
  */
 class SchemaCheckTraitTest extends KernelTestBase {
+
+  /**
+   * Set to TRUE to strict check all configuration saved.
+   *
+   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
+   *
+   * @var bool
+   */
+  protected $strictConfigSchema = TRUE;
+
   use SchemaCheckTrait;
 
   /**
