@@ -5,5 +5,5 @@ editor.settings.unicorn:
   label: 'Unicorn settings'
   mapping:
     ponies_too:
-      type: string
+      type: boolean
       label: 'Ponies too'

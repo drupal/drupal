@@ -60,7 +60,8 @@ function color_form_system_theme_settings_alter(&$form, FormStateInterface $form
     );
     $form['color'] += color_scheme_form($form, $form_state, $theme);
     $form['#validate'][] = 'color_scheme_form_validate';
-    $form['#submit'][] = 'color_scheme_form_submit';
+    // Ensure color submission happens first so we can unset extra values.
+    array_unshift($form['#submit'], 'color_scheme_form_submit');
   }
 }
 
@@ -337,21 +338,26 @@ function color_scheme_form_validate($form, FormStateInterface $form_state) {
  */
 function color_scheme_form_submit($form, FormStateInterface $form_state) {
 
-  // Get theme coloring info.
-  if (!$form_state->hasValue('info')) {
+  // Avoid color settings spilling over to theme settings.
+  $color_settings = array('theme', 'palette', 'scheme');
+  if ($form_state->hasValue('info')) {
+    $color_settings[] = 'info';
+  }
+  foreach ($color_settings as $setting_name) {
+    ${$setting_name} = $form_state->getValue($setting_name);
+    $form_state->unsetValue($setting_name);
+  }
+  if (!isset($info)) {
     return;
   }
-  $theme = $form_state->getValue('theme');
-  $info = $form_state->getValue('info');
 
   $config = \Drupal::config('color.theme.' . $theme);
 
   // Resolve palette.
-  $palette = $form_state->getValue('palette');
-  if ($form_state->getValue('scheme') != '') {
+  if ($scheme != '') {
     foreach ($palette as $key => $color) {
-      if (isset($info['schemes'][$form_state->getValue('scheme')]['colors'][$key])) {
-        $palette[$key] = $info['schemes'][$form_state->getValue('scheme')]['colors'][$key];
+      if (isset($info['schemes'][$scheme]['colors'][$key])) {
+        $palette[$key] = $info['schemes'][$scheme]['colors'][$key];
       }
     }
     $palette += $info['schemes']['default']['colors'];

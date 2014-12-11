@@ -19,6 +19,11 @@ use Drupal\simpletest\WebTestBase;
 class CKEditorAdminTest extends WebTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $strictConfigSchema = TRUE;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -154,8 +159,7 @@ class CKEditorAdminTest extends WebTestBase {
     $this->drupalGet('admin/config/content/formats/manage/filtered_html');
     $expected_settings['toolbar']['rows'][0][] = array(
       'name' => 'Action history',
-      'items' => array('Undo', '|', 'Redo'),
-      array('JustifyCenter')
+      'items' => array('Undo', '|', 'Redo', 'JustifyCenter'),
     );
     $edit = array(
       'editor[settings][toolbar][button_groups]' => json_encode($expected_settings['toolbar']['rows']),
@@ -186,7 +190,7 @@ class CKEditorAdminTest extends WebTestBase {
     $this->drupalGet('admin/config/content/formats/manage/filtered_html');
     $ultra_llama_mode_checkbox = $this->xpath('//input[@type="checkbox" and @name="editor[settings][plugins][llama_contextual_and_button][ultra_llama_mode]" and @checked="checked"]');
     $this->assertTrue(count($ultra_llama_mode_checkbox) === 1, 'The "Ultra llama mode" checkbox exists and is checked.');
-    $expected_settings['plugins']['llama_contextual_and_button']['ultra_llama_mode'] = 1;
+    $expected_settings['plugins']['llama_contextual_and_button']['ultra_llama_mode'] = TRUE;
     $editor = entity_load('editor', 'filtered_html');
     $this->assertTrue($editor instanceof Editor, 'An Editor config entity exists.');
     $this->assertIdentical($expected_settings, $editor->getSettings());

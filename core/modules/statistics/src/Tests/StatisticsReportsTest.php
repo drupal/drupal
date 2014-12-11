@@ -15,6 +15,11 @@ namespace Drupal\statistics\Tests;
 class StatisticsReportsTest extends StatisticsTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $strictConfigSchema = TRUE;
+
+  /**
    * Tests the "popular content" block.
    */
   function testPopularContentBlock() {

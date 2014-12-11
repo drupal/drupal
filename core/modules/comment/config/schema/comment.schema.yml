@@ -24,7 +24,7 @@ action.configuration.comment_unpublish_by_keyword_action:
   type: mapping
   label: 'Unpublish comment containing keyword(s) configuration'
   mapping:
-    keyword:
+    keywords:
       type: sequence
       label: 'Keywords'
       sequence:

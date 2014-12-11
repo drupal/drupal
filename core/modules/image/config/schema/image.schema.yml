@@ -28,6 +28,10 @@ image.style.*:
       sequence:
         - type: image_style.third_party.[%key]
 
+image.effect.*:
+  type: mapping
+  label: 'Effect settings'
+
 image.effect.image_crop:
   type: image_size
   label: 'Image crop'

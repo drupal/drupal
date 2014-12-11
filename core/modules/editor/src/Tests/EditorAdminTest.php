@@ -17,6 +17,11 @@ use Drupal\simpletest\WebTestBase;
 class EditorAdminTest extends WebTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $strictConfigSchema = TRUE;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -79,9 +84,9 @@ class EditorAdminTest extends WebTestBase {
     $this->drupalGet('admin/config/content/formats/manage/filtered_html');
     $edit = $this->selectUnicornEditor();
     // Configure Unicorn Editor's setting to another value.
-    $edit['editor[settings][foo]'] = 'baz';
+    $edit['editor[settings][ponies_too]'] = FALSE;
     $this->drupalPostForm(NULL, $edit, t('Save configuration'));
-    $this->verifyUnicornEditorConfiguration('filtered_html', 'baz');
+    $this->verifyUnicornEditorConfiguration('filtered_html', FALSE);
   }
 
   /**
@@ -106,8 +111,6 @@ class EditorAdminTest extends WebTestBase {
    */
   protected function enableUnicornEditor() {
     \Drupal::service('module_installer')->install(array('editor_test'));
-    $this->rebuildContainer();
-    $this->resetAll();
   }
 
   /**
@@ -135,8 +138,8 @@ class EditorAdminTest extends WebTestBase {
       'editor[editor]' => 'unicorn',
     );
     $this->drupalPostAjaxForm(NULL, $edit, 'editor_configure');
-    $unicorn_setting_foo = $this->xpath('//input[@name="editor[settings][foo]" and @type="text" and @value="bar"]');
-    $this->assertTrue(count($unicorn_setting_foo), "Unicorn Editor's settings form is present.");
+    $unicorn_setting = $this->xpath('//input[@name="editor[settings][ponies_too]" and @type="checkbox" and @checked]');
+    $this->assertTrue(count($unicorn_setting), "Unicorn Editor's settings form is present.");
 
     return $edit;
   }
@@ -146,15 +149,14 @@ class EditorAdminTest extends WebTestBase {
    *
    * @param string $format_id
    *   The format machine name.
-   * @param string $foo
-   *   The expected value of the foo setting.
+   * @param boolean $ponies_too
+   *   The expected value of the ponies_too setting.
    */
-  protected function verifyUnicornEditorConfiguration($format_id, $foo = 'bar') {
+  protected function verifyUnicornEditorConfiguration($format_id, $ponies_too = TRUE) {
     $editor = editor_load($format_id);
     $settings = $editor->getSettings();
     $this->assertIdentical($editor->getEditor(), 'unicorn', 'The text editor is configured correctly.');
-    $this->assertIdentical($settings['foo'], $foo, 'The text editor settings are stored correctly.');
-    $this->assertIdentical($settings['ponies_too'], true, 'The text editor defaults are retrieved correctly.');
+    $this->assertIdentical($settings['ponies_too'], $ponies_too, 'The text editor settings are stored correctly.');
     $this->drupalGet('admin/config/content/formats/manage/'. $format_id);
     $select = $this->xpath('//select[@name="editor[editor]"]');
     $select_is_disabled = $this->xpath('//select[@name="editor[editor]" and @disabled="disabled"]');

@@ -1,0 +1,5 @@
+# Schema for the configuration files of the Color test theme.
+
+color_test_theme.settings:
+  type: theme_settings
+  label: 'Color test theme settings'

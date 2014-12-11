@@ -7,3 +7,4 @@ core: 8.x
 dependencies:
   - action
   - views
+  - node

@@ -14,6 +14,12 @@ use Drupal\Component\Utility\Unicode;
  * @group search
  */
 class SearchTokenizerTest extends SearchTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $strictConfigSchema = TRUE;
+
   /**
    * Verifies that strings of CJK characters are tokenized.
    *
@@ -114,8 +120,8 @@ class SearchTokenizerTest extends SearchTestBase {
     // Set the minimum word size to 1 (to split all CJK characters) and make
     // sure CJK tokenizing is turned on.
     \Drupal::config('search.settings')
-      ->set('minimum_word_size', 1)
-      ->set('overlap_cjk', TRUE)
+      ->set('index.minimum_word_size', 1)
+      ->set('index.overlap_cjk', TRUE)
       ->save();
     $this->refreshVariables();
 

@@ -35,10 +35,10 @@ class UnicornEditor extends EditorBase {
    * {@inheritdoc}
    */
   function settingsForm(array $form, FormStateInterface $form_state, EditorEntity $editor) {
-    $form['foo'] = array(
-      '#title' => t('Foo'),
-      '#type' => 'textfield',
-      '#default_value' => 'bar',
+    $form['ponies_too'] = array(
+      '#title' => t('Pony mode'),
+      '#type' => 'checkbox',
+      '#default_value' => TRUE,
     );
     return $form;
   }

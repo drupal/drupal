@@ -34,3 +34,17 @@ statistics.settings:
             top_recent_limit:
               type: integer
               label: 'Number of most recent views to display'
+
+block.settings.statistics_popular_block:
+  type: block_settings
+  label: 'Popular content block settings'
+  mapping:
+    top_day_num:
+      type: integer
+      label: 'Number of day\s top views to display'
+    top_all_num:
+      type: integer
+      label: 'Number of all time views to display'
+    top_last_num:
+      type: integer
+      label: 'Number of most recent views to display'

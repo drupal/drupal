@@ -12,6 +12,7 @@ use Drupal\Core\Config\ConfigCrudEvent;
 use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\Config\Schema\SchemaCheckTrait;
 use Drupal\Core\Config\Schema\SchemaIncompleteException;
+use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -62,7 +63,14 @@ class ConfigSchemaChecker implements EventSubscriberInterface {
    *   Exception thrown when configuration does not match its schema.
    */
   public function onConfigSave(ConfigCrudEvent $event) {
+    // Only validate configuration if in the default collection. Other
+    // collections may have incomplete configuration (for example language
+    // overrides only). These are not valid in themselves.
     $saved_config = $event->getConfig();
+    if ($saved_config->getStorage()->getCollectionName() != StorageInterface::DEFAULT_COLLECTION) {
+      return;
+    }
+
     $name = $saved_config->getName();
     $data = $saved_config->get();
     $checksum = crc32(serialize($data));
