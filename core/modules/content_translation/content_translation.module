@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\node\NodeInterface;
 
 /**
@@ -134,8 +135,7 @@ function content_translation_entity_type_alter(array &$entity_types) {
 function content_translation_entity_bundle_info_alter(&$bundles) {
   foreach ($bundles as $entity_type => &$info) {
     foreach ($info as $bundle => &$bundle_info) {
-      $enabled = content_translation_get_config($entity_type, $bundle, 'enabled');
-      $bundle_info['translatable'] = !empty($enabled);
+      $bundle_info['translatable'] = \Drupal::service('content_translation.manager')->isEnabled($entity_type, $bundle);
     }
   }
 }
@@ -228,97 +228,6 @@ function content_translation_translate_access(EntityInterface $entity) {
   $condition = $entity instanceof ContentEntityInterface && !$entity->getUntranslated()->language()->isLocked() && \Drupal::languageManager()->isMultilingual() && $entity->isTranslatable() &&
     ($account->hasPermission('create content translations') || $account->hasPermission('update content translations') || $account->hasPermission('delete content translations'));
   return AccessResult::allowedIf($condition)->cachePerRole()->cacheUntilEntityChanges($entity);
-}
-
-/**
- * Returns the key name used to store the configuration setting.
- *
- * Based on the entity type and bundle, the keys used to store configuration
- * will have a common root name.
- *
- * @param string $entity_type
- *   The type of the entity the setting refers to.
- * @param string $bundle
- *   The bundle of the entity the setting refers to.
- * @param string $setting
- *   The name of the setting.
- *
- * @return string
- *   The key name of the configuration setting.
- *
- * @todo Generalize this logic so that it is available to any module needing
- *   per-bundle configuration.
- */
-function content_translation_get_config_key($entity_type, $bundle, $setting) {
-  $entity_type = preg_replace('/[^0-9a-zA-Z_]/', "_", $entity_type);
-  $bundle = preg_replace('/[^0-9a-zA-Z_]/', "_", $bundle);
-  return $entity_type . '.' . $bundle . '.content_translation.' . $setting;
-}
-
-/**
- * Retrieves the value for the specified setting.
- *
- * @param string $entity_type
- *   The type of the entity the setting refer to.
- * @param string $bundle
- *   The bundle of the entity the setting refer to.
- * @param string $setting
- *   The name of the setting.
- *
- * @returns mixed
- *   The stored value for the given setting.
- */
-function content_translation_get_config($entity_type, $bundle, $setting) {
-  $key = content_translation_get_config_key($entity_type, $bundle, $setting);
-  return \Drupal::config('content_translation.settings')->get($key);
-}
-
-/**
- * Stores the given value for the specified setting.
- *
- * @param string $entity_type
- *   The type of the entity the setting refer to.
- * @param string $bundle
- *   The bundle of the entity the setting refer to.
- * @param string $setting
- *   The name of the setting.
- * @param $value
- *   The value to be stored for the given setting.
- */
-function content_translation_set_config($entity_type, $bundle, $setting, $value) {
-  $key = content_translation_get_config_key($entity_type, $bundle, $setting);
-  return \Drupal::config('content_translation.settings')->set($key, $value)->save();
-}
-
-/**
- * Determines whether the given entity type is translatable.
- *
- * @param string $entity_type
- *   The type of the entity.
- * @param string $bundle
- *   (optional) The bundle of the entity. If no bundle is provided, all the
- *   available bundles are checked.
- *
- * @returns
- *   TRUE if the specified bundle is translatable. If no bundle is provided
- *   returns TRUE if at least one of the entity bundles is translatable.
- *
- * @todo Move to \Drupal\content_translation\ContentTranslationManager.
- */
-function content_translation_enabled($entity_type, $bundle = NULL) {
-  $enabled = FALSE;
-
-  if (\Drupal::service('content_translation.manager')->isSupported($entity_type)) {
-    $bundles = !empty($bundle) ? array($bundle) : array_keys(entity_get_bundles($entity_type));
-    foreach ($bundles as $bundle) {
-      if (content_translation_get_config($entity_type, $bundle, 'enabled')) {
-        $enabled = TRUE;
-        break;
-      }
-    }
-  }
-
-  return $enabled;
 }
 
 /**
@@ -419,7 +328,7 @@ function content_translation_language_fallback_candidates_entity_view_alter(&$ca
 function content_translation_entity_storage_load(array $entities, $entity_type) {
   $enabled_entities = array();
 
-  if (content_translation_enabled($entity_type)) {
+  if (\Drupal::service('content_translation.manager')->isEnabled($entity_type)) {
     foreach ($entities as $entity) {
       if ($entity instanceof ContentEntityInterface && $entity->isTranslatable()) {
         $enabled_entities[$entity->id()] = $entity;
@@ -536,7 +445,7 @@ function content_translation_entity_extra_field_info() {
 
   foreach (\Drupal::entityManager()->getDefinitions() as $entity_type => $info) {
     foreach (entity_get_bundles($entity_type) as $bundle => $bundle_info) {
-      if (content_translation_enabled($entity_type, $bundle)) {
+      if (\Drupal::service('content_translation.manager')->isEnabled($entity_type, $bundle)) {
         $extra[$entity_type][$bundle]['form']['translation'] = array(
           'label' => t('Translation'),
           'description' => t('Translation settings'),
@@ -554,7 +463,7 @@ function content_translation_entity_extra_field_info() {
  */
 function content_translation_form_field_ui_field_edit_form_alter(array &$form, FormStateInterface $form_state) {
   $field = $form_state->get('field');
-  $bundle_is_translatable = content_translation_enabled($field->entity_type, $field->bundle);
+  $bundle_is_translatable = \Drupal::service('content_translation.manager')->isEnabled($field->entity_type, $field->bundle);
 
   $form['field']['translatable'] = array(
     '#type' => 'checkbox',
@@ -653,7 +562,7 @@ function content_translation_language_configuration_element_process(array $eleme
       '#title' => t('Enable translation'),
       // For new bundle, we don't know the bundle name yet,
       // default to no translatability.
-      '#default_value' => $context['bundle'] ? content_translation_enabled($context['entity_type'], $context['bundle']) : FALSE,
+      '#default_value' => $context['bundle'] ? \Drupal::service('content_translation.manager')->isEnabled($context['entity_type'], $context['bundle']) : FALSE,
       '#element_validate' => array('content_translation_language_configuration_element_validate'),
       '#prefix' => '<label>' . t('Translation') . '</label>',
     );
@@ -698,8 +607,8 @@ function content_translation_language_configuration_element_submit(array $form, 
   $context = $form_state->get(['language', $key]);
   $enabled = $form_state->getValue(array($key, 'content_translation'));
 
-  if (content_translation_enabled($context['entity_type'], $context['bundle']) != $enabled) {
-    content_translation_set_config($context['entity_type'], $context['bundle'], 'enabled', $enabled);
+  if (\Drupal::service('content_translation.manager')->isEnabled($context['entity_type'], $context['bundle']) != $enabled) {
+    \Drupal::service('content_translation.manager')->setEnabled($context['entity_type'], $context['bundle'], $enabled);
     \Drupal::entityManager()->clearCachedDefinitions();
     \Drupal::service('router.builder_indicator')->setRebuildNeeded();
   }

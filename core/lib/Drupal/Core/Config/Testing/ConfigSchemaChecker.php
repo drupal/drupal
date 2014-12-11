@@ -66,9 +66,7 @@ class ConfigSchemaChecker implements EventSubscriberInterface {
     $name = $saved_config->getName();
     $data = $saved_config->get();
     $checksum = crc32(serialize($data));
-    // Content translation settings cannot be provided schema yet, see
-    // https://www.drupal.org/node/2363155
-    if ($name != 'content_translation.settings' && !isset($this->checked[$name . ':' . $checksum])) {
+    if (!isset($this->checked[$name . ':' . $checksum])) {
       $this->checked[$name . ':' . $checksum] = TRUE;
       $errors = $this->checkConfigSchema($this->typedManager, $name, $data);
       if ($errors === FALSE) {

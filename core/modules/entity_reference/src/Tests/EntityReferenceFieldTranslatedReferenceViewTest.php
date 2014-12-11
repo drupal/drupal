@@ -166,8 +166,8 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends WebTestBase {
   protected function enableTranslation() {
     // Enable translation for the entity types and ensure the change is picked
     // up.
-    content_translation_set_config($this->testEntityTypeName, $this->referrerType->id(), 'enabled', TRUE);
-    content_translation_set_config($this->testEntityTypeName, $this->referencedType->id(), 'enabled', TRUE);
+    \Drupal::service('content_translation.manager')->setEnabled($this->testEntityTypeName, $this->referrerType->id(), TRUE);
+    \Drupal::service('content_translation.manager')->setEnabled($this->testEntityTypeName, $this->referencedType->id(), TRUE);
     drupal_static_reset();
     \Drupal::entityManager()->clearCachedDefinitions();
     \Drupal::service('router.builder')->rebuild();

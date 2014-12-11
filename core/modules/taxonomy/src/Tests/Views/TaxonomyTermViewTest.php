@@ -96,7 +96,7 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
     $language->save();
     // Enable translation for the article content type and ensure the change is
     // picked up.
-    content_translation_set_config('node', 'article', 'enabled', TRUE);
+    \Drupal::service('content_translation.manager')->setEnabled('node', 'article', TRUE);
     $roles = $this->admin_user->getRoles(TRUE);
     Role::load(reset($roles))
       ->grantPermission('create content translations')

@@ -27,20 +27,33 @@ class ContentTranslationPermissions implements ContainerInjectionInterface {
   protected $entityManager;
 
   /**
+   * The content translation manager.
+   *
+   * @var \Drupal\content_translation\ContentTranslationManagerInterface
+   */
+  protected $contentTranslationManager;
+
+  /**
    * Constructs a ContentTranslationPermissions instance.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
+   * @param \Drupal\content_translation\ContentTranslationManagerInterface $content_translation_manager
+   *   The content translation manager.
    */
-  public function __construct(EntityManagerInterface $entity_manager) {
+  public function __construct(EntityManagerInterface $entity_manager, ContentTranslationManagerInterface $content_translation_manager) {
     $this->entityManager = $entity_manager;
+    $this->contentTranslationManager = $content_translation_manager;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('entity.manager'));
+    return new static(
+      $container->get('entity.manager'),
+      $container->get('content_translation.manager')
+    );
   }
 
   /**
@@ -59,7 +72,7 @@ class ContentTranslationPermissions implements ContainerInjectionInterface {
         switch ($permission_granularity) {
           case 'bundle':
             foreach ($this->entityManager->getBundleInfo($entity_type_id) as $bundle => $bundle_info) {
-              if (content_translation_enabled($entity_type_id, $bundle)) {
+              if ($this->contentTranslationManager->isEnabled($entity_type_id, $bundle)) {
                 $t_args['%bundle_label'] = isset($bundle_info['label']) ? $bundle_info['label'] : $bundle;
                 $permission["translate $bundle $entity_type_id"] = [
                   'title' => $this->t('Translate %bundle_label @entity_label', $t_args),
@@ -69,7 +82,7 @@ class ContentTranslationPermissions implements ContainerInjectionInterface {
             break;
 
           case 'entity_type':
-            if (content_translation_enabled($entity_type_id)) {
+            if ($this->contentTranslationManager->isEnabled($entity_type_id)) {
               $permission["translate $entity_type_id"] = [
                 'title' => $this->t('Translate @entity_label', $t_args),
               ];

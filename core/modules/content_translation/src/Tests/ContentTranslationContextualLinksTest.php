@@ -74,7 +74,7 @@ class ContentTranslationContextualLinksTest extends WebTestBase {
 
     // Enable translation for the current entity type and ensure the change is
     // picked up.
-    content_translation_set_config('node', $this->bundle, 'enabled', TRUE);
+    \Drupal::service('content_translation.manager')->setEnabled('node', $this->bundle, TRUE);
     drupal_static_reset();
     \Drupal::entityManager()->clearCachedBundles();
     \Drupal::service('router.builder')->rebuild();

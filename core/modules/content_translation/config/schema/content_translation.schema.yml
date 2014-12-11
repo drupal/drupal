@@ -10,3 +10,11 @@ field_config.third_party.content_translation:
       sequence:
         - type: string
           label: 'Field column for which to synchronize translations'
+
+language.content_settings.third_party.content_translation:
+  type: mapping
+  label: 'Content translation content settings'
+  mapping:
+    enabled:
+      type: boolean
+      label: 'Content translation enabled'

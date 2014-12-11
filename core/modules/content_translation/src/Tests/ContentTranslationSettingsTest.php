@@ -227,7 +227,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
     $args = array('@entity_type' => $entity_type, '@bundle' => $bundle, '@enabled' => $enabled ? 'enabled' : 'disabled');
     $message = format_string('Translation for entity @entity_type (@bundle) is @enabled.', $args);
     \Drupal::entityManager()->clearCachedDefinitions();
-    return $this->assertEqual(content_translation_enabled($entity_type, $bundle), $enabled, $message);
+    return $this->assertEqual(\Drupal::service('content_translation.manager')->isEnabled($entity_type, $bundle), $enabled, $message);
   }
 
   /**

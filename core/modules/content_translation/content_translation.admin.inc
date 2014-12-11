@@ -72,9 +72,10 @@ function _content_translation_form_language_content_settings_form_alter(array &$
     return;
   }
 
+  $content_translation_manager = \Drupal::service('content_translation.manager');
   $default = $form['entity_types']['#default_value'];
   foreach ($default as $entity_type_id => $enabled) {
-    $default[$entity_type_id] = $enabled || content_translation_enabled($entity_type_id) ? $entity_type_id : FALSE;
+    $default[$entity_type_id] = $enabled || $content_translation_manager->isEnabled($entity_type_id) ? $entity_type_id : FALSE;
   }
   $form['entity_types']['#default_value'] = $default;
 
@@ -118,7 +119,7 @@ function _content_translation_form_language_content_settings_form_alter(array &$
           // entity might have fields and if there are fields to translate.
           $form['settings'][$entity_type_id][$bundle]['translatable'] = array(
             '#type' => 'checkbox',
-            '#default_value' => content_translation_enabled($entity_type_id, $bundle),
+            '#default_value' => $content_translation_manager->isEnabled($entity_type_id, $bundle),
           );
         }
       }
@@ -313,7 +314,7 @@ function content_translation_form_language_content_settings_submit(array $form, 
       }
       if (isset($bundle_settings['translatable'])) {
         // Store whether a bundle has translation enabled or not.
-        content_translation_set_config($entity_type_id, $bundle, 'enabled', $bundle_settings['translatable']);
+        \Drupal::service('content_translation.manager')->setEnabled($entity_type_id, $bundle, $bundle_settings['translatable']);
 
         // Save translation_sync settings.
         if (!empty($bundle_settings['columns'])) {

@@ -139,8 +139,8 @@ class TermTranslationFieldViewTest extends TaxonomyTestBase {
   protected function enableTranslation() {
     // Enable translation for the current entity type and ensure the change is
     // picked up.
-    content_translation_set_config('node', 'article', 'enabled', TRUE);
-    content_translation_set_config('taxonomy', $this->vocabulary->id(), 'enabled', TRUE);
+    \Drupal::service('content_translation.manager')->setEnabled('node', 'article', TRUE);
+    \Drupal::service('content_translation.manager')->setEnabled('taxonomy_vocabulary', $this->vocabulary->id(), TRUE);
     drupal_static_reset();
     \Drupal::entityManager()->clearCachedDefinitions();
     \Drupal::service('router.builder')->rebuild();

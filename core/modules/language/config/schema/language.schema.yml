@@ -124,7 +124,7 @@ language.content_settings.*.*:
       type: sequence
       label: 'Third party settings'
       sequence:
-        - type: content_settings.third_party.[%key]
+        - type: language.content_settings.third_party.[%key]
 
 condition.plugin.language:
   type: condition.plugin
