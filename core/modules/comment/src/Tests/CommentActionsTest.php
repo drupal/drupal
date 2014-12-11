@@ -17,11 +17,6 @@ use Drupal\comment\Entity\Comment;
 class CommentActionsTest extends CommentTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected $strictConfigSchema = TRUE;
-
-  /**
    * Modules to install.
    *
    * @var array

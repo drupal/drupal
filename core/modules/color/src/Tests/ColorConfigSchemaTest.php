@@ -17,11 +17,6 @@ use Drupal\simpletest\WebTestBase;
 class ColorConfigSchemaTest extends WebTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected $strictConfigSchema = TRUE;
-
-  /**
    * Modules to install.
    *
    * @var array

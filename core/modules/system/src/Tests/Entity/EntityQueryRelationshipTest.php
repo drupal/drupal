@@ -16,15 +16,6 @@ use Drupal\Component\Utility\Unicode;
 class EntityQueryRelationshipTest extends EntityUnitTestBase  {
 
   /**
-   * Set to TRUE to strict check all configuration saved.
-   *
-   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
-   *
-   * @var bool
-   */
-  protected $strictConfigSchema = TRUE;
-
-  /**
    * Modules to enable.
    *
    * @var array

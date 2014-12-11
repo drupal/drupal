@@ -17,15 +17,6 @@ use Drupal\simpletest\KernelTestBase;
  */
 class ConfigInstallTest extends KernelTestBase {
 
-  /**
-   * Set to TRUE to strict check all configuration saved.
-   *
-   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
-   *
-   * @var bool
-   */
-  protected $strictConfigSchema = TRUE;
-
   protected function setUp() {
     parent::setUp();
 

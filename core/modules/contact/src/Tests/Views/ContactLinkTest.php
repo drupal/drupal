@@ -19,15 +19,6 @@ use Drupal\views\Tests\ViewTestData;
 class ContactLinkTest extends ViewTestBase {
 
   /**
-   * Set to TRUE to strict check all configuration saved.
-   *
-   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
-   *
-   * @var bool
-   */
-  protected $strictConfigSchema = TRUE;
-
-  /**
    * Stores the user data service used by the test.
    *
    * @var \Drupal\user\UserDataInterface

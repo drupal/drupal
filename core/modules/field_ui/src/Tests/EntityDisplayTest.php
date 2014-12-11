@@ -17,15 +17,6 @@ use Drupal\simpletest\KernelTestBase;
  */
 class EntityDisplayTest extends KernelTestBase {
 
-  /**
-   * Set to TRUE to strict check all configuration saved.
-   *
-   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
-   *
-   * @var bool
-   */
-  protected $strictConfigSchema = TRUE;
-
   public static $modules = array('field_ui', 'field', 'entity_test', 'user', 'text', 'field_test', 'node', 'system', 'entity_reference');
 
   protected function setUp() {

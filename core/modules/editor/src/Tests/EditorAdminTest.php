@@ -17,11 +17,6 @@ use Drupal\simpletest\WebTestBase;
 class EditorAdminTest extends WebTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected $strictConfigSchema = TRUE;
-
-  /**
    * Modules to enable.
    *
    * @var array

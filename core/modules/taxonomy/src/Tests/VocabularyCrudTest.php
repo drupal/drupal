@@ -18,11 +18,6 @@ use Drupal\field\Entity\FieldConfig;
 class VocabularyCrudTest extends TaxonomyTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected $strictConfigSchema = TRUE;
-
-  /**
    * Modules to enable.
    *
    * @var array

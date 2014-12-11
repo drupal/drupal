@@ -15,15 +15,6 @@ use Drupal\migrate\Tests\MigrateTestBase;
 abstract class MigrateDrupalTestBase extends MigrateTestBase {
 
   /**
-   * Set to TRUE to strict check all configuration saved.
-   *
-   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
-   *
-   * @var bool
-   */
-  protected $strictConfigSchema = TRUE;
-
-  /**
    * Modules to enable.
    *
    * @var array

@@ -11,15 +11,6 @@ use Drupal\simpletest\KernelTestBase;
  */
 class ConfigEntityNormalizeTest extends KernelTestBase {
 
-  /**
-   * Set to TRUE to strict check all configuration saved.
-   *
-   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
-   *
-   * @var bool
-   */
-  protected $strictConfigSchema = TRUE;
-
   public static $modules = array('config_test');
 
   protected function setUp() {

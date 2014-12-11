@@ -209,7 +209,7 @@ abstract class TestBase {
    *
    * @var bool
    */
-  protected $strictConfigSchema = FALSE;
+  protected $strictConfigSchema = TRUE;
 
   /**
    * Constructor for Test.

@@ -19,11 +19,6 @@ use Drupal\views\Views;
 class BulkFormTest extends WebTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected $strictConfigSchema = TRUE;
-
-  /**
    * Modules to install.
    *
    * @var array

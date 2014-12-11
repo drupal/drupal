@@ -23,15 +23,6 @@ use Drupal\Core\Template\Attribute;
 class DisplayBlockTest extends ViewTestBase {
 
   /**
-   * Set to TRUE to strict check all configuration saved.
-   *
-   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
-   *
-   * @var bool
-   */
-  protected $strictConfigSchema = TRUE;
-
-  /**
    * Modules to install.
    *
    * @var array

@@ -24,11 +24,6 @@ class SchemaConfigListenerTest extends KernelTestBase {
   public static $modules = array('config_test');
 
   /**
-   * {@inheritdoc}
-   */
-  protected $strictConfigSchema = TRUE;
-
-  /**
    * Tests \Drupal\Core\Config\Testing\ConfigSchemaChecker.
    */
   public function testConfigSchemaChecker() {

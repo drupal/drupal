@@ -16,11 +16,6 @@ use Drupal\Component\Utility\Unicode;
 class SearchTokenizerTest extends SearchTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected $strictConfigSchema = TRUE;
-
-  /**
    * Verifies that strings of CJK characters are tokenized.
    *
    * The search_simplify() function does special things with numbers, symbols,

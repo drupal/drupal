@@ -19,11 +19,6 @@ use Drupal\simpletest\WebTestBase;
 class CKEditorAdminTest extends WebTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected $strictConfigSchema = TRUE;
-
-  /**
    * Modules to enable.
    *
    * @var array

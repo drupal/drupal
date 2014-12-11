@@ -129,7 +129,7 @@ class CKEditorLoadingTest extends WebTestBase {
     \Drupal::service('module_installer')->install(array('ckeditor_test'));
     $this->container->get('plugin.manager.ckeditor.plugin')->clearCachedDefinitions();
     $editor_settings = $editor->getSettings();
-    $editor_settings['toolbar']['buttons'][0][] = 'Llama';
+    $editor_settings['toolbar']['rows'][0][0]['items'][] = 'Llama';
     $editor->setSettings($editor_settings);
     $editor->save();
     $this->drupalGet('node/add/article');

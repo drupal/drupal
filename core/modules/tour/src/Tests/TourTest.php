@@ -17,11 +17,6 @@ use Drupal\language\Entity\ConfigurableLanguage;
 class TourTest extends TourTestBasic {
 
   /**
-   * {@inheritdoc}
-   */
-  protected $strictConfigSchema = TRUE;
-
-  /**
    * Modules to enable.
    *
    * @var array
