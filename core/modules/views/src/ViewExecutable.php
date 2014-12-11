@@ -886,7 +886,7 @@ class ViewExecutable {
    */
   protected function _initHandler($key, $info) {
     // Load the requested items from the display onto the object.
-    $this->$key = $this->display_handler->getHandlers($key);
+    $this->$key = &$this->display_handler->getHandlers($key);
 
     // This reference deals with difficult PHP indirection.
     $handlers = &$this->$key;

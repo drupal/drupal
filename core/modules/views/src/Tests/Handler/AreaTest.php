@@ -23,7 +23,7 @@ class AreaTest extends HandlerTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_example_area');
+  public static $testViews = array('test_example_area', 'test_example_area_access');
 
   /**
    * Modules to enable.
@@ -110,6 +110,45 @@ class AreaTest extends HandlerTestBase {
     $this->assertTrue(strpos($output, $header_string) !== FALSE);
     $this->assertTrue(strpos($output, $footer_string) !== FALSE);
     $this->assertTrue(strpos($output, $empty_string) !== FALSE);
+  }
+
+  /**
+   * Tests the access for an area.
+   */
+  public function testAreaAccess() {
+    // Test with access denied for the area handler.
+    $view = Views::getView('test_example_area_access');
+    $view->initDisplay();
+    $view->initHandlers();
+    $handlers = $view->display_handler->getHandlers('empty');
+    $this->assertEqual(0, count($handlers));
+
+    $output = $view->preview();
+    $output = \Drupal::service('renderer')->render($output);
+    // The area output should not be present since access was denied.
+    $this->assertFalse(strpos($output, 'a custom string') !== FALSE);
+    $view->destroy();
+
+    // Test with access granted for the area handler.
+    $view = Views::getView('test_example_area_access');
+    $view->initDisplay();
+    $view->display_handler->overrideOption('empty', [
+      'test_example' => [
+        'field' => 'test_example',
+        'id' => 'test_example',
+        'table' => 'views',
+        'plugin_id' => 'test_example',
+        'string' => 'a custom string',
+        'custom_access' => TRUE,
+      ],
+    ]);
+    $view->initHandlers();
+    $handlers = $view->display_handler->getHandlers('empty');
+
+    $output = $view->preview();
+    $output = \Drupal::service('renderer')->render($output);
+    $this->assertTrue(strpos($output, 'a custom string') !== FALSE);
+    $this->assertEqual(1, count($handlers));
   }
 
   /**

@@ -912,7 +912,7 @@ abstract class DisplayPluginBase extends PluginBase {
    *
    * @return \Drupal\views\Plugin\views\ViewsHandlerInterface[]
    */
-  public function getHandlers($type) {
+  public function &getHandlers($type) {
     if (!isset($this->handlers[$type])) {
       $this->handlers[$type] = array();
       $types = ViewExecutable::getHandlerTypes();
