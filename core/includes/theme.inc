@@ -1095,9 +1095,9 @@ function template_preprocess_item_list(&$variables) {
         // If this child element does not specify how it can be rendered, then
         // we need to inherit the render properties of the current list.
         if (!isset($child['#type']) && !isset($child['#theme']) && !isset($child['#markup'])) {
-          // Since theme_item_list() supports both strings and render arrays as
-          // items, the items of the nested list may have been specified as the
-          // child elements of the nested list, instead of #items. For
+          // Since item-list.html.twig supports both strings and render arrays
+          // as items, the items of the nested list may have been specified as
+          // the child elements of the nested list, instead of #items. For
           // convenience, we automatically move them into #items.
           if (!isset($child['#items'])) {
             // This is the same condition as in
@@ -1553,7 +1553,7 @@ function theme_get_suggestions($args, $base, $delimiter = '__') {
 }
 
 /**
- * Prepare variables for maintenance page templates.
+ * Prepares variables for maintenance page templates.
  *
  * Default template: maintenance-page.html.twig.
  *

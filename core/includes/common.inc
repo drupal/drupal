@@ -1968,8 +1968,8 @@ function _drupal_add_library($library_name, $every_page = NULL) {
  *
  * To set up a table to use drag and drop in place of weight select-lists or in
  * place of a form that contains parent relationships, the form must be themed
- * into a table. The table must have an ID attribute set. If using
- * theme_table(), the ID may be set as follows:
+ * into a table. The table must have an ID attribute set and it
+ * may be set as follows:
  * @code
  * $table = array(
  *   '#type' => 'table',

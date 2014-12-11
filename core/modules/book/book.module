@@ -504,7 +504,7 @@ function template_preprocess_book_node_export_html(&$variables) {
 }
 
 /**
- * Implements template_preprocess_HOOK() for theme_book_tree().
+ * Implements template_preprocess_HOOK() for book-tree.html.twig.
  */
 function template_preprocess_book_tree(&$variables) {
   $variables['tree'] = $variables['tree']['#children'];

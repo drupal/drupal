@@ -184,7 +184,7 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
   /**
    * {@inheritdoc}
    *
-   * Builds the entity listing as renderable array for theme_table().
+   * Builds the entity listing as renderable array for table.html.twig.
    *
    * @todo Add a link to add a new item to the #empty text.
    */

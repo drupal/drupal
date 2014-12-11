@@ -34,7 +34,7 @@ class Range extends Number {
   }
 
   /**
-   * Prepares a #type 'range' render element for theme_input().
+   * Prepares a #type 'range' render element for input.html.twig.
    *
    * @param array $element
    *   An associative array containing the properties of the element.
@@ -42,7 +42,7 @@ class Range extends Number {
    *   #step.
    *
    * @return array
-   *   The $element with prepared variables ready for theme_input().
+   *   The $element with prepared variables ready for input.html.twig.
    */
   public static function preRenderRange($element) {
     $element['#attributes']['type'] = 'range';

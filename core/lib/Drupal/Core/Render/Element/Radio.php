@@ -39,7 +39,7 @@ class Radio extends FormElement {
   }
 
   /**
-   * Prepares a #type 'radio' render element for theme_input().
+   * Prepares a #type 'radio' render element for input.html.twig.
    *
    * @param array $element
    *   An associative array containing the properties of the element.
@@ -51,7 +51,7 @@ class Radio extends FormElement {
    *       all the attributes.
    *
    * @return array
-   *   The $element with prepared variables ready for theme_input().
+   *   The $element with prepared variables ready for input.html.twig.
    */
   public static function preRenderRadio($element) {
     $element['#attributes']['type'] = 'radio';

@@ -38,7 +38,7 @@ class Password extends FormElement {
   }
 
   /**
-   * Prepares a #type 'password' render element for theme_input().
+   * Prepares a #type 'password' render element for input.html.twig.
    *
    * @param array $element
    *   An associative array containing the properties of the element.
@@ -46,7 +46,7 @@ class Password extends FormElement {
    *   #placeholder, #required, #attributes.
    *
    * @return array
-   *   The $element with prepared variables ready for theme_input().
+   *   The $element with prepared variables ready for input.html.twig.
    */
   public static function preRenderPassword($element) {
     $element['#attributes']['type'] = 'password';

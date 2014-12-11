@@ -28,7 +28,7 @@ class FunctionsTest extends WebTestBase {
   public static $modules = array('router_test');
 
   /**
-   * Tests theme_item_list().
+   * Tests item-list.html.twig.
    */
   function testItemList() {
     // Verify that empty items produce no output.

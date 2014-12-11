@@ -695,7 +695,7 @@ function watchdog_exception($type, Exception $exception, $message = NULL, $varia
  *   If there are no messages set, the function returns NULL.
  *
  * @see drupal_get_messages()
- * @see theme_status_messages()
+ * @see status-messages.html.twig
  */
 function drupal_set_message($message = NULL, $type = 'status', $repeat = FALSE) {
   if (isset($message)) {
@@ -742,7 +742,7 @@ function drupal_set_message($message = NULL, $type = 'status', $repeat = FALSE) 
  *   drupal_set_message() for the array structure of individual messages.
  *
  * @see drupal_set_message()
- * @see theme_status_messages()
+ * @see status-messages.html.twig
  */
 function drupal_get_messages($type = NULL, $clear_queue = TRUE) {
   if ($messages = drupal_set_message()) {

@@ -46,7 +46,7 @@ class ConfigTranslationMapperList extends ControllerBase {
   }
 
   /**
-   * Builds the mappers as a renderable array for theme_table().
+   * Builds the mappers as a renderable array for table.html.twig.
    *
    * @return array
    *   Renderable array with config translation mappers.

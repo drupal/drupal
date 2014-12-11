@@ -56,7 +56,7 @@ class Button extends FormElement {
   }
 
   /**
-   * Prepares a #type 'button' render element for theme_input().
+   * Prepares a #type 'button' render element for input.html.twig.
    *
    * @param array $element
    *   An associative array containing the properties of the element.
@@ -66,7 +66,7 @@ class Button extends FormElement {
    * styles the following button_types appropriately: 'primary', 'danger'.
    *
    * @return array
-   *   The $element with prepared variables ready for theme_input().
+   *   The $element with prepared variables ready for input.html.twig.
    */
   public static function preRenderButton($element) {
     $element['#attributes']['type'] = 'submit';

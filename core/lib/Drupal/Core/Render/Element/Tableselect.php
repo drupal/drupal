@@ -132,11 +132,11 @@ class Tableselect extends Table {
         // Render the checkbox / radio element.
         $row['data'][] = drupal_render($element[$key]);
 
-        // As theme_table only maps header and row columns by order, create the
-        // correct order by iterating over the header fields.
+        // As table.html.twig only maps header and row columns by order, create
+        // the correct order by iterating over the header fields.
         foreach ($element['#header'] as $fieldname => $title) {
-          // A row cell can span over multiple headers, which means less row cells
-          // than headers could be present.
+          // A row cell can span over multiple headers, which means less row
+          // cells than headers could be present.
           if (isset($element['#options'][$key][$fieldname])) {
             // A header can span over multiple cells and in this case the cells
             // are passed in an array. The order of this array determines the

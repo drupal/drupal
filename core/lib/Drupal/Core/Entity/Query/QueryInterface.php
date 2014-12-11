@@ -149,9 +149,11 @@ interface QueryInterface extends AlterableInterface {
    * Enables sortable tables for this query.
    *
    * @param $headers
-   *   An array of headers of the same structure as described in theme_table().
-   *   Use a 'specifier' in place of a 'field' to specify what to sort on.
-   *   This can be an entity or a field as described in condition().
+   *   An array of headers of the same structure as described in
+   *   template_preprocess_table(). Use a 'specifier' in place of a 'field' to
+   *   specify what to sort on. This can be an entity or a field as described
+   *   in condition().
+   *
    * @return \Drupal\Core\Entity\Query\QueryInterface
    *   The called object.
    */

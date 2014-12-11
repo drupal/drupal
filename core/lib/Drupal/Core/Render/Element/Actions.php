@@ -92,7 +92,7 @@ class Actions extends Container {
           );
         }
         // Add this button to the corresponding dropbutton.
-        // @todo Change #type 'dropbutton' to be based on theme_item_list()
+        // @todo Change #type 'dropbutton' to be based on item-list.html.twig
         //   instead of links.html.twig to avoid this preemptive rendering.
         $button = drupal_render($element[$key]);
         $dropbuttons[$dropbutton]['#links'][$key] = array(

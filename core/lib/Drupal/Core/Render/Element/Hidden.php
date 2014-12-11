@@ -36,14 +36,14 @@ class Hidden extends FormElement {
   }
 
   /**
-   * Prepares a #type 'hidden' render element for theme_input().
+   * Prepares a #type 'hidden' render element for input.html.twig.
    *
    * @param array $element
    *   An associative array containing the properties of the element.
    *   Properties used: #name, #value, #attributes.
    *
    * @return array
-   *   The $element with prepared variables ready for theme_input().
+   *   The $element with prepared variables ready for input.html.twig.
    */
   public static function preRenderHidden($element) {
     $element['#attributes']['type'] = 'hidden';

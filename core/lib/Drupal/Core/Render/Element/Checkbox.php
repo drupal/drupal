@@ -75,7 +75,7 @@ class Checkbox extends FormElement {
   }
 
   /**
-   * Prepares a #type 'checkbox' render element for theme_input().
+   * Prepares a #type 'checkbox' render element for input.html.twig.
    *
    * @param array $element
    *   An associative array containing the properties of the element.
@@ -83,7 +83,7 @@ class Checkbox extends FormElement {
    *   #attributes, #checked.
    *
    * @return array
-   *   The $element with prepared variables ready for theme_input().
+   *   The $element with prepared variables ready for input.html.twig.
    */
   public static function preRenderCheckbox($element) {
     $element['#attributes']['type'] = 'checkbox';

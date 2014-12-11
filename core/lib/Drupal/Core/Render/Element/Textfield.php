@@ -54,7 +54,7 @@ class Textfield extends FormElement {
   }
 
   /**
-   * Prepares a #type 'textfield' render element for theme_input().
+   * Prepares a #type 'textfield' render element for input.html.twig.
    *
    * @param array $element
    *   An associative array containing the properties of the element.
@@ -62,7 +62,7 @@ class Textfield extends FormElement {
    *   #placeholder, #required, #attributes.
    *
    * @return array
-   *   The $element with prepared variables ready for theme_input().
+   *   The $element with prepared variables ready for input.html.twig.
    */
   public static function preRenderTextfield($element) {
     $element['#attributes']['type'] = 'text';

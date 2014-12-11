@@ -43,7 +43,7 @@ class Search extends FormElement {
   }
 
   /**
-   * Prepares a #type 'search' render element for theme_input().
+   * Prepares a #type 'search' render element for input.html.twig.
    *
    * @param array $element
    *   An associative array containing the properties of the element.
@@ -51,7 +51,7 @@ class Search extends FormElement {
    *   #placeholder, #required, #attributes.
    *
    * @return array
-   *   The $element with prepared variables ready for theme_input().
+   *   The $element with prepared variables ready for input.html.twig.
    */
   public static function preRenderSearch($element) {
     $element['#attributes']['type'] = 'search';

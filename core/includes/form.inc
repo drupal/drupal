@@ -476,7 +476,7 @@ function template_preprocess_form_element(&$variables) {
  *
  * Form element labels include the #title and a #required marker. The label is
  * associated with the element itself by the element #id. Labels may appear
- * before or after elements, depending on theme_form_element() and
+ * before or after elements, depending on form-element.html.twig and
  * #title_display.
  *
  * This function will not be called for elements with no labels, depending on

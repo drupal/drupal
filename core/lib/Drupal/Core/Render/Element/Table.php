@@ -234,10 +234,10 @@ class Table extends FormElement {
   }
 
   /**
-   * #pre_render callback to transform children of an element into #rows suitable for theme_table().
+   * #pre_render callback to transform children of an element of #type 'table'.
    *
    * This function converts sub-elements of an element of #type 'table' to be
-   * suitable for theme_table():
+   * suitable for table.html.twig:
    * - The first level of sub-elements are table rows. Only the #attributes
    *   property is taken into account.
    * - The second level of sub-elements is converted into columns for the
@@ -294,7 +294,7 @@ class Table extends FormElement {
    *
    * @return array
    *
-   * @see theme_table()
+   * @see template_preprocess_table()
    * @see drupal_process_attached()
    * @see drupal_attach_tabledrag()
    */

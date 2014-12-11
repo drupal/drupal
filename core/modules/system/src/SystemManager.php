@@ -195,7 +195,7 @@ class SystemManager {
    *   The menu item to be displayed.
    *
    * @return array
-   *   An array of menu items, as expected by theme_admin_block_content().
+   *   An array of menu items, as expected by admin-block-content.html.twig.
    */
   public function getAdminBlock(MenuLinkInterface $instance) {
     $content = array();

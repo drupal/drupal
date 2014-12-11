@@ -49,7 +49,7 @@ class File extends FormElement {
   }
 
   /**
-   * Prepares a #type 'file' render element for theme_input().
+   * Prepares a #type 'file' render element for input.html.twig.
    *
    * For assistance with handling the uploaded file correctly, see the API
    * provided by file.inc.
@@ -60,7 +60,7 @@ class File extends FormElement {
    *   #attributes.
    *
    * @return array
-   *   The $element with prepared variables ready for theme_input().
+   *   The $element with prepared variables ready for input.html.twig.
    */
   public static function preRenderFile($element) {
     $element['#attributes']['type'] = 'file';

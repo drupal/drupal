@@ -59,7 +59,7 @@ class Url extends FormElement {
   }
 
   /**
-   * Prepares a #type 'url' render element for theme_input().
+   * Prepares a #type 'url' render element for input.html.twig.
    *
    * @param array $element
    *   An associative array containing the properties of the element.
@@ -67,7 +67,7 @@ class Url extends FormElement {
    *   #placeholder, #required, #attributes.
    *
    * @return array
-   *   The $element with prepared variables ready for theme_input().
+   *   The $element with prepared variables ready for input.html.twig.
    */
   public static function preRenderUrl($element) {
     $element['#attributes']['type'] = 'url';

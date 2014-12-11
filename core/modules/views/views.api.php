@@ -832,7 +832,7 @@ function hook_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
  *   The view object.
  *
  * @see \Drupal\views_ui\ViewUI
- * @see theme_table()
+ * @see table.html.twig
  */
 function hook_views_preview_info_alter(array &$rows, ViewExecutable $view) {
   // Adds information about the tables being queried by the view to the query

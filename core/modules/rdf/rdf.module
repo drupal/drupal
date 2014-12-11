@@ -372,7 +372,7 @@ function rdf_preprocess_user(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for theme_username().
+ * Implements hook_preprocess_HOOK() for username.html.twig.
  */
 function rdf_preprocess_username(&$variables) {
   // Because lang is set on the HTML element that wraps the page, the
@@ -538,7 +538,7 @@ function rdf_preprocess_taxonomy_term(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for theme_image().
+ * Implements hook_preprocess_HOOK() for image.html.twig.
  */
 function rdf_preprocess_image(&$variables) {
   // Adds the RDF type for image.  We cannot use the usual entity-based mapping
