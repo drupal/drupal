@@ -7,8 +7,6 @@ services:
   book.manager:
     class: Drupal\book\BookManager
     arguments: ['@entity.manager', '@string_translation', '@config.factory', '@book.outline_storage']
-    tags:
-      - { name: backend_overridable }
   book.outline:
     class: Drupal\book\BookOutline
     arguments: ['@book.manager']
@@ -18,6 +16,8 @@ services:
   book.outline_storage:
     class: Drupal\book\BookOutlineStorage
     arguments: ['@database']
+    tags:
+      - { name: backend_overridable }
   access_check.book.removable:
     class: Drupal\book\Access\BookNodeIsRemovableAccessCheck
     arguments: ['@book.manager']
