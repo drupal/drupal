@@ -227,7 +227,7 @@ function shortcut_default_set($account = NULL) {
 function shortcut_set_title_exists($title) {
   $sets = ShortcutSet::loadMultiple();
   foreach ($sets as $set) {
-    if ($set->label == $title) {
+    if ($set->label() == $title) {
       return TRUE;
     }
   }

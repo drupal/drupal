@@ -49,14 +49,14 @@ class ShortcutSet extends ConfigEntityBase implements ShortcutSetInterface {
    *
    * @var string
    */
-  public $id;
+  protected $id;
 
   /**
    * The human-readable name of the configuration entity.
    *
    * @var string
    */
-  public $label;
+  protected $label;
 
   /**
    * {@inheritdoc}
