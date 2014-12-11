@@ -15,6 +15,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FormatterPluginManager;
+use Drupal\Core\Form\FormHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -508,6 +509,8 @@ class Field extends FieldPluginBase implements CacheablePluginInterface {
     $settings_form = array('#value' => array());
     if ($formatter = $this->formatterPluginManager->getInstance($options)) {
       $settings_form = $formatter->settingsForm($form, $form_state);
+      // Convert field UI selector states to work in the Views field form.
+      FormHelper::rewriteStatesSelector($settings_form, "fields[{$field->getName()}][settings_edit_form]", 'options');
     }
     $form['settings'] = $settings_form;
   }

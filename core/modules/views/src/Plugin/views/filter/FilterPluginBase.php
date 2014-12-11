@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\filter;
 
+use Drupal\Core\Form\FormHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\views\Plugin\CacheablePluginInterface;
@@ -979,39 +980,30 @@ abstract class FilterPluginBase extends HandlerBase implements CacheablePluginIn
       $row['operator']['#title'] = '';
       $this->valueForm($row, $form_state);
 
-      // Fix the dependencies to update value forms when operators
-      // changes. This is needed because forms are inside a new form and
-      // their ids changes. Dependencies are used when operator changes
-      // from to 'Between', 'Not Between', etc, and two or more widgets
-      // are displayed.
-      $without_children = TRUE;
-      foreach (Element::children($row['value']) as $children) {
-        $has_state = FALSE;
-        $states = array();
-        foreach ($row['value'][$children]['#states']['visible'] as $key => $state) {
-          if (isset($state[':input[name="options[operator]"]'])) {
-            $has_state = TRUE;
-            $states[$key] = $state[':input[name="options[operator]"]']['value'];
+      // Fix the dependencies to update value forms when operators changes. This
+      // is needed because forms are inside a new form and their IDs changes.
+      // Dependencies are used when operator changes from to 'Between',
+      // 'Not Between', etc, and two or more widgets are displayed.
+      FormHelper::rewriteStatesSelector($row['value'], ':input[name="options[operator]"]', ':input[name="options[group_info][group_items][' . $item_id . '][operator]"]');
+
+      // Set default values.
+      $children = Element::children($row['value']);
+      if (!empty($children)) {
+        foreach ($children as $child) {
+          foreach ($row['value'][$child]['#states']['visible'] as $state) {
+            if (isset($state[':input[name="options[group_info][group_items][' . $item_id . '][operator]"]'])) {
+              $row['value'][$child]['#title'] = '';
+
+              if (!empty($this->options['group_info']['group_items'][$item_id]['value'][$child])) {
+                $row['value'][$child]['#default_value'] = $this->options['group_info']['group_items'][$item_id]['value'][$child];
+              }
+              // Exit this loop and process the next child element.
+              break;
+            }
           }
         }
-        if ($has_state) {
-          foreach ($states as $key => $state) {
-            $row['value'][$children]['#states']['visible'][] = array(
-              ':input[name="options[group_info][group_items][' . $item_id . '][operator]"]' => array('value' => $state),
-            );
-            unset($row['value'][$children]['#states']['visible'][$key]);
-          }
-
-          $row['value'][$children]['#title'] = '';
-
-          if (!empty($this->options['group_info']['group_items'][$item_id]['value'][$children])) {
-            $row['value'][$children]['#default_value'] = $this->options['group_info']['group_items'][$item_id]['value'][$children];
-          }
-        }
-        $without_children = FALSE;
       }
-
-      if ($without_children) {
+      else {
         if (isset($this->options['group_info']['group_items'][$item_id]['value']) && $this->options['group_info']['group_items'][$item_id]['value'] != '') {
           $row['value']['#default_value'] = $this->options['group_info']['group_items'][$item_id]['value'];
         }
