@@ -4,6 +4,7 @@ global-styling:
     base:
       css/base/elements.css: {}
       css/base/typography.css: {}
+      css/base/print.css: {}
     component:
       css/components/admin-list.css: {}
       css/components/admin-options.css: {}
