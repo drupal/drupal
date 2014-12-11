@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @Action(
  *   id = "node_delete_action",
- *   label = @Translation("Delete selected content"),
+ *   label = @Translation("Delete content"),
  *   type = "node",
  *   confirm_form_route_name = "node.multiple_delete_confirm"
  * )

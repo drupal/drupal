@@ -1,5 +1,5 @@
 id: node_delete_action
-label: 'Delete selected content'
+label: 'Delete content'
 status: true
 langcode: en
 type: node
