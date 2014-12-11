@@ -216,7 +216,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
             ->setSourceStorage($source_storage);
         }
         else {
-          // If we're not in a config synchronisation reset the source storage
+          // If we're not in a config synchronization reset the source storage
           // so that the extension install storage will pick up the new
           // configuration.
           $config_installer->resetSourceStorage();

@@ -13,7 +13,7 @@ use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests importing renamed node type via configuration synchronisation.
+ * Tests importing renamed node type via configuration synchronization.
  *
  * @group node
  */

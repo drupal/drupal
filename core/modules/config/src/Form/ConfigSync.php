@@ -353,7 +353,7 @@ class ConfigSync extends FormBase {
    * @param \Drupal\Core\Config\ConfigImporter $config_importer
    *   The batch config importer object to persist.
    * @param string $sync_step
-   *   The synchronisation step to do.
+   *   The synchronization step to do.
    * @param $context
    *   The batch context.
    */
@@ -375,7 +375,7 @@ class ConfigSync extends FormBase {
   /**
    * Finish batch.
    *
-   * This function is a static function to avoid serialising the ConfigSync
+   * This function is a static function to avoid serializing the ConfigSync
    * object unnecessarily.
    */
   public static function finishBatch($success, $results, $operations) {

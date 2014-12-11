@@ -35,7 +35,7 @@ class LanguageConfigOverrideImportTest extends WebTestBase {
 
     // Uninstall the language module and its dependencies so we can test
     // enabling the language module and creating overrides at the same time
-    // during a configuration synchronisation.
+    // during a configuration synchronization.
     \Drupal::service('module_installer')->uninstall(array('language'));
     // Ensure that the current site has no overrides registered to the
     // ConfigFactory.

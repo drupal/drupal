@@ -560,7 +560,7 @@ class ConfigImporter {
     $operation = $this->getNextExtensionOperation();
     if (!empty($operation)) {
       $this->processExtension($operation['type'], $operation['op'], $operation['name']);
-      $context['message'] = t('Synchronising extensions: @op @name.', array('@op' => $operation['op'], '@name' => $operation['name']));
+      $context['message'] = t('Synchronizing extensions: @op @name.', array('@op' => $operation['op'], '@name' => $operation['name']));
       $processed_count = count($this->processedExtensions['module']['install']) + count($this->processedExtensions['module']['uninstall']);
       $processed_count += count($this->processedExtensions['theme']['uninstall']) + count($this->processedExtensions['theme']['install']);
       $context['finished'] = $processed_count / $this->totalExtensionsToProcess;
@@ -857,8 +857,8 @@ class ConfigImporter {
       case 'update':
         if (!$target_exists) {
           $this->logError($this->t('Update target "@name" is missing.', array('@name' => $name)));
-          // Mark as processed so that the synchronisation continues. Once the
-          // the current synchronisation is complete it will show up as a
+          // Mark as processed so that the synchronization continues. Once the
+          // the current synchronization is complete it will show up as a
           // create.
           $this->setProcessedConfiguration($collection, $op, $name);
           return FALSE;

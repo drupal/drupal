@@ -304,7 +304,7 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
     }
     if (!$this->isSyncing()) {
       // Ensure the correct dependencies are present. If the configuration is
-      // being written during a configuration synchronisation then there is no
+      // being written during a configuration synchronization then there is no
       // need to recalculate the dependencies.
       $this->calculateDependencies();
     }
