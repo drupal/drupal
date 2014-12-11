@@ -250,7 +250,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
     $bundle_entity_type_id = $this->entityManager()->getDefinition($this->entity_type)->getBundleEntityType();
     if ($bundle_entity_type_id != 'bundle') {
       if (!$bundle_entity = $this->entityManager()->getStorage($bundle_entity_type_id)->load($this->bundle)) {
-        throw new \LogicException(String::format('Missing bundle entity, entity type %type, entity id %bundle.', array('%type' => $bundle_entity_type_id, '%id' => $this->bundle)));
+        throw new \LogicException(String::format('Missing bundle entity, entity type %type, entity id %bundle.', array('%type' => $bundle_entity_type_id, '%bundle' => $this->bundle)));
       }
       $this->addDependency('config', $bundle_entity->getConfigDependencyName());
     }

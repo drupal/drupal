@@ -175,6 +175,60 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
   }
 
   /**
+   * Test that invalid bundles are handled.
+   *
+   * @expectedException \LogicException
+   * @expectedExceptionMessage Missing bundle entity, entity type <em class="placeholder">bundle_entity_type</em>, entity id <em class="placeholder">test_bundle_not_exists</em>.
+   */
+  public function testCalculateDependenciesIncorrectBundle() {
+    $storage = $this->getMock('\Drupal\Core\Config\Entity\ConfigEntityStorageInterface');
+    $storage->expects($this->any())
+      ->method('load')
+      ->with('test_bundle_not_exists')
+      ->will($this->returnValue(NULL));
+
+    $this->entityManager->expects($this->any())
+      ->method('getStorage')
+      ->with('bundle_entity_type')
+      ->will($this->returnValue($storage));
+
+    $target_entity_type = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
+    $target_entity_type->expects($this->any())
+      ->method('getBundleEntityType')
+      ->will($this->returnValue('bundle_entity_type'));
+
+    $this->entityManager->expects($this->at(0))
+      ->method('getDefinition')
+      ->with($this->entityTypeId)
+      ->willReturn($this->entityType);
+    $this->entityManager->expects($this->at(1))
+      ->method('getDefinition')
+      ->with($this->entityTypeId)
+      ->willReturn($this->entityType);
+    $this->entityManager->expects($this->at(2))
+      ->method('getDefinition')
+      ->with($this->entityTypeId)
+      ->willReturn($this->entityType);
+    $this->entityManager->expects($this->at(3))
+      ->method('getDefinition')
+      ->with('test_entity_type')
+      ->willReturn($target_entity_type);
+
+    $this->fieldTypePluginManager->expects($this->any())
+      ->method('getDefinition')
+      ->with('test_field')
+      ->willReturn(['provider' => 'test_module', 'config_dependencies' =>['module' => ['test_module2']], 'class' => '\Drupal\Tests\field\Unit\DependencyFieldItem']);
+
+    $field = new FieldConfig(array(
+      'field_name' => $this->fieldStorage->getName(),
+      'entity_type' => 'test_entity_type',
+      'bundle' => 'test_bundle_not_exists',
+      'field_type' => 'test_field',
+    ), $this->entityTypeId);
+    $field->calculateDependencies();
+  }
+
+  /**
    * @covers ::toArray
    */
   public function testToArray() {
