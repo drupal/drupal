@@ -524,21 +524,30 @@ function locale_js_translate(array $files = array()) {
 }
 
 /**
- * Implements hook_library_alter().
+ * Implements hook_library_info_alter().
  *
  * Provides the language support for the jQuery UI Date Picker.
  */
-function locale_library_alter(array &$library, $name) {
-  if ($name == 'core/jquery.ui.datepicker') {
-    // locale.datepicker.js should be added in the JS_LIBRARY group, so that
-    // the behavior executes early. JS_LIBRARY is the default.
-    $library['dependencies'][] = 'locale/drupal.locale.datepicker';
+function locale_library_info_alter(array &$libraries, $module) {
+  if ($module === 'core' && isset($libraries['jquery.ui.datepicker'])) {
+    $libraries['jquery.ui.datepicker']['dependencies'][] = 'locale/drupal.locale.datepicker';
+    $libraries['jquery.ui.datepicker']['drupalSettings']['jquery']['ui']['datepicker'] = [
+      'isRTL' => NULL,
+      'firstDay' => NULL,
+    ];
+  }
+}
 
+/**
+ * Implements hook_js_settings_alter().
+ *
+ * Generates the values for the altered core/jquery.ui.datepicker library.
+ */
+function locale_js_settings_alter(&$settings) {
+  if (isset($settings['jquery']['ui']['datepicker'])) {
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
-    $library['drupalSettings']['jquery']['ui']['datepicker'] = array(
-      'isRTL' => $language_interface->getDirection() == LanguageInterface::DIRECTION_RTL,
-      'firstDay' => \Drupal::config('system.date')->get('first_day'),
-    );
+    $settings['jquery']['ui']['datepicker']['isRTL'] = $language_interface->getDirection() == LanguageInterface::DIRECTION_RTL;
+    $settings['jquery']['ui']['datepicker']['firstDay'] = \Drupal::config('system.date')->get('first_day');
   }
 }
 

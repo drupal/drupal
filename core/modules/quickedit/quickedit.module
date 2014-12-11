@@ -55,7 +55,7 @@ function quickedit_page_attachments(array &$page) {
 }
 
 /**
- * Implements hook_library_alter().
+ * Implements hook_library_info_alter().
  *
  * Includes additional stylesheets defined by the admin theme to allow it to
  * customize the Quick Edit toolbar appearance.
@@ -70,43 +70,28 @@ function quickedit_page_attachments(array &$page) {
  * quickedit_stylesheets:
  *   - css/quickedit.css
  * @endcode
- *
- * The library needs to be dynamically enhanced, because an admin theme normally
- * does not participate in the front-end.
- *
- * @param array &$library
- *   The JavaScript/CSS library that is being altered.
- * @param string $name
- *   The name of the library.
- * @param string $theme
- *   (optional) Internal use only. A base theme name for which to retrieve the
- *   'edit_stylesheets' property.
- *
- * @todo Remove this in favor of the 'stylesheets-additional' property proposed
- *   in https://drupal.org/node/1209958
  */
-function quickedit_library_alter(array &$library, $name, $theme = NULL) {
-  if ($name == 'quickedit/quickedit') {
-    // Retrieve the admin theme.
-    if (!isset($theme)) {
-      $theme = Drupal::config('system.theme')->get('admin');
-    }
-    if ($theme && $theme_path = drupal_get_path('theme', $theme)) {
-      $info = system_get_info('theme', $theme);
-      // Recurse to process base theme(s) first.
-      if (isset($info['base theme'])) {
-        quickedit_library_alter($library, $name, $info['base theme']);
-      }
-      if (isset($info['quickedit_stylesheets']) && is_array($info['quickedit_stylesheets'])) {
-        foreach ($info['quickedit_stylesheets'] as $path) {
-          $library['css'][] = array(
-            'data' => $theme_path . '/' . $path,
-            'group' => CSS_AGGREGATE_THEME,
-            'weight' => CSS_THEME,
-          );
+function quickedit_library_info_alter(&$libraries, $extension) {
+  if ($extension === 'quickedit' && isset($libraries['quickedit'])) {
+    $theme = Drupal::config('system.theme')->get('admin');
+
+    // First let the base theme modify the library, then the actual theme.
+    $alter_library = function(&$library, $theme) use (&$alter_library) {
+      if ($theme_path = drupal_get_path('theme', $theme)) {
+        $info = system_get_info('theme', $theme);
+        // Recurse to process base theme(s) first.
+        if (isset($info['base theme'])) {
+          $alter_library($library, $info['base theme']);
+        }
+        if (isset($info['quickedit_stylesheets'])) {
+          foreach ($info['quickedit_stylesheets'] as $path) {
+            $library['css']['theme']['/' . $theme_path . '/' . $path] = [];
+          }
         }
       }
-    }
+    };
+
+    $alter_library($libraries['quickedit'], $theme);
   }
 }
 

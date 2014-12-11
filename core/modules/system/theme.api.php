@@ -801,6 +801,9 @@ function hook_library_info_alter(&$libraries, $module) {
  *   The name of the library.
  *
  * @see _drupal_add_library()
+ *
+ * @deprecated in Drupal 8.0.x, will be removed before Drupal 8.0.0
+ *   Use hook_library_info_alter() and hook_js_settings_alter().
  */
 function hook_library_alter(array &$library, $name) {
   if ($name == 'core/jquery.ui.datepicker') {
