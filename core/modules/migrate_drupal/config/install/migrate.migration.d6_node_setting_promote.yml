@@ -11,7 +11,7 @@ process:
   entity_type: 'constants/entity_type'
   bundle: type
   field_name: 'constants/field_name'
-  default_value: 'options/promote'
+  'default_value/0/value': 'options/promote'
 destination:
   plugin: entity:base_field_override
 migration_dependencies:

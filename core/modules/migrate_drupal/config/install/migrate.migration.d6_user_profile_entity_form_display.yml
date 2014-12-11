@@ -9,8 +9,6 @@ source:
     entity_type: user
     bundle: user
     form_mode: default
-    options:
-      label: hidden
 process:
   entity_type: 'constants/entity_type'
   bundle: 'constants/bundle'

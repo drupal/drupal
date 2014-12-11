@@ -5,10 +5,8 @@ migration_groups:
 source:
   plugin: variable
   variables:
-    - site_offline
     - site_offline_message
 process:
-  enable: site_offline
   message: site_offline_message
 destination:
   plugin: config

@@ -11,7 +11,6 @@ source:
     name: user_picture
     type: image_image
     options:
-      label: hidden
       settings:
         progress_indicator: throbber
         preview_image_style: thumbnail

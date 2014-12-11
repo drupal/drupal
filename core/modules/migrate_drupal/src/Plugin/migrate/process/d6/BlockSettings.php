@@ -24,9 +24,8 @@ class BlockSettings extends ProcessPluginBase {
    * Set the block configuration.
    */
   public function transform($value, MigrateExecutable $migrate_executable, Row $row, $destination_property) {
-    list($plugin, $delta, $old_settings, $visibility) = $value;
+    list($plugin, $delta, $old_settings) = $value;
     $settings = array();
-    $settings['visibility']['request_path']['negate'] = !$visibility;
     switch ($plugin) {
       case 'aggregator_feed_block':
         list(, $id) = explode('-', $delta);
