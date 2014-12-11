@@ -427,9 +427,9 @@ function db_truncate($table, array $options = array()) {
  *   The base table for this query. May be a string or another SelectQuery
  *   object. If a query object is passed, it will be used as a subselect.
  * @param $alias
- *   The alias for the base table of this query.
+ *   (optional) The alias for the base table of this query.
  * @param $options
- *   An array of options to control how the query operates.
+ *   (optional) An array of options to control how the query operates.
  *
  * @return \Drupal\Core\Database\Query\Select
  *   A new Select object for this connection.
