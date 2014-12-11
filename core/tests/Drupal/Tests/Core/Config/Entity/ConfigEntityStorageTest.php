@@ -792,7 +792,6 @@ class ConfigEntityStorageTest extends UnitTestCase {
    * @return \Drupal\Core\Entity\EntityInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   public function getMockEntity(array $values = array(), $methods = array()) {
-    $methods[] = 'onUpdateBundleEntity';
     return $this->getMockForAbstractClass('Drupal\Core\Config\Entity\ConfigEntityBase', array($values, 'test_entity_type'), '', TRUE, TRUE, TRUE, $methods);
   }
 

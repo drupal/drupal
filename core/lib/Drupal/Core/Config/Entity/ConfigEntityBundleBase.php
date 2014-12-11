@@ -67,12 +67,25 @@ abstract class ConfigEntityBundleBase extends ConfigEntityBase {
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     parent::postSave($storage, $update);
 
+    $entity_manager = $this->entityManager();
+    $bundle_of = $this->getEntityType()->getBundleOf();
     if (!$update) {
-      $this->entityManager()->onBundleCreate($this->id(), $this->getEntityType()->getBundleOf());
+      $entity_manager->onBundleCreate($this->id(), $bundle_of);
     }
-    elseif ($this->getOriginalId() != $this->id()) {
-      $this->renameDisplays();
-      $this->entityManager()->onBundleRename($this->getOriginalId(), $this->id(), $this->getEntityType()->getBundleOf());
+    else {
+      // Invalidate the render cache of entities for which this entity
+      // is a bundle.
+      if ($entity_manager->hasHandler($bundle_of, 'view_builder')) {
+        $entity_manager->getViewBuilder($bundle_of)->resetCache();
+      }
+      // Entity bundle field definitions may depend on bundle settings.
+      $entity_manager->clearCachedFieldDefinitions();
+
+      if ($this->getOriginalId() != $this->id()) {
+        // If the entity was renamed, update the displays.
+        $this->renameDisplays();
+        $entity_manager->onBundleRename($this->getOriginalId(), $this->id(), $bundle_of);
+      }
     }
   }
 
