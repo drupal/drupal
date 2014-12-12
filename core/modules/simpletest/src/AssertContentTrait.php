@@ -141,6 +141,16 @@ trait AssertContentTrait {
   }
 
   /**
+   * Get the current URL from the cURL handler.
+   *
+   * @return string
+   *   The current URL.
+   */
+  protected function getUrl() {
+    return isset($this->url) ? $this->url : 'no-url';
+  }
+
+  /**
    * Builds an XPath query.
    *
    * Builds an XPath query by replacing placeholders in the query by the value

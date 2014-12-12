@@ -19,7 +19,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
  *   label = @Translation("Text (plain, long)"),
  *   description = @Translation("A field containing a long string value."),
  *   default_widget = "string_textarea",
- *   default_formatter = "string",
+ *   default_formatter = "basic_string",
  * )
  */
 class StringLongItem extends StringItemBase {

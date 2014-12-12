@@ -177,7 +177,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupalTestBase {
 
     // Test phone field.
     $expected['weight'] = 9;
-    $expected['type'] = 'string';
+    $expected['type'] = 'basic_string';
     $expected['settings'] = array();
     $component = $display->getComponent('field_test_phone');
     $this->assertEqual($component, $expected, "node.story.teaser field_test_phone is of type telephone.");

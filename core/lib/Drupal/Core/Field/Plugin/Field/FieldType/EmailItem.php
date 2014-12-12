@@ -22,7 +22,7 @@ use Drupal\Core\TypedData\DataDefinition;
  *   label = @Translation("Email"),
  *   description = @Translation("An entity field containing an email value."),
  *   default_widget = "email_default",
- *   default_formatter = "string"
+ *   default_formatter = "basic_string"
  * )
  */
 class EmailItem extends FieldItemBase {

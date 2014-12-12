@@ -2308,16 +2308,6 @@ abstract class WebTestBase extends TestBase {
   }
 
   /**
-   * Get the current URL from the cURL handler.
-   *
-   * @return
-   *   The current URL.
-   */
-  protected function getUrl() {
-    return $this->url;
-  }
-
-  /**
    * Gets the HTTP response headers of the requested page.
    *
    * Normally we are only interested in the headers returned by the last

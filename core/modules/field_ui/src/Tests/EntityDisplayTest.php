@@ -69,7 +69,9 @@ class EntityDisplayTest extends KernelTestBase {
       'label' => 'hidden',
       'type' => 'string',
       'weight' => -5,
-      'settings' => array(),
+      'settings' => array(
+        'link_to_entity' => FALSE,
+      ),
       'third_party_settings' => array(),
     );
     $this->assertEqual($display->getComponents(), $expected);

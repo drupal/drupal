@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\field\Tests\String\StringFormatterTest.
+ * Contains \Drupal\field\Tests\String\RawStringFormatterTest.
  */
 
 namespace Drupal\field\Tests\String;
@@ -17,11 +17,11 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\simpletest\KernelTestBase;
 
 /**
- * Tests the creation of text fields.
+ * Tests the raw string formatter
  *
  * @group field
  */
-class StringFormatterTest extends KernelTestBase {
+class RawStringFormatterTest extends KernelTestBase {
 
   /**
    * Modules to enable.
@@ -69,7 +69,7 @@ class StringFormatterTest extends KernelTestBase {
     $field_storage = FieldStorageConfig::create(array(
       'field_name' => $this->fieldName,
       'entity_type' => $this->entityType,
-      'type' => 'string',
+      'type' => 'string_long',
     ));
     $field_storage->save();
 
@@ -124,23 +124,6 @@ class StringFormatterTest extends KernelTestBase {
     // Verify the cache tags.
     $build = $entity->{$this->fieldName}->view();
     $this->assertTrue(!isset($build[0]['#cache']), format_string('The string formatter has no cache tags.'));
-
-    // Set the formatter to link to the entity.
-    $this->display->setComponent($this->fieldName, [
-      'type' => 'string',
-      'settings' => [
-        'link_to_entity' => TRUE,
-      ],
-    ]);
-    $this->display->save();
-
-    $value = $this->randomMachineName();
-    $entity->{$this->fieldName}->value = $value;
-    $entity->save();
-
-    $this->renderEntityFields($entity, $this->display);
-    $this->assertLink($value, 0);
-    $this->assertLinkByHref($entity->url());
   }
 
 }

@@ -225,6 +225,13 @@ field.widget.settings.checkbox:
       type: boolean
       label: 'Use field label instead of the "On value" as label'
 
+field.formatter.settings.string:
+  type: mapping
+  mapping:
+    link_to_entity:
+      type: boolean
+      label: 'Link to the entity'
+
 field.formatter.settings.number_decimal:
   type: mapping
   label: 'Number decimal display format settings'
