@@ -9,6 +9,7 @@ namespace Drupal\block;
 
 use Drupal\block\Event\BlockContextEvent;
 use Drupal\block\Event\BlockEvents;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Executable\ExecutableManagerInterface;
@@ -337,7 +338,7 @@ class BlockForm extends EntityForm {
       array(
         'theme' => $form_state->getValue('theme'),
       ),
-      array('query' => array('block-placement' => drupal_html_class($this->entity->id())))
+      array('query' => array('block-placement' => Html::getClass($this->entity->id())))
     );
   }
 

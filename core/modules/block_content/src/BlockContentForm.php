@@ -7,6 +7,7 @@
 
 namespace Drupal\block_content;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -102,7 +103,7 @@ class BlockContentForm extends ContentEntityForm {
     // Override the default CSS class name, since the user-defined custom block
     // type name in 'TYPE-block-form' potentially clashes with third-party class
     // names.
-    $form['#attributes']['class'][0] = drupal_html_class('block-' . $block->bundle() . '-form');
+    $form['#attributes']['class'][0] = 'block-' . Html::getClass($block->bundle()) . '-form';
 
     $form['langcode'] = array(
       '#title' => $this->t('Language'),

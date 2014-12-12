@@ -7,6 +7,7 @@
 
 namespace Drupal\block;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\String;
@@ -245,7 +246,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
               'class' => array('draggable'),
             ),
           );
-          if ($placement && $placement == drupal_html_class($entity_id)) {
+          if ($placement && $placement == Html::getClass($entity_id)) {
             $form['blocks'][$entity_id]['#attributes']['id'] = 'block-placed';
           }
 

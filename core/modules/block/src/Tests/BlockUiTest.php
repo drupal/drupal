@@ -7,6 +7,7 @@
 
 namespace Drupal\block\Tests;
 
+use Drupal\Component\Utility\Html;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -200,7 +201,7 @@ class BlockUiTest extends WebTestBase {
 
     // After adding a block, it will indicate which block was just added.
     $this->drupalPostForm('admin/structure/block/add/system_powered_by_block', $block, t('Save block'));
-    $this->assertUrl('admin/structure/block/list/classy?block-placement=' . drupal_html_class($block['id']));
+    $this->assertUrl('admin/structure/block/list/classy?block-placement=' . Html::getClass($block['id']));
 
     // Resaving the block page will remove the block indicator.
     $this->drupalPostForm(NULL, array(), t('Save blocks'));

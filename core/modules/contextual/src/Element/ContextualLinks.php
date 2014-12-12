@@ -7,6 +7,7 @@
 
 namespace Drupal\contextual\Element;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Render\Element\RenderElement;
 use Drupal\Core\Url;
 
@@ -79,7 +80,7 @@ class ContextualLinks extends RenderElement {
     // Transform contextual links into parameters suitable for links.html.twig.
     $links = array();
     foreach ($items as $class => $item) {
-      $class = drupal_html_class($class);
+      $class = Html::getClass($class);
       $links[$class] = array(
         'title' => $item['title'],
         'url' => Url::fromRoute(isset($item['route_name']) ? $item['route_name'] : '', isset($item['route_parameters']) ? $item['route_parameters'] : []),

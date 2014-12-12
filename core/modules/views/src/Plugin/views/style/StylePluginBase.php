@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\style;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -217,7 +218,7 @@ abstract class StylePluginBase extends PluginBase {
 
       $classes = explode(' ', $class);
       foreach ($classes as &$class) {
-        $class = drupal_clean_css_identifier($class);
+        $class = Html::cleanCssIdentifier($class);
       }
       return implode(' ', $classes);
     }

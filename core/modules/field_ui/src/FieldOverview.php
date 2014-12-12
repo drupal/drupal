@@ -7,6 +7,7 @@
 
 namespace Drupal\field_ui;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityListBuilderInterface;
@@ -127,7 +128,7 @@ class FieldOverview extends OverviewBase {
       );
       $table[$name] = array(
         '#attributes' => array(
-          'id' => drupal_html_class($name),
+          'id' => Html::getClass($name),
         ),
         'label' => array(
           '#markup' => String::checkPlain($field->getLabel()),

@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Field;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Component\Utility\String;
@@ -126,9 +127,9 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
       '#parents' => array_merge($parents, array($field_name . '_wrapper')),
       '#attributes' => array(
         'class' => array(
-          'field-type-' . drupal_html_class($this->fieldDefinition->getType()),
-          'field-name-' . drupal_html_class($field_name),
-          'field-widget-' . drupal_html_class($this->getPluginId()),
+          'field-type-' . Html::getClass($this->fieldDefinition->getType()),
+          'field-name-' . Html::getClass($field_name),
+          'field-widget-' . Html::getClass($this->getPluginId()),
         ),
       ),
       'widget' => $elements,

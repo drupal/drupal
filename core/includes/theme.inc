@@ -9,6 +9,7 @@
  */
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
@@ -1352,7 +1353,7 @@ function template_preprocess_html(&$variables) {
   }
   else {
     $segment = explode('/', $path);
-    $variables['attributes']['class'][] = 'path-' . drupal_html_class($segment[1]);
+    $variables['attributes']['class'][] = 'path-' . Html::getClass($segment[1]);
   }
 
   $site_config = \Drupal::config('system.site');
@@ -1638,7 +1639,7 @@ function template_preprocess_field(&$variables, $hook) {
 
   // Add default CSS classes. Since there can be many fields rendered on a page,
   // save some overhead by calling strtr() directly instead of
-  // drupal_html_class().
+  // \Drupal\Component\Utility\Html::getClass().
   $variables['entity_type_css'] = strtr($element['#entity_type'], '_', '-');
   $variables['field_name_css'] = strtr($element['#field_name'], '_', '-');
   $variables['field_type_css'] = strtr($element['#field_type'], '_', '-');

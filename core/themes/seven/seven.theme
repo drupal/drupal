@@ -18,7 +18,7 @@ function seven_preprocess_html(&$variables) {
   if ($suggestions = theme_get_suggestions($path_args, 'page', '-')) {
     foreach ($suggestions as $suggestion) {
       if ($suggestion === 'page-node-edit' || strpos($suggestion, 'page-node-add') !== FALSE) {
-        $variables['attributes']['class'][] = drupal_html_class('node-form-layout');
+        $variables['attributes']['class'][] = 'node-form-layout';
       }
     }
   }

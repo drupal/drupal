@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\block_content\Tests;
+use Drupal\Component\Utility\Html;
 
 /**
  * Ensures that custom block type functions work correctly.
@@ -179,7 +180,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
           $block = reset($blocks);
           $this->assertUrl(\Drupal::url('block.admin_add', array('plugin_id' => 'block_content:' . $block->uuid(), 'theme' => $theme), array('absolute' => TRUE)));
           $this->drupalPostForm(NULL, array(), t('Save block'));
-          $this->assertUrl(\Drupal::url('block.admin_display_theme', array('theme' => $theme), array('absolute' => TRUE, 'query' => array('block-placement' => drupal_html_class($edit['info[0][value]'])))));
+          $this->assertUrl(\Drupal::url('block.admin_display_theme', array('theme' => $theme), array('absolute' => TRUE, 'query' => array('block-placement' => Html::getClass($edit['info[0][value]'])))));
         }
         else {
           $this->fail('Could not load created block.');

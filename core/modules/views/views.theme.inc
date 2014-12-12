@@ -135,7 +135,7 @@ function template_preprocess_views_view_fields(&$variables) {
         $object->separator = Xss::filterAdmin($variables['options']['separator']);
       }
 
-      $object->class = drupal_clean_css_identifier($id);
+      $object->class = Html::cleanCssIdentifier($id);
 
       $previous_inline = $object->inline;
       $object->inline_html = $object->handler->elementWrapperType(TRUE, TRUE);
@@ -453,7 +453,7 @@ function template_preprocess_views_view_table(&$variables) {
   foreach ($columns as $field => $column) {
     // Create a second variable so we can easily find what fields we have and
     // what the CSS classes should be.
-    $variables['fields'][$field] = drupal_clean_css_identifier($field);
+    $variables['fields'][$field] = Html::cleanCssIdentifier($field);
     if ($active == $field) {
       $variables['fields'][$field] .= ' active';
     }
@@ -508,7 +508,7 @@ function template_preprocess_views_view_table(&$variables) {
       }
       // Add a CSS align class to each field if one was set.
       if (!empty($options['info'][$field]['align'])) {
-        $variables['header'][$field]['attributes']['class'][] = drupal_clean_css_identifier($options['info'][$field]['align']);
+        $variables['header'][$field]['attributes']['class'][] = Html::cleanCssIdentifier($options['info'][$field]['align']);
       }
       // Add a header label wrapper if one was selected.
       if ($variables['header'][$field]['content']) {
@@ -529,7 +529,7 @@ function template_preprocess_views_view_table(&$variables) {
 
     // Add a CSS align class to each field if one was set.
     if (!empty($options['info'][$field]['align'])) {
-      $variables['fields'][$field] .= ' ' . drupal_clean_css_identifier($options['info'][$field]['align']);
+      $variables['fields'][$field] .= ' ' . Html::cleanCssIdentifier($options['info'][$field]['align']);
     }
 
     // Render each field into its appropriate column.
@@ -835,7 +835,7 @@ function template_preprocess_views_view_list(&$variables) {
   // Fetch classes from handler options.
   if ($handler->options['class']) {
     $class = explode(' ', $handler->options['class']);
-    $class = array_map('drupal_clean_css_identifier', $class);
+    $class = array_map('\Drupal\Component\Utility\Html::cleanCssIdentifier', $class);
 
     // Initialize a new attribute class for $class.
     $variables['list']['attributes'] = new Attribute(array('class' => $class));
@@ -844,7 +844,7 @@ function template_preprocess_views_view_list(&$variables) {
   // Fetch wrapper classes from handler options.
   if ($handler->options['wrapper_class']) {
     $wrapper_class = explode(' ', $handler->options['wrapper_class']);
-    $variables['attributes']['class'] = array_map('drupal_clean_css_identifier', $wrapper_class);
+    $variables['attributes']['class'] = array_map('\Drupal\Component\Utility\Html::cleanCssIdentifier', $wrapper_class);
   }
 
   $variables['list']['type'] = $handler->options['type'];

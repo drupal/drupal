@@ -7,6 +7,7 @@
 
 namespace Drupal\field_ui;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -192,7 +193,7 @@ abstract class OverviewBase extends FormBase {
           }
 
           // Add row id and associate JS settings.
-          $id = drupal_html_class($name);
+          $id = Html::getClass($name);
           $row['#attributes']['id'] = $id;
           if (isset($row['#js_settings'])) {
             $row['#js_settings'] += array(

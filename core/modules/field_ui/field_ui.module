@@ -5,6 +5,7 @@
  * Allows administrators to attach custom fields to fieldable types.
  */
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
@@ -228,7 +229,7 @@ function theme_field_ui_table($variables) {
 
   // Render rows, region by region.
   foreach ($elements['#regions'] as $region_name => $region) {
-    $region_name_class = drupal_html_class($region_name);
+    $region_name_class = Html::getClass($region_name);
 
     // Add region rows.
     if (isset($region['title']) && empty($region['invisible'])) {

@@ -7,6 +7,7 @@
 
 namespace Drupal\dblog\Controller;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
@@ -199,7 +200,7 @@ class DbLogController extends ControllerBase {
           Xss::filter($dblog->link),
         ),
         // Attributes for table row.
-        'class' => array(drupal_html_class('dblog-' . $dblog->type), $classes[$dblog->severity]),
+        'class' => array(Html::getClass('dblog-' . $dblog->type), $classes[$dblog->severity]),
       );
     }
 

@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Form;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -116,7 +117,7 @@ class ViewsExposedForm extends FormBase {
 
     $form['#action'] = _url($view->display_handler->getUrl());
     $form['#theme'] = $view->buildThemeFunctions('views_exposed_form');
-    $form['#id'] = drupal_clean_css_identifier('views_exposed_form-' . String::checkPlain($view->storage->id()) . '-' . String::checkPlain($display['id']));
+    $form['#id'] = Html::cleanCssIdentifier('views_exposed_form-' . String::checkPlain($view->storage->id()) . '-' . String::checkPlain($display['id']));
     // $form['#attributes']['class'] = array('views-exposed-form');
 
     /** @var \Drupal\views\Plugin\views\exposed_form\ExposedFormPluginBase $exposed_form_plugin */

@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Tests\Plugin;
 
+use Drupal\Component\Utility\Html;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
@@ -189,7 +190,7 @@ class ExposedFormTest extends ViewTestBase {
    *   The form ID.
    */
   protected function getExpectedExposedFormId(ViewExecutable $view) {
-    return drupal_clean_css_identifier('views-exposed-form-' . $view->storage->id() . '-' . $view->current_display);
+    return Html::cleanCssIdentifier('views-exposed-form-' . $view->storage->id() . '-' . $view->current_display);
   }
 
 }

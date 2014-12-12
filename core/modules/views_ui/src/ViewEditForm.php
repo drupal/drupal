@@ -7,6 +7,7 @@
 
 namespace Drupal\views_ui;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Ajax\AjaxResponse;
@@ -910,7 +911,7 @@ class ViewEditForm extends ViewFormBase {
         }
       }
     }
-    $option_build['#attributes']['class'][] = drupal_clean_css_identifier($display_id . '-' . $id);
+    $option_build['#attributes']['class'][] = Html::cleanCssIdentifier($display_id . '-' . $id);
     return $option_build;
   }
 
@@ -1080,7 +1081,7 @@ class ViewEditForm extends ViewFormBase {
         'type' => $type,
         'id' => $id,
       ), array('attributes' => $link_attributes, 'html' => TRUE)));
-      $build['fields'][$id]['#class'][] = drupal_clean_css_identifier($display['id']. '-' . $type . '-' . $id);
+      $build['fields'][$id]['#class'][] = Html::cleanCssIdentifier($display['id']. '-' . $type . '-' . $id);
 
       if ($executable->display_handler->useGroupBy() && $handler->usesGroupBy()) {
         $build['fields'][$id]['#settings_links'][] = $this->l('<span class="label">' . $this->t('Aggregation settings') . '</span>', new Url('views_ui.form_handler_group', array(

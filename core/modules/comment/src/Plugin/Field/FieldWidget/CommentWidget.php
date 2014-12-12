@@ -8,6 +8,7 @@
 namespace Drupal\comment\Plugin\Field\FieldWidget;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -76,7 +77,7 @@ class CommentWidget extends WidgetBase {
         '#open' => ($items->status != $field_default_values[0]['status']),
         '#group' => 'advanced',
         '#attributes' => array(
-          'class' => array('comment-' . drupal_html_class($entity->getEntityTypeId()) . '-settings-form'),
+          'class' => array('comment-' . Html::getClass($entity->getEntityTypeId()) . '-settings-form'),
         ),
         '#attached' => array(
           'library' => array('comment/drupal.comment'),

@@ -8,6 +8,7 @@
 namespace Drupal\block\Tests\Views;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\String;
 use Drupal\views\Views;
 use Drupal\views\Tests\ViewTestBase;
@@ -63,7 +64,7 @@ class DisplayBlockTest extends ViewTestBase {
     // base table.
     $arguments = array(
       ':id' => 'edit-category-lists-views',
-      ':li_class' => 'views-block' . drupal_html_class($edit['id']) . '-block-1',
+      ':li_class' => 'views-block' . Html::getClass($edit['id']) . '-block-1',
       ':href' => \Drupal::Url('block.admin_add', array(
         'plugin_id' => 'views_block:' . $edit['id'] . '-block_1',
         'theme' => 'classy',
@@ -102,7 +103,7 @@ class DisplayBlockTest extends ViewTestBase {
 
     $arguments = array(
       ':id' => 'edit-category-lists-views',
-      ':li_class' => 'views-block' . drupal_html_class($edit['id']) . '-block-2',
+      ':li_class' => 'views-block' . Html::getClass($edit['id']) . '-block-2',
       ':href' => \Drupal::Url('block.admin_add', array(
         'plugin_id' => 'views_block:' . $edit['id'] . '-block_2',
         'theme' => 'classy',
@@ -114,7 +115,7 @@ class DisplayBlockTest extends ViewTestBase {
 
     $arguments = array(
       ':id' => $category_id,
-      ':li_class' => 'views-block' . drupal_html_class($edit['id']) . '-block-3',
+      ':li_class' => 'views-block' . Html::getClass($edit['id']) . '-block-3',
       ':href' => \Drupal::Url('block.admin_add', array(
         'plugin_id' => 'views_block:' . $edit['id'] . '-block_3',
         'theme' => 'classy',

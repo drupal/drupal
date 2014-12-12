@@ -8,6 +8,7 @@
  * API pattern.
  */
 
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Form\FormStateInterface;
@@ -520,7 +521,7 @@ function node_is_page(NodeInterface $node) {
 function node_preprocess_html(&$variables) {
   // If on an individual node page, add the node type to body classes.
   if (($node = \Drupal::routeMatch()->getParameter('node')) && $node instanceof NodeInterface) {
-    $variables['attributes']['class'][] = drupal_html_class('node--type-' . $node->getType());
+    $variables['attributes']['class'][] = Html::getClass('node--type-' . $node->getType());
   }
 }
 

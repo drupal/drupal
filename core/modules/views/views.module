@@ -9,6 +9,7 @@
  * incoming page and block requests.
  */
 
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Query\AlterableInterface;
@@ -194,7 +195,7 @@ function views_theme($existing, $type, $theme, $path) {
       // implement hook_theme() by itself.
       if (!function_exists('theme_' . $def['theme'])) {
         $hooks[$def['theme']]['path'] .= '/templates';
-        $hooks[$def['theme']]['template'] = drupal_clean_css_identifier($def['theme']);
+        $hooks[$def['theme']]['template'] = Html::cleanCssIdentifier($def['theme']);
       }
       else {
         $hooks[$def['theme']]['function'] = 'theme_' . $def['theme'];
