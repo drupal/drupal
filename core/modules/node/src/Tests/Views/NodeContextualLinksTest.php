@@ -8,7 +8,7 @@
 namespace Drupal\node\Tests\Views;
 
 use Drupal\Component\Serialization\Json;
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\user\Entity\User;
 
 /**
  * Tests views contextual links on nodes.
@@ -92,6 +92,32 @@ class NodeContextualLinksTest extends NodeTestBase {
         'Content-Type: application/x-www-form-urlencoded',
       ),
     ));
+  }
+
+  /**
+   * Tests if the node page works if Contextual Links is disabled.
+   *
+   * All views have Contextual links enabled by default, even with the
+   * Contextual links module disabled. This tests if no calls are done to the
+   * Contextual links module by views when it is disabled.
+   *
+   * @see https://www.drupal.org/node/2379811
+   */
+  public function testPageWithDisabledContextualModule() {
+    \Drupal::service('module_installer')->uninstall(['contextual']);
+    \Drupal::service('module_installer')->install(['views_ui']);
+
+    // Ensure that contextual links don't get called for admin users.
+    $admin_user = User::load(1);
+    $admin_user->setPassword('new_password');
+    $admin_user->pass_raw = 'new_password';
+    $admin_user->save();
+
+    $this->drupalCreateContentType(array('type' => 'page'));
+    $this->drupalCreateNode(array('promote' => 1));
+
+    $this->drupalLogin($admin_user);
+    $this->drupalGet('node');
   }
 
 }

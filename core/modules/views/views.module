@@ -308,7 +308,7 @@ function views_page_display_pre_render(array $element) {
  */
 function views_preprocess_html(&$variables) {
   // Early-return to prevent adding unnecessary JavaScript.
-  if (!\Drupal::currentUser()->hasPermission('access contextual links')) {
+  if (!\Drupal::moduleHandler()->moduleExists('contextual') || !\Drupal::currentUser()->hasPermission('access contextual links')) {
     return;
   }
 
@@ -393,8 +393,8 @@ function views_preprocess_html(&$variables) {
  */
 function views_add_contextual_links(&$render_element, $location, ViewExecutable $view, $display_id) {
   // Do not do anything if the view is configured to hide its administrative
-  // links.
-  if ($view->getShowAdminLinks()) {
+  // links or if the Contextual Links module is not enabled.
+  if (\Drupal::moduleHandler()->moduleExists('contextual') && $view->getShowAdminLinks()) {
     // Also do not do anything if the display plugin has not defined any
     // contextual links that are intended to be displayed in the requested
     // location.
