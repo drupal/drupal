@@ -297,8 +297,8 @@ class ModuleHandlerTest extends UnitTestCase {
     $this->moduleHandler->addModule('module_handler_test_added', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_added');
     $this->assertTrue($this->moduleHandler->implementsHook('module_handler_test_added', 'hook'), 'Runtime added module with implementation in include found.');
 
-    $this->moduleHandler->addModule('system', 'core/modules/system');
-    $this->assertFalse($this->moduleHandler->implementsHook('system', 'hook', array(TRUE)), 'Missing implementation not found.');
+    $this->moduleHandler->addModule('module_handler_test_no_hook', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_added');
+    $this->assertFalse($this->moduleHandler->implementsHook('module_handler_test_no_hook', 'hook', array(TRUE)), 'Missing implementation not found.');
   }
 
   /**
