@@ -9,6 +9,7 @@ namespace Drupal\config\Tests;
 
 use Drupal\Core\Config\StorageComparer;
 use Drupal\system\Tests\Module\ModuleTestBase;
+use Drupal\shortcut\Entity\Shortcut;
 
 /**
  * Tests the largest configuration import possible with the modules and profiles
@@ -82,6 +83,10 @@ class ConfigImportAllTest extends ModuleTestBase {
     foreach ($terms as $term) {
       $term->delete();
     }
+
+    // Delete any shortcuts so the shortcut module can be uninstalled.
+    $shortcuts = Shortcut::loadMultiple();
+    entity_delete_multiple('shortcut', array_keys($shortcuts));
 
     system_list_reset();
     $all_modules = system_rebuild_module_data();

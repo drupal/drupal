@@ -289,7 +289,14 @@ services:
     arguments: ['@app.root', '%container.modules%', '@cache.bootstrap']
   module_installer:
     class: Drupal\Core\Extension\ModuleInstaller
+    tags:
+      - { name: service_collector, tag: 'module_install.uninstall_validator', call: addUninstallValidator }
     arguments: ['@app.root', '@module_handler', '@kernel']
+  content_uninstall_validator:
+    class: Drupal\Core\Entity\ContentUninstallValidator
+    tags:
+      - { name: module_install.uninstall_validator }
+    arguments: ['@entity.manager', '@string_translation']
   theme_handler:
     class: Drupal\Core\Extension\ThemeHandler
     arguments: ['@app.root', '@config.factory', '@module_handler', '@state', '@info_parser', '@logger.channel.default', '@asset.css.collection_optimizer', '@config.installer', '@config.manager', '@router.builder_indicator']

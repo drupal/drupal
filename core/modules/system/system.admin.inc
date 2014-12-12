@@ -303,14 +303,16 @@ function theme_system_modules_uninstall($variables) {
   // Display table.
   $rows = array();
   foreach (Element::children($form['modules']) as $module) {
+    $disabled_message = '';
+    // Add the modules requiring the module in question as a validation reason.
     if (!empty($form['modules'][$module]['#required_by'])) {
-      $disabled_message = format_plural(count($form['modules'][$module]['#required_by']),
-        'To uninstall @module, the following module must be uninstalled first: @required_modules',
-        'To uninstall @module, the following modules must be uninstalled first: @required_modules',
-        array('@module' => $form['modules'][$module]['#module_name'], '@required_modules' => implode(', ', $form['modules'][$module]['#required_by'])));
+      $form['modules'][$module]['#validation_reasons'][] = \Drupal::translation()->translate('Required by: @modules', array('@modules' => implode(', ',$form['modules'][$module]['#required_by'])));
     }
-    else {
-      $disabled_message = '';
+    if (!empty($form['modules'][$module]['#validation_reasons'])) {
+      $disabled_message = \Drupal::translation()->formatPlural(count($form['modules'][$module]['#validation_reasons']),
+        'The following reason prevents @module from being uninstalled: @reasons',
+        'The following reasons prevents @module from being uninstalled: @reasons',
+        array('@module' => $form['modules'][$module]['#module_name'], '@reasons' => implode('; ', $form['modules'][$module]['#validation_reasons'])));
     }
     $rows[] = array(
       array('data' => drupal_render($form['uninstall'][$module]), 'align' => 'center'),

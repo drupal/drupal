@@ -42,6 +42,13 @@ class ModuleInstaller implements ModuleInstallerInterface {
   protected $root;
 
   /**
+   * The uninstall validators.
+   *
+   * @var \Drupal\Core\Extension\ModuleUninstallValidatorInterface[]
+   */
+  protected $uninstallValidators;
+
+  /**
    * Constructs a new ModuleInstaller instance.
    *
    * @param string $root
@@ -58,6 +65,13 @@ class ModuleInstaller implements ModuleInstallerInterface {
     $this->root = $root;
     $this->moduleHandler = $module_handler;
     $this->kernel = $kernel;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addUninstallValidator(ModuleUninstallValidatorInterface $uninstall_validator) {
+    $this->uninstallValidators[] = $uninstall_validator;
   }
 
   /**
@@ -306,6 +320,15 @@ class ModuleInstaller implements ModuleInstallerInterface {
       }
     }
 
+    // Use the validators and throw an exception with the reasons.
+    if ($reasons = $this->validateUninstall($module_list)) {
+      foreach ($reasons as $reason) {
+        $reason_message[] = implode(', ', $reason);
+      }
+      throw new ModuleUninstallValidatorException(format_string('The following reasons prevents the modules from being uninstalled: @reasons', array(
+        '@reasons' => implode(', ', $reason_message),
+      )));
+    }
     // Set the actual module weights.
     $module_list = array_map(function ($module) use ($module_data) {
       return $module_data[$module]->sort;
@@ -467,6 +490,25 @@ class ModuleInstaller implements ModuleInstallerInterface {
     // dependencies.
     $container = $this->kernel->getContainer();
     $this->moduleHandler = $container->get('module_handler');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateUninstall(array $module_list) {
+    $reasons = array();
+    foreach ($module_list as $module) {
+      foreach ($this->uninstallValidators as $validator) {
+        $validation_reasons = $validator->validate($module);
+        if (!empty($validation_reasons)) {
+          if (!isset($reasons[$module])) {
+            $reasons[$module] = array();
+          }
+          $reasons[$module] = array_merge($reasons[$module], $validation_reasons);
+        }
+      }
+    }
+    return $reasons;
   }
 
 }

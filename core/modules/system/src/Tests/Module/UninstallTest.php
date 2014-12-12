@@ -43,8 +43,21 @@ class UninstallTest extends WebTestBase {
   function testUninstallPage() {
     $account = $this->drupalCreateUser(array('administer modules'));
     $this->drupalLogin($account);
+
+    // Create a node type.
+    $node_type = entity_create('node_type', array('type' => 'uninstall_blocker'));
+    $node_type->save();
+    // Add a node to prevent node from being uninstalled.
+    $node = entity_create('node', array('type' => 'uninstall_blocker'));
+    $node->save();
+
     $this->drupalGet('admin/modules/uninstall');
     $this->assertTitle(t('Uninstall') . ' | Drupal');
+
+    $this->assertText(\Drupal::translation()->translate('The following reasons prevents Node from being uninstalled: There is content for the entity type: Content'), 'Content prevents uninstalling node module.');
+    // Delete the node to allow node to be uninstalled.
+    $node->delete();
+    $node_type->delete();
 
     // Uninstall module_test.
     $edit = array();

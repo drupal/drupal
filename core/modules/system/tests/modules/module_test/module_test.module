@@ -27,6 +27,10 @@ function module_test_system_info_alter(&$info, Extension $file, $type) {
       // Make config module depend on help module.
       $info['dependencies'][] = 'help';
     }
+    elseif ($file->getName() == 'entity_test') {
+      // Make entity test module depend on help module.
+      $info['dependencies'][] = 'help';
+    }
   }
   elseif (\Drupal::state()->get('module_test.dependency') == 'version dependency') {
     if ($file->getName() == 'color') {

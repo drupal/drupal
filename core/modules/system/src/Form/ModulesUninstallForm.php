@@ -8,6 +8,7 @@
 namespace Drupal\system\Form;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
@@ -26,6 +27,13 @@ class ModulesUninstallForm extends FormBase {
   protected $moduleHandler;
 
   /**
+   * The module installer service.
+   *
+   * @var \Drupal\Core\Extension\ModuleInstallerInterface
+   */
+  protected $moduleInstaller;
+
+  /**
    * The expirable key value store.
    *
    * @var \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface
@@ -38,6 +46,7 @@ class ModulesUninstallForm extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('module_handler'),
+      $container->get('module_installer'),
       $container->get('keyvalue.expirable')->get('modules_uninstall')
     );
   }
@@ -47,11 +56,14 @@ class ModulesUninstallForm extends FormBase {
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
+   * @param \Drupal\Core\Extension\ModuleInstallerInterface $module_installer
+   *   The module installer.
    * @param \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface $key_value_expirable
    *   The key value expirable factory.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, KeyValueStoreExpirableInterface $key_value_expirable) {
+  public function __construct(ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, KeyValueStoreExpirableInterface $key_value_expirable) {
     $this->moduleHandler = $module_handler;
+    $this->moduleInstaller = $module_installer;
     $this->keyValueExpirable = $key_value_expirable;
   }
 
@@ -69,7 +81,7 @@ class ModulesUninstallForm extends FormBase {
     // Make sure the install API is available.
     include_once DRUPAL_ROOT . '/core/includes/install.inc';
 
-    // Get a list of disabled, installed modules.
+    // Get a list of all available modules.
     $modules = system_rebuild_module_data();
     $uninstallable = array_filter($modules, function ($module) use ($modules) {
       return empty($modules[$module->getName()]->info['required']) && drupal_get_installed_schema_version($module->getName()) > SCHEMA_UNINSTALLED;
@@ -110,9 +122,10 @@ class ModulesUninstallForm extends FormBase {
 
     // Sort all modules by their name.
     uasort($uninstallable, 'system_sort_modules_by_info_name');
+    $validation_reasons = $this->moduleInstaller->validateUninstall(array_keys($uninstallable));
 
     $form['uninstall'] = array('#tree' => TRUE);
-    foreach ($uninstallable as $module) {
+    foreach ($uninstallable as $module_key => $module) {
       $name = $module->info['name'] ?: $module->getName();
       $form['modules'][$module->getName()]['#module_name'] = $name;
       $form['modules'][$module->getName()]['name']['#markup'] = $name;
@@ -124,6 +137,12 @@ class ModulesUninstallForm extends FormBase {
         '#title_display' => 'invisible',
       );
 
+      // If a validator returns reasons not to uninstall a module,
+      // list the reasons and disable the check box.
+      if (isset($validation_reasons[$module_key])) {
+        $form['modules'][$module->getName()]['#validation_reasons'] = $validation_reasons[$module_key];
+        $form['uninstall'][$module->getName()]['#disabled'] = TRUE;
+      }
       // All modules which depend on this one must be uninstalled first, before
       // we can allow this module to be uninstalled. (The installation profile
       // is excluded from this list.)
