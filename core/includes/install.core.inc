@@ -183,6 +183,8 @@ function install_state_defaults() {
     'config_verified' => FALSE,
     // TRUE when there is a valid database connection.
     'database_verified' => FALSE,
+    // TRUE if database is empty & ready to install.
+    'database_ready' => FALSE,
     // TRUE when a valid settings.php exists (containing both database
     // connection information and config directory names).
     'settings_verified' => FALSE,
@@ -335,9 +337,6 @@ function install_begin_request($class_loader, &$install_state) {
   $container
     ->register('string_translation', 'Drupal\Core\StringTranslation\TranslationManager')
     ->addArgument(new Reference('language_manager'));
-  $container
-    ->register('path.matcher', 'Drupal\Core\Path\PathMatcher')
-    ->addArgument(new Reference('config.factory'));
 
   // Register the stream wrapper manager.
   $container
@@ -351,6 +350,13 @@ function install_begin_request($class_loader, &$install_state) {
   $install_state['config_verified'] = install_ensure_config_directory(CONFIG_ACTIVE_DIRECTORY) && install_ensure_config_directory(CONFIG_STAGING_DIRECTORY);
   $install_state['database_verified'] = install_verify_database_settings();
   $install_state['settings_verified'] = $install_state['config_verified'] && $install_state['database_verified'];
+
+  // Install factory tables only after checking the database.
+  if ($install_state['database_verified'] && $install_state['database_ready']) {
+    $container
+      ->register('path.matcher', 'Drupal\Core\Path\PathMatcher')
+      ->addArgument(new Reference('config.factory'));
+  }
 
   if ($install_state['settings_verified']) {
     try {
@@ -704,6 +710,9 @@ function install_tasks($install_state) {
       'run' => $install_state['settings_verified'] ? INSTALL_TASK_SKIP : INSTALL_TASK_RUN_IF_NOT_COMPLETED,
       'function' => 'Drupal\Core\Installer\Form\SiteSettingsForm',
     ),
+    'install_verify_database_ready' => array(
+      'run' => $install_state['database_ready'] ? INSTALL_TASK_SKIP : INSTALL_TASK_RUN_IF_NOT_COMPLETED,
+    ),
     'install_base_system' => array(
       'run' => $install_state['base_system_verified'] ? INSTALL_TASK_SKIP : INSTALL_TASK_RUN_IF_NOT_COMPLETED,
     ),
@@ -1048,6 +1057,21 @@ function install_verify_database_settings() {
     }
   }
   return FALSE;
+}
+
+/**
+ * Verify that the database is ready (no existing Drupal installation).
+ */
+function install_verify_database_ready() {
+  $system_schema = system_schema();
+  end($system_schema);
+  $table = key($system_schema);
+
+  if ($database = Database::getConnectionInfo()) {
+    if (Database::getConnection()->schema()->tableExists($table)) {
+      throw new AlreadyInstalledException(\Drupal::service('string_translation'));
+    }
+  }
 }
 
 /**
