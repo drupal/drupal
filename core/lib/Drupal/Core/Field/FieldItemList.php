@@ -334,6 +334,9 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
     // Extract the submitted value, and validate it.
     $widget = $this->defaultValueWidget($form_state);
     $widget->extractFormValues($this, $element, $form_state);
+    // Force a non-required field definition.
+    // @see self::defaultValueWidget().
+    $this->definition->required = FALSE;
     $violations = $this->validate();
 
     // Assign reported errors to the correct form element.

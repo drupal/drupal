@@ -103,11 +103,18 @@ class EntityReferenceAdminTest extends WebTestBase {
 
     // Third step: confirm.
     $this->drupalPostForm(NULL, array(
+      'field[required]' => '1',
       'field[settings][handler_settings][target_bundles][' . key($bundles) . ']' => key($bundles),
     ), t('Save settings'));
 
     // Check that the field appears in the overview form.
     $this->assertFieldByXPath('//table[@id="field-overview"]//tr[@id="field-test"]/td[1]', 'Test label', 'Field was created and appears in the overview page.');
+
+    // Check that the field settings form can be submitted again, even when the
+    // field is required.
+    // The first 'Edit' link is for the Body field.
+    $this->clickLink(t('Edit'), 1);
+    $this->drupalPostForm(NULL, array(), t('Save settings'));
   }
 
 

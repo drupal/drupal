@@ -359,6 +359,24 @@ class ManageFieldsTest extends WebTestBase {
     $field = FieldConfig::loadByName('node', $this->type, $field_name);
     $this->assertEqual($field->default_value, NULL, 'The default value was correctly saved.');
 
+    // Check that the default value can be empty when the field is marked as
+    // required and can store unlimited values.
+    $field_storage = FieldStorageConfig::loadByName('node', $field_name);
+    $field_storage->cardinality = FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED;
+    $field_storage->save();
+
+    $this->drupalGet($admin_path);
+    $edit = array(
+      'field[required]' => 1,
+    );
+    $this->drupalPostForm(NULL, $edit, t('Save settings'));
+
+    $this->drupalGet($admin_path);
+    $this->drupalPostForm(NULL, array(), t('Save settings'));
+    $this->assertText("Saved $field_name configuration", 'The form was successfully submitted.');
+    $field = FieldConfig::loadByName('node', $this->type, $field_name);
+    $this->assertEqual($field->default_value, NULL, 'The default value was correctly saved.');
+
     // Check that the default widget is used when the field is hidden.
     entity_get_form_display($field->entity_type, $field->bundle, 'default')
       ->removeComponent($field_name)->save();
