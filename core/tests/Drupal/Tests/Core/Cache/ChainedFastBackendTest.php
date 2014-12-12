@@ -75,6 +75,8 @@ class ChainedFastBackendTest extends UnitTestCase {
       'cid' => 'foo',
       'data' => 'baz',
       'created' => time(),
+      'expire' => time() + 3600,
+      'tags' => ['tag'],
     );
 
     $consistent_cache = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
@@ -101,7 +103,7 @@ class ChainedFastBackendTest extends UnitTestCase {
     // We should get a call to set the cache item on the fast backend.
     $fast_cache->expects($this->once())
       ->method('set')
-      ->with($cache_item->cid, $cache_item->data);
+      ->with($cache_item->cid, $cache_item->data, $cache_item->expire, $cache_item->tags);
 
     $chained_fast_backend = new ChainedFastBackend(
       $consistent_cache,

@@ -28,4 +28,5 @@ class BackendChainUnitTest extends GenericCacheBackendUnitTestBase {
 
     return $chain;
   }
+
 }
