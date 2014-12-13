@@ -24,16 +24,26 @@ use Drupal\views\Views;
 class HandlerFieldFieldTest extends FieldTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  public static $modules = array('node', 'field_test');
+
+  /**
    * Views used by this test.
    *
    * @var array
    */
   public static $testViews = array('test_view_fieldapi');
 
+  /**
+   * Test nodes.
+   *
+   * @var \Drupal\node\NodeInterface[]
+   */
   public $nodes;
 
   /**
-   * @todo.
+   * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
@@ -66,6 +76,15 @@ class HandlerFieldFieldTest extends FieldTestBase {
     ));
     $this->fieldStorages[5]->save();
 
+    // Setup a text field with access control.
+    // @see field_test_entity_field_access()
+    $this->fieldStorages[6] = entity_create('field_storage_config', array(
+      'field_name' => 'field_no_view_access',
+      'entity_type' => 'node',
+      'type' => 'text',
+    ));
+    $this->fieldStorages[6]->save();
+
     $this->setUpFields();
 
     // Create some nodes.
@@ -77,6 +96,8 @@ class HandlerFieldFieldTest extends FieldTestBase {
         $field_storage = $this->fieldStorages[$key];
         $edit[$field_storage->getName()][0]['value'] = $this->randomMachineName(8);
       }
+      // Add a hidden value for the no-view field.
+      $edit[$this->fieldStorages[6]->getName()][0]['value'] = 'ssh secret squirrel';
       for ($j = 0; $j < 5; $j++) {
         $edit[$this->fieldStorages[3]->getName()][$j]['value'] = $this->randomMachineName(8);
       }
@@ -107,6 +128,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
 
   public function testFieldRender() {
     $this->_testSimpleFieldRender();
+    $this->_testInaccessibleFieldRender();
     $this->_testFormatterSimpleFieldRender();
     $this->_testMultipleFieldRender();
   }
@@ -124,6 +146,24 @@ class HandlerFieldFieldTest extends FieldTestBase {
         $expected_field = $this->nodes[$i]->$field_name->value;
         $this->assertEqual($rendered_field, $expected_field);
       }
+    }
+  }
+
+  public function _testInaccessibleFieldRender() {
+    $view = Views::getView('test_view_fieldapi');
+    $this->prepareView($view);
+    $this->executeView($view);
+
+    // Check that the field handler for the hidden field is correctly removed
+    // from the display.
+    // @see https://www.drupal.org/node/2382931
+    $this->assertFalse(array_key_exists('field_no_view_access', $view->field));
+
+    // Check that the access-denied field is not visible.
+    for ($i = 0; $i < 3; $i++) {
+      $field_name = $this->fieldStorages[6]->getName();
+      $rendered_field = $view->style_plugin->getField($i, $field_name);
+      $this->assertFalse($rendered_field, 'Hidden field not rendered');
     }
   }
 

@@ -47,11 +47,13 @@ interface ViewsHandlerInterface extends ViewsPluginInterface {
   public function ensureMyTable();
 
   /**
-   * Check whether current user has access to this handler.
+   * Check whether given user has access to this handler.
    *
    * @param AccountInterface $account
+   *   The user account to check.
    *
-   * @return boolean
+   * @return bool
+   *   TRUE if the user has access to the handler, FALSE otherwise.
    */
   public function access(AccountInterface $account);
 

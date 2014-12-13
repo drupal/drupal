@@ -216,7 +216,7 @@ class Field extends FieldPluginBase implements CacheablePluginInterface {
   public function access(AccountInterface $account) {
     $base_table = $this->get_base_table();
     $access_control_handler = $this->entityManager->getAccessControlHandler($this->definition['entity_tables'][$base_table]);
-    return $access_control_handler->fieldAccess('view', $this->getFieldDefinition(), $account, NULL, TRUE);
+    return $access_control_handler->fieldAccess('view', $this->getFieldDefinition(), $account);
   }
 
   /**

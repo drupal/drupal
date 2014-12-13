@@ -33,6 +33,11 @@ display:
           table: node__field_name_5
           field: field_name_5
           plugin_id: field
+        field_no_view_access:
+          id: field_no_view_access
+          table: node__field_no_view_access
+          field: field_no_view_access
+          plugin_id: field
       cache:
         type: none
       exposed_form:
