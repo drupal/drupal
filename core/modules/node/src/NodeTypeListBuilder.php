@@ -31,7 +31,7 @@ class NodeTypeListBuilder extends ConfigEntityListBuilder {
   protected $urlGenerator;
 
   /**
-   * Constructs a NodeTypeForm object.
+   * Constructs a NodeTypeListBuilder object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
