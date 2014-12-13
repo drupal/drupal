@@ -18,28 +18,16 @@ interface LinkGeneratorInterface {
   /**
    * Renders a link to a URL.
    *
-   * Examples:
-   * @code
-   * $link_generator = \Drupal::service('link_generator');
-   * $installer_url = \Drupal\Core\Url::fromUri('base://core/install.php');
-   * $installer_link = $link_generator->generate($text, $installer_url);
-   * $external_url = \Drupal\Core\Url::fromUri('http://example.com', ['query' => ['foo' => 'bar']]);
-   * $external_link = $link_generator->generate($text, $external_url);
-   * $internal_url = \Drupal\Core\Url::fromRoute('system.admin');
-   * $internal_link = $link_generator->generate($text, $internal_url);
-   * @endcode
    * However, for links enclosed in translatable text you should use t() and
    * embed the HTML anchor tag directly in the translated string. For example:
    * @code
-   * $text = t('Visit the <a href="@url">content types</a> page', array('@url' => \Drupal::url('node.overview_types')));
+   * t('Visit the <a href="@url">content types</a> page', array('@url' => \Drupal::url('node.overview_types')));
    * @endcode
    * This keeps the context of the link title ('settings' in the example) for
    * translators.
    *
    * @param string|array $text
    *   The link text for the anchor tag as a translated string or render array.
-   *   Strings will be sanitized automatically. If you need to output HTML in
-   *   the link text you should use a render array.
    * @param \Drupal\Core\Url $url
    *   The URL object used for the link. Amongst its options, the following may
    *   be set to affect the generated link:
@@ -48,6 +36,11 @@ interface LinkGeneratorInterface {
    *     must be a string; other elements are more flexible, as they just need
    *     to work as an argument for the constructor of the class
    *     Drupal\Core\Template\Attribute($options['attributes']).
+   *   - html: Whether $text is HTML or just plain-text. For
+   *     example, to make an image tag into a link, this must be set to TRUE, or
+   *     you will see the escaped HTML image tag. $text is not sanitized if
+   *     'html' is TRUE. The calling function must ensure that $text is already
+   *     safe. Defaults to FALSE.
    *   - language: An optional language object. If the path being linked to is
    *     internal to the site, $options['language'] is used to determine whether
    *     the link is "active", or pointing to the current page (the language as

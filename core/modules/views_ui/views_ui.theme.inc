@@ -158,17 +158,7 @@ function theme_views_ui_build_group_filter_form($variables) {
       'value' => drupal_render($form['group_items'][$group_id]['value']),
       'remove' => array(
         'data' => array(
-          '#markup' => drupal_render($form['group_items'][$group_id]['remove']) . \Drupal::l(
-            array(
-              '#type' => 'inline_template',
-              '#template' => '<span>{% trans %}Remove{% endtrans %}</span>',
-            ),
-            Url::fromRoute('<none>', array(), array('attributes' => array(
-              'id' => 'views-remove-link-' . $group_id,
-              'class' => array('views-hidden', 'views-button-remove', 'views-groups-remove-link', 'views-remove-link'),
-              'alt' => t('Remove this item'),
-              'title' => t('Remove this item')),
-            ))),
+          '#markup' => drupal_render($form['group_items'][$group_id]['remove']) . \Drupal::l('<span>' . t('Remove') . '</span>', Url::fromRoute('<none>', [], array('attributes' => array('id' => 'views-remove-link-' . $group_id, 'class' => array('views-hidden', 'views-button-remove', 'views-groups-remove-link', 'views-remove-link'), 'alt' => t('Remove this item'), 'title' => t('Remove this item')), 'html' => true))),
         ),
       ),
     );
@@ -288,10 +278,7 @@ function template_preprocess_views_ui_rearrange_filter_form(&$variables) {
         $remove_link = array(
           '#type' => 'link',
           '#url' => Url::fromRoute('<none>'),
-          '#title' => array(
-            '#type' => 'inline_template',
-            '#template' => '<span>{% trans %}Remove{% endtrans %}</span>',
-          ),
+          '#title' => '<span>' . t('Remove') . '</span>',
           '#weight' => '1',
           '#options' => array(
             'attributes' => array(
@@ -305,6 +292,7 @@ function template_preprocess_views_ui_rearrange_filter_form(&$variables) {
               'alt' => t('Remove this item'),
               'title' => t('Remove this item'),
             ),
+            'html' => TRUE,
           ),
         );
         $row[]['data'] = array(

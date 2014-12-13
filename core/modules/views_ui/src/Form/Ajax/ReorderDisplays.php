@@ -120,13 +120,11 @@ class ReorderDisplays extends ViewsFormBase {
         ),
         'link' => array(
           '#type' => 'link',
-          '#title' => array(
-            '#type' => 'inline_template',
-            '#template' => '<span>{{ label }}</span>',
-            '#context' => array('label' => $this->t('Remove')),
-          ),
+          '#title' => '<span>' . $this->t('Remove') . '</span>',
           '#url' => Url::fromRoute('<none>'),
-          '#href' => 'javascript:void()',
+          '#options' => array(
+            'html' => TRUE,
+          ),
           '#attributes' => array(
             'id' => 'display-remove-link-' . $id,
             'class' => array('views-button-remove', 'display-remove-link'),

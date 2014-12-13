@@ -7,7 +7,6 @@
 
 namespace Drupal\views\Tests\Plugin;
 
-use Drupal\Component\Utility\String;
 use Drupal\views\Views;
 use Drupal\views_test_data\Plugin\views\display\DisplayTest as DisplayTestPlugin;
 
@@ -121,12 +120,12 @@ class DisplayTest extends PluginTestBase {
 
     $this->clickLink('Test option title');
 
-    $test_option = $this->randomString();
-    $this->drupalPostForm(NULL, array('test_option' => $test_option), t('Apply'));
+    $this->randomString = $this->randomString();
+    $this->drupalPostForm(NULL, array('test_option' => $this->randomString), t('Apply'));
 
     // Check the new value has been saved by checking the UI summary text.
     $this->drupalGet('admin/structure/views/view/test_view/edit/display_test_1');
-    $this->assertRaw(String::checkPlain($test_option));
+    $this->assertRaw($this->randomString);
 
     // Test the enable/disable status of a display.
     $view->display_handler->setOption('enabled', FALSE);

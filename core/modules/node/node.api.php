@@ -555,6 +555,7 @@ function hook_node_links_alter(array &$links, NodeInterface $entity, array &$con
       'node-report' => array(
         'title' => t('Report'),
         'href' => "node/{$entity->id()}/report",
+        'html' => TRUE,
         'query' => array('token' => \Drupal::getContainer()->get('csrf_token')->get("node/{$entity->id()}/report")),
       ),
     ),

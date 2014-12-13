@@ -97,6 +97,7 @@ class Actions extends Container {
         $button = drupal_render($element[$key]);
         $dropbuttons[$dropbutton]['#links'][$key] = array(
           'title' => $button,
+          'html' => TRUE,
         );
       }
     }

@@ -985,6 +985,7 @@ class ViewEditForm extends ViewFormBase {
       'title' => $add_text,
       'url' => Url::fromRoute('views_ui.form_add_handler', ['js' => 'nojs', 'view' => $view->id(), 'display_id' => $display['id'], 'type' => $type]),
       'attributes' => array('class' => array('icon compact add', 'views-ajax-link'), 'id' => 'views-add-' . $type),
+      'html' => TRUE,
     );
     if ($count_handlers > 0) {
       // Create the rearrange text variable for the rearrange action.
@@ -994,6 +995,7 @@ class ViewEditForm extends ViewFormBase {
         'title' => $rearrange_text,
         'url' => $rearrange_url,
         'attributes' => array('class' => array($class, 'views-ajax-link'), 'id' => 'views-rearrange-' . $type),
+        'html' => TRUE,
       );
     }
 
@@ -1055,7 +1057,7 @@ class ViewEditForm extends ViewFormBase {
           'display_id' => $display['id'],
           'type' => $type,
           'id' => $id,
-        ), array('attributes' => array('class' => array('views-ajax-link')))));
+        ), array('attributes' => array('class' => array('views-ajax-link')), 'html' => TRUE)));
         continue;
       }
 
@@ -1078,37 +1080,27 @@ class ViewEditForm extends ViewFormBase {
         'display_id' => $display['id'],
         'type' => $type,
         'id' => $id,
-      ), array('attributes' => $link_attributes)));
+      ), array('attributes' => $link_attributes, 'html' => TRUE)));
       $build['fields'][$id]['#class'][] = Html::cleanCssIdentifier($display['id']. '-' . $type . '-' . $id);
 
       if ($executable->display_handler->useGroupBy() && $handler->usesGroupBy()) {
-        $build['fields'][$id]['#settings_links'][] = $this->l(array(
-          '#type' => 'inline_template',
-          '#template' => '<span class="label">{{ label }}</span>',
-          '#context' => array('label' => $this->t('Aggregation settings')),
-        ),
-        new Url('views_ui.form_handler_group', array(
+        $build['fields'][$id]['#settings_links'][] = $this->l('<span class="label">' . $this->t('Aggregation settings') . '</span>', new Url('views_ui.form_handler_group', array(
           'js' => 'nojs',
           'view' => $view->id(),
           'display_id' => $display['id'],
           'type' => $type,
           'id' => $id,
-        ), array('attributes' => array('class' => array('views-button-configure', 'views-ajax-link'), 'title' => $this->t('Aggregation settings')))));
+        ), array('attributes' => array('class' => array('views-button-configure', 'views-ajax-link'), 'title' => $this->t('Aggregation settings')), 'html' => TRUE)));
       }
 
       if ($handler->hasExtraOptions()) {
-        $build['fields'][$id]['#settings_links'][] = $this->l(array(
-          '#type' => 'inline_template',
-          '#template' => '<span class="label">{{ label }}</span>',
-          '#context' => array('label' => $this->t('Settings')),
-        ),
-        new Url('views_ui.form_handler_extra', array(
+        $build['fields'][$id]['#settings_links'][] = $this->l('<span class="label">' . $this->t('Settings') . '</span>', new Url('views_ui.form_handler_extra', array(
           'js' => 'nojs',
           'view' => $view->id(),
           'display_id' => $display['id'],
           'type' => $type,
           'id' => $id,
-        ), array('attributes' => array('class' => array('views-button-configure', 'views-ajax-link'), 'title' => $this->t('Settings')))));
+        ), array('attributes' => array('class' => array('views-button-configure', 'views-ajax-link'), 'title' => $this->t('Settings')), 'html' => TRUE)));
       }
 
       if ($grouping) {

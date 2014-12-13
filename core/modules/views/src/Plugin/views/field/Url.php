@@ -8,7 +8,6 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url as DrupalUrl;
 use Drupal\views\ResultRow;
 
 /**
@@ -46,14 +45,11 @@ class Url extends FieldPluginBase {
   public function render(ResultRow $values) {
     $value = $this->getValue($values);
     if (!empty($this->options['display_as_link'])) {
-      // If the URL is valid, render it normally.
-      if ($url = \Drupal::service('path.validator')->getUrlIfValidWithoutAccessCheck($value)) {
-        return \Drupal::l($this->sanitizeValue($value), $url);
-      }
-      // If the URL is not valid, treat it as an unrecognized local resource.
-      return \Drupal::l($this->sanitizeValue($value), DrupalUrl::fromUri('base://' . trim($value, '/')));
+      return _l($this->sanitizeValue($value), $value, array('html' => TRUE));
     }
-    return $this->sanitizeValue($value, 'url');
+    else {
+      return $this->sanitizeValue($value, 'url');
+    }
   }
 
 }

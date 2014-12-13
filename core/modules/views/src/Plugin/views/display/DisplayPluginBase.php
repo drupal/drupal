@@ -1036,34 +1036,19 @@ abstract class DisplayPluginBase extends PluginBase {
    * an easy URL to exactly the right section. Don't override this.
    */
   public function optionLink($text, $section, $class = '', $title = '') {
-    if (!trim($text)) {
-      $text = $this->t('Broken field');
+    if (!empty($class)) {
+      $text = '<span>' . $text . '</span>';
     }
 
-    if (!empty($class)) {
-      $text = [
-        '#type' => 'inline_template',
-        '#template' => '<span>{{ text }}</span>',
-        '#context' => array('text' => $text),
-      ];
+    if (!trim($text)) {
+      $text = $this->t('Broken field');
     }
 
     if (empty($title)) {
       $title = $text;
     }
 
-    return \Drupal::l($text, new Url('views_ui.form_display', array(
-        'js' => 'nojs',
-        'view' => $this->view->storage->id(),
-        'display_id' => $this->display['id'],
-        'type' => $section
-      ), array(
-        'attributes' => array(
-          'class' => array('views-ajax-link', $class),
-          'title' => $title,
-          'id' => drupal_html_id('views-' . $this->display['id'] . '-' . $section)
-        )
-    )));
+    return \Drupal::l($text, new Url('views_ui.form_display', ['js' => 'nojs', 'view' => $this->view->storage->id(), 'display_id' => $this->display['id'], 'type' => $section], array('attributes' => array('class' => array('views-ajax-link', $class), 'title' => $title, 'id' => drupal_html_id('views-' . $this->display['id'] . '-' . $section)), 'html' => TRUE)));
   }
 
   /**
@@ -1147,12 +1132,12 @@ abstract class DisplayPluginBase extends PluginBase {
       $options['display_id'] = array(
         'category' => 'other',
         'title' => $this->t('Machine Name'),
-        'value' => !empty($this->display['new_id']) ? $this->display['new_id'] : $this->display['id'],
+        'value' => !empty($this->display['new_id']) ? String::checkPlain($this->display['new_id']) : String::checkPlain($this->display['id']),
         'desc' => $this->t('Change the machine name of this display.'),
       );
     }
 
-    $display_comment = Unicode::substr($this->getOption('display_comment'), 0, 10);
+    $display_comment = String::checkPlain(Unicode::substr($this->getOption('display_comment'), 0, 10));
     $options['display_comment'] = array(
       'category' => 'other',
       'title' => $this->t('Administrative comment'),
@@ -1346,7 +1331,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $display_id = $this->getLinkDisplay();
         $displays = $this->view->storage->get('display');
         if (!empty($displays[$display_id])) {
-          $link_display = $displays[$display_id]['display_title'];
+          $link_display = String::checkPlain($displays[$display_id]['display_title']);
         }
       }
 
@@ -1387,7 +1372,7 @@ abstract class DisplayPluginBase extends PluginBase {
       $options['exposed_form']['links']['exposed_form_options'] = $this->t('Exposed form settings for this exposed form style.');
     }
 
-    $css_class = trim($this->getOption('css_class'));
+    $css_class = String::checkPlain(trim($this->getOption('css_class')));
     if (!$css_class) {
       $css_class = $this->t('None');
     }

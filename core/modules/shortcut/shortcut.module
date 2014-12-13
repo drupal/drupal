@@ -8,8 +8,8 @@
 use Drupal\Core\Access\AccessResult;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Routing\UrlMatcher;
 use Drupal\Core\Url;
 use Drupal\shortcut\Entity\ShortcutSet;
 use Drupal\shortcut\ShortcutSetInterface;
@@ -339,13 +339,9 @@ function shortcut_preprocess_page(&$variables) {
         ),
         '#prefix' => '<div class="add-or-remove-shortcuts ' . $link_mode . '-shortcut">',
         '#type' => 'link',
-        '#title' => array(
-          '#type' => 'inline_template',
-          '#template' => '<span class="icon"></span><span class="text">{{ link_text }}</span>',
-          '#context' => array('link_text' => $link_text),
-        ),
+        '#title' => '<span class="icon"></span><span class="text">'. $link_text .'</span>',
         '#url' => Url::fromRoute($route_name, $route_parameters),
-        '#options' => array('query' => $query),
+        '#options' => array('query' => $query, 'html' => TRUE),
         '#suffix' => '</div>',
       );
     }
