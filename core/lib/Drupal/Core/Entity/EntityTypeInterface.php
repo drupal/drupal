@@ -46,7 +46,7 @@ interface EntityTypeInterface {
    * @param mixed $value
    *   The value to set.
    *
-   * @return static
+   * @return $this
    */
   public function set($property, $value);
 
@@ -173,7 +173,7 @@ interface EntityTypeInterface {
    * @param string $class
    *   The name of the entity type class.
    *
-   * @return static
+   * @return $this
    */
   public function setClass($class);
 
@@ -265,7 +265,7 @@ interface EntityTypeInterface {
    *   The form class implementing
    *   \Drupal\Core\Entity\EntityFormInterface.
    *
-   * @return static
+   * @return $this
    *
    * @see \Drupal\Core\Entity\EntityFormBuilderInterface
    */
@@ -293,7 +293,7 @@ interface EntityTypeInterface {
    * @param string $class
    *   The list class to use for the operation.
    *
-   * @return static
+   * @return $this
    */
   public function setListBuilderClass($class);
 
@@ -368,7 +368,7 @@ interface EntityTypeInterface {
    * @param array|string $value
    *   The value for a handler type.
    *
-   * @return static
+   * @return $this
    */
   public function setHandlerClass($handler_type, $value);
 
@@ -455,7 +455,7 @@ interface EntityTypeInterface {
    * @param string $route_name
    *   The route name to use for the link.
    *
-   * @return static
+   * @return $this
    */
   public function setLinkTemplate($key, $route_name);
 
@@ -485,7 +485,7 @@ interface EntityTypeInterface {
    * @param callable $callback
    *   A callable that returns the label of the entity.
    *
-   * @return static
+   * @return $this
    */
   public function setLabelCallback($callback);
 
@@ -625,7 +625,7 @@ interface EntityTypeInterface {
    * @param callable $callback
    *   A callback to use to provide a URI for the entity.
    *
-   * @return static
+   * @return $this
    */
   public function setUriCallback($callback);
 
