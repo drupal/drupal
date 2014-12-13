@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Entity\Sql;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
 /**
@@ -130,18 +131,32 @@ class DefaultTableMapping implements TableMappingInterface {
    */
   public function getColumnNames($field_name) {
     if (!isset($this->columnMapping[$field_name])) {
-      $column_names = array_keys($this->fieldStorageDefinitions[$field_name]->getColumns());
-      if (count($column_names) == 1) {
-        $this->columnMapping[$field_name] = array(reset($column_names) => $field_name);
-      }
-      else {
-        $this->columnMapping[$field_name] = array();
-        foreach ($column_names as $column_name) {
-          $this->columnMapping[$field_name][$column_name] = $field_name . '__' . $column_name;
-        }
+      $this->columnMapping[$field_name] = array();
+      $storage_definition = $this->fieldStorageDefinitions[$field_name];
+      foreach (array_keys($this->fieldStorageDefinitions[$field_name]->getColumns()) as $property_name) {
+        $this->columnMapping[$field_name][$property_name] = $this->getFieldColumnName($storage_definition, $property_name);
       }
     }
     return $this->columnMapping[$field_name];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldColumnName(FieldStorageDefinitionInterface $storage_definition, $property_name) {
+    $field_name = $storage_definition->getName();
+
+    if ($this->allowsSharedTableStorage($storage_definition)) {
+      $column_name = count($storage_definition->getColumns()) == 1 ? $field_name :  $field_name . '__' . $property_name;
+    }
+    elseif ($this->requiresDedicatedTableStorage($storage_definition)) {
+      $column_name = !in_array($property_name, $this->getReservedColumns()) ? $field_name . '_' . $property_name : $property_name;
+    }
+    else {
+      throw new SqlContentEntityStorageException(String::format('Column information not available for the "@field_name" field.', array('@field_name' => $field_name)));
+    }
+
+    return $column_name;
   }
 
   /**
@@ -317,13 +332,6 @@ class DefaultTableMapping implements TableMappingInterface {
       $table_name = $entity_type . $separator . $field_hash;
     }
     return $table_name;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getFieldColumnName(FieldStorageDefinitionInterface $storage_definition, $column) {
-    return in_array($column, $this->getReservedColumns()) ? $column : $storage_definition->getName() . '_' . $column;
   }
 
 }

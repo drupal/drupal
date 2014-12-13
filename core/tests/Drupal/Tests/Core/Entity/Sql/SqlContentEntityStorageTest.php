@@ -281,7 +281,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
     );
 
     $this->fieldDefinitions = $this->mockFieldDefinitions(array('id'));
-    $this->fieldDefinitions['id']->expects($this->once())
+    $this->fieldDefinitions['id']->expects($this->any())
       ->method('getColumns')
       ->will($this->returnValue($columns));
     $this->fieldDefinitions['id']->expects($this->once())
