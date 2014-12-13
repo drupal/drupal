@@ -580,9 +580,6 @@ function template_preprocess_status_messages(&$variables) {
  *     - title: The link text.
  *     - url: (optional) The url object to link to. If omitted, no a tag is
  *       printed out.
- *     - html: (optional) Whether or not 'title' is HTML. If set, the title
- *       will not be passed through
- *       \Drupal\Component\Utility\String::checkPlain().
  *     - attributes: (optional) Attributes for the anchor, or for the <span>
  *       tag used in its place if no 'href' is supplied. If element 'class' is
  *       included, it must be an array of one or more class names.
@@ -664,7 +661,7 @@ function template_preprocess_links(&$variables) {
       $keys = ['title', 'url'];
       $link_element = array(
         '#type' => 'link',
-        '#title' => $link['title'],
+        '#title' => is_array($link['title']) ? drupal_render($link['title']) : SafeMarkup::escape($link['title']),
         '#options' => array_diff_key($link, array_combine($keys, $keys)),
         '#url' => $link['url'],
         '#ajax' => $link['ajax'],
@@ -706,8 +703,7 @@ function template_preprocess_links(&$variables) {
       }
 
       // Handle title-only text items.
-      $text = (!empty($link['html']) ? $link['title'] : String::checkPlain($link['title']));
-      $item['text'] = $text;
+      $item['text'] = $link_element['#title'];
       if (isset($link['attributes'])) {
         $item['text_attributes'] = new Attribute($link['attributes']);
       }

@@ -8,6 +8,7 @@
 namespace Drupal\responsive_image\Tests;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Url;
 use Drupal\image\Tests\ImageFieldTestBase;
 
 /**
@@ -34,10 +35,19 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
   public static $modules = array('field_ui', 'responsive_image', 'responsive_image_test_module');
 
   /**
-   * Drupal\simpletest\WebTestBase\setUp().
+   * The link generator.
+   *
+   * @var \Drupal\Core\Utility\LinkGeneratorInterface
+   */
+  protected $linkGenerator;
+
+  /**
+   * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
+
+    $this->linkGenerator = $this->container->get('link_generator');
 
     // Create user.
     $this->admin_user = $this->drupalCreateUser(array(
@@ -160,7 +170,8 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       '#width' => 40,
       '#height' => 20,
     );
-    $default_output = '<a href="' . file_create_url($image_uri) . '">' . drupal_render($image) . '</a>';
+
+    $default_output = $this->linkGenerator->generate($image, Url::fromUri(file_create_url($image_uri)));
     $this->drupalGet('node/' . $nid);
     $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
     $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');

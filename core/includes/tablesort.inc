@@ -43,6 +43,11 @@ function tablesort_init($header) {
 function tablesort_header(&$cell_content, array &$cell_attributes, array $header, array $ts) {
   // Special formatting for the currently sorted column header.
   if (isset($cell_attributes['field'])) {
+    $text = array(
+      'cell_content' => array(
+        '#markup' => $cell_content,
+      ),
+    );
     $title = t('sort by @s', array('@s' => $cell_content));
     if ($cell_content == $ts['name']) {
       // aria-sort is a WAI-ARIA property that indicates if items in a table
@@ -51,24 +56,24 @@ function tablesort_header(&$cell_content, array &$cell_attributes, array $header
       $cell_attributes['aria-sort'] = ($ts['sort'] == 'asc') ? 'ascending' : 'descending';
       $ts['sort'] = (($ts['sort'] == 'asc') ? 'desc' : 'asc');
       $cell_attributes['class'][] = 'active';
-      $tablesort_indicator = array(
-        '#theme' => 'tablesort_indicator',
-        '#style' => $ts['sort'],
-      );
-      $image = drupal_render($tablesort_indicator);
     }
     else {
-      // If the user clicks a different header, we want to sort ascending initially.
+      // If the user clicks a different header, we want to sort ascending
+      // initially.
       $ts['sort'] = 'asc';
-      $image = '';
     }
-    $cell_content = \Drupal::l($cell_content . $image, new Url('<current>', [], [
+
+    // Append the sort indicator to the cell content.
+    $text['image'] = [
+      '#theme' => 'tablesort_indicator',
+      '#style' => $ts['sort'],
+    ];
+    $cell_content = \Drupal::l($text, new Url('<current>', [], [
       'attributes' => array('title' => $title),
       'query' => array_merge($ts['query'], array(
         'sort' => $ts['sort'],
         'order' => $cell_content,
       )),
-      'html' => TRUE,
     ]));
 
     unset($cell_attributes['field'], $cell_attributes['sort']);

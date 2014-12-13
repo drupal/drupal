@@ -211,6 +211,15 @@ class FunctionsTest extends WebTestBase {
           'key' => 'value',
         )
       ),
+      'render array' => array(
+        'title' => array(
+          '#type' => 'inline_template',
+          '#template' => '<span class="unescaped">{{ text }}</span>',
+          '#context' => array(
+            'text' => 'potentially unsafe text that <should> be escaped',
+          ),
+        ),
+      ),
     );
 
     $expected_links = '';
@@ -221,6 +230,7 @@ class FunctionsTest extends WebTestBase {
     $expected_links .= '<li class="router-test"><a href="' . \Drupal::urlGenerator()->generate('router_test.1') . '">' . String::checkPlain('Test route') . '</a></li>';
     $query = array('key' => 'value');
     $expected_links .= '<li class="query-test"><a href="' . \Drupal::urlGenerator()->generate('router_test.1', $query) . '">' . String::checkPlain('Query test route') . '</a></li>';
+    $expected_links .= '<li class="render-array"><span class="unescaped">' . String::checkPlain('potentially unsafe text that <should> be escaped') . '</span></li>';
     $expected_links .= '</ul>';
 
     // Verify that passing a string as heading works.
@@ -260,6 +270,7 @@ class FunctionsTest extends WebTestBase {
     $expected_links .= '<li class="router-test"><a href="' . \Drupal::urlGenerator()->generate('router_test.1') . '">' . String::checkPlain('Test route') . '</a></li>';
     $query = array('key' => 'value');
     $expected_links .= '<li class="query-test"><a href="' . \Drupal::urlGenerator()->generate('router_test.1', $query) . '">' . String::checkPlain('Query test route') . '</a></li>';
+    $expected_links .= '<li class="render-array"><span class="unescaped">' . String::checkPlain('potentially unsafe text that <should> be escaped') . '</span></li>';
     $expected_links .= '</ul>';
     $expected = $expected_heading . $expected_links;
     $this->assertThemeOutput('links', $variables, $expected);
@@ -276,6 +287,7 @@ class FunctionsTest extends WebTestBase {
     $query = array('key' => 'value');
     $encoded_query = String::checkPlain(Json::encode($query));
     $expected_links .= '<li data-drupal-link-query="'.$encoded_query.'" data-drupal-link-system-path="router_test/test1" class="query-test"><a href="' . \Drupal::urlGenerator()->generate('router_test.1', $query) . '" data-drupal-link-query="'.$encoded_query.'" data-drupal-link-system-path="router_test/test1">' . String::checkPlain('Query test route') . '</a></li>';
+    $expected_links .= '<li class="render-array"><span class="unescaped">' . String::checkPlain('potentially unsafe text that <should> be escaped') . '</span></li>';
     $expected_links .= '</ul>';
     $expected = $expected_heading . $expected_links;
     $this->assertThemeOutput('links', $variables, $expected);

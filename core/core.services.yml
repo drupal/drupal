@@ -508,7 +508,7 @@ services:
     arguments: ['@request_stack', '@config.factory' ]
   link_generator:
     class: Drupal\Core\Utility\LinkGenerator
-    arguments: ['@url_generator', '@module_handler']
+    arguments: ['@url_generator', '@module_handler', '@renderer']
   router:
     class: Drupal\Core\Routing\AccessAwareRouter
     arguments: ['@router.no_access_checks', '@access_manager', '@current_user']

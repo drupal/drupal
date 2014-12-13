@@ -638,6 +638,8 @@ function drupal_http_header_attributes(array $attributes = array()) {
  *
  * @param string|array $text
  *   The link text for the anchor tag as a translated string or render array.
+ *   Strings will be sanitized automatically. If you need to output HTML in the
+ *   link text you should use a render array.
  * @param string $path
  *   The internal path or external URL being linked to, such as "node/34" or
  *   "http://example.com/foo". After the url() function is called to construct
@@ -653,11 +655,6 @@ function drupal_http_header_attributes(array $attributes = array()) {
  *     must be a string; other elements are more flexible, as they just need
  *     to work as an argument for the constructor of the class
  *     Drupal\Core\Template\Attribute($options['attributes']).
- *   - 'html' (default FALSE): Whether $text is HTML or just plain-text. For
- *     example, to make an image tag into a link, this must be set to TRUE, or
- *     you will see the escaped HTML image tag. $text is not sanitized if
- *     'html' is TRUE. The calling function must ensure that $text is already
- *     safe.
  *   - 'language': An optional language object. If the path being linked to is
  *     internal to the site, $options['language'] is used to determine whether
  *     the link is "active", or pointing to the current page (the language as
@@ -710,7 +707,6 @@ function _l($text, $path, array $options = array()) {
   $variables['options'] += array(
     'attributes' => array(),
     'query' => array(),
-    'html' => FALSE,
     'language' => NULL,
     'set_active_class' => FALSE,
   );
@@ -755,8 +751,9 @@ function _l($text, $path, array $options = array()) {
   // in an HTML argument context, we need to encode it properly.
   $url = String::checkPlain(_url($variables['path'], $variables['options']));
 
-  // Sanitize the link text if necessary.
-  $text = $variables['options']['html'] ? $variables['text'] : String::checkPlain($variables['text']);
+  // Sanitize the link text.
+  $text = SafeMarkup::escape($variables['text']);
+
   return SafeMarkup::set('<a href="' . $url . '"' . $attributes . '>' . $text . '</a>');
 }
 

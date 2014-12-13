@@ -294,6 +294,9 @@ trait AssertContentTrait {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertLink($label, $index = 0, $message = '', $group = 'Other') {
+    // $this->xpath will escape entities, so we need to decode them first
+    // to avoid double escaping leading to failed tests.
+    $label = html_entity_decode($label);
     $links = $this->xpath('//a[normalize-space(text())=:label]', array(':label' => $label));
     $message = ($message ? $message : String::format('Link with label %label found.', array('%label' => $label)));
     return $this->assert(isset($links[$index]), $message, $group);

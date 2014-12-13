@@ -103,7 +103,6 @@ class FeedViewBuilder extends EntityViewBuilder {
             '#url' => Url::fromUri($link_href),
             '#options' => array(
               'attributes' => array('class' => array('feed-image')),
-              'html' => TRUE,
             ),
           );
         }
@@ -120,14 +119,16 @@ class FeedViewBuilder extends EntityViewBuilder {
 
       if ($display->getComponent('more_link')) {
         $title_stripped = strip_tags($entity->label());
+        $title = array(
+          '#type' => 'inline_template',
+          '#template' => '{% trans %}More<span class="visually-hidden"> posts about {{title}}</span>{% endtrans %}',
+          '#context' => array('title' => $title_stripped),
+        );
         $build[$id]['more_link'] = array(
           '#type' => 'link',
-          '#title' => t('More<span class="visually-hidden"> posts about @title</span>', array(
-            '@title' => $title_stripped,
-          )),
+          '#title' => $title,
           '#url' => Url::fromRoute('entity.aggregator_feed.canonical', ['aggregator_feed' => $entity->id()]),
           '#options' => array(
-            'html' => TRUE,
             'attributes' => array(
               'title' => $title_stripped,
             ),

@@ -8,6 +8,7 @@
 namespace Drupal\image\Tests;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Url;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
@@ -25,6 +26,22 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
    * @var array
    */
   public static $modules = array('field_ui');
+
+  /**
+   * The link generator.
+   *
+   * @var \Drupal\Core\Utility\LinkGeneratorInterface
+   */
+  protected $linkGenerator;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    $this->linkGenerator = $this->container->get('link_generator');
+  }
 
   /**
    * Test image formatters on node display for public files.
@@ -108,7 +125,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#width' => 40,
       '#height' => 20,
     );
-    $default_output = '<a href="' . file_create_url($image_uri) . '">' . drupal_render($image) . '</a>';
+
+    $default_output = $this->linkGenerator->generate($image, Url::fromUri(file_create_url($image_uri)));
     $this->drupalGet('node/' . $nid);
     $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
     $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');

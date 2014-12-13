@@ -77,7 +77,10 @@ class ViewsIntegrationTest extends ViewUnitTestBase {
       'variables' => array(
         '@token1' => $this->randomMachineName(),
         '!token2' => $this->randomMachineName(),
-        'link' => \Drupal::l('<object>Link</object>', new Url('<front>')),
+        'link' => \Drupal::l(array(
+          '#type' => 'inline_template',
+          '#template' => '<object>Link</object>',
+        ), new Url('<front>')),
       ),
     );
     $logger_factory = $this->container->get('logger.factory');

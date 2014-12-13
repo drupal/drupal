@@ -327,26 +327,30 @@ function template_preprocess_menu_local_task(&$variables) {
   $link += array(
     'localized_options' => array(),
   );
-  $link_text = $link['title'];
 
   if (!empty($variables['element']['#active'])) {
     // Add text to indicate active tab for non-visual users.
-    $active = '<span class="visually-hidden">' . t('(active tab)') . '</span>';
     $variables['attributes']['class'] = array('active');
 
-    // If the link does not contain HTML already, String::checkPlain() it now.
-    // After we set 'html'=TRUE the link will not be sanitized by l().
-    if (empty($link['localized_options']['html'])) {
-      $link['title'] = String::checkPlain($link['title']);
-    }
-    $link['localized_options']['html'] = TRUE;
-    $link_text = t('!local-task-title!active', array('!local-task-title' => $link['title'], '!active' => $active));
+    // Build up an inline template which will be autoescaped.
+    $link_text = array(
+      '#type' => 'inline_template',
+      '#template' => '{{ title }}<span class="visually-hidden">{% trans %}(active tab){% endtrans %}></span>',
+      '#context' => array('title' => $link['title']),
+    );
+    $title = drupal_render($link_text);
   }
+  else {
+    // @todo Remove expicit escaping when https://www.drupal.org/node/2338081
+    //   gets fixed.
+    $title = String::checkPlain($link['title']);
+  }
+
   $link['localized_options']['set_active_class'] = TRUE;
 
   $variables['link'] = array(
     '#type' => 'link',
-    '#title' => $link_text,
+    '#title' => $title,
     '#url' => $link['url'],
     '#options' => $link['localized_options'],
   );

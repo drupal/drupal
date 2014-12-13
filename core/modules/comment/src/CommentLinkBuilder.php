@@ -151,7 +151,6 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
             elseif ($this->currentUser->isAnonymous()) {
               $links['comment-forbidden'] = array(
                 'title' => $this->commentManager->forbiddenMessage($entity, $field_name),
-                'html' => TRUE,
               );
             }
           }
@@ -186,7 +185,6 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
             elseif ($this->currentUser->isAnonymous()) {
               $links['comment-forbidden'] = array(
                 'title' => $this->commentManager->forbiddenMessage($entity, $field_name),
-                'html' => TRUE,
               );
             }
           }

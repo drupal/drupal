@@ -207,24 +207,34 @@ class BookTest extends WebTestBase {
 
     // Check previous, up, and next links.
     if ($previous) {
+      $text = array(
+        '#type' => 'inline_template',
+        '#template' => '<b>‹</b> {{ label }}',
+        '#context' => array('label' => $previous->label()),
+      );
       /** @var \Drupal\Core\Url $url */
       $url = $previous->urlInfo();
-      $url->setOptions(array('html' => TRUE, 'attributes' => array('rel' => array('prev'), 'title' => t('Go to previous page'))));
-      $this->assertRaw(\Drupal::l('<b>‹</b> ' . $previous->label(), $url), 'Previous page link found.');
+      $url->setOptions(array('attributes' => array('rel' => array('prev'), 'title' => t('Go to previous page'))));
+      $this->assertRaw(\Drupal::l($text, $url), 'Previous page link found.');
     }
 
     if ($up) {
       /** @var \Drupal\Core\Url $url */
       $url = $up->urlInfo();
-      $url->setOptions(array('html'=> TRUE, 'attributes' => array('title' => t('Go to parent page'))));
+      $url->setOptions(array('attributes' => array('title' => t('Go to parent page'))));
       $this->assertRaw(\Drupal::l('Up', $url), 'Up page link found.');
     }
 
     if ($next) {
+      $text = array(
+        '#type' => 'inline_template',
+        '#template' => '{{ label }} <b>›</b>',
+        '#context' => array('label' => $next->label()),
+      );
       /** @var \Drupal\Core\Url $url */
       $url = $next->urlInfo();
-      $url->setOptions(array('html'=> TRUE, 'attributes' => array('rel' => array('next'), 'title' => t('Go to next page'))));
-      $this->assertRaw(\Drupal::l($next->label() . ' <b>›</b>', $url), 'Next page link found.');
+      $url->setOptions(array('attributes' => array('rel' => array('next'), 'title' => t('Go to next page'))));
+      $this->assertRaw(\Drupal::l($text, $url), 'Next page link found.');
     }
 
     // Compute the expected breadcrumb.

@@ -247,7 +247,6 @@ class CommentViewBuilder extends EntityViewBuilder {
         $links['comment-delete'] = array(
           'title' => t('Delete'),
           'url' => $entity->urlInfo('delete-form'),
-          'html' => TRUE,
         );
       }
 
@@ -255,7 +254,6 @@ class CommentViewBuilder extends EntityViewBuilder {
         $links['comment-edit'] = array(
           'title' => t('Edit'),
           'url' => $entity->urlInfo('edit-form'),
-          'html' => TRUE,
         );
       }
       if ($entity->access('create')) {
@@ -267,19 +265,16 @@ class CommentViewBuilder extends EntityViewBuilder {
             'field_name' => $entity->getFieldName(),
             'pid' => $entity->id(),
           ]),
-          'html' => TRUE,
         );
       }
       if (!$entity->isPublished() && $entity->access('approve')) {
         $links['comment-approve'] = array(
           'title' => t('Approve'),
           'url' => Url::fromRoute('comment.approve', ['comment' => $entity->id()]),
-          'html' => TRUE,
         );
       }
       if (empty($links) && \Drupal::currentUser()->isAnonymous()) {
         $links['comment-forbidden']['title'] = \Drupal::service('comment.manager')->forbiddenMessage($commented_entity, $entity->getFieldName());
-        $links['comment-forbidden']['html'] = TRUE;
       }
     }
 
@@ -288,7 +283,6 @@ class CommentViewBuilder extends EntityViewBuilder {
       $links['comment-translations'] = array(
         'title' => t('Translate'),
         'url' => $entity->urlInfo('drupal:content-translation-overview'),
-        'html' => TRUE,
       );
     }
 

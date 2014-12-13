@@ -1355,7 +1355,6 @@ abstract class FieldPluginBase extends HandlerBase {
     }
 
     $options = array(
-      'html' => TRUE,
       'absolute' => !empty($alter['absolute']) ? TRUE : FALSE,
     );
 

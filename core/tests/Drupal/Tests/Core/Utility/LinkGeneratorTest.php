@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core\Utility {
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\LinkGenerator;
@@ -40,6 +41,13 @@ class LinkGeneratorTest extends UnitTestCase {
   protected $moduleHandler;
 
   /**
+   * The mocked renderer.
+   *
+   * @var \PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $renderer;
+
+  /**
    * The mocked URL Assembler service.
    *
    * @var \PHPUnit_Framework_MockObject_MockObject|\Drupal\Core\Utility\UnroutedUrlAssemblerInterface
@@ -51,7 +59,6 @@ class LinkGeneratorTest extends UnitTestCase {
    */
   protected $defaultOptions = array(
     'query' => array(),
-    'html' => FALSE,
     'language' => NULL,
     'set_active_class' => FALSE,
     'absolute' => FALSE,
@@ -65,8 +72,10 @@ class LinkGeneratorTest extends UnitTestCase {
 
     $this->urlGenerator = $this->getMock('\Drupal\Core\Routing\UrlGenerator', array(), array(), '', FALSE);
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
+    $this->renderer = $this->getMock('\Drupal\Core\Render\RendererInterface');
 
-    $this->linkGenerator = new LinkGenerator($this->urlGenerator, $this->moduleHandler);
+    $this->linkGenerator = new LinkGenerator($this->urlGenerator, $this->moduleHandler, $this->renderer);
+
     $this->urlAssembler = $this->getMock('\Drupal\Core\Utility\UnroutedUrlAssemblerInterface');
   }
 
@@ -325,7 +334,7 @@ class LinkGeneratorTest extends UnitTestCase {
       ));
     $this->urlGenerator->expects($this->at(1))
       ->method('generateFromRoute')
-      ->with('test_route_5', array(), array('html' => TRUE) + $this->defaultOptions)
+      ->with('test_route_5', array(), $this->defaultOptions)
       ->will($this->returnValue(
         '/test-route-5'
       ));
@@ -344,10 +353,28 @@ class LinkGeneratorTest extends UnitTestCase {
       ),
     ), $result);
 
-    // Test that the 'html' option allows unsanitized HTML link text.
-    $url = new Url('test_route_5', array(), array('html' => TRUE));
+    // Test that HTML link text can be used in a render array.
+    $html = '<em>HTML output</em>';
+    $render_array = [
+      '#type' => 'inline_template',
+      '#template' => '<em>HTML output</em>',
+    ];
+
+    $this->renderer->expects($this->at(0))
+      ->method('render')
+      ->with($render_array)
+      // Mark the HTML string as safe at the moment when the mocked render()
+      // method is invoked to mimic what occurs in render(). We cannot mock
+      // static methods.
+      ->will($this->returnCallback(function () use ($html) {
+        SafeMarkup::set($html);
+        return $html;
+      }));
+
+    $url = new Url('test_route_5', array());
     $url->setUrlGenerator($this->urlGenerator);
-    $result = $this->linkGenerator->generate('<em>HTML output</em>', $url);
+
+    $result = $this->linkGenerator->generate($render_array, $url);
     $this->assertTag(array(
       'tag' => 'a',
       'attributes' => array('href' => '/test-route-5'),
