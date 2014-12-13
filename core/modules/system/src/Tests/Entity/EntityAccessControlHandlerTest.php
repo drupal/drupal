@@ -67,6 +67,34 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase  {
   }
 
   /**
+   * Ensures default entity access is checked when necessary.
+   *
+   * This ensures that the default checkAccess() implementation of the
+   * entity access control handler is considered if hook_entity_access() has not
+   * explicitly forbidden access. Therefore the default checkAccess()
+   * implementation can forbid access, even after access was already explicitly
+   * allowed by hook_entity_access().
+   *
+   * @see \Drupal\entity_test\EntityTestAccessControlHandler::checkAccess()
+   * @see entity_test_entity_access()
+   */
+  function testDefaultEntityAccess() {
+    // Set up a non-admin user that is allowed to view test entities.
+    \Drupal::currentUser()->setAccount($this->createUser(array('uid' => 2), array('view test entity')));
+    $entity = entity_create('entity_test', array(
+        'name' => 'forbid_access',
+      ));
+
+    // The user is denied access to the entity.
+    $this->assertEntityAccess(array(
+        'create' => FALSE,
+        'update' => FALSE,
+        'delete' => FALSE,
+        'view' => FALSE,
+      ), $entity);
+  }
+
+  /**
    * Ensures that the default handler is used as a fallback.
    */
   function testEntityAccessDefaultController() {

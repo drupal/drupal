@@ -497,6 +497,13 @@ function entity_test_entity_prepare_view($entity_type, array $entities, array $d
 function entity_test_entity_access(EntityInterface $entity, $operation, AccountInterface $account, $langcode) {
   \Drupal::state()->set('entity_test_entity_access', TRUE);
 
+  // Attempt to allow access to entities with the title forbid_access,
+  // this will be overridden by
+  // \Drupal\entity_test\EntityTestAccessControlHandler::checkAccess().
+  if ($entity->label() == 'forbid_access') {
+    return AccessResult::allowed();
+  }
+
   // Uncacheable because the access result depends on a State key-value pair and
   // might therefore change at any time.
   $condition = \Drupal::state()->get("entity_test_entity_access.{$operation}." . $entity->id(), FALSE);
