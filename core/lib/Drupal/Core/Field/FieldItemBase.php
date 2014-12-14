@@ -105,10 +105,7 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
   }
 
   /**
-   * Overrides \Drupal\Core\TypedData\TypedData::setValue().
-   *
-   * @param array|null $values
-   *   An array of property values.
+   * {@inheritdoc}
    */
   public function setValue($values, $notify = TRUE) {
     // Treat the values as property value of the first property, if no array is
@@ -117,19 +114,25 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
       $keys = array_keys($this->definition->getPropertyDefinitions());
       $values = array($keys[0] => $values);
     }
-    $this->values = $values;
-    // Update any existing property objects.
-    foreach ($this->properties as $name => $property) {
-      $value = NULL;
-      if (isset($values[$name])) {
-        $value = $values[$name];
-      }
-      $property->setValue($value, FALSE);
-      unset($this->values[$name]);
+    parent::setValue($values, $notify);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * Different to the parent Map class, we avoid creating property objects as
+   * far as possible in order to optimize performance. Thus we just update
+   * $this->values if no property object has been created yet.
+   */
+  protected function writePropertyValue($property_name, $value) {
+    // For defined properties there is either a property object or a plain
+    // value that needs to be updated.
+    if (isset($this->properties[$property_name])) {
+      $this->properties[$property_name]->setValue($value, FALSE);
     }
-    // Notify the parent of any changes.
-    if ($notify && isset($this->parent)) {
-      $this->parent->onChange($this->name);
+    // Allow setting plain values for not-defined properties also.
+    else {
+      $this->values[$property_name] = $value;
     }
   }
 
@@ -139,31 +142,11 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
   public function __get($name) {
     // There is either a property object or a plain value - possibly for a
     // not-defined property. If we have a plain value, directly return it.
-    if (isset($this->values[$name])) {
-      return $this->values[$name];
-    }
-    elseif (isset($this->properties[$name])) {
+    if (isset($this->properties[$name])) {
       return $this->properties[$name]->getValue();
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function set($property_name, $value, $notify = TRUE) {
-    // For defined properties there is either a property object or a plain
-    // value that needs to be updated.
-    if (isset($this->properties[$property_name])) {
-      $this->properties[$property_name]->setValue($value, FALSE);
-      unset($this->values[$property_name]);
-    }
-    // Allow setting plain values for not-defined properties also.
-    else {
-      $this->values[$property_name] = $value;
-    }
-    // Directly notify ourselves.
-    if ($notify) {
-      $this->onChange($property_name);
+    elseif (isset($this->values[$name])) {
+      return $this->values[$name];
     }
   }
 
@@ -183,29 +166,23 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
    * {@inheritdoc}
    */
   public function __isset($name) {
-    return isset($this->values[$name]) || (isset($this->properties[$name]) && $this->properties[$name]->getValue() !== NULL);
+    if (isset($this->properties[$name])) {
+      return $this->properties[$name]->getValue() !== NULL;
+    }
+    return isset($this->values[$name]);
   }
 
   /**
    * {@inheritdoc}
    */
   public function __unset($name) {
-    $this->set($name, NULL);
-    unset($this->values[$name]);
-  }
-
-  /**
-   * Overrides \Drupal\Core\TypedData\Map::onChange().
-   */
-  public function onChange($property_name) {
-    // Notify the parent of changes.
-    if (isset($this->parent)) {
-      $this->parent->onChange($this->name);
+    if ($this->definition->getPropertyDefinition($name)) {
+      $this->set($name, NULL);
     }
-    // Remove the plain value, such that any further __get() calls go via the
-    // updated property object.
-    if (isset($this->properties[$property_name])) {
-      unset($this->values[$property_name]);
+    else {
+      // Explicitly unset the property in $this->values if a non-defined
+      // property is unset, such that its key is removed from $this->values.
+      unset($this->values[$name]);
     }
   }
 

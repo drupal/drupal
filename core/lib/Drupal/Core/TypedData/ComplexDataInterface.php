@@ -53,8 +53,7 @@ interface ComplexDataInterface extends TraversableTypedDataInterface  {
    *   TRUE. If the update stems from a parent object, set it to FALSE to avoid
    *   being notified again.
    *
-   * @return \Drupal\Core\TypedData\TypedDataInterface
-   *   The property object.
+   * @return $this
    *
    * @throws \InvalidArgumentException
    *   If the specified property does not exist.

@@ -69,14 +69,7 @@ class LanguageItem extends FieldItemBase {
     // Treat the values as property value of the language property, if no array
     // is given as this handles language codes and objects.
     if (isset($values) && !is_array($values)) {
-      // Directly update the property instead of invoking the parent, so that
-      // the language property can take care of updating the language code
-      // property.
-      $this->properties['language']->setValue($values, $notify);
-      // If notify was FALSE, ensure the value property gets synched.
-      if (!$notify) {
-        $this->set('value', $this->properties['language']->getTargetIdentifier(), FALSE);
-      }
+      $this->set('language', $values, $notify);
     }
     else {
       // Make sure that the 'language' property gets set as 'value'.
@@ -100,14 +93,15 @@ class LanguageItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public function onChange($property_name) {
+  public function onChange($property_name, $notify = TRUE) {
     // Make sure that the value and the language property stay in sync.
     if ($property_name == 'value') {
-      $this->properties['language']->setValue($this->value, FALSE);
+      $this->writePropertyValue('language', $this->value);
     }
     elseif ($property_name == 'language') {
-      $this->set('value', $this->properties['language']->getTargetIdentifier(), FALSE);
+      $this->writePropertyValue('value', $this->get('language')->getTargetIdentifier());
     }
-    parent::onChange($property_name);
+    parent::onChange($property_name, $notify);
   }
+
 }

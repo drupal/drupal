@@ -141,13 +141,9 @@ class EntityReferenceItem extends FieldItemBase {
    */
   public function setValue($values, $notify = TRUE) {
     if (isset($values) && !is_array($values)) {
-      // Directly update the property instead of invoking the parent, so it can
-      // handle objects and IDs.
-      $this->properties['entity']->setValue($values, $notify);
-      // If notify was FALSE, ensure the target_id property gets synched.
-      if (!$notify) {
-        $this->set('target_id', $this->properties['entity']->getTargetIdentifier(), FALSE);
-      }
+      // If either a scalar or an object was passed as the value for the item,
+      // assign it to the 'entity' property since that works for both cases.
+      $this->set('entity', $values, $notify);
     }
     else {
       // Make sure that the 'entity' property gets set as 'target_id'.
@@ -175,15 +171,15 @@ class EntityReferenceItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public function onChange($property_name) {
+  public function onChange($property_name, $notify = TRUE) {
     // Make sure that the target ID and the target property stay in sync.
     if ($property_name == 'target_id') {
-      $this->properties['entity']->setValue($this->target_id, FALSE);
+      $this->writePropertyValue('entity', $this->target_id);
     }
     elseif ($property_name == 'entity') {
-      $this->set('target_id', $this->properties['entity']->getTargetIdentifier(), FALSE);
+      $this->writePropertyValue('target_id', $this->get('entity')->getTargetIdentifier());
     }
-    parent::onChange($property_name);
+    parent::onChange($property_name, $notify);
   }
 
   /**

@@ -385,9 +385,10 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
    * {@inheritdoc}
    */
   public function set($name, $value, $notify = TRUE) {
-    // If default language or an entity key changes we need to react to that.
-    $notify = $name == 'langcode' || in_array($name, $this->getEntityType()->getKeys());
-    $this->get($name)->setValue($value, $notify);
+    // Assign the value on the child and overrule notify such that we get
+    // notified to handle changes afterwards. We can ignore notify as there is
+    // no parent to notify anyway.
+    $this->get($name)->setValue($value, TRUE);
   }
 
   /**

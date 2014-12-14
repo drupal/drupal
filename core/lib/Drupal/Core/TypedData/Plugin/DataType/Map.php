@@ -94,11 +94,11 @@ class Map extends TypedData implements \IteratorAggregate, ComplexDataInterface 
 
     // Update any existing property objects.
     foreach ($this->properties as $name => $property) {
-      $value = NULL;
-      if (isset($values[$name])) {
-        $value = $values[$name];
-      }
+      $value = isset($values[$name]) ? $values[$name] : NULL;
       $property->setValue($value, FALSE);
+      // Remove the value from $this->values to ensure it does not contain any
+      // value for computed properties.
+      unset($this->values[$name]);
     }
     // Notify the parent of any changes.
     if ($notify && isset($this->parent)) {
@@ -134,19 +134,34 @@ class Map extends TypedData implements \IteratorAggregate, ComplexDataInterface 
   }
 
   /**
-   * Implements \Drupal\Core\TypedData\ComplexDataInterface::set().
+   * {@inheritdoc}
    */
   public function set($property_name, $value, $notify = TRUE) {
+    // Separate the writing in a protected method, such that onChange
+    // implementations can make use of it.
+    $this->writePropertyValue($property_name, $value);
+    $this->onChange($property_name, $notify);
+    return $this;
+  }
+
+  /**
+   * Writes the value of a property without handling changes.
+   *
+   * Implementations of onChange() should use this method instead of set() in
+   * order to avoid onChange() being triggered again.
+   *
+   * @param string $property_name
+   *   The name of the property to be written.
+   * @param $value
+   *   The value to set.
+   */
+  protected function writePropertyValue($property_name, $value) {
     if ($this->definition->getPropertyDefinition($property_name)) {
-      $this->get($property_name)->setValue($value, $notify);
+      $this->get($property_name)->setValue($value, FALSE);
     }
     else {
       // Just set the plain value, which allows adding a new entry to the map.
       $this->values[$property_name] = $value;
-      // Directly notify ourselves.
-      if ($notify) {
-        $this->onChange($property_name, $value);
-      }
     }
   }
 
@@ -212,11 +227,16 @@ class Map extends TypedData implements \IteratorAggregate, ComplexDataInterface 
   }
 
   /**
-   * Implements \Drupal\Core\TypedData\ComplexDataInterface::onChange().
+   * {@inheritdoc}
+   *
+   * @param bool $notify
+   *   (optional) Whether to forward the notification to the parent. Defaults to
+   *   TRUE. By passing FALSE, overrides of this method can re-use the logic
+   *   of parent classes without triggering notification.
    */
-  public function onChange($property_name) {
+  public function onChange($property_name, $notify = TRUE) {
     // Notify the parent of changes.
-    if (isset($this->parent)) {
+    if ($notify && isset($this->parent)) {
       $this->parent->onChange($this->name);
     }
   }

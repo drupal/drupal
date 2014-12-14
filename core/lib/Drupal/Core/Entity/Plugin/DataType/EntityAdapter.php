@@ -105,7 +105,8 @@ class EntityAdapter extends TypedData implements \IteratorAggregate, ComplexData
       throw new \InvalidArgumentException(String::format('Unable to set unknown property @name.', array('@name' => $property_name)));
     }
     // This will throw an exception for unknown fields.
-    return $this->entity->set($property_name, $value, $notify);
+    $this->entity->set($property_name, $value, $notify);
+    return $this;
   }
 
   /**

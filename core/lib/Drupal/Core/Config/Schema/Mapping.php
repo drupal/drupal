@@ -88,7 +88,7 @@ class Mapping extends ArrayElement implements ComplexDataInterface {
     if ($notify && isset($this->parent)) {
       $this->parent->onChange($this->name);
     }
-    return $property;
+    return $this;
   }
 
   /**

@@ -131,13 +131,12 @@ class DateTimeItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public function onChange($property_name) {
-    parent::onChange($property_name);
-
+  public function onChange($property_name, $notify = TRUE) {
     // Enforce that the computed date is recalculated.
     if ($property_name == 'value') {
       $this->date = NULL;
     }
+    parent::onChange($property_name, $notify);
   }
 
 }
