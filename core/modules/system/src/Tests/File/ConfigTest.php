@@ -33,7 +33,6 @@ class ConfigTest extends WebTestBase {
     // upon form submission.
     $file_path = $this->public_files_directory;
     $fields = array(
-      'file_private_path' => $file_path . '/file_config_page_test/private',
       'file_temporary_path' => $file_path . '/file_config_page_test/temporary',
       'file_default_scheme' => 'private',
     );

@@ -302,9 +302,6 @@ system.file:
       type: mapping
       label: 'Path settings'
       mapping:
-        private:
-          type: string
-          label: 'Private file system path'
         temporary:
           type: string
           label: 'Temporary directory'

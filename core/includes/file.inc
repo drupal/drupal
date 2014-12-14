@@ -13,6 +13,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
+use Drupal\Core\StreamWrapper\PrivateStream;
 
 /**
  * Default mode for new directories. See drupal_chmod().
@@ -436,7 +437,7 @@ function file_prepare_directory(&$directory, $options = FILE_MODIFY_PERMISSIONS)
  */
 function file_ensure_htaccess() {
   file_save_htaccess('public://', FALSE);
-  $private_path = \Drupal::config('system.file')->get('path.private');
+  $private_path = PrivateStream::basePath();
   if (!empty($private_path)) {
     file_save_htaccess('private://', TRUE);
   }

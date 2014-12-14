@@ -431,6 +431,18 @@ if ($settings['hash_salt']) {
 # $settings['file_public_path'] = 'sites/default/files';
 
 /**
+ * Private file path:
+ *
+ * A local file system path where private files will be stored. This directory
+ * must be absolute, outside of the the Drupal installation directory and not
+ * accessible over the web.
+ *
+ * See http://drupal.org/documentation/modules/file for more information about
+ * securing private files.
+ */
+# $settings['file_private_path'] = '';
+
+/**
  * Session write interval:
  *
  * Set the minimum interval between each session write to database.

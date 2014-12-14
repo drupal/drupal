@@ -893,10 +893,6 @@ services:
     class: Drupal\Core\StreamWrapper\PublicStream
     tags:
       - { name: stream_wrapper, scheme: public }
-  stream_wrapper.private:
-    class: Drupal\Core\StreamWrapper\PrivateStream
-    tags:
-      - { name: stream_wrapper, scheme: private }
   stream_wrapper.temporary:
     class: Drupal\Core\StreamWrapper\TemporaryStream
     tags:

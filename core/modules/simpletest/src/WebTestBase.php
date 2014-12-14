@@ -794,6 +794,10 @@ abstract class WebTestBase extends TestBase {
       'value' => $this->public_files_directory,
       'required' => TRUE,
     );
+    $settings['settings']['file_private_path'] = (object) array(
+      'value' => $this->private_files_directory,
+      'required' => TRUE,
+    );
     // Save the original site directory path, so that extensions in the
     // site-specific directory can still be discovered in the test site
     // environment.
@@ -874,7 +878,6 @@ abstract class WebTestBase extends TestBase {
     file_prepare_directory($this->private_files_directory, FILE_CREATE_DIRECTORY);
     file_prepare_directory($this->temp_files_directory, FILE_CREATE_DIRECTORY);
     $config->get('system.file')
-      ->set('path.private', $this->private_files_directory)
       ->set('path.temporary', $this->temp_files_directory)
       ->save();
 

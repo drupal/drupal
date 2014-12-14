@@ -5,11 +5,9 @@ migration_groups:
 source:
   plugin: variable
   variables:
-    - file_directory_path
     - file_directory_temp
     - allow_insecure_uploads
 process:
-  'path/private': file_directory_path
   'path/temporary': file_directory_temp
   allow_insecure_uploads:
     plugin: static_map

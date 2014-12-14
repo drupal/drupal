@@ -12,6 +12,7 @@ use Drupal\Core\Url;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\StreamWrapper\PrivateStream;
 use Drupal\Core\StreamWrapper\PublicStream;
 
 /**
@@ -284,7 +285,7 @@ function system_requirements($phase) {
       'title' => t('Public files directory'),
       'directory' => drupal_realpath('public://'),
     );
-    if (\Drupal::config('system.file')->get('path.private')) {
+    if (PrivateStream::basePath()) {
       $htaccess_files['private://.htaccess'] = array(
         'title' => t('Private files directory'),
         'directory' => drupal_realpath('private://'),
@@ -360,7 +361,7 @@ function system_requirements($phase) {
       PublicStream::basePath(),
       // By default no private files directory is configured. For private files
       // to be secure the admin needs to provide a path outside the webroot.
-      $filesystem_config->get('path.private'),
+      PrivateStream::basePath(),
       file_directory_temp(),
     );
   }
@@ -377,8 +378,8 @@ function system_requirements($phase) {
       // in the intended site directory, so don't require it.
       $directories[] = conf_path(FALSE) . '/files';
     }
-    if (!empty($GLOBALS['config']['system.file']['path']['private'])) {
-      $directories[] = $GLOBALS['config']['system.file']['path']['private'];
+    if ($file_private_path = Settings::get('file_private_path')) {
+      $directories[] = $file_private_path;
     }
     if (!empty($GLOBALS['config']['system.file']['path']['temporary'])) {
       $directories[] = $GLOBALS['config']['system.file']['path']['temporary'];

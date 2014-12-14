@@ -161,6 +161,15 @@ abstract class TestBase {
   protected $public_files_directory;
 
   /**
+   * The private file directory for the test environment.
+   *
+   * This is set in TestBase::prepareEnvironment().
+   *
+   * @var string
+   */
+  protected $private_files_directory;
+
+  /**
    * Whether to die in case any test assertion fails.
    *
    * @var boolean

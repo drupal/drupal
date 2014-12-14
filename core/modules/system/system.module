@@ -307,16 +307,6 @@ function system_theme_suggestions_field(array $variables) {
 }
 
 /**
- * Implements hook_stream_wrappers_alter().
- */
-function system_stream_wrappers_alter(&$wrappers) {
-  // Only register the private file stream wrapper if a file path has been set.
-  if (!\Drupal::config('system.file')->get('path.private')) {
-    unset($wrappers['private']);
-  }
-}
-
-/**
  * Menu item access callback - only installed themes can be accessed.
  */
 function _system_themes_access($theme) {
