@@ -40,6 +40,13 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
   protected $unroutedUrlAssembler;
 
   /**
+   * The mocked outbound path processor.
+   *
+   * @var \Drupal\Core\PathProcessor\OutboundPathProcessorInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $pathProcessor;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -47,7 +54,8 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
 
     $this->requestStack = new RequestStack();
     $this->configFactory = $this->getConfigFactoryStub(['system.filter' => []]);
-    $this->unroutedUrlAssembler = new UnroutedUrlAssembler($this->requestStack, $this->configFactory);
+    $this->pathProcessor = $this->getMock('Drupal\Core\PathProcessor\OutboundPathProcessorInterface');
+    $this->unroutedUrlAssembler = new UnroutedUrlAssembler($this->requestStack, $this->configFactory, $this->pathProcessor);
   }
 
   /**
@@ -90,23 +98,7 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
    * @dataProvider providerTestAssembleWithLocalUri
    */
   public function testAssembleWithLocalUri($uri, array $options, $subdir, $expected) {
-    $server = [];
-    if ($subdir) {
-      // Setup a fake request which looks like a Drupal installed under the
-      // subdir "subdir" on the domain www.example.com.
-      // To reproduce the values install Drupal like that and use a debugger.
-      $server = [
-        'SCRIPT_NAME' => '/subdir/index.php',
-        'SCRIPT_FILENAME' => $this->root . '/index.php',
-        'SERVER_NAME' => 'http://www.example.com',
-      ];
-      $request = Request::create('/subdir');
-    }
-    else {
-      $request = Request::create('/');
-    }
-    $request->server->add($server);
-    $this->requestStack->push($request);
+    $this->setupRequestStack($subdir);
 
     $this->assertEquals($expected, $this->unroutedUrlAssembler->assemble($uri, $options));
   }
@@ -125,5 +117,54 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
     ];
   }
 
-}
+  /**
+   * @covers ::assemble
+   */
+  public function testAssembleWithNotEnabledProcessing() {
+    $this->setupRequestStack(FALSE);
+    $this->pathProcessor->expects($this->never())
+      ->method('processOutbound');
+    $result = $this->unroutedUrlAssembler->assemble('base://test-uri', []);
+    $this->assertEquals('/test-uri', $result);
+  }
 
+  /**
+   * @covers ::assemble
+   */
+  public function testAssembleWithEnabledProcessing() {
+    $this->setupRequestStack(FALSE);
+    $this->pathProcessor->expects($this->once())
+      ->method('processOutbound')
+      ->with('test-uri', ['path_processing' => TRUE, 'fragment' => NULL, 'query' => [], 'absolute' => NULL, 'prefix' => NULL, 'script' => NULL])
+      ->willReturn('test-other-uri');
+    $result = $this->unroutedUrlAssembler->assemble('base://test-uri', ['path_processing' => TRUE]);
+    $this->assertEquals('/test-other-uri', $result);
+  }
+
+  /**
+   * Setups the request stack for a given subdir.
+   *
+   * @param string $subdir
+   *   The wanted subdir.
+   */
+  protected function setupRequestStack($subdir) {
+    $server = [];
+    if ($subdir) {
+      // Setup a fake request which looks like a Drupal installed under the
+      // subdir "subdir" on the domain www.example.com.
+      // To reproduce the values install Drupal like that and use a debugger.
+      $server = [
+        'SCRIPT_NAME' => '/subdir/index.php',
+        'SCRIPT_FILENAME' => $this->root . '/index.php',
+        'SERVER_NAME' => 'http://www.example.com',
+      ];
+      $request = Request::create('/subdir');
+    }
+    else {
+      $request = Request::create('/');
+    }
+    $request->server->add($server);
+    $this->requestStack->push($request);
+  }
+
+}

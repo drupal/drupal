@@ -10,6 +10,7 @@ namespace Drupal\Core\Utility;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -27,17 +28,27 @@ class UnroutedUrlAssembler implements UnroutedUrlAssemblerInterface {
   protected $requestStack;
 
   /**
+   * The outbound path processor.
+   *
+   * @var \Drupal\Core\PathProcessor\OutboundPathProcessorInterface
+   */
+  protected $pathProcessor;
+
+  /**
    *  Constructs a new unroutedUrlAssembler object.
    *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config
-   *    The config factory.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   A request stack object.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config
+   *    The config factory.
+   * @param \Drupal\Core\PathProcessor\OutboundPathProcessorInterface $path_processor
+   *   The output path processor.
    */
-  public function __construct(RequestStack $request_stack, ConfigFactoryInterface $config) {
+  public function __construct(RequestStack $request_stack, ConfigFactoryInterface $config, OutboundPathProcessorInterface $path_processor) {
     $allowed_protocols = $config->get('system.filter')->get('protocols') ?: ['http', 'https'];
     UrlHelper::setAllowedProtocols($allowed_protocols);
     $this->requestStack = $request_stack;
+    $this->pathProcessor = $path_processor;
   }
 
   /**
@@ -99,6 +110,14 @@ class UnroutedUrlAssembler implements UnroutedUrlAssemblerInterface {
 
     // Remove the base:// scheme.
     $uri = substr($uri, 7);
+
+    // Allow (outbound) path processing, if needed. A valid use case is the path
+    // alias overview form:
+    // @see \Drupal\path\Controller\PathController::adminOverview().
+    if (!empty($options['path_processing'])) {
+      $uri = $this->pathProcessor->processOutbound($uri, $options);
+    }
+
     // Add any subdirectory where Drupal is installed.
     $current_base_path = $request->getBasePath() . '/';
 
