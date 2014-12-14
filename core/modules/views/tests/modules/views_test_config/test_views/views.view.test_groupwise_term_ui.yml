@@ -28,12 +28,16 @@ display:
           id: name
           table: taxonomy_term_field_data
           plugin_id: taxonomy
+          entity_type: taxonomy_term
+          entity_field: name
         nid:
           field: nid
           id: nid
           relationship: tid_representative
           table: node
           plugin_id: node
+          entity_type: node
+          entity_field: nid
       pager:
         options:
           items_per_page: 10
@@ -64,6 +68,8 @@ display:
           order: DESC
           table: taxonomy_term_data
           plugin_id: standard
+          entity_type: taxonomy_term
+          entity_field: tid
       style:
         type: default
       title: test_groupwise

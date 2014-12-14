@@ -176,6 +176,8 @@ display:
           empty: ''
           hide_alter_empty: true
           plugin_id: file
+          entity_type: file
+          entity_field: fid
         filename:
           id: filename
           table: file_managed
@@ -208,6 +210,8 @@ display:
           empty: ''
           hide_alter_empty: true
           plugin_id: file
+          entity_type: file
+          entity_field: filename
         filemime:
           id: filemime
           table: file_managed
@@ -259,6 +263,8 @@ display:
           link_to_file: false
           filemime_image: false
           plugin_id: file_filemime
+          entity_type: file
+          entity_field: filemime
         filesize:
           id: filesize
           table: file_managed
@@ -309,6 +315,8 @@ display:
           hide_alter_empty: true
           file_size_display: formatted
           plugin_id: file_size
+          entity_type: file
+          entity_field: filesize
         status:
           id: status
           table: file_managed
@@ -358,6 +366,8 @@ display:
           empty_zero: false
           hide_alter_empty: true
           plugin_id: file_status
+          entity_type: file
+          entity_field: status
         created:
           id: created
           table: file_managed
@@ -410,6 +420,8 @@ display:
           custom_date_format: ''
           timezone: ''
           plugin_id: date
+          entity_type: file
+          entity_field: created
         changed:
           id: changed
           table: file_managed
@@ -462,6 +474,8 @@ display:
           custom_date_format: ''
           timezone: ''
           plugin_id: date
+          entity_type: file
+          entity_field: changed
         count:
           id: count
           table: file_usage
@@ -559,6 +573,8 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: string
+          entity_type: file
+          entity_field: filename
         filemime:
           id: filemime
           table: file_managed
@@ -597,6 +613,8 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: string
+          entity_type: file
+          entity_field: filemime
         status:
           id: status
           table: file_managed
@@ -636,6 +654,8 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: file_status
+          entity_type: file
+          entity_field: status
       sorts: {  }
       title: Files
       header: {  }
@@ -979,6 +999,8 @@ display:
           break_phrase: false
           not: false
           plugin_id: file_fid
+          entity_type: file
+          entity_field: fid
       style:
         type: table
         options:

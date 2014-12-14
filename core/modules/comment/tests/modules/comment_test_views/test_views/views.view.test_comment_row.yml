@@ -115,6 +115,8 @@ display:
           hide_alter_empty: true
           link_to_entity: false
           plugin_id: comment
+          entity_type: comment
+          entity_field: subject
       filters:
         status:
           value: true
@@ -125,6 +127,8 @@ display:
             operator: ''
           group: 1
           plugin_id: boolean
+          entity_type: comment
+          entity_field: status
         status_node:
           value: true
           table: node_field_data
@@ -135,6 +139,8 @@ display:
             operator: ''
           group: 1
           plugin_id: boolean
+          entity_type: node
+          entity_field: status
       sorts: {  }
       title: test_comment_row
       header: {  }

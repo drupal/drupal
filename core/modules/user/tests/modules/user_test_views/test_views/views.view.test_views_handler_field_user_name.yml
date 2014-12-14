@@ -40,6 +40,8 @@ display:
           overwrite_anonymous: false
           table: users_field_data
           plugin_id: user_name
+          entity_type: user
+          entity_field: name
       pager:
         type: full
       query:

@@ -40,7 +40,7 @@ display:
       fields:
         title:
           id: title
-          table: node
+          table: node_field_data
           field: title
           plugin_id: node
           label: ''
@@ -56,6 +56,8 @@ display:
           hide_empty: false
           empty_zero: false
           link_to_node: true
+          entity_type: node
+          entity_field: title
       filters:
         status:
           value: true
@@ -66,6 +68,8 @@ display:
           expose:
             operator: '0'
           group: 1
+          entity_type: node
+          entity_field: status
       sorts:
         created:
           id: created
@@ -73,6 +77,8 @@ display:
           field: created
           order: DESC
           plugin_id: date
+          entity_type: node
+          entity_field: created
       title: test_get_attach_displays
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null

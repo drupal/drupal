@@ -24,12 +24,16 @@ display:
           relationship: none
           table: entity_test
           plugin_id: numeric
+          entity_type: entity_test
+          entity_field: id
         id_1:
           field: id
           id: id_1
           relationship: test_relationship
           table: entity_test
           plugin_id: numeric
+          entity_type: entity_test
+          entity_field: id
       pager:
         options:
           offset: 0
@@ -42,6 +46,8 @@ display:
           relationship: none
           table: entity_test
           plugin_id: standard
+          entity_type: entity_test
+          entity_field: id
       relationships:
         test_relationship:
           id: field_test

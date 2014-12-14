@@ -25,18 +25,21 @@ display:
           id: created_day
           table: node_field_data
           plugin_id: date_day
+          entity_type: node
         created_fulldate:
           default_argument_type: fixed
           field: created_fulldate
           id: created_fulldate
           table: node_field_data
           plugin_id: date_fulldate
+          entity_type: node
         created_month:
           default_argument_type: fixed
           field: created_month
           id: created_month
           table: node_field_data
           plugin_id: date_month
+          entity_type: node
       cache:
         type: none
       empty:
@@ -60,32 +63,43 @@ display:
           id: created
           table: node_field_data
           plugin_id: date
+          entity_type: node
+          entity_field: created
         nid:
           field: nid
           id: nid
           table: node
           plugin_id: node
+          entity_type: node
+          entity_field: nid
         path:
           field: path
           id: path
           table: node
           plugin_id: node_path
+          entity_type: node
       filters:
         nid:
           field: nid
           id: nid
           table: node
           plugin_id: numeric
+          entity_type: node
+          entity_field: nid
         status:
           field: status
           id: status
           table: node_field_data
           plugin_id: boolean
+          entity_type: node
+          entity_field: status
         title:
           field: title
           id: title
           table: node_field_data
           plugin_id: string
+          entity_type: node
+          entity_field: title
       footer:
         area:
           empty: false

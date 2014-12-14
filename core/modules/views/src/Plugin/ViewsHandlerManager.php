@@ -91,7 +91,7 @@ class ViewsHandlerManager extends DefaultPluginManager implements FallbackPlugin
 
     if (isset($data[$field][$this->handlerType])) {
       $definition = $data[$field][$this->handlerType];
-      foreach (array('group', 'title', 'title short', 'help', 'real field', 'real table') as $key) {
+      foreach (array('group', 'title', 'title short', 'help', 'real field', 'real table', 'entity field') as $key) {
         if (!isset($definition[$key])) {
           // First check the field level.
           if (!empty($data[$field][$key])) {

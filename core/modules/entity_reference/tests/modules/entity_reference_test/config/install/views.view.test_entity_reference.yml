@@ -86,6 +86,8 @@ display:
           hide_alter_empty: true
           link_to_node: true
           plugin_id: node
+          entity_type: node
+          entity_field: title
       filters:
         status:
           value: true
@@ -96,6 +98,8 @@ display:
             operator: ''
           group: 1
           plugin_id: boolean
+          entity_type: node
+          entity_field: status
       sorts:
         created:
           id: created
@@ -103,6 +107,8 @@ display:
           field: created
           order: DESC
           plugin_id: date
+          entity_type: node
+          entity_field: created
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
   entity_reference_1:

@@ -32,6 +32,7 @@ display:
             items_per_page: 25
           table: node_field_data
           plugin_id: argument_comment_user_uid
+          entity_type: node
       cache:
         type: none
       exposed_form:
@@ -42,6 +43,8 @@ display:
           id: nid
           table: node
           plugin_id: node
+          entity_type: node
+          entity_field: nid
       pager:
         type: full
       query:

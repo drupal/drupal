@@ -38,6 +38,8 @@ class Users extends WizardPluginBase {
       'table' => 'users_field_data',
       'field' => 'status',
       'plugin_id' => 'boolean',
+      'entity_type' => 'user',
+      'entity_field' => 'status',
     )
   );
 
@@ -58,6 +60,8 @@ class Users extends WizardPluginBase {
     $display_options['fields']['name']['id'] = 'name';
     $display_options['fields']['name']['table'] = 'users_field_data';
     $display_options['fields']['name']['field'] = 'name';
+    $display_options['fields']['name']['entity_type'] = 'user';
+    $display_options['fields']['name']['entity_field'] = 'name';
     $display_options['fields']['name']['label'] = '';
     $display_options['fields']['name']['alter']['alter_text'] = 0;
     $display_options['fields']['name']['alter']['make_link'] = 0;

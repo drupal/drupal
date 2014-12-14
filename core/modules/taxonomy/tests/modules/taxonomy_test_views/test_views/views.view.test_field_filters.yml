@@ -87,6 +87,8 @@ display:
           hide_alter_empty: true
           convert_spaces: false
           plugin_id: taxonomy
+          entity_type: taxonomy_term
+          entity_field: name
       filters:
         name:
           id: name
@@ -124,6 +126,8 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: string
+          entity_type: taxonomy_term
+          entity_field: name
       sorts: {  }
       title: 'Name filter page'
       header: {  }
@@ -180,6 +184,8 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: string
+          entity_type: taxonomy_term
+          entity_field: description
       defaults:
         filters: false
         filter_groups: false
@@ -236,6 +242,8 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: string
+          entity_type: taxonomy_term
+          entity_field: description
       defaults:
         filters: false
         filter_groups: false
@@ -292,6 +300,8 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: string
+          entity_type: taxonomy_term
+          entity_field: field_foo
       defaults:
         filters: false
         filter_groups: false
@@ -348,6 +358,8 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: string
+          entity_type: taxonomy_term
+          entity_field: field_foo
       defaults:
         filters: false
         filter_groups: false
@@ -414,6 +426,8 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: string
+          entity_type: taxonomy_term
+          entity_field: name
       defaults:
         filters: false
         filter_groups: false

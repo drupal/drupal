@@ -131,6 +131,8 @@ display:
           format_plural_plural: '@count'
           prefix: ''
           suffix: ''
+          entity_type: aggregator_feed
+          entity_field: fid
       filters: {  }
       sorts: {  }
       title: Sources
@@ -205,6 +207,8 @@ display:
           hide_alter_empty: true
           display_as_link: false
           plugin_id: aggregator_title_link
+          entity_type: aggregator_feed
+          entity_field: title
         url:
           id: url
           table: aggregator_feed
@@ -255,6 +259,8 @@ display:
           hide_alter_empty: true
           display_as_link: false
           plugin_id: url
+          entity_type: aggregator_feed
+          entity_field: url
         description:
           id: description
           table: aggregator_feed
@@ -304,6 +310,8 @@ display:
           empty_zero: false
           hide_alter_empty: true
           plugin_id: xss
+          entity_type: aggregator_feed
+          entity_field: description
         link:
           id: link
           table: aggregator_feed
@@ -354,6 +362,8 @@ display:
           hide_alter_empty: true
           display_as_link: false
           plugin_id: url
+          entity_type: aggregator_feed
+          entity_field: link
       defaults:
         fields: false
         title: false

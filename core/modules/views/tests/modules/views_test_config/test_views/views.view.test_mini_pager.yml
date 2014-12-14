@@ -54,7 +54,7 @@ display:
       fields:
         title:
           id: title
-          table: node
+          table: node_field_data
           field: title
           label: ''
           alter:
@@ -70,6 +70,8 @@ display:
           empty_zero: false
           link_to_node: true
           plugin_id: node
+          entity_type: node
+          entity_field: title
       filters: {  }
       sorts:
         nid:
@@ -78,6 +80,8 @@ display:
           field: nid
           plugin_id: standard
           order: ASC
+          entity_type: node
+          entity_field: nid
       title: test_mini_pager
       filter_groups:
         operator: AND

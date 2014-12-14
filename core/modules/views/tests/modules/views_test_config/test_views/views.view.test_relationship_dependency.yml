@@ -28,6 +28,8 @@ display:
           id: cid
           table: comment
           plugin_id: comment
+          entity_type: comment
+          entity_field: cid
       filter_groups:
         groups: {  }
         operator: AND

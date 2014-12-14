@@ -95,6 +95,8 @@ display:
           hide_alter_empty: true
           anonymous_text: ''
           format_username: true
+          entity_type: user
+          entity_field: name
       filters:
         status:
           value: true
@@ -105,6 +107,8 @@ display:
             operator: '0'
           group: 1
           plugin_id: boolean
+          entity_type: user
+          entity_field: status
         access:
           id: access
           table: users_field_data
@@ -147,6 +151,8 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: date
+          entity_type: user
+          entity_field: access
       sorts:
         access:
           id: access
@@ -161,6 +167,8 @@ display:
             label: ''
           granularity: second
           plugin_id: date
+          entity_type: user
+          entity_field: access
       title: 'Who''s online'
       header:
         result:

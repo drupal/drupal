@@ -31,6 +31,8 @@ display:
           id: uid
           table: users
           field: uid
+          entity_type: user
+          entity_field: uid
         changed:
           id: changed
           table: users_field_data
@@ -38,6 +40,8 @@ display:
           label: 'Updated date'
           date_format: html_date
           plugin_id: date
+          entity_type: user
+          entity_field: changed
       filters: {  }
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null

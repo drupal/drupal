@@ -27,23 +27,31 @@ display:
           table: node_revision
           field: vid
           plugin_id: standard
+          entity_type: node
+          entity_field: vid
         nid_1:
           id: nid_1
           table: node_revision
           field: nid
           plugin_id: standard
+          entity_type: node
+          entity_field: nid
         nid:
           id: nid
           table: node
           field: nid
           relationship: vid
           plugin_id: node
+          entity_type: node
+          entity_field: nid
       arguments:
         nid:
           id: nid
           table: node_revision
           field: nid
           plugin_id: node_nid
+          entity_type: node
+          entity_field: nid
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
     display_plugin: default

@@ -44,6 +44,8 @@ display:
           table: node
           field: nid
           plugin_id: numeric
+          entity_type: node
+          entity_field: nid
         body:
           id: body
           table: node__body
@@ -106,6 +108,8 @@ display:
           separator: ', '
           field_api_classes: false
           plugin_id: field
+          entity_type: node
+          entity_field: body
       title: 'Test serialize'
       arguments: {  }
       field_langcode: '***LANGUAGE_language_content***'

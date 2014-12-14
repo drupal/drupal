@@ -28,11 +28,14 @@ display:
           table: node
           field: node_bulk_form
           plugin_id: node_bulk_form
+          entity_type: node
         title:
           id: title
           table: node_field_data
           field: title
           plugin_id: node
+          entity_type: node
+          entity_field: title
       sorts:
         nid:
           id: nid
@@ -40,6 +43,8 @@ display:
           field: nid
           order: ASC
           plugin_id: standard
+          entity_type: node
+          entity_field: nid
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
   page_1:

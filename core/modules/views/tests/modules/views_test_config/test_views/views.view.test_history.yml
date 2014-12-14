@@ -53,6 +53,8 @@ display:
           hide_empty: false
           empty_zero: false
           link_to_node: true
+          entity_type: node
+          entity_field: title
         timestamp:
           id: timestamp
           table: history
@@ -114,6 +116,8 @@ display:
           expose:
             operator: '0'
           group: 1
+          entity_type: node
+          entity_field: status
       sorts:
         created:
           id: created
@@ -121,6 +125,8 @@ display:
           field: created
           plugin_id: date
           order: DESC
+          entity_type: node
+          entity_field: created
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
   page_1:
@@ -178,6 +184,8 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+          entity_type: node
+          entity_field: status
         timestamp:
           id: timestamp
           table: history

@@ -34,6 +34,8 @@ display:
           id: name
           table: entity_test
           plugin_id: standard
+          entity_type: entity_test
+          entity_field: name
       filters:
         id:
           field: id
@@ -44,6 +46,8 @@ display:
           value:
             value: '3'
           plugin_id: numeric
+          entity_type: entity_test
+          entity_field: id
       group_by: true
       pager:
         type: some

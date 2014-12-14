@@ -131,6 +131,8 @@ display:
           link_to_taxonomy: true
           convert_spaces: false
           plugin_id: taxonomy
+          entity_type: taxonomy_term
+          entity_field: name
       filters: {  }
       sorts:
         tid:
@@ -145,6 +147,8 @@ display:
           expose:
             label: ''
           plugin_id: standard
+          entity_type: taxonomy_term
+          entity_field: tid
       header: {  }
       footer: {  }
       empty: {  }

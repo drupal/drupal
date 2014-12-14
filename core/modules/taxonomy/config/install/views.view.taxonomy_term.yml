@@ -168,6 +168,8 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: language
+          entity_type: node
+          entity_field: langcode
         status:
           id: status
           table: taxonomy_index

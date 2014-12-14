@@ -53,6 +53,8 @@ display:
           link_to_user: true
           format_username: true
           plugin_id: user_name
+          entity_type: user
+          entity_field: name
         translation_link:
           id: translation_link
           table: users
@@ -69,6 +71,7 @@ display:
           hide_alter_empty: true
           text: Translate
           plugin_id: content_translation_link
+          entity_type: user
       filters:
         uid_raw:
           id: uid_raw
@@ -80,6 +83,7 @@ display:
           group: 1
           exposed: false
           plugin_id: numeric
+          entity_type: user
       sorts:
         created:
           id: created
@@ -87,6 +91,8 @@ display:
           field: created
           order: DESC
           plugin_id: date
+          entity_type: user
+          entity_field: created
       title: People
       empty:
         area:

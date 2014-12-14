@@ -23,6 +23,8 @@ display:
           id: uid
           table: node_field_data
           plugin_id: numeric
+          entity_type: node
+          entity_field: uid
       cache:
         type: none
       exposed_form:
@@ -44,6 +46,8 @@ display:
           link_to_node: false
           table: node_field_data
           plugin_id: node
+          entity_type: node
+          entity_field: title
       pager:
         options:
           id: 0

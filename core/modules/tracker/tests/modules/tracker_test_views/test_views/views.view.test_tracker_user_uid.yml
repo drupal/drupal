@@ -104,6 +104,8 @@ display:
           hide_alter_empty: true
           link_to_node: true
           plugin_id: node
+          entity_type: node
+          entity_field: title
       filters:
         uid_touch_tracker:
           id: uid_touch_tracker
@@ -143,6 +145,7 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: tracker_user_uid
+          entity_type: node
       arguments:
         uid_touch_tracker:
           id: uid_touch_tracker
@@ -177,5 +180,6 @@ display:
             fail: 'not found'
           validate_options: {  }
           plugin_id: tracker_user_uid
+          entity_type: node
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null

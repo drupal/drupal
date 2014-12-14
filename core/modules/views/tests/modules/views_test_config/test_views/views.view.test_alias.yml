@@ -42,6 +42,8 @@ display:
           overwrite_anonymous: false
           table: users_field_data
           plugin_id: user_name
+          entity_type: user
+          entity_field: name
       filters:
         uid_raw:
           admin_label: ''
@@ -82,6 +84,7 @@ display:
             min: ''
             value: '1'
           plugin_id: numeric
+          entity_type: user
       pager:
         type: full
       query:

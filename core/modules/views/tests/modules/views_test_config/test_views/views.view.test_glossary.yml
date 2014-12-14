@@ -31,6 +31,8 @@ display:
             items_per_page: 25
           table: node_field_data
           plugin_id: string
+          entity_type: node
+          entity_field: title
       cache:
         type: none
       exposed_form:
@@ -42,6 +44,8 @@ display:
           label: ''
           table: node_field_data
           plugin_id: node
+          entity_type: node
+          entity_field: title
       pager:
         type: full
       query:

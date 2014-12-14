@@ -37,7 +37,9 @@ class NodeRevision extends WizardPluginBase {
       'value' => TRUE,
       'table' => 'node_field_revision',
       'field' => 'status',
-      'plugin_id' => 'boolean'
+      'plugin_id' => 'boolean',
+      'entity_type' => 'node',
+      'entity_field' => 'status',
     )
   );
 
@@ -70,6 +72,8 @@ class NodeRevision extends WizardPluginBase {
     $display_options['fields']['changed']['id'] = 'changed';
     $display_options['fields']['changed']['table'] = 'node_field_revision';
     $display_options['fields']['changed']['field'] = 'changed';
+    $display_options['fields']['changed']['entity_type'] = 'node';
+    $display_options['fields']['changed']['entity_field'] = 'changed';
     $display_options['fields']['changed']['alter']['alter_text'] = FALSE;
     $display_options['fields']['changed']['alter']['make_link'] = FALSE;
     $display_options['fields']['changed']['alter']['absolute'] = FALSE;
@@ -86,6 +90,8 @@ class NodeRevision extends WizardPluginBase {
     $display_options['fields']['title']['id'] = 'title';
     $display_options['fields']['title']['table'] = 'node_field_revision';
     $display_options['fields']['title']['field'] = 'title';
+    $display_options['fields']['title']['entity_type'] = 'node';
+    $display_options['fields']['title']['entity_field'] = 'title';
     $display_options['fields']['title']['label'] = '';
     $display_options['fields']['title']['alter']['alter_text'] = 0;
     $display_options['fields']['title']['alter']['make_link'] = 0;

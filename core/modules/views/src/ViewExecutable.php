@@ -418,18 +418,28 @@ class ViewExecutable {
   protected $showAdminLinks;
 
   /**
+   * The views data.
+   *
+   * @var \Drupal\views\ViewsData
+   */
+  protected $viewsData;
+
+  /**
    * Constructs a new ViewExecutable object.
    *
    * @param \Drupal\views\ViewStorageInterface $storage
    *   The view config entity the actual information is stored on.
    * @param \Drupal\Core\Session\AccountInterface $user
    *   The current user.
+   * @param \Drupal\views\ViewsData $views_data
+   *   The views data.
    */
-  public function __construct(ViewStorageInterface $storage, AccountInterface $user) {
+  public function __construct(ViewStorageInterface $storage, AccountInterface $user, ViewsData $views_data) {
     // Reference the storage and the executable to each other.
     $this->storage = $storage;
     $this->storage->set('executable', $this);
     $this->user = $user;
+    $this->viewsData = $views_data;
 
     // Add the default css for a view.
     $this->element['#attached']['library'][] = 'views/views.module';
@@ -1526,9 +1536,7 @@ class ViewExecutable {
     $this->is_attachment = TRUE;
     // Find out which other displays attach to the current one.
     foreach ($this->display_handler->getAttachedDisplays() as $id) {
-      // Create a clone for the attachments to manipulate. 'static' refers to the current class name.
-      $cloned_view = new static($this->storage, $this->user);
-      $cloned_view->setRequest($this->getRequest());
+      $cloned_view = Views::executableFactory()->get($this->storage);
       $this->displayHandlers->get($id)->attachTo($cloned_view, $this->current_display, $this->element);
     }
     $this->is_attachment = FALSE;
@@ -1900,6 +1908,7 @@ class ViewExecutable {
     $types = $this::getHandlerTypes();
     $this->setDisplay($display_id);
 
+    $data = $this->viewsData->get($table);
     $fields = $this->displayHandlers->get($display_id)->getOption($types[$type]['plural']);
 
     if (empty($id)) {
@@ -1915,8 +1924,14 @@ class ViewExecutable {
       'field' => $field,
     ) + $options;
 
+    if (isset($data['table']['entity type'])) {
+      $fields[$id]['entity_type'] = $data['table']['entity type'];
+    }
+    if (isset($data[$field]['entity field'])) {
+      $fields[$id]['entity_field'] = $data[$field]['entity field'];
+    }
+
     // Load the plugin ID if available.
-    $data = Views::viewsData()->get($table);
     if (isset($data[$field][$handler_type]['id'])) {
       $fields[$id]['plugin_id'] = $data[$field][$handler_type]['id'];
     }

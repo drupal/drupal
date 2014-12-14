@@ -111,6 +111,8 @@ display:
           hide_alter_empty: true
           link_to_comment: true
           link_to_entity: false
+          entity_type: comment
+          entity_field: subject
         changed:
           id: changed
           table: comment_field_data
@@ -163,6 +165,8 @@ display:
           date_format: 'time ago'
           custom_date_format: ''
           timezone: ''
+          entity_type: comment
+          entity_field: changed
       filters:
         status:
           value: true
@@ -173,6 +177,8 @@ display:
           expose:
             operator: ''
           group: 1
+          entity_type: comment
+          entity_field: status
         status_node:
           value: true
           table: node_field_data
@@ -183,6 +189,8 @@ display:
           expose:
             operator: ''
           group: 1
+          entity_type: node
+          entity_field: status
       sorts:
         created:
           id: created
@@ -196,6 +204,8 @@ display:
           expose:
             label: ''
           plugin_id: date
+          entity_type: comment
+          entity_field: created
         cid:
           id: cid
           table: comment
@@ -208,6 +218,8 @@ display:
           expose:
             label: ''
           plugin_id: standard
+          entity_type: comment
+          entity_field: cid
       title: 'Recent comments'
       empty:
         area_text_custom:

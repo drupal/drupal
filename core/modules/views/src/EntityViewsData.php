@@ -127,7 +127,6 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
     $revision_field = $this->entityType->getKey('revision');
 
     // Setup base information of the views data.
-    $data[$base_table]['table']['entity type'] = $this->entityType->id();
     $data[$base_table]['table']['group'] = $this->entityType->getLabel();
     $data[$base_table]['table']['provider'] = $this->entityType->getProvider();
     $data[$base_table]['table']['base'] = [
@@ -156,12 +155,10 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
         'field' => $base_field,
         'type' => 'INNER'
       ];
-      $data[$data_table]['table']['entity type'] = $this->entityType->id();
       $data[$data_table]['table']['group'] = $this->entityType->getLabel();
       $data[$data_table]['table']['provider'] = $this->entityType->getProvider();
     }
     if ($revision_table) {
-      $data[$revision_table]['table']['entity type'] = $this->entityType->id();
       $data[$revision_table]['table']['group'] = $this->t('@entity_type revision', ['@entity_type' => $this->entityType->getLabel()]);
       $data[$revision_table]['table']['provider'] = $this->entityType->getProvider();
       $data[$revision_table]['table']['base'] = array(
@@ -176,7 +173,6 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
       );
 
       if ($revision_data_table) {
-        $data[$revision_data_table]['table']['entity type'] = $this->entityType->id();
         $data[$revision_data_table]['table']['group'] = $this->t('@entity_type revision', ['@entity_type' => $this->entityType->getLabel()]);
 
         $data[$revision_data_table]['table']['join'][$revision_table] = array(
@@ -203,6 +199,12 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
         }
       }
     }
+
+    // Add the entity type key to each table generated.
+    $entity_type_id = $this->entityType->id();
+    array_walk($data, function(&$table_data) use ($entity_type_id){
+      $table_data['table']['entity type'] = $entity_type_id;
+    });
 
     return $data;
   }
@@ -238,6 +240,8 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
     foreach ($field_column_mapping as $field_column_name => $schema_field_name) {
       $views_field_name = ($multiple) ? $field_name . '__' . $field_column_name : $field_name;
       $table_data[$views_field_name] = $this->mapSingleFieldViewsData($table, $field_name, $field_definition_type, $field_column_name, $field_schema['columns'][$field_column_name]['type'], $first, $field_definition);
+
+      $table_data[$views_field_name]['entity field'] = $field_name;
       $first = FALSE;
     }
   }

@@ -40,6 +40,8 @@ display:
           field: id
           order: DESC
           plugin_id: date
+          entity_type: entity_test
+          entity_field: id
       title: 'Test serialize'
       arguments: {  }
       field_langcode: '***LANGUAGE_language_content***'

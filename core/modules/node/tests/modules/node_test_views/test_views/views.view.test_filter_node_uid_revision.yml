@@ -27,6 +27,8 @@ display:
           table: node
           field: nid
           plugin_id: node
+          entity_type: node
+          entity_field: nid
       filter_groups:
         groups:
           1: AND
@@ -43,6 +45,8 @@ display:
           value:
             - '1'
           plugin_id: node_uid_revision
+          entity_type: node
+          entity_field: uid_revision
       sorts:
         nid:
           id: nid
@@ -51,6 +55,8 @@ display:
           order: ASC
           plugin_id: standard
           relationship: none
+          entity_type: node
+          entity_field: nid
       pager:
         type: full
       query:

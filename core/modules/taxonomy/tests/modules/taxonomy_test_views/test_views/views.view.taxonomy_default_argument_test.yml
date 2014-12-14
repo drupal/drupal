@@ -112,6 +112,8 @@ display:
           hide_alter_empty: true
           convert_spaces: false
           plugin_id: taxonomy
+          entity_type: taxonomy_term
+          entity_field: name
       filters: {  }
       sorts: {  }
       header: {  }
@@ -158,5 +160,7 @@ display:
           break_phrase: false
           not: false
           plugin_id: taxonomy
+          entity_type: taxonomy_term
+          entity_field: tid
       field_langcode: '***LANGUAGE_site_default***'
       field_langcode_add_to_query: null

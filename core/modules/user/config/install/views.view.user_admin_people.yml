@@ -188,6 +188,7 @@ display:
           empty_zero: false
           hide_alter_empty: true
           plugin_id: user_bulk_form
+          entity_type: user
         name:
           id: name
           table: users_field_data
@@ -241,6 +242,8 @@ display:
           anonymous_text: ''
           format_username: true
           plugin_id: user_name
+          entity_type: user
+          entity_field: name
         status:
           id: status
           table: users_field_data
@@ -294,6 +297,8 @@ display:
           type_custom_false: ''
           not: '0'
           plugin_id: boolean
+          entity_type: user
+          entity_field: status
         roles_target_id:
           id: roles_target_id
           table: user__roles
@@ -397,6 +402,8 @@ display:
           custom_date_format: ''
           timezone: ''
           plugin_id: date
+          entity_type: user
+          entity_field: created
         access:
           id: access
           table: users_field_data
@@ -449,6 +456,8 @@ display:
           custom_date_format: ''
           timezone: ''
           plugin_id: date
+          entity_type: user
+          entity_field: access
         edit_node:
           id: edit_node
           table: users
@@ -499,6 +508,7 @@ display:
           hide_alter_empty: true
           text: Edit
           plugin_id: user_link_edit
+          entity_type: user
         dropbutton:
           id: dropbutton
           table: views
@@ -607,6 +617,8 @@ display:
           hide_alter_empty: true
           link_to_user: false
           plugin_id: user_mail
+          entity_type: user
+          entity_field: mail
       filters:
         combine:
           id: combine
@@ -775,6 +787,8 @@ display:
                 operator: '='
                 value: '0'
           plugin_id: boolean
+          entity_type: user
+          entity_field: status
         uid_raw:
           id: uid_raw
           table: users
@@ -814,6 +828,7 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: numeric
+          entity_type: user
       sorts:
         created:
           id: created
@@ -828,6 +843,8 @@ display:
             label: ''
           granularity: second
           plugin_id: date
+          entity_type: user
+          entity_field: created
       title: People
       empty:
         area_text_custom:

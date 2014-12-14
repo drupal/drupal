@@ -37,6 +37,8 @@ display:
           id: nid
           table: node
           plugin_id: numeric
+          entity_type: node
+          entity_field: nid
         title:
           id: title
           table: node_field_data
@@ -53,6 +55,8 @@ display:
           hide_alter_empty: true
           link_to_node: true
           plugin_id: node
+          entity_type: node
+          entity_field: title
       filters:
         type:
           id: type
@@ -92,6 +96,8 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: bundle
+          entity_type: node
+          entity_field: type
       group_by: true
       pager:
         type: some

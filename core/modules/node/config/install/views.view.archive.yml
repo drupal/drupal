@@ -75,6 +75,8 @@ display:
           expose:
             label: ''
           granularity: second
+          entity_type: node
+          entity_field: created
       arguments:
         created_year_month:
           id: created_year_month
@@ -94,6 +96,7 @@ display:
             items_per_page: 30
           specify_validation: true
           plugin_id: date_year_month
+          entity_type: node
       filters:
         status:
           id: status
@@ -104,6 +107,8 @@ display:
           expose:
             operator: '0'
           plugin_id: boolean
+          entity_type: node
+          entity_field: status
         langcode:
           id: langcode
           table: node_field_data
@@ -142,6 +147,8 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: language
+          entity_type: node
+          entity_field: langcode
       style:
         type: default
         options:
@@ -188,6 +195,7 @@ display:
             items_per_page: 30
           specify_validation: true
           plugin_id: date_year_month
+          entity_type: node
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
   page_1:

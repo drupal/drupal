@@ -86,6 +86,8 @@ display:
           relationship: none
           table: node
           plugin_id: numeric
+          entity_type: node
+          entity_field: nid
       menu:
         type: tab
         title: 'Test contextual link'

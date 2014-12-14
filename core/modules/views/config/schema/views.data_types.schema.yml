@@ -327,6 +327,15 @@ views_handler:
     admin_label:
       type: label
       label: 'A string to identify the handler instance in the admin UI.'
+    entity_type:
+      type: string
+      label: 'The entity type'
+    entity_field:
+      type: string
+      label: 'The corresponding entity field'
+    plugin_id:
+      type: string
+      label: 'The plugin ID'
 
 views_argument:
   type: views_handler
@@ -780,26 +789,8 @@ views_filter_group_item:
       label: 'Value'
 
 views_relationship:
-  type: mapping
+  type: views_handler
   mapping:
-    id:
-      type: string
-      label: 'ID'
-    table:
-      type: string
-      label: 'Table'
-    field:
-      type: string
-      label: 'UID'
-    plugin_id:
-      type: string
-      label: 'Plugin ID'
-    relationship:
-      type: string
-      label: 'Relationship'
-    group_type:
-      type: string
-      label: 'Group type'
     admin_label:
       type: string
       label: 'Administrative title'

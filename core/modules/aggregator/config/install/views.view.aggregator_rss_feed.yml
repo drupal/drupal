@@ -126,6 +126,8 @@ display:
           format_plural_plural: '@count'
           prefix: ''
           suffix: ''
+          entity_type: aggregator_item
+          entity_field: iid
       filters: {  }
       sorts: {  }
       title: 'Aggregator RSS feed'

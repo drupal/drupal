@@ -113,6 +113,8 @@ display:
           hide_alter_empty: true
           convert_spaces: false
           plugin_id: taxonomy
+          entity_type: taxonomy_term
+          entity_field: name
       filters: {  }
       sorts: {  }
       header: {  }

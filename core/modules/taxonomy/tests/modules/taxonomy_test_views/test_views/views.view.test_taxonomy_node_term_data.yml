@@ -31,6 +31,8 @@ display:
             items_per_page: 25
           table: taxonomy_term_data
           plugin_id: taxonomy
+          entity_type: taxonomy_term
+          entity_field: tid
         tid_1:
           default_argument_type: fixed
           field: tid
@@ -43,6 +45,8 @@ display:
             items_per_page: 25
           table: taxonomy_term_data
           plugin_id: taxonomy
+          entity_type: taxonomy_term
+          entity_field: tid
       cache:
         type: none
       exposed_form:
@@ -75,6 +79,8 @@ display:
           order: DESC
           table: node
           plugin_id: standard
+          entity_type: node
+          entity_field: nid
       style:
         type: default
       row:

@@ -54,6 +54,8 @@ display:
           link_to_user: true
           overwrite_anonymous: false
           plugin_id: user_name
+          entity_type: user
+          entity_field: name
         data:
           id: data
           table: users
@@ -105,6 +107,7 @@ display:
           data_module: views_test_config
           data_name: test_value_name
           plugin_id: user_data
+          entity_type: user
       filters:
         uid:
           value:
@@ -116,6 +119,8 @@ display:
             operator: '0'
           group: 1
           plugin_id: numeric
+          entity_type: user
+          entity_field: uid
       sorts:
         created:
           id: created
@@ -123,5 +128,7 @@ display:
           field: created
           order: DESC
           plugin_id: date
+          entity_type: user
+          entity_field: created
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null

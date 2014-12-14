@@ -31,7 +31,10 @@ class ViewsTest extends UnitTestCase {
     $user = $this->getMock('Drupal\Core\Session\AccountInterface');
     $request_stack = new RequestStack();
     $request_stack->push(new Request());
-    $container->set('views.executable', new ViewExecutableFactory($user, $request_stack));
+    $views_data = $this->getMockBuilder('Drupal\views\ViewsData')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $container->set('views.executable', new ViewExecutableFactory($user, $request_stack, $views_data));
 
     $this->view = new View(array('id' => 'test_view'), 'view');
 

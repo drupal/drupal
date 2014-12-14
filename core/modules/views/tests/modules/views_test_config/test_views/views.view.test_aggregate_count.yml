@@ -24,6 +24,8 @@ display:
             format: default_summary
           table: entity_test
           plugin_id: string
+          entity_type: entity_test
+          entity_field: name
       cache:
         type: none
       exposed_form:
@@ -44,6 +46,8 @@ display:
           id: id
           table: entity_test
           plugin_id: numeric
+          entity_type: entity_test
+          entity_field: id
       group_by: true
       pager:
         type: some

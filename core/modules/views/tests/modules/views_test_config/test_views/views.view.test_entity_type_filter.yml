@@ -24,6 +24,8 @@ display:
           table: node
           field: nid
           relationship: none
+          entity_type: node
+          entity_field: nid
         type:
           id: type
           table: node_field_data
@@ -73,6 +75,8 @@ display:
           empty_zero: false
           hide_alter_empty: true
           plugin_id: node_type
+          entity_type: node
+          entity_field: type
       defaults:
         fields: false
         filters: false
@@ -87,5 +91,7 @@ display:
             test_bundle: test_bundle
             test_bundle_2: test_bundle_2
           plugin_id: bundle
+          entity_type: node
+          entity_field: type
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null

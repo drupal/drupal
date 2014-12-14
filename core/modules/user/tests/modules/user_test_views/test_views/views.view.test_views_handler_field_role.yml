@@ -90,6 +90,8 @@ display:
           anonymous_text: ''
           format_username: true
           plugin_id: user_name
+          entity_type: user
+          entity_field: name
         roles_target_id:
           id: roles_target_id
           table: user__roles
@@ -151,6 +153,8 @@ display:
             operator: '0'
           group: 1
           plugin_id: boolean
+          entity_type: user
+          entity_field: status
       sorts: {  }
       title: test_user_role
       field_langcode: '***LANGUAGE_language_content***'

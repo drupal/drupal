@@ -113,6 +113,8 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+          entity_type: node
+          entity_field: title
         name:
           id: name
           table: users_field_data
@@ -166,6 +168,8 @@ display:
           overwrite_anonymous: false
           anonymous_text: ''
           format_username: true
+          entity_type: user
+          entity_field: name
         changed:
           id: changed
           table: node_field_data
@@ -218,6 +222,8 @@ display:
           hide_alter_empty: true
           custom_date_format: ''
           timezone: ''
+          entity_type: node
+          entity_field: changed
       arguments:
         title:
           id: title
@@ -250,6 +256,8 @@ display:
             fail: 'not found'
           validate_options: {  }
           break_phrase: false
+          entity_type: node
+          entity_field: title
       relationships:
         uid:
           id: uid
@@ -339,6 +347,8 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: language
+          entity_type: node
+          entity_field: langcode
   attachment_1:
     id: attachment_1
     display_title: Attachment
@@ -390,6 +400,8 @@ display:
             fail: 'not found'
           validate_options: {  }
           break_phrase: false
+          entity_type: node
+          entity_field: title
       displays:
         default: default
         page_1: page_1

@@ -28,18 +28,24 @@ display:
           id: cid
           table: comment
           plugin_id: comment
+          entity_type: comment
+          entity_field: cid
         nid:
           field: nid
           id: nid
           table: node
           relationship: node
           plugin_id: node
+          entity_type: node
+          entity_field: nid
         uid:
           field: uid
           id: uid
           table: users
           relationship: uid
           plugin_id: user
+          entity_type: user
+          entity_field: uid
       filter_groups:
         groups: {  }
         operator: AND
@@ -56,7 +62,7 @@ display:
           table: comment_field_data
           plugin_id: standard
         uid:
-          admin_label: 'Author'
+          admin_label: Author
           field: uid
           group_type: group
           id: uid

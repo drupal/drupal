@@ -38,6 +38,8 @@ display:
           field: iid
           id: iid
           plugin_id: numeric
+          entity_type: aggregator_item
+          entity_field: iid
         title:
           table: aggregator_item
           field: title
@@ -70,11 +72,15 @@ display:
             trim: false
             preserve_tags: ''
             html: false
+          entity_type: aggregator_item
+          entity_field: title
         timestamp:
           table: aggregator_item
           field: timestamp
           id: timestamp
           plugin_id: date
+          entity_type: aggregator_item
+          entity_field: timestamp
         author:
           table: aggregator_item
           field: author
@@ -107,6 +113,8 @@ display:
             trim: false
             preserve_tags: ''
             html: false
+          entity_type: aggregator_item
+          entity_field: author
         description:
           id: description
           table: aggregator_item
@@ -156,6 +164,8 @@ display:
           empty_zero: false
           hide_alter_empty: true
           plugin_id: aggregator_xss
+          entity_type: aggregator_item
+          entity_field: description
       filters: {  }
       sorts: {  }
       field_langcode: '***LANGUAGE_language_content***'

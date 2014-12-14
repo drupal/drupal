@@ -35,7 +35,7 @@ class EntityViewsDataTest extends UnitTestCase {
   /**
    * Entity info to use in this test.
    *
-   * @var \Drupal\Core\Entity\EntityTypeInterface|\Drupal\views\Tests\TestEntityType
+   * @var \Drupal\Core\Entity\EntityTypeInterface|\Drupal\Tests\views\Unit\TestEntityType
    */
   protected $baseEntityType;
 
@@ -70,7 +70,7 @@ class EntityViewsDataTest extends UnitTestCase {
   /**
    * The tested entity views controller.
    *
-   * @var \Drupal\views\Tests\TestEntityViewsData
+   * @var \Drupal\Tests\views\Unit\TestEntityViewsData
    */
   protected $viewsData;
 
@@ -342,19 +342,29 @@ class EntityViewsDataTest extends UnitTestCase {
     $data = $this->viewsData->getViewsData();
 
     $this->assertNumericField($data['entity_test']['id']);
+    $this->assertField($data['entity_test']['id'], 'id');
     $this->assertUuidField($data['entity_test']['uuid']);
+    $this->assertField($data['entity_test']['uuid'], 'uuid');
     $this->assertStringField($data['entity_test']['type']);
+    $this->assertEquals('type', $data['entity_test']['type']['entity field']);
 
     $this->assertLanguageField($data['entity_test']['langcode']);
+    $this->assertField($data['entity_test']['langcode'], 'langcode');
     $this->assertEquals('Original language', $data['entity_test']['langcode']['title']);
 
     $this->assertStringField($data['entity_test']['name']);
+    $this->assertField($data['entity_test']['name'], 'name');
 
     $this->assertLongTextField($data['entity_test'], 'description');
+    $this->assertField($data['entity_test']['description__value'], 'description');
+    $this->assertField($data['entity_test']['description__format'], 'description');
 
     $this->assertUriField($data['entity_test']['homepage']);
+    $this->assertField($data['entity_test']['homepage'], 'homepage');
 
     $this->assertEntityReferenceField($data['entity_test']['user_id']);
+    $this->assertField($data['entity_test']['user_id'], 'user_id');
+
     $relationship = $data['entity_test']['user_id']['relationship'];
     $this->assertEquals('users', $relationship['base']);
     $this->assertEquals('uid', $relationship['base field']);
@@ -426,12 +436,16 @@ class EntityViewsDataTest extends UnitTestCase {
 
     // Check the base fields.
     $this->assertNumericField($data['entity_test_mul']['id']);
+    $this->assertField($data['entity_test_mul']['id'], 'id');
     $this->assertUuidField($data['entity_test_mul']['uuid']);
+    $this->assertField($data['entity_test_mul']['uuid'], 'uuid');
 
     $this->assertBundleField($data['entity_test_mul']['type']);
+    $this->assertField($data['entity_test_mul']['type'], 'type');
     $this->assertFalse(isset($data['entity_test_mul']['type']['relationship']));
 
     $this->assertLanguageField($data['entity_test_mul']['langcode']);
+    $this->assertField($data['entity_test_mul']['langcode'], 'langcode');
     // Also ensure that field_data only fields don't appear on the base table.
     $this->assertFalse(isset($data['entity_test_mul']['name']));
     $this->assertFalse(isset($data['entity_test_mul']['description']));
@@ -442,17 +456,24 @@ class EntityViewsDataTest extends UnitTestCase {
 
     // Check the data fields.
     $this->assertNumericField($data['entity_test_mul_property_data']['id']);
+    $this->assertField($data['entity_test_mul_property_data']['id'], 'id');
 
     $this->assertLanguageField($data['entity_test_mul_property_data']['langcode']);
+    $this->assertField($data['entity_test_mul_property_data']['langcode'], 'langcode');
     $this->assertEquals('Translation language', $data['entity_test_mul_property_data']['langcode']['title']);
 
     $this->assertStringField($data['entity_test_mul_property_data']['name']);
+    $this->assertField($data['entity_test_mul_property_data']['name'], 'name');
 
     $this->assertLongTextField($data['entity_test_mul_property_data'], 'description');
+    $this->assertField($data['entity_test_mul_property_data']['description__value'], 'description');
+    $this->assertField($data['entity_test_mul_property_data']['description__format'], 'description');
 
     $this->assertUriField($data['entity_test_mul_property_data']['homepage']);
+    $this->assertField($data['entity_test_mul_property_data']['homepage'], 'homepage');
 
     $this->assertEntityReferenceField($data['entity_test_mul_property_data']['user_id']);
+    $this->assertField($data['entity_test_mul_property_data']['user_id'], 'user_id');
     $relationship = $data['entity_test_mul_property_data']['user_id']['relationship'];
     $this->assertEquals('users', $relationship['base']);
     $this->assertEquals('uid', $relationship['base field']);
@@ -513,9 +534,13 @@ class EntityViewsDataTest extends UnitTestCase {
 
     // Check the base fields.
     $this->assertNumericField($data['entity_test_mulrev']['id']);
+    $this->assertField($data['entity_test_mulrev']['id'], 'id');
     $this->assertNumericField($data['entity_test_mulrev']['revision_id']);
+    $this->assertField($data['entity_test_mulrev']['revision_id'], 'revision_id');
     $this->assertUuidField($data['entity_test_mulrev']['uuid']);
+    $this->assertField($data['entity_test_mulrev']['uuid'], 'uuid');
     $this->assertStringField($data['entity_test_mulrev']['type']);
+    $this->assertField($data['entity_test_mulrev']['type'], 'type');
 
     // Also ensure that field_data only fields don't appear on the base table.
     $this->assertFalse(isset($data['entity_test_mulrev']['name']));
@@ -528,9 +553,12 @@ class EntityViewsDataTest extends UnitTestCase {
 
     // Check the revision fields.
     $this->assertNumericField($data['entity_test_mulrev_revision']['id']);
+    $this->assertField($data['entity_test_mulrev_revision']['id'], 'id');
     $this->assertNumericField($data['entity_test_mulrev_revision']['revision_id']);
+    $this->assertField($data['entity_test_mulrev_revision']['revision_id'], 'revision_id');
 
     $this->assertLanguageField($data['entity_test_mulrev_revision']['langcode']);
+    $this->assertField($data['entity_test_mulrev_revision']['langcode'], 'langcode');
     $this->assertEquals('Original language', $data['entity_test_mulrev_revision']['langcode']['title']);
 
     // Also ensure that field_data only fields don't appear on the revision table.
@@ -543,33 +571,59 @@ class EntityViewsDataTest extends UnitTestCase {
 
     // Check the data fields.
     $this->assertNumericField($data['entity_test_mulrev_property_data']['id']);
+    $this->assertField($data['entity_test_mulrev_property_data']['id'], 'id');
     $this->assertLanguageField($data['entity_test_mulrev_property_data']['langcode']);
+    $this->assertField($data['entity_test_mulrev_property_data']['langcode'], 'langcode');
     $this->assertStringField($data['entity_test_mulrev_property_data']['name']);
+    $this->assertField($data['entity_test_mulrev_property_data']['name'], 'name');
 
     $this->assertLongTextField($data['entity_test_mulrev_property_data'], 'description');
+    $this->assertField($data['entity_test_mulrev_property_data']['description__value'], 'description');
+    $this->assertField($data['entity_test_mulrev_property_data']['description__format'], 'description');
     $this->assertUriField($data['entity_test_mulrev_property_data']['homepage']);
+    $this->assertField($data['entity_test_mulrev_property_data']['homepage'], 'homepage');
 
     $this->assertEntityReferenceField($data['entity_test_mulrev_property_data']['user_id']);
+    $this->assertField($data['entity_test_mulrev_property_data']['user_id'], 'user_id');
     $relationship = $data['entity_test_mulrev_property_data']['user_id']['relationship'];
     $this->assertEquals('users', $relationship['base']);
     $this->assertEquals('uid', $relationship['base field']);
 
     // Check the property data fields.
     $this->assertNumericField($data['entity_test_mulrev_property_revision']['id']);
+    $this->assertField($data['entity_test_mulrev_property_revision']['id'], 'id');
 
     $this->assertLanguageField($data['entity_test_mulrev_property_revision']['langcode']);
+    $this->assertField($data['entity_test_mulrev_property_revision']['langcode'], 'langcode');
     $this->assertEquals('Translation language', $data['entity_test_mulrev_property_revision']['langcode']['title']);
 
     $this->assertStringField($data['entity_test_mulrev_property_revision']['name']);
+    $this->assertField($data['entity_test_mulrev_property_revision']['name'], 'name');
 
     $this->assertLongTextField($data['entity_test_mulrev_property_revision'], 'description');
+    $this->assertField($data['entity_test_mulrev_property_revision']['description__value'], 'description');
+    $this->assertField($data['entity_test_mulrev_property_revision']['description__format'], 'description');
 
     $this->assertUriField($data['entity_test_mulrev_property_revision']['homepage']);
+    $this->assertField($data['entity_test_mulrev_property_revision']['homepage'], 'homepage');
 
     $this->assertEntityReferenceField($data['entity_test_mulrev_property_revision']['user_id']);
+    $this->assertField($data['entity_test_mulrev_property_revision']['user_id'], 'user_id');
     $relationship = $data['entity_test_mulrev_property_revision']['user_id']['relationship'];
     $this->assertEquals('users', $relationship['base']);
     $this->assertEquals('uid', $relationship['base field']);
+  }
+
+  /**
+   * Tests generic stuff per field.
+   *
+   * @param array $data
+   *   The views data to check.
+   * @param string $field_name
+   *   The entity field name.
+   */
+  protected function assertField($data, $field_name) {
+    $this->assertEquals($field_name, $data['entity field']);
   }
 
   /**

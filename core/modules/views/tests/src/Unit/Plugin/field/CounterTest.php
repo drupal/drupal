@@ -72,7 +72,10 @@ class CounterTest extends UnitTestCase {
 
     $storage = new View($config, 'view');
     $user = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $this->view = $this->getMock('Drupal\views\ViewExecutable', NULL, array($storage, $user));
+    $views_data = $this->getMockBuilder('Drupal\views\ViewsData')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $this->view = $this->getMock('Drupal\views\ViewExecutable', NULL, array($storage, $user, $views_data));
 
     $this->display = $this->getMockBuilder('Drupal\views\Plugin\views\display\DisplayPluginBase')
       ->disableOriginalConstructor()

@@ -20,6 +20,8 @@ display:
           table: node_field_data
           field: title
           plugin_id: node
+          entity_type: node
+          entity_field: title
       relationships:
         comment_cid:
           id: comment_cid

@@ -59,6 +59,8 @@ display:
           hide_empty: false
           empty_zero: false
           link_to_comment: true
+          entity_type: comment
+          entity_field: subject
       filters: {  }
       sorts: {  }
       field_langcode: '***LANGUAGE_language_content***'

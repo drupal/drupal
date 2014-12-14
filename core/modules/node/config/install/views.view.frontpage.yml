@@ -45,6 +45,7 @@ display:
           relationship: none
           table: node
           plugin_id: node_listing_empty
+          entity_type: node
         title:
           id: title
           table: views
@@ -103,6 +104,8 @@ display:
           table: node_field_data
           value: true
           plugin_id: boolean
+          entity_type: node
+          entity_field: promote
         status:
           expose:
             operator: ''
@@ -112,6 +115,8 @@ display:
           table: node_field_data
           value: true
           plugin_id: boolean
+          entity_type: node
+          entity_field: status
         langcode:
           id: langcode
           table: node_field_data
@@ -150,6 +155,8 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: language
+          entity_type: node
+          entity_field: langcode
       pager:
         type: full
         options:
@@ -196,6 +203,8 @@ display:
           relationship: none
           table: node_field_data
           plugin_id: boolean
+          entity_type: node
+          entity_field: sticky
         created:
           field: created
           id: created
@@ -209,6 +218,8 @@ display:
           expose:
             label: ''
           granularity: second
+          entity_type: node
+          entity_field: created
       style:
         type: default
         options:

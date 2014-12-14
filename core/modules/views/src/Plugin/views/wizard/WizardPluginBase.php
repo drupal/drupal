@@ -828,10 +828,14 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
         }
       }
     }
+    // @todo refactor the code to use ViewExecutable::addHandler, see
+    //   https://drupal.org/node/2383157
     $display_options['fields'][$default_field] = array(
       'table' => $default_table,
       'field' => $default_field,
       'id' => $default_field,
+      'entity_type' => isset($data[$default_field]['entity type']) ? $data[$default_field]['entity type'] : NULL,
+      'entity_field' => isset($data[$default_field]['entity field']) ? $data[$default_field]['entity field'] : NULL,
       'plugin_id' => $data[$default_field]['field']['id'],
     );
 
@@ -917,6 +921,8 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
         'table' => $table,
         'field' => $bundle_key,
         'value' => $value,
+        'entity_type' => isset($table_data['table']['entity type']) ? $table_data['table']['entity type'] : NULL,
+        'entity_field' => isset($table_data[$bundle_key]['entity field']) ? $table_data[$bundle_key]['entity field'] : NULL,
         'plugin_id' => $handler,
       );
     }
@@ -994,6 +1000,8 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
           'table' => $table,
           'field' => $column,
           'order' => $sort,
+          'entity_type' => isset($data['table']['entity type']) ? $data['table']['entity type'] : NULL,
+          'entity_field' => isset($data[$column]['entity field']) ? $data[$column]['entity field'] : NULL,
           'plugin_id' => $data[$column]['sort']['id'],
        );
       }

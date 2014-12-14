@@ -120,6 +120,8 @@ display:
           hide_alter_empty: true
           link_to_node: false
           plugin_id: node
+          entity_type: node
+          entity_field: nid
       filters:
         status:
           value: true
@@ -130,6 +132,8 @@ display:
             operator: ''
           group: 1
           plugin_id: boolean
+          entity_type: node
+          entity_field: status
       sorts:
         created:
           id: created
@@ -144,6 +148,8 @@ display:
             label: ''
           granularity: second
           plugin_id: date
+          entity_type: node
+          entity_field: created
       title: test_node_view
       header: {  }
       footer: {  }
@@ -189,6 +195,8 @@ display:
           transform_dash: false
           break_phrase: false
           plugin_id: node_type
+          entity_type: node
+          entity_field: type
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
   page_1:

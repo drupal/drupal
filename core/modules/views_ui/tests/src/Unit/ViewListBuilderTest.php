@@ -121,7 +121,10 @@ class ViewListBuilderTest extends UnitTestCase {
     $user = $this->getMock('Drupal\Core\Session\AccountInterface');
     $request_stack = new RequestStack();
     $request_stack->push(new Request());
-    $executable_factory = new ViewExecutableFactory($user, $request_stack);
+    $views_data = $this->getMockBuilder('Drupal\views\ViewsData')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $executable_factory = new ViewExecutableFactory($user, $request_stack, $views_data);
     $container->set('views.executable', $executable_factory);
     $container->set('plugin.manager.views.display', $display_manager);
     \Drupal::setContainer($container);

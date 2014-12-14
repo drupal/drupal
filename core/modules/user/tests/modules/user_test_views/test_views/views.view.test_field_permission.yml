@@ -83,6 +83,8 @@ display:
           hide_alter_empty: true
           link_to_user: false
           plugin_id: user
+          entity_type: user
+          entity_field: uid
         permission:
           id: permission
           table: user__roles

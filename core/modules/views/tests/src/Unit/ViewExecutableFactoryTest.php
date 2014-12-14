@@ -47,6 +47,13 @@ class ViewExecutableFactoryTest extends UnitTestCase {
   protected $viewExecutableFactory;
 
   /**
+   * The mocked views data.
+   *
+   * @var \Drupal\views\ViewsData|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $viewsData;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -55,7 +62,10 @@ class ViewExecutableFactoryTest extends UnitTestCase {
     $this->user = $this->getMock('Drupal\Core\Session\AccountInterface');
     $this->requestStack = new RequestStack();
     $this->view = $this->getMock('Drupal\views\ViewStorageInterface');
-    $this->viewExecutableFactory = new ViewExecutableFactory($this->user, $this->requestStack);
+    $this->viewsData = $this->getMockBuilder('Drupal\views\ViewsData')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $this->viewExecutableFactory = new ViewExecutableFactory($this->user, $this->requestStack, $this->viewsData);
   }
 
   /**

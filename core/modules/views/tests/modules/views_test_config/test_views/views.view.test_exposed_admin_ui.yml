@@ -32,6 +32,8 @@ display:
           id: type
           table: node_field_data
           plugin_id: node_type
+          entity_type: node
+          entity_field: type
         body_value:
           id: body_value
           table: node__body
@@ -72,6 +74,8 @@ display:
                 operator: empty
                 value: ''
           plugin_id: string
+          entity_type: node
+          entity_field: body
       pager:
         type: full
       sorts:
@@ -80,6 +84,8 @@ display:
           id: created
           table: node_field_data
           plugin_id: date
+          entity_type: node
+          entity_field: created
       style:
         type: default
       row:

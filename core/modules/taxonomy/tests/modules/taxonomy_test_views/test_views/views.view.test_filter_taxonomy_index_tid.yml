@@ -113,6 +113,8 @@ display:
           empty: ''
           hide_alter_empty: true
           plugin_id: node
+          entity_type: node
+          entity_field: title
       filters:
         status:
           value: true
@@ -123,6 +125,8 @@ display:
             operator: '0'
           group: 1
           plugin_id: boolean
+          entity_type: node
+          entity_field: status
         tid:
           id: tid
           table: taxonomy_index

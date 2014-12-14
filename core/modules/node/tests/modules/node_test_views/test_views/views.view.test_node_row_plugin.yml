@@ -31,6 +31,8 @@ display:
           table: node
           value: true
           plugin_id: boolean
+          entity_type: node
+          entity_field: status
       pager:
         options:
           items_per_page: 10

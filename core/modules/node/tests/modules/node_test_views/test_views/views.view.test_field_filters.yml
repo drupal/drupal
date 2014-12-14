@@ -88,6 +88,8 @@ display:
           element_default_classes: true
           empty: ''
           hide_alter_empty: true
+          entity_type: node
+          entity_field: title
           plugin_id: node
       filters:
         status:
@@ -99,6 +101,8 @@ display:
             operator: ''
           group: 1
           plugin_id: boolean
+          entity_type: node
+          entity_field: status
         title:
           id: title
           table: node_field_data
@@ -135,6 +139,8 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: string
+          entity_type: node
+          entity_field: title
       sorts:
         created:
           id: created
@@ -149,6 +155,8 @@ display:
             label: ''
           granularity: second
           plugin_id: date
+          entity_type: node
+          entity_field: created
       title: 'Test field filters'
       header: {  }
       footer: {  }
@@ -182,6 +190,8 @@ display:
             operator: ''
           group: 1
           plugin_id: boolean
+          entity_type: node
+          entity_field: status
         body_value:
           id: body_value
           table: node__body
@@ -218,6 +228,8 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: string
+          entity_type: node
+          entity_field: body
       filter_groups:
         operator: AND
         groups:
@@ -246,6 +258,8 @@ display:
           expose:
             operator: ''
           group: 1
+          entity_type: node
+          entity_field: status
           plugin_id: boolean
         body_value:
           id: body_value
@@ -283,6 +297,8 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: string
+          entity_type: node
+          entity_field: body
       filter_groups:
         operator: AND
         groups:
@@ -311,6 +327,8 @@ display:
           expose:
             operator: ''
           group: 1
+          entity_type: node
+          entity_field: status
           plugin_id: boolean
         title:
           id: title
@@ -348,6 +366,8 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: string
+          entity_type: node
+          entity_field: title
       filter_groups:
         operator: AND
         groups:

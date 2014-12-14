@@ -35,7 +35,7 @@ display:
       fields:
         title:
           id: title
-          table: node
+          table: node_field_data
           field: title
           label: ''
           alter:
@@ -51,6 +51,8 @@ display:
           empty_zero: false
           link_to_node: true
           plugin_id: node
+          entity_type: node
+          entity_field: title
       filters:
         status:
           value: true
@@ -61,12 +63,16 @@ display:
             operator: '0'
           group: 1
           plugin_id: boolean
+          entity_type: node
+          entity_field: status
       sorts:
         created:
           id: created
           table: node
           field: created
           order: DESC
+          entity_type: node
+          entity_field: created
       empty:
         http_status_code:
           id: http_status_code

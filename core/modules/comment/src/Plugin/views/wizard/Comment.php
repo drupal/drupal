@@ -39,6 +39,8 @@ class Comment extends WizardPluginBase {
       'table' => 'comment_field_data',
       'field' => 'status',
       'plugin_id' => 'boolean',
+      'entity_type' => 'comment',
+      'entity_field' => 'status',
     ),
     'status_node' => array(
       'value' => TRUE,
@@ -46,6 +48,8 @@ class Comment extends WizardPluginBase {
       'field' => 'status',
       'plugin_id' => 'boolean',
       'relationship' => 'node',
+      'entity_type' => 'node',
+      'entity_field' => 'status',
     ),
   );
 
@@ -72,6 +76,7 @@ class Comment extends WizardPluginBase {
     $display_options['relationships']['node']['id'] = 'node';
     $display_options['relationships']['node']['table'] = 'comment_field_data';
     $display_options['relationships']['node']['field'] = 'node';
+    $display_options['relationships']['node']['entity_type'] = 'comment_field_data';
     $display_options['relationships']['node']['required'] = 1;
     $display_options['relationships']['node']['plugin_id'] = 'standard';
 
@@ -82,6 +87,8 @@ class Comment extends WizardPluginBase {
     $display_options['fields']['subject']['id'] = 'subject';
     $display_options['fields']['subject']['table'] = 'comment_field_data';
     $display_options['fields']['subject']['field'] = 'subject';
+    $display_options['fields']['subject']['entity_type'] = 'comment';
+    $display_options['fields']['subject']['entity_field'] = 'subject';
     $display_options['fields']['subject']['label'] = '';
     $display_options['fields']['subject']['alter']['alter_text'] = 0;
     $display_options['fields']['subject']['alter']['make_link'] = 0;

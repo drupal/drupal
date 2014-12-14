@@ -41,6 +41,8 @@ class File extends WizardPluginBase {
     $display_options['fields']['filename']['id'] = 'filename';
     $display_options['fields']['filename']['table'] = 'file_managed';
     $display_options['fields']['filename']['field'] = 'filename';
+    $display_options['fields']['filename']['entity_type'] = 'file';
+    $display_options['fields']['filename']['entity_field'] = 'filename';
     $display_options['fields']['filename']['label'] = '';
     $display_options['fields']['filename']['alter']['alter_text'] = 0;
     $display_options['fields']['filename']['alter']['make_link'] = 0;

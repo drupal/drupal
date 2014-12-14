@@ -148,6 +148,7 @@ display:
           empty_zero: false
           hide_alter_empty: true
           plugin_id: node_bulk_form
+          entity_type: node
         title:
           id: title
           table: node_field_data
@@ -164,6 +165,8 @@ display:
           hide_alter_empty: true
           link_to_node: true
           plugin_id: node
+          entity_type: node
+          entity_field: title
         type:
           id: type
           table: node_field_data
@@ -181,6 +184,8 @@ display:
           link_to_node: false
           machine_name: ''
           plugin_id: node_type
+          entity_type: node
+          entity_field: type
         name:
           id: name
           table: users_field_data
@@ -201,6 +206,8 @@ display:
           anonymous_text: ''
           format_username: true
           plugin_id: user_name
+          entity_type: user
+          entity_field: name
         status:
           id: status
           table: node_field_data
@@ -220,6 +227,8 @@ display:
           type_custom_false: ''
           not: ''
           plugin_id: boolean
+          entity_type: node
+          entity_field: status
         changed:
           id: changed
           table: node_field_data
@@ -238,6 +247,8 @@ display:
           custom_date_format: ''
           timezone: ''
           plugin_id: date
+          entity_type: node
+          entity_field: changed
         edit_node:
           id: edit_node
           table: node
@@ -246,6 +257,7 @@ display:
           exclude: true
           text: Edit
           plugin_id: node_link_edit
+          entity_type: node
         delete_node:
           id: delete_node
           table: node
@@ -254,6 +266,7 @@ display:
           exclude: true
           text: Delete
           plugin_id: node_link_delete
+          entity_type: node
         dropbutton:
           id: dropbutton
           table: views
@@ -273,6 +286,7 @@ display:
           value: false
           plugin_id: node_status
           group: 1
+          entity_type: node
         status:
           id: status
           table: node_field_data
@@ -317,6 +331,8 @@ display:
                 operator: '='
                 value: '0'
           plugin_id: boolean
+          entity_type: node
+          entity_field: status
         type:
           id: type
           table: node_field_data
@@ -356,6 +372,8 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: bundle
+          entity_type: node
+          entity_field: type
         title:
           id: title
           table: node_field_data
@@ -394,6 +412,8 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: string
+          entity_type: node
+          entity_field: title
         langcode:
           id: langcode
           table: node_field_data
@@ -433,6 +453,8 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: language
+          entity_type: node
+          entity_field: langcode
       sorts: {  }
       title: Content
       empty:

@@ -20,6 +20,8 @@ display:
           id: type
           table: node_field_data
           plugin_id: node_type
+          entity_type: node
+          entity_field: type
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
     display_plugin: default

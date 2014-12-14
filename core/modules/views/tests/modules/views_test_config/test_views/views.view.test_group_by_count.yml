@@ -35,6 +35,8 @@ display:
           id: id
           table: entity_test
           plugin_id: numeric
+          entity_type: entity_test
+          entity_field: id
         name:
           alter:
             alter_text: false
@@ -50,6 +52,8 @@ display:
           id: name
           table: entity_test
           plugin_id: standard
+          entity_type: entity_test
+          entity_field: name
       group_by: true
       pager:
         type: some

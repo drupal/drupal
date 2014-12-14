@@ -23,21 +23,29 @@ display:
           id: nid
           table: node
           plugin_id: node
+          entity_type: node
+          entity_field: nid
         field_name_0:
           id: field_name_0
           table: node__field_name_0
           field: field_name_0
           plugin_id: field
+          entity_type: node
+          entity_field: field_name_0
         field_name_5:
           id: field_name_5
           table: node__field_name_5
           field: field_name_5
           plugin_id: field
+          entity_type: node
+          entity_field: field_name_5
         field_no_view_access:
           id: field_no_view_access
           table: node__field_no_view_access
           field: field_no_view_access
           plugin_id: field
+          entity_type: node
+          entity_field: field_no_view_access
       cache:
         type: none
       exposed_form:

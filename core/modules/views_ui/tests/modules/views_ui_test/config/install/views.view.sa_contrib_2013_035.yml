@@ -113,6 +113,8 @@ display:
           hide_alter_empty: true
           link_to_node: true
           plugin_id: node
+          entity_type: node
+          entity_field: title
         title_1:
           id: title_1
           table: node_field_data
@@ -163,6 +165,8 @@ display:
           hide_alter_empty: true
           link_to_node: true
           plugin_id: node
+          entity_type: node
+          entity_field: title
       filters: {  }
       sorts: {  }
       header:
