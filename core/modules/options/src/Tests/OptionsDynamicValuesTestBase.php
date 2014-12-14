@@ -28,11 +28,18 @@ abstract class OptionsDynamicValuesTestBase extends FieldTestBase {
    */
   protected $entity;
 
+  /**
+   * The field storage.
+   *
+   * @var \Drupal\Core\Field\FieldStorageDefinitionInterface
+   */
+  protected $fieldStorage;
+
   protected function setUp() {
     parent::setUp();
 
     $this->field_name = 'test_options';
-    entity_create('field_storage_config', array(
+    $this->fieldStorage = entity_create('field_storage_config', array(
       'field_name' => $this->field_name,
       'entity_type' => 'entity_test_rev',
       'type' => 'list_string',
@@ -40,7 +47,9 @@ abstract class OptionsDynamicValuesTestBase extends FieldTestBase {
       'settings' => array(
         'allowed_values_function' => 'options_test_dynamic_values_callback',
       ),
-    ))->save();
+    ));
+    $this->fieldStorage->save();
+
     $this->field = entity_create('field_config', array(
       'field_name' => $this->field_name,
       'entity_type' => 'entity_test_rev',

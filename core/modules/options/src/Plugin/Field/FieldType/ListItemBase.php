@@ -63,7 +63,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
    * {@inheritdoc}
    */
   public function getSettableOptions(AccountInterface $account = NULL) {
-    $allowed_options = options_allowed_values($this->getFieldDefinition(), $this->getEntity());
+    $allowed_options = options_allowed_values($this->getFieldDefinition()->getFieldStorageDefinition(), $this->getEntity());
     return $allowed_options;
   }
 

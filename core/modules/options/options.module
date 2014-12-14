@@ -5,9 +5,9 @@
  * Defines selection, check box and radio button widgets for text and numeric fields.
  */
 
-use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
-use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\field\FieldStorageConfigInterface;
 
@@ -54,30 +54,41 @@ function options_field_storage_config_delete(FieldStorageConfigInterface $field_
  * sanitized through \Drupal\Core\Field\AllowedTagsXssTrait::fieldFilterXss()
  * before being displayed.
  *
- * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
- *   The field definition.
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity object.
+ * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $definition
+ *   The field storage definition.
+ * @param \Drupal\Core\Entity\FieldableEntityInterface|NULL $entity
+ *   (optional) The specific entity when this function is called from the
+ *   context of a specific field on a specific entity. This allows custom
+ *  'allowed_values_function' callbacks to either restrict the values or
+ *   customize the labels for particular bundles and entities. NULL when
+ *   there is not a specific entity available, such as for Views filters.
  *
- * @return
+ * @return array
  *   The array of allowed values. Keys of the array are the raw stored values
  *   (number or text), values of the array are the display labels.
+ *
+ * @see callback_allowed_values_function()
  */
-function options_allowed_values(FieldDefinitionInterface $field_definition, EntityInterface $entity) {
+function options_allowed_values(FieldStorageDefinitionInterface $definition, FieldableEntityInterface $entity = NULL) {
   $allowed_values = &drupal_static(__FUNCTION__, array());
 
-  $cache_id = implode(':', array($entity->getEntityTypeId(), $entity->bundle(), $field_definition->getName()));
+  $cache_keys = array($definition->getTargetEntityTypeId(), $definition->getName());
+  if ($entity) {
+    $cache_keys[] = 'entity';
+  }
+  $cache_id = implode(':', $cache_keys);
+
   if (!isset($allowed_values[$cache_id])) {
-    $function = $field_definition->getSetting('allowed_values_function');
+    $function = $definition->getSetting('allowed_values_function');
     // If $cacheable is FALSE, then the allowed values are not statically
     // cached. See options_test_dynamic_values_callback() for an example of
     // generating dynamic and uncached values.
     $cacheable = TRUE;
     if (!empty($function)) {
-      $values = $function($field_definition, $entity, $cacheable);
+      $values = $function($definition, $entity, $cacheable);
     }
     else {
-      $values = $field_definition->getSetting('allowed_values');
+      $values = $definition->getSetting('allowed_values');
     }
 
     if ($cacheable) {
