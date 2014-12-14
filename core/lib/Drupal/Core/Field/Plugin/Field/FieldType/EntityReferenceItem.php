@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
-use Drupal\Core\Config\Entity\ConfigEntityType;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\TypedData\EntityDataDefinition;
@@ -146,12 +145,27 @@ class EntityReferenceItem extends FieldItemBase {
       $this->set('entity', $values, $notify);
     }
     else {
-      // Make sure that the 'entity' property gets set as 'target_id'.
+      parent::setValue($values, FALSE);
+      // Support setting the field item with only one property, but make sure
+      // values stay in sync if only property is passed.
       if (isset($values['target_id']) && !isset($values['entity'])) {
-        $values['entity'] = $values['target_id'];
+        $this->onChange('target_id', FALSE);
       }
-      parent::setValue($values, $notify);
+      elseif (!isset($values['target_id']) && isset($values['entity'])) {
+        $this->onChange('entity', FALSE);
+      }
+      elseif (isset($values['target_id']) && isset($values['entity'])) {
+        // If both properties are passed, verify the passed values match.
+        if ($this->get('entity')->getTargetIdentifier() != $values['target_id']) {
+          throw new \InvalidArgumentException('The target id and entity passed to the entity reference item do not match.');
+        }
+      }
+      // Notify the parent if necessary.
+      if ($notify && $this->parent) {
+        $this->parent->onChange($this->getName());
+      }
     }
+
   }
 
   /**

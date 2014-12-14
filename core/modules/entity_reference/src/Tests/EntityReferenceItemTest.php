@@ -105,9 +105,32 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     ));
     $term2->save();
 
-    $entity->field_test_taxonomy_term->target_id = $term2->id();
+    // Test all the possible ways of assigning a value.
+    $entity->field_test_taxonomy_term->target_id = $term->id();
+    $this->assertEqual($entity->field_test_taxonomy_term->entity->id(), $term->id());
+    $this->assertEqual($entity->field_test_taxonomy_term->entity->getName(), $term->getName());
+
+    $entity->field_test_taxonomy_term = [['target_id' => $term2->id()]];
     $this->assertEqual($entity->field_test_taxonomy_term->entity->id(), $term2->id());
     $this->assertEqual($entity->field_test_taxonomy_term->entity->getName(), $term2->getName());
+
+    // Test value assignment via the computed 'entity' property.
+    $entity->field_test_taxonomy_term->entity = $term;
+    $this->assertEqual($entity->field_test_taxonomy_term->target_id, $term->id());
+    $this->assertEqual($entity->field_test_taxonomy_term->entity->getName(), $term->getName());
+
+    $entity->field_test_taxonomy_term = [['entity' => $term2]];
+    $this->assertEqual($entity->field_test_taxonomy_term->target_id, $term2->id());
+    $this->assertEqual($entity->field_test_taxonomy_term->entity->getName(), $term2->getName());
+
+    // Test assigning an invalid item throws an exception.
+    try {
+      $entity->field_test_taxonomy_term = ['target_id' => 'invalid', 'entity' => $term2];
+      $this->fail('Assigning an invalid item throws an exception.');
+    }
+    catch (\InvalidArgumentException $e) {
+      $this->pass('Assigning an invalid item throws an exception.');
+    }
 
     // Delete terms so we have nothing to reference and try again
     $term->delete();
