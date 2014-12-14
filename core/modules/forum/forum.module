@@ -568,7 +568,7 @@ function template_preprocess_forum_list(&$variables) {
   // Sanitize each forum so that the template can safely print the data.
   foreach ($variables['forums'] as $id => $forum) {
     $variables['forums'][$id]->description = Xss::filterAdmin($forum->description->value);
-    $variables['forums'][$id]->link = forum_uri($forum);
+    $variables['forums'][$id]->link = $forum->url();
     $variables['forums'][$id]->name = String::checkPlain($forum->label());
     $variables['forums'][$id]->is_container = !empty($forum->forum_container->value);
     $variables['forums'][$id]->zebra = $row % 2 == 0 ? 'odd' : 'even';

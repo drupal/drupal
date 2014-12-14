@@ -10,7 +10,6 @@ namespace Drupal\forum\Tests;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Link;
 use Drupal\simpletest\WebTestBase;
-use Drupal\Core\Url;
 
 /**
  * Create, view, edit, delete, and change forum entries and verify its
@@ -108,9 +107,9 @@ class ForumTest extends WebTestBase {
    */
   function testForum() {
     //Check that the basic forum install creates a default forum topic
-    $this->drupalGet('/forum');
+    $this->drupalGet("/forum");
     // Look for the "General discussion" default forum
-    $this->assertRaw(t('<a href="'. Url::fromRoute('forum.page', ['taxonomy_term' => 1]) .'">General discussion</a>'), "Found the default forum at the /forum listing");
+    $this->assertText(t("General discussion"), "Found the default forum at the /forum listing");
 
     // Do the admin tests.
     $this->doAdminTests($this->admin_user);
