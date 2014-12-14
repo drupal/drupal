@@ -3,36 +3,27 @@
  * Stylesheet for the Field UI module.
  */
 
-/* 'Manage fields' and 'Manage display' overviews */
-.field-ui-overview .add-new .label-input {
-  float: left; /* LTR */
+/* Add new field page. */
+.field-ui-field-storage-add-form .field-type-wrapper .form-item {
+  float: left;
+  margin-right: 1em;
+  vertical-align: text-bottom;
 }
-[dir="rtl"] .field-ui-overview .add-new .label-input {
+[dir="rtl"] .field-ui-field-storage-add-form .field-type-wrapper .form-item {
   float: right;
+  margin-left: 1em;
+  margin-right: 0;
 }
-.field-ui-overview .add-new .description {
-  margin-bottom: 0;
-  max-width: 250px;
+.field-ui-field-storage-add-form .field-type-wrapper .form-item-separator {
+  margin-top: 2.3em;
 }
-.field-ui-overview .add-new .form-type-machine-name .description {
-  white-space: normal;
-}
-.field-ui-overview .add-new .add-new-placeholder {
-  font-weight: bold;
-  padding-bottom: .5em;
-}
+
+/* 'Manage fields' and 'Manage display' overviews */
 .field-ui-overview .region-title td {
   font-weight: bold;
 }
 .field-ui-overview .region-message td {
   font-style: italic;
-}
-.field-ui-overview .region-add-new-title {
-  display: none;
-}
-.field-ui-overview .add-new td {
-  vertical-align: top;
-  white-space: nowrap;
 }
 
 /* 'Manage form display' and 'Manage display' overview */

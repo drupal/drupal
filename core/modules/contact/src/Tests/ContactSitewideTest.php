@@ -247,6 +247,8 @@ class ContactSitewideTest extends WebTestBase {
 
     $this->clickLink(t('Manage fields'), $i);
     $this->assertResponse(200);
+    $this->clickLink(t('Add field'));
+    $this->assertResponse(200);
 
     // Create a simple textfield.
     $field_name = Unicode::strtolower($this->randomMachineName());

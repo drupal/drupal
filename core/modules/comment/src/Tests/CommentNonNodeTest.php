@@ -408,24 +408,24 @@ class CommentNonNodeTest extends WebTestBase {
       'administer entity_test_string_id fields',
     ));
     $this->drupalLogin($limited_user);
-    // Visit the Field UI overview.
-    $this->drupalGet('entity_test_string_id/structure/entity_test/fields');
+    // Visit the Field UI field add page.
+    $this->drupalGet('entity_test_string_id/structure/entity_test/fields/add-field');
     // Ensure field isn't shown for string IDs.
-    $this->assertNoOption('edit-fields-add-new-field-type', 'comment');
+    $this->assertNoOption('edit-new-storage-type', 'comment');
     // Ensure a core field type shown.
-    $this->assertOption('edit-fields-add-new-field-type', 'boolean');
+    $this->assertOption('edit-new-storage-type', 'boolean');
 
     // Create a bundle for entity_test_no_id.
     entity_test_create_bundle('entity_test', 'Entity Test', 'entity_test_no_id');
     $this->drupalLogin($this->drupalCreateUser(array(
       'administer entity_test_no_id fields',
     )));
-    // Visit the Field UI overview.
-    $this->drupalGet('entity_test_no_id/structure/entity_test/fields');
+    // Visit the Field UI field add page.
+    $this->drupalGet('entity_test_no_id/structure/entity_test/fields/add-field');
     // Ensure field isn't shown for empty IDs.
-    $this->assertNoOption('edit-fields-add-new-field-type', 'comment');
+    $this->assertNoOption('edit-new-storage-type', 'comment');
     // Ensure a core field type shown.
-    $this->assertOption('edit-fields-add-new-field-type', 'boolean');
+    $this->assertOption('edit-new-storage-type', 'boolean');
   }
 
 }

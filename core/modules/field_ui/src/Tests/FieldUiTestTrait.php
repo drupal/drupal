@@ -34,28 +34,28 @@ trait FieldUiTestTrait {
   public function fieldUIAddNewField($bundle_path, $field_name, $label = NULL, $field_type = 'test_field', array $storage_edit = array(), array $field_edit = array()) {
     $label = $label ?: $this->randomString();
     $initial_edit = array(
-      'fields[_add_new_field][field_name]' => $field_name,
-      'fields[_add_new_field][type]' => $field_type,
-      'fields[_add_new_field][label]' => $label,
+      'new_storage_type' => $field_type,
+      'label' => $label,
+      'field_name' => $field_name,
     );
 
     // Allow the caller to set a NULL path in case they navigated to the right
     // page before calling this method.
     if ($bundle_path !== NULL) {
-      $bundle_path = "$bundle_path/fields";
+      $bundle_path = "$bundle_path/fields/add-field";
     }
 
-    // First step : 'Add new field' on the 'Manage fields' page.
-    $this->drupalPostForm($bundle_path,  $initial_edit, t('Save'));
+    // First step: 'Add field' page.
+    $this->drupalPostForm($bundle_path,  $initial_edit, t('Save and continue'));
     $this->assertRaw(t('These settings apply to the %label field everywhere it is used.', array('%label' => $label)), 'Storage settings page was displayed.');
     // Test Breadcrumbs.
     $this->assertLink($label, 0, 'Field label is correct in the breadcrumb of the storage settings page.');
 
-    // Second step : 'Storage settings' form.
+    // Second step: 'Storage settings' form.
     $this->drupalPostForm(NULL, $storage_edit, t('Save field settings'));
     $this->assertRaw(t('Updated field %label field settings.', array('%label' => $label)), 'Redirected to field settings page.');
 
-    // Third step : 'Field settings' form.
+    // Third step: 'Field settings' form.
     $this->drupalPostForm(NULL, $field_edit, t('Save settings'));
     $this->assertRaw(t('Saved %label configuration.', array('%label' => $label)), 'Redirected to "Manage fields" page.');
 
@@ -68,7 +68,7 @@ trait FieldUiTestTrait {
    *
    * @param string $bundle_path
    *   Admin path of the bundle that the field is to be attached to.
-   * @param string $existing_field_name
+   * @param string $existing_storage_name
    *   The name of the existing field storage for which we want to add a new
    *   field.
    * @param string $label
@@ -77,18 +77,18 @@ trait FieldUiTestTrait {
    *   (optional) $edit parameter for drupalPostForm() on the second step
    *   ('Field settings' form).
    */
-  public function fieldUIAddExistingField($bundle_path, $existing_field_name, $label = NULL, array $field_edit = array()) {
+  public function fieldUIAddExistingField($bundle_path, $existing_storage_name, $label = NULL, array $field_edit = array()) {
     $label = $label ?: $this->randomString();
     $initial_edit = array(
-      'fields[_add_existing_field][label]' => $label,
-      'fields[_add_existing_field][field_name]' => $existing_field_name,
+      'existing_storage_name' => $existing_storage_name,
+      'existing_storage_label' => $label,
     );
 
-    // First step : 'Re-use existing field' on the 'Manage fields' page.
-    $this->drupalPostForm("$bundle_path/fields", $initial_edit, t('Save'));
+    // First step: 'Re-use existing field' on the 'Add field' page.
+    $this->drupalPostForm("$bundle_path/fields/add-field", $initial_edit, t('Save and continue'));
     $this->assertNoRaw('&amp;lt;', 'The page does not have double escaped HTML tags.');
 
-    // Second step : 'Field settings' form.
+    // Second step: 'Field settings' form.
     $this->drupalPostForm(NULL, $field_edit, t('Save settings'));
     $this->assertRaw(t('Saved %label configuration.', array('%label' => $label)), 'Redirected to "Manage fields" page.');
 

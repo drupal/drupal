@@ -118,11 +118,8 @@ class ManageFieldsTest extends WebTestBase {
       $this->assertRaw($table_header . '</th>', format_string('%table_header table header was found.', array('%table_header' => $table_header)));
     }
 
-    // "Add new field" and "Re-use existing field" aren't a table heading so just
-    // test the text.
-    foreach (array('Add new field', 'Re-use existing field') as $element) {
-      $this->assertText($element, format_string('"@element" was found.', array('@element' => $element)));
-    }
+    // Test the "Add field" action link.
+    $this->assertLink('Add field');
 
     // Assert entity operations for all fields.
     $result = $this->xpath('//ul[@class = "dropbutton"]/li/a');
@@ -178,12 +175,14 @@ class ManageFieldsTest extends WebTestBase {
    */
   function addExistingField() {
     // Check "Re-use existing field" appears.
-    $this->drupalGet('admin/structure/types/manage/page/fields');
-    $this->assertRaw(t('Re-use existing field'), '"Re-use existing field" was found.');
+    $this->drupalGet('admin/structure/types/manage/page/fields/add-field');
+    $this->assertRaw(t('Re-use an existing field'), '"Re-use existing field" was found.');
 
     // Check that fields of other entity types (here, the 'comment_body' field)
     // do not show up in the "Re-use existing field" list.
-    $this->assertFalse($this->xpath('//select[@id="edit-add-existing-field-field-name"]//option[@value="comment"]'), 'The list of options respects entity type restrictions.');
+    $this->assertFalse($this->xpath('//select[@id="edit-existing-storage-name"]//option[@value="comment"]'), 'The list of options respects entity type restrictions.');
+    // Validate the FALSE assertion above by also testing a valid one.
+    $this->assertTrue($this->xpath('//select[@id="edit-existing-storage-name"]//option[@value=:field_name]', array(':field_name' => $this->field_name)), 'The list of options shows a valid option.');
 
     // Add a new field based on an existing field.
     $this->fieldUIAddExistingField("admin/structure/types/manage/page", $this->field_name, $this->field_label . '_2');
@@ -254,8 +253,8 @@ class ManageFieldsTest extends WebTestBase {
       $this->drupalPostForm(NULL, array(), t('Delete'));
     }
     // Check "Re-use existing field" appears.
-    $this->drupalGet('admin/structure/types/manage/page/fields');
-    $this->assertRaw(t('Re-use existing field'), '"Re-use existing field" was found.');
+    $this->drupalGet('admin/structure/types/manage/page/fields/add-field');
+    $this->assertRaw(t('Re-use an existing field'), '"Re-use existing field" was found.');
     // Add a new field for the orphaned storage.
     $this->fieldUIAddExistingField("admin/structure/types/manage/page", $this->field_name);
   }
@@ -296,11 +295,11 @@ class ManageFieldsTest extends WebTestBase {
 
     // Try to create the field.
     $edit = array(
-      'fields[_add_new_field][label]' => $field_exceed_max_length_label,
-      'fields[_add_new_field][field_name]' => $field_exceed_max_length_input,
+      'label' => $field_exceed_max_length_label,
+      'field_name' => $field_exceed_max_length_input,
     );
-    $this->drupalPostForm('admin/structure/types/manage/' . $this->type . '/fields', $edit, t('Save'));
-    $this->assertText('New field name cannot be longer than 22 characters but is currently 23 characters long.');
+    $this->drupalPostForm('admin/structure/types/manage/' . $this->type . '/fields/add-field', $edit, t('Save and continue'));
+    $this->assertText('Machine-readable name cannot be longer than 22 characters but is currently 23 characters long.');
 
     // Create a valid field.
     $this->fieldUIAddNewField('admin/structure/types/manage/' . $this->type, $this->field_name_input, $this->field_label);
@@ -427,20 +426,20 @@ class ManageFieldsTest extends WebTestBase {
 
     $label = 'Disallowed field';
     $edit = array(
-      'fields[_add_new_field][label]' => $label,
-      'fields[_add_new_field][type]' => 'test_field',
+      'label' => $label,
+      'new_storage_type' => 'test_field',
     );
 
     // Try with an entity key.
-    $edit['fields[_add_new_field][field_name]'] = 'title';
+    $edit['field_name'] = 'title';
     $bundle_path = 'admin/structure/types/manage/' . $this->type;
-    $this->drupalPostForm("$bundle_path/fields",  $edit, t('Save'));
+    $this->drupalPostForm("$bundle_path/fields/add-field",  $edit, t('Save and continue'));
     $this->assertText(t('The machine-readable name is already in use. It must be unique.'));
 
     // Try with a base field.
-    $edit['fields[_add_new_field][field_name]'] = 'sticky';
+    $edit['field_name'] = 'sticky';
     $bundle_path = 'admin/structure/types/manage/' . $this->type;
-    $this->drupalPostForm("$bundle_path/fields",  $edit, t('Save'));
+    $this->drupalPostForm("$bundle_path/fields/add-field",  $edit, t('Save and continue'));
     $this->assertText(t('The machine-readable name is already in use. It must be unique.'));
   }
 
@@ -485,11 +484,10 @@ class ManageFieldsTest extends WebTestBase {
    * Tests that Field UI respects the 'no_ui' flag in the field type definition.
    */
   function testHiddenFields() {
-    $bundle_path = 'admin/structure/types/manage/' . $this->type . '/fields/';
-
     // Check that the field type is not available in the 'add new field' row.
-    $this->drupalGet($bundle_path);
-    $this->assertFalse($this->xpath('//select[@id="edit-fields-add-new-field-type"]//option[@value="hidden_test_field"]'), "The 'add new field' select respects field types 'no_ui' property.");
+    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields/add-field');
+    $this->assertFalse($this->xpath('//select[@id="edit-new-storage-type"]//option[@value="hidden_test_field"]'), "The 'add new field' select respects field types 'no_ui' property.");
+    $this->assertTrue($this->xpath('//select[@id="edit-new-storage-type"]//option[@value="shape"]'), "The 'add new field' select shows a valid option.");
 
     // Create a field storage and a field programmatically.
     $field_name = 'hidden_test_field';
@@ -512,23 +510,23 @@ class ManageFieldsTest extends WebTestBase {
 
     // Check that the newly added field appears on the 'Manage Fields'
     // screen.
-    $this->drupalGet($bundle_path);
+    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields');
     $this->assertFieldByXPath('//table[@id="field-overview"]//tr[@id="hidden-test-field"]//td[1]', $field['label'], 'Field was created and appears in the overview page.');
 
     // Check that the field does not appear in the 're-use existing field' row
     // on other bundles.
-    $bundle_path = 'admin/structure/types/manage/article/fields/';
-    $this->drupalGet($bundle_path);
-    $this->assertFalse($this->xpath('//select[@id="edit-add-existing-field-field-name"]//option[@value=:field_name]', array(':field_name' => $field_name)), "The 're-use existing field' select respects field types 'no_ui' property.");
+    $this->drupalGet('admin/structure/types/manage/page/fields/add-field');
+    $this->assertFalse($this->xpath('//select[@id="edit-existing-storage-name"]//option[@value=:field_name]', array(':field_name' => $field_name)), "The 're-use existing field' select respects field types 'no_ui' property.");
+    $this->assertTrue($this->xpath('//select[@id="edit-existing-storage-name"]//option[@value=:field_name]', array(':field_name' => 'field_tags')), "The 're-use existing field' select shows a valid option.");
 
     // Check that non-configurable fields are not available.
     $field_types = \Drupal::service('plugin.manager.field.field_type')->getDefinitions();
     foreach ($field_types as $field_type => $definition) {
       if (empty($definition['no_ui'])) {
-        $this->assertTrue($this->xpath('//select[@id="edit-fields-add-new-field-type"]//option[@value=:field_type]', array(':field_type' => $field_type)), String::format('Configurable field type @field_type is available.', array('@field_type' => $field_type)));
+        $this->assertTrue($this->xpath('//select[@id="edit-new-storage-type"]//option[@value=:field_type]', array(':field_type' => $field_type)), String::format('Configurable field type @field_type is available.', array('@field_type' => $field_type)));
       }
       else {
-        $this->assertFalse($this->xpath('//select[@id="edit-fields-add-new-field-type"]//option[@value=:field_type]', array(':field_type' => $field_type)), String::format('Non-configurable field type @field_type is not available.', array('@field_type' => $field_type)));
+        $this->assertFalse($this->xpath('//select[@id="edit-new-storage-type"]//option[@value=:field_type]', array(':field_type' => $field_type)), String::format('Non-configurable field type @field_type is not available.', array('@field_type' => $field_type)));
       }
     }
   }
@@ -553,12 +551,12 @@ class ManageFieldsTest extends WebTestBase {
     // field_tags already exists, so we're expecting an error when trying to
     // create a new field with the same name.
     $edit = array(
-      'fields[_add_new_field][field_name]' => 'tags',
-      'fields[_add_new_field][label]' => $this->randomMachineName(),
-      'fields[_add_new_field][type]' => 'taxonomy_term_reference',
+      'field_name' => 'tags',
+      'label' => $this->randomMachineName(),
+      'new_storage_type' => 'taxonomy_term_reference',
     );
-    $url = 'admin/structure/types/manage/' . $this->type . '/fields';
-    $this->drupalPostForm($url, $edit, t('Save'));
+    $url = 'admin/structure/types/manage/' . $this->type . '/fields/add-field';
+    $this->drupalPostForm($url, $edit, t('Save and continue'));
 
     $this->assertText(t('The machine-readable name is already in use. It must be unique.'));
     $this->assertUrl($url, array(), 'Stayed on the same page.');

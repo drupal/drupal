@@ -7,6 +7,7 @@
 
 namespace Drupal\entity_reference\Tests;
 
+use Drupal\field_ui\Tests\FieldUiTestTrait;
 use Drupal\simpletest\WebTestBase;
 use Drupal\taxonomy\Entity\Vocabulary;
 
@@ -16,6 +17,8 @@ use Drupal\taxonomy\Entity\Vocabulary;
  * @group entity_reference
  */
 class EntityReferenceAdminTest extends WebTestBase {
+
+  use FieldUiTestTrait;
 
   /**
    * Modules to install.
@@ -55,11 +58,11 @@ class EntityReferenceAdminTest extends WebTestBase {
     $bundle_path = 'admin/structure/types/manage/' . $this->type;
 
     // First step: 'Add new field' on the 'Manage fields' page.
-    $this->drupalPostForm($bundle_path . '/fields', array(
-      'fields[_add_new_field][label]' => 'Test label',
-      'fields[_add_new_field][field_name]' => 'test',
-      'fields[_add_new_field][type]' => 'entity_reference',
-    ), t('Save'));
+    $this->drupalPostForm($bundle_path . '/fields/add-field', array(
+      'label' => 'Test label',
+      'field_name' => 'test',
+      'new_storage_type' => 'entity_reference',
+    ), t('Save and continue'));
 
     // Node should be selected by default.
     $this->assertFieldByName('field_storage[settings][target_type]', 'node');
@@ -198,24 +201,13 @@ class EntityReferenceAdminTest extends WebTestBase {
     // Generate a random field name, must be only lowercase characters.
     $field_name = strtolower($this->randomMachineName());
 
-    // Create the initial entity reference.
-    $this->drupalPostForm($bundle_path . '/fields', array(
-      'fields[_add_new_field][label]' => $this->randomMachineName(),
-      'fields[_add_new_field][field_name]' => $field_name,
-      'fields[_add_new_field][type]' => 'entity_reference',
-    ), t('Save'));
-
-    // Select the correct target type given in the parameters and save field settings.
-    $this->drupalPostForm(NULL, array('field_storage[settings][target_type]' => $target_type), t('Save field settings'));
-
-    // Select required fields if there are any.
-    $edit = array();
-    if($bundle) {
-      $edit['field[settings][handler_settings][target_bundles][' . $bundle . ']'] = TRUE;
+    $storage_edit = $field_edit = array();
+    $storage_edit['field_storage[settings][target_type]'] = $target_type;
+    if ($bundle) {
+      $field_edit['field[settings][handler_settings][target_bundles][' . $bundle . ']'] = TRUE;
     }
 
-    // Save settings.
-    $this->drupalPostForm(NULL, $edit, t('Save settings'));
+    $this->fieldUIAddNewField($bundle_path, $field_name, NULL, 'entity_reference', $storage_edit, $field_edit);
 
     // Returns the generated field name.
     return $field_name;

@@ -11,3 +11,7 @@ field_ui.entity_form_mode_add:
   weight: 1
   appears_on:
     - field_ui.entity_form_mode_list
+
+field_ui.field_storage_config_add:
+  class: \Drupal\Core\Menu\LocalActionDefault
+  deriver: \Drupal\field_ui\Plugin\Derivative\FieldUiLocalAction

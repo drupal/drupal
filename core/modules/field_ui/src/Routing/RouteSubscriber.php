@@ -90,13 +90,23 @@ class RouteSubscriber extends RouteSubscriberBase {
         $route = new Route(
           "$path/fields",
           array(
-            '_form' => '\Drupal\field_ui\FieldOverview',
+            '_controller' => '\Drupal\field_ui\Controller\FieldConfigListController::listing',
             '_title' => 'Manage fields',
           ) + $defaults,
           array('_permission' => 'administer ' . $entity_type_id . ' fields'),
           $options
         );
         $collection->add("field_ui.overview_$entity_type_id", $route);
+
+        $route = new Route(
+          "$path/fields/add-field",
+          array(
+            '_form' => '\Drupal\field_ui\Form\FieldStorageAddForm',
+            '_title' => 'Add field',
+          ) + $defaults,
+          array('_permission' => 'administer ' . $entity_type_id . ' fields')
+        );
+        $collection->add("field_ui.field_storage_config_add_$entity_type_id", $route);
 
         $route = new Route(
           "$path/form-display",

@@ -7,16 +7,35 @@
 
 namespace Drupal\field_ui;
 
+use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\String;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\FieldTypePluginManagerInterface;
+use Drupal\Core\Url;
+use Drupal\field\FieldConfigInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides lists of field config entities.
  */
 class FieldConfigListBuilder extends ConfigEntityListBuilder {
+
+  /**
+   * The name of the entity type the listed fields are attached to.
+   *
+   * @var string
+   */
+  protected $targetEntityTypeId;
+
+  /**
+   * The name of the bundle the listed fields are attached to.
+   *
+   * @var string
+   */
+  protected $targetBundle;
 
   /**
    * The entity manager.
@@ -26,33 +45,116 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
   protected $entityManager;
 
   /**
+   * The field type plugin manager.
+   *
+   * @var \Drupal\Core\Field\FieldTypePluginManagerInterface
+   */
+  protected $fieldTypeManager;
+
+  /**
    * Constructs a new class instance.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
+   * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_manager
+   *   The field type manager
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityManagerInterface $entity_manager) {
+  public function __construct(EntityTypeInterface $entity_type, EntityManagerInterface $entity_manager, FieldTypePluginManagerInterface $field_type_manager) {
     parent::__construct($entity_type, $entity_manager->getStorage($entity_type->id()));
+
     $this->entityManager = $entity_manager;
+    $this->fieldTypeManager = $field_type_manager;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
-    return new static($entity_type, $container->get('entity.manager'));
+    return new static($entity_type, $container->get('entity.manager'), $container->get('plugin.manager.field.field_type'));
   }
 
   /**
    * {@inheritdoc}
    */
-  public function render() {
-    // The actual field config overview is rendered by
-    // \Drupal\field_ui\FieldOverview, so we should not use this class to build
-    // lists.
-    throw new \Exception('This class is only used for operations and not for building lists.');
+  public function render($target_entity_type_id = NULL, $target_bundle = NULL) {
+    $this->targetEntityTypeId = $target_entity_type_id;
+    $this->targetBundle = $target_bundle;
+
+    $build = parent::render();
+    $build['#attributes']['id'] = 'field-overview';
+    $build['#empty'] = $this->t('No fields are present yet.');
+
+    return $build;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function load() {
+    $entities = array_filter($this->entityManager->getFieldDefinitions($this->targetEntityTypeId, $this->targetBundle), function ($field_definition) {
+      return $field_definition instanceof FieldConfigInterface;
+    });
+
+    // Sort the entities using the entity class's sort() method.
+    // See \Drupal\Core\Config\Entity\ConfigEntityBase::sort().
+    uasort($entities, array($this->entityType->getClass(), 'sort'));
+    return $entities;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildHeader() {
+    $header = array(
+      'label' => $this->t('Label'),
+      'field_name' => array(
+        'data' => $this->t('Machine name'),
+        'class' => array(RESPONSIVE_PRIORITY_MEDIUM),
+      ),
+      'field_type' => $this->t('Field type'),
+    );
+    return $header + parent::buildHeader();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildRow(EntityInterface $field_config) {
+    /** @var \Drupal\field\FieldConfigInterface $field_config */
+    $field_storage = $field_config->getFieldStorageDefinition();
+    $target_bundle_entity_type_id = $this->entityManager->getDefinition($this->targetEntityTypeId)->getBundleEntityType();
+    $route_parameters = array(
+      $target_bundle_entity_type_id => $this->targetBundle,
+      'field_config' => $field_config->id(),
+    );
+
+    $row = array(
+      'id' => Html::getClass($field_config->getName()),
+      'data' => array(
+        'label' => String::checkPlain($field_config->getLabel()),
+        'field_name' => $field_config->getName(),
+        'field_type' => array(
+          'data' => array(
+            '#type' => 'link',
+            '#title' => $this->fieldTypeManager->getDefinitions()[$field_storage->getType()]['label'],
+            '#url' => Url::fromRoute('field_ui.storage_edit_' . $this->targetEntityTypeId, $route_parameters),
+            '#options' => array('attributes' => array('title' => $this->t('Edit field settings.'))),
+          ),
+        ),
+      ),
+    );
+
+    // Add the operations.
+    $row['data'] = $row['data'] + parent::buildRow($field_config);
+
+    if (!empty($field_storage->locked)) {
+      $row['data']['operations'] = array('data' => array('#markup' => $this->t('Locked')));
+      $row['class'][] = 'menu-disabled';
+    }
+
+    return $row;
   }
 
   /**

@@ -169,7 +169,7 @@ class FormDisplayOverview extends DisplayOverviewBase {
    */
   protected function getOverviewRoute($mode) {
     return Url::fromRoute('field_ui.form_display_overview_form_mode_' . $this->entity_type, [
-      $this->bundleEntityType => $this->bundle,
+      $this->bundleEntityTypeId => $this->bundle,
       'form_mode_name' => $mode,
     ]);
   }
