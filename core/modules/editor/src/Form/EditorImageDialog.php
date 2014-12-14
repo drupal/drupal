@@ -48,7 +48,7 @@ class EditorImageDialog extends FormBase {
     $form['#prefix'] = '<div id="editor-image-dialog-form">';
     $form['#suffix'] = '</div>';
 
-    $editor = editor_load($filter_format->format);
+    $editor = editor_load($filter_format->id());
 
     // Construct strings to use in the upload validators.
     $image_upload = $editor->getImageUploadSettings();

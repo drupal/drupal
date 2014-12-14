@@ -83,6 +83,13 @@ class EditorLoadingTest extends WebTestBase {
     $editor = entity_create('editor', array(
       'format' => 'full_html',
       'editor' => 'unicorn',
+      'image_upload' => array(
+        'status' => FALSE,
+        'scheme' => file_default_scheme(),
+        'directory' => 'inline-images',
+        'max_size' => '',
+        'max_dimensions' => array('width' => '', 'height' => ''),
+      )
     ));
     $editor->save();
 
@@ -118,6 +125,11 @@ class EditorLoadingTest extends WebTestBase {
     $this->assertTrue(count($format_selector) === 1, 'A single text format selector exists on the page.');
     $specific_format_selector = $this->xpath('//select[contains(@class, "filter-list") and contains(@class, "editor") and @data-editor-for="edit-body-0-value"]');
     $this->assertTrue(count($specific_format_selector) === 1, 'A single text format selector exists on the page and has the "editor" class and a "data-editor-for" attribute with the correct value.');
+
+    // Load the editor image dialog form and make sure it does not fatal.
+    $this->drupalGet('editor/dialog/image/full_html');
+    $this->assertResponse(200);
+
     $this->drupalLogout($this->privilegedUser);
 
     // Also associate a text editor with the "Plain Text" text format.
