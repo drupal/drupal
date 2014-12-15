@@ -406,7 +406,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $seed = unpack("L", Crypt::randomBytes(4));
     mt_srand($seed[1]);
 
-    $this->container->get('stream_wrapper_manager')->register();
     $this->booted = TRUE;
 
     return $this;
@@ -439,6 +438,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   public function preHandle(Request $request) {
     // Load all enabled modules.
     $this->container->get('module_handler')->loadAll();
+
+    // Register stream wrappers.
+    $this->container->get('stream_wrapper_manager')->register();
 
     // Initialize legacy request globals.
     $this->initializeRequestGlobals($request);
