@@ -30,6 +30,11 @@ class NodeForm extends ContentEntityForm {
   protected $tempStoreFactory;
 
   /**
+   * Whether this node has been previewed or not.
+   */
+  protected $hasBeenPreviewed = FALSE;
+
+  /**
    * Constructs a ContentEntityForm object.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
@@ -87,6 +92,8 @@ class NodeForm extends ContentEntityForm {
       $form_state->setRebuild();
       $this->entity = $preview->getFormObject()->getEntity();
       unset($this->entity->in_preview);
+
+      $this->hasBeenPreviewed = TRUE;
     }
 
     /** @var \Drupal\node\NodeInterface $node */
@@ -219,7 +226,7 @@ class NodeForm extends ContentEntityForm {
     $node = $this->entity;
     $preview_mode = $node->type->entity->getPreviewMode();
 
-    $element['submit']['#access'] = $preview_mode != DRUPAL_REQUIRED || (!$form_state->getErrors() && $form_state->get('node_preview'));
+    $element['submit']['#access'] = $preview_mode != DRUPAL_REQUIRED || $this->hasBeenPreviewed;
 
     // If saving is an option, privileged users get dedicated form submit
     // buttons to adjust the publishing status while saving in one go.

@@ -194,6 +194,16 @@ class PagePreviewTest extends NodeTestBase {
     $this->assertLink($newterm1);
     $this->assertLink($newterm2);
     $this->assertNoLink($newterm3);
+
+    // Check with required preview.
+    $node_type = NodeType::load('page');
+    $node_type->setPreviewMode(DRUPAL_REQUIRED);
+    $node_type->save();
+    $this->drupalGet('node/add/page');
+    $this->assertNoRaw('edit-submit');
+    $this->drupalPostForm('node/add/page', array($title_key => 'Preview'), t('Preview'));
+    $this->clickLink(t('Back to content editing'));
+    $this->assertRaw('edit-submit');
   }
 
   /**
