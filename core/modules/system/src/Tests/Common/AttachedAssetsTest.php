@@ -245,7 +245,7 @@ class AttachedAssetsTest extends KernelTestBase {
     drupal_process_attached($build);
 
     $js = drupal_get_js();
-    $this->assertTrue(strpos($js, 'core/assets/vendor/backbone/backbone.js?v=1.1.0') > 0 && strpos($js, 'core/assets/vendor/domready/ready.min.js?v=1.0.6') > 0 , 'JavaScript version identifiers correctly appended to URLs');
+    $this->assertTrue(strpos($js, 'core/assets/vendor/backbone/backbone.js?v=1.1.0') > 0 && strpos($js, 'core/assets/vendor/domready/ready.min.js?v=1.0.7') > 0 , 'JavaScript version identifiers correctly appended to URLs');
   }
 
   /**
