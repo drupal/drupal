@@ -56,6 +56,14 @@ class AccessRoleUITest extends UITestBase {
 
     $display = $view->getDisplay('default');
     $this->assertEqual($display['display_options']['access']['options']['role'], array('custom_role' => 'custom_role'));
+
+    // Test changing access plugin from role to none.
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_access_role/default/access', ['access[type]' => 'none'], t('Apply'));
+    $this->drupalPostForm(NULL, array(), t('Save'));
+    // Verify that role option is not set.
+    $view = $entity_manager->getStorage('view')->load('test_access_role');
+    $display = $view->getDisplay('default');
+    $this->assertFalse(isset($display['display_options']['access']['options']['role']));
   }
 
 }

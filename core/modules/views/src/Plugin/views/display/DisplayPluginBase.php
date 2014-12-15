@@ -1994,6 +1994,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $plugin_options = $this->getOption($plugin_type);
         $type = $form_state->getValue(array($plugin_type, 'type'));
         if ($plugin_options['type'] != $type) {
+          /** @var \Drupal\views\Plugin\views\ViewsPluginInterface $plugin */
           $plugin = Views::pluginManager($plugin_type)->createInstance($type);
           if ($plugin) {
             $plugin->init($this->view, $this, $plugin_options['options']);
@@ -2001,6 +2002,7 @@ abstract class DisplayPluginBase extends PluginBase {
               'type' => $type,
               'options' => $plugin->options,
             );
+            $plugin->filterByDefinedOptions($plugin_options['options']);
             $this->setOption($plugin_type, $plugin_options);
             if ($plugin->usesOptions()) {
               $form_state->get('view')->addFormToStack('display', $this->display['id'], $plugin_type . '_options');
