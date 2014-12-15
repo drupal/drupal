@@ -42,10 +42,10 @@ Javascript
   jQuery Mousewheel - Copyright (c) 2010 Brandon Aaron
     (http://brandonaaron.net)
 
-  jQuery Metadata - Copyright (c) 2006 John Resig, Yehuda Katz, Jörn Zaefferer,
+  jQuery Metadata - Copyright (c) 2006 John Resig, Yehuda Katz, JÃ¶rn Zaefferer,
     Paul McLanahan
 
-  jQuery Once - Copyright (c) 2009 Konstantin Käfer
+  jQuery Once - Copyright (c) 2009 Konstantin KÃ¤fer
 
   jQuery UI - Copyright (c) 2012 by the original authors
     (http://jqueryui.com/about)
