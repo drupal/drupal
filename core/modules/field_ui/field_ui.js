@@ -23,26 +23,28 @@
 
         var $newFieldType = $form.find('select[name="new_storage_type"]');
         var $existingStorageName = $form.find('select[name="existing_storage_name"]');
+        var $existingStorageLabel = $form.find('input[name="existing_storage_label"]');
 
         // When the user selects a new field type, clear the "existing field"
         // selection.
-        $newFieldType.change(function () {
+        $newFieldType.on('change', function () {
           if ($(this).val() != '') {
             // Reset the "existing storage name" selection.
-            $existingStorageName.val('').change();
+            $existingStorageName.val('').trigger('change');
           }
         });
 
         // When the user selects an existing storage name, clear the "new field
         // type" selection and populate the 'existing_storage_label' element.
-        $existingStorageName.change(function () {
-          if ($(this).val() != '') {
+        $existingStorageName.on('change', function () {
+          var value = $(this).val();
+          if (value != '') {
             // Reset the "new field type" selection.
-            $newFieldType.val('').change();
+            $newFieldType.val('').trigger('change');
 
             // Pre-populate the "existing storage label" element.
-            if (drupalSettings.existingFieldLabels[$(this).val()] !== undefined) {
-              $(context).find('input[name="existing_storage_label"]').val(drupalSettings.existingFieldLabels[$(this).val()]);
+            if (typeof drupalSettings.existingFieldLabels[value] !== 'undefined') {
+              $existingStorageLabel.val(drupalSettings.existingFieldLabels[value]);
             }
           }
         });
