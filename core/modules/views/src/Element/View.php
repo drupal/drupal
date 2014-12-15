@@ -30,7 +30,7 @@ class View extends RenderElement {
       '#name' => NULL,
       '#display_id' => 'default',
       '#arguments' => array(),
-      '#embed' => FALSE,
+      '#embed' => TRUE,
     );
   }
 
@@ -48,7 +48,7 @@ class View extends RenderElement {
     }
 
     if ($view && $view->access($element['#display_id'])) {
-      if (!empty($element['embed'])) {
+      if (!empty($element['#embed'])) {
         $element += $view->preview($element['#display_id'], $element['#arguments']);
       }
       else {

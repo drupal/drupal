@@ -4,3 +4,10 @@ views_test_data.element:
     _form: '\Drupal\views_test_data\Form\ViewsTestDataElementForm'
   requirements:
     _access: 'TRUE'
+
+views_test_data.element_embed:
+  path: '/views_test_data_element_embed_form'
+  defaults:
+    _form: '\Drupal\views_test_data\Form\ViewsTestDataElementEmbedForm'
+  requirements:
+    _access: 'TRUE'

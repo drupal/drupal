@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains \Drupal\views_test_data\Form\ViewsTestDataElementForm.
+ * Contains \Drupal\views_test_data\Form\ViewsTestDataElementEmbedForm.
  */
 
 namespace Drupal\views_test_data\Form;
@@ -12,13 +12,13 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Simple form page callback to test the view element.
  */
-class ViewsTestDataElementForm extends FormBase {
+class ViewsTestDataElementEmbedForm extends FormBase {
 
   /**
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'views_test_data_element_form';
+    return 'views_test_data_element_embed_form';
   }
 
   /**
@@ -28,9 +28,9 @@ class ViewsTestDataElementForm extends FormBase {
     $form['view'] = array(
       '#type' => 'view',
       '#name' => 'test_view_embed',
-      '#display_id' => 'default',
+      '#display_id' => 'embed_1',
       '#arguments' => array(25),
-      '#embed' => FALSE,
+      '#embed' => TRUE,
     );
 
     return $form;
@@ -41,5 +41,4 @@ class ViewsTestDataElementForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
   }
-
 }
