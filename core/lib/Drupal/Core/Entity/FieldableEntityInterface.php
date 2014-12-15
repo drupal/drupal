@@ -7,8 +7,6 @@
 
 namespace Drupal\Core\Entity;
 
-use Drupal\Core\TypedData\ComplexDataInterface;
-
 /**
  * Interface for entities having fields.
  *

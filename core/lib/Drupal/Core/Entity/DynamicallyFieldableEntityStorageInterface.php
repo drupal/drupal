@@ -20,7 +20,16 @@ use Drupal\Core\Field\FieldStorageDefinitionListenerInterface;
  *
  * For example, configurable fields defined and exposed by field.module.
  */
-interface DynamicallyFieldableEntityStorageInterface extends EntityStorageInterface, FieldStorageDefinitionListenerInterface {
+interface DynamicallyFieldableEntityStorageInterface extends FieldableEntityStorageInterface, FieldStorageDefinitionListenerInterface {
+
+  /**
+   * Determines if the storage contains any data.
+   *
+   * @return bool
+   *   TRUE if the storage contains data, FALSE if not.
+   */
+  public function hasData();
+
   /**
    * Reacts to the creation of a field.
    *
@@ -66,31 +75,6 @@ interface DynamicallyFieldableEntityStorageInterface extends EntityStorageInterf
    *   The number of field data records that have been purged.
    */
   public function purgeFieldData(FieldDefinitionInterface $field_definition, $batch_size);
-
-  /**
-   * Determines the number of entities with values for a given field.
-   *
-   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition
-   *   The field for which to count data records.
-   * @param bool $as_bool
-   *   (Optional) Optimises the query for checking whether there are any records
-   *   or not. Defaults to FALSE.
-   *
-   * @return bool|int
-   *   The number of entities. If $as_bool parameter is TRUE then the
-   *   value will either be TRUE or FALSE.
-   *
-   * @see \Drupal\Core\Entity\FieldableEntityStorageInterface::purgeFieldData()
-   */
-  public function countFieldData($storage_definition, $as_bool = FALSE);
-
-  /**
-   * Determines if the storage contains any data.
-   *
-   * @return bool
-   *   TRUE if the storage contains data, FALSE if not.
-   */
-  public function hasData();
 
   /**
    * Performs final cleanup after all data of a field has been purged.
