@@ -103,8 +103,6 @@ const FILE_STATUS_PERMANENT = 1;
  *   'type' bitmask has an on bit for each bit specified in $filter are
  *   returned.
  *
- * @see hook_stream_wrappers_alter()
- *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
  *   Use \Drupal::service('stream_wrapper_manager')->getWrappers().
  */

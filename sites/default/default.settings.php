@@ -437,6 +437,9 @@ if ($settings['hash_salt']) {
  * must be absolute, outside of the the Drupal installation directory and not
  * accessible over the web.
  *
+ * Note: Caches need to be cleared when this value is changed to make the
+ * private:// stream wrapper available to the system.
+ *
  * See http://drupal.org/documentation/modules/file for more information about
  * securing private files.
  */

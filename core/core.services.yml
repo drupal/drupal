@@ -886,7 +886,6 @@ services:
     parent: default_plugin_manager
   stream_wrapper_manager:
     class: Drupal\Core\StreamWrapper\StreamWrapperManager
-    arguments: ['@module_handler']
     calls:
       - [setContainer, ['@service_container']]
   stream_wrapper.public:

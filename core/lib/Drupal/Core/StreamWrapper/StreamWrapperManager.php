@@ -14,8 +14,6 @@ use Symfony\Component\DependencyInjection\ContainerAware;
  * Provides a StreamWrapper manager.
  *
  * @see file_get_stream_wrappers()
- * @see hook_stream_wrappers_alter()
- * @see system_stream_wrappers()
  * @see \Drupal\Core\StreamWrapper\StreamWrapperInterface
  */
 class StreamWrapperManager extends ContainerAware {
@@ -48,23 +46,6 @@ class StreamWrapperManager extends ContainerAware {
    * @var array
    */
   protected $wrappers = array();
-
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * Constructs a StreamWrapperManager object.
-   *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
-   */
-  public function __construct(ModuleHandlerInterface $module_handler) {
-    $this->moduleHandler = $module_handler;
-  }
 
   /**
    * Provides Drupal stream wrapper registry.
@@ -279,8 +260,6 @@ class StreamWrapperManager extends ContainerAware {
    * Internal use only.
    */
   public function register() {
-    $this->moduleHandler->alter('stream_wrappers', $this->info);
-
     foreach ($this->info as $scheme => $info) {
       $this->registerWrapper($scheme, $info['class'], $info['type']);
     }

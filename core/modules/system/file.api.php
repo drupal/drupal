@@ -11,17 +11,6 @@
  */
 
 /**
- * Alters the list of PHP stream wrapper implementations.
- *
- * @see file_get_stream_wrappers()
- * @see \Drupal\Core\StreamWrapper\StreamWrapperManager
- */
-function hook_stream_wrappers_alter(&$wrappers) {
-  // Change the name of private files to reflect the performance.
-  $wrappers['private']['name'] = t('Slow files');
-}
-
-/**
  * Control access to private file downloads and specify HTTP headers.
  *
  * This hook allows modules to enforce permissions on file downloads whenever

@@ -87,7 +87,7 @@ class FileSystemForm extends ConfigFormBase {
       '#type' => 'item',
       '#title' => t('Private file system path'),
       '#markup' => (PrivateStream::basePath() ? PrivateStream::basePath() : t('Not set')),
-      '#description' => t('An existing local file system path for storing private files. It should be writable by Drupal and not accessible over the web. This must be changed in settings.php. See the online handbook for <a href="@handbook">more information about securing private files</a>.', array('@handbook' => 'http://drupal.org/documentation/modules/file')),
+      '#description' => t('An existing local file system path for storing private files. It should be writable by Drupal and not accessible over the web. This must be changed in settings.php'),
     );
 
     $form['file_temporary_path'] = array(
