@@ -33,20 +33,20 @@ class Condition extends ConditionBase {
     // SQL query object is only necessary to pass to Query::addField() so it
     // can join tables as necessary. On the other hand, conditions need to be
     // added to the $conditionContainer object to keep grouping.
-    $sqlQuery = $conditionContainer instanceof SelectInterface ? $conditionContainer : $conditionContainer->sqlQuery;
-    $tables = $this->query->getTables($sqlQuery);
+    $sql_query = $conditionContainer instanceof SelectInterface ? $conditionContainer : $conditionContainer->sqlQuery;
+    $tables = $this->query->getTables($sql_query);
     foreach ($this->conditions as $condition) {
       if ($condition['field'] instanceOf ConditionInterface) {
-        $sqlCondition = new SqlCondition($condition['field']->getConjunction());
+        $sql_condition = new SqlCondition($condition['field']->getConjunction());
         // Add the SQL query to the object before calling this method again.
-        $sqlCondition->sqlQuery = $sqlQuery;
-        $condition['field']->compile($sqlCondition);
-        $sqlQuery->condition($sqlCondition);
+        $sql_condition->sqlQuery = $sql_query;
+        $condition['field']->compile($sql_condition);
+        $sql_query->condition($sql_condition);
       }
       else {
         $type = strtoupper($this->conjunction) == 'OR' || $condition['operator'] == 'IS NULL' ? 'LEFT' : 'INNER';
-        $this->translateCondition($condition);
         $field = $tables->addField($condition['field'], $type, $condition['langcode']);
+        static::translateCondition($condition, $sql_query, $tables->isFieldCaseSensitive($condition['field']));
         $conditionContainer->condition($field, $condition['value'], $condition['operator']);
       }
     }
@@ -70,24 +70,70 @@ class Condition extends ConditionBase {
    * Translates the string operators to SQL equivalents.
    *
    * @param array $condition
+   *   The condition array.
+   * @param \Drupal\Core\Database\Query\SelectInterface $sql_query
+   *   Select query instance.
+   * @param bool|null $case_sensitive
+   *   If the condition should be case sensitive or not, NULL if the field does
+   *   not define it.
+   *
+   * @see \Drupal\Core\Database\Query\ConditionInterface::condition()
    */
-  protected function translateCondition(&$condition) {
+  public static function translateCondition(&$condition, SelectInterface $sql_query, $case_sensitive) {
+    // There is nothing we can do for IN ().
+    if (is_array($condition['value'])) {
+      return;
+    }
+    // Ensure that the default operator is set to simplify the cases below.
+    if (empty($condition['operator'])) {
+      $condition['operator'] = '=';
+    }
     switch ($condition['operator']) {
+      case '=':
+        // If a field explicitly requests that queries should not be case
+        // sensitive, use the LIKE operator, otherwise keep =.
+        if ($case_sensitive === FALSE) {
+          $condition['value'] = $sql_query->escapeLike($condition['value']);
+          $condition['operator'] = 'LIKE';
+        }
+        break;
+      case '<>':
+        // If a field explicitly requests that queries should not be case
+        // sensitive, use the NOT LIKE operator, otherwise keep <>.
+        if ($case_sensitive === FALSE) {
+          $condition['value'] = $sql_query->escapeLike($condition['value']);
+          $condition['operator'] = 'NOT LIKE';
+        }
+        break;
       case 'STARTS_WITH':
-        $condition['value'] .= '%';
-        $condition['operator'] = 'LIKE';
+        if ($case_sensitive) {
+          $condition['operator'] = 'LIKE BINARY';
+        }
+        else {
+          $condition['operator'] = 'LIKE';
+        }
+        $condition['value'] = $sql_query->escapeLike($condition['value']) . '%';
         break;
 
       case 'CONTAINS':
-        $condition['value'] = '%' . $condition['value'] . '%';
-        $condition['operator'] = 'LIKE';
+        if ($case_sensitive) {
+          $condition['operator'] = 'LIKE BINARY';
+        }
+        else {
+          $condition['operator'] = 'LIKE';
+        }
+        $condition['value'] = '%' . $sql_query->escapeLike($condition['value']) . '%';
         break;
 
       case 'ENDS_WITH':
-        $condition['value'] = '%' . $condition['value'];
-        $condition['operator'] = 'LIKE';
+        if ($case_sensitive) {
+          $condition['operator'] = 'LIKE BINARY';
+        }
+        else {
+          $condition['operator'] = 'LIKE';
+        }
+        $condition['value'] = '%' . $sql_query->escapeLike($condition['value']);
         break;
-
     }
   }
 

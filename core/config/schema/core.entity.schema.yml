@@ -271,3 +271,4 @@ field.formatter.settings.uri_link:
 field.formatter.settings.timestamp_ago:
   type: mapping
   label: 'Timestamp ago display format settings'
+

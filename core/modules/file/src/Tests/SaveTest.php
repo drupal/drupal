@@ -7,7 +7,7 @@
 
 namespace Drupal\file\Tests;
 
-use Drupal\Core\Language\LanguageInterface;
+use Drupal\file\Entity\File;
 
 /**
  * File saving tests.
@@ -17,7 +17,7 @@ use Drupal\Core\Language\LanguageInterface;
 class SaveTest extends FileManagedUnitTestBase {
   function testFileSave() {
     // Create a new file entity.
-    $file = entity_create('file', array(
+    $file = File::create(array(
       'uid' => 1,
       'filename' => 'druplicon.txt',
       'uri' => 'public://druplicon.txt',
@@ -59,7 +59,7 @@ class SaveTest extends FileManagedUnitTestBase {
 
     // Try to insert a second file with the same name apart from case insensitivity
     // to ensure the 'uri' index allows for filenames with different cases.
-    $file = entity_create('file', array(
+    $uppercase_file = File::create(array(
       'uid' => 1,
       'filename' => 'DRUPLICON.txt',
       'uri' => 'public://DRUPLICON.txt',
@@ -68,7 +68,16 @@ class SaveTest extends FileManagedUnitTestBase {
       'changed' => 1,
       'status' => FILE_STATUS_PERMANENT,
     ));
-    file_put_contents($file->getFileUri(), 'hello world');
-    $file->save();
+    file_put_contents($uppercase_file->getFileUri(), 'hello world');
+    $uppercase_file->save();
+
+    // Ensure that file URI entity queries are case sensitive.
+    $fids = \Drupal::entityQuery('file')
+      ->condition('uri', $uppercase_file->getFileUri())
+      ->execute();
+
+    $this->assertEqual(1, count($fids));
+    $this->assertEqual(array($uppercase_file->id() => $uppercase_file->id()), $fids);
+
   }
 }

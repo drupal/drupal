@@ -501,6 +501,13 @@ class Select extends Query implements SelectInterface {
   /**
    * {@inheritdoc}
    */
+  public function escapeLike($string) {
+    return $this->connection->escapeLike($string);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getArguments(PlaceholderInterface $queryPlaceholder = NULL) {
     if (!isset($queryPlaceholder)) {
       $queryPlaceholder = $this;
@@ -984,4 +991,5 @@ class Select extends Query implements SelectInterface {
       $this->union[$key]['query'] = clone($aggregate['query']);
     }
   }
+
 }

@@ -229,6 +229,7 @@ class Connection extends DatabaseConnection {
       // In PostgreSQL, 'LIKE' is case-sensitive. For case-insensitive LIKE
       // statements, we need to use ILIKE instead.
       'LIKE' => array('operator' => 'ILIKE'),
+      'LIKE BINARY' => array('operator' => 'LIKE'),
       'NOT LIKE' => array('operator' => 'NOT ILIKE'),
       'REGEXP' => array('operator' => '~*'),
     );

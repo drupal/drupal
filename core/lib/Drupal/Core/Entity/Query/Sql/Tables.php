@@ -49,6 +49,13 @@ class Tables implements TablesInterface {
   protected $entityManager;
 
   /**
+   * List of case sensitive fields.
+   *
+   * @var array
+   */
+  protected $caseSensitiveFields = array();
+
+  /**
    * @param \Drupal\Core\Database\Query\SelectInterface $sql_query
    */
   public function __construct(SelectInterface $sql_query) {
@@ -139,6 +146,10 @@ class Tables implements TablesInterface {
         }
         $table = $this->ensureFieldTable($index_prefix, $field_storage, $type, $langcode, $base_table, $entity_id_field, $field_id_field);
         $sql_column = $table_mapping->getFieldColumnName($field_storage, $column);
+        $property_definitions = $field_storage->getPropertyDefinitions();
+        if (isset($property_definitions[$column])) {
+          $this->caseSensitiveFields[$field] = $property_definitions[$column]->getSetting('case_sensitive');
+        }
       }
       // The field is stored in a shared table.
       else {
@@ -155,6 +166,17 @@ class Tables implements TablesInterface {
         $entity_tables[$entity_base_table] = $this->getTableMapping($entity_base_table, $entity_type_id);
         $sql_column = $specifier;
         $table = $this->ensureEntityTable($index_prefix, $specifier, $type, $langcode, $base_table, $entity_id_field, $entity_tables);
+
+        // If there is a field storage (some specifiers are not, like
+        // default_langcode), check for case sensitivity.
+        if ($field_storage) {
+          $column = $field_storage->getMainPropertyName();
+          $base_field_property_definitions = $field_storage->getPropertyDefinitions();
+          if (isset($base_field_property_definitions[$column])) {
+            $this->caseSensitiveFields[$field] = $base_field_property_definitions[$column]->getSetting('case_sensitive');
+          }
+        }
+
       }
       // If there are more specifiers to come, it's a relationship.
       if ($field_storage && $key < $count) {
@@ -184,6 +206,15 @@ class Tables implements TablesInterface {
       }
     }
     return "$table.$sql_column";
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isFieldCaseSensitive($field_name) {
+    if (isset($this->caseSensitiveFields[$field_name])) {
+      return $this->caseSensitiveFields[$field_name];
+    }
   }
 
   /**

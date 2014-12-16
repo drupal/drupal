@@ -54,7 +54,7 @@ interface QueryInterface extends AlterableInterface {
    *   same delta within that field.
    * @param $value
    *   The value for $field. In most cases, this is a scalar and it's treated as
-   *   case-insensitive. For more complex options, it is an array. The meaning
+   *   case-insensitive. For more complex operators, it is an array. The meaning
    *   of each element in the array is dependent on $operator.
    * @param $operator
    *   Possible values:

@@ -44,6 +44,7 @@ class StringItem extends StringItemBase {
           'type' => 'varchar',
           'length' => (int) $field_definition->getSetting('max_length'),
           'not null' => FALSE,
+          'binary' => $field_definition->getSetting('case_sensitive'),
         ),
       ),
     );

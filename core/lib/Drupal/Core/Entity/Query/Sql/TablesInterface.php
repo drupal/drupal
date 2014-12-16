@@ -20,8 +20,8 @@ interface TablesInterface {
    *   then entity property name.
    * @param string $type
    *   Join type, can either be INNER or LEFT.
-   * @param $langcode
-   *   The language code the field values are to be shown in.
+   * @param string $langcode
+   *   The language code the field values are to be queried in.
    *
    * @throws \Drupal\Core\Entity\Query\QueryException
    *   If $field specifies an invalid relationship.
@@ -32,5 +32,19 @@ interface TablesInterface {
    *   of this in a query for a condition or sort.
    */
   public function addField($field, $type, $langcode);
+
+  /**
+   * Returns whether the given field is case sensitive.
+   *
+   * This information can only be provided after it was added with addField().
+   *
+   * @param string $field_name
+   *   The name of the field.
+   *
+   * @return bool|null
+   *   TRUE if the field is case sensitive, FALSE if not. Returns NULL when the
+   *   field did not define if it is case sensitive or not.
+   */
+  public function isFieldCaseSensitive($field_name);
 
 }

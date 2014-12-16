@@ -171,6 +171,13 @@ class SelectExtender implements SelectInterface {
     return $this->query->getUnion();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function escapeLike($string) {
+    return $this->query->escapeLike($string);
+  }
+
   public function getArguments(PlaceholderInterface $queryPlaceholder = NULL) {
     return $this->query->getArguments($queryPlaceholder);
   }

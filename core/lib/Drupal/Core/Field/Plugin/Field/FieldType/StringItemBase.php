@@ -20,11 +20,21 @@ abstract class StringItemBase extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
+  public static function defaultStorageSettings() {
+    return array(
+      'case_sensitive' => FALSE,
+    ) + parent::defaultStorageSettings();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     // This is called very early by the user entity roles field. Prevent
     // early t() calls by using the TranslationWrapper.
     $properties['value'] = DataDefinition::create('string')
-      ->setLabel(new TranslationWrapper('Text value'));
+      ->setLabel(new TranslationWrapper('Text value'))
+      ->setSetting('case_sensitive', $field_definition->getSetting('case_sensitive'));
 
     return $properties;
   }

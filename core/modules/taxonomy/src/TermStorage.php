@@ -84,17 +84,6 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
   /**
    * {@inheritdoc}
    */
-  protected function buildPropertyQuery(QueryInterface $entity_query, array $values) {
-    if (isset($values['name'])) {
-      $entity_query->condition('name', $values['name'], 'LIKE');
-      unset($values['name']);
-    }
-    parent::buildPropertyQuery($entity_query, $values);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function resetCache(array $ids = NULL) {
     drupal_static_reset('taxonomy_term_count_nodes');
     $this->parents = array();

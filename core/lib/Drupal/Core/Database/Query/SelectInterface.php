@@ -126,6 +126,19 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   public function &getUnion();
 
   /**
+   * Escapes characters that work as wildcard characters in a LIKE pattern.
+   *
+   * @param $string
+   *   The string to escape.
+   *
+   * @return string
+   *   The escaped string.
+   *
+   * @see \Drupal\Core\Database\Connection::escapeLike()
+   */
+  public function escapeLike($string);
+
+  /**
    * Compiles and returns an associative array of the arguments for this prepared statement.
    *
    * @param $queryPlaceholder

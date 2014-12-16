@@ -24,6 +24,19 @@ interface ConditionInterface {
    * Do not use this method to test for NULL values. Instead, use
    * QueryConditionInterface::isNull() or QueryConditionInterface::isNotNull().
    *
+   * Drupal considers LIKE case insensitive and the following is often used
+   * to tell the database that case insensitive equivalence is desired:
+   * @code
+   * db_select('users')
+   *  ->condition('name', db_like($name), 'LIKE')
+   * @endcode
+   * Use 'LIKE BINARY' instead of 'LIKE' for case sensitive queries.
+   *
+   * Note: When using MySQL, the exact behavior also depends on the used
+   * collation. if the field is set to binary, then a LIKE condition will also
+   * be case sensitive and when a case insensitive collation is used, the =
+   * operator will also be case insensitive.
+   *
    * @param $field
    *   The name of the field to check. If you would like to add a more complex
    *   condition involving operators or functions, use where().
@@ -33,8 +46,8 @@ interface ConditionInterface {
    *   the array is dependent on the $operator.
    * @param $operator
    *   The comparison operator, such as =, <, or >=. It also accepts more
-   *   complex options such as IN, LIKE, or BETWEEN. Defaults to IN if $value is
-   *   an array, and = otherwise.
+   *   complex options such as IN, LIKE, LIKE BINARY, or BETWEEN. Defaults to IN
+   *   if $value is an array, and = otherwise.
    *
    * @return \Drupal\Core\Database\Query\ConditionInterface
    *   The called object.

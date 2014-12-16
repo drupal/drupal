@@ -449,6 +449,9 @@ field.storage_settings.string:
     max_length:
       type: integer
       label: 'Maximum length'
+    case_sensitive:
+      type: boolean
+      label: 'Case sensitive'
 
 field.field_settings.string:
   type: mapping
@@ -467,6 +470,10 @@ field.value.string:
 field.storage_settings.string_long:
   type: mapping
   label: 'String (long) settings'
+  mapping:
+    case_sensitive:
+      type: boolean
+      label: 'Case sensitive'
 
 field.field_settings.string_long:
   type: mapping
@@ -489,6 +496,9 @@ field.storage_settings.uri:
     max_length:
       type: integer
       label: 'Maximum length'
+    case_sensitive:
+      type: boolean
+      label: 'Case sensitive'
 
 field.field_settings.uri:
   type: mapping
