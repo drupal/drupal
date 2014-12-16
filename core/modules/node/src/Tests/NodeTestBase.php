@@ -29,6 +29,9 @@ abstract class NodeTestBase extends WebTestBase {
    */
   protected $accessHandler;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
 

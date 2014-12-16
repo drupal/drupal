@@ -553,6 +553,13 @@ abstract class Entity implements EntityInterface {
   /**
    * {@inheritdoc}
    */
+  public function getConfigDependencyKey() {
+    return $this->getEntityType()->getConfigDependencyKey();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getConfigDependencyName() {
     return $this->getEntityTypeId() . ':' . $this->bundle() . ':' . $this->uuid();
   }

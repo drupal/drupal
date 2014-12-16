@@ -8,7 +8,11 @@
 namespace Drupal\views\Plugin\views\display;
 
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\State\StateInterface;
+use Drupal\Core\Routing\RouteProviderInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -36,6 +40,48 @@ class Page extends PathPluginBase {
    * @var bool
    */
   protected $usesAttachments = TRUE;
+
+  /**
+   * The menu storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $menuStorage;
+
+  /**
+   * Constructs a Page object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
+   *   The route provider.
+   * @param \Drupal\Core\State\StateInterface $state
+   *   The state key value store.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $menu_storage
+   *   The menu storage.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteProviderInterface $route_provider, StateInterface $state, EntityStorageInterface $menu_storage) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $route_provider, $state);
+    $this->menuStorage = $menu_storage;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('router.route_provider'),
+      $container->get('state'),
+      $container->get('entity.manager')->getStorage('menu')
+    );
+  }
 
   /**
    * Overrides \Drupal\views\Plugin\views\display\PathPluginBase::defineOptions().
@@ -202,7 +248,8 @@ class Page extends PathPluginBase {
         // Only display the parent selector if Menu UI module is enabled.
         $menu_parent = $menu['menu_name'] . ':' . $menu['parent'];
         if (\Drupal::moduleHandler()->moduleExists('menu_ui')) {
-          $form['menu']['parent'] = \Drupal::service('menu.parent_form_selector')->parentSelectElement($menu_parent);
+          $menu_link = 'views_view:views.' . $form_state->get('view')->id() . '.' . $form_state->get('display_id');
+          $form['menu']['parent'] = \Drupal::service('menu.parent_form_selector')->parentSelectElement($menu_parent, $menu_link);
           $form['menu']['parent'] += array(
             '#title' => $this->t('Parent'),
             '#description' => $this->t('The maximum depth for a link and all its children is fixed. Some menu links may not be available as parents if selecting them would exceed this limit.'),
@@ -423,6 +470,21 @@ class Page extends PathPluginBase {
       'items per page title' => $this->t('Items per page'),
       'items per page description' => $this->t('The number of items to display per page. Enter 0 for no limit.')
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    $dependencies = parent::calculateDependencies();
+
+    $menu = $this->getOption('menu');
+    if ($menu['type'] === 'normal') {
+      $menu_entity = $this->menuStorage->load($menu['menu_name']);
+      $dependencies[$menu_entity->getConfigDependencyKey()][] = $menu_entity->getConfigDependencyName();
+    }
+
+    return $dependencies;
   }
 
 }

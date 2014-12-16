@@ -44,6 +44,10 @@ abstract class ViewUnitTestBase extends KernelTestBase {
    * using it, it cannot be enabled normally.
    */
   protected function setUpFixtures() {
+    // First install the system module. Many Views have Page displays have menu
+    // links, and for those to work, the system menus must already be present.
+    $this->installConfig(array('system'));
+
     // Define the schema and views data variable before enabling the test module.
     \Drupal::state()->set('views_test_data_schema', $this->schemaDefinition());
     \Drupal::state()->set('views_test_data_views_data', $this->viewsData());
@@ -66,9 +70,6 @@ abstract class ViewUnitTestBase extends KernelTestBase {
     }
     $query->execute();
 
-    // Tests implementing ViewUnitTestBase depend on the theme system being
-    // properly configured.
-    $this->installConfig(array('system'));
     ViewTestData::createTestViews(get_class($this), array('views_test_config'));
   }
 

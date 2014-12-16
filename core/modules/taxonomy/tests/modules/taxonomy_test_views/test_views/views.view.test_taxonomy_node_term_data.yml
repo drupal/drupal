@@ -61,16 +61,14 @@ display:
           id: term_node_tid
           admin_label: 'Term #1'
           table: node
-          vids:
-            tags: ''
+          vids: {}
           plugin_id: node_term_data
         term_node_tid_1:
           field: term_node_tid
           id: term_node_tid_1
           admin_label: 'Term #2'
           table: node
-          vids:
-            tags: ''
+          vids: {}
           plugin_id: node_term_data
       sorts:
         nid:

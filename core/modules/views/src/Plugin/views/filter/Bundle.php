@@ -7,8 +7,11 @@
 
 namespace Drupal\views\Plugin\views\filter;
 
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Filter class which allows filtering by entity bundles.
@@ -32,6 +35,43 @@ class Bundle extends InOperator {
    * @var \Drupal\Core\Entity\EntityTypeInterface
    */
   protected $entityType;
+
+  /**
+   * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityManagerInterface
+   */
+  protected $entityManager;
+
+  /**
+   * Constructs a Bundle object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->entityManager = $entity_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('entity.manager')
+    );
+  }
 
   /**
    * Overrides \Drupal\views\Plugin\views\filter\InOperator::init().
@@ -71,6 +111,23 @@ class Bundle extends InOperator {
     // Make sure that the entity base table is in the query.
     $this->ensureMyTable();
     parent::query();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    $dependencies = parent::calculateDependencies();
+
+    $bundle_entity_type = $this->entityType->getBundleEntityType();
+    $bundle_entity_storage = $this->entityManager->getStorage($bundle_entity_type);
+
+    foreach (array_keys($this->value) as $bundle) {
+      $bundle_entity = $bundle_entity_storage->load($bundle);
+      $dependencies[$bundle_entity->getConfigDependencyKey()][] = $bundle_entity->getConfigDependencyName();
+    }
+
+    return $dependencies;
   }
 
 }

@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\argument_validator;
 
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -209,6 +210,24 @@ class Entity extends ArgumentValidatorPluginBase {
     }
 
     return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    $dependencies = parent::calculateDependencies();
+
+    $entity_type_id = $this->definition['entity_type'];
+    $bundle_entity_type = $this->entityManager->getDefinition($entity_type_id)->getBundleEntityType();
+    $bundle_entity_storage = $this->entityManager->getStorage($bundle_entity_type);
+
+    foreach (array_keys($this->options['bundles']) as $bundle) {
+      $bundle_entity = $bundle_entity_storage->load($bundle);
+      $dependencies[$bundle_entity->getConfigDependencyKey()][] = $bundle_entity->getConfigDependencyName();
+    }
+
+    return $dependencies;
   }
 
 }

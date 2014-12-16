@@ -22,10 +22,12 @@ abstract class NodeTestBase extends ViewTestBase {
    */
   public static $modules = array('node_test_views');
 
-  protected function setUp() {
-    parent::setUp();
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
 
-    ViewTestData::createTestViews(get_class($this), array('node_test_views'));
+    if ($import_test_views) {
+      ViewTestData::createTestViews(get_class($this), array('node_test_views'));
+    }
   }
 
 }

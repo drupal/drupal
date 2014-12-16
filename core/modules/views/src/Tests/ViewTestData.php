@@ -23,7 +23,7 @@ class ViewTestData {
    * Create test views from config.
    *
    * @param string $class
-   *   The name of the test class.
+   *   The name of the test class. Installs the listed test views *in order*.
    * @param array $modules
    *   The module directories to look in for test views.
    */
@@ -45,9 +45,10 @@ class ViewTestData {
         }
 
         $file_storage = new FileStorage($config_dir);
-        foreach ($file_storage->listAll('views.view.') as $config_name) {
-          $id = str_replace('views.view.', '', $config_name);
-          if (in_array($id, $views)) {
+        $available_views = $file_storage->listAll('views.view.');
+        foreach ($views as $id) {
+          $config_name = 'views.view.' . $id;
+          if (in_array($config_name, $available_views)) {
             $storage
               ->create($file_storage->read($config_name))
               ->save();

@@ -2,18 +2,22 @@
 
 /**
  * @file
- * Definition of views_handler_filter_term_node_tid.
+ * Contains \Drupal\taxonomy\Plugin\views\filter\TaxonomyIndexTid.
  */
 
 namespace Drupal\taxonomy\Plugin\views\filter;
 
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\TermStorageInterface;
+use Drupal\taxonomy\VocabularyStorageInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\filter\ManyToOne;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Tags;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Filter by term id.
@@ -26,6 +30,53 @@ class TaxonomyIndexTid extends ManyToOne {
 
   // Stores the exposed input for this filter.
   var $validated_exposed_input = NULL;
+
+  /**
+   * The vocabulary storage.
+   *
+   * @var \Drupal\taxonomy\VocabularyStorageInterface
+   */
+  protected $vocabularyStorage;
+
+  /**
+   * The term storage.
+   *
+   * @var \Drupal\taxonomy\TermStorageInterface
+   */
+  protected $termStorage;
+
+  /**
+   * Constructs a TaxonomyIndexTid object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\taxonomy\VocabularyStorageInterface $vocabulary_storage
+   *   The vocabulary storage.
+   * @param \Drupal\taxonomy\TermStorageInterface $term_storage
+   *   The term storage.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, VocabularyStorageInterface $vocabulary_storage, TermStorageInterface $term_storage) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->vocabularyStorage = $vocabulary_storage;
+    $this->termStorage = $term_storage;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('entity.manager')->getStorage('taxonomy_vocabulary'),
+      $container->get('entity.manager')->getStorage('taxonomy_term')
+    );
+  }
 
   /**
    * Overrides \Drupal\views\Plugin\views\filter\ManyToOne::init().
@@ -372,6 +423,23 @@ class TaxonomyIndexTid extends ManyToOne {
     $contexts[] = 'cache.context.user';
 
     return $contexts;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    $dependencies = parent::calculateDependencies();
+
+    $vocabulary = $this->vocabularyStorage->load($this->options['vid']);
+    $dependencies[$vocabulary->getConfigDependencyKey()][] = $vocabulary->getConfigDependencyName();
+
+    foreach ($this->options['value'] as $tid) {
+      $term = $this->termStorage->load($tid);
+      $dependencies[$term->getConfigDependencyKey()][] = $term->getConfigDependencyName();
+    }
+
+    return $dependencies;
   }
 
 }

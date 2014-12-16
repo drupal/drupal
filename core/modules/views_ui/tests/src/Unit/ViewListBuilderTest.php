@@ -82,9 +82,10 @@ class ViewListBuilderTest extends UnitTestCase {
     );
     $route_provider = $this->getMock('Drupal\Core\Routing\RouteProviderInterface');
     $state = $this->getMock('\Drupal\Core\State\StateInterface');
+    $menu_storage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
     $page_display = $this->getMock('Drupal\views\Plugin\views\display\Page',
       array('initDisplay', 'getPath'),
-      array(array(), 'default', $display_manager->getDefinition('page'), $route_provider, $state)
+      array(array(), 'default', $display_manager->getDefinition('page'), $route_provider, $state, $menu_storage)
     );
     $page_display->expects($this->any())
       ->method('getPath')

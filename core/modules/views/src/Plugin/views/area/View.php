@@ -151,4 +151,19 @@ class View extends AreaPluginBase {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    $dependencies = parent::calculateDependencies();
+
+    list($view_id) = explode(':', $this->options['view_to_insert'], 2);
+    if ($view_id) {
+      $view = $this->viewStorage->load($view_id);
+      $dependencies[$view->getConfigDependencyKey()][] = $view->getConfigDependencyName();
+    }
+
+    return $dependencies;
+  }
+
 }

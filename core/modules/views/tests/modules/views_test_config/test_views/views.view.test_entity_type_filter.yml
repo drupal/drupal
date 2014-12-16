@@ -87,7 +87,6 @@ display:
           field: type
           relationship: none
           value:
-            all: all
             test_bundle: test_bundle
             test_bundle_2: test_bundle_2
           plugin_id: bundle

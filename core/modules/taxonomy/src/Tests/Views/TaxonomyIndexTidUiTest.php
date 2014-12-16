@@ -7,6 +7,8 @@
 
 namespace Drupal\taxonomy\Tests\Views;
 
+use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views_ui\Tests\UITestBase;
 
@@ -33,24 +35,23 @@ class TaxonomyIndexTidUiTest extends UITestBase {
   public static $modules = array('node', 'taxonomy', 'taxonomy_test_views');
 
   /**
+   * A nested array of \Drupal\taxonomy\TermInterface objects.
+   *
+   * @var \Drupal\taxonomy\TermInterface[][]
+   */
+  protected $terms = [];
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
 
-    ViewTestData::createTestViews(get_class($this), array('taxonomy_test_views'));
-  }
-
-  /**
-   * Tests the filter UI.
-   */
-  public function testFilterUI() {
-    entity_create('taxonomy_vocabulary', array(
+    Vocabulary::create([
       'vid' => 'tags',
       'name' => 'Tags',
-    ))->save();
+    ])->save();
 
-    $terms = array();
     // Setup a hierarchy which looks like this:
     // term 0.0
     // term 1.0
@@ -60,15 +61,21 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     // - term 2.2
     for ($i = 0; $i < 3; $i++) {
       for ($j = 0; $j <= $i; $j++) {
-        $terms[$i][$j] = $term = entity_create('taxonomy_term', array(
+        $this->terms[$i][$j] = $term = Term::create([
           'vid' => 'tags',
           'name' => "Term $i.$j",
           'parent' => isset($terms[$i][0]) ? $terms[$i][0]->id() : 0,
-        ));
+        ]);
         $term->save();
       }
     }
+    ViewTestData::createTestViews(get_class($this), array('taxonomy_test_views'));
+  }
 
+  /**
+   * Tests the filter UI.
+   */
+  public function testFilterUI() {
     $this->drupalGet('admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid');
 
     $result = $this->xpath('//select[@id="edit-options-value"]/option');
@@ -78,12 +85,12 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     for ($i = 0; $i < 3; $i++) {
       for ($j = 0; $j <= $i; $j++) {
         $option = $result[$counter++];
-        $prefix = $terms[$i][$j]->parent->target_id ? '-' : '';
+        $prefix = $this->terms[$i][$j]->parent->target_id ? '-' : '';
         $attributes = $option->attributes();
         $tid = (string) $attributes->value;
 
-        $this->assertEqual($prefix . $terms[$i][$j]->getName(), (string) $option);
-        $this->assertEqual($terms[$i][$j]->id(), $tid);
+        $this->assertEqual($prefix . $this->terms[$i][$j]->getName(), (string) $option);
+        $this->assertEqual($this->terms[$i][$j]->id(), $tid);
       }
     }
 
@@ -96,6 +103,22 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     $this->drupalGet('admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid');
     $result = $this->xpath('//input[@id="edit-options-value"]/@data-autocomplete-path');
     $this->assertEqual((string) $result[0], \Drupal::url('taxonomy.autocomplete_vid', ['taxonomy_vocabulary' => 'tags']));
+
+    // Tests \Drupal\taxonomy\Plugin\views\filter\TaxonomyIndexTid::calculateDependencies().
+    $expected = [
+      'config' => [
+        'taxonomy.vocabulary.tags',
+      ],
+      'content' => [
+        'taxonomy_term:tags:' . Term::load(2)->uuid(),
+      ],
+      'module' => [
+        'node',
+        'taxonomy',
+        'user',
+      ],
+    ];
+    $this->assertIdentical($expected, $view->calculateDependencies());
   }
 
 }

@@ -38,6 +38,11 @@ class AccessRoleTest extends AccessTestBase {
       $this->normalRole => $this->normalRole,
     );
     $view->save();
+    $expected = [
+      'config' => ['user.role.' . $this->normalRole],
+      'module' => ['user'],
+    ];
+    $this->assertIdentical($expected, $view->calculateDependencies());
 
     $executable = Views::executableFactory()->get($view);
     $executable->setDisplay('page_1');
@@ -65,6 +70,14 @@ class AccessRoleTest extends AccessTestBase {
       'anonymous' => 'anonymous',
     );
     $view->save();
+    $expected = [
+      'config' => [
+        'user.role.anonymous',
+        'user.role.' . $this->normalRole,
+      ],
+      'module' => ['user'],
+    ];
+    $this->assertIdentical($expected, $view->calculateDependencies());
     $this->drupalLogin($this->webUser);
     $this->drupalGet('test-role');
     $this->assertResponse(403);

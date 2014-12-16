@@ -97,10 +97,10 @@ display:
       title: 'Test page as child'
       menu:
         type: normal
-        title: 'Test child'
+        title: 'Test child (with parent)'
         parent: system.admin
         description: ''
-        menu_name: tools
+        menu_name: admin
         weight: 0
         context: '0'
       defaults:
@@ -117,10 +117,10 @@ display:
       title: 'Tests a menu with a non-existing parent'
       menu:
         type: normal
-        title: 'Test child'
-        parent: system.admin
+        title: 'Test child with non-existing parent'
+        parent: llamasarelame
         description: ''
-        menu_name: not-existing-menu-name
+        menu_name: admin
         weight: 0
         context: '0'
       defaults:
@@ -129,5 +129,5 @@ display:
       field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
-    id: page_4
+    id: page_5
     position: 0

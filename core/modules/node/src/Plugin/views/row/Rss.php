@@ -9,8 +9,8 @@ namespace Drupal\node\Plugin\views\row;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\views\Plugin\views\row\RowPluginBase;
+use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\views\Plugin\views\row\RssPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\node\NodeStorageInterface;
 
@@ -28,7 +28,7 @@ use Drupal\node\NodeStorageInterface;
  *   display_types = {"feed"}
  * )
  */
-class Rss extends RowPluginBase {
+class Rss extends RssPluginBase {
 
   // Basic properties that let the row style follow relationships.
   var $base_table = 'node';
@@ -37,6 +37,11 @@ class Rss extends RowPluginBase {
 
   // Stores the nodes loaded with preRender.
   var $nodes = array();
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $entityTypeId = 'node';
 
   /**
    * The node storage
@@ -54,54 +59,19 @@ class Rss extends RowPluginBase {
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param NodeStorageInterface $node_storage
-   *   The node storage.
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, NodeStorageInterface $node_storage) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->nodeStorage = $node_storage;
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_manager);
+    $this->nodeStorage = $entity_manager->getStorage('node');
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity.manager')->getStorage('node')
-    );
-  }
-
-  protected function defineOptions() {
-    $options = parent::defineOptions();
-
-    $options['view_mode'] = array('default' => 'default');
-
-    return $options;
-  }
-
-  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
-    parent::buildOptionsForm($form, $form_state);
-
-    $form['view_mode'] = array(
-      '#type' => 'select',
-      '#title' => $this->t('Display type'),
-      '#options' => $this->buildOptionsForm_summary_options(),
-      '#default_value' => $this->options['view_mode'],
-    );
-  }
-
-  /**
-   * Return the main options, which are shown in the summary title.
-   */
   public function buildOptionsForm_summary_options() {
-    $view_modes = \Drupal::entityManager()->getViewModes('node');
-    $options = array();
-    foreach ($view_modes as $mode => $settings) {
-      $options[$mode] = $settings['label'];
-    }
+    $options = parent::buildOptionsForm_summary_options();
     $options['title'] = $this->t('Title only');
     $options['default'] = $this->t('Use site default RSS settings');
     return $options;

@@ -405,6 +405,17 @@ interface EntityInterface extends AccessibleInterface {
   public function getCacheTags();
 
   /**
+   * Gets the key that is used to store configuration dependencies.
+   *
+   * @return string
+   *   The key to be used in configuration dependencies when storing
+   *   dependencies on entities of this type.
+   *
+   * @see \Drupal\Core\Entity\EntityTypeInterface::getConfigDependencyKey()
+   */
+  public function getConfigDependencyKey();
+
+  /**
    * Gets the configuration dependency name.
    *
    * Configuration entities can depend on content and configuration entities.

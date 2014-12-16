@@ -42,7 +42,7 @@ class ViewUIObjectTest extends UnitTestCase {
       // process. EntityInterface::getConfigDependencyName() and
       // ConfigEntityInterface::calculateDependencies() are only used for
       // dependency management.
-      if (!in_array($reflection_method->getName(), ['isNew', 'isSyncing', 'isUninstalling', 'getConfigDependencyName', 'calculateDependencies'])) {
+      if (!in_array($reflection_method->getName(), ['isNew', 'isSyncing', 'isUninstalling', 'getConfigDependencyKey', 'getConfigDependencyName', 'calculateDependencies'])) {
         if (count($reflection_method->getParameters()) == 0) {
           $method_args[$reflection_method->getName()] = array();
         }

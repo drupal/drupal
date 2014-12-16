@@ -942,8 +942,16 @@ class Field extends FieldPluginBase implements CacheablePluginInterface {
    * {@inheritdoc}
    */
   public function calculateDependencies() {
+    $dependencies = parent::calculateDependencies();
+
     // Add the module providing the configured field storage as a dependency.
-    return array('config' => array($this->getFieldStorageConfig()->getConfigDependencyName()));
+    $dependencies['config'][] = $this->getFieldStorageConfig()->getConfigDependencyName();
+    // Add the module providing the formatter.
+    if ($this->options['type']) {
+      $dependencies['module'][] = $this->formatterPluginManager->getDefinition($this->options['type'])['provider'];
+    }
+
+    return $dependencies;
   }
 
   /**

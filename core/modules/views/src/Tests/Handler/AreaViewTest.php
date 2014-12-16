@@ -30,13 +30,16 @@ class AreaViewTest extends ViewUnitTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_area_view', 'test_simple_argument');
+  public static $testViews = array('test_simple_argument', 'test_area_view');
 
   /**
    * Tests the view area handler.
    */
   public function testViewArea() {
     $view = Views::getView('test_area_view');
+
+    // Tests \Drupal\views\Plugin\views\area\View::calculateDependencies().
+    $this->assertIdentical(['config' => ['views.view.test_simple_argument']], $view->calculateDependencies());
 
     $this->executeView($view);
     $output = $view->render();

@@ -10,6 +10,7 @@ namespace Drupal\node\Tests\Views;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\views\Plugin\views\PluginBase;
+use Drupal\views\Tests\ViewTestData;
 
 /**
  * Tests node language fields, filters, and sorting.
@@ -41,11 +42,12 @@ class NodeLanguageTest extends NodeTestBase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    parent::setUp();
+    parent::setUp(FALSE);
 
     // Create Page content type.
     if ($this->profile != 'standard') {
       $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+      ViewTestData::createTestViews(get_class($this), array('node_test_views'));
     }
 
     // Add two new languages.

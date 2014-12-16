@@ -213,4 +213,20 @@ class EntityRow extends RowPluginBase {
     return $this->getRenderer()->render($row);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    $dependencies = parent::calculateDependencies();
+
+    $view_mode = $this->entityManager
+      ->getStorage('entity_view_mode')
+      ->load($this->entityTypeId . '.' . $this->options['view_mode']);
+    if ($view_mode) {
+      $dependencies[$view_mode->getConfigDependencyKey()][] = $view_mode->getConfigDependencyName();
+    }
+
+    return $dependencies;
+  }
+
 }

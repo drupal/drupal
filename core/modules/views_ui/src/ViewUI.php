@@ -1129,7 +1129,15 @@ class ViewUI implements ViewStorageInterface {
   /**
    * {@inheritdoc}
    */
+  public function getConfigDependencyKey() {
+    return $this->storage->getConfigDependencyKey();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getConfigDependencyName() {
+    return $this->storage->getConfigDependencyName();
   }
 
   /**

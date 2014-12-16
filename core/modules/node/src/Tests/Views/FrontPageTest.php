@@ -49,6 +49,20 @@ class FrontPageTest extends ViewTestBase {
       ->save();
 
     $view = Views::getView('frontpage');
+
+    // Tests \Drupal\node\Plugin\views\row\RssPluginBase::calculateDependencies().
+    $expected = [
+      'config' => [
+        'core.entity_view_mode.node.rss',
+        'core.entity_view_mode.node.teaser',
+      ],
+      'module' => [
+        'node',
+        'user',
+      ],
+    ];
+    $this->assertIdentical($expected, $view->calculateDependencies());
+
     $view->setDisplay('page_1');
     $this->executeView($view);
     $view->preview();

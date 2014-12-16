@@ -7,8 +7,7 @@
 
 namespace Drupal\comment\Plugin\views\row;
 
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\views\Plugin\views\row\RowPluginBase;
+use Drupal\views\Plugin\views\row\RssPluginBase;
 
 /**
  * Plugin which formats the comments as RSS items.
@@ -23,29 +22,15 @@ use Drupal\views\Plugin\views\row\RowPluginBase;
  *   display_types = {"feed"}
  * )
  */
-class Rss extends RowPluginBase {
+class Rss extends RssPluginBase {
 
    var $base_table = 'comment';
    var $base_field = 'cid';
 
-  protected function defineOptions() {
-    $options = parent::defineOptions();
-
-    $options['view_mode'] = array('default' => 'default');
-
-    return $options;
-  }
-
-  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
-    parent::buildOptionsForm($form, $form_state);
-
-    $form['view_mode'] = array(
-      '#type' => 'select',
-      '#title' => $this->t('Display type'),
-      '#options' => $this->options_form_summary_options(),
-      '#default_value' => $this->options['view_mode'],
-    );
-  }
+  /**
+   * {@inheritdoc}
+   */
+  protected $entityTypeId = 'comment';
 
   public function preRender($result) {
     $cids = array();
@@ -62,18 +47,10 @@ class Rss extends RowPluginBase {
   }
 
   /**
-   * Return the main options, which are shown in the summary title
-   *
-   * @see views_plugin_row_node_rss::options_form_summary_options()
-   * @todo: Maybe provide a views_plugin_row_rss_entity and reuse this method
-   * in views_plugin_row_comment|node_rss.inc
+   * {@inheritdoc}
    */
-  function options_form_summary_options() {
-    $view_modes = \Drupal::entityManager()->getViewModes('node');
-    $options = array();
-    foreach ($view_modes as $mode => $settings) {
-      $options[$mode] = $settings['label'];
-    }
+  public function buildOptionsForm_summary_options() {
+    $options = parent::buildOptionsForm_summary_options();
     $options['title'] = $this->t('Title only');
     $options['default'] = $this->t('Use site default RSS settings');
     return $options;

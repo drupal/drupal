@@ -287,8 +287,7 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
 
     foreach ($executable->displayHandlers as $display) {
       // Add dependency for the display itself.
-      /** @var \Drupal\views\Plugin\views\display\DisplayPluginBase $display */
-      $this->addDependency('module', $display->getProvider());
+      $this->calculatePluginDependencies($display);
 
       // Collect all dependencies of all handlers.
       foreach ($handler_types as $handler_type) {
