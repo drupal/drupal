@@ -160,7 +160,9 @@ class ChainedFastBackend implements CacheBackendInterface {
     if ($cids) {
       foreach ($this->consistentBackend->getMultiple($cids, $allow_invalid) as $item) {
         $cache[$item->cid] = $item;
-        $this->fastBackend->set($item->cid, $item->data, $item->expire, $item->tags);
+        // Don't write the cache tags to the fast backend as any cache tag
+        // invalidation results in an invalidation of the whole fast backend.
+        $this->fastBackend->set($item->cid, $item->data, $item->expire);
       }
     }
 
@@ -173,7 +175,9 @@ class ChainedFastBackend implements CacheBackendInterface {
   public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = array()) {
     $this->consistentBackend->set($cid, $data, $expire, $tags);
     $this->markAsOutdated();
-    $this->fastBackend->set($cid, $data, $expire, $tags);
+    // Don't write the cache tags to the fast backend as any cache tag
+    // invalidation results in an invalidation of the whole fast backend.
+    $this->fastBackend->set($cid, $data, $expire);
   }
 
   /**
@@ -182,6 +186,11 @@ class ChainedFastBackend implements CacheBackendInterface {
   public function setMultiple(array $items) {
     $this->consistentBackend->setMultiple($items);
     $this->markAsOutdated();
+    // Don't write the cache tags to the fast backend as any cache tag
+    // invalidation results in an invalidation of the whole fast backend.
+    foreach ($items as &$item) {
+      unset($item['tags']);
+    }
     $this->fastBackend->setMultiple($items);
   }
 

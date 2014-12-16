@@ -411,7 +411,6 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     $this->assertEqual($cached['cid_4']->expire, $future_expiration, 'Cache expiration has been correctly set.');
 
     $this->assertEqual($cached['cid_5']->data, $items['cid_5']['data'], 'New cache item set correctly.');
-    $this->assertEqual($cached['cid_5']->tags, array('test:a', 'test:b'));
 
     // Calling ::setMultiple() with invalid cache tags.
     try {
