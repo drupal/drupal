@@ -46,11 +46,11 @@ class Condition extends Plugin {
   public $label;
 
   /**
-   * The name of the module providing the type.
+   * The name of the provider that owns the filter.
    *
    * @var string
    */
-  public $module;
+  public $provider;
 
   /**
    * An array of contextual data.
