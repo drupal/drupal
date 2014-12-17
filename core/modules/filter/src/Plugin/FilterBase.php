@@ -28,7 +28,7 @@ abstract class FilterBase extends PluginBase implements FilterInterface {
   protected $plugin_id;
 
   /**
-   * The name of the provider that owns this filter.
+   * The name of the module that owns this filter.
    *
    * @var string
    */
