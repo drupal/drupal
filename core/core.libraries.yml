@@ -2,13 +2,13 @@
 
 backbone:
   remote: https://github.com/jashkenas/backbone
-  version: 1.1.0
+  version: 1.1.2
   license:
     name: MIT
-    url: https://github.com/jashkenas/backbone/blob/1.1.0/LICENSE
+    url: https://github.com/jashkenas/backbone/blob/1.1.2/LICENSE
     gpl-compatible: true
   js:
-    assets/vendor/backbone/backbone.js: { weight: -19 }
+    assets/vendor/backbone/backbone-min.js: { weight: -19, minified: true }
   dependencies:
     - core/underscore
 
@@ -805,10 +805,10 @@ picturefill:
 
 underscore:
   remote: https://github.com/jashkenas/underscore
-  version: 1.5.2
+  version: 1.7.0
   license:
     name: MIT
-    url: https://github.com/jashkenas/underscore/blob/1.5.2/LICENSE
+    url: https://github.com/jashkenas/underscore/blob/1.7.0/LICENSE
     gpl-compatible: true
   js:
-    assets/vendor/underscore/underscore.js: { weight: -20 }
+    assets/vendor/underscore/underscore-min.js: { weight: -20, minified: true }
