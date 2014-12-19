@@ -14,7 +14,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
-use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\language\ConfigurableLanguageManagerInterface;
@@ -25,7 +25,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Configure the selected language negotiation method for this site.
  */
-class NegotiationConfigureForm extends FormBase {
+class NegotiationConfigureForm extends ConfigFormBase {
 
   /**
    * Stores the configuration object for language.types.
@@ -86,7 +86,8 @@ class NegotiationConfigureForm extends FormBase {
    *   The block storage, or NULL if not available.
    */
   public function __construct(ConfigFactoryInterface $config_factory, ConfigurableLanguageManagerInterface $language_manager, LanguageNegotiatorInterface $negotiator, BlockManagerInterface $block_manager, ThemeHandlerInterface $theme_handler, EntityStorageInterface $block_storage = NULL) {
-    $this->languageTypes = $config_factory->get('language.types');
+    parent::__construct($config_factory);
+    $this->languageTypes = $this->config('language.types');
     $this->languageManager = $language_manager;
     $this->negotiator = $negotiator;
     $this->blockManager = $block_manager;
