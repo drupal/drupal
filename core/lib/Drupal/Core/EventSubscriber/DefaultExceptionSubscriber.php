@@ -14,7 +14,6 @@ use Drupal\Core\ContentNegotiation;
 use Drupal\Core\Render\BareHtmlPageRendererInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Utility\Error;
-use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -87,7 +86,6 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
   protected function onHtml(GetResponseForExceptionEvent $event) {
     $exception = $event->getException();
     $error = Error::decodeException($exception);
-    $flatten_exception = FlattenException::create($exception, 500);
 
     // Display the message if the current error reporting level allows this type
     // of message to be displayed, and unconditionally in update.php.
@@ -114,7 +112,7 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
 
       // Check if verbose error reporting is on.
       if ($this->getErrorLevel() == ERROR_REPORTING_DISPLAY_VERBOSE) {
-        $backtrace_exception = $flatten_exception;
+        $backtrace_exception = $exception;
         while ($backtrace_exception->getPrevious()) {
           $backtrace_exception = $backtrace_exception->getPrevious();
         }
@@ -127,7 +125,7 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
 
         // Generate a backtrace containing only scalar argument values. Make
         // sure the backtrace is escaped as it can contain user submitted data.
-        $message .= '<pre class="backtrace">' . SafeMarkup::escape(Error::formatFlattenedBacktrace($backtrace)) . '</pre>';
+        $message .= '<pre class="backtrace">' . SafeMarkup::escape(Error::formatBacktrace($backtrace)) . '</pre>';
       }
       drupal_set_message(SafeMarkup::set($message), $class, TRUE);
     }

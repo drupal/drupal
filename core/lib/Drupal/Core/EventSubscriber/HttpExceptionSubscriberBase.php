@@ -8,7 +8,6 @@
 namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Core\ContentNegotiation;
-use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
@@ -88,7 +87,7 @@ abstract class HttpExceptionSubscriberBase implements EventSubscriberInterface {
     $exception = $event->getException();
 
     // Make the exception available for example when rendering a block.
-    $event->getRequest()->attributes->set('exception', FlattenException::create($exception));
+    $event->getRequest()->attributes->set('exception', $exception);
 
     $handled_formats = $this->getHandledFormats();
 
