@@ -176,7 +176,7 @@ class DenormalizeTest extends NormalizerTestBase {
   }
 
   /**
-   * Verifies that only specified properties get populated in the PATCH context.
+   * Verifies that the denormalized entity is correct in the PATCH context.
    */
   public function testPatchDenormailzation() {
     $data = array(
@@ -195,15 +195,7 @@ class DenormalizeTest extends NormalizerTestBase {
     $denormalized = $this->serializer->denormalize($data, $this->entityClass, $this->format, array('request_method' => 'patch'));
     // Check that the one field got populated as expected.
     $this->assertEqual($data['field_test_text'], $denormalized->get('field_test_text')->getValue());
-    // Unset that field so that now all fields are NULL.
-    $denormalized->set('field_test_text', NULL);
-    // Assert that all fields are NULL and not set to default values. Example:
-    // the UUID field is NULL and not initialized as usual.
-    foreach ($denormalized as $field_name => $field) {
-      // The 'langcode' field always has a value.
-      if ($field_name != 'langcode') {
-        $this->assertFalse(isset($denormalized->$field_name), "$field_name is not set.");
-      }
-    }
+    // Check the custom property that contains the list of fields to merge.
+    $this->assertEqual($denormalized->_restPatchFields, ['field_test_text']);
   }
 }

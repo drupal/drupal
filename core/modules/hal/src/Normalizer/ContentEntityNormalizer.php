@@ -152,15 +152,6 @@ class ContentEntityNormalizer extends NormalizerBase {
 
     $entity = $this->entityManager->getStorage($typed_data_ids['entity_type'])->create($values);
 
-    // Special handling for PATCH: destroy all possible default values that
-    // might have been set on entity creation. We want an "empty" entity that
-    // will only get filled with fields from the data array.
-    if (isset($context['request_method']) && $context['request_method'] == 'patch') {
-      foreach ($entity as $field_name => $field) {
-        $entity->set($field_name, NULL);
-      }
-    }
-
     // Remove links from data array.
     unset($data['_links']);
     // Get embedded resources and remove from data array.
@@ -177,6 +168,12 @@ class ContentEntityNormalizer extends NormalizerBase {
         $field_name = $field_ids['field_name'];
         $data[$field_name] = $field;
       }
+    }
+
+    // Special handling for PATCH: pass the names of the fields whose values
+    // should be merged.
+    if (isset($context['request_method']) && $context['request_method'] == 'patch') {
+      $entity->_restPatchFields = array_keys($data);
     }
 
     // Iterate through remaining items in data array. These should all

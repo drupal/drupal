@@ -134,22 +134,21 @@ class EntityResource extends ResourceBase {
     }
 
     // Overwrite the received properties.
-    foreach ($entity as $field_name => $field) {
-      if (isset($entity->{$field_name})) {
-        // It is not possible to set the language to NULL as it is automatically
-        // re-initialized. As it must not be empty, skip it if it is.
-        // @todo: Use the langcode entity key when available. See
-        //   https://drupal.org/node/2143729.
-        if ($field_name == 'langcode' && $field->isEmpty()) {
-          continue;
-        }
-        if ($field->isEmpty() && !$original_entity->get($field_name)->access('delete')) {
-          throw new AccessDeniedHttpException(String::format('Access denied on deleting field ', array('@field' => $field_name)));
-        }
-        $original_entity->set($field_name, $field->getValue());
-        if (!$original_entity->get($field_name)->access('update')) {
-          throw new AccessDeniedHttpException(String::format('Access denied on updating field ', array('@field' => $field_name)));
-        }
+    foreach ($entity->_restPatchFields as $field_name) {
+      $field = $entity->get($field_name);
+      // It is not possible to set the language to NULL as it is automatically
+      // re-initialized. As it must not be empty, skip it if it is.
+      // @todo: Use the langcode entity key when available. See
+      //   https://drupal.org/node/2143729.
+      if ($field_name == 'langcode' && $field->isEmpty()) {
+        continue;
+      }
+      if ($field->isEmpty() && !$original_entity->get($field_name)->access('delete')) {
+        throw new AccessDeniedHttpException(String::format('Access denied on deleting field @field.', array('@field' => $field_name)));
+      }
+      $original_entity->set($field_name, $field->getValue());
+      if (!$original_entity->get($field_name)->access('update')) {
+        throw new AccessDeniedHttpException(String::format('Access denied on updating field @field.', array('@field' => $field_name)));
       }
     }
 

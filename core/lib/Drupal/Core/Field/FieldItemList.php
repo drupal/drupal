@@ -125,7 +125,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    */
   public function setValue($values, $notify = TRUE) {
     if (!isset($values) || $values === array()) {
-      $this->list = $values;
+      $this->list = array();
     }
     else {
       // Support passing in only the value of the first item.

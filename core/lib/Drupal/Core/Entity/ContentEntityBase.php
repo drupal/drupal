@@ -802,21 +802,25 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
    * Implements the magic method for isset().
    */
   public function __isset($name) {
+    // "Official" Field API fields are always set.
     if ($this->hasField($name)) {
-      return $this->get($name)->getValue() !== NULL;
+      return TRUE;
     }
+    // For non-field properties, check the internal values.
     else {
       return isset($this->values[$name]);
     }
   }
 
   /**
-   * Implements the magic method for unset.
+   * Implements the magic method for unset().
    */
   public function __unset($name) {
+    // Unsetting a field means emptying it.
     if ($this->hasField($name)) {
-      $this->get($name)->setValue(NULL);
+      $this->get($name)->setValue(array());
     }
+    // For non-field properties, unset the internal value.
     else {
       unset($this->values[$name]);
     }

@@ -141,7 +141,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $this->assertEqual($new_user2->id(), $entity->user_id->target_id, format_string('%entity_type: Updated user id can be read.', array('%entity_type' => $entity_type)));
     $this->assertEqual($new_user2->getUsername(), $entity->user_id->entity->name->value, format_string('%entity_type: Updated username value can be read.', array('%entity_type' => $entity_type)));
 
-    // Try unsetting a field.
+    // Try unsetting a field property.
     $entity->name->value = NULL;
     $entity->user_id->target_id = NULL;
     $this->assertNull($entity->name->value, format_string('%entity_type: Name field is not set.', array('%entity_type' => $entity_type)));
@@ -199,25 +199,27 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $this->assertFalse(isset($entity->name[0]->value), format_string('%entity_type: Name is not set.', array('%entity_type' => $entity_type)));
     $this->assertFalse(isset($entity->name->value), format_string('%entity_type: Name is not set.', array('%entity_type' => $entity_type)));
 
-    $entity->name = array();
-    $this->assertTrue(isset($entity->name), 'Name field is set.');
-    $this->assertFalse(isset($entity->name[0]), 'Name field item is not set.');
-    $this->assertFalse(isset($entity->name[0]->value), 'First name item value is not set.');
-    $this->assertFalse(isset($entity->name->value), 'Name value is not set.');
-
-    $entity->name = NULL;
-    $this->assertFalse(isset($entity->name), 'Name field is not set.');
-    $this->assertFalse(isset($entity->name[0]), 'Name field item is not set.');
-    $this->assertFalse(isset($entity->name[0]->value), 'First name item value is not set.');
-    $this->assertFalse(isset($entity->name->value), 'Name value is not set.');
-
-    $entity->name->value = 'a value';
-    $this->assertTrue(isset($entity->name->value), format_string('%entity_type: Name is set.', array('%entity_type' => $entity_type)));
-    unset($entity->name);
-    $this->assertFalse(isset($entity->name), format_string('%entity_type: Name field is not set.', array('%entity_type' => $entity_type)));
-    $this->assertFalse(isset($entity->name[0]), format_string('%entity_type: Name field item is not set.', array('%entity_type' => $entity_type)));
-    $this->assertFalse(isset($entity->name[0]->value), format_string('%entity_type: Name is not set.', array('%entity_type' => $entity_type)));
-    $this->assertFalse(isset($entity->name->value), format_string('%entity_type: Name is not set.', array('%entity_type' => $entity_type)));
+    // Test emptying a field by assigning an empty value. NULL and array()
+    // behave the same.
+    foreach ([NULL, array(), 'unset'] as $empty) {
+      // Make sure a value is present
+      $entity->name->value = 'a value';
+      $this->assertTrue(isset($entity->name->value), format_string('%entity_type: Name is set.', array('%entity_type' => $entity_type)));
+      // Now, empty the field.
+      if ($empty === 'unset') {
+        unset($entity->name);
+      }
+      else {
+        $entity->name = $empty;
+      }
+      $this->assertTrue(isset($entity->name), format_string('%entity_type: Name field is set.', array('%entity_type' => $entity_type)));
+      $this->assertTrue($entity->name->isEmpty(), format_string('%entity_type: Name field is set.', array('%entity_type' => $entity_type)));
+      $this->assertIdentical(count($entity->name), 0, format_string('%entity_type: Name field contains no items.', array('%entity_type' => $entity_type)));
+      $this->assertIdentical($entity->name->getValue(), array(), format_string('%entity_type: Name field value is an empty array.', array('%entity_type' => $entity_type)));
+      $this->assertFalse(isset($entity->name[0]), format_string('%entity_type: Name field item is not set.', array('%entity_type' => $entity_type)));
+      $this->assertFalse(isset($entity->name[0]->value), format_string('%entity_type: First name item value is not set.', array('%entity_type' => $entity_type)));
+      $this->assertFalse(isset($entity->name->value), format_string('%entity_type: Name value is not set.', array('%entity_type' => $entity_type)));
+    }
 
     // Access the language field.
     $this->assertEqual($langcode, $entity->langcode->value, format_string('%entity_type: Language code can be read.', array('%entity_type' => $entity_type)));
@@ -300,18 +302,6 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $this->assertEqual(count($entity->name), 1, format_string('%entity_type: The empty item was removed.', array('%entity_type' => $entity_type)));
     $this->assertEqual($entity->name[0]->value, 'foo', format_string('%entity_type: The items were renumbered.', array('%entity_type' => $entity_type)));
     $this->assertEqual($entity->name[0]->getName(), 0, format_string('%entity_type: The deltas were updated in the items.', array('%entity_type' => $entity_type)));
-
-    // Test removing all list items by assigning an empty array.
-    $entity->name = array();
-    $this->assertIdentical(count($entity->name), 0, format_string('%entity_type: Name field contains no items.', array('%entity_type' => $entity_type)));
-    $this->assertIdentical($entity->name->getValue(), array(), format_string('%entity_type: Name field value is an empty array.', array('%entity_type' => $entity_type)));
-
-    $entity->name->value = 'foo';
-    $this->assertEqual($entity->name->value, 'foo', format_string('%entity_type: Name field set.', array('%entity_type' => $entity_type)));
-    // Test removing all list items by setting it to NULL.
-    $entity->name = NULL;
-    $this->assertIdentical(count($entity->name), 0, format_string('%entity_type: Name field contains no items.', array('%entity_type' => $entity_type)));
-    $this->assertNull($entity->name->getValue(), format_string('%entity_type: Name field value is an empty array.', array('%entity_type' => $entity_type)));
 
     // Test get and set field values.
     $entity->name = 'foo';

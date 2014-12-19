@@ -187,7 +187,7 @@ class QuickEditFieldForm extends FormBase {
 
     // @todo Refine automated log messages and abstract them to all entity
     //   types: http://drupal.org/node/1678002.
-    if ($entity->getEntityTypeId() == 'node' && $entity->isNewRevision() && !isset($entity->revision_log)) {
+    if ($entity->getEntityTypeId() == 'node' && $entity->isNewRevision() && $entity->revision_log->isEmpty()) {
       $entity->revision_log = t('Updated the %field-name field through in-place editing.', array('%field-name' => $entity->get($field_name)->getFieldDefinition()->getLabel()));
     }
 
