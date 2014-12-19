@@ -88,16 +88,26 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
       $query->condition($grants);
     }
 
-    // Node grants currently don't have any cacheability metadata. Hopefully, we
-    // can add that in the future, which would allow this access check result to
-    // be cacheable. For now, this must remain marked as uncacheable, even when
-    // it is theoretically cacheable, because we don't have the necessary meta-
-    // data to know it for a fact.
+    // Only the 'view' node grant can currently be cached; the others currently
+    // don't have any cacheability metadata. Hopefully, we can add that in the
+    // future, which would allow this access check result to be cacheable in all
+    // cases. For now, this must remain marked as uncacheable, even when it is
+    // theoretically cacheable, because we don't have the necessary metadata to
+    // know it for a fact.
+    $set_cacheability = function (AccessResult $access_result) use ($operation) {
+      if ($operation === 'view') {
+        return $access_result->addCacheContexts(['cache_context.node_view_grants']);
+      }
+      else {
+        return $access_result->setCacheable(FALSE);
+      }
+    };
+
     if ($query->execute()->fetchField()) {
-      return AccessResult::allowed()->setCacheable(FALSE);
+      return $set_cacheability(AccessResult::allowed());
     }
     else {
-      return AccessResult::forbidden()->setCacheable(FALSE);
+      return $set_cacheability(AccessResult::forbidden());
     }
   }
 

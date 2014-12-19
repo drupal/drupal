@@ -39,3 +39,8 @@ services:
     arguments: ['@current_route_match']
     tags:
       - { name: page_cache_response_policy }
+  cache_context.node_view_grants:
+    class: Drupal\node\Cache\NodeAccessViewGrantsCacheContext
+    arguments: ['@current_user']
+    tags:
+      - { name: cache.context }
