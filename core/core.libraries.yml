@@ -752,17 +752,21 @@ jquery.ui.widget:
 
 matchmedia:
   remote: https://github.com/paulirish/matchMedia.js
-  # @todo Contribute upstream and replace with upstream version.
-  # @see http://drupal.org/node/1815602
-  version: VERSION
-  license:
+  version: &matchmedia_version 0.2.0
+  license: &matchmedia_license
     name: MIT
-    url: https://github.com/paulirish/matchMedia.js/blob/0.1.0/LICENSE.txt
+    url: https://github.com/paulirish/matchMedia.js/blob/0.2.0/LICENSE.txt
     gpl-compatible: true
   js:
-    misc/matchmedia.js: {}
+    assets/vendor/matchMedia/matchMedia.min.js: { minified: true }
+
+matchmedia.addListener:
+  version: *matchmedia_version
+  license: *matchmedia_license
+  js:
+    assets/vendor/matchMedia/matchMedia.addListener.min.js: { minified: true }
   dependencies:
-    - core/drupal.debounce
+    - core/matchmedia
 
 modernizr:
   remote: https://github.com/Modernizr/Modernizr

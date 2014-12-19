@@ -25,6 +25,7 @@ toolbar:
     - core/drupal.announce
     - core/backbone
     - core/matchmedia
+    - core/matchmedia.addListener
     - core/jquery.once
     - core/drupal.displace
     - toolbar/toolbar.menu
