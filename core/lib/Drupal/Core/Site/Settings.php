@@ -54,6 +54,19 @@ final class Settings {
   }
 
   /**
+   * Protects creating with clone.
+   */
+  private function __clone() {
+  }
+
+  /**
+   * Prevents settings from being serialized.
+   */
+  public function __sleep() {
+    throw new \BadMethodCallException('Settings cannot be serialized.');
+  }
+
+  /**
    * Returns a setting.
    *
    * Settings can be set in settings.php in the $settings array and requested

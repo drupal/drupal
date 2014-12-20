@@ -107,4 +107,15 @@ class SettingsTest extends UnitTestCase {
    );
   }
 
+  /**
+   * Ensures settings cannot be serialized.
+   *
+   * @covers ::__sleep
+   *
+   * @expectedException \BadMethodCallException
+   */
+  public function testSerialize() {
+    serialize(new Settings([]));
+  }
+
 }
