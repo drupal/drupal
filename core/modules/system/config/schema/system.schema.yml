@@ -330,12 +330,11 @@ system.mail:
   label: 'Mail system'
   mapping:
     interface:
-      type: mapping
-      label: 'Interface'
-      mapping:
-        default:
-          type: string
-          label: 'Default'
+      type: sequence
+      label: 'Interfaces'
+      sequence:
+        - type: string
+          label: 'Interface'
 
 system.theme.global:
   type: theme_settings

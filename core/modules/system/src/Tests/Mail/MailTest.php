@@ -7,7 +7,9 @@
 
 namespace Drupal\system\Tests\Mail;
 
+use Drupal\Core\Mail\Plugin\Mail\TestMailCollector;
 use Drupal\simpletest\WebTestBase;
+use Drupal\system_mail_failure_test\Plugin\Mail\TestPhpMailFailure;
 
 /**
  * Performs tests on the pluggable mailing framework.
@@ -43,7 +45,17 @@ class MailTest extends WebTestBase {
 
     // Assert whether the default mail backend is an instance of the expected
     // class.
-    $this->assertTrue($mail_backend instanceof \Drupal\system_mail_failure_test\Plugin\Mail\TestPhpMailFailure, 'Pluggable mail system is extendable.');
+    $this->assertTrue($mail_backend instanceof TestPhpMailFailure, 'Default mail interface can be swapped.');
+
+    // Add a module-specific mail backend.
+    \Drupal::config('system.mail')->set('interface.mymodule_testkey', 'test_mail_collector')->save();
+
+    // Get the added MailInterface class instance.
+    $mail_backend = \Drupal::service('plugin.manager.mail')->getInstance(array('module' => 'mymodule', 'key' => 'testkey'));
+
+    // Assert whether the added mail backend is an instance of the expected
+    // class.
+    $this->assertTrue($mail_backend instanceof TestMailCollector, 'Additional mail interfaces can be added.');
   }
 
   /**
