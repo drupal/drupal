@@ -1,0 +1,10 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Drupal 8\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\\n"
+
+msgid "@site is currently under maintenance. We should be back shortly. Thank you for your patience."
+msgstr "Ons is tans besig met onderhoud op @site. Wees asseblief geduldig, ons sal binnekort weer terug wees."
