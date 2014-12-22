@@ -700,6 +700,9 @@ jquery.ui.spinner:
   license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.ui.spinner.js: {}
+  css:
+    component:
+      assets/vendor/jquery.ui/themes/base/jquery.ui.spinner.css: {}
   dependencies:
     - core/jquery.ui
     - core/jquery.ui.widget
