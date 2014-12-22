@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Core\Utility\HtmlTest.
+ * Contains \Drupal\Tests\Component\Utility\HtmlTest.
  */
 
-namespace Drupal\Tests\Core\Utility;
+namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Tests\UnitTestCase;
