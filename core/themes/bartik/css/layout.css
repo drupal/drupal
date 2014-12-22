@@ -230,3 +230,10 @@ body,
     width: 25%;
   }
 }
+/* ------------------- Main ------------------- */
+
+#main {
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+

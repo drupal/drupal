@@ -1,0 +1,107 @@
+/* --------------- Primary Menu ------------ */
+
+.region-primary-menu {
+  clear: both;
+}
+.region-primary-menu .menu {
+  font-size: 0.929em;
+  margin: 0 5px;
+  padding: 0;
+  text-align: left; /* LTR */
+}
+[dir="rtl"] .region-primary-menu .menu {
+  text-align: right;
+}
+.region-primary-menu .menu li {
+  float: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  height: auto;
+  width: 100%;
+}
+.region-primary-menu .menu a {
+  color: #333;
+  background: #ccc;
+  background: rgba(255, 255, 255, 0.7);
+  float: none;
+  display: block;
+  text-decoration: none;
+  text-shadow: 0 1px #eee;
+  border-radius: 8px;
+  margin: 4px 0;
+  padding: 0.9em 0 0.9em 10px; /* LTR */
+}
+[dir="rtl"] .region-primary-menu .menu a {
+  padding: 0.9em 10px 0.9em 0;
+}
+.region-primary-menu .menu a:hover,
+.region-primary-menu .menu a:focus {
+  background: #f6f6f2;
+  background: rgba(255, 255, 255, 0.95);
+}
+.region-primary-menu .menu a:active {
+  background: #b3b3b3;
+  background: rgba(255, 255, 255, 1);
+}
+.region-primary-menu .menu li a.active {
+  border-bottom: none;
+}
+
+/* ---------- Primary Menu Toggle ----------- */
+/* Hide the toggle by default. */
+.menu-toggle,
+.menu-toggle-target {
+  display: none;
+}
+/* Unhide it for the primary menu. */
+.region-primary-menu .menu-toggle-target {
+  display: inherit;
+  position: fixed;
+  top: 0;
+}
+.region-primary-menu .menu-toggle {
+  display: none;
+}
+body:not(:target) .region-primary-menu .menu-toggle {
+  color: #333;
+  background: #ccc;
+  background: rgba(255, 255, 255, 0.7);
+  float: none;
+  font-size: 0.929em;
+  display: block;
+  text-decoration: none;
+  text-shadow: 0 1px #eee;
+  padding: 0.9em 10px 0.9em 10px;
+  z-index: 1000;
+}
+body:not(:target) .region-primary-menu .menu-toggle:after {
+  content:"";
+  background: url(../../../../misc/icons/ffffff/hamburger.svg) no-repeat;
+  background-size: contain;
+  width: 22px;
+  height: 22px;
+  display: inline-block;
+  position: absolute;
+  right: 10px; /* LTR */
+}
+[dir="rtl"] body:not(:target) .region-primary-menu .menu-toggle:after {
+  right: initial;
+  left: 10px;
+}
+body:not(:target) .region-primary-menu .menu-toggle-target-show:target ~ .menu-toggle,
+body:not(:target) .region-primary-menu .menu-toggle--hide {
+  display: none;
+}
+body:not(:target) .region-primary-menu .menu-toggle-target-show:target ~ .menu-toggle--hide {
+  display: block;
+}
+
+body:not(:target) .region-primary-menu .menu li {
+  height: 0;
+  overflow: hidden;
+}
+body:not(:target) .region-primary-menu .menu-toggle-target-show:target ~ .menu li {
+  height: auto;
+  overflow: visible;
+}

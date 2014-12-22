@@ -2,8 +2,46 @@ global-styling:
   version: VERSION
   css:
     theme:
+      css/base/elements.css: {}
+      css/base/typography.css: {}
       css/layout.css: {}
-      css/style.css: {}
+      css/components/admin.css: {}
+      css/components/book.css: {}
+      css/components/breadcrumb.css: {}
+      css/components/captions.css: {}
+      css/components/comments.css: {}
+      css/components/content.css: {}
+      css/components/contextual.css: {}
+      # @see https://www.drupal.org/node/2389735
+      css/components/dropbutton.component.css: {}
+      css/components/featured.css: {}
+      css/components/footer.css: {}
+      css/components/form.css: {}
+      css/components/forum.css: {}
+      css/components/header.css: {}
+      css/components/help.css: {}
+      css/components/highlighted.css: {}
+      css/components/list.css: {}
+      css/components/messages.css: {}
+      css/components/node-preview.css: {}
+      css/components/pager.css: {}
+      css/components/primary-menu.css: {}
+      css/components/search.css: {}
+      css/components/search-results.css: {}
+      css/components/secondary-menu.css: {}
+      css/components/shortcut.css: {}
+      css/components/skip-link.css: {}
+      css/components/sidebar.css: {}
+      css/components/table.css: {}
+      css/components/tabs.css: {}
+      css/components/tips.css: {}
+      css/components/triptych.css: {}
+      css/components/user.css: {}
+      # @see https://www.drupal.org/node/2389735
+      css/components/vertical-tabs.component.css: {}
+      css/components/views.css: {}
+      css/components/buttons.css: {}
+      css/components/media.css: {}
       css/colors.css: {}
       css/print.css: { media: print }
 
@@ -21,7 +59,7 @@ maintenance_page:
   version: VERSION
   css:
     theme:
-      css/maintenance-page.css: {}
+      css/theme/maintenance-page.css: {}
   dependencies:
     - system/maintenance
     - bartik/global-styling

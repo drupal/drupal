@@ -91,16 +91,16 @@ class CssCollectionGrouperUnitTest extends UnitTestCase {
         'browsers' => array('IE' => TRUE, '!IE' => TRUE),
         'basename' => 'external.css',
       ),
-      'style.css' => array(
+      'elements.css' => array(
         'group' => 100,
         'every_page' => TRUE,
         'media' => 'all',
         'type' => 'file',
         'weight' => 0.001,
         'preprocess' => TRUE,
-        'data' => 'core/themes/bartik/css/style.css',
+        'data' => 'core/themes/bartik/css/base/elements.css',
         'browsers' => array('IE' => TRUE, '!IE' => TRUE),
-        'basename' => 'style.css',
+        'basename' => 'elements.css',
       ),
       'print.css' => array(
         'group' => 100,
@@ -163,7 +163,7 @@ class CssCollectionGrouperUnitTest extends UnitTestCase {
     $this->assertSame($groups[4]['media'], 'all');
     $this->assertSame($groups[4]['preprocess'], TRUE);
     $this->assertSame(count($groups[4]['items']), 1);
-    $this->assertContains($css_assets['style.css'], $groups[4]['items']);
+    $this->assertContains($css_assets['elements.css'], $groups[4]['items']);
 
     // Check group 6.
     $this->assertSame($groups[5]['group'], 100);

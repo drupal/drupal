@@ -1,0 +1,67 @@
+/* ------------------ List Styles ------------------ */
+
+.block ol,
+.block ul {
+  margin: 0;
+  padding: 0 0 0.25em 1em; /* LTR */
+}
+[dir="rtl"] .block ol,
+[dir="rtl"] .block ul {
+  padding: 0 1em 0.25em 0;
+  /* This is required to win over specifity of [dir="rtl"] ul.menu */
+  margin-right: 0;
+}
+.contextual-region .contextual .contextual-links a {
+  font-size: 0.923em;
+  text-shadow: 0 0 0 !important;
+}
+.pager .pager__items {
+  padding: 0;
+}
+.pager__item {
+  font-size: 0.929em;
+  padding: 10px 15px;
+}
+.pager__item a {
+  display: inline-block;
+}
+.pager__item.is-active a {
+  color: #3B3B3B;
+  border-bottom: 0;
+}
+.pager__item--first,
+.pager__item--previous {
+  padding: 10px 10px 10px 0;
+}
+.pager__item--ellipsis {
+  padding: 10px 0;
+}
+.pager__item--last,
+.pager__item--next {
+  padding: 10px 0 10px 10px;
+}
+ul.menu li {
+  margin: 0;
+}
+.region-content ul,
+.region-content ol {
+  margin: 1em 0;
+  padding: 0 0 0.25em 15px; /* LTR */
+}
+[dir="rtl"] .region-content ul,
+[dir="rtl"] .region-content ol {
+  padding: 0 15px 0.25em 0;
+}
+.item-list ul li {
+  margin: 0;
+  padding: 0.2em 0.5em 0 0; /* LTR */
+}
+[dir="rtl"] .item-list ul li {
+  padding: 0.2em 0 0 0.5em;
+}
+ul.tips {
+  padding: 0 0 0 1.25em; /* LTR */
+}
+[dir="rtl"] ul.tips {
+  padding: 0 1.25em 0 0;
+}

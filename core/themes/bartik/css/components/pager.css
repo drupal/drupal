@@ -1,0 +1,27 @@
+/* --------------- Pager ------------ */
+
+.pager .pager__items {
+  padding: 0;
+}
+.pager__item {
+  font-size: 0.929em;
+  padding: 10px 15px;
+}
+.pager__item a {
+  display: inline-block;
+}
+.pager__item.is-active a {
+  color: #3B3B3B;
+  border-bottom: 0;
+}
+.pager__item--first,
+.pager__item--previous {
+  padding: 10px 10px 10px 0;
+}
+.pager__item--ellipsis {
+  padding: 10px 0;
+}
+.pager__item--last,
+.pager__item--next {
+  padding: 10px 0 10px 10px;
+}

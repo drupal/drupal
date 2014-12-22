@@ -1,0 +1,5 @@
+/* Vertical Tabs Reset */
+ul.vertical-tabs-list {
+  margin: -1px 0 -1px -15em;
+  padding: 0;
+}

@@ -1,0 +1,15 @@
+/* -------------- Shortcut Links -------------- */
+
+.shortcut-wrapper {
+  margin: 2.2em 0 1.1em 0; /* Same as usual h1#page-title margin. */
+}
+.shortcut-wrapper h1#page-title {
+  float: left; /* LTR */
+  margin: 0;
+}
+[dir="rtl"] .shortcut-wrapper h1#page-title {
+  float: right;
+}
+div.add-or-remove-shortcuts {
+  padding-top: 0.9em;
+}

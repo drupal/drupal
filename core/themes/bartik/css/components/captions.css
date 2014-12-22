@@ -1,0 +1,31 @@
+/* -------------- Captions -------------- */
+.caption {
+  margin-bottom: 1.2em;
+}
+.caption > * {
+  background: #F3F3F3;
+  padding: 0.5ex;
+  border: 1px solid #CCC;
+}
+.caption > figcaption {
+  border: 1px solid #CCC;
+  border-top: none;
+  padding-top: 0.5ex;
+  font-size: small;
+  text-align: center;
+}
+
+/* Override Bartik's default blockquote and pre styles when captioned. */
+.caption-pre > pre,
+.caption-blockquote > blockquote {
+  margin: 0;
+}
+.caption-blockquote > figcaption::before {
+  content: "— ";
+}
+.caption-blockquote > figcaption {
+  text-align: left;
+}
+[dir="rtl"] .caption-blockquote > figcaption {
+  text-align: right;
+}

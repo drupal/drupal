@@ -1,0 +1,117 @@
+/* ---------- Overall Specifications ---------- */
+
+body {
+  line-height: 1.5;
+  font-size: 87.5%;
+  word-wrap: break-word;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+a {
+  text-decoration: none;
+  border-bottom: 1px dotted;
+}
+a:hover,
+a:active,
+a:focus,
+.link:hover,
+.link:active,
+.link:focus {
+  text-decoration: none;
+  border-bottom-style: solid;
+}
+.field-type-image a,
+h1 a,
+h2 a,
+[role*=banner] a,
+.feed-icon,
+.contextual-links a,
+.toolbar a {
+  border-bottom: none !important;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 1.0em 0 0.5em;
+  font-weight: inherit;
+}
+h1 {
+  font-size: 1.357em;
+  color: #000;
+}
+h2 {
+  font-size: 1.143em;
+}
+h3 {
+  font-size: 1.092em;
+}
+h4 {
+  font-size: 1.05em;
+}
+h5 {
+  font-size: 0.889em;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+h6 {
+  font-size: 0.67em;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+p {
+  margin: 0 0 1.2em;
+}
+del {
+  text-decoration: line-through;
+}
+
+/* ------------------ Reset Styles ------------------ */
+
+blockquote {
+  background: #f7f7f7;
+  border-left: 1px solid #bbb;
+  font-style: italic;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+}
+[dir="rtl"] blockquote {
+  border-left: none;
+  border-right: 4px solid #afafaf;
+}
+blockquote:before {
+  color: #bbb;
+  content: "\201C";
+  font-size: 3em;
+  line-height: 0.1em;
+  margin-right: 0.2em;
+  vertical-align: -.4em;
+}
+[dir="rtl"] blockquote:before {
+  content: "\201D";
+}
+blockquote:after {
+  color: #bbb;
+  content: "\201D";
+  font-size: 3em;
+  line-height: 0.1em;
+  vertical-align: -.45em;
+}
+[dir="rtl"] blockquote:after {
+  content: "\201C";
+}
+blockquote > p:first-child {
+  display: inline;
+}
+a.feed-icon {
+  display: inline-block;
+  padding: 15px 0 0 0;
+}
+img {
+  max-width: 100%;
+  height: auto;
+  border: 0;
+}

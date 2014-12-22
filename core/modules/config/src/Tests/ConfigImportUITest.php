@@ -102,20 +102,20 @@ class ConfigImportUITest extends WebTestBase {
 
     // Verify that both appear as ready to import.
     $this->drupalGet('admin/config/development/configuration');
-    $this->assertText($name);
-    $this->assertText($dynamic_name);
-    $this->assertText('core.extension');
-    $this->assertText('system.theme');
-    $this->assertText('action.settings');
+    $this->assertRaw('<td>' . $name);
+    $this->assertRaw('<td>' . $dynamic_name);
+    $this->assertRaw('<td>core.extension');
+    $this->assertRaw('<td>system.theme');
+    $this->assertRaw('<td>action.settings');
     $this->assertFieldById('edit-submit', t('Import all'));
 
     // Import and verify that both do not appear anymore.
     $this->drupalPostForm(NULL, array(), t('Import all'));
-    $this->assertNoText($name);
-    $this->assertNoText($dynamic_name);
-    $this->assertNoText('core.extension');
-    $this->assertNoText('system.theme');
-    $this->assertNoText('action.settings');
+    $this->assertNoRaw('<td>' . $name);
+    $this->assertNoRaw('<td>' . $dynamic_name);
+    $this->assertNoRaw('<td>core.extension');
+    $this->assertNoRaw('<td>system.theme');
+    $this->assertNoRaw('<td>action.settings');
 
     $this->assertNoFieldById('edit-submit', t('Import all'));
 
@@ -177,15 +177,15 @@ class ConfigImportUITest extends WebTestBase {
 
     // Verify that both appear as ready to import.
     $this->drupalGet('admin/config/development/configuration');
-    $this->assertText('core.extension');
-    $this->assertText('system.theme');
-    $this->assertText('action.settings');
+    $this->assertRaw('<td>core.extension');
+    $this->assertRaw('<td>system.theme');
+    $this->assertRaw('<td>action.settings');
 
     // Import and verify that both do not appear anymore.
     $this->drupalPostForm(NULL, array(), t('Import all'));
-    $this->assertNoText('core.extension');
-    $this->assertNoText('system.theme');
-    $this->assertNoText('action.settings');
+    $this->assertNoRaw('<td>core.extension');
+    $this->assertNoRaw('<td>system.theme');
+    $this->assertNoRaw('<td>action.settings');
 
     $this->rebuildContainer();
     $this->assertFalse(\Drupal::moduleHandler()->moduleExists('ban'), 'Ban module uninstalled during import.');
