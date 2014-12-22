@@ -309,6 +309,6 @@ interface ModuleHandlerInterface {
    * @return string
    *   Returns the human readable name of the module.
    */
-  public function getName($theme);
+  public function getName($module);
 
 }
