@@ -136,7 +136,7 @@ abstract class CachePluginBase extends PluginBase {
         break;
       case 'results':
         $data = array(
-          'result' => $this->view->result,
+          'result' => $this->prepareViewResult($this->view->result),
           'total_rows' => isset($this->view->total_rows) ? $this->view->total_rows : 0,
           'current_page' => $this->view->getCurrentPage(),
         );
@@ -167,6 +167,8 @@ abstract class CachePluginBase extends PluginBase {
         if ($cache = \Drupal::cache($this->resultsBin)->get($this->generateResultsKey())) {
           if (!$cutoff || $cache->created > $cutoff) {
             $this->view->result = $cache->data['result'];
+            // Load entities for each result.
+            $this->view->query->loadEntities($this->view->result);
             $this->view->total_rows = $cache->data['total_rows'];
             $this->view->setCurrentPage($cache->data['current_page']);
             $this->view->execute_time = 0;
@@ -338,6 +340,29 @@ abstract class CachePluginBase extends PluginBase {
     }
 
     return $tags;
+  }
+
+  /**
+   * Prepares the view result before putting it into cache.
+   *
+   * @param \Drupal\views\ResultRow[] $result
+   *   The result containing loaded entities.
+   *
+   * @return \Drupal\views\ResultRow[] $result
+   *   The result without loaded entities.
+   */
+  protected function prepareViewResult(array $result) {
+    $return = [];
+
+    // Clone each row object and remove any loaded entities, to keep the
+    // original result rows intact.
+    foreach ($result as $key => $row) {
+      $clone = clone $row;
+      $clone->resetEntityData();
+      $return[$key] = $clone;
+    }
+
+    return $return;
   }
 
   /**

@@ -23,7 +23,7 @@ class CacheTest extends PluginTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_view', 'test_cache', 'test_groupwise_term_ui');
+  public static $testViews = array('test_view', 'test_cache', 'test_groupwise_term_ui', 'test_display');
 
   /**
    * Modules to enable.
@@ -166,7 +166,41 @@ class CacheTest extends PluginTestBase {
     $cid = 'views_relationship_groupwise_max:test_groupwise_term_ui:default:tid_representative';
     $cache = \Drupal::cache('data')->get($cid);
     $this->assertEqual($cid, $cache->cid, 'Subquery String cached as expected.');
+  }
 
+  /**
+   * Tests the data contained in cached items.
+   */
+  public function testCacheData() {
+    for ($i = 1; $i <= 5; $i++) {
+      $this->drupalCreateNode();
+    }
+
+    $view = Views::getView('test_display');
+    $view->setDisplay();
+    $view->display_handler->overrideOption('cache', array(
+      'type' => 'time',
+      'options' => array(
+        'results_lifespan' => '3600',
+        'output_lifespan' => '3600'
+      )
+    ));
+    $this->executeView($view);
+
+    // Get the cache item.
+    $cid = $view->display_handler->getPlugin('cache')->generateResultsKey();
+    $cache = \Drupal::cache('data')->get($cid);
+
+    // Assert there are results, empty results would mean this test case would
+    // pass otherwise.
+    $this->assertTrue(count($cache->data['result']), 'Results saved in cached data.');
+
+    // Assert each row doesn't contain '_entity' or '_relationship_entities'
+    // items.
+    foreach ($cache->data['result'] as $row) {
+      $this->assertIdentical($row->_entity, NULL, 'Cached row "_entity" property is NULL');
+      $this->assertIdentical($row->_relationship_entities, [], 'Cached row "_relationship_entities" property is empty');
+    }
   }
 
 }
