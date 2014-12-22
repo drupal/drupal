@@ -1172,46 +1172,6 @@ function drupal_clear_css_cache() {
 }
 
 /**
- * Prepares a string for use as a CSS identifier (element, class, or ID name).
- *
- * http://www.w3.org/TR/CSS21/syndata.html#characters shows the syntax for valid
- * CSS identifiers (including element names, classes, and IDs in selectors.)
- *
- * @param $identifier
- *   The identifier to clean.
- * @param $filter
- *   An array of string replacements to use on the identifier.
- *
- * @return
- *   The cleaned identifier.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
- *   Use \Drupal\Component\Utility\Html::cleanCssIdentifier()
- */
-function drupal_clean_css_identifier($identifier, $filter = array(' ' => '-', '_' => '-', '__' => '__', '/' => '-', '[' => '-', ']' => '')) {
-  return Html::cleanCssIdentifier($identifier, $filter);
-}
-
-/**
- * Prepares a string for use as a valid class name.
- *
- * Do not pass one string containing multiple classes as they will be
- * incorrectly concatenated with dashes, i.e. "one two" will become "one-two".
- *
- * @param $class
- *   The class name to clean.
- *
- * @return
- *   The cleaned class name.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
- *   Use \Drupal\Component\Utility\Html::getClass()
- */
-function drupal_html_class($class) {
-  return Html::getClass($class);
-}
-
-/**
  * Prepares a string for use as a valid HTML ID and guarantees uniqueness.
  *
  * This function ensures that each passed HTML ID value only exists once on the
