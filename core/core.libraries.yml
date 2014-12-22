@@ -324,13 +324,13 @@ jquery:
 
 jquery.cookie:
   remote: https://github.com/carhartl/jquery-cookie
-  version: v1.4.0
+  version: v1.4.1
   license:
     name: MIT
-    url: https://github.com/carhartl/jquery-cookie/blob/v1.4.0/MIT-LICENSE.txt
+    url: https://github.com/carhartl/jquery-cookie/blob/v1.4.1/MIT-LICENSE.txt
     gpl-compatible: true
   js:
-    assets/vendor/jquery.cookie/jquery.cookie.js: {}
+    assets/vendor/jquery.cookie/jquery.cookie.min.js: { minified: true }
   dependencies:
     - core/jquery
 
