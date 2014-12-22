@@ -759,28 +759,8 @@
  * \Drupal\Core\CoreServiceProvider class, but this is less common for modules.
  *
  * @section sec_tags Service tags
- * Some services have tags, which are defined in the service definition. Tags
- * are used to define a group of related services, or to specify some aspect of
- * how the service behaves. Typically, if you tag a service, your service class
- * must also implement a corresponding interface. Some common examples:
- * - access_check: Indicates a route access checking service; see the
- *   @link menu Menu and routing system topic @endlink for more information.
- * - cache.bin: Indicates a cache bin service; see the
- *   @link cache Cache topic @endlink for more information.
- * - event_subscriber: Indicates an event subscriber service. Event subscribers
- *   can be used for dynamic routing and route altering; see the
- *   @link menu Menu and routing system topic @endlink for more information.
- *   They can also be used for other purposes; see
- *   http://symfony.com/doc/current/cookbook/doctrine/event_listeners_subscribers.html
- *   for more information.
- * - needs_destruction: Indicates that a destruct() method needs to be called
- *   at the end of a request to finalize operations, if this service was
- *   instantiated.
- *
- * Creating a tag for a service does not do anything on its own, but tags
- * can be discovered or queried in a compiler pass when the container is built,
- * and a corresponding action can be taken. See
- * \Drupal\Core\CoreServiceProvider::register() for an example.
+ * Some services have tags, which are defined in the service definition. See
+ * @link service_tag Service Tags @endlink for usage.
  *
  * @section sec_injection Overriding the default service class
  * Modules can override the default classes used for services. Here are the
@@ -1796,4 +1776,39 @@ function hook_display_variant_plugin_alter(array &$definitions) {
 
 /**
  * @} End of "defgroup ajax".
+ */
+
+/**
+ * @defgroup service_tag Service Tags
+ * @{
+ * Service tags overview
+ *
+ * Some services have tags, which are defined in the service definition. Tags
+ * are used to define a group of related services, or to specify some aspect of
+ * how the service behaves. Typically, if you tag a service, your service class
+ * must also implement a corresponding interface. Some common examples:
+ * - access_check: Indicates a route access checking service; see the
+ *   @link menu Menu and routing system topic @endlink for more information.
+ * - cache.bin: Indicates a cache bin service; see the
+ *   @link cache Cache topic @endlink for more information.
+ * - event_subscriber: Indicates an event subscriber service. Event subscribers
+ *   can be used for dynamic routing and route altering; see the
+ *   @link menu Menu and routing system topic @endlink for more information.
+ *   They can also be used for other purposes; see
+ *   http://symfony.com/doc/current/cookbook/doctrine/event_listeners_subscribers.html
+ *   for more information.
+ * - needs_destruction: Indicates that a destruct() method needs to be called
+ *   at the end of a request to finalize operations, if this service was
+ *   instantiated.
+ *
+ * Creating a tag for a service does not do anything on its own, but tags
+ * can be discovered or queried in a compiler pass when the container is built,
+ * and a corresponding action can be taken. See
+ * \Drupal\Core\Render\MainContent\MainContentRenderersPass for an example of
+ * finding tagged services.
+ *
+ * See @link container Services and Dependency Injection Container @endlink for
+ * information on services and the dependency injection container.
+ *
+ * @}
  */
