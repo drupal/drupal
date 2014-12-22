@@ -32,8 +32,8 @@ class LibraryDiscovery implements LibraryDiscoveryInterface {
   /**
    * The final library definitions, statically cached.
    *
-   * hook_library_alter() allows modules and themes to dynamically alter a
-   * library definition (once per request).
+   * hook_library_info_alter() and hook_js_settings_alter() allows modules
+   * and themes to dynamically alter a library definition (once per request).
    *
    * @var array
    */

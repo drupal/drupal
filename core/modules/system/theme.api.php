@@ -788,39 +788,6 @@ function hook_library_info_alter(&$libraries, $module) {
 }
 
 /**
- * Alters a JavaScript/CSS library before it is attached.
- *
- * Allows modules and themes to dynamically attach further assets to a library
- * when it is added to the page; e.g., to add JavaScript settings.
- *
- * This hook is only invoked once per library and page.
- *
- * @param array $library
- *   The JavaScript/CSS library that is being added.
- * @param string $name
- *   The name of the library.
- *
- * @see _drupal_add_library()
- *
- * @deprecated in Drupal 8.0.x, will be removed before Drupal 8.0.0
- *   Use hook_library_info_alter() and hook_js_settings_alter().
- */
-function hook_library_alter(array &$library, $name) {
-  if ($name == 'core/jquery.ui.datepicker') {
-    // Note: If the added assets do not depend on additional request-specific
-    // data supplied here, consider to statically register it directly via
-    // hook_library_info_alter() already.
-    $library['dependencies'][] = 'locale/drupal.locale.datepicker';
-
-    $language_interface = \Drupal::languageManager()->getCurrentLanguage();
-    $library['drupalSettings']['jquery']['ui']['datepicker'] = array(
-      'isRTL' => $language_interface->getDirection() == LanguageInterface::DIRECTION_RTL,
-      'firstDay' => \Drupal::config('system.date')->get('first_day'),
-    );
-  }
-}
-
-/**
  * Alter CSS files before they are output on the page.
  *
  * @param $css
