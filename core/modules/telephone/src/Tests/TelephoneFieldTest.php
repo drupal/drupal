@@ -27,15 +27,19 @@ class TelephoneFieldTest extends WebTestBase {
     'telephone'
   );
 
-  protected $field;
-  protected $web_user;
+  /**
+   * A user with permission to create articles.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $webUser;
 
   protected function setUp() {
     parent::setUp();
 
     $this->drupalCreateContentType(array('type' => 'article'));
-    $this->article_creator = $this->drupalCreateUser(array('create article content', 'edit own article content'));
-    $this->drupalLogin($this->article_creator);
+    $this->webUser = $this->drupalCreateUser(array('create article content', 'edit own article content'));
+    $this->drupalLogin($this->webUser);
   }
 
   // Test fields.
