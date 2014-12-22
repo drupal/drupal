@@ -215,7 +215,7 @@ function editor_form_filter_admin_format_submit($form, FormStateInterface $form_
   // Delete the existing editor if disabling or switching between editors.
   $format_id = $form_state->getFormObject()->getEntity()->id();
   $original_editor = editor_load($format_id);
-  if ($original_editor && $original_editor->getEditor() != $form_state->getValue('editor')) {
+  if ($original_editor && $original_editor->getEditor() != $form_state->getValue(array('editor', 'editor'))) {
     $original_editor->delete();
   }
 

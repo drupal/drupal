@@ -72,12 +72,23 @@ class ConfigCRUDTest extends KernelTestBase {
     $this->assertIdentical($new_config->get(), $config->get());
     $this->assertIdentical($config->isNew(), FALSE);
 
+    // Pollute the config factory static cache.
+    $this->container->get('config.factory')->setOverrideState(FALSE);
+    \Drupal::config($name);
+    $this->container->get('config.factory')->setOverrideState(TRUE);
+
     // Delete the configuration object.
     $config->delete();
 
     // Verify the configuration object is empty.
     $this->assertIdentical($config->get(), array());
     $this->assertIdentical($config->isNew(), TRUE);
+
+    // Verify that all copies of the configuration has been removed from the
+    // static cache.
+    $this->container->get('config.factory')->setOverrideState(FALSE);
+    $this->assertIdentical(\Drupal::config($name)->isNew(), TRUE);
+    $this->container->get('config.factory')->setOverrideState(TRUE);
 
     // Verify the active configuration contains no value.
     $actual_data = $storage->read($name);
