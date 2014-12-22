@@ -114,12 +114,7 @@ class EntityRow extends RowPluginBase {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-
     $options['view_mode'] = array('default' => 'default');
-    // @todo Make the current language renderer the default as soon as we have a
-    //   translation language filter. See https://drupal.org/node/2161845.
-    $options['rendering_language'] = array('default' => 'translation_language_renderer');
-
     return $options;
   }
 
@@ -134,30 +129,6 @@ class EntityRow extends RowPluginBase {
       '#options' => \Drupal::entityManager()->getViewModeOptions($this->entityTypeId),
       '#title' => $this->t('View mode'),
       '#default_value' => $this->options['view_mode'],
-    );
-
-    $options = $this->buildRenderingLanguageOptions();
-    $form['rendering_language'] = array(
-      '#type' => 'select',
-      '#options' => $options,
-      '#title' => $this->t('Rendering language'),
-      '#default_value' => $this->options['rendering_language'],
-      '#access' => $this->languageManager->isMultilingual(),
-    );
-  }
-
-  /**
-   * Returns the available rendering strategies for language-aware entities.
-   *
-   * @return array
-   *   An array of available entity row renderers keyed by renderer identifiers.
-   */
-  protected function buildRenderingLanguageOptions() {
-    // @todo Consider making these plugins. See https://drupal.org/node/2173811.
-    return array(
-      'current_language_renderer' => $this->t('Current language'),
-      'default_language_renderer' => $this->t('Default language'),
-      'translation_language_renderer' => $this->t('Translation language'),
     );
   }
 
@@ -182,7 +153,7 @@ class EntityRow extends RowPluginBase {
    */
   protected function getRenderer() {
     if (!isset($this->renderer)) {
-      $class = '\Drupal\views\Entity\Render\\' . Container::camelize($this->options['rendering_language']);
+      $class = '\Drupal\views\Entity\Render\\' . Container::camelize($this->displayHandler->getOption('rendering_language'));
       $this->renderer = new $class($this->view, $this->languageManager, $this->entityType);
     }
     return $this->renderer;

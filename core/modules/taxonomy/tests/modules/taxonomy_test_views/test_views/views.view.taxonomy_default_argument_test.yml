@@ -77,7 +77,6 @@ display:
         options:
           relationship: none
           view_mode: default
-          rendering_language: translation_language_renderer
       fields:
         name:
           id: name
@@ -164,3 +163,4 @@ display:
           entity_field: tid
       field_langcode: '***LANGUAGE_site_default***'
       field_langcode_add_to_query: null
+      rendering_language: translation_language_renderer

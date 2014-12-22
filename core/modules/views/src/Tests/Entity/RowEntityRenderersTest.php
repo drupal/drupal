@@ -155,8 +155,7 @@ class RowEntityRenderersTest extends ViewUnitTestBase {
    */
   protected function assertTranslations($renderer_id, array $expected, $message = '', $group = 'Other') {
     $view = Views::getView('test_entity_row_renderers');
-    $row_plugin = $view->getDisplay()->getPlugin('row');
-    $row_plugin->options['rendering_language'] = $renderer_id;
+    $view->getDisplay()->setOption('rendering_language', $renderer_id);
     $view->preview();
 
     $result = TRUE;

@@ -251,7 +251,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
     // Enable the translation language renderer.
     $view = \Drupal::entityManager()->getStorage('view')->load('frontpage');
     $display = &$view->getDisplay('default');
-    $display['display_options']['row']['options']['rendering_language'] = 'translation_language_renderer';
+    $display['display_options']['rendering_language'] = 'translation_language_renderer';
     $view->save();
 
     // Need to check from the beginning, including the base_path, in the url

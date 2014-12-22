@@ -601,6 +601,9 @@ abstract class DisplayPluginBase extends PluginBase {
       'field_langcode_add_to_query' => array(
         'default' => TRUE,
       ),
+      'rendering_language' => array(
+        'default' => 'translation_language_renderer',
+      ),
 
       // These types are all plugins that can have individual settings
       // and therefore need special handling.
@@ -1105,6 +1108,10 @@ abstract class DisplayPluginBase extends PluginBase {
         'title' => $this->t('Pager'),
         'column' => 'second',
       ),
+      'language' => array(
+        'title' => $this->t('Language'),
+        'column' => 'second',
+      ),
       'exposed' => array(
         'title' => $this->t('Exposed form'),
         'column' => 'third',
@@ -1267,14 +1274,21 @@ abstract class DisplayPluginBase extends PluginBase {
       'desc' => $this->t('Allow to set some advanced settings for the query plugin'),
     );
 
-    $language_options = $this->listLanguages(LanguageInterface::STATE_ALL | LanguageInterface::STATE_SITE_DEFAULT | PluginBase::INCLUDE_NEGOTIATED);
-
-    $options['field_langcode'] = array(
-      'category' => 'other',
-      'title' => $this->t('Field Language'),
-      'value' => $language_options[$this->getOption('field_langcode')],
-      'desc' => $this->t('All fields that support translations will be displayed in the selected language.'),
-    );
+    if (\Drupal::languageManager()->isMultilingual() && $this->isBaseTableTranslatable()) {
+      $rendering_language_options = $this->buildRenderingLanguageOptions();
+      $options['rendering_language'] = array(
+        'category' => 'language',
+        'title' => $this->t('Entity Language'),
+        'value' => $rendering_language_options[$this->getOption('rendering_language')],
+      );
+      $language_options = $this->listLanguages(LanguageInterface::STATE_ALL | LanguageInterface::STATE_SITE_DEFAULT | PluginBase::INCLUDE_NEGOTIATED);
+      $options['field_langcode'] = array(
+        'category' => 'language',
+        'title' => $this->t('Field Language'),
+        'value' => $language_options[$this->getOption('field_langcode')],
+        'desc' => $this->t('All fields that support translations will be displayed in the selected language.'),
+      );
+    }
 
     $access_plugin = $this->getPlugin('access');
     if (!$access_plugin) {
@@ -1624,18 +1638,7 @@ abstract class DisplayPluginBase extends PluginBase {
         break;
       case 'field_langcode':
         $form['#title'] .= $this->t('Field Language');
-
-        $translatable_entity_tables = array();
-        foreach (\Drupal::entityManager()->getDefinitions() as $entity_type) {
-          if ($entity_type->isTranslatable() && $base_table = $entity_type->getBaseTable()) {
-            $translatable_entity_tables[] = $base_table;
-          }
-        }
-
-        // Doesn't make sense to show a field setting here if we aren't querying
-        // an entity base table. Also, we make sure that there's at least one
-        // entity type with a translation handler attached.
-        if (in_array($this->view->storage->get('base_table'), $translatable_entity_tables)) {
+        if ($this->isBaseTableTranslatable()) {
           $languages = $this->listLanguages(LanguageInterface::STATE_ALL | LanguageInterface::STATE_SITE_DEFAULT | PluginBase::INCLUDE_NEGOTIATED);
 
           $form['field_langcode'] = array(
@@ -1653,6 +1656,21 @@ abstract class DisplayPluginBase extends PluginBase {
         }
         else {
           $form['field_language']['#markup'] = $this->t("You don't have translatable entity types.");
+        }
+        break;
+      case 'rendering_language':
+        $form['#title'] .= $this->t('Entity Language');
+        if ($this->isBaseTableTranslatable()) {
+          $options = $this->buildRenderingLanguageOptions();
+          $form['rendering_language'] = array(
+            '#type' => 'select',
+            '#options' => $options,
+            '#title' => $this->t('Entity language'),
+            '#default_value' => $this->getOption('rendering_language'),
+          );
+        }
+        else {
+          $form['rendering_language']['#markup'] = $this->t("You don't have translatable entity types.");
         }
         break;
       case 'style':
@@ -1971,6 +1989,9 @@ abstract class DisplayPluginBase extends PluginBase {
       case 'field_langcode':
         $this->setOption('field_langcode', $form_state->getValue('field_langcode'));
         $this->setOption('field_langcode_add_to_query', $form_state->getValue('field_langcode_add_to_query'));
+        break;
+      case 'rendering_language':
+        $this->setOption('rendering_language', $form_state->getValue('rendering_language'));
         break;
       case 'use_ajax':
       case 'hide_attachment_summary':
@@ -2673,6 +2694,38 @@ abstract class DisplayPluginBase extends PluginBase {
     return $this->extenders;
   }
 
+  /**
+   * Returns the available rendering strategies for language-aware entities.
+   *
+   * @return array
+   *   An array of available entity row renderers keyed by renderer identifiers.
+   */
+  protected function buildRenderingLanguageOptions() {
+    // @todo Consider making these plugins. See https://drupal.org/node/2173811.
+    return array(
+      'current_language_renderer' => $this->t('Current language'),
+      'default_language_renderer' => $this->t('Default language'),
+      'translation_language_renderer' => $this->t('Translation language'),
+    );
+  }
+
+  /**
+   * Returns whether the base table is of a translatable entity type.
+   *
+   * @return bool
+   *   TRUE if the base table is of a translatable entity type, FALSE otherwise.
+   */
+  protected function isBaseTableTranslatable() {
+    $view_base_table = $this->view->storage->get('base_table');
+    foreach (\Drupal::entityManager()->getDefinitions() as $entity_type) {
+      if ($entity_type->isTranslatable() && $base_table = $entity_type->getBaseTable()) {
+        if ($base_table === $view_base_table) {
+          return TRUE;
+        }
+      }
+    }
+    return FALSE;
+  }
 }
 
 /**

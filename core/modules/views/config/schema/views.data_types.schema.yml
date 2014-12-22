@@ -250,6 +250,9 @@ views_display:
     field_langcode_add_to_query:
       type: string
       label: 'Add the field language to the query'
+    rendering_language:
+      type: string
+      label: 'Entity language'
     cache_metadata:
       type: mapping
       label: 'Cache metadata'
@@ -835,9 +838,6 @@ views_entity_row:
     view_mode:
       type: string
       label: 'View mode'
-    rendering_language:
-      type: string
-      label: 'Rendering language'
 
 views_cache:
   type: mapping

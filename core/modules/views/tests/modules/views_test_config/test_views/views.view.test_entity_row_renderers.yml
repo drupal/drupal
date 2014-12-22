@@ -31,7 +31,6 @@ display:
         options:
           relationship: none
           view_mode: teaser
-          rendering_language: translation_language_renderer
       sorts:
         title:
           id: title
@@ -42,3 +41,4 @@ display:
           entity_field: title
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
+      rendering_language: translation_language_renderer
