@@ -122,21 +122,6 @@ function bartik_preprocess_menu(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for field.html.twig.
- *
- * @see template_preprocess_field()
- */
-function bartik_preprocess_field(&$variables) {
-  $element = $variables['element'];
-  if ($element['#field_type'] == 'taxonomy_term_reference') {
-    $variables['title_attributes']['class'][] = 'field-label';
-    if ($variables['element']['#label_display'] == 'inline') {
-      $variables['title_attributes']['class'][] = 'inline';
-    }
-  }
-}
-
-/**
  * Helper function for handling the site name and slogan.
  */
 function _bartik_process_page(&$variables) {

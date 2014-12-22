@@ -17,22 +17,44 @@
  * - comment_form: The 'Add new comment' form.
  * - comment_display_mode: Is the comments are threaded.
  * - comment_type: The comment type bundle ID for the comment field.
+ * - entity_type: The entity type to which the field belongs.
+ * - field_name: The name of the field.
+ * - field_type: The type of the field.
+ * - label_display: The display settings for the label.
  *
  * @see template_preprocess_field()
  * @see comment_preprocess_field()
  */
 #}
-<section{{ attributes }}>
+{% set field_name_class = field_name|clean_class %}
+{%
+  set classes = [
+    'field',
+    'field-' ~ entity_type|clean_class ~ '--' ~ field_name_class,
+    'field-name-' ~ field_name_class,
+    'field-type-' ~ field_type|clean_class,
+    'field-label-' ~ label_display,
+    label_display == 'inline' ? 'clearfix',
+    'comment-wrapper',
+  ]
+%}
+{%
+  set title_classes = [
+    'title',
+    label_display == 'visually_hidden' ? 'visually-hidden',
+  ]
+%}
+<section{{ attributes.addClass(classes) }}>
   {% if comments and not label_hidden %}
     {{ title_prefix }}
-    <h2{{ title_attributes }}>{{ label }}</h2>
+    <h2{{ title_attributes.addClass(title_classes) }}>{{ label }}</h2>
     {{ title_suffix }}
   {% endif %}
 
   {{ comments }}
 
   {% if comment_form %}
-    <h2{{ content_attributes }}>{{ 'Add new comment'|t }}</h2>
+    <h2{{ content_attributes.addClass('title', 'comment-form__title') }}>{{ 'Add new comment'|t }}</h2>
     {{ comment_form }}
   {% endif %}
 

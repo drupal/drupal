@@ -24,15 +24,36 @@
  * - items: List of all the field items. Each item contains:
  *   - attributes: List of HTML attributes for each item.
  *   - content: The field item's content.
+ * - entity_type: The entity type to which the field belongs.
+ * - field_name: The name of the field.
+ * - field_type: The type of the field.
+ * - label_display: The display settings for the label.
  *
  * @see template_preprocess_field()
  *
  * @ingroup themeable
  */
 #}
-<div{{ attributes }}>
+{% set field_name_class = field_name|clean_class %}
+{%
+  set classes = [
+    'field',
+    'field-' ~ entity_type|clean_class ~ '--' ~ field_name_class,
+    'field-name-' ~ field_name_class,
+    'field-type-' ~ field_type|clean_class,
+    'field-label-' ~ label_display,
+    label_display == 'inline' ? 'clearfix',
+  ]
+%}
+{%
+  set title_classes = [
+    'field-label',
+    label_display == 'visually_hidden' ? 'visually-hidden',
+  ]
+%}
+<div{{ attributes.addClass(classes) }}>
   {% if not label_hidden %}
-    <div{{ title_attributes.addClass('field-label') }}>{{ label }}</div>
+    <div{{ title_attributes.addClass(title_classes) }}>{{ label }}</div>
   {% endif %}
   <div{{ content_attributes.addClass('field-items') }}>
     {% for item in items %}

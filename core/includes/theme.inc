@@ -1631,36 +1631,17 @@ function template_preprocess_region(&$variables) {
 function template_preprocess_field(&$variables, $hook) {
   $element = $variables['element'];
 
+  // Creating variables for the template.
+  $variables['entity_type'] = $element['#entity_type'];
+  $variables['field_name'] = $element['#field_name'];
+  $variables['field_type'] = $element['#field_type'];
+  $variables['label_display'] = $element['#label_display'];
+
   $variables['label_hidden'] = ($element['#label_display'] == 'hidden');
   // Always set the field label - allow themes to decide whether to display it.
   // In addition the label should be rendered but hidden to support screen
   // readers.
   $variables['label'] = String::checkPlain($element['#title']);
-
-  // Add default CSS classes. Since there can be many fields rendered on a page,
-  // save some overhead by calling strtr() directly instead of
-  // \Drupal\Component\Utility\Html::getClass().
-  $variables['entity_type_css'] = strtr($element['#entity_type'], '_', '-');
-  $variables['field_name_css'] = strtr($element['#field_name'], '_', '-');
-  $variables['field_type_css'] = strtr($element['#field_type'], '_', '-');
-  $variables['attributes']['class'] = array(
-    'field',
-    'field-' . $variables['entity_type_css'] . '--' . $variables['field_name_css'],
-    'field-name-' . $variables['field_name_css'],
-    'field-type-' . $variables['field_type_css'],
-    'field-label-' . $element['#label_display'],
-  );
-
-  // Add a "clearfix" class to the wrapper since we float the label and the
-  // field items in field.module.css if the label is inline.
-  if ($element['#label_display'] == 'inline') {
-    $variables['attributes']['class'][] = 'clearfix';
-  }
-
-  // Hide labels visually, but display them to screenreaders if applicable.
-  if ($element['#label_display'] == 'visually_hidden') {
-    $variables['title_attributes']['class'][] = 'visually-hidden';
-  }
 
   static $default_attributes;
   if (!isset($default_attributes)) {
