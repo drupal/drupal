@@ -15,6 +15,7 @@ use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\SourceEntityInterface;
 use Drupal\migrate_drupal\Plugin\MigrateLoadInterface;
+use Drupal\migrate_drupal\Plugin\CckFieldMigrateSourceInterface;
 
 /**
  * Base class for entity load plugins.
@@ -82,8 +83,33 @@ class LoadEntity extends PluginBase implements MigrateLoadInterface {
       $migration = $storage->create($values);
       try {
         $migration->getSourcePlugin()->checkRequirements();
-        $fields = array_keys($migration->getSourcePlugin()->fields());
-        $migration->process += array_combine($fields, $fields);
+
+        $source_plugin = $migration->getSourcePlugin();
+        // Discuss simplifying per field type processing.
+        // @see https://www.drupal.org/node/2395993
+        if ($source_plugin instanceof CckFieldMigrateSourceInterface) {
+          foreach ($source_plugin->fieldData() as $field_name => $data) {
+            // Specifically process the link field until core is fixed.
+            // @see https://www.drupal.org/node/2235457
+            if ($data['type'] == 'link') {
+              $migration->process[$field_name] = [
+                'plugin' => 'd6_cck_link',
+                'source' => [
+                  $field_name,
+                  $field_name . '_title',
+                  $field_name . '_attributes',
+                ],
+              ];
+            }
+            else {
+              $migration->process[$field_name] = $field_name;
+            }
+          }
+        }
+        else {
+          $fields = array_keys($migration->getSourcePlugin()->fields());
+          $migration->process += array_combine($fields, $fields);
+        }
         $migrations[$migration->id()] = $migration;
       }
       catch (RequirementsException $e) {

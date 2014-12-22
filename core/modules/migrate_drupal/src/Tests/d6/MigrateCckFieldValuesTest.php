@@ -22,7 +22,7 @@ class MigrateCckFieldValuesTest extends MigrateNodeTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'text');
+  public static $modules = array('node', 'text', 'link');
 
   /**
    * {@inheritdoc}
@@ -105,6 +105,17 @@ class MigrateCckFieldValuesTest extends MigrateNodeTestBase {
       'bundle' => 'story',
     ))->save();
 
+    entity_create('field_storage_config', array(
+      'entity_type' => 'node',
+      'field_name' => 'field_test_link',
+      'type' => 'link',
+    ))->save();
+    entity_create('field_config', array(
+      'entity_type' => 'node',
+      'field_name' => 'field_test_link',
+      'bundle' => 'story',
+    ))->save();
+
     // Add some id mappings for the dependant migrations.
     $id_mappings = array(
       'd6_field_formatter_settings' => array(
@@ -143,10 +154,15 @@ class MigrateCckFieldValuesTest extends MigrateNodeTestBase {
     $this->assertEqual($node->field_test_identical1->value, '1', 'Integer value is correct');
     $this->assertEqual($node->field_test_identical2->value, '1', 'Integer value is correct');
 
+    // Test that link fields are migrated.
+    $this->assertIdentical($node->field_test_link->url, 'http://drupal.org/project/drupal');
+    $this->assertIdentical($node->field_test_link->title, 'Drupal project page');
+    $this->assertIdentical($node->field_test_link->route_parameters, []);
+    $this->assertIdentical($node->field_test_link->options['attributes'], ['target' => '_blank']);
+
     $planet_node = Node::load(3);
     $this->assertEqual($planet_node->field_multivalue->value, 33);
     $this->assertEqual($planet_node->field_multivalue[1]->value, 44);
-
   }
 
 }

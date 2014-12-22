@@ -513,6 +513,23 @@ class Drupal6Node extends Drupal6DumpBase {
           'unsigned' => TRUE,
           'not null' => FALSE
         ),
+        'field_test_link_url' => array(
+          'description' => 'The link field',
+          'type' => 'varchar',
+          'length' => 2048,
+          'not null' => FALSE,
+        ),
+        'field_test_link_title' => array(
+          'description' => 'The link field',
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => FALSE,
+        ),
+        'field_test_link_attributes' => array(
+          'description' => 'The link attributes',
+          'type' => 'text',
+          'not null' => FALSE,
+        ),
       ),
       'primary key' => array('vid'),
     ));
@@ -525,7 +542,10 @@ class Drupal6Node extends Drupal6DumpBase {
         'field_test_three_value',
         'field_test_integer_selectlist_value',
         'field_test_identical1_value',
-        'field_test_identical2_value'
+        'field_test_identical2_value',
+        'field_test_link_url',
+        'field_test_link_title',
+        'field_test_link_attributes',
       ))
       ->values(array(
         'nid' => 1,
@@ -535,6 +555,45 @@ class Drupal6Node extends Drupal6DumpBase {
         'field_test_integer_selectlist_value' => '3412',
         'field_test_identical1_value' => 1,
         'field_test_identical2_value' => 1,
+        'field_test_link_url' => 'http://drupal.org/project/drupal',
+        'field_test_link_title' => 'Drupal project page',
+        'field_test_link_attributes' => 's:32:"a:1:{s:6:"target";s:6:"_blank";}";";',
+      ))
+      ->values(array(
+        'nid' => 1,
+        'vid' => 2,
+        'uid' => 1,
+        'field_test_three_value' => '42.42',
+        'field_test_integer_selectlist_value' => '3412',
+        'field_test_identical1_value' => 1,
+        'field_test_identical2_value' => 1,
+        'field_test_link_url' => 'http://drupal.org/project/drupal',
+        'field_test_link_title' => 'Drupal project page',
+        'field_test_link_attributes' => 's:32:"a:1:{s:6:"target";s:6:"_blank";}";',
+      ))
+      ->values(array(
+        'nid' => 2,
+        'vid' => 3,
+        'uid' => 1,
+        'field_test_three_value' => '23.2',
+        'field_test_integer_selectlist_value' => '1244',
+        'field_test_identical1_value' => 1,
+        'field_test_identical2_value' => 1,
+        'field_test_link_url' => 'http://groups.drupal.org/',
+        'field_test_link_title' => 'Drupal Groups',
+        'field_test_link_attributes' => 's:6:"a:0:{}";',
+      ))
+      ->values(array(
+        'nid' => 2,
+        'vid' => 5,
+        'uid' => 1,
+        'field_test_three_value' => '23.2',
+        'field_test_integer_selectlist_value' => '1244',
+        'field_test_identical1_value' => 1,
+        'field_test_identical2_value' => 1,
+        'field_test_link_url' => 'http://groups.drupal.org/',
+        'field_test_link_title' => 'Drupal Groups',
+        'field_test_link_attributes' => 's:6:"a:0:{}";',
       ))
       ->execute();
     $this->setModuleVersion('content', 6001);

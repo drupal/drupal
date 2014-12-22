@@ -60,3 +60,26 @@ field.value.link:
     url:
       type: string
       label: 'URL'
+    options:
+      type: mapping
+      label: 'Link options'
+      mapping:
+        query:
+          type: sequence
+          label: 'Url query key value pairs'
+          sequence:
+            - type: string
+        fragment:
+          type: string
+          label: 'Url fragment'
+        absolute:
+          type: boolean
+          label: 'Is this Url absolute'
+        https:
+          type: boolean
+          label: 'If the Url should use a secure protocol'
+        attributes:
+          type: sequence
+          label: 'Link attributes'
+          sequence:
+            - type: string

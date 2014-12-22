@@ -144,6 +144,7 @@ class MigrateFieldInstanceTest extends MigrateDrupalTestBase {
     $this->assertEqual($field->getSettings(), $expected);
     $this->assertEqual('default link title', $entity->field_test_link->title, 'Field field_test_link default title is correct.');
     $this->assertEqual('http://drupal.org', $entity->field_test_link->url, 'Field field_test_link default title is correct.');
+    $this->assertIdentical($entity->field_test_link->options['attributes'], []);
   }
 
   /**

@@ -1021,7 +1021,7 @@ class Drupal6FieldInstance extends Drupal6DumpBase {
       'global_settings' => 'a:7:{s:10:"attributes";a:4:{s:6:"target";s:7:"default";s:3:"rel";s:8:"nofollow";s:5:"class";s:0:"";s:5:"title";s:10:"Link Title";}s:7:"display";a:1:{s:10:"url_cutoff";s:2:"80";}s:3:"url";i:0;s:5:"title";s:8:"required";s:11:"title_value";s:0:"";s:13:"enable_tokens";s:0:"";s:12:"validate_url";i:1;}',
       'multiple' => 0,
       'db_storage' => 1,
-      'db_columns' => 'a:0:{}',
+      'db_columns' => 'a:3:{s:3:"url";a:4:{s:4:"type";s:7:"varchar";s:6:"length";i:2048;s:8:"not null";b:0;s:8:"sortable";b:1;}s:5:"title";a:4:{s:4:"type";s:7:"varchar";s:6:"length";i:255;s:8:"not null";b:0;s:8:"sortable";b:1;}s:10:"attributes";a:3:{s:4:"type";s:4:"text";s:4:"size";s:6:"medium";s:8:"not null";b:0;}}',
       'active' => 1,
     ))
     ->values(array(

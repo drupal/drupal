@@ -10,6 +10,7 @@ namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
 use Drupal\migrate\Plugin\SourceEntityInterface;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
+use Drupal\migrate_drupal\Plugin\CckFieldMigrateSourceInterface;
 
 
 /**
@@ -19,7 +20,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *   id = "d6_cck_field_values"
  * )
  */
-class CckFieldValues extends DrupalSqlBase implements SourceEntityInterface {
+class CckFieldValues extends DrupalSqlBase implements SourceEntityInterface, CckFieldMigrateSourceInterface {
 
   /**
    * The join options between the node and the node_revisions table.
@@ -259,6 +260,16 @@ class CckFieldValues extends DrupalSqlBase implements SourceEntityInterface {
       $fields[$field_name] = $field_data['label'];
     }
     return $fields;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function fieldData() {
+    $field_info = $this->getSourceFieldInfo($this->configuration['bundle']);
+    $field_info['nid'] = ['type' => 'number'];
+    $field_info['type'] = ['type' => 'text'];
+    return $field_info;
   }
 
   /**
