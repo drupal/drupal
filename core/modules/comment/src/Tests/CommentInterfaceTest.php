@@ -23,7 +23,7 @@ class CommentInterfaceTest extends CommentTestBase {
    */
   function testCommentInterface() {
     // Set comments to have subject and preview disabled.
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->setCommentPreview(DRUPAL_DISABLED);
     $this->setCommentForm(TRUE);
     $this->setCommentSubject(FALSE);
@@ -31,20 +31,20 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->drupalLogout();
 
     // Post comment #1 without subject or preview.
-    $this->drupalLogin($this->web_user);
+    $this->drupalLogin($this->webUser);
     $comment_text = $this->randomMachineName();
     $comment = $this->postComment($this->node, $comment_text);
     $this->assertTrue($this->commentExists($comment), 'Comment found.');
 
     // Set comments to have subject and preview to required.
     $this->drupalLogout();
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->setCommentSubject(TRUE);
     $this->setCommentPreview(DRUPAL_REQUIRED);
     $this->drupalLogout();
 
     // Create comment #2 that allows subject and requires preview.
-    $this->drupalLogin($this->web_user);
+    $this->drupalLogin($this->webUser);
     $subject_text = $this->randomMachineName();
     $comment_text = $this->randomMachineName();
     $comment = $this->postComment($this->node, $comment_text, $subject_text, TRUE);
@@ -58,14 +58,14 @@ class CommentInterfaceTest extends CommentTestBase {
     $anonymous_comment->delete();
 
     // Check comment display.
-    $this->drupalLogin($this->web_user);
+    $this->drupalLogin($this->webUser);
     $this->drupalGet('node/' . $this->node->id());
     $this->assertText($subject_text, 'Individual comment subject found.');
     $this->assertText($comment_text, 'Individual comment body found.');
 
     // Set comments to have subject and preview to optional.
     $this->drupalLogout();
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->setCommentSubject(TRUE);
     $this->setCommentPreview(DRUPAL_OPTIONAL);
 
@@ -87,14 +87,14 @@ class CommentInterfaceTest extends CommentTestBase {
 
     // Test changing the comment author to a verified user.
     $this->drupalGet('comment/' . $comment->id() . '/edit');
-    $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->getSubject(), array('name' => $this->web_user->getUsername()));
-    $this->assertTrue($comment->getAuthorName() == $this->web_user->getUsername() && $comment->getOwnerId() == $this->web_user->id(), 'Comment author successfully changed to a registered user.');
+    $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->getSubject(), array('name' => $this->webUser->getUsername()));
+    $this->assertTrue($comment->getAuthorName() == $this->webUser->getUsername() && $comment->getOwnerId() == $this->webUser->id(), 'Comment author successfully changed to a registered user.');
 
     $this->drupalLogout();
 
     // Reply to comment #2 creating comment #3 with optional preview and no
     // subject though field enabled.
-    $this->drupalLogin($this->web_user);
+    $this->drupalLogin($this->webUser);
     // Deliberately use the wrong url to test
     // \Drupal\comment\Controller\CommentController::redirectNode().
     $this->drupalGet('comment/' . $this->node->id() . '/reply');
@@ -172,7 +172,7 @@ class CommentInterfaceTest extends CommentTestBase {
 
     // Delete comment and make sure that reply is also removed.
     $this->drupalLogout();
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->deleteComment($comment);
     $this->deleteComment($comment_new_page);
 
@@ -181,19 +181,19 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->assertFalse($this->commentExists($reply, TRUE), 'Reply not found.');
 
     // Enabled comment form on node page.
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->setCommentForm(TRUE);
     $this->drupalLogout();
 
     // Submit comment through node form.
-    $this->drupalLogin($this->web_user);
+    $this->drupalLogin($this->webUser);
     $this->drupalGet('node/' . $this->node->id());
     $form_comment = $this->postComment(NULL, $this->randomMachineName(), $this->randomMachineName(), TRUE);
     $this->assertTrue($this->commentExists($form_comment), 'Form comment found.');
 
     // Disable comment form on node page.
     $this->drupalLogout();
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->setCommentForm(FALSE);
   }
 }

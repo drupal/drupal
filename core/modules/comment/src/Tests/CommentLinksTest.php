@@ -52,9 +52,9 @@ class CommentLinksTest extends CommentTestBase {
       ->set('default', 'stark')
       ->save();
 
-    // Remove additional user permissions from $this->web_user added by setUp(),
+    // Remove additional user permissions from $this->webUser added by setUp(),
     // since this test is limited to anonymous and authenticated roles only.
-    $roles = $this->web_user->getRoles();
+    $roles = $this->webUser->getRoles();
     entity_delete_multiple('user_role', array(reset($roles)));
 
     // Create a comment via CRUD API functionality, since

@@ -28,7 +28,7 @@ class CommentRssTest extends CommentTestBase {
    */
   function testCommentRss() {
     // Find comment in RSS feed.
-    $this->drupalLogin($this->web_user);
+    $this->drupalLogin($this->webUser);
     $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName());
     $this->drupalGet('rss.xml');
     $raw = '<comments>' . $this->node->url('canonical', array('fragment' => 'comments', 'absolute' => TRUE)) . '</comments>';

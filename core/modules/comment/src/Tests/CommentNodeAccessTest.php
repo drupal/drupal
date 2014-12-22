@@ -32,7 +32,7 @@ class CommentNodeAccessTest extends CommentTestBase {
     node_access_rebuild();
 
     // Re-create user.
-    $this->web_user = $this->drupalCreateUser(array(
+    $this->webUser = $this->drupalCreateUser(array(
       'access comments',
       'post comments',
       'create article content',
@@ -42,7 +42,7 @@ class CommentNodeAccessTest extends CommentTestBase {
     ));
 
     // Set the author of the created node to the web_user uid.
-    $this->node->setOwnerId($this->web_user->id())->save();
+    $this->node->setOwnerId($this->webUser->id())->save();
   }
 
   /**
@@ -50,7 +50,7 @@ class CommentNodeAccessTest extends CommentTestBase {
    */
   function testThreadedCommentView() {
     // Set comments to have subject required and preview disabled.
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->setCommentPreview(DRUPAL_DISABLED);
     $this->setCommentForm(TRUE);
     $this->setCommentSubject(TRUE);
@@ -58,7 +58,7 @@ class CommentNodeAccessTest extends CommentTestBase {
     $this->drupalLogout();
 
     // Post comment.
-    $this->drupalLogin($this->web_user);
+    $this->drupalLogin($this->webUser);
     $comment_text = $this->randomMachineName();
     $comment_subject = $this->randomMachineName();
     $comment = $this->postComment($this->node, $comment_text, $comment_subject);

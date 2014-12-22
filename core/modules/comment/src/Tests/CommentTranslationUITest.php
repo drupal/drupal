@@ -24,6 +24,13 @@ class CommentTranslationUITest extends ContentTranslationUITest {
   protected $subject;
 
   /**
+   * An administrative user with permission to administer comments.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $adminUser;
+
+  /**
    * Modules to install.
    *
    * @var array
@@ -143,8 +150,8 @@ class CommentTranslationUITest extends ContentTranslationUITest {
    * Tests translate link on comment content admin page.
    */
   function testTranslateLinkCommentAdminPage() {
-    $this->admin_user = $this->drupalCreateUser(array_merge(parent::getTranslatorPermissions(), array('access administration pages', 'administer comments', 'skip comment approval')));
-    $this->drupalLogin($this->admin_user);
+    $this->adminUser = $this->drupalCreateUser(array_merge(parent::getTranslatorPermissions(), array('access administration pages', 'administer comments', 'skip comment approval')));
+    $this->drupalLogin($this->adminUser);
 
     $cid_translatable = $this->createEntity(array(), $this->langcodes[0]);
     $cid_untranslatable = $this->createEntity(array(), $this->langcodes[0], 'comment');

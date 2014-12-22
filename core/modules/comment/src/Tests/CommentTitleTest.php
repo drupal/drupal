@@ -27,8 +27,8 @@ class CommentTitleTest extends CommentTestBase {
     $this->setCommentSubject(TRUE);
 
     // Create a node.
-    $this->drupalLogin($this->web_user);
-    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'uid' => $this->web_user->id()));
+    $this->drupalLogin($this->webUser);
+    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'uid' => $this->webUser->id()));
 
     // Post comment #1 and verify that h3's are not rendered.
     $subject_text = $this->randomMachineName();
@@ -53,8 +53,8 @@ class CommentTitleTest extends CommentTestBase {
     $this->setCommentSubject(TRUE);
 
     // Create a node.
-    $this->drupalLogin($this->web_user);
-    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'uid' => $this->web_user->id()));
+    $this->drupalLogin($this->webUser);
+    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'uid' => $this->webUser->id()));
 
     // Post comment #1 and verify that title is rendered in h3.
     $subject_text = $this->randomMachineName();

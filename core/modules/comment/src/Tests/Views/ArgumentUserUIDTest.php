@@ -28,10 +28,10 @@ class ArgumentUserUIDTest extends CommentTestBase {
     $this->executeView($view, array($this->account->id()));
     $result_set = array(
       array(
-        'nid' => $this->node_user_posted->id(),
+        'nid' => $this->nodeUserPosted->id(),
       ),
       array(
-        'nid' => $this->node_user_commented->id(),
+        'nid' => $this->nodeUserCommented->id(),
       ),
     );
     $column_map = array('nid' => 'nid');

@@ -34,7 +34,7 @@ class CommentAnonymousTest extends CommentTestBase {
    * Tests anonymous comment functionality.
    */
   function testAnonymous() {
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->setCommentAnonymous('0'); // Ensure that doesn't require contact info.
     $this->drupalLogout();
 
@@ -43,7 +43,7 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->assertTrue($this->commentExists($anonymous_comment1), 'Anonymous comment without contact info found.');
 
     // Allow contact info.
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->setCommentAnonymous('1');
 
     // Attempt to edit anonymous comment.
@@ -61,7 +61,7 @@ class CommentAnonymousTest extends CommentTestBase {
 
     // Ensure anonymous users cannot post in the name of registered users.
     $edit = array(
-      'name' => $this->admin_user->getUsername(),
+      'name' => $this->adminUser->getUsername(),
       'mail' => $this->randomMachineName() . '@example.com',
       'subject[0][value]' => $this->randomMachineName(),
       'comment_body[0][value]' => $this->randomMachineName(),
@@ -70,7 +70,7 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->assertText(t('The name you used belongs to a registered user.'));
 
     // Require contact info.
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->setCommentAnonymous('2');
     $this->drupalLogout();
 
@@ -90,7 +90,7 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->assertTrue($this->commentExists($anonymous_comment3), 'Anonymous comment with contact info (required) found.');
 
     // Make sure the user data appears correctly when editing the comment.
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->drupalGet('comment/' . $anonymous_comment3->id() . '/edit');
     $this->assertRaw($author_name, "The anonymous user's name is correct when editing the comment.");
     $this->assertRaw($author_mail, "The anonymous user's email address is correct when editing the comment.");

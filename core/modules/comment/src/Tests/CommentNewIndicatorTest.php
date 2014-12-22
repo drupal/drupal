@@ -71,7 +71,7 @@ class CommentNewIndicatorTest extends CommentTestBase {
   public function testCommentNewCommentsIndicator() {
     // Test if the right links are displayed when no comment is present for the
     // node.
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->drupalGet('node');
     $this->assertNoLink(t('@count comments', array('@count' => 0)));
     $this->assertLink(t('Read more'));
@@ -101,7 +101,7 @@ class CommentNewIndicatorTest extends CommentTestBase {
     $this->drupalLogout();
 
     // Log in with 'web user' and check comment links.
-    $this->drupalLogin($this->web_user);
+    $this->drupalLogin($this->webUser);
     $this->drupalGet('node');
     // Verify the data-history-node-last-comment-timestamp attribute. Given its
     // value, the drupal.node-new-comments-link library would determine that the

@@ -34,7 +34,7 @@ class CommentFieldFilterTest extends CommentTestBase {
    *
    * @var array
    */
-  public $comment_titles = array();
+  public $commentTitles = array();
 
   function setUp() {
     parent::setUp();
@@ -51,7 +51,7 @@ class CommentFieldFilterTest extends CommentTestBase {
     $field_storage->save();
 
     // Set up comment titles.
-    $this->comment_titles = array(
+    $this->commentTitles = array(
       'en' => 'Food in Paris',
       'es' => 'Comida en Paris',
       'fr' => 'Nouriture en Paris',
@@ -61,7 +61,7 @@ class CommentFieldFilterTest extends CommentTestBase {
     // as it predates the language set-up.
     $comment = array(
       'uid' => $this->loggedInUser->id(),
-      'entity_id' => $this->node_user_commented->id(),
+      'entity_id' => $this->nodeUserCommented->id(),
       'entity_type' => 'node',
       'field_name' => 'comment',
       'cid' => '',
@@ -71,14 +71,14 @@ class CommentFieldFilterTest extends CommentTestBase {
     $this->comment = entity_create('comment', $comment);
 
     // Add field values and translate the comment.
-    $this->comment->subject->value = $this->comment_titles['en'];
-    $this->comment->comment_body->value = $this->comment_titles['en'];
+    $this->comment->subject->value = $this->commentTitles['en'];
+    $this->comment->comment_body->value = $this->commentTitles['en'];
     $this->comment->langcode = 'en';
     $this->comment->save();
     foreach (array('es', 'fr') as $langcode) {
       $translation = $this->comment->addTranslation($langcode, array());
-      $translation->comment_body->value = $this->comment_titles[$langcode];
-      $translation->subject->value = $this->comment_titles[$langcode];
+      $translation->comment_body->value = $this->commentTitles[$langcode];
+      $translation->subject->value = $this->commentTitles[$langcode];
     }
     $this->comment->save();
   }
@@ -124,7 +124,7 @@ class CommentFieldFilterTest extends CommentTestBase {
     // page, and they are the same. So the title/body string should appear on
     // the page twice as many times as the input count.
     foreach ($counts as $langcode => $count) {
-      $this->assertEqual(substr_count($text, $this->comment_titles[$langcode]), 2 * $count, 'Translation ' . $langcode . ' has count ' . $count . ' with ' . $message);
+      $this->assertEqual(substr_count($text, $this->commentTitles[$langcode]), 2 * $count, 'Translation ' . $langcode . ' has count ' . $count . ' with ' . $message);
     }
   }
 }

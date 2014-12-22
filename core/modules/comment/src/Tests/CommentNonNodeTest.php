@@ -31,7 +31,7 @@ class CommentNonNodeTest extends WebTestBase {
    *
    * @var \Drupal\user\UserInterface
    */
-  protected $admin_user;
+  protected $adminUser;
 
   protected function setUp() {
     parent::setUp();
@@ -52,7 +52,7 @@ class CommentNonNodeTest extends WebTestBase {
     $this->assertEqual($bundles['comment']['label'], 'Comment settings');
 
     // Create test user.
-    $this->admin_user = $this->drupalCreateUser(array(
+    $this->adminUser = $this->drupalCreateUser(array(
       'administer comments',
       'skip comment approval',
       'post comments',
@@ -247,7 +247,7 @@ class CommentNonNodeTest extends WebTestBase {
     $this->drupalGet('entity_test/structure/entity_test/entity-test/fields/entity_test.entity_test.comment');
     $this->assertNoField('edit-default-value-input-comment-und-0-status-0');
 
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
 
     // Post a comment.
     $comment1 = $this->postComment($this->entity, $this->randomMachineName(), $this->randomMachineName());

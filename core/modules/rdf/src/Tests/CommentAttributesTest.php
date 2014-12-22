@@ -119,11 +119,11 @@ class CommentAttributesTest extends CommentTestBase {
    */
   public function testNumberOfCommentsRdfaMarkup() {
     // Posts 2 comments on behalf of registered user.
-    $this->saveComment($this->node->id(), $this->web_user->id());
-    $this->saveComment($this->node->id(), $this->web_user->id());
+    $this->saveComment($this->node->id(), $this->webUser->id());
+    $this->saveComment($this->node->id(), $this->webUser->id());
 
     // Tests number of comments in teaser view.
-    $this->drupalLogin($this->web_user);
+    $this->drupalLogin($this->webUser);
     $parser = new \EasyRdf_Parser_Rdfa();
     $graph = new \EasyRdf_Graph();
     $parser->parse($graph, $this->drupalGet('node'), 'rdfa', $this->baseUri);
@@ -151,10 +151,10 @@ class CommentAttributesTest extends CommentTestBase {
    */
   public function testCommentRdfaMarkup() {
     // Posts comment #1 on behalf of registered user.
-    $comment1 = $this->saveComment($this->node->id(), $this->web_user->id());
+    $comment1 = $this->saveComment($this->node->id(), $this->webUser->id());
 
     // Tests comment #1 with access to the user profile.
-    $this->drupalLogin($this->web_user);
+    $this->drupalLogin($this->webUser);
     $parser = new \EasyRdf_Parser_Rdfa();
     $graph = new \EasyRdf_Graph();
     $parser->parse($graph, $this->drupalGet('node/' . $this->node->id()), 'rdfa', $this->baseUri);
@@ -181,7 +181,7 @@ class CommentAttributesTest extends CommentTestBase {
     $this->_testBasicCommentRdfaMarkup($graph, $comment2, $anonymous_user);
 
     // Tests comment #2 as logged in user.
-    $this->drupalLogin($this->web_user);
+    $this->drupalLogin($this->webUser);
     $parser = new \EasyRdf_Parser_Rdfa();
     $graph = new \EasyRdf_Graph();
     $parser->parse($graph, $this->drupalGet('node/' . $this->node->id()), 'rdfa', $this->baseUri);
@@ -193,13 +193,13 @@ class CommentAttributesTest extends CommentTestBase {
    */
   public function testCommentReplyOfRdfaMarkup() {
     // Posts comment #1 on behalf of registered user.
-    $this->drupalLogin($this->web_user);
-    $comment_1 = $this->saveComment($this->node->id(), $this->web_user->id());
+    $this->drupalLogin($this->webUser);
+    $comment_1 = $this->saveComment($this->node->id(), $this->webUser->id());
 
     $comment_1_uri = $comment_1->url('canonical', ['absolute' => TRUE]);
 
     // Posts a reply to the first comment.
-    $comment_2 = $this->saveComment($this->node->id(), $this->web_user->id(), NULL, $comment_1->id());
+    $comment_2 = $this->saveComment($this->node->id(), $this->webUser->id(), NULL, $comment_1->id());
     $comment_2_uri = $comment_2->url('canonical', ['absolute' => TRUE]);
 
     $parser = new \EasyRdf_Parser_Rdfa();
@@ -305,7 +305,7 @@ class CommentAttributesTest extends CommentTestBase {
     }
 
     // Author name.
-    $name = empty($account["name"]) ? $this->web_user->getUsername() : $account["name"] . " (not verified)";
+    $name = empty($account["name"]) ? $this->webUser->getUsername() : $account["name"] . " (not verified)";
     $expected_value = array(
       'type' => 'literal',
       'value' => $name,

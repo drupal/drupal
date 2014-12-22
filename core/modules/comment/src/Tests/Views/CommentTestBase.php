@@ -23,11 +23,39 @@ abstract class CommentTestBase extends ViewTestBase {
   public static $modules = array('node', 'comment', 'comment_test_views');
 
   /**
+   * A normal user with permission to post comments (without approval).
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $account;
+
+  /**
+   * A second normal user that will author a node for $account to comment on.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $account2;
+
+  /**
+   * Stores a node posted by the user created as $account.
+   *
+   * @var \Drupal\node\NodeInterface
+   */
+  protected $nodeUserPosted;
+
+  /**
+   * Stores a node posted by the user created as $account2.
+   *
+   * @var \Drupal\node\NodeInterface
+   */
+  protected $nodeUserCommented;
+
+  /**
    * Stores a comment used by the tests.
    *
    * @var \Drupal\comment\Entity\Comment
    */
-  public $comment;
+  protected $comment;
 
   protected function setUp() {
     parent::setUp();
@@ -43,12 +71,12 @@ abstract class CommentTestBase extends ViewTestBase {
     $this->drupalCreateContentType(array('type' => 'page', 'name' => t('Basic page')));
     $this->container->get('comment.manager')->addDefaultField('node', 'page');
 
-    $this->node_user_posted = $this->drupalCreateNode();
-    $this->node_user_commented = $this->drupalCreateNode(array('uid' => $this->account2->id()));
+    $this->nodeUserPosted = $this->drupalCreateNode();
+    $this->nodeUserCommented = $this->drupalCreateNode(array('uid' => $this->account2->id()));
 
     $comment = array(
       'uid' => $this->loggedInUser->id(),
-      'entity_id' => $this->node_user_commented->id(),
+      'entity_id' => $this->nodeUserCommented->id(),
       'entity_type' => 'node',
       'field_name' => 'comment',
       'cid' => '',

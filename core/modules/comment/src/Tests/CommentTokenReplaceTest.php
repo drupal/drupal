@@ -30,7 +30,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
       'language' => $language_interface,
     );
 
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
 
     // Set comment variables.
     $this->setCommentSubject(TRUE);
@@ -53,7 +53,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests['[comment:cid]'] = $comment->id();
     $tests['[comment:hostname]'] = String::checkPlain($comment->getHostname());
     $tests['[comment:author]'] = Xss::filter($comment->getAuthorName());
-    $tests['[comment:mail]'] = String::checkPlain($this->admin_user->getEmail());
+    $tests['[comment:mail]'] = String::checkPlain($this->adminUser->getEmail());
     $tests['[comment:homepage]'] = check_url($comment->getHomepage());
     $tests['[comment:title]'] = Xss::filter($comment->getSubject());
     $tests['[comment:body]'] = $comment->comment_body->processed;
@@ -68,7 +68,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests['[comment:entity:nid]'] = $comment->getCommentedEntityId();
     $tests['[comment:entity:title]'] = String::checkPlain($node->getTitle());
     $tests['[comment:author:uid]'] = $comment->getOwnerId();
-    $tests['[comment:author:name]'] = String::checkPlain($this->admin_user->getUsername());
+    $tests['[comment:author:name]'] = String::checkPlain($this->adminUser->getUsername());
 
     // Test to make sure that we generated something for each token.
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
@@ -81,13 +81,13 @@ class CommentTokenReplaceTest extends CommentTestBase {
     // Generate and test unsanitized tokens.
     $tests['[comment:hostname]'] = $comment->getHostname();
     $tests['[comment:author]'] = $comment->getAuthorName();
-    $tests['[comment:mail]'] = $this->admin_user->getEmail();
+    $tests['[comment:mail]'] = $this->adminUser->getEmail();
     $tests['[comment:homepage]'] = $comment->getHomepage();
     $tests['[comment:title]'] = $comment->getSubject();
     $tests['[comment:body]'] = $comment->comment_body->value;
     $tests['[comment:parent:title]'] = $parent_comment->getSubject();
     $tests['[comment:entity]'] = $node->getTitle();
-    $tests['[comment:author:name]'] = $this->admin_user->getUsername();
+    $tests['[comment:author:name]'] = $this->adminUser->getUsername();
 
     foreach ($tests as $input => $expected) {
       $output = $token_service->replace($input, array('comment' => $comment), array('langcode' => $language_interface->getId(), 'sanitize' => FALSE));

@@ -25,7 +25,7 @@ class CommentBlockTest extends CommentTestBase {
   protected function setUp() {
     parent::setUp();
     // Update admin user to have the 'administer blocks' permission.
-    $this->admin_user = $this->drupalCreateUser(array(
+    $this->adminUser = $this->drupalCreateUser(array(
       'administer content types',
       'administer comments',
       'skip comment approval',
@@ -40,7 +40,7 @@ class CommentBlockTest extends CommentTestBase {
    * Tests the recent comments block.
    */
   function testRecentCommentBlock() {
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $block = $this->drupalPlaceBlock('views_block:comments_recent-block_1');
 
     // Add some test comments, with and without subjects. Because the 10 newest
@@ -64,7 +64,7 @@ class CommentBlockTest extends CommentTestBase {
 
     // Test that a user with the 'access comments' permission can see the
     // block.
-    $this->drupalLogin($this->web_user);
+    $this->drupalLogin($this->webUser);
     $this->drupalGet('');
     $this->assertText(t('Recent comments'));
 

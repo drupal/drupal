@@ -80,7 +80,7 @@ class CommentFieldsTest extends CommentTestBase {
       'type' => 'test_node_type',
     ));
 
-    $this->drupalLogin($this->web_user);
+    $this->drupalLogin($this->webUser);
 
     $this->drupalGet('node/' . $node->nid->value);
     $elements = $this->cssSelect('.field-type-comment');
@@ -98,8 +98,8 @@ class CommentFieldsTest extends CommentTestBase {
    */
   function testCommentInstallAfterContentModule() {
     // Create a user to do module administration.
-    $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer modules'));
-    $this->drupalLogin($this->admin_user);
+    $this->adminUser = $this->drupalCreateUser(array('access administration pages', 'administer modules'));
+    $this->drupalLogin($this->adminUser);
 
     // Drop default comment field added in CommentTestBase::setup().
     FieldStorageConfig::loadByName('node', 'comment')->delete();
@@ -140,8 +140,8 @@ class CommentFieldsTest extends CommentTestBase {
     // Try to post a comment on each node. A failure will be triggered if the
     // comment body is missing on one of these forms, due to postComment()
     // asserting that the body is actually posted correctly.
-    $this->web_user = $this->drupalCreateUser(array('access content', 'access comments', 'post comments', 'skip comment approval'));
-    $this->drupalLogin($this->web_user);
+    $this->webUser = $this->drupalCreateUser(array('access content', 'access comments', 'post comments', 'skip comment approval'));
+    $this->drupalLogin($this->webUser);
     $this->postComment($book_node, $this->randomMachineName(), $this->randomMachineName());
   }
 

@@ -21,7 +21,7 @@ use Drupal\node\Entity\Node;
 class CommentTypeTest extends CommentTestBase {
 
   /**
-   * Admin user
+   * Admin user.
    *
    * @var \Drupal\Core\Session\AccountInterface
    */

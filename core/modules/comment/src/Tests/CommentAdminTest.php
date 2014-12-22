@@ -23,7 +23,7 @@ class CommentAdminTest extends CommentTestBase {
       'post comments' => TRUE,
       'skip comment approval' => FALSE,
     ));
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->setCommentAnonymous('0'); // Ensure that doesn't require contact info.
 
     // Test that the comments page loads correctly when there are no comments
@@ -39,7 +39,7 @@ class CommentAdminTest extends CommentTestBase {
     $this->assertText(t('Your comment has been queued for review by site administrators and will be published after approval.'), 'Comment requires approval.');
 
     // Get unapproved comment id.
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $anonymous_comment4 = $this->getUnapprovedComment($subject);
     $anonymous_comment4 = entity_create('comment', array(
       'cid' => $anonymous_comment4,
@@ -54,7 +54,7 @@ class CommentAdminTest extends CommentTestBase {
     $this->assertFalse($this->commentExists($anonymous_comment4), 'Anonymous comment was not published.');
 
     // Approve comment.
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->performCommentOperation($anonymous_comment4, 'publish', TRUE);
     $this->drupalLogout();
 
@@ -66,7 +66,7 @@ class CommentAdminTest extends CommentTestBase {
     $comments[] = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName(), TRUE);
 
     // Publish multiple comments in one operation.
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/content/comment/approval');
     $this->assertText(t('Unapproved comments (@count)', array('@count' => 2)), 'Two unapproved comments waiting for approval.');
     $edit = array(
@@ -105,7 +105,7 @@ class CommentAdminTest extends CommentTestBase {
       'post comments' => TRUE,
       'skip comment approval' => FALSE,
     ));
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->setCommentAnonymous('0'); // Ensure that doesn't require contact info.
     $this->drupalLogout();
 
@@ -116,7 +116,7 @@ class CommentAdminTest extends CommentTestBase {
     $this->assertText(t('Your comment has been queued for review by site administrators and will be published after approval.'), 'Comment requires approval.');
 
     // Get unapproved comment id.
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $anonymous_comment4 = $this->getUnapprovedComment($subject);
     $anonymous_comment4 = entity_create('comment', array(
       'cid' => $anonymous_comment4,
@@ -131,7 +131,7 @@ class CommentAdminTest extends CommentTestBase {
     $this->assertFalse($this->commentExists($anonymous_comment4), 'Anonymous comment was not published.');
 
     // Approve comment.
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->drupalGet('comment/1/approve');
     $this->assertResponse(403, 'Forged comment approval was denied.');
     $this->drupalGet('comment/1/approve', array('query' => array('token' => 'forged')));
@@ -151,7 +151,7 @@ class CommentAdminTest extends CommentTestBase {
    */
   public function testCommentAdmin() {
     // Login.
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     // Browse to comment bundle overview.
     $this->drupalGet('admin/structure/comment');
     $this->assertResponse(200);
