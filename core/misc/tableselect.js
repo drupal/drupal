@@ -60,6 +60,10 @@
       // Keep track of the last checked checkbox.
       lastChecked = e.target;
     });
+
+    // If all checkboxes are checked on page load, make sure the select-all one
+    // is checked too, otherwise keep unchecked.
+    updateSelectAll((checkboxes.length === checkboxes.filter(':checked').length));
   };
 
   Drupal.tableSelectRange = function (from, to, state) {
