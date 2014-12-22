@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Component\Image\ImageUtilityTest.
+ * Contains \Drupal\Tests\Component\Utility\ImageTest.
  */
 
-namespace Drupal\Tests\Component\Image;
+namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Image;
 use Drupal\Tests\UnitTestCase;
@@ -14,14 +14,14 @@ use Drupal\Tests\UnitTestCase;
  * @coversDefaultClass \Drupal\Component\Utility\Image
  * @group Image
  */
-class ImageUtilityTest extends UnitTestCase {
+class ImageTest extends UnitTestCase {
 
   /**
    * Tests all control flow branches in image_dimensions_scale().
    *
    * @dataProvider providerTestScaleDimensions
    */
-  function testScaleDimensions($input, $output) {
+  public function testScaleDimensions($input, $output) {
     // Process the test dataset.
     $return_value = Image::scaleDimensions($input['dimensions'], $input['width'], $input['height'], $input['upscale']);
 
