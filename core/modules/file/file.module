@@ -655,8 +655,6 @@ function file_cron() {
  * @param $form_field_name
  *   A string that is the associative array key of the upload form element in
  *   the form array.
- * @param \Drupal\Core\Form\FormStateInterface $form_state
- *   The current state of the form.
  * @param $validators
  *   An optional, associative array of callback functions used to validate the
  *   file. See file_validate() for a full discussion of the array format.
