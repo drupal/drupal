@@ -2,8 +2,3 @@ access_log:
   enabled: false
   max_lifetime: 259200
 count_content_views: 0
-block:
-  popular:
-    top_day_limit: 0
-    top_all_limit: 0
-    top_recent_limit: 0

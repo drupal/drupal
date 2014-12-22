@@ -50,9 +50,6 @@ class MigrateStatisticsConfigsTest extends MigrateDrupalTestBase {
     $this->assertIdentical($config->get('access_log.enabled'), FALSE);
     $this->assertIdentical($config->get('access_log.max_lifetime'), 259200);
     $this->assertIdentical($config->get('count_content_views'), 0);
-    $this->assertIdentical($config->get('block.popular.top_day_limit'), 0);
-    $this->assertIdentical($config->get('block.popular.top_all_limit'), 0);
-    $this->assertIdentical($config->get('block.popular.top_recent_limit'), 0);
     $this->assertConfigSchema(\Drupal::service('config.typed'), 'statistics.settings', $config->get());
   }
 

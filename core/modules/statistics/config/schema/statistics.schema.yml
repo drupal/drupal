@@ -17,23 +17,6 @@ statistics.settings:
     count_content_views:
       type: integer
       label: 'Count content views'
-    block:
-      type: mapping
-      label: 'Block settings'
-      mapping:
-        popular:
-          type: mapping
-          label: 'Popular content block'
-          mapping:
-            top_day_limit:
-              type: integer
-              label: 'Number of day''s top views to display'
-            top_all_limit:
-              type: integer
-              label: 'Number of all time views to display'
-            top_recent_limit:
-              type: integer
-              label: 'Number of most recent views to display'
 
 block.settings.statistics_popular_block:
   type: block_settings
