@@ -7,10 +7,12 @@
 
 namespace Drupal\Core\Condition;
 
+use Drupal\Component\Plugin\CategorizingPluginManagerInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Executable\ExecutableManagerInterface;
 use Drupal\Core\Executable\ExecutableInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Plugin\CategorizingPluginManagerTrait;
 use Drupal\Core\Plugin\Context\ContextAwarePluginManagerTrait;
 use Drupal\Core\Plugin\DefaultPluginManager;
 
@@ -23,8 +25,9 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  *
  * @ingroup plugin_api
  */
-class ConditionManager extends DefaultPluginManager implements ExecutableManagerInterface {
+class ConditionManager extends DefaultPluginManager implements ExecutableManagerInterface, CategorizingPluginManagerInterface {
 
+  use CategorizingPluginManagerTrait;
   use ContextAwarePluginManagerTrait;
 
   /**

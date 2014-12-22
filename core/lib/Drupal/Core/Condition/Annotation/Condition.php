@@ -59,4 +59,13 @@ class Condition extends Plugin {
    */
   public $condition = array();
 
+  /**
+   * The category under which the condition should listed in the UI.
+   *
+   * @var \Drupal\Core\Annotation\Translation
+   *
+   * @ingroup plugin_translatable
+   */
+  public $category;
+
 }

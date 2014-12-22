@@ -59,4 +59,13 @@ class Action extends Plugin {
    */
   public $type = '';
 
+  /**
+   * The category under which the action should be listed in the UI.
+   *
+   * @var \Drupal\Core\Annotation\Translation
+   *
+   * @ingroup plugin_translatable
+   */
+  public $category;
+
 }

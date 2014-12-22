@@ -10,9 +10,9 @@ namespace Drupal\Core\Block;
 use Drupal\Component\Plugin\FallbackPluginManagerInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Plugin\CategorizingPluginManagerTrait;
 use Drupal\Core\Plugin\Context\ContextAwarePluginManagerTrait;
 use Drupal\Core\Plugin\DefaultPluginManager;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Manages discovery and instantiation of block plugins.
@@ -23,15 +23,11 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  */
 class BlockManager extends DefaultPluginManager implements BlockManagerInterface, FallbackPluginManagerInterface {
 
-  use StringTranslationTrait;
+  use CategorizingPluginManagerTrait {
+    getSortedDefinitions as traitGetSortedDefinitions;
+    getGroupedDefinitions as traitGetGroupedDefinitions;
+  }
   use ContextAwarePluginManagerTrait;
-
-  /**
-   * An array of all available modules and their data.
-   *
-   * @var array
-   */
-  protected $moduleData;
 
   /**
    * Constructs a new \Drupal\Core\Block\BlockManager object.
@@ -56,61 +52,27 @@ class BlockManager extends DefaultPluginManager implements BlockManagerInterface
    */
   public function processDefinition(&$definition, $plugin_id) {
     parent::processDefinition($definition, $plugin_id);
-
-    // Ensure that every block has a category.
-    if (empty($definition['category'])) {
-      $definition['category'] = $this->getModuleName($definition['provider']);
-    }
-  }
-
-  /**
-   * Gets the name of the module.
-   *
-   * @param string $module
-   *   The machine name of a module.
-   *
-   * @return string
-   *   The human-readable module name if it exists, otherwise the
-   *   machine-readable module name.
-   */
-  protected function getModuleName($module) {
-    // Gather module data.
-    if (!isset($this->moduleData)) {
-      $this->moduleData = system_get_info('module');
-    }
-    // If the module exists, return its human-readable name.
-    if (isset($this->moduleData[$module])) {
-      return $this->t($this->moduleData[$module]['name']);
-    }
-    // Otherwise, return the machine name.
-    return $module;
+    $this->processDefinitionCategory($definition);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getCategories() {
-    $categories = array_unique(array_values(array_map(function ($definition) {
-      return $definition['category'];
-    }, $this->getDefinitions())));
-    natcasesort($categories);
-    return $categories;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getSortedDefinitions() {
+  public function getSortedDefinitions(array $definitions = NULL) {
     // Sort the plugins first by category, then by label.
-    $definitions = $this->getDefinitionsForContexts();
-    uasort($definitions, function ($a, $b) {
-      if ($a['category'] != $b['category']) {
-        return strnatcasecmp($a['category'], $b['category']);
-      }
-      return strnatcasecmp($a['admin_label'], $b['admin_label']);
-    });
+    $definitions = $this->traitGetSortedDefinitions($definitions, 'admin_label');
     // Do not display the 'broken' plugin in the UI.
     unset($definitions['broken']);
+    return $definitions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getGroupedDefinitions(array $definitions = NULL) {
+    $definitions = $this->traitGetGroupedDefinitions($definitions, 'admin_label');
+    // Do not display the 'broken' plugin in the UI.
+    unset($definitions[$this->t('Block')]['broken']);
     return $definitions;
   }
 

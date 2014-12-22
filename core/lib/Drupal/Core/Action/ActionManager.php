@@ -7,8 +7,10 @@
 
 namespace Drupal\Core\Action;
 
+use Drupal\Component\Plugin\CategorizingPluginManagerInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Plugin\CategorizingPluginManagerTrait;
 use Drupal\Core\Plugin\DefaultPluginManager;
 
 /**
@@ -19,7 +21,9 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  * @see \Drupal\Core\Action\ActionBase
  * @see plugin_api
  */
-class ActionManager extends DefaultPluginManager {
+class ActionManager extends DefaultPluginManager implements CategorizingPluginManagerInterface {
+
+  use CategorizingPluginManagerTrait;
 
   /**
    * Constructs a new class instance.

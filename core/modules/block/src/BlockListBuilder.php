@@ -332,9 +332,10 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
     $form['place_blocks']['list']['#type'] = 'container';
     $form['place_blocks']['list']['#attributes']['class'][] = 'entity-meta';
 
-    // Sort the plugins first by category, then by label.
-    $plugins = $this->blockManager->getSortedDefinitions();
-    foreach ($plugins as $plugin_id => $plugin_definition) {
+    // Only add blocks which work without any available context.
+    $definitions = $this->blockManager->getDefinitionsForContexts();
+    $sorted_definitions = $this->blockManager->getSortedDefinitions($definitions);
+    foreach ($sorted_definitions as $plugin_id => $plugin_definition) {
       $category = String::checkPlain($plugin_definition['category']);
       $category_key = 'category-' . $category;
       if (!isset($form['place_blocks']['list'][$category_key])) {
