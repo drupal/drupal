@@ -1310,7 +1310,6 @@
  * @see common.inc
  * @see file
  * @see format
- * @see mail.inc
  * @see php_wrappers
  * @see sanitization
  * @see transliteration
