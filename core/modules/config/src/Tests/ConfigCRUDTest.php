@@ -128,13 +128,26 @@ class ConfigCRUDTest extends KernelTestBase {
 
     // Test renaming when config.factory does not have the object in its static
     // cache.
+    $config_factory = $this->container->get('config.factory');
     $name = 'config_test.crud_rename';
+    // Turn off overrides and pollute the non-overrides static cache.
+    $config_factory->setOverrideState(FALSE);
+    \Drupal::config($name);
+    // Turn on overrides and pollute the overrides static cache.
+    $config_factory->setOverrideState(TRUE);
     $config = \Drupal::config($name);
+    // Rename and ensure that happened properly.
     $new_name = 'config_test.crud_rename_no_cache';
-    $this->container->get('config.factory')->clearStaticCache()->rename($name, $new_name);
+    $config_factory->rename($name, $new_name);
     $renamed_config = \Drupal::config($new_name);
     $this->assertIdentical($renamed_config->get(), $config->get());
     $this->assertIdentical($renamed_config->isNew(), FALSE);
+    // Ensure the overrides static cache has been cleared.
+    $this->assertIdentical(\Drupal::config($name)->isNew(), TRUE);
+    // Ensure the non-overrides static cache has been cleared.
+    $config_factory->setOverrideState(FALSE);
+    $this->assertIdentical(\Drupal::config($name)->isNew(), TRUE);
+    $config_factory->setOverrideState(TRUE);
 
     // Merge data into the configuration object.
     $new_config = \Drupal::config($new_name);

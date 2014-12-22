@@ -219,8 +219,9 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    */
   public function rename($old_name, $new_name) {
     $this->storage->rename($old_name, $new_name);
-    $old_cache_key = $this->getConfigCacheKey($old_name);
-    if (isset($this->cache[$old_cache_key])) {
+
+    // Clear out the static cache of any references to the old name.
+    foreach ($this->getConfigCacheKeys($old_name) as $old_cache_key) {
       unset($this->cache[$old_cache_key]);
     }
 
