@@ -145,7 +145,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // Add the $form_arg as the callback object and determine the form ID.
     $form_state->setFormObject($form_arg);
     if ($form_arg instanceof BaseFormIdInterface) {
-      $form_state->addBuildInfo('base_form_id', $form_arg->getBaseFormID());
+      $form_state->addBuildInfo('base_form_id', $form_arg->getBaseFormId());
     }
     return $form_arg->getFormId();
   }

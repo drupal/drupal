@@ -19,7 +19,7 @@ abstract class ContentEntityConfirmFormBase extends ContentEntityForm implements
   /**
    * {@inheritdoc}
    */
-  public function getBaseFormID() {
+  public function getBaseFormId() {
     return $this->entity->getEntityTypeId() . '_confirm_form';
   }
 

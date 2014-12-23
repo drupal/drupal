@@ -22,7 +22,7 @@ abstract class EntityConfirmFormBase extends EntityForm implements ConfirmFormIn
   /**
    * {@inheritdoc}
    */
-  public function getBaseFormID() {
+  public function getBaseFormId() {
     return $this->entity->getEntityTypeId() . '_confirm_form';
   }
 

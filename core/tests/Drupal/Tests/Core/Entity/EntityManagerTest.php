@@ -1485,7 +1485,7 @@ class TestEntityForm extends EntityHandlerBase {
   /**
    * {@inheritdoc}
    */
-  public function getBaseFormID() {
+  public function getBaseFormId() {
     return 'the_base_form_id';
   }
 

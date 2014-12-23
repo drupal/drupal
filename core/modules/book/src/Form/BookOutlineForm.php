@@ -58,7 +58,7 @@ class BookOutlineForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  public function getBaseFormID() {
+  public function getBaseFormId() {
     return NULL;
   }
 
