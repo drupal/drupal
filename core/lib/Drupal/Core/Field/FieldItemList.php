@@ -124,37 +124,12 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    * {@inheritdoc}
    */
   public function setValue($values, $notify = TRUE) {
-    if (!isset($values) || $values === array()) {
-      $this->list = array();
+    // Support passing in only the value of the first item, either as a litteral
+    // (value of the first property) or as an array of properties.
+    if (isset($values) && (!is_array($values) || (!empty($values) && !is_numeric(current(array_keys($values)))))) {
+      $values = array(0 => $values);
     }
-    else {
-      // Support passing in only the value of the first item.
-      if (!is_array($values) || !is_numeric(current(array_keys($values)))) {
-        $values = array(0 => $values);
-      }
-
-      // Clear the values of properties for which no value has been passed.
-      if (isset($this->list)) {
-        $this->list = array_intersect_key($this->list, $values);
-      }
-
-      // Set the values.
-      foreach ($values as $delta => $value) {
-        if (!is_numeric($delta)) {
-          throw new \InvalidArgumentException('Unable to set a value with a non-numeric delta in a list.');
-        }
-        elseif (!isset($this->list[$delta])) {
-          $this->list[$delta] = $this->createItem($delta, $value);
-        }
-        else {
-          $this->list[$delta]->setValue($value, FALSE);
-        }
-      }
-    }
-    // Notify the parent of any changes.
-    if ($notify && isset($this->parent)) {
-      $this->parent->onChange($this->name);
-    }
+    parent::setValue($values, $notify);
   }
 
   /**

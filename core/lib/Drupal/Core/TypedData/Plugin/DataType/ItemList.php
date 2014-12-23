@@ -79,7 +79,7 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
           $this->list[$delta] = $this->createItem($delta, $value);
         }
         else {
-          $this->list[$delta]->setValue($value);
+          $this->list[$delta]->setValue($value, FALSE);
         }
       }
     }
