@@ -32,7 +32,7 @@ class UrlRewritingTest extends FileTestBase {
 
     // Test alteration of file URLs to use a CDN.
     \Drupal::state()->set('file_test.hook_file_url_alter', 'cdn');
-    $filepath = 'core/assets/vendor/jquery/jquery.js';
+    $filepath = 'core/assets/vendor/jquery/jquery.min.js';
     $url = file_create_url($filepath);
     $this->assertEqual(FILE_URL_TEST_CDN_1 . '/' . $filepath, $url, 'Correctly generated a CDN URL for a shipped file.');
     $filepath = 'core/misc/favicon.ico';
@@ -41,7 +41,7 @@ class UrlRewritingTest extends FileTestBase {
 
     // Test alteration of file URLs to use root-relative URLs.
     \Drupal::state()->set('file_test.hook_file_url_alter', 'root-relative');
-    $filepath = 'core/assets/vendor/jquery/jquery.js';
+    $filepath = 'core/assets/vendor/jquery/jquery.min.js';
     $url = file_create_url($filepath);
     $this->assertEqual(base_path() . '/' . $filepath, $url, 'Correctly generated a root-relative URL for a shipped file.');
     $filepath = 'core/misc/favicon.ico';
@@ -50,7 +50,7 @@ class UrlRewritingTest extends FileTestBase {
 
     // Test alteration of file URLs to use protocol-relative URLs.
     \Drupal::state()->set('file_test.hook_file_url_alter', 'protocol-relative');
-    $filepath = 'core/assets/vendor/jquery/jquery.js';
+    $filepath = 'core/assets/vendor/jquery/jquery.min.js';
     $url = file_create_url($filepath);
     $this->assertEqual('/' . base_path() . '/' . $filepath, $url, 'Correctly generated a protocol-relative URL for a shipped file.');
     $filepath = 'core/misc/favicon.ico';
@@ -109,7 +109,7 @@ class UrlRewritingTest extends FileTestBase {
     \Drupal::setContainer($this->container);
 
     // Shipped file.
-    $filepath = 'core/assets/vendor/jquery/jquery.js';
+    $filepath = 'core/assets/vendor/jquery/jquery.min.js';
     $url = file_create_url($filepath);
     $this->assertIdentical(base_path() . $filepath, file_url_transform_relative($url));
 

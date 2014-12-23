@@ -334,7 +334,7 @@ class AttachedAssetsTest extends KernelTestBase {
     $js = drupal_get_js();
     $this->assertTrue(strpos($js, 'lighter.css') < strpos($js, 'first.js'), 'Lighter CSS assets are rendered first.');
     $this->assertTrue(strpos($js, 'lighter.js') < strpos($js, 'first.js'), 'Lighter JavaScript assets are rendered first.');
-    $this->assertTrue(strpos($js, 'before-jquery.js') < strpos($js, 'core/assets/vendor/jquery/jquery.js'), 'Rendering a JavaScript file above jQuery.');
+    $this->assertTrue(strpos($js, 'before-jquery.js') < strpos($js, 'core/assets/vendor/jquery/jquery.min.js'), 'Rendering a JavaScript file above jQuery.');
   }
 
   /**

@@ -37,7 +37,7 @@ class DownloadTest extends FileManagedTestBase {
 
     // Test generating an URL to a shipped file (i.e. a file that is part of
     // Drupal core, a module or a theme, for example a JavaScript file).
-    $filepath = 'core/assets/vendor/jquery/jquery.js';
+    $filepath = 'core/assets/vendor/jquery/jquery.min.js';
     $url = file_create_url($filepath);
     $this->assertEqual($GLOBALS['base_url'] . '/' . $filepath, $url, 'Correctly generated a URL for a shipped file.');
     $this->drupalHead($url);
