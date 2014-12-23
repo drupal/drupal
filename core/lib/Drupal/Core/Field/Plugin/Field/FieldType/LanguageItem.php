@@ -20,6 +20,8 @@ use Drupal\Core\TypedData\DataReferenceDefinition;
  *   id = "language",
  *   label = @Translation("Language"),
  *   description = @Translation("An entity field referencing a language."),
+ *   default_widget = "language_select",
+ *   default_formatter = "language",
  *   no_ui = TRUE,
  *   constraints = {
  *     "ComplexData" = {

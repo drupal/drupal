@@ -12,7 +12,6 @@ use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Flood\FloodInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -97,15 +96,6 @@ class MessageForm extends ContentEntityForm {
       );
       $form['preview']['message'] = $this->entityManager->getViewBuilder('contact_message')->view($message, 'full');
     }
-
-    $form['langcode'] = array(
-      '#title' => $this->t('Language'),
-      '#type' => 'language_select',
-      '#default_value' => $message->getUntranslated()->language()->getId(),
-      '#languages' => Language::STATE_ALL,
-      // Language module may expose or hide this element, see language_form_alter().
-      '#access' => FALSE,
-    );
 
     $form['name'] = array(
       '#type' => 'textfield',

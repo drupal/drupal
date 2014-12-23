@@ -52,8 +52,8 @@ class FeedLanguageTest extends AggregatorTestBase {
     /** @var \Drupal\aggregator\FeedInterface[] $feeds */
     $feeds = array();
     // Create feeds.
-    $feeds[1] = $this->createFeed(NULL, array('langcode' => $this->langcodes[1]));
-    $feeds[2] = $this->createFeed(NULL, array('langcode' => $this->langcodes[2]));
+    $feeds[1] = $this->createFeed(NULL, array('langcode[0][value]' => $this->langcodes[1]));
+    $feeds[2] = $this->createFeed(NULL, array('langcode[0][value]' => $this->langcodes[2]));
 
     // Make sure that the language has been assigned.
     $this->assertEqual($feeds[1]->language()->getId(), $this->langcodes[1]);

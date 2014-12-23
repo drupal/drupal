@@ -11,30 +11,23 @@
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Render\Element;
-use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Url;
-use Drupal\language\Entity\ContentLanguageSettings;
-use Symfony\Component\HttpFoundation\Response;
-use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\Core\Database\StatementInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Template\Attribute;
+use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\language\ConfigurableLanguageInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
-use Drupal\node\NodeTypeInterface;
 use Drupal\node\NodeInterface;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
-use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
-use Drupal\Core\Template\Attribute;
-use Drupal\file\Entity\File;
-use Drupal\language\ConfigurableLanguageInterface;
-use Drupal\block\Entity\Block;
-use Drupal\Core\Session\AccountInterface;
+use Drupal\node\NodeTypeInterface;
 
 /**
  * Denotes that the node is not published.
@@ -371,30 +364,8 @@ function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
  */
 function node_entity_extra_field_info() {
   $extra = array();
-  $module_language_enabled = \Drupal::moduleHandler()->moduleExists('language');
   $description = t('Node module element');
-
   foreach (node_type_get_types() as $bundle) {
-    // Add the 'language' select if Language module is enabled and the bundle
-    // has multilingual support.
-    // Visibility of the ordering of the language selector is the same as on the
-    // node/add form.
-    if ($module_language_enabled) {
-      $configuration = ContentLanguageSettings::loadByEntityTypeBundle('node', $bundle->type);
-      if ($configuration->isLanguageAlterable()) {
-        $extra['node'][$bundle->type]['form']['langcode'] = array(
-          'label' => t('Language'),
-          'description' => $description,
-          'weight' => 0,
-        );
-      }
-    }
-    $extra['node'][$bundle->type]['display']['langcode'] = array(
-      'label' => t('Language'),
-      'description' => $description,
-      'weight' => 0,
-      'visible' => FALSE,
-    );
     $extra['node'][$bundle->type]['display']['links'] = array(
       'label' => t('Links'),
       'description' => $description,

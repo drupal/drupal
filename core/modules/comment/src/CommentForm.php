@@ -14,10 +14,8 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\language\Entity\ContentLanguageSettings;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -161,15 +159,6 @@ class CommentForm extends ContentEntityForm {
     elseif($this->currentUser->isAnonymous()) {
       $form['author']['name']['#attributes']['data-drupal-default-value'] = $this->config('user.settings')->get('anonymous');
     }
-
-    $form['langcode'] = array(
-      '#title' => t('Language'),
-      '#type' => 'language_select',
-      '#default_value' => $comment->getUntranslated()->language()->getId(),
-      '#languages' => Language::STATE_ALL,
-      // Language module may expose or hide this element, see language_form_alter().
-      '#access' => FALSE,
-    );
 
     // Add author email and homepage fields depending on the current user.
     $form['author']['mail'] = array(

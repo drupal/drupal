@@ -144,8 +144,12 @@ class Message extends ContentEntityBase implements MessageInterface {
       ->setReadOnly(TRUE);
 
     $fields['langcode'] = BaseFieldDefinition::create('language')
-      ->setLabel(t('Language code'))
-      ->setDescription(t('The comment language code.'));
+      ->setLabel(t('Language'))
+      ->setDescription(t('The message language code.'))
+      ->setDisplayOptions('form', array(
+        'type' => 'language_select',
+        'weight' => 2,
+      ));
 
     $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t("The sender's name"))

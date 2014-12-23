@@ -213,8 +213,15 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
       ->setDescription(t('A serialized array of route parameters of this shortcut.'));
 
     $fields['langcode'] = BaseFieldDefinition::create('language')
-      ->setLabel(t('Language code'))
-      ->setDescription(t('The language code of the shortcut.'));
+      ->setLabel(t('Language'))
+      ->setDescription(t('The language code of the shortcut.'))
+      ->setDisplayOptions('view', array(
+        'type' => 'hidden',
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'language_select',
+        'weight' => 2,
+      ));
 
     $fields['path'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Path'))

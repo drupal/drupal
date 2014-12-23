@@ -95,12 +95,12 @@ class LocaleContentTest extends WebTestBase {
     $this->drupalLogin($web_user);
     $this->drupalGet("node/add/{$type1->type}");
     // Verify language select list is not present.
-    $this->assertNoFieldByName('language', NULL, 'Language select not present on the node add form.');
+    $this->assertNoFieldByName('langcode[0][value]', NULL, 'Language select not present on the node add form.');
 
     // Verify language selection appears on the node add form.
     $this->drupalGet("node/add/{$type2->type}");
     // Verify language select list is present.
-    $this->assertFieldByName('langcode', NULL, 'Language select present on the node add form.');
+    $this->assertFieldByName('langcode[0][value]', NULL, 'Language select present on the node add form.');
     // Ensure language appears.
     $this->assertText($name, 'Language present.');
 
@@ -120,7 +120,7 @@ class LocaleContentTest extends WebTestBase {
     $this->assertRaw('<option value="' . $langcode . '" selected="selected">' .  $name . '</option>', 'Correct language selected.');
     // Ensure we can change the node language.
     $edit = array(
-      'langcode' => 'en',
+      'langcode[0][value]' => 'en',
     );
     $this->drupalPostForm($path, $edit, t('Save'));
     $this->assertRaw(t('%title has been updated.', array('%title' => $node_title)));

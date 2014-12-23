@@ -35,13 +35,6 @@ class EntityTestForm extends ContentEntityForm {
     $form = parent::form($form, $form_state);
     $entity = $this->entity;
 
-    $form['langcode'] = array(
-      '#title' => t('Language'),
-      '#type' => 'language_select',
-      '#default_value' => $entity->getUntranslated()->language()->getId(),
-      '#languages' => LanguageInterface::STATE_ALL,
-    );
-
     // @todo: Is there a better way to check if an entity type is revisionable?
     if ($entity->getEntityType()->hasKey('revision') && !$entity->isNew()) {
       $form['revision'] = array(

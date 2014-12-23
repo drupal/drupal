@@ -13,7 +13,6 @@ use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Menu\Form\MenuLinkFormInterface;
 use Drupal\Core\Menu\MenuLinkInterface;
@@ -255,15 +254,6 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
       '#default_value' => $default_value,
       '#required' => TRUE,
       '#weight' => -2,
-    );
-
-    $form['langcode'] = array(
-      '#title' => t('Language'),
-      '#type' => 'language_select',
-      '#default_value' =>  $this->entity->getUntranslated()->language()->getId(),
-      '#languages' => Language::STATE_ALL,
-      // Language module may expose or hide this element, see language_form_alter().
-      '#access' => FALSE,
     );
 
     $default = $this->entity->getMenuName() . ':' . $this->entity->getParentId();

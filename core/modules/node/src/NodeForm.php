@@ -9,13 +9,11 @@ namespace Drupal\node;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\ContentEntityForm;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\language\Entity\ContentLanguageSettings;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\user\Entity\User;
 use Drupal\user\TempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\user\Entity\User;
 
 /**
  * Form controller for the node edit forms.
@@ -114,15 +112,6 @@ class NodeForm extends ContentEntityForm {
     $form['changed'] = array(
       '#type' => 'hidden',
       '#default_value' => $node->getChangedTime(),
-    );
-
-    $form['langcode'] = array(
-      '#title' => t('Language'),
-      '#type' => 'language_select',
-      '#default_value' => $node->getUntranslated()->language()->getId(),
-      '#languages' => LanguageInterface::STATE_ALL,
-      // Language module may expose or hide this element, see language_form_alter().
-      '#access' => FALSE,
     );
 
     $form['advanced'] = array(

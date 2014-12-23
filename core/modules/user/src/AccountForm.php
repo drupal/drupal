@@ -16,8 +16,8 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Url;
 use Drupal\language\ConfigurableLanguageManagerInterface;
-use Drupal\user\Plugin\LanguageNegotiation\LanguageNegotiationUserAdmin;
 use Drupal\user\Plugin\LanguageNegotiation\LanguageNegotiationUser;
+use Drupal\user\Plugin\LanguageNegotiation\LanguageNegotiationUserAdmin;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -266,6 +266,10 @@ abstract class AccountForm extends ContentEntityForm {
       '#languages' => LanguageInterface::STATE_CONFIGURABLE,
       '#default_value' => $user_preferred_langcode,
       '#description' => $user_language_added ? $this->t("This account's preferred language for emails and site presentation.") : $this->t("This account's preferred language for emails."),
+      // This is used to explain that user preferred language and entity
+      // language are synchronized. It can be removed if a different behavior is
+      // desired.
+      '#pre_render' => ['user_langcode' => [$this, 'alterPreferredLangcodeDescription']],
     );
 
     // Only show the account setting for Administration pages language to users
@@ -284,23 +288,50 @@ abstract class AccountForm extends ContentEntityForm {
       '#empty_option' => $this->t('- No preference -'),
       '#empty_value' => '',
     );
+
     // User entities contain both a langcode property (for identifying the
     // language of the entity data) and a preferred_langcode property (see
     // above). Rather than provide a UI forcing the user to choose both
     // separately, assume that the user profile data is in the user's preferred
-    // language. This element provides that synchronization. For use-cases where
-    // this synchronization is not desired, a module can alter or remove this
-    // element.
-    $form['language']['langcode'] = array(
-      '#type' => 'value',
-      '#value_callback' => '_user_language_selector_langcode_value',
-      // For the synchronization to work, this element must have a larger weight
-      // than the preferred_langcode element. Set a large weight here in case
-      // a module alters the weight of the other element.
-      '#weight' => 100,
-    );
+    // language. This entity builder provides that synchronization. For
+    // use-cases where this synchronization is not desired, a module can alter
+    // or remove this item.
+    $form['#entity_builders']['sync_user_langcode'] = [$this, 'syncUserLangcode'];
 
     return parent::form($form, $form_state, $account);
+  }
+
+  /**
+   * Alters the preferred language widget description.
+   *
+   * @param array $element
+   *   The preferred language form element.
+   *
+   * @return array
+   *   The preferred language form element.
+   */
+  public function alterPreferredLangcodeDescription(array $element) {
+    // Only add to the description if the form element has a description.
+    if (isset($element['#description'])) {
+      $element['#description'] .= ' ' . $this->t("This is also assumed to be the primary language of this account's profile information.");
+    }
+    return $element;
+  }
+
+  /**
+   * Synchronizes preferred language and entity language.
+   *
+   * @param string $entity_type_id
+   *   The entity type identifier.
+   * @param \Drupal\user\UserInterface $user
+   *   The entity updated with the submitted values.
+   * @param array $form
+   *   The complete form array.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   */
+  public function syncUserLangcode($entity_type_id, UserInterface $user, array &$form, FormStateInterface &$form_state) {
+    $user->langcode = $user->preferred_langcode;
   }
 
   /**

@@ -78,22 +78,6 @@ class NodeTranslationUITest extends ContentTranslationUITest {
   /**
    * {@inheritdoc}
    */
-  protected function createEntity($values, $langcode, $bundle_name = NULL) {
-    $this->drupalLogin($this->editor);
-    $edit = array(
-      'title[0][value]' => $values['title'][0]['value'],
-      "{$this->fieldName}[0][value]" => $values[$this->fieldName][0]['value'],
-      'langcode' => $langcode,
-    );
-    $this->drupalPostForm('node/add/article', $edit, t('Save and publish'));
-    $this->drupalLogin($this->translator);
-    $node = $this->drupalGetNodeByTitle($values['title']);
-    return $node->id();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function getFormSubmitAction(EntityInterface $entity, $langcode) {
     if ($entity->getTranslation($langcode)->isPublished()) {
       return t('Save and keep published') . $this->getFormSubmitSuffix($entity, $langcode);

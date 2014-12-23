@@ -5,12 +5,15 @@
  * Add language handling functionality to Drupal.
  */
 
-use Drupal\Component\Utility\String;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\ContentEntityFormInterface;
 use Drupal\Core\Entity\EntityFormInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\language\ConfigurableLanguageInterface;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUI;
@@ -171,6 +174,24 @@ function language_process_language_select($element) {
     $element['#options'] = array('en' => t('Built-in English')) + $element['#options'];
   }
   return $element;
+}
+
+/**
+ * Implements hook_entity_base_field_info_alter().
+ */
+function language_entity_base_field_info_alter(&$fields) {
+  foreach ($fields as $definition) {
+    // Set configurable form display for language fields with display options.
+    if ($definition->getType() == 'language') {
+      foreach (array('form', 'view') as $type)  {
+        if ($definition->getDisplayOptions($type)) {
+          // The related configurations will be purged manually on Language
+          // module uninstallation. @see language_modules_uninstalled().
+          $definition->setDisplayConfigurable($type, TRUE);
+        }
+      }
+    }
+  }
 }
 
 /**
@@ -348,6 +369,19 @@ function language_modules_installed($modules) {
     $negotiator->updateConfiguration(array());
     $negotiator->purgeConfiguration();
   }
+  else {
+    // In language_entity_base_field_info_alter() we are altering view/form
+    // display definitions to make language fields display configurable. Since
+    // this is not a hard dependency, and thus is not detected by the config
+    // system, we have to clean up the related values manually.
+    foreach (array('entity_view_display', 'entity_form_display') as $key) {
+      $displays = \Drupal::entityManager()->getStorage($key)->loadMultiple();
+      /** @var \Drupal\Core\Entity\Display\EntityDisplayInterface $display */
+      foreach ($displays as $display) {
+        $display->save();
+      }
+    }
+  }
 }
 
 /**
@@ -481,3 +515,16 @@ function language_field_info_alter(&$info) {
   // Change the default behavior of language field.
   $info['language']['class'] = '\Drupal\language\DefaultLanguageItem';
 }
+
+/**
+ * Implements hook_entity_field_access()
+ */
+function language_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+  if ($field_definition->getName() == 'langcode') {
+    $entity = $items->getEntity();
+    $config = ContentLanguageSettings::loadByEntityTypeBundle($entity->getEntityTypeId(), $entity->bundle());
+    return AccessResult::forbiddenIf(!$config->isLanguageAlterable());
+  }
+  return AccessResult::neutral();
+}
+

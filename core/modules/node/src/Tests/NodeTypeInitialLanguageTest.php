@@ -66,8 +66,8 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
     );
     $this->drupalPostForm('admin/structure/types/manage/article', $edit, t('Save content type'));
     $this->drupalGet('node/add/article');
-    $this->assertField('langcode', 'Language is selectable on node add/edit page when language not hidden.');
-    $this->assertOptionSelected('edit-langcode', 'hu', 'The initial language is the site default on the node add page after the site default language is changed.');
+    $this->assertField('langcode[0][value]', 'Language is selectable on node add/edit page when language not hidden.');
+    $this->assertOptionSelected('edit-langcode-0-value', 'hu', 'The initial language is the site default on the node add page after the site default language is changed.');
 
     // Tests if the language field can be rearranged on the manage form display
     // tab.
@@ -88,7 +88,7 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
     );
     $this->drupalPostForm('admin/structure/types/manage/article', $edit, t('Save content type'));
     $this->drupalGet('node/add/article');
-    $this->assertOptionSelected('edit-langcode', 'en', 'The initial language is the defined language.');
+    $this->assertOptionSelected('edit-langcode-0-value', 'en', 'The initial language is the defined language.');
   }
 
   /**
@@ -111,13 +111,13 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
     ));
     $this->assertTrue(empty($language_field), 'Language field value is not shown by default on node page.');
 
-    // Changes Language field visibility to true and check if it is saved.
+    // Configures Language field formatter and check if it is saved.
     $edit = array(
-      'fields[langcode][type]' => 'visible',
+      'fields[langcode][type]' => 'language',
     );
     $this->drupalPostForm('admin/structure/types/manage/article/display', $edit, t('Save'));
     $this->drupalGet('admin/structure/types/manage/article/display');
-    $this->assertOptionSelected('edit-fields-langcode-type', 'visible', 'Language field has been set to visible.');
+    $this->assertOptionSelected('edit-fields-langcode-type', 'language', 'Language field has been set to visible.');
 
     // Loads node page and check if Language field is shown.
     $this->drupalGet('node/' . $node->id());
@@ -126,4 +126,5 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
     ));
     $this->assertFalse(empty($language_field), 'Language field value is shown on node page.');
   }
+
 }

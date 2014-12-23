@@ -426,18 +426,6 @@ function user_user_view(array &$build, UserInterface $account, EntityViewDisplay
 }
 
 /**
- * Sets the value of the user register and profile forms' langcode element.
- */
-function _user_language_selector_langcode_value($element, $input, FormStateInterface $form_state) {
-  // Only add to the description if the form element have a description.
-  $complete_form = &$form_state->getCompleteForm();
-  if (isset($complete_form['language']['preferred_langcode']['#description'])) {
-    $complete_form['language']['preferred_langcode']['#description'] .= ' ' . t("This is also assumed to be the primary language of this account's profile information.");
-  }
-  return $form_state->getValue('preferred_langcode');
-}
-
-/**
  * Form validation handler for the current password on the user account form.
  *
  * @see AccountForm::form()

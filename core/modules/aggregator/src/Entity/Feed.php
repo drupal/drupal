@@ -153,7 +153,14 @@ class Feed extends ContentEntityBase implements FeedInterface {
 
     $fields['langcode'] = BaseFieldDefinition::create('language')
       ->setLabel(t('Language code'))
-      ->setDescription(t('The feed language code.'));
+      ->setDescription(t('The feed language code.'))
+      ->setDisplayOptions('view', array(
+        'type' => 'hidden',
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'language_select',
+        'weight' => 2,
+      ));
 
     $fields['url'] = BaseFieldDefinition::create('uri')
       ->setLabel(t('URL'))

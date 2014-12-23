@@ -93,7 +93,7 @@ class CommentLanguageTest extends WebTestBase {
       $edit = array(
         'title[0][value]' => $title,
         'body[0][value]' => $this->randomMachineName(),
-        'langcode' => $node_langcode,
+        'langcode[0][value]' => $node_langcode,
         'comment[0][status]' => CommentItemInterface::OPEN,
       );
       $this->drupalPostForm("node/add/article", $edit, t('Save'));

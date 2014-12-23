@@ -7,13 +7,9 @@
 
 namespace Drupal\aggregator;
 
-use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\ContentEntityForm;
-use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form controller for the aggregator feed edit forms.
@@ -24,21 +20,13 @@ class FeedForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
-    $feed = $this->entity;
+    $form = parent::form($form, $form_state);
+    // @todo Allow non translatable entity types having language support to be
+    // configured in the content language setting.
 
-    // @todo: convert to a language selection widget defined in the base field.
-    //   Blocked on https://drupal.org/node/2226493 which adds a generic
-    //   language widget.
-    // Language module may expose or hide this element, see language_form_alter().
-    $form['langcode'] = array(
-      '#title' => $this->t('Language'),
-      '#type' => 'language_select',
-      '#default_value' => $feed->language()->getId(),
-      '#languages' => LanguageInterface::STATE_ALL,
-      '#weight' => -4,
-    );
-
-    return parent::form($form, $form_state, $feed);
+    // Ensure the language widget is displayed.
+    $form['langcode']['#access'] = TRUE;
+    return $form;
   }
 
   /**

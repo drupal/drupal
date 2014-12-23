@@ -8,7 +8,6 @@
 namespace Drupal\content_translation\Tests;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 
@@ -74,7 +73,7 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
     $path = $langcode . '/' . $content_translation_path . '/add/' . $default_langcode . '/' . $langcode;
     $this->drupalPostForm($path, $this->getEditValues($values, $langcode), $this->getFormSubmitActionForNewTranslation($entity, $langcode));
     if ($this->testLanguageSelector) {
-      $this->assertNoFieldByXPath('//select[@id="edit-langcode"]', NULL, 'Language selector correctly disabled on translations.');
+      $this->assertNoFieldByXPath('//select[@id="edit-langcode-0-value"]', NULL, 'Language selector correctly disabled on translations.');
     }
     $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
     $this->drupalGet($entity->getSystemPath('drupal:content-translation-overview'));
@@ -137,20 +136,19 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
   protected function doTestOutdatedStatus() {
     $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
     $langcode = 'fr';
-    $default_langcode = $this->langcodes[0];
+    $languages = \Drupal::languageManager()->getLanguages();
 
     // Mark translations as outdated.
     $edit = array('content_translation[retranslate]' => TRUE);
-    $edit_path = $entity->getSystemPath('edit-form');
-    $this->drupalPostForm($langcode . '/' . $edit_path, $edit, $this->getFormSubmitAction($entity, $langcode));
+    $path = $entity->getSystemPath('edit-form');
+    $this->drupalPostForm($path, $edit, $this->getFormSubmitAction($entity, $langcode), array('language' => $languages[$langcode]));
     $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
 
     // Check that every translation has the correct "outdated" status, and that
     // the Translation fieldset is open if the translation is "outdated".
     foreach ($this->langcodes as $added_langcode) {
-      $prefix = $added_langcode != $default_langcode ? $added_langcode . '/' : '';
-      $path = $prefix . $edit_path;
-      $this->drupalGet($path);
+      $options = array('language' => $languages[$added_langcode]);
+      $this->drupalGet($path, $options);
       if ($added_langcode == $langcode) {
         $this->assertFieldByXPath('//input[@name="content_translation[retranslate]"]', FALSE, 'The retranslate flag is not checked by default.');
         $this->assertFalse($this->xpath('//details[@id="edit-content-translation" and @open="open"]'), 'The translation tab should be collapsed by default.');
@@ -159,8 +157,8 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
         $this->assertFieldByXPath('//input[@name="content_translation[outdated]"]', TRUE, 'The translate flag is checked by default.');
         $this->assertTrue($this->xpath('//details[@id="edit-content-translation" and @open="open"]'), 'The translation tab is correctly expanded when the translation is outdated.');
         $edit = array('content_translation[outdated]' => FALSE);
-        $this->drupalPostForm($path, $edit, $this->getFormSubmitAction($entity, $added_langcode));
-        $this->drupalGet($path);
+        $this->drupalPostForm($path, $edit, $this->getFormSubmitAction($entity, $added_langcode), $options);
+        $this->drupalGet($path, $options);
         $this->assertFieldByXPath('//input[@name="content_translation[retranslate]"]', FALSE, 'The retranslate flag is now shown.');
         $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
         $this->assertFalse($entity->translation[$added_langcode]['outdated'], 'The "outdated" status has been correctly stored.');

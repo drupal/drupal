@@ -10,7 +10,6 @@ namespace Drupal\shortcut;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Path\PathValidatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -67,13 +66,6 @@ class ShortcutForm extends ContentEntityForm {
       '#maxlength' => 255,
       '#field_prefix' => $this->url('<front>', array(), array('absolute' => TRUE)),
       '#default_value' => $this->entity->path->value,
-    );
-
-    $form['langcode'] = array(
-      '#title' => t('Language'),
-      '#type' => 'language_select',
-      '#default_value' => $this->entity->getUntranslated()->language()->getId(),
-      '#languages' => LanguageInterface::STATE_ALL,
     );
 
     return $form;

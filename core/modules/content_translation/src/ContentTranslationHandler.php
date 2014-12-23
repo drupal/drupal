@@ -144,22 +144,33 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
       }
     }
 
-    // Disable languages for existing translations, so it is not possible to
-    // switch this node to some language which is already in the translation
-    // set.
-    $language_widget = isset($form['langcode']) && $form['langcode']['#type'] == 'language_select';
-    if ($language_widget && $has_translations) {
-      $form['langcode']['#options'] = array();
-      foreach (language_list(LanguageInterface::STATE_CONFIGURABLE) as $language) {
-        if (empty($translations[$language->getId()]) || $language->getId() == $entity_langcode) {
-          $form['langcode']['#options'][$language->getId()] = $language->getName();
-        }
-      }
+    // Locate the language widget.
+    $language_field = $this->entityType->getKey('langcode') ?: 'langcode';
+    if (isset($form[$language_field])) {
+      $language_widget = &$form[$language_field];
     }
 
+    // If we are editing the source entity, limit the list of languages so that
+    // it is not possible to switch to a language for which a translation
+    // already exists. Note that this will only work if the widget is structured
+    // like \Drupal\Core\Field\Plugin\Field\FieldWidget\LanguageSelectWidget.
+    if (isset($language_widget['widget'][0]['value']) && !$is_translation && $has_translations) {
+      $language_select = &$language_widget['widget'][0]['value'];
+      if ($language_select['#type'] == 'language_select') {
+        $options = array();
+        foreach (\Drupal::languageManager()->getLanguages() as $language) {
+          // Show the current language, and the languages for which no
+          // translation already exists.
+          if (empty($translations[$language->getId()]) || $language->getId() == $entity_langcode) {
+            $options[$language->getId()] = $language->getName();
+          }
+        }
+        $language_select['#options'] = $options;
+      }
+    }
     if ($is_translation) {
-      if ($language_widget) {
-        $form['langcode']['#access'] = FALSE;
+      if (isset($language_widget)) {
+        $language_widget['widget']['#access'] = FALSE;
       }
 
       // Replace the delete button with the delete translation one.
@@ -271,8 +282,8 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
         '#default_value' => $new_translation ? '' : format_date($date, 'custom', 'Y-m-d H:i:s O'),
       );
 
-      if ($language_widget) {
-        $form['langcode']['#multilingual'] = TRUE;
+      if (isset($language_widget)) {
+        $language_widget['#multilingual'] = TRUE;
       }
 
       $form['#process'][] = array($this, 'entityFormSharedElements');
