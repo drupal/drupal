@@ -84,7 +84,7 @@ class EntityReferenceFieldDefaultValueTest extends WebTestBase {
     $this->assertRaw('name="default_value_input[' . $field_name . '][0][target_id]" value="' . $referenced_node->getTitle() .' (' .$referenced_node->id() . ')', 'The default value is selected in instance settings page');
 
     // Check if the ID has been converted to UUID in config entity.
-    $config_entity = $this->container->get('config.factory')->get('field.field.node.reference_content.' . $field_name)->get();
+    $config_entity = $this->config('field.field.node.reference_content.' . $field_name)->get();
     $this->assertTrue(isset($config_entity['default_value'][0]['target_uuid']), 'Default value contains target_uuid property');
     $this->assertEqual($config_entity['default_value'][0]['target_uuid'], $referenced_node->uuid(), 'Content uuid and config entity uuid are the same');
     // Ensure the configuration has the expected dependency on the entity that
@@ -99,9 +99,9 @@ class EntityReferenceFieldDefaultValueTest extends WebTestBase {
     $this->assertEqual($new_node->get($field_name)->offsetGet(0)->target_id, $referenced_node->id());
 
     // Ensure that the entity reference config schemas are correct.
-    $field_config = \Drupal::config('field.field.node.reference_content.' . $field_name);
+    $field_config = $this->config('field.field.node.reference_content.' . $field_name);
     $this->assertConfigSchema(\Drupal::service('config.typed'), $field_config->getName(), $field_config->get());
-    $field_storage_config = \Drupal::config('field.storage.node.' . $field_name);
+    $field_storage_config = $this->config('field.storage.node.' . $field_name);
     $this->assertConfigSchema(\Drupal::service('config.typed'), $field_storage_config->getName(), $field_storage_config->get());
   }
 

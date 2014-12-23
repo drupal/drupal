@@ -36,7 +36,7 @@ class MigrateSystemRssTest extends MigrateDrupalTestBase {
    * Tests migration of system (rss) variables to system.rss.yml.
    */
   public function testSystemRss() {
-    $config = \Drupal::config('system.rss');
+    $config = $this->config('system.rss');
     $this->assertIdentical($config->get('items.limit'), 10);
     $this->assertIdentical($config->get('items.view_mode'), 'title');
   }

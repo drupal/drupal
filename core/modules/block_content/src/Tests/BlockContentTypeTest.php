@@ -149,7 +149,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     // Install all themes.
     \Drupal::service('theme_handler')->install(array('bartik', 'seven'));
     $themes = array('bartik', 'seven', 'classy');
-    $theme_settings = $this->container->get('config.factory')->get('system.theme');
+    $theme_settings = $this->config('system.theme');
     foreach ($themes as $default_theme) {
       // Change the default theme.
       $theme_settings->set('default', $default_theme)->save();

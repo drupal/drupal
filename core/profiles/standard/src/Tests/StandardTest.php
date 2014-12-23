@@ -98,11 +98,10 @@ class StandardTest extends WebTestBase {
     // conformance. Ensures all imported default configuration is valid when
     // standard profile modules are enabled.
     $names = $this->container->get('config.storage')->listAll();
-    $factory = $this->container->get('config.factory');
     /** @var \Drupal\Core\Config\TypedConfigManagerInterface $typed_config */
     $typed_config = $this->container->get('config.typed');
     foreach ($names as $name) {
-      $config = $factory->get($name);
+      $config = $this->config($name);
       $this->assertConfigSchema($typed_config, $name, $config->get());
     }
 

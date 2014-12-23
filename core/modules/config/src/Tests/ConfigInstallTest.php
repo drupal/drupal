@@ -33,9 +33,9 @@ class ConfigInstallTest extends KernelTestBase {
     $default_configuration_entity = 'config_test.dynamic.dotted.default';
 
     // Verify that default module config does not exist before installation yet.
-    $config = \Drupal::config($default_config);
+    $config = $this->config($default_config);
     $this->assertIdentical($config->isNew(), TRUE);
-    $config = \Drupal::config($default_configuration_entity);
+    $config = $this->config($default_configuration_entity);
     $this->assertIdentical($config->isNew(), TRUE);
 
     // Ensure that schema provided by modules that are not installed is not
@@ -52,9 +52,9 @@ class ConfigInstallTest extends KernelTestBase {
     // Verify that default module config exists.
     \Drupal::configFactory()->reset($default_config);
     \Drupal::configFactory()->reset($default_configuration_entity);
-    $config = \Drupal::config($default_config);
+    $config = $this->config($default_config);
     $this->assertIdentical($config->isNew(), FALSE);
-    $config = \Drupal::config($default_configuration_entity);
+    $config = $this->config($default_configuration_entity);
     $this->assertIdentical($config->isNew(), FALSE);
 
     // Verify that config_test API hooks were invoked for the dynamic default
@@ -67,11 +67,11 @@ class ConfigInstallTest extends KernelTestBase {
     $this->assertFalse(isset($GLOBALS['hook_config_test']['delete']));
 
     // Ensure that data type casting is applied during config installation.
-    $config = \Drupal::config('config_schema_test.schema_in_install');
+    $config = $this->config('config_schema_test.schema_in_install');
     $this->assertIdentical($config->get('integer'), 1);
 
     // Test that uninstalling configuration removes configuration schema.
-    \Drupal::config('core.extension')->set('module', array())->save();
+    $this->config('core.extension')->set('module', array())->save();
     \Drupal::service('config.manager')->uninstall('module', 'config_test');
     $this->assertFalse(\Drupal::service('config.typed')->hasConfigSchema('config_schema_test.schema_in_install'), 'Configuration schema for config_schema_test.schema_in_install does not exist.');
   }

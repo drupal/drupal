@@ -78,7 +78,7 @@ class BlockStorageUnitTest extends KernelTestBase {
     $this->assertTrue($entity instanceof Block, 'The newly created entity is a Block.');
 
     // Verify all of the block properties.
-    $actual_properties = \Drupal::config('block.block.test_block')->get();
+    $actual_properties = $this->config('block.block.test_block')->get();
     $this->assertTrue(!empty($actual_properties['uuid']), 'The block UUID is set.');
     unset($actual_properties['uuid']);
 

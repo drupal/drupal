@@ -38,7 +38,7 @@ class MigrateSystemFileTest extends MigrateDrupalTestBase {
   public function testSystemFile() {
     $old_state = \Drupal::configFactory()->getOverrideState();
     \Drupal::configFactory()->setOverrideState(FALSE);
-    $config = \Drupal::config('system.file');
+    $config = $this->config('system.file');
     $this->assertIdentical($config->get('path.temporary'), 'files/temp');
     $this->assertIdentical($config->get('allow_insecure_uploads'), TRUE);
     \Drupal::configFactory()->setOverrideState($old_state);

@@ -46,7 +46,7 @@ class MigrateDblogConfigsTest extends MigrateDrupalTestBase {
    * Tests migration of dblog variables to dblog.settings.yml.
    */
   public function testBookSettings() {
-    $config = \Drupal::config('dblog.settings');
+    $config = $this->config('dblog.settings');
     $this->assertIdentical($config->get('row_limit'), 1000);
     $this->assertConfigSchema(\Drupal::service('config.typed'), 'dblog.settings', $config->get());
   }

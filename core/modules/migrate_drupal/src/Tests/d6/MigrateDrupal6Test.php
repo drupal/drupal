@@ -153,7 +153,7 @@ class MigrateDrupal6Test extends MigrateFullDrupalTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $config = \Drupal::config('system.theme');
+    $config = $this->config('system.theme');
     $config->set('default', 'bartik');
     $config->set('admin', 'seven');
     $config->save();

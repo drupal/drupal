@@ -36,7 +36,7 @@ class MigrateSystemSiteTest extends MigrateDrupalTestBase {
    * Tests migration of system (site) variables to system.site.yml.
    */
   public function testSystemSite() {
-    $config = \Drupal::config('system.site');
+    $config = $this->config('system.site');
     $this->assertIdentical($config->get('name'), 'site_name');
     $this->assertIdentical($config->get('mail'), 'site_mail@example.com');
     $this->assertIdentical($config->get('slogan'), 'Migrate rocks');

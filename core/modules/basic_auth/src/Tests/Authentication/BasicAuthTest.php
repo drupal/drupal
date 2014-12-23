@@ -58,7 +58,7 @@ class BasicAuthTest extends WebTestBase {
    * Test the global login flood control.
    */
   function testGlobalLoginFloodControl() {
-    \Drupal::config('user.flood')
+    $this->config('user.flood')
       ->set('ip_limit', 2)
       // Set a high per-user limit out so that it is not relevant in the test.
       ->set('user_limit', 4000)
@@ -82,7 +82,7 @@ class BasicAuthTest extends WebTestBase {
    * Test the per-user login flood control.
    */
   function testPerUserLoginFloodControl() {
-    \Drupal::config('user.flood')
+    $this->config('user.flood')
       // Set a high global limit out so that it is not relevant in the test.
       ->set('ip_limit', 4000)
       ->set('user_limit', 2)
@@ -120,7 +120,7 @@ class BasicAuthTest extends WebTestBase {
    */
   function testLocale() {
     ConfigurableLanguage::createFromLangcode('de')->save();
-    \Drupal::config('system.site')->set('langcode', 'de')->save();
+    $this->config('system.site')->set('langcode', 'de')->save();
 
     $account = $this->drupalCreateUser();
 

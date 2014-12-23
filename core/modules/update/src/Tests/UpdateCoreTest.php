@@ -42,7 +42,7 @@ class UpdateCoreTest extends UpdateTestBase {
         'version' => $version,
       ),
     );
-    \Drupal::config('update_test.settings')->set('system_info', $setting)->save();
+    $this->config('update_test.settings')->set('system_info', $setting)->save();
   }
 
   /**
@@ -176,7 +176,7 @@ class UpdateCoreTest extends UpdateTestBase {
         'datestamp' => '1000000000',
       ),
     );
-    \Drupal::config('update_test.settings')->set('system_info', $system_info)->save();
+    $this->config('update_test.settings')->set('system_info', $system_info)->save();
     $this->refreshUpdateStatus(array('drupal' => 'dev'));
     $this->assertNoText(t('2001-Sep-'));
     $this->assertText(t('Up to date'));
@@ -189,10 +189,10 @@ class UpdateCoreTest extends UpdateTestBase {
    */
   function testModulePageRunCron() {
     $this->setSystemInfo('8.0.0');
-    \Drupal::config('update.settings')
+    $this->config('update.settings')
       ->set('fetch.url', _url('update-test', array('absolute' => TRUE)))
       ->save();
-    \Drupal::config('update_test.settings')
+    $this->config('update_test.settings')
       ->set('xml_map', array('drupal' => '0.0'))
       ->save();
 
@@ -207,10 +207,10 @@ class UpdateCoreTest extends UpdateTestBase {
   function testModulePageUpToDate() {
     $this->setSystemInfo('8.0.0');
     // Instead of using refreshUpdateStatus(), set these manually.
-    \Drupal::config('update.settings')
+    $this->config('update.settings')
       ->set('fetch.url', _url('update-test', array('absolute' => TRUE)))
       ->save();
-    \Drupal::config('update_test.settings')
+    $this->config('update_test.settings')
       ->set('xml_map', array('drupal' => '0.0'))
       ->save();
 
@@ -228,10 +228,10 @@ class UpdateCoreTest extends UpdateTestBase {
   function testModulePageRegularUpdate() {
     $this->setSystemInfo('8.0.0');
     // Instead of using refreshUpdateStatus(), set these manually.
-    \Drupal::config('update.settings')
+    $this->config('update.settings')
       ->set('fetch.url', _url('update-test', array('absolute' => TRUE)))
       ->save();
-    \Drupal::config('update_test.settings')
+    $this->config('update_test.settings')
       ->set('xml_map', array('drupal' => '0.1'))
       ->save();
 
@@ -249,10 +249,10 @@ class UpdateCoreTest extends UpdateTestBase {
   function testModulePageSecurityUpdate() {
     $this->setSystemInfo('8.0.0');
     // Instead of using refreshUpdateStatus(), set these manually.
-    \Drupal::config('update.settings')
+    $this->config('update.settings')
       ->set('fetch.url', _url('update-test', array('absolute' => TRUE)))
       ->save();
-    \Drupal::config('update_test.settings')
+    $this->config('update_test.settings')
       ->set('xml_map', array('drupal' => '0.2-sec'))
       ->save();
 
@@ -324,10 +324,10 @@ class UpdateCoreTest extends UpdateTestBase {
   function testLanguageModuleUpdate() {
     $this->setSystemInfo('8.0.0');
     // Instead of using refreshUpdateStatus(), set these manually.
-    \Drupal::config('update.settings')
+    $this->config('update.settings')
       ->set('fetch.url', _url('update-test', array('absolute' => TRUE)))
       ->save();
-    \Drupal::config('update_test.settings')
+    $this->config('update_test.settings')
       ->set('xml_map', array('drupal' => '0.1'))
       ->save();
 

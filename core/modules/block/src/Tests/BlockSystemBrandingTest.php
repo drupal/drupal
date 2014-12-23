@@ -27,7 +27,7 @@ class BlockSystemBrandingTest extends BlockTestBase {
   protected function setUp() {
     parent::setUp();
     // Set a site slogan.
-    \Drupal::config('system.site')
+    $this->config('system.site')
       ->set('slogan', 'Community plumbing')
       ->save();
     // Add the system branding block to the page.
@@ -53,7 +53,7 @@ class BlockSystemBrandingTest extends BlockTestBase {
     $this->assertTrue(!empty($site_slogan_element), 'The branding block slogan was found.');
 
     // Turn just the logo off.
-    \Drupal::config('block.block.site-branding')
+    $this->config('block.block.site-branding')
       ->set('settings.use_site_logo', 0)
       ->save();
     $this->drupalGet('');
@@ -66,7 +66,7 @@ class BlockSystemBrandingTest extends BlockTestBase {
     $this->assertTrue(!empty($site_slogan_element), 'The branding block slogan was found.');
 
     // Turn just the site name off.
-    \Drupal::config('block.block.site-branding')
+    $this->config('block.block.site-branding')
       ->set('settings.use_site_logo', 1)
       ->set('settings.use_site_name', 0)
       ->save();
@@ -80,7 +80,7 @@ class BlockSystemBrandingTest extends BlockTestBase {
     $this->assertTrue(!empty($site_slogan_element), 'The branding block slogan was found.');
 
     // Turn just the site slogan off.
-    \Drupal::config('block.block.site-branding')
+    $this->config('block.block.site-branding')
       ->set('settings.use_site_name', 1)
       ->set('settings.use_site_slogan', 0)
       ->save();
@@ -94,7 +94,7 @@ class BlockSystemBrandingTest extends BlockTestBase {
     $this->assertTrue(empty($site_slogan_element), 'The branding block slogan was disabled.');
 
     // Turn the site name and the site slogan off.
-    \Drupal::config('block.block.site-branding')
+    $this->config('block.block.site-branding')
       ->set('settings.use_site_name', 0)
       ->set('settings.use_site_slogan', 0)
       ->save();

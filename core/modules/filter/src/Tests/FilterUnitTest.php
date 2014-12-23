@@ -506,7 +506,7 @@ me@me.tv
       ),
       // Absolute URL protocols.
       // The list to test is found in the beginning of _filter_url() at
-      // $protocols = \Drupal::config('system.filter')->get('protocols')... (approx line 1555).
+      // $protocols = $this->config('system.filter')->get('protocols')... (approx line 1555).
       '
 https://example.com,
 ftp://ftp.example.com,

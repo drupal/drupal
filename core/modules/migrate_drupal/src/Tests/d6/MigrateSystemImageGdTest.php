@@ -36,7 +36,7 @@ class MigrateSystemImageGdTest extends MigrateDrupalTestBase {
    * Tests migration of system (image GD) variables to system.image.gd.yml.
    */
   public function testSystemImageGd() {
-    $config = \Drupal::config('system.image.gd');
+    $config = $this->config('system.image.gd');
     $this->assertIdentical($config->get('jpeg_quality'), 75);
   }
 

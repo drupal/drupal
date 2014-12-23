@@ -75,7 +75,7 @@ class SearchPageTextTest extends SearchTestBase {
 
     // Test a search input exceeding the limit of AND/OR combinations to test
     // the Denial-of-Service protection.
-    $limit = \Drupal::config('search.settings')->get('and_or_limit');
+    $limit = $this->config('search.settings')->get('and_or_limit');
     $keys = array();
     for ($i = 0; $i < $limit + 1; $i++) {
       // Use a key of 4 characters to ensure we never generate 'AND' or 'OR'.

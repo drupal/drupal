@@ -114,7 +114,7 @@ class LanguageUrlRewritingTest extends WebTestBase {
     $this->rebuildContainer();
 
     // Enable domain configuration.
-    \Drupal::config('language.negotiation')
+    $this->config('language.negotiation')
       ->set('url.source', LanguageNegotiationUrl::CONFIG_DOMAIN)
       ->save();
 

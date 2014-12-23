@@ -144,7 +144,7 @@ class SessionTest extends WebTestBase {
     $this->assertSessionEmpty(TRUE);
 
     // The same behavior is expected when caching is enabled.
-    $config = \Drupal::config('system.performance');
+    $config = $this->config('system.performance');
     $config->set('cache.page.use_internal', 1);
     $config->set('cache.page.max_age', 300);
     $config->save();

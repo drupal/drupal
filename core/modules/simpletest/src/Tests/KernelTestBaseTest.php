@@ -207,7 +207,7 @@ class KernelTestBaseTest extends KernelTestBase {
     $this->enableModules(array('user'));
     $this->installConfig(array('user'));
     $this->assertTrue($this->container->get('config.storage')->exists('user.settings'));
-    $this->assertTrue(\Drupal::config('user.settings')->get('register'));
+    $this->assertTrue($this->config('user.settings')->get('register'));
   }
 
   /**
@@ -285,7 +285,7 @@ class KernelTestBaseTest extends KernelTestBase {
    * Tests that there is no theme by default.
    */
   function testNoThemeByDefault() {
-    $themes = $this->container->get('config.factory')->get('core.extension')->get('theme');
+    $themes = $this->config('core.extension')->get('theme');
     $this->assertEqual($themes, array());
 
     $extensions = $this->container->get('config.storage')->read('core.extension');

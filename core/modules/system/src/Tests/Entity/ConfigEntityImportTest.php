@@ -220,7 +220,7 @@ class ConfigEntityImportTest extends WebTestBase {
     $this->container->get('config.storage.staging')->write($name, $custom_data);
 
     // Verify the active configuration still returns the default values.
-    $config = $this->container->get('config.factory')->get($name);
+    $config = $this->config($name);
     $this->assertIdentical($config->get(), $original_data);
 
     // Import.
@@ -228,7 +228,7 @@ class ConfigEntityImportTest extends WebTestBase {
 
     // Verify the values were updated.
     $this->container->get('config.factory')->reset($name);
-    $config = $this->container->get('config.factory')->get($name);
+    $config = $this->config($name);
     $this->assertIdentical($config->get(), $custom_data);
   }
 

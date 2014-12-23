@@ -48,7 +48,7 @@ abstract class StatisticsTestBase extends WebTestBase {
     $this->drupalLogin($this->blockingUser);
 
     // Enable logging.
-    \Drupal::config('statistics.settings')
+    $this->config('statistics.settings')
       ->set('count_content_views', 1)
       ->save();
   }

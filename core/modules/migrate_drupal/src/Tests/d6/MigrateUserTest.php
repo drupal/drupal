@@ -168,7 +168,7 @@ class MigrateUserTest extends MigrateDrupalTestBase {
       // user preferred language is not configured on the site. We just want to
       // test if the value was imported correctly.
       $this->assertEqual($user->preferred_langcode->value, $source->language);
-      $time_zone = $source->expected_timezone ?: \Drupal::config('system.date')->get('timezone.default');
+      $time_zone = $source->expected_timezone ?: $this->config('system.date')->get('timezone.default');
       $this->assertEqual($user->getTimeZone(), $time_zone);
       $this->assertEqual($user->getInitialEmail(), $source->init);
       $this->assertEqual($user->getRoles(), $roles);

@@ -125,7 +125,7 @@ EOD;
    */
   public function testImportSimpleConfiguration() {
     $this->drupalLogin($this->drupalCreateUser(array('import configuration')));
-    $config = \Drupal::config('system.site')->set('name', 'Test simple import');
+    $config = $this->config('system.site')->set('name', 'Test simple import');
     $edit = array(
       'config_type' => 'system.simple',
       'config_name' => $config->getName(),

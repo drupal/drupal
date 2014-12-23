@@ -264,7 +264,7 @@ class CKEditorTest extends KernelTestBase {
 
     // Enable the Bartik theme, which specifies a CKEditor stylesheet.
     \Drupal::service('theme_handler')->install(['bartik']);
-    \Drupal::config('system.theme')->set('default', 'bartik');
+    $this->config('system.theme')->set('default', 'bartik')->save();
     $expected[] = file_create_url('core/themes/bartik/css/ckeditor-iframe.css');
     $this->assertIdentical($expected, $this->ckeditor->buildContentsCssJSSetting($editor), '"contentsCss" configuration part of JS settings built correctly while a theme providing a CKEditor stylesheet exists.');
   }

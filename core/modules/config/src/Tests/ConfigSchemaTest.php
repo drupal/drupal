@@ -356,16 +356,16 @@ class ConfigSchemaTest extends KernelTestBase {
     );
 
     // Save config which has a schema that enforces types.
-    \Drupal::config('config_schema_test.schema_data_types')
+    $this->config('config_schema_test.schema_data_types')
       ->setData($untyped_to_typed)
       ->save();
-    $this->assertIdentical(\Drupal::config('config_schema_test.schema_data_types')->get(), $typed_values);
+    $this->assertIdentical($this->config('config_schema_test.schema_data_types')->get(), $typed_values);
 
     // Save config which does not have a schema that enforces types.
-    \Drupal::config('config_schema_test.no_schema_data_types')
+    $this->config('config_schema_test.no_schema_data_types')
       ->setData($untyped_values)
       ->save();
-    $this->assertIdentical(\Drupal::config('config_schema_test.no_schema_data_types')->get(), $untyped_values);
+    $this->assertIdentical($this->config('config_schema_test.no_schema_data_types')->get(), $untyped_values);
 
     // Ensure that configuration objects with keys marked as ignored are not
     // changed when saved. The 'config_schema_test.ignore' will have been saved
@@ -373,7 +373,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $extension_path = drupal_get_path('module', 'config_schema_test');
     $install_storage = new FileStorage($extension_path . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY);
     $original_data = $install_storage->read('config_schema_test.ignore');
-    $this->assertIdentical(\Drupal::config('config_schema_test.ignore')->get(), $original_data);
+    $this->assertIdentical($this->config('config_schema_test.ignore')->get(), $original_data);
   }
 
   /**

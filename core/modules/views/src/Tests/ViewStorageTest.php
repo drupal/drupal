@@ -87,7 +87,7 @@ class ViewStorageTest extends ViewUnitTestBase {
    */
   protected function loadTests() {
     $view = entity_load('view', 'test_view_storage');
-    $data = \Drupal::config('views.view.test_view_storage')->get();
+    $data = $this->config('views.view.test_view_storage')->get();
 
     // Confirm that an actual view object is loaded and that it returns all of
     // expected properties.
@@ -132,7 +132,7 @@ class ViewStorageTest extends ViewUnitTestBase {
     }
 
     // Create a new View instance with config values.
-    $values = \Drupal::config('views.view.test_view_storage')->get();
+    $values = $this->config('views.view.test_view_storage')->get();
     $values['id'] = 'test_view_storage_new';
     unset($values['uuid']);
     $created = $this->controller->create($values);
@@ -176,7 +176,7 @@ class ViewStorageTest extends ViewUnitTestBase {
     $view = $view->createDuplicate();
     $view->set('id', 'test_view_storage_new_new2');
     $view->save();
-    $values = \Drupal::config('views.view.test_view_storage_new_new2')->get();
+    $values = $this->config('views.view.test_view_storage_new_new2')->get();
 
     $this->assertTrue(isset($values['display']['test']) && is_array($values['display']['test']), 'New display was saved.');
   }

@@ -39,8 +39,7 @@ class UpdateDeleteFileIfStaleTest extends UpdateTestBase {
     // request, so the beginning of request will be before the file changes and
     // REQUEST_TIME - $filectime is negative. Set the maximum age to a number
     // even smaller than that.
-    $this->container->get('config.factory')
-      ->get('system.file')
+    $this->config('system.file')
       ->set('temporary_maximum_age', -100000)
       ->save();
 

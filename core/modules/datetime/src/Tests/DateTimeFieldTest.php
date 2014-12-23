@@ -320,7 +320,7 @@ class DateTimeFieldTest extends WebTestBase {
     $this->assertFieldByName('default_value_input[default_date]', '', 'The relative default value is empty in instance settings page');
 
     // Check if default_date has been stored successfully.
-    $config_entity = $this->container->get('config.factory')->get('field.field.node.date_content.' . $field_name)->get();
+    $config_entity = $this->config('field.field.node.date_content.' . $field_name)->get();
     $this->assertEqual($config_entity['default_value'][0], array('default_date_type' => 'now', 'default_date' => 'now'), 'Default value has been stored successfully');
 
     // Clear field cache in order to avoid stale cache values.
@@ -353,7 +353,7 @@ class DateTimeFieldTest extends WebTestBase {
     $this->assertFieldByName('default_value_input[default_date]', '+90 days', 'The relative default value is displayed in instance settings page');
 
     // Check if default_date has been stored successfully.
-    $config_entity = $this->container->get('config.factory')->get('field.field.node.date_content.' . $field_name)->get();
+    $config_entity = $this->config('field.field.node.date_content.' . $field_name)->get();
     $this->assertEqual($config_entity['default_value'][0], array('default_date_type' => 'relative', 'default_date' => '+90 days'), 'Default value has been stored successfully');
 
     // Clear field cache in order to avoid stale cache values.
@@ -376,7 +376,7 @@ class DateTimeFieldTest extends WebTestBase {
     $this->assertFieldByName('default_value_input[default_date]', '', 'The relative default value is empty in instance settings page');
 
     // Check if default_date has been stored successfully.
-    $config_entity = $this->container->get('config.factory')->get('field.field.node.date_content.' . $field_name)->get();
+    $config_entity = $this->config('field.field.node.date_content.' . $field_name)->get();
     $this->assertTrue(empty($config_entity['default_value']), 'Empty default value has been stored successfully');
 
     // Clear field cache in order to avoid stale cache values.

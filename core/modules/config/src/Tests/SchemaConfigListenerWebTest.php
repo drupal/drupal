@@ -31,7 +31,7 @@ class SchemaConfigListenerWebTest extends WebTestBase {
     // Test a non-existing schema.
     $msg = 'Expected SchemaIncompleteException thrown';
     try {
-      \Drupal::config('config_schema_test.schemaless')->set('foo', 'bar')->save();
+      $this->config('config_schema_test.schemaless')->set('foo', 'bar')->save();
       $this->fail($msg);
     }
     catch (SchemaIncompleteException $e) {
@@ -41,7 +41,7 @@ class SchemaConfigListenerWebTest extends WebTestBase {
 
     // Test a valid schema.
     $msg = 'Unexpected SchemaIncompleteException thrown';
-    $config = \Drupal::config('config_test.types')->set('int', 10);
+    $config = $this->config('config_test.types')->set('int', 10);
     try {
       $config->save();
       $this->pass($msg);
@@ -52,7 +52,7 @@ class SchemaConfigListenerWebTest extends WebTestBase {
 
     // Test an invalid schema.
     $msg = 'Expected SchemaIncompleteException thrown';
-    $config = \Drupal::config('config_test.types')
+    $config = $this->config('config_test.types')
       ->set('foo', 'bar')
       ->set('array', 1);
     try {

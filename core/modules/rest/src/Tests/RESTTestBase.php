@@ -222,7 +222,7 @@ abstract class RESTTestBase extends WebTestBase {
    */
   protected function enableService($resource_type, $method = 'GET', $format = NULL, $auth = NULL) {
     // Enable REST API for this entity type.
-    $config = \Drupal::config('rest.settings');
+    $config = $this->config('rest.settings');
     $settings = array();
 
     if ($resource_type) {

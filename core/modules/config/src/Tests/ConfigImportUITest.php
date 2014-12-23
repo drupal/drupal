@@ -67,7 +67,7 @@ class ConfigImportUITest extends WebTestBase {
     // module is used because it creates a table during the install. The Action
     // module is used because it creates a single simple configuration file
     // during the install.
-    $core_extension = \Drupal::config('core.extension')->get();
+    $core_extension = $this->config('core.extension')->get();
     $core_extension['module']['action'] = 0;
     $core_extension['module']['ban'] = 0;
     $core_extension['module'] = module_config_sort($core_extension['module']);
@@ -81,7 +81,7 @@ class ConfigImportUITest extends WebTestBase {
     $install_storage = new InstallStorage();
 
     // Set the Bartik theme as default.
-    $system_theme = \Drupal::config('system.theme')->get();
+    $system_theme = $this->config('system.theme')->get();
     $system_theme['default'] = 'bartik';
     $staging->write('system.theme', $system_theme);
 
@@ -123,10 +123,10 @@ class ConfigImportUITest extends WebTestBase {
     $this->assertText(t('There are no configuration changes to import.'));
 
     // Verify site name has changed.
-    $this->assertIdentical($new_site_name, \Drupal::config('system.site')->get('name'));
+    $this->assertIdentical($new_site_name, $this->config('system.site')->get('name'));
 
     // Verify that new config entity exists.
-    $this->assertIdentical($original_dynamic_data, \Drupal::config($dynamic_name)->get());
+    $this->assertIdentical($original_dynamic_data, $this->config($dynamic_name)->get());
 
     // Verify the cache got cleared.
     $this->assertTrue(isset($GLOBALS['hook_cache_flush']));
@@ -156,7 +156,7 @@ class ConfigImportUITest extends WebTestBase {
     $recursion_limit_values = \Drupal::state()->get('ConfigImportUITest.action.settings.recursion_limit', array());
     $this->assertIdentical($recursion_limit_values, array(50));
 
-    $core_extension = \Drupal::config('core.extension')->get();
+    $core_extension = $this->config('core.extension')->get();
     unset($core_extension['module']['action']);
     unset($core_extension['module']['ban']);
     unset($core_extension['module']['options']);
@@ -166,7 +166,7 @@ class ConfigImportUITest extends WebTestBase {
     $staging->delete('action.settings');
     $staging->delete('text.settings');
 
-    $system_theme = \Drupal::config('system.theme')->get();
+    $system_theme = $this->config('system.theme')->get();
     $system_theme['default'] = 'stark';
     $system_theme['admin'] = 'stark';
     $staging->write('system.theme', $system_theme);
@@ -234,7 +234,7 @@ class ConfigImportUITest extends WebTestBase {
     $this->container->get('lock.persistent')->release($config_importer::LOCK_NAME);
 
     // Verify site name has not changed.
-    $this->assertNotEqual($new_site_name, \Drupal::config('system.site')->get('name'));
+    $this->assertNotEqual($new_site_name, $this->config('system.site')->get('name'));
   }
 
   /**
@@ -243,7 +243,7 @@ class ConfigImportUITest extends WebTestBase {
   function testImportSiteUuidValidation() {
     $staging = \Drupal::service('config.storage.staging');
     // Create updated configuration object.
-    $config_data = \Drupal::config('system.site')->get();
+    $config_data = $this->config('system.site')->get();
     // Generate a new site UUID.
     $config_data['uuid'] = \Drupal::service('uuid')->generate();
     $staging->write('system.site', $config_data);
@@ -319,13 +319,13 @@ class ConfigImportUITest extends WebTestBase {
     $this->assertText('Config import validate error 2.');
 
     // Verify site name has not changed.
-    $this->assertNotEqual($new_site_name, \Drupal::config('system.site')->get('name'));
+    $this->assertNotEqual($new_site_name, $this->config('system.site')->get('name'));
   }
 
   public function testConfigUninstallConfigException() {
     $staging = $this->container->get('config.storage.staging');
 
-    $core_extension = \Drupal::config('core.extension')->get();
+    $core_extension = $this->config('core.extension')->get();
     unset($core_extension['module']['config']);
     $staging->write('core.extension', $core_extension);
 
@@ -340,7 +340,7 @@ class ConfigImportUITest extends WebTestBase {
   function prepareSiteNameUpdate($new_site_name) {
     $staging = $this->container->get('config.storage.staging');
     // Create updated configuration object.
-    $config_data = \Drupal::config('system.site')->get();
+    $config_data = $this->config('system.site')->get();
     $config_data['name'] = $new_site_name;
     $staging->write('system.site', $config_data);
   }

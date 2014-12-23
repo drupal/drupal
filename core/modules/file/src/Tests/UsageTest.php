@@ -128,7 +128,7 @@ class UsageTest extends FileManagedUnitTestBase {
     db_update('file_managed')
       ->fields(array(
         'status' => 0,
-        'changed' => REQUEST_TIME - $this->container->get('config.factory')->get('system.file')->get('temporary_maximum_age') - 1,
+        'changed' => REQUEST_TIME - $this->config('system.file')->get('temporary_maximum_age') - 1,
       ))
       ->condition('fid', $temp_old->id())
       ->execute();
@@ -145,7 +145,7 @@ class UsageTest extends FileManagedUnitTestBase {
     // Permanent file that is old.
     $perm_old = file_save_data('');
     db_update('file_managed')
-      ->fields(array('changed' => REQUEST_TIME - $this->container->get('config.factory')->get('system.file')->get('temporary_maximum_age') - 1))
+      ->fields(array('changed' => REQUEST_TIME - $this->config('system.file')->get('temporary_maximum_age') - 1))
       ->condition('fid', $temp_old->id())
       ->execute();
     $this->assertTrue(file_exists($perm_old->getFileUri()), 'Old permanent file was created correctly.');
@@ -177,7 +177,7 @@ class UsageTest extends FileManagedUnitTestBase {
     list($temp_old, $temp_new, $perm_old, $perm_new) = $this->createTempFiles();
 
     // Set the max age to 0, meaning no temporary files will be deleted.
-    \Drupal::config('system.file')
+    $this->config('system.file')
       ->set('temporary_maximum_age', 0)
       ->save();
 
@@ -196,7 +196,7 @@ class UsageTest extends FileManagedUnitTestBase {
     list($temp_old, $temp_new, $perm_old, $perm_new) = $this->createTempFiles();
 
     // Set the max age to older than default.
-    \Drupal::config('system.file')
+    $this->config('system.file')
       ->set('temporary_maximum_age', 21600 + 2)
       ->save();
 

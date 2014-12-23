@@ -104,7 +104,7 @@ class TermTest extends TaxonomyTestBase {
    */
   function testTaxonomyTermChildTerms() {
     // Set limit to 10 terms per page. Set variable to 9 so 10 terms appear.
-    \Drupal::config('taxonomy.settings')->set('terms_per_page_admin', '9')->save();
+    $this->config('taxonomy.settings')->set('terms_per_page_admin', '9')->save();
     $term1 = $this->createTerm($this->vocabulary);
     $terms_array = '';
 

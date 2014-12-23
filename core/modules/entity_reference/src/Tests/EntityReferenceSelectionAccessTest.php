@@ -242,7 +242,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
       ),
     );
 
-    $user_values['anonymous']->name = \Drupal::config('user.settings')->get('anonymous');
+    $user_values['anonymous']->name = $this->config('user.settings')->get('anonymous');
     $users = array();
 
     $user_labels = array();

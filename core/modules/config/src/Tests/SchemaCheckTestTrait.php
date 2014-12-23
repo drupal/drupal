@@ -57,7 +57,7 @@ trait SchemaCheckTestTrait {
    *   The configuration name.
    */
   public function assertConfigSchemaByName($config_name) {
-    $config = \Drupal::config($config_name);
+    $config = $this->config($config_name);
     $this->assertConfigSchema(\Drupal::service('config.typed'), $config->getName(), $config->get());
   }
 

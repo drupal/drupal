@@ -39,7 +39,7 @@ class AttachedAssetsTest extends KernelTestBase {
     parent::setUp();
 
     // Disable preprocessing.
-    \Drupal::config('system.performance')
+    $this->config('system.performance')
       ->set('css.preprocess', FALSE)
       ->set('js.preprocess', FALSE)
       ->save();
@@ -146,7 +146,7 @@ class AttachedAssetsTest extends KernelTestBase {
    */
   function testAggregatedAttributes() {
     // Enable aggregation.
-    \Drupal::config('system.performance')->set('js.preprocess', 1)->save();
+    $this->config('system.performance')->set('js.preprocess', 1)->save();
 
     $build['#attached']['library'][] = 'common_test/js-attributes';
     drupal_process_attached($build);

@@ -55,7 +55,7 @@ class MigrateContactConfigsTest extends MigrateDrupalTestBase {
    * Tests migration of contact variables to contact.settings.yml.
    */
   public function testContactSettings() {
-    $config = \Drupal::config('contact.settings');
+    $config = $this->config('contact.settings');
     $this->assertIdentical($config->get('user_default_enabled'), true);
     $this->assertIdentical($config->get('flood.limit'), 3);
     $this->assertIdentical($config->get('default_form'), 'some_other_category');

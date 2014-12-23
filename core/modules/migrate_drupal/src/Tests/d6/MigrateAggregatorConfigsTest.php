@@ -45,7 +45,7 @@ class MigrateAggregatorConfigsTest extends MigrateDrupalTestBase {
    * Tests migration of aggregator variables to aggregator.settings.yml.
    */
   public function testAggregatorSettings() {
-    $config = \Drupal::config('aggregator.settings');
+    $config = $this->config('aggregator.settings');
     $this->assertIdentical($config->get('fetcher'), 'aggregator');
     $this->assertIdentical($config->get('parser'), 'aggregator');
     $this->assertIdentical($config->get('processors'), array('aggregator'));

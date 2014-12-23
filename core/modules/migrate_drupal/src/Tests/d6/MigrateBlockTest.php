@@ -60,7 +60,7 @@ class MigrateBlockTest extends MigrateDrupalTestBase {
     ));
 
     // Set Bartik and Seven as the default public and admin theme.
-    $config = \Drupal::config('system.theme');
+    $config = $this->config('system.theme');
     $config->set('default', 'bartik');
     $config->set('admin', 'seven');
     $config->save();

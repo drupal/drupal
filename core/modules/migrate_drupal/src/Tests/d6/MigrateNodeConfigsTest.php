@@ -46,7 +46,7 @@ class MigrateNodeConfigsTest extends MigrateDrupalTestBase {
    * Tests Drupal 6 node settings to Drupal 8 migration.
    */
   public function testNodeSettings() {
-    $config = \Drupal::config('node.settings');
+    $config = $this->config('node.settings');
     $this->assertIdentical($config->get('use_admin_theme'), FALSE);
     $this->assertIdentical($config->get('items_per_page'), 3);
     $this->assertConfigSchema(\Drupal::service('config.typed'), 'node.settings', $config->get());

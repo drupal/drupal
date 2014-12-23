@@ -106,7 +106,7 @@ class LanguageNegotiationInfoTest extends WebTestBase {
       'language_test.language_negotiation_info_alter' => TRUE,
     ));
 
-    $negotiation = $this->container->get('config.factory')->get('language.types')->get('negotiation.' . $type . '.enabled');
+    $negotiation = $this->config('language.types')->get('negotiation.' . $type . '.enabled');
     $this->assertFalse(isset($negotiation[$interface_method_id]), 'Interface language negotiation method removed from the stored settings.');
 
     $this->drupalGet('admin/config/regional/language/detection');
@@ -149,7 +149,7 @@ class LanguageNegotiationInfoTest extends WebTestBase {
 
     // Check that unavailable language negotiation methods are not present in
     // the negotiation settings.
-    $negotiation = $this->container->get('config.factory')->get('language.types')->get('negotiation.' . $type . '.enabled');
+    $negotiation = $this->config('language.types')->get('negotiation.' . $type . '.enabled');
     $this->assertFalse(isset($negotiation[$test_method_id]), 'The disabled test language negotiation method is not part of the content language negotiation settings.');
 
     // Check that configuration page presents the correct options and settings.
@@ -164,7 +164,7 @@ class LanguageNegotiationInfoTest extends WebTestBase {
     $configurable = $this->languageManager()->getLanguageTypes();
     foreach ($this->languageManager()->getDefinedLanguageTypesInfo() as $type => $info) {
       if (!in_array($type, $configurable) && isset($info['fixed'])) {
-        $negotiation = $this->container->get('config.factory')->get('language.types')->get('negotiation.' . $type . '.enabled');
+        $negotiation = $this->config('language.types')->get('negotiation.' . $type . '.enabled');
         $equal = count($info['fixed']) == count($negotiation);
         while ($equal && list($id) = each($negotiation)) {
           list(, $info_id) = each($info['fixed']);

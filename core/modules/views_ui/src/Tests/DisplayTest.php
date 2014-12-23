@@ -112,7 +112,7 @@ class DisplayTest extends UITestBase {
    */
   public function testDisplayAreas() {
     // Show the advanced column.
-    \Drupal::config('views.settings')->set('ui.show.advanced_column', TRUE)->save();
+    $this->config('views.settings')->set('ui.show.advanced_column', TRUE)->save();
 
     // Add a new data display to the view.
     $view = Views::getView('test_display');

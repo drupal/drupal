@@ -55,7 +55,7 @@ class TwigTransTest extends WebTestBase {
 
     // Setup test_theme.
     \Drupal::service('theme_handler')->install(array('test_theme'));
-    \Drupal::config('system.theme')->set('default', 'test_theme')->save();
+    $this->config('system.theme')->set('default', 'test_theme')->save();
 
     // Create and log in as admin.
     $this->admin_user = $this->drupalCreateUser(array(
@@ -70,7 +70,7 @@ class TwigTransTest extends WebTestBase {
     $this->installLanguages();
 
     // Assign Lolspeak (xx) to be the default language.
-    \Drupal::config('system.site')->set('langcode', 'xx')->save();
+    $this->config('system.site')->set('langcode', 'xx')->save();
     $this->rebuildContainer();
 
     // Check that lolspeak is the default language for the site.

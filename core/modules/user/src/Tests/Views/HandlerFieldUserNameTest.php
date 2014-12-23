@@ -44,7 +44,7 @@ class HandlerFieldUserNameTest extends UserTestBase {
     $this->assertIdentical($render, $username, 'If the user is not linked the username should be printed out for a normal user.');
 
     $view->result[0]->users_field_data_uid = 0;
-    $anon_name = \Drupal::config('user.settings')->get('anonymous');
+    $anon_name = $this->config('user.settings')->get('anonymous');
     $view->result[0]->users_field_data_name = '';
     $render = $view->field['name']->advancedRender($view->result[0]);
     $this->assertIdentical($render, $anon_name , 'For user0 it should use the default anonymous name by default.');

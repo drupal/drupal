@@ -26,7 +26,7 @@ class ConfirmFormTest extends WebTestBase {
   function testConfirmForm() {
     // Test the building of the form.
     $this->drupalGet('form-test/confirm-form');
-    $site_name = $this->container->get('config.factory')->get('system.site')->get('name');
+    $site_name = $this->config('system.site')->get('name');
     $this->assertTitle(t('ConfirmFormTestForm::getQuestion(). | @site-name', array('@site-name' => $site_name)), 'The question was found as the page title.');
     $this->assertText(t('ConfirmFormTestForm::getDescription().'), 'The description was used.');
     $this->assertFieldByXPath('//input[@id="edit-submit"]', t('ConfirmFormTestForm::getConfirmText().'), 'The confirm text was used.');

@@ -46,7 +46,7 @@ class MigrateBookConfigsTest extends MigrateDrupalTestBase {
    * Tests migration of book variables to book.settings.yml.
    */
   public function testBookSettings() {
-    $config = \Drupal::config('book.settings');
+    $config = $this->config('book.settings');
     $this->assertIdentical($config->get('child_type'), 'book');
     $this->assertIdentical($config->get('block.navigation.mode'), 'all pages');
     $this->assertIdentical($config->get('allowed_types'), array('book'));

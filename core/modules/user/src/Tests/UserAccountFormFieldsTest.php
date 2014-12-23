@@ -55,8 +55,7 @@ class UserAccountFormFieldsTest extends KernelTestBase {
     $this->installConfig(array('user'));
 
     // Disable email confirmation to unlock the password field.
-    $this->container->get('config.factory')
-      ->get('user.settings')
+    $this->config('user.settings')
       ->set('verify_mail', FALSE)
       ->save();
 

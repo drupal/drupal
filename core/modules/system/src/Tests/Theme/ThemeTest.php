@@ -79,7 +79,7 @@ class ThemeTest extends WebTestBase {
   function testThemeSuggestions() {
     // Set the front page as something random otherwise the CLI
     // test runner fails.
-    \Drupal::config('system.site')->set('page.front', 'nobody-home')->save();
+    $this->config('system.site')->set('page.front', 'nobody-home')->save();
     $args = array('node', '1', 'edit');
     $suggestions = theme_get_suggestions($args, 'page');
     $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1', 'page__node__edit'), 'Found expected node edit page suggestions');
@@ -146,7 +146,7 @@ class ThemeTest extends WebTestBase {
     $request->attributes->set(RouteObjectInterface::ROUTE_NAME, 'user.login');
     $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('/user/login'));
     \Drupal::requestStack()->push($request);
-    \Drupal::config('system.site')->set('page.front', 'user/login')->save();
+    $this->config('system.site')->set('page.front', 'user/login')->save();
     $suggestions = theme_get_suggestions(array('user', 'login'), 'page');
     // Set it back to not annoy the batch runner.
     \Drupal::requestStack()->pop();
@@ -163,7 +163,7 @@ class ThemeTest extends WebTestBase {
     // what is output to the HTML HEAD based on what is in a theme's .info.yml
     // file, so it doesn't matter what page we get, as long as it is themed with
     // the test theme. First we test with CSS aggregation disabled.
-    $config = \Drupal::config('system.performance');
+    $config = $this->config('system.performance');
     $config->set('css.preprocess', 0);
     $config->save();
     $this->drupalGet('theme-test/suggestion');
@@ -184,7 +184,7 @@ class ThemeTest extends WebTestBase {
    * Ensures a themes template is overrideable based on the 'template' filename.
    */
   function testTemplateOverride() {
-    \Drupal::config('system.theme')
+    $this->config('system.theme')
       ->set('default', 'test_theme')
       ->save();
     $this->drupalGet('theme-test/template-test');

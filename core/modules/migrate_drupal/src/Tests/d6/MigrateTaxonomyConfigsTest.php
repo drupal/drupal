@@ -45,7 +45,7 @@ class MigrateTaxonomyConfigsTest extends MigrateDrupalTestBase {
    * Tests migration of taxonomy variables to taxonomy.settings.yml.
    */
   public function testTaxonomySettings() {
-    $config = \Drupal::config('taxonomy.settings');
+    $config = $this->config('taxonomy.settings');
     $this->assertIdentical($config->get('terms_per_page_admin'), 100);
     $this->assertIdentical($config->get('override_selector'), FALSE);
     $this->assertConfigSchema(\Drupal::service('config.typed'), 'taxonomy.settings', $config->get());

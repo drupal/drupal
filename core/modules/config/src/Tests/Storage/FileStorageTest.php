@@ -22,7 +22,7 @@ class FileStorageTest extends ConfigStorageTestBase {
     $this->invalidStorage = new FileStorage($this->configDirectories[CONFIG_ACTIVE_DIRECTORY] . '/nonexisting');
 
     // FileStorage::listAll() requires other configuration data to exist.
-    $this->storage->write('system.performance', \Drupal::config('system.performance')->get());
+    $this->storage->write('system.performance', $this->config('system.performance')->get());
     $this->storage->write('core.extension', array('module' => array()));
   }
 

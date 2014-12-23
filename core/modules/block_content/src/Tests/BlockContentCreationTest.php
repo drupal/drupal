@@ -170,7 +170,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
       'region' => 'sidebar_first',
     );
     $block = entity_load('block_content', 1);
-    $url = 'admin/structure/block/add/block_content:' . $block->uuid() . '/' . \Drupal::config('system.theme')->get('default');
+    $url = 'admin/structure/block/add/block_content:' . $block->uuid() . '/' . $this->config('system.theme')->get('default');
     $this->drupalPostForm($url, $instance, t('Save block'));
 
     $block = BlockContent::load(1);
@@ -224,7 +224,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
       'region' => 'sidebar_first',
     );
     $block = entity_load('block_content', 1);
-    $url = 'admin/structure/block/add/block_content:' . $block->uuid() . '/' . \Drupal::config('system.theme')->get('default');
+    $url = 'admin/structure/block/add/block_content:' . $block->uuid() . '/' . $this->config('system.theme')->get('default');
     $this->drupalPostForm($url, $instance, t('Save block'));
 
     $dependencies = \Drupal::service('config.manager')->findConfigEntityDependentsAsEntities('content', array($block->getConfigDependencyName()));

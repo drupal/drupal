@@ -52,7 +52,7 @@ class BookUninstallTest extends KernelTestBase {
       'name' => $this->randomString(),
     ));
     $content_type->save();
-    $book_config = \Drupal::config('book.settings');
+    $book_config = $this->config('book.settings');
     $allowed_types = $book_config->get('allowed_types');
     $allowed_types[] = $content_type->id();
     $book_config->set('allowed_types', $allowed_types)->save();

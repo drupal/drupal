@@ -62,13 +62,13 @@ class StatisticsAdminTest extends WebTestBase {
    * Verifies that the statistics settings page works.
    */
   function testStatisticsSettings() {
-    $config = \Drupal::config('statistics.settings');
+    $config = $this->config('statistics.settings');
     $this->assertFalse($config->get('count_content_views'), 'Count content view log is disabled by default.');
 
     // Enable counter on content view.
     $edit['statistics_count_content_views'] = 1;
     $this->drupalPostForm('admin/config/system/statistics', $edit, t('Save configuration'));
-    $config = \Drupal::config('statistics.settings');
+    $config = $this->config('statistics.settings');
     $this->assertTrue($config->get('count_content_views'), 'Count content view log is enabled.');
 
     // Hit the node.
@@ -95,7 +95,7 @@ class StatisticsAdminTest extends WebTestBase {
    * Tests that when a node is deleted, the node counter is deleted too.
    */
   function testDeleteNode() {
-    \Drupal::config('statistics.settings')->set('count_content_views', 1)->save();
+    $this->config('statistics.settings')->set('count_content_views', 1)->save();
 
     $this->drupalGet('node/' . $this->testNode->id());
     // Manually calling statistics.php, simulating ajax behavior.
@@ -126,7 +126,7 @@ class StatisticsAdminTest extends WebTestBase {
    * Tests that cron clears day counts and expired access logs.
    */
   function testExpiredLogs() {
-    \Drupal::config('statistics.settings')
+    $this->config('statistics.settings')
       ->set('count_content_views', 1)
       ->save();
     \Drupal::state()->set('statistics.day_timestamp', 8640000);

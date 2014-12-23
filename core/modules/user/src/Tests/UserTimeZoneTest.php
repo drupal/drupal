@@ -28,7 +28,7 @@ class UserTimeZoneTest extends WebTestBase {
    */
   function testUserTimeZone() {
     // Setup date/time settings for Los Angeles time.
-    \Drupal::config('system.date')
+    $this->config('system.date')
       ->set('timezone.user.configurable', 1)
       ->set('timezone.default', 'America/Los_Angeles')
       ->save();

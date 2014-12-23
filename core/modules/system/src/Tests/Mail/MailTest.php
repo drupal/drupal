@@ -38,7 +38,7 @@ class MailTest extends WebTestBase {
    */
   public function testPluggableFramework() {
     // Switch mail backends.
-    \Drupal::config('system.mail')->set('interface.default', 'test_php_mail_failure')->save();
+    $this->config('system.mail')->set('interface.default', 'test_php_mail_failure')->save();
 
     // Get the default MailInterface class instance.
     $mail_backend = \Drupal::service('plugin.manager.mail')->getInstance(array('module' => 'default', 'key' => 'default'));
@@ -48,7 +48,7 @@ class MailTest extends WebTestBase {
     $this->assertTrue($mail_backend instanceof TestPhpMailFailure, 'Default mail interface can be swapped.');
 
     // Add a module-specific mail backend.
-    \Drupal::config('system.mail')->set('interface.mymodule_testkey', 'test_mail_collector')->save();
+    $this->config('system.mail')->set('interface.mymodule_testkey', 'test_mail_collector')->save();
 
     // Get the added MailInterface class instance.
     $mail_backend = \Drupal::service('plugin.manager.mail')->getInstance(array('module' => 'mymodule', 'key' => 'testkey'));
@@ -67,7 +67,7 @@ class MailTest extends WebTestBase {
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 
     // Use the state system collector mail backend.
-    \Drupal::config('system.mail')->set('interface.default', 'test_mail_collector')->save();
+    $this->config('system.mail')->set('interface.default', 'test_mail_collector')->save();
     // Reset the state variable that holds sent messages.
     \Drupal::state()->set('system.test_mail_collector', array());
 
@@ -88,7 +88,7 @@ class MailTest extends WebTestBase {
     $language = \Drupal::languageManager()->getCurrentLanguage();
 
     // Use the state system collector mail backend.
-    \Drupal::config('system.mail')->set('interface.default', 'test_mail_collector')->save();
+    $this->config('system.mail')->set('interface.default', 'test_mail_collector')->save();
     // Reset the state variable that holds sent messages.
     \Drupal::state()->set('system.test_mail_collector', array());
     // Send an email with a reply-to address specified.

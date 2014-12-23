@@ -42,7 +42,7 @@ class SearchMultilingualEntityTest extends SearchTestBase {
     $this->drupalLogin($user);
 
     // Make sure that auto-cron is disabled.
-    \Drupal::config('system.cron')->set('threshold.autorun', 0)->save();
+    $this->config('system.cron')->set('threshold.autorun', 0)->save();
 
     // Set up the search plugin.
     $this->plugin = $this->container->get('plugin.manager.search')->createInstance('node_search');
@@ -125,7 +125,7 @@ class SearchMultilingualEntityTest extends SearchTestBase {
   function testMultilingualSearch() {
     // Index only 2 nodes per cron run. We cannot do this setting in the UI,
     // because it doesn't go this low.
-    \Drupal::config('search.settings')->set('index.cron_limit', 2)->save();
+    $this->config('search.settings')->set('index.cron_limit', 2)->save();
     // Get a new search plugin, to make sure it has this setting.
     $this->plugin = $this->container->get('plugin.manager.search')->createInstance('node_search');
 
@@ -141,7 +141,7 @@ class SearchMultilingualEntityTest extends SearchTestBase {
     // Now index the rest of the nodes.
     // Make sure index throttle is high enough, via the UI.
     $this->drupalPostForm('admin/config/search/pages', array('cron_limit' => 20), t('Save configuration'));
-    $this->assertEqual(20, \Drupal::config('search.settings')->get('index.cron_limit', 100), 'Config setting was saved correctly');
+    $this->assertEqual(20, $this->config('search.settings')->get('index.cron_limit', 100), 'Config setting was saved correctly');
     // Get a new search plugin, to make sure it has this setting.
     $this->plugin = $this->container->get('plugin.manager.search')->createInstance('node_search');
 

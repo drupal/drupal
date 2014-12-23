@@ -105,7 +105,7 @@ class ExceptionHandlingTest extends KernelTestBase {
    */
   public function testBacktraceEscaping() {
     // Enable verbose error logging.
-    \Drupal::config('system.logging')->set('error_level', ERROR_REPORTING_DISPLAY_VERBOSE)->save();
+    $this->config('system.logging')->set('error_level', ERROR_REPORTING_DISPLAY_VERBOSE)->save();
 
     $request = Request::create('/router_test/test17');
     $request->headers->set('Accept', 'text/html');

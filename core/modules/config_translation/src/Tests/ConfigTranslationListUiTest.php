@@ -77,7 +77,7 @@ class ConfigTranslationListUiTest extends WebTestBase {
 
     // Enable import of translations. By default this is disabled for automated
     // tests.
-    \Drupal::config('locale.settings')
+    $this->config('locale.settings')
       ->set('translation.import_enabled', TRUE)
       ->save();
   }

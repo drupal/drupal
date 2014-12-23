@@ -46,7 +46,7 @@ class MigrateSearchConfigsTest extends MigrateDrupalTestBase {
    * Tests migration of search variables to search.settings.yml.
    */
   public function testSearchSettings() {
-    $config = \Drupal::config('search.settings');
+    $config = $this->config('search.settings');
     $this->assertIdentical($config->get('index.minimum_word_size'), 3);
     $this->assertIdentical($config->get('index.overlap_cjk'), TRUE);
     $this->assertIdentical($config->get('index.cron_limit'), 100);

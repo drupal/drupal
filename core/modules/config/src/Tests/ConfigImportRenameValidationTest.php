@@ -122,7 +122,7 @@ class ConfigImportRenameValidationTest extends KernelTestBase {
   public function testRenameSimpleConfigValidation() {
     $uuid = new Php();
     // Create a simple configuration with a UUID.
-    $config = \Drupal::config('config_test.new');
+    $config = $this->config('config_test.new');
     $uuid_value = $uuid->generate();
     $config->set('uuid', $uuid_value)->save();
 
@@ -132,7 +132,7 @@ class ConfigImportRenameValidationTest extends KernelTestBase {
     $config->delete();
 
     // Create another simple configuration with the same UUID.
-    $config = \Drupal::config('config_test.old');
+    $config = $this->config('config_test.old');
     $config->set('uuid', $uuid_value)->save();
 
     // Confirm that the staged configuration is detected as a rename since the

@@ -47,7 +47,7 @@ class DisplayFeedTest extends PluginTestBase {
 
     // Test the site name setting.
     $site_name = $this->randomMachineName();
-    $this->container->get('config.factory')->get('system.site')->set('name', $site_name)->save();
+    $this->config('system.site')->set('name', $site_name)->save();
 
     $this->drupalGet('test-feed-display.xml');
     $result = $this->xpath('//title');

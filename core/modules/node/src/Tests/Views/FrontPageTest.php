@@ -43,8 +43,7 @@ class FrontPageTest extends ViewTestBase {
    */
   public function testFrontPage() {
     $site_name = $this->randomMachineName();
-    $this->container->get('config.factory')
-      ->get('system.site')
+    $this->config('system.site')
       ->set('name', $site_name)
       ->save();
 

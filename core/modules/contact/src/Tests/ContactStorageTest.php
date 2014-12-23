@@ -68,7 +68,7 @@ class ContactStorageTest extends ContactSitewideTest {
     $this->assertEqual($message->getSubject(), $subject);
     $this->assertEqual($message->getSenderMail(), $mail);
 
-    $config = \Drupal::config("contact.form.$id");
+    $config = $this->config("contact.form.$id");
     $this->assertEqual($config->get('id'), $id);
   }
 

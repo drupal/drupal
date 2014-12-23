@@ -91,7 +91,7 @@ class BlockContentFieldTest extends BlockContentTestBase {
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $block = entity_load('block_content', 1);
-    $url = 'admin/structure/block/add/block_content:' . $block->uuid() . '/' . \Drupal::config('system.theme')->get('default');
+    $url = 'admin/structure/block/add/block_content:' . $block->uuid() . '/' . $this->config('system.theme')->get('default');
     // Place the block.
     $instance = array(
       'id' => Unicode::strtolower($edit['info[0][value]']),

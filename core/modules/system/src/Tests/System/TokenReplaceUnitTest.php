@@ -60,7 +60,7 @@ class TokenReplaceUnitTest extends TokenReplaceUnitTestBase {
     $source .= '[bogus:token]';
 
     // Replace with with the clear parameter, only the valid token should remain.
-    $target = String::checkPlain(\Drupal::config('system.site')->get('name'));
+    $target = String::checkPlain($this->config('system.site')->get('name'));
     $result = $this->tokenService->replace($source, array(), array('langcode' => $this->interfaceLanguage->getId(), 'clear' => TRUE));
     $this->assertEqual($target, $result, 'Valid tokens replaced while invalid tokens ignored.');
 
@@ -85,7 +85,7 @@ class TokenReplaceUnitTest extends TokenReplaceUnitTestBase {
     $safe_slogan = Xss::filterAdmin($slogan);
 
     // Set a few site variables.
-    $config = $this->container->get('config.factory')->get('system.site');
+    $config = $this->config('system.site');
     $config
       ->set('name', '<strong>Drupal<strong>')
       ->set('slogan', $slogan)

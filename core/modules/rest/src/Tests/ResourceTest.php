@@ -28,7 +28,7 @@ class ResourceTest extends RESTTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->config = \Drupal::config('rest.settings');
+    $this->config = $this->config('rest.settings');
 
     // Create an entity programmatically.
     $this->entity = $this->entityCreate('entity_test');

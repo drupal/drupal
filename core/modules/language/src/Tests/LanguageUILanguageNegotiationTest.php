@@ -91,7 +91,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     // be some bug.
     $default_language = \Drupal::languageManager()->getDefaultLanguage();
     ConfigurableLanguage::createFromLangcode($langcode_browser_fallback)->save();
-    \Drupal::config('system.site')->set('langcode', $langcode_browser_fallback)->save();
+    $this->config('system.site')->set('langcode', $langcode_browser_fallback)->save();
     ConfigurableLanguage::createFromLangcode($langcode)->save();
 
     // We will look for this string in the admin/config screen to see if the
@@ -104,8 +104,8 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     // Now the t()'ed string is in db so switch the language back to default.
     // This will rebuild the container so we need to rebuild the container in
     // the test environment.
-    \Drupal::config('system.site')->set('langcode', $default_language->getId())->save();
-    \Drupal::config('language.negotiation')->set('url.prefixes.en', '')->save();
+    $this->config('system.site')->set('langcode', $default_language->getId())->save();
+    $this->config('language.negotiation')->set('url.prefixes.en', '')->save();
     $this->rebuildContainer();
 
     // Translate the string.
@@ -150,7 +150,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     $this->runTest($test);
 
     // An invalid language is selected.
-    \Drupal::config('language.negotiation')->set('selected_langcode', NULL)->save();
+    $this->config('language.negotiation')->set('selected_langcode', NULL)->save();
     $test = array(
       'language_negotiation' => array(LanguageNegotiationSelected::METHOD_ID),
       'path' => 'admin/config',
@@ -162,7 +162,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     $this->runTest($test);
 
     // No selected language is available.
-    \Drupal::config('language.negotiation')->set('selected_langcode', $langcode_unknown)->save();
+    $this->config('language.negotiation')->set('selected_langcode', $langcode_unknown)->save();
     $test = array(
       'language_negotiation' => array(LanguageNegotiationSelected::METHOD_ID),
       'path' => 'admin/config',
@@ -227,7 +227,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
 
     // Unknown language prefix should return 404.
     $definitions = \Drupal::languageManager()->getNegotiator()->getNegotiationMethods();
-    \Drupal::config('language.types')
+    $this->config('language.types')
       ->set('negotiation.' . LanguageInterface::TYPE_INTERFACE . '.enabled', array_flip(array_keys($definitions)))
       ->save();
     $this->drupalGet("$langcode_unknown/admin/config", array(), $http_header_browser_fallback);
@@ -354,7 +354,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
       $this->container->get('language_negotiator')->saveConfiguration(LanguageInterface::TYPE_INTERFACE, $method_weights);
     }
     if (!empty($test['language_negotiation_url_part'])) {
-      \Drupal::config('language.negotiation')
+      $this->config('language.negotiation')
         ->set('url.source', $test['language_negotiation_url_part'])
         ->save();
     }
@@ -494,7 +494,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
 
     // Check if configurability persisted.
-    $config = \Drupal::config('language.types');
+    $config = $this->config('language.types');
     $this->assertTrue(in_array('language_interface', $config->get('configurable')), 'Interface language is configurable.');
     $this->assertTrue(in_array('language_content', $config->get('configurable')), 'Content language is configurable.');
 

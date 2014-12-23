@@ -28,7 +28,7 @@ class BlockTest extends BlockTestBase {
     // Create a random title for the block.
     $title = $this->randomMachineName(8);
     // Enable a standard block.
-    $default_theme = \Drupal::config('system.theme')->get('default');
+    $default_theme = $this->config('system.theme')->get('default');
     $edit = array(
       'id' => strtolower($this->randomMachineName(8)),
       'region' => 'sidebar_first',
@@ -66,7 +66,7 @@ class BlockTest extends BlockTestBase {
     // Create a random title for the block.
     $title = $this->randomMachineName(8);
     // Enable a standard block.
-    $default_theme = \Drupal::config('system.theme')->get('default');
+    $default_theme = $this->config('system.theme')->get('default');
     $edit = array(
       'id' => strtolower($this->randomMachineName(8)),
       'region' => 'sidebar_first',
@@ -102,7 +102,7 @@ class BlockTest extends BlockTestBase {
     // Create a random title for the block.
     $title = $this->randomMachineName(8);
     // Enable a standard block.
-    $default_theme = \Drupal::config('system.theme')->get('default');
+    $default_theme = $this->config('system.theme')->get('default');
     $edit = array(
       'id' => strtolower($this->randomMachineName(8)),
       'region' => 'sidebar_first',
@@ -134,7 +134,7 @@ class BlockTest extends BlockTestBase {
     $block = array();
     $block['id'] = 'system_powered_by_block';
     $block['settings[label]'] = $this->randomMachineName(8);
-    $block['theme'] = \Drupal::config('system.theme')->get('default');
+    $block['theme'] = $this->config('system.theme')->get('default');
     $block['region'] = 'header';
 
     // Set block title to confirm that interface works and override any custom titles.
@@ -190,7 +190,7 @@ class BlockTest extends BlockTestBase {
   public function testBlockThemeSelector() {
     // Install all themes.
     \Drupal::service('theme_handler')->install(array('bartik', 'seven'));
-    $theme_settings = $this->container->get('config.factory')->get('system.theme');
+    $theme_settings = $this->config('system.theme');
     foreach (array('bartik', 'classy', 'seven') as $theme) {
       $this->drupalGet('admin/structure/block/list/' . $theme);
       $this->assertTitle(t('Block layout') . ' | Drupal');
@@ -236,7 +236,7 @@ class BlockTest extends BlockTestBase {
     $title = $this->randomMachineName(8);
     $id = strtolower($this->randomMachineName(8));
     // Enable a standard block.
-    $default_theme = \Drupal::config('system.theme')->get('default');
+    $default_theme = $this->config('system.theme')->get('default');
     $edit = array(
       'id' => $id,
       'region' => 'sidebar_first',
@@ -275,7 +275,7 @@ class BlockTest extends BlockTestBase {
    */
   function moveBlockToRegion(array $block, $region) {
     // Set the created block to a specific region.
-    $block += array('theme' => \Drupal::config('system.theme')->get('default'));
+    $block += array('theme' => $this->config('system.theme')->get('default'));
     $edit = array();
     $edit['blocks[' . $block['id'] . '][region]'] = $region;
     $this->drupalPostForm('admin/structure/block', $edit, t('Save blocks'));
@@ -307,7 +307,7 @@ class BlockTest extends BlockTestBase {
     $this->drupalLogout();
 
     // Enable page caching.
-    $config = \Drupal::config('system.performance');
+    $config = $this->config('system.performance');
     $config->set('cache.page.use_internal', 1);
     $config->set('cache.page.max_age', 300);
     $config->save();

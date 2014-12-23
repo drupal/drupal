@@ -110,7 +110,7 @@ class ViewEntityDependenciesTest extends ViewUnitTestBase {
 
       $dependencies = $view->calculateDependencies();
       $this->assertEqual($expected[$view_id], $dependencies);
-      $config = \Drupal::config('views.view.' . $view_id);
+      $config = $this->config('views.view.' . $view_id);
       \Drupal::service('config.storage.staging')->write($view_id, $config->get());
     }
   }

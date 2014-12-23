@@ -41,7 +41,7 @@ class TwigExtensionTest extends WebTestBase {
    * Tests that the Twig extension's filter produces expected output.
    */
   function testTwigExtensionFilter() {
-    \Drupal::config('system.theme')
+    $this->config('system.theme')
       ->set('default', 'test_theme')
       ->save();
 
@@ -53,7 +53,7 @@ class TwigExtensionTest extends WebTestBase {
    * Tests that the Twig extension's function produces expected output.
    */
   function testTwigExtensionFunction() {
-    \Drupal::config('system.theme')
+    $this->config('system.theme')
       ->set('default', 'test_theme')
       ->save();
 

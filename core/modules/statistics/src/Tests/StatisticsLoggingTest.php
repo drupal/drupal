@@ -54,7 +54,7 @@ class StatisticsLoggingTest extends WebTestBase {
     $this->node = $this->drupalCreateNode(array('title' => $this->randomMachineName(255), 'uid' => $this->authUser->id()));
 
     // Enable access logging.
-    \Drupal::config('statistics.settings')
+    $this->config('statistics.settings')
       ->set('count_content_views', 1)
       ->save();
 

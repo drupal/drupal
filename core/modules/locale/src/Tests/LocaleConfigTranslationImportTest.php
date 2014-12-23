@@ -36,7 +36,7 @@ class LocaleConfigTranslationImportTest extends WebTestBase {
 
     // Update module should not go out to d.o to check for updates. We override
     // the url to an invalid update source. No update data will be found.
-    \Drupal::config('update.settings')->set('fetch.url', (string) Url::fromRoute('<front>', array(), array('absolute' => TRUE)))->save();
+    $this->config('update.settings')->set('fetch.url', (string) Url::fromRoute('<front>', array(), array('absolute' => TRUE)))->save();
   }
 
   /**
@@ -54,7 +54,7 @@ class LocaleConfigTranslationImportTest extends WebTestBase {
 
     // Enable import of translations. By default this is disabled for automated
     // tests.
-    \Drupal::config('locale.settings')
+    $this->config('locale.settings')
       ->set('translation.import_enabled', TRUE)
       ->save();
 

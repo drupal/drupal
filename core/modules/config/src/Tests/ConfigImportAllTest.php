@@ -78,7 +78,7 @@ class ConfigImportAllTest extends ModuleTestBase {
     field_purge_batch(1000);
 
     // Delete any forum terms so it can be uninstalled.
-    $vid = \Drupal::config('forum.settings')->get('vocabulary');
+    $vid = $this->config('forum.settings')->get('vocabulary');
     $terms = entity_load_multiple_by_properties('taxonomy_term', ['vid' => $vid]);
     foreach ($terms as $term) {
       $term->delete();
@@ -140,11 +140,10 @@ class ConfigImportAllTest extends ModuleTestBase {
     // conformance. Ensures all imported default configuration is valid when
     // all modules are enabled.
     $names = $this->container->get('config.storage')->listAll();
-    $factory = $this->container->get('config.factory');
     /** @var \Drupal\Core\Config\TypedConfigManagerInterface $typed_config */
     $typed_config = $this->container->get('config.typed');
     foreach ($names as $name) {
-      $config = $factory->get($name);
+      $config = $this->config($name);
       $this->assertConfigSchema($typed_config, $name, $config->get());
     }
   }

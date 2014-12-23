@@ -74,7 +74,7 @@ class UserPasswordResetTest extends WebTestBase {
 
      // Verify that the user was sent an email.
     $this->assertMail('to', $this->account->getEmail(), 'Password email sent to user.');
-    $subject = t('Replacement login information for @username at @site', array('@username' => $this->account->getUsername(), '@site' => \Drupal::config('system.site')->get('name')));
+    $subject = t('Replacement login information for @username at @site', array('@username' => $this->account->getUsername(), '@site' => $this->config('system.site')->get('name')));
     $this->assertMail('subject', $subject, 'Password reset email subject is correct.');
 
     $resetURL = $this->getResetURL();
@@ -87,7 +87,7 @@ class UserPasswordResetTest extends WebTestBase {
     // Check successful login.
     $this->drupalPostForm(NULL, NULL, t('Log in'));
     $this->assertLink(t('Log out'));
-    $this->assertTitle(t('@name | @site', array('@name' => $this->account->getUsername(), '@site' => \Drupal::config('system.site')->get('name'))), 'Logged in using password reset link.');
+    $this->assertTitle(t('@name | @site', array('@name' => $this->account->getUsername(), '@site' => $this->config('system.site')->get('name'))), 'Logged in using password reset link.');
 
     // Change the forgotten password.
     $password = user_password();
@@ -113,7 +113,7 @@ class UserPasswordResetTest extends WebTestBase {
     $this->assertTrue( count($this->drupalGetMails(array('id' => 'user_password_reset'))) === $before + 1, 'Email sent when requesting password reset using email address.');
 
     // Create a password reset link as if the request time was 60 seconds older than the allowed limit.
-    $timeout = \Drupal::config('user.settings')->get('password_reset_timeout');
+    $timeout = $this->config('user.settings')->get('password_reset_timeout');
     $bogus_timestamp = REQUEST_TIME - $timeout - 60;
     $_uid = $this->account->id();
     $this->drupalGet("user/reset/$_uid/$bogus_timestamp/" . user_pass_rehash($this->account->getPassword(), $bogus_timestamp, $this->account->getLastLoginTime()));

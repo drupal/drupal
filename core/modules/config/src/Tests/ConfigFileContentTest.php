@@ -56,7 +56,7 @@ class ConfigFileContentTest extends KernelTestBase {
     $false_key = 'false';
 
     // Attempt to read non-existing configuration.
-    $config = \Drupal::config($name);
+    $config = $this->config($name);
 
     // Verify a configuration object is returned.
     $this->assertEqual($config->getName(), $name);
@@ -70,7 +70,7 @@ class ConfigFileContentTest extends KernelTestBase {
     $this->assertIdentical($data, FALSE);
 
     // Add a top level value.
-    $config = \Drupal::config($name);
+    $config = $this->config($name);
     $config->set($key, $value);
 
     // Add a nested value.
@@ -100,7 +100,7 @@ class ConfigFileContentTest extends KernelTestBase {
     $this->assertTrue($data);
 
     // Read top level value.
-    $config = \Drupal::config($name);
+    $config = $this->config($name);
     $this->assertEqual($config->getName(), $name);
     $this->assertTrue($config, 'Config object created.');
     $this->assertEqual($config->get($key), 'bar', 'Top level configuration value found.');
@@ -138,7 +138,7 @@ class ConfigFileContentTest extends KernelTestBase {
     // Unset a nested value.
     $config->clear($nested_key);
     $config->save();
-    $config = \Drupal::config($name);
+    $config = $this->config($name);
 
     // Read unset top level value.
     $this->assertNull($config->get($key), 'Top level value unset.');
@@ -147,13 +147,13 @@ class ConfigFileContentTest extends KernelTestBase {
     $this->assertNull($config->get($nested_key), 'Nested value unset.');
 
     // Create two new configuration files to test listing.
-    $config = \Drupal::config('foo.baz');
+    $config = $this->config('foo.baz');
     $config->set($key, $value);
     $config->save();
 
     // Test chained set()->save().
     $chained_name = 'biff.bang';
-    $config = \Drupal::config($chained_name);
+    $config = $this->config($chained_name);
     $config->set($key, $value)->save();
 
     // Verify the database entry exists from a chained save.
@@ -181,7 +181,7 @@ class ConfigFileContentTest extends KernelTestBase {
     $this->assertEqual($files, array(), 'No files listed with the prefix \'bar\'.');
 
     // Delete the configuration.
-    $config = \Drupal::config($name);
+    $config = $this->config($name);
     $config->delete();
 
     // Verify the database entry no longer exists.

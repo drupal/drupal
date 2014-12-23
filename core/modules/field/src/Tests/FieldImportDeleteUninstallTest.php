@@ -86,7 +86,7 @@ class FieldImportDeleteUninstallTest extends FieldUnitTestBase {
     $this->copyConfig($active, $staging);
 
     // Stage uninstall of the Telephone module.
-    $core_extension = \Drupal::config('core.extension')->get();
+    $core_extension = $this->config('core.extension')->get();
     unset($core_extension['module']['telephone']);
     $staging->write('core.extension', $core_extension);
 
@@ -148,7 +148,7 @@ class FieldImportDeleteUninstallTest extends FieldUnitTestBase {
     $this->copyConfig($active, $staging);
 
     // Stage uninstall of the Telephone module.
-    $core_extension = \Drupal::config('core.extension')->get();
+    $core_extension = $this->config('core.extension')->get();
     unset($core_extension['module']['telephone']);
     $staging->write('core.extension', $core_extension);
 

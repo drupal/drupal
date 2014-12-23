@@ -119,7 +119,7 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
 
     // Make the default scheme neither "public" nor "private" to verify the
     // functions work for other than the default scheme.
-    \Drupal::config('system.file')->set('default_scheme', 'temporary')->save();
+    $this->config('system.file')->set('default_scheme', 'temporary')->save();
 
     // Create the directories for the styles.
     $directory = $scheme . '://styles/' . $this->style->id();
@@ -162,11 +162,11 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
     // rather than a URI. We need to temporarily switch the default scheme to
     // match the desired scheme before testing this, then switch it back to the
     // "temporary" scheme used throughout this test afterwards.
-    \Drupal::config('system.file')->set('default_scheme', $scheme)->save();
+    $this->config('system.file')->set('default_scheme', $scheme)->save();
     $relative_path = file_uri_target($original_uri);
     $generate_url_from_relative_path = $this->style->buildUrl($relative_path, $clean_url);
     $this->assertEqual($generate_url, $generate_url_from_relative_path);
-    \Drupal::config('system.file')->set('default_scheme', 'temporary')->save();
+    $this->config('system.file')->set('default_scheme', 'temporary')->save();
 
     // Fetch the URL that generates the file.
     $this->drupalGet($generate_url);
@@ -220,7 +220,7 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
 
     // Allow insecure image derivatives to be created for the remainder of this
     // test.
-    \Drupal::config('image.settings')->set('allow_insecure_derivatives', TRUE)->save();
+    $this->config('image.settings')->set('allow_insecure_derivatives', TRUE)->save();
 
     // Create another working copy of the file.
     $files = $this->drupalGetTestFiles('image');
@@ -233,7 +233,7 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
     // Suppress the security token in the URL, then get the URL of a file that
     // has not been created and try to create it. Check that the security token
     // is not present in the URL but that the image is still accessible.
-    \Drupal::config('image.settings')->set('suppress_itok_output', TRUE)->save();
+    $this->config('image.settings')->set('suppress_itok_output', TRUE)->save();
     $generated_uri = $this->style->buildUri($original_uri);
     $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
     $generate_url = $this->style->buildUrl($original_uri, $clean_url);
@@ -247,7 +247,7 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
    */
   protected function enablePageCache() {
     // Turn on page caching and rerun the test.
-    $config = \Drupal::config('system.performance');
+    $config = $this->config('system.performance');
     $config->set('cache.page.use_internal', 1);
     $config->set('cache.page.max_age', 300);
     $config->save();

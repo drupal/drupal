@@ -242,7 +242,7 @@ class ThemeTest extends WebTestBase {
     \Drupal::service('theme_handler')->install(array('bartik'));
     $this->drupalGet('admin/appearance');
     $this->clickLink(t('Set as default'));
-    $this->assertEqual(\Drupal::config('system.theme')->get('default'), 'bartik');
+    $this->assertEqual($this->config('system.theme')->get('default'), 'bartik');
 
     // Test the default theme on the secondary links (blocks admin page).
     $this->drupalGet('admin/structure/block');

@@ -290,7 +290,7 @@ class FilterAdminTest extends WebTestBase {
     // Use plain text and see if it escapes all tags, whether allowed or not.
     // In order to test plain text, we have to enable the hidden variable for
     // "show_fallback_format", which displays plain text in the format list.
-    \Drupal::config('filter.settings')
+    $this->config('filter.settings')
       ->set('always_show_fallback_choice', TRUE)
       ->save();
     $edit = array();
@@ -298,7 +298,7 @@ class FilterAdminTest extends WebTestBase {
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
     $this->drupalGet('node/' . $node->id());
     $this->assertText(String::checkPlain($text), 'The "Plain text" text format escapes all HTML tags.');
-    \Drupal::config('filter.settings')
+    $this->config('filter.settings')
       ->set('always_show_fallback_choice', FALSE)
       ->save();
 

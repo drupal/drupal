@@ -32,7 +32,7 @@ class EnginePhpTemplateTest extends WebTestBase {
    * Ensures a theme's template is overrideable based on the 'template' filename.
    */
   function testTemplateOverride() {
-    \Drupal::config('system.theme')
+    $this->config('system.theme')
       ->set('default', 'test_theme_phptemplate')
       ->save();
     $this->drupalGet('theme-test/template-test');

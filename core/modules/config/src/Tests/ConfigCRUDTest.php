@@ -44,9 +44,10 @@ class ConfigCRUDTest extends KernelTestBase {
    */
   function testCRUD() {
     $storage = $this->container->get('config.storage');
+    $config_factory = $this->container->get('config.factory');
     $name = 'config_test.crud';
 
-    $config = \Drupal::config($name);
+    $config = $this->config($name);
     $this->assertIdentical($config->isNew(), TRUE);
 
     // Create a new configuration object.
@@ -67,15 +68,15 @@ class ConfigCRUDTest extends KernelTestBase {
     $actual_data = $storage->read($name);
     $this->assertIdentical($actual_data, array('value' => 'instance-update'));
 
-    // Verify a call to \Drupal::config() immediately returns the updated value.
-    $new_config = \Drupal::config($name);
+    // Verify a call to $this->config() immediately returns the updated value.
+    $new_config = $this->config($name);
     $this->assertIdentical($new_config->get(), $config->get());
     $this->assertIdentical($config->isNew(), FALSE);
 
     // Pollute the config factory static cache.
-    $this->container->get('config.factory')->setOverrideState(FALSE);
-    \Drupal::config($name);
-    $this->container->get('config.factory')->setOverrideState(TRUE);
+    $config_factory->setOverrideState(FALSE);
+    $config_factory->get($name);
+    $config_factory->setOverrideState(TRUE);
 
     // Delete the configuration object.
     $config->delete();
@@ -86,16 +87,16 @@ class ConfigCRUDTest extends KernelTestBase {
 
     // Verify that all copies of the configuration has been removed from the
     // static cache.
-    $this->container->get('config.factory')->setOverrideState(FALSE);
-    $this->assertIdentical(\Drupal::config($name)->isNew(), TRUE);
-    $this->container->get('config.factory')->setOverrideState(TRUE);
+    $config_factory->setOverrideState(FALSE);
+    $this->assertIdentical($config_factory->get($name)->isNew(), TRUE);
+    $config_factory->setOverrideState(TRUE);
 
     // Verify the active configuration contains no value.
     $actual_data = $storage->read($name);
     $this->assertIdentical($actual_data, FALSE);
 
-    // Verify \Drupal::config() returns no data.
-    $new_config = \Drupal::config($name);
+    // Verify $this->config() returns no data.
+    $new_config = $this->config($name);
     $this->assertIdentical($new_config->get(), $config->get());
     $this->assertIdentical($config->isNew(), TRUE);
 
@@ -108,49 +109,48 @@ class ConfigCRUDTest extends KernelTestBase {
     $actual_data = $storage->read($name);
     $this->assertIdentical($actual_data, array('value' => 're-created'));
 
-    // Verify a call to \Drupal::config() immediately returns the updated value.
-    $new_config = \Drupal::config($name);
+    // Verify a call to $this->config() immediately returns the updated value.
+    $new_config = $this->config($name);
     $this->assertIdentical($new_config->get(), $config->get());
     $this->assertIdentical($config->isNew(), FALSE);
 
     // Rename the configuration object.
     $new_name = 'config_test.crud_rename';
     $this->container->get('config.factory')->rename($name, $new_name);
-    $renamed_config = \Drupal::config($new_name);
+    $renamed_config = $this->config($new_name);
     $this->assertIdentical($renamed_config->get(), $config->get());
     $this->assertIdentical($renamed_config->isNew(), FALSE);
 
     // Ensure that the old configuration object is removed from both the cache
     // and the configuration storage.
-    $config = \Drupal::config($name);
+    $config = $this->config($name);
     $this->assertIdentical($config->get(), array());
     $this->assertIdentical($config->isNew(), TRUE);
 
     // Test renaming when config.factory does not have the object in its static
     // cache.
-    $config_factory = $this->container->get('config.factory');
     $name = 'config_test.crud_rename';
     // Turn off overrides and pollute the non-overrides static cache.
     $config_factory->setOverrideState(FALSE);
-    \Drupal::config($name);
+    $config_factory->get($name);
     // Turn on overrides and pollute the overrides static cache.
     $config_factory->setOverrideState(TRUE);
-    $config = \Drupal::config($name);
+    $config = $config_factory->get($name);
     // Rename and ensure that happened properly.
     $new_name = 'config_test.crud_rename_no_cache';
     $config_factory->rename($name, $new_name);
-    $renamed_config = \Drupal::config($new_name);
+    $renamed_config = $config_factory->get($new_name);
     $this->assertIdentical($renamed_config->get(), $config->get());
     $this->assertIdentical($renamed_config->isNew(), FALSE);
     // Ensure the overrides static cache has been cleared.
-    $this->assertIdentical(\Drupal::config($name)->isNew(), TRUE);
+    $this->assertIdentical($config_factory->get($name)->isNew(), TRUE);
     // Ensure the non-overrides static cache has been cleared.
     $config_factory->setOverrideState(FALSE);
-    $this->assertIdentical(\Drupal::config($name)->isNew(), TRUE);
+    $this->assertIdentical($config_factory->get($name)->isNew(), TRUE);
     $config_factory->setOverrideState(TRUE);
 
     // Merge data into the configuration object.
-    $new_config = \Drupal::config($new_name);
+    $new_config = $this->config($new_name);
     $expected_values = array(
       'value' => 'herp',
       '404' => 'derp',
@@ -169,7 +169,7 @@ class ConfigCRUDTest extends KernelTestBase {
     $name = 'nonamespace';
     $message = 'Expected ConfigNameException was thrown for a name without a namespace.';
     try {
-      \Drupal::config($name)->save();
+      $this->config($name)->save();
       $this->fail($message);
     }
     catch (ConfigNameException $e) {
@@ -180,7 +180,7 @@ class ConfigCRUDTest extends KernelTestBase {
     $name = 'config_test.herman_melville.moby_dick_or_the_whale.harper_1851.now_small_fowls_flew_screaming_over_the_yet_yawning_gulf_a_sullen_white_surf_beat_against_its_steep_sides_then_all_collapsed_and_the_great_shroud_of_the_sea_rolled_on_as_it_rolled_five_thousand_years_ago';
     $message = 'Expected ConfigNameException was thrown for a name longer than Config::MAX_NAME_LENGTH.';
     try {
-      \Drupal::config($name)->save();
+      $this->config($name)->save();
       $this->fail($message);
     }
     catch (ConfigNameException $e) {
@@ -192,7 +192,7 @@ class ConfigCRUDTest extends KernelTestBase {
     foreach ($test_characters as $i => $c) {
       try {
         $name = 'namespace.object' . $c;
-        $config = \Drupal::config($name);
+        $config = $this->config($name);
         $config->save();
       }
       catch (ConfigNameException $e) {
@@ -207,7 +207,7 @@ class ConfigCRUDTest extends KernelTestBase {
     $name = 'namespace.object';
     $message = 'ConfigNameException was not thrown for a valid object name.';
     try {
-      $config = \Drupal::config($name);
+      $config = $this->config($name);
       $config->save();
       $this->pass($message);
     }
@@ -224,7 +224,7 @@ class ConfigCRUDTest extends KernelTestBase {
     // Verify that setData() will catch dotted keys.
     $message = 'Expected ConfigValueException was thrown from setData() for value with dotted keys.';
     try {
-      \Drupal::config('namespace.object')->setData(array('key.value' => 12))->save();
+      $this->config('namespace.object')->setData(array('key.value' => 12))->save();
       $this->fail($message);
     }
     catch (ConfigValueException $e) {
@@ -234,7 +234,7 @@ class ConfigCRUDTest extends KernelTestBase {
     // Verify that set() will catch dotted keys.
     $message = 'Expected ConfigValueException was thrown from set() for value with dotted keys.';
     try {
-      \Drupal::config('namespace.object')->set('foo', array('key.value' => 12))->save();
+      $this->config('namespace.object')->set('foo', array('key.value' => 12))->save();
       $this->fail($message);
     }
     catch (ConfigValueException $e) {

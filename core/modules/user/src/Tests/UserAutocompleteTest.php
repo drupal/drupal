@@ -45,7 +45,7 @@ class UserAutocompleteTest extends WebTestBase {
     $this->assertRaw($this->unprivileged_user->getUsername(), 'User name found in autocompletion results.');
 
     $anonymous_name = $this->randomString() . '<script>alert();</script>';
-    \Drupal::config('user.settings')->set('anonymous', $anonymous_name)->save();
+    $this->config('user.settings')->set('anonymous', $anonymous_name)->save();
     // Test that anonymous username is in the result when requested and escaped
     // with \Drupal\Component\Utility\String::checkPlain().
     $users = $this->drupalGetJSON('user/autocomplete/anonymous', array('query' => array('q' => Unicode::substr($anonymous_name, 0, 4))));

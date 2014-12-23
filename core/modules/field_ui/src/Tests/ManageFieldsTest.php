@@ -287,7 +287,7 @@ class ManageFieldsTest extends WebTestBase {
   function testFieldPrefix() {
     // Change default field prefix.
     $field_prefix = strtolower($this->randomMachineName(10));
-    \Drupal::config('field_ui.settings')->set('field_prefix', $field_prefix)->save();
+    $this->config('field_ui.settings')->set('field_prefix', $field_prefix)->save();
 
     // Create a field input and label exceeding the new maxlength, which is 22.
     $field_exceed_max_length_label = $this->randomString(23);
@@ -422,7 +422,7 @@ class ManageFieldsTest extends WebTestBase {
    */
   function testDisallowedFieldNames() {
     // Reset the field prefix so we can test properly.
-    \Drupal::config('field_ui.settings')->set('field_prefix', '')->save();
+    $this->config('field_ui.settings')->set('field_prefix', '')->save();
 
     $label = 'Disallowed field';
     $edit = array(

@@ -65,7 +65,7 @@ abstract class SystemConfigFormTestBase extends WebTestBase {
     $this->assertTrue($valid_form, format_string('Input values: %values<br/>Validation handler errors: %errors', $args));
 
     foreach ($this->values as $data) {
-      $this->assertEqual($data['#value'], \Drupal::config($data['#config_name'])->get($data['#config_key']));
+      $this->assertEqual($data['#value'], $this->config($data['#config_name'])->get($data['#config_key']));
     }
   }
 }

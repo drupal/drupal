@@ -19,7 +19,7 @@ class NodeAccessTest extends NodeTestBase {
   protected function setUp() {
     parent::setUp();
     // Clear permissions for authenticated users.
-    $this->container->get('config.factory')->get('user.role.' . DRUPAL_AUTHENTICATED_RID)->set('permissions', array())->save();
+    $this->config('user.role.' . DRUPAL_AUTHENTICATED_RID)->set('permissions', array())->save();
   }
 
   /**

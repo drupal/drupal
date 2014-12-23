@@ -53,7 +53,7 @@ class ContactPersonalTest extends WebTestBase {
     $this->adminUser = $this->drupalCreateUser(array('administer contact forms', 'administer users', 'administer account settings', 'access site reports'));
 
     // Create some normal users with their contact forms enabled by default.
-    \Drupal::config('contact.settings')->set('user_default_enabled', TRUE)->save();
+    $this->config('contact.settings')->set('user_default_enabled', TRUE)->save();
     $this->webUser = $this->drupalCreateUser(array('access user contact forms'));
     $this->contactUser = $this->drupalCreateUser();
   }
@@ -69,11 +69,11 @@ class ContactPersonalTest extends WebTestBase {
     $this->assertEqual(1, count($mails));
     $mail = $mails[0];
     $this->assertEqual($mail['to'], $this->contactUser->getEmail());
-    $this->assertEqual($mail['from'], \Drupal::config('system.site')->get('mail'));
+    $this->assertEqual($mail['from'], $this->config('system.site')->get('mail'));
     $this->assertEqual($mail['reply-to'], $this->webUser->getEmail());
     $this->assertEqual($mail['key'], 'user_mail');
     $variables = array(
-      '!site-name' => \Drupal::config('system.site')->get('name'),
+      '!site-name' => $this->config('system.site')->get('name'),
       '!subject' => $message['subject[0][value]'],
       '!recipient-name' => $this->contactUser->getUsername(),
     );
@@ -188,7 +188,7 @@ class ContactPersonalTest extends WebTestBase {
 
     // Test with disabled global default contact form in combination with a user
     // that has the contact form enabled.
-    \Drupal::config('contact.settings')->set('user_default_enabled', FALSE)->save();
+    $this->config('contact.settings')->set('user_default_enabled', FALSE)->save();
     $this->contactUser = $this->drupalCreateUser();
     \Drupal::service('user.data')->set('contact', $this->contactUser->id(), 'enabled', 1);
 
@@ -201,7 +201,7 @@ class ContactPersonalTest extends WebTestBase {
    */
   function testPersonalContactFlood() {
     $flood_limit = 3;
-    \Drupal::config('contact.settings')->set('flood.limit', $flood_limit)->save();
+    $this->config('contact.settings')->set('flood.limit', $flood_limit)->save();
 
     // Clear flood table in preparation for flood test and allow other checks to complete.
     db_delete('flood')->execute();
@@ -218,7 +218,7 @@ class ContactPersonalTest extends WebTestBase {
 
     // Submit contact form one over limit.
     $this->drupalGet('user/' . $this->contactUser->id(). '/contact');
-    $this->assertRaw(t('You cannot send more than %number messages in @interval. Try again later.', array('%number' => $flood_limit, '@interval' => \Drupal::service('date.formatter')->formatInterval(\Drupal::config('contact.settings')->get('flood.interval')))), 'Normal user denied access to flooded contact form.');
+    $this->assertRaw(t('You cannot send more than %number messages in @interval. Try again later.', array('%number' => $flood_limit, '@interval' => \Drupal::service('date.formatter')->formatInterval($this->config('contact.settings')->get('flood.interval')))), 'Normal user denied access to flooded contact form.');
 
     // Test that the admin user can still access the contact form even though
     // the flood limit was reached.
@@ -233,7 +233,7 @@ class ContactPersonalTest extends WebTestBase {
     user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access user contact forms'));
     $this->checkContactAccess(200);
     $this->checkContactAccess(403, FALSE);
-    $config = \Drupal::config('contact.settings');
+    $config = $this->config('contact.settings');
     $config->set('user_default_enabled', FALSE);
     $config->save();
     $this->checkContactAccess(403);
@@ -250,7 +250,7 @@ class ContactPersonalTest extends WebTestBase {
   protected function checkContactAccess($response, $contact_value = NULL) {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/people/create');
-    if (\Drupal::config('contact.settings')->get('user_default_enabled', TRUE)) {
+    if ($this->config('contact.settings')->get('user_default_enabled', TRUE)) {
       $this->assertFieldChecked('edit-contact--2');
     }
     else {

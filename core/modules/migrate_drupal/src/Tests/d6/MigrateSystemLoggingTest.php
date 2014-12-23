@@ -38,7 +38,7 @@ class MigrateSystemLoggingTest extends MigrateDrupalTestBase {
    * Tests migration of system error_level variables to system.logging.yml.
    */
   public function testSystemLogging() {
-    $config = \Drupal::config('system.logging');
+    $config = $this->config('system.logging');
     $this->assertIdentical($config->get('error_level'), 'some');
     $this->assertConfigSchema(\Drupal::service('config.typed'), 'system.logging', $config->get());
   }

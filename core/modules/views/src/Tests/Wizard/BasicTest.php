@@ -131,7 +131,7 @@ class BasicTest extends WizardTestBase {
     $this->assertNoText('REST export', 'If only the page and block options were enabled in the wizard, the resulting view does not have a REST export display.');
 
     // Confirm that the block is available in the block administration UI.
-    $this->drupalGet('admin/structure/block/list/' . \Drupal::config('system.theme')->get('default'));
+    $this->drupalGet('admin/structure/block/list/' . $this->config('system.theme')->get('default'));
     $this->assertText($view3['label']);
 
     // Place the block.

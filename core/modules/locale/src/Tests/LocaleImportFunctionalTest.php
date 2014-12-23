@@ -55,7 +55,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
 
     // Enable import of translations. By default this is disabled for automated
     // tests.
-    \Drupal::config('locale.settings')
+    $this->config('locale.settings')
       ->set('translation.import_enabled', TRUE)
       ->save();
   }
@@ -68,7 +68,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
     $this->importPoFile($this->getPoFile(), array(
       'langcode' => 'fr',
     ));
-    \Drupal::config('locale.settings');
+    $this->config('locale.settings');
     // The import should automatically create the corresponding language.
     $this->assertRaw(t('The language %language has been created.', array('%language' => 'French')), 'The language has been automatically created.');
 

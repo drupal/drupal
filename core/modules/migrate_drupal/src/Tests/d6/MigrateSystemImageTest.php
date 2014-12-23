@@ -36,7 +36,7 @@ class MigrateSystemImageTest extends MigrateDrupalTestBase {
    * Tests migration of system (image) variables to system.image.yml.
    */
   public function testSystemImage() {
-    $config = \Drupal::config('system.image');
+    $config = $this->config('system.image');
     $this->assertIdentical($config->get('toolkit'), 'gd');
   }
 

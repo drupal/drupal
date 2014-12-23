@@ -136,7 +136,7 @@ abstract class AggregatorTestBase extends WebTestBase {
    */
   function getDefaultFeedItemCount() {
     // Our tests are based off of rss.xml, so let's find out how many elements should be related.
-    $feed_count = db_query_range('SELECT COUNT(DISTINCT nid) FROM {node_field_data} n WHERE n.promote = 1 AND n.status = 1', 0, $this->container->get('config.factory')->get('system.rss')->get('items.limit'))->fetchField();
+    $feed_count = db_query_range('SELECT COUNT(DISTINCT nid) FROM {node_field_data} n WHERE n.promote = 1 AND n.status = 1', 0, $this->config('system.rss')->get('items.limit'))->fetchField();
     return $feed_count > 10 ? 10 : $feed_count;
   }
 
@@ -336,7 +336,7 @@ EOF;
    * Enable the plugins coming with aggregator_test module.
    */
   function enableTestPlugins() {
-    $this->container->get('config.factory')->get('aggregator.settings')
+    $this->config('aggregator.settings')
       ->set('fetcher', 'aggregator_test_fetcher')
       ->set('parser', 'aggregator_test_parser')
       ->set('processors', array(

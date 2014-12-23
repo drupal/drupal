@@ -117,7 +117,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     // configuration value.
     db_update('file_managed')
       ->fields(array(
-        'changed' => REQUEST_TIME - ($this->container->get('config.factory')->get('system.file')->get('temporary_maximum_age') + 1),
+        'changed' => REQUEST_TIME - ($this->config('system.file')->get('temporary_maximum_age') + 1),
       ))
       ->condition('fid', $node_file_r3->id())
       ->execute();
@@ -133,7 +133,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     // configuration value.
     db_update('file_managed')
       ->fields(array(
-        'changed' => REQUEST_TIME - ($this->container->get('config.factory')->get('system.file')->get('temporary_maximum_age') + 1),
+        'changed' => REQUEST_TIME - ($this->config('system.file')->get('temporary_maximum_age') + 1),
       ))
       ->condition('fid', $node_file_r1->id())
       ->execute();

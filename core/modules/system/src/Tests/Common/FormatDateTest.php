@@ -32,7 +32,7 @@ class FormatDateTest extends WebTestBase {
   protected function setUp() {
     parent::setUp('language');
 
-    \Drupal::config('system.date')
+    $this->config('system.date')
       ->set('timezone.user.configurable', 1)
       ->save();
     $formats = $this->container->get('entity.manager')
@@ -96,7 +96,7 @@ class FormatDateTest extends WebTestBase {
     $this->assertIdentical(format_date($timestamp, 'custom', 'l, d-M-y H:i:s T', 'Europe/London', 'en'), 'Monday, 26-Mar-07 01:00:00 BST', 'Test a different time zone.');
 
     // Change the default language and timezone.
-    \Drupal::config('system.site')->set('langcode', static::LANGCODE)->save();
+    $this->config('system.site')->set('langcode', static::LANGCODE)->save();
     date_default_timezone_set('America/Los_Angeles');
 
     $this->assertIdentical(format_date($timestamp, 'custom', 'l, d-M-y H:i:s T', 'America/Los_Angeles', 'en'), 'Sunday, 25-Mar-07 17:00:00 PDT', 'Test a different language.');

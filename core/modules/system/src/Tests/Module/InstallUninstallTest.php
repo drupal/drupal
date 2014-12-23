@@ -156,7 +156,7 @@ class InstallUninstallTest extends ModuleTestBase {
     if ($module == 'forum') {
       // Forum cannot be uninstalled until all of the content entities related
       // to it have been deleted.
-      $vid = \Drupal::config('forum.settings')->get('vocabulary');
+      $vid = $this->config('forum.settings')->get('vocabulary');
       $terms = entity_load_multiple_by_properties('taxonomy_term', ['vid' => $vid]);
       foreach ($terms as $term) {
         $term->delete();

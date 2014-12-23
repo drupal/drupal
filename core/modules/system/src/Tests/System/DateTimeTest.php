@@ -37,7 +37,7 @@ class DateTimeTest extends WebTestBase {
    */
   function testTimeZoneHandling() {
     // Setup date/time settings for Honolulu time.
-    $config = \Drupal::config('system.date')
+    $config = $this->config('system.date')
       ->set('timezone.default', 'Pacific/Honolulu')
       ->set('timezone.user.configurable', 0)
       ->save();

@@ -798,7 +798,7 @@ abstract class TestBase {
     }
 
     TestServiceProvider::$currentTest = $this;
-    $simpletest_config = \Drupal::config('simpletest.settings');
+    $simpletest_config = $this->config('simpletest.settings');
 
     // Unless preset from run-tests.sh, retrieve the current verbose setting.
     if (!isset($this->verbose)) {
@@ -1516,4 +1516,23 @@ abstract class TestBase {
       $target_storage->write($name, $source_storage->read($name));
     }
   }
+
+  /**
+   * Configuration accessor for tests. Returns non-overriden configuration.
+   *
+   * @param $name
+   *   Configuration name.
+   *
+   * @return \Drupal\Core\Config\Config
+   *   The configuration object with original configuration data.
+   */
+  protected function config($name) {
+    $config_factory = \Drupal::configFactory();
+    $old_state = $config_factory->getOverrideState();
+    $config_factory->setOverrideState(FALSE);
+    $config = $config_factory->get($name);
+    $config_factory->setOverrideState($old_state);
+    return $config;
+  }
+
 }

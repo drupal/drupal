@@ -77,7 +77,7 @@ class UserCreateTest extends WebTestBase {
     $this->assertNoRaw('data-user-info-from-browser', 'Ensure form attribute, data-user-info-from-browser, does not exist.');
 
     // Test that the password strength indicator displays.
-    $config = \Drupal::config('user.settings');
+    $config = $this->config('user.settings');
 
     $config->set('password_strength', TRUE)->save();
     $this->drupalGet('admin/people/create');

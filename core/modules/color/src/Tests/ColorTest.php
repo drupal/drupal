@@ -105,7 +105,7 @@ class ColorTest extends WebTestBase {
    *   color', 'Color set', etc) for the theme which being tested.
    */
   function _testColor($theme, $test_values) {
-    \Drupal::config('system.theme')
+    $this->config('system.theme')
       ->set('default', $theme)
       ->save();
     $settings_path = 'admin/appearance/settings/' . $theme;
@@ -119,7 +119,7 @@ class ColorTest extends WebTestBase {
     $this->drupalPostForm($settings_path, $edit, t('Save configuration'));
 
     $this->drupalGet('<front>');
-    $stylesheets = \Drupal::config('color.theme.' . $theme)->get('stylesheets');
+    $stylesheets = $this->config('color.theme.' . $theme)->get('stylesheets');
     foreach ($stylesheets as $stylesheet) {
       $this->assertPattern('|' . file_create_url($stylesheet) . '|', 'Make sure the color stylesheet is included in the content. (' . $theme . ')');
       $stylesheet_content = join("\n", file($stylesheet));
@@ -132,14 +132,14 @@ class ColorTest extends WebTestBase {
     $this->drupalPostForm($settings_path, $edit, t('Save configuration'));
 
     $this->drupalGet('<front>');
-    $stylesheets = \Drupal::config('color.theme.' . $theme)->get('stylesheets');
+    $stylesheets = $this->config('color.theme.' . $theme)->get('stylesheets');
     foreach ($stylesheets as $stylesheet) {
       $stylesheet_content = join("\n", file($stylesheet));
       $this->assertTrue(strpos($stylesheet_content, 'color: ' . $test_values['scheme_color']) !== FALSE, 'Make sure the color we changed is in the color stylesheet. (' . $theme . ')');
     }
 
     // Test with aggregated CSS turned on.
-    $config = \Drupal::config('system.performance');
+    $config = $this->config('system.performance');
     $config->set('css.preprocess', 1);
     $config->save();
     $this->drupalGet('<front>');
@@ -157,7 +157,7 @@ class ColorTest extends WebTestBase {
    * Tests whether the provided color is valid.
    */
   function testValidColor() {
-    \Drupal::config('system.theme')
+    $this->config('system.theme')
       ->set('default', 'bartik')
       ->save();
     $settings_path = 'admin/appearance/settings/bartik';

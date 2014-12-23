@@ -69,7 +69,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $this->drupalGet('admin/reports/translations');
     $this->assertText(t('Missing translations for one project'));
 
-    $config = \Drupal::config('locale.settings');
+    $config = $this->config('locale.settings');
     // Set a flag to let the locale_test module replace the project data with a
     // set of test projects.
     \Drupal::state()->set('locale.test_projects_alter', TRUE);
@@ -121,7 +121,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
    *  - Import overwrite: all existing translations
    */
   public function testUpdateImportSourceRemote() {
-    $config = \Drupal::config('locale.settings');
+    $config = $this->config('locale.settings');
 
     // Build the test environment.
     $this->setTranslationFiles();
@@ -183,7 +183,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
    *  - Import overwrite: all existing translations
    */
   public function testUpdateImportSourceLocal() {
-    $config = \Drupal::config('locale.settings');
+    $config = $this->config('locale.settings');
 
     // Build the test environment.
     $this->setTranslationFiles();
@@ -237,7 +237,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
    *  - Import overwrite: only overwrite non-customized translations
    */
   public function testUpdateImportModeNonCustomized() {
-    $config = \Drupal::config('locale.settings');
+    $config = $this->config('locale.settings');
 
     // Build the test environment.
     $this->setTranslationFiles();
@@ -273,7 +273,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
    *  - Import overwrite: don't overwrite any existing translation
    */
   public function testUpdateImportModeNone() {
-    $config = \Drupal::config('locale.settings');
+    $config = $this->config('locale.settings');
 
     // Build the test environment.
     $this->setTranslationFiles();

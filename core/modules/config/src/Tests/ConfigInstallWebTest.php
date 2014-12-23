@@ -37,9 +37,9 @@ class ConfigInstallWebTest extends WebTestBase {
     \Drupal::service('module_installer')->install(array('config_test'));
 
     // Verify the configuration does not exist prior to installation.
-    $config_static = \Drupal::config($default_config);
+    $config_static = $this->config($default_config);
     $this->assertIdentical($config_static->isNew(), TRUE);
-    $config_entity = \Drupal::config($default_configuration_entity);
+    $config_entity = $this->config($default_configuration_entity);
     $this->assertIdentical($config_entity->isNew(), TRUE);
 
     // Install the integration module.
@@ -48,10 +48,10 @@ class ConfigInstallWebTest extends WebTestBase {
     // Verify that default module config exists.
     \Drupal::configFactory()->reset($default_config);
     \Drupal::configFactory()->reset($default_configuration_entity);
-    $config_static = \Drupal::config($default_config);
+    $config_static = $this->config($default_config);
     $this->assertIdentical($config_static->isNew(), FALSE);
     $this->assertIdentical($config_static->get('foo'), 'default setting');
-    $config_entity = \Drupal::config($default_configuration_entity);
+    $config_entity = $this->config($default_configuration_entity);
     $this->assertIdentical($config_entity->isNew(), FALSE);
     $this->assertIdentical($config_entity->get('label'), 'Default integration config label');
 
@@ -60,7 +60,7 @@ class ConfigInstallWebTest extends WebTestBase {
     $config_entity->set('label', 'Customized integration config label')->save();
 
     // @todo FIXME: Setting config keys WITHOUT SAVING retains the changed config
-    //   object in memory. Every new call to \Drupal::config() MUST revert in-memory changes
+    //   object in memory. Every new call to $this->config() MUST revert in-memory changes
     //   that haven't been saved!
     //   In other words: This test passes even without this reset, but it shouldn't.
     $this->container->get('config.factory')->reset();
@@ -69,11 +69,11 @@ class ConfigInstallWebTest extends WebTestBase {
     $this->container->get('module_installer')->uninstall(array('config_integration_test'));
 
     // Verify the integration module's config was uninstalled.
-    $config_static = \Drupal::config($default_config);
+    $config_static = $this->config($default_config);
     $this->assertIdentical($config_static->isNew(), TRUE);
 
     // Verify the integration config still exists.
-    $config_entity = \Drupal::config($default_configuration_entity);
+    $config_entity = $this->config($default_configuration_entity);
     $this->assertIdentical($config_entity->isNew(), FALSE);
     $this->assertIdentical($config_entity->get('label'), 'Customized integration config label');
 
@@ -83,12 +83,12 @@ class ConfigInstallWebTest extends WebTestBase {
     // Verify the integration module's config was re-installed.
     \Drupal::configFactory()->reset($default_config);
     \Drupal::configFactory()->reset($default_configuration_entity);
-    $config_static = \Drupal::config($default_config);
+    $config_static = $this->config($default_config);
     $this->assertIdentical($config_static->isNew(), FALSE);
     $this->assertIdentical($config_static->get('foo'), 'default setting');
 
     // Verify the customized integration config still exists.
-    $config_entity = \Drupal::config($default_configuration_entity);
+    $config_entity = $this->config($default_configuration_entity);
     $this->assertIdentical($config_entity->isNew(), FALSE);
     $this->assertIdentical($config_entity->get('label'), 'Customized integration config label');
   }
@@ -126,7 +126,7 @@ class ConfigInstallWebTest extends WebTestBase {
 
     // Verify that active configuration matches the expected data, which was
     // created from the testing install profile's system.cron.yml file.
-    $config = \Drupal::config($config_name);
+    $config = $this->config($config_name);
     $this->assertIdentical($config->get(), $expected_profile_data);
 
     // Turn on the test module, which will attempt to replace the
@@ -136,14 +136,14 @@ class ConfigInstallWebTest extends WebTestBase {
     $this->assertTrue($status, "The module config_existing_default_config_test was installed.");
 
     // Verify that the test module has not been able to change the data.
-    $config = \Drupal::config($config_name);
+    $config = $this->config($config_name);
     $this->assertIdentical($config->get(), $expected_profile_data);
 
     // Disable and uninstall the test module.
     \Drupal::service('module_installer')->uninstall(array('config_existing_default_config_test'));
 
     // Verify that the data hasn't been altered by removing the test module.
-    $config = \Drupal::config($config_name);
+    $config = $this->config($config_name);
     $this->assertIdentical($config->get(), $expected_profile_data);
   }
 }

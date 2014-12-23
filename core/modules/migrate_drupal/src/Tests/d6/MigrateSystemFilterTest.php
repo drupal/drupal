@@ -36,7 +36,7 @@ class MigrateSystemFilterTest extends MigrateDrupalTestBase {
    * Tests migration of system (filter) variables to system.filter.yml.
    */
   public function testSystemFilter() {
-    $config = \Drupal::config('system.filter');
+    $config = $this->config('system.filter');
     $this->assertIdentical($config->get('protocols'), array('http', 'https', 'ftp', 'news', 'nntp', 'tel', 'telnet', 'mailto', 'irc', 'ssh', 'sftp', 'webcal', 'rtsp'));
   }
 

@@ -31,7 +31,7 @@ class LocalePathTest extends WebTestBase {
     parent::setUp();
 
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
-    \Drupal::config('system.site')->set('page.front', 'node')->save();
+    $this->config('system.site')->set('page.front', 'node')->save();
   }
 
   /**

@@ -208,7 +208,7 @@ class MenuRouterTest extends WebTestBase {
   public function testMaintenanceModeLoginPaths() {
     $this->container->get('state')->set('system.maintenance_mode', TRUE);
 
-    $offline_message = t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => \Drupal::config('system.site')->get('name')));
+    $offline_message = t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => $this->config('system.site')->get('name')));
     $this->drupalGet('test-page');
     $this->assertText($offline_message);
     $this->drupalGet('menu_login_callback');
@@ -243,7 +243,7 @@ class MenuRouterTest extends WebTestBase {
 
     $theme_handler = $this->container->get('theme_handler');
     $theme_handler->install(array($this->default_theme, $this->admin_theme));
-    $this->container->get('config.factory')->get('system.theme')
+    $this->config('system.theme')
       ->set('default', $this->default_theme)
       ->set('admin', $this->admin_theme)
       ->save();

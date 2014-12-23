@@ -510,9 +510,7 @@ class ConfigTranslationUiTest extends WebTestBase {
     $this->assertResponse(403);
 
     // Set default language of site information to not-specified language (und).
-    $this->container
-      ->get('config.factory')
-      ->get('system.site')
+    $this->config('system.site')
       ->set('langcode', LanguageInterface::LANGCODE_NOT_SPECIFIED)
       ->save();
 
@@ -583,7 +581,7 @@ class ConfigTranslationUiTest extends WebTestBase {
   public function testLocaleDBStorage() {
     // Enable import of translations. By default this is disabled for automated
     // tests.
-    \Drupal::config('locale.settings')
+    $this->config('locale.settings')
       ->set('translation.import_enabled', TRUE)
       ->save();
 

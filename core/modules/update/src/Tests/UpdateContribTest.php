@@ -45,7 +45,7 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ),
     );
-    \Drupal::config('update_test.settings')->set('system_info', $system_info)->save();
+    $this->config('update_test.settings')->set('system_info', $system_info)->save();
     $this->refreshUpdateStatus(array('drupal' => '0.0', 'aaa_update_test' => 'no-releases'));
     $this->drupalGet('admin/reports/updates');
     // Cannot use $this->standardTests() because we need to check for the
@@ -76,7 +76,7 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ),
     );
-    \Drupal::config('update_test.settings')->set('system_info', $system_info)->save();
+    $this->config('update_test.settings')->set('system_info', $system_info)->save();
     $this->refreshUpdateStatus(
       array(
         'drupal' => '0.0',
@@ -135,7 +135,7 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ),
     );
-    \Drupal::config('update_test.settings')->set('system_info', $system_info)->save();
+    $this->config('update_test.settings')->set('system_info', $system_info)->save();
     $this->refreshUpdateStatus(array('drupal' => '0.0', '#all' => '1_0'));
     $this->standardTests();
     // We're expecting the report to say all projects are up to date.
@@ -190,7 +190,7 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ),
     );
-    \Drupal::config('update_test.settings')->set('system_info', $system_info)->save();
+    $this->config('update_test.settings')->set('system_info', $system_info)->save();
     $xml_mapping = array(
       'drupal' => '0.0',
       'update_test_subtheme' => '1_0',
@@ -208,9 +208,9 @@ class UpdateContribTest extends UpdateTestBase {
    *   base themes have to be installed.
    */
   function testUpdateShowDisabledThemes() {
-    $update_settings = \Drupal::config('update.settings');
+    $update_settings = $this->config('update.settings');
     // Make sure all the update_test_* themes are disabled.
-    $extension_config = \Drupal::config('core.extension');
+    $extension_config = $this->config('core.extension');
     foreach ($extension_config->get('theme') as $theme => $weight) {
       if (preg_match('/^update_test_/', $theme)) {
         $extension_config->clear("theme.$theme");
@@ -242,7 +242,7 @@ class UpdateContribTest extends UpdateTestBase {
     // of update_max_fetch_attempts. Therefore this variable is set very high
     // to avoid test failures in those cases.
     $update_settings->set('fetch.max_attempts', 99999)->save();
-    \Drupal::config('update_test.settings')->set('system_info', $system_info)->save();
+    $this->config('update_test.settings')->set('system_info', $system_info)->save();
     $xml_mapping = array(
       'drupal' => '0.0',
       'update_test_subtheme' => '1_0',
@@ -291,7 +291,7 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ),
     );
-    \Drupal::config('update_test.settings')->set('system_info', $system_info)->save();
+    $this->config('update_test.settings')->set('system_info', $system_info)->save();
     $projects = update_get_projects();
     $theme_data = system_rebuild_theme_data();
     $project_info = new ProjectInfo();
@@ -324,7 +324,7 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ),
     );
-    \Drupal::config('update_test.settings')->set('system_info', $system_info)->save();
+    $this->config('update_test.settings')->set('system_info', $system_info)->save();
 
     $xml_mapping = array(
       'drupal' => '0.0',
@@ -365,7 +365,7 @@ class UpdateContribTest extends UpdateTestBase {
    * update, then assert if we see the appropriate warnings on the right pages.
    */
   function testHookUpdateStatusAlter() {
-    $update_test_config = \Drupal::config('update_test.settings');
+    $update_test_config = $this->config('update_test.settings');
     $update_admin_user = $this->drupalCreateUser(array('administer site configuration', 'administer software updates'));
     $this->drupalLogin($update_admin_user);
 

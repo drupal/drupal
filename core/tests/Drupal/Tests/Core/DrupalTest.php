@@ -133,6 +133,7 @@ class DrupalTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
     $this->setMockContainerService('config.factory', $config);
 
+    // Test \Drupal::config(), not $this->config().
     $this->assertNotNull(\Drupal::config('test_config'));
   }
 

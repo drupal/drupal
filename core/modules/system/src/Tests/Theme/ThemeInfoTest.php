@@ -60,7 +60,7 @@ class ThemeInfoTest extends WebTestBase {
    */
   function testStylesheets() {
     $this->themeHandler->install(array('test_basetheme', 'test_subtheme'));
-    \Drupal::config('system.theme')
+    $this->config('system.theme')
       ->set('default', 'test_subtheme')
       ->save();
 

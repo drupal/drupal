@@ -49,7 +49,7 @@ class LanguageConfigSchemaTest extends WebTestBase {
    */
   function testValidLanguageConfigSchema() {
     // Make sure no language configuration available by default.
-    $config_data = \Drupal::config('language.settings')->get();
+    $config_data = $this->config('language.settings')->get();
     $this->assertTrue(empty($config_data));
 
     $settings_path = 'admin/config/regional/content-language';
@@ -65,7 +65,7 @@ class LanguageConfigSchemaTest extends WebTestBase {
 
     $this->drupalPostForm($settings_path, $edit, t('Save configuration'));
 
-    $config_data = \Drupal::config('language.content_settings.menu_link_content.menu_link_content');
+    $config_data = $this->config('language.content_settings.menu_link_content.menu_link_content');
     // Make sure configuration saved correctly.
     $this->assertTrue($config_data->get('language_alterable'));
 

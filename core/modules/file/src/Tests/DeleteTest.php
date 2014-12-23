@@ -60,7 +60,7 @@ class DeleteTest extends FileManagedUnitTestBase {
     // configuration value.
     db_update('file_managed')
       ->fields(array(
-        'changed' => REQUEST_TIME - ($this->container->get('config.factory')->get('system.file')->get('temporary_maximum_age') + 1),
+        'changed' => REQUEST_TIME - ($this->config('system.file')->get('temporary_maximum_age') + 1),
       ))
       ->condition('fid', $file->id())
       ->execute();

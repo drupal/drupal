@@ -48,7 +48,7 @@ class RelationshipNodeTermDataTest extends TaxonomyTestBase {
     $this->assertIdenticalResultset($view, $expected_result, $column_map);
 
     // Change the view to test relation limited by vocabulary.
-    \Drupal::config('views.view.test_taxonomy_node_term_data')
+    $this->config('views.view.test_taxonomy_node_term_data')
       ->set('display.default.display_options.relationships.term_node_tid.vids', ['views_testing_tags'])
       ->save();
 

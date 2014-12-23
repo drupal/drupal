@@ -89,7 +89,7 @@ class BlockConfigSchemaTest extends KernelTestBase {
       ));
       $block->save();
 
-      $config = \Drupal::config("block.block.$id");
+      $config = $this->config("block.block.$id");
       $this->assertEqual($config->get('id'), $id);
       $this->assertConfigSchema($this->typedConfig, $config->getName(), $config->get());
     }

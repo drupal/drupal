@@ -374,7 +374,7 @@ abstract class WebTestBase extends TestBase {
       'plugin' => $plugin_id,
       'region' => 'sidebar_first',
       'id' => strtolower($this->randomMachineName(8)),
-      'theme' => \Drupal::config('system.theme')->get('default'),
+      'theme' => $this->config('system.theme')->get('default'),
       'label' => $this->randomMachineName(8),
       'visibility' => array(),
       'weight' => 0,

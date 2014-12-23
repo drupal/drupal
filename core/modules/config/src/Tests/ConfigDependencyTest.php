@@ -64,7 +64,7 @@ class ConfigDependencyTest extends KernelTestBase {
     $this->assertFalse(isset($dependents['config_test.dynamic.entity1']), 'config_test.dynamic.entity1 does not have a dependency on the Views module.');
     // Ensure that the provider of the config entity is not actually written to
     // the dependencies array.
-    $raw_config = \Drupal::config('config_test.dynamic.entity1');
+    $raw_config = $this->config('config_test.dynamic.entity1');
     $this->assertTrue(array_search('node', $raw_config->get('dependencies.module')) !== FALSE, 'Node module is written to the dependencies array as this has to be explicit.');
 
     // Create additional entities to test dependencies on config entities.

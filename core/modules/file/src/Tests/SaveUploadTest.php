@@ -173,7 +173,7 @@ class SaveUploadTest extends FileManagedTestBase {
    * Test dangerous file handling.
    */
   function testHandleDangerousFile() {
-    $config = \Drupal::config('system.file');
+    $config = $this->config('system.file');
     // Allow the .php extension and make sure it gets renamed to .txt for
     // safety. Also check to make sure its MIME type was changed.
     $edit = array(
@@ -217,7 +217,7 @@ class SaveUploadTest extends FileManagedTestBase {
    */
   function testHandleFileMunge() {
     // Ensure insecure uploads are disabled for this test.
-    \Drupal::config('system.file')->set('allow_insecure_uploads', 0)->save();
+    $this->config('system.file')->set('allow_insecure_uploads', 0)->save();
     $this->image = file_move($this->image, $this->image->getFileUri() . '.foo.' . $this->image_extension);
 
     // Reset the hook counters to get rid of the 'move' we just called.

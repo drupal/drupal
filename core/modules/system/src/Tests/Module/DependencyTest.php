@@ -156,7 +156,7 @@ class DependencyTest extends ModuleTestBase {
     $this->assert(count($checkbox) == 0, 'Checkbox for uninstalling the comment module not found.');
 
     // Delete any forum terms.
-    $vid = \Drupal::config('forum.settings')->get('vocabulary');
+    $vid = $this->config('forum.settings')->get('vocabulary');
     // Ensure taxonomy has been loaded into the test-runner after forum was
     // enabled.
     \Drupal::moduleHandler()->load('taxonomy');

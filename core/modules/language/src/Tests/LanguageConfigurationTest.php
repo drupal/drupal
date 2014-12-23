@@ -45,7 +45,7 @@ class LanguageConfigurationTest extends WebTestBase {
     $this->assertText('French');
     $this->assertUrl(\Drupal::url('language.admin_overview', [], ['absolute' => TRUE]), [], 'Correct page redirection.');
     // Langcode for Languages is always 'en'.
-    $language = $this->container->get('config.factory')->get('language.entity.fr')->get();
+    $language = $this->config('language.entity.fr')->get();
     $this->assertEqual($language['langcode'], 'en');
 
     // Check if the Default English language has no path prefix.
@@ -107,7 +107,7 @@ class LanguageConfigurationTest extends WebTestBase {
       'predefined_langcode' => 'de',
     );
     $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
-    $language = $this->container->get('config.factory')->get('language.entity.de')->get();
+    $language = $this->config('language.entity.de')->get();
     $this->assertEqual($language['langcode'], 'en');
   }
 

@@ -89,7 +89,7 @@ class BulkFormTest extends UserTestBase {
 
     // Ensure the anonymous user is found.
     $this->drupalGet('test-user-bulk-form');
-    $this->assertText(\Drupal::config('user.settings')->get('anonymous'));
+    $this->assertText($this->config('user.settings')->get('anonymous'));
 
     // Attempt to block the anonymous user.
     $edit = array(

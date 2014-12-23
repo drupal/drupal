@@ -51,7 +51,7 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
     // Read the configuration. Check against raw configuration data rather than
     // the loaded ConfigEntity, to be sure we check that the defaults are
     // applied on write.
-    $field_storage_config = \Drupal::config('field.storage.' . $field_storage->id())->get();
+    $field_storage_config = $this->config('field.storage.' . $field_storage->id())->get();
 
     // Ensure that basic properties are preserved.
     $this->assertEqual($field_storage_config['field_name'], $field_storage_definition['field_name'], 'The field name is properly saved.');

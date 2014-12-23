@@ -155,7 +155,7 @@ class DirectoryTest extends FileTestBase {
    */
   function testFileDirectoryTemp() {
     // Start with an empty variable to ensure we have a clean slate.
-    $config = \Drupal::config('system.file');
+    $config = $this->config('system.file');
     $config->set('path.temporary', '')->save();
     $tmp_directory = file_directory_temp();
     $this->assertEqual(empty($tmp_directory), FALSE, 'file_directory_temp() returned a non-empty value.');

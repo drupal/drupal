@@ -41,7 +41,7 @@ class HandlerArgumentUserUidTest extends UserTestBase {
     $view->destroy();
 
     // Tests the anonymous user.
-    $anonymous = $this->container->get('config.factory')->get('user.settings')->get('anonymous');
+    $anonymous = $this->config('user.settings')->get('anonymous');
     $this->executeView($view, array(0));
     $this->assertEqual($view->getTitle(), $anonymous);
     $view->destroy();

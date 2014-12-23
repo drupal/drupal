@@ -53,13 +53,13 @@ class ConfigExportImportUITest extends WebTestBase {
    * Tests a simple site export import case.
    */
   public function testExportImport() {
-    $this->originalSlogan = \Drupal::config('system.site')->get('slogan');
+    $this->originalSlogan = $this->config('system.site')->get('slogan');
     $this->newSlogan = $this->randomString(16);
     $this->assertNotEqual($this->newSlogan, $this->originalSlogan);
-    \Drupal::config('system.site')
+    $this->config('system.site')
       ->set('slogan', $this->newSlogan)
       ->save();
-    $this->assertEqual(\Drupal::config('system.site')->get('slogan'), $this->newSlogan);
+    $this->assertEqual($this->config('system.site')->get('slogan'), $this->newSlogan);
 
     // Create a content type.
     $this->content_type = $this->drupalCreateContentType();
@@ -92,10 +92,10 @@ class ConfigExportImportUITest extends WebTestBase {
     $this->drupalPostForm('admin/config/development/configuration/full/export', array(), 'Export');
     $this->tarball = $this->drupalGetContent();
 
-    \Drupal::config('system.site')
+    $this->config('system.site')
       ->set('slogan', $this->originalSlogan)
       ->save();
-    $this->assertEqual(\Drupal::config('system.site')->get('slogan'), $this->originalSlogan);
+    $this->assertEqual($this->config('system.site')->get('slogan'), $this->originalSlogan);
 
     // Delete the custom field.
     $fields = FieldConfig::loadMultiple();
@@ -119,12 +119,12 @@ class ConfigExportImportUITest extends WebTestBase {
     $this->drupalPostForm('admin/config/development/configuration/full/import', array('files[import_tarball]' => $filename), 'Upload');
     $this->drupalPostForm(NULL, array(), 'Import all');
 
-    $this->assertEqual(\Drupal::config('system.site')->get('slogan'), $this->newSlogan);
+    $this->assertEqual($this->config('system.site')->get('slogan'), $this->newSlogan);
 
     $this->drupalGet('node/add');
     $this->assertFieldByName("{$this->fieldName}[0][value]", '', 'Widget is displayed');
 
-    \Drupal::config('system.site')
+    $this->config('system.site')
       ->set('slogan', $this->originalSlogan)
       ->save();
     $this->drupalGet('admin/config/development/configuration');

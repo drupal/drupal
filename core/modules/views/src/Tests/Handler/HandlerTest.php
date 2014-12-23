@@ -348,8 +348,8 @@ class HandlerTest extends ViewTestBase {
     $views_data = $views_data['views_test_data'];
 
     // Enable access to callback only field and deny for callback + arguments.
-    \Drupal::config('views_test_data.tests')->set('handler_access_callback', TRUE)->save();
-    \Drupal::config('views_test_data.tests')->set('handler_access_callback_argument', FALSE)->save();
+    $this->config('views_test_data.tests')->set('handler_access_callback', TRUE)->save();
+    $this->config('views_test_data.tests')->set('handler_access_callback_argument', FALSE)->save();
     $view->initDisplay();
     $view->initHandlers();
 
@@ -361,8 +361,8 @@ class HandlerTest extends ViewTestBase {
     }
 
     // Enable access to the callback + argument handlers and deny for callback.
-    \Drupal::config('views_test_data.tests')->set('handler_access_callback', FALSE)->save();
-    \Drupal::config('views_test_data.tests')->set('handler_access_callback_argument', TRUE)->save();
+    $this->config('views_test_data.tests')->set('handler_access_callback', FALSE)->save();
+    $this->config('views_test_data.tests')->set('handler_access_callback_argument', TRUE)->save();
     $view->destroy();
     $view->initDisplay();
     $view->initHandlers();

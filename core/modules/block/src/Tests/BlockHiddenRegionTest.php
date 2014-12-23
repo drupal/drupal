@@ -56,7 +56,7 @@ class BlockHiddenRegionTest extends WebTestBase {
     // Install "block_test_theme" and set it as the default theme.
     $theme = 'block_test_theme';
     \Drupal::service('theme_handler')->install(array($theme));
-    \Drupal::config('system.theme')
+    $this->config('system.theme')
       ->set('default', $theme)
       ->save();
     // Installing a theme will cause the kernel terminate event to rebuild the

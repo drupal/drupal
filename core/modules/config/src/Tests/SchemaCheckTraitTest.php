@@ -48,11 +48,11 @@ class SchemaCheckTraitTest extends KernelTestBase {
    */
   public function testTrait() {
     // Test a non existing schema.
-    $ret = $this->checkConfigSchema($this->typedConfig, 'config_schema_test.noschema', \Drupal::config('config_schema_test.noschema')->get());
+    $ret = $this->checkConfigSchema($this->typedConfig, 'config_schema_test.noschema', $this->config('config_schema_test.noschema')->get());
     $this->assertIdentical($ret, FALSE);
 
     // Test an existing schema with valid data.
-    $config_data = \Drupal::config('config_test.types')->get();
+    $config_data = $this->config('config_test.types')->get();
     $ret = $this->checkConfigSchema($this->typedConfig, 'config_test.types', $config_data);
     $this->assertIdentical($ret, TRUE);
 

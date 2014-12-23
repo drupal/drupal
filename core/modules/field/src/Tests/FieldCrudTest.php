@@ -74,7 +74,7 @@ class FieldCrudTest extends FieldUnitTestBase {
     // Read the configuration. Check against raw configuration data rather than
     // the loaded ConfigEntity, to be sure we check that the defaults are
     // applied on write.
-    $config = \Drupal::config('field.field.' . $field->id())->get();
+    $config = $this->config('field.field.' . $field->id())->get();
     $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
 
     // Check that default values are set.

@@ -31,7 +31,7 @@ class UserLoginTest extends WebTestBase {
    * Test the global login flood control.
    */
   function testGlobalLoginFloodControl() {
-    \Drupal::config('user.flood')
+    $this->config('user.flood')
       ->set('ip_limit', 10)
       // Set a high per-user limit out so that it is not relevant in the test.
       ->set('user_limit', 4000)
@@ -68,7 +68,7 @@ class UserLoginTest extends WebTestBase {
    * Test the per-user login flood control.
    */
   function testPerUserLoginFloodControl() {
-    \Drupal::config('user.flood')
+    $this->config('user.flood')
       // Set a high global limit out so that it is not relevant in the test.
       ->set('ip_limit', 4000)
       ->set('user_limit', 3)
@@ -155,7 +155,7 @@ class UserLoginTest extends WebTestBase {
     $this->assertNoFieldByXPath("//input[@name='pass' and @value!='']", NULL, 'Password value attribute is blank.');
     if (isset($flood_trigger)) {
       if ($flood_trigger == 'user') {
-        $this->assertRaw(format_plural(\Drupal::config('user.flood')->get('user_limit'), 'Sorry, there has been more than one failed login attempt for this account. It is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', 'Sorry, there have been more than @count failed login attempts for this account. It is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', array('@url' => \Drupal::url('user.pass'))));
+        $this->assertRaw(format_plural($this->config('user.flood')->get('user_limit'), 'Sorry, there has been more than one failed login attempt for this account. It is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', 'Sorry, there have been more than @count failed login attempts for this account. It is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', array('@url' => \Drupal::url('user.pass'))));
       }
       else {
         // No uid, so the limit is IP-based.

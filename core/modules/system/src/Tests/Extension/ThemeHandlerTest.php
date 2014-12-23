@@ -368,18 +368,6 @@ class ThemeHandlerTest extends KernelTestBase {
   }
 
   /**
-   * Returns a given config object.
-   *
-   * @param string $name
-   *   The name of the config object to load.
-   *
-   * @return \Drupal\Core\Config\Config
-   */
-  protected function config($name) {
-    return $this->container->get('config.factory')->get($name);
-  }
-
-  /**
    * Returns the active configuration storage.
    *
    * @return \Drupal\Core\Config\ConfigStorageInterface
