@@ -21,12 +21,23 @@
   .layout-region-node-footer {
     float: left; /* LTR */
     width: 65%;
-    padding-right: 2em;
+    padding-right: 2em; /* LTR */
+  }
+
+  [dir="rtl"] .layout-region-node-main,
+  [dir="rtl"] .layout-region-node-footer {
+    float: right;
+    padding-left: 2em;
+    padding-right: 0;
   }
 
   .layout-region-node-secondary {
     float: right; /* LTR */
     width: 35%;
+  }
+
+  [dir="rtl"] .layout-region-node-secondary {
+    float: left;
   }
 
   /* @todo File an issue to add a standard class to all text-like inputs */

@@ -25,7 +25,10 @@
 
 /* Splitbuttons */
 .form-actions .dropbutton-wrapper {
-  float: left;
+  float: left; /* LTR */
+}
+[dir="rtl"] .form-actions .dropbutton-wrapper {
+  float: right;
 }
 .js .form-actions .dropbutton-widget {
   position: static;
