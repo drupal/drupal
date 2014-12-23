@@ -12,6 +12,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\OptGroup;
 
 /**
  * Base class for the 'options_*' widgets.
@@ -155,7 +156,7 @@ abstract class OptionsWidgetBase extends WidgetBase {
       // Options might be nested ("optgroups"). If the widget does not support
       // nested options, flatten the list.
       if (!$this->supportsGroups()) {
-        $options = $this->flattenOptions($options);
+        $options = OptGroup::flattenOptions($options);
       }
 
       $this->options = $options;
@@ -176,7 +177,7 @@ abstract class OptionsWidgetBase extends WidgetBase {
    */
   protected function getSelectedOptions(FieldItemListInterface $items, $delta = 0) {
     // We need to check against a flat list of options.
-    $flat_options = $this->flattenOptions($this->getOptions($items->getEntity()));
+    $flat_options = OptGroup::flattenOptions($this->getOptions($items->getEntity()));
 
     $selected_options = array();
     foreach ($items as $item) {
@@ -189,21 +190,6 @@ abstract class OptionsWidgetBase extends WidgetBase {
     }
 
     return $selected_options;
-  }
-
-  /**
-   * Flattens an array of allowed values.
-   *
-   * @param array $array
-   *   A single or multidimensional array.
-   *
-   * @return array
-   *   The flattened array.
-   */
-  protected function flattenOptions(array $array) {
-    $result = array();
-    array_walk_recursive($array, function($a, $b) use (&$result) { $result[$b] = $a; });
-    return $result;
   }
 
   /**

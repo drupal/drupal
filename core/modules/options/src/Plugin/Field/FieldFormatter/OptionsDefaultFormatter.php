@@ -10,6 +10,7 @@ namespace Drupal\options\Plugin\Field\FieldFormatter;
 use Drupal\Core\Field\AllowedTagsXssTrait;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Form\OptGroup;
 
 /**
  * Plugin implementation of the 'list_default' formatter.
@@ -40,7 +41,7 @@ class OptionsDefaultFormatter extends FormatterBase {
         ->getFieldStorageDefinition()
         ->getOptionsProvider('value', $items->getEntity());
       // Flatten the possible options, to support opt groups.
-      $options = $this->flattenOptions($provider->getPossibleOptions());
+      $options = OptGroup::flattenOptions($provider->getPossibleOptions());
 
       foreach ($items as $delta => $item) {
         $value = $item->value;
@@ -52,23 +53,6 @@ class OptionsDefaultFormatter extends FormatterBase {
     }
 
     return $elements;
-  }
-
-  /**
-   * Flattens an array of allowed values.
-   *
-   * @param array $array
-   *   A single or multidimensional array.
-   *
-   * @return array
-   *   The flattened array.
-   *
-   * @todo Remove it once https://www.drupal.org/node/2392301 landed.
-   */
-  protected function flattenOptions(array $array) {
-    $result = array();
-    array_walk_recursive($array, function($a, $b) use (&$result) { $result[$b] = $a; });
-    return $result;
   }
 
 }

@@ -50,7 +50,7 @@ class OptGroup {
         static::doFlattenOptions($value, $options);
       }
       else {
-        $options[$key] = 1;
+        $options[$key] = $value;
       }
     }
   }

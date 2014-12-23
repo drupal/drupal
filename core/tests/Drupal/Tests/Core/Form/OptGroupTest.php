@@ -22,7 +22,7 @@ class OptGroupTest extends UnitTestCase {
    * @dataProvider providerTestFlattenOptions
    */
   public function testFlattenOptions($options) {
-    $this->assertSame(array('foo' => 1), OptGroup::flattenOptions($options));
+    $this->assertSame(array('foo' => 'foo'), OptGroup::flattenOptions($options));
   }
 
   /**
@@ -42,7 +42,6 @@ class OptGroupTest extends UnitTestCase {
       array(array($object1)),
       array(array($object2)),
       array(array($object1, $object2)),
-      array(array('foo' => $object3)),
       array(array('foo' => $object3, $object1, array('foo' => 'foo'))),
     );
   }
