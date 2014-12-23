@@ -35,7 +35,7 @@ function hook_filter_info_alter(&$info) {
  */
 function hook_filter_secure_image_alter(&$image) {
   // Turn an invalid image into an error indicator.
-  $image->setAttribute('src', base_path() . 'core/misc/message-16-error.png');
+  $image->setAttribute('src', base_path() . 'core/misc/icons/ea2800/error.svg');
   $image->setAttribute('alt', t('Image removed.'));
   $image->setAttribute('title', t('This image has been removed. For security reasons, only images from the local domain are allowed.'));
 
