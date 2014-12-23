@@ -10,8 +10,11 @@
 }
 
 #views-live-preview div.contextual {
-  right: auto;
+  right: auto; /* LTR */
   top: auto;
+}
+[dir="rtl"] #views-live-preview div.contextual {
+  left: auto;
 }
 
 html.js #views-live-preview div.contextual {
@@ -31,17 +34,26 @@ html.js #views-live-preview div.contextual {
 /* @group List */
 
 div.contextual ul.contextual-links {
-  border-radius: 0 4px 4px 4px;
+  border-radius: 0 4px 4px 4px; /* LTR */
   min-width: 10em;
   padding: 6px 6px 9px 6px;
-  right: auto;
+  right: auto; /* LTR */
+}
+[dir="rtl"] div.contextual ul.contextual-links {
+  border-radius: 4px 0 4px 4px;
+  left: auto;
 }
 
 ul.contextual-links li a,
 ul.contextual-links li span {
   padding-bottom: 0.25em;
-  padding-right: 0.1667em;
+  padding-right: 0.1667em; /* LTR */
   padding-top: 0.25em;
+}
+[dir="rtl"] ul.contextual-links li a,
+[dir="rtl"] ul.contextual-links li span {
+  padding-left: 0.1667em;
+  padding-right: 0;
 }
 
 ul.contextual-links li span {
@@ -51,7 +63,11 @@ ul.contextual-links li span {
 ul.contextual-links li a {
   color: #666 !important;
   margin: 0.25em 0;
-  padding-left: 1em;
+  padding-left: 1em; /* LTR */
+}
+[dir="rtl"] ul.contextual-links li a {
+  padding-left: 0.1667em;
+  padding-right: 1em;
 }
 
 ul.contextual-links li a:hover {

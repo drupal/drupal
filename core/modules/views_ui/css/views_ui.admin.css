@@ -26,43 +26,67 @@
 /* @group Columns */
 
 .views-left-25 {
-  float: left;
+  float: left; /* LTR */
   width: 25%;
+}
+[dir="rtl"] .views-left-25 {
+  float: right;
 }
 
 .views-left-30 {
-  float: left;
+  float: left; /* LTR */
   width: 30%;
+}
+[dir="rtl"] .views-left-30 {
+  float: right;
 }
 
 .views-left-40 {
-  float: left;
+  float: left; /* LTR */
   width: 40%;
+}
+[dir="rtl"] .views-left-40 {
+  float: right;
 }
 
 .views-left-50 {
-  float: left;
+  float: left; /* LTR */
   width: 50%;
+}
+[dir="rtl"] .views-left-50 {
+  float: right;
 }
 
 .views-left-75 {
-  float: left;
+  float: left; /* LTR */
   width: 75%;
+}
+[dir="rtl"] .views-left-75 {
+  float: right;
 }
 
 .views-right-50 {
-  float: right;
+  float: right; /* LTR */
   width: 50%;
+}
+[dir="rtl"] .views-right-50 {
+  float: left;
 }
 
 .views-right-60 {
-  float: right;
+  float: right; /* LTR */
   width: 60%;
+}
+[dir="rtl"] .views-right-60 {
+  float: left;
 }
 
 .views-right-70 {
-  float: right;
+  float: right; /* LTR */
   width: 70%;
+}
+[dir="rtl"] .views-right-70 {
+  float: left;
 }
 
 .views-group-box .form-item {
@@ -99,13 +123,15 @@
  }
 
 .views-displays .secondary > li {
-  border-right: 0 none;
+  border-right: 0 none; /* LTR */
   display: inline-block;
   float: left; /* LTR */
   padding: 0;
 }
 [dir="rtl"] .views-displays .secondary > li {
   float: right;
+  border-left: 0 none;
+  border-right: 1px solid #bfbfbf;
 }
 
 .views-displays .secondary .open > a {
