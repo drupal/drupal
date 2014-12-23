@@ -76,7 +76,7 @@ class BatchTestController {
    * Submits the 'Chained' form programmatically.
    *
    * Programmatic form: the page submits the 'Chained' form through
-   * drupal_form_submit().
+   * \Drupal::formBuilder()->submitForm().
    *
    * @param int $value
    *   Some value passed to a the chained form.

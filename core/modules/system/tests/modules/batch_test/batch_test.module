@@ -8,7 +8,7 @@
 use Drupal\Core\Form\FormState;
 
 /**
- * Batch operation: Submits form_test_mock_form() using drupal_form_submit().
+ * Batch operation: Submits form_test_mock_form().
  */
 function _batch_test_nested_drupal_form_submit_callback($value) {
   $form_state = (new FormState())

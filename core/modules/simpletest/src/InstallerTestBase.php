@@ -94,7 +94,7 @@ abstract class InstallerTestBase extends WebTestBase {
     }
 
     // Note that WebTestBase::installParameters() returns form input values
-    // suitable for a programmed drupal_form_submit().
+    // suitable for a programmed \Drupal::formBuilder()->submitForm().
     // @see WebTestBase::translatePostValues()
     $this->parameters = $this->installParameters();
 

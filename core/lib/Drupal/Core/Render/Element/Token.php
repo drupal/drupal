@@ -13,8 +13,9 @@ use Drupal\Core\Form\FormStateInterface;
  * Stores token data in a hidden form field.
  *
  * This is generally used to protect against cross-site forgeries. A token
- * element is automatically added to each Drupal form by drupal_prepare_form(),
- * so you don't generally have to add one yourself.
+ * element is automatically added to each Drupal form by an implementation of
+ * \Drupal\Core\Form\FormBuilderInterface::prepareForm() so you don't generally
+ * have to add one yourself.
  *
  * @FormElement("token")
  */

@@ -168,7 +168,8 @@ function install_drupal($class_loader, $settings = array()) {
  * be used to programmatically submit forms during the installation; the keys
  * of each element indicate the name of the installation task that the form
  * submission is for, and the values are used as the $form_state->getValues()
- * array that is passed on to the form submission via drupal_form_submit()).
+ * array that is passed on to the form submission via
+ * \Drupal::formBuilder()->submitForm()).
  *
  * @see \Drupal\Core\Form\FormBuilderInterface::submitForm()
  */
@@ -197,7 +198,7 @@ function install_state_defaults() {
     // installation. The keys of each element indicate the name of the
     // installation task that the form submission is for, and the values are
     // used as the $form_state->getValues() array that is passed on to the form
-    // submission via drupal_form_submit().
+    // submission via \Drupal::formBuilder()->submitForm().
     'forms' => array(),
     // This becomes TRUE only at the end of the installation process, after
     // all available tasks have been completed and Drupal is fully installed.

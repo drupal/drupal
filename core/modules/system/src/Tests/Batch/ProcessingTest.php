@@ -129,14 +129,14 @@ class ProcessingTest extends WebTestBase {
   }
 
   /**
-   * Tests that drupal_form_submit() can run within a batch operation.
+   * Test form submission during a batch operation.
    */
   function testDrupalFormSubmitInBatch() {
     // Displaying the page triggers a batch that programmatically submits a
     // form.
     $value = rand(0, 255);
     $this->drupalGet('batch-test/nested-programmatic/' . $value);
-    $this->assertEqual(batch_test_stack(), array('mock form submitted with value = ' . $value), 'drupal_form_submit() ran successfully within a batch operation.');
+    $this->assertEqual(batch_test_stack(), array('mock form submitted with value = ' . $value), '\Drupal::formBuilder()->submitForm() ran successfully within a batch operation.');
   }
 
   /**

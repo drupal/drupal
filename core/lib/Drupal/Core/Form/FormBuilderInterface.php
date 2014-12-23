@@ -150,7 +150,7 @@ interface FormBuilderInterface {
    *   @code
    *   $form_state->setValues($my_form_values);
    *   $form_state->addBuildInfo('args', [&$object]);
-   *   drupal_form_submit('mymodule_form', $form_state);
+   *   \Drupal::formBuilder()->submitForm('mymodule_form', $form_state);
    *   @endcode
    * For example:
    * @code
@@ -162,7 +162,7 @@ interface FormBuilderInterface {
    * $values['pass']['pass2'] = 'password';
    * $values['op'] = t('Create new account');
    * $form_state->setValues($values);
-   * drupal_form_submit('user_register_form', $form_state);
+   * \Drupal::formBuilder()->submitForm('user_register_form', $form_state);
    * @endcode
    */
   public function submitForm($form_arg, FormStateInterface &$form_state);

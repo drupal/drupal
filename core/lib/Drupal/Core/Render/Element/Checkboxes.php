@@ -95,12 +95,12 @@ class Checkboxes extends FormElement {
     }
     elseif (is_array($input)) {
       // Programmatic form submissions use NULL to indicate that a checkbox
-      // should be unchecked; see drupal_form_submit(). We therefore remove all
-      // NULL elements from the array before constructing the return value, to
-      // simulate the behavior of web browsers (which do not send unchecked
-      // checkboxes to the server at all). This will not affect non-programmatic
-      // form submissions, since all values in \Drupal::request()->request are
-      // strings.
+      // should be unchecked. We therefore remove all NULL elements from the
+      // array before constructing the return value, to simulate the behavior
+      // of web browsers (which do not send unchecked checkboxes to the server
+      // at all). This will not affect non-programmatic form submissions, since
+      // all values in \Drupal::request()->request are strings.
+      // @see \Drupal\Core\Form\FormBuilderInterface::submitForm()
       foreach ($input as $key => $value) {
         if (!isset($value)) {
           unset($input[$key]);
