@@ -185,6 +185,15 @@ class ContactPersonalTest extends WebTestBase {
     $this->drupalPostForm(NULL, array('contact' => TRUE), t('Save'));
     $this->assertFieldChecked('edit-contact--2');
     $this->assertTrue(\Drupal::service('user.data')->get('contact', $this->webUser->id(), 'enabled'), 'Personal contact form enabled');
+
+    // Test with disabled global default contact form in combination with a user
+    // that has the contact form enabled.
+    \Drupal::config('contact.settings')->set('user_default_enabled', FALSE)->save();
+    $this->contactUser = $this->drupalCreateUser();
+    \Drupal::service('user.data')->set('contact', $this->contactUser->id(), 'enabled', 1);
+
+    $this->drupalGet('user/' . $this->contactUser->id() . '/contact');
+    $this->assertResponse(200);
   }
 
   /**

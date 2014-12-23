@@ -83,11 +83,13 @@ class ContactPageAccess implements AccessInterface {
       return $access;
     }
 
-    // If the requested user has disabled their contact form, do not allow users
-    // to contact them.
+    // Load preference of the requested user.
     $account_data = $this->userData->get('contact', $contact_account->id(), 'enabled');
-    if (isset($account_data) && empty($account_data)) {
-      return $access;
+    if (isset($account_data)) {
+      // Forbid access if the requested user has disabled their contact form.
+      if (empty($account_data)) {
+        return $access;
+      }
     }
     // If the requested user did not save a preference yet, deny access if the
     // configured default is disabled.
