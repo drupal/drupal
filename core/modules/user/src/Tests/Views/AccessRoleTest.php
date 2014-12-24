@@ -70,11 +70,13 @@ class AccessRoleTest extends AccessTestBase {
       'anonymous' => 'anonymous',
     );
     $view->save();
+
+    // Ensure that the list of roles is sorted correctly, if the generated role
+    // ID comes before 'anonymous', see https://www.drupal.org/node/2398259.
+    $roles = ['user.role.anonymous', 'user.role.' . $this->normalRole];
+    sort($roles);
     $expected = [
-      'config' => [
-        'user.role.anonymous',
-        'user.role.' . $this->normalRole,
-      ],
+      'config' => $roles,
       'module' => ['user'],
     ];
     $this->assertIdentical($expected, $view->calculateDependencies());
