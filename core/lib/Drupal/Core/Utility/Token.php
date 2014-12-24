@@ -185,9 +185,9 @@ class Token {
     // $type may not contain : or whitespace characters, but $name may.
     preg_match_all('/
       \[             # [ - pattern start
-      ([^\s\[\]:]*)  # match $type not containing whitespace : [ or ]
+      ([^\s\[\]:]+)  # match $type not containing whitespace : [ or ]
       :              # : - separator
-      ([^\[\]]*)     # match $name not containing [ or ]
+      ([^\[\]]+)     # match $name not containing [ or ]
       \]             # ] - pattern end
       /x', $text, $matches);
 
