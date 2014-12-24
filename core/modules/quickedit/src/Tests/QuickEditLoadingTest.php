@@ -8,11 +8,10 @@
 namespace Drupal\quickedit\Tests;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\simpletest\WebTestBase;
-use Drupal\quickedit\Ajax\MetadataCommand;
-use Drupal\Core\Ajax\AppendCommand;
 use Drupal\Component\Utility\Unicode;
+use Drupal\block_content\Entity\BlockContent;
 use Drupal\node\Entity\Node;
+use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests loading of in-place editing functionality and lazy loading of its
@@ -493,4 +492,23 @@ class QuickEditLoadingTest extends WebTestBase {
     }
   }
 
+  /**
+   * Tests that Quick Edit's data- attributes are present for content blocks.
+   */
+  public function testContentBlock() {
+    \Drupal::service('module_installer')->install(array('block_content'));
+
+    // Create and place a content_block block.
+    $block = BlockContent::create([
+      'info' => $this->randomMachineName(),
+      'type' => 'basic',
+      'langcode' => 'en',
+    ]);
+    $block->save();
+    $this->drupalPlaceBlock('block_content:' . $block->uuid());
+
+    // Check that the data- attribute is present.
+    $this->drupalGet('');
+    $this->assertRaw('data-quickedit-entity-id="block_content/1"');
+  }
 }

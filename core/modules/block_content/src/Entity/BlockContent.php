@@ -53,7 +53,13 @@ use Drupal\block_content\BlockContentInterface;
  *   },
  *   bundle_entity_type = "block_content_type",
  *   field_ui_base_route = "entity.block_content_type.edit_form",
+ *   render_cache = FALSE,
  * )
+ *
+ * Note that render caching of block_content entities is disabled because they
+ * are always rendered as blocks, and blocks already have their own render
+ * caching.
+ * See https://www.drupal.org/node/2284917#comment-9132521 for more information.
  */
 class BlockContent extends ContentEntityBase implements BlockContentInterface {
 
