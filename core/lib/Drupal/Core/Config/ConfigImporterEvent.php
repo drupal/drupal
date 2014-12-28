@@ -37,4 +37,23 @@ class ConfigImporterEvent extends Event {
     return $this->configImporter;
   }
 
+  /**
+   * Gets the list of changes that will be imported.
+   *
+   * @param string $op
+   *   (optional) A change operation. Either delete, create or update. If
+   *   supplied the returned list will be limited to this operation.
+   * @param string $collection
+   *   (optional) The collection to get the changelist for. Defaults to the
+   *   default collection.
+   *
+   * @return array
+   *   An array of config changes that are yet to be imported.
+   *
+   * @see \Drupal\Core\Config\StorageComparerInterface::getChangelist()
+   */
+  public function getChangelist($op = NULL, $collection = StorageInterface::DEFAULT_COLLECTION) {
+    return $this->configImporter->getStorageComparer()->getChangelist($op, $collection);
+  }
+
 }

@@ -322,6 +322,11 @@ services:
   entity.form_builder:
     class: Drupal\Core\Entity\EntityFormBuilder
     arguments: ['@entity.manager', '@form_builder']
+  entity.bundle_config_import_validator:
+    class: Drupal\Core\Entity\Event\BundleConfigImportValidate
+    arguments: ['@config.manager', '@entity.manager']
+    tags:
+      - { name: event_subscriber }
   plugin.manager.block:
     class: Drupal\Core\Block\BlockManager
     parent: default_plugin_manager

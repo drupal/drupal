@@ -393,4 +393,48 @@ class ConfigImportUITest extends WebTestBase {
     $this->assertText(t('There are no configuration changes to import.'));
   }
 
+  /**
+   * Tests the config importer cannot delete bundles with existing entities.
+   *
+   * @see \Drupal\Core\Entity\Event\BundleConfigImportValidate
+   */
+  public function testEntityBundleDelete() {
+    \Drupal::service('module_installer')->install(array('node'));
+    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.staging'));
+
+    $node_type = $this->drupalCreateContentType();
+    $node = $this->drupalCreateNode(array('type' => $node_type->id()));
+    $this->drupalGet('admin/config/development/configuration');
+    // The node type, body field and entity displays will be scheduled for
+    // removal.
+    $this->assertText(format_string('node.type.@type', array('@type' => $node_type->id())));
+    $this->assertText(format_string('field.field.node.@type.body', array('@type' => $node_type->id())));
+    $this->assertText(format_string('core.entity_view_display.node.@type.teaser', array('@type' => $node_type->id())));
+    $this->assertText(format_string('core.entity_view_display.node.@type.default', array('@type' => $node_type->id())));
+    $this->assertText(format_string('core.entity_form_display.node.@type.default', array('@type' => $node_type->id())));
+
+    // Attempt to import configuration and verify that an error message appears
+    // and the node type, body field and entity displays are still scheduled for
+    // removal.
+    $this->drupalPostForm(NULL, array(), t('Import all'));
+    $validation_message = t('Entities exist of type %entity_type and %bundle_label %bundle. These entities need to be deleted before importing.', array('%entity_type' => $node->getEntityType()->getLabel(), '%bundle_label' => $node->getEntityType()->getBundleLabel(), '%bundle' => $node_type->label()));
+    $this->assertRaw($validation_message);
+    $this->assertText(format_string('node.type.@type', array('@type' => $node_type->id())));
+    $this->assertText(format_string('field.field.node.@type.body', array('@type' => $node_type->id())));
+    $this->assertText(format_string('core.entity_view_display.node.@type.teaser', array('@type' => $node_type->id())));
+    $this->assertText(format_string('core.entity_view_display.node.@type.default', array('@type' => $node_type->id())));
+    $this->assertText(format_string('core.entity_form_display.node.@type.default', array('@type' => $node_type->id())));
+
+    // Delete the node and try to import again.
+    $node->delete();
+    $this->drupalPostForm(NULL, array(), t('Import all'));
+    $this->assertNoRaw($validation_message);
+    $this->assertText(t('There are no configuration changes to import.'));
+    $this->assertNoText(format_string('node.type.@type', array('@type' => $node_type->id())));
+    $this->assertNoText(format_string('field.field.node.@type.body', array('@type' => $node_type->id())));
+    $this->assertNoText(format_string('core.entity_view_display.node.@type.teaser', array('@type' => $node_type->id())));
+    $this->assertNoText(format_string('core.entity_view_display.node.@type.default', array('@type' => $node_type->id())));
+    $this->assertNoText(format_string('core.entity_form_display.node.@type.default', array('@type' => $node_type->id())));
+  }
+
 }
