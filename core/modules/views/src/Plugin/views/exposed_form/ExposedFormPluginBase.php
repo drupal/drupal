@@ -327,6 +327,9 @@ abstract class ExposedFormPluginBase extends PluginBase {
       $form_state->setRebuild();
       $this->view->exposed_data = array();
     }
+
+    $form_state->setRedirect('<current>');
+    $form_state->setValues([]);
   }
 
 }

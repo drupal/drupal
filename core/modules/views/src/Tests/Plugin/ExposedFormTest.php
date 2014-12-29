@@ -101,6 +101,11 @@ class ExposedFormTest extends ViewTestBase {
     // Test the button is hidden after reset.
     $this->assertNoField('edit-reset');
 
+    // Test the reset works with type set.
+    $this->drupalGet('test_exposed_form_buttons', array('query' => array('type' => 'article', 'op' => 'Reset')));
+    $this->assertResponse(200);
+    $this->assertFieldById('edit-type', 'All', 'Article type filter has been reset.');
+
     // Rename the label of the reset button.
     $view = Views::getView('test_exposed_form_buttons');
     $view->setDisplay();
