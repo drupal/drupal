@@ -134,13 +134,12 @@ class EntityResource extends ResourceBase {
     }
 
     // Overwrite the received properties.
+    $langcode_key = $entity->getEntityType()->getKey('langcode');
     foreach ($entity->_restPatchFields as $field_name) {
       $field = $entity->get($field_name);
       // It is not possible to set the language to NULL as it is automatically
       // re-initialized. As it must not be empty, skip it if it is.
-      // @todo: Use the langcode entity key when available. See
-      //   https://drupal.org/node/2143729.
-      if ($field_name == 'langcode' && $field->isEmpty()) {
+      if ($field_name == $langcode_key && $field->isEmpty()) {
         continue;
       }
       if ($field->isEmpty() && !$original_entity->get($field_name)->access('delete')) {

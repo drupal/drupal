@@ -40,6 +40,7 @@ use Drupal\taxonomy\TermInterface;
  *     "id" = "tid",
  *     "bundle" = "vid",
  *     "label" = "name",
+ *     "langcode" = "langcode",
  *     "uuid" = "uuid"
  *   },
  *   bundle_entity_type = "taxonomy_vocabulary",

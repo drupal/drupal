@@ -43,6 +43,7 @@ use Drupal\user\UserInterface;
  *     "id" = "cid",
  *     "bundle" = "comment_type",
  *     "label" = "subject",
+ *     "langcode" = "langcode",
  *     "uuid" = "uuid"
  *   },
  *   links = {

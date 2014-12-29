@@ -50,9 +50,12 @@ class EntityFieldTest extends EntityUnitTestBase  {
   protected function setUp() {
     parent::setUp();
 
-    $this->installEntitySchema('entity_test_rev');
-    $this->installEntitySchema('entity_test_mul');
-    $this->installEntitySchema('entity_test_mulrev');
+    foreach (entity_test_entity_types() as $entity_type_id) {
+      // The entity_test schema is installed by the parent.
+      if ($entity_type_id != 'entity_test') {
+        $this->installEntitySchema($entity_type_id);
+      }
+    }
 
     // Create the test field.
     entity_test_install();
@@ -154,7 +157,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $this->assertEqual($new_user2->id(), $entity->user_id->target_id, format_string('%entity_type: Updated user id can be read.', array('%entity_type' => $entity_type)));
     $this->assertEqual($new_user2->getUsername(), $entity->user_id->entity->name->value, format_string('%entity_type: Updated user name value can be read.', array('%entity_type' => $entity_type)));
 
-     // Change the assigned user by id.
+    // Change the assigned user by id.
     $entity->user_id->first()->get('target_id')->setValue($new_user2->id());
     $this->assertEqual($new_user2->id(), $entity->user_id->target_id, format_string('%entity_type: Updated user id can be read.', array('%entity_type' => $entity_type)));
     $this->assertEqual($new_user2->getUsername(), $entity->user_id->entity->name->value, format_string('%entity_type: Updated user name value can be read.', array('%entity_type' => $entity_type)));
@@ -222,19 +225,20 @@ class EntityFieldTest extends EntityUnitTestBase  {
     }
 
     // Access the language field.
-    $this->assertEqual($langcode, $entity->langcode->value, format_string('%entity_type: Language code can be read.', array('%entity_type' => $entity_type)));
-    $this->assertEqual(\Drupal::languageManager()->getLanguage($langcode), $entity->langcode->language, format_string('%entity_type: Language object can be read.', array('%entity_type' => $entity_type)));
+    $langcode_key = $this->entityManager->getDefinition($entity_type)->getKey('langcode');
+    $this->assertEqual($langcode, $entity->{$langcode_key}->value, format_string('%entity_type: Language code can be read.', array('%entity_type' => $entity_type)));
+    $this->assertEqual(\Drupal::languageManager()->getLanguage($langcode), $entity->{$langcode_key}->language, format_string('%entity_type: Language object can be read.', array('%entity_type' => $entity_type)));
 
     // Change the language by code.
-    $entity->langcode->value = \Drupal::languageManager()->getDefaultLanguage()->getId();
-    $this->assertEqual(\Drupal::languageManager()->getDefaultLanguage()->getId(), $entity->langcode->value, format_string('%entity_type: Language code can be read.', array('%entity_type' => $entity_type)));
-    $this->assertEqual(\Drupal::languageManager()->getDefaultLanguage(), $entity->langcode->language, format_string('%entity_type: Language object can be read.', array('%entity_type' => $entity_type)));
+    $entity->{$langcode_key}->value = \Drupal::languageManager()->getDefaultLanguage()->getId();
+    $this->assertEqual(\Drupal::languageManager()->getDefaultLanguage()->getId(), $entity->{$langcode_key}->value, format_string('%entity_type: Language code can be read.', array('%entity_type' => $entity_type)));
+    $this->assertEqual(\Drupal::languageManager()->getDefaultLanguage(), $entity->{$langcode_key}->language, format_string('%entity_type: Language object can be read.', array('%entity_type' => $entity_type)));
 
     // Revert language by code then try setting it by language object.
-    $entity->langcode->value = $langcode;
-    $entity->langcode->language = \Drupal::languageManager()->getDefaultLanguage();
-    $this->assertEqual(\Drupal::languageManager()->getDefaultLanguage()->getId(), $entity->langcode->value, format_string('%entity_type: Language code can be read.', array('%entity_type' => $entity_type)));
-    $this->assertEqual(\Drupal::languageManager()->getDefaultLanguage(), $entity->langcode->language, format_string('%entity_type: Language object can be read.', array('%entity_type' => $entity_type)));
+    $entity->{$langcode_key}->value = $langcode;
+    $entity->{$langcode_key}->language = \Drupal::languageManager()->getDefaultLanguage();
+    $this->assertEqual(\Drupal::languageManager()->getDefaultLanguage()->getId(), $entity->{$langcode_key}->value, format_string('%entity_type: Language code can be read.', array('%entity_type' => $entity_type)));
+    $this->assertEqual(\Drupal::languageManager()->getDefaultLanguage(), $entity->{$langcode_key}->language, format_string('%entity_type: Language object can be read.', array('%entity_type' => $entity_type)));
 
     // Access the text field and test updating.
     $this->assertEqual($entity->field_test_text->value, $this->entity_field_text, format_string('%entity_type: Text field can be read.', array('%entity_type' => $entity_type)));
@@ -347,6 +351,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
    *   The entity type to run the tests with.
    */
   protected function doTestSave($entity_type) {
+    $langcode_key = $this->entityManager->getDefinition($entity_type)->getKey('langcode');
     $entity = $this->createTestEntity($entity_type);
     $entity->save();
     $this->assertTrue((bool) $entity->id(), format_string('%entity_type: Entity has received an id.', array('%entity_type' => $entity_type)));
@@ -357,8 +362,8 @@ class EntityFieldTest extends EntityUnitTestBase  {
     // Access the name field.
     $this->assertEqual(1, $entity->id->value, format_string('%entity_type: ID value can be read.', array('%entity_type' => $entity_type)));
     $this->assertTrue(is_string($entity->uuid->value), format_string('%entity_type: UUID value can be read.', array('%entity_type' => $entity_type)));
-    $this->assertEqual('en', $entity->langcode->value, format_string('%entity_type: Language code can be read.', array('%entity_type' => $entity_type)));
-    $this->assertEqual(\Drupal::languageManager()->getLanguage('en'), $entity->langcode->language, format_string('%entity_type: Language object can be read.', array('%entity_type' => $entity_type)));
+    $this->assertEqual('en', $entity->{$langcode_key}->value, format_string('%entity_type: Language code can be read.', array('%entity_type' => $entity_type)));
+    $this->assertEqual(\Drupal::languageManager()->getLanguage('en'), $entity->{$langcode_key}->language, format_string('%entity_type: Language object can be read.', array('%entity_type' => $entity_type)));
     $this->assertEqual($this->entity_user->id(), $entity->user_id->target_id, format_string('%entity_type: User id can be read.', array('%entity_type' => $entity_type)));
     $this->assertEqual($this->entity_user->getUsername(), $entity->user_id->entity->name->value, format_string('%entity_type: User name can be read.', array('%entity_type' => $entity_type)));
     $this->assertEqual($this->entity_field_text, $entity->field_test_text->value, format_string('%entity_type: Text field can be read.', array('%entity_type' => $entity_type)));
@@ -399,7 +404,8 @@ class EntityFieldTest extends EntityUnitTestBase  {
 
     // Test deriving metadata from references.
     $entity_definition = \Drupal\Core\Entity\TypedData\EntityDataDefinition::create($entity_type);
-    $reference_definition = $entity_definition->getPropertyDefinition('langcode')
+    $langcode_key = $this->entityManager->getDefinition($entity_type)->getKey('langcode');
+    $reference_definition = $entity_definition->getPropertyDefinition($langcode_key)
       ->getPropertyDefinition('language')
       ->getTargetDefinition();
     $this->assertEqual($reference_definition->getDataType(), 'language');
@@ -541,7 +547,9 @@ class EntityFieldTest extends EntityUnitTestBase  {
       // Field format.
       NULL,
     );
-    $this->assertEqual($strings, $target_strings, format_string('%entity_type: All contained strings found.', array('%entity_type' => $entity_type)));
+    asort($strings);
+    asort($target_strings);
+    $this->assertEqual(array_values($strings), array_values($target_strings), format_string('%entity_type: All contained strings found.', array('%entity_type' => $entity_type)));
   }
 
   /**

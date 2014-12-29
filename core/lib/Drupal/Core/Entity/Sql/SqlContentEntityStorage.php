@@ -186,7 +186,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     $translatable = $this->entityType->isTranslatable();
     if ($translatable) {
       $this->dataTable = $this->entityType->getDataTable() ?: $this->entityTypeId . '_field_data';
-      $this->langcodeKey = $this->entityType->getKey('langcode') ?: 'langcode';
+      $this->langcodeKey = $this->entityType->getKey('langcode');
       $this->defaultLangcodeKey = $this->entityType->getKey('default_langcode') ?: 'default_langcode';
     }
     if ($revisionable && $translatable) {
@@ -682,7 +682,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
         // Field values in default language are stored with
         // LanguageInterface::LANGCODE_DEFAULT as key.
-        $langcode = empty($values['default_langcode']) ? $values['langcode'] : LanguageInterface::LANGCODE_DEFAULT;
+        $langcode = empty($values['default_langcode']) ? $values[$this->langcodeKey] : LanguageInterface::LANGCODE_DEFAULT;
         $translations[$id][$langcode] = TRUE;
 
 
@@ -1145,8 +1145,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $table_name = $this->dataTable;
     }
     $record = $this->mapToStorageRecord($entity, $table_name);
-    $record->langcode = $entity->language()->getId();
-    $record->default_langcode = intval($record->langcode == $entity->getUntranslated()->language()->getId());
+    $record->{$this->langcodeKey} = $entity->language()->getId();
+    $record->default_langcode = intval($record->{$this->langcodeKey} == $entity->getUntranslated()->language()->getId());
     return $record;
   }
 

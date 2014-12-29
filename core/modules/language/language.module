@@ -483,18 +483,18 @@ function language_form_system_regional_settings_alter(&$form, FormStateInterface
 /**
  * Implements hook_form_alter().
  */
-function language_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+function language_form_alter(&$form, FormStateInterface $form_state) {
   // Content entity forms may have added a langcode field. But content language
   // configuration should decide if it should be exposed or not in the forms.
   $form_object = $form_state->getFormObject();
-  if ($form_object instanceof ContentEntityFormInterface && isset($form['langcode'])) {
+  if ($form_object instanceof ContentEntityFormInterface) {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
-    $entity_type_id = $form_object->getEntity()->getEntityTypeId();
-    $bundle = $form_object->getEntity()->bundle();
-    $entity_type = Drupal::entityManager()->getDefinition($entity_type_id);
-    if ($entity_type->isTranslatable()) {
-      $language_configuration = ContentLanguageSettings::loadByEntityTypeBundle($entity_type_id, $bundle);
-      $form['langcode']['#access'] = $language_configuration->isLanguageAlterable();
+    $entity = $form_object->getEntity();
+    $entity_type = $entity->getEntityType();
+    $langcode_key = $entity_type->getKey('langcode');
+    if (isset($form[$langcode_key]) && $entity_type->isTranslatable()) {
+      $language_configuration = ContentLanguageSettings::loadByEntityTypeBundle($entity->getEntityTypeId(), $entity->bundle());
+      $form[$langcode_key]['#access'] = $language_configuration->isLanguageAlterable();
     }
   }
 }
@@ -520,11 +520,11 @@ function language_field_info_alter(&$info) {
  * Implements hook_entity_field_access()
  */
 function language_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
-  if ($field_definition->getName() == 'langcode') {
+  $langcode_key = $items->getEntity()->getEntityType()->getKey('langcode');
+  if ($field_definition->getName() == $langcode_key) {
     $entity = $items->getEntity();
     $config = ContentLanguageSettings::loadByEntityTypeBundle($entity->getEntityTypeId(), $entity->bundle());
     return AccessResult::forbiddenIf(!$config->isLanguageAlterable());
   }
   return AccessResult::neutral();
 }
-

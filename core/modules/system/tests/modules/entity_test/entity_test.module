@@ -52,6 +52,7 @@ function entity_test_entity_types($filter = NULL) {
   }
   if ($filter != ENTITY_TEST_TYPES_REVISABLE) {
     $types[] = 'entity_test_mul';
+    $types[] = 'entity_test_mul_langcode_key';
   }
   if ($filter != ENTITY_TEST_TYPES_MULTILINGUAL) {
     $types[] = 'entity_test_rev';
@@ -426,6 +427,34 @@ function entity_test_entity_test_mul_translation_insert(EntityInterface $transla
  */
 function entity_test_entity_test_mul_translation_delete(EntityInterface $translation) {
   _entity_test_record_hooks('entity_test_mul_translation_delete', $translation->language()->getId());
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_translation_insert().
+ */
+function entity_test_entity_test_mulrev_translation_insert(EntityInterface $translation) {
+  _entity_test_record_hooks('entity_test_mulrev_translation_insert', $translation->language()->getId());
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_translation_delete().
+ */
+function entity_test_entity_test_mulrev_translation_delete(EntityInterface $translation) {
+  _entity_test_record_hooks('entity_test_mulrev_translation_delete', $translation->language()->getId());
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_translation_insert().
+ */
+function entity_test_entity_test_mul_langcode_key_translation_insert(EntityInterface $translation) {
+  _entity_test_record_hooks('entity_test_mul_langcode_key_translation_insert', $translation->language()->getId());
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_translation_delete().
+ */
+function entity_test_entity_test_mul_langcode_key_translation_delete(EntityInterface $translation) {
+  _entity_test_record_hooks('entity_test_mul_langcode_key_translation_delete', $translation->language()->getId());
 }
 
 /**

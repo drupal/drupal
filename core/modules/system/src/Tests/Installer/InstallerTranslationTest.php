@@ -53,9 +53,11 @@ class InstallerTranslationTest extends InstallerTestBase {
     $this->assertResponse(200);
 
     $account = User::load(0);
-    $this->assertEqual($account->language()->getId(), 'de', 'Anonymous user is German.');
+    $this->assertEqual($account->language()->getId(), 'en', 'Anonymous user is English.');
     $account = User::load(1);
-    $this->assertEqual($account->language()->getId(), 'de', 'Administrator user is German.');
+    $this->assertEqual($account->language()->getId(), 'en', 'Administrator user is English.');
+    $account = $this->drupalCreateUser();
+    $this->assertEqual($account->language()->getId(), 'de', 'New user is German.');
 
     // Ensure that we can enable basic_auth on a non-english site.
     $this->drupalPostForm('admin/modules', array('modules[Web services][basic_auth][enable]' => TRUE), t('Save configuration'));

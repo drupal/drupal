@@ -499,6 +499,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       'id' => 'entity_test',
       'entity_keys' => array(
         'id' => 'id',
+        'langcode' => 'langcode',
       ),
     ));
 
@@ -592,6 +593,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       'entity_keys' => array(
         'id' => 'id',
         'revision' => 'revision_id',
+        'langcode' => 'langcode',
       ),
     ));
 

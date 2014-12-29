@@ -145,9 +145,9 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
     }
 
     // Locate the language widget.
-    $language_field = $this->entityType->getKey('langcode') ?: 'langcode';
-    if (isset($form[$language_field])) {
-      $language_widget = &$form[$language_field];
+    $langcode_key = $this->entityType->getKey('langcode');
+    if (isset($form[$langcode_key])) {
+      $language_widget = &$form[$langcode_key];
     }
 
     // If we are editing the source entity, limit the list of languages so that

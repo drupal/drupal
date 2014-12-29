@@ -42,10 +42,6 @@ class EntityValidationTest extends EntityUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installEntitySchema('entity_test_rev');
-    $this->installEntitySchema('entity_test_mul');
-    $this->installEntitySchema('entity_test_mulrev');
-
     // Create the test field.
     entity_test_install();
 
@@ -114,7 +110,8 @@ class EntityValidationTest extends EntityUnitTestBase {
     $this->assertEqual($violations[0]->getMessage(), t('%name: may not be longer than @max characters.', array('%name' => 'UUID', '@max' => 128)));
 
     $test_entity = clone $entity;
-    $test_entity->langcode->value = $this->randomString(13);
+    $langcode_key = $this->entityManager->getDefinition($entity_type)->getKey('langcode');
+    $test_entity->{$langcode_key}->value = $this->randomString(13);
     $violations = $test_entity->validate();
     $this->assertEqual($violations->count(), 1, 'Validation failed.');
     $this->assertEqual($violations[0]->getMessage(), t('This value is too long. It should have %limit characters or less.', array('%limit' => '12')));

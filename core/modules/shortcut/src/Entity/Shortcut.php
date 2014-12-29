@@ -39,7 +39,8 @@ use Symfony\Component\HttpFoundation\Request;
  *     "id" = "id",
  *     "uuid" = "uuid",
  *     "bundle" = "shortcut_set",
- *     "label" = "title"
+ *     "label" = "title",
+ *     "langcode" = "langcode",
  *   },
  *   links = {
  *     "canonical" = "entity.shortcut.canonical",

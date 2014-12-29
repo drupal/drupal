@@ -111,6 +111,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
       ->will($this->returnValueMap(array(
         array('id', 'id'),
         array('uuid', 'uuid'),
+        array('langcode', 'langcode'),
       )));
     $this->entityType->expects($this->any())
       ->method('id')

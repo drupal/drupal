@@ -20,7 +20,8 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *   entity_keys = {
  *     "id" = "id",
  *     "uuid" = "uuid",
- *     "bundle" = "type"
+ *     "bundle" = "type",
+ *     "langcode" = "langcode"
  *   }
  * )
  */

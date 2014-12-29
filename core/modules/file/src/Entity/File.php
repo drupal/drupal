@@ -32,22 +32,12 @@ use Drupal\user\UserInterface;
  *   entity_keys = {
  *     "id" = "fid",
  *     "label" = "filename",
+ *     "langcode" = "langcode",
  *     "uuid" = "uuid"
  *   }
  * )
  */
 class File extends ContentEntityBase implements FileInterface {
-
-  /**
-   * The plain data values of the contained properties.
-   *
-   * Define default values.
-   *
-   * @var array
-   */
-  protected $values = array(
-    'langcode' => array(LanguageInterface::LANGCODE_DEFAULT => array(0 => array('value' => LanguageInterface::LANGCODE_NOT_SPECIFIED))),
-  );
 
   /**
    * {@inheritdoc}

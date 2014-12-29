@@ -262,8 +262,13 @@ class Tables implements TablesInterface {
   protected function addJoin($type, $table, $join_condition, $langcode) {
     $arguments = array();
     if ($langcode) {
+      $entity_type_id = $this->sqlQuery->getMetaData('entity_type');
+      $entity_type = $this->entityManager->getDefinition($entity_type_id);
+      // Only the data table follows the entity language key, dedicated field
+      // tables have an hard-coded 'langcode' column.
+      $langcode_key = $entity_type->getDataTable() == $table ? $entity_type->getKey('langcode') : 'langcode';
       $placeholder = ':langcode' . $this->sqlQuery->nextPlaceholder();
-      $join_condition .= ' AND %alias.langcode = ' . $placeholder;
+      $join_condition .= ' AND %alias.' . $langcode_key . ' = ' . $placeholder;
       $arguments[$placeholder] = $langcode;
     }
     return $this->sqlQuery->addJoin($type, $table, NULL, $join_condition, $arguments);

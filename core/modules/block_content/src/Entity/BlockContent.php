@@ -49,6 +49,7 @@ use Drupal\block_content\BlockContentInterface;
  *     "revision" = "revision_id",
  *     "bundle" = "type",
  *     "label" = "info",
+ *     "langcode" = "langcode",
  *     "uuid" = "uuid"
  *   },
  *   bundle_entity_type = "block_content_type",

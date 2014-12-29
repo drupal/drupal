@@ -309,7 +309,8 @@ abstract class Entity implements EntityInterface {
    * {@inheritdoc}
    */
   public function language() {
-    $language = $this->languageManager()->getLanguage($this->langcode);
+    $langcode = $this->{$this->getEntityType()->getKey('langcode')};
+    $language = $this->languageManager()->getLanguage($langcode);
     if (!$language) {
       // Make sure we return a proper language object.
       $langcode = $this->langcode ?: LanguageInterface::LANGCODE_NOT_SPECIFIED;

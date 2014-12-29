@@ -44,6 +44,7 @@ use Drupal\user\UserInterface;
  *   translatable = TRUE,
  *   entity_keys = {
  *     "id" = "uid",
+ *     "langcode" = "langcode",
  *     "uuid" = "uuid"
  *   },
  *   links = {

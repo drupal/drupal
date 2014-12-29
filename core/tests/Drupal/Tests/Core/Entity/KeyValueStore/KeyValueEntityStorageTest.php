@@ -96,6 +96,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
       ->will($this->returnValueMap(array(
         array('id', 'id'),
         array('uuid', $uuid_key),
+        array('langcode', 'langcode'),
       )));
     $this->entityType->expects($this->atLeastOnce())
       ->method('id')

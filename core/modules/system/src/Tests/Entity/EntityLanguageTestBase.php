@@ -51,9 +51,12 @@ abstract class EntityLanguageTestBase extends EntityUnitTestBase {
 
     $this->languageManager = $this->container->get('language_manager');
 
-    $this->installEntitySchema('entity_test_rev');
-    $this->installEntitySchema('entity_test_mul');
-    $this->installEntitySchema('entity_test_mulrev');
+    foreach (entity_test_entity_types() as $entity_type_id) {
+      // The entity_test schema is installed by the parent.
+      if ($entity_type_id != 'entity_test') {
+        $this->installEntitySchema($entity_type_id);
+      }
+    }
 
     $this->installConfig(array('language'));
 

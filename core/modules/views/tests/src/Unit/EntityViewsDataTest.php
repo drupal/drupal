@@ -87,7 +87,7 @@ class EntityViewsDataTest extends UnitTestCase {
       'base_table' => 'entity_test',
       'id' => 'entity_test',
       'label' => 'Entity test',
-      'entity_keys' => ['id' => 'id'],
+      'entity_keys' => ['id' => 'id', 'langcode' => 'langcode'],
       'provider' => 'entity_test',
     ]);
 

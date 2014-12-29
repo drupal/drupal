@@ -43,6 +43,7 @@ use Drupal\aggregator\FeedInterface;
  *   entity_keys = {
  *     "id" = "fid",
  *     "label" = "title",
+ *     "langcode" = "langcode",
  *     "uuid" = "uuid",
  *   }
  * )

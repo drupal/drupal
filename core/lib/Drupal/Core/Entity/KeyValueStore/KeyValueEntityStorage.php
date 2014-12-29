@@ -94,7 +94,7 @@ class KeyValueEntityStorage extends EntityStorageBase {
    */
   public function doCreate(array $values = array()) {
     // Set default language to site default if not provided.
-    $values += array('langcode' => $this->languageManager->getDefaultLanguage()->getId());
+    $values += array($this->getEntityType()->getKey('langcode') => $this->languageManager->getDefaultLanguage()->getId());
     $entity = new $this->entityClass($values, $this->entityTypeId);
 
     // @todo This is handled by ContentEntityStorageBase, which assumes

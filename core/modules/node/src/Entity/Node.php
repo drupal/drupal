@@ -47,6 +47,7 @@ use Drupal\user\UserInterface;
  *     "revision" = "vid",
  *     "bundle" = "type",
  *     "label" = "title",
+ *     "langcode" = "langcode",
  *     "uuid" = "uuid"
  *   },
  *   bundle_entity_type = "node_type",

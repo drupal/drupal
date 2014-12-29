@@ -390,7 +390,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
    */
   protected function processViewsDataForLanguage($table, FieldDefinitionInterface $field_definition, array &$views_field, $field_column_name) {
     // Apply special titles for the langcode field.
-    if ($field_definition->getName() == 'langcode') {
+    if ($field_definition->getName() == $this->entityType->getKey('langcode')) {
       if ($table == $this->entityType->getDataTable() || $table == $this->entityType->getRevisionDataTable()) {
         $views_field['title'] = $this->t('Translation language');
       }

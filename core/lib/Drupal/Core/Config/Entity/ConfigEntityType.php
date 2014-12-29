@@ -67,6 +67,7 @@ class ConfigEntityType extends EntityType {
     parent::__construct($definition);
     // Always add a default 'uuid' key.
     $this->entity_keys['uuid'] = 'uuid';
+    $this->entity_keys['langcode'] = 'langcode';
     $this->handlers += array(
       'storage' => 'Drupal\Core\Config\Entity\ConfigEntityStorage',
     );

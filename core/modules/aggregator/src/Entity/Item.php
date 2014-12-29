@@ -35,6 +35,7 @@ use Drupal\Core\Url;
  *   entity_keys = {
  *     "id" = "iid",
  *     "label" = "title",
+ *     "langcode" = "langcode",
  *   }
  * )
  */

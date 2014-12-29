@@ -37,7 +37,8 @@ use Drupal\user\UserInterface;
  *     "id" = "id",
  *     "uuid" = "uuid",
  *     "bundle" = "type",
- *     "label" = "name"
+ *     "label" = "name",
+ *     "langcode" = "langcode",
  *   },
  *   links = {
  *     "canonical" = "entity.entity_test.canonical",

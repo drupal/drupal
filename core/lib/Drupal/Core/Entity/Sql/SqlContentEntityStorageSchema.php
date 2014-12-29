@@ -879,9 +879,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
 
     $schema = array(
       'description' => "The data table for $entity_type_id entities.",
-      // @todo Use the language entity key when https://drupal.org/node/2143729
-      //   is in.
-      'primary key' => array($id_key, 'langcode'),
+      'primary key' => array($id_key, $entity_type->getKey('langcode')),
       'indexes' => array(),
       'foreign keys' => array(
         $entity_type_id => array(
@@ -917,9 +915,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
 
     $schema = array(
       'description' => "The revision data table for $entity_type_id entities.",
-      // @todo Use the language entity key when https://drupal.org/node/2143729
-      //   is in.
-      'primary key' => array($revision_key, 'langcode'),
+      'primary key' => array($revision_key, $entity_type->getKey('langcode')),
       'indexes' => array(),
       'foreign keys' => array(
         $entity_type_id => array(
@@ -1397,7 +1393,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       $schema['fields'][$schema_field_name] = $column_schema;
       $schema['fields'][$schema_field_name]['description'] = $field_description;
       // Only entity keys are required.
-      $keys = $this->entityType->getKeys() + array('langcode' => 'langcode');
+      $keys = $this->entityType->getKeys();
       // The label is an entity key, but label fields are not necessarily
       // required.
       // Because entity ID and revision ID are both serial fields in the base

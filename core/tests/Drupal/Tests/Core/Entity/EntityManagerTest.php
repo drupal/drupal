@@ -554,7 +554,7 @@ class EntityManagerTest extends UnitTestCase {
    * @covers ::getFieldDefinitions
    */
   public function testGetFieldDefinitionsWithCaching() {
-    $field_definition = $this->setUpEntityWithFieldDefinition(FALSE, 'id', 0);
+    $field_definition = $this->setUpEntityWithFieldDefinition(FALSE, 'id');
 
     $expected = array('id' => $field_definition);
 
@@ -594,7 +594,7 @@ class EntityManagerTest extends UnitTestCase {
    * @covers ::getFieldStorageDefinitions
    */
   public function testGetFieldStorageDefinitionsWithCaching() {
-    $field_definition = $this->setUpEntityWithFieldDefinition(TRUE, 'id', 0);
+    $field_definition = $this->setUpEntityWithFieldDefinition(TRUE, 'id');
     $field_storage_definition = $this->getMock('\Drupal\Core\Field\FieldStorageDefinitionInterface');
     $field_storage_definition->expects($this->any())
       ->method('getName')
@@ -658,7 +658,7 @@ class EntityManagerTest extends UnitTestCase {
    * @expectedException \LogicException
    */
   public function testGetBaseFieldDefinitionsInvalidDefinition() {
-    $langcode_definition = $this->setUpEntityWithFieldDefinition(FALSE, 'langcode');
+    $langcode_definition = $this->setUpEntityWithFieldDefinition(FALSE, 'langcode', array('langcode' => 'langcode'));
     $langcode_definition->expects($this->once())
       ->method('isTranslatable')
       ->will($this->returnValue(TRUE));
@@ -710,11 +710,14 @@ class EntityManagerTest extends UnitTestCase {
    *   ModuleHandlerInterface::invokeAll() implementation. Defaults to FALSE.
    * @param string $field_definition_id
    *   (optional) The ID to use for the field definition. Defaults to 'id'.
+   * @param array $entity_keys
+   *   (optional) An array of entity keys for the mocked entity type. Defaults
+   *   to an empty array.
    *
    * @return \Drupal\Core\Field\BaseFieldDefinition|\PHPUnit_Framework_MockObject_MockObject
    *   A field definition object.
    */
-  protected function setUpEntityWithFieldDefinition($custom_invoke_all = FALSE, $field_definition_id = 'id') {
+  protected function setUpEntityWithFieldDefinition($custom_invoke_all = FALSE, $field_definition_id = 'id', $entity_keys = array()) {
     $entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
     $entity = $this->getMockBuilder('Drupal\Tests\Core\Entity\EntityManagerTestEntity')
       ->disableOriginalConstructor()
@@ -726,7 +729,7 @@ class EntityManagerTest extends UnitTestCase {
       ->will($this->returnValue($entity_class));
     $entity_type->expects($this->any())
       ->method('getKeys')
-      ->will($this->returnValue(array()));
+      ->will($this->returnValue($entity_keys));
     $entity_type->expects($this->any())
       ->method('isSubclassOf')
       ->with($this->equalTo('\Drupal\Core\Entity\FieldableEntityInterface'))

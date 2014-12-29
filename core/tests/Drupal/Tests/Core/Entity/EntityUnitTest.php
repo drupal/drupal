@@ -233,6 +233,11 @@ class EntityUnitTest extends UnitTestCase {
    * @covers ::language
    */
   public function testLanguage() {
+    $this->entityType->expects($this->any())
+      ->method('getKey')
+      ->will($this->returnValueMap(array(
+        array('langcode', 'langcode'),
+      )));
     $this->assertSame('en', $this->entity->language()->getId());
   }
 

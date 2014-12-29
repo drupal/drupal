@@ -58,6 +58,13 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
   protected $uuidKey;
 
   /**
+   * The name of the entity langcode property.
+   *
+   * @var string
+   */
+  protected $langcodeKey;
+
+  /**
    * The UUID service.
    *
    * @var \Drupal\Component\Uuid\UuidInterface
@@ -82,6 +89,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
     $this->entityType = $entity_type;
     $this->idKey = $this->entityType->getKey('id');
     $this->uuidKey = $this->entityType->getKey('uuid');
+    $this->langcodeKey = $this->entityType->getKey('langcode');
     $this->entityClass = $this->entityType->getClass();
   }
 

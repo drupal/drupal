@@ -34,6 +34,7 @@ use Drupal\entity_test\Entity\EntityTest;
  *     "revision" = "revision_id",
  *     "bundle" = "type",
  *     "label" = "name",
+ *     "langcode" = "langcode",
  *   },
  *   links = {
  *     "canonical" = "entity.entity_test_rev.edit_form",

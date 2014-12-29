@@ -35,6 +35,7 @@ use Drupal\menu_link_content\MenuLinkContentInterface;
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "title",
+ *     "langcode" = "langcode",
  *     "uuid" = "uuid",
  *     "bundle" = "bundle"
  *   },

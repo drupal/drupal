@@ -607,6 +607,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
         array('id', $entity_keys['id']),
         array('uuid', $entity_keys['uuid']),
         array('bundle', $entity_keys['bundle']),
+        array('langcode', $entity_keys['langcode']),
       )));
 
     $this->setUpEntityStorage();
@@ -667,6 +668,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
         array('id', $entity_keys['id']),
         array('uuid', $entity_keys['uuid']),
         array('bundle', $entity_keys['bundle']),
+        array('langcode', $entity_keys['langcode']),
       )));
 
     $this->setUpEntityStorage();
@@ -733,6 +735,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
         array('uuid', $entity_keys['uuid']),
         array('bundle', $entity_keys['bundle']),
         array('revision', $entity_keys['revision']),
+        array('langcode', $entity_keys['langcode']),
       )));
 
     $this->setUpEntityStorage();
@@ -854,6 +857,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
           array('uuid', $entity_keys['uuid']),
           array('bundle', $entity_keys['bundle']),
           array('revision', $entity_keys['revision']),
+          array('langcode', $entity_keys['langcode']),
         )));
 
       $this->setUpEntityStorage();

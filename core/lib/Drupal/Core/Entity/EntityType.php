@@ -236,7 +236,8 @@ class EntityType implements EntityTypeInterface {
     // Ensure defaults.
     $this->entity_keys += array(
       'revision' => '',
-      'bundle' => ''
+      'bundle' => '',
+      'langcode' => '',
     );
     $this->handlers += array(
       'access' => 'Drupal\Core\Entity\EntityAccessControlHandler',

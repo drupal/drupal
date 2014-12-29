@@ -434,7 +434,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
 
     // Ensure defined entity keys are there and have proper revisionable and
     // translatable values.
-    $keys = array_filter($entity_type->getKeys() + array('langcode' => 'langcode'));
+    $keys = array_filter($entity_type->getKeys());
     foreach ($keys as $key => $field_name) {
       if (isset($base_field_definitions[$field_name]) && in_array($key, array('id', 'revision', 'uuid', 'bundle')) && $base_field_definitions[$field_name]->isRevisionable()) {
         throw new \LogicException(String::format('The @field field cannot be revisionable as it is used as @key entity key.', array('@field' => $base_field_definitions[$field_name]->getLabel(), '@key' => $key)));
