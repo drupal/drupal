@@ -9,7 +9,6 @@ namespace Drupal\system\Tests\System;
 
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
-use Drupal\Core\Utility\Title;
 use Drupal\simpletest\WebTestBase;
 
 /**
