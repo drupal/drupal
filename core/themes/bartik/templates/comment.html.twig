@@ -74,68 +74,47 @@
   ]
 %}
 <article role="article"{{ attributes.addClass(classes)|without('role') }}>
-
   <header class="comment-header">
     <div class="attribution">
       {{ user_picture }}
-
       <div class="submitted">
-        <p class="commenter-name">
-          {{ author }}
-        </p>
-        <p class="comment-time">
-          {{ created }}
-        </p>
-        <p class="comment-permalink">
-          {{ permalink }}
-        </p>
+        <p class="commenter-name">{{ author }}</p>
+        <p class="comment-time">{{ created }}</p>
+        <p class="comment-permalink">{{ permalink }}</p>
         {#
           // Indicate the semantic relationship between parent and child comments
           // for accessibility. The list is difficult to navigate in a screen
           // reader without this information.
         #}
         {% if parent %}
-        <p class="comment-parent visually-hidden">
-          {{ parent }}
-        </p>
+          <p class="comment-parent visually-hidden">{{ parent }}</p>
         {% endif %}
       </div>
     </div> <!-- /.attribution -->
   </header> <!-- /.comment-header -->
-
   <div class="comment-text">
     <div class="comment-arrow"></div>
-
     {#
     Hide the "new" indicator by default, let a piece of JavaScript ask
     the server which comments are new for the user. Rendering the final
     "new" indicator here would break the render cache.
     #}
     <span class="hidden new" data-comment-timestamp="{{ new_indicator_timestamp }}"></span>
-
     {% if title %}
       {{ title_prefix }}
-      <h3{{ title_attributes }}>{{ title }}</h3>
+        <h3{{ title_attributes }}>{{ title }}</h3>
       {{ title_suffix }}
     {% endif %}
-
     <div{{ content_attributes.addClass('content') }}>
       {{ content|without('links') }}
     </div> <!-- /.content -->
-
     <footer class="comment-footer">
       {% if signature %}
-      <div class="user-signature clearfix">
-        {{ signature }}
-      </div>
+        <div class="user-signature clearfix">{{ signature }}</div>
       {% endif %}
-
-        {% if content.links %}
-          <nav>
-            {{ content.links }}
-          </nav>
-        {% endif %}
+      {% if content.links %}
+        <nav>{{ content.links }}</nav>
+      {% endif %}
     </footer> <!-- /.comment-footer -->
   </div> <!-- /.comment-text -->
-
 </article>

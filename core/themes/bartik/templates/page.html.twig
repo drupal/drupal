@@ -75,126 +75,122 @@
  * @see html.html.twig
  */
 #}
-<div id="page-wrapper"><div id="page">
-
-  <header id="header" role="banner" aria-label="{{ 'Site header'|t}}"><div class="section clearfix">
-
-    {{ page.secondary_menu }}
-
-    {% if logo %}
-      <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home" id="logo">
-        <img src="{{ logo }}" alt="{{ 'Home'|t }}" />
-      </a>
-    {% endif %}
-
-    {% if site_name or site_slogan %}
-      <div id="name-and-slogan"{% if hide_site_name and hide_site_slogan %} class="visually-hidden"{% endif %}>
-        {% if site_name %}
-          {% if title %}
-            <div id="site-name"{% if hide_site_name %} class="visually-hidden"{% endif %}>
-              <strong>
-                <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home"><span>{{ site_name }}</span></a>
-              </strong>
-            </div>
-          {# Use h1 when the content title is empty #}
-          {% else %}
-            <h1 id="site-name"{% if hide_site_name %} class="visually-hidden" {% endif %}>
-              <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home"><span>{{ site_name }}</span></a>
-            </h1>
-          {% endif %}
+<div id="page-wrapper">
+  <div id="page">
+    <header id="header" role="banner" aria-label="{{ 'Site header'|t}}">
+      <div class="section clearfix">
+        {{ page.secondary_menu }}
+        {% if logo %}
+          <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home" id="logo">
+            <img src="{{ logo }}" alt="{{ 'Home'|t }}" />
+          </a>
         {% endif %}
-
-        {% if site_slogan %}
-          <div id="site-slogan"{% if hide_site_slogan %} class="visually-hidden"{% endif %}>
-            {{ site_slogan }}
-          </div>
+        {% if site_name or site_slogan %}
+          <div id="name-and-slogan"{% if hide_site_name and hide_site_slogan %} class="visually-hidden"{% endif %}>
+            {% if site_name %}
+              {% if title %}
+                <div id="site-name"{% if hide_site_name %} class="visually-hidden"{% endif %}>
+                  <strong>
+                    <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home"><span>{{ site_name }}</span></a>
+                  </strong>
+                </div>
+              {# Use h1 when the content title is empty #}
+              {% else %}
+                <h1 id="site-name"{% if hide_site_name %} class="visually-hidden" {% endif %}>
+                  <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home"><span>{{ site_name }}</span></a>
+                </h1>
+              {% endif %}
+            {% endif %}
+            {% if site_slogan %}
+              <div id="site-slogan"{% if hide_site_slogan %} class="visually-hidden"{% endif %}>
+                {{ site_slogan }}
+              </div>
+            {% endif %}
+          </div><!-- /#name-and-slogan -->
         {% endif %}
-      </div><!-- /#name-and-slogan -->
+        {{ page.header }}
+        {{ page.primary_menu }}
+      </div> <!-- /.section -->
+    </header> <!-- /.section -->
+    {% if messages %}
+      <div id="messages">
+        <div class="section clearfix">{{ messages }}</div>
+      </div> <!-- /#messages -->
     {% endif %}
-
-    {{ page.header }}
-    {{ page.primary_menu }}
-
-  </div></header> <!-- /.section, /#header-->
-
-  {% if messages %}
-    <div id="messages"><div class="section clearfix">
-      {{ messages }}
-    </div></div> <!-- /.section, /#messages -->
-  {% endif %}
-
-  {% if page.featured %}
-    <div id="featured"><aside class="section clearfix" role="complementary">
-      {{ page.featured }}
-    </aside></div> <!-- /.section, /#featured -->
-  {% endif %}
-
-  <div id="main-wrapper" class="clearfix"><div id="main" class="clearfix">
-    {{ breadcrumb }}
-
-    <main id="content" class="column" role="main"><section class="section">
-      {% if page.highlighted %}<div id="highlighted">{{ page.highlighted }}</div>{% endif %}
-      <a id="main-content" tabindex="-1"></a>
-      {{ title_prefix }}
-        {% if title %}
-          <h1 class="title" id="page-title">
-            {{ title }}
-          </h1>
+    {% if page.featured %}
+      <div id="featured">
+        <aside class="section clearfix" role="complementary">
+          {{ page.featured }}
+        </aside> <!-- /.section -->
+      </div> <!-- /#featured -->
+    {% endif %}
+    <div id="main-wrapper" class="clearfix">
+      <div id="main" class="clearfix">
+        {{ breadcrumb }}
+        <main id="content" class="column" role="main">
+          <section class="section">
+            {% if page.highlighted %}<div id="highlighted">{{ page.highlighted }}</div>{% endif %}
+            <a id="main-content" tabindex="-1"></a>
+            {{ title_prefix }}
+            {% if title %}
+              <h1 class="title" id="page-title">
+                {{ title }}
+              </h1>
+            {% endif %}
+            {{ title_suffix }}
+            {% if tabs %}
+              <nav class="tabs" role="navigation" aria-label="{{ 'Tabs'|t }}">
+                {{ tabs }}
+              </nav>
+            {% endif %}
+            {{ page.help }}
+            {% if action_links %}
+              <ul class="action-links">{{ action_links }}</ul>
+            {% endif %}
+            {{ page.content }}
+          </section>  <!-- /.section -->
+        </main> <!-- /#content -->
+        {% if page.sidebar_first %}
+          <div id="sidebar-first" class="column sidebar">
+            <aside class="section" role="complementary">
+              {{ page.sidebar_first }}
+            </aside><!-- /.section -->
+          </div><!-- /#sidebar-first -->
         {% endif %}
-      {{ title_suffix }}
-        {% if tabs %}
-          <nav class="tabs" role="navigation" aria-label="{{ 'Tabs'|t }}">
-            {{ tabs }}
-          </nav>
+        {% if page.sidebar_second %}
+          <div id="sidebar-second" class="column sidebar">
+            <aside class="section" role="complementary">
+              {{ page.sidebar_second }}
+            </aside> <!-- /.section -->
+          </div><!-- /#sidebar-second -->
         {% endif %}
-      {{ page.help }}
-        {% if action_links %}
-          <ul class="action-links">
-            {{ action_links }}
-          </ul>
+      </div> <!-- /#main -->
+    </div> <!-- /#main-wrapper -->
+    {% if page.triptych_first or page.triptych_middle or page.triptych_last %}
+      <div id="triptych-wrapper">
+        <aside id="triptych" class="clearfix" role="complementary">
+          {{ page.triptych_first }}
+          {{ page.triptych_middle }}
+          {{ page.triptych_last }}
+        </aside> <!-- /#triptych -->
+      </div> <!-- /#triptych-wrapper -->
+    {% endif %}
+    <div id="footer-wrapper">
+      <footer class="section">
+        {% if page.footer_firstcolumn or page.footer_secondcolumn or page.footer_thirdcolumn or page.footer_fourthcolumn %}
+          <div id="footer-columns" class="clearfix">
+            {{ page.footer_firstcolumn }}
+            {{ page.footer_secondcolumn }}
+            {{ page.footer_thirdcolumn }}
+            {{ page.footer_fourthcolumn }}
+          </div> <!-- /#footer-columns -->
         {% endif %}
-      {{ page.content }}
-    </section></main> <!-- /.section, /#content -->
-
-    {% if page.sidebar_first %}
-      <div id="sidebar-first" class="column sidebar"><aside class="section" role="complementary">
-        {{ page.sidebar_first }}
-      </aside></div><!-- /.section, /#sidebar-first -->
-    {% endif %}
-
-    {% if page.sidebar_second %}
-      <div id="sidebar-second" class="column sidebar"><aside class="section" role="complementary">
-        {{ page.sidebar_second }}
-      </aside></div><!-- /.section, /#sidebar-second -->
-    {% endif %}
-
-  </div></div><!-- /#main, /#main-wrapper -->
-
-  {% if page.triptych_first or page.triptych_middle or page.triptych_last %}
-    <div id="triptych-wrapper"><aside id="triptych" class="clearfix" role="complementary">
-      {{ page.triptych_first }}
-      {{ page.triptych_middle }}
-      {{ page.triptych_last }}
-    </aside></div><!-- /#triptych, /#triptych-wrapper -->
-  {% endif %}
-
-  <div id="footer-wrapper"><footer class="section">
-
-    {% if page.footer_firstcolumn or page.footer_secondcolumn or page.footer_thirdcolumn or page.footer_fourthcolumn %}
-      <div id="footer-columns" class="clearfix">
-        {{ page.footer_firstcolumn }}
-        {{ page.footer_secondcolumn }}
-        {{ page.footer_thirdcolumn }}
-        {{ page.footer_fourthcolumn }}
-      </div><!-- /#footer-columns -->
-    {% endif %}
-
-    {% if page.footer %}
-      <div id="footer" role="contentinfo" class="clearfix">
-        {{ page.footer }}
-      </div> <!-- /#footer -->
-   {% endif %}
-
-  </footer></div> <!-- /.section, /#footer-wrapper -->
-
-</div></div> <!-- /#page, /#page-wrapper -->
+        {% if page.footer %}
+          <div id="footer" role="contentinfo" class="clearfix">
+            {{ page.footer }}
+          </div> <!-- /#footer -->
+        {% endif %}
+      </footer> <!-- /.section -->
+    </div> <!-- /#footer-wrapper -->
+  </div> <!-- /#page -->
+</div> <!-- /#page-wrapper -->

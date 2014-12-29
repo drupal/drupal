@@ -74,7 +74,6 @@
   ]
 %}
 <article{{ attributes.addClass(classes) }}>
-
   <header>
     {{ title_prefix }}
     {% if not page %}
@@ -83,7 +82,6 @@
       </h2>
     {% endif %}
     {{ title_suffix }}
-
     {% if display_submitted %}
       <div class="node__meta">
         {{ author_picture }}
@@ -94,17 +92,11 @@
       </div>
     {% endif %}
   </header>
-
   <div{{ content_attributes.addClass('node__content', 'clearfix') }}>
     {{ content|without('comment', 'links') }}
   </div>
-
   {% if content.links %}
-    <div class="node__links">
-      {{ content.links }}
-    </div>
+    <div class="node__links">{{ content.links }}</div>
   {% endif %}
-
   {{ content.comment }}
-
 </article>
