@@ -8,7 +8,6 @@
 namespace Drupal\system\Tests\Form;
 
 use Drupal\Core\Form\FormState;
-use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Session\UserSession;
 use Drupal\simpletest\KernelTestBase;
 
@@ -89,8 +88,7 @@ class FormCacheTest extends KernelTestBase {
    * Tests the form cache without a logged-in user.
    */
   function testNoCacheToken() {
-    $current_user = $this->container->get('current_user');
-    $current_user->setAccount(new AnonymousUserSession());
+    $this->container->set('current_user', new UserSession(array('uid' => 0)));
 
     $this->form_state->set('example', $this->randomMachineName());
     \Drupal::formBuilder()->setCache($this->form_build_id, $this->form, $this->form_state);
