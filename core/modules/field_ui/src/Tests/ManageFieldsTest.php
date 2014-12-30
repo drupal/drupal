@@ -217,6 +217,12 @@ class ManageFieldsTest extends WebTestBase {
     $this->assertFieldByXPath("//select[@name='field_storage[cardinality]']", 'number');
     $this->assertFieldByXPath("//input[@name='field_storage[cardinality_number]']", 6);
 
+    // Check that tabs displayed.
+    $this->assertLink(t('Edit'));
+    $this->assertLinkByHref('admin/structure/types/manage/article/fields/node.article.body');
+    $this->assertLink(t('Field settings'));
+    $this->assertLinkByHref($field_edit_path);
+
     // Set to unlimited.
     $edit = array(
       'field_storage[cardinality]' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
