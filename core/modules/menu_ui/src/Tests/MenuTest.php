@@ -11,6 +11,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Menu\MenuLinkInterface;
+use Drupal\Core\Url;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\system\Entity\Menu;
 use Drupal\node\Entity\Node;
@@ -102,6 +103,16 @@ class MenuTest extends MenuWebTestBase {
 
     // Login the administrator.
     $this->drupalLogin($this->admin_user);
+
+    // Verify delete link exists and reset link does not exist.
+    $this->drupalGet('admin/structure/menu/manage/' . $this->menu->id());
+    $this->assertLinkByHref('admin/structure/menu/item/' . $this->items[0]->id() . '/delete');
+    $this->assertNoLinkByHref(Url::fromUri('base://admin/structure/menu/link/' . $this->items[0]->getPluginId() . '/reset')->toString());
+    // Check delete and reset access.
+    $this->drupalGet('admin/structure/menu/item/' . $this->items[0]->id() . '/delete');
+    $this->assertResponse(200);
+    $this->drupalGet('admin/structure/menu/link/' . $this->items[0]->getPluginId() . '/reset');
+    $this->assertResponse(403);
 
     // Delete menu links.
     foreach ($this->items as $item) {

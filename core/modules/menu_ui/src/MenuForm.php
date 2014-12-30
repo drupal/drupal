@@ -397,7 +397,7 @@ class MenuForm extends EntityForm {
           );
         }
         elseif ($delete_link = $link->getDeleteRoute()) {
-          $operations['delete'] = $delete_link;
+          $operations['delete']['url'] = $delete_link;
           $operations['delete']['query']['destination'] = $this->entity->url();
           $operations['delete']['title'] = $this->t('Delete');
         }
