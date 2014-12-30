@@ -734,6 +734,21 @@ function file_save_upload($form_field_name, $validators = array(), $destination 
         $files[$i] = FALSE;
         continue;
 
+      case UPLOAD_ERR_NO_TMP_DIR:
+        drupal_set_message(t('The file %file could not be saved because server is missing a temporary folder.', array('%file' => $file_info->getFilename())), 'error');
+        $files[$i] = FALSE;
+        continue;
+
+      case UPLOAD_ERR_CANT_WRITE:
+        drupal_set_message(t('The file %file could not be saved because server is unable to write to disk.', array('%file' => $file_info->getFilename())), 'error');
+        $files[$i] = FALSE;
+        continue;
+
+      case UPLOAD_ERR_EXTENSION:
+        drupal_set_message(t('The file %file could not be saved because a PHP extension stopped the file upload. PHP does not provide a way to ascertain which extension caused the file upload to stop; examining the list of loaded extensions with phpinfo() may help.', array('%file' => $file_info->getFilename())), 'error');
+        $files[$i] = FALSE;
+        continue;
+
       case UPLOAD_ERR_OK:
         // Final check that this is a valid upload, if it isn't, use the
         // default error handler.
