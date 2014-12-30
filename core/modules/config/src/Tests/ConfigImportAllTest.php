@@ -12,8 +12,7 @@ use Drupal\system\Tests\Module\ModuleTestBase;
 use Drupal\shortcut\Entity\Shortcut;
 
 /**
- * Tests the largest configuration import possible with the modules and profiles
- * provided by core.
+ * Tests the largest configuration import possible with all available modules.
  *
  * @group config
  */
