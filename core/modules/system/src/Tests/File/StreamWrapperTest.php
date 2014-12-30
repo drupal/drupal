@@ -7,7 +7,10 @@
 
 namespace Drupal\system\Tests\File;
 
+use Drupal\Core\DrupalKernel;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PublicStream;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests stream wrapper functions.
@@ -36,6 +39,17 @@ class StreamWrapperTest extends FileTestBase {
    * @var string
    */
   protected $classname = 'Drupal\file_test\StreamWrapper\DummyStreamWrapper';
+
+  function setUp() {
+    // Add file_private_path setting.
+    $settings = Settings::getAll();
+    $request = Request::create('/');;
+    $site_path = DrupalKernel::findSitePath($request);
+    $settings['file_private_path'] = $site_path . '/private';
+    new Settings($settings + Settings::getAll());
+
+    parent::setUp();
+  }
 
   /**
    * Test the getClassName() function.
@@ -84,6 +98,15 @@ class StreamWrapperTest extends FileTestBase {
     $this->assertEqual(file_stream_wrapper_get_instance_by_scheme('temporary')->getDirectoryPath(), $config->get('path.temporary'), 'Expected temporary directory path was returned.');
     $config->set('default_scheme', 'private')->save();
     $this->assertEqual(file_build_uri('foo/bar.txt'), 'private://foo/bar.txt', 'Got a valid URI from foo/bar.txt.');
+
+    // Test file_create_url()
+    // TemporaryStream::getExternalUrl() uses Url::fromRoute(), which needs
+    // route information to work.
+    $this->installSchema('system', 'router');
+    $this->container->get('router.builder')->rebuild();
+    $this->assertTrue(strpos(file_create_url('temporary://test.txt'), 'system/temporary?file=test.txt'), 'Temporary external URL correctly built.');
+    $this->assertTrue(strpos(file_create_url('public://test.txt'), Settings::get('file_public_path') . '/test.txt'), 'Public external URL correctly built.');
+    $this->assertTrue(strpos(file_create_url('private://test.txt'), 'system/files/test.txt'), 'Private external URL correctly built.');
   }
 
   /**
