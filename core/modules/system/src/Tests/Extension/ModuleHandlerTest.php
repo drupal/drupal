@@ -116,8 +116,14 @@ class ModuleHandlerTest extends KernelTestBase {
     \Drupal::state()->set('module_test.dependency', 'missing dependency');
     drupal_static_reset('system_rebuild_module_data');
 
-    $result = $this->moduleInstaller()->install(array('color'));
-    $this->assertFalse($result, 'ModuleHandler::install() returns FALSE if dependencies are missing.');
+    try {
+      $result = $this->moduleInstaller()->install(array('color'));
+      $this->fail(t('ModuleInstaller::install() throws an exception if dependencies are missing.'));
+    }
+    catch (\Drupal\Core\Extension\MissingDependencyException $e) {
+      $this->pass(t('ModuleInstaller::install() throws an exception if dependencies are missing.'));
+    }
+
     $this->assertFalse($this->moduleHandler()->moduleExists('color'), 'ModuleHandler::install() aborts if dependencies are missing.');
 
     // Fix the missing dependency.

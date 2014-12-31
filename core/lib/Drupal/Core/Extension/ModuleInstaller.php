@@ -11,6 +11,7 @@ use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DrupalKernelInterface;
+use Drupal\Component\Utility\String;
 
 /**
  * Default implementation of the module installer.
@@ -83,9 +84,12 @@ class ModuleInstaller implements ModuleInstallerInterface {
       // Get all module data so we can find dependencies and sort.
       $module_data = system_rebuild_module_data();
       $module_list = $module_list ? array_combine($module_list, $module_list) : array();
-      if (array_diff_key($module_list, $module_data)) {
+      if ($missing_modules = array_diff_key($module_list, $module_data)) {
         // One or more of the given modules doesn't exist.
-        return FALSE;
+        throw new MissingDependencyException(String::format('Unable to install modules %modules due to missing modules %missing.', array(
+          '%modules' => implode(', ', $module_list),
+          '%missing' => implode(', ', $missing_modules),
+        )));
       }
 
       // Only process currently uninstalled modules.
@@ -101,7 +105,10 @@ class ModuleInstaller implements ModuleInstallerInterface {
         foreach (array_keys($module_data[$module]->requires) as $dependency) {
           if (!isset($module_data[$dependency])) {
             // The dependency does not exist.
-            return FALSE;
+            throw new MissingDependencyException(String::format('Unable to install modules: module %module is missing its dependency module %dependency.', array(
+              '%module' => $module,
+              '%dependency' => $dependency,
+            )));
           }
 
           // Skip already installed modules.

@@ -31,7 +31,10 @@ interface ModuleInstallerInterface {
    *   if you know $module_list is already complete.
    *
    * @return bool
-   *   FALSE if one or more dependencies are missing, TRUE otherwise.
+   *   TRUE if the modules were successfully installed.
+   *
+   * @throws \Drupal\Core\Extension\MissingDependencyException
+   *   Thrown when a requested module, or a dependency of one, can not be found.
    *
    * @see hook_module_preinstall()
    * @see hook_install()

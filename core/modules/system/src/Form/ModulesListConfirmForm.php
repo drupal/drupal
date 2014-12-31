@@ -153,6 +153,10 @@ class ModulesListConfirmForm extends ConfirmFormBase {
 
     // Install the given modules.
     if (!empty($this->modules['install'])) {
+      // Don't catch the exception that this can throw for missing dependencies:
+      // the form doesn't allow modules with unmet dependencies, so the only way
+      // this can happen is if the filesystem changed between form display and
+      // submit, in which case the user has bigger problems.
       $this->moduleInstaller->install(array_keys($this->modules['install']));
     }
 
