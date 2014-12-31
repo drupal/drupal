@@ -146,7 +146,7 @@ class DiffFormatter extends DiffFormatterBase {
    */
   protected function contextLine($line) {
     return array(
-      '&nbsp;',
+      ' ',
       array(
         'data' => $line,
         'class' => 'diff-context',
@@ -162,8 +162,8 @@ class DiffFormatter extends DiffFormatterBase {
    */
   protected function emptyLine() {
     return array(
-      '&nbsp;',
-      '&nbsp;',
+      ' ',
+      ' ',
     );
   }
 
