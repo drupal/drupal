@@ -99,7 +99,7 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
    * An associative array of filters assigned to the text format, keyed by the
    * instance ID of each filter and using the properties:
    * - id: The plugin ID of the filter plugin instance.
-   * - module: The name of the module providing the filter.
+   * - provider: The name of the provider that owns the filter.
    * - status: (optional) A Boolean indicating whether the filter is
    *   enabled in the text format. Defaults to FALSE.
    * - weight: (optional) The weight of the filter in the text format. Defaults

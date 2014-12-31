@@ -33,11 +33,11 @@ class Filter extends Plugin {
   public $id;
 
   /**
-   * The name of the module providing the type.
+   * The name of the provider that owns the filter.
    *
    * @var string
    */
-  public $module;
+  public $provider;
 
   /**
    * The human-readable name of the filter.
