@@ -17,6 +17,13 @@ use Drupal\simpletest\WebTestBase;
 class ToolbarHookToolbarTest extends WebTestBase {
 
   /**
+   * A user with permission to access the administrative toolbar.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $adminUser;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -27,8 +34,8 @@ class ToolbarHookToolbarTest extends WebTestBase {
     parent::setUp();
 
     // Create an administrative user and log it in.
-    $this->admin_user = $this->drupalCreateUser(array('access toolbar'));
-    $this->drupalLogin($this->admin_user);
+    $this->adminUser = $this->drupalCreateUser(array('access toolbar'));
+    $this->drupalLogin($this->adminUser);
   }
 
   /**

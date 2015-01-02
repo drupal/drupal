@@ -33,19 +33,19 @@ class ToolbarAdminMenuTest extends WebTestBase {
   /**
    * A user with permission to access the administrative toolbar.
    *
-   * @var object
+   * @var \Drupal\user\UserInterface
    */
-  protected $admin_user;
+  protected $adminUser;
 
   /**
    * A second user with permission to access the administrative toolbar.
    *
-   * @var object
+   * @var \Drupal\user\UserInterface
    */
-  protected $admin_user_2;
+  protected $adminUser2;
 
   /**
-   * The current admin menu subtrees hash for admin_user.
+   * The current admin menu subtrees hash for adminUser.
    *
    * @var string
    */
@@ -81,10 +81,10 @@ class ToolbarAdminMenuTest extends WebTestBase {
     );
 
     // Create an administrative user and log it in.
-    $this->admin_user = $this->drupalCreateUser($perms);
-    $this->admin_user_2 = $this->drupalCreateUser($perms);
+    $this->adminUser = $this->drupalCreateUser($perms);
+    $this->adminUser2 = $this->drupalCreateUser($perms);
 
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
 
     $this->drupalGet('test-page');
     $this->assertResponse(200);
@@ -92,7 +92,7 @@ class ToolbarAdminMenuTest extends WebTestBase {
     // Assert that the toolbar is present in the HTML.
     $this->assertRaw('id="toolbar-administration"');
 
-    // Store the admin_user admin menu subtrees hash for comparison later.
+    // Store the adminUser admin menu subtrees hash for comparison later.
     $this->hash = $this->getSubtreesHash();
   }
 
@@ -149,7 +149,7 @@ class ToolbarAdminMenuTest extends WebTestBase {
    */
   function testUserRoleUpdateSubtreesHashCacheClear() {
     // Find the new role ID.
-    $all_rids = $this->admin_user->getRoles();
+    $all_rids = $this->adminUser->getRoles();
     unset($all_rids[array_search(DRUPAL_AUTHENTICATED_RID, $all_rids)]);
     $rid = reset($all_rids);
 
@@ -163,7 +163,7 @@ class ToolbarAdminMenuTest extends WebTestBase {
 
     // Test that assigning a user an extra role only affects that single user.
     // Get the hash for a second user.
-    $this->drupalLogin($this->admin_user_2);
+    $this->drupalLogin($this->adminUser2);
     $this->drupalGet('test-page');
     $this->assertResponse(200);
 
@@ -173,7 +173,7 @@ class ToolbarAdminMenuTest extends WebTestBase {
     $admin_user_2_hash = $this->getSubtreesHash();
 
     // Log in the first admin user again.
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->drupalGet('test-page');
     $this->assertResponse(200);
 
@@ -185,7 +185,7 @@ class ToolbarAdminMenuTest extends WebTestBase {
     $rid = $this->drupalCreateRole(array('administer content types',));
 
     // Assign the role to the user.
-    $this->drupalPostForm('user/' . $this->admin_user->id() . '/edit', array("roles[$rid]" => $rid), t('Save'));
+    $this->drupalPostForm('user/' . $this->adminUser->id() . '/edit', array("roles[$rid]" => $rid), t('Save'));
     $this->assertText(t('The changes have been saved.'));
 
     // Assert that the subtrees hash has been altered because the subtrees
@@ -194,7 +194,7 @@ class ToolbarAdminMenuTest extends WebTestBase {
 
     // Log in the second user again and assert that their subtrees hash did not
     // change.
-    $this->drupalLogin($this->admin_user_2);
+    $this->drupalLogin($this->adminUser2);
 
     // Request a new page to refresh the drupalSettings object.
     $this->drupalGet('test-page');
@@ -214,17 +214,17 @@ class ToolbarAdminMenuTest extends WebTestBase {
   function testCacheClearByCacheTag() {
     // Test that the toolbar admin menu subtrees cache is invalidated for a user
     // across multiple languages.
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $toolbarCache = $this->container->get('cache.toolbar');
-    $admin_user_id = $this->admin_user->id();
-    $admin_user_2_id = $this->admin_user_2->id();
+    $admin_user_id = $this->adminUser->id();
+    $admin_user_2_id = $this->adminUser2->id();
 
     // Assert that a cache tag in the toolbar cache under the key "user" exists
-    // for admin_user against the language "en".
+    // for adminUser against the language "en".
     $cache = $toolbarCache->get('toolbar_' . $admin_user_id . ':' . 'en');
     $this->assertEqual($cache->tags[2], 'user:' . $admin_user_id, 'A cache tag in the toolbar cache under the key "user" exists for admin_user against the language "en".');
 
-    // Assert that no toolbar cache exists for admin_user against the
+    // Assert that no toolbar cache exists for adminUser against the
     // language "fr".
     $cache = $toolbarCache->get('toolbar_' . $admin_user_id . ':' . 'fr');
     $this->assertFalse($cache, 'No toolbar cache exists for admin_user against the language "fr".');
@@ -240,20 +240,20 @@ class ToolbarAdminMenuTest extends WebTestBase {
     $this->assertResponse(200);
 
     // Assert that a cache tag in the toolbar cache under the key "user" exists
-    // for admin_user against the language "fr".
+    // for adminUser against the language "fr".
     $cache = $toolbarCache->get('toolbar_' . $admin_user_id . ':' . 'fr');
     $this->assertEqual($cache->tags[2], 'user:' . $admin_user_id, 'A cache tag in the toolbar cache under the key "user" exists for admin_user against the language "fr".');
 
-    // Log in the admin_user_2 user. We will use this user as a control to
-    // verify that clearing a cache tag for admin_user does not clear the cache
-    // for admin_user_2.
-    $this->drupalLogin($this->admin_user_2);
+    // Log in the adminUser2 user. We will use this user as a control to
+    // verify that clearing a cache tag for adminUser does not clear the cache
+    // for adminUser2.
+    $this->drupalLogin($this->adminUser2);
 
     // Request a page in 'en' to create the cache.
     $this->drupalGet('test-page');
     $this->assertResponse(200);
     // Assert that a cache tag in the toolbar cache under the key "user" exists
-    // for admin_user_2 against the language "en".
+    // for adminUser2 against the language "en".
     $cache = $toolbarCache->get('toolbar_' . $admin_user_2_id . ':' . 'en');
     $this->assertEqual($cache->tags[2], 'user:' . $admin_user_2_id, 'A cache tag in the toolbar cache under the key "user" exists for admin_user_2 against the language "en".');
 
@@ -261,34 +261,34 @@ class ToolbarAdminMenuTest extends WebTestBase {
     $this->drupalGet('fr/test-page');
     $this->assertResponse(200);
     // Assert that a cache tag in the toolbar cache under the key "user" exists
-    // for admin_user against the language "fr".
+    // for adminUser against the language "fr".
     $cache = $toolbarCache->get('toolbar_' . $admin_user_2_id . ':' . 'fr');
     $this->assertEqual($cache->tags[2], 'user:' . $admin_user_2_id, 'A cache tag in the toolbar cache under the key "user" exists for admin_user_2 against the language "fr".');
 
-    // Log in admin_user and clear the caches for this user using a tag.
-    $this->drupalLogin($this->admin_user);
+    // Log in adminUser and clear the caches for this user using a tag.
+    $this->drupalLogin($this->adminUser);
     Cache::deleteTags(array('user:' . $admin_user_id));
 
-    // Assert that no toolbar cache exists for admin_user against the
+    // Assert that no toolbar cache exists for adminUser against the
     // language "en".
     $cache = $toolbarCache->get($admin_user_id . ':' . 'en');
     $this->assertFalse($cache, 'No toolbar cache exists for admin_user against the language "en".');
 
-    // Assert that no toolbar cache exists for admin_user against the
+    // Assert that no toolbar cache exists for adminUser against the
     // language "fr".
     $cache = $toolbarCache->get($admin_user_id . ':' . 'fr');
     $this->assertFalse($cache, 'No toolbar cache exists for admin_user against the language "fr".');
 
-    // Log in admin_user_2 and verify that this user's caches still exist.
-    $this->drupalLogin($this->admin_user_2);
+    // Log in adminUser2 and verify that this user's caches still exist.
+    $this->drupalLogin($this->adminUser2);
 
     // Assert that a cache tag in the toolbar cache under the key "user" exists
-    // for admin_user_2 against the language "en".
+    // for adminUser2 against the language "en".
     $cache = $toolbarCache->get('toolbar_' . $admin_user_2_id . ':' . 'en');
     $this->assertEqual($cache->tags[2], 'user:' . $admin_user_2_id, 'A cache tag in the toolbar cache under the key "user" exists for admin_user_2 against the language "en".');
 
     // Assert that a cache tag in the toolbar cache under the key "user" exists
-    // for admin_user_2 against the language "fr".
+    // for adminUser2 against the language "fr".
     $cache = $toolbarCache->get('toolbar_' . $admin_user_2_id . ':' . 'fr');
     $this->assertEqual($cache->tags[2], 'user:' . $admin_user_2_id, 'A cache tag in the toolbar cache under the key "user" exists for admin_user_2 against the language "fr".');
   }
@@ -299,15 +299,15 @@ class ToolbarAdminMenuTest extends WebTestBase {
    */
   function testNonCurrentUserAccountUpdates() {
     $toolbarCache = $this->container->get('cache.toolbar');
-    $admin_user_id = $this->admin_user->id();
-    $admin_user_2_id = $this->admin_user_2->id();
+    $admin_user_id = $this->adminUser->id();
+    $admin_user_2_id = $this->adminUser2->id();
     $this->hash = $this->getSubtreesHash();
 
-    // admin_user_2 will add a role to admin_user.
-    $this->drupalLogin($this->admin_user_2);
+    // adminUser2 will add a role to adminUser.
+    $this->drupalLogin($this->adminUser2);
     $rid = $this->drupalCreateRole(array('administer content types',));
 
-    // Get the subtree hash for admin_user_2 to check later that it has not
+    // Get the subtree hash for adminUser2 to check later that it has not
     // changed. Request a new page to refresh the drupalSettings object.
     $this->drupalGet('test-page');
     $this->assertResponse(200);
@@ -317,15 +317,15 @@ class ToolbarAdminMenuTest extends WebTestBase {
     $this->drupalPostForm('user/' . $admin_user_id . '/edit', array("roles[$rid]" => $rid), t('Save'));
     $this->assertText(t('The changes have been saved.'));
 
-    // Log in admin_user and assert that the subtrees hash has changed.
-    $this->drupalLogin($this->admin_user);
+    // Log in adminUser and assert that the subtrees hash has changed.
+    $this->drupalLogin($this->adminUser);
     $this->assertDifferentHash();
 
-    // Log in admin_user_2 to check that its subtrees hash has not changed.
-    $this->drupalLogin($this->admin_user_2);
+    // Log in adminUser2 to check that its subtrees hash has not changed.
+    $this->drupalLogin($this->adminUser2);
     $new_subtree_hash = $this->getSubtreesHash();
 
-    // Assert that the old admin_user subtree hash and the new admin_user
+    // Assert that the old adminUser subtree hash and the new adminUser
     // subtree hash are the same.
     $this->assertTrue($new_subtree_hash, 'A valid hash value for the admin menu subtrees was created.');
     $this->assertEqual($admin_user_2_hash, $new_subtree_hash, 'The user-specific subtree menu hash has not been updated.');
@@ -336,8 +336,8 @@ class ToolbarAdminMenuTest extends WebTestBase {
    */
   function testLocaleTranslationSubtreesHashCacheClear() {
     $toolbarCache = $this->container->get('cache.toolbar');
-    $admin_user = $this->admin_user;
-    $admin_user_id = $this->admin_user->id();
+    $admin_user = $this->adminUser;
+    $admin_user_id = $this->adminUser->id();
     // User to translate and delete string.
     $translate_user = $this->drupalCreateUser(array('translate interface', 'access administration pages'));
 
@@ -367,12 +367,12 @@ class ToolbarAdminMenuTest extends WebTestBase {
     $this->assertRaw('"edit-languages-' . $langcode .'-weight"', 'Language code found.');
     $this->assertText(t($name), 'Test language added.');
 
-    // Have the admin_user request a page in the new language.
+    // Have the adminUser request a page in the new language.
     $this->drupalGet($langcode . '/test-page');
     $this->assertResponse(200);
 
     // Assert that a cache tag in the toolbar cache under the key "user" exists
-    // for admin_user against the language "xx".
+    // for adminUser against the language "xx".
     $cache = $toolbarCache->get('toolbar_' . $admin_user_id . ':' . $langcode);
     $this->assertEqual($cache->tags[2], 'user:' . $admin_user_id, 'A cache tag in the toolbar cache under the key "user" exists for admin_user against the language "xx".');
 
@@ -407,11 +407,11 @@ class ToolbarAdminMenuTest extends WebTestBase {
     $this->assertUrl(\Drupal::url('locale.translate_page', [], ['absolute' => TRUE]), [], 'Correct page redirection.');
     $this->drupalLogout();
 
-    // Log in the admin_user. Check the admin menu subtrees hash now that one
+    // Log in the adminUser. Check the admin menu subtrees hash now that one
     // of the link items in the Structure tree (Menus) has had its text
     // translated.
     $this->drupalLogin($admin_user);
-    // Have the admin_user request a page in the new language.
+    // Have the adminUser request a page in the new language.
     $this->drupalGet($langcode . '/test-page');
     $this->assertResponse(200);
     $new_subtree_hash = $this->getSubtreesHash();
@@ -426,7 +426,7 @@ class ToolbarAdminMenuTest extends WebTestBase {
    * Tests that the 'toolbar/subtrees/{hash}' is reachable.
    */
   function testSubtreesJsonRequest() {
-    $admin_user = $this->admin_user;
+    $admin_user = $this->adminUser;
     $this->drupalLogin($admin_user);
     // Request a new page to refresh the drupalSettings object.
     $subtrees_hash = $this->getSubtreesHash();
