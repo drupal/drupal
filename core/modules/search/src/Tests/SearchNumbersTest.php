@@ -15,35 +15,51 @@ use Drupal\Core\Language\LanguageInterface;
  * @group search
  */
 class SearchNumbersTest extends SearchTestBase {
-  protected $test_user;
-  protected $numbers;
+  /**
+   * A user with permission to administer nodes.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $testUser;
+
+  /**
+   * An array containing a series of "numbers" for testing purposes.
+   *
+   * Create content with various numbers in it.
+   * Note: 50 characters is the current limit of the search index's word
+   * field.
+   *
+   * @var string[]
+   */
+  protected $numbers = array(
+    'ISBN' => '978-0446365383',
+    'UPC' => '036000 291452',
+    'EAN bar code' => '5901234123457',
+    'negative' => '-123456.7890',
+    'quoted negative' => '"-123456.7890"',
+    'leading zero' => '0777777777',
+    'tiny' => '111',
+    'small' => '22222222222222',
+    'medium' => '333333333333333333333333333',
+    'large' => '444444444444444444444444444444444444444',
+    'gigantic' => '5555555555555555555555555555555555555555555555555',
+    'over fifty characters' => '666666666666666666666666666666666666666666666666666666666666',
+    'date' => '01/02/2009',
+    'commas' => '987,654,321',
+  );
+
+  /**
+   * An array of nodes created for testing purposes.
+   *
+   * @var \Drupal\node\NodeInterface[]
+   */
   protected $nodes;
 
   protected function setUp() {
     parent::setUp();
 
-    $this->test_user = $this->drupalCreateUser(array('search content', 'access content', 'administer nodes', 'access site reports'));
-    $this->drupalLogin($this->test_user);
-
-    // Create content with various numbers in it.
-    // Note: 50 characters is the current limit of the search index's word
-    // field.
-    $this->numbers = array(
-      'ISBN' => '978-0446365383',
-      'UPC' => '036000 291452',
-      'EAN bar code' => '5901234123457',
-      'negative' => '-123456.7890',
-      'quoted negative' => '"-123456.7890"',
-      'leading zero' => '0777777777',
-      'tiny' => '111',
-      'small' => '22222222222222',
-      'medium' => '333333333333333333333333333',
-      'large' => '444444444444444444444444444444444444444',
-      'gigantic' => '5555555555555555555555555555555555555555555555555',
-      'over fifty characters' => '666666666666666666666666666666666666666666666666666666666666',
-      'date' => '01/02/2009',
-      'commas' => '987,654,321',
-    );
+    $this->testUser = $this->drupalCreateUser(array('search content', 'access content', 'administer nodes', 'access site reports'));
+    $this->drupalLogin($this->testUser);
 
     foreach ($this->numbers as $doc => $num) {
       $info = array(

@@ -13,6 +13,12 @@ namespace Drupal\search\Tests;
  * @group search
  */
 class SearchAdvancedSearchFormTest extends SearchTestBase {
+
+  /**
+   * A node to use for testing.
+   *
+   * @var \Drupal\node\NodeInterface
+   */
   protected $node;
 
   protected function setUp() {

@@ -25,13 +25,20 @@ class SearchKeywordsConditionsTest extends SearchTestBase {
    */
   public static $modules = array('comment', 'search_extra_type');
 
+  /**
+   * A user with permission to search and post comments.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $searchingUser;
+
   protected function setUp() {
     parent::setUp();
 
     // Create searching user.
-    $this->searching_user = $this->drupalCreateUser(array('search content', 'access content', 'access comments', 'skip comment approval'));
+    $this->searchingUser = $this->drupalCreateUser(array('search content', 'access content', 'access comments', 'skip comment approval'));
     // Login with sufficient privileges.
-    $this->drupalLogin($this->searching_user);
+    $this->drupalLogin($this->searchingUser);
   }
 
   /**

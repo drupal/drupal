@@ -20,6 +20,13 @@ class SearchPreprocessLangcodeTest extends SearchTestBase {
    */
   public static $modules = array('search_langcode_test');
 
+  /**
+   * Test node for searching.
+   *
+   * @var \Drupal\node\NodeInterface
+   */
+  protected $node;
+
   protected function setUp() {
     parent::setUp();
 

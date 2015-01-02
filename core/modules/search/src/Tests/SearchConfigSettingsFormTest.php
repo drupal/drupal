@@ -26,25 +26,25 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
    *
    * @var \Drupal\user\UserInterface
    */
-  public $search_user;
+  protected $searchUser;
 
   /**
    * Node indexed for searching.
    *
    * @var \Drupal\node\NodeInterface
    */
-  public $search_node;
+  protected $searchNode;
 
   protected function setUp() {
     parent::setUp();
 
     // Login as a user that can create and search content.
-    $this->search_user = $this->drupalCreateUser(array('search content', 'administer search', 'administer nodes', 'bypass node access', 'access user profiles', 'administer users', 'administer blocks', 'access site reports'));
-    $this->drupalLogin($this->search_user);
+    $this->searchUser = $this->drupalCreateUser(array('search content', 'administer search', 'administer nodes', 'bypass node access', 'access user profiles', 'administer users', 'administer blocks', 'access site reports'));
+    $this->drupalLogin($this->searchUser);
 
     // Add a single piece of content and index it.
     $node = $this->drupalCreateNode();
-    $this->search_node = $node;
+    $this->searchNode = $node;
     // Link the node to itself to test that it's only indexed once. The content
     // also needs the word "pizza" so we can use it as the search keyword.
     $body_key = 'body[0][value]';
@@ -133,11 +133,11 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
     $plugin_info = array(
       'node_search' => array(
         'keys' => 'pizza',
-        'text' => $this->search_node->label(),
+        'text' => $this->searchNode->label(),
       ),
       'user_search' => array(
-        'keys' => $this->search_user->getUsername(),
-        'text' => $this->search_user->getEmail(),
+        'keys' => $this->searchUser->getUsername(),
+        'text' => $this->searchUser->getEmail(),
       ),
       'dummy_search_type' => array(
         'keys' => 'foo',

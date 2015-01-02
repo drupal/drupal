@@ -20,9 +20,9 @@ class SearchMultilingualEntityTest extends SearchTestBase {
   /**
    * List of searchable nodes.
    *
-   * @var array
+   * @var \Drupal\node\NodeInterface[]
    */
-  protected $searchable_nodes = array();
+  protected $searchableNodes = array();
 
   /**
    * Node search plugin.
@@ -97,22 +97,22 @@ class SearchMultilingualEntityTest extends SearchTestBase {
       array(
       ),
     );
-    $this->searchable_nodes = array();
+    $this->searchableNodes = array();
     foreach ($nodes as $setting) {
-      $this->searchable_nodes[] = $this->drupalCreateNode($setting);
+      $this->searchableNodes[] = $this->drupalCreateNode($setting);
     }
 
     // Add a single translation to the second node.
-    $translation = $this->searchable_nodes[1]->addTranslation('hu', array('title' => 'Second node hu'));
+    $translation = $this->searchableNodes[1]->addTranslation('hu', array('title' => 'Second node hu'));
     $translation->body->value = $this->randomMachineName(32);
-    $this->searchable_nodes[1]->save();
+    $this->searchableNodes[1]->save();
 
     // Add two translations to the third node.
-    $translation = $this->searchable_nodes[2]->addTranslation('hu', array('title' => 'Third node this is the Hungarian title'));
+    $translation = $this->searchableNodes[2]->addTranslation('hu', array('title' => 'Third node this is the Hungarian title'));
     $translation->body->value = $this->randomMachineName(32);
-    $translation = $this->searchable_nodes[2]->addTranslation('sv', array('title' => 'Third node sv'));
+    $translation = $this->searchableNodes[2]->addTranslation('sv', array('title' => 'Third node sv'));
     $translation->body->value = $this->randomMachineName(32);
-    $this->searchable_nodes[2]->save();
+    $this->searchableNodes[2]->save();
 
     // Verify that we have 8 nodes left to do.
     $this->assertIndexCounts(8, 8, 'before updating the search index');
@@ -196,7 +196,7 @@ class SearchMultilingualEntityTest extends SearchTestBase {
 
     // Mark one of the nodes for reindexing, using the API function, and
     // verify indexing status.
-    search_mark_for_reindex('node_search', $this->searchable_nodes[0]->id());
+    search_mark_for_reindex('node_search', $this->searchableNodes[0]->id());
     $this->assertIndexCounts(1, 8, 'after marking one node to reindex via API function');
 
     // Update the index and verify the totals again.
@@ -206,7 +206,7 @@ class SearchMultilingualEntityTest extends SearchTestBase {
     $this->assertIndexCounts(0, 8, 'after indexing again');
 
     // Mark one node for reindexing by saving it, and verify indexing status.
-    $this->searchable_nodes[1]->save();
+    $this->searchableNodes[1]->save();
     $this->assertIndexCounts(1, 8, 'after marking one node to reindex via save');
 
     // The request time is always the same throughout test runs. Update the
@@ -220,11 +220,11 @@ class SearchMultilingualEntityTest extends SearchTestBase {
       ->execute();
 
     // Save the node again. Verify that the request time on it is not updated.
-    $this->searchable_nodes[1]->save();
+    $this->searchableNodes[1]->save();
     $result = db_select('search_dataset', 'd')
       ->fields('d', array('reindex'))
       ->condition('type', 'node_search')
-      ->condition('sid', $this->searchable_nodes[1]->id())
+      ->condition('sid', $this->searchableNodes[1]->id())
       ->execute()
       ->fetchField();
     $this->assertEqual($result, $old, 'Reindex time was not updated if node was already marked');
@@ -232,7 +232,7 @@ class SearchMultilingualEntityTest extends SearchTestBase {
     // Add a bogus entry to the search index table using a different search
     // type. This will not appear in the index status, because it is not
     // managed by a plugin.
-    search_index('foo', $this->searchable_nodes[0]->id(), 'en', 'some text');
+    search_index('foo', $this->searchableNodes[0]->id(), 'en', 'some text');
     $this->assertIndexCounts(1, 8, 'after adding a different index item');
 
     // Mark just this "foo" index for reindexing.
@@ -245,13 +245,13 @@ class SearchMultilingualEntityTest extends SearchTestBase {
 
     // Clear one item from the index, but with wrong language.
     $this->assertDatabaseCounts(8, 1, 'before clear');
-    search_index_clear('node_search', $this->searchable_nodes[0]->id(), 'hu');
+    search_index_clear('node_search', $this->searchableNodes[0]->id(), 'hu');
     $this->assertDatabaseCounts(8, 1, 'after clear with wrong language');
     // Clear using correct language.
-    search_index_clear('node_search', $this->searchable_nodes[0]->id(), 'en');
+    search_index_clear('node_search', $this->searchableNodes[0]->id(), 'en');
     $this->assertDatabaseCounts(7, 1, 'after clear with right language');
     // Don't specify language.
-    search_index_clear('node_search', $this->searchable_nodes[1]->id());
+    search_index_clear('node_search', $this->searchableNodes[1]->id());
     $this->assertDatabaseCounts(6, 1, 'unspecified language clear');
     // Clear everything in 'foo'.
     search_index_clear('foo');

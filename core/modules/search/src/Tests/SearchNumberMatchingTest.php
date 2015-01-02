@@ -15,29 +15,45 @@ use Drupal\Core\Language\LanguageInterface;
  * @group search
  */
 class SearchNumberMatchingTest extends SearchTestBase {
-  protected $test_user;
-  protected $numbers;
+  /**
+   * A user with permission to administer nodes.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $testUser;
+
+  /**
+   * An array of strings containing numbers to use for testing.
+   *
+   * Define a group of numbers that should all match each other --
+   * numbers with internal punctuation should match each other, as well
+   * as numbers with and without leading zeros and leading/trailing
+   * . and -.
+   *
+   * @var string[]
+   */
+  protected $numbers = array(
+    '123456789',
+    '12/34/56789',
+    '12.3456789',
+    '12-34-56789',
+    '123,456,789',
+    '-123456789',
+    '0123456789',
+  );
+
+  /**
+   * An array of nodes created for testing purposes.
+   *
+   * @var \Drupal\node\NodeInterface[]
+   */
   protected $nodes;
 
   protected function setUp() {
     parent::setUp();
 
-    $this->test_user = $this->drupalCreateUser(array('search content', 'access content', 'administer nodes', 'access site reports'));
-    $this->drupalLogin($this->test_user);
-
-    // Define a group of numbers that should all match each other --
-    // numbers with internal punctuation should match each other, as well
-    // as numbers with and without leading zeros and leading/trailing
-    // . and -.
-    $this->numbers = array(
-      '123456789',
-      '12/34/56789',
-      '12.3456789',
-      '12-34-56789',
-      '123,456,789',
-      '-123456789',
-      '0123456789',
-    );
+    $this->testUser = $this->drupalCreateUser(array('search content', 'access content', 'administer nodes', 'access site reports'));
+    $this->drupalLogin($this->testUser);
 
     foreach ($this->numbers as $num) {
       $info = array(

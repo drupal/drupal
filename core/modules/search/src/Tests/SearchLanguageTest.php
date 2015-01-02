@@ -24,6 +24,13 @@ class SearchLanguageTest extends SearchTestBase {
    */
   public static $modules = array('language');
 
+  /**
+   * Array of nodes available to search.
+   *
+   * @var \Drupal\node\NodeInterface[]
+   */
+  protected $searchableNodes;
+
   protected function setUp() {
     parent::setUp();
 
@@ -63,20 +70,20 @@ class SearchLanguageTest extends SearchTestBase {
         'langcode' => 'en',
       ),
     );
-    $this->searchable_nodes = array();
+    $this->searchableNodes = [];
     foreach ($nodes as $setting) {
-      $this->searchable_nodes[] = $this->drupalCreateNode($setting);
+      $this->searchableNodes[] = $this->drupalCreateNode($setting);
     }
 
     // Add English translation to the second node.
-    $translation = $this->searchable_nodes[1]->addTranslation('en', array('title' => 'Second node en'));
+    $translation = $this->searchableNodes[1]->addTranslation('en', array('title' => 'Second node en'));
     $translation->body->value = $this->randomMachineName(32);
-    $this->searchable_nodes[1]->save();
+    $this->searchableNodes[1]->save();
 
     // Add Spanish translation to the third node.
-    $translation = $this->searchable_nodes[2]->addTranslation('es', array('title' => 'Third node es'));
+    $translation = $this->searchableNodes[2]->addTranslation('es', array('title' => 'Third node es'));
     $translation->body->value = $this->randomMachineName(32);
-    $this->searchable_nodes[2]->save();
+    $this->searchableNodes[2]->save();
 
     // Update the index and then run the shutdown method.
     $plugin = $this->container->get('plugin.manager.search')->createInstance('node_search');

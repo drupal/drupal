@@ -16,20 +16,25 @@ use Drupal\Component\Utility\Unicode;
  * @group search
  */
 class SearchPageTextTest extends SearchTestBase {
-  protected $searching_user;
+  /**
+   * A user with permission to use advanced search.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $searchingUser;
 
   protected function setUp() {
     parent::setUp();
 
     // Create user.
-    $this->searching_user = $this->drupalCreateUser(array('search content', 'access user profiles', 'use advanced search'));
+    $this->searchingUser = $this->drupalCreateUser(array('search content', 'access user profiles', 'use advanced search'));
   }
 
   /**
    * Tests the failed search text, and various other text on the search page.
    */
   function testSearchText() {
-    $this->drupalLogin($this->searching_user);
+    $this->drupalLogin($this->searchingUser);
     $this->drupalGet('search/node');
     $this->assertText(t('Enter your keywords'));
     $this->assertText(t('Search'));
@@ -61,10 +66,10 @@ class SearchPageTextTest extends SearchTestBase {
     $actual_title = (string) current($this->xpath('//title'));
     $this->assertEqual($actual_title, String::decodeEntities(t($title_source, array('@keywords' => Unicode::truncate($search_terms, 60, TRUE, TRUE)))), 'Search page title is correct');
 
-    $edit['keys'] = $this->searching_user->getUsername();
+    $edit['keys'] = $this->searchingUser->getUsername();
     $this->drupalPostForm('search/user', $edit, t('Search'));
     $this->assertText(t('Search'));
-    $this->assertTitle(t($title_source, array('@keywords' => Unicode::truncate($this->searching_user->getUsername(), 60, TRUE, TRUE))));
+    $this->assertTitle(t($title_source, array('@keywords' => Unicode::truncate($this->searchingUser->getUsername(), 60, TRUE, TRUE))));
 
     // Test that search keywords containing slashes are correctly loaded
     // from the GET params and displayed in the search form.

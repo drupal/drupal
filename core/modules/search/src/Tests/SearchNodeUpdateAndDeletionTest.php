@@ -20,14 +20,19 @@ class SearchNodeUpdateAndDeletionTest extends SearchTestBase {
    */
   public static $modules = array();
 
-  public $test_user;
+  /**
+   * A user with permission to access and search content.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  public $testUser;
 
   protected function setUp() {
     parent::setUp();
 
     // Create a test user and log in.
-    $this->test_user = $this->drupalCreateUser(array('access content', 'search content'));
-    $this->drupalLogin($this->test_user);
+    $this->testUser = $this->drupalCreateUser(array('access content', 'search content'));
+    $this->drupalLogin($this->testUser);
   }
 
   /**

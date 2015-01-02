@@ -24,14 +24,19 @@ class SearchPageOverrideTest extends SearchTestBase {
    */
   public static $modules = array('search_extra_type');
 
-  public $search_user;
+  /**
+   * A user with permission to administer search.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  public $searchUser;
 
   protected function setUp() {
     parent::setUp();
 
     // Login as a user that can create and search content.
-    $this->search_user = $this->drupalCreateUser(array('search content', 'administer search'));
-    $this->drupalLogin($this->search_user);
+    $this->searchUser = $this->drupalCreateUser(array('search content', 'administer search'));
+    $this->drupalLogin($this->searchUser);
   }
 
   function testSearchPageHook() {

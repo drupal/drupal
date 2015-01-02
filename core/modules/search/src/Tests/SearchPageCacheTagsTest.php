@@ -13,23 +13,30 @@ namespace Drupal\search\Tests;
  * @group search
  */
 class SearchPageCacheTagsTest extends SearchTestBase {
-
+  /**
+   * {@inheritdoc}
+   */
   protected $dumpHeaders = TRUE;
 
-  protected $searching_user;
+  /**
+   * A user with permission to search content.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $searchingUser;
 
   protected function setUp() {
     parent::setUp();
 
     // Create user.
-    $this->searching_user = $this->drupalCreateUser(array('search content', 'access user profiles'));
+    $this->searchingUser = $this->drupalCreateUser(array('search content', 'access user profiles'));
   }
 
   /**
    * Tests the presence of the expected cache tag in various situations.
    */
   function testSearchText() {
-    $this->drupalLogin($this->searching_user);
+    $this->drupalLogin($this->searchingUser);
 
     // Initial page for searching nodes.
     $this->drupalGet('search/node');
@@ -49,7 +56,7 @@ class SearchPageCacheTagsTest extends SearchTestBase {
     $this->assertTrue(in_array('search_page:user_search', $cache_tags));
 
     // User search results.
-    $edit['keys'] = $this->searching_user->getUsername();
+    $edit['keys'] = $this->searchingUser->getUsername();
     $this->drupalPostForm('search/user', $edit, t('Search'));
     $cache_tags = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Tags'));
     $this->assertTrue(in_array('search_page:user_search', $cache_tags));

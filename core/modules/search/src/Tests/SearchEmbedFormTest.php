@@ -23,13 +23,17 @@ class SearchEmbedFormTest extends SearchTestBase {
 
   /**
    * Node used for testing.
+   *
+   * @var \Drupal\node\NodeInterface
    */
-  public $node;
+  protected $node;
 
   /**
    * Count of how many times the form has been submitted.
+   *
+   * @var int
    */
-  public $submit_count = 0;
+  protected $submitCount = 0;
 
   protected function setUp() {
     parent::setUp();
@@ -44,7 +48,7 @@ class SearchEmbedFormTest extends SearchTestBase {
     search_update_totals();
 
     // Set up a dummy initial count of times the form has been submitted.
-    $this->submit_count = \Drupal::state()->get('search_embedded_form.submit_count');
+    $this->submitCount = \Drupal::state()->get('search_embedded_form.submit_count');
     $this->refreshVariables();
   }
 
@@ -58,8 +62,8 @@ class SearchEmbedFormTest extends SearchTestBase {
       t('Send away'));
     $this->assertText(t('Test form was submitted'), 'Form message appears');
     $count = \Drupal::state()->get('search_embedded_form.submit_count');
-    $this->assertEqual($this->submit_count + 1, $count, 'Form submission count is correct');
-    $this->submit_count = $count;
+    $this->assertEqual($this->submitCount + 1, $count, 'Form submission count is correct');
+    $this->submitCount = $count;
 
     // Now verify that we can see and submit the form from the search results.
     $this->drupalGet('search/node', array('query' => array('keys' => $this->node->label())));
@@ -69,8 +73,8 @@ class SearchEmbedFormTest extends SearchTestBase {
       t('Send away'));
     $this->assertText(t('Test form was submitted'), 'Form message appears');
     $count = \Drupal::state()->get('search_embedded_form.submit_count');
-    $this->assertEqual($this->submit_count + 1, $count, 'Form submission count is correct');
-    $this->submit_count = $count;
+    $this->assertEqual($this->submitCount + 1, $count, 'Form submission count is correct');
+    $this->submitCount = $count;
 
     // Now verify that if we submit the search form, it doesn't count as
     // our form being submitted.
@@ -79,7 +83,7 @@ class SearchEmbedFormTest extends SearchTestBase {
       t('Search'));
     $this->assertNoText(t('Test form was submitted'), 'Form message does not appear');
     $count = \Drupal::state()->get('search_embedded_form.submit_count');
-    $this->assertEqual($this->submit_count, $count, 'Form submission count is correct');
-    $this->submit_count = $count;
+    $this->assertEqual($this->submitCount, $count, 'Form submission count is correct');
+    $this->submitCount = $count;
   }
 }
