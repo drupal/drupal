@@ -61,17 +61,14 @@ class TextWithSummaryItem extends TextItemBase {
         'value' => array(
           'type' => 'text',
           'size' => 'big',
-          'not null' => FALSE,
         ),
         'summary' => array(
           'type' => 'text',
           'size' => 'big',
-          'not null' => FALSE,
         ),
         'format' => array(
           'type' => 'varchar',
           'length' => 255,
-          'not null' => FALSE,
         ),
       ),
       'indexes' => array(

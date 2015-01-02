@@ -30,7 +30,8 @@ class ListStringItem extends ListItemBase {
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['value'] = DataDefinition::create('string')
       ->setLabel(t('Text value'))
-      ->addConstraint('Length', array('max' => 255));
+      ->addConstraint('Length', array('max' => 255))
+      ->setRequired(TRUE);
 
     return $properties;
   }
@@ -44,7 +45,6 @@ class ListStringItem extends ListItemBase {
         'value' => array(
           'type' => 'varchar',
           'length' => 255,
-          'not null' => FALSE,
         ),
       ),
       'indexes' => array(

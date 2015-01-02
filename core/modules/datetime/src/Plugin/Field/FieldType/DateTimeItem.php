@@ -51,7 +51,8 @@ class DateTimeItem extends FieldItemBase {
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['value'] = DataDefinition::create('datetime_iso8601')
-      ->setLabel(t('Date value'));
+      ->setLabel(t('Date value'))
+      ->setRequired(TRUE);
 
     $properties['date'] = DataDefinition::create('any')
       ->setLabel(t('Computed date'))
@@ -73,7 +74,6 @@ class DateTimeItem extends FieldItemBase {
           'description' => 'The date value.',
           'type' => 'varchar',
           'length' => 20,
-          'not null' => FALSE,
         ),
       ),
       'indexes' => array(

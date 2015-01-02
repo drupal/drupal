@@ -65,12 +65,10 @@ class ShapeItem extends FieldItemBase {
         'shape' => array(
           'type' => 'varchar',
           'length' => 32,
-          'not null' => FALSE,
         ),
         'color' => array(
           'type' => 'varchar',
           'length' => 32,
-          'not null' => FALSE,
         ),
       ),
     ) + $foreign_keys;

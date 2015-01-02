@@ -6,6 +6,24 @@
  */
 
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+
+/**
+ * Implements hook_entity_base_field_info().
+ */
+function entity_reference_test_entity_base_field_info(EntityTypeInterface $entity_type) {
+  $fields = array();
+
+  if ($entity_type->id() === 'entity_test') {
+    $fields['user_role'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('User role'))
+      ->setDescription(t('The role of the associated user.'))
+      ->setSetting('target_type', 'user_role')
+      ->setSetting('handler', 'default');
+  }
+
+  return $fields;
+}
 
 /**
  * Implements hook_entity_base_field_info_alter().

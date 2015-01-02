@@ -23,7 +23,8 @@ class ShortcutPathItem extends StringItem {
     $properties['value'] = DataDefinition::create('string')
       ->setLabel(t('String value'))
       ->setComputed(TRUE)
-      ->setClass('\Drupal\shortcut\ShortcutPathValue');
+      ->setClass('\Drupal\shortcut\ShortcutPathValue')
+      ->setRequired(TRUE);
     return $properties;
   }
 

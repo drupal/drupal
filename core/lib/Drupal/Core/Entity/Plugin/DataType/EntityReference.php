@@ -56,6 +56,17 @@ class EntityReference extends DataReferenceBase {
   }
 
   /**
+   * Checks whether the target entity has not been saved yet.
+   *
+   * @return bool
+   *   TRUE if the entity is new, FALSE otherwise.
+   */
+  public function isTargetNew() {
+    // If only an ID is given, the reference cannot be a new entity.
+    return !isset($this->id) && isset($this->target) && $this->target->getValue()->isNew();
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getTarget() {

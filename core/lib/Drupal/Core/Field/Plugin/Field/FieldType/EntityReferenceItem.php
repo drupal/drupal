@@ -11,8 +11,8 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\TypedData\EntityDataDefinition;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\DataReferenceDefinition;
 
@@ -35,6 +35,13 @@ use Drupal\Core\TypedData\DataReferenceDefinition;
  * )
  */
 class EntityReferenceItem extends FieldItemBase {
+
+  /**
+   * Marker value to identify a newly created entity.
+   *
+   * @var int
+   */
+  protected static $NEW_ENTITY_MARKER = -1;
 
   /**
    * {@inheritdoc}
@@ -73,7 +80,9 @@ class EntityReferenceItem extends FieldItemBase {
       $target_id_definition = DataDefinition::create('string')
         ->setLabel(t('@label ID', array($target_type_info->getLabel())));
     }
+    $target_id_definition->setRequired(TRUE);
     $properties['target_id'] = $target_id_definition;
+
     $properties['entity'] = DataReferenceDefinition::create('entity')
       ->setLabel($target_type_info->getLabel())
       ->setDescription(t('The referenced entity'))
@@ -109,7 +118,6 @@ class EntityReferenceItem extends FieldItemBase {
           'description' => 'The ID of the target entity.',
           'type' => 'int',
           'unsigned' => TRUE,
-          'not null' => TRUE,
         ),
       );
     }
@@ -155,8 +163,12 @@ class EntityReferenceItem extends FieldItemBase {
         $this->onChange('entity', FALSE);
       }
       elseif (isset($values['target_id']) && isset($values['entity'])) {
-        // If both properties are passed, verify the passed values match.
-        if ($this->get('entity')->getTargetIdentifier() != $values['target_id']) {
+        // If both properties are passed, verify the passed values match. The
+        // only exception we allow is when we have a new entity: in this case
+        // its actual id and target_id will be different, due to the new entity
+        // marker.
+        $entity_id = $this->get('entity')->getTargetIdentifier();
+        if ($entity_id != $values['target_id'] && ($values['target_id'] != static::$NEW_ENTITY_MARKER || !$this->entity->isNew())) {
           throw new \InvalidArgumentException('The target id and entity passed to the entity reference item do not match.');
         }
       }
@@ -187,11 +199,13 @@ class EntityReferenceItem extends FieldItemBase {
    */
   public function onChange($property_name, $notify = TRUE) {
     // Make sure that the target ID and the target property stay in sync.
-    if ($property_name == 'target_id') {
-      $this->writePropertyValue('entity', $this->target_id);
+    if ($property_name == 'entity') {
+      $property = $this->get('entity');
+      $target_id = $property->isTargetNew() ? static::$NEW_ENTITY_MARKER : $property->getTargetIdentifier();
+      $this->writePropertyValue('target_id', $target_id);
     }
-    elseif ($property_name == 'entity') {
-      $this->writePropertyValue('target_id', $this->get('entity')->getTargetIdentifier());
+    elseif ($property_name == 'target_id' && $this->target_id != static::$NEW_ENTITY_MARKER) {
+      $this->writePropertyValue('entity', $this->target_id);
     }
     parent::onChange($property_name, $notify);
   }
@@ -215,13 +229,12 @@ class EntityReferenceItem extends FieldItemBase {
    */
   public function preSave() {
     if ($this->hasNewEntity()) {
-      $this->entity->save();
-    }
-    // Handle the case where an unsaved entity was directly set using the public
-    // 'entity' property and then saved before this entity. In this case
-    // ::hasNewEntity() will return FALSE but $this->target_id will still be
-    // empty.
-    if (empty($this->target_id) && $this->entity) {
+      // Save the entity if it has not already been saved by some other code.
+      if ($this->entity->isNew()) {
+        $this->entity->save();
+      }
+      // Make sure the parent knows we are updating this property so it can
+      // react properly.
       $this->target_id = $this->entity->id();
     }
   }
@@ -249,7 +262,7 @@ class EntityReferenceItem extends FieldItemBase {
    *   TRUE if the item holds an unsaved entity.
    */
   public function hasNewEntity() {
-    return $this->target_id === NULL && ($entity = $this->entity) && $entity->isNew();
+    return $this->target_id === static::$NEW_ENTITY_MARKER;
   }
 
   /**

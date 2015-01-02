@@ -50,7 +50,8 @@ class TestItem extends FieldItemBase {
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['value'] = DataDefinition::create('integer')
-      ->setLabel(t('Test integer value'));
+      ->setLabel(t('Test integer value'))
+      ->setRequired(TRUE);
 
     return $properties;
   }
@@ -64,7 +65,6 @@ class TestItem extends FieldItemBase {
         'value' => array(
           'type' => 'int',
           'size' => 'medium',
-          'not null' => FALSE,
         ),
       ),
       'indexes' => array(

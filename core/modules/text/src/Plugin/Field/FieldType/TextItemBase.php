@@ -23,7 +23,8 @@ abstract class TextItemBase extends FieldItemBase {
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['value'] = DataDefinition::create('string')
-      ->setLabel(t('Text'));
+      ->setLabel(t('Text'))
+      ->setRequired(TRUE);
 
     $properties['format'] = DataDefinition::create('filter_format')
       ->setLabel(t('Text format'));

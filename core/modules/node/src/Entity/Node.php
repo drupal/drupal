@@ -452,6 +452,7 @@ class Node extends ContentEntityBase implements NodeInterface {
       ->setDescription(t('A boolean indicating whether the node should be displayed at the top of lists in which it appears.'))
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE)
+      ->setDefaultValue(FALSE)
       ->setDisplayOptions('form', array(
         'type' => 'boolean_checkbox',
         'settings' => array(

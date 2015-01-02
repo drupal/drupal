@@ -28,6 +28,9 @@ interface FieldItemInterface extends ComplexDataInterface {
   /**
    * Defines field item properties.
    *
+   * Properties that are required to constitute a valid, non-empty item should
+   * be denoted with \Drupal\Core\TypedData\DataDefinition::setRequired().
+   *
    * @return \Drupal\Core\TypedData\DataDefinitionInterface[]
    *   An array of property definitions of contained properties, keyed by
    *   property name.
@@ -67,10 +70,12 @@ interface FieldItemInterface extends ComplexDataInterface {
    *   following key/value pairs:
    *   - columns: An array of Schema API column specifications, keyed by column
    *     name. The columns need to be a subset of the properties defined in
-   *     propertyDefinitions(). It is recommended to avoid having the column
-   *     definitions depend on field settings when possible. No assumptions
-   *     should be made on how storage engines internally use the original
-   *     column name to structure their storage.
+   *     propertyDefinitions(). The 'not null' property is ignored if present,
+   *     as it is determined automatically by the storage controller depending
+   *     on the table layout and the property definitions. It is recommended to
+   *     avoid having the column definitions depend on field settings when
+   *     possible. No assumptions should be made on how storage engines
+   *     internally use the original column name to structure their storage.
    *   - unique keys: (optional) An array of Schema API unique key definitions.
    *     Only columns that appear in the 'columns' array are allowed.
    *   - indexes: (optional) An array of Schema API index definitions. Only

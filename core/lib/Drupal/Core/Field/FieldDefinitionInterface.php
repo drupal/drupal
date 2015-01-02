@@ -159,13 +159,21 @@ interface FieldDefinitionInterface extends ListDataDefinitionInterface {
   public function getDisplayOptions($display_context);
 
   /**
-   * Returns whether at least one non-empty item is required for this field.
+   * Returns whether the field can be empty.
    *
-   * Currently, required-ness is only enforced at the Form API level in entity
-   * edit forms, not during direct API saves.
+   * If a field is required, an entity needs to have at least a valid,
+   * non-empty item in that field's FieldItemList in order to pass validation.
+   *
+   * An item is considered empty if its isEmpty() method returns TRUE.
+   * Typically, that is if at least one of its required properties is empty.
    *
    * @return bool
    *   TRUE if the field is required.
+   *
+   * @see \Drupal\Core\TypedData\Plugin\DataType\ItemList::isEmpty()
+   * @see \Drupal\Core\Field\FieldItemInterface::isEmpty()
+   * @see \Drupal\Core\TypedData\DataDefinitionInterface:isRequired()
+   * @see \Drupal\Core\TypedData\TypedDataManager::getDefaultConstraints()
    */
   public function isRequired();
 

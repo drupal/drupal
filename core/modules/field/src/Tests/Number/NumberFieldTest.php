@@ -169,7 +169,6 @@ class NumberFieldTest extends WebTestBase {
       'columns' => array(
         'value' => array(
           'type' => 'int',
-          'not null' => FALSE,
           'unsigned' => '',
           'size' => 'normal'
         ),

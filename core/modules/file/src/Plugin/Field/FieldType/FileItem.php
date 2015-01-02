@@ -64,7 +64,6 @@ class FileItem extends EntityReferenceItem {
         'target_id' => array(
           'description' => 'The ID of the file entity.',
           'type' => 'int',
-          'not null' => TRUE,
           'unsigned' => TRUE,
         ),
         'display' => array(
@@ -72,13 +71,11 @@ class FileItem extends EntityReferenceItem {
           'type' => 'int',
           'size' => 'tiny',
           'unsigned' => TRUE,
-          'not null' => TRUE,
           'default' => 1,
         ),
         'description' => array(
           'description' => 'A description of the file.',
           'type' => 'text',
-          'not null' => FALSE,
         ),
       ),
       'indexes' => array(

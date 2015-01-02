@@ -28,7 +28,8 @@ class ListFloatItem extends ListItemBase {
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['value'] = DataDefinition::create('float')
-      ->setLabel(t('Float value'));
+      ->setLabel(t('Float value'))
+      ->setRequired(TRUE);
 
     return $properties;
   }
@@ -41,7 +42,6 @@ class ListFloatItem extends ListItemBase {
       'columns' => array(
         'value' => array(
           'type' => 'float',
-          'not null' => FALSE,
         ),
       ),
       'indexes' => array(

@@ -7,6 +7,7 @@
 
 namespace Drupal\entity_reference\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -71,7 +72,6 @@ class AutocompleteWidget extends AutocompleteWidgetBase {
         // Auto-create item. See
         // \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem::presave().
         $value = array(
-          'target_id' => NULL,
           'entity' => $this->createNewEntity($element['#value'], $element['#autocreate_uid']),
           // Keep the weight property.
           '_weight' => $element['#weight'],

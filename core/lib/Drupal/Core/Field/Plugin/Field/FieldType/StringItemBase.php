@@ -34,7 +34,8 @@ abstract class StringItemBase extends FieldItemBase {
     // early t() calls by using the TranslationWrapper.
     $properties['value'] = DataDefinition::create('string')
       ->setLabel(new TranslationWrapper('Text value'))
-      ->setSetting('case_sensitive', $field_definition->getSetting('case_sensitive'));
+      ->setSetting('case_sensitive', $field_definition->getSetting('case_sensitive'))
+      ->setRequired(TRUE);
 
     return $properties;
   }

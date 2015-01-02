@@ -53,7 +53,8 @@ class IntegerItem extends NumericItemBase {
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['value'] = DataDefinition::create('integer')
-      ->setLabel(t('Integer value'));
+      ->setLabel(t('Integer value'))
+      ->setRequired(TRUE);
 
     return $properties;
   }
@@ -92,7 +93,6 @@ class IntegerItem extends NumericItemBase {
       'columns' => array(
         'value' => array(
           'type' => 'int',
-          'not null' => FALSE,
           // Expose the 'unsigned' setting in the field item schema.
           'unsigned' => $field_definition->getSetting('unsigned'),
           // Expose the 'size' setting in the field item schema. For instance,

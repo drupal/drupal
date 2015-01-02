@@ -61,4 +61,5 @@ abstract class DataReferenceBase extends TypedData implements DataReferenceInter
   public function getString() {
     return (string) $this->getType() . ':' . $this->getTargetIdentifier();
   }
+
 }

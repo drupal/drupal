@@ -42,7 +42,8 @@ class UriItem extends StringItem {
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['value'] = DataDefinition::create('uri')
       ->setLabel(t('URI value'))
-      ->setSetting('case_sensitive', $field_definition->getSetting('case_sensitive'));
+      ->setSetting('case_sensitive', $field_definition->getSetting('case_sensitive'))
+      ->setRequired(TRUE);
 
     return $properties;
   }
@@ -56,7 +57,6 @@ class UriItem extends StringItem {
         'value' => array(
           'type' => 'varchar',
           'length' => (int) $field_definition->getSetting('max_length'),
-          'not null' => TRUE,
           'binary' => $field_definition->getSetting('case_sensitive'),
         ),
       ),

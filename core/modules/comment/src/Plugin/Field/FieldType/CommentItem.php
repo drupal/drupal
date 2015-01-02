@@ -55,7 +55,8 @@ class CommentItem extends FieldItemBase implements CommentItemInterface {
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['status'] = DataDefinition::create('integer')
-      ->setLabel(t('Comment status'));
+      ->setLabel(t('Comment status'))
+      ->setRequired(TRUE);
 
     $properties['cid'] = DataDefinition::create('integer')
       ->setLabel(t('Last comment ID'));
@@ -87,7 +88,6 @@ class CommentItem extends FieldItemBase implements CommentItemInterface {
         'status' => array(
           'description' => 'Whether comments are allowed on this entity: 0 = no, 1 = closed (read only), 2 = open (read/write).',
           'type' => 'int',
-          'not null' => TRUE,
           'default' => 0,
         ),
       ),

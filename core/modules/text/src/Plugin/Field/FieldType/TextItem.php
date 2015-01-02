@@ -41,12 +41,10 @@ class TextItem extends TextItemBase {
         'value' => array(
           'type' => 'varchar',
           'length' => $field_definition->getSetting('max_length'),
-          'not null' => FALSE,
         ),
         'format' => array(
           'type' => 'varchar',
           'length' => 255,
-          'not null' => FALSE,
         ),
       ),
       'indexes' => array(

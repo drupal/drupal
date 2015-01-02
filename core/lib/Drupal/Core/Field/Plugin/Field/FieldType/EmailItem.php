@@ -32,7 +32,8 @@ class EmailItem extends FieldItemBase {
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['value'] = DataDefinition::create('email')
-      ->setLabel(t('E-mail'));
+      ->setLabel(t('E-mail'))
+      ->setRequired(TRUE);
 
     return $properties;
   }
@@ -46,7 +47,6 @@ class EmailItem extends FieldItemBase {
         'value' => array(
           'type' => 'varchar',
           'length' => Email::EMAIL_MAX_LENGTH,
-          'not null' => FALSE,
         ),
       ),
     );

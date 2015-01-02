@@ -83,7 +83,6 @@ class TestItemTest extends FieldUnitTestBase {
         'value' => array(
           'type' => 'int',
           'size' => 'medium',
-          'not null' => FALSE,
         ),
       ),
       'unique keys' => array(),

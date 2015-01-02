@@ -8,6 +8,7 @@
 namespace Drupal\entity_reference\Plugin\Field\FieldWidget;
 
 use Drupal\Component\Utility\Tags;
+use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -73,10 +74,7 @@ class AutocompleteTagsWidget extends AutocompleteWidgetBase {
         elseif ($auto_create && (count($this->getSelectionHandlerSetting('target_bundles')) == 1 || count($bundles) == 1)) {
           // Auto-create item. See
           // \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem::presave().
-          $value[] = array(
-            'target_id' => NULL,
-            'entity' => $this->createNewEntity($input, $element['#autocreate_uid']),
-          );
+          $value[] = array('entity' => $this->createNewEntity($input, $element['#autocreate_uid']));
         }
       }
     };

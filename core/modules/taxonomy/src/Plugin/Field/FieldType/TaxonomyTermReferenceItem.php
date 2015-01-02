@@ -68,8 +68,9 @@ class TaxonomyTermReferenceItem extends EntityReferenceItem implements OptionsPr
   public function getSettableValues(AccountInterface $account = NULL) {
     // Flatten options firstly, because Settable Options may contain group
     // arrays.
-    $flatten_options = OptGroup::flattenOptions($this->getSettableOptions($account));
-    return array_keys($flatten_options);
+    $values = array_keys(OptGroup::flattenOptions($this->getSettableOptions($account)));
+    $values[] = static::$NEW_ENTITY_MARKER;
+    return $values;
   }
 
   /**
@@ -103,7 +104,6 @@ class TaxonomyTermReferenceItem extends EntityReferenceItem implements OptionsPr
         'target_id' => array(
           'type' => 'int',
           'unsigned' => TRUE,
-          'not null' => FALSE,
         ),
       ),
       'indexes' => array(

@@ -1019,6 +1019,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     if ($schema['fields'][$key]['type'] == 'int') {
       $schema['fields'][$key]['type'] = 'serial';
     }
+    $schema['fields'][$key]['not null'] = TRUE;
     unset($schema['fields'][$key]['default']);
   }
 
@@ -1386,27 +1387,36 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
 
     $field_name = $storage_definition->getName();
     $field_description = $storage_definition->getDescription();
+    $base_table = $this->storage->getBaseTable();
+
+    // A shared table contains rows for entities where the field is empty
+    // (since other fields stored in the same table might not be empty), thus
+    // the only columns that can be 'not null' are those for required
+    // properties of required fields. However, even those would break in the
+    // case where a new field is added to a table that contains existing rows.
+    // For now, we only hardcode 'not null' to a couple "entity keys", in order
+    // to keep their indexes optimized.
+    // @todo Revisit once we have support for 'initial' in
+    //   https://www.drupal.org/node/2346019.
+    $not_null_keys = $this->entityType->getKeys();
+    // Label fields are not necessarily required.
+    unset($not_null_keys['label']);
+    // Because entity ID and revision ID are both serial fields in the base and
+    // revision table respectively, the revision ID is not known yet, when
+    // inserting data into the base table. Instead the revision ID in the base
+    // table is updated after the data has been inserted into the revision
+    // table. For this reason the revision ID field cannot be marked as NOT
+    // NULL.
+    if ($table_name == $base_table) {
+      unset($not_null_keys['revision']);
+    }
 
     foreach ($column_mapping as $field_column_name => $schema_field_name) {
       $column_schema = $field_schema['columns'][$field_column_name];
 
       $schema['fields'][$schema_field_name] = $column_schema;
       $schema['fields'][$schema_field_name]['description'] = $field_description;
-      // Only entity keys are required.
-      $keys = $this->entityType->getKeys();
-      // The label is an entity key, but label fields are not necessarily
-      // required.
-      // Because entity ID and revision ID are both serial fields in the base
-      // and revision table respectively, the revision ID is not known yet, when
-      // inserting data into the base table. Instead the revision ID in the base
-      // table is updated after the data has been inserted into the revision
-      // table. For this reason the revision ID field cannot be marked as NOT
-      // NULL.
-      unset($keys['label'], $keys['revision']);
-      // Key fields may not be NULL.
-      if (in_array($field_name, $keys)) {
-        $schema['fields'][$schema_field_name]['not null'] = TRUE;
-      }
+      $schema['fields'][$schema_field_name]['not null'] = in_array($field_name, $not_null_keys);
     }
 
     if (!empty($field_schema['indexes'])) {
@@ -1596,6 +1606,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
 
     // Check that the schema does not include forbidden column names.
     $schema = $storage_definition->getSchema();
+    $properties = $storage_definition->getPropertyDefinitions();
     $table_mapping = $this->storage->getTableMapping();
     if (array_intersect(array_keys($schema['columns']), $table_mapping->getReservedColumns())) {
       throw new FieldException(format_string('Illegal field column names on @field_name', array('@field_name' => $storage_definition->getName())));
@@ -1605,6 +1616,10 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     foreach ($schema['columns'] as $column_name => $attributes) {
       $real_name = $table_mapping->getFieldColumnName($storage_definition, $column_name);
       $data_schema['fields'][$real_name] = $attributes;
+      // A dedicated table only contain rows for actual field values, and no
+      // rows for entities where the field is empty. Thus, we can safely
+      // enforce 'not null' on the columns for the field's required properties.
+      $data_schema['fields'][$real_name]['not null'] = $properties[$column_name]->isRequired();
     }
 
     // Add indexes.

@@ -37,7 +37,8 @@ class LanguageItem extends FieldItemBase {
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['value'] = DataDefinition::create('string')
-      ->setLabel(t('Language code'));
+      ->setLabel(t('Language code'))
+      ->setRequired(TRUE);
 
     $properties['language'] = DataReferenceDefinition::create('language')
       ->setLabel(t('Language object'))
@@ -58,7 +59,6 @@ class LanguageItem extends FieldItemBase {
         'value' => array(
           'type' => 'varchar',
           'length' => 12,
-          'not null' => FALSE,
         ),
       ),
     );

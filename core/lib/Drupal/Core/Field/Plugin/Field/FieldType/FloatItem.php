@@ -29,7 +29,8 @@ class FloatItem extends NumericItemBase {
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['value'] = DataDefinition::create('float')
-      ->setLabel(t('Float'));
+      ->setLabel(t('Float'))
+      ->setRequired(TRUE);
 
     return $properties;
   }
@@ -42,7 +43,6 @@ class FloatItem extends NumericItemBase {
       'columns' => array(
         'value' => array(
           'type' => 'float',
-          'not null' => FALSE,
         ),
       ),
     );

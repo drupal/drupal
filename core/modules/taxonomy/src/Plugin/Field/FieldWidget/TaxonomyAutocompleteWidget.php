@@ -14,6 +14,7 @@ use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\Plugin\Field\FieldType\TaxonomyTermReferenceItem;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -156,7 +157,7 @@ class TaxonomyAutocompleteWidget extends WidgetBase implements ContainerFactoryP
           'vid' => $vocabulary->id(),
           'name' => $value,
         ));
-        $item = array('target_id' => NULL, 'entity' => $term);
+        $item = array('entity' => $term);
       }
       $items[] = $item;
     }

@@ -9,6 +9,7 @@ namespace Drupal\taxonomy\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Component\Utility\String;
+use Drupal\taxonomy\Plugin\Field\FieldType\TaxonomyTermReferenceItem;
 
 /**
  * Plugin implementation of the 'taxonomy_term_reference_link' formatter.
@@ -31,7 +32,7 @@ class LinkFormatter extends TaxonomyFormatterBase {
     // Terms without target_id do not exist yet, theme such terms as just their
     // name.
     foreach ($items as $delta => $item) {
-      if (!$item->target_id) {
+      if ($item->hasNewEntity()) {
         $elements[$delta] = array(
           '#markup' => String::checkPlain($item->entity->label()),
         );

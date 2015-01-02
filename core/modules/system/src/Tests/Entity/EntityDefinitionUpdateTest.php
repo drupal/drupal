@@ -7,11 +7,13 @@
 
 namespace Drupal\system\Tests\Entity;
 
+use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeEvents;
 use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldStorageDefinitionEvents;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\entity_test\FieldStorageDefinition;
 
 /**
@@ -236,14 +238,16 @@ class EntityDefinitionUpdateTest extends EntityUnitTestBase {
   public function testBaseFieldCreateDeleteWithExistingEntities() {
     // Save an entity.
     $name = $this->randomString();
-    $entity = $this->entityManager->getStorage('entity_test_update')->create(array('name' => $name));
+    $storage = $this->entityManager->getStorage('entity_test_update');
+    $entity = $storage->create(array('name' => $name));
     $entity->save();
 
     // Add a base field and run the update. Ensure the base field's column is
     // created and the prior saved entity data is still there.
     $this->addBaseField();
     $this->entityDefinitionUpdateManager->applyUpdates();
-    $this->assertTrue($this->database->schema()->fieldExists('entity_test_update', 'new_base_field'), 'Column created in shared table for new_base_field.');
+    $schema_handler = $this->database->schema();
+    $this->assertTrue($schema_handler->fieldExists('entity_test_update', 'new_base_field'), 'Column created in shared table for new_base_field.');
     $entity = $this->entityManager->getStorage('entity_test_update')->load($entity->id());
     $this->assertIdentical($entity->name->value, $name, 'Entity data preserved during field creation.');
 
@@ -251,9 +255,33 @@ class EntityDefinitionUpdateTest extends EntityUnitTestBase {
     // is deleted and the prior saved entity data is still there.
     $this->removeBaseField();
     $this->entityDefinitionUpdateManager->applyUpdates();
-    $this->assertFalse($this->database->schema()->fieldExists('entity_test_update', 'new_base_field'), 'Column deleted from shared table for new_base_field.');
+    $this->assertFalse($schema_handler->fieldExists('entity_test_update', 'new_base_field'), 'Column deleted from shared table for new_base_field.');
     $entity = $this->entityManager->getStorage('entity_test_update')->load($entity->id());
     $this->assertIdentical($entity->name->value, $name, 'Entity data preserved during field deletion.');
+
+    // Add a base field with a required property and run the update. Ensure
+    // 'not null' is not applied and thus no exception is thrown.
+    $this->addBaseField('shape_required');
+    $this->entityDefinitionUpdateManager->applyUpdates();
+    $assert = $schema_handler->fieldExists('entity_test_update', 'new_base_field__shape') && $schema_handler->fieldExists('entity_test_update', 'new_base_field__color');
+    $this->assertTrue($assert, 'Columns created in shared table for new_base_field.');
+
+    // Recreate the field after emptying the base table and check that its
+    // columns are not 'not null'.
+    // @todo Revisit this test when allowing for required storage field
+    //   definitions. See https://www.drupal.org/node/2390495.
+    $entity->delete();
+    $this->removeBaseField();
+    $this->entityDefinitionUpdateManager->applyUpdates();
+    $assert = !$schema_handler->fieldExists('entity_test_update', 'new_base_field__shape') && !$schema_handler->fieldExists('entity_test_update', 'new_base_field__color');
+    $this->assert($assert, 'Columns removed from the shared table for new_base_field.');
+    $this->addBaseField('shape_required');
+    $this->entityDefinitionUpdateManager->applyUpdates();
+    $assert = $schema_handler->fieldExists('entity_test_update', 'new_base_field__shape') && $schema_handler->fieldExists('entity_test_update', 'new_base_field__color');
+    $this->assertTrue($assert, 'Columns created again in shared table for new_base_field.');
+    $entity = $storage->create(array('name' => $name));
+    $entity->save();
+    $this->pass('The new_base_field columns are still nullable');
   }
 
   /**
@@ -267,14 +295,16 @@ class EntityDefinitionUpdateTest extends EntityUnitTestBase {
   public function testBundleFieldCreateDeleteWithExistingEntities() {
     // Save an entity.
     $name = $this->randomString();
-    $entity = $this->entityManager->getStorage('entity_test_update')->create(array('name' => $name));
+    $storage = $this->entityManager->getStorage('entity_test_update');
+    $entity = $storage->create(array('name' => $name));
     $entity->save();
 
     // Add a bundle field and run the update. Ensure the bundle field's table
     // is created and the prior saved entity data is still there.
     $this->addBundleField();
     $this->entityDefinitionUpdateManager->applyUpdates();
-    $this->assertTrue($this->database->schema()->tableExists('entity_test_update__new_bundle_field'), 'Dedicated table created for new_bundle_field.');
+    $schema_handler = $this->database->schema();
+    $this->assertTrue($schema_handler->tableExists('entity_test_update__new_bundle_field'), 'Dedicated table created for new_bundle_field.');
     $entity = $this->entityManager->getStorage('entity_test_update')->load($entity->id());
     $this->assertIdentical($entity->name->value, $name, 'Entity data preserved during field creation.');
 
@@ -282,9 +312,40 @@ class EntityDefinitionUpdateTest extends EntityUnitTestBase {
     // table is deleted and the prior saved entity data is still there.
     $this->removeBundleField();
     $this->entityDefinitionUpdateManager->applyUpdates();
-    $this->assertFalse($this->database->schema()->tableExists('entity_test_update__new_bundle_field'), 'Dedicated table deleted for new_bundle_field.');
+    $this->assertFalse($schema_handler->tableExists('entity_test_update__new_bundle_field'), 'Dedicated table deleted for new_bundle_field.');
     $entity = $this->entityManager->getStorage('entity_test_update')->load($entity->id());
     $this->assertIdentical($entity->name->value, $name, 'Entity data preserved during field deletion.');
+
+    // Test that required columns are created as 'not null'.
+    $this->addBundleField('shape_required');
+    $this->entityDefinitionUpdateManager->applyUpdates();
+    $message = 'The new_bundle_field_shape column is not nullable.';
+    $values = array(
+      'bundle' => $entity->bundle(),
+      'deleted'=> 0,
+      'entity_id' => $entity->id(),
+      'revision_id' => $entity->id(),
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
+      'delta' => 0,
+      'new_bundle_field_color' => $this->randomString(),
+    );
+    try {
+      // Try to insert a record without providing a value for the 'not null'
+      // column. This should fail.
+      $this->database->insert('entity_test_update__new_bundle_field')
+        ->fields($values)
+        ->execute();
+      $this->fail($message);
+    }
+    catch (DatabaseExceptionWrapper $e) {
+      // Now provide a value for the 'not null' column. This is expected to
+      // succeed.
+      $values['new_bundle_field_shape'] = $this->randomString();
+      $this->database->insert('entity_test_update__new_bundle_field')
+        ->fields($values)
+        ->execute();
+      $this->pass($message);
+    }
   }
 
   /**

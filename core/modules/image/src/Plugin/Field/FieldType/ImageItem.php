@@ -96,20 +96,17 @@ class ImageItem extends FileItem {
         'target_id' => array(
           'description' => 'The ID of the file entity.',
           'type' => 'int',
-          'not null' => TRUE,
           'unsigned' => TRUE,
         ),
         'alt' => array(
           'description' => "Alternative image text, for the image's 'alt' attribute.",
           'type' => 'varchar',
           'length' => 512,
-          'not null' => FALSE,
         ),
         'title' => array(
           'description' => "Image title text, for the image's 'title' attribute.",
           'type' => 'varchar',
           'length' => 1024,
-          'not null' => FALSE,
         ),
         'width' => array(
           'description' => 'The width of the image in pixels.',

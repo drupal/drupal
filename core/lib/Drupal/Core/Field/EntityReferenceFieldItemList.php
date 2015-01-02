@@ -27,11 +27,11 @@ class EntityReferenceFieldItemList extends FieldItemList implements EntityRefere
     // "autocreate" entities that are already populated in $item->entity.
     $target_entities = $ids = array();
     foreach ($this->list as $delta => $item) {
-      if ($item->target_id !== NULL) {
-        $ids[$delta] = $item->target_id;
-      }
-      elseif ($item->hasNewEntity()) {
+      if ($item->hasNewEntity()) {
         $target_entities[$delta] = $item->entity;
+      }
+      elseif ($item->target_id !== NULL) {
+        $ids[$delta] = $item->target_id;
       }
     }
 
