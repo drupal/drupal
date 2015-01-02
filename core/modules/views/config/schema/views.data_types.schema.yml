@@ -365,7 +365,6 @@ views_argument:
       label: 'Override title'
     title:
       type: label
-      label: 'Title'
       label: 'Overridden title'
     default_argument_type:
       type: string
