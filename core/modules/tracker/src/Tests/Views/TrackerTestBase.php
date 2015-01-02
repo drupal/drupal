@@ -30,6 +30,13 @@ abstract class TrackerTestBase extends ViewTestBase {
    */
   protected $node;
 
+  /**
+   * The comment used for testing.
+   *
+   * @var \Drupal\comment\CommentInterface
+   */
+  protected $comment;
+
   protected function setUp() {
     parent::setUp();
 
