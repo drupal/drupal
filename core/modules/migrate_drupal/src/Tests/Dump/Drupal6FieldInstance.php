@@ -854,6 +854,48 @@ class Drupal6FieldInstance extends Drupal6DumpBase {
       )),
       'description' => 'An example integer field.',
     ))
+    ->values(array(
+      'field_name' => 'field_test_exclude_unset',
+      'type_name' => 'story',
+      'weight' => 1,
+      'label' => 'Text Field',
+      'widget_type' => 'text_textfield',
+      'widget_settings' => serialize(array(
+        'rows' => 5,
+        'size' => '60',
+        'default_value' => array(
+          0 => array(
+            'value' => 'text for default value',
+            '_error_element' => 'default_value_widget][field_test][0][value',
+          ),
+        ),
+        'default_value_php' => NULL,
+      )),
+      'display_settings' => serialize(array(
+        'weight' => 1,
+        'parent' => '',
+        'label' => array(
+          'format' => 'above',
+        ),
+        1 => array(
+          'format' => 'default',
+        ),
+        'teaser' => array(
+          'format' => 'trimmed',
+        ),
+        'full' => array(
+          'format' => 'default',
+        ),
+        4 => array(
+          'format' => 'trimmed',
+        ),
+        5 => array(
+          'format' => 'default',
+          'exclude' => 1,
+        ),
+      )),
+      'description' => 'An example text field without exclude.',
+    ))
     ->execute();
 
     // Create the field table.
@@ -1178,6 +1220,30 @@ Goodbye";s:18:"allowed_values_php";s:0:"";}',
       )),
       'active' => 1,
     ))
+    ->values(array(
+      'field_name' => 'field_test_exclude_unset',
+      'module' => 'text',
+      'type' => 'text',
+      'global_settings' => 'a:4:{s:15:"text_processing";s:1:"1";s:10:"max_length";s:0:"";s:14:"allowed_values";s:0:"";s:18:"allowed_values_php";s:0:"";}',
+      'multiple' => 0,
+      'db_storage' => 0,
+      'db_columns' => serialize(array(
+        'value' => array(
+          'type' => 'text',
+          'size' => 'big',
+          'not null' => FALSE,
+          'sortable' => TRUE,
+          'views' => TRUE,
+        ),
+        'format' => array(
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+      )),
+      'active' => 1,
+    ))
     ->execute();
 
     $this->createTable('content_field_test', array(
@@ -1335,6 +1401,52 @@ Goodbye";s:18:"allowed_values_php";s:0:"";}',
       'nid' => 3,
       'field_multivalue_value' => 44,
       'delta' => 1,
+    ))
+    ->execute();
+
+    $this->createTable('content_field_test_exclude_unset', array(
+      'description' => 'Table for field_exlcude',
+      'fields' => array(
+        'vid' => array(
+          'description' => 'The primary identifier for this version.',
+          'type' => 'serial',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ),
+        'nid' => array(
+          'description' => 'The {node} this version belongs to.',
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+        'field_test_exclude_unset_value' => array(
+            'description' => 'Test field value.',
+            'type' => 'varchar',
+            'length' => 255,
+            'not null' => TRUE,
+            'default' => '',
+        ),
+        'field_test_exclude_unset_format' => array(
+            'type' => 'int',
+            'unsigned' => TRUE,
+            'not null' => TRUE,
+            'default' => 0,
+        ),
+      ),
+      'primary key' => array('vid'),
+    ));
+    $this->database->insert('content_field_test_exclude_unset')->fields(array(
+      'vid',
+      'nid',
+      'field_test_exclude_unset_value',
+      'field_test_exclude_unset_format',
+    ))
+    ->values(array(
+      'vid' => 1,
+      'nid' => 1,
+      'field_test_exclude_unset_value' => 'This is a field with exclude unset.',
+      'field_test_exclude_unset_format' => 1,
     ))
     ->execute();
     $this->setModuleVersion('content', '6001');

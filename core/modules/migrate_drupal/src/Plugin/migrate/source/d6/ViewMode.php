@@ -26,7 +26,7 @@ class ViewMode extends ViewModeBase {
     while ($field_row = $result->fetchAssoc()) {
       $field_row['display_settings'] = unserialize($field_row['display_settings']);
       foreach ($this->getViewModes() as $view_mode) {
-        if (isset($field_row['display_settings'][$view_mode]) && !$field_row['display_settings'][$view_mode]['exclude']) {
+        if (isset($field_row['display_settings'][$view_mode]) && empty($field_row['display_settings'][$view_mode]['exclude'])) {
           if (!isset($rows[$view_mode])) {
             $rows[$view_mode]['entity_type'] = 'node';
             $rows[$view_mode]['view_mode'] = $view_mode;

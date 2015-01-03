@@ -70,6 +70,16 @@ class MigrateCckFieldValuesTest extends MigrateNodeTestBase {
       'field_name' => 'field_test_integer_selectlist',
       'bundle' => 'story',
     ))->save();
+    entity_create('field_storage_config', array(
+      'entity_type' => 'node',
+      'field_name' => 'field_test_exclude_unset',
+      'type' => 'text',
+    ))->save();
+    entity_create('field_config', array(
+      'entity_type' => 'node',
+      'field_name' => 'field_test_exclude_unset',
+      'bundle' => 'story',
+    ))->save();
 
     entity_create('field_storage_config', array(
       'entity_type' => 'node',
@@ -153,6 +163,7 @@ class MigrateCckFieldValuesTest extends MigrateNodeTestBase {
     $this->assertEqual($node->field_test_integer_selectlist[0]->value, '3412', 'Integer select list value is correct');
     $this->assertEqual($node->field_test_identical1->value, '1', 'Integer value is correct');
     $this->assertEqual($node->field_test_identical2->value, '1', 'Integer value is correct');
+    $this->assertEqual($node->field_test_exclude_unset->value, 'This is a field with exclude unset.', 'Field with exclude unset is correct.');
 
     // Test that link fields are migrated.
     $this->assertIdentical($node->field_test_link->url, 'http://drupal.org/project/drupal');

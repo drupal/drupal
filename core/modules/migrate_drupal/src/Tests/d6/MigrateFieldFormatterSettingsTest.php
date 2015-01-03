@@ -59,6 +59,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupalTestBase {
         array(array('field_test_date'), array('node', 'field_test_date')),
         array(array('field_test_datestamp'), array('node', 'field_test_datestamp')),
         array(array('field_test_datetime'), array('node', 'field_test_datetime')),
+        array(array('field_test_exclude_unset'), array('node', 'field_test_exclude_unset')),
       ),
     );
     $this->prepareMigrations($id_mappings);
@@ -111,6 +112,9 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupalTestBase {
     $content = $display->get('content');
     $this->assertTrue(isset($content['field_test']), 'Settings for field_test exist.');
     $this->assertTrue(isset($content['field_test_two']), "Settings for field_test_two exist.");
+
+    // Check that we can migrate a field where exclude is not set.
+    $this->assertTrue(isset($content['field_test_exclude_unset']), "Settings for field_test_exclude_unset exist.");
 
     // Test the number field formatter settings are correct.
     $expected['weight'] = 2;
