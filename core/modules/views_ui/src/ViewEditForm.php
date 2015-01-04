@@ -218,7 +218,6 @@ class ViewEditForm extends ViewFormBase {
       $form['ajax-area']['ajax-body'] = array(
         '#type' => 'container',
         '#id' => 'views-ajax-body',
-        '#children' => $view->getDefaultAJAXMessage(),
       );
     }
 

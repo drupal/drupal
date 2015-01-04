@@ -35,6 +35,12 @@ class ViewPreviewForm extends ViewFormBase {
 
     $form['controls']['#attributes'] = array('class' => array('clearfix'));
 
+    $form['controls']['title'] = array(
+      '#prefix' => '<h2 class="view-preview-form__title">',
+      '#markup' => $this->t('Preview'),
+      '#suffix' => '</h2>',
+    );
+
     // Add a checkbox controlling whether or not this display auto-previews.
     $form['controls']['live_preview'] = array(
       '#type' => 'checkbox',

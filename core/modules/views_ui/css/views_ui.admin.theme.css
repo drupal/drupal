@@ -466,6 +466,15 @@ td.group-title {
   max-width: 180px;
 }
 
+.form-edit .form-actions {
+  background-color: #e1e2dc;
+  border-right: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  margin-top: 0;
+  padding: 8px 12px;
+}
+
 /* @end */
 
 /* @group Attachment details tabs
@@ -659,12 +668,12 @@ td.group-title {
 
 #views-ui-preview-form .arguments-preview,
 #views-ui-preview-form .form-type-textfield {
-  margin-left: 14px; /* LTR */
+  margin-left: 10px; /* LTR */
 }
 [dir="rtl"] #views-ui-preview-form .arguments-preview,
 [dir="rtl"] #views-ui-preview-form .form-type-textfield {
   margin-left: 0;
-  margin-right: 14px;
+  margin-right: 10px;
 }
 
 #views-ui-preview-form .form-type-textfield label {
@@ -1011,16 +1020,28 @@ td.group-title {
 
 #views-preview-wrapper {
   border: 1px solid #ccc;
-  padding-bottom: 12px;
-  padding-top: 12px;
 }
 
-#views-ui-preview-form {
-  margin: 12px;
+.view-preview-form {
+  position: relative;
 }
-
+.view-preview-form__title {
+  background-color: #e1e2dc;
+  border-bottom: 1px solid #ccc;
+  margin-top: 0;
+  padding: 8px 12px;
+}
+.view-preview-form .form-item-live-preview {
+  position: absolute;
+  right: 12px;
+  top: 3px;
+}
+[dir="rtl"] .view-preview-form .form-item-live-preview {
+  right: auto;
+  left: 12px;
+}
 #views-live-preview {
-  margin: 0 12px;
+  padding: 12px;
 }
 
 #views-live-preview .views-query-info {
