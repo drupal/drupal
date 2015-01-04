@@ -858,10 +858,6 @@ services:
       - { name: path_processor_inbound, priority: 200 }
       - { name: path_processor_outbound, priority: 200 }
     arguments: ['@config.factory']
-  route_processor_none:
-    class: Drupal\Core\RouteProcessor\RouteProcessorNone
-    tags:
-      - { name: route_processor_outbound, priority: 200 }
   route_processor_current:
     class: Drupal\Core\RouteProcessor\RouteProcessorCurrent
     arguments: ['@current_route_match']

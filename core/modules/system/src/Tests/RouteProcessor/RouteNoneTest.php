@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\PathProcessor\RouteProcessorNoneIntegrationTest.
+ * Contains \Drupal\system\Tests\PathProcessor\RouteNoneTest.
  */
 
 namespace Drupal\system\Tests\RouteProcessor;
@@ -13,10 +13,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
- * @see \Drupal\Core\RouteProcessor\RouteProcessorNone
+ * @see system.routing.yml
+ * @see \Drupal\Core\Routing\UrlGenerator
  * @group route_processor
  */
-class RouteProcessorNoneIntegrationTest extends KernelTestBase {
+class RouteNoneTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
@@ -53,8 +54,8 @@ class RouteProcessorNoneIntegrationTest extends KernelTestBase {
 
     $request_stack->push($request);
     $request_context->fromRequest($request);
-    $this->assertEqual('/subdir/', \Drupal::url('<none>'));
-    $this->assertEqual('/subdir/#test-fragment', \Drupal::url('<none>', [], ['fragment' => 'test-fragment']));
+    $this->assertEqual('', \Drupal::url('<none>'));
+    $this->assertEqual('#test-fragment', \Drupal::url('<none>', [], ['fragment' => 'test-fragment']));
 
     // Test request with subdir on other page.
     $server = [
@@ -68,8 +69,8 @@ class RouteProcessorNoneIntegrationTest extends KernelTestBase {
 
     $request_stack->push($request);
     $request_context->fromRequest($request);
-    $this->assertEqual('/subdir/', \Drupal::url('<none>'));
-    $this->assertEqual('/subdir/#test-fragment', \Drupal::url('<none>', [], ['fragment' => 'test-fragment']));
+    $this->assertEqual('', \Drupal::url('<none>'));
+    $this->assertEqual('#test-fragment', \Drupal::url('<none>', [], ['fragment' => 'test-fragment']));
 
     // Test request without subdir on the homepage.
     $server = [
@@ -83,8 +84,8 @@ class RouteProcessorNoneIntegrationTest extends KernelTestBase {
 
     $request_stack->push($request);
     $request_context->fromRequest($request);
-    $this->assertEqual('/', \Drupal::url('<none>'));
-    $this->assertEqual('/#test-fragment', \Drupal::url('<none>', [], ['fragment' => 'test-fragment']));
+    $this->assertEqual('', \Drupal::url('<none>'));
+    $this->assertEqual('#test-fragment', \Drupal::url('<none>', [], ['fragment' => 'test-fragment']));
 
     // Test request without subdir on other page.
     $server = [
@@ -98,8 +99,8 @@ class RouteProcessorNoneIntegrationTest extends KernelTestBase {
 
     $request_stack->push($request);
     $request_context->fromRequest($request);
-    $this->assertEqual('/', \Drupal::url('<none>'));
-    $this->assertEqual('/#test-fragment', \Drupal::url('<none>', [], ['fragment' => 'test-fragment']));
+    $this->assertEqual('', \Drupal::url('<none>'));
+    $this->assertEqual('#test-fragment', \Drupal::url('<none>', [], ['fragment' => 'test-fragment']));
   }
 
 }

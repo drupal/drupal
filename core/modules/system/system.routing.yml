@@ -379,7 +379,10 @@ system.theme_settings_theme:
     _access: 'TRUE'
 
 '<none>':
-  path: '<none>'
+  path: ''
+  options:
+    _only_fragment: TRUE
+
 
 '<current>':
   path: '<current>'

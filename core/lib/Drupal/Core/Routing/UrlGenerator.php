@@ -192,6 +192,11 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
 
     $absolute = !empty($options['absolute']);
     if (!$absolute || !$host = $this->context->getHost()) {
+
+      if ($route->getOption('_only_fragment')) {
+        return $fragment;
+      }
+
       return $base_url . $path . $fragment;
     }
 
