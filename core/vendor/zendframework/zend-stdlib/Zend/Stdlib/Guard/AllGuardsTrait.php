@@ -7,11 +7,14 @@
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace Zend\Stdlib\Hydrator;
+namespace Zend\Stdlib\Guard;
 
-use Zend\Stdlib\Extractor\ExtractionInterface;
-
-interface HydratorInterface extends HydrationInterface, ExtractionInterface
+/**
+ * An aggregate for all guard traits
+ */
+trait AllGuardsTrait
 {
-
+    use ArrayOrTraversableGuardTrait;
+    use EmptyGuardTrait;
+    use NullGuardTrait;
 }

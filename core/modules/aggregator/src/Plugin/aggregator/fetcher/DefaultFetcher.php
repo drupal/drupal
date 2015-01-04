@@ -90,7 +90,7 @@ class DefaultFetcher implements FetcherInterface, ContainerFactoryPluginInterfac
         return FALSE;
       }
 
-      $feed->source_string = $response->getBody(TRUE);
+      $feed->source_string = (string) $response->getBody();
       $feed->setEtag($response->getHeader('ETag'));
       $feed->setLastModified(strtotime($response->getHeader('Last-Modified')));
       $feed->http_headers = $response->getHeaders();
