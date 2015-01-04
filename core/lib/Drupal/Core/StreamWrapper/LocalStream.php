@@ -235,19 +235,9 @@ abstract class LocalStream implements StreamWrapperInterface {
   }
 
   /**
-   * Support for fseek().
-   *
-   * @param int $offset
-   *   The byte offset to got to.
-   * @param int $whence
-   *   SEEK_SET, SEEK_CUR, or SEEK_END.
-   *
-   * @return bool
-   *   TRUE on success.
-   *
-   * @see http://php.net/manual/streamwrapper.stream-seek.php
+   * {@inheritdoc}
    */
-  public function stream_seek($offset, $whence) {
+  public function stream_seek($offset, $whence = SEEK_SET) {
     // fseek returns 0 on success and -1 on a failure.
     // stream_seek   1 on success and  0 on a failure.
     return !fseek($this->handle, $offset, $whence);
@@ -303,19 +293,10 @@ abstract class LocalStream implements StreamWrapperInterface {
   }
 
   /**
-   * Gets the underlying stream resource for stream_select().
-   *
-   * @param int $cast_as
-   *   Can be STREAM_CAST_FOR_SELECT or STREAM_CAST_AS_STREAM.
-   *
-   * @return resource|false
-   *   The underlying stream resource or FALSE if stream_select() is not
-   *   supported.
-   *
-   * @see http://php.net/manual/streamwrapper.stream-cast.php
+   * {@inheritdoc}
    */
   public function stream_cast($cast_as) {
-    return false;
+    return $this->handle ? $this->handle : FALSE;
   }
 
   /**
@@ -334,6 +315,16 @@ abstract class LocalStream implements StreamWrapperInterface {
         }
         break;
 
+      case STREAM_META_OWNER_NAME:
+      case STREAM_META_OWNER:
+        $return = chown($target, $value);
+        break;
+
+      case STREAM_META_GROUP_NAME:
+      case STREAM_META_GROUP:
+        $return = chgrp($target, $value);
+        break;
+
       case STREAM_META_ACCESS:
         $return = chmod($target, $value);
         break;
@@ -344,6 +335,26 @@ abstract class LocalStream implements StreamWrapperInterface {
       clearstatcache(TRUE, $target);
     }
     return $return;
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * Since Windows systems do not allow it and it is not needed for most use
+   * cases anyway, this method is not supported on local files and will trigger
+   * an error and return false. If needed, custom subclasses can provide
+   * OS-specific implementations for advanced use cases.
+   */
+  public function stream_set_option($option, $arg1, $arg2) {
+    trigger_error('stream_set_option() not supported for local file based stream wrappers', E_USER_WARNING);
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function stream_truncate($new_size) {
+    return ftruncate($this->handle, $new_size);
   }
 
   /**

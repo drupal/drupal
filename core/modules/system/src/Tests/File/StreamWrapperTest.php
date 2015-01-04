@@ -110,6 +110,38 @@ class StreamWrapperTest extends FileTestBase {
   }
 
   /**
+   * Test some file handle functions.
+   */
+  function testFileFunctions() {
+    $filename = 'public://'. $this->randomMachineName();
+    file_put_contents($filename, str_repeat('d', 1000));
+
+    // Open for rw and place pointer at beginning of file so select will return.
+    $handle = fopen($filename, 'c+');
+    $this->assertTrue($handle, 'Able to open a file for appending, reading and writing.');
+
+    // Attempt to change options on the file stream: should all fail.
+    $this->assertFalse(@stream_set_blocking($handle, 0), 'Unable to set to non blocking using a local stream wrapper.');
+    $this->assertFalse(@stream_set_blocking($handle, 1), 'Unable to set to blocking using a local stream wrapper.');
+    $this->assertFalse(@stream_set_timeout($handle, 1), 'Unable to set read time out using a local stream wrapper.');
+    $this->assertEqual(-1 /*EOF*/, @stream_set_write_buffer($handle, 512), 'Unable to set write buffer using a local stream wrapper.');
+
+    // This will test stream_cast().
+    $read = array($handle);
+    $write = NULL;
+    $except = NULL;
+    $this->assertEqual(1, stream_select($read, $write, $except, 0), 'Able to cast a stream via stream_select.');
+
+    // This will test stream_truncate().
+    $this->assertEqual(1, ftruncate($handle, 0), 'Able to truncate a stream via ftruncate().');
+    fclose($handle);
+    $this->assertEqual(0, filesize($filename), 'Able to truncate a stream.');
+
+    // Cleanup.
+    unlink($filename);
+  }
+
+  /**
    * Test the scheme functions.
    */
   function testGetValidStreamScheme() {

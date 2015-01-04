@@ -138,6 +138,14 @@ abstract class LocalReadOnlyStream extends LocalStream {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function stream_truncate($new_size) {
+    trigger_error('stream_truncate() not supported for read-only stream wrappers', E_USER_WARNING);
+    return FALSE;
+  }
+
+  /**
    * Support for unlink().
    *
    * The file will not be deleted from the stream as this is a read-only stream

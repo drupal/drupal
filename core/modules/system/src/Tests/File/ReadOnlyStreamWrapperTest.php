@@ -29,9 +29,9 @@ class ReadOnlyStreamWrapperTest extends FileTestBase {
   protected $classname = 'Drupal\file_test\StreamWrapper\DummyReadOnlyStreamWrapper';
 
   /**
-   * Test write functionality of the read-only stream wrapper.
+   * Test read-only specific behavior.
    */
-  function testWriteFunctions() {
+  function testReadOnlyBehavior() {
     // Generate a test file
     $filename = $this->randomMachineName();
     $filepath = conf_path() . '/files/' . $filename;
@@ -56,13 +56,15 @@ class ReadOnlyStreamWrapperTest extends FileTestBase {
     $handle = fopen($uri, 'r');
     $this->assertTrue($handle, 'Able to open a file for reading with the read-only stream wrapper.');
     // Attempt to change file permissions
-    $this->assertFalse(@drupal_chmod($uri, 0777), 'Unable to change file permissions when using read-only stream wrapper.');
+    $this->assertFalse(@chmod($uri, 0777), 'Unable to change file permissions when using read-only stream wrapper.');
     // Attempt to acquire an exclusive lock for writing
     $this->assertFalse(@flock($handle, LOCK_EX | LOCK_NB), 'Unable to acquire an exclusive lock using the read-only stream wrapper.');
     // Attempt to obtain a shared lock
     $this->assertTrue(flock($handle, LOCK_SH | LOCK_NB), 'Able to acquire a shared lock using the read-only stream wrapper.');
     // Attempt to release a shared lock
     $this->assertTrue(flock($handle, LOCK_UN | LOCK_NB), 'Able to release a shared lock using the read-only stream wrapper.');
+    // Attempt to truncate the file
+    $this->assertFalse(@ftruncate($handle, 0), 'Unable to truncate using the read-only stream wrapper.');
     // Attempt to write to the file
     $this->assertFalse(@fwrite($handle, $this->randomMachineName()), 'Unable to write to file using the read-only stream wrapper.');
     // Attempt to flush output to the file
