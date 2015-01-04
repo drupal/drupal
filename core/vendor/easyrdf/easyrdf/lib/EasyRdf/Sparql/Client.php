@@ -47,12 +47,10 @@ class EasyRdf_Sparql_Client
     /** The query/read address of the SPARQL Endpoint */
     private $queryUri = null;
 
+    private $queryUri_has_params = false;
+
     /** The update/write address of the SPARQL Endpoint */
     private $updateUri = null;
-
-    /** Configuration settings */
-    private $config = array();
-
 
     /** Create a new SPARQL endpoint client
      *
@@ -65,6 +63,13 @@ class EasyRdf_Sparql_Client
     public function __construct($queryUri, $updateUri = null)
     {
         $this->queryUri = $queryUri;
+
+        if (strlen(parse_url($queryUri, PHP_URL_QUERY)) > 0) {
+            $this->queryUri_has_params = true;
+        } else {
+            $this->queryUri_has_params = false;
+        }
+
         if ($updateUri) {
             $this->updateUri = $updateUri;
         } else {
@@ -209,7 +214,7 @@ class EasyRdf_Sparql_Client
         if ($silent) {
             $query .= " SILENT";
         }
-        if (preg_match("/^all|named|default$/i", $graphUri)) {
+        if (preg_match('/^all|named|default$/i', $graphUri)) {
             $query .= " $graphUri";
         } else {
             $query .= " GRAPH <$graphUri>";
@@ -255,8 +260,10 @@ class EasyRdf_Sparql_Client
             // 2046 = 2kB minus 1 for '?' and 1 for NULL-terminated string on server
             $encodedQuery = 'query='.urlencode($prefixes . $query);
             if (strlen($encodedQuery) + strlen($this->queryUri) <= 2046) {
+                $delimiter = $this->queryUri_has_params ? '&' : '?';
+
                 $client->setMethod('GET');
-                $client->setUri($this->queryUri.'?'.$encodedQuery);
+                $client->setUri($this->queryUri.$delimiter.$encodedQuery);
             } else {
                 // Fall back to POST instead (which is un-cacheable)
                 $client->setMethod('POST');

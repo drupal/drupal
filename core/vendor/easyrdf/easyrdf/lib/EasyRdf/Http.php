@@ -50,8 +50,8 @@ class EasyRdf_Http
 
     /** Set the HTTP Client object used to fetch RDF data
      *
-     * @param  object mixed $httpClient The new HTTP client object
-     * @return object mixed The new HTTP client object
+     * @param  EasyRdf_Http_Client|Zend_Http_Client $httpClient The new HTTP client object
+     * @return EasyRdf_Http_Client|Zend_Http_Client The new HTTP client object
      */
     public static function setDefaultHttpClient($httpClient)
     {
@@ -70,7 +70,7 @@ class EasyRdf_Http
      * If no HTTP Client has previously been set, then a new
      * default (EasyRdf_Http_Client) client will be created.
      *
-     * @return object mixed The HTTP client object
+     * @return EasyRdf_Http_Client|Zend_Http_Client The HTTP client object
      */
     public static function getDefaultHttpClient()
     {

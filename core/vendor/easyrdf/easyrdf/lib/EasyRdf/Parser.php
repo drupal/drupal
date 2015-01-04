@@ -56,6 +56,9 @@ class EasyRdf_Parser
     /** The base URI for the document currently being parsed */
     protected $baseUri = null;
 
+
+    protected $tripleCount = 0;
+
     /**
      * Create a new, unique bnode identifier from a source identifier.
      * If the source identifier has previously been seen, the

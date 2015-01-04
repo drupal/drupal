@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * Copyright (c) 2009-2013 Nicholas J Humfrey.  All rights reserved.
+ * Copyright (c) 2009-2014 Nicholas J Humfrey.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,7 +31,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2014 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
  */
 
@@ -39,7 +39,7 @@
  * A namespace registry and manipulation class.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2014 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
  */
 class EasyRdf_Namespace
@@ -52,45 +52,53 @@ class EasyRdf_Namespace
      * With a few extras added.
      *
      */
-    private static $namespaces = array(
-      'bibo' => 'http://purl.org/ontology/bibo/',
-      'cc' => 'http://creativecommons.org/ns#',
-      'cert' => 'http://www.w3.org/ns/auth/cert#',
-      'ctag' => 'http://commontag.org/ns#',
-      'dc' => 'http://purl.org/dc/terms/',
-      'dc11' => 'http://purl.org/dc/elements/1.1/',
-      'dcterms' => 'http://purl.org/dc/terms/',
-      'doap' => 'http://usefulinc.com/ns/doap#',
-      'exif' => 'http://www.w3.org/2003/12/exif/ns#',
-      'foaf' => 'http://xmlns.com/foaf/0.1/',
-      'geo' => 'http://www.w3.org/2003/01/geo/wgs84_pos#',
-      'gr' => 'http://purl.org/goodrelations/v1#',
-      'grddl' => 'http://www.w3.org/2003/g/data-view#',
-      'ical' => 'http://www.w3.org/2002/12/cal/icaltzd#',
-      'ma' => 'http://www.w3.org/ns/ma-ont#',
-      'og' => 'http://ogp.me/ns#',
-      'owl' => 'http://www.w3.org/2002/07/owl#',
-      'rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-      'rdfa' => 'http://www.w3.org/ns/rdfa#',
-      'rdfs' => 'http://www.w3.org/2000/01/rdf-schema#',
-      'rev' => 'http://purl.org/stuff/rev#',
-      'rif' => 'http://www.w3.org/2007/rif#',
-      'rss' => 'http://purl.org/rss/1.0/',
-      'schema' => 'http://schema.org/',
-      'sioc' => 'http://rdfs.org/sioc/ns#',
-      'skos' => 'http://www.w3.org/2004/02/skos/core#',
-      'skosxl' => 'http://www.w3.org/2008/05/skos-xl#',
-      'synd' => 'http://purl.org/rss/1.0/modules/syndication/',
-      'v' => 'http://rdf.data-vocabulary.org/#',
-      'vcard' => 'http://www.w3.org/2006/vcard/ns#',
-      'void' => 'http://rdfs.org/ns/void#',
-      'wdr' => 'http://www.w3.org/2007/05/powder#',
-      'wdrs' => 'http://www.w3.org/2007/05/powder-s#',
-      'wot' => 'http://xmlns.com/wot/0.1/',
-      'xhv' => 'http://www.w3.org/1999/xhtml/vocab#',
-      'xml' => 'http://www.w3.org/XML/1998/namespace',
-      'xsd' => 'http://www.w3.org/2001/XMLSchema#',
+    private static $initial_namespaces = array(
+        'bibo'    => 'http://purl.org/ontology/bibo/',
+        'cc'      => 'http://creativecommons.org/ns#',
+        'cert'    => 'http://www.w3.org/ns/auth/cert#',
+        'ctag'    => 'http://commontag.org/ns#',
+        'dc'      => 'http://purl.org/dc/terms/',
+        'dc11'    => 'http://purl.org/dc/elements/1.1/',
+        'dcat'    => 'http://www.w3.org/ns/dcat#',
+        'dcterms' => 'http://purl.org/dc/terms/',
+        'doap'    => 'http://usefulinc.com/ns/doap#',
+        'exif'    => 'http://www.w3.org/2003/12/exif/ns#',
+        'foaf'    => 'http://xmlns.com/foaf/0.1/',
+        'geo'     => 'http://www.w3.org/2003/01/geo/wgs84_pos#',
+        'gr'      => 'http://purl.org/goodrelations/v1#',
+        'grddl'   => 'http://www.w3.org/2003/g/data-view#',
+        'ical'    => 'http://www.w3.org/2002/12/cal/icaltzd#',
+        'ma'      => 'http://www.w3.org/ns/ma-ont#',
+        'og'      => 'http://ogp.me/ns#',
+        'org'     => 'http://www.w3.org/ns/org#',
+        'owl'     => 'http://www.w3.org/2002/07/owl#',
+        'prov'    => 'http://www.w3.org/ns/prov#',
+        'qb'      => 'http://purl.org/linked-data/cube#',
+        'rdf'     => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+        'rdfa'    => 'http://www.w3.org/ns/rdfa#',
+        'rdfs'    => 'http://www.w3.org/2000/01/rdf-schema#',
+        'rev'     => 'http://purl.org/stuff/rev#',
+        'rif'     => 'http://www.w3.org/2007/rif#',
+        'rr'      => 'http://www.w3.org/ns/r2rml#',
+        'rss'     => 'http://purl.org/rss/1.0/',
+        'schema'  => 'http://schema.org/',
+        'sd'      => 'http://www.w3.org/ns/sparql-service-description#',
+        'sioc'    => 'http://rdfs.org/sioc/ns#',
+        'skos'    => 'http://www.w3.org/2004/02/skos/core#',
+        'skosxl'  => 'http://www.w3.org/2008/05/skos-xl#',
+        'synd'    => 'http://purl.org/rss/1.0/modules/syndication/',
+        'v'       => 'http://rdf.data-vocabulary.org/#',
+        'vcard'   => 'http://www.w3.org/2006/vcard/ns#',
+        'void'    => 'http://rdfs.org/ns/void#',
+        'wdr'     => 'http://www.w3.org/2007/05/powder#',
+        'wdrs'    => 'http://www.w3.org/2007/05/powder-s#',
+        'wot'     => 'http://xmlns.com/wot/0.1/',
+        'xhv'     => 'http://www.w3.org/1999/xhtml/vocab#',
+        'xml'     => 'http://www.w3.org/XML/1998/namespace',
+        'xsd'     => 'http://www.w3.org/2001/XMLSchema#',
     );
+
+    private static $namespaces = null;
 
     private static $default = null;
 
@@ -104,7 +112,20 @@ class EasyRdf_Namespace
       */
     public static function namespaces()
     {
+        if (self::$namespaces === null) {
+            self::resetNamespaces();
+        }
+
         return self::$namespaces;
+    }
+
+    /**
+     * Resets list of namespaces to the one, which is provided by EasyRDF
+     * useful for tests, among other things
+     */
+    public static function resetNamespaces()
+    {
+        self::$namespaces = self::$initial_namespaces;
     }
 
     /**
@@ -115,7 +136,7 @@ class EasyRdf_Namespace
       */
     public static function get($prefix)
     {
-        if (!is_string($prefix) or $prefix === null or $prefix === '') {
+        if (!is_string($prefix) or $prefix === null) {
             throw new InvalidArgumentException(
                 "\$prefix should be a string and cannot be null or empty"
             );
@@ -128,8 +149,10 @@ class EasyRdf_Namespace
         }
 
         $prefix = strtolower($prefix);
-        if (array_key_exists($prefix, self::$namespaces)) {
-            return self::$namespaces[$prefix];
+        $namespaces = self::namespaces();
+
+        if (array_key_exists($prefix, $namespaces)) {
+            return $namespaces[$prefix];
         } else {
             return null;
         }
@@ -143,16 +166,42 @@ class EasyRdf_Namespace
       */
     public static function set($prefix, $long)
     {
-        if (!is_string($prefix) or $prefix === null or $prefix === '') {
+        if (!is_string($prefix) or $prefix === null) {
             throw new InvalidArgumentException(
                 "\$prefix should be a string and cannot be null or empty"
             );
         }
 
-        if (preg_match('/\W/', $prefix)) {
-            throw new InvalidArgumentException(
-                "\$prefix should only contain alpha-numeric characters"
-            );
+        if ($prefix !== '') {
+            // prefix        ::= Name minus ":"                   // see: http://www.w3.org/TR/REC-xml-names/#NT-NCName
+            // Name          ::= NameStartChar (NameChar)*        // see: http://www.w3.org/TR/REC-xml/#NT-Name
+            // NameStartChar ::= ":" | [A-Z] | "_" | [a-z] | [#xC0-#xD6] | [#xD8-#xF6] | [#xF8-#x2FF] | [#x370-#x37D] |
+            //                   [#x37F-#x1FFF] | [#x200C-#x200D] | [#x2070-#x218F] | [#x2C00-#x2FEF] |
+            //                   [#x3001-#xD7FF] | [#xF900-#xFDCF] | [#xFDF0-#xFFFD] | [#x10000-#xEFFFF]
+            // NameChar      ::= NameStartChar | "-" | "." | [0-9] | #xB7 | [#x0300-#x036F] | [#x203F-#x2040]
+
+            $_name_start_char =
+                'A-Z_a-z\xc0-\xD6\xd8-\xf6\xf8-\xff\x{0100}-\x{02ff}\x{0370}-\x{037d}' .
+                '\x{037F}-\x{1FFF}\x{200C}-\x{200D}\x{2070}-\x{218F}\x{2C00}-\x{2FEF}\x{3001}-\x{D7FF}' .
+                '\x{F900}-\x{FDCF}\x{FDF0}-\x{FFFD}\x{10000}-\x{EFFFF}';
+
+            $_name_char =
+                $_name_start_char .
+                '\-.0-9\xb7\x{0300}-\x{036f}\x{203f}-\x{2040}';
+
+            $regex = "#^[{$_name_start_char}]{1}[{$_name_char}]{0,}$#u";
+
+            $match_result = preg_match($regex, $prefix);
+
+            if ($match_result === false) {
+                throw new LogicException('regexp error');
+            }
+
+            if ($match_result === 0) {
+                throw new InvalidArgumentException(
+                    "\$prefix should match RDFXML-QName specification. got: {$prefix}"
+                );
+            }
         }
 
         if (!is_string($long) or $long === null or $long === '') {
@@ -162,7 +211,11 @@ class EasyRdf_Namespace
         }
 
         $prefix = strtolower($prefix);
-        self::$namespaces[$prefix] = $long;
+
+        $namespaces = self::namespaces();
+        $namespaces[$prefix] = $long;
+
+        self::$namespaces = $namespaces;
     }
 
     /**
@@ -193,14 +246,16 @@ class EasyRdf_Namespace
     {
         if (is_null($namespace) or $namespace === '') {
             self::$default = null;
-        } elseif (preg_match("/^\w+$/", $namespace)) {
-            if (isset(self::$namespaces[$namespace])) {
-                self::$default = self::$namespaces[$namespace];
-            } else {
+        } elseif (preg_match('/^\w+$/', $namespace)) {
+            $namespaces = self::namespaces();
+
+            if (!isset($namespaces[$namespace])) {
                 throw new InvalidArgumentException(
                     "Unable to set default namespace to unknown prefix: $namespace"
                 );
             }
+
+            self::$default = $namespaces[$namespace];
         } else {
             self::$default = $namespace;
         }
@@ -220,6 +275,7 @@ class EasyRdf_Namespace
         }
 
         $prefix = strtolower($prefix);
+        self::namespaces();  // make sure, that self::$namespaces is initialized
         if (isset(self::$namespaces[$prefix])) {
             unset(self::$namespaces[$prefix]);
         }
@@ -265,16 +321,25 @@ class EasyRdf_Namespace
             );
         }
 
-        foreach (self::$namespaces as $prefix => $long) {
-            if (substr($uri, 0, strlen($long)) == $long) {
-                return array($prefix, substr($uri, strlen($long)));
+        foreach (self::namespaces() as $prefix => $long) {
+            if (substr($uri, 0, strlen($long)) !== $long) {
+                continue;
             }
+
+            $local_part = substr($uri, strlen($long));
+
+            if (strpos($local_part, '/') !== false) {
+                // we can't have '/' in local part
+                continue;
+            }
+
+            return array($prefix, $local_part);
         }
 
         if ($createNamespace) {
             // Try and create a new namespace
             # FIXME: check the valid characters for an XML element name
-            if (preg_match("/^(.+?)([\w\-]+)$/", $uri, $matches)) {
+            if (preg_match('/^(.+?)([\w\-]+)$/', $uri, $matches)) {
                 $prefix = "ns".(self::$anonymousNamespaceCount++);
                 self::set($prefix, $matches[1]);
                 return array($prefix, $matches[2]);
@@ -333,15 +398,16 @@ class EasyRdf_Namespace
                 "\$shortUri should be a string and cannot be null or empty"
             );
         }
-        
+
         if ($shortUri === 'a') {
-            return self::$namespaces['rdf'] . 'type';
-        } elseif (preg_match("/^(\w+?):([\w\-]+)$/", $shortUri, $matches)) {
+            $namespaces = self::namespaces();
+            return $namespaces['rdf'] . 'type';
+        } elseif (preg_match('/^(\w+?):([\w\-]+)$/', $shortUri, $matches)) {
             $long = self::get($matches[1]);
             if ($long) {
                 return $long . $matches[2];
             }
-        } elseif (preg_match("/^(\w+)$/", $shortUri) and isset(self::$default)) {
+        } elseif (preg_match('/^(\w+)$/', $shortUri) and isset(self::$default)) {
             return self::$default . $shortUri;
         }
 

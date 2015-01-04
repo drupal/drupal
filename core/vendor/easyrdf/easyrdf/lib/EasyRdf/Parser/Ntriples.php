@@ -183,19 +183,19 @@ class EasyRdf_Parser_Ntriples extends EasyRdf_Parser
             );
         }
 
-        $lines = preg_split("/\x0D?\x0A/", strval($data));
+        $lines = preg_split('/\x0D?\x0A/', strval($data));
         foreach ($lines as $index => $line) {
             $lineNum = $index + 1;
-            if (preg_match("/^\s*#/", $line)) {
+            if (preg_match('/^\s*#/', $line)) {
                 # Comment
                 continue;
-            } elseif (preg_match("/^\s*(.+?)\s+<([^<>]+?)>\s+(.+?)\s*\.\s*$/", $line, $matches)) {
+            } elseif (preg_match('/^\s*(.+?)\s+<([^<>]+?)>\s+(.+?)\s*\.\s*$/', $line, $matches)) {
                 $this->addTriple(
                     $this->parseNtriplesSubject($matches[1], $lineNum),
                     $this->unescapeString($matches[2]),
                     $this->parseNtriplesObject($matches[3], $lineNum)
                 );
-            } elseif (preg_match("/^\s*$/", $line)) {
+            } elseif (preg_match('/^\s*$/', $line)) {
                 # Blank line
                 continue;
             } else {

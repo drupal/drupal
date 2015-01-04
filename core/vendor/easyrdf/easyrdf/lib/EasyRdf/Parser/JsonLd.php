@@ -35,38 +35,8 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php
  */
 
-/**
- * Class to serialise an EasyRdf_Graph to RDF/JSON
- * with no external dependancies.
- *
- * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
- * @license    http://www.opensource.org/licenses/bsd-license.php
- */
-class EasyRdf_Serialiser_Json extends EasyRdf_Serialiser_RdfPhp
-{
-    /**
-     * Method to serialise an EasyRdf_Graph to RDF/JSON
-     *
-     * http://n2.talis.com/wiki/RDF_JSON_Specification
-     * docs/appendix-a-rdf-formats-json.md
-     *
-     * @param EasyRdf_Graph $graph   An EasyRdf_Graph object.
-     * @param string        $format  The name of the format to convert to.
-     * @param array         $options
-     * @throws EasyRdf_Exception
-     * @return string The RDF in the new desired format.
-     */
-    public function serialise($graph, $format, array $options = array())
-    {
-        parent::checkSerialiseParams($graph, $format);
-
-        if ($format != 'json') {
-            throw new EasyRdf_Exception(
-                "EasyRdf_Serialiser_Json does not support: $format"
-            );
-        }
-
-        return json_encode(parent::serialise($graph, 'php'));
-    }
+if (PHP_MAJOR_VERSION > 5 or (PHP_MAJOR_VERSION == 5 and PHP_MINOR_VERSION >= 3)) {
+    require dirname(__FILE__).'/JsonLdImplementation.php';
+} else {
+    throw new LogicException("JSON-LD support requires PHP 5.3+");
 }

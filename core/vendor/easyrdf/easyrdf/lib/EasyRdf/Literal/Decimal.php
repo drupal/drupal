@@ -45,24 +45,82 @@
  */
 class EasyRdf_Literal_Decimal extends EasyRdf_Literal
 {
+    /**
+     * written according to http://www.w3.org/TR/xmlschema-2/#decimal
+     */
+    const DECIMAL_REGEX = '^([+\-]?)(((\d+)?\.(\d+))|((\d+)\.?))$';
+
     /** Constructor for creating a new decimal literal
      *
-     * @param  mixed  $value     The value of the literal
-     * @param  string $lang      Should be null (literals with a datatype can't have a language)
-     * @param  string $datatype  Optional datatype (default 'xsd:decimal')
-     * @return object EasyRdf_Literal_Decimal
+     * @param  double|int|string $value    The value of the literal
+     * @param  string            $lang     Should be null (literals with a datatype can't have a language)
+     * @param  string            $datatype Optional datatype (default 'xsd:decimal')
+     *
+     * @throws UnexpectedValueException
+     * @return EasyRdf_Literal_Decimal
      */
     public function __construct($value, $lang = null, $datatype = null)
     {
+        if (is_string($value)) {
+            self::validate($value);
+        } elseif (is_double($value) or is_int($value)) {
+            $locale_data = localeconv();
+            $value = str_replace($locale_data['decimal_point'], '.', strval($value));
+        } else {
+            throw new UnexpectedValueException('EasyRdf_Literal_Decimal expects int/float/string as value');
+        }
+
+        $value = self::canonicalise($value);
+
         parent::__construct($value, null, $datatype);
     }
 
-    /** Return the value of the literal cast to a PHP double
+    /** Return the value of the literal cast to a PHP string
      *
-     * @return double
+     * @return string
      */
     public function getValue()
     {
-        return (double)$this->value;
+        return strval($this->value);
+    }
+
+    /**
+     * @param string $value
+     *
+     * @throws UnexpectedValueException
+     */
+    public static function validate($value)
+    {
+        if (!mb_ereg_match(self::DECIMAL_REGEX, $value)) {
+            throw new UnexpectedValueException("'{$value}' doesn't look like a valid decimal");
+        }
+    }
+
+    /**
+     * Converts valid xsd:decimal literal to Canonical representation
+     * see http://www.w3.org/TR/xmlschema-2/#decimal
+     *
+     * @param string $value Valid xsd:decimal literal
+     *
+     * @return string
+     */
+    public static function canonicalise($value)
+    {
+        $pieces = array();
+        mb_ereg(self::DECIMAL_REGEX, $value, $pieces);
+
+        $sign       = $pieces[1] === '-' ? '-' : '';  // '+' is not allowed
+        $integer    = ltrim(($pieces[4] !== false) ? $pieces[4] : $pieces[7], '0');
+        $fractional = rtrim($pieces[5], '0');
+
+        if (empty($integer)) {
+            $integer = '0';
+        }
+
+        if (empty($fractional)) {
+            $fractional = '0';
+        }
+
+        return "{$sign}{$integer}.{$fractional}";
     }
 }

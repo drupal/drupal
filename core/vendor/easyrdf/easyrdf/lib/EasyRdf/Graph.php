@@ -322,8 +322,11 @@ class EasyRdf_Graph
                 // If we didn't get any location, stop redirecting
                 break;
             } else {
-                throw new EasyRdf_Exception(
-                    "HTTP request for $requestUrl failed: ".$response->getMessage()
+                throw new EasyRdf_Http_Exception(
+                    "HTTP request for {$requestUrl} failed: ".$response->getMessage(),
+                    $response->getStatus(),
+                    null,
+                    $response->getBody()
                 );
             }
         } while ($redirectCounter < $this->maxRedirects);
@@ -431,7 +434,7 @@ class EasyRdf_Graph
             }
         } elseif ($resource === null) {
             throw new InvalidArgumentException(
-                "\$resource cannot be null"
+                "\$resource should be either IRI, blank-node identifier or EasyRdf_Resource. got null"
             );
         }
 
@@ -442,7 +445,7 @@ class EasyRdf_Graph
         } elseif (is_string($resource)) {
             if ($resource == '') {
                 throw new InvalidArgumentException(
-                    "\$resource cannot be an empty string"
+                    "\$resource should be either IRI, blank-node identifier or EasyRdf_Resource. got empty string"
                 );
             } elseif (preg_match("|^<(.+)>$|", $resource, $matches)) {
                 $resource = $matches[1];
@@ -451,7 +454,7 @@ class EasyRdf_Graph
             }
         } else {
             throw new InvalidArgumentException(
-                "\$resource should be a string or an EasyRdf_Resource"
+                "\$resource should be either IRI, blank-node identifier or EasyRdf_Resource"
             );
         }
     }
@@ -1395,13 +1398,10 @@ class EasyRdf_Graph
      */
     public function type($resource = null)
     {
-        $this->checkResourceParam($resource, true);
+        $type = $this->typeAsResource($resource);
 
-        if ($resource) {
-            $type = $this->get($resource, 'rdf:type', 'resource');
-            if ($type) {
-                return EasyRdf_Namespace::shorten($type);
-            }
+        if ($type) {
+            return EasyRdf_Namespace::shorten($type);
         }
 
         return null;
@@ -1437,16 +1437,30 @@ class EasyRdf_Graph
      */
     public function types($resource = null)
     {
-        $this->checkResourceParam($resource, true);
+        $resources = $this->typesAsResources($resource);
 
         $types = array();
-        if ($resource) {
-            foreach ($this->all($resource, 'rdf:type', 'resource') as $type) {
-                $types[] = EasyRdf_Namespace::shorten($type);
-            }
+        foreach ($resources as $type) {
+            $types[] = EasyRdf_Namespace::shorten($type);
         }
 
         return $types;
+    }
+
+    /**
+     * Get the resource types of the graph as a EasyRdf_Resource
+     *
+     * @return EasyRdf_Resource[]
+     */
+    public function typesAsResources($resource = null)
+    {
+        $this->checkResourceParam($resource, true);
+
+        if ($resource) {
+            return $this->all($resource, 'rdf:type', 'resource');
+        }
+
+        return array();
     }
 
     /** Check if a resource is of the specified type

@@ -321,7 +321,7 @@ class EasyRdf_Http_Response
         $decBody = '';
 
         while (trim($body)) {
-            if (preg_match("/^([\da-fA-F]+)[^\r\n]*\r\n/sm", $body, $m)) {
+            if (preg_match('/^([\da-fA-F]+)[^\r\n]*\r\n/sm', $body, $m)) {
                 $length = hexdec(trim($m[1]));
                 $cut = strlen($m[0]);
                 $decBody .= substr($body, $cut, $length);

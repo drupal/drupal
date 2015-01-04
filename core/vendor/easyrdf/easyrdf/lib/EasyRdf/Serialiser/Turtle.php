@@ -71,7 +71,7 @@ class EasyRdf_Serialiser_Turtle extends EasyRdf_Serialiser
      */
     public static function quotedString($value)
     {
-        if (preg_match("/[\t\n\r]/", $value)) {
+        if (preg_match('/[\t\n\r]/', $value)) {
             $escaped = str_replace(array('\\', '"""'), array('\\\\', '\\"""'), $value);
             return '"""'.$escaped.'"""';
         } else {
@@ -94,18 +94,19 @@ class EasyRdf_Serialiser_Turtle extends EasyRdf_Serialiser
         if (is_object($resource)) {
             if ($resource->isBNode()) {
                 return $resource->getUri();
-            } else {
-                $resource = $resource->getUri();
             }
+
+            $resource = $resource->getUri();
         }
 
         $short = EasyRdf_Namespace::shorten($resource, $createNamespace);
+
         if ($short) {
             $this->addPrefix($short);
             return $short;
-        } else {
-            return self::escapeIri($resource);
         }
+
+        return self::escapeIri($resource);
     }
 
     /**
@@ -125,11 +126,11 @@ class EasyRdf_Serialiser_Turtle extends EasyRdf_Serialiser
             if ($datatype == 'http://www.w3.org/2001/XMLSchema#integer') {
                 return sprintf('%d', $value);
             } elseif ($datatype == 'http://www.w3.org/2001/XMLSchema#decimal') {
-                return sprintf('%g', $value);
+                return sprintf('%s', $value);
             } elseif ($datatype == 'http://www.w3.org/2001/XMLSchema#double') {
                 return sprintf('%e', $value);
             } elseif ($datatype == 'http://www.w3.org/2001/XMLSchema#boolean') {
-                return sprintf('%s', $value ? 'true' : 'false');
+                return sprintf('%s', $value);
             } else {
                 $escaped = $this->serialiseResource($datatype, true);
                 return sprintf('%s^^%s', $quoted, $escaped);
@@ -284,7 +285,7 @@ class EasyRdf_Serialiser_Turtle extends EasyRdf_Serialiser
     /**
      * @ignore
      */
-    protected function serialiseSubjects($graph, $filterType)
+    protected function serialiseSubjects(EasyRdf_Graph $graph, $filterType)
     {
         $turtle = '';
         foreach ($graph->resources() as $resource) {
@@ -303,17 +304,19 @@ class EasyRdf_Serialiser_Turtle extends EasyRdf_Serialiser
 
             if ($thisType == 'bnode') {
                 $id = $resource->getBNodeId();
+
                 if (isset($this->outputtedBnodes[$id])) {
                     // Already been serialised
                     continue;
+                }
+
+                $this->outputtedBnodes[$id] = true;
+                $rpcount = $this->reversePropertyCount($resource);
+
+                if ($rpcount == 0) {
+                    $turtle .= '[]';
                 } else {
-                    $this->outputtedBnodes[$id] = true;
-                    $rpcount = $this->reversePropertyCount($resource);
-                    if ($rpcount == 0) {
-                        $turtle .= '[]';
-                    } else {
-                        $turtle .= $this->serialiseResource($resource);
-                    }
+                    $turtle .= $this->serialiseResource($resource);
                 }
             } else {
                 $turtle .= $this->serialiseResource($resource);

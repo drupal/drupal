@@ -162,17 +162,17 @@ class EasyRdf_Parser_Rdfa extends EasyRdf_Parser
 
     protected function guessTimeDatatype($value)
     {
-        if (preg_match("/^-?\d{4}-\d{2}-\d{2}(Z|[\-\+]\d{2}:\d{2})?$/", $value)) {
+        if (preg_match('/^-?\d{4}-\d{2}-\d{2}(Z|[\-\+]\d{2}:\d{2})?$/', $value)) {
             return 'http://www.w3.org/2001/XMLSchema#date';
-        } elseif (preg_match("/^\d{2}:\d{2}:\d{2}(Z|[\-\+]\d{2}:\d{2})?$/", $value)) {
+        } elseif (preg_match('/^\d{2}:\d{2}:\d{2}(Z|[\-\+]\d{2}:\d{2})?$/', $value)) {
             return 'http://www.w3.org/2001/XMLSchema#time';
-        } elseif (preg_match("/^-?\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(Z|[\-\+]\d{2}:\d{2})?$/", $value)) {
+        } elseif (preg_match('/^-?\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(Z|[\-\+]\d{2}:\d{2})?$/', $value)) {
             return 'http://www.w3.org/2001/XMLSchema#dateTime';
-        } elseif (preg_match("/^P(\d+Y)?(\d+M)?(\d+D)?T?(\d+H)?(\d+M)?(\d+S)?$/", $value)) {
+        } elseif (preg_match('/^P(\d+Y)?(\d+M)?(\d+D)?T?(\d+H)?(\d+M)?(\d+S)?$/', $value)) {
             return 'http://www.w3.org/2001/XMLSchema#duration';
-        } elseif (preg_match("/^\d{4}$/", $value)) {
+        } elseif (preg_match('/^\d{4}$/', $value)) {
             return 'http://www.w3.org/2001/XMLSchema#gYear';
-        } elseif (preg_match("/^\d{4}-\d{2}$/", $value)) {
+        } elseif (preg_match('/^\d{4}-\d{2}$/', $value)) {
             return 'http://www.w3.org/2001/XMLSchema#gYearMonth';
         } else {
             return null;
@@ -209,7 +209,7 @@ class EasyRdf_Parser_Rdfa extends EasyRdf_Parser
 
     protected function expandCurie($node, &$context, $value)
     {
-        if (preg_match("/^(\w*?):(.*)$/", $value, $matches)) {
+        if (preg_match('/^(\w*?):(.*)$/', $value, $matches)) {
             list (, $prefix, $local) = $matches;
             $prefix = strtolower($prefix);
             if ($prefix === '_') {
@@ -231,7 +231,7 @@ class EasyRdf_Parser_Rdfa extends EasyRdf_Parser
 
     protected function processUri($node, &$context, $value, $isProp = false)
     {
-        if (preg_match("/^\[(.*)\]$/", $value, $matches)) {
+        if (preg_match('/^\[(.*)\]$/', $value, $matches)) {
             // Safe CURIE
             return $this->expandCurie($node, $context, $matches[1]);
         } elseif (preg_match(self::TERM_REGEXP, $value) and $isProp) {
@@ -268,7 +268,7 @@ class EasyRdf_Parser_Rdfa extends EasyRdf_Parser
         }
 
         $uris = array();
-        foreach (preg_split("/\s+/", $values) as $value) {
+        foreach (preg_split('/\s+/', $values) as $value) {
             $uri = $this->processUri($node, $context, $value, true);
             if ($uri) {
                 array_push($uris, $uri);
@@ -343,7 +343,7 @@ class EasyRdf_Parser_Rdfa extends EasyRdf_Parser
                 }
             }
             if ($node->hasAttribute('prefix')) {
-                $mappings = preg_split("/\s+/", $node->getAttribute('prefix'));
+                $mappings = preg_split('/\s+/', $node->getAttribute('prefix'));
                 while (count($mappings)) {
                     $prefix = strtolower(array_shift($mappings));
                     $uri = array_shift($mappings);
@@ -381,7 +381,7 @@ class EasyRdf_Parser_Rdfa extends EasyRdf_Parser
                     } else {
                         // Only keep CURIEs.
                         $curies = array();
-                        foreach (preg_split("/\s+/", $node->getAttribute($attr)) as $token) {
+                        foreach (preg_split('/\s+/', $node->getAttribute($attr)) as $token) {
                             if (strpos($token, ':')) {
                                 $curies[] = $token;
                             }

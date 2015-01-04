@@ -56,12 +56,17 @@ class EasyRdf_Serialiser_RdfXml extends EasyRdf_Serialiser
     protected function rdfxmlObject($property, $obj, $depth)
     {
         $indent = str_repeat('  ', $depth);
+
+        if ($property[0] === ':') {
+            $property = substr($property, 1);
+        }
+
         if (is_object($obj) and $obj instanceof EasyRdf_Resource) {
             $pcount = count($obj->propertyUris());
             $rpcount = $this->reversePropertyCount($obj);
             $alreadyOutput = isset($this->outputtedResources[$obj->getUri()]);
 
-            $tag = "$indent<$property";
+            $tag = "{$indent}<{$property}";
             if ($obj->isBNode()) {
                 if ($alreadyOutput or $rpcount > 1 or $pcount == 0) {
                     $tag .= " rdf:nodeID=\"".htmlspecialchars($obj->getBNodeId()).'"';
@@ -104,7 +109,7 @@ class EasyRdf_Serialiser_RdfXml extends EasyRdf_Serialiser
                 $value = htmlspecialchars(strval($obj));
             }
 
-            return "$indent<$property$atrributes>$value</$property>\n";
+            return "{$indent}<{$property}{$atrributes}>{$value}</{$property}>\n";
         } else {
             throw new EasyRdf_Exception(
                 "Unable to serialise object to xml: ".getType($obj)
@@ -159,7 +164,7 @@ class EasyRdf_Serialiser_RdfXml extends EasyRdf_Serialiser
                 if ($short) {
                     $this->addPrefix($short);
                     $objects = $res->all("<$property>");
-                    if ($short == 'rdf:type') {
+                    if ($short == 'rdf:type' && $type != 'rdf:Description') {
                         array_shift($objects);
                     }
                     foreach ($objects as $object) {
@@ -224,10 +229,16 @@ class EasyRdf_Serialiser_RdfXml extends EasyRdf_Serialiser
         $namespaceStr = '';
         foreach ($this->prefixes as $prefix => $count) {
             $url = EasyRdf_Namespace::get($prefix);
+
             if (strlen($namespaceStr)) {
                 $namespaceStr .= "\n        ";
             }
-            $namespaceStr .= ' xmlns:'.$prefix.'="'.htmlspecialchars($url).'"';
+
+            if (strlen($prefix) === 0) {
+                $namespaceStr .= ' xmlns="'.htmlspecialchars($url).'"';
+            } else {
+                $namespaceStr .= ' xmlns:'.$prefix.'="'.htmlspecialchars($url).'"';
+            }
         }
 
         return "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n".

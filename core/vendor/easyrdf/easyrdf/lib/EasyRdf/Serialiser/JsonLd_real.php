@@ -115,9 +115,15 @@ class EasyRdf_Serialiser_JsonLd extends EasyRdf_Serialiser
         // OPTIONS
         $use_native_types = !(isset($options['expand_native_types']) and $options['expand_native_types'] == true);
         $should_compact = (isset($options['compact']) and $options['compact'] == true);
+        $should_frame = isset($options['frame']);
 
         // expanded form
         $data = $ld_graph->toJsonLd($use_native_types);
+
+        if ($should_frame) {
+            $data = \ML\JsonLD\JsonLD::frame($data, $options['frame'], $options);
+
+        }
 
         if ($should_compact) {
             // compact form

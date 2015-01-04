@@ -39,6 +39,7 @@
  * A pure-php class to parse RDF/JSON with no dependancies.
  *
  * http://n2.talis.com/wiki/RDF_JSON_Specification
+ * docs/appendix-a-rdf-formats-json.md
  *
  * @package    EasyRdf
  * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey

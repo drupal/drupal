@@ -59,7 +59,7 @@ class EasyRdf_Literal_HexBinary extends EasyRdf_Literal
         $value = strtoupper($value);
 
         // Validate the data
-        if (preg_match("/[^A-F0-9]/", $value)) {
+        if (preg_match('/[^A-F0-9]/', $value)) {
             throw new InvalidArgumentException(
                 "Literal of type xsd:hexBinary contains non-hexadecimal characters"
             );

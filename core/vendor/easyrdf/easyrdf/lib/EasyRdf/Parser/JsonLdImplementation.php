@@ -36,28 +36,21 @@
  */
 
 /**
- * Class to parse RDF with no external dependancies.
- *
- * http://n2.talis.com/wiki/RDF_PHP_Specification
- * docs/appendix-a-rdf-formats-php.md
+ * Class to parse JSON-LD to an EasyRdf_Graph
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2014 Markus Lanthaler
+ * @author     Markus Lanthaler <mail@markus-lanthaler.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php
  */
-class EasyRdf_Parser_RdfPhp extends EasyRdf_Parser
+class EasyRdf_Parser_JsonLd extends EasyRdf_Parser
 {
     /**
-     * Constructor
-     *
-     * @return object EasyRdf_Parser_RdfPhp
-     */
-    public function __construct()
-    {
-    }
-
-    /**
-      * Parse RDF/PHP into an EasyRdf_Graph
+      * Parse a JSON-LD document into an EasyRdf_Graph
+      *
+      * Attention: Since JSON-LD supports datasets, a document may contain
+      * multiple graphs and not just one. This parser returns only the
+      * default graph. An alternative would be to merge all graphs.
       *
       * @param object EasyRdf_Graph $graph   the graph to load the data into
       * @param string               $data    the RDF document data
@@ -67,32 +60,59 @@ class EasyRdf_Parser_RdfPhp extends EasyRdf_Parser
       */
     public function parse($graph, $data, $format, $baseUri)
     {
-        $this->checkParseParams($graph, $data, $format, $baseUri);
+        parent::checkParseParams($graph, $data, $format, $baseUri);
 
-        if ($format != 'php') {
+        if ($format != 'jsonld') {
             throw new EasyRdf_Exception(
-                "EasyRdf_Parser_RdfPhp does not support: $format"
+                "EasyRdf_Parser_JsonLd does not support $format"
             );
         }
 
-        foreach ($data as $subject => $properties) {
-            if (substr($subject, 0, 2) === '_:') {
-                $subject = $this->remapBnode($subject);
-            } elseif (preg_match('/^\w+$/', $subject)) {
-                # Cope with invalid RDF/JSON serialisations that
-                # put the node name in, without the _: prefix
-                # (such as net.fortytwo.sesametools.rdfjson)
+        try {
+            $quads = \ML\JsonLD\JsonLD::toRdf($data, array('base' => $baseUri));
+        } catch (\ML\JsonLD\Exception\JsonLdException $e) {
+            throw new EasyRdf_Parser_Exception($e->getMessage());
+        }
+
+        foreach ($quads as $quad) {
+            // Ignore named graphs
+            if (null !== $quad->getGraph()) {
+                continue;
+            }
+
+            $subject = (string) $quad->getSubject();
+            if ('_:' === substr($subject, 0, 2)) {
                 $subject = $this->remapBnode($subject);
             }
 
-            foreach ($properties as $property => $objects) {
-                foreach ($objects as $object) {
-                    if ($object['type'] === 'bnode') {
-                        $object['value'] = $this->remapBnode($object['value']);
-                    }
-                    $this->addTriple($subject, $property, $object);
+            $predicate = (string) $quad->getProperty();
+
+            if ($quad->getObject() instanceof \ML\IRI\IRI) {
+                $object = array(
+                    'type' => 'uri',
+                    'value' => (string) $quad->getObject()
+                );
+
+                if ('_:' === substr($object['value'], 0, 2)) {
+                    $object = array(
+                        'type' => 'bnode',
+                        'value' => $this->remapBnode($object['value'])
+                    );
+                }
+            } else {
+                $object = array(
+                    'type' => 'literal',
+                    'value' => $quad->getObject()->getValue()
+                );
+
+                if ($quad->getObject() instanceof \ML\JsonLD\LanguageTaggedString) {
+                    $object['lang'] = $quad->getObject()->getLanguage();
+                } else {
+                    $object['datatype'] = $quad->getObject()->getType();
                 }
             }
+
+            $this->addTriple($subject, $predicate, $object);
         }
 
         return $this->tripleCount;

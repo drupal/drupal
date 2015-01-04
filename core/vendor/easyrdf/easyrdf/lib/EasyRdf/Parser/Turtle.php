@@ -129,7 +129,7 @@ class EasyRdf_Parser_Turtle extends EasyRdf_Parser_Ntriples
             }
         }
 
-        if (preg_match("/^(@|prefix$|base$)/i", $directive)) {
+        if (preg_match('/^(@|prefix$|base$)/i', $directive)) {
             $this->parseDirective($directive);
             $this->skipWSC();
             // SPARQL BASE and PREFIX lines do not end in .
@@ -155,7 +155,7 @@ class EasyRdf_Parser_Turtle extends EasyRdf_Parser_Ntriples
             $this->parsePrefixID();
         } elseif ($directive == "base" || $directive == '@base') {
             $this->parseBase();
-        } elseif (mb_strlen($directive) == 0) {
+        } elseif (mb_strlen($directive, "UTF-8") == 0) {
             throw new EasyRdf_Parser_Exception(
                 "Turtle Parse Error: directive name is missing, expected @prefix or @base",
                 $this->line,
@@ -752,7 +752,7 @@ class EasyRdf_Parser_Turtle extends EasyRdf_Parser_Ntriples
             }
         }
 
-        return mb_substr($str, 0, -3);
+        return mb_substr($str, 0, -3, "UTF-8");
     }
 
     /**
@@ -792,7 +792,7 @@ class EasyRdf_Parser_Turtle extends EasyRdf_Parser_Ntriples
                         $c = $this->read();
                     }
 
-                    if (mb_strlen($value) == 1) {
+                    if (mb_strlen($value, "UTF-8") == 1) {
                         // We've only parsed a '.'
                         throw new EasyRdf_Parser_Exception(
                             "Turtle Parse Error: object for statement missing",
@@ -805,7 +805,7 @@ class EasyRdf_Parser_Turtle extends EasyRdf_Parser_Ntriples
                     $datatype = EasyRdf_Namespace::get('xsd').'decimal';
                 }
             } else {
-                if (mb_strlen($value) == 0) {
+                if (mb_strlen($value, "UTF-8") == 0) {
                     // We've only parsed an 'e' or 'E'
                     throw new EasyRdf_Parser_Exception(
                         "Turtle Parse Error: object for statement missing",
@@ -1157,7 +1157,7 @@ class EasyRdf_Parser_Turtle extends EasyRdf_Parser_Ntriples
     protected function read()
     {
         if (!empty($this->data)) {
-            $c = mb_substr($this->data, 0, 1);
+            $c = mb_substr($this->data, 0, 1, "UTF-8");
             // Keep tracks of which line we are on (0A = Line Feed)
             if ($c == "\x0A") {
                 $this->line += 1;
@@ -1165,7 +1165,13 @@ class EasyRdf_Parser_Turtle extends EasyRdf_Parser_Ntriples
             } else {
                 $this->column += 1;
             }
-            $this->data = mb_substr($this->data, 1);
+
+            if (version_compare(PHP_VERSION, '5.4.8', '<')) {
+                // versions of PHP prior to 5.4.8 treat "NULL" length parameter as 0
+                $this->data = mb_substr($this->data, 1, mb_strlen($this->data), "UTF-8");
+            } else {
+                $this->data = mb_substr($this->data, 1, null, "UTF-8");
+            }
             return $c;
         } else {
             return -1;
@@ -1180,7 +1186,7 @@ class EasyRdf_Parser_Turtle extends EasyRdf_Parser_Ntriples
     protected function peek()
     {
         if (!empty($this->data)) {
-            return mb_substr($this->data, 0, 1);
+            return mb_substr($this->data, 0, 1, "UTF-8");
         } else {
             return -1;
         }
@@ -1194,7 +1200,7 @@ class EasyRdf_Parser_Turtle extends EasyRdf_Parser_Ntriples
     protected function unread($c)
     {
         # FIXME: deal with unreading new lines
-        $this->column -= mb_strlen($c);
+        $this->column -= mb_strlen($c, "UTF-8");
         $this->data = $c . $this->data;
     }
 

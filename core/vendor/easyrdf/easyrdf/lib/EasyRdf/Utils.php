@@ -61,7 +61,7 @@ class EasyRdf_Utils
     public static function camelise($str)
     {
         $cc = '';
-        foreach (preg_split("/[\W_]+/", $str) as $part) {
+        foreach (preg_split('/[\W_]+/', $str) as $part) {
             $cc .= ucfirst(strtolower($part));
         }
         return $cc;
@@ -210,7 +210,7 @@ class EasyRdf_Utils
         $type = trim(array_shift($parts));
         $params = array();
         foreach ($parts as $part) {
-            if (preg_match("/^\s*(\w+)\s*=\s*(.+?)\s*$/", $part, $matches)) {
+            if (preg_match('/^\s*(\w+)\s*=\s*(.+?)\s*$/', $part, $matches)) {
                 $params[$matches[1]] = $matches[2];
             }
         }

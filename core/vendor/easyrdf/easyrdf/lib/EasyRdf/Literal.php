@@ -176,7 +176,7 @@ class EasyRdf_Literal
     public static function getDatatypeForValue($value)
     {
         if (is_float($value)) {
-            return 'http://www.w3.org/2001/XMLSchema#decimal';
+            return 'http://www.w3.org/2001/XMLSchema#double';
         } elseif (is_int($value)) {
             return 'http://www.w3.org/2001/XMLSchema#integer';
         } elseif (is_bool($value)) {
@@ -223,8 +223,13 @@ class EasyRdf_Literal
             }
         }
 
-        // Cast value to string
-        settype($this->value, 'string');
+        if (is_float($this->value)) {
+            // special handling of floats, as they suffer from locale [mis]configuration
+            $this->value = rtrim(sprintf('%F', $this->value), '0');
+        } else {
+            // Cast value to string
+            settype($this->value, 'string');
+        }
     }
 
     /** Returns the value of the literal.

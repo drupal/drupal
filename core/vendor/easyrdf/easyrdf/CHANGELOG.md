@@ -1,3 +1,61 @@
+EasyRdf 0.9.0
+=============
+
+* code-style fix
+
+EasyRdf 0.9.0-rc.4
+==================
+
+* fixed compatibility with php < 5.4.8 (see issue #212)
+* tweaked unit-tests
+
+EasyRdf 0.9.0-rc.3
+==================
+
+* fixed documentation generation
+
+EasyRdf 0.9.0-rc.2
+==================
+
+* tweaked unit-tests
+
+EasyRdf 0.9.0-rc.1
+==================
+
+Major new features
+------------------
+* Framing support in `EasyRdf_Serialiser_JsonLd`
+* JSON-LD Parser
+
+API changes
+-----------
+* `EasyRdf_Literal_Decimal` returns strings, instead of floats to avoid losing precision (see issue #178)
+* `EasyRdf_Literal_Decimal` requires input-strings which conform to `xs:decimal` format
+* `EasyRdf_GraphStore` supports operations over default graph now
+* `EasyRdf_Literal` typed as `xs:double` is used for PHP-floats instead of `EasyRdf_Literal_Decimal`
+* Exceptions thrown from `EasyRdf_Graph::resource()` use different message-texts now (see issue #159)
+
+Enhancements
+------------
+* Synced list of default namespaces against [RDFa Core Initial Context](http://www.w3.org/2011/rdfa-context/rdfa-1.1) rev.2014-01-17
+* Added support for empty prefixes (see issue #183)
+* `EasyRdf_Graph::newAndLoad` throws `EasyRdf_Http_Exception` in case of failure, which gives access to status and response-body. (see issue #149)
+* `EasyRdf_Graph` and `EasyRdf_Resource` have 'typesAsResources()' methods now
+
+Bug Fixes
+---------
+* Fix for Turtle serialisation of FALSE (see issue #179)
+* Fix for edge-case in RDF/XML serialisation (see issue #186)
+* SPARQL-queries against endpoints which have query-params in their URL (see issue #184)
+* Float values are properly handled if locale with "other" separator is active
+* Fixed parsing of Turtle-documents with higher utf-8 characters (see issue #195)
+* Namespace-prefixes are compliant with RDFXML QName spec (see issue #185)
+* `EasyRdf_Namespace` won't generate "short" names with "/" in them anymore (see issue #115)
+* `EasyRdf_Parser_RdfXml` respects "base" specified for the document (see issue #157)
+* HTML documents are correctly detected now, not as "n-triples" (see issue #206)
+* Accept-headers are formatted in locale-independent fashion now (see issue #208)
+
+
 EasyRdf 0.8.0
 =============
 
