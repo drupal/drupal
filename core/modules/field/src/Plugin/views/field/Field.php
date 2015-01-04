@@ -20,10 +20,12 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\CacheablePluginInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
+use Drupal\views\Plugin\views\field\MultiItemsFieldHandlerInterface;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
@@ -36,7 +38,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ViewsField("field")
  */
-class Field extends FieldPluginBase implements CacheablePluginInterface {
+class Field extends FieldPluginBase implements CacheablePluginInterface, MultiItemsFieldHandlerInterface {
 
   /**
    * An array to store field renderable arrays for use by renderItems().
@@ -113,6 +115,13 @@ class Field extends FieldPluginBase implements CacheablePluginInterface {
   protected $languageManager;
 
   /**
+   * The renderer.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
    * Constructs a \Drupal\field\Plugin\views\field\Field object.
    *
    * @param array $configuration
@@ -127,13 +136,17 @@ class Field extends FieldPluginBase implements CacheablePluginInterface {
    *   The field formatter plugin manager.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer.
+   *
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, FormatterPluginManager $formatter_plugin_manager, LanguageManagerInterface $language_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, FormatterPluginManager $formatter_plugin_manager, LanguageManagerInterface $language_manager, RendererInterface $renderer) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->entityManager = $entity_manager;
     $this->formatterPluginManager = $formatter_plugin_manager;
     $this->languageManager = $language_manager;
+    $this->renderer = $renderer;
   }
 
   /**
@@ -146,7 +159,8 @@ class Field extends FieldPluginBase implements CacheablePluginInterface {
       $plugin_definition,
       $container->get('entity.manager'),
       $container->get('plugin.manager.field.formatter'),
-      $container->get('language_manager')
+      $container->get('language_manager'),
+      $container->get('renderer')
     );
   }
 
@@ -689,34 +703,25 @@ class Field extends FieldPluginBase implements CacheablePluginInterface {
    * When using advanced render, each possible item in the list is rendered
    * individually. Then the items are all pasted together.
    */
-  protected function renderItems($items) {
+  public function renderItems($items) {
     if (!empty($items)) {
-      $output = '';
-      if (!$this->options['group_rows']) {
-        foreach ($items as $item) {
-          $output .= SafeMarkup::escape($item);
-        }
-        return SafeMarkup::set($output);
-      }
-      if ($this->options['multi_type'] == 'separator') {
-        $output = '';
-        $separator = '';
-        $escaped_separator = Xss::filterAdmin($this->options['separator']);
-        foreach ($items as $item) {
-          $output .= $separator . SafeMarkup::escape($item);
-          $separator = $escaped_separator;
-        }
-        return SafeMarkup::set($output);
+      if ($this->options['multi_type'] == 'separator' || !$this->options['group_rows']) {
+        $separator = $this->options['multi_type'] == 'separator' ? SafeMarkup::checkAdminXss($this->options['separator']) : '';
+        $build = [
+          '#type' => 'inline_template',
+          '#template' => '{{ items | safe_join(separator) }}',
+          '#context' => ['separator' => $separator, 'items' => $items],
+        ];
       }
       else {
-        $item_list = array(
+        $build = array(
           '#theme' => 'item_list',
           '#items' => $items,
           '#title' => NULL,
           '#list_type' => $this->options['multi_type'],
         );
-        return drupal_render($item_list);
       }
+      return $this->renderer->render($build);
     }
   }
 

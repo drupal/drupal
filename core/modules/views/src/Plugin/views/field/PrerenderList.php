@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\ResultRow;
 
 /**
  * Field handler to provide a list of items.
@@ -18,10 +19,8 @@ use Drupal\Core\Form\FormStateInterface;
  * Items to render should be in a list in $this->items
  *
  * @ingroup views_field_handlers
- *
- * @ViewsField("prerender_list")
  */
-class PrerenderList extends FieldPluginBase {
+abstract class PrerenderList extends FieldPluginBase implements MultiItemsFieldHandlerInterface {
 
   /**
    * Stores all items which are used to render the items.
@@ -68,12 +67,9 @@ class PrerenderList extends FieldPluginBase {
   }
 
   /**
-   * Render all items in this field together.
-   *
-   * When using advanced render, each possible item in the list is rendered
-   * individually. Then the items are all pasted together.
+   * {@inheritdoc}
    */
-  protected function renderItems($items) {
+  public function renderItems($items) {
     if (!empty($items)) {
       if ($this->options['type'] == 'separator') {
         return implode($this->sanitizeValue($this->options['separator'], 'xss_admin'), $items);
@@ -91,7 +87,7 @@ class PrerenderList extends FieldPluginBase {
   }
 
   /**
-   * Return an array of items for the field.
+   * {@inheritdoc}
    *
    * Items should be stored in the result array, if possible, as an array
    * with 'value' as the actual displayable value of the item, plus
@@ -100,25 +96,13 @@ class PrerenderList extends FieldPluginBase {
    * is to be made. Additionally, items that might be turned into tokens
    * should also be in this array.
    */
-  public function getItems($values) {
+  public function getItems(ResultRow $values) {
     $field = $this->getValue($values);
     if (!empty($this->items[$field])) {
       return $this->items[$field];
     }
 
     return array();
-  }
-
-  /**
-   * Determine if advanced rendering is allowed.
-   *
-   * By default, advanced rendering will NOT be allowed if the class
-   * inheriting from this does not implement a 'renderItems' method.
-   */
-  protected function allowAdvancedRender() {
-    // Note that the advanced render bits also use the presence of
-    // this method to determine if it needs to render items as a list.
-    return method_exists($this, 'render_item');
   }
 
 }

@@ -47,11 +47,7 @@ use Drupal\views\ViewExecutable;
  * @ingroup views_plugins
  * @see plugin_api
  */
-
-/**
- * Base field handler that has no options and renders an unformatted field.
- */
-abstract class FieldPluginBase extends HandlerBase {
+abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterface {
 
   /**
    * Indicator of the renderText() method for rendering a single item.
@@ -197,7 +193,7 @@ abstract class FieldPluginBase extends HandlerBase {
   }
 
   /**
-   * Called to determine what to tell the clicksorter.
+   * {@inheritdoc}
    */
   public function clickSort($order) {
     if (isset($this->field_alias)) {
@@ -209,18 +205,14 @@ abstract class FieldPluginBase extends HandlerBase {
   }
 
   /**
-   * Determine if this field is click sortable.
-   *
-   * @return bool
-   *   The value of 'click sortable' from the plugin definition, this defaults
-   *   to TRUE if not set.
+   * {@inheritdoc}
    */
   public function clickSortable() {
     return isset($this->definition['click sortable']) ? $this->definition['click sortable'] : TRUE;
   }
 
   /**
-   * Get this field's label.
+   * {@inheritdoc}
    */
   public function label() {
     if (!isset($this->options['label'])) {
@@ -230,7 +222,7 @@ abstract class FieldPluginBase extends HandlerBase {
   }
 
   /**
-   * Return an HTML element based upon the field's element type.
+   * {@inheritdoc}
    */
   public function elementType($none_supported = FALSE, $default_empty = FALSE, $inline = FALSE) {
     if ($none_supported) {
@@ -258,7 +250,7 @@ abstract class FieldPluginBase extends HandlerBase {
   }
 
   /**
-   * Return an HTML element for the label based upon the field's element type.
+   * {@inheritdoc}
    */
   public function elementLabelType($none_supported = FALSE, $default_empty = FALSE) {
     if ($none_supported) {
@@ -278,7 +270,7 @@ abstract class FieldPluginBase extends HandlerBase {
   }
 
   /**
-   * Return an HTML element for the wrapper based upon the field's element type.
+   * {@inheritdoc}
    */
   public function elementWrapperType($none_supported = FALSE, $default_empty = FALSE) {
     if ($none_supported) {
@@ -298,11 +290,7 @@ abstract class FieldPluginBase extends HandlerBase {
   }
 
   /**
-   * Provide a list of elements valid for field HTML.
-   *
-   * This function can be overridden by fields that want more or fewer
-   * elements available, though this seems like it would be an incredibly
-   * rare occurrence.
+   * {@inheritdoc}
    */
   public function getElements() {
     static $elements = NULL;
@@ -319,7 +307,7 @@ abstract class FieldPluginBase extends HandlerBase {
   }
 
   /**
-   * Return the class of the field.
+   * {@inheritdoc}
    */
   public function elementClasses($row_index = NULL) {
     $classes = explode(' ', $this->options['element_class']);
@@ -331,10 +319,7 @@ abstract class FieldPluginBase extends HandlerBase {
   }
 
   /**
-   * Replace a value with tokens from the last field.
-   *
-   * This function actually figures out which field was last and uses its
-   * tokens so they will all be available.
+   * {@inheritdoc}
    */
   public function tokenizeValue($value, $row_index = NULL) {
     if (strpos($value, '[') !== FALSE || strpos($value, '!') !== FALSE || strpos($value, '%') !== FALSE) {
@@ -369,7 +354,7 @@ abstract class FieldPluginBase extends HandlerBase {
   }
 
   /**
-   * Return the class of the field's label.
+   * {@inheritdoc}
    */
   public function elementLabelClasses($row_index = NULL) {
     $classes = explode(' ', $this->options['element_label_class']);
@@ -381,7 +366,7 @@ abstract class FieldPluginBase extends HandlerBase {
   }
 
   /**
-   * Return the class of the field's wrapper.
+   * {@inheritdoc}
    */
   public function elementWrapperClasses($row_index = NULL) {
     $classes = explode(' ', $this->options['element_wrapper_class']);
@@ -393,13 +378,7 @@ abstract class FieldPluginBase extends HandlerBase {
   }
 
   /**
-   * Gets the entity matching the current row and relationship.
-   *
-   * @param \Drupal\views\ResultRow $values
-   *   An object containing all retrieved values.
-   *
-   * @return \Drupal\Core\Entity\EntityInterface
-   *   Returns the entity matching the values.
+   * {@inheritdoc}
    */
   public function getEntity(ResultRow $values) {
     $relationship_id = $this->options['relationship'];
@@ -412,15 +391,7 @@ abstract class FieldPluginBase extends HandlerBase {
   }
 
   /**
-   * Get the value that's supposed to be rendered.
-   *
-   * This api exists so that other modules can easy set the values of the field
-   * without having the need to change the render method as well.
-   *
-   * @param \Drupal\views\ResultRow $values
-   *   An object containing all retrieved values.
-   * @param string $field
-   *   Optional name of the field where the value is stored.
+   * {@inheritdoc}
    */
   public function getValue(ResultRow $values, $field = NULL) {
     $alias = isset($field) ? $this->aliases[$field] : $this->field_alias;
@@ -430,11 +401,7 @@ abstract class FieldPluginBase extends HandlerBase {
   }
 
   /**
-   * Determines if this field will be available as an option to group the result
-   * by in the style settings.
-   *
-   * @return bool
-   *  TRUE if this field handler is groupable, otherwise FALSE.
+   * {@inheritdoc}
    */
   public function useStringGroupBy() {
     return TRUE;
@@ -1119,21 +1086,12 @@ abstract class FieldPluginBase extends HandlerBase {
   }
 
   /**
-   * Run before any fields are rendered.
-   *
-   * This gives the handlers some time to set up before any handler has
-   * been rendered.
-   *
-   * @param \Drupal\views\ResultRow[] $values
-   *   An array of all ResultRow objects returned from the query.
+   * {@inheritdoc}
    */
   public function preRender(&$values) { }
 
   /**
-   * Renders the field.
-   *
-   * @param \Drupal\views\ResultRow $values
-   *   The values retrieved from a single row of a view's query result.
+   * {@inheritdoc}
    */
   public function render(ResultRow $values) {
     $value = $this->getValue($values);
@@ -1141,16 +1099,10 @@ abstract class FieldPluginBase extends HandlerBase {
   }
 
   /**
-   * Render a field using advanced settings.
-   *
-   * This renders a field normally, then decides if render-as-link and
-   * text-replacement rendering is necessary.
-   *
-   * @param \Drupal\views\ResultRow $values
-   *   The values retrieved from a single row of a view's query result.
+   * {@inheritdoc}
    */
   public function advancedRender(ResultRow $values) {
-    if ($this->allowAdvancedRender() && method_exists($this, 'render_item')) {
+    if ($this->allowAdvancedRender() && $this instanceof MultiItemsFieldHandlerInterface) {
       $raw_items = $this->getItems($values);
       // If there are no items, set the original value to NULL.
       if (empty($raw_items)) {
@@ -1168,7 +1120,7 @@ abstract class FieldPluginBase extends HandlerBase {
 
     if ($this->allowAdvancedRender()) {
       $tokens = NULL;
-      if (method_exists($this, 'render_item')) {
+      if ($this instanceof MultiItemsFieldHandlerInterface) {
         $items = array();
         foreach ($raw_items as $count => $item) {
           $value = $this->render_item($count, $item);
@@ -1215,17 +1167,7 @@ abstract class FieldPluginBase extends HandlerBase {
   }
 
   /**
-   * Checks if a field value is empty.
-   *
-   * @param $value
-   *   The field value.
-   * @param bool $empty_zero
-   *   Whether or not this field is configured to consider 0 as empty.
-   * @param bool $no_skip_empty
-   *   Whether or not to use empty() to check the value.
-   *
-   * @return bool
-   * TRUE if the value is considered empty, FALSE otherwise.
+   * {@inheritdoc}
    */
   public function isValueEmpty($value, $empty_zero, $no_skip_empty = TRUE) {
     if (!isset($value)) {
@@ -1242,10 +1184,7 @@ abstract class FieldPluginBase extends HandlerBase {
   }
 
   /**
-   * Perform an advanced text render for the item.
-   *
-   * This is separated out as some fields may render lists, and this allows
-   * each item to be handled individually.
+   * {@inheritdoc}
    */
   public function renderText($alter) {
     $value = $this->last_render;
@@ -1332,7 +1271,7 @@ abstract class FieldPluginBase extends HandlerBase {
   }
 
   /**
-   * Trim the field down to the specified length.
+   * {@inheritdoc}
    */
   public function renderTrimText($alter, $value) {
     if (!empty($alter['strip_tags'])) {
@@ -1516,11 +1455,7 @@ abstract class FieldPluginBase extends HandlerBase {
   }
 
   /**
-   * Get the 'render' tokens to use for advanced rendering.
-   *
-   * This runs through all of the fields and arguments that
-   * are available and gets their values. This will then be
-   * used in one giant str_replace().
+   * {@inheritdoc}
    */
   public function getRenderTokens($item) {
     $tokens = array();
@@ -1647,13 +1582,7 @@ abstract class FieldPluginBase extends HandlerBase {
   protected function documentSelfTokens(&$tokens) { }
 
   /**
-   * Pass values to $this->getRenderer()->render() using $this->themeFunctions() as #theme.
-   *
-   * @param \Drupal\views\ResultRow $values
-   *   Holds single row of a view's result set.
-   *
-   * @return string|false
-   *   Returns rendered output of the given theme implementation.
+   * {@inheritdoc}
    */
   function theme(ResultRow $values) {
     $build = array(

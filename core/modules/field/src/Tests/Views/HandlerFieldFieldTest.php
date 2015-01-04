@@ -288,6 +288,26 @@ class HandlerFieldFieldTest extends FieldTestBase {
       }
       $this->assertEqual($rendered_field, implode(':', $items), 'Make sure that the amount of items is limited.');
     }
+    $view->destroy();
+
+    // Test separator with HTML, ensure it is escaped.
+    $this->prepareView($view);
+    $view->displayHandlers->get('default')->options['fields'][$field_name]['group_rows'] = TRUE;
+    $view->displayHandlers->get('default')->options['fields'][$field_name]['delta_limit'] = 3;
+    $view->displayHandlers->get('default')->options['fields'][$field_name]['separator'] = '<h2>test</h2>';
+    $this->executeView($view);
+
+    for ($i = 0; $i < 3; $i++) {
+      $rendered_field = $view->style_plugin->getField($i, $field_name);
+      $items = [];
+      $pure_items = $this->nodes[$i]->{$field_name}->getValue();
+      $pure_items = array_splice($pure_items, 0, 3);
+      foreach ($pure_items as $j => $item) {
+        $items[] = $pure_items[$j]['value'];
+      }
+      $this->assertEqual($rendered_field, implode('<h2>test</h2>', $items), 'Make sure that the amount of items is limited.');
+    }
+    $view->destroy();
   }
 
 }
