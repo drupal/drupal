@@ -6,10 +6,8 @@ source:
   plugin: variable
   variables:
     - node_admin_theme
-    - default_nodes_main
 process:
   use_admin_theme: node_admin_theme
-  items_per_page: default_nodes_main
 destination:
   plugin: config
   config_name: node.settings

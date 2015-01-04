@@ -833,39 +833,6 @@ function node_page_top(array &$page) {
 /**
  * Implements hook_form_FORM_ID_alter().
  *
- * Alters the System module's site information settings form to add a global
- * default setting for number of posts to show on node listing pages.
- *
- * @see node_page_default()
- * @see node_form_system_site_information_settings_form_submit()
- */
-function node_form_system_site_information_settings_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  $options = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30);
-  $form['front_page']['default_nodes_main'] = array(
-    '#type' => 'select',
-    '#title' => t('Number of posts on front page'),
-    '#default_value' => \Drupal::config('node.settings')->get('items_per_page'),
-    '#options' => array_combine($options, $options),
-    '#access' => (\Drupal::config('system.site')->get('page.front') == 'node'),
-    '#description' => t('The maximum number of posts displayed on overview pages such as the front page.'),
-  );
-  $form['#submit'][] = 'node_form_system_site_information_settings_form_submit';
-}
-
-/**
- * Form submission handler for system_site_information_settings().
- *
- * @see node_form_system_site_information_settings_form_alter()
- */
-function node_form_system_site_information_settings_form_submit($form, FormStateInterface $form_state) {
-  \Drupal::config('node.settings')
-    ->set('items_per_page', $form_state->getValue('default_nodes_main'))
-    ->save();
-}
-
-/**
- * Implements hook_form_FORM_ID_alter().
- *
  * Alters the theme form to use the admin theme on node editing.
  *
  * @see node_form_system_themes_admin_form_submit()

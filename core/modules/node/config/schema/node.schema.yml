@@ -4,9 +4,6 @@ node.settings:
   type: mapping
   label: 'Node settings'
   mapping:
-    items_per_page:
-      type: integer
-      label: 'Number of posts on front page'
     use_admin_theme:
       type: boolean
       label: 'Use admin theme when editing or creating content'
