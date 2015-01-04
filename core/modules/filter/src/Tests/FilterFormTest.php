@@ -71,6 +71,12 @@ class FilterFormTest extends WebTestBase {
   public function testFilterForm() {
     $this->doFilterFormTestAsAdmin();
     $this->doFilterFormTestAsNonAdmin();
+    // Ensure that enabling modules which provide filter plugins behaves
+    // correctly.
+    // @see https://www.drupal.org/node/2387983
+    \Drupal::service('module_installer')->install(['filter_test_plugin']);
+    // Force rebuild module data.
+    _system_rebuild_module_data();
   }
 
   /**

@@ -1,0 +1,6 @@
+name: 'Filter test plugin'
+type: module
+description: 'Tests enabling of modules which provide filter plugins.'
+package: Testing
+version: VERSION
+core: 8.x
