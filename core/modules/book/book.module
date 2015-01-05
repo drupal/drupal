@@ -238,6 +238,10 @@ function book_node_load($nodes) {
 function book_node_view(array &$build, EntityInterface $node, EntityViewDisplayInterface $display, $view_mode) {
   if ($view_mode == 'full') {
     if (!empty($node->book['bid']) && empty($node->in_preview)) {
+      $book_node = Node::load($node->book['bid']);
+      if (!$book_node->access()) {
+        return;
+      }
       $book_navigation = array( '#theme' => 'book_navigation', '#book_link' => $node->book);
       $build['book_navigation'] = array(
         '#markup' => drupal_render($book_navigation),

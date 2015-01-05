@@ -695,7 +695,7 @@ class BookManager implements BookManagerInterface {
    * {@inheritdoc}
    */
   public function loadBookLinks($nids, $translate = TRUE) {
-    $result = $this->bookOutlineStorage->loadMultiple($nids);
+    $result = $this->bookOutlineStorage->loadMultiple($nids, $translate);
     $links = array();
     foreach ($result as $link) {
       if ($translate) {

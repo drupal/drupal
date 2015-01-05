@@ -31,13 +31,23 @@ interface BookOutlineStorageInterface {
   /**
    * Loads books.
    *
+   * Each book entry consists of the following keys:
+   *   - bid: The node ID of the main book.
+   *   - nid: The node ID of the book entry itself.
+   *   - pid: The parent node ID of the book.
+   *   - has_children: A boolean to indicate whether the book has children.
+   *   - weight: The weight of the book entry to order siblings.
+   *   - depth: The depth in the menu hierarchy the entry is placed into.
+   *
    * @param array $nids
    *   An array of node IDs.
+   * @param bool $access
+   *   Whether access checking should be taken into account.
    *
    * @return array
    *   Array of loaded book items.
    */
-  public function loadMultiple($nids);
+  public function loadMultiple($nids, $access = TRUE);
 
   /**
    * Gets child relative depth.

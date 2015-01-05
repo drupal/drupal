@@ -52,6 +52,13 @@ class BookTest extends WebTestBase {
    */
   protected $adminUser;
 
+  /**
+   * A user without the 'node test view' permission.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $webUserWithoutNodeAccess;
+
   protected function setUp() {
     parent::setUp();
 
@@ -61,6 +68,7 @@ class BookTest extends WebTestBase {
     // Create users.
     $this->bookAuthor = $this->drupalCreateUser(array('create new books', 'create book content', 'edit own book content', 'add content to books'));
     $this->webUser = $this->drupalCreateUser(array('access printer-friendly version', 'node test view'));
+    $this->webUserWithoutNodeAccess = $this->drupalCreateUser(array('access printer-friendly version'));
     $this->adminUser = $this->drupalCreateUser(array('create new books', 'create book content', 'edit own book content', 'add content to books', 'administer blocks', 'administer permissions', 'administer book outlines', 'node test view', 'administer content types', 'administer site configuration'));
   }
 
@@ -658,6 +666,37 @@ class BookTest extends WebTestBase {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/structure/book');
     $this->assertText($this->book->label(), 'The book title is displayed on the administrative book listing page.');
+  }
+
+  /**
+   * Ensure the loaded book in hook_node_load() does not depend on the user.
+   */
+  public function testHookNodeLoadAccess() {
+    \Drupal::service('module_installer')->install(['node_access_test']);
+
+    // Ensure that the loaded book in hook_node_load() does NOT depend on the
+    // current user.
+    $this->drupalLogin($this->bookAuthor);
+    $this->book = $this->createBookNode('new');
+    // Reset any internal static caching.
+    $node_storage = \Drupal::entityManager()->getStorage('node');
+    $node_storage->resetCache();
+
+    // Login as user without access to the book node, so no 'node test view'
+    // permission.
+    // @see node_access_test_node_grants().
+    $this->drupalLogin($this->webUserWithoutNodeAccess);
+    $book_node = $node_storage->load($this->book->id());
+    $this->assertTrue(!empty($book_node->book));
+    $this->assertEqual($book_node->book['bid'], $this->book->id());
+
+    // Reset the internal cache to retrigger the hook_node_load() call.
+    $node_storage->resetCache();
+
+    $this->drupalLogin($this->webUser);
+    $book_node = $node_storage->load($this->book->id());
+    $this->assertTrue(!empty($book_node->book));
+    $this->assertEqual($book_node->book['bid'], $this->book->id());
   }
 
 }

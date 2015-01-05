@@ -47,12 +47,16 @@ class BookOutlineStorage implements BookOutlineStorageInterface {
   /**
    * {@inheritdoc}
    */
-  public function loadMultiple($nids) {
+  public function loadMultiple($nids, $access = TRUE) {
     $query = $this->connection->select('book', 'b', array('fetch' => \PDO::FETCH_ASSOC));
     $query->fields('b');
     $query->condition('b.nid', $nids);
-    $query->addTag('node_access');
-    $query->addMetaData('base_table', 'book');
+
+    if ($access) {
+      $query->addTag('node_access');
+      $query->addMetaData('base_table', 'book');
+    }
+
     return $query->execute();
   }
 
