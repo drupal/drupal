@@ -137,7 +137,8 @@ class PathAliasTest extends PathTestBase {
     // Create absolute path alias.
     $edit = array();
     $edit['source'] = 'node/' . $node3->id();
-    $edit['alias'] = '/' . $this->randomMachineName(8);
+    $node3_alias = $this->randomMachineName(8);
+    $edit['alias'] = '/' . $node3_alias;
     $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
 
     // Confirm that the alias was converted to a relative path.
@@ -151,13 +152,35 @@ class PathAliasTest extends PathTestBase {
     // Create alias with trailing slash.
     $edit = array();
     $edit['source'] = 'node/' . $node4->id();
-    $edit['alias'] = $this->randomMachineName(8) . '/';
+    $node4_alias = $this->randomMachineName(8);
+    $edit['alias'] = $node4_alias . '/';
     $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
 
     // Confirm that the alias with trailing slash is not found.
     $this->assertNoText($edit['alias'], 'The absolute alias was not found.');
     // The alias without trailing flash is found.
     $this->assertText(trim($edit['alias'], '/'), 'The alias without trailing slash was found.');
+
+    // Update an existing alias to point to a different source.
+    $pid = $this->getPID($node4_alias);
+    $edit = [];
+    $edit['alias'] = $node4_alias;
+    $edit['source'] = 'node/' . $node2->id();
+    $this->drupalPostForm('admin/config/search/path/edit/' . $pid, $edit, t('Save'));
+    $this->assertText('The alias has been saved.');
+    $this->drupalGet($edit['alias']);
+    $this->assertNoText($node4->label(), 'Previous alias no longer works.');
+    $this->assertText($node2->label(), 'Alias works.');
+    $this->assertResponse(200);
+
+    // Update an existing alias to use a duplicate alias.
+    $pid = $this->getPID($node3_alias);
+    $edit = [];
+    $edit['alias'] = $node4_alias;
+    $edit['source'] = 'node/' . $node3->id();
+    $this->drupalPostForm('admin/config/search/path/edit/' . $pid, $edit, t('Save'));
+    $this->assertRaw(t('The alias %alias is already in use in this language.', array('%alias' => $edit['alias'])));
+
   }
 
   /**

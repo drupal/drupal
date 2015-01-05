@@ -150,14 +150,14 @@ abstract class PathFormBase extends FormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $source = &$form_state->getValue('source');
     $source = $this->aliasManager->getPathByAlias($source);
-    $alias = $form_state->getValue('alias');
+    $alias = &$form_state->getValue('alias');
     // Trim the submitted value of whitespace and slashes.
     $alias = trim(trim($alias), " \\/");
     // Language is only set if language.module is enabled, otherwise save for all
     // languages.
     $langcode = $form_state->getValue('langcode', LanguageInterface::LANGCODE_NOT_SPECIFIED);
 
-    if ($this->aliasStorage->aliasExists($alias, $langcode, $source)) {
+    if ($this->aliasStorage->aliasExists($alias, $langcode, $this->path['source'])) {
       $form_state->setErrorByName('alias', t('The alias %alias is already in use in this language.', array('%alias' => $alias)));
     }
     if (!$this->pathValidator->isValid($source)) {
@@ -173,11 +173,8 @@ abstract class PathFormBase extends FormBase {
     $form_state->cleanValues();
 
     $pid = $form_state->getValue('pid', 0);
-    $source = &$form_state->getValue('source');
-    $source = $this->aliasManager->getPathByAlias($source);
+    $source = $form_state->getValue('source');
     $alias = $form_state->getValue('alias');
-    // Trim the submitted value of whitespace and slashes.
-    $alias = trim(trim($alias), " \\/");
     // Language is only set if language.module is enabled, otherwise save for all
     // languages.
     $langcode = $form_state->getValue('langcode', LanguageInterface::LANGCODE_NOT_SPECIFIED);
