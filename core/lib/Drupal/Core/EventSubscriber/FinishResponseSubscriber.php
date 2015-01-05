@@ -96,6 +96,12 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
     // Set the Content-language header.
     $response->headers->set('Content-language', $this->languageManager->getCurrentLanguage()->getId());
 
+    // Prevent browsers from sniffing a response and picking a MIME type
+    // different from the declared content-type, since that can lead to
+    // XSS and other vulnerabilities.
+    // https://www.owasp.org/index.php/List_of_useful_HTTP_headers
+    $response->headers->set('X-Content-Type-Options', 'nosniff', FALSE);
+
     // Attach globally-declared headers to the response object so that Symfony
     // can send them for us correctly.
     // @todo Remove this once drupal_process_attached() no longer calls

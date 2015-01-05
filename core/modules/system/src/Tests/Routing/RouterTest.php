@@ -25,17 +25,19 @@ class RouterTest extends WebTestBase {
   public static $modules = array('block', 'router_test');
 
   /**
-   * Confirms that the router can get to a controller.
-   */
-  public function testCanRoute() {
-    $this->drupalGet('router_test/test1');
-    $this->assertRaw('test1', 'The correct string was returned because the route was successful.');
-  }
-
-  /**
    * Confirms that our default controller logic works properly.
    */
   public function testDefaultController() {
+    // Confirm that the router can get to a controller.
+    $this->drupalGet('router_test/test1');
+    $this->assertRaw('test1', 'The correct string was returned because the route was successful.');
+
+    // Check expected headers from FinishResponseSubscriber
+    $headers = $this->drupalGetHeaders();
+    $this->assertEqual($headers['x-ua-compatible'], 'IE=edge,chrome=1');
+    $this->assertEqual($headers['content-language'], 'en');
+    $this->assertEqual($headers['x-content-type-options'], 'nosniff');
+
     $this->drupalGet('router_test/test2');
     $this->assertRaw('test2', 'The correct string was returned because the route was successful.');
 
