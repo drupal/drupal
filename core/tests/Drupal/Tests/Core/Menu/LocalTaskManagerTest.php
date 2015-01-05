@@ -85,6 +85,13 @@ class LocalTaskManagerTest extends UnitTestCase {
   protected $accessManager;
 
   /**
+   * The route match.
+   *
+   * @var \Drupal\Core\Routing\RouteMatchInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $routeMatch;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -98,6 +105,7 @@ class LocalTaskManagerTest extends UnitTestCase {
     $this->factory = $this->getMock('Drupal\Component\Plugin\Factory\FactoryInterface');
     $this->cacheBackend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
     $this->accessManager = $this->getMock('Drupal\Core\Access\AccessManagerInterface');
+    $this->routeMatch = $this->getMock('Drupal\Core\Routing\RouteMatchInterface');
 
     $this->setupLocalTaskManager();
   }
@@ -256,7 +264,7 @@ class LocalTaskManagerTest extends UnitTestCase {
       ->will($this->returnValue(new Language(array('id' => 'en'))));
 
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $this->manager = new LocalTaskManager($this->controllerResolver, $request_stack, $this->routeProvider, $this->routeBuilder, $module_handler, $this->cacheBackend, $language_manager, $this->accessManager, $account);
+    $this->manager = new LocalTaskManager($this->controllerResolver, $request_stack, $this->routeMatch, $this->routeProvider, $this->routeBuilder, $module_handler, $this->cacheBackend, $language_manager, $this->accessManager, $account);
 
     $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'discovery');
     $property->setAccessible(TRUE);

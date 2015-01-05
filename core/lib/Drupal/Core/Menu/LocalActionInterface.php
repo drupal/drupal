@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Menu;
 
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Defines an interface for menu local actions.
@@ -25,13 +25,13 @@ interface LocalActionInterface {
   /**
    * Returns the route parameters needed to render a link for the local action.
    *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The HttpRequest object representing the current request.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The current route match.
    *
    * @return array
    *   An array of parameter names and values.
    */
-  public function getRouteParameters(Request $request);
+  public function getRouteParameters(RouteMatchInterface $route_match);
 
   /**
    * Returns the weight for the local action.
@@ -43,13 +43,13 @@ interface LocalActionInterface {
   /**
    * Returns options for rendering a link for the local action.
    *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The HTTP request object representing the current request.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The current route match.
    *
    * @return array
    *   An associative array of options.
    */
-  public function getOptions(Request $request);
+  public function getOptions(RouteMatchInterface $route_match);
 
   /**
    * Returns the localized title to be shown for this action.

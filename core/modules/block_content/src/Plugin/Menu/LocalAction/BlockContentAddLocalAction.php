@@ -8,8 +8,7 @@
 namespace Drupal\block_content\Plugin\Menu\LocalAction;
 
 use Drupal\Core\Menu\LocalActionDefault;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Modifies the 'Add custom block' local action.
@@ -19,18 +18,14 @@ class BlockContentAddLocalAction extends LocalActionDefault {
   /**
    * {@inheritdoc}
    */
-  public function getOptions(Request $request) {
-    $options = parent::getOptions($request);
+  public function getOptions(RouteMatchInterface $route_match) {
+    $options = parent::getOptions($route_match);
     // If the route specifies a theme, append it to the query string.
-    if ($request->attributes->has('theme')) {
-      $options['query']['theme'] = $request->attributes->get('theme');
+    if ($theme = $route_match->getParameter('theme')) {
+      $options['query']['theme'] = $theme;
     }
     // Adds a destination on custom block listing.
-    if ($request->attributes->get(RouteObjectInterface::ROUTE_NAME) == 'block_content.list') {
-      $options['query']['destination'] = 'admin/structure/block/block-content';
-    }
-    // Adds a destination on custom block listing.
-    if ($request->attributes->get(RouteObjectInterface::ROUTE_NAME) == 'block_content.list') {
+    if ($route_match->getRouteName() == 'block_content.list') {
       $options['query']['destination'] = 'admin/structure/block/block-content';
     }
     return $options;

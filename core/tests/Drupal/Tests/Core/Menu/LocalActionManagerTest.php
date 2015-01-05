@@ -14,6 +14,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Menu\LocalActionManager;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
@@ -115,8 +116,9 @@ class LocalActionManagerTest extends UnitTestCase {
     $this->account = $this->getMock('Drupal\Core\Session\AccountInterface');
     $this->discovery = $this->getMock('Drupal\Component\Plugin\Discovery\DiscoveryInterface');
     $this->factory = $this->getMock('Drupal\Component\Plugin\Factory\FactoryInterface');
+    $route_match = $this->getMock('Drupal\Core\Routing\RouteMatchInterface');
 
-    $this->localActionManager = new TestLocalActionManager($this->controllerResolver, $this->request, $this->routeProvider, $this->moduleHandler, $this->cacheBackend, $this->accessManager, $this->account, $this->discovery, $this->factory);
+    $this->localActionManager = new TestLocalActionManager($this->controllerResolver, $this->request, $route_match, $this->routeProvider, $this->moduleHandler, $this->cacheBackend, $this->accessManager, $this->account, $this->discovery, $this->factory);
   }
 
   /**
@@ -339,7 +341,7 @@ class LocalActionManagerTest extends UnitTestCase {
 
 class TestLocalActionManager extends LocalActionManager {
 
-  public function __construct(ControllerResolverInterface $controller_resolver, Request $request, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, AccessManagerInterface $access_manager, AccountInterface $account, DiscoveryInterface $discovery, FactoryInterface $factory) {
+  public function __construct(ControllerResolverInterface $controller_resolver, Request $request, RouteMatchInterface $route_match, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, AccessManagerInterface $access_manager, AccountInterface $account, DiscoveryInterface $discovery, FactoryInterface $factory) {
     $this->discovery = $discovery;
     $this->factory = $factory;
     $this->routeProvider = $route_provider;
@@ -348,6 +350,7 @@ class TestLocalActionManager extends LocalActionManager {
     $this->controllerResolver = $controller_resolver;
     $this->requestStack = new RequestStack();
     $this->requestStack->push($request);
+    $this->routeMatch = $route_match;
     $this->moduleHandler = $module_handler;
     $this->alterInfo('menu_local_actions');
     $this->setCacheBackend($cache_backend, 'local_action_plugins', array('local_action'));

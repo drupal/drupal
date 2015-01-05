@@ -8,9 +8,9 @@
 namespace Drupal\Tests\Core\Menu;
 
 use Drupal\Core\Menu\LocalTaskDefault;
+use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
@@ -99,8 +99,8 @@ class LocalTaskDefaultTest extends UnitTestCase {
 
     $this->setupLocalTaskDefault();
 
-    $request = Request::create('/');
-    $this->assertEquals(array(), $this->localTaskBase->getRouteParameters($request));
+    $route_match = new RouteMatch('', new Route('/'));
+    $this->assertEquals(array(), $this->localTaskBase->getRouteParameters($route_match));
   }
 
   /**
@@ -119,9 +119,8 @@ class LocalTaskDefaultTest extends UnitTestCase {
 
     $this->setupLocalTaskDefault();
 
-    $request = new Request();
-
-    $this->assertEquals(array('parameter' => 'example'), $this->localTaskBase->getRouteParameters($request));
+    $route_match = new RouteMatch('', new Route('/'));
+    $this->assertEquals(array('parameter' => 'example'), $this->localTaskBase->getRouteParameters($route_match));
   }
 
   /**
@@ -134,16 +133,17 @@ class LocalTaskDefaultTest extends UnitTestCase {
       'route_name' => 'test_route'
     );
 
+    $route = new Route('/test-route/{parameter}');
     $this->routeProvider->expects($this->once())
       ->method('getRouteByName')
       ->with('test_route')
-      ->will($this->returnValue(new Route('/test-route/{parameter}')));
+      ->will($this->returnValue($route));
 
     $this->setupLocalTaskDefault();
 
-    $request = new Request(array(), array(), array('parameter' => 'example'));
+    $route_match = new RouteMatch('', $route, array(), array('parameter' => 'example'));
 
-    $this->assertEquals(array('parameter' => 'example'), $this->localTaskBase->getRouteParameters($request));
+    $this->assertEquals(array('parameter' => 'example'), $this->localTaskBase->getRouteParameters($route_match));
   }
 
   /**
@@ -156,20 +156,16 @@ class LocalTaskDefaultTest extends UnitTestCase {
       'route_name' => 'test_route'
     );
 
+    $route = new Route('/test-route/{parameter}');
     $this->routeProvider->expects($this->once())
       ->method('getRouteByName')
       ->with('test_route')
-      ->will($this->returnValue(new Route('/test-route/{parameter}')));
+      ->will($this->returnValue($route));
 
     $this->setupLocalTaskDefault();
 
-    $request = new Request();
-    $raw_variables = new ParameterBag();
-    $raw_variables->set('parameter', 'example');
-    $request->attributes->set('parameter', (object) array('example2'));
-    $request->attributes->set('_raw_variables', $raw_variables);
-
-    $this->assertEquals(array('parameter' => 'example'), $this->localTaskBase->getRouteParameters($request));
+    $route_match = new RouteMatch('', $route, array('parameter' => (object) 'example2'), array('parameter' => 'example'));
+    $this->assertEquals(array('parameter' => 'example'), $this->localTaskBase->getRouteParameters($route_match));
   }
 
   /**
@@ -307,8 +303,8 @@ class LocalTaskDefaultTest extends UnitTestCase {
 
     $this->setupLocalTaskDefault();
 
-    $request = Request::create('/');
-    $this->assertEquals($this->pluginDefinition['options'], $this->localTaskBase->getOptions($request));
+    $route_match = new RouteMatch('', new Route('/'));
+    $this->assertEquals($this->pluginDefinition['options'], $this->localTaskBase->getOptions($route_match));
 
     $this->localTaskBase->setActive(TRUE);
 
@@ -319,7 +315,7 @@ class LocalTaskDefaultTest extends UnitTestCase {
           'active'
         )
       )
-    ), $this->localTaskBase->getOptions($request));
+    ), $this->localTaskBase->getOptions($route_match));
   }
 
 }

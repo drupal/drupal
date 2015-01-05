@@ -15,6 +15,7 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\Core\Plugin\Discovery\YamlDiscovery;
 use Drupal\Core\Plugin\Factory\ContainerFactory;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -65,6 +66,13 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
   protected $requestStack;
 
   /**
+   * The current route match.
+   *
+   * @var \Drupal\Core\Routing\RouteMatchInterface
+   */
+  protected $routeMatch;
+
+  /**
    * The route provider to load routes by name.
    *
    * @var \Drupal\Core\Routing\RouteProviderInterface
@@ -99,6 +107,8 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
    *   An object to use in introspecting route methods.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The current route match.
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
    *   The route provider.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -112,7 +122,7 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
    */
-  public function __construct(ControllerResolverInterface $controller_resolver, RequestStack $request_stack, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, LanguageManagerInterface $language_manager, AccessManagerInterface $access_manager, AccountInterface $account) {
+  public function __construct(ControllerResolverInterface $controller_resolver, RequestStack $request_stack, RouteMatchInterface $route_match, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, LanguageManagerInterface $language_manager, AccessManagerInterface $access_manager, AccountInterface $account) {
     // Skip calling the parent constructor, since that assumes annotation-based
     // discovery.
     $this->discovery = new YamlDiscovery('links.action', $module_handler->getModuleDirectories());
@@ -120,6 +130,7 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
     $this->factory = new ContainerFactory($this, 'Drupal\Core\Menu\LocalActionInterface');
     $this->controllerResolver = $controller_resolver;
     $this->requestStack = $request_stack;
+    $this->routeMatch = $route_match;
     $this->routeProvider = $route_provider;
     $this->accessManager = $access_manager;
     $this->moduleHandler = $module_handler;
@@ -159,16 +170,16 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
       }
     }
     $links = array();
-    $request = $this->requestStack->getCurrentRequest();
+    /** @var $plugin \Drupal\Core\Menu\LocalActionInterface */
     foreach ($this->instances[$route_appears] as $plugin_id => $plugin) {
       $route_name = $plugin->getRouteName();
-      $route_parameters = $plugin->getRouteParameters($request);
+      $route_parameters = $plugin->getRouteParameters($this->routeMatch);
       $links[$plugin_id] = array(
         '#theme' => 'menu_local_action',
         '#link' => array(
           'title' => $this->getTitle($plugin),
           'url' => Url::fromRoute($route_name, $route_parameters),
-          'localized_options' => $plugin->getOptions($request),
+          'localized_options' => $plugin->getOptions($this->routeMatch),
         ),
         '#access' => $this->accessManager->checkNamedRoute($route_name, $route_parameters, $this->account),
         '#weight' => $plugin->getWeight(),

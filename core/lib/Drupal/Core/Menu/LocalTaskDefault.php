@@ -8,6 +8,7 @@
 namespace Drupal\Core\Menu;
 
 use Drupal\Core\Plugin\PluginBase;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -39,7 +40,7 @@ class LocalTaskDefault extends PluginBase implements LocalTaskInterface {
   /**
    * {@inheritdoc}
    */
-  public function getRouteParameters(Request $request) {
+  public function getRouteParameters(RouteMatchInterface $route_match) {
     $parameters = isset($this->pluginDefinition['route_parameters']) ? $this->pluginDefinition['route_parameters'] : array();
     $route = $this->routeProvider()->getRouteByName($this->getRouteName());
     $variables = $route->compile()->getVariables();
@@ -51,7 +52,7 @@ class LocalTaskDefault extends PluginBase implements LocalTaskInterface {
     // /filter/tips/{filter_format} and the path is /filter/tips/plain_text then
     // $raw_variables->get('filter_format') == 'plain_text'.
 
-    $raw_variables = $request->attributes->get('_raw_variables');
+    $raw_variables = $route_match->getRawParameters();
 
     foreach ($variables as $name) {
       if (isset($parameters[$name])) {
@@ -61,8 +62,8 @@ class LocalTaskDefault extends PluginBase implements LocalTaskInterface {
       if ($raw_variables && $raw_variables->has($name)) {
         $parameters[$name] = $raw_variables->get($name);
       }
-      elseif ($request->attributes->has($name)) {
-        $parameters[$name] = $request->attributes->get($name);
+      elseif ($value = $route_match->getRawParameter($name)) {
+        $parameters[$name] = $value;
       }
     }
     // The UrlGenerator will throw an exception if expected parameters are
@@ -109,7 +110,7 @@ class LocalTaskDefault extends PluginBase implements LocalTaskInterface {
   /**
    * {@inheritdoc}
    */
-  public function getOptions(Request $request) {
+  public function getOptions(RouteMatchInterface $route_match) {
     $options = $this->pluginDefinition['options'];
     if ($this->active) {
       if (empty($options['attributes']['class']) || !in_array('active', $options['attributes']['class'])) {

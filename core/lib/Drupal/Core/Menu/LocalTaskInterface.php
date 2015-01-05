@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Menu;
 
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Defines an interface for menu local tasks.
@@ -36,13 +36,13 @@ interface LocalTaskInterface {
   /**
    * Returns the route parameters needed to render a link for the local task.
    *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The HttpRequest object representing the current request.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The current route match.
    *
    * @return array
    *   An array of parameter names and values.
    */
-  public function getRouteParameters(Request $request);
+  public function getRouteParameters(RouteMatchInterface $route_match);
 
   /**
    * Returns the weight of the local task.
@@ -55,13 +55,13 @@ interface LocalTaskInterface {
   /**
    * Returns options for rendering a link to the local task.
    *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The HttpRequest object representing the current request.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The current route match.
    *
    * @return array
    *   An associative array of options.
    */
-  public function getOptions(Request $request);
+  public function getOptions(RouteMatchInterface $route_match);
 
   /**
    * Sets the active status.
