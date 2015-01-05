@@ -54,7 +54,6 @@ class Node extends DrupalSqlBase implements SourceEntityInterface {
       ))
       ->fields('nr', array(
         'vid',
-        'uid',
         'title',
         'body',
         'teaser',
@@ -62,6 +61,8 @@ class Node extends DrupalSqlBase implements SourceEntityInterface {
         'timestamp',
         'format',
       ));
+    $query->addField('n', 'uid', 'node_uid');
+    $query->addField('nr', 'uid', 'revision_uid');
     $query->innerJoin('node', 'n', static::JOIN);
 
     if (isset($this->configuration['node_type'])) {
@@ -90,7 +91,8 @@ class Node extends DrupalSqlBase implements SourceEntityInterface {
       'body' => $this->t('Body'),
       'format' => $this->t('Format'),
       'teaser' => $this->t('Teaser'),
-      'uid' => $this->t('Authored by (uid)'),
+      'node_uid' => $this->t('Node authored by (uid)'),
+      'revision_uid' => $this->t('Revision authored by (uid)'),
       'created' => $this->t('Created timestamp'),
       'changed' => $this->t('Modified timestamp'),
       'status' => $this->t('Published'),

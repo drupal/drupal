@@ -180,7 +180,7 @@ class FakeSelect extends Select {
     $fields = array();
     foreach ($this->fields as $field_info) {
       $this->fieldsWithTable[$field_info['table'] . '.' . $field_info['field']] = $field_info;
-      $fields[$field_info['table']][$field_info['field']] = NULL;
+      $fields[$field_info['table']][$field_info['field']] = $field_info['alias'];
     }
     foreach ($this->tables as $alias => $table_info) {
       if ($table = reset($this->databaseContents[$table_info['table']])) {
@@ -256,8 +256,8 @@ class FakeSelect extends Select {
    */
   protected function getNewRow($table_alias, $fields, $candidate_row, $row = array()) {
     $new_row[$table_alias]['all'] = $candidate_row;
-    foreach ($fields[$table_alias] as $field => $v) {
-      $new_row[$table_alias]['result'][$field] = $candidate_row[$field];
+    foreach ($fields[$table_alias] as $field => $alias) {
+      $new_row[$table_alias]['result'][$alias] = $candidate_row[$field];
     }
     return $new_row + $row;
   }

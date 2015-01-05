@@ -86,6 +86,11 @@ class NodeByNodeTypeTest extends MigrateSqlSourceTestCase {
    */
   protected function setUp() {
     $database_contents = $this->expectedResults;
+    array_walk($this->expectedResults, function (&$row) {
+      $row['node_uid'] = $row['uid'];
+      $row['revision_uid'] = $row['uid'] + 1;
+      unset($row['uid']);
+    });
 
     $database_contents[] = array(
       // Node fields.
@@ -115,11 +120,17 @@ class NodeByNodeTypeTest extends MigrateSqlSourceTestCase {
     // Add another row with an article node and make sure it is not migrated.
 
     foreach ($database_contents as $k => $row) {
-      foreach (array('nid', 'vid', 'title', 'uid', 'body', 'teaser', 'format', 'timestamp', 'log') as $i => $field) {
+      foreach (array('nid', 'vid', 'title', 'uid', 'body', 'teaser', 'format', 'timestamp', 'log') as $field) {
         $this->databaseContents['node_revisions'][$k][$field] = $row[$field];
-        // Keep nid and vid.
-        if ($i > 1) {
-          unset($row[$field]);
+        switch ($field) {
+          case 'nid': case 'vid':
+            break;
+          case 'uid':
+            $this->databaseContents['node_revisions'][$k]['uid']++;
+            break;
+          default:
+            unset($row[$field]);
+            break;
         }
       }
       $this->databaseContents['node'][$k] = $row;

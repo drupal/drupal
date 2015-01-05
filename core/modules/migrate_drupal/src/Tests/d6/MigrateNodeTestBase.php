@@ -37,6 +37,10 @@ abstract class MigrateNodeTestBase extends MigrateDrupalTestBase {
         array(array(1), array('filtered_html')),
         array(array(2), array('full_html')),
       ),
+      'd6_user' => array(
+        array(array(1), array(1)),
+        array(array(2), array(2)),
+      ),
       'd6_field_instance_widget_settings' => array(
         array(
           array('page', 'field_test'),
