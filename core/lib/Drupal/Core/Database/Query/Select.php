@@ -333,40 +333,21 @@ class Select extends Query implements SelectInterface {
   }
 
   /**
-   * Gets a list of all conditions in the HAVING clause.
-   *
-   * This method returns by reference. That allows alter hooks to access the
-   * data structure directly and manipulate it before it gets compiled.
-   *
-   * @return array
-   *   An array of conditions.
-   *
-   * @see \Drupal\Core\Database\Query\ConditionInterface::conditions()
+   * {@inheritdoc}
    */
   public function &havingConditions() {
     return $this->having->conditions();
   }
 
   /**
-   * Gets a list of all values to insert into the HAVING clause.
-   *
-   * @return array
-   *   An associative array of placeholders and values.
+   * {@inheritdoc}
    */
   public function havingArguments() {
     return $this->having->arguments();
   }
 
   /**
-   * Adds an arbitrary HAVING clause to the query.
-   *
-   * @param $snippet
-   *   A portion of a HAVING clause as a prepared statement. It must use named
-   *   placeholders, not ? placeholders.
-   * @param $args
-   *   (optional) An associative array of arguments.
-   *
-   * @return $this
+   * {@inheritdoc}
    */
   public function having($snippet, $args = array()) {
     $this->having->where($snippet, $args);
@@ -374,10 +355,7 @@ class Select extends Query implements SelectInterface {
   }
 
   /**
-   * Compiles the HAVING clause for later retrieval.
-   *
-   * @param $connection
-   *   The database connection for which to compile the clause.
+   * {@inheritdoc}
    */
   public function havingCompile(Connection $connection) {
     $this->having->compile($connection, $this);
@@ -395,12 +373,7 @@ class Select extends Query implements SelectInterface {
   }
 
   /**
-   * Sets a condition in the HAVING clause that the specified field be NULL.
-   *
-   * @param $field
-   *   The name of the field to check.
-   *
-   * @return $this
+   * {@inheritdoc}
    */
   public function havingIsNull($field) {
     $this->having->isNull($field);
@@ -408,12 +381,7 @@ class Select extends Query implements SelectInterface {
   }
 
   /**
-   * Sets a condition in the HAVING clause that the specified field be NOT NULL.
-   *
-   * @param $field
-   *   The name of the field to check.
-   *
-   * @return $this
+   * {@inheritdoc}
    */
   public function havingIsNotNull($field) {
     $this->having->isNotNull($field);
@@ -421,12 +389,7 @@ class Select extends Query implements SelectInterface {
   }
 
   /**
-   * Sets a HAVING condition that the specified subquery returns values.
-   *
-   * @param \Drupal\Core\Database\Query\SelectInterface $select
-   *   The subquery that must contain results.
-   *
-   * @return $this
+   * {@inheritdoc}
    */
   public function havingExists(SelectInterface $select) {
     $this->having->exists($select);
@@ -434,12 +397,7 @@ class Select extends Query implements SelectInterface {
   }
 
   /**
-   * Sets a HAVING condition that the specified subquery returns no values.
-   *
-   * @param \Drupal\Core\Database\Query\SelectInterface $select
-   *   The subquery that must contain results.
-   *
-   * @return $this
+   * {@inheritdoc}
    */
   public function havingNotExists(SelectInterface $select) {
     $this->having->notExists($select);
