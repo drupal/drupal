@@ -224,6 +224,16 @@ interface EntityManagerInterface extends PluginManagerInterface, EntityTypeListe
   public function getFormObject($entity_type, $operation);
 
   /**
+   * Gets all route provider instances.
+   *
+   * @param string $entity_type
+   *   The entity type for this route providers.
+   *
+   * @return \Drupal\Core\Entity\Routing\EntityRouteProviderInterface[]
+   */
+  public function getRouteProviders($entity_type);
+
+  /**
    * Checks whether a certain entity type has a certain handler.
    *
    * @param string $entity_type

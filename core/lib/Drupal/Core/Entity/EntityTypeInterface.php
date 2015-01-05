@@ -225,6 +225,10 @@ interface EntityTypeInterface {
    *   - access: The name of the class that is used for access checks. The class
    *     must implement \Drupal\Core\Entity\EntityAccessControlHandlerInterface.
    *     Defaults to \Drupal\Core\Entity\EntityAccessControlHandler.
+   *   - route_provider: (optional) A list of class names, keyed by a group
+   *     string, which will be used to define routes related to this entity
+   *     type. These classes must implement
+   *     \Drupal\Core\Entity\Routing\EntityRouteProviderInterface.
    */
   public function getHandlerClasses();
 
@@ -281,6 +285,22 @@ interface EntityTypeInterface {
    *   TRUE if there are any forms for this entity type, FALSE otherwise.
    */
   public function hasFormClasses();
+
+  /**
+   * Indicates if this entity type has any route provider.
+   *
+   * @return bool
+   */
+  public function hasRouteProviders();
+
+  /**
+   * Gets all the route provide handlers.
+   *
+   * Much like forms you can define multiple route provider handlers.
+   *
+   * @return string[]
+   */
+  public function getRouteProviderClasses();
 
   /**
    * Returns the list class.

@@ -30,6 +30,9 @@ use Drupal\user\UserInterface;
  *     "list_builder" = "Drupal\user\UserListBuilder",
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
  *     "views_data" = "Drupal\user\UserViewsData",
+ *     "route_provider" = {
+ *       "html" = "Drupal\user\Entity\UserRouteProvider",
+ *     },
  *     "form" = {
  *       "default" = "Drupal\user\ProfileForm",
  *       "cancel" = "Drupal\user\Form\UserCancelForm",

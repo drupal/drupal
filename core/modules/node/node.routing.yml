@@ -5,15 +5,6 @@ node.multiple_delete_confirm:
   requirements:
     _permission: 'administer nodes'
 
-entity.node.edit_form:
-  path: '/node/{node}/edit'
-  defaults:
-    _entity_form: 'node.edit'
-  requirements:
-    _entity_access: 'node.update'
-  options:
-    _node_operation_route: TRUE
-
 node.add_page:
   path: '/node/add'
   defaults:
@@ -47,24 +38,6 @@ entity.node.preview:
     parameters:
       node_preview:
         type: 'node_preview'
-
-entity.node.canonical:
-  path: '/node/{node}'
-  defaults:
-    _controller: '\Drupal\node\Controller\NodeViewController::view'
-    _title_callback: '\Drupal\node\Controller\NodeViewController::title'
-  requirements:
-    _entity_access: 'node.view'
-
-entity.node.delete_form:
-  path: '/node/{node}/delete'
-  defaults:
-    _entity_form: 'node.delete'
-    _title: 'Delete'
-  requirements:
-    _entity_access: 'node.delete'
-  options:
-    _node_operation_route: TRUE
 
 entity.node.version_history:
   path: '/node/{node}/revisions'

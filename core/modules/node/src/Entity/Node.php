@@ -34,6 +34,9 @@ use Drupal\user\UserInterface;
  *       "delete" = "Drupal\node\Form\NodeDeleteForm",
  *       "edit" = "Drupal\node\NodeForm"
  *     },
+ *     "route_provider" = {
+ *       "html" = "Drupal\node\Entity\NodeRouteProvider",
+ *     },
  *     "list_builder" = "Drupal\node\NodeListBuilder",
  *     "translation" = "Drupal\node\NodeTranslationHandler"
  *   },

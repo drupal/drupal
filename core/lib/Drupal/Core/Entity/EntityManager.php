@@ -303,6 +303,20 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
   /**
    * {@inheritdoc}
    */
+  public function getRouteProviders($entity_type) {
+    if (!isset($this->handlers['route_provider'][$entity_type])) {
+      $route_provider_classes = $this->getDefinition($entity_type, TRUE)->getRouteProviderClasses();
+
+      foreach ($route_provider_classes as $type => $class) {
+        $this->handlers['route_provider'][$entity_type][$type] = $this->createHandlerInstance($class, $this->getDefinition($entity_type));
+      }
+    }
+    return isset($this->handlers['route_provider'][$entity_type]) ? $this->handlers['route_provider'][$entity_type] : [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getViewBuilder($entity_type) {
     return $this->getHandler($entity_type, 'view_builder');
   }

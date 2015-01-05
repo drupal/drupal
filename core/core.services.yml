@@ -311,6 +311,11 @@ services:
     parent: container.trait
     tags:
       - { name: plugin_manager_cache_clear }
+  entity_route_subscriber:
+    class: Drupal\Core\EventSubscriber\EntityRouteProviderSubscriber
+    arguments: ['@entity.manager']
+    tags:
+      - { name: event_subscriber }
   entity.definitions.installed:
     class: Drupal\Core\KeyValueStore\KeyValueStoreInterface
     factory_method: get

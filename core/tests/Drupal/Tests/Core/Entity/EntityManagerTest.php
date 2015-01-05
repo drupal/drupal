@@ -1367,6 +1367,24 @@ class EntityManagerTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::getRouteProviders
+   */
+  public function testGetRouteProviders() {
+    $apple = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
+    $apple->expects($this->once())
+      ->method('getRouteProviderClasses')
+      ->willReturn(['default' => 'Drupal\Tests\Core\Entity\TestRouteProvider']);
+    $this->setUpEntityManager(array(
+      'apple' => $apple,
+    ));
+
+    $apple_route_provider = $this->entityManager->getRouteProviders('apple');
+    $this->assertInstanceOf('Drupal\Tests\Core\Entity\TestRouteProvider', $apple_route_provider['default']);
+    $this->assertAttributeInstanceOf('Drupal\Core\Extension\ModuleHandlerInterface', 'moduleHandler', $apple_route_provider['default']);
+    $this->assertAttributeInstanceOf('Drupal\Core\StringTranslation\TranslationInterface', 'stringTranslation', $apple_route_provider['default']);
+  }
+
+  /**
    * Gets a mock controller class name.
    *
    * @return string
@@ -1545,6 +1563,14 @@ class TestEntityFormInjected extends TestEntityForm implements ContainerInjectio
   }
 
 }
+
+/**
+ * Provides a test entity route provider.
+ */
+class TestRouteProvider extends EntityHandlerBase {
+
+}
+
 
 /**
  * Provides a test config entity storage for base field overrides.

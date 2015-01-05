@@ -133,14 +133,6 @@ user.page:
   requirements:
     _user_is_logged_in: 'TRUE'
 
-entity.user.canonical:
-  path: '/user/{user}'
-  defaults:
-    _entity_view: 'user.full'
-    _title_callback: 'Drupal\user\Controller\UserController::userTitle'
-  requirements:
-    _entity_access: 'user.view'
-
 user.login:
   path: '/user/login'
   defaults:
@@ -150,26 +142,6 @@ user.login:
     _user_is_logged_in: 'FALSE'
   options:
     _maintenance_access: TRUE
-
-entity.user.edit_form:
-  path: '/user/{user}/edit'
-  defaults:
-    _entity_form: 'user.default'
-    _title_callback: 'Drupal\user\Controller\UserController::userTitle'
-  options:
-    _admin_route: TRUE
-  requirements:
-    _entity_access: 'user.update'
-
-entity.user.cancel_form:
-  path: '/user/{user}/cancel'
-  defaults:
-    _title: 'Cancel account'
-    _entity_form: 'user.cancel'
-  options:
-    _admin_route: TRUE
-  requirements:
-    _entity_access: 'user.delete'
 
 user.cancel_confirm:
   path: '/user/{user}/cancel/confirm/{timestamp}/{hashed_pass}'
