@@ -8,6 +8,7 @@
 namespace Drupal\taxonomy;
 
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -17,6 +18,31 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  */
 class TermBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   use StringTranslationTrait;
+
+  /**
+   * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityManagerInterface
+   */
+  protected $entityManager;
+
+  /**
+   * The taxonomy storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $termStorage;
+
+  /**
+   * Constructs the TermBreadcrumbBuilder.
+   *
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entityManager
+   *   The entity manager.
+   */
+  public function __construct(EntityManagerInterface $entityManager) {
+    $this->entityManager = $entityManager;
+    $this->termStorage = $entityManager->getStorage('taxonomy_term');
+  }
 
   /**
    * {@inheritdoc}
@@ -35,8 +61,9 @@ class TermBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     //   hard-coded presumption. Make this behavior configurable per
     //   vocabulary or term.
     $breadcrumb = array();
-    while ($parents = taxonomy_term_load_parents($term->id())) {
+    while ($parents = $this->termStorage->loadParents($term->id())) {
       $term = array_shift($parents);
+      $term = $this->entityManager->getTranslationFromContext($term);
       $breadcrumb[] = Link::createFromRoute($term->getName(), 'entity.taxonomy_term.canonical', array('taxonomy_term' => $term->id()));
     }
     $breadcrumb[] = Link::createFromRoute($this->t('Home'), '<front>');
