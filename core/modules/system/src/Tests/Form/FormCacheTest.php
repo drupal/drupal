@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Form;
 
 use Drupal\Core\Form\FormState;
+use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Session\UserSession;
 use Drupal\simpletest\KernelTestBase;
 
@@ -88,7 +89,9 @@ class FormCacheTest extends KernelTestBase {
    * Tests the form cache without a logged-in user.
    */
   function testNoCacheToken() {
-    $this->container->set('current_user', new UserSession(array('uid' => 0)));
+    // Switch to a anonymous user account.
+    $account_switcher = \Drupal::service('account_switcher');
+    $account_switcher->switchTo(new AnonymousUserSession());
 
     $this->form_state->set('example', $this->randomMachineName());
     \Drupal::formBuilder()->setCache($this->form_build_id, $this->form, $this->form_state);
@@ -98,6 +101,9 @@ class FormCacheTest extends KernelTestBase {
     $this->assertEqual($this->form['#property'], $cached_form['#property']);
     $this->assertTrue(empty($cached_form['#cache_token']), 'Form has no cache token');
     $this->assertEqual($this->form_state->get('example'), $cached_form_state->get('example'));
+
+    // Restore user account.
+    $account_switcher->switchBack();
   }
 
 }
