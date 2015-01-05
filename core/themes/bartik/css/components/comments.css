@@ -48,7 +48,7 @@
   line-height: 1.6;
 }
 .comment .comment-arrow {
-  background: url(../images/comment-arrow.gif) no-repeat 0 center transparent; /* LTR */
+  background: url(../../images/comment-arrow.gif) no-repeat 0 center transparent; /* LTR */
   border-left: 1px solid;
   border-right: 1px solid;
   height: 40px;
@@ -58,7 +58,7 @@
   width: 20px;
 }
 [dir="rtl"] .comment .comment-arrow {
-  background-image: url(../images/comment-arrow-rtl.gif);
+  background-image: url(../../images/comment-arrow-rtl.gif);
   margin-left: 0;
   margin-right: -47px;
 }
