@@ -11,6 +11,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Base class for entity forms.
@@ -35,6 +36,13 @@ class EntityForm extends FormBase implements EntityFormInterface {
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
   protected $moduleHandler;
+
+  /**
+   * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityManagerInterface
+   */
+  protected $entityManager;
 
   /**
    * The entity being used by this form.
@@ -322,6 +330,20 @@ class EntityForm extends FormBase implements EntityFormInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getEntityFromRouteMatch(RouteMatchInterface $route_match, $entity_type_id) {
+    if ($route_match->getRawParameter($entity_type_id) !== NULL) {
+      $entity = $route_match->getParameter($entity_type_id);
+    }
+    else {
+      $entity = $this->entityManager->getStorage($entity_type_id)->create([]);
+    }
+
+    return $entity;
+  }
+
+  /**
    * Prepares the entity object before the form is built first.
    */
   protected function prepareEntity() {}
@@ -359,6 +381,14 @@ class EntityForm extends FormBase implements EntityFormInterface {
    */
   public function setModuleHandler(ModuleHandlerInterface $module_handler) {
     $this->moduleHandler = $module_handler;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setEntityManager(EntityManagerInterface $entity_manager) {
+    $this->entityManager = $entity_manager;
     return $this;
   }
 

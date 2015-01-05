@@ -294,6 +294,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
       $form_object
         ->setStringTranslation($this->translationManager)
         ->setModuleHandler($this->moduleHandler)
+        ->setEntityManager($this)
         ->setOperation($operation);
       $this->handlers['form'][$operation][$entity_type] = $form_object;
     }

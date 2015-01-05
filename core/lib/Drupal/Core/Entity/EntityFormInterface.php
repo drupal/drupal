@@ -10,6 +10,7 @@ namespace Drupal\Core\Entity;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\BaseFormIdInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 
 /**
@@ -40,9 +41,6 @@ interface EntityFormInterface extends BaseFormIdInterface {
    *
    * The form entity which has been used for populating form element defaults.
    *
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   *
    * @return \Drupal\Core\Entity\EntityInterface
    *   The current form entity.
    */
@@ -63,6 +61,19 @@ interface EntityFormInterface extends BaseFormIdInterface {
    * @return $this
    */
   public function setEntity(EntityInterface $entity);
+
+  /**
+   * Determines which entity will be used by this form from a RouteMatch object.
+   *
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The route match.
+   * @param string $entity_type_id
+   *   The entity type identifier.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
+   *   The entity object as determined from the passed-in route match.
+   */
+  public function getEntityFromRouteMatch(RouteMatchInterface $route_match, $entity_type_id);
 
   /**
    * Builds an updated entity object based upon the submitted form values.
@@ -128,5 +139,15 @@ interface EntityFormInterface extends BaseFormIdInterface {
    * @return $this
    */
   public function setModuleHandler(ModuleHandlerInterface $module_handler);
+
+  /**
+   * Sets the entity manager for this form.
+   *
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager.
+   *
+   * @return $this
+   */
+  public function setEntityManager(EntityManagerInterface $entity_manager);
 
 }

@@ -8,7 +8,7 @@
 namespace Drupal\Core\Controller;
 
 use Drupal\Core\Form\FormBuilderInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
 
 /**
@@ -39,24 +39,16 @@ class HtmlFormController extends FormController {
   }
 
   /**
-   * @{inheritDoc}
+   * {@inheritdoc}
    */
-  protected function getFormArgument(Request $request) {
-    return $request->attributes->get('_form');
+  protected function getFormArgument(RouteMatchInterface $route_match) {
+    return $route_match->getRouteObject()->getDefault('_form');
   }
 
   /**
-   * Returns the object used to build the form.
-   *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request using this form.
-   * @param string $form_arg
-   *   Either a class name or a service ID.
-   *
-   * @return \Drupal\Core\Form\FormInterface
-   *   The form object to use.
+   * {@inheritdoc}
    */
-  protected function getFormObject(Request $request, $form_arg) {
+  protected function getFormObject(RouteMatchInterface $route_match, $form_arg) {
     return $this->classResolver->getInstanceFromDefinition($form_arg);
   }
 

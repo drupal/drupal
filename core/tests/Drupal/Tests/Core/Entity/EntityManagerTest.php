@@ -10,14 +10,13 @@ namespace Drupal\Tests\Core\Entity {
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityHandlerBase;
 use Drupal\Core\Entity\EntityHandlerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
@@ -1504,6 +1503,13 @@ class TestEntityHandlerInjected implements EntityHandlerInterface {
 class TestEntityForm extends EntityHandlerBase {
 
   /**
+   * The entity manager.
+   *
+   * @var \Drupal\Tests\Core\Entity\TestEntityManager
+   */
+  protected $entityManager;
+
+  /**
    * {@inheritdoc}
    */
   public function getBaseFormId() {
@@ -1528,6 +1534,14 @@ class TestEntityForm extends EntityHandlerBase {
    * {@inheritdoc}
    */
   public function setOperation($operation) {
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setEntityManager(EntityManagerInterface $entity_manager) {
+    $this->entityManager = $entity_manager;
     return $this;
   }
 
