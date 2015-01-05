@@ -2,17 +2,17 @@
 
 /**
  * @file
- * Definition of views_handler_argument_field_list.
+ * Contains \Drupal\views\Plugin\views\argument\ListString.
  */
 
-namespace Drupal\field\Plugin\views\argument;
+namespace Drupal\views\Plugin\views\argument;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\String as UtilityString;
 use Drupal\Core\Field\AllowedTagsXssTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
-use Drupal\views\Plugin\views\argument\Numeric;
+use Drupal\views\Plugin\views\argument\String;
 
 /**
  * Argument handler for list field to show the human readable name in the
@@ -20,9 +20,9 @@ use Drupal\views\Plugin\views\argument\Numeric;
  *
  * @ingroup views_argument_handlers
  *
- * @ViewsArgument("field_list")
+ * @ViewsArgument("field_list_string")
  */
-class FieldList extends Numeric {
+class ListString extends String {
 
   use AllowedTagsXssTrait;
 
@@ -34,7 +34,7 @@ class FieldList extends Numeric {
   var $allowed_values = NULL;
 
   /**
-   * Overrides \Drupal\views\Plugin\views\argument\ArgumentPluginBase::init().
+   * Overrides \Drupal\views\Plugin\views\argument\String::init().
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
@@ -46,6 +46,7 @@ class FieldList extends Numeric {
 
   protected function defineOptions() {
     $options = parent::defineOptions();
+
     $options['summary']['contains']['human'] = array('default' => FALSE);
 
     return $options;
@@ -66,15 +67,16 @@ class FieldList extends Numeric {
     );
   }
 
+
   public function summaryName($data) {
     $value = $data->{$this->name_alias};
     // If the list element has a human readable name show it,
     if (isset($this->allowed_values[$value]) && !empty($this->options['summary']['human'])) {
-      return $this->fieldFilterXss($this->allowed_values[$value]);
+      return $this->caseTransform($this->fieldfilterXss($this->allowed_values[$value]), $this->options['case']);
     }
     // else fallback to the key.
     else {
-      return String::checkPlain($value);
+      return $this->caseTransform(UtilityString::checkPlain($value), $this->options['case']);
     }
   }
 

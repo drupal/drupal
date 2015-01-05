@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\field\Plugin\views\relationship\EntityReverse.
+ * Contains \Drupal\views\Plugin\views\relationship\EntityReverse.
  */
 
-namespace Drupal\field\Plugin\views\relationship;
+namespace Drupal\views\Plugin\views\relationship;
 
 use Drupal\views\Plugin\ViewsHandlerManager;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;

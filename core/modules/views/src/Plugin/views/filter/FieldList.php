@@ -2,12 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\field\Plugin\views\filter\FieldList.
+ * Contains \Drupal\views\Plugin\views\filter\FieldList.
  */
 
-namespace Drupal\field\Plugin\views\filter;
-
-use Drupal\views\Plugin\views\filter\ManyToOne;
+namespace Drupal\views\Plugin\views\filter;
 
 /**
  * Filter handler which uses list-fields as options.
