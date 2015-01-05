@@ -72,7 +72,7 @@ class TermTest extends TaxonomyTestBase {
 
     // Check that hierarchy is flat.
     $vocabulary = entity_load('taxonomy_vocabulary', $this->vocabulary->id());
-    $this->assertEqual(0, $vocabulary->hierarchy, 'Vocabulary is flat.');
+    $this->assertEqual(0, $vocabulary->getHierarchy(), 'Vocabulary is flat.');
 
     // Edit $term2, setting $term1 as parent.
     $edit = array();

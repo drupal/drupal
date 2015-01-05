@@ -33,7 +33,7 @@ class VocabularyForm extends EntityForm {
     $form['name'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Name'),
-      '#default_value' => $vocabulary->name,
+      '#default_value' => $vocabulary->label(),
       '#maxlength' => 255,
       '#required' => TRUE,
     );
@@ -49,7 +49,7 @@ class VocabularyForm extends EntityForm {
     $form['description'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Description'),
-      '#default_value' => $vocabulary->description,
+      '#default_value' => $vocabulary->getDescription(),
     );
 
     // $form['langcode'] is not wrapped in an
@@ -114,20 +114,20 @@ class VocabularyForm extends EntityForm {
     $vocabulary = $this->entity;
 
     // Prevent leading and trailing spaces in vocabulary names.
-    $vocabulary->name = trim($vocabulary->name);
+    $vocabulary->set('name', trim($vocabulary->label()));
 
     $status = $vocabulary->save();
     $edit_link = $this->entity->link($this->t('Edit'));
     switch ($status) {
       case SAVED_NEW:
-        drupal_set_message($this->t('Created new vocabulary %name.', array('%name' => $vocabulary->name)));
-        $this->logger('taxonomy')->notice('Created new vocabulary %name.', array('%name' => $vocabulary->name, 'link' => $edit_link));
+        drupal_set_message($this->t('Created new vocabulary %name.', array('%name' => $vocabulary->label())));
+        $this->logger('taxonomy')->notice('Created new vocabulary %name.', array('%name' => $vocabulary->label(), 'link' => $edit_link));
         $form_state->setRedirectUrl($vocabulary->urlInfo('overview-form'));
         break;
 
       case SAVED_UPDATED:
-        drupal_set_message($this->t('Updated vocabulary %name.', array('%name' => $vocabulary->name)));
-        $this->logger('taxonomy')->notice('Updated vocabulary %name.', array('%name' => $vocabulary->name, 'link' => $edit_link));
+        drupal_set_message($this->t('Updated vocabulary %name.', array('%name' => $vocabulary->label())));
+        $this->logger('taxonomy')->notice('Updated vocabulary %name.', array('%name' => $vocabulary->label(), 'link' => $edit_link));
         $form_state->setRedirect('taxonomy.vocabulary_list');
         break;
     }

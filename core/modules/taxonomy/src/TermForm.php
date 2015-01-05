@@ -30,7 +30,7 @@ class TermForm extends ContentEntityForm {
     $form['relations'] = array(
       '#type' => 'details',
       '#title' => $this->t('Relations'),
-      '#open' => $vocabulary->hierarchy == TAXONOMY_HIERARCHY_MULTIPLE,
+      '#open' => $vocabulary->getHierarchy() == TAXONOMY_HIERARCHY_MULTIPLE,
       '#weight' => 10,
     );
 
@@ -154,8 +154,8 @@ class TermForm extends ContentEntityForm {
     }
     // If we've increased the number of parents and this is a single or flat
     // hierarchy, update the vocabulary immediately.
-    elseif ($current_parent_count > $previous_parent_count && $vocabulary->hierarchy != TAXONOMY_HIERARCHY_MULTIPLE) {
-      $vocabulary->hierarchy = $current_parent_count == 1 ? TAXONOMY_HIERARCHY_SINGLE : TAXONOMY_HIERARCHY_MULTIPLE;
+    elseif ($current_parent_count > $previous_parent_count && $vocabulary->getHierarchy() != TAXONOMY_HIERARCHY_MULTIPLE) {
+      $vocabulary->setHierarchy($current_parent_count == 1 ? TAXONOMY_HIERARCHY_SINGLE : TAXONOMY_HIERARCHY_MULTIPLE);
       $vocabulary->save();
     }
 

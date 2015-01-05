@@ -424,8 +424,8 @@ function hook_mail($key, &$message, $params) {
       '%term_name' => $entity->name,
       '%term_description' => $entity->description,
       '%term_id' => $entity->id(),
-      '%vocabulary_name' => $vocabulary->name,
-      '%vocabulary_description' => $vocabulary->description,
+      '%vocabulary_name' => $vocabulary->label(),
+      '%vocabulary_description' => $vocabulary->getDescription(),
       '%vocabulary_id' => $vocabulary->id(),
     );
   }

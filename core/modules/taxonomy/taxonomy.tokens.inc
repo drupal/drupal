@@ -128,7 +128,7 @@ function taxonomy_tokens($type, $tokens, array $data = array(), array $options =
 
         case 'vocabulary':
           $vocabulary = entity_load('taxonomy_vocabulary', $term->bundle());
-          $replacements[$original] = String::checkPlain($vocabulary->name);
+          $replacements[$original] = String::checkPlain($vocabulary->label());
           break;
 
         case 'parent':
@@ -161,11 +161,11 @@ function taxonomy_tokens($type, $tokens, array $data = array(), array $options =
           break;
 
         case 'name':
-          $replacements[$original] = $sanitize ? String::checkPlain($vocabulary->name) : $vocabulary->name;
+          $replacements[$original] = $sanitize ? String::checkPlain($vocabulary->label()) : $vocabulary->label();
           break;
 
         case 'description':
-          $replacements[$original] = $sanitize ? Xss::filter($vocabulary->description) : $vocabulary->description;
+          $replacements[$original] = $sanitize ? Xss::filter($vocabulary->getDescription()) : $vocabulary->getDescription();
           break;
 
         case 'term-count':

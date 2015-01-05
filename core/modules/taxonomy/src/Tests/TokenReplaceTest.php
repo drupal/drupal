@@ -88,7 +88,7 @@ class TokenReplaceTest extends TaxonomyTestBase {
     $tests['[term:url]'] = $term1->url('canonical', array('absolute' => TRUE));
     $tests['[term:node-count]'] = 0;
     $tests['[term:parent:name]'] = '[term:parent:name]';
-    $tests['[term:vocabulary:name]'] = String::checkPlain($this->vocabulary->name);
+    $tests['[term:vocabulary:name]'] = String::checkPlain($this->vocabulary->label());
 
     foreach ($tests as $input => $expected) {
       $output = $token_service->replace($input, array('term' => $term1), array('langcode' => $language_interface->getId()));
@@ -105,7 +105,7 @@ class TokenReplaceTest extends TaxonomyTestBase {
     $tests['[term:parent:name]'] = String::checkPlain($term1->getName());
     $tests['[term:parent:url]'] = $term1->url('canonical', array('absolute' => TRUE));
     $tests['[term:parent:parent:name]'] = '[term:parent:parent:name]';
-    $tests['[term:vocabulary:name]'] = String::checkPlain($this->vocabulary->name);
+    $tests['[term:vocabulary:name]'] = String::checkPlain($this->vocabulary->label());
 
     // Test to make sure that we generated something for each token.
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
@@ -119,7 +119,7 @@ class TokenReplaceTest extends TaxonomyTestBase {
     $tests['[term:name]'] = $term2->getName();
     $tests['[term:description]'] = $term2->getDescription();
     $tests['[term:parent:name]'] = $term1->getName();
-    $tests['[term:vocabulary:name]'] = $this->vocabulary->name;
+    $tests['[term:vocabulary:name]'] = $this->vocabulary->label();
 
     foreach ($tests as $input => $expected) {
       $output = $token_service->replace($input, array('term' => $term2), array('langcode' => $language_interface->getId(), 'sanitize' => FALSE));
@@ -129,8 +129,8 @@ class TokenReplaceTest extends TaxonomyTestBase {
     // Generate and test sanitized tokens.
     $tests = array();
     $tests['[vocabulary:vid]'] = $this->vocabulary->id();
-    $tests['[vocabulary:name]'] = String::checkPlain($this->vocabulary->name);
-    $tests['[vocabulary:description]'] = Xss::filter($this->vocabulary->description);
+    $tests['[vocabulary:name]'] = String::checkPlain($this->vocabulary->label());
+    $tests['[vocabulary:description]'] = Xss::filter($this->vocabulary->getDescription());
     $tests['[vocabulary:node-count]'] = 1;
     $tests['[vocabulary:term-count]'] = 2;
 
@@ -143,8 +143,8 @@ class TokenReplaceTest extends TaxonomyTestBase {
     }
 
     // Generate and test unsanitized tokens.
-    $tests['[vocabulary:name]'] = $this->vocabulary->name;
-    $tests['[vocabulary:description]'] = $this->vocabulary->description;
+    $tests['[vocabulary:name]'] = $this->vocabulary->label();
+    $tests['[vocabulary:description]'] = $this->vocabulary->getDescription();
 
     foreach ($tests as $input => $expected) {
       $output = $token_service->replace($input, array('vocabulary' => $this->vocabulary), array('langcode' => $language_interface->getId(), 'sanitize' => FALSE));

@@ -55,7 +55,7 @@ class EfqTest extends TaxonomyTestBase {
       ->condition('vid', $vocabulary2->id())
       ->execute();
     sort($result);
-    $this->assertEqual(array_keys($terms2), $result, format_string('Taxonomy terms from the %name vocabulary were retrieved by entity query.', array('%name' => $vocabulary2->name)));
+    $this->assertEqual(array_keys($terms2), $result, format_string('Taxonomy terms from the %name vocabulary were retrieved by entity query.', array('%name' => $vocabulary2->label())));
     $tid = reset($result);
     $ids = (object) array(
       'entity_type' => 'taxonomy_term',

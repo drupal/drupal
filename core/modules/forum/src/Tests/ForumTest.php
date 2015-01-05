@@ -340,16 +340,16 @@ class ForumTest extends WebTestBase {
     $current_vocabulary = entity_load('taxonomy_vocabulary', $vid);
 
     // Make sure we actually edited the vocabulary properly.
-    $this->assertEqual($current_vocabulary->name, $edit['name'], 'The name was updated');
-    $this->assertEqual($current_vocabulary->description, $edit['description'], 'The description was updated');
+    $this->assertEqual($current_vocabulary->label(), $edit['name'], 'The name was updated');
+    $this->assertEqual($current_vocabulary->getDescription(), $edit['description'], 'The description was updated');
 
     // Restore the original vocabulary's name and description.
-    $current_vocabulary->set('name', $original_vocabulary->name);
-    $current_vocabulary->set('description', $original_vocabulary->description);
+    $current_vocabulary->set('name', $original_vocabulary->label());
+    $current_vocabulary->set('description', $original_vocabulary->getDescription());
     $current_vocabulary->save();
     // Reload vocabulary to make sure changes are saved.
     $current_vocabulary = entity_load('taxonomy_vocabulary', $vid);
-    $this->assertEqual($current_vocabulary->name, $original_vocabulary->name, 'The original vocabulary settings were restored');
+    $this->assertEqual($current_vocabulary->label(), $original_vocabulary->label(), 'The original vocabulary settings were restored');
   }
 
   /**

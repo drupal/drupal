@@ -83,13 +83,13 @@ function taxonomy_help($route_name, RouteMatchInterface $route_match) {
 
     case 'entity.taxonomy_vocabulary.overview_form':
       $vocabulary = $route_match->getParameter('taxonomy_vocabulary');
-      switch ($vocabulary->hierarchy) {
+      switch ($vocabulary->getHierarchy()) {
         case TAXONOMY_HIERARCHY_DISABLED:
-          return '<p>' . t('You can reorganize the terms in %capital_name using their drag-and-drop handles, and group terms under a parent term by sliding them under and to the right of the parent.', array('%capital_name' => Unicode::ucfirst($vocabulary->name), '%name' => $vocabulary->name)) . '</p>';
+          return '<p>' . t('You can reorganize the terms in %capital_name using their drag-and-drop handles, and group terms under a parent term by sliding them under and to the right of the parent.', array('%capital_name' => Unicode::ucfirst($vocabulary->label()), '%name' => $vocabulary->label())) . '</p>';
         case TAXONOMY_HIERARCHY_SINGLE:
-          return '<p>' . t('%capital_name contains terms grouped under parent terms. You can reorganize the terms in %capital_name using their drag-and-drop handles.', array('%capital_name' => Unicode::ucfirst($vocabulary->name), '%name' => $vocabulary->name)) . '</p>';
+          return '<p>' . t('%capital_name contains terms grouped under parent terms. You can reorganize the terms in %capital_name using their drag-and-drop handles.', array('%capital_name' => Unicode::ucfirst($vocabulary->label()), '%name' => $vocabulary->label())) . '</p>';
         case TAXONOMY_HIERARCHY_MULTIPLE:
-          return '<p>' . t('%capital_name contains terms with multiple parents. Drag and drop of terms with multiple parents is not supported, but you can re-enable drag-and-drop support by editing each term to include only a single parent.', array('%capital_name' => Unicode::ucfirst($vocabulary->name))) . '</p>';
+          return '<p>' . t('%capital_name contains terms with multiple parents. Drag and drop of terms with multiple parents is not supported, but you can re-enable drag-and-drop support by editing each term to include only a single parent.', array('%capital_name' => Unicode::ucfirst($vocabulary->label()))) . '</p>';
       }
   }
 }
@@ -238,8 +238,8 @@ function taxonomy_check_vocabulary_hierarchy(VocabularyInterface $vocabulary, $c
       $hierarchy = TAXONOMY_HIERARCHY_SINGLE;
     }
   }
-  if ($hierarchy != $vocabulary->hierarchy) {
-    $vocabulary->hierarchy = $hierarchy;
+  if ($hierarchy != $vocabulary->getHierarchy()) {
+    $vocabulary->setHierarchy($hierarchy);
     $vocabulary->save();
   }
 

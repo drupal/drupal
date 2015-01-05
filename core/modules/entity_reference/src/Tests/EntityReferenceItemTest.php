@@ -161,17 +161,17 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     $this->assertTrue($entity->field_test_taxonomy_vocabulary instanceof FieldItemListInterface, 'Field implements interface.');
     $this->assertTrue($entity->field_test_taxonomy_vocabulary[0] instanceof FieldItemInterface, 'Field item implements interface.');
     $this->assertEqual($entity->field_test_taxonomy_vocabulary->target_id, $referenced_entity_id);
-    $this->assertEqual($entity->field_test_taxonomy_vocabulary->entity->name, $this->vocabulary->name);
+    $this->assertEqual($entity->field_test_taxonomy_vocabulary->entity->label(), $this->vocabulary->label());
     $this->assertEqual($entity->field_test_taxonomy_vocabulary->entity->id(), $referenced_entity_id);
     $this->assertEqual($entity->field_test_taxonomy_vocabulary->entity->uuid(), $this->vocabulary->uuid());
 
     // Change the name of the term via the reference.
     $new_name = $this->randomMachineName();
-    $entity->field_test_taxonomy_vocabulary->entity->name = $new_name;
+    $entity->field_test_taxonomy_vocabulary->entity->set('name', $new_name);
     $entity->field_test_taxonomy_vocabulary->entity->save();
     // Verify it is the correct name.
     $vocabulary = entity_load('taxonomy_vocabulary', $referenced_entity_id);
-    $this->assertEqual($vocabulary->name, $new_name);
+    $this->assertEqual($vocabulary->label(), $new_name);
 
     // Make sure the computed term reflects updates to the term id.
     $vocabulary2 = entity_create('taxonomy_vocabulary', array(
@@ -183,7 +183,7 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
 
     $entity->field_test_taxonomy_vocabulary->target_id = $vocabulary2->id();
     $this->assertEqual($entity->field_test_taxonomy_vocabulary->entity->id(), $vocabulary2->id());
-    $this->assertEqual($entity->field_test_taxonomy_vocabulary->entity->name, $vocabulary2->name);
+    $this->assertEqual($entity->field_test_taxonomy_vocabulary->entity->label(), $vocabulary2->label());
 
     // Delete terms so we have nothing to reference and try again
     $this->vocabulary->delete();

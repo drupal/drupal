@@ -83,8 +83,8 @@ class VocabularyUiTest extends TaxonomyTestBase {
     $vocabularies = entity_load_multiple('taxonomy_vocabulary');
     $edit = array();
     foreach ($vocabularies as $key => $vocabulary) {
-      $weight = -$vocabulary->weight;
-      $vocabularies[$key]->weight = $weight;
+      $weight = -$vocabulary->get('weight');
+      $vocabularies[$key]->set('weight', $weight);
       $edit['vocabularies[' . $key . '][weight]'] = $weight;
     }
     // Saving the new weights via the interface.
@@ -96,7 +96,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
 
     // Check that the weights are saved in the database correctly.
     foreach ($vocabularies as $key => $vocabulary) {
-      $this->assertEqual($new_vocabularies[$key]->weight, $vocabularies[$key]->weight, 'The vocabulary weight was changed.');
+      $this->assertEqual($new_vocabularies[$key]->get('weight'), $vocabularies[$key]->get('weight'), 'The vocabulary weight was changed.');
     }
   }
 
@@ -137,12 +137,12 @@ class VocabularyUiTest extends TaxonomyTestBase {
     // Delete the vocabulary.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $vocabulary->id());
     $this->clickLink(t('Delete'));
-    $this->assertRaw(t('Are you sure you want to delete the vocabulary %name?', array('%name' => $vocabulary->name)), '[confirm deletion] Asks for confirmation.');
+    $this->assertRaw(t('Are you sure you want to delete the vocabulary %name?', array('%name' => $vocabulary->label())), '[confirm deletion] Asks for confirmation.');
     $this->assertText(t('Deleting a vocabulary will delete all the terms in it. This action cannot be undone.'), '[confirm deletion] Inform that all terms will be deleted.');
 
     // Confirm deletion.
     $this->drupalPostForm(NULL, NULL, t('Delete'));
-    $this->assertRaw(t('Deleted vocabulary %name.', array('%name' => $vocabulary->name)), 'Vocabulary deleted.');
+    $this->assertRaw(t('Deleted vocabulary %name.', array('%name' => $vocabulary->label())), 'Vocabulary deleted.');
     $this->container->get('entity.manager')->getStorage('taxonomy_vocabulary')->resetCache();
     $this->assertFalse(entity_load('taxonomy_vocabulary', $vid), 'Vocabulary not found.');
   }

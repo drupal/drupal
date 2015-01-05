@@ -125,7 +125,7 @@ class TaxonomyTermReferenceItem extends EntityReferenceItem implements OptionsPr
     $vocabularies = entity_load_multiple('taxonomy_vocabulary');
     $options = array();
     foreach ($vocabularies as $vocabulary) {
-      $options[$vocabulary->id()] = $vocabulary->name;
+      $options[$vocabulary->id()] = $vocabulary->label();
     }
 
     $element = array();

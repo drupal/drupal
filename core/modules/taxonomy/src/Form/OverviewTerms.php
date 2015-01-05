@@ -227,7 +227,7 @@ class OverviewTerms extends FormBase {
         '#title' => $term->getName(),
         '#url' => $term->urlInfo(),
       );
-      if ($taxonomy_vocabulary->hierarchy != TAXONOMY_HIERARCHY_MULTIPLE && count($tree) > 1) {
+      if ($taxonomy_vocabulary->getHierarchy() != TAXONOMY_HIERARCHY_MULTIPLE && count($tree) > 1) {
         $parent_fields = TRUE;
         $form['terms'][$key]['term']['tid'] = array(
           '#type' => 'hidden',
@@ -344,7 +344,7 @@ class OverviewTerms extends FormBase {
       'group' => 'term-weight',
     );
 
-    if ($taxonomy_vocabulary->hierarchy != TAXONOMY_HIERARCHY_MULTIPLE && count($tree) > 1) {
+    if ($taxonomy_vocabulary->getHierarchy() != TAXONOMY_HIERARCHY_MULTIPLE && count($tree) > 1) {
       $form['actions'] = array('#type' => 'actions', '#tree' => FALSE);
       $form['actions']['submit'] = array(
         '#type' => 'submit',
@@ -454,8 +454,8 @@ class OverviewTerms extends FormBase {
     }
 
     // Update the vocabulary hierarchy to flat or single hierarchy.
-    if ($vocabulary->hierarchy != $hierarchy) {
-      $vocabulary->hierarchy = $hierarchy;
+    if ($vocabulary->getHierarchy() != $hierarchy) {
+      $vocabulary->setHierarchy($hierarchy);
       $vocabulary->save();
     }
     drupal_set_message($this->t('The configuration options have been saved.'));

@@ -166,7 +166,7 @@ class TermFieldTest extends TaxonomyTestBase {
     $this->field_storage->save();
     // Change the machine name.
     $new_name = Unicode::strtolower($this->randomMachineName());
-    $this->vocabulary->vid = $new_name;
+    $this->vocabulary->set('vid', $new_name);
     $this->vocabulary->save();
 
     // Check that the field is still attached to the vocabulary.

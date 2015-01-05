@@ -450,7 +450,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
     ));
 
     $GLOBALS['entity_crud_hook_test'] = array();
-    $vocabulary->name = 'New name';
+    $vocabulary->set('name', 'New name');
     $vocabulary->save();
 
     $this->assertHookMessageOrder(array(

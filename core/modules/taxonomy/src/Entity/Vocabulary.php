@@ -52,21 +52,21 @@ class Vocabulary extends ConfigEntityBundleBase implements VocabularyInterface {
    *
    * @var string
    */
-  public $vid;
+  protected $vid;
 
   /**
    * Name of the vocabulary.
    *
    * @var string
    */
-  public $name;
+  protected $name;
 
   /**
    * Description of the vocabulary.
    *
    * @var string
    */
-  public $description;
+  protected $description;
 
   /**
    * The type of hierarchy allowed within the vocabulary.
@@ -78,20 +78,42 @@ class Vocabulary extends ConfigEntityBundleBase implements VocabularyInterface {
    *
    * @var integer
    */
-  public $hierarchy = TAXONOMY_HIERARCHY_DISABLED;
+  protected $hierarchy = TAXONOMY_HIERARCHY_DISABLED;
 
   /**
    * The weight of this vocabulary in relation to other vocabularies.
    *
    * @var integer
    */
-  public $weight = 0;
+  protected $weight = 0;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getHierarchy() {
+    return $this->hierarchy;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setHierarchy($hierarchy) {
+    $this->hierarchy = $hierarchy;
+    return $this;
+  }
 
   /**
    * {@inheritdoc}
    */
   public function id() {
     return $this->vid;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDescription() {
+    return $this->description;
   }
 
   /**

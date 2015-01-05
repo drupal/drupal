@@ -14,6 +14,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides dynamic permissions of the taxonomy module.
+ *
+ * @see taxonomy.permissions.yml
  */
 class TaxonomyPermissions implements ContainerInjectionInterface {
 
@@ -44,21 +46,22 @@ class TaxonomyPermissions implements ContainerInjectionInterface {
   }
 
   /**
-   * Returns an array of REST permissions.
+   * Get taxonomy permissions.
    *
    * @return array
+   *   Permissions array.
    */
   public function permissions() {
     $permissions = [];
     foreach ($this->entityManager->getStorage('taxonomy_vocabulary')->loadMultiple() as $vocabulary) {
       $permissions += [
         'edit terms in ' . $vocabulary->id() => [
-          'title' => $this->t('Edit terms in %vocabulary', ['%vocabulary' => $vocabulary->name]),
+          'title' => $this->t('Edit terms in %vocabulary', ['%vocabulary' => $vocabulary->label()]),
         ],
       ];
       $permissions += [
         'delete terms in ' . $vocabulary->id() => [
-          'title' => $this->t('Delete terms from %vocabulary', ['%vocabulary' => $vocabulary->name]),
+          'title' => $this->t('Delete terms from %vocabulary', ['%vocabulary' => $vocabulary->label()]),
         ],
       ];
     }
