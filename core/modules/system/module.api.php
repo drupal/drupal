@@ -299,8 +299,9 @@ function hook_uninstall() {
  *       regular callback function, which does its processing and optionally
  *       returns HTML output.
  *     - batch: This indicates that the task function will return a batch API
- *       definition suitable for batch_set(). The installer will then take care
- *       of automatically running the task via batch processing.
+ *       definition suitable for batch_set() or an array of batch definitions
+ *       suitable for consecutive batch_set() calls. The installer will then
+ *       take care of automatically running the task via batch processing.
  *     - form: This indicates that the task function will return a standard
  *       form API definition (and separately define validation and submit
  *       handlers, as appropriate). The installer will then take care of

@@ -29,8 +29,8 @@ class InstallerTranslationMultipleLanguageTest extends InstallerTestBase {
   protected function setUpLanguage() {
     // Place custom local translations in the translations directory.
     mkdir(DRUPAL_ROOT . '/' . $this->siteDirectory . '/files/translations', 0777, TRUE);
-    file_put_contents(DRUPAL_ROOT . '/' . $this->siteDirectory . '/files/translations/drupal-8.0.0.de.po', "msgid \"\"\nmsgstr \"\"\nmsgid \"Save and continue\"\nmsgstr \"Save and continue German\"");
-    file_put_contents(DRUPAL_ROOT . '/' . $this->siteDirectory . '/files/translations/drupal-8.0.0.es.po', "msgid \"\"\nmsgstr \"\"\nmsgid \"Save and continue\"\nmsgstr \"Save and continue Spanish\"");
+    file_put_contents(DRUPAL_ROOT . '/' . $this->siteDirectory . '/files/translations/drupal-8.0.0.de.po', "msgid \"\"\nmsgstr \"\"\nmsgid \"Save and continue\"\nmsgstr \"Save and continue German\"\nmsgid\"Anonymous\"\nmsgstr\"Anonymous German\"");
+    file_put_contents(DRUPAL_ROOT . '/' . $this->siteDirectory . '/files/translations/drupal-8.0.0.es.po', "msgid \"\"\nmsgstr \"\"\nmsgid \"Save and continue\"\nmsgstr \"Save and continue Spanish\"\nmsgid\"Anonymous\"\nmsgstr\"Anonymous Spanish\"");
 
     parent::setUpLanguage();
   }
@@ -49,18 +49,27 @@ class InstallerTranslationMultipleLanguageTest extends InstallerTestBase {
     }
 
     // Verify the strings from the translation files were imported.
-    $edit = array();
-    $edit['langcode'] = 'de';
-    $edit['translation'] = 'translated';
-    $edit['string'] = 'Save and continue';
-    $this->drupalPostForm('admin/config/regional/translate', $edit, t('Filter'));
-    $this->assertText('Save and continue German');
-    $edit = array();
-    $edit['langcode'] = 'es';
-    $edit['translation'] = 'translated';
-    $edit['string'] = 'Save and continue';
-    $this->drupalPostForm('admin/config/regional/translate', $edit, t('Filter'));
-    $this->assertText('Save and continue Spanish');
+    $test_samples = array('Save and continue', 'Anonymous');
+    $languages = array(
+      'de' => 'German',
+      'es' => 'Spanish',
+    );
+
+    foreach($test_samples as $sample) {
+      foreach($languages as $langcode => $name) {
+        $edit = array();
+        $edit['langcode'] = $langcode;
+        $edit['translation'] = 'translated';
+        $edit['string'] = $sample;
+        $this->drupalPostForm('admin/config/regional/translate', $edit, t('Filter'));
+        $this->assertText($sample . ' ' . $name);
+      }
+    }
+
+    $config = \Drupal::languageManager()->getLanguageConfigOverride('de', 'user.settings');
+    $this->assertEqual($config->get('anonymous'), 'Anonymous German');
+    $config = \Drupal::languageManager()->getLanguageConfigOverride('es', 'user.settings');
+    $this->assertEqual($config->get('anonymous'), 'Anonymous Spanish');
   }
 
 }
