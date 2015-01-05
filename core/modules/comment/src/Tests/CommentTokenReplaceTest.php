@@ -57,6 +57,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests['[comment:homepage]'] = check_url($comment->getHomepage());
     $tests['[comment:title]'] = Xss::filter($comment->getSubject());
     $tests['[comment:body]'] = $comment->comment_body->processed;
+    $tests['[comment:langcode]'] = String::checkPlain($comment->language()->getId());
     $tests['[comment:url]'] = $comment->url('canonical', $url_options + array('fragment' => 'comment-' . $comment->id()));
     $tests['[comment:edit-url]'] = $comment->url('edit-form', $url_options);
     $tests['[comment:created:since]'] = \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $comment->getCreatedTime(), 2, $language_interface->getId());
@@ -85,6 +86,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests['[comment:homepage]'] = $comment->getHomepage();
     $tests['[comment:title]'] = $comment->getSubject();
     $tests['[comment:body]'] = $comment->comment_body->value;
+    $tests['[comment:langcode]'] = $comment->language()->getId();
     $tests['[comment:parent:title]'] = $parent_comment->getSubject();
     $tests['[comment:entity]'] = $node->getTitle();
     $tests['[comment:author:name]'] = $this->adminUser->getUsername();
