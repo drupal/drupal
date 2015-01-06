@@ -7,7 +7,7 @@ type: image
 settings:
   uri_scheme: public
   default_image:
-    fid: null
+    uuid: null
     alt: ''
     title: ''
     width: null

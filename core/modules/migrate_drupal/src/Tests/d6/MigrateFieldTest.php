@@ -72,7 +72,7 @@ class MigrateFieldTest extends MigrateDrupalTestBase {
     $settings = $field_storage->getSettings();
     $this->assertEqual($settings['target_type'], 'file');
     $this->assertEqual($settings['uri_scheme'], 'public');
-    $this->assertEqual($settings['default_image']['fid'], '');
+    $this->assertEqual($settings['default_image']['uuid'], '');
     $this->assertEqual(array_filter($settings['default_image']), array());
 
     // Phone field.

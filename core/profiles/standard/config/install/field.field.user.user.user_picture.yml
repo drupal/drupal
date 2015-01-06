@@ -18,7 +18,7 @@ settings:
   max_resolution: 85x85
   min_resolution: ''
   default_image:
-    fid: null
+    uuid: null
     alt: ''
     title: ''
     width: null

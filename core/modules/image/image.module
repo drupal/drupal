@@ -340,18 +340,18 @@ function image_entity_presave(EntityInterface $entity) {
     return;
   }
 
-  $fid = $entity->settings['default_image']['fid'];
-  if ($fid) {
-    $original_fid = isset($entity->original) ? $entity->original->settings['default_image']['fid'] : NULL;
-    if ($fid != $original_fid) {
-      $file = file_load($fid);
+  $uuid = $entity->settings['default_image']['uuid'];
+  if ($uuid) {
+    $original_uuid = isset($entity->original) ? $entity->original->settings['default_image']['uuid'] : NULL;
+    if ($uuid != $original_uuid) {
+      $file = \Drupal::entityManager()->loadEntityByUuid('file', $uuid);
       if ($file) {
         $image = \Drupal::service('image.factory')->get($file->getFileUri());
         $entity->settings['default_image']['width'] = $image->getWidth();
         $entity->settings['default_image']['height'] = $image->getHeight();
       }
       else {
-        $entity->settings['default_image']['fid'] = NULL;
+        $entity->settings['default_image']['uuid'] = NULL;
       }
     }
   }
@@ -371,12 +371,12 @@ function image_field_storage_config_update(FieldStorageConfigInterface $field_st
   $prior_field_storage = $field_storage->original;
 
   // The value of a managed_file element can be an array if #extended == TRUE.
-  $fid_new = $field_storage->settings['default_image']['fid'];
-  $fid_old = $prior_field_storage->settings['default_image']['fid'];
+  $uuid_new = $field_storage->settings['default_image']['uuid'];
+  $uuid_old = $prior_field_storage->settings['default_image']['uuid'];
 
-  $file_new = $fid_new ? file_load($fid_new) : FALSE;
+  $file_new = $uuid_new ? \Drupal::entityManager()->loadEntityByUuid('file', $uuid_new) : FALSE;
 
-  if ($fid_new != $fid_old) {
+  if ($uuid_new != $uuid_old) {
 
     // Is there a new file?
     if ($file_new) {
@@ -386,7 +386,7 @@ function image_field_storage_config_update(FieldStorageConfigInterface $field_st
     }
 
     // Is there an old file?
-    if ($fid_old && ($file_old = file_load($fid_old))) {
+    if ($uuid_old && ($file_old = \Drupal::entityManager()->loadEntityByUuid('file', $uuid_old))) {
       \Drupal::service('file.usage')->delete($file_old, 'image', 'default_image', $field_storage->uuid());
     }
   }
@@ -411,12 +411,12 @@ function image_field_config_update(FieldConfigInterface $field) {
 
   $prior_instance = $field->original;
 
-  $fid_new = $field->settings['default_image']['fid'];
-  $fid_old = $prior_instance->settings['default_image']['fid'];
+  $uuid_new = $field->settings['default_image']['uuid'];
+  $uuid_old = $prior_instance->settings['default_image']['uuid'];
 
   // If the old and new files do not match, update the default accordingly.
-  $file_new = $fid_new ? file_load($fid_new) : FALSE;
-  if ($fid_new != $fid_old) {
+  $file_new = $uuid_new ? \Drupal::entityManager()->loadEntityByUuid('file', $uuid_new) : FALSE;
+  if ($uuid_new != $uuid_old) {
     // Save the new file, if present.
     if ($file_new) {
       $file_new->status = FILE_STATUS_PERMANENT;
@@ -424,7 +424,7 @@ function image_field_config_update(FieldConfigInterface $field) {
       \Drupal::service('file.usage')->add($file_new, 'image', 'default_image', $field->uuid());
     }
     // Delete the old file, if present.
-    if ($fid_old && ($file_old = file_load($fid_old))) {
+    if ($uuid_old && ($file_old = \Drupal::entityManager()->loadEntityByUuid('file', $uuid_old))) {
       \Drupal::service('file.usage')->delete($file_old, 'image', 'default_image', $field->uuid());
     }
   }
@@ -447,8 +447,8 @@ function image_field_storage_config_delete(FieldStorageConfigInterface $field) {
   }
 
   // The value of a managed_file element can be an array if #extended == TRUE.
-  $fid = $field->settings['default_image']['fid'];
-  if ($fid && ($file = file_load($fid))) {
+  $uuid = $field->settings['default_image']['uuid'];
+  if ($uuid && ($file = \Drupal::entityManager()->loadEntityByUuid('file', $uuid))) {
     \Drupal::service('file.usage')->delete($file, 'image', 'default_image', $field->uuid());
   }
 }
@@ -464,10 +464,10 @@ function image_field_config_delete(FieldConfigInterface $field) {
   }
 
   // The value of a managed_file element can be an array if #extended == TRUE.
-  $fid = $field->settings['default_image']['fid'];
+  $uuid = $field->settings['default_image']['uuid'];
 
   // Remove the default image when the instance is deleted.
-  if ($fid && ($file = file_load($fid))) {
+  if ($uuid && ($file = \Drupal::entityManager()->loadEntityByUuid('file', $uuid))) {
     \Drupal::service('file.usage')->delete($file, 'image', 'default_image', $field->uuid());
   }
 }

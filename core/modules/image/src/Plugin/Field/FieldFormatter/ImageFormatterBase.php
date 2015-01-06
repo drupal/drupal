@@ -28,11 +28,11 @@ abstract class ImageFormatterBase extends FileFormatterBase {
         $default_image = $this->getFieldSetting('default_image');
         // If we are dealing with a configurable field, look in both
         // instance-level and field-level settings.
-        if (empty($default_image['fid']) && $this->fieldDefinition instanceof FieldConfigInterface) {
+        if (empty($default_image['uuid']) && $this->fieldDefinition instanceof FieldConfigInterface) {
           $default_image = $this->fieldDefinition->getFieldStorageDefinition()->getSetting('default_image');
         }
 
-        if (!empty($default_image['fid']) && ($file = file_load($default_image['fid']))) {
+        if (!empty($default_image['uuid']) && ($file = \Drupal::entityManager()->loadEntityByUuid('file', $default_image['uuid']))) {
           $items->setValue(array(array(
             'is_default' => TRUE,
             'alt' => $default_image['alt'],

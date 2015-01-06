@@ -48,12 +48,19 @@ use Drupal\file\Plugin\Field\FieldType\FileItem;
 class ImageItem extends FileItem {
 
   /**
+   * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityManagerInterface
+   */
+  protected $entityManager;
+
+  /**
    * {@inheritdoc}
    */
   public static function defaultStorageSettings() {
     return array(
       'default_image' => array(
-        'fid' => NULL,
+        'uuid' => NULL,
         'alt' => '',
         'title' => '',
         'width' => NULL,
@@ -75,7 +82,7 @@ class ImageItem extends FileItem {
       'max_resolution' => '',
       'min_resolution' => '',
       'default_image' => array(
-        'fid' => NULL,
+        'uuid' => NULL,
         'alt' => '',
         'title' => '',
         'width' => NULL,
@@ -397,11 +404,16 @@ class ImageItem extends FileItem {
       '#title' => t('Default image'),
       '#open' => TRUE,
     );
-    $element['default_image']['fid'] = array(
+    // Convert the stored UUID to a FID.
+    $fids = [];
+    if ($file = $this->getEntityManager()->loadEntityByUuid('file', $settings['default_image']['uuid'])) {
+      $fids[0] = $file->id();
+    }
+    $element['default_image']['uuid'] = array(
       '#type' => 'managed_file',
       '#title' => t('Image'),
       '#description' => t('Image to be shown if no image is uploaded.'),
-      '#default_value' => empty($settings['default_image']['fid']) ? array() : array($settings['default_image']['fid']),
+      '#default_value' => $fids,
       '#upload_location' => $settings['uri_scheme'] . '://default_images/',
       '#element_validate' => array(
         '\Drupal\file\Element\ManagedFile::validateManagedFile',
@@ -450,9 +462,13 @@ class ImageItem extends FileItem {
     // for default image is not TRUE and this is a single value.
     if (isset($element['fids']['#value'][0])) {
       $value = $element['fids']['#value'][0];
+      // Convert the file ID to a uuid.
+      if ($file = \Drupal::entityManager()->getStorage('file')->load($value)) {
+        $value = $file->uuid();
+      }
     }
     else {
-      $value = 0;
+      $value = '';
     }
     $form_state->setValueForElement($element, $value);
   }
@@ -463,6 +479,18 @@ class ImageItem extends FileItem {
   public function isDisplayed() {
     // Image items do not have per-item visibility settings.
     return TRUE;
+  }
+
+  /**
+   * Gets the entity manager.
+   *
+   * @return \Drupal\Core\Entity\EntityManagerInterface.
+   */
+  protected function getEntityManager() {
+    if (!isset($this->entityManager)) {
+      $this->entityManager = \Drupal::entityManager();
+    }
+    return $this->entityManager;
   }
 
 }
