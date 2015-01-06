@@ -19,7 +19,7 @@ abstract class OptionsDynamicValuesTestBase extends FieldTestBase {
    *
    * @var array
    */
-  public static $modules = array('options', 'entity_test', 'options_test');
+  public static $modules = ['options', 'entity_test', 'options_test'];
 
   /**
    * The created entity.
@@ -38,43 +38,43 @@ abstract class OptionsDynamicValuesTestBase extends FieldTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->field_name = 'test_options';
-    $this->fieldStorage = entity_create('field_storage_config', array(
-      'field_name' => $this->field_name,
+    $field_name = 'test_options';
+    $this->fieldStorage = entity_create('field_storage_config', [
+      'field_name' => $field_name,
       'entity_type' => 'entity_test_rev',
       'type' => 'list_string',
       'cardinality' => 1,
-      'settings' => array(
+      'settings' => [
         'allowed_values_function' => 'options_test_dynamic_values_callback',
-      ),
-    ));
+      ],
+    ]);
     $this->fieldStorage->save();
 
-    $this->field = entity_create('field_config', array(
-      'field_name' => $this->field_name,
+    $this->field = entity_create('field_config', [
+      'field_name' => $field_name,
       'entity_type' => 'entity_test_rev',
       'bundle' => 'entity_test_rev',
       'required' => TRUE,
-    ))->save();
+    ])->save();
     entity_get_form_display('entity_test_rev', 'entity_test_rev', 'default')
-      ->setComponent($this->field_name, array(
+      ->setComponent($field_name, [
         'type' => 'options_select',
-      ))
+      ])
       ->save();
 
     // Create an entity and prepare test data that will be used by
     // options_test_dynamic_values_callback().
-    $values = array(
+    $values = [
       'user_id' => mt_rand(1, 10),
       'name' => $this->randomMachineName(),
-    );
+    ];
     $this->entity = entity_create('entity_test_rev', $values);
     $this->entity->save();
-    $this->test = array(
+    $this->test = [
       'label' => $this->entity->label(),
       'uuid' => $this->entity->uuid(),
       'bundle' => $this->entity->bundle(),
       'uri' => $this->entity->url(),
-    );
+    ];
   }
 }

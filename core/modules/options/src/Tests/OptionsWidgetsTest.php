@@ -21,41 +21,34 @@ class OptionsWidgetsTest extends FieldTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'options', 'entity_test', 'options_test', 'taxonomy', 'field_ui');
+  public static $modules = ['node', 'options', 'entity_test', 'options_test', 'taxonomy', 'field_ui'];
 
   /**
    * A field storage with cardinality 1 to use in this test class.
    *
    * @var \Drupal\field\Entity\FieldStorageConfig
    */
-  protected $card_1;
+  protected $card1;
 
   /**
    * A field storage with cardinality 2 to use in this test class.
    *
    * @var \Drupal\field\Entity\FieldStorageConfig
    */
-  protected $card_2;
-
-  /**
-   * A user with permission to view and manage entities.
-   *
-   * @var \Drupal\user\UserInterface
-   */
-  protected $web_user;
+  protected $card2;
 
 
   protected function setUp() {
     parent::setUp();
 
     // Field storage with cardinality 1.
-    $this->card_1 = entity_create('field_storage_config', array(
+    $this->card1 = entity_create('field_storage_config', [
       'field_name' => 'card_1',
       'entity_type' => 'entity_test',
       'type' => 'list_integer',
       'cardinality' => 1,
-      'settings' => array(
-        'allowed_values' => array(
+      'settings' => [
+        'allowed_values' => [
           // Make sure that 0 works as an option.
           0 => 'Zero',
           1 => 'One',
@@ -63,32 +56,31 @@ class OptionsWidgetsTest extends FieldTestBase {
           2 => 'Some <script>dangerous</script> & unescaped <strong>markup</strong>',
           // Make sure that HTML entities in option text are not double-encoded.
           3 => 'Some HTML encoded markup with &lt; &amp; &gt;',
-        ),
-      ),
-    ));
-    $this->card_1->save();
+        ],
+      ],
+    ]);
+    $this->card1->save();
 
     // Field storage with cardinality 2.
-    $this->card_2 = entity_create('field_storage_config', array(
+    $this->card2 = entity_create('field_storage_config', [
       'field_name' => 'card_2',
       'entity_type' => 'entity_test',
       'type' => 'list_integer',
       'cardinality' => 2,
-      'settings' => array(
-        'allowed_values' => array(
+      'settings' => [
+        'allowed_values' => [
           // Make sure that 0 works as an option.
           0 => 'Zero',
           1 => 'One',
           // Make sure that option text is properly sanitized.
           2 => 'Some <script>dangerous</script> & unescaped <strong>markup</strong>',
-        ),
-      ),
-    ));
-    $this->card_2->save();
+        ],
+      ],
+    ]);
+    $this->card2->save();
 
     // Create a web user.
-    $this->web_user = $this->drupalCreateUser(array('view test entity', 'administer entity_test content'));
-    $this->drupalLogin($this->web_user);
+    $this->drupalLogin($this->drupalCreateUser(['view test entity', 'administer entity_test content']));
   }
 
   /**
@@ -96,22 +88,22 @@ class OptionsWidgetsTest extends FieldTestBase {
    */
   function testRadioButtons() {
     // Create an instance of the 'single value' field.
-    $field = entity_create('field_config', array(
-      'field_storage' => $this->card_1,
+    $field = entity_create('field_config', [
+      'field_storage' => $this->card1,
       'bundle' => 'entity_test',
-    ));
+    ]);
     $field->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
-      ->setComponent($this->card_1->getName(), array(
+      ->setComponent($this->card1->getName(), [
         'type' => 'options_buttons',
-      ))
+      ])
       ->save();
 
     // Create an entity.
-    $entity = entity_create('entity_test', array(
+    $entity = entity_create('entity_test', [
       'user_id' => 1,
       'name' => $this->randomMachineName(),
-    ));
+    ]);
     $entity->save();
     $entity_init = clone $entity;
 
@@ -140,8 +132,8 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertFieldValues($entity_init, 'card_1', array());
 
     // Check that required radios with one option is auto-selected.
-    $this->card_1->settings['allowed_values'] = array(99 => 'Only allowed value');
-    $this->card_1->save();
+    $this->card1->settings['allowed_values'] = [99 => 'Only allowed value'];
+    $this->card1->save();
     $field->required = TRUE;
     $field->save();
     $this->drupalGet('entity_test/manage/' . $entity->id());
@@ -154,12 +146,12 @@ class OptionsWidgetsTest extends FieldTestBase {
   function testCheckBoxes() {
     // Create an instance of the 'multiple values' field.
     $field = entity_create('field_config', array(
-      'field_storage' => $this->card_2,
+      'field_storage' => $this->card2,
       'bundle' => 'entity_test',
     ));
     $field->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
-      ->setComponent($this->card_2->getName(), array(
+      ->setComponent($this->card2->getName(), array(
         'type' => 'options_buttons',
       ))
       ->save();
@@ -229,8 +221,8 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertFieldValues($entity_init, 'card_2', array());
 
     // Required checkbox with one option is auto-selected.
-    $this->card_2->settings['allowed_values'] = array(99 => 'Only allowed value');
-    $this->card_2->save();
+    $this->card2->settings['allowed_values'] = array(99 => 'Only allowed value');
+    $this->card2->save();
     $field->required = TRUE;
     $field->save();
     $this->drupalGet('entity_test/manage/' . $entity->id());
@@ -243,13 +235,13 @@ class OptionsWidgetsTest extends FieldTestBase {
   function testSelectListSingle() {
     // Create an instance of the 'single value' field.
     $field = entity_create('field_config', array(
-      'field_storage' => $this->card_1,
+      'field_storage' => $this->card1,
       'bundle' => 'entity_test',
       'required' => TRUE,
     ));
     $field->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
-      ->setComponent($this->card_1->getName(), array(
+      ->setComponent($this->card1->getName(), array(
         'type' => 'options_select',
       ))
       ->save();
@@ -307,9 +299,9 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Test optgroups.
 
-    $this->card_1->settings['allowed_values'] = array();
-    $this->card_1->settings['allowed_values_function'] = 'options_test_allowed_values_callback';
-    $this->card_1->save();
+    $this->card1->settings['allowed_values'] = array();
+    $this->card1->settings['allowed_values_function'] = 'options_test_allowed_values_callback';
+    $this->card1->save();
 
     // Display form: with no field data, nothing is selected
     $this->drupalGet('entity_test/manage/' . $entity->id());
@@ -343,12 +335,12 @@ class OptionsWidgetsTest extends FieldTestBase {
   function testSelectListMultiple() {
     // Create an instance of the 'multiple values' field.
     $field = entity_create('field_config', array(
-      'field_storage' => $this->card_2,
+      'field_storage' => $this->card2,
       'bundle' => 'entity_test',
     ));
     $field->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
-      ->setComponent($this->card_2->getName(), array(
+      ->setComponent($this->card2->getName(), array(
         'type' => 'options_select',
       ))
       ->save();
@@ -426,9 +418,9 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Test optgroups.
 
     // Use a callback function defining optgroups.
-    $this->card_2->settings['allowed_values'] = array();
-    $this->card_2->settings['allowed_values_function'] = 'options_test_allowed_values_callback';
-    $this->card_2->save();
+    $this->card2->settings['allowed_values'] = array();
+    $this->card2->settings['allowed_values_function'] = 'options_test_allowed_values_callback';
+    $this->card2->save();
     $field->required = FALSE;
     $field->save();
 

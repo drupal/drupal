@@ -29,19 +29,39 @@ class OptionsFieldUITest extends FieldTestBase {
    *
    * @var string
    */
-  protected $type_name;
+  protected $typeName;
+
+  /**
+   * Machine name of the created content type.
+   *
+   * @var string
+   */
+  protected $type;
+
+  /**
+   * Name of the option field.
+   *
+   * @var string
+   */
+  protected $fieldName;
+
+  /**
+   * Admin path to manage field storage settings.
+   *
+   * @var string
+   */
+  protected $adminPath;
 
   protected function setUp() {
     parent::setUp();
 
     // Create test user.
-    $admin_user = $this->drupalCreateUser(array('access content', 'administer taxonomy', 'access administration pages', 'administer site configuration', 'administer content types', 'administer nodes', 'bypass node access', 'administer node fields', 'administer node display'));
+    $admin_user = $this->drupalCreateUser(['access content', 'administer taxonomy', 'access administration pages', 'administer site configuration', 'administer content types', 'administer nodes', 'bypass node access', 'administer node fields', 'administer node display']);
     $this->drupalLogin($admin_user);
 
     // Create content type, with underscores.
-    $type_name = 'test_' . strtolower($this->randomMachineName());
-    $this->type_name = $type_name;
-    $type = $this->drupalCreateContentType(array('name' => $type_name, 'type' => $type_name));
+    $this->typeName = 'test_' . strtolower($this->randomMachineName());
+    $type = $this->drupalCreateContentType(['name' => $this->typeName, 'type' => $this->typeName]);
     $this->type = $type->type;
   }
 
@@ -49,7 +69,7 @@ class OptionsFieldUITest extends FieldTestBase {
    * Options (integer) : test 'allowed values' input.
    */
   function testOptionsAllowedValuesInteger() {
-    $this->field_name = 'field_options_integer';
+    $this->fieldName = 'field_options_integer';
     $this->createOptionsField('list_integer');
 
     // Flat list of textual values.
@@ -73,7 +93,7 @@ class OptionsFieldUITest extends FieldTestBase {
     // Create a node with actual data for the field.
     $settings = array(
       'type' => $this->type,
-      $this->field_name => array(array('value' => 1)),
+      $this->fieldName => array(array('value' => 1)),
     );
     $node = $this->drupalCreateNode($settings);
 
@@ -105,7 +125,7 @@ class OptionsFieldUITest extends FieldTestBase {
    * Options (float) : test 'allowed values' input.
    */
   function testOptionsAllowedValuesFloat() {
-    $this->field_name = 'field_options_float';
+    $this->fieldName = 'field_options_float';
     $this->createOptionsField('list_float');
 
     // Flat list of textual values.
@@ -128,7 +148,7 @@ class OptionsFieldUITest extends FieldTestBase {
     // Create a node with actual data for the field.
     $settings = array(
       'type' => $this->type,
-      $this->field_name => array(array('value' => .5)),
+      $this->fieldName => array(array('value' => .5)),
     );
     $node = $this->drupalCreateNode($settings);
 
@@ -165,7 +185,7 @@ class OptionsFieldUITest extends FieldTestBase {
    * Options (text) : test 'allowed values' input.
    */
   function testOptionsAllowedValuesText() {
-    $this->field_name = 'field_options_text';
+    $this->fieldName = 'field_options_text';
     $this->createOptionsField('list_string');
 
     // Flat list of textual values.
@@ -190,7 +210,7 @@ class OptionsFieldUITest extends FieldTestBase {
     // Create a node with actual data for the field.
     $settings = array(
       'type' => $this->type,
-      $this->field_name => array(array('value' => 'One')),
+      $this->fieldName => array(array('value' => 'One')),
     );
     $node = $this->drupalCreateNode($settings);
 
@@ -230,7 +250,7 @@ class OptionsFieldUITest extends FieldTestBase {
    * Options (text) : test 'trimmed values' input.
    */
   function testOptionsTrimmedValuesText() {
-    $this->field_name = 'field_options_trimmed_text';
+    $this->fieldName = 'field_options_trimmed_text';
     $this->createOptionsField('list_string');
 
     // Explicit keys.
@@ -248,19 +268,19 @@ class OptionsFieldUITest extends FieldTestBase {
   protected function createOptionsField($type) {
     // Create a field.
     entity_create('field_storage_config', array(
-      'field_name' => $this->field_name,
+      'field_name' => $this->fieldName,
       'entity_type' => 'node',
       'type' => $type,
     ))->save();
     entity_create('field_config', array(
-      'field_name' => $this->field_name,
+      'field_name' => $this->fieldName,
       'entity_type' => 'node',
       'bundle' => $this->type,
     ))->save();
 
-    entity_get_form_display('node', $this->type, 'default')->setComponent($this->field_name)->save();
+    entity_get_form_display('node', $this->type, 'default')->setComponent($this->fieldName)->save();
 
-    $this->admin_path = 'admin/structure/types/manage/' . $this->type . '/fields/node.' . $this->type . '.' . $this->field_name . '/storage';
+    $this->adminPath = 'admin/structure/types/manage/' . $this->type . '/fields/node.' . $this->type . '.' . $this->fieldName . '/storage';
   }
 
   /**
@@ -277,14 +297,14 @@ class OptionsFieldUITest extends FieldTestBase {
    */
   function assertAllowedValuesInput($input_string, $result, $message) {
     $edit = array('field_storage[settings][allowed_values]' => $input_string);
-    $this->drupalPostForm($this->admin_path, $edit, t('Save field settings'));
+    $this->drupalPostForm($this->adminPath, $edit, t('Save field settings'));
     $this->assertNoRaw('&amp;lt;', 'The page does not have double escaped HTML tags.');
 
     if (is_string($result)) {
       $this->assertText($result, $message);
     }
     else {
-      $field_storage = FieldStorageConfig::loadByName('node', $this->field_name);
+      $field_storage = FieldStorageConfig::loadByName('node', $this->fieldName);
       $this->assertIdentical($field_storage->getSetting('allowed_values'), $result, $message);
     }
   }
@@ -293,7 +313,7 @@ class OptionsFieldUITest extends FieldTestBase {
    * Tests normal and key formatter display on node display.
    */
   function testNodeDisplay() {
-    $this->field_name = strtolower($this->randomMachineName());
+    $this->fieldName = strtolower($this->randomMachineName());
     $this->createOptionsField('list_integer');
     $node = $this->drupalCreateNode(array('type' => $this->type));
 
@@ -305,12 +325,12 @@ class OptionsFieldUITest extends FieldTestBase {
         0|$off",
     );
 
-    $this->drupalPostForm($this->admin_path, $edit, t('Save field settings'));
-    $this->assertText(format_string('Updated field !field_name field settings.', array('!field_name' => $this->field_name)), "The 'On' and 'Off' form fields work for boolean fields.");
+    $this->drupalPostForm($this->adminPath, $edit, t('Save field settings'));
+    $this->assertText(format_string('Updated field !field_name field settings.', array('!field_name' => $this->fieldName)), "The 'On' and 'Off' form fields work for boolean fields.");
 
     // Select a default value.
     $edit = array(
-      $this->field_name => '1',
+      $this->fieldName => '1',
     );
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
 
@@ -318,9 +338,9 @@ class OptionsFieldUITest extends FieldTestBase {
     $file_formatters = array('list_default', 'list_key');
     foreach ($file_formatters as $formatter) {
       $edit = array(
-        "fields[$this->field_name][type]" => $formatter,
+        "fields[$this->fieldName][type]" => $formatter,
       );
-      $this->drupalPostForm('admin/structure/types/manage/' . $this->type_name . '/display', $edit, t('Save'));
+      $this->drupalPostForm('admin/structure/types/manage/' . $this->typeName . '/display', $edit, t('Save'));
       $this->drupalGet('node/' . $node->id());
 
       if ($formatter == 'list_default') {

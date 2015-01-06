@@ -38,6 +38,13 @@ abstract class LocaleUpdateBase extends WebTestBase {
   protected $timestampNew;
 
   /**
+   * Timestamp for current time.
+   *
+   * @var integer
+   */
+  protected $timestampNow;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -59,7 +66,7 @@ abstract class LocaleUpdateBase extends WebTestBase {
     $this->timestampOld = REQUEST_TIME - 300;
     $this->timestampMedium = REQUEST_TIME - 200;
     $this->timestampNew = REQUEST_TIME - 100;
-    $this->timestamp_now = REQUEST_TIME;
+    $this->timestampNow = REQUEST_TIME;
 
     // Enable import of translations. By default this is disabled for automated
     // tests.
