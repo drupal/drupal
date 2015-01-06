@@ -84,7 +84,8 @@ use Drupal\Core\Template\Attribute;
  *
  * See https://www.drupal.org/node/2092643 for more details about *.routing.yml
  * files, and https://www.drupal.org/node/2122201 for information on how to
- * set up dynamic routes.
+ * set up dynamic routes. The @link events Events topic @endlink is also
+ * relevant to dynamic routes.
  *
  * @section sec_placeholders Defining routes with placeholders
  * Some routes have placeholders in them, and these can also be defined in a

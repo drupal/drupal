@@ -42,6 +42,7 @@
  *
  * - @link plugin_api Plugins @endlink
  * - @link container Services and the Dependency Injection Container @endlink
+ * - @link events Events @endlink
  * - @link i18n Internationalization @endlink
  * - @link cache Caching @endlink
  * - @link utility Utility classes and functions @endlink
@@ -1807,5 +1808,68 @@ function hook_display_variant_plugin_alter(array &$definitions) {
  * See @link container Services and Dependency Injection Container @endlink for
  * information on services and the dependency injection container.
  *
+ * @}
+ */
+
+/**
+ * @defgroup events Events
+ * @{
+ * Overview of event dispatch and subscribing
+ *
+ * @section sec_intro Introduction and terminology
+ * Events are part of the Symfony framework: they allow for different components
+ * of the system to interact and communicate with each other. Each event has a
+ * unique string name. One system component dispatches the event at an
+ * appropriate time; many events are dispatched by Drupal core and the Symfony
+ * framework in every request. Other system components can register as event
+ * subscribers; when an event is dispatched, a method is called on each
+ * registered subscriber, allowing each one to react. For more on the general
+ * concept of events, see
+ * http://symfony.com/doc/current/components/event_dispatcher/introduction.html
+ *
+ * @section sec_dispatch Dispatching events
+ * To dispatch an event, call the
+ * \Symfony\Component\EventDispatcher\EventDispatchInterface::dispatch() method
+ * on the 'event_dispatcher' service (see the
+ * @link container Services topic @endlink for more information about how to
+ * interact with services). The first argument is the unique event name, which
+ * you should normally define as a constant in a separate static class (see
+ * \Symfony\Component\HttpKernel\KernelEvents and
+ * \Drupal\Core\Config\ConfigEvents for examples). The second argument is a
+ * \Symfony\Component\EventDispatcher\Event object; normally you will need to
+ * extend this class, so that your event class can provide data to the event
+ * subscribers.
+ *
+ * @section sec_subscribe Registering event subscribers
+ * Here are the steps to register an event subscriber:
+ * - Define a service in your module, tagged with 'event_subscriber' (see the
+ *   @link container Services topic @endlink for instructions).
+ * - Define a class for your subscriber service that implements
+ *   \Symfony\Component\EventDispatcher\EventSubscriberInterface
+ * - In your class, the getSubscribedEvents method returns a list of the events
+ *   this class is subscribed to, and which methods on the class should be
+ *   called for each one. Example:
+ *   @code
+ *   public function getSubscribedEvents() {
+ *     // Subscribe to kernel terminate with priority 100.
+ *     $events[KernelEvents::TERMINATE][] = array('onTerminate', 100);
+ *     // Subscribe to kernel request with default priority of 0.
+ *     $events[KernelEvents::REQUEST][] = array('onRequest');
+ *     return $events;
+ *   }
+ *   @endcode
+ * - Write the methods that respond to the events; each one receives the
+ *   event object provided in the dispatch as its one argument. In the above
+ *   example, you would need to write onTerminate() and onRequest() methods.
+ *
+ * Note that in your getSubscribedEvents() method, you can optionally set the
+ * priority of your event subscriber (see terminate example above). Event
+ * subscribers with higher priority numbers get executed first; the default
+ * priority is zero. If two event subscribers for the same event have the same
+ * priority, the one defined in a module with a lower module weight will fire
+ * first. Subscribers defined in the same services file are fired in
+ * definition order. If order matters defining a priority is strongly advised
+ * instead of relying on these two tie breaker rules as they might change in a
+ * minor release.
  * @}
  */
