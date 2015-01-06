@@ -28,7 +28,7 @@
         // When the user selects a new field type, clear the "existing field"
         // selection.
         $newFieldType.on('change', function () {
-          if ($(this).val() != '') {
+          if ($(this).val() !== '') {
             // Reset the "existing storage name" selection.
             $existingStorageName.val('').trigger('change');
           }
@@ -38,7 +38,7 @@
         // type" selection and populate the 'existing_storage_label' element.
         $existingStorageName.on('change', function () {
           var value = $(this).val();
-          if (value != '') {
+          if (value !== '') {
             // Reset the "new field type" selection.
             $newFieldType.val('').trigger('change');
 
