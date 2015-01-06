@@ -59,61 +59,68 @@ class QuickEditAutocompleteTermTest extends WebTestBase {
    *
    * @var string
    */
-  protected $field_name;
+  protected $fieldName;
+
+  /**
+   * An user with permissions to access in-place editor.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $editorUser;
 
   protected function setUp() {
     parent::setUp();
 
-    $type = $this->drupalCreateContentType(array(
+    $this->drupalCreateContentType(array(
       'type' => 'article',
     ));
     // Create the vocabulary for the tag field.
-    $this->vocabulary = entity_create('taxonomy_vocabulary',  array(
+    $this->vocabulary = entity_create('taxonomy_vocabulary', [
       'name' => 'quickedit testing tags',
       'vid' => 'quickedit_testing_tags',
-    ));
+    ]);
     $this->vocabulary->save();
-    $this->field_name = 'field_' . $this->vocabulary->id();
-    entity_create('field_storage_config', array(
-      'field_name' => $this->field_name,
+    $this->fieldName = 'field_' . $this->vocabulary->id();
+    entity_create('field_storage_config', [
+      'field_name' => $this->fieldName,
       'entity_type' => 'node',
       'type' => 'taxonomy_term_reference',
       // Set cardinality to unlimited for tagging.
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
-      'settings' => array(
-        'allowed_values' => array(
-          array(
+      'settings' => [
+        'allowed_values' => [
+          [
             'vocabulary' => $this->vocabulary->id(),
             'parent' => 0,
-          ),
-        ),
-      ),
-    ))->save();
-    entity_create('field_config', array(
-      'field_name' => $this->field_name,
+          ],
+        ],
+      ],
+    ])->save();
+    entity_create('field_config', [
+      'field_name' => $this->fieldName,
       'entity_type' => 'node',
       'label' => 'Tags',
       'bundle' => 'article',
-    ))->save();
+    ])->save();
 
     entity_get_form_display('node', 'article', 'default')
-      ->setComponent($this->field_name, array(
+      ->setComponent($this->fieldName, [
         'type' => 'taxonomy_autocomplete',
         'weight' => -4,
-      ))
+      ])
       ->save();
 
     entity_get_display('node', 'article', 'default')
-      ->setComponent($this->field_name, array(
+      ->setComponent($this->fieldName, [
         'type' => 'taxonomy_term_reference_link',
         'weight' => 10,
-      ))
+      ])
       ->save();
     entity_get_display('node', 'article', 'teaser')
-      ->setComponent($this->field_name, array(
+      ->setComponent($this->fieldName, [
         'type' => 'taxonomy_term_reference_link',
         'weight' => 10,
-      ))
+      ])
       ->save();
 
     $this->term1 = $this->createTerm();
@@ -121,20 +128,20 @@ class QuickEditAutocompleteTermTest extends WebTestBase {
 
     $node = array();
     $node['type'] = 'article';
-    $node[$this->field_name][]['target_id'] = $this->term1->id();
-    $node[$this->field_name][]['target_id'] = $this->term2->id();
+    $node[$this->fieldName][]['target_id'] = $this->term1->id();
+    $node[$this->fieldName][]['target_id'] = $this->term2->id();
     $this->node = $this->drupalCreateNode($node);
 
-    $this->editor_user = $this->drupalCreateUser(array('access content', 'create article content', 'edit any article content', 'access in-place editing'));
+    $this->editorUser = $this->drupalCreateUser(['access content', 'create article content', 'edit any article content', 'access in-place editing']);
   }
 
   /**
    * Tests Quick Edit autocomplete term behavior.
    */
   public function testAutocompleteQuickEdit() {
-    $this->drupalLogin($this->editor_user);
+    $this->drupalLogin($this->editorUser);
 
-    $quickedit_uri = 'quickedit/form/node/'. $this->node->id() . '/' . $this->field_name . '/' . $this->node->language()->getId() . '/full';
+    $quickedit_uri = 'quickedit/form/node/'. $this->node->id() . '/' . $this->fieldName . '/' . $this->node->language()->getId() . '/full';
     $post = array('nocssjs' => 'true') + $this->getAjaxPageStatePostData();
     $response = $this->drupalPost($quickedit_uri, 'application/vnd.drupal-ajax', $post);
     $ajax_commands = Json::decode($response);
@@ -149,7 +156,7 @@ class QuickEditAutocompleteTermTest extends WebTestBase {
         'form_id' => 'quickedit_field_form',
         'form_token' => $token_match[1],
         'form_build_id' => $build_id_match[1],
-        $this->field_name => implode(', ', array($this->term1->getName(), 'new term', $this->term2->getName())),
+        $this->fieldName => implode(', ', array($this->term1->getName(), 'new term', $this->term2->getName())),
         'op' => t('Save'),
       );
 
@@ -164,7 +171,7 @@ class QuickEditAutocompleteTermTest extends WebTestBase {
       $this->assertNoLink('new term');
 
       // Load the form again, which should now get it back from TempStore.
-      $quickedit_uri = 'quickedit/form/node/'. $this->node->id() . '/' . $this->field_name . '/' . $this->node->language()->getId() . '/full';
+      $quickedit_uri = 'quickedit/form/node/'. $this->node->id() . '/' . $this->fieldName . '/' . $this->node->language()->getId() . '/full';
       $post = array('nocssjs' => 'true') + $this->getAjaxPageStatePostData();
       $response = $this->drupalPost($quickedit_uri, 'application/vnd.drupal-ajax', $post);
       $ajax_commands = Json::decode($response);
@@ -174,7 +181,7 @@ class QuickEditAutocompleteTermTest extends WebTestBase {
       // taxonomy terms, including the one that has just been newly created and
       // which is not yet stored.
       $this->drupalSetContent($ajax_commands[0]['data']);
-      $this->assertFieldByName($this->field_name, implode(', ', array($this->term1->getName(), 'new term', $this->term2->label())));
+      $this->assertFieldByName($this->fieldName, implode(', ', array($this->term1->getName(), 'new term', $this->term2->label())));
 
       // Save the entity.
       $post = array('nocssjs' => 'true');
