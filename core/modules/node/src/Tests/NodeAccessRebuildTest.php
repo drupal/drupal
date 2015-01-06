@@ -13,12 +13,19 @@ namespace Drupal\node\Tests;
  * @group node
  */
 class NodeAccessRebuildTest extends NodeTestBase {
+  /**
+   * A normal authenticated user.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $webUser;
+
   protected function setUp() {
     parent::setUp();
 
     $web_user = $this->drupalCreateUser(array('administer site configuration', 'access administration pages', 'access site reports'));
     $this->drupalLogin($web_user);
-    $this->web_user = $web_user;
+    $this->webUser = $web_user;
   }
 
   /**

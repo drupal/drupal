@@ -17,6 +17,13 @@ use Drupal\node\Entity\Node;
 class NodeSaveTest extends NodeTestBase {
 
   /**
+   * A normal logged in user.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $webUser;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -29,7 +36,7 @@ class NodeSaveTest extends NodeTestBase {
     // Create a user that is allowed to post; we'll use this to test the submission.
     $web_user = $this->drupalCreateUser(array('create article content'));
     $this->drupalLogin($web_user);
-    $this->web_user = $web_user;
+    $this->webUser = $web_user;
   }
 
   /**
@@ -48,7 +55,7 @@ class NodeSaveTest extends NodeTestBase {
     $node = array(
       'title' => $title,
       'body' => array(array('value' => $this->randomMachineName(32))),
-      'uid' => $this->web_user->id(),
+      'uid' => $this->webUser->id(),
       'type' => 'article',
       'nid' => $test_nid,
     );
@@ -57,7 +64,7 @@ class NodeSaveTest extends NodeTestBase {
     $node->enforceIsNew();
 
     // Verify that node_submit did not overwrite the user ID.
-    $this->assertEqual($node->getOwnerId(), $this->web_user->id(), 'Function node_submit() preserves user ID');
+    $this->assertEqual($node->getOwnerId(), $this->webUser->id(), 'Function node_submit() preserves user ID');
 
     $node->save();
     // Test the import.
@@ -74,7 +81,7 @@ class NodeSaveTest extends NodeTestBase {
   function testTimestamps() {
     // Use the default timestamps.
     $edit = array(
-      'uid' => $this->web_user->id(),
+      'uid' => $this->webUser->id(),
       'type' => 'article',
       'title' => $this->randomMachineName(8),
     );
@@ -101,7 +108,7 @@ class NodeSaveTest extends NodeTestBase {
 
     // Programmatically set the timestamps on the node.
     $edit = array(
-      'uid' => $this->web_user->id(),
+      'uid' => $this->webUser->id(),
       'type' => 'article',
       'title' => $this->randomMachineName(8),
       'created' => 280299600, // Sun, 19 Nov 1978 05:00:00 GMT
@@ -132,7 +139,7 @@ class NodeSaveTest extends NodeTestBase {
   function testDeterminingChanges() {
     // Initial creation.
     $node = entity_create('node', array(
-      'uid' => $this->web_user->id(),
+      'uid' => $this->webUser->id(),
       'type' => 'article',
       'title' => 'test_changes',
     ));

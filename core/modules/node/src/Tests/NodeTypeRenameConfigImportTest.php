@@ -27,12 +27,19 @@ class NodeTypeRenameConfigImportTest extends WebTestBase {
   public static $modules = array('node', 'text', 'config');
 
   /**
+   * A normal logged in user.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $webUser;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-    $this->web_user = $this->drupalCreateUser(array('synchronize configuration'));
-    $this->drupalLogin($this->web_user);
+    $this->webUser = $this->drupalCreateUser(array('synchronize configuration'));
+    $this->drupalLogin($this->webUser);
   }
 
   /**

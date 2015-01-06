@@ -13,21 +13,21 @@ namespace Drupal\node\Tests;
  * @group node
  */
 class PageEditTest extends NodeTestBase {
-  protected $web_user;
-  protected $admin_user;
+  protected $webUser;
+  protected $adminUser;
 
   protected function setUp() {
     parent::setUp();
 
-    $this->web_user = $this->drupalCreateUser(array('edit own page content', 'create page content'));
-    $this->admin_user = $this->drupalCreateUser(array('bypass node access', 'administer nodes'));
+    $this->webUser = $this->drupalCreateUser(array('edit own page content', 'create page content'));
+    $this->adminUser = $this->drupalCreateUser(array('bypass node access', 'administer nodes'));
   }
 
   /**
    * Checks node edit functionality.
    */
   function testPageEdit() {
-    $this->drupalLogin($this->web_user);
+    $this->drupalLogin($this->webUser);
 
     $title_key = 'title[0][value]';
     $body_key = 'body[0][value]';
@@ -92,7 +92,7 @@ class PageEditTest extends NodeTestBase {
    */
   function testPageAuthoredBy() {
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
 
     // Create node to edit.
     $body_key = 'body[0][value]';
@@ -103,7 +103,7 @@ class PageEditTest extends NodeTestBase {
 
     // Check that the node was authored by the currently logged in user.
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
-    $this->assertIdentical($node->getOwnerId(), $this->admin_user->id(), 'Node authored by admin user.');
+    $this->assertIdentical($node->getOwnerId(), $this->adminUser->id(), 'Node authored by admin user.');
 
     // Try to change the 'authored by' field to an invalid user name.
     $edit = array(
@@ -121,14 +121,14 @@ class PageEditTest extends NodeTestBase {
 
     // Change the authored by field to another user's name (that is not
     // logged in).
-    $edit['uid[0][target_id]'] = $this->web_user->getUsername();
+    $edit['uid[0][target_id]'] = $this->webUser->getUsername();
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
     $node_storage->resetCache(array($node->id()));
     $node = $node_storage->load($node->id());
-    $this->assertIdentical($node->getOwnerId(), $this->web_user->id(), 'Node authored by normal user.');
+    $this->assertIdentical($node->getOwnerId(), $this->webUser->id(), 'Node authored by normal user.');
 
     // Check that normal users cannot change the authored by information.
-    $this->drupalLogin($this->web_user);
+    $this->drupalLogin($this->webUser);
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertNoFieldByName('uid[0][target_id]');
   }

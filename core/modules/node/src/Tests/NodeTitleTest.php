@@ -21,13 +21,18 @@ class NodeTitleTest extends NodeTestBase {
    */
   public static $modules = array('comment', 'views');
 
-  protected $admin_user;
+  /**
+   * A user with permission to bypass access content.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $adminUser;
 
   protected function setUp() {
     parent::setUp();
 
-    $this->admin_user = $this->drupalCreateUser(array('administer nodes', 'create article content', 'create page content', 'post comments'));
-    $this->drupalLogin($this->admin_user);
+    $this->adminUser = $this->drupalCreateUser(array('administer nodes', 'create article content', 'create page content', 'post comments'));
+    $this->drupalLogin($this->adminUser);
     $this->container->get('comment.manager')->addDefaultField('node', 'page');
   }
 
