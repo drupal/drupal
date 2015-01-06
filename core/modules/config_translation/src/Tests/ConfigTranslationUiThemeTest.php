@@ -22,7 +22,7 @@ class ConfigTranslationUiThemeTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('config_translation', 'config_translation_test');
+  public static $modules = ['config_translation', 'config_translation_test'];
 
   /**
    * Languages to enable.
@@ -36,19 +36,19 @@ class ConfigTranslationUiThemeTest extends WebTestBase {
    *
    * @var \Drupal\user\UserInterface
    */
-  protected $admin_user;
+  protected $adminUser;
 
   protected function setUp() {
     parent::setUp();
 
-    $admin_permissions = array(
+    $admin_permissions = [
       'administer themes',
       'administer languages',
       'administer site configuration',
       'translate configuration',
-    );
+    ];
     // Create and login user.
-    $this->admin_user = $this->drupalCreateUser($admin_permissions);
+    $this->adminUser = $this->drupalCreateUser($admin_permissions);
 
     // Add languages.
     foreach ($this->langcodes as $langcode) {
@@ -63,14 +63,14 @@ class ConfigTranslationUiThemeTest extends WebTestBase {
     // Install the test theme and rebuild routes.
     $theme = 'config_translation_test_theme';
 
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
 
     $this->drupalGet('admin/appearance');
-    $elements = $this->xpath('//a[normalize-space()=:label and contains(@href, :theme)]', array(
+    $elements = $this->xpath('//a[normalize-space()=:label and contains(@href, :theme)]', [
       ':label' => 'Install and set as default',
       ':theme' => $theme,
-    ));
-    $this->drupalGet($GLOBALS['base_root'] . $elements[0]['href'], array('external' => TRUE));
+    ]);
+    $this->drupalGet($GLOBALS['base_root'] . $elements[0]['href'], ['external' => TRUE]);
 
     $translation_base_url = 'admin/config/development/performance/translate';
     $this->drupalGet($translation_base_url);
