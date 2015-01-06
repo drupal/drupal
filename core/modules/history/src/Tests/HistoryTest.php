@@ -36,7 +36,7 @@ class HistoryTest extends WebTestBase {
    *
    * @var object
    */
-  protected $test_node;
+  protected $testNode;
 
   protected function setUp() {
     parent::setUp();
@@ -45,7 +45,7 @@ class HistoryTest extends WebTestBase {
 
     $this->user = $this->drupalCreateUser(array('create page content', 'access content'));
     $this->drupalLogin($this->user);
-    $this->test_node = $this->drupalCreateNode(array('type' => 'page', 'uid' => $this->user->id()));
+    $this->testNode = $this->drupalCreateNode(array('type' => 'page', 'uid' => $this->user->id()));
   }
 
   /**
@@ -107,7 +107,7 @@ class HistoryTest extends WebTestBase {
    * Verifies that the history endpoints work.
    */
   function testHistory() {
-    $nid = $this->test_node->id();
+    $nid = $this->testNode->id();
 
     // Retrieve "last read" timestamp for test node, for the current user.
     $response = $this->getNodeReadTimestamps(array($nid));
