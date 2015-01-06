@@ -53,18 +53,18 @@ content:
     weight: 20
     settings: {  }
     third_party_settings: {  }
+  taxonomy_forums:
+    type: options_select
+    weight: 26
+    settings: {  }
+    third_party_settings: {  }
   body:
     type: text_textarea_with_summary
-    weight: 26
+    weight: 27
     settings:
       rows: 9
       summary_rows: 3
       placeholder: ''
-    third_party_settings: {  }
-  taxonomy_forums:
-    type: options_select
-    weight: 27
-    settings: {  }
     third_party_settings: {  }
 hidden: {  }
 third_party_settings: {  }

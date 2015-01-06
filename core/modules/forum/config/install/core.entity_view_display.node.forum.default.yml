@@ -19,8 +19,14 @@ mode: default
 content:
   taxonomy_forums:
     type: taxonomy_term_reference_link
-    weight: 10
+    weight: -1
     label: above
+    settings: {  }
+    third_party_settings: {  }
+  body:
+    label: hidden
+    type: text_default
+    weight: 0
     settings: {  }
     third_party_settings: {  }
   comment_forum:
@@ -30,14 +36,8 @@ content:
     settings:
       pager_id: 0
     third_party_settings: {  }
-  body:
-    label: hidden
-    type: text_default
-    weight: 100
-    settings: {  }
-    third_party_settings: {  }
   links:
-    weight: 101
+    weight: 100
 hidden:
   langcode: true
 third_party_settings: {  }
