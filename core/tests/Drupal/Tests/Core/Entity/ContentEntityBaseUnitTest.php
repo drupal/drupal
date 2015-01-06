@@ -388,4 +388,140 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
 
     $this->assertSame($callback_label, $this->entity->label());
   }
+
+  /**
+   * Data provider for testGet().
+   *
+   * @returns
+   *   - Expected output from get().
+   *   - Field name parameter to get().
+   *   - Language code for $activeLanguage.
+   *   - Fields array for $fields.
+   */
+  public function providerGet() {
+    return [
+      // Populated fields array.
+      ['result', 'field_name', 'langcode', ['field_name' => ['langcode' => 'result']]],
+      // Incomplete fields array.
+      ['getTranslatedField_result', 'field_name', 'langcode', ['field_name' => 'no_langcode']],
+      // Empty fields array.
+      ['getTranslatedField_result', 'field_name', 'langcode', []],
+    ];
+  }
+
+  /**
+   * @covers ::get
+   * @dataProvider providerGet
+   */
+  public function testGet($expected, $field_name, $active_langcode, $fields) {
+    // Mock ContentEntityBase.
+    $mock_base = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityBase')
+      ->disableOriginalConstructor()
+      ->setMethods(array('getTranslatedField'))
+      ->getMockForAbstractClass();
+
+    // Set up expectations for getTranslatedField() method. In get(),
+    // getTranslatedField() is only called if the field name and language code
+    // are not present as keys in the fields array.
+    if (isset($fields[$field_name][$active_langcode])) {
+      $mock_base->expects($this->never())
+        ->method('getTranslatedField');
+    }
+    else {
+      $mock_base->expects($this->once())
+        ->method('getTranslatedField')
+        ->with(
+          $this->equalTo($field_name),
+          $this->equalTo($active_langcode)
+        )
+        ->willReturn($expected);
+    }
+
+    // Poke in activeLangcode.
+    $ref_langcode = new \ReflectionProperty($mock_base, 'activeLangcode');
+    $ref_langcode->setAccessible(TRUE);
+    $ref_langcode->setValue($mock_base, $active_langcode);
+
+    // Poke in fields.
+    $ref_fields = new \ReflectionProperty($mock_base, 'fields');
+    $ref_fields->setAccessible(TRUE);
+    $ref_fields->setValue($mock_base, $fields);
+
+    // Exercise get().
+    $this->assertEquals($expected, $mock_base->get($field_name));
+  }
+
+  /**
+   * Data provider for testGetFields().
+   *
+   * @returns array
+   *   - Expected output from getFields().
+   *   - $include_computed value to pass to getFields().
+   *   - Value to mock from all field definitions for isComputed().
+   *   - Array of field names to return from mocked getFieldDefinitions(). A
+   *     Drupal\Core\Field\FieldDefinitionInterface object will be mocked for
+   *     each name.
+   */
+  public function providerGetFields() {
+    return [
+      [[], FALSE, FALSE, []],
+      [['field' => 'field', 'field2' => 'field2'], TRUE, FALSE, ['field', 'field2']],
+      [['field3' => 'field3'], TRUE, TRUE, ['field3']],
+      [[], FALSE, TRUE, ['field4']],
+    ];
+  }
+
+  /**
+   * @covers ::getFields
+   * @dataProvider providerGetFields
+   */
+  public function testGetFields($expected, $include_computed, $is_computed, $field_definitions) {
+    // Mock ContentEntityBase.
+    $mock_base = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityBase')
+      ->disableOriginalConstructor()
+      ->setMethods(array('getFieldDefinitions', 'get'))
+      ->getMockForAbstractClass();
+
+    // Mock field definition objects for each element of $field_definitions.
+    $mocked_field_definitions = array();
+    foreach ($field_definitions as $name) {
+      $mock_definition = $this->getMockBuilder('Drupal\Core\Field\FieldDefinitionInterface')
+        ->setMethods(array('isComputed'))
+        ->getMockForAbstractClass();
+      // Set expectations for isComputed(). isComputed() gets called whenever
+      // $include_computed is FALSE, but not otherwise. It returns the value of
+      // $is_computed.
+      $mock_definition->expects($this->exactly(
+        $include_computed ? 0 : 1
+        ))
+        ->method('isComputed')
+        ->willReturn($is_computed);
+      $mocked_field_definitions[$name] = $mock_definition;
+    }
+
+    // Set up expectations for getFieldDefinitions().
+    $mock_base->expects($this->once())
+      ->method('getFieldDefinitions')
+      ->willReturn($mocked_field_definitions);
+
+    // How many time will we call get()? Since we are rigging all defined fields
+    // to be computed based on $is_computed, then if $include_computed is FALSE,
+    // get() will never be called.
+    $get_count = 0;
+    if ($include_computed) {
+      $get_count = count($field_definitions);
+    }
+
+    // Set up expectations for get(). It simply returns the name passed in.
+    $mock_base->expects($this->exactly($get_count))
+      ->method('get')
+      ->willReturnArgument(0);
+
+    // Exercise getFields().
+    $this->assertArrayEquals(
+      $expected,
+      $mock_base->getFields($include_computed)
+    );
+  }
+
 }
