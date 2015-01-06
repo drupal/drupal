@@ -18,15 +18,25 @@ use Drupal\simpletest\WebTestBase;
  */
 class ConfigImportUITest extends WebTestBase {
 
-  // Enable the Options and Text modules to ensure dependencies are handled
-  // correctly.
+  /**
+   * Modules to install.
+   *
+   * @var array
+   */
   public static $modules = array('config', 'config_test', 'config_import_test', 'text', 'options');
+
+  /**
+   * A user with the 'synchronize configuration' permission.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $webUser;
 
   protected function setUp() {
     parent::setUp();
 
-    $this->web_user = $this->drupalCreateUser(array('synchronize configuration'));
-    $this->drupalLogin($this->web_user);
+    $this->webUser = $this->drupalCreateUser(array('synchronize configuration'));
+    $this->drupalLogin($this->webUser);
     $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.staging'));
   }
 

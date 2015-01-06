@@ -15,6 +15,10 @@ use Drupal\Core\Config\DatabaseStorage;
  * @group config
  */
 class DatabaseStorageTest extends ConfigStorageTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
 

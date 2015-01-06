@@ -21,6 +21,13 @@ class ConfigImportAllTest extends ModuleTestBase {
   use SchemaCheckTestTrait;
 
   /**
+   * A user with the 'synchronize configuration' permission.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $webUser;
+
+  /**
    * The profile to install as a basis for testing.
    *
    * Using the standard profile as this has a lot of additional configuration.
@@ -32,8 +39,8 @@ class ConfigImportAllTest extends ModuleTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->web_user = $this->drupalCreateUser(array('synchronize configuration'));
-    $this->drupalLogin($this->web_user);
+    $this->webUser = $this->drupalCreateUser(array('synchronize configuration'));
+    $this->drupalLogin($this->webUser);
   }
 
   /**

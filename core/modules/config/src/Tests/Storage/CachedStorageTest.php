@@ -32,12 +32,12 @@ class CachedStorageTest extends ConfigStorageTestBase {
    *
    * @var \Drupal\Core\Config\FileStorage
    */
-  protected $filestorage;
+  protected $fileStorage;
 
   protected function setUp() {
     parent::setUp();
-    $this->filestorage = new FileStorage($this->configDirectories[CONFIG_ACTIVE_DIRECTORY]);
-    $this->storage = new CachedStorage($this->filestorage, \Drupal::service('cache.config'));
+    $this->fileStorage = new FileStorage($this->configDirectories[CONFIG_ACTIVE_DIRECTORY]);
+    $this->storage = new CachedStorage($this->fileStorage, \Drupal::service('cache.config'));
     $this->cache = \Drupal::service('cache_factory')->get('config');
     // ::listAll() verifications require other configuration data to exist.
     $this->storage->write('system.performance', array());
@@ -56,14 +56,14 @@ class CachedStorageTest extends ConfigStorageTestBase {
   protected function read($name) {
     $data = $this->cache->get($name);
     // Cache misses fall through to the underlying storage.
-    return $data ? $data->data : $this->filestorage->read($name);
+    return $data ? $data->data : $this->fileStorage->read($name);
   }
 
   /**
    * {@inheritdoc}
    */
   protected function insert($name, $data) {
-    $this->filestorage->write($name, $data);
+    $this->fileStorage->write($name, $data);
     $this->cache->set($name, $data);
   }
 
@@ -71,7 +71,7 @@ class CachedStorageTest extends ConfigStorageTestBase {
    * {@inheritdoc}
    */
   protected function update($name, $data) {
-    $this->filestorage->write($name, $data);
+    $this->fileStorage->write($name, $data);
     $this->cache->set($name, $data);
   }
 
@@ -80,7 +80,7 @@ class CachedStorageTest extends ConfigStorageTestBase {
    */
   protected function delete($name) {
     $this->cache->delete($name);
-    unlink($this->filestorage->getFilePath($name));
+    unlink($this->fileStorage->getFilePath($name));
   }
 
   /**

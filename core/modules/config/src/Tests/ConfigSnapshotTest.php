@@ -24,6 +24,9 @@ class ConfigSnapshotTest extends KernelTestBase {
    */
   public static $modules = array('config_test', 'system');
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
     // Update the config snapshot. This allows the parent::setUp() to write

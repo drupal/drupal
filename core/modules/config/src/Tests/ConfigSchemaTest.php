@@ -27,6 +27,9 @@ class ConfigSchemaTest extends KernelTestBase {
    */
   public static $modules = array('system', 'language', 'locale', 'field', 'image', 'config_schema_test');
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
     $this->installConfig(array('system', 'image', 'config_schema_test'));

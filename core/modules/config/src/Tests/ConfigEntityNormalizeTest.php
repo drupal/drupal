@@ -11,6 +11,11 @@ use Drupal\simpletest\KernelTestBase;
  */
 class ConfigEntityNormalizeTest extends KernelTestBase {
 
+  /**
+   * Modules to install.
+   *
+   * @var array
+   */
   public static $modules = array('config_test');
 
   protected function setUp() {

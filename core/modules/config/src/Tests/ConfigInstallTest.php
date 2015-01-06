@@ -17,6 +17,9 @@ use Drupal\simpletest\KernelTestBase;
  */
 class ConfigInstallTest extends KernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
 

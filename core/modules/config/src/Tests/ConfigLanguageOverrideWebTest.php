@@ -18,8 +18,16 @@ use Drupal\simpletest\WebTestBase;
  */
 class ConfigLanguageOverrideWebTest extends WebTestBase {
 
+  /**
+   * Modules to install.
+   *
+   * @var array
+   */
   public static $modules = array('language', 'system');
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
   }

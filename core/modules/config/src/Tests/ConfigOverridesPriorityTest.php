@@ -18,6 +18,11 @@ use Drupal\simpletest\KernelTestBase;
  */
 class ConfigOverridesPriorityTest extends KernelTestBase {
 
+  /**
+   * Modules to install.
+   *
+   * @var array
+   */
   public static $modules = array('system', 'config', 'config_override_test', 'language');
 
   public function testOverridePriorities() {

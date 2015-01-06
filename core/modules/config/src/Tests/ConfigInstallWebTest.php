@@ -18,6 +18,10 @@ use Drupal\Core\Config\FileStorage;
  * @group config
  */
 class ConfigInstallWebTest extends WebTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
 
