@@ -68,11 +68,11 @@ class KeyValueEntityStorageTest extends UnitTestCase {
   protected $entityManager;
 
   /**
-   * The mocked cache backend.
+   * The mocked cache tags invalidator.
    *
-   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $cacheBackend;
+  protected $cacheTagsInvalidator;
 
   /**
    * {@inheritdoc}
@@ -111,7 +111,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
       ->with('test_entity_type')
       ->will($this->returnValue($this->entityType));
 
-    $this->cacheBackend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
+    $this->cacheTagsInvalidator = $this->getMock('Drupal\Core\Cache\CacheTagsInvalidatorInterface');
 
     $this->keyValueStore = $this->getMock('Drupal\Core\KeyValueStore\KeyValueStoreInterface');
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
@@ -131,8 +131,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
     $container = new ContainerBuilder();
     $container->set('entity.manager', $this->entityManager);
     $container->set('language_manager', $this->languageManager);
-    $container->set('cache.test', $this->cacheBackend);
-    $container->setParameter('cache_bins', array('cache.test' => 'test'));
+    $container->set('cache_tags.invalidator', $this->cacheTagsInvalidator);
     \Drupal::setContainer($container);
   }
 

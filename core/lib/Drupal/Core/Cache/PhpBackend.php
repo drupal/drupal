@@ -36,13 +36,23 @@ class PhpBackend implements CacheBackendInterface {
   protected $cache = array();
 
   /**
+   * The cache tags checksum provider.
+   *
+   * @var \Drupal\Core\Cache\CacheTagsChecksumInterface
+   */
+  protected $checksumProvider;
+
+  /**
    * Constructs a PhpBackend object.
    *
    * @param string $bin
    *   The cache bin for which the object is created.
+   * @param \Drupal\Core\Cache\CacheTagsChecksumInterface $checksum_provider
+   *   The cache tags checksum provider.
    */
-  public function __construct($bin) {
+  public function __construct($bin, CacheTagsChecksumInterface $checksum_provider) {
     $this->bin = 'cache_' . $bin;
+    $this->checksumProvider = $checksum_provider;
   }
 
   /**
@@ -122,6 +132,11 @@ class PhpBackend implements CacheBackendInterface {
     // Check expire time.
     $cache->valid = $cache->expire == Cache::PERMANENT || $cache->expire >= REQUEST_TIME;
 
+    // Check if invalidateTags() has been called with any of the item's tags.
+    if (!$this->checksumProvider->isValid($cache->checksum, $cache->tags)) {
+      $cache->valid = FALSE;
+    }
+
     if (!$allow_invalid && !$cache->valid) {
       return FALSE;
     }
@@ -140,6 +155,7 @@ class PhpBackend implements CacheBackendInterface {
       'created' => round(microtime(TRUE), 3),
       'expire' => $expire,
       'tags' => array_unique($tags),
+      'checksum' => $this->checksumProvider->getCurrentChecksum($tags),
     );
     $this->writeItem($this->normalizeCid($cid), $item);
   }
@@ -157,18 +173,6 @@ class PhpBackend implements CacheBackendInterface {
   public function deleteMultiple(array $cids) {
     foreach ($cids as $cid) {
       $this->delete($cid);
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function deleteTags(array $tags) {
-    foreach ($this->storage()->listAll() as $cidhash) {
-      $item = $this->getByHash($cidhash);
-      if (is_object($item) && array_intersect($tags, $item->tags)) {
-        $this->delete($item->cid);
-      }
     }
   }
 
@@ -205,18 +209,6 @@ class PhpBackend implements CacheBackendInterface {
   public function invalidateMultiple(array $cids) {
     foreach ($cids as $cid) {
       $this->invalidate($cid);
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function invalidateTags(array $tags) {
-    foreach ($this->storage()->listAll() as $cidhash) {
-      $item = $this->getByHash($cidhash);
-      if ($item && array_intersect($tags, $item->tags)) {
-        $this->invalidate($item->cid);
-      }
     }
   }
 

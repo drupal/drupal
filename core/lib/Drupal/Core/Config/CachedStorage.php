@@ -131,7 +131,7 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
       // While not all written data is read back, setting the cache instead of
       // just deleting it avoids cache rebuild stampedes.
       $this->cache->set($this->getCacheKey($name), $data);
-      Cache::deleteTags(array($this::FIND_BY_PREFIX_CACHE_TAG));
+      Cache::invalidateTags(array($this::FIND_BY_PREFIX_CACHE_TAG));
       $this->findByPrefixCache = array();
       return TRUE;
     }
@@ -146,7 +146,7 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
     // rebuilding the cache before the storage is gone.
     if ($this->storage->delete($name)) {
       $this->cache->delete($this->getCacheKey($name));
-      Cache::deleteTags(array($this::FIND_BY_PREFIX_CACHE_TAG));
+      Cache::invalidateTags(array($this::FIND_BY_PREFIX_CACHE_TAG));
       $this->findByPrefixCache = array();
       return TRUE;
     }
@@ -162,7 +162,7 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
     if ($this->storage->rename($name, $new_name)) {
       $this->cache->delete($this->getCacheKey($name));
       $this->cache->delete($this->getCacheKey($new_name));
-      Cache::deleteTags(array($this::FIND_BY_PREFIX_CACHE_TAG));
+      Cache::invalidateTags(array($this::FIND_BY_PREFIX_CACHE_TAG));
       $this->findByPrefixCache = array();
       return TRUE;
     }

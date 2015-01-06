@@ -621,7 +621,7 @@ class ThemeHandler implements ThemeHandlerInterface {
 
     // @todo It feels wrong to have the requirement to clear the local tasks
     //   cache here.
-    Cache::deleteTags(array('local_task'));
+    Cache::invalidateTags(array('local_task'));
     $this->themeRegistryRebuild();
   }
 

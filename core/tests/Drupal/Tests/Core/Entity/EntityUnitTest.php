@@ -73,11 +73,11 @@ class EntityUnitTest extends UnitTestCase {
   protected $languageManager;
 
   /**
-   * The mocked cache backend.
+   * The mocked cache tags invalidator.
    *
-   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $cacheBackend;
+  protected $cacheTagsInvalidator;
 
   /**
    * The entity values.
@@ -116,14 +116,13 @@ class EntityUnitTest extends UnitTestCase {
       ->with('en')
       ->will($this->returnValue(new Language(array('id' => 'en'))));
 
-    $this->cacheBackend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
+    $this->cacheTagsInvalidator = $this->getMock('Drupal\Core\Cache\CacheTagsInvalidator');
 
     $container = new ContainerBuilder();
     $container->set('entity.manager', $this->entityManager);
     $container->set('uuid', $this->uuid);
     $container->set('language_manager', $this->languageManager);
-    $container->set('cache.test', $this->cacheBackend);
-    $container->setParameter('cache_bins', array('cache.test' => 'test'));
+    $container->set('cache_tags.invalidator', $this->cacheTagsInvalidator);
     \Drupal::setContainer($container);
 
     $this->entity = $this->getMockForAbstractClass('\Drupal\Core\Entity\Entity', array($this->values, $this->entityTypeId));
@@ -398,12 +397,12 @@ class EntityUnitTest extends UnitTestCase {
    * @covers ::postSave
    */
   public function testPostSave() {
-    $this->cacheBackend->expects($this->at(0))
+    $this->cacheTagsInvalidator->expects($this->at(0))
       ->method('invalidateTags')
       ->with(array(
         $this->entityTypeId . '_list', // List cache tag.
       ));
-    $this->cacheBackend->expects($this->at(1))
+    $this->cacheTagsInvalidator->expects($this->at(1))
       ->method('invalidateTags')
       ->with(array(
         $this->entityTypeId . ':' . $this->values['id'], // Own cache tag.
@@ -455,7 +454,7 @@ class EntityUnitTest extends UnitTestCase {
    * @covers ::postDelete
    */
   public function testPostDelete() {
-    $this->cacheBackend->expects($this->once())
+    $this->cacheTagsInvalidator->expects($this->once())
       ->method('invalidateTags')
       ->with(array(
         $this->entityTypeId . ':' . $this->values['id'],

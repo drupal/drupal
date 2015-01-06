@@ -17,7 +17,7 @@ namespace Drupal\Core\Cache;
  *
  * @ingroup cache
  */
-class MemoryBackend implements CacheBackendInterface {
+class MemoryBackend implements CacheBackendInterface, CacheTagsInvalidatorInterface {
 
   /**
    * Array to store cache objects.
@@ -144,17 +144,6 @@ class MemoryBackend implements CacheBackendInterface {
   }
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::deleteTags().
-   */
-  public function deleteTags(array $tags) {
-    foreach ($this->cache as $cid => $item) {
-      if (array_intersect($tags, $item->tags)) {
-        unset($this->cache[$cid]);
-      }
-    }
-  }
-
-  /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::deleteAll().
    */
   public function deleteAll() {
@@ -180,7 +169,7 @@ class MemoryBackend implements CacheBackendInterface {
   }
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::invalidateTags().
+   * {@inheritdoc}
    */
   public function invalidateTags(array $tags) {
     foreach ($this->cache as $cid => $item) {

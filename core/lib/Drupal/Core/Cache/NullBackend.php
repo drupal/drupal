@@ -70,11 +70,6 @@ class NullBackend implements CacheBackendInterface {
   public function deleteAll() {}
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::deleteTags().
-   */
-  public function deleteTags(array $tags) {}
-
-  /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::invalidate().
    */
   public function invalidate($cid) {}
@@ -83,11 +78,6 @@ class NullBackend implements CacheBackendInterface {
    * Implements Drupal\Core\Cache\CacheBackendInterface::invalidateMultiple().
    */
   public function invalidateMultiple(array $cids) {}
-
-  /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::invalidateTags().
-   */
-  public function invalidateTags(array $tags) {}
 
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::invalidateAll().

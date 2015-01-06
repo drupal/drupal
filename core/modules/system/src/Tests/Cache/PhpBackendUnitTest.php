@@ -23,7 +23,8 @@ class PhpBackendUnitTest extends GenericCacheBackendUnitTestBase {
    *   A new MemoryBackend object.
    */
   protected function createCacheBackend($bin) {
-    return new PhpBackend($bin);
+    $backend = new PhpBackend($bin, \Drupal::service('cache_tags.invalidator.checksum'));
+    return $backend;
   }
 
 }

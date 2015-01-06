@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Utility;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -346,7 +347,7 @@ class Token {
    */
   public function resetInfo() {
     $this->tokenInfo = NULL;
-    $this->cache->deleteTags(array(
+    Cache::invalidateTags(array(
       static::TOKEN_INFO_CACHE_TAG => TRUE,
     ));
   }

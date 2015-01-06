@@ -32,6 +32,18 @@ services:
     class: Drupal\Core\Cache\TimeZoneCacheContext
     tags:
       - { name: cache.context}
+  cache_tags.invalidator:
+    parent: container.trait
+    class: Drupal\Core\Cache\CacheTagsInvalidator
+    calls:
+      - [setContainer, ['@service_container']]
+    tags:
+      - { name: service_collector, call: addInvalidator, tag: cache_tags_invalidator }
+  cache_tags.invalidator.checksum:
+    class: Drupal\Core\Cache\DatabaseCacheTagsChecksum
+    arguments: ['@database']
+    tags:
+      - { name: cache_tags_invalidator}
   cache.backend.chainedfast:
     class: Drupal\Core\Cache\ChainedFastBackendFactory
     arguments: ['@settings']
@@ -39,12 +51,13 @@ services:
       - [setContainer, ['@service_container']]
   cache.backend.database:
     class: Drupal\Core\Cache\DatabaseBackendFactory
-    arguments: ['@database']
+    arguments: ['@database', '@cache_tags.invalidator.checksum']
   cache.backend.apcu:
     class: Drupal\Core\Cache\ApcuBackendFactory
-    arguments: ['@app.root']
+    arguments: ['@app.root', '@cache_tags.invalidator.checksum']
   cache.backend.php:
     class: Drupal\Core\Cache\PhpBackendFactory
+    arguments: ['@cache_tags.invalidator.checksum']
   cache.bootstrap:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:

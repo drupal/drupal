@@ -8,8 +8,7 @@
 namespace Drupal\Tests;
 
 use Drupal\Component\Utility\Random;
-use Drupal\Component\Utility\String;
-use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 
 /**
@@ -197,24 +196,20 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
   }
 
   /**
-   * Sets up a container with cache bins.
+   * Sets up a container with a cache tags invalidator.
    *
-   * @param \Drupal\Core\Cache\CacheBackendInterface $backend
-   *   The cache backend to set up.
+   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tags_validator
+   *   The cache tags invalidator.
    *
    * @return \Symfony\Component\DependencyInjection\ContainerInterface|\PHPUnit_Framework_MockObject_MockObject
-   *   The container with the cache bins set up.
+   *   The container with the cache tags invalidator service.
    */
-  protected function getContainerWithCacheBins(CacheBackendInterface $backend) {
+  protected function getContainerWithCacheTagsInvalidator(CacheTagsInvalidatorInterface $cache_tags_validator) {
     $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
     $container->expects($this->any())
-      ->method('getParameter')
-      ->with('cache_bins')
-      ->will($this->returnValue(array('cache.test' => 'test')));
-    $container->expects($this->any())
       ->method('get')
-      ->with('cache.test')
-      ->will($this->returnValue($backend));
+      ->with('cache_tags.invalidator')
+      ->will($this->returnValue($cache_tags_validator));
 
     \Drupal::setContainer($container);
     return $container;

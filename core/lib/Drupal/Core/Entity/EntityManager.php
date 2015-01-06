@@ -686,7 +686,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
     $this->fieldMapByFieldType = array();
     $this->displayModeInfo = array();
     $this->extraFields = array();
-    Cache::deleteTags(array('entity_field_info'));
+    Cache::invalidateTags(array('entity_field_info'));
     // The typed data manager statically caches prototype objects with injected
     // definitions, clear those as well.
     $this->typedDataManager->clearCachedDefinitions();
@@ -697,7 +697,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
    */
   public function clearCachedBundles() {
     $this->bundleInfo = array();
-    Cache::deleteTags(array('entity_bundles'));
+    Cache::invalidateTags(array('entity_bundles'));
     // Entity bundles are exposed as data types, clear that cache too.
     $this->typedDataManager->clearCachedDefinitions();
   }

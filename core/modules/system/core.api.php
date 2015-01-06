@@ -468,10 +468,10 @@
  * - An array of values. For example, the "node" tag indicates that particular
  *   node's data is present in the cache item, so its value is an array of node
  *   IDs.
- * Data that has been tagged can be deleted or invalidated as a group: no matter
+ * Data that has been tagged can be invalidated as a group: no matter
  * the Cache ID (cid) of the cache item, no matter in which cache bin a cache
  * item lives; as long as it is tagged with a certain cache tag, it will be
- * deleted or invalidated.
+ * invalidated.
  *
  * Because of that, cache tags are a solution to the cache invalidation problem:
  * - For caching to be effective, each cache item must only be invalidated when
@@ -495,8 +495,7 @@
  * );
  * \Drupal::cache()->set($cid, $data, CacheBackendInterface::CACHE_PERMANENT, $tags);
  *
- * // Delete or invalidate all cache items with certain tags.
- * \Drupal\Core\Cache\Cache::deleteTags(array('node:1'));
+ * // Invalidate all cache items with certain tags.
  * \Drupal\Core\Cache\Cache::invalidateTags(array('user:1'));
  * @endcode
  *
@@ -512,8 +511,6 @@
  * \Drupal\Core\Entity\EntityTypeInterface::getListCacheTags(),
  * \Drupal\Core\Entity\Entity::invalidateTagsOnSave() and
  * \Drupal\Core\Entity\Entity::invalidateTagsOnDelete().
- *
- * @todo Update cache tag deletion in https://drupal.org/node/918538
  *
  * @section configuration Configuration
  *

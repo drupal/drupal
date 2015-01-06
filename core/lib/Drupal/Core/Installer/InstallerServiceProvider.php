@@ -49,6 +49,12 @@ class InstallerServiceProvider implements ServiceProviderInterface, ServiceModif
     $container
       ->register('router.dumper', 'Drupal\Core\Routing\NullMatcherDumper');
 
+    // Remove the cache tags invalidator tag from the cache tags storage, so
+    // that we don't call it when cache tags are invalidated very early in the
+    // installer.
+    $container->getDefinition('cache_tags.invalidator.checksum')
+      ->clearTag('cache_tags_invalidator');
+
     // Replace the route builder with an empty implementation.
     // @todo Convert installer steps into routes; add an installer.routing.yml.
     $definition = $container->getDefinition('router.builder');

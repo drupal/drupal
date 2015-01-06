@@ -190,18 +190,17 @@ class DefaultPluginManagerTest extends UnitTestCase {
    */
   public function testCacheClearWithTags() {
     $cid = $this->randomMachineName();
-    $cache_backend = $this->getMockBuilder('Drupal\Core\Cache\MemoryBackend')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $cache_backend
+    $cache_backend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
+    $cache_tags_invalidator = $this->getMock('Drupal\Core\Cache\CacheTagsInvalidatorInterface');
+    $cache_tags_invalidator
       ->expects($this->once())
-      ->method('deleteTags')
+      ->method('invalidateTags')
       ->with(array('tag'));
     $cache_backend
       ->expects($this->never())
       ->method('deleteMultiple');
 
-    $this->getContainerWithCacheBins($cache_backend);
+    $this->getContainerWithCacheTagsInvalidator($cache_tags_invalidator);
 
     $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions, NULL, NULL, '\Drupal\plugin_test\Plugin\plugin_test\fruit\FruitInterface');
     $plugin_manager->setCacheBackend($cache_backend, $cid, array('tag'));

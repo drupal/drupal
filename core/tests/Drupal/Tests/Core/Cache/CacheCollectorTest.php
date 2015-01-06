@@ -19,9 +19,16 @@ class CacheCollectorTest extends UnitTestCase {
   /**
    * The cache backend that should be used.
    *
-   * @var \PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $cache;
+  protected $cacheBackend;
+
+  /**
+   * The cache tags invalidator.
+   *
+   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $cacheTagsInvalidator;
 
   /**
    * The lock backend that should be used.
@@ -48,12 +55,13 @@ class CacheCollectorTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    $this->cache = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
+    $this->cacheBackend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
+    $this->cacheTagsInvalidator = $this->getMock('Drupal\Core\Cache\CacheTagsInvalidatorInterface');
     $this->lock = $this->getMock('Drupal\Core\Lock\LockBackendInterface');
     $this->cid = $this->randomMachineName();
-    $this->collector = new CacheCollectorHelper($this->cid, $this->cache, $this->lock);
+    $this->collector = new CacheCollectorHelper($this->cid, $this->cacheBackend, $this->lock);
 
-    $this->getContainerWithCacheBins($this->cache);
+    $this->getContainerWithCacheTagsInvalidator($this->cacheTagsInvalidator);
   }
 
 
@@ -90,7 +98,7 @@ class CacheCollectorTest extends UnitTestCase {
     $key = $this->randomMachineName();
     $value = NULL;
 
-    $this->cache->expects($this->once())
+    $this->cacheBackend->expects($this->once())
       ->method('invalidate')
       ->with($this->cid);
     $this->collector->set($key, $value);
@@ -115,7 +123,7 @@ class CacheCollectorTest extends UnitTestCase {
       'data' => array($key => $value),
       'created' => REQUEST_TIME,
     );
-    $this->cache->expects($this->once())
+    $this->cacheBackend->expects($this->once())
       ->method('get')
       ->with($this->cid)
       ->will($this->returnValue($cache));
@@ -137,7 +145,7 @@ class CacheCollectorTest extends UnitTestCase {
     $this->assertTrue($this->collector->has($key));
     $this->assertEquals($value, $this->collector->get($key));
 
-    $this->cache->expects($this->once())
+    $this->cacheBackend->expects($this->once())
       ->method('invalidate')
       ->with($this->cid);
     $this->collector->delete($key);
@@ -151,7 +159,7 @@ class CacheCollectorTest extends UnitTestCase {
   public function testUpdateCacheNoChanges() {
     $this->lock->expects($this->never())
       ->method('acquire');
-    $this->cache->expects($this->never())
+    $this->cacheBackend->expects($this->never())
       ->method('set');
 
     // Destruct the object to trigger the update data process.
@@ -175,10 +183,10 @@ class CacheCollectorTest extends UnitTestCase {
       ->method('acquire')
       ->with($this->cid . ':Drupal\Core\Cache\CacheCollector')
       ->will($this->returnValue(TRUE));
-    $this->cache->expects($this->once())
+    $this->cacheBackend->expects($this->once())
       ->method('get')
       ->with($this->cid, FALSE);
-    $this->cache->expects($this->once())
+    $this->cacheBackend->expects($this->once())
       ->method('set')
       ->with($this->cid, array($key => $value), Cache::PERMANENT, array());
     $this->lock->expects($this->once())
@@ -205,7 +213,7 @@ class CacheCollectorTest extends UnitTestCase {
       ->method('acquire')
       ->with($this->cid . ':Drupal\Core\Cache\CacheCollector')
       ->will($this->returnValue(FALSE));
-    $this->cache->expects($this->never())
+    $this->cacheBackend->expects($this->never())
       ->method('set');
 
     // Destruct the object to trigger the update data process.
@@ -223,12 +231,12 @@ class CacheCollectorTest extends UnitTestCase {
       'data' => array($key => $value),
       'created' => REQUEST_TIME,
     );
-    $this->cache->expects($this->at(0))
+    $this->cacheBackend->expects($this->at(0))
       ->method('get')
       ->with($this->cid)
       ->will($this->returnValue($cache));
 
-    $this->cache->expects($this->at(1))
+    $this->cacheBackend->expects($this->at(1))
       ->method('invalidate')
       ->with($this->cid);
     $this->collector->set($key, 'new value');
@@ -244,11 +252,11 @@ class CacheCollectorTest extends UnitTestCase {
       'data' => array($key => $value),
       'created' => REQUEST_TIME + 1,
     );
-    $this->cache->expects($this->at(0))
+    $this->cacheBackend->expects($this->at(0))
       ->method('get')
       ->with($this->cid)
       ->will($this->returnValue($cache));
-    $this->cache->expects($this->once())
+    $this->cacheBackend->expects($this->once())
       ->method('delete')
       ->with($this->cid);
     $this->lock->expects($this->once())
@@ -280,11 +288,11 @@ class CacheCollectorTest extends UnitTestCase {
       'data' => array('other key' => 'other value'),
       'created' => REQUEST_TIME + 1,
     );
-    $this->cache->expects($this->at(0))
+    $this->cacheBackend->expects($this->at(0))
       ->method('get')
       ->with($this->cid)
       ->will($this->returnValue($cache));
-    $this->cache->expects($this->once())
+    $this->cacheBackend->expects($this->once())
       ->method('set')
       ->with($this->cid, array('other key' => 'other value', $key => $value), Cache::PERMANENT, array());
     $this->lock->expects($this->once())
@@ -306,7 +314,7 @@ class CacheCollectorTest extends UnitTestCase {
       'data' => array($key => $value),
       'created' => REQUEST_TIME,
     );
-    $this->cache->expects($this->at(0))
+    $this->cacheBackend->expects($this->at(0))
       ->method('get')
       ->with($this->cid)
       ->will($this->returnValue($cache));
@@ -322,10 +330,10 @@ class CacheCollectorTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
     // The second argument is set to TRUE because we triggered a cache
     // invalidation.
-    $this->cache->expects($this->at(0))
+    $this->cacheBackend->expects($this->at(0))
       ->method('get')
       ->with($this->cid, TRUE);
-    $this->cache->expects($this->once())
+    $this->cacheBackend->expects($this->once())
       ->method('set')
       ->with($this->cid, array(), Cache::PERMANENT, array());
     $this->lock->expects($this->once())
@@ -373,11 +381,11 @@ class CacheCollectorTest extends UnitTestCase {
     $this->assertEquals(1, $this->collector->getCacheMisses());
 
     // Clear the collected cache, should call it again.
-    $this->cache->expects($this->once())
+    $this->cacheBackend->expects($this->once())
       ->method('delete')
       ->with($this->cid);
-    $this->cache->expects($this->never())
-      ->method('deleteTags');
+    $this->cacheTagsInvalidator->expects($this->never())
+      ->method('invalidateTags');
     $this->collector->clear();
     $this->assertEquals($value, $this->collector->get($key));
     $this->assertEquals(2, $this->collector->getCacheMisses());
@@ -390,7 +398,7 @@ class CacheCollectorTest extends UnitTestCase {
     $key = $this->randomMachineName();
     $value = $this->randomMachineName();
     $tags = array($this->randomMachineName());
-    $this->collector = new CacheCollectorHelper($this->cid, $this->cache, $this->lock, $tags);
+    $this->collector = new CacheCollectorHelper($this->cid, $this->cacheBackend, $this->lock, $tags);
 
     // Set the data and request it.
     $this->collector->setCacheMissData($key, $value);
@@ -401,10 +409,10 @@ class CacheCollectorTest extends UnitTestCase {
     $this->assertEquals(1, $this->collector->getCacheMisses());
 
     // Clear the collected cache using the tags, should call it again.
-    $this->cache->expects($this->never())
+    $this->cacheBackend->expects($this->never())
       ->method('delete');
-    $this->cache->expects($this->once())
-      ->method('deleteTags')
+    $this->cacheTagsInvalidator->expects($this->once())
+      ->method('invalidateTags')
       ->with($tags);
     $this->collector->clear();
     $this->assertEquals($value, $this->collector->get($key));

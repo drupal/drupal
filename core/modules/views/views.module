@@ -470,7 +470,7 @@ function views_field_config_create(FieldConfigInterface $field) {
  * Implements hook_ENTITY_TYPE_update() for 'field_config'.
  */
 function views_field_config_update(FieldConfigInterface $field) {
-  Cache::deleteTags(array('extension' => 'views'));
+  Cache::invalidateTags(array('extension' => 'views'));
   \Drupal::cache('render')->deleteAll();
 }
 
@@ -478,7 +478,7 @@ function views_field_config_update(FieldConfigInterface $field) {
  * Implements hook_ENTITY_TYPE_delete() for 'field_config'.
  */
 function views_field_config_delete(FieldConfigInterface $field) {
-  Cache::deleteTags(array('extension' => 'views'));
+  Cache::invalidateTags(array('extension' => 'views'));
   \Drupal::cache('render')->deleteAll();
 }
 
@@ -487,7 +487,7 @@ function views_field_config_delete(FieldConfigInterface $field) {
  */
 function views_invalidate_cache() {
   // Clear Views' info cache entries.
-  Cache::deleteTags(array('extension' => 'views'));
+  Cache::invalidateTags(array('extension' => 'views'));
 
   // Set the menu as needed to be rebuilt.
   \Drupal::service('router.builder_indicator')->setRebuildNeeded();

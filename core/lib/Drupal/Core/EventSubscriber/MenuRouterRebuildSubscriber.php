@@ -57,7 +57,7 @@ class MenuRouterRebuildSubscriber implements EventSubscriberInterface {
    */
   public function onRouterRebuild(Event $event) {
     $this->menuLinksRebuild();
-    Cache::deleteTags(array('local_task'));
+    Cache::invalidateTags(array('local_task'));
   }
 
   /**

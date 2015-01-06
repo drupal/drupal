@@ -986,7 +986,7 @@ function _locale_refresh_translations($langcodes, $lids = array()) {
     }
   }
   // Clear locale cache.
-  Cache::deleteTags(array('locale'));
+  Cache::invalidateTags(array('locale'));
 }
 
 /**

@@ -1158,12 +1158,7 @@ abstract class WebTestBase extends TestBase {
    */
   protected function refreshVariables() {
     // Clear the tag cache.
-    // @todo Replace drupal_static() usage within classes and provide a
-    //   proper interface for invoking reset() on a cache backend:
-    //   https://www.drupal.org/node/2311945.
-    drupal_static_reset('Drupal\Core\Cache\CacheBackendInterface::tagCache');
-    drupal_static_reset('Drupal\Core\Cache\DatabaseBackend::deletedTags');
-    drupal_static_reset('Drupal\Core\Cache\DatabaseBackend::invalidatedTags');
+    \Drupal::service('cache_tags.invalidator.checksum')->reset();
     foreach (Cache::getBins() as $backend) {
       if (is_callable(array($backend, 'reset'))) {
         $backend->reset();

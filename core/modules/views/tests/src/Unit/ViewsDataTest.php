@@ -26,6 +26,13 @@ class ViewsDataTest extends UnitTestCase {
   protected $cacheBackend;
 
   /**
+   * The mocked cache tags invalidator.
+   *
+   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $cacheTagsInvalidator;
+
+  /**
    * The mocked module handler.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -57,8 +64,9 @@ class ViewsDataTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
+    $this->cacheTagsInvalidator = $this->getMock('Drupal\Core\Cache\CacheTagsInvalidatorInterface');
     $this->cacheBackend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
-    $this->getContainerWithCacheBins($this->cacheBackend);
+    $this->getContainerWithCacheTagsInvalidator($this->cacheTagsInvalidator);
 
     $configs = array();
     $configs['views.settings']['skip_cache'] = FALSE;
@@ -250,20 +258,21 @@ class ViewsDataTest extends UnitTestCase {
     $this->cacheBackend->expects($this->at(3))
       ->method('set')
       ->with("views_data:$random_table_name:en", array());
+    $this->cacheTagsInvalidator->expects($this->once())
+      ->method('invalidateTags')
+      ->with(['views_data']);
     $this->cacheBackend->expects($this->at(4))
-      ->method('deleteAll');
-    $this->cacheBackend->expects($this->at(5))
       ->method('get')
       ->with("views_data:en")
       ->will($this->returnValue(FALSE));
-    $this->cacheBackend->expects($this->at(6))
+    $this->cacheBackend->expects($this->at(5))
       ->method('set')
       ->with("views_data:en", $expected_views_data);
-    $this->cacheBackend->expects($this->at(7))
+    $this->cacheBackend->expects($this->at(6))
       ->method('get')
       ->with("views_data:$random_table_name:en")
       ->will($this->returnValue(FALSE));
-    $this->cacheBackend->expects($this->at(8))
+    $this->cacheBackend->expects($this->at(7))
       ->method('set')
       ->with("views_data:$random_table_name:en", array());
 

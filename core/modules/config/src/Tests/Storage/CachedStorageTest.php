@@ -90,7 +90,8 @@ class CachedStorageTest extends ConfigStorageTestBase {
     parent::containerBuild($container);
     // Use the regular database cache backend to aid testing.
     $container->register('cache_factory', 'Drupal\Core\Cache\DatabaseBackendFactory')
-      ->addArgument(new Reference('database'));
+      ->addArgument(new Reference('database'))
+      ->addArgument(new Reference('cache_tags.invalidator.checksum'));
   }
 
 }

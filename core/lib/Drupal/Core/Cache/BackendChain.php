@@ -23,7 +23,7 @@ namespace Drupal\Core\Cache;
  * @ingroup cache
  */
 
-class BackendChain implements CacheBackendInterface {
+class BackendChain implements CacheBackendInterface, CacheTagsInvalidatorInterface {
 
   /**
    * Ordered list of CacheBackendInterface instances.
@@ -159,15 +159,6 @@ class BackendChain implements CacheBackendInterface {
   }
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::deleteTags().
-   */
-  public function deleteTags(array $tags) {
-    foreach ($this->backends as $backend) {
-      $backend->deleteTags($tags);
-    }
-  }
-
-  /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::deleteAll().
    */
   public function deleteAll() {
@@ -199,7 +190,9 @@ class BackendChain implements CacheBackendInterface {
    */
   public function invalidateTags(array $tags) {
     foreach ($this->backends as $backend) {
-      $backend->invalidateTags($tags);
+      if ($backend instanceof CacheTagsInvalidatorInterface) {
+        $backend->invalidateTags($tags);
+      }
     }
   }
 

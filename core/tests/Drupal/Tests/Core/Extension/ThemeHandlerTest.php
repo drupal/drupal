@@ -121,8 +121,8 @@ class ThemeHandlerTest extends UnitTestCase {
     $logger = $this->getMock('Psr\Log\LoggerInterface');
     $this->themeHandler = new TestThemeHandler($this->root, $this->configFactory, $this->moduleHandler, $this->state, $this->infoParser, $logger, $this->cssCollectionOptimizer, $this->configInstaller, $this->configManager, $this->routeBuilderIndicator, $this->extensionDiscovery);
 
-    $cache_backend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
-    $this->getContainerWithCacheBins($cache_backend);
+    $cache_tags_invalidator = $this->getMock('Drupal\Core\Cache\CacheTagsInvalidatorInterface');
+    $this->getContainerWithCacheTagsInvalidator($cache_tags_invalidator);
   }
 
   /**

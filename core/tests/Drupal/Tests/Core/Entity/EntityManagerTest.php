@@ -62,7 +62,14 @@ class EntityManagerTest extends UnitTestCase {
    *
    * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $cache;
+  protected $cacheBackend;
+
+  /**
+   * The cache tags invalidator.
+   *
+   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $cacheTagsInvalidator;
 
   /**
    * The language manager.
@@ -118,7 +125,8 @@ class EntityManagerTest extends UnitTestCase {
       ->with('entity_type_build')
       ->will($this->returnValue(array()));
 
-    $this->cache = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
+    $this->cacheBackend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
+    $this->cacheTagsInvalidator = $this->getMock('Drupal\Core\Cache\CacheTagsInvalidatorInterface');
 
     $language = $this->getMock('Drupal\Core\Language\LanguageInterface');
     $language->expects($this->any())
@@ -138,7 +146,7 @@ class EntityManagerTest extends UnitTestCase {
     $this->formBuilder = $this->getMock('Drupal\Core\Form\FormBuilderInterface');
     $this->controllerResolver = $this->getClassResolverStub();
 
-    $this->container = $this->getContainerWithCacheBins($this->cache);
+    $this->container = $this->getContainerWithCacheTagsInvalidator($this->cacheTagsInvalidator);
 
     $this->discovery = $this->getMock('Drupal\Component\Plugin\Discovery\DiscoveryInterface');
 
@@ -179,7 +187,7 @@ class EntityManagerTest extends UnitTestCase {
       ->method('getDefinitions')
       ->will($this->returnValue($definitions));
 
-    $this->entityManager = new TestEntityManager(new \ArrayObject(), $this->moduleHandler, $this->cache, $this->languageManager, $this->translationManager, $this->getClassResolverStub(), $this->typedDataManager, $this->installedDefinitions, $this->eventDispatcher);
+    $this->entityManager = new TestEntityManager(new \ArrayObject(), $this->moduleHandler, $this->cacheBackend, $this->languageManager, $this->translationManager, $this->getClassResolverStub(), $this->typedDataManager, $this->installedDefinitions, $this->eventDispatcher);
     $this->entityManager->setContainer($this->container);
     $this->entityManager->setDiscovery($this->discovery);
   }
@@ -192,14 +200,14 @@ class EntityManagerTest extends UnitTestCase {
    */
   public function testClearCachedDefinitions() {
     $this->setUpEntityManager();
-    $this->cache->expects($this->at(0))
-      ->method('deleteTags')
+    $this->cacheTagsInvalidator->expects($this->at(0))
+      ->method('invalidateTags')
       ->with(array('entity_types'));
-    $this->cache->expects($this->at(1))
-      ->method('deleteTags')
+    $this->cacheTagsInvalidator->expects($this->at(1))
+      ->method('invalidateTags')
       ->with(array('entity_bundles'));
-    $this->cache->expects($this->at(2))
-      ->method('deleteTags')
+    $this->cacheTagsInvalidator->expects($this->at(2))
+      ->method('invalidateTags')
       ->with(array('entity_field_info'));
 
     $this->entityManager->clearCachedDefinitions();
@@ -523,21 +531,21 @@ class EntityManagerTest extends UnitTestCase {
 
     $expected = array('id' => $field_definition);
 
-    $this->cache->expects($this->at(0))
+    $this->cacheBackend->expects($this->at(0))
       ->method('get')
       ->with('entity_base_field_definitions:test_entity_type:en', FALSE)
       ->will($this->returnValue(FALSE));
-    $this->cache->expects($this->at(1))
+    $this->cacheBackend->expects($this->at(1))
       ->method('get')
       ->with('entity_type', FALSE)
       ->will($this->returnValue(FALSE));
-    $this->cache->expects($this->at(2))
+    $this->cacheBackend->expects($this->at(2))
       ->method('set')
       ->with('entity_type');
-    $this->cache->expects($this->at(3))
+    $this->cacheBackend->expects($this->at(3))
       ->method('set')
       ->with('entity_base_field_definitions:test_entity_type:en');
-    $this->cache->expects($this->at(4))
+    $this->cacheBackend->expects($this->at(4))
       ->method('get')
       ->with('entity_base_field_definitions:test_entity_type:en', FALSE)
       ->will($this->returnValue((object) array('data' => $expected)));
@@ -557,27 +565,27 @@ class EntityManagerTest extends UnitTestCase {
 
     $expected = array('id' => $field_definition);
 
-    $this->cache->expects($this->at(0))
+    $this->cacheBackend->expects($this->at(0))
       ->method('get')
       ->with('entity_base_field_definitions:test_entity_type:en', FALSE)
       ->will($this->returnValue((object) array('data' => $expected)));
-    $this->cache->expects($this->at(1))
+    $this->cacheBackend->expects($this->at(1))
       ->method('get')
       ->with('entity_bundle_field_definitions:test_entity_type:test_bundle:en', FALSE)
       ->will($this->returnValue(FALSE));
-    $this->cache->expects($this->at(2))
+    $this->cacheBackend->expects($this->at(2))
       ->method('get')
       ->with('entity_type', FALSE)
       ->will($this->returnValue(FALSE));
-    $this->cache->expects($this->at(3))
+    $this->cacheBackend->expects($this->at(3))
       ->method('set');
-    $this->cache->expects($this->at(4))
+    $this->cacheBackend->expects($this->at(4))
       ->method('set');
-    $this->cache->expects($this->at(5))
+    $this->cacheBackend->expects($this->at(5))
       ->method('get')
       ->with('entity_base_field_definitions:test_entity_type:en', FALSE)
       ->will($this->returnValue((object) array('data' => $expected)));
-    $this->cache->expects($this->at(6))
+    $this->cacheBackend->expects($this->at(6))
       ->method('get')
       ->with('entity_bundle_field_definitions:test_entity_type:test_bundle:en', FALSE)
       ->will($this->returnValue((object) array('data' => $expected)));
@@ -616,29 +624,29 @@ class EntityManagerTest extends UnitTestCase {
       'field_storage' => $field_storage_definition,
     );
 
-    $this->cache->expects($this->at(0))
+    $this->cacheBackend->expects($this->at(0))
       ->method('get')
       ->with('entity_base_field_definitions:test_entity_type:en', FALSE)
       ->will($this->returnValue((object) array('data' => array('id' => $expected['id']))));
-    $this->cache->expects($this->at(1))
+    $this->cacheBackend->expects($this->at(1))
       ->method('get')
       ->with('entity_field_storage_definitions:test_entity_type:en', FALSE)
       ->will($this->returnValue(FALSE));
-    $this->cache->expects($this->at(2))
+    $this->cacheBackend->expects($this->at(2))
       ->method('get')
       ->with('entity_type', FALSE)
       ->will($this->returnValue(FALSE));
-    $this->cache->expects($this->at(3))
+    $this->cacheBackend->expects($this->at(3))
       ->method('set')
       ->with('entity_type');
-    $this->cache->expects($this->at(4))
+    $this->cacheBackend->expects($this->at(4))
       ->method('set')
       ->with('entity_field_storage_definitions:test_entity_type:en');
-    $this->cache->expects($this->at(5))
+    $this->cacheBackend->expects($this->at(5))
       ->method('get')
       ->with('entity_base_field_definitions:test_entity_type:en', FALSE)
       ->will($this->returnValue((object) array('data' => array('id' => $expected['id']))));
-    $this->cache->expects($this->at(6))
+    $this->cacheBackend->expects($this->at(6))
       ->method('get')
       ->with('entity_field_storage_definitions:test_entity_type:en', FALSE)
       ->will($this->returnValue((object) array('data' => $expected)));
@@ -773,8 +781,8 @@ class EntityManagerTest extends UnitTestCase {
    */
   public function testClearCachedFieldDefinitions() {
     $this->setUpEntityManager();
-    $this->cache->expects($this->once())
-      ->method('deleteTags')
+    $this->cacheTagsInvalidator->expects($this->once())
+      ->method('invalidateTags')
       ->with(array('entity_field_info'));
     $this->typedDataManager->expects($this->once())
       ->method('clearCachedDefinitions');
@@ -789,8 +797,8 @@ class EntityManagerTest extends UnitTestCase {
    */
   public function testClearCachedBundles() {
     $this->setUpEntityManager();
-    $this->cache->expects($this->once())
-      ->method('deleteTags')
+    $this->cacheTagsInvalidator->expects($this->once())
+      ->method('invalidateTags')
       ->with(array('entity_bundles'));
 
     $this->entityManager->clearCachedBundles();
@@ -861,30 +869,30 @@ class EntityManagerTest extends UnitTestCase {
       'apple' => $apple,
       'banana' => $banana,
     ));
-    $this->cache->expects($this->at(0))
+    $this->cacheBackend->expects($this->at(0))
       ->method('get')
       ->with("entity_bundle_info:en", FALSE)
       ->will($this->returnValue(FALSE));
-    $this->cache->expects($this->at(1))
+    $this->cacheBackend->expects($this->at(1))
       ->method('get')
       ->with("entity_type", FALSE)
       ->will($this->returnValue(FALSE));
-    $this->cache->expects($this->at(2))
+    $this->cacheBackend->expects($this->at(2))
       ->method('set')
       ->with("entity_type");
-    $this->cache->expects($this->at(3))
+    $this->cacheBackend->expects($this->at(3))
       ->method('set')
       ->with("entity_bundle_info:en");
-    $this->cache->expects($this->at(4))
-      ->method('deleteTags')
+    $this->cacheTagsInvalidator->expects($this->at(0))
+      ->method('invalidateTags')
       ->with(array('entity_types'));
-    $this->cache->expects($this->at(5))
-      ->method('deleteTags')
+    $this->cacheTagsInvalidator->expects($this->at(1))
+      ->method('invalidateTags')
       ->with(array('entity_bundles'));
-    $this->cache->expects($this->at(6))
-      ->method('deleteTags')
+    $this->cacheTagsInvalidator->expects($this->at(2))
+      ->method('invalidateTags')
       ->with(array('entity_field_info'));
-    $this->cache->expects($this->at(7))
+    $this->cacheBackend->expects($this->at(4))
       ->method('get')
       ->with("entity_bundle_info:en", FALSE)
       ->will($this->returnValue((object) array('data' => 'cached data')));
@@ -1017,7 +1025,7 @@ class EntityManagerTest extends UnitTestCase {
       ->method('getCurrentLanguage')
       ->will($this->returnValue($language));
 
-    $this->cache->expects($this->once())
+    $this->cacheBackend->expects($this->once())
       ->method('get')
       ->with($cache_id);
 
@@ -1029,7 +1037,7 @@ class EntityManagerTest extends UnitTestCase {
       ->method('alter')
       ->with('entity_extra_field_info', $hook_bundle_extra_fields);
 
-    $this->cache->expects($this->once())
+    $this->cacheBackend->expects($this->once())
       ->method('set')
       ->with($cache_id, $processed_hook_bundle_extra_fields[$entity_type_id][$bundle]);
 
@@ -1169,7 +1177,7 @@ class EntityManagerTest extends UnitTestCase {
       )
     );
     $this->setUpEntityManager();
-    $this->cache->expects($this->once())
+    $this->cacheBackend->expects($this->once())
       ->method('get')
       ->with('entity_field_map')
       ->will($this->returnValue((object) array('data' => $expected)));

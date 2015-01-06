@@ -322,6 +322,6 @@ class ViewsData {
     $this->storage = array();
     $this->allStorage = array();
     $this->fullyLoaded = FALSE;
-    Cache::deleteTags(array('views_data'));
+    Cache::invalidateTags(array('views_data'));
   }
 }

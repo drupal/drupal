@@ -161,7 +161,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
     if ($this->cacheBackend) {
       if ($this->cacheTags) {
         // Use the cache tags to clear the cache.
-        Cache::deleteTags($this->cacheTags);
+        Cache::invalidateTags($this->cacheTags);
       }
       else {
         $this->cacheBackend->delete($this->cacheKey);

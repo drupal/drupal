@@ -8,6 +8,7 @@
 namespace Drupal\Core\Entity\Sql;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
@@ -574,7 +575,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     else {
       $this->entities = array();
       if ($this->entityType->isPersistentlyCacheable()) {
-        $this->cacheBackend->deleteTags(array($this->entityTypeId . '_values'));
+        Cache::invalidateTags(array($this->entityTypeId . '_values'));
       }
     }
   }

@@ -229,7 +229,7 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
       'Two cache items were created in all backends.');
 
     // Invalidate test_tag of value 1. This should invalidate both entries.
-    $this->chain->deleteTags(array('test_tag:2'));
+    $this->chain->invalidateTags(array('test_tag:2'));
     $this->assertSame(FALSE, $this->firstBackend->get('test_cid_clear1')
       && $this->firstBackend->get('test_cid_clear2')
       && $this->secondBackend->get('test_cid_clear1')
@@ -250,7 +250,7 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
       'Two cache items were created in all backends.');
 
     // Invalidate test_tag of value 1. This should invalidate both entries.
-    $this->chain->deleteTags(array('test_tag:1'));
+    $this->chain->invalidateTags(array('test_tag:1'));
     $this->assertSame(FALSE, $this->firstBackend->get('test_cid_clear1')
       && $this->firstBackend->get('test_cid_clear2')
       && $this->secondBackend->get('test_cid_clear1')
@@ -274,7 +274,7 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
       && $this->thirdBackend->get('test_cid_clear3'),
       'Three cached items were created in all backends.');
 
-    $this->chain->deleteTags(array('test_tag_foo:3'));
+    $this->chain->invalidateTags(array('test_tag_foo:3'));
     $this->assertNotSame(FALSE, $this->firstBackend->get('test_cid_clear1')
       && $this->firstBackend->get('test_cid_clear2')
       && $this->secondBackend->get('test_cid_clear1')

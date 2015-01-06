@@ -280,7 +280,7 @@ abstract class CacheCollector implements CacheCollectorInterface, DestructableIn
   public function clear() {
     $this->reset();
     if ($this->tags) {
-      Cache::deleteTags($this->tags);
+      Cache::invalidateTags($this->tags);
     }
     else {
       $this->cache->delete($this->getCid());

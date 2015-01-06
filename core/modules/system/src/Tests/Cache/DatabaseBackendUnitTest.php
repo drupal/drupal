@@ -30,7 +30,7 @@ class DatabaseBackendUnitTest extends GenericCacheBackendUnitTestBase {
    *   A new DatabaseBackend object.
    */
   protected function createCacheBackend($bin) {
-    return new DatabaseBackend($this->container->get('database'), $bin);
+    return new DatabaseBackend($this->container->get('database'), $this->container->get('cache_tags.invalidator.checksum'), $bin);
   }
 
 }

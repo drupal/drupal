@@ -265,9 +265,9 @@ class ToolbarAdminMenuTest extends WebTestBase {
     $cache = $toolbarCache->get('toolbar_' . $admin_user_2_id . ':' . 'fr');
     $this->assertEqual($cache->tags[2], 'user:' . $admin_user_2_id, 'A cache tag in the toolbar cache under the key "user" exists for admin_user_2 against the language "fr".');
 
-    // Log in adminUser and clear the caches for this user using a tag.
+    // Log in the admin user and clear the caches for this user using a tag.
     $this->drupalLogin($this->adminUser);
-    Cache::deleteTags(array('user:' . $admin_user_id));
+    Cache::invalidateTags(array('user:' . $admin_user_id));
 
     // Assert that no toolbar cache exists for adminUser against the
     // language "en".

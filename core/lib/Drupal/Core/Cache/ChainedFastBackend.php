@@ -41,7 +41,7 @@ namespace Drupal\Core\Cache;
  *
  * @ingroup cache
  */
-class ChainedFastBackend implements CacheBackendInterface {
+class ChainedFastBackend implements CacheBackendInterface, CacheTagsInvalidatorInterface {
 
   /**
    * Cache key prefix for the bin-specific entry to track the last write.
@@ -213,14 +213,6 @@ class ChainedFastBackend implements CacheBackendInterface {
   /**
    * {@inheritdoc}
    */
-  public function deleteTags(array $tags) {
-    $this->markAsOutdated();
-    $this->consistentBackend->deleteTags($tags);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function deleteAll() {
     $this->consistentBackend->deleteAll();
     $this->markAsOutdated();
@@ -245,7 +237,9 @@ class ChainedFastBackend implements CacheBackendInterface {
    * {@inheritdoc}
    */
   public function invalidateTags(array $tags) {
-    $this->consistentBackend->invalidateTags($tags);
+    if ($this->consistentBackend instanceof CacheTagsInvalidatorInterface) {
+      $this->consistentBackend->invalidateTags($tags);
+    }
     $this->markAsOutdated();
   }
 

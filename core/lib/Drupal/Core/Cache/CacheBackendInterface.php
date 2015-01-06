@@ -136,7 +136,6 @@ interface CacheBackendInterface {
    *
    * @see \Drupal\Core\Cache\CacheBackendInterface::invalidate()
    * @see \Drupal\Core\Cache\CacheBackendInterface::deleteMultiple()
-   * @see \Drupal\Core\Cache\CacheBackendInterface::deleteTags()
    * @see \Drupal\Core\Cache\CacheBackendInterface::deleteAll()
    */
   public function delete($cid);
@@ -155,31 +154,9 @@ interface CacheBackendInterface {
    *
    * @see \Drupal\Core\Cache\CacheBackendInterface::invalidateMultiple()
    * @see \Drupal\Core\Cache\CacheBackendInterface::delete()
-   * @see \Drupal\Core\Cache\CacheBackendInterface::deleteTags()
    * @see \Drupal\Core\Cache\CacheBackendInterface::deleteAll()
    */
   public function deleteMultiple(array $cids);
-
-  /**
-   * Deletes items with any of the specified tags.
-   *
-   * If the cache items are being deleted because they are no longer "fresh",
-   * you may consider using invalidateTags() instead. This allows callers to
-   * retrieve the invalid items by calling get() with $allow_invalid set to TRUE.
-   * In some cases an invalid item may be acceptable rather than having to
-   * rebuild the cache.
-   *
-   * @param array $tags
-   *   Associative array of tags, in the same format that is passed to
-   *   CacheBackendInterface::set().
-   *
-   * @see \Drupal\Core\Cache\CacheBackendInterface::set()
-   * @see \Drupal\Core\Cache\CacheBackendInterface::invalidateTags()
-   * @see \Drupal\Core\Cache\CacheBackendInterface::delete()
-   * @see \Drupal\Core\Cache\CacheBackendInterface::deleteMultiple()
-   * @see \Drupal\Core\Cache\CacheBackendInterface::deleteAll()
-   */
-  public function deleteTags(array $tags);
 
   /**
    * Deletes all cache items in a bin.
@@ -187,7 +164,6 @@ interface CacheBackendInterface {
    * @see \Drupal\Core\Cache\CacheBackendInterface::invalidateAll()
    * @see \Drupal\Core\Cache\CacheBackendInterface::delete()
    * @see \Drupal\Core\Cache\CacheBackendInterface::deleteMultiple()
-   * @see \Drupal\Core\Cache\CacheBackendInterface::deleteTags()
    */
   public function deleteAll();
 
@@ -202,7 +178,6 @@ interface CacheBackendInterface {
    *
    * @see \Drupal\Core\Cache\CacheBackendInterface::delete()
    * @see \Drupal\Core\Cache\CacheBackendInterface::invalidateMultiple()
-   * @see \Drupal\Core\Cache\CacheBackendInterface::invalidateTags()
    * @see \Drupal\Core\Cache\CacheBackendInterface::invalidateAll()
    */
   public function invalidate($cid);
@@ -213,30 +188,14 @@ interface CacheBackendInterface {
    * Invalid items may be returned in later calls to get(), if the $allow_invalid
    * argument is TRUE.
    *
-   * @param string $cids
+   * @param string[] $cids
    *   An array of cache IDs to invalidate.
    *
    * @see \Drupal\Core\Cache\CacheBackendInterface::deleteMultiple()
    * @see \Drupal\Core\Cache\CacheBackendInterface::invalidate()
-   * @see \Drupal\Core\Cache\CacheBackendInterface::invalidateTags()
    * @see \Drupal\Core\Cache\CacheBackendInterface::invalidateAll()
    */
   public function invalidateMultiple(array $cids);
-
-  /**
-   * Marks cache items with any of the specified tags as invalid.
-   *
-   * @param array $tags
-   *   Associative array of tags, in the same format that is passed to
-   *   CacheBackendInterface::set().
-   *
-   * @see \Drupal\Core\Cache\CacheBackendInterface::set()
-   * @see \Drupal\Core\Cache\CacheBackendInterface::deleteTags()
-   * @see \Drupal\Core\Cache\CacheBackendInterface::invalidate()
-   * @see \Drupal\Core\Cache\CacheBackendInterface::invalidateMultiple()
-   * @see \Drupal\Core\Cache\CacheBackendInterface::invalidateAll()
-   */
-  public function invalidateTags(array $tags);
 
   /**
    * Marks all cache items as invalid.
@@ -244,13 +203,9 @@ interface CacheBackendInterface {
    * Invalid items may be returned in later calls to get(), if the $allow_invalid
    * argument is TRUE.
    *
-   * @param string $cids
-   *   An array of cache IDs to invalidate.
-   *
    * @see \Drupal\Core\Cache\CacheBackendInterface::deleteAll()
    * @see \Drupal\Core\Cache\CacheBackendInterface::invalidate()
    * @see \Drupal\Core\Cache\CacheBackendInterface::invalidateMultiple()
-   * @see \Drupal\Core\Cache\CacheBackendInterface::invalidateTags()
    */
   public function invalidateAll();
 

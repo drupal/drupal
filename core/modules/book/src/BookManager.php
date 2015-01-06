@@ -433,7 +433,7 @@ class BookManager implements BookManagerInterface {
     }
     $this->updateOriginalParent($original);
     $this->books = NULL;
-    \Drupal::cache('data')->deleteTags(array('bid:' . $original['bid']));
+    Cache::invalidateTags(array('bid:' . $original['bid']));
   }
 
   /**
@@ -763,7 +763,7 @@ class BookManager implements BookManagerInterface {
     foreach ($affected_bids as $bid) {
       $cache_tags[] = 'bid:' . $bid;
     }
-    \Drupal::cache('data')->deleteTags($cache_tags);
+    Cache::invalidateTags($cache_tags);
     return $link;
   }
 
