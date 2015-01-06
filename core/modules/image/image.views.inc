@@ -13,10 +13,10 @@ use Drupal\field\FieldStorageConfigInterface;
  * Views integration for image fields. Adds an image relationship to the default
  * field data.
  *
- * @see views_field_default_views_data()
+ * @see field_views_field_default_views_data()
  */
 function image_field_views_data(FieldStorageConfigInterface $field_storage) {
-  $data = views_field_default_views_data($field_storage);
+  $data = field_views_field_default_views_data($field_storage);
   foreach ($data as $table_name => $table_data) {
     // Add the relationship only on the target_id field.
     $data[$table_name][$field_storage->getName() . '_target_id']['relationship'] = array(
@@ -44,7 +44,7 @@ function image_field_views_data_views_data_alter(array &$data, FieldStorageConfi
   /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
   $table_mapping = $entity_manager->getStorage($entity_type_id)->getTableMapping();
 
-  list($label) = views_entity_field_label($entity_type_id, $field_name);
+  list($label) = field_views_field_label($entity_type_id, $field_name);
 
   $data['file_managed'][$pseudo_field_name]['relationship'] = array(
     'title' => t('@entity using @field', array('@entity' => $entity_type->getLabel(), '@field' => $label)),

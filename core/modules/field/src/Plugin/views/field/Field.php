@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\views\Plugin\views\field\Field.
+ * Definition of Drupal\field\Plugin\views\field\Field.
  */
 
-namespace Drupal\views\Plugin\views\field;
+namespace Drupal\field\Plugin\views\field;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
