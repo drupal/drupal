@@ -224,6 +224,7 @@
 }
 .js .form-actions .dropbutton-widget {
   border-color: #1e5c90;
+  background-color: #0071b8;
   background-image: -webkit-linear-gradient(top, #007bc6, #0071b8);
   background-image: linear-gradient(to bottom, #007bc6, #0071b8);
   text-shadow: 0 1px hsla(0, 0%, 0%, 0.5);
