@@ -27,12 +27,19 @@ class LanguageUrlRewritingTest extends WebTestBase {
    */
   public static $modules = array('language', 'language_test');
 
+  /**
+   * An user with permissions to administer languages.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $webUser;
+
   protected function setUp() {
     parent::setUp();
 
     // Create and login user.
-    $this->web_user = $this->drupalCreateUser(array('administer languages', 'access administration pages'));
-    $this->drupalLogin($this->web_user);
+    $this->webUser = $this->drupalCreateUser(array('administer languages', 'access administration pages'));
+    $this->drupalLogin($this->webUser);
 
     // Install French language.
     $edit = array();
@@ -58,7 +65,7 @@ class LanguageUrlRewritingTest extends WebTestBase {
 
     // Check that URL rewriting is not applied to subrequests.
     $this->drupalGet('language_test/subrequest');
-    $this->assertText($this->web_user->getUsername(), 'Page correctly retrieved');
+    $this->assertText($this->webUser->getUsername(), 'Page correctly retrieved');
   }
 
   /**
