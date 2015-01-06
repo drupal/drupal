@@ -25,7 +25,7 @@ class LinkFieldTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity_test', 'link');
+  public static $modules = ['entity_test', 'link'];
 
   /**
    * A field to use in this test class.
@@ -41,22 +41,14 @@ class LinkFieldTest extends WebTestBase {
    */
   protected $field;
 
-  /**
-   * A user with permission to view and manage test entities.
-   *
-   * @var object
-   */
-  protected $web_user;
-
   protected function setUp() {
     parent::setUp();
 
-    $this->web_user = $this->drupalCreateUser(array(
+    $this->drupalLogin($this->drupalCreateUser([
       'view test entity',
       'administer entity_test content',
       'link to any page',
-    ));
-    $this->drupalLogin($this->web_user);
+    ]));
   }
 
   /**
