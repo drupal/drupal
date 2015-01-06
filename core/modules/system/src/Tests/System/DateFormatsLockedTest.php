@@ -20,7 +20,7 @@ class DateFormatsLockedTest extends WebTestBase {
    * Tests attempts at listing, editing, and deleting locked date formats.
    */
   public function testDateLocking() {
-    $this->drupalLogin($this->root_user);
+    $this->drupalLogin($this->rootUser);
 
     // Locked date formats are not linked on the listing page, locked date
     // formats are clearly marked as such; unlocked formats are not marked as

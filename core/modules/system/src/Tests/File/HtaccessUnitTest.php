@@ -22,8 +22,8 @@ class HtaccessUnitTest extends KernelTestBase {
    */
   function testHtaccessSave() {
     // Prepare test directories.
-    $public = $this->public_files_directory . '/test/public';
-    $private = $this->public_files_directory . '/test/private';
+    $public = $this->publicFilesDirectory . '/test/public';
+    $private = $this->publicFilesDirectory . '/test/private';
     $stream = 'public://test/stream';
 
     // Verify that file_save_htaccess() returns FALSE if .htaccess cannot be

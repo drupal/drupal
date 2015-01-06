@@ -209,8 +209,8 @@ abstract class KernelTestBase extends TestBase {
     // StreamWrapper APIs.
     // @todo Move StreamWrapper management into DrupalKernel.
     // @see https://drupal.org/node/2028109
-    file_prepare_directory($this->public_files_directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
-    $this->settingsSet('file_public_path', $this->public_files_directory);
+    file_prepare_directory($this->publicFilesDirectory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+    $this->settingsSet('file_public_path', $this->publicFilesDirectory);
     $this->streamWrappers = array();
     $this->registerStreamWrapper('public', 'Drupal\Core\StreamWrapper\PublicStream');
     // The temporary stream wrapper is able to operate both with and without

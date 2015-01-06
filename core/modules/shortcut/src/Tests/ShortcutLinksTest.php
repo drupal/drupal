@@ -104,7 +104,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $this->config('node.settings')->set('use_admin_theme', '1')->save();
     $this->container->get('router.builder')->rebuild();
 
-    $this->drupalLogin($this->root_user);
+    $this->drupalLogin($this->rootUser);
     $this->drupalGet('admin/config/system/cron');
 
     // Test the "Add to shortcuts" link.
@@ -165,7 +165,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
    * Tests that changing the route of a shortcut link works.
    */
   public function testShortcutLinkChangeRoute() {
-    $this->drupalLogin($this->root_user);
+    $this->drupalLogin($this->rootUser);
     $this->drupalGet('admin/content');
     $this->assertResponse(200);
     // Disable the view.
@@ -242,7 +242,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
       ->save();
 
     // Add cron to the default shortcut set.
-    $this->drupalLogin($this->root_user);
+    $this->drupalLogin($this->rootUser);
     $this->drupalGet('admin/config/system/cron');
     $this->clickLink('Add to Default shortcuts');
 

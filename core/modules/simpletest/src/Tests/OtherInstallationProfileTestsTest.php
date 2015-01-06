@@ -38,11 +38,18 @@ class OtherInstallationProfileTestsTest extends WebTestBase {
    */
   protected $profile = 'minimal';
 
+  /**
+   * An administrative user with permission to administer unit tests.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $adminUser;
+
   protected function setUp() {
     parent::setUp();
 
-    $this->admin_user = $this->drupalCreateUser(array('administer unit tests'));
-    $this->drupalLogin($this->admin_user);
+    $this->adminUser = $this->drupalCreateUser(array('administer unit tests'));
+    $this->drupalLogin($this->adminUser);
   }
 
   /**

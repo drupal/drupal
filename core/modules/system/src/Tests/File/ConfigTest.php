@@ -31,7 +31,7 @@ class ConfigTest extends WebTestBase {
     // Set the file paths to non-default values.
     // The respective directories are created automatically
     // upon form submission.
-    $file_path = $this->public_files_directory;
+    $file_path = $this->publicFilesDirectory;
     $fields = array(
       'file_temporary_path' => $file_path . '/file_config_page_test/temporary',
       'file_default_scheme' => 'private',

@@ -34,7 +34,7 @@ class LocaleLocaleLookupTest extends WebTestBase {
     ConfigurableLanguage::createFromLangcode('fr')->save();
     $this->config('system.site')->set('langcode', 'fr')->save();
 
-    $this->drupalLogin($this->root_user);
+    $this->drupalLogin($this->rootUser);
   }
 
   /**

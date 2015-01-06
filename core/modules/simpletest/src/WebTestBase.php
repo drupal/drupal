@@ -68,6 +68,13 @@ abstract class WebTestBase extends TestBase {
   protected $headers;
 
   /**
+   * The cookies of the page currently loaded in the internal browser.
+   *
+   * @var array
+   */
+  protected $cookies;
+
+  /**
    * Indicates that headers should be dumped if verbose output is enabled.
    *
    * Headers are dumped to verbose by drupalGet(), drupalHead(), and
@@ -83,6 +90,14 @@ abstract class WebTestBase extends TestBase {
    * @var \Drupal\Core\Session\AccountInterface|bool
    */
   protected $loggedInUser = FALSE;
+
+  /**
+   * The "#1" admin user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $rootUser;
+
 
   /**
    * The current cookie file used by cURL.
@@ -101,6 +116,13 @@ abstract class WebTestBase extends TestBase {
   protected $additionalCurlOptions = array();
 
   /**
+   * The original batch, before it was changed for testing purposes.
+   *
+   * @var array
+   */
+  protected $originalBatch;
+
+  /**
    * The original user, before it was changed to a clean uid = 1 for testing.
    *
    * @var object
@@ -115,24 +137,14 @@ abstract class WebTestBase extends TestBase {
   protected $originalShutdownCallbacks = array();
 
   /**
-   * HTTP authentication method.
-   */
-  protected $httpauth_method = CURLAUTH_BASIC;
-
-  /**
-   * HTTP authentication credentials (<username>:<password>).
-   */
-  protected $httpauth_credentials = NULL;
-
-  /**
    * The current session name, if available.
    */
-  protected $session_name = NULL;
+  protected $sessionName = NULL;
 
   /**
    * The current session ID, if available.
    */
-  protected $session_id = NULL;
+  protected $sessionId = NULL;
 
   /**
    * Whether the files were copied to the test files directory.
@@ -147,7 +159,7 @@ abstract class WebTestBase extends TestBase {
   /**
    * The number of redirects followed during the handling of a request.
    */
-  protected $redirect_count;
+  protected $redirectCount;
 
   /**
    * The kernel used in this test.
@@ -678,8 +690,8 @@ abstract class WebTestBase extends TestBase {
     $this->drupalPostForm('user/login', $edit, t('Log in'));
 
     // @see WebTestBase::drupalUserIsLoggedIn()
-    if (isset($this->session_id)) {
-      $account->session_id = $this->session_id;
+    if (isset($this->sessionId)) {
+      $account->session_id = $this->sessionId;
     }
     $pass = $this->assert($this->drupalUserIsLoggedIn($account), format_string('User %name successfully logged in.', array('%name' => $account->getUsername())), 'User login');
     if ($pass) {
@@ -732,7 +744,7 @@ abstract class WebTestBase extends TestBase {
    *   The name of the session cookie.
    */
   public function getSessionName() {
-    return $this->session_name;
+    return $this->sessionName;
   }
 
   /**
@@ -759,7 +771,7 @@ abstract class WebTestBase extends TestBase {
     $this->originalBatch = batch_get();
 
     // Define information about the user 1 account.
-    $this->root_user = new UserSession(array(
+    $this->rootUser = new UserSession(array(
       'uid' => 1,
       'name' => 'admin',
       'mail' => 'admin@example.com',
@@ -770,7 +782,7 @@ abstract class WebTestBase extends TestBase {
     // proper session cookies were set on a response. Because the child site
     // uses the same session name as the test runner, it is necessary to make
     // that available to test-methods.
-    $this->session_name = $this->originalSessionName;
+    $this->sessionName = $this->originalSessionName;
 
     // Reset the static batch to remove Simpletest's batch operations.
     $batch = &batch_get();
@@ -791,11 +803,11 @@ abstract class WebTestBase extends TestBase {
     // @see system_requirements()
     // @see TestBase::prepareEnvironment()
     $settings['settings']['file_public_path'] = (object) array(
-      'value' => $this->public_files_directory,
+      'value' => $this->publicFilesDirectory,
       'required' => TRUE,
     );
     $settings['settings']['file_private_path'] = (object) array(
-      'value' => $this->private_files_directory,
+      'value' => $this->privateFilesDirectory,
       'required' => TRUE,
     );
     // Save the original site directory path, so that extensions in the
@@ -875,10 +887,10 @@ abstract class WebTestBase extends TestBase {
     // While these could be preset/enforced in settings.php like the public
     // files directory above, some tests expect them to be configurable in the
     // UI. If declared in settings.php, they would no longer be configurable.
-    file_prepare_directory($this->private_files_directory, FILE_CREATE_DIRECTORY);
-    file_prepare_directory($this->temp_files_directory, FILE_CREATE_DIRECTORY);
+    file_prepare_directory($this->privateFilesDirectory, FILE_CREATE_DIRECTORY);
+    file_prepare_directory($this->tempFilesDirectory, FILE_CREATE_DIRECTORY);
     $config->get('system.file')
-      ->set('path.temporary', $this->temp_files_directory)
+      ->set('path.temporary', $this->tempFilesDirectory)
       ->save();
 
     // Manually configure the test mail collector implementation to prevent
@@ -973,11 +985,11 @@ abstract class WebTestBase extends TestBase {
           'site_name' => 'Drupal',
           'site_mail' => 'simpletest@example.com',
           'account' => array(
-            'name' => $this->root_user->name,
-            'mail' => $this->root_user->getEmail(),
+            'name' => $this->rootUser->name,
+            'mail' => $this->rootUser->getEmail(),
             'pass' => array(
-              'pass1' => $this->root_user->pass_raw,
-              'pass2' => $this->root_user->pass_raw,
+              'pass1' => $this->rootUser->pass_raw,
+              'pass2' => $this->rootUser->pass_raw,
             ),
           ),
           // \Drupal\Core\Render\Element\Checkboxes::valueCallback() requires
@@ -1209,7 +1221,7 @@ abstract class WebTestBase extends TestBase {
       // Some versions/configurations of cURL break on a NULL cookie jar, so
       // supply a real file.
       if (empty($this->cookieFile)) {
-        $this->cookieFile = $this->public_files_directory . '/cookie.jar';
+        $this->cookieFile = $this->publicFilesDirectory . '/cookie.jar';
       }
 
       $curl_options = array(
@@ -1224,9 +1236,9 @@ abstract class WebTestBase extends TestBase {
         CURLOPT_HEADERFUNCTION => array(&$this, 'curlHeaderCallback'),
         CURLOPT_USERAGENT => $this->databasePrefix,
       );
-      if (isset($this->httpauth_credentials)) {
-        $curl_options[CURLOPT_HTTPAUTH] = $this->httpauth_method;
-        $curl_options[CURLOPT_USERPWD] = $this->httpauth_credentials;
+      if (isset($this->httpAuthCredentials)) {
+        $curl_options[CURLOPT_HTTPAUTH] = $this->httpAuthMethod;
+        $curl_options[CURLOPT_USERPWD] = $this->httpAuthCredentials;
       }
       // curl_setopt_array() returns FALSE if any of the specified options
       // cannot be set, and stops processing any further options.
@@ -1330,9 +1342,9 @@ abstract class WebTestBase extends TestBase {
 
     if (!$redirect) {
       // Reset headers, the session ID and the redirect counter.
-      $this->session_id = NULL;
+      $this->sessionId = NULL;
       $this->headers = array();
-      $this->redirect_count = 0;
+      $this->redirectCount = 0;
     }
 
     $content = curl_exec($this->curlHandle);
@@ -1343,9 +1355,9 @@ abstract class WebTestBase extends TestBase {
     // to prevent fragments being sent to the web server as part
     // of the request.
     // TODO: Remove this for Drupal 8, since fixed in curl 7.20.0.
-    if (in_array($status, array(300, 301, 302, 303, 305, 307)) && $this->redirect_count < $this->maximumRedirects) {
+    if (in_array($status, array(300, 301, 302, 303, 305, 307)) && $this->redirectCount < $this->maximumRedirects) {
       if ($this->drupalGetHeader('location')) {
-        $this->redirect_count++;
+        $this->redirectCount++;
         $curl_options = array();
         $curl_options[CURLOPT_URL] = $this->drupalGetHeader('location');
         $curl_options[CURLOPT_HTTPGET] = TRUE;
@@ -1404,12 +1416,12 @@ abstract class WebTestBase extends TestBase {
       $parts = array_map('trim', explode(';', $matches[2]));
       $value = array_shift($parts);
       $this->cookies[$name] = array('value' => $value, 'secure' => in_array('secure', $parts));
-      if ($name == $this->session_name) {
+      if ($name == $this->sessionName) {
         if ($value != 'deleted') {
-          $this->session_id = $value;
+          $this->sessionId = $value;
         }
         else {
-          $this->session_id = NULL;
+          $this->sessionId = NULL;
         }
       }
     }

@@ -41,7 +41,7 @@ class BrokenSetUpTest extends WebTestBase {
     if (!$this->isInChildSite()) {
       parent::setUp();
 
-      $this->sharedTriggerFile = $this->public_files_directory . '/trigger';
+      $this->sharedTriggerFile = $this->publicFilesDirectory . '/trigger';
 
       // Create and log in user.
       $admin_user = $this->drupalCreateUser(array('administer unit tests'));

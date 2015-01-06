@@ -253,7 +253,7 @@ class ToolkitGdTest extends KernelTestBase {
     }
 
     // Prepare a directory for test file results.
-    $directory = $this->public_files_directory .'/imagetest';
+    $directory = $this->publicFilesDirectory .'/imagetest';
     file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
 
     foreach ($files as $file) {

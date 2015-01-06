@@ -56,7 +56,7 @@ class LanguageConfigOverrideImportTest extends WebTestBase {
     $this->drupalGet('fr');
     $this->assertText('FR default site name');
 
-    $this->drupalLogin($this->root_user);
+    $this->drupalLogin($this->rootUser);
     $this->drupalGet('admin/config/development/maintenance/translate/fr/edit');
     $this->assertText('FR message: @site is currently under maintenance. We should be back shortly. Thank you for your patience');
   }

@@ -285,10 +285,10 @@ class SessionTest extends WebTestBase {
    */
   function assertSessionCookie($sent) {
     if ($sent) {
-      $this->assertNotNull($this->session_id, 'Session cookie was sent.');
+      $this->assertNotNull($this->sessionId, 'Session cookie was sent.');
     }
     else {
-      $this->assertNull($this->session_id, 'Session cookie was not sent.');
+      $this->assertNull($this->sessionId, 'Session cookie was not sent.');
     }
   }
 

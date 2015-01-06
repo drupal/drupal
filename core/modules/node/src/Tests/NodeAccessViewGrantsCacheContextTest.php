@@ -53,7 +53,7 @@ class NodeAccessViewGrantsCacheContextTest extends NodeTestBase {
     $this->noAccessUser2 = $this->drupalCreateUser(array('access content overview', 'access content'));
 
     $this->userMapping = [
-      1 => $this->root_user,
+      1 => $this->rootUser,
       2 => $this->accessUser,
       3 => $this->noAccessUser,
     ];

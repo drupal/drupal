@@ -30,7 +30,7 @@ class DrupalKernelTest extends KernelTestBase {
     $this->settingsSet('php_storage', array('service_container' => array(
       'bin' => 'service_container',
       'class' => 'Drupal\Component\PhpStorage\MTimeProtectedFileStorage',
-      'directory' => DRUPAL_ROOT . '/' . $this->public_files_directory . '/php',
+      'directory' => DRUPAL_ROOT . '/' . $this->publicFilesDirectory . '/php',
       'secret' => Settings::getHashSalt(),
     )));
   }

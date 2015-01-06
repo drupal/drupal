@@ -38,7 +38,7 @@ class SimpleTestTest extends WebTestBase {
    *
    * Used to ensure they are incrementing.
    */
-  protected $test_ids = array();
+  protected $testIds = array();
 
   /**
    * Translated fail message.
@@ -52,6 +52,20 @@ class SimpleTestTest extends WebTestBase {
    * @var string
    */
   private $passMessage = '';
+
+  /**
+   * A valid and recognized permission.
+   *
+   * @var string
+   */
+  protected $validPermission;
+
+  /**
+   * An invalid or unrecognized permission.
+   *
+   * @var string
+   */
+  protected $invalidPermission;
 
   protected function setUp() {
     if (!$this->isInChildSite()) {
@@ -103,8 +117,8 @@ EOD;
   function testWebTestRunner() {
     $this->passMessage = t('SimpleTest pass.');
     $this->failMessage = t('SimpleTest fail.');
-    $this->valid_permission = 'access administration pages';
-    $this->invalid_permission = 'invalid permission';
+    $this->validPermission = 'access administration pages';
+    $this->invalidPermission = 'invalid permission';
 
     if ($this->isInChildSite()) {
       // Only run following code if this test is running itself through a CURL
@@ -128,7 +142,7 @@ EOD;
 
       // Regression test for #290316.
       // Check that test_id is incrementing.
-      $this->assertTrue($this->test_ids[0] != $this->test_ids[1], 'Test ID is incrementing.');
+      $this->assertTrue($this->testIds[0] != $this->testIds[1], 'Test ID is incrementing.');
     }
   }
 
@@ -162,10 +176,10 @@ EOD;
 
     // This causes the second to fourth of the fifteen passes asserted in
     // confirmStubResults().
-    $user = $this->drupalCreateUser(array($this->valid_permission), 'SimpleTestTest');
+    $user = $this->drupalCreateUser(array($this->validPermission), 'SimpleTestTest');
 
     // This causes the fifth of the five fails asserted in confirmStubResults().
-    $this->drupalCreateUser(array($this->invalid_permission));
+    $this->drupalCreateUser(array($this->invalidPermission));
 
     // Test logging in as a user.
     // This causes the fifth to ninth of the fifteen passes asserted in
@@ -215,8 +229,8 @@ EOD;
     $this->assertAssertion($this->passMessage, 'Other', 'Pass', 'SimpleTestTest.php', 'Drupal\simpletest\Tests\SimpleTestTest->stubTest()');
     $this->assertAssertion($this->failMessage, 'Other', 'Fail', 'SimpleTestTest.php', 'Drupal\simpletest\Tests\SimpleTestTest->stubTest()');
 
-    $this->assertAssertion(t('Created permissions: @perms', array('@perms' => $this->valid_permission)), 'Role', 'Pass', 'SimpleTestTest.php', 'Drupal\simpletest\Tests\SimpleTestTest->stubTest()');
-    $this->assertAssertion(t('Invalid permission %permission.', array('%permission' => $this->invalid_permission)), 'Role', 'Fail', 'SimpleTestTest.php', 'Drupal\simpletest\Tests\SimpleTestTest->stubTest()');
+    $this->assertAssertion(t('Created permissions: @perms', array('@perms' => $this->validPermission)), 'Role', 'Pass', 'SimpleTestTest.php', 'Drupal\simpletest\Tests\SimpleTestTest->stubTest()');
+    $this->assertAssertion(t('Invalid permission %permission.', array('%permission' => $this->invalidPermission)), 'Role', 'Fail', 'SimpleTestTest.php', 'Drupal\simpletest\Tests\SimpleTestTest->stubTest()');
 
     // Check that the user was logged in successfully.
     $this->assertAssertion('User SimpleTestTest successfully logged in.', 'User login', 'Pass', 'SimpleTestTest.php', 'Drupal\simpletest\Tests\SimpleTestTest->stubTest()');
@@ -237,7 +251,7 @@ EOD;
 
     $this->assertEqual('15 passes, 3 fails, 2 exceptions, 3 debug messages', $this->childTestResults['summary']);
 
-    $this->test_ids[] = $test_id = $this->getTestIdFromResults();
+    $this->testIds[] = $test_id = $this->getTestIdFromResults();
     $this->assertTrue($test_id, 'Found test ID in results.');
   }
 

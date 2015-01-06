@@ -55,7 +55,7 @@ class UpdateScriptTest extends WebTestBase {
     $this->assertResponse(200);
 
     // Access the update page as user 1.
-    $this->drupalLogin($this->root_user);
+    $this->drupalLogin($this->rootUser);
     $this->drupalGet($this->update_url, array('external' => TRUE));
     $this->assertResponse(200);
   }

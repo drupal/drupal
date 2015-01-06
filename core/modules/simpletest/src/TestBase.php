@@ -55,20 +55,6 @@ abstract class TestBase {
   protected $databasePrefix = NULL;
 
   /**
-   * The site directory of the original parent site.
-   *
-   * @var string
-   */
-  protected $originalSite;
-
-  /**
-   * The original file directory, before it was changed for testing purposes.
-   *
-   * @var string
-   */
-  protected $originalFileDirectory = NULL;
-
-  /**
    * Time limit for the test.
    */
   protected $timeLimit = 500;
@@ -133,13 +119,6 @@ abstract class TestBase {
   protected $verboseDirectory;
 
   /**
-   * The original database prefix when running inside Simpletest.
-   *
-   * @var string
-   */
-  protected $originalPrefix;
-
-  /**
    * URL to the verbose output file directory.
    *
    * @var string
@@ -147,9 +126,100 @@ abstract class TestBase {
   protected $verboseDirectoryUrl;
 
   /**
+   * The original configuration (variables), if available.
+   *
+   * @var string
+   * @todo Remove all remnants of $GLOBALS['conf'].
+   * @see https://drupal.org/node/2183323
+   */
+  protected $originalConf;
+
+  /**
+   * The original configuration (variables).
+   *
+   * @var string
+   */
+  protected $originalConfig;
+
+  /**
+   * The original configuration directories.
+   *
+   * An array of paths keyed by the CONFIG_*_DIRECTORY constants defined by
+   * core/includes/bootstrap.inc.
+   *
+   * @var array
+   */
+  protected $originalConfigDirectories;
+
+  /**
+   * The original container.
+   *
+   * @var \Symfony\Component\DependencyInjection\ContainerInterface
+   */
+  protected $originalContainer;
+
+  /**
+   * The original file directory, before it was changed for testing purposes.
+   *
+   * @var string
+   */
+  protected $originalFileDirectory = NULL;
+
+  /**
+   * The original language.
+   *
+   * @var \Drupal\Core\Language\LanguageInterface
+   */
+  protected $originalLanguage;
+
+  /**
+   * The original database prefix when running inside Simpletest.
+   *
+   * @var string
+   */
+  protected $originalPrefix;
+
+  /**
+   * The original installation profile.
+   *
+   * @var string
+   */
+  protected $originalProfile;
+
+  /**
+   * The name of the session cookie.
+   *
+   * @var string
+   */
+  protected $originalSessionName;
+
+  /**
    * The settings array.
+   *
+   * @var array
    */
   protected $originalSettings;
+
+  /**
+   * The original array of shutdown function callbacks.
+   *
+   * @var array
+   */
+  protected $originalShutdownCallbacks;
+
+  /**
+   * The site directory of the original parent site.
+   *
+   * @var string
+   */
+  protected $originalSite;
+
+  /**
+   * The original user, before testing began.
+   *
+   * @var \Drupal\Core\Session\AccountProxyInterface
+   */
+  protected $originalUser;
 
   /**
    * The public file directory for the test environment.
@@ -158,7 +228,7 @@ abstract class TestBase {
    *
    * @var string
    */
-  protected $public_files_directory;
+  protected $publicFilesDirectory;
 
   /**
    * The private file directory for the test environment.
@@ -167,7 +237,25 @@ abstract class TestBase {
    *
    * @var string
    */
-  protected $private_files_directory;
+  protected $privateFilesDirectory;
+
+  /**
+   * The temporary file directory for the test environment.
+   *
+   * This is set in TestBase::prepareEnvironment().
+   *
+   * @var string
+   */
+  protected $tempFilesDirectory;
+
+  /**
+   * The translation file directory for the test environment.
+   *
+   * This is set in TestBase::prepareEnvironment().
+   *
+   * @var string
+   */
+  protected $translationFilesDirectory;
 
   /**
    * Whether to die in case any test assertion fails.
@@ -207,11 +295,6 @@ abstract class TestBase {
   protected $randomGenerator;
 
   /**
-   * The name of the session cookie.
-   */
-  protected $originalSessionName;
-
-  /**
    * Set to TRUE to strict check all configuration saved.
    *
    * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
@@ -219,6 +302,21 @@ abstract class TestBase {
    * @var bool
    */
   protected $strictConfigSchema = TRUE;
+
+  /**
+   * HTTP authentication method (specified as a CURLAUTH_* constant).
+   *
+   * @var int
+   * @see http://php.net/manual/en/function.curl-setopt.php
+   */
+  protected $httpAuthMethod = CURLAUTH_BASIC;
+
+  /**
+   * HTTP authentication credentials (<username>:<password>).
+   *
+   * @var string
+   */
+  protected $httpAuthCredentials = NULL;
 
   /**
    * Constructor for Test.
@@ -804,6 +902,7 @@ abstract class TestBase {
     if (!isset($this->verbose)) {
       $this->verbose = $simpletest_config->get('verbose');
     }
+
     if ($this->verbose) {
       // Initialize verbose debugging.
       $this->verbose = TRUE;
@@ -816,11 +915,11 @@ abstract class TestBase {
     }
     // HTTP auth settings (<username>:<password>) for the simpletest browser
     // when sending requests to the test site.
-    $this->httpauth_method = (int) $simpletest_config->get('httpauth.method');
+    $this->httpAuthMethod = (int) $simpletest_config->get('httpauth.method');
     $username = $simpletest_config->get('httpauth.username');
     $password = $simpletest_config->get('httpauth.password');
     if (!empty($username) && !empty($password)) {
-      $this->httpauth_credentials = $username . ':' . $password;
+      $this->httpAuthCredentials = $username . ':' . $password;
     }
 
     set_error_handler(array($this, 'errorHandler'));
@@ -1064,10 +1163,10 @@ abstract class TestBase {
     file_prepare_directory($this->siteDirectory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
 
     // Prepare filesystem directory paths.
-    $this->public_files_directory = $this->siteDirectory . '/files';
-    $this->private_files_directory = $this->siteDirectory . '/private';
-    $this->temp_files_directory = $this->siteDirectory . '/temp';
-    $this->translation_files_directory = $this->siteDirectory . '/translations';
+    $this->publicFilesDirectory = $this->siteDirectory . '/files';
+    $this->privateFilesDirectory = $this->siteDirectory . '/private';
+    $this->tempFilesDirectory = $this->siteDirectory . '/temp';
+    $this->translationFilesDirectory = $this->siteDirectory . '/translations';
 
     $this->generatedTestFiles = FALSE;
 

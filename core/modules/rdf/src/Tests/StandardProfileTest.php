@@ -290,7 +290,7 @@ class StandardProfileTest extends WebTestBase {
    * Tests that user data is exposed on user page.
    */
   protected function doUserRdfaTests() {
-    $this->drupalLogin($this->root_user);
+    $this->drupalLogin($this->rootUser);
 
     // Feed the HTML into the parser.
     $graph = $this->getRdfGraph($this->adminUser->getSystemPath());

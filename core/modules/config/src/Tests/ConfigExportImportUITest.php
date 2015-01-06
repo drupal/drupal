@@ -46,7 +46,7 @@ class ConfigExportImportUITest extends WebTestBase {
     // roles are created then the role is lost after import. If the roles
     // created have the same name then the sync will fail because they will
     // have different UUIDs.
-    $this->drupalLogin($this->root_user);
+    $this->drupalLogin($this->rootUser);
   }
 
   /**

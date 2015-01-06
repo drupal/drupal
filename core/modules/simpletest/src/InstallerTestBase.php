@@ -78,7 +78,7 @@ abstract class InstallerTestBase extends WebTestBase {
     $this->isInstalled = FALSE;
 
     // Define information about the user 1 account.
-    $this->root_user = new UserSession(array(
+    $this->rootUser = new UserSession(array(
       'uid' => 1,
       'name' => 'admin',
       'mail' => 'admin@example.com',
