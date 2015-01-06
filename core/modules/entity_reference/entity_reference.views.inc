@@ -11,7 +11,7 @@ use Drupal\field\FieldStorageConfigInterface;
  * Implements hook_field_views_data().
  */
 function entity_reference_field_views_data(FieldStorageConfigInterface $field_storage) {
-  $data = field_views_field_default_views_data($field_storage);
+  $data = views_field_default_views_data($field_storage);
   $entity_manager = \Drupal::entityManager();
   $table_mapping = $entity_manager->getStorage($field_storage->getTargetEntityTypeId())->getTableMapping();
   foreach ($data as $table_name => $table_data) {

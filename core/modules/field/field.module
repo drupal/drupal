@@ -265,20 +265,6 @@ function _field_create_entity_from_ids($ids) {
 }
 
 /**
- * Implements hook_hook_info().
- */
-function field_hook_info() {
-  $hooks['field_views_data'] = array(
-    'group' => 'views',
-  );
-  $hooks['field_views_data_alter'] = array(
-    'group' => 'views',
-  );
-
-  return $hooks;
-}
-
-/**
  * Implements hook_config_import_steps_alter().
  */
 function field_config_import_steps_alter(&$sync_steps, ConfigImporter $config_importer) {

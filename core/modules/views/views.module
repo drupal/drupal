@@ -593,6 +593,13 @@ function views_hook_info() {
     'views_query_alter',
   ), array('group' => 'views_execution'));
 
+  $hooks['field_views_data'] = array(
+    'group' => 'views',
+  );
+  $hooks['field_views_data_alter'] = array(
+    'group' => 'views',
+  );
+
   return $hooks;
 }
 

@@ -57,10 +57,10 @@ function taxonomy_views_data_alter(&$data) {
  * Views integration for taxonomy_term_reference fields. Adds a term relationship to the default
  * field data.
  *
- * @see field_views_field_default_views_data()
+ * @see views_field_default_views_data()
  */
 function taxonomy_field_views_data(FieldStorageConfigInterface $field_storage) {
-  $data = field_views_field_default_views_data($field_storage);
+  $data = views_field_default_views_data($field_storage);
   foreach ($data as $table_name => $table_data) {
     foreach ($table_data as $field_name => $field_data) {
       if (isset($field_data['filter']) && $field_name != 'delta') {
@@ -98,7 +98,7 @@ function taxonomy_field_views_data_views_data_alter(array &$data, FieldStorageCo
   /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
   $table_mapping = $entity_manager->getStorage($entity_type_id)->getTableMapping();
 
-  list($label) = field_views_field_label($entity_type_id, $field_name);
+  list($label) = views_entity_field_label($entity_type_id, $field_name);
 
   $data['taxonomy_term_data'][$pseudo_field_name]['relationship'] = array(
     'title' => t('@entity using @field', array('@entity' => $entity_type->getLabel(), '@field' => $label)),
