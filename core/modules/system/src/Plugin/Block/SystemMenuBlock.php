@@ -128,6 +128,14 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
   /**
    * {@inheritdoc}
    */
+  public function blockSubmit($form, FormStateInterface $form_state) {
+    $this->configuration['level'] = $form_state->getValue('level');
+    $this->configuration['depth'] = $form_state->getValue('depth');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function build() {
     $menu_name = $this->getDerivativeId();
     $parameters = $this->menuTree->getCurrentRouteMenuTreeParameters($menu_name);

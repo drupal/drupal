@@ -7,6 +7,7 @@
 
 namespace Drupal\menu_ui\Tests;
 
+use Drupal\block\Entity\Block;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\Cache;
@@ -46,6 +47,13 @@ class MenuTest extends MenuWebTestBase {
   protected $authenticated_user;
 
   /**
+   * Array of placed menu blocks keyed by block ID.
+   *
+   * @var array
+   */
+  protected $blockPlacements;
+
+  /**
    * A test menu.
    *
    * @var \Drupal\system\Entity\Menu
@@ -79,6 +87,7 @@ class MenuTest extends MenuWebTestBase {
 
     $this->menu = $this->addCustomMenu();
     $this->doMenuTests();
+    $this->doTestMenuBlock();
     $this->addInvalidMenuLink();
     $this->addCustomMenuCRUD();
 
@@ -213,7 +222,8 @@ class MenuTest extends MenuWebTestBase {
     $this->assertText($label);
 
     // Enable the block.
-    $this->drupalPlaceBlock('system_menu_block:' . $menu_name);
+    $block = $this->drupalPlaceBlock('system_menu_block:' . $menu_name);
+    $this->blockPlacements[$menu_name] = $block->id();
     return Menu::load($menu_name);
   }
 
@@ -865,6 +875,27 @@ class MenuTest extends MenuWebTestBase {
     if ($response == 200) {
       $this->assertText(t('Menus'), 'Add menu page was displayed');
     }
+  }
+
+  /**
+   * Tests menu block settings.
+   */
+  protected function doTestMenuBlock() {
+    $menu_id = $this->menu->id();
+    $block_id = $this->blockPlacements[$menu_id];
+    $this->drupalGet('admin/structure/block/manage/' . $block_id);
+    $this->drupalPostForm(NULL, [
+      'settings[depth]' => 3,
+      'settings[level]' => 2,
+    ], t('Save block'));
+    $block = Block::load($block_id);
+    $settings = $block->getPlugin()->getConfiguration();
+    $this->assertEqual($settings['depth'], 3);
+    $this->assertEqual($settings['level'], 2);
+    // Reset settings.
+    $block->getPlugin()->setConfigurationValue('depth', 0);
+    $block->getPlugin()->setConfigurationValue('level', 1);
+    $block->save();
   }
 
 }
