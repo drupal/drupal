@@ -250,7 +250,7 @@ $config_directories = array();
  *
  * $settings contains environment-specific configuration, such as the files
  * directory and reverse proxy address, and temporary configuration, such as
- * turning on Twig debugging and security overrides.
+ * security overrides.
  *
  * @see \Drupal\Core\Site\Settings::get()
  */
