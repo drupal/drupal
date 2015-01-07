@@ -101,18 +101,9 @@ views.filter.many_to_one:
   type: views.filter.in_operator
   label: 'Many to one'
   mapping:
-    operator:
-      type: string
-      label: 'Operator'
     reduce_duplicates:
       type: boolean
       label: 'Reduce duplicate'
-    value:
-      type: sequence
-      label: 'Values'
-      sequence:
-        - type: string
-          label: 'Value'
 
 views.filter.standard:
   type: views_filter
@@ -139,8 +130,4 @@ views.filter_value.combine:
 
 views.filter.language:
   type: views.filter.in_operator
-  label: 'Language'
-
-views.filter_value.language:
-  type: string
   label: 'Language'

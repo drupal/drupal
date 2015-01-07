@@ -148,29 +148,17 @@ views.filter.taxonomy_index_tid:
     error_message:
       type: boolean
       label: 'Display error message'
-
-views.filter.taxonomy_index_tid_depth:
-  type: views.filter.in_operator
-  label: 'Taxonomy term ID with depth'
-  mapping:
-    operator:
-      type: string
-      label: 'Operator'
     value:
       type: sequence
       label: 'Values'
       sequence:
-        - type: string
+        - type: integer
           label: 'Value'
-    vid:
-      type: string
-      label: 'Vocabulary'
-    type:
-      type: string
-      label: 'Selection type'
-    hierarchy:
-      type: boolean
-      label: 'Show hierarchy in dropdown'
+
+views.filter.taxonomy_index_tid_depth:
+  type: views.filter.taxonomy_index_tid
+  label: 'Taxonomy term ID with depth'
+  mapping:
     depth:
       type: integer
       label: 'Depth'

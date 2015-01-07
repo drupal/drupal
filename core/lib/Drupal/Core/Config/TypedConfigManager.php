@@ -130,7 +130,9 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
     // Check whether this type is an extension of another one and compile it.
     if (isset($definition['type'])) {
       $merge = $this->getDefinition($definition['type'], $exception_on_invalid);
-      $definition = NestedArray::mergeDeep($merge, $definition);
+      // Preserve integer keys on merge, so sequence item types can override
+      // parent settings as opposed to adding unused second, third, etc. items.
+      $definition = NestedArray::mergeDeepArray(array($merge, $definition), TRUE);
       // Unset type so we try the merge only once per type.
       unset($definition['type']);
       $this->definitions[$type] = $definition;

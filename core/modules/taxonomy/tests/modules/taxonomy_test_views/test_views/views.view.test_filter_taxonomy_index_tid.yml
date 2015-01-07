@@ -136,7 +136,7 @@ display:
           admin_label: ''
           operator: or
           value:
-            - '2'
+            - 2
           group: 1
           exposed: false
           expose:
