@@ -7,7 +7,6 @@
 
 namespace Drupal\comment\Tests\Views;
 
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
@@ -43,12 +42,6 @@ class CommentFieldFilterTest extends CommentTestBase {
     // Add two new languages.
     ConfigurableLanguage::createFromLangcode('fr')->save();
     ConfigurableLanguage::createFromLangcode('es')->save();
-
-    // Make the comment body field translatable. The title is already
-    // translatable by definition.
-    $field_storage = FieldStorageConfig::loadByName('comment', 'comment_body');
-    $field_storage->translatable = TRUE;
-    $field_storage->save();
 
     // Set up comment titles.
     $this->commentTitles = array(

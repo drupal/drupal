@@ -225,26 +225,21 @@ class ContentTranslationSettingsTest extends WebTestBase {
    * Tests that field setting depends on bundle translatability.
    */
   function testFieldTranslatableSettingsUI() {
-
     // At least one field needs to be translatable to enable article for
-    // translation. Create an extra field to be used for this purpose.
-    $field_storage = array(
+    // translation. Create an extra field to be used for this purpose. We use
+    // the UI to test our form alterations.
+    $edit = array(
+      'new_storage_type' => 'text',
+      'label' => 'Test',
       'field_name' => 'article_text',
-      'entity_type' => 'node',
-      'type' => 'text',
     );
-    entity_create('field_storage_config', $field_storage)->save();
-    $field = array(
-      'field_name' => 'article_text',
-      'entity_type' => 'node',
-      'bundle' => 'article',
-    );
-    entity_create('field_config', $field)->save();
+    $this->drupalPostForm('admin/structure/types/manage/article/fields/add-field', $edit, 'Save and continue');
 
     // Tests that field doesn't have translatable setting if bundle is not
     // translatable.
-    $path = 'admin/structure/types/manage/article/fields/node.article.body';
+    $path = 'admin/structure/types/manage/article/fields/node.article.field_article_text';
     $this->drupalGet($path);
+    $this->assertFieldByXPath('//input[@id="edit-field-translatable" and @disabled="disabled"]');
     $this->assertText('To configure translation for this field, enable language support for this type.', 'No translatable setting for field.');
 
     // Tests that field has translatable setting if bundle is translatable.
@@ -253,11 +248,12 @@ class ContentTranslationSettingsTest extends WebTestBase {
       'entity_types[node]' => TRUE,
       'settings[node][article][settings][language][language_alterable]' => TRUE,
       'settings[node][article][translatable]' => TRUE,
-      'settings[node][article][fields][article_text]' => TRUE,
+      'settings[node][article][fields][field_article_text]' => TRUE,
     );
     $this->assertSettings('node', 'article', TRUE, $edit);
     $this->drupalGet($path);
-    $this->assertNoText('To enable translation of this field, enable language support for this type.', 'No translatable setting for field.');
+    $this->assertFieldByXPath('//input[@id="edit-field-translatable" and not(@disabled) and @checked="checked"]');
+    $this->assertNoText('To enable translation of this field, enable language support for this type.', 'Translatable setting for field available.');
   }
 
   /**

@@ -15,7 +15,6 @@ settings:
 module: image
 locked: false
 cardinality: 1
-translatable: false
 indexes:
   target_id:
     - target_id

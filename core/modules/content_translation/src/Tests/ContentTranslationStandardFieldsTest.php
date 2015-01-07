@@ -62,14 +62,19 @@ class ContentTranslationStandardFieldsTest extends WebTestBase {
     $path = 'admin/config/regional/content-language';
     $this->drupalGet($path);
 
-    // Check comment checkbox.
+    // Check content block fields.
+    $this->assertFieldByXPath("//input[@id='edit-settings-block-content-basic-fields-body' and @checked='checked']");
+
+    // Check comment fields.
+    $this->assertFieldByXPath("//input[@id='edit-settings-comment-comment-fields-comment-body' and @checked='checked']");
+
+    // Check node fields.
     $this->assertFieldByXPath("//input[@id='edit-settings-node-article-fields-comment' and @checked='checked']");
-
-    // Check image checkbox.
     $this->assertFieldByXPath("//input[@id='edit-settings-node-article-fields-field-image' and @checked='checked']");
-
-    // Check tag checkbox.
     $this->assertFieldByXPath("//input[@id='edit-settings-node-article-fields-field-tags' and @checked='checked']");
+
+    // Check user fields.
+    $this->assertFieldByXPath("//input[@id='edit-settings-user-user-fields-user-picture' and @checked='checked']");
   }
 
 }

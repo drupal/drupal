@@ -63,7 +63,6 @@ class TranslationWebTest extends FieldTestBase {
       'entity_type' => $this->entity_type,
       'type' => 'test_field',
       'cardinality' => 4,
-      'translatable' => TRUE,
     );
     entity_create('field_storage_config', $field_storage)->save();
     $this->fieldStorage = entity_load('field_storage_config', $this->entity_type . '.' . $this->field_name);

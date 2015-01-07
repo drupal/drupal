@@ -85,7 +85,6 @@ class TranslationTest extends FieldUnitTestBase {
       'entity_type' => $this->entity_type,
       'type' => 'test_field',
       'cardinality' => 4,
-      'translatable' => TRUE,
     );
     $this->fieldStorage = entity_create('field_storage_config', $this->field_storage_definition);
     $this->fieldStorage->save();

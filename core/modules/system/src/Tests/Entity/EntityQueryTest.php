@@ -68,7 +68,6 @@ class EntityQueryTest extends EntityUnitTestBase {
         'entity_type' => 'entity_test_mulrev',
         'type' => $field_type,
         'cardinality' => 2,
-        'translatable' => TRUE,
       ));
       $field_storage->save();
       $field_storages[] = $field_storage;

@@ -56,11 +56,10 @@ class NodeAccessLanguageAwareTest extends NodeTestBase {
       'entity_type' => 'node',
       'type' => 'boolean',
       'cardinality' => 1,
-      'translatable'  => TRUE,
-        'settings' => array(
-          'on_label' => 'Private',
-          'off_label' => 'Not private',
-        ),
+      'settings' => array(
+        'on_label' => 'Private',
+        'off_label' => 'Not private',
+      ),
     ));
     $field_storage->save();
 

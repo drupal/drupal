@@ -12,7 +12,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests content translation workflows.
+ * Base class for content translation tests.
  */
 abstract class ContentTranslationTestBase extends WebTestBase {
 
@@ -181,7 +181,6 @@ abstract class ContentTranslationTestBase extends WebTestBase {
       'type' => 'string',
       'entity_type' => $this->entityTypeId,
       'cardinality' => 1,
-      'translatable' => TRUE,
     ))->save();
     entity_create('field_config', array(
       'entity_type' => $this->entityTypeId,
@@ -208,7 +207,7 @@ abstract class ContentTranslationTestBase extends WebTestBase {
    *   (optional) The entity bundle, if the entity uses bundles. Defaults to
    *   NULL. If left NULL, $this->bundle will be used.
    *
-   * @return
+   * @return string
    *   The entity id.
    */
   protected function createEntity($values, $langcode, $bundle_name = NULL) {

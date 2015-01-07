@@ -66,7 +66,6 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
       'entity_type' => 'taxonomy_term',
       'type' => 'text',
     ));
-    $field->translatable = TRUE;
     $field->save();
     entity_create('field_config', array(
       'field_name' => 'field_foo',

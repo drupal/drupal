@@ -9,7 +9,6 @@ namespace Drupal\comment\Tests;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\content_translation\Tests\ContentTranslationUITest;
-use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests the Comment Translation UI.
@@ -68,16 +67,6 @@ class CommentTranslationUITest extends ContentTranslationUITest {
    */
   protected function getTranslatorPermissions() {
     return array_merge(parent::getTranslatorPermissions(), array('post comments', 'administer comments', 'access comments'));
-  }
-
-  /**
-   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::setupTestFields().
-   */
-  function setupTestFields() {
-    parent::setupTestFields();
-    $field_storage = FieldStorageConfig::loadByName('comment', 'comment_body');
-    $field_storage->translatable = TRUE;
-    $field_storage->save();
   }
 
   /**

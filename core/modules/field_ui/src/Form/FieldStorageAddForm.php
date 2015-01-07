@@ -223,11 +223,13 @@ class FieldStorageAddForm extends FormBase {
       );
     }
 
-    // Place the 'translatable' property as an explicit value so that
-    // contrib modules can form_alter() the value for newly created fields.
+    // Place the 'translatable' property as an explicit value so that contrib
+    // modules can form_alter() the value for newly created fields. By default
+    // we create field storage as translatable so it will be possible to enable
+    // translation at field level.
     $form['translatable'] = array(
       '#type' => 'value',
-      '#value' => FALSE,
+      '#value' => TRUE,
     );
 
     $form['actions'] = array('#type' => 'actions');
