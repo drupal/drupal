@@ -101,6 +101,16 @@ class LoadEntity extends PluginBase implements MigrateLoadInterface {
                 ],
               ];
             }
+            elseif ($data['type'] === 'filefield') {
+              $migration->process[$field_name] = [
+                'plugin' => 'd6_cck_file',
+                'source' => [
+                  $field_name,
+                  $field_name . '_list',
+                  $field_name . '_data',
+                ],
+              ];
+            }
             else {
               $migration->process[$field_name] = $field_name;
             }

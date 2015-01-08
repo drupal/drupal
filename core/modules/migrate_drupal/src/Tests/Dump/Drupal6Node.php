@@ -530,6 +530,24 @@ class Drupal6Node extends Drupal6DumpBase {
           'type' => 'text',
           'not null' => FALSE,
         ),
+        'field_test_filefield_fid' => array(
+          'description' => 'The file id.',
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ),
+        'field_test_filefield_list' => array(
+          'description' => 'File list field.',
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ),
+        'field_test_filefield_data' => array(
+          'description' => 'The file meta.',
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+        ),
       ),
       'primary key' => array('vid'),
     ));
@@ -546,6 +564,9 @@ class Drupal6Node extends Drupal6DumpBase {
         'field_test_link_url',
         'field_test_link_title',
         'field_test_link_attributes',
+        'field_test_filefield_fid',
+        'field_test_filefield_list',
+        'field_test_filefield_data'
       ))
       ->values(array(
         'nid' => 1,
@@ -558,6 +579,9 @@ class Drupal6Node extends Drupal6DumpBase {
         'field_test_link_url' => 'http://drupal.org/project/drupal',
         'field_test_link_title' => 'Drupal project page',
         'field_test_link_attributes' => 's:32:"a:1:{s:6:"target";s:6:"_blank";}";";',
+        'field_test_filefield_fid' => 1,
+        'field_test_filefield_list' => 1,
+        'field_test_filefield_data' => 'a:1:{s:11:"description";s:4:"desc";}'
       ))
       ->values(array(
         'nid' => 1,
@@ -570,6 +594,9 @@ class Drupal6Node extends Drupal6DumpBase {
         'field_test_link_url' => 'http://drupal.org/project/drupal',
         'field_test_link_title' => 'Drupal project page',
         'field_test_link_attributes' => 's:32:"a:1:{s:6:"target";s:6:"_blank";}";',
+        'field_test_filefield_fid' => 1,
+        'field_test_filefield_list' => 1,
+        'field_test_filefield_data' => 'a:1:{s:11:"description";s:4:"desc";}'
       ))
       ->values(array(
         'nid' => 2,
@@ -582,6 +609,9 @@ class Drupal6Node extends Drupal6DumpBase {
         'field_test_link_url' => 'http://groups.drupal.org/',
         'field_test_link_title' => 'Drupal Groups',
         'field_test_link_attributes' => 's:6:"a:0:{}";',
+        'field_test_filefield_fid' => 2,
+        'field_test_filefield_list' => 1,
+        'field_test_filefield_data' => 'a:1:{s:11:"description";s:4:"desc";}'
       ))
       ->values(array(
         'nid' => 2,
@@ -594,6 +624,9 @@ class Drupal6Node extends Drupal6DumpBase {
         'field_test_link_url' => 'http://groups.drupal.org/',
         'field_test_link_title' => 'Drupal Groups',
         'field_test_link_attributes' => 's:6:"a:0:{}";',
+        'field_test_filefield_fid' => 2,
+        'field_test_filefield_list' => 1,
+        'field_test_filefield_data' => 'a:1:{s:11:"description";s:4:"desc";}'
       ))
       ->execute();
     $this->setModuleVersion('content', 6001);

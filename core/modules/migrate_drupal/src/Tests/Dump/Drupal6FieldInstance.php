@@ -1070,10 +1070,10 @@ class Drupal6FieldInstance extends Drupal6DumpBase {
       'field_name' => 'field_test_filefield',
       'module' => 'filefield',
       'type' => 'filefield',
-      'global_settings' => 'a:3:{s:10:"list_field";s:1:"0";s:12:"list_default";i:1;s:17:"description_field";s:1:"1";}',
+      'global_settings' => 'a:3:{s:10:"list_field";s:1:"0";s:12:"list_default";i:1;s:17:"description_field";s:21:"test file description";}',
       'multiple' => 0,
       'db_storage' => 1,
-      'db_columns' => 'a:0:{}',
+      'db_columns' => 'a:3:{s:3:"fid";a:3:{s:4:"type";s:3:"int";s:8:"not null";b:0;s:5:"views";b:1;}s:4:"list";a:4:{s:4:"type";s:3:"int";s:4:"size";s:4:"tiny";s:8:"not null";b:0;s:5:"views";b:1;}s:4:"data";a:3:{s:4:"type";s:4:"text";s:9:"serialize";b:1;s:5:"views";b:1;}}',
       'active' => 1,
     ))
     ->values(array(
