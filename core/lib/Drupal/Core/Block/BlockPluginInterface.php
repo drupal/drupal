@@ -47,8 +47,8 @@ interface BlockPluginInterface extends ConfigurablePluginInterface, PluginFormIn
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The user session for which to check access.
    *
-   * @return bool
-   *   TRUE if the block should be shown, or FALSE otherwise.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   An access result object instantiated and configured by the block plugin.
    *
    * @see \Drupal\block\BlockAccessControlHandler
    */
