@@ -18,7 +18,6 @@ class MoreLink extends Link {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = get_class($this);
     $info = parent::getInfo();
     return array(
       '#title' => $this->t('More'),
