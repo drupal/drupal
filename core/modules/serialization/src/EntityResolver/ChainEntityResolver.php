@@ -43,7 +43,8 @@ class ChainEntityResolver implements ChainEntityResolverInterface {
    */
   public function resolve(NormalizerInterface $normalizer, $data, $entity_type) {
     foreach ($this->resolvers as $resolver) {
-      if ($resolved = $resolver->resolve($normalizer, $data, $entity_type)) {
+      $resolved = $resolver->resolve($normalizer, $data, $entity_type);
+      if (isset($resolved)) {
         return $resolved;
       }
     }

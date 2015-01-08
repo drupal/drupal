@@ -111,6 +111,23 @@ class ChainEntityResolverTest extends UnitTestCase {
   }
 
   /**
+   * Test the resolve method where one resolver returns 0.
+   *
+   * @covers ::__construct
+   * @covers ::resolve
+   */
+  public function testResolverWithResolvedToZero() {
+    $resolvers = array(
+      $this->createEntityResolverMock(0),
+      $this->createEntityResolverMock(NULL, FALSE),
+    );
+
+    $resolver = new ChainEntityResolver($resolvers);
+
+    $this->assertSame(0, $resolver->resolve($this->testNormalizer, $this->testData, $this->testEntityType));
+  }
+
+  /**
    * Creates a mock entity resolver.
    *
    * @param null|int $return
