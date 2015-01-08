@@ -19,7 +19,7 @@ class StaticMenuLinkOverrides implements StaticMenuLinkOverridesInterface {
    *
    * @var string
    */
-  protected $configName = 'menu_link.static.overrides';
+  protected $configName = 'core.menu.static_menu_link_overrides';
 
   /**
    * The menu link overrides config object.

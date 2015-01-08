@@ -1,7 +1,6 @@
-
-menu_link.static.overrides:
+core.menu.static_menu_link_overrides:
   type: mapping
-  label: 'Menu link overrides'
+  label: 'Static menu link overrides'
   mapping:
     definitions:
       type: sequence

@@ -22,7 +22,7 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
    * @covers ::__construct
    */
   public function testConstruct() {
-    $config_factory = $this->getConfigFactoryStub(array('menu_link.static.overrides' => array()));
+    $config_factory = $this->getConfigFactoryStub(array('core.menu.static_menu_link_overrides' => array()));
     $static_override = new StaticMenuLinkOverrides($config_factory);
 
     $this->assertAttributeEquals($config_factory, 'configFactory', $static_override);
@@ -37,7 +37,7 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
     $config_factory = $this->getMock('Drupal\Core\Config\ConfigFactoryInterface');
     $config_factory->expects($this->at(0))
       ->method('reset')
-      ->with('menu_link.static.overrides');
+      ->with('core.menu.static_menu_link_overrides');
 
     $static_override = new StaticMenuLinkOverrides($config_factory);
 
@@ -53,7 +53,7 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
    * @covers ::getConfig
    */
   public function testLoadOverride($overrides, $id, $expected) {
-    $config_factory = $this->getConfigFactoryStub(array('menu_link.static.overrides' => array('definitions' => $overrides)));
+    $config_factory = $this->getConfigFactoryStub(array('core.menu.static_menu_link_overrides' => array('definitions' => $overrides)));
     $static_override = new StaticMenuLinkOverrides($config_factory);
 
     $this->assertEquals($expected, $static_override->loadOverride($id));
@@ -88,7 +88,7 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
     $overrides['test2'] = array('parent' => 'test1');
     $overrides['test1__la___ma'] = array('parent' => 'test2');
 
-    $config_factory = $this->getConfigFactoryStub(array('menu_link.static.overrides' => array('definitions' => $overrides)));
+    $config_factory = $this->getConfigFactoryStub(array('core.menu.static_menu_link_overrides' => array('definitions' => $overrides)));
     $static_override = new StaticMenuLinkOverrides($config_factory);
 
     $this->assertEquals(array('test1' => array('parent' => 'test0'), 'test1.la__ma' => array('parent' => 'test2')), $static_override->loadMultipleOverrides(array('test1', 'test1.la__ma')));
