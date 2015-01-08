@@ -24,12 +24,9 @@ fieldset {
 }
 label {
   display: table;
-  margin: 0 0 0 0.2em; /* LTR */
+  margin: 0 0 0.1em;
   padding: 0;
   font-weight: bold;
-}
-[dir="rtl"] label {
-  margin: 0 0.2em 0 0;
 }
 label.error {
   color: #a51b00;
