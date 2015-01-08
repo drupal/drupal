@@ -31,9 +31,9 @@ use Drupal\Core\TypedData\TypedDataInterface;
 class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
 
   /**
-   * Numerically indexed array items.
+   * Numerically indexed array of items.
    *
-   * @var array
+   * @var \Drupal\Core\TypedData\TypedDataInterface[]
    */
   protected $list = array();
 
@@ -41,13 +41,11 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
    * Overrides \Drupal\Core\TypedData\TypedData::getValue().
    */
   public function getValue() {
-    if (isset($this->list)) {
-      $values = array();
-      foreach ($this->list as $delta => $item) {
-        $values[$delta] = $item->getValue();
-      }
-      return $values;
+    $values = array();
+    foreach ($this->list as $delta => $item) {
+      $values[$delta] = $item->getValue();
     }
+    return $values;
   }
 
   /**
@@ -66,9 +64,7 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
       }
 
       // Clear the values of properties for which no value has been passed.
-      if (isset($this->list)) {
-        $this->list = array_intersect_key($this->list, $values);
-      }
+      $this->list = array_intersect_key($this->list, $values);
 
       // Set the values.
       foreach ($values as $delta => $value) {
@@ -94,13 +90,11 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
    */
   public function getString() {
     $strings = array();
-    if (isset($this->list)) {
-      foreach ($this->list as $item) {
-        $strings[] = $item->getString();
-      }
-      // Remove any empty strings resulting from empty items.
-      return implode(', ', array_filter($strings, '\Drupal\Component\Utility\Unicode::strlen'));
+    foreach ($this->list as $item) {
+      $strings[] = $item->getString();
     }
+    // Remove any empty strings resulting from empty items.
+    return implode(', ', array_filter($strings, '\Drupal\Component\Utility\Unicode::strlen'));
   }
 
   /**
@@ -146,16 +140,14 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
    * Implements \ArrayAccess::offsetExists().
    */
   public function offsetExists($offset) {
-    return isset($this->list) && array_key_exists($offset, $this->list) && $this->get($offset)->getValue() !== NULL;
+    return array_key_exists($offset, $this->list) && $this->get($offset)->getValue() !== NULL;
   }
 
   /**
    * Implements \ArrayAccess::offsetUnset().
    */
   public function offsetUnset($offset) {
-    if (isset($this->list)) {
-      unset($this->list[$offset]);
-    }
+    unset($this->list[$offset]);
   }
 
   /**
@@ -196,34 +188,29 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
    * Implements \IteratorAggregate::getIterator().
    */
   public function getIterator() {
-    if (isset($this->list)) {
-      return new \ArrayIterator($this->list);
-    }
-    return new \ArrayIterator(array());
+    return new \ArrayIterator($this->list);
   }
 
   /**
    * Implements \Countable::count().
    */
   public function count() {
-    return isset($this->list) ? count($this->list) : 0;
+    return count($this->list);
   }
 
   /**
    * Implements \Drupal\Core\TypedData\ListInterface::isEmpty().
    */
   public function isEmpty() {
-    if (isset($this->list)) {
-      foreach ($this->list as $item) {
-        if ($item instanceof ComplexDataInterface || $item instanceof ListInterface) {
-          if (!$item->isEmpty()) {
-            return FALSE;
-          }
-        }
-        // Other items are treated as empty if they have no value only.
-        elseif ($item->getValue() !== NULL) {
+    foreach ($this->list as $item) {
+      if ($item instanceof ComplexDataInterface || $item instanceof ListInterface) {
+        if (!$item->isEmpty()) {
           return FALSE;
         }
+      }
+      // Other items are treated as empty if they have no value only.
+      elseif ($item->getValue() !== NULL) {
+        return FALSE;
       }
     }
     return TRUE;
@@ -233,24 +220,22 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
    * {@inheritdoc}
    */
   public function filter($callback) {
-    if (isset($this->list)) {
-      $removed = FALSE;
-      // Apply the filter, detecting if some items were actually removed.
-      $this->list = array_filter($this->list, function ($item) use ($callback, &$removed) {
-        if (call_user_func($callback, $item)) {
-          return TRUE;
-        }
-        else {
-          $removed = TRUE;
-        }
-      });
-      if ($removed) {
-        // Rekey the array using array_values().
-        $this->list = array_values($this->list);
-        // Manually update each item's delta.
-        foreach ($this->list as $delta => $item) {
-          $item->setContext($delta, $this);
-        }
+    $removed = FALSE;
+    // Apply the filter, detecting if some items were actually removed.
+    $this->list = array_filter($this->list, function ($item) use ($callback, &$removed) {
+      if (call_user_func($callback, $item)) {
+        return TRUE;
+      }
+      else {
+        $removed = TRUE;
+      }
+    });
+    if ($removed) {
+      // Rekey the array using array_values().
+      $this->list = array_values($this->list);
+      // Manually update each item's delta.
+      foreach ($this->list as $delta => $item) {
+        $item->setContext($delta, $this);
       }
     }
     return $this;
@@ -270,11 +255,10 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
    * Magic method: Implements a deep clone.
    */
   public function __clone() {
-    if (isset($this->list)) {
-      foreach ($this->list as $delta => $item) {
-        $this->list[$delta] = clone $item;
-        $this->list[$delta]->setContext($delta, $this);
-      }
+    foreach ($this->list as $delta => $item) {
+      $this->list[$delta] = clone $item;
+      $this->list[$delta]->setContext($delta, $this);
     }
   }
+
 }

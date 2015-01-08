@@ -27,10 +27,9 @@ use Drupal\Core\TypedData\TypedDataInterface;
 class FieldItemList extends ItemList implements FieldItemListInterface {
 
   /**
-   * Numerically indexed array of field items, implementing the
-   * FieldItemInterface.
+   * Numerically indexed array of field items.
    *
-   * @var array
+   * @var \Drupal\Core\Field\FieldItemInterface[]
    */
   protected $list = array();
 
@@ -111,13 +110,11 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    * @todo Revisit the need when all entity types are converted to NG entities.
    */
   public function getValue($include_computed = FALSE) {
-    if (isset($this->list)) {
-      $values = array();
-      foreach ($this->list as $delta => $item) {
-        $values[$delta] = $item->getValue($include_computed);
-      }
-      return $values;
+    $values = array();
+    foreach ($this->list as $delta => $item) {
+      $values[$delta] = $item->getValue($include_computed);
     }
+    return $values;
   }
 
   /**
@@ -239,10 +236,8 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    *   The name of the method.
    */
   protected function delegateMethod($method) {
-    if (isset($this->list)) {
-      foreach ($this->list as $item) {
-        $item->{$method}();
-      }
+    foreach ($this->list as $item) {
+      $item->{$method}();
     }
   }
 
