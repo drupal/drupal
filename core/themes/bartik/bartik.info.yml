@@ -16,7 +16,6 @@ regions:
   help: Help
   page_top: 'Page top'
   page_bottom: 'Page bottom'
-  highlighted: Highlighted
   featured: Featured
   content: Content
   sidebar_first: 'Sidebar first'

@@ -20,7 +20,6 @@ global-styling:
       css/components/forum.css: {}
       css/components/header.css: {}
       css/components/help.css: {}
-      css/components/highlighted.css: {}
       css/components/list.css: {}
       css/components/messages.css: {}
       css/components/node-preview.css: {}
