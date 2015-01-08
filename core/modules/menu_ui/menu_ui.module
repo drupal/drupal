@@ -117,10 +117,8 @@ function menu_ui_menu_delete(Menu $menu) {
  * Implements hook_block_view_BASE_BLOCK_ID_alter() for 'system_menu_block'.
  */
 function menu_ui_block_view_system_menu_block_alter(array &$build, BlockPluginInterface $block) {
-  // Add contextual links for system menu blocks.
-  $menus = menu_list_system_menus();
-  $menu_name = $block->getDerivativeId();
-  if (isset($menus[$menu_name])) {
+  if ($block->getBaseId() == 'system_menu_block') {
+    $menu_name = $block->getDerivativeId();
     $build['#contextual_links']['menu'] = array(
       'route_parameters' => array('menu' => $menu_name),
     );

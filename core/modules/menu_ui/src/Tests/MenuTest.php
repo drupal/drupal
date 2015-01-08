@@ -540,11 +540,12 @@ class MenuTest extends MenuWebTestBase {
    */
   public function testBlockContextualLinks() {
     $this->drupalLogin($this->drupalCreateUser(array('administer menu', 'access contextual links', 'administer blocks')));
-    $this->addMenuLink();
-    $block = $this->drupalPlaceBlock('system_menu_block:tools', array('label' => 'Tools', 'provider' => 'system'));
+    $custom_menu = $this->addCustomMenu();
+    $this->addMenuLink('', '<front>', $custom_menu->id());
+    $block = $this->drupalPlaceBlock('system_menu_block:' . $custom_menu->id(), array('label' => 'Custom menu', 'provider' => 'system'));
     $this->drupalGet('test-page');
 
-    $id = 'block:block=' . $block->id() . ':|menu:menu=tools:';
+    $id = 'block:block=' . $block->id() . ':|menu:menu=' . $custom_menu->id() . ':';
     // @see \Drupal\contextual\Tests\ContextualDynamicContextTest:assertContextualLinkPlaceHolder()
     $this->assertRaw('<div data-contextual-id="'. $id . '"></div>', format_string('Contextual link placeholder with id @id exists.', array('@id' => $id)));
 
@@ -554,12 +555,12 @@ class MenuTest extends MenuWebTestBase {
     $response =  $this->drupalPost('contextual/render', 'application/json', $post, array('query' => array('destination' => 'test-page')));
     $this->assertResponse(200);
     $json = Json::decode($response);
-    $this->assertIdentical($json[$id], '<ul class="contextual-links"><li class="block-configure"><a href="' . base_path() . 'admin/structure/block/manage/' . $block->id() . '">Configure block</a></li><li class="entitymenuedit-form"><a href="' . base_path() . 'admin/structure/menu/manage/tools">Edit menu</a></li></ul>');
+    $this->assertIdentical($json[$id], '<ul class="contextual-links"><li class="block-configure"><a href="' . base_path() . 'admin/structure/block/manage/' . $block->id() . '">Configure block</a></li><li class="entitymenuedit-form"><a href="' . base_path() . 'admin/structure/menu/manage/' . $custom_menu->id() . '">Edit menu</a></li></ul>');
 
     // Test the contextual links are available when block caching is enabled.
     $this->drupalPostForm('admin/structure/block/manage/' . $block->id(), ['settings[cache][max_age]' => Cache::PERMANENT], t('Save block'));
     $this->drupalGet('test-page');
-    $id = 'block:block=' . $block->id() . ':|menu:menu=tools:';
+    $id = 'block:block=' . $block->id() . ':|menu:menu=' . $custom_menu->id() . ':';
     $this->assertRaw('<div data-contextual-id="'. $id . '"></div>', format_string('Contextual link placeholder with id @id exists.', array('@id' => $id)));
   }
 
