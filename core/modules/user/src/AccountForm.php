@@ -134,8 +134,16 @@ abstract class AccountForm extends ContentEntityForm {
       if (!$pass_reset) {
         $protected_values['mail'] = $form['account']['mail']['#title'];
         $protected_values['pass'] = $this->t('Password');
-        $request_new = $this->l($this->t('Request new password'), new Url('user.pass', array(), array('attributes' => array('title' => $this->t('Request new password via email.')))));
-        $current_pass_description = $this->t('Required if you want to change the %mail or %pass below. !request_new.', array('%mail' => $protected_values['mail'], '%pass' => $protected_values['pass'], '!request_new' => $request_new));
+        $request_new = $this->l($this->t('Reset your password'), new Url('user.pass',
+          array(), array('attributes' => array('title' => $this->t('Send password reset instructions via e-mail.'))))
+        );
+        $current_pass_description = $this->t('Required if you want to change the %mail or %pass below. !request_new.',
+          array(
+            '%mail' => $protected_values['mail'],
+            '%pass' => $protected_values['pass'],
+            '!request_new' => $request_new,
+          )
+        );
       }
 
       // The user must enter their current password to change to a new one.

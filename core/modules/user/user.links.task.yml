@@ -21,7 +21,7 @@ user.register:
 user.pass:
   route_name: user.pass
   base_route: user.page
-  title: 'Request new password'
+  title: 'Reset your password'
 # Other authentication methods may add pages below user/login/.
 user.login:
   route_name: user.login

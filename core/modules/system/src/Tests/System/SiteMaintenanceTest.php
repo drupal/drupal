@@ -104,7 +104,7 @@ class SiteMaintenanceTest extends WebTestBase {
     $edit = array(
       'name' => $this->user->getUsername(),
     );
-    $this->drupalPostForm('user/password', $edit, t('Email new password'));
+    $this->drupalPostForm('user/password', $edit, t('Submit'));
     $mails = $this->drupalGetMails();
     $start = strpos($mails[0]['body'], 'user/reset/'. $this->user->id());
     $path = substr($mails[0]['body'], $start, 66 + strlen($this->user->id()));

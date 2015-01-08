@@ -131,7 +131,7 @@ class UserAccountLinksTests extends WebTestBase {
     $this->assertTitle('Create new account' . $title_suffix, "Page title of /user/register is 'Create new account' for anonymous users.");
 
     $this->drupalGet('user/password');
-    $this->assertTitle('Request new password' . $title_suffix, "Page title of /user/register is 'Request new password' for anonymous users.");
+    $this->assertTitle('Reset your password' . $title_suffix, "Page title of /user/register is 'Reset your password' for anonymous users.");
 
     // Check the page title for registered users is "My Account" in menus.
     $this->drupalLogin($this->drupalCreateUser());

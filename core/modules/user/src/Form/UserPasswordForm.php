@@ -92,15 +92,20 @@ class UserPasswordForm extends FormBase {
       $form['name']['#value'] = $user->getEmail();
       $form['mail'] = array(
         '#prefix' => '<p>',
-        '#markup' =>  $this->t('Password reset instructions will be mailed to %email. You must log out to use the password reset link in the email.', array('%email' => $user->getEmail())),
+        '#markup' => $this->t('Password reset instructions will be mailed to %email. You must log out to use the password reset link in the email.', array('%email' => $user->getEmail())),
         '#suffix' => '</p>',
       );
     }
     else {
+      $form['mail'] = array(
+        '#prefix' => '<p>',
+        '#markup' => $this->t('Password reset instructions will be sent to your registered e-mail address.'),
+        '#suffix' => '</p>',
+      );
       $form['name']['#default_value'] = $this->getRequest()->query->get('name');
     }
     $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array('#type' => 'submit', '#value' => $this->t('Email new password'));
+    $form['actions']['submit'] = array('#type' => 'submit', '#value' => $this->t('Submit'));
 
     return $form;
   }

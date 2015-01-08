@@ -119,7 +119,7 @@ user.pass:
   path: '/user/password'
   defaults:
     _form: '\Drupal\user\Form\UserPasswordForm'
-    _title: 'Request new password'
+    _title: 'Reset your password'
   requirements:
     _access: 'TRUE'
   options:

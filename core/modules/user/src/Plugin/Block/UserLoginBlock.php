@@ -55,9 +55,9 @@ class UserLoginBlock extends BlockBase {
         ),
       )));
     }
-    $items['request_password'] = \Drupal::l(t('Request new password'), new Url('user.pass', array(), array(
+    $items['request_password'] = \Drupal::l(t('Reset your password'), new Url('user.pass', array(), array(
       'attributes' => array(
-        'title' => t('Request new password via email.'),
+        'title' => t('Send password reset instructions via e-mail.'),
         'class' => array('request-password-link'),
       ),
     )));
