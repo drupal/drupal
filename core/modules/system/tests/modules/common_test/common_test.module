@@ -165,6 +165,22 @@ function common_test_preprocess_common_test_render_element(&$variables) {
 }
 
 /**
+ * Implements hook_library_info_build().
+ */
+function common_test_library_info_build() {
+  $libraries = [];
+  if (\Drupal::state()->get('common_test.library_info_build_test')) {
+    $libraries['dynamic_library'] = [
+      'version' => '1.0',
+      'css' => [
+        'common_test.css' => [],
+      ],
+    ];
+  }
+  return $libraries;
+}
+
+/**
  * Implements hook_library_info_alter().
  */
 function common_test_library_info_alter(&$libraries, $module) {
@@ -173,6 +189,13 @@ function common_test_library_info_alter(&$libraries, $module) {
     $libraries['jquery.farbtastic']['version'] = '0.0';
     // Make Farbtastic depend on jQuery Form to test library dependencies.
     $libraries['jquery.farbtastic']['dependencies'][] = 'core/jquery.form';
+  }
+
+  // Alter the dynamically registered library definition.
+  if ($module == 'common_test' && isset($libraries['dynamic_library'])) {
+    $libraries['dynamic_library']['dependencies'] = [
+      'core/jquery',
+    ];
   }
 }
 

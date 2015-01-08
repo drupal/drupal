@@ -375,6 +375,28 @@ class AttachedAssetsTest extends KernelTestBase {
   }
 
   /**
+   * Dynamically defines an asset library and alters it.
+   */
+  function testDynamicLibrary() {
+    /** @var \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery */
+    $library_discovery = \Drupal::service('library.discovery');
+    // Retrieve a dynamic library definition.
+    // @see common_test_library_info_build()
+    \Drupal::state()->set('common_test.library_info_build_test', TRUE);
+    $library_discovery->clearCachedDefinitions();
+    $dynamic_library = $library_discovery->getLibraryByName('common_test', 'dynamic_library');
+    $this->assertTrue(is_array($dynamic_library));
+    if ($this->assertTrue(isset($dynamic_library['version']))) {
+      $this->assertIdentical('1.0', $dynamic_library['version']);
+    }
+    // Make sure the dynamic library definition could be altered.
+    // @see common_test_library_info_alter()
+    if ($this->assertTrue(isset($dynamic_library['dependencies']))) {
+      $this->assertIdentical(['core/jquery'], $dynamic_library['dependencies']);
+    }
+  }
+
+  /**
    * Tests that multiple modules can implement libraries with the same name.
    *
    * @see common_test.library.yml

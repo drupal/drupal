@@ -79,4 +79,11 @@ class LibraryDiscovery implements LibraryDiscoveryInterface {
     return isset($extension[$name]) ? $extension[$name] : FALSE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function clearCachedDefinitions() {
+    $this->collector->clear();
+  }
+
 }

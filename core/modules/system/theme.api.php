@@ -722,6 +722,70 @@ function hook_js_alter(&$javascript) {
 }
 
 /**
+ * Add dynamic library definitions.
+ *
+ * Modules may implement this hook to add dynamic library definitions. Static
+ * libraries, which do not depend on any runtime information, should be declared
+ * in a modulename.libraries.yml file instead.
+ *
+ * @return array[]
+ *   An array of library definitions to register, keyed by library ID. The
+ *   library ID will be prefixed with the module name automatically.
+ *
+ * @see core.libraries.yml
+ * @see hook_library_info_alter()
+ */
+function hook_library_info_build() {
+  $libraries = [];
+  // Add a library whose information changes depending on certain conditions.
+  $libraries['mymodule.zombie'] = [
+    'dependencies' => [
+      'core/backbone',
+    ],
+  ];
+  if (Drupal::moduleHandler()->moduleExists('minifyzombies')) {
+    $libraries['mymodule.zombie'] += [
+      'js' => [
+        'mymodule.zombie.min.js' => [],
+      ],
+      'css' => [
+        'mymodule.zombie.min.css' => [],
+      ],
+    ];
+  }
+  else {
+    $libraries['mymodule.zombie'] += [
+      'js' => [
+        'mymodule.zombie.js' => [],
+      ],
+      'css' => [
+        'mymodule.zombie.css' => [],
+      ],
+    ];
+  }
+
+  // Add a library only if a certain condition is met. If code wants to
+  // integrate with this library it is safe to (try to) load it unconditionally
+  // without reproducing this check. If the library definition does not exist
+  // the library (of course) not be loaded but no notices or errors will be
+  // triggered.
+  if (Drupal::moduleHandler()->moduleExists('vampirize')) {
+    $libraries['mymodule.vampire'] = [
+      'js' => [
+        'js/vampire.js' => [],
+      ],
+      'css' => [
+        'css/vampire.css',
+      ],
+      'dependencies' => [
+        'core/jquery',
+      ],
+    ];
+  }
+  return $libraries;
+}
+
+/**
  * Perform necessary alterations to the JavaScript settings (drupalSettings).
  *
  * @param array &$settings

@@ -161,7 +161,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
    * Tests that an exception is thrown when no CSS/JS/setting is specified.
    *
    * @expectedException \Drupal\Core\Asset\Exception\IncompleteLibraryDefinitionException
-   * @expectedExceptionMessage Incomplete library definition for 'example' in core/tests/Drupal/Tests/Core/Asset/library_test_files/example_module_missing_information.libraries.yml
+   * @expectedExceptionMessage Incomplete library definition for definition 'example' in extension 'example_module_missing_information'
    *
    * @covers ::buildByExtension
    */
@@ -400,7 +400,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
    * Tests that an exception is thrown when license is missing when 3rd party.
    *
    * @expectedException \Drupal\Core\Asset\Exception\LibraryDefinitionMissingLicenseException
-   * @expectedExceptionMessage Missing license information in library definition for 'no-license-info-but-remote' in core/tests/Drupal/Tests/Core/Asset/library_test_files/licenses_missing_information.libraries.yml: it has a remote, but no license.
+   * @expectedExceptionMessage Missing license information in library definition for definition 'no-license-info-but-remote' extension 'licenses_missing_information': it has a remote, but no license.
    *
    * @covers ::buildByExtension
    */
@@ -433,7 +433,6 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     $this->libraryDiscoveryParser->setPaths('module', 'licenses', $path);
 
     $libraries = $this->libraryDiscoveryParser->buildByExtension('licenses');
-
 
     // For libraries without license info, the default license is applied.
     $library = $libraries['no-license-info'];
