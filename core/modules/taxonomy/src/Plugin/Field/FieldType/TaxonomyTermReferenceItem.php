@@ -69,7 +69,7 @@ class TaxonomyTermReferenceItem extends EntityReferenceItem implements OptionsPr
     // Flatten options firstly, because Settable Options may contain group
     // arrays.
     $values = array_keys(OptGroup::flattenOptions($this->getSettableOptions($account)));
-    $values[] = static::$NEW_ENTITY_MARKER;
+    $values[] = static::NEW_ENTITY_MARKER;
     return $values;
   }
 

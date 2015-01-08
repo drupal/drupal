@@ -41,7 +41,7 @@ class EntityReferenceItem extends FieldItemBase {
    *
    * @var int
    */
-  protected static $NEW_ENTITY_MARKER = -1;
+  const NEW_ENTITY_MARKER = -1;
 
   /**
    * {@inheritdoc}
@@ -168,7 +168,7 @@ class EntityReferenceItem extends FieldItemBase {
         // its actual id and target_id will be different, due to the new entity
         // marker.
         $entity_id = $this->get('entity')->getTargetIdentifier();
-        if ($entity_id != $values['target_id'] && ($values['target_id'] != static::$NEW_ENTITY_MARKER || !$this->entity->isNew())) {
+        if ($entity_id != $values['target_id'] && ($values['target_id'] != static::NEW_ENTITY_MARKER || !$this->entity->isNew())) {
           throw new \InvalidArgumentException('The target id and entity passed to the entity reference item do not match.');
         }
       }
@@ -201,10 +201,10 @@ class EntityReferenceItem extends FieldItemBase {
     // Make sure that the target ID and the target property stay in sync.
     if ($property_name == 'entity') {
       $property = $this->get('entity');
-      $target_id = $property->isTargetNew() ? static::$NEW_ENTITY_MARKER : $property->getTargetIdentifier();
+      $target_id = $property->isTargetNew() ? static::NEW_ENTITY_MARKER : $property->getTargetIdentifier();
       $this->writePropertyValue('target_id', $target_id);
     }
-    elseif ($property_name == 'target_id' && $this->target_id != static::$NEW_ENTITY_MARKER) {
+    elseif ($property_name == 'target_id' && $this->target_id != static::NEW_ENTITY_MARKER) {
       $this->writePropertyValue('entity', $this->target_id);
     }
     parent::onChange($property_name, $notify);
@@ -262,7 +262,7 @@ class EntityReferenceItem extends FieldItemBase {
    *   TRUE if the item holds an unsaved entity.
    */
   public function hasNewEntity() {
-    return $this->target_id === static::$NEW_ENTITY_MARKER;
+    return $this->target_id === static::NEW_ENTITY_MARKER;
   }
 
   /**
