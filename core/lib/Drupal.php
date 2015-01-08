@@ -93,9 +93,9 @@ class Drupal {
   const CORE_MINIMUM_SCHEMA_VERSION = 8000;
 
   /**
-   * The currently active container object.
+   * The currently active container object, or NULL if not initialized yet.
    *
-   * @var \Symfony\Component\DependencyInjection\ContainerInterface
+   * @var \Symfony\Component\DependencyInjection\ContainerInterface|null
    */
   protected static $container;
 
@@ -117,7 +117,7 @@ class Drupal {
    * @deprecated This method is only useful for the testing environment. It
    * should not be used otherwise.
    *
-   * @return \Symfony\Component\DependencyInjection\ContainerInterface
+   * @return \Symfony\Component\DependencyInjection\ContainerInterface|null
    */
   public static function getContainer() {
     return static::$container;
@@ -478,6 +478,17 @@ class Drupal {
    * the base path (like robots.txt) use Url::fromUri()->toString() with the
    * base:// scheme.
    *
+   * @param string $route_name
+   *   The name of the route.
+   * @param array $route_parameters
+   *   (optional) An associative array of parameter names and values.
+   * @param array $options
+   *   (optional) An associative array of additional options.
+   *
+   * @return string
+   *   The generated URL for the given route.
+   *
+   * @see \Drupal\Core\Routing\UrlGeneratorInterface::generateFromRoute()
    * @see \Drupal\Core\Url
    * @see \Drupal\Core\Url::fromRoute()
    * @see \Drupal\Core\Url::fromUri()
@@ -501,6 +512,14 @@ class Drupal {
    * This method is a convenience wrapper for the link generator service's
    * generate() method. For detailed documentation, see
    * \Drupal\Core\Routing\LinkGeneratorInterface::generate().
+   *
+   * @param string $text
+   *   The link text for the anchor tag.
+   * @param \Drupal\Core\Url $url
+   *   The URL object used for the link.
+   *
+   * @return string
+   *   An HTML string containing a link to the given route and parameters.
    *
    * @see \Drupal\Core\Utility\LinkGeneratorInterface::generate()
    * @see \Drupal\Core\Url
