@@ -58,8 +58,9 @@ following the instructions in the INTRODUCTION section at the top of this file:
 3. Remove all old core files and directories, except for the 'sites' directory
    and any custom files you added elsewhere.
 
-   If you made modifications to files like .htaccess or robots.txt, you will
-   need to re-apply them from your backup, after the new files are in place.
+   If you made modifications to files like .htaccess, composer.json, or
+   robots.txt you will need to re-apply them from your backup, after the new
+   files are in place.
 
    Sometimes an update includes changes to default.settings.php (this will be
    noted in the release notes). If that's the case, follow these steps:
@@ -93,7 +94,8 @@ following the instructions in the INTRODUCTION section at the top of this file:
    from http://drupal.org using your web browser, extract it, and then use an
    FTP client to upload the files to your web root.
 
-5. Re-apply any modifications to files such as .htaccess or robots.txt.
+5. Re-apply any modifications to files such as .htaccess, composer.json, or
+   robots.txt.
 
 6. Run update.php by visiting http://www.example.com/update.php (replace
    www.example.com with your domain name). This will update the core database
