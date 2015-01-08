@@ -95,7 +95,8 @@ field.value.test_field:
       type: label
       label: 'Value'
 
-entity_view_display.third_party.field_test:
+
+field.formatter.third_party.field_test:
   type: mapping
   label: 'Field test entity display third party setting'
   mapping:

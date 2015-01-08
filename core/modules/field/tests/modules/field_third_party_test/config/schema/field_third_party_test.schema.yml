@@ -1,14 +1,14 @@
-entity_view_display.third_party.field_third_party_test:
+field.formatter.third_party.field_third_party_test:
   type: mapping
-  label: 'field_third_party_test entity display settings'
+  label: 'field_third_party_test third party formatter settings'
   mapping:
     field_test_field_formatter_third_party_settings_form:
       type: string
       label: field_test_field_formatter_third_party_settings_form
 
-entity_form_display.third_party.field_third_party_test:
+field.widget.third_party.field_third_party_test:
   type: mapping
-  label: 'field_third_party_test entity form display settings'
+  label: 'field_third_party_test third party widget settings'
   mapping:
     field_test_widget_third_party_settings_form:
       type: string

@@ -79,17 +79,17 @@ core.entity_view_display.*.*.*:
             weight:
               type: integer
               label: 'Weight'
-            third_party_settings:
-               type: sequence
-               label: 'Third party settings'
-               sequence:
-                 - type: entity_view_display.third_party.[%key]
             label:
                type: string
                label: 'Label setting machine name'
             settings:
               type: field.formatter.settings.[%parent.type]
               label: 'Settings'
+            third_party_settings:
+               type: sequence
+               label: 'Third party settings'
+               sequence:
+                 - type: field.formatter.third_party.[%key]
     hidden:
       type: sequence
       label: 'Field display setting'
@@ -135,14 +135,14 @@ core.entity_form_display.*.*.*:
             weight:
               type: integer
               label: 'Weight'
+            settings:
+              type: field.widget.settings.[%parent.type]
+              label: 'Settings'
             third_party_settings:
               type: sequence
               label: 'Third party settings'
               sequence:
-                - type: entity_form_display.third_party.[%key]
-            settings:
-              type: field.widget.settings.[%parent.type]
-              label: 'Settings'
+                - type: field.widget.third_party.[%key]
     hidden:
       type: sequence
       label: 'Hidden'
