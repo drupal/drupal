@@ -207,6 +207,15 @@ abstract class SqlBase extends SourcePluginBase {
     return $this->iterator;
   }
 
+  /**
+   * Check if we can join against the map table.
+   *
+   * This function specifically catches issues when we're migrating with
+   * unique sets of credentials for the source and destination database.
+   *
+   * @return bool
+   *   TRUE if we can join against the map table otherwise FALSE.
+   */
   protected function mapJoinable() {
     if (!$this->getIds()) {
       return FALSE;
@@ -226,4 +235,5 @@ abstract class SqlBase extends SourcePluginBase {
     }
     return TRUE;
   }
+
 }
