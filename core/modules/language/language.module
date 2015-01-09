@@ -445,19 +445,6 @@ function language_get_browser_drupal_langcode_mappings() {
 }
 
 /**
- * Stores language mappings between browser and Drupal language codes.
- *
- * @param array $mappings
- *   An array containing browser language codes as keys with corresponding
- *   Drupal language codes as values.
- */
-function language_set_browser_drupal_langcode_mappings($mappings) {
-  $config = \Drupal::config('language.mappings');
-  $config->setData($mappings);
-  $config->save();
-}
-
-/**
  * Implements hook_form_FORM_ID_alter for system_regional_settings().
  *
  * @see language_system_regional_settings_form_submit()
