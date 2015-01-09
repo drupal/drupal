@@ -7,8 +7,6 @@
 
 namespace Drupal\Core\Routing;
 
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -17,20 +15,20 @@ use Symfony\Component\Routing\Route;
 class AdminContext {
 
   /**
-   * The request stack
+   * The route match.
    *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
+   * @var \Drupal\Core\Routing\RouteMatchInterface
    */
-  protected $requestStack;
+  protected $routeMatch;
 
   /**
    * Construct a new admin context helper instance.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
-   *   The request stack used to determine the current request.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The route match.
    */
-  public function __construct(RequestStack $request_stack) {
-    $this->requestStack = $request_stack;
+  public function __construct(RouteMatchInterface $route_match) {
+    $this->routeMatch = $route_match;
   }
 
   /**
@@ -45,25 +43,12 @@ class AdminContext {
    */
   public function isAdminRoute(Route $route = NULL) {
     if (!$route) {
-      $route = $this->getRouteFromRequest();
+      $route = $this->routeMatch->getRouteObject();
       if (!$route) {
         return FALSE;
       }
     }
     return (bool) $route->getOption('_admin_route');
-  }
-
-  /**
-   * Extract the route object from the request if one is available.
-   *
-   * @return \Symfony\Component\Routing\Route
-   *   The route object extracted from the current request.
-   */
-  protected function getRouteFromRequest() {
-    $request = $this->requestStack->getCurrentRequest();
-    if ($request) {
-      return $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT);
-    }
   }
 
 }

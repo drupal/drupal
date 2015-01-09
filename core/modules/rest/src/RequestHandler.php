@@ -31,11 +31,13 @@ class RequestHandler implements ContainerAwareInterface {
    *   The route match.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The HTTP request object.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The route match.
    *
    * @return \Symfony\Component\HttpFoundation\Response
    *   The response object.
    */
-  public function handle(RouteMatchInterface $route_match, Request $request) {
+  public function handle(RouteMatchInterface $route_match, Request $request, RouteMatchInterface $route_match) {
 
     $plugin = $route_match->getRouteObject()->getDefault('_plugin');
     $method = strtolower($request->getMethod());
@@ -76,7 +78,7 @@ class RequestHandler implements ContainerAwareInterface {
 
     // Determine the request parameters that should be passed to the resource
     // plugin.
-    $route_parameters = $request->attributes->get('_route_params');
+    $route_parameters = $route_match->getParameters();
     $parameters = array();
     // Filter out all internal parameters starting with "_".
     foreach ($route_parameters as $key => $parameter) {

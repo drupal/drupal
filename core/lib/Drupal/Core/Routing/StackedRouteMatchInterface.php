@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Routing;
 
+use Symfony\Component\HttpFoundation\Request;
+
 /**
  * Defines an interface for a stack of route matches.
  *
@@ -36,5 +38,15 @@ interface StackedRouteMatchInterface extends RouteMatchInterface {
    */
   public function getParentRouteMatch();
 
-}
+  /**
+   * Returns a route match from a given request, if possible.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request
+   *   The request.
+   *
+   * @return \Drupal\Core\Routing\RouteMatchInterface|NULL
+   *   THe matching route match, or NULL if there is no matching one.
+   */
+  public function getRouteMatchFromRequest(Request $request);
 
+}

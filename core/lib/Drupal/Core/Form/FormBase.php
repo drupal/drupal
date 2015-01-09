@@ -54,6 +54,13 @@ abstract class FormBase implements FormInterface, ContainerInjectionInterface {
   protected $loggerFactory;
 
   /**
+   * The route match.
+   *
+   * @var \Drupal\Core\Routing\RouteMatchInterface
+   */
+  protected $routeMatch;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -133,6 +140,18 @@ abstract class FormBase implements FormInterface, ContainerInjectionInterface {
       $this->requestStack = \Drupal::service('request_stack');
     }
     return $this->requestStack->getCurrentRequest();
+  }
+
+  /**
+   * Gets the route match.
+   *
+   * @return \Drupal\Core\Routing\RouteMatchInterface
+   */
+  protected function getRouteMatch() {
+    if (!$this->routeMatch) {
+      $this->routeMatch = \Drupal::routeMatch();
+    }
+    return $this->routeMatch;
   }
 
   /**

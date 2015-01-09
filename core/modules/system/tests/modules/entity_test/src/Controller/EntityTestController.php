@@ -10,8 +10,8 @@ namespace Drupal\entity_test\Controller;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\Query\QueryFactory;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Controller routines for entity_test routes.
@@ -65,8 +65,8 @@ class EntityTestController extends ControllerBase {
   /**
    * Displays the 'Edit existing entity_test' form.
    *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object to get entity type from.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The route match object to get entity type from.
    * @param string $entity_type_id
    *   The entity type ID.
    *
@@ -75,8 +75,8 @@ class EntityTestController extends ControllerBase {
    *
    * @see \Drupal\entity_test\Routing\EntityTestRoutes::routes()
    */
-  public function testEdit(Request $request, $entity_type_id) {
-    $entity = $request->attributes->get($entity_type_id);
+  public function testEdit(RouteMatchInterface $route_match, $entity_type_id) {
+    $entity = $route_match->getParameter($entity_type_id);
     $form = $this->entityFormBuilder()->getForm($entity);
     $form['#title'] = $entity->label();
     return $form;

@@ -74,8 +74,8 @@ class ControllerResolverTest extends UnitTestCase {
     ));
     $arguments = $this->controllerResolver->getArguments($request, $controller);
 
-    $this->assertEquals($mock_entity, $arguments[0], 'Type hinted variables should use upcasted values.');
-    $this->assertEquals(1, $arguments[1], 'Not type hinted variables should use not upcasted values.');
+    $this->assertEquals($mock_entity, $arguments[0]);
+    $this->assertEquals($mock_account, $arguments[1]);
     $this->assertEquals(RouteMatch::createFromRequest($request), $arguments[2], 'Ensure that the route match object is passed along as well');
   }
 

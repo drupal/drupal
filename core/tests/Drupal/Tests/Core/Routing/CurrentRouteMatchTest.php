@@ -78,4 +78,38 @@ class CurrentRouteMatchTest extends RouteMatchBaseTest {
     $this->assertSame('1', $current_route_match->getParameter('foo'));
   }
 
+  /**
+   * @covers ::getRouteMatchFromRequest
+   */
+  public function testGetRouteMatchFromRequestWithRouting() {
+    $request_stack = new RequestStack();
+    $request = new Request();
+    $request_stack->push($request);
+    $current_route_match = new CurrentRouteMatch($request_stack);
+
+    $route_match = $current_route_match->getRouteMatchFromRequest($request);
+
+    $this->assertNull($route_match->getRouteName());
+    $this->assertNull($route_match->getRouteObject());
+  }
+
+  /**
+   * @covers ::getRouteMatchFromRequest
+   */
+  public function testGetRouteMatchFromRequest() {
+    $request_stack = new RequestStack();
+    $request = new Request();
+    $request_stack->push($request);
+    $route = new Route('/test-route/{foo}');
+
+    $request->attributes->set(RouteObjectInterface::ROUTE_NAME, 'test_route');
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, $route);
+    $request->attributes->set('foo', '1');
+    $current_route_match = new CurrentRouteMatch($request_stack);
+
+    $route_match = $current_route_match->getRouteMatchFromRequest($request);
+    $this->assertEquals('test_route', $route_match->getRouteName());
+    $this->assertEquals($route, $route_match->getRouteObject());
+  }
+
 }

@@ -281,6 +281,8 @@ interface ConfigMapperInterface {
   /**
    * Populate the config mapper with request data.
    *
+   * @todo Replace $request with RouteMatch https://www.drupal.org/node/2295255.
+   *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   Page request object.
    */

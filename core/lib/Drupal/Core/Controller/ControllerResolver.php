@@ -138,9 +138,13 @@ class ControllerResolver extends BaseControllerResolver implements ControllerRes
    */
   protected function doGetArguments(Request $request, $controller, array $parameters) {
     $attributes = $request->attributes->all();
+    $raw_parameters = $request->attributes->has('_raw_variables') ? $request->attributes->get('_raw_variables') : [];
     $arguments = array();
     foreach ($parameters as $param) {
       if (array_key_exists($param->name, $attributes)) {
+        $arguments[] = $attributes[$param->name];
+      }
+      elseif (array_key_exists($param->name, $raw_parameters)) {
         $arguments[] = $attributes[$param->name];
       }
       elseif ($param->getClass() && $param->getClass()->isInstance($request)) {
@@ -164,21 +168,6 @@ class ControllerResolver extends BaseControllerResolver implements ControllerRes
         }
 
         throw new \RuntimeException(sprintf('Controller "%s" requires that you provide a value for the "$%s" argument (because there is no default value or because there is a non optional argument after this one).', $repr, $param->name));
-      }
-    }
-
-    // The parameter converter overrides the raw request attributes with the
-    // upcasted objects. However, it keeps a backup copy of the original, raw
-    // values in a special request attribute ('_raw_variables'). If a controller
-    // argument has a type hint, we pass it the upcasted object, otherwise we
-    // pass it the original, raw value.
-    if ($request->attributes->has('_raw_variables') && $raw = $request->attributes->get('_raw_variables')->all()) {
-      foreach ($parameters as $parameter) {
-        // Use the raw value if a parameter has no typehint.
-        if (!$parameter->getClass() && isset($raw[$parameter->name])) {
-          $position = $parameter->getPosition();
-          $arguments[$position] = $raw[$parameter->name];
-        }
       }
     }
     return $arguments;

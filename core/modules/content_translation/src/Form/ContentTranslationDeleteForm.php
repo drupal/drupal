@@ -9,6 +9,7 @@ namespace Drupal\content_translation\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 
 /**
@@ -40,9 +41,9 @@ class ContentTranslationDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL, $language = NULL) {
-    $this->entity = $this->getRequest()->attributes->get($entity_type_id);
-    $this->language = language_load($language);
+  public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL, LanguageInterface $language = NULL) {
+    $this->entity = $this->getRouteMatch()->getParameter($entity_type_id);
+    $this->language = $language;
     return parent::buildForm($form, $form_state);
   }
 

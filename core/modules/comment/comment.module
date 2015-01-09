@@ -314,9 +314,9 @@ function comment_view_multiple($comments, $view_mode = 'full', $langcode = NULL)
  * Implements hook_form_FORM_ID_alter() for field_ui_field_storage_add_form.
  */
 function comment_form_field_ui_field_storage_add_form_alter(&$form, FormStateInterface $form_state) {
-  $request = \Drupal::request();
-  if ($form_state->get('entity_type_id') == 'comment' && $request->attributes->has('commented_entity_type')) {
-    $form['#title'] = \Drupal::service('comment.manager')->getFieldUIPageTitle($request->attributes->get('commented_entity_type'), $request->attributes->get('field_name'));
+  $route_match = \Drupal::routeMatch();
+  if ($form_state->get('entity_type_id') == 'comment' && $route_match->getParameter('commented_entity_type')) {
+    $form['#title'] = \Drupal::service('comment.manager')->getFieldUIPageTitle($route_match->getParameter('commented_entity_type'), $route_match->getParameter('field_name'));
   }
   if (!_comment_entity_uses_integer_id($form_state->get('entity_type_id'))) {
     // You cannot use comment fields on entity types with non-integer IDs.
@@ -328,9 +328,9 @@ function comment_form_field_ui_field_storage_add_form_alter(&$form, FormStateInt
  * Implements hook_form_FORM_ID_alter().
  */
 function comment_form_field_ui_form_display_overview_form_alter(&$form, FormStateInterface $form_state) {
-  $request = \Drupal::request();
-  if ($form['#entity_type'] == 'comment' && $request->attributes->has('commented_entity_type')) {
-    $form['#title'] = \Drupal::service('comment.manager')->getFieldUIPageTitle($request->attributes->get('commented_entity_type'), $request->attributes->get('field_name'));
+  $route_match = \Drupal::routeMatch();
+  if ($form['#entity_type'] == 'comment' && $route_match->getParameter('commented_entity_type')) {
+    $form['#title'] = \Drupal::service('comment.manager')->getFieldUIPageTitle($route_match->getParameter('commented_entity_type'), $route_match->getParameter('field_name'));
   }
 }
 
@@ -338,9 +338,9 @@ function comment_form_field_ui_form_display_overview_form_alter(&$form, FormStat
  * Implements hook_form_FORM_ID_alter().
  */
 function comment_form_field_ui_display_overview_form_alter(&$form, FormStateInterface $form_state) {
-  $request = \Drupal::request();
-  if ($form['#entity_type'] == 'comment' && $request->attributes->has('commented_entity_type')) {
-    $form['#title'] = \Drupal::service('comment.manager')->getFieldUIPageTitle($request->attributes->get('commented_entity_type'), $request->attributes->get('field_name'));
+  $route_match = \Drupal::routeMatch();
+  if ($form['#entity_type'] == 'comment' && $route_match->getParameter('commented_entity_type')) {
+    $form['#title'] = \Drupal::service('comment.manager')->getFieldUIPageTitle($route_match->getParameter('commented_entity_type'), $route_match->getParameter('field_name'));
   }
 }
 

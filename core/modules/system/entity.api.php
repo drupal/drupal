@@ -893,8 +893,8 @@ function hook_ENTITY_TYPE_storage_load(array $entities) {
  */
 function hook_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
  if ($entity instanceof ContentEntityInterface && $entity->isTranslatable()) {
-   $attributes = \Drupal::request()->attributes;
-   \Drupal::service('content_translation.synchronizer')->synchronizeFields($entity, $entity->language()->getId(), $attributes->get('source_langcode'));
+   $route_match = \Drupal::routeMatch();
+   \Drupal::service('content_translation.synchronizer')->synchronizeFields($entity, $entity->language()->getId(), $route_match->getParameter('source_langcode'));
   }
 }
 
@@ -909,8 +909,8 @@ function hook_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
  */
 function hook_ENTITY_TYPE_presave(Drupal\Core\Entity\EntityInterface $entity) {
   if ($entity->isTranslatable()) {
-    $attributes = \Drupal::request()->attributes;
-    \Drupal::service('content_translation.synchronizer')->synchronizeFields($entity, $entity->language()->getId(), $attributes->get('source_langcode'));
+    $route_match = \Drupal::routeMatch();
+    \Drupal::service('content_translation.synchronizer')->synchronizeFields($entity, $entity->language()->getId(), $route_match->getParameter('source_langcode'));
   }
 }
 

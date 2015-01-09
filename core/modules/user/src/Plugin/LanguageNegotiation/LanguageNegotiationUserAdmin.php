@@ -10,6 +10,8 @@ namespace Drupal\user\Plugin\LanguageNegotiation;
 use Drupal\Core\PathProcessor\PathProcessorManager;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\AdminContext;
+use Drupal\Core\Routing\RouteMatch;
+use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\language\LanguageNegotiationMethodBase;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -61,6 +63,13 @@ class LanguageNegotiationUserAdmin extends LanguageNegotiationMethodBase impleme
   protected $pathProcessorManager;
 
   /**
+   * The stacked route match.
+   *
+   * @var \Drupal\Core\Routing\StackedRouteMatchInterface
+   */
+  protected $stackedRouteMatch;
+
+  /**
    * Constructs a new LanguageNegotiationUserAdmin instance.
    *
    * @param \Drupal\Core\Routing\AdminContext $admin_context
@@ -69,11 +78,14 @@ class LanguageNegotiationUserAdmin extends LanguageNegotiationMethodBase impleme
    *   The router.
    * @param \Drupal\Core\PathProcessor\PathProcessorManager $path_processor_manager
    *   The path processor manager.
+   * @param \Drupal\Core\Routing\StackedRouteMatchInterface $stacked_route_match
+   *   The stacked route match.
    */
-  public function __construct(AdminContext $admin_context, UrlMatcherInterface $router, PathProcessorManager $path_processor_manager) {
+  public function __construct(AdminContext $admin_context, UrlMatcherInterface $router, PathProcessorManager $path_processor_manager, StackedRouteMatchInterface $stacked_route_match) {
     $this->adminContext = $admin_context;
     $this->router = $router;
     $this->pathProcessorManager = $path_processor_manager;
+    $this->stackedRouteMatch = $stacked_route_match;
   }
 
   /**
@@ -83,7 +95,8 @@ class LanguageNegotiationUserAdmin extends LanguageNegotiationMethodBase impleme
     return new static(
       $container->get('router.admin_context'),
       $container->get('router'),
-      $container->get('path_processor_manager')
+      $container->get('path_processor_manager'),
+      $container->get('current_route_match')
     );
   }
 
@@ -117,7 +130,8 @@ class LanguageNegotiationUserAdmin extends LanguageNegotiationMethodBase impleme
       // If called from an event subscriber, the request may not have the route
       // object yet (it is still being built), so use the router to look up
       // based on the path.
-      if (!$route_object = $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT)) {
+      $route_match = $this->stackedRouteMatch->getRouteMatchFromRequest($request);
+      if ($route_match && !$route_object = $route_match->getRouteObject()) {
         try {
           // Process the path as an inbound path. This will remove any language
           // prefixes and other path components that inbound processing would

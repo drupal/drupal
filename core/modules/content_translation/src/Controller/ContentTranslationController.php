@@ -10,8 +10,8 @@ namespace Drupal\content_translation\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Base class for entity translation controllers.
@@ -37,16 +37,15 @@ class ContentTranslationController extends ControllerBase {
   /**
    * Builds the translations overview page.
    *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object from which to extract the entity type.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The route match.
    * @param string $entity_type_id
    *   (optional) The entity type ID.
-   *
-   * @return array
-   *   Array of page elements to render.
+   * @return array Array of page elements to render.
+   * Array of page elements to render.
    */
-  public function overview(Request $request, $entity_type_id = NULL) {
-    $entity = $request->attributes->get($entity_type_id);
+  public function overview(RouteMatchInterface $route_match, $entity_type_id = NULL) {
+    $entity = $route_match->getParameter($entity_type_id);
     $account = $this->currentUser();
     $handler = $this->entityManager()->getHandler($entity_type_id, 'translation');
 
@@ -252,16 +251,16 @@ class ContentTranslationController extends ControllerBase {
    * @param \Drupal\Core\Language\LanguageInterface $target
    *   The language of the translated values. Defaults to the current content
    *   language.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object from which to extract the entity type.
+   * @param \Drupal\Core\Routing\RouteMatchInterface
+   *   The route match object from which to extract the entity type.
    * @param string $entity_type_id
    *   (optional) The entity type ID.
    *
    * @return array
    *   A processed form array ready to be rendered.
    */
-  public function add(LanguageInterface $source, LanguageInterface $target, Request $request, $entity_type_id = NULL) {
-    $entity = $request->attributes->get($entity_type_id);
+  public function add(LanguageInterface $source, LanguageInterface $target, RouteMatchInterface $route_match, $entity_type_id = NULL) {
+    $entity = $route_match->getParameter($entity_type_id);
 
     // @todo Exploit the upcoming hook_entity_prepare() when available.
     // See https://www.drupal.org/node/1810394.
@@ -287,16 +286,16 @@ class ContentTranslationController extends ControllerBase {
    * @param \Drupal\Core\Language\LanguageInterface $language
    *   The language of the translated values. Defaults to the current content
    *   language.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object from which to extract the entity type.
+   * @param \Drupal\Core\Routing\RouteMatchInterface
+   *   The route match object from which to extract the entity type.
    * @param string $entity_type_id
    *   (optional) The entity type ID.
    *
    * @return array
    *   A processed form array ready to be rendered.
    */
-  public function edit(LanguageInterface $language, Request $request, $entity_type_id = NULL) {
-    $entity = $request->attributes->get($entity_type_id);
+  public function edit(LanguageInterface $language, RouteMatchInterface $route_match, $entity_type_id = NULL) {
+    $entity = $route_match->getParameter($entity_type_id);
 
     // @todo Provide a way to figure out the default form operation. Maybe like
     //   $operation = isset($info['default_operation']) ? $info['default_operation'] : 'default';

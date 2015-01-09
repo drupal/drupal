@@ -505,7 +505,7 @@ services:
       - [fromRequestStack, ['@request_stack']]
   router.admin_context:
     class: Drupal\Core\Routing\AdminContext
-    arguments: ['@request_stack']
+    arguments: ['@current_route_match']
   router.route_provider:
     class: Drupal\Core\Routing\RouteProvider
     arguments: ['@database', '@router.builder', '@state']

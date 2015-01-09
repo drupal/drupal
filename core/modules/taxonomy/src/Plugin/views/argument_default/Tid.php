@@ -8,6 +8,7 @@
 namespace Drupal\taxonomy\Plugin\views\argument_default;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\taxonomy\TermInterface;
 use Drupal\views\Plugin\CacheablePluginInterface;
 use Drupal\views\ViewExecutable;
@@ -26,6 +27,44 @@ use Symfony\Component\HttpFoundation\Request;
  * )
  */
 class Tid extends ArgumentDefaultPluginBase implements CacheablePluginInterface {
+
+  /**
+   * The route match.
+   *
+   * @var \Drupal\Core\Routing\RouteMatchInterface
+   */
+  protected $routeMatch;
+
+  /**
+   * Constructs a new Date instance.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   *
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The route match.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteMatchInterface $route_match) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->routeMatch = $route_match;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('current_route_match')
+    );
+  }
 
   /**
    * Overrides \Drupal\views\Plugin\views\Plugin\views\PluginBase::init().
@@ -126,14 +165,14 @@ class Tid extends ArgumentDefaultPluginBase implements CacheablePluginInterface 
   public function getArgument() {
     // Load default argument from taxonomy page.
     if (!empty($this->options['term_page'])) {
-      if (($taxonomy_term = $this->view->getRequest()->attributes->get('taxonomy_term')) && $taxonomy_term instanceof TermInterface) {
+      if (($taxonomy_term = $this->routeMatch->getParameter('taxonomy_term')) && $taxonomy_term instanceof TermInterface) {
         return $taxonomy_term->id();
       }
     }
     // Load default argument from node.
     if (!empty($this->options['node'])) {
       // Just check, if a node could be detected.
-      if (($node = $this->view->getRequest()->attributes->get('node')) && $node instanceof NodeInterface) {
+      if (($node = $this->routeMatch->getParameter('node')) && $node instanceof NodeInterface) {
         $taxonomy = array();
         foreach ($node->getFieldDefinitions() as $field) {
           if ($field->getType() == 'taxonomy_term_reference') {

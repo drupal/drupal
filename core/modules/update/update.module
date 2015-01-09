@@ -119,7 +119,8 @@ function update_help($route_name, RouteMatchInterface $route_match) {
 function update_page_top() {
   /** @var \Drupal\Core\Routing\AdminContext $admin_context */
   $admin_context = \Drupal::service('router.admin_context');
-  if ($admin_context->isAdminRoute(\Drupal::request()->attributes->get(RouteObjectInterface::ROUTE_OBJECT)) && \Drupal::currentUser()->hasPermission('administer site configuration')) {
+  $route_match = \Drupal::routeMatch();
+  if ($admin_context->isAdminRoute($route_match->getRouteObject()) && \Drupal::currentUser()->hasPermission('administer site configuration')) {
     $route_name = \Drupal::routeMatch()->getRouteName();
     switch ($route_name) {
       // These pages don't need additional nagging.

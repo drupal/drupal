@@ -122,7 +122,7 @@ class FieldStorageAddForm extends FormBase {
       $form_state->set('entity_type_id', $entity_type_id);
     }
     if (!$form_state->get('bundle')) {
-      $bundle = $bundle ?: $this->getRequest()->attributes->get('_raw_variables')->get($this->bundleEntityTypeId);
+      $bundle = $bundle ?: $this->getRouteMatch()->getRawParameter($this->bundleEntityTypeId);
       $form_state->set('bundle', $bundle);
     }
 

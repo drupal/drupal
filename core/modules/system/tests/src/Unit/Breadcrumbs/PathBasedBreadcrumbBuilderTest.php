@@ -326,8 +326,8 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    */
   public function setupAccessManagerToAllow() {
     $this->accessManager->expects($this->any())
-      ->method('checkRequest')
-      ->will($this->returnValue(AccessResult::allowed()));
+      ->method('check')
+      ->willReturn(TRUE);
   }
 
   protected function setupStubPathProcessor() {

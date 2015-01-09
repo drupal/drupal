@@ -14,10 +14,12 @@ use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Link;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
+use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -139,9 +141,10 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       // Copy the path elements for up-casting.
       $route_request = $this->getRequestForPath(implode('/', $path_elements), $exclude);
       if ($route_request) {
-        $access = $this->accessManager->checkRequest($route_request, $this->currentUser);
+        $route_match = RouteMatch::createFromRequest($route_request);
+        $access = $this->accessManager->check($route_match, $this->currentUser);
         if ($access) {
-          $title = $this->titleResolver->getTitle($route_request, $route_request->attributes->get(RouteObjectInterface::ROUTE_OBJECT));
+          $title = $this->titleResolver->getTitle($route_request, $route_match->getRouteObject());
         }
         if ($access) {
           if (!isset($title)) {
@@ -149,7 +152,8 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
             // route is missing a _title or _title_callback attribute.
             $title = str_replace(array('-', '_'), ' ', Unicode::ucfirst(end($path_elements)));
           }
-          $links[] = Link::createFromRoute($title, $route_request->attributes->get(RouteObjectInterface::ROUTE_NAME), $route_request->attributes->get('_raw_variables')->all());
+          $url = Url::fromRouteMatch($route_match);
+          $links[] = new Link($title, $url);
         }
       }
 

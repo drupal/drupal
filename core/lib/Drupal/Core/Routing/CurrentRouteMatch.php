@@ -132,4 +132,11 @@ class CurrentRouteMatch implements RouteMatchInterface, StackedRouteMatchInterfa
     return $this->getRouteMatch($this->requestStack->getParentRequest());
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getRouteMatchFromRequest(Request $request) {
+    return $this->getRouteMatch($request);
+  }
+
 }

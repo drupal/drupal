@@ -8,6 +8,7 @@
 namespace Drupal\field_ui\Controller;
 
 use Drupal\Core\Entity\Controller\EntityListController;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -22,18 +23,18 @@ class FieldConfigListController extends EntityListController {
    *   The entity type.
    * @param string $bundle
    *   The entity bundle.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The current request.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The current route match.
    *
    * @return array
    *   A render array as expected by drupal_render().
    */
-  public function listing($entity_type_id = NULL, $bundle = NULL, Request $request = NULL) {
+  public function listing($entity_type_id = NULL, $bundle = NULL, RouteMatchInterface $route_match = NULL) {
     if (!$bundle) {
       $entity_info = $this->entityManager()->getDefinition($entity_type_id);
-      $bundle = $request->attributes->get('_raw_variables')->get($entity_info->getBundleEntityType());
+      $bundle = $route_match->getRawParameter($entity_info->getBundleEntityType());
     }
-    return $this->entityManager()->getListBuilder('field_config')->render($entity_type_id, $bundle, $request);
+    return $this->entityManager()->getListBuilder('field_config')->render($entity_type_id, $bundle);
   }
 
 }
