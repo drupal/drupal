@@ -42,6 +42,11 @@
   border-left-color: transparent;
   border-bottom-color: transparent;
 }
+.joyride-tip-guide .joyride-nub.top-right {
+  border-top-color: transparent;
+  border-left-color: transparent;
+  border-right-color: transparent;
+}
 
 /* Typography */
 .joyride-tip-guide h2 {
@@ -79,4 +84,12 @@
 
 .joyride-modal-bg {
   background: rgba(0,0,0, 0.5);
+}
+
+.joyride-expose-wrapper {
+  background-color: #ffffff;
+}
+
+.joyride-expose-cover {
+  background: transparent;
 }

@@ -371,13 +371,13 @@ jquery.intrinsic:
 
 jquery.joyride:
   remote: https://github.com/zurb/joyride
-  version: v2.0.3
+  version: v2.1.0
   license:
     name: MIT
-    url: https://github.com/zurb/joyride/blob/v2.0.3/README.markdown
+    url: https://github.com/zurb/joyride/blob/v2.1.0/README.markdown
     gpl-compatible: true
   js:
-    assets/vendor/jquery-joyride/jquery.joyride-2.0.3.js: {}
+    assets/vendor/jquery-joyride/jquery.joyride-2.1.min.js: { minified: true }
   dependencies:
     - core/jquery
     - core/jquery.cookie

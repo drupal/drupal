@@ -109,6 +109,13 @@
   bottom: auto;
 }
 
+.joyride-tip-guide .joyride-nub.top-right {
+  top: -28px;
+  bottom: auto;
+  left: auto;
+  right: 28px;
+}
+
 .joyride-tip-guide p {
   margin: 0 0 1.4em;
 }
@@ -144,4 +151,16 @@
   top: 0;
   left: 0;
   cursor: pointer;
+}
+
+.joyride-expose-wrapper {
+  position: absolute;
+  z-index: 102;
+}
+
+.joyride-expose-cover {
+  position: absolute;
+  z-index: 10000;
+  top: 0;
+  left: 0;
 }

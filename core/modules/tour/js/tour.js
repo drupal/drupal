@@ -102,6 +102,7 @@
         var that = this;
         if ($tour.find('li').length) {
           $tour.joyride({
+            autoStart: true,
             postRideCallback: function () { that.model.set('isActive', false); },
             template: { // HTML segments for tip layout
               link: '<a href=\"#close\" class=\"joyride-close-tip\">&times;</a>',
