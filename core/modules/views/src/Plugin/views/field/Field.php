@@ -739,7 +739,7 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
     if (!$original_entity) {
       return array();
     }
-    $entity = $this->process_entity($original_entity);
+    $entity = $this->process_entity($values, $original_entity);
     if (!$entity) {
       return array();
     }
@@ -781,13 +781,15 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
    * Replaces values with aggregated values if aggregation is enabled.
    * Takes delta settings into account (@todo remove in #1758616).
    *
+   * @param \Drupal\views\ResultRow $values
+   *   The result row object containing the values.
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity to be processed.
    *
    * @return
    *   TRUE if the processing completed successfully, otherwise FALSE.
    */
-  function process_entity(EntityInterface $entity) {
+  function process_entity(ResultRow $values, EntityInterface $entity) {
     $processed_entity = clone $entity;
 
     $langcode = $this->field_langcode($processed_entity);
