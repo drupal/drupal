@@ -80,7 +80,7 @@ function template_preprocess_views_ui_view_info(&$variables) {
     $displays = t('None');
   }
   else {
-    $displays = format_plural(count($variables['displays']), 'Display', 'Displays') . ': <em>';
+    $displays = \Drupal::translation()->formatPlural(count($variables['displays']), 'Display', 'Displays') . ': <em>';
     $separator = '';
     foreach ($variables['displays'] as $displays_item) {
       $displays .= $separator . SafeMarkup::escape($displays_item);

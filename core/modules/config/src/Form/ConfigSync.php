@@ -239,19 +239,19 @@ class ConfigSync extends FormBase {
         );
         switch ($config_change_type) {
           case 'create':
-            $form[$collection][$config_change_type]['heading']['#value'] = format_plural(count($config_names), '@count new', '@count new');
+            $form[$collection][$config_change_type]['heading']['#value'] = $this->formatPlural(count($config_names), '@count new', '@count new');
             break;
 
           case 'update':
-            $form[$collection][$config_change_type]['heading']['#value'] = format_plural(count($config_names), '@count changed', '@count changed');
+            $form[$collection][$config_change_type]['heading']['#value'] = $this->formatPlural(count($config_names), '@count changed', '@count changed');
             break;
 
           case 'delete':
-            $form[$collection][$config_change_type]['heading']['#value'] = format_plural(count($config_names), '@count removed', '@count removed');
+            $form[$collection][$config_change_type]['heading']['#value'] = $this->formatPlural(count($config_names), '@count removed', '@count removed');
             break;
 
           case 'rename':
-            $form[$collection][$config_change_type]['heading']['#value'] = format_plural(count($config_names), '@count renamed', '@count renamed');
+            $form[$collection][$config_change_type]['heading']['#value'] = $this->formatPlural(count($config_names), '@count renamed', '@count renamed');
             break;
         }
         $form[$collection][$config_change_type]['list'] = array(

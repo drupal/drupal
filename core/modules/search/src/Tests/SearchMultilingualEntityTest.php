@@ -278,7 +278,9 @@ class SearchMultilingualEntityTest extends SearchTestBase {
     $this->assertEqual($status['total'], $total, 'Total items ' . $message . ' is ' . $total);
 
     // Check text in progress section of Search settings page. Note that this
-    // test avoids using format_plural(), so it tests for fragments of text.
+    // test avoids using
+    // \Drupal\Core\StringTranslation\TranslationInterface::formatPlural(), so
+    // it tests for fragments of text.
     $indexed = $total - $remaining;
     $percent = ($total > 0) ? floor(100 * $indexed / $total) : 100;
     $this->drupalGet('admin/config/search/pages');

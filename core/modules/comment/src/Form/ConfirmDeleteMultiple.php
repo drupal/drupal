@@ -122,7 +122,7 @@ class ConfirmDeleteMultiple extends ConfirmFormBase {
       $this->commentStorage->delete($this->comments);
       $count = count($form_state->getValue('comments'));
       $this->logger('content')->notice('Deleted @count comments.', array('@count' => $count));
-      drupal_set_message(format_plural($count, 'Deleted 1 comment.', 'Deleted @count comments.'));
+      drupal_set_message($this->formatPlural($count, 'Deleted 1 comment.', 'Deleted @count comments.'));
     }
     $form_state->setRedirectUrl($this->getCancelUrl());
   }

@@ -76,7 +76,7 @@ class DeleteMultiple extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return format_plural(count($this->nodes), 'Are you sure you want to delete this item?', 'Are you sure you want to delete these items?');
+    return $this->formatPlural(count($this->nodes), 'Are you sure you want to delete this item?', 'Are you sure you want to delete these items?');
   }
 
   /**
@@ -122,7 +122,7 @@ class DeleteMultiple extends ConfirmFormBase {
       $this->tempStoreFactory->get('node_multiple_delete_confirm')->delete(\Drupal::currentUser()->id());
       $count = count($this->nodes);
       $this->logger('content')->notice('Deleted @count posts.', array('@count' => $count));
-      drupal_set_message(format_plural($count, 'Deleted 1 post.', 'Deleted @count posts.'));
+      drupal_set_message($this->formatPlural($count, 'Deleted 1 post.', 'Deleted @count posts.'));
     }
     $form_state->setRedirect('system.admin_content');
   }

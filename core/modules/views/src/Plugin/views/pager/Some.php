@@ -25,9 +25,9 @@ class Some extends PagerPluginBase {
 
   public function summaryTitle() {
     if (!empty($this->options['offset'])) {
-      return format_plural($this->options['items_per_page'], '@count item, skip @skip', '@count items, skip @skip', array('@count' => $this->options['items_per_page'], '@skip' => $this->options['offset']));
+      return $this->formatPlural($this->options['items_per_page'], '@count item, skip @skip', '@count items, skip @skip', array('@count' => $this->options['items_per_page'], '@skip' => $this->options['offset']));
     }
-      return format_plural($this->options['items_per_page'], '@count item', '@count items', array('@count' => $this->options['items_per_page']));
+      return $this->formatPlural($this->options['items_per_page'], '@count item', '@count items', array('@count' => $this->options['items_per_page']));
   }
 
   protected function defineOptions() {

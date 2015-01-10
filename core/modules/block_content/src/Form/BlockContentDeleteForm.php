@@ -44,7 +44,7 @@ class BlockContentDeleteForm extends ContentEntityConfirmFormBase {
     $instances = $this->entity->getInstances();
 
     $form['message'] = array(
-      '#markup' => format_plural(count($instances), 'This will also remove 1 placed block instance.', 'This will also remove @count placed block instances.'),
+      '#markup' => $this->formatPlural(count($instances), 'This will also remove 1 placed block instance.', 'This will also remove @count placed block instances.'),
       '#access' => !empty($instances),
     );
 

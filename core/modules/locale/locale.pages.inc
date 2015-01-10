@@ -73,7 +73,7 @@ function template_preprocess_locale_translation_update_info(array &$variables) {
   // Build output for updates not found.
   if (isset($variables['not_found'])) {
     $releases = array();
-    $variables['missing_updates_status'] = format_plural(count($variables['not_found']), 'Missing translations for one project', 'Missing translations for @count projects');
+    $variables['missing_updates_status'] = \Drupal::translation()->formatPlural(count($variables['not_found']), 'Missing translations for one project', 'Missing translations for @count projects');
     if ($variables['not_found']) {
       foreach ($variables['not_found'] as $update) {
         $version = $update['version'] ? $update['version'] : t('no version');

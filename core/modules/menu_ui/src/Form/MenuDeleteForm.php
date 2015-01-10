@@ -76,7 +76,7 @@ class MenuDeleteForm extends EntityConfirmFormBase {
     $caption = '';
     $num_links = $this->menuLinkManager->countMenuLinks($this->entity->id());
     if ($num_links) {
-      $caption .= '<p>' . format_plural($num_links, '<strong>Warning:</strong> There is currently 1 menu link in %title. It will be deleted (system-defined items will be reset).', '<strong>Warning:</strong> There are currently @count menu links in %title. They will be deleted (system-defined links will be reset).', array('%title' => $this->entity->label())) . '</p>';
+      $caption .= '<p>' . $this->formatPlural($num_links, '<strong>Warning:</strong> There is currently 1 menu link in %title. It will be deleted (system-defined items will be reset).', '<strong>Warning:</strong> There are currently @count menu links in %title. They will be deleted (system-defined links will be reset).', array('%title' => $this->entity->label())) . '</p>';
     }
     $caption .= '<p>' . t('This action cannot be undone.') . '</p>';
     return $caption;

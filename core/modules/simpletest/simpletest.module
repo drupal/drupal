@@ -528,7 +528,7 @@ function simpletest_clean_environment() {
   simpletest_clean_temporary_directories();
   if (\Drupal::config('simpletest.settings')->get('clear_results')) {
     $count = simpletest_clean_results_table();
-    drupal_set_message(format_plural($count, 'Removed 1 test result.', 'Removed @count test results.'));
+    drupal_set_message(\Drupal::translation()->formatPlural($count, 'Removed 1 test result.', 'Removed @count test results.'));
   }
   else {
     drupal_set_message(t('Clear results is disabled and the test results table will not be cleared.'), 'warning');
@@ -556,7 +556,7 @@ function simpletest_clean_database() {
   }
 
   if ($count > 0) {
-    drupal_set_message(format_plural($count, 'Removed 1 leftover table.', 'Removed @count leftover tables.'));
+    drupal_set_message(\Drupal::translation()->formatPlural($count, 'Removed 1 leftover table.', 'Removed @count leftover tables.'));
   }
   else {
     drupal_set_message(t('No leftover tables to remove.'));
@@ -580,7 +580,7 @@ function simpletest_clean_temporary_directories() {
   }
 
   if ($count > 0) {
-    drupal_set_message(format_plural($count, 'Removed 1 temporary directory.', 'Removed @count temporary directories.'));
+    drupal_set_message(\Drupal::translation()->formatPlural($count, 'Removed 1 temporary directory.', 'Removed @count temporary directories.'));
   }
   else {
     drupal_set_message(t('No temporary directories to remove.'));

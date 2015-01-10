@@ -393,12 +393,12 @@ function format_xml_elements($array) {
  *
  * For example:
  * @code
- *   $output = format_plural($node->comment_count, '1 comment', '@count comments');
+ *   $output = \Drupal::translation()->formatPlural($node->comment_count, '1 comment', '@count comments');
  * @endcode
  *
  * Example with additional replacements:
  * @code
- *   $output = format_plural($update_count,
+ *   $output = \Drupal::translation()->formatPlural($update_count,
  *     'Changed the content type of 1 post from %old-type to %new-type.',
  *     'Changed the content type of @count posts from %old-type to %new-type.',
  *     array('%old-type' => $info->old_type, '%new-type' => $info->new_type));
@@ -451,7 +451,7 @@ function format_plural($count, $singular, $plural, array $args = array(), array 
  */
 function format_size($size, $langcode = NULL) {
   if ($size < Bytes::KILOBYTE) {
-    return format_plural($size, '1 byte', '@count bytes', array(), array('langcode' => $langcode));
+    return \Drupal::translation()->formatPlural($size, '1 byte', '@count bytes', array(), array('langcode' => $langcode));
   }
   else {
     $size = $size / Bytes::KILOBYTE; // Convert bytes to kilobytes.

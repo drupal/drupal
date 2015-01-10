@@ -71,7 +71,7 @@ class BlockContentTypeDeleteForm extends EntityConfirmFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $blocks = $this->queryFactory->get('block_content')->condition('type', $this->entity->id())->execute();
     if (!empty($blocks)) {
-      $caption = '<p>' . format_plural(count($blocks), '%label is used by 1 custom block on your site. You can not remove this block type until you have removed all of the %label blocks.', '%label is used by @count custom blocks on your site. You may not remove %label until you have removed all of the %label custom blocks.', array('%label' => $this->entity->label())) . '</p>';
+      $caption = '<p>' . $this->formatPlural(count($blocks), '%label is used by 1 custom block on your site. You can not remove this block type until you have removed all of the %label blocks.', '%label is used by @count custom blocks on your site. You may not remove %label until you have removed all of the %label custom blocks.', array('%label' => $this->entity->label())) . '</p>';
       $form['description'] = array('#markup' => $caption);
       return $form;
     }

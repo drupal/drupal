@@ -190,7 +190,7 @@ function node_title_list(StatementInterface $result, $title = NULL) {
   foreach ($result as $row) {
     // Do not use $node->label() or $node->urlInfo() here, because we only have
     // database rows, not actual nodes.
-    $options = !empty($row->comment_count) ? array('attributes' => array('title' => format_plural($row->comment_count, '1 comment', '@count comments'))) : array();
+    $options = !empty($row->comment_count) ? array('attributes' => array('title' => \Drupal::translation()->formatPlural($row->comment_count, '1 comment', '@count comments'))) : array();
     $items[] = \Drupal::l($row->title, new Url('entity.node.canonical', ['node' => $row->nid], $options));
     $num_rows = TRUE;
   }

@@ -34,7 +34,8 @@ class LocalePluralFormatTest extends WebTestBase {
   }
 
   /**
-   * Tests locale_get_plural() and format_plural() functionality.
+   * Tests locale_get_plural() and \Drupal::translation()->formatPlural()
+   * functionality.
    */
   public function testGetPluralFormat() {
     // Import some .po files with formulas to set up the environment.
@@ -129,7 +130,7 @@ class LocalePluralFormatTest extends WebTestBase {
         // expected index as per the logic for translation lookups.
         $expected_plural_index = ($count == 1) ? 0 : $expected_plural_index;
         $expected_plural_string = str_replace('@count', $count, $plural_strings[$langcode][$expected_plural_index]);
-        $this->assertIdentical(format_plural($count, '1 hour', '@count hours', array(), array('langcode' => $langcode)), $expected_plural_string, 'Plural translation of 1 hours / @count hours for count ' . $count . ' in ' . $langcode . ' is ' . $expected_plural_string);
+        $this->assertIdentical(\Drupal::translation()->formatPlural($count, '1 hour', '@count hours', array(), array('langcode' => $langcode)), $expected_plural_string, 'Plural translation of 1 hours / @count hours for count ' . $count . ' in ' . $langcode . ' is ' . $expected_plural_string);
       }
     }
   }
@@ -217,7 +218,7 @@ class LocalePluralFormatTest extends WebTestBase {
     // langcode here because the language will be English by default and will
     // not save our source string for performance optimization if we do not ask
     // specifically for a language.
-    format_plural(1, '1 day', '@count days', array(), array('langcode' => 'fr'));
+    \Drupal::translation()->formatPlural(1, '1 day', '@count days', array(), array('langcode' => 'fr'));
     $lid = db_query("SELECT lid FROM {locales_source} WHERE source = :source AND context = ''", array(':source' => "1 day" . LOCALE_PLURAL_DELIMITER . "@count days"))->fetchField();
     // Look up editing page for this plural string and check fields.
     $search = array(

@@ -112,7 +112,7 @@ function _update_manager_check_backends(&$form, $operation) {
     $backend_names[] = $backend['title'];
   }
   if ($operation == 'update') {
-    $form['available_backends']['#markup'] = format_plural(
+    $form['available_backends']['#markup'] = \Drupal::translation()->formatPlural(
       count($available_backends),
       'Updating modules and themes requires <strong>@backends access</strong> to your server. See the <a href="@handbook_url">handbook</a> for other update methods.',
       'Updating modules and themes requires access to your server via one of the following methods: <strong>@backends</strong>. See the <a href="@handbook_url">handbook</a> for other update methods.',
@@ -122,7 +122,7 @@ function _update_manager_check_backends(&$form, $operation) {
       ));
   }
   else {
-    $form['available_backends']['#markup'] = format_plural(
+    $form['available_backends']['#markup'] = \Drupal::translation()->formatPlural(
       count($available_backends),
       'Installing modules and themes requires <strong>@backends access</strong> to your server. See the <a href="@handbook_url">handbook</a> for other installation methods.',
       'Installing modules and themes requires access to your server via one of the following methods: <strong>@backends</strong>. See the <a href="@handbook_url">handbook</a> for other installation methods.',

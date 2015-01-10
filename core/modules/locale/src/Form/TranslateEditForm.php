@@ -125,7 +125,7 @@ class TranslateEditForm extends TranslateFormBase {
             for ($i = 0; $i < $plural_formulas[$langcode]['plurals']; $i++) {
               $form['strings'][$string->lid]['translations'][$i] = array(
                 '#type' => 'textarea',
-                '#title' => ($i == 0 ? $this->t('Singular form') : format_plural($i, 'First plural form', '@count. plural form')),
+                '#title' => ($i == 0 ? $this->t('Singular form') : $this->formatPlural($i, 'First plural form', '@count. plural form')),
                 '#rows' => $rows,
                 '#default_value' => isset($translation_array[$i]) ? $translation_array[$i] : '',
                 '#attributes' => array('lang' => $langcode),

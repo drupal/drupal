@@ -52,7 +52,7 @@ function statistics_node_links_alter(array &$node_links, NodeInterface $entity, 
     if (\Drupal::currentUser()->hasPermission('view post access counter')) {
       $statistics = statistics_get($entity->id());
       if ($statistics) {
-        $links['statistics_counter']['title'] = format_plural($statistics['totalcount'], '1 view', '@count views');
+        $links['statistics_counter']['title'] = \Drupal::translation()->formatPlural($statistics['totalcount'], '1 view', '@count views');
         $node_links['statistics'] = array(
           '#theme' => 'links__node__statistics',
           '#links' => $links,

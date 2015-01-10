@@ -159,7 +159,7 @@ function _node_mass_update_batch_finished($success, $results, $operations) {
   }
   else {
     drupal_set_message(t('An error occurred and processing did not complete.'), 'error');
-    $message = format_plural(count($results), '1 item successfully processed:', '@count items successfully processed:');
+    $message = \Drupal::translation()->formatPlural(count($results), '1 item successfully processed:', '@count items successfully processed:');
     $item_list = array(
       '#theme' => 'item_list',
       '#items' => $results,

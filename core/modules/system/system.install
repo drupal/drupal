@@ -606,7 +606,7 @@ function system_requirements($phase) {
       $requirements['disabled_modules'] = array(
         'severity' => REQUIREMENT_ERROR,
         'title' => t('Disabled modules'),
-        'value' => format_plural(count($modules), 'The %modules module is disabled.', 'The following modules are disabled: %modules', array('%modules' => implode(', ', $modules))),
+        'value' => \Drupal::translation()->formatPlural(count($modules), 'The %modules module is disabled.', 'The following modules are disabled: %modules', array('%modules' => implode(', ', $modules))),
         'description' => t('Drupal 8 no longer supports disabled modules. Please either enable or uninstall them before upgrading.'),
       );
     }

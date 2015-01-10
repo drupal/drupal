@@ -74,7 +74,7 @@ class InfoParserUnitTest extends KernelTestBase {
       $this->fail('Expected InfoParserException not thrown when reading missing_key.info.txt');
     }
     catch (InfoParserException $e) {
-      $expected_message = "Missing required key (type) in $filename.";
+      $expected_message = "Missing required keys (type) in $filename.";
       $this->assertEqual($e->getMessage(), $expected_message);
     }
 

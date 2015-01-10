@@ -41,7 +41,7 @@ class InfoParser implements InfoParserInterface {
         }
         $missing_keys = array_diff($this->getRequiredKeys(), array_keys(static::$parsedInfos[$filename]));
         if (!empty($missing_keys)) {
-          $message = format_plural(count($missing_keys), 'Missing required key (!missing_keys) in !file.', 'Missing required keys (!missing_keys) in !file.', array('!missing_keys' => implode(', ', $missing_keys), '!file' => $filename));
+          $message = String::format('Missing required keys (!missing_keys) in !file.', array('!missing_keys' => implode(', ', $missing_keys), '!file' => $filename));
           throw new InfoParserException($message);
         }
         if (isset(static::$parsedInfos[$filename]['version']) && static::$parsedInfos[$filename]['version'] === 'VERSION') {

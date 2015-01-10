@@ -420,10 +420,10 @@ function update_fetch_data_finished($success, $results) {
   if ($success) {
     if (!empty($results)) {
       if (!empty($results['updated'])) {
-        drupal_set_message(format_plural($results['updated'], 'Checked available update data for one project.', 'Checked available update data for @count projects.'));
+        drupal_set_message(\Drupal::translation()->formatPlural($results['updated'], 'Checked available update data for one project.', 'Checked available update data for @count projects.'));
       }
       if (!empty($results['failures'])) {
-        drupal_set_message(format_plural($results['failures'], 'Failed to get available update data for one project.', 'Failed to get available update data for @count projects.'), 'error');
+        drupal_set_message(\Drupal::translation()->formatPlural($results['failures'], 'Failed to get available update data for one project.', 'Failed to get available update data for @count projects.'), 'error');
       }
     }
   }
@@ -652,7 +652,7 @@ function update_verify_update_archive($project, $archive_file, $directory) {
     $errors[] = t('%archive_file does not contain any .info.yml files.', array('%archive_file' => drupal_basename($archive_file)));
   }
   elseif (!$compatible_project) {
-    $errors[] = format_plural(
+    $errors[] = \Drupal::translation()->formatPlural(
       count($incompatible),
       '%archive_file contains a version of %names that is not compatible with Drupal !version.',
       '%archive_file contains versions of modules or themes that are not compatible with Drupal !version: %names',

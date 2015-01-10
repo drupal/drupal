@@ -80,7 +80,7 @@ class ShortcutSetDeleteForm extends EntityConfirmFormBase {
     $number = $this->storage->countAssignedUsers($this->entity);
     $info = '';
     if ($number) {
-      $info .= '<p>' . format_plural($number,
+      $info .= '<p>' . $this->formatPlural($number,
         '1 user has chosen or been assigned to this shortcut set.',
         '@count users have chosen or been assigned to this shortcut set.') . '</p>';
     }

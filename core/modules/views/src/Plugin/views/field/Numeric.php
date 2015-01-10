@@ -150,7 +150,7 @@ class Numeric extends FieldPluginBase {
 
     // Should we format as a plural.
     if (!empty($this->options['format_plural'])) {
-      $value = format_plural($value, $this->options['format_plural_singular'], $this->options['format_plural_plural']);
+      $value = $this->formatPlural($value, $this->options['format_plural_singular'], $this->options['format_plural_plural']);
     }
 
     return $this->sanitizeValue($this->options['prefix'], 'xss')

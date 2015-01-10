@@ -175,7 +175,7 @@ function template_preprocess_file_upload_help(&$variables) {
       $descriptions[] = t('Unlimited number of files can be uploaded to this field.');
     }
     else {
-      $descriptions[] = format_plural($cardinality, 'One file only.', 'Maximum @count files.');
+      $descriptions[] = \Drupal::translation()->formatPlural($cardinality, 'One file only.', 'Maximum @count files.');
     }
   }
   if (isset($upload_validators['file_validate_size'])) {

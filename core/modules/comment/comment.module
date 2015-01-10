@@ -530,7 +530,7 @@ function comment_node_search_result(EntityInterface $node) {
   // Do not make a string if there are no comment fields, or no comments exist
   // or all comment fields are hidden.
   if ($comments > 0 || $open) {
-    return array('comment' => format_plural($comments, '1 comment', '@count comments'));
+    return array('comment' => \Drupal::translation()->formatPlural($comments, '1 comment', '@count comments'));
   }
 }
 

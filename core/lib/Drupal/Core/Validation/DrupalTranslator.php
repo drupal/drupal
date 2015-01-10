@@ -41,7 +41,7 @@ class DrupalTranslator implements TranslatorInterface {
     if (!isset($ids[1])) {
       throw new \InvalidArgumentException(sprintf('The message "%s" cannot be pluralized, because it is missing a plural (e.g. "There is one apple|There are @count apples").', $id));
     }
-    return format_plural($number, $ids[0], $ids[1], $this->processParameters($parameters), $this->getOptions($domain, $locale));
+    return \Drupal::translation()->formatPlural($number, $ids[0], $ids[1], $this->processParameters($parameters), $this->getOptions($domain, $locale));
   }
 
   /**

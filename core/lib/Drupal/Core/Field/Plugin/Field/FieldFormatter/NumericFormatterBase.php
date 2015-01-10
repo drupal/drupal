@@ -77,8 +77,8 @@ abstract class NumericFormatterBase extends FormatterBase {
       if ($this->getSetting('prefix_suffix')) {
         $prefixes = isset($settings['prefix']) ? array_map(array($this, 'fieldFilterXss'), explode('|', $settings['prefix'])) : array('');
         $suffixes = isset($settings['suffix']) ? array_map(array($this, 'fieldFilterXss'), explode('|', $settings['suffix'])) : array('');
-        $prefix = (count($prefixes) > 1) ? format_plural($item->value, $prefixes[0], $prefixes[1]) : $prefixes[0];
-        $suffix = (count($suffixes) > 1) ? format_plural($item->value, $suffixes[0], $suffixes[1]) : $suffixes[0];
+        $prefix = (count($prefixes) > 1) ? $this->formatPlural($item->value, $prefixes[0], $prefixes[1]) : $prefixes[0];
+        $suffix = (count($suffixes) > 1) ? $this->formatPlural($item->value, $suffixes[0], $suffixes[1]) : $suffixes[0];
         $output = $prefix . $output . $suffix;
       }
       // Output the raw value in a content attribute if the text of the HTML

@@ -135,7 +135,7 @@ class Name extends InOperator {
     }
 
     if ($missing) {
-      $form_state->setError($form, format_plural(count($missing), 'Unable to find user: @users', 'Unable to find users: @users', array('@users' => implode(', ', array_keys($missing)))));
+      $form_state->setError($form, $this->formatPlural(count($missing), 'Unable to find user: @users', 'Unable to find users: @users', array('@users' => implode(', ', array_keys($missing)))));
     }
 
     return $uids;

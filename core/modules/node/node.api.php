@@ -380,7 +380,7 @@ function hook_node_access(\Drupal\node\NodeInterface $node, $op, \Drupal\Core\Se
  */
 function hook_node_search_result(\Drupal\node\NodeInterface $node, $langcode) {
   $rating = db_query('SELECT SUM(points) FROM {my_rating} WHERE nid = :nid', array('nid' => $node->id()))->fetchField();
-  return array('rating' => format_plural($rating, '1 point', '@count points'));
+  return array('rating' => \Drupal::translation()->formatPlural($rating, '1 point', '@count points'));
 }
 
 /**
