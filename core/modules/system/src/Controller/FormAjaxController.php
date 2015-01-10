@@ -99,7 +99,7 @@ class FormAjaxController implements ContainerInjectionInterface {
     }
     $callback = $form_state->prepareCallback($callback);
     if (empty($callback) || !is_callable($callback)) {
-      throw new HttpException(500, t('Internal Server Error'));
+      throw new HttpException(500, 'The specified #ajax callback is empty or not callable.');
     }
     /** @var \Drupal\Core\Ajax\AjaxResponse $response */
     $response = call_user_func_array($callback, [&$form, &$form_state]);
