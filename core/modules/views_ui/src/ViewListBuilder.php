@@ -197,8 +197,8 @@ class ViewListBuilder extends ConfigEntityListBuilder {
       ),
     );
 
-    $list['enabled']['heading']['#markup'] = '<h2>' . $this->t('Enabled') . '</h2>';
-    $list['disabled']['heading']['#markup'] = '<h2>' . $this->t('Disabled') . '</h2>';
+    $list['enabled']['heading']['#markup'] = '<h2>' . $this->t('Enabled', array(), array('context' => 'Plural')) . '</h2>';
+    $list['disabled']['heading']['#markup'] = '<h2>' . $this->t('Disabled', array(), array('context' => 'Plural')) . '</h2>';
     foreach (array('enabled', 'disabled') as $status) {
       $list[$status]['#type'] = 'container';
       $list[$status]['#attributes'] = array('class' => array('views-list-section', $status));

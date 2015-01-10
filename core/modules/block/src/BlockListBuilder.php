@@ -215,7 +215,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
         ),
       );
       $form['blocks'][$region]['title'] = array(
-        '#markup' => $region != BlockInterface::BLOCK_REGION_NONE ? $title : t('Disabled'),
+        '#markup' => $region != BlockInterface::BLOCK_REGION_NONE ? $title : t('Disabled', array(), array('context' => 'Plural')),
         '#wrapper_attributes' => array(
           'colspan' => 5,
         ),

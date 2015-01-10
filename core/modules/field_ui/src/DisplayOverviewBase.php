@@ -149,7 +149,7 @@ abstract class DisplayOverviewBase extends FormBase {
         'message' => $this->t('No field is displayed.')
       ),
       'hidden' => array(
-        'title' => $this->t('Disabled'),
+        'title' => $this->t('Disabled', array(), array('context' => 'Plural')),
         'message' => $this->t('No field is hidden.')
       ),
     );
