@@ -111,6 +111,26 @@ class LoadEntity extends PluginBase implements MigrateLoadInterface {
                 ],
               ];
             }
+            elseif ($data['type'] === 'text') {
+              $migration->process[$field_name . '/value'] = $field_name . '/value';
+              // See d6_user, signature_format for an example of the YAML that
+              // represents this process array.
+              $migration->process[$field_name . '/format'] = [
+                [
+                  'plugin' => 'static_map',
+                  'bypass' => TRUE,
+                  'source' => $field_name . '/format',
+                  'map' => [0 => NULL]
+                ],
+                ['plugin' => 'skip_process_on_empty'],
+                [
+                  'plugin' => 'migration',
+                  'migration' => 'd6_filter_format',
+                  'source' => $field_name . '/format',
+                  'no_stub' => 1,
+                ],
+              ];
+            }
             else {
               $migration->process[$field_name] = $field_name;
             }

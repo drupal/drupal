@@ -268,7 +268,7 @@ class CckFieldValues extends DrupalSqlBase implements SourceEntityInterface, Cck
   public function fieldData() {
     $field_info = $this->getSourceFieldInfo($this->configuration['bundle']);
     $field_info['nid'] = ['type' => 'number'];
-    $field_info['type'] = ['type' => 'text'];
+    $field_info['type'] = ['type' => 'varchar'];
     return $field_info;
   }
 

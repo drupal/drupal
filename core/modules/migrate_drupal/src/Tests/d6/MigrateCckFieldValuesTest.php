@@ -167,7 +167,7 @@ class MigrateCckFieldValuesTest extends MigrateNodeTestBase {
   public function testCckFields() {
     $node = Node::load(1);
     $this->assertEqual($node->field_test->value, 'This is a shared text field', "Shared field storage field is correct.");
-    $this->assertEqual($node->field_test->format, 1, "Shared field storage field with multiple columns is correct.");
+    $this->assertEqual($node->field_test->format, 'filtered_html');
     $this->assertEqual($node->field_test_two->value, 10, 'Multi field storage field is correct');
     $this->assertEqual($node->field_test_two[1]->value, 20, 'Multi field second value is correct.');
     $this->assertEqual($node->field_test_three->value, '42.42', 'Single field second value is correct.');
