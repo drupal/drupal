@@ -32,9 +32,9 @@ class RouterTest extends WebTestBase {
     $this->drupalGet('router_test/test1');
     $this->assertRaw('test1', 'The correct string was returned because the route was successful.');
 
-    // Check expected headers from FinishResponseSubscriber
+    // Check expected headers from FinishResponseSubscriber.
     $headers = $this->drupalGetHeaders();
-    $this->assertEqual($headers['x-ua-compatible'], 'IE=edge,chrome=1');
+    $this->assertEqual($headers['x-ua-compatible'], 'IE=edge');
     $this->assertEqual($headers['content-language'], 'en');
     $this->assertEqual($headers['x-content-type-options'], 'nosniff');
 

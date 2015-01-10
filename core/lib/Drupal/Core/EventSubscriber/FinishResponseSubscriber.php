@@ -90,8 +90,8 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
     $response = $event->getResponse();
 
     // Set the X-UA-Compatible HTTP header to force IE to use the most recent
-    // rendering engine or use Chrome's frame rendering engine if available.
-    $response->headers->set('X-UA-Compatible', 'IE=edge,chrome=1', FALSE);
+    // rendering engine.
+    $response->headers->set('X-UA-Compatible', 'IE=edge', FALSE);
 
     // Set the Content-language header.
     $response->headers->set('Content-language', $this->languageManager->getCurrentLanguage()->getId());
