@@ -193,11 +193,11 @@ class Drupal6FieldInstance extends Drupal6DumpBase {
           'format' => 'above',
         ),
         'teaser' => array(
-          'format' => 'unformatted',
+          'format' => 'us_0',
           'exclude' => 0,
         ),
         'full' => array(
-          'format' => 'us_3',
+          'format' => 'us_0',
           'exclude' => 0,
         ),
         4 => array(
@@ -708,7 +708,7 @@ class Drupal6FieldInstance extends Drupal6DumpBase {
           'exclude' => 0,
         ),
         'full' => array(
-          'format' => 'us_3',
+          'format' => 'us_0',
           'exclude' => 0,
         ),
         4 => array(
@@ -808,7 +808,7 @@ class Drupal6FieldInstance extends Drupal6DumpBase {
           'exclude' => 0,
         ),
         'full' => array(
-          'format' => 'us_3',
+          'format' => 'us_0',
           'exclude' => 0,
         ),
         4 => array(
@@ -840,7 +840,7 @@ class Drupal6FieldInstance extends Drupal6DumpBase {
           'exclude' => 0,
         ),
         'full' => array(
-          'format' => 'us_3',
+          'format' => 'us_0',
           'exclude' => 0,
         ),
         4 => array(

@@ -57,9 +57,9 @@ process:
             plain: basic_string
           number_integer:
             default: number_integer
-            us_3: number_integer
-            be_3: number_integer
-            fr_3: number_integer
+            us_0: number_integer
+            be_0: number_integer
+            fr_0: number_integer
             unformatted: number_unformatted
           number_float:
             default: number_decimal
@@ -180,61 +180,6 @@ process:
         - module
         - 'display_settings/format'
       map:
-        number:
-          us_0:
-            scale: 0
-            decimal_separator: .
-            thousand_separator: ','
-            prefix_suffix: true
-          us_1:
-            scale: 1
-            decimal_separator: .
-            thousand_separator: ','
-            prefix_suffix: true
-          us_2:
-            scale: 2
-            decimal_separator: .
-            thousand_separator: ','
-            prefix_suffix: true
-          us_3:
-            thousand_separator: ','
-            prefix_suffix: true
-          be_0:
-            scale: 0
-            decimal_separator: ','
-            thousand_separator: .
-            prefix_suffix: true
-          be_1:
-            scale: 1
-            decimal_separator: ','
-            thousand_separator: .
-            prefix_suffix: true
-          be_2:
-            scale: 2
-            decimal_separator: ','
-            thousand_separator: .
-            prefix_suffix: true
-          be_3:
-            thousand_separator: .
-            prefix_suffix: true
-          fr_0:
-            scale: 0
-            decimal_separator: ','
-            thousand_separator: ' '
-            prefix_suffix: true
-          fr_1:
-            scale: 1
-            decimal_separator: ','
-            thousand_separator: ' '
-            prefix_suffix: true
-          fr_2:
-            scale: 2
-            decimal_separator: ','
-            thousand_separator: ' '
-            prefix_suffix: true
-          fr_3:
-            thousand_separator: ' '
-            prefix_suffix: true
         link:
           default:
             trim_length: '80'
