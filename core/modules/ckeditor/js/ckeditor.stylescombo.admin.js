@@ -31,7 +31,7 @@
           if (!_.isEqual(previousStylesSet, stylesSet)) {
             previousStylesSet = stylesSet;
             $ckeditorActiveToolbar.trigger('CKEditorPluginSettingsChanged', [
-              { stylesSet: stylesSet }
+              {stylesSet: stylesSet}
             ]);
           }
         });
@@ -81,7 +81,7 @@
         // Build the data structure CKEditor's stylescombo plugin expects.
         // @see http://docs.cksource.com/CKEditor_3.x/Developers_Guide/Styles
         stylesSet.push({
-          attributes: { class: classes.join(' ') },
+          attributes: {'class': classes.join(' ')},
           element: element,
           name: label
         });
@@ -103,7 +103,7 @@
         }
         else {
           var count = $.trim(styles).split("\n").length;
-          return Drupal.t('@count styles configured', { '@count': count});
+          return Drupal.t('@count styles configured', {'@count': count});
         }
       });
     }

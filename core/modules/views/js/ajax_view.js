@@ -56,7 +56,7 @@
       setClick: true,
       event: 'click',
       selector: selector,
-      progress: { type: 'fullscreen' }
+      progress: {type: 'fullscreen'}
     };
 
     this.settings = settings;

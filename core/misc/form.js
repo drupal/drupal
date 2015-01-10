@@ -128,6 +128,7 @@
       var $context = $(context);
       var contextIsForm = $context.is('form');
       var $forms = (contextIsForm ? $context : $context.find('form')).once('form-updated');
+      var formFields;
 
       if ($forms.length) {
         // Initialize form behaviors, use $.makeArray to be able to use native
@@ -135,7 +136,7 @@
         $.makeArray($forms).forEach(function (form) {
           var events = 'change.formUpdated keypress.formUpdated';
           var eventHandler = debounce(function (event) { triggerFormUpdated(event.target); }, 300);
-          var formFields = fieldsList(form).join(',');
+          formFields = fieldsList(form).join(',');
 
           form.setAttribute('data-drupal-form-fields', formFields);
           $(form).on(events, eventHandler);
@@ -143,7 +144,7 @@
       }
       // On ajax requests context is the form element.
       if (contextIsForm) {
-        var formFields = fieldsList(context).join(',');
+        formFields = fieldsList(context).join(',');
         // @todo replace with form.getAttribute() when #1979468 is in.
         var currentFields = $(context).attr('data-drupal-form-fields');
         // if there has been a change in the fields or their order, trigger

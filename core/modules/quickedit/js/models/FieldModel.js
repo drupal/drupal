@@ -147,7 +147,7 @@
         // Find all instances of fields that display the same logical field (same
         // entity, same field, just a different instance and maybe a different
         // view mode).
-        .where({ logicalFieldID: currentField.get('logicalFieldID') })
+        .where({logicalFieldID: currentField.get('logicalFieldID')})
         .forEach(function (field) {
           // Ignore the current field.
           if (field === currentField) {

@@ -166,7 +166,7 @@
         selector: '.ckeditor-dialog-loading-link',
         url: url,
         event: 'ckeditor-internal.ckeditor',
-        progress: { 'type': 'throbber' },
+        progress: {'type': 'throbber'},
         submit: {
           editor_object: existingValues
         }
@@ -177,7 +177,7 @@
 
       // After a short delay, show "Loading…" message.
       window.setTimeout(function () {
-        $content.find('span').animate({ top: '0px' });
+        $content.find('span').animate({top: '0px'});
       }, 1000);
 
       // Store the save callback to be executed when this dialog is closed.
@@ -187,7 +187,7 @@
 
   // Respond to new dialogs that are opened by CKEditor, closing the AJAX loader.
   $(window).on('dialog:beforecreate', function (e, dialog, $element, settings) {
-    $('.ckeditor-dialog-loading').animate({ top: '-40px' }, function () {
+    $('.ckeditor-dialog-loading').animate({top: '-40px'}, function () {
       $(this).remove();
     });
   });

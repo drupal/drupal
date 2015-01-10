@@ -25,7 +25,7 @@
         var $link = $('<span class="field-edit-link"> (<button type="button" class="link link-edit-summary">' + Drupal.t('Hide summary') + '</button>)</span>');
         var $button = $link.find('button');
         var toggleClick = true;
-        $link.on('click',function (e) {
+        $link.on('click', function (e) {
           if (toggleClick) {
             $summary.hide();
             $button.html(Drupal.t('Edit summary'));

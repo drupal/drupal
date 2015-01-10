@@ -102,7 +102,7 @@
       html += ' id="' + settings.id + '"';
     }
     html += '>';
-    html += Drupal.theme('quickeditButtons', { buttons: settings.buttons });
+    html += Drupal.theme('quickeditButtons', {buttons: settings.buttons});
     html += '</div>';
     return html;
   };
@@ -133,7 +133,7 @@
       var attrMap = settings.buttons[i].attributes || {};
       for (var attr in attrMap) {
         if (attrMap.hasOwnProperty(attr)) {
-          attributes.push(attr + ((attrMap[attr]) ? '="' + attrMap[attr] + '"' : '' ));
+          attributes.push(attr + ((attrMap[attr]) ? '="' + attrMap[attr] + '"' : ''));
         }
       }
       html += '<button type="' + button.type + '" class="' + button.classes + '"' + ' ' + attributes.join(' ') + '>';

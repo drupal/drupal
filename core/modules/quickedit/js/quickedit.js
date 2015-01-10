@@ -140,7 +140,7 @@
       },
       get: function (fieldID, key) {
         var metadata = JSON.parse(storage.getItem(this._prefixFieldID(fieldID)));
-        return (key === undefined) ? metadata : metadata[key];
+        return (typeof key === 'undefined') ? metadata : metadata[key];
       },
       _prefixFieldID: function (fieldID) {
         return 'Drupal.quickedit.metadata.' + fieldID;
@@ -295,13 +295,13 @@
 
     // If an EntityModel for this field already exists (and hence also a "Quick
     // edit" contextual link), then initialize it immediately.
-    if (Drupal.quickedit.collections.entities.findWhere({ entityID: entityID, entityInstanceID: entityInstanceID })) {
+    if (Drupal.quickedit.collections.entities.findWhere({entityID: entityID, entityInstanceID: entityInstanceID})) {
       initializeField(fieldElement, fieldID, entityID, entityInstanceID);
     }
     // Otherwise: queue the field. It is now available to be set up when its
     // corresponding entity becomes in-place editable.
     else {
-      fieldsAvailableQueue.push({ el: fieldElement, fieldID: fieldID, entityID: entityID, entityInstanceID: entityInstanceID });
+      fieldsAvailableQueue.push({el: fieldElement, fieldID: fieldID, entityID: entityID, entityInstanceID: entityInstanceID});
     }
   }
 
@@ -417,9 +417,9 @@
     var loadEditorsAjax = new Drupal.ajax(id, $el, {
       url: Drupal.url('quickedit/attachments'),
       event: 'quickedit-internal.quickedit',
-      submit: { 'editors[]': missingEditors },
+      submit: {'editors[]': missingEditors},
       // No progress indicator.
-      progress: { type: null }
+      progress: {type: null}
     });
     // Implement a scoped insert AJAX command: calls the callback after all AJAX
     // command functions have been executed (hence the deferred calling).

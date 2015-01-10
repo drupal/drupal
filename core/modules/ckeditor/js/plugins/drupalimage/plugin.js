@@ -180,7 +180,7 @@
       editor.addCommand('editdrupalimage', {
         allowedContent: 'img[alt,!src,width,height,!data-entity-type,!data-entity-uuid]',
         requiredContent: 'img[alt,src,width,height,data-entity-type,data-entity-uuid]',
-        modes: { wysiwyg: 1 },
+        modes: {wysiwyg: 1},
         canUndo: true,
         exec: function (editor, data) {
           var dialogSettings = {

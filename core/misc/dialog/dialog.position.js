@@ -3,7 +3,7 @@
   "use strict";
 
   // autoResize option will turn off resizable and draggable.
-  drupalSettings.dialog = $.extend({ autoResize: true, maxHeight: '95%' }, drupalSettings.dialog);
+  drupalSettings.dialog = $.extend({autoResize: true, maxHeight: '95%'}, drupalSettings.dialog);
 
   /**
    * Resets the current options for positioning.
@@ -61,10 +61,10 @@
   $(window).on({
     'dialog:aftercreate': function (event, dialog, $element, settings) {
       var autoResize = debounce(resetSize, 20);
-      var eventData = { settings: settings, $element: $element };
+      var eventData = {settings: settings, $element: $element};
       if (settings.autoResize === true || settings.autoResize === 'true') {
         $element
-          .dialog('option', { resizable: false, draggable: false })
+          .dialog('option', {resizable: false, draggable: false})
           .dialog('widget').css('position', 'fixed');
         $(window)
           .on('resize.dialogResize scroll.dialogResize', eventData, autoResize)

@@ -39,11 +39,11 @@
       });
       $context.find('#edit-display').drupalSetSummary(function (context) {
         var vals = [];
-        var $context = $(context);
-        $context.find('input:checked').next('label').each(function () {
+        var $editContext = $(context);
+        $editContext.find('input:checked').next('label').each(function () {
           vals.push(Drupal.checkPlain($(this).text()));
         });
-        if (!$context.find('#edit-display-submitted').is(':checked')) {
+        if (!$editContext.find('#edit-display-submitted').is(':checked')) {
           vals.unshift(Drupal.t("Don't display post information"));
         }
         return vals.join(', ');

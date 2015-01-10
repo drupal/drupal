@@ -516,7 +516,7 @@
           // When the link is clicked, dynamically click the corresponding form
           // button.
           .once('views-rearrange-filter-handler')
-          .on('click.views-rearrange-filter-handler', { buttonId: buttonId }, $.proxy(this, 'clickRemoveGroupButton'));
+          .on('click.views-rearrange-filter-handler', {buttonId: buttonId}, $.proxy(this, 'clickRemoveGroupButton'));
       }
     },
 

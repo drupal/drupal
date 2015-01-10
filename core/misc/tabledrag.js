@@ -62,7 +62,7 @@
     this.rtl = $(this.table).css('direction') === 'rtl' ? -1 : 1; // Direction of the table.
 
     // Configure the scroll settings.
-    this.scrollSettings = { amount: 4, interval: 50, trigger: 70 };
+    this.scrollSettings = {amount: 4, interval: 50, trigger: 70};
     this.scrollInterval = null;
     this.scrollY = 0;
     this.windowHeight = 0;
@@ -309,7 +309,7 @@
   Drupal.tableDrag.prototype.makeDraggable = function (item) {
     var self = this;
     var $item = $(item);
-    //Add a class to the title link
+    // Add a class to the title link
     $item.find('td:first a').addClass('menu-item__link');
     // Create the handle.
     var handle = $('<a href="#" class="tabledrag-handle"><div class="handle">&nbsp;</div></a>').attr('title', Drupal.t('Drag to re-order'));
@@ -639,7 +639,7 @@
    */
   Drupal.tableDrag.prototype.pointerCoords = function (event) {
     if (event.pageX || event.pageY) {
-      return { x: event.pageX, y: event.pageY };
+      return {x: event.pageX, y: event.pageY};
     }
     return {
       x: event.clientX + document.body.scrollLeft - document.body.clientLeft,
@@ -654,7 +654,7 @@
   Drupal.tableDrag.prototype.getPointerOffset = function (target, event) {
     var docPos = $(target).offset();
     var pointerPos = this.pointerCoords(event);
-    return { x: pointerPos.x - docPos.left, y: pointerPos.y - docPos.top };
+    return {x: pointerPos.x - docPos.left, y: pointerPos.y - docPos.top};
   };
 
   /**
@@ -890,7 +890,13 @@
     var b = document.body;
 
     var windowHeight = this.windowHeight = window.innerHeight || (de.clientHeight && de.clientWidth !== 0 ? de.clientHeight : b.offsetHeight);
-    var scrollY = this.scrollY = (document.all ? (!de.scrollTop ? b.scrollTop : de.scrollTop) : (window.pageYOffset ? window.pageYOffset : window.scrollY));
+    var scrollY;
+    if (document.all) {
+      scrollY = this.scrollY = !de.scrollTop ? b.scrollTop : de.scrollTop;
+    }
+    else {
+      scrollY = this.scrollY = window.pageYOffset ? window.pageYOffset : window.scrollY;
+    }
     var trigger = this.scrollSettings.trigger;
     var delta = 0;
 
@@ -1120,7 +1126,7 @@
       }
     }
 
-    return { 'min': minIndent, 'max': maxIndent };
+    return {'min': minIndent, 'max': maxIndent};
   };
 
   /**

@@ -207,7 +207,7 @@
           farb.linkTo(function () {}).setColor('#000').linkTo(this);
 
           // Add lock.
-          var i = inputs.length;
+          i = inputs.length;
           if (inputs.length) {
             var toggleClick = true;
             var lock = $('<div class="lock"></div>').on('click', function () {

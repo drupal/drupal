@@ -13,7 +13,7 @@
       editor.addCommand('drupallink', {
         allowedContent: 'a[!href,target]',
         requiredContent: 'a[href]',
-        modes: { wysiwyg: 1 },
+        modes: {wysiwyg: 1},
         canUndo: true,
         exec: function (editor) {
           var linkElement = getSelectedLink(editor);
@@ -26,8 +26,8 @@
 
             // Populate an array with the link's current attributes.
             var attribute = null, attributeName;
-            for (var key = 0; key < linkDOMElement.attributes.length; key++) {
-              attribute = linkDOMElement.attributes.item(key);
+            for (var attrIndex = 0; attrIndex < linkDOMElement.attributes.length; attrIndex++) {
+              attribute = linkDOMElement.attributes.item(attrIndex);
               attributeName = attribute.nodeName.toLowerCase();
               // Don't consider data-cke-saved- attributes; they're just there to
               // work around browser quirks.
@@ -64,7 +64,7 @@
               }
 
               // Create the new link by applying a style to the new text.
-              var style = new CKEDITOR.style({ element: 'a', attributes: returnValues.attributes });
+              var style = new CKEDITOR.style({element: 'a', attributes: returnValues.attributes});
               style.type = CKEDITOR.STYLE_INLINE;
               style.applyToRange(range);
               range.select();
@@ -74,17 +74,17 @@
             }
             // Update the link properties.
             else if (linkElement) {
-              for (var key in returnValues.attributes) {
-                if (returnValues.attributes.hasOwnProperty(key)) {
+              for (var attrName in returnValues.attributes) {
+                if (returnValues.attributes.hasOwnProperty(attrName)) {
                   // Update the property if a value is specified.
-                  if (returnValues.attributes[key].length > 0) {
-                    var value = returnValues.attributes[key];
-                    linkElement.data('cke-saved-' + key, value);
-                    linkElement.setAttribute(key, value);
+                  if (returnValues.attributes[attrName].length > 0) {
+                    var value = returnValues.attributes[attrName];
+                    linkElement.data('cke-saved-' + attrName, value);
+                    linkElement.setAttribute(attrName, value);
                   }
                   // Delete the property if set to an empty string.
                   else {
-                    linkElement.removeAttribute(key);
+                    linkElement.removeAttribute(attrName);
                   }
                 }
               }
@@ -111,7 +111,7 @@
         allowedContent: 'a[!href]',
         requiredContent: 'a[href]',
         exec: function (editor) {
-          var style = new CKEDITOR.style({ element: 'a', type: CKEDITOR.STYLE_INLINE, alwaysRemoveElement: 1 });
+          var style = new CKEDITOR.style({element: 'a', type: CKEDITOR.STYLE_INLINE, alwaysRemoveElement: 1});
           editor.removeStyle(style);
         },
         refresh: function (editor, path) {
@@ -125,7 +125,8 @@
         }
       });
 
-      editor.setKeystroke(CKEDITOR.CTRL + 75 /*K*/, 'drupallink');
+      // CTRL + K.
+      editor.setKeystroke(CKEDITOR.CTRL + 75, 'drupallink');
 
       // Add buttons for link and unlink.
       if (editor.ui.addButton) {
@@ -184,7 +185,7 @@
 
           var menu = {};
           if (anchor.getAttribute('href') && anchor.getChildCount()) {
-            menu = { link: CKEDITOR.TRISTATE_OFF, unlink: CKEDITOR.TRISTATE_OFF };
+            menu = {link: CKEDITOR.TRISTATE_OFF, unlink: CKEDITOR.TRISTATE_OFF};
           }
           return menu;
         });

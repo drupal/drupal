@@ -71,7 +71,6 @@
    * @param {Function} response
    */
   function sourceData(request, response) {
-    /*jshint validthis:true */
     var elementId = this.element.attr('id');
 
     if (!(elementId in autocomplete.cache)) {
@@ -115,8 +114,7 @@
       showSuggestions(autocomplete.cache[elementId][term]);
     }
     else {
-      var options = $.extend({ success: sourceCallbackHandler, data: { q: term } }, autocomplete.ajax);
-      /*jshint validthis:true */
+      var options = $.extend({success: sourceCallbackHandler, data: {q: term}}, autocomplete.ajax);
       $.ajax(this.element.attr('data-autocomplete-path'), options);
     }
   }

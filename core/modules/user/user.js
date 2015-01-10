@@ -13,6 +13,7 @@
         var passwordInput = $(this);
         var innerWrapper = $(this).parent();
         var outerWrapper = $(this).parent().parent();
+        var passwordDescription;
 
         // Add identifying class to password element parent.
         innerWrapper.addClass('password-parent');
@@ -28,7 +29,7 @@
           var passwordMeter = '<div class="password-strength"><div class="password-strength__meter"><div class="password-strength__indicator"></div></div><div class="password-strength__title">' + translate.strengthTitle + ' </div><div class="password-strength__text" aria-live="assertive"></div></div>';
           confirmInput.parent().after('<div class="password-suggestions description"></div>');
           innerWrapper.append(passwordMeter);
-          var passwordDescription = outerWrapper.find('div.password-suggestions').hide();
+          passwordDescription = outerWrapper.find('div.password-suggestions').hide();
         }
 
         // Check that password and confirmation inputs match.
@@ -68,10 +69,10 @@
           // Check the value in the confirm input and show results.
           if (confirmInput.val()) {
             passwordCheckMatch(confirmInput.val());
-            confirmResult.css({ visibility: 'visible' });
+            confirmResult.css({visibility: 'visible'});
           }
           else {
-            confirmResult.css({ visibility: 'hidden' });
+            confirmResult.css({visibility: 'hidden'});
           }
         };
 
@@ -170,7 +171,7 @@
 
     // Assemble the final message.
     msg = translate.hasWeaknesses + '<ul><li>' + msg.join('</li><li>') + '</li></ul>';
-    return { strength: strength, message: msg, indicatorText: indicatorText, indicatorClass: indicatorClass };
+    return {strength: strength, message: msg, indicatorText: indicatorText, indicatorClass: indicatorClass};
 
   };
 

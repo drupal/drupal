@@ -77,14 +77,14 @@
      *  - Boolean padding: indicates whether padding should be applied to the
      *    edited element, to guarantee legibility of text.
      *  - Boolean unifiedToolbar: provides the in-place editor with the ability
-     *    to insert its own toolbar UI into Quick Edit's tightly integrated
+     *    to insert its own toolbar UI into Quick Edit's tightly integrated
      *    toolbar.
      *  - Boolean fullWidthToolbar: indicates whether Quick Edit's tightly
      *    integrated toolbar should consume the full width of the element,
      *    rather than being just long enough to accommodate a label.
      */
     getQuickEditUISettings: function () {
-      return { padding: false, unifiedToolbar: false, fullWidthToolbar: false, popup: false };
+      return {padding: false, unifiedToolbar: false, fullWidthToolbar: false, popup: false};
     },
 
     /**
@@ -211,7 +211,7 @@
         // Create a backstage area for storing forms that are hidden from view
         // (hence "backstage" — since the editing doesn't happen in the form, it
         // happens "directly" in the content, the form is only used for saving).
-        var $backstage = $(Drupal.theme('quickeditBackstage', { id: backstageId })).appendTo('body');
+        var $backstage = $(Drupal.theme('quickeditBackstage', {id: backstageId})).appendTo('body');
         // Hidden forms are stuffed into the backstage container for this field.
         var $form = $(form).appendTo($backstage);
         // Disable the browser's HTML5 validation; we only care about server-

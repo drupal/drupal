@@ -122,7 +122,7 @@
       $.ajax({
         url: Drupal.url('comments/render_new_comments_node_links'),
         type: 'POST',
-        data: { 'node_ids[]': nodeIDs, 'field_name': fieldName },
+        data: {'node_ids[]': nodeIDs, 'field_name': fieldName},
         dataType: 'json',
         success: render
       });

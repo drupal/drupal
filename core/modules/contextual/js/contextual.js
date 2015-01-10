@@ -66,14 +66,14 @@
     var model = new contextual.StateModel({
       title: $region.find('h2:first').text().trim()
     });
-    var viewOptions = $.extend({ el: $contextual, model: model }, options);
+    var viewOptions = $.extend({el: $contextual, model: model}, options);
     contextual.views.push({
       visual: new contextual.VisualView(viewOptions),
       aural: new contextual.AuralView(viewOptions),
       keyboard: new contextual.KeyboardView(viewOptions)
     });
     contextual.regionViews.push(new contextual.RegionView(
-      $.extend({ el: $region, model: model }, options))
+      $.extend({el: $region, model: model}, options))
     );
 
     // Add the model to the collection. This must happen after the views have been
@@ -128,7 +128,7 @@
       $trigger.addClass('visually-hidden');
 
       // Adjust nested contextual link's position.
-      $nestedContextual.css({ top: $nestedContextual.position().top + height });
+      $nestedContextual.css({top: $nestedContextual.position().top + height});
     }
   }
 
@@ -178,7 +178,7 @@
         $.ajax({
           url: Drupal.url('contextual/render'),
           type: 'POST',
-          data: { 'ids[]': uncachedIDs },
+          data: {'ids[]': uncachedIDs},
           dataType: 'json',
           success: function (results) {
             _.each(results, function (html, contextualID) {
@@ -192,7 +192,7 @@
                 // Usually there will only be one placeholder, but it's possible for
                 // multiple identical placeholders exist on the page (probably
                 // because the same content appears more than once).
-                var $placeholders = $context.find('[data-contextual-id="' + contextualID + '"]');
+                $placeholders = $context.find('[data-contextual-id="' + contextualID + '"]');
 
                 // Initialize the contextual links.
                 for (var i = 0; i < $placeholders.length; i++) {
@@ -217,7 +217,7 @@
   };
 
   // A Backbone.Collection of Drupal.contextual.StateModel instances.
-  Drupal.contextual.collection = new Backbone.Collection([], { model: Drupal.contextual.StateModel });
+  Drupal.contextual.collection = new Backbone.Collection([], {model: Drupal.contextual.StateModel});
 
   /**
    * A trigger is an interactive element often bound to a click handler.

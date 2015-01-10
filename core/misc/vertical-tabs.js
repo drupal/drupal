@@ -37,13 +37,13 @@
 
         // Transform each details into a tab.
         $details.each(function () {
-          var $this = $(this);
+          var $that = $(this);
           var vertical_tab = new Drupal.verticalTab({
-            title: $this.find('> summary').text(),
-            details: $this
+            title: $that.find('> summary').text(),
+            details: $that
           });
           tab_list.append(vertical_tab.item);
-          $this
+          $that
             .removeClass('collapsed')
             // prop() can't be used on browsers not supporting details element,
             // the style won't apply to them if prop() is used.
@@ -51,7 +51,7 @@
             .addClass('vertical-tabs-pane')
             .data('verticalTab', vertical_tab);
           if (this.id === focusID) {
-            tab_focus = $this;
+            tab_focus = $that;
           }
         });
 

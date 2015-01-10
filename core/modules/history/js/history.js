@@ -39,7 +39,7 @@
       $.ajax({
         url: Drupal.url('history/get_node_read_timestamps'),
         type: 'POST',
-        data: { 'node_ids[]': nodeIDs },
+        data: {'node_ids[]': nodeIDs},
         dataType: 'json',
         success: function (results) {
           for (var nodeID in results) {

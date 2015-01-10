@@ -100,7 +100,7 @@
      * {@inheritdoc}
      */
     getQuickEditUISettings: function () {
-      return { padding: true, unifiedToolbar: false, fullWidthToolbar: false, popup: false };
+      return {padding: true, unifiedToolbar: false, fullWidthToolbar: false, popup: false};
     },
 
     /**

@@ -47,7 +47,7 @@
     }
   };
 
-  Drupal.tour = Drupal.tour || { models: {}, views: {}};
+  Drupal.tour = Drupal.tour || {models: {}, views: {}};
 
   /**
    * Backbone Model for tours.
@@ -68,7 +68,7 @@
    */
   Drupal.tour.views.ToggleTourView = Backbone.View.extend({
 
-    events: { 'click': 'onClick' },
+    events: {'click': 'onClick'},
 
     /**
      * Implements Backbone Views' initialize().
@@ -109,12 +109,12 @@
               button: '<a href=\"#\" class=\"button button--primary joyride-next-tip\"></a>'
             }
           });
-          this.model.set({ isActive: true, activeTour: $tour });
+          this.model.set({isActive: true, activeTour: $tour});
         }
       }
       else {
         this.model.get('activeTour').joyride('destroy');
-        this.model.set({ isActive: false, activeTour: [] });
+        this.model.set({isActive: false, activeTour: []});
       }
     },
 
@@ -196,14 +196,14 @@
       if (removals) {
         var total = $tour.find('li').length;
         if (!total) {
-          this.model.set({ tour: [] });
+          this.model.set({tour: []});
         }
 
         $tour
           .find('li')
           // Rebuild the progress data.
           .each(function (index) {
-            var progress = Drupal.t('!tour_item of !total', { '!tour_item': index + 1, '!total': total });
+            var progress = Drupal.t('!tour_item of !total', {'!tour_item': index + 1, '!total': total});
             $(this).find('.tour-progress').text(progress);
           })
           // Update the last item to have "End tour" as the button.

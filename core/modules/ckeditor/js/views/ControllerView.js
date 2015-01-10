@@ -242,8 +242,8 @@
       // Remove duplicate buttons.
       existingButtons = _.unique(existingButtons);
       // Prepare the active toolbar and available-button toolbars.
-      for (i = 0; i < existingButtons.length; i++) {
-        var button = existingButtons[i];
+      for (var n = 0; n < existingButtons.length; n++) {
+        var button = existingButtons[n];
         var feature = this.getFeatureForButton(button);
         // Skip dividers.
         if (feature === false) {
@@ -252,7 +252,7 @@
 
         if (Drupal.editorConfiguration.featureIsAllowedByFilters(feature)) {
           // Existing toolbar buttons are in fact "added features".
-          this.$el.find('.ckeditor-toolbar-active').trigger('CKEditorToolbarChanged', ['added', existingButtons[i]]);
+          this.$el.find('.ckeditor-toolbar-active').trigger('CKEditorToolbarChanged', ['added', existingButtons[n]]);
         }
         else {
           // Move the button element from the active the active toolbar to the

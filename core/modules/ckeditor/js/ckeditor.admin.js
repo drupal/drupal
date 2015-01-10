@@ -94,7 +94,7 @@
      *   A callback to invoke after the button group naming modal dialog has been
      *   closed.
      */
-    registerButtonMove: function(view, $button, callback) {
+    registerButtonMove: function (view, $button, callback) {
       var $group = $button.closest('.ckeditor-toolbar-group');
 
       // If dropped in a placeholder button group, the user must name it.
@@ -312,7 +312,7 @@
           });
           // Announce to the user that a modal dialog is open.
           var text = Drupal.t('Editing the name of the new button group in a dialog.');
-          if ($group.attr('data-drupal-ckeditor-toolbar-group-name') !== undefined) {
+          if (typeof $group.attr('data-drupal-ckeditor-toolbar-group-name') !== 'undefined') {
             text = Drupal.t('Editing the name of the "@groupName" button group in a dialog.', {
               '@groupName': $group.attr('data-drupal-ckeditor-toolbar-group-name')
             });

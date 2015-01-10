@@ -146,7 +146,7 @@
      * {@inheritdoc}
      */
     getQuickEditUISettings: function () {
-      return { padding: true, unifiedToolbar: true, fullWidthToolbar: true, popup: false };
+      return {padding: true, unifiedToolbar: true, fullWidthToolbar: true, popup: false};
     },
 
     /**
@@ -174,8 +174,8 @@
       var textLoaderAjax = new Drupal.ajax(fieldID, this.$el, {
         url: Drupal.quickedit.util.buildUrl(fieldID, Drupal.url('editor/!entity_type/!id/!field_name/!langcode/!view_mode')),
         event: 'editor-internal.editor',
-        submit: { nocssjs: true },
-        progress: { type: null } // No progress indicator.
+        submit: {nocssjs: true},
+        progress: {type: null} // No progress indicator.
       });
 
       // Implement a scoped editorGetUntransformedText AJAX command: calls the

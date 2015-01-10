@@ -22,7 +22,7 @@
       function initFileValidation(selector) {
         $context.find(selector)
           .once('fileValidate')
-          .on('change.fileValidate', { extensions: elements[selector] }, Drupal.file.validateExtension);
+          .on('change.fileValidate', {extensions: elements[selector]}, Drupal.file.validateExtension);
       }
 
       if (settings.file && settings.file.elements) {

@@ -290,7 +290,7 @@
           if (fieldState === 'invalid') {
             // A state change in reaction to another state change must be deferred.
             _.defer(function () {
-              entityModel.set('state', 'opened', { reason: 'invalid' });
+              entityModel.set('state', 'opened', {reason: 'invalid'});
             });
           }
           else {
@@ -315,9 +315,9 @@
                 entityModel.set('isCommitting', false);
                 // Change the state back to "opened", to allow the user to hit the
                 // "Save" button again.
-                entityModel.set('state', 'opened', { reason: 'networkerror' });
+                entityModel.set('state', 'opened', {reason: 'networkerror'});
                 // Show a modal to inform the user of the network error.
-                var message = Drupal.t('Your changes to <q>@entity-title</q> could not be saved, either due to a website problem or a network connection problem.<br>Please try again.', { '@entity-title': entityModel.get('label') });
+                var message = Drupal.t('Your changes to <q>@entity-title</q> could not be saved, either due to a website problem or a network connection problem.<br>Please try again.', {'@entity-title': entityModel.get('label')});
                 Drupal.quickedit.util.networkErrorModal(Drupal.t('Sorry!'), message);
               }
             });
@@ -368,7 +368,7 @@
       var entitySaverAjax = new Drupal.ajax(id, $el, {
         url: Drupal.url('quickedit/entity/' + entityModel.get('entityID')),
         event: 'quickedit-save.quickedit',
-        progress: { type: 'none' },
+        progress: {type: 'none'},
         error: function () {
           $el.off('quickedit-save.quickedit');
           // Let the Drupal.quickedit.EntityModel Backbone model's error()=

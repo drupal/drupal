@@ -256,7 +256,7 @@
       //   (2) The active tab is the administration menu tab, indicated by the
       //       presence of the data-drupal-subtrees attribute.
       //   (3) The orientation of the tray is vertical.
-      if (!this.model.get('areSubtreesLoaded') && $activeTab.data('drupal-subtrees') !== undefined && orientation === 'vertical') {
+      if (!this.model.get('areSubtreesLoaded') && typeof $activeTab.data('drupal-subtrees') !== 'undefined' && orientation === 'vertical') {
         var subtreesHash = drupalSettings.toolbar.subtreesHash;
         var langcode = drupalSettings.toolbar.langcode;
         var endpoint = Drupal.url('toolbar/subtrees/' + subtreesHash + '/' + langcode);

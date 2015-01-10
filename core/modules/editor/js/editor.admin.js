@@ -84,22 +84,22 @@
        *
        * This generates an object of this form:
        *   var universe = {
-     *     a: {
-     *       'touchedByAllowedPropertyRule': false,
-     *       'tag': false,
-     *       'attributes:href': false,
-     *       'classes:external': false,
-     *     },
-     *     strong: {
-     *       'touchedByAllowedPropertyRule': false,
-     *       'tag': false,
-     *     },
-     *     img: {
-     *       'touchedByAllowedPropertyRule': false,
-     *       'tag': false,
-     *       'attributes:src': false
-     *     }
-     *   };
+       *     a: {
+       *       'touchedByAllowedPropertyRule': false,
+       *       'tag': false,
+       *       'attributes:href': false,
+       *       'classes:external': false,
+       *     },
+       *     strong: {
+       *       'touchedByAllowedPropertyRule': false,
+       *       'tag': false,
+       *     },
+       *     img: {
+       *       'touchedByAllowedPropertyRule': false,
+       *       'tag': false,
+       *       'attributes:src': false
+       *     }
+       *   };
        *
        * In this example, the given text editor feature resulted in the above
        * universe, which shows that it must be allowed to generate the a, strong
@@ -550,8 +550,8 @@
    *  - classes: ['external', 'internal']
    */
   Drupal.EditorFeatureHTMLRule = function () {
-    this.required = { tags: [], attributes: [], styles: [], classes: [] };
-    this.allowed = { tags: [], attributes: [], styles: [], classes: [] };
+    this.required = {tags: [], attributes: [], styles: [], classes: []};
+    this.allowed = {tags: [], attributes: [], styles: [], classes: []};
     this.raw = null;
   };
 
@@ -616,36 +616,36 @@
    * Examples:
    *  - Whitelist the "p", "strong" and "a" HTML tags:
    *    {
- *      tags: ['p', 'strong', 'a'],
- *      allow: true,
- *      restrictedTags: {
- *        tags: [],
- *        allowed: { attributes: [], styles: [], classes: [] },
- *        forbidden: { attributes: [], styles: [], classes: [] }
- *      }
- *    }
+   *      tags: ['p', 'strong', 'a'],
+   *      allow: true,
+   *      restrictedTags: {
+   *        tags: [],
+   *        allowed: { attributes: [], styles: [], classes: [] },
+   *        forbidden: { attributes: [], styles: [], classes: [] }
+   *      }
+   *    }
    *  - For the "a" HTML tag, only allow the "href" attribute and the "external"
    *    class and disallow the "target" attribute.
    *    {
- *      tags: [],
- *      allow: null,
- *      restrictedTags: {
- *        tags: ['a'],
- *        allowed: { attributes: ['href'], styles: [], classes: ['external'] },
- *        forbidden: { attributes: ['target'], styles: [], classes: [] }
- *      }
- *    }
+   *      tags: [],
+   *      allow: null,
+   *      restrictedTags: {
+   *        tags: ['a'],
+   *        allowed: { attributes: ['href'], styles: [], classes: ['external'] },
+   *        forbidden: { attributes: ['target'], styles: [], classes: [] }
+   *      }
+   *    }
    *  - For all tags, allow the "data-*" attribute (that is, any attribute that
    *    begins with "data-").
    *    {
- *      tags: [],
- *      allow: null,
- *      restrictedTags: {
- *        tags: ['*'],
- *        allowed: { attributes: ['data-*'], styles: [], classes: [] },
- *        forbidden: { attributes: [], styles: [], classes: [] }
- *      }
- *    }
+   *      tags: [],
+   *      allow: null,
+   *      restrictedTags: {
+   *        tags: ['*'],
+   *        allowed: { attributes: ['data-*'], styles: [], classes: [] },
+   *        forbidden: { attributes: [], styles: [], classes: [] }
+   *      }
+   *    }
    */
   Drupal.FilterHTMLRule = function () {
     return {
@@ -655,8 +655,8 @@
       // Apply restrictions to properties set on tags.
       restrictedTags: {
         tags: [],
-        allowed: { attributes: [], styles: [], classes: [] },
-        forbidden: { attributes: [], styles: [], classes: [] }
+        allowed: {attributes: [], styles: [], classes: []},
+        forbidden: {attributes: [], styles: [], classes: []}
       }
     };
   };

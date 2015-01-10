@@ -127,7 +127,7 @@
         // If the toolbar's orientation is horizontal and no active tab is
         // defined then show the tray of the first toolbar tab by default (but
         // not the first 'Home' toolbar tab).
-        if (Drupal.toolbar.models.toolbarModel.get('orientation') === 'horizontal' && Drupal.toolbar.models.toolbarModel.get('activeTab') === null){
+        if (Drupal.toolbar.models.toolbarModel.get('orientation') === 'horizontal' && Drupal.toolbar.models.toolbarModel.get('activeTab') === null) {
           Drupal.toolbar.models.toolbarModel.set({
             'activeTab': $('.toolbar-bar .toolbar-tab:not(.home-toolbar-tab) a').get(0)
           });

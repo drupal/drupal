@@ -177,7 +177,7 @@
     var html = '';
     var tagList = '<' + tags.join('> <') + '>';
     html += '<p class="editor-update-message">';
-    html += Drupal.t('Based on the text editor configuration, these tags have automatically been added: <strong>@tag-list</strong>.', { '@tag-list': tagList });
+    html += Drupal.t('Based on the text editor configuration, these tags have automatically been added: <strong>@tag-list</strong>.', {'@tag-list': tagList});
     html += '</p>';
     return html;
   };

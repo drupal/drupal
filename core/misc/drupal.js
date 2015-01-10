@@ -1,7 +1,7 @@
 /**
  * Base framework for Drupal-specific JavaScript, behaviors, and settings.
  */
-window.Drupal = { behaviors: {}, locale: {} };
+window.Drupal = {behaviors: {}, locale: {}};
 
 // Class indicating that JS is enabled; used for styling purpose.
 document.documentElement.className += ' js';
@@ -90,7 +90,7 @@ if (window.jQuery) {
           behaviors[i].attach(context, settings);
         }
         catch (e) {
-          errors.push({ behavior: i, error: e });
+          errors.push({behavior: i, error: e});
         }
       }
     }
@@ -156,7 +156,7 @@ if (window.jQuery) {
           behaviors[i].detach(context, settings, trigger);
         }
         catch (e) {
-          errors.push({ behavior: i, error: e });
+          errors.push({behavior: i, error: e});
         }
       }
     }

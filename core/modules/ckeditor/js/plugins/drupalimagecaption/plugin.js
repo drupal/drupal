@@ -102,20 +102,21 @@
 
           var attrs = element.attributes;
           var retElement = element;
+          var caption;
 
           // We won't need the attributes during editing: we'll use widget.data
           // to store them (except the caption, which is stored in the DOM).
           if (captionFilterEnabled) {
-            var caption = attrs['data-caption'];
+            caption = attrs['data-caption'];
             delete attrs['data-caption'];
           }
           if (alignFilterEnabled) {
             data.align = attrs['data-align'];
             delete attrs['data-align'];
           }
-          data['data-entity-type' ] = attrs['data-entity-type'];
+          data['data-entity-type'] = attrs['data-entity-type'];
           delete attrs['data-entity-type'];
-          data['data-entity-uuid' ] = attrs['data-entity-uuid'];
+          data['data-entity-uuid'] = attrs['data-entity-uuid'];
           delete attrs['data-entity-uuid'];
 
           if (captionFilterEnabled) {

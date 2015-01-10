@@ -123,7 +123,7 @@
      */
     onMouseLeave: function (event) {
       var that = this;
-      that.model.set('state', 'candidate', { reason: 'mouseleave' });
+      that.model.set('state', 'candidate', {reason: 'mouseleave'});
       event.stopPropagation();
     },
 
