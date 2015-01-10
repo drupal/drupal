@@ -13,6 +13,7 @@ process:
     source:
       - picture
       - file_directory_path
+      - temp_directory_path
       - 'constants/is_public'
 destination:
   plugin: entity:file

@@ -42,8 +42,14 @@ class EntityFile extends EntityContentBase {
    * {@inheritdoc}
    */
   public function import(Row $row, array $old_destination_id_values = array()) {
-    $source = $this->configuration['source_base_path'] . $row->getSourceProperty($this->configuration['source_path_property']);
+    $file = $row->getSourceProperty($this->configuration['source_path_property']);
     $destination = $row->getDestinationProperty($this->configuration['destination_path_property']);
+
+    // We check the destination to see if this is a temporary file. If it is
+    // then we do not prepend the source_base_path because temporary files are
+    // already absolute.
+    $source = $this->isTempFile($destination) ? $file : $this->configuration['source_base_path'] . $file;
+
     $replace = FILE_EXISTS_REPLACE;
     if (!empty($this->configuration['rename'])) {
       $entity_id = $row->getDestinationProperty($this->getKey('id'));
@@ -100,6 +106,20 @@ class EntityFile extends EntityContentBase {
       $filename = str_replace('%26', '&', $filename);
     }
     return $filename;
+  }
+
+  /**
+   * Check if a file is a temp file.
+   *
+   * @param string $file
+   *   The destination file path.
+   *
+   * @return bool
+   *   TRUE if the file is temporary otherwise FALSE.
+   */
+  protected function isTempFile($file) {
+    $tmp = 'temporary://';
+    return substr($file, 0, strlen($tmp)) === $tmp;
   }
 
 }

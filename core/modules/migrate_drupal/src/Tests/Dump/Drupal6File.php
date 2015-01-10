@@ -123,7 +123,18 @@ class Drupal6File extends Drupal6DumpBase {
       'status' => '1',
       'timestamp' => '1388880668',
     ))
+    ->values(array(
+      'fid' => '4',
+      'uid' => '1',
+      'filename' => 'some-temp-file.jpg',
+      'filepath' => '/tmp/some-temp-file.jpg',
+      'filemime' => 'image/jpeg',
+      'filesize' => '183',
+      'status' => '0',
+      'timestamp' => '1388880668',
+    ))
     ->execute();
+    file_put_contents('/tmp/some-temp-file.jpg', '');
   }
 
 }

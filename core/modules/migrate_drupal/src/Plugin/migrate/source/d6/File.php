@@ -27,6 +27,13 @@ class File extends DrupalSqlBase {
   protected $filePath;
 
   /**
+   * The temporary file path.
+   *
+   * @var string
+   */
+  protected $tempFilePath;
+
+  /**
    * Flag for private or public file storage.
    *
    * @var boolean
@@ -58,6 +65,7 @@ class File extends DrupalSqlBase {
   protected function runQuery() {
     $conf_path = isset($this->configuration['conf_path']) ? $this->configuration['conf_path'] : 'sites/default';
     $this->filePath = $this->variableGet('file_directory_path', $conf_path . '/files') . '/';
+    $this->tempFilePath = $this->variableGet('file_directory_temp', '/tmp') . '/';
 
     // FILE_DOWNLOADS_PUBLIC == 1 and FILE_DOWNLOADS_PRIVATE == 2.
     $this->isPublic = $this->variableGet('file_downloads', 1) == 1;
@@ -69,6 +77,7 @@ class File extends DrupalSqlBase {
    */
   public function prepareRow(Row $row) {
     $row->setSourceProperty('file_directory_path', $this->filePath);
+    $row->setSourceProperty('temp_directory_path', $this->tempFilePath);
     $row->setSourceProperty('is_public', $this->isPublic);
     return parent::prepareRow($row);
   }

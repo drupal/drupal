@@ -68,6 +68,10 @@ class MigrateFileTest extends MigrateDrupalTestBase {
 
     $file = entity_load('file', 2);
     $this->assertEqual($file->getFileUri(), 'public://core/modules/simpletest/files/image-2.jpg');
+
+    // Ensure that a temporary file has been migrated.
+    $file = entity_load('file', 4);
+    $this->assertIdentical($file->getFileUri(), 'temporary://some-temp-file.jpg');
   }
 
 }
