@@ -15,16 +15,3 @@
     margin-bottom: 1em;
   }
 }
-@media
-  screen and (max-width: 1020px),
-  (orientation: landscape) and (max-device-height: 1020px) {
-  .toolbar-vertical .block-list-secondary,
-  .toolbar-vertical .layout-region-node-secondary {
-    margin-bottom: 0;
-    padding-bottom: 0;
-    display: block;
-  }
-  .toolbar-vertical .layout-node-form:after {
-    display: none;
-  }
-}
