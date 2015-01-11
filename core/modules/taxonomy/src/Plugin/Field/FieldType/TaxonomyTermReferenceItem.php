@@ -13,6 +13,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\OptGroup;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\OptionsProviderInterface;
+use Drupal\Core\TypedData\AllowedValuesInterface;
+use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Plugin implementation of the 'term_reference' field type.
@@ -83,7 +85,7 @@ class TaxonomyTermReferenceItem extends EntityReferenceItem implements OptionsPr
     else {
       $options = array();
       foreach ($this->getSetting('allowed_values') as $tree) {
-        if ($vocabulary = entity_load('taxonomy_vocabulary', $tree['vocabulary'])) {
+        if ($vocabulary = Vocabulary::load($tree['vocabulary'])) {
           if ($terms = taxonomy_get_tree($vocabulary->id(), $tree['parent'], NULL, TRUE)) {
             foreach ($terms as $term) {
               $options[$term->id()] = str_repeat('-', $term->depth) . $term->getName();
@@ -122,7 +124,7 @@ class TaxonomyTermReferenceItem extends EntityReferenceItem implements OptionsPr
    * {@inheritdoc}
    */
   public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
-    $vocabularies = entity_load_multiple('taxonomy_vocabulary');
+    $vocabularies = Vocabulary::loadMultiple();
     $options = array();
     foreach ($vocabularies as $vocabulary) {
       $options[$vocabulary->id()] = $vocabulary->label();

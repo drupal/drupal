@@ -9,6 +9,7 @@ namespace Drupal\taxonomy\Tests;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Tests loading, saving and deleting vocabularies.
@@ -37,7 +38,7 @@ class VocabularyCrudTest extends TaxonomyTestBase {
    */
   function testTaxonomyVocabularyDeleteWithTerms() {
     // Delete any existing vocabularies.
-    foreach (entity_load_multiple('taxonomy_vocabulary') as $vocabulary) {
+    foreach (Vocabulary::loadMultiple() as $vocabulary) {
       $vocabulary->delete();
     }
 
@@ -68,7 +69,7 @@ class VocabularyCrudTest extends TaxonomyTestBase {
    * Ensure that the vocabulary static reset works correctly.
    */
   function testTaxonomyVocabularyLoadStaticReset() {
-    $original_vocabulary = entity_load('taxonomy_vocabulary', $this->vocabulary->id());
+    $original_vocabulary = Vocabulary::load($this->vocabulary->id());
     $this->assertTrue(is_object($original_vocabulary), 'Vocabulary loaded successfully.');
     $this->assertEqual($this->vocabulary->label(), $original_vocabulary->label(), 'Vocabulary loaded successfully.');
 
@@ -79,12 +80,12 @@ class VocabularyCrudTest extends TaxonomyTestBase {
     $vocabulary->save();
 
     // Load the vocabulary.
-    $new_vocabulary = entity_load('taxonomy_vocabulary', $original_vocabulary->id());
+    $new_vocabulary = Vocabulary::load($original_vocabulary->id());
     $this->assertEqual($new_vocabulary->label(), $vocabulary->label(), 'The vocabulary was loaded.');
 
     // Delete the vocabulary.
     $this->vocabulary->delete();
-    $vocabularies = entity_load_multiple('taxonomy_vocabulary');
+    $vocabularies = Vocabulary::loadMultiple();
     $this->assertTrue(!isset($vocabularies[$this->vocabulary->id()]), 'The vocabulary was deleted.');
   }
 
@@ -94,7 +95,7 @@ class VocabularyCrudTest extends TaxonomyTestBase {
   function testTaxonomyVocabularyLoadMultiple() {
 
     // Delete any existing vocabularies.
-    foreach (entity_load_multiple('taxonomy_vocabulary') as $vocabulary) {
+    foreach (Vocabulary::loadMultiple() as $vocabulary) {
       $vocabulary->delete();
     }
 
@@ -121,7 +122,7 @@ class VocabularyCrudTest extends TaxonomyTestBase {
 
     // Fetch the vocabularies with entity_load_multiple(), specifying IDs.
     // Ensure they are returned in the same order as the original array.
-    $vocabularies = entity_load_multiple('taxonomy_vocabulary', array($vocabulary3->id(), $vocabulary2->id(), $vocabulary1->id()));
+    $vocabularies = Vocabulary::loadMultiple(array($vocabulary3->id(), $vocabulary2->id(), $vocabulary1->id()));
     $loaded_order = array_keys($vocabularies);
     $expected_order = array($vocabulary3->id(), $vocabulary2->id(), $vocabulary1->id());
     $this->assertIdentical($loaded_order, $expected_order);

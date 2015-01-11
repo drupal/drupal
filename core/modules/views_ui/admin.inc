@@ -11,6 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
+use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Converts a form element in the add view wizard to be AJAX-enabled.
@@ -231,7 +232,7 @@ function views_ui_taxonomy_autocomplete_validate($element, FormStateInterface $f
     $allowed_values = $field_storage->getSetting('allowed_values');
     if (!empty($allowed_values)) {
       foreach ($allowed_values as $tree) {
-        if ($vocabulary = entity_load('taxonomy_vocabulary', $tree['vocabulary'])) {
+        if ($vocabulary = Vocabulary::load($tree['vocabulary'])) {
           $vocabularies[$vocabulary->id()] = $tree['vocabulary'];
         }
       }

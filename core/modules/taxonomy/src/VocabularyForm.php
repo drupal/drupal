@@ -12,11 +12,39 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ContentLanguageSettings;
+use Drupal\taxonomy\VocabularyStorageInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base form for vocabulary edit forms.
  */
 class VocabularyForm extends EntityForm {
+
+  /**
+   * The vocabulary storage.
+   *
+   * @var \Drupal\taxonomy\VocabularyStorageInterface.
+   */
+  protected $vocabularyStorage;
+
+  /**
+   * Constructs a new vocabulary form.
+   *
+   * @param \Drupal\taxonomy\VocabularyStorageInterface $vocabulary_storage
+   *   The vocabulary storage.
+   */
+  public function __construct(VocabularyStorageInterface $vocabulary_storage) {
+    $this->vocabularyStorage = $vocabulary_storage;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity.manager')->getStorage('taxonomy_vocabulary')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -42,7 +70,7 @@ class VocabularyForm extends EntityForm {
       '#default_value' => $vocabulary->id(),
       '#maxlength' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
       '#machine_name' => array(
-        'exists' => 'taxonomy_vocabulary_load',
+        'exists' => array($this, 'exists'),
         'source' => array('name'),
       ),
     );
@@ -134,6 +162,20 @@ class VocabularyForm extends EntityForm {
 
     $form_state->setValue('vid', $vocabulary->id());
     $form_state->set('vid', $vocabulary->id());
+  }
+
+  /**
+   * Determines if the vocabulary already exists.
+   *
+   * @param string $id
+   *   The vocabulary ID
+   *
+   * @return bool
+   *   TRUE if the vocabulary exists, FALSE otherwise.
+   */
+  public function exists($id) {
+    $action = $this->vocabularyStorage->load($id);
+    return !empty($action);
   }
 
 }

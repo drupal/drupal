@@ -14,6 +14,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Tests load, save and delete for taxonomy terms.
@@ -71,7 +72,7 @@ class TermTest extends TaxonomyTestBase {
     $term2 = $this->createTerm($this->vocabulary);
 
     // Check that hierarchy is flat.
-    $vocabulary = entity_load('taxonomy_vocabulary', $this->vocabulary->id());
+    $vocabulary = Vocabulary::load($this->vocabulary->id());
     $this->assertEqual(0, $vocabulary->getHierarchy(), 'Vocabulary is flat.');
 
     // Edit $term2, setting $term1 as parent.

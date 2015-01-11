@@ -106,7 +106,7 @@ class TaxonomyIndexTid extends ManyToOne {
   }
 
   public function buildExtraOptionsForm(&$form, FormStateInterface $form_state) {
-    $vocabularies = entity_load_multiple('taxonomy_vocabulary');
+    $vocabularies = $this->vocabularyStorage->loadMultiple();
     $options = array();
     foreach ($vocabularies as $voc) {
       $options[$voc->id()] = $voc->label();
@@ -150,7 +150,7 @@ class TaxonomyIndexTid extends ManyToOne {
   }
 
   protected function valueForm(&$form, FormStateInterface $form_state) {
-    $vocabulary = entity_load('taxonomy_vocabulary', $this->options['vid']);
+    $vocabulary = $this->vocabularyStorage->load($this->options['vid']);
     if (empty($vocabulary) && $this->options['limit']) {
       $form['markup'] = array(
         '#markup' => '<div class="form-item">' . $this->t('An invalid vocabulary is selected. Please change it in the options.') . '</div>',

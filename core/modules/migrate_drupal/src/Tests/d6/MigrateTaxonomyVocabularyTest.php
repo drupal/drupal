@@ -9,6 +9,7 @@ namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Migrate taxonomy vocabularies to taxonomy.vocabulary.*.yml.
@@ -44,14 +45,14 @@ class MigrateTaxonomyVocabularyTest extends MigrateDrupalTestBase {
   public function testTaxonomyVocabulary() {
     for ($i = 0; $i < 3; $i++) {
       $j = $i + 1;
-      $vocabulary = entity_load('taxonomy_vocabulary', "vocabulary_{$j}_i_{$i}_");
+      $vocabulary = Vocabulary::load("vocabulary_{$j}_i_{$i}_");
       $this->assertEqual(array($vocabulary->id()), entity_load('migration', 'd6_taxonomy_vocabulary')->getIdMap()->lookupDestinationID(array($j)));
       $this->assertEqual($vocabulary->label(), "vocabulary $j (i=$i)");
       $this->assertEqual($vocabulary->getDescription(), "description of vocabulary $j (i=$i)");
       $this->assertEqual($vocabulary->getHierarchy(), $i);
       $this->assertEqual($vocabulary->get('weight'), 4 + $i);
     }
-    $vocabulary = entity_load('taxonomy_vocabulary', 'vocabulary_name_much_longer_than');
+    $vocabulary = Vocabulary::load('vocabulary_name_much_longer_than');
     $this->assertEqual($vocabulary->label(), 'vocabulary name much longer than thirty two characters');
     $this->assertEqual($vocabulary->getDescription(), 'description of vocabulary name much longer than thirty two characters');
     $this->assertEqual($vocabulary->getHierarchy(), 3);

@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\String;
 use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\Core\Url;
+use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * @addtogroup hooks
@@ -419,7 +420,7 @@ function hook_mail($key, &$message, $params) {
   );
   if ($context['hook'] == 'taxonomy') {
     $entity = $params['entity'];
-    $vocabulary = entity_load('taxonomy_vocabulary', $entity->id());
+    $vocabulary = Vocabulary::load($entity->id());
     $variables += array(
       '%term_name' => $entity->name,
       '%term_description' => $entity->description,

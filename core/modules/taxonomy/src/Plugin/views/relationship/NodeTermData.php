@@ -84,7 +84,7 @@ class NodeTermData extends RelationshipPluginBase  {
   }
 
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
-    $vocabularies = entity_load_multiple('taxonomy_vocabulary');
+    $vocabularies = $this->vocabularyStorage->loadMultiple();
     $options = array();
     foreach ($vocabularies as $voc) {
       $options[$voc->id()] = $voc->label();

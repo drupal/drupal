@@ -7,6 +7,8 @@
 
 namespace Drupal\path\Tests;
 
+use Drupal\taxonomy\Entity\Vocabulary;
+
 /**
  * Tests URL aliases for taxonomy terms.
  *
@@ -41,7 +43,7 @@ class PathTaxonomyTermTest extends PathTestBase {
    */
   function testTermAlias() {
     // Create a term in the default 'Tags' vocabulary with URL alias.
-    $vocabulary = entity_load('taxonomy_vocabulary', 'tags');
+    $vocabulary = Vocabulary::load('tags');
     $description = $this->randomMachineName();
     $edit = array(
       'name[0][value]' => $this->randomMachineName(),

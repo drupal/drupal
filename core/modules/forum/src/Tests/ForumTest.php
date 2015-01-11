@@ -13,6 +13,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Link;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Url;
+use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Create, view, edit, delete, and change forum entries and verify its
@@ -218,7 +219,7 @@ class ForumTest extends WebTestBase {
     // Test the root forum page title change.
     $this->drupalGet('forum');
     $this->assertTitle(t('Forums | Drupal'));
-    $vocabulary = entity_load('taxonomy_vocabulary', $this->forum['vid']);
+    $vocabulary = Vocabulary::load($this->forum['vid']);
     $vocabulary->set('name', 'Discussions');
     $vocabulary->save();
     $this->drupalGet('forum');
@@ -344,7 +345,7 @@ class ForumTest extends WebTestBase {
   function editForumVocabulary() {
     // Backup forum taxonomy.
     $vid = $this->config('forum.settings')->get('vocabulary');
-    $original_vocabulary = entity_load('taxonomy_vocabulary', $vid);
+    $original_vocabulary = Vocabulary::load($vid);
 
     // Generate a random name and description.
     $edit = array(
@@ -358,7 +359,7 @@ class ForumTest extends WebTestBase {
     $this->assertRaw(t('Updated vocabulary %name.', array('%name' => $edit['name'])), 'Vocabulary was edited');
 
     // Grab the newly edited vocabulary.
-    $current_vocabulary = entity_load('taxonomy_vocabulary', $vid);
+    $current_vocabulary = Vocabulary::load($vid);
 
     // Make sure we actually edited the vocabulary properly.
     $this->assertEqual($current_vocabulary->label(), $edit['name'], 'The name was updated');
@@ -369,7 +370,7 @@ class ForumTest extends WebTestBase {
     $current_vocabulary->set('description', $original_vocabulary->getDescription());
     $current_vocabulary->save();
     // Reload vocabulary to make sure changes are saved.
-    $current_vocabulary = entity_load('taxonomy_vocabulary', $vid);
+    $current_vocabulary = Vocabulary::load($vid);
     $this->assertEqual($current_vocabulary->label(), $original_vocabulary->label(), 'The original vocabulary settings were restored');
   }
 

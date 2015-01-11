@@ -13,6 +13,7 @@ use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\Tests\FieldUnitTestBase;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Tests the new entity API for the entity reference field type.
@@ -170,7 +171,7 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     $entity->field_test_taxonomy_vocabulary->entity->set('name', $new_name);
     $entity->field_test_taxonomy_vocabulary->entity->save();
     // Verify it is the correct name.
-    $vocabulary = entity_load('taxonomy_vocabulary', $referenced_entity_id);
+    $vocabulary = Vocabulary::load($referenced_entity_id);
     $this->assertEqual($vocabulary->label(), $new_name);
 
     // Make sure the computed term reflects updates to the term id.

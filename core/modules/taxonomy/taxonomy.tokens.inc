@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
+use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Implements hook_token_info().
@@ -127,7 +128,7 @@ function taxonomy_tokens($type, $tokens, array $data = array(), array $options =
           break;
 
         case 'vocabulary':
-          $vocabulary = entity_load('taxonomy_vocabulary', $term->bundle());
+          $vocabulary = Vocabulary::load($term->bundle());
           $replacements[$original] = String::checkPlain($vocabulary->label());
           break;
 
@@ -141,7 +142,7 @@ function taxonomy_tokens($type, $tokens, array $data = array(), array $options =
     }
 
     if ($vocabulary_tokens = $token_service->findWithPrefix($tokens, 'vocabulary')) {
-      $vocabulary = entity_load('taxonomy_vocabulary', $term->bundle());
+      $vocabulary = Vocabulary::load($term->bundle());
       $replacements += $token_service->generate('vocabulary', $vocabulary_tokens, array('vocabulary' => $vocabulary), $options);
     }
 
