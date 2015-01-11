@@ -73,7 +73,7 @@ class Node extends FieldPluginBase {
         $this->options['alter']['make_link'] = TRUE;
         $this->options['alter']['path'] = "node/" . $this->getValue($values, 'nid');
         if (isset($this->aliases['langcode'])) {
-          $languages = language_list();
+          $languages = \Drupal::languageManager()->getLanguages();
           $langcode = $this->getValue($values, 'langcode');
           if (isset($languages[$langcode])) {
             $this->options['alter']['language'] = $languages[$langcode];

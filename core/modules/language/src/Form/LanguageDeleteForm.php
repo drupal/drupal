@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Url;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,13 +30,23 @@ class LanguageDeleteForm extends EntityConfirmFormBase {
   protected $urlGenerator;
 
   /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
    * Constructs a new LanguageDeleteForm object.
    *
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
    *   The url generator service.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
    */
-  public function __construct(UrlGeneratorInterface $url_generator) {
+  public function __construct(UrlGeneratorInterface $url_generator, LanguageManagerInterface $language_manager) {
     $this->urlGenerator = $url_generator;
+    $this->languageManager = $language_manager;
   }
 
   /**
@@ -43,7 +54,8 @@ class LanguageDeleteForm extends EntityConfirmFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('url_generator')
+      $container->get('url_generator'),
+      $container->get('language_manager')
     );
   }
 
@@ -96,7 +108,7 @@ class LanguageDeleteForm extends EntityConfirmFormBase {
     }
 
     // Throw a 404 when attempting to delete a non-existing language.
-    $languages = language_list();
+    $languages = $this->languageManager->getLanguages();
     if (!isset($languages[$langcode])) {
       throw new NotFoundHttpException();
     }

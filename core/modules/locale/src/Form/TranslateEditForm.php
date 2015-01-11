@@ -32,7 +32,7 @@ class TranslateEditForm extends TranslateFormBase {
     $langcode = $filter_values['langcode'];
 
     $this->languageManager->reset();
-    $languages = language_list();
+    $languages = $this->languageManager->getLanguages();
 
     $langname = isset($langcode) ? $languages[$langcode]->getName() : "- None -";
 

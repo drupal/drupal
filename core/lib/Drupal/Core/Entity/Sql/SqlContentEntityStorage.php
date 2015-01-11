@@ -25,6 +25,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\FieldStorageConfigInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -122,6 +123,13 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   protected $cacheBackend;
 
   /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
    * {@inheritdoc}
    */
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
@@ -129,7 +137,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $entity_type,
       $container->get('database'),
       $container->get('entity.manager'),
-      $container->get('cache.entity')
+      $container->get('cache.entity'),
+      $container->get('language_manager')
     );
   }
 
@@ -155,12 +164,15 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *   The entity manager.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   The cache backend to be used.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
    */
-  public function __construct(EntityTypeInterface $entity_type, Connection $database, EntityManagerInterface $entity_manager, CacheBackendInterface $cache) {
+  public function __construct(EntityTypeInterface $entity_type, Connection $database, EntityManagerInterface $entity_manager, CacheBackendInterface $cache, LanguageManagerInterface $language_manager) {
     parent::__construct($entity_type);
     $this->database = $database;
     $this->entityManager = $entity_manager;
     $this->cacheBackend = $cache;
+    $this->languageManager = $language_manager;
     $this->initTableLayout();
   }
 
@@ -1251,7 +1263,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     }
 
     // Load field data.
-    $langcodes = array_keys(language_list(LanguageInterface::STATE_ALL));
+    $langcodes = array_keys($this->languageManager->getLanguages(LanguageInterface::STATE_ALL));
     foreach ($storage_definitions as $field_name => $storage_definition) {
       $table = $load_current ? $table_mapping->getDedicatedDataTableName($storage_definition) : $table_mapping->getDedicatedRevisionTableName($storage_definition);
 

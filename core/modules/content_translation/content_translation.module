@@ -242,10 +242,7 @@ function content_translation_translate_access(EntityInterface $entity) {
  * @todo Move to \Drupal\content_translation\ContentTranslationManager.
  */
 function content_translation_controller($entity_type_id) {
-  $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
-  // @todo Throw an exception if the key is missing.
-  $class = $entity_type->getHandlerClass('translation');
-  return new $class($entity_type);
+  return \Drupal::entityManager()->getHandler($entity_type_id, 'translation');
 }
 
 /**

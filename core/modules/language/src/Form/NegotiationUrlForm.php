@@ -9,12 +9,45 @@ namespace Drupal\language\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 
 /**
  * Configure the URL language negotiation method for this site.
  */
 class NegotiationUrlForm extends ConfigFormBase {
+
+  /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
+   * Constructs a new LanguageDeleteForm object.
+   *
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The factory for configuration objects.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
+   */
+  public function __construct(ConfigFactoryInterface $config_factory, LanguageManagerInterface $language_manager) {
+    parent::__construct($config_factory);
+    $this->languageManager = $language_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('config.factory'),
+      $container->get('language_manager')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -69,7 +102,7 @@ class NegotiationUrlForm extends ConfigFormBase {
       ),
     );
 
-    $languages = language_list();
+    $languages = $this->languageManager->getLanguages();
     $prefixes = language_negotiation_url_prefixes();
     $domains = language_negotiation_url_domains();
     foreach ($languages as $langcode => $language) {
@@ -98,7 +131,7 @@ class NegotiationUrlForm extends ConfigFormBase {
    * Implements \Drupal\Core\Form\FormInterface::validateForm().
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $languages = language_list();
+    $languages = $this->languageManager->getLanguages();
 
     // Count repeated values for uniqueness check.
     $count = array_count_values($form_state->getValue('prefix'));

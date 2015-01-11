@@ -14,6 +14,7 @@ use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -80,6 +81,13 @@ class SqlContentEntityStorageTest extends UnitTestCase {
   protected $cache;
 
   /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $languageManager;
+
+  /**
    * The database connection to use.
    *
    * @var \Drupal\Core\Database\Connection|\PHPUnit_Framework_MockObject_MockObject
@@ -101,6 +109,10 @@ class SqlContentEntityStorageTest extends UnitTestCase {
     $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->cache = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
+    $this->languageManager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
+    $this->languageManager->expects($this->any())
+      ->method('getDefaultLanguage')
+      ->will($this->returnValue(new Language(array('langcode' => 'en'))));
     $this->connection = $this->getMockBuilder('Drupal\Core\Database\Connection')
       ->disableOriginalConstructor()
       ->getMock();
@@ -334,7 +346,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->will($this->returnValue($schema_handler));
 
     $storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
-      ->setConstructorArgs(array($this->entityType, $this->connection, $this->entityManager, $this->cache))
+      ->setConstructorArgs(array($this->entityType, $this->connection, $this->entityManager, $this->cache, $this->languageManager))
       ->setMethods(array('getStorageSchema'))
       ->getMock();
 
@@ -1045,7 +1057,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->method('getBaseFieldDefinitions')
       ->will($this->returnValue($this->fieldDefinitions));
 
-    $this->entityStorage = new SqlContentEntityStorage($this->entityType, $this->connection, $this->entityManager, $this->cache);
+    $this->entityStorage = new SqlContentEntityStorage($this->entityType, $this->connection, $this->entityManager, $this->cache, $this->languageManager);
   }
 
   /**
@@ -1122,7 +1134,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->method('set');
 
     $entity_storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
-      ->setConstructorArgs(array($this->entityType, $this->connection, $this->entityManager, $this->cache))
+      ->setConstructorArgs(array($this->entityType, $this->connection, $this->entityManager, $this->cache, $this->languageManager))
       ->setMethods(array('getFromStorage'))
       ->getMock();
     $entity_storage->expects($this->once())
@@ -1172,7 +1184,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->with($key, $entity, CacheBackendInterface::CACHE_PERMANENT, array($this->entityTypeId . '_values', 'entity_field_info'));
 
     $entity_storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
-      ->setConstructorArgs(array($this->entityType, $this->connection, $this->entityManager, $this->cache))
+      ->setConstructorArgs(array($this->entityType, $this->connection, $this->entityManager, $this->cache, $this->languageManager))
       ->setMethods(array('getFromStorage'))
       ->getMock();
     $entity_storage->expects($this->once())
@@ -1227,7 +1239,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->method('getBaseFieldDefinitions')
       ->will($this->returnValue($this->fieldDefinitions));
 
-    $this->entityStorage = new SqlContentEntityStorage($this->entityType, $database, $this->entityManager, $this->cache);
+    $this->entityStorage = new SqlContentEntityStorage($this->entityType, $database, $this->entityManager, $this->cache, $this->languageManager);
 
     $result = $this->entityStorage->hasData();
 

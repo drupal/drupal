@@ -8,18 +8,21 @@
 namespace Drupal\content_translation;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityHandlerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\Element;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base class for content translation handlers.
  *
  * @ingroup entity_api
  */
-class ContentTranslationHandler implements ContentTranslationHandlerInterface {
+class ContentTranslationHandler implements ContentTranslationHandlerInterface, EntityHandlerInterface {
 
   /**
    * The type of the entity being translated.
@@ -36,14 +39,34 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
   protected $entityType;
 
   /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
+    return new static(
+      $entity_type,
+      $container->get('language_manager')
+    );
+  }
+
+  /**
    * Initializes an instance of the content translation controller.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The info array of the given entity type.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
    */
-  public function __construct(EntityTypeInterface $entity_type) {
+  public function __construct(EntityTypeInterface $entity_type, LanguageManagerInterface $language_manager) {
     $this->entityTypeId = $entity_type->id();
     $this->entityType = $entity_type;
+    $this->languageManager = $language_manager;
   }
 
   /**
@@ -104,7 +127,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
 
     // Adjust page title to specify the current language being edited, if we
     // have at least one translation.
-    $languages = language_list();
+    $languages = $this->languageManager->getLanguages();
     if (isset($languages[$form_langcode]) && ($has_translations || $new_translation)) {
       $title = $this->entityFormTitle($entity);
       // When editing the original values display just the entity label.
@@ -137,7 +160,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
           '#submit' => array(array($this, 'entityFormSourceChange')),
         ),
       );
-      foreach (language_list(LanguageInterface::STATE_CONFIGURABLE) as $language) {
+      foreach ($this->languageManager->getLanguages() as $language) {
         if (isset($translations[$language->getId()])) {
           $form['source_langcode']['source']['#options'][$language->getId()] = $language->getName();
         }
@@ -158,7 +181,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
       $language_select = &$language_widget['widget'][0]['value'];
       if ($language_select['#type'] == 'language_select') {
         $options = array();
-        foreach (\Drupal::languageManager()->getLanguages() as $language) {
+        foreach ($this->languageManager->getLanguages() as $language) {
           // Show the current language, and the languages for which no
           // translation already exists.
           if (empty($translations[$language->getId()]) || $language->getId() == $entity_langcode) {
@@ -461,7 +484,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
       'source' => $source,
       'target' => $form_object->getFormLangcode($form_state),
     ));
-    $languages = language_list();
+    $languages = $this->languageManager->getLanguages();
     drupal_set_message(t('Source language set to: %language', array('%language' => $languages[$source]->getName())));
   }
 

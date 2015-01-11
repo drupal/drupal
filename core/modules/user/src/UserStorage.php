@@ -15,6 +15,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Password\PasswordInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -45,9 +46,11 @@ class UserStorage extends SqlContentEntityStorage implements UserStorageInterfac
    *   Cache backend instance to use.
    * @param \Drupal\Core\Password\PasswordInterface $password
    *   The password hashing service.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
    */
-  public function __construct(EntityTypeInterface $entity_type, Connection $database, EntityManagerInterface $entity_manager, CacheBackendInterface $cache, PasswordInterface $password) {
-    parent::__construct($entity_type, $database, $entity_manager, $cache);
+  public function __construct(EntityTypeInterface $entity_type, Connection $database, EntityManagerInterface $entity_manager, CacheBackendInterface $cache, PasswordInterface $password, LanguageManagerInterface $language_manager) {
+    parent::__construct($entity_type, $database, $entity_manager, $cache, $language_manager);
 
     $this->password = $password;
   }
@@ -61,7 +64,8 @@ class UserStorage extends SqlContentEntityStorage implements UserStorageInterfac
       $container->get('database'),
       $container->get('entity.manager'),
       $container->get('cache.entity'),
-      $container->get('password')
+      $container->get('password'),
+      $container->get('language_manager')
     );
   }
 

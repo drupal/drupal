@@ -10,8 +10,8 @@ namespace Drupal\language\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests enabling Language if a module exists that calls language_list during
- * installation.
+ * Tests enabling Language if a module exists that calls
+ * LanguageManager::getLanguages() during installation.
  *
  * @group language
  */
@@ -28,8 +28,8 @@ class LanguageListModuleInstallTest extends WebTestBase {
    * Tests enabling Language.
    */
   function testModuleInstallLanguageList() {
-    // Since language_list uses static caches we need to do this by enabling
-    // the module using the UI.
+    // Since LanguageManager::getLanguages() uses static caches we need to do
+    // this by enabling the module using the UI.
     $admin_user = $this->drupalCreateUser(array('access administration pages', 'administer modules'));
     $this->drupalLogin($admin_user);
     $edit = array();
