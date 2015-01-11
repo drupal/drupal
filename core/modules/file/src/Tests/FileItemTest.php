@@ -100,6 +100,26 @@ class FileItemTest extends FieldUnitTestBase {
     $entity = entity_create('entity_test');
     $entity->file_test->generateSampleItems();
     $this->entityValidateAndSave($entity);
+
+    // Make sure the computed files reflects updates to the file.
+    file_put_contents('public://example-3.txt', $this->randomMachineName());
+    // Test unsaved file entity.
+    $file3 = entity_create('file', array(
+      'uri' => 'public://example-3.txt',
+    ));
+    $display = entity_get_display('entity_test', 'entity_test', 'default');
+    $display->setComponent('file_test', [
+      'label' => 'above',
+      'type' => 'file_default',
+      'weight' => 1,
+    ])->save();
+    $entity = entity_create('entity_test');
+    $entity->file_test = array('entity' => $file3);
+    $uri = $file3->getFileUri();
+    $output = entity_view($entity, 'default');
+    drupal_render($output);
+    $this->assertTrue(!empty($entity->file_test->entity));
+    $this->assertEqual($entity->file_test->entity->getFileUri(), $uri);
   }
 
 }
