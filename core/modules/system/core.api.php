@@ -461,14 +461,15 @@
  *
  * @section tags Cache Tags
  *
- * The fourth argument of the set() method can be used to specify cache tags,
- * which are used to identify what type of data is included in each cache item.
- * Each cache item can have multiple cache tags, and each cache tag has a string
- * key and a value. The value can be:
- * - TRUE, to indicate that this type of data is present in the cache item.
- * - An array of values. For example, the "node" tag indicates that particular
- *   node's data is present in the cache item, so its value is an array of node
- *   IDs.
+ * The fourth argument of the @code set() @endcode method can be used to specify
+ * cache tags, which are used to identify which data is included in each cache
+ * item. A cache item can have multiple cache tags (an array of cache tags), and
+ * each cache tag is a string. The convention is to generate cache tags of the
+ * form @code <prefix>:<suffix> @endcode. Usually, you'll want to associate the
+ * cache tags of entities, or entity listings. You won't have to manually
+ * construct cache tags for them — just get their cache tags via
+ * \Drupal\Core\Entity\EntityInterface::getCacheTags() and
+ * \Drupal\Core\Entity\EntityTypeInterface::getListCacheTags().
  * Data that has been tagged can be invalidated as a group: no matter
  * the Cache ID (cid) of the cache item, no matter in which cache bin a cache
  * item lives; as long as it is tagged with a certain cache tag, it will be
@@ -490,9 +491,10 @@
  * @code
  * // A cache item with nodes, users, and some custom module data.
  * $tags = array(
- *   'my_custom_tag' => TRUE,
- *   'node' => array(1, 3),
- *   'user' => array(7),
+ *   'my_custom_tag',
+ *   'node:1',
+ *   'node:3',
+ *   'user:7',
  * );
  * \Drupal::cache()->set($cid, $data, CacheBackendInterface::CACHE_PERMANENT, $tags);
  *
