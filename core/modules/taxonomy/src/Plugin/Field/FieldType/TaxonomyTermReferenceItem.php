@@ -13,7 +13,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\OptGroup;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\OptionsProviderInterface;
-use Drupal\Core\TypedData\AllowedValuesInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
