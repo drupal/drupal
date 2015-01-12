@@ -17,6 +17,8 @@ use Drupal\Core\Entity\EntityTypeInterface;
 /**
  * Tests site-wide contact form functionality.
  *
+ * @see \Drupal\contact\Tests\ContactStorageTest
+ *
  * @group contact
  */
 class ContactSitewideTest extends WebTestBase {
