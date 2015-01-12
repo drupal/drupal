@@ -11,7 +11,6 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Session\SessionHandler;
-use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\WriteCheckSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
@@ -50,6 +49,13 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
   protected $connection;
 
   /**
+   * The session configuration.
+   *
+   * @var \Drupal\Core\Session\SessionConfigurationInterface
+   */
+  protected $sessionConfiguration;
+
+  /**
    * Whether a lazy session has been started.
    *
    * @var bool
@@ -76,11 +82,12 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
    *   The database connection.
    * @param \Drupal\Core\Session\MetadataBag $metadata_bag
    *   The session metadata bag.
-   * @param \Drupal\Core\Site\Settings $settings
-   *   The settings instance.
+   * @param \Drupal\Core\Session\SessionConfigurationInterface $session_configuration
+   *   The session configuration interface.
    */
-  public function __construct(RequestStack $request_stack, Connection $connection, MetadataBag $metadata_bag, Settings $settings) {
+  public function __construct(RequestStack $request_stack, Connection $connection, MetadataBag $metadata_bag, SessionConfigurationInterface $session_configuration) {
     $options = array();
+    $this->sessionConfiguration = $session_configuration;
     $this->requestStack = $request_stack;
     $this->connection = $connection;
 
@@ -111,8 +118,10 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
       return $this->started;
     }
 
-    $cookies = $this->requestStack->getCurrentRequest()->cookies;
-    if ($cookies->get($this->getName())) {
+    $request = $this->requestStack->getCurrentRequest();
+    $this->setOptions($this->sessionConfiguration->getOptions($request));
+
+    if ($this->sessionConfiguration->hasSession($request)) {
       // If a session cookie exists, initialize the session. Otherwise the
       // session is only started on demand in save(), making
       // anonymous users not use a session cookie unless something is stored in

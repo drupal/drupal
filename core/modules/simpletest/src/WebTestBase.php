@@ -778,11 +778,10 @@ abstract class WebTestBase extends TestBase {
       'pass_raw' => $this->randomMachineName(),
     ));
 
-    // Some tests (SessionTest and SessionHttpsTest) need to examine whether the
-    // proper session cookies were set on a response. Because the child site
-    // uses the same session name as the test runner, it is necessary to make
-    // that available to test-methods.
-    $this->sessionName = $this->originalSessionName;
+    // The child site derives its session name from the database prefix when
+    // running web tests.
+    $prefix = (Request::createFromGlobals()->isSecure() ? 'SSESS' : 'SESS');
+    $this->sessionName = $prefix . substr(hash('sha256', $this->databasePrefix), 0, 32);
 
     // Reset the static batch to remove Simpletest's batch operations.
     $batch = &batch_get();

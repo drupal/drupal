@@ -8,6 +8,7 @@
 namespace Drupal\Core\PageCache\RequestPolicy;
 
 use Drupal\Core\PageCache\RequestPolicyInterface;
+use Drupal\Core\Session\SessionConfigurationInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -21,27 +22,27 @@ use Symfony\Component\HttpFoundation\Request;
 class NoSessionOpen implements RequestPolicyInterface {
 
   /**
-   * The name of the session cookie.
+   * The session configuration.
    *
-   * @var string
+   * @var \Drupal\Core\Session\SessionConfigurationInterface
    */
-  protected $sessionCookieName;
+  protected $sessionConfiguration;
 
   /**
    * Constructs a new page cache session policy.
    *
-   * @param string $session_cookie_name
-   *   (optional) The name of the session cookie. Defaults to session_name().
+   * @param \Drupal\Core\Session\SessionConfigurationInterface $session_configuration
+   *   The session configuration.
    */
-  public function __construct($session_cookie_name = NULL) {
-    $this->sessionCookieName = $session_cookie_name ?: session_name();
+  public function __construct(SessionConfigurationInterface $session_configuration) {
+    $this->sessionConfiguration = $session_configuration;
   }
 
   /**
    * {@inheritdoc}
    */
   public function check(Request $request) {
-    if (!$request->cookies->has($this->sessionCookieName)) {
+    if (!$this->sessionConfiguration->hasSession($request)) {
       return static::ALLOW;
     }
   }

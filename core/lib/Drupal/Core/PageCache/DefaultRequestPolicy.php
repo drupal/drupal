@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\PageCache;
 
+use Drupal\Core\Session\SessionConfigurationInterface;
+
 /**
  * The default page cache request policy.
  *
@@ -18,10 +20,13 @@ class DefaultRequestPolicy extends ChainRequestPolicy {
 
   /**
    * Constructs the default page cache request policy.
+   *
+   * @param \Drupal\Core\Session\SessionConfigurationInterface $session_configuration
+   *   The session configuration.
    */
-  public function __construct() {
+  public function __construct(SessionConfigurationInterface $session_configuration) {
     $this->addPolicy(new RequestPolicy\CommandLineOrUnsafeMethod());
-    $this->addPolicy(new RequestPolicy\NoSessionOpen());
+    $this->addPolicy(new RequestPolicy\NoSessionOpen($session_configuration));
   }
 
 }

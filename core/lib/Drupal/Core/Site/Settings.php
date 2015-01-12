@@ -111,7 +111,7 @@ final class Settings {
    */
   public static function initialize($app_root, $site_path, &$class_loader) {
     // Export these settings.php variables to the global namespace.
-    global $base_url, $cookie_domain, $config_directories, $config;
+    global $base_url, $config_directories, $config;
     $settings = array();
     $config = array();
     $databases = array();

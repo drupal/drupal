@@ -1,4 +1,5 @@
 parameters:
+  session.storage.options: {}
   twig.config: {}
   factory.keyvalue:
     default: keyvalue.database
@@ -116,6 +117,7 @@ services:
     arguments: [discovery]
   page_cache_request_policy:
     class: Drupal\Core\PageCache\DefaultRequestPolicy
+    arguments: ['@session_configuration']
     tags:
       - { name: service_collector, tag: page_cache_request_policy, call: addPolicy}
   page_cache_response_policy:
@@ -1044,9 +1046,12 @@ services:
   current_user:
     class: Drupal\Core\Session\AccountProxy
     arguments: ['@authentication', '@request_stack']
+  session_configuration:
+    class: Drupal\Core\Session\SessionConfiguration
+    arguments: ['%session.storage.options%']
   session_manager:
     class: Drupal\Core\Session\SessionManager
-    arguments: ['@request_stack', '@database', '@session_manager.metadata_bag', '@settings']
+    arguments: ['@request_stack', '@database', '@session_manager.metadata_bag', '@session_configuration']
     tags:
       - { name: backend_overridable }
   session_manager.metadata_bag:
