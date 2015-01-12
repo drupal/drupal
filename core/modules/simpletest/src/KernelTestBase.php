@@ -158,6 +158,12 @@ abstract class KernelTestBase extends TestBase {
     $this->kernel->setSitePath(DrupalKernel::findSitePath($request));
     $this->kernel->boot();
 
+    // Save the original site directory path, so that extensions in the
+    // site-specific directory can still be discovered in the test site
+    // environment.
+    // @see \Drupal\Core\Extension\ExtensionDiscovery::scan()
+    $settings['test_parent_site'] = $this->originalSite;
+
     // Restore and merge settings.
     // DrupalKernel::boot() initializes new Settings, and the containerBuild()
     // method sets additional settings.

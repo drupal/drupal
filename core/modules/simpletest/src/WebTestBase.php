@@ -813,7 +813,7 @@ abstract class WebTestBase extends TestBase {
     // Save the original site directory path, so that extensions in the
     // site-specific directory can still be discovered in the test site
     // environment.
-    // @see \Drupal\Core\SystemListing::scan()
+    // @see \Drupal\Core\Extension\ExtensionDiscovery::scan()
     $settings['settings']['test_parent_site'] = (object) array(
       'value' => $this->originalSite,
       'required' => TRUE,
