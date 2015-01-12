@@ -545,7 +545,9 @@ function template_preprocess_views_view_table(&$variables) {
       $column_reference =& $variables['rows'][$num]['columns'][$column];
 
       // Add field classes.
-      $column_reference['attributes'] = array();
+      if (!isset($column_reference['attributes'])) {
+        $column_reference['attributes'] = array();
+      }
       if ($fields[$field]->options['element_default_classes']) {
         $column_reference['attributes']['class'][] = 'views-field';
         $column_reference['attributes']['class'][] = 'views-field-' . $variables['fields'][$field];
@@ -573,7 +575,7 @@ function template_preprocess_views_view_table(&$variables) {
         }
 
         // Only bother with separators and stuff if the field shows up.
-        if (!empty($field_output) && empty($column_reference['content'])) {
+        if (!empty($field_output)) {
           // Place the field into the column, along with an optional separator.
           if (!empty($column_reference['content'])) {
             if (!empty($options['info'][$column]['separator'])) {

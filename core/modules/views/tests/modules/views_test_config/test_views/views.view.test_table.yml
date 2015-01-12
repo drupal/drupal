@@ -35,6 +35,18 @@ display:
           relationship: none
           table: views_test_data
           plugin_id: string
+        job:
+          field: job
+          id: job
+          relationship: none
+          table: views_test_data
+          plugin_id: string
+        job_1:
+          field: job
+          id: job_1
+          relationship: none
+          table: views_test_data
+          plugin_id: string
       pager:
         options:
           offset: 0
@@ -60,6 +72,8 @@ display:
             age: age
             id: id
             name: name
+            job: job
+            job_1: job_1
           info:
             age:
               sortable: false
@@ -76,6 +90,20 @@ display:
               empty_column: false
               responsive: ''
             name:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            job:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            job_1:
               sortable: true
               default_sort_order: asc
               align: ''

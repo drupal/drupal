@@ -77,4 +77,36 @@ class StyleTableTest extends PluginTestBase {
     $this->assertFalse(count($result), 'Ensure that the description disappears.');
   }
 
+  /**
+   * Test table fields in columns.
+   */
+  public function testFieldInColumns() {
+    $this->drupalGet('test-table');
+
+    // Ensure that both columns are in separate tds.
+    // Check for class " views-field-job ", because just "views-field-job" won't
+    // do: "views-field-job-1" would also contain "views-field-job".
+    // @see Drupal\system\Tests\Form\ElementTest::testButtonClasses().
+    $result = $this->xpath('//tbody/tr/td[contains(concat(" ", @class, " "), " views-field-job ")]');
+    $this->assertTrue(count($result), 'Ensure there is a td with the class views-field-job');
+    $result = $this->xpath('//tbody/tr/td[contains(concat(" ", @class, " "), " views-field-job-1 ")]');
+    $this->assertTrue(count($result), 'Ensure there is a td with the class views-field-job-1');
+
+    // Combine the second job-column with the first one, with ', ' as separator.
+    $view = entity_load('view', 'test_table');
+    $display = &$view->getDisplay('default');
+    $display['display_options']['style']['options']['columns']['job_1'] = 'job';
+    $display['display_options']['style']['options']['info']['job']['separator'] = ', ';
+    $view->save();
+
+    // Ensure that both columns are properly combined.
+    $this->drupalGet('test-table');
+
+    $result = $this->xpath('//tbody/tr/td[contains(concat(" ", @class, " "), " views-field-job views-field-job-1 ")]');
+    $this->assertTrue(count($result), 'Ensure that the job column class names are joined into a single column');
+
+    $result = $this->xpath('//tbody/tr/td[contains(., "Drummer, Drummer")]');
+    $this->assertTrue(count($result), 'Ensure the job column values are joined into a single column');
+  }
+
 }
