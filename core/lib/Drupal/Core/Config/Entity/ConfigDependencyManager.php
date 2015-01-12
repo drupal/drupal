@@ -20,7 +20,7 @@ use Drupal\Component\Utility\SortArray;
  * their fields, and both are created before the view display configuration.
  *
  * The configuration dependency value is structured like this:
- * <code>
+ * @code
  * array(
  *   'config => array(
  *     // An array of configuration entity object names. Recalculated on save.
@@ -45,7 +45,7 @@ use Drupal\Component\Utility\SortArray;
  *     'theme' => array(),
  *   ),
  * );
- * </code>
+ * @endcode
  *
  * Configuration entity dependencies are recalculated on save based on the
  * current values of the configuration. For example, a filter format will depend
