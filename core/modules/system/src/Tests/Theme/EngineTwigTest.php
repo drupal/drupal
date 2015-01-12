@@ -65,7 +65,7 @@ class EngineTwigTest extends WebTestBase {
   }
 
   /**
-   * Tests the link_generator twig functions.
+   * Tests the link_generator Twig functions.
    */
   public function testTwigLinkGenerator() {
     $this->drupalGet('twig-theme-test/link-generator');
@@ -81,6 +81,15 @@ class EngineTwigTest extends WebTestBase {
     foreach ($expected as $string) {
       $this->assertRaw('<div>' . $string . '</div>');
     }
+  }
+
+  /**
+   * Tests the file url Twig functions.
+   */
+  public function testTwigFileUrls() {
+    $this->drupalGet('/twig-theme-test/file-url');
+    $filepath = file_create_url('core/modules/system/tests/modules/twig_theme_test/twig_theme_test.js');
+    $this->assertRaw('<div>file_url: ' . $filepath . '</div>');
   }
 
 }

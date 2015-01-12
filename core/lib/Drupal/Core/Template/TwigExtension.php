@@ -76,6 +76,7 @@ class TwigExtension extends \Twig_Extension {
       new \Twig_SimpleFunction('path', array($this, 'getPath'), array('is_safe_callback' => array($this, 'isUrlGenerationSafe'))),
       new \Twig_SimpleFunction('url_from_path', array($this, 'getUrlFromPath'), array('is_safe_callback' => array($this, 'isUrlGenerationSafe'))),
       new \Twig_SimpleFunction('link', array($this, 'getLink')),
+      new \Twig_SimpleFunction('file_url', 'file_create_url'),
     );
   }
 

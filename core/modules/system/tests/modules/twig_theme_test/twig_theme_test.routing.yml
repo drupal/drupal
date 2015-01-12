@@ -25,3 +25,10 @@ twig_theme_test_link_generator:
     _controller: '\Drupal\twig_theme_test\TwigThemeTestController::linkGeneratorRender'
   requirements:
     _access: 'TRUE'
+
+twig_theme_test_file_url:
+  path: '/twig-theme-test/file-url'
+  defaults:
+    _controller: '\Drupal\twig_theme_test\TwigThemeTestController::fileUrlRender'
+  requirements:
+    _access: 'TRUE'
