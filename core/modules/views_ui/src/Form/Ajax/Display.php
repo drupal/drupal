@@ -8,7 +8,7 @@
 namespace Drupal\views_ui\Form\Ajax;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\views\ViewStorageInterface;
+use Drupal\views\ViewEntityInterface;
 
 /**
  * Provides a form for editing the Views display.
@@ -35,7 +35,7 @@ class Display extends ViewsFormBase {
    * @todo Remove this and switch all usage of $form_state->get('section') to
    *   $form_state->get('type').
    */
-  public function getFormState(ViewStorageInterface $view, $display_id, $js) {
+  public function getFormState(ViewEntityInterface $view, $display_id, $js) {
     $form_state = parent::getFormState($view, $display_id, $js);
     $form_state->set('section', $this->type);
     return $form_state;
@@ -44,7 +44,7 @@ class Display extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getForm(ViewStorageInterface $view, $display_id, $js, $type = NULL) {
+  public function getForm(ViewEntityInterface $view, $display_id, $js, $type = NULL) {
     $this->setType($type);
     return parent::getForm($view, $display_id, $js);
   }

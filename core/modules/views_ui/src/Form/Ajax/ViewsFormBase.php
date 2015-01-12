@@ -11,7 +11,8 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\views\ViewStorageInterface;
+use Drupal\views_ui\ViewUI;
+use Drupal\views\ViewEntityInterface;
 use Drupal\views\Ajax;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\CloseModalDialogCommand;
@@ -63,7 +64,7 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFormState(ViewStorageInterface $view, $display_id, $js) {
+  public function getFormState(ViewEntityInterface $view, $display_id, $js) {
     // $js may already have been converted to a Boolean.
     $ajax = is_string($js) ? $js === 'ajax' : $js;
     return (new FormState())
@@ -81,7 +82,7 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
   /**
    * {@inheritdoc}
    */
-  public function getForm(ViewStorageInterface $view, $display_id, $js) {
+  public function getForm(ViewEntityInterface $view, $display_id, $js) {
     $form_state = $this->getFormState($view, $display_id, $js);
     $view = $form_state->get('view');
     $key = $form_state->get('form_key');

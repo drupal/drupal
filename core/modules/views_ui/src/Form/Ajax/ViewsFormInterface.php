@@ -8,7 +8,7 @@
 namespace Drupal\views_ui\Form\Ajax;
 
 use Drupal\Core\Form\FormInterface;
-use Drupal\views\ViewStorageInterface;
+use Drupal\views\ViewEntityInterface;
 
 interface ViewsFormInterface extends FormInterface {
 
@@ -24,7 +24,7 @@ interface ViewsFormInterface extends FormInterface {
   /**
    * Gets the form state for this form.
    *
-   * @param \Drupal\views\ViewStorageInterface $view
+   * @param \Drupal\views\ViewEntityInterface $view
    *   The view being edited.
    * @param string|null $display_id
    *   The display ID being edited, or NULL to load the first available display.
@@ -35,12 +35,12 @@ interface ViewsFormInterface extends FormInterface {
    * @return \Drupal\Core\Form\FormStateInterface
    *   The current state of the form.
    */
-  public function getFormState(ViewStorageInterface $view, $display_id, $js);
+  public function getFormState(ViewEntityInterface $view, $display_id, $js);
 
   /**
    * Creates a new instance of this form.
    *
-   * @param \Drupal\views\ViewStorageInterface $view
+   * @param \Drupal\views\ViewEntityInterface $view
    *   The view being edited.
    * @param string|null $display_id
    *   The display ID being edited, or NULL to load the first available display.
@@ -55,6 +55,6 @@ interface ViewsFormInterface extends FormInterface {
    * @todo When http://drupal.org/node/1843224 is in, this will return
    *   \Drupal\Core\Ajax\AjaxResponse instead of the array of AJAX commands.
    */
-  public function getForm(ViewStorageInterface $view, $display_id, $js);
+  public function getForm(ViewEntityInterface $view, $display_id, $js);
 
 }

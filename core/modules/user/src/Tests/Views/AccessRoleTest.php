@@ -9,7 +9,6 @@ namespace Drupal\user\Tests\Views;
 
 use Drupal\user\Plugin\views\access\Role;
 use Drupal\views\Views;
-use Drupal\views\ViewStorageInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -31,7 +30,7 @@ class AccessRoleTest extends AccessTestBase {
    * Tests role access plugin.
    */
   function testAccessRole() {
-    /** @var \Drupal\views\ViewStorageInterface $view */
+    /** @var \Drupal\views\ViewentityInterface $view */
     $view = \Drupal::entityManager()->getStorage('view')->load('test_access_role');
     $display = &$view->getDisplay('default');
     $display['display_options']['access']['options']['role'] = array(

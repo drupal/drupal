@@ -21,7 +21,7 @@ use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\query\Sql;
 use Drupal\views\Entity\View;
-use Drupal\views\ViewStorageInterface;
+use Drupal\views\ViewEntityInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,7 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Stores UI related temporary settings.
  */
-class ViewUI implements ViewStorageInterface {
+class ViewUI implements ViewEntityInterface {
 
   /**
    * Indicates if a view is currently being edited.
@@ -109,7 +109,7 @@ class ViewUI implements ViewStorageInterface {
   /**
    * The View storage object.
    *
-   * @var \Drupal\views\ViewStorageInterface
+   * @var \Drupal\views\ViewEntityInterface
    */
   protected $storage;
 
@@ -165,10 +165,10 @@ class ViewUI implements ViewStorageInterface {
   /**
    * Constructs a View UI object.
    *
-   * @param \Drupal\views\ViewStorageInterface $storage
+   * @param \Drupal\views\ViewEntityInterface $storage
    *   The View storage object to wrap.
    */
-  public function __construct(ViewStorageInterface $storage, ViewExecutable $executable = NULL) {
+  public function __construct(ViewEntityInterface $storage, ViewExecutable $executable = NULL) {
     $this->entityType = 'view';
     $this->storage = $storage;
     if (!isset($executable)) {
@@ -1168,4 +1168,17 @@ class ViewUI implements ViewStorageInterface {
     $this->storage->getTypedData();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function addDisplay($plugin_id = 'page', $title = NULL, $id = NULL) {
+    return $this->storage->addDisplay($plugin_id, $title, $id);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getViewExecutable() {
+    return $this->storage->getViewExecutable();
+  }
 }

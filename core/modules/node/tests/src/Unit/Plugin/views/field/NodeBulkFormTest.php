@@ -62,7 +62,7 @@ class NodeBulkFormTest extends UnitTestCase {
     $container->set('views.views_data', $views_data);
     \Drupal::setContainer($container);
 
-    $storage = $this->getMock('Drupal\views\ViewStorageInterface');
+    $storage = $this->getMock('Drupal\views\ViewEntityInterface');
     $storage->expects($this->any())
       ->method('get')
       ->with('base_table')

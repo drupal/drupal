@@ -8,7 +8,7 @@
 namespace Drupal\views_ui\Form\Ajax;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\views\ViewStorageInterface;
+use Drupal\views\ViewEntityInterface;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -34,7 +34,7 @@ class ConfigHandlerExtra extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getForm(ViewStorageInterface $view, $display_id, $js, $type = NULL, $id = NULL) {
+  public function getForm(ViewEntityInterface $view, $display_id, $js, $type = NULL, $id = NULL) {
     $this->setType($type);
     $this->setID($id);
     return parent::getForm($view, $display_id, $js);

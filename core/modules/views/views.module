@@ -430,7 +430,7 @@ function views_add_contextual_links(&$render_element, $location, ViewExecutable 
               break;
             }
             else {
-              $args[$parameter_name] = $view->storage->{$property};
+              $args[$parameter_name] = $view->storage->get($property);
             }
           }
         }

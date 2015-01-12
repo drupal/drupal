@@ -39,7 +39,7 @@ class ViewsBlockTest extends UnitTestCase {
   /**
    * The view entity.
    *
-   * @var \Drupal\views\ViewStorageInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\views\ViewEntityInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $view;
 

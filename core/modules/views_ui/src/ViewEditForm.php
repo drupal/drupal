@@ -855,7 +855,7 @@ class ViewEditForm extends ViewFormBase {
    * Submit handler to Duplicate a display as another display type.
    */
   public function submitDuplicateDisplayAsType($form, FormStateInterface $form_state) {
-    /** @var \Drupal\views\ViewStorageInterface $view */
+    /** @var \Drupal\views\ViewEntityInterface $view */
     $view = $this->entity;
     $display_id = $this->displayID;
 

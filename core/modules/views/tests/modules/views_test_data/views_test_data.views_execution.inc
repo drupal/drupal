@@ -7,7 +7,6 @@
 
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\views\ViewExecutable;
-use Drupal\views\ViewStorageInterface;
 
 /**
  * Implements hook_views_query_substitutions().

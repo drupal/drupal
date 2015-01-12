@@ -8,7 +8,7 @@
 namespace Drupal\views;
 
 use Drupal\Core\Session\AccountInterface;
-use Drupal\views\ViewStorageInterface;
+use Drupal\views\ViewEntityInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -56,13 +56,13 @@ class ViewExecutableFactory {
   /**
    * Instantiates a ViewExecutable class.
    *
-   * @param \Drupal\views\ViewStorageInterface $view
+   * @param \Drupal\views\ViewEntityInterface $view
    *   A view entity instance.
    *
    * @return \Drupal\views\ViewExecutable
    *   A ViewExecutable instance.
    */
-  public function get(ViewStorageInterface $view) {
+  public function get(ViewEntityInterface $view) {
     $view = new ViewExecutable($view, $this->user, $this->viewsData);
     $view->setRequest($this->requestStack->getCurrentRequest());
     return $view;

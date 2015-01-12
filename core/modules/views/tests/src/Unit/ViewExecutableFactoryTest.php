@@ -61,7 +61,7 @@ class ViewExecutableFactoryTest extends UnitTestCase {
 
     $this->user = $this->getMock('Drupal\Core\Session\AccountInterface');
     $this->requestStack = new RequestStack();
-    $this->view = $this->getMock('Drupal\views\ViewStorageInterface');
+    $this->view = $this->getMock('Drupal\views\ViewEntityInterface');
     $this->viewsData = $this->getMockBuilder('Drupal\views\ViewsData')
       ->disableOriginalConstructor()
       ->getMock();

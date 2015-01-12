@@ -54,7 +54,7 @@ interface WizardInterface {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the wizard form.
    *
-   * @return \Drupal\views\ViewStorageInterface
+   * @return \Drupal\views\ViewEntityInterface
    *   The created view object.
    *
    * @throws \Drupal\views\Plugin\views\wizard\WizardException

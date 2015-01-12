@@ -12,7 +12,7 @@ use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
-use Drupal\views\ViewStorageInterface;
+use Drupal\views\ViewEntityInterface;
 use Drupal\Component\Utility\Tags;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -427,14 +427,14 @@ class ViewExecutable {
   /**
    * Constructs a new ViewExecutable object.
    *
-   * @param \Drupal\views\ViewStorageInterface $storage
+   * @param \Drupal\views\ViewEntityInterface $storage
    *   The view config entity the actual information is stored on.
    * @param \Drupal\Core\Session\AccountInterface $user
    *   The current user.
    * @param \Drupal\views\ViewsData $views_data
    *   The views data.
    */
-  public function __construct(ViewStorageInterface $storage, AccountInterface $user, ViewsData $views_data) {
+  public function __construct(ViewEntityInterface $storage, AccountInterface $user, ViewsData $views_data) {
     // Reference the storage and the executable to each other.
     $this->storage = $storage;
     $this->storage->set('executable', $this);

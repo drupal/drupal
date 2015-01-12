@@ -34,7 +34,7 @@ class ReorderDisplays extends ViewsFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    /** @var $view \Drupal\views\ViewStorageInterface */
+    /** @var $view \Drupal\views\ViewEntityInterface */
     $view = $form_state->get('view');
     $display_id = $form_state->get('display_id');
 
