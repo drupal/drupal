@@ -352,59 +352,6 @@ function format_xml_elements($array) {
 }
 
 /**
- * Formats a string containing a count of items.
- *
- * This function ensures that the string is pluralized correctly. Since t() is
- * called by this function, make sure not to pass already-localized strings to
- * it.
- *
- * For example:
- * @code
- *   $output = \Drupal::translation()->formatPlural($node->comment_count, '1 comment', '@count comments');
- * @endcode
- *
- * Example with additional replacements:
- * @code
- *   $output = \Drupal::translation()->formatPlural($update_count,
- *     'Changed the content type of 1 post from %old-type to %new-type.',
- *     'Changed the content type of @count posts from %old-type to %new-type.',
- *     array('%old-type' => $info->old_type, '%new-type' => $info->new_type));
- * @endcode
- *
- * @param $count
- *   The item count to display.
- * @param $singular
- *   The string for the singular case. Make sure it is clear this is singular,
- *   to ease translation (e.g. use "1 new comment" instead of "1 new"). Do not
- *   use @count in the singular string.
- * @param $plural
- *   The string for the plural case. Make sure it is clear this is plural, to
- *   ease translation. Use @count in place of the item count, as in
- *   "@count new comments".
- * @param $args
- *   An associative array of replacements to make after translation. Instances
- *   of any key in this array are replaced with the corresponding value.
- *   Based on the first character of the key, the value is escaped and/or
- *   themed. See format_string(). Note that you do not need to include @count
- *   in this array; this replacement is done automatically for the plural case.
- * @param $options
- *   An associative array of additional options. See t() for allowed keys.
- *
- * @return
- *   A translated string.
- *
- * @see t()
- * @see format_string()
- * @see \Drupal\Core\StringTranslation\TranslationManager->formatPlural()
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::translation()->formatPlural().
- */
-function format_plural($count, $singular, $plural, array $args = array(), array $options = array()) {
-  return \Drupal::translation()->formatPlural($count, $singular, $plural, $args, $options);
-}
-
-/**
  * Generates a string representation for the given byte count.
  *
  * @param $size
