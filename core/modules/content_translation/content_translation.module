@@ -12,7 +12,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\node\NodeInterface;
 
 /**
@@ -184,37 +183,6 @@ function content_translation_menu_links_discovered_alter(array &$links) {
 }
 
 /**
- * Convert an entity canonical link to a router path.
- *
- * @param string $link
- *   The entity link to be converted.
- *
- * @return string
- *   The resulting router path. For instance "/node/{node}" is turned into
- *   "node/%node".
- *
- * @todo Remove this and use the actual link values when all the Content
- *   Translation code is adapted to the new routing system.
- */
-function _content_translation_link_to_router_path($entity_type, $link) {
-  $path = preg_replace('|{([^}]+)}|', '%$1', trim($link, '/'));
-  return str_replace('%id', '%' . $entity_type, $path);
-}
-
-/**
- * Strips out menu loaders from the given path.
- *
- * @param string $path
- *   The path to process.
- *
- * @return
- *   The given path where all the menu loaders are replaced with "%".
- */
-function _content_translation_menu_strip_loaders($path) {
-  return preg_replace('|%[^/]+|', '%', $path);
-}
-
-/**
  * Access callback for the translation overview page.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
@@ -231,42 +199,6 @@ function content_translation_translate_access(EntityInterface $entity) {
 }
 
 /**
- * Content translation controller factory.
- *
- * @param string $entity_type_id
- *   The type of the entity being translated.
- *
- * @return \Drupal\content_translation\ContentTranslationHandlerInterface
- *   An instance of the content translation controller interface.
- *
- * @todo Move to \Drupal\content_translation\ContentTranslationManager.
- */
-function content_translation_controller($entity_type_id) {
-  return \Drupal::entityManager()->getHandler($entity_type_id, 'translation');
-}
-
-/**
- * Checks whether a content translation is accessible.
- *
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity to be accessed.
- * @param $op
- *   The operation to be performed on the translation. Possible values are:
- *   - "view"
- *   - "update"
- *   - "delete"
- *   - "create"
- *
- * @return \Drupal\Core\Access\AccessResultInterface
- *   The access result.
- *
- * @todo Move to \Drupal\content_translation\ContentTranslationManager.
- */
-function content_translation_access(EntityInterface $entity, $op) {
-  return content_translation_controller($entity->getEntityTypeId())->getTranslationAccess($entity, $op) ;
-}
-
-/**
  * Implements hook_form_alter().
  */
 function content_translation_form_alter(array &$form, FormStateInterface $form_state) {
@@ -277,7 +209,7 @@ function content_translation_form_alter(array &$form, FormStateInterface $form_s
   $entity = $form_object->getEntity();
 
   if ($entity instanceof ContentEntityInterface && $entity->isTranslatable() && count($entity->getTranslationLanguages()) > 1) {
-    $controller = content_translation_controller($entity->getEntityTypeId());
+    $controller = \Drupal::entityManager()->getHandler($entity->getEntityTypeId(), 'translation');
     $controller->entityFormAlter($form, $form_state, $entity);
 
     // @todo Move the following lines to the code generating the property form

@@ -88,7 +88,7 @@ abstract class ContentTranslationTestBase extends WebTestBase {
     $this->setupUsers();
     $this->setupTestFields();
 
-    $this->controller = content_translation_controller($this->entityTypeId);
+    $this->controller = \Drupal::entityManager()->getHandler($this->entityTypeId, 'translation');
 
     // Rebuild the container so that the new languages are picked up by services
     // that hold a list of languages.
