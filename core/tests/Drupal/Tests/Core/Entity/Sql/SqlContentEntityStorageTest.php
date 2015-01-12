@@ -135,7 +135,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
   public function testGetBaseTable($base_table, $expected) {
     $this->entityType->expects($this->once())
       ->method('getBaseTable')
-      ->will($this->returnValue('entity_test'));
+      ->willReturn($base_table);
 
     $this->setUpEntityStorage();
 
