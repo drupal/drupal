@@ -358,34 +358,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     foreach ($this->serializedFields() as $name) {
       $fields[$name] = serialize($fields[$name]);
     }
-
-    // Directly fill parents for top-level links.
-    if (empty($link['parent'])) {
-      $fields['p1'] = $link['mlid'];
-      for ($i = 2; $i <= $this->maxDepth(); $i++) {
-        $fields["p$i"] = 0;
-      }
-      $fields['depth'] = 1;
-    }
-    // Otherwise, ensure that this link's depth is not beyond the maximum depth
-    // and fill parents based on the parent link.
-    else {
-      // @todo We want to also check $original['has_children'] here, but that
-      //   will be 0 even if there are children if those are not enabled.
-      //   has_children is really just the rendering hint. So, we either need
-      //   to define another column (has_any_children), or do the extra query.
-      //   https://www.drupal.org/node/2302149
-      if ($original) {
-        $limit = $this->maxDepth() - $this->doFindChildrenRelativeDepth($original) - 1;
-      }
-      else {
-        $limit = $this->maxDepth() - 1;
-      }
-      if ($parent['depth'] > $limit) {
-        throw new PluginException(String::format('The link with ID @id or its children exceeded the maximum depth of @depth', array('@id' => $link['id'], '@depth' => $this->maxDepth())));
-      }
-      $this->setParents($fields, $parent);
-    }
+    $this->setParents($fields, $parent, $original);
 
     // Need to check both parent and menu_name, since parent can be empty in any
     // menu.
@@ -463,22 +436,50 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    *
    * @param array $fields
    *   The menu link.
-   * @param array $parent
+   * @param array|false $parent
    *   The parent menu link.
+   * @param array $original
+   *   The original menu link.
    */
-  protected function setParents(array &$fields, array $parent) {
-    $fields['depth'] = $parent['depth'] + 1;
-    $i = 1;
-    while ($i < $fields['depth']) {
-      $p = 'p' . $i++;
-      $fields[$p] = $parent[$p];
+  protected function setParents(array &$fields, $parent, array $original) {
+    // Directly fill parents for top-level links.
+    if (empty($fields['parent'])) {
+      $fields['p1'] = $fields['mlid'];
+      for ($i = 2; $i <= $this->maxDepth(); $i++) {
+        $fields["p$i"] = 0;
+      }
+      $fields['depth'] = 1;
     }
-    $p = 'p' . $i++;
-    // The parent (p1 - p9) corresponding to the depth always equals the mlid.
-    $fields[$p] = $fields['mlid'];
-    while ($i <= static::MAX_DEPTH) {
+    // Otherwise, ensure that this link's depth is not beyond the maximum depth
+    // and fill parents based on the parent link.
+    else {
+      // @todo We want to also check $original['has_children'] here, but that
+      //   will be 0 even if there are children if those are not enabled.
+      //   has_children is really just the rendering hint. So, we either need
+      //   to define another column (has_any_children), or do the extra query.
+      //   https://www.drupal.org/node/2302149
+      if ($original) {
+        $limit = $this->maxDepth() - $this->doFindChildrenRelativeDepth($original) - 1;
+      }
+      else {
+        $limit = $this->maxDepth() - 1;
+      }
+      if ($parent['depth'] > $limit) {
+        throw new PluginException(String::format('The link with ID @id or its children exceeded the maximum depth of @depth', array('@id' => $fields['id'], '@depth' => $this->maxDepth())));
+      }
+      $fields['depth'] = $parent['depth'] + 1;
+      $i = 1;
+      while ($i < $fields['depth']) {
+        $p = 'p' . $i++;
+        $fields[$p] = $parent[$p];
+      }
       $p = 'p' . $i++;
-      $fields[$p] = 0;
+      // The parent (p1 - p9) corresponding to the depth always equals the mlid.
+      $fields[$p] = $fields['mlid'];
+      while ($i <= static::MAX_DEPTH) {
+        $p = 'p' . $i++;
+        $fields[$p] = 0;
+      }
     }
   }
 
