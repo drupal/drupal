@@ -61,7 +61,7 @@ class ConfigTranslationBlockListBuilder extends ConfigTranslationEntityListBuild
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    $theme = $entity->get('theme');
+    $theme = $entity->getTheme();
     $plugin_definition = $entity->getPlugin()->getPluginDefinition();
 
     $row['label'] = array(

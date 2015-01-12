@@ -183,10 +183,10 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
     // Build blocks first for each region.
     foreach ($entities as $entity_id => $entity) {
       $definition = $entity->getPlugin()->getPluginDefinition();
-      $blocks[$entity->get('region')][$entity_id] = array(
+      $blocks[$entity->getRegion()][$entity_id] = array(
         'label' => $entity->label(),
         'entity_id' => $entity_id,
-        'weight' => $entity->get('weight'),
+        'weight' => $entity->getWeight(),
         'entity' => $entity,
         'category' => $definition['category'],
       );
@@ -401,9 +401,9 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
     $entities = $this->storage->loadMultiple(array_keys($form_state->getValue('blocks')));
     foreach ($entities as $entity_id => $entity) {
       $entity_values = $form_state->getValue(array('blocks', $entity_id));
-      $entity->set('weight', $entity_values['weight']);
-      $entity->set('region', $entity_values['region']);
-      if ($entity->get('region') == BlockInterface::BLOCK_REGION_NONE) {
+      $entity->setWeight($entity_values['weight']);
+      $entity->setRegion($entity_values['region']);
+      if ($entity->getRegion() == BlockInterface::BLOCK_REGION_NONE) {
         $entity->disable();
       }
       else {

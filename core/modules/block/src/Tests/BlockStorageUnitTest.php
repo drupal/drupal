@@ -120,9 +120,9 @@ class BlockStorageUnitTest extends KernelTestBase {
     $this->assertTrue($entity instanceof Block, 'The loaded entity is a Block.');
 
     // Verify several properties of the block.
-    $this->assertEqual($entity->get('region'), '-1');
-    $this->assertTrue($entity->get('status'));
-    $this->assertEqual($entity->get('theme'), 'stark');
+    $this->assertEqual($entity->getRegion(), '-1');
+    $this->assertTrue($entity->status());
+    $this->assertEqual($entity->getTheme(), 'stark');
     $this->assertTrue($entity->uuid());
   }
 

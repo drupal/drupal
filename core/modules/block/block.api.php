@@ -154,8 +154,8 @@ function hook_block_view_BASE_BLOCK_ID_alter(array &$build, \Drupal\Core\Block\B
 function hook_block_access(\Drupal\block\Entity\Block $block, $operation, \Drupal\user\Entity\User $account, $langcode) {
   // Example code that would prevent displaying the 'Powered by Drupal' block in
   // a region different than the footer.
-  if ($operation == 'view' && $block->get('plugin') == 'system_powered_by_block') {
-    return AccessResult::forbiddenIf($block->get('region') != 'footer')->cacheUntilEntityChanges($block);
+  if ($operation == 'view' && $block->getPluginId() == 'system_powered_by_block') {
+    return AccessResult::forbiddenIf($block->getRegion() != 'footer')->cacheUntilEntityChanges($block);
   }
 
   // No opinion.

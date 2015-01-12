@@ -103,7 +103,7 @@ function _block_rehash($theme = NULL) {
       unset($blocks[$block_id]);
       continue;
     }
-    $region = $block->get('region');
+    $region = $block->getRegion();
     $status = $block->status();
     // Disable blocks in invalid regions.
     if (!empty($region) && $region != BlockInterface::BLOCK_REGION_NONE && !isset($regions[$region]) && $status) {
@@ -114,7 +114,7 @@ function _block_rehash($theme = NULL) {
     }
     // Set region to none if not enabled.
     if (!$status && $region != BlockInterface::BLOCK_REGION_NONE) {
-      $block->set('region', BlockInterface::BLOCK_REGION_NONE);
+      $block->setRegion(BlockInterface::BLOCK_REGION_NONE);
       $block->save();
     }
   }
@@ -159,13 +159,11 @@ function block_theme_initialize($theme) {
       else {
         $id = $theme . '_' . $default_theme_block_id;
       }
-      $block = $default_theme_block->createDuplicate();
-      $block->set('id', $id);
-      $block->set('theme', $theme);
+      $block = $default_theme_block->createDuplicateBlock($id, $theme);
       // If the region isn't supported by the theme, assign the block to the
       // theme's default region.
-      if (!isset($regions[$block->get('region')])) {
-        $block->set('region', system_default_region($theme));
+      if (!isset($regions[$block->getRegion()])) {
+        $block->setRegion(system_default_region($theme));
       }
       $block->save();
     }
@@ -282,7 +280,7 @@ function block_user_role_delete($role) {
 function block_menu_delete(Menu $menu) {
   if (!$menu->isSyncing()) {
     foreach (Block::loadMultiple() as $block) {
-      if ($block->get('plugin') == 'system_menu_block:' . $menu->id()) {
+      if ($block->getPluginId() == 'system_menu_block:' . $menu->id()) {
         $block->delete();
       }
     }

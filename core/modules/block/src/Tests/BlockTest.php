@@ -348,7 +348,7 @@ class BlockTest extends BlockTestBase {
     $this->assertIdentical($cache_entry->tags, $expected_cache_tags);
 
     // The "Powered by Drupal" block is modified; verify a cache miss.
-    $block->set('region', 'content');
+    $block->setRegion('content');
     $block->save();
     $this->drupalGet('<front>');
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');

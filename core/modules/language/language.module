@@ -77,7 +77,7 @@ function language_help($route_name, RouteMatchInterface $route_match) {
       return $output;
 
     case 'entity.block.edit_form':
-      if (($block = $route_match->getParameter('block')) && $block->get('plugin') == 'language_block:language_interface') {
+      if (($block = $route_match->getParameter('block')) && $block->getPluginId() == 'language_block:language_interface') {
         return '<p>' . t('With multiple languages added, registered users can select their preferred language and authors can assign a specific language to content.') . '</p>';
       }
       break;

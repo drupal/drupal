@@ -42,7 +42,7 @@ class BlockInvalidRegionTest extends WebTestBase {
   function testBlockInInvalidRegion() {
     // Enable a test block and place it in an invalid region.
     $block = $this->drupalPlaceBlock('test_html');
-    $block->set('region', 'invalid_region');
+    $block->setRegion('invalid_region');
     $block->save();
 
     $warning_message = t('The block %info was assigned to the invalid region %region and has been disabled.', array('%info' => $block->id(), '%region' => 'invalid_region'));
@@ -57,7 +57,7 @@ class BlockInvalidRegionTest extends WebTestBase {
 
     // Place disabled test block in the invalid region of the default theme.
     $block = Block::load($block->id());
-    $block->set('region', 'invalid_region');
+    $block->setRegion('invalid_region');
     $block->save();
 
     // Clear the cache to check if the warning message is not triggered.

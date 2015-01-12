@@ -98,7 +98,7 @@ class BlockForm extends EntityForm {
     $entity = $this->entity;
 
     // Store theme settings in $form_state for use below.
-    if (!$theme = $entity->get('theme')) {
+    if (!$theme = $entity->getTheme()) {
       $theme = $this->config('system.theme')->get('default');
     }
     $form_state->set('block_theme', $theme);
@@ -127,7 +127,7 @@ class BlockForm extends EntityForm {
     );
 
     // Theme settings.
-    if ($entity->get('theme')) {
+    if ($entity->getTheme()) {
       $form['theme'] = array(
         '#type' => 'value',
         '#value' => $theme,
@@ -157,7 +157,7 @@ class BlockForm extends EntityForm {
       '#type' => 'select',
       '#title' => $this->t('Region'),
       '#description' => $this->t('Select the region where this block should be displayed.'),
-      '#default_value' => $entity->get('region'),
+      '#default_value' => $entity->getRegion(),
       '#empty_value' => BlockInterface::BLOCK_REGION_NONE,
       '#options' => system_region_list($theme, REGIONS_VISIBLE),
       '#prefix' => '<div id="edit-block-region-wrapper">',

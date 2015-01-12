@@ -93,12 +93,8 @@ class BlockRepositoryTest extends UnitTestCase {
         ->method('access')
         ->will($this->returnValue($block_config[0]));
       $block->expects($block_config[0] ? $this->atLeastOnce() : $this->never())
-        ->method('get')
-        ->will($this->returnValueMap(array(
-          array('region', $block_config[1]),
-          array('weight', $block_config[2]),
-          array('status', TRUE),
-        )));
+        ->method('getRegion')
+        ->willReturn($block_config[1]);
       $blocks[$block_id] = $block;
     }
 
@@ -159,8 +155,7 @@ class BlockRepositoryTest extends UnitTestCase {
       ->method('access')
       ->willReturn(TRUE);
     $block->expects($this->once())
-      ->method('get')
-      ->with('region')
+      ->method('getRegion')
       ->willReturn('top');
     $blocks['block_id'] = $block;
 

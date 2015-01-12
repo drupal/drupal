@@ -48,7 +48,7 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
    *
    * @var string
    */
-  public $id;
+  protected $id;
 
   /**
    * The plugin instance settings.
@@ -69,7 +69,7 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
    *
    * @var int
    */
-  public $weight;
+  protected $weight;
 
   /**
    * The plugin instance ID.
@@ -114,6 +114,13 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
   protected $conditionPluginManager;
 
   /**
+   * The theme that includes the block plugin for this entity.
+   *
+   * @var string
+   */
+  protected $theme;
+
+  /**
    * {@inheritdoc}
    */
   public function getPlugin() {
@@ -144,7 +151,35 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
   }
 
   /**
-   * Overrides \Drupal\Core\Entity\Entity::label();
+   * {@inheritdoc}
+   */
+  public function getPluginId() {
+    return $this->plugin;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getRegion() {
+    return $this->region;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTheme() {
+    return $this->theme;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getWeight() {
+    return $this->weight;
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function label() {
     $settings = $this->get('settings');
@@ -162,13 +197,13 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
    */
   public static function sort(ConfigEntityInterface $a, ConfigEntityInterface $b) {
     // Separate enabled from disabled.
-    $status = $b->get('status') - $a->get('status');
-    if ($status) {
+    $status = (int) $b->status() - (int) $a->status();
+    if ($status !== 0) {
       return $status;
     }
     // Sort by weight, unless disabled.
-    if ($a->get('region') != static::BLOCK_REGION_NONE) {
-      $weight = $a->get('weight') - $b->get('weight');
+    if ($a->getRegion() != static::BLOCK_REGION_NONE) {
+      $weight = $a->getWeight() - $b->getWeight();
       if ($weight) {
         return $weight;
       }
@@ -281,6 +316,36 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
       $this->conditionPluginManager = \Drupal::service('plugin.manager.condition');
     }
     return $this->conditionPluginManager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setRegion($region) {
+    $this->region = $region;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setWeight($weight) {
+    $this->weight = $weight;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createDuplicateBlock($new_id = NULL, $new_theme = NULL) {
+    $duplicate = parent::createDuplicate();
+    if (!empty($new_id)) {
+      $duplicate->id = $new_id;
+    }
+    if (!empty($new_theme)) {
+      $duplicate->theme = $new_theme;
+    }
+    return $duplicate;
   }
 
 }

@@ -126,7 +126,7 @@ function system_help($route_name, RouteMatchInterface $route_match) {
       return '<p>' . t('The uninstall process removes all data related to a module.') . '</p>';
 
     case 'entity.block.edit_form':
-      if (($block = $route_match->getParameter('block')) && $block->get('plugin') == 'system_powered_by_block') {
+      if (($block = $route_match->getParameter('block')) && $block->getPluginId() == 'system_powered_by_block') {
         return '<p>' . t('The <em>Powered by Drupal</em> block is an optional link to the home page of the Drupal project. While there is absolutely no requirement that sites feature this link, it may be used to show support for Drupal.') . '</p>';
       }
       break;

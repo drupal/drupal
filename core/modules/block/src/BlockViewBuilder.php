@@ -57,7 +57,7 @@ class BlockViewBuilder extends EntityViewBuilder {
             'route_parameters' => array('block' => $entity->id()),
           ),
         ),
-        '#weight' => $entity->get('weight'),
+        '#weight' => $entity->getWeight(),
         '#configuration' => $configuration,
         '#plugin_id' => $plugin_id,
         '#base_plugin_id' => $base_id,

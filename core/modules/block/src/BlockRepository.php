@@ -78,7 +78,7 @@ class BlockRepository implements BlockRepositoryInterface {
       /** @var \Drupal\block\BlockInterface $block */
       // Set the contexts on the block before checking access.
       if ($block->setContexts($contexts)->access('view')) {
-        $full[$block->get('region')][$block_id] = $block;
+        $full[$block->getRegion()][$block_id] = $block;
       }
     }
 
