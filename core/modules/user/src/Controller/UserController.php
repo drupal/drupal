@@ -9,11 +9,12 @@ namespace Drupal\user\Controller;
 
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Datetime\DateFormatter;
+use Drupal\user\UserDataInterface;
 use Drupal\user\UserInterface;
+use Drupal\user\UserStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Drupal\Core\Datetime\DateFormatter;
-use Drupal\user\UserStorageInterface;
 
 /**
  * Controller routines for user routes.
@@ -35,6 +36,13 @@ class UserController extends ControllerBase {
   protected $userStorage;
 
   /**
+   * The user data service.
+   *
+   * @var \Drupal\user\UserDataInterface
+   */
+  protected $userData;
+
+  /**
    * Constructs a UserController object.
    *
    * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
@@ -42,9 +50,10 @@ class UserController extends ControllerBase {
    * @param \Drupal\user\UserStorageInterface $user_storage
    *   The user storage.
    */
-  public function __construct(DateFormatter $date_formatter, UserStorageInterface $user_storage) {
+  public function __construct(DateFormatter $date_formatter, UserStorageInterface $user_storage, UserDataInterface $user_data) {
     $this->dateFormatter = $date_formatter;
     $this->userStorage = $user_storage;
+    $this->userData = $user_data;
   }
 
   /**
@@ -53,7 +62,8 @@ class UserController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('date.formatter'),
-      $container->get('entity.manager')->getStorage('user')
+      $container->get('entity.manager')->getStorage('user'),
+      $container->get('user.data')
     );
   }
 
@@ -164,11 +174,43 @@ class UserController extends ControllerBase {
   }
 
   /**
-   * @todo Remove user_cancel_confirm().
+   * Confirms cancelling a user account via an email link.
+   *
+   * @param \Drupal\user\UserInterface $user
+   *   The user account.
+   * @param int $timestamp
+   *   The timestamp.
+   * @param string $hashed_pass
+   *   The hashed password.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *   A redirect response.
    */
   public function confirmCancel(UserInterface $user, $timestamp = 0, $hashed_pass = '') {
-    module_load_include('pages.inc', 'user');
-    return user_cancel_confirm($user, $timestamp, $hashed_pass);
+    // Time out in seconds until cancel URL expires; 24 hours = 86400 seconds.
+    $timeout = 86400;
+    $current = REQUEST_TIME;
+
+    // Basic validation of arguments.
+    $account_data = $this->userData->get('user', $user->id());
+    if (isset($account_data['cancel_method']) && !empty($timestamp) && !empty($hashed_pass)) {
+      // Validate expiration and hashed password/login.
+      if ($timestamp <= $current && $current - $timestamp < $timeout && $user->id() && $timestamp >= $user->getLastLoginTime() && $hashed_pass == user_pass_rehash($user->getPassword(), $timestamp, $user->getLastLoginTime())) {
+        $edit = array(
+          'user_cancel_notify' => isset($account_data['cancel_notify']) ? $account_data['cancel_notify'] : $this->config('user.settings')->get('notify.status_canceled'),
+        );
+        user_cancel($edit, $user->id(), $account_data['cancel_method']);
+        // Since user_cancel() is not invoked via Form API, batch processing
+        // needs to be invoked manually and should redirect to the front page
+        // after completion.
+        return batch_process('');
+      }
+      else {
+        drupal_set_message(t('You have tried to use an account cancellation link that has expired. Please request a new one using the form below.'));
+        return $this->redirect('entity.user.cancel_form', ['user' => $user->id()], ['absolute' => TRUE]);
+      }
+    }
+    throw new AccessDeniedHttpException();
   }
 
 }

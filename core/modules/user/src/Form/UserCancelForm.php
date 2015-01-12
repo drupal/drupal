@@ -129,7 +129,8 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
     }
     else {
       // Store cancelling method and whether to notify the user in
-      // $this->entity for user_cancel_confirm().
+      // $this->entity for
+      // \Drupal\user\Controller\UserController::confirmCancel().
       $this->entity->user_cancel_method = $form_state->getValue('user_cancel_method');
       $this->entity->user_cancel_notify = $form_state->getValue('user_cancel_notify');
       $this->entity->save();

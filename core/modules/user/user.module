@@ -689,7 +689,7 @@ function user_pass_reset_url($account, $options = array()) {
  *   account.
  *
  * @see user_mail_tokens()
- * @see user_cancel_confirm()
+ * @see \Drupal\user\Controller\UserController::confirmCancel()
  */
 function user_cancel_url($account, $options = array()) {
   $timestamp = REQUEST_TIME;
@@ -711,7 +711,8 @@ function user_cancel_url($account, $options = array()) {
  * same information, and compared to the hash value from the URL. The URL
  * normally contains both the time stamp and the numeric user ID. The login
  * timestamp and hashed password are retrieved from the database as necessary.
- * For a usage example, see user_cancel_url() and user_cancel_confirm().
+ * For a usage example, see user_cancel_url() and
+ * \Drupal\user\Controller\UserController::confirmCancel().
  *
  * @param string $password
  *   The hashed user account password value.
