@@ -79,15 +79,15 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
 
     // Only use node types the user has access to.
     foreach ($this->entityManager()->getStorage('node_type')->loadMultiple() as $type) {
-      if ($this->entityManager()->getAccessControlHandler('node')->createAccess($type->type)) {
-        $content[$type->type] = $type;
+      if ($this->entityManager()->getAccessControlHandler('node')->createAccess($type->id())) {
+        $content[$type->id()] = $type;
       }
     }
 
     // Bypass the node/add listing if only one content type is available.
     if (count($content) == 1) {
       $type = array_shift($content);
-      return $this->redirect('node.add', array('node_type' => $type->type));
+      return $this->redirect('node.add', array('node_type' => $type->id()));
     }
 
     return array(
@@ -107,7 +107,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
    */
   public function add(NodeTypeInterface $node_type) {
     $node = $this->entityManager()->getStorage('node')->create(array(
-      'type' => $node_type->type,
+      'type' => $node_type->id(),
     ));
 
     $form = $this->entityFormBuilder()->getForm($node);
@@ -243,7 +243,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
    *   The page title.
    */
   public function addPageTitle(NodeTypeInterface $node_type) {
-    return $this->t('Create @name', array('@name' => $node_type->name));
+    return $this->t('Create @name', array('@name' => $node_type->label()));
   }
 
 }

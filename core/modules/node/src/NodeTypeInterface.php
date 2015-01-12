@@ -71,4 +71,19 @@ interface NodeTypeInterface extends ConfigEntityInterface, ThirdPartySettingsInt
    */
   public function setPreviewMode($preview_mode);
 
+  /**
+   * Returns the help information.
+   *
+   * @return string
+   *   The help information of this node type.
+   */
+  public function getHelp();
+
+  /**
+   * Returns the description.
+   *
+   * @return string
+   *   The description of this node type.
+   */
+  public function getDescription();
 }

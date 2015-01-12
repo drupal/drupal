@@ -64,7 +64,7 @@ class LocaleContentTest extends WebTestBase {
     // User to add and remove language.
     $admin_user = $this->drupalCreateUser(array('administer languages', 'administer content types', 'access administration pages'));
     // User to create a node.
-    $web_user = $this->drupalCreateUser(array("create {$type1->type} content", "create {$type2->type} content", "edit any {$type2->type} content"));
+    $web_user = $this->drupalCreateUser(array("create {$type1->id()} content", "create {$type2->id()} content", "edit any {$type2->id()} content"));
 
     // Add custom language.
     $this->drupalLogin($admin_user);
@@ -81,24 +81,24 @@ class LocaleContentTest extends WebTestBase {
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
 
     // Set the content type to use multilingual support.
-    $this->drupalGet("admin/structure/types/manage/{$type2->type}");
+    $this->drupalGet("admin/structure/types/manage/{$type2->id()}");
     $this->assertText(t('Language settings'), 'Multilingual support widget present on content type configuration form.');
     $edit = array(
       'language_configuration[language_alterable]' => TRUE,
     );
-    $this->drupalPostForm("admin/structure/types/manage/{$type2->type}", $edit, t('Save content type'));
-    $this->assertRaw(t('The content type %type has been updated.', array('%type' => $type2->name)));
+    $this->drupalPostForm("admin/structure/types/manage/{$type2->id()}", $edit, t('Save content type'));
+    $this->assertRaw(t('The content type %type has been updated.', array('%type' => $type2->label())));
     $this->drupalLogout();
     \Drupal::languageManager()->reset();
 
     // Verify language selection is not present on the node add form.
     $this->drupalLogin($web_user);
-    $this->drupalGet("node/add/{$type1->type}");
+    $this->drupalGet("node/add/{$type1->id()}");
     // Verify language select list is not present.
     $this->assertNoFieldByName('langcode[0][value]', NULL, 'Language select not present on the node add form.');
 
     // Verify language selection appears on the node add form.
-    $this->drupalGet("node/add/{$type2->type}");
+    $this->drupalGet("node/add/{$type2->id()}");
     // Verify language select list is present.
     $this->assertFieldByName('langcode[0][value]', NULL, 'Language select present on the node add form.');
     // Ensure language appears.
@@ -108,7 +108,7 @@ class LocaleContentTest extends WebTestBase {
     $node_title = $this->randomMachineName();
     $node_body = $this->randomMachineName();
     $edit = array(
-      'type' => $type2->type,
+      'type' => $type2->id(),
       'title' => $node_title,
       'body' => array(array('value' => $node_body)),
       'langcode' => $langcode,
@@ -137,7 +137,7 @@ class LocaleContentTest extends WebTestBase {
     // User to add and remove language.
     $admin_user = $this->drupalCreateUser(array('administer languages', 'administer content types', 'access administration pages'));
     // User to create a node.
-    $web_user = $this->drupalCreateUser(array("create {$type->type} content", "edit own {$type->type} content"));
+    $web_user = $this->drupalCreateUser(array("create {$type->id()} content", "edit own {$type->id()} content"));
 
     // Login as admin.
     $this->drupalLogin($admin_user);
@@ -154,12 +154,12 @@ class LocaleContentTest extends WebTestBase {
     \Drupal::languageManager()->reset();
 
     // Set the content type to use multilingual support.
-    $this->drupalGet("admin/structure/types/manage/{$type->type}");
+    $this->drupalGet("admin/structure/types/manage/{$type->id()}");
     $edit = array(
       'language_configuration[language_alterable]' => TRUE,
     );
-    $this->drupalPostForm("admin/structure/types/manage/{$type->type}", $edit, t('Save content type'));
-    $this->assertRaw(t('The content type %type has been updated.', array('%type' => $type->name)));
+    $this->drupalPostForm("admin/structure/types/manage/{$type->id()}", $edit, t('Save content type'));
+    $this->assertRaw(t('The content type %type has been updated.', array('%type' => $type->label())));
     $this->drupalLogout();
 
     // Login as web user to add new node.
@@ -170,7 +170,7 @@ class LocaleContentTest extends WebTestBase {
     foreach (array('en', 'es', 'ar') as $langcode) {
       $nodes[$langcode] = $this->drupalCreateNode(array(
         'langcode' => $langcode,
-        'type' => $type->type,
+        'type' => $type->id(),
         'promote' => NODE_PROMOTED,
       ));
     }

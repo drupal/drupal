@@ -73,7 +73,7 @@ class NodeTypeForm extends EntityForm {
     $form['name'] = array(
       '#title' => t('Name'),
       '#type' => 'textfield',
-      '#default_value' => $type->name,
+      '#default_value' => $type->label(),
       '#description' => t('The human-readable name of this content type. This text will be displayed as part of the list on the <em>Add content</em> page. This name must be unique.'),
       '#required' => TRUE,
       '#size' => 30,
@@ -96,7 +96,7 @@ class NodeTypeForm extends EntityForm {
     $form['description'] = array(
       '#title' => t('Description'),
       '#type' => 'textarea',
-      '#default_value' => $type->description,
+      '#default_value' => $type->getDescription(),
       '#description' => t('Describe this content type. The text will be displayed on the <em>Add content</em> page.'),
     );
 
@@ -132,7 +132,7 @@ class NodeTypeForm extends EntityForm {
     $form['submission']['help']  = array(
       '#type' => 'textarea',
       '#title' => t('Explanation or submission guidelines'),
-      '#default_value' => $type->help,
+      '#default_value' => $type->getHelp(),
       '#description' => t('This text will be displayed at the top of the page when creating or editing content of this type.'),
     );
     $form['workflow'] = array(
@@ -220,8 +220,8 @@ class NodeTypeForm extends EntityForm {
   public function save(array $form, FormStateInterface $form_state) {
     $type = $this->entity;
     $type->setNewRevision($form_state->getValue(array('options', 'revision')));
-    $type->type = trim($type->id());
-    $type->name = trim($type->name);
+    $type->set('type', trim($type->id()));
+    $type->set('name', trim($type->label()));
 
     $status = $type->save();
 

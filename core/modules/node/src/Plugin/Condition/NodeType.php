@@ -73,7 +73,7 @@ class NodeType extends ConditionPluginBase implements ContainerFactoryPluginInte
     $options = array();
     $node_types = $this->entityStorage->loadMultiple();
     foreach ($node_types as $type) {
-      $options[$type->type] = $type->name;
+      $options[$type->id()] = $type->label();
     }
     $form['bundles'] = array(
       '#title' => $this->t('Node types'),

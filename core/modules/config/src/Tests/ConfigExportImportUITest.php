@@ -110,18 +110,18 @@ class ConfigExportImportUITest extends WebTestBase {
     $this->fieldStorage->save();
     entity_create('field_config', array(
       'field_storage' => $this->fieldStorage,
-      'bundle' => $this->contentType->type,
+      'bundle' => $this->contentType->id(),
     ))->save();
-    entity_get_form_display('node', $this->contentType->type, 'default')
+    entity_get_form_display('node', $this->contentType->id(), 'default')
       ->setComponent($this->fieldName, array(
         'type' => 'text_textfield',
       ))
       ->save();
-    entity_get_display('node', $this->contentType->type, 'full')
+    entity_get_display('node', $this->contentType->id(), 'full')
       ->setComponent($this->fieldName)
       ->save();
 
-    $this->drupalGet('node/add/' . $this->contentType->type);
+    $this->drupalGet('node/add/' . $this->contentType->id());
     $this->assertFieldByName("{$this->fieldName}[0][value]", '', 'Widget is displayed');
 
     // Export the configuration.
@@ -146,7 +146,7 @@ class ConfigExportImportUITest extends WebTestBase {
         $field_storage->delete();
       }
     }
-    $this->drupalGet('node/add/' . $this->contentType->type);
+    $this->drupalGet('node/add/' . $this->contentType->id());
     $this->assertNoFieldByName("{$this->fieldName}[0][value]", '', 'Widget is not displayed');
 
     // Import the configuration.

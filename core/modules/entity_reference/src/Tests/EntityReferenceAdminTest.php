@@ -48,7 +48,7 @@ class EntityReferenceAdminTest extends WebTestBase {
     // Create a content type, with underscores.
     $type_name = strtolower($this->randomMachineName(8)) . '_test';
     $type = $this->drupalCreateContentType(array('name' => $type_name, 'type' => $type_name));
-    $this->type = $type->type;
+    $this->type = $type->id();
   }
 
   /**

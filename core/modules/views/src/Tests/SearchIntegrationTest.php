@@ -39,7 +39,7 @@ class SearchIntegrationTest extends ViewTestBase {
     // with the word "sandwich". Make the second node link to the first.
     $node['title'] = 'pizza';
     $node['body'] = array(array('value' => 'pizza'));
-    $node['type'] = $type->type;
+    $node['type'] = $type->id();
     $this->drupalCreateNode($node);
 
     $this->drupalGet('node/1');

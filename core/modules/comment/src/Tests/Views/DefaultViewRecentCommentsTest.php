@@ -68,10 +68,10 @@ class DefaultViewRecentCommentsTest extends ViewTestBase {
 
     // Add a node of the new content type.
     $node_data = array(
-      'type' => $content_type->type,
+      'type' => $content_type->id(),
     );
 
-    $this->container->get('comment.manager')->addDefaultField('node', $content_type->type);
+    $this->container->get('comment.manager')->addDefaultField('node', $content_type->id());
     $this->node = $this->drupalCreateNode($node_data);
 
     // Force a flush of the in-memory storage.

@@ -23,7 +23,7 @@ class SelectionTest extends WebTestBase {
    */
   public function testSelectionHandler() {
     // Create nodes.
-    $type = $this->drupalCreateContentType()->type;
+    $type = $this->drupalCreateContentType()->id();
     $node1 = $this->drupalCreateNode(array('type' => $type));
     $node2 = $this->drupalCreateNode(array('type' => $type));
     $node3 = $this->drupalCreateNode();

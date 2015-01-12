@@ -70,23 +70,23 @@ class TaggedWithTest extends WizardTestBase {
     // configure it to display an autocomplete widget.
     $this->tag_field = array(
       'field_storage' => $this->tag_field_storage,
-      'bundle' => $this->node_type_with_tags->type,
+      'bundle' => $this->node_type_with_tags->id(),
     );
     entity_create('field_config', $this->tag_field)->save();
 
-    entity_get_form_display('node', $this->node_type_with_tags->type, 'default')
+    entity_get_form_display('node', $this->node_type_with_tags->id(), 'default')
       ->setComponent('field_views_testing_tags', array(
         'type' => 'taxonomy_autocomplete',
       ))
       ->save();
 
-    entity_get_display('node', $this->node_type_with_tags->type, 'default')
+    entity_get_display('node', $this->node_type_with_tags->id(), 'default')
       ->setComponent('field_views_testing_tags', array(
         'type' => 'taxonomy_term_reference_link',
         'weight' => 10,
       ))
       ->save();
-    entity_get_display('node', $this->node_type_with_tags->type, 'teaser')
+    entity_get_display('node', $this->node_type_with_tags->id(), 'teaser')
       ->setComponent('field_views_testing_tags', array(
         'type' => 'taxonomy_term_reference_link',
         'weight' => 10,
@@ -100,7 +100,7 @@ class TaggedWithTest extends WizardTestBase {
   function testTaggedWith() {
     // In this test we will only create nodes that have an instance of the tag
     // field.
-    $node_add_path = 'node/add/' . $this->node_type_with_tags->type;
+    $node_add_path = 'node/add/' . $this->node_type_with_tags->id();
 
     // Create three nodes, with different tags.
     $edit = array();
@@ -120,7 +120,7 @@ class TaggedWithTest extends WizardTestBase {
     $view1 = array();
     // First select the node type and update the form so the correct tag field
     // is used.
-    $view1['show[type]'] = $this->node_type_with_tags->type;
+    $view1['show[type]'] = $this->node_type_with_tags->id();
     $this->drupalPostForm('admin/structure/views/add', $view1, t('Update "of type" choice'));
     // Now resubmit the entire form to the same URL.
     $view1['label'] = $this->randomMachineName(16);
@@ -142,7 +142,7 @@ class TaggedWithTest extends WizardTestBase {
     // Create a view that filters by taxonomy term "tag2". It should show only
     // the one node from above that is tagged with "tag2".
     $view2 = array();
-    $view2['show[type]'] = $this->node_type_with_tags->type;
+    $view2['show[type]'] = $this->node_type_with_tags->id();
     $this->drupalPostForm('admin/structure/views/add', $view2, t('Update "of type" choice'));
     $this->assertResponse(200);
     $view2['label'] = $this->randomMachineName(16);
@@ -172,28 +172,28 @@ class TaggedWithTest extends WizardTestBase {
     $tags_xpath = '//input[@name="show[tagged_with]"]';
     $this->drupalGet('admin/structure/views/add');
     $this->assertFieldByXpath($tags_xpath);
-    $view['show[type]'] = $this->node_type_with_tags->type;
+    $view['show[type]'] = $this->node_type_with_tags->id();
     $this->drupalPostForm('admin/structure/views/add', $view, t('Update "of type" choice'));
     $this->assertFieldByXpath($tags_xpath);
-    $view['show[type]'] = $this->node_type_without_tags->type;
+    $view['show[type]'] = $this->node_type_without_tags->id();
     $this->drupalPostForm(NULL, $view, t('Update "of type" choice'));
     $this->assertNoFieldByXpath($tags_xpath);
 
     // If we add an instance of the tagging field to the second node type, the
     // "tagged with" form element should not appear for it too.
     $field = $this->tag_field;
-    $field['bundle'] = $this->node_type_without_tags->type;
+    $field['bundle'] = $this->node_type_without_tags->id();
     entity_create('field_config', $field)->save();
-    entity_get_form_display('node', $this->node_type_without_tags->type, 'default')
+    entity_get_form_display('node', $this->node_type_without_tags->id(), 'default')
       ->setComponent('field_views_testing_tags', array(
         'type' => 'taxonomy_autocomplete',
       ))
       ->save();
 
-    $view['show[type]'] = $this->node_type_with_tags->type;
+    $view['show[type]'] = $this->node_type_with_tags->id();
     $this->drupalPostForm('admin/structure/views/add', $view, t('Update "of type" choice'));
     $this->assertFieldByXpath($tags_xpath);
-    $view['show[type]'] = $this->node_type_without_tags->type;
+    $view['show[type]'] = $this->node_type_without_tags->id();
     $this->drupalPostForm(NULL, $view, t('Update "of type" choice'));
     $this->assertFieldByXpath($tags_xpath);
   }

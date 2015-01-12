@@ -40,7 +40,7 @@ class GlossaryTest extends ViewTestBase {
     );
     foreach ($nodes_per_char as $char => $count) {
       $setting = array(
-        'type' => $type->type
+        'type' => $type->id()
       );
       for ($i = 0; $i < $count; $i++) {
         $node = $setting;

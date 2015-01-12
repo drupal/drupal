@@ -76,7 +76,7 @@ class NodeTypeListBuilder extends ConfigEntityListBuilder {
       'data' => $this->getLabel($entity),
       'class' => array('menu-label'),
     );
-    $row['description'] = Xss::filterAdmin($entity->description);
+    $row['description'] = Xss::filterAdmin($entity->getDescription());
     return $row + parent::buildRow($entity);
   }
 

@@ -58,7 +58,7 @@ class FieldGroupRowsTest extends HandlerTestBase {
     // Create an instance of the text field on the content type.
     $field = array(
       'field_storage' => $field_storage,
-      'bundle' => $node_type->type,
+      'bundle' => $node_type->id(),
     );
     entity_create('field_config', $field)->save();
 

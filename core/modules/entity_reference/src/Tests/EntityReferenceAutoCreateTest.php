@@ -39,10 +39,10 @@ class EntityReferenceAutoCreateTest extends WebTestBase {
 
     // Create "referencing" and "referenced" node types.
     $referencing = $this->drupalCreateContentType();
-    $this->referencingType = $referencing->type;
+    $this->referencingType = $referencing->id();
 
     $referenced = $this->drupalCreateContentType();
-    $this->referencedType = $referenced->type;
+    $this->referencedType = $referenced->id();
 
     entity_create('field_storage_config', array(
       'field_name' => 'test_field',
@@ -60,13 +60,13 @@ class EntityReferenceAutoCreateTest extends WebTestBase {
       'label' => 'Entity reference field',
       'field_name' => 'test_field',
       'entity_type' => 'node',
-      'bundle' => $referencing->type,
+      'bundle' => $referencing->id(),
       'settings' => array(
         'handler' => 'default',
         'handler_settings' => array(
           // Reference a single vocabulary.
           'target_bundles' => array(
-            $referenced->type,
+            $referenced->id(),
           ),
           // Enable auto-create.
           'auto_create' => TRUE,
@@ -74,10 +74,10 @@ class EntityReferenceAutoCreateTest extends WebTestBase {
       ),
     ))->save();
 
-    entity_get_display('node', $referencing->type, 'default')
+    entity_get_display('node', $referencing->id(), 'default')
       ->setComponent('test_field')
       ->save();
-    entity_get_form_display('node', $referencing->type, 'default')
+    entity_get_form_display('node', $referencing->id(), 'default')
       ->setComponent('test_field', array(
         'type' => 'entity_reference_autocomplete',
       ))

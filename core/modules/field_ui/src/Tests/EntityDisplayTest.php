@@ -280,7 +280,7 @@ class EntityDisplayTest extends KernelTestBase {
 
     // Rename the article bundle and assert the entity display is renamed.
     $type->old_type = 'article';
-    $type->type = 'article_rename';
+    $type->set('type', 'article_rename');
     $type->save();
     $old_display = entity_load('entity_view_display', 'node.article.default');
     $this->assertFalse((bool) $old_display);

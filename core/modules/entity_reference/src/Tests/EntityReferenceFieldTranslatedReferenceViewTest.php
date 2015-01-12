@@ -194,7 +194,7 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends WebTestBase {
 
     entity_create('field_config', array(
       'field_name' => $this->referenceFieldName,
-      'bundle' => $this->referrerType->type,
+      'bundle' => $this->referrerType->id(),
       'entity_type' => $this->testEntityTypeName,
     ))
     ->save();

@@ -50,7 +50,7 @@ class NodeTypeRenameConfigImportTest extends WebTestBase {
       'type' => Unicode::strtolower($this->randomMachineName(16)),
       'name' => $this->randomMachineName(),
     ));
-    $staged_type = $content_type->type;
+    $staged_type = $content_type->id();
 
     // Check the default status value for a node of this type.
     $node = entity_create('node', array('type' => $staged_type));
@@ -68,9 +68,9 @@ class NodeTypeRenameConfigImportTest extends WebTestBase {
     $this->copyConfig($active, $staging);
 
     // Change the machine name of the content type.
-    $content_type->type = Unicode::strtolower($this->randomMachineName(8));
+    $content_type->set('type', Unicode::strtolower($this->randomMachineName(8)));
     $content_type->save();
-    $active_type = $content_type->type;
+    $active_type = $content_type->id();
 
     // Ensure the base field override has been renamed and the value is correct.
     $node = entity_create('node', array('type' => $active_type));
@@ -134,7 +134,7 @@ class NodeTypeRenameConfigImportTest extends WebTestBase {
 
     $this->assertFalse(entity_load('node_type', $active_type), 'The content no longer exists with the old name.');
     $content_type = entity_load('node_type', $staged_type);
-    $this->assertIdentical($staged_type, $content_type->type);
+    $this->assertIdentical($staged_type, $content_type->id());
 
     // Ensure the base field override has been renamed and the value is correct.
     $node = entity_create('node', array('type' => $staged_type));

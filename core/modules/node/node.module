@@ -117,11 +117,13 @@ function node_help($route_name, RouteMatchInterface $route_match) {
     case 'entity.node.edit_form':
       $node = $route_match->getParameter('node');
       $type = NodeType::load($node->getType());
-      return (!empty($type->help) ? Xss::filterAdmin($type->help) : '');
+      $help = $type->getHelp();
+      return (!empty($help) ? Xss::filterAdmin($help) : '');
 
     case 'node.add':
       $type = $route_match->getParameter('node_type');
-      return (!empty($type->help) ? Xss::filterAdmin($type->help) : '');
+      $help = $type->getHelp();
+      return (!empty($help) ? Xss::filterAdmin($help) : '');
   }
 }
 
@@ -286,7 +288,7 @@ function node_get_type_label(NodeInterface $node) {
  *   The node type description.
  */
 function node_type_get_description(NodeTypeInterface $node_type) {
-  return $node_type->description;
+  return $node_type->getDescription();
 }
 
 /**
@@ -329,14 +331,14 @@ function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
     $field->save();
 
     // Assign widget settings for the 'default' form mode.
-    entity_get_form_display('node', $type->type, 'default')
+    entity_get_form_display('node', $type->id(), 'default')
       ->setComponent('body', array(
         'type' => 'text_textarea_with_summary',
       ))
       ->save();
 
     // Assign display settings for the 'default' and 'teaser' view modes.
-    entity_get_display('node', $type->type, 'default')
+    entity_get_display('node', $type->id(), 'default')
       ->setComponent('body', array(
         'label' => 'hidden',
         'type' => 'text_default',
@@ -347,7 +349,7 @@ function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
     // might not exist.
     $view_modes = \Drupal::entityManager()->getViewModes('node');
     if (isset($view_modes['teaser'])) {
-      entity_get_display('node', $type->type, 'teaser')
+      entity_get_display('node', $type->id(), 'teaser')
         ->setComponent('body', array(
           'label' => 'hidden',
           'type' => 'text_summary_or_trimmed',
@@ -366,7 +368,7 @@ function node_entity_extra_field_info() {
   $extra = array();
   $description = t('Node module element');
   foreach (node_type_get_types() as $bundle) {
-    $extra['node'][$bundle->type]['display']['links'] = array(
+    $extra['node'][$bundle->id()]['display']['links'] = array(
       'label' => t('Links'),
       'description' => $description,
       'weight' => 100,

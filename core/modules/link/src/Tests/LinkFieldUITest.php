@@ -39,7 +39,7 @@ class LinkFieldUITest extends WebTestBase {
   function testFieldUI() {
     // Add a content type.
     $type = $this->drupalCreateContentType();
-    $type_path = 'admin/structure/types/manage/' . $type->type;
+    $type_path = 'admin/structure/types/manage/' . $type->id();
 
     // Add a link field to the newly-created type.
     $label = $this->randomMachineName();

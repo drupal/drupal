@@ -64,7 +64,7 @@ class FilterHooksTest extends WebTestBase {
     $edit['title[0][value]'] = $title;
     $edit['body[0][value]'] = $this->randomMachineName(32);
     $edit['body[0][format]'] = $format_id;
-    $this->drupalPostForm("node/add/{$type->type}", $edit, t('Save and publish'));
+    $this->drupalPostForm("node/add/{$type->id()}", $edit, t('Save and publish'));
     $this->assertText(t('@type @title has been created.', array('@type' => $type_name, '@title' => $title)));
 
     // Disable the text format.

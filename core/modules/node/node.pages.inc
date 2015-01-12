@@ -30,10 +30,10 @@ function template_preprocess_node_add_list(&$variables) {
   $variables['types'] = array();
   if (!empty($variables['content'])) {
     foreach ($variables['content'] as $type) {
-      $variables['types'][$type->type] = array(
-        'type' => $type->type,
-        'add_link' => \Drupal::l($type->name, new Url('node.add', array('node_type' => $type->type))),
-        'description' => Xss::filterAdmin($type->description),
+      $variables['types'][$type->id()] = array(
+        'type' => $type->id(),
+        'add_link' => \Drupal::l($type->label(), new Url('node.add', array('node_type' => $type->id()))),
+        'description' => Xss::filterAdmin($type->getDescription()),
       );
     }
   }

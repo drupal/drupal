@@ -43,7 +43,7 @@ class ManageFieldsTest extends WebTestBase {
     // Create content type, with underscores.
     $type_name = strtolower($this->randomMachineName(8)) . '_test';
     $type = $this->drupalCreateContentType(array('name' => $type_name, 'type' => $type_name));
-    $this->type = $type->type;
+    $this->type = $type->id();
 
     // Create random field name.
     $this->field_label = $this->randomMachineName(8);
@@ -400,7 +400,7 @@ class ManageFieldsTest extends WebTestBase {
     // Create an additional node type.
     $type_name2 = strtolower($this->randomMachineName(8)) . '_test';
     $type2 = $this->drupalCreateContentType(array('name' => $type_name2, 'type' => $type_name2));
-    $type_name2 = $type2->type;
+    $type_name2 = $type2->id();
 
     // Add a field to the second node type.
     $bundle_path2 = 'admin/structure/types/manage/' . $type_name2;

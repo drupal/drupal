@@ -43,7 +43,7 @@ class FieldAccessTest extends FieldTestBase {
 
     // Create content type.
     $content_type_info = $this->drupalCreateContentType();
-    $content_type = $content_type_info->type;
+    $content_type = $content_type_info->id();
 
     $field_storage = array(
       'field_name' => 'test_view_field',

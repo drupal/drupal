@@ -62,7 +62,7 @@ class OptionsFieldUITest extends FieldTestBase {
     // Create content type, with underscores.
     $this->typeName = 'test_' . strtolower($this->randomMachineName());
     $type = $this->drupalCreateContentType(['name' => $this->typeName, 'type' => $this->typeName]);
-    $this->type = $type->type;
+    $this->type = $type->id();
   }
 
   /**

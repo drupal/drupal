@@ -35,11 +35,11 @@ class NodeTypeTest extends NodeTestBase {
     $this->assertTrue(isset($node_types['article']), 'Node type article is available.');
     $this->assertTrue(isset($node_types['page']), 'Node type basic page is available.');
 
-    $this->assertEqual($node_types['article']->name, $node_names['article'], 'Correct node type base has been returned.');
+    $this->assertEqual($node_types['article']->label(), $node_names['article'], 'Correct node type base has been returned.');
 
     $article = entity_load('node_type', 'article');
     $this->assertEqual($node_types['article'], $article, 'Correct node type has been returned.');
-    $this->assertEqual($node_types['article']->name, $article->label(), 'Correct node type name has been returned.');
+    $this->assertEqual($node_types['article']->label(), $article->label(), 'Correct node type name has been returned.');
   }
 
   /**
@@ -49,14 +49,14 @@ class NodeTypeTest extends NodeTestBase {
     // Create a content type programmaticaly.
     $type = $this->drupalCreateContentType();
 
-    $type_exists = (bool) entity_load('node_type', $type->type);
+    $type_exists = (bool) entity_load('node_type', $type->id());
     $this->assertTrue($type_exists, 'The new content type has been created in the database.');
 
     // Login a test user.
-    $web_user = $this->drupalCreateUser(array('create ' . $type->name . ' content'));
+    $web_user = $this->drupalCreateUser(array('create ' . $type->label() . ' content'));
     $this->drupalLogin($web_user);
 
-    $this->drupalGet('node/add/' . $type->type);
+    $this->drupalGet('node/add/' . $type->id());
     $this->assertResponse(200, 'The new content type can be accessed at node/add.');
 
     // Create a content type via the user interface.
@@ -137,11 +137,11 @@ class NodeTypeTest extends NodeTestBase {
     $this->drupalLogin($web_user);
 
     // Add a new node of this type.
-    $node = $this->drupalCreateNode(array('type' => $type->type));
+    $node = $this->drupalCreateNode(array('type' => $type->id()));
     // Attempt to delete the content type, which should not be allowed.
-    $this->drupalGet('admin/structure/types/manage/' . $type->name . '/delete');
+    $this->drupalGet('admin/structure/types/manage/' . $type->label() . '/delete');
     $this->assertRaw(
-      t('%type is used by 1 piece of content on your site. You can not remove this content type until you have removed all of the %type content.', array('%type' => $type->name)),
+      t('%type is used by 1 piece of content on your site. You can not remove this content type until you have removed all of the %type content.', array('%type' => $type->label())),
       'The content type will not be deleted until all nodes of that type are removed.'
     );
     $this->assertNoText(t('This action cannot be undone.'), 'The node type deletion confirmation form is not available.');
@@ -149,9 +149,9 @@ class NodeTypeTest extends NodeTestBase {
     // Delete the node.
     $node->delete();
     // Attempt to delete the content type, which should now be allowed.
-    $this->drupalGet('admin/structure/types/manage/' . $type->name . '/delete');
+    $this->drupalGet('admin/structure/types/manage/' . $type->label() . '/delete');
     $this->assertRaw(
-      t('Are you sure you want to delete the content type %type?', array('%type' => $type->name)),
+      t('Are you sure you want to delete the content type %type?', array('%type' => $type->label())),
       'The content type is available for deletion.'
     );
     $this->assertText(t('This action cannot be undone.'), 'The node type deletion confirmation form is available.');

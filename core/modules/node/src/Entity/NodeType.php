@@ -50,7 +50,7 @@ class NodeType extends ConfigEntityBundleBase implements NodeTypeInterface {
    *
    * @todo Rename to $id.
    */
-  public $type;
+  protected $type;
 
   /**
    * The human-readable name of the node type.
@@ -59,21 +59,21 @@ class NodeType extends ConfigEntityBundleBase implements NodeTypeInterface {
    *
    * @todo Rename to $label.
    */
-  public $name;
+  protected $name;
 
   /**
    * A brief description of this node type.
    *
    * @var string
    */
-  public $description;
+  protected $description;
 
   /**
    * Help information shown to the user when creating a Node of this type.
    *
    * @var string
    */
-  public $help;
+  protected $help;
 
   /**
    * Default value of the 'Create new revision' checkbox of this node type.
@@ -151,6 +151,20 @@ class NodeType extends ConfigEntityBundleBase implements NodeTypeInterface {
    */
   public function setPreviewMode($preview_mode) {
     $this->preview_mode = $preview_mode;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getHelp() {
+    return $this->help;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDescription() {
+    return $this->description;
   }
 
   /**
