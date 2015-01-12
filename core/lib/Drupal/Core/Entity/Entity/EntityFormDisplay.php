@@ -228,25 +228,6 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
   /**
    * {@inheritdoc}
    */
-  public function __sleep() {
-    // Only store the definition, not external objects or derived data.
-    $keys = array_keys($this->toArray());
-    $keys[] = 'entityTypeId';
-    return $keys;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __wakeup() {
-    // Run the values from self::toArray() through __construct().
-    $values = array_intersect_key($this->toArray(), get_object_vars($this));
-    $this->__construct($values, $this->entityTypeId);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getPluginCollections() {
     $configurations = array();
     foreach ($this->getComponents() as $field_name => $configuration) {
