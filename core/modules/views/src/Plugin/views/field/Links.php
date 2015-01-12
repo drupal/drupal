@@ -82,7 +82,7 @@ abstract class Links extends FieldPluginBase {
       }
       // Make sure that tokens are replaced for this paths as well.
       $tokens = $this->getRenderTokens(array());
-      $path = strip_tags(String::decodeEntities(strtr($path, $tokens)));
+      $path = strip_tags(String::decodeEntities($this->viewsTokenReplace($path, $tokens)));
 
       $links[$field] = array(
         'url' => $path ? UrlObject::fromUri('base://' . $path) : $url,

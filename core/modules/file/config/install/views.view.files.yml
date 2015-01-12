@@ -489,7 +489,7 @@ display:
             alter_text: false
             text: ''
             make_link: true
-            path: 'admin/content/files/usage/[fid]'
+            path: 'admin/content/files/usage/{{fid}}'
             absolute: false
             external: false
             replace_spaces: false

@@ -55,9 +55,9 @@ display:
           automatic_width: true
           alignment: horizontal
           col_class_default: true
-          col_class_custom: 'name-[name]'
+          col_class_custom: 'name-{{name}}'
           row_class_default: true
-          row_class_custom: 'age-[age]'
+          row_class_custom: 'age-{{ age }}'
       row:
         type: fields
       field_langcode: '***LANGUAGE_language_content***'

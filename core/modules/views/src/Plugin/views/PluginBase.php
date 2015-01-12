@@ -320,6 +320,57 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
   }
 
   /**
+   * Replaces Views' tokens in a given string. It is the responsibility of the
+   * calling function to ensure $text and $token replacements are sanitized.
+   *
+   * This used to be a simple strtr() scattered throughout the code. Some Views
+   * tokens, such as arguments (e.g.: %1 or !1), still use the old format so we
+   * handle those as well as the new Twig-based tokens (e.g.: {{ field_name }})
+   *
+   * @param $text
+   *   String with possible tokens.
+   * @param $tokens
+   *   Array of token => replacement_value items.
+   *
+   * @return String
+   */
+  protected function viewsTokenReplace($text, $tokens) {
+    if (empty($tokens)) {
+      return $text;
+    }
+
+    // Separate Twig tokens from other tokens (e.g.: contextual filter tokens in
+    // the form of %1).
+    $twig_tokens = array();
+    $other_tokens = array();
+    foreach ($tokens as $token => $replacement) {
+      if (strpos($token, '{{') !== FALSE) {
+        // Twig wants a token replacement array stripped of curly-brackets.
+        $token = trim(str_replace(array('{', '}'), '', $token));
+        $twig_tokens[$token] = $replacement;
+      }
+      else {
+        $other_tokens[$token] = $replacement;
+      }
+    }
+
+    // Non-Twig tokens are a straight string replacement, Twig tokens get run
+    // through an inline template for rendering and replacement.
+    $text = strtr($text, $other_tokens);
+    if ($twig_tokens) {
+      $build = array(
+        '#type' => 'inline_template',
+        '#template' => $text,
+        '#context' => $twig_tokens,
+      );
+      return drupal_render($build);
+    }
+    else {
+      return $text;
+    }
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getAvailableGlobalTokens($prepared = FALSE, array $types = array()) {

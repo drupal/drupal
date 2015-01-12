@@ -895,7 +895,7 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
   protected function documentSelfTokens(&$tokens) {
     $field = $this->getFieldDefinition();
     foreach ($field->getColumns() as $id => $column) {
-      $tokens['[' . $this->options['id'] . '-' . $id . ']'] = $this->t('Raw @column', array('@column' => $id));
+      $tokens['{{ ' . $this->options['id'] . '-' . $id . ' }}'] = $this->t('Raw @column', array('@column' => $id));
     }
   }
 
@@ -913,11 +913,11 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
                (is_object($item['raw']) ? (array)$item['raw'] : NULL);
       }
       if (isset($raw) && isset($raw[$id]) && is_scalar($raw[$id])) {
-        $tokens['[' . $this->options['id'] . '-' . $id . ']'] = Xss::filterAdmin($raw[$id]);
+        $tokens['{{ ' . $this->options['id'] . '-' . $id . ' }}'] = Xss::filterAdmin($raw[$id]);
       }
       else {
         // Make sure that empty values are replaced as well.
-        $tokens['[' . $this->options['id'] . '-' . $id . ']'] = '';
+        $tokens['{{ ' . $this->options['id'] . '-' . $id . ' }}'] = '';
       }
     }
   }

@@ -122,7 +122,7 @@ display:
             alter_text: true
             text: 'Custom Text'
             make_link: true
-            path: 'node/[nid]'
+            path: 'node/{{nid}}'
             absolute: false
             external: false
             replace_spaces: false

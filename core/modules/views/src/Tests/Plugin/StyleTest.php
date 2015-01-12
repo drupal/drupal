@@ -226,7 +226,7 @@ class StyleTest extends ViewTestBase {
     // Setup some random css class.
     $view->initStyle();
     $random_name = $this->randomMachineName();
-    $view->style_plugin->options['row_class'] = $random_name . " test-token-[name]";
+    $view->style_plugin->options['row_class'] = $random_name . " test-token-{{ name }}";
 
     $output = $view->preview();
     $this->storeViewPreview(drupal_render($output));

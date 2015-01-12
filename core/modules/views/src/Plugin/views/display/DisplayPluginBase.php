@@ -2136,7 +2136,7 @@ abstract class DisplayPluginBase extends PluginBase {
 
       if ($this->getOption('link_display') == 'custom_url' && $override_path = $this->getOption('link_url')) {
         $tokens = $this->getArgumentsTokens();
-        $path = strtr($override_path, $tokens);
+        $path = $this->viewsTokenReplace($override_path, $tokens);
       }
 
       if ($path) {
