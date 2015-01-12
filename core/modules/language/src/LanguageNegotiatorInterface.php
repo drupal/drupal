@@ -202,6 +202,10 @@ interface LanguageNegotiatorInterface {
   /**
    * Updates the configuration based on the given language types.
    *
+   * Stores the list of the language types along with information about their
+   * configurable state. Stores the default settings if the language type is
+   * not configurable.
+   *
    * @param array $types
    *   An array of configurable language types.
    */

@@ -322,30 +322,35 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
     foreach ($language_types_info as $type => $info) {
       $configurable = in_array($type, $types);
 
+      // The default language negotiation settings, if available, are stored in
+      // $info['fixed'].
+      $has_default_settings = !empty($info['fixed']);
       // Check whether the language type is unlocked. Only the status of
       // unlocked language types can be toggled between configurable and
-      // non-configurable. The default language negotiation settings, if
-      // available, are stored in $info['fixed'].
+      // non-configurable.
       if (empty($info['locked'])) {
-        // If we have a non-locked non-configurable language type without
-        // default language negotiation settings, we use the values negotiated
-        // for the interface language which should always be available.
-        if (!$configurable && !empty($info['fixed'])) {
+        if (!$configurable && !$has_default_settings) {
+          // If we have an unlocked non-configurable language type without
+          // default language negotiation settings, we use the values
+          // negotiated for the interface language which, should always be
+          // available.
           $method_weights = array(LanguageNegotiationUI::METHOD_ID);
           $method_weights = array_flip($method_weights);
           $this->saveConfiguration($type, $method_weights);
         }
       }
       else {
-        // Locked language types with default settings are always considered
-        // non-configurable. In turn if default settings are missing, the
-        // language type is always considered configurable.
-        $configurable = empty($info['fixed']);
+        // The language type is locked. Locked language types with default
+        // settings are always considered non-configurable. In turn if default
+        // settings are missing, the language type is always considered
+        // configurable.
 
-        // If the language is non-configurable we need to store its language
-        // negotiation settings.
-        if (!$configurable) {
+        // If the language type is locked we can just store its default language
+        // negotiation settings if it has some, since it is not configurable.
+        if ($has_default_settings) {
           $method_weights = array();
+          // Default settings are in $info['fixed'].
+
           foreach ($info['fixed'] as $weight => $method_id) {
             if (isset($method_definitions[$method_id])) {
               $method_weights[$method_id] = $weight;
@@ -353,8 +358,13 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
           }
           $this->saveConfiguration($type, $method_weights);
         }
+        else {
+          // It was missing default settings, so force it to be configurable.
+          $configurable = TRUE;
+        }
       }
 
+      // Accumulate information for each language type so it can be saved later.
       $language_types[$type] = $configurable;
     }
 
