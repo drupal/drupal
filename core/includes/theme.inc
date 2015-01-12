@@ -1338,23 +1338,11 @@ function template_preprocess_html(&$variables) {
     $variables['attributes']['class'][] = 'db-offline';
   }
 
-  // Add a class that tells us whether the page is viewed by an authenticated
-  // user.
-  if ($variables['logged_in']) {
-    $variables['attributes']['class'][] = 'user-logged-in';
-  }
-  // Add a class that tells us what path the page is located make it possible
-  // to theme the page depending on the current path (e.g. node, admin, user,
-  // etc.) as well as more specific data like path-frontpage.
+  // Add a variable for the root path. This can be used to create a class and
+  // theme the page depending on the current path (e.g. node, admin, user) as
+  // well as more specific data like path-frontpage.
   $path = \Drupal::request()->getPathInfo();
-
-  if (drupal_is_front_page()) {
-    $variables['attributes']['class'][] = 'path-frontpage';
-  }
-  else {
-    $segment = explode('/', $path);
-    $variables['attributes']['class'][] = 'path-' . Html::getClass($segment[1]);
-  }
+  $variables['root_path'] = explode('/', $path)[1];
 
   $site_config = \Drupal::config('system.site');
   // Construct page title.

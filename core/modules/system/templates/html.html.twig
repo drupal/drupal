@@ -4,6 +4,9 @@
  * Default theme implementation for the basic structure of a single Drupal page.
  *
  * Variables:
+ * - logged_in: A flag indicating if user is logged in.
+ * - root_path: The root path of the current page (e.g., node, admin, user).
+ * - node_type: The content type for the current node, if the page is a node.
  * - css: A list of CSS files for the current page.
  * - head: Markup for the HEAD element (including meta tags, keyword tags, and
  *   so on).
@@ -26,6 +29,13 @@
  * @ingroup themeable
  */
 #}
+{%
+  set body_classes = [
+    logged_in ? 'user-logged-in',
+    not root_path ? 'path-frontpage' : 'path-' ~ root_path|clean_class,
+    node_type ? 'node--type-' ~ node_type|clean_class,
+  ]
+%}
 <!DOCTYPE html>
 <html{{ html_attributes }}>
   <head>
@@ -34,7 +44,7 @@
     {{ styles }}
     {{ scripts }}
   </head>
-  <body{{ attributes }}>
+  <body{{ attributes.addClass(body_classes) }}>
     <a href="#main-content" class="visually-hidden focusable skip-link">
       {{ 'Skip to main content'|t }}
     </a>
