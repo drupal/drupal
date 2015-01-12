@@ -8,6 +8,7 @@
 namespace Drupal\views_ui\Form\Ajax;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
@@ -89,7 +90,6 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
 
     // @todo Remove the need for this.
     \Drupal::moduleHandler()->loadInclude('views_ui', 'inc', 'admin');
-    \Drupal::moduleHandler()->loadInclude('views', 'inc', 'includes/ajax');
 
     // Reset the cache of IDs. Drupal rather aggressively prevents ID
     // duplication but this causes it to remember IDs that are no longer even
@@ -128,7 +128,7 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
     $drupal_add_js_original = _drupal_add_js();
     $drupal_add_js = &drupal_static('_drupal_add_js');
     $form_class = get_class($form_state->getFormObject());
-    $response = views_ajax_form_wrapper($form_class, $form_state);
+    $response = $this->ajaxFormWrapper($form_class, $form_state);
 
     // If the form has not been submitted, or was not set for rerendering, stop.
     if (!$form_state->isSubmitted() || $form_state->get('rerender')) {
@@ -153,7 +153,7 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
         return new RedirectResponse($form_url->setAbsolute()->toString());
       }
       $form_state->set('url', $form_url);
-      $response = views_ajax_form_wrapper($form_class, $form_state);
+      $response = $this->ajaxFormWrapper($form_class, $form_state);
     }
     elseif (!$form_state->get('ajax')) {
       // if nothing on the stack, non-js forms just go back to the main view editor.
@@ -176,6 +176,75 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
     }
 
     return $response;
+  }
+
+  /**
+   * Wrapper for handling AJAX forms.
+   *
+   * Wrapper around \Drupal\Core\Form\FormBuilderInterface::buildForm() to
+   * handle some AJAX stuff automatically.
+   * This makes some assumptions about the client.
+   *
+   * @param \Drupal\Core\Form\FormInterface|string $form_class
+   *   The value must be one of the following:
+   *   - The name of a class that implements \Drupal\Core\Form\FormInterface.
+   *   - An instance of a class that implements \Drupal\Core\Form\FormInterface.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse|string|array
+   *   Returns one of three possible values:
+   *   - A \Drupal\Core\Ajax\AjaxResponse object.
+   *   - The rendered form, as a string.
+   *   - A render array with the title in #title and the rendered form in the
+   *   #markup array.
+   */
+  protected function ajaxFormWrapper($form_class, FormStateInterface &$form_state) {
+    // This won't override settings already in.
+    if (!$form_state->has('rerender')) {
+      $form_state->set('rerender', FALSE);
+    }
+    $ajax = $form_state->get('ajax');
+    // Do not overwrite if the redirect has been disabled.
+    if (!$form_state->isRedirectDisabled()) {
+      $form_state->disableRedirect($ajax);
+    }
+    $form_state->disableCache();
+
+    $form = \Drupal::formBuilder()->buildForm($form_class, $form_state);
+    $output = drupal_render($form);
+    drupal_process_attached($form);
+
+    // These forms have the title built in, so set the title here:
+    $title = $form_state->get('title') ?: '';
+
+    if ($ajax && (!$form_state->isExecuted() || $form_state->get('rerender'))) {
+      // If the form didn't execute and we're using ajax, build up an
+      // Ajax command list to execute.
+      $response = new AjaxResponse();
+
+      $display = '';
+      $status_messages = array('#theme' => 'status_messages');
+      if ($messages = drupal_render($status_messages)) {
+        $display = '<div class="views-messages">' . $messages . '</div>';
+      }
+      $display .= $output;
+
+      $options = array(
+        'dialogClass' => 'views-ui-dialog',
+        'width' => '50%',
+      );
+
+      $response->addCommand(new OpenModalDialogCommand($title, $display, $options));
+
+      if ($section = $form_state->get('#section')) {
+        $response->addCommand(new Ajax\HighlightCommand('.' . Html::cleanCssIdentifier($section)));
+      }
+
+      return $response;
+    }
+
+    return $title ? ['#title' => $title, '#markup' => $output] : $output;
   }
 
   /**
