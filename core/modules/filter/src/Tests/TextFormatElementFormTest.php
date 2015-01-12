@@ -117,6 +117,10 @@ class TextFormatElementFormTest extends KernelTestBase implements FormInterface 
     $output = $this->render($form);
     $this->setRawContent($output);
     $this->assertFieldByName('textformat[value]');
+    $this->assertRaw('<h4 class="label">Full HTML</h4>');
+    $this->assertRaw('<h4 class="label">Filtered HTML</h4>');
+    $this->assertRaw('<h4 class="label">Test format</h4>');
+    $this->assertNoPattern('|<h4[^>]*></h4>|', 'No empty H4 element found.');
   }
 
   /**
