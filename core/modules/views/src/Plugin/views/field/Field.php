@@ -341,19 +341,22 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
   }
 
   /**
-   * Determine if this field is click sortable.
+   * {@inheritdoc}
    */
   public function clickSortable() {
-    // Not click sortable in any case.
-    if (empty($this->definition['click sortable'])) {
-      return FALSE;
-    }
     // A field is not click sortable if it's a multiple field with
     // "group multiple values" checked, since a click sort in that case would
     // add a join to the field table, which would produce unwanted duplicates.
     if ($this->multiple && $this->options['group_rows']) {
       return FALSE;
     }
+
+    // If field definition is set, use that.
+    if (isset($this->definition['click sortable'])) {
+      return (bool) $this->definition['click sortable'];
+    }
+
+    // Default to true.
     return TRUE;
   }
 

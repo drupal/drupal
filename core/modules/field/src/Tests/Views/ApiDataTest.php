@@ -83,6 +83,11 @@ class ApiDataTest extends FieldTestBase {
       ),
     );
     $this->assertEqual($expected_join, $data[$revision_table]['table']['join']['node_revision']);
+
+    // Test click sortable.
+    $this->assertTrue($data[$current_table][$field_storage->getName()]['field']['click sortable'], 'String field is click sortable.');
+    // Click sort should only be on the primary field.
+    $this->assertTrue(empty($data[$revision_table][$field_storage->getName()]['field']['click sortable']), 'Non-primary fields are not click sortable');
   }
 
 }

@@ -583,6 +583,11 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
         );
       }
 
+      // Set click sortable if there is a field definition.
+      if (isset($data[$table_alias][$field_name]['field'])) {
+        $data[$table_alias][$field_name]['field']['click sortable'] = $allow_sort;
+      }
+
       // Expose additional delta column for multiple value fields.
       if ($field_storage->isMultiple()) {
         $title_delta = t('@label (!name:delta)', array('@label' => $label, '!name' => $field_name));
