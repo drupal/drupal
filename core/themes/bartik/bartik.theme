@@ -35,18 +35,6 @@ function bartik_preprocess_html(&$variables) {
     $variables['attributes']['class'][] = 'featured';
   }
 
-  if (!empty($variables['page']['triptych_first'])
-    || !empty($variables['page']['triptych_middle'])
-    || !empty($variables['page']['triptych_last'])) {
-    $variables['attributes']['class'][] = 'triptych';
-  }
-
-  if (!empty($variables['page']['footer_firstcolumn'])
-    || !empty($variables['page']['footer_secondcolumn'])
-    || !empty($variables['page']['footer_thirdcolumn'])
-    || !empty($variables['page']['footer_fourthcolumn'])) {
-    $variables['attributes']['class'][] = 'footer-columns';
-  }
 }
 
 /**
