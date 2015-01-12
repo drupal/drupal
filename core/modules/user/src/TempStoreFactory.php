@@ -8,8 +8,7 @@
 namespace Drupal\user;
 
 use Drupal\Component\Serialization\SerializationInterface;
-use Drupal\Core\Database\Connection;
-use Drupal\Core\KeyValueStore\DatabaseStorageExpirable;
+use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 
 /**
@@ -18,18 +17,11 @@ use Drupal\Core\Lock\LockBackendInterface;
 class TempStoreFactory {
 
   /**
-   * The serialization class to use.
+   * The storage factory creating the backend to store the data.
    *
-   * @var \Drupal\Component\Serialization\SerializationInterface
+   * @var \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface
    */
-  protected $serializer;
-
-  /**
-   * The connection object used for this data.
-   *
-   * @var \Drupal\Core\Database\Connection $connection
-   */
-  protected $connection;
+  protected $storageFactory;
 
   /**
    * The lock object used for this data.
@@ -48,8 +40,6 @@ class TempStoreFactory {
   /**
    * Constructs a Drupal\user\TempStoreFactory object.
    *
-   * @param \Drupal\Component\Serialization\SerializationInterface $serializer
-   *   The serialization class to use.
    * @param \Drupal\Core\Database\Connection $connection
    *   The connection object used for this data.
    * @param \Drupal\Core\Lock\LockBackendInterface $lockBackend
@@ -57,9 +47,8 @@ class TempStoreFactory {
    * @param int $expire
    *   The time to live for items, in seconds.
    */
-  function __construct(SerializationInterface $serializer, Connection $connection, LockBackendInterface $lockBackend, $expire = 604800) {
-    $this->serializer = $serializer;
-    $this->connection = $connection;
+  function __construct(KeyValueExpirableFactoryInterface $storage_factory, LockBackendInterface $lockBackend, $expire = 604800) {
+    $this->storageFactory = $storage_factory;
     $this->lockBackend = $lockBackend;
     $this->expire = $expire;
   }
@@ -86,7 +75,7 @@ class TempStoreFactory {
     }
 
     // Store the data for this collection in the database.
-    $storage = new DatabaseStorageExpirable($collection, $this->serializer, $this->connection);
+    $storage = $this->storageFactory->get("user.tempstore.$collection");
     return new TempStore($storage, $this->lockBackend, $owner, $this->expire);
   }
 

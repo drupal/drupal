@@ -61,7 +61,7 @@ services:
     arguments: ['@entity.manager', '@password']
   user.tempstore:
     class: Drupal\user\TempStoreFactory
-    arguments: ['@serialization.phpserialize', '@database', '@lock', '%user.tempstore.expire%']
+    arguments: ['@keyvalue.expirable', '@lock', '%user.tempstore.expire%']
     tags:
       - { name: backend_overridable }
   user.permissions:

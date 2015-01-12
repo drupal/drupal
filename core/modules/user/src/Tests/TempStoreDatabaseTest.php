@@ -8,6 +8,7 @@
 namespace Drupal\user\Tests;
 
 use Drupal\Component\Serialization\PhpSerialize;
+use Drupal\Core\KeyValueStore\KeyValueExpirableFactory;
 use Drupal\simpletest\KernelTestBase;
 use Drupal\user\TempStoreFactory;
 use Drupal\Core\Lock\DatabaseLockBackend;
@@ -75,7 +76,7 @@ class TempStoreDatabaseTest extends KernelTestBase {
    */
   public function testUserTempStore() {
     // Create a key/value collection.
-    $factory = new TempStoreFactory(new PhpSerialize(), Database::getConnection(), new DatabaseLockBackend(Database::getConnection()));
+    $factory = new TempStoreFactory(new KeyValueExpirableFactory(\Drupal::getContainer()), new DatabaseLockBackend(Database::getConnection()));
     $collection = $this->randomMachineName();
 
     // Create two mock users.
@@ -141,7 +142,7 @@ class TempStoreDatabaseTest extends KernelTestBase {
     // assert it is no longer accessible.
     db_update('key_value_expire')
       ->fields(array('expire' => REQUEST_TIME - 1))
-      ->condition('collection', $collection)
+      ->condition('collection', "user.tempstore.$collection")
       ->condition('name', $key)
       ->execute();
     $this->assertFalse($stores[0]->get($key));
