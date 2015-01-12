@@ -54,9 +54,29 @@ class LanguageCustomLanguageConfigurationTest extends WebTestBase {
       'direction' => LanguageInterface::DIRECTION_LTR,
     );
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
-    $this->assertRaw(t('%field may only contain characters a-z, underscores, or hyphens.', array('%field' => t('Language code'))));
+
+    $this->assertRaw(t('%field must be a valid language tag as <a href="@url">defined by the W3C</a>.', array(
+      '%field' => t('Language code'),
+      '@url' => 'http://www.w3.org/International/articles/language-tags/',
+    )));
+
     $this->assertRaw(t('%field cannot contain any markup.', array('%field' => t('Language name in English'))));
     $this->assertUrl(\Drupal::url('language.add', array(), array('absolute' => TRUE)), [], 'Correct page redirection.');
+
+    // Test adding a custom language with a numeric region code.
+    $edit = array(
+      'predefined_langcode' => 'custom',
+      'langcode' => 'es-419',
+      'label' => 'Latin American Spanish',
+      'direction' => LanguageInterface::DIRECTION_LTR,
+    );
+
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
+    $this->assertRaw(t(
+      'The language %language has been created and can now be used.',
+      array('%language' => $edit['label'])
+    ));
+    $this->assertUrl(\Drupal::url('language.admin_overview', array(), array('absolute' => TRUE)), [], 'Correct page redirection.');
 
     // Test validation of existing language values.
     $edit = array(
