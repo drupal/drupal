@@ -275,7 +275,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
    *
    * @see node_access_grants()
    */
-  static function buildGrantsQueryCondition(array $node_access_grants) {
+  protected static function buildGrantsQueryCondition(array $node_access_grants) {
     $grants = new Condition("OR");
     foreach ($node_access_grants as $realm => $gids) {
       if (!empty($gids)) {
