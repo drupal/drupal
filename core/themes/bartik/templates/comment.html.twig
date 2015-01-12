@@ -90,8 +90,8 @@
           <p class="comment-parent visually-hidden">{{ parent }}</p>
         {% endif %}
       </div>
-    </div> <!-- /.attribution -->
-  </header> <!-- /.comment-header -->
+    </div>
+  </header>
   <div class="comment-text">
     <div class="comment-arrow"></div>
     {#
@@ -107,7 +107,7 @@
     {% endif %}
     <div{{ content_attributes.addClass('content') }}>
       {{ content|without('links') }}
-    </div> <!-- /.content -->
+    </div>
     <footer class="comment-footer">
       {% if signature %}
         <div class="user-signature clearfix">{{ signature }}</div>
@@ -115,6 +115,6 @@
       {% if content.links %}
         <nav>{{ content.links }}</nav>
       {% endif %}
-    </footer> <!-- /.comment-footer -->
-  </div> <!-- /.comment-text -->
+    </footer>
+  </div>
 </article>

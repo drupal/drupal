@@ -105,23 +105,23 @@
                 {{ site_slogan }}
               </div>
             {% endif %}
-          </div><!-- /#name-and-slogan -->
+          </div>
         {% endif %}
         {{ page.header }}
         {{ page.primary_menu }}
-      </div> <!-- /.section -->
-    </header> <!-- /.section -->
+      </div>
+    </header>
     {% if messages %}
       <div id="messages">
         <div class="section clearfix">{{ messages }}</div>
-      </div> <!-- /#messages -->
+      </div>
     {% endif %}
     {% if page.featured %}
       <div id="featured">
         <aside class="section clearfix" role="complementary">
           {{ page.featured }}
-        </aside> <!-- /.section -->
-      </div> <!-- /#featured -->
+        </aside>
+      </div>
     {% endif %}
     <div id="main-wrapper" class="clearfix">
       <div id="main" class="clearfix">
@@ -146,32 +146,32 @@
               <ul class="action-links">{{ action_links }}</ul>
             {% endif %}
             {{ page.content }}
-          </section>  <!-- /.section -->
-        </main> <!-- /#content -->
+          </section>
+        </main>
         {% if page.sidebar_first %}
           <div id="sidebar-first" class="column sidebar">
             <aside class="section" role="complementary">
               {{ page.sidebar_first }}
-            </aside><!-- /.section -->
-          </div><!-- /#sidebar-first -->
+            </aside>
+          </div>
         {% endif %}
         {% if page.sidebar_second %}
           <div id="sidebar-second" class="column sidebar">
             <aside class="section" role="complementary">
               {{ page.sidebar_second }}
-            </aside> <!-- /.section -->
-          </div><!-- /#sidebar-second -->
+            </aside>
+          </div>
         {% endif %}
-      </div> <!-- /#main -->
-    </div> <!-- /#main-wrapper -->
+      </div>
+    </div>
     {% if page.triptych_first or page.triptych_middle or page.triptych_last %}
       <div id="triptych-wrapper">
         <aside id="triptych" class="clearfix" role="complementary">
           {{ page.triptych_first }}
           {{ page.triptych_middle }}
           {{ page.triptych_last }}
-        </aside> <!-- /#triptych -->
-      </div> <!-- /#triptych-wrapper -->
+        </aside>
+      </div>
     {% endif %}
     <div id="footer-wrapper">
       <footer class="section">
@@ -181,14 +181,14 @@
             {{ page.footer_secondcolumn }}
             {{ page.footer_thirdcolumn }}
             {{ page.footer_fourthcolumn }}
-          </div> <!-- /#footer-columns -->
+          </div>
         {% endif %}
         {% if page.footer %}
           <div id="footer" role="contentinfo" class="clearfix">
             {{ page.footer }}
-          </div> <!-- /#footer -->
+          </div>
         {% endif %}
-      </footer> <!-- /.section -->
-    </div> <!-- /#footer-wrapper -->
-  </div> <!-- /#page -->
-</div> <!-- /#page-wrapper -->
+      </footer>
+    </div>
+  </div>
+</div>
