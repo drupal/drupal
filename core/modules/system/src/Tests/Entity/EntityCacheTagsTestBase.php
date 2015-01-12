@@ -10,6 +10,7 @@ namespace Drupal\system\Tests\Entity;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\system\Tests\Cache\PageCacheTagsTestBase;
 use Drupal\user\Entity\Role;
@@ -470,7 +471,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
       // is a cache miss.
       $this->pass("Test modification of referenced entity's configurable field.", 'Debug');
       $field_storage_name = $this->entity->getEntityTypeId() . '.configurable_field';
-      $field_storage = entity_load('field_storage_config', $field_storage_name);
+      $field_storage = FieldStorageConfig::load($field_storage_name);
       $field_storage->save();
       $this->verifyPageCache($referencing_entity_path, 'MISS');
       $this->verifyPageCache($listing_path, 'MISS');

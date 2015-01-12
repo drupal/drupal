@@ -10,6 +10,7 @@ namespace Drupal\config\Tests;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Archiver\ArchiveTar;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -140,7 +141,7 @@ class ConfigExportImportUITest extends WebTestBase {
         $field->delete();
       }
     }
-    $field_storages = entity_load_multiple('field_storage_config');
+    $field_storages = FieldStorageConfig::loadMultiple();
     foreach ($field_storages as $field_storage) {
       if ($field_storage->field_name == $this->fieldName) {
         $field_storage->delete();

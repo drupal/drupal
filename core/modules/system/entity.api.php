@@ -1756,7 +1756,7 @@ function hook_entity_field_storage_info(\Drupal\Core\Entity\EntityTypeInterface 
       ->condition('id', $entity_type->id() . '.', 'STARTS_WITH')
       ->execute();
     // Fetch all fields and key them by field name.
-    $field_storages = entity_load_multiple('field_storage_config', $ids);
+    $field_storages = FieldStorageConfig::loadMultiple($ids);
     $result = array();
     foreach ($field_storages as $field_storage) {
       $result[$field_storage->getName()] = $field_storage;

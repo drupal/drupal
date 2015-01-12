@@ -7,6 +7,7 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
@@ -33,7 +34,7 @@ class MigrateUserPictureFieldTest extends MigrateDrupalTestBase {
    * Test the user picture field migration.
    */
   public function testUserPictureField() {
-    $field_storage = entity_load('field_storage_config', 'user.user_picture');
+    $field_storage = FieldStorageConfig::load('user.user_picture');
     $this->assertEqual($field_storage->id(), 'user.user_picture');
     $this->assertEqual(array('user', 'user_picture'), entity_load('migration', 'd6_user_picture_field')->getIdMap()->lookupDestinationID(array('')));
   }

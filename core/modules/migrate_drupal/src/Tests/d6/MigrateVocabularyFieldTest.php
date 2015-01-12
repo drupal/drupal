@@ -7,6 +7,7 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
@@ -59,7 +60,7 @@ class MigrateVocabularyFieldTest extends MigrateDrupalTestBase {
   public function testVocabularyField() {
     // Test that the field exists.
     $field_storage_id = 'node.tags';
-    $field_storage = entity_load('field_storage_config', $field_storage_id);
+    $field_storage = FieldStorageConfig::load($field_storage_id);
     $this->assertEqual($field_storage->id(), $field_storage_id);
     $settings = $field_storage->getSettings();
     $this->assertEqual('tags', $settings['allowed_values'][0]['vocabulary'], "Vocabulary has correct settings.");

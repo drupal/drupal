@@ -11,6 +11,7 @@ use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\CommentType;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field_ui\Tests\FieldUiTestTrait;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Entity\EntityInterface;
@@ -385,7 +386,7 @@ class CommentNonNodeTest extends WebTestBase {
     $this->fieldUIAddNewField('entity_test/structure/entity_test', 'barfoo', 'BarFoo', 'comment', $storage_edit);
 
     // Check the field contains the correct comment type.
-    $field_storage = entity_load('field_storage_config', 'entity_test.field_barfoo');
+    $field_storage = FieldStorageConfig::load('entity_test.field_barfoo');
     $this->assertTrue($field_storage);
     $this->assertEqual($field_storage->getSetting('comment_type'), 'foobar');
     $this->assertEqual($field_storage->getCardinality(), 1);

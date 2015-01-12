@@ -233,7 +233,7 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
       'type' => 'test_field',
     ));
     $field_storage->save();
-    $field_storage = entity_load('field_storage_config', $field_storage->id());
+    $field_storage = FieldStorageConfig::load($field_storage->id());
     $schema = $field_storage->getSchema();
     $expected_indexes = array('value' => array('value'));
     $this->assertEqual($schema['indexes'], $expected_indexes, 'Field type indexes saved by default');
@@ -249,7 +249,7 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
       ),
     ));
     $field_storage->save();
-    $field_storage = entity_load('field_storage_config', $field_storage->id());
+    $field_storage = FieldStorageConfig::load($field_storage->id());
     $schema = $field_storage->getSchema();
     $expected_indexes = array('value' => array());
     $this->assertEqual($schema['indexes'], $expected_indexes, 'Field definition indexes override field type indexes');
@@ -266,7 +266,7 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
     ));
     $field_storage->save();
     $id = $field_storage->id();
-    $field_storage = entity_load('field_storage_config', $id);
+    $field_storage = FieldStorageConfig::load($id);
     $schema = $field_storage->getSchema();
     $expected_indexes = array('value' => array('value'), 'value_2' => array('value'));
     $this->assertEqual($schema['indexes'], $expected_indexes, 'Field definition indexes are merged with field type indexes');
@@ -319,7 +319,7 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
     $this->assertTrue(!empty($field->deleted), 'A field whose storage was deleted is marked for deletion.');
 
     // Try to load the storage normally and make sure it does not show up.
-    $field_storage = entity_load('field_storage_config', 'entity_test.' . $field_storage_definition['field_name']);
+    $field_storage = FieldStorageConfig::load('entity_test.' . $field_storage_definition['field_name']);
     $this->assertTrue(empty($field_storage), 'A deleted storage is not loaded by default.');
 
     // Try to load the field normally and make sure it does not show up.
@@ -327,7 +327,7 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
     $this->assertTrue(empty($field), 'A field whose storage was deleted is not loaded by default.');
 
     // Make sure the other field and its storage are not deleted.
-    $another_field_storage = entity_load('field_storage_config', 'entity_test.' . $another_field_storage_definition['field_name']);
+    $another_field_storage = FieldStorageConfig::load('entity_test.' . $another_field_storage_definition['field_name']);
     $this->assertTrue(!empty($another_field_storage) && empty($another_field_storage->deleted), 'A non-deleted storage is not marked for deletion.');
     $another_field = FieldConfig::load('entity_test.' . $another_field_definition['bundle'] . '.' . $another_field_definition['field_name']);
     $this->assertTrue(!empty($another_field) && empty($another_field->deleted), 'A field whose storage was not deleted is not marked for deletion.');
@@ -336,7 +336,7 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
     // write data into it.
     entity_create('field_storage_config', $field_storage_definition)->save();
     entity_create('field_config', $field_definition)->save();
-    $field_storage = entity_load('field_storage_config', 'entity_test.' . $field_storage_definition['field_name']);
+    $field_storage = FieldStorageConfig::load('entity_test.' . $field_storage_definition['field_name']);
     $this->assertTrue(!empty($field_storage) && empty($field_storage->deleted), 'A new storage with a previously used name is created.');
     $field = FieldConfig::load('entity_test.' . $field_definition['bundle'] . '.' . $field_definition['field_name'] );
     $this->assertTrue(!empty($field) && empty($field->deleted), 'A new field for a previously used field name is created.');
