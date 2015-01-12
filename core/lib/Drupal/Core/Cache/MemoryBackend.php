@@ -197,6 +197,8 @@ class MemoryBackend implements CacheBackendInterface, CacheTagsInvalidatorInterf
   /**
    * {@inheritdoc}
    */
-  public function removeBin() {}
+  public function removeBin() {
+    $this->cache = [];
+  }
 
 }

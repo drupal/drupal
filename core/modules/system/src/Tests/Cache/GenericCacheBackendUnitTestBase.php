@@ -476,19 +476,19 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
    * Test Drupal\Core\Cache\CacheBackendInterface::deleteAll().
    */
   public function testDeleteAll() {
-    $backend = $this->getCacheBackend();
-    $unrelated = $this->getCacheBackend('bootstrap');
+    $backend_a = $this->getCacheBackend();
+    $backend_b = $this->getCacheBackend('bootstrap');
 
     // Set both expiring and permanent keys.
-    $backend->set('test1', 1, Cache::PERMANENT);
-    $backend->set('test2', 3, time() + 1000);
-    $unrelated->set('test3', 4, Cache::PERMANENT);
+    $backend_a->set('test1', 1, Cache::PERMANENT);
+    $backend_a->set('test2', 3, time() + 1000);
+    $backend_b->set('test3', 4, Cache::PERMANENT);
 
-    $backend->deleteAll();
+    $backend_a->deleteAll();
 
-    $this->assertFalse($backend->get('test1'), 'First key has been deleted.');
-    $this->assertFalse($backend->get('test2'), 'Second key has been deleted.');
-    $this->assertTrue($unrelated->get('test3'), 'Item in other bin is preserved.');
+    $this->assertFalse($backend_a->get('test1'), 'First key has been deleted.');
+    $this->assertFalse($backend_a->get('test2'), 'Second key has been deleted.');
+    $this->assertTrue($backend_b->get('test3'), 'Item in other bin is preserved.');
   }
 
   /**
@@ -585,21 +585,40 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
    * Test Drupal\Core\Cache\CacheBackendInterface::invalidateAll().
    */
   public function testInvalidateAll() {
-    $backend = $this->getCacheBackend();
-    $unrelated = $this->getCacheBackend('bootstrap');
+    $backend_a = $this->getCacheBackend();
+    $backend_b = $this->getCacheBackend('bootstrap');
 
     // Set both expiring and permanent keys.
-    $backend->set('test1', 1, Cache::PERMANENT);
-    $backend->set('test2', 3, time() + 1000);
-    $unrelated->set('test3', 4, Cache::PERMANENT);
+    $backend_a->set('test1', 1, Cache::PERMANENT);
+    $backend_a->set('test2', 3, time() + 1000);
+    $backend_b->set('test3', 4, Cache::PERMANENT);
 
-    $backend->invalidateAll();
+    $backend_a->invalidateAll();
 
-    $this->assertFalse($backend->get('test1'), 'First key has been invalidated.');
-    $this->assertFalse($backend->get('test2'), 'Second key has been invalidated.');
-    $this->assertTrue($unrelated->get('test3'), 'Item in other bin is preserved.');
-    $this->assertTrue($backend->get('test1', TRUE), 'First key has not been deleted.');
-    $this->assertTrue($backend->get('test2', TRUE), 'Second key has not been deleted.');
+    $this->assertFalse($backend_a->get('test1'), 'First key has been invalidated.');
+    $this->assertFalse($backend_a->get('test2'), 'Second key has been invalidated.');
+    $this->assertTrue($backend_b->get('test3'), 'Item in other bin is preserved.');
+    $this->assertTrue($backend_a->get('test1', TRUE), 'First key has not been deleted.');
+    $this->assertTrue($backend_a->get('test2', TRUE), 'Second key has not been deleted.');
+  }
+
+  /**
+   * Tests Drupal\Core\Cache\CacheBackendInterface::removeBin().
+   */
+  public function testRemoveBin() {
+    $backend_a = $this->getCacheBackend();
+    $backend_b = $this->getCacheBackend('bootstrap');
+
+    // Set both expiring and permanent keys.
+    $backend_a->set('test1', 1, Cache::PERMANENT);
+    $backend_a->set('test2', 3, time() + 1000);
+    $backend_b->set('test3', 4, Cache::PERMANENT);
+
+    $backend_a->removeBin();
+
+    $this->assertFalse($backend_a->get('test1'), 'First key has been deleted.');
+    $this->assertFalse($backend_a->get('test2', TRUE), 'Second key has been deleted.');
+    $this->assertTrue($backend_b->get('test3'), 'Item in other bin is preserved.');
   }
 
 }

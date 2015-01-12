@@ -232,7 +232,7 @@ class PhpBackend implements CacheBackendInterface {
    */
   public function removeBin() {
     $this->cache = array();
-    $this->storage()->delete($this->bin);
+    $this->storage()->deleteAll();
   }
 
   /**
