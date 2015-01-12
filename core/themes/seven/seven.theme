@@ -72,10 +72,11 @@ function seven_preprocess_menu_local_task(&$variables) {
  */
 function seven_preprocess_node_add_list(&$variables) {
   if (!empty($variables['content'])) {
+    /** @var \Drupal\node\NodeTypeInterface $type */
     foreach ($variables['content'] as $type) {
-      $variables['types'][$type->type]['label'] = String::checkPlain($type->name);
-      $variables['types'][$type->type]['description'] = Xss::filterAdmin($type->description);
-      $variables['types'][$type->type]['url'] = \Drupal::url('node.add', array('node_type' => $type->type));
+      $variables['types'][$type->id()]['label'] = String::checkPlain($type->label());
+      $variables['types'][$type->id()]['description'] = Xss::filterAdmin($type->getDescription());
+      $variables['types'][$type->id()]['url'] = \Drupal::url('node.add', array('node_type' => $type->id()));
     }
   }
 }

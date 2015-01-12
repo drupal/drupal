@@ -10,6 +10,7 @@ namespace Drupal\standard\Tests;
 use Drupal\config\Tests\SchemaCheckTestTrait;
 use Drupal\contact\Entity\ContactForm;
 use Drupal\simpletest\WebTestBase;
+use Drupal\user\Entity\Role;
 
 /**
  * Tests Standard installation profile expectations.
@@ -23,6 +24,13 @@ class StandardTest extends WebTestBase {
   protected $profile = 'standard';
 
   /**
+   * The admin user.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $adminUser;
+
+  /**
    * Tests Standard installation profile.
    */
   function testStandard() {
@@ -32,12 +40,14 @@ class StandardTest extends WebTestBase {
     $this->assertResponse(200);
 
     // Test anonymous user can access 'Main navigation' block.
-    $admin = $this->drupalCreateUser(array(
+    $this->adminUser = $this->drupalCreateUser(array(
       'administer blocks',
       'post comments',
       'skip comment approval',
+      'create article content',
+      'create page content',
     ));
-    $this->drupalLogin($admin);
+    $this->drupalLogin($this->adminUser);
     // Configure the block.
     $this->drupalGet('admin/structure/block/add/system_menu_block:main/bartik');
     $this->drupalPostForm(NULL, array(
@@ -79,7 +89,7 @@ class StandardTest extends WebTestBase {
     ));
 
     // Add a comment.
-    $this->drupalLogin($admin);
+    $this->drupalLogin($this->adminUser);
     $this->drupalGet('node/1');
     $this->drupalPostForm(NULL, array(
       'subject[0][value]' => 'Barfoo',
@@ -120,6 +130,17 @@ class StandardTest extends WebTestBase {
     $contact_form = ContactForm::load('feedback');
     $recipients = $contact_form->getRecipients();
     $this->assertEqual(['simpletest@example.com'], $recipients);
+
+    $role = Role::create([
+      'id' => 'admin_theme',
+      'label' => 'Admin theme',
+    ]);
+    $role->grantPermission('view the administration theme');
+    $role->save();
+    $this->adminUser->addRole($role->id());
+    $this->adminUser->save();
+    $this->drupalGet('node/add');
+    $this->assertResponse(200);
   }
 
 }
