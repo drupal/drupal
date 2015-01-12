@@ -604,29 +604,6 @@ function views_hook_info() {
 }
 
 /**
- * Return a list of all views and display IDs that have a particular
- * setting in their display's plugin settings.
- *
- * @param string $type
- *   A flag from the display plugin definitions (e.g, 'uses_menu_links').
- *
- * @return array
- *   A list of arrays containing the $view and $display_id.
- * @code
- * array(
- *   array($view, $display_id),
- *   array($view, $display_id),
- * );
- * @endcode
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\views\Views::getApplicableViews().
- */
-function views_get_applicable_views($type) {
-  return Views::getApplicableViews($type);
-}
-
-/**
  * Returns an array of all enabled views, as fully loaded $view objects.
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
