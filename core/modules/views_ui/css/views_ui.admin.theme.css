@@ -658,7 +658,7 @@ td.group-title {
   margin-right: 2px;
 }
 
-#views-ui-preview-form .form-type-textfield, #views-ui-preview-form .form-actions {
+#views-ui-preview-form .form-item-view-args, #views-ui-preview-form .form-actions {
   margin-top: 5px;
 }
 
@@ -667,23 +667,23 @@ td.group-title {
 }
 
 #views-ui-preview-form .arguments-preview,
-#views-ui-preview-form .form-type-textfield {
+#views-ui-preview-form .form-item-view-args {
   margin-left: 10px; /* LTR */
 }
 [dir="rtl"] #views-ui-preview-form .arguments-preview,
-[dir="rtl"] #views-ui-preview-form .form-type-textfield {
+[dir="rtl"] #views-ui-preview-form .form-item-view-args {
   margin-left: 0;
   margin-right: 10px;
 }
 
-#views-ui-preview-form .form-type-textfield label {
+#views-ui-preview-form .form-item-view-args label {
   display: inline-block;
   float: left; /* LTR */
   font-weight: normal;
   height: 6ex;
   margin-right: 0.75em; /* LTR */
 }
-[dir="rtl"] #views-ui-preview-form .form-type-textfield label {
+[dir="rtl"] #views-ui-preview-form .form-item-view-args label {
   float: right;
   margin-left: 0.75em;
   margin-right: 0.2em;
