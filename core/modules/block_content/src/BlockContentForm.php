@@ -74,8 +74,8 @@ class BlockContentForm extends ContentEntityForm {
    *
    * Prepares the custom block object.
    *
-   * Fills in a few default values, and then invokes hook_block_content_prepare()
-   * on all modules.
+   * Fills in a few default values, and then invokes
+   * hook_block_content_prepare() on all modules.
    */
   protected function prepareEntity() {
     $block = $this->entity;
@@ -85,7 +85,7 @@ class BlockContentForm extends ContentEntityForm {
       $block->setRevisionLog(NULL);
     }
     // Always use the default revision setting.
-    $block->setNewRevision($block_type->revision);
+    $block->setNewRevision($block_type->shouldCreateNewRevision());
   }
 
   /**

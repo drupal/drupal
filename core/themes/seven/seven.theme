@@ -90,7 +90,7 @@ function seven_preprocess_block_content_add_list(&$variables) {
   if (!empty($variables['content'])) {
     foreach ($variables['content'] as $type) {
       $variables['types'][$type->id()]['label'] = String::checkPlain($type->label());
-      $variables['types'][$type->id()]['description'] = Xss::filterAdmin($type->description);
+      $variables['types'][$type->id()]['description'] = Xss::filterAdmin($type->getDescription());
       $options = array('query' => \Drupal::request()->query->all());
       $variables['types'][$type->id()]['url'] = \Drupal::url('block_content.add_form', array('block_content_type' => $type->id()), $options);
     }

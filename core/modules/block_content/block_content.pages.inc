@@ -28,7 +28,7 @@ function template_preprocess_block_content_add_list(&$variables) {
   foreach ($variables['content'] as $type) {
     $variables['types'][$type->id()] = array(
       'link' => \Drupal::l($type->label(), new Url('block_content.add_form', array('block_content_type' => $type->id()), array('query' => $query))),
-      'description' => Xss::filterAdmin($type->description),
+      'description' => Xss::filterAdmin($type->getDescription()),
       'title' => $type->label(),
       'localized_options' => array(
         'query' => $query,

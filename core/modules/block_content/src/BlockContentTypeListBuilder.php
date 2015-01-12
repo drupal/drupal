@@ -45,7 +45,7 @@ class BlockContentTypeListBuilder extends ConfigEntityListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
     $row['type'] = $entity->link();
-    $row['description'] = Xss::filterAdmin($entity->description);
+    $row['description'] = Xss::filterAdmin($entity->getDescription());
     return $row + parent::buildRow($entity);
   }
 
