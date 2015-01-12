@@ -123,15 +123,19 @@ abstract class AccountForm extends ContentEntityForm {
       );
 
       // To skip the current password field, the user must have logged in via a
-      // one-time link and have the token in the URL.
-      $pass_reset = isset($_SESSION['pass_reset_' . $account->id()]) && (\Drupal::request()->query->get('pass-reset-token') == $_SESSION['pass_reset_' . $account->id()]);
+      // one-time link and have the token in the URL. Store this in $form_state
+      // so it persists even on subsequent Ajax requests.
+      if (!$form_state->get('user_pass_reset')) {
+        $user_pass_reset = $pass_reset = isset($_SESSION['pass_reset_' . $account->id()]) && (\Drupal::request()->query->get('pass-reset-token') == $_SESSION['pass_reset_' . $account->id()]);
+        $form_state->set('user_pass_reset', $user_pass_reset);
+      }
 
       $protected_values = array();
       $current_pass_description = '';
 
       // The user may only change their own password without their current
       // password if they logged in via a one-time login link.
-      if (!$pass_reset) {
+      if (!$form_state->get('user_pass_reset')) {
         $protected_values['mail'] = $form['account']['mail']['#title'];
         $protected_values['pass'] = $this->t('Password');
         $request_new = $this->l($this->t('Reset your password'), new Url('user.pass',

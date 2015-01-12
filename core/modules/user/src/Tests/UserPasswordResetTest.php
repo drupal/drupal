@@ -15,6 +15,18 @@ use Drupal\simpletest\WebTestBase;
  * @group user
  */
 class UserPasswordResetTest extends WebTestBase {
+
+  /**
+   * The profile to install as a basis for testing.
+   *
+   * This test uses the standard profile to test the password reset in
+   * combination with an ajax request provided by the user picture configuration
+   * in the standard profile.
+   *
+   * @var string
+   */
+  protected $profile = 'standard';
+
   /**
    * The user object to test password resetting.
    *
@@ -88,6 +100,14 @@ class UserPasswordResetTest extends WebTestBase {
     $this->drupalPostForm(NULL, NULL, t('Log in'));
     $this->assertLink(t('Log out'));
     $this->assertTitle(t('@name | @site', array('@name' => $this->account->getUsername(), '@site' => $this->config('system.site')->get('name'))), 'Logged in using password reset link.');
+
+    // Make sure the ajax request from uploading a user picture does not
+    // invalidate the reset token.
+    $image = current($this->drupalGetTestFiles('image'));
+    $edit = array(
+      'files[user_picture_0]' => drupal_realpath($image->uri),
+    );
+    $this->drupalPostAjaxForm(NULL, $edit, 'user_picture_0_upload_button');
 
     // Change the forgotten password.
     $password = user_password();
