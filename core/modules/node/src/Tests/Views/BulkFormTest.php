@@ -29,7 +29,7 @@ class BulkFormTest extends NodeTestBase {
    */
   public function testBulkForm() {
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
-    $this->drupalLogin($this->drupalCreateUser(array('administer nodes')));
+    $this->drupalLogin($this->drupalCreateUser(array('administer nodes', 'access content overview', 'bypass node access')));
     $node = $this->drupalCreateNode(array(
       'promote' => FALSE,
     ));

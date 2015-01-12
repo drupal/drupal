@@ -29,6 +29,9 @@ class StaticTest extends AccessPluginBase {
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function access(AccountInterface $account) {
     return !empty($this->options['access']);
   }

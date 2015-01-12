@@ -35,7 +35,14 @@ class BulkFormTest extends UserTestBase {
    * Tests the user bulk form.
    */
   public function testBulkForm() {
+    // Login as a user without 'administer users'.
     $this->drupalLogin($this->drupalCreateUser(array('administer permissions')));
+
+    // Create an user which actually can change users.
+    $this->drupalLogin($this->drupalCreateUser(array('administer users')));
+    $this->drupalGet('test-user-bulk-form');
+    $result = $this->cssSelect('#edit-action option');
+    $this->assertTrue(count($result) > 0);
 
     // Test submitting the page with no selection.
     $edit = array(
@@ -101,7 +108,7 @@ class BulkFormTest extends UserTestBase {
     $this->assertTrue($anonymous_account->isBlocked(), 'Ensure the anonymous user got blocked.');
 
     // Test the list of available actions with a value that contains a dot.
-    $this->drupalLogin($this->drupalCreateUser(array('administer permissions', 'administer views')));
+    $this->drupalLogin($this->drupalCreateUser(array('administer permissions', 'administer views', 'administer users')));
     $action_id = 'user_add_role_action.' . $role;
     $edit = [
       'options[include_exclude]' => 'exclude',

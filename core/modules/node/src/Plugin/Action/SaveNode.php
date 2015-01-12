@@ -8,6 +8,7 @@
 namespace Drupal\node\Plugin\Action;
 
 use Drupal\Core\Action\ActionBase;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Provides an action that can save any entity.
@@ -25,6 +26,14 @@ class SaveNode extends ActionBase {
    */
   public function execute($entity = NULL) {
     $entity->save();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
+    /** @var \Drupal\node\NodeInterface $object */
+    return $object->access('update', $account, $return_as_object);
   }
 
 }

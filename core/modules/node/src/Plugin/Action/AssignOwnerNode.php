@@ -11,6 +11,7 @@ use Drupal\Core\Action\ConfigurableActionBase;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -130,6 +131,17 @@ class AssignOwnerNode extends ConfigurableActionBase implements ContainerFactory
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     $this->configuration['owner_uid'] = $this->connection->query('SELECT uid from {users_field_data} WHERE name = :name AND default_langcode = 1', array(':name' => $form_state->getValue('owner_name')))->fetchField();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
+    /** @var \Drupal\node\NodeInterface $object */
+    $result = $object->access('update', $account, TRUE)
+      ->andIf($object->uid->access('edit', $account, TRUE));
+
+    return $return_as_object ? $result : $result->isAllowed();
   }
 
 }

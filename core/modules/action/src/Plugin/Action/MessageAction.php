@@ -8,9 +8,11 @@
 namespace Drupal\action\Plugin\Action;
 
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Action\ConfigurableActionBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Utility\Token;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -87,6 +89,14 @@ class MessageAction extends ConfigurableActionBase implements ContainerFactoryPl
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     $this->configuration['message'] = $form_state->getValue('message');
     unset($this->configuration['node']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
+    $result = AccessResult::allowed();
+    return $return_as_object ? $result : $result->isAllowed();
   }
 
 }

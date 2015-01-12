@@ -63,6 +63,14 @@ class BulkFormTest extends WebTestBase {
       $edit["node_bulk_form[$i]"] = TRUE;
     }
 
+    // Log in as a user with 'administer nodes' permission to have access to the
+    // bulk operation.
+    $this->drupalCreateContentType(['type' => 'page']);
+    $admin_user = $this->drupalCreateUser(['administer nodes', 'edit any page content']);
+    $this->drupalLogin($admin_user);
+
+    $this->drupalGet('test_bulk_form');
+
     // Set all nodes to sticky and check that.
     $edit += array('action' => 'node_make_sticky_action');
     $this->drupalPostForm(NULL, $edit, t('Apply'));

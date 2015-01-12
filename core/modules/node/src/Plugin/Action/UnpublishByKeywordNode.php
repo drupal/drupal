@@ -10,6 +10,7 @@ namespace Drupal\node\Plugin\Action;
 use Drupal\Component\Utility\Tags;
 use Drupal\Core\Action\ConfigurableActionBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Unpublishes a node containing certain keywords.
@@ -63,6 +64,17 @@ class UnpublishByKeywordNode extends ConfigurableActionBase {
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     $this->configuration['keywords'] = Tags::explode($form_state->getValue('keywords'));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
+    /** @var \Drupal\node\NodeInterface $object */
+    $access = $object->access('update', $account, TRUE)
+      ->andIf($object->status->access('edit', $account, TRUE));
+
+    return $return_as_object ? $access : $access->isAllowed();
   }
 
 }

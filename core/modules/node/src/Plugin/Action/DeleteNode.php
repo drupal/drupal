@@ -87,4 +87,12 @@ class DeleteNode extends ActionBase implements ContainerFactoryPluginInterface {
     $this->executeMultiple(array($object));
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
+    /** @var \Drupal\node\NodeInterface $object */
+    return $object->access('delete', $account, $return_as_object);
+  }
+
 }

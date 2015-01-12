@@ -7,11 +7,13 @@
 
 namespace Drupal\action\Plugin\Action;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Action\ConfigurableActionBase;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Mail\MailManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Utility\Token;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -182,6 +184,14 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
     $this->configuration['recipient'] = $form_state->getValue('recipient');
     $this->configuration['subject'] = $form_state->getValue('subject');
     $this->configuration['message'] = $form_state->getValue('message');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
+    $result = AccessResult::allowed();
+    return $return_as_object ? $result : $result->isAllowed();
   }
 
 }

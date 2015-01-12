@@ -12,6 +12,7 @@ use Drupal\Core\Entity\DependencyTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -89,6 +90,17 @@ abstract class ChangeUserRoleBase extends ConfigurableActionBase implements Cont
       $this->addDependency('config', $prefix . $this->configuration['rid']);
     }
     return $this->dependencies;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
+    /** @var \Drupal\user\UserInterface $object */
+    $access = $object->access('update', $account, TRUE)
+      ->andIf($object->roles->access('edit', $account, TRUE));
+
+    return $return_as_object ? $access : $access->isAllowed();
   }
 
 }
