@@ -31,13 +31,6 @@ use Drupal\Core\DependencyInjection\ClassResolverInterface;
 class ControllerResolver extends BaseControllerResolver implements ControllerResolverInterface {
 
   /**
-   * The PSR-3 logger. (optional)
-   *
-   * @var \Psr\Log\LoggerInterface;
-   */
-  protected $logger;
-
-  /**
    * The class resolver.
    *
    * @var \Drupal\Core\DependencyInjection\ClassResolverInterface
@@ -49,13 +42,9 @@ class ControllerResolver extends BaseControllerResolver implements ControllerRes
    *
    * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
    *   The class resolver.
-   * @param \Psr\Log\LoggerInterface $logger
-   *   (optional) A LoggerInterface instance.
    */
-  public function __construct(ClassResolverInterface $class_resolver, LoggerInterface $logger = NULL) {
+  public function __construct(ClassResolverInterface $class_resolver) {
     $this->classResolver = $class_resolver;
-
-    parent::__construct($logger);
   }
 
   /**
@@ -90,10 +79,6 @@ class ControllerResolver extends BaseControllerResolver implements ControllerRes
    */
   public function getController(Request $request) {
     if (!$controller = $request->attributes->get('_controller')) {
-      if ($this->logger !== NULL) {
-        $this->logger->warning('Unable to look for the controller as the "_controller" parameter is missing');
-      }
-
       return FALSE;
     }
     return $this->getControllerFromDefinition($controller, $request->getPathInfo());

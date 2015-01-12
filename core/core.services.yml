@@ -428,7 +428,7 @@ services:
     arguments: ['@kernel']
   controller_resolver:
     class: Drupal\Core\Controller\ControllerResolver
-    arguments: ['@class_resolver', '@logger.channel.default']
+    arguments: ['@class_resolver']
   class_resolver:
     class: Drupal\Core\DependencyInjection\ClassResolver
     calls:

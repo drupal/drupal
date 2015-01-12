@@ -79,6 +79,7 @@ class TestRunnerKernel extends DrupalKernel {
     $this->getContainer()->get('stream_wrapper_manager')->register();
 
     // Create the build/artifacts directory if necessary.
+    include_once DRUPAL_ROOT . '/core/includes/file.inc';
     if (!is_dir('public://simpletest')) {
       mkdir('public://simpletest', 0777, TRUE);
     }

@@ -124,4 +124,9 @@ interface DrupalKernelInterface extends HttpKernelInterface {
    */
   public function preHandle(Request $request);
 
+  /**
+   * Helper method that loads legacy Drupal include files.
+   */
+  public function loadLegacyIncludes();
+
 }

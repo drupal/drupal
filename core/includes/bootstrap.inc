@@ -294,6 +294,23 @@ function drupal_get_filename($type, $name, $filename = NULL) {
 }
 
 /**
+ * Returns the path to a system item (module, theme, etc.).
+ *
+ * @param $type
+ *   The type of the item; one of 'core', 'profile', 'module', 'theme', or
+ *   'theme_engine'.
+ * @param $name
+ *   The name of the item for which the path is requested. Ignored for
+ *   $type 'core'.
+ *
+ * @return
+ *   The path to the requested item or an empty string if the item is not found.
+ */
+function drupal_get_path($type, $name) {
+  return dirname(drupal_get_filename($type, $name));
+}
+
+/**
  * Gets the page cache cid for this request.
  *
  * @param \Symfony\Component\HttpFoundation\Request $request
@@ -1064,6 +1081,39 @@ function drupal_installation_attempted() {
   // executed code does not involve the installer at all.
   // @see install_drupal()
   return isset($GLOBALS['install_state']) && empty($GLOBALS['install_state']['installation_finished']);
+}
+
+/**
+ * Gets the name of the currently active installation profile.
+ *
+ * When this function is called during Drupal's initial installation process,
+ * the name of the profile that's about to be installed is stored in the global
+ * installation state. At all other times, the "install_profile" setting will be
+ * available in settings.php.
+ *
+ * @return string|null $profile
+ *   The name of the installation profile or NULL if no installation profile is
+ *   currently active. This is the case for example during the first steps of
+ *   the installer or during unit tests.
+ */
+function drupal_get_profile() {
+  global $install_state;
+
+  if (drupal_installation_attempted()) {
+    // If the profile has been selected return it.
+    if (isset($install_state['parameters']['profile'])) {
+      $profile = $install_state['parameters']['profile'];
+    }
+    else {
+      $profile = NULL;
+    }
+  }
+  else {
+    // Fall back to NULL, if there is no 'install_profile' setting.
+    $profile = Settings::get('install_profile');
+  }
+
+  return $profile;
 }
 
 /**

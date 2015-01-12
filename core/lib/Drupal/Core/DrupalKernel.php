@@ -377,22 +377,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // Start a page timer:
     Timer::start('page');
 
-    // Load legacy and other functional code.
-    require_once $this->root . '/core/includes/common.inc';
-    require_once $this->root . '/core/includes/database.inc';
-    require_once $this->root . '/core/includes/path.inc';
-    require_once $this->root . '/core/includes/module.inc';
-    require_once $this->root . '/core/includes/theme.inc';
-    require_once $this->root . '/core/includes/pager.inc';
-    require_once $this->root . '/core/includes/menu.inc';
-    require_once $this->root . '/core/includes/tablesort.inc';
-    require_once $this->root . '/core/includes/file.inc';
-    require_once $this->root . '/core/includes/unicode.inc';
-    require_once $this->root . '/core/includes/form.inc';
-    require_once $this->root . '/core/includes/errors.inc';
-    require_once $this->root . '/core/includes/schema.inc';
-    require_once $this->root . '/core/includes/entity.inc';
-
     // Ensure that findSitePath is set.
     if (!$this->sitePath) {
       throw new \Exception('Kernel does not have site path set before calling boot()');
@@ -434,7 +418,30 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   /**
    * {@inheritdoc}
    */
+  public function loadLegacyIncludes() {
+    require_once $this->root . '/core/includes/common.inc';
+    require_once $this->root . '/core/includes/database.inc';
+    require_once $this->root . '/core/includes/path.inc';
+    require_once $this->root . '/core/includes/module.inc';
+    require_once $this->root . '/core/includes/theme.inc';
+    require_once $this->root . '/core/includes/pager.inc';
+    require_once $this->root . '/core/includes/menu.inc';
+    require_once $this->root . '/core/includes/tablesort.inc';
+    require_once $this->root . '/core/includes/file.inc';
+    require_once $this->root . '/core/includes/unicode.inc';
+    require_once $this->root . '/core/includes/form.inc';
+    require_once $this->root . '/core/includes/errors.inc';
+    require_once $this->root . '/core/includes/schema.inc';
+    require_once $this->root . '/core/includes/entity.inc';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function preHandle(Request $request) {
+
+    $this->loadLegacyIncludes();
+
     // Load all enabled modules.
     $this->container->get('module_handler')->loadAll();
 
