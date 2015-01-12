@@ -351,8 +351,8 @@ function comment_form_field_ui_field_storage_edit_form_alter(&$form, FormStateIn
   if ($form['#field']->getType() == 'comment') {
     // We only support posting one comment at the time so it doesn't make sense
     // to let the site builder choose anything else.
-    $form['field']['cardinality_container']['cardinality']['#options'] = array(1 => 1);
-    $form['field']['cardinality_container']['#access'] = FALSE;
+    $form['field_storage']['cardinality_container']['cardinality']['#default_value'] = 1;
+    $form['field_storage']['cardinality_container']['#access'] = FALSE;
   }
 }
 

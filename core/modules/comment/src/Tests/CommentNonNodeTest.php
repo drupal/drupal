@@ -244,8 +244,14 @@ class CommentNonNodeTest extends WebTestBase {
     $this->assertText(t('Comments'));
     $this->assertLinkByHref('entity_test/structure/entity_test/fields/entity_test.entity_test.comment');
     // Test widget hidden option is not visible when there's no comments.
-    $this->drupalGet('entity_test/structure/entity_test/entity-test/fields/entity_test.entity_test.comment');
+    $this->drupalGet('entity_test/structure/entity_test/fields/entity_test.entity_test.comment');
+    $this->assertResponse(200);
     $this->assertNoField('edit-default-value-input-comment-und-0-status-0');
+    // Test that field to change cardinality is not available.
+    $this->drupalGet('entity_test/structure/entity_test/fields/entity_test.entity_test.comment/storage');
+    $this->assertResponse(200);
+    $this->assertNoField('field_storage[cardinality_number]');
+    $this->assertNoField('field_storage[cardinality]');
 
     $this->drupalLogin($this->adminUser);
 
@@ -382,6 +388,7 @@ class CommentNonNodeTest extends WebTestBase {
     $field_storage = entity_load('field_storage_config', 'entity_test.field_barfoo');
     $this->assertTrue($field_storage);
     $this->assertEqual($field_storage->getSetting('comment_type'), 'foobar');
+    $this->assertEqual($field_storage->getCardinality(), 1);
 
     // Test the new entity commenting inherits default.
     $random_label = $this->randomMachineName();
