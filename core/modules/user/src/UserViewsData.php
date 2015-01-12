@@ -277,6 +277,14 @@ class UserViewsData extends EntityViewsData {
       ),
     );
 
+    $data['users']['user_bulk_form'] = array(
+      'title' => t('Bulk update'),
+      'help' => t('Add a form element that lets you run operations on multiple users.'),
+      'field' => array(
+        'id' => 'user_bulk_form',
+      ),
+    );
+
     $data['user__roles']['table']['group']  = t('User');
 
     $data['user__roles']['table']['join'] = array(

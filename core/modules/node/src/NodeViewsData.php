@@ -115,6 +115,14 @@ class NodeViewsData extends EntityViewsData implements EntityViewsDataInterface 
       ),
     );
 
+    $data['node']['node_bulk_form'] = array(
+      'title' => t('Node operations bulk form'),
+      'help' => t('Add a form element that lets you run operations on multiple nodes.'),
+      'field' => array(
+        'id' => 'node_bulk_form',
+      ),
+    );
+
     // Bogus fields for aliasing purposes.
 
     // @todo Add similar support to any date field

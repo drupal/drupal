@@ -9,19 +9,6 @@ use Drupal\views\Analyzer;
 use Drupal\views\ViewExecutable;
 
 /**
- * Implements hook_views_data_alter().
- */
-function node_views_data_alter(&$data) {
-  $data['node']['node_bulk_form'] = array(
-    'title' => t('Node operations bulk form'),
-    'help' => t('Add a form element that lets you run operations on multiple nodes.'),
-    'field' => array(
-      'id' => 'node_bulk_form',
-    ),
-  );
-}
-
-/**
  * Implements hook_views_wizard().
  */
 function node_views_wizard() {
