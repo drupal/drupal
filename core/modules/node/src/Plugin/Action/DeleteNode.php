@@ -9,6 +9,7 @@ namespace Drupal\node\Plugin\Action;
 
 use Drupal\Core\Action\ActionBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\user\TempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -32,6 +33,13 @@ class DeleteNode extends ActionBase implements ContainerFactoryPluginInterface {
   protected $tempStore;
 
   /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
    * Constructs a new DeleteNode object.
    *
    * @param array $configuration
@@ -42,25 +50,34 @@ class DeleteNode extends ActionBase implements ContainerFactoryPluginInterface {
    *   The plugin implementation definition.
    * @param \Drupal\user\TempStoreFactory $temp_store_factory
    *   The tempstore factory.
+   * @param AccountInterface $current_user
+   *   Current user.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, TempStoreFactory $temp_store_factory) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, TempStoreFactory $temp_store_factory, AccountInterface $current_user) {
+    $this->currentUser = $current_user;
     $this->tempStore = $temp_store_factory->get('node_multiple_delete_confirm');
+
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($configuration, $plugin_id, $plugin_definition, $container->get('user.tempstore'));
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('user.tempstore'),
+      $container->get('current_user')
+    );
   }
 
   /**
    * {@inheritdoc}
    */
   public function executeMultiple(array $entities) {
-    $this->tempStore->set(\Drupal::currentUser()->id(), $entities);
+    $this->tempStore->set($this->currentUser->id(), $entities);
   }
 
   /**
