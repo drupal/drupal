@@ -1,10 +1,11 @@
-id: user_search
-label: Users
-status: true
 langcode: en
-path: user
-plugin: user_search
-configuration: {  }
+status: true
 dependencies:
   module:
     - user
+id: user_search
+label: Users
+path: user
+weight: 0
+plugin: user_search
+configuration: {  }
