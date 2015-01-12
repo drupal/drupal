@@ -420,7 +420,7 @@ function format_size($size, $langcode = NULL) {
  * @return
  *   A translated date string in the requested format.
  *
- * @see \Drupal\Component\Datetime\DateFormatter::format()
+ * @see \Drupal\Core\Datetime\DateFormatter::format()
  */
 function format_date($timestamp, $type = 'medium', $format = '', $timezone = NULL, $langcode = NULL) {
   return \Drupal::service('date.formatter')->format($timestamp, $type, $format, $timezone, $langcode);
