@@ -39,6 +39,17 @@ interface NodeStorageInterface extends EntityStorageInterface {
   public function userRevisionIds(AccountInterface $account);
 
   /**
+   * Counts the number of revisions in the default language.
+   *
+   * @param \Drupal\node\NodeInterface
+   *   The node entity.
+   *
+   * @return int
+   *   The number of revisions in the default language.
+   */
+  public function countDefaultLanguageRevisions(NodeInterface $node);
+
+  /**
    * Updates all nodes of one type to be of another type.
    *
    * @param string $old_type

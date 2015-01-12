@@ -8,7 +8,6 @@
 namespace Drupal\node\Access;
 
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -23,7 +22,7 @@ class NodeRevisionAccessCheck implements AccessInterface {
   /**
    * The node storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
+   * @var \Drupal\node\NodeStorageInterface
    */
   protected $nodeStorage;
 
@@ -33,13 +32,6 @@ class NodeRevisionAccessCheck implements AccessInterface {
    * @var \Drupal\Core\Entity\EntityAccessControlHandlerInterface
    */
   protected $nodeAccess;
-
-  /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
 
   /**
    * A static cache of access checks.
@@ -56,10 +48,9 @@ class NodeRevisionAccessCheck implements AccessInterface {
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
    */
-  public function __construct(EntityManagerInterface $entity_manager, Connection $connection) {
+  public function __construct(EntityManagerInterface $entity_manager) {
     $this->nodeStorage = $entity_manager->getStorage('node');
     $this->nodeAccess = $entity_manager->getAccessControlHandler('node');
-    $this->connection = $connection;
   }
 
   /**
@@ -147,7 +138,7 @@ class NodeRevisionAccessCheck implements AccessInterface {
       // different revisions so there is no need for a separate database check.
       // Also, if you try to revert to or delete the default revision, that's
       // not good.
-      if ($node->isDefaultRevision() && ($this->connection->query('SELECT COUNT(*) FROM {node_field_revision} WHERE nid = :nid AND default_langcode = 1', array(':nid' => $node->id()))->fetchField() == 1 || $op == 'update' || $op == 'delete')) {
+      if ($node->isDefaultRevision() && ($this->nodeStorage->countDefaultLanguageRevisions($node) == 1 || $op == 'update' || $op == 'delete')) {
         $this->access[$cid] = FALSE;
       }
       elseif ($account->hasPermission('administer nodes')) {
