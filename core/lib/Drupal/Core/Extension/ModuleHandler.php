@@ -392,14 +392,12 @@ class ModuleHandler implements ModuleHandlerInterface {
     $implementations = $this->getImplementations($hook);
     foreach ($implementations as $module) {
       $function = $module . '_' . $hook;
-      if (function_exists($function)) {
-        $result = call_user_func_array($function, $args);
-        if (isset($result) && is_array($result)) {
-          $return = NestedArray::mergeDeep($return, $result);
-        }
-        elseif (isset($result)) {
-          $return[] = $result;
-        }
+      $result = call_user_func_array($function, $args);
+      if (isset($result) && is_array($result)) {
+        $return = NestedArray::mergeDeep($return, $result);
+      }
+      elseif (isset($result)) {
+        $return[] = $result;
       }
     }
 
