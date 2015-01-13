@@ -231,7 +231,7 @@ function drupal_find_theme_templates($cache, $extension, $path) {
   // used for filtering. This allows base themes to have sub-themes in its
   // folder hierarchy without affecting the base themes template discovery.
   $theme_paths = array();
-  foreach (list_themes() as $theme_info) {
+  foreach (\Drupal::service('theme_handler')->listInfo() as $theme_info) {
     if (!empty($theme_info->base_theme)) {
       $theme_paths[$theme_info->base_theme][$theme_info->getName()] = $theme_info->getPath();
     }
@@ -352,6 +352,8 @@ function theme_get_setting($setting_name, $theme = NULL) {
     // Get the global settings from configuration.
     $cache[$theme]->setData(\Drupal::config('system.theme.global')->get());
 
+    // Get the values for the theme-specific settings from the .info.yml files
+    // of the theme and all its base themes.
     $themes = \Drupal::service('theme_handler')->listInfo();
     if (isset($themes[$theme])) {
       $theme_object = $themes[$theme];

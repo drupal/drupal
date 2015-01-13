@@ -13,6 +13,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Executable\ExecutableManagerInterface;
+use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -61,6 +62,13 @@ class BlockForm extends EntityForm {
   protected $language;
 
   /**
+   * The theme handler.
+   *
+   * @var \Drupal\Core\Extension\ThemeHandler
+   */
+  protected $themeHandler;
+
+  /**
    * Constructs a BlockForm object.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
@@ -71,12 +79,15 @@ class BlockForm extends EntityForm {
    *   The EventDispatcher for gathering administrative contexts.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language
    *   The language manager.
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   * The theme handler.
    */
-  public function __construct(EntityManagerInterface $entity_manager, ExecutableManagerInterface $manager, EventDispatcherInterface $dispatcher, LanguageManagerInterface $language) {
+  public function __construct(EntityManagerInterface $entity_manager, ExecutableManagerInterface $manager, EventDispatcherInterface $dispatcher, LanguageManagerInterface $language, ThemeHandlerInterface $theme_handler) {
     $this->storage = $entity_manager->getStorage('block');
     $this->manager = $manager;
     $this->dispatcher = $dispatcher;
     $this->language = $language;
+    $this->themeHandler = $theme_handler;
   }
 
   /**
@@ -87,7 +98,8 @@ class BlockForm extends EntityForm {
       $container->get('entity.manager'),
       $container->get('plugin.manager.condition'),
       $container->get('event_dispatcher'),
-      $container->get('language_manager')
+      $container->get('language_manager'),
+      $container->get('theme_handler')
     );
   }
 
@@ -135,7 +147,7 @@ class BlockForm extends EntityForm {
     }
     else {
       $theme_options = array();
-      foreach (list_themes() as $theme_name => $theme_info) {
+      foreach ($this->themeHandler->listInfo() as $theme_name => $theme_info) {
         if (!empty($theme_info->status)) {
           $theme_options[$theme_name] = $theme_info->info['name'];
         }

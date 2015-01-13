@@ -492,7 +492,7 @@ function hook_cache_flush() {
  * @see drupal_flush_all_caches()
  */
 function hook_rebuild() {
-  $themes = list_themes();
+  $themes = \Drupal::service('theme_handler')->listInfo();
   foreach ($themes as $theme) {
     _block_rehash($theme->getName());
   }

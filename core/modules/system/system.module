@@ -100,7 +100,7 @@ function system_help($route_name, RouteMatchInterface $route_match) {
       return $output;
 
     case 'system.theme_settings_theme':
-      $theme_list = list_themes();
+      $theme_list = \Drupal::service('theme_handler')->listInfo();
       $theme = $theme_list[$route_match->getParameter('theme')];
       return '<p>' . t('These options control the display settings for the %name theme. When your site is displayed using this theme, these settings will be used.', array('%name' => $theme->info['name'])) . '</p>';
 

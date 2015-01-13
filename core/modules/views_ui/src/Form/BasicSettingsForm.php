@@ -7,13 +7,47 @@
 
 namespace Drupal\views_ui\Form;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form builder for the admin display defaults page.
  */
 class BasicSettingsForm extends ConfigFormBase {
+
+  /**
+   * The theme handler.
+   *
+   * @var \Drupal\Core\Extension\ThemeHandlerInterface
+   */
+  protected $themeHandler;
+
+  /**
+   * Constructs a \Drupal\views_ui\Form\BasicSettingsForm object.
+   *
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The factory for configuration objects.
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   *   The theme handler.
+   */
+  public function __construct(ConfigFactoryInterface $config_factory, ThemeHandlerInterface $theme_handler) {
+    parent::__construct($config_factory);
+
+    $this->themeHandler = $theme_handler;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('config.factory'),
+      $container->get('theme_handler')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -30,7 +64,7 @@ class BasicSettingsForm extends ConfigFormBase {
 
     $config = $this->config('views.settings');
     $options = array();
-    foreach (list_themes() as $name => $theme) {
+    foreach ($this->themeHandler->listInfo() as $name => $theme) {
       if ($theme->status) {
         $options[$name] = $theme->info['name'];
       }

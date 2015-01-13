@@ -200,17 +200,20 @@ class ThemeTest extends WebTestBase {
   }
 
   /**
-   * Test the list_themes() function.
+   * Test the listInfo() function.
    */
   function testListThemes() {
     $theme_handler = $this->container->get('theme_handler');
     $theme_handler->install(array('test_subtheme'));
     $themes = $theme_handler->listInfo();
 
-    // Check if drupal_theme_access() retrieves installed themes properly from
-    // list_themes().
+    $themes = \Drupal::service('theme_handler')->listInfo();
+    // Check if drupal_theme_access() retrieves enabled themes properly from
+    // ThemeHandlerInterface::listInfo().
     $this->assertTrue(drupal_theme_access('test_theme'), 'Installed theme detected');
 
+    $this->assertTrue(drupal_theme_access('test_theme'), 'Enabled theme detected');
+    // Check if ThemeHandlerInterface::listInfo() returns disabled themes.
     // Check for base theme and subtheme lists.
     $base_theme_list = array('test_basetheme' => 'Theme test base theme');
     $sub_theme_list = array('test_subtheme' => 'Theme test subtheme');

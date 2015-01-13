@@ -788,6 +788,7 @@ services:
       - { name: access_check, applies_to: _entity_create_access }
   access_check.theme:
     class: Drupal\Core\Theme\ThemeAccessCheck
+    arguments: ['@theme_handler']
     tags:
       - { name: access_check, applies_to: _access_theme }
   access_check.custom:
@@ -1048,7 +1049,7 @@ services:
     arguments: ['@app.root', '@theme_handler', '@state']
   theme.registry:
     class: Drupal\Core\Theme\Registry
-    arguments: ['@app.root', '@cache.default', '@lock', '@module_handler']
+    arguments: ['@app.root', '@cache.default', '@lock', '@module_handler', '@theme_handler']
     tags:
       - { name: needs_destruction }
   authentication:

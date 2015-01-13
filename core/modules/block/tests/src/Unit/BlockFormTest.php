@@ -44,6 +44,14 @@ class BlockFormTest extends UnitTestCase {
    */
   protected $language;
 
+
+  /**
+   * The theme handler.
+   *
+   * @var \Drupal\Core\Extension\ThemeHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $themeHandler;
+
   /**
    * The entity manager.
    *
@@ -63,6 +71,7 @@ class BlockFormTest extends UnitTestCase {
 
     $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
     $this->storage = $this->getMock('Drupal\Core\Config\Entity\ConfigEntityStorageInterface');
+    $this->themeHandler = $this->getMock('Drupal\Core\Extension\ThemeHandlerInterface');
     $this->entityManager->expects($this->any())
       ->method('getStorage')
       ->will($this->returnValue($this->storage));
@@ -95,7 +104,7 @@ class BlockFormTest extends UnitTestCase {
       ->method('getQuery')
       ->will($this->returnValue($query));
 
-    $block_form_controller = new BlockForm($this->entityManager, $this->conditionManager, $this->dispatcher, $this->language);
+    $block_form_controller = new BlockForm($this->entityManager, $this->conditionManager, $this->dispatcher, $this->language, $this->themeHandler);
 
     // Ensure that the block with just one other instance gets the next available
     // name suggestion.

@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Form;
 
+use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\StreamWrapper\PublicStream;
@@ -30,17 +31,27 @@ class ThemeSettingsForm extends ConfigFormBase {
   protected $moduleHandler;
 
   /**
+   * The theme handler.
+   *
+   * @var \Drupal\Core\Extension\ThemeHandlerInterface
+   */
+  protected $themeHandler;
+
+  /**
    * Constructs a ThemeSettingsForm object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface
    *   The module handler instance to use.
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   * The theme handler.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler) {
+  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler) {
     parent::__construct($config_factory);
 
     $this->moduleHandler = $module_handler;
+    $this->themeHandler = $theme_handler;
   }
 
   /**
@@ -49,7 +60,8 @@ class ThemeSettingsForm extends ConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
-      $container->get('module_handler')
+      $container->get('module_handler'),
+      $container->get('theme_handler')
     );
   }
 
@@ -69,7 +81,7 @@ class ThemeSettingsForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state, $theme = '') {
     $form = parent::buildForm($form, $form_state);
 
-    $themes = list_themes();
+    $themes = $this->themeHandler->listInfo();
 
     // Deny access if the theme is not installed or not found.
     if (!empty($theme) && (empty($themes[$theme]) || !$themes[$theme]->status)) {
@@ -80,7 +92,7 @@ class ThemeSettingsForm extends ConfigFormBase {
     if ($theme) {
       $var = 'theme_' . $theme . '_settings';
       $config_key = $theme . '.settings';
-      $themes = list_themes();
+      $themes = $this->themeHandler->listInfo();
       $features = $themes[$theme]->info['features'];
     }
     else {

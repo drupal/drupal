@@ -46,6 +46,13 @@ class RegistryTest extends UnitTestCase {
   protected $moduleHandler;
 
   /**
+   * The mocked theme handler.
+   *
+   * @var \Drupal\Core\Extension\ThemeHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $themeHandler;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -54,6 +61,7 @@ class RegistryTest extends UnitTestCase {
     $this->cache = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
     $this->lock = $this->getMock('Drupal\Core\Lock\LockBackendInterface');
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
+    $this->themeHandler = $this->getMock('Drupal\Core\Extension\ThemeHandlerInterface');
 
     $this->setupTheme();
   }
@@ -98,7 +106,7 @@ class RegistryTest extends UnitTestCase {
   }
 
   protected function setupTheme($theme_name = NULL) {
-    $this->registry = new TestRegistry($this->root, $this->cache, $this->lock, $this->moduleHandler, $theme_name);
+    $this->registry = new TestRegistry($this->root, $this->cache, $this->lock, $this->moduleHandler, $this->themeHandler, $theme_name);
   }
 
 }

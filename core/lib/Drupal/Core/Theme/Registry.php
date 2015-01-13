@@ -11,6 +11,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DestructableInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Utility\ThemeRegistry;
 
@@ -137,7 +138,14 @@ class Registry implements DestructableInterface {
   protected $root;
 
   /**
-   * Constructs a \Drupal\Core\\Theme\Registry object.
+   * The theme handler.
+   *
+   * @var \Drupal\Core\Extension\ThemeHandlerInterface
+   */
+  protected $themeHandler;
+
+  /**
+   * Constructs a \Drupal\Core\Theme\Registry object.
    *
    * @param string $root
    *   The app root.
@@ -147,15 +155,18 @@ class Registry implements DestructableInterface {
    *   The lock backend.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to use to load modules.
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   *   The theme handler.
    * @param string $theme_name
    *   (optional) The name of the theme for which to construct the registry.
    */
-  public function __construct($root, CacheBackendInterface $cache, LockBackendInterface $lock, ModuleHandlerInterface $module_handler, $theme_name = NULL) {
+  public function __construct($root, CacheBackendInterface $cache, LockBackendInterface $lock, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, $theme_name = NULL) {
     $this->root = $root;
     $this->cache = $cache;
     $this->lock = $lock;
     $this->moduleHandler = $module_handler;
     $this->themeName = $theme_name;
+    $this->themeHandler = $theme_handler;
   }
 
   /**
@@ -180,7 +191,7 @@ class Registry implements DestructableInterface {
     }
     // Instead of the active theme, a specific theme was requested.
     else {
-      $themes = $this->listThemes();
+      $themes = $this->themeHandler->listInfo();
       $this->theme = $themes[$theme_name];
 
       // Find all base themes.
@@ -403,14 +414,15 @@ class Registry implements DestructableInterface {
    *   example, if a theme hook is both defined by a module and a theme, then
    *   the definition in the theme will be used.
    * @param \stdClass $theme
-   *   The loaded $theme object as returned from list_themes().
+   *   The loaded $theme object as returned from
+   *   ThemeHandlerInterface::listInfo().
    * @param string $path
    *   The directory where $name is. For example, modules/system or
    *   themes/bartik.
    *
    * @see _theme()
    * @see hook_theme()
-   * @see list_themes()
+   * @see \Drupal\Core\Extension\ThemeHandler::listInfo()
    * @see twig_render_template()
    *
    * @throws \BadFunctionCallException
@@ -605,14 +617,4 @@ class Registry implements DestructableInterface {
   protected function getPath($module) {
     return drupal_get_path('module', $module);
   }
-
-  /**
-   * Wraps list_themes().
-   *
-   * @return array
-   */
-  protected function listThemes() {
-    return list_themes();
-  }
-
 }

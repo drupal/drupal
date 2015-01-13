@@ -8,6 +8,7 @@
 namespace Drupal\Core\Theme;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 
 /**
@@ -15,6 +16,22 @@ use Drupal\Core\Routing\Access\AccessInterface;
  */
 class ThemeAccessCheck implements AccessInterface {
 
+  /**
+   * The theme handler.
+   *
+   * @var \Drupal\Core\Extension\ThemeHandlerInterface
+   */
+  protected $themeHandler;
+
+  /**
+   * Constructs a \Drupal\Core\Theme\Registry object.
+   *
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   *   The theme handler.
+   */
+  public function __construct(ThemeHandlerInterface $theme_handler) {
+    $this->themeHandler = $theme_handler;
+  }
   /**
    * Checks access to the theme for routing.
    *
@@ -39,7 +56,7 @@ class ThemeAccessCheck implements AccessInterface {
    *   TRUE if the theme is installed, FALSE otherwise.
    */
   public function checkAccess($theme) {
-    $themes = list_themes();
+    $themes = $this->themeHandler->listInfo();
     return !empty($themes[$theme]->status);
   }
 

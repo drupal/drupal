@@ -20,7 +20,7 @@ use Drupal\Core\Extension\ExtensionDiscovery;
  *   For $type 'theme', the array values are objects representing the
  *   respective database row, with the 'info' property already unserialized.
  *
- * @see list_themes()
+ * @see \Drupal\Core\Extension\ThemeHandler::listInfo()
  */
 function system_list($type) {
   $lists = &drupal_static(__FUNCTION__);
