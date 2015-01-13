@@ -989,10 +989,11 @@
 /**
  * @defgroup extending Extending and altering Drupal
  * @{
- * Overview of add-ons and alteration methods for Drupal.
+ * Overview of extensions and alteration methods for Drupal.
  *
+ * @section sec_types Types of extensions
  * Drupal's core behavior can be extended and altered via these three basic
- * types of add-ons:
+ * types of extensions:
  * - Themes: Themes alter the appearance of Drupal sites. They can include
  *   template files, which alter the HTML markup and other raw output of the
  *   site; CSS files, which alter the styling applied to the HTML; and
@@ -1005,8 +1006,9 @@
  * - Installation profiles: Installation profiles can be used to
  *   create distributions, which are complete specific-purpose packages of
  *   Drupal including additional modules, themes, and data. For more
- *   information, see https://drupal.org/documentation/build/distributions.
+ *   information, see https://www.drupal.org/developing/distributions.
  *
+ * @section sec_alter Alteration methods for modules
  * Here is a list of the ways that modules can alter or extend Drupal's core
  * behavior, or the behavior of other modules:
  * - Hooks: Specially-named functions that a module defines, which are
@@ -1025,6 +1027,13 @@
  * - Routing: Providing or altering "routes", which are URLs that Drupal
  *   responds to, or altering routing behavior with event listener classes.
  *   See the @link menu Routing and menu topic @endlink for more information.
+ *
+ * @section sec_sample *.info.yml files
+ * Extensions must each be located in a directory whose name matches the short
+ * name (or machine name) of the extension, and this directory must contain a
+ * file named machine_name.info.yml (where machine_name is the machine name of
+ * the extension). See \Drupal\Core\Extension\InfoParserInterface::parse() for
+ * documentation of the format of .info.yml files.
  * @}
  */
 
