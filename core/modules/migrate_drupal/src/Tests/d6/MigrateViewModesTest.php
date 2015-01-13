@@ -32,7 +32,11 @@ class MigrateViewModesTest extends MigrateDrupalTestBase {
     parent::setUp();
     $migration = entity_load('migration', 'd6_view_modes');
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6FieldInstance.php',
+      $this->getDumpDirectory() . '/ContentNodeFieldInstance.php',
+      $this->getDumpDirectory() . '/ContentNodeField.php',
+      $this->getDumpDirectory() . '/ContentFieldTest.php',
+      $this->getDumpDirectory() . '/ContentFieldTestTwo.php',
+      $this->getDumpDirectory() . '/ContentFieldMultivalue.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

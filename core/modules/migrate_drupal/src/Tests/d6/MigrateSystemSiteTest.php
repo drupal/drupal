@@ -25,7 +25,7 @@ class MigrateSystemSiteTest extends MigrateDrupalTestBase {
     parent::setUp();
     $migration = entity_load('migration', 'd6_system_site');
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6SystemSite.php',
+      $this->getDumpDirectory() . '/Variable.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, new MigrateMessage());

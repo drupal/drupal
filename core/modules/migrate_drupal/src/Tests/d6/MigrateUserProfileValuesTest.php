@@ -8,8 +8,7 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\Dump\Drupal6User;
-use Drupal\migrate_drupal\Tests\Dump\Drupal6UserProfileFields;
+use Drupal\Core\Database\Database;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 use Drupal\user\Entity\User;
 
@@ -88,24 +87,6 @@ class MigrateUserProfileValuesTest extends MigrateDrupalTestBase {
       'type' => 'boolean',
     ))->save();
 
-    // Create the field instances.
-    foreach (Drupal6UserProfileFields::getData('profile_fields') as $field) {
-      entity_create('field_config', array(
-        'label' => $field['title'],
-        'description' => '',
-        'field_name' => $field['name'],
-        'entity_type' => 'user',
-        'bundle' => 'user',
-        'required' => 0,
-      ))->save();
-    }
-
-    // Create some users to migrate the profile data to.
-    foreach (Drupal6User::getData('users') as $u) {
-      $user = entity_create('user', $u);
-      $user->enforceIsNew();
-      $user->save();
-    }
     // Add some id mappings for the dependant migrations.
     $id_mappings = array(
       'd6_user_profile_field_instance' => array(
@@ -127,10 +108,37 @@ class MigrateUserProfileValuesTest extends MigrateDrupalTestBase {
 
     // Load database dumps to provide source data.
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6UserProfileFields.php',
-      $this->getDumpDirectory() . '/Drupal6User.php',
+      $this->getDumpDirectory() . '/ProfileFields.php',
+      $this->getDumpDirectory() . '/Users.php',
+      $this->getDumpDirectory() . '/ProfileValues.php',
+      $this->getDumpDirectory() . '/UsersRoles.php',
+      $this->getDumpDirectory() . '/EventTimezones.php',
     );
     $this->loadDumps($dumps);
+    $field_data = Database::getConnection('default', 'migrate')
+      ->select('profile_fields', 'u')
+      ->fields('u')
+      ->execute()
+      ->fetchAll();
+    // Create the field instances.
+    foreach ($field_data as $field) {
+      entity_create('field_config', array(
+        'label' => $field->title,
+        'description' => '',
+        'field_name' => $field->name,
+        'entity_type' => 'user',
+        'bundle' => 'user',
+        'required' => 0,
+      ))->save();
+    }
+
+    // Create our users for the node authors.
+    $query = Database::getConnection('default', 'migrate')->query('SELECT * FROM {users} WHERE uid NOT IN (0, 1)');
+    while(($row = $query->fetchAssoc()) !== FALSE) {
+      $user = entity_create('user', $row);
+      $user->enforceIsNew();
+      $user->save();
+    }
 
     // Migrate profile fields.
     $migration_format = entity_load('migration', 'd6_profile_values:user');

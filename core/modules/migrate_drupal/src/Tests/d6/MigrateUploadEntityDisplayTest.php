@@ -43,7 +43,8 @@ class MigrateUploadEntityDisplayTest extends MigrateDrupalTestBase {
 
     $migration = entity_load('migration', 'd6_upload_entity_display');
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6UploadInstance.php',
+      $this->getDumpDirectory() . '/NodeType.php',
+      $this->getDumpDirectory() . '/Variable.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

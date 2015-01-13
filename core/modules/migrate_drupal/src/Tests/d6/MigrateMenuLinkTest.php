@@ -42,7 +42,7 @@ class MigrateMenuLinkTest extends MigrateDrupalTestBase {
 
     $migration = entity_load('migration', 'd6_menu_links');
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6MenuLink.php',
+      $this->getDumpDirectory() . '/MenuLinks.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

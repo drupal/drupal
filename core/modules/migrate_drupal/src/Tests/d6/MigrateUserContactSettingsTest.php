@@ -25,7 +25,10 @@ class MigrateUserContactSettingsTest extends MigrateDrupalTestBase {
     parent::setUp();
 
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6User.php',
+      $this->getDumpDirectory() . '/Users.php',
+      $this->getDumpDirectory() . '/ProfileValues.php',
+      $this->getDumpDirectory() . '/UsersRoles.php',
+      $this->getDumpDirectory() . '/EventTimezones.php',
     );
     $this->loadDumps($dumps);
 

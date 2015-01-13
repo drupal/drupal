@@ -35,7 +35,7 @@ class MigrateCommentVariableInstanceTest extends MigrateDrupalTestBase {
     );
     $this->prepareMigrations($id_mappings);
 
-    foreach (array('page', 'story') as $type) {
+    foreach (array('page', 'story', 'article') as $type) {
       entity_create('node_type', array('type' => $type))->save();
     }
     entity_create('field_storage_config', array(
@@ -53,7 +53,8 @@ class MigrateCommentVariableInstanceTest extends MigrateDrupalTestBase {
     /** @var \Drupal\migrate\entity\Migration $migration */
     $migration = entity_load('migration', 'd6_comment_field_instance');
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6CommentVariable.php',
+      $this->getDumpDirectory() . '/Variable.php',
+      $this->getDumpDirectory() . '/NodeType.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

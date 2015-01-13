@@ -25,7 +25,7 @@ class MigrateSystemPerformanceTest extends MigrateDrupalTestBase {
     parent::setUp();
     $migration = entity_load('migration', 'd6_system_performance');
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6SystemPerformance.php',
+      $this->getDumpDirectory() . '/Variable.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, new MigrateMessage());

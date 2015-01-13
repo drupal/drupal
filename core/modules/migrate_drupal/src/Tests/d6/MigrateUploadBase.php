@@ -85,8 +85,11 @@ abstract class MigrateUploadBase extends MigrateDrupalTestBase {
       }
     }
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6Node.php',
-      $this->getDumpDirectory() . '/Drupal6Upload.php',
+      $this->getDumpDirectory() . '/Node.php',
+      $this->getDumpDirectory() . '/NodeRevisions.php',
+      $this->getDumpDirectory() . '/ContentTypeStory.php',
+      $this->getDumpDirectory() . '/ContentTypeTestPlanet.php',
+      $this->getDumpDirectory() . '/Upload.php',
     );
     $this->loadDumps($dumps);
   }

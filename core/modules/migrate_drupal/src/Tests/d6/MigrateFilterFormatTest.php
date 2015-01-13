@@ -29,7 +29,9 @@ class MigrateFilterFormatTest extends MigrateDrupalTestBase {
     parent::setUp();
     $migration = entity_load('migration', 'd6_filter_format');
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6FilterFormat.php',
+      $this->getDumpDirectory() . '/Filters.php',
+      $this->getDumpDirectory() . '/FilterFormats.php',
+      $this->getDumpDirectory() . '/Variable.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

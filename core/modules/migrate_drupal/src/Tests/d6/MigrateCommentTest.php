@@ -56,9 +56,13 @@ class MigrateCommentTest extends MigrateDrupalTestBase {
     $migration = entity_load('migration', 'd6_comment');
 
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6Node.php',
-      $this->getDumpDirectory() . '/Drupal6CommentVariable.php',
-      $this->getDumpDirectory() . '/Drupal6Comment.php',
+      $this->getDumpDirectory() . '/Node.php',
+      $this->getDumpDirectory() . '/NodeRevisions.php',
+      $this->getDumpDirectory() . '/ContentTypeStory.php',
+      $this->getDumpDirectory() . '/ContentTypeTestPlanet.php',
+      $this->getDumpDirectory() . '/Variable.php',
+      $this->getDumpDirectory() . '/NodeType.php',
+      $this->getDumpDirectory() . '/Comments.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

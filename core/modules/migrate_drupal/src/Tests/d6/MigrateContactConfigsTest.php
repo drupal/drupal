@@ -43,8 +43,8 @@ class MigrateContactConfigsTest extends MigrateDrupalTestBase {
     $this->prepareMigrations($id_mappings);
     $migration = entity_load('migration', 'd6_contact_settings');
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6ContactSettings.php',
-      $this->getDumpDirectory() . '/Drupal6ContactCategory.php',
+      $this->getDumpDirectory() . '/Variable.php',
+      $this->getDumpDirectory() . '/Contact.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, new MigrateMessage());

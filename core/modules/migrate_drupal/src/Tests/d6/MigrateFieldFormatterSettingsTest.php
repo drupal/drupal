@@ -66,7 +66,11 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupalTestBase {
 
     $migration = entity_load('migration', 'd6_field_formatter_settings');
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6FieldInstance.php',
+      $this->getDumpDirectory() . '/ContentNodeFieldInstance.php',
+      $this->getDumpDirectory() . '/ContentNodeField.php',
+      $this->getDumpDirectory() . '/ContentFieldTest.php',
+      $this->getDumpDirectory() . '/ContentFieldTestTwo.php',
+      $this->getDumpDirectory() . '/ContentFieldMultivalue.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);
@@ -87,19 +91,18 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupalTestBase {
       'third_party_settings' => array(),
     );
 
-    // Make sure we don't have the excluded print entity display.
-    $display = entity_load('entity_view_display', 'node.story.print');
-    $this->assertNull($display, "Print entity display not found.");
     // Can we load any entity display.
     $display = entity_load('entity_view_display', 'node.story.teaser');
     $this->assertEqual($display->getComponent($field_name), $expected);
 
     // Test migrate worked with multiple bundles.
     $display = entity_load('entity_view_display', 'node.test_page.teaser');
+    $expected['weight'] = 35;
     $this->assertEqual($display->getComponent($field_name), $expected);
 
     // Test RSS because that has been converted from 4 to rss.
     $display = entity_load('entity_view_display', 'node.story.rss');
+    $expected['weight'] = 1;
     $this->assertEqual($display->getComponent($field_name), $expected);
 
     // Test the default format with text_default which comes from a static map.
@@ -117,7 +120,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupalTestBase {
     $this->assertTrue(isset($content['field_test_exclude_unset']), "Settings for field_test_exclude_unset exist.");
 
     // Test the number field formatter settings are correct.
-    $expected['weight'] = 2;
+    $expected['weight'] = 1;
     $expected['type'] = 'number_integer';
     $expected['settings'] = array(
       'thousand_separator' => ',',
@@ -125,7 +128,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupalTestBase {
     );
     $component = $display->getComponent('field_test_two');
     $this->assertEqual($component, $expected);
-    $expected['weight'] = 3;
+    $expected['weight'] = 2;
     $expected['type'] = 'number_decimal';
     $expected['settings']['scale'] = 2;
     $expected['settings']['decimal_separator'] = '.';
@@ -133,14 +136,14 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupalTestBase {
     $this->assertEqual($component, $expected);
 
     // Test the email field formatter settings are correct.
-    $expected['weight'] = 4;
+    $expected['weight'] = 6;
     $expected['type'] = 'email_mailto';
     $expected['settings'] = array();
     $component = $display->getComponent('field_test_email');
     $this->assertEqual($component, $expected);
 
     // Test the link field formatter settings.
-    $expected['weight'] = 5;
+    $expected['weight'] = 7;
     $expected['type'] = 'link';
     $expected['settings'] = array(
       'trim_length' => 80,
@@ -150,41 +153,41 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupalTestBase {
       'target' => 0,
     );
     $component = $display->getComponent('field_test_link');
-    $this->assertEqual($component, $expected, "node.story.default field_test_link has correct absolute link settings.");
+    $this->assertEqual($component, $expected);
     $expected['settings']['url_only'] = 0;
     $expected['settings']['url_plain'] = 0;
     $display = entity_load('entity_view_display', 'node.story.teaser');
     $component = $display->getComponent('field_test_link');
-    $this->assertEqual($component, $expected, "node.story.teaser field_test_link has correct default link settings.");
+    $this->assertEqual($component, $expected);
 
     // Test the file field formatter settings.
-    $expected['weight'] = 7;
+    $expected['weight'] = 8;
     $expected['type'] = 'file_default';
     $expected['settings'] = array();
     $component = $display->getComponent('field_test_filefield');
-    $this->assertEqual($component, $expected, "node.story.teaser field_test_filefield is of type file_default.");
+    $this->assertEqual($component, $expected);
     $display = entity_load('entity_view_display', 'node.story.default');
     $expected['type'] = 'file_url_plain';
     $component = $display->getComponent('field_test_filefield');
-    $this->assertEqual($component, $expected, "node.story.default field_test_filefield is of type file_url_plain.");
+    $this->assertEqual($component, $expected);
 
     // Test the image field formatter settings.
-    $expected['weight'] = 8;
+    $expected['weight'] = 9;
     $expected['type'] = 'image';
     $expected['settings'] = array('image_style' => '', 'image_link' => '');
     $component = $display->getComponent('field_test_imagefield');
-    $this->assertEqual($component, $expected, "node.story.default field_test_imagefield is of type image with the correct settings.");
+    $this->assertEqual($component, $expected);
     $display = entity_load('entity_view_display', 'node.story.teaser');
     $expected['settings']['image_link'] = 'file';
     $component = $display->getComponent('field_test_imagefield');
-    $this->assertEqual($component, $expected, "node.story.teaser field_test_imagefield is of type image with the correct settings.");
+    $this->assertEqual($component, $expected);
 
     // Test phone field.
-    $expected['weight'] = 9;
+    $expected['weight'] = 13;
     $expected['type'] = 'basic_string';
     $expected['settings'] = array();
     $component = $display->getComponent('field_test_phone');
-    $this->assertEqual($component, $expected, "node.story.teaser field_test_phone is of type telephone.");
+    $this->assertEqual($component, $expected);
 
     // Test date field.
     $expected['weight'] = 10;

@@ -30,7 +30,10 @@ class MigrateUserPictureFileTest extends MigrateDrupalTestBase {
   protected function setUp() {
     parent::setUp();
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6User.php',
+      $this->getDumpDirectory() . '/Users.php',
+      $this->getDumpDirectory() . '/ProfileValues.php',
+      $this->getDumpDirectory() . '/UsersRoles.php',
+      $this->getDumpDirectory() . '/EventTimezones.php',
     );
     /** @var \Drupal\migrate\entity\Migration $migration */
     $migration = entity_load('migration', 'd6_user_picture_file');

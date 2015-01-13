@@ -47,7 +47,7 @@ class MigrateAggregatorItemTest extends MigrateDrupalTestBase {
     /** @var \Drupal\migrate\entity\Migration $migration */
     $migration = entity_load('migration', 'd6_aggregator_item');
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6AggregatorItem.php',
+      $this->getDumpDirectory() . '/AggregatorItem.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

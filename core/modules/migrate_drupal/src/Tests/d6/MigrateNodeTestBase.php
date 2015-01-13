@@ -78,9 +78,17 @@ abstract class MigrateNodeTestBase extends MigrateDrupalTestBase {
 
     // Load dumps.
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6Node.php',
-      $this->getDumpDirectory() . '/Drupal6NodeType.php',
-      $this->getDumpDirectory() . '/Drupal6FieldInstance.php',
+      $this->getDumpDirectory() . '/Node.php',
+      $this->getDumpDirectory() . '/NodeRevisions.php',
+      $this->getDumpDirectory() . '/ContentTypeStory.php',
+      $this->getDumpDirectory() . '/ContentTypeTestPlanet.php',
+      $this->getDumpDirectory() . '/NodeType.php',
+      $this->getDumpDirectory() . '/Variable.php',
+      $this->getDumpDirectory() . '/ContentNodeFieldInstance.php',
+      $this->getDumpDirectory() . '/ContentNodeField.php',
+      $this->getDumpDirectory() . '/ContentFieldTest.php',
+      $this->getDumpDirectory() . '/ContentFieldTestTwo.php',
+      $this->getDumpDirectory() . '/ContentFieldMultivalue.php',
     );
     $this->loadDumps($dumps);
   }

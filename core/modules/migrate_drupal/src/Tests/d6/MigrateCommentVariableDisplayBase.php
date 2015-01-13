@@ -42,7 +42,7 @@ abstract class MigrateCommentVariableDisplayBase extends MigrateDrupalTestBase {
    *
    * @var array
    */
-  protected $types = array('page', 'story');
+  protected $types = array('page', 'story', 'article');
 
   /**
    * {@inheritdoc}
@@ -67,7 +67,8 @@ abstract class MigrateCommentVariableDisplayBase extends MigrateDrupalTestBase {
       ))->save();
     }
     $this->dumps = array(
-      $this->getDumpDirectory() . '/Drupal6CommentVariable.php',
+      $this->getDumpDirectory() . '/Variable.php',
+      $this->getDumpDirectory() . '/NodeType.php',
     );
     $id_mappings = array(
       'd6_comment_field_instance' => array(

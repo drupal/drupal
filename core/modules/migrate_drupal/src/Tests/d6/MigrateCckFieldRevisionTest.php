@@ -64,11 +64,6 @@ class MigrateCckFieldRevisionTest extends MigrateNodeTestBase {
       ),
     );
     $this->prepareMigrations($id_mappings);
-    $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6NodeRevision.php',
-    );
-    $this->loadDumps($dumps);
-
     $migrations = entity_load_multiple('migration', array('d6_cck_field_revision:*'));
     foreach ($migrations as $migration) {
       $executable = new MigrateExecutable($migration, $this);

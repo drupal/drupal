@@ -33,10 +33,6 @@ class MigrateUploadFieldTest extends MigrateDrupalTestBase {
     $migration = entity_load('migration', 'd6_upload_field');
     $executable = new MigrateExecutable($migration, $this);
     $executable->import();
-    $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6UploadField.php',
-    );
-    $this->prepare($migration, $dumps);
   }
 
   /**

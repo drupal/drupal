@@ -39,7 +39,7 @@ class MigrateForumConfigsTest extends MigrateDrupalTestBase {
     ));
     $migration = entity_load('migration', 'd6_forum_settings');
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6ForumSettings.php',
+      $this->getDumpDirectory() . '/Variable.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

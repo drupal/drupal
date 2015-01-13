@@ -34,7 +34,7 @@ class MigrateTaxonomyConfigsTest extends MigrateDrupalTestBase {
     parent::setUp();
     $migration = entity_load('migration', 'd6_taxonomy_settings');
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6TaxonomySettings.php',
+      $this->getDumpDirectory() . '/Variable.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

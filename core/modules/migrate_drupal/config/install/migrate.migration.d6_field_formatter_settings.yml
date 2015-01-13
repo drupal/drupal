@@ -102,7 +102,7 @@ process:
           filefield:
             default: file_default
             url_plain: file_url_plain
-            path_plain: file_url_plan #unsure about this?
+            path_plain: file_url_plain
             image_plain: image
             image_nodelink: image
             image_imagelink: image

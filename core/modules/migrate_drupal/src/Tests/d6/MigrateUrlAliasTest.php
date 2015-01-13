@@ -26,7 +26,7 @@ class MigrateUrlAliasTest extends MigrateDrupalTestBase {
     parent::setUp();
     $migration = entity_load('migration', 'd6_url_alias');
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6UrlAlias.php',
+      $this->getDumpDirectory() . '/UrlAlias.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

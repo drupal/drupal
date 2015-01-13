@@ -71,7 +71,9 @@ class MigrateBlockTest extends MigrateDrupalTestBase {
     /** @var \Drupal\migrate\entity\Migration $migration */
     $migration = entity_load('migration', 'd6_block');
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6Block.php',
+      $this->getDumpDirectory() . '/Blocks.php',
+      $this->getDumpDirectory() . '/BlocksRoles.php',
+      $this->getDumpDirectory() . '/AggregatorFeed.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

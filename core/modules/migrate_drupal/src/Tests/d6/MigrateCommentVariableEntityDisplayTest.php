@@ -22,7 +22,7 @@ class MigrateCommentVariableEntityDisplayTest extends MigrateCommentVariableDisp
   /**
    * The node types being used.
    */
-  protected $types = array('page', 'story');
+  protected $types = array('page', 'story', 'article');
 
   /**
    * Tests comment variables migrated into an entity display.

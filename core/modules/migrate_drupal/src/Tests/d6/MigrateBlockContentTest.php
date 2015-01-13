@@ -43,7 +43,7 @@ class MigrateBlockContentTest extends MigrateDrupalTestBase {
     /** @var \Drupal\migrate\entity\Migration $migration */
     $migration = entity_load('migration', 'd6_custom_block');
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6Box.php',
+      $this->getDumpDirectory() . '/Boxes.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

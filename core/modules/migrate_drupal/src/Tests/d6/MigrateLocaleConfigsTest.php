@@ -34,7 +34,7 @@ class MigrateLocaleConfigsTest extends MigrateDrupalTestBase {
     parent::setUp();
     $migration = entity_load('migration', 'd6_locale_settings');
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6LocaleSettings.php',
+      $this->getDumpDirectory() . '/Variable.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

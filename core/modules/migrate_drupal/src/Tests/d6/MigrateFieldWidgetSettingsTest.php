@@ -63,7 +63,11 @@ class MigrateFieldWidgetSettingsTest extends MigrateDrupalTestBase {
     $this->prepareMigrations($id_mappings);
     $migration = entity_load('migration', 'd6_field_instance_widget_settings');
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6FieldInstance.php',
+      $this->getDumpDirectory() . '/ContentNodeFieldInstance.php',
+      $this->getDumpDirectory() . '/ContentNodeField.php',
+      $this->getDumpDirectory() . '/ContentFieldTest.php',
+      $this->getDumpDirectory() . '/ContentFieldTestTwo.php',
+      $this->getDumpDirectory() . '/ContentFieldMultivalue.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);
@@ -89,62 +93,62 @@ class MigrateFieldWidgetSettingsTest extends MigrateDrupalTestBase {
     // Integer field.
     $component = $form_display->getComponent('field_test_two');
     $expected['type'] = 'number';
-    $expected['weight'] = 2;
+    $expected['weight'] = 1;
     $expected['settings'] = array('placeholder' => '');
-    $this->assertEqual($component, $expected, 'Integer field settings are correct.');
+    $this->assertEqual($component, $expected);
 
     // Float field.
     $component = $form_display->getComponent('field_test_three');
-    $expected['weight'] = 3;
-    $this->assertEqual($component, $expected, 'Float field settings are correct.');
+    $expected['weight'] = 2;
+    $this->assertEqual($component, $expected);
 
     // Email field.
     $component = $form_display->getComponent('field_test_email');
     $expected['type'] = 'email_default';
-    $expected['weight'] = 4;
-    $this->assertEqual($component, $expected, 'Email field settings are correct.');
+    $expected['weight'] = 6;
+    $this->assertEqual($component, $expected);
 
     // Link field.
     $component = $form_display->getComponent('field_test_link');
     $this->assertEqual($component['type'], 'link_default');
-    $this->assertEqual($component['weight'], 5);
+    $this->assertEqual($component['weight'], 7);
     $this->assertFalse(array_filter($component['settings']));
 
     // File field.
     $component = $form_display->getComponent('field_test_filefield');
     $expected['type'] = 'file_generic';
-    $expected['weight'] = 7;
+    $expected['weight'] = 8;
     $expected['settings'] = array('progress_indicator' => 'bar');
-    $this->assertEqual($component, $expected, 'File field settings are correct.');
+    $this->assertEqual($component, $expected);
 
     // Image field.
     $component = $form_display->getComponent('field_test_imagefield');
     $expected['type'] = 'image_image';
-    $expected['weight'] = 8;
+    $expected['weight'] = 9;
     $expected['settings'] = array('progress_indicator' => 'bar', 'preview_image_style' => 'thumbnail');
-    $this->assertEqual($component, $expected, 'Image field settings are correct.');
+    $this->assertEqual($component, $expected);
 
     // Phone field.
     $component = $form_display->getComponent('field_test_phone');
     $expected['type'] = 'telephone_default';
-    $expected['weight'] = 9;
+    $expected['weight'] = 13;
     $expected['settings'] = array('placeholder' => '');
-    $this->assertEqual($component, $expected, 'Phone field settings are correct.');
+    $this->assertEqual($component, $expected);
 
     // Date fields.
     $component = $form_display->getComponent('field_test_date');
     $expected['type'] = 'datetime_default';
     $expected['weight'] = 10;
     $expected['settings'] = array();
-    $this->assertEqual($component, $expected, 'Date field settings are correct.');
+    $this->assertEqual($component, $expected);
 
     $component = $form_display->getComponent('field_test_datestamp');
     $expected['weight'] = 11;
-    $this->assertEqual($component, $expected, 'Date stamp field settings are correct.');
+    $this->assertEqual($component, $expected);
 
     $component = $form_display->getComponent('field_test_datetime');
     $expected['weight'] = 12;
-    $this->assertEqual($component, $expected, 'Datetime field settings are correct.');
+    $this->assertEqual($component, $expected);
 
   }
 

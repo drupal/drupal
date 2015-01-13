@@ -85,10 +85,16 @@ class MigrateUserTest extends MigrateDrupalTestBase {
 
     // Load database dumps to provide source data.
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6FilterFormat.php',
-      $this->getDumpDirectory() . '/Drupal6UserProfileFields.php',
-      $this->getDumpDirectory() . '/Drupal6UserRole.php',
-      $this->getDumpDirectory() . '/Drupal6User.php',
+      $this->getDumpDirectory() . '/Filters.php',
+      $this->getDumpDirectory() . '/FilterFormats.php',
+      $this->getDumpDirectory() . '/Variable.php',
+      $this->getDumpDirectory() . '/ProfileFields.php',
+      $this->getDumpDirectory() . '/Permission.php',
+      $this->getDumpDirectory() . '/Role.php',
+      $this->getDumpDirectory() . '/Users.php',
+      $this->getDumpDirectory() . '/ProfileValues.php',
+      $this->getDumpDirectory() . '/UsersRoles.php',
+      $this->getDumpDirectory() . '/EventTimezones.php',
     );
     $this->loadDumps($dumps);
 

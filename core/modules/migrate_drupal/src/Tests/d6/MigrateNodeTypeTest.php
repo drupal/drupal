@@ -32,7 +32,8 @@ class MigrateNodeTypeTest extends MigrateDrupalTestBase {
     parent::setUp();
     $migration = entity_load('migration', 'd6_node_type');
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6NodeType.php',
+      $this->getDumpDirectory() . '/NodeType.php',
+      $this->getDumpDirectory() . '/Variable.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

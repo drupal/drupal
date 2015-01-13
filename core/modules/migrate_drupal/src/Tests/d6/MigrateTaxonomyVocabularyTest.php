@@ -32,7 +32,8 @@ class MigrateTaxonomyVocabularyTest extends MigrateDrupalTestBase {
     parent::setUp();
     $migration = entity_load('migration', 'd6_taxonomy_vocabulary');
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6TaxonomyVocabulary.php',
+      $this->getDumpDirectory() . '/Vocabulary.php',
+      $this->getDumpDirectory() . '/VocabularyNodeTypes.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

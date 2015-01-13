@@ -40,7 +40,8 @@ class MigrateBookTest extends MigrateDrupalTestBase {
     $this->prepareMigrations($id_mappings);
     // Load database dumps to provide source data.
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6Book.php',
+      $this->getDumpDirectory() . '/Book.php',
+      $this->getDumpDirectory() . '/MenuLinks.php',
     );
     $this->loadDumps($dumps);
     // Migrate books..

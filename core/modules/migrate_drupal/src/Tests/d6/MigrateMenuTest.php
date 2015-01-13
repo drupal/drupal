@@ -27,10 +27,10 @@ class MigrateMenuTest extends MigrateDrupalTestBase {
     parent::setUp();
     $migration = entity_load('migration', 'd6_menu');
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6Menu.php',
+      $this->getDumpDirectory() . '/MenuCustom.php',
     );
     $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, new MigrateMessage());
+    $executable = new MigrateExecutable($migration, $this);
     $executable->import();
   }
 

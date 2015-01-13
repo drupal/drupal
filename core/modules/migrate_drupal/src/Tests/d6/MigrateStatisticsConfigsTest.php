@@ -35,7 +35,7 @@ class MigrateStatisticsConfigsTest extends MigrateDrupalTestBase {
     parent::setUp();
     $migration = entity_load('migration', 'd6_statistics_settings');
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6StatisticsSettings.php',
+      $this->getDumpDirectory() . '/Variable.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, new MigrateMessage());

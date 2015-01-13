@@ -34,8 +34,10 @@ class MigrateTaxonomyTermTest extends MigrateDrupalTestBase {
     /** @var \Drupal\migrate\entity\Migration $migration */
     $migration = entity_load('migration', 'd6_taxonomy_term');
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6TaxonomyTerm.php',
-      $this->getDumpDirectory() . '/Drupal6TaxonomyVocabulary.php',
+      $this->getDumpDirectory() . '/TermData.php',
+      $this->getDumpDirectory() . '/TermHierarchy.php',
+      $this->getDumpDirectory() . '/Vocabulary.php',
+      $this->getDumpDirectory() . '/VocabularyNodeTypes.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);
@@ -51,7 +53,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupalTestBase {
         'source_vid' => 1,
         'vid' => 'vocabulary_1_i_0_',
         'weight' => 0,
-        'parent' => array(2),
+        'parent' => array(0),
       ),
       '2' => array(
         'source_vid' => 2,

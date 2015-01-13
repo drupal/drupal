@@ -61,7 +61,8 @@ class MigrateVocabularyEntityFormDisplayTest extends MigrateDrupalTestBase {
 
     $migration = entity_load('migration', 'd6_vocabulary_entity_form_display');
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6VocabularyField.php',
+      $this->getDumpDirectory() . '/Vocabulary.php',
+      $this->getDumpDirectory() . '/VocabularyNodeTypes.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

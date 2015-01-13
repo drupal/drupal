@@ -26,18 +26,14 @@ class MigrateUserConfigsTest extends MigrateDrupalTestBase {
   protected function setUp() {
     parent::setUp();
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6UserMail.php',
+      $this->getDumpDirectory() . '/Variable.php',
     );
     $migration = entity_load('migration', 'd6_user_mail');
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);
     $executable->import();
 
-    $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6UserSettings.php',
-    );
     $migration = entity_load('migration', 'd6_user_settings');
-    $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);
     $executable->import();
   }

@@ -34,7 +34,7 @@ class MigrateMenuConfigsTest extends MigrateDrupalTestBase {
     parent::setUp();
     $migration = entity_load('migration', 'd6_menu_settings');
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6MenuSettings.php',
+      $this->getDumpDirectory() . '/Variable.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

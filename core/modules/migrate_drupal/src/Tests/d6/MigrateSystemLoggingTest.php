@@ -27,7 +27,7 @@ class MigrateSystemLoggingTest extends MigrateDrupalTestBase {
     parent::setUp();
     $migration = entity_load('migration', 'd6_system_logging');
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6SystemLogging.php',
+      $this->getDumpDirectory() . '/Variable.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

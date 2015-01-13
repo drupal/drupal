@@ -33,7 +33,7 @@ class MigrateSearchPageTest extends MigrateDrupalTestBase {
     /** @var \Drupal\migrate\entity\Migration $migration */
     $migration = entity_load('migration', 'd6_search_page');
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6SearchPage.php',
+      $this->getDumpDirectory() . '/Variable.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

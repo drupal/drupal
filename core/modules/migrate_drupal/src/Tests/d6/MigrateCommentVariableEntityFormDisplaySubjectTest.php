@@ -46,7 +46,8 @@ class MigrateCommentVariableEntityFormDisplaySubjectTest extends MigrateDrupalTe
     /** @var \Drupal\migrate\entity\Migration $migration */
     $migration = entity_load('migration', 'd6_comment_entity_form_display_subject');
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6CommentVariable.php',
+      $this->getDumpDirectory() . '/Variable.php',
+      $this->getDumpDirectory() . '/NodeType.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

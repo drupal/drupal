@@ -33,7 +33,7 @@ class MigrateContactCategoryTest extends MigrateDrupalTestBase {
     parent::setUp();
     $migration = entity_load('migration', 'd6_contact_category');
     $dumps = array(
-      $this->getDumpDirectory() . '/Drupal6ContactCategory.php',
+      $this->getDumpDirectory() . '/Contact.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, new MigrateMessage());

@@ -15,6 +15,14 @@ use Drupal\migrate\Tests\MigrateTestBase;
 abstract class MigrateDrupalTestBase extends MigrateTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+    $this->loadDumps([$this->getDumpDirectory() . '/System.php']);
+  }
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -28,7 +36,7 @@ abstract class MigrateDrupalTestBase extends MigrateTestBase {
    *   A string that represents the dump directory path.
    */
   protected function getDumpDirectory() {
-    return __DIR__ . '/Dump';
+    return __DIR__ . '/Table';
   }
 
 }
