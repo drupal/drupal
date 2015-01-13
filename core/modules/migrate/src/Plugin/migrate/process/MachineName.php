@@ -26,7 +26,7 @@ use Drupal\migrate\Row;
 class MachineName extends ProcessPluginBase {
 
   /**
-   * @var \Drupal\Core\Transliteration\PHPTransliteration
+   * @var \Drupal\Core\Transliteration\PhpTransliteration
    */
   protected $transliteration;
 
@@ -43,7 +43,7 @@ class MachineName extends ProcessPluginBase {
   /**
    * Get the transliteration object.
    *
-   * @return \Drupal\Core\Transliteration\PHPTransliteration
+   * @return \Drupal\Core\Transliteration\PhpTransliteration
    *   The transliteration object.
    */
   protected function getTransliteration() {

@@ -916,7 +916,7 @@ services:
       - { name: route_processor_outbound }
     arguments: ['@csrf_token']
   transliteration:
-    class: Drupal\Core\Transliteration\PHPTransliteration
+    class: Drupal\Core\Transliteration\PhpTransliteration
   flood:
     class: Drupal\Core\Flood\DatabaseBackend
     arguments: ['@database', '@request_stack']

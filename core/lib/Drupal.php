@@ -568,7 +568,7 @@ class Drupal {
   /**
    * Returns the transliteration service.
    *
-   * @return \Drupal\Core\Transliteration\PHPTransliteration
+   * @return \Drupal\Core\Transliteration\PhpTransliteration
    *   The transliteration manager.
    */
   public static function transliteration() {

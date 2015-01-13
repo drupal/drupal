@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\Transliteration;
 
-use Drupal\Core\Transliteration\PHPTransliteration;
+use Drupal\Core\Transliteration\PhpTransliteration;
 use Drupal\simpletest\KernelTestBase;
 
 /**
@@ -24,9 +24,9 @@ class TransliterationTest extends KernelTestBase {
   public static $modules = array('transliterate_test');
 
   /**
-   * Tests the PHPTransliteration class.
+   * Tests the PhpTransliteration class.
    */
-  public function testPHPTransliteration() {
+  public function testPhpTransliteration() {
     $random = $this->randomMachineName(10);
     // Make some strings with two, three, and four-byte characters for testing.
     // Note that the 3-byte character is overridden by the 'kg' language.
@@ -83,7 +83,7 @@ class TransliterationTest extends KernelTestBase {
     foreach($cases as $case) {
       list($langcode, $original, $expected) = $case;
       $printable = (isset($case[3])) ? $case[3] : $original;
-      $transliterator_class = new PHPTransliteration();
+      $transliterator_class = new PhpTransliteration();
       $actual = $transliterator_class->transliterate($original, $langcode);
       $this->assertIdentical($actual, $expected, format_string('@original transliteration to @actual is identical to @expected for language @langcode in new class instance.', array(
         '@original' => $printable,

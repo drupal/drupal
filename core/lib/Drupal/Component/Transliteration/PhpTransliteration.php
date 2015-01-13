@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of \Drupal\Component\Transliteration\PHPTransliteration.
+ * Definition of \Drupal\Component\Transliteration\PhpTransliteration.
  *
  * Some parts of this code were derived from the MediaWiki project's UtfNormal
  * class, Copyright © 2004 Brion Vibber <brion@pobox.com>,
@@ -18,15 +18,15 @@ namespace Drupal\Component\Transliteration;
  * characters in a transliteration database.
  *
  * The database comes from two types of files, both of which are searched for in
- * the PHPTransliteration::$dataDirectory directory. First, language-specific
- * overrides are searched (see PHPTransliteration::readLanguageOverrides()). If
+ * the PhpTransliteration::$dataDirectory directory. First, language-specific
+ * overrides are searched (see PhpTransliteration::readLanguageOverrides()). If
  * there is no language-specific override for a character, the generic
  * transliteration character tables are searched (see
- * PHPTransliteration::readGenericData()). If looking up the character in the
+ * PhpTransliteration::readGenericData()). If looking up the character in the
  * generic table results in a NULL value, or an illegal character is
  * encountered, then a substitute character is returned.
  */
-class PHPTransliteration implements TransliterationInterface {
+class PhpTransliteration implements TransliterationInterface {
 
   /**
    * Directory where data for transliteration resides.
@@ -44,8 +44,8 @@ class PHPTransliteration implements TransliterationInterface {
    * The outermost array keys are language codes. For each language code key,
    * the value is an array whose keys are Unicode character codes, and whose
    * values are the transliterations of those characters to US-ASCII. This is
-   * set up as needed in PHPTransliteration::replace() by calling
-   * PHPTransliteration::readLanguageOverrides().
+   * set up as needed in PhpTransliteration::replace() by calling
+   * PhpTransliteration::readLanguageOverrides().
    *
    * @var array
    */
@@ -56,8 +56,8 @@ class PHPTransliteration implements TransliterationInterface {
    *
    * Array whose keys are the upper two bytes of the Unicode character, and
    * whose values are an array of transliterations for each lower-two bytes
-   * character code. This is set up as needed in PHPTransliteration::replace()
-   * by calling PHPTransliteration::readGenericData().
+   * character code. This is set up as needed in PhpTransliteration::replace()
+   * by calling PhpTransliteration::readGenericData().
    *
    * @var array
    */
@@ -181,7 +181,7 @@ class PHPTransliteration implements TransliterationInterface {
    * Reads in language overrides for a language code.
    *
    * The data is read from files named "$langcode.php" in
-   * PHPTransliteration::$dataDirectory. These files should set up an array
+   * PhpTransliteration::$dataDirectory. These files should set up an array
    * variable $overrides with an element whose key is $langcode and whose value
    * is an array whose keys are character codes, and whose values are their
    * transliterations in this language. The character codes can be for any valid
@@ -210,7 +210,7 @@ class PHPTransliteration implements TransliterationInterface {
    * Reads in generic transliteration data for a bank of characters.
    *
    * The data is read in from a file named "x$bank.php" (with $bank in
-   * hexadecimal notation) in PHPTransliteration::$dataDirectory. These files
+   * hexadecimal notation) in PhpTransliteration::$dataDirectory. These files
    * should set up a variable $bank containing an array whose numerical indices
    * are the remaining two bytes of the character code, and whose values are the
    * transliterations of these characters into US-ASCII. Note that the maximum

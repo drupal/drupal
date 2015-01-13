@@ -2,23 +2,23 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Transliteration\PHPTransliteration.
+ * Contains \Drupal\Core\Transliteration\PhpTransliteration.
  */
 
 namespace Drupal\Core\Transliteration;
 
-use Drupal\Component\Transliteration\PHPTransliteration as BaseTransliteration;
+use Drupal\Component\Transliteration\PhpTransliteration as BaseTransliteration;
 
 /**
- * Enhances PHPTransliteration with an alter hook.
+ * Enhances PhpTransliteration with an alter hook.
  *
  * @ingroup transliteration
  * @see hook_transliteration_overrides_alter()
  */
-class PHPTransliteration extends BaseTransliteration {
+class PhpTransliteration extends BaseTransliteration {
 
   /**
-   * Overrides \Drupal\Component\Transliteration\PHPTransliteration::readLanguageOverrides().
+   * Overrides \Drupal\Component\Transliteration\PhpTransliteration::readLanguageOverrides().
    *
    * Allows modules to alter the language-specific $overrides array by invoking
    * hook_transliteration_overrides_alter().

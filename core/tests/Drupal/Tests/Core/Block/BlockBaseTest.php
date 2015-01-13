@@ -22,8 +22,8 @@ class BlockBaseTest extends UnitTestCase {
    * @see \Drupal\Core\Block\BlockBase::getMachineNameSuggestion().
    */
   public function testGetMachineNameSuggestion() {
-    $transliteration = $this->getMockBuilder('Drupal\Core\Transliteration\PHPTransliteration')
-      // @todo Inject the module handler into PHPTransliteration.
+    $transliteration = $this->getMockBuilder('Drupal\Core\Transliteration\PhpTransliteration')
+      // @todo Inject the module handler into PhpTransliteration.
       ->setMethods(array('readLanguageOverrides'))
       ->getMock();
 

@@ -8,7 +8,7 @@
 namespace Drupal\Tests\system\Unit\Transliteration;
 
 use Drupal\Tests\UnitTestCase;
-use Drupal\Component\Transliteration\PHPTransliteration;
+use Drupal\Component\Transliteration\PhpTransliteration;
 use Drupal\system\MachineNameController;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -29,7 +29,7 @@ class MachineNameControllerTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
     // Create the machine name controller.
-    $this->machineNameController = new MachineNameController(new PHPTransliteration());
+    $this->machineNameController = new MachineNameController(new PhpTransliteration());
   }
 
   /**

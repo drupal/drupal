@@ -240,7 +240,7 @@ function patch_drupal($outdir) {
  *   bytes of Unicode characters (or 0 for base ASCII characters). The next
  *   level is the other two bytes, and the values are the transliterations.
  *
- * @see PHPTransliteration::readGenericData()
+ * @see PhpTransliteration::readGenericData()
  */
 function read_drupal_data() {
   $dir = __DIR__ . '/data';
@@ -635,7 +635,7 @@ function write_data_file($data, $bank, $outdir) {
   $file = $dir . '/x' . sprintf('%02x', $bank) . '.php';
 
   $out = '';
-  $out .= "<?php\n\n/**\n * @file\n * Generic transliteration data for the PHPTransliteration class.\n */\n\n\$base = array(\n";
+  $out .= "<?php\n\n/**\n * @file\n * Generic transliteration data for the PhpTransliteration class.\n */\n\n\$base = array(\n";
 
   // The 00 file skips the ASCII range
   $start = 0;
