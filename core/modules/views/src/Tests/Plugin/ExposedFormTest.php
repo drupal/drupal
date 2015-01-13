@@ -137,6 +137,9 @@ class ExposedFormTest extends ViewTestBase {
 
     $expected_action = _url($view->display_handler->getUrl());
     $this->assertFieldByXPath('//form/@action', $expected_action, 'The expected value for the action attribute was found.');
+    // Make sure the description is shown.
+    $result = $this->xpath('//form//div[contains(@id, :id) and normalize-space(text())=:description]', array(':id' => 'edit-type--description', ':description' => t('Exposed description')));
+    $this->assertEqual(count($result), 1, 'Filter description was found.');
   }
 
   /**

@@ -29,6 +29,7 @@ display:
             label: 'Content: Type'
             operator_id: type_op
             reduce: false
+            description: 'Exposed description'
           exposed: true
           field: type
           id: type

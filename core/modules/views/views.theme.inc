@@ -1014,6 +1014,9 @@ function template_preprocess_views_exposed_form(&$variables) {
     if (!empty($info['label'])) {
       $form[$info['value']]['#title'] = $info['label'];
     }
+    if (!empty($info['description'])) {
+      $form[$info['value']]['#description'] = $info['description'];
+    }
   }
 }
 
