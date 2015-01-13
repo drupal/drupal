@@ -2,17 +2,19 @@
 
 /**
  * @file
- * Contains \Drupal\field\Tests\Views\ApiDataTest.
+ * Contains \Drupal\views\Tests\FieldApiDataTest.
  */
 
-namespace Drupal\field\Tests\Views;
+namespace Drupal\views\Tests;
+
+use Drupal\field\Tests\Views\FieldTestBase;
 
 /**
  * Tests the Field Views data.
  *
- * @group field
+ * @group views
  */
-class ApiDataTest extends FieldTestBase {
+class FieldApiDataTest extends FieldTestBase {
 
   protected function setUp() {
     parent::setUp();
