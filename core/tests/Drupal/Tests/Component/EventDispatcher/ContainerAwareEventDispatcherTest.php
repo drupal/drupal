@@ -8,368 +8,171 @@
 namespace Drupal\Tests\Component\EventDispatcher;
 
 use Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\EventDispatcher\Tests\AbstractEventDispatcherTest;
+use Symfony\Component\EventDispatcher\Tests\CallableClass;
+use Symfony\Component\EventDispatcher\Tests\TestEventListener;
 
 /**
  * Unit tests for the ContainerAwareEventDispatcher.
  *
- * NOTE: 98% of this code is a literal copy of Symfony's EventDispatcherTest.
+ * NOTE: 98% of this code is a literal copy of Symfony's emerging
+ * CompiledEventDispatcherTest.
  *
  * This file does NOT follow Drupal coding standards, so as to simplify future
  * synchronizations.
  *
- * @see https://github.com/symfony/symfony/pull/12131
+ * @see https://github.com/symfony/symfony/pull/12521
  */
-class ContainerAwareEventDispatcherTest extends \PHPUnit_Framework_TestCase
+class ContainerAwareEventDispatcherTest extends AbstractEventDispatcherTest
 {
-    /* Some pseudo events */
-    const preFoo = 'pre.foo';
-    const postFoo = 'post.foo';
-    const preBar = 'pre.bar';
-    const postBar = 'post.bar';
-
-    /**
-     * @var EventDispatcher
-     */
-    private $dispatcher;
-
-    private $listener;
-
-    protected function setUp()
+    protected function createEventDispatcher()
     {
-        $this->dispatcher = new ContainerAwareEventDispatcher(new Container());
-        $this->listener = new TestEventListener();
+        $container = new Container();
+
+        return new ContainerAwareEventDispatcher($container);
     }
 
-    protected function tearDown()
+    public function testGetListenersWithCallables()
     {
-        $this->dispatcher = null;
-        $this->listener = null;
-    }
+        // When passing in callables exclusively as listeners into the event
+        // dispatcher constructor, the event dispatcher must not attempt to
+        // resolve any services.
+        $container = $this->getMock('Symfony\Component\DependencyInjection\IntrospectableContainerInterface');
+        $container->expects($this->never())->method($this->anything());
 
-    public function testInitialState()
-    {
-        $this->assertEquals(array(), $this->dispatcher->getListeners());
-        $this->assertFalse($this->dispatcher->hasListeners(self::preFoo));
-        $this->assertFalse($this->dispatcher->hasListeners(self::postFoo));
-    }
-
-    public function testAddListener()
-    {
-        $this->dispatcher->addListener('pre.foo', array($this->listener, 'preFoo'));
-        $this->dispatcher->addListener('post.foo', array($this->listener, 'postFoo'));
-        $this->assertTrue($this->dispatcher->hasListeners(self::preFoo));
-        $this->assertTrue($this->dispatcher->hasListeners(self::postFoo));
-        $this->assertCount(1, $this->dispatcher->getListeners(self::preFoo));
-        $this->assertCount(1, $this->dispatcher->getListeners(self::postFoo));
-        $this->assertCount(2, $this->dispatcher->getListeners());
-    }
-
-    public function testGetListenersSortsByPriority()
-    {
-        $listener1 = new TestEventListener();
-        $listener2 = new TestEventListener();
-        $listener3 = new TestEventListener();
-        $listener1->name = '1';
-        $listener2->name = '2';
-        $listener3->name = '3';
-
-        $this->dispatcher->addListener('pre.foo', array($listener1, 'preFoo'), -10);
-        $this->dispatcher->addListener('pre.foo', array($listener2, 'preFoo'), 10);
-        $this->dispatcher->addListener('pre.foo', array($listener3, 'preFoo'));
-
-        $expected = array(
-            array($listener2, 'preFoo'),
-            array($listener3, 'preFoo'),
-            array($listener1, 'preFoo'),
+        $firstListener = new CallableClass();
+        $secondListener = function () {};
+        $thirdListener = array(new TestEventListener(), 'preFoo');
+        $listeners = array(
+            'test_event' => array(
+                0 => array(
+                    array('callable' => $firstListener),
+                    array('callable' => $secondListener),
+                    array('callable' => $thirdListener),
+                ),
+            ),
         );
 
-        $this->assertSame($expected, $this->dispatcher->getListeners('pre.foo'));
-    }
+        $dispatcher = new ContainerAwareEventDispatcher($container, $listeners);
+        $actualListeners = $dispatcher->getListeners();
 
-    public function testGetAllListenersSortsByPriority()
-    {
-        $listener1 = new TestEventListener();
-        $listener2 = new TestEventListener();
-        $listener3 = new TestEventListener();
-        $listener4 = new TestEventListener();
-        $listener5 = new TestEventListener();
-        $listener6 = new TestEventListener();
-
-        $this->dispatcher->addListener('pre.foo', $listener1, -10);
-        $this->dispatcher->addListener('pre.foo', $listener2);
-        $this->dispatcher->addListener('pre.foo', $listener3, 10);
-        $this->dispatcher->addListener('post.foo', $listener4, -10);
-        $this->dispatcher->addListener('post.foo', $listener5);
-        $this->dispatcher->addListener('post.foo', $listener6, 10);
-
-        $expected = array(
-            'pre.foo'  => array($listener3, $listener2, $listener1),
-            'post.foo' => array($listener6, $listener5, $listener4),
+        $expectedListeners = array(
+            'test_event' => array(
+                $firstListener,
+                $secondListener,
+                $thirdListener,
+            ),
         );
 
-        $this->assertSame($expected, $this->dispatcher->getListeners());
+        $this->assertSame($expectedListeners, $actualListeners);
     }
 
-    public function testDispatch()
+    public function testDispatchWithCallables()
     {
-        $this->dispatcher->addListener('pre.foo', array($this->listener, 'preFoo'));
-        $this->dispatcher->addListener('post.foo', array($this->listener, 'postFoo'));
-        $this->dispatcher->dispatch(self::preFoo);
-        $this->assertTrue($this->listener->preFooInvoked);
-        $this->assertFalse($this->listener->postFooInvoked);
-        $this->assertInstanceOf('Symfony\Component\EventDispatcher\Event', $this->dispatcher->dispatch('noevent'));
-        $this->assertInstanceOf('Symfony\Component\EventDispatcher\Event', $this->dispatcher->dispatch(self::preFoo));
-        $event = new Event();
-        $return = $this->dispatcher->dispatch(self::preFoo, $event);
-        $this->assertEquals('pre.foo', $event->getName());
-        $this->assertSame($event, $return);
+        // When passing in callables exclusively as listeners into the event
+        // dispatcher constructor, the event dispatcher must not attempt to
+        // resolve any services.
+        $container = $this->getMock('Symfony\Component\DependencyInjection\IntrospectableContainerInterface');
+        $container->expects($this->never())->method($this->anything());
+
+        $firstListener = new CallableClass();
+        $secondListener = function () {};
+        $thirdListener = array(new TestEventListener(), 'preFoo');
+        $listeners = array(
+            'test_event' => array(
+                0 => array(
+                    array('callable' => $firstListener),
+                    array('callable' => $secondListener),
+                    array('callable' => $thirdListener),
+                ),
+            ),
+        );
+
+        $dispatcher = new ContainerAwareEventDispatcher($container, $listeners);
+        $dispatcher->dispatch('test_event');
+
+        $this->assertTrue($thirdListener[0]->preFooInvoked);
     }
 
-    public function testDispatchForClosure()
+    public function testGetListenersWithServices()
     {
-        $invoked = 0;
-        $listener = function () use (&$invoked) {
-            $invoked++;
-        };
-        $this->dispatcher->addListener('pre.foo', $listener);
-        $this->dispatcher->addListener('post.foo', $listener);
-        $this->dispatcher->dispatch(self::preFoo);
-        $this->assertEquals(1, $invoked);
+        $container = new ContainerBuilder();
+        $container->register('listener_service', 'Symfony\Component\EventDispatcher\Tests\TestEventListener');
+
+        $listeners = array(
+            'test_event' => array(
+                0 => array(
+                    array('service' => array('listener_service', 'preFoo')),
+                ),
+            ),
+        );
+
+        $dispatcher = new ContainerAwareEventDispatcher($container, $listeners);
+        $actualListeners = $dispatcher->getListeners();
+
+        $listenerService = $container->get('listener_service');
+        $expectedListeners = array(
+            'test_event' => array(
+                array($listenerService, 'preFoo'),
+            ),
+        );
+
+        $this->assertSame($expectedListeners, $actualListeners);
     }
 
-    public function testStopEventPropagation()
+    public function testDispatchWithServices()
     {
-        $otherListener = new TestEventListener();
+        $container = new ContainerBuilder();
+        $container->register('listener_service', 'Symfony\Component\EventDispatcher\Tests\TestEventListener');
 
-        // postFoo() stops the propagation, so only one listener should
-        // be executed
-        // Manually set priority to enforce $this->listener to be called first
-        $this->dispatcher->addListener('post.foo', array($this->listener, 'postFoo'), 10);
-        $this->dispatcher->addListener('post.foo', array($otherListener, 'preFoo'));
-        $this->dispatcher->dispatch(self::postFoo);
-        $this->assertTrue($this->listener->postFooInvoked);
-        $this->assertFalse($otherListener->postFooInvoked);
+        $listeners = array(
+            'test_event' => array(
+                0 => array(
+                    array('service' => array('listener_service', 'preFoo')),
+                ),
+            ),
+        );
+
+        $dispatcher = new ContainerAwareEventDispatcher($container, $listeners);
+
+        $dispatcher->dispatch('test_event');
+
+        $listenerService = $container->get('listener_service');
+        $this->assertTrue($listenerService->preFooInvoked);
     }
 
-    public function testDispatchByPriority()
+    public function testRemoveService()
     {
-        $invoked = array();
-        $listener1 = function () use (&$invoked) {
-            $invoked[] = '1';
-        };
-        $listener2 = function () use (&$invoked) {
-            $invoked[] = '2';
-        };
-        $listener3 = function () use (&$invoked) {
-            $invoked[] = '3';
-        };
-        $this->dispatcher->addListener('pre.foo', $listener1, -10);
-        $this->dispatcher->addListener('pre.foo', $listener2);
-        $this->dispatcher->addListener('pre.foo', $listener3, 10);
-        $this->dispatcher->dispatch(self::preFoo);
-        $this->assertEquals(array('3', '2', '1'), $invoked);
-    }
+        $container = new ContainerBuilder();
+        $container->register('listener_service', 'Symfony\Component\EventDispatcher\Tests\TestEventListener');
+        $container->register('other_listener_service', 'Symfony\Component\EventDispatcher\Tests\TestEventListener');
 
-    public function testRemoveListener()
-    {
-        $this->dispatcher->addListener('pre.bar', $this->listener);
-        $this->assertTrue($this->dispatcher->hasListeners(self::preBar));
-        $this->dispatcher->removeListener('pre.bar', $this->listener);
-        $this->assertFalse($this->dispatcher->hasListeners(self::preBar));
-        $this->dispatcher->removeListener('notExists', $this->listener);
-    }
+        $listeners = array(
+            'test_event' => array(
+                0 => array(
+                    array('service' => array('listener_service', 'preFoo')),
+                    array('service' => array('other_listener_service', 'preFoo')),
+                ),
+            ),
+        );
 
-    public function testAddSubscriber()
-    {
-        $eventSubscriber = new TestEventSubscriber();
-        $this->dispatcher->addSubscriber($eventSubscriber);
-        $this->assertTrue($this->dispatcher->hasListeners(self::preFoo));
-        $this->assertTrue($this->dispatcher->hasListeners(self::postFoo));
-    }
+        $dispatcher = new ContainerAwareEventDispatcher($container, $listeners);
 
-    public function testAddSubscriberWithPriorities()
-    {
-        $eventSubscriber = new TestEventSubscriber();
-        $this->dispatcher->addSubscriber($eventSubscriber);
+        $listenerService = $container->get('listener_service');
+        $dispatcher->removeListener('test_event', array($listenerService, 'preFoo'));
 
-        $eventSubscriber = new TestEventSubscriberWithPriorities();
-        $this->dispatcher->addSubscriber($eventSubscriber);
+        // Ensure that other service was not initialized during removal of the
+        // listener service.
+        $this->assertFalse($container->initialized('other_listener_service'));
 
-        $listeners = $this->dispatcher->getListeners('pre.foo');
-        $this->assertTrue($this->dispatcher->hasListeners(self::preFoo));
-        $this->assertCount(2, $listeners);
-        $this->assertInstanceOf('Drupal\Tests\Component\EventDispatcher\TestEventSubscriberWithPriorities', $listeners[0][0]);
-    }
+        $dispatcher->dispatch('test_event');
 
-    public function testAddSubscriberWithMultipleListeners()
-    {
-        $eventSubscriber = new TestEventSubscriberWithMultipleListeners();
-        $this->dispatcher->addSubscriber($eventSubscriber);
-
-        $listeners = $this->dispatcher->getListeners('pre.foo');
-        $this->assertTrue($this->dispatcher->hasListeners(self::preFoo));
-        $this->assertCount(2, $listeners);
-        $this->assertEquals('preFoo2', $listeners[0][1]);
-    }
-
-    public function testRemoveSubscriber()
-    {
-        $eventSubscriber = new TestEventSubscriber();
-        $this->dispatcher->addSubscriber($eventSubscriber);
-        $this->assertTrue($this->dispatcher->hasListeners(self::preFoo));
-        $this->assertTrue($this->dispatcher->hasListeners(self::postFoo));
-        $this->dispatcher->removeSubscriber($eventSubscriber);
-        $this->assertFalse($this->dispatcher->hasListeners(self::preFoo));
-        $this->assertFalse($this->dispatcher->hasListeners(self::postFoo));
-    }
-
-    public function testRemoveSubscriberWithPriorities()
-    {
-        $eventSubscriber = new TestEventSubscriberWithPriorities();
-        $this->dispatcher->addSubscriber($eventSubscriber);
-        $this->assertTrue($this->dispatcher->hasListeners(self::preFoo));
-        $this->dispatcher->removeSubscriber($eventSubscriber);
-        $this->assertFalse($this->dispatcher->hasListeners(self::preFoo));
-    }
-
-    public function testRemoveSubscriberWithMultipleListeners()
-    {
-        $eventSubscriber = new TestEventSubscriberWithMultipleListeners();
-        $this->dispatcher->addSubscriber($eventSubscriber);
-        $this->assertTrue($this->dispatcher->hasListeners(self::preFoo));
-        $this->assertCount(2, $this->dispatcher->getListeners(self::preFoo));
-        $this->dispatcher->removeSubscriber($eventSubscriber);
-        $this->assertFalse($this->dispatcher->hasListeners(self::preFoo));
-    }
-
-    public function testEventReceivesTheDispatcherInstance()
-    {
-        $dispatcher = null;
-        $this->dispatcher->addListener('test', function ($event) use (&$dispatcher) {
-            $dispatcher = $event->getDispatcher();
-        });
-        $this->dispatcher->dispatch('test');
-        $this->assertSame($this->dispatcher, $dispatcher);
-    }
-
-    public function testEventReceivesTheDispatcherInstanceAsArgument()
-    {
-        $listener = new TestWithDispatcher();
-        $this->dispatcher->addListener('test', array($listener, 'foo'));
-        $this->assertNull($listener->name);
-        $this->assertNull($listener->dispatcher);
-        $this->dispatcher->dispatch('test');
-        $this->assertEquals('test', $listener->name);
-        $this->assertSame($this->dispatcher, $listener->dispatcher);
-    }
-
-    /**
-     * @see https://bugs.php.net/bug.php?id=62976
-     *
-     * This bug affects:
-     *  - The PHP 5.3 branch for versions < 5.3.18
-     *  - The PHP 5.4 branch for versions < 5.4.8
-     *  - The PHP 5.5 branch is not affected
-     */
-    public function testWorkaroundForPhpBug62976()
-    {
-        $dispatcher = new ContainerAwareEventDispatcher(new Container());
-        $dispatcher->addListener('bug.62976', new CallableClass());
-        $dispatcher->removeListener('bug.62976', function () {});
-        $this->assertTrue($dispatcher->hasListeners('bug.62976'));
-    }
-
-    public function testHasListenersWhenAddedCallbackListenerIsRemoved()
-    {
-        $listener = function () {};
-        $this->dispatcher->addListener('foo', $listener);
-        $this->dispatcher->removeListener('foo', $listener);
-        $this->assertFalse($this->dispatcher->hasListeners());
-    }
-
-    public function testGetListenersWhenAddedCallbackListenerIsRemoved()
-    {
-        $listener = function () {};
-        $this->dispatcher->addListener('foo', $listener);
-        $this->dispatcher->removeListener('foo', $listener);
-        $this->assertSame(array(), $this->dispatcher->getListeners());
-    }
-
-    public function testHasListenersWithoutEventsReturnsFalseAfterHasListenersWithEventHasBeenCalled()
-    {
-        $this->assertFalse($this->dispatcher->hasListeners('foo'));
-        $this->assertFalse($this->dispatcher->hasListeners());
-    }
-}
-
-class CallableClass
-{
-    public function __invoke()
-    {
-    }
-}
-
-class TestEventListener
-{
-    public $preFooInvoked = false;
-    public $postFooInvoked = false;
-
-    /* Listener methods */
-
-    public function preFoo(Event $e)
-    {
-        $this->preFooInvoked = true;
-    }
-
-    public function postFoo(Event $e)
-    {
-        $this->postFooInvoked = true;
-
-        $e->stopPropagation();
-    }
-}
-
-class TestWithDispatcher
-{
-    public $name;
-    public $dispatcher;
-
-    public function foo(Event $e, $name, $dispatcher)
-    {
-        $this->name = $name;
-        $this->dispatcher = $dispatcher;
-    }
-}
-
-class TestEventSubscriber implements EventSubscriberInterface
-{
-    public static function getSubscribedEvents()
-    {
-        return array('pre.foo' => 'preFoo', 'post.foo' => 'postFoo');
-    }
-}
-
-class TestEventSubscriberWithPriorities implements EventSubscriberInterface
-{
-    public static function getSubscribedEvents()
-    {
-        return array(
-            'pre.foo' => array('preFoo', 10),
-            'post.foo' => array('postFoo'),
-            );
-    }
-}
-
-class TestEventSubscriberWithMultipleListeners implements EventSubscriberInterface
-{
-    public static function getSubscribedEvents()
-    {
-        return array('pre.foo' => array(
-            array('preFoo1'),
-            array('preFoo2', 10),
-        ));
+        $this->assertFalse($listenerService->preFooInvoked);
+        $otherService = $container->get('other_listener_service');
+        $this->assertTrue($otherService->preFooInvoked);
     }
 }
