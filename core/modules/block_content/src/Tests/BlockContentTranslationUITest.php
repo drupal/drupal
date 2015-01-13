@@ -135,6 +135,10 @@ class BlockContentTranslationUITest extends ContentTranslationUITest {
     catch (\Exception $e) {
       $this->fail($message);
     }
+
+    // Check that the translate operation link is shown.
+    $this->drupalGet('admin/structure/block/block-content');
+    $this->assertLinkByHref('block/' . $entity->id() . '/translations');
   }
 
   /**

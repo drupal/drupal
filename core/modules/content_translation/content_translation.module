@@ -12,7 +12,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_help().
@@ -161,16 +160,18 @@ function content_translation_field_info_alter(&$info) {
 }
 
 /**
- * Implements hook_entity_operation_alter().
+ * Implements hook_entity_operation().
  */
-function content_translation_entity_operation_alter(array &$operations, \Drupal\Core\Entity\EntityInterface $entity) {
-  // @todo Use an access permission.
-  if ($entity instanceof NodeInterface && $entity->isTranslatable()) {
+function content_translation_entity_operation(EntityInterface $entity) {
+  $operations = array();
+  if ($entity->hasLinkTemplate('drupal:content-translation-overview') && content_translation_translate_access($entity)->isAllowed()) {
     $operations['translate'] = array(
       'title' => t('Translate'),
       'url' => $entity->urlInfo('drupal:content-translation-overview'),
+      'weight' => 50,
     );
   }
+  return $operations;
 }
 
 /**
