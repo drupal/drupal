@@ -29,9 +29,9 @@ class FilterSecurityTest extends WebTestBase {
   /**
    * A user with administrative permissions.
    *
-   * @var object
+   * @var \Drupal\user\UserInterface
    */
-  protected $admin_user;
+  protected $adminUser;
 
   protected function setUp() {
     parent::setUp();
@@ -44,8 +44,8 @@ class FilterSecurityTest extends WebTestBase {
     $filtered_html_permission = $filtered_html_format->getPermissionName();
     user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array($filtered_html_permission));
 
-    $this->admin_user = $this->drupalCreateUser(array('administer modules', 'administer filters', 'administer site configuration'));
-    $this->drupalLogin($this->admin_user);
+    $this->adminUser = $this->drupalCreateUser(array('administer modules', 'administer filters', 'administer site configuration'));
+    $this->drupalLogin($this->adminUser);
   }
 
   /**

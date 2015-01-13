@@ -24,6 +24,13 @@ class FilterHtmlImageSecureTest extends WebTestBase {
    */
   public static $modules = array('filter', 'node', 'comment');
 
+  /**
+   * An authenticated user.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $webUser;
+
   protected function setUp() {
     parent::setUp();
 
@@ -49,14 +56,14 @@ class FilterHtmlImageSecureTest extends WebTestBase {
     $filtered_html_format->save();
 
     // Setup users.
-    $this->web_user = $this->drupalCreateUser(array(
+    $this->webUser = $this->drupalCreateUser(array(
       'access content',
       'access comments',
       'post comments',
       'skip comment approval',
       $filtered_html_format->getPermissionName(),
     ));
-    $this->drupalLogin($this->web_user);
+    $this->drupalLogin($this->webUser);
 
     // Setup a node to comment and test on.
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
