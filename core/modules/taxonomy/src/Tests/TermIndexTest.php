@@ -25,19 +25,39 @@ class TermIndexTest extends TaxonomyTestBase {
    */
   public static $modules = array('views');
 
+  /**
+   * Vocabulary for testing.
+   *
+   * @var \Drupal\taxonomy\VocabularyInterface
+   */
+  protected $vocabulary;
+
+  /**
+   * Name of the taxonomy term reference field.
+   *
+   * @var string
+   */
+  protected $fieldName1;
+
+  /**
+   * Name of the taxonomy term reference field.
+   *
+   * @var string
+   */
+  protected $fieldName2;
+
   protected function setUp() {
     parent::setUp();
 
     // Create an administrative user.
-    $this->admin_user = $this->drupalCreateUser(array('administer taxonomy', 'bypass node access'));
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->drupalCreateUser(['administer taxonomy', 'bypass node access']));
 
     // Create a vocabulary and add two term reference fields to article nodes.
     $this->vocabulary = $this->createVocabulary();
 
-    $this->field_name_1 = Unicode::strtolower($this->randomMachineName());
+    $this->fieldName1 = Unicode::strtolower($this->randomMachineName());
     entity_create('field_storage_config', array(
-      'field_name' => $this->field_name_1,
+      'field_name' => $this->fieldName1,
       'entity_type' => 'node',
       'type' => 'taxonomy_term_reference',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
@@ -51,24 +71,24 @@ class TermIndexTest extends TaxonomyTestBase {
       ),
     ))->save();
     entity_create('field_config', array(
-      'field_name' => $this->field_name_1,
+      'field_name' => $this->fieldName1,
       'bundle' => 'article',
       'entity_type' => 'node',
     ))->save();
     entity_get_form_display('node', 'article', 'default')
-      ->setComponent($this->field_name_1, array(
+      ->setComponent($this->fieldName1, array(
         'type' => 'options_select',
       ))
       ->save();
     entity_get_display('node', 'article', 'default')
-      ->setComponent($this->field_name_1, array(
+      ->setComponent($this->fieldName1, array(
         'type' => 'taxonomy_term_reference_link',
       ))
       ->save();
 
-    $this->field_name_2 = Unicode::strtolower($this->randomMachineName());
+    $this->fieldName2 = Unicode::strtolower($this->randomMachineName());
     entity_create('field_storage_config', array(
-      'field_name' => $this->field_name_2,
+      'field_name' => $this->fieldName2,
       'entity_type' => 'node',
       'type' => 'taxonomy_term_reference',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
@@ -82,17 +102,17 @@ class TermIndexTest extends TaxonomyTestBase {
       ),
     ))->save();
     entity_create('field_config', array(
-      'field_name' => $this->field_name_2,
+      'field_name' => $this->fieldName2,
       'bundle' => 'article',
       'entity_type' => 'node',
     ))->save();
     entity_get_form_display('node', 'article', 'default')
-      ->setComponent($this->field_name_2, array(
+      ->setComponent($this->fieldName2, array(
         'type' => 'options_select',
       ))
       ->save();
     entity_get_display('node', 'article', 'default')
-      ->setComponent($this->field_name_2, array(
+      ->setComponent($this->fieldName2, array(
         'type' => 'taxonomy_term_reference_link',
       ))
       ->save();
@@ -111,8 +131,8 @@ class TermIndexTest extends TaxonomyTestBase {
     $edit = array();
     $edit['title[0][value]'] = $this->randomMachineName();
     $edit['body[0][value]'] = $this->randomMachineName();
-    $edit["{$this->field_name_1}[]"] = $term_1->id();
-    $edit["{$this->field_name_2}[]"] = $term_1->id();
+    $edit["{$this->fieldName1}[]"] = $term_1->id();
+    $edit["{$this->fieldName2}[]"] = $term_1->id();
     $this->drupalPostForm('node/add/article', $edit, t('Save'));
 
     // Check that the term is indexed, and only once.
@@ -124,7 +144,7 @@ class TermIndexTest extends TaxonomyTestBase {
     $this->assertEqual(1, $index_count, 'Term 1 is indexed once.');
 
     // Update the article to change one term.
-    $edit["{$this->field_name_1}[]"] = $term_2->id();
+    $edit["{$this->fieldName1}[]"] = $term_2->id();
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
 
     // Check that both terms are indexed.
@@ -140,7 +160,7 @@ class TermIndexTest extends TaxonomyTestBase {
     $this->assertEqual(1, $index_count, 'Term 2 is indexed.');
 
     // Update the article to change another term.
-    $edit["{$this->field_name_2}[]"] = $term_2->id();
+    $edit["{$this->fieldName2}[]"] = $term_2->id();
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
 
     // Check that only one term is indexed.
@@ -176,7 +196,7 @@ class TermIndexTest extends TaxonomyTestBase {
     $this->assertEqual(1, $index_count, 'Term 2 is indexed once.');
 
     // Update the article to change one term.
-    $node->{$this->field_name_1} = array(array('target_id' => $term_1->id()));
+    $node->{$this->fieldName1} = array(array('target_id' => $term_1->id()));
     $node->save();
 
     // Check that both terms are indexed.
@@ -192,7 +212,7 @@ class TermIndexTest extends TaxonomyTestBase {
     $this->assertEqual(1, $index_count, 'Term 2 is indexed.');
 
     // Update the article to change another term.
-    $node->{$this->field_name_2} = array(array('target_id' => $term_1->id()));
+    $node->{$this->fieldName2} = array(array('target_id' => $term_1->id()));
     $node->save();
 
     // Check that only one term is indexed.

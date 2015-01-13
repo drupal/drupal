@@ -20,7 +20,7 @@ class TermTranslationUITest extends ContentTranslationUITest {
   /**
    * The vocabulary used for creating terms.
    *
-   * @var \Drupal\taxonomy\Entity\Vocabulary
+   * @var \Drupal\taxonomy\VocabularyInterface
    */
   protected $vocabulary;
 
@@ -105,8 +105,7 @@ class TermTranslationUITest extends ContentTranslationUITest {
    * Tests translate link on vocabulary term list.
    */
   function testTranslateLinkVocabularyAdminPage() {
-    $this->admin_user = $this->drupalCreateUser(array_merge(parent::getTranslatorPermissions(), array('access administration pages', 'administer taxonomy')));
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->drupalCreateUser(array_merge(parent::getTranslatorPermissions(), ['access administration pages', 'administer taxonomy'])));
 
     $values = array(
       'name' => $this->randomMachineName(),

@@ -23,10 +23,23 @@ use Drupal\taxonomy\Entity\Vocabulary;
  */
 class TermTest extends TaxonomyTestBase {
 
+  /**
+   * Vocabulary for testing.
+   *
+   * @var \Drupal\taxonomy\VocabularyInterface
+   */
+  protected $vocabulary;
+
+  /**
+   * Taxonomy term reference field for testing.
+   *
+   * @var \Drupal\field\FieldConfigInterface
+   */
+  protected $field;
+
   protected function setUp() {
     parent::setUp();
-    $this->admin_user = $this->drupalCreateUser(array('administer taxonomy', 'bypass node access'));
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->drupalCreateUser(['administer taxonomy', 'bypass node access']));
     $this->vocabulary = $this->createVocabulary();
 
     $field_name = 'taxonomy_' . $this->vocabulary->id();

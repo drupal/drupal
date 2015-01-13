@@ -25,21 +25,38 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
    */
   public static $modules = array('entity_test');
 
+  /**
+   * Name of the taxonomy term reference field.
+   *
+   * @var string
+   */
+  protected $fieldName;
+
+  /**
+   * Vocabulary for testing.
+   *
+   * @var \Drupal\taxonomy\VocabularyInterface
+   */
   protected $vocabulary1;
+
+  /**
+   * Vocabulary for testing.
+   *
+   * @var \Drupal\taxonomy\VocabularyInterface
+   */
   protected $vocabulary2;
 
   protected function setUp() {
     parent::setUp();
 
-    $web_user = $this->drupalCreateUser(array('view test entity', 'administer entity_test content', 'administer taxonomy'));
-    $this->drupalLogin($web_user);
+    $this->drupalLogin($this->drupalCreateUser(['view test entity', 'administer entity_test content', 'administer taxonomy']));
     $this->vocabulary1 = $this->createVocabulary();
     $this->vocabulary2 = $this->createVocabulary();
 
     // Set up a field storage and a field.
-    $this->field_name = Unicode::strtolower($this->randomMachineName());
+    $this->fieldName = Unicode::strtolower($this->randomMachineName());
     entity_create('field_storage_config', array(
-      'field_name' => $this->field_name,
+      'field_name' => $this->fieldName,
       'entity_type' => 'entity_test',
       'type' => 'taxonomy_term_reference',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
@@ -57,17 +74,17 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
       )
     ))->save();
     entity_create('field_config', array(
-      'field_name' => $this->field_name,
+      'field_name' => $this->fieldName,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
     ))->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
-      ->setComponent($this->field_name, array(
+      ->setComponent($this->fieldName, array(
         'type' => 'options_select',
       ))
       ->save();
     entity_get_display('entity_test', 'entity_test', 'full')
-      ->setComponent($this->field_name, array(
+      ->setComponent($this->fieldName, array(
         'type' => 'taxonomy_term_reference_link',
       ))
       ->save();
@@ -85,9 +102,9 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
     $this->drupalGet('entity_test/add');
     // Just check if the widget for the select is displayed, the NULL value is
     // used to ignore the value check.
-    $this->assertFieldByName("{$this->field_name}[]", NULL, 'Widget is displayed.');
+    $this->assertFieldByName("{$this->fieldName}[]", NULL, 'Widget is displayed.');
     $edit = array(
-      "{$this->field_name}[]" => array($term1->id(), $term2->id()),
+      "{$this->fieldName}[]" => array($term1->id(), $term2->id()),
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
@@ -116,18 +133,18 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
     $this->assertNoText($term2->getName(), 'Term 2 name is not displayed.');
 
     // Verify that field storage settings and field settings are correct.
-    $field_storage = FieldStorageConfig::loadByName('entity_test', $this->field_name);
+    $field_storage = FieldStorageConfig::loadByName('entity_test', $this->fieldName);
     $this->assertEqual(count($field_storage->getSetting('allowed_values')), 1, 'Only one vocabulary is allowed for the field.');
 
     // The widget should still be displayed.
     $this->drupalGet('entity_test/add');
     // Just check if the widget for the select is displayed, the NULL value is
     // used to ignore the value check.
-    $this->assertFieldByName("{$this->field_name}[]", NULL, 'Widget is still displayed.');
+    $this->assertFieldByName("{$this->fieldName}[]", NULL, 'Widget is still displayed.');
 
     // Term 1 should still pass validation.
     $edit = array(
-      "{$this->field_name}[]" => array($term1->id()),
+      "{$this->fieldName}[]" => array($term1->id()),
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
   }

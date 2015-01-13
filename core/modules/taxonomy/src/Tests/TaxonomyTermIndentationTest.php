@@ -21,10 +21,16 @@ class TaxonomyTermIndentationTest extends TaxonomyTestBase {
    */
   public static $modules = array('taxonomy');
 
+  /**
+   * Vocabulary for testing.
+   *
+   * @var \Drupal\taxonomy\VocabularyInterface
+   */
+  protected $vocabulary;
+
   protected function setUp() {
     parent::setUp();
-    $this->admin_user = $this->drupalCreateUser(array('administer taxonomy', 'bypass node access'));
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->drupalCreateUser(['administer taxonomy', 'bypass node access']));
     $this->vocabulary = $this->createVocabulary();
   }
 
@@ -72,4 +78,3 @@ class TaxonomyTermIndentationTest extends TaxonomyTestBase {
   }
 
 }
-

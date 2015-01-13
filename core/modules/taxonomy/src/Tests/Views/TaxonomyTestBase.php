@@ -27,21 +27,28 @@ abstract class TaxonomyTestBase extends ViewTestBase {
   /**
    * Stores the nodes used for the different tests.
    *
-   * @var array
+   * @var \Drupal\node\NodeInterface[]
    */
   protected $nodes = array();
 
   /**
+   * The vocabulary used for creating terms.
+   *
+   * @var \Drupal\taxonomy\VocabularyInterface
+   */
+  protected $vocabulary;
+
+  /**
    * Stores the first term used in the different tests.
    *
-   * @var \Drupal\taxonomy\Term
+   * @var \Drupal\taxonomy\TermInterface
    */
   protected $term1;
 
   /**
    * Stores the second term used in the different tests.
    *
-   * @var \Drupal\taxonomy\Term
+   * @var \Drupal\taxonomy\TermInterface
    */
   protected $term2;
 
@@ -77,9 +84,9 @@ abstract class TaxonomyTestBase extends ViewTestBase {
       'vid' => 'views_testing_tags',
     ));
     $this->vocabulary->save();
-    $this->field_name = 'field_' . $this->vocabulary->id();
+    $field_name = 'field_' . $this->vocabulary->id();
     entity_create('field_storage_config', array(
-      'field_name' => $this->field_name,
+      'field_name' => $field_name,
       'entity_type' => 'node',
       'type' => 'taxonomy_term_reference',
       // Set cardinality to unlimited for tagging.
@@ -94,27 +101,27 @@ abstract class TaxonomyTestBase extends ViewTestBase {
       ),
     ))->save();
     entity_create('field_config', array(
-      'field_name' => $this->field_name,
+      'field_name' => $field_name,
       'entity_type' => 'node',
       'label' => 'Tags',
       'bundle' => 'article',
     ))->save();
 
     entity_get_form_display('node', 'article', 'default')
-      ->setComponent($this->field_name, array(
+      ->setComponent($field_name, array(
         'type' => 'taxonomy_autocomplete',
         'weight' => -4,
       ))
       ->save();
 
     entity_get_display('node', 'article', 'default')
-      ->setComponent($this->field_name, array(
+      ->setComponent($field_name, array(
         'type' => 'taxonomy_term_reference_link',
         'weight' => 10,
       ))
       ->save();
     entity_get_display('node', 'article', 'teaser')
-      ->setComponent($this->field_name, array(
+      ->setComponent($field_name, array(
         'type' => 'taxonomy_term_reference_link',
         'weight' => 10,
       ))

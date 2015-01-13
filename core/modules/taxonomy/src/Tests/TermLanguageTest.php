@@ -19,12 +19,18 @@ class TermLanguageTest extends TaxonomyTestBase {
 
   public static $modules = array('language');
 
+  /**
+   * Vocabulary for testing.
+   *
+   * @var \Drupal\taxonomy\VocabularyInterface
+   */
+  protected $vocabulary;
+
   protected function setUp() {
     parent::setUp();
 
     // Create an administrative user.
-    $this->admin_user = $this->drupalCreateUser(array('administer taxonomy'));
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->drupalCreateUser(['administer taxonomy']));
 
     // Create a vocabulary to which the terms will be assigned.
     $this->vocabulary = $this->createVocabulary();

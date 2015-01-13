@@ -33,11 +33,18 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
   public static $testViews = array('test_field_filters');
 
   /**
+   * The vocabulary used for creating terms.
+   *
+   * @var \Drupal\taxonomy\VocabularyInterface
+   */
+  protected $vocabulary;
+
+  /**
    * List of taxonomy term names by language.
    *
    * @var array
    */
-  public $term_names = array();
+  public $termNames = [];
 
   function setUp() {
     parent::setUp();
@@ -47,7 +54,7 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
     ConfigurableLanguage::createFromLangcode('es')->save();
 
     // Set up term names.
-    $this->term_names = array(
+    $this->termNames = array(
       'en' => 'Food in Paris',
       'es' => 'Comida en Paris',
       'fr' => 'Nouriture en Paris',
@@ -75,11 +82,11 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
     ))->save();
 
     // Create term with translations.
-    $taxonomy = $this->createTermWithProperties(array('name' => $this->term_names['en'], 'langcode' => 'en', 'description' => $this->term_names['en'], 'field_foo' => $this->term_names['en']));
+    $taxonomy = $this->createTermWithProperties(array('name' => $this->termNames['en'], 'langcode' => 'en', 'description' => $this->termNames['en'], 'field_foo' => $this->termNames['en']));
     foreach (array('es', 'fr') as $langcode) {
-      $translation = $taxonomy->addTranslation($langcode, array('name' => $this->term_names[$langcode]));
-      $translation->description->value = $this->term_names[$langcode];
-      $translation->field_foo->value = $this->term_names[$langcode];
+      $translation = $taxonomy->addTranslation($langcode, array('name' => $this->termNames[$langcode]));
+      $translation->description->value = $this->termNames[$langcode];
+      $translation->field_foo->value = $this->termNames[$langcode];
     }
     $taxonomy->save();
 
@@ -139,7 +146,7 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
     // page, and they are the same. So the title/body string should appear on
     // the page twice as many times as the input count.
     foreach ($counts as $langcode => $count) {
-      $this->assertEqual(substr_count($text, $this->term_names[$langcode]), 2 * $count, 'Translation ' . $langcode . ' has count ' . $count . ' with ' . $message);
+      $this->assertEqual(substr_count($text, $this->termNames[$langcode]), 2 * $count, 'Translation ' . $langcode . ' has count ' . $count . ' with ' . $message);
     }
   }
 
@@ -149,7 +156,7 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
    * @param array $properties
    *   Array of properties and field values to set.
    *
-   * @return \Drupal\taxonomy\Term
+   * @return \Drupal\taxonomy\TermInterface
    *   The created taxonomy term.
    */
   protected function createTermWithProperties($properties) {

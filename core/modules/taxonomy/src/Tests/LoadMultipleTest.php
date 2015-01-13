@@ -18,8 +18,7 @@ class LoadMultipleTest extends TaxonomyTestBase {
 
   protected function setUp() {
     parent::setUp();
-    $this->taxonomy_admin = $this->drupalCreateUser(array('administer taxonomy'));
-    $this->drupalLogin($this->taxonomy_admin);
+    $this->drupalLogin($this->drupalCreateUser(['administer taxonomy']));
   }
 
   /**

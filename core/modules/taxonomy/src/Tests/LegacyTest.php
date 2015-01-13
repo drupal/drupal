@@ -62,8 +62,7 @@ class LegacyTest extends TaxonomyTestBase {
       ))
       ->save();
 
-    $this->admin_user = $this->drupalCreateUser(array('administer taxonomy', 'administer nodes', 'bypass node access'));
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->drupalCreateUser(['administer taxonomy', 'administer nodes', 'bypass node access']));
   }
 
   /**

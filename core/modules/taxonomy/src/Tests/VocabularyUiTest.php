@@ -17,10 +17,16 @@ use Drupal\taxonomy\Entity\Vocabulary;
  */
 class VocabularyUiTest extends TaxonomyTestBase {
 
+  /**
+   * The vocabulary used for creating terms.
+   *
+   * @var \Drupal\taxonomy\VocabularyInterface
+   */
+  protected $vocabulary;
+
   protected function setUp() {
     parent::setUp();
-    $this->admin_user = $this->drupalCreateUser(array('administer taxonomy'));
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->drupalCreateUser(['administer taxonomy']));
     $this->vocabulary = $this->createVocabulary();
   }
 

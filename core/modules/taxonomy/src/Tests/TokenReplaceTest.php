@@ -19,14 +19,27 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
  */
 class TokenReplaceTest extends TaxonomyTestBase {
 
+  /**
+   * The vocabulary used for creating terms.
+   *
+   * @var \Drupal\taxonomy\VocabularyInterface
+   */
+  protected $vocabulary;
+
+  /**
+   * Name of the taxonomy term reference field.
+   *
+   * @var string
+   */
+  protected $fieldName;
+
   protected function setUp() {
     parent::setUp();
-    $this->admin_user = $this->drupalCreateUser(array('administer taxonomy', 'bypass node access'));
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->drupalCreateUser(['administer taxonomy', 'bypass node access']));
     $this->vocabulary = $this->createVocabulary();
-    $this->field_name = 'taxonomy_' . $this->vocabulary->id();
+    $this->fieldName = 'taxonomy_' . $this->vocabulary->id();
     entity_create('field_storage_config', array(
-      'field_name' => $this->field_name,
+      'field_name' => $this->fieldName,
       'entity_type' => 'node',
       'type' => 'taxonomy_term_reference',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
@@ -41,17 +54,17 @@ class TokenReplaceTest extends TaxonomyTestBase {
     ))->save();
 
     entity_create('field_config', array(
-      'field_name' => $this->field_name,
+      'field_name' => $this->fieldName,
       'bundle' => 'article',
       'entity_type' => 'node',
     ))->save();
     entity_get_form_display('node', 'article', 'default')
-      ->setComponent($this->field_name, array(
+      ->setComponent($this->fieldName, array(
         'type' => 'options_select',
       ))
       ->save();
     entity_get_display('node', 'article', 'default')
-      ->setComponent($this->field_name, array(
+      ->setComponent($this->fieldName, array(
         'type' => 'taxonomy_term_reference_link',
       ))
       ->save();
@@ -77,7 +90,7 @@ class TokenReplaceTest extends TaxonomyTestBase {
     // Create node with term2.
     $edit = array();
     $node = $this->drupalCreateNode(array('type' => 'article'));
-    $edit[$this->field_name . '[]'] = $term2->id();
+    $edit[$this->fieldName . '[]'] = $term2->id();
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
 
     // Generate and test sanitized tokens for term1.

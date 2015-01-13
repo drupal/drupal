@@ -29,20 +29,34 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
   public static $modules = array('taxonomy', 'views');
 
   /**
+   * An user with permissions to administer taxonomy.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $adminUser;
+
+  /**
+   * Name of the taxonomy term reference field.
+   *
+   * @var string
+   */
+  protected $fieldName1;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
 
     // Create an administrative user.
-    $this->admin_user = $this->drupalCreateUser(array('administer taxonomy', 'bypass node access'));
-    $this->drupalLogin($this->admin_user);
+    $this->adminUser = $this->drupalCreateUser(['administer taxonomy', 'bypass node access']);
+    $this->drupalLogin($this->adminUser);
 
     // Create a vocabulary and add two term reference fields to article nodes.
 
-    $this->field_name_1 = Unicode::strtolower($this->randomMachineName());
+    $this->fieldName1 = Unicode::strtolower($this->randomMachineName());
     entity_create('field_storage_config', array(
-      'field_name' => $this->field_name_1,
+      'field_name' => $this->fieldName1,
       'entity_type' => 'node',
       'type' => 'taxonomy_term_reference',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
@@ -56,17 +70,17 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
       ),
     ))->save();
     entity_create('field_config', array(
-      'field_name' => $this->field_name_1,
+      'field_name' => $this->fieldName1,
       'bundle' => 'article',
       'entity_type' => 'node',
     ))->save();
     entity_get_form_display('node', 'article', 'default')
-      ->setComponent($this->field_name_1, array(
+      ->setComponent($this->fieldName1, array(
         'type' => 'options_select',
       ))
       ->save();
     entity_get_display('node', 'article', 'default')
-      ->setComponent($this->field_name_1, array(
+      ->setComponent($this->fieldName1, array(
         'type' => 'taxonomy_term_reference_link',
       ))
       ->save();
@@ -83,7 +97,7 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
     $edit = array();
     $edit['title[0][value]'] = $original_title = $this->randomMachineName();
     $edit['body[0][value]'] = $this->randomMachineName();
-    $edit["{$this->field_name_1}[]"] = $term->id();
+    $edit["{$this->fieldName1}[]"] = $term->id();
     $this->drupalPostForm('node/add/article', $edit, t('Save'));
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
 
@@ -97,7 +111,7 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
     // Enable translation for the article content type and ensure the change is
     // picked up.
     \Drupal::service('content_translation.manager')->setEnabled('node', 'article', TRUE);
-    $roles = $this->admin_user->getRoles(TRUE);
+    $roles = $this->adminUser->getRoles(TRUE);
     Role::load(reset($roles))
       ->grantPermission('create content translations')
       ->grantPermission('translate any entity')
