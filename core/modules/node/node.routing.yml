@@ -26,6 +26,9 @@ node.add:
     _node_add_access: 'node:{node_type}'
   options:
     _node_operation_route: TRUE
+    parameters:
+      node_type:
+        use_current_language: TRUE
 
 entity.node.preview:
   path: '/node/preview/{node_preview}/{view_mode_id}'
