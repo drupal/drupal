@@ -50,7 +50,7 @@ class TwigThemeTestController {
   }
 
   /**
-   * Renders for testing file_create_url functions in a Twig template.
+   * Renders for testing file_url functions in a Twig template.
    */
   public function fileUrlRender() {
     return array(
