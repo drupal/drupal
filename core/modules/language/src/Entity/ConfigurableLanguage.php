@@ -38,8 +38,8 @@ use Drupal\language\ConfigurableLanguageInterface;
  *     "weight" = "weight"
  *   },
  *   links = {
- *     "delete-form" = "entity.configurable_language.delete_form",
- *     "edit-form" = "entity.configurable_language.edit_form"
+ *     "delete-form" = "/admin/config/regional/language/delete/{configurable_language}",
+ *     "edit-form" = "/admin/config/regional/language/edit/{configurable_language}"
  *   }
  * )
  */

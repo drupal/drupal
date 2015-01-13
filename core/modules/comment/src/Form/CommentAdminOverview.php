@@ -224,7 +224,7 @@ class CommentAdminOverview extends FormBase {
       if ($this->moduleHandler->moduleExists('content_translation') && $this->moduleHandler->invoke('content_translation', 'translate_access', array($comment))->isAllowed()) {
         $links['translate'] = array(
           'title' => $this->t('Translate'),
-          'url' => Url::fromRoute('content_translation.translation_overview_comment', ['comment' => $comment->id()], $comment_uri_options + ['query' => $destination]),
+          'url' => Url::fromRoute('entity.comment.content_translation_overview', ['comment' => $comment->id()], $comment_uri_options + ['query' => $destination]),
         );
       }
       $options[$comment->id()]['operations']['data'] = array(

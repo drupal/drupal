@@ -51,9 +51,9 @@ use Drupal\user\UserInterface;
  *     "uuid" = "uuid"
  *   },
  *   links = {
- *     "canonical" = "entity.user.canonical",
- *     "edit-form" = "entity.user.edit_form",
- *     "cancel-form" = "entity.user.cancel_form",
+ *     "canonical" = "/user/{user}",
+ *     "edit-form" = "/user/{user}/edit",
+ *     "cancel-form" = "/user/{user}/cancel",
  *   },
  *   field_ui_base_route = "entity.user.admin_form",
  * )

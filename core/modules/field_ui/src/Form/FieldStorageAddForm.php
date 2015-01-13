@@ -322,6 +322,8 @@ class FieldStorageAddForm extends FormBase {
     $error = FALSE;
     $values = $form_state->getValues();
     $destinations = array();
+    $entity_type = $this->entityManager->getDefinition($this->entityTypeId);
+    $bundle_entity_type = FieldUI::getRouteBundleEntityType($entity_type);
 
     // Create new field.
     if ($values['new_storage_type']) {
@@ -352,9 +354,9 @@ class FieldStorageAddForm extends FormBase {
           $this->bundleEntityTypeId => $this->bundle,
           'field_config' => $field->id(),
         );
-        $destinations[] = array('route_name' => 'field_ui.storage_edit_' . $this->entityTypeId, 'route_parameters' => $route_parameters);
-        $destinations[] = array('route_name' => 'field_ui.field_edit_' . $this->entityTypeId, 'route_parameters' => $route_parameters);
-        $destinations[] = array('route_name' => 'field_ui.overview_' . $this->entityTypeId, 'route_parameters' => $route_parameters);
+        $destinations[] = array('route_name' => "entity.field_config.{$this->entityTypeId}_storage_edit_form", 'route_parameters' => $route_parameters);
+        $destinations[] = array('route_name' => "entity.field_config.{$this->entityTypeId}_field_edit_form", 'route_parameters' => $route_parameters);
+        $destinations[] = array('route_name' => "entity.{$bundle_entity_type}.field_ui_fields", 'route_parameters' => $route_parameters);
 
         // Store new field information for any additional submit handlers.
         $form_state->set(['fields_added', '_add_new_field'], $values['field_name']);
@@ -384,8 +386,8 @@ class FieldStorageAddForm extends FormBase {
           $this->bundleEntityTypeId => $this->bundle,
           'field_config' => $field->id(),
         );
-        $destinations[] = array('route_name' => 'field_ui.field_edit_' . $this->entityTypeId, 'route_parameters' => $route_parameters);
-        $destinations[] = array('route_name' => 'field_ui.overview_' . $this->entityTypeId, 'route_parameters' => $route_parameters);
+        $destinations[] = array('route_name' => "entity.field_config.{$this->entityTypeId}_field_edit_form", 'route_parameters' => $route_parameters);
+        $destinations[] = array('route_name' => "entity.{$bundle_entity_type}.field_ui_fields", 'route_parameters' => $route_parameters);
 
         // Store new field information for any additional submit handlers.
         $form_state->set(['fields_added', '_add_existing_field'], $field_name);

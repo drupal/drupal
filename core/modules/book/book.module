@@ -89,8 +89,8 @@ function book_entity_type_build(array &$entity_types) {
   /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
   $entity_types['node']
     ->setFormClass('book_outline', 'Drupal\book\Form\BookOutlineForm')
-    ->setLinkTemplate('book-outline-form', 'entity.node.book_outline_form')
-    ->setLinkTemplate('book-remove-form', 'entity.node.book_remove_form');
+    ->setLinkTemplate('book-outline-form', '/node/{node}/outline')
+    ->setLinkTemplate('book-remove-form', '/node/{node}/outline/remove');
 }
 
 /**

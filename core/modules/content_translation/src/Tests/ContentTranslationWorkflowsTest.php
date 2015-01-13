@@ -62,6 +62,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
     // Create a translation.
     $this->drupalLogin($this->translator);
     $path = $this->entity->getSystemPath('drupal:content-translation-overview');
+
     $add_translation_path = $path . "/add/$default_langcode/{$this->langcodes[2]}";
     $this->drupalPostForm($add_translation_path, array(), t('Save'));
     $this->rebuildContainer();

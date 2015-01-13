@@ -36,9 +36,9 @@ use Drupal\shortcut\ShortcutSetInterface;
  *     "label" = "label"
  *   },
  *   links = {
- *     "customize-form" = "entity.shortcut_set.customize_form",
- *     "delete-form" = "entity.shortcut_set.delete_form",
- *     "edit-form" = "entity.shortcut_set.edit_form"
+ *     "customize-form" = "/admin/config/user-interface/shortcut/manage/{shortcut_set}/customize",
+ *     "delete-form" = "/admin/config/user-interface/shortcut/manage/{shortcut_set}/delete",
+ *     "edit-form" = "/admin/config/user-interface/shortcut/manage/{shortcut_set}"
  *   }
  * )
  */

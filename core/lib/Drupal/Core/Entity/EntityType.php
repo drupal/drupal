@@ -546,8 +546,12 @@ class EntityType implements EntityTypeInterface {
   /**
    * {@inheritdoc}
    */
-  public function setLinkTemplate($key, $route_name) {
-    $this->links[$key] = $route_name;
+  public function setLinkTemplate($key, $path) {
+    if ($path[0] !== '/') {
+      throw new \InvalidArgumentException('Link templates accepts paths, which have to start with a leading slash.');
+    }
+
+    $this->links[$key] = $path;
     return $this;
   }
 

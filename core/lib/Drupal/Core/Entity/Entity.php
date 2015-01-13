@@ -164,8 +164,9 @@ abstract class Entity implements EntityInterface {
     $link_templates = $this->linkTemplates();
 
     if (isset($link_templates[$rel])) {
-      // If there is a template for the given relationship type, generate the path.
-      $uri = new Url($link_templates[$rel], $this->urlRouteParameters($rel));
+      $route_parameters = $this->urlRouteParameters($rel);
+      $route_name = "entity.{$this->entityTypeId}." . str_replace(array('-', 'drupal:'), array('_', ''), $rel);
+      $uri = new Url($route_name, $route_parameters);
     }
     else {
       $bundle = $this->bundle();
@@ -224,7 +225,7 @@ abstract class Entity implements EntityInterface {
    * Returns an array link templates.
    *
    * @return array
-   *   An array of link templates containing route names.
+   *   An array of link templates containing paths.
    */
   protected function linkTemplates() {
     return $this->getEntityType()->getLinkTemplates();

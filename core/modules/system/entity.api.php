@@ -327,11 +327,12 @@ use Drupal\language\Entity\ContentLanguageSettings;
  *   also need to add a corresponding route to your module's routing.yml file;
  *   see the entity.node.canonical route in node.routing.yml for an example, and see
  *   @ref sec_routes below for some notes.
- * - Define routing and links for the various URLs associated with the entity.
+ * - Define routes and links for the various URLs associated with the entity.
  *   These go into the 'links' annotation, with the link type as the key, and
- *   the route machine name (defined in your module's routing.yml file) as the
- *   value; see @ref sec_routes below for some routing notes. Typical link
- *   types are:
+ *   the path of this link template as the value. The corresponding route
+ *   requires the following route name:
+ *   "entity.$entity_type_id.$link_template_type". See @ref sec_routes below for
+ *   some routing notes. Typical link types are:
  *   - canonical: Default link, either to view (if entities are viewed on their
  *     own pages) or edit the entity.
  *   - delete-form: Confirmation form to delete the entity.

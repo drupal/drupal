@@ -36,13 +36,13 @@ function hook_config_translation_info(&$info) {
   $route_provider = \Drupal::service('router.route_provider');
 
   // If field UI is not enabled, the base routes of the type
-  // "field_ui.field_edit_$entity_type" are not defined.
+  // "entity.field_config.{$entity_type}_field_edit_form" are not defined.
   if (\Drupal::moduleHandler()->moduleExists('field_ui')) {
     // Add fields entity mappers to all fieldable entity types defined.
     foreach ($entity_manager->getDefinitions() as $entity_type_id => $entity_type) {
       $base_route = NULL;
       try {
-        $base_route = $route_provider->getRouteByName('field_ui.field_edit_' . $entity_type_id);
+        $base_route = $route_provider->getRouteByName('entity.field_config.' . $entity_type_id . '_field_edit_form');
       }
       catch (RouteNotFoundException $e) {
         // Ignore non-existent routes.
@@ -51,7 +51,7 @@ function hook_config_translation_info(&$info) {
       // Make sure entity type has field UI enabled and has a base route.
       if ($entity_type->get('field_ui_base_route') && !empty($base_route)) {
         $info[$entity_type_id . '_fields'] = array(
-          'base_route_name' => 'field_ui.field_edit_' . $entity_type_id,
+          'base_route_name' => 'entity.field_config.' . $entity_type_id . '_field_edit_form',
           'entity_type' => 'field_config',
           'title' => t('!label field'),
           'class' => '\Drupal\config_translation\ConfigFieldMapper',

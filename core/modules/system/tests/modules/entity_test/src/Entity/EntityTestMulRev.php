@@ -41,9 +41,9 @@ use Drupal\entity_test\Entity\EntityTestRev;
  *     "langcode" = "langcode",
  *   },
  *   links = {
- *     "canonical" = "entity.entity_test_mulrev.edit_form",
- *     "delete-form" = "entity.entity_test_mulrev.delete_form",
- *     "edit-form" = "entity.entity_test_mulrev.edit_form"
+ *     "canonical" = "/entity_test_mulrev/manage/{entity_test_mulrev}",
+ *     "delete-form" = "/entity_test/delete/entity_test_mulrev/{entity_test_mulrev}",
+ *     "edit-form" = "/entity_test_mulrev/manage/{entity_test_mulrev}",
  *   }
  * )
  */

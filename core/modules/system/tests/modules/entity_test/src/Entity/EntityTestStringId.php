@@ -29,8 +29,8 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *     "bundle" = "type"
  *   },
  *   links = {
- *     "canonical" = "entity.entity_test.canonical",
- *     "edit-form" = "entity.entity_test_string_id.edit_form",
+ *     "canonical" = "/entity_test_string_id/manage/{entity_test_string_id}",
+ *     "edit-form" = "/entity_test_string_id/manage/{entity_test_string_id}",
  *   },
  *   field_ui_base_route = "entity.entity_test_string_id.admin_form",
  * )

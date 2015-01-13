@@ -81,13 +81,13 @@ function user_help($route_name, RouteMatchInterface $route_match) {
     case 'user.role_list':
       return '<p>' . t('A role defines a group of users that have certain privileges. These privileges are defined on the <a href="!permissions">Permissions page</a>. Here, you can define the names and the display sort order of the roles on your site. It is recommended to order roles from least permissive (for example, Anonymous user) to most permissive (for example, Administrator user). Users who are not logged in have the Anonymous user role. Users who are logged in have the Authenticated user role, plus any other roles granted to their user account.', array('!permissions' => \Drupal::url('user.admin_permissions'))) . '</p>';
 
-    case 'field_ui.overview_user':
+    case 'entity.user.field_ui_fields':
       return '<p>' . t('This form lets administrators add and edit fields for storing user data.') . '</p>';
 
-    case 'field_ui.form_display_overview_user':
+    case 'entity.user.field_ui_form_display':
       return '<p>' . t('This form lets administrators configure how form fields should be displayed when editing a user profile.') . '</p>';
 
-    case 'field_ui.display_overview_user':
+    case 'entity.node.field_ui_display':
       return '<p>' . t('This form lets administrators configure how fields should be displayed when rendering a user profile page.') . '</p>';
   }
 }

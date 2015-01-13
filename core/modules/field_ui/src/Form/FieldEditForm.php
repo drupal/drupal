@@ -223,7 +223,7 @@ class FieldEditForm extends FormBase {
     }
     $entity_type = $this->entityManager->getDefinition($this->field->entity_type);
     $form_state->setRedirect(
-      'field_ui.delete_' . $this->field->entity_type,
+      'entity.field_config.' . $this->field->entity_type . '_field_delete_form',
       array(
         $entity_type->getBundleEntityType() => $this->field->bundle,
         'field_config' => $this->field->id(),

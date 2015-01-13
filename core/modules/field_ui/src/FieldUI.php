@@ -8,6 +8,7 @@
 namespace Drupal\field_ui;
 
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Url;
 
 /**
@@ -29,7 +30,8 @@ class FieldUI {
   public static function getOverviewRouteInfo($entity_type_id, $bundle) {
     $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
     if ($entity_type->get('field_ui_base_route')) {
-      return new Url("field_ui.overview_$entity_type_id", array(
+      $bundle_entity_type = static::getRouteBundleEntityType($entity_type);
+      return new Url("entity.{$bundle_entity_type}.field_ui_fields", array(
         $entity_type->getBundleEntityType() => $bundle,
       ));
     }
@@ -66,4 +68,18 @@ class FieldUI {
     return $next_destination;
   }
 
+  /**
+   * Gets the bundle entity type used for route names.
+   *
+   * This method returns the bundle entity type, in case there is one.
+   *
+   * @param \Drupal\Core\Entity\EntityType $entity_type
+   *   The actual entity type, not the bundle.
+   *
+   * @return string
+   *   The used entity type ID in the route name.
+   */
+  public static function getRouteBundleEntityType(EntityType $entity_type) {
+    return $entity_type->getBundleEntityType() != 'bundle' ? $entity_type->getBundleEntityType() : $entity_type->id();
+  }
 }

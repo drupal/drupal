@@ -105,9 +105,9 @@ interface EntityInterface extends AccessibleInterface {
    * example:
    * @code
    * links = {
-   *   "canonical" = "entity.node.canonical",
-   *   "edit-form" = "entity.node.edit_form",
-   *   "version-history" = "entity.node.version_history"
+   *   "canonical" = "/node/{node}",
+   *   "edit-form" = "/node/{node}/edit",
+   *   "version-history" = "/node/{node}/revisions"
    * }
    * @endcode
    * or specified in a callback function set like:

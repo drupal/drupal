@@ -36,8 +36,8 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *     "id" = "id"
  *   },
  *   links = {
- *     "delete-form" = "entity.block.delete_form",
- *     "edit-form" = "entity.block.edit_form"
+ *     "delete-form" = "/admin/structure/block/manage/{block}/delete",
+ *     "edit-form" = "/admin/structure/block/manage/{block}"
  *   }
  * )
  */

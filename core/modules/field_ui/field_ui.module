@@ -51,7 +51,7 @@ function field_ui_help($route_name, RouteMatchInterface $route_match) {
         $output .= '<dd>' . t('Fields on taxonomy terms are defined at the taxonomy vocabulary level, on the <em>Manage fields</em> tab of the vocabulary edit page (which you can reach from the <a href="@taxonomy">Taxonomy page</a>). When you define a field for a vocabulary, each term in that vocabulary will have that field added to it. For example, you could define an image field for a vocabulary to store an icon with each term.', array('@taxonomy' => \Drupal::url('taxonomy.vocabulary_list'))) . '</dd>';
       }
       $output .= '<dt>' . t('Fields on user accounts') . '</dt>';
-      $output .= '<dd>' . t('Fields on user accounts are defined on a site-wide basis on the <a href="@fields">Manage fields tab</a> of the <a href="@accounts">Account settings</a> page. When you define a field for user accounts, each user account will have that field added to it. For example, you could add a long text field to allow users to include a biography.', array('@fields' => \Drupal::url('field_ui.overview_user'), '@accounts' => \Drupal::url('entity.user.admin_form'))) . '</dd>';
+      $output .= '<dd>' . t('Fields on user accounts are defined on a site-wide basis on the <a href="@fields">Manage fields tab</a> of the <a href="@accounts">Account settings</a> page. When you define a field for user accounts, each user account will have that field added to it. For example, you could add a long text field to allow users to include a biography.', array('@fields' => \Drupal::url('entity.user.field_ui_fields'), '@accounts' => \Drupal::url('entity.user.admin_form'))) . '</dd>';
       if ($module_handler->moduleExists('comment')) {
         $output .= '<dt>' . t('Fields on comments') . '</dt>';
         $output .= '<dd>' . t('Fields on comments are defined at the comment entity level, on the <em>Manage fields</em> tab of the comment types edit page (which you can reach from the <a href="@types">Comment types page</a>). When you add a field for comments, each comment on an entity with that comment type will have that field added to it. For example, you could add a website field to the comments on forum posts, to allow forum commenters to add a link to their website.', array('@types' => \Drupal::url('comment.type_list'))) . '</dd>';
@@ -91,10 +91,14 @@ function field_ui_entity_type_build(array &$entity_types) {
 
   foreach ($entity_types as $entity_type) {
     if ($bundle = $entity_type->getBundleOf()) {
+      // To generate links in the UI we use the route names, so we don't have to
+      // know the exact required routes.
+      // This allows us to not require route information inside this hook, which
+      // otherwise could result in circular dependencies.
       $entity_type
-        ->setLinkTemplate('field_ui-fields', "field_ui.overview_$bundle")
-        ->setLinkTemplate('field_ui-form-display', "field_ui.form_display_overview_$bundle")
-        ->setLinkTemplate('field_ui-display', "field_ui.display_overview_$bundle");
+        ->setLinkTemplate('field_ui-fields', "/admin/{$entity_type->id()}/fields")
+        ->setLinkTemplate('field_ui-form-display', "/admin/{$entity_type->id()}/fields-form-display")
+        ->setLinkTemplate('field_ui-display', "/admin/{$entity_type->id()}/fields-display");
     }
   }
 }
@@ -300,8 +304,8 @@ function field_ui_entity_type_alter(array &$entity_types) {
   $form_mode->setFormClass('edit', 'Drupal\field_ui\Form\EntityDisplayModeEditForm');
   $form_mode->setFormClass('delete', 'Drupal\field_ui\Form\EntityDisplayModeDeleteForm');
   $form_mode->set('admin_permission', 'administer display modes');
-  $form_mode->setLinkTemplate('delete-form', 'field_ui.entity_form_mode.delete_form');
-  $form_mode->setLinkTemplate('edit-form', 'field_ui.entity_form_mode.edit_form');
+  $form_mode->setLinkTemplate('delete-form', '/admin/structure/display-modes/form/manage/{entity_form_mode}/delete');
+  $form_mode->setLinkTemplate('edit-form', '/admin/structure/display-modes/form/manage/{entity_form_mode}');
 
   $view_mode = $entity_types['entity_view_mode'];
   $view_mode->setListBuilderClass('Drupal\field_ui\EntityDisplayModeListBuilder');
@@ -309,6 +313,6 @@ function field_ui_entity_type_alter(array &$entity_types) {
   $view_mode->setFormClass('edit', 'Drupal\field_ui\Form\EntityDisplayModeEditForm');
   $view_mode->setFormClass('delete', 'Drupal\field_ui\Form\EntityDisplayModeDeleteForm');
   $view_mode->set('admin_permission', 'administer display modes');
-  $view_mode->setLinkTemplate('delete-form', 'field_ui.entity_view_mode.delete_form');
-  $view_mode->setLinkTemplate('edit-form', 'field_ui.entity_view_mode.edit_form');
+  $view_mode->setLinkTemplate('delete-form', '/admin/structure/display-modes/view/manage/{entity_view_mode}/delete');
+  $view_mode->setLinkTemplate('edit-form', '/admin/structure/display-modes/view/manage/{entity_view_mode}');
 }

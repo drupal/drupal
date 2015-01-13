@@ -35,11 +35,11 @@ use Drupal\search\SearchPageInterface;
  *   },
  *   admin_permission = "administer search",
  *   links = {
- *     "edit-form" = "entity.search_page.edit_form",
- *     "delete-form" = "entity.search_page.delete_form",
- *     "enable" = "entity.search_page.enable",
- *     "disable" = "entity.search_page.disable",
- *     "set-default" = "entity.search_page.set_default"
+ *     "edit-form" = "/admin/config/search/pages/manage/{search_page}",
+ *     "delete-form" = "/admin/config/search/pages/manage/{search_page}/delete",
+ *     "enable" = "/admin/config/search/pages/manage/{search_page}/enable",
+ *     "disable" = "/admin/config/search/pages/manage/{search_page}/disable",
+ *     "set-default" = "/admin/config/search/pages/manage/{search_page}/set-default"
  *   },
  *   config_prefix = "page",
  *   entity_keys = {

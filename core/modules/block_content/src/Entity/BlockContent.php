@@ -39,9 +39,9 @@ use Drupal\block_content\BlockContentInterface;
  *   revision_table = "block_content_revision",
  *   data_table = "block_content_field_data",
  *   links = {
- *     "canonical" = "entity.block_content.canonical",
- *     "delete-form" = "entity.block_content.delete_form",
- *     "edit-form" = "entity.block_content.canonical",
+ *     "canonical" = "/block/{block_content}",
+ *     "delete-form" = "/block/{block_content}/delete",
+ *     "edit-form" = "/block/{block_content}",
  *   },
  *   translatable = TRUE,
  *   entity_keys = {

@@ -57,10 +57,10 @@ use Drupal\user\UserInterface;
  *   field_ui_base_route = "entity.node_type.edit_form",
  *   permission_granularity = "bundle",
  *   links = {
- *     "canonical" = "entity.node.canonical",
- *     "delete-form" = "entity.node.delete_form",
- *     "edit-form" = "entity.node.edit_form",
- *     "version-history" = "entity.node.version_history",
+ *     "canonical" = "/node/{node}",
+ *     "delete-form" = "/node/{node}/delete",
+ *     "edit-form" = "/node/{node}/edit",
+ *     "version-history" = "/node/{node}/revisions",
  *   }
  * )
  */

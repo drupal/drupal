@@ -33,9 +33,9 @@ use Drupal\aggregator\FeedInterface;
  *     }
  *   },
  *   links = {
- *     "canonical" = "entity.aggregator_feed.canonical",
- *     "edit-form" = "entity.aggregator_feed.edit_form",
- *     "delete-form" = "entity.aggregator_feed.delete_form",
+ *     "canonical" = "/aggregator/sources/{aggregator_feed}",
+ *     "edit-form" = "/aggregator/sources/{aggregator_feed}/configure",
+ *     "delete-form" = "/aggregator/sources/{aggregator_feed}/delete",
  *   },
  *   field_ui_base_route = "aggregator.admin_overview",
  *   base_table = "aggregator_feed",

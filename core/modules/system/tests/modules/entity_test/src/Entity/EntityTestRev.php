@@ -37,9 +37,9 @@ use Drupal\entity_test\Entity\EntityTest;
  *     "langcode" = "langcode",
  *   },
  *   links = {
- *     "canonical" = "entity.entity_test_rev.edit_form",
- *     "delete-form" = "entity.entity_test_rev.delete_form",
- *     "edit-form" = "entity.entity_test_rev.edit_form"
+ *     "canonical" = "/entity_test_rev/manage/{entity_test_rev}",
+ *     "delete-form" = "/entity_test/delete/entity_test_rev/{entity_test_rev}",
+ *     "edit-form" = "/entity_test_rev/manage/{entity_test_rev}"
  *   }
  * )
  */

@@ -27,6 +27,11 @@ const ENTITY_TEST_TYPES_REVISABLE = 1;
 const ENTITY_TEST_TYPES_MULTILINGUAL = 2;
 
 /**
+ * Filter that limits test entity list to routeable ones.
+ */
+const ENTITY_TEST_TYPES_ROUTING = 3;
+
+/**
  * Returns a list of test entity types.
  *
  * The returned entity types are one for each available entity storage type:
@@ -47,7 +52,7 @@ const ENTITY_TEST_TYPES_MULTILINGUAL = 2;
  */
 function entity_test_entity_types($filter = NULL) {
   $types = array();
-  if ($filter == NULL) {
+  if ($filter === NULL || $filter === ENTITY_TEST_TYPES_ROUTING) {
     $types[] = 'entity_test';
   }
   if ($filter != ENTITY_TEST_TYPES_REVISABLE) {
@@ -57,7 +62,11 @@ function entity_test_entity_types($filter = NULL) {
   if ($filter != ENTITY_TEST_TYPES_MULTILINGUAL) {
     $types[] = 'entity_test_rev';
   }
+  if ($filter === ENTITY_TEST_TYPES_ROUTING) {
+    $types[] = 'entity_test_base_field_display';
+  }
   $types[] = 'entity_test_mulrev';
+
   return array_combine($types, $types);
 }
 

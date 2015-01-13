@@ -41,9 +41,9 @@ use Drupal\user\UserInterface;
  *     "langcode" = "langcode",
  *   },
  *   links = {
- *     "canonical" = "entity.entity_test.canonical",
- *     "edit-form" = "entity.entity_test.edit_form",
- *     "delete-form" = "entity.entity_test.delete_form",
+ *     "canonical" = "/entity_test/{entity_test}",
+ *     "edit-form" = "/entity_test/manage/{entity_test}",
+ *     "delete-form" = "/entity_test/delete/entity_test/{entity_test}",
  *   },
  *   field_ui_base_route = "entity.entity_test.admin_form",
  * )

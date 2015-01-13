@@ -8,6 +8,7 @@
 use Drupal\config_translation\Plugin\Derivative\ConfigTranslationLocalTasks;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\field\FieldConfigInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
@@ -83,7 +84,7 @@ function config_translation_entity_type_alter(array &$entity_types) {
       elseif ($entity_type_id == 'field_config') {
         $class = 'Drupal\config_translation\Controller\ConfigTranslationFieldListBuilder';
         // Will be filled in dynamically, see \Drupal\field\Entity\FieldConfig::linkTemplates().
-        $entity_type->setLinkTemplate('drupal:config-translation-overview', 'config_translation.item.overview.');
+        $entity_type->setLinkTemplate('config-translation-overview', $entity_type->getLinkTemplate('edit-form') . '/translate');
       }
       else {
         $class = 'Drupal\config_translation\Controller\ConfigTranslationEntityListBuilder';
@@ -91,7 +92,7 @@ function config_translation_entity_type_alter(array &$entity_types) {
       $entity_type->setHandlerClass('config_translation_list', $class);
 
       if ($entity_type->hasLinkTemplate('edit-form')) {
-        $entity_type->setLinkTemplate('drupal:config-translation-overview', 'config_translation.item.overview.' . $entity_type->getLinkTemplate('edit-form'));
+        $entity_type->setLinkTemplate('config-translation-overview', $entity_type->getLinkTemplate('edit-form') . '/translate');
       }
     }
   }
@@ -105,14 +106,14 @@ function config_translation_config_translation_info(&$info) {
   $route_provider = \Drupal::service('router.route_provider');
 
   // If field UI is not enabled, the base routes of the type
-  // "field_ui.field_edit_$entity_type" are not defined.
+  // "entity.field_config.{$entity_type}_field_edit_form" are not defined.
   if (\Drupal::moduleHandler()->moduleExists('field_ui')) {
     // Add fields entity mappers to all fieldable entity types defined.
     foreach ($entity_manager->getDefinitions() as $entity_type_id => $entity_type) {
       // Make sure entity type has field UI enabled and has a base route.
       if ($entity_type->get('field_ui_base_route')) {
         $info[$entity_type_id . '_fields'] = array(
-          'base_route_name' => 'field_ui.field_edit_' . $entity_type_id,
+          'base_route_name' => "entity.field_config.{$entity_type_id}_field_edit_form",
           'entity_type' => 'field_config',
           'title' => '!label field',
           'class' => '\Drupal\config_translation\ConfigFieldMapper',
@@ -139,9 +140,10 @@ function config_translation_config_translation_info(&$info) {
     }
 
     // Use the entity type as the plugin ID.
+    $base_route_name = "entity.$entity_type_id.edit_form";
     $info[$entity_type_id] = array(
       'class' => '\Drupal\config_translation\ConfigEntityMapper',
-      'base_route_name' => $entity_type->getLinkTemplate('edit-form'),
+      'base_route_name' => $base_route_name,
       'title' => '!label !entity_type',
       'names' => array(),
       'entity_type' => $entity_type_id,
@@ -157,12 +159,18 @@ function config_translation_entity_operation(EntityInterface $entity) {
   $operations = array();
   $entity_type = $entity->getEntityType();
   if ($entity_type->isSubclassOf('Drupal\Core\Config\Entity\ConfigEntityInterface') &&
-    $entity->hasLinkTemplate('drupal:config-translation-overview') &&
+    $entity->hasLinkTemplate('config-translation-overview') &&
     \Drupal::currentUser()->hasPermission('translate configuration')) {
+
+    $link_template = 'config-translation-overview';
+    if ($entity instanceof FieldConfigInterface) {
+      $link_template = "config-translation-overview.{$entity->getTargetEntityTypeId()}";
+    }
+
     $operations['translate'] = array(
       'title' => t('Translate'),
       'weight' => 50,
-      'url' => $entity->urlInfo('drupal:config-translation-overview'),
+      'url' => $entity->urlInfo($link_template),
     );
   }
 

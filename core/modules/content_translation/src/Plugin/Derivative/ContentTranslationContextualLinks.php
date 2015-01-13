@@ -53,7 +53,7 @@ class ContentTranslationContextualLinks extends DeriverBase implements Container
     // Create contextual links for translatable entity types.
     foreach ($this->contentTranslationManager->getSupportedEntityTypes() as $entity_type_id => $entity_type) {
       $this->derivatives[$entity_type_id]['title'] = t('Translate');
-      $this->derivatives[$entity_type_id]['route_name'] = $entity_type->getLinkTemplate('drupal:content-translation-overview');
+      $this->derivatives[$entity_type_id]['route_name'] = "entity.$entity_type_id.content_translation_overview";
       $this->derivatives[$entity_type_id]['group'] = $entity_type_id;
     }
     return parent::getDerivativeDefinitions($base_plugin_definition);

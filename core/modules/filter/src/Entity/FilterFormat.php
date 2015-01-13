@@ -39,8 +39,8 @@ use Drupal\filter\Plugin\FilterInterface;
  *     "status" = "status"
  *   },
  *   links = {
- *     "edit-form" = "entity.filter_format.edit_form",
- *     "disable" = "entity.filter_format.disable"
+ *     "edit-form" = "/admin/config/content/formats/manage/{filter_format}",
+ *     "disable" = "/admin/config/content/formats/manage/{filter_format}/disable"
  *   }
  * )
  */

@@ -37,6 +37,13 @@ class ConfigFieldMapper extends ConfigEntityMapper {
   /**
    * {@inheritdoc}
    */
+  public function getOverviewRouteName() {
+    return 'entity.field_config.config_translation_overview.' . $this->pluginDefinition['base_entity_type'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getTypeLabel() {
     $base_entity_info = $this->entityManager->getDefinition($this->pluginDefinition['base_entity_type']);
     return $this->t('@label fields', array('@label' => $base_entity_info->getLabel()));

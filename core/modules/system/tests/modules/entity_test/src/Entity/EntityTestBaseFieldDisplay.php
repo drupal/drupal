@@ -30,7 +30,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "bundle" = "type"
  *   },
  *   links = {
- *     "edit-form" = "entity.entity_test_base_field_display.edit_form",
+ *     "edit-form" = "/entity_test_base_field_display/manage/{entity_test_base_field_display}",
  *   },
  *   field_ui_base_route = "entity.entity_test_base_field_display.admin_form",
  * )

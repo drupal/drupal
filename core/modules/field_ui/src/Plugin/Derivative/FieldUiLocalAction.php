@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -59,10 +60,11 @@ class FieldUiLocalAction extends DeriverBase implements ContainerDeriverInterfac
 
     foreach ($this->entityManager->getDefinitions() as $entity_type_id => $entity_type) {
       if ($entity_type->get('field_ui_base_route')) {
+        $bundle_entity_type = FieldUI::getRouteBundleEntityType($entity_type);
         $this->derivatives["field_storage_config_add_$entity_type_id"] = array(
           'route_name' => "field_ui.field_storage_config_add_$entity_type_id",
           'title' => $this->t('Add field'),
-          'appears_on' => array("field_ui.overview_$entity_type_id"),
+          'appears_on' => array("entity.$bundle_entity_type.field_ui_fields"),
         );
       }
     }

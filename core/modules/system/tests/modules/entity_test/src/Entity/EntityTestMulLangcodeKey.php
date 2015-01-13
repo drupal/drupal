@@ -36,9 +36,9 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *     "langcode" = "custom_langcode_key",
  *   },
  *   links = {
- *     "canonical" = "entity.entity_test_mul_langcode_key.edit_form",
- *     "edit-form" = "entity.entity_test_mul_langcode_key.edit_form",
- *     "delete-form" = "entity.entity_test_mul_langcode_key.delete_form",
+ *     "canonical" = "/entity_test_mul_langcode_key/manage/{entity_test_mul_langcode_key}",
+ *     "edit-form" = "/entity_test_mul_langcode_key/manage/{entity_test_mul_langcode_key}",
+ *     "delete-form" = "/entity_test/delete/entity_test_mul_langcode_key/{entity_test_mul_langcode_key}",
  *   },
  *   field_ui_base_route = "entity.entity_test_mul_langcode_key.admin_form",
  * )

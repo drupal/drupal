@@ -455,7 +455,7 @@ interface EntityTypeInterface {
    *   The link type.
    *
    * @return string|bool
-   *   The route name for this link, or FALSE if it doesn't exist.
+   *   The path for this link, or FALSE if it doesn't exist.
    */
   public function getLinkTemplate($key);
 
@@ -475,12 +475,15 @@ interface EntityTypeInterface {
    *
    * @param string $key
    *   The name of a link.
-   * @param string $route_name
-   *   The route name to use for the link.
+   * @param string $path
+   *   The route path to use for the link.
    *
    * @return $this
+   *
+   * @throws \InvalidArgumentException
+   *   Thrown when the path does not start with a leading slash.
    */
-  public function setLinkTemplate($key, $route_name);
+  public function setLinkTemplate($key, $path);
 
   /**
    * Gets the callback for the label of the entity.

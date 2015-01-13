@@ -40,9 +40,9 @@ use Drupal\menu_link_content\MenuLinkContentInterface;
  *     "bundle" = "bundle"
  *   },
  *   links = {
- *     "canonical" = "entity.menu_link_content.canonical",
- *     "edit-form" = "entity.menu_link_content.canonical",
- *     "delete-form" = "entity.menu_link_content.delete_form",
+ *     "canonical" = "/admin/structure/menu/item/{menu_link_content}/edit",
+ *     "edit-form" = "/admin/structure/menu/item/{menu_link_content}/edit",
+ *     "delete-form" = "/admin/structure/menu/item/{menu_link_content}/delete",
  *   }
  * )
  */

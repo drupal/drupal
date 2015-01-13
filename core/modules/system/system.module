@@ -1309,8 +1309,8 @@ function system_entity_type_build(array &$entity_types) {
     ->setFormClass('edit', 'Drupal\system\Form\DateFormatEditForm')
     ->setFormClass('delete', 'Drupal\system\Form\DateFormatDeleteForm')
     ->setListBuilderClass('Drupal\system\DateFormatListBuilder')
-    ->setLinkTemplate('edit-form', 'entity.date_format.edit_form')
-    ->setLinkTemplate('delete-form', 'entity.date_format.delete_form');
+    ->setLinkTemplate('edit-form', '/admin/config/regional/date-time/formats/manage/{date_format}')
+    ->setLinkTemplate('delete-form', '/admin/config/regional/date-time/formats/manage/{date_format}/delete');
 }
 
 /**

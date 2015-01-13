@@ -47,9 +47,9 @@ use Drupal\user\UserInterface;
  *     "uuid" = "uuid"
  *   },
  *   links = {
- *     "canonical" = "entity.comment.canonical",
- *     "delete-form" = "entity.comment.delete_form",
- *     "edit-form" = "entity.comment.edit_form",
+ *     "canonical" = "/comment/{comment}",
+ *     "delete-form" = "/comment/{comment}/delete",
+ *     "edit-form" = "/comment/{comment}/edit",
  *   },
  *   bundle_entity_type = "comment_type",
  *   field_ui_base_route  = "entity.comment_type.edit_form",

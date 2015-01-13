@@ -46,9 +46,9 @@ use Drupal\taxonomy\TermInterface;
  *   bundle_entity_type = "taxonomy_vocabulary",
  *   field_ui_base_route = "entity.taxonomy_vocabulary.overview_form",
  *   links = {
- *     "canonical" = "entity.taxonomy_term.canonical",
- *     "delete-form" = "entity.taxonomy_term.delete_form",
- *     "edit-form" = "entity.taxonomy_term.edit_form",
+ *     "canonical" = "/taxonomy/term/{taxonomy_term}",
+ *     "delete-form" = "/taxonomy/term/{taxonomy_term}/delete",
+ *     "edit-form" = "/taxonomy/term/{taxonomy_term}/edit",
  *   },
  *   permission_granularity = "bundle"
  * )

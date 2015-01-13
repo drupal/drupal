@@ -34,10 +34,10 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *     "status" = "status"
  *   },
  *   links = {
- *     "edit-form" = "entity.config_test.edit_form",
- *     "delete-form" = "entity.config_test.delete_form",
- *     "enable" = "entity.config_test.enable",
- *     "disable" = "entity.config_test.disable"
+ *     "edit-form" = "/admin/structure/config_test/manage/{config_test}",
+ *     "delete-form" = "/admin/structure/config_test/manage/{config_test}/delete",
+ *     "enable" = "/admin/structure/config_test/manage/{config_test}/enable",
+ *     "disable" = "/admin/structure/config_test/manage/{config_test}/disable"
  *   }
  * )
  */

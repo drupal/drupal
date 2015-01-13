@@ -139,7 +139,7 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
           'data' => array(
             '#type' => 'link',
             '#title' => $this->fieldTypeManager->getDefinitions()[$field_storage->getType()]['label'],
-            '#url' => Url::fromRoute('field_ui.storage_edit_' . $this->targetEntityTypeId, $route_parameters),
+            '#url' => Url::fromRoute("entity.field_config.{$this->targetEntityTypeId}_storage_edit_form", $route_parameters),
             '#options' => array('attributes' => array('title' => $this->t('Edit field settings.'))),
           ),
         ),
@@ -164,11 +164,24 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
     /** @var \Drupal\field\FieldConfigInterface $entity */
     $operations = parent::getDefaultOperations($entity);
 
+    if ($entity->access('update') && $entity->hasLinkTemplate("{$entity->entity_type}-field-edit-form")) {
+      $operations['edit'] = array(
+        'title' => $this->t('Edit'),
+        'weight' => 10,
+      ) + $entity->urlInfo("{$entity->entity_type}-field-edit-form")->toArray();
+    }
+    if ($entity->access('delete') && $entity->hasLinkTemplate("{$entity->entity_type}-field-delete-form")) {
+      $operations['delete'] = array(
+      'title' => $this->t('Delete'),
+      'weight' => 100,
+      ) + $entity->urlInfo("{$entity->entity_type}-field-delete-form")->toArray();
+    }
+
     $operations['storage-settings'] = array(
       'title' => $this->t('Storage settings'),
       'weight' => 20,
       'attributes' => array('title' => $this->t('Edit storage settings.')),
-      'url' => $entity->urlInfo('storage-edit-form'),
+      'url' => $entity->urlInfo("{$entity->entity_type}-storage-edit-form"),
     );
     $operations['edit']['attributes']['title'] = $this->t('Edit field settings.');
     $operations['delete']['attributes']['title'] = $this->t('Delete field.');

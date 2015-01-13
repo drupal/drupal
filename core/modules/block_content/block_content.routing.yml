@@ -45,6 +45,15 @@ entity.block_content.canonical:
   requirements:
     _entity_access: 'block_content.update'
 
+entity.block_content.edit_form:
+  path: '/block/{block_content}'
+  defaults:
+    _entity_form: 'block_content.edit'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _entity_access: 'block_content.update'
+
 entity.block_content.delete_form:
   path: '/block/{block_content}/delete'
   defaults:

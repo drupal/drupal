@@ -63,10 +63,10 @@ function menu_ui_entity_type_build(array &$entity_types) {
     ->setFormClass('edit', 'Drupal\menu_ui\MenuForm')
     ->setFormClass('delete', 'Drupal\menu_ui\Form\MenuDeleteForm')
     ->setListBuilderClass('Drupal\menu_ui\MenuListBuilder')
-    ->setLinkTemplate('add-form', 'entity.menu.add_form')
-    ->setLinkTemplate('delete-form', 'entity.menu.delete_form')
-    ->setLinkTemplate('edit-form', 'entity.menu.edit_form')
-    ->setLinkTemplate('add-link-form', 'entity.menu.add_link_form');
+    ->setLinkTemplate('add-form', '/admin/structure/menu/add')
+    ->setLinkTemplate('delete-form', '/admin/structure/menu/manage/{menu}/delete')
+    ->setLinkTemplate('edit-form', '/admin/structure/menu/manage/{menu}')
+    ->setLinkTemplate('add-link-form', '/admin/structure/menu/manage/{menu}/add');
 }
 
 /**

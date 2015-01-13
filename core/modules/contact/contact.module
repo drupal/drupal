@@ -43,7 +43,7 @@ function contact_help($route_name, RouteMatchInterface $route_match) {
  */
 function contact_entity_type_alter(array &$entity_types) {
   /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
-  $entity_types['user']->setLinkTemplate('contact-form', 'entity.user.contact_form');
+  $entity_types['user']->setLinkTemplate('contact-form', '/user/{user}/contact');
 }
 
 /**

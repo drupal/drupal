@@ -65,10 +65,10 @@ class EntityUrlTest extends UnitTestCase {
    */
   public function providerTestUrlInfo() {
     return array(
-      array('Drupal\Core\Entity\Entity', 'edit-form', 'test_entity_type.edit'),
-      array('Drupal\Core\Config\Entity\ConfigEntityBase', 'edit-form', 'test_entity_type.edit'),
+      array('Drupal\Core\Entity\Entity', 'edit-form', 'entity.test_entity_type.edit_form'),
+      array('Drupal\Core\Config\Entity\ConfigEntityBase', 'edit-form', 'entity.test_entity_type.edit_form'),
       // Test that overriding the default $rel parameter works.
-      array('Drupal\Core\Config\Entity\ConfigEntityBase', FALSE, 'test_entity_type.edit'),
+      array('Drupal\Core\Config\Entity\ConfigEntityBase', FALSE, 'entity.test_entity_type.edit_form'),
     );
   }
 
@@ -181,13 +181,13 @@ class EntityUrlTest extends UnitTestCase {
       ->method('generateFromRoute')
       ->will($this->returnValueMap(array(
         array(
-          'test_entity_type.view',
+          'entity.test_entity_type.canonical',
           array('test_entity_type' => 'test_entity_id'),
           array('entity_type' => 'test_entity_type', 'entity' => $valid_entity),
           '/entity/test_entity_type/test_entity_id',
         ),
         array(
-          'test_entity_type.view',
+          'entity.test_entity_type.canonical',
           array('test_entity_type' => 'test_entity_id'),
           array('absolute' => TRUE, 'entity_type' => 'test_entity_type', 'entity' => $valid_entity),
           'http://drupal/entity/test_entity_type/test_entity_id',
@@ -208,7 +208,7 @@ class EntityUrlTest extends UnitTestCase {
     $entity_type->expects($this->exactly(3))
       ->method('getLinkTemplates')
       ->will($this->returnValue(array(
-        'canonical' => 'test_entity_type.view',
+        'canonical' => 'entity.test_entity_type.canonical',
       )));
 
     $this->entityManager
@@ -222,7 +222,7 @@ class EntityUrlTest extends UnitTestCase {
 
     $this->urlGenerator->expects($this->once())
       ->method('getPathFromRoute')
-      ->with('test_entity_type.view', array('test_entity_type' => 'test_entity_id'))
+      ->with('entity.test_entity_type.canonical', array('test_entity_type' => 'test_entity_id'))
       ->will($this->returnValue('entity/test_entity_type/test_entity_id'));
 
     $valid_entity = $this->getMockForAbstractClass('Drupal\Core\Entity\Entity', array(array('id' => 'test_entity_id'), 'test_entity_type'));

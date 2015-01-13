@@ -203,7 +203,9 @@ class DisplayOverview extends DisplayOverviewBase {
    * {@inheritdoc}
    */
   protected function getOverviewRoute($mode) {
-    return Url::fromRoute('field_ui.display_overview_view_mode_' . $this->entity_type, [
+    $entity_type = $this->entityManager->getDefinition($this->entity_type);
+    $field_entity_type = $entity_type->getBundleEntityType() != 'bundle'?  $entity_type->getBundleEntityType() : $entity_type->id();
+    return Url::fromRoute('field_ui.display_overview_view_mode_' . $field_entity_type, [
       $this->bundleEntityTypeId => $this->bundle,
       'view_mode_name' => $mode,
     ]);

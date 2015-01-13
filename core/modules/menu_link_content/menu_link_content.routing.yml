@@ -14,6 +14,14 @@ entity.menu_link_content.canonical:
   requirements:
     _entity_access: 'menu_link_content.update'
 
+entity.menu_link_content.edit_form:
+  path: '/admin/structure/menu/item/{menu_link_content}/edit'
+  defaults:
+    _entity_form: 'menu_link_content.default'
+    _title: 'Edit menu link'
+  requirements:
+    _entity_access: 'menu_link_content.update'
+
 entity.menu_link_content.delete_form:
   path: '/admin/structure/menu/item/{menu_link_content}/delete'
   defaults:

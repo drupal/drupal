@@ -43,9 +43,9 @@ use Symfony\Component\HttpFoundation\Request;
  *     "langcode" = "langcode",
  *   },
  *   links = {
- *     "canonical" = "entity.shortcut.canonical",
- *     "delete-form" = "entity.shortcut.delete_form",
- *     "edit-form" = "entity.shortcut.canonical",
+ *     "canonical" = "/admin/config/user-interface/shortcut/link/{shortcut}",
+ *     "delete-form" = "/admin/config/user-interface/shortcut/link/{shortcut}/delete",
+ *     "edit-form" = "/admin/config/user-interface/shortcut/link/{shortcut}",
  *   },
  *   list_cache_tags = { "shortcut_set_list" },
  *   bundle_entity_type = "shortcut_set"

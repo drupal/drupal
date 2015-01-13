@@ -53,14 +53,14 @@ function views_ui_entity_type_build(array &$entity_types) {
     ->setFormClass('delete', 'Drupal\views_ui\ViewDeleteForm')
     ->setFormClass('break_lock', 'Drupal\views_ui\Form\BreakLockForm')
     ->setListBuilderClass('Drupal\views_ui\ViewListBuilder')
-    ->setLinkTemplate('edit-form', 'entity.view.edit_form')
-    ->setLinkTemplate('edit-display-form', 'entity.view.edit_display_form')
-    ->setLinkTemplate('preview-form', 'entity.view.preview_form')
-    ->setLinkTemplate('duplicate-form', 'entity.view.duplicate_form')
-    ->setLinkTemplate('delete-form', 'entity.view.delete_form')
-    ->setLinkTemplate('enable', 'entity.view.enable')
-    ->setLinkTemplate('disable', 'entity.view.disable')
-    ->setLinkTemplate('break-lock-form', 'entity.view.break_lock_form');
+    ->setLinkTemplate('edit-form', '/admin/structure/views/view/{view}')
+    ->setLinkTemplate('edit-display-form', '/admin/structure/views/view/{view}/edit/{display_id}')
+    ->setLinkTemplate('preview-form', '/admin/structure/views/view/{view}/preview/{display_id}')
+    ->setLinkTemplate('duplicate-form', '/admin/structure/views/view/{view}/duplicate')
+    ->setLinkTemplate('delete-form', '/admin/structure/views/view/{view}/delete')
+    ->setLinkTemplate('enable', '/admin/structure/views/view/{view}/enable')
+    ->setLinkTemplate('disable', '/admin/structure/views/view/{view}/disable')
+    ->setLinkTemplate('break-lock-form', '/admin/structure/views/view/{view}/break-lock');
 }
 
 /**

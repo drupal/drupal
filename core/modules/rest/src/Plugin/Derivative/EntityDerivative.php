@@ -110,7 +110,11 @@ class EntityDerivative implements ContainerDeriverInterface {
         foreach ($default_uris as $link_relation => $default_uri) {
           // Check if there are link templates defined for the entity type and
           // use the path from the route instead of the default.
-          if ($route_name = $entity_type->getLinkTemplate($link_relation)) {
+          $link_template = $entity_type->getLinkTemplate($link_relation);
+          if (strpos($link_template, '/') !== FALSE) {
+            $this->derivatives[$entity_type_id]['uri_paths'][$link_relation] = '/' . $link_template;
+          }
+          elseif ($route_name = $link_template) {
             // @todo remove the try/catch as part of
             // http://drupal.org/node/2281645
             try {

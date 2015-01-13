@@ -33,8 +33,8 @@ use Drupal\responsive_image\ResponsiveImageMappingInterface;
  *     "label" = "label"
  *   },
  *   links = {
- *     "edit-form" = "entity.responsive_image_mapping.edit_form",
- *     "duplicate-form" = "entity.responsive_image_mapping.duplicate_form"
+ *     "edit-form" = "/admin/config/media/responsive-image-mapping/{responsive_image_mapping}",
+ *     "duplicate-form" = "/admin/config/media/responsive-image-mapping/{responsive_image_mapping}/duplicate"
  *   }
  * )
  */

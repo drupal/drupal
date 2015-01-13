@@ -245,6 +245,13 @@ class ConfigEntityMapper extends ConfigNamesMapper {
   /**
    * {@inheritdoc}
    */
+  public function getOverviewRouteName() {
+    return 'entity.' . $this->entityType . '.config_translation_overview';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function processRoute(Route $route) {
     // Add entity upcasting information.
     $parameters = $route->getOption('parameters') ?: array();

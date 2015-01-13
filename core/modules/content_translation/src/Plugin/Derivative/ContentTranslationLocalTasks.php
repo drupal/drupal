@@ -61,13 +61,14 @@ class ContentTranslationLocalTasks extends DeriverBase implements ContainerDeriv
     // Create tabs for all possible entity types.
     foreach ($this->contentTranslationManager->getSupportedEntityTypes() as $entity_type_id => $entity_type) {
       // Find the route name for the translation overview.
-      $translation_route_name = $entity_type->getLinkTemplate('drupal:content-translation-overview');
+      $translation_route_name = "entity.$entity_type_id.content_translation_overview";
 
+      $base_route_name = "entity.$entity_type_id.canonical";
       $this->derivatives[$translation_route_name] = array(
         'entity_type' => $entity_type_id,
         'title' => 'Translate',
         'route_name' => $translation_route_name,
-        'base_route' => $entity_type->getLinkTemplate('canonical'),
+        'base_route' => $base_route_name,
       ) + $base_plugin_definition;
     }
     return parent::getDerivativeDefinitions($base_plugin_definition);

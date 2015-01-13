@@ -261,12 +261,12 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
   protected function linkTemplates() {
     $link_templates = parent::linkTemplates();
     if (\Drupal::moduleHandler()->moduleExists('field_ui')) {
-      $link_templates['edit-form'] = 'field_ui.field_edit_' . $this->entity_type;
-      $link_templates['storage-edit-form'] = 'field_ui.storage_edit_' . $this->entity_type;
-      $link_templates['delete-form'] = 'field_ui.delete_' . $this->entity_type;
+      $link_templates["{$this->entity_type}-field-edit-form"] = 'entity.field_config.' . $this->entity_type . '_field_edit_form';
+      $link_templates["{$this->entity_type}-storage-edit-form"] = 'entity.field_config.' . $this->entity_type . '_storage_edit_form';
+      $link_templates["{$this->entity_type}-field-delete-form"] = 'entity.field_config.' . $this->entity_type . '_field_delete_form';
 
-      if (isset($link_templates['drupal:config-translation-overview'])) {
-        $link_templates['drupal:config-translation-overview'] .= $link_templates['edit-form'];
+      if (isset($link_templates['config-translation-overview'])) {
+        $link_templates["config-translation-overview.{$this->entity_type}"] = "entity.field_config.config_translation_overview.{$this->entity_type}";
       }
     }
     return $link_templates;

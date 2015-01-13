@@ -62,6 +62,14 @@ entity.shortcut.canonical:
   requirements:
     _entity_access: 'shortcut.update'
 
+entity.shortcut.edit_form:
+  path: '/admin/config/user-interface/shortcut/link/{shortcut}'
+  defaults:
+    _entity_form: 'shortcut.default'
+    _title: 'Edit'
+  requirements:
+    _entity_access: 'shortcut.update'
+
 entity.shortcut.link_delete_inline:
   path: '/admin/config/user-interface/shortcut/link/{shortcut}/delete-inline'
   defaults:
