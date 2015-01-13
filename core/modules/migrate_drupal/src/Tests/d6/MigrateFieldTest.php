@@ -53,7 +53,6 @@ class MigrateFieldTest extends MigrateDrupalTestBase {
     $field_storage = FieldStorageConfig::load('node.field_test');
     $expected = array('max_length' => 255);
     $this->assertEqual($field_storage->type, "text",  t('Field type is @fieldtype. It should be text.', array('@fieldtype' => $field_storage->type)));
-    $this->assertEqual($field_storage->status(), TRUE, "Status is TRUE");
     $this->assertEqual($field_storage->settings, $expected, "Field type text settings are correct");
 
     // Integer field.
@@ -87,7 +86,6 @@ class MigrateFieldTest extends MigrateDrupalTestBase {
     // Date field.
     $field_storage = FieldStorageConfig::load('node.field_test_datetime');
     $this->assertEqual($field_storage->type, "datetime",  t('Field type is @fieldtype. It should be datetime.', array('@fieldtype' => $field_storage->type)));
-    $this->assertEqual($field_storage->status(), TRUE);
 
     // Decimal field with radio buttons.
     $field_storage = FieldStorageConfig::load('node.field_test_decimal_radio_buttons');
