@@ -53,10 +53,8 @@ class HelpController extends ControllerBase {
    */
   public function helpMain() {
     $output = array(
-      '#attached' => array(
-        'library' => ['help/help'],
-      ),
-      '#markup' => '<h2>' . $this->t('Help topics') . '</h2><p>' . $this->t('Help is available on the following items:') . '</p>' . $this->helpLinksAsList(),
+      '#markup' => '<h2>' . $this->t('Help topics') . '</h2><p>' . $this->t('Help is available on the following items:') . '</p>',
+      'links' => $this->helpLinksAsList(),
     );
     return $output;
   }
@@ -81,16 +79,27 @@ class HelpController extends ControllerBase {
     // Output pretty four-column list.
     $count = count($modules);
     $break = ceil($count / 4);
-    $output = '<div class="clearfix"><div class="help-items"><ul>';
+    $column = array(
+      '#type' => 'container',
+      'links' => array('#theme' => 'item_list'),
+      '#attributes' => array('class' => array('layout-column', 'quarter')),
+    );
+    $output = array(
+      '#prefix' => '<div class="clearfix">',
+      '#suffix' => '</div>',
+      0 => $column,
+    );
+
     $i = 0;
+    $current_column = 0;
     foreach ($modules as $module => $name) {
-      $output .= '<li>' . $this->l($name, new Url('help.page', array('name' => $module))) . '</li>';
+      $output[$current_column]['links']['#items'][] = $this->l($name, new Url('help.page', array('name' => $module)));
       if (($i + 1) % $break == 0 && ($i + 1) != $count) {
-        $output .= '</ul></div><div class="help-items' . ($i + 1 == $break * 3 ? ' help-items-last' : '') . '"><ul>';
+        $current_column++;
+        $output[$current_column] = $column;
       }
       $i++;
     }
-    $output .= '</ul></div></div>';
 
     return $output;
   }

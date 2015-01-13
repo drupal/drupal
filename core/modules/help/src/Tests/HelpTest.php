@@ -58,12 +58,9 @@ class HelpTest extends WebTestBase {
     $this->drupalLogin($this->anyUser);
     $this->verifyHelp(403);
 
-    // Check for css on admin/help.
+    // Verify that introductory help text exists, goes for 100% module coverage.
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/help');
-    $this->assertRaw('help.module.css', 'The help.module.css file is present in the HTML.');
-
-    // Verify that introductory help text exists, goes for 100% module coverage.
     $this->assertRaw(t('For more information, refer to the subjects listed in the Help Topics section or to the <a href="!docs">online documentation</a> and <a href="!support">support</a> pages at <a href="!drupal">drupal.org</a>.', array('!docs' => 'https://drupal.org/documentation', '!support' => 'https://drupal.org/support', '!drupal' => 'https://drupal.org')), 'Help intro text correctly appears.');
 
     // Verify that help topics text appears.
