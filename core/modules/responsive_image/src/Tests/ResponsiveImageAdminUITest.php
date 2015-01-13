@@ -29,12 +29,9 @@ class ResponsiveImageAdminUITest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    // Create user.
-    $this->admin_user = $this->drupalCreateUser(array(
+    $this->drupalLogin($this->drupalCreateUser([
       'administer responsive images',
-    ));
-
-    $this->drupalLogin($this->admin_user);
+    ]));
   }
 
   /**
