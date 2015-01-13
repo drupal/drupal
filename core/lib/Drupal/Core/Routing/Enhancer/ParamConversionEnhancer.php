@@ -9,7 +9,6 @@ namespace Drupal\Core\Routing\Enhancer;
 
 use Drupal\Core\ParamConverter\ParamConverterManagerInterface;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
-use Symfony\Cmf\Component\Routing\Enhancer\RouteEnhancerInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -17,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Routing\Route;
 
 /**
  * Provides a route enhancer that handles parameter conversion.
@@ -88,6 +88,13 @@ class ParamConversionEnhancer implements RouteEnhancerInterface, EventSubscriber
   public static function getSubscribedEvents() {
     $events[KernelEvents::EXCEPTION][] = array('onException', 75);
     return $events;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function applies(Route $route) {
+    return TRUE;
   }
 
 }

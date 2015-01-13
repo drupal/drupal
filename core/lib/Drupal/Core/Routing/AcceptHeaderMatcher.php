@@ -9,9 +9,9 @@ namespace Drupal\Core\Routing;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\ContentNegotiation;
-use Symfony\Cmf\Component\Routing\NestedMatcher\RouteFilterInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
+use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -80,6 +80,13 @@ class AcceptHeaderMatcher implements RouteFilterInterface {
     // \Symfony\Component\Routing\Exception\ResourceNotFoundException here
     // because we don't want to return a 404 status code, but rather a 406.
     throw new NotAcceptableHttpException(String::format('No route found for the specified formats @formats.', array('@formats' => implode(' ', $acceptable_mime_types))));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function applies(Route $route) {
+    return TRUE;
   }
 
 }

@@ -527,7 +527,17 @@ services:
     calls:
       - [setFinalMatcher, ['@router.matcher.final_matcher']]
     tags:
-      - { name: service_collector, tag: route_filter, call: addRouteFilter }
+      - { name: service_collector, tag: non_lazy_route_filter, call: addRouteFilter }
+  route_filter.lazy_collector:
+    class: Drupal\Core\Routing\LazyRouteFilter
+    tags:
+      - { name: non_lazy_route_filter }
+    parent: container.trait
+  route_filter_subscriber:
+    class: Drupal\Core\EventSubscriber\RouteFilterSubscriber
+    arguments: ['@route_filter.lazy_collector']
+    tags:
+      - { name: event_subscriber }
   url_generator:
     class: Drupal\Core\Routing\UrlGenerator
     arguments: ['@router.route_provider', '@path_processor_manager', '@route_processor_manager', '@config.factory', '@logger.channel.default', '@request_stack']
@@ -546,7 +556,7 @@ services:
     class: Symfony\Cmf\Component\Routing\DynamicRouter
     arguments: ['@router.request_context', '@router.matcher', '@url_generator']
     tags:
-      - { name: service_collector, tag: route_enhancer, call: addRouteEnhancer }
+      - { name: service_collector, tag: non_lazy_route_enhancer, call: addRouteEnhancer }
   router.no_access_checks:
     class: Symfony\Cmf\Component\Routing\ChainRouter
     calls:
@@ -659,6 +669,16 @@ services:
     arguments: ['@resolver_manager.entity']
   ajax_subscriber:
     class: Drupal\Core\EventSubscriber\AjaxSubscriber
+    tags:
+      - { name: event_subscriber }
+  route_enhancer.lazy_collector:
+    class: Drupal\Core\Routing\LazyRouteEnhancer
+    tags:
+      - { name: non_lazy_route_enhancer, priority: 5000 }
+    parent: container.trait
+  route_enhancer_subscriber:
+    class: Drupal\Core\EventSubscriber\RouteEnhancerSubscriber
+    arguments: ['@route_enhancer.lazy_collector']
     tags:
       - { name: event_subscriber }
   route_enhancer.param_conversion:

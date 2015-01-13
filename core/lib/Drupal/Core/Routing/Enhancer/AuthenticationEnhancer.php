@@ -10,8 +10,8 @@ namespace Drupal\Core\Routing\Enhancer;
 use Drupal\Core\Authentication\AuthenticationManagerInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Session\AnonymousUserSession;
-use Symfony\Cmf\Component\Routing\Enhancer\RouteEnhancerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Route;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
 /**
@@ -75,4 +75,12 @@ class AuthenticationEnhancer implements RouteEnhancerInterface {
     }
     return $defaults;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function applies(Route $route) {
+    return TRUE;
+  }
+
 }

@@ -7,8 +7,9 @@
 
 namespace Drupal\Core\Entity\Enhancer;
 
+use Drupal\Core\Routing\Enhancer\RouteEnhancerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Cmf\Component\Routing\Enhancer\RouteEnhancerInterface;
+use Symfony\Component\Routing\Route;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
 /**
@@ -78,6 +79,17 @@ class EntityRouteEnhancer implements RouteEnhancerInterface {
       }
     }
     return $defaults;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function applies(Route $route) {
+    return !$route->hasDefault('_controller') &&
+      ($route->hasDefault('_entity_form')
+        || $route->hasDefault('_entity_list')
+        || $route->hasDefault('_entity_view')
+      );
   }
 
 }
