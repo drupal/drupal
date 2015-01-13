@@ -69,7 +69,6 @@ class DbUpdateController extends ControllerBase {
   protected $entityDefinitionUpdateManager;
 
   /**
-<<<<<<< ours
    * The bare HTML page renderer.
    *
    * @var \Drupal\Core\Render\BareHtmlPageRendererInterface
