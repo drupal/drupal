@@ -22,14 +22,36 @@ class SqlBaseTest extends MigrateTestBase {
    */
   public function testConnectionTypes() {
     $sql_base = new TestSqlBase();
+
+    // Check the default values.
     $this->assertIdentical($sql_base->getDatabase()->getTarget(), 'default');
+    $this->assertIdentical($sql_base->getDatabase()->getKey(), 'migrate');
 
     $target = 'test_db_target';
-    $config = array('target' => $target);
+    $key = 'test_migrate_connection';
+    $config = array('target' => $target, 'key' => $key);
     $sql_base->setConfiguration($config);
-    Database::addConnectionInfo('migrate', $target, Database::getConnectionInfo('default')['default']);
+    Database::addConnectionInfo($key, $target, Database::getConnectionInfo('default')['default']);
 
+    // Validate we've injected our custom key and target.
     $this->assertIdentical($sql_base->getDatabase()->getTarget(), $target);
+    $this->assertIdentical($sql_base->getDatabase()->getKey(), $key);
+
+    // Now test we can have SqlBase create the connection from an info array.
+    $sql_base = new TestSqlBase();
+
+    $target = 'test_db_target2';
+    $key = 'test_migrate_connection2';
+    $database = Database::getConnectionInfo('default')['default'];
+    $config = array('target' => $target, 'key' => $key, 'database' => $database);
+    $sql_base->setConfiguration($config);
+
+    // Call getDatabase() to get the connection defined.
+    $sql_base->getDatabase();
+
+    // Validate the connection has been created with the right values.
+    $this->assertIdentical(Database::getConnectionInfo($key)[$target], $database);
+
   }
 
 }
