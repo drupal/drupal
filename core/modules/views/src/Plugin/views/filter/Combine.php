@@ -77,15 +77,7 @@ class Combine extends String {
       }
     }
     if ($fields) {
-      $count = count($fields);
-      $separated_fields = array();
-      foreach ($fields as $key => $field) {
-        $separated_fields[] = $field;
-        if ($key < $count-1) {
-          $separated_fields[] = "' '";
-        }
-      }
-      $expression = implode(', ', $separated_fields);
+      $expression = implode(', ', $fields);
       $expression = "CONCAT_WS(' ', $expression)";
 
       $info = $this->operators();

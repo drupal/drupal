@@ -82,6 +82,49 @@ class FilterCombineTest extends ViewUnitTestBase {
   }
 
   /**
+   * Tests filtering result using a phrase that matches combined fields.
+   */
+  public function testFilterCombineContainsPhrase() {
+    $view = Views::getView('test_view');
+    $view->setDisplay();
+
+    $fields = $view->displayHandlers->get('default')->getOption('fields');
+    $view->displayHandlers->get('default')->overrideOption('fields', $fields + array(
+      'job' => array(
+        'id' => 'job',
+        'table' => 'views_test_data',
+        'field' => 'job',
+        'relationship' => 'none',
+      ),
+    ));
+
+    // Change the filtering.
+    $view->displayHandlers->get('default')->overrideOption('filters', array(
+      'age' => array(
+        'id' => 'combine',
+        'table' => 'views',
+        'field' => 'combine',
+        'relationship' => 'none',
+        'operator' => 'contains',
+        'fields' => array(
+          'name',
+          'job',
+        ),
+        'value' => 'ohn Si',
+      ),
+    ));
+
+    $this->executeView($view);
+    $resultset = array(
+      array(
+        'name' => 'John',
+        'job' => 'Singer',
+      ),
+    );
+    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+  }
+
+  /**
    * Tests if the filter can handle removed fields.
    *
    * Tests the combined filter handler when a field overwrite is done
