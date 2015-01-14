@@ -874,18 +874,21 @@ function hook_css_alter(&$css) {
  * depends on the elements of other modules, use hook_page_attachments_alter()
  * instead, which runs after this hook.
  *
- * @param array &$page
- *   An empty renderable array representing the page.
+ * If you try to add anything but #attached and #post_render_cache to the array
+ * an exception is thrown.
+ *
+ * @param array &$attachments
+ *   An array that you can add attachments to.
  *
  * @see hook_page_attachments_alter()
  */
-function hook_page_attachments(array &$page) {
+function hook_page_attachments(array &$attachments) {
   // Unconditionally attach an asset to the page.
-  $page['#attached']['library'][] = 'core/domready';
+  $attachments['#attached']['library'][] = 'core/domready';
 
   // Conditionally attach an asset to the page.
   if (!\Drupal::currentUser()->hasPermission('may pet kittens')) {
-    $page['#attached']['library'][] = 'core/jquery';
+    $attachments['#attached']['library'][] = 'core/jquery';
   }
 }
 
@@ -896,20 +899,19 @@ function hook_page_attachments(array &$page) {
  * add attachments to the page that depend on another module's attachments (this
  * hook runs after hook_page_attachments().
  *
- * If you want to alter the attachments added by other modules or if your module
- * depends on the elements of other modules, use hook_page_attachments_alter()
- * instead, which runs after this hook.
+ * If you try to add anything but #attached and #post_render_cache to the array
+ * an exception is thrown.
  *
- * @param array &$page
- *   An empty renderable array representing the page.
+ * @param array &$attachments
+ *   Array of all attachments provided by hook_page_attachments() implementations.
  *
  * @see hook_page_attachments_alter()
  */
-function hook_page_attachments_alter(array &$page) {
+function hook_page_attachments_alter(array &$attachments) {
   // Conditionally remove an asset.
-  if (in_array('core/jquery', $page['#attached']['library'])) {
-    $index = array_search('core/jquery', $page['#attached']['library']);
-    unset($page['#attached']['library'][$index]);
+  if (in_array('core/jquery', $attachments['#attached']['library'])) {
+    $index = array_search('core/jquery', $attachments['#attached']['library']);
+    unset($attachments['#attached']['library'][$index]);
   }
 }
 
