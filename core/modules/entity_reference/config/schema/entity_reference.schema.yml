@@ -37,29 +37,6 @@ entity_reference.default.handler_settings:
       type: boolean
       label: 'Create referenced entities if they don''t already exist'
 
-field.formatter.settings.entity_reference_entity_view:
-  type: mapping
-  label: 'Entity reference rendered entity display format settings'
-  mapping:
-    view_mode:
-      type: string
-      label: 'View mode'
-    link:
-      type: boolean
-      label: 'Show links'
-
-field.formatter.settings.entity_reference_entity_id:
-  type: mapping
-  label: 'Entity reference entity ID display format settings'
-
-field.formatter.settings.entity_reference_label:
-  type: mapping
-  label: 'Entity reference label display format settings'
-  mapping:
-    link:
-      type: boolean
-      label: 'Link label to the referenced entity'
-
 field.widget.settings.entity_reference_autocomplete_tags:
   type: mapping
   label: 'Entity reference autocomplete (Tags style) display format settings'

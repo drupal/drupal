@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\entity_reference\Plugin\Field\FieldFormatter\EntityReferenceIdFormatter.
+ * Contains \Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceIdFormatter.
  */
 
-namespace Drupal\entity_reference\Plugin\Field\FieldFormatter;
+namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Component\Utility\String;

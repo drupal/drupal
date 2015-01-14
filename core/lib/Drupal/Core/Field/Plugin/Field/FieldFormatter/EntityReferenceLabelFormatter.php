@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\entity_reference\Plugin\Field\FieldFormatter\EntityReferenceLabelFormatter.
+ * Contains \Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceLabelFormatter.
  */
 
-namespace Drupal\entity_reference\Plugin\Field\FieldFormatter;
+namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\Exception\UndefinedLinkTemplateException;

@@ -2,14 +2,14 @@
 
 /**
  * @file
- * Contains \Drupal\entity_reference\Plugin\Field\FieldFormatter\EntityReferenceFormatterBase.
+ * Contains \Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceFormatterBase.
  */
 
-namespace Drupal\entity_reference\Plugin\Field\FieldFormatter;
+namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\TypedData\TranslatableInterface;
-use Drupal\Core\Field\FieldItemListInterface;
 
 /**
  * Parent plugin for entity reference formatters.
