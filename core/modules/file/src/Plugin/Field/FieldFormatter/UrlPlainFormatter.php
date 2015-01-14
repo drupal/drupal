@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\file\Plugin\field\formatter\UrlPlainFormatter.
+ * Contains \Drupal\file\Plugin\Field\FieldFormatter\UrlPlainFormatter.
  */
 
 namespace Drupal\file\Plugin\Field\FieldFormatter;

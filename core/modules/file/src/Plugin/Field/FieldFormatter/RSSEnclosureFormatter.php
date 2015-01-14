@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\file\Plugin\field\formatter\RSSEnclosureFormatter.
+ * Contains \Drupal\file\Plugin\Field\FieldFormatter\RSSEnclosureFormatter.
  */
 
 namespace Drupal\file\Plugin\Field\FieldFormatter;
