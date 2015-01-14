@@ -119,7 +119,7 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
   /**
    * {@inheritdoc}
    */
-  public function access(AccountInterface $account) {
+  public function access(AccountInterface $account, $return_as_object = FALSE) {
     // @todo Remove self::blockAccess() and force individual plugins to return
     //   their own AccessResult logic. Until that is done in
     //   https://www.drupal.org/node/2375689 the access will be set uncacheable.
@@ -129,7 +129,9 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
     else {
       $access = AccessResult::forbidden();
     }
-    return $access->setCacheable(FALSE);
+
+    $access->setCacheable(FALSE);
+    return $return_as_object ? $access : $access->isAllowed();
   }
 
   /**

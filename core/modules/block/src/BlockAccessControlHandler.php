@@ -100,7 +100,7 @@ class BlockAccessControlHandler extends EntityAccessControlHandler implements En
       }
       if ($this->resolveConditions($conditions, 'and') !== FALSE) {
         // Delegate to the plugin.
-        $access = $entity->getPlugin()->access($account);
+        $access = $entity->getPlugin()->access($account, TRUE);
       }
       else {
         $access = AccessResult::forbidden();

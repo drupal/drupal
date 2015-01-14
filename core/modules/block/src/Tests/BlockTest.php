@@ -436,4 +436,18 @@ class BlockTest extends BlockTestBase {
     $this->assertIdentical(NULL, Block::load($block->id()));
   }
 
+  /**
+   * Tests the block access.
+   */
+  public function testBlockAccess() {
+    $this->drupalPlaceBlock('test_access', ['region' => 'help']);
+
+    $this->drupalGet('<front>');
+    $this->assertNoText('Hello test world');
+
+    \Drupal::state()->set('test_block_access', TRUE);
+    $this->drupalGet('<front>');
+    $this->assertText('Hello test world');
+  }
+
 }
