@@ -206,13 +206,6 @@ class RouteBuilder implements RouteBuilderInterface {
   /**
    * {@inheritdoc}
    */
-  public function getCollectionDuringRebuild() {
-    return $this->routeCollection ?: FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function rebuildIfNeeded() {
     if ($this->routeBuilderIndicator->isRebuildNeeded()) {
       return $this->rebuild();

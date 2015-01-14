@@ -18,18 +18,6 @@ interface RouteBuilderInterface {
   public function rebuild();
 
   /**
-   * Returns the route collection during the rebuild.
-   *
-   * Don't use this function unless you really have to! Better pass along the
-   * collection for yourself during the rebuild.
-   *
-   * Every use of this function is a design flaw of your code.
-   *
-   * @return \Symfony\Component\Routing\RouteCollection|FALSE
-   */
-  public function getCollectionDuringRebuild();
-
-  /**
    * Rebuilds the route info and dumps to dumper if necessary.
    *
    * @return bool
