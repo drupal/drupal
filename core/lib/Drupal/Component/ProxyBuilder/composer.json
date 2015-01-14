@@ -1,0 +1,16 @@
+{
+  "name": "drupal/proxy-builder",
+  "description": "Provides a lightweight mechanism to provide lazy loaded proxies.",
+  "keywords": ["drupal", "proxy"],
+  "homepage": "https://drupal.org/project/drupal",
+  "license": "GPL-2.0+",
+  "require": {
+    "php": ">=5.4.2",
+    "symfony/dependency-injection": "~2.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "Drupal\\Component\\ProxyBuilder\\": ""
+    }
+  }
+}
