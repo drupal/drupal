@@ -11,7 +11,7 @@
 function keyvalue_test_entity_type_alter(array &$entity_types) {
   /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
   if (isset($entity_types['config_test'])) {
-    $entity_types['config_test']->setStorageClass('Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage');
+    $entity_types['config_test']->setStorageClass('Drupal\Core\Entity\KeyValueStore\KeyValueConfigEntityStorage');
   }
   if (isset($entity_types['entity_test_label'])) {
     $entity_types['entity_test_label']->setStorageClass('Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage');

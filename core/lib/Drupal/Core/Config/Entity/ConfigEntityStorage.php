@@ -420,4 +420,26 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
     return $entity;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function loadOverrideFree($id) {
+    $old_state = $this->configFactory->getOverrideState();
+    $this->configFactory->setOverrideState(FALSE);
+    $entity = $this->load($id);
+    $this->configFactory->setOverrideState($old_state);
+    return $entity;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function loadMultipleOverrideFree(array $ids = NULL) {
+    $old_state = $this->configFactory->getOverrideState();
+    $this->configFactory->setOverrideState(FALSE);
+    $entities = $this->loadMultiple($ids);
+    $this->configFactory->setOverrideState($old_state);
+    return $entities;
+  }
+
 }
