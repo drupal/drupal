@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\views\cache;
 
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Render\RendererInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -46,12 +47,14 @@ class Time extends CachePluginBase {
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer service.
    * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
    *   The date formatter service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, DateFormatter $date_formatter) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RendererInterface $renderer, DateFormatter $date_formatter) {
     $this->dateFormatter = $date_formatter;
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $renderer);
   }
 
   /**
@@ -62,6 +65,7 @@ class Time extends CachePluginBase {
       $configuration,
       $plugin_id,
       $plugin_definition,
+      $container->get('renderer'),
       $container->get('date.formatter')
     );
   }

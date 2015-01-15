@@ -2266,79 +2266,6 @@ function show(&$element) {
 }
 
 /**
- * Gets the cached, prerendered element of a renderable element from the cache.
- *
- * @param array $elements
- *   A renderable array.
- *
- * @return array
- *   A renderable array, with the original element and all its children pre-
- *   rendered, or FALSE if no cached copy of the element is available.
- *
- * @see drupal_render()
- * @see drupal_render_cache_set()
- */
-function drupal_render_cache_get(array $elements) {
-  if (!\Drupal::request()->isMethodSafe() || !$cid = drupal_render_cid_create($elements)) {
-    return FALSE;
-  }
-  $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'render';
-
-  if (!empty($cid) && $cache = \Drupal::cache($bin)->get($cid)) {
-    $cached_element = $cache->data;
-    // Return the cached element.
-    return $cached_element;
-  }
-  return FALSE;
-}
-
-/**
- * Caches the rendered output of a renderable element.
- *
- * This is called by drupal_render() if the #cache property is set on an
- * element.
- *
- * @param $markup
- *   The rendered output string of $elements.
- * @param array $elements
- *   A renderable array.
- *
- * @see drupal_render_cache_get()
- */
-function drupal_render_cache_set(&$markup, array $elements) {
-  // Create the cache ID for the element.
-  if (!\Drupal::request()->isMethodSafe() || !$cid = drupal_render_cid_create($elements)) {
-    return FALSE;
-  }
-
-  // Cache implementations are allowed to modify the markup, to support
-  // replacing markup with edge-side include commands. The supporting cache
-  // backend will store the markup in some other key (like
-  // $data['#real-value']) and return an include command instead. When the
-  // ESI command is executed by the content accelerator, the real value can
-  // be retrieved and used.
-  $data['#markup'] = $markup;
-
-  // Persist attached data associated with this element.
-  $data['#attached'] = $elements['#attached'];
-
-  // Persist #post_render_cache callbacks associated with this element.
-  if (isset($elements['#post_render_cache'])) {
-    $data['#post_render_cache'] = $elements['#post_render_cache'];
-  }
-
-  // Persist cache tags associated with this element. Also associate the
-  // "rendered" cache tag. This allows us to invalidate the entire render cache,
-  // regardless of the cache bin.
-  $data['#cache']['tags'] = $elements['#cache']['tags'];
-  $data['#cache']['tags'][] = 'rendered';
-
-  $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'render';
-  $expire = isset($elements['#cache']['expire']) ? $elements['#cache']['expire'] : Cache::PERMANENT;
-  \Drupal::cache($bin)->set($cid, $data, $expire, $data['#cache']['tags']);
-}
-
-/**
  * Generates a render cache placeholder.
  *
  * This is used by drupal_pre_render_render_cache_placeholder() to generate
@@ -2358,7 +2285,7 @@ function drupal_render_cache_set(&$markup, array $elements) {
  *
  * @throws \Exception
  *
- * @see drupal_render_cache_get()
+ * @see \Drupal\Core\Render\Renderer::getFromCache()
  */
 function drupal_render_cache_generate_placeholder($callback, array &$context) {
   if (is_string($callback) && strpos($callback, '::') === FALSE) {
@@ -2380,33 +2307,6 @@ function drupal_render_cache_generate_placeholder($callback, array &$context) {
   );
 
   return '<drupal-render-cache-placeholder callback="' . $callback . '" token="' . $context['token'] . '"></drupal-render-cache-placeholder>';
-}
-
-/**
- * Creates the cache ID for a renderable element.
- *
- * This creates the cache ID string, either by returning the #cache['cid']
- * property if present or by building the cache ID out of the #cache['keys'].
- *
- * @param $elements
- *   A renderable array.
- *
- * @return
- *   The cache ID string, or FALSE if the element may not be cached.
- */
-function drupal_render_cid_create($elements) {
-  if (isset($elements['#cache']['cid'])) {
-    return $elements['#cache']['cid'];
-  }
-  elseif (isset($elements['#cache']['keys'])) {
-    // Cache keys may either be static (just strings) or tokens (placeholders
-    // that are converted to static keys by the @cache_contexts service,
-    // depending on the request).
-    $cache_contexts = \Drupal::service("cache_contexts");
-    $keys = $cache_contexts->convertTokensToKeys($elements['#cache']['keys']);
-    return implode(':', $keys);
-  }
-  return FALSE;
 }
 
 /**

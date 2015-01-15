@@ -1153,4 +1153,4 @@ services:
       - { name: mime_type_guesser }
   renderer:
     class: Drupal\Core\Render\Renderer
-    arguments: ['@controller_resolver', '@theme.manager', '@plugin.manager.element_info']
+    arguments: ['@controller_resolver', '@theme.manager', '@plugin.manager.element_info', '@request_stack', '@cache_factory', '@cache_contexts']

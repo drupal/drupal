@@ -525,7 +525,7 @@ class RenderTest extends KernelTestBase {
 
     // GET request: validate cached data.
     $element = array('#cache' => array('cid' => 'post_render_cache_test_GET'));
-    $cached_element = \Drupal::cache('render')->get(drupal_render_cid_create($element))->data;
+    $cached_element = \Drupal::cache('render')->get('post_render_cache_test_GET')->data;
     $expected_element = array(
       '#markup' => '<p>#cache enabled, GET</p>',
       '#attached' => $test_element['#attached'],
@@ -566,8 +566,7 @@ class RenderTest extends KernelTestBase {
     $this->assertIdentical($element['#attached']['drupalSettings'], $expected_js_settings, '#attached is modified; both the original JavaScript setting and the one added by the #post_render_cache callback exist.');
 
     // POST request: Ensure no data was cached.
-    $element = array('#cache' => array('cid' => 'post_render_cache_test_POST'));
-    $cached_element = \Drupal::cache('render')->get(drupal_render_cid_create($element));
+    $cached_element = \Drupal::cache('render')->get('post_render_cache_test_POST');
     $this->assertFalse($cached_element, 'No data is cached because this is a POST request.');
 
     // Restore the previous request method.
@@ -630,8 +629,7 @@ class RenderTest extends KernelTestBase {
     $this->assertIdentical($element['#attached']['drupalSettings'], $expected_js_settings, '#attached is modified; both the original JavaScript setting and the ones added by each #post_render_cache callback exist.');
 
     // GET request: validate cached data.
-    $element = array('#cache' => $element['#cache']);
-    $cached_element = \Drupal::cache('render')->get(drupal_render_cid_create($element))->data;
+    $cached_element = \Drupal::cache('render')->get('simpletest:drupal_render:children_post_render_cache')->data;
     $expected_element = array(
       '#attached' => array(
         'drupalSettings' => [
@@ -697,11 +695,8 @@ class RenderTest extends KernelTestBase {
     $this->assertIdentical($element['#attached']['drupalSettings'], $expected_js_settings, '#attached is modified; both the original JavaScript setting and the ones added by each #post_render_cache callback exist.');
 
     // GET request: validate cached data for both the parent and child.
-    $element = $test_element;
-    $element['#cache']['keys'] = array('simpletest', 'drupal_render', 'children_post_render_cache', 'nested_cache_parent');
-    $element['child']['#cache']['keys'] = array('simpletest', 'drupal_render', 'children_post_render_cache', 'nested_cache_child');
-    $cached_parent_element = \Drupal::cache('render')->get(drupal_render_cid_create($element))->data;
-    $cached_child_element = \Drupal::cache('render')->get(drupal_render_cid_create($element['child']))->data;
+    $cached_parent_element = \Drupal::cache('render')->get('simpletest:drupal_render:children_post_render_cache:nested_cache_parent')->data;
+    $cached_child_element = \Drupal::cache('render')->get('simpletest:drupal_render:children_post_render_cache:nested_cache_child')->data;
     $expected_parent_element = array(
       '#attached' => array(
         'drupalSettings' => [
@@ -834,8 +829,7 @@ class RenderTest extends KernelTestBase {
 
     // GET request: validate cached data.
     $expected_token = $context['token'];
-    $element = array('#cache' => array('cid' => 'render_cache_placeholder_test_GET'));
-    $cached_element = \Drupal::cache('render')->get(drupal_render_cid_create($element))->data;
+    $cached_element = \Drupal::cache('render')->get('render_cache_placeholder_test_GET')->data;
     // Parse unique token out of the cached markup.
     $dom = Html::load($cached_element['#markup']);
     $xpath = new \DOMXPath($dom);
@@ -927,8 +921,7 @@ class RenderTest extends KernelTestBase {
 
     // GET request: validate cached data for child element.
     $expected_token = $context['token'];
-    $element = array('#cache' => array('cid' => 'render_cache_placeholder_test_child_GET'));
-    $cached_element = \Drupal::cache('render')->get(drupal_render_cid_create($element))->data;
+    $cached_element = \Drupal::cache('render')->get('render_cache_placeholder_test_child_GET')->data;
     // Parse unique token out of the cached markup.
     $dom = Html::load($cached_element['#markup']);
     $xpath = new \DOMXPath($dom);
@@ -953,8 +946,7 @@ class RenderTest extends KernelTestBase {
     $this->assertIdentical($cached_element, $expected_element, 'The correct data is cached for the child element: the stored #markup and #attached properties are not affected by #post_render_cache callbacks.');
 
     // GET request: validate cached data (for the parent/entire render array).
-    $element = array('#cache' => array('cid' => 'render_cache_placeholder_test_GET'));
-    $cached_element = \Drupal::cache('render')->get(drupal_render_cid_create($element))->data;
+    $cached_element = \Drupal::cache('render')->get('render_cache_placeholder_test_GET')->data;
     // Parse unique token out of the cached markup.
     $dom = Html::load($cached_element['#markup']);
     $xpath = new \DOMXPath($dom);
@@ -981,8 +973,7 @@ class RenderTest extends KernelTestBase {
     // GET request: validate cached data.
     // Check the cache of the child element again after the parent has been
     // rendered.
-    $element = array('#cache' => array('cid' => 'render_cache_placeholder_test_child_GET'));
-    $cached_element = \Drupal::cache('render')->get(drupal_render_cid_create($element))->data;
+    $cached_element = \Drupal::cache('render')->get('render_cache_placeholder_test_child_GET')->data;
     // Verify that the child element contains the correct
     // render_cache_placeholder markup.
     $dom = Html::load($cached_element['#markup']);

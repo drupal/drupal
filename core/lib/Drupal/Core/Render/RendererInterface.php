@@ -97,8 +97,7 @@ interface RendererInterface {
    *       'keys' is set, the cache ID is created automatically from these keys.
    *       Cache keys may either be static (just strings) or tokens
    *       (placeholders that are converted to static keys by the
-   *       @cache_contexts service, depending on the request). See
-   *       drupal_render_cid_create().
+   *       'cache_contexts' service, depending on the request).
    *     - 'cid': Specify the cache ID directly. Either 'keys' or 'cid' is
    *       required. If 'cid' is set, 'keys' is ignored. Use only if you have
    *       special requirements.
@@ -268,5 +267,24 @@ interface RendererInterface {
    * @see ::renderRoot()
    */
   public function render(&$elements, $is_root_call = FALSE);
+
+  /**
+   * Gets a cacheable render array for a render array and its rendered output.
+   *
+   * Given a render array and its rendered output (HTML string), return an array
+   * data structure that allows the render array and its associated metadata to
+   * be cached reliably (and is serialization-safe).
+   *
+   * If Drupal needs additional rendering metadata to be cached at some point,
+   * consumers of this method will continue to work. Those who only cache
+   * certain parts of a render array will cease to work.
+   *
+   * @param array $elements
+   *   A renderable array, on which ::render() has already been invoked.
+   *
+   * @return array
+   *   An array representing the cacheable data for this render array.
+   */
+  public function getCacheableRenderArray(array $elements);
 
 }

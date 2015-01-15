@@ -185,16 +185,12 @@ class HtmlRenderer implements MainContentRendererInterface {
       // title. We set its $is_root_call parameter to FALSE, to ensure
       // #post_render_cache callbacks are not yet applied. This is essentially
       // "pre-rendering" the main content, the "full rendering" will happen in
-      // ::renderContentIntoResponse().
+      // ::renderResponse().
       // @todo Remove this once https://www.drupal.org/node/2359901 lands.
       if (!empty($main_content)) {
         $this->renderer->render($main_content, FALSE);
-        $main_content = [
-          '#markup' => $main_content['#markup'],
-          '#attached' => $main_content['#attached'],
-          '#cache' => ['tags' => $main_content['#cache']['tags']],
-          '#post_render_cache' => $main_content['#post_render_cache'],
-          '#title' => isset($main_content['#title']) ? $main_content['#title'] : NULL,
+        $main_content = $this->renderer->getCacheableRenderArray($main_content) + [
+          '#title' => isset($main_content['#title']) ? $main_content['#title'] : NULL
         ];
       }
 

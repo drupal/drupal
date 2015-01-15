@@ -33,6 +33,8 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
    * Tests entity render cache handling.
    */
   public function testEntityViewBuilderCache() {
+    $cache_contexts = \Drupal::service("cache_contexts");
+
     // Force a request via GET so we can get drupal_render() cache working.
     $request = \Drupal::request();
     $request_method = $request->server->get('REQUEST_METHOD');
@@ -48,7 +50,7 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
     // Get a fully built entity view render array.
     $entity_test->save();
     $build = $this->container->get('entity.manager')->getViewBuilder('entity_test')->view($entity_test, 'full');
-    $cid = drupal_render_cid_create($build);
+    $cid = implode(':', $cache_contexts->convertTokensToKeys($build['#cache']['keys']));
     $bin = $build['#cache']['bin'];
 
     // Mock the build array to not require the theme registry.
@@ -79,6 +81,8 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
    * Tests entity render cache with references.
    */
   public function testEntityViewBuilderCacheWithReferences() {
+    $cache_contexts = \Drupal::service("cache_contexts");
+
     // Force a request via GET so we can get drupal_render() cache working.
     $request = \Drupal::request();
     $request_method = $request->server->get('REQUEST_METHOD');
@@ -95,7 +99,7 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
 
     // Get a fully built entity view render array for the referenced entity.
     $build = $this->container->get('entity.manager')->getViewBuilder('entity_test')->view($entity_test_reference, 'full');
-    $cid_reference = drupal_render_cid_create($build);
+    $cid_reference = implode(':', $cache_contexts->convertTokensToKeys($build['#cache']['keys']));
     $bin_reference = $build['#cache']['bin'];
 
     // Mock the build array to not require the theme registry.
@@ -114,7 +118,7 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
 
     // Get a fully built entity view render array.
     $build = $this->container->get('entity.manager')->getViewBuilder('entity_test')->view($entity_test, 'full');
-    $cid = drupal_render_cid_create($build);
+    $cid = implode(':', $cache_contexts->convertTokensToKeys($build['#cache']['keys']));
     $bin = $build['#cache']['bin'];
 
     // Mock the build array to not require the theme registry.

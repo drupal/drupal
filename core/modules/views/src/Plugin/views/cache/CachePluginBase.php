@@ -7,10 +7,11 @@
 
 namespace Drupal\views\Plugin\views\cache;
 
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\Core\Database\Query\Select;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @defgroup views_cache_plugins Views cache plugins
@@ -71,6 +72,43 @@ abstract class CachePluginBase extends PluginBase {
    * @see \Drupal\views\Plugin\views\cache\CachePluginBase::generateOutputKey()
    */
   protected $outputKey;
+
+  /**
+   * The renderer service.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
+   * Constructs a CachePluginBase object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer service.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RendererInterface $renderer) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->renderer = $renderer;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('renderer')
+    );
+  }
 
   /**
    * Returns the outputKey property.
@@ -143,8 +181,8 @@ abstract class CachePluginBase extends PluginBase {
         \Drupal::cache($this->resultsBin)->set($this->generateResultsKey(), $data, $this->cacheSetExpire($type), $this->getCacheTags());
         break;
       case 'output':
-        $this->storage['output'] = drupal_render($this->view->display_handler->output);
-        $this->gatherRenderMetadata($this->view->display_handler->output);
+        $this->renderer->render($this->view->display_handler->output);
+        $this->storage = $this->renderer->getCacheableRenderArray($this->view->display_handler->output);
         \Drupal::cache($this->outputBin)->set($this->generateOutputKey(), $this->storage, $this->cacheSetExpire($type), $this->getCacheTags());
         break;
     }
@@ -180,17 +218,10 @@ abstract class CachePluginBase extends PluginBase {
         if ($cache = \Drupal::cache($this->outputBin)->get($this->generateOutputKey())) {
           if (!$cutoff || $cache->created > $cutoff) {
             $this->storage = $cache->data;
-
-            $this->restoreRenderMetadata();
-            $this->view->display_handler->output = array(
-              '#attached' => &$this->view->element['#attached'],
-              '#cache' => [
-                'tags' => &$this->view->element['#cache']['tags'],
-              ],
-              '#post_render_cache' => &$this->view->element['#post_render_cache'],
-              '#markup' => $cache->data['output'],
-            );
-
+            $this->view->display_handler->output = $this->storage;
+            $this->view->element['#attached'] = &$this->view->display_handler->output['#attached'];
+            $this->view->element['#cache']['tags'] = &$this->view->display_handler->output['#cache']['tags'];
+            $this->view->element['#post_render_cache'] = &$this->view->display_handler->output['#post_render_cache'];
             return TRUE;
           }
         }
@@ -234,27 +265,6 @@ abstract class CachePluginBase extends PluginBase {
    * Start caching the html head.
    */
   public function cacheStart() { }
-
-  /**
-   * Gather bubbleable render metadata from the render array.
-   *
-   * @param array $render_array
-   *   The view render array to collect data from.
-   */
-  protected function gatherRenderMetadata(array $render_array = []) {
-    $this->storage['attachments'] = $render_array['#attached'];
-    $this->storage['postRenderCache'] = $render_array['#post_render_cache'];
-    $this->storage['cacheTags'] = $render_array['#cache']['tags'];
-  }
-
-  /**
-   * Restore bubbleable render metadata.
-   */
-  public function restoreRenderMetadata() {
-    $this->view->element['#attached'] = drupal_merge_attached($this->view->element['#attached'], $this->storage['attachments']);
-    $this->view->element['#cache']['tags'] = Cache::mergeTags(isset($this->view->element['#cache']['tags']) ? $this->view->element['#cache']['tags'] : [], $this->storage['cacheTags']);
-    $this->view->element['#post_render_cache'] = NestedArray::mergeDeep(isset($this->view->element['#post_render_cache']) ? $this->view->element['#post_render_cache'] : [], $this->storage['postRenderCache']);
-  }
 
   /**
    * Calculates and sets a cache ID used for the result cache.

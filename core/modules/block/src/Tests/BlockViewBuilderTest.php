@@ -160,7 +160,7 @@ class BlockViewBuilderTest extends KernelTestBase {
 
     // Test that a cache entry is created.
     $build = $this->getBlockRenderArray();
-    $cid = drupal_render_cid_create($build);
+    $cid = 'entity_view:block:test_block:en:core';
     drupal_render($build);
     $this->assertTrue($this->container->get('cache.render')->get($cid), 'The block render element has been cached.');
 
@@ -223,10 +223,10 @@ class BlockViewBuilderTest extends KernelTestBase {
     ));
     $alter_add_key = $this->randomMachineName();
     \Drupal::state()->set('block_test_view_alter_cache_key', $alter_add_key);
+    $cid = 'entity_view:block:test_block:en:core:' . $alter_add_key;
     $expected_keys = array_merge($default_keys, array($alter_add_key));
     $build = $this->getBlockRenderArray();
     $this->assertIdentical($expected_keys, $build['#cache']['keys'], 'An altered cacheable block has the expected cache keys.');
-    $cid = drupal_render_cid_create(array('#cache' => array('keys' => $expected_keys)));
     $this->assertIdentical(drupal_render($build), '');
     $cache_entry = $this->container->get('cache.render')->get($cid);
     $this->assertTrue($cache_entry, 'The block render element has been cached with the expected cache ID.');
@@ -242,7 +242,6 @@ class BlockViewBuilderTest extends KernelTestBase {
     $build = $this->getBlockRenderArray();
     sort($build['#cache']['tags']);
     $this->assertIdentical($expected_tags, $build['#cache']['tags'], 'An altered cacheable block has the expected cache tags.');
-    $cid = drupal_render_cid_create(array('#cache' => array('keys' => $expected_keys)));
     $this->assertIdentical(drupal_render($build), '');
     $cache_entry = $this->container->get('cache.render')->get($cid);
     $this->assertTrue($cache_entry, 'The block render element has been cached with the expected cache ID.');
@@ -272,6 +271,8 @@ class BlockViewBuilderTest extends KernelTestBase {
    * @see \Drupal\block\Tests\BlockCacheTest
    */
   public function testBlockViewBuilderCacheContexts() {
+    $cache_contexts = \Drupal::service("cache_contexts");
+
     // Force a request via GET so we can get drupal_render() cache working.
     $request = \Drupal::request();
     $request_method = $request->server->get('REQUEST_METHOD');
@@ -282,7 +283,7 @@ class BlockViewBuilderTest extends KernelTestBase {
       'max_age' => 600,
     ));
     $build = $this->getBlockRenderArray();
-    $cid = drupal_render_cid_create($build);
+    $cid = implode(':', $build['#cache']['keys']);
     drupal_render($build);
     $this->assertTrue($this->container->get('cache.render', $cid), 'The block render element has been cached.');
 
@@ -293,7 +294,7 @@ class BlockViewBuilderTest extends KernelTestBase {
     ));
     $old_cid = $cid;
     $build = $this->getBlockRenderArray();
-    $cid = drupal_render_cid_create($build);
+    $cid = implode(':', $cache_contexts->convertTokensToKeys($build['#cache']['keys']));
     drupal_render($build);
     $this->assertTrue($this->container->get('cache.render', $cid), 'The block render element has been cached.');
     $this->assertNotEqual($cid, $old_cid, 'The cache ID has changed.');
@@ -306,7 +307,7 @@ class BlockViewBuilderTest extends KernelTestBase {
     $this->container->set('cache_context.url', $temp_context);
     $old_cid = $cid;
     $build = $this->getBlockRenderArray();
-    $cid = drupal_render_cid_create($build);
+    $cid = implode(':', $cache_contexts->convertTokensToKeys($build['#cache']['keys']));
     drupal_render($build);
     $this->assertTrue($this->container->get('cache.render', $cid), 'The block render element has been cached.');
     $this->assertNotEqual($cid, $old_cid, 'The cache ID has changed.');
