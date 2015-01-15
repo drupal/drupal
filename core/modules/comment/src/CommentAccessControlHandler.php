@@ -100,7 +100,7 @@ class CommentAccessControlHandler extends EntityAccessControlHandler {
         /** @var \Drupal\comment\CommentInterface $entity */
         $entity = $items->getEntity();
         $commented_entity = $entity->getCommentedEntity();
-        $anonymous_contact = $commented_entity->get($entity->getFieldName())->getFieldDefinition()->getSetting('anonymous_contact');
+        $anonymous_contact = $commented_entity->get($entity->getFieldName())->getFieldDefinition()->getSetting('anonymous');
         $admin_access = AccessResult::allowedIfHasPermission($account, 'administer comments');
         $anonymous_access = AccessResult::allowedIf($entity->isNew() && $account->isAnonymous() && $anonymous_contact != COMMENT_ANONYMOUS_MAYNOT_CONTACT && $account->hasPermission('post comments'))
           ->cachePerRole()
