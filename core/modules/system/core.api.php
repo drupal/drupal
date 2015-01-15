@@ -1043,7 +1043,7 @@
  * Using the Plugin API
  *
  * @section sec_overview Overview and terminology
-
+ *
  * The basic idea of plugins is to allow a particular module or subsystem of
  * Drupal to provide functionality in an extensible, object-oriented way. The
  * controlling module or subsystem defines the basic framework (interface) for
@@ -1613,6 +1613,233 @@
  * @addtogroup hooks
  * @{
  */
+
+/**
+ * Perform periodic actions.
+ *
+ * Modules that require some commands to be executed periodically can
+ * implement hook_cron(). The engine will then call the hook whenever a cron
+ * run happens, as defined by the administrator. Typical tasks managed by
+ * hook_cron() are database maintenance, backups, recalculation of settings
+ * or parameters, automated mailing, and retrieving remote data.
+ *
+ * Short-running or non-resource-intensive tasks can be executed directly in
+ * the hook_cron() implementation.
+ *
+ * Long-running tasks and tasks that could time out, such as retrieving remote
+ * data, sending email, and intensive file tasks, should use the queue API
+ * instead of executing the tasks directly. To do this, first define one or
+ * more queues via a \Drupal\Core\Annotation\QueueWorker plugin. Then, add items
+ * that need to be processed to the defined queues.
+ */
+function hook_cron() {
+  // Short-running operation example, not using a queue:
+  // Delete all expired records since the last cron run.
+  $expires = \Drupal::state()->get('mymodule.cron_last_run', REQUEST_TIME);
+  db_delete('mymodule_table')
+    ->condition('expires', $expires, '>=')
+    ->execute();
+  \Drupal::state()->set('mymodule.cron_last_run', REQUEST_TIME);
+
+  // Long-running operation example, leveraging a queue:
+  // Fetch feeds from other sites.
+  $result = db_query('SELECT * FROM {aggregator_feed} WHERE checked + refresh < :time AND refresh <> :never', array(
+    ':time' => REQUEST_TIME,
+    ':never' => AGGREGATOR_CLEAR_NEVER,
+  ));
+  $queue = \Drupal::queue('aggregator_feeds');
+  foreach ($result as $feed) {
+    $queue->createItem($feed);
+  }
+}
+
+/**
+ * Alter available data types for typed data wrappers.
+ *
+ * @param array $data_types
+ *   An array of data type information.
+ *
+ * @see hook_data_type_info()
+ */
+function hook_data_type_info_alter(&$data_types) {
+  $data_types['email']['class'] = '\Drupal\mymodule\Type\Email';
+}
+
+/**
+ * Alter cron queue information before cron runs.
+ *
+ * Called by \Drupal\Core\Cron to allow modules to alter cron queue settings
+ * before any jobs are processesed.
+ *
+ * @param array $queues
+ *   An array of cron queue information.
+ *
+ * @see \Drupal\Core\QueueWorker\QueueWorkerInterface
+ * @see \Drupal\Core\Annotation\QueueWorker
+ * @see \Drupal\Core\Cron
+ */
+function hook_queue_info_alter(&$queues) {
+  // This site has many feeds so let's spend 90 seconds on each cron run
+  // updating feeds instead of the default 60.
+  $queues['aggregator_feeds']['cron']['time'] = 90;
+}
+
+/**
+ * Alter an email message created with MailManagerInterface->mail().
+ *
+ * hook_mail_alter() allows modification of email messages created and sent
+ * with MailManagerInterface->mail(). Usage examples include adding and/or
+ * changing message text, message fields, and message headers.
+ *
+ * Email messages sent using functions other than MailManagerInterface->mail()
+ * will not invoke hook_mail_alter(). For example, a contributed module directly
+ * calling the MailInterface->mail() or PHP mail() function will not invoke
+ * this hook. All core modules use MailManagerInterface->mail() for messaging,
+ * it is best practice but not mandatory in contributed modules.
+ *
+ * @param $message
+ *   An array containing the message data. Keys in this array include:
+ *  - 'id':
+ *     The MailManagerInterface->mail() id of the message. Look at module source
+ *     code or MailManagerInterface->mail() for possible id values.
+ *  - 'to':
+ *     The address or addresses the message will be sent to. The
+ *     formatting of this string must comply with RFC 2822.
+ *  - 'from':
+ *     The address the message will be marked as being from, which is
+ *     either a custom address or the site-wide default email address.
+ *  - 'subject':
+ *     Subject of the email to be sent. This must not contain any newline
+ *     characters, or the email may not be sent properly.
+ *  - 'body':
+ *     An array of strings containing the message text. The message body is
+ *     created by concatenating the individual array strings into a single text
+ *     string using "\n\n" as a separator.
+ *  - 'headers':
+ *     Associative array containing mail headers, such as From, Sender,
+ *     MIME-Version, Content-Type, etc.
+ *  - 'params':
+ *     An array of optional parameters supplied by the caller of
+ *     MailManagerInterface->mail() that is used to build the message before
+ *     hook_mail_alter() is invoked.
+ *  - 'language':
+ *     The language object used to build the message before hook_mail_alter()
+ *     is invoked.
+ *  - 'send':
+ *     Set to FALSE to abort sending this email message.
+ *
+ * @see \Drupal\Core\Mail\MailManagerInterface::mail()
+ */
+function hook_mail_alter(&$message) {
+  if ($message['id'] == 'modulename_messagekey') {
+    if (!example_notifications_optin($message['to'], $message['id'])) {
+      // If the recipient has opted to not receive such messages, cancel
+      // sending.
+      $message['send'] = FALSE;
+      return;
+    }
+    $message['body'][] = "--\nMail sent out from " . \Drupal::config('system.site')->get('name');
+  }
+}
+
+/**
+ * Prepares a message based on parameters;
+ *
+ * This hook is called from MailManagerInterface->mail(). Note that hook_mail(),
+ * unlike hook_mail_alter(), is only called on the $module argument to
+ * MailManagerInterface->mail(), not all modules.
+ *
+ * @param $key
+ *   An identifier of the mail.
+ * @param $message
+ *   An array to be filled in. Elements in this array include:
+ *   - id: An ID to identify the mail sent. Look at module source code or
+ *     MailManagerInterface->mail() for possible id values.
+ *   - to: The address or addresses the message will be sent to. The
+ *     formatting of this string must comply with RFC 2822.
+ *   - subject: Subject of the email to be sent. This must not contain any
+ *     newline characters, or the mail may not be sent properly.
+ *     MailManagerInterface->mail() sets this to an empty
+ *     string when the hook is invoked.
+ *   - body: An array of lines containing the message to be sent. Drupal will
+ *     format the correct line endings for you. MailManagerInterface->mail()
+ *     sets this to an empty array when the hook is invoked.
+ *   - from: The address the message will be marked as being from, which is
+ *     set by MailManagerInterface->mail() to either a custom address or the
+ *     site-wide default email address when the hook is invoked.
+ *   - headers: Associative array containing mail headers, such as From,
+ *     Sender, MIME-Version, Content-Type, etc.
+ *     MailManagerInterface->mail() pre-fills several headers in this array.
+ * @param $params
+ *   An array of parameters supplied by the caller of
+ *   MailManagerInterface->mail().
+ *
+ * @see \Drupal\Core\Mail\MailManagerInterface->mail()
+ */
+function hook_mail($key, &$message, $params) {
+  $account = $params['account'];
+  $context = $params['context'];
+  $variables = array(
+    '%site_name' => \Drupal::config('system.site')->get('name'),
+    '%username' => user_format_name($account),
+  );
+  if ($context['hook'] == 'taxonomy') {
+    $entity = $params['entity'];
+    $vocabulary = Vocabulary::load($entity->id());
+    $variables += array(
+      '%term_name' => $entity->name,
+      '%term_description' => $entity->description,
+      '%term_id' => $entity->id(),
+      '%vocabulary_name' => $vocabulary->label(),
+      '%vocabulary_description' => $vocabulary->getDescription(),
+      '%vocabulary_id' => $vocabulary->id(),
+    );
+  }
+
+  // Node-based variable translation is only available if we have a node.
+  if (isset($params['node'])) {
+    /** @var \Drupal\node\NodeInterface $node */
+    $node = $params['node'];
+    $variables += array(
+      '%uid' => $node->getOwnerId(),
+      '%url' => $node->url('canonical', array('absolute' => TRUE)),
+      '%node_type' => node_get_type_label($node),
+      '%title' => $node->getTitle(),
+      '%teaser' => $node->teaser,
+      '%body' => $node->body,
+    );
+  }
+  $subject = strtr($context['subject'], $variables);
+  $body = strtr($context['message'], $variables);
+  $message['subject'] .= str_replace(array("\r", "\n"), '', $subject);
+  $message['body'][] = MailFormatHelper::htmlToText($body);
+}
+
+/**
+ * Alter the list of mail backend plugin definitions.
+ *
+ * @param array $info
+ *   The mail backend plugin definitions to be altered.
+ *
+ * @see \Drupal\Core\Annotation\Mail
+ * @see \Drupal\Core\Mail\MailManager
+ */
+function hook_mail_backend_info_alter(&$info) {
+  unset($info['test_mail_collector']);
+}
+
+/**
+ * Alter the default country list.
+ *
+ * @param $countries
+ *   The associative array of countries keyed by two-letter country code.
+ *
+ * @see \Drupal\Core\Locale\CountryManager::getList().
+ */
+function hook_countries_alter(&$countries) {
+  // Elbonia is now independent, so add it to the country list.
+  $countries['EB'] = 'Elbonia';
+}
 
 /**
  * Alter display variant plugin definitions.
