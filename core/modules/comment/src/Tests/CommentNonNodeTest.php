@@ -360,12 +360,16 @@ class CommentNonNodeTest extends WebTestBase {
     $this->assertNoFieldChecked('edit-default-value-input-comment-0-status-1');
     $this->assertFieldChecked('edit-default-value-input-comment-0-status-2');
     // Test comment option change in field settings.
-    $edit = array('default_value_input[comment][0][status]' => CommentItemInterface::CLOSED);
+    $edit = array(
+      'default_value_input[comment][0][status]' => CommentItemInterface::CLOSED,
+      'field[settings][anonymous]' => COMMENT_ANONYMOUS_MAY_CONTACT,
+    );
     $this->drupalPostForm(NULL, $edit, t('Save settings'));
     $this->drupalGet('entity_test/structure/entity_test/fields/entity_test.entity_test.comment');
     $this->assertNoFieldChecked('edit-default-value-input-comment-0-status-0');
     $this->assertFieldChecked('edit-default-value-input-comment-0-status-1');
     $this->assertNoFieldChecked('edit-default-value-input-comment-0-status-2');
+    $this->assertFieldByName('field[settings][anonymous]', COMMENT_ANONYMOUS_MAY_CONTACT);
 
     // Add a new comment-type.
     $bundle = CommentType::create(array(
