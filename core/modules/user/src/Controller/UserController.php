@@ -49,6 +49,8 @@ class UserController extends ControllerBase {
    *   The date formatter service.
    * @param \Drupal\user\UserStorageInterface $user_storage
    *   The user storage.
+   * @param \Drupal\user\UserDataInterface $user_data
+   *   The user data service.
    */
   public function __construct(DateFormatter $date_formatter, UserStorageInterface $user_storage, UserDataInterface $user_data) {
     $this->dateFormatter = $date_formatter;
