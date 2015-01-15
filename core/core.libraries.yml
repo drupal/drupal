@@ -304,13 +304,13 @@ drupal.vertical-tabs:
 
 html5shiv:
   remote: https://github.com/aFarkas/html5shiv
-  version: 3.6.2
+  version: 3.7.2
   license:
     name: GNU-GPL-2.0-or-later
     url: http://www.gnu.org/licenses/gpl-2.0.html
     gpl-compatible: true
   js:
-    assets/vendor/html5shiv/html5.js: { every_page: true, weight: -22, browsers: { IE: 'lte IE 8', '!IE': false }, minified: true }
+    assets/vendor/html5shiv/html5shiv.min.js: { every_page: true, weight: -22, browsers: { IE: 'lte IE 8', '!IE': false }, minified: true }
 
 jquery:
   remote: https://github.com/jquery/jquery

@@ -60,11 +60,11 @@ class NoJavaScriptAnonymousTest extends WebTestBase {
     $this->assertNoRaw('var drupalSettings = {', 'drupalSettings is not set.');
 
     // Ensure the HTML5 shiv exists.
-    $this->assertRaw('html5shiv/html5.js', 'HTML5 shiv JavaScript exists.');
+    $this->assertRaw('html5shiv/html5shiv.min.js', 'HTML5 shiv JavaScript exists.');
 
     // Ensure no other JavaScript file exists on the page, while ignoring the
     // HTML5 shiv.
-    $this->assertNoPattern('/(?<!html5)\.js/', "No other JavaScript exists.");
+    $this->assertNoPattern('/(?<!html5shiv\.min)\.js/', "No other JavaScript exists.");
   }
 
 }
