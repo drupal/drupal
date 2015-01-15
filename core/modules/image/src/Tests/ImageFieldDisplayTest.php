@@ -58,7 +58,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->assertLinkByHref(\Drupal::url('image.style_list'), 0, 'Link to image styles configuration is found');
 
     // Remove 'administer image styles' permission from testing admin user.
-    $admin_user_roles = $this->admin_user->getRoles(TRUE);
+    $admin_user_roles = $this->adminUser->getRoles(TRUE);
     user_role_change_permissions(reset($admin_user_roles), array('administer image styles' => FALSE));
 
     // Go to manage display page again.
@@ -127,7 +127,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       $this->assertResponse('403', 'Access denied to original image as anonymous user.');
 
       // Log in again.
-      $this->drupalLogin($this->admin_user);
+      $this->drupalLogin($this->adminUser);
     }
 
     // Test the image linked to content formatter.

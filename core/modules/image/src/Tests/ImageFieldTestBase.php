@@ -34,7 +34,12 @@ abstract class ImageFieldTestBase extends WebTestBase {
    */
   public static $modules = array('node', 'image', 'field_ui', 'image_module_test');
 
-  protected $admin_user;
+  /**
+   * An user with permissions to administer content types and image styles.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $adminUser;
 
   protected function setUp() {
     parent::setUp();
@@ -45,8 +50,8 @@ abstract class ImageFieldTestBase extends WebTestBase {
       $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
     }
 
-    $this->admin_user = $this->drupalCreateUser(array('access content', 'access administration pages', 'administer site configuration', 'administer content types', 'administer node fields', 'administer nodes', 'create article content', 'edit any article content', 'delete any article content', 'administer image styles', 'administer node display'));
-    $this->drupalLogin($this->admin_user);
+    $this->adminUser = $this->drupalCreateUser(array('access content', 'access administration pages', 'administer site configuration', 'administer content types', 'administer node fields', 'administer nodes', 'create article content', 'edit any article content', 'delete any article content', 'administer image styles', 'administer node display'));
+    $this->drupalLogin($this->adminUser);
   }
 
   /**

@@ -40,7 +40,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     parent::setUp();
 
     // Create user.
-    $this->admin_user = $this->drupalCreateUser(array(
+    $this->adminUser = $this->drupalCreateUser(array(
       'administer responsive images',
       'access content',
       'access administration pages',
@@ -53,7 +53,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       'delete any article content',
       'administer image styles'
     ));
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     // Add responsive image mapping.
     $this->responsiveImgMapping = entity_create('responsive_image_mapping', array(
       'id' => 'mapping_one',
@@ -180,7 +180,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       $this->assertResponse('403', 'Access denied to original image as anonymous user.');
 
       // Log in again.
-      $this->drupalLogin($this->admin_user);
+      $this->drupalLogin($this->adminUser);
     }
 
     // Use the responsive image formatter with a responsive image mapping.
