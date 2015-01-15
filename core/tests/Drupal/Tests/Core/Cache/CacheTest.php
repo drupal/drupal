@@ -105,6 +105,8 @@ class CacheTest extends UnitTestCase {
       ['node', [5 => NULL], ['node:']],
       ['node', ['a' => NULL], ['node:']],
       ['node', ['a' => TRUE], ['node:1']],
+      // Test the $glue parameter.
+      ['config:system.menu', ['menu_name'], ['config:system.menu.menu_name'], '.'],
     ];
   }
 
@@ -113,8 +115,8 @@ class CacheTest extends UnitTestCase {
    *
    * @dataProvider buildTagsProvider
    */
-  public function testBuildTags($prefix, array $suffixes, array $expected) {
-    $this->assertEquals($expected, Cache::buildTags($prefix, $suffixes));
+  public function testBuildTags($prefix, array $suffixes, array $expected, $glue = ':') {
+    $this->assertEquals($expected, Cache::buildTags($prefix, $suffixes, $glue));
   }
 
 }

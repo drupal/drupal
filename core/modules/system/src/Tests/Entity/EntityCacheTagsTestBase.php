@@ -283,8 +283,13 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     $empty_entity_listing_path = 'entity_test/list_empty/' . $entity_type;
     $nonempty_entity_listing_path = 'entity_test/list_labels_alphabetically/' . $entity_type;
 
-    $render_cache_tags = array('rendered');
-    $theme_cache_tags = array('theme:classy', 'theme_global_settings');
+    // Cache tags present on every rendered page.
+    $page_cache_tags = Cache::mergeTags(
+      ['rendered'],
+      // If the block module is used, the Block page display variant is used,
+      // which adds the block config entity type's list cache tags.
+      \Drupal::moduleHandler()->moduleExists('block') ? ['config:block_list']: []
+    );
 
     $view_cache_tag = array();
     if ($this->entity->getEntityType()->hasHandlerClass('view_builder')) {
@@ -299,11 +304,13 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
       // Includes the main entity's cache tags, since this entity references it.
       $this->entity->getCacheTags(),
       $this->getAdditionalCacheTagsForEntity($this->entity),
-      $view_cache_tag
+      $view_cache_tag,
+      ['rendered']
     );
     $non_referencing_entity_cache_tags = Cache::mergeTags(
       $this->non_referencing_entity->getCacheTags(),
-      \Drupal::entityManager()->getViewBuilder('entity_test')->getCacheTags()
+      \Drupal::entityManager()->getViewBuilder('entity_test')->getCacheTags(),
+      ['rendered']
     );
 
     // Generate the cache tags for all two possible entity listing paths.
@@ -311,44 +318,37 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     // 2. list cache tag plus entity cache tag (listing query has a match)
     $empty_entity_listing_cache_tags = Cache::mergeTags(
       $this->entity->getEntityType()->getListCacheTags(),
-      $theme_cache_tags,
-      $render_cache_tags
+      $page_cache_tags
     );
     $nonempty_entity_listing_cache_tags = Cache::mergeTags(
       $this->entity->getEntityType()->getListCacheTags(),
       $this->entity->getCacheTags(),
       $this->getAdditionalCacheTagsForEntityListing($this->entity),
-      $theme_cache_tags,
-      $render_cache_tags
+      $page_cache_tags
     );
 
     $this->pass("Test referencing entity.", 'Debug');
     $this->verifyPageCache($referencing_entity_path, 'MISS');
     // Verify a cache hit, but also the presence of the correct cache tags.
-    $tags = Cache::mergeTags($render_cache_tags, $theme_cache_tags, $referencing_entity_cache_tags);
-    $this->verifyPageCache($referencing_entity_path, 'HIT', $tags);
+    $this->verifyPageCache($referencing_entity_path, 'HIT', Cache::mergeTags($referencing_entity_cache_tags, $page_cache_tags));
     // Also verify the existence of an entity render cache entry.
     $cid = 'entity_view:entity_test:' . $this->referencing_entity->id() . ':full:classy:r.anonymous:' . date_default_timezone_get();
-    $tags = Cache::mergeTags($render_cache_tags, $referencing_entity_cache_tags);
-    $this->verifyRenderCache($cid, $tags);
+    $this->verifyRenderCache($cid, $referencing_entity_cache_tags);
 
     $this->pass("Test non-referencing entity.", 'Debug');
     $this->verifyPageCache($non_referencing_entity_path, 'MISS');
     // Verify a cache hit, but also the presence of the correct cache tags.
-    $tags = Cache::mergeTags($render_cache_tags, $theme_cache_tags, $non_referencing_entity_cache_tags);
-    $this->verifyPageCache($non_referencing_entity_path, 'HIT', $tags);
+    $this->verifyPageCache($non_referencing_entity_path, 'HIT', Cache::mergeTags($non_referencing_entity_cache_tags, $page_cache_tags));
     // Also verify the existence of an entity render cache entry.
     $cid = 'entity_view:entity_test:' . $this->non_referencing_entity->id() . ':full:classy:r.anonymous:' . date_default_timezone_get();
-    $tags = Cache::mergeTags($render_cache_tags, $non_referencing_entity_cache_tags);
-    $this->verifyRenderCache($cid, $tags);
+    $this->verifyRenderCache($cid, $non_referencing_entity_cache_tags);
 
 
     $this->pass("Test listing of referencing entities.", 'Debug');
     // Prime the page cache for the listing of referencing entities.
     $this->verifyPageCache($listing_path, 'MISS');
     // Verify a cache hit, but also the presence of the correct cache tags.
-    $tags = Cache::mergeTags($render_cache_tags, $theme_cache_tags, $referencing_entity_cache_tags);
-    $this->verifyPageCache($listing_path, 'HIT', $tags);
+    $this->verifyPageCache($listing_path, 'HIT', Cache::mergeTags($referencing_entity_cache_tags, $page_cache_tags));
 
 
     $this->pass("Test empty listing.", 'Debug');
@@ -564,16 +564,13 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     // Verify cache hits.
     $referencing_entity_cache_tags = Cache::mergeTags(
       $this->referencing_entity->getCacheTags(),
-      \Drupal::entityManager()->getViewBuilder('entity_test')->getCacheTags()
+      \Drupal::entityManager()->getViewBuilder('entity_test')->getCacheTags(),
+      ['rendered']
     );
-    $tags = Cache::mergeTags($render_cache_tags, $theme_cache_tags, $referencing_entity_cache_tags);
-    $this->verifyPageCache($referencing_entity_path, 'HIT', $tags);
-    $tags = Cache::mergeTags($render_cache_tags, $theme_cache_tags);
-    $this->verifyPageCache($listing_path, 'HIT', $tags);
-    $tags = Cache::mergeTags($render_cache_tags, $theme_cache_tags, $this->entity->getEntityType()->getListCacheTags());
-    $this->verifyPageCache($empty_entity_listing_path, 'HIT', $tags);
-    $tags = Cache::mergeTags($tags, $this->getAdditionalCacheTagsForEntityListing());
-    $this->verifyPageCache($nonempty_entity_listing_path, 'HIT', $tags);
+    $this->verifyPageCache($referencing_entity_path, 'HIT', Cache::mergeTags($referencing_entity_cache_tags, $page_cache_tags));
+    $this->verifyPageCache($listing_path, 'HIT', $page_cache_tags);
+    $this->verifyPageCache($empty_entity_listing_path, 'HIT', $empty_entity_listing_cache_tags);
+    $this->verifyPageCache($nonempty_entity_listing_path, 'HIT', Cache::mergeTags($this->entity->getEntityType()->getListCacheTags(), $this->getAdditionalCacheTagsForEntityListing(), $page_cache_tags));
   }
 
   /**

@@ -314,7 +314,7 @@ function _toolbar_get_subtrees_hash($langcode) {
     // Clear the cache when the 'locale' tag is deleted. This ensures a fresh
     // subtrees rendering when string translations are made.
     $role_list_cache_tags = \Drupal::entityManager()->getDefinition('user_role')->getListCacheTags();
-    \Drupal::cache('toolbar')->set($cid, $hash, Cache::PERMANENT, Cache::mergeTags(array('user:' . $uid, 'locale', 'menu:admin'), $role_list_cache_tags));
+    \Drupal::cache('toolbar')->set($cid, $hash, Cache::PERMANENT, Cache::mergeTags(array('user:' . $uid, 'locale', 'config:system.menu.admin'), $role_list_cache_tags));
   }
   return $hash;
 }

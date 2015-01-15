@@ -262,4 +262,15 @@ abstract class ConfigBase {
     $this->setData(NestedArray::mergeDeepArray(array($this->data, $data_to_merge), TRUE));
     return $this;
   }
+
+  /**
+   * The unique cache tag associated with this configuration object.
+   *
+   * @return string[]
+   *   An array of cache tags.
+   */
+  public function getCacheTags() {
+    return ['config:' . $this->name];
+  }
+
 }

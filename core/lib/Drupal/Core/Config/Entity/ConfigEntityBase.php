@@ -14,6 +14,7 @@ use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\Core\Entity\Entity;
 use Drupal\Core\Config\ConfigDuplicateUUIDException;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Plugin\PluginDependencyTrait;
@@ -372,6 +373,15 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags() {
+    // Use cache tags that match the underlying config object's name.
+    // @see \Drupal\Core\Config\ConfigBase::getCacheTags()
+    return ['config:' . $this->getConfigDependencyName()];
+  }
+
+  /**
    * Overrides \Drupal\Core\Entity\DependencyTrait:addDependency().
    *
    * Note that this function should only be called from implementations of
@@ -409,6 +419,26 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    * {@inheritdoc}
    */
   public function onDependencyRemoval(array $dependencies) {
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * Override to never invalidate the entity's cache tag; the config system
+   * already invalidates it.
+   */
+  protected function invalidateTagsOnSave($update) {
+    Cache::invalidateTags($this->getEntityType()->getListCacheTags());
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * Override to never invalidate the individual entities' cache tags; the
+   * config system already invalidates them.
+   */
+  protected static function invalidateTagsOnDelete(EntityTypeInterface $entity_type, array $entities) {
+    Cache::invalidateTags($entity_type->getListCacheTags());
   }
 
 }

@@ -8,6 +8,7 @@ namespace Drupal\Core\Access;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableInterface;
+use Drupal\Core\Config\ConfigBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 
@@ -357,6 +358,19 @@ abstract class AccessResult implements AccessResultInterface, CacheableInterface
    */
   public function cacheUntilEntityChanges(EntityInterface $entity) {
     $this->addCacheTags($entity->getCacheTags());
+    return $this;
+  }
+
+  /**
+   * Convenience method, adds the configuration object's cache tag.
+   *
+   * @param \Drupal\Core\Config\ConfigBase $configuration
+   *   The configuration object whose cache tag to set on the access result.
+   *
+   * @return $this
+   */
+  public function cacheUntilConfigurationChanges(ConfigBase $configuration) {
+    $this->addCacheTags($configuration->getCacheTags());
     return $this;
   }
 

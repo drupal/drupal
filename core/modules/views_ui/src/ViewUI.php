@@ -1158,7 +1158,7 @@ class ViewUI implements ViewEntityInterface {
    * {@inheritdoc}
    */
   public function getCacheTags() {
-    $this->storage->getCacheTags();
+    return $this->storage->getCacheTags();
   }
 
   /**

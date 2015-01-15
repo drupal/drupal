@@ -7,6 +7,7 @@
 
 namespace Drupal\language\Config;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\StorableConfigBase;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
@@ -57,6 +58,11 @@ class LanguageConfigOverride extends StorableConfigBase {
       $this->validateValue($key, $value);
     }
     $this->storage->write($this->name, $this->data);
+    // Invalidate the cache tags not only when updating, but also when creating,
+    // because a language config override object uses the same cache tag as the
+    // default configuration object. Hence creating a language override is like
+    // an update of configuration, but only for a specific language.
+    Cache::invalidateTags($this->getCacheTags());
     $this->isNew = FALSE;
     $this->eventDispatcher->dispatch(LanguageConfigOverrideEvents::SAVE_OVERRIDE, new LanguageConfigOverrideCrudEvent($this));
     $this->originalData = $this->data;
@@ -69,6 +75,7 @@ class LanguageConfigOverride extends StorableConfigBase {
   public function delete() {
     $this->data = array();
     $this->storage->delete($this->name);
+    Cache::invalidateTags($this->getCacheTags());
     $this->isNew = TRUE;
     $this->eventDispatcher->dispatch(LanguageConfigOverrideEvents::DELETE_OVERRIDE, new LanguageConfigOverrideCrudEvent($this));
     $this->originalData = $this->data;

@@ -12,6 +12,7 @@ use Drupal\block\Event\BlockContextEvent;
 use Drupal\block\Event\BlockEvents;
 use Drupal\Core\Block\MainContentBlockPluginInterface;
 use Drupal\Core\Display\PageVariantInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityViewBuilderInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Display\VariantBase;
@@ -43,11 +44,11 @@ class BlockPageVariant extends VariantBase implements PageVariantInterface, Cont
   protected $blockViewBuilder;
 
   /**
-   * The current theme.
+   * The Block entity type list cache tags.
    *
-   * @var string
+   * @var string[]
    */
-  protected $theme;
+  protected $blockListCacheTags;
 
   /**
    * The render array representing the main page content.
@@ -71,12 +72,15 @@ class BlockPageVariant extends VariantBase implements PageVariantInterface, Cont
    *   The block view builder.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
    *   The event dispatcher.
+   * @param string[] $block_list_cache_tags
+   *   The Block entity type list cache tags.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, BlockRepositoryInterface $block_repository, EntityViewBuilderInterface $block_view_builder, EventDispatcherInterface $dispatcher) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, BlockRepositoryInterface $block_repository, EntityViewBuilderInterface $block_view_builder, EventDispatcherInterface $dispatcher, array $block_list_cache_tags) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->blockRepository = $block_repository;
     $this->blockViewBuilder = $block_view_builder;
     $this->dispatcher = $dispatcher;
+    $this->blockListCacheTags = $block_list_cache_tags;
   }
 
   /**
@@ -89,7 +93,8 @@ class BlockPageVariant extends VariantBase implements PageVariantInterface, Cont
       $plugin_definition,
       $container->get('block.repository'),
       $container->get('entity.manager')->getViewBuilder('block'),
-      $container->get('event_dispatcher')
+      $container->get('event_dispatcher'),
+      $container->get('entity.manager')->getDefinition('block')->getListCacheTags()
     );
   }
 
@@ -108,7 +113,11 @@ class BlockPageVariant extends VariantBase implements PageVariantInterface, Cont
     // Track whether a block that shows the main content is displayed or not.
     $main_content_block_displayed = FALSE;
 
-    $build = array();
+    $build = [
+      '#cache' => [
+        'tags' => $this->blockListCacheTags,
+      ],
+    ];
     $contexts = $this->getActiveBlockContexts();
     // Load all region content assigned via blocks.
     foreach ($this->blockRepository->getVisibleBlocksPerRegion($contexts) as $region => $blocks) {

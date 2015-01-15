@@ -12,6 +12,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\SelectInterface;
@@ -40,6 +41,13 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    * @var \Drupal\Core\Cache\CacheBackendInterface
    */
   protected $menuCacheBackend;
+
+  /**
+   * The cache tags invalidator.
+   *
+   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
+   */
+  protected $cacheTagsInvalidator;
 
   /**
    * The database table name.
@@ -109,14 +117,17 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    *   A Database connection to use for reading and writing configuration data.
    * @param \Drupal\Core\Cache\CacheBackendInterface $menu_cache_backend
    *   Cache backend instance for the extracted tree data.
+   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tags_invalidator
+   *   The cache tags invalidator.
    * @param string $table
    *   A database table name to store configuration data in.
    * @param array $options
    *   (optional) Any additional database connection options to use in queries.
    */
-  public function __construct(Connection $connection, CacheBackendInterface $menu_cache_backend, $table, array $options = array()) {
+  public function __construct(Connection $connection, CacheBackendInterface $menu_cache_backend, CacheTagsInvalidatorInterface $cache_tags_invalidator, $table, array $options = array()) {
     $this->connection = $connection;
     $this->menuCacheBackend = $menu_cache_backend;
+    $this->cacheTagsInvalidator = $cache_tags_invalidator;
     $this->table = $table;
     $this->options = $options;
   }
@@ -180,8 +191,8 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     $this->resetDefinitions();
     $affected_menus = $this->getMenuNames() + $before_menus;
     // Invalidate any cache tagged with any menu name.
-    $cache_tags = Cache::buildTags('menu', $affected_menus);
-    Cache::invalidateTags($cache_tags);
+    $cache_tags = Cache::buildTags('config:system.menu', $affected_menus, '.');
+    $this->cacheTagsInvalidator->invalidateTags($cache_tags);
     $this->resetDefinitions();
     // Every item in the cache bin should have one of the menu cache tags but it
     // is not guaranteed, so invalidate everything in the bin.
@@ -241,8 +252,8 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
   public function save(array $link) {
     $affected_menus = $this->doSave($link);
     $this->resetDefinitions();
-    $cache_tags = Cache::buildTags('menu', $affected_menus);
-    Cache::invalidateTags($cache_tags);
+    $cache_tags = Cache::buildTags('config:system.menu', $affected_menus, '.');
+    $this->cacheTagsInvalidator->invalidateTags($cache_tags);
     return $affected_menus;
   }
 
@@ -394,7 +405,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       $this->updateParentalStatus($item);
       // Many children may have moved.
       $this->resetDefinitions();
-      Cache::invalidateTags(array('menu:' . $item['menu_name']));
+      $this->cacheTagsInvalidator->invalidateTags(['config:system.menu.' . $item['menu_name']]);
     }
   }
 
@@ -823,7 +834,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       $data['tree'] = $this->doBuildTreeData($links, $parameters->activeTrail, $parameters->minDepth);
       $data['definitions'] = array();
       $data['route_names'] = $this->collectRoutesAndDefinitions($data['tree'], $data['definitions']);
-      $this->menuCacheBackend->set($tree_cid, $data, Cache::PERMANENT, array('menu:' . $menu_name));
+      $this->menuCacheBackend->set($tree_cid, $data, Cache::PERMANENT, ['config:system.menu.' . $menu_name]);
       // The definitions were already added to $this->definitions in
       // $this->doBuildTreeData()
       unset($data['definitions']);

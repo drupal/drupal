@@ -47,7 +47,7 @@ use Symfony\Component\HttpFoundation\Request;
  *     "delete-form" = "/admin/config/user-interface/shortcut/link/{shortcut}/delete",
  *     "edit-form" = "/admin/config/user-interface/shortcut/link/{shortcut}",
  *   },
- *   list_cache_tags = { "shortcut_set_list" },
+ *   list_cache_tags = { "config:shortcut_set_list" },
  *   bundle_entity_type = "shortcut_set"
  * )
  */

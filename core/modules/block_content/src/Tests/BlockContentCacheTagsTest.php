@@ -55,7 +55,7 @@ class BlockContentCacheTagsTest extends EntityCacheTagsTestBase {
    * Each comment must have a comment body, which always has a text format.
    */
   protected function getAdditionalCacheTagsForEntity(EntityInterface $entity) {
-    return array('filter_format:plain_text');
+    return ['config:filter.format.plain_text'];
   }
 
 }

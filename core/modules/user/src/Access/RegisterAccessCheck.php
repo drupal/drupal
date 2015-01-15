@@ -26,7 +26,7 @@ class RegisterAccessCheck implements AccessInterface {
    *   The access result.
    */
   public function access(AccountInterface $account) {
-    // @todo cacheable per role once https://www.drupal.org/node/2040135 lands.
-    return AccessResult::allowedIf($account->isAnonymous() && \Drupal::config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY)->setCacheable(FALSE);
+    $user_settings = \Drupal::config('user.settings');
+    return AccessResult::allowedIf($account->isAnonymous() && $user_settings->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY)->cacheUntilConfigurationChanges($user_settings);
   }
 }

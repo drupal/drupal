@@ -399,7 +399,7 @@ interface EntityInterface extends AccessibleInterface {
   /**
    * The unique cache tag associated with this entity.
    *
-   * @return array
+   * @return string[]
    *   An array of cache tags.
    */
   public function getCacheTags();

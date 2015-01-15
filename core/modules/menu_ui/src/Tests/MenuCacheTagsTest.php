@@ -48,13 +48,12 @@ class MenuCacheTagsTest extends PageCacheTagsTestBase {
 
     // Verify a cache hit, but also the presence of the correct cache tags.
     $expected_tags = array(
-      'theme:classy',
-      'theme_global_settings',
       'rendered',
       'block_view',
-      'block:' . $block->id(),
+      'config:block_list',
+      'config:block.block.' . $block->id(),
       'block_plugin:system_menu_block__llama',
-      'menu:llama',
+      'config:system.menu.llama',
     );
     $this->verifyPageCache($path, 'HIT', $expected_tags);
 
@@ -106,7 +105,7 @@ class MenuCacheTagsTest extends PageCacheTagsTestBase {
     $this->verifyPageCache($path, 'MISS');
 
     // Verify a cache hit.
-    $this->verifyPageCache($path, 'HIT', array('rendered', 'theme:classy', 'theme_global_settings'));
+    $this->verifyPageCache($path, 'HIT', ['config:block_list', 'rendered']);
   }
 
 }

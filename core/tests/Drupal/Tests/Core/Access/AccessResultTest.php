@@ -400,6 +400,7 @@ class AccessResultTest extends UnitTestCase {
    * @covers ::resetCacheTags
    * @covers ::getCacheTags
    * @covers ::cacheUntilEntityChanges
+   * @covers ::cacheUntilConfigurationChanges
    */
   public function testCacheTags() {
     $verify = function (AccessResult $access, array $tags) {
@@ -445,6 +446,18 @@ class AccessResultTest extends UnitTestCase {
     $a = AccessResult::neutral()->addCacheTags($tags);
     $verify($a, $tags);
     $b = AccessResult::neutral()->cacheUntilEntityChanges($node);
+    $verify($b, $tags);
+    $this->assertEquals($a, $b);
+
+    // ::cacheUntilConfigurationChanges() convenience method.
+    $configuration = $this->getMock('\Drupal\Core\Config\ConfigBase');
+    $configuration->expects($this->any())
+      ->method('getCacheTags')
+      ->will($this->returnValue(array('config:foo.bar.baz')));
+    $tags = array('config:foo.bar.baz');
+    $a = AccessResult::neutral()->addCacheTags($tags);
+    $verify($a, $tags);
+    $b = AccessResult::neutral()->cacheUntilConfigurationChanges($configuration);
     $verify($b, $tags);
     $this->assertEquals($a, $b);
   }

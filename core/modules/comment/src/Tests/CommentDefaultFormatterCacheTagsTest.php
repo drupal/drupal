@@ -107,7 +107,7 @@ class CommentDefaultFormatterCacheTagsTest extends EntityUnitTestBase {
       'comment_list',
       'comment_view',
       'comment:' . $comment->id(),
-      'filter_format:plain_text',
+      'config:filter.format.plain_text',
       'user_view',
       'user:2',
     );

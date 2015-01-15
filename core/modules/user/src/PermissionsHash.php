@@ -59,7 +59,7 @@ class PermissionsHash implements PermissionsHashInterface {
     }
     else {
       $permissions_hash = $this->doGenerate($sorted_roles);
-      $tags = Cache::buildTags('user_role', $sorted_roles);
+      $tags = Cache::buildTags('config:user.role', $sorted_roles, '.');
       $this->cache->set("user_permissions_hash:$role_list", $permissions_hash, Cache::PERMANENT, $tags);
     }
 

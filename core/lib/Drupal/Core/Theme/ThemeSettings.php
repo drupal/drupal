@@ -46,4 +46,12 @@ class ThemeSettings extends ConfigBase {
   public function getTheme() {
     return $this->theme;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags() {
+    return ['rendered'];
+  }
+
 }

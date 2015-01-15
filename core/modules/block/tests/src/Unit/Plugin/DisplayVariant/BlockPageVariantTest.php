@@ -61,9 +61,8 @@ class BlockPageVariantTest extends UnitTestCase {
     $this->dispatcher->expects($this->any())
       ->method('dispatch')
       ->willReturnArgument(1);
-    $this->contextHandler = $this->getMock('Drupal\Core\Plugin\Context\ContextHandlerInterface');
     return $this->getMockBuilder('Drupal\block\Plugin\DisplayVariant\BlockPageVariant')
-      ->setConstructorArgs(array($configuration, 'test', $definition, $this->blockRepository, $this->blockViewBuilder, $this->dispatcher, $this->contextHandler))
+      ->setConstructorArgs(array($configuration, 'test', $definition, $this->blockRepository, $this->blockViewBuilder, $this->dispatcher, ['config:block_list']))
       ->setMethods(array('getRegionNames'))
       ->getMock();
   }
@@ -89,6 +88,11 @@ class BlockPageVariantTest extends UnitTestCase {
     $test_cases = [];
     $test_cases[] = [$blocks_config, 4,
       [
+        '#cache' => [
+          'tags' => [
+            'config:block_list',
+          ],
+        ],
         'top' => [
           'block1' => [],
           '#sorted' => TRUE,
@@ -108,6 +112,11 @@ class BlockPageVariantTest extends UnitTestCase {
     unset($blocks_config['block4']);
     $test_cases[] = [$blocks_config, 3,
       [
+        '#cache' => [
+          'tags' => [
+            'config:block_list',
+          ],
+        ],
         'top' => [
           'block1' => [],
           '#sorted' => TRUE,
@@ -170,7 +179,16 @@ class BlockPageVariantTest extends UnitTestCase {
       ->method('getVisibleBlocksPerRegion')
       ->willReturn([]);
 
-    $expected = ['content' => ['system_main' => []]];
+    $expected = [
+      '#cache' => [
+        'tags' => [
+          'config:block_list',
+        ],
+      ],
+      'content' => [
+        'system_main' => [],
+      ],
+    ];
     $this->assertSame($expected, $display_variant->build());
   }
 

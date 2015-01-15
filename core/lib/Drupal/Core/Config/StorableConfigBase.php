@@ -66,16 +66,18 @@ abstract class StorableConfigBase extends ConfigBase {
   /**
    * Saves the configuration object.
    *
-   * @return \Drupal\Core\Config\Config
-   *   The configuration object.
+   * Must invalidate the cache tags associated with the configuration object.
+   *
+   * @return $this
    */
   abstract public function save();
 
   /**
    * Deletes the configuration object.
    *
-   * @return \Drupal\Core\Config\Config
-   *   The configuration object.
+   * Must invalidate the cache tags associated with the configuration object.
+   *
+   * @return $this
    */
   abstract public function delete();
 

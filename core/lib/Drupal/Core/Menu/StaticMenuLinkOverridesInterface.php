@@ -84,4 +84,12 @@ interface StaticMenuLinkOverridesInterface {
    */
   public function saveOverride($id, array $definition);
 
+  /**
+   * The unique cache tag associated with this menu link override.
+   *
+   * @return string[]
+   *   An array of cache tags.
+   */
+  public function getCacheTags();
+
 }

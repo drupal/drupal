@@ -202,12 +202,12 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     $this->assertRaw('media="(min-width: 560px)"');
     $this->assertRaw('media="(min-width: 851px)"');
     $cache_tags = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Tags'));
-    $this->assertTrue(in_array('responsive_image_mapping:mapping_one', $cache_tags));
+    $this->assertTrue(in_array('config:responsive_image.mappings.mapping_one', $cache_tags));
     if (!$empty_styles) {
-      $this->assertTrue(in_array('image_style:thumbnail', $cache_tags));
-      $this->assertTrue(in_array('image_style:medium', $cache_tags));
+      $this->assertTrue(in_array('config:image.style.thumbnail', $cache_tags));
+      $this->assertTrue(in_array('config:image.style.medium', $cache_tags));
     }
-    $this->assertTrue(in_array('image_style:large', $cache_tags));
+    $this->assertTrue(in_array('config:image.style.large', $cache_tags));
 
     // Test the fallback image style.
     $large_style = entity_load('image_style', 'large');

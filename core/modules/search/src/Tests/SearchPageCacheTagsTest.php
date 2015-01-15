@@ -41,25 +41,25 @@ class SearchPageCacheTagsTest extends SearchTestBase {
     // Initial page for searching nodes.
     $this->drupalGet('search/node');
     $cache_tags = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Tags'));
-    $this->assertTrue(in_array('search_page:node_search', $cache_tags));
+    $this->assertTrue(in_array('config:search.page.node_search', $cache_tags));
 
     // Node search results.
     $edit = array();
     $edit['keys'] = 'bike shed';
     $this->drupalPostForm('search/node', $edit, t('Search'));
     $cache_tags = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Tags'));
-    $this->assertTrue(in_array('search_page:node_search', $cache_tags));
+    $this->assertTrue(in_array('config:search.page.node_search', $cache_tags));
 
     // Initial page for searching users.
     $this->drupalGet('search/user');
     $cache_tags = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Tags'));
-    $this->assertTrue(in_array('search_page:user_search', $cache_tags));
+    $this->assertTrue(in_array('config:search.page.user_search', $cache_tags));
 
     // User search results.
     $edit['keys'] = $this->searchingUser->getUsername();
     $this->drupalPostForm('search/user', $edit, t('Search'));
     $cache_tags = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Tags'));
-    $this->assertTrue(in_array('search_page:user_search', $cache_tags));
+    $this->assertTrue(in_array('config:search.page.user_search', $cache_tags));
   }
 
 }

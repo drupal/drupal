@@ -81,14 +81,16 @@ class Cache {
    *   A prefix string.
    * @param array $suffixes
    *   An array of suffixes. Will be cast to strings.
+   * @param string $glue
+   *   A string to be used as glue for concatenation. Defaults to a colon.
    *
    * @return string[]
    *   An array of cache tags.
    */
-  public static function buildTags($prefix, array $suffixes) {
+  public static function buildTags($prefix, array $suffixes, $glue = ':') {
     $tags = [];
     foreach ($suffixes as $suffix) {
-      $tags[] = $prefix . ':' . $suffix;
+      $tags[] = $prefix . $glue . $suffix;
     }
     return $tags;
   }

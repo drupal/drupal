@@ -205,8 +205,7 @@ abstract class CachePluginBase extends PluginBase {
    * to be sure that we catch everything. Maybe that's a bad idea.
    */
   public function cacheFlush() {
-    $id = $this->view->storage->id();
-    Cache::invalidateTags(array('view:' . $id));
+    Cache::invalidateTags($this->view->storage->getCacheTags());
   }
 
   /**
@@ -323,12 +322,11 @@ abstract class CachePluginBase extends PluginBase {
   /**
    * Gets an array of cache tags for the current view.
    *
-   * @return array
-   *   An array fo cache tags based on the current view.
+   * @return string[]
+   *   An array of cache tags based on the current view.
    */
   protected function getCacheTags() {
-    $id = $this->view->storage->id();
-    $tags = array('view:' . $id);
+    $tags = $this->view->storage->getCacheTags();
 
     $entity_information = $this->view->query->getEntityTableInfo();
 

@@ -406,7 +406,7 @@ services:
     arguments: ['@plugin.manager.menu.link']
   menu.tree_storage:
     class: Drupal\Core\Menu\MenuTreeStorage
-    arguments: ['@database', '@cache.menu', 'menu_tree']
+    arguments: ['@database', '@cache.menu', '@cache_tags.invalidator', 'menu_tree']
     public: false  # Private to plugin.manager.menu.link and menu.link_tree
     tags:
       - { name: backend_overridable }

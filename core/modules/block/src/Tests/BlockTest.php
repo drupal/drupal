@@ -327,10 +327,9 @@ class BlockTest extends BlockTestBase {
     $cid = implode(':', $cid_parts);
     $cache_entry = \Drupal::cache('render')->get($cid);
     $expected_cache_tags = array(
-      'theme:classy',
-      'theme_global_settings',
+      'config:block_list',
       'block_view',
-      'block:powered',
+      'config:block.block.powered',
       'block_plugin:system_powered_by_block',
       'rendered',
     );
@@ -339,8 +338,7 @@ class BlockTest extends BlockTestBase {
     $cache_entry = \Drupal::cache('render')->get('entity_view:block:powered:en:classy');
     $expected_cache_tags = array(
       'block_view',
-      'block:powered',
-      'theme:classy',
+      'config:block.block.powered',
       'block_plugin:system_powered_by_block',
       'rendered',
     );
@@ -369,11 +367,10 @@ class BlockTest extends BlockTestBase {
     $cid = implode(':', $cid_parts);
     $cache_entry = \Drupal::cache('render')->get($cid);
     $expected_cache_tags = array(
-      'theme:classy',
-      'theme_global_settings',
+      'config:block_list',
       'block_view',
-      'block:powered-2',
-      'block:powered',
+      'config:block.block.powered',
+      'config:block.block.powered-2',
       'block_plugin:system_powered_by_block',
       'rendered',
     );
@@ -381,8 +378,7 @@ class BlockTest extends BlockTestBase {
     $this->assertEqual($cache_entry->tags, $expected_cache_tags);
     $expected_cache_tags = array(
       'block_view',
-      'block:powered',
-      'theme:classy',
+      'config:block.block.powered',
       'block_plugin:system_powered_by_block',
       'rendered',
     );
@@ -391,8 +387,7 @@ class BlockTest extends BlockTestBase {
     $this->assertIdentical($cache_entry->tags, $expected_cache_tags);
     $expected_cache_tags = array(
       'block_view',
-      'block:powered-2',
-      'theme:classy',
+      'config:block.block.powered-2',
       'block_plugin:system_powered_by_block',
       'rendered',
     );

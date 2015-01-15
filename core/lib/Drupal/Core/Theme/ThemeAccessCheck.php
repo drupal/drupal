@@ -42,8 +42,8 @@ class ThemeAccessCheck implements AccessInterface {
    *   The access result.
    */
   public function access($theme) {
-    // Cacheable until the theme is modified.
-    return AccessResult::allowedIf($this->checkAccess($theme))->addCacheTags(array('theme:' . $theme));
+    // Cacheable until the theme settings are modified.
+    return AccessResult::allowedIf($this->checkAccess($theme))->addCacheTags(['config:' . $theme . '.settings']);
   }
 
   /**

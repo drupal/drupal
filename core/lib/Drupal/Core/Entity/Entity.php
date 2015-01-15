@@ -407,7 +407,7 @@ abstract class Entity implements EntityInterface {
    * {@inheritdoc}
    */
   public static function postDelete(EntityStorageInterface $storage, array $entities) {
-    self::invalidateTagsOnDelete($storage->getEntityType(), $entities);
+    static::invalidateTagsOnDelete($storage->getEntityType(), $entities);
   }
 
   /**

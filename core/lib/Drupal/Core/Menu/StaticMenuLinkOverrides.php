@@ -144,6 +144,13 @@ class StaticMenuLinkOverrides implements StaticMenuLinkOverridesInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags() {
+    return $this->getConfig()->getCacheTags();
+  }
+
+  /**
    * Encodes the ID by replacing dots with double underscores.
    *
    * This is done because config schema uses dots for its internal type

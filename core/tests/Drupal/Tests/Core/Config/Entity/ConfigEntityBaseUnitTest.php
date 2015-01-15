@@ -106,6 +106,9 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     $this->entityType->expects($this->any())
       ->method('getProvider')
       ->will($this->returnValue($this->provider));
+    $this->entityType->expects($this->any())
+      ->method('getConfigPrefix')
+      ->willReturn('test_provider.' . $this->entityTypeId);
 
     $this->entityManager = $this->getMock('\Drupal\Core\Entity\EntityManagerInterface');
     $this->entityManager->expects($this->any())
@@ -362,7 +365,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
   public function testDisable() {
     $this->cacheTagsInvalidator->expects($this->once())
       ->method('invalidateTags')
-      ->with(array($this->entityTypeId . ':' . $this->id));
+      ->with(array('config:test_provider.'  . $this->entityTypeId . '.' . $this->id));
 
     $this->entity->setStatus(TRUE);
     $this->assertSame($this->entity, $this->entity->disable());

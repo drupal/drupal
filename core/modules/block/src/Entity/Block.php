@@ -239,19 +239,6 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
 
   /**
    * {@inheritdoc}
-   *
-   * Block configuration entities are a special case: one block entity stores
-   * the placement of one block in one theme. Changing these entities may affect
-   * any page that is rendered in a certain theme, even if the block doesn't
-   * appear there currently. Hence a block configuration entity must also return
-   * the associated theme's cache tag.
-   */
-  public function getCacheTags() {
-    return Cache::mergeTags(parent::getCacheTags(), ['theme:' . $this->theme]);
-  }
-
-  /**
-   * {@inheritdoc}
    */
   public function setContexts(array $contexts) {
     $this->contexts = $contexts;

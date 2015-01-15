@@ -8,6 +8,7 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Cache\Cache;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -218,6 +219,7 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    * {@inheritdoc}
    */
   public function rename($old_name, $new_name) {
+    Cache::invalidateTags($this->get($old_name)->getCacheTags());
     $this->storage->rename($old_name, $new_name);
 
     // Clear out the static cache of any references to the old name.

@@ -93,7 +93,9 @@ class ContactPageAccess implements AccessInterface {
     }
     // If the requested user did not save a preference yet, deny access if the
     // configured default is disabled.
-    else if (!$this->configFactory->get('contact.settings')->get('user_default_enabled')) {
+    $contact_settings = $this->configFactory->get('contact.settings');
+    $access->cacheUntilConfigurationChanges($contact_settings);
+    if (!isset($account_data) && !$contact_settings->get('user_default_enabled')) {
       return $access;
     }
 

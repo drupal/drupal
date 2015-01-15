@@ -97,7 +97,7 @@ class AccessManager implements AccessManagerInterface {
     }
     catch (RouteNotFoundException $e) {
       // Cacheable until extensions change.
-      $result = AccessResult::forbidden()->addCacheTags(array('extension'));
+      $result = AccessResult::forbidden()->addCacheTags(['config:core.extension']);
       return $return_as_object ? $result : $result->isAllowed();
     }
     catch (ParamNotConvertedException $e) {

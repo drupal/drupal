@@ -173,7 +173,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $default_output = drupal_render($image_style);
     $this->drupalGet('node/' . $nid);
     $cache_tags = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Tags'));
-    $this->assertTrue(in_array('image_style:thumbnail', $cache_tags));
+    $this->assertTrue(in_array('config:image.style.thumbnail', $cache_tags));
     $this->assertRaw($default_output, 'Image style thumbnail formatter displaying correctly on full node view.');
 
     if ($scheme == 'private') {

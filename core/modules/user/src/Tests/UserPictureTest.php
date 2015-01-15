@@ -103,9 +103,6 @@ class UserPictureTest extends WebTestBase {
       ->set('features.comment_user_picture', TRUE)
       ->save();
 
-    // @todo Remove when https://www.drupal.org/node/2040135 lands.
-    Cache::invalidateTags(['rendered']);
-
     $edit = array(
       'comment_body[0][value]' => $this->randomString(),
     );
@@ -117,9 +114,6 @@ class UserPictureTest extends WebTestBase {
       ->set('features.node_user_picture', FALSE)
       ->set('features.comment_user_picture', FALSE)
       ->save();
-
-    // @todo Remove when https://www.drupal.org/node/2040135 lands.
-    Cache::invalidateTags(['rendered']);
 
     $this->drupalGet('node/' . $node->id());
     $this->assertNoRaw(file_uri_target($file->getFileUri()), 'User picture not found on node and comment.');

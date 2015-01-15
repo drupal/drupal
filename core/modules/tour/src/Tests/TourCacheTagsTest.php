@@ -48,12 +48,10 @@ class TourCacheTagsTest extends PageCacheTagsTestBase {
     $this->verifyPageCache($path, 'MISS');
 
     // Verify a cache hit, but also the presence of the correct cache tags.
-    $expected_tags = array(
-      'theme:classy',
-      'theme_global_settings',
-      'tour:tour-test',
+    $expected_tags = [
+      'config:tour.tour.tour-test',
       'rendered',
-    );
+    ];
     $this->verifyPageCache($path, 'HIT', $expected_tags);
 
     // Verify that after modifying the tour, there is a cache miss.
@@ -70,7 +68,10 @@ class TourCacheTagsTest extends PageCacheTagsTestBase {
     $this->verifyPageCache($path, 'MISS');
 
     // Verify a cache hit.
-    $this->verifyPageCache($path, 'HIT', array('rendered', 'theme:classy', 'theme_global_settings'));
+    $expected_tags = [
+      'rendered',
+    ];
+    $this->verifyPageCache($path, 'HIT', $expected_tags);
   }
 
 }
