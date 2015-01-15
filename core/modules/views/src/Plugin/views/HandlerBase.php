@@ -709,7 +709,9 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
     // If the user has configured a relationship on the handler take that into
     // account.
     if (!empty($this->options['relationship']) && $this->options['relationship'] != 'none') {
-      $views_data = $this->getViewsData()->get($this->view->relationship->table);
+      $relationship = $this->displayHandler->getOption('relationships')[$this->options['relationship']];
+      $table_data = $this->getViewsData()->get($relationship['table']);
+      $views_data = $this->getViewsData()->get($table_data[$relationship['field']]['relationship']['base']);
     }
     else {
       $views_data = $this->getViewsData()->get($this->view->storage->get('base_table'));

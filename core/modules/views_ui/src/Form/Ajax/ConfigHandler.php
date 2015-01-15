@@ -54,6 +54,7 @@ class ConfigHandler extends ViewsFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, Request $request = NULL) {
+    /** @var \Drupal\views\Entity\View $view */
     $view = $form_state->get('view');
     $display_id = $form_state->get('display_id');
     $type = $form_state->get('type');
@@ -130,6 +131,9 @@ class ConfigHandler extends ViewsFormBase {
             // skips submitting the form.
             $executable->setHandlerOption($display_id, $type, $id, 'relationship', $rel);
             $save_ui_cache = TRUE;
+            // Re-initialize with new relationship.
+            $item['relationship'] = $rel;
+            $handler->init($executable, $executable->display_handler, $item);
           }
 
           $form['options']['relationship'] = array(
