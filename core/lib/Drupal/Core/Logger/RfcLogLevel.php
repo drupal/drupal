@@ -29,6 +29,12 @@ use Drupal\Core\StringTranslation\TranslationWrapper;
  *
  * @} End of "defgroup logging_severity_levels".
  */
+
+/**
+ * Defines various logging severity levels.
+ *
+ * @ingroup logging_severity_levels
+ */
 class RfcLogLevel {
 
   /**

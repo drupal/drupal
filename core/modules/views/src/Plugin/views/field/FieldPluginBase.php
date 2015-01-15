@@ -47,6 +47,12 @@ use Drupal\views\ViewExecutable;
  * @ingroup views_plugins
  * @see plugin_api
  */
+
+/**
+ * Base class for views fields.
+ *
+ * @ingroup views_field_handlers
+ */
 abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterface {
 
   /**
@@ -1699,4 +1705,3 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 /**
  * @}
  */
-
