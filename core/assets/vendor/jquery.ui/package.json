@@ -2,11 +2,11 @@
 	"name": "jquery-ui",
 	"title": "jQuery UI",
 	"description": "A curated set of user interface interactions, effects, widgets, and themes built on top of the jQuery JavaScript Library.",
-	"version": "1.10.2",
+	"version": "1.11.2",
 	"homepage": "http://jqueryui.com",
 	"author": {
 		"name": "jQuery Foundation and other contributors",
-		"url": "https://github.com/jquery/jquery-ui/blob/1.10.2/AUTHORS.txt"
+		"url": "https://github.com/jquery/jquery-ui/blob/1.11.2/AUTHORS.txt"
 	},
 	"maintainers": [
 		{
@@ -38,6 +38,11 @@
 			"name": "TJ VanToll",
 			"email": "tj.vantoll@gmail.com",
 			"url": "http://tjvantoll.com"
+		},
+		{
+			"name": "Felix Nagel",
+			"email": "info@felixnagel.com",
+			"url": "http://www.felixnagel.com"
 		}
 	],
 	"repository": {
@@ -48,23 +53,30 @@
 	"licenses": [
 		{
 			"type": "MIT",
-			"url": "https://github.com/jquery/jquery-ui/blob/1.10.2/MIT-LICENSE.txt"
+			"url": "https://github.com/jquery/jquery-ui/blob/1.11.2/LICENSE.txt"
 		}
 	],
+	"scripts": {
+		"test": "grunt"
+	},
 	"dependencies": {},
 	"devDependencies": {
-		"grunt": "0.4.0",
-		"grunt-contrib-jshint": "0.1.1",
-		"grunt-contrib-uglify": "0.1.1",
+		"commitplease": "1.6.0",
+		"grunt": "0.4.2",
+		"grunt-bowercopy": "1.1.0",
+		"grunt-compare-size": "0.4.0",
 		"grunt-contrib-concat": "0.1.3",
-		"grunt-contrib-qunit": "0.2.0",
-		"grunt-contrib-csslint": "0.1.0",
-		"grunt-contrib-cssmin": "0.4.2",
-		"grunt-compare-size": "0.3.1",
-		"grunt-html": "0.3.3",
+		"grunt-contrib-csslint": "0.2.0",
+		"grunt-contrib-jshint": "0.7.1",
+		"grunt-contrib-qunit": "0.4.0",
+		"grunt-contrib-uglify": "0.1.1",
+		"grunt-esformatter": "0.2.0",
 		"grunt-git-authors": "1.2.0",
+		"grunt-html": "1.0.0",
+		"grunt-jscs": "0.6.2",
+		"load-grunt-tasks": "0.3.0",
 		"rimraf": "2.1.4",
-		"testswarm": "1.0.0-alpha"
+		"testswarm": "1.1.0"
 	},
 	"keywords": []
 }

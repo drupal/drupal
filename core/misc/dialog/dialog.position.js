@@ -53,7 +53,8 @@
     var leftString = (left > 0 ? '+' : '-') + Math.abs(Math.round(left / 2)) + 'px';
     var topString = (top > 0 ? '+' : '-') + Math.abs(Math.round(top / 2)) + 'px';
     options.position = {
-      my: 'center' + (left !== 0 ? leftString : '') + ' center' + (top !== 0 ? topString : '')
+      my: 'center' + (left !== 0 ? leftString : '') + ' center' + (top !== 0 ? topString : ''),
+      of: window
     };
     return options;
   }

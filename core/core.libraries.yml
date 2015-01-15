@@ -396,18 +396,18 @@ jquery.once:
 
 jquery.ui:
   remote: https://github.com/jquery/jquery-ui
-  version: &jquery_ui_version 1.10.2
+  version: &jquery_ui_version 1.11.2
   license: &jquery_ui_license
     name: MIT
-    url: https://github.com/jquery/jquery-ui/blob/1.10.2/MIT-LICENSE.txt
+    url: https://github.com/jquery/jquery-ui/blob/1.11.2/MIT-LICENSE.txt
     gpl-compatible: true
   js:
-    assets/vendor/jquery.ui/ui/jquery.ui.core.js: { weight: -11 }
+    assets/vendor/jquery.ui/ui/core-min.js: { weight: -11, minified: true }
   css:
     component:
-      assets/vendor/jquery.ui/themes/base/jquery.ui.core.css: {}
+      assets/vendor/jquery.ui/themes/base/core.css: {}
     theme:
-      assets/vendor/jquery.ui/themes/base/jquery.ui.theme.css: {}
+      assets/vendor/jquery.ui/themes/base/theme.css: {}
   dependencies:
     - core/jquery
 
@@ -415,10 +415,10 @@ jquery.ui.accordion:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/jquery.ui.accordion.js: {}
+    assets/vendor/jquery.ui/ui/accordion-min.js: { minified: true }
   css:
     component:
-      assets/vendor/jquery.ui/themes/base/jquery.ui.accordion.css: {}
+      assets/vendor/jquery.ui/themes/base/accordion.css: {}
   dependencies:
     - core/jquery.ui
     - core/jquery.ui.widget
@@ -427,10 +427,10 @@ jquery.ui.autocomplete:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/jquery.ui.autocomplete.js: {}
+    assets/vendor/jquery.ui/ui/autocomplete-min.js: { minified: true }
   css:
     component:
-      assets/vendor/jquery.ui/themes/base/jquery.ui.autocomplete.css: {}
+      assets/vendor/jquery.ui/themes/base/autocomplete.css: {}
   dependencies:
     - core/jquery.ui
     - core/jquery.ui.widget
@@ -441,10 +441,10 @@ jquery.ui.button:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/jquery.ui.button.js: {}
+    assets/vendor/jquery.ui/ui/button-min.js: { minified: true }
   css:
     component:
-      assets/vendor/jquery.ui/themes/base/jquery.ui.button.css: {}
+      assets/vendor/jquery.ui/themes/base/button.css: {}
   dependencies:
     - core/jquery.ui
     - core/jquery.ui.widget
@@ -453,10 +453,10 @@ jquery.ui.datepicker:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/jquery.ui.datepicker.js: {}
+    assets/vendor/jquery.ui/ui/datepicker-min.js: { minified: true }
   css:
     component:
-      assets/vendor/jquery.ui/themes/base/jquery.ui.datepicker.css: {}
+      assets/vendor/jquery.ui/themes/base/datepicker.css: {}
   dependencies:
     - core/jquery.ui
 
@@ -464,10 +464,10 @@ jquery.ui.dialog:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/jquery.ui.dialog.js: {}
+    assets/vendor/jquery.ui/ui/dialog-min.js: { minified: true }
   css:
     component:
-      assets/vendor/jquery.ui/themes/base/jquery.ui.dialog.css: {}
+      assets/vendor/jquery.ui/themes/base/dialog.css: {}
   dependencies:
     - core/jquery.ui
     - core/jquery.ui.widget
@@ -481,7 +481,7 @@ jquery.ui.draggable:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/jquery.ui.draggable.js: {}
+    assets/vendor/jquery.ui/ui/draggable-min.js: { minified: true }
   dependencies:
     - core/jquery.ui
     - core/jquery.ui.mouse
@@ -491,7 +491,7 @@ jquery.ui.droppable:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/jquery.ui.droppable.js: {}
+    assets/vendor/jquery.ui/ui/droppable-min.js: { minified: true }
   dependencies:
     - core/jquery.ui
     - core/jquery.ui.widget
@@ -502,13 +502,13 @@ jquery.ui.effects.core:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/jquery.effects.core.js: { weight: -9 }
+    assets/vendor/jquery.ui/ui/effect-min.js: { weight: -9, minified: true }
 
 jquery.ui.effects.blind:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/jquery.effects.blind.js: {}
+    assets/vendor/jquery.ui/ui/effect-blind-min.js: { minified: true }
   dependencies:
     - core/jquery.ui.effects.core
 
@@ -516,7 +516,7 @@ jquery.ui.effects.bounce:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/jquery.effects.bounce.js: {}
+    assets/vendor/jquery.ui/ui/effect-bounce-min.js: { minified: true }
   dependencies:
     - core/jquery.ui.effects.core
 
@@ -524,7 +524,7 @@ jquery.ui.effects.clip:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/jquery.effects.clip.js: {}
+    assets/vendor/jquery.ui/ui/effect-clip-min.js: { minified: true }
   dependencies:
     - core/jquery.ui.effects.core
 
@@ -532,7 +532,7 @@ jquery.ui.effects.drop:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/jquery.effects.drop.js: {}
+    assets/vendor/jquery.ui/ui/effect-drop-min.js: { minified: true }
   dependencies:
     - core/jquery.ui.effects.core
 
@@ -540,7 +540,7 @@ jquery.ui.effects.explode:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/jquery.effects.explode.js: {}
+    assets/vendor/jquery.ui/ui/effect-explode-min.js: { minified: true }
   dependencies:
     - core/jquery.ui.effects.core
 
@@ -548,7 +548,7 @@ jquery.ui.effects.fade:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/jquery.effects.fade.js: {}
+    assets/vendor/jquery.ui/ui/effect-fade-min.js: { minified: true }
   dependencies:
     - core/jquery.ui.effects.core
 
@@ -556,7 +556,7 @@ jquery.ui.effects.fold:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/jquery.effects.fold.js: {}
+    assets/vendor/jquery.ui/ui/effect-fold-min.js: { minified: true }
   dependencies:
     - core/jquery.ui.effects.core
 
@@ -564,7 +564,15 @@ jquery.ui.effects.highlight:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/jquery.effects.highlight.js: {}
+    assets/vendor/jquery.ui/ui/effect-highlight-min.js: { minified: true }
+  dependencies:
+    - core/jquery.ui.effects.core
+
+jquery.ui.effects.puff:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/effect-puff-min.js: { minified: true }
   dependencies:
     - core/jquery.ui.effects.core
 
@@ -572,7 +580,7 @@ jquery.ui.effects.pulsate:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/jquery.effects.pulsate.js: {}
+    assets/vendor/jquery.ui/ui/effect-pulsate-min.js: { minified: true }
   dependencies:
     - core/jquery.ui.effects.core
 
@@ -580,7 +588,7 @@ jquery.ui.effects.scale:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/jquery.effects.scale.js: {}
+    assets/vendor/jquery.ui/ui/effect-scale-min.js: { minified: true }
   dependencies:
     - core/jquery.ui.effects.core
 
@@ -588,7 +596,15 @@ jquery.ui.effects.shake:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/jquery.effects.shake.js: {}
+    assets/vendor/jquery.ui/ui/effect-shake-min.js: { minified: true }
+  dependencies:
+    - core/jquery.ui.effects.core
+
+jquery.ui.effects.size:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/effect-size-min.js: { minified: true }
   dependencies:
     - core/jquery.ui.effects.core
 
@@ -596,7 +612,7 @@ jquery.ui.effects.slide:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/jquery.effects.slide.js: {}
+    assets/vendor/jquery.ui/ui/effect-slide-min.js: { minified: true }
   dependencies:
     - core/jquery.ui.effects.core
 
@@ -604,7 +620,7 @@ jquery.ui.effects.transfer:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/jquery.effects.transfer.js: {}
+    assets/vendor/jquery.ui/ui/effect-transfer-min.js: { minified: true }
   dependencies:
     - core/jquery.ui.effects.core
 
@@ -612,10 +628,10 @@ jquery.ui.menu:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/jquery.ui.menu.js: {}
+    assets/vendor/jquery.ui/ui/menu-min.js: { minified: true }
   css:
     component:
-      assets/vendor/jquery.ui/themes/base/jquery.ui.menu.css: {}
+      assets/vendor/jquery.ui/themes/base/menu.css: {}
   dependencies:
     - core/jquery.ui
     - core/jquery.ui.widget
@@ -624,7 +640,7 @@ jquery.ui.mouse:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/jquery.ui.mouse.js: {}
+    assets/vendor/jquery.ui/ui/mouse-min.js: { minified: true }
   dependencies:
     - core/jquery.ui.widget
 
@@ -632,16 +648,16 @@ jquery.ui.position:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/jquery.ui.position.js: {}
+    assets/vendor/jquery.ui/ui/position-min.js: { minified: true }
 
 jquery.ui.progressbar:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/jquery.ui.progressbar.js: {}
+    assets/vendor/jquery.ui/ui/progressbar-min.js: { minified: true }
   css:
     component:
-      assets/vendor/jquery.ui/themes/base/jquery.ui.progressbar.css: {}
+      assets/vendor/jquery.ui/themes/base/progressbar.css: {}
   dependencies:
     - core/jquery.ui
     - core/jquery.ui.widget
@@ -650,10 +666,10 @@ jquery.ui.resizable:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/jquery.ui.resizable.js: {}
+    assets/vendor/jquery.ui/ui/resizable-min.js: { minified: true }
   css:
     component:
-      assets/vendor/jquery.ui/themes/base/jquery.ui.resizable.css: {}
+      assets/vendor/jquery.ui/themes/base/resizable.css: {}
   dependencies:
     - core/jquery.ui
     - core/jquery.ui.widget
@@ -663,23 +679,37 @@ jquery.ui.selectable:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/jquery.ui.selectable.js: {}
+    assets/vendor/jquery.ui/ui/selectable-min.js: { minified: true }
   css:
     component:
-      assets/vendor/jquery.ui/themes/base/jquery.ui.selectable.css: {}
+      assets/vendor/jquery.ui/themes/base/selectable.css: {}
   dependencies:
     - core/jquery.ui
     - core/jquery.ui.mouse
+    - core/jquery.ui.widget
+
+jquery.ui.selectmenu:
+  version: *jquery_ui_version
+  license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/selectmenu-min.js: { minified: true }
+  css:
+    component:
+      assets/vendor/jquery.ui/themes/base/selectmenu.css: {}
+  dependencies:
+    - core/jquery.ui
+    - core/jquery.ui.menu
+    - core/jquery.ui.position
     - core/jquery.ui.widget
 
 jquery.ui.slider:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/jquery.ui.slider.js: {}
+    assets/vendor/jquery.ui/ui/slider-min.js: { minified: true }
   css:
     component:
-      assets/vendor/jquery.ui/themes/base/jquery.ui.slider.css: {}
+      assets/vendor/jquery.ui/themes/base/slider.css: {}
   dependencies:
     - core/jquery.ui
     - core/jquery.ui.mouse
@@ -689,7 +719,7 @@ jquery.ui.sortable:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/jquery.ui.sortable.js: {}
+    assets/vendor/jquery.ui/ui/sortable-min.js: { minified: true }
   dependencies:
     - core/jquery.ui
     - core/jquery.ui.mouse
@@ -699,10 +729,10 @@ jquery.ui.spinner:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/jquery.ui.spinner.js: {}
+    assets/vendor/jquery.ui/ui/spinner-min.js: { minified: true }
   css:
     component:
-      assets/vendor/jquery.ui/themes/base/jquery.ui.spinner.css: {}
+      assets/vendor/jquery.ui/themes/base/spinner.css: {}
   dependencies:
     - core/jquery.ui
     - core/jquery.ui.widget
@@ -712,10 +742,10 @@ jquery.ui.tabs:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/jquery.ui.tabs.js: {}
+    assets/vendor/jquery.ui/ui/tabs-min.js: { minified: true }
   css:
     component:
-      assets/vendor/jquery.ui/themes/base/jquery.ui.tabs.css: {}
+      assets/vendor/jquery.ui/themes/base/tabs.css: {}
   dependencies:
     - core/jquery.ui
     - core/jquery.ui.widget
@@ -724,10 +754,10 @@ jquery.ui.tooltip:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/jquery.ui.tooltip.js: {}
+    assets/vendor/jquery.ui/ui/tooltip-min.js: { minified: true }
   css:
     component:
-      assets/vendor/jquery.ui/themes/base/jquery.ui.tooltip.css: {}
+      assets/vendor/jquery.ui/themes/base/tooltip.css: {}
   dependencies:
     - core/jquery.ui
     - core/jquery.ui.widget
@@ -749,7 +779,7 @@ jquery.ui.widget:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/jquery.ui.widget.js: { weight: -10 }
+    assets/vendor/jquery.ui/ui/widget-min.js: { weight: -10, minified: true }
   dependencies:
     - core/jquery.ui
 

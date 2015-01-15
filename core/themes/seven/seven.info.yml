@@ -11,10 +11,10 @@ libraries:
  - seven/global-styling
 stylesheets-override:
   - css/components/vertical-tabs.css
-  - css/components/jquery.ui.theme.css
+  - css/components/jquery.ui/theme.css
   - css/components/dialog.theme.css
 stylesheets-remove:
-  - jquery.ui.dialog.css
+  - dialog.css
 quickedit_stylesheets:
   - css/components/quickedit.css
 regions:

@@ -1,7 +1,7 @@
 {
 	"name": "ui.button",
 	"title": "jQuery UI Button",
-	"description": "Enhances a form with themable buttons.",
+	"description": "Enhances a form with themeable buttons.",
 	"keywords": [
 		"ui",
 		"button",
@@ -9,10 +9,10 @@
 		"radio",
 		"checkbox"
 	],
-	"version": "1.10.2",
+	"version": "1.11.2",
 	"author": {
 		"name": "jQuery Foundation and other contributors",
-		"url": "https://github.com/jquery/jquery-ui/blob/1.10.2/AUTHORS.txt"
+		"url": "https://github.com/jquery/jquery-ui/blob/1.11.2/AUTHORS.txt"
 	},
 	"maintainers": [
 		{
@@ -44,12 +44,17 @@
 			"name": "TJ VanToll",
 			"email": "tj.vantoll@gmail.com",
 			"url": "http://tjvantoll.com"
+		},
+		{
+			"name": "Felix Nagel",
+			"email": "info@felixnagel.com",
+			"url": "http://www.felixnagel.com"
 		}
 	],
 	"licenses": [
 		{
 			"type": "MIT",
-			"url": "https://github.com/jquery/jquery-ui/blob/1.10.2/MIT-LICENSE.txt"
+			"url": "https://github.com/jquery/jquery-ui/blob/1.11.2/LICENSE.txt"
 		}
 	],
 	"bugs": "http://bugs.jqueryui.com/",
@@ -59,8 +64,8 @@
 	"download": "http://jqueryui.com/download/",
 	"dependencies": {
 		"jquery": ">=1.6",
-		"ui.core": "1.10.2",
-		"ui.widget": "1.10.2"
+		"ui.core": "1.11.2",
+		"ui.widget": "1.11.2"
 	},
 	"category": "widget"
 }
