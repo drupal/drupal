@@ -76,12 +76,12 @@
 #locale-translation-status-form td {
   vertical-align: top;
 }
-#locale-translation-status-form .expand .inner {
+.locale-translation-update__wrapper {
   background: transparent url(../../../misc/menu-collapsed.png) left .6em no-repeat;
   margin-left: -12px;
   padding-left: 12px;
 }
-#locale-translation-status-form .expanded .expand .inner {
+.expanded .locale-translation-update__wrapper {
   background: transparent url(../../../misc/menu-expanded.png) left .6em no-repeat;
 }
 
@@ -93,33 +93,33 @@
 #locale-translation-status-form .description {
   cursor: pointer;
 }
-#locale-translation-status-form .description .inner {
+.locale-translation-update__wrapper {
   color: #5c5c5b;
   line-height: 20px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-#locale-translation-status-form .expanded .description .inner {
+.expanded .locale-translation-update__wrapper {
   height: auto;
   overflow: visible;
   white-space: normal;
 }
-#locale-translation-status-form .expanded .description .text {
+.expanded .locale-translation-update__message {
   -webkit-hyphens: auto;
   -moz-hyphens: auto;
   -ms-hyphens: auto;
   hyphens: auto;
 }
-.js #locale-translation-status-form .description .inner {
+.js .locale-translation-update__wrapper {
   height: 20px;
 }
-#locale-translation-status-form .expanded .description .inner {
+.expanded .locale-translation-update__wrapper {
   height: auto;
   overflow: visible;
   white-space: normal;
 }
-#locale-translation-status-form .details {
+.locale-translation-update__details {
   padding: 5px 0;
   max-width: 490px;
   white-space: normal;

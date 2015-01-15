@@ -98,7 +98,7 @@ class TranslationStatusForm extends FormBase {
             ),
           ),
           'status' => array(
-            'class' => array('description', 'expand', 'priority-low'),
+            'class' => array('description', 'priority-low'),
             'data' => drupal_render($locale_translation_update_info),
           ),
         );

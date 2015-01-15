@@ -60,7 +60,7 @@
           $tr.toggleClass('expanded');
 
           // Change screen reader text.
-          $tr.find('.update-description-prefix').text(function () {
+          $tr.find('.locale-translation-update__prefix').text(function () {
             if ($tr.hasClass('expanded')) {
               return Drupal.t('Hide description');
             }

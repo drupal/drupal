@@ -18,15 +18,15 @@
  * @ingroup themeable
  */
 #}
-<div class="inner" tabindex="0" role="button">
-  <span class="update-description-prefix visually-hidden">Show description</span>
+<div class="locale-translation-update__wrapper" tabindex="0" role="button">
+  <span class="locale-translation-update__prefix visually-hidden">Show description</span>
   {% if modules %}
     {% set module_list = modules|safe_join(', ') %}
-    <span class="text">{% trans %}Updates for: {{ module_list }}{% endtrans %}</span>
+    <span class="locale-translation-update__message">{% trans %}Updates for: {{ module_list }}{% endtrans %}</span>
   {% elseif missing_updates_status %}
-    <span class="text">{{ missing_updates_status }}</span>
+    <span class="locale-translation-update__message">{{ missing_updates_status }}</span>
   {% endif %}
   {% if details %}
-    <div class="details">{{ details }}</div>
+    <div class="locale-translation-update__details">{{ details }}</div>
   {% endif %}
 </div>
