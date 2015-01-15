@@ -182,7 +182,6 @@ abstract class DisplayPluginBase extends PluginBase {
     // Track changes that the user should know about.
     $changed = FALSE;
 
-    // Make some modifications:
     if (!isset($options) && isset($display['display_options'])) {
       $options = $display['display_options'];
     }
@@ -250,21 +249,21 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
-   * Determine if this display is the 'default' display which contains
-   * fallback settings
+   * Determines if this display is the 'default' display.
+   *
+   * 'Default' display contains fallback settings.
    */
   public function isDefaultDisplay() { return FALSE; }
 
   /**
-   * Determine if this display uses exposed filters, so the view
-   * will know whether or not to build them.
+   * Determines if this display uses exposed filters.
    */
   public function usesExposed() {
     if (!isset($this->has_exposed)) {
       foreach ($this->handlers as $type => $value) {
         foreach ($this->view->$type as $handler) {
           if ($handler->canExpose() && $handler->isExposed()) {
-            // one is all we need; if we find it, return true.
+            // One is all we need; if we find it, return TRUE.
             $this->has_exposed = TRUE;
             return TRUE;
           }
@@ -282,9 +281,7 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
-   * Determine if this display should display the exposed
-   * filters widgets, so the view will know whether or not
-   * to render them.
+   * Determines if this display should display the exposed filters widgets.
    *
    * Regardless of what this function
    * returns, exposed filters will not be used nor
@@ -441,7 +438,7 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
-   * Allow displays to attach to other views.
+   * Allows displays to attach to other views.
    *
    * @param \Drupal\views\ViewExecutable $view
    *   The views executable.
@@ -453,8 +450,7 @@ abstract class DisplayPluginBase extends PluginBase {
   public function attachTo(ViewExecutable $view, $display_id, array &$build) { }
 
   /**
-   * Static member function to list which sections are defaultable
-   * and what items each section contains.
+   * Lists the 'defaultable' sections and what items each section contains.
    */
   public function defaultableSections($section = NULL) {
     $sections = array(
@@ -480,7 +476,7 @@ abstract class DisplayPluginBase extends PluginBase {
 
       'exposed_form' => array('exposed_form'),
 
-      // These guys are special
+      // These sections are special.
       'header' => array('header'),
       'footer' => array('footer'),
       'empty' => array('empty'),
@@ -726,7 +722,7 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
-   * Check to see if the display has a 'path' field.
+   * Checks to see if the display has a 'path' field.
    *
    * This is a pure function and not just a setting on the definition
    * because some displays (such as a panel pane) may have a path based
@@ -737,16 +733,16 @@ abstract class DisplayPluginBase extends PluginBase {
   public function hasPath() { return FALSE; }
 
   /**
-   * Check to see if the display has some need to link to another display.
+   * Checks to see if the display has some need to link to another display.
    *
-   * For the most part, displays without a path will use a link display. However,
-   * sometimes displays that have a path might also need to link to another display.
-   * This is true for feeds.
+   * For the most part, displays without a path will use a link display.
+   * However, sometimes displays that have a path might also need to link to
+   * another display. This is true for feeds.
    */
   public function usesLinkDisplay() { return !$this->hasPath(); }
 
   /**
-   * Check to see if the display can put the exposed formin a block.
+   * Checks to see if the display can put the exposed form in a block.
    *
    * By default, displays that do not have a path cannot disconnect
    * the exposed form and put it in a block, because the form has no
@@ -779,8 +775,7 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
-   * Check to see which display to use when creating links within
-   * a view using this display.
+   * Returns the ID of the display to use when making links.
    */
   public function getLinkDisplay() {
     $display_id = $this->getOption('link_display');
@@ -795,11 +790,11 @@ abstract class DisplayPluginBase extends PluginBase {
     else {
       return $display_id;
     }
-    // fall-through returns NULL
+    // Fall-through returns NULL.
   }
 
   /**
-   * Return the base path to use for this display.
+   * Returns the base path to use for this display.
    *
    * This can be overridden for displays that do strange things
    * with the path.
@@ -820,19 +815,17 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
-   * Determine if a given option is set to use the default display or the
-   * current display
+   * Determines if an option is set to use the default or current display.
    *
    * @return
-   *   TRUE for the default display
+   *   TRUE for the default display.
    */
   public function isDefaulted($option) {
     return !$this->isDefaultDisplay() && !empty($this->default_display) && !empty($this->options['defaults'][$option]);
   }
 
   /**
-   * Intelligently get an option either from this display or from the
-   * default display, if directed to do so.
+   * Gets an option, from this display or the default display.
    */
   public function getOption($option) {
     if ($this->isDefaulted($option)) {
@@ -845,7 +838,7 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
-   * Determine if the display's style uses fields.
+   * Determines if the display's style uses fields.
    *
    * @return bool
    */
@@ -1010,8 +1003,7 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
-   * Intelligently set an option either from this display or from the
-   * default display, if directed to do so.
+   * Sets an option, on this display or the default display.
    */
   public function setOption($option, $value) {
     if ($this->isDefaulted($option)) {
@@ -1034,8 +1026,10 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
-   * Because forms may be split up into sections, this provides
-   * an easy URL to exactly the right section. Don't override this.
+   * Returns a link to a section of a form.
+   *
+   * Because forms may be split up into sections, this provides an easy URL
+   * to exactly the right section. Don't override this.
    */
   public function optionLink($text, $section, $class = '', $title = '') {
     if (!empty($class)) {
@@ -1081,7 +1075,7 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
-   * Provide the default summary for options in the views UI.
+   * Provides the default summary for options in the views UI.
    *
    * This output is returned as an array.
    */
@@ -1175,7 +1169,8 @@ abstract class DisplayPluginBase extends PluginBase {
       'desc' => $this->t('Change the way content is formatted.'),
     );
 
-    // This adds a 'Settings' link to the style_options setting if the style has options.
+    // This adds a 'Settings' link to the style_options setting if the style has
+    // options.
     if ($style_plugin_instance->usesOptions()) {
       $options['style']['links']['style_options'] = $this->t('Change settings for this format');
     }
@@ -1192,7 +1187,8 @@ abstract class DisplayPluginBase extends PluginBase {
         'setting' => $row_summary,
         'desc' => $this->t('Change the way each row in the view is styled.'),
       );
-      // This adds a 'Settings' link to the row_options setting if the row style has options.
+      // This adds a 'Settings' link to the row_options setting if the row style
+      // has options.
       if ($row_plugin_instance->usesOptions()) {
         $options['row']['links']['row_options'] = $this->t('Change settings for this style');
       }
@@ -1224,7 +1220,7 @@ abstract class DisplayPluginBase extends PluginBase {
 
     $pager_plugin = $this->getPlugin('pager');
     if (!$pager_plugin) {
-      // default to the no pager plugin.
+      // Default to the no pager plugin.
       $pager_plugin = Views::pluginManager('pager')->createInstance('none');
     }
 
@@ -1238,7 +1234,7 @@ abstract class DisplayPluginBase extends PluginBase {
       'desc' => $this->t("Change this display's pager setting."),
     );
 
-    // If pagers aren't allowed, change the text of the item:
+    // If pagers aren't allowed, change the text of the item.
     if (!$this->usesPager()) {
       $options['pager']['title'] = $this->t('Items to display');
     }
@@ -1291,7 +1287,7 @@ abstract class DisplayPluginBase extends PluginBase {
 
     $access_plugin = $this->getPlugin('access');
     if (!$access_plugin) {
-      // default to the no access control plugin.
+      // Default to the no access control plugin.
       $access_plugin = Views::pluginManager('access')->createInstance('none');
     }
 
@@ -1311,7 +1307,7 @@ abstract class DisplayPluginBase extends PluginBase {
 
     $cache_plugin = $this->getPlugin('cache');
     if (!$cache_plugin) {
-      // default to the no cache control plugin.
+      // Default to the no cache control plugin.
       $cache_plugin = Views::pluginManager('cache')->createInstance('none');
     }
 
@@ -1367,7 +1363,7 @@ abstract class DisplayPluginBase extends PluginBase {
 
     $exposed_form_plugin = $this->getPlugin('exposed_form');
     if (!$exposed_form_plugin) {
-      // default to the no cache control plugin.
+      // Default to the no cache control plugin.
       $exposed_form_plugin = Views::pluginManager('exposed_form')->createInstance('basic');
     }
 
@@ -1403,7 +1399,7 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
-   * Provide the default form for setting options.
+   * Provides the default form for setting options.
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
@@ -1709,7 +1705,7 @@ abstract class DisplayPluginBase extends PluginBase {
           $row_plugin = $this->getOption('row');
           $name = $row_plugin['type'];
         }
-        // if row, $style will be empty.
+        // If row, $style will be empty.
         if (empty($style)) {
           $form['#title'] .= $this->t('Row style options');
         }
@@ -1895,7 +1891,7 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
-   * Validate the options form.
+   * Validates the options form.
    */
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     $section = $form_state->get('section');
@@ -1947,7 +1943,8 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
-   * Perform any necessary changes to the form values prior to storage.
+   * Performs any necessary changes to the form values prior to storage.
+   *
    * There is no need for this function to actually store the data.
    */
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
@@ -2072,9 +2069,9 @@ abstract class DisplayPluginBase extends PluginBase {
    * @param string $section
    *   Which option should be marked as overridden, for example "filters".
    * @param bool $new_state
-   *   Select the new state of the option.
-   *     - TRUE: Revert to default.
-   *     - FALSE: Mark it as overridden.
+   *   Select the new state of the option:
+   *   - TRUE: Revert new state option to default.
+   *   - FALSE: Mark it as overridden.
    */
   public function setOverride($section, $new_state = NULL) {
     $options = $this->defaultableSections($section);
@@ -2094,7 +2091,7 @@ abstract class DisplayPluginBase extends PluginBase {
         unset($this->display['display_options'][$option]);
       }
       else {
-        // copy existing values into our display.
+        // Copy existing values into our display.
         $this->options[$option] = $this->getOption($option);
         $this->display['display_options'][$option] = $this->options[$option];
       }
@@ -2104,7 +2101,7 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
-   * Inject anything into the query that the display handler needs.
+   * Injects anything into the query that the display handler needs.
    */
   public function query() {
     foreach ($this->extenders as $extender) {
@@ -2113,21 +2110,21 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
-   * Not all display plugins will support filtering
+   * Does nothing (obsolete function).
    *
-   * @todo this doesn't seems to be used
+   * @todo This function no longer seems to be used.
    */
   public function renderFilters() { }
 
   /**
-   * Not all display plugins will suppert pager rendering.
+   * Checks to see if the display plugins support pager rendering.
    */
   public function renderPager() {
     return TRUE;
   }
 
   /**
-   * Render the 'more' link
+   * Renders the 'more' link.
    */
   public function renderMoreLink() {
     if ($this->isMoreEnabled() && ($this->useMoreAlways() || (!empty($this->view->pager) && $this->view->pager->hasMoreRecords()))) {
@@ -2172,7 +2169,7 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
-   * Render this display.
+   * Renders this display.
    */
   public function render() {
     $rows = (!empty($this->view->result) || $this->view->style_plugin->evenEmpty()) ? $this->view->style_plugin->render($this->view->result) : array();
@@ -2260,7 +2257,7 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
-   * Render one of the available areas.
+   * Renders one of the available areas.
    *
    * @param string $area
    *   Identifier of the specific area to render.
@@ -2281,7 +2278,7 @@ abstract class DisplayPluginBase extends PluginBase {
 
 
   /**
-   * Determine if the user has access to this display of the view.
+   * Determines if the user has access to this display of the view.
    */
   public function access(AccountInterface $account = NULL) {
     if (!isset($account)) {
@@ -2294,14 +2291,15 @@ abstract class DisplayPluginBase extends PluginBase {
       return $plugin->access($account);
     }
 
-    // fallback to all access if no plugin.
+    // Fallback to all access if no plugin.
     return TRUE;
   }
 
   /**
-   * Set up any variables on the view prior to execution. These are separated
-   * from execute because they are extremely common and unlikely to be
-   * overridden on an individual display.
+   * Sets up any variables on the view prior to execution.
+   *
+   * These are separated from execute because they are extremely common
+   * and unlikely to be overridden on an individual display.
    */
   public function preExecute() {
     $this->view->setAjaxEnabled($this->ajaxEnabled());
@@ -2324,8 +2322,8 @@ abstract class DisplayPluginBase extends PluginBase {
    *
    * @return array
    *   Returns an array:
-   *     - first value: (boolean) Whether the display is cacheable.
-   *     - second value: (string[]) The cache contexts the display varies by.
+   *   - first value: (boolean) Whether the display is cacheable.
+   *   - second value: (string[]) The cache contexts the display varies by.
    */
   public function calculateCacheMetadata () {
     $is_cacheable = TRUE;
@@ -2364,8 +2362,7 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
-   * When used externally, this is how a view gets run and returns
-   * data in the format required.
+   * Executes the view and returns data in the format required.
    *
    * The base class cannot be executed.
    */
@@ -2393,8 +2390,9 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
-   * Fully render the display for the purposes of a live preview or
-   * some other AJAXy reason.
+   * Renders the display for the purposes of a live preview.
+   *
+   * Also might be used for some other AJAXy reason.
    */
   function preview() {
     return $this->view->render();
@@ -2421,7 +2419,8 @@ abstract class DisplayPluginBase extends PluginBase {
    * Make sure the display and all associated handlers are valid.
    *
    * @return
-   *   Empty array if the display is valid; an array of error strings if it is not.
+   *   Empty array if the display is valid; an array of error strings if it is
+   *   not.
    */
   public function validate() {
     $errors = array();
@@ -2443,7 +2442,7 @@ abstract class DisplayPluginBase extends PluginBase {
       $errors[] = $this->t('Display "@display" uses a path but the path is undefined.', array('@display' => $this->display['display_title']));
     }
 
-    // Validate style plugin
+    // Validate style plugin.
     $style = $this->getPlugin('style');
     if (empty($style)) {
       $errors[] = $this->t('Display "@display" has an invalid style plugin.', array('@display' => $this->display['display_title']));
@@ -2462,7 +2461,7 @@ abstract class DisplayPluginBase extends PluginBase {
       $errors = array_merge($errors, $result);
     }
 
-    // Validate handlers
+    // Validate handlers.
     foreach (ViewExecutable::getHandlerTypes() as $type => $info) {
       foreach ($this->getHandlers($type) as $handler) {
         $result = $handler->validate();
@@ -2496,7 +2495,7 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
-   * Check if the provided identifier is unique.
+   * Checks if the provided identifier is unique.
    *
    * @param string $id
    *   The id of the handler which is checked.
@@ -2556,7 +2555,7 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
-   * Provide the block system with any exposed widget blocks for this display.
+   * Provides the block system with any exposed widget blocks for this display.
    */
   public function getSpecialBlocks() {
     $blocks = array();
@@ -2574,7 +2573,7 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
-   * Render the exposed form as block.
+   * Renders the exposed form as block.
    *
    * @return string|null
    *  The rendered exposed form as string or NULL otherwise.
@@ -2594,15 +2593,17 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
-   * Provide some helpful text for the arguments.
-   * The result should contain of an array with
+   * Provides help text for the arguments.
+   *
+   * @return array
+   *   Returns an array which contains text for the argument fieldset:
    *   - filter value present: The title of the fieldset in the argument
    *     where you can configure what should be done with a given argument.
-   *   - filter value not present: The tiel of the fieldset in the argument
+   *   - filter value not present: The title of the fieldset in the argument
    *     where you can configure what should be done if the argument does not
    *     exist.
-   *   - description: A description about how arguments comes to the display.
-   *     For example blocks don't get it from url.
+   *   - description: A description about how arguments are passed
+   *     to the display. For example blocks can't get arguments from url.
    */
   public function getArgumentText() {
     return array(
@@ -2613,10 +2614,15 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
-   * Provide some helpful text for pagers.
+   * Provides help text for pagers.
    *
-   * The result should contain of an array within
-   *   - items per page title
+   * @return array
+   *   Returns an array which contains text for the items_per_page form
+   *   element:
+   *   - items per page title: The title text for the items_per_page form
+   *     element.
+   *   - items per page description: The description text for the
+   *     items_per_page form element.
    */
   public function getPagerText() {
     return array(
