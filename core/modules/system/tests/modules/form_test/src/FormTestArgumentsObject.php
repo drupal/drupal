@@ -8,19 +8,26 @@
 namespace Drupal\form_test;
 
 use Drupal\Component\Utility\String;
-use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides a test form object that needs arguments.
  */
-class FormTestArgumentsObject extends FormBase {
+class FormTestArgumentsObject extends ConfigFormBase {
 
   /**
    * {@inheritdoc}
    */
   public function getFormId() {
     return 'form_test_form_test_arguments_object';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getEditableConfigNames() {
+    return ['form_test.object'];
   }
 
   /**

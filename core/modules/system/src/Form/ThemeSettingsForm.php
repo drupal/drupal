@@ -38,6 +38,13 @@ class ThemeSettingsForm extends ConfigFormBase {
   protected $themeHandler;
 
   /**
+   * An array of configuration names that should be editable.
+   *
+   * @var array
+   */
+  protected $editableConfig = [];
+
+  /**
    * Constructs a ThemeSettingsForm object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -74,6 +81,13 @@ class ThemeSettingsForm extends ConfigFormBase {
 
   /**
    * {@inheritdoc}
+   */
+  protected function getEditableConfigNames() {
+    return $this->editableConfig;
+  }
+
+  /**
+   * {@inheritdoc}
    *
    * @param string $theme
    *   The theme name.
@@ -99,6 +113,10 @@ class ThemeSettingsForm extends ConfigFormBase {
       $var = 'theme_settings';
       $config_key = 'system.theme.global';
     }
+    // @todo this is pretty meaningless since we're using theme_get_settings
+    //   which means overrides can bleed into active config here. Will be fixed
+    //   by https://www.drupal.org/node/2402467.
+    $this->editableConfig = [$config_key];
 
     $form['var'] = array(
       '#type' => 'hidden',
@@ -389,7 +407,9 @@ class ThemeSettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
-    $config = $this->config($form_state->getValue('config_key'));
+    $config_key = $form_state->getValue('config_key');
+    $this->editableConfig = [$config_key];
+    $config = $this->config($config_key);
 
     // Exclude unnecessary elements before saving.
     $form_state->cleanValues();

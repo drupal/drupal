@@ -1520,9 +1520,10 @@ function drupal_tempnam($directory, $prefix) {
  *   A string containing the path to the temporary directory.
  */
 function file_directory_temp() {
-  $config = \Drupal::config('system.file');
-  $temporary_directory = $config->get('path.temporary');
+  $temporary_directory = \Drupal::config('system.file')->get('path.temporary');
   if (empty($temporary_directory)) {
+    // Needs set up.
+    $config = \Drupal::configFactory()->getEditable('system.file');
     $temporary_directory = file_directory_os_temp();
 
     if (empty($temporary_directory)) {

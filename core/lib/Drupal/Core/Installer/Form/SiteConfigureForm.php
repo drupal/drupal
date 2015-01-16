@@ -100,6 +100,17 @@ class SiteConfigureForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  protected function getEditableConfigNames() {
+    return [
+      'system.date',
+      'system.site',
+      'update.settings',
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['#title'] = $this->t('Configure site');
 

@@ -61,6 +61,13 @@ class ImageToolkitForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  protected function getEditableConfigNames() {
+    return ['system.image'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $current_toolkit = $this->config('system.image')->get('toolkit');
 

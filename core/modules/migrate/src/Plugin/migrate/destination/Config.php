@@ -6,6 +6,7 @@
 
 namespace Drupal\migrate\Plugin\migrate\destination;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\MigrateException;
@@ -43,12 +44,12 @@ class Config extends DestinationBase implements ContainerFactoryPluginInterface 
    *   The plugin implementation definition.
    * @param \Drupal\migrate\Entity\MigrationInterface $migration
    *   The migration entity.
-   * @param \Drupal\Core\Config\Config $config
-   *   The configuration object.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The configuration factory.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, ConfigObject $config) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, ConfigFactoryInterface $config_factory) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
-    $this->config = $config;
+    $this->config = $config_factory->getEditable($configuration['config_name']);
   }
 
   /**
@@ -60,7 +61,7 @@ class Config extends DestinationBase implements ContainerFactoryPluginInterface 
       $plugin_id,
       $plugin_definition,
       $migration,
-      $container->get('config.factory')->get($configuration['config_name'])
+      $container->get('config.factory')
     );
   }
 

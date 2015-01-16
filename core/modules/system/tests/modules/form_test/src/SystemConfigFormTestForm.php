@@ -21,4 +21,11 @@ class SystemConfigFormTestForm extends ConfigFormBase {
     return 'form_test_system_config_test_form';
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function getEditableConfigNames() {
+    return [];
+  }
+
 }

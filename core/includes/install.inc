@@ -618,7 +618,7 @@ function drupal_install_system($install_state) {
 
   // Ensure default language is saved.
   if (isset($install_state['parameters']['langcode'])) {
-    \Drupal::config('system.site')
+    \Drupal::configFactory()->getEditable('system.site')
       ->set('langcode', $install_state['parameters']['langcode'])
       ->save();
   }

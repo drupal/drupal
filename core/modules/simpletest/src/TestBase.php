@@ -1629,7 +1629,7 @@ abstract class TestBase {
     $config_factory = \Drupal::configFactory();
     $old_state = $config_factory->getOverrideState();
     $config_factory->setOverrideState(FALSE);
-    $config = $config_factory->get($name);
+    $config = $config_factory->getEditable($name);
     $config_factory->setOverrideState($old_state);
     return $config;
   }

@@ -58,6 +58,13 @@ class RegionalForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  protected function getEditableConfigNames() {
+    return ['system.date'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $countries = $this->countryManager->getList();
     $system_date = $this->config('system.date');

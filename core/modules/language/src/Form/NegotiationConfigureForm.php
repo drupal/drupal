@@ -121,6 +121,13 @@ class NegotiationConfigureForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  protected function getEditableConfigNames() {
+    return ['language.types'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $configurable = $this->languageTypes->get('configurable');
 

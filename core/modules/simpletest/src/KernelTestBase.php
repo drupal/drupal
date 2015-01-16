@@ -208,7 +208,10 @@ abstract class KernelTestBase extends TestBase {
     if ($modules) {
       $this->enableModules($modules);
     }
-    // In order to use theme functions default theme config needs to exist.
+    // In order to use theme functions default theme config needs to exist. This
+    // configuration is not saved because it would fatal due to system module's
+    // configuration schema not existing. However since the configuration is
+    // cached in the configuration factory everything works.
     $this->config('system.theme')->set('default', 'classy');
 
     // Tests based on this class are entitled to use Drupal's File and
@@ -483,7 +486,7 @@ abstract class KernelTestBase extends TestBase {
     // Unset the list of modules in the extension handler.
     $module_handler = $this->container->get('module_handler');
     $module_filenames = $module_handler->getModuleList();
-    $extension_config = $this->container->get('config.factory')->get('core.extension');
+    $extension_config = $this->config('core.extension');
     foreach ($modules as $module) {
       unset($module_filenames[$module]);
       $extension_config->clear('module.' . $module);

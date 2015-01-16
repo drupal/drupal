@@ -339,7 +339,9 @@ function language_negotiation_url_prefixes_update() {
  * Saves language prefix settings.
  */
 function language_negotiation_url_prefixes_save(array $prefixes) {
-  \Drupal::config('language.negotiation')
+  // @todo https://www.drupal.org/node/2403229 $prefixes can contain
+  //   configuration overrides.
+  \Drupal::configFactory()->getEditable('language.negotiation')
   ->set('url.prefixes', $prefixes)
   ->save();
 }
@@ -355,7 +357,9 @@ function language_negotiation_url_domains() {
  * Saves the language domain settings.
  */
 function language_negotiation_url_domains_save(array $domains) {
-  \Drupal::config('language.negotiation')
+  // @todo https://www.drupal.org/node/2403229 $domains can contain
+  //   configuration overrides.
+  \Drupal::configFactory()->getEditable('language.negotiation')
   ->set('url.domains', $domains)
   ->save();
 }
@@ -492,7 +496,7 @@ function language_form_alter(&$form, FormStateInterface $form_state) {
  * @see language_form_system_regional_settings_alter()
  */
 function language_system_regional_settings_form_submit($form, FormStateInterface $form_state) {
-  \Drupal::config('system.site')->set('langcode', $form_state->getValue('site_default_language'))->save();
+  \Drupal::configFactory()->getEditable('system.site')->set('langcode', $form_state->getValue('site_default_language'))->save();
 }
 
 /**

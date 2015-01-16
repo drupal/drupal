@@ -104,7 +104,7 @@ class GDToolkit extends ImageToolkitBase {
       '#description' => t('Define the image quality for JPEG manipulations. Ranges from 0 to 100. Higher values mean better image quality but bigger files.'),
       '#min' => 0,
       '#max' => 100,
-      '#default_value' => $this->configFactory->get('system.image.gd')->get('jpeg_quality'),
+      '#default_value' => $this->configFactory->getEditable('system.image.gd')->get('jpeg_quality', FALSE),
       '#field_suffix' => t('%'),
     );
     return $form;
@@ -114,7 +114,7 @@ class GDToolkit extends ImageToolkitBase {
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $this->configFactory->get('system.image.gd')
+    $this->configFactory->getEditable('system.image.gd')
       ->set('jpeg_quality', $form_state->getValue(array('gd', 'image_jpeg_quality')))
       ->save();
   }

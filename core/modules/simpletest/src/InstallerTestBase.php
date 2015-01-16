@@ -160,7 +160,7 @@ abstract class InstallerTestBase extends WebTestBase {
 
     // Manually configure the test mail collector implementation to prevent
     // tests from sending out e-mails and collect them in state instead.
-    $config->get('system.mail')
+    $config->getEditable('system.mail')
       ->set('interface.default', 'test_mail_collector')
       ->save();
 

@@ -32,7 +32,7 @@ class ConfigModuleOverridesTest extends KernelTestBase {
     $non_overridden_slogan = 'Yay for defaults!';
     $config_factory = $this->container->get('config.factory');
     $config_factory
-      ->get($name)
+      ->getEditable($name)
       ->set('name', $non_overridden_name)
       ->set('slogan', $non_overridden_slogan)
       ->save();

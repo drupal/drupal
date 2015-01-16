@@ -224,7 +224,7 @@ class ConfigManager implements ConfigManagerInterface {
 
     $config_names = $this->configFactory->listAll($name . '.');
     foreach ($config_names as $config_name) {
-      $this->configFactory->get($config_name)->delete();
+      $this->configFactory->getEditable($config_name)->delete();
     }
 
     // Remove any matching configuration from collections.

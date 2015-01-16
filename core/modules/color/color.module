@@ -169,7 +169,10 @@ function color_get_palette($theme, $default = FALSE) {
 
   // Load variable.
   // @todo Default color config should be moved to yaml in the theme.
-  return \Drupal::config('color.theme.' . $theme)->get('palette') ?: $palette;
+  // Getting a mutable override-free object because this function is only used
+  // in forms. Color configuration is used to write CSS to the file system
+  // making configuration overrides pointless.
+  return \Drupal::configFactory()->getEditable('color.theme.' . $theme)->get('palette') ?: $palette;
 }
 
 /**
@@ -196,7 +199,11 @@ function color_scheme_form($complete_form, FormStateInterface $form_state, $them
 
   // See if we're using a predefined scheme.
   // Note: we use the original theme when the default scheme is chosen.
-  $current_scheme = \Drupal::config('color.theme.' . $theme)->get('palette');
+  // Note: we use configuration without overrides since this information is used
+  // in a form and therefore without doing this would bleed overrides into
+  // active configuration. Furthermore, color configuration is used to write
+  // CSS to the file system making configuration overrides pointless.
+  $current_scheme = \Drupal::configFactory()->getEditable('color.theme.' . $theme)->get('palette');
   foreach ($schemes as $key => $scheme) {
     if ($current_scheme == $scheme) {
       $scheme_name = $key;
@@ -213,6 +220,7 @@ function color_scheme_form($complete_form, FormStateInterface $form_state, $them
   }
 
   // Add scheme selector.
+  $default_palette = color_get_palette($theme, TRUE);
   $form['scheme'] = array(
     '#type' => 'select',
     '#title' => t('Color set'),
@@ -226,7 +234,7 @@ function color_scheme_form($complete_form, FormStateInterface $form_state, $them
       // Add custom JavaScript.
       'drupalSettings' => [
         'color' => [
-          'reference' => color_get_palette($theme, TRUE),
+          'reference' => $default_palette,
           'schemes' => $schemes,
         ],
         'gradients' => $info['gradients'],
@@ -234,8 +242,8 @@ function color_scheme_form($complete_form, FormStateInterface $form_state, $them
     ),
   );
 
-  // Add palette fields.
-  $palette = color_get_palette($theme);
+  // Add palette fields. Use the configuration if available.
+  $palette = $current_scheme ?: $default_palette;
   $names = $info['fields'];
   $form['palette']['#tree'] = TRUE;
   foreach ($palette as $name => $value) {
@@ -361,7 +369,7 @@ function color_scheme_form_submit($form, FormStateInterface $form_state) {
     return;
   }
 
-  $config = \Drupal::config('color.theme.' . $theme);
+  $config = \Drupal::configFactory()->getEditable('color.theme.' . $theme);
 
   // Resolve palette.
   if ($scheme != '') {
@@ -620,7 +628,7 @@ function _color_render_images($theme, &$info, &$paths, $palette) {
     if ($file == 'screenshot.png') {
       $slice = imagecreatetruecolor(150, 90);
       imagecopyresampled($slice, $target, 0, 0, $x, $y, 150, 90, $width, $height);
-      \Drupal::config('color.theme.' . $theme)
+      \Drupal::configFactory()->getEditable('color.theme.' . $theme)
         ->set('screenshot', $image)
         ->save();
     }

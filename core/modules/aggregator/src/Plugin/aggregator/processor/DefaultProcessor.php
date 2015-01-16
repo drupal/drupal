@@ -16,6 +16,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Entity\Query\QueryInterface;
+use Drupal\Core\Form\ConfigFormBaseTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\UrlGeneratorTrait;
@@ -33,7 +34,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class DefaultProcessor extends AggregatorPluginSettingsBase implements ProcessorInterface, ContainerFactoryPluginInterface {
-
+  use ConfigFormBaseTrait;
   use UrlGeneratorTrait;
 
   /**
@@ -110,8 +111,16 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
   /**
    * {@inheritdoc}
    */
+  protected function getEditableConfigNames() {
+    return ['aggregator.settings'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $processors = $this->configuration['processors'];
+    $config = $this->config('aggregator.settings');
+    $processors = $config->get('processors');
     $info = $this->getPluginDefinition();
     $counts = array(3, 5, 10, 15, 20, 25);
     $items = array_map(function ($count) {
@@ -135,7 +144,7 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
     $form['processors'][$info['id']]['aggregator_summary_items'] = array(
       '#type' => 'select',
       '#title' => t('Number of items shown in listing pages'),
-      '#default_value' => $this->configuration['source']['list_max'],
+      '#default_value' => $config->get('source.list_max'),
       '#empty_value' => 0,
       '#options' => $items,
     );
@@ -143,7 +152,7 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
     $form['processors'][$info['id']]['aggregator_clear'] = array(
       '#type' => 'select',
       '#title' => t('Discard items older than'),
-      '#default_value' => $this->configuration['items']['expire'],
+      '#default_value' => $config->get('items.expire'),
       '#options' => $period,
       '#description' => t('Requires a correctly configured <a href="@cron">cron maintenance task</a>.', array('@cron' => $this->url('system.status'))),
     );
@@ -156,7 +165,7 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
     $form['processors'][$info['id']]['aggregator_teaser_length'] = array(
       '#type' => 'select',
       '#title' => t('Length of trimmed description'),
-      '#default_value' => $this->configuration['items']['teaser_length'],
+      '#default_value' => $config->get('items.teaser_length'),
       '#options' => $options,
       '#description' => t('The maximum number of characters used in the trimmed version of content.'),
     );
@@ -275,7 +284,7 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
    * {@inheritdoc}
    */
   public function setConfiguration(array $configuration) {
-    $config = $this->configFactory->get('aggregator.settings');
+    $config = $this->config('aggregator.settings');
     foreach ($configuration as $key => $value) {
       $config->set($key, $value);
     }

@@ -7,6 +7,7 @@
 
 namespace Drupal\language\Form;
 
+use Drupal\Core\Form\ConfigFormBaseTrait;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -16,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Defines a confirmation form for deleting a browser language negotiation mapping.
  */
 class NegotiationBrowserDeleteForm extends ConfirmFormBase {
+  use ConfigFormBaseTrait;
 
   /**
    * The browser language code to be deleted.
@@ -23,6 +25,14 @@ class NegotiationBrowserDeleteForm extends ConfirmFormBase {
    * @var string
    */
   protected $browserLangcode;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getEditableConfigNames() {
+    return ['language.mappings'];
+  }
+
 
   /**
    * {@inheritdoc}

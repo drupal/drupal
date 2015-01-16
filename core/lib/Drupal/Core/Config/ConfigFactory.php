@@ -105,15 +105,41 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
   /**
    * {@inheritdoc}
    */
+  public function getEditable($name) {
+    $old_state = $this->getOverrideState();
+    $this->setOverrideState(FALSE);
+    $config = $this->doGet($name, FALSE);
+    $this->setOverrideState($old_state);
+    return $config;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function get($name) {
-    if ($config = $this->loadMultiple(array($name))) {
+    return $this->doGet($name);
+  }
+
+  /**
+   * Returns a configuration object for a given name.
+   *
+   * @param string $name
+   *   The name of the configuration object to construct.
+   * @param bool $immutable
+   *   (optional) Create an immutable configuration object. Defaults to TRUE.
+   *
+   * @return \Drupal\Core\Config\Config|\Drupal\Core\Config\ImmutableConfig
+   *   A configuration object.
+   */
+  protected function doGet($name, $immutable = TRUE) {
+    if ($config = $this->doLoadMultiple(array($name), $immutable)) {
       return $config[$name];
     }
     else {
       // If the configuration object does not exist in the configuration
       // storage, create a new object and add it to the static cache.
-      $cache_key = $this->getConfigCacheKey($name);
-      $this->cache[$cache_key] = new Config($name, $this->storage, $this->eventDispatcher, $this->typedConfigManager);
+      $cache_key = $this->getConfigCacheKey($name, $immutable);
+      $this->cache[$cache_key] = $this->createConfigObject($name, $immutable);
 
       if ($this->useOverrides) {
         // Get and apply any overrides.
@@ -134,10 +160,25 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    * {@inheritdoc}
    */
   public function loadMultiple(array $names) {
+    return $this->doLoadMultiple($names);
+  }
+
+  /**
+   * Returns a list of configuration objects for the given names.
+   *
+   * @param array $names
+   *   List of names of configuration objects.
+   * @param bool $immutable
+   *   (optional) Create an immutable configuration objects. Defaults to TRUE.
+   *
+   * @return \Drupal\Core\Config\Config[]|\Drupal\Core\Config\ImmutableConfig[]
+   *   List of successfully loaded configuration objects, keyed by name.
+   */
+  protected function doLoadMultiple(array $names, $immutable = TRUE) {
     $list = array();
 
     foreach ($names as $key => $name) {
-      $cache_key = $this->getConfigCacheKey($name);
+      $cache_key = $this->getConfigCacheKey($name, $immutable);
       if (isset($this->cache[$cache_key])) {
         $list[$name] = $this->cache[$cache_key];
         unset($names[$key]);
@@ -156,9 +197,9 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
       }
 
       foreach ($storage_data as $name => $data) {
-        $cache_key = $this->getConfigCacheKey($name);
+        $cache_key = $this->getConfigCacheKey($name, $immutable);
 
-        $this->cache[$cache_key] = new Config($name, $this->storage, $this->eventDispatcher, $this->typedConfigManager);
+        $this->cache[$cache_key] = $this->createConfigObject($name, $immutable);
         $this->cache[$cache_key]->initWithData($data);
         if ($this->useOverrides) {
           if (isset($module_overrides[$name])) {
@@ -230,7 +271,7 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
     // Prime the cache and load the configuration with the correct overrides.
     $config = $this->get($new_name);
     $this->eventDispatcher->dispatch(ConfigEvents::RENAME, new ConfigRenameEvent($config, $old_name));
-    return $config;
+    return $this;
   }
 
   /**
@@ -254,12 +295,14 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    *
    * @param string $name
    *   The name of the configuration object.
+   * @param bool $immutable
+   *   Whether or not the object is mutable.
    *
    * @return string
    *   The cache key.
    */
-  protected function getConfigCacheKey($name) {
-    return $name . ':' . implode(':', $this->getCacheKeys());
+  protected function getConfigCacheKey($name, $immutable) {
+    return $name . ':' . implode(':', $this->getCacheKeys()) . ':' . ($immutable ? static::IMMUTABLE: static::MUTABLE);
   }
 
   /**
@@ -294,7 +337,7 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
   }
 
   /**
-   * Removes stale static cache entries when configuration is saved.
+   * Updates stale static cache entries when configuration is saved.
    *
    * @param ConfigCrudEvent $event
    *   The configuration event.
@@ -307,7 +350,9 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
     foreach ($this->getConfigCacheKeys($saved_config->getName()) as $cache_key) {
       $cached_config = $this->cache[$cache_key];
       if ($cached_config !== $saved_config) {
-        $this->cache[$cache_key]->setData($saved_config->getRawData());
+        // We can not just update the data since other things about the object
+        // might have changed. For example, whether or not it is new.
+        $this->cache[$cache_key]->initWithData($saved_config->getRawData());
       }
     }
   }
@@ -339,6 +384,24 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    */
   public function addOverride(ConfigFactoryOverrideInterface $config_factory_override) {
     $this->configFactoryOverrides[] = $config_factory_override;
+  }
+
+  /**
+   * Creates a configuration object.
+   *
+   * @param string $name
+   *   Configuration object name.
+   * @param bool $immutable
+   *   Determines whether a mutable or immutable config object is returned.
+   *
+   * @return \Drupal\Core\Config\Config|\Drupal\Core\Config\ImmutableConfig
+   *   The configuration object.
+   */
+  protected function createConfigObject($name, $immutable) {
+    if ($immutable) {
+      return new ImmutableConfig($name, $this->storage, $this->eventDispatcher, $this->typedConfigManager);
+    }
+    return new Config($name, $this->storage, $this->eventDispatcher, $this->typedConfigManager);
   }
 
 }

@@ -246,8 +246,13 @@ class ConfigEntityStorageTest extends UnitTestCase {
         $this->entityTypeId . '_list', // List cache tag.
       ));
 
-    $this->configFactory->expects($this->exactly(2))
+    $this->configFactory->expects($this->exactly(1))
       ->method('get')
+      ->with('the_config_prefix.foo')
+      ->will($this->returnValue($config_object));
+
+    $this->configFactory->expects($this->exactly(1))
+      ->method('getEditable')
       ->with('the_config_prefix.foo')
       ->will($this->returnValue($config_object));
 
@@ -311,8 +316,12 @@ class ConfigEntityStorageTest extends UnitTestCase {
       ->method('loadMultiple')
       ->with(array('the_config_prefix.foo'))
       ->will($this->returnValue(array()));
-    $this->configFactory->expects($this->exactly(2))
+    $this->configFactory->expects($this->exactly(1))
       ->method('get')
+      ->with('the_config_prefix.foo')
+      ->will($this->returnValue($config_object));
+    $this->configFactory->expects($this->exactly(1))
+      ->method('getEditable')
       ->with('the_config_prefix.foo')
       ->will($this->returnValue($config_object));
 
@@ -370,6 +379,10 @@ class ConfigEntityStorageTest extends UnitTestCase {
 
     $this->configFactory->expects($this->once())
       ->method('rename')
+      ->willReturn($this->configFactory);
+    $this->configFactory->expects($this->exactly(1))
+      ->method('getEditable')
+      ->with('the_config_prefix.bar')
       ->will($this->returnValue($config_object));
     $this->configFactory->expects($this->exactly(2))
       ->method('loadMultiple')
@@ -506,8 +519,11 @@ class ConfigEntityStorageTest extends UnitTestCase {
       ->will($this->returnValue($config_object));
     $this->configFactory->expects($this->once())
       ->method('rename')
+      ->willReturn($this->configFactory);
+    $this->configFactory->expects($this->exactly(1))
+      ->method('getEditable')
+      ->with('the_config_prefix.foo')
       ->will($this->returnValue($config_object));
-
     $this->entityQuery->expects($this->once())
       ->method('condition')
       ->will($this->returnSelf());
@@ -736,7 +752,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
       ));
 
     $this->configFactory->expects($this->exactly(2))
-      ->method('get')
+      ->method('getEditable')
       ->will($this->returnValueMap($config_map));
 
     $this->moduleHandler->expects($this->at(0))

@@ -100,13 +100,11 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
    *   A MockBuilder object for the ConfigFactory with the desired return values.
    */
   public function getConfigFactoryStub(array $configs = array()) {
-    $config_map = array();
+    $config_get_map = array();
+    $config_editable_map = array();
     // Construct the desired configuration object stubs, each with its own
     // desired return map.
     foreach ($configs as $config_name => $config_values) {
-      $config_object = $this->getMockBuilder('Drupal\Core\Config\Config')
-        ->disableOriginalConstructor()
-        ->getMock();
       $map = array();
       foreach ($config_values as $key => $value) {
         $map[] = array($key, $value);
@@ -114,18 +112,31 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
       // Also allow to pass in no argument.
       $map[] = array('', $config_values);
 
-      $config_object->expects($this->any())
+      $immutable_config_object = $this->getMockBuilder('Drupal\Core\Config\ImmutableConfig')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $immutable_config_object->expects($this->any())
         ->method('get')
         ->will($this->returnValueMap($map));
+      $config_get_map[] = array($config_name, $immutable_config_object);
 
-      $config_map[] = array($config_name, $config_object);
+      $mutable_config_object = $this->getMockBuilder('Drupal\Core\Config\Config')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $mutable_config_object->expects($this->any())
+        ->method('get')
+        ->will($this->returnValueMap($map));
+      $config_editable_map[] = array($config_name, $mutable_config_object);
     }
     // Construct a config factory with the array of configuration object stubs
     // as its return map.
     $config_factory = $this->getMock('Drupal\Core\Config\ConfigFactoryInterface');
     $config_factory->expects($this->any())
       ->method('get')
-      ->will($this->returnValueMap($config_map));
+      ->will($this->returnValueMap($config_get_map));
+    $config_factory->expects($this->any())
+      ->method('getEditable')
+      ->will($this->returnValueMap($config_editable_map));
     return $config_factory;
   }
 

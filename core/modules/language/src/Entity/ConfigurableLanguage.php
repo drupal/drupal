@@ -130,7 +130,7 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
 
     $language_manager = \Drupal::languageManager();
     $language_manager->reset();
-    if ($language_manager instanceof ConfigurableLanguageManagerInterface) {
+    if (!$this->isLocked() && $language_manager instanceof ConfigurableLanguageManagerInterface) {
       $language_manager->updateLockedLanguageWeights();
     }
 
@@ -228,6 +228,14 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
    */
   public function getWeight() {
     return $this->weight;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setWeight($weight) {
+    $this->weight = $weight;
+    return $this;
   }
 
   /**

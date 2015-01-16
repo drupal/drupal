@@ -7,19 +7,26 @@
 
 namespace Drupal\form_test;
 
-use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides a test form object.
  */
-class FormTestServiceObject extends FormBase {
+class FormTestServiceObject extends ConfigFormBase {
 
   /**
    * {@inheritdoc}
    */
   public function getFormId() {
     return 'form_test_form_test_service_object';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getEditableConfigNames() {
+    return ['form_test.object'];
   }
 
   /**
@@ -54,7 +61,7 @@ class FormTestServiceObject extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     drupal_set_message($this->t('The FormTestServiceObject::submitForm() method was used for this form.'));
-    $this->config('form_test.object')
+    $this->config('form_test.object', FALSE)
       ->set('bananas', $form_state->getValue('bananas'))
       ->save();
   }

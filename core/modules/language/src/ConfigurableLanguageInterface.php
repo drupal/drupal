@@ -16,4 +16,15 @@ use Drupal\Core\Language\LanguageInterface;
  */
 interface ConfigurableLanguageInterface extends ConfigEntityInterface, LanguageInterface {
 
+  /**
+   * Sets the weight of the language.
+   *
+   * @param int $weight
+   *   The weight, used to order languages with larger positive weights sinking
+   *   items toward the bottom of lists.
+   *
+   * @return $this
+   */
+  public function setWeight($weight);
+
 }

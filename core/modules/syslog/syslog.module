@@ -33,7 +33,7 @@ function syslog_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_form_FORM_ID_alter().
  */
 function syslog_form_system_logging_settings_alter(&$form, FormStateInterface $form_state) {
-  $config = \Drupal::config('syslog.settings');
+  $config = \Drupal::configFactory()->getEditable('syslog.settings');
   $help = \Drupal::moduleHandler()->moduleExists('help') ? ' ' . \Drupal::l(t('More information'), new Url('help.page', ['name' => 'syslog'])) . '.' : NULL;
   $form['syslog_identity'] = array(
     '#type'          => 'textfield',
@@ -66,7 +66,7 @@ function syslog_form_system_logging_settings_alter(&$form, FormStateInterface $f
  * @see syslog_form_system_logging_settings_alter()
  */
 function syslog_logging_settings_submit($form, FormStateInterface $form_state) {
-  \Drupal::config('syslog.settings')
+  \Drupal::configFactory()->getEditable('syslog.settings')
     ->set('identity', $form_state->getValue('syslog_identity'))
     ->set('facility', $form_state->getValue('syslog_facility'))
     ->set('format', $form_state->getValue('syslog_format'))

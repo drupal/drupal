@@ -45,10 +45,11 @@ function language_test_language_types_info_alter(array &$language_types) {
     unset($language_types[LanguageInterface::TYPE_CONTENT]['fixed']);
     // By default languages are not configurable. Make
     // LanguageInterface::TYPE_CONTENT configurable.
-    $configurable = \Drupal::config('language.types')->get('configurable');
+    $config = \Drupal::configFactory()->getEditable('language.types');
+    $configurable = $config->get('configurable');
     if (!in_array(LanguageInterface::TYPE_CONTENT, $configurable)) {
       $configurable[] = LanguageInterface::TYPE_CONTENT;
-      \Drupal::config('language.types')->set('configurable', $configurable)->save();
+      $config->set('configurable', $configurable)->save();
     }
   }
 }

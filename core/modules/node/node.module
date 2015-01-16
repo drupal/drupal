@@ -843,7 +843,7 @@ function node_form_system_themes_admin_form_alter(&$form, FormStateInterface $fo
   $form['admin_theme']['use_admin_theme'] = array(
     '#type' => 'checkbox',
     '#title' => t('Use the administration theme when editing or creating content'),
-    '#default_value' => \Drupal::config('node.settings')->get('use_admin_theme'),
+    '#default_value' => \Drupal::configFactory()->getEditable('node.settings')->get('use_admin_theme'),
   );
   $form['#submit'][] = 'node_form_system_themes_admin_form_submit';
 }
@@ -854,7 +854,7 @@ function node_form_system_themes_admin_form_alter(&$form, FormStateInterface $fo
  * @see node_form_system_themes_admin_form_alter()
  */
 function node_form_system_themes_admin_form_submit($form, FormStateInterface $form_state) {
-  \Drupal::config('node.settings')
+  \Drupal::configFactory()->getEditable('node.settings')
     ->set('use_admin_theme', $form_state->getValue('use_admin_theme'))
     ->save();
   \Drupal::service('router.builder_indicator')->setRebuildNeeded();

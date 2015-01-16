@@ -94,14 +94,14 @@ class SearchPageRepository implements SearchPageRepositoryInterface {
    * {@inheritdoc}
    */
   public function clearDefaultSearchPage() {
-    $this->configFactory->get('search.settings')->clear('default_page')->save();
+    $this->configFactory->getEditable('search.settings')->clear('default_page')->save();
   }
 
   /**
    * {@inheritdoc}
    */
   public function setDefaultSearchPage(SearchPageInterface $search_page) {
-    $this->configFactory->get('search.settings')->set('default_page', $search_page->id())->save();
+    $this->configFactory->getEditable('search.settings')->set('default_page', $search_page->id())->save();
     $search_page->enable()->save();
   }
 

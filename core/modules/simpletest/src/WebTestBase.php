@@ -888,7 +888,7 @@ abstract class WebTestBase extends TestBase {
     // UI. If declared in settings.php, they would no longer be configurable.
     file_prepare_directory($this->privateFilesDirectory, FILE_CREATE_DIRECTORY);
     file_prepare_directory($this->tempFilesDirectory, FILE_CREATE_DIRECTORY);
-    $config->get('system.file')
+    $config->getEditable('system.file')
       ->set('path.temporary', $this->tempFilesDirectory)
       ->save();
 
@@ -896,7 +896,7 @@ abstract class WebTestBase extends TestBase {
     // tests from sending out emails and collect them in state instead.
     // While this should be enforced via settings.php prior to installation,
     // some tests expect to be able to test mail system implementations.
-    $config->get('system.mail')
+    $config->getEditable('system.mail')
       ->set('interface.default', 'test_mail_collector')
       ->save();
 
@@ -904,10 +904,10 @@ abstract class WebTestBase extends TestBase {
     // environment optimizations for all tests to avoid needless overhead and
     // ensure a sane default experience for test authors.
     // @see https://drupal.org/node/2259167
-    $config->get('system.logging')
+    $config->getEditable('system.logging')
       ->set('error_level', 'verbose')
       ->save();
-    $config->get('system.performance')
+    $config->getEditable('system.performance')
       ->set('css.preprocess', FALSE)
       ->set('js.preprocess', FALSE)
       ->save();

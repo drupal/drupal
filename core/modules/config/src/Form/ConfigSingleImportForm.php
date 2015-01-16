@@ -243,7 +243,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
 
     // If a simple configuration file was added, set the data and save.
     if ($this->data['config_type'] === 'system.simple') {
-      $this->config($this->data['config_name'])->setData($this->data['import'])->save();
+      $this->configFactory()->getEditable($this->data['config_name'])->setData($this->data['import'])->save();
       drupal_set_message($this->t('The %name configuration was imported.', array('%name' => $this->data['config_name'])));
     }
     // For a config entity, create an entity and save it.

@@ -559,7 +559,7 @@ function book_type_is_allowed($type) {
  */
 function book_node_type_update(NodeTypeInterface $type) {
   if ($type->getOriginalId() != $type->id()) {
-    $config = \Drupal::config('book.settings');
+    $config = \Drupal::configFactory()->getEditable('book.settings');
     // Update the list of node types that are allowed to be added to books.
     $allowed_types = $config->get('allowed_types');
     $old_key = array_search($type->getOriginalId(), $allowed_types);

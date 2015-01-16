@@ -195,7 +195,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
    * {@inheritdoc}
    */
   public function saveLanguageTypesConfiguration(array $values) {
-    $config = $this->configFactory->get('language.types');
+    $config = $this->configFactory->getEditable('language.types');
     if (isset($values['configurable'])) {
       $config->set('configurable', $values['configurable']);
     }
@@ -343,23 +343,21 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
    * {@inheritdoc}
    */
   public function updateLockedLanguageWeights() {
-    $max_weight = 0;
+    // Get the weight of the last configurable language.
+    $configurable_languages = $this->getLanguages(LanguageInterface::STATE_CONFIGURABLE);
+    $max_weight = end($configurable_languages)->getWeight();
 
-    // Get maximum weight to update the system languages to keep them on bottom.
-    foreach ($this->getLanguages(LanguageInterface::STATE_CONFIGURABLE) as $language) {
-      if (!$language->isLocked()) {
-        $max_weight = max($max_weight, $language->getWeight());
-      }
-    }
-
-    // Loop locked languages to maintain the existing order.
     $locked_languages = $this->getLanguages(LanguageInterface::STATE_LOCKED);
-    $config_ids = array_map(function($language) { return 'language.entity.' . $language->getId(); }, $locked_languages);
-    foreach ($this->configFactory->loadMultiple($config_ids) as $config) {
-      // Update system languages weight.
-      $max_weight++;
-      $config->set('weight', $max_weight);
-      $config->save();
+    // Update locked language weights to maintain the existing order, if
+    // necessary.
+    if (reset($locked_languages)->getWeight() <= $max_weight) {
+      foreach ($locked_languages as $language) {
+        // Update system languages weight.
+        $max_weight++;
+        ConfigurableLanguage::load($language->getId())
+          ->setWeight($max_weight)
+          ->save();
+      }
     }
   }
 

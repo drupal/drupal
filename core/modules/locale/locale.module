@@ -647,7 +647,7 @@ function locale_form_language_admin_edit_form_alter(&$form, FormStateInterface $
     $form['locale_translate_english'] = array(
       '#title' => t('Enable interface translation to English'),
       '#type' => 'checkbox',
-      '#default_value' => locale_translate_english(),
+      '#default_value' => \Drupal::configFactory()->getEditable('locale.settings')->get('translate_english'),
     );
     $form['actions']['submit']['#submit'][] = 'locale_form_language_admin_edit_form_alter_submit';
   }
@@ -657,7 +657,7 @@ function locale_form_language_admin_edit_form_alter(&$form, FormStateInterface $
  * Form submission handler for language_admin_edit_form().
  */
 function locale_form_language_admin_edit_form_alter_submit($form, FormStateInterface $form_state) {
-  \Drupal::config('locale.settings')->set('translate_english', intval($form_state->getValue('locale_translate_english')))->save();
+  \Drupal::configFactory()->getEditable('locale.settings')->set('translate_english', intval($form_state->getValue('locale_translate_english')))->save();
 }
 
 /**

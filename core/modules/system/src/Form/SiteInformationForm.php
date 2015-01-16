@@ -71,6 +71,13 @@ class SiteInformationForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  protected function getEditableConfigNames() {
+    return ['system.site'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $site_config = $this->config('system.site');
     $site_mail = $site_config->get('mail');

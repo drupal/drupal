@@ -402,7 +402,7 @@ class CKEditorTest extends KernelTestBase {
   protected function assertCKEditorLanguage($langcode = 'fr') {
     // Set French as the site default language.
     ConfigurableLanguage::createFromLangcode('fr')->save();
-    \Drupal::config('system.site')->set('langcode', 'fr')->save();
+    $this->config('system.site')->set('langcode', 'fr')->save();
 
     // Reset the language manager so new negotiations attempts will fall back on
     // French. Reinject the language manager CKEditor to use the current one.

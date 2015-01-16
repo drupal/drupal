@@ -25,6 +25,13 @@ class RssFeedsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  protected function getEditableConfigNames() {
+    return ['system.rss'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $rss_config = $this->config('system.rss');
     $form['feed_description'] = array(

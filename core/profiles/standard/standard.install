@@ -22,10 +22,10 @@ function standard_install() {
   \Drupal::service('entity.definition_update_manager')->applyUpdates();
 
   // Set front page to "node".
-  \Drupal::config('system.site')->set('page.front', 'node')->save();
+  \Drupal::configFactory()->getEditable('system.site')->set('page.front', 'node')->save();
 
   // Allow visitor account creation with administrative approval.
-  $user_settings = \Drupal::config('user.settings');
+  $user_settings = \Drupal::configFactory()->getEditable('user.settings');
   $user_settings->set('register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)->save();
 
   // Enable default permissions for system roles.
@@ -71,5 +71,5 @@ function standard_install() {
   $shortcut->save();
 
   // Enable the admin theme.
-  \Drupal::config('node.settings')->set('use_admin_theme', '1')->save();
+  \Drupal::configFactory()->getEditable('node.settings')->set('use_admin_theme', '1')->save();
 }

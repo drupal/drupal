@@ -249,7 +249,7 @@ class ConfigCRUDTest extends KernelTestBase {
     \Drupal::service('module_installer')->install(array('config_test'));
     $storage = new DatabaseStorage($this->container->get('database'), 'config');
     $name = 'config_test.types';
-    $config = $this->container->get('config.factory')->get($name);
+    $config = $this->config($name);
     $original_content = file_get_contents(drupal_get_path('module', 'config_test') . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY . "/$name.yml");
     $this->verbose('<pre>' . $original_content . "\n" . var_export($storage->read($name), TRUE));
 
@@ -299,7 +299,7 @@ class ConfigCRUDTest extends KernelTestBase {
     // also fails.
     $typed_config_manager = $this->container->get('config.typed');
     $config_name = 'config_test.no_schema';
-    $config = $this->container->get('config.factory')->get($config_name);
+    $config = $this->config($config_name);
     $this->assertFalse($typed_config_manager->hasConfigSchema($config_name));
 
     try {

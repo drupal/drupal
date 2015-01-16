@@ -41,7 +41,7 @@ class ConfigOverridesPriorityTest extends KernelTestBase {
     /** @var \Drupal\Core\Config\ConfigFactoryInterface $config_factory */
     $config_factory = $this->container->get('config.factory');
     $config_factory
-      ->get('system.site')
+      ->getEditable('system.site')
       ->set('name', $non_overridden_name)
       ->set('slogan', $non_overridden_slogan)
       ->set('mail', $non_overridden_mail)

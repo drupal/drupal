@@ -7,19 +7,26 @@
 
 namespace Drupal\form_test;
 
-use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides a test form object.
  */
-class FormTestObject extends FormBase {
+class FormTestObject extends ConfigFormBase {
 
   /**
    * {@inheritdoc}
    */
   public function getFormId() {
     return 'form_test_form_test_object';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getEditableConfigNames() {
+    return ['form_test.object'];
   }
 
   /**

@@ -623,7 +623,7 @@ function system_install() {
   \Drupal::state()->set('system.cron_key', $cron_key);
 
   // Populate the site UUID.
-  \Drupal::config('system.site')
+  \Drupal::configFactory()->getEditable('system.site')
     ->set('uuid', \Drupal::service('uuid')->generate())
     ->save();
 }

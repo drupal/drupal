@@ -57,6 +57,13 @@ class SiteMaintenanceModeForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  protected function getEditableConfigNames() {
+    return ['system.maintenance'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('system.maintenance');
     $form['maintenance_mode'] = array(

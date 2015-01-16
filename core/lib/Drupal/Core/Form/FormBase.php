@@ -87,7 +87,7 @@ abstract class FormBase implements FormInterface, ContainerInjectionInterface {
    *   the config object returned will contain the contents of book.admin
    *   configuration file.
    *
-   * @return \Drupal\Core\Config\Config
+   * @return \Drupal\Core\Config\ImmutableConfig
    *   A configuration object.
    */
   protected function config($name) {

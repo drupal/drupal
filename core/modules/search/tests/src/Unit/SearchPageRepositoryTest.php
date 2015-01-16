@@ -151,7 +151,7 @@ class SearchPageRepositoryTest extends UnitTestCase {
       ->with('default_page')
       ->will($this->returnValue($config));
     $this->configFactory->expects($this->once())
-      ->method('get')
+      ->method('getEditable')
       ->with('search.settings')
       ->will($this->returnValue($config));
     $this->searchPageRepository->clearDefaultSearchPage();
@@ -227,7 +227,7 @@ class SearchPageRepositoryTest extends UnitTestCase {
       ->method('save')
       ->will($this->returnValue($config));
     $this->configFactory->expects($this->once())
-      ->method('get')
+      ->method('getEditable')
       ->with('search.settings')
       ->will($this->returnValue($config));
 

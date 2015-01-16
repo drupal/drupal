@@ -11,6 +11,7 @@ use Drupal\aggregator\Plugin\AggregatorPluginSettingsBase;
 use Drupal\aggregator\Plugin\ProcessorInterface;
 use Drupal\aggregator\FeedInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Form\ConfigFormBaseTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -27,6 +28,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class TestProcessor extends AggregatorPluginSettingsBase implements ProcessorInterface, ContainerFactoryPluginInterface {
+  use ConfigFormBaseTrait;
 
   /**
    * Contains the configuration object factory.
@@ -67,8 +69,15 @@ class TestProcessor extends AggregatorPluginSettingsBase implements ProcessorInt
   /**
    * {@inheritdoc}
    */
+  protected function getEditableConfigNames() {
+    return ['aggregator_test.settings'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $processors = $this->configFactory->get('aggregator.settings')->get('processors');
+    $processors = $this->config('aggregator.settings')->get('processors');
     $info = $this->getPluginDefinition();
 
     $form['processors'][$info['id']] = array(
@@ -134,7 +143,7 @@ class TestProcessor extends AggregatorPluginSettingsBase implements ProcessorInt
    * {@inheritdoc}
    */
   public function setConfiguration(array $configuration) {
-    $config = $this->configFactory->get('aggregator_test.settings');
+    $config = $this->config('aggregator_test.settings');
     foreach ($configuration as $key => $value) {
       $config->set($key, $value);
     }

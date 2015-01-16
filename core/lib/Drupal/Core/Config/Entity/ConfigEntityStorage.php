@@ -200,8 +200,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
    */
   protected function doDelete($entities) {
     foreach ($entities as $entity) {
-      $config = $this->configFactory->get($this->getPrefix() . $entity->id());
-      $config->delete();
+      $this->configFactory->getEditable($this->getPrefix() . $entity->id())->delete();
     }
   }
 
@@ -238,16 +237,15 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
   protected function doSave($id, EntityInterface $entity) {
     $is_new = $entity->isNew();
     $prefix = $this->getPrefix();
+    $config_name = $prefix . $entity->id();
     if ($id !== $entity->id()) {
       // Renaming a config object needs to cater for:
       // - Storage needs to access the original object.
       // - The object needs to be renamed/copied in ConfigFactory and reloaded.
       // - All instances of the object need to be renamed.
-      $config = $this->configFactory->rename($prefix . $id, $prefix . $entity->id());
+      $this->configFactory->rename($prefix . $id, $config_name);
     }
-    else {
-      $config = $this->configFactory->get($prefix . $id);
-    }
+    $config = $this->configFactory->getEditable($config_name);
 
     // Retrieve the desired properties and set them in config.
     $config->setData($this->mapToStorageRecord($entity));

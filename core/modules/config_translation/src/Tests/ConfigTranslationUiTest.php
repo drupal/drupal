@@ -759,7 +759,7 @@ class ConfigTranslationUiTest extends WebTestBase {
     // security vulnerabilities.
     $config_factory
       ->setOverrideState(FALSE)
-      ->get('config_translation_test.content')
+      ->getEditable('config_translation_test.content')
       ->set('content.format', 'full_html')
       ->save();
 

@@ -211,8 +211,7 @@ function drupal_required_modules() {
  *   An integer representing the weight of the module.
  */
 function module_set_weight($module, $weight) {
-  // Update the module weight in the config file that contains it.
-  $extension_config = \Drupal::config('core.extension');
+  $extension_config = \Drupal::configFactory()->getEditable('core.extension');
   if ($extension_config->get("module.$module") !== NULL) {
     $extension_config
       ->set("module.$module", $weight)

@@ -59,6 +59,13 @@ class NegotiationUrlForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  protected function getEditableConfigNames() {
+    return ['language.negotiation'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state) {
     global $base_url;
     $config = $this->config('language.negotiation');

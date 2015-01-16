@@ -24,6 +24,13 @@ class ThemeAdminForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  protected function getEditableConfigNames() {
+    return ['system.theme'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state, array $theme_options = NULL) {
     // Administration theme settings.
     $form['admin_theme'] = array(

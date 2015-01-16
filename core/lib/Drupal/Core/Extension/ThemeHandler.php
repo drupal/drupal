@@ -179,7 +179,7 @@ class ThemeHandler implements ThemeHandlerInterface {
     if (!isset($list[$name])) {
       throw new \InvalidArgumentException("$name theme is not installed.");
     }
-    $this->configFactory->get('system.theme')
+    $this->configFactory->getEditable('system.theme')
       ->set('default', $name)
       ->save();
     return $this;
@@ -189,7 +189,7 @@ class ThemeHandler implements ThemeHandlerInterface {
    * {@inheritdoc}
    */
   public function install(array $theme_list, $install_dependencies = TRUE) {
-    $extension_config = $this->configFactory->get('core.extension');
+    $extension_config = $this->configFactory->getEditable('core.extension');
 
     $theme_data = $this->rebuildThemeData();
 
@@ -313,8 +313,8 @@ class ThemeHandler implements ThemeHandlerInterface {
    * {@inheritdoc}
    */
   public function uninstall(array $theme_list) {
-    $extension_config = $this->configFactory->get('core.extension');
-    $theme_config = $this->configFactory->get('system.theme');
+    $extension_config = $this->configFactory->getEditable('core.extension');
+    $theme_config = $this->configFactory->getEditable('system.theme');
     $list = $this->listInfo();
     foreach ($theme_list as $key) {
       if (!isset($list[$key])) {

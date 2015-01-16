@@ -7,7 +7,7 @@
 
 namespace Drupal\form_test;
 
-use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Provides a test form object.
  */
-class FormTestControllerObject extends FormBase {
+class FormTestControllerObject extends ConfigFormBase {
 
   /**
    * {@inheritdoc}
@@ -27,9 +27,18 @@ class FormTestControllerObject extends FormBase {
   /**
    * {@inheritdoc}
    */
+  protected function getEditableConfigNames() {
+    return ['form_test.object'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function create(ContainerInterface $container) {
     drupal_set_message(t('The FormTestControllerObject::create() method was used for this form.'));
-    return new static();
+    return new static(
+      $container->get('config.factory')
+    );
   }
 
   /**

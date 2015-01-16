@@ -55,13 +55,21 @@ class ConfigOverrideTest extends KernelTestBase {
     $this->assertFalse(isset($data['baz']));
     $this->assertIdentical($data['404'], $expected_original_data['404']);
 
-    // Get the configuration object in with overrides.
-    $config = \Drupal::config('config_test.system');
+    // Get the configuration object with overrides.
+    $config = \Drupal::configFactory()->get('config_test.system');
 
     // Verify that it contains the overridden data from $config.
     $this->assertIdentical($config->get('foo'), $overrides['config_test.system']['foo']);
     $this->assertIdentical($config->get('baz'), $overrides['config_test.system']['baz']);
     $this->assertIdentical($config->get('404'), $overrides['config_test.system']['404']);
+
+    // Get the configuration object which does not have overrides.
+    $config = \Drupal::configFactory()->getEditable('config_test.system');
+
+    // Verify that it does not contains the overridden data from $config.
+    $this->assertIdentical($config->get('foo'), $expected_original_data['foo']);
+    $this->assertIdentical($config->get('baz'), NULL);
+    $this->assertIdentical($config->get('404'), $expected_original_data['404']);
 
     // Set the value for 'baz' (on the original data).
     $expected_original_data['baz'] = 'original baz';
@@ -71,11 +79,6 @@ class ConfigOverrideTest extends KernelTestBase {
     $expected_original_data['404'] = 'original 404';
     $config->set('404', $expected_original_data['404']);
 
-    // Verify that it still contains the overridden data from $config.
-    $this->assertIdentical($config->get('foo'), $overrides['config_test.system']['foo']);
-    $this->assertIdentical($config->get('baz'), $overrides['config_test.system']['baz']);
-    $this->assertIdentical($config->get('404'), $overrides['config_test.system']['404']);
-
     // Save the configuration object (having overrides applied).
     $config->save();
 
@@ -84,6 +87,11 @@ class ConfigOverrideTest extends KernelTestBase {
     $this->assertIdentical($config->get('foo'), $overrides['config_test.system']['foo']);
     $this->assertIdentical($config->get('baz'), $overrides['config_test.system']['baz']);
     $this->assertIdentical($config->get('404'), $overrides['config_test.system']['404']);
+
+    // Verify that raw config data has changed.
+    $this->assertIdentical($config->getOriginal('foo', FALSE), $expected_original_data['foo']);
+    $this->assertIdentical($config->getOriginal('baz', FALSE), $expected_original_data['baz']);
+    $this->assertIdentical($config->getOriginal('404', FALSE), $expected_original_data['404']);
 
     // Write file to staging.
     $staging = $this->container->get('config.storage.staging');
@@ -118,7 +126,7 @@ class ConfigOverrideTest extends KernelTestBase {
     $this->assertIdentical($config->get('key'), 'override');
     $old_state = \Drupal::configFactory()->getOverrideState();
     \Drupal::configFactory()->setOverrideState(FALSE);
-    $config_raw = \Drupal::config('config_test.new');
+    $config_raw = \Drupal::configFactory()->getEditable('config_test.new');
     $this->assertIdentical($config_raw->get('key'), NULL);
     $config_raw
       ->set('key', 'raw')

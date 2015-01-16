@@ -7,14 +7,25 @@
 
 namespace Drupal\contact;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Form\ConfigFormBaseTrait;
 use Drupal\Core\Form\FormStateInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base form for contact form edit forms.
  */
 class ContactFormEditForm extends EntityForm {
+  use ConfigFormBaseTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getEditableConfigNames() {
+    return ['contact.settings'];
+  }
 
   /**
    * {@inheritdoc}

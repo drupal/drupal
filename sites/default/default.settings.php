@@ -551,7 +551,18 @@ if ($settings['hash_salt']) {
  * the default settings.php.
  *
  * Note that any values you provide in these variable overrides will not be
- * modifiable from the Drupal administration interface.
+ * viewable from the Drupal administration interface. The administration
+ * interface displays the values stored in configuration so that you can stage
+ * changes to other environments that don't have the overrides.
+ *
+ * There are particular configuration values that are risky to override. For
+ * example, overriding the list of installed modules in 'core.extension' is not
+ * supported as module install or uninstall has not occurred. Other examples
+ * include field storage configuration, because it has effects on database
+ * structure, and 'core.menu.static_menu_link_overrides' since this is cached in
+ * a way that is not config override aware. Also, note that changing
+ * configuration values in settings.php will not fire any of the configuration
+ * change events.
  */
 # $config['system.site']['name'] = 'My Drupal site';
 # $config['system.theme']['default'] = 'stark';
