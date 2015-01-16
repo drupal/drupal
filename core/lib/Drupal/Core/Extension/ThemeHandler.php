@@ -13,6 +13,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ConfigInstallerInterface;
 use Drupal\Core\Config\ConfigManagerInterface;
+use Drupal\Core\Config\PreExistingConfigException;
 use Drupal\Core\Routing\RouteBuilderIndicatorInterface;
 use Drupal\Core\State\StateInterface;
 use Psr\Log\LoggerInterface;
@@ -253,6 +254,13 @@ class ThemeHandler implements ThemeHandlerInterface {
           '%name' => $key,
           '@max' => DRUPAL_EXTENSION_NAME_MAX_LENGTH,
         )));
+      }
+
+      // Validate default configuration of the theme. If there is existing
+      // configuration then stop installing.
+      $existing_configuration = $this->configInstaller->findPreExistingConfiguration('theme', $key);
+      if (!empty($existing_configuration)) {
+        throw PreExistingConfigException::create($key, $existing_configuration);
       }
 
       // The value is not used; the weight is ignored for themes currently.

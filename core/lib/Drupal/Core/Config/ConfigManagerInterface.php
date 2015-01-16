@@ -24,6 +24,17 @@ interface ConfigManagerInterface {
   public function getEntityTypeIdByName($name);
 
   /**
+   * Loads a configuration entity using the configuration name.
+   *
+   * @param string $name
+   *   The configuration object name.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface|null
+   *   The configuration entity or NULL if it does not exist.
+   */
+  public function loadConfigEntityByName($name);
+
+  /**
    * Gets the entity manager.
    *
    * @return \Drupal\Core\Entity\EntityManagerInterface

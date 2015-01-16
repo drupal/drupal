@@ -8,6 +8,7 @@
 namespace Drupal\system\Controller;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\PreExistingConfigException;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Routing\RouteBuilderIndicatorInterface;
@@ -120,12 +121,28 @@ class ThemeController extends ControllerBase {
     $theme = $request->get('theme');
 
     if (isset($theme)) {
-      if ($this->themeHandler->install(array($theme))) {
-        $themes = $this->themeHandler->listInfo();
-        drupal_set_message($this->t('The %theme theme has been installed.', array('%theme' => $themes[$theme]->info['name'])));
+      try {
+        if ($this->themeHandler->install(array($theme))) {
+          $themes = $this->themeHandler->listInfo();
+          drupal_set_message($this->t('The %theme theme has been installed.', array('%theme' => $themes[$theme]->info['name'])));
+        }
+        else {
+          drupal_set_message($this->t('The %theme theme was not found.', array('%theme' => $theme)), 'error');
+        }
       }
-      else {
-        drupal_set_message($this->t('The %theme theme was not found.', array('%theme' => $theme)), 'error');
+      catch (PreExistingConfigException $e) {
+        $config_objects = $e->flattenConfigObjects($e->getConfigObjects());
+        drupal_set_message(
+          $this->formatPlural(
+            count($config_objects),
+            'Unable to install @extension, %config_names already exists in active configuration.',
+            'Unable to install @extension, %config_names already exist in active configuration.',
+            array(
+              '%config_names' => implode(', ', $config_objects),
+              '@extension' => $theme,
+            )),
+          'error'
+        );
       }
 
       return $this->redirect('system.themes_page');

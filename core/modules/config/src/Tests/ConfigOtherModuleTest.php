@@ -7,6 +7,8 @@
 
 namespace Drupal\config\Tests;
 
+use Drupal\Core\Config\PreExistingConfigException;
+use Drupal\Core\Config\StorageInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -57,10 +59,18 @@ class ConfigOtherModuleTest extends WebTestBase {
     // Default configuration provided by config_test should still exist.
     $this->assertTrue(entity_load('config_test', 'dotted.default', TRUE), 'The configuration is not deleted.');
 
-    // Re-enable module to test that default config is unchanged.
-    $this->installModule('config_other_module_config_test');
-    $config_entity = entity_load('config_test', 'other_module_test', TRUE);
-    $this->assertEqual($config_entity->get('style'), "The piano ain't got no wrong notes.", 'Re-enabling the module does not install default config over the existing config entity.');
+    // Re-enable module to test that pre-existing default configuration throws
+    // an error.
+    $msg = "The expected PreExistingConfigException is thrown by reinstalling config_other_module_config_test.";
+    try {
+      $this->installModule('config_other_module_config_test');
+      $this->fail($msg);
+    }
+    catch (PreExistingConfigException $e) {
+      $this->pass($msg);
+      $this->assertEqual($e->getExtension(), 'config_other_module_config_test');
+      $this->assertEqual($e->getConfigObjects(), [StorageInterface::DEFAULT_COLLECTION => ['config_test.dynamic.other_module_test']]);
+    }
   }
 
   /**

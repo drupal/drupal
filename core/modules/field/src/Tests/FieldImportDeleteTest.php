@@ -21,6 +21,10 @@ class FieldImportDeleteTest extends FieldUnitTestBase {
   /**
    * Modules to enable.
    *
+   * The default configuration provided by field_test_config is imported by
+   * \Drupal\field\Tests\FieldUnitTestBase::setUp() when it installs field
+   * configuration.
+   *
    * @var array
    */
   public static $modules = array('field_test_config');
@@ -52,9 +56,6 @@ class FieldImportDeleteTest extends FieldUnitTestBase {
 
     // Create a second bundle for the 'Entity test' entity type.
     entity_test_create_bundle('test_bundle');
-
-    // Import default config.
-    $this->installConfig(array('field_test_config'));
 
     // Get the uuid's for the field storages.
     $field_storage_uuid = FieldStorageConfig::load($field_storage_id)->uuid();

@@ -110,6 +110,19 @@ class ConfigManager implements ConfigManagerInterface {
   /**
    * {@inheritdoc}
    */
+  public function loadConfigEntityByName($name) {
+    $entity_type_id = $this->getEntityTypeIdByName($name);
+    if ($entity_type_id) {
+      $entity_type = $this->entityManager->getDefinition($entity_type_id);
+      $id = substr($name, strlen($entity_type->getConfigPrefix()) + 1);
+      return $this->entityManager->getStorage($entity_type_id)->load($id);
+    }
+    return NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getEntityManager() {
     return $this->entityManager;
   }

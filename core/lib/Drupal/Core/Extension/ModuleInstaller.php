@@ -10,6 +10,8 @@ namespace Drupal\Core\Extension;
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Config\PreExistingConfigException;
+use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\DrupalKernelInterface;
 use Drupal\Component\Utility\String;
 
@@ -147,6 +149,18 @@ class ModuleInstaller implements ModuleInstallerInterface {
             '%name' => $module,
             '@max' => DRUPAL_EXTENSION_NAME_MAX_LENGTH,
           )));
+        }
+
+        // Install profiles can not have config clashes. Configuration that
+        // has the same name as a module's configuration will be used instead.
+        if ($module != drupal_get_profile()) {
+          // Validate default configuration of this module. Bail if unable to
+          // install. Should not continue installing more modules because those
+          // may depend on this one.
+          $existing_configuration = $config_installer->findPreExistingConfiguration('module', $module);
+          if (!empty($existing_configuration)) {
+            throw PreExistingConfigException::create($module, $existing_configuration);
+          }
         }
 
         $extension_config

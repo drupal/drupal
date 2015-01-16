@@ -9,6 +9,7 @@ namespace Drupal\system\Form;
 
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Config\PreExistingConfigException;
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -517,7 +518,24 @@ class ModulesListForm extends FormBase {
 
     // There seem to be no dependencies that would need approval.
     if (!empty($modules['install'])) {
-      $this->moduleInstaller->install(array_keys($modules['install']));
+      try {
+        $this->moduleInstaller->install(array_keys($modules['install']));
+      }
+      catch (PreExistingConfigException $e) {
+        $config_objects = $e->flattenConfigObjects($e->getConfigObjects());
+        drupal_set_message(
+          $this->formatPlural(
+            count($config_objects),
+            'Unable to install @extension, %config_names already exists in active configuration.',
+            'Unable to install @extension, %config_names already exist in active configuration.',
+            array(
+              '%config_names' => implode(', ', $config_objects),
+              '@extension' => $modules['install'][$e->getExtension()]
+            )),
+          'error'
+        );
+        return;
+      }
     }
 
     // Gets module list after install process, flushes caches and displays a

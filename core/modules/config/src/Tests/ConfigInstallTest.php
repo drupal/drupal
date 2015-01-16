@@ -7,6 +7,8 @@
 
 namespace Drupal\config\Tests;
 
+use Drupal\Core\Config\PreExistingConfigException;
+use Drupal\Core\Config\StorageInterface;
 use Drupal\simpletest\KernelTestBase;
 
 /**
@@ -113,6 +115,21 @@ class ConfigInstallTest extends KernelTestBase {
       $collection_storage = $active_storage->createCollection($collection);
       $data = $collection_storage->read('config_collection_install_test.test');
       $this->assertEqual($collection, $data['collection']);
+    }
+
+    // Tests that clashing configuration in collections is detected.
+    try {
+      \Drupal::service('module_installer')->install(['config_collection_clash_install_test']);
+      $this->fail('Expected PreExistingConfigException not thrown.');
+    }
+    catch (PreExistingConfigException $e) {
+      $this->assertEqual($e->getExtension(), 'config_collection_clash_install_test');
+      $this->assertEqual($e->getConfigObjects(), [
+        'another_collection' => ['config_collection_install_test.test'],
+        'collection.test1' => ['config_collection_install_test.test'],
+        'collection.test2' => ['config_collection_install_test.test'],
+      ]);
+      $this->assertEqual($e->getMessage(), 'Configuration objects (another_collection/config_collection_install_test.test, collection/test1/config_collection_install_test.test, collection/test2/config_collection_install_test.test) provided by config_collection_clash_install_test already exist in active configuration');
     }
 
     // Test that the we can use the config installer to install all the

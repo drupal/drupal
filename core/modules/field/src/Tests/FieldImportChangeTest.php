@@ -19,6 +19,10 @@ class FieldImportChangeTest extends FieldUnitTestBase {
   /**
    * Modules to enable.
    *
+   * The default configuration provided by field_test_config is imported by
+   * \Drupal\field\Tests\FieldUnitTestBase::setUp() when it installs field
+   * configuration.
+   *
    * @var array
    */
   public static $modules = array('field_test_config');
@@ -31,8 +35,6 @@ class FieldImportChangeTest extends FieldUnitTestBase {
     $field_id = "entity_test.entity_test.$field_storage_id";
     $field_config_name = "field.field.$field_id";
 
-    // Import default config.
-    $this->installConfig(array('field_test_config'));
     $active = $this->container->get('config.storage');
     $staging = $this->container->get('config.storage.staging');
     $this->copyConfig($active, $staging);

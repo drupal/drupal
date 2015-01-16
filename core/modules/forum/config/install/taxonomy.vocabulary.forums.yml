@@ -1,6 +1,9 @@
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  enforced:
+    module:
+      - forum
 name: Forums
 vid: forums
 description: 'Forum navigation vocabulary'

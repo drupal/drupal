@@ -1,0 +1,7 @@
+# Clashes with default configuration provided by the config_test module.
+id: dotted.default
+label: 'Config install fail'
+weight: 0
+protected_property: Default
+# Intentionally commented out to verify default status behavior.
+# status: 1
