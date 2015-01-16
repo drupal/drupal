@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Component\Utility;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Component\Utility\String;
 
@@ -71,10 +72,13 @@ class StringTest extends UnitTestCase {
    *   The expected result from calling the function.
    * @param string $message
    *   The message to display as output to the test.
+   * @param bool $expected_is_safe
+   *   Whether the result is expected to be safe for HTML display.
    */
-  function testFormat($string, $args, $expected, $message) {
+  function testFormat($string, $args, $expected, $message, $expected_is_safe) {
     $result = String::format($string, $args);
     $this->assertEquals($expected, $result, $message);
+    $this->assertEquals($expected_is_safe, SafeMarkup::isSafe($result), 'String::format correctly sets the result as safe or not safe.');
   }
 
   /**
@@ -83,10 +87,11 @@ class StringTest extends UnitTestCase {
    * @see testFormat()
    */
   function providerFormat() {
-    $tests[] = array('Simple text', array(), 'Simple text', 'String::format leaves simple text alone.');
-    $tests[] = array('Escaped text: @value', array('@value' => '<script>'), 'Escaped text: &lt;script&gt;', 'String::format replaces and escapes string.');
-    $tests[] = array('Placeholder text: %value', array('%value' => '<script>'), 'Placeholder text: <em class="placeholder">&lt;script&gt;</em>', 'String::format replaces, escapes and themes string.');
-    $tests[] = array('Verbatim text: !value', array('!value' => '<script>'), 'Verbatim text: <script>', 'String::format replaces verbatim string as-is.');
+    $tests[] = array('Simple text', array(), 'Simple text', 'String::format leaves simple text alone.', TRUE);
+    $tests[] = array('Escaped text: @value', array('@value' => '<script>'), 'Escaped text: &lt;script&gt;', 'String::format replaces and escapes string.', TRUE);
+    $tests[] = array('Placeholder text: %value', array('%value' => '<script>'), 'Placeholder text: <em class="placeholder">&lt;script&gt;</em>', 'String::format replaces, escapes and themes string.', TRUE);
+    $tests[] = array('Verbatim text: !value', array('!value' => '<script>'), 'Verbatim text: <script>', 'String::format replaces verbatim string as-is.', FALSE);
+    $tests[] = array('Verbatim text: !value', array('!value' => SafeMarkup::set('<span>Safe HTML</span>')), 'Verbatim text: <span>Safe HTML</span>', 'String::format replaces verbatim string as-is.', TRUE);
 
     return $tests;
   }

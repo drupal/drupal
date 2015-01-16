@@ -189,16 +189,16 @@ function template_preprocess_file_upload_help(&$variables) {
     $max = $upload_validators['file_validate_image_resolution'][0];
     $min = $upload_validators['file_validate_image_resolution'][1];
     if ($min && $max && $min == $max) {
-      $descriptions[] = t('Images must be exactly !size pixels.', array('!size' => '<strong>' . $max . '</strong>'));
+      $descriptions[] = t('Images must be exactly <strong>@size</strong> pixels.', array('@size' => $max));
     }
     elseif ($min && $max) {
-      $descriptions[] = t('Images must be larger than !min pixels. Images larger than !max pixels will be resized.', array('!min' => '<strong>' . $min . '</strong>', '!max' => '<strong>' . $max . '</strong>'));
+      $descriptions[] = t('Images must be larger than <strong>@min</strong> pixels. Images larger than <strong>@max</strong> pixels will be resized.', array('@min' => $min, '@max' => $max));
     }
     elseif ($min) {
-      $descriptions[] = t('Images must be larger than !min pixels.', array('!min' => '<strong>' . $min . '</strong>'));
+      $descriptions[] = t('Images must be larger than <strong>@min</strong> pixels.', array('@min' => $min));
     }
     elseif ($max) {
-      $descriptions[] = t('Images larger than !max pixels will be resized.', array('!max' => '<strong>' . $max . '</strong>'));
+      $descriptions[] = t('Images larger than <strong>@max</strong> pixels will be resized.', array('@max' => $max));
     }
   }
 

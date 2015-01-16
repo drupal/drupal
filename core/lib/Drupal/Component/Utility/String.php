@@ -96,6 +96,8 @@ class String {
    * @see t()
    */
   public static function format($string, array $args = array()) {
+    $safe = TRUE;
+
     // Transform arguments before inserting them.
     foreach ($args as $key => $value) {
       switch ($key[0]) {
@@ -112,9 +114,18 @@ class String {
 
         case '!':
           // Pass-through.
+          if (!SafeMarkup::isSafe($value)) {
+            $safe = FALSE;
+          }
       }
     }
-    return SafeMarkup::set(strtr($string, $args));
+
+    $output = strtr($string, $args);
+    if ($safe) {
+      SafeMarkup::set($output);
+    }
+
+    return $output;
   }
 
   /**
