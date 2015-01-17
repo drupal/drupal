@@ -24,8 +24,15 @@ use Drupal\views\Plugin\views\row\RssPluginBase;
  */
 class Rss extends RssPluginBase {
 
-   var $base_table = 'comment';
-   var $base_field = 'cid';
+  /**
+   * {@inheritdoc}
+   */
+  protected $base_table = 'comment';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $base_field = 'cid';
 
   /**
    * {@inheritdoc}
