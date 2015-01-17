@@ -102,7 +102,7 @@ entity.comment_type.add_form:
   path: '/admin/structure/comment/types/add'
   defaults:
     _entity_form: 'comment_type.add'
-    _title: 'Add'
+    _title: 'Add comment type'
   requirements:
     _permission: 'administer comment types'
   options:
