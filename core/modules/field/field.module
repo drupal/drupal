@@ -64,22 +64,38 @@ require_once __DIR__ . '/field.purge.inc';
 function field_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.field':
+      $field_ui_url = \Drupal::moduleHandler()->moduleExists('field_ui') ? \Drupal::url('help.page', array('name' => 'field_ui')) : '#';
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Field module allows custom data fields to be defined for <a href="!entity-help"><em>entity</em></a> types (entities include content items, comments, user accounts, and taxonomy terms). The Field module takes care of storing, loading, editing, and rendering field data. Most users will not interact with the Field module directly, but will instead use the <a href="!field-ui-help">Field UI module</a> user interface. Module developers can use the Field API to make new entity types "fieldable" and thus allow fields to be attached to them. For more information, see the <a href="!field">online documentation for the Field module</a>.', array('!entity-help' => \Drupal::url('help.page', array('name' => 'entity')), '!field-ui-help' => \Drupal::url('help.page', array('name' => 'field_ui')), '!field' => 'https://drupal.org/documentation/modules/field')) . '</p>';
+      $output .= '<p>' . t('The Field module allows custom data fields to be defined for <em>entity</em> types (see below). The Field module takes care of storing, loading, editing, and rendering field data. Most users will not interact with the Field module directly, but will instead use the <a href="!field-ui-help">Field UI module</a> user interface. Module developers can use the Field API to make new entity types "fieldable" and thus allow fields to be attached to them. For more information, see the <a href="!field">online documentation for the Field module</a>.', array('!field-ui-help' => $field_ui_url, '!field' => 'https://drupal.org/documentation/modules/field')). '</p>';
+      $output .= '<h3>' . t('Terminology') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Entities and entity types') . '</dt>';
+      $output .= '<dd>' . t('The website\'s content and configuration is managed using <em>entities</em>, which are grouped into <em>entity types</em>. <em>Content entity types</em> are the entity types for site content (such as the main site content, comments, custom blocks, taxonomy terms, and user accounts). <em>Configuration entity types</em> are used to store configuration information for your site, such as individual views in the Views module, and settings for your main site content types.') . '</dd>';
+      $output .= '<dt>' . t('Entity sub-types') . '</dt>';
+      $output .= '<dd>' . t('Some content entity types are further grouped into sub-types (for example, you could have article and page content types within the main site content entity type, and tag and category vocabularies within the taxonomy term entity type); other entity types, such as user accounts, do not have sub-types. Programmers use the term <em>bundle</em> for entity sub-types.') . '</dd>';
+      $output .= '<dt>' . t('Fields and field types') . '</dt>';
+      $output .= '<dd>' . t('Content entity types and sub-types store most of their text, file, and other information in <em>fields</em>. Fields are grouped by <em>field type</em>; field types define what type of data can be stored in that field, such as text, images, or taxonomy term references.') . '</dd>';
+      $output .= '<dt>' . t('Formatters and view modes') . '</dd>';
+      $output .= '<dd>' . t('Content entity types and sub-types can have one or more <em>view modes</em>, used for displaying the entity items. For instance, a content item could be viewed in full content mode on its own page, teaser mode in a list, or RSS mode in a feed. In each view mode, each field can be hidden or displayed, and if it is displayed, you can choose and configure the <em>formatter</em> that is used to display the field. For instance, a long text field can be displayed trimmed or full-length, and taxonomy term reference fields can be displayed in plain text or linked to the taxonomy term page.') . '</dd>';
+      $output .= '<dt>' . t('Widgets and form modes') . '</dd>';
+      $output .= '<dd>' . t('Content entity types and sub-types can have one or more <em>form modes</em>, used for editing. For instance, a content item could be edited in a compact format with only some fields editable, or a full format that allows all fields to be edited. In each form mode, each field can be hidden or displayed, and if it is displayed, you can choose and configure the <em>widget</em> that is used to edit the field. For instance, a taxonomy term reference field can be edited using a select list, radio buttons, or an autocomplete widget.') . '</dd>';
+      $output .= '</dl>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
-      $output .= '<dt>' . t('Enabling field types') . '</dt>';
-      $output .= '<dd>' . t('The Field module provides the infrastructure for fields and field attachment; the field types and input widgets themselves are provided by additional modules. Some of the modules are required; the optional modules can be enabled from the <a href="!modules">Extend administration page</a>. Additional fields and widgets may be provided by contributed modules, which you can find in the <a href="!contrib">contributed module section of Drupal.org</a>.', array('!modules' => \Drupal::url('system.modules_list'), '!contrib' => 'https://drupal.org/project/modules'));
+      $output .= '<dt>' . t('Enabling field types, widgets, and formatters') . '</dt>';
+      $output .= '<dd>' . t('The Field module provides the infrastructure for fields; the field types, formatters, and widgets are provided by Drupal core or additional modules. Some of the modules are required; the optional modules can be enabled from the <a href="!modules">Extend administration page</a>. Additional fields, formatters, and widgets may be provided by contributed modules, which you can find in the <a href="!contrib">contributed module section of Drupal.org</a>.', array('!modules' => \Drupal::url('system.modules_list'), '!contrib' => 'https://drupal.org/project/modules'));
 
-      // Make a list of all widget and field modules currently enabled, ordered
-      // by displayed module name (module names are not translated).
+      // Make a list of all widget, formatter, and field modules currently
+      // enabled, ordered by displayed module name (module names are not
+      // translated).
       $items = array();
       $info = system_get_info('module');
-      $field_widgets = \Drupal::service('plugin.manager.field.widget')->getDefinitions();
+      $widgets = \Drupal::service('plugin.manager.field.widget')->getDefinitions();
       $field_types = \Drupal::service('plugin.manager.field.field_type')->getUiDefinitions();
+      $formatters = \Drupal::service('plugin.manager.field.formatter')->getDefinitions();
       $providers = array();
-      foreach (array_merge($field_types, $field_widgets) as $plugin) {
+      foreach (array_merge($field_types, $widgets, $formatters) as $plugin) {
         $providers[] = $plugin['provider'];
       }
       $providers = array_unique($providers);
@@ -98,13 +114,14 @@ function field_help($route_name, RouteMatchInterface $route_match) {
         }
       }
       if ($items) {
-        $output .= ' ' . t('Currently enabled field and input widget modules:');
+        $output .= ' ' . t('Currently enabled field, formatter, and widget modules:');
         $item_list = array(
           '#theme' => 'item_list',
           '#items' => $items,
         );
         $output .= drupal_render($item_list);
       }
+      $output .= '</dd></dl>';
       return $output;
   }
 }
