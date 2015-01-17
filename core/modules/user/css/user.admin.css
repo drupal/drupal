@@ -13,10 +13,6 @@
   padding-left: 0;
   padding-right: 1.5em;
 }
-#permissions tr.odd .form-item,
-#permissions tr.even .form-item {
-  white-space: normal;
-}
 
 #user-admin-settings .details-description {
   font-size: 0.85em;
