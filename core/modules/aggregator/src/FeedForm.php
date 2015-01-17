@@ -32,25 +32,6 @@ class FeedForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, FormStateInterface $form_state) {
-    $feed = $this->buildEntity($form, $form_state);
-    // Check for duplicate titles.
-    $feed_storage = $this->entityManager->getStorage('aggregator_feed');
-    $result = $feed_storage->getFeedDuplicates($feed);
-    foreach ($result as $item) {
-      if (strcasecmp($item->label(), $feed->label()) == 0) {
-        $form_state->setErrorByName('title', $this->t('A feed named %feed already exists. Enter a unique title.', array('%feed' => $feed->label())));
-      }
-      if (strcasecmp($item->getUrl(), $feed->getUrl()) == 0) {
-        $form_state->setErrorByName('url', $this->t('A feed with this URL %url already exists. Enter a unique URL.', array('%url' => $feed->getUrl())));
-      }
-    }
-    parent::validate($form, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function save(array $form, FormStateInterface $form_state) {
     $feed = $this->entity;
     $insert = (bool) $feed->id();

@@ -30,6 +30,16 @@ class AddFeedTest extends AggregatorTestBase {
     $this->assertText($feed->label(), 'Page title');
     $this->assertRaw($feed->getWebsiteUrl());
 
+    // Try to add a duplicate.
+    $edit = [
+      'title[0][value]' => $feed->label(),
+      'url[0][value]' => $feed->getUrl(),
+      'refresh' => '900',
+    ];
+    $this->drupalPostForm('aggregator/sources/add', $edit, t('Save'));
+    $this->assertRaw(t('A feed named %feed already exists. Enter a unique title.', array('%feed' => $feed->label())));
+    $this->assertRaw(t('A feed with this URL %url already exists. Enter a unique URL.', array('%url' => $feed->getUrl())));
+
     // Delete feed.
     $this->deleteFeed($feed);
   }

@@ -25,6 +25,6 @@ class UserMailUnique extends Constraint {
    * {@inheritdoc}
    */
   public function validatedBy() {
-    return '\Drupal\user\Plugin\Validation\Constraint\UserUniqueValidator';
+    return '\Drupal\Core\Validation\Plugin\Validation\Constraint\UniqueFieldValueValidator';
   }
 }
