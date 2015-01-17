@@ -710,10 +710,20 @@ class ViewUI implements ViewEntityInterface {
           }
 
           if ($show_stats) {
-            $rows['statistics'][] = array('<strong>' . t('Query build time') . '</strong>', t('@time ms', array('@time' => intval($this->executable->build_time * 100000) / 100)));
-            $rows['statistics'][] = array('<strong>' . t('Query execute time') . '</strong>', t('@time ms', array('@time' => intval($this->executable->execute_time * 100000) / 100)));
-            $rows['statistics'][] = array('<strong>' . t('View render time') . '</strong>', t('@time ms', array('@time' => intval($this->executable->render_time * 100000) / 100)));
+            $rows['statistics'][] = array(
+              array('data' => array('#type' => 'inline_template', '#template' => "<strong>{% trans 'Query build time' %}</strong>")),
+              t('@time ms', array('@time' => intval($this->executable->build_time * 100000) / 100)),
+            );
 
+            $rows['statistics'][] = array(
+              array('data' => array('#type' => 'inline_template', '#template' => "<strong>{% trans 'Query execute time' %}</strong>")),
+              t('@time ms', array('@time' => intval($this->executable->execute_time * 100000) / 100)),
+            );
+
+            $rows['statistics'][] = array(
+              array('data' => array('#type' => 'inline_template', '#template' => "<strong>{% trans 'View render time' %}</strong>")),
+              t('@time ms', array('@time' => intval($this->executable->render_time * 100000) / 100)),
+            );
           }
           \Drupal::moduleHandler()->alter('views_preview_info', $rows, $this->executable);
         }
