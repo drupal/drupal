@@ -59,7 +59,7 @@ class PathItem extends FieldItemBase {
     if ($this->alias) {
       $entity = $this->getEntity();
 
-      if ($path = \Drupal::service('path.alias_storage')->save($entity->getSystemPath(), $this->alias, $this->getLangcode())) {
+      if ($path = \Drupal::service('path.alias_storage')->save($entity->urlInfo()->getInternalPath(), $this->alias, $this->getLangcode())) {
         $this->pid = $path['pid'];
       }
     }
@@ -76,8 +76,7 @@ class PathItem extends FieldItemBase {
     // Only save a non-empty alias.
     elseif ($this->alias) {
       $entity = $this->getEntity();
-
-      \Drupal::service('path.alias_storage')->save($entity->getSystemPath(), $this->alias, $this->getLangcode(), $this->pid);
+      \Drupal::service('path.alias_storage')->save($entity->urlInfo()->getInternalPath(), $this->alias, $this->getLangcode(), $this->pid);
     }
   }
 
@@ -87,7 +86,7 @@ class PathItem extends FieldItemBase {
   public function delete() {
     // Delete all aliases associated with this entity.
     $entity = $this->getEntity();
-    \Drupal::service('path.alias_storage')->delete(array('source' => $entity->getSystemPath()));
+    \Drupal::service('path.alias_storage')->delete(array('source' => $entity->urlInfo()->getInternalPath()));
   }
 
   /**

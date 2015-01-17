@@ -57,7 +57,7 @@ class UpdateTest extends RESTTestBase {
     $serialized = $serializer->serialize($patch_entity, $this->defaultFormat, $context);
 
     // Update the entity over the REST API.
-    $this->httpRequest($entity->getSystemPath(), 'PATCH', $serialized, $this->defaultMimeType);
+    $this->httpRequest($entity->urlInfo(), 'PATCH', $serialized, $this->defaultMimeType);
     $this->assertResponse(204);
 
     // Re-load updated entity from the database.
@@ -69,7 +69,7 @@ class UpdateTest extends RESTTestBase {
     $normalized = $serializer->normalize($patch_entity, $this->defaultFormat, $context);
     unset($normalized['field_test_text']);
     $serialized = $serializer->encode($normalized, $this->defaultFormat);
-    $this->httpRequest($entity->getSystemPath(), 'PATCH', $serialized, $this->defaultMimeType);
+    $this->httpRequest($entity->urlInfo(), 'PATCH', $serialized, $this->defaultMimeType);
     $this->assertResponse(204);
 
     $entity = entity_load($entity_type, $entity->id(), TRUE);
@@ -80,7 +80,7 @@ class UpdateTest extends RESTTestBase {
     $serialized = $serializer->encode($normalized, $this->defaultFormat);
 
     // Update the entity over the REST API.
-    $this->httpRequest($entity->getSystemPath(), 'PATCH', $serialized, $this->defaultMimeType);
+    $this->httpRequest($entity->urlInfo(), 'PATCH', $serialized, $this->defaultMimeType);
     $this->assertResponse(204);
 
     // Re-load updated entity from the database.
@@ -94,7 +94,7 @@ class UpdateTest extends RESTTestBase {
     $entity->save();
 
     // Try to empty a field that is access protected.
-    $this->httpRequest($entity->getSystemPath(), 'PATCH', $serialized, $this->defaultMimeType);
+    $this->httpRequest($entity->urlInfo(), 'PATCH', $serialized, $this->defaultMimeType);
     $this->assertResponse(403);
 
     // Re-load the entity from the database.
@@ -105,7 +105,7 @@ class UpdateTest extends RESTTestBase {
     $normalized = $serializer->normalize($patch_entity, $this->defaultFormat, $context);
     $normalized['field_test_text'][0]['value'] = 'no access value';
     $serialized = $serializer->serialize($normalized, $this->defaultFormat, $context);
-    $this->httpRequest($entity->getSystemPath(), 'PATCH', $serialized, $this->defaultMimeType);
+    $this->httpRequest($entity->urlInfo(), 'PATCH', $serialized, $this->defaultMimeType);
     $this->assertResponse(403);
 
     // Re-load the entity from the database.
@@ -118,7 +118,7 @@ class UpdateTest extends RESTTestBase {
       'format' => 'full_html',
     ));
     $serialized = $serializer->serialize($patch_entity, $this->defaultFormat, $context);
-    $this->httpRequest($entity->getSystemPath(), 'PATCH', $serialized, $this->defaultMimeType);
+    $this->httpRequest($entity->urlInfo(), 'PATCH', $serialized, $this->defaultMimeType);
     $this->assertResponse(422);
 
     // Re-load the entity from the database.
@@ -130,7 +130,7 @@ class UpdateTest extends RESTTestBase {
     $entity->save();
 
     // Try to send no data at all, which does not make sense on PATCH requests.
-    $this->httpRequest($entity->getSystemPath(), 'PATCH', NULL, $this->defaultMimeType);
+    $this->httpRequest($entity->urlInfo(), 'PATCH', NULL, $this->defaultMimeType);
     $this->assertResponse(400);
 
     // Try to update a non-existing entity with ID 9999.
@@ -143,20 +143,20 @@ class UpdateTest extends RESTTestBase {
     // Send a UUID that is too long.
     $entity->set('uuid', $this->randomMachineName(129));
     $invalid_serialized = $serializer->serialize($entity, $this->defaultFormat, $context);
-    $response = $this->httpRequest($entity->getSystemPath(), 'PATCH', $invalid_serialized, $this->defaultMimeType);
+    $response = $this->httpRequest($entity->urlInfo(), 'PATCH', $invalid_serialized, $this->defaultMimeType);
     $this->assertResponse(422);
     $error = Json::decode($response);
     $this->assertEqual($error['error'], "Unprocessable Entity: validation failed.\nuuid.0.value: <em class=\"placeholder\">UUID</em>: may not be longer than 128 characters.\n");
 
     // Try to update an entity without proper permissions.
     $this->drupalLogout();
-    $this->httpRequest($entity->getSystemPath(), 'PATCH', $serialized, $this->defaultMimeType);
+    $this->httpRequest($entity->urlInfo(), 'PATCH', $serialized, $this->defaultMimeType);
     $this->assertResponse(403);
 
     // Try to update a resource which is not REST API enabled.
     $this->enableService(FALSE);
     $this->drupalLogin($account);
-    $this->httpRequest($entity->getSystemPath(), 'PATCH', $serialized, $this->defaultMimeType);
+    $this->httpRequest($entity->urlInfo(), 'PATCH', $serialized, $this->defaultMimeType);
     $this->assertResponse(405);
   }
 

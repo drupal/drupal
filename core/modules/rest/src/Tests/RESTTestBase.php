@@ -8,6 +8,7 @@
 namespace Drupal\rest\Tests;
 
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -62,12 +63,12 @@ abstract class RESTTestBase extends WebTestBase {
   /**
    * Helper function to issue a HTTP request with simpletest's cURL.
    *
-   * @param string $url
-   *   The relative URL, e.g. "entity/node/1"
+   * @param string|\Drupal\Core\Url $url
+   *   A relative URL string or a Url object.
    * @param string $method
    *   HTTP method, one of GET, POST, PUT or DELETE.
    * @param array $body
-   *   Either the body for POST and PUT or additional URL parameters for GET.
+   *   The body for POST and PUT.
    * @param string $mime_type
    *   The MIME type of the transmitted content.
    */
@@ -79,14 +80,22 @@ abstract class RESTTestBase extends WebTestBase {
       // GET the CSRF token first for writing requests.
       $token = $this->drupalGet('rest/session/token');
     }
+
+    // Convert to absolute URL.
+    if ($url instanceof Url) {
+      $url = $url->setAbsolute()->toString();
+    }
+    else {
+      $url = _url($url, array('absolute' => TRUE));
+    }
+
     switch ($method) {
       case 'GET':
         // Set query if there are additional GET parameters.
-        $options = isset($body) ? array('absolute' => TRUE, 'query' => $body) : array('absolute' => TRUE);
         $curl_options = array(
           CURLOPT_HTTPGET => TRUE,
           CURLOPT_CUSTOMREQUEST => 'GET',
-          CURLOPT_URL => _url($url, $options),
+          CURLOPT_URL => $url,
           CURLOPT_NOBODY => FALSE,
           CURLOPT_HTTPHEADER => array('Accept: ' . $mime_type),
         );
@@ -97,7 +106,7 @@ abstract class RESTTestBase extends WebTestBase {
           CURLOPT_HTTPGET => FALSE,
           CURLOPT_POST => TRUE,
           CURLOPT_POSTFIELDS => $body,
-          CURLOPT_URL => _url($url, array('absolute' => TRUE)),
+          CURLOPT_URL => $url,
           CURLOPT_NOBODY => FALSE,
           CURLOPT_HTTPHEADER => array(
             'Content-Type: ' . $mime_type,
@@ -111,7 +120,7 @@ abstract class RESTTestBase extends WebTestBase {
           CURLOPT_HTTPGET => FALSE,
           CURLOPT_CUSTOMREQUEST => 'PUT',
           CURLOPT_POSTFIELDS => $body,
-          CURLOPT_URL => _url($url, array('absolute' => TRUE)),
+          CURLOPT_URL => $url,
           CURLOPT_NOBODY => FALSE,
           CURLOPT_HTTPHEADER => array(
             'Content-Type: ' . $mime_type,
@@ -125,7 +134,7 @@ abstract class RESTTestBase extends WebTestBase {
           CURLOPT_HTTPGET => FALSE,
           CURLOPT_CUSTOMREQUEST => 'PATCH',
           CURLOPT_POSTFIELDS => $body,
-          CURLOPT_URL => _url($url, array('absolute' => TRUE)),
+          CURLOPT_URL => $url,
           CURLOPT_NOBODY => FALSE,
           CURLOPT_HTTPHEADER => array(
             'Content-Type: ' . $mime_type,
@@ -138,7 +147,7 @@ abstract class RESTTestBase extends WebTestBase {
         $curl_options = array(
           CURLOPT_HTTPGET => FALSE,
           CURLOPT_CUSTOMREQUEST => 'DELETE',
-          CURLOPT_URL => _url($url, array('absolute' => TRUE)),
+          CURLOPT_URL => $url,
           CURLOPT_NOBODY => FALSE,
           CURLOPT_HTTPHEADER => array('X-CSRF-Token: ' . $token),
         );

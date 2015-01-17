@@ -13,6 +13,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Url;
 use Drupal\image\Plugin\Field\FieldFormatter\ImageFormatterBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -173,11 +174,10 @@ class ResponsiveImageFormatter extends ImageFormatterBase implements ContainerFa
    */
   public function viewElements(FieldItemListInterface $items) {
     $elements = array();
+    $url = NULL;
     // Check if the formatter involves a link.
     if ($this->getSetting('image_link') == 'content') {
-      $uri = $items->getEntity()->urlInfo();
-      // @todo Remove when theme_responsive_image_formatter() has support for route name.
-      $uri['path'] = $items->getEntity()->getSystemPath();
+      $url = $items->getEntity()->urlInfo();
     }
     elseif ($this->getSetting('image_link') == 'file') {
       $link_file = TRUE;
@@ -214,10 +214,7 @@ class ResponsiveImageFormatter extends ImageFormatterBase implements ContainerFa
 
     foreach ($items as $delta => $item) {
       if (isset($link_file)) {
-        $uri = array(
-          'path' => file_create_url($item->entity->getFileUri()),
-          'options' => array(),
-        );
+        $url = Url::fromUri(file_create_url($item->entity->getFileUri()));
       }
       $elements[$delta] = array(
         '#theme' => 'responsive_image_formatter',
@@ -229,7 +226,7 @@ class ResponsiveImageFormatter extends ImageFormatterBase implements ContainerFa
         '#item' => $item,
         '#image_style' => $fallback_image_style,
         '#mapping_id' => $responsive_image_mapping ? $responsive_image_mapping->id() : '',
-        '#path' => isset($uri) ? $uri : '',
+        '#url' => $url,
         '#cache' => array(
           'tags' => $cache_tags,
         )

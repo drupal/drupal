@@ -27,6 +27,7 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\block\Entity\Block;
+use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\user\Entity\Role;
 
@@ -1457,7 +1458,7 @@ abstract class WebTestBase extends TestBase {
   /**
    * Retrieves a Drupal path or an absolute path.
    *
-   * @param $path
+   * @param \Drupal\Core\Url|string $path
    *   Drupal path or URL to load into internal browser
    * @param $options
    *   Options to be forwarded to the url generator.
@@ -1469,11 +1470,13 @@ abstract class WebTestBase extends TestBase {
    *   The retrieved HTML string, also available as $this->getRawContent()
    */
   protected function drupalGet($path, array $options = array(), array $headers = array()) {
-    $options['absolute'] = TRUE;
-
+    if ($path instanceof Url) {
+      $url = $path->setAbsolute()->toString();
+    }
     // The URL generator service is not necessarily available yet; e.g., in
     // interactive installer tests.
-    if ($this->container->has('url_generator')) {
+    else if ($this->container->has('url_generator')) {
+      $options['absolute'] = TRUE;
       $url = $this->container->get('url_generator')->generateFromPath($path, $options);
     }
     else {
@@ -2482,8 +2485,8 @@ abstract class WebTestBase extends TestBase {
   /**
    * Passes if the internal browser's URL matches the given path.
    *
-   * @param $path
-   *   The expected system path.
+   * @param \Drupal\Core\Url|string $path
+   *   The expected system path or URL.
    * @param $options
    *   (optional) Any additional options to pass for $path to the url generator.
    * @param $message
@@ -2500,17 +2503,23 @@ abstract class WebTestBase extends TestBase {
    *   TRUE on pass, FALSE on fail.
    */
   protected function assertUrl($path, array $options = array(), $message = '', $group = 'Other') {
+    if ($path instanceof Url)  {
+      $url = $path->setAbsolute()->toString();
+    }
+    else {
+      $options['absolute'] = TRUE;
+      $url = $this->container->get('url_generator')->generateFromPath($path, $options);
+    }
     if (!$message) {
       $message = String::format('Expected @url matches current URL (@current_url).', array(
-        '@url' => var_export($this->container->get('url_generator')->generateFromPath($path, $options), TRUE),
+        '@url' => var_export($url, TRUE),
         '@current_url' => $this->getUrl(),
       ));
     }
-    $options['absolute'] = TRUE;
     // Paths in query strings can be encoded or decoded with no functional
     // difference, decode them for comparison purposes.
     $actual_url = urldecode($this->getUrl());
-    $expected_url = urldecode($this->container->get('url_generator')->generateFromPath($path, $options));
+    $expected_url = urldecode($url);
     return $this->assertEqual($actual_url, $expected_url, $message, $group);
   }
 

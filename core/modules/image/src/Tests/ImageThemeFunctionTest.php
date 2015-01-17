@@ -8,6 +8,7 @@
 namespace Drupal\image\Tests;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -86,9 +87,7 @@ class ImageThemeFunctionTest extends WebTestBase {
       '#theme' => 'image_formatter',
       '#image_style' => 'test',
       '#item' => $entity->image_test,
-      '#path' => array(
-        'path' => $path,
-      ),
+      '#url' => Url::fromUri('base://' . $path),
     );
 
     // Test using theme_image_formatter() with a NULL value for the alt option.
@@ -108,13 +107,14 @@ class ImageThemeFunctionTest extends WebTestBase {
     // Link the image to a fragment on the page, and not a full URL.
     $fragment = $this->randomMachineName();
     $element = $base_element;
-    $element['#path']['path'] = '';
-    $element['#path']['options'] = array(
-      'external' => TRUE,
-      'fragment' => $fragment,
-    );
+    $element['#url'] = Url::fromRoute('<none>', [], ['fragment' => $fragment]);
     $this->drupalSetContent(drupal_render($element));
-    $elements = $this->xpath('//a[@href=:fragment]/img[@class="image-style-test" and @src=:url and @width=:width and @height=:height and @alt=""]', array(':fragment' => '#' . $fragment, ':url' => $url, ':width' => $image->getWidth(), ':height' => $image->getHeight()));
+    $elements = $this->xpath('//a[@href=:fragment]/img[@class="image-style-test" and @src=:url and @width=:width and @height=:height and @alt=""]', array(
+      ':fragment' => '#' . $fragment,
+      ':url' => $url,
+      ':width' => $image->getWidth(),
+      ':height' => $image->getHeight()
+    ));
     $this->assertEqual(count($elements), 1, 'theme_image_formatter() correctly renders a link fragment.');
   }
 

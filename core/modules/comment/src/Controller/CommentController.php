@@ -128,7 +128,7 @@ class CommentController extends ControllerBase {
       // Find the current display page for this comment.
       $page = $this->entityManager()->getStorage('comment')->getDisplayOrdinal($comment, $field_definition->getSetting('default_mode'), $field_definition->getSetting('per_page'));
       // @todo: Cleaner sub request handling.
-      $redirect_request = Request::create($entity->getSystemPath(), 'GET', $request->query->all(), $request->cookies->all(), array(), $request->server->all());
+      $redirect_request = Request::create($entity->url(), 'GET', $request->query->all(), $request->cookies->all(), array(), $request->server->all());
       $redirect_request->query->set('page', $page);
       // @todo: Convert the pager to use the request object.
       $request->query->set('page', $page);

@@ -44,7 +44,7 @@ class ReadTest extends RESTTestBase {
       $entity = $this->entityCreate($entity_type);
       $entity->save();
       // Read it over the REST API.
-      $response = $this->httpRequest($entity->getSystemPath(), 'GET', NULL, $this->defaultMimeType);
+      $response = $this->httpRequest($entity->urlInfo(), 'GET', NULL, $this->defaultMimeType);
       $this->assertResponse('200', 'HTTP response code is correct.');
       $this->assertHeader('content-type', $this->defaultMimeType);
       $data = Json::decode($response);
@@ -53,7 +53,7 @@ class ReadTest extends RESTTestBase {
       $this->assertEqual($data['uuid'][0]['value'], $entity->uuid(), 'Entity UUID is correct');
 
       // Try to read the entity with an unsupported mime format.
-      $response = $this->httpRequest($entity->getSystemPath(), 'GET', NULL, 'application/wrongformat');
+      $response = $this->httpRequest($entity->urlInfo(), 'GET', NULL, 'application/wrongformat');
       $this->assertResponse(200);
       $this->assertHeader('Content-type', 'text/html; charset=UTF-8');
 
@@ -70,7 +70,7 @@ class ReadTest extends RESTTestBase {
       if ($entity_type == 'entity_test') {
         $entity->field_test_text->value = 'no access value';
         $entity->save();
-        $response = $this->httpRequest($entity->getSystemPath(), 'GET', NULL, $this->defaultMimeType);
+        $response = $this->httpRequest($entity->urlInfo(), 'GET', NULL, $this->defaultMimeType);
         $this->assertResponse(200);
         $this->assertHeader('content-type', $this->defaultMimeType);
         $data = Json::decode($response);
@@ -79,14 +79,14 @@ class ReadTest extends RESTTestBase {
 
       // Try to read an entity without proper permissions.
       $this->drupalLogout();
-      $response = $this->httpRequest($entity->getSystemPath(), 'GET', NULL, $this->defaultMimeType);
+      $response = $this->httpRequest($entity->urlInfo(), 'GET', NULL, $this->defaultMimeType);
       $this->assertResponse(403);
       $this->assertIdentical('{}', $response);
     }
     // Try to read a resource which is not REST API enabled.
     $account = $this->drupalCreateUser();
     $this->drupalLogin($account);
-    $response = $this->httpRequest($account->getSystemPath(), 'GET', NULL, $this->defaultMimeType);
+    $response = $this->httpRequest($account->urlInfo(), 'GET', NULL, $this->defaultMimeType);
     // AcceptHeaderMatcher considers the canonical, non-REST route a match, but
     // a lower quality one: no format restrictions means there's always a match,
     // and hence when there is no matching REST route, the non-REST route is
@@ -114,7 +114,7 @@ class ReadTest extends RESTTestBase {
     $entity->save();
 
     // Read it over the REST API.
-    $response = $this->httpRequest($entity->getSystemPath(), 'GET', NULL, 'application/json');
+    $response = $this->httpRequest($entity->urlInfo(), 'GET', NULL, 'application/json');
     $this->assertResponse('200', 'HTTP response code is correct.');
   }
 

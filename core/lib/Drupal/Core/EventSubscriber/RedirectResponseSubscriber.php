@@ -8,6 +8,7 @@
 namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Routing\RequestContext;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -32,9 +33,12 @@ class RedirectResponseSubscriber implements EventSubscriberInterface {
    *
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
    *   The url generator service.
+   * @param \Drupal\Core\Routing\RequestContext $request_context
+   *   The request context.
    */
-  public function __construct(UrlGeneratorInterface $url_generator) {
+  public function __construct(UrlGeneratorInterface $url_generator, RequestContext $request_context) {
     $this->urlGenerator = $url_generator;
+    $this->requestContext = $request_context;
   }
 
   /**
@@ -55,16 +59,21 @@ class RedirectResponseSubscriber implements EventSubscriberInterface {
       // the following exception:
       // - Absolute URLs that point to this site (i.e. same base URL and
       //   base path) are allowed.
-      if ($destination && (!UrlHelper::isExternal($destination) || UrlHelper::externalIsLocal($destination, $GLOBALS['base_url']))) {
-        $destination = UrlHelper::parse($destination);
+      if ($destination) {
+        if (!UrlHelper::isExternal($destination)) {
+          $destination = UrlHelper::parse($destination);
 
-        $path = $destination['path'];
-        $options['query'] = $destination['query'];
-        $options['fragment'] = $destination['fragment'];
-        // The 'Location' HTTP header must always be absolute.
-        $options['absolute'] = TRUE;
+          $path = $destination['path'];
+          $options['query'] = $destination['query'];
+          $options['fragment'] = $destination['fragment'];
+          // The 'Location' HTTP header contain an absolute URL.
+          $options['absolute'] = TRUE;
 
-        $response->setTargetUrl($this->urlGenerator->generateFromPath($path, $options));
+          $response->setTargetUrl($this->urlGenerator->generateFromPath($path, $options));
+        }
+        elseif (UrlHelper::externalIsLocal($destination, $this->requestContext->getCompleteBaseUrl())) {
+          $response->setTargetUrl($destination);
+        }
       }
     }
   }

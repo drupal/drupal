@@ -277,8 +277,8 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
    */
   public function testReferencedEntity() {
     $entity_type = $this->entity->getEntityTypeId();
-    $referencing_entity_path = $this->referencing_entity->getSystemPath();
-    $non_referencing_entity_path = $this->non_referencing_entity->getSystemPath();
+    $referencing_entity_path = $this->referencing_entity->url('canonical', array('absolute' => TRUE));
+    $non_referencing_entity_path = $this->non_referencing_entity->url('canonical', array('absolute' => TRUE));
     $listing_path = 'entity_test/list/' . $entity_type . '_reference/' . $entity_type . '/' . $this->entity->id();
     $empty_entity_listing_path = 'entity_test/list_empty/' . $entity_type;
     $nonempty_entity_listing_path = 'entity_test/list_labels_alphabetically/' . $entity_type;

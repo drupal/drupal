@@ -9,6 +9,7 @@ namespace Drupal\toolbar\Tests;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -449,7 +450,7 @@ class ToolbarAdminMenuTest extends WebTestBase {
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
 
     // Get a page with the new language langcode in the URL.
-    $this->drupalGet('/xx/test-page');
+    $this->drupalGet('xx/test-page');
     // Request a new page to refresh the drupalSettings object.
     $subtrees_hash = $this->getSubtreesHash();
 
@@ -463,18 +464,15 @@ class ToolbarAdminMenuTest extends WebTestBase {
   function testLanguageSwitching() {
     // Create a new language with the langcode 'xx'.
     $langcode = 'xx';
-    // The English name for the language. This will be translated.
-    $name = $this->randomMachineName(16);
-    $edit = array(
-      'predefined_langcode' => 'custom',
-      'langcode' => $langcode,
-      'label' => $name,
-      'direction' => LanguageInterface::DIRECTION_LTR,
-    );
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
+    $language = ConfigurableLanguage::createFromLangcode($langcode);
+    $language->save();
+    // The language path processor is just registered for more than one
+    // configured language, so rebuild the container now that we are
+    // multilingual.
+    $this->rebuildContainer();
 
     // Get a page with the new language langcode in the URL.
-    $this->drupalGet('/xx/test-page');
+    $this->drupalGet('test-page', array('language' => $language));
     // Assert different hash.
     $new_subtree_hash = $this->getSubtreesHash();
 

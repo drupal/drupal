@@ -7,6 +7,7 @@
 
 namespace Drupal\rdf\Tests;
 
+use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 use Drupal\simpletest\WebTestBase;
 
@@ -200,8 +201,7 @@ class StandardProfileTest extends WebTestBase {
    */
   protected function doFrontPageRdfaTests() {
     // Feed the HTML into the parser.
-    $path = 'node';
-    $graph = $this->getRdfGraph($path);
+    $graph = $this->getRdfGraph(Url::fromRoute('<front>'));
 
     // Ensure that both articles are listed.
     $this->assertEqual(2, count($graph->allOfType('http://schema.org/Article')), 'Two articles found on front page.');
@@ -240,7 +240,7 @@ class StandardProfileTest extends WebTestBase {
    */
   protected function doArticleRdfaTests() {
     // Feed the HTML into the parser.
-    $graph = $this->getRdfGraph($this->article->getSystemPath());
+    $graph = $this->getRdfGraph($this->article->urlInfo());
 
     // Type.
     $this->assertEqual($graph->type($this->articleUri), 'schema:Article', 'Article type was found (schema:Article).');
@@ -277,7 +277,7 @@ class StandardProfileTest extends WebTestBase {
     $node_type->save();
 
     // Feed the HTML into the parser.
-    $graph = $this->getRdfGraph($this->page->getSystemPath());
+    $graph = $this->getRdfGraph($this->page->urlInfo());
 
     // Type.
     $this->assertEqual($graph->type($this->pageUri), 'schema:WebPage', 'Page type was found (schema:WebPage).');
@@ -293,7 +293,7 @@ class StandardProfileTest extends WebTestBase {
     $this->drupalLogin($this->rootUser);
 
     // Feed the HTML into the parser.
-    $graph = $this->getRdfGraph($this->adminUser->getSystemPath());
+    $graph = $this->getRdfGraph($this->adminUser->urlInfo());
 
     // User type.
     $this->assertEqual($graph->type($this->authorUri), 'schema:Person', "User type was found (schema:Person) on user page.");
@@ -313,7 +313,7 @@ class StandardProfileTest extends WebTestBase {
    */
   protected function doTermRdfaTests() {
     // Feed the HTML into the parser.
-    $graph = $this->getRdfGraph($this->term->getSystemPath());
+    $graph = $this->getRdfGraph($this->term->urlInfo());
 
     // Term type.
     $this->assertEqual($graph->type($this->termUri), 'schema:Thing', "Term type was found (schema:Thing) on term page.");
@@ -517,16 +517,16 @@ class StandardProfileTest extends WebTestBase {
   /**
    * Get the EasyRdf_Graph object for a page.
    *
-   * @param string $path
-   *   The relative path to the page being tested.
+   * @param \Drupal\Core\Url $url
+   *   The URL object for the page.
    *
    * @return \EasyRdf_Graph
    *   The RDF graph object.
    */
-  protected function getRdfGraph($path) {
+  protected function getRdfGraph(Url $url) {
     $parser = new \EasyRdf_Parser_Rdfa();
     $graph = new \EasyRdf_Graph();
-    $parser->parse($graph, $this->drupalGet($path), 'rdfa', $this->baseUri);
+    $parser->parse($graph, $this->drupalGet($url), 'rdfa', $this->baseUri);
     return $graph;
   }
 }

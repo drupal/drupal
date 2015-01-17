@@ -38,18 +38,18 @@ class ConfigEntityStatusUITest extends WebTestBase {
     $entity = entity_load('config_test', $id);
 
     // Disable an entity.
-    $disable_path = $entity->getSystemPath('disable');
-    $this->assertLinkByHref($disable_path);
-    $this->drupalGet($disable_path);
+    $disable_url = $entity->urlInfo('disable');
+    $this->assertLinkByHref($disable_url->toString());
+    $this->drupalGet($disable_url);
     $this->assertResponse(200);
-    $this->assertNoLinkByHref($disable_path);
+    $this->assertNoLinkByHref($disable_url->toString());
 
     // Enable an entity.
-    $enable_path = $entity->getSystemPath('enable');
-    $this->assertLinkByHref($enable_path);
-    $this->drupalGet($enable_path);
+    $enable_url = $entity->urlInfo('enable');
+    $this->assertLinkByHref($enable_url->toString());
+    $this->drupalGet($enable_url);
     $this->assertResponse(200);
-    $this->assertNoLinkByHref($enable_path);
+    $this->assertNoLinkByHref($enable_url->toString());
   }
 
 }

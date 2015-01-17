@@ -178,15 +178,14 @@ class ImageFormatter extends ImageFormatterBase implements ContainerFactoryPlugi
    */
   public function viewElements(FieldItemListInterface $items) {
     $elements = array();
+    $url = NULL;
 
     $image_link_setting = $this->getSetting('image_link');
     // Check if the formatter involves a link.
     if ($image_link_setting == 'content') {
       $entity = $items->getEntity();
       if (!$entity->isNew()) {
-        // @todo Remove when theme_image_formatter() has support for route name.
-        $uri['path'] = $entity->getSystemPath();
-        $uri['options'] = $entity->urlInfo()->getOptions();
+        $url = $entity->urlInfo();
       }
     }
     elseif ($image_link_setting == 'file') {
@@ -206,10 +205,7 @@ class ImageFormatter extends ImageFormatterBase implements ContainerFactoryPlugi
       if ($item->entity) {
         if (isset($link_file)) {
           $image_uri = $item->entity->getFileUri();
-          $uri = array(
-            'path' => file_create_url($image_uri),
-            'options' => array(),
-          );
+          $url = Url::fromUri(file_create_url($image_uri));
         }
 
         // Extract field item attributes for the theme function, and unset them
@@ -222,7 +218,7 @@ class ImageFormatter extends ImageFormatterBase implements ContainerFactoryPlugi
           '#item' => $item,
           '#item_attributes' => $item_attributes,
           '#image_style' => $image_style_setting,
-          '#path' => isset($uri) ? $uri : '',
+          '#url' => $url,
           '#cache' => array(
             'tags' => $cache_tags,
           ),

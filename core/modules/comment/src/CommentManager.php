@@ -263,7 +263,7 @@ class CommentManager implements CommentManagerInterface {
         $destination = array('destination' => 'comment/reply/' . $entity->getEntityTypeId() . '/' . $entity->id() . '/' . $field_name . '#comment-form');
       }
       else {
-        $destination = array('destination' => $entity->getSystemPath() . '#comment-form');
+        $destination = array('destination' => $entity->url('canonical', array('fragment' => 'comment-form')));
       }
 
       if ($this->userConfig->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {

@@ -19,8 +19,8 @@ trait AssertBreadcrumbTrait {
   /**
    * Assert that a given path shows certain breadcrumb links.
    *
-   * @param string $goto
-   *   (optional) A system path to pass to
+   * @param \Drupal\Core\Url|string $goto
+   *   (optional) A path or URL to pass to
    *   Drupal\simpletest\WebTestBase::drupalGet().
    * @param array $trail
    *   An associative array whose keys are expected breadcrumb link paths and
@@ -68,7 +68,9 @@ trait AssertBreadcrumbTrait {
     // this test would go into an infinite loop, so we need to check that too.
     while ($trail && !empty($parts)) {
       foreach ($trail as $path => $title) {
-        $url = _url($path);
+        // If the path is empty or does not start with a leading /, assume it
+        // is an internal path that needs to be passed through _url().
+        $url = $path == '' || $path[0] != '/' ? _url($path) : $path;
         $part = array_shift($parts);
         $pass = ($pass && $part['href'] === $url && $part['text'] === String::checkPlain($title));
       }

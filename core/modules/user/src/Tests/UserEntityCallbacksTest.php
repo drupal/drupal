@@ -48,10 +48,4 @@ class UserEntityCallbacksTest extends WebTestBase {
     $this->assertEqual($this->anonymous->label(), $name, 'The variable anonymous should be used for name of uid 0');
   }
 
-  /**
-   * Test URI callback.
-   */
-  function testUriCallback() {
-    $this->assertEqual('user/' . $this->account->id(), $this->account->getSystemPath(), 'Correct user URI.');
-  }
 }

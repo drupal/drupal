@@ -33,7 +33,7 @@ class PathWidget extends WidgetBase {
     $entity = $items->getEntity();
     $path = array();
     if (!$entity->isNew()) {
-      $conditions = array('source' => $entity->getSystemPath());
+      $conditions = array('source' => $entity->urlInfo()->getInternalPath());
       if ($items->getLangcode() != LanguageInterface::LANGCODE_NOT_SPECIFIED) {
         $conditions['langcode'] = $items->getLangcode();
       }
@@ -44,7 +44,7 @@ class PathWidget extends WidgetBase {
     }
     $path += array(
       'pid' => NULL,
-      'source' => !$entity->isNew() ? $entity->getSystemPath() : NULL,
+      'source' => !$entity->isNew() ? $entity->urlInfo()->getInternalPath() : NULL,
       'alias' => '',
       'langcode' => $items->getLangcode(),
     );

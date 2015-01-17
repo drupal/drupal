@@ -139,7 +139,7 @@ function image_theme() {
       'file' => 'image.field.inc',
     ),
     'image_formatter' => array(
-      'variables' => array('item' => NULL, 'item_attributes' => NULL, 'path' => NULL, 'image_style' => NULL),
+      'variables' => array('item' => NULL, 'item_attributes' => NULL, 'url' => NULL, 'image_style' => NULL),
       'file' => 'image.field.inc',
     ),
   );

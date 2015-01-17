@@ -329,7 +329,7 @@ class ConfigTranslationUiTest extends WebTestBase {
     foreach ($this->langcodes as $langcode) {
       $langcode_prefixes = array_merge(array(''), $this->langcodes);
       foreach ($langcode_prefixes as $langcode_prefix) {
-        $this->drupalGet(ltrim("$langcode_prefix/$translation_base_url/$langcode/edit"));
+        $this->drupalGet(ltrim("$langcode_prefix/$translation_base_url/$langcode/edit", '/'));
         $this->assertFieldByName('translation[config_names][contact.form.feedback][label]', 'Website feedback - ' . $langcode);
         $this->assertText($label);
       }

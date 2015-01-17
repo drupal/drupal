@@ -7,6 +7,7 @@
 
 namespace Drupal\taxonomy\Tests;
 
+use Drupal\Core\Url;
 use Drupal\system\Tests\Menu\AssertBreadcrumbTrait;
 
 /**
@@ -59,31 +60,32 @@ class TermTranslationBreadcrumbTest extends TaxonomyTestBase {
    */
   public function testTranslatedBreadcrumbs() {
     // Ensure non-translated breadcrumb is correct.
-    $breadcrumb = array('' => 'Home');
+    $breadcrumb = array(Url::fromRoute('<front>')->toString() => 'Home');
     foreach ($this->terms as $term) {
-      $breadcrumb[$term->getSystemPath()] = $term->label();
+      $breadcrumb[$term->url()] = $term->label();
     }
     // The last item will not be in the breadcrumb.
     array_pop($breadcrumb);
 
     // Check the breadcrumb on the leaf term page.
     $term = $this->getLeafTerm();
-    $this->assertBreadcrumb($term->getSystemPath(), $breadcrumb, $term->label());
+    $this->assertBreadcrumb($term->urlInfo(), $breadcrumb, $term->label());
+
+    $languages = \Drupal::languageManager()->getLanguages();
 
     // Construct the expected translated breadcrumb.
-    $breadcrumb = array($this->translateToLangcode => 'Home');
+    $breadcrumb = array(Url::fromRoute('<front>', [], ['language' => $languages[$this->translateToLangcode]])->toString() => 'Home');
     foreach ($this->terms as $term) {
       $translated = $term->getTranslation($this->translateToLangcode);
-      $path = $this->translateToLangcode . '/' . $translated->getSystemPath();
-      $breadcrumb[$path] = $translated->label();
+      $url = $translated->url('canonical', ['language' => $languages[$this->translateToLangcode]]);
+      $breadcrumb[$url] = $translated->label();
     }
     array_pop($breadcrumb);
 
     // Check for the translated breadcrumb on the translated leaf term page.
     $term = $this->getLeafTerm();
     $translated = $term->getTranslation($this->translateToLangcode);
-    $path = $this->translateToLangcode . '/' . $translated->getSystemPath();
-    $this->assertBreadcrumb($path, $breadcrumb, $translated->label());
+    $this->assertBreadcrumb($translated->urlInfo('canonical', ['language' => $languages[$this->translateToLangcode]]), $breadcrumb, $translated->label());
   }
 
   /**

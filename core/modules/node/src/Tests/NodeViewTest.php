@@ -21,16 +21,16 @@ class NodeViewTest extends NodeTestBase {
   public function testHtmlHeadLinks() {
     $node = $this->drupalCreateNode();
 
-    $this->drupalGet($node->getSystemPath());
+    $this->drupalGet($node->urlInfo());
 
     $result = $this->xpath('//link[@rel = "version-history"]');
-    $this->assertEqual($result[0]['href'], _url("node/{$node->id()}/revisions"));
+    $this->assertEqual($result[0]['href'], $node->url('version-history'));
 
     $result = $this->xpath('//link[@rel = "edit-form"]');
-    $this->assertEqual($result[0]['href'], _url("node/{$node->id()}/edit"));
+    $this->assertEqual($result[0]['href'], $node->url('edit-form'));
 
     $result = $this->xpath('//link[@rel = "canonical"]');
-    $this->assertEqual($result[0]['href'], _url("node/{$node->id()}"));
+    $this->assertEqual($result[0]['href'], $node->url());
   }
 
 }

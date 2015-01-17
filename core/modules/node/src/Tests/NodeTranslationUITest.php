@@ -10,6 +10,7 @@ namespace Drupal\node\Tests;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\content_translation\Tests\ContentTranslationUITest;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Url;
 
 /**
  * Tests the Node Translation UI.
@@ -92,7 +93,6 @@ class NodeTranslationUITest extends ContentTranslationUITest {
    */
   protected function doTestPublishedStatus() {
     $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
-    $path = $entity->getSystemPath('edit-form');
     $languages = $this->container->get('language_manager')->getLanguages();
 
     $actions = array(
@@ -104,7 +104,9 @@ class NodeTranslationUITest extends ContentTranslationUITest {
       // (Un)publish the node translations and check that the translation
       // statuses are (un)published accordingly.
       foreach ($this->langcodes as $langcode) {
-        $this->drupalPostForm($path, array(), $action . $this->getFormSubmitSuffix($entity, $langcode), array('language' => $languages[$langcode]));
+        $options = array('language' => $languages[$langcode]);
+        $url = $entity->urlInfo('edit-form', $options);
+        $this->drupalPostForm($url, array(), $action . $this->getFormSubmitSuffix($entity, $langcode), $options);
       }
       $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
       foreach ($this->langcodes as $langcode) {
@@ -123,7 +125,6 @@ class NodeTranslationUITest extends ContentTranslationUITest {
    */
   protected function doTestAuthoringInfo() {
     $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
-    $path = $entity->getSystemPath('edit-form');
     $languages = $this->container->get('language_manager')->getLanguages();
     $values = array();
 
@@ -143,7 +144,9 @@ class NodeTranslationUITest extends ContentTranslationUITest {
         'sticky[value]' => $values[$langcode]['sticky'],
         'promote[value]' => $values[$langcode]['promote'],
       );
-      $this->drupalPostForm($path, $edit, $this->getFormSubmitAction($entity, $langcode), array('language' => $languages[$langcode]));
+      $options = array('language' => $languages[$langcode]);
+      $url = $entity->urlInfo('edit-form', $options);
+      $this->drupalPostForm($url, $edit, $this->getFormSubmitAction($entity, $langcode), $options);
     }
 
     $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
@@ -291,7 +294,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
     $this->doTestTranslations('node/' . $node->id(), $values);
 
     // Test that the node page has the correct alternate hreflang links.
-    $this->doTestAlternateHreflangLinks('node/' . $node->id());
+    $this->doTestAlternateHreflangLinks($node->urlInfo());
   }
 
   /**
@@ -313,20 +316,23 @@ class NodeTranslationUITest extends ContentTranslationUITest {
   /**
    * Tests that the given path provides the correct alternate hreflang links.
    *
-   * @param string $path
+   * @param \Drupal\Core\Url $url
    *   The path to be tested.
    */
-  protected function doTestAlternateHreflangLinks($path) {
+  protected function doTestAlternateHreflangLinks(Url $url) {
     $languages = $this->container->get('language_manager')->getLanguages();
+    $url->setAbsolute();
+    $urls = [];
     foreach ($this->langcodes as $langcode) {
-      $urls[$langcode] = _url($path, array('absolute' => TRUE, 'language' => $languages[$langcode]));
+      $language_url = clone $url;
+      $urls[$langcode] = $language_url->setOption('language', $languages[$langcode]);
     }
     foreach ($this->langcodes as $langcode) {
-      $this->drupalGet($path, array('language' => $languages[$langcode]));
-      foreach ($urls as $alternate_langcode => $url) {
+      $this->drupalGet($urls[$langcode]);
+      foreach ($urls as $alternate_langcode => $language_url) {
         // Retrieve desired link elements from the HTML head.
         $links = $this->xpath('head/link[@rel = "alternate" and @href = :href and @hreflang = :hreflang]',
-          array(':href' => $url, ':hreflang' => $alternate_langcode));
+          array(':href' => $language_url->toString(), ':hreflang' => $alternate_langcode));
         $this->assert(isset($links[0]), format_string('The %langcode node translation has the correct alternate hreflang link for %alternate_langcode: %link.', array('%langcode' => $langcode, '%alternate_langcode' => $alternate_langcode, '%link' => $url)));
       }
     }

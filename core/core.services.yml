@@ -823,7 +823,7 @@ services:
     arguments: ['@language_manager', '@config.factory', '@page_cache_request_policy', '@page_cache_response_policy']
   redirect_response_subscriber:
     class: Drupal\Core\EventSubscriber\RedirectResponseSubscriber
-    arguments: ['@url_generator']
+    arguments: ['@url_generator', '@router.request_context']
     tags:
       - { name: event_subscriber }
   request_close_subscriber:

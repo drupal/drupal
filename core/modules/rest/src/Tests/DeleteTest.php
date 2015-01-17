@@ -44,7 +44,7 @@ class DeleteTest extends RESTTestBase {
       $entity = $this->entityCreate($entity_type);
       $entity->save();
       // Delete it over the REST API.
-      $response = $this->httpRequest($entity->getSystemPath(), 'DELETE');
+      $response = $this->httpRequest($entity->urlInfo(), 'DELETE');
       // Clear the static cache with entity_load(), otherwise we won't see the
       // update.
       $entity = entity_load($entity_type, $entity->id(), TRUE);
@@ -62,7 +62,7 @@ class DeleteTest extends RESTTestBase {
       // Re-save entity to the database.
       $entity = $this->entityCreate($entity_type);
       $entity->save();
-      $this->httpRequest($entity->getSystemPath(), 'DELETE');
+      $this->httpRequest($entity->urlInfo(), 'DELETE');
       $this->assertResponse(403);
       $this->assertNotIdentical(FALSE, entity_load($entity_type, $entity->id(), TRUE), 'The ' . $entity_type . ' entity is still in the database.');
     }

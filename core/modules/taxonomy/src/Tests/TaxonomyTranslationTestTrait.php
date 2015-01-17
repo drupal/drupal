@@ -55,6 +55,7 @@ trait TaxonomyTranslationTestTrait {
    */
   protected function setupLanguages() {
     ConfigurableLanguage::createFromLangcode($this->translateToLangcode)->save();
+    $this->rebuildContainer();
   }
 
   /**

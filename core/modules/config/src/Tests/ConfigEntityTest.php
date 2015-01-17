@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\Core\Config\Entity\Exception\ConfigEntityIdLengthException;
+use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -122,7 +123,7 @@ class ConfigEntityTest extends WebTestBase {
     }
 
     // The entity path can only be checked after saving.
-    $this->assertIdentical($config_test->getSystemPath(), 'admin/structure/config_test/manage/' . $expected['id']);
+    $this->assertIdentical($config_test->url(), Url::fromRoute('entity.config_test.edit_form', ['config_test' => $expected['id']])->toString());
 
     // Verify that the correct status is returned and properties did not change.
     $this->assertIdentical($status, SAVED_NEW);

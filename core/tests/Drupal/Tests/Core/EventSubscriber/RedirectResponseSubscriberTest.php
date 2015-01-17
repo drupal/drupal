@@ -8,6 +8,7 @@
 namespace Drupal\Tests\Core\EventSubscriber;
 
 use Drupal\Core\EventSubscriber\RedirectResponseSubscriber;
+use Drupal\Core\Routing\RequestContext;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -23,28 +24,12 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class RedirectResponseSubscriberTest extends UnitTestCase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-    $GLOBALS['base_url'] = 'http://example.com/drupal';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function tearDown() {
-    unset($GLOBALS['base_url']);
-    parent::tearDown();
-  }
-
-  /**
    * Test destination detection and redirection.
    *
    * @param Request $request
    *   The request object with destination query set.
-   * @param bool $expected
-   *   Whether or not a redirect will occur.
+   * @param string|bool $expected
+   *   The expected target URL or FALSE.
    *
    * @covers ::checkRedirectUrl
    * @dataProvider providerTestDestinationRedirect
@@ -60,19 +45,28 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
 
     if ($expected) {
       $url_generator
-        ->expects($this->once())
+        ->expects($this->any())
         ->method('generateFromPath')
-          ->will($this->returnValue('success'));
+          ->willReturnMap([
+            ['test', ['query' => [], 'fragment' => '', 'absolute' => TRUE], 'http://example.com/drupal/test']
+          ]);
     }
 
-    $listener = new RedirectResponseSubscriber($url_generator);
+    $request_context = $this->getMockBuilder('Drupal\Core\Routing\RequestContext')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $request_context->expects($this->any())
+      ->method('getCompleteBaseUrl')
+      ->willReturn('http://example.com/drupal');
+
+    $listener = new RedirectResponseSubscriber($url_generator, $request_context);
     $dispatcher->addListener(KernelEvents::RESPONSE, array($listener, 'checkRedirectUrl'));
     $event = new FilterResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST, $response);
     $dispatcher->dispatch(KernelEvents::RESPONSE, $event);
 
     $target_url = $event->getResponse()->getTargetUrl();
     if ($expected) {
-      $this->assertEquals('success', $target_url);
+      $this->assertEquals($expected, $target_url);
     }
     else {
       $this->assertEquals('http://example.com/drupal', $target_url);
@@ -90,9 +84,9 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
       array(new Request(array('destination' => 'http://example.com')), FALSE),
       array(new Request(array('destination' => 'http://example.com/foobar')), FALSE),
       array(new Request(array('destination' => 'http://example.ca/drupal')), FALSE),
-      array(new Request(array('destination' => 'test')), TRUE),
-      array(new Request(array('destination' => 'http://example.com/drupal/')), TRUE),
-      array(new Request(array('destination' => 'http://example.com/drupal/test')), TRUE),
+      array(new Request(array('destination' => 'test')), 'http://example.com/drupal/test'),
+      array(new Request(array('destination' => 'http://example.com/drupal/')), 'http://example.com/drupal/'),
+      array(new Request(array('destination' => 'http://example.com/drupal/test')), 'http://example.com/drupal/test'),
     );
   }
 }

@@ -88,7 +88,7 @@ function responsive_image_theme() {
     'responsive_image_formatter' => array(
       'variables' => array(
         'item' => NULL,
-        'path' => NULL,
+        'url' => NULL,
         'image_style' => NULL,
         'mapping_id' => array(),
       ),
@@ -125,7 +125,7 @@ function theme_responsive_image_formatter($variables) {
       '#theme' => 'image_formatter',
       '#item' => $item,
       '#image_style' => $variables['image_style'],
-      '#path' => $variables['path'],
+      '#url' => $variables['url'],
     );
     return drupal_render($image_formatter);
   }

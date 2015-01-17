@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Cache;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Component\Utility\String;
 
@@ -53,7 +54,8 @@ abstract class PageCacheTagsTestBase extends WebTestBase {
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), $hit_or_miss, $message);
 
     if ($hit_or_miss === 'HIT' && is_array($tags)) {
-      $cid_parts = array(_url($path, array('absolute' => TRUE)), 'html');
+      $absolute_url = UrlHelper::isExternal($path) ? $path : _url($path, array('absolute' => TRUE));
+      $cid_parts = array($absolute_url, 'html');
       $cid = implode(':', $cid_parts);
       $cache_entry = \Drupal::cache('render')->get($cid);
       sort($cache_entry->tags);

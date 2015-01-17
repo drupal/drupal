@@ -1444,6 +1444,9 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       $options['entity_type'] = $alter['entity_type'];
     }
 
+    // @todo Add proper support for url objects, see
+    //   https://www.drupal.org/node/2404603
+    //   This means for example taking into account the options.
     if (isset($options['url']) && $options['url'] instanceof Url) {
       $value .= $this->linkGenerator()->generate($text, $options['url']);
     }

@@ -46,7 +46,7 @@ function template_preprocess_image_widget(&$variables) {
  *   - item_attributes: An optional associative array of html attributes to be
  *     placed in the img tag.
  *   - image_style: An optional image style.
- *   - path: An optional array containing the link 'path' and link 'options'.
+ *   - url: An optional \Drupal\Core\Url object.
  */
 function template_preprocess_image_formatter(&$variables) {
   if ($variables['image_style']) {
@@ -78,15 +78,5 @@ function template_preprocess_image_formatter(&$variables) {
 
   foreach (array('width', 'height', 'alt') as $key) {
     $variables['image']["#$key"] = $item->$key;
-  }
-
-  // The link path and link options are both optional, but for the options to be
-  // processed, the link path must at least be an empty string.
-  // @todo Add support for route names.
-  $variables['url'] = NULL;
-  if (isset($variables['path']['path'])) {
-    $path = $variables['path']['path'];
-    $options = isset($variables['path']['options']) ? $variables['path']['options'] : array();
-    $variables['url'] = _url($path, $options);
   }
 }

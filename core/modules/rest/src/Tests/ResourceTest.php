@@ -55,7 +55,7 @@ class ResourceTest extends RESTTestBase {
     $this->rebuildCache();
 
     // Verify that accessing the resource returns 401.
-    $response = $this->httpRequest($this->entity->getSystemPath(), 'GET', NULL, $this->defaultMimeType);
+    $response = $this->httpRequest($this->entity->urlInfo(), 'GET', NULL, $this->defaultMimeType);
     // AcceptHeaderMatcher considers the canonical, non-REST route a match, but
     // a lower quality one: no format restrictions means there's always a match,
     // and hence when there is no matching REST route, the non-REST route is
@@ -84,7 +84,7 @@ class ResourceTest extends RESTTestBase {
     $this->rebuildCache();
 
     // Verify that accessing the resource returns 401.
-    $response = $this->httpRequest($this->entity->getSystemPath(), 'GET', NULL, $this->defaultMimeType);
+    $response = $this->httpRequest($this->entity->urlInfo(), 'GET', NULL, $this->defaultMimeType);
     // AcceptHeaderMatcher considers the canonical, non-REST route a match, but
     // a lower quality one: no format restrictions means there's always a match,
     // and hence when there is no matching REST route, the non-REST route is
