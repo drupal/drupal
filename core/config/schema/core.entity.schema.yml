@@ -251,7 +251,7 @@ field.formatter.settings.number_decimal:
 
 field.formatter.settings.number_integer:
   type: mapping
-  label: 'Number interger display format settings'
+  label: 'Number integer display format settings'
   mapping:
     thousand_separator:
       type: string
