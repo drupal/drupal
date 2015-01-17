@@ -765,7 +765,7 @@ jquery.ui.tooltip:
 
 jquery.ui.touch-punch:
   remote: https://github.com/furf/jquery-ui-touch-punch
-  version: 0.2.2
+  version: 0.2.3
   license:
     name: GNU-GPL-2.0-or-later
     url: https://github.com/furf/jquery-ui-touch-punch
