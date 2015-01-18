@@ -58,6 +58,15 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
 
   /**
    * {@inheritdoc}
+   *
+   * Note that extending classes should not override this method to add entity
+   * validation logic, but define further validation constraints using the
+   * entity validation API and/or provide a new validation constraint if
+   * necessary. This is the only way to ensure that the validation logic
+   * is correctly applied independently of form submissions; e.g., for REST
+   * requests.
+   * For more information about entity validation, see
+   * https://www.drupal.org/node/2015613.
    */
   public function validate(array $form, FormStateInterface $form_state) {
     $entity = $this->buildEntity($form, $form_state);
