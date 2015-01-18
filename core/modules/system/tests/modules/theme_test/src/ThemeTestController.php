@@ -63,8 +63,8 @@ class ThemeTestController extends ControllerBase {
     $element = array();
     $element['test'] = array(
       '#type' => 'inline_template',
-      '#template' => 'test-with-context {{ lama }}',
-      '#context' => array('lama' => 'muuh'),
+      '#template' => 'test-with-context {{ llama }}',
+      '#context' => array('llama' => 'muuh'),
     );
     return $element;
   }

@@ -33,7 +33,7 @@ class TwigEnvironmentTest extends KernelTestBase {
     /** @var \Drupal\Core\Template\TwigEnvironment $environment */
     $environment = \Drupal::service('twig');
     $this->assertEqual($environment->renderInline('test-no-context'), 'test-no-context');
-    $this->assertEqual($environment->renderInline('test-with-context {{ lama }}', array('lama' => 'muuh')), 'test-with-context muuh');
+    $this->assertEqual($environment->renderInline('test-with-context {{ llama }}', array('llama' => 'muuh')), 'test-with-context muuh');
 
     $element = array();
     $unsafe_string = '<script>alert(\'Danger! High voltage!\');</script>';
@@ -56,8 +56,8 @@ class TwigEnvironmentTest extends KernelTestBase {
     $element = array();
     $element['test'] = array(
       '#type' => 'inline_template',
-      '#template' => 'test-with-context {{ lama }}',
-      '#context' => array('lama' => 'muuh'),
+      '#template' => 'test-with-context {{ llama }}',
+      '#context' => array('llama' => 'muuh'),
     );
     $element_copy = $element;
     // Render it twice so that twig caching is triggered.
