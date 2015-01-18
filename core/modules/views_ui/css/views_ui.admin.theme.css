@@ -595,6 +595,9 @@ td.group-title {
   margin: 0;
   padding: 0;
 }
+.views-displays .tabs.secondary .action-list input.form-submit:hover {
+  box-shadow: none;
+}
 
 .views-displays .tabs.secondary .action-list li:hover {
   background-color: #ddd;
