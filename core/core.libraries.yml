@@ -14,11 +14,10 @@ backbone:
 
 classList:
   remote: https://github.com/eligrey/classList.js
-  # @todo Stable release required for Drupal 8.0.
-  version: master
+  version: 2014-12-13
   license:
     name: Public Domain
-    url: https://github.com/eligrey/classList.js/blob/master/LICENSE.md
+    url: https://github.com/eligrey/classList.js/blob/2014-12-13/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/classList/classList.min.js: { weight: -21, browsers: { IE: 'lte IE 9', '!IE': false }, minified: true }
