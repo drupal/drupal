@@ -47,13 +47,10 @@ class UserLocalTasksTest extends LocalTaskIntegrationTest {
    *
    * @dataProvider getUserLoginRoutes
    */
-  public function testUserLoginLocalTasks($route, $subtask = array()) {
+  public function testUserLoginLocalTasks($route) {
     $tasks = array(
-      0 => array('user.page', 'user.register', 'user.pass',),
+      0 => array('user.register', 'user.pass', 'user.login',),
     );
-    if ($subtask) {
-      $tasks[] = $subtask;
-    }
     $this->assertLocalTasks($route, $tasks);
   }
 
@@ -62,8 +59,7 @@ class UserLocalTasksTest extends LocalTaskIntegrationTest {
    */
   public function getUserLoginRoutes() {
     return array(
-      array('user.page', array('user.login',)),
-      array('user.login', array('user.login',)),
+      array('user.login'),
       array('user.register'),
       array('user.pass'),
     );

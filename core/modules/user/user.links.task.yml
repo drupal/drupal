@@ -1,4 +1,3 @@
-
 entity.user_role.edit_form:
   title: 'Edit'
   route_name: entity.user_role.edit_form
@@ -9,24 +8,22 @@ user.account_settings_tab:
   title: 'Settings'
   base_route: entity.user.admin_form
 
-user.page:
-  route_name: user.page
-  base_route: user.page
-  title: 'Log in'
-  weight: -10
 user.register:
   route_name: user.register
   base_route: user.page
   title: 'Create new account'
+
 user.pass:
   route_name: user.pass
   base_route: user.page
   title: 'Reset your password'
+
 # Other authentication methods may add pages below user/login/.
 user.login:
   route_name: user.login
-  parent_id: user.page
-  title: 'Username and password'
+  base_route: user.page
+  title: 'Log in'
+  weight: -10
 
 entity.user.canonical:
   route_name: entity.user.canonical
