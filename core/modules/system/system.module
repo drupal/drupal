@@ -551,7 +551,6 @@ function system_page_attachments(array &$page) {
     'system_meta_content_type' => array(
       '#tag' => 'meta',
       '#attributes' => array(
-        'name' => 'charset',
         'charset' => 'utf-8',
       ),
       // Security: This always has to be output first.
