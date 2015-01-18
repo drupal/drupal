@@ -42,7 +42,6 @@ class TranslationTest extends FieldUnitTestBase {
    */
   protected $entity_type = 'test_entity';
 
-
   /**
    * An array defining the field storage to use in this test.
    *
@@ -71,6 +70,9 @@ class TranslationTest extends FieldUnitTestBase {
    */
   protected $field;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
 
@@ -185,6 +187,19 @@ class TranslationTest extends FieldUnitTestBase {
         $this->assertEqual($entity->getTranslation($langcode)->{$field_name_default}->getValue(), $empty_items, format_string('Empty value correctly populated for language %language.', array('%language' => $langcode)));
       }
     }
+  }
+
+  /**
+   * Tests field access.
+   *
+   * Regression test to verify that fieldAccess() can be called while only
+   * passing the required parameters.
+   *
+   * @see https://www.drupal.org/node/2404739
+   */
+  public function testFieldAccess() {
+    $access_control_handler = \Drupal::entityManager()->getAccessControlHandler($this->entity_type);
+    $this->assertTrue($access_control_handler->fieldAccess('view', $this->field));
   }
 
 }
