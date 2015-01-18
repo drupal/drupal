@@ -304,8 +304,11 @@ function pager_query_add_page(array $query, $element, $index) {
   if ($new_page = implode(',', pager_load_array($page_new[$element], $element, explode(',', $page)))) {
     $query['page'] = $new_page;
   }
-  if ($query_pager = pager_get_query_parameters()) {
-    $query = array_merge($query, $query_pager);
+  // Merge the query parameters passed to this function with the parameters
+  // from the current request. In case of collision, the parameters passed
+  // into this function take precedence.
+  if ($current_request_query = pager_get_query_parameters()) {
+    $query = array_merge($current_request_query, $query);
   }
   return $query;
 }
