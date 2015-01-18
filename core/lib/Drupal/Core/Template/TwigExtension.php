@@ -109,7 +109,7 @@ class TwigExtension extends \Twig_Extension {
 
       // CSS class and ID filters.
       new \Twig_SimpleFilter('clean_class', '\Drupal\Component\Utility\Html::getClass'),
-      new \Twig_SimpleFilter('clean_id', 'drupal_clean_id_identifier'),
+      new \Twig_SimpleFilter('clean_id', '\Drupal\Component\Utility\Html::getId'),
     );
   }
 
