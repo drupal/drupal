@@ -91,7 +91,7 @@ function contact_mail($key, &$message, $params) {
   $contact_message = $params['contact_message'];
   /** @var $sender \Drupal\user\UserInterface */
   $sender = $params['sender'];
-  $language = language_load($message['langcode']);
+  $language = \Drupal::languageManager()->getLanguage($message['langcode']);
 
   $variables = array(
     '!site-name' => \Drupal::config('system.site')->get('name'),

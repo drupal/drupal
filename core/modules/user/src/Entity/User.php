@@ -372,13 +372,13 @@ class User extends ContentEntityBase implements UserInterface {
    * {@inheritdoc}
    */
   function getPreferredLangcode($fallback_to_default = TRUE) {
-    $language_list = \Drupal::languageManager()->getLanguages();
+    $language_list = $this->languageManager()->getLanguages();
     $preferred_langcode = $this->get('preferred_langcode')->value;
     if (!empty($preferred_langcode) && isset($language_list[$preferred_langcode])) {
       return $language_list[$preferred_langcode]->getId();
     }
     else {
-      return $fallback_to_default ? language_default()->getId() : '';
+      return $fallback_to_default ? $this->languageManager()->getDefaultLanguage()->getId() : '';
     }
   }
 
@@ -386,13 +386,13 @@ class User extends ContentEntityBase implements UserInterface {
    * {@inheritdoc}
    */
   function getPreferredAdminLangcode($fallback_to_default = TRUE) {
-    $language_list = \Drupal::languageManager()->getLanguages();
+    $language_list = $this->languageManager()->getLanguages();
     $preferred_langcode = $this->get('preferred_admin_langcode')->value;
     if (!empty($preferred_langcode) && isset($language_list[$preferred_langcode])) {
       return $language_list[$preferred_langcode]->getId();
     }
     else {
-      return $fallback_to_default ? language_default()->getId() : '';
+      return $fallback_to_default ? $this->languageManager()->getDefaultLanguage()->getId() : '';
     }
   }
 

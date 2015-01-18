@@ -5,7 +5,7 @@ services:
       - { name: event_subscriber }
   node.grant_storage:
     class: Drupal\node\NodeGrantDatabaseStorage
-    arguments: ['@database', '@module_handler']
+    arguments: ['@database', '@module_handler', '@language_manager']
     tags:
       - { name: backend_overridable }
   access_check.node.revision:

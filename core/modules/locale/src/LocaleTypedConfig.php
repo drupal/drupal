@@ -7,6 +7,7 @@
 
 namespace Drupal\locale;
 
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\TypedData\ContextAwareInterface;
 use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\Config\Schema\Element;
@@ -48,6 +49,13 @@ class LocaleTypedConfig extends Element {
   protected $typedConfigManager;
 
   /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
    * Constructs a configuration wrapper object.
    *
    * @param \Drupal\Core\TypedData\DataDefinitionInterface $definition
@@ -60,12 +68,15 @@ class LocaleTypedConfig extends Element {
    *   The locale configuration manager object.
    * @param \Drupal\locale\TypedConfigManagerInterface $typed_config;
    *   The typed configuration manager interface.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
    */
-  public function __construct(DataDefinitionInterface $definition, $name, $langcode, LocaleConfigManager $locale_config, TypedConfigManagerInterface $typed_config) {
+  public function __construct(DataDefinitionInterface $definition, $name, $langcode, LocaleConfigManager $locale_config, TypedConfigManagerInterface $typed_config, LanguageManagerInterface $language_manager) {
     parent::__construct($definition, $name);
     $this->langcode = $langcode;
     $this->localeConfig = $locale_config;
     $this->typedConfigManager = $typed_config;
+    $this->languageManager = $language_manager;
   }
 
   /**
@@ -91,7 +102,7 @@ class LocaleTypedConfig extends Element {
    * {@inheritdoc}
    */
   public function language() {
-    return language_load($this->langcode);
+    return $this->languageManager->getLanguage($this->langcode);
   }
 
   /**

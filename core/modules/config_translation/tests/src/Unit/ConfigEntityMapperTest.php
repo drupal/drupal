@@ -47,6 +47,13 @@ class ConfigEntityMapperTest extends UnitTestCase {
    */
   protected $routeProvider;
 
+  /**
+   * The mocked language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface $language_manager|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $languageManager;
+
   protected function setUp() {
     $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
 
@@ -75,6 +82,8 @@ class ConfigEntityMapperTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
+    $this->languageManager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
+
     $this->configEntityMapper = new ConfigEntityMapper(
       'configurable_language',
       $definition,
@@ -84,7 +93,8 @@ class ConfigEntityMapperTest extends UnitTestCase {
       $this->getMock('Drupal\config_translation\ConfigMapperManagerInterface'),
       $this->routeProvider,
       $this->getStringTranslationStub(),
-      $this->entityManager
+      $this->entityManager,
+      $this->languageManager
     );
   }
 

@@ -655,7 +655,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       'label' => $form_state->getValue('label'),
       'description' => $form_state->getValue('description'),
       'base_table' => $this->base_table,
-      'langcode' => language_default()->getId(),
+      'langcode' => \Drupal::languageManager()->getDefaultLanguage()->getId(),
     );
 
     $view = entity_create('view', $values);

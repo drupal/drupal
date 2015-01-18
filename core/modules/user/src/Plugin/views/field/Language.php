@@ -30,7 +30,7 @@ class Language extends User {
       }
     }
     if (empty($data)) {
-      $lang = language_default();
+      $lang = \Drupal::languageManager()->getDefaultLanguage();
     }
     else {
       $lang = \Drupal::languageManager()->getLanguages();

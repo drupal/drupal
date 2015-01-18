@@ -9,7 +9,11 @@ namespace Drupal\language;
 
 use Drupal\Core\Config\Entity\DraggableListBuilder;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a class to build a listing of language entities.
@@ -22,6 +26,39 @@ class LanguageListBuilder extends DraggableListBuilder {
    * {@inheritdoc}
    */
   protected $entitiesKey = 'languages';
+
+  /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
+    return new static(
+      $entity_type,
+      $container->get('entity.manager')->getStorage($entity_type->id()),
+      $container->get('language_manager')
+    );
+  }
+
+  /**
+   * Constructs a new EntityListController object.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
+   *   The entity storage controller class.
+   * @param \Drupal\Core\Language\LanguageManagerInterface
+   *   The language manager.
+   */
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, LanguageManagerInterface $language_manager) {
+    parent::__construct($entity_type, $storage);
+    $this->languageManager = $language_manager;
+  }
 
   /**
    * {@inheritdoc}
@@ -47,7 +84,7 @@ class LanguageListBuilder extends DraggableListBuilder {
    */
   public function getDefaultOperations(EntityInterface $entity) {
     $operations = parent::getDefaultOperations($entity);
-    $default = language_default();
+    $default = $this->languageManager->getDefaultLanguage();
 
     // Deleting the site default language is not allowed.
     if ($entity->id() == $default->getId()) {
@@ -89,10 +126,9 @@ class LanguageListBuilder extends DraggableListBuilder {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
-    $language_manager = \Drupal::languageManager();
-    $language_manager->reset();
-    if ($language_manager instanceof ConfigurableLanguageManagerInterface) {
-      $language_manager->updateLockedLanguageWeights();
+    $this->languageManager->reset();
+    if ($this->languageManager instanceof ConfigurableLanguageManagerInterface) {
+      $this->languageManager->updateLockedLanguageWeights();
     }
 
     drupal_set_message(t('Configuration saved.'));

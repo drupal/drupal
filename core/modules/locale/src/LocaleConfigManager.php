@@ -117,7 +117,7 @@ class LocaleConfigManager {
     $data_definition = $this->typedConfigManager->buildDataDefinition($definition, $data);
     // Unless the configuration has a explicit language code we assume English.
     $langcode = isset($default['langcode']) ? $default['langcode'] : 'en';
-    $wrapper = new LocaleTypedConfig($data_definition, $name, $langcode, $this, $this->typedConfigManager);
+    $wrapper = new LocaleTypedConfig($data_definition, $name, $langcode, $this, $this->typedConfigManager, $this->languageManager);
     $wrapper->setValue($data);
     return $wrapper;
   }

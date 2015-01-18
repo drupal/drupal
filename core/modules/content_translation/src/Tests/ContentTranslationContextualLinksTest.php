@@ -65,7 +65,7 @@ class ContentTranslationContextualLinksTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
     // Set up an additional language.
-    $this->langcodes = array(language_default()->getId(), 'es');
+    $this->langcodes = array(\Drupal::languageManager()->getDefaultLanguage()->getId(), 'es');
     ConfigurableLanguage::createFromLangcode('es')->save();
 
     // Create a content type.

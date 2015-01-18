@@ -18,6 +18,7 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Database\Query\Condition;
@@ -66,6 +67,13 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
   protected $searchSettings;
 
   /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
    * The Drupal account to use for checking for access to advanced search.
    *
    * @var \Drupal\Core\Session\AccountInterface
@@ -111,6 +119,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       $container->get('entity.manager'),
       $container->get('module_handler'),
       $container->get('config.factory')->get('search.settings'),
+      $container->get('language_manager'),
       $container->get('current_user')
     );
   }
@@ -132,14 +141,17 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
    *   A module manager object.
    * @param \Drupal\Core\Config\Config $search_settings
    *   A config object for 'search.settings'.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The $account object to use for checking for access to advanced search.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Connection $database, EntityManagerInterface $entity_manager, ModuleHandlerInterface $module_handler, Config $search_settings, AccountInterface $account = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, Connection $database, EntityManagerInterface $entity_manager, ModuleHandlerInterface $module_handler, Config $search_settings, LanguageManagerInterface $language_manager, AccountInterface $account = NULL) {
     $this->database = $database;
     $this->entityManager = $entity_manager;
     $this->moduleHandler = $module_handler;
     $this->searchSettings = $search_settings;
+    $this->languageManager = $language_manager;
     $this->account = $account;
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
@@ -302,7 +314,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
 
       $extra = $this->moduleHandler->invokeAll('node_search_result', array($node, $item->langcode));
 
-      $language = language_load($item->langcode);
+      $language = $this->languageManager->getLanguage($item->langcode);
       $username = array(
         '#theme' => 'username',
         '#account' => $node->getOwner(),
@@ -486,7 +498,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
 
     // Add languages.
     $language_options = array();
-    $language_list = \Drupal::languageManager()->getLanguages(LanguageInterface::STATE_ALL);
+    $language_list = $this->languageManager->getLanguages(LanguageInterface::STATE_ALL);
     foreach ($language_list as $langcode => $language) {
       // Make locked languages appear special in the list.
       $language_options[$langcode] = $language->isLocked() ? t('- @name -', array('@name' => $language->getName())) : $language->getName();

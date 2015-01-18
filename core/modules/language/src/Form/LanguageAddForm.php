@@ -117,7 +117,7 @@ class LanguageAddForm extends LanguageFormBase {
       // Reuse the editing form validation routine if we add a custom language.
       $this->validateCommon($form['custom_language'], $form_state);
 
-      if ($language = language_load($langcode)) {
+      if ($language = $this->languageManager->getLanguage($langcode)) {
         $form_state->setErrorByName('langcode', $this->t('The language %language (%langcode) already exists.', array('%language' => $language->getName(), '%langcode' => $langcode)));
       }
     }
@@ -135,7 +135,7 @@ class LanguageAddForm extends LanguageFormBase {
       $form_state->setErrorByName('predefined_langcode', $this->t('Fill in the language details and save the language with <em>Add custom language</em>.'));
     }
     else {
-      if ($language = language_load($langcode)) {
+      if ($language = $this->languageManager->getLanguage($langcode)) {
         $form_state->setErrorByName('predefined_langcode', $this->t('The language %language (%langcode) already exists.', array('%language' => $language->getName(), '%langcode' => $langcode)));
       }
     }

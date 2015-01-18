@@ -188,7 +188,7 @@ class UserSession implements AccountInterface {
       return $language_list[$this->preferred_langcode]->getId();
     }
     else {
-      return $fallback_to_default ? language_default()->getId() : '';
+      return $fallback_to_default ? \Drupal::languageManager()->getDefaultLanguage()->getId() : '';
     }
   }
 
@@ -201,7 +201,7 @@ class UserSession implements AccountInterface {
       return $language_list[$this->preferred_admin_langcode]->getId();
     }
     else {
-      return $fallback_to_default ? language_default()->getId() : '';
+      return $fallback_to_default ? \Drupal::languageManager()->getDefaultLanguage()->getId() : '';
     }
   }
 

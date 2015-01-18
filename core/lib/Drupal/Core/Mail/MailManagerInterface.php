@@ -31,10 +31,11 @@ interface MailManagerInterface extends PluginManagerInterface {
    * user_preferred_langcode(). If you send email based on form values filled on
    * the page, there are two additional choices if you are not sending the email
    * to a user on the site. You can either use the language used to generate the
-   * page or the site default language. See language_default(). The former is
-   * good if sending email to the person filling the form, the later is good if
-   * you send email to an address previously set up (like contact addresses in a
-   * contact form).
+   * page or the site default language. See
+   * Drupal\Core\Language\LanguageManagerInterface::getDefaultLanguage(). The
+   * former is good if sending email to the person filling the form, the later
+   * is good if you send email to an address previously set up (like contact
+   * addresses in a contact form).
    *
    * Taking care of always using the proper language is even more important when
    * sending emails in a row to multiple users. Hook_mail() abstracts whether

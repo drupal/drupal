@@ -39,7 +39,7 @@ class ConfigLanguageOverrideTest extends KernelTestBase {
     // The language module implements a config factory override object that
     // overrides configuration when the Language module is enabled. This test ensures that
     // English overrides work.
-    \Drupal::languageManager()->setConfigOverrideLanguage(language_load('en'));
+    \Drupal::languageManager()->setConfigOverrideLanguage(\Drupal::languageManager()->getLanguage('en'));
     $config = \Drupal::config('config_test.system');
     $this->assertIdentical($config->get('foo'), 'en bar');
 
@@ -50,11 +50,11 @@ class ConfigLanguageOverrideTest extends KernelTestBase {
     ConfigurableLanguage::createFromLangcode('fr')->save();
     ConfigurableLanguage::createFromLangcode('de')->save();
 
-    \Drupal::languageManager()->setConfigOverrideLanguage(language_load('fr'));
+    \Drupal::languageManager()->setConfigOverrideLanguage(\Drupal::languageManager()->getLanguage('fr'));
     $config = \Drupal::config('config_test.system');
     $this->assertIdentical($config->get('foo'), 'fr bar');
 
-    \Drupal::languageManager()->setConfigOverrideLanguage(language_load('de'));
+    \Drupal::languageManager()->setConfigOverrideLanguage(\Drupal::languageManager()->getLanguage('de'));
     $config = \Drupal::config('config_test.system');
     $this->assertIdentical($config->get('foo'), 'de bar');
 
@@ -94,7 +94,7 @@ class ConfigLanguageOverrideTest extends KernelTestBase {
     $this->assertIdentical($config->get('value'), array('key' => 'override'));
 
     // Ensure renaming the config will rename the override.
-    \Drupal::languageManager()->setConfigOverrideLanguage(language_load('en'));
+    \Drupal::languageManager()->setConfigOverrideLanguage(\Drupal::languageManager()->getLanguage('en'));
     \Drupal::configFactory()->rename('config_test.foo', 'config_test.bar');
     $config = \Drupal::config('config_test.bar');
     $this->assertEqual($config->get('value'), array('key' => 'original'));

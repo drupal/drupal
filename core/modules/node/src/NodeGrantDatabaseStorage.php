@@ -13,6 +13,7 @@ use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\user\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -39,16 +40,26 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
   protected $moduleHandler;
 
   /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
    * Constructs a NodeGrantDatabaseStorage object.
    *
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
    */
-  public function __construct(Connection $database, ModuleHandlerInterface $module_handler) {
+  public function __construct(Connection $database, ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager) {
     $this->database = $database;
     $this->moduleHandler = $module_handler;
+    $this->languageManager = $language_manager;
   }
 
   /**
@@ -201,7 +212,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
           continue;
         }
         if (isset($grant['langcode'])) {
-          $grant_languages = array($grant['langcode'] => language_load($grant['langcode']));
+          $grant_languages = array($grant['langcode'] => $this->languageManager->getLanguage($grant['langcode']));
         }
         else {
           $grant_languages = $node->getTranslationLanguages(TRUE);

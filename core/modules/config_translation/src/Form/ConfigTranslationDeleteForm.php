@@ -121,7 +121,7 @@ class ConfigTranslationDeleteForm extends ConfirmFormBase {
     $mapper = $this->configMapperManager->createInstance($plugin_id);
     $mapper->populateFromRequest($request);
 
-    $language = language_load($langcode);
+    $language = $this->languageManager->getLanguage($langcode);
     if (!$language) {
       throw new NotFoundHttpException();
     }
