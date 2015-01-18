@@ -163,7 +163,6 @@ class LanguageSwitchingTest extends WebTestBase {
   /**
    * Test languge switcher links for domain based negotiation
    */
-
   function testLanguageBlockWithDomain() {
     // Add the Italian language.
     ConfigurableLanguage::createFromLangcode('it')->save();
@@ -239,6 +238,33 @@ class LanguageSwitchingTest extends WebTestBase {
 
     $this->doTestLanguageLinkActiveClassAuthenticated();
     $this->doTestLanguageLinkActiveClassAnonymous();
+  }
+
+  /**
+   * Check the path-admin class, as same as on default language.
+   */
+  function testLanguageBodyClass() {
+    $searched_class = 'path-admin';
+
+    // Add language.
+    $edit = array(
+      'predefined_langcode' => 'fr',
+    );
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
+
+    // Enable URL language detection and selection.
+    $edit = array('language_interface[enabled][language-url]' => '1');
+    $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
+
+    // Go to admin/config, check the class on default language.
+    $this->drupalGet('admin/config');
+    $class = $this->xpath('//body[contains(@class, :class)]', array(':class' => $searched_class));
+    $this->assertTrue(isset($class[0]), t('The path-admin class appears on default language.'));
+
+    // Go to admin/config, check the class on french language.
+    $this->drupalGet('fr/admin/config');
+    $class = $this->xpath('//body[contains(@class, :class)]', array(':class' => $searched_class));
+    $this->assertTrue(isset($class[0]), t('The path-admin class same as on default language.'));
   }
 
   /**

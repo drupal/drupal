@@ -1343,8 +1343,15 @@ function template_preprocess_html(&$variables) {
   // Add a variable for the root path. This can be used to create a class and
   // theme the page depending on the current path (e.g. node, admin, user) as
   // well as more specific data like path-frontpage.
-  $path = \Drupal::request()->getPathInfo();
-  $variables['root_path'] = explode('/', $path)[1];
+  $is_front_page =  \Drupal::service('path.matcher')->isFrontPage();
+
+  if ($is_front_page) {
+    $variables['root_path'] = TRUE;
+  }
+  else {
+    $system_path = \Drupal::request()->attributes->get('_system_path');
+    $variables['root_path'] = explode('/', $system_path)[0];
+  }
 
   $site_config = \Drupal::config('system.site');
   // Construct page title.
@@ -1356,7 +1363,7 @@ function template_preprocess_html(&$variables) {
   }
   // @todo Remove once views is not bypassing the view subscriber anymore.
   //   @see http://drupal.org/node/2068471
-  elseif (drupal_is_front_page()) {
+  elseif ($is_front_page) {
     $head_title = array(
       'title' => t('Home'),
       'name' => String::checkPlain($site_config->get('name')),
