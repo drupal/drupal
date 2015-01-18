@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
  * Controller providing page callbacks for the action admin interface.
  */
 class SessionTestController extends ControllerBase {
+
   /**
    * Prints the stored session value to the screen.
    *
@@ -123,4 +124,5 @@ class SessionTestController extends ControllerBase {
   public function isLoggedIn() {
     return ['#markup' => $this->t('User is logged in.')];
   }
+
 }
