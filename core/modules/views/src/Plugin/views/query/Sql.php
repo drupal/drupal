@@ -1254,7 +1254,7 @@ class Sql extends QueryPluginBase {
       }
 
       foreach ($entity_information as $entity_type_id => $info) {
-        $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
+        $entity_type = \Drupal::entityManager()->getDefinition($info['entity_type']);
         $base_field = empty($table['revision']) ? $entity_type->getKey('id') : $entity_type->getKey('revision');
         $this->addField($info['alias'], $base_field, '', $params);
       }
@@ -1468,30 +1468,40 @@ class Sql extends QueryPluginBase {
       return;
     }
 
+    // Extract all entity types from entity_information.
+    $entity_types = array();
+    foreach ($entity_information as $info) {
+      $entity_type = $info['entity_type'];
+      if (!isset($entity_types[$entity_type])) {
+        $entity_types[$entity_type] = \Drupal::entityManager()->getDefinition($entity_type);
+      }
+    }
+
     // Assemble a list of entities to load.
     $ids_by_type = array();
-    foreach ($entity_information as $entity_type => $info) {
-      $entity_info = \Drupal::entityManager()->getDefinition($entity_type);
+    foreach ($entity_information as $info) {
+      $relationship_id = $info['relationship_id'];
+      $entity_type = $info['entity_type'];
+      $entity_info = $entity_types[$entity_type];
       $id_key = empty($table['revision']) ? $entity_info->getKey('id') : $entity_info->getKey('revision');
       $id_alias = $this->getFieldAlias($info['alias'], $id_key);
 
       foreach ($results as $index => $result) {
         // Store the entity id if it was found.
         if (isset($result->{$id_alias}) && $result->{$id_alias} != '') {
-          $ids_by_type[$entity_type][$index] = $result->$id_alias;
+          $ids_by_type[$entity_type][$index][$relationship_id] = $result->$id_alias;
         }
       }
     }
 
     // Load all entities and assign them to the correct result row.
     foreach ($ids_by_type as $entity_type => $ids) {
-      $info = $entity_information[$entity_type];
-      $relationship_id = $info['relationship_id'];
+      $flat_ids = iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($ids)), FALSE);
 
       // Drupal core currently has no way to load multiple revisions. Sad.
-      if ($info['revision']) {
+      if (isset($entity_table_info[$entity_type]['revision']) && $entity_table_info[$entity_type]['revision'] == TRUE) {
         $entities = array();
-        foreach ($ids as $revision_id) {
+        foreach ($flat_ids as $revision_id) {
           $entity = entity_revision_load($entity_type, $revision_id);
           if ($entity) {
             $entities[$revision_id] = $entity;
@@ -1499,22 +1509,24 @@ class Sql extends QueryPluginBase {
         }
       }
       else {
-        $entities = entity_load_multiple($entity_type, $ids);
+        $entities = entity_load_multiple($entity_type, $flat_ids);
       }
 
-      foreach ($ids as $index => $id) {
-        if (isset($entities[$id])) {
-          $entity = $entities[$id];
-        }
-        else {
-          $entity = NULL;
-        }
+      foreach ($ids as $index => $relationships) {
+        foreach ($relationships as $relationship_id => $entity_id) {
+          if (isset($entities[$entity_id])) {
+            $entity = $entities[$entity_id];
+          }
+          else {
+            $entity = NULL;
+          }
 
-        if ($relationship_id == 'none') {
-          $results[$index]->_entity = $entity;
-        }
-        else {
-          $results[$index]->_relationship_entities[$relationship_id] = $entity;
+          if ($relationship_id == 'none') {
+            $results[$index]->_entity = $entity;
+          }
+          else {
+            $results[$index]->_relationship_entities[$relationship_id] = $entity;
+          }
         }
       }
     }

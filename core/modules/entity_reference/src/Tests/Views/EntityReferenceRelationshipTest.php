@@ -122,8 +122,12 @@ class EntityReferenceRelationshipTest extends ViewUnitTestBase {
     $this->executeView($view);
 
     foreach (array_keys($view->result) as $index) {
-      // Just check that the actual ID of the entity is the expected one.
+      // Check that the actual ID of the entity is the expected one.
       $this->assertEqual($view->result[$index]->id, $this->entities[$index + 1]->id());
+
+      // Also check that we have the correct result entity.
+      $this->assertEqual($view->result[$index]->_entity->id(), $this->entities[$index + 1]->id());
+
       // Test the forward relationship.
       // The second and third entity refer to the first one.
       // The value key on the result will be in the format
@@ -141,6 +145,7 @@ class EntityReferenceRelationshipTest extends ViewUnitTestBase {
 
     foreach (array_keys($view->result) as $index) {
       $this->assertEqual($view->result[$index]->id, $this->entities[$index + 1]->id());
+      $this->assertEqual($view->result[$index]->_entity->id(), $this->entities[$index + 1]->id());
       // The second and third entity refer to the first one.
       $this->assertEqual($view->result[$index]->entity_test_entity_test__field_test_id, $index == 0 ? NULL : 1);
     }
