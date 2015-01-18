@@ -165,6 +165,19 @@ EOS;
   }
 
   /**
+   * @covers ::build()
+   */
+  public function testBuildWithNestedInterface() {
+    $class = 'Drupal\Tests\Component\ProxyBuilder\TestServiceWithChildInterfaces';
+
+    $result = $this->proxyBuilder->build($class);
+    $method_body = '';
+
+    $interface_string = ' implements \Drupal\Tests\Component\ProxyBuilder\TestChildInterface';
+    $this->assertEquals($this->buildExpectedClass($class, $method_body, $interface_string), $result);
+  }
+
+  /**
    * @covers ::buildMethod()
    * @covers ::buildParameter()
    * @covers ::buildMethodBody()
@@ -348,3 +361,14 @@ class TestServiceWithPublicStaticMethod {
 
 }
 
+interface TestBaseInterface {
+
+}
+
+interface TestChildInterface extends TestBaseInterface {
+
+}
+
+class TestServiceWithChildInterfaces implements TestChildInterface {
+
+}

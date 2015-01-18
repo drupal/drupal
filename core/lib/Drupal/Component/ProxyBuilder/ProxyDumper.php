@@ -16,6 +16,13 @@ use Symfony\Component\DependencyInjection\LazyProxy\PhpDumper\DumperInterface;
 class ProxyDumper implements DumperInterface {
 
   /**
+   * Keeps track of already existing proxy classes.
+   *
+   * @var array
+   */
+  protected $buildClasses = [];
+
+  /**
    * The proxy builder.
    *
    * @var \Drupal\Component\ProxyBuilder\ProxyBuilder
@@ -56,7 +63,16 @@ EOS;
    * {@inheritdoc}
    */
   public function getProxyCode(Definition $definition) {
-    return $this->builder->build($definition->getClass());
+    // Maybe the same class is used in different services, which are both marked
+    // as lazy (just think about 2 database connections).
+    // In those cases we should not generate proxy code the second time.
+    if (!isset($this->buildClasses[$definition->getClass()])) {
+      $this->buildClasses[$definition->getClass()] = TRUE;
+      return $this->builder->build($definition->getClass());
+    }
+    else {
+      return '';
+    }
   }
 
 }

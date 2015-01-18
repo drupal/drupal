@@ -85,6 +85,9 @@ EOS;
     $this->assertEquals($expected, $result);
   }
 
+  /**
+   * @covers ::getProxyCode()
+   */
   public function testGetProxyCode() {
     $definition = new Definition('Drupal\Tests\Component\ProxyBuilder\TestService');
     $definition->setLazy(TRUE);
@@ -97,6 +100,26 @@ EOS;
 
     $result = $this->proxyDumper->getProxyCode($definition);
     $this->assertEquals($class, $result);
+  }
+
+  /**
+   * @covers ::getProxyCode()
+   */
+  public function testGetProxyCodeWithSameClassMultipleTimes() {
+    $definition = new Definition('Drupal\Tests\Component\ProxyBuilder\TestService');
+    $definition->setLazy(TRUE);
+
+    $class = 'class Drupal_Tests_Component_ProxyBuilder_TestService_Proxy {}';
+    $this->proxyBuilder->expects($this->once())
+      ->method('build')
+      ->with('Drupal\Tests\Component\ProxyBuilder\TestService')
+      ->willReturn($class);
+
+    $result = $this->proxyDumper->getProxyCode($definition);
+    $this->assertEquals($class, $result);
+
+    $result = $this->proxyDumper->getProxyCode($definition);
+    $this->assertEquals('', $result);
   }
 
 }

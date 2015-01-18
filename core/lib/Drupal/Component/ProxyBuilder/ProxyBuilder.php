@@ -48,11 +48,28 @@ class ProxyBuilder {
 EOS;
     $class_start = 'class {{ proxy_class_name }}';
 
-    if ($interfaces = $reflection->getInterfaceNames()) {
-      foreach ($interfaces as &$interface) {
-        $interface = '\\' . $interface;
+    // For cases in which the implemented interface is a child of another
+    // interface, getInterfaceNames() also returns the parent. This causes a
+    // PHP error.
+    // In order to avoid that, check for each interface, whether one of its
+    // parents is also in the list and exclude it.
+    if ($interfaces = $reflection->getInterfaces()) {
+      foreach ($interfaces as $interface_name => $interface) {
+        // Exclude all parents from the list of implemented interfaces of the
+        // class.
+        if ($parent_interfaces = $interface->getInterfaceNames()) {
+          foreach ($parent_interfaces as $parent_interface) {
+            if (isset($interfaces[$parent_interface])) {}
+            unset($interfaces[$parent_interface]);
+          }
+        }
       }
-      $class_start .= ' implements ' . implode(', ', $interfaces);
+
+      $interface_names = [];
+      foreach ($interfaces as $interface) {
+        $interface_names[] = '\\' . $interface->getName();
+      }
+      $class_start .= ' implements ' . implode(', ', $interface_names);
     }
 
     $output .= $this->buildUseStatements();
@@ -102,7 +119,7 @@ EOS;
     $output .= implode("\n", $methods);
 
     // Indent the output.
-    $output = implode("\n", array_map(function($value) {
+    $output = implode("\n", array_map(function ($value) {
       if ($value === '') {
         return $value;
       }
@@ -174,7 +191,7 @@ EOS;
 
     $output .= $this->buildMethodBody($reflection_method);
 
-    $output .= "\n". '}';
+    $output .= "\n" . '}';
     return $output;
   }
 
