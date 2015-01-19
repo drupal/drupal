@@ -8,12 +8,15 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Renderer;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ResultRow;
@@ -1593,13 +1596,21 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * {@inheritdoc}
    */
   function theme(ResultRow $values) {
+    $renderer = $this->getRenderer();
     $build = array(
       '#theme' => $this->themeFunctions(),
       '#view' => $this->view,
       '#field' => $this,
       '#row' => $values,
     );
-    return $this->getRenderer()->render($build);
+    $output = $renderer->render($build);
+
+    // Set the bubbleable rendering metadata on $view->element. This ensures the
+    // bubbleable rendering metadata of individual rendered fields is not lost.
+    // @see \Drupal\Core\Render\Renderer::updateStack()
+    $this->view->element = $renderer->mergeBubbleableMetadata($this->view->element, $build);
+
+    return $output;
   }
 
   public function themeFunctions() {

@@ -7,13 +7,12 @@
 
 namespace Drupal\Core\Render;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheContexts;
 use Drupal\Core\Cache\CacheFactoryInterface;
 use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Core\Cache\Cache;
-use Drupal\Component\Utility\NestedArray;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -161,7 +160,7 @@ class Renderer implements RendererInterface {
     if (!isset(static::$stack)) {
       static::$stack = new \SplStack();
     }
-    static::$stack->push(new RenderStackFrame());
+    static::$stack->push(new BubbleableMetadata());
 
     // Try to fetch the prerendered element from cache, run any
     // #post_render_cache callbacks and return the final markup.
@@ -365,12 +364,13 @@ class Renderer implements RendererInterface {
       // stack frame to collect those additions, merge them back to the element,
       // and then update the current frame to match the modified element state.
       do {
-        static::$stack->push(new RenderStackFrame());
+        static::$stack->push(new BubbleableMetadata());
         $this->processPostRenderCache($elements);
         $post_render_additions = static::$stack->pop();
-        $elements['#cache']['tags'] = Cache::mergeTags($elements['#cache']['tags'], $post_render_additions->tags);
-        $elements['#attached'] = drupal_merge_attached($elements['#attached'], $post_render_additions->attached);
-        $elements['#post_render_cache'] = $post_render_additions->postRenderCache;
+        $elements['#post_render_cache'] = NULL;
+        BubbleableMetadata::createFromRenderArray($elements)
+          ->merge($post_render_additions)
+          ->applyTo($elements);
       } while (!empty($elements['#post_render_cache']));
       if (static::$stack->count() !== 1) {
         throw new \LogicException('A stray drupal_render() invocation with $is_root_call = TRUE is causing bubbling of attached assets to break.');
@@ -405,12 +405,12 @@ class Renderer implements RendererInterface {
    */
   protected function updateStack(&$element) {
     // The latest frame represents the bubbleable metadata for the subtree.
-    $frame = static::$stack->top();
+    $frame = static::$stack->pop();
     // Update the frame, but also update the current element, to ensure it
     // contains up-to-date information in case it gets render cached.
-    $frame->tags = $element['#cache']['tags'] = Cache::mergeTags($element['#cache']['tags'], $frame->tags);
-    $frame->attached = $element['#attached'] = drupal_merge_attached($element['#attached'], $frame->attached);
-    $frame->postRenderCache = $element['#post_render_cache'] = NestedArray::mergeDeep($element['#post_render_cache'], $frame->postRenderCache);
+    $updated_frame = BubbleableMetadata::createFromRenderArray($element)->merge($frame);
+    $updated_frame->applyTo($element);
+    static::$stack->push($updated_frame);
   }
 
   /**
@@ -431,10 +431,7 @@ class Renderer implements RendererInterface {
     // Merge the current and the parent stack frame.
     $current = static::$stack->pop();
     $parent = static::$stack->pop();
-    $current->tags = Cache::mergeTags($current->tags, $parent->tags);
-    $current->attached = drupal_merge_attached($current->attached, $parent->attached);
-    $current->postRenderCache = NestedArray::mergeDeep($current->postRenderCache, $parent->postRenderCache);
-    static::$stack->push($current);
+    static::$stack->push($current->merge($parent));
   }
 
   /**
@@ -573,6 +570,16 @@ class Renderer implements RendererInterface {
         'tags' => $elements['#cache']['tags'],
       ],
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function mergeBubbleableMetadata(array $a, array $b) {
+    $meta_a = BubbleableMetadata::createFromRenderArray($a);
+    $meta_b = BubbleableMetadata::createFromRenderArray($b);
+    $meta_a->merge($meta_b)->applyTo($a);
+    return $a;
   }
 
 }

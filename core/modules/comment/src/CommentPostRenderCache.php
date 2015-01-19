@@ -9,6 +9,7 @@ namespace Drupal\comment;
 
 use Drupal\Core\Entity\EntityFormBuilderInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Render\Renderer;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
@@ -75,7 +76,7 @@ class CommentPostRenderCache {
     $callback = 'comment.post_render_cache:renderForm';
     $placeholder = drupal_render_cache_generate_placeholder($callback, $context);
     $element['#markup'] = str_replace($placeholder, $markup, $element['#markup']);
-    $element['#attached'] = drupal_merge_attached($element['#attached'], $form['#attached']);
+    $element = Renderer::mergeBubbleableMetadata($element, $form);
 
     return $element;
   }

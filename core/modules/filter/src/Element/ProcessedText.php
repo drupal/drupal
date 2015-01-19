@@ -9,7 +9,9 @@ namespace Drupal\filter\Element;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element\RenderElement;
+use Drupal\Core\Render\Renderer;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\filter\Plugin\FilterInterface;
 
@@ -107,44 +109,20 @@ class ProcessedText extends RenderElement {
     }
 
     // Perform filtering.
-    $cache_tags = array();
-    $all_assets = array();
-    $all_post_render_cache_callbacks = array();
+    $metadata = BubbleableMetadata::createFromRenderArray($element);
     foreach ($filters as $filter) {
       if ($filter_must_be_applied($filter)) {
         $result = $filter->process($text, $langcode);
-        $all_assets[] = $result->getAssets();
-        $cache_tags = Cache::mergeTags($cache_tags, $result->getCacheTags());
-        $all_post_render_cache_callbacks[] = $result->getPostRenderCacheCallbacks();
+        $metadata = $metadata->merge($result->getBubbleableMetadata());
         $text = $result->getProcessedText();
       }
     }
 
-    // Filtering done, store in #markup.
+    // Filtering done, store in #markup, set the updated bubbleable rendering
+    // metadata, and set the text format's cache tag.
     $element['#markup'] = $text;
-
-    // Collect all cache tags.
-    if (isset($element['#cache']) && isset($element['#cache']['tags'])) {
-      // Merge the original cache tags array.
-      $cache_tags = Cache::mergeTags($cache_tags, $element['#cache']['tags']);
-    }
-    // Prepend the text format's cache tags array.
-    $cache_tags = Cache::mergeTags($cache_tags, $format->getCacheTags());
-    $element['#cache']['tags'] = $cache_tags;
-
-    // Collect all attached assets.
-    if (isset($element['#attached'])) {
-      // Prepend the original attached assets array.
-      array_unshift($all_assets, $element['#attached']);
-    }
-    $element['#attached'] = NestedArray::mergeDeepArray($all_assets);
-
-    // Collect all #post_render_cache callbacks.
-    if (isset($element['#post_render_cache'])) {
-      // Prepend the original attached #post_render_cache array.
-      array_unshift($all_assets, $element['#post_render_cache']);
-    }
-    $element['#post_render_cache'] = NestedArray::mergeDeepArray($all_post_render_cache_callbacks);
+    $metadata->applyTo($element);
+    $element['#cache']['tags'] = Cache::mergeTags($element['#cache']['tags'], $format->getCacheTags());
 
     return $element;
   }

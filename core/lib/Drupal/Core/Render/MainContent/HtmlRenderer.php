@@ -14,6 +14,7 @@ use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Display\PageVariantInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Render\PageDisplayVariantSelectionEvent;
+use Drupal\Core\Render\Renderer;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Render\RenderEvents;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -262,14 +263,7 @@ class HtmlRenderer implements MainContentRendererInterface {
     }
 
     // Merge the attachments onto the $page render array.
-    $page['#attached'] = isset($page['#attached']) ? $page['#attached'] : [];
-    $page['#post_render_cache'] = isset($page['#post_render_cache']) ? $page['#post_render_cache'] : [];
-    if (isset($attachments['#attached'])) {
-      $page['#attached'] = drupal_merge_attached($page['#attached'], $attachments['#attached']);
-    }
-    if (isset($attachments['#post_render_cache'])) {
-      $page['#post_render_cache'] = NestedArray::mergeDeep($page['#post_render_cache'], $attachments['#post_render_cache']);
-    }
+    $page = Renderer::mergeBubbleableMetadata($page, $attachments);
   }
 
   /**

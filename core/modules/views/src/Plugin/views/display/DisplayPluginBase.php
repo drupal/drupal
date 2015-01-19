@@ -2177,11 +2177,13 @@ abstract class DisplayPluginBase extends PluginBase {
     $element = array(
       '#theme' => $this->themeFunctions(),
       '#view' => $this->view,
+      '#pre_render' => [[$this, 'elementPreRender']],
+      '#rows' => $rows,
       // Assigned by reference so anything added in $element['#attached'] will
       // be available on the view.
       '#attached' => &$this->view->element['#attached'],
-      '#pre_render' => [[$this, 'elementPreRender']],
-      '#rows' => $rows,
+      '#cache' => &$this->view->element['#cache'],
+      '#post_render_cache' => &$this->view->element['#post_render_cache'],
     );
 
     return $element;

@@ -88,7 +88,8 @@ interface RendererInterface {
    *     does not have access to it (#access = FALSE), then an empty string is
    *     returned.
    *   - If no stack data structure has been created yet, it is done now. Next,
-   *     an empty \Drupal\Core\Render\RenderStackFrame is pushed onto the stack.
+   *     an empty \Drupal\Core\Render\BubbleableMetadata is pushed onto the
+   *     stack.
    *   - If this element has #cache defined then the cached markup for this
    *     element will be returned if it exists in Renderer::render()'s cache. To
    *     use Renderer::render() caching, set the element's #cache property to an
@@ -286,5 +287,21 @@ interface RendererInterface {
    *   An array representing the cacheable data for this render array.
    */
   public function getCacheableRenderArray(array $elements);
+
+  /**
+   * Merges the bubbleable rendering metadata o/t 2nd render array with the 1st.
+   *
+   * @param array $a
+   *   A render array.
+   * @param array $b
+   *   A render array.
+   *
+   * @return array
+   *   The first render array, modified to also contain the bubbleable rendering
+   *   metadata of the second render array.
+   *
+   * @see \Drupal\Core\Render\BubbleableMetadata
+   */
+  public static function mergeBubbleableMetadata(array $a, array $b);
 
 }

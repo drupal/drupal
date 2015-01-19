@@ -149,8 +149,8 @@ class CacheTest extends PluginTestBase {
     drupal_render($output);
     $this->assertTrue(in_array('views_test_data/test', $output['#attached']['library']), 'Make sure libraries are added for cached views.');
     $this->assertEqual(['foo' => 'bar'], $output['#attached']['drupalSettings'], 'Make sure drupalSettings are added for cached views.');
-    $this->assertTrue(['views_test_data:1'], $output['#cache']['tags']);
-    $this->assertTrue(['views_test_data_post_render_cache' => [['foo' => 'bar']]], $output['#post_render_cache']);
+    $this->assertEqual(['views_test_data:1'], $output['#cache']['tags']);
+    $this->assertEqual(['views_test_data_post_render_cache' => [['foo' => 'bar']]], $output['#post_render_cache']);
     $this->assertFalse(!empty($view->build_info['pre_render_called']), 'Make sure hook_views_pre_render is not called for the cached view.');
   }
 
