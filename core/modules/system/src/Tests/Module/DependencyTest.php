@@ -15,6 +15,22 @@ use Drupal\Component\Utility\Unicode;
  */
 class DependencyTest extends ModuleTestBase {
   /**
+   * Checks functionality of project namespaces for dependencies.
+   */
+  function testProjectNamespaceForDependencies() {
+    $edit = array(
+      'modules[Core][filter][enable]' => TRUE,
+    );
+    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
+    // Enable module with project namespace to ensure nothing breaks.
+    $edit = array(
+      'modules[Testing][system_project_namespace_test][enable]' => TRUE,
+    );
+    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
+    $this->assertModules(array('system_project_namespace_test'), TRUE);
+  }
+
+  /**
    * Attempts to enable the Content Translation module without Language enabled.
    */
   function testEnableWithoutDependency() {

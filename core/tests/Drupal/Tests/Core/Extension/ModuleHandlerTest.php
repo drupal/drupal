@@ -499,6 +499,7 @@ class ModuleHandlerTest extends UnitTestCase {
       array('views_ui(<= 8.x-1.x)', array('name' => 'views_ui', 'original_version' => ' (<= 8.x-1.x)', 'versions' => array(array('op' => '<=', 'version' => '2.x')))),
       array('views_ui( <=8.x-1.x)', array('name' => 'views_ui', 'original_version' => ' ( <=8.x-1.x)', 'versions' => array(array('op' => '<=', 'version' => '2.x')))),
       array('views_ui(>8.x-1.x)', array('name' => 'views_ui', 'original_version' => ' (>8.x-1.x)', 'versions' => array(array('op' => '>', 'version' => '2.x')))),
+      array('drupal:views_ui(>8.x-1.x)', array('project' => 'drupal', 'name' => 'views_ui', 'original_version' => ' (>8.x-1.x)', 'versions' => array(array('op' => '>', 'version' => '2.x')))),
     );
   }
 

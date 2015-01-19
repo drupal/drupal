@@ -27,7 +27,16 @@ interface InfoParserInterface  {
    * - type: whether it is for a module or theme. (Required)
    *
    * Information stored in a module .info.yml file:
-   * - dependencies: An array of shortnames of other modules this module requires.
+   * - dependencies: An array of dependency strings. Each is in the form
+   *   'project:module (versions)'; with the following meanings:
+   *   - project: (optional) Project shortname, recommended to ensure
+   *     uniqueness, if the module is part of a project hosted on drupal.org.
+   *     If omitted, also omit the : that follows. The project name is currently
+   *     ignored by Drupal core but is used for automated testing.
+   *   - module: (required) Module shortname within the project.
+   *   - (versions): Version information, consisting of one or more
+   *     comma-separated operator/value pairs or simply version numbers, which
+   *     can contain "x" as a wildcard. Examples: (>=8.22, <8.28), (8.x-3.x).
    * - package: The name of the package of modules this module belongs to.
    *
    * See forum.info.yml for an example of a module .info.yml file.

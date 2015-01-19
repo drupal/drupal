@@ -631,7 +631,12 @@ class ModuleHandler implements ModuleHandlerInterface {
    * Parses a dependency for comparison by drupal_check_incompatibility().
    *
    * @param $dependency
-   *   A dependency string, for example 'foo (>=8.x-4.5-beta5, 3.x)'.
+   *   A dependency string, which specifies a module dependency, and optionally
+   *   the project it comes from and versions that are supported. Supported
+   *   formats include:
+   *   - 'module'
+   *   - 'project:module'
+   *   - 'project:module (>=version, version)'
    *
    * @return
    *   An associative array with three keys:
@@ -646,6 +651,12 @@ class ModuleHandler implements ModuleHandlerInterface {
    * @see drupal_check_incompatibility()
    */
   public static function parseDependency($dependency) {
+    $value = array();
+    // Split out the optional project name.
+    if (strpos($dependency, ':') !== FALSE) {
+      list($project_name, $dependency) = explode(':', $dependency);
+      $value['project'] = $project_name;
+    }
     // We use named subpatterns and support every op that version_compare
     // supports. Also, op is optional and defaults to equals.
     $p_op = '(?<operation>!=|==|=|<|<=|>|>=|<>)?';
@@ -654,7 +665,6 @@ class ModuleHandler implements ModuleHandlerInterface {
     $p_major = '(?<major>\d+)';
     // By setting the minor version to x, branches can be matched.
     $p_minor = '(?<minor>(?:\d+|x)(?:-[A-Za-z]+\d+)?)';
-    $value = array();
     $parts = explode('(', $dependency, 2);
     $value['name'] = trim($parts[0]);
     if (isset($parts[1])) {
