@@ -1079,6 +1079,10 @@ function user_user_role_insert(RoleInterface $role) {
  * Implements hook_ENTITY_TYPE_delete() for user_role entities.
  */
 function user_user_role_delete(RoleInterface $role) {
+  // Delete role references for all users.
+  $user_storage = \Drupal::entityManager()->getStorage('user');
+  $user_storage->deleteRoleReferences(array($role->id()));
+
   // Ignore the authenticated and anonymous roles or the role is being synced.
   if (in_array($role->id(), array(DRUPAL_AUTHENTICATED_RID, DRUPAL_ANONYMOUS_RID)) || $role->isSyncing()) {
     return;

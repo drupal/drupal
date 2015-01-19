@@ -29,14 +29,4 @@ class RoleStorage extends ConfigEntityStorage implements RoleStorageInterface {
     return $has_permission;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function deleteRoleReferences(array $rids) {
-    // Remove the role from all users.
-    db_delete('user__roles')
-      ->condition('target_id', $rids)
-      ->execute();
-  }
-
 }
