@@ -277,8 +277,8 @@ abstract class QueryPluginBase extends PluginBase {
       );
 
       // Include the entity provider.
-      if (!empty($base_table_data['table']['provider'])) {
-        $entity_tables[$base_table_data['table']['entity type']]['provider'] = $base_table_data['table']['provider'];
+      if (!empty($table_data['table']['provider'])) {
+        $entity_tables[$table_data['table']['entity type']]['provider'] = $table_data['table']['provider'];
       }
     }
 
@@ -286,7 +286,7 @@ abstract class QueryPluginBase extends PluginBase {
     foreach ((array) $this->view->relationship as $relationship_id => $relationship) {
       $table_data = $views_data->get($relationship->definition['base']);
       if (isset($table_data['table']['entity type'])) {
-        $entity_tables[$relationship_id . '__' . $relationship->tableAlias] = array(
+        $entity_tables[$table_data['table']['entity type']] = array(
           'base' => $relationship->definition['base'],
           'relationship_id' => $relationship_id,
           'alias' => $relationship->alias,
@@ -296,7 +296,7 @@ abstract class QueryPluginBase extends PluginBase {
 
         // Include the entity provider.
         if (!empty($table_data['table']['provider'])) {
-          $entity_tables[$relationship_id . '__' . $relationship->tableAlias]['provider'] = $table_data['table']['provider'];
+          $entity_tables[$table_data['table']['entity type']]['provider'] = $table_data['table']['provider'];
         }
       }
     }

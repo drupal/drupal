@@ -8,7 +8,6 @@
 namespace Drupal\entity_reference\Tests\Views;
 
 use Drupal\simpletest\WebTestBase;
-use Drupal\views\Views;
 
 /**
  * Tests entity reference selection handler.
@@ -20,33 +19,18 @@ class SelectionTest extends WebTestBase {
   public static $modules = array('node', 'views', 'entity_reference', 'entity_reference_test', 'entity_test');
 
   /**
-   * Nodes for testing.
-   *
-   * @var array
+   * Tests the selection handler.
    */
-  protected $nodes = array();
-
-  /**
-   * The entity reference field to test.
-   *
-   * @var \Drupal\Core\Field\FieldDefinitionInterface
-   */
-  protected $field;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setUp() {
-    parent::setUp();
-
+  public function testSelectionHandler() {
     // Create nodes.
     $type = $this->drupalCreateContentType()->id();
     $node1 = $this->drupalCreateNode(array('type' => $type));
     $node2 = $this->drupalCreateNode(array('type' => $type));
     $node3 = $this->drupalCreateNode();
 
+    $nodes = array();
     foreach (array($node1, $node2, $node3) as $node) {
-      $this->nodes[$node->getType()][$node->id()] = $node->label();
+      $nodes[$node->getType()][$node->id()] = $node->label();
     }
 
     // Create a field.
@@ -76,72 +60,21 @@ class SelectionTest extends WebTestBase {
       ),
     ));
     $field->save();
-    $this->field = $field;
-  }
 
-  /**
-   * Confirm the expected results are returned.
-   *
-   * @param array $result
-   *   Query results keyed by node type and nid.
-   */
-  protected function assertResults(array $result) {
+    // Get values from selection handler.
+    $handler = $this->container->get('plugin.manager.entity_reference.selection')->getSelectionHandler($field);
+    $result = $handler->getReferenceableEntities();
+
     $success = FALSE;
     foreach ($result as $node_type => $values) {
       foreach ($values as $nid => $label) {
-        if (!$success = $this->nodes[$node_type][$nid] == trim(strip_tags($label))) {
+        if (!$success = $nodes[$node_type][$nid] == trim(strip_tags($label))) {
           // There was some error, so break.
           break;
         }
       }
     }
+
     $this->assertTrue($success, 'Views selection handler returned expected values.');
-  }
-
-  /**
-   * Tests the selection handler.
-   */
-  public function testSelectionHandler() {
-    // Get values from selection handler.
-    $handler = $this->container->get('plugin.manager.entity_reference.selection')->getSelectionHandler($this->field);
-    $result = $handler->getReferenceableEntities();
-    $this->assertResults($result);
-  }
-
-  /**
-   * Tests the selection handler with a relationship.
-   */
-  public function testSelectionHandlerRelationship() {
-    // Add a relationship to the view.
-    $view = Views::getView('test_entity_reference');
-    $view->setDisplay();
-    $view->displayHandlers->get('default')->setOption('relationships', array(
-      'test_relationship' => array(
-        'id' => 'uid',
-        'table' => 'users',
-        'field' => 'uid',
-      ),
-    ));
-
-    // Add a filter depending on the relationship to the test view.
-    $view->displayHandlers->get('default')->setOption('filters', array(
-      'uid' => array(
-        'id' => 'uid',
-        'table' => 'users',
-        'field' => 'uid',
-        'relationship' => 'test_relationship',
-      )
-    ));
-
-    // Set view to distinct so only one row per node is returned.
-    $query_options = $view->display_handler->getOption('query');
-    $query_options['options']['distinct'] = TRUE;
-    $view->display_handler->setOption('query', $query_options);
-    $view->save();
-
-    // Get values from the selection handler.
-    $handler = $this->container->get('plugin.manager.entity_reference.selection')->getSelectionHandler($this->field);
-    $result = $handler->getReferenceableEntities();
-    $this->assertResults($result);
   }
 }
