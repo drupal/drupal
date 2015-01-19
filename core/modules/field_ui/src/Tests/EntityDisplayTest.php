@@ -40,15 +40,15 @@ class EntityDisplayTest extends KernelTestBase {
     // Check that providing no 'weight' results in the highest current weight
     // being assigned. The 'name' field's formatter has weight -5, therefore
     // these follow.
-    $expected['component_1'] = array('weight' => -4);
-    $expected['component_2'] = array('weight' => -3);
+    $expected['component_1'] = array('weight' => -4, 'settings' => array(), 'third_party_settings' => array());
+    $expected['component_2'] = array('weight' => -3, 'settings' => array(), 'third_party_settings' => array());
     $display->setComponent('component_1');
     $display->setComponent('component_2');
     $this->assertEqual($display->getComponent('component_1'), $expected['component_1']);
     $this->assertEqual($display->getComponent('component_2'), $expected['component_2']);
 
     // Check that arbitrary options are correctly stored.
-    $expected['component_3'] = array('weight' => 10, 'third_party_settings' => array('field_test' => array('foo' => 'bar')));
+    $expected['component_3'] = array('weight' => 10, 'third_party_settings' => array('field_test' => array('foo' => 'bar')), 'settings' => array());
     $display->setComponent('component_3', $expected['component_3']);
     $this->assertEqual($display->getComponent('component_3'), $expected['component_3']);
 
@@ -109,14 +109,14 @@ class EntityDisplayTest extends KernelTestBase {
     $this->assertTrue($display->isNew());
 
     // Add some components and save the display.
-    $display->setComponent('component_1', array('weight' => 10))
+    $display->setComponent('component_1', array('weight' => 10, 'settings' => array()))
       ->save();
 
     // Check that entity_get_display() returns the correct object.
     $display = entity_get_display('entity_test', 'entity_test', 'default');
     $this->assertFalse($display->isNew());
     $this->assertEqual($display->id, 'entity_test.entity_test.default');
-    $this->assertEqual($display->getComponent('component_1'), array('weight' => 10));
+    $this->assertEqual($display->getComponent('component_1'), array( 'weight' => 10, 'settings' => array(), 'third_party_settings' => array()));
   }
 
   /**
@@ -139,7 +139,7 @@ class EntityDisplayTest extends KernelTestBase {
     $display->removeComponent('display_extra_field');
     $display->setComponent('display_extra_field_hidden', array('weight' => 10));
     $this->assertNull($display->getComponent('display_extra_field'));
-    $this->assertEqual($display->getComponent('display_extra_field_hidden'), array('weight' => 10));
+    $this->assertEqual($display->getComponent('display_extra_field_hidden'), array('weight' => 10, 'settings' => array(), 'third_party_settings' => array()));
   }
 
   /**

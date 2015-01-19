@@ -288,6 +288,9 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
       $options = $this->pluginManager->prepareConfiguration($field_definition->getType(), $options);
     }
 
+    // Ensure we always have an empty settings and array.
+    $options += ['settings' => [], 'third_party_settings' => []];
+
     $this->content[$name] = $options;
     unset($this->hidden[$name]);
     unset($this->plugins[$name]);

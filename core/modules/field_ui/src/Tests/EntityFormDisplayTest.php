@@ -40,7 +40,7 @@ class EntityFormDisplayTest extends KernelTestBase {
     $form_display = entity_get_form_display('entity_test', 'entity_test', 'default');
     $this->assertFalse($form_display->isNew());
     $this->assertEqual($form_display->id, 'entity_test.entity_test.default');
-    $this->assertEqual($form_display->getComponent('component_1'), array('weight' => 10));
+    $this->assertEqual($form_display->getComponent('component_1'), array('weight' => 10, 'settings' => array(), 'third_party_settings' => array()));
   }
 
   /**
