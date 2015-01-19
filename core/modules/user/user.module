@@ -3,18 +3,19 @@
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AnonymousUserSession;
-use \Drupal\Core\Entity\Display\EntityViewDisplayInterface;
-use Drupal\Core\Url;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\Url;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
-use Drupal\user\UserInterface;
 use Drupal\user\RoleInterface;
-use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\user\UserInterface;
 
 /**
  * @file
@@ -93,7 +94,6 @@ function user_theme() {
   return array(
     'user' => array(
       'render element' => 'elements',
-      'file' => 'user.pages.inc',
     ),
     'username' => array(
       'variables' => array('account' => NULL, 'attributes' => array(), 'link_options' => array()),
@@ -1484,4 +1484,24 @@ function user_logout() {
 
   // Destroy the current session, and reset $user to the anonymous user.
   session_destroy();
+}
+
+/**
+ * Prepares variables for user templates.
+ *
+ * Default template: user.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing the user information and any
+ *     fields attached to the user. Properties used:
+ *     - #user: A \Drupal\user\Entity\User object. The user account of the
+ *       profile being viewed.
+ *   - attributes: HTML attributes for the containing element.
+ */
+function template_preprocess_user(&$variables) {
+  // Helpful $content variable for templates.
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+  }
 }
