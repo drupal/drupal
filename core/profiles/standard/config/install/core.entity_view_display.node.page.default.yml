@@ -8,7 +8,6 @@ dependencies:
     - text
     - user
 id: node.page.default
-label: null
 targetEntityType: node
 bundle: page
 mode: default

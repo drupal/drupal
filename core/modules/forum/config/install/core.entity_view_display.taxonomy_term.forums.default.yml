@@ -6,7 +6,6 @@ dependencies:
   module:
     - text
 id: taxonomy_term.forums.default
-label: null
 targetEntityType: taxonomy_term
 bundle: forums
 mode: default

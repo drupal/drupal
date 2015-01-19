@@ -9,7 +9,6 @@ dependencies:
     - text
     - user
 id: node.page.teaser
-label: null
 targetEntityType: node
 bundle: page
 mode: teaser

@@ -79,10 +79,10 @@ function user_help($route_name, RouteMatchInterface $route_match) {
     case 'entity.user.field_ui_fields':
       return '<p>' . t('This form lets administrators add and edit fields for storing user data.') . '</p>';
 
-    case 'entity.user.field_ui_form_display':
+    case 'entity.entity_form_display.user.default':
       return '<p>' . t('This form lets administrators configure how form fields should be displayed when editing a user profile.') . '</p>';
 
-    case 'entity.node.field_ui_display':
+    case 'entity.entity_view_display.user.default':
       return '<p>' . t('This form lets administrators configure how fields should be displayed when rendering a user profile page.') . '</p>';
   }
 }

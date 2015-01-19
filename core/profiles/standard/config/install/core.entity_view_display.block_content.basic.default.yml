@@ -7,7 +7,6 @@ dependencies:
   module:
     - text
 id: block_content.basic.default
-label: null
 targetEntityType: block_content
 bundle: basic
 mode: default

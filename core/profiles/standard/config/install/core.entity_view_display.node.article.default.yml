@@ -14,7 +14,6 @@ dependencies:
     - text
     - user
 id: node.article.default
-label: null
 targetEntityType: node
 bundle: article
 mode: default

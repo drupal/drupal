@@ -9,7 +9,6 @@ dependencies:
     - text
     - user
 id: node.options_install_test.teaser
-label: null
 targetEntityType: node
 bundle: options_install_test
 mode: teaser

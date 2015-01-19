@@ -399,6 +399,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
     // Only store the definition, not external objects or derived data.
     $keys = array_keys($this->toArray());
     $keys[] = 'entityTypeId';
+    $keys[] = 'enforceIsNew';
     return $keys;
   }
 
@@ -408,7 +409,9 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   public function __wakeup() {
     // Run the values from self::toArray() through __construct().
     $values = array_intersect_key($this->toArray(), get_object_vars($this));
+    $is_new = $this->isNew();
     $this->__construct($values, $this->entityTypeId);
+    $this->enforceIsNew($is_new);
   }
 
 }

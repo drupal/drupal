@@ -8,7 +8,6 @@ dependencies:
     - text
     - user
 id: node.book.default
-label: null
 targetEntityType: node
 bundle: book
 mode: default

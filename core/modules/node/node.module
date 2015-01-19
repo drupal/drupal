@@ -100,13 +100,13 @@ function node_help($route_name, RouteMatchInterface $route_match) {
     case 'node.type_add':
       return '<p>' . t('Individual content types can have different fields, behaviors, and permissions assigned to them.') . '</p>';
 
-    case "entity.node.field_ui_form_display":
-    case 'field_ui.form_display_overview_form_mode_node':
+    case 'entity.entity_form_display.node.default':
+    case 'entity.entity_form_display.node.form_mode':
       $type = $route_match->getParameter('node_type');
       return '<p>' . t('Content items can be edited using different form modes. Here, you can define which fields are shown and hidden when %type content is edited in each form mode, and define how the field form widgets are displayed in each form mode.', array('%type' => $type->label())) . '</p>' ;
 
-    case 'entity.node.field_ui_display':
-    case 'field_ui.display_overview_view_mode_node':
+    case 'entity.entity_view_display.node.default':
+    case 'entity.entity_view_display.node.view_mode':
       $type = $route_match->getParameter('node_type');
       return '<p>' . t('Content items can be displayed using different view modes: Teaser, Full content, Print, RSS, etc. <em>Teaser</em> is a short format that is typically used in lists of multiple content items. <em>Full content</em> is typically used when the content is displayed on its own page.') . '</p>' .
         '<p>' . t('Here, you can define which fields are shown and hidden when %type content is displayed in each view mode, and define how the fields are displayed in each view mode.', array('%type' => $type->label())) . '</p>';

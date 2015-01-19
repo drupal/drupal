@@ -54,9 +54,6 @@ core.entity_view_display.*.*.*:
     id:
       type: string
       label: 'ID'
-    label:
-      type: label
-      label: 'Label'
     targetEntityType:
       type: string
       label: 'Target entity type'

@@ -8,7 +8,6 @@ dependencies:
     - text
     - user
 id: node.options_install_test.default
-label: null
 targetEntityType: node
 bundle: options_install_test
 mode: default

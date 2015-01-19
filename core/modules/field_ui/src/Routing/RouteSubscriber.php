@@ -114,46 +114,48 @@ class RouteSubscriber extends RouteSubscriberBase {
         $route = new Route(
           "$path/form-display",
           array(
-            '_form' => '\Drupal\field_ui\FormDisplayOverview',
+            '_entity_form' => 'entity_form_display.edit',
             '_title' => 'Manage form display',
+            'form_mode_name' => 'default',
           ) + $defaults,
           array('_field_ui_form_mode_access' => 'administer ' . $entity_type_id . ' form display'),
           $options
         );
-        $collection->add("entity.{$bundle_entity_type}.field_ui_form_display", $route);
+        $collection->add("entity.entity_form_display.$bundle_entity_type.default", $route);
 
         $route = new Route(
           "$path/form-display/{form_mode_name}",
           array(
-            '_form' => '\Drupal\field_ui\FormDisplayOverview',
+            '_entity_form' => 'entity_form_display.edit',
             '_title' => 'Manage form display',
           ) + $defaults,
           array('_field_ui_form_mode_access' => 'administer ' . $entity_type_id . ' form display'),
           $options
         );
-        $collection->add("field_ui.form_display_overview_form_mode_$bundle_entity_type", $route);
+        $collection->add("entity.entity_form_display.$bundle_entity_type.form_mode", $route);
 
         $route = new Route(
           "$path/display",
           array(
-            '_form' => '\Drupal\field_ui\DisplayOverview',
+            '_entity_form' => 'entity_view_display.edit',
             '_title' => 'Manage display',
+            'view_mode_name' => 'default',
           ) + $defaults,
           array('_field_ui_view_mode_access' => 'administer ' . $entity_type_id . ' display'),
           $options
         );
-        $collection->add("entity.{$bundle_entity_type}.field_ui_display", $route);
+        $collection->add("entity.entity_view_display.$bundle_entity_type.default", $route);
 
         $route = new Route(
           "$path/display/{view_mode_name}",
           array(
-            '_form' => '\Drupal\field_ui\DisplayOverview',
+            '_entity_form' => 'entity_view_display.edit',
             '_title' => 'Manage display',
           ) + $defaults,
           array('_field_ui_view_mode_access' => 'administer ' . $entity_type_id . ' display'),
           $options
         );
-        $collection->add("field_ui.display_overview_view_mode_$bundle_entity_type", $route);
+        $collection->add("entity.entity_view_display.$bundle_entity_type.view_mode", $route);
       }
     }
   }

@@ -82,7 +82,7 @@ class FieldUiLocalTask extends DeriverBase implements ContainerDeriverInterface 
 
         // 'Manage form display' tab.
         $this->derivatives["form_display_overview_$field_entity_type"] = array(
-          'route_name' => "entity.{$field_entity_type}.field_ui_form_display",
+          'route_name' => "entity.entity_form_display.$field_entity_type.default",
           'weight' => 2,
           'title' => $this->t('Manage form display'),
           'base_route' => "entity.$field_entity_type.field_ui_fields",
@@ -90,7 +90,7 @@ class FieldUiLocalTask extends DeriverBase implements ContainerDeriverInterface 
 
         // 'Manage display' tab.
         $this->derivatives["display_overview_$field_entity_type"] = array(
-          'route_name' => "entity.{$field_entity_type}.field_ui_display",
+          'route_name' => "entity.entity_view_display.$field_entity_type.default",
           'weight' => 3,
           'title' => $this->t('Manage display'),
           'base_route' => "entity.$field_entity_type.field_ui_fields",
@@ -119,13 +119,13 @@ class FieldUiLocalTask extends DeriverBase implements ContainerDeriverInterface 
         // actually visible for a given bundle.
         $this->derivatives['field_form_display_default_' . $field_entity_type] = array(
           'title' => 'Default',
-          'route_name' => "entity.{$field_entity_type}.field_ui_form_display",
+          'route_name' => "entity.entity_form_display.$field_entity_type.default",
           'parent_id' => "field_ui.fields:form_display_overview_$field_entity_type",
           'weight' => -1,
         );
         $this->derivatives['field_display_default_' . $field_entity_type] = array(
           'title' => 'Default',
-          'route_name' => "entity.{$field_entity_type}.field_ui_display",
+          'route_name' => "entity.entity_view_display.$field_entity_type.default",
           'parent_id' => "field_ui.fields:display_overview_$field_entity_type",
           'weight' => -1,
         );
@@ -135,7 +135,7 @@ class FieldUiLocalTask extends DeriverBase implements ContainerDeriverInterface 
         foreach ($this->entityManager->getFormModes($entity_type_id) as $form_mode => $form_mode_info) {
           $this->derivatives['field_form_display_' . $form_mode . '_' . $field_entity_type] = array(
             'title' => $form_mode_info['label'],
-            'route_name' => "field_ui.form_display_overview_form_mode_$field_entity_type",
+            'route_name' => "entity.entity_form_display.$field_entity_type.form_mode",
             'route_parameters' => array(
               'form_mode_name' => $form_mode,
             ),
@@ -149,7 +149,7 @@ class FieldUiLocalTask extends DeriverBase implements ContainerDeriverInterface 
         foreach ($this->entityManager->getViewModes($entity_type_id) as $view_mode => $form_mode_info) {
           $this->derivatives['field_display_' . $view_mode . '_' . $field_entity_type] = array(
             'title' => $form_mode_info['label'],
-            'route_name' => "field_ui.display_overview_view_mode_$field_entity_type",
+            'route_name' => "entity.entity_view_display.$field_entity_type.view_mode",
             'route_parameters' => array(
               'view_mode_name' => $view_mode,
             ),

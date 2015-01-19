@@ -164,6 +164,7 @@ class ManageDisplayTest extends WebTestBase {
     // is no longer there.
     \Drupal::service('module_installer')->uninstall(array('field_third_party_test'));
     $this->drupalGet($manage_display);
+    $this->assertResponse(200);
     $this->assertNoFieldByName('field_test_settings_edit');
   }
 

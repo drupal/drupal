@@ -2,44 +2,30 @@
 
 /**
  * @file
- * Contains \Drupal\field_ui\DisplayOverviewBase.
+ * Contains \Drupal\field_ui\Form\EntityDisplayFormBase.
  */
 
-namespace Drupal\field_ui;
+namespace Drupal\field_ui\Form;
 
 use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\String;
-use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Entity\Display\EntityDisplayInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityForm;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Field\PluginSettingsInterface;
-use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\field_ui\FieldUI;
 
 /**
- * Field UI display overview base class.
+ * Base class for EntityDisplay edit forms.
  */
-abstract class DisplayOverviewBase extends FormBase {
-
-  /**
-   * The name of the entity type.
-   *
-   * @var string
-   */
-  protected $entity_type = '';
-
-  /**
-   * The entity bundle.
-   *
-   * @var string
-   */
-  protected $bundle = '';
+abstract class EntityDisplayFormBase extends EntityForm {
 
   /**
    * The name of the entity type which provides bundles for the entity type
@@ -48,20 +34,6 @@ abstract class DisplayOverviewBase extends FormBase {
    * @var string
    */
   protected $bundleEntityTypeId;
-
-  /**
-   * The entity view or form mode.
-   *
-   * @var string
-   */
-  protected $mode = '';
-
-  /**
-   * The entity manager.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
-   */
-  protected $entityManager;
 
   /**
    * The display context. Either 'view' or 'form'.
@@ -85,41 +57,41 @@ abstract class DisplayOverviewBase extends FormBase {
   protected $fieldTypes;
 
   /**
-   * The config factory.
+   * The entity being used by this form.
    *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   * @var \Drupal\Core\Entity\Display\EntityDisplayInterface
    */
-  protected $configFactory;
+  protected $entity;
 
   /**
-   * Constructs a new DisplayOverviewBase.
+   * Constructs a new EntityDisplayFormBase.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
    * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_manager
    *   The field type manager.
    * @param \Drupal\Component\Plugin\PluginManagerBase $plugin_manager
    *   The widget or formatter plugin manager.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The configuration factory.
    */
-  public function __construct(EntityManagerInterface $entity_manager, FieldTypePluginManagerInterface $field_type_manager, PluginManagerBase $plugin_manager, ConfigFactoryInterface $config_factory) {
-    $this->entityManager = $entity_manager;
+  public function __construct(FieldTypePluginManagerInterface $field_type_manager, PluginManagerBase $plugin_manager) {
     $this->fieldTypes = $field_type_manager->getDefinitions();
     $this->pluginManager = $plugin_manager;
-    $this->configFactory = $config_factory;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('entity.manager'),
-      $container->get('plugin.manager.field.field_type'),
-      $container->get('plugin.manager.field.widget'),
-      $container->get('config.factory')
-    );
+  public function getEntityFromRouteMatch(RouteMatchInterface $route_match, $entity_type_id) {
+    $route_parameters = $route_match->getParameters()->all();
+
+    if (isset($route_parameters['bundle'])) {
+      $bundle = $route_parameters['bundle'];
+    }
+    else {
+      $target_entity_type = $this->entityManager->getDefinition($route_parameters['entity_type_id']);
+      $this->bundleEntityTypeId = $target_entity_type->getBundleEntityType();
+      $bundle = $route_parameters[$this->bundleEntityTypeId]->id();
+    }
+
+    return $this->getEntityDisplay($route_parameters['entity_type_id'], $bundle, $route_parameters[$this->displayContext . '_mode_name']);
   }
 
   /**
@@ -177,7 +149,7 @@ abstract class DisplayOverviewBase extends FormBase {
    */
   protected function getFieldDefinitions() {
     $context = $this->displayContext;
-    return array_filter($this->entityManager->getFieldDefinitions($this->entity_type, $this->bundle), function(FieldDefinitionInterface $field_definition) use ($context) {
+    return array_filter($this->entityManager->getFieldDefinitions($this->entity->targetEntityType, $this->entity->bundle), function(FieldDefinitionInterface $field_definition) use ($context) {
       return $field_definition->isDisplayConfigurable($context);
     });
   }
@@ -185,32 +157,20 @@ abstract class DisplayOverviewBase extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL, $bundle = NULL, $mode = 'default') {
-    $entity_type = $this->entityManager->getDefinition($entity_type_id);
-    $this->bundleEntityTypeId = $entity_type->getBundleEntityType();
-
-    if (!$form_state->get('bundle')) {
-      $bundle = $bundle ?: $this->getRequest()->attributes->get('_raw_variables')->get($this->bundleEntityTypeId);
-      $form_state->set('bundle', $bundle);
-    }
-
-    $this->entity_type = $entity_type_id;
-    $this->bundle = $form_state->get('bundle');
-    $this->mode = $mode;
+  public function form(array $form, FormStateInterface $form_state) {
+    $form = parent::form($form, $form_state);
 
     $field_definitions = $this->getFieldDefinitions();
     $extra_fields = $this->getExtraFields();
-    $entity_display = $this->getEntityDisplay($this->mode);
 
     $form += array(
-      '#entity_type' => $this->entity_type,
-      '#bundle' => $this->bundle,
-      '#mode' => $this->mode,
+      '#entity_type' => $this->entity->targetEntityType,
+      '#bundle' => $this->entity->bundle,
       '#fields' => array_keys($field_definitions),
       '#extra' => array_keys($extra_fields),
     );
 
-    if (empty($field_definitions) && empty($extra_fields) && $route_info = FieldUI::getOverviewRouteInfo($this->entity_type, $this->bundle)) {
+    if (empty($field_definitions) && empty($extra_fields) && $route_info = FieldUI::getOverviewRouteInfo($this->entity->targetEntityType, $this->entity->bundle)) {
       drupal_set_message($this->t('There are no fields yet added. You can add new fields on the <a href="@link">Manage fields</a> page.', array('@link' => $route_info->toString())), 'warning');
       return $form;
     }
@@ -246,18 +206,18 @@ abstract class DisplayOverviewBase extends FormBase {
 
     // Field rows.
     foreach ($field_definitions as $field_name => $field_definition) {
-      $table[$field_name] = $this->buildFieldRow($field_definition, $entity_display, $form, $form_state);
+      $table[$field_name] = $this->buildFieldRow($field_definition, $form, $form_state);
     }
 
     // Non-field elements.
     foreach ($extra_fields as $field_id => $extra_field) {
-      $table[$field_id] = $this->buildExtraFieldRow($field_id, $extra_field, $entity_display);
+      $table[$field_id] = $this->buildExtraFieldRow($field_id, $extra_field);
     }
 
     $form['fields'] = $table;
 
     // Custom display settings.
-    if ($this->mode == 'default') {
+    if ($this->entity->mode == 'default') {
       // Only show the settings if there is at least one custom display mode.
       if ($display_modes = $this->getDisplayModes()) {
         $form['modes'] = array(
@@ -324,8 +284,6 @@ abstract class DisplayOverviewBase extends FormBase {
    *
    * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
    *   The field definition.
-   * @param \Drupal\Core\Entity\Display\EntityDisplayInterface $entity_display
-   *   The entity display.
    * @param array $form
    *   An associative array containing the structure of the form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
@@ -334,9 +292,9 @@ abstract class DisplayOverviewBase extends FormBase {
    * @return array
    *   A table row array.
    */
-  protected function buildFieldRow(FieldDefinitionInterface $field_definition, EntityDisplayInterface $entity_display, array $form, FormStateInterface $form_state) {
+  protected function buildFieldRow(FieldDefinitionInterface $field_definition, array $form, FormStateInterface $form_state) {
     $field_name = $field_definition->getName();
-    $display_options = $entity_display->getComponent($field_name);
+    $display_options = $this->entity->getComponent($field_name);
     $label = $field_definition->getLabel();
 
     $regions = array_keys($this->getRegions());
@@ -514,14 +472,12 @@ abstract class DisplayOverviewBase extends FormBase {
    *   The field ID.
    * @param array $extra_field
    *   The pseudo-field element.
-   * @param \Drupal\Core\Entity\Display\EntityDisplayInterface $entity_display
-   *   The entity display.
    *
    * @return array
    *   A table row array.
    */
-  protected function buildExtraFieldRow($field_id, $extra_field, EntityDisplayInterface $entity_display) {
-    $display_options = $entity_display->getComponent($field_id);
+  protected function buildExtraFieldRow($field_id, $extra_field) {
+    $display_options = $this->entity->getComponent($field_id);
 
     $regions = array_keys($this->getRegions());
     $extra_field_row = array(
@@ -578,8 +534,48 @@ abstract class DisplayOverviewBase extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    parent::submitForm($form, $form_state);
     $form_values = $form_state->getValues();
-    $display = $this->getEntityDisplay($this->mode);
+
+    // Handle the 'display modes' checkboxes if present.
+    if ($this->entity->mode == 'default' && !empty($form_values['display_modes_custom'])) {
+      $display_modes = $this->getDisplayModes();
+      $current_statuses = $this->getDisplayStatuses();
+
+      $statuses = array();
+      foreach ($form_values['display_modes_custom'] as $mode => $value) {
+        if (!empty($value) && empty($current_statuses[$mode])) {
+          // If no display exists for the newly enabled view mode, initialize
+          // it with those from the 'default' view mode, which were used so
+          // far.
+          if (!$this->entityManager->getStorage($this->entity->getEntityTypeId())->load($this->entity->targetEntityType . '.' . $this->entity->bundle . '.' . $mode)) {
+            $display = $this->getEntityDisplay($this->entity->targetEntityType, $this->entity->bundle, 'default')->createCopy($mode);
+            $display->save();
+          }
+
+          $display_mode_label = $display_modes[$mode]['label'];
+          $url = $this->getOverviewUrl($mode);
+          drupal_set_message($this->t('The %display_mode mode now uses custom display settings. You might want to <a href="@url">configure them</a>.', ['%display_mode' => $display_mode_label, '@url' => $url->toString()]));
+        }
+        $statuses[$mode] = !empty($value);
+      }
+
+      $this->saveDisplayStatuses($statuses);
+    }
+
+    drupal_set_message($this->t('Your settings have been saved.'));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function copyFormValuesToEntity(EntityInterface $entity, array $form, FormStateInterface $form_state) {
+    $form_values = $form_state->getValues();
+
+    if ($this->entity instanceof EntityWithPluginCollectionInterface) {
+      // Do not manually update values represented by plugin collections.
+      $form_values = array_diff_key($form_values, $this->entity->getPluginCollections());
+    }
 
     // Collect data for 'regular' fields.
     foreach ($form['#fields'] as $field_name) {
@@ -588,7 +584,7 @@ abstract class DisplayOverviewBase extends FormBase {
       $values = $form_values['fields'][$field_name];
 
       if ($values['type'] == 'hidden') {
-        $display->removeComponent($field_name);
+        $entity->removeComponent($field_name);
       }
       else {
         // Get plugin settings. They lie either directly in submitted form
@@ -602,7 +598,7 @@ abstract class DisplayOverviewBase extends FormBase {
         elseif (isset($plugin_settings[$field_name]['settings'])) {
           $settings = $plugin_settings[$field_name]['settings'];
         }
-        elseif ($current_options = $display->getComponent($field_name)) {
+        elseif ($current_options = $entity->getComponent($field_name)) {
           $settings = $current_options['settings'];
         }
         $third_party_settings = array();
@@ -612,7 +608,7 @@ abstract class DisplayOverviewBase extends FormBase {
         elseif (isset($plugin_settings[$field_name]['third_party_settings'])) {
           $third_party_settings = $plugin_settings[$field_name]['third_party_settings'];
         }
-        elseif (($current_options = $display->getComponent($field_name)) && isset($current_options['third_party_settings'])) {
+        elseif (($current_options = $entity->getComponent($field_name)) && isset($current_options['third_party_settings'])) {
           $third_party_settings = $current_options['third_party_settings'];
         }
 
@@ -633,52 +629,21 @@ abstract class DisplayOverviewBase extends FormBase {
           $component_values['label'] = $values['label'];
         }
 
-        $display->setComponent($field_name, $component_values);
+        $entity->setComponent($field_name, $component_values);
       }
     }
 
     // Collect data for 'extra' fields.
     foreach ($form['#extra'] as $name) {
       if ($form_values['fields'][$name]['type'] == 'hidden') {
-        $display->removeComponent($name);
+        $entity->removeComponent($name);
       }
       else {
-        $display->setComponent($name, array(
+        $entity->setComponent($name, array(
           'weight' => $form_values['fields'][$name]['weight'],
         ));
       }
     }
-
-    // Save the display.
-    $display->save();
-
-    // Handle the 'display modes' checkboxes if present.
-    if ($this->mode == 'default' && !empty($form_values['display_modes_custom'])) {
-      $display_modes = $this->getDisplayModes();
-      $current_statuses = $this->getDisplayStatuses();
-
-      $statuses = array();
-      foreach ($form_values['display_modes_custom'] as $mode => $value) {
-        if (!empty($value) && empty($current_statuses[$mode])) {
-          // If no display exists for the newly enabled view mode, initialize
-          // it with those from the 'default' view mode, which were used so
-          // far.
-          if (!entity_load($this->getEntityDisplay('default')->getEntityTypeId(), $this->entity_type . '.' . $this->bundle . '.' . $mode)) {
-            $display = $this->getEntityDisplay('default')->createCopy($mode);
-            $display->save();
-          }
-
-          $display_mode_label = $display_modes[$mode]['label'];
-          $url = $this->getOverviewRoute($mode);
-          drupal_set_message($this->t('The %display_mode mode now uses custom display settings. You might want to <a href="@url">configure them</a>.', ['%display_mode' => $display_mode_label, '@url' => $url->toString()]));
-        }
-        $statuses[$mode] = !empty($value);
-      }
-
-      $this->saveDisplayStatuses($statuses);
-    }
-
-    drupal_set_message($this->t('Your settings have been saved.'));
   }
 
   /**
@@ -865,7 +830,7 @@ abstract class DisplayOverviewBase extends FormBase {
    * Determines the rendering order of an array representing a tree.
    *
    * Callback for array_reduce() within
-   * \Drupal\field_ui\DisplayOverviewBase::tablePreRender().
+   * \Drupal\field_ui\Form\EntityDisplayFormBase::tablePreRender().
    */
   public function reduceOrder($array, $a) {
     $array = !isset($array) ? array() : $array;
@@ -880,17 +845,6 @@ abstract class DisplayOverviewBase extends FormBase {
   }
 
   /**
-   * Returns the entity display object used by this form.
-   *
-   * @param string $mode
-   *   A view or form mode.
-   *
-   * @return \Drupal\Core\Entity\Display\EntityDisplayInterface
-   *   An entity display.
-   */
-  abstract protected function getEntityDisplay($mode);
-
-  /**
    * Returns the extra fields of the entity type and bundle used by this form.
    *
    * @return array
@@ -900,9 +854,24 @@ abstract class DisplayOverviewBase extends FormBase {
    */
   protected function getExtraFields() {
     $context = $this->displayContext == 'view' ? 'display' : $this->displayContext;
-    $extra_fields = $this->entityManager->getExtraFields($this->entity_type, $this->bundle);
+    $extra_fields = $this->entityManager->getExtraFields($this->entity->targetEntityType, $this->entity->bundle);
     return isset($extra_fields[$context]) ? $extra_fields[$context] : array();
   }
+
+  /**
+   * Returns an entity display object to be used by this form.
+   *
+   * @param string $entity_type_id
+   *   The target entity type ID of the entity display.
+   * @param string $bundle
+   *   The target bundle of the entity display.
+   * @param string $mode
+   *   A view or form mode.
+   *
+   * @return \Drupal\Core\Entity\Display\EntityDisplayInterface
+   *   An entity display.
+   */
+  abstract protected function getEntityDisplay($entity_type_id, $bundle, $mode);
 
   /**
    * Returns the widget or formatter plugin for a field.
@@ -935,7 +904,7 @@ abstract class DisplayOverviewBase extends FormBase {
         $applicable_options[$option] = $label;
       }
     }
-    return $applicable_options;
+    return $applicable_options + array('hidden' => '- ' . $this->t('Hidden') . ' -');
   }
 
   /**
@@ -956,14 +925,6 @@ abstract class DisplayOverviewBase extends FormBase {
    *   An array of form or view mode info.
    */
   abstract protected function getDisplayModes();
-
-  /**
-   * Returns the display entity type.
-   *
-   * @return string
-   *   The name of the display entity type.
-   */
-  abstract protected function getDisplayType();
 
   /**
    * Returns the region to which a row in the display overview belongs.
@@ -998,15 +959,15 @@ abstract class DisplayOverviewBase extends FormBase {
   /**
    * Returns entity (form) displays for the current entity display type.
    *
-   * @return array
+   * @return \Drupal\Core\Entity\Display\EntityDisplayInterface[]
    *   An array holding entity displays or entity form displays.
    */
   protected function getDisplays() {
     $load_ids = array();
-    $display_entity_type = $this->getDisplayType();
+    $display_entity_type = $this->entity->getEntityTypeId();
     $entity_type = $this->entityManager->getDefinition($display_entity_type);
     $config_prefix = $entity_type->getConfigPrefix();
-    $ids = $this->configFactory->listAll($config_prefix . '.' . $this->entity_type . '.' . $this->bundle . '.');
+    $ids = $this->configFactory()->listAll($config_prefix . '.' . $this->entity->targetEntityType . '.' . $this->entity->bundle . '.');
     foreach ($ids as $id) {
       $config_id = str_replace($config_prefix . '.', '', $id);
       list(,, $display_mode) = explode('.', $config_id);
@@ -1014,7 +975,7 @@ abstract class DisplayOverviewBase extends FormBase {
         $load_ids[] = $config_id;
       }
     }
-    return entity_load_multiple($display_entity_type, $load_ids);
+    return $this->entityManager->getStorage($display_entity_type)->loadMultiple($load_ids);
   }
 
   /**
@@ -1055,7 +1016,7 @@ abstract class DisplayOverviewBase extends FormBase {
   abstract protected function getTableHeader();
 
   /**
-   * Returns the route info of a specific form or view mode form.
+   * Returns the Url object for a specific entity (form) display edit form.
    *
    * @param string $mode
    *   The form or view mode.
@@ -1063,7 +1024,7 @@ abstract class DisplayOverviewBase extends FormBase {
    * @return \Drupal\Core\Url
    *   A Url object for the overview route.
    */
-  abstract protected function getOverviewRoute($mode);
+  abstract protected function getOverviewUrl($mode);
 
   /**
    * Adds the widget or formatter third party settings forms.

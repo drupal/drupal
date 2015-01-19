@@ -12,7 +12,6 @@ dependencies:
     - text
     - user
 id: node.forum.teaser
-label: null
 targetEntityType: node
 bundle: forum
 mode: teaser

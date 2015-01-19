@@ -11,6 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Entity\EntityViewModeInterface;
+use Drupal\Core\Url;
 use Drupal\field_ui\FieldUI;
 use Drupal\field_ui\Plugin\Derivative\FieldUiLocalTask;
 
@@ -68,6 +69,8 @@ function field_ui_entity_type_build(array &$entity_types) {
   $entity_types['field_config']->setListBuilderClass('Drupal\field_ui\FieldConfigListBuilder');
   $entity_types['field_storage_config']->setListBuilderClass('Drupal\field_ui\FieldStorageConfigListBuilder');
   $entity_types['field_storage_config']->setLinkTemplate('collection', '/admin/reports/fields');
+  $entity_types['entity_form_display']->setFormClass('edit', 'Drupal\field_ui\Form\EntityFormDisplayEditForm');
+  $entity_types['entity_view_display']->setFormClass('edit', 'Drupal\field_ui\Form\EntityViewDisplayEditForm');
 
   foreach ($entity_types as $entity_type) {
     if ($bundle = $entity_type->getBundleOf()) {
@@ -76,9 +79,7 @@ function field_ui_entity_type_build(array &$entity_types) {
       // This allows us to not require route information inside this hook, which
       // otherwise could result in circular dependencies.
       $entity_type
-        ->setLinkTemplate('field_ui-fields', "/admin/{$entity_type->id()}/fields")
-        ->setLinkTemplate('field_ui-form-display', "/admin/{$entity_type->id()}/fields-form-display")
-        ->setLinkTemplate('field_ui-display', "/admin/{$entity_type->id()}/fields-display");
+        ->setLinkTemplate('field_ui-fields', "/admin/{$entity_type->id()}/fields");
     }
   }
 }
@@ -143,14 +144,18 @@ function field_ui_entity_operation(EntityInterface $entity) {
       $operations['manage-form-display'] = array(
         'title' => t('Manage form display'),
         'weight' => 20,
-        'url' => $entity->urlInfo('field_ui-form-display'),
+        'url' => Url::fromRoute("entity.entity_form_display.{$entity->getEntityTypeId()}.default", array(
+          $entity->getEntityTypeId() => $entity->id(),
+        )),
       );
     }
     if ($account->hasPermission('administer '. $bundle_of . ' display')) {
       $operations['manage-display'] = array(
         'title' => t('Manage display'),
         'weight' => 25,
-        'url' => $entity->urlInfo('field_ui-display'),
+        'url' => Url::fromRoute("entity.entity_view_display.{$entity->getEntityTypeId()}.default", array(
+          $entity->getEntityTypeId() => $entity->id(),
+        )),
       );
     }
   }
