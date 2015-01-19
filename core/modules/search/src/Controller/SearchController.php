@@ -191,7 +191,8 @@ class SearchController extends ControllerBase {
       drupal_set_message($this->t('The %label search page has been disabled.', array('%label' => $search_page->label())));
     }
 
-    return $this->redirect('search.settings');
+    $url = $search_page->urlInfo('collection');
+    return $this->redirect($url->getRouteName(), $url->getRouteParameters(), $url->getOptions());
   }
 
   /**
@@ -208,7 +209,7 @@ class SearchController extends ControllerBase {
     $this->searchPageRepository->setDefaultSearchPage($search_page);
 
     drupal_set_message($this->t('The default search page is now %label. Be sure to check the ordering of your search pages.', array('%label' => $search_page->label())));
-    return $this->redirect('search.settings');
+    return $this->redirect('entity.search_page.collection');
   }
 
 }

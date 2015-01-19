@@ -45,7 +45,7 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
     $this->assertNoText(t('Translation update status'), 'No status message');
 
     $this->drupalGet('admin/reports/translations');
-    $this->assertRaw(t('No translatable languages available. <a href="@add_language">Add a language</a> first.', array('@add_language' => \Drupal::url('language.admin_overview'))), 'Language message');
+    $this->assertRaw(t('No translatable languages available. <a href="@add_language">Add a language</a> first.', array('@add_language' => \Drupal::url('entity.configurable_language.collection'))), 'Language message');
 
     // Add German language.
     $this->addLanguage('de');

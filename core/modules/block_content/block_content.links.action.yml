@@ -2,7 +2,7 @@ block_content_type_add:
   route_name: block_content.type_add
   title: 'Add custom block type'
   appears_on:
-    - block_content.type_list
+    - entity.block_content_type.collection
 
 block_content_add_action:
   route_name: block_content.add_page
@@ -10,5 +10,5 @@ block_content_add_action:
   appears_on:
     - block.admin_display
     - block.admin_display_theme
-    - block_content.list
+    - entity.block_content.collection
   class: \Drupal\block_content\Plugin\Menu\LocalAction\BlockContentAddLocalAction

@@ -9,7 +9,6 @@ namespace Drupal\image\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
 
 /**
  * Creates a form to delete an image style.
@@ -34,7 +33,7 @@ class ImageStyleDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('image.style_list');
+    return $this->entity->urlInfo('collection');
   }
 
   /**

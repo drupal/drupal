@@ -99,7 +99,7 @@ class CommentTypeDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('comment.type_list');
+    return $this->entity->urlInfo('collection');
   }
 
   /**
@@ -143,7 +143,7 @@ class CommentTypeDeleteForm extends EntityConfirmFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->entity->delete();
-    $form_state->setRedirect('comment.type_list');
+    $form_state->setRedirectUrl($this->entity->urlInfo('collection'));
     drupal_set_message($this->t('Comment type %label has been deleted.', array('%label' => $this->entity->label())));
     $this->logger->notice('comment type %label has been deleted.', array('%label' => $this->entity->label()));
   }

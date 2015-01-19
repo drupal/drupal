@@ -17,21 +17,21 @@ function block_content_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.block_content':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Custom Block module allows you to create blocks of content, which can be placed in regions throughout the website. Custom blocks can have fields; see the <a href="!field-help">Field module help</a> for more information. Once created, custom blocks can be placed like blocks provided by other modules; see the <a href="!blocks">Block module help page</a> for details. For more information, see <a href="!online-help">the online documentation for the Custom Block module</a>.', array('!block-content' => \Drupal::url('block_content.list'), '!field-help' => \Drupal::url('help.page', array('name' => 'field')), '!blocks' => \Drupal::url('help.page', array('name' => 'block')), '!online-help' => 'https://drupal.org/documentation/modules/block_content')) . '</p>';
+      $output .= '<p>' . t('The Custom Block module allows you to create blocks of content, which can be placed in regions throughout the website. Custom blocks can have fields; see the <a href="!field-help">Field module help</a> for more information. Once created, custom blocks can be placed like blocks provided by other modules; see the <a href="!blocks">Block module help page</a> for details. For more information, see <a href="!online-help">the online documentation for the Custom Block module</a>.', array('!block-content' => \Drupal::url('entity.block_content.collection'), '!field-help' => \Drupal::url('help.page', array('name' => 'field')), '!blocks' => \Drupal::url('help.page', array('name' => 'block')), '!online-help' => 'https://drupal.org/documentation/modules/block_content')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Creating and managing custom block types') . '</dt>';
-      $output .= '<dd>' . t('Users with the <em>Administer blocks</em> permission can create different custom block types, each with different fields and display settings, from the <a href="!types">Custom block types</a> page. The Custom block types page lists all of your created custom block types, and allows you to edit and manage them. For more information about managing fields and display settings, see the <a href="!field-ui">Field UI module help</a>.', array('!types' => \Drupal::url('block_content.type_list'), '!field-ui' => \Drupal::url('help.page', array('name' => 'field_ui')))) . '</dd>';
+      $output .= '<dd>' . t('Users with the <em>Administer blocks</em> permission can create different custom block types, each with different fields and display settings, from the <a href="!types">Custom block types</a> page. The Custom block types page lists all of your created custom block types, and allows you to edit and manage them. For more information about managing fields and display settings, see the <a href="!field-ui">Field UI module help</a>.', array('!types' => \Drupal::url('entity.block_content_type.collection'), '!field-ui' => \Drupal::url('help.page', array('name' => 'field_ui')))) . '</dd>';
       $output .= '<dt>' . t('Creating custom blocks') . '</dt>';
       $output .= '<dd>' . t('Users with the <em>Administer blocks</em> permission can <a href="!block-add">add custom blocks</a> of each of their defined custom block types. Created custom blocks are then listed on the <a href="!blocks">Blocks administration page</a>.', array('!blocks' => \Drupal::url('block.admin_display'), '!block-add' => \Drupal::url('block_content.add_page'))) . '</dd>';
       $output .= '</dl>';
       return $output;
 
-    case 'block_content.list':
+    case 'entity.block_content.collection':
       $output = '<p>' . t('This page lists user-created blocks. These blocks are derived from block types. A block type can consist of different fields and display settings. From the block types tab you can manage these fields as well as create new block types.') . '</p>';
       return $output;
 
-    case 'block_content.type_list':
+    case 'entity.block_content_type.collection':
       $output = '<p>' . t('This page lists block types. A block type can consist of different fields and display settings. From here you can manage these fields as well as create new block types.') . '</p>';
       return $output;
 

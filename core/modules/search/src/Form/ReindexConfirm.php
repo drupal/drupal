@@ -55,7 +55,7 @@ class ReindexConfirm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('search.settings');
+    return new Url('entity.search_page.collection');
   }
 
   /**

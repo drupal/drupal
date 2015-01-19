@@ -34,18 +34,18 @@ entity.user.edit_form:
   base_route: entity.user.canonical
   title: Edit
 
-user.admin_account:
+entity.user.collection:
   title: List
-  route_name: user.admin_account
-  base_route: user.admin_account
+  route_name: entity.user.collection
+  base_route: entity.user.collection
 
 user.admin_permissions:
   title: Permissions
   route_name: user.admin_permissions
-  base_route: user.admin_account
+  base_route: entity.user.collection
 
-user.role_list:
+entity.user_role.collection:
   title: 'Roles'
-  route_name: user.role_list
-  base_route: user.admin_account
+  route_name: entity.user_role.collection
+  base_route: entity.user.collection
   weight: 10

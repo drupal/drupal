@@ -46,7 +46,8 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
  *   links = {
  *     "flush-form" = "/admin/config/media/image-styles/manage/{image_style}/flush",
  *     "edit-form" = "/admin/config/media/image-styles/manage/{image_style}",
- *     "delete-form" = "/admin/config/media/image-styles/manage/{image_style}/delete"
+ *     "delete-form" = "/admin/config/media/image-styles/manage/{image_style}/delete",
+ *     "collection" = "/admin/config/media/image-styles",
  *   }
  * )
  */

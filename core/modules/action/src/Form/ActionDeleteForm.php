@@ -34,7 +34,7 @@ class ActionDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('action.admin');
+    return new Url('entity.action.collection');
   }
 
   /**

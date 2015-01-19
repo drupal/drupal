@@ -40,7 +40,8 @@ use Drupal\taxonomy\VocabularyInterface;
  *     "delete-form" = "/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/delete",
  *     "reset-form" = "/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/reset",
  *     "overview-form" = "/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/overview",
- *     "edit-form" = "/admin/structure/taxonomy/manage/{taxonomy_vocabulary}"
+ *     "edit-form" = "/admin/structure/taxonomy/manage/{taxonomy_vocabulary}",
+ *     "collection" = "/admin/structure/taxonomy",
  *   }
  * )
  */

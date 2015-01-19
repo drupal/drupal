@@ -1,8 +1,8 @@
-contact.form_list:
+entity.contact_form.collection:
   title: 'Contact forms'
   parent: system.admin_structure
   description: 'Create and manage contact forms.'
-  route_name: contact.form_list
+  route_name: entity.contact_form.collection
 contact.site_page:
   title: Contact
   route_name: contact.site_page

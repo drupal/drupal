@@ -1,4 +1,4 @@
-block_content.type_list:
+entity.block_content_type.collection:
   path: '/admin/structure/block/block-content/types'
   defaults:
     _entity_list: 'block_content_type'
@@ -80,7 +80,7 @@ entity.block_content_type.edit_form:
   requirements:
     _entity_access: 'block_content_type.update'
 
-block_content.list:
+entity.block_content.collection:
   path: '/admin/structure/block/block-content'
   defaults:
     _title: 'Custom block library'

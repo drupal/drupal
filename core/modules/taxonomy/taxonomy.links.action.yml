@@ -2,7 +2,7 @@ entity.taxonomy_vocabulary.add_form:
   route_name: entity.taxonomy_vocabulary.add_form
   title: 'Add vocabulary'
   appears_on:
-    - taxonomy.vocabulary_list
+    - entity.taxonomy_vocabulary.collection
 
 entity.taxonomy_term.add_form:
   route_name: entity.taxonomy_term.add_form

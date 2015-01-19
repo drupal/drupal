@@ -34,7 +34,7 @@ class ConfigTestDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('config_test.list_page');
+    return $this->entity->urlInfo('collection');
   }
 
   /**

@@ -1,4 +1,4 @@
-search.settings:
+entity.search_page.collection:
   path: '/admin/config/search/pages'
   defaults:
     _entity_list: 'search_page'

@@ -4,4 +4,4 @@ description: 'Allows users to configure languages and apply them to content.'
 package: Multilingual
 version: VERSION
 core: 8.x
-configure: language.admin_overview
+configure: entity.configurable_language.collection

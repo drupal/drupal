@@ -156,7 +156,7 @@ class VocabularyForm extends EntityForm {
       case SAVED_UPDATED:
         drupal_set_message($this->t('Updated vocabulary %name.', array('%name' => $vocabulary->label())));
         $this->logger('taxonomy')->notice('Updated vocabulary %name.', array('%name' => $vocabulary->label(), 'link' => $edit_link));
-        $form_state->setRedirect('taxonomy.vocabulary_list');
+        $form_state->setRedirectUrl($vocabulary->urlInfo('collection'));
         break;
     }
 

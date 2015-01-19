@@ -1,4 +1,4 @@
-config_test.list_page:
+entity.config_test.collection:
   path: '/admin/structure/config_test'
   defaults:
     _entity_list: 'config_test'

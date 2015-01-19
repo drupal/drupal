@@ -39,7 +39,8 @@ use Drupal\language\ConfigurableLanguageInterface;
  *   },
  *   links = {
  *     "delete-form" = "/admin/config/regional/language/delete/{configurable_language}",
- *     "edit-form" = "/admin/config/regional/language/edit/{configurable_language}"
+ *     "edit-form" = "/admin/config/regional/language/edit/{configurable_language}",
+ *     "collection" = "/admin/config/regional/language",
  *   }
  * )
  */

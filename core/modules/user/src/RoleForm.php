@@ -68,7 +68,7 @@ class RoleForm extends EntityForm {
       drupal_set_message($this->t('Role %label has been added.', array('%label' => $entity->label())));
       $this->logger('user')->notice('Role %label has been added.', array('%label' => $entity->label(), 'link' => $edit_link));
     }
-    $form_state->setRedirect('user.role_list');
+    $form_state->setRedirect('entity.user_role.collection');
   }
 
 }

@@ -342,7 +342,7 @@ class ViewEditForm extends ViewFormBase {
     // Remove this view from cache so edits will be lost.
     $view = $this->entity;
     $this->tempStore->delete($view->id());
-    $form_state->setRedirect('views_ui.list');
+    $form_state->setRedirectUrl($this->entity->urlInfo('collection'));
   }
 
   /**

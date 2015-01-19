@@ -188,7 +188,7 @@ class ViewAddForm extends ViewFormBase {
     // @todo Figure out whether it really makes sense to throw and catch exceptions on the wizard.
     catch (WizardException $e) {
       drupal_set_message($e->getMessage(), 'error');
-      $form_state->setRedirect('views_ui.list');
+      $form_state->setRedirect('entity.view.collection');
       return;
     }
     $this->entity->save();
@@ -205,7 +205,7 @@ class ViewAddForm extends ViewFormBase {
    *   The current state of the form.
    */
   public function cancel(array $form, FormStateInterface $form_state) {
-    $form_state->setRedirect('views_ui.list');
+    $form_state->setRedirect('entity.view.collection');
   }
 
 }

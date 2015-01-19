@@ -54,6 +54,7 @@ use Drupal\user\UserInterface;
  *     "canonical" = "/user/{user}",
  *     "edit-form" = "/user/{user}/edit",
  *     "cancel-form" = "/user/{user}/cancel",
+ *     "collection" = "/admin/people",
  *   },
  *   field_ui_base_route = "entity.user.admin_form",
  * )

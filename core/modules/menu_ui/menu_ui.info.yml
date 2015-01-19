@@ -4,6 +4,6 @@ description: 'Allows administrators to customize the site navigation menu.'
 package: Core
 version: VERSION
 core: 8.x
-configure: menu_ui.overview_page
+configure: entity.menu.collection
 dependencies:
   - menu_link_content

@@ -32,7 +32,7 @@ function language_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Adding languages') . '</dt>';
-      $output .= '<dd>' . t('You can add languages on the <a href="!language_list">Languages</a> page by selecting <em>Add language</em> and choosing a language from the drop-down menu. This language is then displayed in the languages list, where it can be configured further. If the <a href="!interface">Interface translation module</a> is enabled, and the <em>translation server</em> is set as a translation source, then the interface translation for this language is automatically downloaded as well.' , array('!language_list' => \Drupal::url('language.admin_overview'), '!interface' => (\Drupal::moduleHandler()->moduleExists('locale')) ? \Drupal::url('help.page', array('name' => 'locale')) : '#')) . '</dd>';
+      $output .= '<dd>' . t('You can add languages on the <a href="!language_list">Languages</a> page by selecting <em>Add language</em> and choosing a language from the drop-down menu. This language is then displayed in the languages list, where it can be configured further. If the <a href="!interface">Interface translation module</a> is enabled, and the <em>translation server</em> is set as a translation source, then the interface translation for this language is automatically downloaded as well.' , array('!language_list' => \Drupal::url('entity.configurable_language.collection'), '!interface' => (\Drupal::moduleHandler()->moduleExists('locale')) ? \Drupal::url('help.page', array('name' => 'locale')) : '#')) . '</dd>';
       $output .= '<dt>' . t('Adding custom languages') . '</dt>';
       $output .= '<dd>' . t('You can add a language that is not provided in the drop-down list by choosing <em>Custom language</em> at the end of the list. You then have to configure its language code, name, and direction in the form provided.') . '</dd>';
       $output .= '<dt>' . t('Configuring content languages') . '</dt>';
@@ -48,13 +48,13 @@ function language_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<ul><li>' . t('<em>URL</em> sets the interface language based on a path prefix or domain (for example specifying <em>de</em> for German would result in URLs like <em>example.com/de/contact</em>). The default language does not require a path prefix, but can have one assigned as well. If the language detection is done by domain name, a domain needs to be specified for each language.') . '</li>';
       $output .= '<li>' . t('<em>Session</em> determines the interface language from a request or session parameter (for example <em>example.com?language=de</em> would set the interface language to German based on the use of <em>de</em> as the <em>language</em> parameter).') . '</li>';
       $output .= '<li>' . t('<em>User</em> follows the language configuration set on the user\'s profile page.') . '</li>';
-      $output .= '<li>' . t('<em>Browser</em> sets the interface language based on the browser\'s language settings. Since browsers use different language codes to refer to the same languages, you can add and edit languages codes to map the browser language codes to the <a href="!language_list">language codes</a> used on your site.',  array('!language_list' => \Drupal::url('language.admin_overview'))) . '</li>';
+      $output .= '<li>' . t('<em>Browser</em> sets the interface language based on the browser\'s language settings. Since browsers use different language codes to refer to the same languages, you can add and edit languages codes to map the browser language codes to the <a href="!language_list">language codes</a> used on your site.',  array('!language_list' => \Drupal::url('entity.configurable_language.collection'))) . '</li>';
       $output .= '<li>' . t('<em>Account administration pages</em> follows the configuration set as <em>Administration pages language</em> on the profile page of an administrative user. This method is similar to the <em>User</em> method, but only sets the interface text language on administration pages, independent of the interface text language on other pages.') . '</li>';
       $output .= '<li>' . t('<em>Selected language</em> allows you to specify the site\'s default language or a specific language as the fall-back language. This method should be listed last.') . '</li></ul></dd>';
       $output .= '</dl>';
       return $output;
 
-    case 'language.admin_overview':
+    case 'entity.configurable_language.collection':
       return '<p>' . t('Reorder the added languages to set their order in the language switcher block and, when editing content, in the list of selectable languages. This ordering does not impact <a href="@detection">detection and selection</a>.', array('@detection' => \Drupal::url('language.negotiation'))) . '</p>';
 
     case 'language.add':
@@ -69,11 +69,11 @@ function language_help($route_name, RouteMatchInterface $route_match) {
       return $output;
 
     case 'language.negotiation_browser':
-      $output = '<p>' . t('Browsers use different language codes to refer to the same languages. Internally, a best effort is made to determine the correct language based on the code that the browser sends. You can add and edit additional mappings from browser language codes to <a href="!configure-languages">site languages</a>.', array('!configure-languages' => \Drupal::url('language.admin_overview'))) . '</p>';
+      $output = '<p>' . t('Browsers use different language codes to refer to the same languages. Internally, a best effort is made to determine the correct language based on the code that the browser sends. You can add and edit additional mappings from browser language codes to <a href="!configure-languages">site languages</a>.', array('!configure-languages' => \Drupal::url('entity.configurable_language.collection'))) . '</p>';
       return $output;
 
     case 'language.negotiation_selected':
-      $output = '<p>' . t('Changing the selected language here (and leaving this option as the last among the detection and selection options) is the easiest way to change the fallback language for the website, if you need to change how your site works by default (e.g., when using an empty path prefix or using the default domain). <a href="!admin-change-language">Changing the site\'s default language</a> itself might have other undesired side effects.', array('!admin-change-language' => \Drupal::url('language.admin_overview'))) . '</p>';
+      $output = '<p>' . t('Changing the selected language here (and leaving this option as the last among the detection and selection options) is the easiest way to change the fallback language for the website, if you need to change how your site works by default (e.g., when using an empty path prefix or using the default domain). <a href="!admin-change-language">Changing the site\'s default language</a> itself might have other undesired side effects.', array('!admin-change-language' => \Drupal::url('entity.configurable_language.collection'))) . '</p>';
       return $output;
 
     case 'entity.block.edit_form':

@@ -24,7 +24,7 @@ class ResponsiveImageMappingDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('responsive_image.mapping_page');
+    return $this->entity->urlInfo('collection');
   }
 
   /**

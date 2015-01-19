@@ -2,4 +2,4 @@ views_add_local_action:
   route_name: views_ui.add
   title: 'Add new view'
   appears_on:
-    - views_ui.list
+    - entity.view.collection

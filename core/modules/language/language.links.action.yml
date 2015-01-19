@@ -2,4 +2,4 @@ language_add_local_action:
   route_name: language.add
   title: 'Add language'
   appears_on:
-    - language.admin_overview
+    - entity.configurable_language.collection

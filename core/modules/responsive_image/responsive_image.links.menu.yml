@@ -1,6 +1,6 @@
-responsive_image.mapping_page:
+entity.responsive_image_mapping.collection:
   title: 'Responsive image mappings'
   description: 'Manage responsive image mappings'
   weight: 10
-  route_name: responsive_image.mapping_page
+  route_name: entity.responsive_image_mapping.collection
   parent: system.admin_config_media

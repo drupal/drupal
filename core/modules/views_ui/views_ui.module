@@ -28,9 +28,9 @@ function views_ui_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Creating and managing views.') . '</dt>';
-      $output .= '<dd>' . t('Views can be created from the <a href="@list">Views list page</a> by using the "Add new view" action. Existing views can be managed from the <a href="@list">Views list page</a> by locating the view in the "Enabled" or "Disabled" list and selecting the desired operation action, for example "Edit".', array('@list' => \Drupal::url('views_ui.list', array('name' => 'views_ui')))) . '</dd>';
+      $output .= '<dd>' . t('Views can be created from the <a href="@list">Views list page</a> by using the "Add new view" action. Existing views can be managed from the <a href="@list">Views list page</a> by locating the view in the "Enabled" or "Disabled" list and selecting the desired operation action, for example "Edit".', array('@list' => \Drupal::url('entity.view.collection', array('name' => 'views_ui')))) . '</dd>';
       $output .= '<dt>' . t('Enabling and disabling views.') . '<dt>';
-      $output .= '<dd>' . t('Views can be enabled or disabled from the <a href="@list">Views list page</a>. To enable a view, find the view within the "Disabled" list and select the "Enable" operation. To disable a view find the view within the "Enabled" list and select the "Disable" operation.', array('@list' => \Drupal::url('views_ui.list', array('name' => 'views_ui')))) . '</dd>';
+      $output .= '<dd>' . t('Views can be enabled or disabled from the <a href="@list">Views list page</a>. To enable a view, find the view within the "Disabled" list and select the "Enable" operation. To disable a view find the view within the "Enabled" list and select the "Disable" operation.', array('@list' => \Drupal::url('entity.view.collection', array('name' => 'views_ui')))) . '</dd>';
       $output .= '<dt>' . t('Exporting and importing views.') . '</dt>';
       $output .= '<dd>' . t('Views can be exported and imported as configuration files by using the <a href="@config">Configuration Manager module</a>.', array('@config' => \Drupal::url('help.page', array('name' => 'config')))) . '</dd>';
       $output .= '<dt>' . t('Theming views.') . '</dt>';
@@ -60,7 +60,8 @@ function views_ui_entity_type_build(array &$entity_types) {
     ->setLinkTemplate('delete-form', '/admin/structure/views/view/{view}/delete')
     ->setLinkTemplate('enable', '/admin/structure/views/view/{view}/enable')
     ->setLinkTemplate('disable', '/admin/structure/views/view/{view}/disable')
-    ->setLinkTemplate('break-lock-form', '/admin/structure/views/view/{view}/break-lock');
+    ->setLinkTemplate('break-lock-form', '/admin/structure/views/view/{view}/break-lock')
+    ->setLinkTemplate('collection', '/admin/structure/views');
 }
 
 /**

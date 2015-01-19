@@ -135,7 +135,7 @@ class TranslationStatusForm extends FormBase {
 
     if (!$languages) {
       $empty = $this->t('No translatable languages available. <a href="@add_language">Add a language</a> first.', array(
-        '@add_language' => $this->url('language.admin_overview'),
+        '@add_language' => $this->url('entity.configurable_language.collection'),
       ));
     }
     elseif ($status) {

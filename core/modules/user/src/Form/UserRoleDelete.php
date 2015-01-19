@@ -9,7 +9,6 @@ namespace Drupal\user\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
 
 /**
  * Provides a deletion confirmation form for Role entity.
@@ -27,7 +26,7 @@ class UserRoleDelete extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('user.role_list');
+    return $this->entity->urlInfo('collection');
   }
 
   /**

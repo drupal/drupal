@@ -19,13 +19,13 @@ function action_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Using simple actions') . '</dt>';
-      $output .= '<dd>' . t('<em>Simple actions</em> do not require configuration and are listed automatically as available on the <a href="!actions">Actions page</a>.', array('!actions' => \Drupal::url('action.admin'))) . '</dd>';
+      $output .= '<dd>' . t('<em>Simple actions</em> do not require configuration and are listed automatically as available on the <a href="!actions">Actions page</a>.', array('!actions' => \Drupal::url('entity.action.collection'))) . '</dd>';
       $output .= '<dt>' . t('Creating and configuring advanced actions') . '</dt>';
-      $output .= '<dd>' . t('<em>Advanced actions</em> are user-created and have to be configured individually. Create an advanced action on the <a href="!actions">Actions page</a> by selecting an action type from the drop-down list. Then configure your action, for example by specifying the recipient of an automated email message.', array('!actions' => \Drupal::url('action.admin'))) . '</dd>';
+      $output .= '<dd>' . t('<em>Advanced actions</em> are user-created and have to be configured individually. Create an advanced action on the <a href="!actions">Actions page</a> by selecting an action type from the drop-down list. Then configure your action, for example by specifying the recipient of an automated email message.', array('!actions' => \Drupal::url('entity.action.collection'))) . '</dd>';
       $output .= '</dl>';
       return $output;
 
-    case 'action.admin':
+    case 'entity.action.collection':
       $output = '<p>' . t('There are two types of actions: simple and advanced. Simple actions do not require any additional configuration and are listed here automatically. Advanced actions need to be created and configured before they can be used because they have options that need to be specified; for example, sending an email to a specified address or unpublishing content containing certain words. To create an advanced action, select the action from the drop-down list in the advanced action section below and click the <em>Create</em> button.') . '</p>';
       return $output;
 
@@ -45,5 +45,6 @@ function action_entity_type_build(array &$entity_types) {
     ->setFormClass('delete', 'Drupal\action\Form\ActionDeleteForm')
     ->setListBuilderClass('Drupal\action\ActionListBuilder')
     ->setLinkTemplate('delete-form', '/admin/config/system/actions/configure/{action}/delete')
-    ->setLinkTemplate('edit-form', '/admin/config/system/actions/configure/{action}');
+    ->setLinkTemplate('edit-form', '/admin/config/system/actions/configure/{action}')
+    ->setLinkTemplate('collection', '/admin/config/system/actions');
 }

@@ -55,9 +55,9 @@ system.admin_index:
   title: 'Index'
   weight: -18
 
-system.date_format_list:
-  route_name: system.date_format_list
-  base_route: system.date_format_list
+entity.date_format.collection:
+  route_name: entity.date_format.collection
+  base_route: entity.date_format.collection
   title: 'List'
 entity.date_format.edit_form:
   title: 'Edit'

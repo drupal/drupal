@@ -43,7 +43,7 @@ entity.user.admin_form:
   requirements:
     _permission: 'administer account settings'
 
-user.admin_account:
+entity.user.collection:
   path: '/admin/people'
   defaults:
     _entity_list: 'user'
@@ -83,7 +83,7 @@ user.multiple_cancel_confirm:
   requirements:
     _permission: 'administer users'
 
-user.role_list:
+entity.user_role.collection:
   path: '/admin/people/roles'
   defaults:
     _entity_list: 'user_role'

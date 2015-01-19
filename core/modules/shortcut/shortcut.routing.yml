@@ -6,7 +6,7 @@ entity.shortcut_set.delete_form:
   requirements:
     _entity_access: 'shortcut_set.delete'
 
-shortcut.set_admin:
+entity.shortcut_set.collection:
   path: '/admin/config/user-interface/shortcut'
   defaults:
     _entity_list: 'shortcut_set'

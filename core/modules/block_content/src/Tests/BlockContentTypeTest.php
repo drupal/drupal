@@ -197,7 +197,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $blocks = $storage->loadByProperties(array('info' => $edit['info[0][value]']));
     if (!empty($blocks)) {
-      $this->assertUrl(\Drupal::url('block_content.list', array(), array('absolute' => TRUE)));
+      $this->assertUrl(\Drupal::url('entity.block_content.collection', array(), array('absolute' => TRUE)));
     }
     else {
       $this->fail('Could not load created block.');

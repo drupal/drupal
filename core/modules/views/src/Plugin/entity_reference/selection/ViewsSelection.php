@@ -106,7 +106,7 @@ class ViewsSelection implements SelectionInterface {
       $form['view']['no_view_help'] = array(
         '#markup' => '<p>' . t('No eligible views were found. <a href="@create">Create a view</a> with an <em>Entity Reference</em> display, or add such a display to an <a href="@existing">existing view</a>.', array(
           '@create' => \Drupal::url('views_ui.add'),
-          '@existing' => \Drupal::url('views_ui.list'),
+          '@existing' => \Drupal::url('entity.view.collection'),
         )) . '</p>',
       );
     }

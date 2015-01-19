@@ -198,7 +198,7 @@ class BlockContentForm extends ContentEntityForm {
         );
       }
       else {
-        $form_state->setRedirect('block_content.list');
+        $form_state->setRedirectUrl($block->urlInfo('collection'));
       }
     }
     else {

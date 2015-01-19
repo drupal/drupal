@@ -103,7 +103,7 @@ class ShortcutSetDeleteForm extends EntityConfirmFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->entity->delete();
-    $form_state->setRedirect('shortcut.set_admin');
+    $form_state->setRedirectUrl($this->entity->urlInfo('collection'));
     drupal_set_message(t('The shortcut set %title has been deleted.', array('%title' => $this->entity->label())));
   }
 

@@ -1,4 +1,4 @@
-taxonomy.vocabulary_list:
+entity.taxonomy_vocabulary.collection:
   path: '/admin/structure/taxonomy'
   defaults:
     _entity_list: 'taxonomy_vocabulary'

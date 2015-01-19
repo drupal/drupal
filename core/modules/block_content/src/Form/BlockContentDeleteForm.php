@@ -58,7 +58,7 @@ class BlockContentDeleteForm extends ContentEntityConfirmFormBase {
     $this->entity->delete();
     drupal_set_message($this->t('Custom block %label has been deleted.', array('%label' => $this->entity->label())));
     $this->logger('block_content')->notice('Custom block %label has been deleted.', array('%label' => $this->entity->label()));
-    $form_state->setRedirect('block_content.list');
+    $form_state->setRedirectUrl($this->entity->urlInfo('collection'));
   }
 
 }

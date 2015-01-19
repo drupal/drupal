@@ -2,4 +2,4 @@ comment_type_add:
   route_name: entity.comment_type.add_form
   title: 'Add comment type'
   appears_on:
-    - comment.type_list
+    - entity.comment_type.collection

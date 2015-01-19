@@ -1,7 +1,7 @@
-field_ui.list:
+entity.field_storage_config.collection:
   title: Entities
-  route_name: field_ui.list
-  base_route: field_ui.list
+  route_name: entity.field_storage_config.collection
+  base_route: entity.field_storage_config.collection
 
 field_ui.fields:
   class: \Drupal\Core\Menu\LocalTaskDefault
@@ -17,12 +17,12 @@ field_ui.entity_form_mode.edit_form:
   route_name: field_ui.entity_form_mode.edit_form
   base_route: field_ui.entity_form_mode.edit_form
 
-field_ui.entity_view_mode_list:
+entity.entity_view_mode.collection:
   title: List
-  route_name: field_ui.entity_view_mode_list
-  base_route: field_ui.entity_view_mode_list
+  route_name: entity.entity_view_mode.collection
+  base_route: entity.entity_view_mode.collection
 
-field_ui.entity_form_mode_list:
+entity.entity_form_mode.collection:
   title: List
-  route_name: field_ui.entity_form_mode_list
-  base_route: field_ui.entity_form_mode_list
+  route_name: entity.entity_form_mode.collection
+  base_route: entity.entity_form_mode.collection

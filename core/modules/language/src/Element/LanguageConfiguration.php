@@ -47,7 +47,7 @@ class LanguageConfiguration extends FormElement {
       '#type' => 'select',
       '#title' => t('Default language'),
       '#options' => $options + static::getDefaultOptions(),
-      '#description' => t('Explanation of the language options is found on the <a href="@languages_list_page">languages list page</a>.', array('@languages_list_page' => \Drupal::url('language.admin_overview'))),
+      '#description' => t('Explanation of the language options is found on the <a href="@languages_list_page">languages list page</a>.', array('@languages_list_page' => \Drupal::url('entity.configurable_language.collection'))),
       '#default_value' => ($default_config != NULL) ? $default_config->getDefaultLangcode() : LanguageInterface::LANGCODE_SITE_DEFAULT,
     );
 

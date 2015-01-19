@@ -1,7 +1,7 @@
-field_ui.list:
+entity.field_storage_config.collection:
   title: 'Field list'
   description: 'Overview of fields on all entity types.'
-  route_name: field_ui.list
+  route_name: entity.field_storage_config.collection
   parent: system.admin_reports
 
 field_ui.display_mode:
@@ -10,14 +10,14 @@ field_ui.display_mode:
   route_name: field_ui.display_mode
   parent: system.admin_structure
 
-field_ui.entity_view_mode_list:
+entity.entity_view_mode.collection:
   title: 'View modes'
   description: 'Manage custom view modes.'
-  route_name: field_ui.entity_view_mode_list
+  route_name: entity.entity_view_mode.collection
   parent: field_ui.display_mode
 
-field_ui.entity_form_mode_list:
+entity.entity_form_mode.collection:
   title: 'Form modes'
   description: 'Manage custom form modes.'
-  route_name: field_ui.entity_form_mode_list
+  route_name: entity.entity_form_mode.collection
   parent: field_ui.display_mode

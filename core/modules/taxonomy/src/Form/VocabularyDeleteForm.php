@@ -9,7 +9,6 @@ namespace Drupal\taxonomy\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
 
 /**
  * Provides a deletion confirmation form for taxonomy vocabulary.
@@ -34,7 +33,7 @@ class VocabularyDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('taxonomy.vocabulary_list');
+    return $this->entity->urlInfo('collection');
   }
 
   /**

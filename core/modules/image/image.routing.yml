@@ -38,7 +38,7 @@ image.effect_delete:
   requirements:
     _permission: 'administer image styles'
 
-image.style_list:
+entity.image_style.collection:
   path: '/admin/config/media/image-styles'
   defaults:
     _entity_list: 'image_style'

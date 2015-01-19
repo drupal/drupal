@@ -25,7 +25,7 @@ class BlockContentAddLocalAction extends LocalActionDefault {
       $options['query']['theme'] = $theme;
     }
     // Adds a destination on custom block listing.
-    if ($route_match->getRouteName() == 'block_content.list') {
+    if ($route_match->getRouteName() == 'entity.block_content.collection') {
       $options['query']['destination'] = 'admin/structure/block/block-content';
     }
     return $options;

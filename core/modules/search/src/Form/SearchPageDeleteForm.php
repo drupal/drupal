@@ -9,7 +9,6 @@ namespace Drupal\search\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
 
 /**
  * Provides a deletion confirm form for search.
@@ -27,7 +26,7 @@ class SearchPageDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('search.settings');
+    return $this->entity->urlInfo('collection');
   }
 
   /**

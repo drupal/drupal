@@ -162,7 +162,7 @@ class ResponsiveImageMappingForm extends EntityForm {
       );
     }
     else {
-      $form_state->setRedirect('responsive_image.mapping_page');
+      $form_state->setRedirectUrl($this->entity->urlInfo('collection'));
     }
   }
 

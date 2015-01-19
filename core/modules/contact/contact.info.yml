@@ -4,4 +4,4 @@ description: 'Enables the use of both personal and site-wide contact forms.'
 package: Core
 version: VERSION
 core: 8.x
-configure: contact.form_list
+configure: entity.contact_form.collection

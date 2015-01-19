@@ -56,18 +56,18 @@ function image_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Manipulating images') . '</dt>';
-      $output .= '<dd>' . t('With the Image module you can scale, crop, resize, rotate and desaturate images without affecting the original image using <a href="@image">image styles</a>. When you change an image style, the module automatically refreshes all created images. Every image style must have a name, which will be used in the URL of the generated images. There are two common approaches to naming image styles (which you use will depend on how the image style is being applied):',array('@image' => \Drupal::url('image.style_list')));
+      $output .= '<dd>' . t('With the Image module you can scale, crop, resize, rotate and desaturate images without affecting the original image using <a href="@image">image styles</a>. When you change an image style, the module automatically refreshes all created images. Every image style must have a name, which will be used in the URL of the generated images. There are two common approaches to naming image styles (which you use will depend on how the image style is being applied):',array('@image' => \Drupal::url('entity.image_style.collection')));
       $output .= '<ul><li>' . t('Based on where it will be used: eg. <em>profile-picture</em>') . '</li>';
       $output .= '<li>' . t('Describing its appearance: eg. <em>square-85x85</em>') . '</li></ul>';
       $output .=  t('After you create an image style, you can add effects: crop, scale, resize, rotate, and desaturate (other contributed modules provide additional effects). For example, by combining effects as crop, scale, and desaturate, you can create square, grayscale thumbnails.') . '<dd>';
       $output .= '<dt>' . t('Attaching images to content as fields') . '</dt>';
-      $output .= '<dd>' . t("Image module also allows you to attach images to content as fields. To add an image field to a <a href='@content-type'>content type</a>, go to the content type's <em>manage fields</em> page, and add a new field of type <em>Image</em>. Attaching images to content this way allows image styles to be applied and maintained, and also allows you more flexibility when theming.", array('@content-type' => \Drupal::url('node.overview_types'))) . '</dd>';
+      $output .= '<dd>' . t("Image module also allows you to attach images to content as fields. To add an image field to a <a href='@content-type'>content type</a>, go to the content type's <em>manage fields</em> page, and add a new field of type <em>Image</em>. Attaching images to content this way allows image styles to be applied and maintained, and also allows you more flexibility when theming.", array('@content-type' => \Drupal::url('entity.node_type.collection'))) . '</dd>';
       $output .= '<dt>' . t('Configuring image fields for accessibility') . '</dt>';
       $output .= '<dd>' . t('For accessibility and search engine optimization, all images that convey meaning on web sites should have alternate text. Drupal also allows entry of title text for images, but it can lead to confusion for screen reader users and its use is not recommended. Image fields can be configured so that alternate and title text fields are enabled or disabled; if enabled, the fields can be set to be required. The recommended setting is to enable and require alternate text and disable title text.') . '</dd>';
       $output .= '</dl>';
       return $output;
 
-    case 'image.style_list':
+    case 'entity.image_style.collection':
       return '<p>' . t('Image styles commonly provide thumbnail sizes by scaling and cropping images, but can also add various effects before an image is displayed. When an image is displayed with a style, a new file is created and the original image is left unchanged.') . '</p>';
 
     case 'image.effect_add_form':

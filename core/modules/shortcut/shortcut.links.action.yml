@@ -2,7 +2,7 @@ shortcut_set_add_local_action:
   route_name: shortcut.set_add
   title: 'Add shortcut set'
   appears_on:
-    - shortcut.set_admin
+    - entity.shortcut_set.collection
 shortcut.link_add:
   route_name: shortcut.link_add
   title: 'Add shortcut'

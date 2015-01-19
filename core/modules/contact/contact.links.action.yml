@@ -3,4 +3,4 @@ contact.form_add:
   title: 'Add contact form'
   weight: 1
   appears_on:
-    - contact.form_list
+    - entity.contact_form.collection

@@ -97,7 +97,7 @@ class LanguageAddForm extends LanguageFormBase {
       // to their theme so they can switch between the languages.
       drupal_set_message($this->t('Use one of the language switcher blocks to allow site visitors to switch between languages. You can enable these blocks on the <a href="@block-admin">block administration page</a>.', array('@block-admin' => $this->url('block.admin_display'))));
     }
-    $form_state->setRedirect('language.admin_overview');
+    $form_state->setRedirectUrl($this->entity->urlInfo('collection'));
   }
 
   /**

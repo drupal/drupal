@@ -36,7 +36,8 @@ use Drupal\node\NodeTypeInterface;
  *   },
  *   links = {
  *     "edit-form" = "/admin/structure/types/manage/{node_type}",
- *     "delete-form" = "/admin/structure/types/manage/{node_type}/delete"
+ *     "delete-form" = "/admin/structure/types/manage/{node_type}/delete",
+ *     "collection" = "/admin/structure/types",
  *   }
  * )
  */

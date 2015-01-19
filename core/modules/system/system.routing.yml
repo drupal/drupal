@@ -220,7 +220,7 @@ system.run_cron:
   requirements:
     _permission: 'administer site configuration'
 
-system.date_format_list:
+entity.date_format.collection:
   path: '/admin/config/regional/date-time'
   defaults:
     _entity_list: 'date_format'

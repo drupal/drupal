@@ -9,4 +9,4 @@ entity.menu.add_form:
   route_name: entity.menu.add_form
   title: 'Add menu'
   appears_on:
-    - menu_ui.overview_page
+    - entity.menu.collection

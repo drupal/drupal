@@ -6,4 +6,4 @@ version: VERSION
 core: 8.x
 dependencies:
   - file
-configure: image.style_list
+configure: entity.image_style.collection

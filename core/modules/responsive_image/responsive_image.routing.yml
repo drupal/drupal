@@ -1,4 +1,4 @@
-responsive_image.mapping_page:
+entity.responsive_image_mapping.collection:
   path: '/admin/config/media/responsive-image-mapping'
   defaults:
     _entity_list: 'responsive_image_mapping'

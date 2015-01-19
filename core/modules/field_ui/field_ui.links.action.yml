@@ -3,14 +3,14 @@ field_ui.entity_view_mode_add:
   title: 'Add new view mode'
   weight: 1
   appears_on:
-    - field_ui.entity_view_mode_list
+    - entity.entity_view_mode.collection
 
 field_ui.entity_form_mode_add:
   route_name: field_ui.entity_form_mode_add
   title: 'Add new form mode'
   weight: 1
   appears_on:
-    - field_ui.entity_form_mode_list
+    - entity.entity_form_mode.collection
 
 field_ui.field_storage_config_add:
   class: \Drupal\Core\Menu\LocalActionDefault

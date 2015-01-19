@@ -8,9 +8,9 @@ user.logout:
   route_name: user.logout
   weight: 10
   menu_name: account
-user.admin_account:
+entity.user.collection:
   title: People
-  route_name: user.admin_account
+  route_name: entity.user.collection
   description: 'Manage user accounts, roles, and permissions.'
   parent: system.admin
   weight: 4

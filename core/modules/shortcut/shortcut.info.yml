@@ -4,4 +4,4 @@ description: 'Allows users to manage customizable lists of shortcut links.'
 package: Core
 version: VERSION
 core: 8.x
-configure: shortcut.set_admin
+configure: entity.shortcut_set.collection

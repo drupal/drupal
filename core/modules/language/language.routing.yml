@@ -38,7 +38,7 @@ entity.configurable_language.edit_form:
   requirements:
     _entity_access: 'configurable_language.update'
 
-language.admin_overview:
+entity.configurable_language.collection:
   path: '/admin/config/regional/language'
   defaults:
     _entity_list: 'configurable_language'

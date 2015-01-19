@@ -38,7 +38,8 @@ use Drupal\shortcut\ShortcutSetInterface;
  *   links = {
  *     "customize-form" = "/admin/config/user-interface/shortcut/manage/{shortcut_set}/customize",
  *     "delete-form" = "/admin/config/user-interface/shortcut/manage/{shortcut_set}/delete",
- *     "edit-form" = "/admin/config/user-interface/shortcut/manage/{shortcut_set}"
+ *     "edit-form" = "/admin/config/user-interface/shortcut/manage/{shortcut_set}",
+ *     "collection" = "/admin/config/user-interface/shortcut",
  *   }
  * )
  */

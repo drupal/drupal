@@ -1,8 +1,8 @@
-views_ui.list:
+entity.view.collection:
   title: Views
   parent: system.admin_structure
   description: 'Manage customized lists of content.'
-  route_name: views_ui.list
+  route_name: entity.view.collection
 views_ui.reports_plugins:
   title: 'Views plugins'
   parent: system.admin_reports

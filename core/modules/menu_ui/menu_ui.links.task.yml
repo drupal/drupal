@@ -3,7 +3,7 @@ entity.menu.edit_form:
   route_name: entity.menu.edit_form
   base_route: entity.menu.edit_form
 
-menu_ui.overview_page:
+entity.menu.collection:
   title: 'List'
-  route_name: menu_ui.overview_page
-  base_route: menu_ui.overview_page
+  route_name: entity.menu.collection
+  base_route: entity.menu.collection

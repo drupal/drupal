@@ -87,7 +87,7 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('user.admin_account');
+    return new Url('entity.user.collection');
   }
 
   /**
@@ -106,7 +106,7 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
       ->get('user_user_operations_cancel')
       ->get($this->currentUser()->id());
     if (!$accounts) {
-      return $this->redirect('user.admin_account');
+      return $this->redirect('entity.user.collection');
     }
 
     $form['accounts'] = array('#prefix' => '<ul>', '#suffix' => '</ul>', '#tree' => TRUE);
@@ -130,7 +130,7 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
       drupal_set_message($message, $redirect ? 'error' : 'warning');
       // If only user 1 was selected, redirect to the overview.
       if ($redirect) {
-        return $this->redirect('user.admin_account');
+        return $this->redirect('entity.user.collection');
       }
     }
 
@@ -197,7 +197,7 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
         }
       }
     }
-    $form_state->setRedirect('user.admin_account');
+    $form_state->setRedirect('entity.user.collection');
   }
 
 }

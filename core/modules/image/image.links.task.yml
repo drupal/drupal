@@ -3,7 +3,7 @@ entity.image_style.edit_form:
   route_name: entity.image_style.edit_form
   base_route: entity.image_style.edit_form
 
-image.style_list:
+entity.image_style.collection:
   title: List
-  route_name: image.style_list
-  base_route: image.style_list
+  route_name: entity.image_style.collection
+  base_route: entity.image_style.collection

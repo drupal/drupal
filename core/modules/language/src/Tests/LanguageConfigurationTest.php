@@ -43,7 +43,7 @@ class LanguageConfigurationTest extends WebTestBase {
     );
     $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
     $this->assertText('French');
-    $this->assertUrl(\Drupal::url('language.admin_overview', [], ['absolute' => TRUE]), [], 'Correct page redirection.');
+    $this->assertUrl(\Drupal::url('entity.configurable_language.collection', [], ['absolute' => TRUE]), [], 'Correct page redirection.');
     // Langcode for Languages is always 'en'.
     $language = $this->config('language.entity.fr')->get();
     $this->assertEqual($language['langcode'], 'en');

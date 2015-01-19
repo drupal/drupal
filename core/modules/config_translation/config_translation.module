@@ -23,7 +23,7 @@ function config_translation_help($route_name, RouteMatchInterface $route_match) 
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Enabling translation') . '</dt>';
-      $output .= '<dd>' . t('In order to translate configuration, the website must have at least two <a href="!url">languages</a>.', array('!url' => \Drupal::url('language.admin_overview'))) . '</dd>';
+      $output .= '<dd>' . t('In order to translate configuration, the website must have at least two <a href="!url">languages</a>.', array('!url' => \Drupal::url('entity.configurable_language.collection'))) . '</dd>';
       $output .= '<dt>' . t('Translating configuration text') . '</dt>';
       $output .= '<dd>' . t('Users with the <em>Translate user edited configuration</em> permission can access the configuration translation overview, and manage translations for specific languages. The <a href="!translation-page">Configuration translation</a> page shows a list of all configuration text that can be translated, either as individual items or as lists. After you click on <em>Translate</em>, you are provided with a list of all languages. You can <em>add</em> or <em>edit</em> a translation for a specific language. Users with specific configuration permissions can also <em>edit</em> the text for the site\'s default language. For some configuration text items (for example for the site information), the specific translation pages can also be accessed directly from their configuration pages.', array('!translation-page' => \Drupal::url('config_translation.mapper_list'))) . '</dd>';
       $output .= '<dt>' . t('Translating date formats') . '</dt>';

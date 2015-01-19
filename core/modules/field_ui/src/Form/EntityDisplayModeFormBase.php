@@ -125,7 +125,7 @@ abstract class EntityDisplayModeFormBase extends EntityForm {
     drupal_set_message(t('Saved the %label @entity-type.', array('%label' => $this->entity->label(), '@entity-type' => $this->entityType->getLowercaseLabel())));
     $this->entity->save();
     \Drupal::entityManager()->clearCachedFieldDefinitions();
-    $form_state->setRedirect('field_ui.' . $this->entity->getEntityTypeId() . '_list');
+    $form_state->setRedirectUrl($this->entity->urlInfo('collection'));
   }
 
 }

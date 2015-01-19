@@ -9,7 +9,6 @@ namespace Drupal\field_ui\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
 
 /**
  * Provides the delete form for entity display modes.
@@ -20,7 +19,7 @@ class EntityDisplayModeDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('field_ui.' . $this->entity->getEntityTypeId() . '_list');
+    return $this->entity->urlInfo('collection');
   }
 
   /**

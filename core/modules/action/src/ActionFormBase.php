@@ -149,7 +149,7 @@ abstract class ActionFormBase extends EntityForm {
     $this->entity->save();
     drupal_set_message($this->t('The action has been successfully saved.'));
 
-    $form_state->setRedirect('action.admin');
+    $form_state->setRedirect('entity.action.collection');
   }
 
 }

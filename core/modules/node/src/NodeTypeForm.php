@@ -233,7 +233,7 @@ class NodeTypeForm extends EntityForm {
     elseif ($status == SAVED_NEW) {
       node_add_body_field($type);
       drupal_set_message(t('The content type %name has been added.', $t_args));
-      $context = array_merge($t_args, array('link' => $this->l(t('View'), new Url('node.overview_types'))));
+      $context = array_merge($t_args, array('link' => $type->link($this->t('View'), 'collection')));
       $this->logger('node')->notice('Added content type %name.', $context);
     }
 
@@ -256,7 +256,7 @@ class NodeTypeForm extends EntityForm {
     }
 
     $this->entityManager->clearCachedFieldDefinitions();
-    $form_state->setRedirect('node.overview_types');
+    $form_state->setRedirectUrl($type->urlInfo('collection'));
   }
 
 }

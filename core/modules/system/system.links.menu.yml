@@ -94,11 +94,11 @@ system.regional_settings:
   description: 'Settings for the site''s default time zone and country.'
   route_name: system.regional_settings
   weight: -20
-system.date_format_list:
+entity.date_format.collection:
   title: 'Date and time formats'
   parent: system.admin_config_regional
   description: 'Configure display format strings for date and time.'
-  route_name: system.date_format_list
+  route_name: entity.date_format.collection
   weight: -9
 system.admin_config_search:
   title: 'Search and metadata'

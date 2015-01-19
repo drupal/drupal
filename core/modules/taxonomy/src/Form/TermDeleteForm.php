@@ -8,9 +8,6 @@
 namespace Drupal\taxonomy\Form;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\ContentEntityConfirmFormBase;
 
 /**
@@ -36,7 +33,7 @@ class TermDeleteForm extends ContentEntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('taxonomy.vocabulary_list');
+    return $this->entity->urlInfo('collection');
   }
 
   /**

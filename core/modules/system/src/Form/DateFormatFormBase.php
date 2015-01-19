@@ -174,7 +174,6 @@ abstract class DateFormatFormBase extends EntityForm {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $form_state->setRedirect('system.date_format_list');
     $form_state->setValue('pattern', trim($form_state->getValue('date_format_pattern')));
     parent::submitForm($form, $form_state);
   }
@@ -190,6 +189,7 @@ abstract class DateFormatFormBase extends EntityForm {
     else {
       drupal_set_message(t('Custom date format added.'));
     }
+    $form_state->setRedirectUrl($this->entity->urlInfo('collection'));
   }
 
 }

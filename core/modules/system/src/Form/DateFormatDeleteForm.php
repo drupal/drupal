@@ -10,7 +10,6 @@ namespace Drupal\system\Form;
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -65,7 +64,7 @@ class DateFormatDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('system.date_format_list');
+    return $this->entity->urlInfo('collection');
   }
 
   /**

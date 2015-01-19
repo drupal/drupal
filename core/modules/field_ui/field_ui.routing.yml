@@ -1,4 +1,4 @@
-field_ui.list:
+entity.field_storage_config.collection:
   path: '/admin/reports/fields'
   defaults:
     _entity_list: 'field_storage_config'
@@ -14,7 +14,7 @@ field_ui.display_mode:
   requirements:
     _permission: 'administer display modes'
 
-field_ui.entity_view_mode_list:
+entity.entity_view_mode.collection:
   path: '/admin/structure/display-modes/view'
   defaults:
     _entity_list: 'entity_view_mode'
@@ -54,7 +54,7 @@ entity.entity_view_mode.delete_form:
   requirements:
     _entity_access: 'entity_view_mode.delete'
 
-field_ui.entity_form_mode_list:
+entity.entity_form_mode.collection:
   path: '/admin/structure/display-modes/form'
   defaults:
     _entity_list: 'entity_form_mode'

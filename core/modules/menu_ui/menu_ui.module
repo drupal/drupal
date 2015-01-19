@@ -39,7 +39,7 @@ function menu_ui_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Managing menus') . '</dt>';
-      $output .= '<dd>' . t('Users with the <em>Administer menus and menu items</em> permission can add, edit, and delete custom menus on the <a href="!menu">Menus page</a>. Custom menus can be special site menus, menus of external links, or any combination of internal and external links. You may create an unlimited number of additional menus, each of which will automatically have an associated block (if you have the <a href="!block_help">Block module</a> installed). By selecting <em>Edit menu</em>, you can add, edit, or delete links for a given menu. The links listing page provides a drag-and-drop interface for controlling the order of links, and creating a hierarchy within the menu.', array('!block_help' => \Drupal::url('help.page', array('name' => 'block')), '!menu' => \Drupal::url('menu_ui.overview_page'))) . '</dd>';
+      $output .= '<dd>' . t('Users with the <em>Administer menus and menu items</em> permission can add, edit, and delete custom menus on the <a href="!menu">Menus page</a>. Custom menus can be special site menus, menus of external links, or any combination of internal and external links. You may create an unlimited number of additional menus, each of which will automatically have an associated block (if you have the <a href="!block_help">Block module</a> installed). By selecting <em>Edit menu</em>, you can add, edit, or delete links for a given menu. The links listing page provides a drag-and-drop interface for controlling the order of links, and creating a hierarchy within the menu.', array('!block_help' => \Drupal::url('help.page', array('name' => 'block')), '!menu' => \Drupal::url('entity.menu.collection'))) . '</dd>';
       $output .= '<dt>' . t('Displaying menus') . '</dt>';
       $output .= '<dd>' . t('If you have the Block module enabled, then each menu that you create is rendered in a block that you enable and position on the <a href="!blocks">Block layout page</a>. In some <a href="!themes">themes</a>, the main menu and possibly the secondary menu will be output automatically; you may be able to disable this behavior on the <a href="!themes">theme\'s settings page</a>.', array('!blocks' => (\Drupal::moduleHandler()->moduleExists('block')) ? \Drupal::url('block.admin_display') : '#', '!themes' => \Drupal::url('system.themes_page'), '!theme_settings' => \Drupal::url('system.theme_settings'))) . '</dd>';
       $output .= '</dl>';
@@ -48,7 +48,7 @@ function menu_ui_help($route_name, RouteMatchInterface $route_match) {
   if ($route_name == 'entity.menu.add_form' && \Drupal::moduleHandler()->moduleExists('block')) {
     return '<p>' . t('You can enable the newly-created block for this menu on the <a href="!blocks">Block layout page</a>.', array('!blocks' => \Drupal::url('block.admin_display'))) . '</p>';
   }
-  elseif ($route_name == 'menu_ui.overview_page' && \Drupal::moduleHandler()->moduleExists('block')) {
+  elseif ($route_name == 'entity.menu.collection' && \Drupal::moduleHandler()->moduleExists('block')) {
     return '<p>' . t('Each menu has a corresponding block that is managed on the <a href="!blocks">Block layout page</a>.', array('!blocks' => \Drupal::url('block.admin_display'))) . '</p>';
   }
 }
@@ -66,7 +66,8 @@ function menu_ui_entity_type_build(array &$entity_types) {
     ->setLinkTemplate('add-form', '/admin/structure/menu/add')
     ->setLinkTemplate('delete-form', '/admin/structure/menu/manage/{menu}/delete')
     ->setLinkTemplate('edit-form', '/admin/structure/menu/manage/{menu}')
-    ->setLinkTemplate('add-link-form', '/admin/structure/menu/manage/{menu}/add');
+    ->setLinkTemplate('add-link-form', '/admin/structure/menu/manage/{menu}/add')
+    ->setLinkTemplate('collection', '/admin/structure/menu');
 }
 
 /**

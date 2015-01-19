@@ -1,7 +1,7 @@
-language.admin_overview:
+entity.configurable_language.collection:
   title: Languages
   description: 'Configure languages for content and the user interface.'
-  route_name: language.admin_overview
+  route_name: entity.configurable_language.collection
   parent: system.admin_config_regional
 language.content_settings_page:
   title: 'Content language'

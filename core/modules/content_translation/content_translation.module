@@ -25,7 +25,7 @@ function content_translation_help($route_name, RouteMatchInterface $route_match)
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Enabling translation') . '</dt>';
-      $output .= '<dd>' . t('In order to translate content, the website must have at least two <a href="!url">languages</a>. When that is the case, you can enable translation for the desired content entities on the <a href="!translation-entity">Content language</a> page. When enabling translation you can choose the default language for content and decide whether to show the language selection field on the content editing forms.', array('!url' => \Drupal::url('language.admin_overview'), '!translation-entity' => \Drupal::url('language.content_settings_page'), '!language-help' => \Drupal::url('help.page', array('name' => 'language')))) . '</dd>';
+      $output .= '<dd>' . t('In order to translate content, the website must have at least two <a href="!url">languages</a>. When that is the case, you can enable translation for the desired content entities on the <a href="!translation-entity">Content language</a> page. When enabling translation you can choose the default language for content and decide whether to show the language selection field on the content editing forms.', array('!url' => \Drupal::url('entity.configurable_language.collection'), '!translation-entity' => \Drupal::url('language.content_settings_page'), '!language-help' => \Drupal::url('help.page', array('name' => 'language')))) . '</dd>';
       $output .= '<dt>' . t('Enabling field translation') . '</dt>';
       $output .= '<dd>' . t('You can define which fields of a content entity can be translated. For example, you might want to translate the title and body field while leaving the image field untranslated. If you exclude a field from being translated, it will still show up in the content editing form, but any changes made to that field will be applied to <em>all</em> translations of that content.') . '</dd>';
       $output .= '<dt>' . t('Translating content') . '</dt>';
@@ -40,7 +40,7 @@ function content_translation_help($route_name, RouteMatchInterface $route_match)
     case 'language.content_settings_page':
       $output = '';
       if (!\Drupal::languageManager()->isMultilingual()) {
-        $output .= '<br/>' . t('Before you can translate content, there must be at least two languages added on the <a href="!url">languages administration</a> page.', array('!url' => \Drupal::url('language.admin_overview')));
+        $output .= '<br/>' . t('Before you can translate content, there must be at least two languages added on the <a href="!url">languages administration</a> page.', array('!url' => \Drupal::url('entity.configurable_language.collection')));
       }
       return $output;
   }

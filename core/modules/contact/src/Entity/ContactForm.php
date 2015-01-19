@@ -35,7 +35,8 @@ use Drupal\Core\Config\Entity\ThirdPartySettingsTrait;
  *   },
  *   links = {
  *     "delete-form" = "/admin/structure/contact/manage/{contact_form}/delete",
- *     "edit-form" = "/admin/structure/contact/manage/{contact_form}"
+ *     "edit-form" = "/admin/structure/contact/manage/{contact_form}",
+ *     "collection" = "/admin/structure/contact",
  *   }
  * )
  */

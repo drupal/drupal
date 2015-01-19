@@ -6,7 +6,7 @@ entity.contact_form.delete_form:
   requirements:
     _entity_access: 'contact_form.delete'
 
-contact.form_list:
+entity.contact_form.collection:
   path: '/admin/structure/contact'
   defaults:
     _entity_list: 'contact_form'

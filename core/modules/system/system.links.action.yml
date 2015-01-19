@@ -3,4 +3,4 @@ system.date_format_add:
   title: 'Add format'
   weight: -10
   appears_on:
-    - system.date_format_list
+    - entity.date_format.collection

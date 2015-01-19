@@ -80,7 +80,7 @@ node.revision_delete_confirm:
   options:
     _node_operation_route: TRUE
 
-node.overview_types:
+entity.node_type.collection:
   path: '/admin/structure/types'
   defaults:
     _controller: '\Drupal\Core\Entity\Controller\EntityListController::listing'

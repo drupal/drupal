@@ -81,7 +81,7 @@ class ConfigTestForm extends EntityForm {
       drupal_set_message(format_string('%label configuration has been created.', array('%label' => $entity->label())));
     }
 
-    $form_state->setRedirect('config_test.list_page');
+    $form_state->setRedirectUrl($this->entity->urlInfo('collection'));
   }
 
 }

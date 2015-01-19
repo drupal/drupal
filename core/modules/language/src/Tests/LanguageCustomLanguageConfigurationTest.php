@@ -76,7 +76,7 @@ class LanguageCustomLanguageConfigurationTest extends WebTestBase {
       'The language %language has been created and can now be used.',
       array('%language' => $edit['label'])
     ));
-    $this->assertUrl(\Drupal::url('language.admin_overview', array(), array('absolute' => TRUE)), [], 'Correct page redirection.');
+    $this->assertUrl(\Drupal::url('entity.configurable_language.collection', array(), array('absolute' => TRUE)), [], 'Correct page redirection.');
 
     // Test validation of existing language values.
     $edit = array(
@@ -92,7 +92,7 @@ class LanguageCustomLanguageConfigurationTest extends WebTestBase {
       'The language %language has been created and can now be used.',
       array('%language' => $edit['label'])
     ));
-    $this->assertUrl(\Drupal::url('language.admin_overview', array(), array('absolute' => TRUE)), [], 'Correct page redirection.');
+    $this->assertUrl(\Drupal::url('entity.configurable_language.collection', array(), array('absolute' => TRUE)), [], 'Correct page redirection.');
 
     // Add the language a second time and confirm that this is not allowed.
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));

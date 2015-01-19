@@ -39,7 +39,8 @@ use Drupal\search\SearchPageInterface;
  *     "delete-form" = "/admin/config/search/pages/manage/{search_page}/delete",
  *     "enable" = "/admin/config/search/pages/manage/{search_page}/enable",
  *     "disable" = "/admin/config/search/pages/manage/{search_page}/disable",
- *     "set-default" = "/admin/config/search/pages/manage/{search_page}/set-default"
+ *     "set-default" = "/admin/config/search/pages/manage/{search_page}/set-default",
+ *     "collection" = "/admin/config/search/pages",
  *   },
  *   config_prefix = "page",
  *   entity_keys = {

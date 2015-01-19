@@ -24,7 +24,7 @@ function shortcut_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<p>' . t('The Shortcut module allows users to create sets of <em>shortcut</em> links to commonly-visited pages of the site. Shortcuts are contained within <em>sets</em>. Each user with <em>Select any shortcut set</em> permission can select a shortcut set created by anyone at the site. For more information, see the online handbook entry for <a href="!shortcut">Shortcut module</a>.', array('!shortcut' => 'http://drupal.org/documentation/modules/shortcut')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl><dt>' . t('Administering shortcuts') . '</dt>';
-      $output .= '<dd>' . t('Users with the <em>Administer shortcuts</em> permission can manage shortcut sets and edit the shortcuts within sets from the <a href="!shortcuts">Shortcuts administration page</a>.', array('!shortcuts' => \Drupal::url('shortcut.set_admin'))) . '</dd>';
+      $output .= '<dd>' . t('Users with the <em>Administer shortcuts</em> permission can manage shortcut sets and edit the shortcuts within sets from the <a href="!shortcuts">Shortcuts administration page</a>.', array('!shortcuts' => \Drupal::url('entity.shortcut_set.collection'))) . '</dd>';
       $output .= '<dt>' . t('Choosing shortcut sets') . '</dt>';
       $output .= '<dd>' . t('Users with permission to switch shortcut sets can choose a shortcut set to use from the Shortcuts tab of their user account page.') . '</dd>';
       $output .= '<dt>' . t('Adding and removing shortcuts') . '</dt>';
@@ -34,7 +34,7 @@ function shortcut_help($route_name, RouteMatchInterface $route_match) {
       $output .= '</dl>';
       return $output;
 
-    case 'shortcut.set_admin':
+    case 'entity.shortcut_set.collection':
     case 'shortcut.set_add':
     case 'entity.shortcut_set.edit_form':
       $user = \Drupal::currentUser();
@@ -373,7 +373,7 @@ function shortcut_toolbar() {
         'tab' => array(
           '#type' => 'link',
           '#title' => t('Shortcuts'),
-          '#url' => Url::fromRoute('shortcut.set_admin'),
+          '#url' => $shortcut_set->urlInfo('collection'),
           '#attributes' => array(
             'title' => t('Shortcuts'),
             'class' => array('toolbar-icon', 'toolbar-icon-shortcut'),

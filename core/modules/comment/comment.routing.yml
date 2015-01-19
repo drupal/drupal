@@ -78,7 +78,7 @@ comment.node_redirect:
     _entity_access: 'node.view'
     _module_dependencies: 'node'
 
-comment.type_list:
+entity.comment_type.collection:
   path: '/admin/structure/comment'
   defaults:
     _entity_list: 'comment_type'

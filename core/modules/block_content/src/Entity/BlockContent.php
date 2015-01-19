@@ -42,6 +42,7 @@ use Drupal\block_content\BlockContentInterface;
  *     "canonical" = "/block/{block_content}",
  *     "delete-form" = "/block/{block_content}/delete",
  *     "edit-form" = "/block/{block_content}",
+ *     "collection" = "/admin/structure/block/block-content",
  *   },
  *   translatable = TRUE,
  *   entity_keys = {

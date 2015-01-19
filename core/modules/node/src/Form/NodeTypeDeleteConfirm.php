@@ -10,7 +10,6 @@ namespace Drupal\node\Form;
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -55,7 +54,7 @@ class NodeTypeDeleteConfirm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('node.overview_types');
+    return $this->entity->urlInfo('collection');
   }
 
   /**

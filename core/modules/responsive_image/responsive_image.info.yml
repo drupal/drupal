@@ -7,4 +7,4 @@ core: 8.x
 dependencies:
   - breakpoint
   - image
-configure: responsive_image.mapping_page
+configure: entity.responsive_image_mapping.collection

@@ -4,6 +4,6 @@ description: 'Administrative interface for Views.'
 package: Core
 version: VERSION
 core: 8.x
-configure: views_ui.list
+configure: entity.view.collection
 dependencies:
   - views

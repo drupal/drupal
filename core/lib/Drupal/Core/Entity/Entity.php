@@ -274,9 +274,12 @@ abstract class Entity implements EntityInterface {
    *   An array of URI placeholders.
    */
   protected function urlRouteParameters($rel) {
-    // The entity ID is needed as a route parameter.
-    $uri_route_parameters[$this->getEntityTypeId()] = $this->id();
+    $uri_route_parameters = [];
 
+    if ($rel != 'collection') {
+      // The entity ID is needed as a route parameter.
+      $uri_route_parameters[$this->getEntityTypeId()] = $this->id();
+    }
     return $uri_route_parameters;
   }
 

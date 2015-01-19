@@ -38,7 +38,8 @@ use Drupal\user\RoleInterface;
  *   links = {
  *     "delete-form" = "/admin/people/roles/manage/{user_role}/delete",
  *     "edit-form" = "/admin/people/roles/manage/{user_role}",
- *     "edit-permissions-form" = "/admin/people/permissions/{user_role}"
+ *     "edit-permissions-form" = "/admin/people/permissions/{user_role}",
+ *     "collection" = "/admin/people/roles",
  *   }
  * )
  */

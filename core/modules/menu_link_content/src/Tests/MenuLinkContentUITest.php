@@ -56,7 +56,7 @@ class MenuLinkContentUITest extends ContentTranslationUITest {
    */
   protected function createEntity($values, $langcode, $bundle_name = NULL) {
     $values['menu_name'] = 'tools';
-    $values['route_name'] = 'menu_ui.overview_page';
+    $values['route_name'] = 'entity.menu.collection';
     $values['title'] = 'Test title';
 
     return parent::createEntity($values, $langcode, $bundle_name);

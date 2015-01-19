@@ -173,7 +173,7 @@ class CommentTypeForm extends EntityForm {
       $this->logger->notice('Comment type %label has been added.', array('%label' => $comment_type->label(), 'link' =>  $edit_link));
     }
 
-    $form_state->setRedirect('comment.type_list');
+    $form_state->setRedirectUrl($comment_type->urlInfo('collection'));
   }
 
 }

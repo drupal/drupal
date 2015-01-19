@@ -1,11 +1,11 @@
-language.admin_overview:
+entity.configurable_language.collection:
   title: 'List'
-  route_name: language.admin_overview
-  base_route: language.admin_overview
+  route_name: entity.configurable_language.collection
+  base_route: entity.configurable_language.collection
 language.negotiation:
   title: 'Detection and selection'
   route_name: language.negotiation
-  base_route: language.admin_overview
+  base_route: entity.configurable_language.collection
 
 entity.configurable_language.edit_form:
   title: 'Edit'
