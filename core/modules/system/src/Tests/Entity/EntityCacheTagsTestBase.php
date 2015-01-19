@@ -280,13 +280,13 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     $entity_type = $this->entity->getEntityTypeId();
     $referencing_entity_url = $this->referencing_entity->urlInfo('canonical');
     $non_referencing_entity_url = $this->non_referencing_entity->urlInfo('canonical');
-    $listing_url = Url::fromRoute('entity.entity_test.list_referencing_entities', [
+    $listing_url = Url::fromRoute('entity.entity_test.collection_referencing_entities', [
       'entity_reference_field_name' =>  $entity_type . '_reference',
       'referenced_entity_type' => $entity_type,
       'referenced_entity_id' => $this->entity->id(),
     ]);
-    $empty_entity_listing_url = Url::fromRoute('entity.entity_test.list_empty', ['entity_type_id' => $entity_type]);
-    $nonempty_entity_listing_url = Url::fromRoute('entity.entity_test.list_labels_alphabetically', ['entity_type_id' => $entity_type]);
+    $empty_entity_listing_url = Url::fromRoute('entity.entity_test.collection_empty', ['entity_type_id' => $entity_type]);
+    $nonempty_entity_listing_url = Url::fromRoute('entity.entity_test.collection_labels_alphabetically', ['entity_type_id' => $entity_type]);
 
     // Cache tags present on every rendered page.
     $page_cache_tags = Cache::mergeTags(
