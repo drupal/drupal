@@ -60,13 +60,20 @@
   z-index: 101;
   top: 0; /* keeps the page from scrolling when calculating position. */
   left: 0;
-  padding: 1em 1em 1.5em 1.5em;
+  padding: 1em 1em 1.5em 1.5em; /* LTR */
+}
+[dir="rtl"] .joyride-tip-guide {
+  padding: 1em 1.5em 1.5em 1em;
 }
 
 .joyride-content-wrapper {
   /* Apply padding from parent .joyride-tip-guide to absolutely positioned children. */
   position: relative;
-  padding-right: 1em;
+  padding-right: 1em; /* LTR */
+}
+[dir="rtl"] .joyride-content-wrapper {
+  padding-right: 0;
+  padding-left: 1em;
 }
 
 /* Mobile */
@@ -140,6 +147,7 @@
 }
 [dir="rtl"] .joyride-close-tip {
   left: 0;
+  right: auto;
 }
 
 .joyride-modal-bg {
