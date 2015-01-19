@@ -1,46 +1,11 @@
 <?php
-/**
- * PHPUnit
+/*
+ * This file is part of PHPUnit.
  *
- * Copyright (c) 2001-2014, Sebastian Bergmann <sebastian@phpunit.de>.
- * All rights reserved.
+ * (c) Sebastian Bergmann <sebastian@phpunit.de>
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- *   * Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *
- *   * Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in
- *     the documentation and/or other materials provided with the
- *     distribution.
- *
- *   * Neither the name of Sebastian Bergmann nor the names of his
- *     contributors may be used to endorse or promote products derived
- *     from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * @package    PHPUnit
- * @subpackage Util
- * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2001-2014 Sebastian Bergmann <sebastian@phpunit.de>
- * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
- * @link       http://www.phpunit.de/
- * @since      File available since Release 3.2.0
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 /**
@@ -49,7 +14,7 @@
  * @package    PHPUnit
  * @subpackage Util
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2001-2014 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
  * @link       http://www.phpunit.de/
  * @since      Class available since Release 3.2.0
@@ -70,11 +35,11 @@ class PHPUnit_Util_XML
     public static function prepareString($string)
     {
         return preg_replace(
-          '/[\\x00-\\x08\\x0b\\x0c\\x0e-\\x1f\\x7f]/',
-          '',
-          htmlspecialchars(
-            PHPUnit_Util_String::convertToUtf8($string), ENT_QUOTES, 'UTF-8'
-          )
+            '/[\\x00-\\x08\\x0b\\x0c\\x0e-\\x1f\\x7f]/',
+            '',
+            htmlspecialchars(
+                PHPUnit_Util_String::convertToUtf8($string), ENT_QUOTES, 'UTF-8'
+            )
         );
     }
 
@@ -84,10 +49,11 @@ class PHPUnit_Util_XML
      * @param  string      $filename
      * @param  boolean     $isHtml
      * @param  boolean     $xinclude
+     * @param  boolean     $strict
      * @return DOMDocument
      * @since  Method available since Release 3.3.0
      */
-    public static function loadFile($filename, $isHtml = false, $xinclude = false)
+    public static function loadFile($filename, $isHtml = false, $xinclude = false, $strict = false)
     {
         $reporting = error_reporting(0);
         $contents  = file_get_contents($filename);
@@ -95,14 +61,14 @@ class PHPUnit_Util_XML
 
         if ($contents === false) {
             throw new PHPUnit_Framework_Exception(
-              sprintf(
-                'Could not read "%s".',
-                $filename
-              )
+                sprintf(
+                    'Could not read "%s".',
+                    $filename
+                )
             );
         }
 
-        return self::load($contents, $isHtml, $filename, $xinclude);
+        return self::load($contents, $isHtml, $filename, $xinclude, $strict);
     }
 
     /**
@@ -123,16 +89,23 @@ class PHPUnit_Util_XML
      * @param  boolean            $isHtml
      * @param  string             $filename
      * @param  boolean            $xinclude
+     * @param  boolean            $strict
      * @return DOMDocument
      * @since  Method available since Release 3.3.0
      * @author Mike Naberezny <mike@maintainable.com>
      * @author Derek DeVries <derek@maintainable.com>
      * @author Tobias Schlitt <toby@php.net>
      */
-    public static function load($actual, $isHtml = false, $filename = '', $xinclude = false)
+    public static function load($actual, $isHtml = false, $filename = '', $xinclude = false, $strict = false)
     {
         if ($actual instanceof DOMDocument) {
             return $actual;
+        }
+
+        // Required for XInclude on Windows.
+        if ($xinclude) {
+            $cwd = getcwd();
+            chdir(dirname($filename));
         }
 
         $document  = new DOMDocument;
@@ -141,15 +114,15 @@ class PHPUnit_Util_XML
         $message   = '';
         $reporting = error_reporting(0);
 
+        if ('' !== $filename) {
+            // Necessary for xinclude
+            $document->documentURI = $filename;
+        }
+
         if ($isHtml) {
             $loaded = $document->loadHTML($actual);
         } else {
             $loaded = $document->loadXML($actual);
-        }
-
-        if ('' !== $filename) {
-            // Necessary for xinclude
-            $document->documentURI = $filename;
         }
 
         if (!$isHtml && $xinclude) {
@@ -157,21 +130,24 @@ class PHPUnit_Util_XML
         }
 
         foreach (libxml_get_errors() as $error) {
-            $message .= $error->message;
+            $message .= "\n" . $error->message;
         }
 
         libxml_use_internal_errors($internal);
         error_reporting($reporting);
 
-        if ($loaded === false) {
-            if ($filename != '') {
-                throw new PHPUnit_Framework_Exception(
-                  sprintf(
-                    'Could not load "%s".%s',
+        if ($xinclude) {
+            chdir($cwd);
+        }
 
-                    $filename,
-                    $message != '' ? "\n" . $message : ''
-                  )
+        if ($loaded === false || ($strict && $message !== '')) {
+            if ($filename !== '') {
+                throw new PHPUnit_Framework_Exception(
+                    sprintf(
+                        'Could not load "%s".%s',
+                        $filename,
+                        $message != '' ? "\n" . $message : ''
+                    )
                 );
             } else {
                 throw new PHPUnit_Framework_Exception($message);
@@ -245,7 +221,7 @@ class PHPUnit_Util_XML
                         $variable[] = $value;
                     }
                 }
-            }
+                }
             break;
 
             case 'object': {
@@ -266,12 +242,12 @@ class PHPUnit_Util_XML
                 } else {
                     $variable = new $className;
                 }
-            }
+                }
             break;
 
             case 'boolean': {
                 $variable = $element->nodeValue == 'true' ? true : false;
-            }
+                }
             break;
 
             case 'integer':
@@ -280,7 +256,7 @@ class PHPUnit_Util_XML
                 $variable = $element->nodeValue;
 
                 settype($variable, $element->tagName);
-            }
+                }
             break;
         }
 
@@ -319,7 +295,7 @@ class PHPUnit_Util_XML
 
         if (!empty($unknown)) {
             throw new PHPUnit_Framework_Exception(
-              'Unknown key(s): ' . implode(', ', $unknown)
+                'Unknown key(s): ' . implode(', ', $unknown)
             );
         }
 
@@ -351,7 +327,7 @@ class PHPUnit_Util_XML
         // substitute spaces within attribute value
         while (preg_match('/\[[^\]]+"[^"]+\s[^"]+"\]/', $selector)) {
             $selector = preg_replace(
-              '/(\[[^\]]+"[^"]+)\s([^"]+"\])/', "$1__SPACE__$2", $selector
+                '/(\[[^\]]+"[^"]+)\s([^"]+"\])/', "$1__SPACE__$2", $selector
             );
         }
 
@@ -390,7 +366,7 @@ class PHPUnit_Util_XML
             // match attributes (\[[^\]]*\]*), ids (#[^\.#\[]*),
             // and classes (\.[^\.#\[]*))
             preg_match_all(
-              "/(\[[^\]]*\]*|#[^\.#\[]*|\.[^\.#\[]*)/", $element, $matches
+                "/(\[[^\]]*\]*|#[^\.#\[]*|\.[^\.#\[]*)/", $element, $matches
             );
 
             if (!empty($matches[1])) {
@@ -401,15 +377,11 @@ class PHPUnit_Util_XML
                     // id matched
                     if (substr($match, 0, 1) == '#') {
                         $tag['id'] = substr($match, 1);
-                    }
-
-                    // class matched
-                    else if (substr($match, 0, 1) == '.') {
+                    } // class matched
+                    elseif (substr($match, 0, 1) == '.') {
                         $classes[] = substr($match, 1);
-                    }
-
-                    // attribute matched
-                    else if (substr($match, 0, 1) == '[' &&
+                    } // attribute matched
+                    elseif (substr($match, 0, 1) == '[' &&
                              substr($match, -1, 1) == ']') {
                         $attribute = substr($match, 1, strlen($match) - 2);
                         $attribute = str_replace('"', '', $attribute);
@@ -418,15 +390,11 @@ class PHPUnit_Util_XML
                         if (strstr($attribute, '~=')) {
                             list($key, $value) = explode('~=', $attribute);
                             $value             = "regexp:/.*\b$value\b.*/";
-                        }
-
-                        // match substring
-                        else if (strstr($attribute, '*=')) {
+                        } // match substring
+                        elseif (strstr($attribute, '*=')) {
                             list($key, $value) = explode('*=', $attribute);
                             $value             = "regexp:/.*$value.*/";
-                        }
-
-                        // exact match
+                        } // exact match
                         else {
                             list($key, $value) = explode('=', $attribute);
                         }
@@ -531,7 +499,7 @@ class PHPUnit_Util_XML
         if ($options['tag']) {
             if ($isHtml) {
                 $elements = self::getElementsByCaseInsensitiveTagName(
-                  $dom, $options['tag']
+                    $dom, $options['tag']
                 );
             } else {
                 $elements = $dom->getElementsByTagName($options['tag']);
@@ -544,9 +512,7 @@ class PHPUnit_Util_XML
             if (empty($nodes)) {
                 return false;
             }
-        }
-
-        // no tag selected, get them all
+        } // no tag selected, get them all
         else {
             $tags = array(
               'a', 'abbr', 'acronym', 'address', 'area', 'b', 'base', 'bdo',
@@ -571,7 +537,7 @@ class PHPUnit_Util_XML
             foreach ($tags as $tag) {
                 if ($isHtml) {
                     $elements = self::getElementsByCaseInsensitiveTagName(
-                      $dom, $tag
+                        $dom, $tag
                     );
                 } else {
                     $elements = $dom->getElementsByTagName($tag);
@@ -598,18 +564,16 @@ class PHPUnit_Util_XML
                         if (!preg_match($matches[1], $node->getAttribute($name))) {
                             $invalid = true;
                         }
-                    }
-
-                    // class can match only a part
-                    else if ($name == 'class') {
+                    } // class can match only a part
+                    elseif ($name == 'class') {
                         // split to individual classes
                         $findClasses = explode(
-                          ' ', preg_replace("/\s+/", " ", $value)
+                            ' ', preg_replace("/\s+/", " ", $value)
                         );
 
                         $allClasses = explode(
-                          ' ',
-                          preg_replace("/\s+/", " ", $node->getAttribute($name))
+                            ' ',
+                            preg_replace("/\s+/", " ", $node->getAttribute($name))
                         );
 
                         // make sure each class given is in the actual node
@@ -618,9 +582,7 @@ class PHPUnit_Util_XML
                                 $invalid = true;
                             }
                         }
-                    }
-
-                    // match by exact string
+                    } // match by exact string
                     else {
                         if ($node->getAttribute($name) != $value) {
                             $invalid = true;
@@ -652,17 +614,13 @@ class PHPUnit_Util_XML
                     if (!preg_match($matches[1], self::getNodeText($node))) {
                         $invalid = true;
                     }
-                }
-
-                // match empty string
-                else if ($options['content'] === '') {
+                } // match empty string
+                elseif ($options['content'] === '') {
                     if (self::getNodeText($node) !== '') {
                         $invalid = true;
                     }
-                }
-
-                // match by exact string
-                else if (strstr(self::getNodeText($node), $options['content']) === false) {
+                } // match by exact string
+                elseif (strstr(self::getNodeText($node), $options['content']) === false) {
                     $invalid = true;
                 }
 
@@ -807,8 +765,8 @@ class PHPUnit_Util_XML
         if ($options['children']) {
             $validChild   = array('count', 'greater_than', 'less_than', 'only');
             $childOptions = self::assertValidKeys(
-                              $options['children'], $validChild
-                            );
+                $options['children'], $validChild
+            );
 
             foreach ($nodes as $node) {
                 $childNodes = $node->childNodes;
@@ -827,26 +785,20 @@ class PHPUnit_Util_XML
                         if (count($children) !== $childOptions['count']) {
                             break;
                         }
-                    }
-
-                    // range count of children
-                    else if ($childOptions['less_than']    !== null &&
+                    } // range count of children
+                    elseif ($childOptions['less_than']    !== null &&
                             $childOptions['greater_than'] !== null) {
                         if (count($children) >= $childOptions['less_than'] ||
                             count($children) <= $childOptions['greater_than']) {
                             break;
                         }
-                    }
-
-                    // less than a given count
-                    else if ($childOptions['less_than'] !== null) {
+                    } // less than a given count
+                    elseif ($childOptions['less_than'] !== null) {
                         if (count($children) >= $childOptions['less_than']) {
                             break;
                         }
-                    }
-
-                    // more than a given count
-                    else if ($childOptions['greater_than'] !== null) {
+                    } // more than a given count
+                    elseif ($childOptions['greater_than'] !== null) {
                         if (count($children) <= $childOptions['greater_than']) {
                             break;
                         }
@@ -855,7 +807,7 @@ class PHPUnit_Util_XML
                     // match each child against a specific tag
                     if ($childOptions['only']) {
                         $onlyNodes = self::findNodes(
-                          $dom, $childOptions['only'], $isHtml
+                            $dom, $childOptions['only'], $isHtml
                         );
 
                         // try to match each child to one of the 'only' nodes

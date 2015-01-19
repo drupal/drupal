@@ -10,14 +10,21 @@ php:
   - hhvm-nightly
 
 matrix:
-    allow_failures:
-        - php: hhvm
+  allow_failures:
+    - php: hhvm
+    - php: hhvm-nightly
 
-before_script:
-  - composer self-update
-  - composer install --no-interaction --prefer-source --dev
+install:
+  - travis_retry composer install --no-interaction --prefer-source
+  - if [[ "$TRAVIS_PHP_VERSION" == hhvm* ]]; then echo -e '\nhhvm.libxml.ext_entity_whitelist = "file"' | sudo tee -a /etc/hhvm/php.ini; fi
 
-script: ./phpunit --configuration ./build/travis-ci.xml
+script:
+  - ./phpunit
+  - ./phpunit --configuration ./build/travis-ci-fail.xml > /dev/null; if [ $? -eq 0 ]; then echo "SHOULD FAIL"; exit 1; else echo "fail checked"; fi;
+  - xmllint --noout --schema phpunit.xsd phpunit.xml.dist
+  - xmllint --noout --schema phpunit.xsd tests/_files/configuration.xml
+  - xmllint --noout --schema phpunit.xsd tests/_files/configuration_empty.xml
+  - xmllint --noout --schema phpunit.xsd tests/_files/configuration_xinclude.xml -xinclude
 
 notifications:
   email: false

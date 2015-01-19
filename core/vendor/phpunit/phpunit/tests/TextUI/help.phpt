@@ -47,6 +47,7 @@ Test Execution Options:
   --strict-coverage         Be strict about unintentionally covered code.
   --disallow-test-output    Be strict about output during tests.
   --enforce-time-limit      Enforce time limit based on test size.
+  --disallow-todo-tests     Disallow @todo-annotated tests.
   --strict                  Run tests in strict mode (enables all of the above).
 
   --process-isolation       Run each test in a separate PHP process.
@@ -67,7 +68,7 @@ Test Execution Options:
   --repeat <times>          Runs the test(s) repeatedly.
   --tap                     Report test execution progress in TAP format.
   --testdox                 Report test execution progress in TestDox format.
-  --printer <printer>       TestSuiteListener implementation to use.
+  --printer <printer>       TestListener implementation to use.
 
 Configuration Options:
 

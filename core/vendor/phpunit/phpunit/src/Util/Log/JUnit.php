@@ -1,46 +1,11 @@
 <?php
-/**
- * PHPUnit
+/*
+ * This file is part of PHPUnit.
  *
- * Copyright (c) 2001-2014, Sebastian Bergmann <sebastian@phpunit.de>.
- * All rights reserved.
+ * (c) Sebastian Bergmann <sebastian@phpunit.de>
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- *   * Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *
- *   * Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in
- *     the documentation and/or other materials provided with the
- *     distribution.
- *
- *   * Neither the name of Sebastian Bergmann nor the names of his
- *     contributors may be used to endorse or promote products derived
- *     from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * @package    PHPUnit
- * @subpackage Util_Log
- * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2001-2014 Sebastian Bergmann <sebastian@phpunit.de>
- * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
- * @link       http://www.phpunit.de/
- * @since      File available since Release 2.3.0
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 /**
@@ -51,7 +16,7 @@
  * @package    PHPUnit
  * @subpackage Util_Log
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2001-2014 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
  * @link       http://www.phpunit.de/
  * @since      Class available since Release 2.1.0
@@ -176,7 +141,7 @@ class PHPUnit_Util_Log_JUnit extends PHPUnit_Util_Printer implements PHPUnit_Fra
                        PHPUnit_Util_Filter::getFilteredStacktrace($e);
 
             $error = $this->document->createElement(
-              'error', PHPUnit_Util_XML::prepareString($buffer)
+                'error', PHPUnit_Util_XML::prepareString($buffer)
             );
 
             $error->setAttribute('type', get_class($e));
@@ -209,7 +174,7 @@ class PHPUnit_Util_Log_JUnit extends PHPUnit_Util_Printer implements PHPUnit_Fra
                            PHPUnit_Util_Filter::getFilteredStacktrace($e);
 
                 $failure = $this->document->createElement(
-                  'failure', PHPUnit_Util_XML::prepareString($buffer)
+                    'failure', PHPUnit_Util_XML::prepareString($buffer)
                 );
 
                 $failure->setAttribute('type', get_class($e));
@@ -232,11 +197,11 @@ class PHPUnit_Util_Log_JUnit extends PHPUnit_Util_Printer implements PHPUnit_Fra
     {
         if ($this->logIncompleteSkipped && $this->currentTestCase !== null) {
             $error = $this->document->createElement(
-              'error',
-              PHPUnit_Util_XML::prepareString(
-                "Incomplete Test\n" .
-                PHPUnit_Util_Filter::getFilteredStacktrace($e)
-              )
+                'error',
+                PHPUnit_Util_XML::prepareString(
+                    "Incomplete Test\n" .
+                    PHPUnit_Util_Filter::getFilteredStacktrace($e)
+                )
             );
 
             $error->setAttribute('type', get_class($e));
@@ -261,11 +226,11 @@ class PHPUnit_Util_Log_JUnit extends PHPUnit_Util_Printer implements PHPUnit_Fra
     {
         if ($this->logIncompleteSkipped && $this->currentTestCase !== null) {
             $error = $this->document->createElement(
-              'error',
-              PHPUnit_Util_XML::prepareString(
-                "Risky Test\n" .
-                PHPUnit_Util_Filter::getFilteredStacktrace($e)
-              )
+                'error',
+                PHPUnit_Util_XML::prepareString(
+                    "Risky Test\n" .
+                    PHPUnit_Util_Filter::getFilteredStacktrace($e)
+                )
             );
 
             $error->setAttribute('type', get_class($e));
@@ -290,11 +255,11 @@ class PHPUnit_Util_Log_JUnit extends PHPUnit_Util_Printer implements PHPUnit_Fra
     {
         if ($this->logIncompleteSkipped && $this->currentTestCase !== null) {
             $error = $this->document->createElement(
-              'error',
-              PHPUnit_Util_XML::prepareString(
-                "Skipped Test\n" .
-                PHPUnit_Util_Filter::getFilteredStacktrace($e)
-              )
+                'error',
+                PHPUnit_Util_XML::prepareString(
+                    "Skipped Test\n" .
+                    PHPUnit_Util_Filter::getFilteredStacktrace($e)
+                )
             );
 
             $error->setAttribute('type', get_class($e));
@@ -351,23 +316,23 @@ class PHPUnit_Util_Log_JUnit extends PHPUnit_Util_Printer implements PHPUnit_Fra
     public function endTestSuite(PHPUnit_Framework_TestSuite $suite)
     {
         $this->testSuites[$this->testSuiteLevel]->setAttribute(
-          'tests', $this->testSuiteTests[$this->testSuiteLevel]
+            'tests', $this->testSuiteTests[$this->testSuiteLevel]
         );
 
         $this->testSuites[$this->testSuiteLevel]->setAttribute(
-          'assertions', $this->testSuiteAssertions[$this->testSuiteLevel]
+            'assertions', $this->testSuiteAssertions[$this->testSuiteLevel]
         );
 
         $this->testSuites[$this->testSuiteLevel]->setAttribute(
-          'failures', $this->testSuiteFailures[$this->testSuiteLevel]
+            'failures', $this->testSuiteFailures[$this->testSuiteLevel]
         );
 
         $this->testSuites[$this->testSuiteLevel]->setAttribute(
-          'errors', $this->testSuiteErrors[$this->testSuiteLevel]
+            'errors', $this->testSuiteErrors[$this->testSuiteLevel]
         );
 
         $this->testSuites[$this->testSuiteLevel]->setAttribute(
-          'time', sprintf('%F', $this->testSuiteTimes[$this->testSuiteLevel])
+            'time', sprintf('%F', $this->testSuiteTimes[$this->testSuiteLevel])
         );
 
         if ($this->testSuiteLevel > 1) {
@@ -424,16 +389,16 @@ class PHPUnit_Util_Log_JUnit extends PHPUnit_Util_Printer implements PHPUnit_Fra
                     $this->testSuiteAssertions[$this->testSuiteLevel] += $numAssertions;
 
                     $this->currentTestCase->setAttribute(
-                      'assertions', $numAssertions
+                        'assertions', $numAssertions
                     );
                 }
 
                 $this->currentTestCase->setAttribute(
-                  'time', sprintf('%F', $time)
+                    'time', sprintf('%F', $time)
                 );
 
                 $this->testSuites[$this->testSuiteLevel]->appendChild(
-                  $this->currentTestCase
+                    $this->currentTestCase
                 );
 
                 $this->testSuiteTests[$this->testSuiteLevel]++;
@@ -442,7 +407,7 @@ class PHPUnit_Util_Log_JUnit extends PHPUnit_Util_Printer implements PHPUnit_Fra
                 if (method_exists($test, 'hasOutput') && $test->hasOutput()) {
                     $systemOut = $this->document->createElement('system-out');
                     $systemOut->appendChild(
-                      $this->document->createTextNode($test->getActualOutput())
+                        $this->document->createTextNode($test->getActualOutput())
                     );
                     $this->currentTestCase->appendChild($systemOut);
                 }

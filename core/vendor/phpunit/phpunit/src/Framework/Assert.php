@@ -1,46 +1,11 @@
 <?php
-/**
- * PHPUnit
+/*
+ * This file is part of PHPUnit.
  *
- * Copyright (c) 2001-2014, Sebastian Bergmann <sebastian@phpunit.de>.
- * All rights reserved.
+ * (c) Sebastian Bergmann <sebastian@phpunit.de>
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- *   * Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *
- *   * Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in
- *     the documentation and/or other materials provided with the
- *     distribution.
- *
- *   * Neither the name of Sebastian Bergmann nor the names of his
- *     contributors may be used to endorse or promote products derived
- *     from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * @package    PHPUnit
- * @subpackage Framework
- * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2001-2014 Sebastian Bergmann <sebastian@phpunit.de>
- * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
- * @link       http://www.phpunit.de/
- * @since      File available since Release 2.0.0
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 /**
@@ -49,7 +14,7 @@
  * @package    PHPUnit
  * @subpackage Framework
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2001-2014 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
  * @link       http://www.phpunit.de/
  * @since      Class available since Release 2.0.0
@@ -67,23 +32,53 @@ abstract class PHPUnit_Framework_Assert
      * @param mixed             $key
      * @param array|ArrayAccess $array
      * @param string            $message
-     * @since  Method available since Release 3.0.0
+     * @since Method available since Release 3.0.0
      */
     public static function assertArrayHasKey($key, $array, $message = '')
     {
         if (!(is_integer($key) || is_string($key))) {
             throw PHPUnit_Util_InvalidArgumentHelper::factory(
-              1, 'integer or string'
+                1,
+                'integer or string'
             );
         }
 
         if (!(is_array($array) || $array instanceof ArrayAccess)) {
             throw PHPUnit_Util_InvalidArgumentHelper::factory(
-              2, 'array or ArrayAccess'
+                2,
+                'array or ArrayAccess'
             );
         }
 
         $constraint = new PHPUnit_Framework_Constraint_ArrayHasKey($key);
+
+        self::assertThat($array, $constraint, $message);
+    }
+
+    /**
+     * Asserts that an array has a specified subset.
+     *
+     * @param array|ArrayAccess  $subset
+     * @param array|ArrayAccess  $array
+     * @param boolean            $strict  Check for object identity
+     * @param string             $message
+     * @since Method available since Release 4.4.0
+     */
+    public static function assertArraySubset($subset, $array, $strict = false, $message = '')
+    {
+        if (!is_array($subset)) {
+            throw PHPUnit_Util_InvalidArgumentHelper::factory(
+                1, 'array or ArrayAccess'
+            );
+        }
+
+        if (!is_array($array)) {
+            throw PHPUnit_Util_InvalidArgumentHelper::factory(
+                2, 'array or ArrayAccess'
+            );
+        }
+
+        $constraint = new PHPUnit_Framework_Constraint_ArraySubset($subset, $strict);
 
         self::assertThat($array, $constraint, $message);
     }
@@ -100,18 +95,20 @@ abstract class PHPUnit_Framework_Assert
     {
         if (!(is_integer($key) || is_string($key))) {
             throw PHPUnit_Util_InvalidArgumentHelper::factory(
-              1, 'integer or string'
+                1,
+                'integer or string'
             );
         }
 
         if (!(is_array($array) || $array instanceof ArrayAccess)) {
             throw PHPUnit_Util_InvalidArgumentHelper::factory(
-              2, 'array or ArrayAccess'
+                2,
+                'array or ArrayAccess'
             );
         }
 
         $constraint = new PHPUnit_Framework_Constraint_Not(
-          new PHPUnit_Framework_Constraint_ArrayHasKey($key)
+            new PHPUnit_Framework_Constraint_ArrayHasKey($key)
         );
 
         self::assertThat($array, $constraint, $message);
@@ -133,15 +130,19 @@ abstract class PHPUnit_Framework_Assert
         if (is_array($haystack) ||
             is_object($haystack) && $haystack instanceof Traversable) {
             $constraint = new PHPUnit_Framework_Constraint_TraversableContains(
-              $needle, $checkForObjectIdentity, $checkForNonObjectIdentity
+                $needle,
+                $checkForObjectIdentity,
+                $checkForNonObjectIdentity
             );
         } elseif (is_string($haystack)) {
             $constraint = new PHPUnit_Framework_Constraint_StringContains(
-              $needle, $ignoreCase
+                $needle,
+                $ignoreCase
             );
         } else {
             throw PHPUnit_Util_InvalidArgumentHelper::factory(
-              2, 'array, traversable or string'
+                2,
+                'array, traversable or string'
             );
         }
 
@@ -164,12 +165,12 @@ abstract class PHPUnit_Framework_Assert
     public static function assertAttributeContains($needle, $haystackAttributeName, $haystackClassOrObject, $message = '', $ignoreCase = false, $checkForObjectIdentity = true, $checkForNonObjectIdentity = false)
     {
         self::assertContains(
-          $needle,
-          self::readAttribute($haystackClassOrObject, $haystackAttributeName),
-          $message,
-          $ignoreCase,
-          $checkForObjectIdentity,
-          $checkForNonObjectIdentity
+            $needle,
+            self::readAttribute($haystackClassOrObject, $haystackAttributeName),
+            $message,
+            $ignoreCase,
+            $checkForObjectIdentity,
+            $checkForNonObjectIdentity
         );
     }
 
@@ -189,19 +190,23 @@ abstract class PHPUnit_Framework_Assert
         if (is_array($haystack) ||
             is_object($haystack) && $haystack instanceof Traversable) {
             $constraint = new PHPUnit_Framework_Constraint_Not(
-              new PHPUnit_Framework_Constraint_TraversableContains(
-                $needle, $checkForObjectIdentity, $checkForNonObjectIdentity
-              )
+                new PHPUnit_Framework_Constraint_TraversableContains(
+                    $needle,
+                    $checkForObjectIdentity,
+                    $checkForNonObjectIdentity
+                )
             );
         } elseif (is_string($haystack)) {
             $constraint = new PHPUnit_Framework_Constraint_Not(
-              new PHPUnit_Framework_Constraint_StringContains(
-                $needle, $ignoreCase
-              )
+                new PHPUnit_Framework_Constraint_StringContains(
+                    $needle,
+                    $ignoreCase
+                )
             );
         } else {
             throw PHPUnit_Util_InvalidArgumentHelper::factory(
-              2, 'array, traversable or string'
+                2,
+                'array, traversable or string'
             );
         }
 
@@ -224,12 +229,12 @@ abstract class PHPUnit_Framework_Assert
     public static function assertAttributeNotContains($needle, $haystackAttributeName, $haystackClassOrObject, $message = '', $ignoreCase = false, $checkForObjectIdentity = true, $checkForNonObjectIdentity = false)
     {
         self::assertNotContains(
-          $needle,
-          self::readAttribute($haystackClassOrObject, $haystackAttributeName),
-          $message,
-          $ignoreCase,
-          $checkForObjectIdentity,
-          $checkForNonObjectIdentity
+            $needle,
+            self::readAttribute($haystackClassOrObject, $haystackAttributeName),
+            $message,
+            $ignoreCase,
+            $checkForObjectIdentity,
+            $checkForNonObjectIdentity
         );
     }
 
@@ -247,7 +252,8 @@ abstract class PHPUnit_Framework_Assert
         if (!(is_array($haystack) ||
             is_object($haystack) && $haystack instanceof Traversable)) {
             throw PHPUnit_Util_InvalidArgumentHelper::factory(
-              2, 'array or traversable'
+                2,
+                'array or traversable'
             );
         }
 
@@ -256,11 +262,12 @@ abstract class PHPUnit_Framework_Assert
         }
 
         self::assertThat(
-          $haystack,
-          new PHPUnit_Framework_Constraint_TraversableContainsOnly(
-            $type, $isNativeType
-          ),
-          $message
+            $haystack,
+            new PHPUnit_Framework_Constraint_TraversableContainsOnly(
+                $type,
+                $isNativeType
+            ),
+            $message
         );
     }
 
@@ -276,14 +283,16 @@ abstract class PHPUnit_Framework_Assert
         if (!(is_array($haystack) ||
             is_object($haystack) && $haystack instanceof Traversable)) {
             throw PHPUnit_Util_InvalidArgumentHelper::factory(
-              2, 'array or traversable'
+                2,
+                'array or traversable'
             );
         }
 
         self::assertThat(
             $haystack,
             new PHPUnit_Framework_Constraint_TraversableContainsOnly(
-                $classname, false
+                $classname,
+                false
             ),
             $message
         );
@@ -303,10 +312,10 @@ abstract class PHPUnit_Framework_Assert
     public static function assertAttributeContainsOnly($type, $haystackAttributeName, $haystackClassOrObject, $isNativeType = null, $message = '')
     {
         self::assertContainsOnly(
-          $type,
-          self::readAttribute($haystackClassOrObject, $haystackAttributeName),
-          $isNativeType,
-          $message
+            $type,
+            self::readAttribute($haystackClassOrObject, $haystackAttributeName),
+            $isNativeType,
+            $message
         );
     }
 
@@ -324,7 +333,8 @@ abstract class PHPUnit_Framework_Assert
         if (!(is_array($haystack) ||
             is_object($haystack) && $haystack instanceof Traversable)) {
             throw PHPUnit_Util_InvalidArgumentHelper::factory(
-              2, 'array or traversable'
+                2,
+                'array or traversable'
             );
         }
 
@@ -333,13 +343,14 @@ abstract class PHPUnit_Framework_Assert
         }
 
         self::assertThat(
-          $haystack,
-          new PHPUnit_Framework_Constraint_Not(
-            new PHPUnit_Framework_Constraint_TraversableContainsOnly(
-              $type, $isNativeType
-            )
-          ),
-          $message
+            $haystack,
+            new PHPUnit_Framework_Constraint_Not(
+                new PHPUnit_Framework_Constraint_TraversableContainsOnly(
+                    $type,
+                    $isNativeType
+                )
+            ),
+            $message
         );
     }
 
@@ -358,10 +369,10 @@ abstract class PHPUnit_Framework_Assert
     public static function assertAttributeNotContainsOnly($type, $haystackAttributeName, $haystackClassOrObject, $isNativeType = null, $message = '')
     {
         self::assertNotContainsOnly(
-          $type,
-          self::readAttribute($haystackClassOrObject, $haystackAttributeName),
-          $isNativeType,
-          $message
+            $type,
+            self::readAttribute($haystackClassOrObject, $haystackAttributeName),
+            $isNativeType,
+            $message
         );
     }
 
@@ -385,9 +396,9 @@ abstract class PHPUnit_Framework_Assert
         }
 
         self::assertThat(
-          $haystack,
-          new PHPUnit_Framework_Constraint_Count($expectedCount),
-          $message
+            $haystack,
+            new PHPUnit_Framework_Constraint_Count($expectedCount),
+            $message
         );
     }
 
@@ -404,9 +415,9 @@ abstract class PHPUnit_Framework_Assert
     public static function assertAttributeCount($expectedCount, $haystackAttributeName, $haystackClassOrObject, $message = '')
     {
         self::assertCount(
-          $expectedCount,
-          self::readAttribute($haystackClassOrObject, $haystackAttributeName),
-          $message
+            $expectedCount,
+            self::readAttribute($haystackClassOrObject, $haystackAttributeName),
+            $message
         );
     }
 
@@ -430,7 +441,7 @@ abstract class PHPUnit_Framework_Assert
         }
 
         $constraint = new PHPUnit_Framework_Constraint_Not(
-          new PHPUnit_Framework_Constraint_Count($expectedCount)
+            new PHPUnit_Framework_Constraint_Count($expectedCount)
         );
 
         self::assertThat($haystack, $constraint, $message);
@@ -449,9 +460,9 @@ abstract class PHPUnit_Framework_Assert
     public static function assertAttributeNotCount($expectedCount, $haystackAttributeName, $haystackClassOrObject, $message = '')
     {
         self::assertNotCount(
-          $expectedCount,
-          self::readAttribute($haystackClassOrObject, $haystackAttributeName),
-          $message
+            $expectedCount,
+            self::readAttribute($haystackClassOrObject, $haystackAttributeName),
+            $message
         );
     }
 
@@ -469,7 +480,11 @@ abstract class PHPUnit_Framework_Assert
     public static function assertEquals($expected, $actual, $message = '', $delta = 0.0, $maxDepth = 10, $canonicalize = false, $ignoreCase = false)
     {
         $constraint = new PHPUnit_Framework_Constraint_IsEqual(
-          $expected, $delta, $maxDepth, $canonicalize, $ignoreCase
+            $expected,
+            $delta,
+            $maxDepth,
+            $canonicalize,
+            $ignoreCase
         );
 
         self::assertThat($actual, $constraint, $message);
@@ -490,13 +505,13 @@ abstract class PHPUnit_Framework_Assert
     public static function assertAttributeEquals($expected, $actualAttributeName, $actualClassOrObject, $message = '', $delta = 0.0, $maxDepth = 10, $canonicalize = false, $ignoreCase = false)
     {
         self::assertEquals(
-          $expected,
-          self::readAttribute($actualClassOrObject, $actualAttributeName),
-          $message,
-          $delta,
-          $maxDepth,
-          $canonicalize,
-          $ignoreCase
+            $expected,
+            self::readAttribute($actualClassOrObject, $actualAttributeName),
+            $message,
+            $delta,
+            $maxDepth,
+            $canonicalize,
+            $ignoreCase
         );
     }
 
@@ -515,9 +530,13 @@ abstract class PHPUnit_Framework_Assert
     public static function assertNotEquals($expected, $actual, $message = '', $delta = 0.0, $maxDepth = 10, $canonicalize = false, $ignoreCase = false)
     {
         $constraint = new PHPUnit_Framework_Constraint_Not(
-          new PHPUnit_Framework_Constraint_IsEqual(
-            $expected, $delta, $maxDepth, $canonicalize, $ignoreCase
-          )
+            new PHPUnit_Framework_Constraint_IsEqual(
+                $expected,
+                $delta,
+                $maxDepth,
+                $canonicalize,
+                $ignoreCase
+            )
         );
 
         self::assertThat($actual, $constraint, $message);
@@ -538,13 +557,13 @@ abstract class PHPUnit_Framework_Assert
     public static function assertAttributeNotEquals($expected, $actualAttributeName, $actualClassOrObject, $message = '', $delta = 0.0, $maxDepth = 10, $canonicalize = false, $ignoreCase = false)
     {
         self::assertNotEquals(
-          $expected,
-          self::readAttribute($actualClassOrObject, $actualAttributeName),
-          $message,
-          $delta,
-          $maxDepth,
-          $canonicalize,
-          $ignoreCase
+            $expected,
+            self::readAttribute($actualClassOrObject, $actualAttributeName),
+            $message,
+            $delta,
+            $maxDepth,
+            $canonicalize,
+            $ignoreCase
         );
     }
 
@@ -572,8 +591,8 @@ abstract class PHPUnit_Framework_Assert
     public static function assertAttributeEmpty($haystackAttributeName, $haystackClassOrObject, $message = '')
     {
         self::assertEmpty(
-          self::readAttribute($haystackClassOrObject, $haystackAttributeName),
-          $message
+            self::readAttribute($haystackClassOrObject, $haystackAttributeName),
+            $message
         );
     }
 
@@ -601,8 +620,8 @@ abstract class PHPUnit_Framework_Assert
     public static function assertAttributeNotEmpty($haystackAttributeName, $haystackClassOrObject, $message = '')
     {
         self::assertNotEmpty(
-          self::readAttribute($haystackClassOrObject, $haystackAttributeName),
-          $message
+            self::readAttribute($haystackClassOrObject, $haystackAttributeName),
+            $message
         );
     }
 
@@ -631,9 +650,9 @@ abstract class PHPUnit_Framework_Assert
     public static function assertAttributeGreaterThan($expected, $actualAttributeName, $actualClassOrObject, $message = '')
     {
         self::assertGreaterThan(
-          $expected,
-          self::readAttribute($actualClassOrObject, $actualAttributeName),
-          $message
+            $expected,
+            self::readAttribute($actualClassOrObject, $actualAttributeName),
+            $message
         );
     }
 
@@ -648,7 +667,9 @@ abstract class PHPUnit_Framework_Assert
     public static function assertGreaterThanOrEqual($expected, $actual, $message = '')
     {
         self::assertThat(
-          $actual, self::greaterThanOrEqual($expected), $message
+            $actual,
+            self::greaterThanOrEqual($expected),
+            $message
         );
     }
 
@@ -664,9 +685,9 @@ abstract class PHPUnit_Framework_Assert
     public static function assertAttributeGreaterThanOrEqual($expected, $actualAttributeName, $actualClassOrObject, $message = '')
     {
         self::assertGreaterThanOrEqual(
-          $expected,
-          self::readAttribute($actualClassOrObject, $actualAttributeName),
-          $message
+            $expected,
+            self::readAttribute($actualClassOrObject, $actualAttributeName),
+            $message
         );
     }
 
@@ -695,9 +716,9 @@ abstract class PHPUnit_Framework_Assert
     public static function assertAttributeLessThan($expected, $actualAttributeName, $actualClassOrObject, $message = '')
     {
         self::assertLessThan(
-          $expected,
-          self::readAttribute($actualClassOrObject, $actualAttributeName),
-          $message
+            $expected,
+            self::readAttribute($actualClassOrObject, $actualAttributeName),
+            $message
         );
     }
 
@@ -726,9 +747,9 @@ abstract class PHPUnit_Framework_Assert
     public static function assertAttributeLessThanOrEqual($expected, $actualAttributeName, $actualClassOrObject, $message = '')
     {
         self::assertLessThanOrEqual(
-          $expected,
-          self::readAttribute($actualClassOrObject, $actualAttributeName),
-          $message
+            $expected,
+            self::readAttribute($actualClassOrObject, $actualAttributeName),
+            $message
         );
     }
 
@@ -749,13 +770,13 @@ abstract class PHPUnit_Framework_Assert
         self::assertFileExists($actual, $message);
 
         self::assertEquals(
-          file_get_contents($expected),
-          file_get_contents($actual),
-          $message,
-          0,
-          10,
-          $canonicalize,
-          $ignoreCase
+            file_get_contents($expected),
+            file_get_contents($actual),
+            $message,
+            0,
+            10,
+            $canonicalize,
+            $ignoreCase
         );
     }
 
@@ -776,13 +797,13 @@ abstract class PHPUnit_Framework_Assert
         self::assertFileExists($actual, $message);
 
         self::assertNotEquals(
-          file_get_contents($expected),
-          file_get_contents($actual),
-          $message,
-          0,
-          10,
-          $canonicalize,
-          $ignoreCase
+            file_get_contents($expected),
+            file_get_contents($actual),
+            $message,
+            0,
+            10,
+            $canonicalize,
+            $ignoreCase
         );
     }
 
@@ -802,13 +823,13 @@ abstract class PHPUnit_Framework_Assert
         self::assertFileExists($expectedFile, $message);
 
         self::assertEquals(
-          file_get_contents($expectedFile),
-          $actualString,
-          $message,
-          0,
-          10,
-          $canonicalize,
-          $ignoreCase
+            file_get_contents($expectedFile),
+            $actualString,
+            $message,
+            0,
+            10,
+            $canonicalize,
+            $ignoreCase
         );
     }
 
@@ -828,13 +849,13 @@ abstract class PHPUnit_Framework_Assert
         self::assertFileExists($expectedFile, $message);
 
         self::assertNotEquals(
-          file_get_contents($expectedFile),
-          $actualString,
-          $message,
-          0,
-          10,
-          $canonicalize,
-          $ignoreCase
+            file_get_contents($expectedFile),
+            $actualString,
+            $message,
+            0,
+            10,
+            $canonicalize,
+            $ignoreCase
         );
     }
 
@@ -870,7 +891,7 @@ abstract class PHPUnit_Framework_Assert
         }
 
         $constraint = new PHPUnit_Framework_Constraint_Not(
-          new PHPUnit_Framework_Constraint_FileExists
+            new PHPUnit_Framework_Constraint_FileExists
         );
 
         self::assertThat($filename, $constraint, $message);
@@ -969,7 +990,7 @@ abstract class PHPUnit_Framework_Assert
         }
 
         $constraint = new PHPUnit_Framework_Constraint_ClassHasAttribute(
-          $attributeName
+            $attributeName
         );
 
         self::assertThat($className, $constraint, $message);
@@ -998,7 +1019,7 @@ abstract class PHPUnit_Framework_Assert
         }
 
         $constraint = new PHPUnit_Framework_Constraint_Not(
-          new PHPUnit_Framework_Constraint_ClassHasAttribute($attributeName)
+            new PHPUnit_Framework_Constraint_ClassHasAttribute($attributeName)
         );
 
         self::assertThat($className, $constraint, $message);
@@ -1027,7 +1048,7 @@ abstract class PHPUnit_Framework_Assert
         }
 
         $constraint = new PHPUnit_Framework_Constraint_ClassHasStaticAttribute(
-          $attributeName
+            $attributeName
         );
 
         self::assertThat($className, $constraint, $message);
@@ -1056,9 +1077,9 @@ abstract class PHPUnit_Framework_Assert
         }
 
         $constraint = new PHPUnit_Framework_Constraint_Not(
-          new PHPUnit_Framework_Constraint_ClassHasStaticAttribute(
-            $attributeName
-          )
+            new PHPUnit_Framework_Constraint_ClassHasStaticAttribute(
+                $attributeName
+            )
         );
 
         self::assertThat($className, $constraint, $message);
@@ -1087,7 +1108,7 @@ abstract class PHPUnit_Framework_Assert
         }
 
         $constraint = new PHPUnit_Framework_Constraint_ObjectHasAttribute(
-          $attributeName
+            $attributeName
         );
 
         self::assertThat($object, $constraint, $message);
@@ -1116,7 +1137,7 @@ abstract class PHPUnit_Framework_Assert
         }
 
         $constraint = new PHPUnit_Framework_Constraint_Not(
-          new PHPUnit_Framework_Constraint_ObjectHasAttribute($attributeName)
+            new PHPUnit_Framework_Constraint_ObjectHasAttribute($attributeName)
         );
 
         self::assertThat($object, $constraint, $message);
@@ -1137,7 +1158,7 @@ abstract class PHPUnit_Framework_Assert
             self::assertEquals($expected, $actual, $message);
         } else {
             $constraint = new PHPUnit_Framework_Constraint_IsIdentical(
-              $expected
+                $expected
             );
 
             self::assertThat($actual, $constraint, $message);
@@ -1156,9 +1177,9 @@ abstract class PHPUnit_Framework_Assert
     public static function assertAttributeSame($expected, $actualAttributeName, $actualClassOrObject, $message = '')
     {
         self::assertSame(
-          $expected,
-          self::readAttribute($actualClassOrObject, $actualAttributeName),
-          $message
+            $expected,
+            self::readAttribute($actualClassOrObject, $actualAttributeName),
+            $message
         );
     }
 
@@ -1177,7 +1198,7 @@ abstract class PHPUnit_Framework_Assert
             self::assertNotEquals($expected, $actual, $message);
         } else {
             $constraint = new PHPUnit_Framework_Constraint_Not(
-              new PHPUnit_Framework_Constraint_IsIdentical($expected)
+                new PHPUnit_Framework_Constraint_IsIdentical($expected)
             );
 
             self::assertThat($actual, $constraint, $message);
@@ -1196,9 +1217,9 @@ abstract class PHPUnit_Framework_Assert
     public static function assertAttributeNotSame($expected, $actualAttributeName, $actualClassOrObject, $message = '')
     {
         self::assertNotSame(
-          $expected,
-          self::readAttribute($actualClassOrObject, $actualAttributeName),
-          $message
+            $expected,
+            self::readAttribute($actualClassOrObject, $actualAttributeName),
+            $message
         );
     }
 
@@ -1235,9 +1256,9 @@ abstract class PHPUnit_Framework_Assert
     public static function assertAttributeInstanceOf($expected, $attributeName, $classOrObject, $message = '')
     {
         self::assertInstanceOf(
-          $expected,
-          self::readAttribute($classOrObject, $attributeName),
-          $message
+            $expected,
+            self::readAttribute($classOrObject, $attributeName),
+            $message
         );
     }
 
@@ -1274,9 +1295,9 @@ abstract class PHPUnit_Framework_Assert
     public static function assertAttributeNotInstanceOf($expected, $attributeName, $classOrObject, $message = '')
     {
         self::assertNotInstanceOf(
-          $expected,
-          self::readAttribute($classOrObject, $attributeName),
-          $message
+            $expected,
+            self::readAttribute($classOrObject, $attributeName),
+            $message
         );
     }
 
@@ -1313,9 +1334,9 @@ abstract class PHPUnit_Framework_Assert
     public static function assertAttributeInternalType($expected, $attributeName, $classOrObject, $message = '')
     {
         self::assertInternalType(
-          $expected,
-          self::readAttribute($classOrObject, $attributeName),
-          $message
+            $expected,
+            self::readAttribute($classOrObject, $attributeName),
+            $message
         );
     }
 
@@ -1352,9 +1373,9 @@ abstract class PHPUnit_Framework_Assert
     public static function assertAttributeNotInternalType($expected, $attributeName, $classOrObject, $message = '')
     {
         self::assertNotInternalType(
-          $expected,
-          self::readAttribute($classOrObject, $attributeName),
-          $message
+            $expected,
+            self::readAttribute($classOrObject, $attributeName),
+            $message
         );
     }
 
@@ -1399,7 +1420,7 @@ abstract class PHPUnit_Framework_Assert
         }
 
         $constraint = new PHPUnit_Framework_Constraint_Not(
-          new PHPUnit_Framework_Constraint_PCREMatch($pattern)
+            new PHPUnit_Framework_Constraint_PCREMatch($pattern)
         );
 
         self::assertThat($string, $constraint, $message);
@@ -1428,9 +1449,9 @@ abstract class PHPUnit_Framework_Assert
         }
 
         self::assertThat(
-          $actual,
-          new PHPUnit_Framework_Constraint_SameSize($expected),
-          $message
+            $actual,
+            new PHPUnit_Framework_Constraint_SameSize($expected),
+            $message
         );
     }
 
@@ -1457,7 +1478,7 @@ abstract class PHPUnit_Framework_Assert
         }
 
         $constraint = new PHPUnit_Framework_Constraint_Not(
-          new PHPUnit_Framework_Constraint_SameSize($expected)
+            new PHPUnit_Framework_Constraint_SameSize($expected)
         );
 
         self::assertThat($actual, $constraint, $message);
@@ -1505,7 +1526,7 @@ abstract class PHPUnit_Framework_Assert
         }
 
         $constraint = new PHPUnit_Framework_Constraint_Not(
-          new PHPUnit_Framework_Constraint_StringMatches($format)
+            new PHPUnit_Framework_Constraint_StringMatches($format)
         );
 
         self::assertThat($string, $constraint, $message);
@@ -1528,7 +1549,7 @@ abstract class PHPUnit_Framework_Assert
         }
 
         $constraint = new PHPUnit_Framework_Constraint_StringMatches(
-          file_get_contents($formatFile)
+            file_get_contents($formatFile)
         );
 
         self::assertThat($string, $constraint, $message);
@@ -1551,9 +1572,9 @@ abstract class PHPUnit_Framework_Assert
         }
 
         $constraint = new PHPUnit_Framework_Constraint_Not(
-          new PHPUnit_Framework_Constraint_StringMatches(
-            file_get_contents($formatFile)
-          )
+            new PHPUnit_Framework_Constraint_StringMatches(
+                file_get_contents($formatFile)
+            )
         );
 
         self::assertThat($string, $constraint, $message);
@@ -1578,7 +1599,7 @@ abstract class PHPUnit_Framework_Assert
         }
 
         $constraint = new PHPUnit_Framework_Constraint_StringStartsWith(
-          $prefix
+            $prefix
         );
 
         self::assertThat($string, $constraint, $message);
@@ -1603,7 +1624,7 @@ abstract class PHPUnit_Framework_Assert
         }
 
         $constraint = new PHPUnit_Framework_Constraint_Not(
-          new PHPUnit_Framework_Constraint_StringStartsWith($prefix)
+            new PHPUnit_Framework_Constraint_StringStartsWith($prefix)
         );
 
         self::assertThat($string, $constraint, $message);
@@ -1651,7 +1672,7 @@ abstract class PHPUnit_Framework_Assert
         }
 
         $constraint = new PHPUnit_Framework_Constraint_Not(
-          new PHPUnit_Framework_Constraint_StringEndsWith($suffix)
+            new PHPUnit_Framework_Constraint_StringEndsWith($suffix)
         );
 
         self::assertThat($string, $constraint, $message);
@@ -1805,39 +1826,42 @@ abstract class PHPUnit_Framework_Assert
      */
     public static function assertEqualXMLStructure(DOMElement $expectedElement, DOMElement $actualElement, $checkAttributes = false, $message = '')
     {
+        $expectedElement = clone $expectedElement;
+        $actualElement   = clone $actualElement;
+
         self::assertEquals(
-          $expectedElement->tagName,
-          $actualElement->tagName,
-          $message
+            $expectedElement->tagName,
+            $actualElement->tagName,
+            $message
         );
 
         if ($checkAttributes) {
             self::assertEquals(
-              $expectedElement->attributes->length,
-              $actualElement->attributes->length,
-              sprintf(
-                '%s%sNumber of attributes on node "%s" does not match',
-                $message,
-                !empty($message) ? "\n" : '',
-                $expectedElement->tagName
-              )
+                $expectedElement->attributes->length,
+                $actualElement->attributes->length,
+                sprintf(
+                    '%s%sNumber of attributes on node "%s" does not match',
+                    $message,
+                    !empty($message) ? "\n" : '',
+                    $expectedElement->tagName
+                )
             );
 
-            for ($i = 0 ; $i < $expectedElement->attributes->length; $i++) {
+            for ($i = 0; $i < $expectedElement->attributes->length; $i++) {
                 $expectedAttribute = $expectedElement->attributes->item($i);
                 $actualAttribute   = $actualElement->attributes->getNamedItem(
-                  $expectedAttribute->name
+                    $expectedAttribute->name
                 );
 
                 if (!$actualAttribute) {
                     self::fail(
-                      sprintf(
-                        '%s%sCould not find attribute "%s" on node "%s"',
-                        $message,
-                        !empty($message) ? "\n" : '',
-                        $expectedAttribute->name,
-                        $expectedElement->tagName
-                      )
+                        sprintf(
+                            '%s%sCould not find attribute "%s" on node "%s"',
+                            $message,
+                            !empty($message) ? "\n" : '',
+                            $expectedAttribute->name,
+                            $expectedElement->tagName
+                        )
                     );
                 }
             }
@@ -1847,22 +1871,22 @@ abstract class PHPUnit_Framework_Assert
         PHPUnit_Util_XML::removeCharacterDataNodes($actualElement);
 
         self::assertEquals(
-          $expectedElement->childNodes->length,
-          $actualElement->childNodes->length,
-          sprintf(
-            '%s%sNumber of child nodes of "%s" differs',
-            $message,
-            !empty($message) ? "\n" : '',
-            $expectedElement->tagName
-          )
+            $expectedElement->childNodes->length,
+            $actualElement->childNodes->length,
+            sprintf(
+                '%s%sNumber of child nodes of "%s" differs',
+                $message,
+                !empty($message) ? "\n" : '',
+                $expectedElement->tagName
+            )
         );
 
         for ($i = 0; $i < $expectedElement->childNodes->length; $i++) {
             self::assertEqualXMLStructure(
-              $expectedElement->childNodes->item($i),
-              $actualElement->childNodes->item($i),
-              $checkAttributes,
-              $message
+                $expectedElement->childNodes->item($i),
+                $actualElement->childNodes->item($i),
+                $checkAttributes,
+                $message
             );
         }
     }
@@ -1882,19 +1906,27 @@ abstract class PHPUnit_Framework_Assert
      * assertSelectCount("#binder", true, $xml);  // any?
      * assertSelectCount(".binder", 3, $xml);     // exactly 3?
      *
-     * @param array   $selector
-     * @param integer $count
-     * @param mixed   $actual
-     * @param string  $message
-     * @param boolean $isHtml
+     * @param array                 $selector
+     * @param integer|boolean|array $count
+     * @param mixed                 $actual
+     * @param string                $message
+     * @param boolean               $isHtml
      * @since  Method available since Release 3.3.0
      * @author Mike Naberezny <mike@maintainable.com>
      * @author Derek DeVries <derek@maintainable.com>
+     * @deprecated
      */
     public static function assertSelectCount($selector, $count, $actual, $message = '', $isHtml = true)
     {
+        trigger_error(__METHOD__ . ' is deprecated', E_USER_DEPRECATED);
+
         self::assertSelectEquals(
-          $selector, true, $count, $actual, $message, $isHtml
+            $selector,
+            true,
+            $count,
+            $actual,
+            $message,
+            $isHtml
         );
     }
 
@@ -1902,20 +1934,28 @@ abstract class PHPUnit_Framework_Assert
      * assertSelectRegExp("#binder .name", "/Mike|Derek/", true, $xml); // any?
      * assertSelectRegExp("#binder .name", "/Mike|Derek/", 3, $xml);    // 3?
      *
-     * @param array   $selector
-     * @param string  $pattern
-     * @param integer $count
-     * @param mixed   $actual
-     * @param string  $message
-     * @param boolean $isHtml
+     * @param array                 $selector
+     * @param string                $pattern
+     * @param integer|boolean|array $count
+     * @param mixed                 $actual
+     * @param string                $message
+     * @param boolean               $isHtml
      * @since  Method available since Release 3.3.0
      * @author Mike Naberezny <mike@maintainable.com>
      * @author Derek DeVries <derek@maintainable.com>
+     * @deprecated
      */
     public static function assertSelectRegExp($selector, $pattern, $count, $actual, $message = '', $isHtml = true)
     {
+        trigger_error(__METHOD__ . ' is deprecated', E_USER_DEPRECATED);
+
         self::assertSelectEquals(
-          $selector, "regexp:$pattern", $count, $actual, $message, $isHtml
+            $selector,
+            "regexp:$pattern",
+            $count,
+            $actual,
+            $message,
+            $isHtml
         );
     }
 
@@ -1923,30 +1963,34 @@ abstract class PHPUnit_Framework_Assert
      * assertSelectEquals("#binder .name", "Chuck", true,  $xml);  // any?
      * assertSelectEquals("#binder .name", "Chuck", false, $xml);  // none?
      *
-     * @param array   $selector
-     * @param string  $content
-     * @param integer $count
-     * @param mixed   $actual
-     * @param string  $message
-     * @param boolean $isHtml
+     * @param array                 $selector
+     * @param string                $content
+     * @param integer|boolean|array $count
+     * @param mixed                 $actual
+     * @param string                $message
+     * @param boolean               $isHtml
      * @since  Method available since Release 3.3.0
      * @author Mike Naberezny <mike@maintainable.com>
      * @author Derek DeVries <derek@maintainable.com>
+     * @deprecated
      */
     public static function assertSelectEquals($selector, $content, $count, $actual, $message = '', $isHtml = true)
     {
+        trigger_error(__METHOD__ . ' is deprecated', E_USER_DEPRECATED);
+
         $tags = PHPUnit_Util_XML::cssSelect(
-          $selector, $content, $actual, $isHtml
+            $selector,
+            $content,
+            $actual,
+            $isHtml
         );
 
         // assert specific number of elements
         if (is_numeric($count)) {
             $counted = $tags ? count($tags) : 0;
             self::assertEquals($count, $counted, $message);
-        }
-
-        // assert any elements exist if true, assert no elements exist if false
-        else if (is_bool($count)) {
+        } // assert any elements exist if true, assert no elements exist if false
+        elseif (is_bool($count)) {
             $any = count($tags) > 0 && $tags[0] instanceof DOMNode;
 
             if ($count) {
@@ -1954,10 +1998,8 @@ abstract class PHPUnit_Framework_Assert
             } else {
                 self::assertFalse($any, $message);
             }
-        }
-
-        // check for range number of elements
-        else if (is_array($count) &&
+        } // check for range number of elements
+        elseif (is_array($count) &&
                 (isset($count['>']) || isset($count['<']) ||
                 isset($count['>=']) || isset($count['<=']))) {
             $counted = $tags ? count($tags) : 0;
@@ -2118,9 +2160,12 @@ abstract class PHPUnit_Framework_Assert
      * @since  Method available since Release 3.3.0
      * @author Mike Naberezny <mike@maintainable.com>
      * @author Derek DeVries <derek@maintainable.com>
+     * @deprecated
      */
     public static function assertTag($matcher, $actual, $message = '', $isHtml = true)
     {
+        trigger_error(__METHOD__ . ' is deprecated', E_USER_DEPRECATED);
+
         $dom     = PHPUnit_Util_XML::load($actual, $isHtml);
         $tags    = PHPUnit_Util_XML::findNodes($dom, $matcher, $isHtml);
         $matched = count($tags) > 0 && $tags[0] instanceof DOMNode;
@@ -2141,9 +2186,12 @@ abstract class PHPUnit_Framework_Assert
      * @since  Method available since Release 3.3.0
      * @author Mike Naberezny <mike@maintainable.com>
      * @author Derek DeVries <derek@maintainable.com>
+     * @deprecated
      */
     public static function assertNotTag($matcher, $actual, $message = '', $isHtml = true)
     {
+        trigger_error(__METHOD__ . ' is deprecated', E_USER_DEPRECATED);
+
         $dom     = PHPUnit_Util_XML::load($actual, $isHtml);
         $tags    = PHPUnit_Util_XML::findNodes($dom, $matcher, $isHtml);
         $matched = count($tags) > 0 && $tags[0] instanceof DOMNode;
@@ -2235,7 +2283,7 @@ abstract class PHPUnit_Framework_Assert
 
         // call constraint
         $constraint = new PHPUnit_Framework_Constraint_JsonMatches(
-          $expectedJson
+            $expectedJson
         );
 
         self::assertThat($actualJson, $constraint, $message);
@@ -2258,7 +2306,7 @@ abstract class PHPUnit_Framework_Assert
 
         // call constraint
         $constraint = new PHPUnit_Framework_Constraint_JsonMatches(
-          $expectedJson
+            $expectedJson
         );
 
         self::assertThat($actualJson, new PHPUnit_Framework_Constraint_Not($constraint), $message);
@@ -2284,7 +2332,7 @@ abstract class PHPUnit_Framework_Assert
 
         // call constraint
         $constraintExpected = new PHPUnit_Framework_Constraint_JsonMatches(
-          $expectedJson
+            $expectedJson
         );
 
         $constraintActual = new PHPUnit_Framework_Constraint_JsonMatches($actualJson);
@@ -2313,7 +2361,7 @@ abstract class PHPUnit_Framework_Assert
 
         // call constraint
         $constraintExpected = new PHPUnit_Framework_Constraint_JsonMatches(
-          $expectedJson
+            $expectedJson
         );
 
         $constraintActual = new PHPUnit_Framework_Constraint_JsonMatches($actualJson);
@@ -2459,7 +2507,8 @@ abstract class PHPUnit_Framework_Assert
     public static function attribute(PHPUnit_Framework_Constraint $constraint, $attributeName)
     {
         return new PHPUnit_Framework_Constraint_Attribute(
-          $constraint, $attributeName
+            $constraint,
+            $attributeName
         );
     }
 
@@ -2529,7 +2578,11 @@ abstract class PHPUnit_Framework_Assert
     public static function equalTo($value, $delta = 0.0, $maxDepth = 10, $canonicalize = false, $ignoreCase = false)
     {
         return new PHPUnit_Framework_Constraint_IsEqual(
-          $value, $delta, $maxDepth, $canonicalize, $ignoreCase
+            $value,
+            $delta,
+            $maxDepth,
+            $canonicalize,
+            $ignoreCase
         );
     }
 
@@ -2550,10 +2603,14 @@ abstract class PHPUnit_Framework_Assert
     public static function attributeEqualTo($attributeName, $value, $delta = 0.0, $maxDepth = 10, $canonicalize = false, $ignoreCase = false)
     {
         return self::attribute(
-          self::equalTo(
-            $value, $delta, $maxDepth, $canonicalize, $ignoreCase
-          ),
-          $attributeName
+            self::equalTo(
+                $value,
+                $delta,
+                $maxDepth,
+                $canonicalize,
+                $ignoreCase
+            ),
+            $attributeName
         );
     }
 
@@ -2603,8 +2660,8 @@ abstract class PHPUnit_Framework_Assert
     public static function greaterThanOrEqual($value)
     {
         return self::logicalOr(
-          new PHPUnit_Framework_Constraint_IsEqual($value),
-          new PHPUnit_Framework_Constraint_GreaterThan($value)
+            new PHPUnit_Framework_Constraint_IsEqual($value),
+            new PHPUnit_Framework_Constraint_GreaterThan($value)
         );
     }
 
@@ -2618,7 +2675,7 @@ abstract class PHPUnit_Framework_Assert
     public static function classHasAttribute($attributeName)
     {
         return new PHPUnit_Framework_Constraint_ClassHasAttribute(
-          $attributeName
+            $attributeName
         );
     }
 
@@ -2633,7 +2690,7 @@ abstract class PHPUnit_Framework_Assert
     public static function classHasStaticAttribute($attributeName)
     {
         return new PHPUnit_Framework_Constraint_ClassHasStaticAttribute(
-          $attributeName
+            $attributeName
         );
     }
 
@@ -2647,7 +2704,7 @@ abstract class PHPUnit_Framework_Assert
     public static function objectHasAttribute($attributeName)
     {
         return new PHPUnit_Framework_Constraint_ObjectHasAttribute(
-          $attributeName
+            $attributeName
         );
     }
 
@@ -2711,8 +2768,8 @@ abstract class PHPUnit_Framework_Assert
     public static function lessThanOrEqual($value)
     {
         return self::logicalOr(
-          new PHPUnit_Framework_Constraint_IsEqual($value),
-          new PHPUnit_Framework_Constraint_LessThan($value)
+            new PHPUnit_Framework_Constraint_IsEqual($value),
+            new PHPUnit_Framework_Constraint_LessThan($value)
         );
     }
 
@@ -2820,22 +2877,24 @@ abstract class PHPUnit_Framework_Assert
         if (is_string($classOrObject)) {
             if (!class_exists($classOrObject)) {
                 throw PHPUnit_Util_InvalidArgumentHelper::factory(
-                  1, 'class name'
+                    1,
+                    'class name'
                 );
             }
 
             return self::getStaticAttribute(
-              $classOrObject,
-              $attributeName
+                $classOrObject,
+                $attributeName
             );
         } elseif (is_object($classOrObject)) {
             return self::getObjectAttribute(
-              $classOrObject,
-              $attributeName
+                $classOrObject,
+                $attributeName
             );
         } else {
             throw PHPUnit_Util_InvalidArgumentHelper::factory(
-              1, 'class name or object'
+                1,
+                'class name or object'
             );
         }
     }
@@ -2881,10 +2940,10 @@ abstract class PHPUnit_Framework_Assert
         }
 
         throw new PHPUnit_Framework_Exception(
-          sprintf(
-            'Attribute "%s" not found in class.',
-            $attributeName
-          )
+            sprintf(
+                'Attribute "%s" not found in class.',
+                $attributeName
+            )
         );
     }
 
@@ -2939,10 +2998,10 @@ abstract class PHPUnit_Framework_Assert
         }
 
         throw new PHPUnit_Framework_Exception(
-          sprintf(
-            'Attribute "%s" not found in object.',
-            $attributeName
-          )
+            sprintf(
+                'Attribute "%s" not found in object.',
+                $attributeName
+            )
         );
     }
 

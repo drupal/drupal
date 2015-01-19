@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <xs:annotation>
-    <xs:documentation source="http://www.phpunit.de/manual/4.1/en/appendixes.configuration.html">
-      This Schema file defines the rules by which the XML configuration file of PHPUnit 4.1 may be structured.
+    <xs:documentation source="https://phpunit.de/manual/4.4/en/appendixes.configuration.html">
+      This Schema file defines the rules by which the XML configuration file of PHPUnit 4.4 may be structured.
     </xs:documentation>
     <xs:appinfo source="http://www.phpunit.de/manual/current/en/appendixes.configuration.html"/>
   </xs:annotation>
@@ -35,6 +35,7 @@
   <xs:complexType name="whiteListType">
     <xs:complexContent>
       <xs:extension base="filterType">
+        <xs:attribute name="addUncoveredFilesFromWhitelist" default="false" type="xs:boolean"/>
         <xs:attribute name="processUncoveredFilesFromWhitelist" default="true" type="xs:boolean"/>
       </xs:extension>
     </xs:complexContent>
@@ -116,6 +117,7 @@
           <xs:enumeration value="coverage-html"/>
           <xs:enumeration value="coverage-text"/>
           <xs:enumeration value="coverage-clover"/>
+          <xs:enumeration value="coverage-crap4j"/>
           <xs:enumeration value="json"/>
           <xs:enumeration value="plain"/>
           <xs:enumeration value="tap"/>
@@ -204,6 +206,7 @@
     <xs:attribute name="beStrictAboutTestsThatDoNotTestAnything" type="xs:boolean" default="false"/>
     <xs:attribute name="beStrictAboutOutputDuringTests" type="xs:boolean" default="false"/>
     <xs:attribute name="beStrictAboutTestSize" type="xs:boolean" default="false"/>
+    <xs:attribute name="beStrictAboutTodoAnnotatedTests" type="xs:boolean" default="false"/>
     <xs:attribute name="checkForUnintentionallyCoveredCode" type="xs:boolean" default="false"/>
     <xs:attribute name="strict" type="xs:boolean" default="false"/>
     <xs:attribute name="testSuiteLoaderClass" type="xs:string" default="PHPUnit_Runner_StandardTestSuiteLoader"/>
@@ -212,6 +215,7 @@
     <xs:attribute name="timeoutForMediumTests" type="xs:integer" default="10"/>
     <xs:attribute name="timeoutForLargeTests" type="xs:integer" default="60"/>
     <xs:attribute name="verbose" type="xs:boolean" default="false"/>
+    <xs:attribute name="stderr" type="xs:boolean" default="false"/>
   </xs:attributeGroup>
   <xs:group name="configGroup">
     <xs:all>
@@ -241,7 +245,7 @@
   <xs:element name="testsuites" type="testSuitesType" substitutionGroup="testSuiteFacet"/>
   <xs:complexType name="testSuitesType">
     <xs:sequence>
-      <xs:element name="testsuite" type="testSuiteType"/>
+      <xs:element name="testsuite" type="testSuiteType" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="testSuiteType">
