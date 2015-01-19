@@ -10,6 +10,7 @@ namespace Drupal\system\Tests\Entity;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Url;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\system\Tests\Cache\PageCacheTagsTestBase;
@@ -277,11 +278,15 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
    */
   public function testReferencedEntity() {
     $entity_type = $this->entity->getEntityTypeId();
-    $referencing_entity_path = $this->referencing_entity->url('canonical', array('absolute' => TRUE));
-    $non_referencing_entity_path = $this->non_referencing_entity->url('canonical', array('absolute' => TRUE));
-    $listing_path = 'entity_test/list/' . $entity_type . '_reference/' . $entity_type . '/' . $this->entity->id();
-    $empty_entity_listing_path = 'entity_test/list_empty/' . $entity_type;
-    $nonempty_entity_listing_path = 'entity_test/list_labels_alphabetically/' . $entity_type;
+    $referencing_entity_url = $this->referencing_entity->urlInfo('canonical');
+    $non_referencing_entity_url = $this->non_referencing_entity->urlInfo('canonical');
+    $listing_url = Url::fromRoute('entity.entity_test.list_referencing_entities', [
+      'entity_reference_field_name' =>  $entity_type . '_reference',
+      'referenced_entity_type' => $entity_type,
+      'referenced_entity_id' => $this->entity->id(),
+    ]);
+    $empty_entity_listing_url = Url::fromRoute('entity.entity_test.list_empty', ['entity_type_id' => $entity_type]);
+    $nonempty_entity_listing_url = Url::fromRoute('entity.entity_test.list_labels_alphabetically', ['entity_type_id' => $entity_type]);
 
     // Cache tags present on every rendered page.
     $page_cache_tags = Cache::mergeTags(
@@ -328,17 +333,17 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     );
 
     $this->pass("Test referencing entity.", 'Debug');
-    $this->verifyPageCache($referencing_entity_path, 'MISS');
+    $this->verifyPageCache($referencing_entity_url, 'MISS');
     // Verify a cache hit, but also the presence of the correct cache tags.
-    $this->verifyPageCache($referencing_entity_path, 'HIT', Cache::mergeTags($referencing_entity_cache_tags, $page_cache_tags));
+    $this->verifyPageCache($referencing_entity_url, 'HIT', Cache::mergeTags($referencing_entity_cache_tags, $page_cache_tags));
     // Also verify the existence of an entity render cache entry.
     $cid = 'entity_view:entity_test:' . $this->referencing_entity->id() . ':full:classy:r.anonymous:' . date_default_timezone_get();
     $this->verifyRenderCache($cid, $referencing_entity_cache_tags);
 
     $this->pass("Test non-referencing entity.", 'Debug');
-    $this->verifyPageCache($non_referencing_entity_path, 'MISS');
+    $this->verifyPageCache($non_referencing_entity_url, 'MISS');
     // Verify a cache hit, but also the presence of the correct cache tags.
-    $this->verifyPageCache($non_referencing_entity_path, 'HIT', Cache::mergeTags($non_referencing_entity_cache_tags, $page_cache_tags));
+    $this->verifyPageCache($non_referencing_entity_url, 'HIT', Cache::mergeTags($non_referencing_entity_cache_tags, $page_cache_tags));
     // Also verify the existence of an entity render cache entry.
     $cid = 'entity_view:entity_test:' . $this->non_referencing_entity->id() . ':full:classy:r.anonymous:' . date_default_timezone_get();
     $this->verifyRenderCache($cid, $non_referencing_entity_cache_tags);
@@ -346,40 +351,40 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
 
     $this->pass("Test listing of referencing entities.", 'Debug');
     // Prime the page cache for the listing of referencing entities.
-    $this->verifyPageCache($listing_path, 'MISS');
+    $this->verifyPageCache($listing_url, 'MISS');
     // Verify a cache hit, but also the presence of the correct cache tags.
-    $this->verifyPageCache($listing_path, 'HIT', Cache::mergeTags($referencing_entity_cache_tags, $page_cache_tags));
+    $this->verifyPageCache($listing_url, 'HIT', Cache::mergeTags($referencing_entity_cache_tags, $page_cache_tags));
 
 
     $this->pass("Test empty listing.", 'Debug');
     // Prime the page cache for the empty listing.
-    $this->verifyPageCache($empty_entity_listing_path, 'MISS');
+    $this->verifyPageCache($empty_entity_listing_url, 'MISS');
     // Verify a cache hit, but also the presence of the correct cache tags.
-    $this->verifyPageCache($empty_entity_listing_path, 'HIT', $empty_entity_listing_cache_tags);
+    $this->verifyPageCache($empty_entity_listing_url, 'HIT', $empty_entity_listing_cache_tags);
 
 
     $this->pass("Test listing containing referenced entity.", 'Debug');
     // Prime the page cache for the listing containing the referenced entity.
-    $this->verifyPageCache($nonempty_entity_listing_path, 'MISS');
+    $this->verifyPageCache($nonempty_entity_listing_url, 'MISS');
     // Verify a cache hit, but also the presence of the correct cache tags.
-    $this->verifyPageCache($nonempty_entity_listing_path, 'HIT', $nonempty_entity_listing_cache_tags);
+    $this->verifyPageCache($nonempty_entity_listing_url, 'HIT', $nonempty_entity_listing_cache_tags);
 
 
     // Verify that after modifying the referenced entity, there is a cache miss
     // for every route except the one for the non-referencing entity.
     $this->pass("Test modification of referenced entity.", 'Debug');
     $this->entity->save();
-    $this->verifyPageCache($referencing_entity_path, 'MISS');
-    $this->verifyPageCache($listing_path, 'MISS');
-    $this->verifyPageCache($empty_entity_listing_path, 'MISS');
-    $this->verifyPageCache($nonempty_entity_listing_path, 'MISS');
-    $this->verifyPageCache($non_referencing_entity_path, 'HIT');
+    $this->verifyPageCache($referencing_entity_url, 'MISS');
+    $this->verifyPageCache($listing_url, 'MISS');
+    $this->verifyPageCache($empty_entity_listing_url, 'MISS');
+    $this->verifyPageCache($nonempty_entity_listing_url, 'MISS');
+    $this->verifyPageCache($non_referencing_entity_url, 'HIT');
 
     // Verify cache hits.
-    $this->verifyPageCache($referencing_entity_path, 'HIT');
-    $this->verifyPageCache($listing_path, 'HIT');
-    $this->verifyPageCache($empty_entity_listing_path, 'HIT');
-    $this->verifyPageCache($nonempty_entity_listing_path, 'HIT');
+    $this->verifyPageCache($referencing_entity_url, 'HIT');
+    $this->verifyPageCache($listing_url, 'HIT');
+    $this->verifyPageCache($empty_entity_listing_url, 'HIT');
+    $this->verifyPageCache($nonempty_entity_listing_url, 'HIT');
 
 
     // Verify that after modifying the referencing entity, there is a cache miss
@@ -387,30 +392,30 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     // empty entity listing.
     $this->pass("Test modification of referencing entity.", 'Debug');
     $this->referencing_entity->save();
-    $this->verifyPageCache($referencing_entity_path, 'MISS');
-    $this->verifyPageCache($listing_path, 'MISS');
-    $this->verifyPageCache($nonempty_entity_listing_path, 'HIT');
-    $this->verifyPageCache($non_referencing_entity_path, 'HIT');
-    $this->verifyPageCache($empty_entity_listing_path, 'HIT');
+    $this->verifyPageCache($referencing_entity_url, 'MISS');
+    $this->verifyPageCache($listing_url, 'MISS');
+    $this->verifyPageCache($nonempty_entity_listing_url, 'HIT');
+    $this->verifyPageCache($non_referencing_entity_url, 'HIT');
+    $this->verifyPageCache($empty_entity_listing_url, 'HIT');
 
     // Verify cache hits.
-    $this->verifyPageCache($referencing_entity_path, 'HIT');
-    $this->verifyPageCache($listing_path, 'HIT');
-    $this->verifyPageCache($nonempty_entity_listing_path, 'HIT');
+    $this->verifyPageCache($referencing_entity_url, 'HIT');
+    $this->verifyPageCache($listing_url, 'HIT');
+    $this->verifyPageCache($nonempty_entity_listing_url, 'HIT');
 
 
     // Verify that after modifying the non-referencing entity, there is a cache
     // miss only for the non-referencing entity route.
     $this->pass("Test modification of non-referencing entity.", 'Debug');
     $this->non_referencing_entity->save();
-    $this->verifyPageCache($referencing_entity_path, 'HIT');
-    $this->verifyPageCache($listing_path, 'HIT');
-    $this->verifyPageCache($empty_entity_listing_path, 'HIT');
-    $this->verifyPageCache($nonempty_entity_listing_path, 'HIT');
-    $this->verifyPageCache($non_referencing_entity_path, 'MISS');
+    $this->verifyPageCache($referencing_entity_url, 'HIT');
+    $this->verifyPageCache($listing_url, 'HIT');
+    $this->verifyPageCache($empty_entity_listing_url, 'HIT');
+    $this->verifyPageCache($nonempty_entity_listing_url, 'HIT');
+    $this->verifyPageCache($non_referencing_entity_url, 'MISS');
 
     // Verify cache hits.
-    $this->verifyPageCache($non_referencing_entity_path, 'HIT');
+    $this->verifyPageCache($non_referencing_entity_url, 'HIT');
 
 
     if ($this->entity->getEntityType()->hasHandlerClass('view_builder')) {
@@ -421,15 +426,15 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
       $this->pass("Test modification of referenced entity's '$referenced_entity_view_mode' display.", 'Debug');
       $entity_display = entity_get_display($entity_type, $this->entity->bundle(), $referenced_entity_view_mode);
       $entity_display->save();
-      $this->verifyPageCache($referencing_entity_path, 'MISS');
-      $this->verifyPageCache($listing_path, 'MISS');
-      $this->verifyPageCache($non_referencing_entity_path, 'HIT');
-      $this->verifyPageCache($empty_entity_listing_path, 'HIT');
-      $this->verifyPageCache($nonempty_entity_listing_path, 'HIT');
+      $this->verifyPageCache($referencing_entity_url, 'MISS');
+      $this->verifyPageCache($listing_url, 'MISS');
+      $this->verifyPageCache($non_referencing_entity_url, 'HIT');
+      $this->verifyPageCache($empty_entity_listing_url, 'HIT');
+      $this->verifyPageCache($nonempty_entity_listing_url, 'HIT');
 
       // Verify cache hits.
-      $this->verifyPageCache($referencing_entity_path, 'HIT');
-      $this->verifyPageCache($listing_path, 'HIT');
+      $this->verifyPageCache($referencing_entity_url, 'HIT');
+      $this->verifyPageCache($listing_url, 'HIT');
     }
 
 
@@ -441,27 +446,27 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
       $this->pass("Test modification of referenced entity's bundle entity.", 'Debug');
       $bundle_entity = entity_load($bundle_entity_type, $this->entity->bundle());
       $bundle_entity->save();
-      $this->verifyPageCache($referencing_entity_path, 'MISS');
-      $this->verifyPageCache($listing_path, 'MISS');
-      $this->verifyPageCache($non_referencing_entity_path, 'HIT');
+      $this->verifyPageCache($referencing_entity_url, 'MISS');
+      $this->verifyPageCache($listing_url, 'MISS');
+      $this->verifyPageCache($non_referencing_entity_url, 'HIT');
       // Special case: entity types may choose to use their bundle entity type
       // cache tags, to avoid having excessively granular invalidation.
       $is_special_case = $bundle_entity->getCacheTags() == $this->entity->getCacheTags() && $bundle_entity->getEntityType()->getListCacheTags() == $this->entity->getEntityType()->getListCacheTags();
       if ($is_special_case) {
-        $this->verifyPageCache($empty_entity_listing_path, 'MISS');
-        $this->verifyPageCache($nonempty_entity_listing_path, 'MISS');
+        $this->verifyPageCache($empty_entity_listing_url, 'MISS');
+        $this->verifyPageCache($nonempty_entity_listing_url, 'MISS');
       }
       else {
-        $this->verifyPageCache($empty_entity_listing_path, 'HIT');
-        $this->verifyPageCache($nonempty_entity_listing_path, 'HIT');
+        $this->verifyPageCache($empty_entity_listing_url, 'HIT');
+        $this->verifyPageCache($nonempty_entity_listing_url, 'HIT');
       }
 
       // Verify cache hits.
-      $this->verifyPageCache($referencing_entity_path, 'HIT');
-      $this->verifyPageCache($listing_path, 'HIT');
+      $this->verifyPageCache($referencing_entity_url, 'HIT');
+      $this->verifyPageCache($listing_url, 'HIT');
       if ($is_special_case) {
-        $this->verifyPageCache($empty_entity_listing_path, 'HIT');
-        $this->verifyPageCache($nonempty_entity_listing_path, 'HIT');
+        $this->verifyPageCache($empty_entity_listing_url, 'HIT');
+        $this->verifyPageCache($nonempty_entity_listing_url, 'HIT');
       }
     }
 
@@ -473,15 +478,15 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
       $field_storage_name = $this->entity->getEntityTypeId() . '.configurable_field';
       $field_storage = FieldStorageConfig::load($field_storage_name);
       $field_storage->save();
-      $this->verifyPageCache($referencing_entity_path, 'MISS');
-      $this->verifyPageCache($listing_path, 'MISS');
-      $this->verifyPageCache($empty_entity_listing_path, 'HIT');
-      $this->verifyPageCache($nonempty_entity_listing_path, 'HIT');
-      $this->verifyPageCache($non_referencing_entity_path, 'HIT');
+      $this->verifyPageCache($referencing_entity_url, 'MISS');
+      $this->verifyPageCache($listing_url, 'MISS');
+      $this->verifyPageCache($empty_entity_listing_url, 'HIT');
+      $this->verifyPageCache($nonempty_entity_listing_url, 'HIT');
+      $this->verifyPageCache($non_referencing_entity_url, 'HIT');
 
       // Verify cache hits.
-      $this->verifyPageCache($referencing_entity_path, 'HIT');
-      $this->verifyPageCache($listing_path, 'HIT');
+      $this->verifyPageCache($referencing_entity_url, 'HIT');
+      $this->verifyPageCache($listing_url, 'HIT');
 
 
       // Verify that after modifying a configurable field on the entity, there
@@ -490,15 +495,15 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
       $field_name = $this->entity->getEntityTypeId() . '.' . $this->entity->bundle() . '.configurable_field';
       $field = FieldConfig::load($field_name);
       $field->save();
-      $this->verifyPageCache($referencing_entity_path, 'MISS');
-      $this->verifyPageCache($listing_path, 'MISS');
-      $this->verifyPageCache($empty_entity_listing_path, 'HIT');
-      $this->verifyPageCache($nonempty_entity_listing_path, 'HIT');
-      $this->verifyPageCache($non_referencing_entity_path, 'HIT');
+      $this->verifyPageCache($referencing_entity_url, 'MISS');
+      $this->verifyPageCache($listing_url, 'MISS');
+      $this->verifyPageCache($empty_entity_listing_url, 'HIT');
+      $this->verifyPageCache($nonempty_entity_listing_url, 'HIT');
+      $this->verifyPageCache($non_referencing_entity_url, 'HIT');
 
       // Verify cache hits.
-      $this->verifyPageCache($referencing_entity_path, 'HIT');
-      $this->verifyPageCache($listing_path, 'HIT');
+      $this->verifyPageCache($referencing_entity_url, 'HIT');
+      $this->verifyPageCache($listing_url, 'HIT');
     }
 
 
@@ -507,31 +512,31 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     // entity and the empty entity listing.
     $this->pass("Test invalidation of referenced entity's cache tag.", 'Debug');
     Cache::invalidateTags($this->entity->getCacheTags());
-    $this->verifyPageCache($referencing_entity_path, 'MISS');
-    $this->verifyPageCache($listing_path, 'MISS');
-    $this->verifyPageCache($nonempty_entity_listing_path, 'MISS');
-    $this->verifyPageCache($non_referencing_entity_path, 'HIT');
-    $this->verifyPageCache($empty_entity_listing_path, 'HIT');
+    $this->verifyPageCache($referencing_entity_url, 'MISS');
+    $this->verifyPageCache($listing_url, 'MISS');
+    $this->verifyPageCache($nonempty_entity_listing_url, 'MISS');
+    $this->verifyPageCache($non_referencing_entity_url, 'HIT');
+    $this->verifyPageCache($empty_entity_listing_url, 'HIT');
 
     // Verify cache hits.
-    $this->verifyPageCache($referencing_entity_path, 'HIT');
-    $this->verifyPageCache($listing_path, 'HIT');
-    $this->verifyPageCache($nonempty_entity_listing_path, 'HIT');
+    $this->verifyPageCache($referencing_entity_url, 'HIT');
+    $this->verifyPageCache($listing_url, 'HIT');
+    $this->verifyPageCache($nonempty_entity_listing_url, 'HIT');
 
     // Verify that after invalidating the entity's list cache tag directly,
     // there is a cache miss for both the empty entity listing and the non-empty
     // entity listing routes, but not for other routes.
     $this->pass("Test invalidation of referenced entity's list cache tag.", 'Debug');
     Cache::invalidateTags($this->entity->getEntityType()->getListCacheTags());
-    $this->verifyPageCache($empty_entity_listing_path, 'MISS');
-    $this->verifyPageCache($nonempty_entity_listing_path, 'MISS');
-    $this->verifyPageCache($referencing_entity_path, 'HIT');
-    $this->verifyPageCache($non_referencing_entity_path, 'HIT');
-    $this->verifyPageCache($listing_path, 'HIT');
+    $this->verifyPageCache($empty_entity_listing_url, 'MISS');
+    $this->verifyPageCache($nonempty_entity_listing_url, 'MISS');
+    $this->verifyPageCache($referencing_entity_url, 'HIT');
+    $this->verifyPageCache($non_referencing_entity_url, 'HIT');
+    $this->verifyPageCache($listing_url, 'HIT');
 
     // Verify cache hits.
-    $this->verifyPageCache($empty_entity_listing_path, 'HIT');
-    $this->verifyPageCache($nonempty_entity_listing_path, 'HIT');
+    $this->verifyPageCache($empty_entity_listing_url, 'HIT');
+    $this->verifyPageCache($nonempty_entity_listing_url, 'HIT');
 
 
     if (!empty($view_cache_tag)) {
@@ -540,26 +545,26 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
       // listing of referencing entities, but not for other routes.
       $this->pass("Test invalidation of referenced entity's 'view' cache tag.", 'Debug');
       Cache::invalidateTags($view_cache_tag);
-      $this->verifyPageCache($referencing_entity_path, 'MISS');
-      $this->verifyPageCache($listing_path, 'MISS');
-      $this->verifyPageCache($non_referencing_entity_path, 'HIT');
-      $this->verifyPageCache($empty_entity_listing_path, 'HIT');
-      $this->verifyPageCache($nonempty_entity_listing_path, 'HIT');
+      $this->verifyPageCache($referencing_entity_url, 'MISS');
+      $this->verifyPageCache($listing_url, 'MISS');
+      $this->verifyPageCache($non_referencing_entity_url, 'HIT');
+      $this->verifyPageCache($empty_entity_listing_url, 'HIT');
+      $this->verifyPageCache($nonempty_entity_listing_url, 'HIT');
 
       // Verify cache hits.
-      $this->verifyPageCache($referencing_entity_path, 'HIT');
-      $this->verifyPageCache($listing_path, 'HIT');
+      $this->verifyPageCache($referencing_entity_url, 'HIT');
+      $this->verifyPageCache($listing_url, 'HIT');
     }
 
     // Verify that after deleting the entity, there is a cache miss for every
     // route except for the the non-referencing entity one.
     $this->pass('Test deletion of referenced entity.', 'Debug');
     $this->entity->delete();
-    $this->verifyPageCache($referencing_entity_path, 'MISS');
-    $this->verifyPageCache($listing_path, 'MISS');
-    $this->verifyPageCache($empty_entity_listing_path, 'MISS');
-    $this->verifyPageCache($nonempty_entity_listing_path, 'MISS');
-    $this->verifyPageCache($non_referencing_entity_path, 'HIT');
+    $this->verifyPageCache($referencing_entity_url, 'MISS');
+    $this->verifyPageCache($listing_url, 'MISS');
+    $this->verifyPageCache($empty_entity_listing_url, 'MISS');
+    $this->verifyPageCache($nonempty_entity_listing_url, 'MISS');
+    $this->verifyPageCache($non_referencing_entity_url, 'HIT');
 
     // Verify cache hits.
     $referencing_entity_cache_tags = Cache::mergeTags(
@@ -567,10 +572,10 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
       \Drupal::entityManager()->getViewBuilder('entity_test')->getCacheTags(),
       ['rendered']
     );
-    $this->verifyPageCache($referencing_entity_path, 'HIT', Cache::mergeTags($referencing_entity_cache_tags, $page_cache_tags));
-    $this->verifyPageCache($listing_path, 'HIT', $page_cache_tags);
-    $this->verifyPageCache($empty_entity_listing_path, 'HIT', $empty_entity_listing_cache_tags);
-    $this->verifyPageCache($nonempty_entity_listing_path, 'HIT', Cache::mergeTags($this->entity->getEntityType()->getListCacheTags(), $this->getAdditionalCacheTagsForEntityListing(), $page_cache_tags));
+    $this->verifyPageCache($referencing_entity_url, 'HIT', Cache::mergeTags($referencing_entity_cache_tags, $page_cache_tags));
+    $this->verifyPageCache($listing_url, 'HIT', $page_cache_tags);
+    $this->verifyPageCache($empty_entity_listing_url, 'HIT', $empty_entity_listing_cache_tags);
+    $this->verifyPageCache($nonempty_entity_listing_url, 'HIT', Cache::mergeTags($this->entity->getEntityType()->getListCacheTags(), $this->getAdditionalCacheTagsForEntityListing(), $page_cache_tags));
   }
 
   /**

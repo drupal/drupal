@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\Cache;
 
-use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Component\Utility\String;
 
@@ -39,8 +39,8 @@ abstract class PageCacheTagsTestBase extends WebTestBase {
   /**
    * Verify that when loading a given page, it's a page cache hit or miss.
    *
-   * @param string $path
-   *   The page at this path will be loaded.
+   * @param \Drupal\Core\Url $url
+   *   The page for this URL will be loaded.
    * @param string $hit_or_miss
    *   'HIT' if a page cache hit is expected, 'MISS' otherwise.
    *
@@ -48,13 +48,13 @@ abstract class PageCacheTagsTestBase extends WebTestBase {
    *   When expecting a page cache hit, you may optionally specify an array of
    *   expected cache tags. While FALSE, the cache tags will not be verified.
    */
-  protected function verifyPageCache($path, $hit_or_miss, $tags = FALSE) {
-    $this->drupalGet($path);
-    $message = String::format('Page cache @hit_or_miss for %path.', array('@hit_or_miss' => $hit_or_miss, '%path' => $path));
+  protected function verifyPageCache(Url $url, $hit_or_miss, $tags = FALSE) {
+    $this->drupalGet($url);
+    $message = String::format('Page cache @hit_or_miss for %path.', array('@hit_or_miss' => $hit_or_miss, '%path' => $url->toString()));
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), $hit_or_miss, $message);
 
     if ($hit_or_miss === 'HIT' && is_array($tags)) {
-      $absolute_url = UrlHelper::isExternal($path) ? $path : _url($path, array('absolute' => TRUE));
+      $absolute_url = $url->setAbsolute()->toString();
       $cid_parts = array($absolute_url, 'html');
       $cid = implode(':', $cid_parts);
       $cache_entry = \Drupal::cache('render')->get($cid);

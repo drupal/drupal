@@ -7,6 +7,7 @@
 
 namespace Drupal\tour\Tests;
 
+use Drupal\Core\Url;
 use Drupal\system\Tests\Cache\PageCacheTagsTestBase;
 use Drupal\tour\Entity\Tour;
 use Drupal\user\Entity\Role;
@@ -42,36 +43,36 @@ class TourCacheTagsTest extends PageCacheTagsTestBase {
    * - 'tour:<tour ID>'
    */
   public function testRenderedTour() {
-    $path = 'tour-test-1';
+    $url = Url::fromRoute('tour_test.1');
 
     // Prime the page cache.
-    $this->verifyPageCache($path, 'MISS');
+    $this->verifyPageCache($url, 'MISS');
 
     // Verify a cache hit, but also the presence of the correct cache tags.
     $expected_tags = [
       'config:tour.tour.tour-test',
       'rendered',
     ];
-    $this->verifyPageCache($path, 'HIT', $expected_tags);
+    $this->verifyPageCache($url, 'HIT', $expected_tags);
 
     // Verify that after modifying the tour, there is a cache miss.
     $this->pass('Test modification of tour.', 'Debug');
     Tour::load('tour-test')->save();
-    $this->verifyPageCache($path, 'MISS');
+    $this->verifyPageCache($url, 'MISS');
 
     // Verify a cache hit.
-    $this->verifyPageCache($path, 'HIT', $expected_tags);
+    $this->verifyPageCache($url, 'HIT', $expected_tags);
 
     // Verify that after deleting the tour, there is a cache miss.
     $this->pass('Test deletion of tour.', 'Debug');
     Tour::load('tour-test')->delete();
-    $this->verifyPageCache($path, 'MISS');
+    $this->verifyPageCache($url, 'MISS');
 
     // Verify a cache hit.
     $expected_tags = [
       'rendered',
     ];
-    $this->verifyPageCache($path, 'HIT', $expected_tags);
+    $this->verifyPageCache($url, 'HIT', $expected_tags);
   }
 
 }
