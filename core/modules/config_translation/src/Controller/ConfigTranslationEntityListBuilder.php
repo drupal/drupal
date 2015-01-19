@@ -8,12 +8,12 @@
 namespace Drupal\config_translation\Controller;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityListBuilder;
+use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 
 /**
  * Defines the configuration translation list builder for entities.
  */
-class ConfigTranslationEntityListBuilder extends EntityListBuilder implements ConfigTranslationEntityListBuilderInterface {
+class ConfigTranslationEntityListBuilder extends ConfigEntityListBuilder implements ConfigTranslationEntityListBuilderInterface {
 
   /**
    * Provides user facing strings for the filter element.

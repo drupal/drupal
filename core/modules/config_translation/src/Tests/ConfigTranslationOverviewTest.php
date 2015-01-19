@@ -120,4 +120,27 @@ class ConfigTranslationOverviewTest extends WebTestBase {
     $this->assertLinkByHref('admin/config/regional/date-time/formats/manage/html_year/translate');
   }
 
+  /**
+   * Tests that overrides do not affect listing screens.
+   */
+  public function testListingPageWithOverrides() {
+    $original_label = 'Default';
+    $overridden_label = 'Overridden label';
+
+    // Set up an override.
+    $settings['config']['config_test.dynamic.dotted.default']['label'] = (object) array(
+      'value' => $overridden_label,
+      'required' => TRUE,
+    );
+    $this->writeSettings($settings);
+
+    // Test that the overridden label is loaded with the entity.
+    $this->assertEqual(config_test_load('dotted.default')->label(), $overridden_label);
+
+    // Test that the original label on the listing page is intact.
+    $this->drupalGet('admin/config/regional/config-translation/config_test');
+    $this->assertText($original_label);
+    $this->assertNoText($overridden_label);
+  }
+
 }
