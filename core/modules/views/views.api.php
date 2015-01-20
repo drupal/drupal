@@ -188,6 +188,28 @@ function hook_views_data() {
       'left_field' => 'nid',
       // Foreign key field in example_table to use in the join.
       'field' => 'nid',
+      // An array of extra conditions on the join.
+      'extra' => array(
+        0 => array(
+          // Adds AND node.published = TRUE to the join.
+          'field' => 'published',
+          'value' => TRUE,
+        ),
+        1 => array(
+          // Adds AND example_table.numeric_field = 1 to the join.
+          'left_field' => 'numeric_field',
+          'value' => 1,
+          // If true, the value will not be surrounded in quotes.
+          'numeric' => TRUE,
+        ),
+        2 => array(
+          // Adds AND example_table.boolean_field <> node.published to the join.
+          'field' => 'published',
+          'left_field' => 'boolean_field',
+          // The operator used, Defaults to "=".
+          'operator' => '!=',
+        ),
+      ),
     ),
   );
 
