@@ -8,7 +8,12 @@ core: 8.x
 libraries:
   - bartik/global-styling
 ckeditor_stylesheets:
-  - css/ckeditor-iframe.css
+  - css/base/elements.css
+  - css/base/typography.css
+  - css/components/captions.css
+  - css/components/content.css
+  - css/components/list.css
+  - css/components/table.css
 regions:
   header: Header
   primary_menu: 'Primary menu'
