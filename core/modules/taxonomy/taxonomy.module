@@ -135,62 +135,6 @@ function taxonomy_page_attachments_alter(array &$page) {
 }
 
 /**
- * Return nodes attached to a term across all fields.
- *
- * This function requires taxonomy module to be maintaining its own tables,
- * and will return an empty array if it is not. If using other field storage
- * methods alternatives methods for listing terms will need to be used.
- *
- * @param $tid
- *   The term ID.
- * @param $pager
- *   Boolean to indicate whether a pager should be used.
- * @param $limit
- *   Integer. The maximum number of nodes to find.
- *   Set to FALSE for no limit.
- * @param $order
- *   An array of fields and directions.
- *
- * @return
- *   An array of nids matching the query.
- */
-function taxonomy_select_nodes($tid, $pager = TRUE, $limit = FALSE, $order = array('t.sticky' => 'DESC', 't.created' => 'DESC')) {
-  if (!\Drupal::config('taxonomy.settings')->get('maintain_index_table')) {
-    return array();
-  }
-  $query = db_select('taxonomy_index', 't');
-  $query->addTag('node_access');
-  $query->addMetaData('base_table', 'taxonomy_index');
-  $query->condition('tid', $tid);
-  $query->condition('status', NODE_PUBLISHED);
-  if ($pager) {
-    $count_query = clone $query;
-    $count_query->addExpression('COUNT(t.nid)');
-
-    $query = $query->extend('Drupal\Core\Database\Query\PagerSelectExtender');
-    if ($limit !== FALSE) {
-      $query = $query->limit($limit);
-    }
-    $query->setCountQuery($count_query);
-  }
-  else {
-    if ($limit !== FALSE) {
-      $query->range(0, $limit);
-    }
-  }
-  $query->addField('t', 'nid');
-  $query->addField('t', 'tid');
-  foreach ($order as $field => $direction) {
-    $query->orderBy($field, $direction);
-    // ORDER BY fields need to be loaded too, assume they are in the form
-    // table_alias.name
-    list($table_alias, $name) = explode('.', $field);
-    $query->addField($table_alias, $name);
-  }
-  return $query->execute()->fetchCol();
-}
-
-/**
  * Implements hook_theme().
  */
 function taxonomy_theme() {
@@ -634,11 +578,11 @@ function taxonomy_autocomplete_validate($element, FormStateInterface $form_state
  * sorted by creation date. To avoid slow queries due to joining across
  * multiple node and field tables with various conditions and order by criteria,
  * we maintain a denormalized table with all relationships between terms,
- * published nodes and common sort criteria such as sticky and created.
- * This is used as a lookup table by taxonomy_select_nodes(). When using other
- * field storage engines or alternative methods of denormalizing this data
- * you should set the taxonomy.settings:maintain_index_table to '0' to avoid
- * unnecessary writes in SQL.
+ * published nodes and common sort criteria such as status, sticky and created.
+ * When using other field storage engines or alternative methods of
+ * denormalizing this data you should set the
+ * taxonomy.settings:maintain_index_table to '0' to avoid unnecessary writes in
+ * SQL.
  */
 
 /**
