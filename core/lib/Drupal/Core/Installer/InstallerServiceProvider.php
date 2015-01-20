@@ -73,11 +73,6 @@ class InstallerServiceProvider implements ServiceProviderInterface, ServiceModif
     $twig_config['cache'] = FALSE;
     $container->setParameter('twig.config', $twig_config);
 
-    // Disable configuration overrides.
-    // ConfigFactory would to try to load language overrides and InstallStorage
-    // throws an exception upon trying to load a non-existing file.
-    $container->get('config.factory')->setOverrideState(FALSE);
-
     // No service may persist when the early installer kernel is rebooted into
     // the production environment.
     // @todo The DrupalKernel reboot performed by drupal_install_system() is

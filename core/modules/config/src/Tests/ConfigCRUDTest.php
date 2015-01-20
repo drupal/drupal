@@ -74,9 +74,7 @@ class ConfigCRUDTest extends KernelTestBase {
     $this->assertIdentical($config->isNew(), FALSE);
 
     // Pollute the config factory static cache.
-    $config_factory->setOverrideState(FALSE);
-    $config_factory->get($name);
-    $config_factory->setOverrideState(TRUE);
+    $config_factory->getEditable($name);
 
     // Delete the configuration object.
     $config->delete();
@@ -87,9 +85,7 @@ class ConfigCRUDTest extends KernelTestBase {
 
     // Verify that all copies of the configuration has been removed from the
     // static cache.
-    $config_factory->setOverrideState(FALSE);
-    $this->assertIdentical($config_factory->get($name)->isNew(), TRUE);
-    $config_factory->setOverrideState(TRUE);
+    $this->assertIdentical($config_factory->getEditable($name)->isNew(), TRUE);
 
     // Verify the active configuration contains no value.
     $actual_data = $storage->read($name);
@@ -130,11 +126,9 @@ class ConfigCRUDTest extends KernelTestBase {
     // Test renaming when config.factory does not have the object in its static
     // cache.
     $name = 'config_test.crud_rename';
-    // Turn off overrides and pollute the non-overrides static cache.
-    $config_factory->setOverrideState(FALSE);
-    $config_factory->get($name);
-    // Turn on overrides and pollute the overrides static cache.
-    $config_factory->setOverrideState(TRUE);
+    // Pollute the non-overrides static cache.
+    $config_factory->getEditable($name);
+    // Pollute the overrides static cache.
     $config = $config_factory->get($name);
     // Rename and ensure that happened properly.
     $new_name = 'config_test.crud_rename_no_cache';
@@ -145,9 +139,7 @@ class ConfigCRUDTest extends KernelTestBase {
     // Ensure the overrides static cache has been cleared.
     $this->assertIdentical($config_factory->get($name)->isNew(), TRUE);
     // Ensure the non-overrides static cache has been cleared.
-    $config_factory->setOverrideState(FALSE);
-    $this->assertIdentical($config_factory->get($name)->isNew(), TRUE);
-    $config_factory->setOverrideState(TRUE);
+    $this->assertIdentical($config_factory->getEditable($name)->isNew(), TRUE);
 
     // Merge data into the configuration object.
     $new_config = $this->config($new_name);

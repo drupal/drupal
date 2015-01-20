@@ -15,34 +15,6 @@ namespace Drupal\Core\Config;
 interface ConfigFactoryInterface {
 
   /**
-   * Constant used in static cache keys for mutable config objects.
-   */
-  const MUTABLE = 'mutable';
-
-  /**
-   * Constant used in static cache keys for immutable config objects.
-   */
-  const IMMUTABLE = 'immutable';
-
-  /**
-   * Sets the override state.
-   *
-   * @param bool $state
-   *   TRUE if overrides should be applied, FALSE otherwise.
-   *
-   * @return $this
-   */
-  public function setOverrideState($state);
-
-  /**
-   * Gets the override state.
-   *
-   * @return bool
-   *   Get the override state.
-   */
-  public function getOverrideState();
-
-  /**
    * Returns an immutable configuration object for a given name.
    *
    * @param string $name

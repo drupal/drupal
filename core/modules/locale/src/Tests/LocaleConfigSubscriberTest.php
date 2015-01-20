@@ -330,11 +330,7 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
   protected function assertConfigValue($config_name, $key, $value) {
     // Make sure the configuration was translated correctly.
     $translation_config = $this->configFactory->get($config_name);
-    $passed = $this->assertIdentical($value, $translation_config->get($key));
-
-    // Make sure the override state of the configuration factory was not
-    // modified.
-    return $passed && $this->assertIdentical(TRUE, $this->configFactory->getOverrideState());
+    return $this->assertIdentical($value, $translation_config->get($key));
   }
 
   /**

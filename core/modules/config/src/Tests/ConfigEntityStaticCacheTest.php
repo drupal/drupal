@@ -83,28 +83,28 @@ class ConfigEntityStaticCacheTest extends KernelTestBase {
    * Tests that the static cache is sensitive to config overrides.
    */
   public function testConfigOverride() {
+    /** @var \Drupal\Core\Config\Entity\ConfigEntityStorage $storage */
+    $storage = \Drupal::entityManager()->getStorage($this->entityTypeId);
     // Prime the cache prior to adding a config override.
-    entity_load($this->entityTypeId, $this->entityId);
+    $storage->load($this->entityId);
 
     // Add the config override, and ensure that what is loaded is correct
     // despite the prior cache priming.
     \Drupal::configFactory()->addOverride(new ConfigOverrider());
-    $entity_override = entity_load($this->entityTypeId, $this->entityId);
+    $entity_override = $storage->load($this->entityId);
     $this->assertIdentical($entity_override->label, 'Overridden label');
 
-    // Disable overrides to ensure that loading the config entity again does not
-    // return the overridden value.
-    \Drupal::configFactory()->setOverrideState(FALSE);
-    $entity_no_override = entity_load($this->entityTypeId, $this->entityId);
+    // Load override free to ensure that loading the config entity again does
+    // not return the overridden value.
+    $entity_no_override = $storage->loadOverrideFree($this->entityId);
     $this->assertNotIdentical($entity_no_override->label, 'Overridden label');
     $this->assertNotIdentical($entity_override->_loadStamp, $entity_no_override->_loadStamp);
 
     // Reload the entity and ensure the cache is used.
-    $this->assertIdentical(entity_load($this->entityTypeId, $this->entityId)->_loadStamp, $entity_no_override->_loadStamp);
+    $this->assertIdentical($storage->loadOverrideFree($this->entityId)->_loadStamp, $entity_no_override->_loadStamp);
 
     // Enable overrides and reload the entity and ensure the cache is used.
-    \Drupal::configFactory()->setOverrideState(TRUE);
-    $this->assertIdentical(entity_load($this->entityTypeId, $this->entityId)->_loadStamp, $entity_override->_loadStamp);
+    $this->assertIdentical($storage->load($this->entityId)->_loadStamp, $entity_override->_loadStamp);
   }
 
 }

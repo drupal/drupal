@@ -148,11 +148,7 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
     // Get base language configuration to display in the form before setting the
     // language to use for the form. This avoids repetitively settings and
     // resetting the language to get original values later.
-    $config_factory = $this->configFactory();
-    $old_state = $config_factory->getOverrideState();
-    $config_factory->setOverrideState(FALSE);
     $this->baseConfigData = $this->mapper->getConfigData();
-    $config_factory->setOverrideState($old_state);
 
     // Set the translation target language on the configuration factory.
     $original_language = $this->languageManager->getConfigOverrideLanguage();
@@ -174,7 +170,7 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
 
       $schema = $this->typedConfigManager->get($name);
       $source_config = $this->baseConfigData[$name];
-      $translation_config = $config_factory->get($name)->get();
+      $translation_config = $this->configFactory()->get($name)->get();
 
       if ($form_element = $this->createFormElement($schema)) {
         $parents = array('config_names', $name);
@@ -201,16 +197,11 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_values = $form_state->getValue(array('translation', 'config_names'));
 
-    // For the form submission handling, use the raw data.
-    $config_factory = $this->configFactory();
-    $old_state = $config_factory->getOverrideState();
-    $config_factory->setOverrideState(FALSE);
-
     foreach ($this->mapper->getConfigNames() as $name) {
       $schema = $this->typedConfigManager->get($name);
 
       // Set configuration values based on form submission and source values.
-      $base_config = $config_factory->get($name);
+      $base_config = $this->configFactory()->getEditable($name);
       $config_translation = $this->languageManager->getLanguageConfigOverride($this->language->getId(), $name);
 
       $element = $this->createFormElement($schema);
@@ -225,7 +216,6 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
         $config_translation->save();
       }
     }
-    $config_factory->setOverrideState($old_state);
 
     $form_state->setRedirect(
       $this->mapper->getOverviewRoute(),

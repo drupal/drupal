@@ -78,11 +78,7 @@ class AdminPathConfigEntityConverter extends EntityConverter {
 
     if ($storage = $this->entityManager->getStorage($entity_type_id)) {
       // Make sure no overrides are loaded.
-      $old_state = $this->configFactory->getOverrideState();
-      $this->configFactory->setOverrideState(FALSE);
-      $entity = $storage->load($value);
-      $this->configFactory->setOverrideState($old_state);
-      return $entity;
+      return $storage->loadOverrideFree($value);
     }
   }
 

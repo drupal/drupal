@@ -99,9 +99,6 @@ class ConfigInstaller implements ConfigInstallerInterface {
     // Gather information about all the supported collections.
     $collection_info = $this->configManager->getConfigCollectionInfo();
 
-    $old_state = $this->configFactory->getOverrideState();
-    $this->configFactory->setOverrideState(FALSE);
-
     // Read enabled extensions directly from configuration to avoid circular
     // dependencies with ModuleHandler and ThemeHandler.
     $extension_config = $this->configFactory->get('core.extension');
@@ -124,7 +121,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
         $this->createConfiguration($collection, $config_to_install);
       }
     }
-    $this->configFactory->setOverrideState($old_state);
+
     // Reset all the static caches and list caches.
     $this->configFactory->reset();
   }
@@ -255,10 +252,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
       return in_array($provider, $enabled_extensions);
     });
     if (!empty($config_to_install)) {
-      $old_state = $this->configFactory->getOverrideState();
-      $this->configFactory->setOverrideState(FALSE);
       $this->createConfiguration($collection, $config_to_install);
-      $this->configFactory->setOverrideState($old_state);
       // Reset all the static caches and list caches.
       $this->configFactory->reset();
     }

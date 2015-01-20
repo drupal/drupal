@@ -431,7 +431,7 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
   public function getConfigData() {
     $config_data = array();
     foreach ($this->getConfigNames() as $name) {
-      $config_data[$name] = $this->configFactory->get($name)->get();
+      $config_data[$name] = $this->configFactory->getEditable($name)->get();
     }
     return $config_data;
   }

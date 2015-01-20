@@ -1626,12 +1626,7 @@ abstract class TestBase {
    *   The configuration object with original configuration data.
    */
   protected function config($name) {
-    $config_factory = \Drupal::configFactory();
-    $old_state = $config_factory->getOverrideState();
-    $config_factory->setOverrideState(FALSE);
-    $config = $config_factory->getEditable($name);
-    $config_factory->setOverrideState($old_state);
-    return $config;
+    return \Drupal::configFactory()->getEditable($name);
   }
 
 }

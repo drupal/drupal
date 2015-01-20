@@ -128,15 +128,9 @@ class LocaleConfigSubscriber implements EventSubscriberInterface {
 
     // Only do anything if the configuration was shipped.
     if ($this->stringStorage->getLocations(['type' => 'configuration', 'name' => $name])) {
-      $override_state = $this->configFactory->getOverrideState();
-      $this->configFactory->setOverrideState(FALSE);
-
-      $source_config = $this->configFactory->get($name);
+      $source_config = $this->configFactory->getEditable($name);
       $schema = $this->localeConfigManager->get($name)->getTypedConfig();
-
       $this->traverseSchema($schema, $source_config, $translation_config, $callable);
-
-      $this->configFactory->setOverrideState($override_state);
     }
   }
 

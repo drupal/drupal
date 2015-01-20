@@ -44,13 +44,6 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
   protected $eventDispatcher;
 
   /**
-   * A flag indicating if we should use overrides.
-   *
-   * @var boolean
-   */
-  protected $useOverrides = TRUE;
-
-  /**
    * Cached configuration objects.
    *
    * @var \Drupal\Core\Config\Config[]
@@ -90,27 +83,8 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
   /**
    * {@inheritdoc}
    */
-  public function setOverrideState($state) {
-    $this->useOverrides = $state;
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getOverrideState() {
-    return $this->useOverrides;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getEditable($name) {
-    $old_state = $this->getOverrideState();
-    $this->setOverrideState(FALSE);
-    $config = $this->doGet($name, FALSE);
-    $this->setOverrideState($old_state);
-    return $config;
+    return $this->doGet($name, FALSE);
   }
 
   /**
@@ -141,7 +115,7 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
       $cache_key = $this->getConfigCacheKey($name, $immutable);
       $this->cache[$cache_key] = $this->createConfigObject($name, $immutable);
 
-      if ($this->useOverrides) {
+      if ($immutable) {
         // Get and apply any overrides.
         $overrides = $this->loadOverrides(array($name));
         if (isset($overrides[$name])) {
@@ -191,7 +165,7 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
       $module_overrides = array();
       $storage_data = $this->storage->readMultiple($names);
 
-      if ($this->useOverrides && !empty($storage_data)) {
+      if ($immutable && !empty($storage_data)) {
         // Only get module overrides if we have configuration to override.
         $module_overrides = $this->loadOverrides($names);
       }
@@ -201,7 +175,7 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
 
         $this->cache[$cache_key] = $this->createConfigObject($name, $immutable);
         $this->cache[$cache_key]->initWithData($data);
-        if ($this->useOverrides) {
+        if ($immutable) {
           if (isset($module_overrides[$name])) {
             $this->cache[$cache_key]->setModuleOverride($module_overrides[$name]);
           }
@@ -278,20 +252,17 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    * {@inheritdoc}
    */
   public function getCacheKeys() {
-    $keys = array();
-    if ($this->useOverrides) {
-      // Because get() adds overrides both from $GLOBALS and from
-      // $this->configFactoryOverrides, add cache keys for each.
-      $keys[] = 'global_overrides';
-      foreach($this->configFactoryOverrides as $override) {
-        $keys[] =  $override->getCacheSuffix();
-      }
+    // Because get() adds overrides both from $GLOBALS and from
+    // $this->configFactoryOverrides, add cache keys for each.
+    $keys[] = 'global_overrides';
+    foreach($this->configFactoryOverrides as $override) {
+      $keys[] =  $override->getCacheSuffix();
     }
     return $keys;
   }
 
   /**
-   * Gets the cache key for a given config name.
+   * Gets the static cache key for a given config name.
    *
    * @param string $name
    *   The name of the configuration object.
@@ -302,7 +273,11 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    *   The cache key.
    */
   protected function getConfigCacheKey($name, $immutable) {
-    return $name . ':' . implode(':', $this->getCacheKeys()) . ':' . ($immutable ? static::IMMUTABLE: static::MUTABLE);
+    $suffix = '';
+    if ($immutable) {
+      $suffix = ':' . implode(':', $this->getCacheKeys());
+    }
+    return $name . $suffix;
   }
 
   /**
@@ -316,8 +291,9 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    */
   protected function getConfigCacheKeys($name) {
     return array_filter(array_keys($this->cache), function($key) use ($name) {
-      // Return TRUE if the key starts with the configuration name.
-      return strpos($key, $name . ':') === 0;
+      // Return TRUE if the key is the name or starts with the configuration
+      // name plus the delimiter.
+      return $key === $name || strpos($key, $name . ':') === 0;
     });
   }
 

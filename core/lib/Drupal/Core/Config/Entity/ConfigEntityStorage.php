@@ -93,6 +93,13 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
   protected $entities = array();
 
   /**
+   * Determines if the underlying configuration is retrieved override free.
+   *
+   * @var bool
+   */
+  protected $overrideFree = FALSE;
+
+  /**
    * Constructs a ConfigEntityStorage object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -179,7 +186,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
     // Load all of the configuration entities.
     $records = array();
     foreach ($this->configFactory->loadMultiple($names) as $config) {
-      $records[$config->get($this->idKey)] = $config->get();
+      $records[$config->get($this->idKey)] = $this->overrideFree ? $config->getOriginal(NULL, FALSE) : $config->get();
     }
     return $this->mapFromStorageRecords($records);
   }
@@ -289,7 +296,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
     $entities = array();
     // Load any available entities from the internal cache.
     if ($this->entityType->isStaticallyCacheable() && !empty($this->entities)) {
-      $config_overrides_key = implode(':', $this->configFactory->getCacheKeys());
+      $config_overrides_key = $this->overrideFree ? '' : implode(':', $this->configFactory->getCacheKeys());
       foreach ($ids as $id) {
         if (!empty($this->entities[$id])) {
           if (isset($this->entities[$id][$config_overrides_key])) {
@@ -309,7 +316,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
    */
   protected function setStaticCache(array $entities) {
     if ($this->entityType->isStaticallyCacheable()) {
-      $config_overrides_key = implode(':', $this->configFactory->getCacheKeys());
+      $config_overrides_key = $this->overrideFree ? '' : implode(':', $this->configFactory->getCacheKeys());
       foreach ($entities as $id => $entity) {
         $this->entities[$id][$config_overrides_key] = $entity;
       }
@@ -422,21 +429,17 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
    * {@inheritdoc}
    */
   public function loadOverrideFree($id) {
-    $old_state = $this->configFactory->getOverrideState();
-    $this->configFactory->setOverrideState(FALSE);
-    $entity = $this->load($id);
-    $this->configFactory->setOverrideState($old_state);
-    return $entity;
+    $entities = $this->loadMultipleOverrideFree([$id]);
+    return isset($entities[$id]) ? $entities[$id] : NULL;
   }
 
   /**
    * {@inheritdoc}
    */
   public function loadMultipleOverrideFree(array $ids = NULL) {
-    $old_state = $this->configFactory->getOverrideState();
-    $this->configFactory->setOverrideState(FALSE);
+    $this->overrideFree = TRUE;
     $entities = $this->loadMultiple($ids);
-    $this->configFactory->setOverrideState($old_state);
+    $this->overrideFree = FALSE;
     return $entities;
   }
 

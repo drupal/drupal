@@ -12,6 +12,7 @@ use Drupal\Core\Config\Entity\DraggableListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Form\ConfigFormBaseTrait;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -23,6 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @see \Drupal\search\Entity\SearchPage
  */
 class SearchPageListBuilder extends DraggableListBuilder implements FormInterface {
+  use ConfigFormBaseTrait;
 
   /**
    * The entities being listed.
@@ -80,6 +82,13 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
    */
   public function getFormID() {
     return 'search_admin_settings';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getEditableConfigNames() {
+    return ['search.settings'];
   }
 
   /**
@@ -156,9 +165,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
-    $old_state = $this->configFactory->getOverrideState();
-    $search_settings = $this->configFactory->setOverrideState(FALSE)->get('search.settings');
-    $this->configFactory->setOverrideState($old_state);
+    $search_settings = $this->config('search.settings');
     // Collect some stats.
     $remaining = 0;
     $total = 0;
@@ -328,7 +335,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
-    $search_settings = $this->configFactory->getEditable('search.settings');
+    $search_settings = $this->config('search.settings');
     // If these settings change, the default index needs to be rebuilt.
     if (($search_settings->get('index.minimum_word_size') != $form_state->getValue('minimum_word_size')) || ($search_settings->get('index.overlap_cjk') != $form_state->getValue('overlap_cjk'))) {
       $search_settings->set('index.minimum_word_size', $form_state->getValue('minimum_word_size'));

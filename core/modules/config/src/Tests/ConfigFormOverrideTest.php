@@ -31,7 +31,6 @@ class ConfigFormOverrideTest extends WebTestBase {
       'required' => TRUE,
     );
     $this->writeSettings($settings);
-    \Drupal::configFactory()->setOverrideState(TRUE);
 
     // Test that everything on the form is the same, but that the override
     // worked for the actual site name.
