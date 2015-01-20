@@ -1243,7 +1243,7 @@ function template_preprocess_file_link(&$variables) {
   $variables['attributes'] = new Attribute($variables['attributes']);
   $variables['attributes']->addClass($classes);
 
-  $variables['link'] = _l($link_text, $url, $options);
+  $variables['link'] = \Drupal::l($link_text, Url::fromUri($url, $options));
 }
 
 /**
