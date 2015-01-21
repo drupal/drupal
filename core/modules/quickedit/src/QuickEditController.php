@@ -142,8 +142,7 @@ class QuickEditController extends ControllerBase {
       throw new NotFoundHttpException();
     }
 
-    $elements['#attached'] = $this->editorSelector->getEditorAttachments($editors);
-    drupal_process_attached($elements);
+    $response->setAttachments($this->editorSelector->getEditorAttachments($editors));
 
     return $response;
   }
@@ -205,7 +204,12 @@ class QuickEditController extends ControllerBase {
       $response->addCommand(new FieldFormSavedCommand($output, $other_view_modes));
     }
     else {
-      $response->addCommand(new FieldFormCommand(drupal_render($form)));
+      $output = drupal_render($form);
+      // When working with a hidden form, we don't want its CSS/JS to be loaded.
+      if ($request->request->get('nocssjs') !== 'true') {
+        $response->setAttachments($form['#attached']);
+      }
+      $response->addCommand(new FieldFormCommand($output));
 
       $errors = $form_state->getErrors();
       if (count($errors)) {
@@ -214,12 +218,6 @@ class QuickEditController extends ControllerBase {
         );
         $response->addCommand(new FieldFormValidationErrorsCommand(drupal_render($status_messages)));
       }
-    }
-
-    // When working with a hidden form, we don't want any CSS or JS to be loaded.
-    if ($request->request->get('nocssjs') === 'true') {
-      drupal_static_reset('_drupal_add_css');
-      drupal_static_reset('_drupal_add_js');
     }
 
     return $response;

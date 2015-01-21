@@ -3,6 +3,7 @@
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
@@ -104,7 +105,7 @@ function user_theme() {
 /**
  * Implements hook_js_settings_alter().
  */
-function user_js_settings_alter(&$settings) {
+function user_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
   // Provide the user ID in drupalSettings to allow JavaScript code to customize
   // the experience for the end user, rather than the server side, which would
   // break the render cache.

@@ -50,7 +50,8 @@ class ViewAjaxTest extends ViewTestBase {
       'view_name' => 'test_ajax_view',
       'view_display_id' => 'page_1',
     );
-    $response = $this->drupalPost('views/ajax', 'application/json', $post);
+    $post += $this->getAjaxPageStatePostData();
+    $response = $this->drupalPost('views/ajax', 'application/vnd.drupal-ajax', $post);
     $data = Json::decode($response);
 
     // Ensure that the view insert command is part of the result.

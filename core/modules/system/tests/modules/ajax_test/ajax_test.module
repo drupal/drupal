@@ -10,50 +10,7 @@ use Drupal\Core\Ajax\AlertCommand;
 use Drupal\Core\Ajax\OpenDialogCommand;
 use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Ajax\CloseDialogCommand;
-use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Url;
-
-/**
- * Menu callback: Returns an element suitable for use by
- * \Drupal\Core\Ajax\AjaxResponse::ajaxRender().
- *
- * Additionally ensures that \Drupal\Core\Ajax\AjaxResponse::ajaxRender()
- * incorporates JavaScript settings generated during the page request by
- * invoking _drupal_add_js() with a dummy setting.
- *
- * @deprecated \Drupal\ajax_test\Controller\AjaxTestController::render()
- */
-function ajax_test_render() {
-  $attached = array(
-    '#attached' => array(
-      'drupalSettings' => array(
-        'ajax' => 'test',
-      ),
-    ),
-  );
-  // @todo Why is this being tested via an explicit drupal_render() call?
-  drupal_render($attached);
-  drupal_process_attached($attached);
-  $response = new AjaxResponse();
-  return $response;
-}
-
-/**
- * Menu callback: Returns an AjaxResponse; settings command set last.
- *
- * Helps verifying AjaxResponse reorders commands to ensure correct execution.
- *
- * @deprecated \Drupal\ajax_test\Controller\AjaxTestController::order()
- */
-function ajax_test_order() {
-  $response = new AjaxResponse();
-  // HTML insertion command.
-  $response->addCommand(new HtmlCommand('body', 'Hello, world!'));
-  $build['#attached']['library'][] = 'ajax_test/order';
-  drupal_process_attached($build);
-
-  return $response;
-}
 
 /**
  * Menu callback: Returns AJAX element with #error property set.

@@ -79,15 +79,13 @@ class FileWidgetAjaxController extends FormAjaxController {
     $status_messages = array('#theme' => 'status_messages');
     $form['#prefix'] .= drupal_render($status_messages);
     $output = drupal_render($form);
-    drupal_process_attached($form);
-    $js = _drupal_add_js();
-    $settings = $js['drupalSettings']['data'];
 
     $response = new AjaxResponse();
+    $response->setAttachments($form['#attached']);
     foreach ($commands as $command) {
       $response->addCommand($command, TRUE);
     }
-    return $response->addCommand(new ReplaceCommand(NULL, $output, $settings));
+    return $response->addCommand(new ReplaceCommand(NULL, $output));
   }
 
   /**

@@ -1115,6 +1115,12 @@ services:
   library.discovery.parser:
     class: Drupal\Core\Asset\LibraryDiscoveryParser
     arguments: ['@app.root', '@module_handler']
+  library.dependency_resolver:
+    class: Drupal\Core\Asset\LibraryDependencyResolver
+    arguments: ['@library.discovery']
+  asset.resolver:
+    class: Drupal\Core\Asset\AssetResolver
+    arguments: ['@library.discovery', '@library.dependency_resolver', '@module_handler', '@theme.manager']
   info_parser:
     class: Drupal\Core\Extension\InfoParser
   twig:

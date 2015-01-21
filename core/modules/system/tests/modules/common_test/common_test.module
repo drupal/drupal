@@ -5,6 +5,8 @@
  * Helper module for the Common tests.
  */
 
+use \Drupal\Core\Asset\AttachedAssetsInterface;
+
 /**
  * Applies #printed to an element to help test #pre_render.
  */
@@ -347,7 +349,7 @@ function common_test_page_attachments_alter(array &$page) {
  *
  * @see \Drupal\system\Tests\Common\JavaScriptTest::testHeaderSetting()
  */
-function common_test_js_settings_alter(&$settings) {
+function common_test_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
   // Modify an existing setting.
   if (array_key_exists('pluralDelimiter', $settings['locale'])) {
     $settings['locale']['pluralDelimiter'] = '☃';

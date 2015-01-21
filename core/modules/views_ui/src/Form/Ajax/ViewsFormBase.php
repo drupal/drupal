@@ -119,14 +119,6 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
       unset($view->form_cache);
     }
 
-    // With the below logic, we may end up rendering a form twice (or two forms
-    // each sharing the same element ids), potentially resulting in
-    // _drupal_add_js() being called twice to add the same setting. drupal_get_js()
-    // is ok with that, but until \Drupal\Core\Ajax\AjaxResponse::ajaxRender()
-    // is (http://drupal.org/node/208611), reset the _drupal_add_js() static
-    // before rendering the second time.
-    $drupal_add_js_original = _drupal_add_js();
-    $drupal_add_js = &drupal_static('_drupal_add_js');
     $form_class = get_class($form_state->getFormObject());
     $response = $this->ajaxFormWrapper($form_class, $form_state);
 
@@ -137,7 +129,6 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
 
     // Sometimes we need to re-generate the form for multi-step type operations.
     if (!empty($view->stack)) {
-      $drupal_add_js = $drupal_add_js_original;
       $stack = $view->stack;
       $top = array_shift($stack);
 
@@ -222,6 +213,11 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
       // If the form didn't execute and we're using ajax, build up an
       // Ajax command list to execute.
       $response = new AjaxResponse();
+
+      // Attach the library necessary for using the OpenModalDialogCommand and
+      // set the attachments for this Ajax response.
+      $form['#attached']['library'][] = 'core/drupal.dialog.ajax';
+      $response->setAttachments($form['#attached']);
 
       $display = '';
       $status_messages = array('#theme' => 'status_messages');

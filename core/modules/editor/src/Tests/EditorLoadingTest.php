@@ -191,7 +191,7 @@ class EditorLoadingTest extends WebTestBase {
       // Editor.module's JS settings present.
       isset($settings['editor']),
       // Editor.module's JS present.
-      isset($settings['ajaxPageState']['js']['core/modules/editor/js/editor.js']),
+      strpos($this->getRawContent(), drupal_get_path('module', 'editor') . '/js/editor.js') !== FALSE,
       // Body field.
       $this->xpath('//textarea[@id="edit-body-0-value"]'),
       // Format selector.

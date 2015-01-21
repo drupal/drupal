@@ -7,6 +7,8 @@
 
 namespace Drupal\ajax_test\Controller;
 
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Url;
 
 /**
@@ -23,17 +25,38 @@ class AjaxTestController {
   }
 
   /**
-   * @todo Remove ajax_test_render().
+   * Returns a render array that will be rendered by AjaxRenderer.
+   *
+   * Ensures that \Drupal\Core\Ajax\AjaxResponse::ajaxRender()
+   * incorporates JavaScript settings generated during the page request by
+   * adding a dummy setting.
    */
   public function render() {
-    return ajax_test_render();
+    return [
+      '#attached' => [
+        'library' => [
+          'core/drupalSettings',
+        ],
+        'drupalSettings' => [
+          'ajax' => 'test',
+        ],
+      ],
+    ];
   }
 
   /**
-   * @todo Remove ajax_test_order().
+   * Returns an AjaxResponse; settings command set last.
+   *
+   * Helps verifying AjaxResponse reorders commands to ensure correct execution.
    */
   public function order() {
-    return ajax_test_order();
+    $response = new AjaxResponse();
+    // HTML insertion command.
+    $response->addCommand(new HtmlCommand('body', 'Hello, world!'));
+    $build['#attached']['library'][] = 'ajax_test/order';
+    $response->setAttachments($build['#attached']);
+
+    return $response;
   }
 
   /**

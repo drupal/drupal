@@ -6,6 +6,7 @@
 
 namespace Drupal\locale\Tests;
 
+use Drupal\Core\Asset\AttachedAssets;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -30,10 +31,9 @@ class LocaleLibraryAlterTest extends WebTestBase {
    * @see locale_library_alter()
    */
   public function testLibraryAlter() {
-    $attached['#attached']['library'][] = 'core/jquery.ui.datepicker';
-    drupal_render($attached);
-    drupal_process_attached($attached);
-    $scripts = drupal_get_js();
-    $this->assertTrue(strpos($scripts, 'locale.datepicker.js'), 'locale.datepicker.js added to scripts.');
+    $assets = new AttachedAssets();
+    $assets->setLibraries(['core/jquery.ui.datepicker']);
+    $js_assets = $this->container->get('asset.resolver')->getJsAssets($assets, FALSE)[0];
+    $this->assertTrue(array_key_exists('core/modules/locale/locale.datepicker.js', $js_assets), 'locale.datepicker.js added to scripts.');
   }
 }

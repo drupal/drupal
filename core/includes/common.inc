@@ -760,305 +760,6 @@ function _drupal_add_html_head_link($attributes, $header = FALSE) {
 }
 
 /**
- * Adds a cascading stylesheet to the stylesheet queue.
- *
- * Calling drupal_static_reset('_drupal_add_css') will clear all cascading
- * stylesheets added so far.
- *
- * If CSS aggregation/compression is enabled, all cascading style sheets added
- * with $options['preprocess'] set to TRUE will be merged into one aggregate
- * file and compressed by removing all extraneous white space.
- * Externally hosted stylesheets are never aggregated or compressed.
- *
- * The reason for aggregating the files is outlined quite thoroughly here:
- * http://www.die.net/musings/page_load_time/ "Load fewer external objects. Due
- * to request overhead, one bigger file just loads faster than two smaller ones
- * half its size."
- *
- * $options['preprocess'] should be only set to TRUE when a file is required for
- * all typical visitors and most pages of a site. It is critical that all
- * preprocessed files are added unconditionally on every page, even if the
- * files do not happen to be needed on a page.
- *
- * Non-preprocessed files should only be added to the page when they are
- * actually needed.
- *
- * @param $data
- *   (optional) The stylesheet data to be added, depending on what is passed
- *   through to the $options['type'] parameter:
- *   - 'file': The path to the CSS file relative to the base_path(), or a
- *     stream wrapper URI. For example: "modules/devel/devel.css" or
- *     "public://generated_css/stylesheet_1.css". Note that Modules should
- *     always prefix the names of their CSS files with the module name; for
- *     example, system-menus.css rather than simply menus.css. Themes can
- *     override module-supplied CSS files based on their filenames, and this
- *     prefixing helps prevent confusing name collisions for theme developers.
- *     See drupal_get_css() where the overrides are performed.
- *   - 'external': The absolute path to an external CSS file that is not hosted
- *     on the local server. These files will not be aggregated if CSS
- *     aggregation is enabled.
- * @param $options
- *   (optional) A string defining the 'type' of CSS that is being added in the
- *   $data parameter ('file' or 'external'), or an array which can have any or
- *   all of the following keys:
- *   - 'type': The type of stylesheet being added. Available options are 'file'
- *     or 'external'. Defaults to 'file'.
- *   - 'basename': Force a basename for the file being added. Modules are
- *     expected to use stylesheets with unique filenames, but integration of
- *     external libraries may make this impossible. The basename of
- *     'core/modules/node/node.css' is 'node.css'. If the external library
- *     "node.js" ships with a 'node.css', then a different, unique basename
- *     would be 'node.js.css'.
- *   - 'group': A number identifying the aggregation group in which to add the
- *     stylesheet. Available constants are:
- *     - CSS_AGGREGATE_DEFAULT: (default) Any module-layer CSS.
- *     - CSS_AGGREGATE_THEME: Any theme-layer CSS.
- *     The aggregate group number affects load order and the CSS cascade.
- *     Stylesheets in an aggregate with a lower group number will be output to
- *     the page before stylesheets in an aggregate with a higher group number,
- *     so CSS within higher aggregate groups can take precedence over CSS
- *     within lower aggregate groups.
- *   - 'every_page': For optimal front-end performance when aggregation is
- *     enabled, this should be set to TRUE if the stylesheet is present on every
- *     page of the website for users for whom it is present at all. This
- *     defaults to FALSE. It is set to TRUE for stylesheets added via module and
- *     theme .info.yml files. Modules that add stylesheets within
- *     hook_page_attachments() implementations, or from other code that ensures
- *     that the stylesheet is added to all website pages, should also set this flag
- *     to TRUE. All stylesheets within the same group that have the 'every_page'
- *     flag set to TRUE and do not have 'preprocess' set to FALSE are aggregated
- *     together into a single aggregate file, and that aggregate file can be
- *     reused across a user's entire site visit, leading to faster navigation
- *     between pages.
- *     However, stylesheets that are only needed on pages less frequently
- *     visited, can be added by code that only runs for those particular pages,
- *     and that code should not set the 'every_page' flag. This minimizes the
- *     size of the aggregate file that the user needs to download when first
- *     visiting the website. Stylesheets without the 'every_page' flag are
- *     aggregated into a separate aggregate file. This other aggregate file is
- *     likely to change from page to page, and each new aggregate file needs to
- *     be downloaded when first encountered, so it should be kept relatively
- *     small by ensuring that most commonly needed stylesheets are added to
- *     every page.
- *   - 'weight': The weight of the stylesheet specifies the order in which the
- *     CSS will appear relative to other stylesheets with the same aggregate
- *     group and 'every_page' flag. The exact ordering of stylesheets is as
- *     follows:
- *     - First by aggregate group.
- *     - Then by the 'every_page' flag, with TRUE coming before FALSE.
- *     - Then by weight.
- *     - Then by the order in which the CSS was added. For example, all else
- *       being the same, a stylesheet added by a call to _drupal_add_css() that
- *       happened later in the page request gets added to the page after one for
- *       which _drupal_add_css() happened earlier in the page request.
- *     Available constants are:
- *     - CSS_BASE: Styles for HTML elements ("base" styles).
- *     - CSS_LAYOUT: Styles that layout a page.
- *     - CSS_COMPONENT: Styles for design components (and their associated
- *       states and themes.)
- *     - CSS_STATE: Styles for states that are not included with components.
- *     - CSS_THEME: Styles for themes that are not included with components.
- *     The weight numbers follow the SMACSS convention of CSS categorization.
- *     See http://drupal.org/node/1887922
- *   - 'media': The media type for the stylesheet, e.g., all, print, screen.
- *     Defaults to 'all'. It is extremely important to leave this set to 'all'
- *     or it will negatively impact front-end performance. Instead add a @media
- *     block to the included CSS file.
- *   - 'preprocess': If TRUE and CSS aggregation/compression is enabled, the
- *     styles will be aggregated and compressed. Defaults to TRUE.
- *   - 'browsers': An array containing information specifying which browsers
- *     should load the CSS item. See
- *     \Drupal\Core\Render\Element\HtmlTag::preRenderConditionalComments() for
- *     details.
- *
- * @return
- *   An array of queued cascading stylesheets.
- *
- * @deprecated as of Drupal 8.0. Use the #attached key in render arrays instead.
- *
- * @see drupal_get_css()
- */
-function _drupal_add_css($data = NULL, $options = NULL) {
-  $css = &drupal_static(__FUNCTION__, array());
-
-  // Construct the options, taking the defaults into consideration.
-  if (isset($options)) {
-    if (!is_array($options)) {
-      $options = array('type' => $options);
-    }
-  }
-  else {
-    $options = array();
-  }
-
-  // Create an array of CSS files for each media type first, since each type needs to be served
-  // to the browser differently.
-  if (isset($data)) {
-    $options += array(
-      'type' => 'file',
-      'group' => CSS_AGGREGATE_DEFAULT,
-      'weight' => 0,
-      'every_page' => FALSE,
-      'media' => 'all',
-      'preprocess' => TRUE,
-      'data' => $data,
-      'browsers' => array(),
-    );
-    $options['browsers'] += array(
-      'IE' => TRUE,
-      '!IE' => TRUE,
-    );
-
-    // Files with a query string cannot be preprocessed.
-    if ($options['type'] === 'file' && $options['preprocess'] && strpos($options['data'], '?') !== FALSE) {
-      $options['preprocess'] = FALSE;
-    }
-
-    // Always add a tiny value to the weight, to conserve the insertion order.
-    $options['weight'] += count($css) / 1000;
-
-    // Add the data to the CSS array depending on the type.
-    switch ($options['type']) {
-      case 'file':
-        // Local CSS files are keyed by basename; if a file with the same
-        // basename is added more than once, it gets overridden.
-        // By default, take over the filename as basename.
-        if (!isset($options['basename'])) {
-          $options['basename'] = drupal_basename($data);
-        }
-        $css[$options['basename']] = $options;
-        break;
-
-      default:
-        // External files are keyed by their full URI, so the same CSS file is
-        // not added twice.
-        $css[$data] = $options;
-    }
-  }
-
-  return $css;
-}
-
-/**
- * Returns a themed representation of all stylesheets to attach to the page.
- *
- * It loads the CSS in order, with 'module' first, then 'theme' afterwards.
- * This ensures proper cascading of styles so themes can easily override
- * module styles through CSS selectors.
- *
- * Themes may replace module-defined CSS files by adding a stylesheet with the
- * same filename. For example, themes/bartik/system-menus.css would replace
- * modules/system/system-menus.css. This allows themes to override complete
- * CSS files, rather than specific selectors, when necessary.
- *
- * @param $css
- *   (optional) An array of CSS files. If no array is provided, the default
- *   stylesheets array is used instead.
- * @param $skip_alter
- *   (optional) If set to TRUE, this function skips calling
- *   \Drupal::moduleHandler->alter() on $css, useful when the calling function
- *   passes a $css array that has already been altered.
- *
- * @return
- *   A string of XHTML CSS tags.
- *
- * @see _drupal_add_css()
- */
-function drupal_get_css($css = NULL, $skip_alter = FALSE, $theme_add_css = TRUE) {
-  $theme_info = \Drupal::theme()->getActiveTheme();
-
-  if (!isset($css)) {
-    $css = _drupal_add_css();
-  }
-
-  // Allow modules and themes to alter the CSS items.
-  if (!$skip_alter) {
-    \Drupal::moduleHandler()->alter('css', $css);
-    \Drupal::theme()->alter('css', $css);
-  }
-
-  // Sort CSS items, so that they appear in the correct order.
-  uasort($css, 'drupal_sort_css_js');
-
-  // Allow themes to remove CSS files by basename.
-  if ($stylesheet_remove = $theme_info->getStyleSheetsRemove()) {
-    foreach ($css as $key => $options) {
-      if (isset($options['basename']) && isset($stylesheet_remove[$options['basename']])) {
-        unset($css[$key]);
-      }
-    }
-  }
-  // Allow themes to conditionally override CSS files by basename.
-  if ($stylesheet_override = $theme_info->getStyleSheetsOverride()) {
-    foreach ($css as $key => $options) {
-      if (isset($options['basename']) && isset($stylesheet_override[$options['basename']])) {
-        $css[$key]['data'] = $stylesheet_override[$options['basename']];
-      }
-    }
-  }
-
-  // Render the HTML needed to load the CSS.
-  $styles = array(
-    '#type' => 'styles',
-    '#items' => $css,
-  );
-
-  return drupal_render($styles);
-}
-
-/**
- * Sorts CSS and JavaScript resources.
- *
- * Callback for uasort() within:
- * - drupal_get_css()
- * - drupal_get_js()
- *
- * This sort order helps optimize front-end performance while providing modules
- * and themes with the necessary control for ordering the CSS and JavaScript
- * appearing on a page.
- *
- * @param $a
- *   First item for comparison. The compared items should be associative arrays
- *   of member items from _drupal_add_css() or _drupal_add_js().
- * @param $b
- *   Second item for comparison.
- *
- * @see _drupal_add_css()
- * @see _drupal_add_js()
- */
-function drupal_sort_css_js($a, $b) {
-  // First order by group, so that all items in the CSS_AGGREGATE_DEFAULT group
-  // appear before items in the CSS_AGGREGATE_THEME group. Modules may create
-  // additional groups by defining their own constants.
-  if ($a['group'] < $b['group']) {
-    return -1;
-  }
-  elseif ($a['group'] > $b['group']) {
-    return 1;
-  }
-  // Within a group, order all infrequently needed, page-specific files after
-  // common files needed throughout the website. Separating this way allows for
-  // the aggregate file generated for all of the common files to be reused
-  // across a site visit without being cut by a page using a less common file.
-  elseif ($a['every_page'] && !$b['every_page']) {
-    return -1;
-  }
-  elseif (!$a['every_page'] && $b['every_page']) {
-    return 1;
-  }
-  // Finally, order by weight.
-  elseif ($a['weight'] < $b['weight']) {
-    return -1;
-  }
-  elseif ($a['weight'] > $b['weight']) {
-    return 1;
-  }
-  else {
-    return 0;
-  }
-}
-
-/**
  * Deletes old cached CSS files.
  *
  * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
@@ -1124,200 +825,12 @@ function drupal_clean_id_identifier($id) {
 }
 
 /**
- * Adds a JavaScript file or setting to the page.
- *
- * The behavior of this function depends on the parameters it is called with.
- * Generally, it handles the addition of JavaScript to the page. The following
- * actions can be performed using this function:
- * - Add a file ('file'): Adds a reference to a JavaScript file to the page.
- * - Add external JavaScript ('external'): Allows the inclusion of external
- *   JavaScript files that are not hosted on the local server. Note that these
- *   external JavaScript references do not get aggregated when preprocessing is
- *   on.
- * - Add settings ('setting'): Adds settings to Drupal's global storage of
- *   JavaScript settings. Per-page settings are required by some modules to
- *   function properly. All settings will be accessible at drupalSettings.
- *
- * Examples:
- * @code
- *   _drupal_add_js('core/misc/collapse.js');
- *   _drupal_add_js('core/misc/collapse.js', 'file');
- *   _drupal_add_js('http://example.com/example.js', 'external');
- *   _drupal_add_js(array('myModule' => array('key' => 'value')), 'setting');
- * @endcode
- *
- * Calling drupal_static_reset('_drupal_add_js') will clear all JavaScript added
- * so far.
- *
- * If JavaScript aggregation is enabled, all JavaScript files added with
- * $options['preprocess'] set to TRUE will be merged into one aggregate file.
- * Externally hosted JavaScripts are never aggregated.
- *
- * The reason for aggregating the files is outlined quite thoroughly here:
- * http://www.die.net/musings/page_load_time/ "Load fewer external objects. Due
- * to request overhead, one bigger file just loads faster than two smaller ones
- * half its size."
- *
- * $options['preprocess'] should be only set to TRUE when a file is required for
- * all typical visitors and most pages of a site. It is critical that all
- * preprocessed files are added unconditionally on every page, even if the
- * files are not needed on a page.
- *
- * Non-preprocessed files should only be added to the page when they are
- * actually needed.
+ * Constructs an array of the defaults that are used for JavaScript assets.
  *
  * @param $data
- *   (optional) If given, the value depends on the $options parameter, or
- *   $options['type'] if $options is passed as an associative array:
- *   - 'file': Path to the file relative to base_path().
- *   - 'external': The absolute path to an external JavaScript file that is not
- *     hosted on the local server. These files will not be aggregated if
- *     JavaScript aggregation is enabled.
- *   - 'setting': An associative array with configuration options. The array is
- *     merged directly into drupalSettings. All modules should wrap their
- *     actual configuration settings in another variable to prevent conflicts in
- *     the drupalSettings namespace. Items added with a string key will replace
- *     existing settings with that key; items with numeric array keys will be
- *     added to the existing settings array.
- * @param $options
- *   (optional) A string defining the type of JavaScript that is being added in
- *   the $data parameter ('file'/'setting'/'external'), or an associative array.
- *   JavaScript settings should always pass the string 'setting' only. Other
- *   types can have the following elements in the array:
- *   - type: The type of JavaScript that is to be added to the page. Allowed
- *     values are 'file', 'external' or 'setting'. Defaults
- *     to 'file'.
- *   - scope: The location in which you want to place the script. Possible
- *     values are 'header' or 'footer'. If your theme implements different
- *     regions, you can also use these. Defaults to 'header'.
- *   - group: A number identifying the group in which to add the JavaScript.
- *     Available constants are:
- *     - JS_LIBRARY: Any libraries, settings, or jQuery plugins.
- *     - JS_DEFAULT: Any module-layer JavaScript.
- *     - JS_THEME: Any theme-layer JavaScript.
- *     The group number serves as a weight: JavaScript within a lower weight
- *     group is presented on the page before JavaScript within a higher weight
- *     group.
- *   - every_page: For optimal front-end performance when aggregation is
- *     enabled, this should be set to TRUE if the JavaScript is present on every
- *     page of the website for users for whom it is present at all. This
- *     defaults to FALSE. It is set to TRUE for JavaScript files that are added
- *     via module and theme .info.yml files. Modules that add JavaScript within
- *     hook_page_attachments() implementations, or from other code that ensures
- *     that the JavaScript is added to all website pages, should also set this
- *     flag to TRUE. All JavaScript files within the same group and that have the
- *     'every_page' flag set to TRUE and do not have 'preprocess' set to FALSE
- *     are aggregated together into a single aggregate file, and that aggregate
- *     file can be reused across a user's entire site visit, leading to faster
- *     navigation between pages. However, JavaScript that is only needed on
- *     pages less frequently visited, can be added by code that only runs for
- *     those particular pages, and that code should not set the 'every_page'
- *     flag. This minimizes the size of the aggregate file that the user needs
- *     to download when first visiting the website. JavaScript without the
- *     'every_page' flag is aggregated into a separate aggregate file. This
- *     other aggregate file is likely to change from page to page, and each new
- *     aggregate file needs to be downloaded when first encountered, so it
- *     should be kept relatively small by ensuring that most commonly needed
- *     JavaScript is added to every page.
- *   - weight: A number defining the order in which the JavaScript is added to
- *     the page relative to other JavaScript with the same 'scope', 'group',
- *     and 'every_page' value. In some cases, the order in which the JavaScript
- *     is presented on the page is very important. jQuery, for example, must be
- *     added to the page before any jQuery code is run, so jquery.js uses the
- *     JS_LIBRARY group and a weight of -20, jquery.once.js (a library drupal.js
- *     depends on) uses the JS_LIBRARY group and a weight of -19, drupal.js uses
- *     the JS_LIBRARY group and a weight of -1, other libraries use the
- *     JS_LIBRARY group and a weight of 0 or higher, and all other scripts use
- *     one of the other group constants. The exact ordering of JavaScript is as
- *     follows:
- *     - First by scope, with 'header' first, 'footer' last, and any other
- *       scopes provided by a custom theme coming in between, as determined by
- *       the theme.
- *     - Then by group.
- *     - Then by the 'every_page' flag, with TRUE coming before FALSE.
- *     - Then by weight.
- *     - Then by the order in which the JavaScript was added. For example, all
- *       else being the same, JavaScript added by a call to _drupal_add_js() that
- *       happened later in the page request gets added to the page after one for
- *       which _drupal_add_js() happened earlier in the page request.
- *   - cache: If set to FALSE, the JavaScript file is loaded anew on every page
- *     call; in other words, it is not cached. Used only when 'type' references
- *     a JavaScript file. Defaults to TRUE.
- *   - preprocess: If TRUE and JavaScript aggregation is enabled, the script
- *     file will be aggregated. Defaults to TRUE.
- *   - attributes: An associative array of attributes for the <script> tag. This
- *     may be used to add 'defer', 'async', or custom attributes. Note that
- *     setting any attributes will disable preprocessing as though the
- *     'preprocess' option was set to FALSE.
- *   - browsers: An array containing information specifying which browsers
- *     should load the JavaScript item. See
- *     \Drupal\Core\Render\Element\HtmlTag::preRenderConditionalComments() for
- *     details.
+ *   (optional) The default data parameter for the JavaScript asset array.
  *
- * @return
- *   The current array of JavaScript files, settings, and in-line code,
- *   including Drupal defaults, anything previously added with calls to
- *   _drupal_add_js(), and this function call's additions.
- *
- * @deprecated as of Drupal 8.0. Use the #attached key in render arrays instead.
- *
- * @see drupal_get_js()
- */
-function _drupal_add_js($data = NULL, $options = NULL) {
-  $javascript = &drupal_static(__FUNCTION__, array());
-
-  // Construct the options, taking the defaults into consideration.
-  if (isset($options)) {
-    if (!is_array($options)) {
-      $options = array('type' => $options);
-    }
-  }
-  else {
-    $options = array();
-  }
-  $options += drupal_js_defaults($data);
-
-  // Preprocess can only be set if caching is enabled and no attributes are set.
-  $options['preprocess'] = $options['cache'] && empty($options['attributes']) ? $options['preprocess'] : FALSE;
-
-  // Tweak the weight so that files of the same weight are included in the
-  // order of the calls to _drupal_add_js().
-  $options['weight'] += count($javascript) / 1000;
-  if (isset($data)) {
-    switch ($options['type']) {
-      case 'setting':
-        // If the setting array doesn't exist, add defaults values.
-        if (!isset($javascript['drupalSettings'])) {
-          $javascript['drupalSettings'] = array(
-            'type' => 'setting',
-            'scope' => 'header',
-            'group' => JS_SETTING,
-            'every_page' => TRUE,
-            'weight' => 0,
-            'browsers' => array(),
-            'data' => array(),
-          );
-        }
-        $javascript['drupalSettings']['data'] = NestedArray::mergeDeepArray([$javascript['drupalSettings']['data'], $data], TRUE);
-        break;
-
-      default: // 'file' and 'external'
-        // Local and external files must keep their name as the associative key
-        // so the same JavaScript file is not added twice.
-        $javascript[$options['data']] = $options;
-    }
-  }
-  return $javascript;
-}
-
-/**
- * Constructs an array of the defaults that are used for JavaScript items.
- *
- * @param $data
- *   (optional) The default data parameter for the JavaScript item array.
- *
- * @see drupal_get_js()
- * @see _drupal_add_js()
+ * @see hook_js_alter()
  */
 function drupal_js_defaults($data = NULL) {
   return array(
@@ -1333,135 +846,6 @@ function drupal_js_defaults($data = NULL) {
     'data' => $data,
     'browsers' => array(),
   );
-}
-
-/**
- * Returns a themed presentation of all JavaScript code for the current page.
- *
- * References to JavaScript files are placed in a certain order: first, all
- * 'core' files, then all 'module' and finally all 'theme' JavaScript files
- * are added to the page. Then, all settings are output. If running update.php,
- * all preprocessing is disabled.
- *
- * Note that hook_js_alter(&$javascript) is called during this function call
- * to allow alterations of the JavaScript during its presentation. Calls to
- * _drupal_add_js() from hook_js_alter() will not be added to the output
- * presentation. The correct way to add JavaScript during hook_js_alter()
- * is to add another element to the $javascript array, deriving from
- * drupal_js_defaults(). See locale_js_alter() for an example of this.
- *
- * @param $scope
- *   (optional) The scope for which the JavaScript rules should be returned.
- *   Defaults to 'header'.
- * @param $javascript
- *   (optional) An array with all JavaScript code. Defaults to the default
- *   JavaScript array for the given scope.
- * @param bool $skip_alter
- *   (optional) If set to TRUE, this function skips calling
- *   \Drupal::moduleHandler->alter() on $javascript, useful when the calling
- *   function passes a $javascript array that has already been altered.
- * @param bool $is_ajax
- *   (optional) If set to TRUE, this function is called from an Ajax request and
- *   adds javascript settings to update ajaxPageState values.
- *
- * @return
- *   All JavaScript code segments and includes for the scope as HTML tags.
- *
- * @see _drupal_add_js()
- * @see locale_js_alter()
- * @see drupal_js_defaults()
- */
-function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALSE, $is_ajax = FALSE, $theme_add_js = TRUE) {
-  if (!isset($javascript)) {
-    $javascript = _drupal_add_js();
-  }
-  if (empty($javascript)) {
-    return '';
-  }
-
-  // Allow modules to alter the JavaScript.
-  if (!$skip_alter) {
-    \Drupal::moduleHandler()->alter('js', $javascript);
-    \Drupal::theme()->alter('js', $javascript);
-  }
-
-  // Filter out elements of the given scope.
-  $items = array();
-  foreach ($javascript as $key => $item) {
-    if ($item['scope'] == $scope) {
-      $items[$key] = $item;
-    }
-  }
-
-  if (!empty($items)) {
-    // Sort the JavaScript files so that they appear in the correct order.
-    uasort($items, 'drupal_sort_css_js');
-    // Don't add settings if there is no other JavaScript on the page, unless
-    // this is an AJAX request.
-    if (!empty($items['drupalSettings']) || $is_ajax) {
-      $theme_key = \Drupal::theme()->getActiveTheme()->getName();
-      // Provide the page with information about the theme that's used, so that
-      // a later AJAX request can be rendered using the same theme.
-      // @see \Drupal\Core\Theme\AjaxBasePageNegotiator
-      $ajaxPageState['theme'] = $theme_key;
-      // Checks that the DB is available before filling theme_token.
-      if (!defined('MAINTENANCE_MODE')) {
-        $ajaxPageState['theme_token'] = \Drupal::csrfToken()->get($theme_key);
-      }
-
-      // Provide the page with information about the individual JavaScript files
-      // used, information not otherwise available when aggregation is enabled.
-      $ajaxPageState['js'] = array_fill_keys(array_keys($javascript), 1);
-      unset($ajaxPageState['js']['drupalSettings']);
-
-      // Provide the page with information about the individual CSS files used,
-      // information not otherwise available when CSS aggregation is enabled.
-      // The setting is attached later in this function, but is set here, so
-      // that CSS files removed in drupal_process_attached() are still
-      // considered "used" and prevented from being added in a later AJAX
-      // request.
-      // Skip if no files were added to the page otherwise jQuery.extend() will
-      // overwrite the drupalSettings.ajaxPageState.css object with an empty
-      // array.
-      $css = _drupal_add_css();
-      if (!empty($css)) {
-        // Cast the array to an object to be on the safe side even if not empty.
-        $ajaxPageState['css'] = (object) array_fill_keys(array_keys($css), 1);
-      }
-
-      _drupal_add_js(['ajaxPageState' => $ajaxPageState], 'setting');
-
-      // If we're outputting the header scope, then this might be the final time
-      // that drupal_get_js() is running, so add the settings to this output as well
-      // as to the _drupal_add_js() cache. If $items['drupalSettings'] doesn't
-      // exist, it's because drupal_get_js() was intentionally passed a
-      // $javascript argument stripped of settings, potentially in order to
-      // override how settings get output, so in this case, do not add the
-      // setting to this output.
-      if ($scope == 'header' && isset($items['drupalSettings'])) {
-        $items['drupalSettings']['data']['ajaxPageState'] = $ajaxPageState;
-      }
-    }
-  }
-
-  // Process the 'drupalSettings' JavaScript asset, if any.
-  if (!empty($items['drupalSettings'])) {
-    $settings = $items['drupalSettings']['data'];
-
-    // Allow modules and themes to alter the JavaScript settings.
-    \Drupal::moduleHandler()->alter('js_settings', $settings);
-    \Drupal::theme()->alter('js_settings', $settings);
-
-    $items['drupalSettings']['data'] = $settings;
-  }
-
-  // Render the HTML needed to load the JavaScript.
-  $elements = array(
-    '#type' => 'scripts',
-    '#items' => $items,
-  );
-
-  return drupal_render($elements);
 }
 
 /**
@@ -1517,7 +901,7 @@ function drupal_merge_attached(array $a, array $b) {
 }
 
 /**
- * Adds attachments to a render() structure.
+ * Processes non-asset attachments in a render() structure.
  *
  * Libraries, JavaScript settings, feeds, HTML <head> tags and HTML <head> links
  * are attached to elements using the #attached property. The #attached property
@@ -1527,6 +911,9 @@ function drupal_merge_attached(array $a, array $b) {
  * @code
  * $build['#attached'] = [
  *   'library' => ['core/jquery']
+ * ];
+ * $build['#attached']['http_header'] = [
+ *   ['Content-Type', 'application/rss+xml; charset=utf-8'],
  * ];
  * @endcode
  *
@@ -1538,58 +925,25 @@ function drupal_merge_attached(array $a, array $b) {
  * - 'html_head_link' (<link> tags in HTML <head>)
  * - 'http_header' (HTTP headers)
  *
- * For example:
- * @code
- * $build['#attached']['http_header'] = array(
- *   array('Content-Type', 'application/rss+xml; charset=utf-8'),
- * );
- * @endcode
+ * This function processes all non-asset attachments, to apply them to the
+ * current response (that means all keys except 'library' and 'drupalSettings').
  *
  * @param array $elements
  *   The structured array describing the data being rendered.
- * @param bool $dependency_check
- *   When TRUE, will exit if a given library's dependencies are missing. When
- *   set to FALSE, will continue to add the libraries, even though one or more
- *   dependencies are missing. Defaults to FALSE.
  *
- * @return bool
- *   FALSE if there were any missing library dependencies; TRUE if all library
- *   dependencies were met.
- *
- * @see _drupal_add_library()
- * @see _drupal_add_js()
- * @see _drupal_add_css()
  * @see drupal_render()
+ * @see \Drupal\Core\Asset\AssetResolver
+ *
+ * @throws LogicException
+ *   When attaching something of a non-existing attachment type.
  */
-function drupal_process_attached(array $elements, $dependency_check = FALSE) {
-  // Add defaults to the special attached structures that should be processed differently.
-  $elements['#attached'] += array(
-    'library' => array(),
-  );
-
-  // Add the libraries first.
-  $success = TRUE;
-  foreach ($elements['#attached']['library'] as $library) {
-    if (_drupal_add_library($library) === FALSE) {
-      $success = FALSE;
-      // Exit if the dependency is missing.
-      if ($dependency_check) {
-        return $success;
-      }
-    }
-  }
-  unset($elements['#attached']['library']);
-
-  // Convert every JavaScript settings asset into a regular JavaScript asset.
-  // @todo Clean this up in https://www.drupal.org/node/2368797
-  if (!empty($elements['#attached']['drupalSettings'])) {
-    _drupal_add_js($elements['#attached']['drupalSettings'], ['type' => 'setting']);
-    unset($elements['#attached']['drupalSettings']);
+function drupal_process_attached(array $elements) {
+  // Asset attachments are handled by \Drupal\Core\Asset\AssetResolver.
+  foreach (array('library', 'drupalSettings') as $type) {
+    unset($elements['#attached'][$type]);
   }
 
   // Add additional types of attachments specified in the render() structure.
-  // Libraries, JavaScript and CSS have been added already, as they require
-  // special handling.
   foreach ($elements['#attached'] as $callback => $options) {
     foreach ($elements['#attached'][$callback] as $args) {
       // Limit the amount allowed entries.
@@ -1617,8 +971,6 @@ function drupal_process_attached(array $elements, $dependency_check = FALSE) {
       }
     }
   }
-
-  return $success;
 }
 
 /**
@@ -1752,68 +1104,6 @@ function drupal_process_states(&$elements) {
   // is available, so setting #wrapper_attributes makes it work.
   $key = ($elements['#type'] == 'item') ? '#wrapper_attributes' : '#attributes';
   $elements[$key]['data-drupal-states'] = JSON::encode($elements['#states']);
-}
-
-/**
- * Adds multiple JavaScript or CSS files at the same time.
- *
- * A library defines a set of JavaScript and/or CSS files, optionally using
- * settings, and optionally requiring another library. For example, a library
- * can be a jQuery plugin, a JavaScript framework, or a CSS framework. This
- * function allows modules to load a library defined/shipped by itself or a
- * depending module, without having to add all files of the library separately.
- * Each library is only loaded once.
- *
- * @param $library_name
- *   The name of the library to add.
- * @param $every_page
- *   Set to TRUE if this library is added to every page on the site.
- *
- * @return
- *   TRUE if the library was successfully added; FALSE if the library or one of
- *   its dependencies could not be added.
- *
- * @see \Drupal\Core\Asset\LibraryDiscovery
- * @see hook_library_info_alter()
- *
- * @deprecated in Drupal 8.0.x, will be removed before Drupal 8.0.0
- *   Use #attached on render arrays.
- */
-function _drupal_add_library($library_name, $every_page = NULL) {
-  $added = &drupal_static(__FUNCTION__, array());
-  /** @var \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery */
-  $library_discovery = \Drupal::service('library.discovery');
-
-  list($extension, $name) = explode('/', $library_name, 2);
-  // Only process the library if it exists and it was not added already.
-  if (!isset($added[$extension][$name])) {
-    if ($library = $library_discovery->getLibraryByName($extension, $name)) {
-      // Add all components within the library.
-      $elements['#attached'] = array(
-        'library' => $library['dependencies'],
-      );
-      if (isset($library['drupalSettings'])) {
-        $elements['#attached']['drupalSettings'] = $library['drupalSettings'];
-      }
-      $added[$extension][$name] = drupal_process_attached($elements, TRUE);
-
-      // Add both the JavaScript and the CSS.
-      // The parameters for _drupal_add_js() and _drupal_add_css() require special
-      // handling.
-      foreach (array('js', 'css') as $type) {
-        foreach ($library[$type] as $options) {
-          call_user_func('_drupal_add_' . $type, $options['data'], $options);
-        }
-        unset($elements['#attached'][$type]);
-      }
-    }
-    else {
-      // Requested library does not exist.
-      $added[$extension][$name] = FALSE;
-    }
-  }
-
-  return $added[$extension][$name];
 }
 
 /**

@@ -45,7 +45,7 @@ class JsCollectionGrouper implements AssetCollectionGrouperInterface {
           // Group file items if their 'preprocess' flag is TRUE.
           // Help ensure maximum reuse of aggregate files by only grouping
           // together items that share the same 'group' value and 'every_page'
-          // flag. See _drupal_add_js() for details about that.
+          // flag.
           $group_keys = $item['preprocess'] ? array($item['type'], $item['group'], $item['every_page'], $item['browsers']) : FALSE;
           break;
 

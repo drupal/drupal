@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
@@ -618,9 +619,9 @@ function system_page_attachments(array &$page) {
 /**
  * Implements hook_js_settings_alter().
  *
- * Generates the values for the core/drupalSettings library.
+ * Sets values for the core/drupalSettings and core/drupal.ajax libraries.
  */
-function system_js_settings_alter(&$settings) {
+function system_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
   // url() generates the script and prefix using hook_url_outbound_alter().
   // Instead of running the hook_url_outbound_alter() again here, extract
   // them from url().
@@ -655,6 +656,37 @@ function system_js_settings_alter(&$settings) {
   }
   if (!isset($settings['locale']['pluralDelimiter'])) {
     $settings['locale']['pluralDelimiter'] = LOCALE_PLURAL_DELIMITER;
+  }
+
+  // Now generate the values for the core/drupal.ajax library.
+  // We need to send ajaxPageState settings for core/drupal.ajax if:
+  // - ajaxPageState is being loaded in this Response, in which case it will
+  //   already exist at $settings['ajaxPageState'] (because the core/drupal.ajax
+  //   library definition specifies a placeholder 'ajaxPageState' setting).
+  // - core/drupal.ajax already has been loaded and hence this is an AJAX
+  //   Response in which we must send the list of extra asset libraries that are
+  //   being added in this AJAX Response.
+  /** @var \Drupal\Core\Asset\LibraryDependencyResolver $library_dependency_resolver */
+  $library_dependency_resolver = \Drupal::service('library.dependency_resolver');
+  if (isset($settings['ajaxPageState']) || in_array('core/drupal.ajax', $library_dependency_resolver->getLibrariesWithDependencies($assets->getAlreadyLoadedLibraries()))) {
+    // Provide the page with information about the theme that's used, so that
+    // a later AJAX request can be rendered using the same theme.
+    // @see \Drupal\Core\Theme\AjaxBasePageNegotiator
+    $theme_key = \Drupal::theme()->getActiveTheme()->getName();
+    $settings['ajaxPageState']['theme'] = $theme_key;
+    // Checks that the DB is available before filling theme_token.
+    if (!defined('MAINTENANCE_MODE')) {
+      $settings['ajaxPageState']['theme_token'] = \Drupal::csrfToken()->get($theme_key);
+    }
+
+    // Provide the page with information about the individual asset libraries
+    // used, information not otherwise available when aggregation is enabled.
+    $minimal_libraries = $library_dependency_resolver->getMinimalRepresentativeSubset(array_merge(
+      $assets->getLibraries(),
+      $assets->getAlreadyLoadedLibraries()
+    ));
+    sort($minimal_libraries);
+    $settings['ajaxPageState']['libraries'] = implode(',', $minimal_libraries);
   }
 }
 

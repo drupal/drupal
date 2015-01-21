@@ -101,6 +101,12 @@ class AjaxTestDialogForm extends FormBase {
     $response = new AjaxResponse();
     $title = $this->t('AJAX Dialog contents');
     $html = drupal_render($content);
+
+    // Attach the library necessary for using the Open(Modal)DialogCommand and
+    // set the attachments for this Ajax response.
+    $content['#attached']['library'][] = 'core/drupal.dialog.ajax';
+    $response->setAttachments($content['#attached']);
+
     if ($is_modal) {
       $response->addCommand(new OpenModalDialogCommand($title, $html));
     }

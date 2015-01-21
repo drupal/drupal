@@ -711,12 +711,13 @@ function hook_element_info_alter(array &$types) {
  *
  * @param $javascript
  *   An array of all JavaScript being presented on the page.
+ * @param \Drupal\Core\Asset\AttachedAssetsInterface $assets
+ *   The assets attached to the current response.
  *
- * @see _drupal_add_js()
- * @see drupal_get_js()
  * @see drupal_js_defaults()
+ * @see \Drupal\Core\Asset\AssetResolver
  */
-function hook_js_alter(&$javascript) {
+function hook_js_alter(&$javascript, \Drupal\Core\Asset\AttachedAssetsInterface $assets) {
   // Swap out jQuery to use an updated version of the library.
   $javascript['core/assets/vendor/jquery/jquery.min.js']['data'] = drupal_get_path('module', 'jquery_update') . '/jquery.js';
 }
@@ -791,12 +792,12 @@ function hook_library_info_build() {
  * @param array &$settings
  *   An array of all JavaScript settings (drupalSettings) being presented on the
  *   page.
+ * @param \Drupal\Core\Asset\AttachedAssetsInterface $assets
+ *   The assets attached to the current response.
  *
- * @see _drupal_add_js()
- * @see drupal_get_js()
- * @see drupal_js_defaults()
+ * @see \Drupal\Core\Asset\AssetResolver
  */
-function hook_js_settings_alter(array &$settings) {
+function hook_js_settings_alter(array &$settings, \Drupal\Core\Asset\AttachedAssetsInterface $assets) {
   // Add settings.
   $settings['user']['uid'] = \Drupal::currentUser();
 
@@ -856,11 +857,12 @@ function hook_library_info_alter(&$libraries, $module) {
  *
  * @param $css
  *   An array of all CSS items (files and inline CSS) being requested on the page.
+ * @param \Drupal\Core\Asset\AttachedAssetsInterface $assets
+ *   The assets attached to the current response.
  *
- * @see _drupal_add_css()
- * @see drupal_get_css()
+ * @see Drupal\Core\Asset\LibraryResolverInterface::getCssAssets()
  */
-function hook_css_alter(&$css) {
+function hook_css_alter(&$css, \Drupal\Core\Asset\AttachedAssetsInterface $assets) {
   // Remove defaults.css file.
   unset($css[drupal_get_path('module', 'system') . '/defaults.css']);
 }

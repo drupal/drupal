@@ -384,21 +384,12 @@
     // Allow Drupal to return new JavaScript and CSS files to load without
     // returning the ones already loaded.
     // @see \Drupal\Core\Theme\AjaxBasePageNegotiator
-    // @see drupal_get_css()
-    // @see drupal_get_js()
+    // @see \Drupal\Core\Asset\LibraryDependencyResolverInterface::getMinimalRepresentativeSubset()
+    // @see system_js_settings_alter()
     var pageState = drupalSettings.ajaxPageState;
     options.data['ajax_page_state[theme]'] = pageState.theme;
     options.data['ajax_page_state[theme_token]'] = pageState.theme_token;
-    for (var cssFile in pageState.css) {
-      if (pageState.css.hasOwnProperty(cssFile)) {
-        options.data['ajax_page_state[css][' + cssFile + ']'] = 1;
-      }
-    }
-    for (var jsFile in pageState.js) {
-      if (pageState.js.hasOwnProperty(jsFile)) {
-        options.data['ajax_page_state[js][' + jsFile + ']'] = 1;
-      }
-    }
+    options.data['ajax_page_state[libraries]'] = pageState.libraries;
   };
 
   /**

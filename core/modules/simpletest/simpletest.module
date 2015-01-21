@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Render\Element;
@@ -50,7 +51,7 @@ function simpletest_theme() {
 /**
  * Implements hook_js_alter().
  */
-function simpletest_js_alter(&$javascript) {
+function simpletest_js_alter(&$javascript, AttachedAssetsInterface $assets) {
   // Since SimpleTest is a special use case for the table select, stick the
   // SimpleTest JavaScript above the table select.
   $simpletest = drupal_get_path('module', 'simpletest') . '/simpletest.js';

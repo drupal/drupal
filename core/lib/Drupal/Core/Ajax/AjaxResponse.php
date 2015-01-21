@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Ajax;
 
+use Drupal\Core\Asset\AttachedAssets;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,6 +25,32 @@ class AjaxResponse extends JsonResponse {
    * @var array
    */
   protected $commands = array();
+
+  /**
+   * The attachments for this Ajax response.
+   *
+   * @var array
+   */
+  protected $attachments = [
+    'library' => [],
+    'drupalSettings' => [],
+  ];
+
+  /**
+   * Sets attachments for this Ajax response.
+   *
+   * When this Ajax response is rendered, it will take care of generating the
+   * necessary Ajax commands, if any.
+   *
+   * @param array $attachments
+   *   An #attached array.
+   *
+   * @return $this
+   */
+  public function setAttachments(array $attachments) {
+    $this->attachments = $attachments;
+    return $this;
+  }
 
   /**
    * Add an AJAX command to the response.
@@ -90,77 +117,54 @@ class AjaxResponse extends JsonResponse {
    *   An array of commands ready to be returned as JSON.
    */
   protected function ajaxRender(Request $request) {
-    // Ajax responses aren't rendered with html.html.twig, so we have to call
-    // drupal_get_css() and drupal_get_js() here, in order to have new files
-    // added during this request to be loaded by the page. We only want to send
-    // back files that the page hasn't already loaded, so we implement simple
-    // diffing logic using array_diff_key().
     $ajax_page_state = $request->request->get('ajax_page_state');
-    foreach (array('css', 'js') as $type) {
-      // It is highly suspicious if
-      // $request->request->get("ajax_page_state[$type]") is empty, since the
-      // base page ought to have at least one JS file and one CSS file loaded.
-      // It probably indicates an error, and rather than making the page reload
-      // all of the files, instead we return no new files.
-      if (empty($ajax_page_state[$type])) {
-        $items[$type] = array();
-      }
-      else {
-        $function = '_drupal_add_' . $type;
-        $items[$type] = $function();
-        \Drupal::moduleHandler()->alter($type, $items[$type]);
-        // @todo Inline CSS and JS items are indexed numerically. These can't be
-        //   reliably diffed with array_diff_key(), since the number can change
-        //   due to factors unrelated to the inline content, so for now, we
-        //   strip the inline items from Ajax responses, and can add support for
-        //   them when _drupal_add_css() and _drupal_add_js() are changed to use
-        //   a hash of the inline content as the array key.
-        foreach ($items[$type] as $key => $item) {
-          if (is_numeric($key)) {
-            unset($items[$type][$key]);
-          }
-        }
-        // Ensure that the page doesn't reload what it already has.
-        $items[$type] = array_diff_key($items[$type], $ajax_page_state[$type]);
-      }
-    }
+
+    // Aggregate CSS/JS if necessary, but only during normal site operation.
+    $config = \Drupal::config('system.performance');
+    $optimize_css = !defined('MAINTENANCE_MODE') && $config->get('css.preprocess');
+    $optimize_js = !defined('MAINTENANCE_MODE') && $config->get('js.preprocess');
+
+    // Resolve the attached libraries into asset collections.
+    $assets = new AttachedAssets();
+    $assets->setLibraries(isset($this->attachments['library']) ? $this->attachments['library'] : [])
+      ->setAlreadyLoadedLibraries(isset($ajax_page_state) ? explode(',', $ajax_page_state['libraries']) : [])
+      ->setSettings(isset($this->attachments['drupalSettings']) ? $this->attachments['drupalSettings'] : []);
+    $asset_resolver = \Drupal::service('asset.resolver');
+    $css_assets = $asset_resolver->getCssAssets($assets, $optimize_css);
+    list($js_assets_header, $js_assets_footer) = $asset_resolver->getJsAssets($assets, $optimize_js);
 
     // Render the HTML to load these files, and add AJAX commands to insert this
-    // HTML in the page. We pass TRUE as the $skip_alter argument to prevent the
-    // data from being altered again, as we already altered it above. Settings
-    // are handled separately, afterwards.
-    if (isset($items['js']['drupalSettings'])) {
-      unset($items['js']['drupalSettings']);
-    }
-    $styles = drupal_get_css($items['css'], TRUE);
-    $scripts_footer = drupal_get_js('footer', $items['js'], TRUE, TRUE);
-    $scripts_header = drupal_get_js('header', $items['js'], TRUE, TRUE);
+    // HTML in the page. Settings are handled separately, afterwards.
+    $settings = (isset($js_assets_header['drupalSettings'])) ? $js_assets_header['drupalSettings']['data'] : [];
+    unset($js_assets_header['drupalSettings']);
 
-    // Prepend commands to add the resources, preserving their relative order.
+    // Prepend commands to add the assets, preserving their relative order.
     $resource_commands = array();
-    if (!empty($styles)) {
-      $resource_commands[] = new AddCssCommand($styles);
+    $renderer = \Drupal::service('renderer');
+    if (!empty($css_assets)) {
+      $css_render_array = \Drupal::service('asset.css.collection_renderer')->render($css_assets);
+      $resource_commands[] = new AddCssCommand($renderer->render($css_render_array));
     }
-    if (!empty($scripts_header)) {
-      $resource_commands[] = new PrependCommand('head', $scripts_header);
+    if (!empty($js_assets_header)) {
+      $js_header_render_array = \Drupal::service('asset.js.collection_renderer')->render($js_assets_header);
+      $resource_commands[] = new PrependCommand('head', $renderer->render($js_header_render_array));
     }
-    if (!empty($scripts_footer)) {
-      $resource_commands[] = new AppendCommand('body', $scripts_footer);
+    if (!empty($js_assets_footer)) {
+      $js_footer_render_array = \Drupal::service('asset.js.collection_renderer')->render($js_assets_footer);
+      $resource_commands[] = new AppendCommand('body', $renderer->render($js_footer_render_array));
     }
     foreach (array_reverse($resource_commands) as $resource_command) {
       $this->addCommand($resource_command, TRUE);
     }
 
     // Prepend a command to merge changes and additions to drupalSettings.
-    $scripts = _drupal_add_js();
-    if (!empty($scripts['drupalSettings'])) {
-      $settings = $scripts['drupalSettings']['data'];
+    if (!empty($settings)) {
       // During Ajax requests basic path-specific settings are excluded from
       // new drupalSettings values. The original page where this request comes
       // from already has the right values. An Ajax request would update them
       // with values for the Ajax request and incorrectly override the page's
       // values.
-      // @see _drupal_add_js()
+      // @see system_js_settings_alter()
       unset($settings['path']);
       $this->addCommand(new SettingsCommand($settings, TRUE), TRUE);
     }

@@ -77,6 +77,12 @@ drupal.ajax:
   version: VERSION
   js:
     misc/ajax.js: {}
+  drupalSettings:
+    # These placeholder values will be set by system_js_settings_alter().
+    ajaxPageState:
+      libraries: null
+      theme: null
+      theme_token: null
   dependencies:
     - core/jquery
     - core/drupal

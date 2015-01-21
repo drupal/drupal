@@ -175,13 +175,13 @@ class NodeTranslationUITest extends ContentTranslationUITest {
     $edit['use_admin_theme'] = TRUE;
     $this->drupalPostForm('admin/appearance', $edit, t('Save configuration'));
     $this->drupalGet('node/' . $article->id() . '/translations');
-    $this->assertRaw('"theme":"seven"', 'Translation uses admin theme if edit is admin.');
+    $this->assertRaw('core/themes/seven/css/base/elements.css', 'Translation uses admin theme if edit is admin.');
 
     // Turn off admin theme for editing, assert inheritance to translations.
     $edit['use_admin_theme'] = FALSE;
     $this->drupalPostForm('admin/appearance', $edit, t('Save configuration'));
     $this->drupalGet('node/' . $article->id() . '/translations');
-    $this->assertNoRaw('"theme":"seven"', 'Translation uses frontend theme if edit is frontend.');
+    $this->assertNoRaw('core/themes/seven/css/base/elements.css', 'Translation uses frontend theme if edit is frontend.');
 
     // Assert presence of translation page itself (vs. DisabledBundle below).
     $this->assertResponse(200);

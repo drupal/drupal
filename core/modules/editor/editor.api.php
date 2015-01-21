@@ -30,8 +30,8 @@ function hook_editor_info_alter(array &$editors) {
  * Modifies JavaScript settings that are added for text editors.
  *
  * @param array $settings
- *   All the settings that will be added to the page via _drupal_add_js() for
- *   the text formats to which a user has access.
+ *   All the settings that will be added to the page for the text formats to
+ *   which a user has access.
  */
 function hook_editor_js_settings_alter(array &$settings) {
   if (isset($settings['editor']['formats']['basic_html'])) {

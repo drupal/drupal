@@ -94,7 +94,7 @@ class DialogTest extends AjaxTestBase {
 
     // Emulate going to the JS version of the page and check the JSON response.
     $ajax_result = $this->drupalGetAJAX('ajax-test/dialog-contents', array(), array('Accept: application/vnd.drupal-modal'));
-    $this->assertEqual($modal_expected_response, $ajax_result[1], 'Modal dialog JSON response matches.');
+    $this->assertEqual($modal_expected_response, $ajax_result[3], 'Modal dialog JSON response matches.');
 
     // Check that requesting a "normal" dialog without JS goes to a page.
     $this->drupalGet('ajax-test/dialog-contents');
@@ -136,9 +136,13 @@ class DialogTest extends AjaxTestBase {
     $ajax_result = $this->drupalPostAjaxForm('ajax-test/dialog', array(), 'button1');
 
     // Check that CSS and JavaScript are "added" to the page dynamically.
-    $this->assertTrue(in_array('dialog.css', array_keys($ajax_result[0]['settings']['ajaxPageState']['css'])), 'jQuery UI dialog CSS added to the page.');
-    $this->assertTrue(in_array('core/assets/vendor/jquery.ui/ui/dialog-min.js', array_keys($ajax_result[0]['settings']['ajaxPageState']['js'])), 'jQuery UI dialog JS added to the page.');
-    $this->assertTrue(in_array('core/misc/dialog/dialog.ajax.js', array_keys($ajax_result[0]['settings']['ajaxPageState']['js'])), 'Drupal dialog JS added to the page.');
+    $this->assertTrue(in_array('core/drupal.dialog.ajax', explode(',', $ajax_result[0]['settings']['ajaxPageState']['libraries'])), 'core/drupal.dialog.ajax library is added to the page.');
+    $dialog_css_exists = strpos($ajax_result[1]['data'], 'dialog.css') !== FALSE;
+    $this->assertTrue($dialog_css_exists, 'jQuery UI dialog CSS added to the page.');
+    $dialog_js_exists = strpos($ajax_result[2]['data'], 'dialog-min.js') !== FALSE;
+    $this->assertTrue($dialog_js_exists, 'jQuery UI dialog JS added to the page.');
+    $dialog_js_exists = strpos($ajax_result[2]['data'], 'dialog.ajax.js') !== FALSE;
+    $this->assertTrue($dialog_js_exists, 'Drupal dialog JS added to the page.');
 
     // Check that the response matches the expected value.
     $this->assertEqual($modal_expected_response, $ajax_result[3], 'POST request modal dialog JSON response matches.');
@@ -169,12 +173,12 @@ class DialogTest extends AjaxTestBase {
       ],
     ];
     $this->assertEqual($expected_ajax_settings, $ajax_result[0]['settings']['ajax']);
-    $this->drupalSetContent($ajax_result[1]['data']);
+    $this->drupalSetContent($ajax_result[3]['data']);
     // Remove the data, the form build id and token will never match.
-    unset($ajax_result[1]['data']);
+    unset($ajax_result[3]['data']);
     $form = $this->xpath("//form[@id='ajax-test-form']");
     $this->assertTrue(!empty($form), 'Modal dialog JSON contains form.');
-    $this->assertEqual($form_expected_response, $ajax_result[1]);
+    $this->assertEqual($form_expected_response, $ajax_result[3]);
 
     // Check that requesting an entity form dialog without JS goes to a page.
     $this->drupalGet('admin/structure/contact/add');
@@ -185,12 +189,12 @@ class DialogTest extends AjaxTestBase {
 
     // Emulate going to the JS version of the form and check the JSON response.
     $ajax_result = $this->drupalGetAJAX('admin/structure/contact/add', array(), array('Accept: application/vnd.drupal-modal'));
-    $this->drupalSetContent($ajax_result[1]['data']);
+    $this->drupalSetContent($ajax_result[3]['data']);
     // Remove the data, the form build id and token will never match.
-    unset($ajax_result[1]['data']);
+    unset($ajax_result[3]['data']);
     $form = $this->xpath("//form[@id='contact-form-add-form']");
     $this->assertTrue(!empty($form), 'Modal dialog JSON contains entity form.');
-    $this->assertEqual($entity_form_expected_response, $ajax_result[1]);
+    $this->assertEqual($entity_form_expected_response, $ajax_result[3]);
   }
 
 }

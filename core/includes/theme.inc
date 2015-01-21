@@ -15,6 +15,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Asset\AttachedAssets;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\StorageException;
 use Drupal\Core\Extension\Extension;
@@ -1400,11 +1401,25 @@ function template_preprocess_html(&$variables) {
   // Render the attachments into HTML markup to be used directly in the template
   // for #type => html: html.html.twig.
   $all_attached = ['#attached' => $attached];
-  drupal_process_attached($all_attached);
+  $assets = AttachedAssets::createFromRenderArray($all_attached);
+  // Take Ajax page state into account, to allow for something like Turbolinks
+  // to be implemented without altering core.
+  // @see https://github.com/rails/turbolinks/
+  $ajax_page_state = \Drupal::request()->request->get('ajax_page_state');
+  $assets->setAlreadyLoadedLibraries(isset($ajax_page_state) ? explode(',', $ajax_page_state['libraries']) : []);
+  // Optimize CSS/JS if necessary, but only during normal site operation.
+  $optimize_css = !defined('MAINTENANCE_MODE') && \Drupal::config('system.performance')->get('css.preprocess');
+  $optimize_js = !defined('MAINTENANCE_MODE') && \Drupal::config('system.performance')->get('js.preprocess');
+  // Render the asset collections.
+  $asset_resolver = \Drupal::service('asset.resolver');
+  $variables['styles'] = \Drupal::service('asset.css.collection_renderer')->render($asset_resolver->getCssAssets($assets, $optimize_css));
+  list($js_assets_header, $js_assets_footer) = $asset_resolver->getJsAssets($assets, $optimize_js);
+  $js_collection_renderer = \Drupal::service('asset.js.collection_renderer');
+  $variables['scripts'] = $js_collection_renderer->render($js_assets_header);
+  $variables['scripts_bottom'] = $js_collection_renderer->render($js_assets_footer);
 
-  $variables['styles'] = drupal_get_css();
-  $variables['scripts'] = drupal_get_js();
-  $variables['scripts_bottom'] = drupal_get_js('footer');
+  // Handle all non-asset attachments.
+  drupal_process_attached($all_attached);
   $variables['head'] = drupal_get_html_head(FALSE);
 }
 

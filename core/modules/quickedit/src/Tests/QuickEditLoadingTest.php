@@ -87,9 +87,8 @@ class QuickEditLoadingTest extends WebTestBase {
     $this->drupalGet('node/1');
 
     // Library and in-place editors.
-    $settings = $this->getDrupalSettings();
-    $this->assertFalse(isset($settings['ajaxPageState']['js']['core/modules/quickedit/js/quickedit.js']), 'Quick Edit library not loaded.');
-    $this->assertFalse(isset($settings['ajaxPageState']['js']['core/modules/quickedit/js/editors/formEditor.js']), "'form' in-place editor not loaded.");
+    $this->assertNoRaw('core/modules/quickedit/js/quickedit.js',  'Quick Edit library not loaded.');
+    $this->assertNoRaw('core/modules/quickedit/js/editors/formEditor.js', "'form' in-place editor not loaded.");
 
     // HTML annotation must always exist (to not break the render cache).
     $this->assertRaw('data-quickedit-entity-id="node/1"');
@@ -140,8 +139,9 @@ class QuickEditLoadingTest extends WebTestBase {
 
     // Library and in-place editors.
     $settings = $this->getDrupalSettings();
-    $this->assertTrue(isset($settings['ajaxPageState']['js']['core/modules/quickedit/js/quickedit.js']), 'Quick Edit library loaded.');
-    $this->assertFalse(isset($settings['ajaxPageState']['js']['core/modules/quickedit/js/editors/formEditor.js']), "'form' in-place editor not loaded.");
+    $libraries = explode(',', $settings['ajaxPageState']['libraries']);
+    $this->assertTrue(in_array('quickedit/quickedit', $libraries), 'Quick Edit library loaded.');
+    $this->assertFalse(in_array('quickedit/quickedit.inPlaceEditor.form', $libraries), "'form' in-place editor not loaded.");
 
     // HTML annotation must always exist (to not break the render cache).
     $this->assertRaw('data-quickedit-entity-id="node/1"');
@@ -182,7 +182,7 @@ class QuickEditLoadingTest extends WebTestBase {
     $this->assertIdentical('settings', $ajax_commands[0]['command'], 'The first AJAX command is a settings command.');
     // Second command: insert libraries into DOM.
     $this->assertIdentical('insert', $ajax_commands[1]['command'], 'The second AJAX command is an append command.');
-    $this->assertTrue(in_array('core/modules/quickedit/js/editors/formEditor.js', array_keys($ajax_commands[0]['settings']['ajaxPageState']['js'])), 'The quickedit.inPlaceEditor.form library is loaded.');
+    $this->assertTrue(in_array('quickedit/quickedit.inPlaceEditor.form', explode(',', $ajax_commands[0]['settings']['ajaxPageState']['libraries'])), 'The quickedit.inPlaceEditor.form library is loaded.');
 
     // Retrieving the form for this field should result in a 200 response,
     // containing only a quickeditFieldForm command.
@@ -481,6 +481,7 @@ class QuickEditLoadingTest extends WebTestBase {
 
     if ($form_tokens_found) {
       $post = array(
+        'nocssjs' => 'true',
         'form_id' => 'quickedit_field_form',
         'form_token' => $token_match[1],
         'form_build_id' => $build_id_match[1],

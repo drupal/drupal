@@ -228,6 +228,7 @@ class EditorImageDialog extends FormBase {
       unset($form['#prefix'], $form['#suffix']);
       $status_messages = array('#theme' => 'status_messages');
       $output = drupal_render($form);
+      $response->setAttachments($form['#attached']);
       $output = '<div>' . drupal_render($status_messages) . $output . '</div>';
       $response->addCommand(new HtmlCommand('#editor-image-dialog-form', $output));
     }

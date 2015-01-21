@@ -46,10 +46,8 @@ class TableTest extends KernelTestBase {
       '#sticky' => TRUE,
     );
     $this->render($table);
-    $js = _drupal_add_js();
-    $this->assertTrue(isset($js['core/misc/tableheader.js']), 'tableheader.js found.');
+    $this->assertTrue(in_array('core/drupal.tableheader', $table['#attached']['library']), 'tableheader asset library found.');
     $this->assertRaw('sticky-enabled');
-    drupal_static_reset('_drupal_add_js');
   }
 
   /**
@@ -71,10 +69,8 @@ class TableTest extends KernelTestBase {
       '#sticky' => FALSE,
     );
     $this->render($table);
-    $js = _drupal_add_js();
-    $this->assertFalse(isset($js['core/misc/tableheader.js']), 'tableheader.js not found.');
+    $this->assertFalse(in_array('core/drupal.tableheader', $table['#attached']['library']), 'tableheader asset library not found.');
     $this->assertNoRaw('sticky-enabled');
-    drupal_static_reset('_drupal_add_js');
   }
 
   /**

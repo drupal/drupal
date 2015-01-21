@@ -15,6 +15,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Url;
+use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\Language;
@@ -445,7 +446,7 @@ function locale_cache_flush() {
 /**
  * Implements hook_js_alter().
  */
-function locale_js_alter(&$javascript) {
+function locale_js_alter(&$javascript, AttachedAssetsInterface $assets) {
   $files = array();
   foreach ($javascript as $item) {
     if (isset($item['type']) && $item['type'] == 'file') {
@@ -543,7 +544,7 @@ function locale_library_info_alter(array &$libraries, $module) {
  *
  * Generates the values for the altered core/jquery.ui.datepicker library.
  */
-function locale_js_settings_alter(&$settings) {
+function locale_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
   if (isset($settings['jquery']['ui']['datepicker'])) {
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
     $settings['jquery']['ui']['datepicker']['isRTL'] = $language_interface->getDirection() == LanguageInterface::DIRECTION_RTL;

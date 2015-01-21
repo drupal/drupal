@@ -53,21 +53,6 @@ class AjaxFormsTestLazyLoadForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    if ($form_state->getValue('add_files')) {
-      $attached = [
-        '#attached' => [
-          'library' => [
-            'system/admin',
-            'system/drupal.system',
-          ],
-          'drupalSettings' => [
-            'ajax_forms_test_lazy_load_form_submit' => 'executed',
-          ],
-        ],
-      ];
-      drupal_render($attached);
-      drupal_process_attached($attached);
-    }
     $form_state->setRebuild();
   }
 

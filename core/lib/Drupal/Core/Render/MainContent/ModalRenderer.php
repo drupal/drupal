@@ -26,7 +26,11 @@ class ModalRenderer extends DialogRenderer {
 
     // First render the main content, because it might provide a title.
     $content = drupal_render_root($main_content);
-    drupal_process_attached($main_content);
+
+    // Attach the library necessary for using the OpenModalDialogCommand and set
+    // the attachments for this Ajax response.
+    $main_content['#attached']['library'][] = 'core/drupal.dialog.ajax';
+    $response->setAttachments($main_content['#attached']);
 
     // If the main content doesn't provide a title, use the title resolver.
     $title = isset($main_content['#title']) ? $main_content['#title'] : $this->titleResolver->getTitle($request, $route_match->getRouteObject());

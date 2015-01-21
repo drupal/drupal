@@ -65,6 +65,7 @@ class AjaxRenderer implements MainContentRendererInterface {
     }
 
     $html = $this->drupalRenderRoot($main_content);
+    $response->setAttachments($main_content['#attached']);
 
     // The selector for the insert command is NULL as the new content will
     // replace the element making the Ajax call. The default 'replaceWith'
@@ -84,9 +85,7 @@ class AjaxRenderer implements MainContentRendererInterface {
    * @todo: Remove as part of https://drupal.org/node/2182149
    */
   protected function drupalRenderRoot(&$elements) {
-    $output = drupal_render_root($elements);
-    drupal_process_attached($elements);
-    return $output;
+    return drupal_render_root($elements);
   }
 
 }
