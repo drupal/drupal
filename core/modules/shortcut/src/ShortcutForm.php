@@ -26,6 +26,34 @@ class ShortcutForm extends ContentEntityForm {
   protected $entity;
 
   /**
+   * The path validator.
+   *
+   * @var \Drupal\Core\Path\PathValidatorInterface
+   */
+  protected $pathValidator;
+
+  /**
+   * Constructs a new ShortcutForm instance.
+   *
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager
+   * @param \Drupal\Core\Path\PathValidatorInterface $path_validator
+   *   The path validator.
+   */
+  public function __construct(EntityManagerInterface $entity_manager, PathValidatorInterface $path_validator) {
+    parent::__construct($entity_manager);
+
+    $this->pathValidator = $path_validator;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static($container->get('entity.manager'), $container->get('path.validator'));
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
@@ -60,14 +88,11 @@ class ShortcutForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function validate(array $form, FormStateInterface $form_state) {
-    parent::validate($form, $form_state);
-
-    $this->entity->path->value = $form_state->getValue('path');
-    /** @var \Symfony\Component\Validator\ConstraintViolationListInterface $result */
-    $result = $this->entity->path->validate();
-    if ($result->count()) {
-      $form_state->setErrorByName('path', $result->offsetGet(0)->getMessage());
+    if (!$this->pathValidator->isValid($form_state->getValue('path'))) {
+      $form_state->setErrorByName('path', $this->t('The shortcut must correspond to a valid path on the site.'));
     }
+
+    parent::validate($form, $form_state);
   }
 
   /**

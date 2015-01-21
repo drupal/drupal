@@ -228,7 +228,6 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
       ->setLabel(t('Path'))
       ->setDescription(t('The computed shortcut path.'))
       ->setComputed(TRUE)
-      ->addConstraint('ShortcutPath', [])
       ->setCustomStorage(TRUE);
 
     $item_definition = $fields['path']->getItemDefinition();
