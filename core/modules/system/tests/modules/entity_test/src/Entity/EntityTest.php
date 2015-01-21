@@ -29,7 +29,7 @@ use Drupal\user\UserInterface;
  *       "delete" = "Drupal\entity_test\EntityTestDeleteForm"
  *     },
  *     "translation" = "Drupal\content_translation\ContentTranslationHandler",
- *     "views_data" = "Drupal\views\EntityViewsData"
+ *     "views_data" = "Drupal\entity_test\EntityTestViewsData"
  *   },
  *   base_table = "entity_test",
  *   persistent_cache = FALSE,

@@ -23,6 +23,15 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   use ThirdPartySettingsTrait;
 
   /**
+   * The 'mode' for runtime EntityDisplay objects used to render entities with
+   * arbitrary display options rather than a configured view mode or form mode.
+   *
+   * @todo Prevent creation of a mode with this ID
+   *   https://www.drupal.org/node/2410727
+   */
+  const CUSTOM_MODE = '_custom';
+
+  /**
    * Unique ID for the config entity.
    *
    * @var string
@@ -55,7 +64,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
    *
    * @var string
    */
-  public $mode;
+  public $mode = self::CUSTOM_MODE;
 
   /**
    * Whether this display is enabled or not. If the entity (form) display
@@ -112,7 +121,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
    * {@inheritdoc}
    */
   public function __construct(array $values, $entity_type) {
-    if (!isset($values['targetEntityType']) || !isset($values['bundle']) || !isset($values['mode'])) {
+    if (!isset($values['targetEntityType']) || !isset($values['bundle'])) {
       throw new \InvalidArgumentException('Missing required properties for an EntityDisplay entity.');
     }
 
@@ -156,13 +165,13 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
    */
   public function calculateDependencies() {
     parent::calculateDependencies();
-    $target_entity_type = \Drupal::entityManager()->getDefinition($this->targetEntityType);
+    $target_entity_type = $this->entityManager()->getDefinition($this->targetEntityType);
 
     $bundle_entity_type_id = $target_entity_type->getBundleEntityType();
     if ($bundle_entity_type_id != 'bundle') {
       // If the target entity type uses entities to manage its bundles then
       // depend on the bundle entity.
-      if (!$bundle_entity = \Drupal::entityManager()->getStorage($bundle_entity_type_id)->load($this->bundle)) {
+      if (!$bundle_entity = $this->entityManager()->getStorage($bundle_entity_type_id)->load($this->bundle)) {
         throw new \LogicException(String::format('Missing bundle entity, entity type %type, entity id %bundle.', array('%type' => $bundle_entity_type_id, '%bundle' => $this->bundle)));
       }
       $this->addDependency('config', $bundle_entity->getConfigDependencyName());
@@ -181,7 +190,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
     }
     // Depend on configured modes.
     if ($this->mode != 'default') {
-      $mode_entity = \Drupal::entityManager()->getStorage('entity_' . $this->displayContext . '_mode')->load($target_entity_type->id() . '.' . $this->mode);
+      $mode_entity = $this->entityManager()->getStorage('entity_' . $this->displayContext . '_mode')->load($target_entity_type->id() . '.' . $this->mode);
       $this->addDependency('config', $mode_entity->getConfigDependencyName());
     }
     return $this->dependencies;
@@ -213,39 +222,42 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
    * - or that are not supposed to be configurable.
    */
   protected function init() {
-    // Fill in defaults for extra fields.
-    $context = $this->displayContext == 'view' ? 'display' : $this->displayContext;
-    $extra_fields = \Drupal::entityManager()->getExtraFields($this->targetEntityType, $this->bundle);
-    $extra_fields = isset($extra_fields[$context]) ? $extra_fields[$context] : array();
-    foreach ($extra_fields as $name => $definition) {
-      if (!isset($this->content[$name]) && !isset($this->hidden[$name])) {
-        // Extra fields are visible by default unless they explicitly say so.
-        if (!isset($definition['visible']) || $definition['visible'] == TRUE) {
-          $this->content[$name] = array(
-            'weight' => $definition['weight']
-          );
-        }
-        else {
-          $this->hidden[$name] = TRUE;
+    // Only populate defaults for "official" view modes and form modes.
+    if ($this->mode !== static::CUSTOM_MODE) {
+      // Fill in defaults for extra fields.
+      $context = $this->displayContext == 'view' ? 'display' : $this->displayContext;
+      $extra_fields = \Drupal::entityManager()->getExtraFields($this->targetEntityType, $this->bundle);
+      $extra_fields = isset($extra_fields[$context]) ? $extra_fields[$context] : array();
+      foreach ($extra_fields as $name => $definition) {
+        if (!isset($this->content[$name]) && !isset($this->hidden[$name])) {
+          // Extra fields are visible by default unless they explicitly say so.
+          if (!isset($definition['visible']) || $definition['visible'] == TRUE) {
+            $this->content[$name] = array(
+              'weight' => $definition['weight']
+            );
+          }
+          else {
+            $this->hidden[$name] = TRUE;
+          }
         }
       }
-    }
 
-    // Fill in defaults for fields.
-    $fields = $this->getFieldDefinitions();
-    foreach ($fields as $name => $definition) {
-      if (!$definition->isDisplayConfigurable($this->displayContext) || (!isset($this->content[$name]) && !isset($this->hidden[$name]))) {
-        $options = $definition->getDisplayOptions($this->displayContext);
+      // Fill in defaults for fields.
+      $fields = $this->getFieldDefinitions();
+      foreach ($fields as $name => $definition) {
+        if (!$definition->isDisplayConfigurable($this->displayContext) || (!isset($this->content[$name]) && !isset($this->hidden[$name]))) {
+          $options = $definition->getDisplayOptions($this->displayContext);
 
-        if (!empty($options['type']) && $options['type'] == 'hidden') {
-          $this->hidden[$name] = TRUE;
+          if (!empty($options['type']) && $options['type'] == 'hidden') {
+            $this->hidden[$name] = TRUE;
+          }
+          elseif ($options) {
+            $this->content[$name] = $this->pluginManager->prepareConfiguration($definition->getType(), $options);
+          }
+          // Note: (base) fields that do not specify display options are not
+          // tracked in the display at all, in order to avoid cluttering the
+          // configuration that gets saved back.
         }
-        elseif ($options) {
-          $this->content[$name] = $this->pluginManager->prepareConfiguration($definition->getType(), $options);
-        }
-        // Note: (base) fields that do not specify display options are not
-        // tracked in the display at all, in order to avoid cluttering the
-        // configuration that gets saved back.
       }
     }
   }
@@ -348,7 +360,12 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
 
     if (!isset($this->fieldDefinitions)) {
       $definitions = \Drupal::entityManager()->getFieldDefinitions($this->targetEntityType, $this->bundle);
-      $this->fieldDefinitions = array_filter($definitions, array($this, 'fieldHasDisplayOptions'));
+      // For "official" view modes and form modes, ignore fields whose
+      // definition states they should not be displayed.
+      if ($this->mode !== static::CUSTOM_MODE) {
+        $definitions = array_filter($definitions, array($this, 'fieldHasDisplayOptions'));
+      }
+      $this->fieldDefinitions = $definitions;
     }
 
     return $this->fieldDefinitions;

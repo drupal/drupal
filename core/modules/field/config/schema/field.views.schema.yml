@@ -18,7 +18,7 @@ views.argument.field_list_string:
 
 views.field.field:
   type: views_field
-  label: 'Log event message'
+  label: 'Views entity field handler'
   mapping:
     click_sort_column:
       type: string
@@ -27,11 +27,8 @@ views.field.field:
       type: string
       label: 'Formatter'
     settings:
-      type: sequence
       label: 'Settings'
-      sequence:
-        - type: string
-          label: 'Setting'
+      type: field.formatter.settings.[%parent.type]
     group_column:
       type: string
       label: 'Group by column'

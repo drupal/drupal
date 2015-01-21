@@ -13,7 +13,9 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldConfigInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Field\FormatterPluginManager;
 use Drupal\Core\Form\FormHelper;
 use Drupal\Core\Form\FormStateInterface;
@@ -22,6 +24,7 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\field\FieldStorageConfigInterface;
 use Drupal\views\Plugin\CacheablePluginInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
@@ -35,6 +38,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * A field that displays fieldapi fields.
  *
  * @ingroup views_field_handlers
+ *
+ * @todo Rename the class https://www.drupal.org/node/2408667
  *
  * @ViewsField("field")
  */
@@ -122,6 +127,13 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
   protected $renderer;
 
   /**
+   * The field type plugin manager.
+   *
+   * @var \Drupal\Core\Field\FieldTypePluginManagerInterface
+   */
+  protected $fieldTypePluginManager;
+
+  /**
    * Constructs a \Drupal\field\Plugin\views\field\Field object.
    *
    * @param array $configuration
@@ -134,19 +146,27 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
    *   The field formatter plugin manager.
    * @param \Drupal\Core\Field\FormatterPluginManager $formatter_plugin_manager
    *   The field formatter plugin manager.
+   * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_plugin_manager
+   *   The field plugin type manager.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
-   *
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, FormatterPluginManager $formatter_plugin_manager, LanguageManagerInterface $language_manager, RendererInterface $renderer) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, FormatterPluginManager $formatter_plugin_manager, FieldTypePluginManagerInterface $field_type_plugin_manager, LanguageManagerInterface $language_manager, RendererInterface $renderer) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->entityManager = $entity_manager;
     $this->formatterPluginManager = $formatter_plugin_manager;
+    $this->fieldTypePluginManager = $field_type_plugin_manager;
     $this->languageManager = $language_manager;
     $this->renderer = $renderer;
+
+    // @todo Unify 'entity field'/'field_name' instead of converting back and
+    //   forth. https://www.drupal.org/node/2410779
+    if (isset($this->definition['entity field'])) {
+      $this->definition['field_name'] = $this->definition['entity field'];
+    }
   }
 
   /**
@@ -159,6 +179,7 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
       $plugin_definition,
       $container->get('entity.manager'),
       $container->get('plugin.manager.field.formatter'),
+      $container->get('plugin.manager.field.field_type'),
       $container->get('language_manager'),
       $container->get('renderer')
     );
@@ -172,7 +193,7 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
    */
   protected function getFieldDefinition() {
     if (!$this->fieldDefinition) {
-      $field_storage_config = $this->getFieldStorageConfig();
+      $field_storage_config = $this->getFieldStorageDefinition();
       $this->fieldDefinition = BaseFieldDefinition::createFromFieldStorageDefinition($field_storage_config);
     }
     return $this->fieldDefinition;
@@ -228,36 +249,8 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
    * {@inheritdoc}
    */
   public function access(AccountInterface $account) {
-    $base_table = $this->get_base_table();
-    $access_control_handler = $this->entityManager->getAccessControlHandler($this->definition['entity_tables'][$base_table]);
+    $access_control_handler = $this->entityManager->getAccessControlHandler($this->getEntityType());
     return $access_control_handler->fieldAccess('view', $this->getFieldDefinition(), $account);
-  }
-
-  /**
-   * Set the base_table and base_table_alias.
-   *
-   * @return string
-   *   The base table which is used in the current view "context".
-   */
-  function get_base_table() {
-    if (!isset($this->base_table)) {
-      // This base_table is coming from the entity not the field.
-      $this->base_table = $this->view->storage->get('base_table');
-
-      // If the current field is under a relationship you can't be sure that the
-      // base table of the view is the base table of the current field.
-      // For example a field from a node author on a node view does have users as base table.
-      if (!empty($this->options['relationship']) && $this->options['relationship'] != 'none') {
-        $relationships = $this->view->display_handler->getOption('relationships');
-        if (!empty($relationships[$this->options['relationship']])) {
-          $options = $relationships[$this->options['relationship']];
-          $data = Views::viewsData()->get($options['table']);
-          $this->base_table = $data[$options['field']]['relationship']['base'];
-        }
-      }
-    }
-
-    return $this->base_table;
   }
 
   /**
@@ -267,9 +260,6 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
    * plugin. Columns are added only if they are used in groupings.
    */
   public function query($use_groupby = FALSE) {
-    $this->get_base_table();
-
-    $entity_type = $this->definition['entity_tables'][$this->base_table];
     $fields = $this->additional_fields;
     // No need to add the entity type.
     $entity_type_key = array_search('entity_type', $fields);
@@ -286,16 +276,10 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
       }
       $options += is_array($this->options['group_columns']) ? $this->options['group_columns'] : array();
 
-      $fields = array();
-      $rkey = $this->definition['is revision'] ? EntityStorageInterface::FIELD_LOAD_REVISION : EntityStorageInterface::FIELD_LOAD_CURRENT;
       // Go through the list and determine the actual column name from field api.
+      $fields = array();
       foreach ($options as $column) {
-        $name = $column;
-        if (isset($field_definition['storage_details']['sql'][$rkey][$this->table][$column])) {
-          $name = $field_definition['storage_details']['sql'][$rkey][$this->table][$column];
-        }
-
-        $fields[$column] = $name;
+        $fields[$column] = $this->getTableMapping()->getFieldColumnName($this->getFieldStorageDefinition(), $column);
       }
 
       $this->group_fields = $fields;
@@ -370,12 +354,8 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
     }
 
     $this->ensureMyTable();
-    $entity_type_id = $this->definition['entity_type'];
-    $field_storage_definitions = $this->entityManager->getFieldStorageDefinitions($entity_type_id);
-    $field_storage = $field_storage_definitions[$this->definition['field_name']];
-    /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
-    $table_mapping = $this->entityManager->getStorage($entity_type_id)->getTableMapping();
-    $column = $table_mapping->getFieldColumnName($field_storage, $this->options['click_sort_column']);
+    $field_storage_definition = $this->getFieldStorageDefinition();
+    $column = $this->getTableMapping()->getFieldColumnName($field_storage_definition, $this->options['click_sort_column']);
     if (!isset($this->aliases[$column])) {
       // Column is not in query; add a sort on it (without adding the column).
       $this->aliases[$column] = $this->tableAlias . '.' . $column;
@@ -383,13 +363,36 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
     $this->query->addOrderBy(NULL, NULL, $order, $this->aliases[$column]);
   }
 
+  /**
+   * Gets the field storage of the used field.
+   *
+   * @return \Drupal\Core\Field\FieldStorageDefinitionInterface
+   */
+  protected function getFieldStorageDefinition() {
+    $entity_type_id = $this->definition['entity_type'];
+    $field_storage_definitions = $this->entityManager->getFieldStorageDefinitions($entity_type_id);
+
+    $field_storage = NULL;
+    // @todo Unify 'entity field'/'field_name' instead of converting back and
+    //   forth. https://www.drupal.org/node/2410779
+    if (isset($this->definition['field_name'])) {
+      $field_storage = $field_storage_definitions[$this->definition['field_name']];
+    }
+    elseif (isset($this->definition['entity field'])) {
+      $field_storage = $field_storage_definitions[$this->definition['entity field']];
+    }
+    return $field_storage;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $field_storage_definitions = $this->entityManager->getFieldStorageDefinitions($this->definition['entity_type']);
-    $field_storage = $field_storage_definitions[$this->definition['field_name']];
-    $field_type = \Drupal::service('plugin.manager.field.field_type')->getDefinition($field_storage->getType());
-    $column_names = array_keys($field_storage->getColumns());
+    $field_storage_definition = $this->getFieldStorageDefinition();
+    $field_type = $this->fieldTypePluginManager->getDefinition($field_storage_definition->getType());
+    $column_names = array_keys($field_storage_definition->getColumns());
     $default_column = '';
     // Try to determine a sensible default.
     if (count($column_names) == 1) {
@@ -403,11 +406,13 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
     $options['click_sort_column'] = array(
       'default' => $default_column,
     );
+
     $options['type'] = array(
-      'default' => $field_type['default_formatter'],
+      'default' => isset($field_type['default_formatter']) ? $field_type['default_formatter'] : '',
     );
+
     $options['settings'] = array(
-      'default' => array(),
+      'default' => isset($this->definition['default_formatter_settings']) ? $this->definition['default_formatter_settings'] : [],
     );
     $options['group_column'] = array(
       'default' => $default_column,
@@ -423,7 +428,7 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
     // If we know the exact number of allowed values, then that can be
     // the default. Otherwise, default to 'all'.
     $options['delta_limit'] = array(
-      'default' => ($field_storage->getCardinality() > 1) ? $field_storage->getCardinality() : 'all',
+      'default' => ($field_storage_definition->getCardinality() > 1) ? $field_storage_definition->getCardinality() : 'all',
     );
     $options['delta_offset'] = array(
       'default' => 0,
@@ -756,7 +761,7 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
 
     $items = array();
     if ($this->options['field_api_classes']) {
-      return array(array('rendered' => drupal_render($render_array)));
+      return array(array('rendered' => $this->renderer->render($render_array)));
     }
 
     foreach (Element::children($render_array) as $count) {
@@ -955,9 +960,11 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
     $dependencies = parent::calculateDependencies();
 
     // Add the module providing the configured field storage as a dependency.
-    $dependencies['config'][] = $this->getFieldStorageConfig()->getConfigDependencyName();
+    if (($field_storage_definition = $this->getFieldStorageDefinition()) && $field_storage_definition instanceof EntityInterface) {
+      $dependencies['config'][] = $field_storage_definition->getConfigDependencyName();
+    }
     // Add the module providing the formatter.
-    if ($this->options['type']) {
+    if (!empty($this->options['type'])) {
       $dependencies['module'][] = $this->formatterPluginManager->getDefinition($this->options['type'])['provider'];
     }
 
@@ -981,6 +988,27 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
     $contexts[] = 'cache.context.user';
 
     return $contexts;
+  }
+
+  /**
+   * Gets the table mapping for the entity type of the field.
+   *
+   * @return \Drupal\Core\Entity\Sql\DefaultTableMapping
+   *   The table mapping.
+   */
+  protected function getTableMapping() {
+    return $this->entityManager->getStorage($this->definition['entity_type'])->getTableMapping();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getValue(ResultRow $values, $field = NULL) {
+    if ($field === NULL) {
+      return $this->getEntity($values)->{$this->definition['field_name']}->value;
+    }
+
+    return $this->getEntity($values)->{$this->definition['field_name']}->$field;
   }
 
 }

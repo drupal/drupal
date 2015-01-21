@@ -92,7 +92,6 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
       ->setName($definition->getName())
       ->setProvider($definition->getProvider())
       ->setQueryable($definition->isQueryable())
-      ->setRequired($definition->isRequired())
       ->setRevisionable($definition->isRevisionable())
       ->setSettings($definition->getSettings())
       ->setTargetEntityTypeId($definition->getTargetEntityTypeId())

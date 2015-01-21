@@ -475,7 +475,6 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
         $this->singleFieldDisplays[$key] = EntityViewDisplay::create(array(
           'targetEntityType' => $entity_type_id,
           'bundle' => $bundle,
-          'mode' => '_custom',
           'status' => TRUE,
         ))->setComponent($field_name, $display_options);
       }

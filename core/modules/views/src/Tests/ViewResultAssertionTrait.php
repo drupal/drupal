@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Tests;
 
+use Drupal\views\Plugin\views\field\Field;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -90,8 +91,15 @@ trait ViewResultAssertionTrait {
     foreach ($view->result as $key => $value) {
       $row = array();
       foreach ($column_map as $view_column => $expected_column) {
+        if (property_exists($value, $view_column)) {
+          $row[$expected_column] = (string) $value->$view_column;
+        }
         // The comparison will be done on the string representation of the value.
-        $row[$expected_column] = (string) $value->$view_column;
+        // For entity fields we don't have the raw value. Let's try to fetch it
+        // using the entity itself.
+        elseif (empty($value->$view_column) && isset($view->field[$expected_column]) && ($field = $view->field[$expected_column]) && $field instanceof Field) {
+          $row[$expected_column] = $field->getEntity($value)->{$field->definition['field_name']}->value;
+        }
       }
       $result[$key] = $row;
     }

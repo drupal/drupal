@@ -91,7 +91,7 @@ class ViewsHandlerManager extends DefaultPluginManager implements FallbackPlugin
 
     if (isset($data[$field][$this->handlerType])) {
       $definition = $data[$field][$this->handlerType];
-      foreach (array('group', 'title', 'title short', 'help', 'real field', 'real table', 'entity field') as $key) {
+      foreach (array('group', 'title', 'title short', 'help', 'real field', 'real table', 'entity type', 'entity field') as $key) {
         if (!isset($definition[$key])) {
           // First check the field level.
           if (!empty($data[$field][$key])) {
@@ -99,7 +99,8 @@ class ViewsHandlerManager extends DefaultPluginManager implements FallbackPlugin
           }
           // Then if that doesn't work, check the table level.
           elseif (!empty($data['table'][$key])) {
-            $definition[$key] = $data['table'][$key];
+            $definition_key = $key === 'entity type' ? 'entity_type' : $key;
+            $definition[$definition_key] = $data['table'][$key];
           }
         }
       }
