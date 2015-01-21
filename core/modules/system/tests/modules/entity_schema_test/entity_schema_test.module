@@ -34,6 +34,11 @@ function entity_schema_test_entity_base_field_info(EntityTypeInterface $entity_t
       ->setLabel(t('A custom base field'));
     if (\Drupal::state()->get('entity_schema_update')) {
       $definitions += EntityTestMulRev::baseFieldDefinitions($entity_type);
+      // And add a revision log.
+      $definitions['revision_log'] = BaseFieldDefinition::create('string_long')
+        ->setLabel(t('Revision log message'))
+        ->setDescription(t('The log entry explaining the changes in this revision.'))
+        ->setRevisionable(TRUE);
     }
     return $definitions;
   }

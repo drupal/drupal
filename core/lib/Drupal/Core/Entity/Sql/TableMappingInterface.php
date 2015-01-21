@@ -102,4 +102,18 @@ interface TableMappingInterface {
    *   unique among all other fields.
    */
   public function getFieldColumnName(FieldStorageDefinitionInterface $storage_definition, $property_name);
+
+  /**
+   * Returns the table name for a given column.
+   *
+   * @param string $field_name
+   *   The name of the entity field to return the column mapping for.
+   *
+   * @return string
+   *   Table name for the given field.
+   *
+   * @throws \Drupal\Core\Entity\Sql\SqlContentEntityStorageException
+   */
+  public function getFieldTableName($field_name);
+
 }

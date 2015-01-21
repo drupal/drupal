@@ -294,7 +294,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     //   easily instantiate a new table mapping whenever needed.
     if (!isset($this->tableMapping) || $storage_definitions) {
       $definitions = $storage_definitions ?: $this->entityManager->getFieldStorageDefinitions($this->entityTypeId);
-      $table_mapping = new DefaultTableMapping($definitions);
+      $table_mapping = new DefaultTableMapping($this->entityType, $definitions);
 
       $definitions = array_filter($definitions, function (FieldStorageDefinitionInterface $definition) use ($table_mapping) {
         return $table_mapping->allowsSharedTableStorage($definition);
@@ -1745,19 +1745,24 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         ->distinct(TRUE);
     }
     elseif ($table_mapping->allowsSharedTableStorage($storage_definition)) {
-      $data_table = $this->dataTable ?: $this->baseTable;
-      $query = $this->database->select($data_table, 't');
-      $columns = $storage_definition->getColumns();
-      if (count($columns) > 1) {
-        $or = $query->orConditionGroup();
-        foreach ($columns as $column_name => $data) {
-          $or->isNotNull($storage_definition->getName() . '__' . $column_name);
-        }
-        $query->condition($or);
+      // Ascertain the table this field is mapped too.
+      $field_name = $storage_definition->getName();
+      try {
+        $table_name = $table_mapping->getFieldTableName($field_name);
       }
-      else {
-        $query->isNotNull($storage_definition->getName());
+      catch (SqlContentEntityStorageException $e) {
+        // This may happen when changing field storage schema, since we are not
+        // able to use a table mapping matching the passed storage definition.
+        // @todo Revisit this once we are able to instantiate the table mapping
+        //   properly. See https://www.drupal.org/node/2274017.
+        $table_name = $this->dataTable ?: $this->baseTable;
       }
+      $query = $this->database->select($table_name, 't');
+      $or = $query->orConditionGroup();
+      foreach (array_keys($storage_definition->getColumns()) as $property_name) {
+        $or->isNotNull($table_mapping->getFieldColumnName($storage_definition, $property_name));
+      }
+      $query->condition($or);
       $query
         ->fields('t', array($this->idKey))
         ->distinct(TRUE);
