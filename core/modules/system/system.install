@@ -611,28 +611,6 @@ function system_requirements($phase) {
       );
     }
   }
-
-  // See if trusted hostnames have been configured, and warn the user if they
-  // are not set.
-  if ($phase == 'runtime') {
-    $trusted_host_patterns = Settings::get('trusted_host_patterns');
-    if (empty($trusted_host_patterns)) {
-      $requirements['trusted_host_patterns'] = array(
-        'title' => t('Trusted Host Settings'),
-        'value' => t('Not enabled'),
-        'description' => t('The trusted_host_patterns setting is not configured in settings.php. This can lead to security vulnerabilities. It is <strong>highly recommended</strong> that you configure this. See <a href="@url">Protecting against HTTP HOST Header attacks</a> for more information.', array('@url' => 'https://www.drupal.org/node/1992030')),
-        'severity' => REQUIREMENT_ERROR,
-      );
-    }
-    else {
-      $requirements['trusted_host_patterns'] = array(
-        'title' => t('Trusted Host Settings'),
-        'value' => t('Enabled'),
-        'description' => t('The trusted_host_patterns setting is set to allow %trusted_host_patterns', array('%trusted_host_patterns' => join(', ', $trusted_host_patterns))),
-      );
-    }
-  }
-
   return $requirements;
 }
 

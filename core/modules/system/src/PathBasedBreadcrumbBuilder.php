@@ -7,7 +7,6 @@
 
 namespace Drupal\system;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -15,17 +14,19 @@ use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Link;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
-use Drupal\Core\Routing\RequestContext;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
+use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 
 /**
  * Class to define the menu_link breadcrumb builder.
@@ -36,7 +37,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   /**
    * The router request context.
    *
-   * @var \Drupal\Core\Routing\RequestContext
+   * @var \Symfony\Component\Routing\RequestContext
    */
   protected $context;
 
@@ -85,7 +86,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   /**
    * Constructs the PathBasedBreadcrumbBuilder.
    *
-   * @param \Drupal\Core\Routing\RequestContext $context
+   * @param \Symfony\Component\Routing\RequestContext $context
    *   The router request context.
    * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
    *   The menu link access service.
@@ -181,7 +182,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     }
     // @todo Use the RequestHelper once https://drupal.org/node/2090293 is
     //   fixed.
-    $request = Request::create($this->context->getCompleteBaseUrl() . '/' . $path);
+    $request = Request::create($this->context->getBaseUrl() . '/' . $path);
     // Performance optimization: set a short accept header to reduce overhead in
     // AcceptHeaderMatcher when matching the request.
     $request->headers->set('Accept', 'text/html');

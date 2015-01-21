@@ -58,7 +58,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
   /**
    * The mocked route request context.
    *
-   * @var \Drupal\Core\Routing\RequestContext|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Symfony\Component\Routing\RequestContext|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $context;
 
@@ -89,7 +89,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
     $config_factory = $this->getConfigFactoryStub(array('system.site' => array('front' => 'test_frontpage')));
 
     $this->pathProcessor = $this->getMock('\Drupal\Core\PathProcessor\InboundPathProcessorInterface');
-    $this->context = $this->getMock('\Drupal\Core\Routing\RequestContext');
+    $this->context = $this->getMock('\Symfony\Component\Routing\RequestContext');
 
     $this->accessManager = $this->getMock('\Drupal\Core\Access\AccessManagerInterface');
     $this->titleResolver = $this->getMock('\Drupal\Core\Controller\TitleResolverInterface');
