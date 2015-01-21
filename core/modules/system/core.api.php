@@ -575,10 +575,8 @@
  * appropriately for their particular sites.
  *
  * @section sec_define Defining permissions
- * Modules define permissions via a $module.permissions.yml file. This file
- * defines machine names, human-readable names, and optionally
- * descriptions for each permission type. The machine names are the canonical
- * way to refer to permissions for access checking.
+ * Modules define permissions via a $module.permissions.yml file. See
+ * \Drupal\user\PermissionHandler for documentation of permissions.yml files.
  *
  * @section sec_access Access permission checking
  * Depending on the situation, there are several methods for ensuring that
