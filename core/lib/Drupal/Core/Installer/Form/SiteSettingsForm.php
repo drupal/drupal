@@ -155,6 +155,13 @@ class SiteSettingsForm extends FormBase {
       'value' => $install_state['parameters']['profile'],
       'required' => TRUE,
     );
+    // Set the initial trusted host value if this isn't a command line install.
+    if (PHP_SAPI !== 'cli') {
+      $settings['settings']['trusted_host_patterns'] = (object) array(
+        'value' => array('^' . preg_quote(\Drupal::request()->getHost()) . '$'),
+        'required' => TRUE,
+      );
+    }
 
     drupal_rewrite_settings($settings);
 

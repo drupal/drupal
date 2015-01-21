@@ -201,6 +201,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *   from disk. Defaults to TRUE.
    *
    * @return static
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
+   *   In case the host name in the request is not trusted.
    */
   public static function createFromRequest(Request $request, $class_loader, $environment, $allow_dumping = TRUE) {
     // Include our bootstrap file.
@@ -216,6 +219,15 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $site_path = static::findSitePath($request);
     $kernel->setSitePath($site_path);
     Settings::initialize(dirname($core_root), $site_path, $class_loader);
+
+    // Initialize our list of trusted HTTP Host headers to protect against
+    // header attacks.
+    $hostPatterns = Settings::get('trusted_host_patterns', array());
+    if (PHP_SAPI !== 'cli' && !empty($hostPatterns)) {
+      if (static::setupTrustedHosts($request, $hostPatterns) === FALSE) {
+        throw new BadRequestHttpException('The provided host name is not valid for this server.');
+      }
+    }
 
     // Redirect the user to the installation script if Drupal has not been
     // installed yet (i.e., if no $databases array has been defined in the
@@ -1254,4 +1266,46 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     return TRUE;
   }
 
+  /**
+   * Sets up the lists of trusted HTTP Host headers.
+   *
+   * Since the HTTP Host header can be set by the user making the request, it
+   * is possible to create an attack vectors against a site by overriding this.
+   * Symfony provides a mechanism for creating a list of trusted Host values.
+   *
+   * Host patterns (as regular expressions) can be configured throught
+   * settings.php for multisite installations, sites using ServerAlias without
+   * canonical redirection, or configurations where the site responds to default
+   * requests. For example,
+   *
+   * @code
+   * $settings['trusted_host_patterns'] = array(
+   *   '^example\.com$',
+   *   '^*.example\.com$',
+   * );
+   * @endcode
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   * @param array $hostPatterns
+   *   The array of trusted host patterns.
+   *
+   * @return boolean
+   *   TRUE if the Host header is trusted, FALSE otherwise.
+   *
+   * @see https://www.drupal.org/node/1992030
+   */
+  protected static function setupTrustedHosts(Request $request, $hostPatterns) {
+    $request->setTrustedHosts($hostPatterns);
+
+    // Get the host, which will validate the current request.
+    try {
+      $request->getHost();
+    }
+    catch (\UnexpectedValueException $e) {
+      return FALSE;
+    }
+
+    return TRUE;
+  }
 }
