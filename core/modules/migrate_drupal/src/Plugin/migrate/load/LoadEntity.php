@@ -98,13 +98,15 @@ class LoadEntity extends PluginBase implements MigrateLoadInterface {
                 $this->processTextField($field_name, $data, $migration);
                 break;
               default:
-                $migration->process[$field_name] = $field_name;
+                $process = $migration->getProcess();
+                $process[$field_name] = $field_name;
+                $migration->setProcess($process);
             }
           }
         }
         else {
           $fields = array_keys($migration->getSourcePlugin()->fields());
-          $migration->process += array_combine($fields, $fields);
+          $migration->setProcess($migration->getProcess() + array_combine($fields, $fields));
         }
         $migrations[$migration->id()] = $migration;
       }
@@ -132,10 +134,12 @@ class LoadEntity extends PluginBase implements MigrateLoadInterface {
     $value_key = $field_data['db_storage'] ? $field_name : "$field_name/value";
     $format_key = $field_data['db_storage'] ? $field_name . '_format' : "$field_name/format" ;
 
-    $migration->process["$field_name/value"] = $value_key;
+    $process = $migration->getProcess();
+
+    $process["$field_name/value"] = $value_key;
     // See d6_user, signature_format for an example of the YAML that
     // represents this process array.
-    $migration->process["$field_name/format"] = [
+    $process["$field_name/format"] = [
       [
         'plugin' => 'static_map',
         'bypass' => TRUE,
@@ -150,6 +154,8 @@ class LoadEntity extends PluginBase implements MigrateLoadInterface {
         'no_stub' => 1,
       ],
     ];
+
+    $migration->setProcess($process);
   }
 
   /**
@@ -163,7 +169,8 @@ class LoadEntity extends PluginBase implements MigrateLoadInterface {
    *   The migration entity.
    */
   protected function processFileField($field_name, $field_data, MigrationInterface $migration) {
-    $migration->process[$field_name] = [
+    $process = $migration->getProcess();
+    $process[$field_name] = [
       'plugin' => 'd6_cck_file',
       'source' => [
         $field_name,
@@ -171,6 +178,7 @@ class LoadEntity extends PluginBase implements MigrateLoadInterface {
         $field_name . '_data',
       ],
     ];
+    $migration->setProcess($process);
   }
 
   /**
@@ -186,7 +194,8 @@ class LoadEntity extends PluginBase implements MigrateLoadInterface {
   protected function processLinkField($field_name, $field_data, MigrationInterface $migration) {
     // Specifically process the link field until core is fixed.
     // @see https://www.drupal.org/node/2235457
-    $migration->process[$field_name] = [
+    $process = $migration->getProcess();
+    $process[$field_name] = [
       'plugin' => 'd6_cck_link',
       'source' => [
         $field_name,
@@ -194,6 +203,7 @@ class LoadEntity extends PluginBase implements MigrateLoadInterface {
         $field_name . '_attributes',
       ],
     ];
+    $migration->setProcess($process);
   }
 
 }

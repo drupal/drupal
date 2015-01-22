@@ -41,21 +41,21 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
    *
    * @var string
    */
-  public $id;
+  protected $id;
 
   /**
    * The human-readable label for the migration.
    *
    * @var string
    */
-  public $label;
+  protected $label;
 
   /**
    * The plugin ID for the row.
    *
    * @var string
    */
-  public $row;
+  protected $row;
 
   /**
    * The source configuration, with at least a 'plugin' key.
@@ -64,7 +64,7 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
    *
    * @var array
    */
-  public $source;
+  protected $source;
 
   /**
    * The source plugin.
@@ -78,21 +78,21 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
    *
    * @var array
    */
-  public $process;
+  protected $process;
 
   /**
    * The configuration describing the load plugins.
    *
    * @var array
    */
-  public $load;
+  protected $load;
 
   /**
    * The cached process plugins.
    *
    * @var array
    */
-  protected $processPlugins = array();
+  protected $processPlugins = [];
 
   /**
    * The destination configuration, with at least a 'plugin' key.
@@ -101,7 +101,7 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
    *
    * @var array
    */
-  public $destination;
+  protected $destination;
 
   /**
    * The destination plugin.
@@ -117,7 +117,7 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
    *
    * @var string
    */
-  public $idMap = array();
+  protected $idMap = [];
 
   /**
    * The identifier map.
@@ -134,7 +134,7 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
    *
    * @var array
    */
-  public $sourceIds = array();
+  protected $sourceIds = [];
 
   /**
    * The destination identifiers.
@@ -144,14 +144,14 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
    *
    * @var array
    */
-  public $destinationIds = FALSE;
+  protected $destinationIds = [];
 
   /**
    * Information on the high water mark.
    *
    * @var array
    */
-  public $highWaterProperty;
+  protected $highWaterProperty;
 
   /**
    * Indicate whether the primary system of record for this migration is the
@@ -163,7 +163,7 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
    *
    * @var string
    */
-  public $systemOfRecord = self::SOURCE;
+  protected $systemOfRecord = self::SOURCE;
 
   /**
    * Specify value of source_row_status for current map row. Usually set by
@@ -171,7 +171,7 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
    *
    * @var int
    */
-  public $sourceRowStatus = MigrateIdMapInterface::STATUS_IMPORTED;
+  protected $sourceRowStatus = MigrateIdMapInterface::STATUS_IMPORTED;
 
   /**
    * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
@@ -179,23 +179,25 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
   protected $highWaterStorage;
 
   /**
+   * Track time of last import if TRUE.
+   *
    * @var bool
    */
-  public $trackLastImported = FALSE;
+  protected $trackLastImported = FALSE;
 
   /**
    * These migrations must be already executed before this migration can run.
    *
    * @var array
    */
-  protected $requirements = array();
+  protected $requirements = [];
 
   /**
    * These migrations, if ran at all, must be executed before this migration.
    *
    * @var array
    */
-  public $migration_dependencies = array();
+  protected $migration_dependencies = [];
 
   /**
    * The entity manager.
@@ -382,4 +384,55 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
     return $this->getMigrationResult() === static::RESULT_COMPLETED;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getProcess() {
+    return $this->process;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setProcess(array $process) {
+    $this->process = $process;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSystemOfRecord() {
+    return $this->systemOfRecord;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setSystemOfRecord($system_of_record) {
+    $this->systemOfRecord = $system_of_record;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isTrackLastImported() {
+    return $this->trackLastImported;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setTrackLastImported($track_last_imported) {
+    $this->trackLastImported = (bool) $track_last_imported;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMigrationDependencies() {
+    return $this->migration_dependencies;
+  }
 }

@@ -27,20 +27,22 @@ class MigrationStorage extends ConfigEntityStorage implements MigrateBuildDepend
     $requirement_graph = array();
     $different = FALSE;
     foreach ($migrations as $migration) {
-      /** @var \Drupal\migrate\Entity\Migration $migration */
+      /** @var \Drupal\migrate\Entity\MigrationInterface $migration */
       $id = $migration->id();
       $requirements[$id] = array();
       $dependency_graph[$id]['edges'] = array();
-      if (isset($migration->migration_dependencies['required'])) {
-        foreach ($migration->migration_dependencies['required'] as $dependency) {
+      $migration_dependencies = $migration->getMigrationDependencies();
+
+      if (isset($migration_dependencies['required'])) {
+        foreach ($migration_dependencies['required'] as $dependency) {
           if (!isset($dynamic_ids[$dependency])) {
             $this->addDependency($requirement_graph, $id, $dependency, $dynamic_ids);
           }
           $this->addDependency($dependency_graph, $id, $dependency, $dynamic_ids);
         }
       }
-      if (isset($migration->migration_dependencies['optional'])) {
-        foreach ($migration->migration_dependencies['optional'] as $dependency) {
+      if (isset($migration_dependencies['optional'])) {
+        foreach ($migration_dependencies['optional'] as $dependency) {
           $different = TRUE;
           $this->addDependency($dependency_graph, $id, $dependency, $dynamic_ids);
         }

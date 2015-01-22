@@ -35,9 +35,11 @@ class MigrateUserPictureFileTest extends MigrateDrupalTestBase {
       $this->getDumpDirectory() . '/UsersRoles.php',
       $this->getDumpDirectory() . '/EventTimezones.php',
     );
-    /** @var \Drupal\migrate\entity\Migration $migration */
+    /** @var \Drupal\migrate\Entity\MigrationInterface $migration */
     $migration = entity_load('migration', 'd6_user_picture_file');
-    $migration->source['conf_path'] = 'core/modules/simpletest';
+    $source = $migration->get('source');
+    $source['conf_path'] = 'core/modules/simpletest';
+    $migration->set('source', $source);
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);
     $executable->import();

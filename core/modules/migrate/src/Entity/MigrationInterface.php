@@ -179,4 +179,66 @@ interface MigrationInterface extends ConfigEntityInterface {
    */
   public function getMigrationResult();
 
+  /**
+   * Get the current configuration describing the process plugins.
+   *
+   * @return array
+   *   The configuration describing the process plugins.
+   */
+  public function getProcess();
+
+  /**
+   * Set the current configuration describing the process plugins.
+   *
+   * @param array $process
+   *   The configuration describing the process plugins.
+   *
+   * @return $this
+   */
+  public function setProcess(array $process);
+
+  /**
+   * Get the current system of record of the migration.
+   *
+   * @return string
+   *   The current system of record of the migration.
+   */
+  public function getSystemOfRecord();
+
+  /**
+   * Set the system of record for the migration.
+   *
+   * @param string $system_of_record
+   *   The system of record of the migration.
+   *
+   * @return $this
+   */
+  public function setSystemOfRecord($system_of_record);
+
+  /**
+   * Checks if the migration should track time of last import.
+   *
+   * @return bool
+   *   TRUE if the migration is tracking last import time.
+   */
+  public function isTrackLastImported();
+
+  /**
+   * Set if the migration should track time of last import.
+   *
+   * @param bool $track_last_imported
+   *   Boolean value to indicate if the migration should track last import time.
+   *
+   * @return $this
+   */
+  public function setTrackLastImported($track_last_imported);
+
+  /**
+   * Get the dependencies for this migration.
+   *
+   * @return array
+   *   The dependencies for this migrations.
+   */
+  public function getMigrationDependencies();
+
 }
