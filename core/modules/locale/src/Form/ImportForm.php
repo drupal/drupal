@@ -171,6 +171,7 @@ class ImportForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    \Drupal::moduleHandler()->loadInclude('locale', 'translation.inc');
     // Add language, if not yet supported.
     $language = $this->languageManager->getLanguage($form_state->getValue('langcode'));
     if (empty($language)) {
@@ -178,15 +179,21 @@ class ImportForm extends FormBase {
       $language->save();
       drupal_set_message($this->t('The language %language has been created.', array('%language' => $this->t($language->label()))));
     }
-    $options = array(
+    $options = array_merge(_locale_translation_default_update_options(), array(
       'langcode' => $form_state->getValue('langcode'),
       'overwrite_options' => $form_state->getValue('overwrite_options'),
       'customized' => $form_state->getValue('customized') ? LOCALE_CUSTOMIZED : LOCALE_NOT_CUSTOMIZED,
-    );
+    ));
     $this->moduleHandler->loadInclude('locale', 'bulk.inc');
     $file = locale_translate_file_attach_properties($this->file, $options);
     $batch = locale_translate_batch_build(array($file->uri => $file), $options);
     batch_set($batch);
+
+    // Create or update all configuration translations for this language.
+    \Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
+    if ($batch = locale_config_batch_update_components($options, array($form_state->getValue('langcode')))) {
+      batch_set($batch);
+    }
 
     $form_state->setRedirect('locale.translate_page');
   }
