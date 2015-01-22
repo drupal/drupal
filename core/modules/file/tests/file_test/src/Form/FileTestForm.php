@@ -102,6 +102,13 @@ class FileTestForm implements FormInterface {
       $validators['file_validate_extensions'] = array($form_state->getValue('extensions'));
     }
 
+    // The test for drupal_move_uploaded_file() triggering a warning is
+    // unavoidable. We're interested in what happens afterwards in
+    // file_save_upload().
+    if (\Drupal::state()->get('file_test.disable_error_collection')) {
+      define('SIMPLETEST_COLLECT_ERRORS', FALSE);
+    }
+
     $file = file_save_upload('file_test_upload', $validators, $destination, 0, $form_state->getValue('file_test_replace'));
     if ($file) {
       $form_state->setValue('file_test_upload', $file);
