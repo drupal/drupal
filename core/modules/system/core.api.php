@@ -322,15 +322,20 @@
  *   Configuration entity classes expose dependencies by overriding the
  *   \Drupal\Core\Config\Entity\ConfigEntityInterface::calculateDependencies()
  *   method.
- * - On routes for paths staring with '\admin' with configuration entity
- *   placeholders, configuration entities are normally loaded in their original
- *   language, not translated. This is usually desirable, because most admin
- *   paths are for editing configuration, and you need that to be in the source
- *   language. If for some reason you need to have your configuration entity
- *   loaded in the currently-selected language on an admin path (for instance,
- *   if you go to example.com/es/admin/your_path and you need the entity to be
- *   in Spanish), then you can add a 'use_current_language' parameter option to
- *   your route. Here's an example using the configurable_language config
+ * - On routes for paths staring with '/admin' or otherwise designated as
+ *   administration paths (such as node editing when it is set as an admin
+ *   operation), if they have configuration entity placeholders, configuration
+ *   entities are normally loaded in their original language, without
+ *   translations or other overrides. This is usually desirable, because most
+ *   admin paths are for editing configuration, and you need that to be in the
+ *   source language and to lack possibly dynamic overrides. If for some reason
+ *   you need to have your configuration entity loaded in the currently-selected
+ *   language on an admin path (for instance, if you go to
+ *   example.com/es/admin/your_path and you need the entity to be in Spanish),
+ *   then you can add a 'with_config_overrides' parameter option to your route.
+ *   The same applies if you need to load the entity with overrides (or
+ *   translated) on an admin path like '/node/add/article' (when configured to
+ *   be an admin path). Here's an example using the configurable_language config
  *   entity:
  *   @code
  *   mymodule.myroute:
@@ -341,7 +346,7 @@
  *       parameters:
  *         configurable_language:
  *           type: entity:configurable_language
- *           use_current_language: 'TRUE'
+ *           with_config_overrides: TRUE
  *   @endcode
  *   With the route defined this way, the $configurable_language parameter to
  *   your controller method will come in translated to the current language.

@@ -30,4 +30,4 @@ language_test.entity_using_current_language:
       configurable_language:
         type: entity:configurable_language
         # Force load in current interface language.
-        use_current_language: 'TRUE'
+        with_config_overrides: TRUE

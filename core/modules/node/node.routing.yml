@@ -28,7 +28,7 @@ node.add:
     _node_operation_route: TRUE
     parameters:
       node_type:
-        use_current_language: TRUE
+        with_config_overrides: TRUE
 
 entity.node.preview:
   path: '/node/preview/{node_preview}/{view_mode_id}'
