@@ -108,6 +108,15 @@ class Language implements LanguageInterface {
   /**
    * {@inheritdoc}
    */
+  public function setName($name) {
+    $this->name = $name;
+
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getId() {
     return $this->id;
   }

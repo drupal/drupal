@@ -397,19 +397,9 @@ class LanguageManager implements LanguageManagerInterface {
     $filtered_languages = array();
     // Add the site's default language if requested.
     if ($flags & LanguageInterface::STATE_SITE_DEFAULT) {
-
-      // Setup a language to have the defaults with data appropriate of the
-      // default language only for runtime.
-      $defaultLanguage = $this->getDefaultLanguage();
-      $default = new Language(
-        array(
-          'id' => $defaultLanguage->getId(),
-          'name' => $this->t("Site's default language (@lang_name)",
-            array('@lang_name' => $defaultLanguage->getName())),
-          'direction' => $defaultLanguage->getDirection(),
-          'weight' => $defaultLanguage->getWeight(),
-        )
-      );
+      // Setup a language to have the defaults, but with overridden name.
+      $default = $this->getDefaultLanguage();
+      $default->setName($this->t("Site's default language (@lang_name)", array('@lang_name' => $default->getName())));
       $filtered_languages[LanguageInterface::LANGCODE_SITE_DEFAULT] = $default;
     }
 
