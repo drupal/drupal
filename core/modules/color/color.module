@@ -115,7 +115,7 @@ function color_preprocess_page(&$variables) {
 
   // Override logo.
   $logo = \Drupal::config('color.theme.' . $theme_key)->get('logo');
-  if ($logo && $variables['logo'] && preg_match('!' . $theme_key . '/logo.png$!', $variables['logo'])) {
+  if ($logo && $variables['logo'] && preg_match('!' . $theme_key . '/logo.svg$!', $variables['logo'])) {
     $variables['logo'] = file_create_url($logo);
   }
 }
@@ -435,7 +435,7 @@ function color_scheme_form_submit($form, FormStateInterface $form_state) {
   // Save palette and logo location.
   $config
     ->set('palette', $palette)
-    ->set('logo', $paths['target'] . 'logo.png')
+    ->set('logo', $paths['target'] . 'logo.svg')
     ->save();
 
   // Copy over neutral images.

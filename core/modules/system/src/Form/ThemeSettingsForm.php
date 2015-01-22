@@ -254,7 +254,7 @@ class ThemeSettingsForm extends ConfigFormBase {
 
     // Inject human-friendly values and form element descriptions for logo and
     // favicon.
-    foreach (array('logo' => 'logo.png', 'favicon' => 'favicon.ico') as $type => $default) {
+    foreach (array('logo' => 'logo.svg', 'favicon' => 'favicon.ico') as $type => $default) {
       if (isset($form[$type]['settings'][$type . '_path'])) {
         $element = &$form[$type]['settings'][$type . '_path'];
 

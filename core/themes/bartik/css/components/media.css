@@ -65,11 +65,11 @@
   }
   #logo,
   .site-logo {
-    padding: 15px 15px 15px 10px; /* LTR */
+    padding: 9px 4px 4px 9px; /* LTR */
   }
   [dir="rtl"] #logo,
   [dir="rtl"] .site-logo {
-    padding: 15px 10px 15px 15px;
+    padding: 9px 9px 4px 4px;
   }
   #name-and-slogan,
   .site-branding-text {

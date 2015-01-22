@@ -72,9 +72,9 @@ class ThemeTest extends WebTestBase {
         'src' => $GLOBALS['base_url'] . '/' . 'core/misc/druplicon.png',
       ),
       // Relative path to a file in a theme.
-      $default_theme_path . '/logo.png' => array(
-        'form' => $default_theme_path . '/logo.png',
-        'src' => $GLOBALS['base_url'] . '/' . $default_theme_path . '/logo.png',
+      $default_theme_path . '/logo.svg' => array(
+        'form' => $default_theme_path . '/logo.svg',
+        'src' => $GLOBALS['base_url'] . '/' . $default_theme_path . '/logo.svg',
       ),
     );
     foreach ($supported_paths as $input => $expected) {
@@ -92,9 +92,9 @@ class ThemeTest extends WebTestBase {
         ':description' => 'description',
       ));
       // Expected default values (if all else fails).
-      $implicit_public_file = 'logo.png';
-      $explicit_file = 'public://logo.png';
-      $local_file = $default_theme_path . '/logo.png';
+      $implicit_public_file = 'logo.svg';
+      $explicit_file = 'public://logo.svg';
+      $local_file = $default_theme_path . '/logo.svg';
       // Adjust for fully qualified stream wrapper URI in public filesystem.
       if (file_uri_scheme($input) == 'public') {
         $implicit_public_file = file_uri_target($input);

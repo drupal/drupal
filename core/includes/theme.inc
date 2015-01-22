@@ -382,7 +382,7 @@ function theme_get_setting($setting_name, $theme = NULL) {
       if ($cache[$theme]->get('features.logo')) {
         $logo_path = $cache[$theme]->get('logo.path');
         if ($cache[$theme]->get('logo.use_default')) {
-          $cache[$theme]->set('logo.url', file_create_url($theme_object->getPath() . '/logo.png'));
+          $cache[$theme]->set('logo.url', file_create_url($theme_object->getPath() . '/logo.svg'));
         }
         elseif ($logo_path) {
           $cache[$theme]->set('logo.url', file_create_url($logo_path));

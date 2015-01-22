@@ -103,7 +103,7 @@ $info = array(
 
   // Files to copy.
   'copy' => array(
-    'logo.png',
+    'logo.svg',
   ),
 
   // Gradient definitions.

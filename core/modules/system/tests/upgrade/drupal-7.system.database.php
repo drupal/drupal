@@ -201,11 +201,11 @@ db_insert('variable')->fields(array(
   ))
   ->values(array(
     'name' => 'color_bartik_files',
-    'value' => serialize(array('public://color/bartik-09696463/logo.png', 'public://color/bartik-09696463/colors.css')),
+    'value' => serialize(array('public://color/bartik-09696463/logo.svg', 'public://color/bartik-09696463/colors.css')),
   ))
   ->values(array(
     'name' => 'color_bartik_logo',
-    'value' => serialize('public://color/bartik-09696463/logo.png'),
+    'value' => serialize('public://color/bartik-09696463/logo.svg'),
   ))
   ->values(array(
     'name' => 'color_bartik_palette',
@@ -224,11 +224,11 @@ db_insert('variable')->fields(array(
   ))
   ->values(array(
     'name' => 'color_seven_files',
-    'value' => serialize(array('public://color/seven-09696463/logo.png', 'public://color/seven-09696463/colors.css')),
+    'value' => serialize(array('public://color/seven-09696463/logo.svg', 'public://color/seven-09696463/colors.css')),
   ))
   ->values(array(
     'name' => 'color_seven_logo',
-    'value' => serialize('public://color/seven-09696463/logo.png'),
+    'value' => serialize('public://color/seven-09696463/logo.svg'),
   ))
   ->values(array(
     'name' => 'color_seven_palette',
