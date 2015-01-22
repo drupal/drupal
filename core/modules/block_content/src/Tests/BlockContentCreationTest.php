@@ -39,6 +39,43 @@ class BlockContentCreationTest extends BlockContentTestBase {
    * Creates a "Basic page" block and verifies its consistency in the database.
    */
   public function testBlockContentCreation() {
+    $this->drupalLogin($this->adminUser);
+
+    // Create a block.
+    $edit = array();
+    $edit['info[0][value]'] = 'Test Block';
+    $edit['body[0][value]'] = $this->randomMachineName(16);
+    $this->drupalPostForm('block/add/basic', $edit, t('Save'));
+
+    // Check that the Basic block has been created.
+    $this->assertRaw(format_string('!block %name has been created.', array(
+      '!block' => 'basic',
+      '%name' => $edit['info[0][value]']
+    )), 'Basic block created.');
+
+    // Check that the view mode setting is hidden because only one exists.
+    $this->assertNoFieldByXPath('//select[@name="settings[view_mode]"]', NULL, 'View mode setting hidden because only one exists');
+
+    // Check that the block exists in the database.
+    $blocks = entity_load_multiple_by_properties('block_content', array('info' => $edit['info[0][value]']));
+    $block = reset($blocks);
+    $this->assertTrue($block, 'Custom Block found in database.');
+
+    // Check that attempting to create another block with the same value for
+    // 'info' returns an error.
+    $this->drupalPostForm('block/add/basic', $edit, t('Save'));
+
+    // Check that the Basic block has been created.
+    $this->assertRaw(format_string('A block with description %name already exists.', array(
+      '%name' => $edit['info[0][value]']
+    )));
+    $this->assertResponse(200);
+  }
+
+  /**
+   * Creates a "Basic page" block with multiple view modes.
+   */
+  public function testBlockContentCreationMultipleViewModes() {
     // Add a new view mode and verify if it is selected as expected.
     $this->drupalLogin($this->drupalCreateUser(array('administer display modes')));
     $this->drupalGet('admin/structure/display-modes/view/add/block_content');
@@ -62,6 +99,9 @@ class BlockContentCreationTest extends BlockContentTestBase {
       '!block' => 'basic',
       '%name' => $edit['info[0][value]']
     )), 'Basic block created.');
+
+    // Check that the view mode setting is shown because more than one exists.
+    $this->assertFieldByXPath('//select[@name="settings[view_mode]"]', NULL, 'View mode setting shown because multiple exist');
 
     // Change the view mode.
     $view_mode['settings[view_mode]'] = 'test_view_mode';
