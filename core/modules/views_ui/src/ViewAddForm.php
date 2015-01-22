@@ -55,7 +55,7 @@ class ViewAddForm extends ViewFormBase {
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
-    $form['#attached']['library'][] = 'views_ui/admin.styling';
+    $form['#attached']['library'][] = 'views_ui/views_ui.admin';
     $form['#attributes']['class'] = array('views-admin');
 
     $form['name'] = array(
