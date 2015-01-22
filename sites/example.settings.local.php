@@ -55,3 +55,15 @@ $settings['extension_discovery_scan_tests'] = TRUE;
  * using these parameters in a request to rebuild.php.
  */
 $settings['rebuild_access'] = TRUE;
+
+/**
+ * Trust localhost.
+ *
+ * This will configure several common hostnames used for local development to
+ * be trusted hosts.
+ */
+$settings['trusted_host_patterns'] = array(
+  '^localhost$',
+  '^localhost\.*',
+  '\.local$',
+);

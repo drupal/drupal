@@ -611,8 +611,9 @@ class ViewUI implements ViewEntityInterface {
 
       // Make view links come back to preview.
 
-      // Also override the current path so we get the pager.
-      $request = new Request();
+      // Also override the current path so we get the pager, and make sure the
+      // Request object gets all of the proper values from $_SERVER.
+      $request = Request::createFromGlobals();
       $request->attributes->set(RouteObjectInterface::ROUTE_NAME, 'entity.view.preview_form');
       $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, \Drupal::service('router.route_provider')->getRouteByName('entity.view.preview_form'));
       $request->attributes->set('view', $this->storage);

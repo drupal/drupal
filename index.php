@@ -27,7 +27,7 @@ try {
   $kernel->terminate($request, $response);
 }
 catch (HttpExceptionInterface $e) {
-  $response = new Response('', $e->getStatusCode());
+  $response = new Response($e->getMessage(), $e->getStatusCode());
   $response->prepare($request)->send();
 }
 catch (Exception $e) {
