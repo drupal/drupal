@@ -333,7 +333,7 @@ class ContactSitewideTest extends WebTestBase {
    * @param string $reply
    *   The auto-reply text that is sent to a user upon completing the contact
    *   form.
-   * @param boolean $selected
+   * @param bool $selected
    *   A Boolean indicating whether the form should be selected by default.
    * @param array $third_party_settings
    *   Array of third party settings to be added to the posted form data.
@@ -361,7 +361,7 @@ class ContactSitewideTest extends WebTestBase {
    * @param string $reply
    *   The auto-reply text that is sent to a user upon completing the contact
    *   form.
-   * @param boolean $selected
+   * @param bool $selected
    *   A Boolean indicating whether the form should be selected by default.
    */
   function updateContactForm($id, $label, $recipients, $reply, $selected) {

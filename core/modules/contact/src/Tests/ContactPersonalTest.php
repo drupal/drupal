@@ -259,9 +259,9 @@ class ContactPersonalTest extends WebTestBase {
   /**
    * Creates a user and then checks contact form access.
    *
-   * @param integer $response
+   * @param int $response
    *   The expected response code.
-   * @param boolean $contact_value
+   * @param bool $contact_value
    *   (optional) The value the contact field should be set too.
    */
   protected function checkContactAccess($response, $contact_value = NULL) {
