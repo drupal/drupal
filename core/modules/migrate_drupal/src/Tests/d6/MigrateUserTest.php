@@ -157,14 +157,14 @@ class MigrateUserTest extends MigrateDrupalTestBase {
       }
       // Get the user signature format.
       $migration_format = entity_load('migration', 'd6_filter_format');
-      $signature_format = $migration_format->getIdMap()->lookupDestinationId(array($source->signature_format));
+      $signature_format = $source->signature_format === '0' ? [NULL] : $migration_format->getIdMap()->lookupDestinationId(array($source->signature_format));
 
       $user = User::load($source->uid);
       $this->assertEqual($user->id(), $source->uid);
       $this->assertEqual($user->label(), $source->name);
       $this->assertEqual($user->getEmail(), $source->mail);
       $this->assertEqual($user->getSignature(), $source->signature);
-      $this->assertEqual($user->getSignatureFormat(), reset($signature_format));
+      $this->assertIdentical($user->getSignatureFormat(), reset($signature_format));
       $this->assertEqual($user->getCreatedTime(), $source->created);
       $this->assertEqual($user->getLastAccessedTime(), $source->access);
       $this->assertEqual($user->getLastLoginTime(), $source->login);
