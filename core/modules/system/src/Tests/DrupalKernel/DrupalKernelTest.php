@@ -153,4 +153,27 @@ class DrupalKernelTest extends KernelTestBase {
     ));
   }
 
+  /**
+   * Test repeated loading of compiled DIC with different environment.
+   */
+  public function testRepeatedBootWithDifferentEnvironment() {
+    $request = Request::createFromGlobals();
+    $class_loader = require DRUPAL_ROOT . '/core/vendor/autoload.php';
+
+    $environments = [
+      'testing1',
+      'testing1',
+      'testing2',
+      'testing2',
+    ];
+
+    foreach ($environments as $environment) {
+      $kernel = DrupalKernel::createFromRequest($request, $class_loader, $environment);
+      $this->settingsSet('hash_salt', $this->databasePrefix);
+      $kernel->boot();
+    }
+
+    $this->pass('Repeatedly loaded compiled DIC with different environment');
+  }
+
 }

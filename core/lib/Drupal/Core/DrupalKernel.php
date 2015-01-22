@@ -667,6 +667,15 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     return implode('_', $parts);
   }
 
+  /**
+   * Returns the container class namespace based on the environment.
+   *
+   * @return string
+   *   The class name.
+   */
+  protected function getClassNamespace() {
+    return 'Drupal\\Core\\DependencyInjection\\Container\\' . $this->environment;
+  }
 
   /**
    * Returns the kernel parameters.
@@ -704,16 +713,14 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // If the module list hasn't already been set in updateModules and we are
     // not forcing a rebuild, then try and load the container from the disk.
     if (empty($this->moduleList) && !$rebuild) {
-      $class = $this->getClassName();
-      $cache_file = $class . '.php';
+      $fully_qualified_class_name = '\\' . $this->getClassNamespace() . '\\' . $this->getClassName();
 
       // First, try to load from storage.
-      if (!class_exists($class, FALSE)) {
-        $this->storage()->load($cache_file);
+      if (!class_exists($fully_qualified_class_name, FALSE)) {
+        $this->storage()->load($this->getClassName() . '.php');
       }
       // If the load succeeded or the class already existed, use it.
-      if (class_exists($class, FALSE)) {
-        $fully_qualified_class_name = '\\' . $class;
+      if (class_exists($fully_qualified_class_name, FALSE)) {
         $container = new $fully_qualified_class_name;
       }
     }
@@ -1093,7 +1100,12 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $dumper = new PhpDumper($container);
     $dumper->setProxyDumper(new ProxyDumper(new ProxyBuilder()));
     $class = $this->getClassName();
-    $content = $dumper->dump(array('class' => $class, 'base_class' => $baseClass));
+    $namespace = $this->getClassNamespace();
+    $content = $dumper->dump([
+      'class' => $class,
+      'base_class' => $baseClass,
+      'namespace' => $namespace,
+    ]);
     return $this->storage()->save($class . '.php', $content);
   }
 
