@@ -33,7 +33,7 @@ class ContactPersonalTest extends WebTestBase {
   private $adminUser;
 
   /**
-   * A user with 'access user contact forms' permission.
+   * A user with permission to view profiles and access user contact forms.
    *
    * @var \Drupal\user\UserInterface
    */
@@ -54,7 +54,7 @@ class ContactPersonalTest extends WebTestBase {
 
     // Create some normal users with their contact forms enabled by default.
     $this->config('contact.settings')->set('user_default_enabled', TRUE)->save();
-    $this->webUser = $this->drupalCreateUser(array('access user contact forms'));
+    $this->webUser = $this->drupalCreateUser(array('access user profiles', 'access user contact forms'));
     $this->contactUser = $this->drupalCreateUser();
   }
 
@@ -116,6 +116,23 @@ class ContactPersonalTest extends WebTestBase {
     $this->drupalLogin($this->webUser);
     $this->drupalGet('user/' . $this->contactUser->id() . '/contact');
     $this->assertResponse(200);
+
+    // Test that there is no access to personal contact forms for users
+    // without an email address configured.
+    $original_email = $this->contactUser->getEmail();
+    $this->contactUser->setEmail(FALSE)->save();
+    $this->drupalGet('user/' . $this->contactUser->id() . '/contact');
+    $this->assertResponse(404, 'Not found (404) returned when visiting a personal contact form for a user with no email address');
+
+    // Test that the 'contact tab' does not appear on the user profiles
+    // for users without an email address configured.
+    $this->drupalGet('user/' . $this->contactUser->id());
+    $contact_link = '/user/' . $this->contactUser->id() . '/contact';
+    $this->assertResponse(200);
+    $this->assertNoLinkByHref ($contact_link, 'The "contact" tab is hidden on profiles for users with no email address');
+
+    // Restore original email address.
+    $this->contactUser->setEmail($original_email)->save();
 
     // Test denied access to the user's own contact form.
     $this->drupalGet('user/' . $this->webUser->id() . '/contact');

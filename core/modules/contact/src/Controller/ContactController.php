@@ -115,8 +115,17 @@ class ContactController extends ControllerBase {
    *
    * @return array
    *   The personal contact form as render array as expected by drupal_render().
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+   *   Exception is thrown when user tries to access a contact form for a
+   *   user who does not have an e-mail address configured.
    */
   public function contactPersonalPage(UserInterface $user) {
+    // Do not continue if the user does not have an e-mail address configured.
+    if (!$user->getEmail()) {
+      throw new NotFoundHttpException();
+    }
+
     // Check if flood control has been activated for sending emails.
     if (!$this->currentUser()->hasPermission('administer contact forms') && !$this->currentUser()->hasPermission('administer users')) {
       $this->contactFloodControl();

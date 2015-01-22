@@ -7,6 +7,7 @@
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\user\Entity\User;
 
 /**
  * Implements hook_help().
@@ -82,6 +83,26 @@ function contact_entity_extra_field_info() {
     'weight' => 5,
   );
   return $fields;
+}
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ *
+ * Hides the 'Contact' tab on the user profile if the user does not have an
+ * email address configured.
+ */
+function contact_menu_local_tasks_alter(&$data, $route_name) {
+  if ($route_name == 'entity.user.canonical') {
+    foreach ($data['tabs'][0] as $href => $tab_data) {
+      if ($href == 'entity.user.contact_form') {
+        $link_params = $tab_data['#link']['url']->getRouteParameters();
+        $account = User::load($link_params['user']);
+        if (!$account->getEmail()) {
+          unset($data['tabs'][0]['entity.user.contact_form']);
+        }
+      }
+    }
+  }
 }
 
 /**
