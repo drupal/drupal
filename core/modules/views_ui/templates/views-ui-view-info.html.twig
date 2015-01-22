@@ -14,3 +14,7 @@
 #}
 <h3 class="views-ui-view-title views-table-filter-text-source">{{ title }}</h3>
 <div class="views-ui-view-displays">{{ displays }}</div>
+<div class="views-ui-view-machine-name">
+    {% trans 'Machine name:' %}
+    <span class="views-table-filter-text-source">{{ view.id }}</span>
+</div>
