@@ -1030,6 +1030,10 @@
  * - Routing: Providing or altering "routes", which are URLs that Drupal
  *   responds to, or altering routing behavior with event listener classes.
  *   See the @link menu Routing and menu topic @endlink for more information.
+ * - Events: Modules can register as event subscribers; when an event is
+ *   dispatched, a method is called on each registered subscriber, allowing each
+ *   one to react. See the @link events Events topic @endlink for more
+ *   information.
  *
  * @section sec_sample *.info.yml files
  * Extensions must each be located in a directory whose name matches the short
