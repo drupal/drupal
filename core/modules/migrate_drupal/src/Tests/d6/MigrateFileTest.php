@@ -29,6 +29,9 @@ class MigrateFileTest extends MigrateDrupalTestBase {
    * {@inheritdoc}
    */
   protected function setUp() {
+    // Set the temp file of the site to the same as the D6 site, this allows us
+    // to test files which start and finish in the same place.
+    $this->tempFilesDirectory = '/tmp';
     parent::setUp();
     $dumps = array(
       $this->getDumpDirectory() . '/Files.php',

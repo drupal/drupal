@@ -50,6 +50,11 @@ class EntityFile extends EntityContentBase {
     // already absolute.
     $source = $this->isTempFile($destination) ? $file : $this->configuration['source_base_path'] . $file;
 
+    // If the start and end file is exactly the same, there is nothing to do.
+    if (drupal_realpath($source) === drupal_realpath($destination)) {
+      return parent::import($row, $old_destination_id_values);
+    }
+
     $replace = FILE_EXISTS_REPLACE;
     if (!empty($this->configuration['rename'])) {
       $entity_id = $row->getDestinationProperty($this->getKey('id'));
