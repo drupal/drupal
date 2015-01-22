@@ -39,13 +39,13 @@ abstract class UpdateTestBase extends WebTestBase {
    *   (optional) A string containing the URL to fetch update data from.
    *   Defaults to 'update-test'.
    *
-   * @see update_test_mock_page()
+   * @see Drupal\update_test\Controller\UpdateTestController::updateTest()
    */
   protected function refreshUpdateStatus($xml_map, $url = 'update-test') {
     // Tell the Update Manager module to fetch from the URL provided by
     // update_test module.
     $this->config('update.settings')->set('fetch.url', _url($url, array('absolute' => TRUE)))->save();
-    // Save the map for update_test_mock_page() to use.
+    // Save the map for UpdateTestController::updateTest() to use.
     $this->config('update_test.settings')->set('xml_map', $xml_map)->save();
     // Manually check the update status.
     $this->drupalGet('admin/reports/updates/check');
