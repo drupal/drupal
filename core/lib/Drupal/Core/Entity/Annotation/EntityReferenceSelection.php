@@ -2,25 +2,25 @@
 
 /**
  * @file
- * Contains \Drupal\entity_reference\Annotation\EntityReferenceSelection.
+ * Contains \Drupal\Core\Entity\Annotation\EntityReferenceSelection.
  */
 
-namespace Drupal\entity_reference\Annotation;
+namespace Drupal\Core\Entity\Annotation;
 
 use Drupal\Component\Annotation\Plugin;
 
 /**
  * Defines an EntityReferenceSelection plugin annotation object.
  *
- * Plugin Namespace: Plugin\entity_reference\selection
+ * Plugin Namespace: Plugin\EntityReferenceSelection
  *
  * For a working example, see
- * \Drupal\comment\Plugin\entity_reference\selection\CommentSelection
+ * \Drupal\comment\Plugin\EntityReferenceSelection\CommentSelection
  *
- * @see \Drupal\entity_reference\Plugin\Type\SelectionPluginManager
- * @see \Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface
- * @see \Drupal\entity_reference\Plugin\entity_reference\selection\SelectionBase
- * @see \Drupal\entity_reference\Plugin\Derivative\SelectionBase
+ * @see \Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManager
+ * @see \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface
+ * @see \Drupal\Core\Entity\Plugin\EntityReferenceSelection\SelectionBase
+ * @see \Drupal\Core\Entity\Plugin\Derivative\SelectionBase
  * @see plugin_api
  *
  * @Annotation

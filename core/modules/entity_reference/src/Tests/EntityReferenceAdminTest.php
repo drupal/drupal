@@ -118,6 +118,26 @@ class EntityReferenceAdminTest extends WebTestBase {
     // The first 'Edit' link is for the Body field.
     $this->clickLink(t('Edit'), 1);
     $this->drupalPostForm(NULL, array(), t('Save settings'));
+
+    // Switch the target type to 'taxonomy_term' and check that the settings
+    // specific to its selection handler are displayed.
+    $field_name = 'node.' . $this->type . '.field_test';
+    $edit = array(
+      'field_storage[settings][target_type]' => 'taxonomy_term',
+    );
+    $this->drupalPostForm($bundle_path . '/fields/' . $field_name . '/storage', $edit, t('Save field settings'));
+    $this->drupalGet($bundle_path . '/fields/' . $field_name);
+    $this->assertFieldByName('field[settings][handler_settings][auto_create]');
+
+    // Switch the target type to 'user' and check that the settings specific to
+    // its selection handler are displayed.
+    $field_name = 'node.' . $this->type . '.field_test';
+    $edit = array(
+      'field_storage[settings][target_type]' => 'user',
+    );
+    $this->drupalPostForm($bundle_path . '/fields/' . $field_name . '/storage', $edit, t('Save field settings'));
+    $this->drupalGet($bundle_path . '/fields/' . $field_name);
+    $this->assertFieldByName('field[settings][handler_settings][filter][type]', '_none');
   }
 
 

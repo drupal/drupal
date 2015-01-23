@@ -2,17 +2,20 @@
 
 /**
  * @file
- * Contains \Drupal\views\Plugin\entity_reference\selection\ViewsSelection.
+ * Contains \Drupal\views\Plugin\EntityReferenceSelection\ViewsSelection.
  */
 
-namespace Drupal\views\Plugin\entity_reference\selection;
+namespace Drupal\views\Plugin\EntityReferenceSelection;
 
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface;
+use Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Plugin\PluginBase;
+use Drupal\Core\Url;
 use Drupal\views\Views;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the 'selection' entity_reference.
@@ -24,21 +27,14 @@ use Drupal\views\Views;
  *   weight = 0
  * )
  */
-class ViewsSelection implements SelectionInterface {
+class ViewsSelection extends PluginBase implements SelectionInterface, ContainerFactoryPluginInterface {
 
   /**
-   * The field definition.
+   * The entity manager.
    *
-   * @var \Drupal\Core\Field\FieldDefinitionInterface
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
-  protected $fieldDefinition;
-
-  /**
-   * The entity object, or NULL
-   *
-   * @var \Drupal\Core\Entity\EntityInterface|null
-   */
-  protected $entity;
+  protected $entityManager;
 
   /**
    * The loaded View object.
@@ -48,23 +44,45 @@ class ViewsSelection implements SelectionInterface {
   protected $view;
 
   /**
-   * Constructs a View selection handler.
+   * Constructs a new ViewsSelection object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager service.
    */
-  public function __construct(FieldDefinitionInterface $field_definition, EntityInterface $entity = NULL) {
-    $this->fieldDefinition = $field_definition;
-    $this->entity = $entity;
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->entityManager = $entity_manager;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function settingsForm(FieldDefinitionInterface $field_definition) {
-    $selection_handler_settings = $field_definition->getSetting('handler_settings') ?: array();
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('entity.manager')
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+    $selection_handler_settings = $this->configuration['handler_settings'];
     $view_settings = !empty($selection_handler_settings['view']) ? $selection_handler_settings['view'] : array();
     $displays = Views::getApplicableViews('entity_reference_display');
     // Filter views that list the entity type we want, and group the separate
     // displays by view.
-    $entity_type = \Drupal::entityManager()->getDefinition($field_definition->getSetting('target_type'));
+    $entity_type = $this->entityManager->getDefinition($this->configuration['target_type']);
     $options = array();
     foreach ($displays as $data) {
       list($view, $display_id) = $data;
@@ -79,39 +97,48 @@ class ViewsSelection implements SelectionInterface {
     // into 'view_name' and 'view_display' in the final submitted values, so
     // we massage the data at validate time on the wrapping element (not
     // ideal).
-    $plugin = new static($field_definition);
-    $form['view']['#element_validate'] = array(array($plugin, 'settingsFormValidate'));
+    $form['view']['#element_validate'] = array(array(get_called_class(), 'settingsFormValidate'));
 
     if ($options) {
       $default = !empty($view_settings['view_name']) ? $view_settings['view_name'] . ':' . $view_settings['display_name'] : NULL;
       $form['view']['view_and_display'] = array(
         '#type' => 'select',
-        '#title' => t('View used to select the entities'),
+        '#title' => $this->t('View used to select the entities'),
         '#required' => TRUE,
         '#options' => $options,
         '#default_value' => $default,
-        '#description' => '<p>' . t('Choose the view and display that select the entities that can be referenced.<br />Only views with a display of type "Entity Reference" are eligible.') . '</p>',
+        '#description' => '<p>' . $this->t('Choose the view and display that select the entities that can be referenced.<br />Only views with a display of type "Entity Reference" are eligible.') . '</p>',
       );
 
       $default = !empty($view_settings['arguments']) ? implode(', ', $view_settings['arguments']) : '';
       $form['view']['arguments'] = array(
         '#type' => 'textfield',
-        '#title' => t('View arguments'),
+        '#title' => $this->t('View arguments'),
         '#default_value' => $default,
         '#required' => FALSE,
-        '#description' => t('Provide a comma separated list of arguments to pass to the view.'),
+        '#description' => $this->t('Provide a comma separated list of arguments to pass to the view.'),
       );
     }
     else {
       $form['view']['no_view_help'] = array(
-        '#markup' => '<p>' . t('No eligible views were found. <a href="@create">Create a view</a> with an <em>Entity Reference</em> display, or add such a display to an <a href="@existing">existing view</a>.', array(
-          '@create' => \Drupal::url('views_ui.add'),
-          '@existing' => \Drupal::url('entity.view.collection'),
+        '#markup' => '<p>' . $this->t('No eligible views were found. <a href="@create">Create a view</a> with an <em>Entity Reference</em> display, or add such a display to an <a href="@existing">existing view</a>.', array(
+          '@create' => Url::fromRoute('views_ui.add'),
+          '@existing' => Url::fromRoute('entity.view.collection'),
         )) . '</p>',
       );
     }
     return $form;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) { }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) { }
 
   /**
    * Initializes a view.
@@ -131,14 +158,14 @@ class ViewsSelection implements SelectionInterface {
    *   Return TRUE if the view was initialized, FALSE otherwise.
    */
   protected function initializeView($match = NULL, $match_operator = 'CONTAINS', $limit = 0, $ids = NULL) {
-    $handler_settings = $this->fieldDefinition->getSetting('handler_settings');
+    $handler_settings = $this->configuration['handler_settings'];
     $view_name = $handler_settings['view']['view_name'];
     $display_name = $handler_settings['view']['display_name'];
 
     // Check that the view is valid and the display still exists.
     $this->view = Views::getView($view_name);
     if (!$this->view || !$this->view->access($display_name)) {
-      drupal_set_message(t('The reference view %view_name used in the %field_name field cannot be found.', array('%view_name' => $view_name, '%field_name' => $this->fieldDefinition->getLabel())), 'warning');
+      drupal_set_message(t('The reference view %view_name cannot be found.', array('%view_name' => $view_name)), 'warning');
       return FALSE;
     }
     $this->view->setDisplay($display_name);
@@ -158,7 +185,7 @@ class ViewsSelection implements SelectionInterface {
    * {@inheritdoc}
    */
   public function getReferenceableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0) {
-    $handler_settings = $this->fieldDefinition->getSetting('handler_settings');
+    $handler_settings = $this->configuration['handler_settings'];
     $display_name = $handler_settings['view']['display_name'];
     $arguments = $handler_settings['view']['arguments'];
     $result = array();
@@ -189,7 +216,7 @@ class ViewsSelection implements SelectionInterface {
    * {@inheritdoc}
    */
   public function validateReferenceableEntities(array $ids) {
-    $handler_settings = $this->fieldDefinition->getSetting('handler_settings');
+    $handler_settings = $this->configuration['handler_settings'];
     $display_name = $handler_settings['view']['display_name'];
     $arguments = $handler_settings['view']['arguments'];
     $result = array();
@@ -222,7 +249,7 @@ class ViewsSelection implements SelectionInterface {
       list($view, $display) = explode(':', $element['view_and_display']['#value']);
     }
     else {
-      $form_state->setError($element, t('The views entity selection mode requires a view.'));
+      $form_state->setError($element, $this->t('The views entity selection mode requires a view.'));
       return;
     }
 

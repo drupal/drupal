@@ -103,7 +103,7 @@ class SelectionTest extends WebTestBase {
    */
   public function testSelectionHandler() {
     // Get values from selection handler.
-    $handler = $this->container->get('plugin.manager.entity_reference.selection')->getSelectionHandler($this->field);
+    $handler = $this->container->get('plugin.manager.entity_reference_selection')->getSelectionHandler($this->field);
     $result = $handler->getReferenceableEntities();
     $this->assertResults($result);
   }
@@ -140,7 +140,7 @@ class SelectionTest extends WebTestBase {
     $view->save();
 
     // Get values from the selection handler.
-    $handler = $this->container->get('plugin.manager.entity_reference.selection')->getSelectionHandler($this->field);
+    $handler = $this->container->get('plugin.manager.entity_reference_selection')->getSelectionHandler($this->field);
     $result = $handler->getReferenceableEntities();
     $this->assertResults($result);
   }

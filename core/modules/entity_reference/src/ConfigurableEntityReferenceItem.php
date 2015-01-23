@@ -80,7 +80,7 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements Opt
    */
   public function getSettableOptions(AccountInterface $account = NULL) {
     $field_definition = $this->getFieldDefinition();
-    if (!$options = \Drupal::service('plugin.manager.entity_reference.selection')->getSelectionHandler($field_definition, $this->getEntity())->getReferenceableEntities()) {
+    if (!$options = \Drupal::service('plugin.manager.entity_reference_selection')->getSelectionHandler($field_definition, $this->getEntity())->getReferenceableEntities()) {
       return array();
     }
 
@@ -138,17 +138,18 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements Opt
     $field = $form_state->get('field');
 
     // Get all selection plugins for this entity type.
-    $selection_plugins = \Drupal::service('plugin.manager.entity_reference.selection')->getSelectionGroups($this->getSetting('target_type'));
-    $handler_groups = array_keys($selection_plugins);
-
-    $handlers = \Drupal::service('plugin.manager.entity_reference.selection')->getDefinitions();
+    $selection_plugins = \Drupal::service('plugin.manager.entity_reference_selection')->getSelectionGroups($this->getSetting('target_type'));
     $handlers_options = array();
-    foreach ($handlers as $plugin_id => $plugin) {
+    foreach (array_keys($selection_plugins) as $selection_group_id) {
       // We only display base plugins (e.g. 'default', 'views', ...) and not
-      // entity type specific plugins (e.g. 'default_node', 'default_user',
+      // entity type specific plugins (e.g. 'default:node', 'default:user',
       // ...).
-      if (in_array($plugin_id, $handler_groups)) {
-        $handlers_options[$plugin_id] = String::checkPlain($plugin['label']);
+      if (array_key_exists($selection_group_id, $selection_plugins[$selection_group_id])) {
+        $handlers_options[$selection_group_id] = String::checkPlain($selection_plugins[$selection_group_id][$selection_group_id]['label']);
+      }
+      elseif (array_key_exists($selection_group_id . ':' . $this->getSetting('target_type'), $selection_plugins[$selection_group_id])) {
+        $selection_group_plugin = $selection_group_id . ':' . $this->getSetting('target_type');
+        $handlers_options[$selection_group_id] = String::checkPlain($selection_plugins[$selection_group_id][$selection_group_plugin]['base_plugin_label']);
       }
     }
 
@@ -191,8 +192,8 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements Opt
       '#attributes' => array('class' => array('entity_reference-settings')),
     );
 
-    $handler = \Drupal::service('plugin.manager.entity_reference.selection')->getSelectionHandler($field);
-    $form['handler']['handler_settings'] += $handler->settingsForm($field);
+    $handler = \Drupal::service('plugin.manager.entity_reference_selection')->getSelectionHandler($field);
+    $form['handler']['handler_settings'] += $handler->buildConfigurationForm(array(), $form_state);
 
     return $form;
   }
@@ -209,6 +210,9 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements Opt
     if ($form_state->hasValue('field')) {
       $form_state->unsetValue(array('field', 'settings', 'handler_submit'));
       $form_state->get('field')->settings = $form_state->getValue(['field', 'settings']);
+
+      $handler = \Drupal::service('plugin.manager.entity_reference_selection')->getSelectionHandler($form_state->get('field'));
+      $handler->validateConfigurationForm($form, $form_state);
     }
   }
 

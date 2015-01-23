@@ -201,7 +201,7 @@ function entity_reference_query_entity_reference_alter(AlterableInterface $query
  * @param int $cardinality
  *   The cardinality of the field.
  *
- * @see \Drupal\entity_reference\Plugin\entity_reference\selection\SelectionBase::settingsForm()
+ * @see \Drupal\Core\Entity\Plugin\EntityReferenceSelection\SelectionBase::buildConfigurationForm()
  */
 function entity_reference_create_field($entity_type, $bundle, $field_name, $field_label, $target_entity_type, $selection_handler = 'default', $selection_handler_settings = array(), $cardinality = 1) {
   // Look for or add the specified field to the requested entity bundle.

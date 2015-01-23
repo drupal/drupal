@@ -2,25 +2,25 @@
 
 /**
  * @file
- * Contains \Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface.
+ * Contains \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface.
  */
 
-namespace Drupal\entity_reference\Plugin\Type\Selection;
+namespace Drupal\Core\Entity\EntityReferenceSelection;
 
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Plugin\PluginFormInterface;
 
 /**
  * Interface definition for Entity Reference Selection plugins.
  *
- * @see \Drupal\entity_reference\Plugin\entity_reference\selection\SelectionBase
- * @see \Drupal\entity_reference\Plugin\Type\SelectionPluginManager
- * @see \Drupal\entity_reference\Annotation\EntityReferenceSelection
- * @see \Drupal\entity_reference\Plugin\Derivative\SelectionBase
+ * @see \Drupal\Core\Entity\Plugin\EntityReferenceSelection\SelectionBase
+ * @see \Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManager
+ * @see \Drupal\Core\Entity\Annotation\EntityReferenceSelection
+ * @see \Drupal\Core\Entity\Plugin\Derivative\SelectionBase
  * @see plugin_api
  */
-interface SelectionInterface {
+interface SelectionInterface extends PluginFormInterface {
 
   /**
    * Returns a list of referenceable entities.
@@ -77,16 +77,5 @@ interface SelectionInterface {
    *   A Select Query object.
    */
   public function entityQueryAlter(SelectInterface $query);
-
-  /**
-   * Generates the settings form for this selection.
-   *
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
-   *   The definition of the field to which the selection is associated.
-   *
-   * @return array
-   *   A Form API array.
-   */
-  public static function settingsForm(FieldDefinitionInterface $field_definition);
 
 }

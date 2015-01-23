@@ -10,9 +10,8 @@ namespace Drupal\entity_reference;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Tags;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\entity_reference\Plugin\Type\SelectionPluginManager;
-use Drupal\field\FieldConfigInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
@@ -30,7 +29,7 @@ class EntityReferenceAutocomplete {
   /**
    * The Entity reference selection handler plugin manager.
    *
-   * @var \Drupal\entity_reference\Plugin\Type\SelectionPluginManager
+   * @var \Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface
    */
   protected $selectionHandlerManager;
 
@@ -39,10 +38,10 @@ class EntityReferenceAutocomplete {
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
-   * @param \Drupal\entity_reference\Plugin\Type\SelectionPluginManager $selection_manager
+   * @param \Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface $selection_manager
    *   The Entity reference selection handler plugin manager.
    */
-  public function __construct(EntityManagerInterface $entity_manager, SelectionPluginManager $selection_manager) {
+  public function __construct(EntityManagerInterface $entity_manager, SelectionPluginManagerInterface $selection_manager) {
     $this->entityManager = $entity_manager;
     $this->selectionHandlerManager = $selection_manager;
   }

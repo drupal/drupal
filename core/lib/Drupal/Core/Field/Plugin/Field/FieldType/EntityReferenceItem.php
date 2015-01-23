@@ -243,7 +243,7 @@ class EntityReferenceItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
-    $manager = \Drupal::service('plugin.manager.entity_reference.selection');
+    $manager = \Drupal::service('plugin.manager.entity_reference_selection');
     if ($referenceable = $manager->getSelectionHandler($field_definition)->getReferenceableEntities()) {
       $group = array_rand($referenceable);
       $values['target_id'] = array_rand($referenceable[$group]);

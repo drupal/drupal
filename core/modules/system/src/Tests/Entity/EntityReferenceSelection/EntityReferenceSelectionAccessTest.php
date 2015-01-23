@@ -2,13 +2,12 @@
 
 /**
  * @file
- * Contains \Drupal\entity_reference\Tests\EntityReferenceSelectionAccessTest.
+ * Contains \Drupal\system\Tests\Entity\EntityReferenceSelection\EntityReferenceSelectionAccessTest.
  */
 
-namespace Drupal\entity_reference\Tests;
+namespace Drupal\system\Tests\Entity\EntityReferenceSelection;
 
 use Drupal\Component\Utility\String;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\comment\CommentInterface;
 use Drupal\simpletest\WebTestBase;
@@ -20,7 +19,12 @@ use Drupal\simpletest\WebTestBase;
  */
 class EntityReferenceSelectionAccessTest extends WebTestBase {
 
-  public static $modules = array('node', 'comment', 'entity_reference', 'entity_test');
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node', 'comment');
 
   protected function setUp() {
     parent::setUp();
@@ -29,8 +33,18 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
     $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
   }
 
-  protected function assertReferenceable(FieldDefinitionInterface $field_definition, $tests, $handler_name) {
-    $handler = \Drupal::service('plugin.manager.entity_reference.selection')->getSelectionHandler($field_definition);
+  /**
+   * Checks that a selection plugin returns the expected results.
+   *
+   * @param array $selection_options
+   *   An array of options as required by entity reference selection plugins.
+   * @param array $tests
+   *   An array of tests to run.
+   * @param string $handler_name
+   *   The name of the entity type selection handler being tested.
+   */
+  protected function assertReferenceable(array $selection_options, $tests, $handler_name) {
+    $handler = \Drupal::service('plugin.manager.entity_reference_selection')->getInstance($selection_options);
 
     foreach ($tests as $test) {
       foreach ($test['arguments'] as $arguments) {
@@ -55,30 +69,13 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
    * Test the node-specific overrides of the entity handler.
    */
   public function testNodeHandler() {
-    // Create a field.
-    $field_storage = entity_create('field_storage_config', array(
-      'field_name' => 'test_field',
-      'entity_type' => 'entity_test',
-      'translatable' => FALSE,
-      'entity_types' => array(),
-      'settings' => array(
-        'target_type' => 'node',
+    $selection_options = array(
+      'target_type' => 'node',
+      'handler' => 'default',
+      'handler_settings' => array(
+        'target_bundles' => array(),
       ),
-      'type' => 'entity_reference',
-      'cardinality' => '1',
-    ));
-    $field_storage->save();
-    $field = entity_create('field_config', array(
-      'field_storage' => $field_storage,
-      'bundle' => 'test_bundle',
-      'settings' => array(
-        'handler' => 'default',
-        'handler_settings' => array(
-          'target_bundles' => array(),
-        ),
-      ),
-    ));
-    $field->save();
+    );
 
     // Build a set of test data.
     // Titles contain HTML-special characters to test escaping.
@@ -162,7 +159,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         'result' => array(),
       ),
     );
-    $this->assertReferenceable($field, $referenceable_tests, 'Node handler');
+    $this->assertReferenceable($selection_options, $referenceable_tests, 'Node handler');
 
     // Test as an admin.
     $admin_user = $this->drupalCreateUser(array('access content', 'bypass node access'));
@@ -191,36 +188,20 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         ),
       ),
     );
-    $this->assertReferenceable($field, $referenceable_tests, 'Node handler (admin)');
+    $this->assertReferenceable($selection_options, $referenceable_tests, 'Node handler (admin)');
   }
 
   /**
    * Test the user-specific overrides of the entity handler.
    */
   public function testUserHandler() {
-    // Create a field.
-    $field_storage = entity_create('field_storage_config', array(
-      'field_name' => 'test_field',
-      'entity_type' => 'entity_test',
-      'translatable' => FALSE,
-      'settings' => array(
-        'target_type' => 'user',
+    $selection_options = array(
+      'target_type' => 'user',
+      'handler' => 'default',
+      'handler_settings' => array(
+        'target_bundles' => array(),
       ),
-      'type' => 'entity_reference',
-      'cardinality' => '1',
-    ));
-    $field_storage->save();
-    $field = entity_create('field_config', array(
-      'field_storage' => $field_storage,
-      'bundle' => 'test_bundle',
-      'settings' => array(
-        'handler' => 'default',
-        'handler_settings' => array(
-          'target_bundles' => array(),
-        ),
-      ),
-    ));
-    $field->save();
+    );
 
     // Build a set of test data.
     $user_values = array(
@@ -296,7 +277,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         'result' => array(),
       ),
     );
-    $this->assertReferenceable($field, $referenceable_tests, 'User handler');
+    $this->assertReferenceable($selection_options, $referenceable_tests, 'User handler');
 
     \Drupal::currentUser()->setAccount($users['admin']);
     $referenceable_tests = array(
@@ -335,37 +316,20 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         ),
       ),
     );
-    $this->assertReferenceable($field, $referenceable_tests, 'User handler (admin)');
+    $this->assertReferenceable($selection_options, $referenceable_tests, 'User handler (admin)');
   }
 
   /**
    * Test the comment-specific overrides of the entity handler.
    */
   public function testCommentHandler() {
-    // Create a field.
-    $field_storage = entity_create('field_storage_config', array(
-      'field_name' => 'test_field',
-      'entity_type' => 'entity_test',
-      'translatable' => FALSE,
-      'entity_types' => array(),
-      'settings' => array(
-        'target_type' => 'comment',
+    $selection_options = array(
+      'target_type' => 'comment',
+      'handler' => 'default',
+      'handler_settings' => array(
+        'target_bundles' => array(),
       ),
-      'type' => 'entity_reference',
-      'cardinality' => '1',
-    ));
-    $field_storage->save();
-    $field = entity_create('field_config', array(
-      'field_storage' => $field_storage,
-      'bundle' => 'test_bundle',
-      'settings' => array(
-        'handler' => 'default',
-        'handler_settings' => array(
-          'target_bundles' => array(),
-        ),
-      ),
-    ));
-    $field->save();
+    );
 
     // Build a set of test data.
     $node_values = array(
@@ -474,7 +438,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         'result' => array(),
       ),
     );
-    $this->assertReferenceable($field, $referenceable_tests, 'Comment handler');
+    $this->assertReferenceable($selection_options, $referenceable_tests, 'Comment handler');
 
     // Test as a comment admin.
     $admin_user = $this->drupalCreateUser(array('access content', 'access comments', 'administer comments'));
@@ -492,7 +456,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         ),
       ),
     );
-    $this->assertReferenceable($field, $referenceable_tests, 'Comment handler (comment admin)');
+    $this->assertReferenceable($selection_options, $referenceable_tests, 'Comment handler (comment admin)');
 
     // Test as a node and comment admin.
     $admin_user = $this->drupalCreateUser(array('access content', 'access comments', 'administer comments', 'bypass node access'));
@@ -511,6 +475,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         ),
       ),
     );
-    $this->assertReferenceable($field, $referenceable_tests, 'Comment handler (comment + node admin)');
+    $this->assertReferenceable($selection_options, $referenceable_tests, 'Comment handler (comment + node admin)');
   }
+
 }

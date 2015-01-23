@@ -2,20 +2,20 @@
 
 /**
  * @file
- * Contains \Drupal\comment\Plugin\entity_reference\selection\CommentSelection.
+ * Contains \Drupal\comment\Plugin\EntityReferenceSelection\CommentSelection.
  */
 
-namespace Drupal\comment\Plugin\entity_reference\selection;
+namespace Drupal\comment\Plugin\EntityReferenceSelection;
 
 use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Entity\Plugin\EntityReferenceSelection\SelectionBase;
 use Drupal\comment\CommentInterface;
-use Drupal\entity_reference\Plugin\entity_reference\selection\SelectionBase;
 
 /**
  * Provides specific access control for the comment entity type.
  *
  * @EntityReferenceSelection(
- *   id = "comment_default",
+ *   id = "default:comment",
  *   label = @Translation("Comment selection"),
  *   entity_types = {"comment"},
  *   group = "default",
@@ -33,7 +33,7 @@ class CommentSelection extends SelectionBase {
     // Adding the 'comment_access' tag is sadly insufficient for comments:
     // core requires us to also know about the concept of 'published' and
     // 'unpublished'.
-    if (!\Drupal::currentUser()->hasPermission('administer comments')) {
+    if (!$this->currentUser->hasPermission('administer comments')) {
       $query->condition('status', CommentInterface::PUBLISHED);
     }
     return $query;
@@ -61,8 +61,9 @@ class CommentSelection extends SelectionBase {
     // Passing the query to node_query_node_access_alter() is sadly
     // insufficient for nodes.
     // @see SelectionEntityTypeNode::entityQueryAlter()
-    if (!\Drupal::currentUser()->hasPermission('bypass node access') && !count(\Drupal::moduleHandler()->getImplementations('node_grants'))) {
+    if (!$this->currentUser->hasPermission('bypass node access') && !count($this->moduleHandler->getImplementations('node_grants'))) {
       $query->condition($node_alias . '.status', 1);
     }
   }
+
 }

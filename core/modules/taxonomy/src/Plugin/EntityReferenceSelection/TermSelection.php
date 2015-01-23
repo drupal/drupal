@@ -2,22 +2,22 @@
 
 /**
  * @file
- * Contains \Drupal\taxonomy\Plugin\entity_reference\selection\TermSelection.
+ * Contains \Drupal\taxonomy\Plugin\EntityReferenceSelection\TermSelection.
  */
 
-namespace Drupal\taxonomy\Plugin\entity_reference\selection;
+namespace Drupal\taxonomy\Plugin\EntityReferenceSelection;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\entity_reference\Plugin\entity_reference\selection\SelectionBase;
+use Drupal\Core\Entity\Plugin\EntityReferenceSelection\SelectionBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Provides specific access control for the taxonomy_term entity type.
  *
  * @EntityReferenceSelection(
- *   id = "taxonomy_term_default",
+ *   id = "default:taxonomy_term",
  *   label = @Translation("Taxonomy Term selection"),
  *   entity_types = {"taxonomy_term"},
  *   group = "default",
@@ -36,15 +36,14 @@ class TermSelection extends SelectionBase {
   /**
    * {@inheritdoc}
    */
-  public static function settingsForm(FieldDefinitionInterface $field_definition) {
-    $form = parent::settingsForm($field_definition);
-    $selection_handler_settings = $field_definition->getSetting('handler_settings');
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+    $form = parent::buildConfigurationForm($form, $form_state);
 
     // @todo: Currently allow auto-create only on taxonomy terms.
     $form['auto_create'] = array(
       '#type' => 'checkbox',
-      '#title' => t("Create referenced entities if they don't already exist"),
-      '#default_value' => isset($selection_handler_settings['auto_create']) ? $selection_handler_settings['auto_create'] : FALSE,
+      '#title' => $this->t("Create referenced entities if they don't already exist"),
+      '#default_value' => isset($this->configuration['handler_settings']['auto_create']) ? $this->configuration['handler_settings']['auto_create'] : FALSE,
     );
     return $form;
 
@@ -60,13 +59,13 @@ class TermSelection extends SelectionBase {
 
     $options = array();
 
-    $bundles = entity_get_bundles('taxonomy_term');
-    $handler_settings = $this->fieldDefinition->getSetting('handler_settings');
+    $bundles = $this->entityManager->getBundleInfo('taxonomy_term');
+    $handler_settings = $this->configuration['handler_settings'];
     $bundle_names = !empty($handler_settings['target_bundles']) ? $handler_settings['target_bundles'] : array_keys($bundles);
 
     foreach ($bundle_names as $bundle) {
       if ($vocabulary = Vocabulary::load($bundle)) {
-        if ($terms = taxonomy_get_tree($vocabulary->id(), 0, NULL, TRUE)) {
+        if ($terms = $this->entityManager->getStorage('taxonomy_term')->loadTree($vocabulary->id(), 0, NULL, TRUE)) {
           foreach ($terms as $term) {
             $options[$vocabulary->id()][$term->id()] = str_repeat('-', $term->depth) . String::checkPlain($term->getName());
           }
@@ -76,4 +75,5 @@ class TermSelection extends SelectionBase {
 
     return $options;
   }
+
 }

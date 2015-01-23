@@ -2,18 +2,22 @@
 
 /**
  * @file
- * Contains \Drupal\entity_reference\Plugin\entity_reference\selection\SelectionBase.
+ * Contains \Drupal\Core\Entity\Plugin\EntityReferenceSelection\SelectionBase.
  */
 
-namespace Drupal\entity_reference\Plugin\entity_reference\selection;
+namespace Drupal\Core\Entity\Plugin\EntityReferenceSelection;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface;
+use Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Plugin\PluginBase;
+use Drupal\Core\Session\AccountInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Default plugin implementation of the Entity Reference Selection plugin.
@@ -21,10 +25,10 @@ use Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface;
  * Also serves as a base class for specific types of Entity Reference
  * Selection plugins.
  *
- * @see \Drupal\entity_reference\Plugin\Type\SelectionPluginManager
- * @see \Drupal\entity_reference\Annotation\EntityReferenceSelection
- * @see \Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface
- * @see \Drupal\entity_reference\Plugin\Derivative\SelectionBase
+ * @see \Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManager
+ * @see \Drupal\Core\Entity\Annotation\EntityReferenceSelection
+ * @see \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface
+ * @see \Drupal\Core\Entity\Plugin\Derivative\SelectionBase
  * @see plugin_api
  *
  * @EntityReferenceSelection(
@@ -32,42 +36,78 @@ use Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface;
  *   label = @Translation("Default"),
  *   group = "default",
  *   weight = 0,
- *   deriver = "Drupal\entity_reference\Plugin\Derivative\SelectionBase"
+ *   deriver = "Drupal\Core\Entity\Plugin\Derivative\SelectionBase"
  * )
  */
-class SelectionBase implements SelectionInterface {
+class SelectionBase extends PluginBase implements SelectionInterface, ContainerFactoryPluginInterface {
 
   /**
-   * The field definition.
+   * The entity manager.
    *
-   * @var \Drupal\Core\Field\FieldDefinitionInterface
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
-  protected $fieldDefinition;
+  protected $entityManager;
 
   /**
-   * The entity object, or NULL
+   * The module handler service.
    *
-   * @var \Drupal\Core\Entity\EntityInterface|null
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
-  protected $entity;
+  protected $moduleHandler;
 
   /**
-   * Constructs a SelectionBase object.
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
    */
-  public function __construct(FieldDefinitionInterface $field_definition, EntityInterface $entity = NULL) {
-    $this->fieldDefinition = $field_definition;
-    $this->entity = $entity;
+  protected $currentUser;
+
+  /**
+   * Constructs a new SelectionBase object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager service.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler service.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current user.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, ModuleHandlerInterface $module_handler, AccountInterface $current_user) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->entityManager = $entity_manager;
+    $this->moduleHandler = $module_handler;
+    $this->currentUser = $current_user;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function settingsForm(FieldDefinitionInterface $field_definition) {
-    $entity_manager = \Drupal::entityManager();
-    $entity_type_id = $field_definition->getSetting('target_type');
-    $selection_handler_settings = $field_definition->getSetting('handler_settings') ?: array();
-    $entity_type = $entity_manager->getDefinition($entity_type_id);
-    $bundles = $entity_manager->getBundleInfo($entity_type_id);
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('entity.manager'),
+      $container->get('module_handler'),
+      $container->get('current_user')
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+    $entity_type_id = $this->configuration['target_type'];
+    $selection_handler_settings = $this->configuration['handler_settings'];
+    $entity_type = $this->entityManager->getDefinition($entity_type_id);
+    $bundles = $this->entityManager->getBundleInfo($entity_type_id);
 
     // Merge-in default values.
     $selection_handler_settings += array(
@@ -84,13 +124,13 @@ class SelectionBase implements SelectionInterface {
         $bundle_options[$bundle_name] = $bundle_info['label'];
       }
 
-      $target_bundles_title = t('Bundles');
+      $target_bundles_title = $this->t('Bundles');
       // Default core entity types with sensible labels.
       if ($entity_type_id == 'node') {
-        $target_bundles_title = t('Content types');
+        $target_bundles_title = $this->t('Content types');
       }
       elseif ($entity_type_id == 'taxonomy_term') {
-        $target_bundles_title = t('Vocabularies');
+        $target_bundles_title = $this->t('Vocabularies');
       }
 
       $form['target_bundles'] = array(
@@ -114,7 +154,7 @@ class SelectionBase implements SelectionInterface {
     if ($entity_type->isSubclassOf('\Drupal\Core\Entity\FieldableEntityInterface')) {
       $fields = array();
       foreach (array_keys($bundles) as $bundle) {
-        $bundle_fields = array_filter($entity_manager->getFieldDefinitions($entity_type_id, $bundle), function ($field_definition) {
+        $bundle_fields = array_filter($this->entityManager->getFieldDefinitions($entity_type_id, $bundle), function ($field_definition) {
           return !$field_definition->isComputed();
         });
         foreach ($bundle_fields as $field_name => $field_definition) {
@@ -125,20 +165,20 @@ class SelectionBase implements SelectionInterface {
           // @todo: Use property labels instead of the column name.
           if (count($columns) > 1) {
             foreach ($columns as $column_name => $column_info) {
-              $fields[$field_name . '.' . $column_name] = t('@label (@column)', array('@label' => $field_definition->getLabel(), '@column' => $column_name));
+              $fields[$field_name . '.' . $column_name] = $this->t('@label (@column)', array('@label' => $field_definition->getLabel(), '@column' => $column_name));
             }
           }
           else {
-            $fields[$field_name] = t('@label', array('@label' => $field_definition->getLabel()));
+            $fields[$field_name] = $this->t('@label', array('@label' => $field_definition->getLabel()));
           }
         }
       }
 
       $form['sort']['field'] = array(
         '#type' => 'select',
-        '#title' => t('Sort by'),
+        '#title' => $this->t('Sort by'),
         '#options' => array(
-          '_none' => t('- None -'),
+          '_none' => $this->t('- None -'),
         ) + $fields,
         '#ajax' => TRUE,
         '#limit_validation_errors' => array(),
@@ -159,11 +199,11 @@ class SelectionBase implements SelectionInterface {
 
         $form['sort']['settings']['direction'] = array(
           '#type' => 'select',
-          '#title' => t('Sort direction'),
+          '#title' => $this->t('Sort direction'),
           '#required' => TRUE,
           '#options' => array(
-            'ASC' => t('Ascending'),
-            'DESC' => t('Descending'),
+            'ASC' => $this->t('Ascending'),
+            'DESC' => $this->t('Descending'),
           ),
           '#default_value' => $selection_handler_settings['sort']['direction'],
         );
@@ -176,8 +216,18 @@ class SelectionBase implements SelectionInterface {
   /**
    * {@inheritdoc}
    */
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) { }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) { }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getReferenceableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0) {
-    $target_type = $this->fieldDefinition->getSetting('target_type');
+    $target_type = $this->configuration['target_type'];
 
     $query = $this->buildEntityQuery($match, $match_operator);
     if ($limit > 0) {
@@ -216,8 +266,8 @@ class SelectionBase implements SelectionInterface {
   public function validateReferenceableEntities(array $ids) {
     $result = array();
     if ($ids) {
-      $target_type = $this->fieldDefinition->getSetting('target_type');
-      $entity_type = \Drupal::entityManager()->getDefinition($target_type);
+      $target_type = $this->configuration['target_type'];
+      $entity_type = $this->entityManager->getDefinition($target_type);
       $query = $this->buildEntityQuery();
       $result = $query
         ->condition($entity_type->getKey('id'), $ids, 'IN')
@@ -243,13 +293,13 @@ class SelectionBase implements SelectionInterface {
     if (empty($entities)) {
       if ($strict) {
         // Error if there are no entities available for a required field.
-        $form_state->setError($element, t('There are no entities matching "%value".', $params));
+        $form_state->setError($element, $this->t('There are no entities matching "%value".', $params));
       }
     }
     elseif (count($entities) > 5) {
       $params['@id'] = key($entities);
       // Error if there are more than 5 matching entities.
-      $form_state->setError($element, t('Many entities are called %value. Specify the one you want by appending the id in parentheses, like "@value (@id)".', $params));
+      $form_state->setError($element, $this->t('Many entities are called %value. Specify the one you want by appending the id in parentheses, like "@value (@id)".', $params));
     }
     elseif (count($entities) > 1) {
       // More helpful error if there are only a few matching entities.
@@ -258,7 +308,7 @@ class SelectionBase implements SelectionInterface {
         $multiples[] = $name . ' (' . $id . ')';
       }
       $params['@id'] = $id;
-      $form_state->setError($element, t('Multiple entities match this reference; "%multiple". Specify the one you want by appending the id in parentheses, like "@value (@id)".', array('%multiple' => implode('", "', $multiples))));
+      $form_state->setError($element, $this->t('Multiple entities match this reference; "%multiple". Specify the one you want by appending the id in parentheses, like "@value (@id)".', array('%multiple' => implode('", "', $multiples))));
     }
     else {
       // Take the one and only matching entity.
@@ -280,11 +330,11 @@ class SelectionBase implements SelectionInterface {
    *   it.
    */
   public function buildEntityQuery($match = NULL, $match_operator = 'CONTAINS') {
-    $target_type = $this->fieldDefinition->getSetting('target_type');
-    $handler_settings = $this->fieldDefinition->getSetting('handler_settings');
-    $entity_type = \Drupal::entityManager()->getDefinition($target_type);
+    $target_type = $this->configuration['target_type'];
+    $handler_settings = $this->configuration['handler_settings'];
+    $entity_type = $this->entityManager->getDefinition($target_type);
 
-    $query = \Drupal::entityQuery($target_type);
+    $query = $this->entityManager->getStorage($target_type)->getQuery();
     if (!empty($handler_settings['target_bundles'])) {
       $query->condition($entity_type->getKey('bundle'), $handler_settings['target_bundles'], 'IN');
     }
@@ -294,16 +344,14 @@ class SelectionBase implements SelectionInterface {
     }
 
     // Add entity-access tag.
-    $query->addTag($this->fieldDefinition->getSetting('target_type') . '_access');
+    $query->addTag($target_type . '_access');
 
     // Add the Selection handler for
     // entity_reference_query_entity_reference_alter().
     $query->addTag('entity_reference');
-    $query->addMetaData('field_definition', $this->fieldDefinition);
     $query->addMetaData('entity_reference_selection_handler', $this);
 
     // Add the sort option.
-    $handler_settings = $this->fieldDefinition->getSetting('handler_settings');
     if (!empty($handler_settings['sort'])) {
       $sort_settings = $handler_settings['sort'];
       if ($sort_settings['field'] != '_none') {
@@ -333,10 +381,11 @@ class SelectionBase implements SelectionInterface {
 
     $query->alterTags = array($tag => TRUE);
     $query->alterMetaData['base_table'] = $base_table;
-    \Drupal::moduleHandler()->alter(array('query', 'query_' . $tag), $query);
+    $this->moduleHandler->alter(array('query', 'query_' . $tag), $query);
 
     // Restore the tags and metadata.
     $query->alterTags = $old_tags;
     $query->alterMetaData = $old_metadata;
   }
+
 }

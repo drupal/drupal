@@ -1,7 +1,4 @@
 services:
-  plugin.manager.entity_reference.selection:
-    class: Drupal\entity_reference\Plugin\Type\SelectionPluginManager
-    parent: default_plugin_manager
   entity_reference.autocomplete:
     class: Drupal\entity_reference\EntityReferenceAutocomplete
-    arguments: ['@entity.manager', '@plugin.manager.entity_reference.selection']
+    arguments: ['@entity.manager', '@plugin.manager.entity_reference_selection']

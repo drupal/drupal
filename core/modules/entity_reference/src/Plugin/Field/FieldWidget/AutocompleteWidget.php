@@ -64,7 +64,7 @@ class AutocompleteWidget extends AutocompleteWidgetBase {
       if ($value === NULL) {
         // Try to get a match from the input string when the user didn't use the
         // autocomplete but filled in a value manually.
-        $handler = \Drupal::service('plugin.manager.entity_reference.selection')->getSelectionHandler($this->fieldDefinition);
+        $handler = \Drupal::service('plugin.manager.entity_reference_selection')->getSelectionHandler($this->fieldDefinition);
         $value = $handler->validateAutocompleteInput($element['#value'], $element, $form_state, $form, !$auto_create);
       }
 

@@ -2,18 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\file\Plugin\Type\selection\FileSelection.
+ * Contains \Drupal\file\Plugin\EntityReferenceSelection\FileSelection.
  */
 
-namespace Drupal\file\Plugin\entity_reference\selection;
+namespace Drupal\file\Plugin\EntityReferenceSelection;
 
-use Drupal\entity_reference\Plugin\entity_reference\selection\SelectionBase;
+use Drupal\Core\Entity\Plugin\EntityReferenceSelection\SelectionBase;
 
 /**
  * Provides specific access control for the file entity type.
  *
  * @EntityReferenceSelection(
- *   id = "file_default",
+ *   id = "default:file",
  *   label = @Translation("File selection"),
  *   entity_types = {"file"},
  *   group = "default",
@@ -30,4 +30,5 @@ class FileSelection extends SelectionBase {
     $query->condition('status', FILE_STATUS_PERMANENT);
     return $query;
   }
+
 }

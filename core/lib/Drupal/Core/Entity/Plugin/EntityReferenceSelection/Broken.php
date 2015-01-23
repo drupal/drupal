@@ -2,12 +2,13 @@
 
 /**
  * @file
- * Contains \Drupal\entity_reference\Plugin\Type\Selection\SelectionBroken.
+ * Contains \Drupal\Core\Entity\Plugin\EntityReferenceSelection\SelectionBroken.
  */
 
-namespace Drupal\entity_reference\Plugin\Type\Selection;
+namespace Drupal\Core\Entity\Plugin\EntityReferenceSelection;
 
 use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -19,17 +20,27 @@ use Drupal\Core\Form\FormStateInterface;
  *   label = @Translation("Broken/Missing")
  * )
  */
-class SelectionBroken implements SelectionInterface {
+class Broken implements SelectionInterface {
 
   /**
    * {@inheritdoc}
    */
-  public static function settingsForm(FieldDefinitionInterface $field_definition) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form['selection_handler'] = array(
       '#markup' => t('The selected selection handler is broken.'),
     );
     return $form;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) { }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) { }
 
   /**
    * {@inheritdoc}

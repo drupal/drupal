@@ -69,7 +69,7 @@ class TermEntityReferenceTest extends TaxonomyTestBase {
     ));
     $field->save();
 
-    $handler = $this->container->get('plugin.manager.entity_reference.selection')->getSelectionHandler($field);
+    $handler = $this->container->get('plugin.manager.entity_reference_selection')->getSelectionHandler($field);
     $result = $handler->getReferenceableEntities();
 
     $expected_result = array(

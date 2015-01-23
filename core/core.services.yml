@@ -348,6 +348,9 @@ services:
     arguments: ['@config.manager', '@entity.manager']
     tags:
       - { name: event_subscriber }
+  plugin.manager.entity_reference_selection:
+    class: Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManager
+    parent: default_plugin_manager
   plugin.manager.block:
     class: Drupal\Core\Block\BlockManager
     parent: default_plugin_manager
