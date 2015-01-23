@@ -32,3 +32,10 @@ twig_theme_test_file_url:
     _controller: '\Drupal\twig_theme_test\TwigThemeTestController::fileUrlRender'
   requirements:
     _access: 'TRUE'
+
+twig_theme_test_registry_loader:
+  path: '/twig-theme-test/registry-loader'
+  defaults:
+    _controller: '\Drupal\twig_theme_test\TwigThemeTestController::registryLoaderRender'
+  requirements:
+    _access: 'TRUE'

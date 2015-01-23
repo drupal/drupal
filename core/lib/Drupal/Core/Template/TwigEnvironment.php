@@ -8,8 +8,6 @@
 namespace Drupal\Core\Template;
 
 use Drupal\Core\PhpStorage\PhpStorageFactory;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Extension\ThemeHandlerInterface;
 
 /**
  * A class that defines a Twig environment for Drupal.
@@ -35,31 +33,19 @@ class TwigEnvironment extends \Twig_Environment {
    * internally.
    *
    * @param string $root
-   *   The app root;
+   *   The app root.
+   * @param \Twig_LoaderInterface $loader
+   *   The Twig loader or loader chain.
+   * @param array $options
+   *   The options for the Twig environment.
    */
-  public function __construct($root, \Twig_LoaderInterface $loader = NULL, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, $options = array()) {
+  public function __construct($root, \Twig_LoaderInterface $loader = NULL, $options = array()) {
     // @todo Pass as arguments from the DIC.
     $this->cache_object = \Drupal::cache();
 
     // Ensure that twig.engine is loaded, given that it is needed to render a
     // template because functions like twig_drupal_escape_filter are called.
     require_once $root . '/core/themes/engines/twig/twig.engine';
-
-    // Set twig path namespace for themes and modules.
-    $namespaces = array();
-    foreach ($module_handler->getModuleList() as $name => $extension) {
-      $namespaces[$name] = $extension->getPath();
-    }
-    foreach ($theme_handler->listInfo() as $name => $extension) {
-      $namespaces[$name] = $extension->getPath();
-    }
-
-    foreach ($namespaces as $name => $path) {
-      $templatesDirectory = $path . '/templates';
-      if (file_exists($templatesDirectory)) {
-        $loader->addPath($templatesDirectory, $name);
-      }
-    }
 
     $this->templateClasses = array();
 
@@ -72,7 +58,7 @@ class TwigEnvironment extends \Twig_Environment {
     // Ensure autoescaping is always on.
     $options['autoescape'] = TRUE;
 
-    $this->loader = new \Twig_Loader_Chain([$loader, new \Twig_Loader_String()]);
+    $this->loader = $loader;
     parent::__construct($this->loader, $options);
   }
 

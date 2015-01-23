@@ -42,6 +42,25 @@ class TaggedHandlersPassTest extends UnitTestCase {
   }
 
   /**
+   * Tests a required consumer with no handlers.
+   *
+   * @expectedException \Symfony\Component\DependencyInjection\Exception\LogicException
+   * @expectedExceptionMessage At least one service tagged with 'consumer_id' is required.
+   * @covers ::process
+   */
+  public function testProcessRequiredHandlers() {
+    $container = $this->buildContainer();
+    $container
+      ->register('consumer_id', __NAMESPACE__ . '\ValidConsumer')
+      ->addTag('service_collector', array(
+        'required' => TRUE,
+      ));
+
+    $handler_pass = new TaggedHandlersPass();
+    $handler_pass->process($container);
+  }
+
+  /**
    * Tests consumer with missing interface in non-production environment.
    *
    * @expectedException \Symfony\Component\DependencyInjection\Exception\LogicException

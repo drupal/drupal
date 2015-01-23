@@ -58,4 +58,11 @@ class TwigThemeTestController {
     );
   }
 
+  /**
+   * Menu callback for testing the Twig registry loader.
+   */
+  public function registryLoaderRender() {
+    return array('#theme' => 'twig_registry_loader_test');
+  }
+
 }

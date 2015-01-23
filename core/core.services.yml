@@ -1125,7 +1125,7 @@ services:
     class: Drupal\Core\Extension\InfoParser
   twig:
     class: Drupal\Core\Template\TwigEnvironment
-    arguments: ['@app.root', '@twig.loader', '@module_handler', '@theme_handler', '%twig.config%']
+    arguments: ['@app.root', '@twig.loader', '%twig.config%']
     tags:
       - { name: service_collector, tag: 'twig.extension', call: addExtension }
   twig.extension:
@@ -1142,10 +1142,24 @@ services:
     tags:
       - { name: twig.extension }
   twig.loader:
-    alias: twig.loader.filesystem
+    class: Twig_Loader_Chain
+    public: false
+    tags:
+      - { name: service_collector, tag: twig.loader, call: addLoader, required: TRUE }
   twig.loader.filesystem:
-    class: Twig_Loader_Filesystem
-    arguments: ['@app.root']
+    class: Drupal\Core\Template\Loader\FilesystemLoader
+    arguments: ['@app.root', '@module_handler', '@theme_handler']
+    tags:
+      - { name: twig.loader, priority: 100 }
+  twig.loader.theme_registry:
+    class: Drupal\Core\Template\Loader\ThemeRegistryLoader
+    arguments: ['@theme.registry']
+    tags:
+      - { name: twig.loader, priority: 0 }
+  twig.loader.string:
+    class: Twig_Loader_String
+    tags:
+      - { name: twig.loader, priority: -100 }
   element_info:
     alias: plugin.manager.element_info
   file.mime_type.guesser:

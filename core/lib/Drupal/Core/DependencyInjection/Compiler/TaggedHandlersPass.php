@@ -53,6 +53,8 @@ class TaggedHandlersPass implements CompilerPassInterface {
    *   - Optionally the handler's priority as second argument, if the method
    *     accepts a second parameter and its name is "priority". In any case, all
    *     handlers registered at compile time are sorted already.
+   * - required: Boolean indicating if at least one handler service is required.
+   *   Defaults to FALSE.
    *
    * Example (YAML):
    * @code
@@ -74,12 +76,15 @@ class TaggedHandlersPass implements CompilerPassInterface {
    *   interface.
    * @throws \Symfony\Component\DependencyInjection\Exception\LogicException
    *   If a tagged handler does not implement the required interface.
+   * @throws \Symfony\Component\DependencyInjection\Exception\LogicException
+   *   If at least one tagged service is required but none are found.
    */
   public function process(ContainerBuilder $container) {
     foreach ($container->findTaggedServiceIds('service_collector') as $consumer_id => $passes) {
       foreach ($passes as $pass) {
         $tag = isset($pass['tag']) ? $pass['tag'] : $consumer_id;
         $method_name = isset($pass['call']) ? $pass['call'] : 'addHandler';
+        $required = isset($pass['required']) ? $pass['required'] : FALSE;
 
         // Determine parameters.
         $consumer = $container->getDefinition($consumer_id);
@@ -122,6 +127,9 @@ class TaggedHandlersPass implements CompilerPassInterface {
           $handlers[$id] = isset($attributes[0]['priority']) ? $attributes[0]['priority'] : 0;
         }
         if (empty($handlers)) {
+          if ($required) {
+            throw new LogicException(sprintf("At least one service tagged with '%s' is required.", $tag));
+          }
           continue;
         }
         // Sort all handlers by priority.
