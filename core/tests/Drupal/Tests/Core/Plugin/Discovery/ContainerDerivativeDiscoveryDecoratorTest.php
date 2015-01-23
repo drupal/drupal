@@ -11,14 +11,13 @@ use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the container aware derivative discovery decorator.
- *
+ * @coversDefaultClass \Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator
  * @group Plugin
  */
 class ContainerDerivativeDiscoveryDecoratorTest extends UnitTestCase {
 
   /**
-   * Tests the getDerivativeFetcher method.
+   * @covers ::getDerivativeFetcher
    *
    * @see \Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator::getDerivativeFetcher().
    */
