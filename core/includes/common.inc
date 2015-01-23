@@ -1268,48 +1268,6 @@ function drupal_clear_js_cache() {
 }
 
 /**
- * Stores the current page in the cache.
- *
- * If page_compression is enabled, a gzipped version of the page is stored in
- * the cache to avoid compressing the output on each request. The cache entry
- * is unzipped in the relatively rare event that the page is requested by a
- * client without gzip support.
- *
- * Page compression requires the PHP zlib extension
- * (http://php.net/manual/ref.zlib.php).
- *
- * @param \Symfony\Component\HttpFoundation\Response $response
- *   The fully populated response.
- * @param \Symfony\Component\HttpFoundation\Request $request
- *   The request for this page.
- */
-function drupal_page_set_cache(Response $response, Request $request) {
-  // Check if the current page may be compressed.
-  if (extension_loaded('zlib') && !$response->headers->get('Content-Encoding') &&
-      \Drupal::config('system.performance')->get('response.gzip')) {
-
-    $content = $response->getContent();
-    if ($content) {
-      $response->setContent(gzencode($content, 9, FORCE_GZIP));
-      $response->headers->set('Content-Encoding', 'gzip');
-    }
-
-    // When page compression is enabled, ensure that proxy caches will record
-    // and deliver different versions of a page depending on whether the
-    // client supports gzip or not.
-    $response->setVary('Accept-Encoding', FALSE);
-  }
-
-  // Use the actual timestamp from an Expires header, if available.
-  $date = $response->getExpires();
-  $expire = ($date > (new DateTime())) ? $date->getTimestamp() : Cache::PERMANENT;
-
-  $cid = drupal_page_cache_get_cid($request);
-  $tags = explode(' ', $response->headers->get('X-Drupal-Cache-Tags'));
-  \Drupal::cache('render')->set($cid, $response, $expire, $tags);
-}
-
-/**
  * Pre-render callback: Renders a link into #markup.
  *
  * @deprecated Use \Drupal\Core\Render\Element\Link::preRenderLink().

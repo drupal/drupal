@@ -94,16 +94,6 @@ interface DrupalKernelInterface extends HttpKernelInterface {
   public function updateModules(array $module_list, array $module_filenames = array());
 
   /**
-   * Attempts to serve a page from the cache.
-   *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The current request.
-   *
-   * @return $this
-   */
-  public function handlePageCache(Request $request);
-
-  /**
    * Prepare the kernel for handling a request without handling the request.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request

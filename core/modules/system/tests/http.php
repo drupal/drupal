@@ -26,7 +26,6 @@ foreach ($_SERVER as &$value) {
 $request = Request::createFromGlobals();
 $kernel = TestKernel::createFromRequest($request, $autoloader, 'testing', TRUE);
 $response = $kernel
-  ->handlePageCache($request)
   ->handle($request)
     // Handle the response object.
     ->prepare($request)->send();

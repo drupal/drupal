@@ -77,6 +77,13 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected $booted = FALSE;
 
   /**
+   * Whether essential services have been set up properly by preHandle().
+   *
+   * @var bool
+   */
+  protected $prepared = FALSE;
+
+  /**
    * Holds the list of enabled modules.
    *
    * @var array
@@ -474,42 +481,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     // Override of Symfony's mime type guesser singleton.
     MimeTypeGuesser::registerWithSymfonyGuesser($this->container);
-  }
 
-  /**
-   * {@inheritdoc}
-   *
-   * @todo Invoke proper request/response/terminate events.
-   */
-  public function handlePageCache(Request $request) {
-    $this->boot();
-
-    // Check for a cache mode force from settings.php.
-    if (Settings::get('page_cache_without_database')) {
-      $cache_enabled = TRUE;
-    }
-    else {
-      $config = $this->getContainer()->get('config.factory')->get('system.performance');
-      $cache_enabled = $config->get('cache.page.use_internal');
-    }
-
-    $request_policy = \Drupal::service('page_cache_request_policy');
-    if ($cache_enabled && $request_policy->check($request) === RequestPolicyInterface::ALLOW) {
-      // Get the page from the cache.
-      $response = drupal_page_get_cache($request);
-      // If there is a cached page, display it.
-      if ($response) {
-        $response->headers->set('X-Drupal-Cache', 'HIT');
-
-        drupal_serve_page_from_cache($response, $request);
-
-        // We are done.
-        $response->prepare($request);
-        $response->send();
-        exit;
-      }
-    }
-    return $this;
+    $this->prepared = TRUE;
   }
 
   /**
@@ -577,7 +550,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * {@inheritdoc}
    */
   public function terminate(Request $request, Response $response) {
-    if (FALSE === $this->booted) {
+    // Only run terminate() when essential services have been set up properly
+    // by preHandle() before.
+    if (FALSE === $this->prepared) {
       return;
     }
 

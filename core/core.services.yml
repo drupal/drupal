@@ -124,6 +124,7 @@ services:
     class: Drupal\Core\PageCache\ChainResponsePolicy
     tags:
       - { name: service_collector, tag: page_cache_response_policy, call: addPolicy}
+    lazy: true
   page_cache_kill_switch:
     class: Drupal\Core\PageCache\ResponsePolicy\KillSwitch
     tags:
@@ -455,7 +456,7 @@ services:
       - { name: http_middleware, priority: 300 }
   http_middleware.page_cache:
     class: Drupal\Core\StackMiddleware\PageCache
-    arguments: ['@kernel']
+    arguments: ['@cache.render', '@page_cache_request_policy', '@page_cache_response_policy', '@content_negotiation']
     tags:
       - { name: http_middleware, priority: 200 }
   http_middleware.kernel_pre_handle:

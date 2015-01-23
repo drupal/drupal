@@ -136,17 +136,6 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
       // header declaring the response as not cacheable.
       $this->setResponseNotCacheable($response, $request);
     }
-
-    // Currently it is not possible to cache some types of responses. Therefore
-    // exclude binary file responses (generated files, e.g. images with image
-    // styles) and streamed responses (files directly read from the disk).
-    // see: https://github.com/symfony/symfony/issues/9128#issuecomment-25088678
-    if ($is_cacheable && $this->config->get('cache.page.use_internal') && !($response instanceof BinaryFileResponse) && !($response instanceof StreamedResponse)) {
-      // Store the response in the internal page cache.
-      drupal_page_set_cache($response, $request);
-      $response->headers->set('X-Drupal-Cache', 'MISS');
-      drupal_serve_page_from_cache($response, $request);
-    }
   }
 
   /**
