@@ -201,12 +201,6 @@ class CommentForm extends ContentEntityForm {
       '#access' => $is_admin,
     );
 
-    // Used for conditional validation of author fields.
-    $form['is_anonymous'] = array(
-      '#type' => 'value',
-      '#value' => ($comment->id() ? !$comment->getOwnerId() : $this->currentUser->isAnonymous()),
-    );
-
     return parent::form($form, $form_state, $comment);
   }
 
@@ -243,43 +237,10 @@ class CommentForm extends ContentEntityForm {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityForm::validate().
-   */
-  public function validate(array $form, FormStateInterface $form_state) {
-    parent::validate($form, $form_state);
-    $entity = $this->entity;
-
-    if (!$entity->isNew()) {
-      // Verify the name in case it is being changed from being anonymous.
-      $accounts = $this->entityManager->getStorage('user')->loadByProperties(array('name' => $form_state->getValue('name')));
-      $account = reset($accounts);
-      $form_state->setValue('uid', $account ? $account->id() : 0);
-
-      $date = $form_state->getValue('date');
-      if ($date instanceOf DrupalDateTime && $date->hasErrors()) {
-        $form_state->setErrorByName('date', $this->t('You have to specify a valid date.'));
-      }
-      if ($form_state->getValue('name') && !$form_state->getValue('is_anonymous') && !$account) {
-        $form_state->setErrorByName('name', $this->t('You have to specify a valid author.'));
-      }
-    }
-    elseif ($form_state->getValue('is_anonymous')) {
-      // Validate anonymous comment author fields (if given). If the (original)
-      // author of this comment was an anonymous user, verify that no registered
-      // user with this name exists.
-      if ($form_state->getValue('name')) {
-        $accounts = $this->entityManager->getStorage('user')->loadByProperties(array('name' => $form_state->getValue('name')));
-        if (!empty($accounts)) {
-          $form_state->setErrorByName('name', $this->t('The name you used belongs to a registered user.'));
-        }
-      }
-    }
-  }
-
-  /**
-   * Overrides EntityForm::buildEntity().
+   * {@inheritdoc}
    */
   public function buildEntity(array $form, FormStateInterface $form_state) {
+    /** @var \Drupal\comment\CommentInterface $comment */
     $comment = parent::buildEntity($form, $form_state);
     if (!$form_state->isValueEmpty('date') && $form_state->getValue('date') instanceOf DrupalDateTime) {
       $comment->setCreatedTime($form_state->getValue('date')->getTimestamp());
@@ -287,27 +248,20 @@ class CommentForm extends ContentEntityForm {
     else {
       $comment->setCreatedTime(REQUEST_TIME);
     }
-    $comment->changed->value = REQUEST_TIME;
-    return $comment;
-  }
+    $author_name = $form_state->getValue('name');
 
-  /**
-   * {@inheritdoc}
-   */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    parent::submitForm($form, $form_state);
-    /** @var \Drupal\comment\CommentInterface $comment */
-    $comment = $this->entity;
-    // If the comment was posted by a registered user, assign the author's ID.
-    // @todo Too fragile. Should be prepared and stored in comment_form()
-    // already.
-    $author_name = $comment->getAuthorName();
-    if (!$comment->is_anonymous && !empty($author_name) && ($account = user_load_by_name($author_name))) {
-      $comment->setOwner($account);
+    if (!$this->currentUser->isAnonymous()) {
+      // Assign the owner based on the given user name - none means anonymous.
+      $accounts = $this->entityManager->getStorage('user')
+        ->loadByProperties(array('name' => $author_name));
+      $account = reset($accounts);
+      $uid = $account ? $account->id() : 0;
+      $comment->setOwnerId($uid);
     }
+
     // If the comment was posted by an anonymous user and no author name was
     // required, use "Anonymous" by default.
-    if ($comment->is_anonymous && (!isset($author_name) || $author_name === '')) {
+    if ($comment->getOwnerId() === 0 && (!isset($author_name) || $author_name === '')) {
       $comment->setAuthorName($this->config('user.settings')->get('anonymous'));
     }
 
@@ -326,8 +280,26 @@ class CommentForm extends ContentEntityForm {
         $comment->setSubject($this->t('(No subject)'));
       }
     }
-
     return $comment;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validate(array $form, FormStateInterface $form_state) {
+    parent::validate($form, $form_state);
+    $comment = $this->buildEntity($form, $form_state);
+
+    // Customly trigger validation of manually added fields and add in
+    // violations.
+    $violations = $comment->created->validate();
+    foreach ($violations as $violation) {
+      $form_state->setErrorByName('date', $violation->getMessage());
+    }
+    $violations = $comment->name->validate();
+    foreach ($violations as $violation) {
+      $form_state->setErrorByName('name', $violation->getMessage());
+    }
   }
 
   /**

@@ -19,6 +19,25 @@ use Symfony\Component\Validator\Constraint;
  */
 class CommentNameConstraint extends Constraint {
 
-  public $message = '%name belongs to a registered user.';
+  /**
+   * Message shown when an anonymous user comments using a registered name.
+   *
+   * @var string
+   */
+  public $messageNameTaken = 'The name you used (%name) belongs to a registered user.';
+
+  /**
+   * Message shown when an admin changes the comment-author to an invalid user.
+   *
+   * @var string
+   */
+  public $messageRequired = 'You have to specify a valid author.';
+
+  /**
+   * Message shown when the name doesn't match the author's name.
+   *
+   * @var string
+   */
+  public $messageMatch = 'The specified author name does not match the comment author.';
 
 }

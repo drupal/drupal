@@ -67,7 +67,9 @@ class CommentAnonymousTest extends CommentTestBase {
       'comment_body[0][value]' => $this->randomMachineName(),
     );
     $this->drupalPostForm('comment/reply/node/' . $this->node->id() . '/comment', $edit, t('Save'));
-    $this->assertText(t('The name you used belongs to a registered user.'));
+    $this->assertRaw(t('The name you used (%name) belongs to a registered user.', [
+      '%name' => $this->adminUser->getUsername(),
+    ]));
 
     // Require contact info.
     $this->drupalLogin($this->adminUser);
