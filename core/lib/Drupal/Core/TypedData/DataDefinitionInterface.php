@@ -203,4 +203,20 @@ interface DataDefinitionInterface {
    */
   public function getConstraint($constraint_name);
 
+  /**
+   * Adds a validation constraint.
+   *
+   * See \Drupal\Core\TypedData\DataDefinitionInterface::getConstraints() for
+   * details.
+   *
+   * @param string $constraint_name
+   *   The name of the constraint to add, i.e. its plugin id.
+   * @param array|null $options
+   *   The constraint options as required by the constraint plugin, or NULL.
+   *
+   * @return static
+   *   The object itself for chaining.
+   */
+  public function addConstraint($constraint_name, $options = NULL);
+
 }

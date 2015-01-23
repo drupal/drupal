@@ -133,39 +133,11 @@ function forum_uri($forum) {
 }
 
 /**
- * Implements hook_node_validate().
- *
- * Checks in particular that the node is assigned only a "leaf" term in the
- * forum taxonomy.
+ * Implements hook_entity_bundle_field_info_alter().
  */
-function forum_node_validate(EntityInterface $node, $form, FormStateInterface $form_state) {
-  if (\Drupal::service('forum_manager')->checkNodeType($node)) {
-    // vocabulary is selected, not a "container" term.
-    if (!$node->taxonomy_forums->isEmpty()) {
-      // Extract the node's proper topic ID.
-      foreach ($node->taxonomy_forums as $delta => $item) {
-        // If no term was selected (e.g. when no terms exist yet), remove the
-        // item.
-        if (empty($item->target_id)) {
-          unset($node->taxonomy_forums[$delta]);
-          continue;
-        }
-        $term = $item->entity;
-        if (!$term) {
-          $form_state->setErrorByName('taxonomy_forums', t('Select a forum.'));
-          continue;
-        }
-        $used = \Drupal::entityQuery('taxonomy_term')
-          ->condition('tid', $term->id())
-          ->condition('vid', $term->bundle())
-          ->range(0, 1)
-          ->count()
-          ->execute();
-        if ($used && !empty($term->forum_container->value)) {
-          $form_state->setErrorByName('taxonomy_forums', t('The item %forum is a forum container, not a forum. Select one of the forums below instead.', array('%forum' => $term->getName())));
-        }
-      }
-    }
+function forum_entity_bundle_field_info_alter(&$fields, \Drupal\Core\Entity\EntityTypeInterface $entity_type, $bundle) {
+  if ($entity_type->id() == 'node'  && !empty($fields['taxonomy_forums'])) {
+    $fields['taxonomy_forums']->addConstraint('ForumLeaf', []);
   }
 }
 

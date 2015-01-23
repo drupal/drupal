@@ -297,6 +297,10 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
   /**
    * Sets constraints for a given field item property.
    *
+   * Note: this overwrites any existing property constraints. If you need to
+   * add to the existing constraints, use
+   * \Drupal\Core\Field\BaseFieldDefinition::addPropertyConstraints()
+   *
    * @param string $name
    *   The name of the property to set constraints for.
    * @param array $constraints
@@ -309,6 +313,51 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
     $item_constraints = $this->getItemDefinition()->getConstraints();
     $item_constraints['ComplexData'][$name] = $constraints;
     $this->getItemDefinition()->setConstraints($item_constraints);
+    return $this;
+  }
+
+  /**
+   * Adds constraints for a given field item property.
+   *
+   * Adds a constraint to a property of a base field item. e.g.
+   * @code
+   * // Limit the field item's value property to the range 0 through 10.
+   * // e.g. $node->size->value.
+   * $field->addPropertyConstraints('value', [
+   *   'Range' => [
+   *     'min' => 0,
+   *     'max' => 10,
+   *   ]
+   * ]);
+   * @endcode
+   *
+   * If you want to add a validation constraint that applies to the
+   * \Drupal\Core\Field\FieldItemList, use BaseFieldDefinition::addConstraint()
+   * instead.
+   *
+   * Note: passing a new set of options for an existing property constraint will
+   * overwrite with the new options.
+   *
+   * @param string $name
+   *   The name of the property to set constraints for.
+   * @param array $constraints
+   *   The constraints to set.
+   *
+   * @return static
+   *   The object itself for chaining.
+   *
+   * @see \Drupal\Core\Field\BaseFieldDefinition::addConstraint()
+   */
+  public function addPropertyConstraints($name, array $constraints) {
+    $item_constraints = $this->getItemDefinition()->getConstraint('ComplexData') ?: [];
+    if (isset($item_constraints[$name])) {
+      // Add the new property constraints, overwriting as required.
+      $item_constraints[$name] = $constraints + $item_constraints[$name];
+    }
+    else {
+      $item_constraints[$name] = $constraints;
+    }
+    $this->getItemDefinition()->addConstraint('ComplexData', $item_constraints);
     return $this;
   }
 

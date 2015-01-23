@@ -276,19 +276,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
   }
 
   /**
-   * Sets the array of validation constraints.
-   *
-   * NOTE: This will override any previously set constraints. In most cases
-   * DataDefinition::addConstraint() should be used instead.
-   *
-   * @param array $constraints
-   *   The array of constraints. See
-   *   \Drupal\Core\TypedData\TypedDataManager::getConstraints() for details.
-   *
-   * @return $this
-   *
-   * @see \Drupal\Core\TypedData\DataDefinition::addConstraint()
-   * @see \Drupal\Core\TypedData\DataDefinition::getConstraints()
+   * {@inheritdoc}
    */
   public function setConstraints(array $constraints) {
     $this->definition['constraints'] = $constraints;
@@ -296,18 +284,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
   }
 
   /**
-   * Adds a validation constraint.
-   *
-   * See \Drupal\Core\TypedData\DataDefinitionInterface::getConstraints() for
-   * details.
-   *
-   * @param string $constraint_name
-   *   The name of the constraint to add, i.e. its plugin id.
-   * @param array|null $options
-   *   The constraint options as required by the constraint plugin, or NULL.
-   *
-   * @return static
-   *   The object itself for chaining.
+   * {@inheritdoc}
    */
   public function addConstraint($constraint_name, $options = NULL) {
     $this->definition['constraints'][$constraint_name] = $options;

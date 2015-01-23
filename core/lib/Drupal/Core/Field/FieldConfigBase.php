@@ -191,6 +191,13 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
   protected $bundleRenameAllowed = FALSE;
 
   /**
+   * Array of constraint options keyed by constraint plugin ID.
+   *
+   * @var array
+   */
+  protected $constraints = [];
+
+  /**
    * {@inheritdoc}
    */
   public function id() {
@@ -430,7 +437,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    * {@inheritdoc}
    */
   public function getConstraints() {
-    return \Drupal::typedDataManager()->getDefaultConstraints($this);
+    return \Drupal::typedDataManager()->getDefaultConstraints($this) + $this->constraints;
   }
 
   /**
@@ -479,6 +486,46 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    * {@inheritdoc}
    */
   public function getConfig($bundle) {
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setConstraints(array $constraints) {
+    $this->constraints = $constraints;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addConstraint($constraint_name, $options = NULL) {
+    $this->constraints[$constraint_name] = $options;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setPropertyConstraints($name, array $constraints) {
+    $item_constraints = $this->getItemDefinition()->getConstraints();
+    $item_constraints['ComplexData'][$name] = $constraints;
+    $this->getItemDefinition()->setConstraints($item_constraints);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addPropertyConstraints($name, array $constraints) {
+    $item_constraints = $this->getItemDefinition()->getConstraint('ComplexData') ?: [];
+    if (isset($item_constraints[$name])) {
+      // Add the new property constraints, overwriting as required.
+      $item_constraints[$name] = $constraints + $item_constraints[$name];
+    }
+    else {
+      $item_constraints[$name] = $constraints;
+    }
+    $this->getItemDefinition()->addConstraint('ComplexData', $item_constraints);
     return $this;
   }
 

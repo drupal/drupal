@@ -65,4 +65,131 @@ interface FieldConfigInterface extends FieldDefinitionInterface, ConfigEntityInt
    */
   public function setDefaultValue($value);
 
+  /**
+   * Sets constraints for a given field item property.
+   *
+   * Note: this overwrites any existing property constraints. If you need to
+   * add to the existing constraints, use
+   * \Drupal\Core\Field\FieldConfigInterface::addPropertyConstraints()
+   *
+   * Note that constraints added via this method are not stored in configuration
+   * and as such need to be added at runtime using
+   * hook_entity_bundle_field_info_alter().
+   *
+   * @param string $name
+   *   The name of the property to set constraints for.
+   * @param array $constraints
+   *   The constraints to set.
+   *
+   * @return static
+   *   The object itself for chaining.
+   *
+   * @see hook_entity_bundle_field_info_alter()
+   */
+  public function setPropertyConstraints($name, array $constraints);
+
+  /**
+   * Adds constraints for a given field item property.
+   *
+   * Adds a constraint to a property of a field item. e.g.
+   * @code
+   * // Limit the field item's value property to the range 0 through 10.
+   * // e.g. $node->field_how_many->value.
+   * $field->addPropertyConstraints('value', [
+   *   'Range' => [
+   *     'min' => 0,
+   *     'max' => 10,
+   *   ]
+   * ]);
+   * @endcode
+   *
+   * If you want to add a validation constraint that applies to the
+   * \Drupal\Core\Field\FieldItemList, use FieldConfigInterface::addConstraint()
+   * instead.
+   *
+   * Note: passing a new set of options for an existing property constraint will
+   * overwrite with the new options.
+   *
+   * Note that constraints added via this method are not stored in configuration
+   * and as such need to be added at runtime using
+   * hook_entity_bundle_field_info_alter().
+   *
+   * @param string $name
+   *   The name of the property to set constraints for.
+   * @param array $constraints
+   *   The constraints to set.
+   *
+   * @return static
+   *   The object itself for chaining.
+   *
+   * @see \Drupal\Core\Field\FieldConfigInterface::addConstraint()
+   * @see hook_entity_bundle_field_info_alter()
+   */
+  public function addPropertyConstraints($name, array $constraints);
+
+  /**
+   * Adds a validation constraint to the FieldItemList.
+   *
+   * Note: If you wish to apply a constraint to just a property of a FieldItem
+   * use \Drupal\Core\Field\FieldConfigInterface::addPropertyConstraints()
+   * instead.
+   * @code
+   *   // Add a constraint to the 'field_username' FieldItemList.
+   *   // e.g. $node->field_username
+   *   $fields['field_username']->addConstraint('UserNameUnique', []);
+   * @endcode
+   *
+   * If you wish to apply a constraint to a \Drupal\Core\Field\FieldItem instead
+   * of a property or FieldItemList, you can use the
+   * \Drupal\Core\Field\FieldConfigBase::getItemDefinition() method.
+   * @code
+   *   // Add a constraint to the 'field_entity_reference' FieldItem (entity
+   *   // reference item).
+   *   $fields['field_entity_reference']->getItemDefinition()->addConstraint('MyCustomFieldItemValidationPlugin', []);
+   * @endcode
+   *
+   * See \Drupal\Core\TypedData\DataDefinitionInterface::getConstraints() for
+   * details.
+   *
+   * Note that constraints added via this method are not stored in configuration
+   * and as such need to be added at runtime using
+   * hook_entity_bundle_field_info_alter().
+   *
+   * @param string $constraint_name
+   *   The name of the constraint to add, i.e. its plugin id.
+   * @param array|null $options
+   *   The constraint options as required by the constraint plugin, or NULL.
+   *
+   * @return static
+   *   The object itself for chaining.
+   *
+   * @see \Drupal\Core\Field\FieldItemList
+   * @see \Drupal\Core\Field\FieldConfigInterface::addPropertyConstraints()
+   * @see hook_entity_bundle_field_info_alter()
+   */
+  public function addConstraint($constraint_name, $options = NULL);
+
+  /**
+   * Sets the array of validation constraints for the FieldItemList.
+   *
+   * NOTE: This will overwrite any previously set constraints. In most cases
+   * FieldConfigInterface::addConstraint() should be used instead.
+   *
+   * Note that constraints added via this method are not stored in configuration
+   * and as such need to be added at runtime using
+   * hook_entity_bundle_field_info_alter().
+   *
+   * @param array $constraints
+   *   The array of constraints. See
+   *   \Drupal\Core\TypedData\TypedDataManager::getConstraints() for details.
+   *
+   * @return $this
+   *
+   * @see \Drupal\Core\TypedData\DataDefinition::addConstraint()
+   * @see \Drupal\Core\TypedData\DataDefinition::getConstraints()
+   * @see \Drupal\Core\Field\FieldItemList
+   * @see hook_entity_bundle_field_info_alter()
+   */
+  public function setConstraints(array $constraints);
+
 }
