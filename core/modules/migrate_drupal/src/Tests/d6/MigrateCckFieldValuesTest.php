@@ -179,9 +179,8 @@ class MigrateCckFieldValuesTest extends MigrateNodeTestBase {
     $this->assertEqual($node->field_test_exclude_unset->value, 'This is a field with exclude unset.', 'Field with exclude unset is correct.');
 
     // Test that link fields are migrated.
-    $this->assertIdentical($node->field_test_link->url, 'http://drupal.org/project/drupal');
+    $this->assertIdentical($node->field_test_link->uri, 'http://drupal.org/project/drupal');
     $this->assertIdentical($node->field_test_link->title, 'Drupal project page');
-    $this->assertIdentical($node->field_test_link->route_parameters, []);
     $this->assertIdentical($node->field_test_link->options['attributes'], ['target' => '_blank']);
 
     // Test the file field meta.

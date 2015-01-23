@@ -41,13 +41,13 @@ class LinkWidget extends WidgetBase {
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
 
     $default_url_value = NULL;
-    if (isset($items[$delta]->url)) {
-      if ($url = \Drupal::pathValidator()->getUrlIfValid($items[$delta]->url)) {
+    if (isset($items[$delta]->uri)) {
+      if ($url = \Drupal::pathValidator()->getUrlIfValid($items[$delta]->uri)) {
         $url->setOptions($items[$delta]->options);
         $default_url_value = ltrim($url->toString(), '/');
       }
     }
-    $element['url'] = array(
+    $element['uri'] = array(
       '#type' => 'url',
       '#title' => $this->t('URL'),
       '#placeholder' => $this->getSetting('placeholder_url'),
@@ -59,18 +59,18 @@ class LinkWidget extends WidgetBase {
     // If the field is configured to support internal links, it cannot use the
     // 'url' form element and we have to do the validation ourselves.
     if ($this->supportsInternalLinks()) {
-      $element['url']['#type'] = 'textfield';
+      $element['uri']['#type'] = 'textfield';
     }
 
     // If the field is configured to allow only internal links, add a useful
     // element prefix.
     if (!$this->supportsExternalLinks()) {
-      $element['url']['#field_prefix'] = \Drupal::url('<front>', array(), array('absolute' => TRUE));
+      $element['uri']['#field_prefix'] = \Drupal::url('<front>', array(), array('absolute' => TRUE));
     }
     // If the field is configured to allow both internal and external links,
     // show a useful description.
     elseif ($this->supportsExternalLinks() && $this->supportsInternalLinks()) {
-      $element['url']['#description'] = $this->t('This can be an internal Drupal path such as %add-node or an external URL such as %drupal. Enter %front to link to the front page.', array('%front' => '<front>', '%add-node' => 'node/add', '%drupal' => 'http://drupal.org'));
+      $element['uri']['#description'] = $this->t('This can be an internal Drupal path such as %add-node or an external URL such as %drupal. Enter %front to link to the front page.', array('%front' => '<front>', '%add-node' => 'node/add', '%drupal' => 'http://drupal.org'));
     }
 
     $element['title'] = array(
@@ -188,7 +188,7 @@ class LinkWidget extends WidgetBase {
    * Conditionally requires the link title if a URL value was filled in.
    */
   public function validateTitle(&$element, FormStateInterface $form_state, $form) {
-    if ($element['url']['#value'] !== '' && $element['title']['#value'] === '') {
+    if ($element['uri']['#value'] !== '' && $element['title']['#value'] === '') {
       $element['title']['#required'] = TRUE;
       $form_state->setError($element['title'], $this->t('!name field is required.', array('!name' => $element['title']['#title'])));
     }
@@ -199,19 +199,16 @@ class LinkWidget extends WidgetBase {
    */
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
     foreach ($values as &$value) {
-      if (!empty($value['url'])) {
-        $url = \Drupal::pathValidator()->getUrlIfValid($value['url']);
+      if (!empty($value['uri'])) {
+        $url = \Drupal::pathValidator()->getUrlIfValid($value['uri']);
         if (!$url) {
           return $values;
         }
 
-        // @todo Don't use the toArray method here. Removed once it is
-        //   deprecated.
-        $value += $url->toArray();
-
+        $value += ['options' => []];
         // Reset the URL value to contain only the path.
         if (!$url->isExternal() && $this->supportsInternalLinks()) {
-          $value['url'] = substr($url->toString(), strlen(\Drupal::request()->getBasePath() . '/'));
+          $value['uri'] = substr($url->toString(), strlen(\Drupal::request()->getBasePath() . '/'));
         }
       }
     }

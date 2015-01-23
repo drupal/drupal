@@ -52,7 +52,7 @@ class LinkTypeConstraint extends Constraint implements ConstraintValidatorInterf
       /** @var $link_item \Drupal\link\LinkItemInterface */
       $link_item = $value;
       $link_type = $link_item->getFieldDefinition()->getSetting('link_type');
-      $url_string = $link_item->url;
+      $url_string = $link_item->uri;
       // Validate the url property.
       if ($url_string !== '') {
         if ($url = \Drupal::pathValidator()->getUrlIfValid($url_string)) {

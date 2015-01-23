@@ -86,7 +86,7 @@ class BlockContentFieldTest extends BlockContentTestBase {
     $this->drupalGet('block/add/link');
     $edit = array(
       'info[0][value]' => $this->randomMachineName(8),
-      $this->fieldStorage->getName() . '[0][url]' => 'http://example.com',
+      $this->fieldStorage->getName() . '[0][uri]' => 'http://example.com',
       $this->fieldStorage->getName() . '[0][title]' => 'Example.com'
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));

@@ -8,16 +8,39 @@
 namespace Drupal\migrate_drupal\Plugin\migrate\process\d6;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 use Drupal\migrate\Plugin\migrate\process\Route;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @MigrateProcessPlugin(
  *   id = "d6_cck_link"
  * )
  */
-class CckLink extends Route implements ContainerFactoryPluginInterface {
+class CckLink extends ProcessPluginBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->migration = $migration;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration = NULL) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $migration
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -27,10 +50,9 @@ class CckLink extends Route implements ContainerFactoryPluginInterface {
 
     // Drupal 6 link attributes are double serialized.
     $attributes = unserialize(unserialize($attributes));
-    $route_plugin_value = [$url, []];
-    $route = parent::transform($route_plugin_value, $migrate_executable, $row, $destination_property);
 
     // Massage the values into the correct form for the link.
+    $route['uri'] = $url;
     $route['options']['attributes'] = $attributes;
     $route['title'] = $title;
     return $route;

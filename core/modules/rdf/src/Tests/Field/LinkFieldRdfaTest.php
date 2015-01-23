@@ -6,6 +6,7 @@
 
 namespace Drupal\rdf\Tests\Field;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\rdf\Tests\Field\FieldRdfaTestBase;
 
 /**
@@ -48,7 +49,7 @@ class LinkFieldRdfaTest extends FieldRdfaTestBase {
     // Set up test values.
     $this->testValue = 'http://test.me/foo/bar/neque/porro/quisquam/est/qui-dolorem?foo/bar/neque/porro/quisquam/est/qui-dolorem';
     $this->entity = entity_create('entity_test', array());
-    $this->entity->{$this->fieldName}->url = $this->testValue;
+    $this->entity->{$this->fieldName}->uri = $this->testValue;
 
     // Set up the expected result.
     $expected_rdf = array(
@@ -66,8 +67,7 @@ class LinkFieldRdfaTest extends FieldRdfaTestBase {
     // Set up test values.
     $this->testValue = 'admin';
     $this->entity = entity_create('entity_test', array());
-    $this->entity->{$this->fieldName}->route_name = 'system.admin';
-    $this->entity->{$this->fieldName}->url = 'admin';
+    $this->entity->{$this->fieldName}->uri = 'admin';
 
     // Set up the expected result.
     // AssertFormatterRdfa looks for a full path.
@@ -86,8 +86,7 @@ class LinkFieldRdfaTest extends FieldRdfaTestBase {
     // Set up test values.
     $this->testValue = '<front>';
     $this->entity = entity_create('entity_test', array());
-    $this->entity->{$this->fieldName}->route_name = $this->testValue;
-    $this->entity->{$this->fieldName}->url = '<front>';
+    $this->entity->{$this->fieldName}->uri = '<front>';
 
     // Set up the expected result.
     $expected_rdf = array(

@@ -44,17 +44,13 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
    * {@inheritdoc}
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
-    $properties['url'] = DataDefinition::create('string')
-      ->setLabel(t('URL'));
+    // @todo Change the type from 'string' to 'uri':
+    //   https://www.drupal.org/node/2412509.
+    $properties['uri'] = DataDefinition::create('string')
+      ->setLabel(t('URI'));
 
     $properties['title'] = DataDefinition::create('string')
       ->setLabel(t('Link text'));
-
-    $properties['route_name'] = DataDefinition::create('string')
-      ->setLabel(t('Route name'));
-
-    $properties['route_parameters'] = MapDataDefinition::create()
-      ->setLabel(t('Route parameters'));
 
     $properties['options'] = MapDataDefinition::create()
       ->setLabel(t('Options'));
@@ -68,8 +64,8 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
     return array(
       'columns' => array(
-        'url' => array(
-          'description' => 'The URL of the link.',
+        'uri' => array(
+          'description' => 'The URI of the link.',
           'type' => 'varchar',
           'length' => 2048,
         ),
@@ -77,17 +73,6 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
           'description' => 'The link text.',
           'type' => 'varchar',
           'length' => 255,
-        ),
-        'route_name' => array(
-          'description' => 'The machine name of a defined Route this link represents.',
-          'type' => 'varchar',
-          'length' => 255,
-        ),
-        'route_parameters' => array(
-          'description' => 'Serialized array of route parameters of the link.',
-          'type' => 'blob',
-          'size' => 'big',
-          'serialize' => TRUE,
         ),
         'options' => array(
           'description' => 'Serialized array of options for the link.',
@@ -152,7 +137,7 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
         $values['title'] = mt_rand(0,1) ? $random->sentences(4) : '';
         break;
     }
-    $values['url'] = 'http://www.' . $random->word($domain_length) . '.' . $tlds[mt_rand(0, (sizeof($tlds)-1))];
+    $values['uri'] = 'http://www.' . $random->word($domain_length) . '.' . $tlds[mt_rand(0, (sizeof($tlds)-1))];
     return $values;
   }
 
@@ -160,7 +145,7 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
    * {@inheritdoc}
    */
   public function isEmpty() {
-    $value = $this->get('url')->getValue();
+    $value = $this->get('uri')->getValue();
     return $value === NULL || $value === '';
   }
 
@@ -168,14 +153,15 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
    * {@inheritdoc}
    */
   public function isExternal() {
-    // External links don't have a route_name value.
-    return empty($this->route_name);
+    // External links don't resolve to a route.
+    $url = \Drupal::pathValidator()->getUrlIfValid($this->uri);
+    return $url->isExternal();
   }
 
   /**
    * {@inheritdoc}
    */
   public static function mainPropertyName() {
-    return 'url';
+    return 'uri';
   }
 }
