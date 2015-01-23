@@ -82,6 +82,14 @@ class EditorAdminTest extends WebTestBase {
     $edit['editor[settings][ponies_too]'] = FALSE;
     $this->drupalPostForm(NULL, $edit, t('Save configuration'));
     $this->verifyUnicornEditorConfiguration('filtered_html', FALSE);
+
+    // Switch back to 'None' and check the Unicorn Editor's settings are gone.
+    $edit = array(
+      'editor[editor]' => '',
+    );
+    $this->drupalPostAjaxForm(NULL, $edit, 'editor_configure');
+    $unicorn_setting = $this->xpath('//input[@name="editor[settings][ponies_too]" and @type="checkbox" and @checked]');
+    $this->assertTrue(count($unicorn_setting) === 0, "Unicorn Editor's settings form is no longer present.");
   }
 
   /**
@@ -125,7 +133,7 @@ class EditorAdminTest extends WebTestBase {
     $this->assertTrue(((string) $options[0]) === 'None', 'Option 1 in the Text Editor select is "None".');
     $this->assertTrue(((string) $options[1]) === 'Unicorn Editor', 'Option 2 in the Text Editor select is "Unicorn Editor".');
     $this->assertTrue(((string) $options[0]['selected']) === 'selected', 'Option 1 ("None") is selected.');
-    // Ensure the none option is selected
+    // Ensure the none option is selected.
     $this->assertNoRaw(t('This option is disabled because no modules that provide a text editor are currently enabled.'), 'Description for select absent that tells users to install a text editor module.');
 
     // Select the "Unicorn Editor" editor and click the "Configure" button.
