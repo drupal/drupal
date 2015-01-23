@@ -591,13 +591,6 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
   /**
    * {@inheritdoc}
    */
-  public function isRequired() {
-    return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getOptionsProvider($property_name, FieldableEntityInterface $entity) {
     // If the field item class implements the interface, proxy it through.
     $item = $entity->get($this->getName())->first();
