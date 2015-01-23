@@ -211,10 +211,10 @@ small .admin-link:after {
   width: 16px;
   margin-top: 2px;
 }
-.system-status-report .error .status-icon div {
+.system-status-report .status-icon--error div {
   background-image: url(../../../misc/icons/ea2800/error.svg);
 }
-.system-status-report .warning .status-icon div {
+.system-status-report .status-icon--warning div {
   background-image: url(../../../misc/icons/e29700/warning.svg);
 }
 .system-status-report .status-title {

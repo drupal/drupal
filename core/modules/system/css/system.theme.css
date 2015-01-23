@@ -529,8 +529,10 @@ ul.tabs {
   margin-top: 0.769em;
 }
 
-/* @TODO Separate tables and messages styling */
+/* See .color-success in Seven's colors.css */
 .messages--status {
+  color: #325e1c;
+  background-color: #f3faef;
   border-color: #c9e1bd #c9e1bd #c9e1bd transparent;  /* LTR */
   background-image: url(../../../misc/icons/73b355/check.svg);
   box-shadow: -8px 0 0 #77b259; /* LTR */
@@ -540,33 +542,24 @@ ul.tabs {
   box-shadow: 8px 0 0 #77b259;
   margin-left: 0;
 }
-.messages--status {
-  color: #325e1c;
-}
-.messages--status {
-  background-color: #f3faef;
-}
 
+/* See .color-warning in Seven's colors.css */
 .messages--warning {
+  background-color: #fdf8ed;
   background-image: url(../../../misc/icons/e29700/warning.svg);
   border-color: #f4daa6 #f4daa6 #f4daa6 transparent;  /* LTR */
+  color: #734c00;
   box-shadow: -8px 0 0 #e09600; /* LTR */
 }
 [dir="rtl"] .messages--warning {
   border-color: #f4daa6 transparent #f4daa6 #f4daa6;
   box-shadow: 8px 0 0 #e09600;
 }
-.messages--warning,
-.warning {
-  color: #734c00;
-}
-.messages--warning,
-table tr.warning,
-table tr.warning:hover {
-  background-color: #fdf8ed;
-}
 
+/* See .color-error in Seven's colors.css */
 .messages--error {
+  background-color: #fcf4f2;
+  color: #a51b00;
   background-image: url(../../../misc/icons/ea2800/error.svg);
   border-color: #f9c9bf #f9c9bf #f9c9bf transparent;  /* LTR */
   box-shadow: -8px 0 0 #e62600; /* LTR */
@@ -574,15 +567,6 @@ table tr.warning:hover {
 [dir="rtl"] .messages--error {
   border-color: #f9c9bf transparent #f9c9bf #f9c9bf;
   box-shadow: 8px 0 0 #e62600;
-}
-.messages--error,
-.error {
-  color: #a51b00;
-}
-.messages--error,
-table tr.error,
-table tr.error:hover {
-  background-color: #fcf4f2;
 }
 .messages--error p.error {
   color: #a51b00;
