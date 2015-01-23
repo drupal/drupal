@@ -111,7 +111,7 @@ class EditorImageDialog extends FormBase {
       '#placeholder' => $this->t('Short description for the visually impaired'),
       '#type' => 'textfield',
       '#required' => TRUE,
-      '#required_error' => $this->t('Alternative text is required.<br><em>(Only in rare cases should this be left empty. To create empty alternative text, enter <code>""</code> — two double quotes without any content).'),
+      '#required_error' => $this->t('Alternative text is required.<br />(Only in rare cases should this be left empty. To create empty alternative text, enter <code>""</code> — two double quotes without any content).'),
       '#default_value' => $alt,
       '#maxlength' => 2048,
     );
