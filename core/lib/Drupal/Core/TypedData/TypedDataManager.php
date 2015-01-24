@@ -10,10 +10,12 @@ namespace Drupal\Core\TypedData;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\TypedData\Validation\MetadataFactory;
 use Drupal\Core\Validation\ConstraintManager;
+use Drupal\Core\Validation\ConstraintValidatorFactory;
 use Drupal\Core\Validation\DrupalTranslator;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -44,20 +46,30 @@ class TypedDataManager extends DefaultPluginManager {
    */
   protected $prototypes = array();
 
- /**
-  * Constructs a new TypedDataManager.
-  *
-  * @param \Traversable $namespaces
-  *   An object that implements \Traversable which contains the root paths
-  *   keyed by the corresponding namespace to look for plugin implementations.
-  * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
-  *   Cache backend instance to use.
-  * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-  *   The module handler.
-  */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
+  /**
+   * The class resolver.
+   *
+   * @var \Drupal\Core\DependencyInjection\ClassResolverInterface
+   */
+  protected $classResolver;
+
+  /**
+   * Constructs a new TypedDataManager.
+   *
+   * @param \Traversable $namespaces
+   *   An object that implements \Traversable which contains the root paths
+   *   keyed by the corresponding namespace to look for plugin implementations.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   *   Cache backend instance to use.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
+   * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
+   *   The class resolver.
+   */
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, ClassResolverInterface $class_resolver) {
     $this->alterInfo('data_type_info');
     $this->setCacheBackend($cache_backend, 'typed_data_types_plugins');
+    $this->classResolver = $class_resolver;
 
     parent::__construct('Plugin/DataType', $namespaces, $module_handler, NULL, 'Drupal\Core\TypedData\Annotation\DataType');
   }
@@ -322,6 +334,7 @@ class TypedDataManager extends DefaultPluginManager {
       $this->validator = Validation::createValidatorBuilder()
         ->setMetadataFactory(new MetadataFactory())
         ->setTranslator(new DrupalTranslator())
+        ->setConstraintValidatorFactory(new ConstraintValidatorFactory($this->classResolver))
         ->setApiVersion(Validation::API_VERSION_2_4)
         ->getValidator();
     }

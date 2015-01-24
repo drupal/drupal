@@ -489,7 +489,7 @@ services:
     arguments: [replica]
   typed_data_manager:
     class: Drupal\Core\TypedData\TypedDataManager
-    parent: default_plugin_manager
+    arguments: ['@container.namespaces', '@cache.discovery', '@module_handler', '@class_resolver']
     calls:
       - [setValidationConstraintManager, ['@validation.constraint']]
     tags:

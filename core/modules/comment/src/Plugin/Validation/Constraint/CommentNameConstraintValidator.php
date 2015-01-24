@@ -7,6 +7,9 @@
 
 namespace Drupal\comment\Plugin\Validation\Constraint;
 
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\user\UserStorageInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\comment\CommentInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -14,7 +17,31 @@ use Symfony\Component\Validator\ConstraintValidator;
 /**
  * Validates the CommentName constraint.
  */
-class CommentNameConstraintValidator extends ConstraintValidator {
+class CommentNameConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
+
+  /**
+   * User storage handler.
+   *
+   * @var \Drupal\user\UserStorageInterface
+   */
+  protected $userStorage;
+
+  /**
+   * Constructs a new CommentNameConstraintValidator.
+   *
+   * @param \Drupal\user\UserStorageInterface $user_storage
+   *   The user storage handler.
+   */
+  public function __construct(UserStorageInterface $user_storage) {
+    $this->userStorage = $user_storage;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static($container->get('entity.manager')->getStorage('user'));
+  }
 
   /**
    * {@inheritdoc}
@@ -37,8 +64,7 @@ class CommentNameConstraintValidator extends ConstraintValidator {
     // Do not allow unauthenticated comment authors to use a name that is
     // taken by a registered user.
     if (isset($author_name) && $author_name !== '' && $comment->getOwnerId() === 0) {
-      // @todo Properly inject dependency https://drupal.org/node/2197029
-      $users = \Drupal::entityManager()->getStorage('user')->loadByProperties(array('name' => $author_name));
+      $users = $this->userStorage->loadByProperties(array('name' => $author_name));
       if (!empty($users)) {
         $this->context->addViolation($constraint->messageNameTaken, array('%name' => $author_name));
       }
