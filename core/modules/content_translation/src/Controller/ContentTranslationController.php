@@ -7,42 +7,16 @@
 
 namespace Drupal\content_translation\Controller;
 
-use Drupal\content_translation\ContentTranslationManagerInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base class for entity translation controllers.
  */
 class ContentTranslationController extends ControllerBase {
-
-  /**
-   * The content translation manager.
-   *
-   * @var \Drupal\content_translation\ContentTranslationManagerInterface
-   */
-  protected $manager;
-
-  /**
-   * Initializes a content translation controller.
-   *
-   * @param \Drupal\content_translation\ContentTranslationManagerInterface
-   *   A content translation manager instance.
-   */
-  public function __construct(ContentTranslationManagerInterface $manager) {
-    $this->manager = $manager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static($container->get('content_translation.manager'));
-  }
 
   /**
    * Populates target values with the source values.
@@ -74,7 +48,6 @@ class ContentTranslationController extends ControllerBase {
     $entity = $route_match->getParameter($entity_type_id);
     $account = $this->currentUser();
     $handler = $this->entityManager()->getHandler($entity_type_id, 'translation');
-    $manager = $this->manager;
 
     $languages = $this->languageManager()->getLanguages();
     $original = $entity->getUntranslated()->language()->getId();
@@ -95,9 +68,8 @@ class ContentTranslationController extends ControllerBase {
       }
 
       // Show source-language column if there are non-original source langcodes.
-      $additional_source_langcodes = array_filter(array_keys($translations), function ($langcode) use ($entity, $original, $manager) {
-        $source = $manager->getTranslationMetadata($entity->getTranslation($langcode))->getSource();
-        return $source != $original && $source != LanguageInterface::LANGCODE_NOT_SPECIFIED;
+      $additional_source_langcodes = array_filter($entity->translation, function ($translation) use ($original) {
+        return !empty($translation['source']) && $translation['source'] != $original;
       });
       $show_source_column = !empty($additional_source_langcodes);
 
@@ -146,9 +118,7 @@ class ContentTranslationController extends ControllerBase {
         $links = &$operations['data']['#links'];
         if (array_key_exists($langcode, $translations)) {
           // Existing translation in the translation set: display status.
-          $translation = $entity->getTranslation($langcode);
-          $metadata = $manager->getTranslationMetadata($translation);
-          $source = $metadata->getSource() ?: LanguageInterface::LANGCODE_NOT_SPECIFIED;
+          $source = isset($entity->translation[$langcode]['source']) ? $entity->translation[$langcode]['source'] : '';
           $is_original = $langcode == $original;
           $label = $entity->getTranslation($langcode)->label();
           $link = isset($links->links[$langcode]['url']) ? $links->links[$langcode] : array('url' => $entity->urlInfo());
@@ -175,12 +145,13 @@ class ContentTranslationController extends ControllerBase {
           if (isset($links['edit'])) {
             $links['edit']['title'] = $this->t('Edit');
           }
+          $translation = $entity->translation[$langcode];
           $status = array('data' => array(
             '#type' => 'inline_template',
             '#template' => '<span class="status">{% if status %}{{ "Published"|t }}{% else %}{{ "Not published"|t }}{% endif %}</span>{% if outdated %} <span class="marker">{{ "outdated"|t }}</span>{% endif %}',
             '#context' => array(
-              'status' => $metadata->isPublished(),
-              'outdated' => $metadata->isOutdated(),
+              'status' => $translation['status'],
+              'outdated' => $translation['outdated'],
             ),
           ));
 

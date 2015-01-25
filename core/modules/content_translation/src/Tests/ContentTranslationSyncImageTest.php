@@ -116,6 +116,10 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
     $default_langcode = $this->langcodes[0];
     $langcode = $this->langcodes[1];
 
+    // Populate the required contextual values.
+    $attributes = \Drupal::request()->attributes;
+    $attributes->set('source_langcode', $default_langcode);
+
     // Populate the test entity with some random initial values.
     $values = array(
       'name' => $this->randomMachineName(),
@@ -183,7 +187,6 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
 
     // Perform synchronization: the translation language is used as source,
     // while the default language is used as target.
-    $this->manager->getTranslationMetadata($translation)->setSource($default_langcode);
     $entity = $this->saveEntity($translation);
     $translation = $entity->getTranslation($langcode);
 
@@ -213,6 +216,8 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
       'title' => $langcode . '_' . $removed_fid . '_' . $this->randomMachineName(),
     );
     $translation->{$this->fieldName}->setValue(array_values($values[$langcode]));
+    // When updating an entity we do not have a source language defined.
+    $attributes->remove('source_langcode');
     $entity = $this->saveEntity($translation);
     $translation = $entity->getTranslation($langcode);
 

@@ -8,16 +8,13 @@
 namespace Drupal\content_translation;
 
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Entity\EntityHandlerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\Element;
-use Drupal\user\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -26,7 +23,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @ingroup entity_api
  */
 class ContentTranslationHandler implements ContentTranslationHandlerInterface, EntityHandlerInterface {
-  use DependencySerializationTrait;
 
   /**
    * The type of the entity being translated.
@@ -50,11 +46,14 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
   protected $languageManager;
 
   /**
-   * The content translation manager.
-   *
-   * @var \Drupal\content_translation\ContentTranslationManagerInterface
+   * {@inheritdoc}
    */
-  protected $manager;
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
+    return new static(
+      $entity_type,
+      $container->get('language_manager')
+    );
+  }
 
   /**
    * Initializes an instance of the content translation controller.
@@ -63,124 +62,11 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    *   The info array of the given entity type.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
-   * @param \Drupal\content_translation\ContentTranslationManagerInterface $manager
-   *   The content translation manager service.
    */
-  public function __construct(EntityTypeInterface $entity_type, LanguageManagerInterface $language_manager, ContentTranslationManagerInterface $manager) {
+  public function __construct(EntityTypeInterface $entity_type, LanguageManagerInterface $language_manager) {
     $this->entityTypeId = $entity_type->id();
     $this->entityType = $entity_type;
     $this->languageManager = $language_manager;
-    $this->manager = $manager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
-    return new static(
-      $entity_type,
-      $container->get('language_manager'),
-      $container->get('content_translation.manager')
-    );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getFieldDefinitions() {
-    $definitions = array();
-
-    $definitions['content_translation_source'] = BaseFieldDefinition::create('language')
-      ->setLabel(t('Translation source'))
-      ->setDescription(t('The source language from which this translation was created.'))
-      ->setDefaultValue(LanguageInterface::LANGCODE_NOT_SPECIFIED)
-      ->setRevisionable(TRUE)
-      ->setTranslatable(TRUE);
-
-    $definitions['content_translation_outdated'] = BaseFieldDefinition::create('boolean')
-      ->setLabel(t('Translation outdated'))
-      ->setDescription(t('A boolean indicating whether this translation needs to be updated.'))
-      ->setDefaultValue(FALSE)
-      ->setRevisionable(TRUE)
-      ->setTranslatable(TRUE);
-
-    if (!$this->hasAuthor()) {
-      $definitions['content_translation_uid'] = BaseFieldDefinition::create('entity_reference')
-        ->setLabel(t('Translation author'))
-        ->setDescription(t('The author of this translation.'))
-        ->setSetting('target_type', 'user')
-        ->setSetting('handler', 'default')
-        ->setRevisionable(TRUE)
-        ->setTranslatable(TRUE);
-    }
-
-    if (!$this->hasPublishedStatus()) {
-      $definitions['content_translation_status'] = BaseFieldDefinition::create('boolean')
-        ->setLabel(t('Translation status'))
-        ->setDescription(t('A boolean indicating whether the translation is visible to non-translators.'))
-        ->setDefaultValue(TRUE)
-        ->setRevisionable(TRUE)
-        ->setTranslatable(TRUE);
-    }
-
-    if (!$this->hasCreatedTime()) {
-      $definitions['content_translation_created'] = BaseFieldDefinition::create('created')
-        ->setLabel(t('Translation created time'))
-        ->setDescription(t('The Unix timestamp when the translation was created.'))
-        ->setRevisionable(TRUE)
-        ->setTranslatable(TRUE);
-    }
-
-    if (!$this->hasChangedTime()) {
-      $definitions['content_translation_changed'] = BaseFieldDefinition::create('changed')
-        ->setLabel(t('Translation changed time'))
-        ->setDescription(t('The Unix timestamp when the translation was most recently saved.'))
-        ->setPropertyConstraints('value', array('EntityChanged' => array()))
-        ->setRevisionable(TRUE)
-        ->setTranslatable(TRUE);
-    }
-
-    return $definitions;
-  }
-
-  /**
-   * Checks whether the entity type supports author natively.
-   *
-   * @return bool
-   *   TRUE if metadata is natively supported, FALSE otherwise.
-   */
-  protected function hasAuthor() {
-    return is_subclass_of($this->entityType->getClass(), '\Drupal\user\EntityOwnerInterface');
-  }
-
-  /**
-   * Checks whether the entity type supports published status natively.
-   *
-   * @return bool
-   *   TRUE if metadata is natively supported, FALSE otherwise.
-   */
-  protected function hasPublishedStatus() {
-    return array_key_exists('status', \Drupal::entityManager()->getLastInstalledFieldStorageDefinitions($this->entityType->id()));
-  }
-
-  /**
-   * Checks whether the entity type supports modification time natively.
-   *
-   * @return bool
-   *   TRUE if metadata is natively supported, FALSE otherwise.
-   */
-  protected function hasChangedTime() {
-    return is_subclass_of($this->entityType->getClass(), '\Drupal\Core\Entity\EntityChangedInterface');
-  }
-
-  /**
-   * Checks whether the entity type supports creation time natively.
-   *
-   * @return bool
-   *   TRUE if metadata is natively supported, FALSE otherwise.
-   */
-  protected function hasCreatedTime() {
-    return array_key_exists('created', \Drupal::entityManager()->getLastInstalledFieldStorageDefinitions($this->entityType->id()));
   }
 
   /**
@@ -188,9 +74,9 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    */
   public function retranslate(EntityInterface $entity, $langcode = NULL) {
     $updated_langcode = !empty($langcode) ? $langcode : $entity->language()->getId();
-    foreach ($entity->getTranslationLanguages() as $langcode => $language) {
-      $this->manager->getTranslationMetadata($entity->getTranslation($langcode))
-        ->setOutdated($langcode != $updated_langcode);
+    $translations = $entity->getTranslationLanguages();
+    foreach ($translations as $langcode => $language) {
+      $entity->translation[$langcode]['outdated'] = $langcode != $updated_langcode;
     }
   }
 
@@ -345,16 +231,20 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
       );
 
       // A new translation is enabled by default.
-      $metadata = $this->manager->getTranslationMetadata($entity);
-      $status = $new_translation || $metadata->isPublished();
+      $status = $new_translation || $entity->translation[$form_langcode]['status'];
       // If there is only one published translation we cannot unpublish it,
       // since there would be nothing left to display.
       $enabled = TRUE;
       if ($status) {
-        $published = 0;
-        foreach ($entity->getTranslationLanguages() as $langcode => $language) {
-          $published += $this->manager->getTranslationMetadata($entity->getTranslation($langcode))
-            ->isPublished();
+        // A new translation is not available in the translation metadata, hence
+        // it should count as one more.
+        $published = $new_translation;
+        // When creating a brand new translation, $entity->translation is not
+        // set.
+        if (!$new_translation) {
+          foreach ($entity->translation as $translation) {
+            $published += $translation['status'];
+          }
         }
         $enabled = $published > 1;
       }
@@ -370,7 +260,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
         '#disabled' => !$enabled,
       );
 
-      $translate = !$new_translation && $metadata->isOutdated();
+      $translate = !$new_translation && $entity->translation[$form_langcode]['outdated'];
       if (!$translate) {
         $form['content_translation']['retranslate'] = array(
           '#type' => 'checkbox',
@@ -394,8 +284,8 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
       if ($new_translation) {
         $name = \Drupal::currentUser()->getUsername();
       }
-      elseif (($account = $metadata->getAuthor()) && $account->id()) {
-        $name = $account->getUsername();
+      elseif ($entity->translation[$form_langcode]['uid']) {
+        $name = user_load($entity->translation[$form_langcode]['uid'])->getUsername();
       }
       $form['content_translation']['name'] = array(
         '#type' => 'textfield',
@@ -406,13 +296,13 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
         '#description' => t('Leave blank for %anonymous.', array('%anonymous' => \Drupal::config('user.settings')->get('anonymous'))),
       );
 
-      $date = $new_translation ? REQUEST_TIME : $metadata->getCreatedTime();
+      $date = $new_translation ? REQUEST_TIME : $entity->translation[$form_langcode]['created'];
       $form['content_translation']['created'] = array(
         '#type' => 'textfield',
         '#title' => t('Authored on'),
         '#maxlength' => 25,
-        '#description' => t('Format: %time. The date format is YYYY-MM-DD and %timezone is the time zone offset from UTC. Leave blank to use the time of form submission.', array('%time' => format_date(REQUEST_TIME, 'custom', 'Y-m-d H:i:s O'), '%timezone' => format_date(REQUEST_TIME, 'custom', 'O'))),
-        '#default_value' => $new_translation || !$date ? '' : format_date($date, 'custom', 'Y-m-d H:i:s O'),
+        '#description' => t('Format: %time. The date format is YYYY-MM-DD and %timezone is the time zone offset from UTC. Leave blank to use the time of form submission.', array('%time' => format_date($date, 'custom', 'Y-m-d H:i:s O'), '%timezone' => format_date($date, 'custom', 'O'))),
+        '#default_value' => $new_translation ? '' : format_date($date, 'custom', 'Y-m-d H:i:s O'),
       );
 
       if (isset($language_widget)) {
@@ -528,27 +418,35 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
   public function entityFormEntityBuild($entity_type, EntityInterface $entity, array $form, FormStateInterface $form_state) {
     $form_object = $form_state->getFormObject();
     $form_langcode = $form_object->getFormLangcode($form_state);
-    $values = &$form_state->getValue('content_translation', array());
 
-    if ($values['name'] == \Drupal::config('user.settings')->get('anonymous')) {
-      $values['name'] = '';
+    if (!isset($entity->translation[$form_langcode])) {
+      $entity->translation[$form_langcode] = array();
     }
+    $values = $form_state->getValue('content_translation', array());
+    $translation = &$entity->translation[$form_langcode];
 
-    $metadata = $this->manager->getTranslationMetadata($entity);
-    $metadata->setAuthor(!empty($values['name']) && ($account = user_load_by_name($values['name'])) ? $account : User::load(0));
-    $metadata->setPublished(!empty($values['status']));
-    $metadata->setCreatedTime(!empty($values['created']) ? strtotime($values['created']) : REQUEST_TIME);
-    $metadata->setChangedTime(REQUEST_TIME);
+    // @todo Use the entity setter when all entities support multilingual
+    // properties.
+    $translation['uid'] = !empty($values['name']) && ($account = user_load_by_name($values['name'])) ? $account->id() : 0;
+    $translation['status'] = !empty($values['status']);
+    $translation['created'] = !empty($values['created']) ? strtotime($values['created']) : REQUEST_TIME;
+    $translation['changed'] = REQUEST_TIME;
 
     $source_langcode = $this->getSourceLangcode($form_state);
     if ($source_langcode) {
-      $metadata->setSource($source_langcode);
+      $translation['source'] = $source_langcode;
     }
 
-    $metadata->setOutdated(!empty($values['outdated']));
+    $translation['outdated'] = !empty($values['outdated']);
     if (!empty($values['retranslate'])) {
       $this->retranslate($entity, $form_langcode);
     }
+
+    // Set contextual information that can be reused during the storage phase.
+    // @todo Remove this once translation metadata are converted to regular
+    //   fields.
+    $attributes = \Drupal::request()->attributes;
+    $attributes->set('source_langcode', $source_langcode);
   }
 
   /**

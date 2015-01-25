@@ -9,7 +9,6 @@ namespace Drupal\comment\Tests;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\content_translation\Tests\ContentTranslationUITest;
-use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
  * Tests the Comment Translation UI.
@@ -109,58 +108,30 @@ class CommentTranslationUITest extends ContentTranslationUITest {
   }
 
   /**
-   * {@inheritdoc}
+   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::assertPublishedStatus().
    */
-  protected function doTestPublishedStatus() {
-    $entity_manager = \Drupal::entityManager();
-    $storage = $entity_manager->getStorage($this->entityTypeId);
+  protected function assertPublishedStatus() {
+    parent::assertPublishedStatus();
+    $entity = entity_load($this->entityTypeId, $this->entityId);
+    $user = $this->drupalCreateUser(array('access comments'));
+    $this->drupalLogin($user);
+    $languages = $this->container->get('language_manager')->getLanguages();
 
-    $storage->resetCache();
-    $entity = $storage->load($this->entityId);
-
-    // Unpublish translations.
+    // Check that simple users cannot see unpublished field translations.
     foreach ($this->langcodes as $index => $langcode) {
+      $translation = $this->getTranslation($entity, $langcode);
+      $value = $this->getValue($translation, 'comment_body', $langcode);
+      $this->drupalGet($entity->urlInfo(), array('language' => $languages[$langcode]));
       if ($index > 0) {
-        $edit = array('status' => 0);
-        $url = $entity->urlInfo('edit-form', array('language' => ConfigurableLanguage::load($langcode)));
-        $this->drupalPostForm($url, $edit, $this->getFormSubmitAction($entity, $langcode));
-        $storage->resetCache();
-        $entity = $storage->load($this->entityId);
-        $this->assertFalse($this->manager->getTranslationMetadata($entity->getTranslation($langcode))->isPublished(), 'The translation has been correctly unpublished.');
+        $this->assertNoRaw($value, 'Unpublished field translation is not shown.');
+      }
+      else {
+        $this->assertRaw($value, 'Published field translation is shown.');
       }
     }
-  }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function doTestAuthoringInfo() {
-    $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
-    $path = $entity->getSystemPath('edit-form');
-    $languages = $this->container->get('language_manager')->getLanguages();
-    $values = array();
-
-    // Post different authoring information for each translation.
-    foreach ($this->langcodes as $langcode) {
-      $user = $this->drupalCreateUser();
-      $values[$langcode] = array(
-        'uid' => $user->id(),
-        'created' => REQUEST_TIME - mt_rand(0, 1000),
-      );
-      $edit = array(
-        'name' => $user->getUsername(),
-        'date[date]' => format_date($values[$langcode]['created'], 'custom', 'Y-m-d'),
-        'date[time]' => format_date($values[$langcode]['created'], 'custom', 'H:i:s'),
-      );
-      $this->drupalPostForm($path, $edit, $this->getFormSubmitAction($entity, $langcode), array('language' => $languages[$langcode]));
-    }
-
-    $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
-    foreach ($this->langcodes as $langcode) {
-      $metadata = $this->manager->getTranslationMetadata($entity->getTranslation($langcode));
-      $this->assertEqual($metadata->getAuthor()->id(), $values[$langcode]['uid'], 'Translation author correctly stored.');
-      $this->assertEqual($metadata->getCreatedTime(), $values[$langcode]['created'], 'Translation date correctly stored.');
-    }
+    // Login as translator again to ensure subsequent tests do not break.
+    $this->drupalLogin($this->translator);
   }
 
   /**

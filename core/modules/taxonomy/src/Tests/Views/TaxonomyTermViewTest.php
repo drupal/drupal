@@ -119,7 +119,6 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
     drupal_static_reset();
     \Drupal::entityManager()->clearCachedDefinitions();
     \Drupal::service('router.builder')->rebuild();
-    \Drupal::service('entity.definition_update_manager')->applyUpdates();
 
     $edit['title[0][value]'] = $translated_title = $this->randomMachineName();
 
@@ -138,7 +137,6 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
     // Uninstall language module and ensure that the language is not part of the
     // query anymore.
     // @see \Drupal\views\Plugin\views\filter\LanguageFilter::query()
-    $node->delete();
     \Drupal::service('module_installer')->uninstall(['content_translation', 'language']);
 
     $view = Views::getView('taxonomy_term');

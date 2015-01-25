@@ -97,8 +97,7 @@ function _content_translation_form_language_content_settings_form_alter(array &$
       if ($fields) {
         foreach ($fields as $field_name => $definition) {
           // Allow to configure only fields supporting multilingual storage.
-          // We skip our own fields as they are always translatable.
-          if (!empty($storage_definitions[$field_name]) && $storage_definitions[$field_name]->isTranslatable() && $storage_definitions[$field_name]->getProvider() != 'content_translation') {
+          if (!empty($storage_definitions[$field_name]) && $storage_definitions[$field_name]->isTranslatable()) {
             $form['settings'][$entity_type_id][$bundle]['fields'][$field_name] = array(
               '#label' => $definition->getLabel(),
               '#type' => 'checkbox',
@@ -339,5 +338,4 @@ function content_translation_form_language_content_settings_submit(array $form, 
   // Ensure entity and menu router information are correctly rebuilt.
   \Drupal::entityManager()->clearCachedDefinitions();
   \Drupal::service('router.builder_indicator')->setRebuildNeeded();
-  \Drupal::service('content_translation.updates_manager')->updateDefinitions($entity_types);
 }

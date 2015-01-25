@@ -176,7 +176,7 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
         $this->drupalGet($url);
         $this->assertFieldByXPath('//input[@name="content_translation[retranslate]"]', FALSE, 'The retranslate flag is now shown.');
         $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
-        $this->assertFalse($this->manager->getTranslationMetadata($entity->getTranslation($added_langcode))->isOutdated(), 'The "outdated" status has been correctly stored.');
+        $this->assertFalse($entity->translation[$added_langcode]['outdated'], 'The "outdated" status has been correctly stored.');
       }
     }
   }
@@ -194,7 +194,7 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
         $edit = array('content_translation[status]' => FALSE);
         $this->drupalPostForm($url, $edit, $this->getFormSubmitAction($entity, $langcode));
         $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
-        $this->assertFalse($this->manager->getTranslationMetadata($entity->getTranslation($langcode))->isPublished(), 'The translation has been correctly unpublished.');
+        $this->assertFalse($entity->translation[$langcode]['status'], 'The translation has been correctly unpublished.');
       }
     }
 
@@ -227,9 +227,8 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
 
     $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
     foreach ($this->langcodes as $langcode) {
-      $metadata = $this->manager->getTranslationMetadata($entity->getTranslation($langcode));
-      $this->assertEqual($metadata->getAuthor()->id(), $values[$langcode]['uid'], 'Translation author correctly stored.');
-      $this->assertEqual($metadata->getCreatedTime(), $values[$langcode]['created'], 'Translation date correctly stored.');
+      $this->assertEqual($entity->translation[$langcode]['uid'], $values[$langcode]['uid'], 'Translation author correctly stored.');
+      $this->assertEqual($entity->translation[$langcode]['created'], $values[$langcode]['created'], 'Translation date correctly stored.');
     }
 
     // Try to post non valid values and check that they are rejected.
@@ -241,9 +240,8 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
     );
     $this->drupalPostForm($entity->urlInfo('edit-form'), $edit, $this->getFormSubmitAction($entity, $langcode));
     $this->assertTrue($this->xpath('//div[contains(@class, "error")]//ul'), 'Invalid values generate a list of form errors.');
-    $metadata = $this->manager->getTranslationMetadata($entity->getTranslation($langcode));
-    $this->assertEqual($metadata->getAuthor()->id(), $values[$langcode]['uid'], 'Translation author correctly kept.');
-    $this->assertEqual($metadata->getCreatedTime(), $values[$langcode]['created'], 'Translation date correctly kept.');
+    $this->assertEqual($entity->translation[$langcode]['uid'], $values[$langcode]['uid'], 'Translation author correctly kept.');
+    $this->assertEqual($entity->translation[$langcode]['created'], $values[$langcode]['created'], 'Translation date correctly kept.');
   }
 
   /**

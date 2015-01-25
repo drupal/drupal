@@ -5,8 +5,80 @@
  * Installation functions for Content Translation module.
  */
 
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
+
+/**
+ * Implements hook_schema().
+ */
+function content_translation_schema() {
+  $schema['content_translation'] = array(
+    'description' => 'Table to track content translations',
+    'fields' => array(
+      'entity_type' => array(
+        'type' => 'varchar',
+        'length' => EntityTypeInterface::ID_MAX_LENGTH,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The entity type this translation relates to',
+      ),
+      'entity_id' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The entity id this translation relates to',
+      ),
+      'langcode' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The target language for this translation.',
+      ),
+      'source' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The source language from which this translation was created.',
+      ),
+      'outdated' => array(
+        'description' => 'A boolean indicating whether this translation needs to be updated.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'uid' => array(
+        'description' => 'The author of this translation.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'status' => array(
+        'description' => 'Boolean indicating whether the translation is visible to non-translators.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 1,
+      ),
+      'created' => array(
+        'description' => 'The Unix timestamp when the translation was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'changed' => array(
+        'description' => 'The Unix timestamp when the translation was most recently saved.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('entity_type', 'entity_id', 'langcode'),
+  );
+  return $schema;
+}
 
 /**
  * Implements hook_install().

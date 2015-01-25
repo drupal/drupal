@@ -24,9 +24,3 @@ services:
   content_translation.manager:
     class: Drupal\content_translation\ContentTranslationManager
     arguments: ['@entity.manager']
-
-  content_translation.updates_manager:
-    class: Drupal\content_translation\ContentTranslationUpdatesManager
-    arguments: ['@entity.manager', '@entity.definition_update_manager']
-    tags:
-      - { name: event_subscriber }

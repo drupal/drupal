@@ -7,9 +7,7 @@
 
 namespace Drupal\content_translation;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\language\Entity\ContentLanguageSettings;
 
 /**
@@ -32,23 +30,6 @@ class ContentTranslationManager implements ContentTranslationManagerInterface {
    */
   public function __construct(EntityManagerInterface $manager) {
     $this->entityManager = $manager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  function getTranslationHandler($entity_type_id) {
-    return $this->entityManager->getHandler($entity_type_id, 'translation');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getTranslationMetadata(EntityInterface $translation) {
-    // We need a new instance of the metadata handler wrapping each translation.
-    $entity_type = $translation->getEntityType();
-    $class = $entity_type->get('content_translation_metadata');
-    return new $class($translation, $this->getTranslationHandler($entity_type->id()));
   }
 
   /**
