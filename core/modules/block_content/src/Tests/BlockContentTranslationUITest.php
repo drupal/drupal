@@ -158,11 +158,9 @@ class BlockContentTranslationUITest extends ContentTranslationUITest {
     $enabled_block_content = $this->createBlockContent();
     $disabled_block_content = $this->createBlockContent(FALSE, $bundle->id());
 
-    // Make sure that only a single row was inserted into the
-    // {content_translation} table.
-    $rows = db_query('SELECT * FROM {content_translation}')->fetchAll();
+    // Make sure that only a single row was inserted into the block table.
+    $rows = db_query('SELECT * FROM {block_content_field_data} WHERE id = :id', array(':id' => $enabled_block_content->id()))->fetchAll();
     $this->assertEqual(1, count($rows));
-    $this->assertEqual($enabled_block_content->id(), reset($rows)->entity_id);
   }
 
 }

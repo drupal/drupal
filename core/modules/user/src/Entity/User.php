@@ -56,7 +56,7 @@ use Drupal\user\UserInterface;
  *     "cancel-form" = "/user/{user}/cancel",
  *     "collection" = "/admin/people",
  *   },
- *   field_ui_base_route = "entity.user.admin_form",
+ *   field_ui_base_route = "entity.user.admin_form"
  * )
  */
 class User extends ContentEntityBase implements UserInterface {

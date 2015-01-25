@@ -113,9 +113,8 @@ class NodeTranslationUITest extends ContentTranslationUITest {
         // The node is created as unpublished thus we switch to the published
         // status first.
         $status = !$index;
-        $this->assertEqual($status, $entity->translation[$langcode]['status'], 'The translation has been correctly unpublished.');
         $translation = $entity->getTranslation($langcode);
-        $this->assertEqual($status, $translation->isPublished(), 'The status of the translation has been correctly saved.');
+        $this->assertEqual($status, $this->manager->getTranslationMetadata($translation)->isPublished(), 'The translation has been correctly unpublished.');
       }
     }
   }
@@ -151,11 +150,10 @@ class NodeTranslationUITest extends ContentTranslationUITest {
 
     $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
     foreach ($this->langcodes as $langcode) {
-      $this->assertEqual($entity->translation[$langcode]['uid'], $values[$langcode]['uid'], 'Translation author correctly stored.');
-      $this->assertEqual($entity->translation[$langcode]['created'], $values[$langcode]['created'], 'Translation date correctly stored.');
       $translation = $entity->getTranslation($langcode);
-      $this->assertEqual($translation->getOwnerId(), $values[$langcode]['uid'], 'Author of translation correctly stored.');
-      $this->assertEqual($translation->getCreatedTime(), $values[$langcode]['created'], 'Date of Translation correctly stored.');
+      $metadata = $this->manager->getTranslationMetadata($translation);
+      $this->assertEqual($metadata->getAuthor()->id(), $values[$langcode]['uid'], 'Translation author correctly stored.');
+      $this->assertEqual($metadata->getCreatedTime(), $values[$langcode]['created'], 'Translation date correctly stored.');
       $this->assertEqual($translation->isSticky(), $values[$langcode]['sticky'], 'Sticky of Translation correctly stored.');
       $this->assertEqual($translation->isPromoted(), $values[$langcode]['promote'], 'Promoted of Translation correctly stored.');
     }
@@ -202,7 +200,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
     ));
 
     // Make sure that nothing was inserted into the {content_translation} table.
-    $rows = db_query('SELECT * FROM {content_translation}')->fetchAll();
+    $rows = db_query('SELECT nid, count(nid) AS count FROM {node_field_data} WHERE type <> :type GROUP BY nid HAVING count >= 2', array(':type' => $this->bundle))->fetchAll();
     $this->assertEqual(0, count($rows));
 
     // Ensure the translation tab is not accessible.
