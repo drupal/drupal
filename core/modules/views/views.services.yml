@@ -75,3 +75,8 @@ services:
       - { name: 'event_subscriber' }
   views.exposed_form_cache:
     class: Drupal\views\ExposedFormCache
+  views.entity_schema_subscriber:
+    class: Drupal\views\EventSubscriber\ViewsEntitySchemaSubscriber
+    arguments: ['@entity.manager']
+    tags:
+      - { name: 'event_subscriber' }

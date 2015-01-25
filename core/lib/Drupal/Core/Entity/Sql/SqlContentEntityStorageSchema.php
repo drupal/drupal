@@ -130,8 +130,28 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       $entity_type->getStorageClass() != $original->getStorageClass() ||
       $entity_type->isRevisionable() != $original->isRevisionable() ||
       $entity_type->isTranslatable() != $original->isTranslatable() ||
+      $this->hasSharedTableNameChanges($entity_type, $original) ||
       // Detect changes in key or index definitions.
       $this->getEntitySchemaData($entity_type, $this->getEntitySchema($entity_type, TRUE)) != $this->loadEntitySchemaData($original);
+  }
+
+  /**
+   * Detects whether any table name got renamed in an entity type update.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The new entity type.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $original
+   *   The origin entity type.
+   *
+   * @return bool
+   *   Returns TRUE if there have been changes.
+   */
+  protected function hasSharedTableNameChanges(EntityTypeInterface $entity_type, EntityTypeInterface $original) {
+    return
+      $entity_type->getBaseTable() != $original->getBaseTable() ||
+      $entity_type->getDataTable() != $original->getDataTable() ||
+      $entity_type->getRevisionTable() != $original->getRevisionTable() ||
+      $entity_type->getRevisionDataTable() != $original->getRevisionDataTable();
   }
 
   /**
