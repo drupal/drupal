@@ -34,7 +34,7 @@ class HtmlCommand extends InsertCommand {
       'command' => 'insert',
       'method' => 'html',
       'selector' => $this->selector,
-      'data' => $this->html,
+      'data' => $this->getRenderedContent(),
       'settings' => $this->settings,
     );
   }

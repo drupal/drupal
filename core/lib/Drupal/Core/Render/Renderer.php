@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Render;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheContexts;
 use Drupal\Core\Cache\CacheFactoryInterface;
@@ -580,6 +581,20 @@ class Renderer implements RendererInterface {
     $meta_b = BubbleableMetadata::createFromRenderArray($b);
     $meta_a->merge($meta_b)->applyTo($a);
     return $a;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function mergeAttachments(array $a, array $b) {
+    // If both #attached arrays contain drupalSettings, then merge them
+    // correctly; adding the same settings multiple times needs to behave
+    // idempotently.
+    if (!empty($a['drupalSettings']) && !empty($b['drupalSettings'])) {
+      $a['drupalSettings'] = NestedArray::mergeDeepArray([$a['drupalSettings'], $b['drupalSettings']], TRUE);
+      unset($b['drupalSettings']);
+    }
+    return NestedArray::mergeDeep($a, $b);
   }
 
 }

@@ -8,6 +8,7 @@
 namespace Drupal\Core\Ajax;
 
 use Drupal\Core\Asset\AttachedAssets;
+use Drupal\Core\Render\Renderer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -70,6 +71,15 @@ class AjaxResponse extends JsonResponse {
     }
     else {
       $this->commands[] = $command->render();
+    }
+    if ($command instanceof CommandWithAttachedAssetsInterface) {
+      $assets = $command->getAttachedAssets();
+      $attachments = [
+        'library' => $assets->getLibraries(),
+        'drupalSettings' => $assets->getSettings(),
+      ];
+      $attachments = Renderer::mergeAttachments($this->attachments, $attachments);
+      $this->setAttachments($attachments);
     }
 
     return $this;

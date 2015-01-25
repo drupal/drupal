@@ -34,7 +34,7 @@ class AfterCommand extends InsertCommand {
       'command' => 'insert',
       'method' => 'after',
       'selector' => $this->selector,
-      'data' => $this->html,
+      'data' => $this->getRenderedContent(),
       'settings' => $this->settings,
     );
   }

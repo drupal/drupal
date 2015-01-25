@@ -35,7 +35,7 @@ class ReplaceCommand extends InsertCommand {
       'command' => 'insert',
       'method' => 'replaceWith',
       'selector' => $this->selector,
-      'data' => $this->html,
+      'data' => $this->getRenderedContent(),
       'settings' => $this->settings,
     );
   }

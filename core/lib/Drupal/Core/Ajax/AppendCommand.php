@@ -34,7 +34,7 @@ class AppendCommand extends InsertCommand {
       'command' => 'insert',
       'method' => 'append',
       'selector' => $this->selector,
-      'data' => $this->html,
+      'data' => $this->getRenderedContent(),
       'settings' => $this->settings,
     );
   }

@@ -20,6 +20,7 @@ use Drupal\Component\Utility\SortArray;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Tags;
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Asset\AttachedAssets;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Site\Settings;
@@ -32,6 +33,7 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Routing\GeneratorNotInitializedException;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Renderer;
 use Drupal\Core\Session\AnonymousUserSession;
 
 /**
@@ -852,7 +854,7 @@ function drupal_js_defaults($data = NULL) {
  * Merges two #attached arrays.
  *
  * The values under the 'drupalSettings' key are merged in a special way, to
- * match the behavior of
+ * match the behavior of:
  *
  * @code
  *   jQuery.extend(true, {}, $settings_items[0], $settings_items[1], ...)
@@ -889,15 +891,12 @@ function drupal_js_defaults($data = NULL) {
  *
  * @return array
  *   The merged #attached array.
+ *
+ * @deprecated To be removed in Drupal 8.0.x. Use
+ *   \Drupal\Core\Render\Renderer::mergeAttachments() instead.
  */
 function drupal_merge_attached(array $a, array $b) {
-  // If both #attached arrays contain drupalSettings, then merge them correctly;
-  // adding the same settings multiple times needs to behave idempotently.
-  if (!empty($a['drupalSettings']) && !empty($b['drupalSettings'])) {
-    $a['drupalSettings'] = NestedArray::mergeDeepArray([$a['drupalSettings'], $b['drupalSettings']], TRUE);
-    unset($b['drupalSettings']);
-  }
-  return NestedArray::mergeDeep($a, $b);
+  return Renderer::mergeAttachments($a, $b);
 }
 
 /**

@@ -226,11 +226,11 @@ class EditorImageDialog extends FormBase {
 
     if ($form_state->getErrors()) {
       unset($form['#prefix'], $form['#suffix']);
-      $status_messages = array('#theme' => 'status_messages');
-      $output = drupal_render($form);
-      $response->setAttachments($form['#attached']);
-      $output = '<div>' . drupal_render($status_messages) . $output . '</div>';
-      $response->addCommand(new HtmlCommand('#editor-image-dialog-form', $output));
+      $form['status_messages'] = [
+        '#theme' => 'status_messages',
+        '#weight' => -10,
+      ];
+      $response->addCommand(new HtmlCommand('#editor-image-dialog-form', $form));
     }
     else {
       $response->addCommand(new EditorDialogSave($form_state->getValues()));

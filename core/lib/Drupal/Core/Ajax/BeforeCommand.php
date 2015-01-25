@@ -34,7 +34,7 @@ class BeforeCommand extends InsertCommand {
       'command' => 'insert',
       'method' => 'before',
       'selector' => $this->selector,
-      'data' => $this->html,
+      'data' => $this->getRenderedContent(),
       'settings' => $this->settings,
     );
   }

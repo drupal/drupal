@@ -21,7 +21,9 @@ use Drupal\Core\Ajax\CommandInterface;
  *
  * @ingroup ajax
  */
-class InsertCommand implements CommandInterface {
+class InsertCommand implements CommandInterface, CommandWithAttachedAssetsInterface {
+
+  use CommandWithAttachedAssetsTrait;
 
   /**
    * A CSS selector string.
@@ -34,11 +36,13 @@ class InsertCommand implements CommandInterface {
   protected $selector;
 
   /**
-   * The HTML content that will replace the matched element(s).
+   * The content for the matched element(s).
    *
-   * @var string
+   * Either a render array or an HTML string.
+   *
+   * @var string|array
    */
-  protected $html;
+  protected $content;
 
   /**
    * A settings array to be passed to any any attached JavaScript behavior.
@@ -52,14 +56,15 @@ class InsertCommand implements CommandInterface {
    *
    * @param string $selector
    *   A CSS selector.
-   * @param string $html
-   *   String of HTML that will replace the matched element(s).
+   * @param string|array $content
+   *   The content that will be inserted in the matched element(s), either a
+   *   render array or an HTML string.
    * @param array $settings
    *   An array of JavaScript settings to be passed to any attached behaviors.
    */
-  public function __construct($selector, $html, array $settings = NULL) {
+  public function __construct($selector, $content, array $settings = NULL) {
     $this->selector = $selector;
-    $this->html = $html;
+    $this->content = $content;
     $this->settings = $settings;
   }
 
@@ -72,7 +77,7 @@ class InsertCommand implements CommandInterface {
       'command' => 'insert',
       'method' => NULL,
       'selector' => $this->selector,
-      'data' => $this->html,
+      'data' => $this->getRenderedContent(),
       'settings' => $this->settings,
     );
   }

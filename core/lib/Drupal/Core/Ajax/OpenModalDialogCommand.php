@@ -25,8 +25,9 @@ class OpenModalDialogCommand extends OpenDialogCommand {
    *
    * @param string $title
    *   The title of the dialog.
-   * @param string $html
-   *   HTML that will be placed in the dialog.
+   * @param string|array $content
+   *   The content that will be placed in the dialog, either a render array
+   *   or an HTML string.
    * @param array $dialog_options
    *   (optional) Settings to be passed to the dialog implementation. Any
    *   jQuery UI option can be used. See http://api.jqueryui.com/dialog.
@@ -35,8 +36,8 @@ class OpenModalDialogCommand extends OpenDialogCommand {
    *   on the content of the dialog. If left empty, the settings will be
    *   populated automatically from the current request.
    */
-  public function __construct($title, $html, array $dialog_options = array(), $settings = NULL) {
+  public function __construct($title, $content, array $dialog_options = array(), $settings = NULL) {
     $dialog_options['modal'] = TRUE;
-    parent::__construct('#drupal-modal', $title, $html, $dialog_options, $settings);
+    parent::__construct('#drupal-modal', $title, $content, $dialog_options, $settings);
   }
 }

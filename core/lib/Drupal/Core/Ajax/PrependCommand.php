@@ -34,7 +34,7 @@ class PrependCommand extends InsertCommand {
       'command' => 'insert',
       'method' => 'prepend',
       'selector' => $this->selector,
-      'data' => $this->html,
+      'data' => $this->getRenderedContent(),
       'settings' => $this->settings,
     );
   }
