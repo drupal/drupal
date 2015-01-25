@@ -6,6 +6,7 @@ global-styling:
       css/base/typography.css: {}
       css/layout.css: {}
       css/components/admin.css: {}
+      css/components/block.css: {}
       css/components/book.css: {}
       css/components/breadcrumb.css: {}
       css/components/captions.css: {}
@@ -20,7 +21,7 @@ global-styling:
       css/components/forum.css: {}
       css/components/header.css: {}
       css/components/help.css: {}
-      css/components/list.css: {}
+      css/components/item-list.css: {}
       css/components/messages.css: {}
       css/components/node-preview.css: {}
       css/components/pager.css: {}

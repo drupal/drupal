@@ -1,0 +1,12 @@
+/**
+ * @file
+ * Visual styles for Bartik's item list.
+ */
+
+.item-list ul li {
+  margin: 0;
+  padding: 0.2em 0.5em 0 0; /* LTR */
+}
+[dir="rtl"] .item-list ul li {
+  padding: 0.2em 0 0 0.5em;
+}
