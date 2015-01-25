@@ -86,6 +86,10 @@ class LibraryDiscoveryParser {
       }
       $library += array('dependencies' => array(), 'js' => array(), 'css' => array());
 
+      if (isset($library['header']) && !is_bool($library['header'])) {
+        throw new \LogicException(sprintf("The 'header' key in the library definition '%s' in extension '%s' is invalid: it must be a boolean.", $id, $extension));
+      }
+
       if (isset($library['version'])) {
         // @todo Retrieve version of a non-core extension.
         if ($library['version'] === 'VERSION') {

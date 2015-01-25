@@ -214,8 +214,23 @@ class AssetResolver implements AssetResolverInterface {
    */
   public function getJsAssets(AttachedAssetsInterface $assets, $optimize) {
     $javascript = [];
+    $libraries_to_load = $this->getLibrariesToLoad($assets);
 
-    foreach ($this->getLibrariesToLoad($assets) as $library) {
+    // Collect all libraries that contain JS assets and are in the header.
+    $header_js_libraries = [];
+    foreach ($libraries_to_load as $library) {
+      list($extension, $name) = explode('/', $library, 2);
+      $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
+      if (isset($definition['js']) && !empty($definition['header'])) {
+        $header_js_libraries[] = $library;
+      }
+    }
+    // The current list of header JS libraries are only those libraries that are
+    // in the header, but their dependencies must also be loaded for them to
+    // function correctly, so update the list with those.
+    $header_js_libraries = $this->libraryDependencyResolver->getLibrariesWithDependencies($header_js_libraries);
+
+    foreach ($libraries_to_load as $library) {
       list($extension, $name) = explode('/', $library, 2);
       $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
       if (isset($definition['js'])) {
@@ -225,13 +240,16 @@ class AssetResolver implements AssetResolverInterface {
             'group' => JS_DEFAULT,
             'every_page' => FALSE,
             'weight' => 0,
-            'scope' => 'header',
             'cache' => TRUE,
             'preprocess' => TRUE,
             'attributes' => array(),
             'version' => NULL,
             'browsers' => array(),
           );
+
+          // 'scope' is a calculated option, based on which libraries are marked
+          // to be loaded from the header (see above).
+          $options['scope'] = in_array($library, $header_js_libraries) ? 'header' : 'footer';
 
           // Preprocess can only be set if caching is enabled and no attributes
           // are set.
@@ -267,8 +285,6 @@ class AssetResolver implements AssetResolverInterface {
       }
     }
 
-    // @todo Refactor this when the default scope is changed to 'footer' in
-    //    https://www.drupal.org/node/784626
     // If the core/drupalSettings library is being loaded or is already loaded,
     // get the JavaScript settings assets, and convert them into a single
     // "regular" JavaScript asset.
@@ -278,7 +294,6 @@ class AssetResolver implements AssetResolverInterface {
     if ($settings_needed && $settings_have_changed) {
       $settings = $this->getJsSettingsAssets($assets);
       if (!empty($settings)) {
-        // Prepend to the list of JavaScript assets, to render it first.
         $settings_as_inline_javascript = [
           'type' => 'setting',
           'group' => JS_SETTING,
@@ -287,7 +302,15 @@ class AssetResolver implements AssetResolverInterface {
           'browsers' => array(),
           'data' => $settings,
         ];
-        $js_assets_header = ['drupalSettings' => $settings_as_inline_javascript] + $js_assets_header;
+        $settings_js_asset = ['drupalSettings' => $settings_as_inline_javascript];
+        // Prepend to the list of JS assets, to render it first. Preferably in
+        // the footer, but in the header if necessary.
+        if (in_array('core/drupalSettings', $header_js_libraries)) {
+          $js_assets_header = $settings_js_asset + $js_assets_header;
+        }
+        else {
+          $js_assets_footer = $settings_js_asset + $js_assets_footer;
+        }
       }
     }
 

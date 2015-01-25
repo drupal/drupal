@@ -36,9 +36,12 @@ js-attributes:
         foo: bar
         defer: true
 
-js-footer:
+js-header:
+  header: true
   js:
-    footer.js: { scope: footer }
+    header.js: {}
+  dependencies:
+    - core/drupal
 
 # Library to test setting cache = FALSE, to prevent aggregation.
 no-cache:

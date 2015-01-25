@@ -34,7 +34,7 @@ drupal.editor.dialog:
 quickedit.inPlaceEditor.formattedText:
   version: VERSION
   js:
-    js/editor.formattedTextEditor.js: { scope: footer, attributes: { defer: true } }
+    js/editor.formattedTextEditor.js: { attributes: { defer: true } }
   dependencies:
     - quickedit/quickedit
     - editor/drupal.editor

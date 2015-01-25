@@ -11,6 +11,6 @@ api:
 mark-as-read:
   version: VERSION
   js:
-    js/mark-as-read.js: { scope: footer }
+    js/mark-as-read.js: {}
   dependencies:
     - history/api

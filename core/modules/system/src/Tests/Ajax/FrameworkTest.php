@@ -47,7 +47,8 @@ class FrameworkTest extends AjaxTestBase {
     $assets = AttachedAssets::createFromRenderArray($build);
     $css_render_array = $css_collection_renderer->render($asset_resolver->getCssAssets($assets, FALSE));
     $expected_commands[1] = new AddCssCommand($renderer->render($css_render_array));
-    $build['#attached']['library'][] = 'ajax_test/order-js-command';
+    $build['#attached']['library'][] = 'ajax_test/order-header-js-command';
+    $build['#attached']['library'][] = 'ajax_test/order-footer-js-command';
     $assets = AttachedAssets::createFromRenderArray($build);
     list($js_assets_header, $js_assets_footer) = $asset_resolver->getJsAssets($assets, FALSE);
     $js_header_render_array = $js_collection_renderer->render($js_assets_header);
@@ -126,7 +127,7 @@ class FrameworkTest extends AjaxTestBase {
 
     $assets->setLibraries([$expected['library_2']])
       ->setAlreadyLoadedLibraries($original_libraries);
-    $js_assets = $asset_resolver->getJsAssets($assets, FALSE)[0];
+    $js_assets = $asset_resolver->getJsAssets($assets, FALSE)[1];
     unset($js_assets['drupalSettings']);
     $js_render_array = $js_collection_renderer->render($js_assets);
     $expected_js_html = $renderer->render($js_render_array);

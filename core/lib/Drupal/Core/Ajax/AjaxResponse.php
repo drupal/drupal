@@ -135,8 +135,15 @@ class AjaxResponse extends JsonResponse {
 
     // Render the HTML to load these files, and add AJAX commands to insert this
     // HTML in the page. Settings are handled separately, afterwards.
-    $settings = (isset($js_assets_header['drupalSettings'])) ? $js_assets_header['drupalSettings']['data'] : [];
-    unset($js_assets_header['drupalSettings']);
+    $settings = [];
+    if (isset($js_assets_header['drupalSettings'])) {
+      $settings = $js_assets_header['drupalSettings']['data'];
+      unset($js_assets_header['drupalSettings']);
+    }
+    if (isset($js_assets_footer['drupalSettings'])) {
+      $settings = $js_assets_footer['drupalSettings']['data'];
+      unset($js_assets_footer['drupalSettings']);
+    }
 
     // Prepend commands to add the assets, preserving their relative order.
     $resource_commands = array();

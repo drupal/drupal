@@ -2,24 +2,24 @@ quickedit:
   version: VERSION
   js:
     # Core.
-    js/quickedit.js: { scope: footer }
-    js/util.js: { scope: footer }
+    js/quickedit.js: {}
+    js/util.js: {}
     # Models.
-    js/models/BaseModel.js: { scope: footer }
-    js/models/AppModel.js: { scope: footer }
-    js/models/EntityModel.js: { scope: footer }
-    js/models/FieldModel.js: { scope: footer }
-    js/models/EditorModel.js: { scope: footer }
+    js/models/BaseModel.js: {}
+    js/models/AppModel.js: {}
+    js/models/EntityModel.js: {}
+    js/models/FieldModel.js: {}
+    js/models/EditorModel.js: {}
     # Views.
-    js/views/AppView.js: { scope: footer }
-    js/views/FieldDecorationView.js: { scope: footer }
-    js/views/EntityDecorationView.js: { scope: footer }
-    js/views/EntityToolbarView.js: { scope: footer }
-    js/views/ContextualLinkView.js: { scope: footer }
-    js/views/FieldToolbarView.js: { scope: footer }
-    js/views/EditorView.js: { scope: footer }
+    js/views/AppView.js: {}
+    js/views/FieldDecorationView.js: {}
+    js/views/EntityDecorationView.js: {}
+    js/views/EntityToolbarView.js: {}
+    js/views/ContextualLinkView.js: {}
+    js/views/FieldToolbarView.js: {}
+    js/views/EditorView.js: {}
     # Other.
-    js/theme.js: { scope: footer }
+    js/theme.js: {}
   css:
     component:
       css/quickedit.module.css: {}
@@ -44,13 +44,13 @@ quickedit:
 quickedit.inPlaceEditor.form:
   version: VERSION
   js:
-    js/editors/formEditor.js: { scope: footer }
+    js/editors/formEditor.js: {}
   dependencies:
     - quickedit/quickedit
 
 quickedit.inPlaceEditor.plainText:
   version: VERSION
   js:
-    js/editors/plainTextEditor.js: { scope: footer }
+    js/editors/plainTextEditor.js: {}
   dependencies:
     - quickedit/quickedit

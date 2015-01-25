@@ -48,6 +48,7 @@ drupal:
     misc/drupal.js: { weight: -18 }
   dependencies:
     - core/domready
+    - core/drupalSettings
 
 drupalSettings:
   version: VERSION
@@ -308,6 +309,8 @@ drupal.vertical-tabs:
     - core/drupal.form
 
 html5shiv:
+  # Block the page from being loaded until html5shiv is initialized.
+  header: true
   remote: https://github.com/aFarkas/html5shiv
   version: 3.7.2
   license:
@@ -807,6 +810,8 @@ matchmedia.addListener:
     - core/matchmedia
 
 modernizr:
+  # Block the page from being loaded until Modernizr is initialized.
+  header: true
   remote: https://github.com/Modernizr/Modernizr
   license:
     name: MIT
@@ -814,7 +819,7 @@ modernizr:
     gpl-compatible: true
   version: v2.8.3
   js:
-    assets/vendor/modernizr/modernizr.min.js: { every_page: true, preprocess: 0, scope: header, weight: -21, minified: true }
+    assets/vendor/modernizr/modernizr.min.js: { every_page: true, preprocess: 0, weight: -21, minified: true }
 
 normalize:
   remote: https://github.com/necolas/normalize.css

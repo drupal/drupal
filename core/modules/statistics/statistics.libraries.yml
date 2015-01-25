@@ -1,7 +1,7 @@
 drupal.statistics:
   version: VERSION
   js:
-    statistics.js: { scope: footer }
+    statistics.js: {}
   dependencies:
     - core/jquery
     - core/drupal
