@@ -69,6 +69,7 @@ trait TaxonomyTranslationTestTrait {
     drupal_static_reset();
     \Drupal::entityManager()->clearCachedDefinitions();
     \Drupal::service('router.builder')->rebuild();
+    \Drupal::service('entity.definition_update_manager')->applyUpdates();
   }
 
   /**
@@ -80,7 +81,6 @@ trait TaxonomyTranslationTestTrait {
       'entity_type' => 'node',
       'type' => 'taxonomy_term_reference',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
-      'translatable' => FALSE,
       'settings' => array(
         'allowed_values' => array(
           array(
@@ -95,6 +95,7 @@ trait TaxonomyTranslationTestTrait {
       'field_name' => $this->termFieldName,
       'bundle' => 'article',
       'entity_type' => 'node',
+      'translatable' => FALSE,
     ));
     $field->save();
     entity_get_form_display('node', 'article', 'default')

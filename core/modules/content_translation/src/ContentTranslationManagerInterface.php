@@ -7,6 +7,9 @@
 
 namespace Drupal\content_translation;
 
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+
 /**
  * Provides an interface for common functionality for content translation.
  */
@@ -30,6 +33,28 @@ interface ContentTranslationManagerInterface {
    *   TRUE if an entity type is supported, FALSE otherwise.
    */
   public function isSupported($entity_type_id);
+
+  /**
+   * Returns an instance of the Content translation handler.
+   *
+   * @param string $entity_type_id
+   *   The type of the entity being translated.
+   *
+   * @return \Drupal\content_translation\ContentTranslationHandlerInterface
+   *   An instance of the content translation handler.
+   */
+  public function getTranslationHandler($entity_type_id);
+
+  /**
+   * Returns an instance of the Content translation metadata.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $translation
+   *   The entity translation whose metadata needs to be retrieved.
+   *
+   * @return \Drupal\content_translation\ContentTranslationMetadataWrapperInterface
+   *   An instance of the content translation metadata.
+   */
+  public function getTranslationMetadata(EntityInterface $translation);
 
   /**
    * Sets the value for translatability of the given entity type bundle.

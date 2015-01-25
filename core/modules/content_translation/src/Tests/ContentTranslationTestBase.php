@@ -79,6 +79,11 @@ abstract class ContentTranslationTestBase extends WebTestBase {
    */
   protected $controller;
 
+  /**
+   * @var \Drupal\content_translation\ContentTranslationManagerInterface
+   */
+  protected $manager;
+
   protected function setUp() {
     parent::setUp();
 
@@ -88,7 +93,8 @@ abstract class ContentTranslationTestBase extends WebTestBase {
     $this->setupUsers();
     $this->setupTestFields();
 
-    $this->controller = \Drupal::entityManager()->getHandler($this->entityTypeId, 'translation');
+    $this->manager = $this->container->get('content_translation.manager');
+    $this->controller = $this->manager->getTranslationHandler($this->entityTypeId);
 
     // Rebuild the container so that the new languages are picked up by services
     // that hold a list of languages.
@@ -167,6 +173,7 @@ abstract class ContentTranslationTestBase extends WebTestBase {
     drupal_static_reset();
     \Drupal::entityManager()->clearCachedDefinitions();
     \Drupal::service('router.builder')->rebuild();
+    \Drupal::service('entity.definition_update_manager')->applyUpdates();
   }
 
   /**

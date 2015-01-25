@@ -95,9 +95,9 @@ class TermTranslationUITest extends ContentTranslationUITest {
 
     // Make sure that no row was inserted for taxonomy vocabularies which do
     // not have translations enabled.
-    $rows = db_query('SELECT * FROM {content_translation}')->fetchAll();
+    $rows = db_query('SELECT tid, count(tid) AS count FROM {taxonomy_term_field_data} WHERE vid <> :vid GROUP BY tid', array(':vid' => $this->bundle))->fetchAll();
     foreach ($rows as $row) {
-      $this->assertEqual('taxonomy_term', $row->entity_type, 'Row contains a taxonomy term.');
+      $this->assertTrue($row->count < 2, 'Term does not have translations.');
     }
   }
 

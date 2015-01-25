@@ -19,6 +19,13 @@ use Drupal\Core\Form\FormStateInterface;
 interface ContentTranslationHandlerInterface {
 
   /**
+   * Returns a set of field definitions to be used to store metadata items.
+   *
+   * @return \Drupal\Core\Field\FieldDefinitionInterface[]
+   */
+  public function getFieldDefinitions();
+
+  /**
    * Checks if the user can perform the given operation on translations of the
    * wrapped entity.
    *

@@ -176,6 +176,7 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends WebTestBase {
     drupal_static_reset();
     \Drupal::entityManager()->clearCachedDefinitions();
     \Drupal::service('router.builder')->rebuild();
+    \Drupal::service('entity.definition_update_manager')->applyUpdates();
   }
 
   /**
