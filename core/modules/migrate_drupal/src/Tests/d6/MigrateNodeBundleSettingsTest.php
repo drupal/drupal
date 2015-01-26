@@ -44,6 +44,9 @@ class MigrateNodeBundleSettingsTest extends MigrateDrupalTestBase {
     entity_create('node_type', array('type' => 'event'))->save();
     entity_create('node_type', array('type' => 'book'))->save();
 
+    // Create a config entity that already exists.
+    entity_create('base_field_override', array('field_name' => 'promote', 'entity_type' => 'node', 'bundle' => 'page',))->save();
+
     $id_mappings = array(
       'd6_node_type' => array(
         array(array('test_page'), array('test_page')),
