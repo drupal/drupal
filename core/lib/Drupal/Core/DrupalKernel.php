@@ -530,12 +530,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
         }
       }
     }
-    if ($container_yamls = Settings::get('container_yamls')) {
-      $this->serviceYamls['site'] = $container_yamls;
-    }
-    $site_services_yml = $this->getSitePath() . '/services.yml';
-    if (file_exists($site_services_yml) && is_readable($site_services_yml)) {
-      $this->serviceYamls['site'][] = $site_services_yml;
+    if (!$this->addServiceFiles(Settings::get('container_yamls'))) {
+      throw new \Exception('The container_yamls setting is missing from settings.php');
     }
   }
 
@@ -1294,5 +1290,22 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     }
 
     return TRUE;
+  }
+
+  /**
+   * Add service files.
+   *
+   * @param $service_yamls
+   *   A list of service files.
+   *
+   * @return bool
+   *   TRUE if the list was an array, FALSE otherwise.
+   */
+  protected function addServiceFiles($service_yamls) {
+    if (is_array($service_yamls)) {
+      $this->serviceYamls['site'] = array_filter($service_yamls, 'file_exists');
+      return TRUE;
+    }
+    return FALSE;
   }
 }

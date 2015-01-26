@@ -54,6 +54,7 @@ class DrupalKernelTest extends KernelTestBase {
     // Manually create kernel to avoid replacing settings.
     $class_loader = require DRUPAL_ROOT . '/core/vendor/autoload.php';
     $kernel = DrupalKernel::createFromRequest($request, $class_loader, 'testing');
+    $this->settingsSet('container_yamls', []);
     $this->settingsSet('hash_salt', $this->databasePrefix);
     if (isset($modules_enabled)) {
       $kernel->updateModules($modules_enabled);
@@ -169,6 +170,7 @@ class DrupalKernelTest extends KernelTestBase {
 
     foreach ($environments as $environment) {
       $kernel = DrupalKernel::createFromRequest($request, $class_loader, $environment);
+      $this->settingsSet('container_yamls', []);
       $this->settingsSet('hash_salt', $this->databasePrefix);
       $kernel->boot();
     }

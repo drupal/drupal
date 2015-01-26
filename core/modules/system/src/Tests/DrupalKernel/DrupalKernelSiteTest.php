@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\DrupalKernel;
 
+use Drupal\Core\Site\Settings;
 use Drupal\simpletest\KernelTestBase;
 
 /**
@@ -20,6 +21,9 @@ class DrupalKernelSiteTest extends KernelTestBase {
    * Tests services.yml in site directory.
    */
   public function testServicesYml() {
+    $container_yamls = Settings::get('container_yamls');
+    $container_yamls[] = $this->siteDirectory . '/services.yml';
+    $this->settingsSet('container_yamls', $container_yamls);
     $this->assertFalse($this->container->has('site.service.yml'));
     // A service provider class always has precedence over services.yml files.
     // KernelTestBase::buildContainer() swaps out many services with in-memory

@@ -135,11 +135,16 @@ abstract class KernelTestBase extends TestBase {
   protected function setUp() {
     $this->keyValueFactory = new KeyValueMemoryFactory();
 
+    // Back up settings from TestBase::prepareEnvironment().
+    $settings = Settings::getAll();
+
     // Allow for test-specific overrides.
     $settings_services_file = DRUPAL_ROOT . '/' . $this->originalSite . '/testing.services.yml';
     if (file_exists($settings_services_file)) {
       // Copy the testing-specific service overrides in place.
-      copy($settings_services_file, DRUPAL_ROOT . '/' . $this->siteDirectory . '/services.yml');
+      $testing_services_file = DRUPAL_ROOT . '/' . $this->siteDirectory . '/services.yml';
+      copy($settings_services_file, $testing_services_file);
+      $this->settingsSet('container_yamls', [$testing_services_file]);
     }
 
     // Create and set new configuration directories.
@@ -149,8 +154,6 @@ abstract class KernelTestBase extends TestBase {
     // @todo Remove the indirection; implement ServiceProviderInterface instead.
     $GLOBALS['conf']['container_service_providers']['TestServiceProvider'] = 'Drupal\simpletest\TestServiceProvider';
 
-    // Back up settings from TestBase::prepareEnvironment().
-    $settings = Settings::getAll();
     // Bootstrap a new kernel. Don't use createFromRequest so we don't mess with settings.
     $class_loader = require DRUPAL_ROOT . '/core/vendor/autoload.php';
     $this->kernel = new DrupalKernel('testing', $class_loader, FALSE);

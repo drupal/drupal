@@ -1210,6 +1210,7 @@ abstract class TestBase {
     new Settings(array(
       // For performance, simply use the database prefix as hash salt.
       'hash_salt' => $this->databasePrefix,
+      'container_yamls' => [],
     ));
 
     drupal_set_time_limit($this->timeLimit);
