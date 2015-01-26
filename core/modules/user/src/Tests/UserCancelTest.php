@@ -65,6 +65,27 @@ class UserCancelTest extends WebTestBase {
   }
 
   /**
+   * Test ability to change the permission for canceling users.
+   */
+  public function testUserCancelChangePermission() {
+    \Drupal::service('module_installer')->install(array('user_form_test'));
+    $this->config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
+
+    // Create a regular user.
+    $account = $this->drupalCreateUser(array());
+
+    $admin_user = $this->drupalCreateUser(array('cancel other accounts'));
+    $this->drupalLogin($admin_user);
+
+    // Delete regular user.
+    $this->drupalPostForm('user_form_test_cancel/' . $account->id(), array(), t('Cancel account'));
+
+    // Confirm deletion.
+    $this->assertRaw(t('%name has been deleted.', array('%name' => $account->getUsername())), 'User deleted.');
+    $this->assertFalse(user_load($account->id()), 'User is not found in the database.');
+  }
+
+  /**
    * Tests that user account for uid 1 cannot be cancelled.
    *
    * This should never be possible, or the site owner would become unable to

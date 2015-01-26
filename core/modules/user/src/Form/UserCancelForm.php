@@ -110,6 +110,13 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
     // Always provide entity id in the same form key as in the entity edit form.
     $form['uid'] = array('#type' => 'value', '#value' => $this->entity->id());
 
+    // Store the user permissions so that it can be altered in hook_form_alter()
+    // if desired.
+    $form['access'] = array(
+      '#type' => 'value',
+      '#value' => $user->hasPermission('administer users'),
+    );
+
     $form = parent::buildForm($form, $form_state);
 
     return $form;
@@ -122,7 +129,7 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
     // Cancel account immediately, if the current user has administrative
     // privileges, no confirmation mail shall be sent, and the user does not
     // attempt to cancel the own account.
-    if ($this->currentUser()->hasPermission('administer users') && $form_state->isValueEmpty('user_cancel_confirm') && $this->entity->id() != $this->currentUser()->id()) {
+    if (!$form_state->isValueEmpty('access') && $form_state->isValueEmpty('user_cancel_confirm') && $this->entity->id() != $this->currentUser()->id()) {
       user_cancel($form_state->getValues(), $this->entity->id(), $form_state->getValue('user_cancel_method'));
 
       $form_state->setRedirectUrl($this->entity->urlInfo('collection'));

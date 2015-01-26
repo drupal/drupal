@@ -4,3 +4,11 @@ user_form_test.current_password:
     _form: '\Drupal\user_form_test\Form\TestCurrentPassword'
   requirements:
     _permission: 'administer users'
+
+user_form_test.cancel:
+  path: '/user_form_test_cancel/{user}'
+  defaults:
+    _entity_form: 'user.cancel'
+  requirements:
+    _permission: 'cancel other accounts'
+
