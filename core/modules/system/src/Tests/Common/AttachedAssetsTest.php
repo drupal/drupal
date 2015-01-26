@@ -169,6 +169,27 @@ class AttachedAssetsTest extends KernelTestBase {
   }
 
   /**
+   * Integration test for CSS/JS aggregation.
+   */
+  function testAggregation() {
+    $build['#attached']['library'][] = 'core/drupal.timezone';
+    $build['#attached']['library'][] = 'core/drupal.vertical-tabs';
+    $assets = AttachedAssets::createFromRenderArray($build);
+
+    $this->assertEqual(1, count($this->assetResolver->getCssAssets($assets, TRUE)), 'There is a sole aggregated CSS asset.');
+
+    list($header_js, $footer_js) = $this->assetResolver->getJsAssets($assets, TRUE);
+    $this->assertEqual([], \Drupal::service('asset.js.collection_renderer')->render($header_js), 'There are 0 JavaScript assets in the header.');
+    $rendered_footer_js = \Drupal::service('asset.js.collection_renderer')->render($footer_js);
+    $this->assertTrue(
+      count($rendered_footer_js) == 2
+      && substr($rendered_footer_js[0]['#value'], 0, 20) === 'var drupalSettings ='
+      && substr($rendered_footer_js[1]['#attributes']['src'], 0, 7) === 'http://',
+      'There are 2 JavaScript assets in the footer: one with drupalSettings, one with the sole aggregated JavaScript asset.'
+    );
+  }
+
+  /**
    * Tests JavaScript settings.
    */
   function testSettings() {

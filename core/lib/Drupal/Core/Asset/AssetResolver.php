@@ -285,6 +285,12 @@ class AssetResolver implements AssetResolverInterface {
       }
     }
 
+    if ($optimize) {
+      $collection_optimizer = \Drupal::service('asset.js.collection_optimizer');
+      $js_assets_header = $collection_optimizer->optimize($js_assets_header);
+      $js_assets_footer = $collection_optimizer->optimize($js_assets_footer);
+    }
+
     // If the core/drupalSettings library is being loaded or is already loaded,
     // get the JavaScript settings assets, and convert them into a single
     // "regular" JavaScript asset.

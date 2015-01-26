@@ -9,6 +9,7 @@ namespace Drupal\system\Tests\Ajax;
 
 use Drupal\Core\Ajax\AddCssCommand;
 use Drupal\Core\Ajax\AfterCommand;
+use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\AlertCommand;
 use Drupal\Core\Ajax\AppendCommand;
 use Drupal\Core\Ajax\BeforeCommand;
@@ -22,6 +23,7 @@ use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\RemoveCommand;
 use Drupal\Core\Ajax\RestripeCommand;
 use Drupal\Core\Ajax\SettingsCommand;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Performs tests on AJAX framework commands.
@@ -118,6 +120,33 @@ class CommandsTest extends AjaxTestBase {
     $commands = $this->drupalPostAjaxForm($form_path, $edit, array('op' => t("AJAX 'settings' command")));
     $expected = new SettingsCommand(array('ajax_forms_test' => array('foo' => 42)));
     $this->assertCommand($commands, $expected->render(), "'settings' AJAX command issued with correct data.");
+  }
+
+  /**
+   * Regression test: Settings command exists regardless of JS aggregation.
+   */
+  public function testAttachedSettings() {
+    $assert = function($message) {
+      $response = new AjaxResponse();
+      $response->setAttachments([
+        'library' => ['core/drupalSettings'],
+        'drupalSettings' => ['foo' => 'bar'],
+      ]);
+
+      $response->prepare(new Request());
+      $expected = [
+        'command' => 'settings',
+      ];
+      $this->assertCommand($response->getCommands(), $expected, $message);
+    };
+
+    $config = $this->config('system.performance');
+
+    $config->set('js.preprocess', FALSE)->save();
+    $assert('Settings command exists when JS aggregation is disabled.');
+
+    $config->set('js.preprocess', TRUE)->save();
+    $assert('Settings command exists when JS aggregation is enabled.');
   }
 
 }
