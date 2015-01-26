@@ -20,24 +20,6 @@ class FeedStorage extends SqlContentEntityStorage implements FeedStorageInterfac
   /**
    * {@inheritdoc}
    */
-  public function getFeedDuplicates(FeedInterface $feed) {
-    $query = \Drupal::entityQuery('aggregator_feed');
-
-    $or_condition = $query->orConditionGroup()
-      ->condition('title', $feed->label())
-      ->condition('url', $feed->getUrl());
-    $query->condition($or_condition);
-
-    if ($feed->id()) {
-      $query->condition('fid', $feed->id(), '<>');
-    }
-
-    return $this->loadMultiple($query->execute());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getFeedIdsToRefresh() {
     return $this->database->query('SELECT fid FROM {aggregator_feed} WHERE queued = 0 AND checked + refresh < :time AND refresh <> :never', array(
       ':time' => REQUEST_TIME,
