@@ -7,7 +7,6 @@ global-styling:
       css/base/print.css: {}
     component:
       css/components/admin-list.css: {}
-      css/components/admin-options.css: {}
       css/components/admin-panel.css: {}
       css/components/block-recent-content.css: {}
       css/components/content-header.css: {}
