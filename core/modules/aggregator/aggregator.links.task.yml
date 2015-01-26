@@ -19,5 +19,6 @@ entity.aggregator_feed.edit_form:
   weight: 10
 entity.aggregator_feed.delete_form:
   route_name: entity.aggregator_feed.delete_form
-  tab_root_id: entity.aggregator_feed.canonical
+  base_route: entity.aggregator_feed.canonical
   title: Delete
+  weight: 20
