@@ -249,8 +249,8 @@ function theme_system_modules_details($variables) {
     }
     $description .= '</div>';
     $links = '';
-    foreach (array('help', 'permissions', 'configure') as $key) {
-      $links .= drupal_render($module['links'][$key]);
+    foreach (array('help', 'permissions', 'configure') as $link_type) {
+      $links .= drupal_render($module['links'][$link_type]);
     }
     if ($links) {
       $description .= '  <div class="links">';
