@@ -118,7 +118,6 @@ class ViewsExposedForm extends FormBase {
     $form['#action'] = _url($view->display_handler->getUrl());
     $form['#theme'] = $view->buildThemeFunctions('views_exposed_form');
     $form['#id'] = Html::cleanCssIdentifier('views_exposed_form-' . String::checkPlain($view->storage->id()) . '-' . String::checkPlain($display['id']));
-    // $form['#attributes']['class'] = array('views-exposed-form');
 
     /** @var \Drupal\views\Plugin\views\exposed_form\ExposedFormPluginBase $exposed_form_plugin */
     $exposed_form_plugin = $form_state->get('exposed_form_plugin');

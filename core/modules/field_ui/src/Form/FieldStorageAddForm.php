@@ -141,7 +141,7 @@ class FieldStorageAddForm extends FormBase {
 
     $form['add'] = array(
       '#type' => 'container',
-      '#attributes' => array('class' => array('field-type-wrapper', 'clearfix')),
+      '#attributes' => array('class' => array('form--inline', 'clearfix')),
     );
 
     $form['add']['new_storage_type'] = array(

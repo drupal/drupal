@@ -1007,9 +1007,6 @@ function template_preprocess_views_exposed_form(&$variables) {
     $variables['q'] = $form['q'];
   }
 
-  // Include basic theming for exposed forms.
-  $form['#attached']['library'][] = 'views/views.exposed-form';
-
   foreach ($form['#info'] as $info) {
     if (!empty($info['label'])) {
       $form[$info['value']]['#title'] = $info['label'];

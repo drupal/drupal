@@ -25,9 +25,3 @@ views.contextual-links:
   dependencies:
     - core/jquery
     - core/drupal
-
-views.exposed-form:
-  version: VERSION
-  css:
-    component:
-      css/views.exposed_form.css: {}

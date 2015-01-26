@@ -3,21 +3,6 @@
  * Stylesheet for the Field UI module.
  */
 
-/* Add new field page. */
-.field-ui-field-storage-add-form .field-type-wrapper .form-item {
-  float: left;
-  margin-right: 1em;
-  vertical-align: text-bottom;
-}
-[dir="rtl"] .field-ui-field-storage-add-form .field-type-wrapper .form-item {
-  float: right;
-  margin-left: 1em;
-  margin-right: 0;
-}
-.field-ui-field-storage-add-form .field-type-wrapper .form-item-separator {
-  margin-top: 2.3em;
-}
-
 /* 'Manage fields' and 'Manage display' overviews */
 .field-ui-overview .region-title td {
   font-weight: bold;
