@@ -95,3 +95,10 @@ views.display_extender.display_extender_test:
 
 views.display_extender.display_extender_test2:
   type: views.display_extender.display_extender_test
+
+views.argument_default.argument_default_test:
+  type: ignore
+
+views.argument_validator.argument_validator_test:
+  type: ignore
+

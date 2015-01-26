@@ -95,6 +95,7 @@ class EntityTest extends UnitTestCase {
 
     $this->entityManager->expects($this->any())
       ->method('getStorage')
+      ->with('entity_test')
       ->will($this->returnValue($storage));
 
     $this->executable = $this->getMockBuilder('Drupal\views\ViewExecutable')
@@ -171,6 +172,54 @@ class EntityTest extends UnitTestCase {
 
     $this->assertTrue($this->argumentValidator->validateArgument(1));
     $this->assertFalse($this->argumentValidator->validateArgument(2));
+  }
+
+  /**
+   * @covers ::calculateDependencies
+   */
+  public function testCalculateDependencies() {
+    // Create an entity manager, storage, entity type, and entity to mock the
+    // loading of entities providing bundles.
+    $entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
+    $storage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
+    $entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
+    $mock_entity = $this->getMock('Drupal\Core\Entity\EntityInterface');
+
+    $mock_entity->expects($this->any())
+      ->method('getConfigDependencyKey')
+      ->willReturn('config');
+    $mock_entity->expects($this->any())
+      ->method('getConfigDependencyName')
+      ->willReturn('test_bundle');
+    $storage->expects($this->any())
+      ->method('loadMultiple')
+      ->with(['test_bundle'])
+      ->willReturn(['test_bundle' => $mock_entity]);
+
+    $entity_type->expects($this->any())
+      ->method('getBundleEntityType')
+      ->willReturn('entity_test_bundle');
+    $entityManager->expects($this->any())
+      ->method('getDefinition')
+      ->with('entity_test')
+      ->willReturn($entity_type);
+    $entityManager->expects($this->any())
+      ->method('hasHandler')
+      ->with('entity_test_bundle', 'storage')
+      ->willReturn(TRUE);
+    $entityManager->expects($this->any())
+      ->method('getStorage')
+      ->with('entity_test_bundle')
+      ->willReturn($storage);
+
+    // Set up the argument validator.
+    $argumentValidator = new Entity(array(), 'entity_test', ['entity_type' => 'entity_test'], $entityManager);
+    $options = array();
+    $options['access'] = FALSE;
+    $options['bundles'] = array('test_bundle' => 1);
+    $argumentValidator->init($this->executable, $this->display, $options);
+
+    $this->assertEquals(['config'=>['test_bundle']], $argumentValidator->calculateDependencies());
   }
 
   /**

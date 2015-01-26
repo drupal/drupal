@@ -281,9 +281,6 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
 
       // Collect all dependencies of plugins.
       foreach (Views::getPluginTypes('plugin') as $plugin_type) {
-        // Argument validator/default plugins do not return a plugin.
-        // @todo https://www.drupal.org/node/2368767 Calculate argument
-        //   validator/default plugin dependencies.
         if (!$plugin = $display->getPlugin($plugin_type)) {
           continue;
         }

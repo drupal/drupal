@@ -21,15 +21,6 @@ display:
     display_options:
       access:
         type: test_static
-      arguments:
-        'null':
-          default_action: default
-          default_argument_type: fixed
-          id: 'null'
-          must_not_be: false
-          table: views
-          field: null
-          plugin_id: 'null'
       cache:
         type: none
       exposed_form:

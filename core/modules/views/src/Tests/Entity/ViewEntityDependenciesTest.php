@@ -23,14 +23,14 @@ class ViewEntityDependenciesTest extends ViewUnitTestBase {
    *
    * @var array
    */
-  public static $testViews = ['test_field_get_entity', 'test_relationship_dependency', 'test_plugin_dependencies'];
+  public static $testViews = ['test_field_get_entity', 'test_relationship_dependency', 'test_plugin_dependencies', 'test_argument_dependency'];
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = ['node', 'comment', 'user', 'field', 'text', 'entity_reference'];
+  public static $modules = ['node', 'comment', 'user', 'field', 'text', 'entity_reference', 'search'];
 
   /**
    * {@inheritdoc}
@@ -39,7 +39,7 @@ class ViewEntityDependenciesTest extends ViewUnitTestBase {
     parent::setUp();
     // Install the necessary dependencies for node type creation to work.
     $this->installEntitySchema('node');
-    $this->installConfig(array('field'));
+    $this->installConfig(array('field', 'node'));
   }
 
   /**
@@ -96,7 +96,6 @@ class ViewEntityDependenciesTest extends ViewUnitTestBase {
     $expected['test_plugin_dependencies'] = [
       'module' => [
         'comment',
-        // The argument handler has an explicit dependency on views_test_data.
         'views_test_data',
       ],
       'content' => [
@@ -105,6 +104,23 @@ class ViewEntityDependenciesTest extends ViewUnitTestBase {
         'StyleTest',
       ]
     ];
+
+    $expected['test_argument_dependency'] = [
+      'config' => [
+        'core.entity_view_mode.node.teaser'
+      ],
+      'content' => [
+        'ArgumentDefaultTest',
+        'ArgumentValidatorTest'
+      ],
+      'module' => [
+        'node',
+        // The argument handler is provided by the search module.
+        'search',
+        'user'
+      ],
+    ];
+
     foreach ($this::$testViews as $view_id) {
       $view = Views::getView($view_id);
 

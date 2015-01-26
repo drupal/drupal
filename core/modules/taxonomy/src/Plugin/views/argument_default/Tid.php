@@ -234,4 +234,16 @@ class Tid extends ArgumentDefaultPluginBase implements CacheablePluginInterface 
     return ['cache.context.url'];
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    $dependencies = parent::calculateDependencies();
+
+    foreach ($this->vocabularyStorage->loadMultiple(array_keys($this->options['vids'])) as $vocabulary) {
+      $dependencies[$vocabulary->getConfigDependencyKey()][] = $vocabulary->getConfigDependencyName();
+    }
+    return $dependencies;
+  }
+
 }

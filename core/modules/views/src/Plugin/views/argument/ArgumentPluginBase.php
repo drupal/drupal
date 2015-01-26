@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Plugin\views\argument;
 
+use Drupal\Component\Plugin\DependentPluginInterface;
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String as UtilityString;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
@@ -1221,6 +1223,24 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheablePlugin
     }
 
     return $contexts;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    $dependencies = [];
+    if (($argument_default = $this->getPlugin('argument_default')) && $argument_default instanceof DependentPluginInterface) {
+      $dependencies = NestedArray::mergeDeep($dependencies, $argument_default->calculateDependencies());
+    }
+    if (($argument_validator = $this->getPlugin('argument_validator')) && $argument_validator instanceof DependentPluginInterface) {
+      $dependencies = NestedArray::mergeDeep($dependencies, $argument_validator->calculateDependencies());
+    }
+    if (($style = $this->getPlugin('style')) && $style instanceof DependentPluginInterface) {
+      $dependencies = NestedArray::mergeDeep($dependencies, $style->calculateDependencies());
+    }
+
+    return $dependencies;
   }
 
 }
