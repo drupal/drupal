@@ -101,11 +101,11 @@
 .toolbar-icon-system-themes-page.active:before {
   background-image: url(../../../misc/icons/000000/paintbrush.svg);
 }
-.toolbar-icon-user-admin-account:before {
+.toolbar-icon-entity-user-collection:before {
   background-image: url(../../../misc/icons/787878/people.svg);
 }
-.toolbar-icon-user-admin-account:active:before,
-.toolbar-icon-user-admin-account.active:before {
+.toolbar-icon-entity-user-collection:active:before,
+.toolbar-icon-entity-user-collection.active:before {
   background-image: url(../../../misc/icons/000000/people.svg);
 }
 .toolbar-icon-system-modules-list:before {
