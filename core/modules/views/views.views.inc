@@ -634,26 +634,3 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
 
   return $data;
 }
-
-/**
- * Have a different filter handler for lists. This should allow to select values of the list.
- */
-function list_field_views_data(FieldStorageConfigInterface $field_storage) {
-  $data = views_field_default_views_data($field_storage);
-  foreach ($data as $table_name => $table_data) {
-    foreach ($table_data as $field_name => $field_data) {
-      if (isset($field_data['filter']) && $field_name != 'delta') {
-        $data[$table_name][$field_name]['filter']['id'] = 'field_list';
-      }
-      if (isset($field_data['argument']) && $field_name != 'delta') {
-        if ($field_storage->getType() == 'list_string') {
-          $data[$table_name][$field_name]['argument']['id'] = 'field_list_string';
-        }
-        else {
-          $data[$table_name][$field_name]['argument']['id'] = 'field_list';
-        }
-      }
-    }
-  }
-  return $data;
-}

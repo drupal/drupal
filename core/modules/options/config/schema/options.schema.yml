@@ -114,3 +114,44 @@ field.widget.settings.options_buttons:
 field.widget.settings.options_select:
   type: mapping
   label: 'Select list format settings'
+
+views.argument.number_list_field:
+  type: views.argument.numeric
+  mapping:
+    summary:
+      type: mapping
+      label: 'Display a summary'
+      mapping:
+        sort_order:
+          type: string
+          label: 'Sort order'
+        number_of_records:
+          type: integer
+          label: 'Sort by'
+        format:
+          type: string
+          label: 'Format'
+        human:
+          type: boolean
+
+views.argument.string_list_field:
+  type: views.argument.string
+  mapping:
+    summary:
+      type: mapping
+      label: 'Display a summary'
+      mapping:
+        sort_order:
+          type: string
+          label: 'Sort order'
+        number_of_records:
+          type: integer
+          label: 'Sort by'
+        format:
+          type: string
+          label: 'Format'
+        human:
+          type: boolean
+
+views.filter.list_field:
+  type: views.filter.many_to_one

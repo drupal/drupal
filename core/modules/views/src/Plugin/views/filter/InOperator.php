@@ -65,7 +65,7 @@ class InOperator extends FilterPluginBase {
    */
   public function getValueOptions() {
     if (isset($this->valueOptions)) {
-      return;
+      return $this->valueOptions;
     }
 
     if (isset($this->definition['options callback']) && is_callable($this->definition['options callback'])) {
