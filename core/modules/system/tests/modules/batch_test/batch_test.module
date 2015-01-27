@@ -167,6 +167,21 @@ function _batch_test_theme_callback() {
 }
 
 /**
+ * Tests the title on the progress page by performing a batch callback.
+ */
+function _batch_test_title_callback() {
+  // Because drupalGet() steps through the full progressive batch before
+  // returning control to the test function, we cannot test that the correct
+  // title is being used on the batch processing page by viewing that page
+  // directly. Instead, we save the title being used in a variable here, so
+  // that it can be loaded and inspected in the thread running the test.
+  $request = \Drupal::request();
+  $route_match = \Drupal::routeMatch();
+  $title = \Drupal::service('title_resolver')->getTitle($request, $route_match->getRouteObject());
+  batch_test_stack($title);
+}
+
+/**
  * Helper function: Stores or retrieves traced execution data.
  */
 function batch_test_stack($data = NULL, $reset = FALSE) {

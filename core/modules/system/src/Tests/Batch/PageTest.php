@@ -47,4 +47,18 @@ class PageTest extends WebTestBase {
     // page.
     $this->assertEqual(batch_test_stack(), array('seven'), 'A progressive batch correctly uses the theme of the page that started the batch.');
   }
+
+  /**
+   * Tests that the batch API progress page shows the title correctly.
+   */
+  function testBatchProgressPageTitle() {
+    // Visit an administrative page that runs a test batch, and check that the
+    // title shown during batch execution (which the batch callback function
+    // saved as a variable) matches the theme used on the administrative page.
+    $this->drupalGet('batch-test/test-title');
+    // The stack should contain the title shown on the progress page.
+    $this->assertEqual(batch_test_stack(), ['Batch Test'], 'The batch title is shown on the batch page.');
+    $this->assertText('Redirection successful.', 'Redirection after batch execution is correct.');
+  }
+
 }

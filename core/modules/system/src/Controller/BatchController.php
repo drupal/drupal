@@ -75,4 +75,15 @@ class BatchController implements ContainerInjectionInterface {
     }
   }
 
+  /**
+   * The _title_callback for the system.batch_page.normal route.
+   *
+   * @return string
+   *   The page title.
+   */
+  public function batchPageTitle() {
+    $current_set = _batch_current_set();
+    return !empty($current_set['title']) ? $current_set['title'] : '';
+  }
+
 }

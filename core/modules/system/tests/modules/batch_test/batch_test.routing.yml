@@ -70,3 +70,10 @@ batch_test.test_theme:
     _controller: '\Drupal\batch_test\Controller\BatchTestController::testThemeBatch'
   requirements:
     _access: 'TRUE'
+
+batch_test.test_title:
+  path: '/batch-test/test-title'
+  defaults:
+    _controller: '\Drupal\batch_test\Controller\BatchTestController::testTitleBatch'
+  requirements:
+    _access: 'TRUE'

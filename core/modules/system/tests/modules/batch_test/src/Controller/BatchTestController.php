@@ -113,4 +113,22 @@ class BatchTestController {
     return batch_process('batch-test/redirect');
   }
 
+  /**
+   * Runs a batch for testing the title shown on the progress page.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse|null
+   *   A redirect response if the batch is progressive. No return value otherwise.
+   */
+  public function testTitleBatch() {
+    batch_test_stack(NULL, TRUE);
+    $batch = [
+      'title' => 'Batch Test',
+      'operations' => [
+        ['_batch_test_title_callback', []],
+      ],
+    ];
+    batch_set($batch);
+    return batch_process('batch-test/redirect');
+  }
+
 }

@@ -426,6 +426,7 @@ system.batch_page.html:
   path: '/batch'
   defaults:
     _controller: '\Drupal\system\Controller\BatchController::batchPage'
+    _title_callback: '\Drupal\system\Controller\BatchController::batchPageTitle'
   requirements:
     _access: 'TRUE'
     _format: 'html'
