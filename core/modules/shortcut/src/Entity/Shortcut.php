@@ -150,7 +150,6 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
       ->setLabel(t('Path'))
       ->setDescription(t('The location this shortcut points to.'))
       ->setRequired(TRUE)
-      ->setTranslatable(FALSE)
       ->setSettings(array(
         'default_value' => '',
         'max_length' => 560,
