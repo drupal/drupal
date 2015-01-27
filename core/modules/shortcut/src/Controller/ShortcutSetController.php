@@ -64,7 +64,9 @@ class ShortcutSetController extends ControllerBase {
       $shortcut = $this->entityManager()->getStorage('shortcut')->create(array(
         'title' => $name,
         'shortcut_set' => $shortcut_set->id(),
-        'path' => $link,
+        'link' => array(
+          'uri' => $link,
+        ),
       ));
 
       try {

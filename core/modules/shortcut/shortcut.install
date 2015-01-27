@@ -5,9 +5,6 @@
  * Install, update and uninstall functions for the shortcut module.
  */
 
-use Drupal\Core\Database\Database;
-use Drupal\Core\Language\Language;
-
 /**
  * Implements hook_schema().
  */

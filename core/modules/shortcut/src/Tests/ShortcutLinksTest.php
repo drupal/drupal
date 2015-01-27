@@ -6,6 +6,9 @@
  */
 
 namespace Drupal\shortcut\Tests;
+
+use Drupal\Component\Utility\String;
+use Drupal\Core\Url;
 use Drupal\shortcut\Entity\Shortcut;
 use Drupal\shortcut\Entity\ShortcutSet;
 
@@ -37,42 +40,40 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $this->container->get('path.alias_storage')->save($path['source'], $path['alias']);
 
     // Create some paths to test.
-    $test_cases = array(
-      array('path' => '', 'route_name' => '<front>'),
-      array('path' => '<front>', 'route_name' => '<front>'),
-      array('path' => 'admin', 'route_name' => 'system.admin'),
-      array('path' => 'admin/config/system/site-information', 'route_name' => 'system.site_information_settings'),
-      array('path' => 'node/' . $this->node->id() . '/edit', 'route_name' => 'entity.node.edit_form'),
-      array('path' => $path['alias'], 'route_name' => 'entity.node.canonical'),
-      array('path' => 'router_test/test2', 'route_name' => 'router_test.2'),
-      array('path' => 'router_test/test3/value', 'route_name' => 'router_test.3'),
-    );
+    $test_cases = [
+      '<front>',
+      'admin',
+      'admin/config/system/site-information',
+      'node/' . $this->node->id() . '/edit',
+      $path['alias'],
+      'router_test/test2',
+      'router_test/test3/value',
+    ];
 
     // Check that each new shortcut links where it should.
-    foreach ($test_cases as $test) {
+    foreach ($test_cases as $test_path) {
       $title = $this->randomMachineName();
       $form_data = array(
         'title[0][value]' => $title,
-        'path' => $test['path'],
+        'link[0][uri]' => $test_path,
       );
       $this->drupalPostForm('admin/config/user-interface/shortcut/manage/' . $set->id() . '/add-link', $form_data, t('Save'));
       $this->assertResponse(200);
       $saved_set = ShortcutSet::load($set->id());
-      $routes = $this->getShortcutInformation($saved_set, 'route_name');
-      $this->assertTrue(in_array($test['route_name'], $routes), 'Shortcut created: ' . $test['path']);
-      $this->assertLink($title, 0, 'Shortcut link found on the page.');
+      $paths = $this->getShortcutInformation($saved_set, 'link');
+      $test_path = $test_path != '<front>' ? $test_path : '';
+      $this->assertTrue(in_array($test_path, $paths), 'Shortcut created: ' . $test_path);
+      $this->assertLink($title, 0, String::format('Shortcut link %url found on the page.', ['%url' => $test_path]));
     }
     $saved_set = ShortcutSet::load($set->id());
     // Test that saving and re-loading a shortcut preserves its values.
     $shortcuts = $saved_set->getShortcuts();
     foreach ($shortcuts as $entity) {
       // Test the node routes with parameters.
-      if (strpos($entity->route_name->value, 'node.') === 0) {
-        $entity->save();
-        $loaded = Shortcut::load($entity->id());
-        $this->assertEqual($entity->route_name->value, $loaded->route_name->value);
-        $this->assertEqual($entity->get('route_parameters')->first()->getValue(), $loaded->get('route_parameters')->first()->getValue());
-      }
+      $entity->save();
+      $loaded = Shortcut::load($entity->id());
+      $this->assertEqual($entity->link->uri, $loaded->link->uri);
+      $this->assertEqual($entity->link->options, $loaded->link->options);
     }
 
     // Login as non admin user, to check that access is checked when creating
@@ -81,15 +82,15 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $title = $this->randomMachineName();
     $form_data = [
       'title[0][value]' => $title,
-      'path' => 'admin',
+      'link[0][uri]' => 'admin',
     ];
     $this->drupalPostForm('admin/config/user-interface/shortcut/manage/' . $set->id() . '/add-link', $form_data, t('Save'));
     $this->assertResponse(200);
-    $this->assertRaw(t('The shortcut must correspond to a valid path on the site.'));
+    $this->assertRaw(t('The URL %url is not valid.', ['%url' => 'admin']));
 
     $form_data = [
       'title[0][value]' => $title,
-      'path' => 'node',
+      'link[0][uri]' => 'node',
     ];
     $this->drupalPostForm('admin/config/user-interface/shortcut/manage/' . $set->id() . '/add-link', $form_data, t('Save'));
     $this->assertLink($title, 0, 'Shortcut link found on the page.');
@@ -136,7 +137,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
 
     $shortcuts = $set->getShortcuts();
     $shortcut = reset($shortcuts);
-    $this->drupalPostForm('admin/config/user-interface/shortcut/link/' . $shortcut->id(), array('title[0][value]' => $new_link_name, 'path' => $shortcut->path->value), t('Save'));
+    $this->drupalPostForm('admin/config/user-interface/shortcut/link/' . $shortcut->id(), array('title[0][value]' => $new_link_name, 'link[0][uri]' => $shortcut->link->uri), t('Save'));
     $saved_set = ShortcutSet::load($set->id());
     $titles = $this->getShortcutInformation($saved_set, 'title');
     $this->assertTrue(in_array($new_link_name, $titles), 'Shortcut renamed: ' . $new_link_name);
@@ -154,10 +155,10 @@ class ShortcutLinksTest extends ShortcutTestBase {
 
     $shortcuts = $set->getShortcuts();
     $shortcut = reset($shortcuts);
-    $this->drupalPostForm('admin/config/user-interface/shortcut/link/' . $shortcut->id(), array('title[0][value]' => $shortcut->getTitle(), 'path' => $new_link_path), t('Save'));
+    $this->drupalPostForm('admin/config/user-interface/shortcut/link/' . $shortcut->id(), array('title[0][value]' => $shortcut->getTitle(), 'link[0][uri]' => $new_link_path), t('Save'));
     $saved_set = ShortcutSet::load($set->id());
-    $routes = $this->getShortcutInformation($saved_set, 'route_name');
-    $this->assertTrue(in_array('system.admin_config', $routes), 'Shortcut path changed: ' . $new_link_path);
+    $paths = $this->getShortcutInformation($saved_set, 'link');
+    $this->assertTrue(in_array($new_link_path, $paths), 'Shortcut path changed: ' . $new_link_path);
     $this->assertLinkByHref($new_link_path, 0, 'Shortcut with new path appears on the page.');
   }
 

@@ -5,3 +5,5 @@ package: Core
 version: VERSION
 core: 8.x
 configure: entity.shortcut_set.collection
+dependencies:
+  - link

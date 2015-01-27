@@ -164,4 +164,29 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
   public static function mainPropertyName() {
     return 'uri';
   }
+
+  /**
+   * Gets the URL object.
+   *
+   * @return \Drupal\Core\Url
+   */
+  public function getUrl() {
+    return \Drupal::pathValidator()->getUrlIfValidWithoutAccessCheck($this->uri);
+  }
+
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setValue($values, $notify = TRUE) {
+    // Unserialize the values.
+    // @todo The storage controller should take care of this, see
+    //   SqlContentEntityStorage::loadFieldItems, see
+    //   https://www.drupal.org/node/2414835
+    if (isset($values['options']) && is_string($values['options'])) {
+      $values['options'] = unserialize($values['options']);
+    }
+    parent::setValue($values, $notify);
+  }
+
 }

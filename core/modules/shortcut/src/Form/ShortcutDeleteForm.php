@@ -27,7 +27,7 @@ class ShortcutDeleteForm extends ContentEntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to delete the shortcut %title?', array('%title' => $this->entity->title->value));
+    return $this->t('Are you sure you want to delete the shortcut %title?', array('%title' => $this->entity->getTitle()));
   }
 
   /**

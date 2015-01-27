@@ -62,18 +62,22 @@ abstract class ShortcutTestBase extends WebTestBase {
 
       // Populate the default shortcut set.
       $shortcut = Shortcut::create(array(
-        'set' => 'default',
+        'shortcut_set' => 'default',
         'title' => t('Add content'),
         'weight' => -20,
-        'path' => 'node/add',
+        'link' => array(
+          'uri' => 'node/add',
+        ),
       ));
       $shortcut->save();
 
       $shortcut = Shortcut::create(array(
-        'set' => 'default',
+        'shortcut_set' => 'default',
         'title' => t('All content'),
         'weight' => -19,
-        'path' => 'admin/content',
+        'link' => array(
+          'uri' => 'admin/content',
+        ),
       ));
       $shortcut->save();
     }
@@ -111,7 +115,7 @@ abstract class ShortcutTestBase extends WebTestBase {
    * @param string $key
    *   The array key indicating what information to extract from each link:
    *    - 'title': Extract shortcut titles.
-   *    - 'path': Extract shortcut paths.
+   *    - 'link': Extract shortcut paths.
    *    - 'id': Extract the shortcut ID.
    *
    * @return array
@@ -121,7 +125,12 @@ abstract class ShortcutTestBase extends WebTestBase {
     $info = array();
     \Drupal::entityManager()->getStorage('shortcut')->resetCache();
     foreach ($set->getShortcuts() as $shortcut) {
-      $info[] = $shortcut->{$key}->value;
+      if ($key == 'link') {
+        $info[] = $shortcut->link->uri;
+      }
+      else {
+        $info[] = $shortcut->{$key}->value;
+      }
     }
     return $info;
   }

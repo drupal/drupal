@@ -256,10 +256,10 @@ function shortcut_renderable_links($shortcut_set = NULL) {
   $cache_tags = array();
   foreach ($shortcuts as $shortcut) {
     $shortcut = \Drupal::entityManager()->getTranslationFromContext($shortcut);
-    $links[] = array(
+    $links[$shortcut->id()] = array(
+      'type' => 'link',
       'title' => $shortcut->label(),
-      'url' => Url::fromRoute($shortcut->getRouteName(), $shortcut->getRouteParameters()),
-    );
+    ) + $shortcut->getUrl()->toArray();
     $cache_tags = Cache::mergeTags($cache_tags, $shortcut->getCacheTags());
   }
 
@@ -310,8 +310,9 @@ function shortcut_preprocess_page(&$variables) {
 
     // Check if $link is already a shortcut and set $link_mode accordingly.
     $shortcuts = \Drupal::entityManager()->getStorage('shortcut')->loadByProperties(array('shortcut_set' => $shortcut_set->id()));
+    /** @var \Drupal\shortcut\ShortcutInterface $shortcut */
     foreach ($shortcuts as $shortcut) {
-      if ($shortcut->getRouteName() == $route_match->getRouteName() && $shortcut->getRouteParameters() == $route_match->getParameters()->all()) {
+      if (($shortcut_url = $shortcut->getUrl()) && $shortcut_url->isRouted() && $shortcut_url->getRouteName() == $route_match->getRouteName() && $shortcut_url->getRouteParameters() == $route_match->getParameters()->all()) {
         $shortcut_id = $shortcut->id();
         break;
       }

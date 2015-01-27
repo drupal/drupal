@@ -52,7 +52,11 @@ class SetCustomize extends EntityForm {
     foreach ($this->entity->getShortcuts() as $shortcut) {
       $id = $shortcut->id();
       $form['shortcuts']['links'][$id]['#attributes']['class'][] = 'draggable';
-      $form['shortcuts']['links'][$id]['name']['#markup'] = $this->l($shortcut->getTitle(), $shortcut->getUrl());
+      $form['shortcuts']['links'][$id]['name'] = array(
+        '#type' => 'link',
+        '#title' => $shortcut->getTitle(),
+      ) + $shortcut->getUrl()->toRenderArray();
+      unset($form['shortcuts']['links'][$id]['name']['#access_callback']);
       $form['shortcuts']['links'][$id]['#weight'] = $shortcut->getWeight();
       $form['shortcuts']['links'][$id]['weight'] = array(
         '#type' => 'weight',

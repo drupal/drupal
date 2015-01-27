@@ -43,10 +43,10 @@ class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
   protected function createEntity() {
     // Create a "Llama" shortcut.
     $shortcut = Shortcut::create(array(
-      'set' => 'default',
+      'shortcut_set' => 'default',
       'title' => t('Llama'),
       'weight' => 0,
-      'path' => 'admin',
+      'link' => ['uri' => 'admin'],
     ));
     $shortcut->save();
 

@@ -7,6 +7,7 @@
 
 namespace Drupal\link\Plugin\Field\FieldWidget;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -43,8 +44,9 @@ class LinkWidget extends WidgetBase {
     $default_url_value = NULL;
     if (isset($items[$delta]->uri)) {
       if ($url = \Drupal::pathValidator()->getUrlIfValid($items[$delta]->uri)) {
-        $url->setOptions($items[$delta]->options);
-        $default_url_value = ltrim($url->toString(), '/');
+        $url->setOptions($items[$delta]->options ?: []);
+        $url_string = $url->toString();
+        $default_url_value = $url->isRouted() ? Unicode::substr($url_string, strlen(base_path())) : $url_string;
       }
     }
     $element['uri'] = array(

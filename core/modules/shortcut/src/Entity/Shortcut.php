@@ -12,12 +12,13 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
-use Drupal\Core\Url;
+use Drupal\link\LinkItemInterface;
 use Drupal\shortcut\ShortcutInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Defines the shortcut entity class.
+ *
+ * @property \Drupal\link\LinkItemInterface link
  *
  * @ContentEntityType(
  *   id = "shortcut",
@@ -65,7 +66,7 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
    */
   public function setTitle($link_title) {
     $this->set('title', $link_title);
-   return $this;
+    return $this;
   }
 
   /**
@@ -87,67 +88,7 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
    * {@inheritdoc}
    */
   public function getUrl() {
-    return new Url($this->getRouteName(), $this->getRouteParameters());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getRouteName() {
-    return $this->get('route_name')->value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setRouteName($route_name) {
-    $this->set('route_name', $route_name);
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getRouteParameters() {
-    return $this->get('route_parameters')->first()->getValue();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setRouteParameters($route_parameters) {
-    $this->set('route_parameters', $route_parameters);
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function preCreate(EntityStorageInterface $storage, array &$values) {
-    parent::preCreate($storage, $values);
-
-    if (!isset($values['shortcut_set'])) {
-      $values['shortcut_set'] = 'default';
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function preSave(EntityStorageInterface $storage) {
-    parent::preSave($storage);
-
-    // @todo fix PathValidatorInterface::getUrlIfValid() so we can use it
-    //   here. The problem is that we need an exception, not a FALSE
-    //   return value. https://www.drupal.org/node/2346695
-    if ($this->path->value == '<front>') {
-      $url = new Url($this->path->value);
-    }
-    else {
-      $url = Url::createFromRequest(Request::create("/{$this->path->value}"));
-    }
-    $this->setRouteName($url->getRouteName());
-    $this->setRouteParameters($url->getRouteParameters());
+    return $this->link->first()->getUrl();
   }
 
   /**
@@ -205,13 +146,22 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
       ->setLabel(t('Weight'))
       ->setDescription(t('Weight among shortcuts in the same shortcut set.'));
 
-    $fields['route_name'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Route name'))
-      ->setDescription(t('The machine name of a defined Route this shortcut represents.'));
-
-    $fields['route_parameters'] = BaseFieldDefinition::create('map')
-      ->setLabel(t('Route parameters'))
-      ->setDescription(t('A serialized array of route parameters of this shortcut.'));
+    $fields['link'] = BaseFieldDefinition::create('link')
+      ->setLabel(t('Path'))
+      ->setDescription(t('The location this shortcut points to.'))
+      ->setRequired(TRUE)
+      ->setTranslatable(FALSE)
+      ->setSettings(array(
+        'default_value' => '',
+        'max_length' => 560,
+        'link_type' => LinkItemInterface::LINK_INTERNAL,
+        'title' => DRUPAL_DISABLED,
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'link_default',
+        'weight' => 0,
+      ))
+      ->setDisplayConfigurable('form', TRUE);
 
     $fields['langcode'] = BaseFieldDefinition::create('language')
       ->setLabel(t('Language'))
@@ -223,16 +173,6 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
         'type' => 'language_select',
         'weight' => 2,
       ));
-
-    $fields['path'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Path'))
-      ->setDescription(t('The computed shortcut path.'))
-      ->setComputed(TRUE)
-      ->setCustomStorage(TRUE);
-
-    $item_definition = $fields['path']->getItemDefinition();
-    $item_definition->setClass('\Drupal\shortcut\ShortcutPathItem');
-    $fields['path']->setItemDefinition($item_definition);
 
     return $fields;
   }
