@@ -194,7 +194,7 @@ class MenuLinkContent extends MenuLinkBase implements ContainerFactoryPluginInte
    * {@inheritdoc}
    */
   public function getTranslateRoute() {
-    return $this->getEntity()->urlInfo('content-translation-overview');
+    return $this->getEntity()->urlInfo('drupal:content-translation-overview');
   }
 
   /**

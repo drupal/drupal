@@ -8,6 +8,7 @@
 namespace Drupal\menu_link_content\Tests;
 
 use Drupal\content_translation\Tests\ContentTranslationUITest;
+use Drupal\menu_link_content\Entity\MenuLinkContent;
 
 /**
  * Tests the menu link content UI.
@@ -60,6 +61,19 @@ class MenuLinkContentUITest extends ContentTranslationUITest {
     $values['title'] = 'Test title';
 
     return parent::createEntity($values, $langcode, $bundle_name);
+  }
+
+  /**
+   * Ensure that a translate link can be found on the menu edit form.
+   */
+  public function testTranslationLinkOnMenuEditForm() {
+    $this->drupalGet('admin/structure/menu/manage/tools');
+    $this->assertNoLink(t('Translate'));
+
+    $menu_link_content = MenuLinkContent::create(['menu_name' => 'tools', 'route_name' => 'entity.menu.collection']);
+    $menu_link_content->save();
+    $this->drupalGet('admin/structure/menu/manage/tools');
+    $this->assertLink(t('Translate'));
   }
 
   /**
