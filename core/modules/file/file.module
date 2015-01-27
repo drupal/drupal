@@ -756,7 +756,7 @@ function file_save_upload($form_field_name, $validators = array(), $destination 
       'uri' => $file_info->getRealPath(),
       'filesize' => $file_info->getSize(),
     );
-    $values['filemime'] = file_get_mimetype($values['filename']);
+    $values['filemime'] = \Drupal::service('file.mime_type.guesser')->guess($values['uri']);
     $file = entity_create('file', $values);
 
     $extensions = '';

@@ -16,12 +16,12 @@ use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface;
 class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
 
   /**
-   * Default MIME extension mapping.
+   * MIME extension mappings.
    *
    * @var array
    *   Array of mimetypes correlated to the extensions that relate to them.
    */
-  protected $defaultMapping = array(
+  protected $mapping = array(
     'mimetypes' => array(
       0 => 'application/andrew-inset',
       1 => 'application/atom',
@@ -865,40 +865,9 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
   );
 
   /**
-   * The MIME types mapping array after going through the module handler.
-   *
-   * @var array
-   */
-  protected $mapping;
-
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * Constructs a new ExtensionMimeTypeGuesser.
-   *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
-   */
-  public function __construct(ModuleHandlerInterface $module_handler) {
-    $this->moduleHandler = $module_handler;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function guess($path) {
-    if ($this->mapping === NULL) {
-      $mapping = $this->defaultMapping;
-      // Allow modules to alter the default mapping.
-      $this->moduleHandler->alter('file_mimetype_mapping', $mapping);
-      $this->mapping = $mapping;
-    }
-
     $extension = '';
     $file_parts = explode('.', drupal_basename($path));
 
@@ -918,16 +887,6 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
     }
 
     return 'application/octet-stream';
-  }
-
-  /**
-   * Sets the mimetypes/extension mapping to use when guessing mimetype.
-   *
-   * @param array|null $mapping
-   *   Passing a NULL mapping will cause guess() to use self::$defaultMapping.
-   */
-  public function setMapping(array $mapping = NULL) {
-    $this->mapping = $mapping;
   }
 
 }

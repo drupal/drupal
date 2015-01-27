@@ -284,21 +284,6 @@ function file_test_file_url_alter(&$uri) {
 }
 
 /**
- * Implements hook_file_mimetype_mapping_alter().
- */
-function file_test_file_mimetype_mapping_alter(&$mapping) {
-  // Add new mappings.
-  $mapping['mimetypes']['file_test_mimetype_1'] = 'madeup/file_test_1';
-  $mapping['mimetypes']['file_test_mimetype_2'] = 'madeup/file_test_2';
-  $mapping['mimetypes']['file_test_mimetype_3'] = 'madeup/doc';
-  $mapping['extensions']['file_test_1'] = 'file_test_mimetype_1';
-  $mapping['extensions']['file_test_2'] = 'file_test_mimetype_2';
-  $mapping['extensions']['file_test_3'] = 'file_test_mimetype_2';
-  // Override existing mapping.
-  $mapping['extensions']['doc'] = 'file_test_mimetype_3';
-}
-
-/**
  * Helper validator that returns the $errors parameter.
  */
 function file_test_validator(File $file, $errors) {

@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\File\MimeType;
 
+use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser as SymfonyMimeTypeGuesser;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface;
@@ -15,6 +16,13 @@ use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface;
  * Defines a MIME type guesser that also supports stream wrapper paths.
  */
 class MimeTypeGuesser implements MimeTypeGuesserInterface {
+
+  /**
+   * The stream wrapper manager.
+   *
+   * @var \Drupal\Core\StreamWrapper\StreamWrapperManager
+   */
+  protected $streamWrapperManager;
 
   /**
    * An array of arrays of registered guessers keyed by priority.
@@ -36,10 +44,20 @@ class MimeTypeGuesser implements MimeTypeGuesserInterface {
   protected $sortedGuessers = NULL;
 
   /**
+   * Constructs the mime type guesser service.
+   *
+   * @param \Drupal\Core\StreamWrapper\StreamWrapperManager $stream_wrapper_manager
+   *   The stream wrapper manager.
+   */
+  public function __construct(StreamWrapperManager $stream_wrapper_manager) {
+    $this->streamWrapperManager = $stream_wrapper_manager;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function guess($path) {
-    if ($wrapper = file_stream_wrapper_get_instance_by_uri($path)) {
+    if ($wrapper = $this->streamWrapperManager->getViaUri($path)) {
       // Get the real path from the stream wrapper.
       $path = $wrapper->realpath();
     }
@@ -68,9 +86,15 @@ class MimeTypeGuesser implements MimeTypeGuesserInterface {
    * @return $this
    */
   public function addGuesser(MimeTypeGuesserInterface $guesser, $priority = 0) {
-    $this->guessers[$priority][] = $guesser;
-    // Mark sorted guessers for rebuild.
-    $this->sortedGuessers = NULL;
+    // Only add guessers which are supported.
+    // @see \Symfony\Component\HttpFoundation\File\MimeType\FileinfoMimeTypeGuesser
+    // @see \Symfony\Component\HttpFoundation\File\MimeType\FileBinaryMimeTypeGuesser
+    $supported = method_exists($guesser, 'isSupported') ? $guesser->isSupported() : TRUE;
+    if ($supported) {
+      $this->guessers[$priority][] = $guesser;
+      // Mark sorted guessers for rebuild.
+      $this->sortedGuessers = NULL;
+    }
     return $this;
   }
 
