@@ -12,7 +12,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -46,13 +45,6 @@ class ThemeSettingsForm extends ConfigFormBase {
   protected $editableConfig = [];
 
   /**
-   * The mime type guesser.
-   *
-   * @var \Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface
-   */
-  protected $mimeTypeGuesser;
-
-  /**
    * Constructs a ThemeSettingsForm object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -61,15 +53,12 @@ class ThemeSettingsForm extends ConfigFormBase {
    *   The module handler instance to use.
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    * The theme handler.
-   * @param \Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface $mime_type_guesser
-   *   The mime type guesser.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, MimeTypeGuesserInterface $mime_type_guesser) {
+  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler) {
     parent::__construct($config_factory);
 
     $this->moduleHandler = $module_handler;
     $this->themeHandler = $theme_handler;
-    $this->mimeTypeGuesser = $mime_type_guesser;
   }
 
   /**
@@ -79,8 +68,7 @@ class ThemeSettingsForm extends ConfigFormBase {
     return new static(
       $container->get('config.factory'),
       $container->get('module_handler'),
-      $container->get('theme_handler'),
-      $container->get('file.mime_type.guesser')
+      $container->get('theme_handler')
     );
   }
 
@@ -458,7 +446,7 @@ class ThemeSettingsForm extends ConfigFormBase {
       }
 
       if (empty($values['default_favicon']) && !empty($values['favicon_path'])) {
-        $values['favicon_mimetype'] = $this->mimeTypeGuesser->guess($values['favicon_path']);
+        $values['favicon_mimetype'] = file_get_mimetype($values['favicon_path']);
       }
     }
 

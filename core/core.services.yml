@@ -1168,7 +1168,6 @@ services:
     alias: plugin.manager.element_info
   file.mime_type.guesser:
     class: Drupal\Core\File\MimeType\MimeTypeGuesser
-    arguments: ['@stream_wrapper_manager']
     tags:
       - { name: service_collector, tag: mime_type_guesser, call: addGuesser }
   file.mime_type.guesser.extension:
@@ -1176,14 +1175,6 @@ services:
     arguments: ['@module_handler']
     tags:
       - { name: mime_type_guesser }
-  file.mime_type.guesser.fileinfo:
-    class: Symfony\Component\HttpFoundation\File\MimeType\FileinfoMimeTypeGuesser
-    tags:
-      - { name: mime_type_guesser, priority: 64 }
-  file.mime_type.guesser.filebinary:
-    class: Symfony\Component\HttpFoundation\File\MimeType\FileBinaryMimeTypeGuesser
-    tags:
-      - { name: mime_type_guesser, priority: 32 }
   renderer:
     class: Drupal\Core\Render\Renderer
     arguments: ['@controller_resolver', '@theme.manager', '@plugin.manager.element_info', '@request_stack', '@cache_factory', '@cache_contexts']

@@ -100,6 +100,30 @@ function hook_file_url_alter(&$uri) {
 }
 
 /**
+ * Alter MIME type mappings used to determine MIME type from a file extension.
+ *
+ * Invoked by \Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser::guess(). It
+ * is used to allow modules to add to or modify the default mapping from
+ * \Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser::$defaultMapping.
+ *
+ * @param $mapping
+ *   An array of mimetypes correlated to the extensions that relate to them.
+ *   The array has 'mimetypes' and 'extensions' elements, each of which is an
+ *   array.
+ *
+ * @see \Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser::guess()
+ * @see \Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser::$defaultMapping
+ */
+function hook_file_mimetype_mapping_alter(&$mapping) {
+  // Add new MIME type 'drupal/info'.
+  $mapping['mimetypes']['example_info'] = 'drupal/info';
+  // Add new extension '.info.yml' and map it to the 'drupal/info' MIME type.
+  $mapping['extensions']['info'] = 'example_info';
+  // Override existing extension mapping for '.ogg' files.
+  $mapping['extensions']['ogg'] = 189;
+}
+
+/**
  * Alter archiver information declared by other modules.
  *
  * See hook_archiver_info() for a description of archivers and the archiver

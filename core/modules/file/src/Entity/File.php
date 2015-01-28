@@ -185,7 +185,7 @@ class File extends ContentEntityBase implements FileInterface {
 
     // Automatically detect filemime if not set.
     if (!isset($values['filemime']) && isset($values['uri'])) {
-      $values['filemime'] = \Drupal::service('file.mime_type.guesser')->guess($values['uri']);
+      $values['filemime'] = file_get_mimetype($values['uri']);
     }
   }
 

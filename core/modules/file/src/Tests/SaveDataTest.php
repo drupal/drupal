@@ -25,7 +25,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
     $this->assertEqual(file_default_scheme(), file_uri_scheme($result->getFileUri()), "File was placed in Drupal's files directory.");
     $this->assertEqual($result->getFilename(), drupal_basename($result->getFileUri()), "Filename was set to the file's basename.");
     $this->assertEqual($contents, file_get_contents($result->getFileUri()), 'Contents of the file are correct.');
-    $this->assertEqual($result->getMimeType(), 'text/plain', 'A MIME type was set.');
+    $this->assertEqual($result->getMimeType(), 'application/octet-stream', 'A MIME type was set.');
     $this->assertTrue($result->isPermanent(), "The file's status was set to permanent.");
 
     // Check that the correct hooks were called.
@@ -74,7 +74,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
     $this->assertEqual('public', file_uri_scheme($result->getFileUri()), "File was placed in Drupal's files directory.");
     $this->assertEqual($result->getFilename(), $existing->getFilename(), 'Filename was set to the basename of the source, rather than that of the renamed file.');
     $this->assertEqual($contents, file_get_contents($result->getFileUri()), 'Contents of the file are correct.');
-    $this->assertEqual($result->getMimeType(), 'text/plain', 'A MIME type was set.');
+    $this->assertEqual($result->getMimeType(), 'application/octet-stream', 'A MIME type was set.');
     $this->assertTrue($result->isPermanent(), "The file's status was set to permanent.");
 
     // Check that the correct hooks were called.
@@ -102,7 +102,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
     $this->assertEqual('public', file_uri_scheme($result->getFileUri()), "File was placed in Drupal's files directory.");
     $this->assertEqual($result->getFilename(), $existing->getFilename(), 'Filename was set to the basename of the existing file, rather than preserving the original name.');
     $this->assertEqual($contents, file_get_contents($result->getFileUri()), 'Contents of the file are correct.');
-    $this->assertEqual($result->getMimeType(), 'text/plain', 'A MIME type was set.');
+    $this->assertEqual($result->getMimeType(), 'application/octet-stream', 'A MIME type was set.');
     $this->assertTrue($result->isPermanent(), "The file's status was set to permanent.");
 
     // Check that the correct hooks were called.
