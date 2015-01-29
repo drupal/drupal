@@ -9,13 +9,16 @@ namespace Drupal\Tests\Core;
 
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -438,6 +441,33 @@ class UrlTest extends UnitTestCase {
     $url = Url::fromRouteMatch($route_match);
     $this->assertSame('test_route', $url->getRouteName());
     $this->assertEquals(['foo' => '1'] , $url->getRouteParameters());
+  }
+
+  /**
+   * Tests the fromUri() method with an entity: URI.
+   *
+   * @covers ::fromUri
+   */
+  public function testEntityUris() {
+    $url = Url::fromUri('entity:test_entity/1');
+    $this->assertSame('entity.test_entity.canonical', $url->getRouteName());
+    $this->assertEquals(['test_entity' => '1'], $url->getRouteParameters());
+  }
+
+  /**
+   * Tests the fromUri() method with an invalid entity: URI.
+   *
+   * @covers ::fromUri
+   * @expectedException \Symfony\Component\Routing\Exception\InvalidParameterException
+   */
+  public function testInvalidEntityUriParameter() {
+    // Make the mocked URL generator behave like the actual one.
+    $this->urlGenerator->expects($this->once())
+      ->method('generateFromRoute')
+      ->with('entity.test_entity.canonical', ['test_entity' => '1/blah'])
+      ->willThrowException(new InvalidParameterException('Parameter "test_entity" for route "/test_entity/{test_entity}" must match "[^/]++" ("1/blah" given) to generate a corresponding URL..'));
+
+    Url::fromUri('entity:test_entity/1/blah')->toString();
   }
 
   /**
