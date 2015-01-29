@@ -524,11 +524,14 @@ function user_admin_perm($form_state, $rid = NULL) {
   }
 
   // Compile role array:
-  // Add a comma at the end so when searching for a permission, we can
-  // always search for "$perm," to make sure we do not confuse
+  // Add a comma at the beginning and end so when searching for a permission,
+  // we can always search for ", $perm," to make sure we do not confuse
   // permissions that are substrings of each other.
+  // For two permissions: 'OneModule view' and 'Module view', if we remove
+  // remove the comma from the beginning, enabling the former will
+  // automatically enable the latter
   while ($role = db_fetch_object($result)) {
-    $role_permissions[$role->rid] = $role->perm .',';
+    $role_permissions[$role->rid] = ', '.$role->perm .',';
   }
 
   // Retrieve role names for columns.
@@ -550,7 +553,7 @@ function user_admin_perm($form_state, $rid = NULL) {
         $form['permission'][$perm] = array('#value' => t($perm));
         foreach ($role_names as $rid => $name) {
           // Builds arrays for checked boxes for each role
-          if (strpos($role_permissions[$rid], $perm .',') !== FALSE) {
+          if (strpos($role_permissions[$rid], ', '. $perm .',') !== FALSE) {
             $status[$rid][] = $perm;
           }
         }
