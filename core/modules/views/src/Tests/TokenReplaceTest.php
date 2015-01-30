@@ -44,7 +44,7 @@ class TokenReplaceTest extends ViewUnitTestBase {
       '[view:description]' => 'Test view to token replacement tests.',
       '[view:id]' => 'test_tokens',
       '[view:title]' => 'Test token page',
-      '[view:url]' => _url('test_tokens', array('absolute' => TRUE)),
+      '[view:url]' => $view->getUrlInfo('page_1')->setAbsolute(TRUE)->toString(),
       '[view:total-rows]' => (string) $view->total_rows,
       '[view:base-table]' => 'views_test_data',
       '[view:base-field]' => 'id',

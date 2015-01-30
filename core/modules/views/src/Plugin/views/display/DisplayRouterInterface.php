@@ -38,4 +38,12 @@ interface DisplayRouterInterface {
    */
   public function alterRoutes(RouteCollection $collection);
 
+  /**
+   * Generates an URL to this display.
+   *
+   * @return \Drupal\Core\Url
+   *   A URL object for the display.
+   */
+  public function getUrlInfo();
+
 }

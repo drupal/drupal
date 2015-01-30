@@ -11,6 +11,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Utility\UnroutedUrlAssemblerInterface;
 
 class RelationLinkManager implements RelationLinkManagerInterface {
 
@@ -27,24 +28,33 @@ class RelationLinkManager implements RelationLinkManagerInterface {
   protected $entityManager;
 
   /**
+   * The unrouted URL assembler.
+   *
+   * @var \Drupal\Core\Utility\UnroutedUrlAssemblerInterface
+   */
+  protected $urlAssembler;
+
+  /**
    * Constructor.
    *
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache of relation URIs and their associated Typed Data IDs.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
+   * @param \Drupal\Core\Utility\UnroutedUrlAssemblerInterface $url_assembler
+   *   The unrouted URL assembler.
    */
-  public function __construct(CacheBackendInterface $cache, EntityManagerInterface $entity_manager) {
+  public function __construct(CacheBackendInterface $cache, EntityManagerInterface $entity_manager, UnroutedUrlAssemblerInterface $url_assembler) {
     $this->cache = $cache;
     $this->entityManager = $entity_manager;
+    $this->urlAssembler = $url_assembler;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getRelationUri($entity_type, $bundle, $field_name) {
-    // @todo Make the base path configurable.
-    return _url("rest/relation/$entity_type/$bundle/$field_name", array('absolute' => TRUE));
+    return $this->urlAssembler->assemble("base://rest/relation/$entity_type/$bundle/$field_name", array('absolute' => TRUE));
   }
 
   /**

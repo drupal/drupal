@@ -458,7 +458,7 @@ function system_authorized_run($callback, $file, $arguments = array(), $page_tit
 function system_authorized_batch_process() {
   $finish_url = system_authorized_get_url();
   $process_url = system_authorized_batch_processing_url();
-  return batch_process($finish_url->toString(), $process_url->toString());
+  return batch_process($finish_url->toString(), $process_url);
 }
 
 /**
@@ -631,7 +631,7 @@ function system_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
 
   $pathPrefix = '';
   $current_query = $request->query->all();
-  _url('', array('script' => &$scriptPath, 'prefix' => &$pathPrefix));
+  Url::fromRoute('<front>', [], array('script' => &$scriptPath, 'prefix' => &$pathPrefix))->toString();
   $current_path = \Drupal::routeMatch()->getRouteName() ? Url::fromRouteMatch(\Drupal::routeMatch())->getInternalPath() : '';
   $current_path_is_admin = \Drupal::service('router.admin_context')->isAdminRoute();
   $path_settings = [
@@ -722,11 +722,11 @@ function system_user_presave(UserInterface $account) {
 /**
  * Implements hook_user_login().
  */
-function system_user_login($account) {
+function system_user_login(UserInterface $account) {
   $config = \Drupal::config('system.date');
   // If the user has a NULL time zone, notify them to set a time zone.
   if (!$account->getTimezone() && $config->get('timezone.user.configurable') && $config->get('timezone.user.warn')) {
-    drupal_set_message(t('Configure your <a href="@user-edit">account time zone setting</a>.', array('@user-edit' => _url("user/$account->id()/edit", array('query' => drupal_get_destination(), 'fragment' => 'edit-timezone')))));
+    drupal_set_message(t('Configure your <a href="@user-edit">account time zone setting</a>.', array('@user-edit' => $account->url('edit-form', array('query' => drupal_get_destination(), 'fragment' => 'edit-timezone')))));
   }
 }
 

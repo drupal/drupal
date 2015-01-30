@@ -745,9 +745,10 @@ function batch_set($batch_definition) {
  * This function is generally not needed in form submit handlers;
  * Form API takes care of batches that were set during form submission.
  *
- * @param $redirect
- *   (optional) Path to redirect to when the batch has finished processing.
- * @param $url
+ * @param \Drupal\Core\Url|string $redirect
+ *   (optional) Either path or Url object to redirect to when the batch has
+ *   finished processing.
+ * @param \Drupal\Core\Url $url
  *   (optional - should only be used for separate scripts like update.php)
  *   URL of the batch processing page.
  * @param $redirect_callback
@@ -757,7 +758,7 @@ function batch_set($batch_definition) {
  * @return \Symfony\Component\HttpFoundation\RedirectResponse|null
  *   A redirect response if the batch is progressive. No return value otherwise.
  */
-function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = NULL) {
+function batch_process($redirect = NULL, Url $url = NULL, $redirect_callback = NULL) {
   $batch =& batch_get();
 
   if (isset($batch)) {
@@ -765,8 +766,7 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = NU
     $process_info = array(
       'current_set' => 0,
       'progressive' => TRUE,
-      'url' => $url,
-      'url_options' => array(),
+      'url' => isset($url) ? $url : Url::fromRoute('system.batch_page.html'),
       'source_url' => Url::fromRouteMatch(\Drupal::routeMatch()),
       'batch_redirect' => $redirect,
       'theme' => \Drupal::theme()->getActiveTheme()->getName(),
@@ -793,7 +793,16 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = NU
     if ($batch['progressive']) {
       // Now that we have a batch id, we can generate the redirection link in
       // the generic error message.
-      $batch['error_message'] = t('Please continue to <a href="@error_url">the error page</a>', array('@error_url' => _url($url, array('query' => array('id' => $batch['id'], 'op' => 'finished')))));
+      /** @var \Drupal\Core\Url $batch_url */
+      $batch_url = $batch['url'];
+      /** @var \Drupal\Core\Url $error_url */
+      $error_url = clone $batch_url;
+      $query_options = $error_url->getOption('query');
+      $query_options['id'] = $batch['id'];
+      $query_options['op'] = 'finished';
+      $error_url->setOption('query', $query_options);
+
+      $batch['error_message'] = t('Please continue to <a href="@error_url">the error page</a>', array('@error_url' => $error_url->toString()));
 
       // Clear the way for the redirection to the batch processing page, by
       // saving and unsetting the 'destination', if there is any.
@@ -815,13 +824,15 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = NU
       $_SESSION['batches'][$batch['id']] = TRUE;
 
       // Redirect for processing.
-      $options = array('query' => array('op' => 'start', 'id' => $batch['id']));
+      $query_options = $error_url->getOption('query');
+      $query_options['op'] = 'start';
+      $query_options['id'] = $batch['id'];
+      $batch_url->setOption('query', $query_options);
       if (($function = $batch['redirect_callback']) && function_exists($function)) {
-        $function($batch['url'], $options);
+        $function($batch_url->toString(), ['query' => $query_options]);
       }
       else {
-        $options['absolute'] = TRUE;
-        return new RedirectResponse(_url($batch['url'], $options));
+        return new RedirectResponse($batch_url->setAbsolute()->toString());
       }
     }
     else {

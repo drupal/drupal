@@ -480,7 +480,7 @@ function hook_local_tasks_alter(&$local_tasks) {
  * - title: The localized title of the link.
  * - route_name: The route name of the link.
  * - route_parameters: The route parameters of the link.
- * - localized_options: An array of options to pass to _url().
+ * - localized_options: An array of URL options.
  * - (optional) weight: The weight of the link, which is used to sort the links.
  *
  *

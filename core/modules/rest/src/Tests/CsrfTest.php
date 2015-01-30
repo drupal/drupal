@@ -5,6 +5,8 @@
 
 namespace Drupal\rest\Tests;
 
+use Drupal\Core\Url;
+
 /**
  * Tests the CSRF protection.
  *
@@ -107,7 +109,7 @@ class CsrfTest extends RESTTestBase {
       CURLOPT_HTTPGET => FALSE,
       CURLOPT_POST => TRUE,
       CURLOPT_POSTFIELDS => $this->serialized,
-      CURLOPT_URL => _url('entity/' . $this->testEntityType, array('absolute' => TRUE)),
+      CURLOPT_URL => Url::fromRoute('rest.entity.' . $this->testEntityType . '.POST')->setAbsolute()->toString(),
       CURLOPT_NOBODY => FALSE,
       CURLOPT_HTTPHEADER => array(
         "Content-Type: {$this->defaultMimeType}",

@@ -9,6 +9,7 @@ namespace Drupal\language\Tests;
 
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Url;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\simpletest\WebTestBase;
 use Symfony\Component\HttpFoundation\Request;
@@ -138,21 +139,21 @@ class LanguageUrlRewritingTest extends WebTestBase {
 
     // Create an absolute French link.
     $language = \Drupal::languageManager()->getLanguage('fr');
-    $url = _url('', array(
+    $url = Url::fromRoute('<none>', [], [
       'absolute' => TRUE,
       'language' => $language,
-    ));
+    ])->toString();
 
     $expected = ($index_php ? 'http://example.fr:88/index.php' : 'http://example.fr:88') . rtrim(base_path(), '/') . '/';
 
     $this->assertEqual($url, $expected, 'The right port is used.');
 
-    // If we set the port explicitly in _url(), it should not be overriden.
-    $url = _url('', array(
+    // If we set the port explicitly, it should not be overriden.
+    $url = Url::fromRoute('<none>', [], [
       'absolute' => TRUE,
       'language' => $language,
       'base_url' => $request->getBaseUrl() . ':90',
-    ));
+    ])->toString();
 
     $expected = $index_php ? 'http://example.fr:90/index.php' : 'http://example.fr:90' . rtrim(base_path(), '/') . '/';
 

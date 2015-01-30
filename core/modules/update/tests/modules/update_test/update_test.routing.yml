@@ -11,5 +11,6 @@ update_test.update_test:
     _title: 'Update test'
     _controller: '\Drupal\update_test\Controller\UpdateTestController::updateTest'
     version: NULL
+    project_name: NULL
   requirements:
     _access: 'TRUE'

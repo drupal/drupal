@@ -1470,23 +1470,10 @@ abstract class WebTestBase extends TestBase {
    *   The retrieved HTML string, also available as $this->getRawContent()
    */
   protected function drupalGet($path, array $options = array(), array $headers = array()) {
-    if ($path instanceof Url) {
-      $url = $path->setAbsolute()->toString();
-    }
-    // The URL generator service is not necessarily available yet; e.g., in
-    // interactive installer tests.
-    else if ($this->container->has('url_generator')) {
-      $options['absolute'] = TRUE;
-      $url = $this->container->get('url_generator')->generateFromPath($path, $options);
-    }
-    else {
-      $url = $this->getAbsoluteUrl($path);
-    }
-
     // We re-using a CURL connection here. If that connection still has certain
     // options set, it might change the GET into a POST. Make sure we clear out
     // previous options.
-    $out = $this->curlExec(array(CURLOPT_HTTPGET => TRUE, CURLOPT_URL => $url, CURLOPT_NOBODY => FALSE, CURLOPT_HTTPHEADER => $headers));
+    $out = $this->curlExec(array(CURLOPT_HTTPGET => TRUE, CURLOPT_URL => $this->buildUrl($path, $options), CURLOPT_NOBODY => FALSE, CURLOPT_HTTPHEADER => $headers));
     // Ensure that any changes to variables in the other thread are picked up.
     $this->refreshVariables();
 
@@ -1512,7 +1499,7 @@ abstract class WebTestBase extends TestBase {
    * @param string $path
    *   Path to request AJAX from.
    * @param array $options
-   *   Array of options to pass to _url().
+   *   Array of URL options.
    * @param array $headers
    *   Array of headers. Eg array('Accept: application/vnd.drupal-ajax').
    *
@@ -1967,11 +1954,10 @@ abstract class WebTestBase extends TestBase {
    *
    * @see WebTestBase::getAjaxPageStatePostData()
    * @see WebTestBase::curlExec()
-   * @see _url()
    */
   protected function drupalPost($path, $accept, array $post, $options = array()) {
     return $this->curlExec(array(
-      CURLOPT_URL => _url($path, $options + array('absolute' => TRUE)),
+      CURLOPT_URL => $this->buildUrl($path, $options),
       CURLOPT_POST => TRUE,
       CURLOPT_POSTFIELDS => $this->serializePostValues($post),
       CURLOPT_HTTPHEADER => array(
@@ -2732,5 +2718,31 @@ abstract class WebTestBase extends TestBase {
     $this->container->get('router.request_context')->fromRequest($request);
 
     return $request;
+  }
+
+  /**
+   * Builds an a absolute URL from a system path or a URL object.
+   *
+   * @param string|\Drupal\Core\Url $path
+   *   A system path or a URL.
+   * @param array $options
+   *   Options to be passed to Url::fromUri().
+   *
+   * @return string
+   *   An absolute URL stsring.
+   */
+  protected function buildUrl($path, array $options = array()) {
+    if ($path instanceof Url) {
+      return $path->setAbsolute()->toString();
+    }
+    // The URL generator service is not necessarily available yet; e.g., in
+    // interactive installer tests.
+    else if ($this->container->has('url_generator')) {
+      $options['absolute'] = TRUE;
+      return $this->container->get('url_generator')->generateFromPath($path, $options);
+    }
+    else {
+      return $this->getAbsoluteUrl($path);
+    }
   }
 }

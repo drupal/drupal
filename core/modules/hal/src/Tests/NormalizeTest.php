@@ -7,6 +7,8 @@
 
 namespace Drupal\hal\Tests;
 
+use Drupal\Core\Url;
+
 /**
  * Tests that entities can be normalized in HAL.
  *
@@ -59,8 +61,8 @@ class NormalizeTest extends NormalizerTestBase {
     $entity->getTranslation('en')->set('field_test_entity_reference', array(0 => $translation_values['field_test_entity_reference']));
     $entity->save();
 
-    $type_uri = _url('rest/type/entity_test/entity_test', array('absolute' => TRUE));
-    $relation_uri = _url('rest/relation/entity_test/entity_test/field_test_entity_reference', array('absolute' => TRUE));
+    $type_uri = Url::fromUri('base://rest/type/entity_test/entity_test', array('absolute' => TRUE))->toString();
+    $relation_uri = Url::fromUri('base://rest/relation/entity_test/entity_test/field_test_entity_reference', array('absolute' => TRUE))->toString();
 
     $expected_array = array(
       '_links' => array(

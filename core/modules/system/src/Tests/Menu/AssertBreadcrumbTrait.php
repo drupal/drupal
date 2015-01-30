@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Menu;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Url;
 
 /**
  * Provides test assertions for verifying breadcrumbs.
@@ -68,9 +69,19 @@ trait AssertBreadcrumbTrait {
     // this test would go into an infinite loop, so we need to check that too.
     while ($trail && !empty($parts)) {
       foreach ($trail as $path => $title) {
-        // If the path is empty or does not start with a leading /, assume it
-        // is an internal path that needs to be passed through _url().
-        $url = $path == '' || $path[0] != '/' ? _url($path) : $path;
+        // If the path is empty, generate the path from the <front> route.  If
+        // the path does not start with a leading, then run it through
+        // Url::fromUri('base://')->toString() to get correct the base
+        // prepended.
+        if ($path == '') {
+          $url = Url::fromRoute('<front>')->toString();
+        }
+        elseif ($path[0] != '/') {
+          $url = Url::fromUri('base://' . $path)->toString();
+        }
+        else {
+          $url = $path;
+        }
         $part = array_shift($parts);
         $pass = ($pass && $part['href'] === $url && $part['text'] === String::checkPlain($title));
       }

@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Menu;
 
+use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -62,7 +63,8 @@ class MenuRouterTest extends WebTestBase {
    */
   protected function doTestHookMenuIntegration() {
     // Generate base path with random argument.
-    $base_path = 'foo/' . $this->randomMachineName(8);
+    $machine_name = $this->randomMachineName(8);
+    $base_path = 'foo/' . $machine_name;
     $this->drupalGet($base_path);
     // Confirm correct controller activated.
     $this->assertText('test1');
@@ -70,8 +72,8 @@ class MenuRouterTest extends WebTestBase {
     $this->assertLink('Local task A');
     $this->assertLink('Local task B');
     // Confirm correct local task href.
-    $this->assertLinkByHref(_url($base_path));
-    $this->assertLinkByHref(_url($base_path . '/b'));
+    $this->assertLinkByHref(Url::fromRoute('menu_test.router_test1', ['bar' => $machine_name])->toString());
+    $this->assertLinkByHref(Url::fromRoute('menu_test.router_test2', ['bar' => $machine_name])->toString());
   }
 
   /**

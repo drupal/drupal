@@ -74,7 +74,7 @@ class TokenReplaceUnitTest extends TokenReplaceUnitTestBase {
    * Tests the generation of all system site information tokens.
    */
   public function testSystemSiteTokenReplacement() {
-    // The use of the _url() function requires the url_alias table to exist.
+    // The use of the \Drupal::url() method requires the url_alias table to exist.
     $this->installSchema('system', 'url_alias');
     $url_options = array(
       'absolute' => TRUE,

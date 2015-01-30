@@ -119,11 +119,11 @@ class PathLanguageTest extends PathTestBase {
     $this->drupalGet('fr/' . $edit['path[0][alias]']);
     $this->assertText($french_node->body->value, 'Alias for French translation works.');
 
-    // Confirm that the alias is returned by _url(). Languages are cached on
+    // Confirm that the alias is returned for the URL. Languages are cached on
     // many levels, and we need to clear those caches.
     $this->container->get('language_manager')->reset();
     $languages = $this->container->get('language_manager')->getLanguages();
-    $url = $this->container->get('url_generator')->generateFromPath('node/' . $french_node->id(), array('language' => $languages['fr']));
+    $url = $french_node->url('canonical', array('language' => $languages['fr']));
 
     $this->assertTrue(strpos($url, $edit['path[0][alias]']), 'URL contains the path alias.');
 

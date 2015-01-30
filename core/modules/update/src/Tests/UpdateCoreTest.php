@@ -190,7 +190,7 @@ class UpdateCoreTest extends UpdateTestBase {
   function testModulePageRunCron() {
     $this->setSystemInfo('8.0.0');
     $this->config('update.settings')
-      ->set('fetch.url', _url('update-test', array('absolute' => TRUE)))
+      ->set('fetch.url', Url::fromRoute('update_test.update_test')->setAbsolute()->toString())
       ->save();
     $this->config('update_test.settings')
       ->set('xml_map', array('drupal' => '0.0'))
@@ -208,7 +208,7 @@ class UpdateCoreTest extends UpdateTestBase {
     $this->setSystemInfo('8.0.0');
     // Instead of using refreshUpdateStatus(), set these manually.
     $this->config('update.settings')
-      ->set('fetch.url', _url('update-test', array('absolute' => TRUE)))
+      ->set('fetch.url', Url::fromRoute('update_test.update_test')->setAbsolute()->toString())
       ->save();
     $this->config('update_test.settings')
       ->set('xml_map', array('drupal' => '0.0'))
@@ -229,7 +229,7 @@ class UpdateCoreTest extends UpdateTestBase {
     $this->setSystemInfo('8.0.0');
     // Instead of using refreshUpdateStatus(), set these manually.
     $this->config('update.settings')
-      ->set('fetch.url', _url('update-test', array('absolute' => TRUE)))
+      ->set('fetch.url', Url::fromRoute('update_test.update_test')->setAbsolute()->toString())
       ->save();
     $this->config('update_test.settings')
       ->set('xml_map', array('drupal' => '0.1'))
@@ -250,7 +250,7 @@ class UpdateCoreTest extends UpdateTestBase {
     $this->setSystemInfo('8.0.0');
     // Instead of using refreshUpdateStatus(), set these manually.
     $this->config('update.settings')
-      ->set('fetch.url', _url('update-test', array('absolute' => TRUE)))
+      ->set('fetch.url', Url::fromRoute('update_test.update_test')->setAbsolute()->toString())
       ->save();
     $this->config('update_test.settings')
       ->set('xml_map', array('drupal' => '0.2-sec'))
@@ -325,7 +325,7 @@ class UpdateCoreTest extends UpdateTestBase {
     $this->setSystemInfo('8.0.0');
     // Instead of using refreshUpdateStatus(), set these manually.
     $this->config('update.settings')
-      ->set('fetch.url', _url('update-test', array('absolute' => TRUE)))
+      ->set('fetch.url', Url::fromRoute('update_test.update_test')->setAbsolute()->toString())
       ->save();
     $this->config('update_test.settings')
       ->set('xml_map', array('drupal' => '0.1'))

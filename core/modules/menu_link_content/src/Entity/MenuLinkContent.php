@@ -342,7 +342,7 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
 
     $fields['options'] = BaseFieldDefinition::create('map')
       ->setLabel(t('Options'))
-      ->setDescription(t('A serialized array of options to be passed to the _url() or _l() function, such as a query string or HTML attributes.'))
+      ->setDescription(t('A serialized array of URL options, such as a query string or HTML attributes.'))
       ->setSetting('default_value', array());
 
     $fields['external'] = BaseFieldDefinition::create('boolean')

@@ -64,7 +64,7 @@ abstract class RESTTestBase extends WebTestBase {
    * Helper function to issue a HTTP request with simpletest's cURL.
    *
    * @param string|\Drupal\Core\Url $url
-   *   A relative URL string or a Url object.
+   *   A Url object or system path.
    * @param string $method
    *   HTTP method, one of GET, POST, PUT or DELETE.
    * @param array $body
@@ -81,13 +81,7 @@ abstract class RESTTestBase extends WebTestBase {
       $token = $this->drupalGet('rest/session/token');
     }
 
-    // Convert to absolute URL.
-    if ($url instanceof Url) {
-      $url = $url->setAbsolute()->toString();
-    }
-    else {
-      $url = _url($url, array('absolute' => TRUE));
-    }
+    $url = $this->buildUrl($url);
 
     switch ($method) {
       case 'GET':

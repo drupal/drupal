@@ -23,7 +23,7 @@ class SearchKeywordsConditionsTest extends SearchTestBase {
    *
    * @var array
    */
-  public static $modules = array('comment', 'search_extra_type');
+  public static $modules = array('comment', 'search_extra_type', 'test_page_test');
 
   /**
    * A user with permission to search and post comments.

@@ -7,6 +7,8 @@
 
 namespace Drupal\search\Tests;
 
+use Drupal\Core\Url;
+
 /**
  * Verify the search config settings form.
  *
@@ -19,7 +21,7 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'search_extra_type');
+  public static $modules = array('block', 'search_extra_type', 'test_page_test');
 
   /**
    * User who can search and administer search.
@@ -269,8 +271,8 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
     // Ensure both search pages have their tabs displayed.
     $this->drupalGet('search');
     $elements = $this->xpath('//*[contains(@class, :class)]//a', array(':class' => 'tabs primary'));
-    $this->assertIdentical((string) $elements[0]['href'], _url('search/' . $first['path']));
-    $this->assertIdentical((string) $elements[1]['href'], _url('search/' . $second['path']));
+    $this->assertIdentical((string) $elements[0]['href'], Url::fromRoute('search.view_' . $first_id)->toString());
+    $this->assertIdentical((string) $elements[1]['href'], Url::fromRoute('search.view_' . $second_id)->toString());
 
     // Switch the weight of the search pages and check the order of the tabs.
     $edit = array(
@@ -280,8 +282,8 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
     $this->drupalPostForm('admin/config/search/pages', $edit, t('Save configuration'));
     $this->drupalGet('search');
     $elements = $this->xpath('//*[contains(@class, :class)]//a', array(':class' => 'tabs primary'));
-    $this->assertIdentical((string) $elements[0]['href'], _url('search/' . $second['path']));
-    $this->assertIdentical((string) $elements[1]['href'], _url('search/' . $first['path']));
+    $this->assertIdentical((string) $elements[0]['href'], Url::fromRoute('search.view_' . $second_id)->toString());
+    $this->assertIdentical((string) $elements[1]['href'], Url::fromRoute('search.view_' . $first_id)->toString());
 
     // Check the initial state of the search pages.
     $this->drupalGet('admin/config/search/pages');

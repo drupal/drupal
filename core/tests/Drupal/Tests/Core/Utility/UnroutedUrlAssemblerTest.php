@@ -73,6 +73,7 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
    * @dataProvider providerTestAssembleWithExternalUrl
    */
   public function testAssembleWithExternalUrl($uri, array $options, $expected) {
+   $this->setupRequestStack(FALSE);
    $this->assertEquals($expected, $this->unroutedUrlAssembler->assemble($uri, $options));
   }
 

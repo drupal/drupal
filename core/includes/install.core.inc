@@ -18,6 +18,7 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\StringTranslation\Translator\FileTranslation;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
@@ -581,10 +582,10 @@ function install_run_task($task, &$install_state) {
       }
       // Process the batch. For progressive batches, this will redirect.
       // Otherwise, the batch will complete.
-      // install_redirect_url() returns core/install.php, so let's ensure to
-      // drop it from it and use base:// as batch_process() is using the
-      // unrouted URL assembler, which requires base://.
-      $response = batch_process(preg_replace('@^core/@', 'base://', install_redirect_url($install_state)), install_full_redirect_url($install_state));
+      // Disable the default script for the URL and clone the object, as
+      // batch_process() will add additional options to the batch URL.
+      $url = Url::fromUri('base://install.php', ['query' => $install_state['parameters'], 'script' => '']);
+      $response = batch_process($url, clone $url);
       if ($response instanceof Response) {
         // Save $_SESSION data from batch.
         \Drupal::service('session_manager')->save();

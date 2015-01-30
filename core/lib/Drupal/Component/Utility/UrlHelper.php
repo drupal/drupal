@@ -134,7 +134,6 @@ class UrlHelper {
    *   - fragment: The fragment component from $url, if it exists.
    *
    * @see \Drupal\Core\Utility\LinkGenerator
-   * @see _url()
    * @see http://tools.ietf.org/html/rfc3986
    *
    * @ingroup php_wrappers

@@ -7,6 +7,7 @@
 
 namespace Drupal\hal\Tests;
 
+use Drupal\Core\Url;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 
 /**
@@ -24,7 +25,7 @@ class DenormalizeTest extends NormalizerTestBase {
     $data_with_valid_type = array(
       '_links' => array(
         'type' => array(
-          'href' => _url('rest/type/entity_test/entity_test', array('absolute' => TRUE)),
+          'href' => Url::fromUri('base://rest/type/entity_test/entity_test', array('absolute' => TRUE))->toString(),
         ),
       ),
     );
@@ -36,10 +37,10 @@ class DenormalizeTest extends NormalizerTestBase {
       '_links' => array(
         'type' => array(
           array(
-            'href' => _url('rest/types/foo', array('absolute' => TRUE)),
+            'href' => Url::fromUri('base://rest/types/foo', array('absolute' => TRUE))->toString(),
           ),
           array(
-            'href' => _url('rest/type/entity_test/entity_test', array('absolute' => TRUE)),
+            'href' => Url::fromUri('base://rest/type/entity_test/entity_test', array('absolute' => TRUE))->toString(),
           ),
         ),
       ),
@@ -51,7 +52,7 @@ class DenormalizeTest extends NormalizerTestBase {
     $data_with_invalid_type = array(
       '_links' => array(
         'type' => array(
-          'href' => _url('rest/types/foo', array('absolute' => TRUE)),
+          'href' => Url::fromUri('base://rest/types/foo', array('absolute' => TRUE))->toString(),
         ),
       ),
     );
@@ -84,7 +85,7 @@ class DenormalizeTest extends NormalizerTestBase {
     $no_field_data = array(
       '_links' => array(
         'type' => array(
-          'href' => _url('rest/type/entity_test/entity_test', array('absolute' => TRUE)),
+          'href' => Url::fromUri('base://rest/type/entity_test/entity_test', array('absolute' => TRUE))->toString(),
         ),
       ),
     );
@@ -94,7 +95,7 @@ class DenormalizeTest extends NormalizerTestBase {
     $empty_field_data = array(
       '_links' => array(
         'type' => array(
-          'href' => _url('rest/type/entity_test/entity_test', array('absolute' => TRUE)),
+          'href' => Url::fromUri('base://rest/type/entity_test/entity_test', array('absolute' => TRUE))->toString(),
         ),
       ),
       'field_test_text' => array(),
@@ -112,7 +113,7 @@ class DenormalizeTest extends NormalizerTestBase {
     $data = array(
       '_links' => array(
         'type' => array(
-          'href' => _url('rest/type/entity_test/entity_test', array('absolute' => TRUE)),
+          'href' => Url::fromUri('base://rest/type/entity_test/entity_test', array('absolute' => TRUE))->toString(),
         ),
       ),
       'uuid' => array(
@@ -182,7 +183,7 @@ class DenormalizeTest extends NormalizerTestBase {
     $data = array(
       '_links' => array(
         'type' => array(
-          'href' => _url('rest/type/entity_test/entity_test', array('absolute' => TRUE)),
+          'href' => Url::fromUri('base://rest/type/entity_test/entity_test', array('absolute' => TRUE))->toString(),
         ),
       ),
       'field_test_text' => array(

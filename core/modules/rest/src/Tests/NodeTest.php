@@ -7,6 +7,7 @@
 
 namespace Drupal\rest\Tests;
 
+use Drupal\Core\Url;
 use Drupal\rest\Tests\RESTTestBase;
 
 /**
@@ -50,14 +51,14 @@ class NodeTest extends RESTTestBase {
 
     $node = $this->entityCreate('node');
     $node->save();
-    $this->httpRequest('node/' . $node->id(), 'GET', NULL, $this->defaultMimeType);
+    $this->httpRequest($node->urlInfo(), 'GET', NULL, $this->defaultMimeType);
     $this->assertResponse(200);
     $this->assertHeader('Content-type', $this->defaultMimeType);
 
     // Also check that JSON works and the routing system selects the correct
     // REST route.
     $this->enableService('entity:node', 'GET', 'json');
-    $this->httpRequest('node/' . $node->id(), 'GET', NULL, 'application/json');
+    $this->httpRequest($node->urlInfo(), 'GET', NULL, 'application/json');
     $this->assertResponse(200);
     $this->assertHeader('Content-type', 'application/json');
 
@@ -69,7 +70,7 @@ class NodeTest extends RESTTestBase {
     $data = array(
       '_links' => array(
         'type' => array(
-          'href' => _url('rest/type/node/resttest', array('absolute' => TRUE)),
+          'href' => Url::fromUri('base://rest/type/node/resttest', array('absolute' => TRUE))->toString(),
         ),
       ),
       'title' => array(
@@ -79,7 +80,7 @@ class NodeTest extends RESTTestBase {
       ),
     );
     $serialized = $this->container->get('serializer')->serialize($data, $this->defaultFormat);
-    $this->httpRequest('node/' . $node->id(), 'PATCH', $serialized, $this->defaultMimeType);
+    $this->httpRequest($node->urlInfo(), 'PATCH', $serialized, $this->defaultMimeType);
     $this->assertResponse(204);
 
     // Reload the node from the DB and check if the title was correctly updated.

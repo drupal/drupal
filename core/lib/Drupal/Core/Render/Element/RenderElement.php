@@ -291,9 +291,8 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
         $settings['progress'] = array('type' => $settings['progress']);
       }
       // Change progress path to a full URL.
-      if (isset($settings['progress']['path'])) {
-        $settings['progress']['url'] = _url($settings['progress']['path']);
-        unset($settings['progress']['path']);
+      if (isset($settings['progress']['url']) && $settings['progress']['url'] instanceof Url) {
+        $settings['progress']['url'] = $settings['progress']['url']->toString();
       }
 
       $element['#attached']['drupalSettings']['ajax'][$element['#id']] = $settings;

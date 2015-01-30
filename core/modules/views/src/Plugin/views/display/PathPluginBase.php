@@ -486,5 +486,15 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     return $errors;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getUrlInfo() {
+    if (strpos($this->getOption('path'), '%') !== FALSE) {
+      throw new \InvalidArgumentException('No placeholders supported yet.');
+    }
+
+    return Url::fromRoute($this->getRoute($this->view->storage->id(), $this->display['id']));
+  }
 
 }

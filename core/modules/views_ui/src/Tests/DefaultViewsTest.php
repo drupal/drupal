@@ -7,6 +7,8 @@
 
 namespace Drupal\views_ui\Tests;
 
+use Drupal\Core\Url;
+
 /**
  * Tests enabling, disabling, and reverting default views via the listing page.
  *
@@ -168,7 +170,7 @@ class DefaultViewsTest extends UITestBase {
 
     // Check that a dynamic path is shown as text.
     $this->assertRaw('test_route_with_suffix/%/suffix');
-    $this->assertNoLinkByHref(_url('test_route_with_suffix/%/suffix'));
+    $this->assertNoLinkByHref(Url::fromUri('base://test_route_with_suffix/%/suffix')->toString());
   }
 
   /**

@@ -1273,7 +1273,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
           'not null' => FALSE,
         ),
         'options' => array(
-          'description' => 'A serialized array of options to be passed to the _url() or _l() function, such as a query string or HTML attributes.',
+          'description' => 'A serialized array of URL options, such as a query string or HTML attributes.',
           'type' => 'blob',
           'size' => 'big',
           'not null' => FALSE,

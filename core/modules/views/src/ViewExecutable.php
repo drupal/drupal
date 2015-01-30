@@ -11,6 +11,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\views\Plugin\views\display\DisplayRouterInterface;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\ViewEntityInterface;
 use Drupal\Component\Utility\Tags;
@@ -1755,6 +1756,26 @@ class ViewExecutable {
       $pieces = array_merge($pieces, $args);
     }
     return implode('/', $pieces);
+  }
+
+  /**
+   * Gets the Url object associated with the display handler.
+   *
+   * @param string $display_id
+   *   (Optional) The display id. ( Used only to detail an exception. )
+   *
+   * @throws \InvalidArgumentException
+   *   Thrown when the display plugin does not have a URL to return.
+   *
+   * @return \Drupal\Core\Url
+   *   The display handlers URL object.
+   */
+  public function getUrlInfo($display_id = '') {
+    $this->initDisplay();
+    if (!$this->display_handler instanceof DisplayRouterInterface) {
+      throw new \InvalidArgumentException(String::format('You cannot generate a URL for the display @display_id', ['@display_id' => $display_id]));
+    }
+    return $this->display_handler->getUrlInfo();
   }
 
   /**

@@ -148,7 +148,7 @@ class RenderElementTypesTest extends KernelTestBase {
           '#type' => 'more_link',
           '#url' => Url::fromRoute('router_test.1'),
         ),
-        'expected' => '//div[@class="more-link"]/a[@href="' . _url('router_test/test1') . '" and text()="More"]',
+        'expected' => '//div[@class="more-link"]/a[@href="' . Url::fromRoute('router_test.1')->toString() . '" and text()="More"]',
       ),
       array(
         'name' => "#type 'more_link' anchor tag with a route",
@@ -165,7 +165,7 @@ class RenderElementTypesTest extends KernelTestBase {
           '#url' => Url::fromRoute('system.admin_content'),
           '#options' => array('absolute' => TRUE),
         ),
-        'expected' => '//div[@class="more-link"]/a[@href="' . _url('admin/content', array('absolute' => TRUE)) . '" and text()="More"]',
+        'expected' => '//div[@class="more-link"]/a[@href="' . Url::fromRoute('system.admin_content')->setAbsolute()->toString() . '" and text()="More"]',
       ),
       array(
         'name' => "#type 'more_link' anchor tag to the front page",
@@ -173,7 +173,7 @@ class RenderElementTypesTest extends KernelTestBase {
           '#type' => 'more_link',
           '#url' => Url::fromRoute('<front>'),
         ),
-        'expected' => '//div[@class="more-link"]/a[@href="' . _url('<front>') . '" and text()="More"]',
+        'expected' => '//div[@class="more-link"]/a[@href="' . Url::fromRoute('<front>')->toString() . '" and text()="More"]',
       ),
     );
 

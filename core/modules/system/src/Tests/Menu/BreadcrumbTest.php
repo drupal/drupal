@@ -7,8 +7,7 @@
 
 namespace Drupal\system\Tests\Menu;
 
-use Drupal\Component\Utility\String;
-use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Url;
 use Drupal\node\Entity\NodeType;
 
 /**
@@ -279,7 +278,7 @@ class BreadcrumbTest extends MenuTestBase {
       // other than the breadcrumb trail.
       $elements = $this->xpath('//nav[@id=:menu]/descendant::a[@href=:href]', array(
         ':menu' => 'block-bartik-tools',
-        ':href' => _url($link_path),
+        ':href' => Url::fromUri('base://' . $link_path)->toString(),
       ));
       $this->assertTrue(count($elements) == 1, "Link to {$link_path} appears only once.");
 

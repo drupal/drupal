@@ -88,7 +88,7 @@ class AliasWhitelist extends CacheCollector implements AliasWhitelistInterface {
    */
   public function get($offset) {
     $this->lazyLoadCache();
-    // _url() may be called with paths that are not represented by menu router
+    // this may be called with paths that are not represented by menu router
     // items such as paths that will be rewritten by hook_url_outbound_alter().
     // Therefore internally TRUE is used to indicate whitelisted paths. FALSE is
     // used to indicate paths that have already been checked but are not

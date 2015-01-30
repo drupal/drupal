@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Menu;
 
+use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -40,7 +41,7 @@ class MenuTranslateTest extends WebTestBase {
     $this->assertResponse(403);
     $elements = $this->xpath('//ul[@class=:class]/li/a[@href=:href]', array(
       ':class' => 'tabs primary',
-      ':href' => _url('foo/asdf'),
+      ':href' => Url::fromRoute('menu_test.router_test1', ['bar' => 'asdf'])->toString(),
     ));
     $this->assertTrue(empty($elements), 'No tab linking to foo/asdf found');
     $this->assertNoLinkByHref('foo/asdf/b');

@@ -6,6 +6,8 @@
 
 namespace Drupal\serialization\Tests;
 
+use Drupal\Core\Url;
+
 /**
  * Tests that entities references can be resolved.
  *
@@ -29,6 +31,9 @@ class EntityResolverTest extends NormalizerTestBase {
 
   protected function setUp() {
     parent::setUp();
+
+    $this->installSchema('system', 'router');
+    \Drupal::service('router.builder')->rebuild();
 
     // Create the test field storage.
     entity_create('field_storage_config', array(
@@ -58,16 +63,16 @@ class EntityResolverTest extends NormalizerTestBase {
     $entity->set('field_test_entity_reference', array(array('target_id' => 1)));
     $entity->save();
 
-    $field_uri = _url('rest/relation/entity_test_mulrev/entity_test_mulrev/field_test_entity_reference', array('absolute' => TRUE));
+    $field_uri = Url::fromUri('base://rest/relation/entity_test_mulrev/entity_test_mulrev/field_test_entity_reference', array('absolute' => TRUE))->toString();
 
     $data = array(
       '_links' => array(
         'type' => array(
-          'href' => _url('rest/type/entity_test_mulrev/entity_test_mulrev', array('absolute' => TRUE)),
+          'href' => Url::fromUri('base://rest/type/entity_test_mulrev/entity_test_mulrev', array('absolute' => TRUE))->toString(),
         ),
         $field_uri => array(
           array(
-            'href' => _url('entity/entity_test_mulrev/' . $entity->id()),
+            'href' => $entity->url(),
           ),
         ),
       ),
@@ -75,7 +80,7 @@ class EntityResolverTest extends NormalizerTestBase {
         $field_uri => array(
           array(
             '_links' => array(
-              'self' => _url('entity/entity_test_mulrev/' . $entity->id()),
+              'self' => $entity->url(),
             ),
             'uuid' => array(
               array(

@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests\Wizard;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Url;
 
 /**
  * Tests the ability of the views wizard to put views in a menu.
@@ -40,7 +41,7 @@ class MenuTest extends WizardTestBase {
     $this->drupalGet('');
     $this->assertResponse(200);
     $this->assertLink($view['page[link_properties][title]']);
-    $this->assertLinkByHref(_url($view['page[path]']));
+    $this->assertLinkByHref(Url::fromUri('base://' . $view['page[path]'])->toString());
 
     // Make sure the link is associated with the main menu.
     /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */

@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Menu;
 
+use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -34,7 +35,7 @@ class LocalTasksTest extends WebTestBase {
     ));
     $this->assertTrue(count($elements), 'Local tasks found.');
     foreach ($hrefs as $index => $element) {
-      $expected = _url($hrefs[$index]);
+      $expected = Url::fromUri('base://' . $hrefs[$index])->toString();
       $method = ($elements[$index]['href'] == $expected ? 'pass' : 'fail');
       $this->{$method}(format_string('Task @number href @value equals @expected.', array(
         '@number' => $index + 1,
