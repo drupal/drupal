@@ -418,6 +418,17 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   /**
    * {@inheritdoc}
    */
+  public function getConfigTarget() {
+    // For configuration entities, use the config ID for the config target
+    // identifier. This ensures that default configuration (which does not yet
+    // have UUIDs) can be provided and installed with references to the target,
+    // and also makes config dependencies more readable.
+    return $this->id();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function onDependencyRemoval(array $dependencies) {
   }
 

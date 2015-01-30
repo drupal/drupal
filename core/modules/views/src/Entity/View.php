@@ -266,6 +266,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
 
     $executable = $this->getExecutable();
     $executable->initDisplay();
+    $executable->initStyle();
     $handler_types = array_keys(Views::getHandlerTypes());
 
     foreach ($executable->displayHandlers as $display) {

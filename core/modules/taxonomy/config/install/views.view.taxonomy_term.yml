@@ -227,7 +227,7 @@ display:
           admin_label: ''
           empty: true
           tokenize: true
-          entity_id: '!1'
+          target: '!1'
           view_mode: full
           bypass_access: false
           plugin_id: entity

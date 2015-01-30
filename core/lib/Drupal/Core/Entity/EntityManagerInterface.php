@@ -470,6 +470,26 @@ interface EntityManagerInterface extends PluginManagerInterface, EntityTypeListe
   public function loadEntityByUuid($entity_type_id, $uuid);
 
   /**
+   * Loads an entity by the config target identifier.
+   *
+   * @param string $entity_type_id
+   *   The entity type ID to load from.
+   * @param string $target
+   *   The configuration target to load, as returned from
+   *   \Drupal\Core\Entity\EntityInterface::getConfigTarget().
+   *
+   * @return \Drupal\Core\Entity\EntityInterface|FALSE
+   *   The entity object, or FALSE if there is no entity with the given UUID.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   *   Thrown if the target identifier is a UUID but the entity type does not
+   *   support UUIDs.
+   *
+   * @see \Drupal\Core\Entity\EntityInterface::getConfigTarget()
+   */
+  public function loadEntityByConfigTarget($entity_type_id, $target);
+
+  /**
    * Returns the entity type ID based on the class that is called on.
    *
    * Compares the class this is called on against the known entity classes

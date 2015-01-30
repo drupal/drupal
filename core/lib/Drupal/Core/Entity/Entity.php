@@ -569,4 +569,13 @@ abstract class Entity implements EntityInterface {
     return $this->getEntityTypeId() . ':' . $this->bundle() . ':' . $this->uuid();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfigTarget() {
+    // For content entities, use the UUID for the config target identifier.
+    // This ensures that references to the target can be deployed reliably.
+    return $this->uuid();
+  }
+
 }

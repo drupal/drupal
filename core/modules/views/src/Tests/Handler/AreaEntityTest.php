@@ -7,9 +7,11 @@
 
 namespace Drupal\views\Tests\Handler;
 
+use Drupal\block\Entity\Block;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormState;
-use Drupal\views\Tests\ViewTestBase;
+use Drupal\views\Entity\View;
+use Drupal\views\Tests\ViewUnitTestBase;
 use Drupal\views\Views;
 
 /**
@@ -18,14 +20,14 @@ use Drupal\views\Views;
  * @group views
  * @see \Drupal\views\Plugin\views\area\Entity
  */
-class AreaEntityTest extends ViewTestBase {
+class AreaEntityTest extends ViewUnitTestBase {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('entity_test');
+  public static $modules = ['entity_test', 'user', 'block'];
 
   /**
    * Views used by this test.
@@ -34,10 +36,27 @@ class AreaEntityTest extends ViewTestBase {
    */
   public static $testViews = array('test_entity_area');
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
+  }
 
-    $this->enableViewsTestModule();
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUpFixtures() {
+    $this->installEntitySchema('user');
+    $this->installEntitySchema('entity_test');
+    $this->installConfig(['entity_test']);
+
+    Block::create([
+      'id' => 'test_block',
+      'plugin' => 'system_main_block',
+    ])->save();
+
+    parent::setUpFixtures();
   }
 
   /**
@@ -72,20 +91,51 @@ class AreaEntityTest extends ViewTestBase {
    * Tests the area handler.
    */
   public function testEntityArea() {
-
+    /** @var \Drupal\Core\Entity\EntityInterface[] $entities */
     $entities = array();
     for ($i = 0; $i < 3; $i++) {
       $random_label = $this->randomMachineName();
       $data = array('bundle' => 'entity_test', 'name' => $random_label);
-      $entity_test = $this->container->get('entity.manager')->getStorage('entity_test')->create($data);
+      $entity_test = $this->container->get('entity.manager')
+        ->getStorage('entity_test')
+        ->create($data);
+
+      $uuid_map[0] = 'aa0c61cb-b7bb-4795-972a-493dabcf529c';
+      $uuid_map[1] = '62cef0ff-6f30-4f7a-b9d6-a8ed5a3a6bf3';
+      $uuid_map[2] = '3161d6e9-3326-4719-b513-8fa68a731ba2';
+      $entity_test->uuid->value = $uuid_map[$i];
+
       $entity_test->save();
       $entities[] = $entity_test;
-      \Drupal::state()->set('entity_test_entity_access.view.' . $entity_test->id(), $i != 2);
+      \Drupal::state()
+        ->set('entity_test_entity_access.view.' . $entity_test->id(), $i != 2);
     }
 
+    $this->doTestCalculateDependencies();
+    $this->doTestRender($entities);
+  }
+
+  /**
+   * Tests rendering the entity area handler.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface[] $entities
+   *   The entities.
+   */
+  public function doTestRender($entities) {
     $view = Views::getView('test_entity_area');
+    $preview = $view->preview('default', [$entities[1]->id()]);
+    $this->setRawContent(\Drupal::service('renderer')->render($preview));
+
+    $result = $this->xpath('//div[@class = "view-header"]');
+    $this->assertTrue(strpos(trim((string) $result[0]), $entities[0]->label()) !== FALSE, 'The rendered entity appears in the header of the view.');
+    $this->assertTrue(strpos(trim((string) $result[0]), 'full') !== FALSE, 'The rendered entity appeared in the right view mode.');
+
+    $result = $this->xpath('//div[@class = "view-footer"]');
+    $this->assertTrue(strpos(trim((string) $result[0]), $entities[1]->label()) !== FALSE, 'The rendered entity appears in the footer of the view.');
+    $this->assertTrue(strpos(trim((string) $result[0]), 'full') !== FALSE, 'The rendered entity appeared in the right view mode.');
+
     $preview = $view->preview('default', array($entities[1]->id()));
-    $this->drupalSetContent(drupal_render($preview));
+    $this->setRawContent(drupal_render($preview));
 
     $result = $this->xpath('//div[@class = "view-header"]');
     $this->assertTrue(strpos(trim((string) $result[0]), $entities[0]->label()) !== FALSE, 'The rendered entity appears in the header of the view.');
@@ -107,7 +157,7 @@ class AreaEntityTest extends ViewTestBase {
     $view->setHandler('default', 'header', 'entity_entity_test', $item);
 
     $preview = $view->preview('default', array($entities[1]->id()));
-    $this->drupalSetContent(drupal_render($preview));
+    $this->setRawContent(drupal_render($preview));
 
     $result = $this->xpath('//div[@class = "view-header"]');
     $this->assertTrue(strpos(trim((string) $result[0]), $entities[0]->label()) !== FALSE, 'The rendered entity appears in the header of the view.');
@@ -116,7 +166,7 @@ class AreaEntityTest extends ViewTestBase {
     // Test entity access.
     $view = Views::getView('test_entity_area');
     $preview = $view->preview('default', array($entities[2]->id()));
-    $this->drupalSetContent(drupal_render($preview));
+    $this->setRawContent(drupal_render($preview));
     $result = $this->xpath('//div[@class = "view-footer"]');
     $this->assertTrue(strpos($result[0], $entities[2]->label()) === FALSE, 'The rendered entity does not appear in the footer of the view.');
 
@@ -127,6 +177,20 @@ class AreaEntityTest extends ViewTestBase {
     $view->display_handler->getHandler('header', 'entity_entity_test')->buildOptionsForm($form, $form_state);
     $this->assertTrue(isset($form['view_mode']['#options']['test']), 'Ensure that the test view mode is available.');
     $this->assertTrue(isset($form['view_mode']['#options']['default']), 'Ensure that the default view mode is available.');
+  }
+
+  /**
+   * Tests the calculation of the rendered dependencies.
+   */
+  public function doTestCalculateDependencies() {
+    $view = View::load('test_entity_area');
+
+    $dependencies = $view->calculateDependencies();
+    // Ensure that both config and content entity dependencies are calculated.
+    $this->assertEqual([
+      'config' => ['block.block.test_block'],
+      'content' => ['entity_test:entity_test:aa0c61cb-b7bb-4795-972a-493dabcf529c'],
+    ], $dependencies);
   }
 
 }

@@ -12,6 +12,7 @@ use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Config\Entity\ConfigEntityType;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\Entity\Exception\AmbiguousEntityClassException;
 use Drupal\Core\Entity\Exception\NoCorrespondingEntityClassException;
@@ -976,6 +977,28 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
     $entities = $this->getStorage($entity_type_id)->loadByProperties(array($uuid_key => $uuid));
 
     return reset($entities);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function loadEntityByConfigTarget($entity_type_id, $target) {
+    $entity_type = $this->getDefinition($entity_type_id);
+
+    // For configuration entities, the config target is given by the entity ID.
+    // @todo Consider adding a method to allow entity types to indicate the
+    //   target identifier key rather than hard-coding this check. Issue:
+    //   https://www.drupal.org/node/2412983.
+    if ($entity_type instanceof ConfigEntityType) {
+      $entity = $this->getStorage($entity_type_id)->load($target);
+    }
+
+    // For content entities, the config target is given by the UUID.
+    else {
+      $entity = $this->loadEntityByUuid($entity_type_id, $target);
+    }
+
+    return $entity;
   }
 
   /**

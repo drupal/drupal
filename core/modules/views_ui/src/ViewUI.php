@@ -1154,6 +1154,13 @@ class ViewUI implements ViewEntityInterface {
   /**
    * {@inheritdoc}
    */
+  public function getConfigTarget() {
+    return $this->storage->getConfigTarget();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function onDependencyRemoval(array $dependencies) {
     return $this->storage->onDependencyRemoval($dependencies);
   }
