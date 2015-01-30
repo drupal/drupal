@@ -81,16 +81,18 @@ class StandardTest extends WebTestBase {
 
     // Ensure comments don't show in the front page RSS feed.
     // Create an article.
-    $node = $this->drupalCreateNode(array(
+    $this->drupalCreateNode(array(
       'type' => 'article',
       'title' => 'Foobar',
       'promote' => 1,
       'status' => 1,
+      'body' => array(array('value' => 'Then she picked out two somebodies,<br />Sally and me', 'format' => 'basic_html')),
     ));
 
     // Add a comment.
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('node/1');
+    $this->assertRaw('Then she picked out two somebodies,<br />Sally and me', 'Found a line break.');
     $this->drupalPostForm(NULL, array(
       'subject[0][value]' => 'Barfoo',
       'comment_body[0][value]' => 'Then she picked out two somebodies, Sally and me',

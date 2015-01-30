@@ -318,7 +318,7 @@ class FilterUnitTest extends KernelTestBase {
     $filter = $this->filters['filter_html'];
     $filter->setConfiguration(array(
       'settings' => array(
-        'allowed_html' => '<a> <em> <strong> <cite> <blockquote> <code> <ul> <ol> <li> <dl> <dt> <dd>',
+        'allowed_html' => '<a> <em> <strong> <cite> <blockquote> <code> <ul> <ol> <li> <dl> <dt> <dd> <br>',
         'filter_html_help' => 1,
         'filter_html_nofollow' => 0,
       )
@@ -355,6 +355,12 @@ class FilterUnitTest extends KernelTestBase {
 
     $f = _filter_html('<code onerror>&nbsp;</code>', $filter);
     $this->assertNoNormalized($f, 'onerror', 'HTML filter should remove empty on* attributes on default.');
+
+    $f = _filter_html('<br>', $filter);
+    $this->assertNormalized($f, '<br>', 'HTML filter should allow line breaks.');
+
+    $f = _filter_html('<br />', $filter);
+    $this->assertNormalized($f, '<br />', 'HTML filter should allow self-closing line breaks.');
   }
 
   /**
