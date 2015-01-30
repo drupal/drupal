@@ -395,7 +395,7 @@
   Drupal.behaviors.viewsUiPreview = {
     attach: function (context) {
       // Only act on the edit view form.
-      var $contextualFiltersBucket = $(context).find('.views-display-column .views-ui-display-tab-bucket.contextual-filters');
+      var $contextualFiltersBucket = $(context).find('.views-display-column .views-ui-display-tab-bucket.argument');
       if ($contextualFiltersBucket.length === 0) {
         return;
       }

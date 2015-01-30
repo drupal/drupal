@@ -555,7 +555,7 @@ class ViewEditForm extends ViewFormBase {
         $build['columns'][$column][$id] = $bucket['build'];
         $build['columns'][$column][$id]['#theme_wrappers'][] = 'views_ui_display_tab_bucket';
         $build['columns'][$column][$id]['#title'] = !empty($bucket['title']) ? $bucket['title'] : '';
-        $build['columns'][$column][$id]['#name'] = !empty($bucket['title']) ? $bucket['title'] : $id;
+        $build['columns'][$column][$id]['#name'] = $id;
       }
     }
 
@@ -931,7 +931,8 @@ class ViewEditForm extends ViewFormBase {
     $build['#overridden'] = FALSE;
     $build['#defaulted'] = FALSE;
 
-    $build['#name'] = $build['#title'] = $types[$type]['title'];
+    $build['#name'] = $type;
+    $build['#title'] = $types[$type]['title'];
 
     $rearrange_url = Url::fromRoute('views_ui.form_rearrange', ['js' => 'nojs', 'view' => $view->id(), 'display_id' => $display['id'], 'type' => $type]);
     $class = 'icon compact rearrange';

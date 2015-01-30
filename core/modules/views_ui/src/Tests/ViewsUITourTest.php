@@ -8,6 +8,7 @@
 namespace Drupal\views_ui\Tests;
 
 use Drupal\tour\Tests\TourTestBase;
+use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
  * Tests the Views UI tour.
@@ -24,11 +25,18 @@ class ViewsUITourTest extends TourTestBase {
   protected $adminUser;
 
   /**
+   * String translation storage object.
+   *
+   * @var \Drupal\locale\StringStorageInterface
+   */
+  protected $localeStorage;
+
+  /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('views_ui', 'tour');
+  public static $modules = array('views_ui', 'tour', 'language', 'locale');
 
   protected function setUp() {
     parent::setUp();
@@ -48,6 +56,61 @@ class ViewsUITourTest extends TourTestBase {
     $view['page[path]'] = $this->randomMachineName(16);
     $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
     $this->assertTourTips();
+  }
+
+  /**
+   * Tests views_ui tour tip availability in a different language.
+   */
+  public function testViewsUiTourTipsTranslated() {
+    $langcode = 'nl';
+
+    // Add a default locale storage for this test.
+    $this->localeStorage = $this->container->get('locale.storage');
+
+    // Add Dutch language programmatically.
+    ConfigurableLanguage::createFromLangcode($langcode)->save();
+
+    // Handler titles that need translations.
+    $handler_titles = array(
+      'Format',
+      'Fields',
+      'Sort criteria',
+      'Filter criteria',
+    );
+
+    foreach ($handler_titles as $handler_title) {
+      // Create source string.
+      $source = $this->localeStorage->createString(array(
+        'source' => $handler_title
+      ));
+      $source->save();
+      $this->createTranslation($source, $langcode);
+    }
+
+    // Create a basic view that shows all content, with a page and a block
+    // display.
+    $view['label'] = $this->randomMachineName(16);
+    $view['id'] = strtolower($this->randomMachineName(16));
+    $view['page[create]'] = 1;
+    $view['page[path]'] = $this->randomMachineName(16);
+    // Load the page in dutch.
+    $this->drupalPostForm(
+      $langcode . '/admin/structure/views/add',
+      $view,
+      t('Save and edit')
+    );
+    $this->assertTourTips();
+  }
+
+  /**
+   * Creates single translation for source string.
+   */
+  public function createTranslation($source, $langcode) {
+    return $this->localeStorage->createTranslation(array(
+        'lid' => $source->lid,
+        'language' => $langcode,
+        'translation' => $this->randomMachineName(100),
+      ))->save();
   }
 
 }

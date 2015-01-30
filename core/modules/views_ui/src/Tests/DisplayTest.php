@@ -121,16 +121,15 @@ class DisplayTest extends UITestBase {
 
     $this->drupalGet('admin/structure/views/view/test_display/edit/display_no_area_test_1');
 
-    // Create a mapping of area type => class.
     $areas = array(
-      'header' => 'header',
-      'footer' => 'footer',
-      'empty' => 'no-results-behavior',
+      'header',
+      'footer',
+      'empty',
     );
 
     // Assert that the expected text is found in each area category.
-    foreach ($areas as $type => $class) {
-      $element = $this->xpath('//div[contains(@class, :class)]/div', array(':class' => $class));
+    foreach ($areas as $type) {
+      $element = $this->xpath('//div[contains(@class, :class)]/div', array(':class' => $type));
       $this->assertEqual((string) $element[0], String::format('The selected display type does not use @type plugins', array('@type' => $type)));
     }
   }
