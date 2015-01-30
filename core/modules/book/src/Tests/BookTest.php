@@ -59,8 +59,12 @@ class BookTest extends WebTestBase {
    */
   protected $webUserWithoutNodeAccess;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
+    $this->drupalPlaceBlock('system_breadcrumb_block');
 
     // node_access_test requires a node_access_rebuild().
     node_access_rebuild();

@@ -32,9 +32,6 @@
  *   on the theme settings page. If hidden, the "visually-hidden" class is
  *   added to make the site slogan visually hidden, but still accessible.
  *
- * Navigation:
- * - breadcrumb: The breadcrumb trail for the current page.
- *
  * Page content (in order of occurrence in the default page.html.twig):
  * - title_prefix: Additional output populated by modules, intended to be
  *   displayed in front of the main title tag that appears in the template.
@@ -68,6 +65,7 @@
  * - page.footer_thirdcolumn: Items for the third footer column.
  * - page.footer_fourthcolumn: Items for the fourth footer column.
  * - page.footer: Items for the footer region.
+ * - page.breadcrumb: Items for the breadcrumb region.
  *
  * @see template_preprocess_page()
  * @see bartik_preprocess_page()
@@ -125,7 +123,7 @@
     {% endif %}
     <div id="main-wrapper" class="clearfix">
       <div id="main" class="clearfix">
-        {{ breadcrumb }}
+        {{ page.breadcrumb }}
         <main id="content" class="column" role="main">
           <section class="section">
             <a id="main-content" tabindex="-1"></a>

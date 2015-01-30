@@ -468,6 +468,7 @@ class ThemeHandler implements ThemeHandlerInterface {
         'help' => 'Help',
         'page_top' => 'Page top',
         'page_bottom' => 'Page bottom',
+        'breadcrumb' => 'Breadcrumb',
       ),
       'description' => '',
       'features' => $this->defaultFeatures,

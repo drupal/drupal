@@ -26,7 +26,7 @@ class DbLogTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('dblog', 'node', 'forum', 'help');
+  public static $modules = array('dblog', 'node', 'forum', 'help', 'block');
 
   /**
    * A user with some relevant administrative permissions.
@@ -42,8 +42,12 @@ class DbLogTest extends WebTestBase {
    */
   protected $webUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
+    $this->drupalPlaceBlock('system_breadcrumb_block');
 
     // Create users with specific permissions.
     $this->adminUser = $this->drupalCreateUser(array('administer site configuration', 'access administration pages', 'access site reports', 'administer users'));

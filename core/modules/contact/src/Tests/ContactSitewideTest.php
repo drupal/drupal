@@ -30,7 +30,15 @@ class ContactSitewideTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('text', 'contact', 'field_ui', 'contact_test');
+  public static $modules = array('text', 'contact', 'field_ui', 'contact_test', 'block');
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+    $this->drupalPlaceBlock('system_breadcrumb_block');
+  }
 
   /**
    * Tests configuration options and the site-wide contact form.

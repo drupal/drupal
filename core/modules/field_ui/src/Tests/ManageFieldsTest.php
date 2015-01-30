@@ -28,13 +28,14 @@ class ManageFieldsTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'field_ui', 'field_test', 'taxonomy', 'image');
+  public static $modules = array('node', 'field_ui', 'field_test', 'taxonomy', 'image', 'block');
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
+    $this->drupalPlaceBlock('system_breadcrumb_block');
 
     // Create a test user.
     $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer node fields', 'administer node form display', 'administer node display', 'administer taxonomy', 'administer taxonomy_term fields', 'administer taxonomy_term display', 'administer users', 'administer account settings', 'administer user display', 'bypass node access'));

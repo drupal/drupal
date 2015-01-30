@@ -25,7 +25,7 @@ class CommentNonNodeTest extends WebTestBase {
 
   use FieldUiTestTrait;
 
-  public static $modules = array('comment', 'user', 'field_ui', 'entity_test');
+  public static $modules = array('comment', 'user', 'field_ui', 'entity_test', 'block');
 
   /**
    * An administrative user with permission to configure comment settings.
@@ -34,8 +34,12 @@ class CommentNonNodeTest extends WebTestBase {
    */
   protected $adminUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
+    $this->drupalPlaceBlock('system_breadcrumb_block');
 
     // Create a bundle for entity_test.
     entity_test_create_bundle('entity_test', 'Entity Test', 'entity_test');

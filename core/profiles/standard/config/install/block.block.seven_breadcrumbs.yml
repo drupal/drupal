@@ -1,9 +1,9 @@
 id: seven_breadcrumbs
 theme: seven
-weight: -2
-status: false
+weight: 0
+status: true
 langcode: en
-region: '-1'
+region: breadcrumb
 plugin: system_breadcrumb_block
 settings:
   id: system_breadcrumb_block

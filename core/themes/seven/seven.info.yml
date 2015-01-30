@@ -23,5 +23,6 @@ regions:
   page_top: 'Page top'
   page_bottom: 'Page bottom'
   sidebar_first: 'First sidebar'
+  breadcrumb: Breadcrumb
 regions_hidden:
   - sidebar_first

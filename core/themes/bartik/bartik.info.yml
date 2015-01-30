@@ -22,6 +22,7 @@ regions:
   page_top: 'Page top'
   page_bottom: 'Page bottom'
   featured: Featured
+  breadcrumb: Breadcrumb
   content: Content
   sidebar_first: 'Sidebar first'
   sidebar_second: 'Sidebar second'

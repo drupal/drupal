@@ -23,11 +23,19 @@ class FileFieldWidgetTest extends FileFieldTestBase {
   use FieldUiTestTrait;
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+    $this->drupalPlaceBlock('system_breadcrumb_block');
+  }
+
+  /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('comment');
+  public static $modules = array('comment', 'block');
 
   /**
    * Tests upload and remove buttons for a single-valued File field.

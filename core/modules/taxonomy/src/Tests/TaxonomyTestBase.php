@@ -22,10 +22,14 @@ abstract class TaxonomyTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('taxonomy');
+  public static $modules = array('taxonomy', 'block');
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
+    $this->drupalPlaceBlock('system_breadcrumb_block');
 
     // Create Basic page and Article node types.
     if ($this->profile != 'standard') {

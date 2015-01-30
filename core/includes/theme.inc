@@ -1482,17 +1482,6 @@ function template_preprocess_page(&$variables) {
     '#theme' => 'status_messages',
     '#access' => $variables['show_messages'],
   );
-
-  // Set the breadcrumb last, so as to increase the chance of being able to
-  // re-use the cache of an already retrieved menu containing the active link
-  // for the current page.
-  // @see menu_tree_page_data()
-  if (!defined('MAINTENANCE_MODE')) {
-    $variables['breadcrumb'] = array(
-      '#theme' => 'breadcrumb',
-      '#links' => \Drupal::service('breadcrumb')->build(\Drupal::routeMatch()),
-    );
-  }
 }
 
 /**

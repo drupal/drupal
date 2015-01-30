@@ -19,7 +19,7 @@ class NodeTitleTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = array('comment', 'views');
+  public static $modules = array('comment', 'views', 'block');
 
   /**
    * A user with permission to bypass access content.
@@ -28,8 +28,12 @@ class NodeTitleTest extends NodeTestBase {
    */
   protected $adminUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
+    $this->drupalPlaceBlock('system_breadcrumb_block');
 
     $this->adminUser = $this->drupalCreateUser(array('administer nodes', 'create article content', 'create page content', 'post comments'));
     $this->drupalLogin($this->adminUser);

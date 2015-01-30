@@ -25,9 +25,6 @@
  * - site_slogan: The slogan of the site. This is empty when displaying the site
  *   slogan has been disabled in theme settings.
  *
- * Navigation:
- * - breadcrumb: The breadcrumb trail for the current page.
- *
  * Page content (in order of occurrence in the default page.html.twig):
  * - title_prefix: Additional output populated by modules, intended to be
  *   displayed in front of the main title tag that appears in the template.
@@ -54,6 +51,7 @@
  * - page.sidebar_first: Items for the first sidebar.
  * - page.sidebar_second: Items for the second sidebar.
  * - page.footer: Items for the footer region.
+ * - page.breadcrumb: Items for the breadcrumb region.
  *
  * @see template_preprocess_page()
  * @see html.html.twig
@@ -96,7 +94,7 @@
   {{ page.primary_menu }}
   {{ page.secondary_menu }}
 
-  {{ breadcrumb }}
+  {{ page.breadcrumb }}
 
   {{ messages }}
 

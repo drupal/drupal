@@ -25,6 +25,9 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
 
   protected $dumpHeaders = TRUE;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
 
@@ -64,7 +67,7 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
         'request_path' => array(
           'pages' => 'node/' . $node_2->id(),
         ),
-      )
+      ),
     ));
 
     // Full node page 1.
@@ -72,6 +75,7 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
       'rendered',
       'block_view',
       'config:block_list',
+      'config:block.block.bartik_breadcrumbs',
       'config:block.block.bartik_content',
       'config:block.block.bartik_tools',
       'config:block.block.bartik_login',
@@ -79,6 +83,7 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
       'config:block.block.bartik_powered',
       'config:block.block.bartik_main_menu',
       'config:block.block.bartik_account_menu',
+      'block_plugin:system_breadcrumb_block',
       'block_plugin:system_main_block',
       'block_plugin:system_menu_block__account',
       'block_plugin:system_menu_block__main',
@@ -101,6 +106,7 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
       'rendered',
       'block_view',
       'config:block_list',
+      'config:block.block.bartik_breadcrumbs',
       'config:block.block.bartik_content',
       'config:block.block.bartik_tools',
       'config:block.block.bartik_login',
@@ -109,6 +115,7 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
       'config:block.block.bartik_powered',
       'config:block.block.bartik_main_menu',
       'config:block.block.bartik_account_menu',
+      'block_plugin:system_breadcrumb_block',
       'block_plugin:system_main_block',
       'block_plugin:system_menu_block__account',
       'block_plugin:system_menu_block__main',
