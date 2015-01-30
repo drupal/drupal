@@ -170,7 +170,7 @@ class DefaultViewsTest extends UITestBase {
 
     // Check that a dynamic path is shown as text.
     $this->assertRaw('test_route_with_suffix/%/suffix');
-    $this->assertNoLinkByHref(Url::fromUri('base://test_route_with_suffix/%/suffix')->toString());
+    $this->assertNoLinkByHref(Url::fromUri('base:test_route_with_suffix/%/suffix')->toString());
   }
 
   /**

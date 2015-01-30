@@ -36,7 +36,7 @@ class ConfirmFormHelper {
       $options = UrlHelper::parse($query->get('destination'));
       // @todo Use Url::fromPath() once https://www.drupal.org/node/2351379 is
       //   resolved.
-      $url = Url::fromUri('base://' . $options['path'], $options);
+      $url = Url::fromUri('base:' . $options['path'], $options);
     }
     // Check for a route-based cancel link.
     else {

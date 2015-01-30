@@ -584,7 +584,7 @@ function install_run_task($task, &$install_state) {
       // Otherwise, the batch will complete.
       // Disable the default script for the URL and clone the object, as
       // batch_process() will add additional options to the batch URL.
-      $url = Url::fromUri('base://install.php', ['query' => $install_state['parameters'], 'script' => '']);
+      $url = Url::fromUri('base:install.php', ['query' => $install_state['parameters'], 'script' => '']);
       $response = batch_process($url, clone $url);
       if ($response instanceof Response) {
         // Save $_SESSION data from batch.

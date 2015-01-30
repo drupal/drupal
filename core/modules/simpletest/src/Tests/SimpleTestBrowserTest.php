@@ -77,7 +77,7 @@ class SimpleTestBrowserTest extends WebTestBase {
     // @see drupal_valid_test_ua()
     // Not using File API; a potential error must trigger a PHP warning.
     unlink($this->siteDirectory . '/.htkey');
-    $this->drupalGet(Url::fromUri('base://core/install.php', array('external' => TRUE, 'absolute' => TRUE))->toString());
+    $this->drupalGet(Url::fromUri('base:core/install.php', array('external' => TRUE, 'absolute' => TRUE))->toString());
     $this->assertResponse(403, 'Cannot access install.php.');
   }
 

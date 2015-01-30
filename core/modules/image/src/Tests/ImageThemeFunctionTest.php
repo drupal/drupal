@@ -87,7 +87,7 @@ class ImageThemeFunctionTest extends WebTestBase {
       '#theme' => 'image_formatter',
       '#image_style' => 'test',
       '#item' => $entity->image_test,
-      '#url' => Url::fromUri('base://' . $path),
+      '#url' => Url::fromUri('base:' . $path),
     );
 
     // Test using theme_image_formatter() with a NULL value for the alt option.

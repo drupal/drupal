@@ -54,7 +54,7 @@ class RelationLinkManager implements RelationLinkManagerInterface {
    * {@inheritdoc}
    */
   public function getRelationUri($entity_type, $bundle, $field_name) {
-    return $this->urlAssembler->assemble("base://rest/relation/$entity_type/$bundle/$field_name", array('absolute' => TRUE));
+    return $this->urlAssembler->assemble("base:rest/relation/$entity_type/$bundle/$field_name", array('absolute' => TRUE));
   }
 
   /**

@@ -70,7 +70,7 @@ class NodeTest extends RESTTestBase {
     $data = array(
       '_links' => array(
         'type' => array(
-          'href' => Url::fromUri('base://rest/type/node/resttest', array('absolute' => TRUE))->toString(),
+          'href' => Url::fromUri('base:rest/type/node/resttest', array('absolute' => TRUE))->toString(),
         ),
       ),
       'title' => array(

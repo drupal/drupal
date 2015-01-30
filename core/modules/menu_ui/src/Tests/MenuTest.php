@@ -116,7 +116,7 @@ class MenuTest extends MenuWebTestBase {
     // Verify delete link exists and reset link does not exist.
     $this->drupalGet('admin/structure/menu/manage/' . $this->menu->id());
     $this->assertLinkByHref('admin/structure/menu/item/' . $this->items[0]->id() . '/delete');
-    $this->assertNoLinkByHref(Url::fromUri('base://admin/structure/menu/link/' . $this->items[0]->getPluginId() . '/reset')->toString());
+    $this->assertNoLinkByHref(Url::fromUri('base:admin/structure/menu/link/' . $this->items[0]->getPluginId() . '/reset')->toString());
     // Check delete and reset access.
     $this->drupalGet('admin/structure/menu/item/' . $this->items[0]->id() . '/delete');
     $this->assertResponse(200);

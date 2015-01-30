@@ -278,7 +278,7 @@ class BreadcrumbTest extends MenuTestBase {
       // other than the breadcrumb trail.
       $elements = $this->xpath('//nav[@id=:menu]/descendant::a[@href=:href]', array(
         ':menu' => 'block-bartik-tools',
-        ':href' => Url::fromUri('base://' . $link_path)->toString(),
+        ':href' => Url::fromUri('base:' . $link_path)->toString(),
       ));
       $this->assertTrue(count($elements) == 1, "Link to {$link_path} appears only once.");
 

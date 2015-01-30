@@ -499,9 +499,9 @@ function _format_date_callback(array $matches = NULL, $new_langcode = NULL) {
  *   non-controller or sub-domain URIs such as core/install.php. Note that
  *   \Drupal\Core\Url::fromUri() expects a valid URI including the scheme. URIs
  *   from the same sub-domain that are not handled by Drupal controllers should
- *   be prepended with base://. For example:
+ *   use the base: scheme. For example:
  * @code
- * $installer_url = \Drupal\Core\Url::fromUri('base://core/install.php')->toString();
+ * $installer_url = \Drupal\Core\Url::fromUri('base:core/install.php')->toString();
  * $external_url = \Drupal\Core\Url::fromUri('http://example.com', ['query' => ['foo' => 'bar']])->toString();
  * $internal_url = \Drupal\Core\Url::fromRoute('system.admin')->toString();
  * @endcode
@@ -604,9 +604,9 @@ function drupal_http_header_attributes(array $attributes = array()) {
  *   core/install.php use \Drupal\Core\Url::fromUri(). Note that
  *   \Drupal\Core\Url::fromUri() expects a valid URI including the scheme. URIs
  *   from the same sub-domain that are not handled by Drupal controllers should
- *   be prepended with base://. For example:
+ *   be prepended with base:. For example:
  * @code
- * $installer_url = \Drupal\Core\Url::fromUri('base://core/install.php')->toString();
+ * $installer_url = \Drupal\Core\Url::fromUri('base:core/install.php')->toString();
  * $installer_link = \Drupal::l($text, $installer_url);
  * $external_url = \Drupal\Core\Url::fromUri('http://example.com', ['query' => ['foo' => 'bar']])->toString();
  * $external_link = \Drupal::l($text, $external_url);

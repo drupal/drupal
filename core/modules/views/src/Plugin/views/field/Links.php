@@ -85,7 +85,7 @@ abstract class Links extends FieldPluginBase {
       $path = strip_tags(String::decodeEntities($this->viewsTokenReplace($path, $tokens)));
 
       $links[$field] = array(
-        'url' => $path ? UrlObject::fromUri('base://' . $path) : $url,
+        'url' => $path ? UrlObject::fromUri('base:' . $path) : $url,
         'title' => $title,
       );
       if (!empty($this->options['destination'])) {

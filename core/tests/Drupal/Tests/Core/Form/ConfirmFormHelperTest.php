@@ -96,7 +96,7 @@ class ConfirmFormHelperTest extends UnitTestCase {
     $query = array('destination' => 'baz');
     $form = $this->getMock('Drupal\Core\Form\ConfirmFormInterface');
     $link = ConfirmFormHelper::buildCancelLink($form, new Request($query));
-    $this->assertSame('base://' . $query['destination'], $link['#url']->getUri());
+    $this->assertSame('base:' . $query['destination'], $link['#url']->getUri());
   }
 
 }

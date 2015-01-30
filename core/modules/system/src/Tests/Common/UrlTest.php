@@ -32,12 +32,12 @@ class UrlTest extends WebTestBase {
     $text = $this->randomMachineName();
     $path = "<SCRIPT>alert('XSS')</SCRIPT>";
     $link = _l($text, $path);
-    $sanitized_path = check_url(Url::fromUri('base://' . $path)->toString());
+    $sanitized_path = check_url(Url::fromUri('base:' . $path)->toString());
     $this->assertTrue(strpos($link, $sanitized_path) !== FALSE, format_string('XSS attack @path was filtered by _l().', array('@path' => $path)));
 
     // Test \Drupal\Core\Url.
-    $link = Url::fromUri('base://' . $path)->toString();
-    $sanitized_path = check_url(Url::fromUri('base://' . $path)->toString());
+    $link = Url::fromUri('base:' . $path)->toString();
+    $sanitized_path = check_url(Url::fromUri('base:' . $path)->toString());
     $this->assertTrue(strpos($link, $sanitized_path) !== FALSE, format_string('XSS attack @path was filtered by #theme', ['@path' => $path]));
   }
 

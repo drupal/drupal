@@ -318,7 +318,7 @@ class ViewEditForm extends ViewFormBase {
       }
       // @todo Use Url::fromPath() once https://www.drupal.org/node/2351379 is
       //   resolved.
-      $form_state->setRedirectUrl(Url::fromUri("base://$destination"));
+      $form_state->setRedirectUrl(Url::fromUri("base:$destination"));
     }
 
     $view->save();
@@ -424,7 +424,7 @@ class ViewEditForm extends ViewFormBase {
               '#options' => array('alt' => array($this->t("Go to the real page for this display"))),
               // @todo Use Url::fromPath() once
               //   https://www.drupal.org/node/2351379 is resolved.
-              '#url' => Url::fromUri("base://$path"),
+              '#url' => Url::fromUri("base:$path"),
               '#prefix' => '<li class="view">',
               "#suffix" => '</li>',
             );

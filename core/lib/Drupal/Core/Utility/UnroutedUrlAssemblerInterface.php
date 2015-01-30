@@ -18,11 +18,11 @@ interface UnroutedUrlAssemblerInterface {
    * domain-local URIs and external URLs.
    *
    * @param string $uri
-   *   A local URI or an external URL being linked to, such as "base://foo"
+   *   A local URI or an external URL being linked to, such as "base:foo"
    *    or "http://example.com/foo".
    *   - If you provide a full URL, it will be considered an external URL as
    *     long as it has an allowed protocol.
-   *   - If you provide only a local URI (e.g. "base://foo"), it will be
+   *   - If you provide only a local URI (e.g. "base:foo"), it will be
    *     considered a path local to Drupal, but not handled by the routing
    *     system.  The base path (the subdirectory where the front controller
    *     is found) will be added to the path. Additional query arguments for

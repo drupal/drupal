@@ -23,15 +23,15 @@ class AddFeedTest extends WebTestBase {
   function testBasicFeedAddNoTitle() {
     $path = $this->randomMachineName(12);
     $external_url = 'http://' . $this->randomMachineName(12) . '/' . $this->randomMachineName(12);
-    $fully_qualified_local_url = Url::fromUri('base://' . $this->randomMachineName(12), array('absolute' => TRUE))->toString();
+    $fully_qualified_local_url = Url::fromUri('base:' . $this->randomMachineName(12), array('absolute' => TRUE))->toString();
 
     $path_for_title = $this->randomMachineName(12);
     $external_for_title = 'http://' . $this->randomMachineName(12) . '/' . $this->randomMachineName(12);
-    $fully_qualified_for_title = Url::fromUri('base://' . $this->randomMachineName(12), array('absolute' => TRUE))->toString();
+    $fully_qualified_for_title = Url::fromUri('base:' . $this->randomMachineName(12), array('absolute' => TRUE))->toString();
 
     $urls = array(
       'path without title' => array(
-        'url' => Url::fromUri('base://' . $path, array('absolute' => TRUE))->toString(),
+        'url' => Url::fromUri('base:' . $path, array('absolute' => TRUE))->toString(),
         'title' => '',
       ),
       'external URL without title' => array(
@@ -43,7 +43,7 @@ class AddFeedTest extends WebTestBase {
         'title' => '',
       ),
       'path with title' => array(
-        'url' => Url::fromUri('base://' . $path_for_title, array('absolute' => TRUE))->toString(),
+        'url' => Url::fromUri('base:' . $path_for_title, array('absolute' => TRUE))->toString(),
         'title' => $this->randomMachineName(12),
       ),
       'external URL with title' => array(

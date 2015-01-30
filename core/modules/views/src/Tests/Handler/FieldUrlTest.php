@@ -71,7 +71,7 @@ class FieldUrlTest extends ViewUnitTestBase {
 
     $this->executeView($view);
 
-    $this->assertEqual(\Drupal::l('John', Url::fromUri('base://John')), $view->field['name']->advancedRender($view->result[0]));
+    $this->assertEqual(\Drupal::l('John', Url::fromUri('base:John')), $view->field['name']->advancedRender($view->result[0]));
   }
 
 }

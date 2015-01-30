@@ -63,12 +63,12 @@ class EntityResolverTest extends NormalizerTestBase {
     $entity->set('field_test_entity_reference', array(array('target_id' => 1)));
     $entity->save();
 
-    $field_uri = Url::fromUri('base://rest/relation/entity_test_mulrev/entity_test_mulrev/field_test_entity_reference', array('absolute' => TRUE))->toString();
+    $field_uri = Url::fromUri('base:rest/relation/entity_test_mulrev/entity_test_mulrev/field_test_entity_reference', array('absolute' => TRUE))->toString();
 
     $data = array(
       '_links' => array(
         'type' => array(
-          'href' => Url::fromUri('base://rest/type/entity_test_mulrev/entity_test_mulrev', array('absolute' => TRUE))->toString(),
+          'href' => Url::fromUri('base:rest/type/entity_test_mulrev/entity_test_mulrev', array('absolute' => TRUE))->toString(),
         ),
         $field_uri => array(
           array(

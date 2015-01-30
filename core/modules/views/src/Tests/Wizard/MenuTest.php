@@ -41,7 +41,7 @@ class MenuTest extends WizardTestBase {
     $this->drupalGet('');
     $this->assertResponse(200);
     $this->assertLink($view['page[link_properties][title]']);
-    $this->assertLinkByHref(Url::fromUri('base://' . $view['page[path]'])->toString());
+    $this->assertLinkByHref(Url::fromUri('base:' . $view['page[path]'])->toString());
 
     // Make sure the link is associated with the main menu.
     /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */

@@ -476,7 +476,7 @@ class Drupal {
    * the \Drupal\Core\Url object. See \Drupal\Core\Url::fromRoute() for
    * detailed documentation. For non-routed local URIs relative to
    * the base path (like robots.txt) use Url::fromUri()->toString() with the
-   * base:// scheme.
+   * base: scheme.
    *
    * @param string $route_name
    *   The name of the route.

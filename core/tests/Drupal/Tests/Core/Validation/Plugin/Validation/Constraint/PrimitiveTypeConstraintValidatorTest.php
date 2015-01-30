@@ -71,8 +71,8 @@ class PrimitiveTypeConstraintValidatorTest extends UnitTestCase {
     $data[] = [$this->getMock('Drupal\Core\TypedData\Type\UriInterface'), 'https://www.drupal.org', TRUE];
     $data[] = [$this->getMock('Drupal\Core\TypedData\Type\UriInterface'), 'Invalid', FALSE];
     $data[] = [$this->getMock('Drupal\Core\TypedData\Type\UriInterface'), 'entity:node/1', TRUE];
-    $data[] = [$this->getMock('Drupal\Core\TypedData\Type\UriInterface'), 'base://', FALSE];
-    $data[] = [$this->getMock('Drupal\Core\TypedData\Type\UriInterface'), 'base://node', TRUE];
+    $data[] = [$this->getMock('Drupal\Core\TypedData\Type\UriInterface'), 'base:', TRUE];
+    $data[] = [$this->getMock('Drupal\Core\TypedData\Type\UriInterface'), 'base:node', TRUE];
     $data[] = [$this->getMock('Drupal\Core\TypedData\Type\UriInterface'), 'user-path:', TRUE];
     $data[] = [$this->getMock('Drupal\Core\TypedData\Type\UriInterface'), 'public://', FALSE];
     $data[] = [$this->getMock('Drupal\Core\TypedData\Type\UriInterface'), 'public://foo.png', TRUE];

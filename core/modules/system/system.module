@@ -421,7 +421,7 @@ function system_authorized_init($callback, $file, $arguments = array(), $page_ti
 function system_authorized_get_url(array $options = array()) {
   global $base_url;
   // Prefix with $base_url so url() treats it as an external link.
-  $url = Url::fromUri('base://core/authorize.php');
+  $url = Url::fromUri('base:core/authorize.php');
   $url_options = $url->getOptions();
   $url->setOptions($options + $url_options);
   return $url;
