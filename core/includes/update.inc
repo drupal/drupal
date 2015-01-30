@@ -17,7 +17,7 @@ use Drupal\Core\Utility\Error;
  * Disables any extensions that are incompatible with the current core version.
  */
 function update_fix_compatibility() {
-  $extension_config = \Drupal::config('core.extension');
+  $extension_config = \Drupal::configFactory()->getEditable('core.extension');
   $save = FALSE;
   foreach (array('module', 'theme') as $type) {
     foreach ($extension_config->get($type) as $name => $weight) {
