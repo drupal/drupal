@@ -66,7 +66,7 @@ class UserRoleAdminTest extends WebTestBase {
     $this->drupalGet("admin/people/roles/manage/{$role->id()}");
     $this->clickLink(t('Delete'));
     $this->drupalPostForm(NULL, array(), t('Delete'));
-    $this->assertRaw(t('Role %label has been deleted.', array('%label' => $role_name)));
+    $this->assertRaw(t('The role %label has been deleted.', array('%label' => $role_name)));
     $this->assertNoLinkByHref("admin/people/roles/manage/{$role->id()}", 'Role edit link removed.');
     \Drupal::entityManager()->getStorage('user_role')->resetCache(array($role->id()));
     $this->assertFalse(Role::load($role->id()), 'A deleted role can no longer be loaded.');

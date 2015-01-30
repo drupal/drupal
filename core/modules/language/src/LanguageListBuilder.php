@@ -82,21 +82,6 @@ class LanguageListBuilder extends DraggableListBuilder {
   /**
    * {@inheritdoc}
    */
-  public function getDefaultOperations(EntityInterface $entity) {
-    $operations = parent::getDefaultOperations($entity);
-    $default = $this->languageManager->getDefaultLanguage();
-
-    // Deleting the site default language is not allowed.
-    if ($entity->id() == $default->getId()) {
-      unset($operations['delete']);
-    }
-
-    return $operations;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function buildHeader() {
     $header['label'] = t('Name');
     return $header + parent::buildHeader();

@@ -327,7 +327,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       'replacement' => 'thumbnail',
     );
     $this->drupalPostForm($style_path . $new_style_name . '/delete', $edit, t('Delete'));
-    $message = t('Style %name was deleted.', array('%name' => $new_style_label));
+    $message = t('The image style %name has been deleted.', array('%name' => $new_style_label));
     $this->assertRaw($message);
 
     $replacement_style = entity_load('image_style', 'thumbnail');

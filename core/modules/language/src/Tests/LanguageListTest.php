@@ -75,10 +75,10 @@ class LanguageListTest extends WebTestBase {
 
     // Ensure we can't delete the default language.
     $this->drupalGet('admin/config/regional/language/delete/' . $langcode);
-    $this->assertUrl(\Drupal::url('entity.configurable_language.collection', [], ['absolute' => TRUE, 'language' => $language]));
-    $this->assertText(t('The default language cannot be deleted.'), 'Failed to delete the default language.');
+    $this->assertResponse(403, 'Failed to delete the default language.');
 
     // Ensure 'Edit' link works.
+    $this->drupalGet('admin/config/regional/language');
     $this->clickLink(t('Edit'));
     $this->assertTitle(t('Edit language | Drupal'), 'Page title is "Edit language".');
     // Edit a language.

@@ -8,14 +8,13 @@
 namespace Drupal\system\Form;
 
 use Drupal\Core\Datetime\DateFormatter;
-use Drupal\Core\Entity\EntityConfirmFormBase;
-use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityDeleteForm;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Builds a form to delete a date format.
  */
-class DateFormatDeleteForm extends EntityConfirmFormBase {
+class DateFormatDeleteForm extends EntityDeleteForm {
 
   /**
    * The date formatter service.
@@ -47,34 +46,10 @@ class DateFormatDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return t('Are you sure you want to remove the format %name : %format?', array(
+    return t('Are you sure you want to delete the format %name : %format?', array(
       '%name' => $this->entity->label(),
       '%format' => $this->dateFormatter->format(REQUEST_TIME, $this->entity->id()))
     );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getConfirmText() {
-    return t('Remove');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getCancelUrl() {
-    return $this->entity->urlInfo('collection');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->entity->delete();
-    drupal_set_message(t('Removed date format %format.', array('%format' => $this->entity->label())));
-
-    $form_state->setRedirectUrl($this->getCancelUrl());
   }
 
 }

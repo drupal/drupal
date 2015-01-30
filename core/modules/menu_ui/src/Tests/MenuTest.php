@@ -240,7 +240,7 @@ class MenuTest extends MenuWebTestBase {
     // Delete custom menu.
     $this->drupalPostForm("admin/structure/menu/manage/$menu_name/delete", array(), t('Delete'));
     $this->assertResponse(200);
-    $this->assertRaw(t('The custom menu %title has been deleted.', array('%title' => $label)), 'Custom menu was deleted');
+    $this->assertRaw(t('The menu %title has been deleted.', array('%title' => $label)), 'Custom menu was deleted');
     $this->assertNull(Menu::load($menu_name), 'Custom menu was deleted');
     // Test if all menu links associated to the menu were removed from database.
     $result = entity_load_multiple_by_properties('menu_link_content', array('menu_name' => $menu_name));
@@ -739,7 +739,7 @@ class MenuTest extends MenuWebTestBase {
     $title = $item->getTitle();
 
     // Delete menu link.
-    $this->drupalPostForm("admin/structure/menu/item/$mlid/delete", array(), t('Confirm'));
+    $this->drupalPostForm("admin/structure/menu/item/$mlid/delete", array(), t('Delete'));
     $this->assertResponse(200);
     $this->assertRaw(t('The menu link %title has been deleted.', array('%title' => $title)), 'Menu link was deleted');
 

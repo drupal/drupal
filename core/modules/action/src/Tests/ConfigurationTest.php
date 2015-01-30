@@ -81,7 +81,7 @@ class ConfigurationTest extends WebTestBase {
     $this->assertResponse(200);
 
     // Make sure that the action was actually deleted.
-    $this->assertRaw(t('Action %action was deleted', array('%action' => $new_action_label)), 'Make sure that we get a delete confirmation message.');
+    $this->assertRaw(t('The action %action has been deleted.', array('%action' => $new_action_label)), 'Make sure that we get a delete confirmation message.');
     $this->drupalGet('admin/config/system/actions');
     $this->assertResponse(200);
     $this->assertNoText($new_action_label, "Make sure the action label does not appear on the overview page after we've deleted the action.");

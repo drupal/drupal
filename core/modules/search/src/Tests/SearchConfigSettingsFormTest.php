@@ -311,9 +311,9 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
 
     // Test deleting.
     $this->clickLink(t('Delete'));
-    $this->assertRaw(t('Are you sure you want to delete the %label search page?', array('%label' => $first['label'])));
+    $this->assertRaw(t('Are you sure you want to delete the search page %label?', array('%label' => $first['label'])));
     $this->drupalPostForm(NULL, array(), t('Delete'));
-    $this->assertRaw(t('The %label search page has been deleted.', array('%label' => $first['label'])));
+    $this->assertRaw(t('The search page %label has been deleted.', array('%label' => $first['label'])));
     $this->verifySearchPageOperations($first_id, FALSE, FALSE, FALSE, FALSE);
   }
 

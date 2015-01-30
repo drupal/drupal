@@ -214,7 +214,7 @@ class ConfigEntityListTest extends WebTestBase {
     $this->assertLinkByHref('admin/structure/config_test/manage/albatross/delete');
     $this->clickLink('Delete', 1);
     $this->assertResponse(200);
-    $this->assertTitle('Are you sure you want to delete Albatross | Drupal');
+    $this->assertTitle('Are you sure you want to delete the test configuration Albatross? | Drupal');
     $this->drupalPostForm(NULL, array(), t('Delete'));
 
     // Verify that the text of the label and machine name does not appear in
@@ -225,7 +225,7 @@ class ConfigEntityListTest extends WebTestBase {
     // Delete the original entity using the operations link.
     $this->clickLink('Delete');
     $this->assertResponse(200);
-    $this->assertTitle('Are you sure you want to delete Default | Drupal');
+    $this->assertTitle('Are you sure you want to delete the test configuration Default? | Drupal');
     $this->drupalPostForm(NULL, array(), t('Delete'));
 
     // Verify that the text of the label and machine name does not appear in

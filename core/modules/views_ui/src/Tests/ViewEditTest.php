@@ -38,7 +38,7 @@ class ViewEditTest extends UITestBase {
     $this->clickLink(t('Delete view'));
     $this->assertUrl('admin/structure/views/view/test_view/delete');
     $this->drupalPostForm(NULL, array(), t('Delete'));
-    $this->assertRaw(t('View %name deleted', array('%name' => $view->label())));
+    $this->assertRaw(t('The view %name has been deleted.', array('%name' => $view->label())));
 
     $this->assertUrl('admin/structure/views');
     $view = $this->container->get('entity.manager')->getStorage('view')->load('test_view');

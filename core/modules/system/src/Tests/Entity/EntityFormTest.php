@@ -79,7 +79,7 @@ class EntityFormTest extends WebTestBase {
 
     $this->drupalGet($entity_type . '/manage/' . $entity->id());
     $this->clickLink(t('Delete'));
-    $this->drupalPostForm(NULL, array(), t('Confirm'));
+    $this->drupalPostForm(NULL, array(), t('Delete'));
     $entity = $this->loadEntityByName($entity_type, $name2);
     $this->assertFalse($entity, format_string('%entity_type: Entity not found in the database.', array('%entity_type' => $entity_type)));
   }

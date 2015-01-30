@@ -171,7 +171,7 @@ class BlockTest extends BlockTestBase {
     $this->clickLink(t('Delete'));
     $this->assertRaw(t('Are you sure you want to delete the block %name?', array('%name' => $block['settings[label]'])));
     $this->drupalPostForm(NULL, array(), t('Delete'));
-    $this->assertRaw(t('The block %name has been removed.', array('%name' => $block['settings[label]'])));
+    $this->assertRaw(t('The block %name has been deleted.', array('%name' => $block['settings[label]'])));
 
     // Test deleting a block via "Configure block" link.
     $block = $this->drupalPlaceBlock('system_powered_by_block');
@@ -179,7 +179,7 @@ class BlockTest extends BlockTestBase {
     $this->clickLink(t('Delete'));
     $this->assertRaw(t('Are you sure you want to delete the block %name?', array('%name' => $block->label())));
     $this->drupalPostForm(NULL, array(), t('Delete'));
-    $this->assertRaw(t('The block %name has been removed.', array('%name' => $block->label())));
+    $this->assertRaw(t('The block %name has been deleted.', array('%name' => $block->label())));
     $this->assertUrl('admin');
     $this->assertNoRaw($block->id());
   }

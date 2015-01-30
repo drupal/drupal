@@ -23,7 +23,7 @@ use Drupal\Core\Config\Entity\ThirdPartySettingsTrait;
  *     "form" = {
  *       "add" = "Drupal\contact\ContactFormEditForm",
  *       "edit" = "Drupal\contact\ContactFormEditForm",
- *       "delete" = "Drupal\contact\Form\ContactFormDeleteForm"
+ *       "delete" = "Drupal\Core\Entity\EntityDeleteForm"
  *     }
  *   },
  *   config_prefix = "form",

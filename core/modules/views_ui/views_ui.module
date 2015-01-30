@@ -50,7 +50,7 @@ function views_ui_entity_type_build(array &$entity_types) {
     ->setFormClass('add', 'Drupal\views_ui\ViewAddForm')
     ->setFormClass('preview', 'Drupal\views_ui\ViewPreviewForm')
     ->setFormClass('duplicate', 'Drupal\views_ui\ViewDuplicateForm')
-    ->setFormClass('delete', 'Drupal\views_ui\ViewDeleteForm')
+    ->setFormClass('delete', 'Drupal\Core\Entity\EntityDeleteForm')
     ->setFormClass('break_lock', 'Drupal\views_ui\Form\BreakLockForm')
     ->setListBuilderClass('Drupal\views_ui\ViewListBuilder')
     ->setLinkTemplate('edit-form', '/admin/structure/views/view/{view}')

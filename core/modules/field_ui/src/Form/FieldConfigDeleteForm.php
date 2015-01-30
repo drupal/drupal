@@ -7,7 +7,7 @@
 
 namespace Drupal\field_ui\Form;
 
-use Drupal\Core\Entity\EntityConfirmFormBase;
+use Drupal\Core\Entity\EntityDeleteForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\field_ui\FieldUI;
@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a form for removing a field from a bundle.
  */
-class FieldConfigDeleteForm extends EntityConfirmFormBase {
+class FieldConfigDeleteForm extends EntityDeleteForm {
 
   /**
    * The entity manager.
@@ -47,20 +47,6 @@ class FieldConfigDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getQuestion() {
-    return $this->t('Are you sure you want to delete the field %field?', array('%field' => $this->entity->getLabel()));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getConfirmText() {
-    return $this->t('Delete');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getCancelUrl() {
     return FieldUI::getOverviewRouteInfo($this->entity->entity_type, $this->entity->bundle);
   }
@@ -70,8 +56,8 @@ class FieldConfigDeleteForm extends EntityConfirmFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $field_storage = $this->entity->getFieldStorageDefinition();
-    $bundles = entity_get_bundles();
-    $bundle_label = $bundles[$this->entity->entity_type][$this->entity->bundle]['label'];
+    $bundles = $this->entityManager->getBundleInfo($this->entity->entity_type);
+    $bundle_label = $bundles[$this->entity->bundle]['label'];
 
     if ($field_storage && !$field_storage->locked) {
       $this->entity->delete();

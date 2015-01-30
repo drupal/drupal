@@ -8,12 +8,13 @@
 namespace Drupal\taxonomy\Form;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Entity\ContentEntityConfirmFormBase;
+use Drupal\Core\Entity\ContentEntityDeleteForm;
+use Drupal\Core\Url;
 
 /**
  * Provides a deletion confirmation form for taxonomy term.
  */
-class TermDeleteForm extends ContentEntityConfirmFormBase {
+class TermDeleteForm extends ContentEntityDeleteForm {
 
   /**
    * {@inheritdoc}
@@ -33,7 +34,9 @@ class TermDeleteForm extends ContentEntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return $this->entity->urlInfo('collection');
+    // The cancel URL is the vocabulary collection, terms have no global
+    // list page.
+    return new Url('entity.taxonomy_vocabulary.collection');
   }
 
   /**
@@ -46,24 +49,22 @@ class TermDeleteForm extends ContentEntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getConfirmText() {
-    return $this->t('Delete');
+  protected function getDeletionMessage() {
+    return $this->t('Deleted term %name.', array('%name' => $this->entity->label()));
   }
 
   /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->entity->delete();
+    parent::submitForm($form, $form_state);
+
     $storage = $this->entityManager->getStorage('taxonomy_vocabulary');
     $vocabulary = $storage->load($this->entity->bundle());
 
     // @todo Move to storage http://drupal.org/node/1988712
     taxonomy_check_vocabulary_hierarchy($vocabulary, array('tid' => $this->entity->id()));
 
-    drupal_set_message($this->t('Deleted term %name.', array('%name' => $this->entity->getName())));
-    $this->logger('taxonomy')->notice('Deleted term %name.', array('%name' => $this->entity->getName()));
-    $form_state->setRedirectUrl($this->getCancelUrl());
   }
 
 }

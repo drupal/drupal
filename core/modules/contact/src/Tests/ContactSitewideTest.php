@@ -414,7 +414,7 @@ class ContactSitewideTest extends WebTestBase {
       }
       else {
         $this->drupalPostForm("admin/structure/contact/manage/$id/delete", array(), t('Delete'));
-        $this->assertRaw(t('Contact form %label has been deleted.', array('%label' => $contact_form->label())));
+        $this->assertRaw(t('The contact form %label has been deleted.', array('%label' => $contact_form->label())));
         $this->assertFalse(ContactForm::load($id), format_string('Form %contact_form not found', array('%contact_form' => $contact_form->label())));
       }
     }

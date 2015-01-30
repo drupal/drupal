@@ -7,13 +7,12 @@
 
 namespace Drupal\taxonomy\Form;
 
-use Drupal\Core\Entity\EntityConfirmFormBase;
-use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityDeleteForm;
 
 /**
  * Provides a deletion confirmation form for taxonomy vocabulary.
  */
-class VocabularyDeleteForm extends EntityConfirmFormBase {
+class VocabularyDeleteForm extends EntityDeleteForm {
 
   /**
    * {@inheritdoc}
@@ -32,13 +31,6 @@ class VocabularyDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelUrl() {
-    return $this->entity->urlInfo('collection');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getDescription() {
     return $this->t('Deleting a vocabulary will delete all the terms in it. This action cannot be undone.');
   }
@@ -46,18 +38,8 @@ class VocabularyDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getConfirmText() {
-    return $this->t('Delete');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->entity->delete();
-    drupal_set_message($this->t('Deleted vocabulary %name.', array('%name' => $this->entity->label())));
-    $this->logger('taxonomy')->notice('Deleted vocabulary %name.', array('%name' => $this->entity->label()));
-    $form_state->setRedirectUrl($this->getCancelUrl());
+  protected function getDeletionMessage() {
+    return $this->t('Deleted vocabulary %name.', array('%name' => $this->entity->label()));
   }
 
 }

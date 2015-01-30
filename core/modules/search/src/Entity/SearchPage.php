@@ -30,7 +30,7 @@ use Drupal\search\SearchPageInterface;
  *       "add" = "Drupal\search\Form\SearchPageAddForm",
  *       "edit" = "Drupal\search\Form\SearchPageEditForm",
  *       "search" = "Drupal\search\Form\SearchPageForm",
- *       "delete" = "Drupal\search\Form\SearchPageDeleteForm"
+ *       "delete" = "Drupal\Core\Entity\EntityDeleteForm"
  *     }
  *   },
  *   admin_permission = "administer search",

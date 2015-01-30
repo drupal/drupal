@@ -227,7 +227,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->assertText(\Drupal::translation()->formatPlural(1, 'This will also remove 1 placed block instance.', 'This will also remove @count placed block instance.'));
 
     $this->drupalPostForm(NULL, array(), 'Delete');
-    $this->assertRaw(t('Custom block %name has been deleted.', array('%name' => $edit['info[0][value]'])));
+    $this->assertRaw(t('The custom block %name has been deleted.', array('%name' => $edit['info[0][value]'])));
 
     // Create another block and force the plugin cache to flush.
     $edit2 = array();

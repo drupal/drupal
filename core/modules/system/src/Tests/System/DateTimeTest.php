@@ -111,9 +111,9 @@ class DateTimeTest extends WebTestBase {
 
     // Delete custom date format.
     $this->clickLink(t('Delete'));
-    $this->drupalPostForm('admin/config/regional/date-time/formats/manage/' . $date_format_id . '/delete', array(), t('Remove'));
+    $this->drupalPostForm('admin/config/regional/date-time/formats/manage/' . $date_format_id . '/delete', array(), t('Delete'));
     $this->assertUrl(\Drupal::url('entity.date_format.collection', [], ['absolute' => TRUE]), [], 'Correct page redirection.');
-    $this->assertRaw(t('Removed date format %format.', array('%format' => $name)), 'Custom date format removed.');
+    $this->assertRaw(t('The date format %format has been deleted.', array('%format' => $name)), 'Custom date format removed.');
 
     // Make sure the date does not exist in config.
     $date_format = entity_load('date_format', $date_format_id);

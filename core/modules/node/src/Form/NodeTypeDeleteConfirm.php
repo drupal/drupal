@@ -7,15 +7,15 @@
 
 namespace Drupal\node\Form;
 
-use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Entity\Query\QueryFactory;
+use Drupal\Core\Entity\EntityDeleteForm;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a form for content type deletion.
  */
-class NodeTypeDeleteConfirm extends EntityConfirmFormBase {
+class NodeTypeDeleteConfirm extends EntityDeleteForm {
 
   /**
    * The query factory to create entity queries.
@@ -46,27 +46,6 @@ class NodeTypeDeleteConfirm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getQuestion() {
-    return t('Are you sure you want to delete the content type %type?', array('%type' => $this->entity->label()));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getCancelUrl() {
-    return $this->entity->urlInfo('collection');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getConfirmText() {
-    return t('Delete');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $num_nodes = $this->queryFactory->get('node')
       ->condition('type', $this->entity->id())
@@ -80,18 +59,6 @@ class NodeTypeDeleteConfirm extends EntityConfirmFormBase {
     }
 
     return parent::buildForm($form, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->entity->delete();
-    $t_args = array('%name' => $this->entity->label());
-    drupal_set_message(t('The content type %name has been deleted.', $t_args));
-    $this->logger('node')->notice('Deleted content type %name.', $t_args);
-
-    $form_state->setRedirectUrl($this->getCancelUrl());
   }
 
 }

@@ -169,7 +169,7 @@ class CommentTypeTest extends CommentTestBase {
     // Attempt to delete the comment type, which should now be allowed.
     $this->drupalGet('admin/structure/comment/manage/' . $type->id() . '/delete');
     $this->assertRaw(
-      t('Are you sure you want to delete %type?', array('%type' => $type->id())),
+      t('Are you sure you want to delete the comment type %type?', array('%type' => $type->id())),
       'The comment type is available for deletion.'
     );
     $this->assertText(t('This action cannot be undone.'), 'The comment type deletion confirmation form is available.');
@@ -186,7 +186,7 @@ class CommentTypeTest extends CommentTestBase {
     // Delete the comment type.
     $this->drupalPostForm('admin/structure/comment/manage/' . $type->id() . '/delete', array(), t('Delete'));
     $this->assertNull(CommentType::load($type->id()), 'Comment type deleted.');
-    $this->assertRaw(t('Comment type %label has been deleted.', array('%label' => $type->label())));
+    $this->assertRaw(t('The comment type %label has been deleted.', array('%label' => $type->label())));
   }
 
 }

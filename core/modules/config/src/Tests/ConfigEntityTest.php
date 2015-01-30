@@ -241,7 +241,7 @@ class ConfigEntityTest extends WebTestBase {
     $label3 = $this->randomMachineName();
     $message_insert = format_string('%label configuration has been created.', array('%label' => $label1));
     $message_update = format_string('%label configuration has been updated.', array('%label' => $label2));
-    $message_delete = format_string('%label configuration has been deleted.', array('%label' => $label2));
+    $message_delete = format_string('The test configuration %label has been deleted.', array('%label' => $label2));
 
     // Create a configuration entity.
     $edit = array(

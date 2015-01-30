@@ -61,7 +61,7 @@ class PageEditTest extends BlockContentTestBase {
     // Test deleting the block.
     $this->drupalGet("block/" . $revised_block->id());
     $this->clickLink(t('Delete'));
-    $this->assertText(format_string('Are you sure you want to delete !label?', array('!label' => $revised_block->label())));
+    $this->assertText(format_string('Are you sure you want to delete the custom block !label?', array('!label' => $revised_block->label())));
   }
 
 }

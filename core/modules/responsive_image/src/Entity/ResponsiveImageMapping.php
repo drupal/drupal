@@ -21,7 +21,7 @@ use Drupal\responsive_image\ResponsiveImageMappingInterface;
  *     "form" = {
  *       "edit" = "Drupal\responsive_image\ResponsiveImageMappingForm",
  *       "add" = "Drupal\responsive_image\ResponsiveImageMappingForm",
- *       "delete" = "Drupal\responsive_image\Form\ResponsiveImageMappingDeleteForm",
+ *       "delete" = "Drupal\Core\Entity\EntityDeleteForm",
  *       "duplicate" = "Drupal\responsive_image\ResponsiveImageMappingForm"
  *     }
  *   },

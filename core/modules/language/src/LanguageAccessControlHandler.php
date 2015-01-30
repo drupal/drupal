@@ -25,9 +25,14 @@ class LanguageAccessControlHandler extends EntityAccessControlHandler {
   public function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
     switch ($operation) {
       case 'update':
+        /* @var \Drupal\Core\Language\LanguageInterface $entity */
+        return AccessResult::allowedIf(!$entity->isLocked())->cacheUntilEntityChanges($entity)
+          ->andIf(parent::checkAccess($entity, $operation, $langcode, $account));
+
       case 'delete':
         /* @var \Drupal\Core\Language\LanguageInterface $entity */
         return AccessResult::allowedIf(!$entity->isLocked())->cacheUntilEntityChanges($entity)
+          ->andIf(AccessResult::allowedIf(!$entity->isDefault())->cacheUntilEntityChanges($entity))
           ->andIf(parent::checkAccess($entity, $operation, $langcode, $account));
 
       default:
