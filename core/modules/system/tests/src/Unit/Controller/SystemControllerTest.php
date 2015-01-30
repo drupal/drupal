@@ -298,6 +298,13 @@ class SystemControllerTest extends UnitTestCase {
       }
     }
 
+    // Test case to verify that the 'active' class is not added multiple times.
+    $data[] = [
+      0 => ['#markup' => '<a data-drupal-link-system-path="&lt;front&gt;">Once</a> <a data-drupal-link-system-path="&lt;front&gt;">Twice</a>'],
+      1 => ['path' => '', 'front' => TRUE, 'language' => 'en', 'query' => []],
+      2 => ['#markup' => '<a data-drupal-link-system-path="&lt;front&gt;" class="active">Once</a> <a data-drupal-link-system-path="&lt;front&gt;" class="active">Twice</a>'],
+    ];
+
     return $data;
   }
 
