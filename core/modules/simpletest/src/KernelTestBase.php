@@ -211,11 +211,6 @@ abstract class KernelTestBase extends TestBase {
     if ($modules) {
       $this->enableModules($modules);
     }
-    // In order to use theme functions default theme config needs to exist. This
-    // configuration is not saved because it would fatal due to system module's
-    // configuration schema not existing. However since the configuration is
-    // cached in the configuration factory everything works.
-    $this->config('system.theme')->set('default', 'classy');
 
     // Tests based on this class are entitled to use Drupal's File and
     // StreamWrapper APIs.
