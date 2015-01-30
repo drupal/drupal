@@ -229,9 +229,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     // Initialize our list of trusted HTTP Host headers to protect against
     // header attacks.
-    $hostPatterns = Settings::get('trusted_host_patterns', array());
-    if (PHP_SAPI !== 'cli' && !empty($hostPatterns)) {
-      if (static::setupTrustedHosts($request, $hostPatterns) === FALSE) {
+    $host_patterns = Settings::get('trusted_host_patterns', array());
+    if (PHP_SAPI !== 'cli' && !empty($host_patterns)) {
+      if (static::setupTrustedHosts($request, $host_patterns) === FALSE) {
         throw new BadRequestHttpException('The provided host name is not valid for this server.');
       }
     }
@@ -1270,7 +1270,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
-   * @param array $hostPatterns
+   * @param array $host_patterns
    *   The array of trusted host patterns.
    *
    * @return boolean
@@ -1278,8 +1278,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *
    * @see https://www.drupal.org/node/1992030
    */
-  protected static function setupTrustedHosts(Request $request, $hostPatterns) {
-    $request->setTrustedHosts($hostPatterns);
+  protected static function setupTrustedHosts(Request $request, $host_patterns) {
+    $request->setTrustedHosts($host_patterns);
 
     // Get the host, which will validate the current request.
     try {
