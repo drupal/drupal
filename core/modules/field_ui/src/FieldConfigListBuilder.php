@@ -168,13 +168,15 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
       $operations['edit'] = array(
         'title' => $this->t('Edit'),
         'weight' => 10,
-      ) + $entity->urlInfo("{$entity->entity_type}-field-edit-form")->toArray();
+        'url' => $entity->urlInfo("{$entity->entity_type}-field-edit-form"),
+      );
     }
     if ($entity->access('delete') && $entity->hasLinkTemplate("{$entity->entity_type}-field-delete-form")) {
       $operations['delete'] = array(
-      'title' => $this->t('Delete'),
-      'weight' => 100,
-      ) + $entity->urlInfo("{$entity->entity_type}-field-delete-form")->toArray();
+        'title' => $this->t('Delete'),
+        'weight' => 100,
+        'url' => $entity->urlInfo("{$entity->entity_type}-field-delete-form"),
+      );
     }
 
     $operations['storage-settings'] = array(

@@ -312,24 +312,6 @@ class UrlTest extends UnitTestCase {
   }
 
   /**
-   * Tests the toArray() method.
-   *
-   * @param \Drupal\Core\Url[] $urls
-   *   An array of Url objects.
-   *
-   * @depends testUrlFromRequest
-   *
-   * @covers ::toArray
-   */
-  public function testToArray($urls) {
-    foreach ($urls as $index => $url) {
-      $expected = Url::fromRoute($this->map[$index][0], $this->map[$index][1], $this->map[$index][2]);
-      $expected->setUrlGenerator(\Drupal::urlGenerator());
-      $this->assertEquals($expected, $url);
-    }
-  }
-
-  /**
    * Tests the getRouteName() method.
    *
    * @param \Drupal\Core\Url[] $urls

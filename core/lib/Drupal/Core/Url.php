@@ -515,23 +515,6 @@ class Url {
   }
 
   /**
-   * Returns all the information about the route.
-   *
-   * @return array
-   *   An associative array containing all the properties of the route.
-   *
-   * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.
-   *   Most usecases should use the URL object directly, like #type links. Other
-   *   usecases should get the information from the URL object manually.
-   */
-  public function toArray() {
-    return [
-      'url' => $this,
-      'options' => $this->getOptions(),
-    ];
-  }
-
-  /**
    * Returns the route information for a render array.
    *
    * @return array

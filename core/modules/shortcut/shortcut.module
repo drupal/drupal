@@ -259,7 +259,8 @@ function shortcut_renderable_links($shortcut_set = NULL) {
     $links[$shortcut->id()] = array(
       'type' => 'link',
       'title' => $shortcut->label(),
-    ) + $shortcut->getUrl()->toArray();
+      'url' => $shortcut->getUrl(),
+    );
     $cache_tags = Cache::mergeTags($cache_tags, $shortcut->getCacheTags());
   }
 
