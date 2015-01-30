@@ -67,14 +67,14 @@ class LinksTest extends WebTestBase {
     );
 
     $parent = $base_options + array(
-      'route_name' => 'menu_test.hierarchy_parent',
+      'link' => ['uri' => 'menu-test/hierarchy/parent'],
     );
     $link = entity_create('menu_link_content', $parent);
     $link->save();
     $links['parent'] = $link->getPluginId();
 
     $child_1 = $base_options + array(
-      'route_name' => 'menu_test.hierarchy_parent_child',
+      'link' => ['uri' => 'menu-test/hierarchy/parent/child'],
       'parent' => $links['parent'],
     );
     $link = entity_create('menu_link_content', $child_1);
@@ -82,7 +82,7 @@ class LinksTest extends WebTestBase {
     $links['child-1'] = $link->getPluginId();
 
     $child_1_1 = $base_options + array(
-      'route_name' => 'menu_test.hierarchy_parent_child2',
+      'link' => ['uri' => 'menu-test/hierarchy/parent/child2/child'],
       'parent' => $links['child-1'],
     );
     $link = entity_create('menu_link_content', $child_1_1);
@@ -90,7 +90,7 @@ class LinksTest extends WebTestBase {
     $links['child-1-1'] = $link->getPluginId();
 
     $child_1_2 = $base_options + array(
-      'route_name' => 'menu_test.hierarchy_parent_child2',
+      'link' => ['uri' => 'menu-test/hierarchy/parent/child2/child'],
       'parent' => $links['child-1'],
     );
     $link = entity_create('menu_link_content', $child_1_2);
@@ -98,7 +98,7 @@ class LinksTest extends WebTestBase {
     $links['child-1-2'] = $link->getPluginId();
 
     $child_2 = $base_options + array(
-      'route_name' => 'menu_test.hierarchy_parent_child',
+      'link' => ['uri' => 'menu-test/hierarchy/parent/child'],
       'parent' => $links['parent'],
     );
     $link = entity_create('menu_link_content', $child_2);
@@ -136,7 +136,7 @@ class LinksTest extends WebTestBase {
     $options = array(
       'title' => 'Test Link',
     );
-    $link->setOptions($options);
+    $link->link->options = $options;
     $link->changed->value = REQUEST_TIME - 5;
     $link->save();
     // Make sure the changed timestamp is updated.

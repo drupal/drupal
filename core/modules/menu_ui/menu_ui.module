@@ -162,8 +162,9 @@ function menu_ui_node_save(EntityInterface $node) {
         $entity = entity_create('menu_link_content', array(
           'title' => trim($definition['title']),
           'description' => trim($definition['description']),
-          'route_name' => 'entity.node.canonical',
-          'route_parameters' => array('node' => $node->id()),
+          // @todo Use entity: in the URI.
+          //   https://www.drupal.org/node/2417367
+          'link' => ['uri' => 'node/' . $node->id()],
           'menu_name' => $definition['menu_name'],
           'parent' => $definition['parent'],
           'weight' => isset($definition['weight']) ? $definition['weight'] : 0,
@@ -212,8 +213,8 @@ function menu_ui_node_prepare_form(NodeInterface $node, $operation, FormStateInt
       $type_menus = $node_type->getThirdPartySetting('menu_ui', 'available_menus', array('main'));
       if (in_array($menu_name, $type_menus)) {
         $query = \Drupal::entityQuery('menu_link_content')
-          ->condition('route_name', 'entity.node.canonical')
-          ->condition('route_parameters', serialize(array('node' => $node->id())))
+          // @todo Use link.uri once https://www.drupal.org/node/2391217 is in.
+          ->condition('link__uri', 'node/' . $node->id())
           ->condition('menu_name', $menu_name)
           ->sort('id', 'ASC')
           ->range(0, 1);
@@ -224,8 +225,8 @@ function menu_ui_node_prepare_form(NodeInterface $node, $operation, FormStateInt
       // Check all allowed menus if a link does not exist in the default menu.
       if (!$id && !empty($type_menus)) {
         $query = \Drupal::entityQuery('menu_link_content')
-          ->condition('route_name', 'entity.node.canonical')
-          ->condition('route_parameters', serialize(array('node' => $node->id())))
+          // @todo Use link.uri once https://www.drupal.org/node/2391217 is in.
+          ->condition('link__uri', 'node/' . $node->id())
           ->condition('menu_name', array_values($type_menus), 'IN')
           ->sort('id', 'ASC')
           ->range(0, 1);

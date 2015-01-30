@@ -4,3 +4,5 @@ description: 'Allows administrators to create custom menu links.'
 package: Core
 version: VERSION
 core: 8.x
+dependencies:
+  - link

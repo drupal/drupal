@@ -39,6 +39,7 @@ class SystemMenuBlockTest extends KernelTestBase {
     'menu_link_content',
     'field',
     'user',
+    'link',
   );
 
   /**

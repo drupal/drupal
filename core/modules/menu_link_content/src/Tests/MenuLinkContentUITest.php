@@ -57,7 +57,7 @@ class MenuLinkContentUITest extends ContentTranslationUITest {
    */
   protected function createEntity($values, $langcode, $bundle_name = NULL) {
     $values['menu_name'] = 'tools';
-    $values['route_name'] = 'entity.menu.collection';
+    $values['link']['uri'] = 'admin/structure/menu';
     $values['title'] = 'Test title';
 
     return parent::createEntity($values, $langcode, $bundle_name);
@@ -70,7 +70,7 @@ class MenuLinkContentUITest extends ContentTranslationUITest {
     $this->drupalGet('admin/structure/menu/manage/tools');
     $this->assertNoLink(t('Translate'));
 
-    $menu_link_content = MenuLinkContent::create(['menu_name' => 'tools', 'route_name' => 'entity.menu.collection']);
+    $menu_link_content = MenuLinkContent::create(['menu_name' => 'tools', 'link' => ['uri' => 'admin/structure/menu']]);
     $menu_link_content->save();
     $this->drupalGet('admin/structure/menu/manage/tools');
     $this->assertLink(t('Translate'));

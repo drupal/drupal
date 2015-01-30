@@ -22,15 +22,8 @@ process:
     plugin: migration
     migration: d6_menu
     source: menu_name
-  route:
-    plugin: route
-    source:
-      - link_path
-      - options
-  route_name: @route/route_name
-  route_parameters: @route/route_parameters
-  url: @route/url
-  options: @route/options
+  'link/uri': link_path
+  'link/options': options
   external: external
   weight: weight
   expanded: expanded

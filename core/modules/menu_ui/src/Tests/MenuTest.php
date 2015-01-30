@@ -106,7 +106,7 @@ class MenuTest extends MenuWebTestBase {
 
     foreach ($this->items as $item) {
       // Paths were set as 'node/$nid'.
-      $node = Node::load($item->getRouteParameters()['node']);
+      $node = Node::load(str_replace('node/', '', $item->link->uri));
       $this->verifyMenuLink($item, $node);
     }
 

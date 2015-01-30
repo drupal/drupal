@@ -40,7 +40,7 @@ class MenuTreeStorageTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'menu_link_content');
+  public static $modules = array('system');
 
   /**
    * {@inheritdoc}
@@ -50,7 +50,6 @@ class MenuTreeStorageTest extends KernelTestBase {
 
     $this->treeStorage = new MenuTreeStorage($this->container->get('database'), $this->container->get('cache.menu'), $this->container->get('cache_tags.invalidator'), 'menu_tree');
     $this->connection = $this->container->get('database');
-    $this->installEntitySchema('menu_link_content');
   }
 
   /**
@@ -302,30 +301,22 @@ class MenuTreeStorageTest extends KernelTestBase {
    * Tests finding the subtree height with content menu links.
    */
   public function testSubtreeHeight() {
-
-    $storage = \Drupal::entityManager()->getStorage('menu_link_content');
-
     // root
     // - child1
     // -- child2
     // --- child3
     // ---- child4
-    $root = $storage->create(array('route_name' => 'menu_test.menu_name_test', 'menu_name' => 'menu1', 'bundle' => 'menu_link_content'));
-    $root->save();
-    $child1 = $storage->create(array('route_name' => 'menu_test.menu_name_test', 'menu_name' => 'menu1', 'bundle' => 'menu_link_content', 'parent' => $root->getPluginId()));
-    $child1->save();
-    $child2 = $storage->create(array('route_name' => 'menu_test.menu_name_test', 'menu_name' => 'menu1', 'bundle' => 'menu_link_content', 'parent' => $child1->getPluginId()));
-    $child2->save();
-    $child3 = $storage->create(array('route_name' => 'menu_test.menu_name_test', 'menu_name' => 'menu1', 'bundle' => 'menu_link_content', 'parent' => $child2->getPluginId()));
-    $child3->save();
-    $child4 = $storage->create(array('route_name' => 'menu_test.menu_name_test', 'menu_name' => 'menu1', 'bundle' => 'menu_link_content', 'parent' => $child3->getPluginId()));
-    $child4->save();
+    $this->addMenuLink('root');
+    $this->addMenuLink('child1', 'root');
+    $this->addMenuLink('child2', 'child1');
+    $this->addMenuLink('child3', 'child2');
+    $this->addMenuLink('child4', 'child3');
 
-    $this->assertEqual($this->treeStorage->getSubtreeHeight($root->getPluginId()), 5);
-    $this->assertEqual($this->treeStorage->getSubtreeHeight($child1->getPluginId()), 4);
-    $this->assertEqual($this->treeStorage->getSubtreeHeight($child2->getPluginId()), 3);
-    $this->assertEqual($this->treeStorage->getSubtreeHeight($child3->getPluginId()), 2);
-    $this->assertEqual($this->treeStorage->getSubtreeHeight($child4->getPluginId()), 1);
+    $this->assertEqual($this->treeStorage->getSubtreeHeight('root'), 5);
+    $this->assertEqual($this->treeStorage->getSubtreeHeight('child1'), 4);
+    $this->assertEqual($this->treeStorage->getSubtreeHeight('child2'), 3);
+    $this->assertEqual($this->treeStorage->getSubtreeHeight('child3'), 2);
+    $this->assertEqual($this->treeStorage->getSubtreeHeight('child4'), 1);
   }
 
   /**

@@ -198,6 +198,7 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
     if ($extracted) {
       if ($extracted->isExternal()) {
         $new_definition['url'] = $extracted->getUri();
+        $new_definition['options'] = $extracted->getOptions();
       }
       else {
         $new_definition['route_name'] = $extracted->getRouteName();
@@ -219,33 +220,7 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
-    // We always show the internal path here.
-    /** @var \Drupal\Core\Url $url */
-    $url = $this->getEntity()->getUrlObject();
-    if ($url->isExternal()) {
-      $default_value = $url->toString();
-    }
-    elseif ($url->getRouteName() == '<front>') {
-      // The default route for new entities is <front>, but we just want an
-      // empty form field.
-      $default_value = $this->getEntity()->isNew() ? '' : '<front>';
-    }
-    else {
-      // @todo Url::getInternalPath() calls UrlGenerator::getPathFromRoute()
-      // which need a replacement since it is deprecated.
-      // https://www.drupal.org/node/2307061
-      $default_value = $url->getInternalPath();
-    }
-
-    // @todo Add a helper method to Url to render just the query string and
-    // fragment. https://www.drupal.org/node/2305013
-    $options = $url->getOptions();
-    if (isset($options['query'])) {
-      $default_value .= $options['query'] ? ('?' . UrlHelper::buildQuery($options['query'])) : '';
-    }
-    if (isset($options['fragment']) && $options['fragment'] !== '') {
-      $default_value .= '#' . $options['fragment'];
-    }
+    $default_value = $this->getEntity()->link->uri;
 
     $form['url'] = array(
       '#title' => $this->t('Link path'),
@@ -299,10 +274,7 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
     $entity->enabled->value = (bool) $new_definition['enabled'];
     $entity->expanded->value = $new_definition['expanded'];
 
-    $entity->url->value = $new_definition['url'];
-    $entity->route_name->value = $new_definition['route_name'];
-    $entity->setRouteParameters($new_definition['route_parameters']);
-    $entity->setOptions($new_definition['options']);
+    $entity->link->uri = $form_state->getValue('url');
 
     return $entity;
   }

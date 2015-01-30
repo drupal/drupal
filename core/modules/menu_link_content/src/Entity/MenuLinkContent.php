@@ -12,10 +12,13 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Url;
+use Drupal\link\LinkItemInterface;
 use Drupal\menu_link_content\MenuLinkContentInterface;
 
 /**
  * Defines the menu link content entity class.
+ *
+ * @property \Drupal\link\LinkItemInterface link
  *
  * @ContentEntityType(
  *   id = "menu_link_content",
@@ -72,50 +75,8 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
   /**
    * {@inheritdoc}
    */
-  public function getRouteName() {
-    return $this->get('route_name')->value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getRouteParameters() {
-    return $this->get('route_parameters')->first()->getValue();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setRouteParameters(array $route_parameters) {
-    $this->set('route_parameters', array($route_parameters));
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getUrl() {
-    return $this->get('url')->value ?: NULL;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getUrlObject() {
-    if ($route_name = $this->getRouteName()) {
-      $url = new Url($route_name, $this->getRouteParameters(), $this->getOptions());
-    }
-    else {
-      $path = $this->getUrl();
-      if (isset($path)) {
-        $url = Url::fromUri($path);
-      }
-      else {
-        $url = new Url('<front>');
-      }
-    }
-
-    return $url;
+    return \Drupal::pathValidator()->getUrlIfValidWithoutAccessCheck($this->link->uri) ?: Url::fromRoute('<front>');
   }
 
   /**
@@ -123,21 +84,6 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
    */
   public function getMenuName() {
     return $this->get('menu_name')->value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getOptions() {
-    return $this->get('options')->first()->getValue();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setOptions(array $options) {
-    $this->set('options', array($options));
-    return $this;
   }
 
   /**
@@ -201,10 +147,18 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
     $definition = array();
     $definition['class'] = 'Drupal\menu_link_content\Plugin\Menu\MenuLinkContent';
     $definition['menu_name'] = $this->getMenuName();
-    $definition['route_name'] = $this->getRouteName();
-    $definition['route_parameters'] = $this->getRouteParameters();
-    $definition['url'] = $this->getUrl();
-    $definition['options'] = $this->getOptions();
+
+    if ($url_object = $this->getUrlObject()) {
+      if ($url_object->isExternal()) {
+        $definition['url'] = $url_object->getUri();
+      }
+      else {
+        $definition['route_name'] = $url_object->getRouteName();
+        $definition['route_parameters'] = $url_object->getRouteParameters();
+      }
+      $definition['options'] = $url_object->getOptions();
+    }
+
     $definition['title'] = $this->getTitle();
     $definition['description'] = $this->getDescription();
     $definition['weight'] = $this->getWeight();
@@ -327,23 +281,17 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
       ->setDescription(t('The menu name. All links with the same menu name (such as "tools") are part of the same menu.'))
       ->setSetting('default_value', 'tools');
 
-    // @todo Use a link field https://www.drupal.org/node/2302205.
-    $fields['route_name'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Route name'))
-      ->setDescription(t('The machine name of a defined Symfony Route this menu item represents.'));
-
-    $fields['route_parameters'] = BaseFieldDefinition::create('map')
-      ->setLabel(t('Route parameters'))
-      ->setDescription(t('A serialized array of route parameters of this menu link.'));
-
-    $fields['url'] = BaseFieldDefinition::create('uri')
-      ->setLabel(t('External link url'))
-      ->setDescription(t('The url of the link, in case you have an external link.'));
-
-    $fields['options'] = BaseFieldDefinition::create('map')
-      ->setLabel(t('Options'))
-      ->setDescription(t('A serialized array of URL options, such as a query string or HTML attributes.'))
-      ->setSetting('default_value', array());
+    $fields['link'] = BaseFieldDefinition::create('link')
+      ->setLabel(t('Link'))
+      ->setDescription(t('The location this menu link points to.'))
+      ->setRequired(TRUE)
+      ->setSettings(array(
+        'default_value' => '',
+        'max_length' => 560,
+        'link_type' => LinkItemInterface::LINK_GENERIC,
+        'title' => DRUPAL_DISABLED,
+      ))
+    ;
 
     $fields['external'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('External'))

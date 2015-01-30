@@ -45,6 +45,7 @@ class MenuLinkTreeTest extends KernelTestBase {
     'menu_test',
     'menu_link_content',
     'field',
+    'link',
   );
 
   /**

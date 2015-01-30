@@ -29,46 +29,6 @@ interface MenuLinkContentInterface extends ContentEntityInterface, EntityChanged
   public function getTitle();
 
   /**
-   * Gets the route name of the menu link.
-   *
-   * @return string|NULL
-   *   Returns the route name, or NULL if it is an external link.
-   */
-  public function getRouteName();
-
-  /**
-   * Gets the route parameters of the menu link content entity.
-   *
-   * @return array
-   *   The route parameters, or an empty array.
-   */
-  public function getRouteParameters();
-
-  /**
-   * Sets the route parameters of the custom menu link.
-   *
-   * @param array $route_parameters
-   *   The route parameters, usually derived from the path entered by the
-   *   administrator. For example, for a link to a node with route
-   *   'entity.node.canonical' the route needs the node ID as a parameter:
-   *   @code
-   *     array('node' => 2)
-   *   @endcode
-   *
-   * @return $this
-   */
-  public function setRouteParameters(array $route_parameters);
-
-  /**
-   * Gets the external URL.
-   *
-   * @return string|NULL
-   *   Returns the external URL if the menu link points to an external URL,
-   *   otherwise NULL.
-   */
-  public function getUrl();
-
-  /**
    * Gets the url object pointing to the URL of the menu link content entity.
    *
    * @return \Drupal\Core\Url
@@ -83,24 +43,6 @@ interface MenuLinkContentInterface extends ContentEntityInterface, EntityChanged
    *   The menu ID.
    */
   public function getMenuName();
-
-  /**
-   * Gets the options for the menu link content entity.
-   *
-   * @return array
-   *   The options that may be passed to the URL generator.
-   */
-  public function getOptions();
-
-  /**
-   * Sets the query options of the menu link content entity.
-   *
-   * @param array $options
-   *   The new option.
-   *
-   * @return $this
-   */
-  public function setOptions(array $options);
 
   /**
    * Gets the description of the menu link for the UI.
