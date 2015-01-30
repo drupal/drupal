@@ -8,6 +8,7 @@
 namespace Drupal\link\Plugin\Field\FieldType;
 
 use Drupal\Component\Utility\Random;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -44,9 +45,7 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
    * {@inheritdoc}
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
-    // @todo Change the type from 'string' to 'uri':
-    //   https://www.drupal.org/node/2412509.
-    $properties['uri'] = DataDefinition::create('string')
+    $properties['uri'] = DataDefinition::create('uri')
       ->setLabel(t('URI'));
 
     $properties['title'] = DataDefinition::create('string')
@@ -153,9 +152,7 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
    * {@inheritdoc}
    */
   public function isExternal() {
-    // External links don't resolve to a route.
-    $url = \Drupal::pathValidator()->getUrlIfValid($this->uri);
-    return $url->isExternal();
+    return $this->getUrl()->isExternal();
   }
 
   /**
@@ -166,14 +163,23 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
   }
 
   /**
-   * Gets the URL object.
+   * {@inheritdoc}
    *
-   * @return \Drupal\Core\Url
+   * @todo Remove the $access_check parameter and replace all logic in the
+   *    function body with a call to Url::fromUri() in
+   *    https://www.drupal.org/node/2416987.
    */
-  public function getUrl() {
-    return \Drupal::pathValidator()->getUrlIfValidWithoutAccessCheck($this->uri);
+  public function getUrl($access_check = FALSE) {
+    $uri = $this->uri;
+    $scheme = parse_url($uri, PHP_URL_SCHEME);
+    if ($scheme === 'user-path') {
+      $uri_reference = explode(':', $uri, 2)[1];
+    }
+    else {
+      $uri_reference = $uri;
+    }
+    return $access_check ? \Drupal::pathValidator()->getUrlIfValid($uri_reference) : \Drupal::pathValidator()->getUrlIfValidWithoutAccessCheck($uri_reference);
   }
-
 
   /**
    * {@inheritdoc}

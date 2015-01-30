@@ -61,8 +61,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
       $this->assertResponse(200);
       $saved_set = ShortcutSet::load($set->id());
       $paths = $this->getShortcutInformation($saved_set, 'link');
-      $test_path = $test_path != '<front>' ? $test_path : '';
-      $this->assertTrue(in_array($test_path, $paths), 'Shortcut created: ' . $test_path);
+      $this->assertTrue(in_array('user-path:' . $test_path, $paths), 'Shortcut created: ' . $test_path);
       $this->assertLink($title, 0, String::format('Shortcut link %url found on the page.', ['%url' => $test_path]));
     }
     $saved_set = ShortcutSet::load($set->id());
@@ -158,7 +157,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $this->drupalPostForm('admin/config/user-interface/shortcut/link/' . $shortcut->id(), array('title[0][value]' => $shortcut->getTitle(), 'link[0][uri]' => $new_link_path), t('Save'));
     $saved_set = ShortcutSet::load($set->id());
     $paths = $this->getShortcutInformation($saved_set, 'link');
-    $this->assertTrue(in_array($new_link_path, $paths), 'Shortcut path changed: ' . $new_link_path);
+    $this->assertTrue(in_array('user-path:' . $new_link_path, $paths), 'Shortcut path changed: ' . $new_link_path);
     $this->assertLinkByHref($new_link_path, 0, 'Shortcut with new path appears on the page.');
   }
 

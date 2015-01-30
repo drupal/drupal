@@ -66,7 +66,7 @@ abstract class ShortcutTestBase extends WebTestBase {
         'title' => t('Add content'),
         'weight' => -20,
         'link' => array(
-          'uri' => 'node/add',
+          'uri' => 'user-path:node/add',
         ),
       ));
       $shortcut->save();
@@ -76,7 +76,7 @@ abstract class ShortcutTestBase extends WebTestBase {
         'title' => t('All content'),
         'weight' => -19,
         'link' => array(
-          'uri' => 'admin/content',
+          'uri' => 'user-path:admin/content',
         ),
       ));
       $shortcut->save();

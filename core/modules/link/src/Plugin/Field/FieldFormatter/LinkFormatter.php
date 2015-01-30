@@ -9,6 +9,7 @@ namespace Drupal\link\Plugin\Field\FieldFormatter;
 
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
@@ -241,9 +242,7 @@ class LinkFormatter extends FormatterBase implements ContainerFactoryPluginInter
    *   An Url object.
    */
   protected function buildUrl(LinkItemInterface $item) {
-    // @todo Consider updating the usage of the path validator with whatever
-    // gets added in https://www.drupal.org/node/2405551.
-    $url = $this->pathValidator->getUrlIfValidWithoutAccessCheck($item->uri) ?: Url::fromRoute('<none>');
+    $url = $item->getUrl() ?: Url::fromRoute('<none>');
 
     $settings = $this->getSettings();
     $options = $item->options;

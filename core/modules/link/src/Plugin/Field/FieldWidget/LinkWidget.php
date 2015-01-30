@@ -8,10 +8,14 @@
 namespace Drupal\link\Plugin\Field\FieldWidget;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\link\LinkItemInterface;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationInterface;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
  * Plugin implementation of the 'link' widget.
@@ -37,23 +41,41 @@ class LinkWidget extends WidgetBase {
   }
 
   /**
+   * Gets the URI without the 'user-path:' scheme, for display while editing.
+   *
+   * @param string $uri
+   *   The URI to get the displayable string for.
+   *
+   * @return string
+   */
+  protected function getUriAsDisplayableString($uri) {
+    $scheme = parse_url($uri, PHP_URL_SCHEME);
+    if ($scheme === 'user-path') {
+      $uri_reference = explode(':', $uri, 2)[1];
+    }
+    else {
+      $uri_reference = $uri;
+    }
+    return $uri_reference;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
+    /** @var \Drupal\link\LinkItemInterface $item */
+    $item = $items[$delta];
 
-    $default_url_value = NULL;
-    if (isset($items[$delta]->uri)) {
-      if ($url = \Drupal::pathValidator()->getUrlIfValid($items[$delta]->uri)) {
-        $url->setOptions($items[$delta]->options ?: []);
-        $url_string = $url->toString();
-        $default_url_value = $url->isRouted() ? Unicode::substr($url_string, strlen(base_path())) : $url_string;
-      }
-    }
     $element['uri'] = array(
       '#type' => 'url',
       '#title' => $this->t('URL'),
       '#placeholder' => $this->getSetting('placeholder_url'),
-      '#default_value' => $default_url_value,
+      // The current field value could have been entered by a different user.
+      // However, if it is inaccessible to the current user, do not display it
+      // to them.
+      // @todo Revisit this access requirement in
+      //   https://www.drupal.org/node/2416987.
+      '#default_value' => $item->getUrl(TRUE) ? $this->getUriAsDisplayableString($item->uri) : NULL,
       '#maxlength' => 2048,
       '#required' => $element['#required'],
     );
@@ -202,19 +224,44 @@ class LinkWidget extends WidgetBase {
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
     foreach ($values as &$value) {
       if (!empty($value['uri'])) {
-        $url = \Drupal::pathValidator()->getUrlIfValid($value['uri']);
-        if (!$url) {
-          return $values;
+        // Users can enter relative URLs, but we need a valid URI, so add an
+        // explicit scheme when necessary.
+        if (parse_url($value['uri'], PHP_URL_SCHEME) === NULL) {
+          $value['uri'] = 'user-path:' . $value['uri'];
         }
 
         $value += ['options' => []];
-        // Reset the URL value to contain only the path.
-        if (!$url->isExternal() && $this->supportsInternalLinks()) {
-          $value['uri'] = substr($url->toString(), strlen(\Drupal::request()->getBasePath() . '/'));
-        }
       }
     }
     return $values;
+  }
+
+
+  /**
+   * {@inheritdoc}
+   *
+   * Override the '%url' message parameter, to ensure that 'user-path:' URIs
+   * show a validation error message that doesn't mention that scheme.
+   */
+  public function flagErrors(FieldItemListInterface $items, ConstraintViolationListInterface $violations, array $form, FormStateInterface $form_state) {
+    /** @var \Symfony\Component\Validator\ConstraintViolationInterface $violation */
+    foreach ($violations as $offset => $violation) {
+      $parameters = $violation->getMessageParameters();
+      if (isset($parameters['%url'])) {
+        $parameters['%url'] = $this->getUriAsDisplayableString($parameters['%url']);
+        $violations->set($offset, new ConstraintViolation(
+          $this->t($violation->getMessageTemplate(), $parameters),
+          $violation->getMessageTemplate(),
+          $parameters,
+          $violation->getRoot(),
+          $violation->getPropertyPath(),
+          $violation->getInvalidValue(),
+          $violation->getMessagePluralization(),
+          $violation->getCode()
+        ));
+      }
+    }
+    parent::flagErrors($items, $violations, $form, $form_state);
   }
 
 }
