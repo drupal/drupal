@@ -106,6 +106,16 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
    */
   public function applyUpdates() {
     foreach ($this->getChangeList() as $entity_type_id => $change_list) {
+      // Process entity type definition changes before storage definitions ones
+      // this is necessary when you change an entity type from non-revisionable
+      // to revisionable and at the same time add revisionable fields to the
+      // entity type.
+      if (!empty($change_list['entity_type']) && $change_list['entity_type'] == static::DEFINITION_UPDATED) {
+        $entity_type = $this->entityManager->getDefinition($entity_type_id);
+        $original = $this->entityManager->getLastInstalledDefinition($entity_type_id);
+        $this->entityManager->onEntityTypeUpdate($entity_type, $original);
+      }
+
       // Process field storage definition changes.
       if (!empty($change_list['field_storage_definitions'])) {
         $storage_definitions = $this->entityManager->getFieldStorageDefinitions($entity_type_id);
@@ -126,15 +136,6 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
               break;
           }
         }
-      }
-      // Process entity type definition changes after storage definitions ones
-      // as entity type updates might create base fields as well. That way, if
-      // both occur at the same time it does not lead to problems due to the
-      // base field creation being applied twice.
-      if (!empty($change_list['entity_type']) && $change_list['entity_type'] == static::DEFINITION_UPDATED) {
-        $entity_type = $this->entityManager->getDefinition($entity_type_id);
-        $original = $this->entityManager->getLastInstalledDefinition($entity_type_id);
-        $this->entityManager->onEntityTypeUpdate($entity_type, $original);
       }
     }
   }

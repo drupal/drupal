@@ -1076,7 +1076,11 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
   protected function createDedicatedTableSchema(FieldStorageDefinitionInterface $storage_definition) {
     $schema = $this->getDedicatedTableSchema($storage_definition);
     foreach ($schema as $name => $table) {
-      $this->database->schema()->createTable($name, $table);
+      // Check if the table exists because it might already have been
+      // created as part of the earlier entity type update event.
+      if (!$this->database->schema()->tableExists($name)) {
+        $this->database->schema()->createTable($name, $table);
+      }
     }
     $this->saveFieldSchemaData($storage_definition, $schema);
   }
@@ -1109,11 +1113,19 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
           $schema[$table_name] = $this->getSharedTableFieldSchema($storage_definition, $table_name, $column_names);
           if (!$only_save) {
             foreach ($schema[$table_name]['fields'] as $name => $specifier) {
-              $schema_handler->addField($table_name, $name, $specifier);
+              // Check if the field exists because it might already have been
+              // created as part of the earlier entity type update event.
+              if (!$schema_handler->fieldExists($table_name, $name)) {
+                $schema_handler->addField($table_name, $name, $specifier);
+              }
             }
             if (!empty($schema[$table_name]['indexes'])) {
               foreach ($schema[$table_name]['indexes'] as $name => $specifier) {
-                $schema_handler->addIndex($table_name, $name, $specifier);
+                // Check if the index exists because it might already have been
+                // created as part of the earlier entity type update event.
+                if (!$schema_handler->indexExists($table_name, $name)) {
+                  $schema_handler->addIndex($table_name, $name, $specifier);
+                }
               }
             }
             if (!empty($schema[$table_name]['unique keys'])) {
