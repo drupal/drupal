@@ -1178,3 +1178,5 @@ services:
   renderer:
     class: Drupal\Core\Render\Renderer
     arguments: ['@controller_resolver', '@theme.manager', '@plugin.manager.element_info', '@request_stack', '@cache_factory', '@cache_contexts']
+  email.validator:
+    class: Egulias\EmailValidator\EmailValidator

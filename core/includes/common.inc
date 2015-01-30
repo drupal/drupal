@@ -248,17 +248,17 @@ function drupal_get_destination() {
 /**
  * Verifies the syntax of the given email address.
  *
- * This uses the
- * @link http://php.net/manual/filter.filters.validate.php PHP email validation filter. @endlink
- *
- * @param $mail
+ * @param string $mail
  *   A string containing an email address.
  *
- * @return
+ * @return bool
  *   TRUE if the address is in a valid format.
+ *
+ * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+ *   Use \Drupal::service('email.validator')->isValid().
  */
 function valid_email_address($mail) {
-  return (bool)filter_var($mail, FILTER_VALIDATE_EMAIL);
+  return \Drupal::service('email.validator')->isValid($mail);
 }
 
 /**
