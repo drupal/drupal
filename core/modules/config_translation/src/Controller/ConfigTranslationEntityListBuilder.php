@@ -31,10 +31,10 @@ class ConfigTranslationEntityListBuilder extends ConfigEntityListBuilder impleme
    * {@inheritdoc}
    */
   public function render() {
-    $table = parent::render();
+    $build = parent::render();
     $filter = $this->getFilterLabels();
 
-    usort($table['#rows'], array($this, 'sortRows'));
+    usort($build['table']['#rows'], array($this, 'sortRows'));
 
     $build['filters'] = array(
       '#type' => 'container',
@@ -56,7 +56,6 @@ class ConfigTranslationEntityListBuilder extends ConfigEntityListBuilder impleme
       ),
     );
 
-    $build['table'] = $table;
     $build['table']['#attributes']['class'][] = 'config-translation-entity-list';
     $build['#attached']['library'][] = 'system/drupal.system.modules';
 

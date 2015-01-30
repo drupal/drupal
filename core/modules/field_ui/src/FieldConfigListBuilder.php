@@ -83,8 +83,8 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
     $this->targetBundle = $target_bundle;
 
     $build = parent::render();
-    $build['#attributes']['id'] = 'field-overview';
-    $build['#empty'] = $this->t('No fields are present yet.');
+    $build['table']['#attributes']['id'] = 'field-overview';
+    $build['table']['#empty'] = $this->t('No fields are present yet.');
 
     return $build;
   }

@@ -237,4 +237,34 @@ class ConfigEntityListTest extends WebTestBase {
     $this->assertText('There is no Test configuration yet.');
   }
 
+  /**
+   * Test paging.
+   */
+  public function testPager() {
+    $storage = \Drupal::entityManager()->getListBuilder('config_test')->getStorage();
+
+    // Create 51 test entities.
+    for ($i = 1; $i < 52; $i++) {
+      $storage->create(array(
+        'id' => str_pad($i, 2, '0', STR_PAD_LEFT),
+        'label' => 'Test config entity ' . $i,
+        'weight' => $i,
+        'protected_property' => $i,
+      ))->save();
+    }
+
+    // Load the listing page.
+    $this->drupalGet('admin/structure/config_test');
+
+    // Item 51 should not be present.
+    $this->assertRaw('Test config entity 50', 'Config entity 50 is shown.');
+    $this->assertNoRaw('Test config entity 51', 'Config entity 51 is on the next page.');
+
+    // Browse to the next page.
+    $this->clickLink(t('Page 2'));
+    $this->assertNoRaw('Test config entity 50', 'Test config entity 50 is on the previous page.');
+    $this->assertRaw('dotted.default', 'Default config entity appears on page 2.');
+    $this->assertRaw('Test config entity 51', 'Test config entity 51 is on page 2.');
+  }
+
 }

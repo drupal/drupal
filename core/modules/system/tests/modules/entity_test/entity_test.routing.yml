@@ -48,6 +48,13 @@ entity.entity_test.collection_empty:
   requirements:
     _access: 'TRUE'
 
+entity.entity_test.collection:
+  path: '/entity_test/list'
+  defaults:
+    _entity_list: entity_test
+  requirements:
+    _access: 'TRUE'
+
 entity.block.test_operation:
   path: '/admin/structure/block/manage/{block}/test_operation'
   defaults:
