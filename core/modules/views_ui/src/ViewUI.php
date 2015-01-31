@@ -702,7 +702,7 @@ class ViewUI implements ViewEntityInterface {
               Xss::filterAdmin($this->executable->getTitle()),
             );
             if (isset($path)) {
-              $path = \Drupal::l($path, Url::fromUri('base:' . $path));
+              $path = \Drupal::l($path, Url::fromUri('user-path:' . $path));
             }
             else {
               $path = t('This display has no path.');

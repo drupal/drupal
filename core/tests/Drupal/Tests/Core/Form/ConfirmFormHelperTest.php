@@ -10,6 +10,7 @@ namespace Drupal\Tests\Core\Form;
 use Drupal\Core\Form\ConfirmFormHelper;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -95,8 +96,20 @@ class ConfirmFormHelperTest extends UnitTestCase {
   public function testCancelLinkDestination() {
     $query = array('destination' => 'baz');
     $form = $this->getMock('Drupal\Core\Form\ConfirmFormInterface');
+
+    $path_validator = $this->getMock('Drupal\Core\Path\PathValidatorInterface');
+    $container_builder = new ContainerBuilder();
+    $container_builder->set('path.validator', $path_validator);
+    \Drupal::setContainer($container_builder);
+
+    $url = Url::fromRoute('test_route');
+    $path_validator->expects($this->atLeastOnce())
+      ->method('getUrlIfValidWithoutAccessCheck')
+      ->with('baz')
+      ->willReturn($url);
+
     $link = ConfirmFormHelper::buildCancelLink($form, new Request($query));
-    $this->assertSame('base:' . $query['destination'], $link['#url']->getUri());
+    $this->assertSame($url, $link['#url']);
   }
 
 }

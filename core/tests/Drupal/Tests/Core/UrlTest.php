@@ -61,6 +61,13 @@ class UrlTest extends UnitTestCase {
   protected $map;
 
   /**
+   * The mocked path validator.
+   *
+   * @var \Drupal\Core\Path\PathValidatorInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $pathValidator;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -93,10 +100,13 @@ class UrlTest extends UnitTestCase {
       ->will($this->returnValueMap($alias_map));
 
     $this->router = $this->getMock('Drupal\Tests\Core\Routing\TestRouterInterface');
+    $this->pathValidator = $this->getMock('Drupal\Core\Path\PathValidatorInterface');
+
     $this->container = new ContainerBuilder();
     $this->container->set('router.no_access_checks', $this->router);
     $this->container->set('url_generator', $this->urlGenerator);
     $this->container->set('path.alias_manager', $this->pathAliasManager);
+    $this->container->set('path.validator', $this->pathValidator);
     \Drupal::setContainer($this->container);
   }
 
@@ -160,6 +170,36 @@ class UrlTest extends UnitTestCase {
   public function testFromRouteFront() {
     $url = Url::fromRoute('<front>');
     $this->assertSame('<front>', $url->getRouteName());
+  }
+
+  /**
+   * Tests fromUri() method with a user-entered path not matching any route.
+   *
+   * @covers ::fromUri
+   */
+  public function testFromRoutedPathWithInvalidRoute() {
+    $this->pathValidator->expects($this->once())
+      ->method('getUrlIfValidWithoutAccessCheck')
+      ->with('invalid-path')
+      ->willReturn(FALSE);
+    $url = Url::fromUri('user-path:invalid-path');
+    $this->assertSame(FALSE, $url->isRouted());
+    $this->assertSame('base:invalid-path', $url->getUri());
+  }
+
+  /**
+   * Tests fromUri() method with user-entered path matching a valid route.
+   *
+   * @covers ::fromUri
+   */
+  public function testFromRoutedPathWithValidRoute() {
+    $url = Url::fromRoute('test_route');
+    $this->pathValidator->expects($this->once())
+      ->method('getUrlIfValidWithoutAccessCheck')
+      ->with('valid-path')
+      ->willReturn($url);
+    $result_url = Url::fromUri('user-path:valid-path');
+    $this->assertSame($url, $result_url);
   }
 
   /**
@@ -382,7 +422,7 @@ class UrlTest extends UnitTestCase {
   }
 
   /**
-   * Tests the access() method.
+   * Tests the access() method for routed URLs.
    *
    * @param bool $access
    *
@@ -390,11 +430,26 @@ class UrlTest extends UnitTestCase {
    * @covers ::accessManager
    * @dataProvider accessProvider
    */
-  public function testAccess($access) {
+  public function testAccessRouted($access) {
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
     $url = new TestUrl('entity.node.canonical', ['node' => 3]);
     $url->setAccessManager($this->getMockAccessManager($access, $account));
     $this->assertEquals($access, $url->access($account));
+  }
+
+  /**
+   * Tests the access() method for unrouted URLs (they always have access).
+   *
+   * @covers ::access
+   */
+  public function testAccessUnrouted() {
+    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $url = TestUrl::fromUri('base:kittens');
+    $access_manager = $this->getMock('Drupal\Core\Access\AccessManagerInterface');
+    $access_manager->expects($this->never())
+      ->method('checkNamedRoute');
+    $url->setAccessManager($access_manager);
+    $this->assertTrue($url->access($account));
   }
 
   /**

@@ -203,9 +203,12 @@ class Url {
    * use Url::fromRoute().
    *
    * @param string $uri
-   *   The URI of the resource including the scheme. For Drupal paths that are
-   *   not handled by the routing system, use base: for the scheme. For entity
-   *   URLs you may use entity:{entity_type}/{entity_id} URIs.
+   *   The URI of the resource including the scheme. For user input that may
+   *   correspond to a Drupal route, use user-path: for the scheme. For paths
+   *   that are known not to be handled by the Drupal routing system (such as
+   *   static files), use base: for the scheme to get a link relative to the
+   *   Drupal base path (like the <base> HTML element). For a link to an entity
+   *   you may use entity:{entity_type}/{entity_id} URIs.
    * @param array $options
    *   (optional) An associative array of additional URL options, with the
    *   following elements:
@@ -223,8 +226,14 @@ class Url {
    *     defined, the current scheme is used, so the user stays on HTTP or HTTPS
    *     respectively. TRUE enforces HTTPS and FALSE enforces HTTP.
    *
+   * Note: the user-path: scheme should be avoided except when processing actual
+   * user input that may or may not correspond to a Drupal route. Normally use
+   * Url::fromRoute() for code linking to any any Drupal page.
+   *
+   * You can call access() on the returned object to do access checking.
+   *
    * @return \Drupal\Core\Url
-   *   A new Url object for an unrouted (non-Drupal) URL or a routed entity URI.
+   *   A new Url object with properties depending on the URI scheme.
    *
    * @throws \InvalidArgumentException
    *   Thrown when the passed in path has no scheme.
@@ -232,20 +241,29 @@ class Url {
    * @see static::fromRoute()
    */
   public static function fromUri($uri, $options = array()) {
-    if (!($scheme = parse_url($uri, PHP_URL_SCHEME))) {
-      throw new \InvalidArgumentException(String::format('The URI "@uri" is invalid. You must use a valid URI scheme. Use base: for a path, e.g., to a Drupal file that needs the base path. Do not use this for internal paths controlled by Drupal.', ['@uri' => $uri]));
+    $uri_parts = parse_url($uri);
+    if ($uri_parts === FALSE) {
+      throw new \InvalidArgumentException(String::format('The URI "@uri" is malformed.', ['@uri' => $uri]));
+    }
+    if (empty($uri_parts['scheme'])) {
+      throw new \InvalidArgumentException(String::format('The URI "@uri" is invalid. You must use a valid URI scheme. Use base: for items like a static file that needs the base path. Use user-path: for user input without a scheme. Use entity: for referencing the canonical route of a content entity.', ['@uri' => $uri]));
     }
 
-    // Special case entity: URIs. Map these to the canonical entity route.
-    if ($scheme === 'entity') {
-      return static::fromEntityUri($uri);
+    $uri_parts += ['path' => ''];
+    if ($uri_parts['scheme'] === 'entity') {
+      $url = static::fromEntityUri($uri);
     }
-    $url = new static($uri, array(), $options);
-    if ($scheme !== 'base') {
-      $url->external = TRUE;
-      $url->setOption('external', TRUE);
+    elseif ($uri_parts['scheme'] === 'user-path') {
+      $url = static::fromUserPathUri($uri, $options);
     }
-    $url->setUnrouted();
+    else {
+      $url = new static($uri, array(), $options);
+      if ($uri_parts['scheme'] !== 'base') {
+        $url->external = TRUE;
+        $url->setOption('external', TRUE);
+      }
+      $url->setUnrouted();
+    }
 
     return $url;
   }
@@ -270,6 +288,27 @@ class Url {
     }
 
     return new static("entity.$entity_type_id.canonical", [$entity_type_id => $entity_id]);
+  }
+
+  /**
+   * Creates a new Url object for 'user-path:' URIs.
+   *
+   * @param string $uri
+   *   An URI of the form user-path:{path}.
+   * @param array $options
+   *   An array of options, see static::fromUri() for details.
+   *
+   * @return \Drupal\Core\Url
+   *   A new Url object for a 'user-path:' URI.
+   */
+  protected static function fromUserPathUri($uri, array $options) {
+    $uri_reference = explode(':', $uri, 2)[1];
+    $url = \Drupal::pathValidator()
+      ->getUrlIfValidWithoutAccessCheck($uri_reference) ?: static::fromUri('base:' . $uri_reference);
+    // Allow to specify additional or override options from the path.
+    $url->setOptions($options + $url->getOptions());
+
+    return $url;
   }
 
   /**
@@ -567,7 +606,10 @@ class Url {
    *   Returns TRUE if the user has access to the url, otherwise FALSE.
    */
   public function access(AccountInterface $account = NULL) {
-    return $this->accessManager()->checkNamedRoute($this->getRouteName(), $this->getRouteParameters(), $account);
+    if ($this->isRouted()) {
+      return $this->accessManager()->checkNamedRoute($this->getRouteName(), $this->getRouteParameters(), $account);
+    }
+    return TRUE;
   }
 
   /**
