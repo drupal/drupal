@@ -15,7 +15,7 @@ use Symfony\Component\Routing\RouteCollection;
  * In addition to implementing the interface, specify 'uses_routes' in the
  * plugin definition.
  */
-interface DisplayRouterInterface {
+interface DisplayRouterInterface extends DisplayPluginInterface {
 
   /**
    * Adds the route entry of a view to the collection.
