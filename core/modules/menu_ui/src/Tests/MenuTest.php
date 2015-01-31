@@ -260,6 +260,26 @@ class MenuTest extends MenuWebTestBase {
    */
   function doMenuTests() {
     $menu_name = $this->menu->id();
+
+    // Test the 'Add link' local action.
+    $this->drupalGet(Url::fromRoute('entity.menu.edit_form',  ['menu' => $menu_name]));
+
+    $this->clickLink(t('Add link'));
+    $link_title = $this->randomString();
+    $this->drupalPostForm(NULL, array('url' => '<front>', 'title[0][value]' => $link_title), t('Save'));
+    $this->assertUrl(Url::fromRoute('entity.menu.edit_form',  ['menu' => $menu_name]));
+    // Test the 'Edit' operation.
+    $this->clickLink(t('Edit'));
+    $this->assertFieldByName('title[0][value]', $link_title);
+    $link_title = $this->randomString();
+    $this->drupalPostForm(NULL, array('title[0][value]' => $link_title), t('Save'));
+    $this->assertUrl(Url::fromRoute('entity.menu.edit_form',  ['menu' => $menu_name]));
+    // Test the 'Delete' operation.
+    $this->clickLink(t('Delete'));
+    $this->assertRaw(t('Are you sure you want to delete the custom menu link %item?', array('%item' => $link_title)));
+    $this->drupalPostForm(NULL, array(), t('Delete'));
+    $this->assertUrl(Url::fromRoute('entity.menu.edit_form',  ['menu' => $menu_name]));
+
     // Add nodes to use as links for menu links.
     $node1 = $this->drupalCreateNode(array('type' => 'article'));
     $node2 = $this->drupalCreateNode(array('type' => 'article'));
