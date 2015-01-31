@@ -76,7 +76,7 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
    * {@inheritdoc}
    */
   public function getUrlObject() {
-    return \Drupal::pathValidator()->getUrlIfValidWithoutAccessCheck($this->link->uri) ?: Url::fromRoute('<front>');
+    return $this->link->first()->getUrl();
   }
 
   /**
@@ -291,7 +291,10 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
         'link_type' => LinkItemInterface::LINK_GENERIC,
         'title' => DRUPAL_DISABLED,
       ))
-    ;
+      ->setDisplayOptions('form', array(
+        'type' => 'link_default',
+        'weight' => -2,
+      ));
 
     $fields['external'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('External'))
@@ -337,7 +340,7 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
       ))
       ->setDisplayOptions('form', array(
         'settings' => array('display_label' => TRUE),
-        'weight' => 0,
+        'weight' => -1,
       ));
 
     $fields['langcode'] = BaseFieldDefinition::create('language')

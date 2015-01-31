@@ -106,7 +106,7 @@ class MenuTest extends MenuWebTestBase {
 
     foreach ($this->items as $item) {
       // Paths were set as 'node/$nid'.
-      $node = Node::load(str_replace('node/', '', $item->link->uri));
+      $node = Node::load(str_replace('user-path:node/', '', $item->link->uri));
       $this->verifyMenuLink($item, $node);
     }
 
@@ -266,7 +266,7 @@ class MenuTest extends MenuWebTestBase {
 
     $this->clickLink(t('Add link'));
     $link_title = $this->randomString();
-    $this->drupalPostForm(NULL, array('url' => '<front>', 'title[0][value]' => $link_title), t('Save'));
+    $this->drupalPostForm(NULL, array('link[0][uri]' => '<front>', 'title[0][value]' => $link_title), t('Save'));
     $this->assertUrl(Url::fromRoute('entity.menu.edit_form',  ['menu' => $menu_name]));
     // Test the 'Edit' operation.
     $this->clickLink(t('Edit'));
@@ -475,7 +475,7 @@ class MenuTest extends MenuWebTestBase {
     $this->assertResponse(200);
 
     $this->assertFieldByName('title[0][value]', '');
-    $this->assertFieldByName('url', '');
+    $this->assertFieldByName('link[0][uri]', '');
 
     $this->assertNoFieldChecked('edit-expanded-value');
     $this->assertFieldChecked('edit-enabled-value');
@@ -495,13 +495,13 @@ class MenuTest extends MenuWebTestBase {
     $item = $this->addMenuLink('', $path);
 
     $this->drupalGet('admin/structure/menu/item/' . $item->id() . '/edit');
-    $this->assertFieldByName('url', $path, 'Path is found with both query and fragment.');
+    $this->assertFieldByName('link[0][uri]', $path, 'Path is found with both query and fragment.');
 
     // Now change the path to something without query and fragment.
     $path = 'test-page';
-    $this->drupalPostForm('admin/structure/menu/item/' . $item->id() . '/edit', array('url' => $path), t('Save'));
+    $this->drupalPostForm('admin/structure/menu/item/' . $item->id() . '/edit', array('link[0][uri]' => $path), t('Save'));
     $this->drupalGet('admin/structure/menu/item/' . $item->id() . '/edit');
-    $this->assertFieldByName('url', $path, 'Path no longer has query or fragment.');
+    $this->assertFieldByName('link[0][uri]', $path, 'Path no longer has query or fragment.');
 
     // Use <front>#fragment and ensure that saving it does not loose its
     // content.
@@ -509,12 +509,12 @@ class MenuTest extends MenuWebTestBase {
     $item = $this->addMenuLink('', $path);
 
     $this->drupalGet('admin/structure/menu/item/' . $item->id() . '/edit');
-    $this->assertFieldByName('url', $path, 'Path is found with both query and fragment.');
+    $this->assertFieldByName('link[0][uri]', $path, 'Path is found with both query and fragment.');
 
     $this->drupalPostForm('admin/structure/menu/item/' . $item->id() . '/edit', array(), t('Save'));
 
     $this->drupalGet('admin/structure/menu/item/' . $item->id() . '/edit');
-    $this->assertFieldByName('url', $path, 'Path is found with both query and fragment.');
+    $this->assertFieldByName('link[0][uri]', $path, 'Path is found with both query and fragment.');
   }
 
   /**
@@ -610,7 +610,7 @@ class MenuTest extends MenuWebTestBase {
 
     $title = '!link_' . $this->randomMachineName(16);
     $edit = array(
-      'url' => $path,
+      'link[0][uri]' => $path,
       'title[0][value]' => $title,
       'description[0][value]' => '',
       'enabled[value]' => 1,
@@ -639,7 +639,7 @@ class MenuTest extends MenuWebTestBase {
   function addInvalidMenuLink() {
     foreach (array('-&-', 'admin/people/permissions', '#') as $link_path) {
       $edit = array(
-        'url' => $link_path,
+        'link[0][uri]' => $link_path,
         'title[0][value]' => 'title',
       );
       $this->drupalPostForm("admin/structure/menu/manage/{$this->menu->id()}/add", $edit, t('Save'));

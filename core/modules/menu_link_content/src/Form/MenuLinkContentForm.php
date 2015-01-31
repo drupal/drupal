@@ -193,7 +193,7 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
     $new_definition['route_parameters'] = [];
     $new_definition['options'] = [];
 
-    $extracted = $this->pathValidator->getUrlIfValid($form_state->getValue('url'));
+    $extracted = $this->pathValidator->getUrlIfValid($form_state->getValue(['link', 0, 'uri']));
 
     if ($extracted) {
       if ($extracted->isExternal()) {
@@ -219,17 +219,6 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
    */
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
-
-    $default_value = $this->getEntity()->link->uri;
-
-    $form['url'] = array(
-      '#title' => $this->t('Link path'),
-      '#type' => 'textfield',
-      '#description' => $this->t('The path for this menu link. This can be an internal Drupal path such as %add-node or an external URL such as %drupal. Enter %front to link to the front page.', array('%front' => '<front>', '%add-node' => 'node/add', '%drupal' => 'http://drupal.org')),
-      '#default_value' => $default_value,
-      '#required' => TRUE,
-      '#weight' => -2,
-    );
 
     $default = $this->entity->getMenuName() . ':' . $this->entity->getParentId();
     $form['menu_parent'] = $this->menuParentSelector->parentSelectElement($default, $this->entity->getPluginId());
@@ -274,8 +263,6 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
     $entity->enabled->value = (bool) $new_definition['enabled'];
     $entity->expanded->value = $new_definition['expanded'];
 
-    $entity->link->uri = $form_state->getValue('url');
-
     return $entity;
   }
 
@@ -312,10 +299,10 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
    *   The current state of the form.
    */
   protected function doValidate(array $form, FormStateInterface $form_state) {
-    $extracted = $this->pathValidator->getUrlIfValid($form_state->getValue('url'));
+    $extracted = $this->pathValidator->getUrlIfValid($form_state->getValue(['link', 0, 'uri']));
 
     if (!$extracted) {
-      $form_state->setErrorByName('url', $this->t("The path '@link_path' is either invalid or you do not have access to it.", array('@link_path' => $form_state->getValue('url'))));
+      $form_state->setErrorByName('link][0][uri', $this->t("The path '@link_path' is either invalid or you do not have access to it.", array('@link_path' => $form_state->getValue(['link', 0, 'uri']))));
     }
   }
 

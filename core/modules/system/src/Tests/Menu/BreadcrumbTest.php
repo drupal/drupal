@@ -187,7 +187,7 @@ class BreadcrumbTest extends MenuTestBase {
     $menu = 'tools';
     $edit = array(
       'title[0][value]' => 'Root',
-      'url' => 'node',
+      'link[0][uri]' => 'node',
     );
     $this->drupalPostForm("admin/structure/menu/manage/$menu/add", $edit, t('Save'));
     $menu_links = entity_load_multiple_by_properties('menu_link_content', array('title' => 'Root'));
@@ -240,7 +240,7 @@ class BreadcrumbTest extends MenuTestBase {
       $term = $data['term'];
       $edit = array(
         'title[0][value]' => "$name link",
-        'url' => "taxonomy/term/{$term->id()}",
+        'link[0][uri]' => "taxonomy/term/{$term->id()}",
         'menu_parent' => "$menu:{$parent_mlid}",
         'enabled[value]' => 1,
       );
@@ -248,7 +248,7 @@ class BreadcrumbTest extends MenuTestBase {
       $menu_links = entity_load_multiple_by_properties('menu_link_content', array(
         'title' => $edit['title[0][value]'],
         // @todo Use link.uri once https://www.drupal.org/node/2391217 is in.
-        'link__uri' => 'taxonomy/term/' . $term->id(),
+        'link__uri' => 'user-path:taxonomy/term/' . $term->id(),
       ));
       $tags[$name]['link'] = reset($menu_links);
       $parent_mlid = $tags[$name]['link']->getPluginId();
