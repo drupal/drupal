@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url as CoreUrl;
 use Drupal\views\ResultRow;
 
 /**
@@ -45,7 +46,7 @@ class Url extends FieldPluginBase {
   public function render(ResultRow $values) {
     $value = $this->getValue($values);
     if (!empty($this->options['display_as_link'])) {
-      return _l($this->sanitizeValue($value), $value, array('html' => TRUE));
+      return \Drupal::l($this->sanitizeValue($value), CoreUrl::fromUri('user-path:' . $value), array('html' => TRUE));
     }
     else {
       return $this->sanitizeValue($value, 'url');

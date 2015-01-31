@@ -17,6 +17,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Renderer;
+use Drupal\Core\Url as CoreUrl;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ResultRow;
@@ -1247,7 +1248,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
           $more_link_path = Unicode::substr($more_link_path, Unicode::strlen($base_path));
         }
 
-        $more_link = _l($more_link_text, $more_link_path, array('attributes' => array('class' => array('views-more-link'))));
+        $more_link = \Drupal::l($more_link_text, CoreUrl::fromUri('user-path:' . $more_link_path), array('attributes' => array('class' => array('views-more-link'))));
 
         $suffix .= " " . $more_link;
       }

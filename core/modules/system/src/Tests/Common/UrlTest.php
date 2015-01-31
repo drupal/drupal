@@ -28,10 +28,10 @@ class UrlTest extends WebTestBase {
    * Confirms that invalid URLs are filtered in link generating functions.
    */
   function testLinkXSS() {
-    // Test _l().
+    // Test \Drupal::l().
     $text = $this->randomMachineName();
     $path = "<SCRIPT>alert('XSS')</SCRIPT>";
-    $link = _l($text, $path);
+    $link = \Drupal::l($text, Url::fromUri('user-path:' . $path));
     $sanitized_path = check_url(Url::fromUri('base:' . $path)->toString());
     $this->assertTrue(strpos($link, $sanitized_path) !== FALSE, format_string('XSS attack @path was filtered by _l().', array('@path' => $path)));
 
