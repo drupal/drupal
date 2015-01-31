@@ -92,4 +92,14 @@ interface MenuLinkContentInterface extends ContentEntityInterface, EntityChanged
    */
   public function getWeight();
 
+  /**
+   * Builds up the menu link plugin definition for this entity.
+   *
+   * @return array
+   *   The plugin definition corresponding to this entity.
+   *
+   * @see \Drupal\Core\Menu\MenuLinkTree::$defaults
+   */
+  public function getPluginDefinition();
+
 }

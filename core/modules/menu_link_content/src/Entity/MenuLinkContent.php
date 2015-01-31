@@ -136,20 +136,15 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
   }
 
   /**
-   * Builds up the menu link plugin definition for this entity.
-   *
-   * @return array
-   *   The plugin definition corresponding to this entity.
-   *
-   * @see \Drupal\Core\Menu\MenuLinkTree::$defaults
+   * {@inheritdoc}
    */
-  protected function getPluginDefinition() {
+  public function getPluginDefinition() {
     $definition = array();
     $definition['class'] = 'Drupal\menu_link_content\Plugin\Menu\MenuLinkContent';
     $definition['menu_name'] = $this->getMenuName();
 
     if ($url_object = $this->getUrlObject()) {
-      if ($url_object->isExternal()) {
+      if (!$url_object->isRouted()) {
         $definition['url'] = $url_object->getUri();
       }
       else {
