@@ -151,8 +151,6 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
       ->setDescription(t('The location this shortcut points to.'))
       ->setRequired(TRUE)
       ->setSettings(array(
-        'default_value' => '',
-        'max_length' => 560,
         'link_type' => LinkItemInterface::LINK_INTERNAL,
         'title' => DRUPAL_DISABLED,
       ))

@@ -286,8 +286,6 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
       ->setDescription(t('The location this menu link points to.'))
       ->setRequired(TRUE)
       ->setSettings(array(
-        'default_value' => '',
-        'max_length' => 560,
         'link_type' => LinkItemInterface::LINK_GENERIC,
         'title' => DRUPAL_DISABLED,
       ))
