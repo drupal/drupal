@@ -1,0 +1,4 @@
+views_ui_test.test:
+  css:
+    component:
+      css/views_ui_test.test.css: {}

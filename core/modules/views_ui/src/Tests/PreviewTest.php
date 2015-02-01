@@ -213,6 +213,9 @@ class PreviewTest extends UITestBase {
     // @see views_ui_test.module
     $elements = $this->xpath('//div[@id="views-live-preview"]/div[contains(@class, views-query-info)]//td[text()=:text]', array(':text' => t('Test row count')));
     $this->assertEqual(count($elements), 1, 'Views Query Preview Info area altered.');
+    // Check that additional assets are attached.
+    $this->assertTrue(strpos($this->getDrupalSettings()['ajaxPageState']['libraries'], 'views_ui_test/views_ui_test.test') !== FALSE, 'Attached library found.');
+    $this->assertRaw('css/views_ui_test.test.css', 'Attached CSS asset found.');
   }
 
   /**

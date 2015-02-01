@@ -68,7 +68,7 @@ class ViewPreviewForm extends ViewFormBase {
         '#weight' => 110,
         '#theme_wrappers' => array('container'),
         '#attributes' => array('id' => 'views-live-preview'),
-        '#markup' => $view->renderPreview($this->displayID, $args),
+        'preview' => $view->renderPreview($this->displayID, $args),
       );
     }
     $uri = $view->urlInfo('preview-form');

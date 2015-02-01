@@ -577,7 +577,6 @@ class ViewUI implements ViewEntityInterface {
     $combined = $show_query && $show_stats;
 
     $rows = array('query' => array(), 'statistics' => array());
-    $output = '';
 
     $errors = $this->executable->validate();
     $this->executable->destroy();
@@ -599,7 +598,9 @@ class ViewUI implements ViewEntityInterface {
       $this->executable->setExposedInput($exposed_input);
 
       if (!$this->executable->setDisplay($display_id)) {
-        return t('Invalid display id @display', array('@display' => $display_id));
+        return [
+          '#markup' => t('Invalid display id @display', array('@display' => $display_id)),
+        ];
       }
 
       $this->executable->setArguments($args);
@@ -644,7 +645,6 @@ class ViewUI implements ViewEntityInterface {
 
       // Execute/get the view preview.
       $preview = $this->executable->preview($display_id, $args);
-      $preview = drupal_render($preview);
 
       if ($show_additional_queries) {
         $this->endQueryCapture();
@@ -769,10 +769,16 @@ class ViewUI implements ViewEntityInterface {
     }
 
     if ($show_location === 'above' || $show_stats === 'above') {
-      $output .= drupal_render($table) . $preview;
+      $output = [
+        'table' => $table,
+        'preview' => $preview,
+      ];
     }
     elseif ($show_location === 'below' || $show_stats === 'below') {
-      $output .= $preview . drupal_render($table);
+      $output = [
+        'preview' => $preview,
+        'table' => $table,
+      ];
     }
 
     // Ensure that we just remove an additional request we pushed earlier.
