@@ -1347,7 +1347,7 @@ function template_preprocess_html(&$variables) {
   $is_front_page =  \Drupal::service('path.matcher')->isFrontPage();
 
   if ($is_front_page) {
-    $variables['root_path'] = TRUE;
+    $variables['root_path'] = FALSE;
   }
   else {
     $system_path = \Drupal::request()->attributes->get('_system_path');

@@ -256,15 +256,31 @@ class LanguageSwitchingTest extends WebTestBase {
     $edit = array('language_interface[enabled][language-url]' => '1');
     $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
 
-    // Go to admin/config, check the class on default language.
+    // Check if the default (English) admin/config page has the right class.
     $this->drupalGet('admin/config');
     $class = $this->xpath('//body[contains(@class, :class)]', array(':class' => $searched_class));
     $this->assertTrue(isset($class[0]), t('The path-admin class appears on default language.'));
 
-    // Go to admin/config, check the class on french language.
+    // Check if the French admin/config page has the right class.
     $this->drupalGet('fr/admin/config');
     $class = $this->xpath('//body[contains(@class, :class)]', array(':class' => $searched_class));
     $this->assertTrue(isset($class[0]), t('The path-admin class same as on default language.'));
+
+    // The testing profile sets the user/login page as the frontpage. That
+    // redirects authenticated users to their profile page, so check with an
+    // anonymous user instead.
+    $this->drupalLogout();
+
+    // Check if the default (English) frontpage has the right class.
+    $this->drupalGet('<front>');
+    $class = $this->xpath('//body[contains(@class, :class)]', array(':class' => 'path-frontpage'));
+    $this->assertTrue(isset($class[0]), 'path-frontpage class found on the body tag');
+
+    // Check if the French frontpage has the right class.
+    $this->drupalGet('fr');
+    $class = $this->xpath('//body[contains(@class, :class)]', array(':class' => 'path-frontpage'));
+    $this->assertTrue(isset($class[0]), 'path-frontpage class found on the body tag with french as the active language');
+
   }
 
   /**
