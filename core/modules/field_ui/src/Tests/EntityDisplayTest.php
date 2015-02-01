@@ -87,15 +87,15 @@ class EntityDisplayTest extends KernelTestBase {
 
     // Check that CreateCopy() creates a new component that can be correclty
     // saved.
-    EntityViewMode::create(array('id' => $display->targetEntityType . '.other_view_mode', 'targetEntityType' => $display->targetEntityType))->save();
+    EntityViewMode::create(array('id' => $display->getTargetEntityTypeId() . '.other_view_mode', 'targetEntityType' => $display->getTargetEntityTypeId()))->save();
     $new_display = $display->createCopy('other_view_mode');
     $new_display->save();
     $new_display = entity_load('entity_view_display', $new_display->id());
     $dependencies = $new_display->calculateDependencies();
     $this->assertEqual(array('config' => array('core.entity_view_mode.entity_test.other_view_mode'), 'module' => array('entity_test')), $dependencies);
-    $this->assertEqual($new_display->targetEntityType, $display->targetEntityType);
-    $this->assertEqual($new_display->bundle, $display->bundle);
-    $this->assertEqual($new_display->mode, 'other_view_mode');
+    $this->assertEqual($new_display->getTargetEntityTypeId(), $display->getTargetEntityTypeId());
+    $this->assertEqual($new_display->getTargetBundle(), $display->getTargetBundle());
+    $this->assertEqual($new_display->getMode(), 'other_view_mode');
     $this->assertEqual($new_display->getComponents(), $display->getComponents());
   }
 
@@ -115,7 +115,7 @@ class EntityDisplayTest extends KernelTestBase {
     // Check that entity_get_display() returns the correct object.
     $display = entity_get_display('entity_test', 'entity_test', 'default');
     $this->assertFalse($display->isNew());
-    $this->assertEqual($display->id, 'entity_test.entity_test.default');
+    $this->assertEqual($display->id(), 'entity_test.entity_test.default');
     $this->assertEqual($display->getComponent('component_1'), array( 'weight' => 10, 'settings' => array(), 'third_party_settings' => array()));
   }
 
@@ -287,11 +287,11 @@ class EntityDisplayTest extends KernelTestBase {
     $old_form_display = entity_load('entity_form_display', 'node.article.default');
     $this->assertFalse((bool) $old_form_display);
     $new_display = entity_load('entity_view_display', 'node.article_rename.default');
-    $this->assertEqual('article_rename', $new_display->bundle);
-    $this->assertEqual('node.article_rename.default', $new_display->id);
+    $this->assertEqual('article_rename', $new_display->getTargetBundle());
+    $this->assertEqual('node.article_rename.default', $new_display->id());
     $new_form_display = entity_load('entity_form_display', 'node.article_rename.default');
-    $this->assertEqual('article_rename', $new_form_display->bundle);
-    $this->assertEqual('node.article_rename.default', $new_form_display->id);
+    $this->assertEqual('article_rename', $new_form_display->getTargetBundle());
+    $this->assertEqual('node.article_rename.default', $new_form_display->id());
 
     $expected_view_dependencies = array(
       'config' => array('field.field.node.article_rename.body', 'node.type.article_rename'),

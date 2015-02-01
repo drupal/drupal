@@ -22,10 +22,11 @@ interface EntityDisplayInterface extends ConfigEntityInterface, EntityWithPlugin
    * The new object necessarily has the same $targetEntityType and $bundle
    * properties than the original one.
    *
-   * @param $view_mode
+   * @param string $view_mode
    *   The view mode for the new object.
    *
    * @return static
+   *   A duplicate of this object with the given view mode.
    */
   public function createCopy($view_mode);
 
@@ -90,5 +91,47 @@ interface EntityDisplayInterface extends ConfigEntityInterface, EntityWithPlugin
    *   A widget or formatter plugin or NULL if the field does not exist.
    */
   public function getRenderer($field_name);
+
+  /**
+   * Returns the entity type for which this display is used.
+   *
+   * @return string
+   *   The entity type id.
+   */
+  public function getTargetEntityTypeId();
+
+  /**
+   * Returns the view or form mode to be displayed.
+   *
+   * @return string
+   *   The mode to be displayed.
+   */
+  public function getMode();
+
+  /**
+   * Returns the original view or form mode that was requested.
+   *
+   * @return string
+   *   The original mode that was requested.
+   */
+  public function getOriginalMode();
+
+  /**
+   * Returns the bundle to be displayed.
+   *
+   * @return string
+   *   The bundle to be displayed.
+   */
+  public function getTargetBundle();
+
+  /**
+   * Sets the bundle to be displayed.
+   *
+   * @param string $bundle
+   *   The bundle to be displayed.
+   *
+   * @return $this
+   */
+  public function setTargetBundle($bundle);
 
 }

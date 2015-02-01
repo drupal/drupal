@@ -26,9 +26,9 @@ abstract class ConfigEntityBundleBase extends ConfigEntityBase {
     // Rename entity displays.
     if ($this->getOriginalId() !== $this->id()) {
       foreach ($this->loadDisplays('entity_view_display') as $display) {
-        $new_id = $this->getEntityType()->getBundleOf() . '.' . $this->id() . '.' . $display->mode;
+        $new_id = $this->getEntityType()->getBundleOf() . '.' . $this->id() . '.' . $display->getMode();
         $display->set('id', $new_id);
-        $display->bundle = $this->id();
+        $display->setTargetBundle($this->id());
         $display->save();
       }
     }
@@ -36,9 +36,9 @@ abstract class ConfigEntityBundleBase extends ConfigEntityBase {
     // Rename entity form displays.
     if ($this->getOriginalId() !== $this->id()) {
       foreach ($this->loadDisplays('entity_form_display') as $form_display) {
-        $new_id = $this->getEntityType()->getBundleOf() . '.' . $this->id() . '.' . $form_display->mode;
+        $new_id = $this->getEntityType()->getBundleOf() . '.' . $this->id() . '.' . $form_display->getMode();
         $form_display->set('id', $new_id);
-        $form_display->bundle = $this->id();
+        $form_display->setTargetBundle($this->id());
         $form_display->save();
       }
     }

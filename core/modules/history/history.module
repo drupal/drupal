@@ -134,7 +134,7 @@ function history_cron() {
  */
 function history_node_view_alter(array &$build, EntityInterface $node, EntityViewDisplayInterface $display) {
   // Update the history table, stating that this user viewed this node.
-  if (($display->originalMode === 'full') && \Drupal::currentUser()->isAuthenticated()) {
+  if (($display->getOriginalMode() === 'full') && \Drupal::currentUser()->isAuthenticated()) {
     // When the window's "load" event is triggered, mark the node as read.
     // This still allows for Drupal behaviors (which are triggered on the
     // "DOMContentReady" event) to add "new" and "updated" indicators.

@@ -149,7 +149,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
    */
   protected function getFieldDefinitions() {
     $context = $this->displayContext;
-    return array_filter($this->entityManager->getFieldDefinitions($this->entity->targetEntityType, $this->entity->bundle), function(FieldDefinitionInterface $field_definition) use ($context) {
+    return array_filter($this->entityManager->getFieldDefinitions($this->entity->getTargetEntityTypeId(), $this->entity->getTargetBundle()), function(FieldDefinitionInterface $field_definition) use ($context) {
       return $field_definition->isDisplayConfigurable($context);
     });
   }
@@ -164,13 +164,13 @@ abstract class EntityDisplayFormBase extends EntityForm {
     $extra_fields = $this->getExtraFields();
 
     $form += array(
-      '#entity_type' => $this->entity->targetEntityType,
-      '#bundle' => $this->entity->bundle,
+      '#entity_type' => $this->entity->getTargetEntityTypeId(),
+      '#bundle' => $this->entity->getTargetBundle(),
       '#fields' => array_keys($field_definitions),
       '#extra' => array_keys($extra_fields),
     );
 
-    if (empty($field_definitions) && empty($extra_fields) && $route_info = FieldUI::getOverviewRouteInfo($this->entity->targetEntityType, $this->entity->bundle)) {
+    if (empty($field_definitions) && empty($extra_fields) && $route_info = FieldUI::getOverviewRouteInfo($this->entity->getTargetEntityTypeId(), $this->entity->getTargetBundle())) {
       drupal_set_message($this->t('There are no fields yet added. You can add new fields on the <a href="@link">Manage fields</a> page.', array('@link' => $route_info->toString())), 'warning');
       return $form;
     }
@@ -217,7 +217,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
     $form['fields'] = $table;
 
     // Custom display settings.
-    if ($this->entity->mode == 'default') {
+    if ($this->entity->getMode() == 'default') {
       // Only show the settings if there is at least one custom display mode.
       if ($display_modes = $this->getDisplayModes()) {
         $form['modes'] = array(
@@ -538,7 +538,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
     $form_values = $form_state->getValues();
 
     // Handle the 'display modes' checkboxes if present.
-    if ($this->entity->mode == 'default' && !empty($form_values['display_modes_custom'])) {
+    if ($this->entity->getMode() == 'default' && !empty($form_values['display_modes_custom'])) {
       $display_modes = $this->getDisplayModes();
       $current_statuses = $this->getDisplayStatuses();
 
@@ -548,8 +548,8 @@ abstract class EntityDisplayFormBase extends EntityForm {
           // If no display exists for the newly enabled view mode, initialize
           // it with those from the 'default' view mode, which were used so
           // far.
-          if (!$this->entityManager->getStorage($this->entity->getEntityTypeId())->load($this->entity->targetEntityType . '.' . $this->entity->bundle . '.' . $mode)) {
-            $display = $this->getEntityDisplay($this->entity->targetEntityType, $this->entity->bundle, 'default')->createCopy($mode);
+          if (!$this->entityManager->getStorage($this->entity->getEntityTypeId())->load($this->entity->getTargetEntityTypeId() . '.' . $this->entity->getTargetBundle() . '.' . $mode)) {
+            $display = $this->getEntityDisplay($this->entity->getTargetEntityTypeId(), $this->entity->getTargetBundle(), 'default')->createCopy($mode);
             $display->save();
           }
 
@@ -854,7 +854,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
    */
   protected function getExtraFields() {
     $context = $this->displayContext == 'view' ? 'display' : $this->displayContext;
-    $extra_fields = $this->entityManager->getExtraFields($this->entity->targetEntityType, $this->entity->bundle);
+    $extra_fields = $this->entityManager->getExtraFields($this->entity->getTargetEntityTypeId(), $this->entity->getTargetBundle());
     return isset($extra_fields[$context]) ? $extra_fields[$context] : array();
   }
 
@@ -967,7 +967,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
     $display_entity_type = $this->entity->getEntityTypeId();
     $entity_type = $this->entityManager->getDefinition($display_entity_type);
     $config_prefix = $entity_type->getConfigPrefix();
-    $ids = $this->configFactory()->listAll($config_prefix . '.' . $this->entity->targetEntityType . '.' . $this->entity->bundle . '.');
+    $ids = $this->configFactory()->listAll($config_prefix . '.' . $this->entity->getTargetEntityTypeId() . '.' . $this->entity->getTargetBundle() . '.');
     foreach ($ids as $id) {
       $config_id = str_replace($config_prefix . '.', '', $id);
       list(,, $display_mode) = explode('.', $config_id);
