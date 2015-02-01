@@ -65,21 +65,21 @@ class LinkWidget extends WidgetBase {
    *
    * Schemeless URIs are treated as 'user-path:' URIs.
    *
-   * @param string $uri
+   * @param string $string
    *   The user-entered string.
    *
    * @return string
-   *   The URI, if a non-empty $uri was passed.
+   *   The URI, if a non-empty $string was passed.
    */
-  protected static function getUserEnteredStringAsUri($uri) {
-    if (!empty($uri)) {
+  protected static function getUserEnteredStringAsUri($string) {
+    if (!empty($string)) {
       // Users can enter relative URLs, but we need a valid URI, so add an
       // explicit scheme when necessary.
-      if (parse_url($uri, PHP_URL_SCHEME) === NULL) {
-        $uri = 'user-path:' . $uri;
+      if (parse_url($string, PHP_URL_SCHEME) === NULL) {
+        return 'user-path:' . $string;
       }
     }
-    return $uri;
+    return $string;
   }
 
   /**
