@@ -14,6 +14,7 @@ use Drupal\Core\Installer\Exception\NoProfilesException;
 use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StringTranslation\Translator\FileTranslation;
 use Drupal\Core\Extension\ExtensionDiscovery;
@@ -343,8 +344,12 @@ function install_begin_request($class_loader, &$install_state) {
   // Register the stream wrapper manager.
   $container
     ->register('stream_wrapper_manager', 'Drupal\Core\StreamWrapper\StreamWrapperManager')
-    ->addArgument(new Reference('module_handler'))
     ->addMethodCall('setContainer', array(new Reference('service_container')));
+  $container
+    ->register('file_system', 'Drupal\Core\File\FileSystem')
+    ->addArgument(new Reference('stream_wrapper_manager'))
+    ->addArgument(Settings::getInstance())
+    ->addArgument((new LoggerChannelFactory())->get('file'));
 
   \Drupal::setContainer($container);
 

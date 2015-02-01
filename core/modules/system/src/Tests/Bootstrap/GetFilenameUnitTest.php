@@ -16,10 +16,32 @@ use Drupal\simpletest\KernelTestBase;
  */
 class GetFilenameUnitTest extends KernelTestBase {
 
+  /**
+   * The container used by the test, moved out of the way.
+   *
+   * @var \Symfony\Component\DependencyInjection\ContainerInterface
+   */
+  protected $previousContainer;
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
+    // Store the previous container.
+    $this->previousContainer = $this->container;
     $this->container = NULL;
     \Drupal::setContainer(NULL);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function tearDown() {
+    parent::tearDown();
+    // Restore the previous container.
+    $this->container = $this->previousContainer;
+    \Drupal::setContainer($this->previousContainer);
   }
 
   /**

@@ -189,6 +189,9 @@ services:
     factory_class: Drupal\Core\Database\Database
     factory_method: getConnection
     arguments: [default]
+  file_system:
+    class: Drupal\Core\File\FileSystem
+    arguments: ['@stream_wrapper_manager', '@settings', '@logger.channel.file']
   form_builder:
     class: Drupal\Core\Form\FormBuilder
     arguments: ['@form_validator', '@form_submitter', '@form_cache', '@module_handler', '@event_dispatcher', '@request_stack', '@class_resolver', '@theme.manager', '@?csrf_token']
@@ -236,6 +239,11 @@ services:
   logger.channel.cron:
     parent: logger.channel_base
     arguments: ['cron']
+  logger.channel.file:
+    class: Drupal\Core\Logger\LoggerChannel
+    factory_method: get
+    factory_service: logger.factory
+    arguments: ['file']
   logger.channel.form:
     parent: logger.channel_base
     arguments: ['form']

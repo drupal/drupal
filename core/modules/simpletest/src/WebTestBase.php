@@ -1005,10 +1005,25 @@ abstract class WebTestBase extends TestBase {
 
     // If we only have one db driver available, we cannot set the driver.
     include_once DRUPAL_ROOT . '/core/includes/install.inc';
-    if (count(drupal_get_database_types()) == 1) {
+    if (count($this->getDatabaseTypes()) == 1) {
       unset($parameters['forms']['install_settings_form']['driver']);
     }
     return $parameters;
+  }
+
+  /**
+   * Returns all supported database driver installer objects.
+   *
+   * This wraps drupal_get_database_types() for use without a current container.
+   *
+   * @return \Drupal\Core\Database\Install\Tasks[]
+   *   An array of available database driver installer objects.
+   */
+  protected function getDatabaseTypes() {
+    \Drupal::setContainer($this->originalContainer);
+    $database_types = drupal_get_database_types();
+    \Drupal::setContainer(NULL);
+    return $database_types;
   }
 
   /**

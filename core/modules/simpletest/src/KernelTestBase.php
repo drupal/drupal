@@ -147,9 +147,6 @@ abstract class KernelTestBase extends TestBase {
       $this->settingsSet('container_yamls', [$testing_services_file]);
     }
 
-    // Create and set new configuration directories.
-    $this->prepareConfigDirectories();
-
     // Add this test class as a service provider.
     // @todo Remove the indirection; implement ServiceProviderInterface instead.
     $GLOBALS['conf']['container_service_providers']['TestServiceProvider'] = 'Drupal\simpletest\TestServiceProvider';
@@ -171,6 +168,9 @@ abstract class KernelTestBase extends TestBase {
     // DrupalKernel::boot() initializes new Settings, and the containerBuild()
     // method sets additional settings.
     new Settings($settings + Settings::getAll());
+
+    // Create and set new configuration directories.
+    $this->prepareConfigDirectories();
 
     // Set the request scope.
     $this->container = $this->kernel->getContainer();

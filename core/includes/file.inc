@@ -10,20 +10,26 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\PhpStorage\FileStorage;
 use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\String;
-use Drupal\Core\Site\Settings;
+use Drupal\Core\File\FileSystem;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\Core\StreamWrapper\PrivateStream;
 
 /**
  * Default mode for new directories. See drupal_chmod().
+ *
+ * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+ *   Use \Drupal\Core\File\FileSystem::CHMOD_DIRECTORY.
  */
-const FILE_CHMOD_DIRECTORY = 0775;
+const FILE_CHMOD_DIRECTORY = FileSystem::CHMOD_DIRECTORY;
 
 /**
  * Default mode for new files. See drupal_chmod().
+ *
+ * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+ *   Use \Drupal\Core\File\FileSystem::CHMOD_FILE.
  */
-const FILE_CHMOD_FILE = 0664;
+const FILE_CHMOD_FILE = FileSystem::CHMOD_FILE;
 
 /**
  * @defgroup file File interface
@@ -129,40 +135,21 @@ function file_stream_wrapper_get_class($scheme) {
 /**
  * Returns the scheme of a URI (e.g. a stream).
  *
- * @param string $uri
- *   A stream, referenced as "scheme://target"  or "data:target".
- *
- * @return string
- *   A string containing the name of the scheme, or FALSE if none. For example,
- *   the URI "public://example.txt" would return "public".
- *
- * @see file_uri_target()
+ * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+ *   Use \Drupal\Core\File\FileSystem::uriScheme().
  */
 function file_uri_scheme($uri) {
-  if (preg_match('/^([\w\-]+):\/\/|^(data):/', $uri, $matches)) {
-    // The scheme will always be the last element in the matches array.
-    return array_pop($matches);
-  }
-
-  return FALSE;
+  return \Drupal::service('file_system')->uriScheme($uri);
 }
 
 /**
  * Checks that the scheme of a stream URI is valid.
  *
- * Confirms that there is a registered stream handler for the provided scheme
- * and that it is callable. This is useful if you want to confirm a valid
- * scheme without creating a new instance of the registered handler.
- *
- * @param string $scheme
- *   A URI scheme, a stream is referenced as "scheme://target".
- *
- * @return bool
- *   Returns TRUE if the string is the name of a validated stream,
- *   or FALSE if the scheme does not have a registered handler.
+ * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+ *   Use \Drupal\Core\File\FileSystem::validScheme().
  */
 function file_stream_wrapper_valid_scheme($scheme) {
-  return $scheme && class_exists(file_stream_wrapper_get_class($scheme));
+  return \Drupal::service('file_system')->validScheme($scheme);
 }
 
 
@@ -957,38 +944,11 @@ function file_unmanaged_delete_recursive($path, $callback = NULL) {
 /**
  * Moves an uploaded file to a new location.
  *
- * PHP's move_uploaded_file() does not properly support streams if open_basedir
- * is enabled, so this function fills that gap.
- *
- * Compatibility: normal paths and stream wrappers.
- *
- * @param $filename
- *   The filename of the uploaded file.
- * @param $uri
- *   A string containing the destination URI of the file.
- *
- * @return
- *   TRUE on success, or FALSE on failure.
- *
- * @see move_uploaded_file()
- * @see http://drupal.org/node/515192
- * @ingroup php_wrappers
+ * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+ *   Use \Drupal\Core\File\FileSystem::moveUploadedFile().
  */
 function drupal_move_uploaded_file($filename, $uri) {
-  $result = @move_uploaded_file($filename, $uri);
-  // PHP's move_uploaded_file() does not properly support streams if
-  // open_basedir is enabled so if the move failed, try finding a real path and
-  // retry the move operation.
-  if (!$result) {
-    if ($realpath = drupal_realpath($uri)) {
-      $result = move_uploaded_file($filename, $realpath);
-    }
-    else {
-      $result = move_uploaded_file($filename, $uri);
-    }
-  }
-
-  return $result;
+  return \Drupal::service('file_system')->moveUploadedFile($filename, $uri);
 }
 
 /**
@@ -1179,338 +1139,82 @@ function file_get_mimetype($uri, $mapping = NULL) {
 /**
  * Sets the permissions on a file or directory.
  *
- * This function will use the file_chmod_directory and
- * file_chmod_file settings for the default modes for directories
- * and uploaded/generated files. By default these will give everyone read access
- * so that users accessing the files with a user account without the webserver
- * group (e.g. via FTP) can read these files, and give group write permissions
- * so webserver group members (e.g. a vhost account) can alter files uploaded
- * and owned by the webserver.
- *
- * PHP's chmod does not support stream wrappers so we use our wrapper
- * implementation which interfaces with chmod() by default. Contrib wrappers
- * may override this behavior in their implementations as needed.
- *
- * @param $uri
- *   A string containing a URI file, or directory path.
- * @param $mode
- *   Integer value for the permissions. Consult PHP chmod() documentation for
- *   more information.
- *
- * @return bool
- *   TRUE for success, FALSE in the event of an error.
- *
- * @ingroup php_wrappers
+ * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+ *   Use \Drupal\Core\File\FileSystem::chmod().
  */
 function drupal_chmod($uri, $mode = NULL) {
-  if (!isset($mode)) {
-    if (is_dir($uri)) {
-      $mode = Settings::get('file_chmod_directory', FILE_CHMOD_DIRECTORY);
-    }
-    else {
-      $mode = Settings::get('file_chmod_file', FILE_CHMOD_FILE);
-    }
-  }
-
-  if (@chmod($uri, $mode)) {
-    return TRUE;
-  }
-
-  \Drupal::logger('file')->error('The file permissions could not be set on %uri.', array('%uri' => $uri));
-  return FALSE;
+  return \Drupal::service('file_system')->chmod($uri, $mode);
 }
 
 /**
  * Deletes a file.
  *
- * PHP's unlink() is broken on Windows, as it can fail to remove a file
- * when it has a read-only flag set.
- *
- * @param $uri
- *   A URI or pathname.
- * @param $context
- *   Refer to http://php.net/manual/ref.stream.php
- *
- * @return
- *   Boolean TRUE on success, or FALSE on failure.
- *
- * @see unlink()
- * @ingroup php_wrappers
+ * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+ *   Use \Drupal\Core\File\FileSystem::unlink().
  */
 function drupal_unlink($uri, $context = NULL) {
-  $scheme = file_uri_scheme($uri);
-  if (!file_stream_wrapper_valid_scheme($scheme) && (substr(PHP_OS, 0, 3) == 'WIN')) {
-    chmod($uri, 0600);
-  }
-  if ($context) {
-    return unlink($uri, $context);
-  }
-  else {
-    return unlink($uri);
-  }
+  return \Drupal::service('file_system')->unlink($uri, $context);
 }
 
 /**
  * Resolves the absolute filepath of a local URI or filepath.
  *
- * The use of drupal_realpath() is discouraged, because it does not work for
- * remote URIs. Except in rare cases, URIs should not be manually resolved.
- *
- * Only use this function if you know that the stream wrapper in the URI uses
- * the local file system, and you need to pass an absolute path to a function
- * that is incompatible with stream URIs.
- *
- * @param string $uri
- *   A stream wrapper URI or a filepath, possibly including one or more symbolic
- *   links.
- *
- * @return string|false
- *   The absolute local filepath (with no symbolic links), or FALSE on failure.
- *
- * @see \Drupal\Core\StreamWrapper\StreamWrapperInterface::realpath()
- * @see http://php.net/manual/function.realpath.php
- * @ingroup php_wrappers
+ * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+ *   Use \Drupal\Core\File\FileSystem::realpath().
  */
 function drupal_realpath($uri) {
-  // If this URI is a stream, pass it off to the appropriate stream wrapper.
-  // Otherwise, attempt PHP's realpath. This allows use of drupal_realpath even
-  // for unmanaged files outside of the stream wrapper interface.
-  if ($wrapper = file_stream_wrapper_get_instance_by_uri($uri)) {
-    return $wrapper->realpath();
-  }
-
-  return realpath($uri);
+  return \Drupal::service('file_system')->realpath($uri);
 }
 
 /**
  * Gets the name of the directory from a given path.
  *
- * PHP's dirname() does not properly pass streams, so this function fills
- * that gap. It is backwards compatible with normal paths and will use
- * PHP's dirname() as a fallback.
- *
- * Compatibility: normal paths and stream wrappers.
- *
- * @param $uri
- *   A URI or path.
- *
- * @return
- *   A string containing the directory name.
- *
- * @see dirname()
- * @see http://drupal.org/node/515192
- * @ingroup php_wrappers
+ * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+ *   Use \Drupal\Core\File\FileSystem::dirname().
  */
 function drupal_dirname($uri) {
-  $scheme = file_uri_scheme($uri);
-
-  if (file_stream_wrapper_valid_scheme($scheme)) {
-    return file_stream_wrapper_get_instance_by_scheme($scheme)->dirname($uri);
-  }
-  else {
-    return dirname($uri);
-  }
+  return \Drupal::service('file_system')->dirname($uri);
 }
 
 /**
  * Gets the filename from a given path.
  *
- * PHP's basename() does not properly support streams or filenames beginning
- * with a non-US-ASCII character.
- *
- * @see http://bugs.php.net/bug.php?id=37738
- * @see basename()
- *
- * @ingroup php_wrappers
+ * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+ *   Use \Drupal\Core\File\FileSystem::basename().
  */
 function drupal_basename($uri, $suffix = NULL) {
-  $separators = '/';
-  if (DIRECTORY_SEPARATOR != '/') {
-    // For Windows OS add special separator.
-    $separators .= DIRECTORY_SEPARATOR;
-  }
-  // Remove right-most slashes when $uri points to directory.
-  $uri = rtrim($uri, $separators);
-  // Returns the trailing part of the $uri starting after one of the directory
-  // separators.
-  $filename = preg_match('@[^' . preg_quote($separators, '@') . ']+$@', $uri, $matches) ? $matches[0] : '';
-  // Cuts off a suffix from the filename.
-  if ($suffix) {
-    $filename = preg_replace('@' . preg_quote($suffix, '@') . '$@', '', $filename);
-  }
-  return $filename;
+  return \Drupal::service('file_system')->basename($uri, $suffix);
 }
 
 /**
  * Creates a directory, optionally creating missing components in the path to
  * the directory.
  *
- * When PHP's mkdir() creates a directory, the requested mode is affected by the
- * process's umask. This function overrides the umask and sets the mode
- * explicitly for all directory components created.
- *
- * @param $uri
- *   A URI or pathname.
- * @param $mode
- *   Mode given to created directories. Defaults to the directory mode
- *   configured in the Drupal installation. It must have a leading zero.
- * @param $recursive
- *   Create directories recursively, defaults to FALSE. Cannot work with a mode
- *   which denies writing or execution to the owner of the process.
- * @param $context
- *   Refer to http://php.net/manual/ref.stream.php
- *
- * @return
- *   Boolean TRUE on success, or FALSE on failure.
- *
- * @see mkdir()
- * @see http://drupal.org/node/515192
- * @ingroup php_wrappers
- *
- * @todo Update with open_basedir compatible recursion logic from
- *   \Drupal\Component\PhpStorage\FileStorage::ensureDirectory().
+ * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+ *   Use \Drupal\Core\File\FileSystem::mkdir().
  */
 function drupal_mkdir($uri, $mode = NULL, $recursive = FALSE, $context = NULL) {
-  if (!isset($mode)) {
-    $mode = Settings::get('file_chmod_directory', FILE_CHMOD_DIRECTORY);
-  }
-
-  // If the URI has a scheme, don't override the umask - schemes can handle this
-  // issue in their own implementation.
-  if (file_uri_scheme($uri)) {
-    return _drupal_mkdir_call($uri, $mode, $recursive, $context);
-  }
-
-  // If recursive, create each missing component of the parent directory
-  // individually and set the mode explicitly to override the umask.
-  if ($recursive) {
-    // Ensure the path is using DIRECTORY_SEPARATOR.
-    $uri = str_replace('/', DIRECTORY_SEPARATOR, $uri);
-    // Determine the components of the path.
-    $components = explode(DIRECTORY_SEPARATOR, $uri);
-    // If the filepath is absolute the first component will be empty as there
-    // will be nothing before the first slash.
-    if ($components[0] == '') {
-      $recursive_path = DIRECTORY_SEPARATOR;
-      // Get rid of the empty first component.
-      array_shift($components);
-    }
-    else {
-      $recursive_path = '';
-    }
-    // Don't handle the top-level directory in this loop.
-    array_pop($components);
-    // Create each component if necessary.
-    foreach ($components as $component) {
-      $recursive_path .= $component;
-
-      if (!file_exists($recursive_path)) {
-        if (!_drupal_mkdir_call($recursive_path, $mode, FALSE, $context)) {
-          return FALSE;
-        }
-        // Not necessary to use drupal_chmod() as there is no scheme.
-        if (!chmod($recursive_path, $mode)) {
-          return FALSE;
-        }
-      }
-
-      $recursive_path .= DIRECTORY_SEPARATOR;
-    }
-  }
-
-  // Do not check if the top-level directory already exists, as this condition
-  // must cause this function to fail.
-  if (!_drupal_mkdir_call($uri, $mode, FALSE, $context)) {
-    return FALSE;
-  }
-  // Not necessary to use drupal_chmod() as there is no scheme.
-  return chmod($uri, $mode);
-}
-
-/**
- * Helper function. Ensures we don't pass a NULL as a context resource to
- * mkdir().
- *
- * @see drupal_mkdir()
- */
-function _drupal_mkdir_call($uri, $mode, $recursive, $context) {
-  if (is_null($context)) {
-    return mkdir($uri, $mode, $recursive);
-  }
-  else {
-    return mkdir($uri, $mode, $recursive, $context);
-  }
+  return \Drupal::service('file_system')->mkdir($uri, $mode, $recursive, $context);
 }
 
 /**
  * Removes a directory.
  *
- * PHP's rmdir() is broken on Windows, as it can fail to remove a directory
- * when it has a read-only flag set.
- *
- * @param $uri
- *   A URI or pathname.
- * @param $context
- *   Refer to http://php.net/manual/ref.stream.php
- *
- * @return
- *   Boolean TRUE on success, or FALSE on failure.
- *
- * @see rmdir()
- * @ingroup php_wrappers
+ * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+ *   Use \Drupal\Core\File\FileSystem::rmdir().
  */
 function drupal_rmdir($uri, $context = NULL) {
-  $scheme = file_uri_scheme($uri);
-  if (!file_stream_wrapper_valid_scheme($scheme) && (substr(PHP_OS, 0, 3) == 'WIN')) {
-    chmod($uri, 0700);
-  }
-  if ($context) {
-    return rmdir($uri, $context);
-  }
-  else {
-    return rmdir($uri);
-  }
+  return \Drupal::service('file_system')->rmdir($uri, $context);
 }
 
 /**
  * Creates a file with a unique filename in the specified directory.
  *
- * PHP's tempnam() does not return a URI like we want. This function
- * will return a URI if given a URI, or it will return a filepath if
- * given a filepath.
- *
- * Compatibility: normal paths and stream wrappers.
- *
- * @param $directory
- *   The directory where the temporary filename will be created.
- * @param $prefix
- *   The prefix of the generated temporary filename.
- *   Note: Windows uses only the first three characters of prefix.
- *
- * @return
- *   The new temporary filename, or FALSE on failure.
- *
- * @see tempnam()
- * @see http://drupal.org/node/515192
- * @ingroup php_wrappers
+ * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+ *   Use \Drupal\Core\File\FileSystem::tempnam().
  */
 function drupal_tempnam($directory, $prefix) {
-  $scheme = file_uri_scheme($directory);
-
-  if (file_stream_wrapper_valid_scheme($scheme)) {
-    $wrapper = file_stream_wrapper_get_instance_by_scheme($scheme);
-
-    if ($filename = tempnam($wrapper->getDirectoryPath(), $prefix)) {
-      return $scheme . '://' . drupal_basename($filename);
-    }
-    else {
-      return FALSE;
-    }
-  }
-  else {
-    // Handle as a normal tempnam() call.
-    return tempnam($directory, $prefix);
-  }
+  return \Drupal::service('file_system')->tempnam($directory, $prefix);
 }
 
 /**

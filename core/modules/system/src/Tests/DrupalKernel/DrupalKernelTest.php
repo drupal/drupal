@@ -36,6 +36,15 @@ class DrupalKernelTest extends KernelTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function prepareConfigDirectories() {
+    \Drupal::setContainer($this->originalContainer);
+    parent::prepareConfigDirectories();
+    \Drupal::setContainer(NULL);
+  }
+
+  /**
    * Build a kernel for testings.
    *
    * Because the bootstrap is in DrupalKernel::boot and that involved loading

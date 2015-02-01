@@ -1282,6 +1282,10 @@ abstract class TestBase {
     // log to pick up any fatal errors.
     simpletest_log_read($this->testId, $this->databasePrefix, get_class($this));
 
+    // Restore original dependency injection container.
+    $this->container = $this->originalContainer;
+    \Drupal::setContainer($this->originalContainer);
+
     // Delete test site directory.
     file_unmanaged_delete_recursive($this->siteDirectory, array($this, 'filePreDeleteCallback'));
 
@@ -1300,7 +1304,6 @@ abstract class TestBase {
     new Settings($this->originalSettings);
 
     // Restore original statics and globals.
-    \Drupal::setContainer($this->originalContainer);
     $GLOBALS['config_directories'] = $this->originalConfigDirectories;
 
     // Re-initialize original stream wrappers of the parent site.
