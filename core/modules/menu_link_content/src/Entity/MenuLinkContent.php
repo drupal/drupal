@@ -144,6 +144,9 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
     $definition['menu_name'] = $this->getMenuName();
 
     if ($url_object = $this->getUrlObject()) {
+      $definition['url'] = NULL;
+      $definition['route_name'] = NULL;
+      $definition['route_parameters'] = [];
       if (!$url_object->isRouted()) {
         $definition['url'] = $url_object->getUri();
       }

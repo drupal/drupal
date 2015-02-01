@@ -244,15 +244,6 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, FormStateInterface $form_state) {
-    $this->doValidate($form, $form_state);
-
-    parent::validate($form, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function buildEntity(array $form, FormStateInterface $form_state) {
     /** @var \Drupal\menu_link_content\MenuLinkContentInterface $entity */
     $entity = parent::buildEntity($form, $form_state);
@@ -297,6 +288,9 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
    *   A nested array form elements comprising the form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
+   *
+   * @todo Remove this code, as validation is already performed by the link
+   *   field: https://www.drupal.org/node/2418031.
    */
   protected function doValidate(array $form, FormStateInterface $form_state) {
     $extracted = $this->pathValidator->getUrlIfValid($form_state->getValue(['link', 0, 'uri']));

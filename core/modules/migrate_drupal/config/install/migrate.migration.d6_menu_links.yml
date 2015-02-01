@@ -22,7 +22,10 @@ process:
     plugin: migration
     migration: d6_menu
     source: menu_name
-  'link/uri': link_path
+  'link/uri':
+    plugin: userpath_uri
+    source:
+      - link_path
   'link/options': options
   external: external
   weight: weight

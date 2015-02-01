@@ -208,7 +208,10 @@ class LinkFormatter extends FormatterBase implements ContainerFactoryPluginInter
           // Piggyback on the metadata attributes, which will be placed in the
           // field template wrapper, and set the URL value in a content
           // attribute.
-          $item->_attributes += array('content' => $item->uri);
+          // @todo Does RDF need a URL rather than an internal URI here?
+          // @see \Drupal\rdf\Tests\Field\LinkFieldRdfaTest.
+          $content = str_replace('user-path:', '', $item->uri);
+          $item->_attributes += array('content' => $content);
         }
       }
       else {

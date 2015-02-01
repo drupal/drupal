@@ -22,7 +22,7 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  */
 class LinkTypeConstraint extends Constraint implements ConstraintValidatorInterface {
 
-  public $message = 'The URL %url is not valid.';
+  public $message = "The path '@uri' is either invalid or you do not have access to it.";
 
   /**
    * @var \Symfony\Component\Validator\ExecutionContextInterface
@@ -48,23 +48,34 @@ class LinkTypeConstraint extends Constraint implements ConstraintValidatorInterf
    */
   public function validate($value, Constraint $constraint) {
     if (isset($value)) {
-      $url_is_valid = FALSE;
+      $uri_is_valid = TRUE;
+
       /** @var $link_item \Drupal\link\LinkItemInterface */
       $link_item = $value;
       $link_type = $link_item->getFieldDefinition()->getSetting('link_type');
-      $url = $link_item->getUrl(TRUE);
 
-      if ($url) {
-        $url_is_valid = TRUE;
-        if ($url->isExternal() && !($link_type & LinkItemInterface::LINK_EXTERNAL)) {
-          $url_is_valid = FALSE;
+      // Try to resolve the given URI to a URL. It may fail if it's schemeless.
+      try {
+        $url = $link_item->getUrl();
+      }
+      catch (\InvalidArgumentException $e) {
+        $uri_is_valid = FALSE;
+      }
+
+      // If the link field doesn't support both internal and external links,
+      // check whether the URL (a resolved URI) is in fact violating either
+      // restriction.
+      if ($uri_is_valid && $link_type !== LinkItemInterface::LINK_GENERIC) {
+        if (!($link_type & LinkItemInterface::LINK_EXTERNAL) && $url->isExternal()) {
+          $uri_is_valid = FALSE;
         }
-        if (!$url->isExternal() && !($link_type & LinkItemInterface::LINK_INTERNAL)) {
-          $url_is_valid = FALSE;
+        if (!($link_type & LinkItemInterface::LINK_INTERNAL) && !$url->isExternal()) {
+          $uri_is_valid = FALSE;
         }
       }
-      if (!$url_is_valid) {
-        $this->context->addViolation($this->message, array('%url' => $link_item->uri));
+
+      if (!$uri_is_valid) {
+        $this->context->addViolation($this->message, array('@uri' => $link_item->uri));
       }
     }
   }

@@ -12,6 +12,7 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\link\LinkItemInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationInterface;
@@ -48,7 +49,7 @@ class LinkWidget extends WidgetBase {
    *
    * @return string
    */
-  protected function getUriAsDisplayableString($uri) {
+  protected static function getUriAsDisplayableString($uri) {
     $scheme = parse_url($uri, PHP_URL_SCHEME);
     if ($scheme === 'user-path') {
       $uri_reference = explode(':', $uri, 2)[1];
@@ -57,6 +58,54 @@ class LinkWidget extends WidgetBase {
       $uri_reference = $uri;
     }
     return $uri_reference;
+  }
+
+  /**
+   * Gets the user-entered string as a URI.
+   *
+   * Schemeless URIs are treated as 'user-path:' URIs.
+   *
+   * @param string $uri
+   *   The user-entered string.
+   *
+   * @return string
+   *   The URI, if a non-empty $uri was passed.
+   */
+  protected static function getUserEnteredStringAsUri($uri) {
+    if (!empty($uri)) {
+      // Users can enter relative URLs, but we need a valid URI, so add an
+      // explicit scheme when necessary.
+      if (parse_url($uri, PHP_URL_SCHEME) === NULL) {
+        $uri = 'user-path:' . $uri;
+      }
+    }
+    return $uri;
+  }
+
+  /**
+   * Disallows saving inaccessible or untrusted URLs.
+   */
+  public static function validateUriElement($element, FormStateInterface $form_state, $form) {
+    $uri = static::getUserEnteredStringAsUri($element['#value']);
+
+    // If the URI is empty or not well-formed, the link field type's validation
+    // constraint will detect it.
+    // @see \Drupal\link\Plugin\Validation\Constraint\LinkTypeConstraint::validate()
+    if (!empty($uri) && parse_url($uri)) {
+      $url = Url::fromUri($uri);
+
+      // Disallow unrouted internal URLs (i.e. disallow 'base:' URIs).
+      $disallowed  = !$url->isRouted() && !$url->isExternal();
+      // Disallow URLs if the current user doesn't have the 'link to any page'
+      // permission nor can access this URI.
+      $disallowed = $disallowed || (!\Drupal::currentUser()->hasPermission('link to any page') && !$url->access());
+      // Disallow external URLs using untrusted protocols.
+      $disallowed = $disallowed || ($url->isExternal() && !in_array(parse_url($uri, PHP_URL_SCHEME), UrlHelper::getAllowedProtocols()));
+
+      if ($disallowed) {
+        $form_state->setError($element, t("The path '@link_path' is either invalid or you do not have access to it.", ['@link_path' => static::getUriAsDisplayableString($uri)]));
+      }
+    }
   }
 
   /**
@@ -73,9 +122,8 @@ class LinkWidget extends WidgetBase {
       // The current field value could have been entered by a different user.
       // However, if it is inaccessible to the current user, do not display it
       // to them.
-      // @todo Revisit this access requirement in
-      //   https://www.drupal.org/node/2416987.
-      '#default_value' => $item->getUrl(TRUE) ? $this->getUriAsDisplayableString($item->uri) : NULL,
+      '#default_value' => (!$item->isEmpty() && (\Drupal::currentUser()->hasPermission('link to any page') || $item->getUrl()->access())) ? static::getUriAsDisplayableString($item->uri) : NULL,
+      '#element_validate' => array(array(get_called_class(), 'validateUriElement')),
       '#maxlength' => 2048,
       '#required' => $element['#required'],
     );
@@ -223,15 +271,8 @@ class LinkWidget extends WidgetBase {
    */
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
     foreach ($values as &$value) {
-      if (!empty($value['uri'])) {
-        // Users can enter relative URLs, but we need a valid URI, so add an
-        // explicit scheme when necessary.
-        if (parse_url($value['uri'], PHP_URL_SCHEME) === NULL) {
-          $value['uri'] = 'user-path:' . $value['uri'];
-        }
-
-        $value += ['options' => []];
-      }
+      $value['uri'] = static::getUserEnteredStringAsUri($value['uri']);
+      $value += ['options' => []];
     }
     return $values;
   }
@@ -240,15 +281,15 @@ class LinkWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    *
-   * Override the '%url' message parameter, to ensure that 'user-path:' URIs
+   * Override the '%uri' message parameter, to ensure that 'user-path:' URIs
    * show a validation error message that doesn't mention that scheme.
    */
   public function flagErrors(FieldItemListInterface $items, ConstraintViolationListInterface $violations, array $form, FormStateInterface $form_state) {
     /** @var \Symfony\Component\Validator\ConstraintViolationInterface $violation */
     foreach ($violations as $offset => $violation) {
       $parameters = $violation->getMessageParameters();
-      if (isset($parameters['%url'])) {
-        $parameters['%url'] = $this->getUriAsDisplayableString($parameters['%url']);
+      if (isset($parameters['@uri'])) {
+        $parameters['@uri'] = static::getUriAsDisplayableString($parameters['@uri']);
         $violations->set($offset, new ConstraintViolation(
           $this->t($violation->getMessageTemplate(), $parameters),
           $violation->getMessageTemplate(),

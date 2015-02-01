@@ -15,6 +15,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\MapDataDefinition;
+use Drupal\Core\Url;
 use Drupal\link\LinkItemInterface;
 
 /**
@@ -164,21 +165,9 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo Remove the $access_check parameter and replace all logic in the
-   *    function body with a call to Url::fromUri() in
-   *    https://www.drupal.org/node/2416987.
    */
-  public function getUrl($access_check = FALSE) {
-    $uri = $this->uri;
-    $scheme = parse_url($uri, PHP_URL_SCHEME);
-    if ($scheme === 'user-path') {
-      $uri_reference = explode(':', $uri, 2)[1];
-    }
-    else {
-      $uri_reference = $uri;
-    }
-    return $access_check ? \Drupal::pathValidator()->getUrlIfValid($uri_reference) : \Drupal::pathValidator()->getUrlIfValidWithoutAccessCheck($uri_reference);
+  public function getUrl() {
+    return Url::fromUri($this->uri);
   }
 
   /**

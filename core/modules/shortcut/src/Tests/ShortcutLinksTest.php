@@ -85,7 +85,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
     ];
     $this->drupalPostForm('admin/config/user-interface/shortcut/manage/' . $set->id() . '/add-link', $form_data, t('Save'));
     $this->assertResponse(200);
-    $this->assertRaw(t('The URL %url is not valid.', ['%url' => 'admin']));
+    $this->assertRaw(t("The path '@link_path' is either invalid or you do not have access to it.", ['@link_path' => 'admin']));
 
     $form_data = [
       'title[0][value]' => $title,

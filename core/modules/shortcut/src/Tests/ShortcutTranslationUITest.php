@@ -50,7 +50,7 @@ class ShortcutTranslationUITest extends ContentTranslationUITest {
    * {@inheritdoc}
    */
   protected function createEntity($values, $langcode, $bundle_name = NULL) {
-    $values['link']['uri'] = 'user';
+    $values['link']['uri'] = 'user-path:user';
     return parent::createEntity($values, $langcode, $bundle_name);
   }
 

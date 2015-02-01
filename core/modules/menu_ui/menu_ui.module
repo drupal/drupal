@@ -162,9 +162,7 @@ function menu_ui_node_save(EntityInterface $node) {
         $entity = entity_create('menu_link_content', array(
           'title' => trim($definition['title']),
           'description' => trim($definition['description']),
-          // @todo Use entity: in the URI.
-          //   https://www.drupal.org/node/2417367
-          'link' => ['uri' => 'node/' . $node->id()],
+          'link' => ['uri' => 'entity:node/' . $node->id()],
           'menu_name' => $definition['menu_name'],
           'parent' => $definition['parent'],
           'weight' => isset($definition['weight']) ? $definition['weight'] : 0,
@@ -226,7 +224,7 @@ function menu_ui_node_prepare_form(NodeInterface $node, $operation, FormStateInt
       if (!$id && !empty($type_menus)) {
         $query = \Drupal::entityQuery('menu_link_content')
           // @todo Use link.uri once https://www.drupal.org/node/2391217 is in.
-          ->condition('link__uri', 'node/' . $node->id())
+          ->condition('link__uri', 'entity:node/' . $node->id())
           ->condition('menu_name', array_values($type_menus), 'IN')
           ->sort('id', 'ASC')
           ->range(0, 1);

@@ -40,11 +40,8 @@ interface LinkItemInterface extends FieldItemInterface {
   /**
    * Gets the URL object.
    *
-   * @return \Drupal\Core\Url|false
-   *   Returns an Url object if any of the following are true:
-   *   - The URI is external.
-   *   - The URI is internal and valid.
-   *   Otherwise, FALSE is returned.
+   * @return \Drupal\Core\Url
+   *   Returns an Url object.
    */
   public function getUrl();
 

@@ -57,7 +57,7 @@ class MigrateMenuLinkTest extends MigrateDrupalTestBase {
     $this->assertIdentical($menu_link->isEnabled(), TRUE);
     $this->assertIdentical($menu_link->isExpanded(), FALSE);
     $this->assertIdentical($menu_link->link->options, ['attributes' => ['title' => 'Test menu link 1']]);
-    $this->assertIdentical($menu_link->link->uri, 'user/login');
+    $this->assertIdentical($menu_link->link->uri, 'user-path:user/login');
     $this->assertIdentical($menu_link->getWeight(), 15);
 
     $menu_link = entity_load('menu_link_content', 139);
@@ -67,7 +67,7 @@ class MigrateMenuLinkTest extends MigrateDrupalTestBase {
     $this->assertIdentical($menu_link->isEnabled(), TRUE);
     $this->assertIdentical($menu_link->isExpanded(), TRUE);
     $this->assertIdentical($menu_link->link->options, ['query' => ['foo' => 'bar'], 'attributes' => ['title' => ['Test menu link 2']]]);
-    $this->assertIdentical($menu_link->link->uri, 'admin');
+    $this->assertIdentical($menu_link->link->uri, 'user-path:admin');
     $this->assertIdentical($menu_link->getWeight(), 12);
 
     $menu_link = entity_load('menu_link_content', 140);

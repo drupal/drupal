@@ -271,6 +271,16 @@ class UrlHelper {
   }
 
   /**
+   * Gets the allowed protocols.
+   *
+   * @return array
+   *   An array of protocols, for example http, https and irc.
+   */
+  public static function getAllowedProtocols() {
+    return static::$allowedProtocols;
+  }
+
+  /**
    * Sets the allowed protocols.
    *
    * @param array $protocols

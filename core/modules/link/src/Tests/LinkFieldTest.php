@@ -100,6 +100,7 @@ class LinkFieldTest extends WebTestBase {
     $valid_internal_entries = array(
       'entity_test/add',
       'a/path/alias',
+      'entity:user/1',
     );
 
     // Define some invalid URLs.
@@ -167,7 +168,7 @@ class LinkFieldTest extends WebTestBase {
         "{$field_name}[0][uri]" => $invalid_value,
       );
       $this->drupalPostForm('entity_test/add', $edit, t('Save'));
-      $this->assertText(t('The URL @url is not valid.', array('@url' => $invalid_value)));
+      $this->assertText(t("The path '@link_path' is either invalid or you do not have access to it.", array('@link_path' => $invalid_value)));
     }
   }
 

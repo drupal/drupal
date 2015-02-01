@@ -346,7 +346,7 @@ class MenuForm extends EntityForm {
         if (!$link->isEnabled()) {
           $form[$id]['title']['#markup'] .= ' (' . $this->t('disabled') . ')';
         }
-        elseif (($url = $link->getUrlObject()) && !$url->isExternal() && $url->getRouteName() == 'user.page') {
+        elseif (($url = $link->getUrlObject()) && $url->isRouted() && $url->getRouteName() == 'user.page') {
           $form[$id]['title']['#markup'] .= ' (' . $this->t('logged in users only') . ')';
         }
 
