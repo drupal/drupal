@@ -750,7 +750,9 @@ function hook_library_info_build() {
         'mymodule.zombie.min.js' => [],
       ],
       'css' => [
-        'mymodule.zombie.min.css' => [],
+        'base' => [
+          'mymodule.zombie.min.css' => [],
+        ],
       ],
     ];
   }
@@ -760,7 +762,9 @@ function hook_library_info_build() {
         'mymodule.zombie.js' => [],
       ],
       'css' => [
-        'mymodule.zombie.css' => [],
+        'base' => [
+          'mymodule.zombie.css' => [],
+        ],
       ],
     ];
   }
@@ -776,7 +780,9 @@ function hook_library_info_build() {
         'js/vampire.js' => [],
       ],
       'css' => [
-        'css/vampire.css',
+        'base' => [
+          'css/vampire.css',
+        ],
       ],
       'dependencies' => [
         'core/jquery',

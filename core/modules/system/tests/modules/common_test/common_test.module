@@ -175,7 +175,9 @@ function common_test_library_info_build() {
     $libraries['dynamic_library'] = [
       'version' => '1.0',
       'css' => [
-        'common_test.css' => [],
+        'base' => [
+          'common_test.css' => [],
+        ],
       ],
     ];
   }
