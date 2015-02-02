@@ -38,7 +38,6 @@ process:
     -
       plugin: migration
       migration: d6_filter_format
-      no_stub: 1
   user_picture:
     plugin: d6_user_picture
     source: uid

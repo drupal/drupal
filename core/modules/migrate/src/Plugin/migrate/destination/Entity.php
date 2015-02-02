@@ -114,10 +114,7 @@ abstract class Entity extends DestinationBase implements ContainerFactoryPluginI
       $values = $row->getDestination();
       // Stubs might not have the bundle specified.
       if ($row->stub()) {
-        $bundle_key = $this->getKey('bundle');
-        if ($bundle_key && !isset($values[$bundle_key])) {
-          $values[$bundle_key] = reset($this->bundles);
-        }
+        $values = $this->processStubValues($values);
       }
       $entity = $this->storage->create($values);
       $entity->enforceIsNew();
@@ -135,6 +132,26 @@ abstract class Entity extends DestinationBase implements ContainerFactoryPluginI
    */
   protected function getEntityId(Row $row) {
     return $row->getDestinationProperty($this->getKey('id'));
+  }
+
+  /**
+   * Process the stub values.
+   *
+   * @param array $values
+   *   An array of destination values.
+   *
+   * @return array
+   *   The processed stub values.
+   */
+  protected function processStubValues(array $values) {
+    $values = array_intersect_key($values, $this->getIds());
+
+    $bundle_key = $this->getKey('bundle');
+    if ($bundle_key && !isset($values[$bundle_key])) {
+      $values[$bundle_key] = reset($this->bundles);
+    }
+
+    return $values;
   }
 
   /**

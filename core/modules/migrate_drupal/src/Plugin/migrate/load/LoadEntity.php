@@ -151,7 +151,6 @@ class LoadEntity extends PluginBase implements MigrateLoadInterface {
         'plugin' => 'migration',
         'migration' => 'd6_filter_format',
         'source' => $format_key,
-        'no_stub' => 1,
       ],
     ];
 

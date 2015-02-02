@@ -11,6 +11,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\MigrateException;
+use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\RequirementsInterface;
 
@@ -274,8 +275,11 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
   /**
    * {@inheritdoc}
    */
-  public function getDestinationPlugin() {
+  public function getDestinationPlugin($stub = FALSE) {
     if (!isset($this->destinationPlugin)) {
+      if ($stub && !empty($this->destination['no_stub'])) {
+        throw new MigrateSkipRowException;
+      }
       $this->destinationPlugin = \Drupal::service('plugin.manager.migrate.destination')->createInstance($this->destination['plugin'], $this->destination, $this);
     }
     return $this->destinationPlugin;

@@ -49,10 +49,8 @@ class MigrateBlockTest extends MigrateDrupalTestBase {
     }
     $this->prepareMigrations(array(
       'd6_custom_block'  => array(
-        array(array(10), array(1)),
-        array(array(11), array(2)),
-        array(array(12), array(1)),
-        array(array(13), array(2)),
+        array(array(1), array(1)),
+        array(array(2), array(2)),
       ),
       'd6_menu' => array(
         array(array('menu1'), array('menu')),

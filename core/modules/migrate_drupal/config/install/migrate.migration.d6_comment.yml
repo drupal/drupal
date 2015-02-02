@@ -9,29 +9,17 @@ source:
 process:
   cid: cid
   pid:
-    -
-      plugin: skip_process_on_empty
-      source: pid
-    -
-      plugin: migration
-      migration: d6_comment
-  entity_id:
     plugin: migration
-    migration: d6_node
-    source: nid
+    migration: d6_comment
+    source: pid
+  entity_id: nid
   entity_type: 'constants/entity_type'
   # field_name & comment_type is calculated in
   # \Drupal\migrate_drupal\Plugin\migrate\source\d6\Comment::prepareRow()
   field_name: field_name
   comment_type: comment_type
   subject: subject
-  uid:
-    -
-      plugin: skip_process_on_empty
-      source: uid
-    -
-      plugin: migration
-      migration: d6_user
+  uid: uid
   name: name
   mail: mail
   homepage: homepage
