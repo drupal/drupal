@@ -11,7 +11,6 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
-use Drupal\Core\Url;
 use Drupal\link\LinkItemInterface;
 use Drupal\menu_link_content\MenuLinkContentInterface;
 
@@ -19,12 +18,14 @@ use Drupal\menu_link_content\MenuLinkContentInterface;
  * Defines the menu link content entity class.
  *
  * @property \Drupal\link\LinkItemInterface link
+ * @property \Drupal\Core\Field\FieldItemList rediscover
  *
  * @ContentEntityType(
  *   id = "menu_link_content",
  *   label = @Translation("Custom menu link"),
  *   handlers = {
  *     "storage" = "Drupal\Core\Entity\Sql\SqlContentEntityStorage",
+ *     "storage_schema" = "Drupal\menu_link_content\MenuLinkContentStorageSchema",
  *     "access" = "Drupal\menu_link_content\MenuLinkContentAccessControlHandler",
  *     "form" = {
  *       "default" = "Drupal\menu_link_content\Form\MenuLinkContentForm",
@@ -182,6 +183,19 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
   /**
    * {@inheritdoc}
    */
+  public function preSave(EntityStorageInterface $storage) {
+    parent::preSave($storage);
+
+    if (parse_url($this->link->uri, PHP_URL_SCHEME) === 'user-path') {
+      $this->setRequiresRediscovery(TRUE);
+    }
+    else {
+      $this->setRequiresRediscovery(FALSE);
+    }
+  }
+  /**
+   * {@inheritdoc}
+   */
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     parent::postSave($storage, $update);
 
@@ -297,6 +311,10 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
       ->setDescription(t('A flag to indicate if the link points to a full URL starting with a protocol, like http:// (1 = external, 0 = internal).'))
       ->setSetting('default_value', FALSE);
 
+    $fields['rediscover'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Indicates whether the menu link should be rediscovered'))
+      ->setSetting('default_value', FALSE);
+
     $fields['weight'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Weight'))
       ->setDescription(t('Link weight among links in the same menu at the same depth. In the menu, the links with high weight will sink and links with a low weight will be positioned nearer the top.'))
@@ -359,6 +377,21 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
       ->setDescription(t('The time that the menu link was last edited.'));
 
     return $fields;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function requiresRediscovery() {
+    return $this->get('rediscover')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setRequiresRediscovery($rediscovery) {
+    $this->set('rediscover', $rediscovery);
+    return $this;
   }
 
 }

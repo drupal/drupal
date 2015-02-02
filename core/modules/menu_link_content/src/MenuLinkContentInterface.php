@@ -102,4 +102,35 @@ interface MenuLinkContentInterface extends ContentEntityInterface, EntityChanged
    */
   public function getPluginDefinition();
 
+  /**
+   * Returns whether the menu link requires rediscovery.
+   *
+   * If a menu-link points to a user-supplied path such as /blog then the route
+   * this resolves to needs to be rediscovered as the module or route providing
+   * a given path might change over time.
+   *
+   * For example: at the time a menu-link is created, the /blog path might be
+   * provided by a route in Views module, but later this path may be served by
+   * the Panels module. Flagging a link as requiring rediscovery ensures that if
+   * the route that provides a user-entered path changes over time, the link is
+   * flexible enough to update to reflect these changes.
+   *
+   * @return bool
+   *   TRUE if the menu link requires rediscovery during route rebuilding.
+   */
+  public function requiresRediscovery();
+
+  /**
+   * Flags a link as requiring rediscovery.
+   *
+   * @param bool $rediscovery
+   *   Whether or not the link requires rediscovery.
+   *
+   * @return $this
+   *   The instance on which the method was called.
+   *
+   * @see \Drupal\menu_link_content\MenuLinkContentInterface::requiresRediscovery()
+   */
+  public function setRequiresRediscovery($rediscovery);
+
 }
