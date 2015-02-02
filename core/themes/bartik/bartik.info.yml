@@ -12,7 +12,6 @@ ckeditor_stylesheets:
   - css/base/typography.css
   - css/components/captions.css
   - css/components/content.css
-  - css/components/list.css
   - css/components/table.css
 regions:
   header: Header
