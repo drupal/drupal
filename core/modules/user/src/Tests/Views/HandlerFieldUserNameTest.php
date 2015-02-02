@@ -27,10 +27,13 @@ class HandlerFieldUserNameTest extends UserTestBase {
   public function testUserName() {
     $this->drupalLogin($this->drupalCreateUser(array('access user profiles')));
 
+    // Set defaults.
     $view = Views::getView('test_views_handler_field_user_name');
+    $view->initHandlers();
+    $view->field['name']->options['link_to_user'] = TRUE;
+    $view->field['name']->init($view, $view->getDisplay('default'));
     $this->executeView($view);
 
-    $view->field['name']->options['link_to_user'] = TRUE;
     $username = $view->result[0]->users_field_data_name = $this->randomMachineName();
     $view->result[0]->users_field_data_uid = 1;
     $render = $view->field['name']->advancedRender($view->result[0]);
@@ -53,6 +56,22 @@ class HandlerFieldUserNameTest extends UserTestBase {
     $anon_name = $view->field['name']->options['anonymous_text'] = $this->randomMachineName();
     $render = $view->field['name']->advancedRender($view->result[0]);
     $this->assertIdentical($render, $anon_name , 'For user0 it should use the configured anonymous text if overwrite_anonymous is checked.');
+    $view->result[0]->users_field_data_uid = 1;
+    $render = $view->field['name']->advancedRender($view->result[0]);
+    $this->assertNotIdentical($render, $anon_name , 'For registered user it should not use the configured anonymous text if overwrite_anonymous is checked.');
+  }
+
+  /**
+   * Tests that the field handler works when no additional fields are added.
+   */
+  public function testNoAdditionalFields() {
+    $view = Views::getView('test_views_handler_field_user_name');
+    $this->executeView($view);
+
+    $username = $view->result[0]->users_field_data_name = $this->randomMachineName();
+    $view->result[0]->users_field_data_uid = 1;
+    $render = $view->field['name']->advancedRender($view->result[0]);
+    $this->assertTrue(strpos($render, $username) !== FALSE, 'If link to user is checked the username should be part of the output.');
   }
 
 }

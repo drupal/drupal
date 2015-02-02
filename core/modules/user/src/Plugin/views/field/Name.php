@@ -80,10 +80,10 @@ class Name extends User {
    * {@inheritdoc}
    */
   protected function renderLink($data, ResultRow $values) {
-    $account = entity_create('user');
-    $account->uid = $this->getValue($values, 'uid');
-    $account->name = $this->getValue($values);
-    if (!empty($this->options['link_to_user']) || !empty($this->options['overwrite_anonymous'])) {
+    if (!empty($this->options['link_to_user']) || !empty($this->options['overwrite_anonymous']) || !empty($this->options['format_username'])) {
+      $account = entity_create('user');
+      $account->uid = $this->getValue($values, 'uid');
+      $account->name = $this->getValue($values);
       if (!empty($this->options['overwrite_anonymous']) && !$account->id()) {
         // This is an anonymous user, and we're overriting the text.
         return String::checkPlain($this->options['anonymous_text']);
@@ -96,11 +96,12 @@ class Name extends User {
         );
         return drupal_render($username);
       }
+      // If we want a formatted username, do that.
+      if (!empty($this->options['format_username'])) {
+        return user_format_name($account);
+      }
     }
-    // If we want a formatted username, do that.
-    if (!empty($this->options['format_username'])) {
-      return user_format_name($account);
-    }
+
     // Otherwise, there's no special handling, so return the data directly.
     return $data;
   }

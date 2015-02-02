@@ -36,8 +36,9 @@ display:
           hide_empty: false
           id: name
           label: ''
-          link_to_user: true
+          link_to_user: false
           overwrite_anonymous: false
+          format_username: false
           table: users_field_data
           plugin_id: user_name
           entity_type: user
