@@ -169,12 +169,19 @@ class LinkWidget extends WidgetBase {
       '#attributes' => array('class' => array('link-field-widget-attributes')),
     );
 
-    // If cardinality is 1, ensure a label is output for the field by wrapping it
-    // in a details element.
+    // If cardinality is 1, ensure a proper label is output for the field.
     if ($this->fieldDefinition->getFieldStorageDefinition()->getCardinality() == 1) {
-      $element += array(
-        '#type' => 'fieldset',
-      );
+      // If the link title is disabled, use the field definition label as the
+      // title of the 'uri' element.
+      if ($this->getFieldSetting('title') == DRUPAL_DISABLED) {
+        $element['uri']['#title'] = $element['#title'];
+      }
+      // Otherwise wrap everything in a details element.
+      else {
+        $element += array(
+          '#type' => 'fieldset',
+        );
+      }
     }
 
     return $element;
