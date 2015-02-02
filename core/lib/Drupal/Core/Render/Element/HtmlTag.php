@@ -18,6 +18,16 @@ use Drupal\Core\Template\Attribute;
 class HtmlTag extends RenderElement {
 
   /**
+   * Void elements do not contain values or closing tags.
+   * @see http://www.w3.org/TR/html5/syntax.html#syntax-start-tag
+   * @see http://www.w3.org/TR/html5/syntax.html#void-elements
+   */
+  static protected $voidElements = array(
+    'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
+    'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr',
+  );
+
+  /**
    * {@inheritdoc}
    */
   public function getInfo() {
@@ -59,13 +69,16 @@ class HtmlTag extends RenderElement {
    */
   public static function preRenderHtmlTag($element) {
     $attributes = isset($element['#attributes']) ? new Attribute($element['#attributes']) : '';
-    if (!isset($element['#value'])) {
+
+    // Construct a void element.
+    if (in_array($element['#tag'], self::$voidElements)) {
       // This function is intended for internal use, so we assume that no unsafe
       // values are passed in #tag. The attributes are already safe because
       // Attribute output is already automatically sanitized.
       // @todo Escape this properly instead? https://www.drupal.org/node/2296101
       $markup = SafeMarkup::set('<' . $element['#tag'] . $attributes . " />\n");
     }
+    // Construct all other elements.
     else {
       $markup = '<' . $element['#tag'] . $attributes . '>';
       if (isset($element['#value_prefix'])) {
