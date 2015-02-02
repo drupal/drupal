@@ -36,3 +36,50 @@ function menu_link_content_menu_delete(MenuInterface $menu) {
   $menu_links = $storage->loadByProperties(array('menu_name' => $menu->id()));
   $storage->delete($menu_links);
 }
+
+/**
+ * Implements hook_path_insert().
+ */
+function menu_link_content_path_insert($path) {
+  _menu_link_content_update_path_alias($path['alias']);
+}
+
+/**
+ * Helper function to update plugin definition using user-path scheme.
+ *
+ * @param string $path
+ *   The path alias.
+ *
+ */
+function _menu_link_content_update_path_alias($path) {
+  /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
+  $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
+  // @todo Use link.uri once https://www.drupal.org/node/2391217 is in.
+  /** @var \Drupal\menu_link_content\MenuLinkContentInterface[] $entities */
+  $entities = \Drupal::entityManager()
+    ->getStorage('menu_link_content')
+    ->loadByProperties(['link__uri' => 'user-path:' . $path]);
+  foreach ($entities as $menu_link) {
+    $menu_link_manager->updateDefinition($menu_link->getPluginId(), $menu_link->getPluginDefinition(), FALSE);
+  }
+}
+
+/**
+ * Implements hook_path_update().
+ */
+function menu_link_content_path_update($path) {
+  if ($path['alias'] != $path['original']['alias']) {
+    _menu_link_content_update_path_alias($path['alias']);
+    _menu_link_content_update_path_alias($path['original']['alias']);
+  }
+  elseif ($path['source'] != $path['original']['source']) {
+    _menu_link_content_update_path_alias($path['alias']);
+  }
+}
+
+/**
+ * Implements hook_path_delete().
+ */
+function menu_link_content_path_delete($path) {
+  _menu_link_content_update_path_alias($path['alias']);
+}

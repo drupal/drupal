@@ -81,6 +81,9 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
           'serialize' => TRUE,
         ),
       ),
+      'indexes' => array(
+        'uri' => array(array('uri', 30)),
+      ),
     );
   }
 
