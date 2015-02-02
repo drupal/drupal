@@ -39,7 +39,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     parent::setUp();
 
     // Create users and test node.
-    $this->adminUser = $this->drupalCreateUser(array('administer content types', 'administer nodes', 'administer blocks'));
+    $this->adminUser = $this->drupalCreateUser(array('administer content types', 'administer nodes', 'administer blocks', 'access content overview'));
     $this->webUser = $this->drupalCreateUser(array('access content', 'create article content'));
   }
 
@@ -98,6 +98,12 @@ class NodeBlockFunctionalTest extends NodeTestBase {
 
     $this->drupalLogout();
     $this->drupalLogin($this->adminUser);
+
+    // Verify that the More link is shown and leads to the admin content page.
+    $this->drupalGet('');
+    $this->clickLink('More');
+    $this->assertResponse('200');
+    $this->assertUrl('admin/content');
 
     // Set the number of recent nodes to show to 10.
     $block->getPlugin()->setConfigurationValue('items_per_page', 10);

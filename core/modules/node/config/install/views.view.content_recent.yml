@@ -62,19 +62,11 @@ display:
           description: ''
           columns:
             title: title
-            timestamp: title
             name: title
             edit_node: edit_node
             delete_node: delete_node
           info:
             title:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            timestamp:
               sortable: false
               default_sort_order: asc
               align: ''
@@ -111,38 +103,26 @@ display:
           id: title
           table: node_field_data
           field: title
-          relationship: none
-          group_type: group
-          admin_label: ''
+          entity_type: node
+          entity_field: title
           label: ''
           exclude: false
           alter:
             alter_text: false
-            text: ''
             make_link: false
-            path: ''
             absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: ''
+            trim: false
             word_boundary: false
             ellipsis: false
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
             strip_tags: false
-            trim: false
-            preserve_tags: ''
             html: false
+          hide_empty: false
+          empty_zero: false
+          link_to_node: true
+          plugin_id: node
+          relationship: none
+          group_type: group
+          admin_label: ''
           element_type: ''
           element_class: ''
           element_label_type: ''
@@ -152,13 +132,7 @@ display:
           element_wrapper_class: ''
           element_default_classes: true
           empty: ''
-          hide_empty: false
-          empty_zero: false
           hide_alter_empty: true
-          link_to_node: true
-          plugin_id: node
-          entity_type: node
-          entity_field: title
         name:
           id: name
           table: users_field_data
@@ -211,9 +185,9 @@ display:
           overwrite_anonymous: false
           anonymous_text: ''
           format_username: true
-          plugin_id: user_name
           entity_type: user
           entity_field: name
+          plugin_id: user_name
         edit_node:
           id: edit_node
           table: node
@@ -262,9 +236,9 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          text: edit
-          plugin_id: node_link_edit
+          text: Edit
           entity_type: node
+          plugin_id: node_link_edit
         delete_node:
           id: delete_node
           table: node
@@ -313,9 +287,9 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          text: delete
-          plugin_id: node_link_delete
+          text: Delete
           entity_type: node
+          plugin_id: node_link_delete
       filters:
         status_extra:
           id: status_extra
@@ -329,7 +303,7 @@ display:
           group: 1
           exposed: false
           expose:
-            operator_id: '0'
+            operator_id: ''
             label: ''
             description: ''
             use_operator: false
@@ -352,8 +326,8 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          plugin_id: node_status
           entity_type: node
+          plugin_id: node_status
         langcode:
           id: langcode
           table: node_field_data
@@ -391,9 +365,9 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          plugin_id: language
           entity_type: node
           entity_field: langcode
+          plugin_id: language
       sorts:
         changed:
           id: changed
@@ -407,9 +381,9 @@ display:
           expose:
             label: ''
           granularity: second
-          plugin_id: date
           entity_type: node
           entity_field: changed
+          plugin_id: date
       title: 'Recent content'
       header: {  }
       footer: {  }
@@ -434,24 +408,24 @@ display:
           group_type: group
           admin_label: author
           required: true
+          entity_type: node
+          entity_field: uid
           plugin_id: standard
       arguments: {  }
-      filter_groups:
-        operator: AND
-        groups: {  }
+      display_extenders: {  }
+      field_langcode: '***LANGUAGE_language_content***'
+      field_langcode_add_to_query: null
       use_more: true
       use_more_always: true
       use_more_text: More
+      link_url: admin/content
       link_display: custom_url
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
   block_1:
     display_plugin: block
     id: block_1
     display_title: Block
     position: 1
     display_options:
-      link_url: admin/content
-      block_category: 'Lists (Views)'
+      display_extenders: {  }
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
