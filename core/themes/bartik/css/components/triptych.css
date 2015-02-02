@@ -19,6 +19,16 @@
   border-bottom: 1px solid #dfdfdf;
   line-height: 1.3;
 }
+@media all and (min-width: 520px) {
+  #triptych h2 {
+    font-size: 1.714em;
+    margin-bottom: 0.9em;
+  }
+  #triptych .block {
+    margin-bottom: 2em;
+    padding-bottom: 2em;
+  }
+}
 #triptych .block:last-child {
   border-bottom: none;
 }

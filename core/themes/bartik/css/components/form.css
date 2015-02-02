@@ -62,6 +62,17 @@ input,
 textarea {
   font-size: 0.929em;
 }
+
+/**
+ * Make the font slightly bigger in mobile
+ * @todo: check the correct font-size
+ */
+@media screen and (max-width: 60em) { /* 920px */
+  input,
+  textarea {
+    font-size: 1.142857143em;
+  }
+}
 textarea {
   line-height: 1.5;
 }

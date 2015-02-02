@@ -31,6 +31,16 @@ body,
 [dir="rtl"] .region-header {
   float: left;
 }
+@media all and (min-width: 461px) and (max-width: 900px) {
+  .region-header {
+    margin: .5em 5px .75em;
+  }
+}
+@media all and (min-width: 901px) {
+  .region-header {
+    margin: 1em 5px 1.5em;
+  }
+}
 .region-secondary-menu .block-menu {
   width: 100%;
   margin: 0 auto;

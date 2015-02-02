@@ -105,3 +105,88 @@ body:not(:target) .region-primary-menu .menu-toggle-target-show:target ~ .menu l
   height: auto;
   overflow: visible;
 }
+
+/**
+ * Media queries for primary menu.
+ */
+@media all and (min-width: 461px) and (max-width: 900px) {
+  .region-primary-menu .menu {
+    margin: 0 5px;
+    padding: 0;
+    text-align: center;
+  }
+  .region-primary-menu .menu li,
+  body:not(:target) .region-primary-menu .menu li {
+    float: left; /* LTR */
+    margin-right: 5px; /* LTR */
+    padding: 0;
+    display: inline-block;
+    width: 32.75%;
+    height: auto;
+    overflow: visible;
+  }
+  [dir="rtl"] .region-primary-menu .menu li,
+  [dir="rtl"] body:not(:target) .region-primary-menu .menu li {
+    float: right;
+    margin-left: 5px;
+    margin-right: 0;
+  }
+  .region-primary-menu .menu li:nth-child(3n) {
+    margin-right: -5px; /* LTR */
+  }
+  [dir="rtl"] .region-primary-menu .menu li:nth-child(3n) {
+    margin-left: -5px;
+    margin-right: 0;
+  }
+  .region-primary-menu .menu a {
+    float: none;
+    display: block;
+    border-radius: 8px;
+    margin-bottom: 5px;
+    padding: 0.9em 5px;
+  }
+  body:not(:target) .region-primary-menu .menu-toggle {
+    display: none;
+  }
+}
+
+@media all and (min-width: 901px) {
+  .region-primary-menu .block-menu .menu {
+    font-size: 0.929em;
+    margin: 0;
+    padding: 0 15px;
+  }
+  .region-primary-menu .menu li,
+  body:not(:target) .region-primary-menu .menu li {
+    float: left; /* LTR */
+    list-style: none;
+    padding: 0 1px;
+    margin: 0 1px;
+    width: auto;
+    height: auto;
+    overflow: visible;
+  }
+  [dir="rtl"] .region-primary-menu .menu li,
+  [dir="rtl"] body:not(:target) .region-primary-menu .menu li {
+    float: right;
+  }
+  .region-primary-menu .menu a {
+    float: left; /* LTR */
+    padding: 0.7em 0.8em;
+    margin-bottom: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  [dir="rtl"] .region-primary-menu .menu a {
+    float: right;
+    padding: 0.7em 0.8em;
+  }
+  .featured .region-primary-menu .menu li a:active,
+  .featured .region-primary-menu .menu li a.active {
+    background: #f0f0f0;
+    background: rgba(240, 240, 240, 1.0);
+  }
+  body:not(:target) .region-primary-menu .menu-toggle {
+    display: none;
+  }
+}

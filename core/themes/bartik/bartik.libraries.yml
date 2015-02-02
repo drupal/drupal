@@ -41,7 +41,6 @@ global-styling:
       css/components/vertical-tabs.component.css: {}
       css/components/views.css: {}
       css/components/buttons.css: {}
-      css/components/media.css: {}
       css/colors.css: {}
       css/print.css: { media: print }
 
