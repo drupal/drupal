@@ -52,7 +52,8 @@ class RedirectResponseSubscriber implements EventSubscriberInterface {
     if ($response instanceOf RedirectResponse) {
       $options = array();
 
-      $destination = $event->getRequest()->query->get('destination');
+      $request = $event->getRequest();
+      $destination = $request->query->get('destination');
       // A destination from \Drupal::request()->query always overrides the
       // current RedirectResponse. We do not allow absolute URLs to be passed
       // via \Drupal::request()->query, as this can be an attack vector, with
@@ -61,15 +62,28 @@ class RedirectResponseSubscriber implements EventSubscriberInterface {
       //   base path) are allowed.
       if ($destination) {
         if (!UrlHelper::isExternal($destination)) {
-          $destination = UrlHelper::parse($destination);
-
-          $path = $destination['path'];
-          $options['query'] = $destination['query'];
-          $options['fragment'] = $destination['fragment'];
-          // The 'Location' HTTP header contain an absolute URL.
-          $options['absolute'] = TRUE;
-
-          $response->setTargetUrl($this->urlGenerator->generateFromPath($path, $options));
+          // The destination query parameter can be a relative URL in the sense
+          // of not including the scheme and host, but its path is expected to
+          // be absolute (start with a '/'). For such a case, prepend the
+          // scheme and host, because the 'Location' header must be absolute.
+          if (strpos($destination, '/') === 0) {
+            $destination = $request->getSchemeAndHttpHost() . $destination;
+          }
+          else {
+            // Legacy destination query parameters can be relative paths that
+            // have not yet been converted to URLs (outbound path processors
+            // and other URL handling still needs to be performed).
+            // @todo As generateFromPath() is deprecated, remove this in
+            //   https://www.drupal.org/node/2418219.
+            $destination = UrlHelper::parse($destination);
+            $path = $destination['path'];
+            $options['query'] = $destination['query'];
+            $options['fragment'] = $destination['fragment'];
+            // The 'Location' HTTP header must always be absolute.
+            $options['absolute'] = TRUE;
+            $destination = $this->urlGenerator->generateFromPath($path, $options);
+          }
+          $response->setTargetUrl($destination);
         }
         elseif (UrlHelper::externalIsLocal($destination, $this->requestContext->getCompleteBaseUrl())) {
           $response->setTargetUrl($destination);

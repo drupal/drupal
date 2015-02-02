@@ -210,11 +210,15 @@ function drupal_get_html_head($render = TRUE) {
  * previous request, that destination is returned. As such, a destination can
  * persist across multiple pages.
  *
- * @return
+ * @return array
  *   An associative array containing the key:
- *   - destination: The path provided via the destination query string or, if
- *     not available, the current path.
+ *   - destination: The value of the current request's 'destination' query
+ *     parameter, if present. This can be either a relative or absolute URL.
+ *     However, for security, redirection to external URLs is not performed.
+ *     If the query parameter isn't present, then the URL of the current
+ *     request is returned.
  *
+ * @see \Drupal\Core\EventSubscriber\RedirectResponseSubscriber::checkRedirectUrl()
  * @ingroup form_api
  */
 function drupal_get_destination() {
@@ -229,7 +233,7 @@ function drupal_get_destination() {
     $destination = array('destination' => $query->get('destination'));
   }
   else {
-    $path = \Drupal::routeMatch()->getRouteName() ? Url::fromRouteMatch(\Drupal::routeMatch())->getInternalPath() : '';
+    $path = \Drupal::url('<current>');
     $query = UrlHelper::buildQuery(UrlHelper::filterQueryParameters($query->all()));
     if ($query != '') {
       $path .= '?' . $query;

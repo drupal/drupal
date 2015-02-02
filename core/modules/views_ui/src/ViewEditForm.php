@@ -727,7 +727,7 @@ class ViewEditForm extends ViewFormBase {
         $element['extra_actions']['#links']['revert'] = array(
           'title' => $this->t('Revert view'),
           'href' => "admin/structure/views/view/{$view->id()}/revert",
-          'query' => array('destination' => "admin/structure/views/view/{$view->id()}"),
+          'query' => array('destination' => $view->url('edit-form')),
         );
       }
       else {

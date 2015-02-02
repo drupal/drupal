@@ -52,7 +52,7 @@ class UserAdminTest extends WebTestBase {
     $this->assertText($admin_user->getUsername(), 'Found Admin user on admin users page');
 
     // Test for existence of edit link in table.
-    $link = $user_a->link(t('Edit'), 'edit-form', array('query' => array('destination' => 'admin/people')));
+    $link = $user_a->link(t('Edit'), 'edit-form', array('query' => array('destination' => $user_a->url('collection'))));
     $this->assertRaw($link, 'Found user A edit link on admin users page');
 
     // Test exposed filter elements.

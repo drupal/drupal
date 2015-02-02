@@ -16,6 +16,7 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
+use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -27,6 +28,7 @@ use Drupal\field\Entity\FieldConfig;
  */
 class CommentManager implements CommentManagerInterface {
   use StringTranslationTrait;
+  use UrlGeneratorTrait;
 
   /**
    * The entity manager service.
@@ -55,13 +57,6 @@ class CommentManager implements CommentManagerInterface {
    * @var \Drupal\Core\Config\Config
    */
   protected $userConfig;
-
-  /**
-   * The url generator service.
-   *
-   * @var \Drupal\Core\Routing\UrlGeneratorInterface
-   */
-  protected $urlGenerator;
 
   /**
    * The module handler service.
@@ -260,7 +255,12 @@ class CommentManager implements CommentManagerInterface {
       // We cannot use drupal_get_destination() because these links
       // sometimes appear on /node and taxonomy listing pages.
       if ($entity->get($field_name)->getFieldDefinition()->getSetting('form_location') == CommentItemInterface::FORM_SEPARATE_PAGE) {
-        $destination = array('destination' => 'comment/reply/' . $entity->getEntityTypeId() . '/' . $entity->id() . '/' . $field_name . '#comment-form');
+        $comment_reply_parameters = [
+          'entity_type' => $entity->getEntityTypeId(),
+          'entity' => $entity->id(),
+          'field_name' => $field_name,
+        ];
+        $destination = array('destination' => $this->url('comment.reply', $comment_reply_parameters, array('fragment' => 'comment-form')));
       }
       else {
         $destination = array('destination' => $entity->url('canonical', array('fragment' => 'comment-form')));

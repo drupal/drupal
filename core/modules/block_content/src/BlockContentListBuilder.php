@@ -39,7 +39,7 @@ class BlockContentListBuilder extends EntityListBuilder {
   public function getDefaultOperations(EntityInterface $entity) {
     $operations = parent::getDefaultOperations($entity);
     if (isset($operations['edit'])) {
-      $operations['edit']['query']['destination'] = 'admin/structure/block/block-content';
+      $operations['edit']['query']['destination'] = $entity->url('collection');
     }
     return $operations;
   }
