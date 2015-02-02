@@ -9,17 +9,8 @@
   },
   "minimum-stability": "dev",
   "prefer-stable": true,
-  "repositories": [],
   "config": {
     "preferred-install": "dist",
     "autoloader-suffix": "Drupal8"
-  },
-  "extra": {
-    "_readme": [
-      "This is an example file to show how a Drupal website can be managed via",
-      "Composer. It does not work out of the box but requires a Git subtree",
-      "split of the core directory to be added to the repositories",
-      "section above."
-    ]
   }
 }
