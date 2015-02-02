@@ -291,7 +291,7 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
     $fields['menu_name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Menu name'))
       ->setDescription(t('The menu name. All links with the same menu name (such as "tools") are part of the same menu.'))
-      ->setSetting('default_value', 'tools');
+      ->setDefaultValue('tools');
 
     $fields['link'] = BaseFieldDefinition::create('link')
       ->setLabel(t('Link'))
@@ -309,11 +309,11 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
     $fields['external'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('External'))
       ->setDescription(t('A flag to indicate if the link points to a full URL starting with a protocol, like http:// (1 = external, 0 = internal).'))
-      ->setSetting('default_value', FALSE);
+      ->setDefaultValue(FALSE);
 
     $fields['rediscover'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Indicates whether the menu link should be rediscovered'))
-      ->setSetting('default_value', FALSE);
+      ->setDefaultValue(FALSE);
 
     $fields['weight'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Weight'))
