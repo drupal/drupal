@@ -10,6 +10,7 @@ namespace Drupal\Core\Config;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\Schema\ConfigSchemaDiscovery;
+use Drupal\Core\Config\Schema\Element;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\TypedData\TypedDataManager;
 
@@ -293,6 +294,19 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
     // The schema system falls back on the Undefined class for unknown types.
     $definition = $this->getDefinition($name);
     return is_array($definition) && ($definition['class'] != '\Drupal\Core\Config\Schema\Undefined');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createInstance($data_type, array $configuration = array()) {
+    $instance = parent::createInstance($data_type, $configuration);
+    // Enable elements to construct their own definitions using the typed config
+    // manager.
+    if ($instance instanceof Element) {
+      $instance->setTypedConfig($this);
+    }
+    return $instance;
   }
 
 }
