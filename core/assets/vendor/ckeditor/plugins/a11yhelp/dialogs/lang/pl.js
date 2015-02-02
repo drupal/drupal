@@ -1,5 +1,5 @@
 ﻿/*
- Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+ Copyright (c) 2003-2015, CKSource - Frederico Knabben. All rights reserved.
  For licensing, see LICENSE.md or http://ckeditor.com/license
 */
 CKEDITOR.plugins.setLang("a11yhelp","pl",{title:"Instrukcje dotyczące dostępności",contents:"Zawartość pomocy. Wciśnij ESC, aby zamknąć to okno.",legend:[{name:"Informacje ogólne",items:[{name:"Pasek narzędzi edytora",legend:"Wciśnij ${toolbarFocus} aby przejść do paska narzędzi. Przejdź do następnej i poprzedniej grupy narzędzi używając TAB oraz SHIFT-TAB. Przejdź do następnego i poprzedniego narzędzia używając STRZAŁKI W PRAWO lub STRZAŁKI W LEWO. Wciśnij SPACJĘ lub ENTER, aby aktywować zaznaczone narzędzie."},

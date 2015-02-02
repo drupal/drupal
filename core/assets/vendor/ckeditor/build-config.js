@@ -10,12 +10,15 @@
  *    Changing this file will not change your CKEditor configuration.
  */
 
+/* exported CKBUILDER_CONFIG */
+
 var CKBUILDER_CONFIG = {
 	skin: 'moono',
 	ignore: [
 		// CKEditor repository structure: unrelated to the usage of CKEditor itself.
 		'dev',
 		'README.md',
+		'.editorconfig',
 		'.gitignore',
 		'.gitattributes',
 		'.idea',

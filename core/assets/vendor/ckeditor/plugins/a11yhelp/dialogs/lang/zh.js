@@ -1,5 +1,5 @@
 ﻿/*
- Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+ Copyright (c) 2003-2015, CKSource - Frederico Knabben. All rights reserved.
  For licensing, see LICENSE.md or http://ckeditor.com/license
 */
 CKEDITOR.plugins.setLang("a11yhelp","zh",{title:"輔助工具指南",contents:"說明內容。若要關閉此對話框請按「ESC」。",legend:[{name:"一般",items:[{name:"編輯器工具列",legend:"請按「${toolbarFocus}」以瀏覽工具列。\r\n利用「TAB」或「SHIFT+TAB」以便移動到下一個或前一個工具列群組。\r\n利用「→」或「←」以便移動到下一個或前一個工具列按鈕。\r\n請按下「空白鍵」或「ENTER」鍵啟動工具列按鈕。"},{name:"編輯器對話方塊",legend:"在對話框中，請按 TAB 鍵以便移動到下個欄位，請按 SHIFT + TAB 以便移動到前個欄位；請按 ENTER 以提交對話框資料，或按下 ESC 取消對話框。\r\n若是有多個頁框的對話框，請按 ALT + F10 以移動到頁框列表，並以 TAB 或是 → 方向鍵移動到下個頁框。以 SHIFT + TAB 或是 ← 方向鍵移動到前個頁框。按下 空白鍵 或是 ENTER 以選取頁框。"},{name:"編輯器內容功能表",

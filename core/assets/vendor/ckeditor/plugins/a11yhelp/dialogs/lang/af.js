@@ -1,5 +1,5 @@
 ﻿/*
- Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+ Copyright (c) 2003-2015, CKSource - Frederico Knabben. All rights reserved.
  For licensing, see LICENSE.md or http://ckeditor.com/license
 */
 CKEDITOR.plugins.setLang("a11yhelp","af",{title:"Toeganglikheid instruksies",contents:"Hulp inhoud. Druk ESC om toe te maak.",legend:[{name:"Algemeen",items:[{name:"Bewerker balk",legend:"Druk ${toolbarFocus} om op die werkbalk te land. Beweeg na die volgende en voorige wekrbalkgroep met TAB and SHIFT-TAB. Beweeg na die volgende en voorige werkbalkknop met die regter of linker pyl. Druk SPASIE of ENTER om die knop te bevestig."},{name:"Bewerker dialoog",legend:"In 'n dialoog, druk TAB vir die volgende dialoog veld, SHIFT + TAB vir die vorige dialoog veld, ENTER om te bevestig enESC om die dialoog af te breek. Vir 'n dialoog met meer as een leisie, druk ALT + F10 om die leisielys te wys. Beweeg dan met TAB of Regter pyl na die volgende leise of SHIFT + TAB of Linker pyl na die voorige leisie. Druk SPACE of ENTER om na die leisie bladsy toe te gaan."},

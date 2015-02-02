@@ -1,5 +1,5 @@
 ﻿/*
- Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+ Copyright (c) 2003-2015, CKSource - Frederico Knabben. All rights reserved.
  For licensing, see LICENSE.md or http://ckeditor.com/license
 */
 CKEDITOR.plugins.setLang("specialchar","da",{euro:"Euro-tegn",lsquo:"Left single quotation mark",rsquo:"Right single quotation mark",ldquo:"Left double quotation mark",rdquo:"Right double quotation mark",ndash:"Bindestreg",mdash:"Tankestreg",iexcl:"Inverted exclamation mark",cent:"Cent-tegn",pound:"Pund-tegn",curren:"Kurs-tegn",yen:"Yen-tegn",brvbar:"Brudt streg",sect:"Paragraftegn",uml:"Diaeresis",copy:"Copyright-tegn",ordf:"Feminine ordinal indicator",laquo:"Left-pointing double angle quotation mark",
