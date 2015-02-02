@@ -387,4 +387,16 @@
  */
 .ui-autocomplete {
   background: #fff;
+  border: 1px solid #ccc;
+}
+
+/* Suggestion list */
+.ui-autocomplete .ui-menu-item.ui-state-focus,
+.autocomplete .ui-menu-item.ui-state-hover {
+  background: #0072b9;
+  margin: 0;
+}
+.ui-autocomplete .ui-state-focus a,
+.autocomplete .ui-state-hover a {
+  color: #fff;
 }
