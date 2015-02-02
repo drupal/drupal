@@ -61,16 +61,19 @@ trait EntityTypeEventSubscriberTrait {
   /**
    * {@inheritdoc}
    */
-  abstract public function onEntityTypeCreate(EntityTypeInterface $entity_type);
+  public function onEntityTypeCreate(EntityTypeInterface $entity_type) {
+  }
 
   /**
    * {@inheritdoc}
    */
-  abstract public function onEntityTypeUpdate(EntityTypeInterface $entity_type, EntityTypeInterface $original);
+  public function onEntityTypeUpdate(EntityTypeInterface $entity_type, EntityTypeInterface $original) {
+  }
 
   /**
    * {@inheritdoc}
    */
-  abstract public function onEntityTypeDelete(EntityTypeInterface $entity_type);
+  public function onEntityTypeDelete(EntityTypeInterface $entity_type) {
+  }
 
 }

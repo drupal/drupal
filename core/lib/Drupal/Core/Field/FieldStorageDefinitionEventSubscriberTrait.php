@@ -61,16 +61,19 @@ trait FieldStorageDefinitionEventSubscriberTrait {
   /**
    * {@inheritdoc}
    */
-  abstract public function onFieldStorageDefinitionCreate(FieldStorageDefinitionInterface $storage_definition);
+  public function onFieldStorageDefinitionCreate(FieldStorageDefinitionInterface $storage_definition) {
+  }
 
   /**
    * {@inheritdoc}
    */
-  abstract public function onFieldStorageDefinitionUpdate(FieldStorageDefinitionInterface $storage_definition, FieldStorageDefinitionInterface $original);
+  public function onFieldStorageDefinitionUpdate(FieldStorageDefinitionInterface $storage_definition, FieldStorageDefinitionInterface $original) {
+  }
 
   /**
    * {@inheritdoc}
    */
-  abstract public function onFieldStorageDefinitionDelete(FieldStorageDefinitionInterface $storage_definition);
+  public function onFieldStorageDefinitionDelete(FieldStorageDefinitionInterface $storage_definition) {
+  }
 
 }
