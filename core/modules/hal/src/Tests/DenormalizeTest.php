@@ -197,6 +197,6 @@ class DenormalizeTest extends NormalizerTestBase {
     // Check that the one field got populated as expected.
     $this->assertEqual($data['field_test_text'], $denormalized->get('field_test_text')->getValue());
     // Check the custom property that contains the list of fields to merge.
-    $this->assertEqual($denormalized->_restPatchFields, ['field_test_text']);
+    $this->assertEqual($denormalized->_restSubmittedFields, ['field_test_text']);
   }
 }

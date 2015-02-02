@@ -40,7 +40,7 @@ use Drupal\user\UserInterface;
  *     },
  *     "translation" = "Drupal\user\ProfileTranslationHandler"
  *   },
- *   admin_permission = "administer user",
+ *   admin_permission = "administer users",
  *   base_table = "users",
  *   data_table = "users_field_data",
  *   label_callback = "user_format_name",

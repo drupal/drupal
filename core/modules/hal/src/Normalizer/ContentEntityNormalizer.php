@@ -171,11 +171,8 @@ class ContentEntityNormalizer extends NormalizerBase {
       }
     }
 
-    // Special handling for PATCH: pass the names of the fields whose values
-    // should be merged.
-    if (isset($context['request_method']) && $context['request_method'] == 'patch') {
-      $entity->_restPatchFields = array_keys($data);
-    }
+    // Pass the names of the fields whose values can be merged.
+    $entity->_restSubmittedFields = array_keys($data);
 
     // Iterate through remaining items in data array. These should all
     // correspond to fields.
