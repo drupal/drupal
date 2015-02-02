@@ -1,5 +1,9 @@
 /* Vertical Tabs Reset */
 ul.vertical-tabs-list {
-  margin: -1px 0 -1px -15em;
+  margin: -1px 0 -1px -15em; /* LTR */
   padding: 0;
+}
+[dir="rtl"] ul.vertical-tabs-list {
+  margin-left: 0;
+  margin-right: -15em;
 }

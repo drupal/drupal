@@ -26,7 +26,11 @@ fieldset,
   font-size: 0.857em;
 }
 .filter-wrapper .form-item label {
-  margin-right: 10px;
+  margin-right: 10px; /* LTR */
+}
+[dir="rtl"] .filter-wrapper .form-item label {
+  margin-left: 10px;
+  margin-right: 0;
 }
 summary {
   background: #dbdbdb;
@@ -109,11 +113,21 @@ input.form-submit:focus {
 }
 .form-type-radio label,
 .form-type-checkbox label {
-  margin-left: 4px;
+  margin-left: 4px; /* LTR */
+}
+[dir="rtl"] .form-type-radio label,
+[dir="rtl"] .form-type-checkbox label {
+  margin-right: 4px;
+  margin-left: 0;
 }
 .form-type-radio .description,
 .form-type-checkbox .description {
-  margin-left: 2px;
+  margin-left: 2px; /* LTR */
+}
+[dir="rtl"] .form-type-radio .description,
+[dir="rtl"] .form-type-checkbox .description {
+  margin-right: 2px;
+  margin-left: 0;
 }
 .form-actions {
   padding-top: 10px;

@@ -38,7 +38,11 @@
 }
 #triptych .block ul,
 #triptych .block ol {
-  padding-left: 0;
+  padding-left: 0; /* LTR */
+}
+[dir="rtl"] #triptych .block ul,
+[dir="rtl"] #triptych .block ol {
+  padding-right: 0;
 }
 #triptych #block-user-login .form-text {
   width: 185px;
@@ -52,7 +56,10 @@
   height: 0;
 }
 #triptych-last #block-node-syndicate {
-  text-align: right;
+  text-align: right; /* LTR */
+}
+[dir="rtl"] #triptych-last #block-node-syndicate {
+  text-align: left;
 }
 #triptych #block-search-form .form-type-search input {
   width: 185px;
@@ -61,5 +68,8 @@
   text-align: center;
 }
 #triptych-last #block-system-powered-by {
-  text-align: right;
+  text-align: right; /* LTR */
+}
+[dir="rtl"] #triptych-last #block-system-powered-by {
+  text-align: left;
 }

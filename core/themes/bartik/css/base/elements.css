@@ -73,25 +73,27 @@ del {
 
 blockquote {
   background: #f7f7f7;
-  border-left: 1px solid #bbb;
+  border-left: 1px solid #bbb; /* LTR */
   font-style: italic;
   margin: 1.5em 10px;
   padding: 0.5em 10px;
 }
 [dir="rtl"] blockquote {
   border-left: none;
-  border-right: 4px solid #afafaf;
+  border-right: 1px solid #bbb;
 }
 blockquote:before {
   color: #bbb;
   content: "\201C";
   font-size: 3em;
   line-height: 0.1em;
-  margin-right: 0.2em;
+  margin-right: 0.2em; /* LTR */
   vertical-align: -.4em;
 }
 [dir="rtl"] blockquote:before {
   content: "\201D";
+  margin-left: 0.2em;
+  margin-right: 0;
 }
 blockquote:after {
   color: #bbb;

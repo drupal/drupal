@@ -1,8 +1,11 @@
 /* --------------- Search Results ---------------- */
 
 ol.search-results {
-  padding-left: 0;
+  padding-left: 0; /* LTR */
   list-style-position: inside;
+}
+[dir="rtl"] ol.search-results {
+  padding-right: 0;
 }
 .search-results li {
   border-bottom: 1px solid #d3d7d9;
@@ -15,5 +18,8 @@ ol.search-results {
   margin-bottom: 1em;
 }
 .search-results .search-snippet-info {
-  padding-left: 0;
+  padding-left: 0; /* LTR */
+}
+[dir="rtl"] .search-results .search-snippet-info {
+  padding-right: 0;
 }

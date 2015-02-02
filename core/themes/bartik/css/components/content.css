@@ -90,12 +90,10 @@ h1#page-title {
   float: right;
 }
 .node__links {
-  text-align: right;
+  text-align: right; /* LTR */
 }
 [dir="rtl"] .node__links {
   text-align: left;
-  margin-right: 236px;
-  margin-left: 0;
 }
 @media all and (min-width: 560px) {
   .node .field-type-image {

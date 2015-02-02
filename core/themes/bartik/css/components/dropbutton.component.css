@@ -31,7 +31,7 @@
   border-radius: 1em;
 }
 .js .dropbutton-widget .button:hover {
-  border-radius: 1em 0 0 1em;
+  border-radius: 1em 0 0 1em; /* LTR */
 }
 [dir="rtl"].js .dropbutton-widget .button:hover {
   border-radius: 0 1em 1em 0;
@@ -45,7 +45,7 @@
 }
 .js .dropbutton-multiple .dropbutton-widget .dropbutton-action a {
   color: #3a3a3a;
-  margin-right: 0;
+  margin-right: 0; /* LTR */
 }
 [dir="rtl"].js .dropbutton-multiple .dropbutton-widget .dropbutton-action a {
   margin-left: 0;

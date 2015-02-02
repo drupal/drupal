@@ -79,5 +79,9 @@ table ul.links {
   font-size: 1em;
 }
 table ul.links li {
-  padding: 0 1em 0 0;
+  padding: 0 1em 0 0; /* LTR */
+}
+[dir="rtl"] table ul.links li {
+  padding-left: 1em;
+  padding-right: 0;
 }

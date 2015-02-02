@@ -16,12 +16,22 @@
 }
 .pager__item--first,
 .pager__item--previous {
-  padding: 10px 10px 10px 0;
+  padding: 10px 10px 10px 0; /* LTR */
+}
+[dir="rtl"] .pager__item--first,
+[dir="rtl"] .pager__item--previous {
+  padding-left: 10px;
+  padding-right: 0;
 }
 .pager__item--ellipsis {
   padding: 10px 0;
 }
 .pager__item--last,
 .pager__item--next {
-  padding: 10px 0 10px 10px;
+  padding: 10px 0 10px 10px; /* LTR */
+}
+[dir="rtl"] .pager__item--last,
+[dir="rtl"] .pager__item--next {
+  padding-left: 0;
+  padding-right: 10px;
 }

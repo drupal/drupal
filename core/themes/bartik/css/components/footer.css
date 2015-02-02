@@ -60,10 +60,11 @@
 #footer-columns .content ul {
   list-style: none;
   padding-left: 0; /* LTR */
-  margin-left: 0;
+  margin-left: 0; /* LTR */
 }
 [dir="rtl"] #footer-columns .content ul {
   padding-right: 0;
+  margin-right: 0;
 }
 #footer-columns .content li {
   list-style: none;

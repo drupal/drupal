@@ -25,7 +25,11 @@ body.maintenance-page {
   margin: 0;
 }
 .maintenance-page #content .section {
-  padding: 0 0 0 10px;
+  padding: 0 0 0 10px; /* LTR */
+}
+[dir="rtl"] .maintenance-page #content .section {
+  padding-left: 0;
+  padding-right: 10px;
 }
 .maintenance-page #header {
   background-color: #fff;
@@ -33,9 +37,12 @@ body.maintenance-page {
 }
 .maintenance-page #name-and-slogan {
   margin-bottom: 50px;
-  margin-left: 0;
+  margin-left: 0; /* LTR */
   padding-top: 20px;
   font-size: 90%;
+}
+[dir="rtl"] .maintenance-page #name-and-slogan {
+  margin-right: 0;
 }
 .maintenance-page #name-and-slogan,
 .maintenance-page #name-and-slogan a,

@@ -21,7 +21,10 @@
 .views-displays .region-content .secondary,
 .views-displays .region-content .secondary {
   padding-bottom: 0;
-  padding-left: 0;
+  padding-left: 0; /* LTR */
+}
+[dir="rtl"] .views-displays .region-content .secondary {
+  padding-right: 0;
 }
 
 .views-displays .secondary a {
@@ -106,6 +109,9 @@
 }
 
 .views-ui-display-tab-actions .dropbutton input.form-submit {
-  margin-right: 0;
+  margin-right: 0; /* LTR */
   margin-top: 0;
+}
+[dir="rtl"] .views-ui-display-tab-actions .dropbutton input.form-submit {
+  margin-left: 0;
 }

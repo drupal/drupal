@@ -20,7 +20,7 @@
 #block-search-form .form-item-search-block-form input {
   float: left; /* LTR */
   font-size: 1em;
-  margin-right: 5px;
+  margin-right: 5px; /* LTR */
 }
 [dir="rtl"] #search-form input#edit-keys,
 [dir="rtl"] #block-search-form .form-item-search-block-form input {

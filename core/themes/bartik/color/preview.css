@@ -26,8 +26,12 @@
   font-size: 1.821em;
   line-height: 1;
   margin-bottom: 30px;
-  margin-left: 15px;
+  margin-left: 15px; /* LTR */
   padding-top: 34px;
+}
+[dir="rtl"] #preview-site-name {
+  margin-left: 0;
+  margin-right: 15px;
 }
 #preview-main-menu {
   clear: both;
@@ -69,16 +73,28 @@
 #preview-sidebar,
 #preview-content {
   display: inline;
-  float: left;
+  float: left; /* LTR */
   position: relative;
 }
+[dir="rtl"] #preview-sidebar,
+[dir="rtl"] #preview-content {
+    float: right;
+}
 #preview-sidebar {
-  margin-left: 15px;
+  margin-left: 15px; /* LTR */
   width: 210px;
 }
+[dir="rtl"] #preview-sidebar {
+  margin-left: 0;
+  margin-right: 15px;
+}
 #preview-content {
-  margin-left: 30px;
+  margin-left: 30px; /* LTR */
   width: 26.5em;
+}
+[dir="rtl"] #preview-content {
+  margin-left: 0;
+  margin-right: 30px;
 }
 #preview-sidebar .preview-block {
   border: 1px solid;
@@ -130,10 +146,13 @@
 }
 #preview-footer-wrapper .preview-footer-column {
   display: inline;
-  float: left;
+  float: left; /* LTR */
   padding: 0 10px;
   position: relative;
   width: 220px;
+}
+[dir="rtl"] #preview-footer-wrapper .preview-footer-column {
+  float: right;
 }
 #preview-footer-wrapper .preview-block {
   border: 1px solid #444;
@@ -158,8 +177,12 @@
   margin-top: 0;
 }
 #preview-footer-columns .preview-content ul {
-  margin-left: 0;
-  padding-left: 0;
+  margin-left: 0; /* LTR */
+  padding-left: 0; /* LTR */
+}
+[dir="rtl"] #preview-footer-columns .preview-content ul {
+  margin-right: 0;
+  padding-right: 0;
 }
 #preview-footer-columns .preview-content li {
   list-style: none;
@@ -172,8 +195,12 @@
   border-color: rgba(255, 255, 255, 0.15);
   display: block;
   line-height: 1.2;
-  padding: 0.8em 2px 0.8em 20px;
+  padding: 0.8em 2px 0.8em 20px; /* LTR */
   text-indent: -15px;
+}
+[dir="rtl"] #preview-footer-columns .preview-content li a {
+  padding-left: 2px;
+  padding-right: 20px;
 }
 #preview-footer-columns .preview-content li a:hover,
 #preview-footer-columns .preview-content li a:focus {

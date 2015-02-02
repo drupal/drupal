@@ -2,12 +2,19 @@
 
 .skip-link,
 .skip-link.visually-hidden.focusable {
-  left: 50%;
-  margin-left: -5.25em;
+  left: 50%; /* LTR */
+  margin-left: -5.25em; /* LTR */
   margin-top: 0;
   position: absolute !important;
   width: auto;
   z-index: 50;
+}
+[dir="rtl"] .skip-link,
+[dir="rtl"] .skip-link.visually-hidden.focusable {
+  left: auto;
+  right: 50%;
+  margin-left: 0;
+  margin-right: -5.25em;
 }
 .skip-link,
 .skip-link:link,

@@ -84,7 +84,7 @@
   padding: 0 0.5em 0 0; /* LTR */
 }
 [dir="rtl"] .comment ul.links li {
-  padding: 0 0 0.5em;
+  padding: 0 0 0 0.5em;
 }
 .comment.unpublished {
   margin-right: 5px; /* LTR */

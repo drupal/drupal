@@ -2,6 +2,10 @@
 .path-admin #content img {
   margin-right: 15px; /* LTR */
 }
+[dir="rtl"] .path-admin #content img {
+  margin-left: 15px;
+  margin-right: 0;
+}
 .path-admin #content .simpletest-image img {
   margin: 0;
 }
@@ -45,5 +49,9 @@ div.admin-panel dd {
   margin: 0 0 10px;
 }
 div.admin-panel .description {
-  margin: 0 0 14px 7px;
+  margin: 0 0 14px 7px; /* LTR */
+}
+[dir="rtl"] div.admin-panel .description {
+  margin-left: 0;
+  margin-right: 7px;
 }
