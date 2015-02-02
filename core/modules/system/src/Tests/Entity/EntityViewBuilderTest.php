@@ -7,6 +7,8 @@
 
 namespace Drupal\system\Tests\Entity;
 
+use Drupal\user\Entity\Role;
+
 /**
  * Tests the entity view builder.
  *
@@ -26,7 +28,12 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->installConfig(array('entity_test'));
+    $this->installConfig(array('user', 'entity_test'));
+
+    // Give anonymous users permission to view test entities.
+    Role::load(DRUPAL_ANONYMOUS_RID)
+      ->grantPermission('view test entity')
+      ->save();
   }
 
   /**
@@ -113,7 +120,6 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
     // Create another entity that references the first one.
     $entity_test = $this->createTestEntity('entity_test');
     $entity_test->reference_field->entity = $entity_test_reference;
-    $entity_test->reference_field->access = TRUE;
     $entity_test->save();
 
     // Get a fully built entity view render array.

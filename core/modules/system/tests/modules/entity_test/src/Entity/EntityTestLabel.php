@@ -14,6 +14,7 @@ namespace Drupal\entity_test\Entity;
  *   id = "entity_test_label",
  *   label = @Translation("Entity Test label"),
  *   handlers = {
+ *     "access" = "Drupal\entity_test\EntityTestAccessControlHandler",
  *     "view_builder" = "Drupal\entity_test\EntityTestViewBuilder"
  *   },
  *   base_table = "entity_test",

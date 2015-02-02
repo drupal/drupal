@@ -12,6 +12,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
+use Drupal\user\Entity\Role;
 
 /**
  * Tests the formatters functionality.
@@ -66,6 +67,12 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
+    // Grant the 'view test entity' permission.
+    $this->installConfig(array('user'));
+    Role::load(DRUPAL_ANONYMOUS_RID)
+      ->grantPermission('view test entity')
+      ->save();
+
     // The label formatter rendering generates links, so build the router.
     $this->installSchema('system', 'router');
     $this->container->get('router.builder')->rebuild();
@@ -118,6 +125,11 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
    * Assert unaccessible items don't change the data of the fields.
    */
   public function testAccess() {
+    // Revoke the 'view test entity' permission for this test.
+    Role::load(DRUPAL_ANONYMOUS_RID)
+      ->revokePermission('view test entity')
+      ->save();
+
     $field_name = $this->fieldName;
 
     $referencing_entity = entity_create($this->entityType, array('name' => $this->randomMachineName()));
@@ -265,8 +277,7 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
 
     $delta = 0;
     foreach ($referenced_entities as $referenced_entity) {
-      $referencing_entity->{$this->fieldName}[$delta]->entity = $referenced_entity;
-      $referencing_entity->{$this->fieldName}[$delta++]->access = TRUE;
+      $referencing_entity->{$this->fieldName}[$delta++]->entity = $referenced_entity;
     }
 
     // Build the renderable array for the entity reference field.
