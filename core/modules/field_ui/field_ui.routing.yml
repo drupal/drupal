@@ -30,7 +30,7 @@ field_ui.entity_view_mode_add:
   requirements:
     _permission: 'administer display modes'
 
-field_ui.entity_view_mode_add_type:
+entity.entity_view_mode.add_form:
   path: '/admin/structure/display-modes/view/add/{entity_type_id}'
   defaults:
     _entity_form: 'entity_view_mode.add'
@@ -70,7 +70,7 @@ field_ui.entity_form_mode_add:
   requirements:
     _permission: 'administer display modes'
 
-field_ui.entity_form_mode_add_type:
+entity.entity_form_mode.add_form:
   path: '/admin/structure/display-modes/form/add/{entity_type_id}'
   defaults:
     _entity_form: 'entity_form_mode.add'
