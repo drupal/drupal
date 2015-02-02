@@ -7,12 +7,14 @@
 
 namespace Drupal\book\Form;
 
+use Drupal\book\BookManager;
 use Drupal\book\BookManagerInterface;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -107,7 +109,7 @@ class BookAdminEditForm extends FormBase {
           $values = $form_state->getValue(array('table', $key));
 
           // Update menu item if moved.
-          if ($row['pid']['#default_value'] != $values['pid'] || $row['weight']['#default_value'] != $values['weight']) {
+          if ($row['parent']['pid']['#default_value'] != $values['pid'] || $row['weight']['#default_value'] != $values['weight']) {
             $link = $this->bookManager->loadBookLink($values['nid'], FALSE);
             $link['weight'] = $values['weight'];
             $link['pid'] = $values['pid'];
@@ -143,8 +145,30 @@ class BookAdminEditForm extends FormBase {
    */
   protected function bookAdminTable(NodeInterface $node, array &$form) {
     $form['table'] = array(
-      '#theme' => 'book_admin_table',
-      '#tree' => TRUE,
+      '#type' => 'table',
+      '#header' => [
+        $this->t('Title'),
+        $this->t('Weight'),
+        $this->t('Parent'),
+        $this->t('Operations'),
+      ],
+      '#empty' => $this->t('No book content available.'),
+      '#tabledrag' => [
+        [
+          'action' => 'match',
+          'relationship' => 'parent',
+          'group' => 'book-pid',
+          'subgroup' => 'book-pid',
+          'source' => 'book-nid',
+          'hidden' => TRUE,
+          'limit' => BookManager::BOOK_MAX_DEPTH - 2,
+        ],
+        [
+          'action' => 'order',
+          'relationship' => 'sibling',
+          'group' => 'book-weight',
+        ],
+      ],
     );
 
     $tree = $this->bookManager->bookSubtreeData($node->book);
@@ -181,32 +205,92 @@ class BookAdminEditForm extends FormBase {
     $count = count($tree);
     $delta = ($count < 30) ? 15 : intval($count / 2) + 1;
 
+    $access = \Drupal::currentUser()->hasPermission('administer nodes');
+    $destination = drupal_get_destination();
+
     foreach ($tree as $data) {
-      $form['book-admin-' . $data['link']['nid']] = array(
-        '#item' => $data['link'],
-        'depth' => array('#type' => 'value', '#value' => $data['link']['depth']),
-        'title' => array(
-          '#type' => 'textfield',
-          '#default_value' => $data['link']['title'],
-          '#maxlength' => 255,
-          '#size' => 40,
-        ),
-        'weight' => array(
-          '#type' => 'weight',
-          '#default_value' => $data['link']['weight'],
-          '#delta' => max($delta, abs($data['link']['weight'])),
-          '#title' => $this->t('Weight for @title', array('@title' => $data['link']['title'])),
-          '#title_display' => 'invisible',
-        ),
-        'pid' => array(
-          '#type' => 'hidden',
-          '#default_value' => $data['link']['pid'],
-        ),
-        'nid' => array(
-          '#type' => 'hidden',
-          '#default_value' => $data['link']['nid'],
-        ),
-      );
+      $nid = $data['link']['nid'];
+      $id = 'book-admin-' . $nid;
+
+      $form[$id]['#item'] = $data['link'];
+      $form[$id]['#nid'] = $nid;
+      $form[$id]['#attributes']['class'][] = 'draggable';
+      $form[$id]['#weight'] = $data['link']['weight'];
+
+      if (isset($data['link']['depth']) && $data['link']['depth'] > 2) {
+        $indentation = [
+          '#theme' => 'indentation',
+          '#size' => $data['link']['depth'] - 2,
+        ];
+      }
+
+      $form[$id]['title'] = [
+        '#prefix' => !empty($indentation) ? drupal_render($indentation) : '',
+        '#type' => 'textfield',
+        '#default_value' => $data['link']['title'],
+        '#maxlength' => 255,
+        '#size' => 40,
+      ];
+
+      $form[$id]['weight'] = [
+        '#type' => 'weight',
+        '#default_value' => $data['link']['weight'],
+        '#delta' => max($delta, abs($data['link']['weight'])),
+        '#title' => $this->t('Weight for @title', ['@title' => $data['link']['title']]),
+        '#title_display' => 'invisible',
+        '#attributes' => [
+          'class' => ['book-weight'],
+        ],
+      ];
+
+      $form[$id]['parent']['nid'] = [
+        '#parents' => ['table', $id, 'nid'],
+        '#type' => 'hidden',
+        '#value' => $nid,
+        '#attributes' => [
+          'class' => ['book-nid'],
+        ],
+      ];
+
+      $form[$id]['parent']['pid'] = [
+        '#parents' => ['table', $id, 'pid'],
+        '#type' => 'hidden',
+        '#default_value' => $data['link']['pid'],
+        '#attributes' => [
+          'class' => ['book-pid'],
+        ],
+      ];
+
+      $form[$id]['parent']['bid'] = [
+        '#parents' => ['table', $id, 'bid'],
+        '#type' => 'hidden',
+        '#default_value' => $data['link']['bid'],
+        '#attributes' => [
+          'class' => ['book-bid'],
+        ],
+      ];
+
+      $form[$id]['operations'] = [
+        '#type' => 'operations',
+      ];
+      $form[$id]['operations']['#links']['view'] = [
+        'title' => $this->t('View'),
+        'url' => new Url('entity.node.canonical', ['node' => $nid]),
+      ];
+
+      if ($access) {
+        $form[$id]['operations']['#links']['edit'] = [
+          'title' => $this->t('Edit'),
+          'url' => new Url('entity.node.edit_form', ['node' => $nid]),
+          'query' => $destination,
+        ];
+        $form[$id]['operations']['#links']['delete'] = [
+          'title' => $this->t('Delete'),
+          'url' => new Url('entity.node.delete_form', ['node' => $nid]),
+          'query' => $destination,
+        ];
+      }
+
       if ($data['below']) {
         $this->bookAdminTableTree($data['below'], $form);
       }

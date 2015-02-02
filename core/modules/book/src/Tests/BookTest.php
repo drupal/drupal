@@ -673,6 +673,23 @@ class BookTest extends WebTestBase {
   }
 
   /**
+   * Tests the administrative listing of all book pages in a book.
+   */
+  public function testAdminBookNodeListing() {
+    // Create a new book.
+    $this->createBook();
+    $this->drupalLogin($this->adminUser);
+
+    // Load the book page list and assert the created book title is displayed
+    // and action links are shown on list items.
+    $this->drupalGet('admin/structure/book/' . $this->book->id());
+    $this->assertText($this->book->label(), 'The book title is displayed on the administrative book listing page.');
+
+    $elements = $this->xpath('//table//ul[@class="dropbutton"]/li/a');
+    $this->assertEqual((string) $elements[0], 'View', 'View link is found from the list.');
+  }
+
+  /**
    * Ensure the loaded book in hook_node_load() does not depend on the user.
    */
   public function testHookNodeLoadAccess() {
