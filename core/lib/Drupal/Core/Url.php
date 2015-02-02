@@ -250,13 +250,18 @@ class Url {
       throw new \InvalidArgumentException(String::format('The URI "@uri" is invalid. You must use a valid URI scheme. Use base: for items like a static file that needs the base path. Use user-path: for user input without a scheme. Use entity: for referencing the canonical route of a content entity. Use route: for directly representing a route name and parameters.', ['@uri' => $uri]));
     }
     $uri_parts += ['path' => ''];
+    // Discard empty fragment in $options for consistency with parse_url().
+    if (isset($options['fragment']) && strlen($options['fragment']) == 0) {
+      unset($options['fragment']);
+    }
     // Extract query parameters and fragment and merge them into $uri_options,
     // but preserve the original $options for the fallback case.
     $uri_options = $options;
-    if (!empty($uri_parts['fragment'])) {
+    if (isset($uri_parts['fragment'])) {
       $uri_options += ['fragment' => $uri_parts['fragment']];
+      unset($uri_parts['fragment']);
     }
-    unset($uri_parts['fragment']);
+
     if (!empty($uri_parts['query'])) {
       $uri_query = [];
       parse_str($uri_parts['query'], $uri_query);
@@ -302,7 +307,7 @@ class Url {
    * @throws \InvalidArgumentException
    *   Thrown if the entity URI is invalid.
    */
-  protected static function fromEntityUri(array $uri_parts, $options, $uri) {
+  protected static function fromEntityUri(array $uri_parts, array $options, $uri) {
     list($entity_type_id, $entity_id) = explode('/', $uri_parts['path'], 2);
     if ($uri_parts['scheme'] != 'entity' || $entity_id === '') {
       throw new \InvalidArgumentException(String::format('The entity URI "@uri" is invalid. You must specify the entity id in the URL. e.g., entity:node/1 for loading the canonical path to node entity with id 1.', ['@uri' => $uri]));
@@ -410,12 +415,12 @@ class Url {
   }
 
   /**
-   * Return a URI string that represents tha data in the Url object.
+   * Generates a URI string that represents tha data in the Url object.
    *
    * The URI will typically have the scheme of route: even if the object was
-   * constructed using an entity: or user-path: scheme.  A user-path: URI
-   * that does not match a Drupal route with be returned here with the base:
-   * scheme, and external URLs will be returned in their original form.
+   * constructed using an entity: or user-path: scheme. A user-path: URI that
+   * does not match a Drupal route with be returned here with the base: scheme,
+   * and external URLs will be returned in their original form.
    *
    * @return string
    *   A URI representation of the Url object data.
@@ -431,7 +436,7 @@ class Url {
       $uri = $this->uri;
     }
     $query = !empty($this->options['query']) ? ('?' . UrlHelper::buildQuery($this->options['query'])) : '';
-    $fragment = !empty($this->options['fragment']) ? '#' . $this->options['fragment'] : '';
+    $fragment = isset($this->options['fragment']) && strlen($this->options['fragment']) ? '#' . $this->options['fragment'] : '';
     return $uri . $query . $fragment;
   }
 
@@ -580,7 +585,7 @@ class Url {
   }
 
   /**
-   * Returns the URI of the URL.
+   * Returns the URI value for this Url object.
    *
    * Only to be used if self::$unrouted is TRUE.
    *
@@ -599,7 +604,7 @@ class Url {
   }
 
   /**
-   * Sets the absolute value for this Url.
+   * Sets the value of the absolute option for this Url.
    *
    * @param bool $absolute
    *   (optional) Whether to make this Url absolute or not. Defaults to TRUE.
@@ -612,7 +617,19 @@ class Url {
   }
 
   /**
-   * Generates the URI for this Url object.
+   * Generates the string URL representation for this Url object.
+   *
+   * For an external URL, the string will contain the input plus any query
+   * string or fragment specified by the options array.
+   *
+   * If this Url object was constructed from a Drupal route or from an internal
+   * URI (URIs using the user-path:, base:, or entity: schemes), the returned
+   * string will either be a relative URL like /node/1 or an absolute URL like
+   * http://example.com/node/1 depending on the options array, plus any
+   * specified query string or fragment.
+   *
+   * @return string
+   *   A string URL.
    */
   public function toString() {
     if ($this->unrouted) {

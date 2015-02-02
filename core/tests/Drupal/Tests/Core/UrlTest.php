@@ -492,6 +492,33 @@ class UrlTest extends UnitTestCase {
         NULL,
       ],
       [
+        // Ensure a fragment of #0 is handled correctly.
+        'entity:test_entity/1#0',
+        [],
+        'entity.test_entity.canonical',
+        ['test_entity' => '1'],
+        NULL,
+        '0',
+      ],
+      // Ensure an empty fragment of # is in options discarded as expected.
+      [
+        'entity:test_entity/1',
+        ['fragment' => ''],
+        'entity.test_entity.canonical',
+        ['test_entity' => '1'],
+        NULL,
+        NULL,
+      ],
+      // Ensure an empty fragment of # in the URI is discarded as expected.
+      [
+        'entity:test_entity/1#',
+        [],
+        'entity.test_entity.canonical',
+        ['test_entity' => '1'],
+        NULL,
+        NULL,
+      ],
+      [
         'entity:test_entity/2?page=1&foo=bar#bottom',
         [], 'entity.test_entity.canonical',
         ['test_entity' => '2'],
@@ -613,6 +640,12 @@ class UrlTest extends UnitTestCase {
       ['route:entity.test_entity.canonical;test_entity=1', [], 'route:entity.test_entity.canonical;test_entity=1'],
       ['route:entity.test_entity.canonical;test_entity=1', ['fragment' => 'top', 'query' => ['page' => '2']], 'route:entity.test_entity.canonical;test_entity=1?page=2#top'],
       ['route:entity.test_entity.canonical;test_entity=1?page=2#top', [], 'route:entity.test_entity.canonical;test_entity=1?page=2#top'],
+      // Check that an empty fragment is discarded.
+      ['route:entity.test_entity.canonical;test_entity=1?page=2#', [], 'route:entity.test_entity.canonical;test_entity=1?page=2'],
+      // Check that an empty fragment is discarded.
+      ['route:entity.test_entity.canonical;test_entity=1?page=2', ['fragment' => ''], 'route:entity.test_entity.canonical;test_entity=1?page=2'],
+      // Check that a fragment of #0 is preserved.
+      ['route:entity.test_entity.canonical;test_entity=1?page=2#0', [], 'route:entity.test_entity.canonical;test_entity=1?page=2#0'],
     ];
   }
 
