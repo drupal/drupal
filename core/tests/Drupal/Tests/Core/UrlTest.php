@@ -9,7 +9,6 @@ namespace Drupal\Tests\Core;
 
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
@@ -18,7 +17,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -481,14 +479,50 @@ class UrlTest extends UnitTestCase {
   }
 
   /**
+   * Data provider for testing entity URIs
+   */
+  public function providerTestEntityUris() {
+    return [
+      [
+        'entity:test_entity/1',
+        [],
+        'entity.test_entity.canonical',
+        ['test_entity' => '1'],
+        NULL,
+        NULL,
+      ],
+      [
+        'entity:test_entity/2?page=1&foo=bar#bottom',
+        [], 'entity.test_entity.canonical',
+        ['test_entity' => '2'],
+        ['page' => '1', 'foo' => 'bar'],
+        'bottom',
+      ],
+      [
+        'entity:test_entity/2?page=1&foo=bar#bottom',
+        ['fragment' => 'top', 'query' => ['foo' => 'yes', 'focus' => 'no']],
+        'entity.test_entity.canonical',
+        ['test_entity' => '2'],
+        ['page' => '1', 'foo' => 'yes', 'focus' => 'no'],
+        'top',
+      ],
+
+    ];
+  }
+
+  /**
    * Tests the fromUri() method with an entity: URI.
    *
    * @covers ::fromUri
+   *
+   * @dataProvider providerTestEntityUris
    */
-  public function testEntityUris() {
-    $url = Url::fromUri('entity:test_entity/1');
-    $this->assertSame('entity.test_entity.canonical', $url->getRouteName());
-    $this->assertEquals(['test_entity' => '1'], $url->getRouteParameters());
+  public function testEntityUris($uri, $options, $route_name, $route_parameters, $query, $fragment) {
+    $url = Url::fromUri($uri, $options);
+    $this->assertSame($route_name, $url->getRouteName());
+    $this->assertEquals($route_parameters, $url->getRouteParameters());
+    $this->assertEquals($url->getOption('query'), $query);
+    $this->assertSame($url->getOption('fragment'), $fragment);
   }
 
   /**
@@ -505,6 +539,89 @@ class UrlTest extends UnitTestCase {
       ->willThrowException(new InvalidParameterException('Parameter "test_entity" for route "/test_entity/{test_entity}" must match "[^/]++" ("1/blah" given) to generate a corresponding URL..'));
 
     Url::fromUri('entity:test_entity/1/blah')->toString();
+  }
+
+  /**
+   * Tests the toUriString() method with entity: URIs.
+   *
+   * @covers ::toUriString
+   *
+   * @dataProvider providerTestToUriStringForEntity
+   */
+  public function testToUriStringForEntity($uri, $options, $uri_string) {
+    $url = Url::fromUri($uri, $options);
+    $this->assertSame($url->toUriString(), $uri_string);
+  }
+
+  /**
+   * Data provider for testing string entity URIs
+   */
+  public function providerTestToUriStringForEntity() {
+    return [
+      ['entity:test_entity/1', [], 'route:entity.test_entity.canonical;test_entity=1'],
+      ['entity:test_entity/1', ['fragment' => 'top', 'query' => ['page' => '2']], 'route:entity.test_entity.canonical;test_entity=1?page=2#top'],
+      ['entity:test_entity/1?page=2#top', [], 'route:entity.test_entity.canonical;test_entity=1?page=2#top'],
+    ];
+  }
+
+  /**
+   * Tests the toUriString() method with user-path: URIs.
+   *
+   * @covers ::toUriString
+   *
+   * @dataProvider providerTestToUriStringForUserPath
+   */
+  public function testToUriStringForUserPath($uri, $options, $uri_string) {
+    $url = Url::fromRoute('entity.test_entity.canonical', ['test_entity' => '1']);
+    $this->pathValidator->expects($this->any())
+      ->method('getUrlIfValidWithoutAccessCheck')
+      ->with('test-entity/1')
+      ->willReturn($url);
+    $url = Url::fromUri($uri, $options);
+    $this->assertSame($url->toUriString(), $uri_string);
+  }
+
+  /**
+   * Data provider for testing user-path URIs
+   */
+  public function providerTestToUriStringForUserPath() {
+    return [
+      ['user-path:test-entity/1', [], 'route:entity.test_entity.canonical;test_entity=1'],
+      ['user-path:test-entity/1', ['fragment' => 'top'], 'route:entity.test_entity.canonical;test_entity=1#top'],
+      ['user-path:test-entity/1', ['fragment' => 'top', 'query' => ['page' => '2']], 'route:entity.test_entity.canonical;test_entity=1?page=2#top'],
+      ['user-path:test-entity/1?page=2#top', [], 'route:entity.test_entity.canonical;test_entity=1?page=2#top'],
+    ];
+  }
+
+  /**
+   * Tests the toUriString() method with route: URIs.
+   *
+   * @covers ::toUriString
+   *
+   * @dataProvider providerTestToUriStringForRoute
+   */
+  public function testToUriStringForRoute($uri, $options, $uri_string) {
+    $url = Url::fromUri($uri, $options);
+    $this->assertSame($url->toUriString(), $uri_string);
+  }
+
+  /**
+   * Data provider for testing user-path URIs
+   */
+  public function providerTestToUriStringForRoute() {
+    return [
+      ['route:entity.test_entity.canonical;test_entity=1', [], 'route:entity.test_entity.canonical;test_entity=1'],
+      ['route:entity.test_entity.canonical;test_entity=1', ['fragment' => 'top', 'query' => ['page' => '2']], 'route:entity.test_entity.canonical;test_entity=1?page=2#top'],
+      ['route:entity.test_entity.canonical;test_entity=1?page=2#top', [], 'route:entity.test_entity.canonical;test_entity=1?page=2#top'],
+    ];
+  }
+
+  /**
+   * @expectedException \InvalidArgumentException
+   * @expectedExceptionMessage The route URI "route:" is invalid.
+   */
+  public function testFromRouteUriWithMissingRouteName() {
+    Url::fromUri('route:');
   }
 
   /**

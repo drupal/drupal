@@ -265,7 +265,7 @@ class UrlTest extends WebTestBase {
     // Verify external URL can contain a query string.
     $url = $test_url . '?drupal=awesome';
     $result = Url::fromUri($url)->toString();
-    $this->assertEqual($url, $result, 'External URL with query string works without a query string in $options.');
+    $this->assertEqual($url, $result);
 
     // Verify external URL can be extended with a query string.
     $url = $test_url;
@@ -277,6 +277,6 @@ class UrlTest extends WebTestBase {
     $url = $test_url . '?drupal=awesome';
     $query = array($this->randomMachineName(5) => $this->randomMachineName(5));
     $result = Url::fromUri($url, array('query' => $query))->toString();
-    $this->assertEqual($url . '&' . http_build_query($query, '', '&'), $result, 'External URL query string can be extended with a custom query string in $options.');
+    $this->assertEqual($url . '&' . http_build_query($query, '', '&'), $result);
   }
 }

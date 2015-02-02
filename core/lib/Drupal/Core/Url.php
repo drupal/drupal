@@ -8,6 +8,7 @@
 namespace Drupal\Core;
 
 use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
@@ -213,7 +214,7 @@ class Url {
    *   (optional) An associative array of additional URL options, with the
    *   following elements:
    *   - 'query': An array of query key/value-pairs (without any URL-encoding)
-   *     to append to the URL. Merged with the parameters array.
+   *     to append to the URL.
    *   - 'fragment': A fragment identifier (named anchor) to append to the URL.
    *     Do not include the leading '#' character.
    *   - 'absolute': Defaults to FALSE. Whether to force the output to be an
@@ -240,21 +241,37 @@ class Url {
    *
    * @see static::fromRoute()
    */
-  public static function fromUri($uri, $options = array()) {
+  public static function fromUri($uri, $options = []) {
     $uri_parts = parse_url($uri);
     if ($uri_parts === FALSE) {
       throw new \InvalidArgumentException(String::format('The URI "@uri" is malformed.', ['@uri' => $uri]));
     }
     if (empty($uri_parts['scheme'])) {
-      throw new \InvalidArgumentException(String::format('The URI "@uri" is invalid. You must use a valid URI scheme. Use base: for items like a static file that needs the base path. Use user-path: for user input without a scheme. Use entity: for referencing the canonical route of a content entity.', ['@uri' => $uri]));
+      throw new \InvalidArgumentException(String::format('The URI "@uri" is invalid. You must use a valid URI scheme. Use base: for items like a static file that needs the base path. Use user-path: for user input without a scheme. Use entity: for referencing the canonical route of a content entity. Use route: for directly representing a route name and parameters.', ['@uri' => $uri]));
+    }
+    $uri_parts += ['path' => ''];
+    // Extract query parameters and fragment and merge them into $uri_options,
+    // but preserve the original $options for the fallback case.
+    $uri_options = $options;
+    if (!empty($uri_parts['fragment'])) {
+      $uri_options += ['fragment' => $uri_parts['fragment']];
+    }
+    unset($uri_parts['fragment']);
+    if (!empty($uri_parts['query'])) {
+      $uri_query = [];
+      parse_str($uri_parts['query'], $uri_query);
+      $uri_options['query'] = isset($uri_options['query']) ? $uri_options['query'] + $uri_query : $uri_query;
+      unset($uri_parts['query']);
     }
 
-    $uri_parts += ['path' => ''];
     if ($uri_parts['scheme'] === 'entity') {
-      $url = static::fromEntityUri($uri);
+      $url = static::fromEntityUri($uri_parts, $uri_options, $uri);
     }
     elseif ($uri_parts['scheme'] === 'user-path') {
-      $url = static::fromUserPathUri($uri, $options);
+      $url = static::fromUserPathUri($uri_parts, $uri_options);
+    }
+    elseif ($uri_parts['scheme'] === 'route') {
+      $url = static::fromRouteUri($uri_parts, $uri_options, $uri);
     }
     else {
       $url = new static($uri, array(), $options);
@@ -271,8 +288,13 @@ class Url {
   /**
    * Create a new Url object for entity URIs.
    *
+   * @param array $uri_parts
+   *   Parts from an URI of the form entity:{entity_type}/{entity_id} as from
+   *   parse_url().
+   * @param array $options
+   *   An array of options, see static::fromUri() for details.
    * @param string $uri
-   *   An URI of the form entity:{entity_type}/{entity_id}.
+   *   The original entered URI.
    *
    * @return \Drupal\Core\Url
    *   A new Url object for an entity's canonical route.
@@ -280,35 +302,65 @@ class Url {
    * @throws \InvalidArgumentException
    *   Thrown if the entity URI is invalid.
    */
-  protected static function fromEntityUri($uri) {
-    $uri_parts = parse_url($uri);
+  protected static function fromEntityUri(array $uri_parts, $options, $uri) {
     list($entity_type_id, $entity_id) = explode('/', $uri_parts['path'], 2);
     if ($uri_parts['scheme'] != 'entity' || $entity_id === '') {
       throw new \InvalidArgumentException(String::format('The entity URI "@uri" is invalid. You must specify the entity id in the URL. e.g., entity:node/1 for loading the canonical path to node entity with id 1.', ['@uri' => $uri]));
     }
 
-    return new static("entity.$entity_type_id.canonical", [$entity_type_id => $entity_id]);
+    return new static("entity.$entity_type_id.canonical", [$entity_type_id => $entity_id], $options);
   }
 
   /**
    * Creates a new Url object for 'user-path:' URIs.
    *
-   * @param string $uri
-   *   An URI of the form user-path:{path}.
+   * @param array $uri_parts
+   *   Parts from an URI of the form user-path:{path} as from parse_url().
    * @param array $options
    *   An array of options, see static::fromUri() for details.
    *
    * @return \Drupal\Core\Url
    *   A new Url object for a 'user-path:' URI.
    */
-  protected static function fromUserPathUri($uri, array $options) {
-    $uri_reference = explode(':', $uri, 2)[1];
+  protected static function fromUserPathUri(array $uri_parts, array $options) {
     $url = \Drupal::pathValidator()
-      ->getUrlIfValidWithoutAccessCheck($uri_reference) ?: static::fromUri('base:' . $uri_reference);
-    // Allow to specify additional or override options from the path.
+      ->getUrlIfValidWithoutAccessCheck($uri_parts['path']) ?: static::fromUri('base:' . $uri_parts['path'], $options);
+    // Allow specifying additional options.
     $url->setOptions($options + $url->getOptions());
 
     return $url;
+  }
+
+  /**
+   * Creates a new Url object for 'route:' URIs.
+   *
+   * @param array $uri_parts
+   *   Parts from an URI of the form route:{route_name};{route_parameters} as
+   *   from parse_url(), where the path is the route name optionally followed by
+   *   a ";" followed by route parameters in key=value format with & separators.
+   * @param array $options
+   *   An array of options, see static::fromUri() for details.
+   * @param string $uri
+   *   The original passed in URI.
+   *
+   * @return \Drupal\Core\Url
+   *   A new Url object for a 'route:' URI.
+   *
+   * @throws \InvalidArgumentException
+   *   Thrown when the route URI does not have a route name.
+   */
+  protected static function fromRouteUri(array $uri_parts, array $options, $uri) {
+    $route_parts = explode(';', $uri_parts['path'], 2);
+    $route_name = $route_parts[0];
+    if ($route_name === '') {
+      throw new \InvalidArgumentException(String::format('The route URI "@uri" is invalid. You must have a route name in the URI. e.g., route:system.admin', ['@uri' => $uri]));
+    }
+    $route_parameters = [];
+    if (!empty($route_parts[1])) {
+      parse_str($route_parts[1], $route_parameters);
+    }
+
+    return new static($route_name, $route_parameters, $options);
   }
 
   /**
@@ -355,6 +407,32 @@ class Url {
     // Set empty route name and parameters.
     $this->routeName = NULL;
     $this->routeParameters = array();
+  }
+
+  /**
+   * Return a URI string that represents tha data in the Url object.
+   *
+   * The URI will typically have the scheme of route: even if the object was
+   * constructed using an entity: or user-path: scheme.  A user-path: URI
+   * that does not match a Drupal route with be returned here with the base:
+   * scheme, and external URLs will be returned in their original form.
+   *
+   * @return string
+   *   A URI representation of the Url object data.
+   */
+  public function toUriString() {
+    if ($this->isRouted()) {
+      $uri = 'route:' . $this->routeName;
+      if ($this->routeParameters) {
+        $uri .= ';' . UrlHelper::buildQuery($this->routeParameters);
+      }
+    }
+    else {
+      $uri = $this->uri;
+    }
+    $query = !empty($this->options['query']) ? ('?' . UrlHelper::buildQuery($this->options['query'])) : '';
+    $fragment = !empty($this->options['fragment']) ? '#' . $this->options['fragment'] : '';
+    return $uri . $query . $fragment;
   }
 
   /**
