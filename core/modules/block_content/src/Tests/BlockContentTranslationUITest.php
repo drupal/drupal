@@ -11,7 +11,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\content_translation\Tests\ContentTranslationUITest;
 
 /**
- * Tests the node translation UI.
+ * Tests the block content translation UI.
  *
  * @group block_content
  */
@@ -154,7 +154,7 @@ class BlockContentTranslationUITest extends ContentTranslationUITest {
     ));
     $bundle->save();
 
-    // Create a node for each bundle.
+    // Create a block content for each bundle.
     $enabled_block_content = $this->createBlockContent();
     $disabled_block_content = $this->createBlockContent(FALSE, $bundle->id());
 

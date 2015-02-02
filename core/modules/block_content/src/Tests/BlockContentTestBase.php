@@ -11,7 +11,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Sets up page and article content types.
+ * Sets up block content types.
  */
 abstract class BlockContentTestBase extends WebTestBase {
 

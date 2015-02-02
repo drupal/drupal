@@ -119,7 +119,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
       t('%label is used by 1 custom block on your site. You can not remove this block type until you have removed all of the %label blocks.', array('%label' => $type->label())),
       'The block type will not be deleted until all blocks of that type are removed.'
     );
-    $this->assertNoText(t('This action cannot be undone.'), 'The node type deletion confirmation form is not available.');
+    $this->assertNoText(t('This action cannot be undone.'), 'The block type deletion confirmation form is not available.');
 
     // Delete the block.
     $block->delete();
