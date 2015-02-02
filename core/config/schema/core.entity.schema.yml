@@ -222,6 +222,19 @@ field.widget.settings.checkbox:
       type: boolean
       label: 'Use field label instead of the "On value" as label'
 
+field.formatter.settings.boolean:
+  type: mapping
+  mapping:
+    format:
+      type: string
+      label: 'Output format'
+    format_custom_false:
+      type: string
+      label: 'Custom output for FALSE'
+    format_custom_true:
+      type: string
+      label: 'Custom output for TRUE'
+
 field.formatter.settings.string:
   type: mapping
   mapping:
