@@ -84,10 +84,19 @@ class UnroutedUrlTest extends UnitTestCase {
    */
   public function providerFromUri() {
     return [
+      // [$uri, $is_external]
+      // An external URI.
       ['http://drupal.org', TRUE],
+      // An internal, unrouted, base-relative URI.
       ['base:robots.txt', FALSE],
+      // Base-relative URIs with special characters.
       ['base:AKI@&hO@', FALSE],
       ['base:(:;2&+h^', FALSE],
+      // Various token formats.
+      ['base:node/[token]', FALSE],
+      ['base:node/%', FALSE],
+      ['base:node/[token:token]', FALSE],
+      ['base:node/{{ token }}', FALSE],
     ];
   }
 
@@ -107,14 +116,20 @@ class UnroutedUrlTest extends UnitTestCase {
    */
   public function providerFromInvalidUri() {
     return [
-      ['base://AKI@&hO@'],
-      ['#foo'],
-      ['foo?bar'],
-      ['?bar'],
-      ['base://(:;2&+h^'],
+      // Schemeless paths.
       ['test'],
       ['/test'],
       ['//test'],
+      // Schemeless path with a query string.
+      ['foo?bar'],
+      // Only a query string.
+      ['?bar'],
+      // Only a fragment.
+      ['#foo'],
+      // Disallowed characters in the authority (host name) that are valid
+      // elsewhere in the path.
+      ['base://(:;2&+h^'],
+      ['base://AKI@&hO@'],
     ];
   }
 
