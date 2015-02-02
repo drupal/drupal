@@ -922,10 +922,11 @@ td.group-title {
 }
 
 .views-ui-dialog #views-progress-indicator {
+  color: #fff;
   font-size: 11px;
   position: absolute;
   right: 10px; /* LTR */
-  top: 8px;
+  top: 32px;
 }
 [dir="rtl"] .views-ui-dialog #views-progress-indicator {
   left: 10px;
