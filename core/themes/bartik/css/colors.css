@@ -43,7 +43,7 @@ a:active,
   border-color: #f9f9f9;
 }
 #page-wrapper,
-#footer-wrapper {
+#site-footer__wrapper {
   background: #292929;
 }
 .region-header,
@@ -70,4 +70,3 @@ a:active,
   right: -20px;
   left: 0;
 }
-

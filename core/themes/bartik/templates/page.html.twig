@@ -60,11 +60,11 @@
  * - page.triptych_first: Items for the first triptych.
  * - page.triptych_middle: Items for the middle triptych.
  * - page.triptych_last: Items for the last triptych.
- * - page.footer_firstcolumn: Items for the first footer column.
- * - page.footer_secondcolumn: Items for the second footer column.
- * - page.footer_thirdcolumn: Items for the third footer column.
- * - page.footer_fourthcolumn: Items for the fourth footer column.
- * - page.footer: Items for the footer region.
+ * - page.footer_first: Items for the first footer column.
+ * - page.footer_second: Items for the second footer column.
+ * - page.footer_third: Items for the third footer column.
+ * - page.footer_fourth: Items for the fourth footer column.
+ * - page.footer_fifth: Items for the fifth footer column.
  * - page.breadcrumb: Items for the breadcrumb region.
  *
  * @see template_preprocess_page()
@@ -171,19 +171,19 @@
         </aside>
       </div>
     {% endif %}
-    <div id="footer-wrapper">
-      <footer class="section">
-        {% if page.footer_firstcolumn or page.footer_secondcolumn or page.footer_thirdcolumn or page.footer_fourthcolumn %}
+    <div id="site-footer__wrapper">
+      <footer class="site-footer">
+        {% if page.footer_first or page.footer_second or page.footer_third or page.footer_fourth %}
           <div id="footer-columns" class="clearfix">
-            {{ page.footer_firstcolumn }}
-            {{ page.footer_secondcolumn }}
-            {{ page.footer_thirdcolumn }}
-            {{ page.footer_fourthcolumn }}
+            {{ page.footer_first }}
+            {{ page.footer_second }}
+            {{ page.footer_third }}
+            {{ page.footer_fourth }}
           </div>
         {% endif %}
-        {% if page.footer %}
-          <div id="footer" role="contentinfo" class="clearfix">
-            {{ page.footer }}
+        {% if page.footer_fifth %}
+          <div id="site-footer__bottom" role="contentinfo">
+            {{ page.footer_fifth }}
           </div>
         {% endif %}
       </footer>

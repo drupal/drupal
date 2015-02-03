@@ -28,8 +28,8 @@ regions:
   triptych_first: 'Triptych first'
   triptych_middle: 'Triptych middle'
   triptych_last: 'Triptych last'
-  footer_firstcolumn: 'Footer first column'
-  footer_secondcolumn: 'Footer second column'
-  footer_thirdcolumn: 'Footer third column'
-  footer_fourthcolumn: 'Footer fourth column'
-  footer: Footer
+  footer_first: 'Footer first'
+  footer_second: 'Footer second'
+  footer_third: 'Footer third'
+  footer_fourth: 'Footer fourth'
+  footer_fifth: 'Footer fifth'

@@ -3,7 +3,7 @@ theme: bartik
 weight: 0
 status: true
 langcode: en
-region: footer
+region: footer_fifth
 plugin: 'system_menu_block:footer'
 settings:
   id: 'system_menu_block:footer'
