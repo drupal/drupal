@@ -21,7 +21,17 @@
  * @ingroup themeable
  */
 #}
-<span{{ attributes }}>
+{% set field_name_class = field_name|clean_class %}
+{%
+  set classes = [
+    'field',
+    'field-' ~ entity_type|clean_class ~ '--' ~ field_name_class,
+    'field-name-' ~ field_name_class,
+    'field-type-' ~ field_type|clean_class,
+    'field-label-' ~ label_display,
+  ]
+%}
+<span{{ attributes.addClass(classes) }}>
   {%- for item in items -%}
     {{ item.content }}
   {%- endfor -%}

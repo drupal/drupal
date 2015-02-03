@@ -68,7 +68,17 @@
  * @ingroup themeable
  */
 #}
-<article{{ attributes }}>
+{%
+  set classes = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    node.isPromoted() ? 'node--promoted',
+    node.isSticky() ? 'node--sticky',
+    not node.isPublished() ? 'node--unpublished',
+    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+  ]
+%}
+<article{{ attributes.addClass(classes) }}>
 
   {{ title_prefix }}
   {% if not page %}
@@ -79,17 +89,23 @@
   {{ title_suffix }}
 
   {% if display_submitted %}
-    <footer>
+    <footer class="node__meta">
       {{ author_picture }}
-      <div{{ author_attributes }}>
+      <div{{ author_attributes.addClass('node__submitted') }}>
         {% trans %}Submitted by {{ author_name|passthrough }} on {{ date|passthrough }}{% endtrans %}
         {{ metadata }}
       </div>
     </footer>
   {% endif %}
 
-  <div{{ content_attributes }}>
-    {{ content }}
+  <div{{ content_attributes.addClass('node__content') }}>
+    {{ content|without('links') }}
   </div>
+
+  {% if content.links %}
+    <div class="node__links">
+      {{ content.links }}
+    </div>
+  {% endif %}
 
 </article>
