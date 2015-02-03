@@ -126,7 +126,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
     }
 
     if (!$this->entityManager()->getDefinition($values['targetEntityType'])->isSubclassOf('\Drupal\Core\Entity\FieldableEntityInterface')) {
-      throw new \InvalidArgumentException('EntityDisplay entities can only handle content entity types.');
+      throw new \InvalidArgumentException('EntityDisplay entities can only handle fieldable entity types.');
     }
 
     // A plugin manager and a context type needs to be set by extending classes.
@@ -388,12 +388,6 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
    * Returns the definitions of the fields that are candidate for display.
    */
   protected function getFieldDefinitions() {
-    // Entity displays are sometimes created for non-content entities.
-    // @todo Prevent this in https://drupal.org/node/2095195.
-    if (!\Drupal::entityManager()->getDefinition($this->targetEntityType)->isSubclassOf('\Drupal\Core\Entity\FieldableEntityInterface')) {
-      return array();
-    }
-
     if (!isset($this->fieldDefinitions)) {
       $definitions = \Drupal::entityManager()->getFieldDefinitions($this->targetEntityType, $this->bundle);
       // For "official" view modes and form modes, ignore fields whose
