@@ -4,6 +4,9 @@ views_display:
   type: mapping
   label: 'Display options'
   mapping:
+    enabled:
+      type: boolean
+      label: 'Status'
     title:
       type: text
       label: 'Display title'
