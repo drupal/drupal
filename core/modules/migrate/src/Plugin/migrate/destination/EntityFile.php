@@ -50,6 +50,11 @@ class EntityFile extends EntityContentBase {
     // already absolute.
     $source = $this->isTempFile($destination) ? $file : $this->configuration['source_base_path'] . $file;
 
+    $dirname = drupal_dirname($destination);
+    if (!file_prepare_directory($dirname, FILE_CREATE_DIRECTORY)) {
+      throw new MigrateException(t('Could not create directory %dirname', array('%dirname' => $dirname)));
+    }
+
     // If the start and end file is exactly the same, there is nothing to do.
     if (drupal_realpath($source) === drupal_realpath($destination)) {
       return parent::import($row, $old_destination_id_values);
@@ -62,11 +67,7 @@ class EntityFile extends EntityContentBase {
         $replace = FILE_EXISTS_RENAME;
       }
     }
-    $dirname = drupal_dirname($destination);
-    if (!file_prepare_directory($dirname, FILE_CREATE_DIRECTORY)) {
-      throw new MigrateException(t('Could not create directory %dirname',
-        array('%dirname' => $dirname)));
-    }
+
     if ($this->configuration['move']) {
       $copied = file_unmanaged_move($source, $destination, $replace);
     }
@@ -78,7 +79,7 @@ class EntityFile extends EntityContentBase {
         throw new MigrateException(t('File %file could not be copied because a file by that name already exists in the destination directory (%destination)', array('%file' => $source, '%destination' => $original_destination)));
       }
       $source = $this->urlencode($source);
-      $copied = copy($source, $destination);
+      $copied = @copy($source, $destination);
     }
     if ($copied) {
       return parent::import($row, $old_destination_id_values);
