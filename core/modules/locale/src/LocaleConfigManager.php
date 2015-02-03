@@ -109,7 +109,7 @@ class LocaleConfigManager {
    */
   public function get($name) {
     // Read default and current configuration data.
-    $default = $this->installStorage->read($name);
+    $default = $this->installStorageRead($name);
     $updated = $this->configStorage->read($name);
     // We get only the data that didn't change from default.
     $data = $this->compareConfigData($default, $updated);
@@ -199,12 +199,12 @@ class LocaleConfigManager {
       foreach ($components as $type => $list) {
         // InstallStorage::getComponentNames returns a list of folders keyed by
         // config name.
-        $names = array_merge($names, array_keys($this->installStorage->getComponentNames($type, $list)));
+        $names = array_merge($names, $this->installStorageComponents($type, $list));
       }
       return $names;
     }
     else {
-      return $this->installStorage->listAll();
+      return $this->installStorageAll();
     }
   }
 
@@ -353,6 +353,83 @@ class LocaleConfigManager {
    */
   public function isUpdatingConfigTranslations() {
     return $this->isUpdating;
+  }
+
+  /**
+   * Read a configuration from install storage or default languages.
+   *
+   * @param string $name
+   *   Configuration object name.
+   *
+   * @return array
+   *   Configuration data from install storage or default language.
+   */
+  protected function installStorageRead($name) {
+    if ($this->installStorage->exists($name)) {
+      return $this->installStorage->read($name);
+    }
+    elseif (strpos($name, 'language.entity.') === 0) {
+      // Simulate default languages as if they were shipped as default
+      // configuration.
+      $langcode = str_replace('language.entity.', '', $name);
+      $predefined_languages = $this->languageManager->getStandardLanguageList();
+      if (isset($predefined_languages[$langcode])) {
+        $data = $this->configStorage->read($name);
+        $data['label'] = $predefined_languages[$langcode][0];
+        return $data;
+      }
+    }
+  }
+
+  /**
+   * Return the list of configuration in install storage and current languages.
+   *
+   * @return array
+   *   List of configuration in install storage and current languages.
+   */
+  protected function installStorageAll() {
+    $languages = $this->predefinedConfiguredLanguages();
+    return array_unique(array_merge($this->installStorage->listAll(), $languages));
+  }
+
+  /**
+   * Get all configuration names and folders for a list of modules or themes.
+   *
+   * @param string $type
+   *   Type of components: 'module' | 'theme' | 'profile'
+   * @param array $list
+   *   Array of theme or module names.
+   *
+   * @return array
+   *   Configuration names provided by that component. In case of language
+   *   module this list is extended with configured languages that have
+   *   predefined names as well.
+   */
+  protected function installStorageComponents($type, array $list) {
+    $names = array_keys($this->installStorage->getComponentNames($type, $list));
+    if ($type == 'module' && in_array('language', $list)) {
+      $languages = $this->predefinedConfiguredLanguages();
+      $names = array_unique(array_merge($names, $languages));
+    }
+    return $names;
+  }
+
+  /**
+   * Compute the list of configuration names that match predefined languages.
+   *
+   * @return array
+   *   The list of configuration names that match predefined languages.
+   */
+  protected function predefinedConfiguredLanguages() {
+    $names = $this->configStorage->listAll('language.entity.');
+    $predefined_languages = $this->languageManager->getStandardLanguageList();
+    foreach ($names as $id => $name) {
+      $langcode = str_replace('language.entity.', '', $name);
+      if (!isset($predefined_languages[$langcode])) {
+        unset($names[$id]);
+      }
+    }
+    return array_values($names);
   }
 
 }

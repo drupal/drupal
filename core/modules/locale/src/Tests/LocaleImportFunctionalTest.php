@@ -352,6 +352,18 @@ class LocaleImportFunctionalTest extends WebTestBase {
   }
 
   /**
+   * Test the translation are imported when a new language is created.
+   */
+  public function testCreatedLanguageTranslation() {
+    // Import a .po file to add de language.
+    $this->importPoFile($this->getPoFileWithConfigDe(), array('langcode' => 'de'));
+
+    // Get the language.entity.de label and check it's been translated.
+    $override = \Drupal::languageManager()->getLanguageConfigOverride('de', 'language.entity.de');
+    $this->assertEqual($override->get('label'), 'Deutsch');
+  }
+
+  /**
    * Helper function: import a standalone .po file in a given language.
    *
    * @param string $contents
@@ -623,6 +635,9 @@ msgstr ""
 
 msgid "Anonymous"
 msgstr "Anonymous German"
+
+msgid "German"
+msgstr "Deutsch"
 
 EOF;
   }
