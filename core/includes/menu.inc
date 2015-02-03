@@ -23,8 +23,8 @@ use Drupal\Core\Template\Attribute;
  * @param array $variables
  *   An associative array containing:
  *   - element: A render element containing:
- *     - #link: A menu link array with 'title', 'href', and 'localized_options'
- *       keys.
+ *     - #link: A menu link array with 'title', 'url', and (optionally)
+ *       'localized_options' keys.
  *     - #active: A boolean indicating whether the local task is active.
  */
 function template_preprocess_menu_local_task(&$variables) {
@@ -42,10 +42,10 @@ function template_preprocess_menu_local_task(&$variables) {
     // If the link does not contain HTML already, String::checkPlain() it now.
     // After we set 'html'=TRUE the link will not be sanitized by l().
     if (empty($link['localized_options']['html'])) {
-      $link['title'] = String::checkPlain($link['title']);
+      $link_text = String::checkPlain($link_text);
     }
     $link['localized_options']['html'] = TRUE;
-    $link_text = t('!local-task-title!active', array('!local-task-title' => $link['title'], '!active' => $active));
+    $link_text = t('!local-task-title!active', array('!local-task-title' => $link_text, '!active' => $active));
   }
   $link['localized_options']['set_active_class'] = TRUE;
 
@@ -65,8 +65,8 @@ function template_preprocess_menu_local_task(&$variables) {
  * @param array $variables
  *   An associative array containing:
  *   - element: A render element containing:
- *     - #link: A menu link array with 'title', 'href', and 'localized_options'
- *       keys.
+ *     - #link: A menu link array with 'title', 'url', and (optionally)
+ *       'localized_options' keys.
  */
 function template_preprocess_menu_local_action(&$variables) {
   $link = $variables['element']['#link'];
