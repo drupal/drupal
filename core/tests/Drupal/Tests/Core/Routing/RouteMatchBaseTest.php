@@ -102,7 +102,7 @@ abstract class RouteMatchBaseTest extends UnitTestCase {
 
   /**
    * @covers ::getParameter
-   * @covers \Drupal\Core\Routing\RouteMatch::getParameterNames
+   * @covers ::getParameterNames
    * @dataProvider routeMatchProvider
    */
   public function testGetParameter(RouteMatchInterface $route_match, Route $route, $parameters, $expected_filtered_parameters) {
@@ -116,7 +116,7 @@ abstract class RouteMatchBaseTest extends UnitTestCase {
 
   /**
    * @covers ::getParameters
-   * @covers \Drupal\Core\Routing\RouteMatch::getParameterNames
+   * @covers ::getParameterNames
    * @dataProvider routeMatchProvider
    */
   public function testGetParameters(RouteMatchInterface $route_match, Route $route, $parameters, $expected_filtered_parameters) {
@@ -125,7 +125,7 @@ abstract class RouteMatchBaseTest extends UnitTestCase {
 
   /**
    * @covers ::getRawParameter
-   * @covers \Drupal\Core\Routing\RouteMatch::getParameterNames
+   * @covers ::getParameterNames
    * @dataProvider routeMatchProvider
    */
   public function testGetRawParameter(RouteMatchInterface $route_match, Route $route, $parameters, $expected_filtered_parameters) {
@@ -139,7 +139,7 @@ abstract class RouteMatchBaseTest extends UnitTestCase {
 
   /**
    * @covers ::getRawParameters
-   * @covers \Drupal\Core\Routing\RouteMatch::getParameterNames
+   * @covers ::getParameterNames
    * @dataProvider routeMatchProvider
    */
   public function testGetRawParameters(RouteMatchInterface $route_match, Route $route, $parameters, $expected_filtered_parameters) {

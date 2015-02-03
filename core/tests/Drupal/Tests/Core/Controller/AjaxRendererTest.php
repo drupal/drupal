@@ -43,7 +43,7 @@ class AjaxRendererTest extends UnitTestCase {
   /**
    * Tests the content method.
    *
-   * @covers \Drupal\Core\Render\MainContent\AjaxRenderer::renderResponse
+   * @covers ::renderResponse
    */
   public function testRenderWithFragmentObject() {
     $main_content = ['#markup' => 'example content'];

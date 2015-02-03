@@ -100,7 +100,7 @@ class AccessAwareRouterTest extends UnitTestCase {
   /**
    * Ensure that methods are passed to the wrapped router.
    *
-   * @covers \Drupal\Core\Routing\AccessAwareRouter::__call
+   * @covers ::__call
    */
   public function testCall() {
     $mock_router = $this->getMock('Symfony\Component\Routing\RouterInterface');
