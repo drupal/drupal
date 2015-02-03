@@ -107,9 +107,9 @@
         var $preview = $('<span class="machine-name-value">' + options.field_prefix + Drupal.checkPlain(machine) + options.field_suffix + '</span>');
         $suffix.empty();
         if (options.label) {
-          $suffix.append(' ').append('<span class="machine-name-label">' + options.label + ':</span>');
+          $suffix.append('<span class="machine-name-label">' + options.label + ': </span>');
         }
-        $suffix.append(' ').append($preview);
+        $suffix.append($preview);
 
         // If the machine name cannot be edited, stop further processing.
         if ($target.is(':disabled')) {
@@ -126,7 +126,7 @@
         };
         // If it is editable, append an edit link.
         var $link = $('<span class="admin-link"><button type="button" class="link">' + Drupal.t('Edit') + '</button></span>').on('click', eventData, clickEditHandler);
-        $suffix.append(' ').append($link);
+        $suffix.append($link);
 
         // Preview the machine name in realtime when the human-readable name
         // changes, but only if there is no machine name yet; i.e., only upon
