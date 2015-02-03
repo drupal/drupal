@@ -715,7 +715,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
         '#title' => $this->t('Text'),
         '#type' => 'textarea',
         '#default_value' => $this->options['alter']['text'],
-        '#description' => $this->t('The text to display for this field. You may include HTML or Twig. You may enter data from this view as per the "Replacement patterns" below.'),
+        '#description' => $this->t('The text to display for this field. You may include HTML or <a href="@url">Twig</a>. You may enter data from this view as per the "Replacement patterns" below.', array('@url' => CoreUrl::fromUri('http://twig.sensiolabs.org/documentation'))),
         '#states' => array(
           'visible' => array(
             ':input[name="options[alter][alter_text]"]' => array('checked' => TRUE),
@@ -879,7 +879,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       $output = '<p>' . $this->t('You must add some additional fields to this display before using this field. These fields may be marked as <em>Exclude from display</em> if you prefer. Note that due to rendering order, you cannot use fields that come after this field; if you need a field not listed here, rearrange your fields.') . '</p>';
       // We have some options, so make a list.
       if (!empty($options)) {
-        $output = '<p>' . $this->t("The following Twig replacement tokens are available for this field. Note that due to rendering order, you cannot use fields that come after this field; if you need a field not listed here, rearrange your fields.") . '</p>';
+        $output = '<p>' . $this->t("The following replacement tokens are available for this field. Note that due to rendering order, you cannot use fields that come after this field; if you need a field not listed here, rearrange your fields.") . '</p>';
         foreach (array_keys($options) as $type) {
           if (!empty($options[$type])) {
             $items = array();
