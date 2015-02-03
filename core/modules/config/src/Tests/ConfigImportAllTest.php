@@ -51,9 +51,9 @@ class ConfigImportAllTest extends ModuleTestBase {
     // Get a list of modules to enable.
     $all_modules = system_rebuild_module_data();
     $all_modules = array_filter($all_modules, function ($module) {
-      // Filter hidden, already enabled modules and modules in the Testing
-      // package.
-      if (!empty($module->info['hidden']) || $module->status == TRUE || $module->info['package'] == 'Testing') {
+      // Filter contrib, hidden, already enabled modules and modules in the
+      // Testing package.
+      if ($module->origin !== 'core' || !empty($module->info['hidden']) || $module->status == TRUE || $module->info['package'] == 'Testing') {
         return FALSE;
       }
       return TRUE;
