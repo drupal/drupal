@@ -110,16 +110,6 @@ interface LanguageInterface {
   public function getName();
 
   /**
-   * Sets the name of the language.
-   *
-   * @param string $name
-   *   The human-readable English name of the language.
-   *
-   * @return $this
-   */
-  public function setName($name);
-
-  /**
    * Gets the ID (language code).
    *
    * @return string

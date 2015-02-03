@@ -38,13 +38,14 @@ class ConfigurableLanguageUnitTest extends UnitTestCase {
 
   /**
    * @covers ::getWeight
+   * @covers ::setWeight
    */
   public function testWeight() {
     // The weight, an integer. Used to order languages with larger positive
     // weights sinking items toward the bottom of lists.
-    $weight = -5;
-    $configurableLanguage = new ConfigurableLanguage(array('weight' => $weight), 'configurable_language');
-    $this->assertEquals($configurableLanguage->getWeight(), $weight);
+    $configurableLanguage = new ConfigurableLanguage(array('weight' => -5), 'configurable_language');
+    $this->assertEquals($configurableLanguage->getWeight(), -5);
+    $this->assertEquals($configurableLanguage->setWeight(13)->getWeight(), 13);
   }
 
 }

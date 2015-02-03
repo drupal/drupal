@@ -17,6 +17,16 @@ use Drupal\Core\Language\LanguageInterface;
 interface ConfigurableLanguageInterface extends ConfigEntityInterface, LanguageInterface {
 
   /**
+   * Sets the name of the language.
+   *
+   * @param string $name
+   *   The human-readable English name of the language.
+   *
+   * @return $this
+   */
+  public function setName($name);
+
+  /**
    * Sets the weight of the language.
    *
    * @param int $weight
