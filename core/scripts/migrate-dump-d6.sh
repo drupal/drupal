@@ -11,9 +11,10 @@
  * need new Drupal 6 data.
  *
  *  - Clone the repository from: https://www.drupal.org/sandbox/benjy/2405029
- *  - Create a database called d6_migrate and import core/migrate_drupal/src/Tests/d6.gz
+ *  - Create a database called d6_migrate and import core/modules/migrate_drupal/src/Tests/d6.gz
+ *  - In drupal_6_migrate/sites/default, copy default.settings.php to settings.php and add an entry for the d6_migrate database, eg: $db_url = 'mysqli://username:password@localhost/d6_migrate';
  *  - Add an entry into your Drupal 8 settings file, eg: $databases['d6_migrate']['default'] = array ( // Credentials );
- *  - Use the Drupal 6 site to make data changes as needed.
+ *  - Use the Drupal 6 site to make data changes as needed (User ID 1 credentials are admin/admin).
  *  - Run ./core/scripts/migrate-dump-d6.sh to re-export the tables.
  */
 
