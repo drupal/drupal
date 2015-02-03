@@ -458,7 +458,7 @@ class Page extends PathPluginBase {
     return array(
       'filter value not present' => $this->t('When the filter value is <em>NOT</em> in the URL'),
       'filter value present' => $this->t('When the filter value <em>IS</em> in the URL or a default is provided'),
-      'description' => $this->t('The contextual filter values is provided by the URL.'),
+      'description' => $this->t('The contextual filter values are provided by the URL.'),
     );
   }
 
