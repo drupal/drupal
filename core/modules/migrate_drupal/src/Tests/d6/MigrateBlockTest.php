@@ -55,6 +55,10 @@ class MigrateBlockTest extends MigrateDrupalTestBase {
       'd6_menu' => array(
         array(array('menu1'), array('menu')),
       ),
+      'd6_user_role' => array(
+        array(array(2), array('authenticated')),
+        array(array(3), array('migrate_test_role_1')),
+      ),
     ));
 
     // Set Bartik and Seven as the default public and admin theme.
@@ -83,7 +87,7 @@ class MigrateBlockTest extends MigrateDrupalTestBase {
    */
   public function testBlockMigration() {
     $blocks = Block::loadMultiple();
-    $this->assertEqual(count($blocks), 8);
+    $this->assertEqual(count($blocks), 10);
 
     // User blocks
     $test_block_user = $blocks['user'];
@@ -101,6 +105,30 @@ class MigrateBlockTest extends MigrateDrupalTestBase {
     $visibility = $test_block_user_1->getVisibility();
     $this->assertTrue(empty($visibility['request_path']['pages']));
     $this->assertEqual(0, $test_block_user_1->getWeight());
+
+    $test_block_user_2 = $blocks['user_2'];
+    $this->assertNotNull($test_block_user_2);
+    $this->assertEqual('sidebar_second', $test_block_user_2->getRegion());
+    $this->assertEqual('bartik', $test_block_user_2->getTheme());
+    $visibility = $test_block_user_2->getVisibility();
+    $this->assertEqual($visibility['user_role']['id'], 'user_role');
+    $roles = array();
+    $roles['authenticated'] = 'authenticated';
+    $this->assertEqual($visibility['user_role']['roles'], $roles);
+    $this->assertFalse($visibility['user_role']['negate']);
+    $this->assertEqual(-9, $test_block_user_2->getWeight());
+
+    $test_block_user_3 = $blocks['user_3'];
+    $this->assertNotNull($test_block_user_3);
+    $this->assertEqual('sidebar_second', $test_block_user_3->getRegion());
+    $this->assertEqual('bartik', $test_block_user_3->getTheme());
+    $visibility = $test_block_user_3->getVisibility();
+    $this->assertEqual($visibility['user_role']['id'], 'user_role');
+    $roles = array();
+    $roles['migrate_test_role_1'] = 'migrate_test_role_1';
+    $this->assertEqual($visibility['user_role']['roles'], $roles);
+    $this->assertFalse($visibility['user_role']['negate']);
+    $this->assertEqual(-6, $test_block_user_3->getWeight());
 
     // Check system block
     $test_block_system = $blocks['system'];

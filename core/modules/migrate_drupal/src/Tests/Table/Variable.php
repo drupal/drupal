@@ -655,6 +655,15 @@ class Variable extends Drupal6DumpBase {
       'name' => 'upload_story',
       'value' => 'b:1;',
     ))->values(array(
+      'name' => 'user_block_max_list_count',
+      'value' => 's:2:"10";',
+    ))->values(array(
+      'name' => 'user_block_seconds_online',
+      'value' => 's:3:"900";',
+    ))->values(array(
+      'name' => 'user_block_whois_new_count',
+      'value' => 's:1:"5";',
+    ))->values(array(
       'name' => 'user_email_verification',
       'value' => 'i:0;',
     ))->values(array(

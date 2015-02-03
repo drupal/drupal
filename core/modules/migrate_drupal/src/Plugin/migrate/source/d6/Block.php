@@ -85,7 +85,7 @@ class Block extends DrupalSqlBase {
       ->condition('delta', $delta)
       ->execute()
       ->fetchCol();
-    $row->setSourceProperty('permissions', $roles);
+    $row->setSourceProperty('roles', $roles);
     $settings = array();
     // Contrib can use hook_migration_d6_block_prepare_row() to add similar
     // variables via $migration->getSource()->variableGet().
