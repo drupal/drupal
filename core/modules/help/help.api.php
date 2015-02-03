@@ -1,3 +1,5 @@
+<?php
+
 /**
  * @file
  * Hooks for the Help system.
