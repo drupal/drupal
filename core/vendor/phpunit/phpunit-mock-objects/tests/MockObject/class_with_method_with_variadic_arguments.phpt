@@ -1,13 +1,24 @@
 --TEST--
-PHPUnit_Framework_MockObject_Generator::generate('NonExistentClass', array(), 'MockFoo', TRUE, TRUE)
+PHPUnit_Framework_MockObject_Generator::generate('ClassWithMethodWithVariadicArguments', array(), 'MockFoo', TRUE, TRUE)
+--SKIPIF--
+<?php
+if (version_compare(PHP_VERSION, '5.6.0', '<')) print 'skip: PHP >= 5.6.0 required';
+?>
 --FILE--
 <?php
+class ClassWithMethodWithVariadicArguments
+{
+    public function methodWithVariadicArguments($a, ...$parameters)
+    {
+    }
+}
+
 require __DIR__ . '/../../vendor/autoload.php';
 
 $generator = new PHPUnit_Framework_MockObject_Generator;
 
 $mock = $generator->generate(
-  'NonExistentClass',
+  'ClassWithMethodWithVariadicArguments',
   array(),
   'MockFoo',
   TRUE,
@@ -17,11 +28,7 @@ $mock = $generator->generate(
 print $mock['code'];
 ?>
 --EXPECTF--
-class NonExistentClass
-{
-}
-
-class MockFoo extends NonExistentClass implements PHPUnit_Framework_MockObject_MockObject
+class MockFoo extends ClassWithMethodWithVariadicArguments implements PHPUnit_Framework_MockObject_MockObject
 {
     private $__phpunit_invocationMocker;
     private $__phpunit_originalObject;
@@ -29,6 +36,28 @@ class MockFoo extends NonExistentClass implements PHPUnit_Framework_MockObject_M
     public function __clone()
     {
         $this->__phpunit_invocationMocker = clone $this->__phpunit_getInvocationMocker();
+    }
+
+    public function methodWithVariadicArguments($a, ...$parameters)
+    {
+        $arguments = array($a);
+        $count     = func_num_args();
+
+        if ($count > 1) {
+            $_arguments = func_get_args();
+
+            for ($i = 1; $i < $count; $i++) {
+                $arguments[] = $_arguments[$i];
+            }
+        }
+
+        $result = $this->__phpunit_getInvocationMocker()->invoke(
+          new PHPUnit_Framework_MockObject_Invocation_Object(
+            'ClassWithMethodWithVariadicArguments', 'methodWithVariadicArguments', $arguments, $this, TRUE
+          )
+        );
+
+        return $result;
     }
 
     public function expects(PHPUnit_Framework_MockObject_Matcher_Invocation $matcher)

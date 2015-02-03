@@ -49,6 +49,13 @@ abstract class AnnotationDriver implements MappingDriver
     protected $paths = array();
 
     /**
+     * The paths excluded from path where to look for mapping files.
+     *
+     * @var array
+     */
+    protected $excludePaths = array();
+
+    /**
      * The file extension of mapping documents.
      *
      * @var string
@@ -107,7 +114,27 @@ abstract class AnnotationDriver implements MappingDriver
     }
 
     /**
-     * Retrieves the current annotation reader.
+     * Append exclude lookup paths to metadata driver.
+     *
+     * @param array $paths
+     */
+    public function addExcludePaths(array $paths)
+    {
+        $this->excludePaths = array_unique(array_merge($this->excludePaths, $paths));
+    }
+
+    /**
+     * Retrieve the defined metadata lookup exclude paths.
+     *
+     * @return array
+     */
+    public function getExcludePaths()
+    {
+        return $this->excludePaths;
+    }
+
+    /**
+     * Retrieve the current annotation reader
      *
      * @return AnnotationReader
      */
@@ -192,7 +219,20 @@ abstract class AnnotationDriver implements MappingDriver
             );
 
             foreach ($iterator as $file) {
-                $sourceFile = realpath($file[0]);
+                $sourceFile = $file[0];
+
+                if ( ! preg_match('(^phar:)i', $sourceFile)) {
+                    $sourceFile = realpath($sourceFile);
+                }
+
+                foreach ($this->excludePaths as $excludePath) {
+                    $exclude = str_replace('\\', '/', realpath($excludePath));
+                    $current = str_replace('\\', '/', $sourceFile);
+
+                    if (strpos($current, $exclude) !== false) {
+                        continue 2;
+                    }
+                }
 
                 require_once $sourceFile;
 
