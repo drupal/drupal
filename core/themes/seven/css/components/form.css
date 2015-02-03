@@ -183,6 +183,13 @@ textarea.form-textarea {
   clear: both;
 }
 
+/**
+ * Limits extra long instances of select elements to the max width allowed
+ * to avoid breaking layouts.
+ */
+select {
+  max-width: 100%;
+}
 
 /**
  * Select elements - Webkit only
