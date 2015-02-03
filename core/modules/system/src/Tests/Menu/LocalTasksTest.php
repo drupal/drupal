@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\Menu\LocalTasksTest.
+ * Contains \Drupal\system\Tests\Menu\LocalTasksTest.
  */
 
 namespace Drupal\system\Tests\Menu;
@@ -29,13 +29,14 @@ class LocalTasksTest extends WebTestBase {
    *   (optional) The local tasks level to assert; 0 for primary, 1 for
    *   secondary. Defaults to 0.
    */
-  protected function assertLocalTasks(array $hrefs, $level = 0) {
+  protected function assertLocalTasks(array $routes, $level = 0) {
     $elements = $this->xpath('//*[contains(@class, :class)]//a', array(
       ':class' => $level == 0 ? 'tabs primary' : 'tabs secondary',
     ));
     $this->assertTrue(count($elements), 'Local tasks found.');
-    foreach ($hrefs as $index => $element) {
-      $expected = Url::fromUri('base:' . $hrefs[$index])->toString();
+    foreach ($routes as $index => $route_info) {
+      list($route_name, $route_parameters) = $route_info;
+      $expected = Url::fromRoute($route_name, $route_parameters)->toString();
       $method = ($elements[$index]['href'] == $expected ? 'pass' : 'fail');
       $this->{$method}(format_string('Task @number href @value equals @expected.', array(
         '@number' => $index + 1,
@@ -50,14 +51,12 @@ class LocalTasksTest extends WebTestBase {
    */
   public function testPluginLocalTask() {
     // Verify that local tasks appear as defined in the router.
-    $this->drupalGet('menu-local-task-test/tasks');
-
-    $this->drupalGet('menu-local-task-test/tasks/view');
-    $this->assertLocalTasks(array(
-      'menu-local-task-test/tasks/view',
-      'menu-local-task-test/tasks/settings',
-      'menu-local-task-test/tasks/edit',
-    ));
+    $this->drupalGet(Url::fromRoute('menu_test.local_task_test_tasks_view'));
+    $this->assertLocalTasks([
+      ['menu_test.local_task_test_tasks_view', []],
+      ['menu_test.local_task_test_tasks_settings', []],
+      ['menu_test.local_task_test_tasks_edit', []],
+    ]);
 
     // Ensure the view tab is active.
     $result = $this->xpath('//ul[contains(@class, "tabs")]//li[contains(@class, "active")]/a');
@@ -65,21 +64,21 @@ class LocalTasksTest extends WebTestBase {
     $this->assertEqual('View', (string) $result[0], 'The view tab is active.');
 
     // Verify that local tasks in the second level appear.
-    $sub_tasks = array(
-      'menu-local-task-test/tasks/settings/sub1',
-      'menu-local-task-test/tasks/settings/sub2',
-      'menu-local-task-test/tasks/settings/sub3',
-      'menu-local-task-test/tasks/settings/derive1',
-      'menu-local-task-test/tasks/settings/derive2',
-    );
-    $this->drupalGet('menu-local-task-test/tasks/settings');
+    $sub_tasks = [
+      ['menu_test.local_task_test_tasks_settings_sub1', []],
+      ['menu_test.local_task_test_tasks_settings_sub2', []],
+      ['menu_test.local_task_test_tasks_settings_sub3', []],
+      ['menu_test.local_task_test_tasks_settings_derived', ['placeholder' => 'derive1']],
+      ['menu_test.local_task_test_tasks_settings_derived', ['placeholder' => 'derive2']],
+    ];
+    $this->drupalGet(Url::fromRoute('menu_test.local_task_test_tasks_settings'));
     $this->assertLocalTasks($sub_tasks, 1);
 
     $result = $this->xpath('//ul[contains(@class, "tabs")]//li[contains(@class, "active")]/a');
     $this->assertEqual(1, count($result), 'There is just a single active tab.');
     $this->assertEqual('Settings', (string) $result[0], 'The settings tab is active.');
 
-    $this->drupalGet('menu-local-task-test/tasks/settings/sub1');
+    $this->drupalGet(Url::fromRoute('menu_test.local_task_test_tasks_settings_sub1'));
     $this->assertLocalTasks($sub_tasks, 1);
 
     $result = $this->xpath('//ul[contains(@class, "tabs")]//a[contains(@class, "active")]');
@@ -87,7 +86,7 @@ class LocalTasksTest extends WebTestBase {
     $this->assertEqual('Settings', (string) $result[0], 'The settings tab is active.');
     $this->assertEqual('Dynamic title for TestTasksSettingsSub1', (string) $result[1], 'The sub1 tab is active.');
 
-    $this->drupalGet('menu-local-task-test/tasks/settings/derive1');
+    $this->drupalGet(Url::fromRoute('menu_test.local_task_test_tasks_settings_derived', ['placeholder' => 'derive1']));
     $this->assertLocalTasks($sub_tasks, 1);
 
     $result = $this->xpath('//ul[contains(@class, "tabs")]//li[contains(@class, "active")]');
@@ -109,24 +108,25 @@ class LocalTasksTest extends WebTestBase {
     $entity = \Drupal::entityManager()->getStorage('entity_test')->create(array('bundle' => 'test'));
     $entity->save();
 
-    $this->drupalGet('menu-local-task-test-upcasting/1/sub1');
+    $this->drupalGet(Url::fromRoute('menu_test.local_task_test_upcasting_sub1', ['entity_test' => '1']));
 
-    $tasks = array(
-      'menu-local-task-test-upcasting/1/sub1',
-      'menu-local-task-test-upcasting/1/sub2',
-    );
+    $tasks = [
+      ['menu_test.local_task_test_upcasting_sub1', ['entity_test' => '1']],
+      ['menu_test.local_task_test_upcasting_sub2', ['entity_test' => '1']],
+    ];
+
     $this->assertLocalTasks($tasks, 0);
 
     $result = $this->xpath('//ul[contains(@class, "tabs")]//li[contains(@class, "active")]');
     $this->assertEqual(1, count($result), 'There is one active tab.');
     $this->assertEqual('upcasting sub1', (string) $result[0]->a, 'The "upcasting sub1" tab is active.');
 
-    $this->drupalGet('menu-local-task-test-upcasting/1/sub2');
+    $this->drupalGet(Url::fromRoute('menu_test.local_task_test_upcasting_sub2', ['entity_test' => '1']));
 
-    $tasks = array(
-      'menu-local-task-test-upcasting/1/sub1',
-      'menu-local-task-test-upcasting/1/sub2',
-    );
+    $tasks = [
+      ['menu_test.local_task_test_upcasting_sub1', ['entity_test' => '1']],
+      ['menu_test.local_task_test_upcasting_sub2', ['entity_test' => '1']],
+    ];
     $this->assertLocalTasks($tasks, 0);
 
     $result = $this->xpath('//ul[contains(@class, "tabs")]//li[contains(@class, "active")]');
