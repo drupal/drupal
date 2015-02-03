@@ -199,7 +199,7 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
   public function getChildCids(array $comments) {
     return $this->database->select('comment_field_data', 'c')
       ->fields('c', array('cid'))
-      ->condition('pid', array_keys($comments))
+      ->condition('pid', array_keys($comments), 'IN')
       ->condition('default_langcode', 1)
       ->execute()
       ->fetchCol();

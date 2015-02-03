@@ -31,7 +31,7 @@ class UserDeleteTest extends WebTestBase {
     $query = db_select('user__roles', 'r');
     $roles_created = $query
       ->fields('r', array('entity_id'))
-      ->condition('entity_id', $uids)
+      ->condition('entity_id', $uids, 'IN')
       ->countQuery()
       ->execute()
       ->fetchField();
@@ -45,7 +45,7 @@ class UserDeleteTest extends WebTestBase {
     $query = db_select('user__roles', 'r');
     $roles_after_deletion = $query
       ->fields('r', array('entity_id'))
-      ->condition('entity_id', $uids)
+      ->condition('entity_id', $uids, 'IN')
       ->countQuery()
       ->execute()
       ->fetchField();

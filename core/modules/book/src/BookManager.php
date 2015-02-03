@@ -886,7 +886,7 @@ class BookManager implements BookManagerInterface {
       // @todo This should be actually filtering on the desired node status field
       //   language and just fall back to the default language.
       $nids = \Drupal::entityQuery('node')
-        ->condition('nid', $nids)
+        ->condition('nid', $nids, 'IN')
         ->condition('status', 1)
         ->execute();
 

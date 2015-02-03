@@ -793,10 +793,10 @@ function locale_translation_update_file_history($file) {
 function locale_translation_file_history_delete($projects = array(), $langcodes = array()) {
   $query = db_delete('locale_file');
   if (!empty($projects)) {
-    $query->condition('project', $projects);
+    $query->condition('project', $projects, 'IN');
   }
   if (!empty($langcodes)) {
-    $query->condition('langcode', $langcodes);
+    $query->condition('langcode', $langcodes, 'IN');
   }
   $query->execute();
 }

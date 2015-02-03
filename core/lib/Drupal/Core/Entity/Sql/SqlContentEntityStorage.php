@@ -667,7 +667,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $table = $this->revisionDataTable ?: $this->dataTable;
       $query = $this->database->select($table, 'data', array('fetch' => \PDO::FETCH_ASSOC))
         ->fields('data')
-        ->condition($this->idKey, array_keys($entities))
+        ->condition($this->idKey, array_keys($entities), 'IN')
         ->orderBy('data.' . $this->idKey);
 
       if ($this->revisionDataTable) {
@@ -676,7 +676,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         foreach ($entities as $values) {
           $revision_ids[] = is_object($values) ? $values->getRevisionId() : $values[$this->revisionKey][LanguageInterface::LANGCODE_DEFAULT];
         }
-        $query->condition($this->revisionKey, $revision_ids);
+        $query->condition($this->revisionKey, $revision_ids, 'IN');
       }
 
       $data = $query->execute();
@@ -878,24 +878,24 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     $ids = array_keys($entities);
 
     $this->database->delete($this->entityType->getBaseTable())
-      ->condition($this->idKey, $ids)
+      ->condition($this->idKey, $ids, 'IN')
       ->execute();
 
     if ($this->revisionTable) {
       $this->database->delete($this->revisionTable)
-        ->condition($this->idKey, $ids)
+        ->condition($this->idKey, $ids, 'IN')
         ->execute();
     }
 
     if ($this->dataTable) {
       $this->database->delete($this->dataTable)
-        ->condition($this->idKey, $ids)
+        ->condition($this->idKey, $ids, 'IN')
         ->execute();
     }
 
     if ($this->revisionDataTable) {
       $this->database->delete($this->revisionDataTable)
-        ->condition($this->idKey, $ids)
+        ->condition($this->idKey, $ids, 'IN')
         ->execute();
     }
 

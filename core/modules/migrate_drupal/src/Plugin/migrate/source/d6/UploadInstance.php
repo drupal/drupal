@@ -33,7 +33,7 @@ class UploadInstance extends DrupalSqlBase {
     $max_filesize = $max_filesize ? $max_filesize . 'MB' : '';
     $file_extensions = $this->variableGet('upload_extensions_default', 'jpg jpeg gif png txt doc xls pdf ppt pps odt ods odp');
     $return = array();
-    $values = $this->getDatabase()->query('SELECT name, value FROM {variable} WHERE name IN (:name)', array(':name' => $variables))->fetchAllKeyed();
+    $values = $this->getDatabase()->query('SELECT name, value FROM {variable} WHERE name IN ( :name[] )', array(':name[]' => $variables))->fetchAllKeyed();
     foreach ($node_types as $node_type) {
       $name = $prefix . '_' . $node_type;
       if (isset($values[$name])) {

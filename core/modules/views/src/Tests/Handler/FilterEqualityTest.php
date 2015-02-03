@@ -54,7 +54,7 @@ class FilterEqualityTest extends ViewUnitTestBase {
         'field' => 'name',
         'relationship' => 'none',
         'operator' => '=',
-        'value' => array('value' => 'Ringo'),
+        'value' => 'Ringo',
       ),
     ));
 
@@ -98,7 +98,7 @@ class FilterEqualityTest extends ViewUnitTestBase {
         'field' => 'name',
         'relationship' => 'none',
         'operator' => '!=',
-        'value' => array('value' => 'Ringo'),
+        'value' => 'Ringo',
       ),
     ));
 
@@ -172,12 +172,12 @@ class FilterEqualityTest extends ViewUnitTestBase {
             1 => array(
               'title' => 'Name is equal to Ringo',
               'operator' => '=',
-              'value' => array('value' => 'Ringo'),
+              'value' => 'Ringo',
             ),
             2 => array(
               'title' => 'Name is not equal to Ringo',
               'operator' => '!=',
-              'value' => array('value' => 'Ringo'),
+              'value' => 'Ringo',
             ),
           ),
         ),

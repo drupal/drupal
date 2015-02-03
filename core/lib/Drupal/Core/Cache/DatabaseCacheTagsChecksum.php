@@ -108,7 +108,7 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
     if ($query_tags) {
       $db_tags = array();
       try {
-        $db_tags = $this->connection->query('SELECT tag, invalidations FROM {cachetags} WHERE tag IN (:tags)', array(':tags' => $query_tags))
+        $db_tags = $this->connection->query('SELECT tag, invalidations FROM {cachetags} WHERE tag IN ( :tags[] )', array(':tags[]' => $query_tags))
           ->fetchAllKeyed();
         $this->tagCache += $db_tags;
       }

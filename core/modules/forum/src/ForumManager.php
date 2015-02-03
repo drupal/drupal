@@ -205,7 +205,7 @@ class ForumManager implements ForumManagerInterface {
       $query
         ->orderBy('f.sticky', 'DESC')
         ->orderByHeader($header)
-        ->condition('n.nid', $nids)
+        ->condition('n.nid', $nids, 'IN')
         // @todo This should be actually filtering on the desired node language
         //   and just fall back to the default language.
         ->condition('n.default_langcode', 1);

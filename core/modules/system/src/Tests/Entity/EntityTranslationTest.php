@@ -264,11 +264,11 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     // query.
     $query = \Drupal::entityQuery($entity_type);
     $group = $query->andConditionGroup()
-      ->condition('user_id', $properties[$default_langcode]['user_id'], '=', $default_langcode)
-      ->condition('name', $properties[$default_langcode]['name'], '=', $default_langcode);
+      ->condition('user_id', $properties[$default_langcode]['user_id'][0], '=', $default_langcode)
+      ->condition('name', $properties[$default_langcode]['name'][0], '=', $default_langcode);
     $result = $query
       ->condition($group)
-      ->condition('name', $properties[$langcode]['name'], '=', $langcode)
+      ->condition('name', $properties[$langcode]['name'][0], '=', $langcode)
       ->execute();
     $this->assertEqual(count($result), 1, format_string('%entity_type: One entity loaded by name and uid using different language meta conditions.', array('%entity_type' => $entity_type)));
 
@@ -279,10 +279,10 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     $entity->save();
     $query = \Drupal::entityQuery($entity_type);
     $default_langcode_group = $query->andConditionGroup()
-      ->condition('user_id', $properties[$default_langcode]['user_id'], '=', $default_langcode)
-      ->condition('name', $properties[$default_langcode]['name'], '=', $default_langcode);
+      ->condition('user_id', $properties[$default_langcode]['user_id'][0], '=', $default_langcode)
+      ->condition('name', $properties[$default_langcode]['name'][0], '=', $default_langcode);
     $langcode_group = $query->andConditionGroup()
-      ->condition('name', $properties[$langcode]['name'], '=', $langcode)
+      ->condition('name', $properties[$langcode]['name'][0], '=', $langcode)
       ->condition("$this->field_name.value", $field_value, '=', $langcode);
     $result = $query
       ->condition($langcode_key, $default_langcode)

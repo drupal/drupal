@@ -246,7 +246,9 @@ use Drupal\Core\Site\Settings;
  * @param $query
  *   The prepared statement query to run. Although it will accept both named and
  *   unnamed placeholders, named placeholders are strongly preferred as they are
- *   more self-documenting.
+ *   more self-documenting. If the argument corresponding to a placeholder is
+ *   an array of values to be expanded, e.g. for an IN query, the placeholder
+ *   should be named with a trailing bracket like :example[]
  * @param $args
  *   An array of values to substitute into the query. If the query uses named
  *   placeholders, this is an associative array in any order. If the query uses

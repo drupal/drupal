@@ -1357,7 +1357,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheablePluginIn
       }
       if (isset($value)) {
         $this->value = $value;
-        if (empty($this->alwaysMultiple) && empty($this->options['expose']['multiple'])) {
+        if (empty($this->alwaysMultiple) && empty($this->options['expose']['multiple']) && !is_array($value)) {
           $this->value = array($value);
         }
       }

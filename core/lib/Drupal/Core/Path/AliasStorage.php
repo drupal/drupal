@@ -118,7 +118,7 @@ class AliasStorage implements AliasStorageInterface {
    */
   public function preloadPathAlias($preloaded, $langcode) {
     $args = array(
-      ':system' => $preloaded,
+      ':system[]' => $preloaded,
       ':langcode' => $langcode,
       ':langcode_undetermined' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     );
@@ -132,13 +132,13 @@ class AliasStorage implements AliasStorageInterface {
     if ($langcode == LanguageInterface::LANGCODE_NOT_SPECIFIED) {
       // Prevent PDO from complaining about a token the query doesn't use.
       unset($args[':langcode']);
-      $result = $this->connection->query('SELECT source, alias FROM {url_alias} WHERE source IN (:system) AND langcode = :langcode_undetermined ORDER BY pid ASC', $args);
+      $result = $this->connection->query('SELECT source, alias FROM {url_alias} WHERE source IN ( :system[] ) AND langcode = :langcode_undetermined ORDER BY pid ASC', $args);
     }
     elseif ($langcode < LanguageInterface::LANGCODE_NOT_SPECIFIED) {
-      $result = $this->connection->query('SELECT source, alias FROM {url_alias} WHERE source IN (:system) AND langcode IN (:langcode, :langcode_undetermined) ORDER BY langcode ASC, pid ASC', $args);
+      $result = $this->connection->query('SELECT source, alias FROM {url_alias} WHERE source IN ( :system[] ) AND langcode IN (:langcode, :langcode_undetermined) ORDER BY langcode ASC, pid ASC', $args);
     }
     else {
-      $result = $this->connection->query('SELECT source, alias FROM {url_alias} WHERE source IN (:system) AND langcode IN (:langcode, :langcode_undetermined) ORDER BY langcode DESC, pid ASC', $args);
+      $result = $this->connection->query('SELECT source, alias FROM {url_alias} WHERE source IN ( :system[] ) AND langcode IN (:langcode, :langcode_undetermined) ORDER BY langcode DESC, pid ASC', $args);
     }
 
     return $result->fetchAllKeyed();

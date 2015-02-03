@@ -26,7 +26,8 @@ class UserUid extends Name {
     // table, we need to make sure {tracker_user} is JOINed and use its alias
     // for the WHERE clause.
     $tracker_user_alias = $this->query->ensureTable('tracker_user');
-    $this->query->addWhere(0, "$tracker_user_alias.uid", $this->value);
+    // Cast scalars to array so we can consistently use an IN condition.
+    $this->query->addWhere(0, "$tracker_user_alias.uid", (array) $this->value, 'IN');
   }
 
 }

@@ -214,7 +214,7 @@ class BlockContentForm extends ContentEntityForm {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if ($this->entity->isNew()) {
-      $exists = $this->blockContentStorage->loadByProperties(array('info' => $form_state->getValue('info')));
+      $exists = $this->blockContentStorage->loadByProperties(array('info' => $form_state->getValue(['info', 0, 'value'])));
       if (!empty($exists)) {
         $form_state->setErrorByName('info', $this->t('A block with description %name already exists.', array(
           '%name' => $form_state->getValue(array('info', 0, 'value')),

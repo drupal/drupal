@@ -75,7 +75,7 @@ class DatabaseStorage extends StorageBase {
   public function getMultiple(array $keys) {
     $values = array();
     try {
-      $result = $this->connection->query('SELECT name, value FROM {' . $this->connection->escapeTable($this->table) . '} WHERE name IN (:keys) AND collection = :collection', array(':keys' => $keys, ':collection' => $this->collection))->fetchAllAssoc('name');
+      $result = $this->connection->query('SELECT name, value FROM {' . $this->connection->escapeTable($this->table) . '} WHERE name IN ( :keys[] ) AND collection = :collection', array(':keys[]' => $keys, ':collection' => $this->collection))->fetchAllAssoc('name');
       foreach ($keys as $key) {
         if (isset($result[$key])) {
           $values[$key] = $this->serializer->decode($result[$key]->value);
@@ -152,7 +152,7 @@ class DatabaseStorage extends StorageBase {
     // Delete in chunks when a large array is passed.
     while ($keys) {
       $this->connection->delete($this->table)
-        ->condition('name', array_splice($keys, 0, 1000))
+        ->condition('name', array_splice($keys, 0, 1000), 'IN')
         ->condition('collection', $this->collection)
         ->execute();
     }

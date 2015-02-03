@@ -68,14 +68,9 @@ class Condition implements ConditionInterface, \Countable {
   /**
    * Implements Drupal\Core\Database\Query\ConditionInterface::condition().
    */
-  public function condition($field, $value = NULL, $operator = NULL) {
-    if (!isset($operator)) {
-      if (is_array($value)) {
-        $operator = 'IN';
-      }
-      else {
-        $operator = '=';
-      }
+  public function condition($field, $value = NULL, $operator = '=') {
+    if (empty($operator)) {
+      $operator = '=';
     }
     if (empty($value) && is_array($value)) {
       throw new InvalidQueryException(sprintf("Query condition '%s %s ()' cannot be empty.", $field, $operator));
@@ -211,7 +206,7 @@ class Condition implements ConditionInterface, \Countable {
             // We assume that if there is a delimiter, then the value is an
             // array. If not, it is a scalar. For simplicity, we first convert
             // up to an array so that we can build the placeholders in the same way.
-            elseif (!$operator['delimiter']) {
+            elseif (!$operator['delimiter'] && !is_array($condition['value'])) {
               $condition['value'] = array($condition['value']);
             }
             if ($operator['use_value']) {

@@ -178,7 +178,7 @@ class RouteProvider implements RouteProviderInterface, PagedRouteProviderInterfa
 
     $routes_to_load = array_diff($names, array_keys($this->routes));
     if ($routes_to_load) {
-      $result = $this->connection->query('SELECT name, route FROM {' . $this->connection->escapeTable($this->tableName) . '} WHERE name IN (:names)', array(':names' => $routes_to_load));
+      $result = $this->connection->query('SELECT name, route FROM {' . $this->connection->escapeTable($this->tableName) . '} WHERE name IN ( :names[] )', array(':names[]' => $routes_to_load));
       $routes = $result->fetchAllKeyed();
 
       foreach ($routes as $name => $route) {
@@ -289,8 +289,8 @@ class RouteProvider implements RouteProviderInterface, PagedRouteProviderInterfa
       return $collection;
     }
 
-    $routes = $this->connection->query("SELECT name, route FROM {" . $this->connection->escapeTable($this->tableName) . "} WHERE pattern_outline IN (:patterns) ORDER BY fit DESC, name ASC", array(
-      ':patterns' => $ancestors,
+    $routes = $this->connection->query("SELECT name, route FROM {" . $this->connection->escapeTable($this->tableName) . "} WHERE pattern_outline IN ( :patterns[] ) ORDER BY fit DESC, name ASC", array(
+      ':patterns[]' => $ancestors,
     ))
       ->fetchAllKeyed();
 

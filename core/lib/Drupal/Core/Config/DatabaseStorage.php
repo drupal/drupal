@@ -107,7 +107,7 @@ class DatabaseStorage implements StorageInterface {
   public function readMultiple(array $names) {
     $list = array();
     try {
-      $list = $this->connection->query('SELECT name, data FROM {' . $this->connection->escapeTable($this->table) . '} WHERE collection = :collection AND name IN (:names)', array(':collection' => $this->collection, ':names' => $names), $this->options)->fetchAllKeyed();
+      $list = $this->connection->query('SELECT name, data FROM {' . $this->connection->escapeTable($this->table) . '} WHERE collection = :collection AND name IN ( :names[] )', array(':collection' => $this->collection, ':names[]' => $names), $this->options)->fetchAllKeyed();
       foreach ($list as &$data) {
         $data = $this->decode($data);
       }

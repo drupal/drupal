@@ -101,7 +101,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
    */
   public function deleteTermHierarchy($tids) {
     $this->database->delete('taxonomy_term_hierarchy')
-      ->condition('tid', $tids)
+      ->condition('tid', $tids, 'IN')
       ->execute();
   }
 

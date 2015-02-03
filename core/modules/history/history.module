@@ -79,9 +79,9 @@ function history_read_multiple($nids) {
     return $return;
   }
 
-  $result = db_query('SELECT nid, timestamp FROM {history} WHERE uid = :uid AND nid IN(:nids)', array(
+  $result = db_query('SELECT nid, timestamp FROM {history} WHERE uid = :uid AND nid IN ( :nids[] )', array(
     ':uid' => \Drupal::currentUser()->id(),
-    ':nids' => array_keys($nodes_to_read),
+    ':nids[]' => array_keys($nodes_to_read),
   ));
   foreach ($result as $row) {
     $nodes_to_read[$row->nid] = (int) $row->timestamp;

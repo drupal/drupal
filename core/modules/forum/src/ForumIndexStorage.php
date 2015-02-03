@@ -58,7 +58,7 @@ class ForumIndexStorage implements ForumIndexStorageInterface {
   public function read(array $vids) {
     return $this->database->select('forum', 'f')
       ->fields('f', array('nid', 'tid'))
-      ->condition('f.vid', $vids)
+      ->condition('f.vid', $vids, 'IN')
       ->execute();
   }
 

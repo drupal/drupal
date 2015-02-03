@@ -191,7 +191,7 @@ class Select extends Query implements SelectInterface {
   /**
    * {@inheritdoc}
    */
-  public function condition($field, $value = NULL, $operator = NULL) {
+  public function condition($field, $value = NULL, $operator = '=') {
     $this->where->condition($field, $value, $operator);
     return $this;
   }

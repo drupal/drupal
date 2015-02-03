@@ -144,7 +144,7 @@ class FilterStringTest extends ViewUnitTestBase {
         'field' => 'name',
         'relationship' => 'none',
         'operator' => '!=',
-        'value' => array('value' => 'Ringo'),
+        'value' => 'Ringo',
       ),
     ));
 
@@ -756,7 +756,7 @@ class FilterStringTest extends ViewUnitTestBase {
             2 => array(
               'title' => 'Is not Ringo',
               'operator' => '!=',
-              'value' => array('value' => 'Ringo'),
+              'value' => 'Ringo',
             ),
             3 => array(
               'title' => 'Contains ing',

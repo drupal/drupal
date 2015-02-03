@@ -88,7 +88,7 @@ class SelectExtender implements SelectInterface {
 
   /* Implementations of Drupal\Core\Database\Query\ConditionInterface for the WHERE clause. */
 
-  public function condition($field, $value = NULL, $operator = NULL) {
+  public function condition($field, $value = NULL, $operator = '=') {
     $this->query->condition($field, $value, $operator);
     return $this;
   }

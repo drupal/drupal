@@ -93,7 +93,8 @@ class StringDatabaseStorage implements StringStorageInterface {
     $query = $this->connection->select('locales_location', 'l', $this->options)
       ->fields('l');
     foreach ($conditions as $field => $value) {
-      $query->condition('l.' . $field, $value);
+      // Cast scalars to array so we can consistently use an IN condition.
+      $query->condition('l.' . $field, (array) $value, 'IN');
     }
     return $query->execute()->fetchAll();
   }
@@ -398,13 +399,14 @@ class StringDatabaseStorage implements StringStorageInterface {
     }
 
     // If we have conditions for location's type or name, then we need the
-    // location table, for which we add a subquery.
+    // location table, for which we add a subquery. We cast any scalar value to
+    // array so we can consistently use IN conditions.
     if (isset($conditions['type']) || isset($conditions['name'])) {
       $subquery = $this->connection->select('locales_location', 'l', $this->options)
         ->fields('l', array('sid'));
       foreach (array('type', 'name') as $field) {
         if (isset($conditions[$field])) {
-          $subquery->condition('l.' . $field, $conditions[$field]);
+          $subquery->condition('l.' . $field, (array) $conditions[$field], 'IN');
           unset($conditions[$field]);
         }
       }
@@ -422,12 +424,12 @@ class StringDatabaseStorage implements StringStorageInterface {
         // Conditions for target fields when doing an outer join only make
         // sense if we add also OR field IS NULL.
         $query->condition(db_or()
-            ->condition($field_alias, $value)
+            ->condition($field_alias, (array) $value, 'IN')
             ->isNull($field_alias)
         );
       }
       else {
-        $query->condition($field_alias, $value);
+        $query->condition($field_alias, (array) $value, 'IN');
       }
     }
 

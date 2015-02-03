@@ -7,21 +7,36 @@
 
 namespace Drupal\system\Tests\Database;
 
-use Drupal\Core\Database\DatabaseExceptionWrapper;
-
 /**
  * Tests Drupal's extended prepared statement syntax..
  *
  * @group Database
  */
 class QueryTest extends DatabaseTestBase {
+
   /**
    * Tests that we can pass an array of values directly in the query.
    */
   function testArraySubstitution() {
-    $names = db_query('SELECT name FROM {test} WHERE age IN (:ages) ORDER BY age', array(':ages' => array(25, 26, 27)))->fetchAll();
-
+    $names = db_query('SELECT name FROM {test} WHERE age IN ( :ages[] ) ORDER BY age', array(':ages[]' => array(25, 26, 27)))->fetchAll();
     $this->assertEqual(count($names), 3, 'Correct number of names returned');
+
+    $names = db_query('SELECT name FROM {test} WHERE age IN ( :ages[] ) ORDER BY age', array(':ages[]' => array(25)))->fetchAll();
+    $this->assertEqual(count($names), 1, 'Correct number of names returned');
+  }
+
+  /**
+   * Tests that we can not pass a scalar value when an array is expected.
+   */
+  function testScalarSubstitution() {
+    try {
+      $names = db_query('SELECT name FROM {test} WHERE age IN ( :ages[] ) ORDER BY age', array(':ages[]' => 25))->fetchAll();
+      $this->fail('Array placeholder with scalar argument should result in an exception.');
+    }
+    catch (\InvalidArgumentException $e) {
+      $this->pass('Array placeholder with scalar argument should result in an exception.');
+    }
+
   }
 
   /**
@@ -37,7 +52,7 @@ class QueryTest extends DatabaseTestBase {
       db_query("SELECT * FROM {test} WHERE name = :name", array(':name' => $condition))->fetchObject();
       $this->fail('SQL injection attempt via array arguments should result in a database exception.');
     }
-    catch (DatabaseExceptionWrapper $e) {
+    catch (\InvalidArgumentException $e) {
       $this->pass('SQL injection attempt via array arguments should result in a database exception.');
     }
 

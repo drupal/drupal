@@ -517,6 +517,7 @@ abstract class Connection implements \Serializable {
    *
    * @throws \PDOException
    * @throws \Drupal\Core\Database\IntegrityConstraintViolationException
+   * @throws \InvalidArgumentException
    */
   public function query($query, array $args = array(), $options = array()) {
 
@@ -581,38 +582,48 @@ abstract class Connection implements \Serializable {
    * Drupal supports an alternate syntax for doing arrays of values. We
    * therefore need to expand them out into a full, executable query string.
    *
-   * @param $query
+   * @param string $query
    *   The query string to modify.
-   * @param $args
+   * @param array $args
    *   The arguments for the query.
    *
-   * @return
+   * @return bool
    *   TRUE if the query was modified, FALSE otherwise.
    */
   protected function expandArguments(&$query, &$args) {
     $modified = FALSE;
 
-    // If the placeholder value to insert is an array, assume that we need
-    // to expand it out into a comma-delimited set of placeholders.
-    foreach (array_filter($args, 'is_array') as $key => $data) {
+    // If the placeholder indicated the value to use is an array,  we need to
+    // expand it out into a comma-delimited set of placeholders.
+    foreach ($args as $key => $data) {
+      $is_bracket_placeholder = substr($key, -2) === '[]';
+      $is_array_data = is_array($data);
+      if ($is_bracket_placeholder && !$is_array_data) {
+        throw new \InvalidArgumentException('Placeholders with a trailing [] can only be expanded with an array of values.');
+      }
+      elseif (!$is_bracket_placeholder) {
+        if ($is_array_data) {
+          throw new \InvalidArgumentException('Placeholders must have a trailing [] if they are to be expanded with an array of values.');
+        }
+        // Scalar placeholder - does not need to be expanded.
+        continue;
+      }
+      // Handle expansion of arrays.
+      $key_name = str_replace('[]', '__', $key);
       $new_keys = array();
+      // We require placeholders to have trailing brackets if the developer
+      // intends them to be expanded to an array to make the intent explicit.
       foreach (array_values($data) as $i => $value) {
         // This assumes that there are no other placeholders that use the same
-        // name.  For example, if the array placeholder is defined as :example
+        // name.  For example, if the array placeholder is defined as :example[]
         // and there is already an :example_2 placeholder, this will generate
         // a duplicate key.  We do not account for that as the calling code
         // is already broken if that happens.
-        $new_keys[$key . '_' . $i] = $value;
+        $new_keys[$key_name . $i] = $value;
       }
 
       // Update the query with the new placeholders.
-      // preg_replace is necessary to ensure the replacement does not affect
-      // placeholders that start with the same exact text. For example, if the
-      // query contains the placeholders :foo and :foobar, and :foo has an
-      // array of values, using str_replace would affect both placeholders,
-      // but using the following preg_replace would only affect :foo because
-      // it is followed by a non-word character.
-      $query = preg_replace('#' . $key . '\b#', implode(', ', array_keys($new_keys)), $query);
+      $query = str_replace($key, implode(', ', array_keys($new_keys)), $query);
 
       // Update the args array with the new placeholders.
       unset($args[$key]);

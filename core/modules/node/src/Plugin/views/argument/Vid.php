@@ -74,7 +74,7 @@ class Vid extends Numeric {
   public function titleQuery() {
     $titles = array();
 
-    $results = $this->database->query('SELECT nr.vid, nr.nid, npr.title FROM {node_revision} nr WHERE nr.vid IN (:vids)', array(':vids' => $this->value))->fetchAllAssoc('vid', PDO::FETCH_ASSOC);
+    $results = $this->database->query('SELECT nr.vid, nr.nid, npr.title FROM {node_revision} nr WHERE nr.vid IN ( :vids[] )', array(':vids[]' => $this->value))->fetchAllAssoc('vid', PDO::FETCH_ASSOC);
     $nids = array();
     foreach ($results as $result) {
       $nids[] = $result['nid'];

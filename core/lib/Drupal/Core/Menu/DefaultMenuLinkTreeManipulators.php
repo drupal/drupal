@@ -114,7 +114,7 @@ class DefaultMenuLinkTreeManipulators {
       $nids = array_keys($node_links);
 
       $query = $this->queryFactory->get('node');
-      $query->condition('nid', $nids);
+      $query->condition('nid', $nids, 'IN');
 
       // Allows admins to view all nodes, by both disabling node_access
       // query rewrite as well as not checking for the node status. The

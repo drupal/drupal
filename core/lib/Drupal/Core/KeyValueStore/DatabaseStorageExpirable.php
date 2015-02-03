@@ -51,10 +51,10 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
    */
   public function getMultiple(array $keys) {
     $values = $this->connection->query(
-      'SELECT name, value FROM {' . $this->connection->escapeTable($this->table) . '} WHERE expire > :now AND name IN (:keys) AND collection = :collection',
+      'SELECT name, value FROM {' . $this->connection->escapeTable($this->table) . '} WHERE expire > :now AND name IN ( :keys[] ) AND collection = :collection',
       array(
         ':now' => REQUEST_TIME,
-        ':keys' => $keys,
+        ':keys[]' => $keys,
         ':collection' => $this->collection,
       ))->fetchAllKeyed();
     return array_map(array($this->serializer, 'decode'), $values);
