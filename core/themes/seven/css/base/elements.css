@@ -30,43 +30,48 @@ summary,
   font-weight: bold;
   text-transform: uppercase;
 }
+
+/**
+ * Reusable heading classes are included to help modules change the styling of
+ * headings on a page without affecting accessibility.
+ */
 h1,
 h2,
 h3,
 h4,
 h5,
 h6,
-.header-a,
-.header-b,
-.header-c,
-.header-d,
-.header-e,
-.header-f {
+.heading-a,
+.heading-b,
+.heading-c,
+.heading-d,
+.heading-e,
+.heading-f {
   font-weight: bold;
   margin: 10px 0;
 }
 h1,
-.header-a {
+.heading-a {
   font-size: 1.538em;
 }
 h2,
-.header-b {
+.heading-b {
   font-size: 1.385em;
 }
 h3,
-.header-c {
+.heading-c {
   font-size: 1.231em;
 }
 h4,
-.header-d {
+.heading-d {
   font-size: 1.154em;
 }
 h5,
-.header-e {
+.heading-e {
   font-size: 1.077em;
 }
 h6,
-.header-f {
+.heading-f {
   font-size: 1.077em;
 }
 p {
