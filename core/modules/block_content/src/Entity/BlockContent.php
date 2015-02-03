@@ -26,6 +26,7 @@ use Drupal\block_content\BlockContentInterface;
  *     "access" = "Drupal\block_content\BlockContentAccessControlHandler",
  *     "list_builder" = "Drupal\block_content\BlockContentListBuilder",
  *     "view_builder" = "Drupal\block_content\BlockContentViewBuilder",
+ *     "views_data" = "Drupal\block_content\BlockContentViewsData",
  *     "form" = {
  *       "add" = "Drupal\block_content\BlockContentForm",
  *       "edit" = "Drupal\block_content\BlockContentForm",

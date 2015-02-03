@@ -1,0 +1,18 @@
+# Schema for the views plugins of the Block Content module.
+
+# @todo Fix this when https://www.drupal.org/node/2322949 is fixed.
+views.field.block_content:
+  type: views_field
+  label: 'Block Content'
+  mapping:
+    link_to_entity:
+      type: boolean
+      label: 'Link this field to the original piece of block content'
+
+views.field.block_content_type:
+  type: views.field.block_content
+  label: 'Block content type'
+  mapping:
+    machine_name:
+      type: string
+      label: 'Output machine name'
