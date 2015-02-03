@@ -402,6 +402,19 @@ class ViewExecutableTest extends ViewUnitTestBase {
   }
 
   /**
+   * Tests ViewExecutable::getHandlers().
+   */
+  public function testGetHandlers() {
+    $view = Views::getView('test_executable_displays');
+    $view->setDisplay('page_1');
+
+    $view->getHandlers('field', 'page_2');
+
+    // getHandlers() shouldn't change the active display.
+    $this->assertEqual('page_1', $view->current_display, "The display shouldn't change after getHandlers()");
+  }
+
+  /**
    * Tests the validation of display handlers.
    */
   public function testValidate() {

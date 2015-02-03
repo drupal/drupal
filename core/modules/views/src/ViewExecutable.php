@@ -2001,6 +2001,8 @@ class ViewExecutable {
    *   An array of handler instances of a given type for this display.
    */
   public function getHandlers($type, $display_id = NULL) {
+    $old_display_id = !empty($this->current_display) ? $this->current_display : 'default';
+
     $this->setDisplay($display_id);
 
     if (!isset($display_id)) {
@@ -2009,7 +2011,14 @@ class ViewExecutable {
 
     // Get info about the types so we can get the right data.
     $types = static::getHandlerTypes();
-    return $this->displayHandlers->get($display_id)->getOption($types[$type]['plural']);
+
+    $handlers = $this->displayHandlers->get($display_id)->getOption($types[$type]['plural']);
+
+    // Restore initial display id (if any) or set to 'default'.
+    if ($display_id != $old_display_id) {
+      $this->setDisplay($old_display_id);
+    }
+    return $handlers;
   }
 
   /**
