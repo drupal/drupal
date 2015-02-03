@@ -581,6 +581,9 @@ views_field:
     hide_alter_empty:
       type: boolean
       label: 'Hide rewriting if empty'
+    destination:
+      type: boolean
+      label: 'Append a destination query string to operation links.'
     plugin_id:
       type: string
       label: 'Plugin ID'

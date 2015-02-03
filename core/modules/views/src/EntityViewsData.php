@@ -148,6 +148,14 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
       }
     }
 
+    $data[$base_table]['operations'] = array(
+      'field' => array(
+        'title' => $this->t('Operations links'),
+        'help' => $this->t('Provides links to perform entity operations.'),
+        'id' => 'entity_operations',
+      ),
+    );
+
     // Setup relations to the revisions/property data.
     if ($data_table) {
       $data[$data_table]['table']['join'][$base_table] = [

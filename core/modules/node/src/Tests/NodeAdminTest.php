@@ -171,4 +171,5 @@ class NodeAdminTest extends NodeTestBase {
       $this->assertLinkByHref('node/' . $node->id() . '/delete');
     }
   }
+
 }
