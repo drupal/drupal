@@ -268,25 +268,18 @@ class Route implements \Serializable
      *
      * @param string $scheme
      *
-     * @return bool    true if the scheme requirement exists, otherwise false
+     * @return bool true if the scheme requirement exists, otherwise false
      */
     public function hasScheme($scheme)
     {
-        $scheme = strtolower($scheme);
-        foreach ($this->schemes as $requiredScheme) {
-            if ($scheme === $requiredScheme) {
-                return true;
-            }
-        }
-
-        return false;
+        return in_array(strtolower($scheme), $this->schemes, true);
     }
 
     /**
      * Returns the uppercased HTTP methods this route is restricted to.
      * So an empty array means that any method is allowed.
      *
-     * @return array The schemes
+     * @return array The methods
      */
     public function getMethods()
     {
@@ -399,7 +392,7 @@ class Route implements \Serializable
     }
 
     /**
-     * Checks if an option has been set
+     * Checks if an option has been set.
      *
      * @param string $name An option name
      *

@@ -29,7 +29,7 @@ class Parser
     private $refs = array();
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param int $offset The offset of YAML document (used for line numbers in error messages)
      */
@@ -41,10 +41,10 @@ class Parser
     /**
      * Parses a YAML string to a PHP value.
      *
-     * @param string  $value                  A YAML string
-     * @param bool    $exceptionOnInvalidType true if an exception must be thrown on invalid types (a PHP resource or object), false otherwise
-     * @param bool    $objectSupport          true if object support is enabled, false otherwise
-     * @param bool    $objectForMap           true if maps should return a stdClass instead of array()
+     * @param string $value                  A YAML string
+     * @param bool   $exceptionOnInvalidType true if an exception must be thrown on invalid types (a PHP resource or object), false otherwise
+     * @param bool   $objectSupport          true if object support is enabled, false otherwise
+     * @param bool   $objectForMap           true if maps should return a stdClass instead of array()
      *
      * @return mixed A PHP value
      *
@@ -98,7 +98,6 @@ class Parser
                     $data[] = $parser->parse($this->getNextEmbedBlock(null, true), $exceptionOnInvalidType, $objectSupport, $objectForMap);
                 } else {
                     if (isset($values['leadspaces'])
-                        && ' ' == $values['leadspaces']
                         && preg_match('#^(?P<key>'.Inline::REGEX_QUOTED_STRING.'|[^ \'"\{\[].*?) *\:(\s+(?P<value>.+?))?\s*$#u', $values['value'], $matches)
                     ) {
                         // this is a compact notation element, add to next block and parse
@@ -108,7 +107,7 @@ class Parser
 
                         $block = $values['value'];
                         if ($this->isNextLineIndented()) {
-                            $block .= "\n".$this->getNextEmbedBlock($this->getCurrentLineIndentation() + 2);
+                            $block .= "\n".$this->getNextEmbedBlock($this->getCurrentLineIndentation() + strlen($values['leadspaces']) + 1);
                         }
 
                         $data[] = $parser->parse($block, $exceptionOnInvalidType, $objectSupport, $objectForMap);
@@ -349,7 +348,14 @@ class Parser
             $newIndent = $indentation;
         }
 
-        $data = array(substr($this->currentLine, $newIndent));
+        $data = array();
+        if ($this->getCurrentLineIndentation() >= $newIndent) {
+            $data[] = substr($this->currentLine, $newIndent);
+        } else {
+            $this->moveToPreviousLine();
+
+            return;
+        }
 
         if ($inSequence && $oldLineIndentation === $newIndent && '-' === $data[0][0]) {
             // the previous line contained a dash but no item content, this line is a sequence item with the same indentation
@@ -372,7 +378,7 @@ class Parser
                 $removeComments = !preg_match($removeCommentsPattern, $this->currentLine);
             }
 
-            if ($isItUnindentedCollection && !$this->isStringUnIndentedCollectionItem($this->currentLine)) {
+            if ($isItUnindentedCollection && !$this->isStringUnIndentedCollectionItem($this->currentLine) && $newIndent === $indent) {
                 $this->moveToPreviousLine();
                 break;
             }
@@ -623,7 +629,7 @@ class Parser
 
         // strip YAML header
         $count = 0;
-        $value = preg_replace('#^\%YAML[: ][\d\.]+.*\n#su', '', $value, -1, $count);
+        $value = preg_replace('#^\%YAML[: ][\d\.]+.*\n#u', '', $value, -1, $count);
         $this->offset += $count;
 
         // remove leading comments
@@ -649,7 +655,7 @@ class Parser
     }
 
     /**
-     * Returns true if the next line starts unindented collection
+     * Returns true if the next line starts unindented collection.
      *
      * @return bool Returns true if the next line starts unindented collection, false otherwise
      */
@@ -681,7 +687,7 @@ class Parser
     }
 
     /**
-     * Returns true if the string is un-indented collection item
+     * Returns true if the string is un-indented collection item.
      *
      * @return bool Returns true if the string is un-indented collection item, false otherwise
      */

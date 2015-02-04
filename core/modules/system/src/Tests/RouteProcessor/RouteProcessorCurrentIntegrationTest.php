@@ -47,7 +47,7 @@ class RouteProcessorCurrentIntegrationTest extends KernelTestBase {
       'SCRIPT_FILENAME' => \Drupal::root() . '/index.php',
       'SERVER_NAME' => 'http://www.example.com',
     ];
-    $request = Request::create('/subdir', 'GET', [], [], [], $server);
+    $request = Request::create('/subdir/', 'GET', [], [], [], $server);
     $request->attributes->set(RouteObjectInterface::ROUTE_NAME, '<front>');
     $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('/'));
 

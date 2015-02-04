@@ -159,7 +159,7 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
         'SCRIPT_FILENAME' => $this->root . '/index.php',
         'SERVER_NAME' => 'http://www.example.com',
       ];
-      $request = Request::create('/subdir');
+      $request = Request::create('/subdir/');
     }
     else {
       $request = Request::create('/');

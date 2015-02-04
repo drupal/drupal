@@ -223,6 +223,21 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $request = Request::create('http://test.com/?foo');
         $this->assertEquals('/?foo', $request->getRequestUri());
         $this->assertEquals(array('foo' => ''), $request->query->all());
+
+        ## assume rewrite rule: (.*) --> app/app.php ; app/ is a symlink to a symfony web/ directory
+        $request = Request::create('http://test.com/apparthotel-1234', 'GET', array(), array(), array(),
+            array(
+                'DOCUMENT_ROOT' => '/var/www/www.test.com',
+                'SCRIPT_FILENAME' => '/var/www/www.test.com/app/app.php',
+                'SCRIPT_NAME' => '/app/app.php',
+                'PHP_SELF' => '/app/app.php/apparthotel-1234',
+            ));
+        $this->assertEquals('http://test.com/apparthotel-1234', $request->getUri());
+        $this->assertEquals('/apparthotel-1234', $request->getPathInfo());
+        $this->assertEquals('', $request->getQueryString());
+        $this->assertEquals(80, $request->getPort());
+        $this->assertEquals('test.com', $request->getHttpHost());
+        $this->assertFalse($request->isSecure());
     }
 
     /**
@@ -885,6 +900,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             array(array('3620:0:1cfe:face:b00c::3'), '1620:0:1cfe:face:b00c::3', '3620:0:1cfe:face:b00c::3,2620:0:1cfe:face:b00c::3', array('1620:0:1cfe:face:b00c::3', '2620:0:1cfe:face:b00c::3')),
             // multiple forwarded for with remote IPv4 addr and some reverse proxies trusted but in the middle
             array(array('2620:0:1cfe:face:b00c::3', '4620:0:1cfe:face:b00c::3'), '1620:0:1cfe:face:b00c::3', '4620:0:1cfe:face:b00c::3,3620:0:1cfe:face:b00c::3,2620:0:1cfe:face:b00c::3', array('1620:0:1cfe:face:b00c::3', '3620:0:1cfe:face:b00c::3')),
+
+            // client IP with port
+            array(array('88.88.88.88'), '127.0.0.1', '88.88.88.88:12345, 127.0.0.1', array('127.0.0.1')),
         );
     }
 
@@ -1324,7 +1342,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             array(
-                '/foo%20bar',
+                '/foo%20bar/',
                 array(
                     'SCRIPT_FILENAME' => '/home/John Doe/public_html/foo bar/app.php',
                     'SCRIPT_NAME' => '/foo bar/app.php',

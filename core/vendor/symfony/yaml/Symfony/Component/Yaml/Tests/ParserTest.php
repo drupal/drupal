@@ -464,9 +464,7 @@ EOF;
     }
 
     /**
-     *
      * @expectedException \Symfony\Component\Yaml\Exception\ParseException
-     *
      */
     public function testUnindentedCollectionException()
     {
@@ -476,6 +474,22 @@ collection:
 -item1
 -item2
 -item3
+
+EOF;
+
+        $this->parser->parse($yaml);
+    }
+
+    /**
+     * @expectedException \Symfony\Component\Yaml\Exception\ParseException
+     */
+    public function testShortcutKeyUnindentedCollectionException()
+    {
+        $yaml = <<<EOF
+
+collection:
+-  key: foo
+  foo: bar
 
 EOF;
 
@@ -698,6 +712,17 @@ list_in_map: { key: [*var] }
 map_in_map: { foo: { bar: *var } }
 EOF
         ));
+    }
+
+    public function testYamlDirective()
+    {
+        $yaml = <<<EOF
+%YAML 1.2
+---
+foo: 1
+bar: 2
+EOF;
+        $this->assertEquals(array('foo' => 1, 'bar' => 2), $this->parser->parse($yaml));
     }
 }
 

@@ -12,12 +12,12 @@
 namespace Symfony\Component\HttpKernel\EventListener;
 
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpKernel\Exception\FlattenException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -104,7 +104,7 @@ class ExceptionListener implements EventSubscriberInterface
      * Clones the request for the exception.
      *
      * @param \Exception $exception The thrown exception.
-     * @param Request $request The original request.
+     * @param Request    $request   The original request.
      *
      * @return Request $request The cloned request.
      */

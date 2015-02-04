@@ -116,7 +116,7 @@ class UploadedFile extends File
     }
 
     /**
-     * Returns the original file extension
+     * Returns the original file extension.
      *
      * It is extracted from the original file name that was uploaded.
      * Then it should not be considered as a safe value.
@@ -139,7 +139,7 @@ class UploadedFile extends File
      *
      * @return string|null The mime type
      *
-     * @see getMimeType
+     * @see getMimeType()
      *
      * @api
      */
@@ -252,7 +252,7 @@ class UploadedFile extends File
     }
 
     /**
-     * Returns the maximum size of an uploaded file as configured in php.ini
+     * Returns the maximum size of an uploaded file as configured in php.ini.
      *
      * @return int The maximum size of an uploaded file in bytes
      */

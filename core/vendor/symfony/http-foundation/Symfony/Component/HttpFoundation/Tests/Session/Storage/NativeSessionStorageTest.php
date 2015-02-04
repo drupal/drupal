@@ -27,6 +27,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\Proxy\SessionHandlerProxy;
  * These tests require separate processes.
  *
  * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
  */
 class NativeSessionStorageTest extends \PHPUnit_Framework_TestCase
 {
@@ -34,8 +35,8 @@ class NativeSessionStorageTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        ini_set('session.save_handler', 'files');
-        ini_set('session.save_path', $this->savePath = sys_get_temp_dir().'/sf2test');
+        $this->iniSet('session.save_handler', 'files');
+        $this->iniSet('session.save_path', $this->savePath = sys_get_temp_dir().'/sf2test');
         if (!is_dir($this->savePath)) {
             mkdir($this->savePath);
         }
@@ -85,13 +86,15 @@ class NativeSessionStorageTest extends \PHPUnit_Framework_TestCase
     public function testGetId()
     {
         $storage = $this->getStorage();
-        $this->assertEquals('', $storage->getId());
+        $this->assertSame('', $storage->getId(), 'Empty ID before starting session');
 
         $storage->start();
-        $this->assertNotEquals('', $storage->getId());
+        $id = $storage->getId();
+        $this->assertInternalType('string', $id);
+        $this->assertNotSame('', $id);
 
         $storage->save();
-        $this->assertNotEquals('', $storage->getId());
+        $this->assertSame($id, $storage->getId(), 'ID stays after saving session');
     }
 
     public function testRegenerate()
@@ -118,7 +121,7 @@ class NativeSessionStorageTest extends \PHPUnit_Framework_TestCase
 
     public function testDefaultSessionCacheLimiter()
     {
-        ini_set('session.cache_limiter', 'nocache');
+        $this->iniSet('session.cache_limiter', 'nocache');
 
         $storage = new NativeSessionStorage();
         $this->assertEquals('', ini_get('session.cache_limiter'));
@@ -126,7 +129,7 @@ class NativeSessionStorageTest extends \PHPUnit_Framework_TestCase
 
     public function testExplicitSessionCacheLimiter()
     {
-        ini_set('session.cache_limiter', 'nocache');
+        $this->iniSet('session.cache_limiter', 'nocache');
 
         $storage = new NativeSessionStorage(array('cache_limiter' => 'public'));
         $this->assertEquals('public', ini_get('session.cache_limiter'));
@@ -168,7 +171,7 @@ class NativeSessionStorageTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Test skipped, for PHP 5.3 only.');
         }
 
-        ini_set('session.save_handler', 'files');
+        $this->iniSet('session.save_handler', 'files');
         $storage = $this->getStorage();
         $storage->setSaveHandler();
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Session\Storage\Proxy\NativeProxy', $storage->getSaveHandler());
@@ -190,7 +193,7 @@ class NativeSessionStorageTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Test skipped, for PHP 5.4 only.');
         }
 
-        ini_set('session.save_handler', 'files');
+        $this->iniSet('session.save_handler', 'files');
         $storage = $this->getStorage();
         $storage->setSaveHandler();
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Session\Storage\Proxy\SessionHandlerProxy', $storage->getSaveHandler());
@@ -209,35 +212,8 @@ class NativeSessionStorageTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException \RuntimeException
      */
-    public function testStartedOutside53()
+    public function testStartedOutside()
     {
-        if (PHP_VERSION_ID >= 50400) {
-            $this->markTestSkipped('Test skipped, for PHP 5.3 only.');
-        }
-
-        $storage = $this->getStorage();
-
-        $this->assertFalse(isset($_SESSION));
-
-        session_start();
-        $this->assertTrue(isset($_SESSION));
-        // PHP session might have started, but the storage driver has not, so false is correct here
-        $this->assertFalse($storage->isStarted());
-
-        $key = $storage->getMetadataBag()->getStorageKey();
-        $this->assertFalse(isset($_SESSION[$key]));
-        $storage->start();
-    }
-
-    /**
-     * @expectedException \RuntimeException
-     */
-    public function testCanStartOutside54()
-    {
-        if (PHP_VERSION_ID < 50400) {
-            $this->markTestSkipped('Test skipped, for PHP 5.4 only.');
-        }
-
         $storage = $this->getStorage();
 
         $this->assertFalse(isset($_SESSION));
@@ -246,12 +222,27 @@ class NativeSessionStorageTest extends \PHPUnit_Framework_TestCase
 
         session_start();
         $this->assertTrue(isset($_SESSION));
-        $this->assertTrue($storage->getSaveHandler()->isActive());
+        if (PHP_VERSION_ID >= 50400) {
+            // this only works in PHP >= 5.4 where session_status is available
+            $this->assertTrue($storage->getSaveHandler()->isActive());
+        }
         // PHP session might have started, but the storage driver has not, so false is correct here
         $this->assertFalse($storage->isStarted());
 
         $key = $storage->getMetadataBag()->getStorageKey();
         $this->assertFalse(isset($_SESSION[$key]));
         $storage->start();
+    }
+
+    public function testRestart()
+    {
+        $storage = $this->getStorage();
+        $storage->start();
+        $id = $storage->getId();
+        $storage->getBag('attributes')->set('lucky', 7);
+        $storage->save();
+        $storage->start();
+        $this->assertSame($id, $storage->getId(), 'Same session ID after restarting');
+        $this->assertSame(7, $storage->getBag('attributes')->get('lucky'), 'Data still available');
     }
 }

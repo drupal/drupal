@@ -50,7 +50,7 @@ class ExceptionHandler
      */
     public static function register($debug = true, $fileLinkFormat = null)
     {
-        $handler = new static($debug, $fileLinkFormat = null);
+        $handler = new static($debug, $fileLinkFormat);
 
         $prev = set_exception_handler(array($handler, 'handle'));
         if (is_array($prev) && $prev[0] instanceof ErrorHandler) {
@@ -142,8 +142,10 @@ class ExceptionHandler
      * this method will use it to create and send the response. If not,
      * it will fallback to plain PHP functions.
      *
-     * @see sendPhpResponse
-     * @see createResponse
+     * @param \Exception $exception An \Exception instance
+     *
+     * @see sendPhpResponse()
+     * @see createResponse()
      */
     private function failSafeHandle(\Exception $exception)
     {

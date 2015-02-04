@@ -52,7 +52,7 @@ class ResolveDefinitionTemplatesPass implements CompilerPassInterface
     }
 
     /**
-     * Resolves the definition
+     * Resolves the definition.
      *
      * @param string              $id         The definition identifier
      * @param DefinitionDecorator $definition
@@ -84,6 +84,7 @@ class ResolveDefinitionTemplatesPass implements CompilerPassInterface
         $def->setFactoryClass($parentDef->getFactoryClass());
         $def->setFactoryMethod($parentDef->getFactoryMethod());
         $def->setFactoryService($parentDef->getFactoryService());
+        $def->setFactory($parentDef->getFactory());
         $def->setConfigurator($parentDef->getConfigurator());
         $def->setFile($parentDef->getFile());
         $def->setPublic($parentDef->isPublic());

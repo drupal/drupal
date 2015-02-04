@@ -204,9 +204,9 @@ class RouteTest extends \PHPUnit_Framework_TestCase
     public function testCondition()
     {
         $route = new Route('/');
-        $this->assertEquals(null, $route->getCondition());
+        $this->assertSame('', $route->getCondition());
         $route->setCondition('context.getMethod() == "GET"');
-        $this->assertEquals('context.getMethod() == "GET"', $route->getCondition());
+        $this->assertSame('context.getMethod() == "GET"', $route->getCondition());
     }
 
     public function testCompile()
@@ -218,8 +218,10 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $this->assertNotSame($compiled, $route->compile(), '->compile() recompiles if the route was modified');
     }
 
-    public function testPattern()
+    public function testLegacyPattern()
     {
+        $this->iniSet('error_reporting', -1 & ~E_USER_DEPRECATED);
+
         $route = new Route('/{foo}');
         $this->assertEquals('/{foo}', $route->getPattern());
 

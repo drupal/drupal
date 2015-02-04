@@ -61,7 +61,7 @@ class YamlDumper extends Dumper
     }
 
     /**
-     * Adds a service
+     * Adds a service.
      *
      * @param string     $id
      * @param Definition $definition
@@ -86,7 +86,7 @@ class YamlDumper extends Dumper
                 foreach ($attributes as $key => $value) {
                     $att[] = sprintf('%s: %s', $this->dumper->dump($key), $this->dumper->dump($value));
                 }
-                $att = $att ? ', '.implode(' ', $att) : '';
+                $att = $att ? ', '.implode(', ', $att) : '';
 
                 $tagsCode .= sprintf("            - { name: %s%s }\n", $this->dumper->dump($name), $att);
             }
@@ -140,7 +140,7 @@ class YamlDumper extends Dumper
         }
 
         if (null !== $decorated = $definition->getDecoratedService()) {
-            list ($decorated, $renamedId) = $decorated;
+            list($decorated, $renamedId) = $decorated;
             $code .= sprintf("        decorates: %s\n", $decorated);
             if (null !== $renamedId) {
                 $code .= sprintf("        decoration_inner_name: %s\n", $renamedId);
@@ -159,7 +159,7 @@ class YamlDumper extends Dumper
     }
 
     /**
-     * Adds a service alias
+     * Adds a service alias.
      *
      * @param string $alias
      * @param Alias  $id
@@ -176,7 +176,7 @@ class YamlDumper extends Dumper
     }
 
     /**
-     * Adds services
+     * Adds services.
      *
      * @return string
      */
@@ -203,7 +203,7 @@ class YamlDumper extends Dumper
     }
 
     /**
-     * Adds parameters
+     * Adds parameters.
      *
      * @return string
      */
@@ -239,7 +239,7 @@ class YamlDumper extends Dumper
     }
 
     /**
-     * Dumps the value to YAML format
+     * Dumps the value to YAML format.
      *
      * @param mixed $value
      *
@@ -328,7 +328,7 @@ class YamlDumper extends Dumper
     }
 
     /**
-     * Escapes arguments
+     * Escapes arguments.
      *
      * @param array $arguments
      *

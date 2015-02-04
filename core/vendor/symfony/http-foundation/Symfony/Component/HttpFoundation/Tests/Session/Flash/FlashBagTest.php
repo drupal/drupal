@@ -12,17 +12,16 @@
 namespace Symfony\Component\HttpFoundation\Tests\Session\Flash;
 
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 /**
- * FlashBagTest
+ * FlashBagTest.
  *
  * @author Drak <drak@zikula.org>
  */
 class FlashBagTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Symfony\Component\HttpFoundation\SessionFlash\FlashBagInterface
+     * @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface
      */
     private $bag;
 
