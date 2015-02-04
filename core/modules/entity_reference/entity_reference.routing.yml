@@ -1,7 +1,0 @@
-entity_reference.autocomplete:
-  path: '/entity_reference/autocomplete/{type}/{field_name}/{entity_type}/{bundle_name}/{entity_id}'
-  defaults:
-    _controller: '\Drupal\entity_reference\EntityReferenceController::handleAutocomplete'
-    entity_id: 'NULL'
-  requirements:
-    _access: 'TRUE'

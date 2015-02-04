@@ -158,7 +158,7 @@ class NodeCreationTest extends NodeTestBase {
 
     $this->drupalGet('node/add/page');
 
-    $result = $this->xpath('//input[@id="edit-uid-0-target-id" and contains(@data-autocomplete-path, "/entity_reference/autocomplete/tags/uid/node/page")]');
+    $result = $this->xpath('//input[@id="edit-uid-0-target-id" and contains(@data-autocomplete-path, "/entity_reference_autocomplete/user/default")]');
     $this->assertEqual(count($result), 1, 'Ensure that the user does have access to the autocompletion');
   }
 

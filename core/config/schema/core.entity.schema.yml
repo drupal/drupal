@@ -200,6 +200,34 @@ field.widget.settings.checkbox:
       type: boolean
       label: 'Use field label instead of the "On value" as label'
 
+field.widget.settings.entity_reference_autocomplete_tags:
+  type: mapping
+  label: 'Entity reference autocomplete (Tags style) display format settings'
+  mapping:
+    match_operator:
+      type: string
+      label: 'Autocomplete matching'
+    size:
+      type: integer
+      label: 'Size of textfield'
+    placeholder:
+      type: label
+      label: 'Placeholder'
+
+field.widget.settings.entity_reference_autocomplete:
+  type: mapping
+  label: 'Entity reference autocomplete display format settings'
+  mapping:
+    match_operator:
+      type: string
+      label: 'Autocomplete matching'
+    size:
+      type: integer
+      label: 'Size of textfield'
+    placeholder:
+      type: label
+      label: 'Placeholder'
+
 field.formatter.settings.boolean:
   type: mapping
   mapping:

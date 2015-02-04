@@ -36,37 +36,3 @@ entity_reference.default.handler_settings:
     auto_create:
       type: boolean
       label: 'Create referenced entities if they don''t already exist'
-
-field.widget.settings.entity_reference_autocomplete_tags:
-  type: mapping
-  label: 'Entity reference autocomplete (Tags style) display format settings'
-  mapping:
-    match_operator:
-      type: string
-      label: 'Autocomplete matching'
-    size:
-      type: integer
-      label: 'Size of textfield'
-    autocomplete_type:
-      type: string
-      label: 'Autocomplete type'
-    placeholder:
-      type: label
-      label: 'Placeholder'
-
-field.widget.settings.entity_reference_autocomplete:
-  type: mapping
-  label: 'Entity reference autocomplete display format settings'
-  mapping:
-    match_operator:
-      type: string
-      label: 'Autocomplete matching'
-    size:
-      type: integer
-      label: 'Size of textfield'
-    autocomplete_type:
-      type: string
-      label: 'Autocomplete type'
-    placeholder:
-      type: label
-      label: 'Placeholder'

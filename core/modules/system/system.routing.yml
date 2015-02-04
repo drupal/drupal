@@ -460,3 +460,11 @@ system.admin_content:
     _title: 'Content'
   requirements:
     _permission: 'access administration pages'
+
+system.entity_autocomplete:
+  path: '/entity_reference_autocomplete/{target_type}/{selection_handler}/{selection_settings}'
+  defaults:
+    _controller: '\Drupal\system\Controller\EntityAutocompleteController::handleAutocomplete'
+    selection_settings: ''
+  requirements:
+    _access: 'TRUE'

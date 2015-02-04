@@ -84,12 +84,10 @@ class UserEntityReferenceTest extends EntityUnitTestBase {
     $user3->save();
 
 
-    /**
-     * @var \Drupal\entity_reference\EntityReferenceAutocomplete $autocomplete
-     */
-    $autocomplete = \Drupal::service('entity_reference.autocomplete');
+    /** @var \Drupal\Core\Entity\EntityAutocompleteMatcher $autocomplete */
+    $autocomplete = \Drupal::service('entity.autocomplete_matcher');
 
-    $matches = $autocomplete->getMatches($field_definition, 'user', 'user', 'NULL', '', 'aabb');
+    $matches = $autocomplete->getMatches('user', 'default', $field_definition->getSetting('handler_settings'), 'aabb');
     $this->assertEqual(count($matches), 2);
     $users = array();
     foreach ($matches as $match) {
@@ -99,7 +97,7 @@ class UserEntityReferenceTest extends EntityUnitTestBase {
     $this->assertTrue(in_array($user2->label(), $users));
     $this->assertFalse(in_array($user3->label(), $users));
 
-    $matches = $autocomplete->getMatches($field_definition, 'user', 'user', 'NULL', '', 'aabbbb');
+    $matches = $autocomplete->getMatches('user', 'default', $field_definition->getSetting('handler_settings'), 'aabbbb');
     $this->assertEqual(count($matches), 0, '');
   }
 }

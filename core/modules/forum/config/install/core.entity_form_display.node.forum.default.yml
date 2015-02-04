@@ -28,7 +28,6 @@ content:
     settings:
       match_operator: CONTAINS
       size: 60
-      autocomplete_type: tags
       placeholder: ''
     third_party_settings: {  }
   created:

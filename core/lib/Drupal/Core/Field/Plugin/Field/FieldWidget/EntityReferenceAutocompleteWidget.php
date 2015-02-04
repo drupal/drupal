@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\entity_reference\Plugin\Field\FieldWidget\AutocompleteWidgetBase.
+ * Contains \Drupal\Core\Field\Plugin\Field\FieldWidget\AutocompleteWidget.
  */
 
-namespace Drupal\entity_reference\Plugin\Field\FieldWidget;
+namespace Drupal\Core\Field\Plugin\Field\FieldWidget;
 
 use Drupal\Component\Utility\Tags;
 use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
@@ -16,9 +16,29 @@ use Drupal\user\EntityOwnerInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
- * Parent plugin for entity reference autocomplete widgets.
+ * Plugin implementation of the 'entity_reference_autocomplete' widget.
+ *
+ * @FieldWidget(
+ *   id = "entity_reference_autocomplete",
+ *   label = @Translation("Autocomplete"),
+ *   description = @Translation("An autocomplete text field."),
+ *   field_types = {
+ *     "entity_reference"
+ *   }
+ * )
  */
-abstract class AutocompleteWidgetBase extends WidgetBase {
+class EntityReferenceAutocompleteWidget extends WidgetBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return array(
+      'match_operator' => 'CONTAINS',
+      'size' => '60',
+      'placeholder' => '',
+    ) + parent::defaultSettings();
+  }
 
   /**
    * {@inheritdoc}
@@ -75,29 +95,26 @@ abstract class AutocompleteWidgetBase extends WidgetBase {
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $entity = $items->getEntity();
 
-    // Prepare the autocomplete route parameters.
-    $autocomplete_route_parameters = array(
-      'type' => $this->getSetting('autocomplete_type'),
-      'field_name' => $this->fieldDefinition->getName(),
-      'entity_type' => $entity->getEntityTypeId(),
-      'bundle_name' => $entity->bundle(),
-    );
-
-    if ($entity_id = $entity->id()) {
-      $autocomplete_route_parameters['entity_id'] = $entity_id;
-    }
-
     $element += array(
-      '#type' => 'textfield',
+      '#type' => 'entity_autocomplete',
+      '#target_type' => $this->getFieldSetting('target_type'),
+      '#selection_handler' => $this->getFieldSetting('handler'),
+      '#selection_settings' => $this->getFieldSetting('handler_settings'),
+      // Entity reference field items are handling validation themselves via
+      // the 'ValidReference' constraint.
+      '#validate_reference' => FALSE,
       '#maxlength' => 1024,
       '#default_value' => implode(', ', $this->getLabels($items, $delta)),
-      '#autocomplete_route_name' => 'entity_reference.autocomplete',
-      '#autocomplete_route_parameters' => $autocomplete_route_parameters,
       '#size' => $this->getSetting('size'),
       '#placeholder' => $this->getSetting('placeholder'),
-      '#element_validate' => array(array($this, 'elementValidate')),
-      '#autocreate_uid' => ($entity instanceof EntityOwnerInterface) ? $entity->getOwnerId() : \Drupal::currentUser()->id(),
     );
+
+    if ($this->getSelectionHandlerSetting('auto_create')) {
+      $element['#autocreate'] = array(
+        'bundle' => $this->getAutocreateBundle(),
+        'uid' => ($entity instanceof EntityOwnerInterface) ? $entity->getOwnerId() : \Drupal::currentUser()->id()
+      );
+    }
 
     return array('target_id' => $element);
   }
@@ -110,9 +127,20 @@ abstract class AutocompleteWidgetBase extends WidgetBase {
   }
 
   /**
-   * Validates an element.
+   * {@inheritdoc}
    */
-  public function elementValidate($element, FormStateInterface $form_state, $form) { }
+  public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
+    foreach ($values as $key => $value) {
+      // The entity_autocomplete form element returns an array when an entity
+      // was "autocreated", so we need to move it up a level.
+      if (is_array($value['target_id'])) {
+        unset($values[$key]['target_id']);
+        $values[$key] += $value['target_id'];
+      }
+    }
+
+    return $values;
+  }
 
   /**
    * Gets the entity labels.
@@ -144,43 +172,29 @@ abstract class AutocompleteWidgetBase extends WidgetBase {
   }
 
   /**
-   * Creates a new entity from a label entered in the autocomplete input.
+   * Returns the name of the bundle which will be used for autocreated entities.
    *
-   * @param string $label
-   *   The entity label.
-   * @param int $uid
-   *   The entity uid.
-   *
-   * @return \Drupal\Core\Entity\EntityInterface
+   * @return string
+   *   The bundle name.
    */
-  protected function createNewEntity($label, $uid) {
-    $entity_manager = \Drupal::entityManager();
-    $target_type = $this->getFieldSetting('target_type');
-    $target_bundles = $this->getSelectionHandlerSetting('target_bundles');
-
-    // Get the bundle.
-    if (!empty($target_bundles)) {
-      $bundle = reset($target_bundles);
-    }
-    else {
-      $bundles = entity_get_bundles($target_type);
-      $bundle = reset($bundles);
-    }
-
-    $entity_type = $entity_manager->getDefinition($target_type);
-    $bundle_key = $entity_type->getKey('bundle');
-    $label_key = $entity_type->getKey('label');
-
-    $entity = $entity_manager->getStorage($target_type)->create(array(
-      $label_key => $label,
-      $bundle_key => $bundle,
-    ));
-
-    if ($entity instanceof EntityOwnerInterface) {
-      $entity->setOwnerId($uid);
+  protected function getAutocreateBundle() {
+    $bundle = NULL;
+    if ($this->getSelectionHandlerSetting('auto_create')) {
+      // If the 'target_bundles' setting is restricted to a single choice, we
+      // can use that.
+      if (($target_bundles = $this->getSelectionHandlerSetting('target_bundles')) && count($target_bundles) == 1) {
+        $bundle = reset($target_bundles);
+      }
+      // Otherwise use the first bundle as a fallback.
+      else {
+        // @todo Expose a proper UI for choosing the bundle for autocreated
+        // entities in https://www.drupal.org/node/2412569.
+        $bundles = entity_get_bundles($this->getFieldSetting('target_type'));
+        $bundle = key($bundles);
+      }
     }
 
-    return $entity;
+    return $bundle;
   }
 
   /**
@@ -195,17 +209,6 @@ abstract class AutocompleteWidgetBase extends WidgetBase {
   protected function getSelectionHandlerSetting($setting_name) {
     $settings = $this->getFieldSetting('handler_settings');
     return isset($settings[$setting_name]) ? $settings[$setting_name] : NULL;
-  }
-
-  /**
-   * Checks whether a content entity is referenced.
-   *
-   * @return bool
-   */
-  protected function isContentReferenced() {
-    $target_type = $this->getFieldSetting('target_type');
-    $target_type_info = \Drupal::entityManager()->getDefinition($target_type);
-    return $target_type_info->isSubclassOf('\Drupal\Core\Entity\ContentEntityInterface');
   }
 
 }

@@ -1,4 +1,0 @@
-services:
-  entity_reference.autocomplete:
-    class: Drupal\entity_reference\EntityReferenceAutocomplete
-    arguments: ['@entity.manager', '@plugin.manager.entity_reference_selection']

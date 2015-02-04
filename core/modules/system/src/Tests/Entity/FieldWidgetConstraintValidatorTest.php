@@ -18,7 +18,19 @@ use Drupal\system\Tests\TypedData;
  */
 class FieldWidgetConstraintValidatorTest extends KernelTestBase {
 
-  public static $modules = array('entity_test', 'field', 'user');
+  public static $modules = array('entity_test', 'field', 'user', 'system');
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    $this->installSchema('system', 'router');
+    $this->container->get('router.builder')->rebuild();
+
+    $this->installEntitySchema('user');
+  }
 
   /**
    * Tests widget constraint validation.
@@ -37,6 +49,8 @@ class FieldWidgetConstraintValidatorTest extends KernelTestBase {
     \Drupal::formBuilder()->processForm('field_test_entity_form', $form, $form_state);
 
     // Validate the field constraint.
+    $form_state->getFormObject()->setEntity($entity)->setFormDisplay($display, $form_state);
+    $entity = $form_state->getFormObject()->buildEntity($form, $form_state);
     $display->validateFormValues($entity, $form, $form_state);
 
     $errors = $form_state->getErrors();

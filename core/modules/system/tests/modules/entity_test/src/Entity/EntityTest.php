@@ -115,7 +115,6 @@ class EntityTest extends ContentEntityBase implements EntityOwnerInterface {
         'settings' => array(
           'match_operator' => 'CONTAINS',
           'size' => '60',
-          'autocomplete_type' => 'tags',
           'placeholder' => '',
         ),
       ));
