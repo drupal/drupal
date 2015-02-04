@@ -27,15 +27,10 @@ class MenuLanguageTest extends MenuWebTestBase {
    */
   public static $modules = array('language');
 
-  protected $admin_user;
-  protected $menu;
-
   protected function setUp() {
     parent::setUp();
 
-    // Create user.
-    $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer menu'));
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->drupalCreateUser(array('access administration pages', 'administer menu')));
 
     // Add some custom languages.
     foreach (array('aa', 'bb', 'cc', 'cs') as $language_code) {

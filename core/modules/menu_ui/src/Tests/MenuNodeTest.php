@@ -31,15 +31,14 @@ class MenuNodeTest extends WebTestBase {
 
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 
-    $this->admin_user = $this->drupalCreateUser(array(
+    $this->drupalLogin($this->drupalCreateUser(array(
       'access administration pages',
       'administer content types',
       'administer menu',
       'create page content',
       'edit any page content',
       'delete any page content',
-    ));
-    $this->drupalLogin($this->admin_user);
+    )));
   }
 
   /**

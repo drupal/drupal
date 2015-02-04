@@ -35,16 +35,16 @@ class MenuTest extends MenuWebTestBase {
   /**
    * A user with administration rights.
    *
-   * @var \Drupal\user\Entity\User
+   * @var \Drupal\user\UserInterface
    */
-  protected $admin_user;
+  protected $adminUser;
 
   /**
    * An authenticated user.
    *
-   * @var \Drupal\user\Entity\User
+   * @var \Drupal\user\UserInterface
    */
-  protected $authenticated_user;
+  protected $authenticatedUser;
 
   /**
    * Array of placed menu blocks keyed by block ID.
@@ -73,8 +73,8 @@ class MenuTest extends MenuWebTestBase {
     $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
 
     // Create users.
-    $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer blocks', 'administer menu', 'create article content'));
-    $this->authenticated_user = $this->drupalCreateUser(array());
+    $this->adminUser = $this->drupalCreateUser(array('access administration pages', 'administer blocks', 'administer menu', 'create article content'));
+    $this->authenticatedUser = $this->drupalCreateUser(array());
   }
 
   /**
@@ -82,7 +82,7 @@ class MenuTest extends MenuWebTestBase {
    */
   function testMenu() {
     // Login the user.
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->items = array();
 
     $this->menu = $this->addCustomMenu();
@@ -101,7 +101,7 @@ class MenuTest extends MenuWebTestBase {
     $this->assertIdentical($before_count, $after_count, 'MenuLinkManager::rebuild() does not add more links');
     // Do standard user tests.
     // Login the user.
-    $this->drupalLogin($this->authenticated_user);
+    $this->drupalLogin($this->authenticatedUser);
     $this->verifyAccess(403);
 
     foreach ($this->items as $item) {
@@ -111,7 +111,7 @@ class MenuTest extends MenuWebTestBase {
     }
 
     // Login the administrator.
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
 
     // Verify delete link exists and reset link does not exist.
     $this->drupalGet('admin/structure/menu/manage/' . $this->menu->id());
@@ -488,7 +488,7 @@ class MenuTest extends MenuWebTestBase {
    * Adds and removes a menu link with a query string and fragment.
    */
   function testMenuQueryAndFragment() {
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
 
     // Make a path with query and fragment on.
     $path = 'test-page?arg1=value1&arg2=value2';
@@ -521,7 +521,7 @@ class MenuTest extends MenuWebTestBase {
    * Tests renaming the built-in menu.
    */
   function testSystemMenuRename() {
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $edit = array(
       'label' => $this->randomMachineName(16),
     );
@@ -550,7 +550,7 @@ class MenuTest extends MenuWebTestBase {
     // Test that a user with 'administer menu' but without 'bypass node access'
     // cannot see the menu item.
     $this->drupalLogout();
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/structure/menu/manage/' . $item->getMenuName());
     $this->assertNoText($item->getTitle(), "Menu link pointing to unpublished node is only visible to users with 'bypass node access' permission");
   }
@@ -595,7 +595,7 @@ class MenuTest extends MenuWebTestBase {
    *   Menu name. Defaults to 'tools'.
    * @param bool $expanded
    *   Whether or not this menu link is expanded. Setting this to TRUE should
-   *   test whether it works when we do the authenticated_user tests. Defaults
+   *   test whether it works when we do the authenticatedUser tests. Defaults
    *   to FALSE.
    * @param string $weight
    *  Menu weight. Defaults to 0.
@@ -831,7 +831,7 @@ class MenuTest extends MenuWebTestBase {
 
     // Do standard user tests.
     // Login the user.
-    $this->drupalLogin($this->authenticated_user);
+    $this->drupalLogin($this->authenticatedUser);
     $this->drupalGetAJAX('admin/structure/menu/parents');
     $this->assertResponse(403);
   }
