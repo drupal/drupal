@@ -22,7 +22,7 @@ class ManageDisplayTest extends WebTestBase {
   use FieldUiTestTrait;
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * @var array
    */

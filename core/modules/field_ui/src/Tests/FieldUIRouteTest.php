@@ -17,7 +17,9 @@ use Drupal\simpletest\WebTestBase;
 class FieldUIRouteTest extends WebTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
+   *
+   * @var string[]
    */
   public static $modules = array('entity_test', 'field_ui');
 

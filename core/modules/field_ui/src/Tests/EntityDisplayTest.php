@@ -17,6 +17,11 @@ use Drupal\simpletest\KernelTestBase;
  */
 class EntityDisplayTest extends KernelTestBase {
 
+  /**
+   * Modules to install.
+   *
+   * @var string[]
+   */
   public static $modules = array('field_ui', 'field', 'entity_test', 'user', 'text', 'field_test', 'node', 'system', 'entity_reference');
 
   protected function setUp() {
