@@ -20,7 +20,7 @@ global-styling:
       css/components/form.css: {}
       css/components/forum.css: {}
       css/components/header.css: {}
-      css/components/help.css: {}
+      css/components/region-help.css: {}
       css/components/item-list.css: {}
       css/components/messages.css: {}
       css/components/node-preview.css: {}
