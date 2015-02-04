@@ -207,3 +207,5 @@ test_with_parents.plugin_types.*:
     value:
       type: string
 
+config_schema_test.hook:
+  type: string

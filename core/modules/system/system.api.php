@@ -580,8 +580,8 @@ function hook_config_import_steps_alter(&$sync_steps, \Drupal\Core\Config\Config
  * configuration schema type to change default labels or form element renderers
  * used for configuration translation.
  *
- * It is strongly advised not to use this hook to add new data types or to
- * change the structure of existing ones. Keep in mind that there are tools
+ * If implementations of this hook add or remove configuration schema a
+ * ConfigSchemaAlterException will be thrown. Keep in mind that there are tools
  * that may use the configuration schema for static analysis of configuration
  * files, like the string extractor for the localization system. Such systems
  * won't work with dynamically defined configuration schemas.
@@ -591,6 +591,9 @@ function hook_config_import_steps_alter(&$sync_steps, \Drupal\Core\Config\Config
  * @param $definitions
  *   Associative array of configuration type definitions keyed by schema type
  *   names. The elements are themselves array with information about the type.
+ *
+ * @see \Drupal\Core\Config\TypedConfigManager
+ * @see \Drupal\Core\Config\Schema\ConfigSchemaAlterException
  */
 function hook_config_schema_info_alter(&$definitions) {
   // Enhance the text and date type definitions with classes to generate proper

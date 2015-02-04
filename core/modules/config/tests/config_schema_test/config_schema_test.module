@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ * Tests configuration schema functionality.
+ */
+
+/**
+ * Implements hook_config_schema_info_alter().
+ */
+function config_schema_test_config_schema_info_alter(&$definitions) {
+  if (\Drupal::state()->get('config_schema_test_exception_add')) {
+    $definitions['config_schema_test.hook_added_defintion'] = $definitions['config_schema_test.hook'];
+  }
+  if (\Drupal::state()->get('config_schema_test_exception_remove')) {
+    unset($definitions['config_schema_test.hook']);
+  }
+
+  // Since code can not be unloaded only alter the definition if it exists.
+  if (isset($definitions['config_schema_test.hook'])) {
+    $definitions['config_schema_test.hook']['additional_metadata'] = 'new schema info';
+  }
+}

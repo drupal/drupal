@@ -8,7 +8,9 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Config\Schema\ConfigSchemaAlterException;
 use Drupal\Core\Config\Schema\ConfigSchemaDiscovery;
 use Drupal\Core\Config\Schema\Element;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -294,6 +296,29 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
     // The schema system falls back on the Undefined class for unknown types.
     $definition = $this->getDefinition($name);
     return is_array($definition) && ($definition['class'] != '\Drupal\Core\Config\Schema\Undefined');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function alterDefinitions(&$definitions) {
+    $discovered_schema = array_keys($definitions);
+    parent::alterDefinitions($definitions);
+    $altered_schema = array_keys($definitions);
+    if ($discovered_schema != $altered_schema) {
+      $added_keys = array_diff($altered_schema, $discovered_schema);
+      $removed_keys = array_diff($discovered_schema, $altered_schema);
+      if (!empty($added_keys) && !empty($removed_keys)) {
+        $message = 'Invoking hook_config_schema_info_alter() has added (@added) and removed (@removed) schema definitions';
+      }
+      elseif (!empty($added_keys)) {
+        $message = 'Invoking hook_config_schema_info_alter() has added (@added) schema definitions';
+      }
+      else {
+        $message = 'Invoking hook_config_schema_info_alter() has removed (@removed) schema definitions';
+      }
+      throw new ConfigSchemaAlterException(String::format($message, ['@added' => implode(',', $added_keys), '@removed' => implode(',', $removed_keys)]));
+    }
   }
 
   /**

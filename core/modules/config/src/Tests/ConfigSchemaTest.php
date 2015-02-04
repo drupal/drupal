@@ -9,6 +9,7 @@ namespace Drupal\config\Tests;
 
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\InstallStorage;
+use Drupal\Core\Config\Schema\ConfigSchemaAlterException;
 use Drupal\Core\TypedData\Type\IntegerInterface;
 use Drupal\Core\TypedData\Type\StringInterface;
 use Drupal\simpletest\KernelTestBase;
@@ -434,6 +435,56 @@ class ConfigSchemaTest extends KernelTestBase {
 
     $definition = $tests[3]['settings']->getDataDefinition()->toArray();
     $this->assertEqual($definition['type'], 'test_with_parents.plugin_types.*');
+  }
+
+  /**
+   * Tests hook_config_schema_info_alter().
+   */
+  public function testConfigSchemaInfoAlter() {
+    /** @var \Drupal\Core\Config\TypedConfigManagerInterface $typed_config */
+    $typed_config = \Drupal::service('config.typed');
+    $typed_config->clearCachedDefinitions();
+
+    // Ensure that keys can not be added or removed by
+    // hook_config_schema_info_alter().
+    \Drupal::state()->set('config_schema_test_exception_remove', TRUE);
+    $message = 'Expected ConfigSchemaAlterException thrown.';
+    try {
+      $typed_config->getDefinitions();
+      $this->fail($message);
+    }
+    catch (ConfigSchemaAlterException $e) {
+      $this->pass($message);
+      $this->assertEqual($e->getMessage(), 'Invoking hook_config_schema_info_alter() has removed (config_schema_test.hook) schema definitions');
+    }
+
+    \Drupal::state()->set('config_schema_test_exception_add', TRUE);
+    $message = 'Expected ConfigSchemaAlterException thrown.';
+    try {
+      $typed_config->getDefinitions();
+      $this->fail($message);
+    }
+    catch (ConfigSchemaAlterException $e) {
+      $this->pass($message);
+      $this->assertEqual($e->getMessage(), 'Invoking hook_config_schema_info_alter() has added (config_schema_test.hook_added_defintion) and removed (config_schema_test.hook) schema definitions');
+    }
+
+    \Drupal::state()->set('config_schema_test_exception_remove', FALSE);
+    $message = 'Expected ConfigSchemaAlterException thrown.';
+    try {
+      $typed_config->getDefinitions();
+      $this->fail($message);
+    }
+    catch (ConfigSchemaAlterException $e) {
+      $this->pass($message);
+      $this->assertEqual($e->getMessage(), 'Invoking hook_config_schema_info_alter() has added (config_schema_test.hook_added_defintion) schema definitions');
+    }
+
+    // Tests that hook_config_schema_info_alter() can add additional metadata to
+    // existing configuration schema.
+    \Drupal::state()->set('config_schema_test_exception_add', FALSE);
+    $definitions = $typed_config->getDefinitions();
+    $this->assertEqual($definitions['config_schema_test.hook']['additional_metadata'], 'new schema info');
   }
 
 }
