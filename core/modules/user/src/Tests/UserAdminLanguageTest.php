@@ -18,16 +18,16 @@ use Drupal\simpletest\WebTestBase;
 class UserAdminLanguageTest extends WebTestBase {
 
   /**
-   * Administrator user for this test.
+   * A user with permission to access admin pages and administer languages.
    *
-   * @var \Drupal\user\Entity\User
+   * @var \Drupal\user\UserInterface
    */
   protected $adminUser;
 
   /**
-   * Non-administrator user for this test.
+   * A non-administrator user for this test.
    *
-   * @var \Drupal\user\Entity\User
+   * @var \Drupal\user\UserInterface
    */
   protected $regularUser;
 

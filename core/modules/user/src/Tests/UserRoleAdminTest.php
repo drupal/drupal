@@ -17,16 +17,23 @@ use Drupal\user\Entity\Role;
  */
 class UserRoleAdminTest extends WebTestBase {
 
+  /**
+   * User with admin privileges.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $adminUser;
+
   protected function setUp() {
     parent::setUp();
-    $this->admin_user = $this->drupalCreateUser(array('administer permissions', 'administer users'));
+    $this->adminUser = $this->drupalCreateUser(array('administer permissions', 'administer users'));
   }
 
   /**
    * Test adding, renaming and deleting roles.
    */
   function testRoleAdministration() {
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
     // Test presence of tab.
     $this->drupalGet('admin/people/permissions');
@@ -85,7 +92,7 @@ class UserRoleAdminTest extends WebTestBase {
    * Test user role weight change operation and ordering.
    */
   function testRoleWeightOrdering() {
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $roles = user_roles();
     $weight = count($roles);
     $new_role_weights = array();

@@ -17,12 +17,27 @@ use Drupal\simpletest\WebTestBase;
  * @group user
  */
 class UserAutocompleteTest extends WebTestBase {
+
+  /**
+   * A regular user for testing.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $unprivilegedUser;
+
+  /**
+   * A user with permission to access user profiles.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $privilegedUser;
+
   protected function setUp() {
     parent::setUp();
 
     // Set up two users with different permissions to test access.
-    $this->unprivileged_user = $this->drupalCreateUser();
-    $this->privileged_user = $this->drupalCreateUser(array('access user profiles'));
+    $this->unprivilegedUser = $this->drupalCreateUser();
+    $this->privilegedUser = $this->drupalCreateUser(array('access user profiles'));
   }
 
   /**
@@ -30,19 +45,20 @@ class UserAutocompleteTest extends WebTestBase {
    */
   function testUserAutocomplete() {
     // Check access from unprivileged user, should be denied.
-    $this->drupalLogin($this->unprivileged_user);
-    $username = $this->unprivileged_user->getUsername();
+    $this->drupalLogin($this->unprivilegedUser);
+    $username = $this->unprivilegedUser->getUsername();
     $this->drupalGet('user/autocomplete', array('query' => array('q' => $username[0])));
     $this->assertResponse(403, 'Autocompletion access denied to user without permission.');
 
     // Check access from privileged user.
     $this->drupalLogout();
-    $this->drupalLogin($this->privileged_user);
+    $this->drupalLogin($this->privilegedUser);
     $this->drupalGet('user/autocomplete', array('query' => array('q' => $username[0])));
     $this->assertResponse(200, 'Autocompletion access allowed.');
 
-    // Using first letter of the user's name, make sure the user's full name is in the results.
-    $this->assertRaw($this->unprivileged_user->getUsername(), 'User name found in autocompletion results.');
+    // Using first letter of the user's name, make sure the user's full name is
+    // in the results.
+    $this->assertRaw($this->unprivilegedUser->getUsername(), 'User name found in autocompletion results.');
 
     $anonymous_name = $this->randomString() . '<script>alert();</script>';
     $this->config('user.settings')->set('anonymous', $anonymous_name)->save();

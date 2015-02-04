@@ -111,8 +111,8 @@ class UserCancelTest extends WebTestBase {
     $user1->pass_raw = $password;
 
     // Try to cancel uid 1's account with a different user.
-    $this->admin_user = $this->drupalCreateUser(array('administer users'));
-    $this->drupalLogin($this->admin_user);
+    $admin_user = $this->drupalCreateUser(array('administer users'));
+    $this->drupalLogin($admin_user);
     $edit = array(
       'action' => 'user_cancel_user_action',
       'user_bulk_form[0]' => TRUE,

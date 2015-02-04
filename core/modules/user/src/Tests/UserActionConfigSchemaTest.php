@@ -29,13 +29,6 @@ class UserActionConfigSchemaTest extends KernelTestBase {
   public static $modules = array('system', 'user');
 
   /**
-   * A user with administrative permissions.
-   *
-   * @var \Drupal\user\UserInterface
-   */
-  protected $adminUser;
-
-  /**
    * Tests whether the user action config schema are valid.
    */
   function testValidUserActionConfigSchema() {

@@ -15,12 +15,11 @@ use Drupal\simpletest\WebTestBase;
  * @group user
  */
 class UserRolesAssignmentTest extends WebTestBase {
-  protected $admin_user;
 
   protected function setUp() {
     parent::setUp();
-    $this->admin_user = $this->drupalCreateUser(array('administer permissions', 'administer users'));
-    $this->drupalLogin($this->admin_user);
+    $admin_user = $this->drupalCreateUser(array('administer permissions', 'administer users'));
+    $this->drupalLogin($admin_user);
   }
 
   /**

@@ -18,6 +18,8 @@ class UserTranslationUITest extends ContentTranslationUITest {
 
   /**
    * The user name of the test user.
+   *
+   * @var string
    */
   protected $name;
 

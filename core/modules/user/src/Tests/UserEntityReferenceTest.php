@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Contains \Drupal\user\Tests\UserEntityReferenceTest.
@@ -17,12 +18,16 @@ use Drupal\system\Tests\Entity\EntityUnitTestBase;
 class UserEntityReferenceTest extends EntityUnitTestBase {
 
   /**
-   * @var \Drupal\user\Entity\Role
+   * A randomly-generated role for testing purposes.
+   *
+   * @var \Drupal\user\Entity\RoleInterface
    */
   protected $role1;
 
   /**
-   * @var \Drupal\user\Entity\Role
+   * A randomly-generated role for testing purposes.
+   *
+   * @var \Drupal\user\Entity\RoleInterface
    */
   protected $role2;
 
@@ -79,7 +84,9 @@ class UserEntityReferenceTest extends EntityUnitTestBase {
     $user3->save();
 
 
-    /** @var \Drupal\entity_reference\EntityReferenceAutocomplete $autocomplete */
+    /**
+     * @var \Drupal\entity_reference\EntityReferenceAutocomplete $autocomplete
+     */
     $autocomplete = \Drupal::service('entity_reference.autocomplete');
 
     $matches = $autocomplete->getMatches($field_definition, 'user', 'user', 'NULL', '', 'aabb');

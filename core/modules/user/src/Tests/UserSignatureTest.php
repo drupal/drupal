@@ -17,6 +17,34 @@ use Drupal\simpletest\WebTestBase;
 class UserSignatureTest extends WebTestBase {
 
   /**
+   * A regular user.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $webUser;
+
+  /**
+   * User with admin privileges.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $adminUser;
+
+  /**
+   * Filtered HTML format.
+   *
+   * @var \Drupal\filter\FilterFormatInterface
+   */
+  protected $filteredHtmlFormat;
+
+  /**
+   * Full HTML format.
+   *
+   * @var \Drupal\filter\FilterFormatInterface
+   */
+  protected $fullHtmlFormat;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -35,7 +63,7 @@ class UserSignatureTest extends WebTestBase {
     $this->container->get('comment.manager')->addDefaultField('node', 'page');
 
     // Prefetch and create text formats.
-    $this->filtered_html_format = entity_create('filter_format', array(
+    $this->filteredHtmlFormat = entity_create('filter_format', array(
       'format' => 'filtered_html_format',
       'name' => 'Filtered HTML',
       'weight' => -1,
@@ -49,18 +77,18 @@ class UserSignatureTest extends WebTestBase {
         ),
       ),
     ));
-    $this->filtered_html_format->save();
+    $this->filteredHtmlFormat->save();
 
-    $this->full_html_format = entity_create('filter_format', array(
+    $this->fullHtmlFormat = entity_create('filter_format', array(
       'format' => 'full_html',
       'name' => 'Full HTML',
     ));
-    $this->full_html_format->save();
+    $this->fullHtmlFormat->save();
 
-    user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array($this->filtered_html_format->getPermissionName()));
+    user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array($this->filteredHtmlFormat->getPermissionName()));
 
     // Create regular and administrative users.
-    $this->web_user = $this->drupalCreateUser(array('post comments'));
+    $this->webUser = $this->drupalCreateUser(array('post comments'));
 
     $admin_permissions = array('post comments', 'administer comments', 'administer user form display', 'administer account settings');
     foreach (filter_formats() as $format) {
@@ -68,7 +96,7 @@ class UserSignatureTest extends WebTestBase {
         $admin_permissions[] = $permission;
       }
     }
-    $this->admin_user = $this->drupalCreateUser($admin_permissions);
+    $this->adminUser = $this->drupalCreateUser($admin_permissions);
   }
 
   /**
@@ -90,12 +118,12 @@ class UserSignatureTest extends WebTestBase {
     $this->assertNoText(t('Signature'));
 
     // Log in as a regular user and create a signature.
-    $this->drupalLogin($this->web_user);
+    $this->drupalLogin($this->webUser);
     $signature_text = "<h1>" . $this->randomMachineName() . "</h1>";
     $edit = array(
       'signature[value]' => $signature_text,
     );
-    $this->drupalPostForm('user/' . $this->web_user->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('user/' . $this->webUser->id() . '/edit', $edit, t('Save'));
 
     // Verify that values were stored.
     $this->assertFieldByName('signature[value]', $edit['signature[value]'], 'Submitted signature text found.');
@@ -118,14 +146,14 @@ class UserSignatureTest extends WebTestBase {
 
     // Log in as an administrator and edit the comment to use Full HTML, so
     // that the comment text itself is not filtered at all.
-    $this->drupalLogin($this->admin_user);
-    $edit['comment_body[0][format]'] = $this->full_html_format->id();
+    $this->drupalLogin($this->adminUser);
+    $edit['comment_body[0][format]'] = $this->fullHtmlFormat->id();
     $this->drupalPostForm('comment/' . $comment_id . '/edit', $edit, t('Save'));
 
     // Assert that the signature did not make it through unfiltered.
     $this->drupalGet('node/' . $node->id());
     $this->assertNoRaw($signature_text, 'Unfiltered signature text not found.');
-    $this->assertRaw(check_markup($signature_text, $this->filtered_html_format->id()), 'Filtered signature text found.');
+    $this->assertRaw(check_markup($signature_text, $this->filteredHtmlFormat->id()), 'Filtered signature text found.');
     // Verify that the user signature's text format's cache tag is present.
     $this->drupalGet('node/' . $node->id());
     $this->assertTrue(in_array('config:filter.format.filtered_html_format', explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Tags'))));
