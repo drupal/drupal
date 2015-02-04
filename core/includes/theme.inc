@@ -1042,6 +1042,9 @@ function template_preprocess_table(&$variables) {
       }
     }
   }
+  if (empty($variables['no_striping'])) {
+    $variables['attributes']['data-striping'] = 1;
+  }
 }
 
 /**
