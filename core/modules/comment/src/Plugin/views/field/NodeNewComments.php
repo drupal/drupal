@@ -65,7 +65,7 @@ class NodeNewComments extends Numeric {
   }
 
   /**
-   * Overrides Drupal\views\Plugin\views\field\FieldPluginBase::init().
+   * {@inheritdoc}
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
@@ -75,6 +75,9 @@ class NodeNewComments extends Numeric {
     $this->additional_fields['comment_count'] = array('table' => 'comment_entity_statistics', 'field' => 'comment_count');
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -83,6 +86,9 @@ class NodeNewComments extends Numeric {
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['link_to_comment'] = array(
       '#title' => $this->t('Link this field to new comments'),
@@ -94,12 +100,18 @@ class NodeNewComments extends Numeric {
     parent::buildOptionsForm($form, $form_state);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function query() {
     $this->ensureMyTable();
     $this->addAdditionalFields();
     $this->field_alias = $this->table . '_' . $this->field;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function preRender(&$values) {
     $user = \Drupal::currentUser();
     if ($user->isAnonymous() || empty($values)) {

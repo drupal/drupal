@@ -23,6 +23,9 @@ use Drupal\views\ResultRow;
  */
 class Numeric extends FieldPluginBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -39,6 +42,9 @@ class Numeric extends FieldPluginBase {
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     if (!empty($this->definition['float'])) {
       $form['set_precision'] = array(
