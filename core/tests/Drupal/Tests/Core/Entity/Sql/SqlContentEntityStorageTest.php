@@ -324,7 +324,6 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       'fields' => array(
         'id' => array(
           'type' => 'serial',
-          'description' => NULL,
           'not null' => TRUE,
         ),
       ),

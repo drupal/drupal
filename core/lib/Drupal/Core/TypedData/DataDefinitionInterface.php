@@ -70,6 +70,9 @@ interface DataDefinitionInterface {
   /**
    * Returns a human readable description.
    *
+   * Descriptions are usually used on user interfaces where the data is edited
+   * or displayed.
+   *
    * @return string|null
    *   The description, or NULL if no description is available.
    */

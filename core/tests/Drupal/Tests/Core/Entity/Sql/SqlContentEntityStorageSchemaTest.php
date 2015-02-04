@@ -112,11 +112,9 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       'columns' => array(
         'value' => array(
           'type' => 'text',
-          'description' => 'The text value',
         ),
         'format' => array(
           'type' => 'varchar',
-          'description' => 'The text description',
         ),
       ),
     ));
@@ -248,95 +246,77 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
         'description' => 'The base table for entity_test entities.',
         'fields' => array(
           'id' => array(
-            'description' => 'The id field.',
             'type' => 'serial',
             'not null' => TRUE,
           ),
           'name' => array(
-            'description' => 'The name field.',
             'type' => 'varchar',
             'length' => 255,
             'not null' => FALSE,
           ),
           'description__value' => array(
-            'description' => 'The description field.',
             'type' => 'text',
             'not null' => FALSE,
           ),
           'description__format' => array(
-            'description' => 'The description field.',
             'type' => 'varchar',
             'not null' => FALSE,
           ),
           'uuid' => array(
-            'description' => 'The uuid field.',
             'type' => 'varchar',
             'length' => 128,
             'not null' => FALSE,
           ),
           'hash' => array(
-            'description' => 'The hash field.',
             'type' => 'varchar',
             'length' => 20,
             'not null' => FALSE,
           ),
           'email__username' => array(
-            'description' => 'The email field.',
             'type' => 'varchar',
             'not null' => FALSE,
           ),
           'email__hostname' => array(
-            'description' => 'The email field.',
             'type' => 'varchar',
             'not null' => FALSE,
           ),
           'email__domain' => array(
-            'description' => 'The email field.',
             'type' => 'varchar',
             'not null' => FALSE,
           ),
           'owner' => array(
-            'description' => 'The owner field.',
             'type' => 'int',
             'not null' => FALSE,
           ),
           'translator' => array(
-            'description' => 'The translator field.',
             'type' => 'int',
             'not null' => FALSE,
           ),
           'location__country' => array(
-            'description' => 'The location field.',
             'type' => 'varchar',
             'not null' => FALSE,
           ),
           'location__state' => array(
-            'description' => 'The location field.',
             'type' => 'varchar',
             'not null' => FALSE,
           ),
           'location__city' => array(
-            'description' => 'The location field.',
             'type' => 'varchar',
             'not null' => FALSE,
           ),
           'editor' => array(
-            'description' => 'The editor field.',
             'type' => 'int',
             'not null' => FALSE,
           ),
           'editor_revision__target_id' => array(
-            'description' => 'The editor_revision field.',
             'type' => 'int',
             'not null' => FALSE,
           ),
           'editor_revision__target_revision_id' => array(
-            'description' => 'The editor_revision field.',
             'type' => 'int',
             'not null' => FALSE,
           ),
           'long_index_name' => array(
-            'description' => 'The long_index_name field.',
             'type' => 'int',
             'not null' => FALSE,
           ),
@@ -439,12 +419,10 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
         'description' => 'The base table for entity_test entities.',
         'fields' => array(
           'id' => array(
-            'description' => 'The id field.',
             'type' => 'serial',
             'not null' => TRUE,
           ),
           'revision_id' => array(
-            'description' => 'The revision_id field.',
             'type' => 'int',
             'not null' => FALSE,
           )
@@ -465,12 +443,10 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
         'description' => 'The revision table for entity_test entities.',
         'fields' => array(
           'id' => array(
-            'description' => 'The id field.',
             'type' => 'int',
             'not null' => TRUE,
           ),
           'revision_id' => array(
-            'description' => 'The revision_id field.',
             'type' => 'serial',
             'not null' => TRUE,
           ),
@@ -538,12 +514,10 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
         'description' => 'The base table for entity_test entities.',
         'fields' => array(
           'id' => array(
-            'description' => 'The id field.',
             'type' => 'serial',
             'not null' => TRUE,
           ),
           'langcode' => array(
-            'description' => 'The langcode field.',
             'type' => 'varchar',
             'not null' => TRUE,
           )
@@ -557,12 +531,10 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
         'description' => 'The data table for entity_test entities.',
         'fields' => array(
           'id' => array(
-            'description' => 'The id field.',
             'type' => 'int',
             'not null' => TRUE,
           ),
           'langcode' => array(
-            'description' => 'The langcode field.',
             'type' => 'varchar',
             'not null' => TRUE,
           ),
@@ -645,17 +617,14 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
         'description' => 'The base table for entity_test entities.',
         'fields' => array(
           'id' => array(
-            'description' => 'The id field.',
             'type' => 'serial',
             'not null' => TRUE,
           ),
           'revision_id' => array(
-            'description' => 'The revision_id field.',
             'type' => 'int',
             'not null' => FALSE,
           ),
           'langcode' => array(
-            'description' => 'The langcode field.',
             'type' => 'varchar',
             'not null' => TRUE,
           )
@@ -676,17 +645,14 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
         'description' => 'The revision table for entity_test entities.',
         'fields' => array(
           'id' => array(
-            'description' => 'The id field.',
             'type' => 'int',
             'not null' => TRUE,
           ),
           'revision_id' => array(
-            'description' => 'The revision_id field.',
             'type' => 'serial',
             'not null' => TRUE,
           ),
           'langcode' => array(
-            'description' => 'The langcode field.',
             'type' => 'varchar',
             'not null' => TRUE,
           ),
@@ -707,17 +673,14 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
         'description' => 'The data table for entity_test entities.',
         'fields' => array(
           'id' => array(
-            'description' => 'The id field.',
             'type' => 'int',
             'not null' => TRUE,
           ),
           'revision_id' => array(
-            'description' => 'The revision_id field.',
             'type' => 'int',
             'not null' => TRUE,
           ),
           'langcode' => array(
-            'description' => 'The langcode field.',
             'type' => 'varchar',
             'not null' => TRUE,
           ),
@@ -738,17 +701,14 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
         'description' => 'The revision data table for entity_test entities.',
         'fields' => array(
           'id' => array(
-            'description' => 'The id field.',
             'type' => 'int',
             'not null' => TRUE,
           ),
           'revision_id' => array(
-            'description' => 'The revision_id field.',
             'type' => 'int',
             'not null' => TRUE,
           ),
           'langcode' => array(
-            'description' => 'The langcode field.',
             'type' => 'varchar',
             'not null' => TRUE,
           ),
@@ -1242,10 +1202,6 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
     $this->storageDefinitions[$field_name]->expects($this->any())
       ->method('getName')
       ->will($this->returnValue($field_name));
-    // getDescription() is called once for each table.
-    $this->storageDefinitions[$field_name]->expects($this->any())
-      ->method('getDescription')
-      ->will($this->returnValue("The $field_name field."));
     // getSchema() is called once for each table.
     $this->storageDefinitions[$field_name]->expects($this->any())
       ->method('getSchema')

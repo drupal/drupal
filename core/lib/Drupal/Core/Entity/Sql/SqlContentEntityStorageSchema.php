@@ -1418,7 +1418,6 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     }
 
     $field_name = $storage_definition->getName();
-    $field_description = $storage_definition->getDescription();
     $base_table = $this->storage->getBaseTable();
 
     // A shared table contains rows for entities where the field is empty
@@ -1447,7 +1446,6 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       $column_schema = $field_schema['columns'][$field_column_name];
 
       $schema['fields'][$schema_field_name] = $column_schema;
-      $schema['fields'][$schema_field_name]['description'] = $field_description;
       $schema['fields'][$schema_field_name]['not null'] = in_array($field_name, $not_null_keys);
     }
 
