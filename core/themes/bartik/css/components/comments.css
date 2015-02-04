@@ -37,6 +37,7 @@
   line-height: 1.2;
 }
 .comment .submitted .comment-time {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 0.786em;
   color: #68696b;
 }

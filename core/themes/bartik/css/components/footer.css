@@ -1,5 +1,8 @@
 /* ------------------ Footer ------------------ */
 
+#footer-wrapper {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
 #site-footer__wrapper .block .content {
   color: #c0c0c0;
   color: rgba(255, 255, 255, 0.65);

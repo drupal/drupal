@@ -55,6 +55,11 @@ label {
 label[for] {
   cursor: pointer;
 }
+input,
+textarea,
+select {
+  font-family: "Lucida Grande", "Lucida Sans Unicode", Verdana, sans-serif;
+}
 input {
   margin: 2px 0;
   padding: 4px;
@@ -136,7 +141,10 @@ input.form-submit:focus {
 #edit-body {
   margin-bottom: 2em;
 }
-
+.node-form label,
+.node-form .description {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
 .node-form .form-wrapper {
   margin-bottom: 2em;
 }
@@ -188,6 +196,7 @@ input.form-submit:focus {
 /* Comment form */
 .comment-form label {
   float: left; /* LTR */
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 0.929em;
   width: 120px;
 }

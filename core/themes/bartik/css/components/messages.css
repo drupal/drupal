@@ -3,6 +3,7 @@
 #messages {
   padding: 20px 0 5px;
   margin: 0 auto;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 .featured #messages {
   background: #f0f0f0;

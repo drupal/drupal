@@ -42,6 +42,7 @@ h1#page-title {
   line-height: 1.6;
 }
 .node__meta {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 0.857em;
   color: #68696b;
   margin-bottom: -5px;
@@ -57,6 +58,7 @@ h1#page-title {
 }
 .field-type-taxonomy-term-reference {
   margin: 0 0 1.2em;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 .field-type-taxonomy-term-reference .field-label {
   font-weight: normal;
@@ -114,6 +116,7 @@ h1#page-title {
 }
 ul.links {
   color: #68696b;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 0.821em;
 }
 .node--unpublished,
@@ -194,4 +197,7 @@ ul.links {
 [dir="rtl"] .region-content ul,
 [dir="rtl"] .region-content ol {
   padding: 0 15px 0.25em 0;
+}
+#page .ui-widget {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }

@@ -4,6 +4,9 @@ div.tabs {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   margin-bottom: 20px;
 }
+.tabs ul.primary {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
 .tabs ul.primary li a {
   color: #000;
   background-color: #ededed;

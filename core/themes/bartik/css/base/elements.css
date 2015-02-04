@@ -2,11 +2,12 @@
 
 body {
   line-height: 1.5;
-  font-size: 87.5%;
   word-wrap: break-word;
   margin: 0;
   padding: 0;
   border: 0;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 87.5%;
 }
 a {
   text-decoration: none;
@@ -20,6 +21,9 @@ a:focus,
 .link:focus {
   text-decoration: none;
   border-bottom-style: solid;
+}
+.link {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 .field-type-image a,
 h1 a,

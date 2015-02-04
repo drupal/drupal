@@ -1,4 +1,7 @@
 /* ------------------ Header ------------------ */
+#header {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
 #logo,
 .site-logo {
   float: left; /* LTR */
@@ -77,6 +80,7 @@ h1.site-name {
 }
 #site-slogan,
 .site-slogan {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 0.929em;
   margin-top: 7px;
   word-spacing: 0.1em;
