@@ -15,6 +15,7 @@ use Drupal\Core\KeyValueStore\KeyValueDatabaseExpirableFactory;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Menu\MenuTreeParameters;
+use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Core\Url;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\user\UserInterface;
@@ -958,12 +959,13 @@ function _system_rebuild_module_data() {
  */
 function _system_rebuild_module_data_ensure_required($module, &$modules) {
   if (!empty($module->info['required'])) {
-    foreach ($module->info['dependencies'] as $dependant) {
-      if (!isset($modules[$dependant]->info['required'])) {
-        $modules[$dependant]->info['required'] = TRUE;
-        $modules[$dependant]->info['explanation'] = t('Dependency of required module @module', array('@module' => $module->info['name']));
+    foreach ($module->info['dependencies'] as $dependency) {
+      $dependency_name = ModuleHandler::parseDependency($dependency)['name'];
+      if (!isset($modules[$dependency_name]->info['required'])) {
+        $modules[$dependency_name]->info['required'] = TRUE;
+        $modules[$dependency_name]->info['explanation'] = t('Dependency of required module @module', array('@module' => $module->info['name']));
         // Ensure any dependencies it has are required.
-        _system_rebuild_module_data_ensure_required($modules[$dependant], $modules);
+        _system_rebuild_module_data_ensure_required($modules[$dependency_name], $modules);
       }
     }
   }
