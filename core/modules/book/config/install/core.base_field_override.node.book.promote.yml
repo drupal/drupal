@@ -7,8 +7,8 @@ id: node.book.promote
 field_name: promote
 entity_type: node
 bundle: book
-label: Promote
-description: 'A boolean indicating whether the node should be displayed on the front page.'
+label: Promoted to front page
+description: ''
 required: false
 translatable: true
 default_value:

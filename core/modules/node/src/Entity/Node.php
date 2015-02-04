@@ -436,8 +436,7 @@ class Node extends ContentEntityBase implements NodeInterface {
       ->setTranslatable(TRUE);
 
     $fields['promote'] = BaseFieldDefinition::create('boolean')
-      ->setLabel(t('Promote'))
-      ->setDescription(t('A boolean indicating whether the node should be displayed on the front page.'))
+      ->setLabel(t('Promoted to front page'))
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE)
       ->setDefaultValue(TRUE)
@@ -451,8 +450,7 @@ class Node extends ContentEntityBase implements NodeInterface {
       ->setDisplayConfigurable('form', TRUE);
 
     $fields['sticky'] = BaseFieldDefinition::create('boolean')
-      ->setLabel(t('Sticky'))
-      ->setDescription(t('A boolean indicating whether the node should be displayed at the top of lists in which it appears.'))
+      ->setLabel(t('Sticky at top of lists'))
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE)
       ->setDefaultValue(FALSE)
