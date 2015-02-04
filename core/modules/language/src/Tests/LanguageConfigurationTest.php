@@ -30,7 +30,7 @@ class LanguageConfigurationTest extends WebTestBase {
   function testLanguageConfiguration() {
 
     // User to add and remove language.
-    $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages', 'administer site configuration'));
+    $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages'));
     $this->drupalLogin($admin_user);
 
     // Check if the Default English language has no path prefix.
@@ -56,8 +56,8 @@ class LanguageConfigurationTest extends WebTestBase {
     $this->assertFieldByXPath('//input[@name="prefix[fr]"]', 'fr', 'French has a path prefix.');
 
     // Check if we can change the default language.
-    $this->drupalGet('admin/config/regional/settings');
-    $this->assertOptionSelected('edit-site-default-language', 'en', 'English is the default language.');
+    $this->drupalGet('admin/config/regional/language');
+    $this->assertFieldChecked('edit-site-default-language-en', 'English is the default language.');
 
     // Change the default language.
     $edit = array(
@@ -65,8 +65,8 @@ class LanguageConfigurationTest extends WebTestBase {
     );
     $this->drupalPostForm(NULL, $edit, t('Save configuration'));
     $this->rebuildContainer();
-    $this->assertOptionSelected('edit-site-default-language', 'fr', 'Default language updated.');
-    $this->assertUrl(\Drupal::url('system.regional_settings', [], ['absolute' => TRUE, 'langcode' => 'fr']), [], 'Correct page redirection.');
+    $this->assertFieldChecked('edit-site-default-language-fr', 'Default language updated.');
+    $this->assertUrl(\Drupal::url('entity.configurable_language.collection', [], ['absolute' => TRUE, 'langcode' => 'fr']), [], 'Correct page redirection.');
 
     // Check if a valid language prefix is added after changing the default
     // language.

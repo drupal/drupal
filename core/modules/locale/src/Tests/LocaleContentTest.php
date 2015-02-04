@@ -47,7 +47,7 @@ class LocaleContentTest extends WebTestBase {
     $edit = array(
       'site_default_language' => 'ar',
     );
-    $this->drupalPostForm('admin/config/regional/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/language', $edit, t('Save configuration'));
 
     // Verify that the machine name field is still LTR for a new content type.
     $this->drupalGet('admin/structure/types/add');

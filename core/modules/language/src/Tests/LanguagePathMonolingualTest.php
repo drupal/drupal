@@ -39,7 +39,7 @@ class LanguagePathMonolingualTest extends WebTestBase {
     $edit = array(
       'site_default_language' => 'fr',
     );
-    $this->drupalPostForm('admin/config/regional/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/language', $edit, t('Save configuration'));
 
     // Delete English.
     $this->drupalPostForm('admin/config/regional/language/delete/en', array(), t('Delete'));

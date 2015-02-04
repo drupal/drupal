@@ -13,6 +13,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Render\Element;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -83,8 +84,11 @@ class LanguageListBuilder extends DraggableListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header['label'] = t('Name');
-    return $header + parent::buildHeader();
+    $header = array(
+        'label' => t('Name'),
+        'default' => t('Default'),
+      ) + parent::buildHeader();
+    return $header;
   }
 
   /**
@@ -92,6 +96,14 @@ class LanguageListBuilder extends DraggableListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
     $row['label'] = $this->getLabel($entity);
+    $row['default'] = array(
+      '#type' => 'radio',
+      '#parents' => array('site_default_language'),
+      '#title' => t('Set @title as default', array('@title' => $entity->label())),
+      '#title_display' => 'invisible',
+      '#return_value' => $entity->id(),
+      '#id' => 'edit-site-default-language-' . $entity->id(),
+    );
     return $row + parent::buildRow($entity);
   }
 
@@ -100,6 +112,15 @@ class LanguageListBuilder extends DraggableListBuilder {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
+
+    // Mark the right language as default in the form.
+    $default = \Drupal::languageManager()->getDefaultLanguage();
+    foreach (Element::children($form[$this->entitiesKey]) as $key) {
+      if ($key == $default->getId()) {
+        $form[$this->entitiesKey][$key]['default']['#default_value'] = $default->getId();
+      }
+    }
+
     $form[$this->entitiesKey]['#languages'] = $this->entities;
     $form['actions']['submit']['#value'] = t('Save configuration');
     return $form;
@@ -111,12 +132,22 @@ class LanguageListBuilder extends DraggableListBuilder {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
+    // Save the default language.
+    foreach ($form_state->getValue($this->entitiesKey) as $id => $value) {
+      if (isset($this->entities[$id]) && ($id == $form_state->getValue('site_default_language'))) {
+        \Drupal::configFactory()->getEditable('system.site')->set('langcode', $form_state->getValue('site_default_language'))->save();
+      }
+    }
+
     $this->languageManager->reset();
     if ($this->languageManager instanceof ConfigurableLanguageManagerInterface) {
       $this->languageManager->updateLockedLanguageWeights();
     }
 
     drupal_set_message(t('Configuration saved.'));
+    // Force the redirection to the page with the language we have just
+    // selected as default.
+    $form_state->setRedirect('entity.configurable_language.collection', array(), array('language' => $this->entities[$form_state->getValue('site_default_language')]));
   }
 
 }

@@ -668,8 +668,8 @@ class ConfigTranslationUiTest extends WebTestBase {
     $edit = array(
       'site_default_language' => 'ta',
     );
-    $this->drupalPostForm('admin/config/regional/settings', $edit, t('Save configuration'));
-    $this->assertRaw(t('The configuration options have been saved.'));
+    $this->drupalPostForm('admin/config/regional/language', $edit, t('Save configuration'));
+    $this->assertRaw(t('Configuration saved.'));
 
     // Delete English language
     $this->drupalPostForm('admin/config/regional/language/delete/en', array(), t('Delete'));

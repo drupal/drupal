@@ -128,14 +128,14 @@ class SearchLanguageTest extends SearchTestBase {
     $this->assertNoLink('Third node en', 'Search results does not contain third English node');
 
     // Change the default language and delete English.
-    $path = 'admin/config/regional/settings';
+    $path = 'admin/config/regional/language';
     $this->drupalGet($path);
-    $this->assertOptionSelected('edit-site-default-language', 'en', 'Default language updated.');
+    $this->assertFieldChecked('edit-site-default-language-en', 'Default language updated.');
     $edit = array(
       'site_default_language' => 'fr',
     );
     $this->drupalPostForm($path, $edit, t('Save configuration'));
-    $this->assertNoOptionSelected('edit-site-default-language', 'en', 'Default language updated.');
+    $this->assertNoFieldChecked('edit-site-default-language-en', 'Default language updated.');
     $this->drupalPostForm('admin/config/regional/language/delete/en', array(), t('Delete'));
   }
 }
