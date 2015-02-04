@@ -75,7 +75,7 @@ class FormSubmitter implements FormSubmitterInterface {
       // after the batch is processed.
     }
 
-    // Set a flag to indicate the the form has been processed and executed.
+    // Set a flag to indicate the form has been processed and executed.
     $form_state->setExecuted();
 
     // If no response has been set, process the form redirect.

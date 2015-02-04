@@ -75,7 +75,7 @@ class ConnectionTest extends DatabaseTestBase {
     // Open the default target so we have an object to compare.
     $db1 = Database::getConnection('default', 'default');
 
-    // Try to close the the default connection, then open a new one.
+    // Try to close the default connection, then open a new one.
     Database::closeConnection('default', 'default');
     $db2 = Database::getConnection('default', 'default');
 

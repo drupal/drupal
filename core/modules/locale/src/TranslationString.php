@@ -12,7 +12,7 @@ namespace Drupal\locale;
  *
  * This class represents a translation of a source string to a given language,
  * thus it must have at least a 'language' which is the language code and a
- * 'translation' property which is the translated text of the the source string
+ * 'translation' property which is the translated text of the source string
  * in the specified language.
  */
 class TranslationString extends StringBase {

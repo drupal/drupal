@@ -117,7 +117,7 @@ class MatcherDumper implements MatcherDumperInterface {
           $compiled = $route->compile();
           // The fit value is a binary number which has 1 at every fixed path
           // position and 0 where there is a wildcard. We keep track of all such
-          // patterns that exist so that we can minimize the the number of path
+          // patterns that exist so that we can minimize the number of path
           // patterns we need to check in the RouteProvider.
           $masks[$compiled->getFit()] = 1;
           $names[] = $name;

@@ -59,7 +59,7 @@ class DisplayTest extends PluginTestBase {
 
     $this->assertTrue(isset($displays['display_test_1']), 'Added display has been assigned to "display_test_1"');
 
-    // Check the the display options are like expected.
+    // Check the display options are like expected.
     $options = array(
       'display_options' => array(),
       'display_plugin' => 'display_test',

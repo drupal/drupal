@@ -13,7 +13,7 @@ use Drupal\Core\KeyValueStore\DatabaseStorageExpirable;
 use Drupal\simpletest\KernelTestBase;
 
 /**
- * Tests garbage collection for the the expirable key-value database storage.
+ * Tests garbage collection for the expirable key-value database storage.
  *
  * @group KeyValueStore
  */

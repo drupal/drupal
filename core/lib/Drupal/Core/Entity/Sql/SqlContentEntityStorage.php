@@ -1121,7 +1121,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *   The schema name of the field column.
    *
    * @return bool
-   *   TRUE if the the column is serial, FALSE otherwise.
+   *   TRUE if the column is serial, FALSE otherwise.
    *
    * @see \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema::processBaseTable()
    * @see \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema::processRevisionTable()

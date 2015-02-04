@@ -537,8 +537,8 @@ EOF;
    * Helper function that returns a .po file with context.
    */
   public function getPoFileWithContext() {
-    // Croatian (code hr) is one the the languages that have a different
-    // form for the full name and the abbreviated name for the month May.
+    // Croatian (code hr) is one of the languages that have a different
+    // form for the full name and the abbreviated name for the month of May.
     return <<< EOF
 msgid ""
 msgstr ""

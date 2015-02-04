@@ -77,7 +77,7 @@ class CommandsTest extends AjaxTestBase {
     $this->assertCommand($commands, $expected->render(), "'changed' AJAX command (with asterisk) issued with correct selector.");
 
     // Tests the 'css' command.
-    $commands = $this->drupalPostAjaxForm($form_path, $edit, array('op' => t("Set the the '#box' div to be blue.")));
+    $commands = $this->drupalPostAjaxForm($form_path, $edit, array('op' => t("Set the '#box' div to be blue.")));
     $expected = new CssCommand('#css_div', array('background-color' => 'blue'));
     $this->assertCommand($commands, $expected->render(), "'css' AJAX command issued with correct selector.");
 

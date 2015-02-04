@@ -422,7 +422,7 @@ class SystemController extends ControllerBase {
         }
       }
 
-      // Only if the the path, the language and the query match, we set the
+      // Only if the path, the language and the query match, we set the
       // "active" class.
       if ($add_active) {
         if (strlen($class) > 0) {

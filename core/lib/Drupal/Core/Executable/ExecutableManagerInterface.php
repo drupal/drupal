@@ -25,7 +25,7 @@ interface ExecutableManagerInterface extends PluginManagerInterface {
    *
    * @return mixed
    *   The returned data varies by plugin implementation, e.g. conditions return
-   *   the the boolean evaluation result.
+   *   the boolean evaluation result.
    */
   public function execute(ExecutableInterface $plugin);
 

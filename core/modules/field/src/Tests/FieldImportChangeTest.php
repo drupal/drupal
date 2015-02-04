@@ -39,7 +39,7 @@ class FieldImportChangeTest extends FieldUnitTestBase {
     $staging = $this->container->get('config.storage.staging');
     $this->copyConfig($active, $staging);
 
-    // Save as files in the the staging directory.
+    // Save as files in the staging directory.
     $field = $active->read($field_config_name);
     $new_label = 'Test update import field';
     $field['label'] = $new_label;

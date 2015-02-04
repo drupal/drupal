@@ -194,7 +194,7 @@ interface RendererInterface {
    *   - If this element has #prefix and/or #suffix defined, they are
    *     concatenated to #children.
    *   - The rendering of this element is now complete. The next step will be
-   *     render caching. So this is the perfect time to update the the stack. At
+   *     render caching. So this is the perfect time to update the stack. At
    *     this point, children of this element (if any), have been rendered also,
    *     and if there were any, their bubbleable rendering metadata will have
    *     been bubbled up into the stack frame for the element that is currently

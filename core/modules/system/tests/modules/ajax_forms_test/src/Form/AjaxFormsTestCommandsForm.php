@@ -88,7 +88,7 @@ class AjaxFormsTestCommandsForm extends FormBase {
 
     // Shows the Ajax 'css' command.
     $form['css_command_example'] = array(
-      '#value' => $this->t("Set the the '#box' div to be blue."),
+      '#value' => $this->t("Set the '#box' div to be blue."),
       '#type' => 'submit',
       '#ajax' => array(
         'callback' => 'ajax_forms_test_advanced_commands_css_callback',

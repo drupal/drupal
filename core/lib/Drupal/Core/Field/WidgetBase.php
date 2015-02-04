@@ -383,7 +383,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
     if ($violations->count()) {
       $form_builder = \Drupal::formBuilder();
 
-      // Locate the correct element in the the form.
+      // Locate the correct element in the form.
       $element = NestedArray::getValue($form_state->getCompleteForm(), $field_state['array_parents']);
 
       // Do not report entity-level validation errors if Form API errors have

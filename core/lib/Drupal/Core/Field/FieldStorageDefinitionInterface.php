@@ -282,7 +282,7 @@ interface FieldStorageDefinitionInterface {
    * details.
    *
    * @param string $constraint_name
-   *   The name of the the constraint, i.e. its plugin id.
+   *   The name of the constraint, i.e. its plugin id.
    *
    * @return array
    *   A validation constraint definition which can be used for instantiating a

@@ -274,7 +274,7 @@ class TypedDataManager extends DefaultPluginManager {
     // Root data type and settings.
     $parts[] = $root_definition->getDataType();
     if ($settings = $root_definition->getSettings()) {
-      // Hash the settings into a string. crc32 is the the fastest way to hash
+      // Hash the settings into a string. crc32 is the fastest way to hash
       // something for non-cryptographic purposes.
       $parts[] = crc32(serialize($settings));
     }

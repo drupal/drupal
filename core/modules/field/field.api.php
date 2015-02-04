@@ -289,7 +289,7 @@ function hook_field_purge_field_storage(\Drupal\field\Entity\FieldStorageConfig 
  * Acts when a field is being purged.
  *
  * In field_purge_field(), after the field definition has been removed
- * from the the system, the entity storage has purged stored field data, and the
+ * from the system, the entity storage has purged stored field data, and the
  * field info cache has been cleared, this hook is invoked on all modules to
  * allow them to respond to the field being purged.
  *

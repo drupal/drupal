@@ -65,7 +65,7 @@ class TempStoreFactory {
    *   session if no user is logged in.
    *
    * @return \Drupal\user\TempStore
-   *   An instance of the the key/value store.
+   *   An instance of the key/value store.
    */
   function get($collection, $owner = NULL) {
     // Use the currently authenticated user ID or the active user ID unless

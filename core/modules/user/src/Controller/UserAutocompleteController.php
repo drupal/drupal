@@ -50,7 +50,7 @@ class UserAutocompleteController implements ContainerInjectionInterface {
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The current request object containing the search string.
    * @param bool $include_anonymous
-   *   (optional) TRUE if the the name used to indicate anonymous users (e.g.
+   *   (optional) TRUE if the name used to indicate anonymous users (e.g.
    *   "Anonymous") should be autocompleted. Defaults to FALSE.
    *
    * @return \Symfony\Component\HttpFoundation\JsonResponse

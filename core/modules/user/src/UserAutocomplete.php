@@ -61,7 +61,7 @@ class UserAutocomplete {
    *   The string to match for usernames.
    *
    * @param bool $include_anonymous
-   *   (optional) TRUE if the the name used to indicate anonymous users (e.g.
+   *   (optional) TRUE if the name used to indicate anonymous users (e.g.
    *   "Anonymous") should be autocompleted. Defaults to FALSE.
    *
    * @return array

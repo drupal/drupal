@@ -264,7 +264,7 @@ function theme_responsive_image($variables) {
  * @param array $variables
  *   An associative array containing:
  *   - media: The media query to use.
- *   - srcset: The srcset containing the the path of the image file or a full
+ *   - srcset: The srcset containing the path of the image file or a full
  *     URL and optionally multipliers.
  *   - src: Either the path of the image file (relative to base_path()) or a
  *     full URL.

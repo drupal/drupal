@@ -557,7 +557,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     }
 
     // Verify that after deleting the entity, there is a cache miss for every
-    // route except for the the non-referencing entity one.
+    // route except for the non-referencing entity one.
     $this->pass('Test deletion of referenced entity.', 'Debug');
     $this->entity->delete();
     $this->verifyPageCache($referencing_entity_url, 'MISS');

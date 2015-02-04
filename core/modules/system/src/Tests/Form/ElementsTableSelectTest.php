@@ -75,7 +75,7 @@ class ElementsTableSelectTest extends WebTestBase {
 
     $table_body = $this->xpath('//tbody');
     // The first two body rows should each have 5 table cells: One for the
-    // radio, one cell in the first column, one cell in the the second column,
+    // radio, one cell in the first column, one cell in the second column,
     // and two cells in the third column which has colspan 2.
     for ( $i = 0; $i <= 1; $i++) {
       $this->assertEqual(count($table_body[0]->tr[$i]->td), 5, format_string('There are five cells in row @row.', array('@row' => $i)));

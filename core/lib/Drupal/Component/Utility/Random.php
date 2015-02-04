@@ -51,7 +51,7 @@ class Random {
    *   (optional) If TRUE ensures that the random string returned is unique.
    *   Defaults to FALSE.
    * @param callable $validator
-   *   (optional) A callable to validate the the string. Defaults to NULL.
+   *   (optional) A callable to validate the string. Defaults to NULL.
    *
    * @return string
    *   Randomly generated string.
