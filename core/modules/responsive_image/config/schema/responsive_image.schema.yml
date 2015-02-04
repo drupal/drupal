@@ -1,15 +1,12 @@
 # Schema for the configuration files of the Responsive Image module.
 
 responsive_image.mappings.*:
-  type: mapping
+  type: config_entity
   label: 'Responsive image mapping'
   mapping:
     id:
       type: string
       label: 'Machine-readable name'
-    uuid:
-      type: string
-      label: 'UUID'
     label:
       type: label
       label: 'Label'
@@ -32,15 +29,6 @@ responsive_image.mappings.*:
     breakpointGroup:
       type: string
       label: 'Breakpoint group'
-    status:
-      type: boolean
-      label: 'Status'
-    langcode:
-      type: string
-      label: 'Default language'
-    dependencies:
-      type: config_dependencies
-      label: 'Dependencies'
 
 field.formatter.settings.responsive_image:
   type: mapping

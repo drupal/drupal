@@ -1,33 +1,21 @@
 # Schema for Configuration files of the entity module.
 
 core.entity_view_mode.*.*:
-  type: mapping
+  type: config_entity
   label: 'Entity view mode settings'
   mapping:
     id:
       type: string
       label: 'ID'
-    uuid:
-      type: string
-      label: 'UUID'
     label:
       type: label
       label: 'The human-readable name of the view mode'
     targetEntityType:
       type: string
       label: 'Target entity type'
-    status:
-      type: boolean
-      label: 'Enabled'
     cache:
       type: boolean
       label: 'Cached'
-    langcode:
-      type: string
-      label: 'Default language'
-    dependencies:
-      type: config_dependencies
-      label: 'Dependencies'
 
 core.entity_form_mode.*.*:
   type: config_entity
