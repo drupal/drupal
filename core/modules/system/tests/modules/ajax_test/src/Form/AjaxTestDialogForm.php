@@ -7,9 +7,8 @@
 
 namespace Drupal\ajax_test\Form;
 
-use Drupal\Core\Form\FormInterface;
+use Drupal\ajax_test\Controller\AjaxTestController;
 use Drupal\Core\Form\FormBase;
-use Drupal\Component\Utility\String;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Ajax\OpenDialogCommand;
@@ -97,7 +96,7 @@ class AjaxTestDialogForm extends FormBase {
    *   An ajax response object.
    */
   protected function dialog($is_modal = FALSE) {
-    $content = ajax_test_dialog_contents();
+    $content = AjaxTestController::dialogContents();
     $response = new AjaxResponse();
     $title = $this->t('AJAX Dialog contents');
 

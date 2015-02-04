@@ -17,11 +17,31 @@ use Drupal\Core\Url;
 class AjaxTestController {
 
   /**
-   * Returns example content for dialog testing.
+   * Example content for dialog testing.
+   *
+   * @return array
+   *   Renderable array of AJAX dialog contents.
    */
-  public function dialogContents() {
-    // Re-use the utility method that returns the example content.
-    return ajax_test_dialog_contents();
+  public static function dialogContents() {
+    // This is a regular render array; the keys do not have special meaning.
+    $content = array(
+      '#title' => 'AJAX Dialog contents',
+      'content' => array(
+        '#markup' => 'Example message',
+      ),
+      'cancel' => array(
+        '#type' => 'link',
+        '#title' => 'Cancel',
+        '#url' => Url::fromRoute('<front>'),
+        '#attributes' => array(
+          // This is a special class to which JavaScript assigns dialog closing
+          // behavior.
+          'class' => array('dialog-cancel'),
+        ),
+      ),
+    );
+
+    return $content;
   }
 
   /**

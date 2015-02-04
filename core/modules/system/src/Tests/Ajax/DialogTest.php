@@ -32,7 +32,7 @@ class DialogTest extends AjaxTestBase {
     $this->drupalGet('ajax-test/dialog');
 
     // Set up variables for this test.
-    $dialog_renderable = ajax_test_dialog_contents();
+    $dialog_renderable = \Drupal\ajax_test\Controller\AjaxTestController::dialogContents();
     $dialog_contents = drupal_render($dialog_renderable);
     $modal_expected_response = array(
       'command' => 'openDialog',

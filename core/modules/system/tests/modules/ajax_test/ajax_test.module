@@ -29,31 +29,6 @@ function ajax_test_error() {
 }
 
 /**
- * Returns example content for dialog tests.
- */
-function ajax_test_dialog_contents() {
-  // This is a regular render array; the keys do not have special meaning.
-  $content = array(
-    '#title' => 'AJAX Dialog contents',
-    'content' => array(
-      '#markup' => 'Example message',
-    ),
-    'cancel' => array(
-      '#type' => 'link',
-      '#title' => 'Cancel',
-      '#url' => Url::fromRoute('<front>'),
-      '#attributes' => array(
-        // This is a special class to which JavaScript assigns dialog closing
-        // behavior.
-        'class' => array('dialog-cancel'),
-      ),
-    ),
-  );
-
-  return $content;
-}
-
-/**
  * Menu callback: Close the ajax dialog.
  *
  * @deprecated \Drupal\ajax_test\Controller\AjaxTestController::dialogClose()
