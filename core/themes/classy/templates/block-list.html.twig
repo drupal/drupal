@@ -13,11 +13,11 @@
  * @ingroup themeable
  */
 #}
-<div>
-  <div>
+<div class="layout-block-list clearfix">
+  <div class="layout-region block-list-primary">
     {{ form|without('place_blocks') }}
   </div>
-  <div>
+  <div class="layout-region block-list-secondary">
     {{ form.place_blocks }}
   </div>
 </div>

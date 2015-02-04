@@ -83,7 +83,7 @@ class BlockViewBuilderTest extends KernelTestBase {
     $entity = Block::load('test_block1');
     $output = entity_view($entity, 'block');
     $expected = array();
-    $expected[] = '<div id="block-test-block1" class="block block-block-test">';
+    $expected[] = '<div id="block-test-block1">';
     $expected[] = '  ';
     $expected[] = '    ';
     $expected[] = '      ';
@@ -107,7 +107,7 @@ class BlockViewBuilderTest extends KernelTestBase {
     $entity->save();
     $output = entity_view($entity, 'block');
     $expected = array();
-    $expected[] = '<div id="block-test-block2" class="block block-block-test">';
+    $expected[] = '<div id="block-test-block2">';
     $expected[] = '  ';
     $expected[] = '      <h2>Powered by Bananas</h2>';
     $expected[] = '    ';
