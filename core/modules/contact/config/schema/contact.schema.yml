@@ -22,11 +22,6 @@ contact.form.*:
     weight:
       type: integer
       label: 'Weight'
-    third_party_settings:
-      type: sequence
-      label: 'Third party settings'
-      sequence:
-        - type: contact_form.third_party.[%key]
 
 contact.settings:
   type: mapping

@@ -120,11 +120,6 @@ language.content_settings.*.*:
     language_alterable:
       type: boolean
       label: 'Allow to alter the language'
-    third_party_settings:
-      type: sequence
-      label: 'Third party settings'
-      sequence:
-        - type: language.content_settings.third_party.[%key]
 
 condition.plugin.language:
   type: condition.plugin

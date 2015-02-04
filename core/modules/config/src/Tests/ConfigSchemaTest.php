@@ -26,7 +26,7 @@ class ConfigSchemaTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'language', 'locale', 'field', 'image', 'config_schema_test');
+  public static $modules = array('system', 'language', 'locale', 'field', 'image', 'config_test', 'config_schema_test');
 
   /**
    * {@inheritdoc}
@@ -172,7 +172,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['mapping']['effects']['sequence'][0]['mapping']['uuid']['type'] = 'string';
     $expected['mapping']['third_party_settings']['type'] = 'sequence';
     $expected['mapping']['third_party_settings']['label'] = 'Third party settings';
-    $expected['mapping']['third_party_settings']['sequence'][0]['type'] = 'image_style.third_party.[%key]';
+    $expected['mapping']['third_party_settings']['sequence'][0]['type'] = '[%parent.%parent.%type].third_party.[%key]';
     $expected['type'] = 'image.style.*';
 
     $this->assertEqual($definition, $expected);
@@ -202,6 +202,19 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['type'] =  'image.effect.image_scale';
 
     $this->assertEqual($definition, $expected, 'Retrieved the right metadata for the first effect of image.style.medium');
+
+    $test = \Drupal::service('config.typed')->get('config_test.dynamic.third_party')->get('third_party_settings.config_schema_test');
+    $definition = $test->getDataDefinition()->toArray();
+    $expected = array();
+    $expected['type'] = 'config_test.dynamic.*.third_party.config_schema_test';
+    $expected['label'] = 'Mapping';
+    $expected['class'] = '\Drupal\Core\Config\Schema\Mapping';
+    $expected['definition_class'] = '\Drupal\Core\TypedData\MapDataDefinition';
+    $expected['mapping'] = [
+      'integer' => ['type' => 'integer'],
+      'string' => ['type' => 'string'],
+    ];
+    $this->assertEqual($definition, $expected, 'Retrieved the right metadata for config_test.dynamic.third_party:third_party_settings.config_schema_test');
 
     // More complex, several level deep test.
     $definition = \Drupal::service('config.typed')->getDefinition('config_schema_test.someschema.somemodule.section_one.subsection');

@@ -9,7 +9,6 @@ namespace Drupal\contact\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\contact\ContactFormInterface;
-use Drupal\Core\Config\Entity\ThirdPartySettingsTrait;
 
 /**
  * Defines the contact form entity.
@@ -41,8 +40,6 @@ use Drupal\Core\Config\Entity\ThirdPartySettingsTrait;
  * )
  */
 class ContactForm extends ConfigEntityBundleBase implements ContactFormInterface {
-
-  use ThirdPartySettingsTrait;
 
   /**
    * The form ID.

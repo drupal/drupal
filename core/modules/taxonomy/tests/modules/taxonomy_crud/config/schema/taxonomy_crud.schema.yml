@@ -1,4 +1,4 @@
-taxonomy.vocabulary.third_party.taxonomy_crud:
+taxonomy.vocabulary.*.third_party.taxonomy_crud:
   type: mapping
   label: 'Schema for taxonomy_crud module additions to vocabulary entity'
   mapping:

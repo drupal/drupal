@@ -9,7 +9,6 @@ namespace Drupal\Core\Field;
 
 use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Config\Entity\ThirdPartySettingsTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
@@ -19,8 +18,6 @@ use Drupal\Component\Utility\String;
  * Base class for configurable field definitions.
  */
 abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigInterface {
-
-  use ThirdPartySettingsTrait;
 
   /**
    * The field ID.

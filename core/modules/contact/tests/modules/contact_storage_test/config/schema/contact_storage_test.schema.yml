@@ -1,6 +1,6 @@
 # Schema for configuration files of the Contact Storage Test module.
 
-contact_form.third_party.contact_storage_test:
+contact.form.*.third_party.contact_storage_test:
   type: mapping
   label: 'Per-contact form storage settings'
   mapping:

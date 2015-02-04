@@ -269,6 +269,11 @@ config_entity:
     dependencies:
       type: config_dependencies
       label: 'Dependencies'
+    third_party_settings:
+      type: sequence
+      label: 'Third party settings'
+      sequence:
+        - type: '[%parent.%parent.%type].third_party.[%key]'
 
 block_settings:
   type: mapping
@@ -393,11 +398,6 @@ field_config_base:
       label: 'Default value callback'
     settings:
       type: field.field_settings.[%parent.field_type]
-    third_party_settings:
-      type: sequence
-      label: 'Third party settings'
-      sequence:
-        - type: field_config.third_party.[%key]
     field_type:
       type: string
       label: 'Field type'

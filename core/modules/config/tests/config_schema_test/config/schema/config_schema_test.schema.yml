@@ -209,3 +209,11 @@ test_with_parents.plugin_types.*:
 
 config_schema_test.hook:
   type: string
+
+config_test.dynamic.*.third_party.config_schema_test:
+  type: mapping
+  mapping:
+    integer:
+      type: integer
+    string:
+      type: string

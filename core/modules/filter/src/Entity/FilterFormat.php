@@ -400,7 +400,7 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
    * {@inheritdoc}
    */
   public function onDependencyRemoval(array $dependencies) {
-    $changed = FALSE;
+    $changed = parent::onDependencyRemoval($dependencies);
     $filters = $this->filters();
     foreach ($filters as $filter) {
       // Remove disabled filters, so that this FilterFormat config entity can
@@ -410,9 +410,7 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
         $changed = TRUE;
       }
     }
-    if ($changed) {
-      $this->save();
-    }
+    return $changed;
   }
 
   /**

@@ -240,6 +240,8 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    * their value or some of these special strings:
    * - '%key', will be replaced by the element's key.
    * - '%parent', to reference the parent element.
+   * - '%type', to reference the schema definition type. Can only be used in
+   *   combination with %parent.
    *
    * There may be nested configuration keys separated by dots or more complex
    * patterns like '%parent.name' which references the 'name' value of the
@@ -249,6 +251,9 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    * - 'name.subkey', indicates a nested value of the current element.
    * - '%parent.name', will be replaced by the 'name' value of the parent.
    * - '%parent.%key', will be replaced by the parent element's key.
+   * - '%parent.%type', will be replaced by the schema type of the parent.
+   * - '%parent.%parent.%type', will be replaced by the schema type of the
+   *   parent's parent.
    *
    * @param string $value
    *   Variable value to be replaced.
@@ -273,9 +278,11 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
       else {
         // Get nested value and continue processing.
         if ($name == '%parent') {
+          /** @var \Drupal\Core\Config\Schema\ArrayElement $parent */
           // Switch replacement values with values from the parent.
           $parent = $data['%parent'];
           $data = $parent->getValue();
+          $data['%type'] = $parent->getDataDefinition()->getDataType();
           // The special %parent and %key values now need to point one level up.
           if ($new_parent = $parent->getParent()) {
             $data['%parent'] = $new_parent;

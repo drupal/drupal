@@ -220,8 +220,10 @@ class ConfigManager implements ConfigManagerInterface {
       if (isset($entity_dependencies[$type]) && in_array($name, $entity_dependencies[$type])) {
         $affected_dependencies[$type] = array($name);
       }
-      // Inform the entity.
-      $entity->onDependencyRemoval($affected_dependencies);
+      // Inform the entity and, if the entity is changed, re-save it.
+      if ($entity->onDependencyRemoval($affected_dependencies)) {
+        $entity->save();
+      }
     }
 
     // Recalculate the dependencies, some config entities may have fixed their

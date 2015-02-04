@@ -22,11 +22,6 @@ image.style.*:
               type: integer
             uuid:
               type: string
-    third_party_settings:
-      type: sequence
-      label: 'Third party settings'
-      sequence:
-        - type: image_style.third_party.[%key]
 
 image.effect.*:
   type: mapping

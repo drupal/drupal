@@ -7,12 +7,12 @@
 
 namespace Drupal\Core\Config\Entity;
 
-use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\Core\Entity\Entity;
 use Drupal\Core\Config\ConfigDuplicateUUIDException;
+use Drupal\Core\Config\Entity\ThirdPartySettingsTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
@@ -24,7 +24,7 @@ use Drupal\Core\Plugin\PluginDependencyTrait;
  *
  * @ingroup entity_api
  */
-abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface {
+abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface, ThirdPartySettingsInterface {
 
   use PluginDependencyTrait {
     addDependency as addDependencyTrait;
@@ -86,6 +86,15 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    * @var string
    */
   protected $langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED;
+
+  /**
+   * Third party entity settings.
+   *
+   * An array of key/value pairs keyed by provider.
+   *
+   * @var array
+   */
+  protected $third_party_settings = array();
 
   /**
    * Overrides Entity::__construct().
@@ -259,6 +268,9 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
         $properties[$name] = $this->get($name);
       }
     }
+    if (empty($this->third_party_settings)) {
+      unset($properties['third_party_settings']);
+    }
     return $properties;
   }
 
@@ -430,6 +442,13 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    * {@inheritdoc}
    */
   public function onDependencyRemoval(array $dependencies) {
+    $changed = FALSE;
+    if (!empty($this->third_party_settings)) {
+      $old_count = count($this->third_party_settings);
+      $this->third_party_settings = array_diff_key($this->third_party_settings, array_flip($dependencies['module']));
+      $changed = $old_count != count($this->third_party_settings);
+    }
+    return $changed;
   }
 
   /**
@@ -450,6 +469,53 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    */
   protected static function invalidateTagsOnDelete(EntityTypeInterface $entity_type, array $entities) {
     Cache::invalidateTags($entity_type->getListCacheTags());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setThirdPartySetting($module, $key, $value) {
+    $this->third_party_settings[$module][$key] = $value;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getThirdPartySetting($module, $key, $default = NULL) {
+    if (isset($this->third_party_settings[$module][$key])) {
+      return $this->third_party_settings[$module][$key];
+    }
+    else {
+      return $default;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getThirdPartySettings($module) {
+    return isset($this->third_party_settings[$module]) ? $this->third_party_settings[$module] : array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function unsetThirdPartySetting($module, $key) {
+    unset($this->third_party_settings[$module][$key]);
+    // If the third party is no longer storing any information, completely
+    // remove the array holding the settings for this module.
+    if (empty($this->third_party_settings[$module])) {
+      unset($this->third_party_settings[$module]);
+    }
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getThirdPartyProviders() {
+    return array_keys($this->third_party_settings);
   }
 
 }

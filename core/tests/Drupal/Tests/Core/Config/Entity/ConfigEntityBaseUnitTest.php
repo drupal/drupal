@@ -291,14 +291,20 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
 
   /**
    * @covers ::calculateDependencies
+   * @covers ::onDependencyRemoval
    */
   public function testCalculateDependenciesWithThirdPartySettings() {
-    $this->entity = $this->getMockForAbstractClass('\Drupal\Tests\Core\Config\Entity\Fixtures\ConfigEntityBaseWithThirdPartySettings', array(array(), $this->entityTypeId));
+    $this->entity = $this->getMockForAbstractClass('\Drupal\Core\Config\Entity\ConfigEntityBase', array(array(), $this->entityTypeId));
     $this->entity->setThirdPartySetting('test_provider', 'test', 'test');
     $this->entity->setThirdPartySetting('test_provider2', 'test', 'test');
     $this->entity->setThirdPartySetting($this->provider, 'test', 'test');
 
     $this->assertEquals(array('test_provider', 'test_provider2'), $this->entity->calculateDependencies()['module']);
+    $changed = $this->entity->onDependencyRemoval(['module' => ['test_provider2']]);
+    $this->assertTrue($changed, 'Calling onDependencyRemoval with an existing third party dependency provider returns TRUE.');
+    $changed = $this->entity->onDependencyRemoval(['module' => ['test_provider3']]);
+    $this->assertFalse($changed, 'Calling onDependencyRemoval with a non-existing third party dependency provider returns FALSE.');
+    $this->assertEquals(array('test_provider'), $this->entity->calculateDependencies()['module']);
   }
 
   /**
@@ -465,6 +471,40 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    */
   public function testToArrayFallback() {
     $this->entity->toArray();
+  }
+
+  /**
+   * @covers ::getThirdPartySetting
+   * @covers ::setThirdPartySetting
+   * @covers ::getThirdPartySettings
+   * @covers ::unsetThirdPartySetting
+   * @covers ::getThirdPartyProviders
+   */
+  public function testThirdPartySettings() {
+    $key = 'test';
+    $third_party = 'test_provider';
+    $value = $this->getRandomGenerator()->string();
+
+    // Test getThirdPartySetting() with no settings.
+    $this->assertEquals($value, $this->entity->getThirdPartySetting($third_party, $key, $value));
+    $this->assertNull($this->entity->getThirdPartySetting($third_party, $key));
+
+    // Test setThirdPartySetting().
+    $this->entity->setThirdPartySetting($third_party, $key, $value);
+    $this->assertEquals($value, $this->entity->getThirdPartySetting($third_party, $key));
+    $this->assertEquals($value, $this->entity->getThirdPartySetting($third_party, $key, $this->randomGenerator->string()));
+
+    // Test getThirdPartySettings().
+    $this->entity->setThirdPartySetting($third_party, 'test2', 'value2');
+    $this->assertEquals(array($key => $value, 'test2' => 'value2'), $this->entity->getThirdPartySettings($third_party));
+
+    // Test getThirdPartyProviders().
+    $this->entity->setThirdPartySetting('test_provider2', $key, $value);
+    $this->assertEquals(array($third_party, 'test_provider2'), $this->entity->getThirdPartyProviders());
+
+    // Test unsetThirdPartyProviders().
+    $this->entity->unsetThirdPartySetting('test_provider2', $key);
+    $this->assertEquals(array($third_party), $this->entity->getThirdPartyProviders());
   }
 
 }
