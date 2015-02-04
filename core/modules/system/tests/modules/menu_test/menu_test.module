@@ -81,20 +81,6 @@ function menu_test_menu_local_tasks_alter(&$data, $route_name) {
 }
 
 /**
- * Page callback: Provides a dummy function which can be used as a placeholder.
- *
- * @return string
- *   A string that can be used for comparison.
- *
- * @see menu_test_menu().
- *
- * @deprecated Use \Drupal\menu_test\Controller\MenuTestController::menuTestCallback()
- */
-function menu_test_callback() {
-  return ['#markup' => 'This is menu_test_callback().'];
-}
-
-/**
  * Page callback: Tests the theme negotiation functionality.
  *
  * @param bool $inherited

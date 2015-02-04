@@ -199,7 +199,7 @@ class MenuRouterTest extends WebTestBase {
       "%23%25%26%2B%2F%3F" . // Characters that look like a percent-escaped string.
       "éøïвβ中國書۞"; // Characters from various non-ASCII alphabets.
     $this->drupalGet($path);
-    $this->assertRaw('This is menu_test_callback().');
+    $this->assertRaw('This is the menuTestCallback content.');
   }
 
   /**

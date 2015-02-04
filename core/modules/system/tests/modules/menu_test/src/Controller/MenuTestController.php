@@ -13,10 +13,13 @@ namespace Drupal\menu_test\Controller;
 class MenuTestController {
 
   /**
-   * @todo Remove menu_test_callback().
+   * Some known placeholder content which can be used for testing.
+   *
+   * @return string
+   *   A string that can be used for comparison.
    */
   public function menuTestCallback() {
-    return menu_test_callback();
+    return ['#markup' => 'This is the menuTestCallback content.'];
   }
 
 
