@@ -251,10 +251,8 @@ function shortcut_renderable_links($shortcut_set = NULL) {
     $shortcut_set = shortcut_current_displayed_set();
   }
 
-  /** @var \Drupal\shortcut\ShortcutInterface[] $shortcuts  */
-  $shortcuts = \Drupal::entityManager()->getStorage('shortcut')->loadByProperties(array('shortcut_set' => $shortcut_set->id()));
   $cache_tags = array();
-  foreach ($shortcuts as $shortcut) {
+  foreach ($shortcut_set->getShortcuts() as $shortcut) {
     $shortcut = \Drupal::entityManager()->getTranslationFromContext($shortcut);
     $links[$shortcut->id()] = array(
       'type' => 'link',

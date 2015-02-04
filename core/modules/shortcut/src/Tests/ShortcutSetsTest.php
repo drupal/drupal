@@ -79,9 +79,10 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save changes'));
     $this->assertRaw(t('The shortcut set has been updated.'));
 
-    // Check to ensure that the shortcut weights have changed.
-    $weights = $this->getShortcutInformation($set, 'weight');
-    $this->assertEqual($weights, array(2, 1));
+    \Drupal::entityManager()->getStorage('shortcut')->resetCache();
+    // Check to ensure that the shortcut weights have changed and that
+    // ShortcutSet::.getShortcuts() returns shortcuts in the new order.
+    $this->assertIdentical(array_reverse(array_keys($shortcuts)), array_keys($set->getShortcuts()));
   }
 
   /**

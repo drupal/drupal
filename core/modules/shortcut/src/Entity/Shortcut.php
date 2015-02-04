@@ -181,4 +181,26 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
     return $this->shortcut_set->entity->getCacheTags();
   }
 
+  /**
+   * Sort shortcut objects.
+   *
+   * Callback for uasort().
+   *
+   * @param \Drupal\shortcut\ShortcutInterface $a
+   *   First item for comparison.
+   * @param \Drupal\shortcut\ShortcutInterface $b
+   *   Second item for comparison.
+   *
+   * @return int
+   *   The comparison result for uasort().
+   */
+  public static function sort(ShortcutInterface $a, ShortcutInterface $b) {
+    $a_weight = $a->getWeight();
+    $b_weight = $b->getWeight();
+    if ($a_weight == $b_weight) {
+      return strnatcasecmp($a->getTitle(), $b->getTitle());
+    }
+    return ($a_weight < $b_weight) ? -1 : 1;
+  }
+
 }

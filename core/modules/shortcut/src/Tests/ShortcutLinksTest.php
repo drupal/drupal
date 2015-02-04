@@ -261,6 +261,24 @@ class ShortcutLinksTest extends ShortcutTestBase {
   }
 
   /**
+   * Tests the shortcuts are correctly ordered by weight in the toolbar.
+   */
+  public function testShortcutLinkOrder() {
+    $this->drupalLogin($this->drupalCreateUser(array('access toolbar', 'access shortcuts')));
+    $this->drupalGet(Url::fromRoute('<front>'));
+    $shortcuts = $this->cssSelect('#toolbar-item-shortcuts-tray .menu a');
+    $this->assertEqual((string) $shortcuts[0], 'Add content');
+    $this->assertEqual((string) $shortcuts[1], 'All content');
+    foreach($this->set->getShortcuts() as $shortcut) {
+      $shortcut->setWeight($shortcut->getWeight() * -1)->save();
+    }
+    $this->drupalGet(Url::fromRoute('<front>'));
+    $shortcuts = $this->cssSelect('#toolbar-item-shortcuts-tray .menu a');
+    $this->assertEqual((string) $shortcuts[0], 'All content');
+    $this->assertEqual((string) $shortcuts[1], 'Add content');
+  }
+
+  /**
    * Tests that the 'access shortcuts' permission is required for shortcut set
    * administration page access.
    */

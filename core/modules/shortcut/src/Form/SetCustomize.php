@@ -79,8 +79,6 @@ class SetCustomize extends EntityForm {
         '#links' => $links,
       );
     }
-    // Sort the list so the output is ordered by weight.
-    uasort($form['shortcuts']['links'], array('\Drupal\Component\Utility\SortArray', 'sortByWeightProperty'));
     return $form;
   }
 
