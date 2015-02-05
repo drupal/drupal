@@ -76,6 +76,30 @@ class CreateTest extends RESTTestBase {
   }
 
   /**
+   * Ensure that an entity cannot be created without the restful permission.
+   */
+  public function testCreateWithoutPermission() {
+    $entity_type = 'entity_test';
+    // Enables the REST service for 'entity_test' entity type.
+    $this->enableService('entity:' . $entity_type, 'POST');
+    $permissions = $this->entityPermissions($entity_type, 'create');
+    // Create a user without the 'restful post entity:entity_test permission.
+    $account = $this->drupalCreateUser($permissions);
+    $this->drupalLogin($account);
+    // Populate some entity properties before create the entity.
+    $entity_values = $this->entityValues($entity_type);
+    $entity = EntityTest::create($entity_values);
+
+    // Serialize the entity before the POST request.
+    $serialized = $this->serializer->serialize($entity, $this->defaultFormat, ['account' => $account]);
+
+    // Create the entity over the REST API.
+    $this->httpRequest('entity/' . $entity_type, 'POST', $serialized, $this->defaultMimeType);
+    $this->assertResponse(403);
+    $this->assertFalse(EntityTest::loadMultiple(), 'No entity has been created in the database.');
+  }
+
+  /**
    * Tests several valid and invalid create requests for 'entity_test' entity type.
    */
   public function testCreateEntityTest() {
