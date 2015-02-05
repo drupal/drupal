@@ -79,6 +79,19 @@ class EntityValidationTest extends EntityUnitTestBase {
    * Tests validating test entity types.
    */
   public function testValidation() {
+    // Ensure that the constraint manager is marked as cached cleared.
+    $plugin_cache_clearer = \Drupal::service('plugin.cache_clearer');
+    $get_cached_discoveries = function () {
+      return $this->cachedDiscoveries;
+    };
+    $get_cached_discoveries = $get_cached_discoveries->bindTo($plugin_cache_clearer, $plugin_cache_clearer);
+    $cached_discoveries = $get_cached_discoveries();
+    $cached_discovery_classes = [];
+    foreach ($cached_discoveries as $cached_discovery) {
+      $cached_discovery_classes[] = get_class($cached_discovery);
+    }
+    $this->assertTrue(in_array('Drupal\Core\Validation\ConstraintManager', $cached_discovery_classes));
+
     // All entity variations have to have the same results.
     foreach (entity_test_entity_types() as $entity_type) {
       $this->checkValidation($entity_type);
