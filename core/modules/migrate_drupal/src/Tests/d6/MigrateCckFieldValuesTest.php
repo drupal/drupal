@@ -84,7 +84,9 @@ class MigrateCckFieldValuesTest extends MigrateNodeTestBase {
     entity_create('field_storage_config', array(
       'entity_type' => 'node',
       'field_name' => 'field_multivalue',
-      'type' => 'integer',
+      'type' => 'decimal',
+      'precision' => '10',
+      'scale' => '2',
       'cardinality' => -1,
     ))->save();
     entity_create('field_config', array(
@@ -167,16 +169,16 @@ class MigrateCckFieldValuesTest extends MigrateNodeTestBase {
   public function testCckFields() {
     $node = Node::load(1);
 
-    $this->assertEqual($node->field_test->value, 'This is a shared text field');
-    $this->assertEqual($node->field_test->format, 'filtered_html');
-    $this->assertEqual($node->field_test_two->value, 10);
-    $this->assertEqual($node->field_test_two[1]->value, 20);
+    $this->assertIdentical($node->field_test->value, 'This is a shared text field');
+    $this->assertIdentical($node->field_test->format, 'filtered_html');
+    $this->assertIdentical($node->field_test_two->value, '10');
+    $this->assertIdentical($node->field_test_two[1]->value, '20');
 
-    $this->assertEqual($node->field_test_three->value, '42.42', 'Single field second value is correct.');
-    $this->assertEqual($node->field_test_integer_selectlist[0]->value, '3412');
-    $this->assertEqual($node->field_test_identical1->value, '1', 'Integer value is correct');
-    $this->assertEqual($node->field_test_identical2->value, '1', 'Integer value is correct');
-    $this->assertEqual($node->field_test_exclude_unset->value, 'This is a field with exclude unset.', 'Field with exclude unset is correct.');
+    $this->assertIdentical($node->field_test_three->value, '42.42', 'Single field second value is correct.');
+    $this->assertIdentical($node->field_test_integer_selectlist[0]->value, '3412');
+    $this->assertIdentical($node->field_test_identical1->value, '1', 'Integer value is correct');
+    $this->assertIdentical($node->field_test_identical2->value, '1', 'Integer value is correct');
+    $this->assertIdentical($node->field_test_exclude_unset->value, 'This is a field with exclude unset.', 'Field with exclude unset is correct.');
 
     // Test that link fields are migrated.
     $this->assertIdentical($node->field_test_link->uri, 'http://drupal.org/project/drupal');
@@ -188,8 +190,8 @@ class MigrateCckFieldValuesTest extends MigrateNodeTestBase {
     $this->assertIdentical($node->field_test_filefield->target_id, '5');
 
     $planet_node = Node::load(3);
-    $this->assertEqual($planet_node->field_multivalue->value, 33);
-    $this->assertEqual($planet_node->field_multivalue[1]->value, 44);
+    $this->assertIdentical($planet_node->field_multivalue->value, '33.00');
+    $this->assertIdentical($planet_node->field_multivalue[1]->value, '44.00');
   }
 
 }

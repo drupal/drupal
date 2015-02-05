@@ -62,10 +62,10 @@ class MigrateVocabularyFieldTest extends MigrateDrupalTestBase {
     // Test that the field exists.
     $field_storage_id = 'node.tags';
     $field_storage = FieldStorageConfig::load($field_storage_id);
-    $this->assertEqual($field_storage->id(), $field_storage_id);
+    $this->assertIdentical($field_storage->id(), $field_storage_id);
     $settings = $field_storage->getSettings();
-    $this->assertEqual('tags', $settings['allowed_values'][0]['vocabulary'], "Vocabulary has correct settings.");
-    $this->assertEqual(array('node', 'tags'), entity_load('migration', 'd6_vocabulary_field')->getIdMap()->lookupDestinationID(array(4)), "Test IdMap");
+    $this->assertIdentical('tags', $settings['allowed_values'][0]['vocabulary'], "Vocabulary has correct settings.");
+    $this->assertIdentical(array('node', 'tags'), entity_load('migration', 'd6_vocabulary_field')->getIdMap()->lookupDestinationID(array(4)), "Test IdMap");
   }
 
 }

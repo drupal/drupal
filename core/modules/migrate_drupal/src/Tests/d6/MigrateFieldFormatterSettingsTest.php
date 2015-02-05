@@ -84,8 +84,8 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupalTestBase {
     // Run tests.
     $field_name = "field_test";
     $expected = array(
-      'weight' => 1,
       'label' => 'above',
+      'weight' => 1,
       'type' => 'text_trimmed',
       'settings' => array('trim_length' => 600),
       'third_party_settings' => array(),
@@ -93,23 +93,23 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupalTestBase {
 
     // Can we load any entity display.
     $display = entity_load('entity_view_display', 'node.story.teaser');
-    $this->assertEqual($display->getComponent($field_name), $expected);
+    $this->assertIdentical($display->getComponent($field_name), $expected);
 
     // Test migrate worked with multiple bundles.
     $display = entity_load('entity_view_display', 'node.test_page.teaser');
     $expected['weight'] = 35;
-    $this->assertEqual($display->getComponent($field_name), $expected);
+    $this->assertIdentical($display->getComponent($field_name), $expected);
 
     // Test RSS because that has been converted from 4 to rss.
     $display = entity_load('entity_view_display', 'node.story.rss');
     $expected['weight'] = 1;
-    $this->assertEqual($display->getComponent($field_name), $expected);
+    $this->assertIdentical($display->getComponent($field_name), $expected);
 
     // Test the default format with text_default which comes from a static map.
     $expected['type'] = 'text_default';
     $expected['settings'] = array();
     $display = entity_load('entity_view_display', 'node.story.default');
-    $this->assertEqual($display->getComponent($field_name), $expected);
+    $this->assertIdentical($display->getComponent($field_name), $expected);
 
     // Check that we can migrate multiple fields.
     $content = $display->get('content');
@@ -127,107 +127,111 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupalTestBase {
       'prefix_suffix' => TRUE,
     );
     $component = $display->getComponent('field_test_two');
-    $this->assertEqual($component, $expected);
+    $this->assertIdentical($component, $expected);
     $expected['weight'] = 2;
     $expected['type'] = 'number_decimal';
-    $expected['settings']['scale'] = 2;
-    $expected['settings']['decimal_separator'] = '.';
+    $expected['settings'] = array(
+       'scale' => 2,
+       'decimal_separator' => '.',
+       'thousand_separator' => ',',
+       'prefix_suffix' => TRUE,
+    );
     $component = $display->getComponent('field_test_three');
-    $this->assertEqual($component, $expected);
+    $this->assertIdentical($component, $expected);
 
     // Test the email field formatter settings are correct.
     $expected['weight'] = 6;
     $expected['type'] = 'email_mailto';
     $expected['settings'] = array();
     $component = $display->getComponent('field_test_email');
-    $this->assertEqual($component, $expected);
+    $this->assertIdentical($component, $expected);
 
     // Test the link field formatter settings.
     $expected['weight'] = 7;
     $expected['type'] = 'link';
     $expected['settings'] = array(
       'trim_length' => 80,
-      'url_only' => 1,
-      'url_plain' => 1,
-      'rel' => 0,
-      'target' => 0,
+      'url_only' => TRUE,
+      'url_plain' => TRUE,
+      'rel' => '0',
+      'target' => '0',
     );
     $component = $display->getComponent('field_test_link');
-    $this->assertEqual($component, $expected);
-    $expected['settings']['url_only'] = 0;
-    $expected['settings']['url_plain'] = 0;
+    $this->assertIdentical($component, $expected);
+    $expected['settings']['url_only'] = FALSE;
+    $expected['settings']['url_plain'] = FALSE;
     $display = entity_load('entity_view_display', 'node.story.teaser');
     $component = $display->getComponent('field_test_link');
-    $this->assertEqual($component, $expected);
+    $this->assertIdentical($component, $expected);
 
     // Test the file field formatter settings.
     $expected['weight'] = 8;
     $expected['type'] = 'file_default';
     $expected['settings'] = array();
     $component = $display->getComponent('field_test_filefield');
-    $this->assertEqual($component, $expected);
+    $this->assertIdentical($component, $expected);
     $display = entity_load('entity_view_display', 'node.story.default');
     $expected['type'] = 'file_url_plain';
     $component = $display->getComponent('field_test_filefield');
-    $this->assertEqual($component, $expected);
+    $this->assertIdentical($component, $expected);
 
     // Test the image field formatter settings.
     $expected['weight'] = 9;
     $expected['type'] = 'image';
     $expected['settings'] = array('image_style' => '', 'image_link' => '');
     $component = $display->getComponent('field_test_imagefield');
-    $this->assertEqual($component, $expected);
+    $this->assertIdentical($component, $expected);
     $display = entity_load('entity_view_display', 'node.story.teaser');
     $expected['settings']['image_link'] = 'file';
     $component = $display->getComponent('field_test_imagefield');
-    $this->assertEqual($component, $expected);
+    $this->assertIdentical($component, $expected);
 
     // Test phone field.
     $expected['weight'] = 13;
     $expected['type'] = 'basic_string';
     $expected['settings'] = array();
     $component = $display->getComponent('field_test_phone');
-    $this->assertEqual($component, $expected);
+    $this->assertIdentical($component, $expected);
 
     // Test date field.
     $expected['weight'] = 10;
     $expected['type'] = 'datetime_default';
     $expected['settings'] = array('format_type' => 'fallback');
     $component = $display->getComponent('field_test_date');
-    $this->assertEqual($component, $expected);
+    $this->assertIdentical($component, $expected);
     $display = entity_load('entity_view_display', 'node.story.default');
     $expected['settings']['format_type'] = 'long';
     $component = $display->getComponent('field_test_date');
-    $this->assertEqual($component, $expected);
+    $this->assertIdentical($component, $expected);
 
     // Test date stamp field.
     $expected['weight'] = 11;
     $expected['settings']['format_type'] = 'fallback';
     $component = $display->getComponent('field_test_datestamp');
-    $this->assertEqual($component, $expected);
+    $this->assertIdentical($component, $expected);
     $display = entity_load('entity_view_display', 'node.story.teaser');
     $expected['settings'] = array('format_type' => 'medium');
     $component = $display->getComponent('field_test_datestamp');
-    $this->assertEqual($component, $expected);
+    $this->assertIdentical($component, $expected);
 
     // Test datetime field.
     $expected['weight'] = 12;
     $expected['settings'] = array('format_type' => 'short');
     $component = $display->getComponent('field_test_datetime');
-    $this->assertEqual($component, $expected);
+    $this->assertIdentical($component, $expected);
     $display = entity_load('entity_view_display', 'node.story.default');
     $expected['settings']['format_type'] = 'fallback';
     $component = $display->getComponent('field_test_datetime');
-    $this->assertEqual($component, $expected);
+    $this->assertIdentical($component, $expected);
 
     // Test a date field with a random format which should be mapped
     // to datetime_default.
     $display = entity_load('entity_view_display', 'node.story.rss');
     $expected['settings']['format_type'] = 'fallback';
     $component = $display->getComponent('field_test_datetime');
-    $this->assertEqual($component, $expected);
+    $this->assertIdentical($component, $expected);
     // Test that our Id map has the correct data.
-    $this->assertEqual(array('node', 'story', 'teaser', 'field_test'), entity_load('migration', 'd6_field_formatter_settings')->getIdMap()->lookupDestinationID(array('story', 'teaser', 'node', 'field_test')));
+    $this->assertIdentical(array('node', 'story', 'teaser', 'field_test'), entity_load('migration', 'd6_field_formatter_settings')->getIdMap()->lookupDestinationID(array('story', 'teaser', 'node', 'field_test')));
   }
 
 }

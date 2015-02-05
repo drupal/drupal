@@ -46,7 +46,7 @@ class MigrateUrlAliasTest extends MigrateDrupalTestBase {
     );
     $path = \Drupal::service('path.alias_storage')->load($conditions);
     $this->assertNotNull($path, "Path alias for node/1 successfully loaded.");
-    $this->assertEqual(array(1), $migration->getIdMap()->lookupDestinationID(array($path['pid'])), "Test IdMap");
+    $this->assertIdentical(array('1'), $migration->getIdMap()->lookupDestinationID(array($path['pid'])), "Test IdMap");
     $conditions = array(
       'source' => 'node/2',
       'alias' => 'alias-two',
@@ -70,7 +70,7 @@ class MigrateUrlAliasTest extends MigrateDrupalTestBase {
     $executable->import();
 
     $path = \Drupal::service('path.alias_storage')->load(array('pid' => $path['pid']));
-    $this->assertEqual($path['alias'], 'new-url-alias');
+    $this->assertIdentical($path['alias'], 'new-url-alias');
   }
 
 }

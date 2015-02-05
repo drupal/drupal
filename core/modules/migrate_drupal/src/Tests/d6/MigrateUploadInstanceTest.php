@@ -68,19 +68,19 @@ class MigrateUploadInstanceTest extends MigrateDrupalTestBase {
   public function testUploadFieldInstance() {
     $field = FieldConfig::load('node.page.upload');
     $settings = $field->getSettings();
-    $this->assertEqual($field->id(), 'node.page.upload');
-    $this->assertEqual($settings['file_extensions'], 'jpg jpeg gif png txt doc xls pdf ppt pps odt ods odp');
-    $this->assertEqual($settings['max_filesize'], '1MB');
-    $this->assertEqual($settings['description_field'], TRUE);
+    $this->assertIdentical($field->id(), 'node.page.upload');
+    $this->assertIdentical($settings['file_extensions'], 'jpg jpeg gif png txt doc xls pdf ppt pps odt ods odp');
+    $this->assertIdentical($settings['max_filesize'], '1MB');
+    $this->assertIdentical($settings['description_field'], TRUE);
 
     $field = FieldConfig::load('node.story.upload');
-    $this->assertEqual($field->id(), 'node.story.upload');
+    $this->assertIdentical($field->id(), 'node.story.upload');
 
     // Shouldn't exist.
     $field = FieldConfig::load('node.article.upload');
     $this->assertTrue(is_null($field));
 
-    $this->assertEqual(array('node', 'page', 'upload'), entity_load('migration', 'd6_upload_field_instance')->getIdMap()->lookupDestinationID(array('page')));
+    $this->assertIdentical(array('node', 'page', 'upload'), entity_load('migration', 'd6_upload_field_instance')->getIdMap()->lookupDestinationID(array('page')));
   }
 
 }

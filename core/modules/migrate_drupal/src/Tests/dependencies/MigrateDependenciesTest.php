@@ -29,7 +29,7 @@ class MigrateDependenciesTest extends MigrateDrupalTestBase {
     $migration_items = array('d6_comment', 'd6_filter_format', 'd6_node');
     $migrations = entity_load_multiple('migration', $migration_items);
     $expected_order = array('d6_filter_format', 'd6_node', 'd6_comment');
-    $this->assertEqual(array_keys($migrations), $expected_order);
+    $this->assertIdentical(array_keys($migrations), $expected_order);
     $expected_requirements = array(
       'd6_node',
       'd6_node_type',
@@ -43,9 +43,9 @@ class MigrateDependenciesTest extends MigrateDrupalTestBase {
     // Migration dependencies for comment include dependencies for node
     // migration as well.
     $actual_requirements = $migrations['d6_comment']->get('requirements');
-    $this->assertEqual(count($actual_requirements), count($expected_requirements));
+    $this->assertIdentical(count($actual_requirements), count($expected_requirements));
     foreach ($expected_requirements as $requirement) {
-      $this->assertEqual($actual_requirements[$requirement], $requirement);
+      $this->assertIdentical($actual_requirements[$requirement], $requirement);
     }
   }
 
@@ -62,7 +62,7 @@ class MigrateDependenciesTest extends MigrateDrupalTestBase {
     $executable = new MigrateExecutable($migration, $this);
     $this->startCollectingMessages();
     $executable->import();
-    $this->assertEqual($this->migrateMessages['error'], array(String::format('Migration @id did not meet the requirements. Missing migrations d6_aggregator_feed. requirements: d6_aggregator_feed.', array('@id' => $migration->id()))));
+    $this->assertIdentical($this->migrateMessages['error'], array(String::format('Migration @id did not meet the requirements. Missing migrations d6_aggregator_feed. requirements: d6_aggregator_feed.', array('@id' => $migration->id()))));
     $this->collectMessages = FALSE;
   }
 

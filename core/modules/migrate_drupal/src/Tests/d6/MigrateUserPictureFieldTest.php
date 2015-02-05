@@ -35,8 +35,8 @@ class MigrateUserPictureFieldTest extends MigrateDrupalTestBase {
    */
   public function testUserPictureField() {
     $field_storage = FieldStorageConfig::load('user.user_picture');
-    $this->assertEqual($field_storage->id(), 'user.user_picture');
-    $this->assertEqual(array('user', 'user_picture'), entity_load('migration', 'd6_user_picture_field')->getIdMap()->lookupDestinationID(array('')));
+    $this->assertIdentical($field_storage->id(), 'user.user_picture');
+    $this->assertIdentical(array('user', 'user_picture'), entity_load('migration', 'd6_user_picture_field')->getIdMap()->lookupDestinationID(array('')));
   }
 
 }

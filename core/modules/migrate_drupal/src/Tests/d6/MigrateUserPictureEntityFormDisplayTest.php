@@ -47,10 +47,10 @@ class MigrateUserPictureEntityFormDisplayTest extends MigrateDrupalTestBase {
   public function testUserPictureEntityFormDisplay() {
     $display = entity_get_form_display('user', 'user', 'default');
     $component = $display->getComponent('user_picture');
-    $this->assertEqual($component['type'], 'image_image');
-    $this->assertEqual($component['settings']['progress_indicator'], 'throbber');
+    $this->assertIdentical($component['type'], 'image_image');
+    $this->assertIdentical($component['settings']['progress_indicator'], 'throbber');
 
-    $this->assertEqual(array('user', 'user', 'default', 'user_picture'), entity_load('migration', 'd6_user_picture_entity_form_display')->getIdMap()->lookupDestinationID(array('')));
+    $this->assertIdentical(array('user', 'user', 'default', 'user_picture'), entity_load('migration', 'd6_user_picture_entity_form_display')->getIdMap()->lookupDestinationID(array('')));
   }
 
 }

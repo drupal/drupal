@@ -42,9 +42,9 @@ class MigrateCommentTypeTest extends MigrateDrupalTestBase {
    */
   public function testCommentType() {
     $comment_type = entity_load('comment_type', 'comment');
-    $this->assertEqual('node', $comment_type->getTargetEntityTypeId());
+    $this->assertIdentical('node', $comment_type->getTargetEntityTypeId());
     $comment_type = entity_load('comment_type', 'comment_no_subject');
-    $this->assertEqual('node', $comment_type->getTargetEntityTypeId());
+    $this->assertIdentical('node', $comment_type->getTargetEntityTypeId());
   }
 
 }

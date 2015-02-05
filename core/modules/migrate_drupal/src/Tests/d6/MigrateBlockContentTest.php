@@ -56,20 +56,20 @@ class MigrateBlockContentTest extends MigrateDrupalTestBase {
   public function testBlockMigration() {
     /** @var BlockContent $block */
     $block = entity_load('block_content', 1);
-    $this->assertEqual('My block 1', $block->label());
-    $this->assertEqual(1, $block->getRevisionId());
+    $this->assertIdentical('My block 1', $block->label());
+    $this->assertIdentical('1', $block->getRevisionId());
     $this->assertTrue(REQUEST_TIME <= $block->getChangedTime() && $block->getChangedTime() <= time());
-    $this->assertEqual('en', $block->language()->getId());
-    $this->assertEqual('<h3>My first custom block body</h3>', $block->body->value);
-    $this->assertEqual('full_html', $block->body->format);
+    $this->assertIdentical('en', $block->language()->getId());
+    $this->assertIdentical('<h3>My first custom block body</h3>', $block->body->value);
+    $this->assertIdentical('full_html', $block->body->format);
 
     $block = entity_load('block_content', 2);
-    $this->assertEqual('My block 2', $block->label());
-    $this->assertEqual(2, $block->getRevisionId());
+    $this->assertIdentical('My block 2', $block->label());
+    $this->assertIdentical('2', $block->getRevisionId());
     $this->assertTrue(REQUEST_TIME <= $block->getChangedTime() && $block->getChangedTime() <= time());
-    $this->assertEqual('en', $block->language()->getId());
-    $this->assertEqual('<h3>My second custom block body</h3>', $block->body->value);
-    $this->assertEqual('full_html', $block->body->format);
+    $this->assertIdentical('en', $block->language()->getId());
+    $this->assertIdentical('<h3>My second custom block body</h3>', $block->body->value);
+    $this->assertIdentical('full_html', $block->body->format);
   }
 
 }

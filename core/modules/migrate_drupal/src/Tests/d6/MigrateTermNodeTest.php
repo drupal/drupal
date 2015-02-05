@@ -38,12 +38,12 @@ class MigrateTermNodeTest extends MigrateTermNodeTestBase {
     $node_storage->resetCache(array(1, 2));
     $nodes = Node::loadMultiple(array(1, 2));
     $node = $nodes[1];
-    $this->assertEqual(count($node->vocabulary_1_i_0_), 1);
-    $this->assertEqual($node->vocabulary_1_i_0_[0]->target_id, 1);
+    $this->assertIdentical(count($node->vocabulary_1_i_0_), 1);
+    $this->assertIdentical($node->vocabulary_1_i_0_[0]->target_id, '1');
     $node = $nodes[2];
-    $this->assertEqual(count($node->vocabulary_2_i_1_), 2);
-    $this->assertEqual($node->vocabulary_2_i_1_[0]->target_id, 2);
-    $this->assertEqual($node->vocabulary_2_i_1_[1]->target_id, 3);
+    $this->assertIdentical(count($node->vocabulary_2_i_1_), 2);
+    $this->assertIdentical($node->vocabulary_2_i_1_[0]->target_id, '2');
+    $this->assertIdentical($node->vocabulary_2_i_1_[1]->target_id, '3');
   }
 
 }

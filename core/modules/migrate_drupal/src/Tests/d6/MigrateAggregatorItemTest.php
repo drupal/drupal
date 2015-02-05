@@ -60,15 +60,15 @@ class MigrateAggregatorItemTest extends MigrateDrupalTestBase {
   public function testAggregatorItem() {
     /** @var Item $item */
     $item = Item::load(1);
-    $this->assertEqual($item->id(), 1);
-    $this->assertEqual($item->getFeedId(), 5);
-    $this->assertEqual($item->label(), 'This (three) weeks in Drupal Core - January 10th 2014');
-    $this->assertEqual($item->getAuthor(), 'larowlan');
-    $this->assertEqual($item->getDescription(), "<h2 id='new'>What's new with Drupal 8?</h2>");
-    $this->assertEqual($item->getLink(), 'https://groups.drupal.org/node/395218');
-    $this->assertEqual($item->getPostedTime(), 1389297196);
-    $this->assertEqual($item->language()->getId(), 'en');
-    $this->assertEqual($item->getGuid(), '395218 at https://groups.drupal.org');
+    $this->assertIdentical($item->id(), '1');
+    $this->assertIdentical($item->getFeedId(), '5');
+    $this->assertIdentical($item->label(), 'This (three) weeks in Drupal Core - January 10th 2014');
+    $this->assertIdentical($item->getAuthor(), 'larowlan');
+    $this->assertIdentical($item->getDescription(), "<h2 id='new'>What's new with Drupal 8?</h2>");
+    $this->assertIdentical($item->getLink(), 'https://groups.drupal.org/node/395218');
+    $this->assertIdentical($item->getPostedTime(), '1389297196');
+    $this->assertIdentical($item->language()->getId(), 'en');
+    $this->assertIdentical($item->getGuid(), '395218 at https://groups.drupal.org');
 
   }
 

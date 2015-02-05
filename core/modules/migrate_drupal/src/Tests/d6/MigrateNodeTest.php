@@ -38,24 +38,24 @@ class MigrateNodeTest extends MigrateNodeTestBase {
    */
   public function testNode() {
     $node = Node::load(1);
-    $this->assertEqual($node->id(), 1, 'Node 1 loaded.');
-    $this->assertEqual($node->langcode->value, 'und');
-    $this->assertEqual($node->body->value, 'test');
-    $this->assertEqual($node->body->summary, 'test');
-    $this->assertEqual($node->body->format, 'filtered_html');
-    $this->assertEqual($node->getType(), 'story', 'Node has the correct bundle.');
-    $this->assertEqual($node->getTitle(), 'Test title', 'Node has the correct title.');
-    $this->assertEqual($node->getCreatedTime(), 1388271197, 'Node has the correct created time.');
-    $this->assertEqual($node->isSticky(), FALSE);
-    $this->assertEqual($node->getOwnerId(), 1);
-    $this->assertEqual($node->getRevisionCreationTime(), 1420861423);
+    $this->assertIdentical($node->id(), '1', 'Node 1 loaded.');
+    $this->assertIdentical($node->langcode->value, 'und');
+    $this->assertIdentical($node->body->value, 'test');
+    $this->assertIdentical($node->body->summary, 'test');
+    $this->assertIdentical($node->body->format, 'filtered_html');
+    $this->assertIdentical($node->getType(), 'story', 'Node has the correct bundle.');
+    $this->assertIdentical($node->getTitle(), 'Test title', 'Node has the correct title.');
+    $this->assertIdentical($node->getCreatedTime(), '1388271197', 'Node has the correct created time.');
+    $this->assertIdentical($node->isSticky(), FALSE);
+    $this->assertIdentical($node->getOwnerId(), '1');
+    $this->assertIdentical($node->getRevisionCreationTime(), '1420861423');
 
     /** @var \Drupal\node\NodeInterface $node_revision */
     $node_revision = \Drupal::entityManager()->getStorage('node')->loadRevision(1);
-    $this->assertEqual($node_revision->getTitle(), 'Test title');
-    $this->assertEqual($node_revision->getRevisionAuthor()->id(), 1, 'Node revision has the correct user');
+    $this->assertIdentical($node_revision->getTitle(), 'Test title');
+    $this->assertIdentical($node_revision->getRevisionAuthor()->id(), '1', 'Node revision has the correct user');
     // This is empty on the first revision.
-    $this->assertEqual($node_revision->revision_log->value, '');
+    $this->assertIdentical($node_revision->revision_log->value, '');
 
     // It is pointless to run the second half from MigrateDrupal6Test.
     if (empty($this->standalone)) {
@@ -81,10 +81,10 @@ class MigrateNodeTest extends MigrateNodeTestBase {
     $executable->import();
 
     $node = Node::load(1);
-    $this->assertEqual($node->getTitle(), 'New node title');
+    $this->assertIdentical($node->getTitle(), 'New node title');
     // Test a multi-column fields are correctly upgraded.
-    $this->assertEqual($node->body->value, 'test');
-    $this->assertEqual($node->body->format, 'full_html');
+    $this->assertIdentical($node->body->value, 'test');
+    $this->assertIdentical($node->body->format, 'full_html');
 
     $node = Node::load(3);
     // Test that format = 0 from source maps to filtered_html.

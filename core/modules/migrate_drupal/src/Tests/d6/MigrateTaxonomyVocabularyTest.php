@@ -47,17 +47,17 @@ class MigrateTaxonomyVocabularyTest extends MigrateDrupalTestBase {
     for ($i = 0; $i < 3; $i++) {
       $j = $i + 1;
       $vocabulary = Vocabulary::load("vocabulary_{$j}_i_{$i}_");
-      $this->assertEqual(array($vocabulary->id()), entity_load('migration', 'd6_taxonomy_vocabulary')->getIdMap()->lookupDestinationID(array($j)));
-      $this->assertEqual($vocabulary->label(), "vocabulary $j (i=$i)");
-      $this->assertEqual($vocabulary->getDescription(), "description of vocabulary $j (i=$i)");
-      $this->assertEqual($vocabulary->getHierarchy(), $i);
-      $this->assertEqual($vocabulary->get('weight'), 4 + $i);
+      $this->assertIdentical(array($vocabulary->id()), entity_load('migration', 'd6_taxonomy_vocabulary')->getIdMap()->lookupDestinationID(array($j)));
+      $this->assertIdentical($vocabulary->label(), "vocabulary $j (i=$i)");
+      $this->assertIdentical($vocabulary->getDescription(), "description of vocabulary $j (i=$i)");
+      $this->assertIdentical($vocabulary->getHierarchy(), $i);
+      $this->assertIdentical($vocabulary->get('weight'), 4 + $i);
     }
     $vocabulary = Vocabulary::load('vocabulary_name_much_longer_than');
-    $this->assertEqual($vocabulary->label(), 'vocabulary name much longer than thirty two characters');
-    $this->assertEqual($vocabulary->getDescription(), 'description of vocabulary name much longer than thirty two characters');
-    $this->assertEqual($vocabulary->getHierarchy(), 3);
-    $this->assertEqual($vocabulary->get('weight'), 7);
+    $this->assertIdentical($vocabulary->label(), 'vocabulary name much longer than thirty two characters');
+    $this->assertIdentical($vocabulary->getDescription(), 'description of vocabulary name much longer than thirty two characters');
+    $this->assertIdentical($vocabulary->getHierarchy(), 3);
+    $this->assertIdentical($vocabulary->get('weight'), 7);
   }
 
 }
