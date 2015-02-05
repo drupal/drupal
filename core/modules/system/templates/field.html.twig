@@ -7,12 +7,16 @@
  * to your theme's directory and customize it, just like customizing other
  * Drupal templates such as page.html.twig or node.html.twig.
  *
- * For example, for a field named 'body' displayed on the 'article' content
- * type, any of the following templates will override this default
- * implementation. The first of these templates that exists is used:
- * - field--body--article.html.twig
- * - field--article.html.twig
- * - field--body.html.twig
+ * Instead of overriding the theming for all fields, you can also just override
+ * theming for a subset of fields using
+ * @link themeable Theme hook suggestions. @endlink For example,
+ * here are some theme hook suggestions that can be used for a field_foo field
+ * on an article node type:
+ * - field--node--field-foo--article.html.twig
+ * - field--node--field-foo.html.twig
+ * - field--node--article.html.twig
+ * - field--field-foo.html.twig
+ * - field--text-with-summary.html.twig
  * - field.html.twig
  *
  * Available variables:

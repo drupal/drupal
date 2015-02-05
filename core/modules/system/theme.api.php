@@ -150,6 +150,9 @@
  *   PLUGIN is the machine name of the particular search plugin type that was
  *   used for the search (such as node_search or user_search).
  *
+ * For further information on overriding theme hooks see
+ * https://www.drupal.org/node/2186401
+ *
  * @section sec_alternate_suggestions Altering theme hook suggestions
  * Modules can also alter the theme suggestions provided using the mechanisms
  * of the previous section. There are two hooks for this: the
