@@ -409,65 +409,6 @@ function hook_node_update_index(\Drupal\node\NodeInterface $node, $langcode) {
 }
 
 /**
- * Perform node validation before a node is created or updated.
- *
- * This hook is invoked from NodeForm::validate(), after a user has
- * finished editing the node and is previewing or submitting it. It is invoked
- * at the end of all the standard validation steps.
- *
- * To indicate a validation error, use $form_state->setErrorByName().
- *
- * Note: Changes made to the $node object within your hook implementation will
- * have no effect.  The preferred method to change a node's content is to use
- * hook_node_presave() instead. If it is really necessary to change the node at
- * the validate stage, you can use setValueForElement().
- *
- * @param \Drupal\node\NodeInterface $node
- *   The node being validated.
- * @param $form
- *   The form being used to edit the node.
- * @param $form_state
- *   The current state of the form.
- *
- * @ingroup entity_crud
- */
-function hook_node_validate(\Drupal\node\NodeInterface $node, $form, \Drupal\Core\Form\FormStateInterface $form_state) {
-  if (isset($node->end) && isset($node->start)) {
-    if ($node->start > $node->end) {
-      $form_state->setErrorByName('time', t('An event may not end before it starts.'));
-    }
-  }
-}
-
-/**
- * Act on a node after validated form values have been copied to it.
- *
- * This hook is invoked when a node form is submitted with either the "Save" or
- * "Preview" button, after form values have been copied to the form state's node
- * object, but before the node is saved or previewed. It is a chance for modules
- * to adjust the node's properties from what they are simply after a copy from
- * $form_state->getValues(). This hook is intended for adjusting non-field-related
- * properties.
- *
- * @param \Drupal\node\NodeInterface $node
- *   The node entity being updated in response to a form submission.
- * @param $form
- *   The form being used to edit the node.
- * @param $form_state
- *   The current state of the form.
- *
- * @ingroup entity_crud
- */
-function hook_node_submit(\Drupal\node\NodeInterface $node, $form, \Drupal\Core\Form\FormStateInterface $form_state) {
-  // Decompose the selected menu parent option into 'menu_name' and 'parent', if
-  // the form used the default parent selection widget.
-  $parent = $form_state->getValue(array('menu', 'parent'));
-  if (!empty($parent)) {
-    list($node->menu['menu_name'], $node->menu['parent']) = explode(':', $parent);
-  }
-}
-
-/**
  * Provide additional methods of scoring for core search results for nodes.
  *
  * A node's search score is used to rank it among other nodes matched by the

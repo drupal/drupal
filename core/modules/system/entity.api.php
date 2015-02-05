@@ -150,10 +150,6 @@ use Drupal\language\Entity\ContentLanguageSettings;
  * - hook_ENTITY_TYPE_prepare_form()
  * - hook_entity_form_display_alter() (for content entities only)
  *
- * Some specific entity types have additional hooks that are run during
- * various steps in the process:
- * - Node entities: hook_node_validate() and hook_submit().
- *
  * @section delete Delete operations
  * To delete one or more entities, load them and then delete them:
  * @code

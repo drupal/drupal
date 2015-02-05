@@ -293,14 +293,6 @@ class NodeForm extends ContentEntityForm {
       $form_state->setErrorByName('changed', $this->t('The content on this page has either been modified by another user, or you have already submitted modifications using this form. As a result, your changes cannot be saved.'));
     }
 
-    // Invoke hook_node_validate() for validation needed by modules.
-    // Can't use \Drupal::moduleHandler()->invokeAll(), because $form_state must
-    // be receivable by reference.
-    foreach (\Drupal::moduleHandler()->getImplementations('node_validate') as $module) {
-      $function = $module . '_node_validate';
-      $function($node, $form, $form_state);
-    }
-
     parent::validate($form, $form_state);
   }
 
@@ -327,12 +319,6 @@ class NodeForm extends ContentEntityForm {
     }
     else {
       $node->setNewRevision(FALSE);
-    }
-
-    $node->validated = TRUE;
-    foreach (\Drupal::moduleHandler()->getImplementations('node_submit') as $module) {
-      $function = $module . '_node_submit';
-      $function($node, $form, $form_state);
     }
   }
 

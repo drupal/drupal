@@ -63,8 +63,7 @@ class NodeSaveTest extends NodeTestBase {
     $node = entity_create('node', $node);
     $node->enforceIsNew();
 
-    // Verify that node_submit did not overwrite the user ID.
-    $this->assertEqual($node->getOwnerId(), $this->webUser->id(), 'Function node_submit() preserves user ID');
+    $this->assertEqual($node->getOwnerId(), $this->webUser->id());
 
     $node->save();
     // Test the import.
