@@ -63,6 +63,7 @@ Cron system
 
 CSS
 - John Albin Wilkins 'JohnAlbin' http://drupal.org/user/32095
+- Lewis Nyman 'LewisNyman' https://drupal.org/user/751964
 
 Database system
 - Larry Garfield 'Crell' http://drupal.org/user/26398
