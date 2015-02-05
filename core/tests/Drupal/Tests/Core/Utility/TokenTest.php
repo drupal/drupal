@@ -53,6 +53,13 @@ class TokenTest extends UnitTestCase {
   protected $token;
 
   /**
+   * The cache tags invalidator.
+   *
+   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $cacheTagsInvalidator;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -64,7 +71,9 @@ class TokenTest extends UnitTestCase {
 
     $this->language = $this->getMock('\Drupal\Core\Language\LanguageInterface');
 
-    $this->token = new Token($this->moduleHandler, $this->cache, $this->languageManager);
+    $this->cacheTagsInvalidator = $this->getMock('\Drupal\Core\Cache\CacheTagsInvalidatorInterface');
+
+    $this->token = new Token($this->moduleHandler, $this->cache, $this->languageManager, $this->cacheTagsInvalidator);
   }
 
   /**
@@ -111,6 +120,17 @@ class TokenTest extends UnitTestCase {
     // the static cache, so the persistent cache must not be accessed and the
     // hooks must not be invoked.
     $this->token->getInfo();
+  }
+
+  /**
+   * @covers ::resetInfo
+   */
+  public function testResetInfo() {
+    $this->cacheTagsInvalidator->expects($this->once())
+      ->method('invalidateTags')
+      ->with(['token_info']);
+
+    $this->token->resetInfo();
   }
 
 }

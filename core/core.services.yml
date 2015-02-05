@@ -988,7 +988,7 @@ services:
       - { name: service_collector, tag: breadcrumb_builder, call: addBuilder }
   token:
     class: Drupal\Core\Utility\Token
-    arguments: ['@module_handler', '@cache.discovery', '@language_manager']
+    arguments: ['@module_handler', '@cache.discovery', '@language_manager', '@cache_tags.invalidator']
   batch.storage:
     class: Drupal\Core\Batch\BatchStorage
     arguments: ['@database', '@session_manager', '@csrf_token']
