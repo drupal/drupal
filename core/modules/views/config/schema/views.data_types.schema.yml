@@ -152,7 +152,7 @@ views_display:
           type: boolean
           label: 'Display ''more'' link only if there is more content'
         use_more_text:
-          type: boolean
+          type: label
           label: 'The text to display for the more link.'
         exposed_form:
           type: boolean
@@ -223,7 +223,7 @@ views_display:
       type: boolean
       label: 'Display ''more'' link only if there is more content'
     use_more_text:
-      type: string
+      type: label
       label: 'The text to display for the more link.'
     link_display:
       type: string
