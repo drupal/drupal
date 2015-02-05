@@ -1,7 +1,6 @@
 <?php
 
 use Drupal\Core\Extension\Extension;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Implements hook_modules_installed().
@@ -65,37 +64,6 @@ function system_test_system_info_alter(&$info, Extension $file, $type) {
 }
 
 /**
- * Try to acquire a named lock and report the outcome.
- *
- * @deprecated \Drupal\system_test\Controller\SystemTestController::lockAcquire()
- */
-function system_test_lock_acquire() {
-  if (\Drupal::lock()->acquire('system_test_lock_acquire')) {
-    \Drupal::lock()->release('system_test_lock_acquire');
-    return ['#markup' => 'TRUE: Lock successfully acquired in system_test_lock_acquire()'];
-  }
-  else {
-    return ['#markup' => 'FALSE: Lock not acquired in system_test_lock_acquire()'];
-  }
-}
-
-/**
- * Try to acquire a specific lock, and then exit.
- *
- * @deprecated \Drupal\system_test\Controller\SystemTestController::lockExit()
- */
-function system_test_lock_exit() {
-  if (\Drupal::lock()->acquire('system_test_lock_exit', 900)) {
-    echo 'TRUE: Lock successfully acquired in system_test_lock_exit()';
-    // The shut-down function should release the lock.
-    exit();
-  }
-  else {
-    return ['#markup' => 'FALSE: Lock not acquired in system_test_lock_exit()'];
-  }
-}
-
-/**
  * Implements hook_page_attachments().
  */
 function system_test_page_attachments(array &$page) {
@@ -104,15 +72,6 @@ function system_test_page_attachments(array &$page) {
   if ($frontpage && drupal_is_front_page()) {
     drupal_set_message(t('On front page.'));
   }
-}
-
-/**
- * A simple page callback which adds a register shutdown function.
- *
- * @deprecated \Drupal\system_test\Controller\SystemTestController::shutdownFunctions()
- */
-function system_test_page_shutdown_functions($arg1, $arg2) {
-  drupal_register_shutdown_function('_system_test_first_shutdown_function', $arg1, $arg2);
 }
 
 /**
@@ -149,19 +108,6 @@ function system_test_filetransfer_info() {
       'weight' => -10,
     ),
   );
-}
-
-/**
- * Page callback to initialize authorize.php during testing.
- *
- * @see system_authorized_init().
- *
- * @deprecated \Drupal\system_test\Controller\SystemTestController::authorizeInit()
- */
-function system_test_authorize_init_page($page_title) {
-  $authorize_url = $GLOBALS['base_url'] . '/core/authorize.php';
-  system_authorized_init('system_test_authorize_run', drupal_get_path('module', 'system_test') . '/system_test.module', array(), $page_title);
-  return new RedirectResponse($authorize_url);
 }
 
 /**

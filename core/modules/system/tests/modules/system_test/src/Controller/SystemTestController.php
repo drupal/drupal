@@ -8,6 +8,8 @@
 namespace Drupal\system_test\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Url;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Drupal\Core\Lock\LockBackendInterface;
@@ -19,6 +21,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class SystemTestController extends ControllerBase {
 
   /**
+   * The lock service.
+   *
+   * @var \Drupal\Core\Lock\LockBackendInterface
+   */
+  protected $lock;
+
+  /**
    * The persistent lock service.
    *
    * @var \Drupal\Core\Lock\LockBackendInterface
@@ -28,10 +37,13 @@ class SystemTestController extends ControllerBase {
   /**
    * Constructs the SystemTestController.
    *
+   * @param \Drupal\Core\Lock\LockBackendInterface $lock
+   *   The lock service.
    * @param \Drupal\Core\Lock\LockBackendInterface $persistent_lock
    *   The persistent lock service.
    */
-  public function __construct(LockBackendInterface $persistent_lock) {
+  public function __construct(LockBackendInterface $lock, LockBackendInterface $persistent_lock) {
+    $this->lock = $lock;
     $this->persistentLock = $persistent_lock;
   }
 
@@ -39,7 +51,7 @@ class SystemTestController extends ControllerBase {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('lock.persistent'));
+    return new static($container->get('lock'), $container->get('lock.persistent'));
   }
 
   /**
@@ -76,17 +88,30 @@ class SystemTestController extends ControllerBase {
   }
 
   /**
-   * @todo Remove system_test_lock_acquire().
+   * Try to acquire a named lock and report the outcome.
    */
   public function lockAcquire() {
-    return system_test_lock_acquire();
+    if ($this->lock->acquire('system_test_lock_acquire')) {
+      $this->lock->release('system_test_lock_acquire');
+      return ['#markup' => 'TRUE: Lock successfully acquired in \Drupal\system_test\Controller\SystemTestController::lockAcquire()'];
+    }
+    else {
+      return ['#markup' => 'FALSE: Lock not acquired in \Drupal\system_test\Controller\SystemTestController::lockAcquire()'];
+    }
   }
 
   /**
-   * @todo Remove system_test_lock_exit().
+   * Try to acquire a specific lock, and then exit.
    */
   public function lockExit() {
-    return system_test_lock_exit();
+    if ($this->lock->acquire('system_test_lock_exit', 900)) {
+      echo 'TRUE: Lock successfully acquired in \Drupal\system_test\Controller\SystemTestController::lockExit()';
+      // The shut-down function should release the lock.
+      exit();
+    }
+    else {
+      return ['#markup' => 'FALSE: Lock not acquired in system_test_lock_exit()'];
+    }
   }
 
   /**
@@ -132,10 +157,14 @@ class SystemTestController extends ControllerBase {
   }
 
   /**
-   * @todo Remove system_test_authorize_init_page().
+   * Initialize authorize.php during testing.
+   *
+   * @see system_authorized_init().
    */
   public function authorizeInit($page_title) {
-    return system_test_authorize_init_page($page_title);
+    $authorize_url = Url::fromUri('base:core/authorize.php', array('absolute' => TRUE))->toString();
+    system_authorized_init('system_test_authorize_run', drupal_get_path('module', 'system_test') . '/system_test.module', array(), $page_title);
+    return new RedirectResponse($authorize_url);
   }
 
   /**
@@ -151,10 +180,10 @@ class SystemTestController extends ControllerBase {
   }
 
   /**
-   * @todo Remove system_test_page_shutdown_functions().
+   * A simple page callback which adds a register shutdown function.
    */
   public function shutdownFunctions($arg1, $arg2) {
-    system_test_page_shutdown_functions($arg1, $arg2);
+    drupal_register_shutdown_function('_system_test_first_shutdown_function', $arg1, $arg2);
     // If using PHP-FPM then fastcgi_finish_request() will have been fired
     // preventing further output to the browser which means that the escaping of
     // the exception message can not be tested.

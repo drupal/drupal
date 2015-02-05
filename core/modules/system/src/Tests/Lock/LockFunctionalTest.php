@@ -28,8 +28,8 @@ class LockFunctionalTest extends WebTestBase {
    */
   public function testLockAcquire() {
     $lock = $this->container->get('lock');
-    $lock_acquired = 'TRUE: Lock successfully acquired in system_test_lock_acquire()';
-    $lock_not_acquired = 'FALSE: Lock not acquired in system_test_lock_acquire()';
+    $lock_acquired = 'TRUE: Lock successfully acquired in \Drupal\system_test\Controller\SystemTestController::lockAcquire()';
+    $lock_not_acquired = 'FALSE: Lock not acquired in \Drupal\system_test\Controller\SystemTestController::lockAcquire()';
     $this->assertTrue($lock->acquire('system_test_lock_acquire'), 'Lock acquired by this request.', 'Lock');
     $this->assertTrue($lock->acquire('system_test_lock_acquire'), 'Lock extended by this request.', 'Lock');
     $lock->release('system_test_lock_acquire');
@@ -54,7 +54,7 @@ class LockFunctionalTest extends WebTestBase {
     $this->assertFalse($lock->acquire('system_test_lock_acquire'), 'Lock cannot be extended by this request.', 'Lock');
 
     // Check the shut-down function.
-    $lock_acquired_exit = 'TRUE: Lock successfully acquired in system_test_lock_exit()';
+    $lock_acquired_exit = 'TRUE: Lock successfully acquired in \Drupal\system_test\Controller\SystemTestController::lockExit()';
     $this->drupalGet('system-test/lock-exit');
     $this->assertText($lock_acquired_exit, 'Lock acquired by the other request before exit.', 'Lock');
     $this->assertTrue($lock->acquire('system_test_lock_exit'), 'Lock acquired by this request after the other request exits.', 'Lock');
