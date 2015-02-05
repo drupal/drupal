@@ -135,16 +135,12 @@ display:
       empty: {  }
       relationships: {  }
       arguments: {  }
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
   page_dc:
     display_plugin: page
     id: page_dc
     display_title: 'Description Comida'
     position: 3
     display_options:
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       display_description: ''
       path: test-desc-filter
       filters:
@@ -201,8 +197,6 @@ display:
     display_title: 'Description Comida'
     position: 3
     display_options:
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       display_description: ''
       path: test-desc-paris
       filters:
@@ -259,8 +253,6 @@ display:
     display_title: 'Field Comida'
     position: 3
     display_options:
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       display_description: ''
       path: test-field-filter
       filters:
@@ -317,8 +309,6 @@ display:
     display_title: 'Field Paris'
     position: 3
     display_options:
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       display_description: ''
       path: test-field-paris
       filters:
@@ -375,8 +365,6 @@ display:
     display_title: 'Name Comida'
     position: 1
     display_options:
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       path: test-name-filter
       display_description: ''
   page_np:
@@ -385,8 +373,6 @@ display:
     display_title: 'Name Paris'
     position: 1
     display_options:
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       path: test-name-paris
       display_description: ''
       filters:

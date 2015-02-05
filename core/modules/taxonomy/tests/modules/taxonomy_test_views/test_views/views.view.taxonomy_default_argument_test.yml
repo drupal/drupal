@@ -161,6 +161,4 @@ display:
           plugin_id: taxonomy
           entity_type: taxonomy_term
           entity_field: tid
-      field_langcode: '***LANGUAGE_site_default***'
-      field_langcode_add_to_query: null
-      rendering_language: translation_language_renderer
+      rendering_language: '***LANGUAGE_entity_translation***'

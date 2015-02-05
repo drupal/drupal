@@ -352,8 +352,6 @@ display:
           break_phrase: false
           not: false
           plugin_id: numeric
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       display_extenders: {  }
   rest_export_1:
     display_plugin: rest_export
@@ -361,8 +359,6 @@ display:
     display_title: 'REST export'
     position: 1
     display_options:
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       path: node/%node/comments
       pager:
         type: some

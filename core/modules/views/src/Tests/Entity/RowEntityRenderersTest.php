@@ -25,7 +25,7 @@ class RowEntityRenderersTest extends ViewUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('field', 'filter', 'text', 'node', 'user', 'language', 'entity_reference');
+  public static $modules = array('field', 'filter', 'text', 'node', 'user', 'language', 'entity_reference', 'views_test_language');
 
   /**
    * Views used by this test.
@@ -40,6 +40,13 @@ class RowEntityRenderersTest extends ViewUnitTestBase {
    * @var array
    */
   protected $langcodes;
+
+  /**
+   * An array of titles for each node per language.
+   *
+   * @var array
+   */
+  protected $expected;
 
   /**
    * {@inheritdoc}
@@ -66,13 +73,8 @@ class RowEntityRenderersTest extends ViewUnitTestBase {
     $node_type = NodeType::create(array('type' => 'test'));
     $node_type->setDisplaySubmitted(FALSE);
     $node_type->save();
-  }
 
-  /**
-   * Tests the entity row renderers.
-   */
-  public function testRenderers() {
-    $values = array();
+    $this->values = array();
     $controller = \Drupal::entityManager()->getStorage('node');
     $langcode_index = 0;
 
@@ -85,19 +87,45 @@ class RowEntityRenderersTest extends ViewUnitTestBase {
 
       foreach ($langcodes as $langcode) {
         // Ensure we have a predictable result order.
-        $values[$i][$langcode] = $i . '-' . $langcode . '-' . $this->randomMachineName();
+        $this->values[$i][$langcode] = $i . '-' . $langcode . '-' . $this->randomMachineName();
 
         if ($langcode != $default_langcode) {
-          $node->addTranslation($langcode, array('title' => $values[$i][$langcode]));
+          $node->addTranslation($langcode, array('title' => $this->values[$i][$langcode]));
         }
         else {
-          $node->setTitle($values[$i][$langcode]);
+          $node->setTitle($this->values[$i][$langcode]);
         }
 
         $node->save();
       }
     }
+  }
 
+  /**
+   * Tests the entity row renderers.
+   */
+  public function testEntityRenderers() {
+    $this->checkLanguageRenderers('page_1', $this->values);
+  }
+
+  /**
+   * Tests the field row renderers.
+   */
+  public function testFieldRenderers() {
+    $this->checkLanguageRenderers('page_2', $this->values);
+  }
+
+  /**
+   * Checks that the language renderer configurations work as expected.
+   *
+   * @param string $display
+   *   Name of display to test with.
+   * @param array $values
+   *   An array of node information which are each an array of node titles
+   *   associated with language keys appropriate for the translation of that
+   *   node.
+   */
+  protected function checkLanguageRenderers($display, $values) {
     $expected = array(
       $values[0]['en'],
       $values[0]['en'],
@@ -109,7 +137,7 @@ class RowEntityRenderersTest extends ViewUnitTestBase {
       $values[2]['en'],
       $values[2]['en'],
     );
-    $this->assertTranslations('current_language_renderer', $expected, 'The current language renderer behaves as expected.');
+    $this->assertTranslations($display, '***LANGUAGE_language_content***', $expected, 'The current language renderer behaves as expected.');
 
     $expected = array(
       $values[0]['en'],
@@ -122,7 +150,7 @@ class RowEntityRenderersTest extends ViewUnitTestBase {
       $values[2]['l1'],
       $values[2]['l1'],
     );
-    $this->assertTranslations('default_language_renderer', $expected, 'The default language renderer behaves as expected.');
+    $this->assertTranslations($display, '***LANGUAGE_entity_default***', $expected, 'The default language renderer behaves as expected.');
 
     $expected = array(
       $values[0]['en'],
@@ -135,12 +163,40 @@ class RowEntityRenderersTest extends ViewUnitTestBase {
       $values[2]['l0'],
       $values[2]['l1'],
     );
-    $this->assertTranslations('translation_language_renderer', $expected, 'The translation language renderer behaves as expected.');
+    $this->assertTranslations($display, '***LANGUAGE_entity_translation***', $expected, 'The translation language renderer behaves as expected.');
+
+    $expected = array(
+      $values[0][$this->langcodes[0]],
+      $values[0][$this->langcodes[0]],
+      $values[0][$this->langcodes[0]],
+      $values[1][$this->langcodes[0]],
+      $values[1][$this->langcodes[0]],
+      $values[1][$this->langcodes[0]],
+      $values[2][$this->langcodes[0]],
+      $values[2][$this->langcodes[0]],
+      $values[2][$this->langcodes[0]],
+    );
+    $this->assertTranslations($display, '***LANGUAGE_site_default***', $expected, 'The site default language renderer behaves as expected.');
+
+    $expected = array(
+      $values[0]['l0'],
+      $values[0]['l0'],
+      $values[0]['l0'],
+      $values[1]['l0'],
+      $values[1]['l0'],
+      $values[1]['l0'],
+      $values[2]['l0'],
+      $values[2]['l0'],
+      $values[2]['l0'],
+    );
+    $this->assertTranslations($display, 'l0', $expected, 'The language specific renderer behaves as expected.');
   }
 
   /**
    * Checks that the view results match the expected values.
    *
+   * @param string $display
+   *   Name of display to test with.
    * @param string $renderer_id
    *   The id of the renderer to be tested.
    * @param array $expected
@@ -153,17 +209,24 @@ class RowEntityRenderersTest extends ViewUnitTestBase {
    * @return bool
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
-  protected function assertTranslations($renderer_id, array $expected, $message = '', $group = 'Other') {
+  protected function assertTranslations($display, $renderer_id, array $expected, $message = '', $group = 'Other') {
     $view = Views::getView('test_entity_row_renderers');
+    $view->setDisplay($display);
     $view->getDisplay()->setOption('rendering_language', $renderer_id);
     $view->preview();
 
-    $result = TRUE;
-    foreach ($view->result as $index => $row) {
-      $build = $view->rowPlugin->render($row);
-      $output = drupal_render($build);
-      $result = strpos($output, $expected[$index]) !== FALSE;
-      if (!$result) {
+    $result = FALSE;
+    foreach ($expected as $index => $expected_output) {
+      if (!empty($view->result[$index])) {
+        $build = $view->rowPlugin->render($view->result[$index]);
+        $output = drupal_render($build);
+        $result = strpos($output, $expected_output) !== FALSE;
+        if (!$result) {
+          break;
+        }
+      }
+      else {
+        $result = FALSE;
         break;
       }
     }

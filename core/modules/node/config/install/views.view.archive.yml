@@ -165,8 +165,6 @@ display:
       empty: {  }
       relationships: {  }
       fields: {  }
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
   block_1:
     id: block_1
     display_title: Block
@@ -196,8 +194,6 @@ display:
           specify_validation: true
           plugin_id: date_year_month
           entity_type: node
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
   page_1:
     id: page_1
     display_title: Page
@@ -208,5 +204,3 @@ display:
         type: views_query
         options: {  }
       path: archive
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null

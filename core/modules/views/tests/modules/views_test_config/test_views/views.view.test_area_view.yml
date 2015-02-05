@@ -43,8 +43,6 @@ display:
           view_to_insert: 'test_simple_argument:default'
           inherit_arguments: true
           plugin_id: view
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default

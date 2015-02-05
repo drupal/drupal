@@ -42,8 +42,6 @@ display:
           table: views
           plugin_id: title
           title: test_title_empty
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
@@ -60,8 +58,6 @@ display:
           table: views
           plugin_id: title
           title: test_title_header
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: page
     display_title: 'Page 1'
     id: page_1

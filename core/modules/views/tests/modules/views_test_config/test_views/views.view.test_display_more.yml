@@ -39,8 +39,6 @@ display:
       use_more_always: true
       use_more_text: 'custom more text'
       link_display: page_1
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
@@ -52,5 +50,3 @@ display:
     position: 1
     display_options:
       path: test_display_more
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null

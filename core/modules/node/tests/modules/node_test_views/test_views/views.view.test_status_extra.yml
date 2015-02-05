@@ -137,13 +137,9 @@ display:
         operator: AND
         groups:
           1: AND
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
   page_1:
     display_options:
       path: test_status_extra
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
     id: page_1

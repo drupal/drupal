@@ -32,8 +32,6 @@ display:
           plugin_id: user_uid
           entity_type: user
           entity_field: uid
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default

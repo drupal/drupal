@@ -168,8 +168,6 @@ display:
           entity_field: description
       filters: {  }
       sorts: {  }
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
   feed_1:
     display_plugin: feed
     id: feed_1
@@ -181,5 +179,3 @@ display:
         type: aggregator_rss
         options:
           view_mode: default
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null

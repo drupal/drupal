@@ -23,8 +23,6 @@ display:
           plugin_id: numeric
       style:
         type: html_list
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
@@ -32,8 +30,6 @@ display:
   page_1:
     display_options:
       path: test_field_classes
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
     id: page_1

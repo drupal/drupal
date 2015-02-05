@@ -148,5 +148,3 @@ display:
           plugin_id: numeric
       filters: {  }
       sorts: {  }
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null

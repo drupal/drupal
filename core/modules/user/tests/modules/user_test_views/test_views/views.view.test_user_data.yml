@@ -130,5 +130,3 @@ display:
           plugin_id: date
           entity_type: user
           entity_field: created
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null

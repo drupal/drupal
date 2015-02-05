@@ -815,8 +815,6 @@ display:
         operator: AND
         groups:
           1: AND
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       display_extenders: {  }
   page_1:
     display_plugin: page
@@ -841,6 +839,4 @@ display:
         weight: 0
       defaults:
         show_admin_links: false
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       display_extenders: {  }

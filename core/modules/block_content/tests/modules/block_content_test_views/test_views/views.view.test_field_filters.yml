@@ -150,9 +150,7 @@ display:
       empty: {  }
       relationships: {  }
       arguments: {  }
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
-      rendering_language: translation_language_renderer
+      rendering_language: '***LANGUAGE_entity_translation***'
       display_extenders: {  }
   page_bf:
     display_plugin: page
@@ -160,8 +158,6 @@ display:
     display_title: 'Body filter page'
     position: 1
     display_options:
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       path: test-body-filter
       display_description: ''
       title: 'Test body filters'
@@ -219,8 +215,6 @@ display:
     display_title: 'Body filter page Paris'
     position: 1
     display_options:
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       path: test-body-paris
       display_description: ''
       title: 'Test body filters'
@@ -278,8 +272,6 @@ display:
     display_title: 'Info filter page'
     position: 1
     display_options:
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       path: test-info-filter
       display_description: ''
       title: 'Test info filter'
@@ -337,8 +329,6 @@ display:
     display_title: 'Info filter page Paris'
     position: 1
     display_options:
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       path: test-info-paris
       display_description: ''
       title: 'Test info filter'

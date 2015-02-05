@@ -680,8 +680,6 @@ display:
       arguments: {  }
       group_by: true
       show_admin_links: true
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
   page_1:
     display_plugin: page
     id: page_1
@@ -709,8 +707,6 @@ display:
           group_type: group
           admin_label: 'File usage'
           required: false
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
   page_2:
     display_plugin: page
     id: page_2
@@ -1060,5 +1056,3 @@ display:
           group_type: group
           admin_label: 'File usage'
           required: true
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null

@@ -195,15 +195,6 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       $this->unpackOptions($this->options, $options);
     }
 
-    // Convert the field_langcode and field_language_add_to_query settings.
-    $field_langcode = $this->getOption('field_langcode');
-    $field_language_add_to_query = $this->getOption('field_language_add_to_query');
-    if (isset($field_langcode)) {
-      $this->setOption('field_langcode', $field_langcode);
-      $this->setOption('field_langcode_add_to_query', $field_language_add_to_query);
-      $changed = TRUE;
-    }
-
     // Mark the view as changed so the user has a chance to save it.
     if ($changed) {
       $this->view->changed = TRUE;
@@ -539,14 +530,8 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       'group_by' => array(
         'default' => FALSE,
       ),
-      'field_langcode' => array(
-        'default' => '***LANGUAGE_language_content***',
-      ),
-      'field_langcode_add_to_query' => array(
-        'default' => TRUE,
-      ),
       'rendering_language' => array(
-        'default' => 'translation_language_renderer',
+        'default' => '***LANGUAGE_entity_translation***',
       ),
 
       // These types are all plugins that can have individual settings
@@ -1175,15 +1160,9 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       $rendering_language_options = $this->buildRenderingLanguageOptions();
       $options['rendering_language'] = array(
         'category' => 'language',
-        'title' => $this->t('Entity Language'),
+        'title' => $this->t('Rendering Language'),
         'value' => $rendering_language_options[$this->getOption('rendering_language')],
-      );
-      $language_options = $this->listLanguages(LanguageInterface::STATE_ALL | LanguageInterface::STATE_SITE_DEFAULT | PluginBase::INCLUDE_NEGOTIATED);
-      $options['field_langcode'] = array(
-        'category' => 'language',
-        'title' => $this->t('Field Language'),
-        'value' => $language_options[$this->getOption('field_langcode')],
-        'desc' => $this->t('All fields that support translations will be displayed in the selected language.'),
+        'desc' => $this->t('All content that supports translations will be displayed in the selected language.'),
       );
     }
 
@@ -1533,36 +1512,15 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
           $this->view->query->buildOptionsForm($form['query']['options'], $form_state);
         }
         break;
-      case 'field_langcode':
-        $form['#title'] .= $this->t('Field Language');
-        if ($this->isBaseTableTranslatable()) {
-          $languages = $this->listLanguages(LanguageInterface::STATE_ALL | LanguageInterface::STATE_SITE_DEFAULT | PluginBase::INCLUDE_NEGOTIATED);
-
-          $form['field_langcode'] = array(
-            '#type' => 'select',
-            '#title' => $this->t('Field Language'),
-            '#description' => $this->t('All fields which support translations will be displayed in the selected language.'),
-            '#options' => $languages,
-            '#default_value' => $this->getOption('field_langcode'),
-          );
-          $form['field_langcode_add_to_query'] = array(
-            '#type' => 'checkbox',
-            '#title' => $this->t('When needed, add the field language condition to the query'),
-            '#default_value' => $this->getOption('field_langcode_add_to_query'),
-          );
-        }
-        else {
-          $form['field_language']['#markup'] = $this->t("You don't have translatable entity types.");
-        }
-        break;
       case 'rendering_language':
-        $form['#title'] .= $this->t('Entity Language');
+        $form['#title'] .= $this->t('Rendering language');
         if ($this->isBaseTableTranslatable()) {
           $options = $this->buildRenderingLanguageOptions();
           $form['rendering_language'] = array(
             '#type' => 'select',
             '#options' => $options,
-            '#title' => $this->t('Entity language'),
+            '#title' => $this->t('Rendering language'),
+            '#description' => $this->t('All content that supports translations will be displayed in the selected language.'),
             '#default_value' => $this->getOption('rendering_language'),
           );
         }
@@ -1881,10 +1839,6 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       case 'distinct':
       case 'group_by':
         $this->setOption($section, $form_state->getValue($section));
-        break;
-      case 'field_langcode':
-        $this->setOption('field_langcode', $form_state->getValue('field_langcode'));
-        $this->setOption('field_langcode_add_to_query', $form_state->getValue('field_langcode_add_to_query'));
         break;
       case 'rendering_language':
         $this->setOption('rendering_language', $form_state->getValue('rendering_language'));
@@ -2515,11 +2469,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
    */
   protected function buildRenderingLanguageOptions() {
     // @todo Consider making these plugins. See https://drupal.org/node/2173811.
-    return array(
-      'current_language_renderer' => $this->t('Current language'),
-      'default_language_renderer' => $this->t('Default language'),
-      'translation_language_renderer' => $this->t('Translation language'),
-    );
+    return $this->listLanguages(LanguageInterface::STATE_CONFIGURABLE | LanguageInterface::STATE_SITE_DEFAULT | PluginBase::INCLUDE_NEGOTIATED | PluginBase::INCLUDE_ENTITY);
   }
 
   /**

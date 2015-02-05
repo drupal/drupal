@@ -15,6 +15,3 @@ display:
     id: default
     display_title: Master
     position: null
-    display_options:
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null

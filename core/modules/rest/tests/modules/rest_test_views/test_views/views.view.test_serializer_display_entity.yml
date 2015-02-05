@@ -44,8 +44,6 @@ display:
           entity_field: id
       title: 'Test serialize'
       arguments: {  }
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
   rest_export_1:
     display_plugin: rest_export
     id: rest_export_1
@@ -55,5 +53,3 @@ display:
       defaults:
         access: false
       path: test/serialize/entity
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null

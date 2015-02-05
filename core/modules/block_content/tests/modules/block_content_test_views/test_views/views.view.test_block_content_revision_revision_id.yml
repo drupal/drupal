@@ -54,8 +54,6 @@ display:
           plugin_id: block_content_id
           entity_type: block_content
           entity_field: id
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       display_extenders: {  }
     display_plugin: default
     display_title: Master

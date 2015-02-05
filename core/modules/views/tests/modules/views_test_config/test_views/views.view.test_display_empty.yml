@@ -39,8 +39,6 @@ display:
           id: area
           table: views
           plugin_id: text
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default

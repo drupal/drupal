@@ -86,8 +86,6 @@ display:
       filter_groups:
         operator: AND
         groups: {  }
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
   page_1:
     display_plugin: page
     id: page_1
@@ -95,8 +93,6 @@ display:
     position: null
     display_options:
       path: test_mini_pager
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
   page_2:
     display_plugin: page
     id: page_2
@@ -110,8 +106,6 @@ display:
         type: mini
         options:
           items_per_page: 1
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
   page_3:
     display_plugin: page
     id: page_3
@@ -125,5 +119,3 @@ display:
         type: mini
         options:
           items_per_page: 0
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null

@@ -233,8 +233,6 @@ display:
       relationships: {  }
       fields: {  }
       arguments: {  }
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
@@ -266,13 +264,9 @@ display:
         options:
           relationship: none
           view_mode: rss
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
   page_1:
     display_options:
       path: node
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
     id: page_1

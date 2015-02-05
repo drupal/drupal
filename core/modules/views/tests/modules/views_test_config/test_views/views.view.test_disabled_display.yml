@@ -143,8 +143,6 @@ display:
       relationships: {  }
       arguments: {  }
       display_extenders: {  }
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
   attachment_1:
     display_plugin: attachment
     id: attachment_1
@@ -152,8 +150,6 @@ display:
     position: 1
     display_options:
       display_extenders: {  }
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       displays:
         page_2: page_2
       display_description: ''
@@ -165,8 +161,6 @@ display:
     position: 1
     display_options:
       display_extenders: {  }
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       display_description: ''
       enabled: false
   embed_1:
@@ -176,8 +170,6 @@ display:
     position: 1
     display_options:
       display_extenders: {  }
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       display_description: ''
       enabled: false
   feed_1:
@@ -187,8 +179,6 @@ display:
     position: 1
     display_options:
       display_extenders: {  }
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       display_description: ''
       enabled: false
       path: test-disabled-display.xml
@@ -199,8 +189,6 @@ display:
     position: 1
     display_options:
       display_extenders: {  }
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       path: test-disabled-display
   page_2:
     display_plugin: page
@@ -209,8 +197,6 @@ display:
     position: 2
     display_options:
       display_extenders: {  }
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       path: test-disabled-display-2
       display_description: ''
       enabled: false

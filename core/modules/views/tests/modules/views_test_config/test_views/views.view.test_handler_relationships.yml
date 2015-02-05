@@ -34,8 +34,6 @@ display:
           field: node
           relationship: comment_cid
           plugin_id: standard
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default

@@ -127,8 +127,6 @@ display:
           order: DESC
           entity_type: node
           entity_field: created
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
   page_1:
     display_plugin: page
     id: page_1
@@ -137,8 +135,6 @@ display:
     display_options:
       display_description: ''
       path: test-without-history
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
   page_2:
     display_plugin: page
     id: page_2
@@ -230,5 +226,3 @@ display:
         operator: AND
         groups:
           1: AND
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null

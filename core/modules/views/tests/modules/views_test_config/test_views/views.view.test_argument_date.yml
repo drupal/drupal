@@ -41,8 +41,6 @@ display:
           relationship: none
           table: views_test_data
           plugin_id: numeric
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
@@ -57,8 +55,6 @@ display:
           id: date_day
           table: views_test_data
           plugin_id: date_day
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: embed
     id: embed_1
     display_title: ''
@@ -73,8 +69,6 @@ display:
           id: date_month
           table: views_test_data
           plugin_id: date_month
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: embed
     id: embed_2
     display_title: ''
@@ -89,8 +83,6 @@ display:
           id: date_week
           table: views_test_data
           plugin_id: date_week
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: embed
     id: embed_3
     display_title: ''
@@ -105,8 +97,6 @@ display:
           id: date_year
           table: views_test_data
           plugin_id: date_year
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: embed
     id: embed_4
     display_title: ''
@@ -121,8 +111,6 @@ display:
           id: date_year_month
           table: views_test_data
           plugin_id: date_year_month
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: embed
     id: embed_5
     display_title: ''

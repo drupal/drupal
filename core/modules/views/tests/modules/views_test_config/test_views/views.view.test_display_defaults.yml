@@ -49,5 +49,3 @@ display:
           field: created
           order: DESC
           plugin_id: date
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null

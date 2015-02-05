@@ -85,8 +85,6 @@ display:
           empty: true
           status_code: 200
           plugin_id: http_status_code
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
   page_1:
     display_plugin: page
     id: page_1
@@ -94,5 +92,3 @@ display:
     position: null
     display_options:
       path: test-http-status-code
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null

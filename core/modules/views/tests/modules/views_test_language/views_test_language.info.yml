@@ -1,0 +1,9 @@
+name: 'Views Test Language'
+type: module
+description: 'Test module for Views.'
+package: Testing
+version: VERSION
+core: 8.x
+dependencies:
+  - views
+  - language

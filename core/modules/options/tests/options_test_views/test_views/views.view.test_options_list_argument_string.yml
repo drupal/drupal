@@ -191,8 +191,6 @@ display:
           break_phrase: false
           plugin_id: string_list_field
       display_extenders: {  }
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
   block_1:
     display_plugin: block
     id: block_1
@@ -200,5 +198,3 @@ display:
     position: 1
     display_options:
       display_extenders: {  }
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null

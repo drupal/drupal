@@ -196,8 +196,6 @@ display:
           plugin_id: text_custom
       relationships: {  }
       arguments: {  }
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
   who_s_online_block:
     display_plugin: block
     id: who_s_online_block
@@ -206,5 +204,3 @@ display:
     display_options:
       block_description: 'Who''s online'
       display_description: 'A list of users that are currently logged in.'
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null

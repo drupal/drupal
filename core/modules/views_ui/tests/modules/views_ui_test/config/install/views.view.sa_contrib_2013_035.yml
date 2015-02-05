@@ -179,8 +179,6 @@ display:
       empty: {  }
       relationships: {  }
       arguments: {  }
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       title: '<marquee>VIEWS TITLE</marquee>'
   page_1:
     display_plugin: page
@@ -188,6 +186,4 @@ display:
     display_title: Page
     position: 2
     display_options:
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       path: foobar

@@ -153,8 +153,6 @@ display:
           entity_type: node
           entity_field: created
       title: form
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
   page_1:
     display_plugin: page
     id: page_1
@@ -162,8 +160,6 @@ display:
     position: null
     display_options:
       path: test_bulk_form
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
   page_2:
     display_plugin: page
     id: page_2
@@ -184,5 +180,3 @@ display:
           empty: true
           content: 'This view is empty.'
           plugin_id: text_custom
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null

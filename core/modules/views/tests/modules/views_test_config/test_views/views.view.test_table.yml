@@ -129,8 +129,6 @@ display:
           content: 'custom text'
           tokenize: false
           plugin_id: text_custom
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
@@ -138,8 +136,6 @@ display:
   page_1:
     display_options:
       path: test-table
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: page
     display_title: 'Page display'
     id: page_1

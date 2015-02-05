@@ -15,17 +15,11 @@ display:
     display_title: Master
     id: default
     position: 0
-    display_options:
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
   page_1:
     display_plugin: page
     display_title: Page
     id: page_1
     position: 1
-    display_options:
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
   page_2:
     display_plugin: page
     display_title: 'Page 2'
@@ -36,5 +30,3 @@ display:
         style: false
       style:
         type: grid
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null

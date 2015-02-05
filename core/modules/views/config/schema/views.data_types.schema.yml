@@ -247,12 +247,6 @@ views_display:
     hide_attachment_summary:
       type: boolean
       label: 'Hide attachments in summary'
-    field_langcode:
-      type: string
-      label: 'Field langcode'
-    field_langcode_add_to_query:
-      type: string
-      label: 'Add the field language to the query'
     rendering_language:
       type: string
       label: 'Entity language'

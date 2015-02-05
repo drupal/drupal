@@ -31,8 +31,6 @@ display:
           relationship: none
           table: views_test_data
           plugin_id: standard
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
@@ -46,8 +44,6 @@ display:
       query:
         type: views_query
         options: {  }
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
   page_1:
     id: page_1
     display_title: Page
@@ -58,5 +54,3 @@ display:
         type: views_query
         options: {  }
       path: test_view_storage
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null

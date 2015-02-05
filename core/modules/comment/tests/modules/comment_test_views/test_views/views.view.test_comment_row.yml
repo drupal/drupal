@@ -147,8 +147,6 @@ display:
       footer: {  }
       empty: {  }
       arguments: {  }
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
   page_1:
     display_plugin: page
     id: page_1
@@ -156,5 +154,3 @@ display:
     position: 1
     display_options:
       path: test-comment-row
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null

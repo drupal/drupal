@@ -34,8 +34,6 @@ display:
           table: views_test_data
           field: id
           plugin_id: numeric
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
@@ -45,9 +43,6 @@ display:
     display_title: Attachment
     id: attachment_1
     position: 1
-    display_options:
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
   feed_1:
     display_plugin: feed
     id: feed_1
@@ -70,14 +65,10 @@ display:
             guid_field: id
             guid_field_is_permalink: false
       path: test_attachment_ui_feed
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
   page_1:
     display_plugin: page
     display_title: Page
     display_options:
       path: test_attachment_ui
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     id: page_1
     position: 2

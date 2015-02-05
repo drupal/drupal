@@ -413,8 +413,6 @@ display:
           plugin_id: standard
       arguments: {  }
       display_extenders: {  }
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       use_more: true
       use_more_always: true
       use_more_text: More
@@ -425,7 +423,3 @@ display:
     id: block_1
     display_title: Block
     position: 1
-    display_options:
-      display_extenders: {  }
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null

@@ -99,6 +99,4 @@ display:
           separator: ', '
           field_api_classes: false
           plugin_id: field
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       display_extenders: {  }

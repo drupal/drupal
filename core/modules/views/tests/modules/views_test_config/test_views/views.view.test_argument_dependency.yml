@@ -216,5 +216,3 @@ display:
           entity_field: uid
           plugin_id: numeric
       display_extenders: {  }
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null

@@ -76,8 +76,6 @@ display:
       style:
         type: default
       title: test_display_feed
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
@@ -93,8 +91,6 @@ display:
       style:
         type: rss
       sitename_title: true
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: feed
     display_title: Feed
     id: feed_1
@@ -102,8 +98,6 @@ display:
   page:
     display_options:
       path: test-feed-display
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
     id: page

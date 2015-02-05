@@ -181,5 +181,3 @@ display:
           validate_options: {  }
           plugin_id: tracker_user_uid
           entity_type: node
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null

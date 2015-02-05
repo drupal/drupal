@@ -13,7 +13,7 @@ use Drupal\views\ResultRow;
 /**
  * Renders entity translations in their active language.
  */
-class TranslationLanguageRenderer extends DefaultLanguageRenderer {
+class TranslationLanguageRenderer extends RendererBase {
 
   /**
    * Stores the field alias of the langcode column.
@@ -71,7 +71,7 @@ class TranslationLanguageRenderer extends DefaultLanguageRenderer {
   /**
    * {@inheritdoc}
    */
-  protected function getLangcode(ResultRow $row) {
+  public function getLangcode(ResultRow $row) {
     return isset($row->{$this->langcodeAlias}) ? $row->{$this->langcodeAlias} : $this->languageManager->getDefaultLanguage()->getId();
   }
 

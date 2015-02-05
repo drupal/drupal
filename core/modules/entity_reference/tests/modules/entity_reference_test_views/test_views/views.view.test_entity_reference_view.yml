@@ -55,8 +55,6 @@ display:
           field: field_test
           relationship: none
           plugin_id: standard
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
@@ -72,8 +70,6 @@ display:
           field: reverse_field_test
           relationship: none
           plugin_id: standard
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: embed
     display_title: Embed
     id: embed_1

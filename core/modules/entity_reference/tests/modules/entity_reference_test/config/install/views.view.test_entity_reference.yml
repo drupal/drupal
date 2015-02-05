@@ -109,8 +109,6 @@ display:
           plugin_id: date
           entity_type: node
           entity_field: created
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
   entity_reference_1:
     display_plugin: entity_reference
     id: entity_reference_1
@@ -127,5 +125,3 @@ display:
         type: none
         options:
           offset: 0
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null

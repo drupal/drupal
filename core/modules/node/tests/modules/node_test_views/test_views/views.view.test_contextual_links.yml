@@ -68,8 +68,6 @@ display:
       relationships: {  }
       fields: {  }
       arguments: {  }
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
@@ -95,8 +93,6 @@ display:
         menu_name: tools
         weight: 0
         context: '1'
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
     id: page_1

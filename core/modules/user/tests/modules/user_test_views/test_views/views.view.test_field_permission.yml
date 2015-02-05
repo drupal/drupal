@@ -138,5 +138,3 @@ display:
           plugin_id: user_permissions
       filters: {  }
       sorts: {  }
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null

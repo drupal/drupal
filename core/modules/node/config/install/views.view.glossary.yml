@@ -306,8 +306,6 @@ display:
       footer: {  }
       empty: {  }
       sorts: {  }
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       filters:
         langcode:
           id: langcode
@@ -406,8 +404,6 @@ display:
         default: default
         page_1: page_1
       inherit_arguments: false
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
   page_1:
     id: page_1
     display_title: Page
@@ -424,5 +420,3 @@ display:
         weight: 0
         menu_name: main
         parent: ''
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null

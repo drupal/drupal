@@ -22,8 +22,6 @@ display:
           table: views_test_data
           field: id
           plugin_id: numeric
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
@@ -47,8 +45,6 @@ display:
         weight: 0
       defaults:
         title: false
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
     id: page_1
@@ -66,8 +62,6 @@ display:
         context: '0'
       defaults:
         title: false
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
     id: page_2
@@ -85,8 +79,6 @@ display:
         context: '0'
       defaults:
         title: false
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
     id: page_3
@@ -105,8 +97,6 @@ display:
         context: '0'
       defaults:
         title: false
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
     id: page_4
@@ -125,8 +115,6 @@ display:
         context: '0'
       defaults:
         title: false
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
     id: page_5

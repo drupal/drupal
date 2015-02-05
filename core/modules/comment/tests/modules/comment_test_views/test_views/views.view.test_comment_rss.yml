@@ -63,8 +63,6 @@ display:
           entity_field: subject
       filters: {  }
       sorts: {  }
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
   feed_1:
     display_plugin: feed
     id: feed_1
@@ -72,5 +70,3 @@ display:
     position: null
     display_options:
       path: test-comment-rss
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null

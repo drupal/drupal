@@ -126,8 +126,6 @@ display:
       footer: {  }
       empty: {  }
       relationships: {  }
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       display_extenders: {  }
       arguments:
         type:
@@ -178,6 +176,4 @@ display:
     position: null
     display_options:
       path: test-block_content-view
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       display_extenders: {  }

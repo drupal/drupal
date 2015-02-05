@@ -180,8 +180,6 @@ display:
           entity_type: node
           entity_field: created
       title: test_entity_operations
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
   page_1:
     display_plugin: page
     id: page_1
@@ -189,5 +187,3 @@ display:
     position: null
     display_options:
       path: test-entity-operations
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null

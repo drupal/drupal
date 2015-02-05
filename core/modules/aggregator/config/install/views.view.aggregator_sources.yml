@@ -141,16 +141,12 @@ display:
       empty: {  }
       relationships: {  }
       arguments: {  }
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
   feed_1:
     display_plugin: feed
     id: feed_1
     display_title: Feed
     position: 2
     display_options:
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       style:
         type: opml
         options:
@@ -389,8 +385,6 @@ display:
     display_title: Page
     position: 1
     display_options:
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       path: aggregator/sources
       menu:
         type: normal

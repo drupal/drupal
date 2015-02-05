@@ -47,8 +47,6 @@ display:
       style:
         type: default
       title: test_node_row_plugin
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
@@ -56,8 +54,6 @@ display:
   page_1:
     display_options:
       path: test-node-row-plugin
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
     id: page_1

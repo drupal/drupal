@@ -23,7 +23,7 @@ abstract class RendererBase {
    *
    * @var \Drupal\views\ViewExecutable
    */
-  public $view = NULL;
+  public $view;
 
   /**
    * The language manager.
@@ -61,6 +61,17 @@ abstract class RendererBase {
     $this->languageManager = $language_manager;
     $this->entityType = $entity_type;
   }
+
+  /**
+   * Returns the language code associated to the given row.
+   *
+   * @param \Drupal\views\ResultRow $row
+   *   The result row.
+   *
+   * @return string
+   *   A language code.
+   */
+  abstract public function getLangcode(ResultRow $row);
 
   /**
    * Alters the query if needed.

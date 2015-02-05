@@ -147,17 +147,13 @@ display:
       footer: {  }
       empty: {  }
       arguments: {  }
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
-      rendering_language: translation_language_renderer
+      rendering_language: '***LANGUAGE_entity_translation***'
   page_bf:
     display_plugin: page
     id: page_bf
     display_title: 'Body Comida'
     position: 1
     display_options:
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       path: test-body-filter
       display_description: ''
       filters:
@@ -214,8 +210,6 @@ display:
     display_title: 'Body Paris'
     position: 1
     display_options:
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       path: test-body-paris
       display_description: ''
       filters:
@@ -272,8 +266,6 @@ display:
     display_title: 'Title Comida'
     position: 1
     display_options:
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       path: test-title-filter
       display_description: ''
   page_tp:
@@ -282,8 +274,6 @@ display:
     display_title: 'Title Paris'
     position: 1
     display_options:
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
       path: test-title-paris
       display_description: ''
       filters:

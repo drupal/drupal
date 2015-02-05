@@ -46,8 +46,6 @@ display:
         type: default
       row:
         type: 'entity:node'
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: default
     display_title: Master
     id: default
@@ -56,8 +54,6 @@ display:
     display_options:
       path: test_exposed_block
       exposed_block: true
-      field_langcode: '***LANGUAGE_language_content***'
-      field_langcode_add_to_query: null
     display_plugin: page
     display_title: Page
     id: page_1
