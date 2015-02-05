@@ -63,6 +63,7 @@ class EntityRevisionsTest extends WebTestBase {
 
     $names = array();
     $texts = array();
+    $created = array();
     $revision_ids = array();
 
     // Create three revisions.
@@ -76,6 +77,7 @@ class EntityRevisionsTest extends WebTestBase {
       $entity->setNewRevision(TRUE);
       $names[] = $entity->name->value = $this->randomMachineName(32);
       $texts[] = $entity->field_test_text->value = $this->randomMachineName(32);
+      $created[] = $entity->created->value = time() + $i + 1;
       $entity->save();
       $revision_ids[] = $entity->revision_id->value;
 
@@ -93,6 +95,10 @@ class EntityRevisionsTest extends WebTestBase {
       $this->assertEqual($entity_revision->revision_id->value, $revision_ids[$i], format_string('%entity_type: Revision ID matches.', array('%entity_type' => $entity_type)));
       $this->assertEqual($entity_revision->name->value, $names[$i], format_string('%entity_type: Name matches.', array('%entity_type' => $entity_type)));
       $this->assertEqual($entity_revision->field_test_text->value, $texts[$i], format_string('%entity_type: Text matches.', array('%entity_type' => $entity_type)));
+
+      // Check non-revisioned values are loaded.
+      $this->assertTrue(isset($entity_revision->created->value), format_string('%entity_type: Non-revisioned field is loaded.', array('%entity_type' => $entity_type)));
+      $this->assertEqual($entity_revision->created->value, $created[2], format_string('%entity_type: Non-revisioned field value is the same between revisions.', array('%entity_type' => $entity_type)));
     }
 
     // Confirm the correct revision text appears in the edit form.

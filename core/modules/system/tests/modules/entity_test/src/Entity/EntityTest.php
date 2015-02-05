@@ -100,6 +100,11 @@ class EntityTest extends ContentEntityBase implements EntityOwnerInterface {
       ->setDescription(t('The bundle of the test entity.'))
       ->setRequired(TRUE);
 
+    $fields['created'] = BaseFieldDefinition::create('created')
+      ->setLabel(t('Authored on'))
+      ->setDescription(t('Time the entity was created'))
+      ->setTranslatable(TRUE);
+
     $fields['user_id'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('User ID'))
       ->setDescription(t('The ID of the associated user.'))

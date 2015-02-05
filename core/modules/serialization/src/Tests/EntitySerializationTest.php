@@ -100,6 +100,9 @@ class EntitySerializationTest extends NormalizerTestBase {
           'format' => $this->values['field_test_text']['format'],
         ),
       ),
+      'created' => array(
+        array('value' => $this->entity->created->value),
+      ),
     );
 
     $normalized = $this->serializer->normalize($this->entity);
@@ -152,6 +155,7 @@ class EntitySerializationTest extends NormalizerTestBase {
       'user_id' => '<user_id><target_id>' . $this->values['user_id'] . '</target_id></user_id>',
       'revision_id' => '<revision_id><value>' . $this->entity->getRevisionId() . '</value></revision_id>',
       'field_test_text' => '<field_test_text><value>' . $this->values['field_test_text']['value'] . '</value><format>' . $this->values['field_test_text']['format'] . '</format></field_test_text>',
+      'created' => '<created><value>' . $this->entity->created->value . '</value></created>',
     );
     // Sort it in the same order as normalised.
     $expected = array_merge($normalized, $expected);
