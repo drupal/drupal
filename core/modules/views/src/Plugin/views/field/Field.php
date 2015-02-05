@@ -8,7 +8,7 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\Xss;
+use Drupal\Component\Utility\Xss as CoreXss;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -876,7 +876,7 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
                (is_object($item['raw']) ? (array)$item['raw'] : NULL);
       }
       if (isset($raw) && isset($raw[$id]) && is_scalar($raw[$id])) {
-        $tokens['{{ ' . $this->options['id'] . '-' . $id . ' }}'] = Xss::filterAdmin($raw[$id]);
+        $tokens['{{ ' . $this->options['id'] . '-' . $id . ' }}'] = CoreXss::filterAdmin($raw[$id]);
       }
       else {
         // Make sure that empty values are replaced as well.
