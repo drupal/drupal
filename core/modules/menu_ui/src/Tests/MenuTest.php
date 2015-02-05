@@ -462,6 +462,9 @@ class MenuTest extends MenuWebTestBase {
     $this->clickLink($item8->getTitle());
     $this->assertResponse(200);
 
+    // Check invalid menu link parents.
+    $this->checkInvalidParentMenuLinks();
+
     // Save menu links for later tests.
     $this->items[] = $item1;
     $this->items[] = $item2;
@@ -644,6 +647,48 @@ class MenuTest extends MenuWebTestBase {
       );
       $this->drupalPostForm("admin/structure/menu/manage/{$this->menu->id()}/add", $edit, t('Save'));
       $this->assertRaw(t("The path '@link_path' is either invalid or you do not have access to it.", array('@link_path' => $link_path)), 'Menu link was not created');
+    }
+  }
+
+  /**
+   * Tests that parent options are limited by depth when adding menu links.
+   */
+  function checkInvalidParentMenuLinks() {
+    $last_link = null;
+    $created_links = array();
+
+    // Get the max depth of the tree.
+    $menu_link_tree = \Drupal::service('menu.link_tree');
+    $max_depth = $menu_link_tree->maxDepth();
+
+    // Create a maximum number of menu links, each a child of the previous.
+    for ($i = 0; $i <= $max_depth - 1; $i++) {
+      $parent = $last_link ? 'tools:' . $last_link->getPluginId() : 'tools:';
+      $title = 'title' . $i;
+      $edit = array(
+        'link[0][uri]' => '<front>',
+        'title[0][value]' => $title,
+        'menu_parent' => $parent,
+        'description[0][value]' => '',
+        'enabled[value]' => 1,
+        'expanded[value]' => FALSE,
+        'weight[0][value]' => '0',
+      );
+      $this->drupalPostForm("admin/structure/menu/manage/{$this->menu->id()}/add", $edit, t('Save'));
+      $menu_links = entity_load_multiple_by_properties('menu_link_content', array('title' => $title));
+      $last_link = reset($menu_links);
+      $created_links[]  = 'tools:' . $last_link->getPluginId();
+    }
+
+    // The last link cannot be a parent in the new menu link form.
+    $this->drupalGet('admin/structure/menu/manage/admin/add');
+    $value = 'tools:' . $last_link->getPluginId();
+    $this->assertNoOption('edit-menu-parent', $value, 'The invalid option is not there.');
+
+    // All but the last link can be parents in the new menu link form.
+    array_pop($created_links);
+    foreach ($created_links as $key => $link) {
+      $this->assertOption('edit-menu-parent', $link, 'The valid option number ' . ($key + 1) . ' is there.');
     }
   }
 

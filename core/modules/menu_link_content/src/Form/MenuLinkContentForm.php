@@ -221,7 +221,8 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
     $form = parent::form($form, $form_state);
 
     $default = $this->entity->getMenuName() . ':' . $this->entity->getParentId();
-    $form['menu_parent'] = $this->menuParentSelector->parentSelectElement($default, $this->entity->getPluginId());
+    $id = $this->entity->isNew() ? '' : $this->entity->getPluginId();
+    $form['menu_parent'] = $this->menuParentSelector->parentSelectElement($default, $id);
     $form['menu_parent']['#weight'] = 10;
     $form['menu_parent']['#title'] = $this->t('Parent link');
     $form['menu_parent']['#description'] = $this->t('The maximum depth for a link and all its children is fixed. Some menu links may not be available as parents if selecting them would exceed this limit.');
