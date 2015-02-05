@@ -733,7 +733,7 @@ function drupal_bootstrap($phase = NULL) {
     $boot_level = $phase;
   }
 
-  return \Drupal::getContainer() ? DRUPAL_BOOTSTRAP_CODE : DRUPAL_BOOTSTRAP_CONFIGURATION;
+  return \Drupal::hasContainer() ? DRUPAL_BOOTSTRAP_CODE : DRUPAL_BOOTSTRAP_CONFIGURATION;
 }
 
 /**
