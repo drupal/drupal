@@ -331,11 +331,9 @@ class TypedDataTest extends KernelTestBase {
 
     // Test using array access.
     $this->assertEqual($typed_data[0]->getValue(), 'one');
-    $typed_data[4] = 'four';
-    $this->assertEqual($typed_data[4]->getValue(), 'four');
-    $typed_data[] = 'five';
-    $this->assertEqual($typed_data[5]->getValue(), 'five');
-    $this->assertEqual($typed_data->count(), 5);
+    $typed_data[] = 'four';
+    $this->assertEqual($typed_data[3]->getValue(), 'four');
+    $this->assertEqual($typed_data->count(), 4);
     $this->assertTrue(isset($typed_data[0]));
     $this->assertTrue(!isset($typed_data[6]));
 
@@ -366,26 +364,20 @@ class TypedDataTest extends KernelTestBase {
 
     $this->assertEqual($typed_data->getValue(), array(NULL, '', 'three'));
     // Test unsetting.
-    unset($typed_data[2]);
+    unset($typed_data[1]);
     $this->assertEqual(count($typed_data), 2);
-    $this->assertNull($typed_data[3]->getValue());
+    // Check that items were shifted.
+    $this->assertEqual($typed_data[1]->getValue(), 'three');
 
-    // Getting a not set list item sets it.
-    $this->assertNull($typed_data[4]->getValue());
-    $this->assertEqual(count($typed_data), 4);
+    // Getting a not set list item returns NULL, and does not create a new item.
+    $this->assertNull($typed_data[2]);
+    $this->assertEqual(count($typed_data), 2);
 
     // Test setting the list with less values.
     $typed_data->setValue(array('one'));
     $this->assertEqual($typed_data->count(), 1);
 
     // Test setting invalid values.
-    try {
-      $typed_data->setValue(array('not a list' => 'one'));
-      $this->fail('No exception has been thrown when setting an invalid value.');
-    }
-    catch (\Exception $e) {
-      $this->pass('Exception thrown:' . $e->getMessage());
-    }
     try {
       $typed_data->setValue('string');
       $this->fail('No exception has been thrown when setting an invalid value.');

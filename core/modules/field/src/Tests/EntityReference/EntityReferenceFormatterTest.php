@@ -275,14 +275,14 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
     // Create the entity that will have the entity reference field.
     $referencing_entity = entity_create($this->entityType, array('name' => $this->randomMachineName()));
 
-    $delta = 0;
-    foreach ($referenced_entities as $referenced_entity) {
-      $referencing_entity->{$this->fieldName}[$delta++]->entity = $referenced_entity;
-    }
-
-    // Build the renderable array for the entity reference field.
     $items = $referencing_entity->get($this->fieldName);
 
+    // Assign the referenced entities.
+    foreach ($referenced_entities as $referenced_entity) {
+      $items[] = ['entity' => $referenced_entity];
+    }
+
+    // Build the renderable array for the field.
     return $items->view(array('type' => $formatter, 'settings' => $formatter_options));
   }
 

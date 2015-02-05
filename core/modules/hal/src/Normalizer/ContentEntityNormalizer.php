@@ -177,20 +177,16 @@ class ContentEntityNormalizer extends NormalizerBase {
     // Iterate through remaining items in data array. These should all
     // correspond to fields.
     foreach ($data as $field_name => $field_data) {
+      $items = $entity->get($field_name);
       // Remove any values that were set as a part of entity creation (e.g
-      // uuid). If this field is set to an empty array in the data, this will
-      // also have the effect of marking the field for deletion in REST module.
-      $entity->{$field_name} = array();
-
-      $field = $entity->get($field_name);
-      // Get the class of the field. This will generally be the default Field
-      // class.
-      $field_class = get_class($field);
-      // Pass in the empty field object as a target instance. Since the context
-      // is already prepared for the field, any data added to it is
-      // automatically added to the entity.
-      $context['target_instance'] = $field;
-      $this->serializer->denormalize($field_data, $field_class, $format, $context);
+      // uuid). If the incoming field data is set to an empty array, this will
+      // also have the effect of emptying the field in REST module.
+      $items->setValue(array());
+      if ($field_data) {
+        // Denormalize the field data into the FieldItemList object.
+        $context['target_instance'] = $items;
+        $this->serializer->denormalize($field_data, get_class($items), $format, $context);
+      }
     }
 
     return $entity;

@@ -139,6 +139,8 @@ class FileWidget extends WidgetBase {
     // Add one more empty row for new uploads except when this is a programmed
     // multiple form as it is not necessary.
     if ($empty_single_allowed || $empty_multiple_allowed) {
+      // Create a new empty item.
+      $items->appendItem();
       $element = array(
         '#title' => $title,
         '#description' => $description,

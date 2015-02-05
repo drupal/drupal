@@ -108,7 +108,9 @@ class FieldStorageEditForm extends FormBase {
     // FieldItem.
     $ids = (object) array('entity_type' => $this->field->entity_type, 'bundle' => $this->field->bundle, 'entity_id' => NULL);
     $entity = _field_create_entity_from_ids($ids);
-    $form['field_storage']['settings'] += $entity->get($field_storage->getName())->first()->storageSettingsForm($form, $form_state, $field_storage->hasData());
+    $items = $entity->get($field_storage->getName());
+    $item = $items->first() ?: $items->appendItem();
+    $form['field_storage']['settings'] += $item->storageSettingsForm($form, $form_state, $field_storage->hasData());
 
     // Build the configurable field values.
     $cardinality = $field_storage->getCardinality();

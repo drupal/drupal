@@ -399,7 +399,7 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
       // Fill in the entity with more values than $cardinality.
       for ($i = 0; $i < 20; $i++) {
         // We can not use $i here because 0 values are filtered out.
-        $entity->field_update[$i]->value = $i + 1;
+        $entity->field_update[] = $i + 1;
       }
       // Load back and assert there are $cardinality number of values.
       $entity = $this->entitySaveReload($entity);

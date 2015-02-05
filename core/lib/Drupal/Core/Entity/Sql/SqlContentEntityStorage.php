@@ -1090,7 +1090,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         // @todo Give field types more control over this behavior in
         //   https://drupal.org/node/2232427.
         if (!$definition->getMainPropertyName() && count($columns) == 1) {
-          $value = $entity->$field_name->first()->getValue();
+          $value = ($item = $entity->$field_name->first()) ? $item->getValue() : array();
         }
         else {
           $value = isset($entity->$field_name->$column_name) ? $entity->$field_name->$column_name : NULL;
@@ -1300,7 +1300,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             }
 
             // Add the item to the field values for the entity.
-            $entities[$row->entity_id]->getTranslation($row->langcode)->{$field_name}[$delta_count[$row->entity_id][$row->langcode]] = $item;
+            $entities[$row->entity_id]->getTranslation($row->langcode)->{$field_name}->appendItem($item);
             $delta_count[$row->entity_id][$row->langcode]++;
           }
         }

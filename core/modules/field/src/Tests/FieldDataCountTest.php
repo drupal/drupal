@@ -72,11 +72,9 @@ class FieldDataCountTest extends FieldUnitTestBase {
     // Create 12 entities to ensure that the purging works as expected.
     for ($i=0; $i < 12; $i++) {
       $entity = entity_create('entity_test');
-      $value = mt_rand(1,99);
-      $value2 = mt_rand(1,99);
-      $entity->field_int[0]->value = $value;
-      $entity->field_int[1]->value = $value2;
-      $entity->name->value = $this->randomMachineName();
+      $entity->field_int[] = mt_rand(1,99);
+      $entity->field_int[] = mt_rand(1,99);
+      $entity->name[] = $this->randomMachineName();
       $entity->save();
     }
 

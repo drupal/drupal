@@ -109,7 +109,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
       'private' => FALSE,
     ));
     $translation = $node->getTranslation('ca');
-    $translation->field_private[0]->value = 0;
+    $translation->field_private->value = 0;
     $node->save();
 
     $this->nodes['private_both_public'] = $node = $this->drupalCreateNode(array(
@@ -119,7 +119,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
       'private' => TRUE,
     ));
     $translation = $node->getTranslation('ca');
-    $translation->field_private[0]->value = 0;
+    $translation->field_private->value = 0;
     $node->save();
 
     $this->nodes['public_hu_private'] = $node = $this->drupalCreateNode(array(
@@ -129,7 +129,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
       'private' => FALSE,
     ));
     $translation = $node->getTranslation('ca');
-    $translation->field_private[0]->value = 0;
+    $translation->field_private->value = 0;
     $node->save();
 
     $this->nodes['public_ca_private'] = $node = $this->drupalCreateNode(array(
@@ -139,7 +139,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
       'private' => FALSE,
     ));
     $translation = $node->getTranslation('ca');
-    $translation->field_private[0]->value = 1;
+    $translation->field_private->value = 1;
     $node->save();
 
     $this->nodes['public_both_private'] = $node = $this->drupalCreateNode(array(
@@ -149,7 +149,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
       'private' => FALSE,
     ));
     $translation = $node->getTranslation('ca');
-    $translation->field_private[0]->value = 1;
+    $translation->field_private->value = 1;
     $node->save();
 
     $this->nodes['private_both_private'] = $node = $this->drupalCreateNode(array(
@@ -159,7 +159,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
       'private' => TRUE,
     ));
     $translation = $node->getTranslation('ca');
-    $translation->field_private[0]->value = 1;
+    $translation->field_private->value = 1;
     $node->save();
 
     $this->nodes['public_no_language_private'] = $this->drupalCreateNode(array(

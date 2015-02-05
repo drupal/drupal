@@ -23,6 +23,7 @@ use Drupal\Core\Session\AnonymousUserSession;
  *   id = "comment",
  *   label = @Translation("Comments"),
  *   description = @Translation("This field manages configuration and presentation of comments on an entity."),
+ *   list_class = "\Drupal\comment\CommentFieldItemList",
  *   default_widget = "comment_default",
  *   default_formatter = "comment_default"
  * )
@@ -150,20 +151,6 @@ class CommentItem extends FieldItemBase implements CommentItemInterface {
     );
 
     return $element;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __get($name) {
-    if ($name == 'status' && !isset($this->values[$name])) {
-      // Get default value from the field when no data saved in entity.
-      $field_default_values = $this->getFieldDefinition()->getDefaultValue($this->getEntity());
-      return $field_default_values[0]['status'];
-    }
-    else {
-      return parent::__get($name);
-    }
   }
 
   /**

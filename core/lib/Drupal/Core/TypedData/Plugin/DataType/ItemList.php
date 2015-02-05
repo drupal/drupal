@@ -59,25 +59,23 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
       $this->list = array();
     }
     else {
+      // Only arrays with numeric keys are supported.
       if (!is_array($values)) {
         throw new \InvalidArgumentException('Cannot set a list with a non-array value.');
       }
-
-      // Clear the values of properties for which no value has been passed.
-      $this->list = array_intersect_key($this->list, $values);
-
-      // Set the values.
-      foreach ($values as $delta => $value) {
-        if (!is_numeric($delta)) {
-          throw new \InvalidArgumentException('Unable to set a value with a non-numeric delta in a list.');
-        }
-        elseif (!isset($this->list[$delta])) {
+      // Assign incoming values. Keys are renumbered to ensure 0-based
+      // sequential deltas. If possible, reuse existing items rather than
+      // creating new ones.
+      foreach (array_values($values) as $delta => $value) {
+        if (!isset($this->list[$delta])) {
           $this->list[$delta] = $this->createItem($delta, $value);
         }
         else {
           $this->list[$delta]->setValue($value, FALSE);
         }
       }
+      // Truncate extraneous pre-existing values.
+      $this->list = array_slice($this->list, 0, count($values));
     }
     // Notify the parent of any changes.
     if ($notify && isset($this->parent)) {
@@ -104,28 +102,65 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
     if (!is_numeric($index)) {
       throw new \InvalidArgumentException('Unable to get a value with a non-numeric delta in a list.');
     }
-    // Allow getting not yet existing items as well.
-    // @todo: Maybe add a public createItem() method in addition?
-    elseif (!isset($this->list[$index])) {
-      $this->list[$index] = $this->createItem($index);
+    // Automatically create the first item for computed fields.
+    if ($index == 0 && !isset($this->list[0]) && $this->definition->isComputed()) {
+      $this->list[0] = $this->createItem(0);
     }
-    return $this->list[$index];
+    return isset($this->list[$index]) ? $this->list[$index] : NULL;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function set($index, $item) {
-    if (is_numeric($index)) {
-      // Support setting values via typed data objects.
-      if ($item instanceof TypedDataInterface) {
-        $item = $item->getValue();
-      }
-      $this->get($index)->setValue($item);
-      return $this;
+  public function set($index, $value) {
+    if (!is_numeric($index)) {
+      throw new \InvalidArgumentException('Unable to set a value with a non-numeric delta in a list.');
+    }
+    // Ensure indexes stay sequential. We allow assigning an item at an existing
+    // index, or at the next index available.
+    if ($index < 0 || $index > count($this->list)) {
+      throw new \InvalidArgumentException('Unable to set a value to a non-subsequent delta in a list.');
+    }
+    // Support setting values via typed data objects.
+    if ($value instanceof TypedDataInterface) {
+      $value = $value->getValue();
+    }
+    // If needed, create the item at the next position.
+    $item = isset($this->list[$index]) ? $this->list[$index] : $this->appendItem();
+    $item->setValue($value);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function removeItem($index) {
+    if (isset($this->list) && array_key_exists($index, $this->list)) {
+      // Remove the item, and reassign deltas.
+      unset($this->list[$index]);
+      $this->rekey($index);
     }
     else {
-      throw new \InvalidArgumentException('Unable to set a value with a non-numeric delta in a list.');
+      throw new \InvalidArgumentException('Unable to remove item at non-existing index.');
+    }
+    return $this;
+  }
+
+  /**
+   * Renumbers the items in the list.
+   *
+   * @param int $from_index
+   *   Optionally, the index at which to start the renumbering, if it is known
+   *   that items before that can safely be skipped (for example, when removing
+   *   an item at a given index).
+   */
+  protected function rekey($from_index = 0) {
+    // Re-key the list to maintain consecutive indexes.
+    $this->list = array_values($this->list);
+    // Each item holds its own index as a "name", it needs to be updated
+    // according to the new list indexes.
+    for ($i = $from_index; $i < count($this->list); $i++) {
+      $this->list[$i]->setContext($i, $this);
     }
   }
 
@@ -140,14 +175,15 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
    * Implements \ArrayAccess::offsetExists().
    */
   public function offsetExists($offset) {
-    return array_key_exists($offset, $this->list) && $this->get($offset)->getValue() !== NULL;
+    // We do not want to throw exceptions here, so we do not use get().
+    return isset($this->list[$offset]);
   }
 
   /**
    * Implements \ArrayAccess::offsetUnset().
    */
   public function offsetUnset($offset) {
-    unset($this->list[$offset]);
+    $this->removeItem($offset);
   }
 
   /**
@@ -155,6 +191,29 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
    */
   public function offsetGet($offset) {
     return $this->get($offset);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function offsetSet($offset, $value) {
+    if (!isset($offset)) {
+      // The [] operator has been used.
+      $this->appendItem($value);
+    }
+    else {
+      $this->set($offset, $value);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function appendItem($value = NULL) {
+    $offset = count($this->list);
+    $item = $this->createItem($offset, $value);
+    $this->list[$offset] = $item;
+    return $item;
   }
 
   /**
@@ -171,17 +230,6 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
    */
   public function getItemDefinition() {
     return $this->definition->getItemDefinition();
-  }
-
-  /**
-   * Implements \ArrayAccess::offsetSet().
-   */
-  public function offsetSet($offset, $value) {
-    if (!isset($offset)) {
-      // The [] operator has been used so point at a new entry.
-      $offset = $this->list ? max(array_keys($this->list)) + 1 : 0;
-    }
-    $this->set($offset, $value);
   }
 
   /**
@@ -220,22 +268,19 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
    * {@inheritdoc}
    */
   public function filter($callback) {
-    $removed = FALSE;
-    // Apply the filter, detecting if some items were actually removed.
-    $this->list = array_filter($this->list, function ($item) use ($callback, &$removed) {
-      if (call_user_func($callback, $item)) {
-        return TRUE;
-      }
-      else {
-        $removed = TRUE;
-      }
-    });
-    if ($removed) {
-      // Rekey the array using array_values().
-      $this->list = array_values($this->list);
-      // Manually update each item's delta.
-      foreach ($this->list as $delta => $item) {
-        $item->setContext($delta, $this);
+    if (isset($this->list)) {
+      $removed = FALSE;
+      // Apply the filter, detecting if some items were actually removed.
+      $this->list = array_filter($this->list, function ($item) use ($callback, &$removed) {
+        if (call_user_func($callback, $item)) {
+          return TRUE;
+        }
+        else {
+          $removed = TRUE;
+        }
+      });
+      if ($removed) {
+        $this->rekey();
       }
     }
     return $this;

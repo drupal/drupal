@@ -384,7 +384,7 @@ class DateTimeFieldTest extends WebTestBase {
 
     // Create a new node to check that datetime field default value is not set.
     $new_node = entity_create('node', array('type' => 'date_content'));
-    $this->assertNull($new_node->get($field_name)->offsetGet(0)->value, 'Default value is not set');
+    $this->assertNull($new_node->get($field_name)->value, 'Default value is not set');
   }
 
   /**

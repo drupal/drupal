@@ -169,6 +169,11 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
     $elements = array();
 
     for ($delta = 0; $delta <= $max; $delta++) {
+      // Add a new empty item if it doesn't exist yet at this delta.
+      if (!isset($items[$delta])) {
+        $items->appendItem();
+      }
+
       // For multiple fields, title and description are handled by the wrapping
       // table.
       $element = array(

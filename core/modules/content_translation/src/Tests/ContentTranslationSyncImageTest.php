@@ -149,7 +149,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
         'alt' => $default_langcode . '_' . $fid . '_' . $this->randomMachineName(),
         'title' => $default_langcode . '_' . $fid . '_' . $this->randomMachineName(),
       );
-      $entity->{$this->fieldName}->get($delta)->setValue($item);
+      $entity->{$this->fieldName}[] = $item;
 
       // Store the generated values keying them by fid for easier lookup.
       $values[$default_langcode][$fid] = $item;
@@ -175,7 +175,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
         'alt' => $langcode . '_' . $fid . '_' . $this->randomMachineName(),
         'title' => $langcode . '_' . $fid . '_' . $this->randomMachineName(),
       );
-      $translation->{$this->fieldName}->get($delta)->setValue($item);
+      $translation->{$this->fieldName}[] = $item;
 
       // Again store the generated values keying them by fid for easier lookup.
       $values[$langcode][$fid] = $item;

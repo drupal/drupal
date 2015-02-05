@@ -333,10 +333,10 @@ function entity_test_entity_test_insert($entity) {
 function entity_test_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
   if ($field_definition->getName() == 'field_test_text') {
     if ($items) {
-      if ($items[0]->value == 'no access value') {
+      if ($items->value == 'no access value') {
         return AccessResult::forbidden()->cacheUntilEntityChanges($items->getEntity());
       }
-      elseif ($operation == 'delete' && $items[0]->value == 'no delete access value') {
+      elseif ($operation == 'delete' && $items->value == 'no delete access value') {
         return AccessResult::forbidden()->cacheUntilEntityChanges($items->getEntity());
       }
     }
@@ -351,7 +351,7 @@ function entity_test_entity_field_access($operation, FieldDefinitionInterface $f
  * @see \Drupal\system\Tests\Entity\FieldAccessTest::testFieldAccess()
  */
 function entity_test_entity_field_access_alter(array &$grants, array $context) {
-  if ($context['field_definition']->getName() == 'field_test_text' && $context['items'][0]->value == 'access alter value') {
+  if ($context['field_definition']->getName() == 'field_test_text' && $context['items']->value == 'access alter value') {
     $grants[':default'] = AccessResult::forbidden()->inheritCacheability($grants[':default'])->cacheUntilEntityChanges($context['items']->getEntity());
   }
 }

@@ -592,10 +592,12 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    * {@inheritdoc}
    */
   public function getOptionsProvider($property_name, FieldableEntityInterface $entity) {
-    // If the field item class implements the interface, proxy it through.
-    $item = $entity->get($this->getName())->first();
-    if ($item instanceof OptionsProviderInterface) {
-      return $item;
+    // If the field item class implements the interface, create an orphaned
+    // runtime item object, so that it can be used as the options provider
+    // without modifying the entity being worked on.
+    if (is_subclass_of($this->getFieldItemClass(), '\Drupal\Core\TypedData\OptionsProviderInterface')) {
+      $items = $entity->get($this->getName());
+      return \Drupal::typedDataManager()->getPropertyInstance($items, 0);
     }
     // @todo: Allow setting custom options provider, see
     // https://www.drupal.org/node/2002138.

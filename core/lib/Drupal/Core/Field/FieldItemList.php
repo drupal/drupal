@@ -43,18 +43,6 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
   /**
    * {@inheritdoc}
    */
-  public function __construct(DataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
-    parent::__construct($definition, $name, $parent);
-    // Always initialize one empty item as most times a value for at least one
-    // item will be present. That way prototypes created by
-    // \Drupal\Core\TypedData\TypedDataManager::getPropertyInstance() will
-    // already have this field item ready for use after cloning.
-    $this->list[0] = $this->createItem(0);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getEntity() {
     // The "parent" is the TypedData object for the entity, we need to unwrap
     // the actual entity.
@@ -133,28 +121,39 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    * {@inheritdoc}
    */
   public function __get($property_name) {
-    return $this->first()->__get($property_name);
+    // For empty fields, $entity->field->property is NULL.
+    if ($item = $this->first()) {
+      return $item->__get($property_name);
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function __set($property_name, $value) {
-    $this->first()->__set($property_name, $value);
+    // For empty fields, $entity->field->property = $value automatically
+    // creates the item before assigning the value.
+    $item = $this->first() ?: $this->appendItem();
+    $item->__set($property_name, $value);
   }
 
   /**
    * {@inheritdoc}
    */
   public function __isset($property_name) {
-    return $this->first()->__isset($property_name);
+    if ($item = $this->first()) {
+      return $item->__isset($property_name);
+    }
+    return FALSE;
   }
 
   /**
    * {@inheritdoc}
    */
   public function __unset($property_name) {
-    return $this->first()->__unset($property_name);
+    if ($item = $this->first()) {
+      $item->__unset($property_name);
+    }
   }
 
   /**
@@ -177,16 +176,17 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    * {@inheritdoc}
    */
   public function applyDefaultValue($notify = TRUE) {
-    $value = $this->getFieldDefinition()->getDefaultValue($this->getEntity());
-
-    // NULL or array() mean "no default value", but  0, '0' and the empty string
-    // are valid default values.
-    if (!isset($value) || (is_array($value) && empty($value))) {
-      // Create one field item and apply defaults.
-      $this->first()->applyDefaultValue(FALSE);
+    if ($value = $this->getFieldDefinition()->getDefaultValue($this->getEntity())) {
+      $this->setValue($value, $notify);
     }
     else {
-      $this->setValue($value, $notify);
+      // Create one field item and give it a chance to apply its defaults.
+      // Remove it if this ended up doing nothing.
+      // @todo Having to create an item in case it wants to set a value is
+      // absurd. Remove that in https://www.drupal.org/node/2356623.
+      $item = $this->first() ?: $this->appendItem();
+      $item->applyDefaultValue(FALSE);
+      $this->filterEmptyItems();
     }
     return $this;
   }
