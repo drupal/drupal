@@ -8,7 +8,7 @@ backbone:
     url: https://github.com/jashkenas/backbone/blob/1.1.2/LICENSE
     gpl-compatible: true
   js:
-    assets/vendor/backbone/backbone-min.js: { minified: true }
+    assets/vendor/backbone/backbone-min.js: { weight: -19, minified: true }
   dependencies:
     - core/underscore
 
@@ -20,7 +20,7 @@ classList:
     url: https://github.com/eligrey/classList.js/blob/2014-12-13/LICENSE.md
     gpl-compatible: true
   js:
-    assets/vendor/classList/classList.min.js: { browsers: { IE: 'lte IE 9', '!IE': false }, minified: true }
+    assets/vendor/classList/classList.min.js: { weight: -21, browsers: { IE: 'lte IE 9', '!IE': false }, minified: true }
 
 ckeditor:
   remote: https://github.com/ckeditor/ckeditor-dev
@@ -40,12 +40,12 @@ domready:
     url: https://github.com/ded/domready/blob/v1.0.7/LICENSE
     gpl-compatible: true
   js:
-    assets/vendor/domready/ready.min.js: { minified: true }
+    assets/vendor/domready/ready.min.js: { weight: -21, minified: true }
 
 drupal:
   version: VERSION
   js:
-    misc/drupal.js: {}
+    misc/drupal.js: { weight: -18 }
   dependencies:
     - core/domready
     - core/drupalSettings
@@ -102,7 +102,7 @@ drupal.announce:
 drupal.autocomplete:
   version: VERSION
   js:
-    misc/autocomplete.js: {}
+    misc/autocomplete.js: { weight: -1 }
   dependencies:
     - core/jquery
     - core/drupal
@@ -246,7 +246,7 @@ drupal.tabbingmanager:
 drupal.tabledrag:
   version: VERSION
   js:
-    misc/tabledrag.js: {}
+    misc/tabledrag.js: { weight: -1 }
   dependencies:
     - core/jquery
     - core/modernizr
@@ -297,7 +297,7 @@ drupal.vertical-tabs:
   version: VERSION
   js:
     # Load before core/drupal.collapse.
-    misc/vertical-tabs.js: {}
+    misc/vertical-tabs.js: { weight: -1 }
   css:
     component:
       misc/vertical-tabs.css: {}
@@ -318,7 +318,7 @@ html5shiv:
     url: http://www.gnu.org/licenses/gpl-2.0.html
     gpl-compatible: true
   js:
-    assets/vendor/html5shiv/html5shiv.min.js: { every_page: true, browsers: { IE: 'lte IE 8', '!IE': false }, minified: true }
+    assets/vendor/html5shiv/html5shiv.min.js: { every_page: true, weight: -22, browsers: { IE: 'lte IE 8', '!IE': false }, minified: true }
 
 jquery:
   remote: https://github.com/jquery/jquery
@@ -328,7 +328,7 @@ jquery:
     url: https://github.com/jquery/jquery/blob/2.1.3/MIT-LICENSE.txt
     gpl-compatible: true
   js:
-    assets/vendor/jquery/jquery.min.js: { minified: true }
+    assets/vendor/jquery/jquery.min.js: { minified: true, weight: -20 }
 
 jquery.cookie:
   remote: https://github.com/carhartl/jquery-cookie
@@ -398,7 +398,7 @@ jquery.once:
     url: https://github.com/RobLoach/jquery-once/blob/1.2.3/LICENSE
     gpl-compatible: true
   js:
-    assets/vendor/jquery-once/jquery.once.js: {}
+    assets/vendor/jquery-once/jquery.once.js: { weight: -19 }
   dependencies:
     - core/jquery
 
@@ -410,7 +410,7 @@ jquery.ui:
     url: https://github.com/jquery/jquery-ui/blob/1.11.2/MIT-LICENSE.txt
     gpl-compatible: true
   js:
-    assets/vendor/jquery.ui/ui/core-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/core-min.js: { weight: -11, minified: true }
   css:
     component:
       assets/vendor/jquery.ui/themes/base/core.css: {}
@@ -510,7 +510,7 @@ jquery.ui.effects.core:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/effect-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/effect-min.js: { weight: -9, minified: true }
 
 jquery.ui.effects.blind:
   version: *jquery_ui_version
@@ -787,7 +787,7 @@ jquery.ui.widget:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/widget-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/widget-min.js: { weight: -10, minified: true }
   dependencies:
     - core/jquery.ui
 
@@ -819,7 +819,7 @@ modernizr:
     gpl-compatible: true
   version: v2.8.3
   js:
-    assets/vendor/modernizr/modernizr.min.js: { every_page: true, preprocess: 0 }
+    assets/vendor/modernizr/modernizr.min.js: { every_page: true, preprocess: 0, weight: -21, minified: true }
 
 normalize:
   remote: https://github.com/necolas/normalize.css
@@ -830,7 +830,7 @@ normalize:
     gpl-compatible: true
   css:
     base:
-      assets/vendor/normalize-css/normalize.css: { every_page: true }
+      assets/vendor/normalize-css/normalize.css: { every_page: true, weight: -20 }
 
 picturefill:
   remote: https://github.com/scottjehl/picturefill
@@ -842,7 +842,7 @@ picturefill:
     url: https://github.com/scottjehl/picturefill/blob/master/LICENSE
     gpl-compatible: true
   js:
-    assets/vendor/picturefill/picturefill.js: {}
+    assets/vendor/picturefill/picturefill.js: { weight: -10 }
   dependencies:
     - core/matchmedia
 
@@ -854,4 +854,4 @@ underscore:
     url: https://github.com/jashkenas/underscore/blob/1.7.0/LICENSE
     gpl-compatible: true
   js:
-    assets/vendor/underscore/underscore-min.js: { minified: true }
+    assets/vendor/underscore/underscore-min.js: { weight: -20, minified: true }
