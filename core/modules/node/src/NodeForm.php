@@ -91,6 +91,11 @@ class NodeForm extends ContentEntityForm {
       $this->entity = $preview->getFormObject()->getEntity();
       unset($this->entity->in_preview);
 
+      // Remove the stale temp store entry for existing nodes.
+      if (!$this->entity->isNew()) {
+        $store->delete($uuid);
+      }
+
       $this->hasBeenPreviewed = TRUE;
     }
 

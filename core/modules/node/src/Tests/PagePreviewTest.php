@@ -195,6 +195,21 @@ class PagePreviewTest extends NodeTestBase {
     $this->assertLink($newterm2);
     $this->assertNoLink($newterm3);
 
+    // Check that editing an existing node after it has been previewed and not
+    // saved doesn't remember the previous changes.
+    $edit = array(
+      $title_key => $this->randomMachineName(8),
+    );
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Preview'));
+    $this->assertText($edit[$title_key], 'New title displayed.');
+    $this->clickLink(t('Back to content editing'));
+    $this->assertFieldByName($title_key, $edit[$title_key], 'New title value displayed.');
+    // Navigate away from the node without saving.
+    $this->drupalGet('<front>');
+    // Go back to the edit form, the title should have its initial value.
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->assertFieldByName($title_key, $node->label(), 'Correct title value displayed.');
+
     // Check with required preview.
     $node_type = NodeType::load('page');
     $node_type->setPreviewMode(DRUPAL_REQUIRED);
