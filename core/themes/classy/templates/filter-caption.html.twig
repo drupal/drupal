@@ -12,7 +12,7 @@
  * - string classes: The classes of the captioned HTML tag.
  */
 #}
-<figure{%- if classes %} class="{{ classes }}"{%- endif %}>
+<figure class="caption caption-{{ tag }}{%- if classes %} {{ classes }}{%- endif %}">
 {{ node }}
 <figcaption>{{ caption }}</figcaption>
 </figure>

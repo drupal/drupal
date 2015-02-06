@@ -24,19 +24,30 @@
 
 {% if tips|length %}
   {% if multiple %}
-    <div>
+    <div class="compose-tips">
   {% endif %}
 
   {% for name, tip in tips %}
     {% if multiple %}
-      <div{{ attributes }}>
+      {%
+        set tip_classes = [
+          'filter-type',
+          'filter-' ~ name|clean_class,
+        ]
+      %}
+      <div{{ tip.attributes.addClass(tip_classes) }}>
       <h3>{{ tip.name }}</h3>
     {% endif %}
 
     {% if tip.list|length %}
-      <ul>
+      <ul class="tips">
       {% for item in tip.list %}
-        <li{{ tip.attributes }}>{{ item.tip }}</li>
+        {%
+          set item_classes = [
+            long ? 'filter-' ~ item.id|replace({'/': '-'}),
+          ]
+        %}
+        <li{{ item.attributes.addClass(item_classes) }}>{{ item.tip }}</li>
       {% endfor %}
       </ul>
     {% endif %}
