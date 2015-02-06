@@ -221,8 +221,7 @@ class ImageDimensionsTest extends WebTestBase {
     $effect_plugin = $style->getEffect($effect_id);
     $style->deleteImageEffect($effect_plugin);
 
-    // Ensure that an effect with no dimensions callback unsets the dimensions.
-    // This ensures compatibility with 7.0 contrib modules.
+    // Ensure that an effect can unset dimensions.
     $effect = array(
       'id' => 'image_module_test_null',
       'data' => array(),
