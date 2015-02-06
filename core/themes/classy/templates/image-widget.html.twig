@@ -14,11 +14,11 @@
 #}
 <div{{ attributes }}>
   {% if data.preview %}
-    <div>
+    <div class="image-preview">
       {{ data.preview }}
     </div>
   {% endif %}
-  <div>
+  <div class="image-widget-data">
     {# Render widget data without the image preview that was output already. #}
     {{ data|without('preview') }}
   </div>
