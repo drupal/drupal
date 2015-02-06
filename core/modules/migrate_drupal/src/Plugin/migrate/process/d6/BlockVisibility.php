@@ -58,9 +58,12 @@ class BlockVisibility extends ProcessPluginBase implements ContainerFactoryPlugi
   public function transform($value, MigrateExecutable $migrate_executable, Row $row, $destination_property) {
     list($pages, $roles, $old_visibility) = $value;
     $visibility = array();
-    $visibility['request_path']['pages'] = $pages;
-    $visibility['request_path']['id'] = 'request_path';
-    $visibility['request_path']['negate'] = !$old_visibility;
+
+    if (!empty($pages)) {
+      $visibility['request_path']['pages'] = $pages;
+      $visibility['request_path']['id'] = 'request_path';
+      $visibility['request_path']['negate'] = !$old_visibility;
+    }
 
     if (!empty($roles)) {
       foreach ($roles as $key => $role_id) {

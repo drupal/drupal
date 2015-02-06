@@ -66,7 +66,7 @@ class MigrateMenuLinkTest extends MigrateDrupalTestBase {
     $this->assertIdentical($menu_link->getDescription(), 'Test menu link 2');
     $this->assertIdentical($menu_link->isEnabled(), TRUE);
     $this->assertIdentical($menu_link->isExpanded(), TRUE);
-    $this->assertIdentical($menu_link->link->options, ['query' => ['foo' => 'bar'], 'attributes' => ['title' => ['Test menu link 2']]]);
+    $this->assertIdentical($menu_link->link->options, ['query' => 'foo=bar', 'attributes' => ['title' => 'Test menu link 2']]);
     $this->assertIdentical($menu_link->link->uri, 'user-path:admin');
     $this->assertIdentical($menu_link->getWeight(), 12);
 

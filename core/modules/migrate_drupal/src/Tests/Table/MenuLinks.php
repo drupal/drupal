@@ -376,7 +376,7 @@ class MenuLinks extends Drupal6DumpBase {
       'link_path' => 'admin',
       'router_path' => 'admin',
       'link_title' => 'Test 2',
-      'options' => 'a:2:{s:5:"query";a:1:{s:3:"foo";s:3:"bar";}s:10:"attributes";a:1:{s:5:"title";a:1:{i:0;s:16:"Test menu link 2";}}}',
+      'options' => 'a:2:{s:5:"query";s:7:"foo=bar";s:10:"attributes";a:1:{s:5:"title";s:16:"Test menu link 2";}}',
       'module' => 'menu',
       'hidden' => '0',
       'external' => '0',

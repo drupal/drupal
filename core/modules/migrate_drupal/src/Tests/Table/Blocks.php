@@ -157,7 +157,7 @@ class Blocks extends Drupal6DumpBase {
       'custom' => '0',
       'throttle' => '0',
       'visibility' => '0',
-      'pages' => '',
+      'pages' => 'node/1',
       'title' => '',
       'cache' => '-1',
     ))->values(array(
