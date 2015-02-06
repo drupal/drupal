@@ -192,7 +192,7 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
 
       // Otherwise, we only limit values if the user hasn't selected "all", 0, or
       // the value matching field cardinality.
-      if ((intval($this->options['delta_limit']) && ($this->options['delta_limit'] != $cardinality)) || intval($this->options['delta_offset'])) {
+      if ((($this->options['delta_limit'] > 0) && ($this->options['delta_limit'] != $cardinality)) || intval($this->options['delta_offset'])) {
         $this->limit_values = TRUE;
       }
     }
@@ -394,7 +394,7 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
     // If we know the exact number of allowed values, then that can be
     // the default. Otherwise, default to 'all'.
     $options['delta_limit'] = array(
-      'default' => ($field_storage_definition->getCardinality() > 1) ? $field_storage_definition->getCardinality() : 'all',
+      'default' => ($field_storage_definition->getCardinality() > 1) ? $field_storage_definition->getCardinality() : 0,
     );
     $options['delta_offset'] = array(
       'default' => 0,
@@ -830,7 +830,7 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
 
         // We should only get here in this case if there's an offset, and
         // in that case we're limiting to all values after the offset.
-        if ($delta_limit == 'all') {
+        if ($delta_limit === 0) {
           $delta_limit = count($all_values) - $offset;
         }
       }

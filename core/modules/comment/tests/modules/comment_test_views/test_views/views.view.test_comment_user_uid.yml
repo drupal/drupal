@@ -49,7 +49,7 @@ display:
         type: full
       query:
         options:
-          query_comment: false
+          query_comment: ''
         type: views_query
       style:
         type: default

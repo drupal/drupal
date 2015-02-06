@@ -42,10 +42,10 @@ views.field.field:
       type: boolean
       label: 'Display all values in the same row'
     delta_limit:
-      type: string
+      type: integer
       label: 'Field'
     delta_offset:
-      type: string
+      type: integer
       label: 'Offset'
     delta_reversed:
       type: boolean

@@ -18,7 +18,7 @@ views.field.boolean:
       type: string
       label: 'Custom output for FALSE'
     not:
-      type: string
+      type: boolean
       label: 'Reverse'
 
 views.field.broken:

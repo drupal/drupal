@@ -134,7 +134,7 @@ class FieldTest extends UnitTestCase {
     $handler->init($this->executable, $this->display, $options);
 
     $this->assertEquals('value', $handler->options['group_column']);
-    $this->assertEquals('all', $handler->options['delta_limit']);
+    $this->assertEquals(0, $handler->options['delta_limit']);
   }
 
   /**

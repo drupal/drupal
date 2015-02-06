@@ -61,7 +61,7 @@ display:
             suffix: ''
             target: ''
             nl2br: false
-            max_length: ''
+            max_length: 0
             word_boundary: true
             ellipsis: true
             more_link: false
@@ -86,7 +86,7 @@ display:
           type: yes-no
           type_custom_true: ''
           type_custom_false: ''
-          not: ''
+          not: false
           plugin_id: boolean
         comment_count:
           id: comment_count
@@ -114,7 +114,7 @@ display:
             suffix: ''
             target: ''
             nl2br: false
-            max_length: ''
+            max_length: 0
             word_boundary: true
             ellipsis: true
             more_link: false

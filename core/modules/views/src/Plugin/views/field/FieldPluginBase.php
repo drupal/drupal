@@ -446,7 +446,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
         'suffix' => array('default' => ''),
         'target' => array('default' => ''),
         'nl2br' => array('default' => FALSE),
-        'max_length' => array('default' => ''),
+        'max_length' => array('default' => 0),
         'word_boundary' => array('default' => TRUE),
         'ellipsis' => array('default' => TRUE),
         'more_link' => array('default' => FALSE),

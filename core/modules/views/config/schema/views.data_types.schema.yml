@@ -131,7 +131,7 @@ views_display:
           type: boolean
           label: 'CSS class'
         display_description:
-          type: label
+          type: boolean
           label: 'Administrative description'
         use_ajax:
           type: boolean
@@ -513,7 +513,7 @@ views_field:
           type: boolean
           label: 'Convert newlines to HTML <br> tags'
         max_length:
-          type: string
+          type: integer
           label: 'Maximum number of characters'
         word_boundary:
           type: boolean
@@ -803,25 +803,6 @@ views_relationship:
 views_query:
   type: mapping
   label: 'Query options'
-  mapping:
-    query_comment:
-      type: boolean
-      label: 'Query comment'
-    disable_sql_rewrite:
-      type: boolean
-      label: 'Disable SQL rewriting'
-    distinct:
-      type: boolean
-      label: 'Distinct'
-    replica:
-      type: boolean
-      label: 'Use Replica Server'
-    query_tags:
-      type: sequence
-      label: 'Query Tags'
-      sequence:
-        - type: string
-          label: 'Tag'
 
 views_row:
   type: mapping

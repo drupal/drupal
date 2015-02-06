@@ -97,9 +97,6 @@ views.display.feed:
       sequence:
         - type: string
           label: 'Display'
-    display_description:
-      type: text
-      label: 'Display description'
 
 views.display.embed:
   type: views_display
