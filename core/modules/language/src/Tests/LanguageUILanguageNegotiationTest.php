@@ -20,6 +20,7 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\language\LanguageNegotiatorInterface;
+use Drupal\block\Entity\Block;
 
 /**
  * Tests UI language switching.
@@ -501,5 +502,30 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     // Ensure configuration was saved.
     $this->assertFalse(array_key_exists('language-url', $config->get('negotiation.language_content.enabled')), 'URL negotiation is not enabled for content.');
     $this->assertTrue(array_key_exists('language-session', $config->get('negotiation.language_content.enabled')), 'Session negotiation is enabled for content.');
+  }
+
+  /**
+   * Tests if the language switcher block gets deleted when a language type has been made not configurable.
+   */
+  public function testDisableLanguageSwitcher() {
+    $block_id = 'test_language_block';
+
+    // Enable the language switcher block.
+    $this->drupalPlaceBlock('language_block:' . LanguageInterface::TYPE_CONTENT, array('id' => $block_id));
+
+    // Check if the language switcher block has been created.
+    $block = Block::load($block_id);
+    $this->assertTrue($block, 'Language switcher block was created.');
+
+    // Make sure language_content is not configurable.
+    $edit = array(
+      'language_content[configurable]' => FALSE,
+    );
+    $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
+    $this->assertResponse(200);
+
+    // Check if the language switcher block has been removed.
+    $block = Block::load($block_id);
+    $this->assertFalse($block, 'Language switcher block was removed.');
   }
 }

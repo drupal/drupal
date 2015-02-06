@@ -334,7 +334,7 @@ class NegotiationConfigureForm extends ConfigFormBase {
     $blocks = $this->blockStorage->loadByProperties(array('theme' => $theme));
     foreach ($language_types as $language_type) {
       foreach ($blocks as $block) {
-        if (strpos($block->id, 'language_switcher_' . substr($language_type, 9)) !== FALSE) {
+        if ($block->getPluginId() == 'language_block:' . $language_type) {
           $block->delete();
         }
       }
