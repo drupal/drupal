@@ -50,6 +50,11 @@ class ShortcutLinksTest extends ShortcutTestBase {
       'router_test/test3/value',
     ];
 
+    $test_cases_non_access = [
+      'admin',
+      'admin/config/system/site-information',
+    ];
+
     // Check that each new shortcut links where it should.
     foreach ($test_cases as $test_path) {
       $title = $this->randomMachineName();
@@ -62,7 +67,13 @@ class ShortcutLinksTest extends ShortcutTestBase {
       $saved_set = ShortcutSet::load($set->id());
       $paths = $this->getShortcutInformation($saved_set, 'link');
       $this->assertTrue(in_array('user-path:' . $test_path, $paths), 'Shortcut created: ' . $test_path);
-      $this->assertLink($title, 0, String::format('Shortcut link %url found on the page.', ['%url' => $test_path]));
+
+      if (in_array($test_path, $test_cases_non_access)) {
+        $this->assertNoLink($title, String::format('Shortcut link %url not accessible on the page.', ['%url' => $test_path]));
+      }
+      else {
+        $this->assertLink($title, 0, String::format('Shortcut link %url found on the page.', ['%url' => $test_path]));
+      }
     }
     $saved_set = ShortcutSet::load($set->id());
     // Test that saving and re-loading a shortcut preserves its values.
@@ -249,11 +260,19 @@ class ShortcutLinksTest extends ShortcutTestBase {
     // Verify that users without the 'access shortcuts' permission can't see the
     // shortcuts.
     $this->drupalLogin($this->drupalCreateUser(array('access toolbar')));
-    $this->assertNoLink('Shortcuts', 0, 'Shortcut link not found on page.');
+    $this->assertNoLink('Shortcuts', 'Shortcut link not found on page.');
+
+    // Verify that users without the 'administer site configuration' permission
+    // can't see the cron shortcuts.
+    $this->drupalLogin($this->drupalCreateUser(array('access toolbar', 'access shortcuts')));
+    $this->assertNoLink('Shortcuts', 'Shortcut link not found on page.');
+    $this->assertNoLink('Cron', 'Cron shortcut link not found on page.');
 
     // Verify that users with the 'access shortcuts' permission can see the
     // shortcuts.
-    $this->drupalLogin($this->drupalCreateUser(array('access toolbar', 'access shortcuts')));
+    $this->drupalLogin($this->drupalCreateUser(array(
+      'access toolbar', 'access shortcuts', 'administer site configuration',
+    )));
     $this->clickLink('Shortcuts', 0, 'Shortcut link found on page.');
     $this->assertLink('Cron', 0, 'Cron shortcut link found on page.');
 
@@ -264,7 +283,8 @@ class ShortcutLinksTest extends ShortcutTestBase {
    * Tests the shortcuts are correctly ordered by weight in the toolbar.
    */
   public function testShortcutLinkOrder() {
-    $this->drupalLogin($this->drupalCreateUser(array('access toolbar', 'access shortcuts')));
+    // Ensure to give permissions to access the shortcuts.
+    $this->drupalLogin($this->drupalCreateUser(array('access toolbar', 'access shortcuts', 'access content overview', 'administer content types')));
     $this->drupalGet(Url::fromRoute('<front>'));
     $shortcuts = $this->cssSelect('#toolbar-item-shortcuts-tray .menu a');
     $this->assertEqual((string) $shortcuts[0], 'Add content');
