@@ -3,14 +3,14 @@ drupal.contextual-links:
   js:
     # Ensure to run before contextual/drupal.context-toolbar.
     # Core.
-    js/contextual.js: { weight: -2 }
+    js/contextual.js: {}
     # Models.
-    js/models/StateModel.js: { weight: -2 }
+    js/models/StateModel.js: {}
     # Views.
-    js/views/AuralView.js: { weight: -2 }
-    js/views/KeyboardView.js: { weight: -2 }
-    js/views/RegionView.js: { weight: -2 }
-    js/views/VisualView.js: { weight: -2 }
+    js/views/AuralView.js: {}
+    js/views/KeyboardView.js: {}
+    js/views/RegionView.js: {}
+    js/views/VisualView.js: {}
   css:
     component:
       css/contextual.module.css: {}

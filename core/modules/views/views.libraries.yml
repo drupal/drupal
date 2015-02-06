@@ -21,7 +21,7 @@ views.contextual-links:
   version: VERSION
   js:
     # Ensure to run before contextual/drupal.contextual-links.
-    js/views-contextual.js: { weight: -10 }
+    js/views-contextual.js: {}
   dependencies:
     - core/jquery
     - core/drupal

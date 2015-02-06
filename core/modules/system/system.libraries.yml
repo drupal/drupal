@@ -3,9 +3,9 @@ base:
   css:
     # Adjust the weights to load these early.
     component:
-      css/system.module.css: { every_page: true, weight: -10, }
+      css/system.module.css: { every_page: true }
     theme:
-      css/system.theme.css: { every_page: true, weight: -10 }
+      css/system.theme.css: { every_page: true }
   dependencies:
     - core/normalize
 
@@ -13,7 +13,7 @@ admin:
   version: VERSION
   css:
     theme:
-      css/system.admin.css: { weight: -10 }
+      css/system.admin.css: {}
   dependencies:
     - system/base
 
@@ -21,7 +21,7 @@ maintenance:
   version: VERSION
   css:
     theme:
-      css/system.maintenance.css: { weight: -10 }
+      css/system.maintenance.css: {}
   dependencies:
     - system/base
     - system/admin
