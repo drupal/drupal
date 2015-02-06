@@ -41,6 +41,20 @@ if ($args['execute-test']) {
   exit;
 }
 
+if ($args['list']) {
+  // Display all available tests.
+  echo "\nAvailable test groups & classes\n";
+  echo   "-------------------------------\n\n";
+  $groups = simpletest_test_get_all($args['module']);
+  foreach ($groups as $group => $tests) {
+    echo $group . "\n";
+    foreach ($tests as $class => $info) {
+      echo " - $class\n";
+    }
+  }
+  exit;
+}
+
 simpletest_script_setup_database(TRUE);
 
 if ($args['clean']) {
@@ -52,20 +66,6 @@ if ($args['clean']) {
   $messages = drupal_get_messages('status');
   foreach ($messages['status'] as $text) {
     echo " - " . $text . "\n";
-  }
-  exit;
-}
-
-if ($args['list']) {
-  // Display all available tests.
-  echo "\nAvailable test groups & classes\n";
-  echo   "-------------------------------\n\n";
-  $groups = simpletest_test_get_all($args['module']);
-  foreach ($groups as $group => $tests) {
-    echo $group . "\n";
-    foreach ($tests as $class => $info) {
-      echo " - $class\n";
-    }
   }
   exit;
 }
