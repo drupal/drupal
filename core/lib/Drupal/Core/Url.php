@@ -319,6 +319,33 @@ class Url {
   /**
    * Creates a new Url object for 'user-path:' URIs.
    *
+   * Important note: the URI minus the scheme can NOT simply be validated by a
+   * \Drupal\Core\Path\PathValidatorInterface implementation. The semantics of
+   * the 'user-path:' URI scheme are different:
+   * - PathValidatorInterface accepts paths without a leading slash (e.g.
+   *   'node/add') as well as 2 special paths: '<front>' and '<none>', which are
+   *   mapped to the correspondingly named routes.
+   * - 'user-path:' URIs store paths with a leading slash that represents the
+   *   root — i.e. the front page — (e.g. 'user-path:/node/add'), and doesn't
+   *   have any exceptions.
+   *
+   * To clarify, a few examples of path plus corresponding 'user-path:' URI:
+   * - 'node/add' -> 'user-path:/node/add'
+   * - 'node/add?foo=bar' -> 'user-path:/node/add?foo=bar'
+   * - 'node/add#kitten' -> 'user-path:/node/add#kitten'
+   * - '<front>' -> 'user-path:/'
+   * - '<front>foo=bar' -> 'user-path:/?foo=bar'
+   * - '<front>#kitten' -> 'user-path:/#kitten'
+   * - '<none>' -> 'user-path:'
+   * - '<none>foo=bar' -> 'user-path:?foo=bar'
+   * - '<none>#kitten' -> 'user-path:#kitten'
+   *
+   * Therefore, when using a PathValidatorInterface to validate 'user-path:'
+   * URIs, we must map:
+   * - 'user-path:' (path component is '')  to the special '<none>' path
+   * - 'user-path:/' (path component is '/') to the special '<front>' path
+   * - 'user-path:/some-path' (path component is '/some-path') to 'some-path'
+   *
    * @param array $uri_parts
    *   Parts from an URI of the form user-path:{path} as from parse_url().
    * @param array $options
@@ -328,6 +355,21 @@ class Url {
    *   A new Url object for a 'user-path:' URI.
    */
   protected static function fromUserPathUri(array $uri_parts, array $options) {
+    // Both PathValidator::getUrlIfValidWithoutAccessCheck() and 'base:' URIs
+    // only accept/contain paths without a leading slash, unlike 'user-path:'
+    // URIs, for which the leading slash means "relative to Drupal root" and
+    // "relative to Symfony app root" (just like in Symfony/Drupal 8 routes).
+    if (empty($uri_parts['path'])) {
+      $uri_parts['path'] = '<none>';
+    }
+    elseif ($uri_parts['path'] === '/') {
+      $uri_parts['path'] = '<front>';
+    }
+    else {
+      // Remove the leading slash.
+      $uri_parts['path'] = substr($uri_parts['path'], 1);
+    }
+
     $url = \Drupal::pathValidator()
       ->getUrlIfValidWithoutAccessCheck($uri_parts['path']) ?: static::fromUri('base:' . $uri_parts['path'], $options);
     // Allow specifying additional options.

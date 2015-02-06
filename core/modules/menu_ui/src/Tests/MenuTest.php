@@ -105,8 +105,8 @@ class MenuTest extends MenuWebTestBase {
     $this->verifyAccess(403);
 
     foreach ($this->items as $item) {
-      // Paths were set as 'node/$nid'.
-      $node = Node::load(str_replace('user-path:node/', '', $item->link->uri));
+      // Menu link URIs are stored as 'user-path:/node/$nid'.
+      $node = Node::load(str_replace('user-path:/node/', '', $item->link->uri));
       $this->verifyMenuLink($item, $node);
     }
 
@@ -640,7 +640,7 @@ class MenuTest extends MenuWebTestBase {
    * Attempts to add menu link with invalid path or no access permission.
    */
   function addInvalidMenuLink() {
-    foreach (array('-&-', 'admin/people/permissions', '#') as $link_path) {
+    foreach (array('-&-', 'admin/people/permissions') as $link_path) {
       $edit = array(
         'link[0][uri]' => $link_path,
         'title[0][value]' => 'title',

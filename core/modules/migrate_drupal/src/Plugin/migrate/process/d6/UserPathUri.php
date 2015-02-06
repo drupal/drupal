@@ -27,7 +27,7 @@ class UserPathUri extends ProcessPluginBase {
     list($path) = $value;
 
     if (parse_url($path, PHP_URL_SCHEME) === NULL) {
-      return 'user-path:' . $path;
+      return 'user-path:/' . $path;
     }
     return $path;
   }

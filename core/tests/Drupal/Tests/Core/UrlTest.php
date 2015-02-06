@@ -180,7 +180,7 @@ class UrlTest extends UnitTestCase {
       ->method('getUrlIfValidWithoutAccessCheck')
       ->with('invalid-path')
       ->willReturn(FALSE);
-    $url = Url::fromUri('user-path:invalid-path');
+    $url = Url::fromUri('user-path:/invalid-path');
     $this->assertSame(FALSE, $url->isRouted());
     $this->assertSame('base:invalid-path', $url->getUri());
   }
@@ -196,7 +196,7 @@ class UrlTest extends UnitTestCase {
       ->method('getUrlIfValidWithoutAccessCheck')
       ->with('valid-path')
       ->willReturn($url);
-    $result_url = Url::fromUri('user-path:valid-path');
+    $result_url = Url::fromUri('user-path:/valid-path');
     $this->assertSame($url, $result_url);
   }
 
@@ -602,8 +602,11 @@ class UrlTest extends UnitTestCase {
     $url = Url::fromRoute('entity.test_entity.canonical', ['test_entity' => '1']);
     $this->pathValidator->expects($this->any())
       ->method('getUrlIfValidWithoutAccessCheck')
-      ->with('test-entity/1')
-      ->willReturn($url);
+      ->willReturnMap([
+        ['test-entity/1', $url],
+        ['<front>', Url::fromRoute('<front>')],
+        ['<none>', Url::fromRoute('<none>')],
+      ]);
     $url = Url::fromUri($uri, $options);
     $this->assertSame($url->toUriString(), $uri_string);
   }
@@ -613,10 +616,23 @@ class UrlTest extends UnitTestCase {
    */
   public function providerTestToUriStringForUserPath() {
     return [
-      ['user-path:test-entity/1', [], 'route:entity.test_entity.canonical;test_entity=1'],
-      ['user-path:test-entity/1', ['fragment' => 'top'], 'route:entity.test_entity.canonical;test_entity=1#top'],
-      ['user-path:test-entity/1', ['fragment' => 'top', 'query' => ['page' => '2']], 'route:entity.test_entity.canonical;test_entity=1?page=2#top'],
-      ['user-path:test-entity/1?page=2#top', [], 'route:entity.test_entity.canonical;test_entity=1?page=2#top'],
+      // The four permutations of a regular path.
+      ['user-path:/test-entity/1', [], 'route:entity.test_entity.canonical;test_entity=1'],
+      ['user-path:/test-entity/1', ['fragment' => 'top'], 'route:entity.test_entity.canonical;test_entity=1#top'],
+      ['user-path:/test-entity/1', ['fragment' => 'top', 'query' => ['page' => '2']], 'route:entity.test_entity.canonical;test_entity=1?page=2#top'],
+      ['user-path:/test-entity/1?page=2#top', [], 'route:entity.test_entity.canonical;test_entity=1?page=2#top'],
+
+      // The four permutations of the special '<front>' path.
+      ['user-path:/', [], 'route:<front>'],
+      ['user-path:/', ['fragment' => 'top'], 'route:<front>#top'],
+      ['user-path:/', ['fragment' => 'top', 'query' => ['page' => '2']], 'route:<front>?page=2#top'],
+      ['user-path:/?page=2#top', [], 'route:<front>?page=2#top'],
+
+      // The four permutations of the special '<none>' path.
+      ['user-path:', [], 'route:<none>'],
+      ['user-path:', ['fragment' => 'top'], 'route:<none>#top'],
+      ['user-path:', ['fragment' => 'top', 'query' => ['page' => '2']], 'route:<none>?page=2#top'],
+      ['user-path:?page=2#top', [], 'route:<none>?page=2#top'],
     ];
   }
 

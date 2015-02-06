@@ -46,7 +46,7 @@ class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
       'shortcut_set' => 'default',
       'title' => t('Llama'),
       'weight' => 0,
-      'link' => [['uri' => 'user-path:admin']],
+      'link' => [['uri' => 'user-path:/admin']],
     ));
     $shortcut->save();
 

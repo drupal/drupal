@@ -46,7 +46,7 @@ class MenuLinkContentDeriverTest extends KernelTestBase {
     // Set up a custom menu link pointing to a specific path.
     MenuLinkContent::create([
       'title' => 'Example',
-      'link' => [['uri' => 'user-path:example-path']],
+      'link' => [['uri' => 'user-path:/example-path']],
       'menu_name' => 'tools',
     ])->save();
     $menu_tree = \Drupal::menuTree()->load('tools', new MenuTreeParameters());

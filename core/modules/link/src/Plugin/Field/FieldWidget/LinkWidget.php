@@ -53,6 +53,20 @@ class LinkWidget extends WidgetBase {
     $scheme = parse_url($uri, PHP_URL_SCHEME);
     if ($scheme === 'user-path') {
       $uri_reference = explode(':', $uri, 2)[1];
+      // @todo Present the leading slash to the user and hence delete the next
+      //   block in https://www.drupal.org/node/2418017. There, we will also
+      //   remove the ability to enter '<front>' or '<none>', we'll expect '/'
+      //   and '' instead respectively.
+      $path = parse_url($uri, PHP_URL_PATH);
+      if ($path === '/') {
+        $uri_reference = '<front>' . substr($uri_reference, 1);
+      }
+      elseif (empty($path)) {
+        $uri_reference = '<none>' . $uri_reference;
+      }
+      else {
+        $uri_reference = ltrim($uri_reference, '/');
+      }
     }
     else {
       $uri_reference = $uri;
@@ -76,6 +90,31 @@ class LinkWidget extends WidgetBase {
       // Users can enter relative URLs, but we need a valid URI, so add an
       // explicit scheme when necessary.
       if (parse_url($string, PHP_URL_SCHEME) === NULL) {
+        // @todo Present the leading slash to the user and hence delete the next
+        //   block in https://www.drupal.org/node/2418017. There, we will also
+        //   remove the ability to enter '<front>' or '<none>', we'll expect '/'
+        //   and '' instead respectively.
+        // Users can enter paths that don't start with a leading slash, we
+        // want to normalize them to have a leading slash. However, we don't
+        // want to add a leading slash if it already starts with one, or if it
+        // contains only a querystring or a fragment. Examples:
+        // - 'foo' -> '/foo'
+        // - '?foo=bar' -> '/?foo=bar'
+        // - '#foo' -> '/#foo'
+        // - '<front>' -> '/'
+        // - '<front>#foo' -> '/#foo'
+        // - '<none>' -> ''
+        // - '<none>#foo' -> '#foo'
+        if (strpos($string, '<front>') === 0) {
+          $string = '/' . substr($string, strlen('<front>'));
+        }
+        elseif (strpos($string, '<none>') === 0) {
+          $string = substr($string, strlen('<none>'));
+        }
+        elseif (!in_array($string[0], ['/', '?', '#'])) {
+          $string = '/' . $string;
+        }
+
         return 'user-path:' . $string;
       }
     }

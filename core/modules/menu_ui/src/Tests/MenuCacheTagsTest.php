@@ -83,7 +83,7 @@ class MenuCacheTagsTest extends PageCacheTagsTestBase {
       'title' => 'Alpaca',
       'menu_name' => 'llama',
       'link' => [[
-        'uri' => 'user-path:<front>',
+        'uri' => 'user-path:/',
       ]],
       'bundle' => 'menu_name',
     ));

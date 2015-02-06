@@ -61,7 +61,7 @@ class FieldUI {
         $options['query']['destinations'] = $destinations;
       }
       // Redirect to any given path within the same domain.
-      $next_destination = Url::fromUri('user-path:' . $options['path']);
+      $next_destination = Url::fromUri('user-path:/' . $options['path']);
     }
     return $next_destination;
   }

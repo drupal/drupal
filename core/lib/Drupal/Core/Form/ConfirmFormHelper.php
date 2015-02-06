@@ -34,7 +34,7 @@ class ConfirmFormHelper {
     // If a destination is specified, that serves as the cancel link.
     if ($query->has('destination')) {
       $options = UrlHelper::parse($query->get('destination'));
-      $url = Url::fromUri('user-path:' . $options['path'], $options);
+      $url = Url::fromUri('user-path:/' . $options['path'], $options);
     }
     // Check for a route-based cancel link.
     else {

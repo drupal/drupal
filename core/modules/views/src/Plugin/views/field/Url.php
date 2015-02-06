@@ -46,7 +46,7 @@ class Url extends FieldPluginBase {
   public function render(ResultRow $values) {
     $value = $this->getValue($values);
     if (!empty($this->options['display_as_link'])) {
-      return \Drupal::l($this->sanitizeValue($value), CoreUrl::fromUri('user-path:' . $value), array('html' => TRUE));
+      return \Drupal::l($this->sanitizeValue($value), CoreUrl::fromUri('user-path:/' . $value), array('html' => TRUE));
     }
     else {
       return $this->sanitizeValue($value, 'url');

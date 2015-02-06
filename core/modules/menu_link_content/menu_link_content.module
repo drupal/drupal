@@ -58,7 +58,7 @@ function _menu_link_content_update_path_alias($path) {
   /** @var \Drupal\menu_link_content\MenuLinkContentInterface[] $entities */
   $entities = \Drupal::entityManager()
     ->getStorage('menu_link_content')
-    ->loadByProperties(['link__uri' => 'user-path:' . $path]);
+    ->loadByProperties(['link__uri' => 'user-path:/' . $path]);
   foreach ($entities as $menu_link) {
     $menu_link_manager->updateDefinition($menu_link->getPluginId(), $menu_link->getPluginDefinition(), FALSE);
   }
