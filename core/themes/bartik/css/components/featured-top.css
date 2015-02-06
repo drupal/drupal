@@ -1,6 +1,6 @@
 /* ----------------- Featured ----------------- */
 
-#featured {
+#featured-top {
   text-align: center;
   font-size: 1.2em;
   font-weight: normal;
@@ -12,21 +12,11 @@
   border-bottom: 1px solid #e7e7e7;
   text-shadow: 1px 1px #fff;
 }
-@media all and (min-width: 520px) {
-  #featured {
-    font-size: 1.643em;
-  }
-}
-#featured h2 {
+#featured-top h2 {
   font-size: 1.2em;
   line-height: 1;
 }
-@media all and (min-width: 520px) {
-  #featured h2 {
-    font-size: 1.174em;
-  }
-}
-#featured p {
+#featured-top p {
   margin: 0;
   padding: 0;
 }

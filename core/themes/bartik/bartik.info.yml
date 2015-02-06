@@ -20,16 +20,17 @@ regions:
   help: Help
   page_top: 'Page top'
   page_bottom: 'Page bottom'
-  featured: Featured
+  featured_top: 'Featured top'
   breadcrumb: Breadcrumb
   content: Content
   sidebar_first: 'Sidebar first'
   sidebar_second: 'Sidebar second'
-  triptych_first: 'Triptych first'
-  triptych_middle: 'Triptych middle'
-  triptych_last: 'Triptych last'
+  featured_bottom_first: 'Featured bottom first'
+  featured_bottom_second: 'Featured bottom second'
+  featured_bottom_third: 'Featured bottom third'
   footer_first: 'Footer first'
   footer_second: 'Footer second'
   footer_third: 'Footer third'
   footer_fourth: 'Footer fourth'
   footer_fifth: 'Footer fifth'
+
