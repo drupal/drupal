@@ -32,7 +32,7 @@
  * @ingroup themeable
  */
 #}
-<table>
+<table id="forum-{{ forum_id }}">
   <thead>
     <tr>
       <th>{{ 'Forum'|t }}</th>
@@ -43,33 +43,37 @@
   </thead>
   <tbody>
   {% for child_id, forum in forums %}
-    <tr>
-      <td{% if forum.is_container == true %} colspan="4"{% endif %}>
+    <tr id="forum-list-{{ child_id }}" class="{{ forum.zebra }}">
+      <td {% if forum.is_container == true -%}
+        colspan="4" class="container"
+      {%- else -%}
+        class="forum"
+      {%- endif -%}>
         {#
           Enclose the contents of this cell with X divs, where X is the
           depth this forum resides at. This will allow us to use CSS
           left-margin for indenting.
         #}
         {% for i in 1..forum.depth if forum.depth > 0 %}<div class="indent">{% endfor %}
-          <div title="{{ forum.icon_title }}">
+          <div class="icon forum-status-{{ forum.icon_class }}" title="{{ forum.icon_title }}">
             <span class="visually-hidden">{{ forum.icon_title }}</span>
           </div>
-          <div><a href="{{ forum.link }}">{{ forum.label }}</a></div>
+          <div class="name"><a href="{{ forum.link }}">{{ forum.label }}</a></div>
           {% if forum.description.value %}
-            <div>{{ forum.description.value }}</div>
+            <div class="description">{{ forum.description.value }}</div>
           {% endif %}
         {% for i in 1..forum.depth if forum.depth > 0 %}</div>{% endfor %}
       </td>
       {% if forum.is_container == false %}
-        <td>
+        <td class="topics">
           {{ forum.num_topics }}
           {% if forum.new_topics == true %}
             <br />
             <a href="{{ forum.new_url }}">{{ forum.new_text }}</a>
           {% endif %}
         </td>
-        <td>{{ forum.num_posts }}</td>
-        <td>{{ forum.last_reply }}</td>
+        <td class="posts">{{ forum.num_posts }}</td>
+        <td class="last-reply">{{ forum.last_reply }}</td>
       {% endif %}
     </tr>
   {% endfor %}
