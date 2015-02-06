@@ -7,6 +7,7 @@
 
 namespace Drupal\language\Form;
 
+use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -62,7 +63,7 @@ class ContentLanguageSettingsForm extends FormBase {
     $bundles = $this->entityManager->getAllBundleInfo();
     $language_configuration = array();
     foreach ($entity_types as $entity_type_id => $entity_type) {
-      if (!$entity_type->isTranslatable()) {
+      if (!$entity_type instanceof ContentEntityTypeInterface || !$entity_type->hasKey('langcode')) {
         continue;
       }
       $labels[$entity_type_id] = $entity_type->getLabel() ?: $entity_type_id;

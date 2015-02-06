@@ -87,11 +87,15 @@ function _content_translation_form_language_content_settings_form_alter(array &$
     $entity_type = $entity_manager->getDefinition($entity_type_id);
     $storage_definitions = $entity_type instanceof ContentEntityTypeInterface ? $entity_manager->getFieldStorageDefinitions($entity_type_id) : array();
 
+    $entity_type_translatable = $entity_type->isTranslatable();
     foreach (entity_get_bundles($entity_type_id) as $bundle => $bundle_info) {
       // Here we do not want the widget to be altered and hold also the "Enable
       // translation" checkbox, which would be redundant. Hence we add this key
       // to be able to skip alterations.
       $form['settings'][$entity_type_id][$bundle]['settings']['language']['#content_translation_skip_alter'] = TRUE;
+      if (!$entity_type_translatable) {
+        continue;
+      }
 
       $fields = $entity_manager->getFieldDefinitions($entity_type_id, $bundle);
       if ($fields) {
@@ -167,6 +171,7 @@ function _content_translation_preprocess_language_content_settings_table(&$varia
     }
     else {
       $translatable = array(
+        'data' => t('N/A'),
         'class' => array('untranslatable'),
       );
       array_unshift($rows[$bundle]['data'], $translatable);

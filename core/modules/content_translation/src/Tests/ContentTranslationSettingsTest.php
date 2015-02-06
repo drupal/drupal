@@ -257,6 +257,14 @@ class ContentTranslationSettingsTest extends WebTestBase {
   }
 
   /**
+   * Tests the translatable settings checkbox for untranslatable entities.
+   */
+  function testNonTranslatableTranslationSettingsUI() {
+    $this->drupalGet('admin/config/regional/content-language');
+    $this->assertNoField('settings[entity_test][entity_test][translatable]');
+  }
+
+  /**
    * Returns the entity manager.
    *
    * @return \Drupal\Core\Entity\EntityManagerInterface

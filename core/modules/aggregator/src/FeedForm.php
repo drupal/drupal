@@ -19,19 +19,6 @@ class FeedForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, FormStateInterface $form_state) {
-    $form = parent::form($form, $form_state);
-    // @todo Allow non translatable entity types having language support to be
-    // configured in the content language setting.
-
-    // Ensure the language widget is displayed.
-    $form['langcode']['#access'] = TRUE;
-    return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function save(array $form, FormStateInterface $form_state) {
     $feed = $this->entity;
     $insert = (bool) $feed->id();
