@@ -253,7 +253,7 @@ class AliasManager implements AliasManagerInterface, CacheDecoratorInterface {
   public function cacheClear($source = NULL) {
     if ($source) {
       foreach (array_keys($this->lookupMap) as $lang) {
-        $this->lookupMap[$lang][$source];
+        unset($this->lookupMap[$lang][$source]);
       }
     }
     else {
