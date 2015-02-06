@@ -97,12 +97,32 @@ interface UserInterface extends ContentEntityInterface, EntityChangedInterface, 
   public function getSignature();
 
   /**
+   * Sets the user signature.
+   *
+   * @param string $signature
+   *   The new signature text of the user.
+   *
+   * @return $this
+   */
+  public function setSignature($signature);
+
+  /**
    * Returns the signature format.
    *
    * @return string
    *   Name of the filter format.
    */
   public function getSignatureFormat();
+
+  /**
+   * Sets the signature format.
+   *
+   * @param string $signature_format
+   *   The name of the new filter format.
+   *
+   * @return $this
+   */
+  public function setSignatureFormat($signature_format);
 
   /**
    * Returns the creation time of the user as a UNIX timestamp.

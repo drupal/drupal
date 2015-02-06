@@ -88,6 +88,7 @@ abstract class AccountForm extends ContentEntityForm {
     // The mail field is NOT required if account originally had no mail set
     // and the user performing the edit has 'administer users' permission.
     // This allows users without email address to be edited and deleted.
+    // Also see \Drupal\user\Plugin\Validation\Constraint\UserMailRequired.
     $form['account']['mail'] = array(
       '#type' => 'email',
       '#title' => $this->t('Email address'),
@@ -359,7 +360,23 @@ abstract class AccountForm extends ContentEntityForm {
     if (is_string(key($form_state->getValue('roles')))) {
       $form_state->setValue('roles', array_keys(array_filter($form_state->getValue('roles'))));
     }
-    return parent::buildEntity($form, $form_state);
+
+    /** @var \Drupal\user\UserInterface $account */
+    $account = parent::buildEntity($form, $form_state);
+
+    // Take care of mapping signature form element values as their structure
+    // does not directly match the field structure.
+    $signature = $form_state->getValue('signature');
+    $account->setSignature($signature['value']);
+    $account->setSignatureFormat($signature['format']);
+
+    // Translate the empty value '' of language selects to an unset field.
+    foreach (array('preferred_langcode', 'preferred_admin_langcode') as $field_name) {
+      if ($form_state->getValue($field_name) === '') {
+        $account->$field_name = NULL;
+      }
+    }
+    return $account;
   }
 
   /**
@@ -368,63 +385,25 @@ abstract class AccountForm extends ContentEntityForm {
   public function validate(array $form, FormStateInterface $form_state) {
     parent::validate($form, $form_state);
 
-    $account = $this->entity;
-    // Validate new or changing username.
-    if ($form_state->hasValue('name')) {
-      if ($error = user_validate_name($form_state->getValue('name'))) {
-        $form_state->setErrorByName('name', $error);
-      }
-      // Cast the user ID as an integer. It might have been set to NULL, which
-      // could lead to unexpected results.
-      else {
-        $name_taken = (bool) $this->entityQuery->get('user')
-          ->condition('uid', (int) $account->id(), '<>')
-          ->condition('name', $form_state->getValue('name'))
-          ->range(0, 1)
-          ->count()
-          ->execute();
-
-        if ($name_taken) {
-          $form_state->setErrorByName('name', $this->t('The username %name is already taken.', array('%name' => $form_state->getValue('name'))));
-        }
-      }
-    }
-
-    $mail = $form_state->getValue('mail');
-
-    if (!empty($mail)) {
-      $mail_taken = (bool) $this->entityQuery->get('user')
-        ->condition('uid', (int) $account->id(), '<>')
-        ->condition('mail', $mail)
-        ->range(0, 1)
-        ->count()
-        ->execute();
-
-      if ($mail_taken) {
-        // Format error message dependent on whether the user is logged in or not.
-        if (\Drupal::currentUser()->isAuthenticated()) {
-          $form_state->setErrorByName('mail', $this->t('The email address %email is already taken.', array('%email' => $mail)));
-        }
-        else {
-          $form_state->setErrorByName('mail', $this->t('The email address %email is already registered. <a href="@password">Have you forgotten your password?</a>', array('%email' => $mail, '@password' => $this->url('user.pass'))));
-        }
-      }
-    }
-
-    // Make sure the signature isn't longer than the size of the database field.
-    // Signatures are disabled by default, so make sure it exists first.
-    if ($signature = $form_state->getValue('signature')) {
-      // Move text format for user signature into 'signature_format'.
-      $form_state->setValue('signature_format', $signature['format']);
-      // Move text value for user signature into 'signature'.
-      $form_state->setValue('signature', $signature['value']);
-
-      // @todo Make the user signature field use a widget to benefit from
-      //   automatic typed data validation in https://drupal.org/node/2227381.
-      $field_definitions = $this->entityManager->getFieldDefinitions('user', $this->getEntity()->bundle());
-      $max_length = $field_definitions['signature']->getSetting('max_length');
-      if (Unicode::strlen($form_state->getValue('signature')) > $max_length) {
-        $form_state->setErrorByName('signature', $this->t('The signature is too long: it must be %max characters or less.', array('%max' => $max_length)));
+    /** @var \Drupal\user\UserInterface $account */
+    $account = $this->buildEntity($form, $form_state);
+    // Customly trigger validation of manually added fields and add in
+    // violations. This is necessary as entity form displays only invoke entity
+    // validation for fields contained in the display.
+    $field_names = array(
+      'name',
+      'mail',
+      'signature',
+      'signature_format',
+      'timezone',
+      'langcode',
+      'preferred_langcode',
+      'preferred_admin_langcode'
+    );
+    foreach ($field_names as $field_name) {
+      $violations = $account->$field_name->validate();
+      foreach ($violations as $violation) {
+        $form_state->setErrorByName($field_name, $violation->getMessage());
       }
     }
   }

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Plugin\Field\FieldType\LanguageItem.
+ * Contains \Drupal\Core\Field\Plugin\Field\FieldType\LanguageItem.
  */
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
@@ -25,10 +25,16 @@ use Drupal\Core\TypedData\DataReferenceDefinition;
  *   no_ui = TRUE,
  *   constraints = {
  *     "ComplexData" = {
- *       "value" = {"Length" = {"max" = 12}}
+ *       "value" = {
+ *         "Length" = {"max" = 12},
+ *         "AllowedValues" = {"callback" = "\Drupal\Core\Field\Plugin\Field\FieldType\LanguageItem::getAllowedLanguageCodes" }
+ *       }
  *     }
  *   }
  * )
+ *
+ * @todo Define the AllowedValues constraint via an options provider once
+ *   https://www.drupal.org/node/2329937 is completed.
  */
 class LanguageItem extends FieldItemBase {
 
@@ -48,6 +54,16 @@ class LanguageItem extends FieldItemBase {
       ->setReadOnly(FALSE);
 
     return $properties;
+  }
+
+  /**
+   * Defines allowed language codes for the field's AllowedValues constraint.
+   *
+   * @return string[]
+   *   The allowed values.
+   */
+  public static function getAllowedLanguageCodes() {
+    return array_keys(\Drupal::languageManager()->getLanguages(LanguageInterface::STATE_ALL));
   }
 
   /**

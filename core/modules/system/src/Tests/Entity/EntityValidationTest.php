@@ -126,8 +126,10 @@ class EntityValidationTest extends EntityUnitTestBase {
     $langcode_key = $this->entityManager->getDefinition($entity_type)->getKey('langcode');
     $test_entity->{$langcode_key}->value = $this->randomString(13);
     $violations = $test_entity->validate();
-    $this->assertEqual($violations->count(), 1, 'Validation failed.');
+    // This should fail on AllowedValues and Length constraints.
+    $this->assertEqual($violations->count(), 2, 'Validation failed.');
     $this->assertEqual($violations[0]->getMessage(), t('This value is too long. It should have %limit characters or less.', array('%limit' => '12')));
+    $this->assertEqual($violations[1]->getMessage(), t('The value you selected is not a valid choice.'));
 
     $test_entity = clone $entity;
     $test_entity->type->value = NULL;
