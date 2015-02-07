@@ -12,6 +12,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\block_content\BlockContentTypeInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -82,6 +83,13 @@ class BlockContentController extends ControllerBase {
     if ($types && count($types) == 1) {
       $type = reset($types);
       return $this->addForm($type, $request);
+    }
+    if (count($types) === 0) {
+      return array(
+        '#markup' => $this->t('You have not created any block types yet. Go to the <a href="!url">block type creation page</a> to add a new block type.', [
+          '!url' => Url::fromRoute('block_content.type_add')->toString(),
+        ]),
+      );
     }
 
     return array('#theme' => 'block_content_add_list', '#content' => $types);

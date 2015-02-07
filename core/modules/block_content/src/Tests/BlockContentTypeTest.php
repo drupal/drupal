@@ -7,6 +7,7 @@
 
 namespace Drupal\block_content\Tests;
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Url;
 
 /**
  * Ensures that custom block type functions work correctly.
@@ -33,17 +34,32 @@ class BlockContentTypeTest extends BlockContentTestBase {
   );
 
   /**
+   * Whether or not to create an initial block type.
+   *
+   * @var bool
+   */
+  protected $autoCreateBasicBlockType = FALSE;
+
+  /**
    * Tests creating a block type programmatically and via a form.
    */
   public function testBlockContentTypeCreation() {
+    // Login a test user.
+    $this->drupalLogin($this->adminUser);
+
+    // Test the page with no block-types.
+    $this->drupalGet('block/add');
+    $this->assertResponse(200);
+    $this->assertRaw(t('You have not created any block types yet. Go to the <a href="!url">block type creation page</a> to add a new block type.', [
+      '!url' => Url::fromRoute('block_content.type_add')->toString(),
+    ]));
+    // Now create an initial block-type.
+    $this->createBlockContentType('basic', TRUE);
     // Create a block type programmaticaly.
     $type = $this->createBlockContentType('other');
 
     $block_type = entity_load('block_content_type', 'other');
     $this->assertTrue($block_type, 'The new block type has been created.');
-
-    // Login a test user.
-    $this->drupalLogin($this->adminUser);
 
     $this->drupalGet('block/add/' . $type->id());
     $this->assertResponse(200, 'The new block type can be accessed at bloack/add.');
@@ -69,6 +85,9 @@ class BlockContentTypeTest extends BlockContentTestBase {
    * Tests editing a block type using the UI.
    */
   public function testBlockContentTypeEditing() {
+    // Now create an initial block-type.
+    $this->createBlockContentType('basic', TRUE);
+
     $this->drupalLogin($this->adminUser);
     // We need two block types to prevent /block/add redirecting.
     $this->createBlockContentType('other');
@@ -106,6 +125,9 @@ class BlockContentTypeTest extends BlockContentTestBase {
    * Tests deleting a block type that still has content.
    */
   public function testBlockContentTypeDeletion() {
+    // Now create an initial block-type.
+    $this->createBlockContentType('basic', TRUE);
+
     // Create a block type programmatically.
     $type = $this->createBlockContentType('foo');
 
@@ -136,6 +158,9 @@ class BlockContentTypeTest extends BlockContentTestBase {
    * Tests that redirects work as expected when multiple block types exist.
    */
   public function testsBlockContentAddTypes() {
+    // Now create an initial block-type.
+    $this->createBlockContentType('basic', TRUE);
+
     $this->drupalLogin($this->adminUser);
     // Create two block types programmatically.
     $type = $this->createBlockContentType('foo');

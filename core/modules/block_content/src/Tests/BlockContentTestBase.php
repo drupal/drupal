@@ -44,13 +44,20 @@ abstract class BlockContentTestBase extends WebTestBase {
   public static $modules = array('block', 'block_content');
 
   /**
+   * Whether or not to auto-create the basic block type during setup.
+   *
+   * @var bool
+   */
+  protected $autoCreateBasicBlockType = TRUE;
+
+  /**
    * Sets the test up.
    */
   protected function setUp() {
     parent::setUp();
-    // Ensure the basic bundle exists. This is provided by the standard profile.
-    $block_content_type = $this->createBlockContentType('basic');
-    block_content_add_body_field($block_content_type->id());
+    if ($this->autoCreateBasicBlockType) {
+      $this->createBlockContentType('basic', TRUE);
+    }
 
     $this->adminUser = $this->drupalCreateUser($this->permissions);
   }
@@ -84,17 +91,22 @@ abstract class BlockContentTestBase extends WebTestBase {
    *
    * @param string $label
    *   The block type label.
+   * @param bool $create_body
+   *   Whether or not to create the body field
    *
    * @return \Drupal\block_content\Entity\BlockContentType
    *   Created custom block type.
    */
-  protected function createBlockContentType($label) {
+  protected function createBlockContentType($label, $create_body = FALSE) {
     $bundle = entity_create('block_content_type', array(
       'id' => $label,
       'label' => $label,
-      'revision' => FALSE
+      'revision' => FALSE,
     ));
     $bundle->save();
+    if ($create_body) {
+      block_content_add_body_field($bundle->id());
+    }
     return $bundle;
   }
 
