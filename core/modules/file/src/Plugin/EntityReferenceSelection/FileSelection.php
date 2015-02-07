@@ -25,7 +25,7 @@ class FileSelection extends SelectionBase {
   /**
    * {@inheritdoc}
    */
-  public function buildEntityQuery($match = NULL, $match_operator = 'CONTAINS') {
+  protected function buildEntityQuery($match = NULL, $match_operator = 'CONTAINS') {
     $query = parent::buildEntityQuery($match, $match_operator);
     $query->condition('status', FILE_STATUS_PERMANENT);
     return $query;

@@ -329,7 +329,7 @@ class SelectionBase extends PluginBase implements SelectionInterface, ContainerF
    *   The EntityQuery object with the basic conditions and sorting applied to
    *   it.
    */
-  public function buildEntityQuery($match = NULL, $match_operator = 'CONTAINS') {
+  protected function buildEntityQuery($match = NULL, $match_operator = 'CONTAINS') {
     $target_type = $this->configuration['target_type'];
     $handler_settings = $this->configuration['handler_settings'];
     $entity_type = $this->entityManager->getDefinition($target_type);
