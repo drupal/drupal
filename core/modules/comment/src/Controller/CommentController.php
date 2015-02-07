@@ -130,10 +130,6 @@ class CommentController extends ControllerBase {
       // @todo: Cleaner sub request handling.
       $redirect_request = Request::create($entity->url(), 'GET', $request->query->all(), $request->cookies->all(), array(), $request->server->all());
       $redirect_request->query->set('page', $page);
-      // Carry over the session to the subrequest.
-      if ($session = $request->getSession()) {
-        $redirect_request->setSession($session);
-      }
       // @todo: Convert the pager to use the request object.
       $request->query->set('page', $page);
       return $this->httpKernel->handle($redirect_request, HttpKernelInterface::SUB_REQUEST);

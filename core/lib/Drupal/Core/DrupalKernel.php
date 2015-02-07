@@ -571,9 +571,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   public function prepareLegacyRequest(Request $request) {
     $this->boot();
     $this->preHandle($request);
-    // Setup services which are normally initialized from within stack
-    // middleware or during the request kernel event.
-    $request->setSession($this->container->get('session'));
+    // Enter the request scope so that current_user service is available for
+    // locale/translation sake.
     $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('<none>'));
     $request->attributes->set(RouteObjectInterface::ROUTE_NAME, '<none>');
     $this->container->get('request_stack')->push($request);
@@ -718,16 +717,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $this->container = $container;
     if ($session_manager_started) {
       $this->container->get('session_manager')->start();
-    }
-
-    // The request stack is preserved accross container rebuilds. Reinject the
-    // new session into the master request if one was present before.
-    if (($request_stack = $this->container->get('request_stack', ContainerInterface::NULL_ON_INVALID_REFERENCE))) {
-      if ($request = $request_stack->getMasterRequest()) {
-        if ($request->hasSession()) {
-          $request->setSession($this->container->get('session'));
-        }
-      }
     }
     \Drupal::setContainer($this->container);
 

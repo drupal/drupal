@@ -21,11 +21,9 @@ use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Route;
 
 use GuzzleHttp\Exception\RequestException;
 
@@ -398,6 +396,7 @@ function install_begin_request($class_loader, &$install_state) {
   $kernel->setSitePath($site_path);
   $kernel->boot();
   $container = $kernel->getContainer();
+  $container->get('request_stack')->push($request);
 
   // Register the file translation service.
   if (isset($GLOBALS['config']['locale.settings']['translation']['path'])) {
@@ -443,15 +442,13 @@ function install_begin_request($class_loader, &$install_state) {
   if ($profile && !$module_handler->moduleExists($profile)) {
     $module_handler->addProfile($profile, $install_state['profiles'][$profile]->getPath());
   }
+  // After setting up a custom and finite module list in a custom low-level
+  // bootstrap like here, ensure to use ModuleHandler::loadAll() so that
+  // ModuleHandler::isLoaded() returns TRUE, since that is a condition being
+  // checked by other subsystems (e.g., the theme system).
+  $module_handler->loadAll();
 
-  // Load all modules and perform request related initialization.
-  $kernel->preHandle($request);
-
-  // Initialize a route on this legacy request similar to
-  // \Drupal\Core\DrupalKernel::prepareLegacyRequest() since normal routing
-  // will not happen.
-  $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('<none>'));
-  $request->attributes->set(RouteObjectInterface::ROUTE_NAME, '<none>');
+  $kernel->prepareLegacyRequest($request);
 
   // Prepare for themed output. We need to run this at the beginning of the
   // page request to avoid a different theme accidentally getting set. (We also
@@ -596,7 +593,7 @@ function install_run_task($task, &$install_state) {
       $response = batch_process($url, clone $url);
       if ($response instanceof Response) {
         // Save $_SESSION data from batch.
-        \Drupal::service('session')->save();
+        \Drupal::service('session_manager')->save();
         // Send the response.
         $response->send();
         exit;
@@ -1551,7 +1548,7 @@ function install_load_profile(&$install_state) {
  *   An array of information about the current installation state.
  */
 function install_bootstrap_full() {
-  \Drupal::service('session')->start();
+  \Drupal::service('session_manager')->start();
 }
 
 /**

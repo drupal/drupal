@@ -59,6 +59,9 @@ class InstallerServiceProvider implements ServiceProviderInterface, ServiceModif
     // @todo Convert installer steps into routes; add an installer.routing.yml.
     $definition = $container->getDefinition('router.builder');
     $definition->setClass('Drupal\Core\Installer\InstallerRouteBuilder');
+
+    // Remove dependencies on Drupal's default session handling.
+    $container->removeDefinition('authentication.cookie');
   }
 
   /**
