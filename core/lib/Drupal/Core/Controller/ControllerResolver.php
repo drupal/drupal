@@ -56,11 +56,11 @@ class ControllerResolver extends BaseControllerResolver implements ControllerRes
     }
 
     if (strpos($controller, ':') === FALSE) {
-      if (method_exists($controller, '__invoke')) {
-        return new $controller;
-      }
-      elseif (function_exists($controller)) {
+      if (function_exists($controller)) {
         return $controller;
+      }
+      elseif (method_exists($controller, '__invoke')) {
+        return new $controller;
       }
     }
 
