@@ -475,6 +475,11 @@ services:
     arguments: ['@kernel']
     tags:
       - { name: http_middleware, priority: 100 }
+  http_middleware.session:
+    class: Drupal\Core\StackMiddleware\Session
+    arguments: ['@session']
+    tags:
+      - { name: http_middleware, priority: 50 }
   language_manager:
     class: Drupal\Core\Language\LanguageManager
     arguments: ['@language.default']
@@ -993,7 +998,7 @@ services:
     arguments: ['@module_handler', '@cache.discovery', '@language_manager', '@cache_tags.invalidator']
   batch.storage:
     class: Drupal\Core\Batch\BatchStorage
-    arguments: ['@database', '@session_manager', '@csrf_token']
+    arguments: ['@database', '@session', '@csrf_token']
     tags:
       - { name: backend_overridable }
   replica_database_ignore__subscriber:
@@ -1089,6 +1094,15 @@ services:
   session_configuration:
     class: Drupal\Core\Session\SessionConfiguration
     arguments: ['%session.storage.options%']
+  session:
+    class: Symfony\Component\HttpFoundation\Session\Session
+    arguments: ['@session_manager', '@session.attribute_bag', '@session.flash_bag']
+  session.flash_bag:
+    class: Symfony\Component\HttpFoundation\Session\Flash\FlashBag
+    public: false
+  session.attribute_bag:
+    class: Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag
+    public: false
   session_manager:
     class: Drupal\Core\Session\SessionManager
     arguments: ['@request_stack', '@database', '@session_manager.metadata_bag', '@session_configuration']

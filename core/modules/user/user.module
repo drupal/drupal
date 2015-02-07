@@ -609,7 +609,7 @@ function user_login_finalize(UserInterface $account) {
   // This is called before hook_user_login() in case one of those functions
   // fails or incorrectly does a redirect which would leave the old session
   // in place.
-  \Drupal::service('session_manager')->regenerate();
+  \Drupal::service('session')->migrate();
 
   \Drupal::moduleHandler()->invokeAll('user_login', array($account));
 }
@@ -840,7 +840,7 @@ function _user_cancel($edit, $account, $method) {
 function _user_cancel_session_regenerate() {
   // Regenerate the users session instead of calling session_destroy() as we
   // want to preserve any messages that might have been set.
-  \Drupal::service('session_manager')->regenerate();
+  \Drupal::service('session')->migrate();
 }
 
 /**
@@ -1484,6 +1484,10 @@ function user_logout() {
   \Drupal::moduleHandler()->invokeAll('user_logout', array($user));
 
   // Destroy the current session, and reset $user to the anonymous user.
+  // Note: In Symfony the session is intended to be destroyed with
+  // Session::invalidate(). Regrettably this method is currently broken and may
+  // lead to the creation of spurious session records in the database.
+  // @see https://github.com/symfony/symfony/issues/12375
   session_destroy();
 }
 
