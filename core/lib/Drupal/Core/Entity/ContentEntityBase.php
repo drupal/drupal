@@ -650,9 +650,9 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     $translation->translations = &$this->translations;
     $translation->enforceIsNew = &$this->enforceIsNew;
     $translation->translationInitialize = FALSE;
-    // The label is the only entity key that can change based on the language,
-    // so unset that in case it is currently set.
+    // Reset language-dependent properties.
     unset($translation->entityKeys['label']);
+    $translation->typedData = NULL;
 
     return $translation;
   }

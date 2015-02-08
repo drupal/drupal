@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Entity;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -662,6 +663,30 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     }
     catch (\InvalidArgumentException $e) {
       $this->pass($message);
+    }
+  }
+
+  /**
+   * Tests how entity adapters work with translations.
+   */
+  function testEntityAdapter() {
+    $entity_type = 'entity_test';
+    $default_langcode = 'en';
+    $values[$default_langcode] = array('name' => $this->randomString());
+    $controller = $this->entityManager->getStorage($entity_type);
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+    $entity = $controller->create($values[$default_langcode]);
+
+    foreach ($this->langcodes as $langcode) {
+      $values[$langcode] = array('name' => $this->randomString());
+      $entity->addTranslation($langcode, $values[$langcode]);
+    }
+
+    $langcodes = array_merge(array($default_langcode), $this->langcodes);
+    foreach ($langcodes as $langcode) {
+      $adapter = $entity->getTranslation($langcode)->getTypedData();
+      $name = $adapter->get('name')->value;
+      $this->assertEqual($name, $values[$langcode]['name'], String::format('Name correctly retrieved from "@langcode" adapter', array('@langcode' => $langcode)));
     }
   }
 
