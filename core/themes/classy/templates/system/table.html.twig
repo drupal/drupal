@@ -1,0 +1,115 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a table.
+ *
+ * Available variables:
+ * - attributes: HTML attributes to apply to the <table> tag.
+ * - caption: A localized string for the <caption> tag.
+ * - colgroups: Column groups. Each group contains the following properties:
+ *   - attributes: HTML attributes to apply to the <col> tag.
+ *     Note: Drupal currently supports only one table header row, see
+ *     http://drupal.org/node/893530 and
+ *     http://api.drupal.org/api/drupal/includes!theme.inc/function/theme_table/7#comment-5109.
+ * - header: Table header cells. Each cell contains the following properties:
+ *   - tag: The HTML tag name to use; either TH or TD.
+ *   - attributes: HTML attributes to apply to the tag.
+ *   - content: A localized string for the title of the column.
+ *   - field: Field name (required for column sorting).
+ *   - sort: Default sort order for this column ("asc" or "desc").
+ * - sticky: A flag indicating whether to use a "sticky" table header.
+ * - rows: Table rows. Each row contains the following properties:
+ *   - attributes: HTML attributes to apply to the <tr> tag.
+ *   - data: Table cells.
+ *   - no_striping: A flag indicating that the row should receive no
+ *     'even / odd' styling. Defaults to FALSE.
+ *   - cells: Table cells of the row. Each cell contains the following keys:
+ *     - tag: The HTML tag name to use; either TH or TD.
+ *     - attributes: Any HTML attributes, such as "colspan", to apply to the
+ *       table cell.
+ *     - content: The string to display in the table cell.
+ *     - active_table_sort: A boolean indicating whether the cell is the active
+         table sort.
+ * - footer: Table footer rows, in the same format as the rows variable.
+ * - empty: The message to display in an extra row if table does not have
+ *   any rows.
+ * - no_striping: A boolean indicating that the row should receive no striping.
+ * - header_columns: The number of columns in the header.
+ *
+ * @see template_preprocess_table()
+ *
+ * @ingroup themeable
+ */
+#}
+<table{{ attributes }}>
+  {% if caption %}
+    <caption>{{ caption }}</caption>
+  {% endif %}
+
+  {% for colgroup in colgroups %}
+    {% if colgroup.cols %}
+      <colgroup{{ colgroup.attributes }}>
+        {% for col in colgroup.cols %}
+          <col{{ col.attributes }} />
+        {% endfor %}
+      </colgroup>
+    {% else %}
+      <colgroup{{ colgroup.attributes }} />
+    {% endif %}
+  {% endfor %}
+
+  {% if header %}
+    <thead>
+      <tr>
+        {% for cell in header %}
+          {%
+            set cell_classes = [
+              cell.active_table_sort ? 'active',
+            ]
+          %}
+          <{{ cell.tag }}{{ cell.attributes.addClass(cell_classes) }}>
+            {{- cell.content -}}
+          </{{ cell.tag }}>
+        {% endfor %}
+      </tr>
+    </thead>
+  {% endif %}
+
+  {% if rows %}
+    <tbody>
+      {% for row in rows %}
+        {%
+          set row_classes = [
+            not no_striping ? cycle(['odd', 'even'], loop.index0),
+          ]
+        %}
+        <tr{{ row.attributes.addClass(row_classes) }}>
+          {% for cell in row.cells %}
+            <{{ cell.tag }}{{ cell.attributes }}>
+              {{- cell.content -}}
+            </{{ cell.tag }}>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  {% elseif empty %}
+    <tbody>
+      <tr class="odd">
+        <td colspan="{{ header_columns }}" class="empty message">{{ empty }}</td>
+      </tr>
+    </tbody>
+  {% endif %}
+  {% if footer %}
+    <tfoot>
+      {% for row in footer %}
+        <tr{{ row.attributes }}>
+          {% for cell in row.cells %}
+            <{{ cell.tag }}{{ cell.attributes }}>
+              {{- cell.content -}}
+            </{{ cell.tag }}>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </tfoot>
+  {% endif %}
+</table>

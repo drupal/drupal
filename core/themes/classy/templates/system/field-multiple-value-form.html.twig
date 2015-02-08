@@ -1,0 +1,36 @@
+{#
+/**
+ * @file
+ * Default theme implementation for an individual form element.
+ *
+ * Available variables for all fields:
+ * - multiple: Whether there are multiple instances of the field.
+ *
+ * Available variables for single cardinality fields:
+ * - elements: Form elements to be rendered.
+ *
+ * Available variables when there are multiple fields.
+ * - table: Table of field items.
+ * - description: Description text for the form element.
+ * - button: "Add another item" button.
+ *
+ * @see template_preprocess_field_multiple_value_form()
+ *
+ * @ingroup themeable
+ */
+#}
+{% if multiple %}
+  <div class="form-item">
+    {{ table }}
+    {% if description %}
+      <div class="description">{{ description }}</div>
+    {% endif %}
+    {% if button %}
+      <div class="clearfix">{{ button }}</div>
+    {% endif %}
+  </div>
+{% else %}
+  {% for element in elements %}
+    {{ element }}
+  {% endfor %}
+{% endif %}

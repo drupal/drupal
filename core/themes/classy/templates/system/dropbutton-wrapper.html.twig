@@ -1,0 +1,23 @@
+{#
+/**
+ * @file
+ * Default theme implementation for a dropbutton wrapper.
+ *
+ * Available variables:
+ * - children: Contains the child elements of the dropbutton menu.
+ *
+ * @see template_preprocess()
+ * @see template_preprocess_dropbutton_wrapper()
+ *
+ * @ingroup themeable
+ */
+#}
+{% if children %}
+  {% spaceless %}
+    <div class="dropbutton-wrapper">
+      <div class="dropbutton-widget">
+        {{ children }}
+      </div>
+    </div>
+  {% endspaceless %}
+{% endif %}

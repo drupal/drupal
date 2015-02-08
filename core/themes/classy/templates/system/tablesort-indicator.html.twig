@@ -1,0 +1,18 @@
+{#
+/**
+ * @file
+ * Default theme implementation for displaying a tablesort indicator.
+ *
+ * Available variables:
+ * - style: Either 'asc' or 'desc', indicating the sorting direction.
+ *
+ * @see template_preprocess_tablesort_indicator()
+ *
+ * @ingroup themeable
+ */
+#}
+{% if style == 'asc' -%}
+  <img src="{{ arrow_asc }}" width="13" height="13" alt="{{ 'sort ascending'|t }}" title="{{ 'sort ascending'|t }}" />
+{% else -%}
+  <img src="{{ arrow_desc }}" width="13" height="13" alt="{{ 'sort descending'|t }}" title="{{ 'sort descending'|t }}" />
+{% endif %}

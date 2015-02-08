@@ -1,0 +1,28 @@
+{#
+/**
+ * @file
+ * Default theme implementation for a date / time element.
+ *
+ * Available variables
+ * - timestamp: (optional) A UNIX timestamp for the datetime attribute. If the
+ *   datetime cannot be represented as a UNIX timestamp, use a valid datetime
+ *   attribute value in attributes.datetime.
+ * - text: (optional) The content to display within the <time> element. Set
+ *   'html' to TRUE if this value is already sanitized for output in HTML.
+ *   Defaults to a human-readable representation of the timestamp value or the
+ *   datetime attribute value using format_date().
+ * - attributes: (optional) HTML attributes to apply to the <time> element.
+ *   A datetime attribute in 'attributes' overrides the 'timestamp'. To
+ *   create a valid datetime attribute value from a UNIX timestamp, use
+ *   format_date() with one of the predefined 'html_*' formats.
+ * - html: (optional) Whether 'text' is HTML markup (TRUE) or plain-text
+ *   (FALSE). Defaults to FALSE. For example, to use a SPAN tag within the
+ *   TIME element, this must be set to TRUE, or the SPAN tag will be escaped.
+ *   It is the responsibility of the caller to properly sanitize the value
+ *   contained in 'text' (or within the SPAN tag in aforementioned example).
+ *
+ * @see template_preprocess_datetime()
+ * @see http://www.w3.org/TR/html5-author/the-time-element.html#attr-time-datetime
+ */
+#}
+<time{{ attributes.addClass('datetime') }}>{{ html ? text|raw : text }}</time>
