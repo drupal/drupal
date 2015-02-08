@@ -20,13 +20,6 @@ use Symfony\Component\HttpFoundation\Session\Storage\Proxy\AbstractProxy;
 class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
 
   /**
-   * The session manager.
-   *
-   * @var \Drupal\Core\Session\SessionManagerInterface
-   */
-  protected $sessionManager;
-
-  /**
    * The request stack.
    *
    * @var \Symfony\Component\HttpFoundation\RequestStack
@@ -50,15 +43,12 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
   /**
    * Constructs a new SessionHandler instance.
    *
-   * @param \Drupal\Core\Session\SessionManagerInterface $session_manager
-   *   The session manager.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
    */
-  public function __construct(SessionManagerInterface $session_manager, RequestStack $request_stack, Connection $connection) {
-    $this->sessionManager = $session_manager;
+  public function __construct(RequestStack $request_stack, Connection $connection) {
     $this->requestStack = $request_stack;
     $this->connection = $connection;
   }
@@ -123,12 +113,6 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
     // The exception handler is not active at this point, so we need to do it
     // manually.
     try {
-      if (!$this->sessionManager->isEnabled()) {
-        // We don't have anything to do if we are not allowed to save the
-        // session.
-        return TRUE;
-      }
-
       $fields = array(
         'uid' => $user->id(),
         'hostname' => $this->requestStack->getCurrentRequest()->getClientIP(),
@@ -173,10 +157,6 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
   public function destroy($sid) {
     global $user;
 
-    // Nothing to do if we are not allowed to change the session.
-    if (!$this->sessionManager->isEnabled()) {
-      return TRUE;
-    }
     // Delete session data.
     $this->connection->delete('sessions')
       ->condition('sid', Crypt::hashBase64($sid))
