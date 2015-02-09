@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Tests;
 
+use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -15,6 +16,8 @@ use Drupal\simpletest\WebTestBase;
  * @group user
  */
 class UserSignatureTest extends WebTestBase {
+
+  use CommentTestTrait;
 
   /**
    * A regular user.
@@ -60,7 +63,7 @@ class UserSignatureTest extends WebTestBase {
     // Create Basic page node type.
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
     // Add a comment field with commenting enabled by default.
-    $this->container->get('comment.manager')->addDefaultField('node', 'page');
+    $this->addDefaultCommentField('node', 'page');
 
     // Prefetch and create text formats.
     $this->filteredHtmlFormat = entity_create('filter_format', array(

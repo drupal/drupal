@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Entity\EntityReferenceSelection;
 
+use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\comment\CommentInterface;
@@ -18,6 +19,8 @@ use Drupal\simpletest\WebTestBase;
  * @group entity_reference
  */
 class EntityReferenceSelectionAccessTest extends WebTestBase {
+
+  use CommentTestTrait;
 
   /**
    * Modules to enable.
@@ -354,7 +357,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
     }
 
     // Create comment field on article.
-    $this->container->get('comment.manager')->addDefaultField('node', 'article');
+    $this->addDefaultCommentField('node', 'article');
 
     $comment_values = array(
       'published_published' => array(

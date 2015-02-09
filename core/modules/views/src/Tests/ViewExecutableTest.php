@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Tests;
 
+use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\views\Views;
 use Drupal\views\ViewExecutable;
 use Drupal\views\ViewExecutableFactory;
@@ -29,6 +30,8 @@ use Symfony\Component\HttpFoundation\Response;
  * @see \Drupal\views\ViewExecutable
  */
 class ViewExecutableTest extends ViewUnitTestBase {
+
+  use CommentTestTrait;
 
   public static $modules = array('system', 'node', 'comment', 'user', 'filter', 'field', 'text', 'entity_reference');
 
@@ -86,7 +89,7 @@ class ViewExecutableTest extends ViewUnitTestBase {
       'type' => 'page',
       'name' => 'Page',
     ))->save();
-    $this->container->get('comment.manager')->addDefaultField('node', 'page');
+    $this->addDefaultCommentField('node', 'page');
     parent::setUpFixtures();
 
     $this->installConfig(array('filter'));

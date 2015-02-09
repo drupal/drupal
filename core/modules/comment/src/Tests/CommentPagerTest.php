@@ -273,7 +273,7 @@ class CommentPagerTest extends CommentTestBase {
    */
   function testTwoPagers() {
     // Add another field to article content-type.
-    $this->container->get('comment.manager')->addDefaultField('node', 'article', 'comment_2');
+    $this->addDefaultCommentField('node', 'article', 'comment_2');
     // Set default to display comment list with unique pager id.
     entity_get_display('node', 'article', 'default')
       ->setComponent('comment_2', array(

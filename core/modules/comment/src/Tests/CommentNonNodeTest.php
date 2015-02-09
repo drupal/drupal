@@ -24,6 +24,7 @@ use Drupal\Core\Entity\EntityInterface;
 class CommentNonNodeTest extends WebTestBase {
 
   use FieldUiTestTrait;
+  use CommentTestTrait;
 
   public static $modules = array('comment', 'user', 'field_ui', 'entity_test', 'block');
 
@@ -50,7 +51,7 @@ class CommentNonNodeTest extends WebTestBase {
       'target_entity_type_id' => 'entity_test',
     ))->save();
     // Create comment field on entity_test bundle.
-    $this->container->get('comment.manager')->addDefaultField('entity_test', 'entity_test');
+    $this->addDefaultCommentField('entity_test', 'entity_test');
 
     // Verify that bundles are defined correctly.
     $bundles = \Drupal::entityManager()->getBundleInfo('comment');

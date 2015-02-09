@@ -32,7 +32,7 @@ class CommentFieldsTest extends CommentTestBase {
     // Do not make assumptions on default node types created by the test
     // installation profile, and create our own.
     $this->drupalCreateContentType(array('type' => 'test_node_type'));
-    $this->container->get('comment.manager')->addDefaultField('node', 'test_node_type');
+    $this->addDefaultCommentField('node', 'test_node_type');
 
     // Check that the 'comment_body' field is present on the comment bundle.
     $field = FieldConfig::loadByName('comment', 'comment', 'comment_body');
@@ -48,7 +48,7 @@ class CommentFieldsTest extends CommentTestBase {
     // Create a new content type.
     $type_name = 'test_node_type_2';
     $this->drupalCreateContentType(array('type' => $type_name));
-    $this->container->get('comment.manager')->addDefaultField('node', $type_name);
+    $this->addDefaultCommentField('node', $type_name);
 
     // Check that the 'comment_body' field exists and has an instance on the
     // new comment bundle.
@@ -58,7 +58,7 @@ class CommentFieldsTest extends CommentTestBase {
     $this->assertTrue(isset($field), format_string('The comment_body field is present for comments on type @type', array('@type' => $type_name)));
 
     // Test adding a field that defaults to CommentItemInterface::CLOSED.
-    $this->container->get('comment.manager')->addDefaultField('node', 'test_node_type', 'who_likes_ponies', CommentItemInterface::CLOSED, 'who_likes_ponies');
+    $this->addDefaultCommentField('node', 'test_node_type', 'who_likes_ponies', CommentItemInterface::CLOSED, 'who_likes_ponies');
     $field = FieldConfig::load('node.test_node_type.who_likes_ponies');
     $this->assertEqual($field->default_value[0]['status'], CommentItemInterface::CLOSED);
   }
@@ -68,11 +68,11 @@ class CommentFieldsTest extends CommentTestBase {
    */
   public function testCommentFieldDelete() {
     $this->drupalCreateContentType(array('type' => 'test_node_type'));
-    $this->container->get('comment.manager')->addDefaultField('node', 'test_node_type');
+    $this->addDefaultCommentField('node', 'test_node_type');
     // We want to test the handling of removing the primary comment field, so we
     // ensure there is at least one other comment field attached to a node type
     // so that comment_entity_load() runs for nodes.
-    $this->container->get('comment.manager')->addDefaultField('node', 'test_node_type', 'comment2');
+    $this->addDefaultCommentField('node', 'test_node_type', 'comment2');
 
     // Create a sample node.
     $node = $this->drupalCreateNode(array(
@@ -132,7 +132,7 @@ class CommentFieldsTest extends CommentTestBase {
     $this->assertTrue($this->container->get('module_handler')->moduleExists('comment'), 'Comment module enabled.');
 
     // Create nodes of each type.
-    $this->container->get('comment.manager')->addDefaultField('node', 'book');
+    $this->addDefaultCommentField('node', 'book');
     $book_node = $this->drupalCreateNode(array('type' => 'book'));
 
     $this->drupalLogout();

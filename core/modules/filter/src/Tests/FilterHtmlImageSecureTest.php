@@ -7,6 +7,7 @@
 
 namespace Drupal\filter\Tests;
 
+use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\simpletest\WebTestBase;
 
@@ -16,6 +17,8 @@ use Drupal\simpletest\WebTestBase;
  * @group filter
  */
 class FilterHtmlImageSecureTest extends WebTestBase {
+
+  use CommentTestTrait;
 
   /**
    * Modules to enable.
@@ -68,7 +71,7 @@ class FilterHtmlImageSecureTest extends WebTestBase {
     // Setup a node to comment and test on.
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
     // Add a comment field.
-    $this->container->get('comment.manager')->addDefaultField('node', 'page');
+    $this->addDefaultCommentField('node', 'page');
     $this->node = $this->drupalCreateNode();
   }
 

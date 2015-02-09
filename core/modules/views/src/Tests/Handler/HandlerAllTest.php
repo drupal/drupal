@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Tests\Handler;
 
+use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\Plugin\views\filter\InOperator;
@@ -17,6 +18,8 @@ use Drupal\views\Plugin\views\filter\InOperator;
  * @group views
  */
 class HandlerAllTest extends HandlerTestBase {
+
+  use CommentTestTrait;
 
   /**
    * Modules to enable.
@@ -48,7 +51,7 @@ class HandlerAllTest extends HandlerTestBase {
    */
   public function testHandlers() {
     $this->drupalCreateContentType(array('type' => 'article'));
-    $this->container->get('comment.manager')->addDefaultField('node', 'article');
+    $this->addDefaultCommentField('node', 'article');
 
     $object_types = array_keys(ViewExecutable::getHandlerTypes());
     foreach ($this->container->get('views.views_data')->get() as $base_table => $info) {

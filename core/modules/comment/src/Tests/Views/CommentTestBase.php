@@ -7,6 +7,7 @@
 
 namespace Drupal\comment\Tests\Views;
 
+use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 
@@ -14,6 +15,8 @@ use Drupal\views\Tests\ViewTestData;
  * Tests the argument_comment_user_uid handler.
  */
 abstract class CommentTestBase extends ViewTestBase {
+
+  use CommentTestTrait;
 
   /**
    * Modules to install.
@@ -69,7 +72,7 @@ abstract class CommentTestBase extends ViewTestBase {
     $this->drupalLogin($this->account);
 
     $this->drupalCreateContentType(array('type' => 'page', 'name' => t('Basic page')));
-    $this->container->get('comment.manager')->addDefaultField('node', 'page');
+    $this->addDefaultCommentField('node', 'page');
 
     $this->nodeUserPosted = $this->drupalCreateNode();
     $this->nodeUserCommented = $this->drupalCreateNode(array('uid' => $this->account2->id()));

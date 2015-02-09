@@ -17,6 +17,8 @@ use Drupal\simpletest\WebTestBase;
  */
 class CommentUninstallTest extends WebTestBase {
 
+  use CommentTestTrait;
+
   /**
    * Modules to install.
    *
@@ -30,7 +32,7 @@ class CommentUninstallTest extends WebTestBase {
     // Create an article content type.
     $this->drupalCreateContentType(array('type' => 'article', 'name' => t('Article')));
     // Create comment field on article so that adds 'comment_body' field.
-    $this->container->get('comment.manager')->addDefaultField('node', 'article');
+    $this->addDefaultCommentField('node', 'article');
   }
 
   /**

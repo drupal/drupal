@@ -44,28 +44,6 @@ interface CommentManagerInterface {
   public function getFields($entity_type_id);
 
   /**
-   * Utility method to add the default comment field to an entity.
-   *
-   * Attaches a comment field named 'comment' to the given entity type and
-   * bundle. Largely replicates the default behavior in Drupal 7 and earlier.
-   *
-   * @param string $entity_type
-   *   The entity type to attach the default comment field to.
-   * @param string $bundle
-   *   The bundle to attach the default comment field to.
-   * @param string $field_name
-   *   (optional) Field name to use for the comment field. Defaults to
-   *     'comment'.
-   * @param int $default_value
-   *   (optional) Default value, one of CommentItemInterface::HIDDEN,
-   *   CommentItemInterface::OPEN, CommentItemInterface::CLOSED. Defaults to
-   *   CommentItemInterface::OPEN.
-   * @param string $comment_type_id
-   *   (optional) ID of comment type to use. Defaults to 'comment'.
-   */
-  public function addDefaultField($entity_type, $bundle, $field_name = 'comment', $default_value = CommentItemInterface::OPEN, $comment_type_id = 'comment');
-
-  /**
    * Creates a comment_body field.
    *
    * @param string $comment_type

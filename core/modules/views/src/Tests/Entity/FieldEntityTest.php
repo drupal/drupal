@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Tests\Entity;
 
+use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Views;
 
@@ -16,6 +17,8 @@ use Drupal\views\Views;
  * @group views
  */
 class FieldEntityTest extends ViewTestBase {
+
+  use CommentTestTrait;
 
   /**
    * Views used by this test.
@@ -41,7 +44,7 @@ class FieldEntityTest extends ViewTestBase {
     $account = entity_create('user', array('name' => $this->randomMachineName(), 'bundle' => 'user'));
     $account->save();
     $this->drupalCreateContentType(array('type' => 'page'));
-    $this->container->get('comment.manager')->addDefaultField('node', 'page');
+    $this->addDefaultCommentField('node', 'page');
     // Force a flush of the in-memory storage.
     $this->container->get('views.views_data')->clear();
 

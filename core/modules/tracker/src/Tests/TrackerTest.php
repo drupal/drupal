@@ -8,6 +8,7 @@
 namespace Drupal\tracker\Tests;
 
 use Drupal\comment\CommentInterface;
+use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -16,6 +17,8 @@ use Drupal\simpletest\WebTestBase;
  * @group tracker
  */
 class TrackerTest extends WebTestBase {
+
+  use CommentTestTrait;
 
   /**
    * Modules to enable.
@@ -46,7 +49,7 @@ class TrackerTest extends WebTestBase {
     $permissions = array('access comments', 'create page content', 'post comments', 'skip comment approval');
     $this->user = $this->drupalCreateUser($permissions);
     $this->otherUser = $this->drupalCreateUser($permissions);
-    $this->container->get('comment.manager')->addDefaultField('node', 'page');
+    $this->addDefaultCommentField('node', 'page');
   }
 
   /**

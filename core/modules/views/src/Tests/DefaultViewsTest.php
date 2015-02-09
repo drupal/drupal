@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests;
 
 use Drupal\comment\CommentInterface;
+use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
@@ -21,6 +22,8 @@ use Drupal\views\Views;
  * @group views
  */
 class DefaultViewsTest extends ViewTestBase {
+
+  use CommentTestTrait;
 
   /**
    * Modules to enable.
@@ -81,7 +84,7 @@ class DefaultViewsTest extends ViewTestBase {
     // Create a time in the past for the archive.
     $time = REQUEST_TIME - 3600;
 
-    $this->container->get('comment.manager')->addDefaultField('node', 'page');
+    $this->addDefaultCommentField('node', 'page');
 
     $this->container->get('views.views_data')->clear();
 

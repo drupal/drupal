@@ -8,6 +8,7 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\comment\Entity\Comment;
+use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
@@ -19,6 +20,8 @@ use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
  */
 class MigrateCommentTest extends MigrateDrupalTestBase {
 
+  use CommentTestTrait;
+
   static $modules = array('node', 'comment');
 
   /**
@@ -28,7 +31,7 @@ class MigrateCommentTest extends MigrateDrupalTestBase {
     parent::setUp();
     entity_create('node_type', array('type' => 'page'))->save();
     entity_create('node_type', array('type' => 'story'))->save();
-    \Drupal::service('comment.manager')->addDefaultField('node', 'story');
+    $this->addDefaultCommentField('node', 'story');
     $this->container->get('entity.manager')->getStorage('comment_type')->create(array(
       'id' => 'comment_no_subject',
       'label' => 'comment_no_subject',

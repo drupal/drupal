@@ -127,7 +127,7 @@ class CommentTypeTest extends CommentTestBase {
     // Create a comment type programmatically.
     $type = $this->createCommentType('foo');
     $this->drupalCreateContentType(array('type' => 'page'));
-    \Drupal::service('comment.manager')->addDefaultField('node', 'page', 'foo', CommentItemInterface::OPEN, 'foo');
+    $this->addDefaultCommentField('node', 'page', 'foo', CommentItemInterface::OPEN, 'foo');
     $field_storage = FieldStorageConfig::loadByName('node', 'foo');
 
     $this->drupalLogin($this->adminUser);
@@ -176,7 +176,7 @@ class CommentTypeTest extends CommentTestBase {
 
     // Test exception thrown when re-using an existing comment type.
     try {
-      \Drupal::service('comment.manager')->addDefaultField('comment', 'comment', 'bar');
+      $this->addDefaultCommentField('comment', 'comment', 'bar');
       $this->fail('Exception not thrown.');
     }
     catch (\InvalidArgumentException $e) {

@@ -7,12 +7,16 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\comment\Tests\CommentTestTrait;
+
 /**
  * Tests node title.
  *
  * @group node
  */
 class NodeTitleTest extends NodeTestBase {
+
+  use CommentTestTrait;
 
   /**
    * Modules to enable.
@@ -37,7 +41,7 @@ class NodeTitleTest extends NodeTestBase {
 
     $this->adminUser = $this->drupalCreateUser(array('administer nodes', 'create article content', 'create page content', 'post comments'));
     $this->drupalLogin($this->adminUser);
-    $this->container->get('comment.manager')->addDefaultField('node', 'page');
+    $this->addDefaultCommentField('node', 'page');
   }
 
   /**

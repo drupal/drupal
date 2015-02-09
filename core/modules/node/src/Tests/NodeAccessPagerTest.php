@@ -8,6 +8,7 @@
 namespace Drupal\node\Tests;
 
 use Drupal\comment\CommentInterface;
+use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -16,6 +17,8 @@ use Drupal\simpletest\WebTestBase;
  * @group node
  */
 class NodeAccessPagerTest extends WebTestBase {
+
+  use CommentTestTrait;
 
   /**
    * Modules to enable.
@@ -29,7 +32,7 @@ class NodeAccessPagerTest extends WebTestBase {
 
     node_access_rebuild();
     $this->drupalCreateContentType(array('type' => 'page', 'name' => t('Basic page')));
-    $this->container->get('comment.manager')->addDefaultField('node', 'page');
+    $this->addDefaultCommentField('node', 'page');
     $this->webUser = $this->drupalCreateUser(array('access content', 'access comments', 'node test view'));
   }
 

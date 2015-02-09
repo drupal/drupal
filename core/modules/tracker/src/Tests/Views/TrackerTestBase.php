@@ -7,6 +7,7 @@
 
 namespace Drupal\tracker\Tests\Views;
 
+use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
@@ -15,6 +16,8 @@ use Drupal\views\Tests\ViewTestData;
  * Base class for all tracker tests.
  */
 abstract class TrackerTestBase extends ViewTestBase {
+
+  use CommentTestTrait;
 
   /**
    * Modules to enable.
@@ -44,7 +47,7 @@ abstract class TrackerTestBase extends ViewTestBase {
 
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
     // Add a comment field.
-    $this->container->get('comment.manager')->addDefaultField('node', 'page');
+    $this->addDefaultCommentField('node', 'page');
 
     $permissions = array('access comments', 'create page content', 'post comments', 'skip comment approval');
     $account = $this->drupalCreateUser($permissions);

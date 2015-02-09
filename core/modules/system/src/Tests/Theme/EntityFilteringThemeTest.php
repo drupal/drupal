@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Theme;
 
+use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
@@ -19,6 +20,8 @@ use Drupal\simpletest\WebTestBase;
  * @group Theme
  */
 class EntityFilteringThemeTest extends WebTestBase {
+
+  use CommentTestTrait;
 
   /**
    * Use the standard profile.
@@ -97,7 +100,7 @@ class EntityFilteringThemeTest extends WebTestBase {
     $this->term->save();
 
     // Add a comment field.
-    $this->container->get('comment.manager')->addDefaultField('node', 'article', 'comment', CommentItemInterface::OPEN);
+    $this->addDefaultCommentField('node', 'article', 'comment', CommentItemInterface::OPEN);
     // Create a test node tagged with the test term.
     $this->node = $this->drupalCreateNode(array(
       'title' => $this->xss_label,
