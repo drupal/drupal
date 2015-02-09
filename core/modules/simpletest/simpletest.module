@@ -144,7 +144,7 @@ function simpletest_run_tests($test_list) {
 
   // Get the info for the first test being run.
   $first_test = reset($test_list);
-  $info = TestDiscovery::getTestInfo(new \ReflectionClass($first_test));
+  $info = TestDiscovery::getTestInfo($first_test);
 
   $batch = array(
     'title' => t('Running tests'),
@@ -320,7 +320,7 @@ function _simpletest_batch_operation($test_list_init, $test_id, &$context) {
   $test = new $test_class($test_id);
   $test->run();
   $size = count($test_list);
-  $info = TestDiscovery::getTestInfo(new \ReflectionClass($test));
+  $info = TestDiscovery::getTestInfo($test_class);
 
   \Drupal::moduleHandler()->invokeAll('test_finished', array($test->results));
 

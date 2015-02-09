@@ -26,6 +26,8 @@ use Symfony\Component\EventDispatcher\Tests\TestEventListener;
  * synchronizations.
  *
  * @see https://github.com/symfony/symfony/pull/12521
+ *
+ * @group Symfony
  */
 class ContainerAwareEventDispatcherTest extends AbstractEventDispatcherTest
 {

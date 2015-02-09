@@ -12,6 +12,7 @@ use Drupal\Tests\UnitTestCase;
 
 /**
  * @coversDefaultClass \Drupal\Component\Plugin\DefaultFactory
+ * @group Plugin
  */
 class DefaultFactoryTest extends UnitTestCase {
 

@@ -153,7 +153,7 @@ class SimpletestResultsForm extends FormBase {
     $form['result']['results'] = array();
     foreach ($results as $group => $assertions) {
       // Create group details with summary information.
-      $info = TestDiscovery::getTestInfo(new \ReflectionClass($group));
+      $info = TestDiscovery::getTestInfo($group);
       $form['result']['results'][$group] = array(
         '#type' => 'details',
         '#title' => $info['name'],

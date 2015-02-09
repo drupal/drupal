@@ -14,6 +14,7 @@ use Drupal\Tests\UnitTestCase;
  * Tests the migrate entity.
  *
  * @coversDefaultClass \Drupal\migrate\Entity\Migration
+ * @group migrate
  */
 class MigrationTest extends UnitTestCase {
 
