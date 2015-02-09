@@ -24,7 +24,13 @@ class LanguageConfigurationElementTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('taxonomy', 'node', 'language', 'language_elements_test');
+  public static $modules = array('taxonomy', 'node', 'language', 'language_elements_test', 'field_ui');
+
+  protected function setUp() {
+    parent::setUp();
+    $user = $this->drupalCreateUser(array('access administration pages', 'administer languages', 'administer content types'));
+    $this->drupalLogin($user);
+  }
 
   /**
    * Tests the language settings have been saved.
@@ -56,6 +62,21 @@ class LanguageConfigurationElementTest extends WebTestBase {
     $this->drupalGet('language-tests/language_configuration_element');
     $this->assertOptionSelected('edit-lang-configuration-langcode', 'authors_default');
     $this->assertFieldChecked('edit-lang-configuration-language-alterable');
+
+    // Test if content type settings have been saved.
+    $edit = array(
+      'name' => 'Page',
+      'type' => 'page',
+      'language_configuration[langcode]' => 'authors_default',
+      'language_configuration[language_alterable]' => TRUE,
+    );
+    $this->drupalPostForm('admin/structure/types/add', $edit, 'Save and manage fields');
+
+    // Make sure the settings are saved when creating the content type.
+    $this->drupalGet('admin/structure/types/manage/page');
+    $this->assertOptionSelected('edit-language-configuration-langcode', 'authors_default');
+    $this->assertFieldChecked('edit-language-configuration-language-alterable');
+
   }
 
   /**

@@ -209,17 +209,21 @@ function language_configuration_element_submit(&$form, FormStateInterface $form_
       $entity_type_id = $values['entity_type'];
       $bundle = $values['bundle'];
       $form_object = $form_state->getFormObject();
-      if ($form_object instanceof EntityFormInterface && !$form_object->getEntity()->isNew() && in_array($form_object->getOperation(), ['default', 'edit'])) {
+      if ($form_object instanceof EntityFormInterface) {
         /** @var EntityFormInterface $form_object */
         $entity = $form_object->getEntity();
         if ($entity->getEntityType()->getBundleOf()) {
           $bundle = $entity->id();
+          $language[$element_name]['bundle'] = $bundle;
         }
       }
       $config = ContentLanguageSettings::loadByEntityTypeBundle($entity_type_id, $bundle);
       $config->setDefaultLangcode($form_state->getValue(array($element_name, 'langcode')));
       $config->setLanguageAlterable($form_state->getValue(array($element_name, 'language_alterable')));
       $config->save();
+
+      // Set the form_state languaged with the updated bundle.
+      $form_state->set('language', $language);
     }
   }
 }

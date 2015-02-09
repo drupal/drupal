@@ -433,7 +433,8 @@ function content_translation_language_configuration_element_process(array $eleme
       '#prefix' => '<label>' . t('Translation') . '</label>',
     );
 
-    $form['actions']['submit']['#submit'][] = 'content_translation_language_configuration_element_submit';
+    $submit_name = isset($form['actions']['save_continue']) ? 'save_continue' : 'submit';
+    $form['actions'][$submit_name]['#submit'][] = 'content_translation_language_configuration_element_submit';
   }
   return $element;
 }
