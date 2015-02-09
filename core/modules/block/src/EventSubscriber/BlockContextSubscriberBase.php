@@ -38,7 +38,7 @@ abstract class BlockContextSubscriberBase implements EventSubscriberInterface {
    *   // Set that specific node as the value of the 'node' context.
    *   $context = new Context(new ContextDefinition('entity:node'));
    *   $context->setContextValue($node);
-   *   $event->setContext('node', $context);
+   *   $event->setContext('node.node', $context);
    * @endcode
    *
    * @param \Drupal\block\Event\BlockContextEvent $event
@@ -57,12 +57,12 @@ abstract class BlockContextSubscriberBase implements EventSubscriberInterface {
    * For example:
    * @code
    *   // During configuration, there is no specific node to pass as context.
-   *   // However, inform the system that a context named 'node' is available,
-   *   // and provide its definition, so that blocks can be configured to use
-   *   // it. When the block is rendered, the value of this context will be
-   *   // supplied by onBlockActiveContext().
+   *   // However, inform the system that a context named 'node.node' is
+   *   // available, and provide its definition, so that blocks can be
+   *   // configured to use it. When the block is rendered, the value of this
+   *   // context will be supplied by onBlockActiveContext().
    *   $context = new Context(new ContextDefinition('entity:node'));
-   *   $event->setContext('node', $context);
+   *   $event->setContext('node.node', $context);
    * @endcode
    *
    * @param \Drupal\block\Event\BlockContextEvent $event

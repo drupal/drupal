@@ -7,6 +7,8 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\block\Entity\Block;
+
 /**
  * Tests node block functionality.
  *
@@ -120,18 +122,15 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->assertText($node4->label(), 'Node found in block.');
 
     // Enable the "Powered by Drupal" block only on article nodes.
-    $block = $this->drupalPlaceBlock('system_powered_by_block', array(
-      'visibility' => array(
-        'node_type' => array(
-          'context_mapping' => array(
-            'node' => 'node.node',
-          ),
-          'bundles' => array(
-            'article' => 'article',
-          ),
-        ),
-      ),
-    ));
+    $edit = [
+      'id' => strtolower($this->randomMachineName()),
+      'region' => 'sidebar_first',
+      'visibility[node_type][bundles][article]' => 'article',
+    ];
+    $theme =  \Drupal::service('theme_handler')->getDefault();
+    $this->drupalPostForm("admin/structure/block/add/system_powered_by_block/$theme", $edit, t('Save block'));
+
+    $block = Block::load($edit['id']);
     $visibility = $block->getVisibility();
     $this->assertTrue(isset($visibility['node_type']['bundles']['article']), 'Visibility settings were saved to configuration');
 

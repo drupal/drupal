@@ -59,7 +59,7 @@ class NodeRouteContext extends BlockContextSubscriberBase {
    */
   public function onBlockAdministrativeContext(BlockContextEvent $event) {
     $context = new Context(new ContextDefinition('entity:node'));
-    $event->setContext('node', $context);
+    $event->setContext('node.node', $context);
   }
 
 }
