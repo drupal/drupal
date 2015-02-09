@@ -152,30 +152,6 @@ function module_load_include($type, $module, $name = NULL) {
 }
 
 /**
- * Installs a given list of modules.
- *
- * @see \Drupal\Core\Extension\ModuleHandlerInterface::install()
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0. Use
- *   \Drupal::service('module_installer')->install($module_list, $enable_dependencies = TRUE).
- */
-function module_install($module_list, $enable_dependencies = TRUE) {
-  return \Drupal::service('module_installer')->install($module_list, $enable_dependencies);
-}
-
-/**
- * Installs a given list of modules.
- *
- * @see \Drupal\Core\Extension\ModuleHandlerInterface::module_install()
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0. Use
- *   \Drupal::service('module_installer')->uninstall($module_list, $enable_dependencies = TRUE).
- */
-function module_uninstall($module_list = array(), $uninstall_dependents = TRUE) {
-  return \Drupal::service('module_installer')->uninstall($module_list, $uninstall_dependents);
-}
-
-/**
  * Returns an array of modules required by core.
  */
 function drupal_required_modules() {
