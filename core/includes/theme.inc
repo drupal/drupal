@@ -130,35 +130,6 @@ function drupal_theme_rebuild() {
 }
 
 /**
- * Returns a list of all currently available themes.
- *
- * Retrieved from the database, if available and the site is not in maintenance
- * mode; otherwise compiled freshly from the filesystem.
- *
- * @param $refresh
- *   Whether to reload the list of themes from the database. Defaults to FALSE.
- *
- * @return array
- *   An associative array of the currently available themes.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::service('theme_handler')->listInfo().
- *
- * @see \Drupal\Core\Extension\ThemeHandler::listInfo().
- */
-function list_themes($refresh = FALSE) {
-  /** @var \Drupal\Core\Extension\ThemeHandler $theme_handler */
-  $theme_handler = \Drupal::service('theme_handler');
-
-  if ($refresh) {
-    $theme_handler->reset();
-    system_list_reset();
-  }
-
-  return $theme_handler->listInfo();
-}
-
-/**
  * Allows themes and/or theme engines to discover overridden theme functions.
  *
  * @param $cache
