@@ -1,0 +1,77 @@
+langcode: und
+status: true
+dependencies:
+  module:
+    - file
+    - user
+id: test_image_user_image_data
+label: test_image_user_image_data
+module: views
+description: ''
+tag: ''
+base_table: users
+base_field: uid
+core: 8.x
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: 0
+    display_options:
+      access:
+        type: perm
+        options:
+          perm: 'access user profiles'
+      cache:
+        type: none
+      style:
+        type: table
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: true
+          override: true
+          sticky: false
+          caption: ''
+          summary: ''
+          description: ''
+          columns:
+            name: name
+            fid: fid
+          info:
+            name:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            fid:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+          default: '-1'
+          empty_table: false
+      row:
+        type: fields
+        options:
+          inline: {  }
+          separator: ''
+          hide_empty: false
+          default_field_elements: true
+      relationships:
+        user_picture_target_id:
+          id: user_picture_target_id
+          table: user__user_picture
+          field: user_picture_target_id
+          relationship: none
+          group_type: group
+          admin_label: 'image from user_picture'
+          required: true
+          plugin_id: standard
+      arguments: {  }
+      display_extenders: {  }

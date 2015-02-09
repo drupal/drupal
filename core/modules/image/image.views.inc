@@ -22,7 +22,7 @@ function image_field_views_data(FieldStorageConfigInterface $field_storage) {
     $data[$table_name][$field_storage->getName() . '_target_id']['relationship'] = array(
       'id' => 'standard',
       'base' => 'file_managed',
-      'base field' => 'target_id',
+      'base field' => 'fid',
       'label' => t('image from !field_name', array('!field_name' => $field_storage->getName())),
     );
   }
