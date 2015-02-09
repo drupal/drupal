@@ -3,7 +3,6 @@ global-styling:
   css:
     theme:
       css/base/elements.css: {}
-      css/base/typography.css: {}
       css/layout.css: {}
       css/components/admin.css: {}
       css/components/block.css: {}

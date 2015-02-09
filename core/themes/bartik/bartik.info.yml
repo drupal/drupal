@@ -9,7 +9,6 @@ libraries:
   - bartik/global-styling
 ckeditor_stylesheets:
   - css/base/elements.css
-  - css/base/typography.css
   - css/components/captions.css
   - css/components/content.css
   - css/components/table.css
