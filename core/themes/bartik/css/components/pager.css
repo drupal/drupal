@@ -1,5 +1,9 @@
-/* --------------- Pager ------------ */
+/**
+ * @file
+ * Styles for Bartik's pagination.
+ */
 
+/* Using .pager selector on the first one to override .region-content ul. */
 .pager .pager__items {
   padding: 0;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -12,7 +16,7 @@
   display: inline-block;
 }
 .pager__item.is-active a {
-  color: #3B3B3B;
+  color: #3b3b3b;
   border-bottom: 0;
 }
 .pager__item--first,

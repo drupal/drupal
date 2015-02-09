@@ -169,9 +169,7 @@ abbr.ajax-changed {
   text-align: center;
 }
 .pager__item {
-  background-image: none;
   display: inline;
-  list-style-type: none;
   padding: 0.5em;
 }
 .pager__item.is-active {
