@@ -2,32 +2,59 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Transliteration\TransliterationTest.
+ * Contains \Drupal\Tests\Component\Transliteration\PhpTransliterationTest.
  */
 
-namespace Drupal\system\Tests\Transliteration;
+namespace Drupal\Tests\Component\Transliteration;
 
-use Drupal\Core\Transliteration\PhpTransliteration;
-use Drupal\simpletest\KernelTestBase;
+use Drupal\Component\Transliteration\PhpTransliteration;
+use Drupal\Component\Utility\Random;
+use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests Transliteration component functionality.
  *
  * @group Transliteration
+ *
+ * @coversClass \Drupal\Component\Transliteration\PhpTransliteration
  */
-class TransliterationTest extends KernelTestBase {
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('transliterate_test');
+class PhpTransliterationTest extends UnitTestCase {
 
   /**
    * Tests the PhpTransliteration class.
+   *
+   * @param string $langcode
+   *   The language code to test.
+   * @param string $original
+   *   The original string.
+   * @param string $expected
+   *   The expected return from PhpTransliteration::transliterate().
+   * @param string $unknown_character
+   *   (optional) The character to substitute for characters in $string without
+   *   transliterated equivalents. Defaults to '?'.
+   * @param int $max_length
+   *   (optional) If provided, return at most this many characters, ensuring
+   *   that the transliteration does not split in the middle of an input
+   *   character's transliteration.
+   *
+   * @dataProvider providerTestPhpTransliteration
    */
-  public function testPhpTransliteration() {
-    $random = $this->randomMachineName(10);
+  public function testPhpTransliteration($langcode, $original, $expected, $unknown_character = '?', $max_length = NULL) {
+    $transliterator_class = new PhpTransliteration();
+    $actual = $transliterator_class->transliterate($original, $langcode, $unknown_character, $max_length);
+    $this->assertSame($expected, $actual);
+  }
+
+  /**
+   * Provides data for self::testPhpTransliteration().
+   *
+   * @return array
+   *   An array of arrays, each containing the parameters for
+   *   self::testPhpTransliteration().
+   */
+  public function providerTestPhpTransliteration() {
+    $random_generator = new Random();
+    $random = $random_generator->string(10);
     // Make some strings with two, three, and four-byte characters for testing.
     // Note that the 3-byte character is overridden by the 'kg' language.
     $two_byte = 'Ä Ö Ü Å Ø äöüåøhello';
@@ -41,10 +68,8 @@ class TransliterationTest extends KernelTestBase {
     // http://en.wikipedia.org/wiki/Gothic_alphabet
     // They are not in our tables, but should at least give us '?' (unknown).
     $five_byte = html_entity_decode('&#x10330;&#x10338;', ENT_NOQUOTES, 'UTF-8');
-    // Five-byte characters do not work in MySQL, so make a printable version.
-    $five_byte_printable = '&#x10330;&#x10338;';
 
-    $cases = array(
+    return array(
       // Each test case is (language code, input, output).
       // Test ASCII in English.
       array('en', $random, $random),
@@ -57,7 +82,7 @@ class TransliterationTest extends KernelTestBase {
       array('fr', $three_byte, 'c'),
       array('fr', $four_byte, 'wii'),
       // Test 5-byte characters.
-      array('en', $five_byte, '??', $five_byte_printable),
+      array('en', $five_byte, '??'),
       // Test a language with no overrides.
       array('en', $two_byte, 'A O U A O aouaohello'),
       // Test language overrides provided by core.
@@ -66,47 +91,29 @@ class TransliterationTest extends KernelTestBase {
       array('dk', $two_byte, 'A O U Aa Oe aouaaoehello'),
       array('dk', $random, $random),
       array('kg', $three_byte, 'ts'),
-      // Test the language override hook in the test module, which changes
-      // the transliteration of Ä to Z and provides for the 5-byte characters.
-      array('zz', $two_byte, 'Z O U A O aouaohello'),
-      array('zz', $random, $random),
-      array('zz', $five_byte, 'ATh', $five_byte_printable),
       // Test strings in some other languages.
       // Turkish, provided by drupal.org user Kartagis.
       array('tr', 'Abayı serdiler bize. Söyleyeceğim yüzlerine. Sanırım hepimiz aynı şeyi düşünüyoruz.', 'Abayi serdiler bize. Soyleyecegim yuzlerine. Sanirim hepimiz ayni seyi dusunuyoruz.'),
+      // Illegal/unknown unicode.
+      array('en', chr(0xF8) . chr(0x80) . chr(0x80) . chr(0x80) . chr(0x80), '?'),
+      // Max length.
+      array('de', $two_byte, 'Ae Oe', '?', 5),
     );
+  }
 
-    // Test each case both with a new instance of the transliteration class,
-    // and with one that builds as it goes.
-    $transliterator_service = $this->container->get('transliteration');
-
-    foreach($cases as $case) {
-      list($langcode, $original, $expected) = $case;
-      $printable = (isset($case[3])) ? $case[3] : $original;
-      $transliterator_class = new PhpTransliteration();
-      $actual = $transliterator_class->transliterate($original, $langcode);
-      $this->assertIdentical($actual, $expected, format_string('@original transliteration to @actual is identical to @expected for language @langcode in new class instance.', array(
-        '@original' => $printable,
-        '@langcode' => $langcode,
-        '@expected' => $expected,
-        '@actual' => $actual,
-      )));
-
-      $actual = $transliterator_service->transliterate($original, $langcode);
-      $this->assertIdentical($actual, $expected, format_string('@original transliteration to @actual is identical to @expected for language @langcode in service instance.', array(
-        '@original' => $printable,
-        '@langcode' => $langcode,
-        '@expected' => $expected,
-        '@actual' => $actual,
-      )));
-    }
+  /**
+   * Tests the transliteration with max length.
+   */
+  public function testTransliterationWithMaxLength() {
+    $transliteration = new PhpTransliteration();
 
     // Test with max length, using German. It should never split up the
     // transliteration of a single character.
     $input = 'Ä Ö Ü Å Ø äöüåøhello';
     $trunc_output = 'Ae Oe Ue A O aeoe';
-    $this->assertIdentical($trunc_output, $transliterator_service->transliterate($input, 'de', '?', 17), 'Truncating to 17 characters works');
-    $this->assertIdentical($trunc_output, $transliterator_service->transliterate($input, 'de', '?', 18), 'Truncating to 18 characters works');
 
+    $this->assertSame($trunc_output, $transliteration->transliterate($input, 'de', '?', 17), 'Truncating to 17 characters works');
+    $this->assertSame($trunc_output, $transliteration->transliterate($input, 'de', '?', 18), 'Truncating to 18 characters works');
   }
+
 }

@@ -1,6 +1,0 @@
-name: 'Transliteration test'
-type: module
-description: 'Helper module for Transliteration system tests.'
-package: Testing
-version: VERSION
-core: 8.x
