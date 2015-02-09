@@ -50,22 +50,3 @@
 #search-form .form-item-keys label {
   display: block;
 }
-
-/* --------------- Search Results ---------------- */
-ol.search-results {
-  padding-left: 0;
-  list-style-position: inside;
-}
-.search-results li {
-  border-bottom: 1px solid #d3d7d9;
-  padding-bottom: 0.4285em;
-  margin-bottom: 0.5em;
-}
-.search-results li:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
-  margin-bottom: 1em;
-}
-.search-results .search-snippet-info {
-  padding-left: 0;
-}
