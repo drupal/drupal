@@ -383,7 +383,7 @@ class Node extends ContentEntityBase implements NodeInterface {
 
     $fields['uid'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Authored by'))
-      ->setDescription(t('The user ID of the node author.'))
+      ->setDescription(t('The username of the content author.'))
       ->setRevisionable(TRUE)
       ->setSetting('target_type', 'user')
       ->setSetting('handler', 'default')
