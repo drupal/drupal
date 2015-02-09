@@ -146,6 +146,9 @@ class FieldStorageEditForm extends FormBase {
         'visible' => array(
          ':input[name="field_storage[cardinality]"]' => array('value' => 'number'),
         ),
+        'disabled' => array(
+         ':input[name="field_storage[cardinality]"]' => array('value' => -1),
+        ),
       ),
     );
 
