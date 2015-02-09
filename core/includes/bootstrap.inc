@@ -816,32 +816,6 @@ function drupal_get_bootstrap_phase() {
 }
 
 /**
- * Returns the list of enabled modules.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::moduleHandler()->getModuleList().
- *
- * @see \Drupal\Core\Extension\ModuleHandler::getModuleList()
- */
-function module_list() {
-  $modules = array_keys(\Drupal::moduleHandler()->getModuleList());
-  return array_combine($modules, $modules);
-}
-
-/**
- * Determines which modules are implementing a hook.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::moduleHandler()->getImplementations($hook).
- *
- * @see \Drupal\Core\Extension\ModuleHandler::getImplementations()
- */
-function module_implements($hook) {
-  return \Drupal::moduleHandler()->getImplementations($hook);
-}
-
-
-/**
  * Returns the test prefix if this is an internal request from SimpleTest.
  *
  * @param string $new_prefix
