@@ -2,4 +2,4 @@ forum.index:
   version: VERSION
   css:
     component:
-      css/forum.module.css: {}
+      css/forum.theme.css: {}
