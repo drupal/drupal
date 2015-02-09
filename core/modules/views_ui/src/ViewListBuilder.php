@@ -186,9 +186,10 @@ class ViewListBuilder extends ConfigEntityListBuilder {
 
     $list['filters']['text'] = array(
       '#type' => 'search',
-      '#title' => $this->t('Search'),
-      '#size' => 30,
-      '#placeholder' => $this->t('Enter view name'),
+      '#title' => $this->t('Filter'),
+      '#title_display' => 'invisible',
+      '#size' => 40,
+      '#placeholder' => $this->t('Filter by view name or description'),
       '#attributes' => array(
         'class' => array('views-filter-text'),
         'data-table' => '.views-listing-table',
