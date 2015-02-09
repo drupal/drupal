@@ -59,6 +59,15 @@
   padding-right: 3.75em;
 }
 
+.toolbar .toolbar-tray-vertical .menu a {
+  padding-left: 2.75em; /* LTR */
+  padding-right: 4em; /* LTR */
+}
+[dir="rtl"] .toolbar .toolbar-tray-vertical .menu a {
+  padding-left: 4em;
+  padding-right: 2.75em;
+}
+
 /**
  * Top level icons.
  */
@@ -230,8 +239,15 @@
  * Handle.
  */
 .toolbar .toolbar-icon.toolbar-handle {
-  width: 3em;
+  width: 4em;
   text-indent: -9999px;
+}
+.toolbar .toolbar-icon.toolbar-handle:before {
+  left: 1.6667em; /* LTR */
+}
+[dir="rtl"] .toolbar .toolbar-icon.toolbar-handle:before {
+  left: auto;
+  right: 1.6667em;
 }
 .toolbar .toolbar-icon.toolbar-handle:before {
   background-image: url(../../../misc/icons/5181c6/chevron-disc-down.svg);
