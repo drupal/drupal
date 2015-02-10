@@ -238,6 +238,17 @@ function language_entity_bundle_rename($entity_type_id, $bundle_old, $bundle_new
 }
 
 /**
+ * Implements hook_entity_bundle_delete().
+ */
+function language_entity_bundle_delete($entity_type_id, $bundle) {
+  // Remove the content language settings associated with the bundle.
+  $settings = ContentLanguageSettings::loadByEntityTypeBundle($entity_type_id, $bundle);
+  if (!$settings->isNew()) {
+    $settings->delete();
+  }
+}
+
+/**
  * Returns the default language code assigned to an entity type and a bundle.
  *
  * @param string $entity_type

@@ -185,6 +185,41 @@ class LanguageConfigurationElementTest extends WebTestBase {
   }
 
   /**
+   * Tests the language settings are deleted on bundle delete.
+   */
+  public function testNodeTypeDelete() {
+    // Create the article content type first if the profile used is not the
+    // standard one.
+    if ($this->profile != 'standard') {
+      $this->drupalCreateContentType(array(
+        'type' => 'article',
+        'name' => 'Article'
+      ));
+    }
+    $admin_user = $this->drupalCreateUser(array('administer content types'));
+    $this->drupalLogin($admin_user);
+
+    // Create language configuration for the articles.
+    $edit = array(
+      'language_configuration[langcode]' => 'authors_default',
+      'language_configuration[language_alterable]' => TRUE,
+    );
+    $this->drupalPostForm('admin/structure/types/manage/article', $edit, t('Save content type'));
+
+    // Check the language default configuration for articles is present.
+    $configuration = \Drupal::entityManager()->getStorage('language_content_settings')->load('node.article');
+    $this->assertTrue($configuration, 'The language configuration is present.');
+
+    // Delete 'article' bundle.
+    $this->drupalPostForm('admin/structure/types/manage/article/delete', array(), t('Delete'));
+
+    // Check that the language configuration has been deleted.
+    \Drupal::entityManager()->getStorage('language_content_settings')->resetCache();
+    $configuration = \Drupal::entityManager()->getStorage('language_content_settings')->load('node.article');
+    $this->assertFalse($configuration, 'The language configuration was deleted after bundle was deleted.');
+  }
+
+  /**
    * Tests that the configuration is updated when a vocabulary is changed.
    */
   public function testTaxonomyVocabularyUpdate() {
