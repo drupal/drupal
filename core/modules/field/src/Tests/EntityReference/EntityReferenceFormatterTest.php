@@ -244,7 +244,7 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
     // \Drupal\Core\Entity\EntityInterface::urlInfo() will throw an exception
     // and the label formatter will output only the label instead of a link.
     $field_storage_config = FieldStorageConfig::loadByName($this->entityType, $this->fieldName);
-    $field_storage_config->settings['target_type'] = 'entity_test_label';
+    $field_storage_config->setSetting('target_type', 'entity_test_label');
     $field_storage_config->save();
 
     $referenced_entity_with_no_link_template = entity_create('entity_test_label', array(

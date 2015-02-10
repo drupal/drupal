@@ -84,7 +84,7 @@ function field_purge_batch($batch_size, $field_storage_uuid = NULL) {
 
   $info = \Drupal::entityManager()->getDefinitions();
   foreach ($fields as $field) {
-    $entity_type = $field->entity_type;
+    $entity_type = $field->getTargetEntityTypeId();
 
     // We cannot purge anything if the entity type is unknown (e.g. the
     // providing module was uninstalled).
@@ -117,7 +117,7 @@ function field_purge_batch($batch_size, $field_storage_uuid = NULL) {
     // We cannot purge anything if the entity type is unknown (e.g. the
     // providing module was uninstalled).
     // @todo Revisit after https://drupal.org/node/2080823.
-    if (!isset($info[$field_storage->entity_type])) {
+    if (!isset($info[$field_storage->getTargetEntityTypeId()])) {
       continue;
     }
 
@@ -170,7 +170,7 @@ function field_purge_field_storage(FieldStorageConfigInterface $field_storage) {
   $state->set('field.storage.deleted', $deleted_storages);
 
   // Notify the storage layer.
-  \Drupal::entityManager()->getStorage($field_storage->entity_type)->finalizePurge($field_storage);
+  \Drupal::entityManager()->getStorage($field_storage->getTargetEntityTypeId())->finalizePurge($field_storage);
 
   // Invoke external hooks after the cache is cleared for API consistency.
   \Drupal::moduleHandler()->invokeAll('field_purge_field_storage', array($field_storage));

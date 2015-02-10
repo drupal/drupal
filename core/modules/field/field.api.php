@@ -81,7 +81,7 @@ function hook_field_storage_config_update_forbid(\Drupal\field\FieldStorageConfi
     $allowed_values = $field_storage->getSetting('allowed_values');
     $prior_allowed_values = $prior_field_storage->getSetting('allowed_values');
     $lost_keys = array_keys(array_diff_key($prior_allowed_values,$allowed_values));
-    if (_options_values_in_use($field_storage->entity_type, $field_storage->getName(), $lost_keys)) {
+    if (_options_values_in_use($field_storage->getTargetEntityTypeId(), $field_storage->getName(), $lost_keys)) {
       throw new \Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException(t('A list field (@field_name) with existing data cannot have its keys changed.', array('@field_name' => $field_storage->getName())));
     }
   }

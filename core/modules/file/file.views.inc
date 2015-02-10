@@ -37,7 +37,7 @@ function file_field_views_data(FieldStorageConfigInterface $field_storage) {
  * Views integration to provide reverse relationships on file fields.
  */
 function file_field_views_data_views_data_alter(array &$data, FieldStorageConfigInterface $field_storage) {
-  $entity_type_id = $field_storage->entity_type;
+  $entity_type_id = $field_storage->getTargetEntityTypeId();
   $entity_manager = \Drupal::entityManager();
   $entity_type = $entity_manager->getDefinition($entity_type_id);
   $field_name = $field_storage->getName();

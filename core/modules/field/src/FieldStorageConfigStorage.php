@@ -104,6 +104,7 @@ class FieldStorageConfigStorage extends ConfigEntityStorage {
     $include_deleted = isset($conditions['include_deleted']) ? $conditions['include_deleted'] : FALSE;
     unset($conditions['include_deleted']);
 
+    /** @var \Drupal\field\FieldStorageConfigInterface[] $storages */
     $storages = array();
 
     // Get field storages living in configuration. If we are explicitly looking
@@ -134,16 +135,7 @@ class FieldStorageConfigStorage extends ConfigEntityStorage {
     foreach ($storages as $field) {
       foreach ($conditions as $key => $value) {
         // Extract the actual value against which the condition is checked.
-        switch ($key) {
-          case 'uuid';
-            $checked_value = $field->uuid();
-            break;
-
-          default:
-            $checked_value = $field->$key;
-            break;
-        }
-
+        $checked_value = $field->get($key);
         // Skip to the next field as soon as one condition does not match.
         if ($checked_value != $value) {
           continue 2;

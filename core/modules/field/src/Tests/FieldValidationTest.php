@@ -48,7 +48,7 @@ class FieldValidationTest extends FieldUnitTestBase {
    * Tests that the number of values is validated against the field cardinality.
    */
   function testCardinalityConstraint() {
-    $cardinality = $this->fieldTestData->field_storage->cardinality;
+    $cardinality = $this->fieldTestData->field_storage->getCardinality();
     $entity = $this->entity;
 
     for ($delta = 0; $delta < $cardinality + 1; $delta++) {

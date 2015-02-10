@@ -176,9 +176,10 @@ function views_views_data() {
 
   $entity_manager = \Drupal::entityManager();
   if ($entity_manager->hasDefinition('field_storage_config')) {
+    /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
     foreach ($entity_manager->getStorage('field_storage_config')->loadMultiple() as $field_storage) {
       if (_views_field_get_entity_type_storage($field_storage)) {
-        $result = (array) $module_handler->invoke($field_storage->module, 'field_views_data', array($field_storage));
+        $result = (array) $module_handler->invoke($field_storage->getTypeProvider(), 'field_views_data', array($field_storage));
         if (empty($result)) {
           $result = views_field_default_views_data($field_storage);
         }
@@ -207,9 +208,10 @@ function views_views_data_alter(&$data) {
   if (!$entity_manager->hasDefinition('field_storage_config')) {
     return;
   }
+  /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
   foreach ($entity_manager->getStorage('field_storage_config')->loadMultiple() as $field_storage) {
     if (_views_field_get_entity_type_storage($field_storage)) {
-      $function = $field_storage->module . '_field_views_data_views_data_alter';
+      $function = $field_storage->getTypeProvider() . '_field_views_data_views_data_alter';
       if (function_exists($function)) {
         $function($data, $field_storage);
       }

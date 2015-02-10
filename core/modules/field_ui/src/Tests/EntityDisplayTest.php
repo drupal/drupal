@@ -173,7 +173,7 @@ class EntityDisplayTest extends KernelTestBase {
 
     // Check that providing no options results in default values being used.
     $display->setComponent($field_name);
-    $field_type_info = \Drupal::service('plugin.manager.field.field_type')->getDefinition($field_storage->type);
+    $field_type_info = \Drupal::service('plugin.manager.field.field_type')->getDefinition($field_storage->getType());
     $default_formatter = $field_type_info['default_formatter'];
     $formatter_settings =  \Drupal::service('plugin.manager.field.formatter')->getDefaultSettings($default_formatter);
     $expected = array(

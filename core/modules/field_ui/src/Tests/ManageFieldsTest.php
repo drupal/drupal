@@ -396,7 +396,7 @@ class ManageFieldsTest extends WebTestBase {
     // Check that the default value can be empty when the field is marked as
     // required and can store unlimited values.
     $field_storage = FieldStorageConfig::loadByName('node', $field_name);
-    $field_storage->cardinality = FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED;
+    $field_storage->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
     $field_storage->save();
 
     $this->drupalGet($admin_path);

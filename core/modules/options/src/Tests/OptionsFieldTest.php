@@ -39,7 +39,7 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
     $entity = entity_create('entity_test');
     $entity->{$this->fieldName}->value = 1;
     $entity->save();
-    $this->fieldStorage->settings['allowed_values'] = array(2 => 'Two');
+    $this->fieldStorage->setSetting('allowed_values', [2 => 'Two']);
     try {
       $this->fieldStorage->save();
       $this->fail(t('Cannot update a list field storage to not include keys with existing data.'));
@@ -52,7 +52,7 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
     $entity->save();
 
     // Removed options do not appear.
-    $this->fieldStorage->settings['allowed_values'] = array(2 => 'Two');
+    $this->fieldStorage->setSetting('allowed_values', [2 => 'Two']);
     $this->fieldStorage->save();
     $entity = entity_create('entity_test');
     $form = \Drupal::service('entity.form_builder')->getForm($entity);
@@ -61,7 +61,7 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
     $this->assertTrue(empty($form[$this->fieldName]['widget'][3]), 'Option 3 does not exist');
 
     // Completely new options appear.
-    $this->fieldStorage->settings['allowed_values'] = array(10 => 'Update', 20 => 'Twenty');
+    $this->fieldStorage->setSetting('allowed_values', [10 => 'Update', 20 => 'Twenty']);
     $this->fieldStorage->save();
     // The entity holds an outdated field object with the old allowed values
     // setting, so we need to reintialize the entity object.

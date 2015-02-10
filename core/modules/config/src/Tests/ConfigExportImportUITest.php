@@ -143,7 +143,7 @@ class ConfigExportImportUITest extends WebTestBase {
     }
     $field_storages = FieldStorageConfig::loadMultiple();
     foreach ($field_storages as $field_storage) {
-      if ($field_storage->field_name == $this->fieldName) {
+      if ($field_storage->getName() == $this->fieldName) {
         $field_storage->delete();
       }
     }

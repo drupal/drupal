@@ -40,7 +40,7 @@ class ConfigImporterFieldPurger {
       $context['sandbox']['field']['current_storage_id'] = $field_storage->id();
       // If the storage has not been deleted yet we need to do that. This is the
       // case when the storage deletion is staged.
-      if (!$field_storage->deleted) {
+      if (!$field_storage->isDeleted()) {
         $field_storage->delete();
       }
     }
@@ -138,9 +138,10 @@ class ConfigImporterFieldPurger {
     }
 
     // Gather deleted fields from modules that are being uninstalled.
+    /** @var \Drupal\field\FieldStorageConfigInterface[] $field_storages */
     $field_storages = entity_load_multiple_by_properties('field_storage_config', array('deleted' => TRUE, 'include_deleted' => TRUE));
     foreach ($field_storages as $field_storage) {
-      if (!in_array($field_storage->module, $providers)) {
+      if (!in_array($field_storage->getTypeProvider(), $providers)) {
         $storages_to_delete[$field_storage->id()] = $field_storage;
       }
     }

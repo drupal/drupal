@@ -53,7 +53,7 @@ class NodeFieldMultilingualTest extends WebTestBase {
 
     // Make node body translatable.
     $field_storage = FieldStorageConfig::loadByName('node', 'body');
-    $field_storage->translatable = TRUE;
+    $field_storage->setTranslatable(TRUE);
     $field_storage->save();
   }
 

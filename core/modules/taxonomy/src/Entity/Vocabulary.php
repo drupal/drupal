@@ -137,12 +137,14 @@ class Vocabulary extends ConfigEntityBundleBase implements VocabularyInterface {
       foreach ($field_storages as $field_storage) {
         $update_storage = FALSE;
 
-        foreach ($field_storage->settings['allowed_values'] as &$value) {
+        $allowed_values = $field_storage->getSetting('allowed_values');
+        foreach ($allowed_values as &$value) {
           if ($value['vocabulary'] == $this->getOriginalId()) {
             $value['vocabulary'] = $this->id();
             $update_storage = TRUE;
           }
         }
+        $field_storage->setSetting('allowed_values', $allowed_values);
 
         if ($update_storage) {
           $field_storage->save();
@@ -186,14 +188,17 @@ class Vocabulary extends ConfigEntityBundleBase implements VocabularyInterface {
       $modified_storage = FALSE;
       // Term reference fields may reference terms from more than one
       // vocabulary.
-      foreach ($field_storage->settings['allowed_values'] as $key => $allowed_value) {
+      foreach ($field_storage->getSetting('allowed_values') as $key => $allowed_value) {
         if (isset($vocabularies[$allowed_value['vocabulary']])) {
-          unset($field_storage->settings['allowed_values'][$key]);
+          $allowed_values = $field_storage->getSetting('allowed_values');
+          unset($allowed_values[$key]);
+          $field_storage->setSetting('allowed_values', $allowed_values);
           $modified_storage = TRUE;
         }
       }
       if ($modified_storage) {
-        if (empty($field_storage->settings['allowed_values'])) {
+        $allowed_values = $field_storage->getSetting('allowed_values');
+        if (empty($allowed_values)) {
           $field_storage->delete();
         }
         else {

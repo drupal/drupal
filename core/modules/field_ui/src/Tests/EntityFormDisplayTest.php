@@ -74,7 +74,7 @@ class EntityFormDisplayTest extends KernelTestBase {
 
     // Check that providing no options results in default values being used.
     $form_display->setComponent($field_name);
-    $field_type_info = \Drupal::service('plugin.manager.field.field_type')->getDefinition($field_storage->type);
+    $field_type_info = \Drupal::service('plugin.manager.field.field_type')->getDefinition($field_storage->getType());
     $default_widget = $field_type_info['default_widget'];
     $widget_settings = \Drupal::service('plugin.manager.field.widget')->getDefaultSettings($default_widget);
     $expected = array(

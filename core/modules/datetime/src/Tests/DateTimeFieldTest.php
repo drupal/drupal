@@ -95,7 +95,7 @@ class DateTimeFieldTest extends WebTestBase {
    * Tests date field functionality.
    */
   function testDateField() {
-    $field_name = $this->fieldStorage->field_name;
+    $field_name = $this->fieldStorage->getName();
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
@@ -163,7 +163,7 @@ class DateTimeFieldTest extends WebTestBase {
   function testDatetimeField() {
     $field_name = $this->fieldStorage->getName();
     // Change the field to a datetime field.
-    $this->fieldStorage->settings['datetime_type'] = 'datetime';
+    $this->fieldStorage->setSetting('datetime_type', 'datetime');
     $this->fieldStorage->save();
 
     // Display creation form.
@@ -229,7 +229,7 @@ class DateTimeFieldTest extends WebTestBase {
   function testDatelistWidget() {
     $field_name = $this->fieldStorage->getName();
     // Change the field to a datetime field.
-    $this->fieldStorage->settings['datetime_type'] = 'datetime';
+    $this->fieldStorage->setSetting('datetime_type', 'datetime');
     $this->fieldStorage->save();
 
     // Change the widget to a datelist widget.
@@ -393,7 +393,7 @@ class DateTimeFieldTest extends WebTestBase {
   function testInvalidField() {
 
     // Change the field to a datetime field.
-    $this->fieldStorage->settings['datetime_type'] = 'datetime';
+    $this->fieldStorage->setSetting('datetime_type', 'datetime');
     $this->fieldStorage->save();
     $field_name = $this->fieldStorage->getName();
 

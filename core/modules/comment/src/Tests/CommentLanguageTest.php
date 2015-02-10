@@ -73,7 +73,7 @@ class CommentLanguageTest extends WebTestBase {
 
     // Make comment body translatable.
     $field_storage = FieldStorageConfig::loadByName('comment', 'comment_body');
-    $field_storage->translatable = TRUE;
+    $field_storage->setTranslatable(TRUE);
     $field_storage->save();
     $this->assertTrue($field_storage->isTranslatable(), 'Comment body is translatable.');
   }

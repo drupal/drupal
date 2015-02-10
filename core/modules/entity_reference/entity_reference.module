@@ -69,7 +69,7 @@ function entity_reference_field_widget_info_alter(&$info) {
  * Reset the instance handler settings, when the target type is changed.
  */
 function entity_reference_field_storage_config_update(FieldStorageConfigInterface $field_storage) {
-  if ($field_storage->type != 'entity_reference') {
+  if ($field_storage->getType() != 'entity_reference') {
     // Only act on entity reference fields.
     return;
   }

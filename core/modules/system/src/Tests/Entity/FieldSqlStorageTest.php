@@ -332,7 +332,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     $entity->save();
 
     // Attempt to update the field in a way that would work without data.
-    $field_storage->settings['scale'] = 3;
+    $field_storage->setSetting('scale', 3);
     try {
       $field_storage->save();
       $this->fail(t('Cannot update field schema with data.'));
@@ -357,7 +357,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
 
     // Attempt to update the field in a way that would break the storage.
     $prior_field_storage = $field_storage;
-    $field_storage->settings['max_length'] = -1;
+    $field_storage->setSetting('max_length', -1);
     try {
       $field_storage->save();
       $this->fail(t('Update succeeded.'));
@@ -412,14 +412,14 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     $entity->save();
 
     // Add an index.
-    $field_storage->indexes = array('value' => array(array('value', 255)));
+    $field_storage->setIndexes(['value' => [['value', 255]]]);
     $field_storage->save();
     foreach ($tables as $table) {
       $this->assertTrue(Database::getConnection()->schema()->indexExists($table, "{$field_name}_value"), t("Index on value created in @table", array('@table' => $table)));
     }
 
     // Add a different index, removing the existing custom one.
-    $field_storage->indexes = array('value_format' => array(array('value', 127), array('format', 127)));
+    $field_storage->setIndexes(['value_format' => [['value', 127], ['format', 127]]]);
     $field_storage->save();
     foreach ($tables as $table) {
       $this->assertTrue(Database::getConnection()->schema()->indexExists($table, "{$field_name}_value_format"), t("Index on value_format created in @table", array('@table' => $table)));
@@ -455,7 +455,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
 
     // Update the field settings, it should update the foreign key definition too.
     $foreign_key_name = 'color';
-    $field_storage->settings['foreign_key_name'] = $foreign_key_name;
+    $field_storage->setSetting('foreign_key_name', $foreign_key_name);
     $field_storage->save();
     // Reload the field schema after the update.
     $schema = $field_storage->getSchema();

@@ -59,7 +59,7 @@ class SearchMultilingualEntityTest extends SearchTestBase {
     // definition. The parent class has already created the article and page
     // content types.
     $field_storage = FieldStorageConfig::loadByName('node', 'body');
-    $field_storage->translatable = TRUE;
+    $field_storage->setTranslatable(TRUE);
     $field_storage->save();
 
     // Create a few page nodes with multilingual body values.

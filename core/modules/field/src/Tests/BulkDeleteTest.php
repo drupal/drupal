@@ -314,7 +314,7 @@ class BulkDeleteTest extends FieldUnitTestBase {
     $this->assertEqual(count($fields), 0, 'The field is purged.');
     // The field storage still exists, not deleted.
     $storages = entity_load_multiple_by_properties('field_storage_config', array('uuid' => $field_storage->uuid(), 'include_deleted' => TRUE));
-    $this->assertTrue(isset($storages[$field_storage->uuid()]) && !$storages[$field_storage->uuid()]->deleted, 'The field storage exists and is not deleted');
+    $this->assertTrue(isset($storages[$field_storage->uuid()]) && !$storages[$field_storage->uuid()]->isDeleted(), 'The field storage exists and is not deleted');
 
     // Delete the second field.
     $bundle = next($this->bundles);
@@ -341,7 +341,7 @@ class BulkDeleteTest extends FieldUnitTestBase {
     $fields = entity_load_multiple_by_properties('field_config', array('uuid' => $field->uuid(), 'include_deleted' => TRUE));
     $this->assertTrue(isset($fields[$field->uuid()]) && $fields[$field->uuid()]->deleted, 'The field exists and is deleted');
     $storages = entity_load_multiple_by_properties('field_storage_config', array('uuid' => $field_storage->uuid(), 'include_deleted' => TRUE));
-    $this->assertTrue(isset($storages[$field_storage->uuid()]) && $storages[$field_storage->uuid()]->deleted, 'The field storage exists and is deleted');
+    $this->assertTrue(isset($storages[$field_storage->uuid()]) && $storages[$field_storage->uuid()]->isDeleted(), 'The field storage exists and is deleted');
 
     // Purge again to purge the field and the storage.
     field_purge_batch(0);

@@ -141,7 +141,7 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
     // Filter out unknown settings and make sure all settings are present, so
     // that a complete field definition is passed to the various hooks and
     // written to config.
-    $default_settings = $field_type_manager->getDefaultFieldSettings($storage_definition->type);
+    $default_settings = $field_type_manager->getDefaultFieldSettings($storage_definition->getType());
     $this->settings = array_intersect_key($this->settings, $default_settings) + $default_settings;
 
     if ($this->isNew()) {

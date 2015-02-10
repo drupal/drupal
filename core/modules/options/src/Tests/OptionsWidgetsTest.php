@@ -132,7 +132,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertFieldValues($entity_init, 'card_1', array());
 
     // Check that required radios with one option is auto-selected.
-    $this->card1->settings['allowed_values'] = [99 => 'Only allowed value'];
+    $this->card1->setSetting('allowed_values', [99 => 'Only allowed value']);
     $this->card1->save();
     $field->required = TRUE;
     $field->save();
@@ -221,7 +221,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertFieldValues($entity_init, 'card_2', array());
 
     // Required checkbox with one option is auto-selected.
-    $this->card2->settings['allowed_values'] = array(99 => 'Only allowed value');
+    $this->card2->setSetting('allowed_values', [99 => 'Only allowed value']);
     $this->card2->save();
     $field->required = TRUE;
     $field->save();
@@ -299,8 +299,8 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Test optgroups.
 
-    $this->card1->settings['allowed_values'] = array();
-    $this->card1->settings['allowed_values_function'] = 'options_test_allowed_values_callback';
+    $this->card1->setSetting('allowed_values', []);
+    $this->card1->setSetting('allowed_values_function', 'options_test_allowed_values_callback');
     $this->card1->save();
 
     // Display form: with no field data, nothing is selected
@@ -418,8 +418,8 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Test optgroups.
 
     // Use a callback function defining optgroups.
-    $this->card2->settings['allowed_values'] = array();
-    $this->card2->settings['allowed_values_function'] = 'options_test_allowed_values_callback';
+    $this->card2->setSetting('allowed_values', []);
+    $this->card2->setSetting('allowed_values_function', 'options_test_allowed_values_callback');
     $this->card2->save();
     $field->required = FALSE;
     $field->save();

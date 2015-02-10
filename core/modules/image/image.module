@@ -7,6 +7,7 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\file\Entity\File;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\field\FieldConfigInterface;
@@ -321,49 +322,51 @@ function image_filter_keyword($value, $current_pixels, $new_pixels) {
  * Transforms default image of image field from array into single value at save.
  */
 function image_entity_presave(EntityInterface $entity) {
-  $field_storage = FALSE;
-  $entity_type_id = $entity->getEntityTypeId();
-  if ($entity_type_id == 'field_config') {
-    $field_storage = $entity->getFieldStorageDefinition();
-    $default_settings = \Drupal::service('plugin.manager.field.field_type')->getDefaultFieldSettings('image');
+  // Get the default image settings, return if not saving an image field storage
+  // or image field entity.
+  if (($entity instanceof FieldStorageConfigInterface || $entity instanceof FieldConfigInterface) && $entity->getType() == 'image') {
+    $default_image = $entity->getSetting('default_image');
   }
-  elseif ($entity_type_id == 'field_storage_config') {
-    $field_storage = $entity;
-    $default_settings = \Drupal::service('plugin.manager.field.field_type')->getDefaultStorageSettings('image');
-  }
-  // Exit, if not saving an image field storage or image field entity.
-  if (!$field_storage || $field_storage->type != 'image') {
+  else {
     return;
   }
 
-  if ($field_storage->isSyncing()) {
+  if ($entity->isSyncing()) {
     return;
   }
 
-  $uuid = $entity->settings['default_image']['uuid'];
+  $uuid = $default_image['uuid'];
   if ($uuid) {
-    $original_uuid = isset($entity->original) ? $entity->original->settings['default_image']['uuid'] : NULL;
+    $original_uuid = isset($entity->original) ? $entity->original->getSetting('default_image')['uuid'] : NULL;
     if ($uuid != $original_uuid) {
       $file = \Drupal::entityManager()->loadEntityByUuid('file', $uuid);
       if ($file) {
         $image = \Drupal::service('image.factory')->get($file->getFileUri());
-        $entity->settings['default_image']['width'] = $image->getWidth();
-        $entity->settings['default_image']['height'] = $image->getHeight();
+        $default_image['width'] = $image->getWidth();
+        $default_image['height'] = $image->getHeight();
       }
       else {
-        $entity->settings['default_image']['uuid'] = NULL;
+        $default_image['uuid'] = NULL;
       }
     }
   }
 
-  $entity->settings['default_image'] += $default_settings['default_image'];
+  // @todo Simplify this in https://www.drupal.org/node/2030637, when both
+  //   interfaces have a setSetting() method.
+  if ($entity instanceof FieldStorageConfigInterface) {
+    $entity->setSetting('default_image', $default_image);
+  }
+  elseif ($entity instanceof FieldConfig) {
+    $entity->settings['default_image'] = $default_image;
+  }
+
 }
 
 /**
  * Implements hook_ENTITY_TYPE_update() for 'field_storage_config'.
  */
 function image_field_storage_config_update(FieldStorageConfigInterface $field_storage) {
-  if ($field_storage->type != 'image') {
+  if ($field_storage->getType() != 'image') {
     // Only act on image fields.
     return;
   }
@@ -371,8 +374,8 @@ function image_field_storage_config_update(FieldStorageConfigInterface $field_st
   $prior_field_storage = $field_storage->original;
 
   // The value of a managed_file element can be an array if #extended == TRUE.
-  $uuid_new = $field_storage->settings['default_image']['uuid'];
-  $uuid_old = $prior_field_storage->settings['default_image']['uuid'];
+  $uuid_new = $field_storage->getSetting('default_image')['uuid'];
+  $uuid_old = $prior_field_storage->getSetting('default_image')['uuid'];
 
   $file_new = $uuid_new ? \Drupal::entityManager()->loadEntityByUuid('file', $uuid_new) : FALSE;
 
@@ -392,8 +395,8 @@ function image_field_storage_config_update(FieldStorageConfigInterface $field_st
   }
 
   // If the upload destination changed, then move the file.
-  if ($file_new && (file_uri_scheme($file_new->getFileUri()) != $field_storage->settings['uri_scheme'])) {
-    $directory = $field_storage->settings['uri_scheme'] . '://default_images/';
+  if ($file_new && (file_uri_scheme($file_new->getFileUri()) != $field_storage->getSetting('uri_scheme'))) {
+    $directory = $field_storage->getSetting('uri_scheme') . '://default_images/';
     file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
     file_move($file_new, $directory . $file_new->filename);
   }
@@ -404,14 +407,14 @@ function image_field_storage_config_update(FieldStorageConfigInterface $field_st
  */
 function image_field_config_update(FieldConfigInterface $field) {
   $field_storage = $field->getFieldStorageDefinition();
-  if ($field_storage->type != 'image') {
+  if ($field_storage->getType() != 'image') {
     // Only act on image fields.
     return;
   }
 
   $prior_instance = $field->original;
 
-  $uuid_new = $field->settings['default_image']['uuid'];
+  $uuid_new = $field->getSetting('default_image')['uuid'];
   $uuid_old = $prior_instance->settings['default_image']['uuid'];
 
   // If the old and new files do not match, update the default accordingly.
@@ -430,8 +433,8 @@ function image_field_config_update(FieldConfigInterface $field) {
   }
 
   // If the upload destination changed, then move the file.
-  if ($file_new && (file_uri_scheme($file_new->getFileUri()) != $field_storage->settings['uri_scheme'])) {
-    $directory = $field_storage->settings['uri_scheme'] . '://default_images/';
+  if ($file_new && (file_uri_scheme($file_new->getFileUri()) != $field_storage->getSetting('uri_scheme'))) {
+    $directory = $field_storage->getSetting('uri_scheme') . '://default_images/';
     file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
     file_move($file_new, $directory . $file_new->filename);
   }
@@ -441,13 +444,13 @@ function image_field_config_update(FieldConfigInterface $field) {
  * Implements hook_ENTITY_TYPE_delete() for 'field_storage_config'.
  */
 function image_field_storage_config_delete(FieldStorageConfigInterface $field) {
-  if ($field->type != 'image') {
+  if ($field->getType() != 'image') {
     // Only act on image fields.
     return;
   }
 
   // The value of a managed_file element can be an array if #extended == TRUE.
-  $uuid = $field->settings['default_image']['uuid'];
+  $uuid = $field->getSetting('default_image')['uuid'];
   if ($uuid && ($file = \Drupal::entityManager()->loadEntityByUuid('file', $uuid))) {
     \Drupal::service('file.usage')->delete($file, 'image', 'default_image', $field->uuid());
   }
@@ -458,7 +461,7 @@ function image_field_storage_config_delete(FieldStorageConfigInterface $field) {
  */
 function image_field_config_delete(FieldConfigInterface $field) {
   $field_storage = $field->getFieldStorageDefinition();
-  if ($field_storage->type != 'image') {
+  if ($field_storage->getType() != 'image') {
     // Only act on image fields.
     return;
   }

@@ -99,7 +99,7 @@ class EntityTranslationFormTest extends WebTestBase {
 
     // Make body translatable.
     $field_storage = FieldStorageConfig::loadByName('node', 'body');
-    $field_storage->translatable = TRUE;
+    $field_storage->setTranslatable(TRUE);
     $field_storage->save();
     $field_storage = FieldStorageConfig::loadByName('node', 'body');
     $this->assertTrue($field_storage->isTranslatable(), 'Field body is translatable.');

@@ -153,7 +153,7 @@ function field_system_info_alter(&$info, Extension $file, $type) {
       // remains no actual, non-deleted fields)
       $non_deleted = FALSE;
       foreach ($field_storages as $field_storage) {
-        if (empty($field_storage->deleted)) {
+        if (!$field_storage->isDeleted()) {
           $non_deleted = TRUE;
           break;
         }

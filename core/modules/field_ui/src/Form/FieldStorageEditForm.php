@@ -155,7 +155,7 @@ class FieldStorageEditForm extends FormBase {
     // Build the non-configurable field values.
     $form['field_storage']['field_name'] = array('#type' => 'value', '#value' => $field_storage->getName());
     $form['field_storage']['type'] = array('#type' => 'value', '#value' => $field_storage->getType());
-    $form['field_storage']['module'] = array('#type' => 'value', '#value' => $field_storage->module);
+    $form['field_storage']['module'] = array('#type' => 'value', '#value' => $field_storage->getTypeProvider());
     $form['field_storage']['translatable'] = array('#type' => 'value', '#value' => $field_storage->isTranslatable());
 
     $form['actions'] = array('#type' => 'actions');
@@ -199,7 +199,7 @@ class FieldStorageEditForm extends FormBase {
     // Merge incoming form values into the existing field.
     $field_storage = $this->field->getFieldStorageDefinition();
     foreach ($field_values as $key => $value) {
-      $field_storage->{$key} = $value;
+      $field_storage->set($key, $value);
     }
 
     // Update the field.

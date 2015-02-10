@@ -207,10 +207,10 @@ class FieldCrudTest extends FieldUnitTestBase {
     entity_create('field_config', $this->fieldDefinition)->save();
     entity_create('field_config', $field_definition_2)->save();
     $field_storage->delete();
-    $this->assertFalse(FieldConfig::loadByName('entity_test', $this->fieldDefinition['bundle'], $field_storage->field_name));
-    $this->assertFalse(FieldConfig::loadByName('entity_test', $field_definition_2['bundle'], $field_storage->field_name));
+    $this->assertFalse(FieldConfig::loadByName('entity_test', $this->fieldDefinition['bundle'], $field_storage->getName()));
+    $this->assertFalse(FieldConfig::loadByName('entity_test', $field_definition_2['bundle'], $field_storage->getName()));
 
-    // Chack that deletion of the last field deletes the storage.
+    // Check that deletion of the last field deletes the storage.
     $field_storage = entity_create('field_storage_config', $this->fieldStorageDefinition);
     $field_storage->save();
     $field = entity_create('field_config', $this->fieldDefinition);
@@ -218,9 +218,9 @@ class FieldCrudTest extends FieldUnitTestBase {
     $field_2 = entity_create('field_config', $field_definition_2);
     $field_2->save();
     $field->delete();
-    $this->assertTrue(FieldStorageConfig::loadByName('entity_test', $field_storage->field_name));
+    $this->assertTrue(FieldStorageConfig::loadByName('entity_test', $field_storage->getName()));
     $field_2->delete();
-    $this->assertFalse(FieldStorageConfig::loadByName('entity_test', $field_storage->field_name));
+    $this->assertFalse(FieldStorageConfig::loadByName('entity_test', $field_storage->getName()));
 
     // Check that deletion of all fields using a storage simultaneously deletes
     // the storage.
@@ -231,7 +231,7 @@ class FieldCrudTest extends FieldUnitTestBase {
     $field_2 = entity_create('field_config', $field_definition_2);
     $field_2->save();
     $this->container->get('entity.manager')->getStorage('field_config')->delete(array($field, $field_2));
-    $this->assertFalse(FieldStorageConfig::loadByName('entity_test', $field_storage->field_name));
+    $this->assertFalse(FieldStorageConfig::loadByName('entity_test', $field_storage->getName()));
   }
 
   /**

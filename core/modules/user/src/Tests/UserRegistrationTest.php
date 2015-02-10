@@ -247,7 +247,7 @@ class UserRegistrationTest extends WebTestBase {
     $this->assertEqual($new_user->test_user_field->value, $value, 'The field value was correclty saved.');
 
     // Check that the 'add more' button works.
-    $field_storage->cardinality = FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED;
+    $field_storage->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
     $field_storage->save();
     foreach (array('js', 'nojs') as $js) {
       $this->drupalGet('user/register');

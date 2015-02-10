@@ -50,7 +50,7 @@ class BlockContentFieldFilterTest extends BlockContentTestBase {
     // Make the body field translatable. The info is already translatable by
     // definition.
     $field_storage = FieldStorageConfig::loadByName('block_content', 'body');
-    $field_storage->translatable = TRUE;
+    $field_storage->setTranslatable(TRUE);
     $field_storage->save();
 
     // Set up block_content infos.

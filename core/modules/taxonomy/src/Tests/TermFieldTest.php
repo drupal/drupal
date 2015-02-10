@@ -161,7 +161,7 @@ class TermFieldTest extends TaxonomyTestBase {
   function testTaxonomyTermFieldChangeMachineName() {
     // Add several entries in the 'allowed_values' setting, to make sure that
     // they all get updated.
-    $this->fieldStorage->settings['allowed_values'] = array(
+    $this->fieldStorage->setSetting('allowed_values', [
       array(
         'vocabulary' => $this->vocabulary->id(),
         'parent' => '0',
@@ -174,7 +174,7 @@ class TermFieldTest extends TaxonomyTestBase {
         'vocabulary' => 'foo',
         'parent' => '0',
       ),
-    );
+    ]);
     $this->fieldStorage->save();
     // Change the machine name.
     $new_name = Unicode::strtolower($this->randomMachineName());

@@ -500,7 +500,7 @@ function hook_field_views_data(\Drupal\field\FieldStorageConfigInterface $field_
  * @see hook_field_views_data_views_data_alter()
  */
 function hook_field_views_data_alter(array &$data, \Drupal\field\FieldStorageConfigInterface $field_storage) {
-  $entity_type_id = $field_storage->entity_type;
+  $entity_type_id = $field_storage->getTargetEntityTypeId();
   $field_name = $field_storage->getName();
   $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
   $pseudo_field_name = 'reverse_' . $field_name . '_' . $entity_type_id;

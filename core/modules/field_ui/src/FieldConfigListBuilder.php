@@ -149,7 +149,7 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
     // Add the operations.
     $row['data'] = $row['data'] + parent::buildRow($field_config);
 
-    if (!empty($field_storage->locked)) {
+    if ($field_storage->isLocked()) {
       $row['data']['operations'] = array('data' => array('#markup' => $this->t('Locked')));
       $row['class'][] = 'menu-disabled';
     }

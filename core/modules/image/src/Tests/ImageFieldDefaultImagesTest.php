@@ -175,7 +175,9 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     );
 
     // Upload a new default for the field storage.
-    $field_storage->settings['default_image']['uuid'] = $default_images['field_new']->uuid();
+    $default_image_settings = $field_storage->getSetting('default_image');
+    $default_image_settings['uuid'] = $default_images['field_new']->uuid();
+    $field_storage->setSetting('default_image', $default_image_settings);
     $field_storage->save();
 
     // Confirm that the new default is used on the article field settings form.
