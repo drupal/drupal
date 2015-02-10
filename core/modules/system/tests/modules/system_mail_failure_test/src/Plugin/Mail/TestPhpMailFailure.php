@@ -16,7 +16,7 @@ use Drupal\Core\Mail\MailInterface;
  * This class is for running tests or for development. To use set the
  * configuration:
  * @code
- *   \Drupal::config('system.mail')->set('interface.default', 'test_php_mail_failure')->save();
+ *   \Drupal::configFactory()->getEditable('system.mail')->set('interface.default', 'test_php_mail_failure')->save();
  * @endcode
  *
  * @Mail(
