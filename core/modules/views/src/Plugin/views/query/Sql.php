@@ -1266,6 +1266,11 @@ class Sql extends QueryPluginBase {
     // Add groupby.
     if ($groupby) {
       foreach ($groupby as $field) {
+        // Handle group by of field without table alias to avoid ambiguous
+        // column error.
+        if ($field == $this->view->storage->get('base_field')) {
+          $field = $this->view->storage->get('base_table') . '.' . $field;
+        }
         $query->groupBy($field);
       }
       if (!empty($this->having) && $condition = $this->buildCondition('having')) {

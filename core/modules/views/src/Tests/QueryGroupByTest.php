@@ -189,4 +189,20 @@ class QueryGroupByTest extends ViewUnitTestBase {
     $this->assertTrue(strpos($view->build_info['query'], 'HAVING'), 'Make sure that HAVING is in the query');
   }
 
+  /**
+   * Tests grouping on base field.
+   */
+  public function testGroupByBaseField() {
+    $this->setupTestEntities();
+
+    $view = Views::getView('test_group_by_count');
+    $view->setDisplay();
+    // This tests that the GROUP BY portion of the query is properly formatted
+    // to include the base table to avoid ambiguous field errors.
+    $view->displayHandlers->get('default')->options['fields']['name']['group_type'] = 'min';
+    unset($view->displayHandlers->get('default')->options['fields']['id']['group_type']);
+    $this->executeView($view);
+    $this->assertTrue(strpos($view->build_info['query'], 'GROUP BY entity_test.id'), 'GROUP BY field includes the base table name when grouping on the base field.');
+  }
+
 }
