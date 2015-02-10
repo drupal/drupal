@@ -854,14 +854,14 @@ abstract class WebTestBase extends TestBase {
     // bootstrap into DRUPAL_BOOTSTRAP_CONFIGURATION (again). Hence, we have to
     // reload the newly written custom settings.php manually.
     $class_loader = require DRUPAL_ROOT . '/core/vendor/autoload.php';
-    Settings::initialize(DRUPAL_ROOT, $directory, $class_loader);
+    Settings::initialize(DRUPAL_ROOT, $this->siteDirectory, $class_loader);
 
     // Execute the non-interactive installer.
     require_once DRUPAL_ROOT . '/core/includes/install.core.inc';
     install_drupal($class_loader, $parameters);
 
     // Import new settings.php written by the installer.
-    Settings::initialize(DRUPAL_ROOT, $directory, $class_loader);
+    Settings::initialize(DRUPAL_ROOT, $this->siteDirectory, $class_loader);
     foreach ($GLOBALS['config_directories'] as $type => $path) {
       $this->configDirectories[$type] = $path;
     }
