@@ -127,7 +127,6 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    */
   public function requiresEntityStorageSchemaChanges(EntityTypeInterface $entity_type, EntityTypeInterface $original) {
     return
-      $entity_type->getStorageClass() != $original->getStorageClass() ||
       $entity_type->isRevisionable() != $original->isRevisionable() ||
       $entity_type->isTranslatable() != $original->isTranslatable() ||
       $this->hasSharedTableNameChanges($entity_type, $original) ||
