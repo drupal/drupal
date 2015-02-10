@@ -213,6 +213,23 @@ interface DisplayPluginInterface {
    */
   public function getPath();
 
+  /**
+   * Points to the display which can be linked by this display.
+   *
+   * If the display has route information, the display itself is returned.
+   * Otherwise, the configured linked display is returned. For example, if a
+   * block display links to a page display, the page display will be returned
+   * in both cases.
+   *
+   * @return \Drupal\views\Plugin\views\display\DisplayRouterInterface|NULL
+   */
+  public function getRoutedDisplay();
+
+  /**
+   * Returns a URL to $this display or its configured linked display.
+   *
+   * @return \Drupal\Core\Url|null
+   */
   public function getUrl();
 
   /**

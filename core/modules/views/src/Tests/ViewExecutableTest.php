@@ -322,18 +322,6 @@ class ViewExecutableTest extends ViewUnitTestBase {
     $view->override_path = $override_path;
     $this->assertEqual($view->getPath(), $override_path);
 
-    // Test the getUrl method().
-    $url = 'foo';
-    $this->assertEqual($view->getUrl(NULL, $url), $url);
-    // Test with arguments.
-    $arg1 = 'bar';
-    $arg2 = 12345;
-    $this->assertEqual($view->getUrl(array($arg1, $arg2), $url), "$url/$arg1/$arg2");
-    // Test the override_url property override.
-    $override_url = 'baz';
-    $view->override_url = $override_url;
-    $this->assertEqual($view->getUrl(NULL, $url), $override_url);
-
     // Test the title methods.
     $title = $this->randomString();
     $view->setTitle($title);

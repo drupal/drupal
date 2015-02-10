@@ -54,6 +54,13 @@ class ViewExecutableFactoryTest extends UnitTestCase {
   protected $viewsData;
 
   /**
+   * The mocked route provider.
+   *
+   * @var \Drupal\Core\Routing\RouteProviderInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $routeProvider;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -65,7 +72,8 @@ class ViewExecutableFactoryTest extends UnitTestCase {
     $this->viewsData = $this->getMockBuilder('Drupal\views\ViewsData')
       ->disableOriginalConstructor()
       ->getMock();
-    $this->viewExecutableFactory = new ViewExecutableFactory($this->user, $this->requestStack, $this->viewsData);
+    $this->routeProvider = $this->getMock('Drupal\Core\Routing\RouteProviderInterface');
+    $this->viewExecutableFactory = new ViewExecutableFactory($this->user, $this->requestStack, $this->viewsData, $this->routeProvider);
   }
 
   /**

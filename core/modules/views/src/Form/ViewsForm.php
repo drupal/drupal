@@ -133,7 +133,8 @@ class ViewsForm implements FormInterface, ContainerInjectionInterface {
     $query = $this->requestStack->getCurrentRequest()->query->all();
     $query = UrlHelper::filterQueryParameters($query, array(), '');
 
-    $form['#action'] = $this->urlGenerator->generateFromPath($view->getUrl(), array('query' => $query));
+    $options = array('query' => $query);
+    $form['#action'] = $view->hasUrl() ? $view->getUrl()->setOptions($options)->toString() : Url::fromRoute('<current>')->setOptions($options)->toString();
     // Tell the preprocessor whether it should hide the header, footer, pager...
     $form['show_view_elements'] = array(
       '#type' => 'value',

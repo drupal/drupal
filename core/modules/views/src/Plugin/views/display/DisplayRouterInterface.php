@@ -46,4 +46,29 @@ interface DisplayRouterInterface extends DisplayPluginInterface {
    */
   public function getUrlInfo();
 
+  /**
+   * Returns the route name for the display.
+   *
+   * The default route name for a display is views.$view_id.$display_id. Some
+   * displays may override existing routes; in these cases, the route that is
+   * overridden is returned instead.
+   *
+   * @return string
+   *   The name of the route
+   *
+   * @see \Drupal\views\Plugin\views\display\DisplayRouterInterface::alterRoutes()
+   * @see \Drupal\views\Plugin\views\display\DisplayRouterInterface::getAlteredRouteNames()
+   */
+  public function getRouteName();
+
+  /**
+   * Returns the list of routes overridden by Views.
+   *
+   * @return string[]
+   *   An array of overridden route names. The keys are in the form
+   *   view_id.display_id and the values are the route names.
+   *
+   * @see \Drupal\views\Plugin\views\display\DisplayRouterInterface::alterRoutes()
+   */
+  public function getAlteredRouteNames();
 }

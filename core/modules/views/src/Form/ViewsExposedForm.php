@@ -11,6 +11,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\views\ExposedFormCache;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -115,7 +116,7 @@ class ViewsExposedForm extends FormBase {
       '#id' => drupal_html_id('edit-submit-' . $view->storage->id()),
     );
 
-    $form['#action'] = _url($view->display_handler->getUrl());
+    $form['#action'] = $view->hasUrl() ? $view->getUrl()->toString() : Url::fromRoute('<current>')->toString();
     $form['#theme'] = $view->buildThemeFunctions('views_exposed_form');
     $form['#id'] = Html::cleanCssIdentifier('views_exposed_form-' . String::checkPlain($view->storage->id()) . '-' . String::checkPlain($display['id']));
 

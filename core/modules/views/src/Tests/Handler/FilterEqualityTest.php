@@ -76,6 +76,8 @@ class FilterEqualityTest extends ViewUnitTestBase {
     $filters['name']['group_info']['default_group'] = 1;
     $view->setDisplay('page_1');
     $view->displayHandlers->get('page_1')->overrideOption('filters', $filters);
+    $view->save();
+    $this->container->get('router.builder')->rebuild();
 
     $this->executeView($view);
     $resultset = array(
@@ -129,6 +131,8 @@ class FilterEqualityTest extends ViewUnitTestBase {
     $filters['name']['group_info']['default_group'] = 2;
     $view->setDisplay('page_1');
     $view->displayHandlers->get('page_1')->overrideOption('filters', $filters);
+    $view->save();
+    $this->container->get('router.builder')->rebuild();
 
     $this->executeView($view);
     $resultset = array(
@@ -153,6 +157,7 @@ class FilterEqualityTest extends ViewUnitTestBase {
     $filters = array(
       'name' => array(
         'id' => 'name',
+        'plugin_id' => 'equality',
         'table' => 'views_test_data',
         'field' => 'name',
         'relationship' => 'none',

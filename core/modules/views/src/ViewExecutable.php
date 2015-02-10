@@ -10,7 +10,9 @@ namespace Drupal\views;
 use Drupal\Component\Utility\String;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Form\FormState;
+use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
 use Drupal\views\Plugin\views\display\DisplayRouterInterface;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\ViewEntityInterface;
@@ -239,9 +241,9 @@ class ViewExecutable {
   /**
    * Allow to override the url of the current view.
    *
-   * @var string
+   * @var \Drupal\Core\Url
    */
-  public $override_url = NULL;
+  public $override_url;
 
   /**
    * Allow to override the path used for generated urls.
@@ -426,6 +428,13 @@ class ViewExecutable {
   protected $viewsData;
 
   /**
+   * The route provider.
+   *
+   * @var \Drupal\Core\Routing\RouteProviderInterface
+   */
+  protected $routeProvider;
+
+  /**
    * Constructs a new ViewExecutable object.
    *
    * @param \Drupal\views\ViewEntityInterface $storage
@@ -434,13 +443,16 @@ class ViewExecutable {
    *   The current user.
    * @param \Drupal\views\ViewsData $views_data
    *   The views data.
+   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
+   *   The route provider.
    */
-  public function __construct(ViewEntityInterface $storage, AccountInterface $user, ViewsData $views_data) {
+  public function __construct(ViewEntityInterface $storage, AccountInterface $user, ViewsData $views_data, RouteProviderInterface $route_provider) {
     // Reference the storage and the executable to each other.
     $this->storage = $storage;
     $this->storage->set('executable', $this);
     $this->user = $user;
     $this->viewsData = $views_data;
+    $this->routeProvider = $route_provider;
 
     // Add the default css for a view.
     $this->element['#attached']['library'][] = 'views/views.module';
@@ -1693,11 +1705,46 @@ class ViewExecutable {
   }
 
   /**
+   * Determines whether you can link to the view or a particular display.
+   *
+   * Some displays (e.g. block displays) do not have their own route, but may
+   * optionally provide a link to another display that does have a route.
+   *
+   * @param array $args
+   *   (optional) The arguments.
+   * @param string $display_id
+   *   (optional) The display ID. The current display will be used by default.
+   *
+   * @return bool
+   */
+  public function hasUrl($args = NULL, $display_id = NULL) {
+    if (!empty($this->override_url)) {
+      return TRUE;
+    }
+
+    // If the display has a valid route available (either its own or for a
+    // linked display), then we can provide a URL for it.
+    $display_handler = $this->displayHandlers->get($display_id ?: $this->current_display)->getRoutedDisplay();
+    if (!$display_handler instanceof DisplayRouterInterface) {
+      return FALSE;
+    }
+
+    return TRUE;
+  }
+
+  /**
    * Get the URL for the current view.
    *
    * This URL will be adjusted for arguments.
+   *
+   * @param array $args
+   *   (optional) Passed in arguments.
+   * @param string $display_id
+   *   (optional) Specify the display ID to link to, fallback to the current ID.
+   *
+   * @return \Drupal\Core\Url
    */
-  public function getUrl($args = NULL, $path = NULL) {
+  public function getUrl($args = NULL, $display_id = NULL) {
     if (!empty($this->override_url)) {
       return $this->override_url;
     }
@@ -1705,6 +1752,12 @@ class ViewExecutable {
     if (!isset($path)) {
       $path = $this->getPath();
     }
+
+    $display_handler = $this->displayHandlers->get($display_id ?: $this->current_display)->getRoutedDisplay();
+    if (!$display_handler instanceof DisplayRouterInterface) {
+      throw new \InvalidArgumentException('You cannot create a URL to a display without routes.');
+    }
+
     if (!isset($args)) {
       $args = $this->args;
 
@@ -1721,41 +1774,41 @@ class ViewExecutable {
     }
     // Don't bother working if there's nothing to do:
     if (empty($path) || (empty($args) && strpos($path, '%') === FALSE)) {
-      return $path;
+      return $display_handler->getUrlInfo();
     }
 
-    $pieces = array();
     $argument_keys = isset($this->argument) ? array_keys($this->argument) : array();
     $id = current($argument_keys);
-    foreach (explode('/', $path) as $piece) {
-      if ($piece != '%') {
-        $pieces[] = $piece;
-      }
-      else {
-        if (empty($args)) {
-          // Try to never put % in a url; use the wildcard instead.
-          if ($id && !empty($this->argument[$id]->options['exception']['value'])) {
-            $pieces[] = $this->argument[$id]->options['exception']['value'];
-          }
-          else {
-            $pieces[] = '*'; // gotta put something if there just isn't one.
-          }
 
+    /** @var \Drupal\Core\Url $url */
+    $url = $display_handler->getUrlInfo();
+    $route = $this->routeProvider->getRouteByName($url->getRouteName());
+
+    $variables = $route->compile()->getVariables();
+    $parameters = $url->getRouteParameters();
+
+    foreach ($variables as $variable_name) {
+      if (empty($args)) {
+        // Try to never put % in a URL; use the wildcard instead.
+        if ($id && !empty($this->argument[$id]->options['exception']['value'])) {
+          $parameters[$variable_name] = $this->argument[$id]->options['exception']['value'];
         }
         else {
-          $pieces[] = array_shift($args);
+          // Provide some fallback in case no exception value could be found.
+          $parameters[$variable_name] = '*';
         }
+      }
+      else {
+        $parameters[$variable_name] = array_shift($args);
+      }
 
-        if ($id) {
-          $id = next($argument_keys);
-        }
+      if ($id) {
+        $id = next($argument_keys);
       }
     }
 
-    if (!empty($args)) {
-      $pieces = array_merge($pieces, $args);
-    }
-    return implode('/', $pieces);
+    $url->setRouteParameters($parameters);
+    return $url;
   }
 
   /**

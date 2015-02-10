@@ -726,8 +726,28 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   /**
    * {@inheritdoc}
    */
+  public function getRoutedDisplay() {
+    // If this display has a route, return this display.
+    if ($this instanceof DisplayRouterInterface) {
+      return $this;
+    }
+
+    // If the display does not have a route (e.g. a block display), get the
+    // route for the linked display.
+    $display_id = $this->getLinkDisplay();
+    if ($display_id && $this->view->displayHandlers->has($display_id) && is_object($this->view->displayHandlers->get($display_id))) {
+      return $this->view->displayHandlers->get($display_id)->getRoutedDisplay();
+    }
+
+    // No routed display exists, so return NULL
+    return NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getUrl() {
-    return $this->view->getUrl();
+    return $this->view->getUrl(NULL, $this->display['id']);
   }
 
   /**
@@ -1973,27 +1993,31 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
    */
   public function renderMoreLink() {
     if ($this->isMoreEnabled() && ($this->useMoreAlways() || (!empty($this->view->pager) && $this->view->pager->hasMoreRecords()))) {
-      $path = $this->getPath();
-
+      // If the user has supplied a custom "More" link path, replace any
+      // argument tokens and use that for the URL.
       if ($this->getOption('link_display') == 'custom_url' && $override_path = $this->getOption('link_url')) {
         $tokens = $this->getArgumentsTokens();
         $path = $this->viewsTokenReplace($override_path, $tokens);
+        $url = Url::fromUri('user-path:/' . $path);
+      }
+      // Otherwise, use the URL for the display.
+      else {
+        $url = $this->view->getUrl(NULL, $this->display['id']);
       }
 
-      if ($path) {
-        if (empty($override_path)) {
-          $path = $this->view->getUrl(NULL, $path);
-        }
+      // If a URL is available (either from the display or a custom path),
+      // render the "More" link.
+      if ($url) {
         $url_options = array();
         if (!empty($this->view->exposed_raw_input)) {
           $url_options['query'] = $this->view->exposed_raw_input;
         }
+        $url->setOptions($url_options);
         $theme = $this->view->buildThemeFunctions('views_more');
-        $path = check_url(_url($path, $url_options));
 
         return array(
           '#theme' => $theme,
-          '#more_url' => $path,
+          '#more_url' => $url->toString(),
           '#link_text' => String::checkPlain($this->useMoreText()),
           '#view' => $this->view,
         );

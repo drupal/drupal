@@ -294,6 +294,7 @@ function template_preprocess_views_view_field(&$variables) {
  *   - rows: The raw row data.
  */
 function template_preprocess_views_view_summary(&$variables) {
+  /** @var \Drupal\views\ViewExecutable $view */
   $view = $variables['view'];
   $argument = $view->argument[$view->build_info['summary_level']];
 
@@ -331,11 +332,16 @@ function template_preprocess_views_view_summary(&$variables) {
     $args = $view->args;
     $args[$argument->position] = $row_args[$id];
 
-    $base_path = NULL;
     if (!empty($argument->options['summary_options']['base_path'])) {
       $base_path = $argument->options['summary_options']['base_path'];
+      $tokens = $this->getArgumentsTokens();
+      $base_path = $this->viewsTokenReplace($base_path, $tokens);
+      $url = Url::fromUri('user-path:/' . $base_path);
     }
-    $variables['rows'][$id]->url = _url($view->getUrl($args, $base_path), $url_options);
+    else {
+      $url = $view->getUrl($args)->setOptions($url_options);
+    }
+    $variables['rows'][$id]->url = $url->toString();
     $variables['rows'][$id]->count = intval($row->{$argument->count_alias});
     if (isset($active_urls[$variables['rows'][$id]->url])) {
       $variables['rows'][$id]->attributes['class'][] = 'active';
@@ -395,11 +401,16 @@ function template_preprocess_views_view_summary_unformatted(&$variables) {
     $args = $view->args;
     $args[$argument->position] = $row_args[$id];
 
-    $base_path = NULL;
     if (!empty($argument->options['summary_options']['base_path'])) {
       $base_path = $argument->options['summary_options']['base_path'];
+      $tokens = $this->getArgumentsTokens();
+      $base_path = $this->viewsTokenReplace($base_path, $tokens);
+      $url = Url::fromUri('user-path:/' . $base_path);
     }
-    $variables['rows'][$id]->url = _url($view->getUrl($args, $base_path), $url_options);
+    else {
+      $url = $view->getUrl($args)->setOptions($url_options);
+    }
+    $variables['rows'][$id]->url = $url->toString();
     $variables['rows'][$id]->count = intval($row->{$argument->count_alias});
     if (isset($active_urls[$variables['rows'][$id]->url])) {
       $variables['rows'][$id]->attributes['class'][] = 'active';
@@ -891,11 +902,11 @@ function template_preprocess_views_view_rss(&$variables) {
   // there isn't one, use the global $base_url
   $link_display_id = $view->display_handler->getLinkDisplay();
   if ($link_display_id && $display = $view->displayHandlers->get($link_display_id)) {
-    $path = $view->displayHandlers->get($link_display_id)->getPath();
+    $url = $view->getUrl(NULL, $link_display_id);
   }
 
-  if ($path) {
-    $path = $view->getUrl(NULL, $path);
+  /** @var \Drupal\Core\Url $url */
+  if ($url) {
     $url_options = array('absolute' => TRUE);
     if (!empty($view->exposed_raw_input)) {
       $url_options['query'] = $view->exposed_raw_input;
@@ -903,11 +914,12 @@ function template_preprocess_views_view_rss(&$variables) {
 
     // Compare the link to the default home page; if it's the default home page,
     // just use $base_url.
-    if ($path == $config->get('page.front')) {
-      $path = '';
+    $url_string = $url->setOptions($url_options)->toString();
+    if ($url_string === Url::fromUri('user-path:/' . $config->get('page.front'))->toString()) {
+      $url_string = Url::fromRoute('<front>')->setAbsolute()->toString();
     }
 
-    $variables['link'] = check_url(_url($path, $url_options));
+    $variables['link'] = $url_string;
   }
 
   $variables['langcode'] = String::checkPlain(\Drupal::languageManager()->getCurrentLanguage()->getId());
@@ -935,7 +947,7 @@ function template_preprocess_views_view_row_rss(&$variables) {
   $item = $variables['row'];
 
   $variables['title'] = String::checkPlain($item->title);
-  $variables['link'] = check_url($item->link);
+  $variables['link'] = $item->link;
   $variables['description'] = String::checkPlain($item->description);
   $variables['item_elements'] = empty($item->elements) ? '' : format_xml_elements($item->elements);
 }
