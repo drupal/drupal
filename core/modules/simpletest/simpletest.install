@@ -15,7 +15,7 @@ use Drupal\Component\Utility\String;
  *   https://www.drupal.org/node/2289201 and
  *   https://www.drupal.org/node/2307163 and then decrease this limit.
  */
-const SIMPLETEST_MINIMUM_PHP_MEMORY_LIMIT = '320M';
+const SIMPLETEST_MINIMUM_PHP_MEMORY_LIMIT = '192M';
 
 /**
  * Implements hook_requirements().

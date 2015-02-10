@@ -38,11 +38,12 @@ abstract class MTimeProtectedFileStorageBase extends PhpStorageTestBase {
    */
   protected function setUp() {
     parent::setUp();
+    $this->directory = sys_get_temp_dir() . '/php' . str_replace('\\','_', get_class($this));
 
     $this->secret = $this->randomMachineName();
 
     $this->settings = array(
-      'directory' => sys_get_temp_dir() . '/php',
+      'directory' =>  $this->directory,
       'bin' => 'test',
       'secret' => $this->secret,
     );
@@ -69,7 +70,7 @@ abstract class MTimeProtectedFileStorageBase extends PhpStorageTestBase {
     $php = new $this->storageClass($this->settings);
     $name = 'simpletest.php';
     $php->save($name, '<?php');
-    $expected_root_directory = sys_get_temp_dir() . '/php/test';
+    $expected_root_directory =  $this->directory . '/test';
     if (substr($name, -4) === '.php') {
       $expected_directory = $expected_root_directory . '/' . substr($name, 0, -4);
     }

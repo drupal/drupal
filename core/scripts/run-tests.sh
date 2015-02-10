@@ -522,13 +522,6 @@ function simpletest_script_execute_batch($test_classes) {
       $test_ids[] = $test_id;
 
       $test_class = array_shift($test_classes);
-      // Process phpunit tests immediately since they are fast and we don't need
-      // to fork for them.
-      if (is_subclass_of($test_class, '\PHPUnit_Framework_TestCase')) {
-        simpletest_script_run_phpunit($test_id, $test_class);
-        continue;
-      }
-
       // Fork a child process.
       $command = simpletest_script_command($test_id, $test_class);
       $process = proc_open($command, array(), $pipes, NULL, NULL, array('bypass_shell' => TRUE));
@@ -637,11 +630,15 @@ function simpletest_script_run_one_test($test_id, $test_class) {
       $methods = array();
     }
     $test = new $class_name($test_id);
-    $test->dieOnFail = (bool) $args['die-on-fail'];
-    $test->verbose = (bool) $args['verbose'];
-    $test->run($methods);
-
-    simpletest_script_reporter_display_summary($test_class, $test->results);
+    if (is_subclass_of($test_class, '\PHPUnit_Framework_TestCase')) {
+      simpletest_script_run_phpunit($test_id, $test_class);
+    }
+    else {
+      $test->dieOnFail = (bool) $args['die-on-fail'];
+      $test->verbose = (bool) $args['verbose'];
+      $test->run($methods);
+      simpletest_script_reporter_display_summary($test_class, $test->results);
+    }
 
     // Finished, kill this runner.
     exit(0);
@@ -707,6 +704,10 @@ function simpletest_script_command($test_id, $test_class) {
  * @see simpletest_script_run_one_test()
  */
 function simpletest_script_cleanup($test_id, $test_class, $exitcode) {
+  if (strpos($test_class, 'Drupal\\Tests\\') === 0) {
+    // PHPUnit test, move on.
+    return;
+  }
   // Retrieve the last database prefix used for testing.
   list($db_prefix, ) = simpletest_last_test_get($test_id);
 
