@@ -1,5 +1,5 @@
-responsive_image.mapping_page_add:
-  route_name: responsive_image.mapping_page_add
-  title: 'Add responsive image mapping'
+responsive_image.style_page_add:
+  route_name: responsive_image.style_page_add
+  title: 'Add responsive image style'
   appears_on:
-    - entity.responsive_image_mapping.collection
+    - entity.responsive_image_style.collection

@@ -363,13 +363,13 @@ class ConfigTranslationListUiTest extends WebTestBase {
     $edit['label'] = $this->randomMachineName();
     $edit['id'] = strtolower($edit['label']);
 
-    $this->drupalPostForm('admin/config/media/responsive-image-mapping/add', $edit, t('Save'));
-    $this->assertRaw(t('Responsive image mapping %label saved.', array('%label' => $edit['label'])));
+    $this->drupalPostForm('admin/config/media/responsive-image-style/add', $edit, t('Save'));
+    $this->assertRaw(t('Responsive image style %label saved.', array('%label' => $edit['label'])));
 
-    // Get the responsive image mapping listing.
-    $this->drupalGet('admin/config/media/responsive-image-mapping');
+    // Get the responsive image style listing.
+    $this->drupalGet('admin/config/media/responsive-image-style');
 
-    $translate_link = 'admin/config/media/responsive-image-mapping/' . $edit['id'] . '/translate';
+    $translate_link = 'admin/config/media/responsive-image-style/' . $edit['id'] . '/translate';
     // Test if the link to translate the style is on the page.
     $this->assertLinkByHref($translate_link);
 

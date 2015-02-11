@@ -87,9 +87,9 @@ class BreakpointTest extends UnitTestCase {
    * @covers ::getMediaQuery
    */
   public function testGetMediaQuery() {
-    $this->pluginDefinition['mediaQuery'] = 'only screen and (min-width: 3456px)';
+    $this->pluginDefinition['mediaQuery'] = 'only screen and (min-width: 1220px)';
     $this->setupBreakpoint();
-    $this->assertEquals('only screen and (min-width: 3456px)', $this->breakpoint->getMediaQuery());
+    $this->assertEquals('only screen and (min-width: 1220px)', $this->breakpoint->getMediaQuery());
   }
 
   /**

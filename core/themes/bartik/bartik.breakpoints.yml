@@ -1,7 +1,7 @@
 bartik.mobile:
   label: mobile
   mediaQuery: '(min-width: 0px)'
-  weight: 0
+  weight: 2
   multipliers:
     - 1x
 bartik.narrow:
@@ -13,6 +13,6 @@ bartik.narrow:
 bartik.wide:
   label: wide
   mediaQuery: 'all and (min-width: 851px)'
-  weight: 2
+  weight: 0
   multipliers:
     - 1x

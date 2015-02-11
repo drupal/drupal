@@ -1,32 +1,32 @@
 breakpoint_theme_test.mobile:
   label: mobile
   mediaQuery: '(min-width: 0px)'
-  weight: 0
+  weight: 3
   multipliers:
     - 1x
 breakpoint_theme_test.narrow:
   label: narrow
   mediaQuery: '(min-width: 560px)'
-  weight: 1
+  weight: 2
   multipliers:
     - 1x
 # Out of order breakpoint to test sorting.
 breakpoint_theme_test.tv:
   label: tv
-  mediaQuery: 'only screen and (min-width: 3456px)'
-  weight: 3
+  mediaQuery: 'only screen and (min-width: 1220px)'
+  weight: 0
   multipliers:
     - 1x
 breakpoint_theme_test.wide:
   label: wide
   mediaQuery: '(min-width: 851px)'
-  weight: 2
+  weight: 1
   multipliers:
     - 1x
 breakpoint_theme_test.group2.narrow:
   label: narrow
   mediaQuery: '(min-width: 560px)'
-  weight: 1
+  weight: 2
   multipliers:
     - 1x
     - 2x
@@ -34,7 +34,7 @@ breakpoint_theme_test.group2.narrow:
 breakpoint_theme_test.group2.wide:
   label: wide
   mediaQuery: '(min-width: 851px)'
-  weight: 2
+  weight: 1
   multipliers:
     - 1x
     - 2x

@@ -1,39 +1,39 @@
-entity.responsive_image_mapping.collection:
-  path: '/admin/config/media/responsive-image-mapping'
+entity.responsive_image_style.collection:
+  path: '/admin/config/media/responsive-image-style'
   defaults:
-    _entity_list: 'responsive_image_mapping'
-    _title: 'Responsive image mappings'
+    _entity_list: 'responsive_image_style'
+    _title: 'Responsive image styles'
   requirements:
     _permission: 'administer responsive images'
 
-responsive_image.mapping_page_add:
-  path: '/admin/config/media/responsive-image-mapping/add'
+responsive_image.style_page_add:
+  path: '/admin/config/media/responsive-image-style/add'
   defaults:
-    _entity_form: 'responsive_image_mapping.add'
-    _title: 'Add responsive image mapping'
+    _entity_form: 'responsive_image_style.add'
+    _title: 'Add responsive image style'
   requirements:
     _permission: 'administer responsive images'
 
-entity.responsive_image_mapping.edit_form:
-  path: '/admin/config/media/responsive-image-mapping/{responsive_image_mapping}'
+entity.responsive_image_style.edit_form:
+  path: '/admin/config/media/responsive-image-style/{responsive_image_style}'
   defaults:
-    _entity_form: 'responsive_image_mapping.edit'
-    _title: 'Edit responsive image mapping'
+    _entity_form: 'responsive_image_style.edit'
+    _title: 'Edit responsive image style'
   requirements:
     _permission: 'administer responsive images'
 
-entity.responsive_image_mapping.duplicate_form:
-  path: '/admin/config/media/responsive-image-mapping/{responsive_image_mapping}/duplicate'
+entity.responsive_image_style.duplicate_form:
+  path: '/admin/config/media/responsive-image-style/{responsive_image_style}/duplicate'
   defaults:
-    _entity_form: 'responsive_image_mapping.duplicate'
-    _title: 'Duplicate responsive image mapping'
+    _entity_form: 'responsive_image_style.duplicate'
+    _title: 'Duplicate responsive image style'
   requirements:
     _permission: 'administer responsive images'
 
-responsive_image.mapping_action_confirm:
-  path: '/admin/config/media/responsive-image-mapping/{responsive_image_mapping}/delete'
+entity.responsive_image_style.delete_form:
+  path: '/admin/config/media/responsive-image-style/{responsive_image_style}/delete'
   defaults:
-    _entity_form: 'responsive_image_mapping.delete'
+    _entity_form: 'responsive_image_style.delete'
     _title: 'Delete'
   requirements:
     _permission: 'administer responsive images'

@@ -9,8 +9,12 @@ use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Routing\RouteMatchInterface;
 use \Drupal\Core\Template\Attribute;
+use Drupal\image\Entity\ImageStyle;
 use Drupal\Core\Url;
-use Drupal\responsive_image\Entity\ResponsiveImageMapping;
+use Drupal\responsive_image\Entity\ResponsiveImageStyle;
+use Drupal\Core\Image\ImageInterface;
+use Drupal\Component\Utility\String;
+use Drupal\breakpoint\BreakpointInterface;
 
 /**
  * The machine name for the empty image breakpoint image style option.
@@ -28,15 +32,15 @@ function responsive_image_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<p>' . t('The Responsive Image module provides an image formatter and breakpoint mappings to output responsive images using the HTML5 picture tag. For more information, see the <a href="!responsive_image">online documentation for the Responsive Image module</a>.', array( '!responsive_image' => 'https://drupal.org/documentation/modules/responsive_image')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
-      $output .= '<dt>' . t('Defining responsive image mappings') . '</dt>';
-      $output .= '<dd>' . t('By creating responsive image mappings you define the image styles that are being used to output images at certain breakpoints. On the <a href="!responsive_image_mapping">Responsive image mappings</a> page, click <em>Add responsive image mapping</em> to create a new mapping. First chose a label and a breakpoint group and click Save. After that you can choose the image styles that will be used for each breakpoint. Image styles can be defined on the <a href="!image_styles">Image styles page</a> that is provided by the <a href="!image_help">Image module</a>. Breakpoints are defined in the configuration files of the theme. See the <a href="!breakpoint_help">help page of the Breakpoint module</a> for more information.', array('!responsive_image_mapping' => \Drupal::url('entity.responsive_image_mapping.collection'), '!image_styles' => \Drupal::url('entity.image_style.collection'),'!image_help' => \Drupal::url('help.page', array('name' => 'image')), '!breakpoint_help' => \Drupal::url('help.page', array('name' => 'breakpoint')))) . '</dd>';
-      $output .= '<dt>' . t('Using responsive image mappings in Image fields') . '</dt>';
-      $output .= '<dd>' . t('After defining responsive image mappings, you can use them in the display settings for your Image fields, so that the site displays responsive images using the HTML5 picture tag. Open the Manage display page for the entity type (content type, taxonomy vocabulary, etc.) that the Image field is attached to. Choose the format <em>Responsive image</em>, click the Edit icon, and select one of the responsive image mappings that you have created. For general information on how to manage fields and their display see the <a href="!field_ui">Field UI module help page</a>. For background information about entities and fields see the <a href="!field_help">Field module help page</a>.', array('!field_ui' => \Drupal::url('help.page', array('name' => 'field_ui')),'!field_help' => \Drupal::url('help.page', array('name' => 'field')))) . '</dd>';
+      $output .= '<dt>' . t('Defining responsive image styles') . '</dt>';
+      $output .= '<dd>' . t('By creating responsive image styles you define the image styles that are being used to output images at certain breakpoints. On the <a href="!responsive_image_style">Responsive image styles</a> page, click <em>Add responsive image style</em> to create a new style. First chose a label and a breakpoint group and click Save. After that you can choose the image styles that will be used for each breakpoint. Image styles can be defined on the <a href="!image_styles">Image styles page</a> that is provided by the <a href="!image_help">Image module</a>. Breakpoints are defined in the configuration files of the theme. See the <a href="!breakpoint_help">help page of the Breakpoint module</a> for more information.', array('!responsive_image_style' => \Drupal::url('entity.responsive_image_style.collection'), '!image_styles' => \Drupal::url('entity.image_style.collection'),'!image_help' => \Drupal::url('help.page', array('name' => 'image')), '!breakpoint_help' => \Drupal::url('help.page', array('name' => 'breakpoint')))) . '</dd>';
+      $output .= '<dt>' . t('Using responsive image styles in Image fields') . '</dt>';
+      $output .= '<dd>' . t('After defining responsive image styles, you can use them in the display settings for your Image fields, so that the site displays responsive images using the HTML5 picture tag. Open the Manage display page for the entity type (content type, taxonomy vocabulary, etc.) that the Image field is attached to. Choose the format <em>Responsive image</em>, click the Edit icon, and select one of the responsive image styles that you have created. For general information on how to manage fields and their display see the <a href="!field_ui">Field UI module help page</a>. For background information about entities and fields see the <a href="!field_help">Field module help page</a>.', array('!field_ui' => \Drupal::url('help.page', array('name' => 'field_ui')),'!field_help' => \Drupal::url('help.page', array('name' => 'field')))) . '</dd>';
       $output .= '</dl>';
       break;
 
-    case 'entity.responsive_image_mapping.collection':
-      $output .= '<p>' . t('A responsive image mapping associates an image style with each breakpoint defined by your theme.') . '</p>';
+    case 'entity.responsive_image_style.collection':
+      $output .= '<p>' . t('A responsive image style associates an image style with each breakpoint defined by your theme.') . '</p>';
       break;
 
   }
@@ -49,19 +53,19 @@ function responsive_image_help($route_name, RouteMatchInterface $route_match) {
 function responsive_image_menu() {
   $items = array();
 
-  $items['admin/config/media/responsive-image-mapping'] = array(
-    'title' => 'Responsive image mappings',
-    'description' => 'Manage responsive image mappings',
+  $items['admin/config/media/responsive-image-style'] = array(
+    'title' => 'Responsive image styles',
+    'description' => 'Manage responsive image styles',
     'weight' => 10,
-    'route_name' => 'entity.responsive_image_mapping.collection',
+    'route_name' => 'entity.responsive_image_style.collection',
   );
-  $items['admin/config/media/responsive-image-mapping/%responsive_image_mapping'] = array(
-    'title' => 'Edit responsive image mapping',
-    'route_name' => 'entity.responsive_image_mapping.edit_form',
+  $items['admin/config/media/responsive-image-style/%responsive_image_style'] = array(
+    'title' => 'Edit responsive image style',
+    'route_name' => 'entity.responsive_image_style.edit_form',
   );
-  $items['admin/config/media/responsive-image-mapping/%responsive_image_mapping/duplicate'] = array(
-    'title' => 'Duplicate responsive image mapping',
-    'route_name' => 'entity.responsive_image_mapping.duplicate_form',
+  $items['admin/config/media/responsive-image-style/%responsive_image_style/duplicate'] = array(
+    'title' => 'Duplicate responsive image style',
+    'route_name' => 'entity.responsive_image_style.duplicate_form',
   );
 
   return $items;
@@ -81,27 +85,17 @@ function responsive_image_theme() {
         'alt' => '',
         'title' => NULL,
         'attributes' => array(),
-        'mapping_id' => array(),
+        'responsive_image_style_id' => array(),
       ),
-      'function' => 'theme_responsive_image',
     ),
     'responsive_image_formatter' => array(
       'variables' => array(
         'item' => NULL,
         'url' => NULL,
         'image_style' => NULL,
-        'mapping_id' => array(),
+        'responsive_image_style_id' => array(),
       ),
       'function' => 'theme_responsive_image_formatter',
-    ),
-    'responsive_image_source' => array(
-      'variables' => array(
-        'src' => NULL,
-        'srcset' => NULL,
-        'dimensions' => NULL,
-        'media' => NULL,
-      ),
-      'function' => 'theme_responsive_image_source',
     ),
   );
 }
@@ -113,14 +107,14 @@ function responsive_image_theme() {
  *   An associative array containing:
  *   - item: An ImageItem object.
  *   - image_style: An optional image style.
- *   - path: An optional array containing the link 'path' and link 'options'.
- *   - mapping_id: The ID of the responsive image mapping.
+ *   - responsive_image_style_id: The ID of the responsive image style.
+ *   - url: An optional \Drupal\Core\Url object.
  *
  * @ingroup themeable
  */
 function theme_responsive_image_formatter($variables) {
   $item = $variables['item'];
-  if (!isset($variables['mapping_id']) || empty($variables['mapping_id'])) {
+  if (!isset($variables['responsive_image_style_id']) || empty($variables['responsive_image_style_id'])) {
     $image_formatter = array(
       '#theme' => 'image_formatter',
       '#item' => $item,
@@ -135,7 +129,7 @@ function theme_responsive_image_formatter($variables) {
     '#width' => $item->width,
     '#height' => $item->height,
     '#style_name' => $variables['image_style'],
-    '#mapping_id' => $variables['mapping_id'],
+    '#responsive_image_style_id' => $variables['responsive_image_style_id'],
   );
   if (isset($item->uri)) {
     $responsive_image['#uri'] = $item->uri;
@@ -148,19 +142,17 @@ function theme_responsive_image_formatter($variables) {
   if (Unicode::strlen($item->title) != 0) {
     $responsive_image['#title'] = $item->title;
   }
-  // @todo Add support for route names.
-  if (isset($variables['path']['path'])) {
-    $path = $variables['path']['path'];
-    $options = isset($variables['path']['options']) ? $variables['path']['options'] : array();
-    $options['html'] = TRUE;
-    return \Drupal::l($responsive_image, Url::fromUri($path, $options));
+  if (isset($variables['url'])) {
+    return \Drupal::l($responsive_image, $variables['url']->setOption('html', TRUE));
   }
 
   return drupal_render($responsive_image);
 }
 
 /**
- * Returns HTML for a responsive image.
+ * Prepares variables for a responsive image.
+ *
+ * Default template: responsive-image.html.twig.
  *
  * @param $variables
  *   An associative array containing:
@@ -171,12 +163,13 @@ function theme_responsive_image_formatter($variables) {
  *   - alt: The alternative text for text-based browsers.
  *   - title: The title text is displayed when the image is hovered in some
  *     popular browsers.
+ *   - attributes: Associative array of attributes to be placed in the img tag.
  *   - style_name: The name of the style to be used as a fallback image.
- *   - mapping_id: The ID of the responsive image mapping.
+ *   - responsive_image_style_id: The ID of the responsive image style.
  *
  * @ingroup themeable
  */
-function theme_responsive_image($variables) {
+function template_preprocess_responsive_image(&$variables) {
   // Make sure that width and height are proper values
   // If they exists we'll output them
   // @see http://www.w3.org/community/respimg/2012/06/18/florians-compromise/
@@ -189,114 +182,243 @@ function theme_responsive_image($variables) {
     unset($variables['height']);
   }
 
-  $sources = array();
-
-  // Fallback image, output as source with media query.
-  $sources[] = array(
-    'src' => _responsive_image_image_style_url($variables['style_name'], $variables['uri']),
-    'dimensions' => responsive_image_get_image_dimensions($variables),
-  );
-  $responsive_image_mapping = ResponsiveImageMapping::load($variables['mapping_id']);
+  $image = \Drupal::service('image.factory')->get($variables['uri']);
+  $responsive_image_style = ResponsiveImageStyle::load($variables['responsive_image_style_id']);
   // All breakpoints and multipliers.
-  $breakpoints = \Drupal::service('breakpoint.manager')->getBreakpointsByGroup($responsive_image_mapping->getBreakpointGroup());
-  foreach ($responsive_image_mapping->getKeyedMappings() as $breakpoint_id => $multipliers) {
+  $breakpoints = \Drupal::service('breakpoint.manager')->getBreakpointsByGroup($responsive_image_style->getBreakpointGroup());
+  foreach ($responsive_image_style->getKeyedImageStyleMappings() as $breakpoint_id => $multipliers) {
     if (isset($breakpoints[$breakpoint_id])) {
-      $breakpoint = $breakpoints[$breakpoint_id];
-      $new_sources = array();
-      foreach ($multipliers as $multiplier => $image_style) {
-        $new_source = $variables;
-        $new_source['style_name'] = $image_style;
-        $new_source['#multiplier'] = $multiplier;
-        $new_sources[] = $new_source;
-      }
-
-      // Only one image, use src.
-      if (count($new_sources) == 1) {
-        $sources[] = array(
-          'src' => _responsive_image_image_style_url($new_sources[0]['style_name'], $new_sources[0]['uri']),
-          'dimensions' => responsive_image_get_image_dimensions($new_sources[0]),
-          'media' => $breakpoint->getMediaQuery(),
-        );
-      }
-      else {
-        // Multiple images, use srcset.
-        $srcset = array();
-        foreach ($new_sources as $new_source) {
-          $srcset[] = _responsive_image_image_style_url($new_source['style_name'], $new_source['uri']) . ' ' . $new_source['#multiplier'];
-        }
-        $sources[] = array(
-          'srcset' => implode(', ', $srcset),
-          'dimensions' => responsive_image_get_image_dimensions($new_sources[0]),
-          'media' => $breakpoint->getMediaQuery(),
-        );
-      }
+      $variables['sources'][] = responsive_image_build_source_attributes($image, $variables, $breakpoints[$breakpoint_id], $multipliers);
     }
   }
-
-  if (!empty($sources)) {
-    $output = array();
-    $output[] = '<picture>';
-
-    // Add source tags to the output.
-    foreach ($sources as $source) {
-      $responsive_image_source = array(
-        '#theme' => 'responsive_image_source',
-        '#src' => $source['src'],
-        '#dimensions' => $source['dimensions'],
-      );
-      if (isset($source['media'])) {
-        $responsive_image_source['#media'] = $source['media'];
-      }
-      if (isset($source['srcset'])) {
-        $responsive_image_source['#srcset'] = $source['srcset'];
-      }
-      $output[] = drupal_render($responsive_image_source);
+  // Prepare the fallback image. Use srcset in the fallback image to avoid
+  // unnecessary preloading of images in older browsers. See
+  // http://scottjehl.github.io/picturefill/#using-picture and
+  // http://scottjehl.github.io/picturefill/#gotchas for more information.
+  $variables['img_element'] = array(
+    '#theme' => 'image',
+    '#srcset' => array(
+      array(
+        'uri' => _responsive_image_image_style_url($variables['style_name'], $image->getSource()),
+      ),
+    ),
+  );
+  foreach (array('alt', 'title', 'attributes') as $key) {
+    if (isset($variables[$key])) {
+      $variables['img_element']["#$key"] = $variables[$key];
+      unset($variables[$key]);
     }
-
-    $output[] = '</picture>';
-    return SafeMarkup::set(implode("\n", $output));
   }
 }
 
 /**
- * Returns HTML for a source tag.
+ * Helper function for template_preprocess_responsive_image().
  *
+ * Builds an array of attributes for <source> tags to be used in a <picture>
+ * tag. In other words, this function provides the attributes for each <source>
+ * tag in a <picture> tag.
+ *
+ * In a responsive image style, each breakpoint has an image style mapping for
+ * each of its multipliers. An image style mapping can be either of two types:
+ * 'sizes' (meaning it will output a <source> tag with the 'sizes' attribute) or
+ * 'image_style' (meaning it will output a <source> tag based on the selected
+ * image style for this breakpoint and multiplier). A responsive image style
+ * can contain image style mappings of mixed types (both 'image_style' and
+ * 'sizes'). For example:
+ * @code
+ * $responsive_img_style = ResponsiveImageStyle::create(array(
+ *   'id' => 'style_one',
+ *   'label' => 'Style One',
+ *   'breakpoint_group' => 'responsive_image_test_module',
+ * ));
+ * $responsive_img_style->addImageStyleMapping('responsive_image_test_module.mobile', '1x', array(
+ *   'image_mapping_type' => 'image_style',
+ *   'image_mapping' => 'thumbnail',
+ * ))
+ * ->addImageStyleMapping('responsive_image_test_module.narrow', '1x', array(
+ *   'image_mapping_type' => 'sizes',
+ *   'image_mapping' => array(
+ *     'sizes' => '(min-width: 700px) 700px, 100vw',
+ *     'sizes_image_styles' => array(
+ *       'large' => 'large',
+ *       'medium' => 'medium',
+ *     ),
+ *   ),
+ * ))
+ * ->save();
+ * @endcode
+ * The above responsive image style will result in a <picture> tag like this:
+ * @code
+ * <picture>
+ *   <source media="(min-width: 0px)" srcset="sites/default/files/styles/thumbnail/image.jpeg" />
+ *   <source media="(min-width: 560px)" sizes="(min-width: 700px) 700px, 100vw" srcset="sites/default/files/styles/large/image.jpeg 480w, sites/default/files/styles/medium/image.jpeg 220w" />
+ *   <img srcset="fallback.jpeg" />
+ * </picture>
+ * @endcode
+ *
+ * When all the images in the 'srcset' attribute of a <source> tag have the same
+ * MIME type, the source tag will get a 'mime-type' attribute as well. This way
+ * we can gain some front-end performance because browsers can select which
+ * image (<source> tag) to load based on the MIME types they support (which, for
+ * instance, can be beneficial for browsers supporting WebP).
+ * For example:
+ * A <source> tag can contain multiple images:
+ * @code
+ * <source [...] srcset="image1.jpeg 1x, image2.jpeg 2x, image3.jpeg 3x" />
+ * @endcode
+ * In the above example we can add the 'mime-type' attribute ('image/jpeg')
+ * since all images in the 'srcset' attribute of the <source> tag have the same
+ * MIME type.
+ * If a <source> tag were to look like this:
+ * @code
+ * <source [...] srcset="image1.jpeg 1x, image2.webp 2x, image3.jpeg 3x" />
+ * @endcode
+ * We can't add the 'mime-type' attribute ('image/jpeg' vs 'image/webp'). So in
+ * order to add the 'mime-type' attribute to the <source> tag all images in the
+ * 'srcset' attribute of the <source> tag need to be of the same MIME type. This
+ * way, a <picture> tag could look like this:
+ * @code
+ * <picture>
+ *   <source [...] mime-type="image/webp" srcset="image1.webp 1x, image2.webp 2x, image3.webp 3x"/>
+ *   <source [...] mime-type="image/jpeg" srcset="image1.jpeg 1x, image2.jpeg 2x, image3.jpeg 3x"/>
+ *   <img srcset="fallback.jpeg" />
+ * </picture>
+ * @endcode
+ * This way a browser can decide which <source> tag is preferred based on the
+ * MIME type. In other words, the MIME types of all images in one <source> tag
+ * need to be the same in order to set the 'mime-type' attribute but not all
+ * MIME types within the <picture> tag need to be the same.
+ *
+ * For image style mappings of the type 'sizes', a width descriptor is added to
+ * each source. For example:
+ * @code
+ * <source media="(min-width: 0px)" srcset="image1.jpeg 100w" />
+ * @endcode
+ * The width descriptor here is "100w". This way the browser knows this image is
+ * 100px wide without having to load it. According to the spec, a multiplier can
+ * not be present if a width descriptor is.
+ * For example:
+ * Valid:
+ * @code
+ * <source media="(min-width:0px)" srcset="img1.jpeg 50w, img2.jpeg=100w" />
+ * @endcode
+ * Invalid:
+ * @code
+ * <source media="(min-width:0px)" srcset="img1.jpeg 50w 1x, img2.jpeg=100w 1x" />
+ * @endcode
+ *
+ * Note: Since the specs do not allow width descriptors and multipliers combined
+ * inside one 'srcset' attribute, we either have to use something like
+ * @code
+ * <source [...] srcset="image1.jpeg 1x, image2.webp 2x, image3.jpeg 3x" />
+ * @endcode
+ * to support multipliers or
+ * @code
+ * <source [...] sizes"(min-width: 40em) 80vw, 100vw" srcset="image1.jpeg 300w, image2.webp 600w, image3.jpeg 1200w" />
+ * @endcode
+ * to support the 'sizes' attribute.
+ *
+ * In theory people could add an image style mapping for the same breakpoint
+ * (but different multiplier) so the array contains an entry for breakpointA.1x
+ * and breakpointA.2x. If we would output those we will end up with something
+ * like
+ * @code
+ * <source [...] sizes="(min-width: 40em) 80vw, 100vw" srcset="a1.jpeg 300w 1x, a2.jpeg 600w 1x, a3.jpeg 1200w 1x, b1.jpeg 250w 2x, b2.jpeg 680w 2x, b3.jpeg 1240w 2x" />
+ * @endcode
+ * which is illegal. So the solution is to merge both arrays into one and
+ * disregard the multiplier. Which, in this case, would output
+ * @code
+ * <source [...] sizes="(min-width: 40em) 80vw, 100vw" srcset="b1.jpeg 250w, a1.jpeg 300w, a2.jpeg 600w, b2.jpeg 680w, a3.jpeg 1200w,  b3.jpeg 1240w" />
+ * @endcode
+ * See http://www.w3.org/html/wg/drafts/html/master/embedded-content.html#image-candidate-string
+ * for further information.
+ *
+ * @param \Drupal\Core\Image\ImageInterface $image
+ *   The image to build the <source> tags for.
  * @param array $variables
- *   An associative array containing:
- *   - media: The media query to use.
- *   - srcset: The srcset containing the path of the image file or a full
- *     URL and optionally multipliers.
- *   - src: Either the path of the image file (relative to base_path()) or a
- *     full URL.
- *   - dimensions: The width and height of the image (if known).
+ *   An array with the following keys:
+ *     - responsive_image_style_id: The \Drupal\responsive_image\Entity\ResponsiveImageStyle
+ *       ID.
+ *     - width: The width of the image (if known).
+ *     - height: The height of the image (if known).
+ * @param \Drupal\breakpoint\BreakpointInterface $breakpoint
+ *   The breakpoint for this source tag.
+ * @param array $multipliers
+ *   An array with multipliers as keys and image style mappings as values.
  *
- * @ingroup themeable
+ * @return \Drupal\Core\Template\Attribute[]
+ *   An array of attributes for the source tag.
  */
-function theme_responsive_image_source($variables) {
-  $output = array();
-  if (isset($variables['media']) && !empty($variables['media'])) {
-    if (!isset($variables['srcset'])) {
-      $output[] = '<!-- <source media="' . $variables['media'] . '" src="' . $variables['src'] . '" ' . new Attribute($variables['dimensions']) . ' /> -->';
-      $output[] = '<source media="' . $variables['media'] . '" src="' . $variables['src'] . '" ' . new Attribute($variables['dimensions']) . '/>';
-    }
-    elseif (!isset($variables['src'])) {
-      $output[] = '<!-- <source media="' . $variables['media'] . '" srcset="' . $variables['srcset'] . '" ' . new Attribute($variables['dimensions']) . ' /> -->';
-      $output[] = '<source media="' . $variables['media'] . '" srcset="' . $variables['srcset'] . '" ' . new Attribute($variables['dimensions']) . ' />';
+function responsive_image_build_source_attributes(ImageInterface $image, array $variables, BreakpointInterface $breakpoint, array $multipliers) {
+  $width = isset($variables['width']) && !empty($variables['width']) ? $variables['width'] : $image->getWidth();
+  $height = isset($variables['height']) && !empty($variables['height']) ? $variables['height'] : $image->getHeight();
+  $extension = pathinfo($image->getSource(), PATHINFO_EXTENSION);
+  $sizes = array();
+  $srcset = array();
+  $derivative_mime_types = array();
+  foreach ($multipliers as $multiplier => $image_style_mapping) {
+    switch ($image_style_mapping['image_mapping_type']) {
+      // Create a <source> tag with the 'sizes' attribute.
+      case 'sizes':
+        // Loop through the image styles for this breakpoint and multiplier.
+        foreach ($image_style_mapping['image_mapping']['sizes_image_styles'] as $image_style_name) {
+          // Get the dimensions.
+          $dimensions = responsive_image_get_image_dimensions($image_style_name, array('width' => $width, 'height' => $height));
+          // Get MIME type.
+          $derivative_mime_type = responsive_image_get_mime_type($image_style_name, $extension);
+          $derivative_mime_types[] = $derivative_mime_type;
+
+          // Add the image source with its width descriptor. When a width
+          // descriptor is used in a srcset, we can't add a multiplier to
+          // it. Because of this, the image styles for all multipliers of
+          // this breakpoint should be merged into one srcset and the sizes
+          // attribute should be merged as well.
+          if (is_null($dimensions['width'])) {
+            throw new \LogicException(String::format('Could not determine image width for @file using image style with ID: @image_style_name. This image style can not be used for a responsive image style mapping using the \'sizes\' attribute.', array('@file' => $image->getSource(), '@image_style_name' => $image_style_name)));
+          }
+          // Use the image width as key so we can sort the array later on.
+          // Images within a srcset should be sorted from small to large, since
+          // the first matching source will be used.
+          $srcset[intval($dimensions['width'])] = file_create_url(_responsive_image_image_style_url($image_style_name, $image->getSource())) . ' ' . $dimensions['width'] . 'w';
+          $sizes = array_merge(explode(',', $image_style_mapping['image_mapping']['sizes']), $sizes);
+        }
+        break;
+
+      case 'image_style':
+        // Get MIME type.
+        $derivative_mime_type = responsive_image_get_mime_type($image_style_mapping['image_mapping'], $extension);
+        $derivative_mime_types[] = $derivative_mime_type;
+        // Add the image source with its multiplier. Use the multiplier as key
+        // so we can sort the array later on. Multipliers within a srcset should
+        // be sorted from small to large, since the first matching source will
+        // be used. We multiply it by 100 so multipliers with up to two decimals
+        // can be used.
+        $srcset[intval(Unicode::substr($multiplier, 0, -1) * 100)] = file_create_url(_responsive_image_image_style_url($image_style_mapping['image_mapping'], $image->getSource())) . ' ' . $multiplier;
+        break;
     }
   }
-  else {
-    $output[] = '<!-- <source src="' . $variables['src'] . '" ' . new Attribute($variables['dimensions']) . ' /> -->';
-    $output[] = '<source src="' . $variables['src'] . '" ' . new Attribute($variables['dimensions']) . '/>';
+  // Sort the srcset from small to large image width or multiplier.
+  ksort($srcset);
+  $source_attributes = new \Drupal\Core\Template\Attribute(array(
+    'srcset' => implode(', ', array_unique($srcset)),
+    'media' => $breakpoint->getMediaQuery(),
+  ));
+  if (count(array_unique($derivative_mime_types)) == 1) {
+    $source_attributes->setAttribute('type', $derivative_mime_types[0]);
   }
-  return implode("\n", $output);
+  if (!empty($sizes)) {
+    $source_attributes->setAttribute('sizes', implode(',', array_unique($sizes)));
+  }
+  return $source_attributes;
 }
 
 /**
  * Determines the dimensions of an image.
  *
- * @param $variables
+ * @param string $image_style_name
+ *   The name of the style to be used to alter the original image.
+ * @param array $dimensions
  *   An associative array containing:
- *   - style_name: The name of the style to be used to alter the original image.
  *   - width: The width of the source image (if known).
  *   - height: The height of the source image (if known).
  *
@@ -304,21 +426,16 @@ function theme_responsive_image_source($variables) {
  *   Dimensions to be modified - an array with components width and height, in
  *   pixels.
  */
-function responsive_image_get_image_dimensions($variables) {
+function responsive_image_get_image_dimensions($image_style_name, array $dimensions) {
   // Determine the dimensions of the styled image.
-  $dimensions = array(
-    'width' => $variables['width'],
-    'height' => $variables['height'],
-  );
-
-  if ($variables['style_name'] == RESPONSIVE_IMAGE_EMPTY_IMAGE) {
+  if ($image_style_name == RESPONSIVE_IMAGE_EMPTY_IMAGE) {
     $dimensions = array(
       'width' => 1,
       'height' => 1,
     );
   }
   else {
-    $entity = entity_load('image_style', $variables['style_name']);
+    $entity = ImageStyle::load($image_style_name);
     if ($entity instanceof Drupal\image\Entity\ImageStyle) {
       $entity->transformDimensions($dimensions);
     }
@@ -328,17 +445,38 @@ function responsive_image_get_image_dimensions($variables) {
 }
 
 /**
+ * Determines the MIME type of an image.
+ *
+ * @param string $image_style_name
+ *   The image style that will be applied to the image.
+ * @param string $extension
+ *   The original extension of the image (without the leading dot).
+ *
+ * @return string
+ *   The MIME type of the image after the image style is applied.
+ */
+function responsive_image_get_mime_type($image_style_name, $extension) {
+  if ($image_style_name == RESPONSIVE_IMAGE_EMPTY_IMAGE) {
+    return 'image/gif';
+  }
+  // The MIME type guesser needs a full path, not just an extension, but the
+  // file doesn't have to exist.
+  $fake_path = 'responsive_image.' . ImageStyle::load($image_style_name)->getDerivativeExtension($extension);
+  return Drupal::service('file.mime_type.guesser.extension')->guess($fake_path);
+}
+
+/**
  * Wrapper around image_style_url() so we can return an empty image.
  */
 function _responsive_image_image_style_url($style_name, $path) {
   if ($style_name == RESPONSIVE_IMAGE_EMPTY_IMAGE) {
     // The smallest data URI for a 1px square transparent GIF image.
-    return 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+    // http://probablyprogramming.com/2009/03/15/the-tiniest-gif-ever
+    return 'data:image/gif;base64,R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
   }
-  $entity = entity_load('image_style', $style_name);
+  $entity = ImageStyle::load($style_name);
   if ($entity instanceof Drupal\image\Entity\ImageStyle) {
     return $entity->buildUrl($path);
   }
   return file_create_url($path);
 }
-

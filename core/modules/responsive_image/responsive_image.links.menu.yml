@@ -1,6 +1,6 @@
-entity.responsive_image_mapping.collection:
-  title: 'Responsive image mappings'
-  description: 'Manage responsive image mappings'
+entity.responsive_image_style.collection:
+  title: 'Responsive image styles'
+  description: 'Manage responsive image styles'
   weight: 10
-  route_name: entity.responsive_image_mapping.collection
+  route_name: entity.responsive_image_style.collection
   parent: system.admin_config_media

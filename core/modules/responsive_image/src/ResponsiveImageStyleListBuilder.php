@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\responsive_image\ResponsiveImageMappingListBuilder.
+ * Contains Drupal\responsive_image\ResponsiveImageStyleListBuilder.
  */
 
 namespace Drupal\responsive_image;
@@ -11,9 +11,9 @@ use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
- * Provides a listing of responsive image mappings.
+ * Provides a listing of responsive image styles.
  */
-class ResponsiveImageMappingListBuilder extends ConfigEntityListBuilder {
+class ResponsiveImageStyleListBuilder extends ConfigEntityListBuilder {
 
   /**
    * {@inheritdoc}

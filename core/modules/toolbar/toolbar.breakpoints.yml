@@ -1,7 +1,7 @@
 toolbar.narrow:
   label: narrow
   mediaQuery: 'only screen and (min-width: 16.5em)'
-  weight: 0
+  weight: 2
   multipliers:
     - 1x
 toolbar.standard:
@@ -13,6 +13,6 @@ toolbar.standard:
 toolbar.wide:
   label: wide
   mediaQuery: 'only screen and (min-width: 61em)'
-  weight: 2
+  weight: 0
   multipliers:
     - 1x

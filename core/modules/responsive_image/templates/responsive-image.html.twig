@@ -1,0 +1,30 @@
+{#
+/**
+ * @file
+ * Default theme implementation of a responsive image.
+ *
+ * Available variables:
+ * - sources: The attributes of the <source> tags for this <picture> tag.
+ * - fallback_image: The fallback <img> tag to use for this <picture> tag.
+ *
+ * @see template_preprocess()
+ * @see template_preprocess_responsive_image()
+ *
+ * @ingroup themeable
+ */
+#}
+<picture>
+  {% if sources %}
+    {#
+    Internet Explorer 9 doesn't recognise source elements that are wrapped in
+    picture tags. See http://scottjehl.github.io/picturefill/#ie9
+    #}
+    <!--[if IE 9]><video style="display: none;"><![endif]-->
+    {% for source_attributes in sources %}
+      <source{{ source_attributes }}/>
+    {% endfor %}
+    <!--[if IE 9]></video><![endif]-->
+  {% endif %}
+  {# The controlling image, with the fallback image in srcset. #}
+  {{ img_element }}
+</picture>
