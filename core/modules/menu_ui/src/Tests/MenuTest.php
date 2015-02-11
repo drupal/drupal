@@ -266,7 +266,7 @@ class MenuTest extends MenuWebTestBase {
 
     $this->clickLink(t('Add link'));
     $link_title = $this->randomString();
-    $this->drupalPostForm(NULL, array('link[0][uri]' => '<front>', 'title[0][value]' => $link_title), t('Save'));
+    $this->drupalPostForm(NULL, array('link[0][uri]' => '/', 'title[0][value]' => $link_title), t('Save'));
     $this->assertUrl(Url::fromRoute('entity.menu.edit_form',  ['menu' => $menu_name]));
     // Test the 'Edit' operation.
     $this->clickLink(t('Edit'));
@@ -301,9 +301,9 @@ class MenuTest extends MenuWebTestBase {
     $this->doMenuLinkFormDefaultsTest();
 
     // Add menu links.
-    $item1 = $this->addMenuLink('', 'node/' . $node1->id(), $menu_name, TRUE);
-    $item2 = $this->addMenuLink($item1->getPluginId(), 'node/' . $node2->id(), $menu_name, FALSE);
-    $item3 = $this->addMenuLink($item2->getPluginId(), 'node/' . $node3->id(), $menu_name);
+    $item1 = $this->addMenuLink('', '/node/' . $node1->id(), $menu_name, TRUE);
+    $item2 = $this->addMenuLink($item1->getPluginId(), '/node/' . $node2->id(), $menu_name, FALSE);
+    $item3 = $this->addMenuLink($item2->getPluginId(), '/node/' . $node3->id(), $menu_name);
 
     // Hierarchy
     // <$menu_name>
@@ -337,10 +337,10 @@ class MenuTest extends MenuWebTestBase {
     $this->verifyMenuLink($item3, $node3, $item2, $node2);
 
     // Add more menu links.
-    $item4 = $this->addMenuLink('', 'node/' . $node4->id(), $menu_name);
-    $item5 = $this->addMenuLink($item4->getPluginId(), 'node/' . $node5->id(), $menu_name);
+    $item4 = $this->addMenuLink('', '/node/' . $node4->id(), $menu_name);
+    $item5 = $this->addMenuLink($item4->getPluginId(), '/node/' . $node5->id(), $menu_name);
     // Create a menu link pointing to an alias.
-    $item6 = $this->addMenuLink($item4->getPluginId(), 'node5', $menu_name, TRUE, '0');
+    $item6 = $this->addMenuLink($item4->getPluginId(), '/node5', $menu_name, TRUE, '0');
 
     // Hierarchy
     // <$menu_name>
@@ -427,7 +427,7 @@ class MenuTest extends MenuWebTestBase {
     // item's weight doesn't get changed because of the old hardcoded delta=50.
     $items = array();
     for ($i = -50; $i <= 51; $i++) {
-      $items[$i] = $this->addMenuLink('', 'node/' . $node1->id(), $menu_name, TRUE, strval($i));
+      $items[$i] = $this->addMenuLink('', '/node/' . $node1->id(), $menu_name, TRUE, strval($i));
     }
     $this->assertMenuLink($items[51]->getPluginId(), array('weight' => '51'));
 
@@ -454,7 +454,7 @@ class MenuTest extends MenuWebTestBase {
     $this->assertMenuLink($item7->getPluginId(), array('url' => 'http://drupal.org'));
 
     // Add <front> menu item.
-    $item8 = $this->addMenuLink('', '<front>', $menu_name);
+    $item8 = $this->addMenuLink('', '/', $menu_name);
     $this->assertMenuLink($item8->getPluginId(), array('route_name' => '<front>'));
     $this->drupalGet('');
     $this->assertResponse(200);
@@ -494,20 +494,19 @@ class MenuTest extends MenuWebTestBase {
     $this->drupalLogin($this->adminUser);
 
     // Make a path with query and fragment on.
-    $path = 'test-page?arg1=value1&arg2=value2';
+    $path = '/test-page?arg1=value1&arg2=value2';
     $item = $this->addMenuLink('', $path);
 
     $this->drupalGet('admin/structure/menu/item/' . $item->id() . '/edit');
     $this->assertFieldByName('link[0][uri]', $path, 'Path is found with both query and fragment.');
 
     // Now change the path to something without query and fragment.
-    $path = 'test-page';
+    $path = '/test-page';
     $this->drupalPostForm('admin/structure/menu/item/' . $item->id() . '/edit', array('link[0][uri]' => $path), t('Save'));
     $this->drupalGet('admin/structure/menu/item/' . $item->id() . '/edit');
     $this->assertFieldByName('link[0][uri]', $path, 'Path no longer has query or fragment.');
 
-    // Use <front>#fragment and ensure that saving it does not loose its
-    // content.
+    // Use <front>#fragment and ensure that saving it does not lose its content.
     $path = '<front>?arg1=value#fragment';
     $item = $this->addMenuLink('', $path);
 
@@ -547,7 +546,7 @@ class MenuTest extends MenuWebTestBase {
       'status' => NODE_NOT_PUBLISHED,
     ));
 
-    $item = $this->addMenuLink('', 'node/' . $node->id());
+    $item = $this->addMenuLink('', '/node/' . $node->id());
     $this->modifyMenuLink($item);
 
     // Test that a user with 'administer menu' but without 'bypass node access'
@@ -564,7 +563,7 @@ class MenuTest extends MenuWebTestBase {
   public function testBlockContextualLinks() {
     $this->drupalLogin($this->drupalCreateUser(array('administer menu', 'access contextual links', 'administer blocks')));
     $custom_menu = $this->addCustomMenu();
-    $this->addMenuLink('', '<front>', $custom_menu->id());
+    $this->addMenuLink('', '/', $custom_menu->id());
     $block = $this->drupalPlaceBlock('system_menu_block:' . $custom_menu->id(), array('label' => 'Custom menu', 'provider' => 'system'));
     $this->drupalGet('test-page');
 
@@ -606,7 +605,7 @@ class MenuTest extends MenuWebTestBase {
    * @return \Drupal\menu_link_content\Entity\MenuLinkContent
    *   A menu link entity.
    */
-  function addMenuLink($parent = '', $path = '<front>', $menu_name = 'tools', $expanded = FALSE, $weight = '0') {
+  function addMenuLink($parent = '', $path = '/', $menu_name = 'tools', $expanded = FALSE, $weight = '0') {
     // View add menu link page.
     $this->drupalGet("admin/structure/menu/manage/$menu_name/add");
     $this->assertResponse(200);
@@ -640,7 +639,7 @@ class MenuTest extends MenuWebTestBase {
    * Attempts to add menu link with invalid path or no access permission.
    */
   function addInvalidMenuLink() {
-    foreach (array('-&-', 'admin/people/permissions') as $link_path) {
+    foreach (array('/-&-', '/admin/people/permissions') as $link_path) {
       $edit = array(
         'link[0][uri]' => $link_path,
         'title[0][value]' => 'title',
@@ -666,7 +665,7 @@ class MenuTest extends MenuWebTestBase {
       $parent = $last_link ? 'tools:' . $last_link->getPluginId() : 'tools:';
       $title = 'title' . $i;
       $edit = array(
-        'link[0][uri]' => '<front>',
+        'link[0][uri]' => '/',
         'title[0][value]' => $title,
         'menu_parent' => $parent,
         'description[0][value]' => '',

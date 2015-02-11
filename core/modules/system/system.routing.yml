@@ -382,7 +382,8 @@ system.theme_settings_theme:
   path: ''
   options:
     _only_fragment: TRUE
-
+  requirements:
+    _access: 'TRUE'
 
 '<current>':
   path: '<current>'

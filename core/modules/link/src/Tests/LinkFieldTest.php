@@ -25,7 +25,7 @@ class LinkFieldTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = ['entity_test', 'link'];
+  public static $modules = ['entity_test', 'link', 'node'];
 
   /**
    * A field to use in this test class.
@@ -93,27 +93,61 @@ class LinkFieldTest extends WebTestBase {
 
     // Create a path alias.
     \Drupal::service('path.alias_storage')->save('admin', 'a/path/alias');
-    // Define some valid URLs.
+
+    // Create a node to test the link widget.
+    $node = $this->drupalCreateNode();
+
+    // Define some valid URLs (keys are the entered values, values are the
+    // strings displayed to the user).
     $valid_external_entries = array(
-      'http://www.example.com/',
+      'http://www.example.com/' => 'http://www.example.com/',
     );
     $valid_internal_entries = array(
-      'entity_test/add',
-      'a/path/alias',
-      'entity:user/1',
+      '/entity_test/add' => '/entity_test/add',
+      '/a/path/alias' => '/a/path/alias',
+
+      // Front page, with query string and fragment.
+      '/' => '&lt;front&gt;',
+      '/?example=llama' => '&lt;front&gt;?example=llama',
+      '/#example' => '&lt;front&gt;#example',
+
+      // @todo '<front>' is valid input for BC reasons, may be removed by
+      //   https://www.drupal.org/node/2421941
+      '<front>' => '&lt;front&gt;',
+      '<front>#example' => '&lt;front&gt;#example',
+      '<front>?example=llama' =>'&lt;front&gt;?example=llama',
+
+      // Query string and fragment.
+      '?example=llama' => '?example=llama',
+      '#example' => '#example',
+
+      // Entity reference autocomplete value.
+      $node->label() . ' (1)' => $node->label() . ' (1)',
+      // Entity URI displayed as ER autocomplete value when displayed in a form.
+      'entity:node/1' => $node->label() . ' (1)',
+      // URI for an entity that exists, but is not accessible by the user.
+      'entity:user/1' => '- Restricted access - (1)',
+      // URI for an entity that doesn't exist, but with a valid ID.
+      'entity:user/999999' => 'entity:user/999999',
+      // URI for an entity that doesn't exist, with an invalid ID.
+      'entity:user/invalid-parameter' => 'entity:user/invalid-parameter',
     );
 
     // Define some invalid URLs.
+    $validation_error_1 = "The path '@link_path' is either invalid or you do not have access to it.";
+    $validation_error_2 = 'Manually entered paths should start with /, ? or #.';
     $invalid_external_entries = array(
       // Missing protcol
-      'not-an-url',
+      'not-an-url' => $validation_error_2,
       // Invalid protocol
-      'invalid://not-a-valid-protocol',
+      'invalid://not-a-valid-protocol' => $validation_error_1,
       // Missing host name
-      'http://',
+      'http://' => $validation_error_1,
     );
     $invalid_internal_entries = array(
-      'non/existing/path',
+      '/non/existing/path' => $validation_error_1,
+      'no-leading-slash' => $validation_error_2,
+      'entity:non_existing_entity_type/yar' => $validation_error_1,
     );
 
     // Test external and internal URLs for 'link_type' = LinkItemInterface::LINK_GENERIC.
@@ -142,15 +176,15 @@ class LinkFieldTest extends WebTestBase {
    *   An array of valid URL entries.
    */
   protected function assertValidEntries($field_name, array $valid_entries) {
-    foreach ($valid_entries as $value) {
+    foreach ($valid_entries as $uri => $string) {
       $edit = array(
-        "{$field_name}[0][uri]" => $value,
+        "{$field_name}[0][uri]" => $uri,
       );
       $this->drupalPostForm('entity_test/add', $edit, t('Save'));
       preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
       $id = $match[1];
       $this->assertText(t('entity_test @id has been created.', array('@id' => $id)));
-      $this->assertRaw($value);
+      $this->assertRaw($string);
     }
   }
 
@@ -163,12 +197,12 @@ class LinkFieldTest extends WebTestBase {
    *   An array of invalid URL entries.
    */
   protected function assertInvalidEntries($field_name, array $invalid_entries) {
-    foreach ($invalid_entries as $invalid_value) {
+    foreach ($invalid_entries as $invalid_value => $error_message) {
       $edit = array(
         "{$field_name}[0][uri]" => $invalid_value,
       );
       $this->drupalPostForm('entity_test/add', $edit, t('Save'));
-      $this->assertText(t("The path '@link_path' is either invalid or you do not have access to it.", array('@link_path' => $invalid_value)));
+      $this->assertText(t($error_message, array('@link_path' => $invalid_value)));
     }
   }
 

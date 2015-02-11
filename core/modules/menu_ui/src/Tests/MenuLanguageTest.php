@@ -65,7 +65,7 @@ class MenuLanguageTest extends MenuWebTestBase {
     $this->assertOptionSelected('edit-langcode', $edit['langcode'], 'The menu language was correctly selected.');
 
     // Test menu link language.
-    $link_path = '<front>';
+    $link_path = '/';
 
     // Add a menu link.
     $link_title = $this->randomString();

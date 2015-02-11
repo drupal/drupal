@@ -9,11 +9,13 @@ namespace Drupal\link\Plugin\Field\FieldWidget;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Entity\Element\EntityAutocomplete;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\link\LinkItemInterface;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
@@ -42,83 +44,101 @@ class LinkWidget extends WidgetBase {
   }
 
   /**
-   * Gets the URI without the 'user-path:' scheme, for display while editing.
+   * Gets the URI without the 'user-path:' or 'entity:' scheme.
+   *
+   * The following two forms of URIs are transformed:
+   * - 'entity:' URIs: to entity autocomplete ("label (entity id)") strings;
+   * - 'user-path:' URIs: the scheme is stripped.
+   *
+   * This method is the inverse of ::getUserEnteredStringAsUri().
    *
    * @param string $uri
    *   The URI to get the displayable string for.
    *
    * @return string
+   *
+   * @see static::getUserEnteredStringAsUri()
    */
   protected static function getUriAsDisplayableString($uri) {
     $scheme = parse_url($uri, PHP_URL_SCHEME);
+
+    // By default, the displayable string is the URI.
+    $displayable_string = $uri;
+
+    // A different displayable string may be chosen in case of the 'user-path:'
+    // or 'entity:' built-in schemes.
     if ($scheme === 'user-path') {
       $uri_reference = explode(':', $uri, 2)[1];
-      // @todo Present the leading slash to the user and hence delete the next
-      //   block in https://www.drupal.org/node/2418017. There, we will also
-      //   remove the ability to enter '<front>' or '<none>', we'll expect '/'
-      //   and '' instead respectively.
+
+      // @todo '<front>' is valid input for BC reasons, may be removed by
+      //   https://www.drupal.org/node/2421941
       $path = parse_url($uri, PHP_URL_PATH);
       if ($path === '/') {
         $uri_reference = '<front>' . substr($uri_reference, 1);
       }
-      elseif (empty($path)) {
-        $uri_reference = '<none>' . $uri_reference;
-      }
-      else {
-        $uri_reference = ltrim($uri_reference, '/');
+
+      $displayable_string = $uri_reference;
+    }
+    elseif ($scheme === 'entity') {
+      list($entity_type, $entity_id) = explode('/', substr($uri, 7), 2);
+      // Show the 'entity:' URI as the entity autocomplete would, but only if:
+      // - the entity could be loaded, and;
+      // - the current user is allowed to view the entity (otherwise we have a
+      //   information disclosure security problem).
+      $entity_manager = \Drupal::entityManager();
+      if ($entity_manager->getDefinition($entity_type, FALSE)) {
+        $entity = \Drupal::entityManager()->getStorage($entity_type)->load($entity_id);
+        if ($entity) {
+          $label = ($entity->access('view')) ? $entity->label() : t('- Restricted access -');
+          $displayable_string = $label . ' (' . $entity_id . ')';
+        }
       }
     }
-    else {
-      $uri_reference = $uri;
-    }
-    return $uri_reference;
+
+    return $displayable_string;
   }
 
   /**
    * Gets the user-entered string as a URI.
    *
-   * Schemeless URIs are treated as 'user-path:' URIs.
+   * The following two forms of input are mapped to URIs:
+   * - entity autocomplete ("label (entity id)") strings: to 'entity:' URIs;
+   * - strings without a detectable scheme: to 'user-path:' URIs.
+   *
+   * This method is the inverse of ::getUriAsDisplayableString().
    *
    * @param string $string
    *   The user-entered string.
    *
    * @return string
-   *   The URI, if a non-empty $string was passed.
+   *   The URI, if a non-empty $uri was passed.
+   *
+   * @see static::getUriAsDisplayableString()
    */
   protected static function getUserEnteredStringAsUri($string) {
-    if (!empty($string)) {
-      // Users can enter relative URLs, but we need a valid URI, so add an
-      // explicit scheme when necessary.
-      if (parse_url($string, PHP_URL_SCHEME) === NULL) {
-        // @todo Present the leading slash to the user and hence delete the next
-        //   block in https://www.drupal.org/node/2418017. There, we will also
-        //   remove the ability to enter '<front>' or '<none>', we'll expect '/'
-        //   and '' instead respectively.
-        // Users can enter paths that don't start with a leading slash, we
-        // want to normalize them to have a leading slash. However, we don't
-        // want to add a leading slash if it already starts with one, or if it
-        // contains only a querystring or a fragment. Examples:
-        // - 'foo' -> '/foo'
-        // - '?foo=bar' -> '/?foo=bar'
-        // - '#foo' -> '/#foo'
-        // - '<front>' -> '/'
-        // - '<front>#foo' -> '/#foo'
-        // - '<none>' -> ''
-        // - '<none>#foo' -> '#foo'
-        if (strpos($string, '<front>') === 0) {
-          $string = '/' . substr($string, strlen('<front>'));
-        }
-        elseif (strpos($string, '<none>') === 0) {
-          $string = substr($string, strlen('<none>'));
-        }
-        elseif (!in_array($string[0], ['/', '?', '#'])) {
-          $string = '/' . $string;
-        }
+    // By default, assume the entered string is an URI.
+    $uri = $string;
 
-        return 'user-path:' . $string;
-      }
+    // Detect entity autocomplete string, map to 'entity:' URI.
+    $entity_id = EntityAutocomplete::extractEntityIdFromAutocompleteInput($string);
+    if ($entity_id !== NULL) {
+      // @todo Support entity types other than 'node'. Will be fixed in
+      //    https://www.drupal.org/node/2423093.
+      $uri = 'entity:node/' . $entity_id;
     }
-    return $string;
+    // Detect a schemeless string, map to 'user-path:' URI.
+    elseif (!empty($string) && parse_url($string, PHP_URL_SCHEME) === NULL) {
+      // @todo '<front>' is valid input for BC reasons, may be removed by
+      //   https://www.drupal.org/node/2421941
+      // - '<front>' -> '/'
+      // - '<front>#foo' -> '/#foo'
+      if (strpos($string, '<front>') === 0) {
+        $string = '/' . substr($string, strlen('<front>'));
+      }
+      $uri = 'user-path:' . $string;
+    }
+
+    return $uri;
   }
 
   /**
@@ -126,6 +146,15 @@ class LinkWidget extends WidgetBase {
    */
   public static function validateUriElement($element, FormStateInterface $form_state, $form) {
     $uri = static::getUserEnteredStringAsUri($element['#value']);
+    $form_state->setValueForElement($element, $uri);
+
+    // If getUserEnteredStringAsUri() mapped the entered value is mapped to a
+    // 'user-path:' URI , ensure the raw value begins with '/', '?' or '#'.
+    // @todo '<front>' is valid input for BC reasons, may be removed by
+    //   https://www.drupal.org/node/2421941
+    if (parse_url($uri, PHP_URL_SCHEME) === 'user-path' && !in_array($element['#value'][0], ['/', '?', '#'], TRUE) && substr($element['#value'], 0, 7) !== '<front>') {
+      $form_state->setError($element, t('Manually entered paths should start with /, ? or #.'));
+    }
 
     // If the URI is empty or not well-formed, the link field type's validation
     // constraint will detect it.
@@ -140,6 +169,15 @@ class LinkWidget extends WidgetBase {
       $disallowed = $disallowed || (!\Drupal::currentUser()->hasPermission('link to any page') && !$url->access());
       // Disallow external URLs using untrusted protocols.
       $disallowed = $disallowed || ($url->isExternal() && !in_array(parse_url($uri, PHP_URL_SCHEME), UrlHelper::getAllowedProtocols()));
+      // Disallow routed URLs that don't exist.
+      if (!$disallowed && $url->isRouted()) {
+        try {
+          $url->toString();
+        }
+        catch (RouteNotFoundException $e) {
+          $disallowed = TRUE;
+        }
+      }
 
       if ($disallowed) {
         $form_state->setError($element, t("The path '@link_path' is either invalid or you do not have access to it.", ['@link_path' => static::getUriAsDisplayableString($uri)]));
@@ -170,18 +208,23 @@ class LinkWidget extends WidgetBase {
     // If the field is configured to support internal links, it cannot use the
     // 'url' form element and we have to do the validation ourselves.
     if ($this->supportsInternalLinks()) {
-      $element['uri']['#type'] = 'textfield';
+      $element['uri']['#type'] = 'entity_autocomplete';
+      // @todo The user should be able to select an entity type. Will be fixed
+      //    in https://www.drupal.org/node/2423093.
+      $element['uri']['#target_type'] = 'node';
+      // Disable autocompletion when the first character is '/', '#' or '?'.
+      $element['uri']['#attributes']['data-autocomplete-first-character-blacklist'] = '/#?';
     }
 
     // If the field is configured to allow only internal links, add a useful
     // element prefix.
     if (!$this->supportsExternalLinks()) {
-      $element['uri']['#field_prefix'] = \Drupal::url('<front>', array(), array('absolute' => TRUE));
+      $element['uri']['#field_prefix'] = rtrim(\Drupal::url('<front>', array(), array('absolute' => TRUE)), '/');
     }
     // If the field is configured to allow both internal and external links,
     // show a useful description.
     elseif ($this->supportsExternalLinks() && $this->supportsInternalLinks()) {
-      $element['uri']['#description'] = $this->t('This can be an internal path such as %add-node or an external URL such as %url. Enter %front to link to the front page.', array('%front' => '<front>', '%add-node' => 'node/add', '%url' => 'http://example.com'));
+      $element['uri']['#description'] = $this->t('Start typing the title of a piece of content to select it. You can also enter an internal path such as %add-node or an external URL such as %url. Enter %front to link to the front page.', array('%front' => '<front>', '%add-node' => '/node/add', '%url' => 'http://example.com'));
     }
 
     $element['title'] = array(

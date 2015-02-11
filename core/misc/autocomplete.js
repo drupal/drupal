@@ -59,9 +59,14 @@
    * @return {Boolean}
    */
   function searchHandler(event) {
-    // Only search when the term is two characters or larger.
+    var options = autocomplete.options;
     var term = autocomplete.extractLastTerm(event.target.value);
-    return term.length >= autocomplete.minLength;
+    // Abort search if the first character is in firstCharacterBlacklist.
+    if (term.length > 0 && options.firstCharacterBlacklist.indexOf(term[0]) !== -1) {
+      return false;
+    }
+    // Only search when the term is at least the minimum length.
+    return term.length >= options.minLength;
   }
 
   /**
@@ -174,6 +179,11 @@
       // Act on textfields with the "form-autocomplete" class.
       var $autocomplete = $(context).find('input.form-autocomplete').once('autocomplete');
       if ($autocomplete.length) {
+        // Allow options to be overriden per instance.
+        var blacklist = $autocomplete.attr('data-autocomplete-first-character-blacklist');
+        $.extend(autocomplete.options, {
+          firstCharacterBlacklist: (blacklist) ? blacklist : ''
+        });
         // Use jQuery UI Autocomplete on the textfield.
         $autocomplete.autocomplete(autocomplete.options)
           .data("ui-autocomplete")
@@ -194,8 +204,7 @@
    */
   autocomplete = {
     cache: {},
-    // Exposes methods to allow overriding by contrib.
-    minLength: 1,
+    // Exposes options to allow overriding by contrib.
     splitValues: autocompleteSplitValues,
     extractLastTerm: extractLastTerm,
     // jQuery UI autocomplete options.
@@ -204,7 +213,10 @@
       focus: focusHandler,
       search: searchHandler,
       select: selectHandler,
-      renderItem: renderItem
+      renderItem: renderItem,
+      minLength: 1,
+      // Custom options, used by Drupal.autocomplete.
+      firstCharacterBlacklist: ''
     },
     ajax: {
       dataType: 'json'
