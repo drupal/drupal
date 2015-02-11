@@ -4,14 +4,7 @@
  * Default theme implementation for main view template.
  *
  * Available variables:
- * - attributes: Remaining HTML attributes for the element including:
- *   - class: HTML classes that can be used to style contextually
- *     through CSS, including:
- *     - view
- *     - view-[css_name]
- *     - view-id-[view_name]
- *     - view-display-id-[display_name]
- *     - view-dom-id-[dom_id]
+ * - attributes: Remaining HTML attributes for the element.
  * - css_name: A css-safe version of the view name.
  * - css_class: The user-specified classes names, if any.
  * - header: The optional header.
@@ -31,13 +24,24 @@
  *   view content.
  * - attachment_after: An optional attachment view to be displayed after the
  *   view content.
+ * - dom_id: Unique id for every view being printed to give unique class for
+ *   Javascript.
  *
  * @see template_preprocess_views_view()
  *
  * @ingroup themeable
  */
 #}
-<div{{ attributes }}>
+{%
+  set classes = [
+    'view',
+    'view-' ~ id|clean_class,
+    'view-id-' ~ id,
+    'view-display-id-' ~ display_id,
+    dom_id ? 'view-dom-id-' ~ dom_id,
+  ]
+%}
+<div{{ attributes.addClass(classes) }}>
   {{ title_prefix }}
   {% if title %}
     {{ title }}

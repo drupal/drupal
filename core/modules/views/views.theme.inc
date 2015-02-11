@@ -34,13 +34,6 @@ function template_preprocess_views_view(&$variables) {
   // for an example of this.
   $variables['title'] = '';
 
-  // Basic classes.
-  $variables['attributes']['class'] = array();
-  $variables['attributes']['class'][] = 'view';
-  $variables['attributes']['class'][] = 'view-' . Html::cleanCssIdentifier($variables['id']);
-  $variables['attributes']['class'][] = 'view-id-' . $variables['id'];
-  $variables['attributes']['class'][] = 'view-display-id-' . $variables['display_id'];
-
   $css_class = $view->display_handler->getOption('css_class');
   if (!empty($css_class)) {
     $variables['css_class'] = preg_replace('/[^a-zA-Z0-9- ]/', '-', $css_class);
@@ -60,7 +53,6 @@ function template_preprocess_views_view(&$variables) {
     // identifier for each view. This identifier is written to both
     // drupalSettings and the DIV wrapper.
     $variables['dom_id'] = $view->dom_id;
-    $variables['attributes']['class'][] = 'view-dom-id-' . $variables['dom_id'];
   }
 }
 
@@ -343,10 +335,8 @@ function template_preprocess_views_view_summary(&$variables) {
     }
     $variables['rows'][$id]->url = $url->toString();
     $variables['rows'][$id]->count = intval($row->{$argument->count_alias});
-    if (isset($active_urls[$variables['rows'][$id]->url])) {
-      $variables['rows'][$id]->attributes['class'][] = 'active';
-    }
     $variables['rows'][$id]->attributes = new Attribute($variables['rows'][$id]->attributes);
+    $variables['rows'][$id]->active = isset($active_urls[$variables['rows'][$id]->url]);
   }
 }
 
@@ -412,9 +402,7 @@ function template_preprocess_views_view_summary_unformatted(&$variables) {
     }
     $variables['rows'][$id]->url = $url->toString();
     $variables['rows'][$id]->count = intval($row->{$argument->count_alias});
-    if (isset($active_urls[$variables['rows'][$id]->url])) {
-      $variables['rows'][$id]->attributes['class'][] = 'active';
-    }
+    $variables['rows'][$id]->active = isset($active_urls[$variables['rows'][$id]->url]);
     $variables['rows'][$id]->attributes = new Attribute($variables['rows'][$id]->attributes);
   }
 }
@@ -502,12 +490,9 @@ function template_preprocess_views_view_table(&$variables) {
         $variables['header'][$field]['content'] = \Drupal::l($label, new Url('<current>', [], $link_options));
       }
 
+      $variables['header'][$field]['default_classes'] = $fields[$field]->options['element_default_classes'];
       // Set up the header label class.
       $variables['header'][$field]['attributes'] = array();
-      if ($fields[$field]->options['element_default_classes']) {
-        $variables['header'][$field]['attributes']['class'][] = 'views-field';
-        $variables['header'][$field]['attributes']['class'][] = 'views-field-' . $variables['fields'][$field];
-      }
       $class = $fields[$field]->elementLabelClasses(0);
       if ($class) {
         $variables['header'][$field]['attributes']['class'][] = $class;
@@ -555,13 +540,15 @@ function template_preprocess_views_view_table(&$variables) {
       // Reference to the column in the loop to make the code easier to read.
       $column_reference =& $variables['rows'][$num]['columns'][$column];
 
+      $column_reference['default_classes'] = $fields[$field]->options['element_default_classes'];
+
+      // Set the field key to the column so it can be used for adding classes
+      // in a template.
+      $column_reference['fields'][] = $variables['fields'][$field];
+
       // Add field classes.
       if (!isset($column_reference['attributes'])) {
         $column_reference['attributes'] = array();
-      }
-      if ($fields[$field]->options['element_default_classes']) {
-        $column_reference['attributes']['class'][] = 'views-field';
-        $column_reference['attributes']['class'][] = 'views-field-' . $variables['fields'][$field];
       }
 
       if ($classes = $fields[$field]->elementClasses($num)) {
@@ -635,8 +622,6 @@ function template_preprocess_views_view_table(&$variables) {
     $variables['rows'][$num]['attributes'] = new Attribute($variables['rows'][$num]['attributes']);
   }
 
-  $variables['attributes']['class'][] = 'views-table';
-  $variables['attributes']['class'][] = 'views-view-table';
   if (empty($variables['rows']) && !empty($options['empty_table'])) {
     $build = $view->display_handler->renderArea('empty');
     $variables['rows'][0]['columns'][0]['content'] = drupal_render($build);
@@ -648,11 +633,11 @@ function template_preprocess_views_view_table(&$variables) {
     ));
   }
 
+  $variables['sticky'] = FALSE;
   if (!empty($options['sticky'])) {
     $variables['view']->element['#attached']['library'][] = 'core/drupal.tableheader';
-    $variables['attributes']['class'][] = "sticky-enabled";
+    $variables['sticky'] = TRUE;
   }
-  $variables['attributes']['class'][] = 'cols-' . count($variables['header']);
 
   // Add the caption to the list if set.
   if (!empty($handler->options['caption'])) {
@@ -668,6 +653,7 @@ function template_preprocess_views_view_table(&$variables) {
   $variables['description'] = $handler->options['description'];
   $variables['caption_needed'] |= !empty($variables['summary']) || !empty($variables['description']);
 
+  $variables['responsive'] = FALSE;
   // If the table has headers and it should react responsively to columns hidden
   // with the classes represented by the constants RESPONSIVE_PRIORITY_MEDIUM
   // and RESPONSIVE_PRIORITY_LOW, add the tableresponsive behaviors.
@@ -675,7 +661,7 @@ function template_preprocess_views_view_table(&$variables) {
     $variables['view']->element['#attached']['library'][] = 'core/drupal.tableresponsive';
     // Add 'responsive-enabled' class to the table to identify it for JS.
     // This is needed to target tables constructed by this function.
-    $variables['attributes']['class'][] = 'responsive-enabled';
+    $variables['responsive'] = TRUE;
   }
 }
 
@@ -692,13 +678,6 @@ function template_preprocess_views_view_table(&$variables) {
 function template_preprocess_views_view_grid(&$variables) {
   $options = $variables['options'] = $variables['view']->style_plugin->options;
   $horizontal = ($options['alignment'] === 'horizontal');
-
-  $variables['attributes']['class'] = array(
-    'views-view-grid',
-    $options['alignment'],
-    'cols-' . $options['columns'],
-    'clearfix',
-  );
 
   $col = 0;
   $row = 0;
@@ -720,14 +699,6 @@ function template_preprocess_views_view_grid(&$variables) {
     // Create attributes for rows.
     if (!$horizontal || ($horizontal && empty($items[$row]['attributes']))) {
       $row_attributes = array('class' => array());
-      // Add default views row classes.
-      if ($options['row_class_default']) {
-        $row_attributes['class'][] = 'views-row';
-        $row_attributes['class'][] = 'row-' . ($row + 1);
-        if ($horizontal) {
-          $row_attributes['class'][] = 'clearfix';
-        }
-      }
       // Add custom row classes.
       $row_class = array_filter(explode(' ', $variables['view']->style_plugin->getCustomClass($result_index, 'row')));
       if (!empty($row_class)) {
@@ -746,13 +717,6 @@ function template_preprocess_views_view_grid(&$variables) {
     if ($horizontal || (!$horizontal && empty($items[$col]['attributes']))) {
       $col_attributes = array('class' => array());
       // Add default views column classes.
-      if ($options['col_class_default']) {
-        $col_attributes['class'][] = 'views-col';
-        $col_attributes['class'][] = 'col-' . ($col + 1);
-        if (!$horizontal) {
-          $col_attributes['class'][] = 'clearfix';
-        }
-      }
       // Add custom column classes.
       $col_class = array_filter(explode(' ', $variables['view']->style_plugin->getCustomClass($result_index, 'col')));
       if (!empty($col_class)) {
@@ -818,18 +782,15 @@ function template_preprocess_views_view_unformatted(&$variables) {
   $style = $view->style_plugin;
   $options = $style->options;
 
-  $default_row_class = isset($options['default_row_class']) ? $options['default_row_class'] : FALSE;
+  $variables['default_row_class'] = !empty($options['default_row_class']);
   foreach ($rows as $id => $row) {
     $variables['rows'][$id] = array();
     $variables['rows'][$id]['content'] = $row;
     $variables['rows'][$id]['attributes'] = array();
-    if ($default_row_class) {
-      $variables['rows'][$id]['attributes']['class'][] = 'views-row';
-    }
-    if ($row_class = $view->style_plugin->getRowClass($id)) {
-      $variables['rows'][$id]['attributes']['class'][] = $row_class;
-    }
     $variables['rows'][$id]['attributes'] = new Attribute($variables['rows'][$id]['attributes']);
+    if ($row_class = $view->style_plugin->getRowClass($id)) {
+      $variables['rows'][$id]['attributes']->addClass($row_class);
+    }
   }
 }
 

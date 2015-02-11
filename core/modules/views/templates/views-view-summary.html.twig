@@ -10,6 +10,7 @@
  *   - link: The summary link text.
  *   - count: The number of items under this grouping.
  *   - attributes: HTML attributes to apply to each row.
+ *   - active: A flag indicating whtether the row is active.
  * - options: Flags indicating how the summary should be displayed.
  *   This contains:
  *   - count: A flag indicating whether the count should be displayed.
@@ -22,7 +23,7 @@
 <div class="item-list">
   <ul class="views-summary">
   {% for row in rows %}
-    <li><a href="{{ row.url }}"{{ row.attributes }}>{{ row.link }}</a>
+    <li><a href="{{ row.url }}"{{ row.attributes.addClass(row.active ? 'active') }}>{{ row.link }}</a>
       {% if options.count %}
         ({{ row.count }})
       {% endif %}
