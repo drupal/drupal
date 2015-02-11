@@ -40,45 +40,42 @@ h2 a,
  * headings on a page without affecting accessibility
  */
 h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-.heading-a,
-.heading-b,
-.heading-c,
-.heading-d,
-.heading-e,
-.heading-f {
+.heading-a {
   margin: 1.0em 0 0.5em;
   font-weight: inherit;
-}
-h1,
-.heading-a {
   font-size: 1.357em;
   color: #000;
 }
 h2,
 .heading-b {
+  margin: 1.0em 0 0.5em;
+  font-weight: inherit;
   font-size: 1.143em;
 }
 h3,
 .heading-c {
+  margin: 1.0em 0 0.5em;
+  font-weight: inherit;
   font-size: 1.092em;
 }
 h4,
 .heading-d {
+  margin: 1.0em 0 0.5em;
+  font-weight: inherit;
   font-size: 1.05em;
 }
 h5,
 .heading-e {
+  margin: 1.0em 0 0.5em;
+  font-weight: inherit;
   font-size: 0.889em;
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
 h6,
 .heading-f {
+  margin: 1.0em 0 0.5em;
+  font-weight: inherit;
   font-size: 0.67em;
   text-transform: uppercase;
   letter-spacing: 0.1em;
