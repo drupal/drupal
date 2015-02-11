@@ -420,8 +420,8 @@ function system_authorized_init($callback, $file, $arguments = array(), $page_ti
  * @see system_authorized_init()
  */
 function system_authorized_get_url(array $options = array()) {
-  global $base_url;
-  // Prefix with $base_url so url() treats it as an external link.
+  // core/authorize.php is an unrouted URL, so using the base: scheme is
+  // the correct usage for this case.
   $url = Url::fromUri('base:core/authorize.php');
   $url_options = $url->getOptions();
   $url->setOptions($options + $url_options);
