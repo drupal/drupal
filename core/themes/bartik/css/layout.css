@@ -53,11 +53,8 @@ body,
   padding: 0 15px;
 }
 #site-footer__wrapper {
-  padding: 35px 0 30px;
-}
-#site-footer__wrapper .section {
+  padding: 35px 15px 30px;
   box-sizing: border-box;
-  padding: 0 15px;
 }
 .region-featured-bottom-first,
 .region-featured-bottom-second,
