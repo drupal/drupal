@@ -6,9 +6,9 @@
 /**
  * Add search page select/submit.
  */
-#search-admin-settings #edit-add-page {
+.search-admin-settings .container-inline {
   margin-bottom: 1em;
 }
-#search-admin-settings #edit-add-page label {
+.search-admin-settings label[for="edit-search-type"] {
   display: block;
 }
