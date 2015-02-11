@@ -33,4 +33,4 @@ drupal.user.icons:
   version: VERSION
   css:
     theme:
-      css/user.icons.css: {}
+      css/user.icons.theme.css: {}

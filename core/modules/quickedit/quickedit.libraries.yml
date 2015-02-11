@@ -25,7 +25,7 @@ quickedit:
       css/quickedit.module.css: {}
     theme:
       css/quickedit.theme.css: {}
-      css/quickedit.icons.css: {}
+      css/quickedit.icons.theme.css: {}
   dependencies:
     - core/jquery
     - core/jquery.once

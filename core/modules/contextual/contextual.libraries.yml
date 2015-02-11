@@ -16,7 +16,7 @@ drupal.contextual-links:
       css/contextual.module.css: {}
     theme:
       css/contextual.theme.css: {}
-      css/contextual.icons.css: {}
+      css/contextual.icons.theme.css: {}
   dependencies:
     - core/jquery
     - core/drupal

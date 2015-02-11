@@ -13,4 +13,4 @@ drupal.shortcut:
       css/shortcut.module.css: {}
     theme:
       css/shortcut.theme.css: {}
-      css/shortcut.icons.css: {}
+      css/shortcut.icons.theme.css: {}
