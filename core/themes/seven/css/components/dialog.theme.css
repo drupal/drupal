@@ -7,7 +7,9 @@
   border: 0;
   position: absolute;
   z-index: 1260;
-  overflow: visible;
+  /* jQuery UI modals crash in Firefox unless overflow is set to hidden.
+     See: https://www.drupal.org/node/2423781 */
+  overflow: hidden;
   padding: 0;
 }
 @media all and (max-width: 48em) { /* 768px */
