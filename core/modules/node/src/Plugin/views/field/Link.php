@@ -27,12 +27,18 @@ class Link extends FieldPluginBase {
     return FALSE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['text'] = array('default' => '');
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['text'] = array(
       '#type' => 'textfield',

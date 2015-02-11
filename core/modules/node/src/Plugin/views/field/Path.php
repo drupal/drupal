@@ -23,7 +23,7 @@ use Drupal\views\ViewExecutable;
 class Path extends FieldPluginBase {
 
   /**
-   * Overrides \Drupal\views\Plugin\views\field\FieldPluginBase::init().
+   * {@inheritdoc}
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
@@ -31,6 +31,9 @@ class Path extends FieldPluginBase {
     $this->additional_fields['nid'] = 'nid';
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['absolute'] = array('default' => FALSE);
@@ -38,6 +41,9 @@ class Path extends FieldPluginBase {
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     $form['absolute'] = array(
@@ -49,6 +55,9 @@ class Path extends FieldPluginBase {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function query() {
     $this->ensureMyTable();
     $this->addAdditionalFields();

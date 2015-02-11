@@ -51,6 +51,9 @@ class Comment extends FieldPluginBase {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['link_to_comment'] = array('default' => TRUE);

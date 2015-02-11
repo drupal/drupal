@@ -22,7 +22,7 @@ use Drupal\views\ResultRow;
 class TranslationLink extends FieldPluginBase {
 
   /**
-   * Overrides \Drupal\views\Plugin\views\field\FieldPluginBase::defineOptions().
+   * {@inheritdoc}
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
@@ -31,7 +31,7 @@ class TranslationLink extends FieldPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\field\FieldPluginBase::buildOptionsForm().
+   * {@inheritdoc}
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['text'] = array(
@@ -72,7 +72,7 @@ class TranslationLink extends FieldPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\Plugin\field\FieldPluginBase::query().
+   * {@inheritdoc}
    */
   public function query() {
   }

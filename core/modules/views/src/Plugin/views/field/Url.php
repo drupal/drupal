@@ -20,6 +20,9 @@ use Drupal\views\ResultRow;
  */
 class Url extends FieldPluginBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 

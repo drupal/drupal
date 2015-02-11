@@ -24,7 +24,7 @@ use Drupal\views\ViewExecutable;
 class LinkEdit extends FieldPluginBase {
 
   /**
-   * Overrides Drupal\views\Plugin\views\field\FieldPluginBase::init().
+   * {@inheritdoc}
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
@@ -33,6 +33,9 @@ class LinkEdit extends FieldPluginBase {
     $this->additional_fields['vid'] = 'vid';
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -41,6 +44,9 @@ class LinkEdit extends FieldPluginBase {
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['text'] = array(
       '#type' => 'textfield',
@@ -50,6 +56,9 @@ class LinkEdit extends FieldPluginBase {
     parent::buildOptionsForm($form, $form_state);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function query() {
     $this->ensureMyTable();
     $this->addAdditionalFields();

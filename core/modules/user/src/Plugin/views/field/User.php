@@ -23,7 +23,7 @@ use Drupal\views\ViewExecutable;
 class User extends FieldPluginBase {
 
   /**
-   * Overrides \Drupal\views\Plugin\views\field\FieldPluginBase::init().
+   * {@inheritdoc}
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
@@ -33,6 +33,9 @@ class User extends FieldPluginBase {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['link_to_user'] = array('default' => TRUE);

@@ -31,6 +31,9 @@ class ContextualLinks extends FieldPluginBase {
     return FALSE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -40,6 +43,9 @@ class ContextualLinks extends FieldPluginBase {
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $all_fields = $this->view->display_handler->getFieldLabels();
     // Offer to include only those fields that follow this one.
@@ -63,6 +69,9 @@ class ContextualLinks extends FieldPluginBase {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function preRender(&$values) {
     // Add a row plugin css class for the contextual link.
     $class = 'contextual-region';
@@ -138,6 +147,9 @@ class ContextualLinks extends FieldPluginBase {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function query() { }
 
 }

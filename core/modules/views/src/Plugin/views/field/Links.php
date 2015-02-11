@@ -26,7 +26,7 @@ abstract class Links extends FieldPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\field\FieldPluginBase::defineOptions().
+   * {@inheritdoc}
    */
   public function defineOptions() {
     $options = parent::defineOptions();
@@ -38,7 +38,7 @@ abstract class Links extends FieldPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\field\FieldPluginBase::defineOptions().
+   * {@inheritdoc}
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
@@ -97,7 +97,7 @@ abstract class Links extends FieldPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\field\FieldPluginBase::query().
+   * {@inheritdoc}
    */
   public function query() {
   }

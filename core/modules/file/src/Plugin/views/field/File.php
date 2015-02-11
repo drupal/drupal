@@ -24,7 +24,7 @@ use Drupal\views\Plugin\views\field\FieldPluginBase;
 class File extends FieldPluginBase {
 
   /**
-   * Overrides \Drupal\views\Plugin\views\field\FieldPluginBase::init().
+   * {@inheritdoc}
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
@@ -34,6 +34,9 @@ class File extends FieldPluginBase {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['link_to_file'] = array('default' => FALSE);

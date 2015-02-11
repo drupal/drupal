@@ -32,6 +32,9 @@ abstract class PrerenderList extends FieldPluginBase implements MultiItemsFieldH
    */
   var $items = array();
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -41,6 +44,9 @@ abstract class PrerenderList extends FieldPluginBase implements MultiItemsFieldH
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['type'] = array(
       '#type' => 'radios',

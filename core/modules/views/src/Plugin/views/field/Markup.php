@@ -27,7 +27,7 @@ use Drupal\views\ViewExecutable;
 class Markup extends FieldPluginBase {
 
   /**
-   * Overrides \Drupal\views\Plugin\views\field\FieldPluginBase::init().
+   * {@inheritdoc}
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
@@ -57,6 +57,9 @@ class Markup extends FieldPluginBase {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function elementType($none_supported = FALSE, $default_empty = FALSE, $inline = FALSE) {
     if ($inline) {
       return 'span';

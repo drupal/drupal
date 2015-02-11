@@ -60,6 +60,9 @@ class Link extends FieldPluginBase {
     $this->entityManager = $entity_manager;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['text'] = array('default' => '');
@@ -67,6 +70,9 @@ class Link extends FieldPluginBase {
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['text'] = array(
       '#type' => 'textfield',
@@ -81,6 +87,9 @@ class Link extends FieldPluginBase {
     parent::buildOptionsForm($form, $form_state);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function query() {}
 
   /**
