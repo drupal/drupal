@@ -54,11 +54,10 @@ function menu_link_content_path_insert($path) {
 function _menu_link_content_update_path_alias($path) {
   /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
   $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
-  // @todo Use link.uri once https://www.drupal.org/node/2391217 is in.
   /** @var \Drupal\menu_link_content\MenuLinkContentInterface[] $entities */
   $entities = \Drupal::entityManager()
     ->getStorage('menu_link_content')
-    ->loadByProperties(['link__uri' => 'user-path:/' . $path]);
+    ->loadByProperties(['link.uri' => 'user-path:/' . $path]);
   foreach ($entities as $menu_link) {
     $menu_link_manager->updateDefinition($menu_link->getPluginId(), $menu_link->getPluginDefinition(), FALSE);
   }

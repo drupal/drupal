@@ -247,8 +247,7 @@ class BreadcrumbTest extends MenuTestBase {
       $this->drupalPostForm("admin/structure/menu/manage/$menu/add", $edit, t('Save'));
       $menu_links = entity_load_multiple_by_properties('menu_link_content', array(
         'title' => $edit['title[0][value]'],
-        // @todo Use link.uri once https://www.drupal.org/node/2391217 is in.
-        'link__uri' => 'user-path:/taxonomy/term/' . $term->id(),
+        'link.uri' => 'user-path:/taxonomy/term/' . $term->id(),
       ));
       $tags[$name]['link'] = reset($menu_links);
       $parent_mlid = $tags[$name]['link']->getPluginId();

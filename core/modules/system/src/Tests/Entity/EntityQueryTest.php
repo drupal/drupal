@@ -13,6 +13,8 @@ use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\Entity\Vocabulary;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -667,6 +669,41 @@ class EntityQueryTest extends EntityUnitTestBase {
     )->execute();
     $this->assertIdentical(count($result), 0, 'Case sensitive, exact match.');
 
+  }
+
+  /**
+   * Test base fields with multiple columns.
+   */
+  public function testBaseFieldMultipleColumns() {
+    $this->enableModules(['taxonomy']);
+    $this->installEntitySchema('taxonomy_term');
+
+    Vocabulary::create(['vid' => 'tags']);
+
+    $term1 = Term::create([
+      'name' => $this->randomMachineName(),
+      'vid' => 'tags',
+      'description' => array(
+        'value' => $this->randomString(),
+        'format' => 'format1',
+      )]);
+    $term1->save();
+
+    $term2 = Term::create([
+      'name' => $this->randomMachineName(),
+      'vid' => 'tags',
+      'description' => array(
+        'value' => $this->randomString(),
+        'format' => 'format2',
+      )]);
+    $term2->save();
+
+    $ids = \Drupal::entityQuery('taxonomy_term')
+      ->condition('description.format', 'format1')
+      ->execute();
+
+    $this->assertEqual(count($ids), 1);
+    $this->assertEqual($term1->id(), reset($ids));
   }
 
 }

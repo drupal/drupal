@@ -165,7 +165,22 @@ class Tables implements TablesInterface {
         $entity_base_table = $entity_type->getBaseTable();
         $entity_tables[$entity_base_table] = $this->getTableMapping($entity_base_table, $entity_type_id);
         $sql_column = $specifier;
-        $table = $this->ensureEntityTable($index_prefix, $specifier, $type, $langcode, $base_table, $entity_id_field, $entity_tables);
+
+        // If there are more specifiers, get the right sql column name if the
+        // next one is a column of this field.
+        if ($key < $count) {
+          $next = $specifiers[$key + 1];
+          // Is this a field column?
+          $columns = $field_storage->getColumns();
+          if (isset($columns[$next]) || in_array($next, $table_mapping->getReservedColumns())) {
+            // Use it.
+            $sql_column = $table_mapping->getFieldColumnName($field_storage, $next);
+            // Do not process it again.
+            $key++;
+          }
+        }
+
+        $table = $this->ensureEntityTable($index_prefix, $sql_column, $type, $langcode, $base_table, $entity_id_field, $entity_tables);
 
         // If there is a field storage (some specifiers are not, like
         // default_langcode), check for case sensitivity.

@@ -194,8 +194,7 @@ function menu_ui_get_menu_link_defaults(NodeInterface $node) {
     $type_menus = $node_type->getThirdPartySetting('menu_ui', 'available_menus', array('main'));
     if (in_array($menu_name, $type_menus)) {
       $query = \Drupal::entityQuery('menu_link_content')
-        // @todo Use link.uri once https://www.drupal.org/node/2391217 is in.
-        ->condition('link__uri', 'node/' . $node->id())
+        ->condition('link.uri', 'node/' . $node->id())
         ->condition('menu_name', $menu_name)
         ->sort('id', 'ASC')
         ->range(0, 1);
@@ -206,8 +205,7 @@ function menu_ui_get_menu_link_defaults(NodeInterface $node) {
     // Check all allowed menus if a link does not exist in the default menu.
     if (!$id && !empty($type_menus)) {
       $query = \Drupal::entityQuery('menu_link_content')
-        // @todo Use link.uri once https://www.drupal.org/node/2391217 is in.
-        ->condition('link__uri', 'entity:node/' . $node->id())
+        ->condition('link.uri', 'entity:node/' . $node->id())
         ->condition('menu_name', array_values($type_menus), 'IN')
         ->sort('id', 'ASC')
         ->range(0, 1);
