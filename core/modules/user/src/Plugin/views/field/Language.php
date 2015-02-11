@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Plugin\views\field;
 
+use Drupal\Core\Url;
 use Drupal\views\ResultRow;
 
 /**
@@ -26,7 +27,7 @@ class Language extends User {
       $uid = $this->getValue($values, 'uid');
       if ($this->view->getUser()->hasPermission('access user profiles') && $uid) {
         $this->options['alter']['make_link'] = TRUE;
-        $this->options['alter']['path'] = 'user/' . $uid;
+        $this->options['alter']['url'] = Url::fromRoute('entity.user.canonical', ['user' => $uid]);
       }
     }
     if (empty($data)) {

@@ -81,7 +81,7 @@ class Taxonomy extends FieldPluginBase {
 
     if (!empty($this->options['link_to_taxonomy']) && $term && $data !== NULL && $data !== '') {
       $this->options['alter']['make_link'] = TRUE;
-      $this->options['alter']['path'] = $term->getSystemPath();
+      $this->options['alter']['url'] = $term->urlInfo();
     }
 
     if (!empty($this->options['convert_spaces'])) {

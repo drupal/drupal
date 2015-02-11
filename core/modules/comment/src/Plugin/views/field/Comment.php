@@ -8,6 +8,7 @@
 namespace Drupal\comment\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -92,7 +93,7 @@ class Comment extends FieldPluginBase {
       $this->options['alter']['make_link'] = TRUE;
       $cid = $this->getValue($values, 'cid');
       if (!empty($cid)) {
-        $this->options['alter']['path'] = "comment/" . $cid;
+        $this->options['alter']['url'] = Url::fromRoute('entity.comment.canonical', ['comment' => $cid]);
         $this->options['alter']['fragment'] = "comment-" . $cid;
       }
       // If there is no comment link to the entity.
@@ -100,7 +101,7 @@ class Comment extends FieldPluginBase {
         $entity_id = $this->getValue($values, 'entity_id');
         $entity_type = $this->getValue($values, 'entity_type');
         $entity = entity_load($entity_type, $entity_id);
-        $this->options['alter']['path'] = $entity->getSystemPath();
+        $this->options['alter']['url'] = $entity->urlInfo();
       }
     }
 

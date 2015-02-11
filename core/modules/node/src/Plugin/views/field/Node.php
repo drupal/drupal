@@ -8,6 +8,7 @@
 namespace Drupal\node\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -71,7 +72,7 @@ class Node extends FieldPluginBase {
     if (!empty($this->options['link_to_node']) && !empty($this->additional_fields['nid'])) {
       if ($data !== NULL && $data !== '') {
         $this->options['alter']['make_link'] = TRUE;
-        $this->options['alter']['path'] = "node/" . $this->getValue($values, 'nid');
+        $this->options['alter']['url'] = Url::fromRoute('entity.node.canonical', ['node' => $this->getValue($values, 'nid')]);
         if (isset($this->aliases['langcode'])) {
           $languages = \Drupal::languageManager()->getLanguages();
           $langcode = $this->getValue($values, 'langcode');

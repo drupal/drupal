@@ -11,6 +11,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 
@@ -95,6 +96,9 @@ class ContextualLinks extends FieldPluginBase {
       $path = '';
       if (!empty($this->view->field[$field]->options['alter']['path'])) {
         $path = $this->view->field[$field]->options['alter']['path'];
+      }
+      elseif (!empty($this->view->field[$field]->options['alter']['url']) && $this->view->field[$field]->options['alter']['url'] instanceof Url) {
+        $path = $this->view->field[$field]->options['alter']['url']->toString();
       }
       if (!empty($title) && !empty($path)) {
         // Make sure that tokens are replaced for this paths as well.

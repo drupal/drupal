@@ -8,6 +8,7 @@
 namespace Drupal\user\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\views\ResultRow;
 
 /**

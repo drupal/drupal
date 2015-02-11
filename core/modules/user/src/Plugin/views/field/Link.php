@@ -90,7 +90,7 @@ class Link extends FieldPluginBase {
     $text = !empty($this->options['text']) ? $this->options['text'] : $this->t('View');
 
     $this->options['alter']['make_link'] = TRUE;
-    $this->options['alter']['path'] = $entity->getSystemPath();
+    $this->options['alter']['url'] = $entity->urlInfo();
 
     return $text;
   }

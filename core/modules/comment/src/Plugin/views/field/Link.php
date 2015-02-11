@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Url;
 use Drupal\views\ResultRow;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -111,13 +112,13 @@ class Link extends FieldPluginBase {
     $this->options['alter']['html'] = TRUE;
 
     if (!empty($cid)) {
-      $this->options['alter']['path'] = "comment/" . $cid;
+      $this->options['alter']['url'] = Url::fromRoute('entity.comment.canonical', ['comment' => $cid]);
       $this->options['alter']['fragment'] = "comment-" . $cid;
     }
     // If there is no comment link to the node.
     elseif ($this->options['link_to_node']) {
       $entity = $comment->getCommentedEntity();
-      $this->options['alter']['path'] = $entity->getSystemPath();
+      $this->options['alter']['url'] = $entity->urlInfo();
     }
 
     return $text;

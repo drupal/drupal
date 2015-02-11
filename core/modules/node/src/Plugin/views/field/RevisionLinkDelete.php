@@ -8,6 +8,7 @@
 namespace Drupal\node\Plugin\views\field;
 
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
 use Drupal\node\Plugin\views\field\RevisionLink;
 use Drupal\views\ResultRow;
 
@@ -50,7 +51,7 @@ class RevisionLinkDelete extends RevisionLink {
     }
 
     $this->options['alter']['make_link'] = TRUE;
-    $this->options['alter']['path'] = 'node/' . $node->id() . "/revisions/$vid/delete";
+    $this->options['alter']['url'] = Url::fromRoute('node.revision_delete_confirm', ['node' => $node->id(), 'node_revision' => $vid]);
     $this->options['alter']['query'] = drupal_get_destination();
 
     return !empty($this->options['text']) ? $this->options['text'] : $this->t('Delete');

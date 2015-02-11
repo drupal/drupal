@@ -28,7 +28,7 @@ class LinkCancel extends Link {
 
       $text = !empty($this->options['text']) ? $this->options['text'] : $this->t('Cancel account');
 
-      $this->options['alter']['path'] = $entity->getSystemPath('cancel-form');
+      $this->options['alter']['url'] = $entity->urlInfo('cancel-form');
       $this->options['alter']['query'] = drupal_get_destination();
 
       return $text;

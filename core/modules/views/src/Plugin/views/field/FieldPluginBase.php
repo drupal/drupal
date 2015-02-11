@@ -1259,7 +1259,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     }
     $this->last_render_text = $value;
 
-    if (!empty($alter['make_link']) && !empty($alter['path'])) {
+    if (!empty($alter['make_link']) && (!empty($alter['path']) || !empty($alter['url']))) {
       if (!isset($tokens)) {
         $tokens = $this->getRenderTokens($alter);
       }
@@ -1295,34 +1295,52 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * the user.
    */
   protected function renderAsLink($alter, $text, $tokens) {
-    $value = '';
-
-    if (!empty($alter['prefix'])) {
-      $value .= Xss::filterAdmin($this->viewsTokenReplace($alter['prefix'], $tokens));
-    }
-
     $options = array(
-      'html' => TRUE,
       'absolute' => !empty($alter['absolute']) ? TRUE : FALSE,
+      'alias' => FALSE,
+      'entity' => NULL,
+      'entity_type' => NULL,
+      'fragment' => NULL,
+      'html' => TRUE,
+      'language' => NULL,
+      'query' => [],
     );
 
     $alter += [
       'path' => NULL
     ];
 
-    // $path will be run through check_url() by _l() so we do not need to
-    // sanitize it ourselves.
     $path = $alter['path'];
+    if (empty($alter['url'])) {
+      if (!parse_url($path, PHP_URL_SCHEME)) {
+        $alter['url'] = CoreUrl::fromUri('user-path:/' . ltrim($path, '/'));
+      }
+      else {
+        $alter['url'] = CoreUrl::fromUri($path);
+      }
+    }
+
+    $options = $alter['url']->getOptions() + $options;
+
+    $path = $alter['url']->setOptions($options)->toUriString();
 
     // strip_tags() removes <front>, so check whether its different to front.
-    if ($path != '<front>') {
+    if ($path != 'route:<front>') {
+      // Unescape Twig delimiters that may have been escaped by the
+      // Url::toUriString() call above, because we support twig tokens in
+      // rewrite settings of views fields.
+      // In that case the original path looks like
+      // user-path:/admin/content/files/usage/{{fid}}, which will be escaped by
+      // the toUriString() call above.
+      $path = str_replace(['%7B','%7D'], ['{','}'], $path);
+
       // Use strip tags as there should never be HTML in the path.
       // However, we need to preserve special characters like " that
       // were removed by String::checkPlain().
       $path = strip_tags(String::decodeEntities($this->viewsTokenReplace($path, $tokens)));
 
-      if (!empty($alter['path_case']) && $alter['path_case'] != 'none') {
-        $path = $this->caseTransform($path, $this->options['alter']['path_case']);
+      if (!empty($alter['path_case']) && $alter['path_case'] != 'none' && !$alter['url']->isRouted()) {
+        $path = str_replace($alter['path'], $this->caseTransform($alter['path'], $this->options['alter']['path_case']), $path);
       }
 
       if (!empty($alter['replace_spaces'])) {
@@ -1355,7 +1373,8 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     if ($alter['external']) {
       if (!isset($url['scheme'])) {
         // There is no scheme, add the default 'http://' to the $path.
-        $path = "http://$path";
+        // Use the original $alter['path'] instead of the parsed version.
+        $path = "http://" . $alter['path'];
         // Reset the $url array to include the new scheme.
         $url = UrlHelper::parse($path);
       }
@@ -1403,6 +1422,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       $options['attributes']['rel'] = $rel;
     }
 
+    // Not sure if this String::checkPlain() is needed here?
     $target = String::checkPlain(trim($this->viewsTokenReplace($alter['target'], $tokens)));
     if (!empty($target)) {
       $options['attributes']['target'] = $target;
@@ -1448,15 +1468,18 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       $options['entity_type'] = $alter['entity_type'];
     }
 
-    // @todo Add proper support for url objects, see
-    //   https://www.drupal.org/node/2404603
-    //   This means for example taking into account the options.
-    if (isset($options['url']) && $options['url'] instanceof Url) {
-      $value .= $this->linkGenerator()->generate($text, $options['url']);
+    // The path has been heavily processed above, so it should be used as-is.
+    $final_url = CoreUrl::fromUri($path, $options);
+
+    // Build the link based on our altered Url object, adding on the optional
+    // prefix and suffix
+    $value = '';
+
+    if (!empty($alter['prefix'])) {
+      $value .= Xss::filterAdmin($this->viewsTokenReplace($alter['prefix'], $tokens));
     }
-    else {
-      $value .= _l($text, $path, $options);
-    }
+
+    $value .= $this->linkGenerator()->generate($text, $final_url);
 
     if (!empty($alter['suffix'])) {
       $value .= Xss::filterAdmin($this->viewsTokenReplace($alter['suffix'], $tokens));
@@ -1474,7 +1497,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       $tokens = $this->view->build_info['substitutions'];
     }
     $count = 0;
-    foreach ($this->view->display_handler->getHandlers('argument') as $arg => $handler) {
+    foreach ($this->displayHandler->getHandlers('argument') as $arg => $handler) {
       $token = '%' . ++$count;
       if (!isset($tokens[$token])) {
         $tokens[$token] = '';
@@ -1487,10 +1510,12 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     }
 
     // Get flattened set of tokens for any array depth in query parameters.
-    $tokens += $this->getTokenValuesRecursive($this->view->getRequest()->query->all());
+    if ($request = $this->view->getRequest()) {
+      $tokens += $this->getTokenValuesRecursive($request->query->all());
+    }
 
     // Now add replacements for our fields.
-    foreach ($this->view->display_handler->getHandlers('field') as $field => $handler) {
+    foreach ($this->displayHandler->getHandlers('field') as $field => $handler) {
       if (isset($handler->last_render)) {
         $tokens["{{ $field }}"] = $handler->last_render;
       }
@@ -1718,5 +1743,5 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 }
 
 /**
- * @}
+ * @} End of "defgroup views_field_handlers".
  */

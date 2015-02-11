@@ -76,7 +76,7 @@ class Link extends FieldPluginBase {
   protected function renderLink($node, ResultRow $values) {
     if ($node->access('view')) {
       $this->options['alter']['make_link'] = TRUE;
-      $this->options['alter']['path'] = 'node/' . $node->id();
+      $this->options['alter']['url'] = $node->urlInfo();
       $text = !empty($this->options['text']) ? $this->options['text'] : $this->t('View');
       return $text;
     }

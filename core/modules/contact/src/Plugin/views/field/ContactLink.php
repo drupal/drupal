@@ -11,6 +11,7 @@ use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
 use Drupal\user\Plugin\views\field\Link;
 use Drupal\views\ResultRow;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -117,7 +118,7 @@ class ContactLink extends Link {
     }
 
     $this->options['alter']['make_link'] = TRUE;
-    $this->options['alter']['path'] = "user/{$entity->id()}/contact";
+    $this->options['alter']['url'] =  Url::fromRoute('entity.user.contact_form', ['user' => $entity->id()]);
 
     $title = $this->t('Contact %user', array('%user' => $entity->name->value));
     $this->options['alter']['attributes'] = array('title' => $title);

@@ -370,6 +370,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
         '#template' => $text,
         '#context' => $twig_tokens,
       );
+
       return drupal_render($build);
     }
     else {

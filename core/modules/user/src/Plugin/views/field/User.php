@@ -66,7 +66,7 @@ class User extends FieldPluginBase {
   protected function renderLink($data, ResultRow $values) {
     if (!empty($this->options['link_to_user']) && $this->view->getUser()->hasPermission('access user profiles') && ($entity = $this->getEntity($values)) && $data !== NULL && $data !== '') {
       $this->options['alter']['make_link'] = TRUE;
-      $this->options['alter']['path'] = $entity->getSystemPath();
+      $this->options['alter']['url'] = $entity->urlInfo();
     }
     return $data;
   }

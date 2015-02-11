@@ -112,7 +112,7 @@ class EntityLabel extends FieldPluginBase {
 
     if (!empty($this->options['link_to_entity'])) {
       $this->options['alter']['make_link'] = TRUE;
-      $this->options['alter']['path'] = $entity->getSystemPath();
+      $this->options['alter']['url'] = $entity->urlInfo();
     }
 
     return $this->sanitizeValue($entity->label());

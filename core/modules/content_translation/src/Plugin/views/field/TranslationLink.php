@@ -65,7 +65,7 @@ class TranslationLink extends FieldPluginBase {
       $text = !empty($this->options['text']) ? $this->options['text'] : $this->t('Translate');
 
       $this->options['alter']['make_link'] = TRUE;
-      $this->options['alter']['path'] = $entity->getSystemPath('drupal:content-translation-overview');
+      $this->options['alter']['url'] = $entity->urlInfo('drupal:content-translation-overview');
 
       return $text;
     }
