@@ -36,42 +36,39 @@ summary,
  * headings on a page without affecting accessibility.
  */
 h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-.heading-a,
-.heading-b,
-.heading-c,
-.heading-d,
-.heading-e,
-.heading-f {
+.heading-a {
   font-weight: bold;
   margin: 10px 0;
-}
-h1,
-.heading-a {
   font-size: 1.538em;
 }
 h2,
 .heading-b {
+  font-weight: bold;
+  margin: 10px 0;
   font-size: 1.385em;
 }
 h3,
 .heading-c {
+  font-weight: bold;
+  margin: 10px 0;
   font-size: 1.231em;
 }
 h4,
 .heading-d {
+  font-weight: bold;
+  margin: 10px 0;
   font-size: 1.154em;
 }
 h5,
 .heading-e {
+  font-weight: bold;
+  margin: 10px 0;
   font-size: 1.077em;
 }
 h6,
 .heading-f {
+  font-weight: bold;
+  margin: 10px 0;
   font-size: 1.077em;
 }
 p {
