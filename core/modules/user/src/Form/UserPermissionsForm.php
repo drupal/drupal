@@ -105,6 +105,7 @@ class UserPermissionsForm extends FormBase {
       '#type' => 'table',
       '#header' => array($this->t('Permission')),
       '#id' => 'permissions',
+      '#attributes' => ['class' => ['permissions']],
       '#sticky' => TRUE,
     );
     foreach ($role_names as $name) {

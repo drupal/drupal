@@ -41,11 +41,11 @@
   .install-configure-form .form-type-password {
     width: 100%;
   }
-  input.password-confirm,
-  input.password-field {
+  .password-confirm,
+  .password-field {
     float: none;
   }
-  div.password-confirm {
+  .password-confirm-match {
     float: none;
     width: auto;
     max-width: 100%;

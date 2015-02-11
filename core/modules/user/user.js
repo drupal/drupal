@@ -19,9 +19,9 @@
         innerWrapper.addClass('password-parent');
 
         // Add the password confirmation layer.
-        outerWrapper.find('input.password-confirm').parent().append('<div class="password-confirm">' + translate.confirmTitle + ' <span></span></div>').addClass('confirm-parent');
+        outerWrapper.find('input.password-confirm').parent().append('<div class="password-confirm-match">' + translate.confirmTitle + ' <span></span></div>').addClass('confirm-parent');
         var confirmInput = outerWrapper.find('input.password-confirm');
-        var confirmResult = outerWrapper.find('div.password-confirm');
+        var confirmResult = outerWrapper.find('div.password-confirm-match');
         var confirmChild = confirmResult.find('span');
 
         // If the password strength indicator is enabled, add its markup.

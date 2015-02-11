@@ -5,6 +5,8 @@ drupal.user:
   css:
     component:
       css/user.module.css: {}
+    theme:
+      css/user.theme.css: {}
   dependencies:
     - core/jquery
     - core/drupal
