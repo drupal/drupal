@@ -86,11 +86,10 @@ class PathController extends ControllerBase {
     $destination = drupal_get_destination();
     foreach ($this->aliasStorage->getAliasesForAdminListing($header, $keys) as $data) {
       $row = array();
-      $row['data']['alias'] = $this->l(Unicode::truncate($data->alias, 50, FALSE, TRUE), Url::fromUri('base:' . $data->source, array(
-        'path_processing' => TRUE,
+      $row['data']['alias'] = $this->l(Unicode::truncate($data->alias, 50, FALSE, TRUE), Url::fromUri('user-path:/' . $data->source, array(
         'attributes' => array('title' => $data->alias),
       )));
-      $row['data']['source'] = $this->l(Unicode::truncate($data->source, 50, FALSE, TRUE), Url::fromUri('base:' . $data->source, array(
+      $row['data']['source'] = $this->l(Unicode::truncate($data->source, 50, FALSE, TRUE), Url::fromUri('user-path:/' . $data->source, array(
         'alias' => TRUE,
         'attributes' => array('title' => $data->source),
       )));
