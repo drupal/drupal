@@ -512,7 +512,7 @@ class User extends ContentEntityBase implements UserInterface {
         'UserNameUnique' => array(),
       ));
 
-    $fields['pass'] = BaseFieldDefinition::create('string')
+    $fields['pass'] = BaseFieldDefinition::create('password')
       ->setLabel(t('Password'))
       ->setDescription(t('The password of this user (hashed).'));
 

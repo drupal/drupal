@@ -25,6 +25,11 @@ services:
     class: Drupal\serialization\Normalizer\ListNormalizer
     tags:
       - { name: normalizer }
+  serializer.normalizer.password_field_item:
+      class: Drupal\serialization\Normalizer\NullNormalizer
+      arguments: ['Drupal\Core\Field\Plugin\Field\FieldType\PasswordItem']
+      tags:
+        - { name: normalizer, priority: 20 }
   serializer.normalizer.typed_data:
     class: Drupal\serialization\Normalizer\TypedDataNormalizer
     tags:

@@ -19,6 +19,13 @@ use Drupal\user\Entity\User;
 class EntitySerializationTest extends NormalizerTestBase {
 
   /**
+   * Modules to install.
+   *
+   * @var array
+   */
+  public static $modules = array('serialization', 'system', 'field', 'entity_test', 'text', 'filter', 'user', 'entity_serialization_test');
+
+  /**
    * The test values.
    *
    * @var array
@@ -111,17 +118,33 @@ class EntitySerializationTest extends NormalizerTestBase {
       $this->assertEqual($expected[$fieldName], $normalized[$fieldName], "ComplexDataNormalizer produces expected array for $fieldName.");
     }
     $this->assertEqual(array_diff_key($normalized, $expected), array(), 'No unexpected data is added to the normalized array.');
+  }
 
-    // Test password isn't available.
+  /**
+   * Tests user normalization, using the entity_serialization_test module to
+   * override some default access controls.
+   */
+  public function testUserNormalize() {
     $account = User::create([
-      'name' => 'foo',
+      'name' => 'serialization_test_user',
       'mail' => 'foo@example.com',
       'pass' => '123456',
     ]);
     $account->save();
+
+    // Test password isn't available.
     $normalized = $this->serializer->normalize($account);
-    $this->assertTrue(empty($normalized['pass']));
-    $this->assertTrue(empty($normalized['mail']));
+
+    $this->assertFalse(array_key_exists('pass', $normalized), '"pass" key does not exist in normalized user');
+    $this->assertFalse(array_key_exists('mail', $normalized), '"mail" key does not exist in normalized user');
+
+    // Test again using our test user, so that our access control override will
+    // allow password viewing.
+    $normalized = $this->serializer->normalize($account, NULL, ['account' => $account]);
+
+    // The key 'pass' will now exist, but the password value should be
+    // normalized to NULL.
+    $this->assertIdentical($normalized['pass'], [NULL], '"pass" value is normalized to [NULL]');
   }
 
   /**
