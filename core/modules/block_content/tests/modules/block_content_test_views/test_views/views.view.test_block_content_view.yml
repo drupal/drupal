@@ -120,7 +120,21 @@ display:
           plugin_id: block_content
           entity_type: block_content
           entity_field: id
-      sorts: {  }
+      sorts:
+        id:
+          id: id
+          table: block_content
+          field: id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: ASC
+          exposed: false
+          expose:
+            label: ''
+          entity_type: block_content
+          entity_field: id
+          plugin_id: standard
       title: test_block_content_view
       header: {  }
       footer: {  }
