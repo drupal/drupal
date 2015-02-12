@@ -443,8 +443,14 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   public function __sleep() {
     // Only store the definition, not external objects or derived data.
     $keys = array_keys($this->toArray());
+    // In addition, we need to keep the entity type and the "is new" status.
     $keys[] = 'entityTypeId';
     $keys[] = 'enforceIsNew';
+    // Keep track of the serialized keys, to avoid calling toArray() again in
+    // __wakeup(). Because of the way __sleep() works, the data has to be
+    // present in the object to be included in the serialized values.
+    $keys[] = '_serializedKeys';
+    $this->_serializedKeys = $keys;
     return $keys;
   }
 
@@ -452,9 +458,14 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
    * {@inheritdoc}
    */
   public function __wakeup() {
-    // Run the values from self::toArray() through __construct().
-    $values = array_intersect_key($this->toArray(), get_object_vars($this));
     $is_new = $this->isNew();
+    // Determine what were the properties from toArray() that were saved in
+    // __sleep().
+    $keys = $this->_serializedKeys;
+    unset($this->_serializedKeys);
+    $values = array_intersect_key(get_object_vars($this), array_flip($keys));
+    // Run those values through the __construct(), as if they came from a
+    // regular entity load.
     $this->__construct($values, $this->entityTypeId);
     $this->enforceIsNew($is_new);
   }
