@@ -10,6 +10,7 @@ namespace Drupal\Tests\Core\DependencyInjection;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\Routing\Tests\Fixtures\AnnotatedClasses\BarClass;
 
 require_once __DIR__ . '../../../../../../vendor/symfony/dependency-injection/Symfony/Component/DependencyInjection/Tests/Fixtures/includes/classes.php';
 
@@ -50,7 +51,18 @@ class ContainerBuilderTest extends UnitTestCase {
 
     $result = $container->get('bar');
     $this->assertTrue($result instanceof \BarClass);
-    $this->assertEquals('bar', $result->_serviceId);
+  }
+
+  /**
+   * Tests the set() method.
+   *
+   * @covers ::set
+   */
+  public function testSet() {
+    $container = new ContainerBuilder();
+    $class = new BarClass();
+    $container->set('bar', $class);
+    $this->assertEquals('bar', $class->_serviceId);
   }
 
 }

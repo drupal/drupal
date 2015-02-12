@@ -442,6 +442,8 @@ services:
     class: SplString
     factory_service: 'app.root.factory'
     factory_method: 'get'
+    tags:
+      - { name: parameter_service }
   app.root.factory:
     class: Drupal\Core\AppRootFactory
     arguments: ['@kernel']

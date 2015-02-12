@@ -30,19 +30,6 @@ class ContainerBuilder extends SymfonyContainerBuilder {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function get($id, $invalidBehavior = self::EXCEPTION_ON_INVALID_REFERENCE) {
-    $service = parent::get($id, $invalidBehavior);
-    // Some services are called but do not exist, so the parent returns nothing.
-    if (is_object($service)) {
-      $service->_serviceId = $id;
-    }
-
-    return $service;
-  }
-
-  /**
    * Overrides Symfony\Component\DependencyInjection\ContainerBuilder::set().
    *
    * Drupal's container builder can be used at runtime after compilation, so we
@@ -58,6 +45,11 @@ class ContainerBuilder extends SymfonyContainerBuilder {
 
     if ($this->hasDefinition($id) && ($definition = $this->getDefinition($id)) && $definition->isSynchronized()) {
       $this->synchronize($id);
+    }
+
+    // Ensure that the _serviceId property is set on synthetic services as well.
+    if (isset($this->services[$id]) && is_object($this->services[$id]) && !isset($this->services[$id]->_serviceId)) {
+      $this->services[$id]->_serviceId = $id;
     }
   }
 
