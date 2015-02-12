@@ -1071,7 +1071,7 @@ services:
     arguments: ['@app.root', '@theme_handler', '@state']
   theme.registry:
     class: Drupal\Core\Theme\Registry
-    arguments: ['@app.root', '@cache.default', '@lock', '@module_handler', '@theme_handler']
+    arguments: ['@app.root', '@cache.default', '@lock', '@module_handler', '@theme_handler', '@theme.initialization']
     tags:
       - { name: needs_destruction }
   authentication:

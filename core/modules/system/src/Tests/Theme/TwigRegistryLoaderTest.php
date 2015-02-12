@@ -30,7 +30,7 @@ class TwigRegistryLoaderTest extends WebTestBase {
 
   protected function setUp() {
     parent::setUp();
-    \Drupal::service('theme_handler')->install(array('test_theme_twig_registry_loader'));
+    \Drupal::service('theme_handler')->install(array('test_theme_twig_registry_loader', 'test_theme_twig_registry_loader_theme', 'test_theme_twig_registry_loader_subtheme'));
     $this->twig = \Drupal::service('twig');
   }
 
@@ -65,6 +65,25 @@ class TwigRegistryLoaderTest extends WebTestBase {
     $this->drupalGet('twig-theme-test/registry-loader');
     $this->assertText('This line is from test_theme_twig_registry_loader/templates/twig-registry-loader-test-extend.html.twig');
     $this->assertText('This line is from test_theme_twig_registry_loader/templates/twig-registry-loader-test-include.html.twig');
+
+    // Enable overriding theme that overrides the extend and insert templates
+    // from the base theme.
+    $this->config('system.theme')
+      ->set('default', 'test_theme_twig_registry_loader_theme')
+      ->save();
+    $this->drupalGet('twig-theme-test/registry-loader');
+    $this->assertText('This line is from test_theme_twig_registry_loader_theme/templates/twig-registry-loader-test-extend.html.twig');
+    $this->assertText('This line is from test_theme_twig_registry_loader_theme/templates/twig-registry-loader-test-include.html.twig');
+
+    // Enable a subtheme for the theme that doesnt have any overrides to make
+    // sure that templates are being loaded from the first parent which has the
+    // templates.
+    $this->config('system.theme')
+      ->set('default', 'test_theme_twig_registry_loader_subtheme')
+      ->save();
+    $this->drupalGet('twig-theme-test/registry-loader');
+    $this->assertText('This line is from test_theme_twig_registry_loader_theme/templates/twig-registry-loader-test-extend.html.twig');
+    $this->assertText('This line is from test_theme_twig_registry_loader_theme/templates/twig-registry-loader-test-include.html.twig');
   }
 
 }

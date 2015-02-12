@@ -175,6 +175,9 @@ class ActiveTheme {
   /**
    * Returns an array of base theme active theme objects keyed by name.
    *
+   * The order starts with the base theme of $this and ends with the root of
+   * the dependency chain.
+   *
    * @return static[]
    */
   public function getBaseThemes() {

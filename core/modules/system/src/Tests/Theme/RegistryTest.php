@@ -7,7 +7,8 @@
 
 namespace Drupal\system\Tests\Theme;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Core\Theme\Registry;
+use Drupal\simpletest\KernelTestBase;
 use Drupal\Core\Utility\ThemeRegistry;
 
 /**
@@ -15,7 +16,7 @@ use Drupal\Core\Utility\ThemeRegistry;
  *
  * @group Theme
  */
-class RegistryTest extends WebTestBase {
+class RegistryTest extends KernelTestBase {
 
   /**
    * Modules to enable.
@@ -61,5 +62,38 @@ class RegistryTest extends WebTestBase {
     $registry = new ThemeRegistry($cid, $cache, $lock_backend, array('theme_registry'), $this->container->get('module_handler')->isLoaded());
     $this->assertTrue($registry->get('theme_test_template_test'), 'Offset was returned correctly from the theme registry');
     $this->assertTrue($registry->get('theme_test_template_test_2'), 'Offset was returned correctly from the theme registry');
+  }
+
+  /**
+   * Tests the theme registry with multiple subthemes.
+   */
+  public function testMultipleSubThemes() {
+    $theme_handler = \Drupal::service('theme_handler');
+    $theme_handler->install(['test_basetheme', 'test_subtheme', 'test_subsubtheme']);
+
+    $registry_subsub_theme = new Registry(\Drupal::root(), \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), 'test_subsubtheme');
+    $registry_sub_theme = new Registry(\Drupal::root(), \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), 'test_subtheme');
+    $registry_base_theme = new Registry(\Drupal::root(), \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), 'test_basetheme');
+
+    $preprocess_functions = $registry_subsub_theme->get()['theme_test_template_test']['preprocess functions'];
+    $this->assertIdentical([
+      'template_preprocess',
+      'test_basetheme_preprocess_theme_test_template_test',
+      'test_subtheme_preprocess_theme_test_template_test',
+      'test_subsubtheme_preprocess_theme_test_template_test',
+    ], $preprocess_functions);
+
+    $preprocess_functions = $registry_sub_theme->get()['theme_test_template_test']['preprocess functions'];
+    $this->assertIdentical([
+      'template_preprocess',
+      'test_basetheme_preprocess_theme_test_template_test',
+      'test_subtheme_preprocess_theme_test_template_test',
+    ], $preprocess_functions);
+
+    $preprocess_functions = $registry_base_theme->get()['theme_test_template_test']['preprocess functions'];
+    $this->assertIdentical([
+      'template_preprocess',
+      'test_basetheme_preprocess_theme_test_template_test',
+    ], $preprocess_functions);
   }
 }

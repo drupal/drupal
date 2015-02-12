@@ -22,3 +22,9 @@ function test_subtheme_views_post_render(ViewExecutable $view) {
   // We append the function name to the title for test to check for.
   $view->setTitle($view->getTitle() . ":" . __FUNCTION__);
 }
+
+/**
+ * Implements hook_preprocess_HOOK() for theme_test_template_test templates.
+ */
+function test_subtheme_preprocess_theme_test_template_test(&$variables) {
+}

@@ -25,23 +25,9 @@ class Registry implements DestructableInterface {
   /**
    * The theme object representing the active theme for this registry.
    *
-   * @var object
+   * @var \Drupal\Core\Theme\ActiveTheme
    */
   protected $theme;
-
-  /**
-   * An array of base theme objects.
-   *
-   * @var array
-   */
-  protected $baseThemes = array();
-
-  /**
-   * The name of the theme engine of $theme.
-   *
-   * @var string
-   */
-  protected $engine;
 
   /**
    * The lock backend that should be used.
@@ -157,16 +143,19 @@ class Registry implements DestructableInterface {
    *   The module handler to use to load modules.
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    *   The theme handler.
+   * @param \Drupal\Core\Theme\ThemeInitializationInterface $theme_initialization
+   *   The theme initialization.
    * @param string $theme_name
    *   (optional) The name of the theme for which to construct the registry.
    */
-  public function __construct($root, CacheBackendInterface $cache, LockBackendInterface $lock, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, $theme_name = NULL) {
+  public function __construct($root, CacheBackendInterface $cache, LockBackendInterface $lock, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, ThemeInitializationInterface $theme_initialization, $theme_name = NULL) {
     $this->root = $root;
     $this->cache = $cache;
     $this->lock = $lock;
     $this->moduleHandler = $module_handler;
     $this->themeName = $theme_name;
     $this->themeHandler = $theme_handler;
+    $this->themeInitialization = $theme_initialization;
   }
 
   /**
@@ -184,38 +173,12 @@ class Registry implements DestructableInterface {
     }
     // Unless instantiated for a specific theme, use globals.
     if (!isset($theme_name)) {
-      $active_theme = \Drupal::theme()->getActiveTheme();
-      $this->theme = $active_theme;
-      $this->baseThemes = $active_theme->getBaseThemes();
-      $this->engine = $active_theme->getEngine();
+      $this->theme = \Drupal::theme()->getActiveTheme();
     }
     // Instead of the active theme, a specific theme was requested.
     else {
-      $themes = $this->themeHandler->listInfo();
-      $this->theme = $themes[$theme_name];
-
-      // Find all base themes.
-      $this->baseThemes = array();
-      $ancestor = $theme_name;
-      while ($ancestor && isset($themes[$ancestor]->base_theme)) {
-        $ancestor = $themes[$ancestor]->base_theme;
-        $this->baseThemes[] = $themes[$ancestor];
-        if (!empty($themes[$ancestor]->owner)) {
-          include_once $this->root . '/' . $themes[$ancestor]->owner;
-        }
-      }
-      $this->baseThemes = array_reverse($this->baseThemes);
-
-      if (isset($this->theme->engine)) {
-        $this->engine = $this->theme->engine;
-        include_once $this->root . '/' . $this->theme->owner;
-        if (function_exists($this->theme->engine . '_init')) {
-          foreach ($this->baseThemes as $base) {
-            call_user_func($this->theme->engine . '_init', $base);
-          }
-          call_user_func($this->theme->engine . '_init', $this->theme);
-        }
-      }
+      $this->theme = $this->themeInitialization->getActiveThemeByName($theme_name);
+      $this->themeInitialization->loadActiveTheme($this->theme);
     }
   }
 
@@ -344,18 +307,20 @@ class Registry implements DestructableInterface {
     }
 
     // Process each base theme.
-    foreach ($this->baseThemes as $base) {
+    // Ensure that we start with the root of the parents, so that both CSS files
+    // and preprocess functions comes first.
+    foreach (array_reverse($this->theme->getBaseThemes()) as $base) {
       // If the base theme uses a theme engine, process its hooks.
       $base_path = $base->getPath();
-      if ($this->engine) {
-        $this->processExtension($cache, $this->engine, 'base_theme_engine', $base->getName(), $base_path);
+      if ($this->theme->getEngine()) {
+        $this->processExtension($cache, $this->theme->getEngine(), 'base_theme_engine', $base->getName(), $base_path);
       }
       $this->processExtension($cache, $base->getName(), 'base_theme', $base->getName(), $base_path);
     }
 
     // And then the same thing, but for the theme.
-    if ($this->engine) {
-      $this->processExtension($cache, $this->engine, 'theme_engine', $this->theme->getName(), $this->theme->getPath());
+    if ($this->theme->getEngine()) {
+      $this->processExtension($cache, $this->theme->getEngine(), 'theme_engine', $this->theme->getName(), $this->theme->getPath());
     }
 
     // Finally, hooks provided by the theme itself.

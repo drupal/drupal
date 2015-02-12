@@ -216,7 +216,8 @@ class ThemeTest extends WebTestBase {
     // Check if ThemeHandlerInterface::listInfo() returns disabled themes.
     // Check for base theme and subtheme lists.
     $base_theme_list = array('test_basetheme' => 'Theme test base theme');
-    $sub_theme_list = array('test_subtheme' => 'Theme test subtheme');
+    $sub_theme_list = array('test_subsubtheme' => 'Theme test subsubtheme', 'test_subtheme' => 'Theme test subtheme');
+
     $this->assertIdentical($themes['test_basetheme']->sub_themes, $sub_theme_list, 'Base theme\'s object includes list of subthemes.');
     $this->assertIdentical($themes['test_subtheme']->base_themes, $base_theme_list, 'Subtheme\'s object includes list of base themes.');
     // Check for theme engine in subtheme.
