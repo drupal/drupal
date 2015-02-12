@@ -332,7 +332,12 @@ function menu_ui_form_node_form_alter(&$form, FormStateInterface $form_state) {
     '#default_value' => $defaults['weight'],
     '#description' => t('Menu links with lower weights are displayed before links with higher weights.'),
   );
-  $form['actions']['submit']['#submit'][] = 'menu_ui_form_node_form_submit';
+
+  foreach (array_keys($form['actions']) as $action) {
+    if (isset($form['actions'][$action]['#type']) && $form['actions'][$action]['#type'] === 'submit') {
+      $form['actions'][$action]['#submit'][] = 'menu_ui_form_node_form_submit';
+    }
+  }
 }
 
 /**

@@ -18,6 +18,13 @@ use Drupal\menu_link_content\Entity\MenuLinkContent;
 class MenuNodeTest extends WebTestBase {
 
   /**
+   * An editor user.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $editor;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -31,14 +38,15 @@ class MenuNodeTest extends WebTestBase {
 
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 
-    $this->drupalLogin($this->drupalCreateUser(array(
+    $this->editor = $this->drupalCreateUser(array(
       'access administration pages',
       'administer content types',
       'administer menu',
       'create page content',
       'edit any page content',
       'delete any page content',
-    )));
+    ));
+    $this->drupalLogin($this->editor);
   }
 
   /**
@@ -104,6 +112,36 @@ class MenuNodeTest extends WebTestBase {
     $this->drupalGet('test-page');
     $this->assertNoLink($node_title);
 
+    // Use not only the save button, but also the two special buttons:
+    // 'Save and publish' as well as 'Save and keep published'.
+    // These buttons just appear for 'administer nodes' users.
+    $admin_user = $this->drupalCreateUser([
+      'access administration pages',
+      'administer content types',
+      'administer nodes',
+      'administer menu',
+      'create page content',
+      'edit any page content',
+    ]);
+    $this->drupalLogin($admin_user);
+    foreach ([t('Save and unpublish') => FALSE, t('Save and keep unpublished') => FALSE, t('Save and publish') => TRUE, t('Save and keep published') => TRUE] as $submit => $visible) {
+      $edit = [
+        'menu[enabled]' => 1,
+        'menu[title]' => $node_title,
+      ];
+      $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, $submit);
+      // Assert that the link exists.
+      $this->drupalGet('test-page');
+      if ($visible) {
+        $this->assertLink($node_title, 0, 'Found a menu link after submitted with ' . $submit);
+      }
+      else {
+        $this->assertNoLink($node_title, 'Found no menu link after submitted with ' . $submit);
+      }
+    }
+
+    // Log back in as normal user.
+    $this->drupalLogin($this->editor);
     // Edit the node and create a menu link.
     $edit = array(
       'menu[enabled]' => 1,
