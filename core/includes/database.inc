@@ -740,23 +740,6 @@ function db_rename_table($table, $new_name) {
 }
 
 /**
- * Copies the structure of a table.
- *
- * @param string $source
- *   The name of the table to be copied.
- * @param string $destination
- *   The name for the new table.
- *
- * @return \Drupal\Core\Database\StatementInterface
- *   The result of the executed query.
- *
- * @see \Drupal\Core\Database\Schema::copyTable()
- */
-function db_copy_table_schema($source, $destination) {
-  return Database::getConnection()->schema()->copyTable($source, $destination);
-}
-
-/**
  * Drops a table.
  *
  * @param $table

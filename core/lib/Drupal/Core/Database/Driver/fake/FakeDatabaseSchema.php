@@ -105,13 +105,6 @@ class FakeDatabaseSchema extends Schema {
   /**
    * {@inheritdoc}
    */
-  public function copyTable($source, $destination) {
-    throw new \Exception(sprintf('Unsupported method "%s"', __METHOD__));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function createTable($name, $table) {
     #throw new \Exception(sprintf('Unsupported method "%s"', __METHOD__));
   }

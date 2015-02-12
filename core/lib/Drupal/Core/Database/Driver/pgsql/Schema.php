@@ -433,16 +433,6 @@ class Schema extends DatabaseSchema {
     $this->connection->query('ALTER TABLE {' . $table . '} RENAME TO ' . $prefixInfo['table']);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function copyTable($source, $destination) {
-    // @TODO The server is likely going to rename indexes and constraints
-    //   during the copy process, and it will not match our
-    //   table_name + constraint name convention anymore.
-    throw new \Exception('Not implemented, see https://drupal.org/node/2061879');
-  }
-
   public function dropTable($table) {
     if (!$this->tableExists($table)) {
       return FALSE;

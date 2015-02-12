@@ -406,24 +406,6 @@ abstract class Schema implements PlaceholderInterface {
   abstract public function dropTable($table);
 
   /**
-   * Copies the table schema.
-   *
-   * @param string $source
-   *   The name of the table to be used as source.
-   * @param string $destination
-   *   The name of the table to be used as destination.
-   *
-   * @return \Drupal\Core\Database\StatementInterface
-   *   The result of the executed query.
-   *
-   * @throws \Drupal\Core\Database\SchemaObjectExistsException
-   *   Thrown when the source table does not exist.
-   * @throws \Drupal\Core\Database\SchemaObjectDoesNotExistException
-   *   Thrown when the destination table already exists.
-   */
-  abstract public function copyTable($source, $destination);
-
-  /**
    * Add a new field to a table.
    *
    * @param $table

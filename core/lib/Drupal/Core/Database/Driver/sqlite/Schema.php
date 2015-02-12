@@ -273,20 +273,6 @@ class Schema extends DatabaseSchema {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function copyTable($source, $destination) {
-    if (!$this->tableExists($source)) {
-      throw new SchemaObjectDoesNotExistException(String::format("Cannot copy @source to @destination: table @source doesn't exist.", array('@source' => $source, '@destination' => $destination)));
-    }
-    if ($this->tableExists($destination)) {
-      throw new SchemaObjectExistsException(String::format("Cannot copy @source to @destination: table @destination already exists.", array('@source' => $source, '@destination' => $destination)));
-    }
-
-    $this->createTable($destination, $this->introspectSchema($source));
-  }
-
   public function dropTable($table) {
     if (!$this->tableExists($table)) {
       return FALSE;
