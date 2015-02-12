@@ -171,23 +171,10 @@ input.form-submit:focus {
 /* Disabled form elements */
 .form-disabled input,
 .form-disabled select,
-.form-disabled textarea,
-.form-button-disabled,
-.form-button-disabled:hover,
-.form-button-disabled:active,
-.form-button-disabled:focus
- {
+.form-disabled textarea {
   background: #ededed;
   border-color: #bbb;
   color: #717171;
-}
-.image-button-disabled,
-.image-button-disabled:hover,
-.image-button-disabled:active,
-.image-button-disabled:focus {
-  -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-  filter: alpha(opacity=50);
-  opacity: .5;
 }
 .form-disabled label {
   color: #717171;

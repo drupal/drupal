@@ -20,7 +20,24 @@
 .button:hover,
 .button:active,
 .button:focus {
-  text-decoration: none;
-  color: #5a5a5a;
   background: #dedede;
+  color: #5a5a5a;
+  text-decoration: none;
+}
+.button.is-disabled:hover,
+.button.is-disabled:active,
+.button.is-disabled:focus,
+.button.is-disabled {
+  background: #ededed;
+  border-color: #bbb;
+  color: #717171;
+  cursor: default;
+}
+.image-button.is-disabled:hover,
+.image-button.is-disabled:active,
+.image-button.is-disabled:focus,
+.image-button.is-disabled {
+  background: transparent;
+  opacity: 0.5;
+  cursor: default;
 }
