@@ -1332,8 +1332,8 @@ function template_preprocess_html(&$variables) {
   // Construct page title.
   if (!empty($variables['page']['#title'])) {
     $head_title = array(
-      'title' => trim(strip_tags($variables['page']['#title'])),
-      'name' => $site_config->get('name'),
+      'title' => SafeMarkup::set(trim(strip_tags($variables['page']['#title']))),
+      'name' => String::checkPlain($site_config->get('name')),
     );
   }
   // @todo Remove once views is not bypassing the view subscriber anymore.
@@ -1341,23 +1341,24 @@ function template_preprocess_html(&$variables) {
   elseif ($is_front_page) {
     $head_title = array(
       'title' => t('Home'),
-      'name' => $site_config->get('name'),
+      'name' => String::checkPlain($site_config->get('name')),
     );
   }
   else {
-    $head_title = array('name' => $site_config->get('name'));
+    $head_title = array('name' => String::checkPlain($site_config->get('name')));
     if ($site_config->get('slogan')) {
       $head_title['slogan'] = strip_tags(Xss::filterAdmin($site_config->get('slogan')));
     }
   }
 
   $variables['head_title_array'] = $head_title;
-
-  $variables['head_title'] = array(
-    '#type' => 'inline_template',
-    '#template' => '{{ head_title|safe_join(" | ") }}',
-    '#context' => array('head_title' => $head_title),
-  );
+  $output = '';
+  $separator = '';
+  foreach ($head_title as $item) {
+    $output .= $separator . SafeMarkup::escape($item);
+    $separator = ' | ';
+  }
+  $variables['head_title'] = SafeMarkup::set($output);
 
   // Collect all attachments. This must happen in the preprocess function for
   // #type => html, to ensure that attachments added in #pre_render callbacks
