@@ -154,6 +154,7 @@ class LinkWidget extends WidgetBase {
     //   https://www.drupal.org/node/2421941
     if (parse_url($uri, PHP_URL_SCHEME) === 'user-path' && !in_array($element['#value'][0], ['/', '?', '#'], TRUE) && substr($element['#value'], 0, 7) !== '<front>') {
       $form_state->setError($element, t('Manually entered paths should start with /, ? or #.'));
+      return;
     }
 
     // If the URI is empty or not well-formed, the link field type's validation

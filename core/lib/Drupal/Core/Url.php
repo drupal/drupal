@@ -353,6 +353,9 @@ class Url {
    *
    * @return \Drupal\Core\Url
    *   A new Url object for a 'user-path:' URI.
+   *
+   * @throws \InvalidArgumentException
+   *   Thrown when the URI's path component doesn't have a leading slash.
    */
   protected static function fromUserPathUri(array $uri_parts, array $options) {
     // Both PathValidator::getUrlIfValidWithoutAccessCheck() and 'base:' URIs
@@ -366,6 +369,9 @@ class Url {
       $uri_parts['path'] = '<front>';
     }
     else {
+      if ($uri_parts['path'][0] !== '/') {
+        throw new \InvalidArgumentException(String::format('The user-path path component "@path" is invalid. Its path component must have a leading slash, e.g. user-path:/foo.', ['@path' => $uri_parts['path']]));
+      }
       // Remove the leading slash.
       $uri_parts['path'] = substr($uri_parts['path'], 1);
     }

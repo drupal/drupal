@@ -637,6 +637,78 @@ class UrlTest extends UnitTestCase {
   }
 
   /**
+   * Tests the fromUri() method with a valid user-path: URI.
+   *
+   * @covers ::fromUri
+   * @dataProvider providerFromValidUserPathUri
+   */
+  public function testFromValidUserPathUri($path) {
+    $url = Url::fromUri('user-path:' . $path);
+    $this->assertInstanceOf('Drupal\Core\Url', $url);
+  }
+
+  /**
+   * Data provider for testFromValidUserPathUri().
+   */
+  public function providerFromValidUserPathUri() {
+    return [
+      // Normal paths with a leading slash.
+      ['/kittens'],
+      ['/kittens/bengal'],
+      // Fragments with and without leading slashes.
+      ['/#about-our-kittens'],
+      ['/kittens#feeding'],
+      ['#feeding'],
+      // Query strings with and without leading slashes.
+      ['/kittens?page=1000'],
+      ['/?page=1000'],
+      ['?page=1000'],
+      // Paths with various token formats but no leading slash.
+      ['/[duckies]'],
+      ['/%bunnies'],
+      ['/{{ puppies }}'],
+      // Disallowed characters in the authority (host name) that are valid
+      // elsewhere in the path.
+      ['/(:;2&+h^'],
+      ['/AKI@&hO@'],
+    ];
+  }
+
+  /**
+   * Tests the fromUri() method with an invalid user-path: URI.
+   *
+   * @covers ::fromUri
+   * @expectedException \InvalidArgumentException
+   * @dataProvider providerFromInvalidUserPathUri
+   */
+  public function testFromInvalidUserPathUri($path) {
+    Url::fromUri('user-path:' . $path);
+  }
+
+  /**
+   * Data provider for testFromInvalidUserPathUri().
+   */
+  public function providerFromInvalidUserPathUri() {
+    return [
+      // Normal paths without a leading slash.
+      ['kittens'],
+      ['kittens/bengal'],
+      // Path without a leading slash containing a fragment.
+      ['kittens#feeding'],
+      // Path without a leading slash containing a query string.
+      ['kittens?page=1000'],
+      // Paths with various token formats but no leading slash.
+      ['[duckies]'],
+      ['%bunnies'],
+      ['{{ puppies }}'],
+      // Disallowed characters in the authority (host name) that are valid
+      // elsewhere in the path.
+      ['(:;2&+h^'],
+      ['AKI@&hO@'],
+    ];
+  }
+
+  /**
    * Tests the toUriString() method with route: URIs.
    *
    * @covers ::toUriString
