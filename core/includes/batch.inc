@@ -15,6 +15,7 @@
  */
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Timer;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Batch\Percentage;
@@ -23,6 +24,7 @@ use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Renders the batch processing page based on the current state of the batch.
@@ -43,8 +45,7 @@ function _batch_page(Request $request) {
   if (!$batch) {
     $batch = \Drupal::service('batch.storage')->load($request_id);
     if (!$batch) {
-      drupal_set_message(t('No active batch.'), 'error');
-      return new RedirectResponse(\Drupal::url('<front>', [], ['absolute' => TRUE]));
+      throw new NotFoundHttpException(String::format('Batch %id requested, but not found.', array('%id' => $request_id)));
     }
   }
   // Restore safe strings from previous batches.
