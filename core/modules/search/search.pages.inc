@@ -59,6 +59,10 @@ function template_preprocess_search_result(&$variables) {
   $variables['snippet'] = isset($result['snippet']) ? $result['snippet'] : '';
   // Provide separated and grouped meta information..
   $variables['info_split'] = $info;
-  $variables['info'] = implode(' - ', $info);
+  $variables['info'] = array(
+    '#type' => 'inline_template',
+    '#template' => '{{ info|safe_join(" - ") }}',
+    '#context' => array('info' => $info),
+  );
 }
 

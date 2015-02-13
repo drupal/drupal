@@ -26,7 +26,7 @@ class SearchNodePunctuationTest extends SearchTestBase {
     node_access_rebuild();
 
     // Create a test user and log in.
-    $this->testUser = $this->drupalCreateUser(array('access content', 'search content', 'use advanced search'));
+    $this->testUser = $this->drupalCreateUser(array('access content', 'search content', 'use advanced search', 'access user profiles'));
     $this->drupalLogin($this->testUser);
   }
 
@@ -47,5 +47,9 @@ class SearchNodePunctuationTest extends SearchTestBase {
     $edit = array('keys' => '"bunny\'s"');
     $this->drupalPostForm('search/node', $edit, t('Search'));
     $this->assertText($node->label());
+
+    // Check if the author is linked correctly to the user profile page.
+    $username = $node->getOwner()->getUsername();
+    $this->assertLink($username);
   }
 }
