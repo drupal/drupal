@@ -606,6 +606,8 @@ class SearchQuery extends SelectExtender {
     if (count($this->conditions)) {
       $inner->condition($this->conditions);
     }
+    // PostgreSQL requires a group by condition to prevent a GROUPING ERROR.
+    $inner->groupBy('i.sid');
 
     // Remove existing fields and expressions, they are not needed for a count
     // query.
