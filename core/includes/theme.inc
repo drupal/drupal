@@ -1270,15 +1270,6 @@ function _template_preprocess_default_variables() {
 }
 
 /**
- * #pre_render callback for the html element type.
- *
- * @deprecated Use \Drupal\Core\Render\Element\Html::preRenderHtml().
- */
-function drupal_pre_render_html(array $element) {
-  return Element\Html::preRenderHtml($element);
-}
-
-/**
  * Prepares variables for HTML document templates.
  *
  * Default template: html.html.twig.
