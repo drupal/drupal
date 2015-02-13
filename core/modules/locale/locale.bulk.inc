@@ -165,7 +165,9 @@ function locale_translate_batch_build(array $files, array $options) {
 }
 
 /**
- * Perform interface translation import as a batch step.
+ * Implements callback_batch_operation().
+ *
+ * Perform interface translation import.
  *
  * @param object $file
  *   A file object of the gettext file to be imported. The file object must
@@ -262,7 +264,9 @@ function locale_translate_batch_import($file, array $options, array &$context) {
 }
 
 /**
- * Batch callback: Save data of imported files.
+ * Implements callback_batch_operation().
+ *
+ * Save data of imported files.
  *
  * @param array $context
  *   Contains a list of imported files.
@@ -285,6 +289,8 @@ function locale_translate_batch_import_save(array $context) {
 }
 
 /**
+ * Implements callback_batch_operation().
+ *
  * Refreshs translations after importing strings.
  *
  * @param array $context
@@ -346,6 +352,8 @@ function locale_translate_batch_refresh(array &$context) {
 }
 
 /**
+ * Implements callback_batch_finished().
+ *
  * Finished callback of system page locale import batch.
  *
  * @param bool $success
@@ -581,7 +589,9 @@ function locale_config_batch_build(array $names, array $langcodes, array $option
 }
 
 /**
- * Performs configuration translation refresh as a batch step.
+ * Implements callback_batch_operation().
+ *
+ * Performs configuration translation refresh.
  *
  * @param array $names
  *   An array of names of configuration objects to update.
@@ -605,6 +615,8 @@ function locale_config_batch_refresh_name(array $names, array $langcodes, array 
 }
 
 /**
+ * Implements callback_batch_finished().
+ *
  * Finishes callback of system page locale import batch.
  *
  * @param bool $success

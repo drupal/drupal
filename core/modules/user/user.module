@@ -786,7 +786,9 @@ function user_cancel($edit, $uid, $method) {
 }
 
 /**
- * Last batch processing step for cancelling a user account.
+ * Implements callback_batch_operation().
+ *
+ * Last step for cancelling a user account.
  *
  * Since batch and session API require a valid user account, the actual
  * cancellation of a user account needs to happen last.
@@ -833,6 +835,8 @@ function _user_cancel($edit, $account, $method) {
 }
 
 /**
+ * Implements callback_batch_finished().
+ *
  * Finished batch processing callback for cancelling a user account.
  *
  * @see user_cancel()

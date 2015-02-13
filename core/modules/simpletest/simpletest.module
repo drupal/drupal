@@ -297,7 +297,7 @@ function simpletest_phpunit_command() {
 }
 
 /**
- * Batch operation callback.
+ * Implements callback_batch_operation().
  */
 function _simpletest_batch_operation($test_list_init, $test_id, &$context) {
   simpletest_classloader_register();
@@ -361,6 +361,9 @@ function _simpletest_batch_operation($test_list_init, $test_id, &$context) {
   $context['finished'] = 1 - $size / $max;
 }
 
+/**
+ * Implements callback_batch_finished().
+ */
 function _simpletest_batch_finished($success, $results, $operations, $elapsed) {
   if ($success) {
     drupal_set_message(t('The test run finished in @elapsed.', array('@elapsed' => $elapsed)));

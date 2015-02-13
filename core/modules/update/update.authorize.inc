@@ -102,7 +102,9 @@ function update_authorize_run_install($filetransfer, $project, $updater_name, $l
 }
 
 /**
- * Batch callback: Copies project to its proper place when authorized to do so.
+ * Implements callback_batch_operation().
+ *
+ * Copies project to its proper place when authorized to do so.
  *
  * @param string $project
  *   The canonical short name of the project being installed.
@@ -240,7 +242,9 @@ function update_authorize_update_batch_finished($success, $results) {
 }
 
 /**
- * Batch callback: Performs actions when the authorized install batch is done.
+ * Implements callback_batch_finished().
+ *
+ * Performs actions when the authorized install batch is done.
  *
  * This processes the results and stashes them into SESSION such that
  * authorize.php will render a report. Also responsible for putting the site

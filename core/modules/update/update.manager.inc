@@ -224,7 +224,9 @@ function update_manager_file_get($url) {
 }
 
 /**
- * Batch callback: Downloads, unpacks, and verifies a project.
+ * Implements callback_batch_operation().
+ *
+ * Downloads, unpacks, and verifies a project.
  *
  * This function assumes that the provided URL points to a file archive of some
  * sort. The URL can have any scheme that we have a file stream wrapper to

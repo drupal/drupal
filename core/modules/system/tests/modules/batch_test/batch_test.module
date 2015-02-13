@@ -154,7 +154,9 @@ function _batch_test_batch_5() {
 }
 
 /**
- * Tests the progress page theme by performing a batch callback.
+ * Implements callback_batch_operation().
+ *
+ * Tests the progress page theme.
  */
 function _batch_test_theme_callback() {
   // Because drupalGet() steps through the full progressive batch before

@@ -1179,6 +1179,8 @@ function node_access_rebuild($batch_mode = FALSE) {
 }
 
 /**
+ * Implements callback_batch_operation().
+ *
  * Performs batch operation for node_access_rebuild().
  *
  * This is a multistep operation: we go through all nodes by packs of 20. The
@@ -1223,6 +1225,8 @@ function _node_access_rebuild_batch_operation(&$context) {
 }
 
 /**
+ * Implements callback_batch_finished().
+ *
  * Performs post-processing for node_access_rebuild().
  *
  * @param bool $success

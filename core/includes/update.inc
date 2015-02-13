@@ -150,6 +150,8 @@ function update_set_schema($module, $schema_version) {
 }
 
 /**
+ * Implements callback_batch_operation().
+ *
  * Performs one update and stores the results for display on the results page.
  *
  * If an update function completes successfully, it should return a message

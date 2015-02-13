@@ -15,7 +15,7 @@ use GuzzleHttp\Exception\RequestException;
 require_once __DIR__ . '/locale.translation.inc';
 
 /**
- * Batch operation callback: Check status of a remote and local po file.
+ * Implements callback_batch_operation().
  *
  * Checks the presence and creation time po translation files in located at
  * remote server location and local file system.
@@ -83,7 +83,9 @@ function locale_translation_batch_status_check($project, $langcode, array $optio
 }
 
 /**
- * Batch finished callback: Set result message.
+ * Implements callback_batch_finished().
+ *
+ * Set result message.
  *
  * @param bool $success
  *   TRUE if batch successfully completed.
@@ -119,7 +121,7 @@ function locale_translation_batch_status_finished($success, $results) {
 }
 
 /**
- * Batch operation: Download a remote translation file.
+ * Implements callback_batch_operation().
  *
  * Downloads a remote gettext file into the translations directory. When
  * successfully the translation status is updated.
@@ -150,7 +152,7 @@ function locale_translation_batch_fetch_download($project, $langcode, &$context)
 }
 
 /**
- * Batch process: Import translation file.
+ * Implements callback_batch_operation().
  *
  * Imports a gettext file from the translation directory. When successfully the
  * translation status is updated.
@@ -199,7 +201,9 @@ function locale_translation_batch_fetch_import($project, $langcode, $options, &$
 }
 
 /**
- * Batch finished callback: Set result message.
+ * Implements callback_batch_finished().
+ *
+ * Set result message.
  *
  * @param bool $success
  *   TRUE if batch successfully completed.
