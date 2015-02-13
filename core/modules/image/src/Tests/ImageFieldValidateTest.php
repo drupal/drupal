@@ -59,13 +59,49 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
       'alt_field_required' => 1,
       'title_field' => 1,
       'title_field_required' => 1,
+      'required' => 1,
     );
-    $this->createImageField($field_name, 'article', array(), $field_settings);
+    $instance = $this->createImageField($field_name, 'article', array(), $field_settings);
     $images = $this->drupalGetTestFiles('image');
     // Let's just use the first image.
     $image = $images[0];
     $this->uploadNodeImage($image, $field_name, 'article');
-    $this->assertText(t('The field Alternative text is required'), 'Node save failed when alt text required was set and alt text was left empty.');
-    $this->assertText(t('The field Title is required'), 'Node save failed when title text required was set and title text was left empty.');
+
+    // Look for form-required for the alt text.
+    $elements = $this->xpath('//label[@for="edit-' . $field_name . '-0-alt" and @class="form-required"]/following-sibling::input[@id="edit-' . $field_name . '-0-alt"]');
+
+    $this->assertTrue(isset($elements[0]),'Required marker is shown for the required alt text.');
+
+    $elements = $this->xpath('//label[@for="edit-' . $field_name . '-0-title" and @class="form-required"]/following-sibling::input[@id="edit-' . $field_name . '-0-title"]');
+
+    $this->assertTrue(isset($elements[0]), 'Required marker is shown for the required title text.');
+
+    $this->assertText(t('Alternative text field is required.'));
+    $this->assertText(t('Title field is required.'));
+
+    $instance->settings['alt_field_required'] = 0;
+    $instance->settings['title_field_required'] = 0;
+    $instance->save();
+
+    $edit = array(
+      'title[0][value]' => $this->randomMachineName(),
+    );
+    $this->drupalPostForm('node/add/article', $edit, t('Save and publish'));
+
+    $this->assertNoText(t('Alternative text field is required.'));
+    $this->assertNoText(t('Title field is required.'));
+
+    $instance->settings['required'] = 0;
+    $instance->settings['alt_field_required'] = 1;
+    $instance->settings['title_field_required'] = 1;
+    $instance->save();
+
+    $edit = array(
+      'title[0][value]' => $this->randomMachineName(),
+    );
+    $this->drupalPostForm('node/add/article', $edit, t('Save and publish'));
+
+    $this->assertNoText(t('Alternative text field is required.'));
+    $this->assertNoText(t('Title field is required.'));
   }
 }
