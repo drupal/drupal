@@ -8,7 +8,7 @@
 namespace Drupal\Core\Batch;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Session\SessionManager;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Drupal\Core\Access\CsrfTokenGenerator;
 
 class BatchStorage implements BatchStorageInterface {
@@ -21,11 +21,11 @@ class BatchStorage implements BatchStorageInterface {
   protected $connection;
 
   /**
-   * The session manager.
+   * The session.
    *
-   * @var \Drupal\Core\Session\SessionManager
+   * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
    */
-  protected $sessionManager;
+  protected $session;
 
   /**
    * The CSRF token generator.
@@ -39,14 +39,14 @@ class BatchStorage implements BatchStorageInterface {
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
-   * @param \Drupal\Core\Session\SessionManager $session_manager
-   *   The session manager.
+   * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
+   *   The session.
    * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
    *   The CSRF token generator.
    */
-  public function __construct(Connection $connection, SessionManager $session_manager, CsrfTokenGenerator $csrf_token) {
+  public function __construct(Connection $connection, SessionInterface $session, CsrfTokenGenerator $csrf_token) {
     $this->connection = $connection;
-    $this->sessionManager = $session_manager;
+    $this->session = $session;
     $this->csrfToken = $csrf_token;
   }
 
@@ -55,7 +55,7 @@ class BatchStorage implements BatchStorageInterface {
    */
   public function load($id) {
     // Ensure that a session is started before using the CSRF token generator.
-    $this->sessionManager->start();
+    $this->session->start();
     $batch = $this->connection->query("SELECT batch FROM {batch} WHERE bid = :bid AND token = :token", array(
       ':bid' => $id,
       ':token' => $this->csrfToken->get($id),
@@ -100,7 +100,7 @@ class BatchStorage implements BatchStorageInterface {
    */
   public function create(array $batch) {
     // Ensure that a session is started before using the CSRF token generator.
-    $this->sessionManager->start();
+    $this->session->start();
     $this->connection->insert('batch')
       ->fields(array(
         'bid' => $batch['id'],

@@ -128,7 +128,7 @@ class User extends ContentEntityBase implements UserInterface {
       if ($this->pass->value != $this->original->pass->value) {
         $session_manager->delete($this->id());
         if ($this->id() == \Drupal::currentUser()->id()) {
-          $session_manager->regenerate();
+          \Drupal::service('session')->migrate();
         }
       }
 

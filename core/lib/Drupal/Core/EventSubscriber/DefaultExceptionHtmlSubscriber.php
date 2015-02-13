@@ -111,6 +111,11 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
         // Persist the 'exception' attribute to the subrequest.
         $sub_request->attributes->set('exception', $request->attributes->get('exception'));
 
+        // Carry over the session to the subrequest.
+        if ($session = $request->getSession()) {
+          $sub_request->setSession($session);
+        }
+
         $response = $this->httpKernel->handle($sub_request, HttpKernelInterface::SUB_REQUEST);
         $response->setStatusCode($status_code);
         $event->setResponse($response);

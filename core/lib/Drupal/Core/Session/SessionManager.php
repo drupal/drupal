@@ -337,7 +337,7 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
     // Ignore attribute bags when they do not contain any data.
     foreach ($this->bags as $bag) {
       $key = $bag->getStorageKey();
-      $mask[$key] = empty($_SESSION[$key]);
+      $mask[$key] = !empty($_SESSION[$key]);
     }
 
     return array_intersect_key($mask, $_SESSION);
