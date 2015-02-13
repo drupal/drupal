@@ -1520,7 +1520,7 @@ function theme_get_suggestions($args, $base, $delimiter = '__') {
       $prefix .= $delimiter . $arg;
     }
   }
-  if (drupal_is_front_page()) {
+  if (\Drupal::service('path.matcher')->isFrontPage()) {
     // Front templates should be based on root only, not prefixed arguments.
     $suggestions[] = $base . $delimiter . 'front';
   }

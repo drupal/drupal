@@ -348,8 +348,7 @@ class LinkGeneratorTest extends UnitTestCase {
    * @see \Drupal\Core\Utility\LinkGenerator::generate()
    *
    * @todo Test that the active class is added on the front page when generating
-   *   links to the front page when drupal_is_front_page() is converted to a
-   *   service.
+   *   links to the front page in https://www.drupal.org/node/2420967.
    */
   public function testGenerateActive() {
     $this->urlGenerator->expects($this->exactly(5))
@@ -488,12 +487,4 @@ class LinkGeneratorTest extends UnitTestCase {
 
 }
 
-}
-namespace {
-  // @todo Remove this once there is a service for drupal_is_front_page().
-  if (!function_exists('drupal_is_front_page')) {
-    function drupal_is_front_page() {
-      return FALSE;
-    }
-  }
 }

@@ -268,7 +268,7 @@ function system_theme_suggestions_maintenance_page(array $variables) {
   // allow themers to override the page and the content completely.
   $offline = defined('MAINTENANCE_MODE');
   try {
-    drupal_is_front_page();
+    \Drupal::service('path.matcher')->isFrontPage();
   }
   catch (Exception $e) {
     // The database is not yet available.
@@ -609,7 +609,7 @@ function system_page_attachments(array &$page) {
       // Collect the current state that determines whether a link is active.
       array(
         'path' => \Drupal::routeMatch()->getRouteName() ? Url::fromRouteMatch(\Drupal::routeMatch())->getInternalPath() : '',
-        'front' => drupal_is_front_page(),
+        'front' => \Drupal::service('path.matcher')->isFrontPage(),
         'language' => \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_URL)->getId(),
         'query' => \Drupal::request()->query->all(),
       )
@@ -641,7 +641,7 @@ function system_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
     'pathPrefix' => $pathPrefix,
     'currentPath' => $current_path,
     'currentPathIsAdmin' => $current_path_is_admin,
-    'isFront' => drupal_is_front_page(),
+    'isFront' => \Drupal::service('path.matcher')->isFrontPage(),
     'currentLanguage' => \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_URL)->getId(),
   ];
   if (!empty($current_query)) {
