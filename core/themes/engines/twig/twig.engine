@@ -127,8 +127,8 @@ function twig_render_template($template_file, array $variables) {
  * @see TwigNodeVisitor
  */
 function twig_render_var($arg) {
-  // Check for numeric zero.
-  if ($arg === 0) {
+  // Check for a numeric zero int or float.
+  if ($arg === 0 || $arg === 0.0) {
     return 0;
   }
 
@@ -213,8 +213,8 @@ function twig_without($element) {
  *   The escaped, rendered output, or NULL if there is no valid output.
  */
 function twig_drupal_escape_filter(\Twig_Environment $env, $string, $strategy = 'html', $charset = NULL, $autoescape = FALSE) {
-  // Check for a numeric zero.
-  if ($string === 0) {
+  // Check for a numeric zero int or float.
+  if ($string === 0 || $string === 0.0) {
     return 0;
   }
 
