@@ -17,16 +17,16 @@
 #}
 {% block content %}
   {% if site_logo %}
-    <a href="{{ url('<front>') }}" title="{{ 'Home'|t }}" rel="home" class="site-logo">
+    <a href="{{ url('<front>') }}" title="{{ 'Home'|t }}" rel="home">
       <img src="{{ site_logo }}" alt="{{ 'Home'|t }}" />
     </a>
   {% endif %}
   {% if site_name %}
-    <div class="site-name">
+    <div>
       <a href="{{ url('<front>') }}" title="{{ 'Home'|t }}" rel="home">{{ site_name }}</a>
     </div>
   {% endif %}
   {% if site_slogan %}
-    <div class="site-slogan">{{ site_slogan }}</div>
+    <div>{{ site_slogan }}</div>
   {% endif %}
 {% endblock %}

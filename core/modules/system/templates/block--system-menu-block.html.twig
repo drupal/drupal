@@ -40,22 +40,14 @@
  * @ingroup themeable
  */
 #}
-{%
-  set classes = [
-    'block',
-    'block-menu',
-    'navigation',
-    'menu--' ~ derivative_plugin_id|clean_class,
-  ]
-%}
 {% set heading_id = attributes.id ~ '-menu'|clean_id %}
-<nav{{ attributes.addClass(classes) }} role="navigation" aria-labelledby="{{ heading_id }}">
+<nav{{ attributes }} role="navigation" aria-labelledby="{{ heading_id }}">
   {# Label. If not displayed, we still provide it for screen readers. #}
   {% if not configuration.label_display %}
     {% set title_attributes = title_attributes.addClass('visually-hidden') %}
   {% endif %}
   {{ title_prefix }}
-  <h2 id="{{ heading_id }}"{{ title_attributes }}>{{ configuration.label }}</h2>
+  <h2{{ title_attributes }}>{{ configuration.label }}</h2>
   {{ title_suffix }}
 
   {# Menu. #}
