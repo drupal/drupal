@@ -14,7 +14,6 @@ global-styling:
       css/components/buttons.css: {}
       css/components/buttons.theme.css: {}
       css/components/colors.css: {}
-      css/components/comments.css: {}
       css/components/messages.css: {}
       css/components/dropbutton.component.css: {}
       css/components/entity-meta.css: {}
