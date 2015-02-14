@@ -38,7 +38,6 @@ abstract class MTimeProtectedFileStorageBase extends PhpStorageTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->directory = sys_get_temp_dir() . '/php' . str_replace('\\','_', get_class($this));
 
     $this->secret = $this->randomMachineName();
 

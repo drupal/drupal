@@ -28,10 +28,8 @@ class FileStorageTest extends PhpStorageTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $dir_path = sys_get_temp_dir() . '/php';
-
     $this->standardSettings = array(
-      'directory' => $dir_path,
+      'directory' => $this->directory,
       'bin' => 'test',
     );
   }
@@ -67,7 +65,7 @@ class FileStorageTest extends PhpStorageTestBase {
   public function testDeleteAll() {
 
     // Make sure directory exists prior to removal.
-    $this->assertTrue(file_exists(sys_get_temp_dir() . '/php/test'), 'File storage directory does not exist.');
+    $this->assertTrue(file_exists($this->directory . '/test'), 'File storage directory does not exist.');
 
     // Write out some files.
     $php = new FileStorage($this->standardSettings);
@@ -87,7 +85,7 @@ class FileStorageTest extends PhpStorageTestBase {
 
     $this->assertTrue($php->deleteAll());
     $this->assertFalse($php->load($name));
-    $this->assertFalse(file_exists(sys_get_temp_dir() . '/php/test'), 'File storage directory still exists after call to deleteAll().');
+    $this->assertFalse(file_exists($this->directory . '/test'), 'File storage directory still exists after call to deleteAll().');
 
     // Should still return TRUE if directory has already been deleted.
     $this->assertTrue($php->deleteAll());

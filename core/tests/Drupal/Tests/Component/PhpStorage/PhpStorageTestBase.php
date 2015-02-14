@@ -15,6 +15,21 @@ use Drupal\Tests\UnitTestCase;
 abstract class PhpStorageTestBase extends UnitTestCase {
 
   /**
+   * A unique per test class directory path to test php storage.
+   *
+   * @var string
+   */
+  protected $directory;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+    $this->directory = sys_get_temp_dir() . '/php' . str_replace('\\','_', get_class($this));
+  }
+
+  /**
    * Assert that a PHP storage's load/save/delete operations work.
    */
   public function assertCRUD($php) {

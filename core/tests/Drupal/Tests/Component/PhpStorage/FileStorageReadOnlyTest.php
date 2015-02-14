@@ -36,14 +36,12 @@ class FileStorageReadOnlyTest extends PhpStorageTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $dir_path = sys_get_temp_dir() . '/php';
-
     $this->standardSettings = array(
-      'directory' => $dir_path,
+      'directory' => $this->directory,
       'bin' => 'test',
     );
     $this->readonlyStorage = array(
-      'directory' => $dir_path,
+      'directory' => $this->directory,
       // Let this read from the bin where the other instance is writing.
       'bin' => 'test',
     );
@@ -102,7 +100,7 @@ class FileStorageReadOnlyTest extends PhpStorageTestBase {
     $this->assertFalse($php_read->deleteAll());
 
     // Make sure directory exists prior to removal.
-    $this->assertTrue(file_exists(sys_get_temp_dir() . '/php/test'), 'File storage directory does not exist.');
+    $this->assertTrue(file_exists($this->directory . '/test'), 'File storage directory does not exist.');
   }
 
 }
