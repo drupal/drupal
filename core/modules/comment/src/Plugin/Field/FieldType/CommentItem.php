@@ -12,6 +12,7 @@ use Drupal\comment\Entity\CommentType;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Session\AnonymousUserSession;
@@ -29,6 +30,7 @@ use Drupal\Core\Session\AnonymousUserSession;
  * )
  */
 class CommentItem extends FieldItemBase implements CommentItemInterface {
+  use UrlGeneratorTrait;
 
   /**
    * {@inheritdoc}
@@ -183,7 +185,8 @@ class CommentItem extends FieldItemBase implements CommentItemInterface {
       '#type' => 'select',
       '#title' => t('Comment type'),
       '#options' => $options,
-      '#description' => t('Select the Comment type to use for this comment field.'),
+      '#required' => TRUE,
+      '#description' => $this->t('Select the Comment type to use for this comment field. Manage the comment types from the <a href="@url">administration overview page</a>.', array('@url' => $this->url('entity.comment_type.collection'))),
       '#default_value' => $this->getSetting('comment_type'),
       '#disabled' => $has_data,
     );

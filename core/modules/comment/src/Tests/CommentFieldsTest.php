@@ -10,6 +10,7 @@ namespace Drupal\comment\Tests;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\comment\Entity\CommentType;
 
 /**
  * Tests fields on comments.
@@ -91,6 +92,48 @@ class CommentFieldsTest extends CommentTestBase {
     $this->drupalGet('node/' . $node->nid->value);
     $elements = $this->cssSelect('.field-type-comment');
     $this->assertEqual(1, count($elements), 'There is one comment field on the node.');
+  }
+
+  /**
+   * Tests creating a comment field through the interface.
+   */
+  public function testCommentFieldCreate() {
+    // Create user who can administer user fields.
+    $user = $this->drupalCreateUser(array(
+      'administer user fields',
+    ));
+    $this->drupalLogin($user);
+
+    // Create comment field in account settings.
+    $edit = array(
+      'new_storage_type' => 'comment',
+      'label' => 'User comment',
+      'field_name' => 'user_comment',
+    );
+    $this->drupalPostForm('admin/config/people/accounts/fields/add-field', $edit, 'Save and continue');
+
+    // Try to save the comment field without selecting a comment type.
+    $edit = array();
+    $this->drupalPostForm('admin/config/people/accounts/fields/user.user.field_user_comment/storage', $edit, t('Save field settings'));
+    // We should get an error message.
+    $this->assertText(t('An illegal choice has been detected. Please contact the site administrator.'));
+
+    // Create a comment type for users.
+    $bundle = CommentType::create(array(
+      'id' => 'user_comment_type',
+      'label' => 'user_comment_type',
+      'description' => '',
+      'target_entity_type_id' => 'user',
+    ));
+    $bundle->save();
+
+    // Select a comment type and try to save again.
+    $edit = array(
+      'field_storage[settings][comment_type]' => 'user_comment_type',
+    );
+    $this->drupalPostForm('admin/config/people/accounts/fields/user.user.field_user_comment/storage', $edit, t('Save field settings'));
+    // We shouldn't get an error message.
+    $this->assertNoText(t('An illegal choice has been detected. Please contact the site administrator.'));
   }
 
   /**
