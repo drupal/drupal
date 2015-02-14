@@ -11,7 +11,7 @@
  * @ingroup themeable
  */
 #}
-<div>
+<div class="layout-container">
 
   <header role="banner">
     {% if logo %}
@@ -21,15 +21,15 @@
     {% endif %}
 
     {% if site_name or site_slogan %}
-      <div>
+      <div class="name-and-slogan">
         {% if site_name %}
-         <h1>
+         <h1 class="site-name">
            <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home">{{ site_name }}</a>
          </h1>
         {% endif %}
 
         {% if site_slogan %}
-          <div>{{ site_slogan }}</div>
+          <div class="site-slogan">{{ site_slogan }}</div>
         {% endif %}
       </div>{# /.name-and-slogan #}
     {% endif %}
@@ -47,13 +47,13 @@
   </main>
 
   {% if page.sidebar_first %}
-    <aside role="complementary">
+    <aside class="layout-sidebar-first" role="complementary">
       {{ page.sidebar_first }}
     </aside>{# /.layout-sidebar-first #}
   {% endif %}
 
   {% if page.sidebar_second %}
-    <aside role="complementary">
+    <aside class="layout-sidebar-second" role="complementary">
       {{ page.sidebar_second }}
     </aside>{# /.layout-sidebar-second #}
   {% endif %}
