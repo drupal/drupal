@@ -9,7 +9,6 @@ CONTENTS OF THIS FILE
  * Building and customizing your site
  * Multisite configuration
  * Multilingual configuration
- * More information
 
 REQUIREMENTS AND NOTES
 ----------------------
@@ -18,11 +17,11 @@ Drupal requires:
 
 - A web server with PHP support, for example:
   - Apache 2.0 (or greater) (http://httpd.apache.org/).
-  - Nginx 1.1 (or greater) (http://www.nginx.com/).
-- PHP 5.4.5 (or greater) (http://www.php.net/).
+  - Nginx 1.1 (or greater) (http://nginx.com/).
+- PHP 5.4.5 (or greater) (http://php.net/).
 - One of the following databases:
   - MySQL 5.0.15 (or greater) (http://www.mysql.com/).
-  - MariaDB 5.1.44 (or greater) (http://mariadb.org/). MariaDB is a fully
+  - MariaDB 5.1.44 (or greater) (https://mariadb.org/). MariaDB is a fully
     compatible drop-in replacement for MySQL.
   - Percona Server 5.1.70 (or greater) (http://www.percona.com/). Percona
     Server is a backwards-compatible replacement for MySQL.
@@ -31,11 +30,11 @@ Drupal requires:
 
 For more detailed information about Drupal requirements, including a list of
 PHP extensions and configurations that are required, see "System requirements"
-(http://drupal.org/requirements) in the Drupal.org online documentation.
+(https://www.drupal.org/requirements) in the Drupal.org online documentation.
 
 For detailed information on how to configure a test server environment using a
 variety of operating systems and web servers, see "Local server setup"
-(http://drupal.org/node/157602) in the Drupal.org online documentation.
+(https://www.drupal.org/node/157602) in the Drupal.org online documentation.
 
 Note that all directories mentioned in this document are always relative to the
 directory of your Drupal installation, and commands are meant to be run from
@@ -47,7 +46,7 @@ OPTIONAL SERVER REQUIREMENTS
 - If you want to use Drupal's "Clean URLs" feature on an Apache web server, you
   will need the mod_rewrite module and the ability to use local .htaccess
   files. For Clean URLs support on IIS, see "Clean URLs with IIS"
-  (http://drupal.org/node/3854) in the Drupal.org online documentation.
+  (https://www.drupal.org/node/3854) in the Drupal.org online documentation.
 
 - If you plan to use XML-based services such as RSS aggregation, you will need
   PHP's XML extension. This extension is enabled by default on most PHP
@@ -68,23 +67,23 @@ INSTALLATION
 
 1. Download and extract Drupal.
 
-   You can obtain the latest Drupal release from http://drupal.org -- the files
-   are available in .tar.gz and .zip formats and can be extracted using most
-   compression tools.
+   You can obtain the latest Drupal release from https://www.drupal.org -- the
+   files are available in .tar.gz and .zip formats and can be extracted using
+   most compression tools.
 
    To download and extract the files, on a typical Unix/Linux command line, use
-   the following commands (assuming you want version x.y of Drupal in .tar.gz
+   the following commands (assuming you want version x.y.z of Drupal in .tar.gz
    format):
 
-     wget http://drupal.org/files/projects/drupal-x.y.tar.gz
-     tar -zxvf drupal-x.y.tar.gz
+     wget https://www.drupal.org/files/projects/drupal-x.y.z.tar.gz
+     tar -zxvf drupal-x.y.z.tar.gz
 
-   This will create a new directory drupal-x.y/ containing all Drupal files and
-   directories. Then, to move the contents of that directory into a directory
-   within your web server's document root or your public HTML directory,
-   continue with this command:
+   This will create a new directory drupal-x.y.z/ containing all Drupal files
+   and directories. Then, to move the contents of that directory into a
+   directory within your web server's document root or your public HTML
+   directory, continue with this command:
 
-     mv drupal-x.y/* drupal-x.y/.htaccess /path/to/your/installation
+     mv drupal-x.y.z/* drupal-x.y.z/.htaccess drupal-x.y.z/.csslintrc drupal-x.y.z/.editorconfig drupal-x.y.z/.eslintignore drupal-x.y.z/.eslintrc /path/to/your/installation
 
 2. Create the Drupal database.
 
@@ -189,7 +188,7 @@ INSTALLATION
    maintenance account on a "Welcome" page. If the default Drupal theme is not
    displaying properly and links on the page result in "Page Not Found" errors,
    you may be experiencing problems with clean URLs. Visit
-   http://drupal.org/getting-started/clean-urls to troubleshoot.
+   https://www.drupal.org/getting-started/clean-urls to troubleshoot.
 
 5. Change file system storage settings (optional).
 
@@ -247,9 +246,9 @@ INSTALLATION
    name of each file for CHANGELOG.txt in the example.
 
    For more information on setting file permissions, see "Modifying Linux,
-   Unix, and Mac file permissions" (http://drupal.org/node/202483) or
-   "Modifying Windows file permissions" (http://drupal.org/node/202491) in the
-   Drupal.org online documentation.
+   Unix, and Mac file permissions" (https://www.drupal.org/node/202483) or
+   "Modifying Windows file permissions" (https://www.drupal.org/node/202491) in
+   the Drupal.org online documentation.
 
 7. Set up independent "cron" maintenance jobs.
 
@@ -287,9 +286,9 @@ INSTALLATION
    page.
 
    More information about cron maintenance tasks is available at
-   http://drupal.org/cron, and sample cron shell scripts can be found in the
-   scripts/ directory. (Note that these scripts must be customized like the
-   above example, to add your site-specific cron key and domain name.)
+   https://www.drupal.org/cron, and sample cron shell scripts can be found in
+   the core/scripts/ directory. (Note that these scripts must be customized like
+   the above example, to add your site-specific cron key and domain name.)
 
 REINSTALL
 ------------
@@ -312,7 +311,8 @@ A new installation of Drupal defaults to a very basic configuration. To extend
 your site, you use "modules" and "themes". A module is a plugin that adds
 functionality to Drupal, while a theme changes the look of your site. The core
 of Drupal provides several optional modules and themes, and you can download
-more at http://drupal.org/project/modules and http://drupal.org/project/themes
+more at https://www.drupal.org/project/project_module and
+https://www.drupal.org/project/project_theme
 
 Do not mix downloaded or custom modules and themes with Drupal's core modules
 and themes. Drupal's modules and themes are located in the /core/modules and
@@ -323,9 +323,9 @@ directories -- see the Multisite Configuration section, below.
 
 Never edit Drupal's core modules and themes; instead, use the hooks available in
 the Drupal API. To modify the behavior of Drupal, develop a module as described
-at http://drupal.org/developing/modules. To modify the look of Drupal, create a
-subtheme as described at http://drupal.org/node/225125, or a completely new
-theme as described at http://drupal.org/documentation/theme
+at https://www.drupal.org/developing/modules. To modify the look of Drupal,
+create a subtheme as described at https://www.drupal.org/node/2165673, or a
+completely new theme as described at https://www.drupal.org/documentation/theme
 
 MULTISITE CONFIGURATION
 -----------------------
@@ -389,8 +389,8 @@ accessible to other sites, the setup would look like this:
     themes/custom_theme
     modules/custom_module
 
-NOTE: for more information about multiple virtual hosts or the configuration
-settings, consult http://drupal.org/getting-started/6/install/multi-site
+For more information about multiple virtual hosts or the configuration
+settings, consult https://www.drupal.org/documentation/install/multi-site
 
 For more information on configuring Drupal's file system path in a multisite
 configuration, see step 6 above.
@@ -401,22 +401,5 @@ MULTILINGUAL CONFIGURATION
 By default, Drupal is installed in one language, and further languages may be
 installed later.
 
-For detailed instructions, visit http://drupal.org/documentation/multilingual
-
-MORE INFORMATION
-----------------
-
-- See the Drupal.org online documentation:
-  http://drupal.org/documentation
-
-- For a list of security announcements, see the "Security advisories" page at
-  http://drupal.org/security (available as an RSS feed). This page also
-  describes how to subscribe to these announcements via email.
-
-- For information about the Drupal security process, or to find out how to
-  report a potential security issue to the Drupal security team, see the
-  "Security team" page at http://drupal.org/security-team
-
-- For information about the wide range of available support options, visit
-  http://drupal.org and click on Community and Support in the top or bottom
-  navigation.
+For detailed instructions, visit
+https://www.drupal.org/documentation/multilingual
