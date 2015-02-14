@@ -1107,11 +1107,28 @@ services:
   session.attribute_bag:
     class: Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag
     public: false
-  session_manager:
-    class: Drupal\Core\Session\SessionManager
-    arguments: ['@request_stack', '@database', '@session_manager.metadata_bag', '@session_configuration']
+  session_handler:
+    alias: session_handler.storage
+  session_handler.storage:
+    class: Drupal\Core\Session\SessionHandler
+    arguments: ['@request_stack', '@database']
     tags:
       - { name: backend_overridable }
+  session_handler.write_check:
+    class: Symfony\Component\HttpFoundation\Session\Storage\Handler\WriteCheckSessionHandler
+    tags:
+      - { name: session_handler_proxy, priority: 100 }
+  session_handler.write_safe:
+    class: Drupal\Core\Session\WriteSafeSessionHandler
+    tags:
+      - { name: session_handler_proxy, priority: 150 }
+  session_manager:
+    class: Drupal\Core\Session\SessionManager
+    arguments: ['@request_stack', '@database', '@session_manager.metadata_bag', '@session_configuration', '@session_handler']
+    tags:
+      - { name: backend_overridable }
+    calls:
+      - [setWriteSafeHandler, ['@session_handler.write_safe']]
   session_manager.metadata_bag:
     class: Drupal\Core\Session\MetadataBag
     arguments: ['@settings']

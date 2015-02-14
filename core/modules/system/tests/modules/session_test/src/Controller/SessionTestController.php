@@ -9,6 +9,7 @@ namespace Drupal\session_test\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -123,6 +124,29 @@ class SessionTestController extends ControllerBase {
    */
   public function isLoggedIn() {
     return ['#markup' => $this->t('User is logged in.')];
+  }
+
+  /**
+   * Returns the trace recorded by test proxy session handlers as JSON.
+   *
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
+   *   The response.
+   */
+  public function traceHandler() {
+    // Start a session if necessary, set a value and then save and close it.
+    \Drupal::service('session_manager')->start();
+    if (empty($_SESSION['trace-handler'])) {
+      $_SESSION['trace-handler'] = 1;
+    }
+    else {
+      $_SESSION['trace-handler']++;
+    }
+    \Drupal::service('session_manager')->save();
+
+    // Collect traces and return them in JSON format.
+    $trace = \Drupal::service('session_test.session_handler_proxy_trace')->getArrayCopy();
+
+    return new JsonResponse($trace);
   }
 
 }

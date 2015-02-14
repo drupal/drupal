@@ -75,3 +75,11 @@ session_test.form:
     _title: 'Test form'
   requirements:
     _access: 'TRUE'
+
+session_test.trace_handler:
+  path: '/session-test/trace-handler'
+  defaults:
+    _title: 'Returns the trace recorded by test proxy session handlers as JSON'
+    _controller: '\Drupal\session_test\Controller\SessionTestController::traceHandler'
+  requirements:
+    _access: 'TRUE'

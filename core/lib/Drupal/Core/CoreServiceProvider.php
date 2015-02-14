@@ -14,6 +14,7 @@ use Drupal\Core\DependencyInjection\Compiler\RegisterLazyRouteEnhancers;
 use Drupal\Core\DependencyInjection\Compiler\RegisterLazyRouteFilters;
 use Drupal\Core\DependencyInjection\Compiler\DependencySerializationTraitPass;
 use Drupal\Core\DependencyInjection\Compiler\StackedKernelPass;
+use Drupal\Core\DependencyInjection\Compiler\StackedSessionHandlerPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterStreamWrappersPass;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -62,6 +63,8 @@ class CoreServiceProvider implements ServiceProviderInterface  {
     $container->addCompilerPass(new BackendCompilerPass());
 
     $container->addCompilerPass(new StackedKernelPass());
+
+    $container->addCompilerPass(new StackedSessionHandlerPass());
 
     $container->addCompilerPass(new MainContentRenderersPass());
 

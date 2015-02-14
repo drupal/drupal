@@ -10,7 +10,6 @@ namespace Drupal\Core\Session;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Connection;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\Storage\Handler\WriteCheckSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 
 /**
@@ -63,10 +62,8 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
   /**
    * The write safe session handler.
    *
-   * @todo: The write safe session handler should be exposed in the
-   *   container and this reference should be removed once all database queries
+   * @todo: This reference should be removed once all database queries
    *   are removed from the session manager class.
-   * @see https://www.drupal.org/node/2372389
    *
    * @var \Drupal\Core\Session\WriteSafeSessionHandlerInterface
    */
@@ -83,20 +80,17 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
    *   The session metadata bag.
    * @param \Drupal\Core\Session\SessionConfigurationInterface $session_configuration
    *   The session configuration interface.
+   * @param \Symfony\Component\HttpFoundation\Session\Storage\Proxy\AbstractProxy|Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeSessionHandler|\SessionHandlerInterface|NULL $handler
+   *   The object to register as a PHP session handler.
+   *   @see \Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage::setSaveHandler()
    */
-  public function __construct(RequestStack $request_stack, Connection $connection, MetadataBag $metadata_bag, SessionConfigurationInterface $session_configuration) {
+  public function __construct(RequestStack $request_stack, Connection $connection, MetadataBag $metadata_bag, SessionConfigurationInterface $session_configuration, $handler = NULL) {
     $options = array();
     $this->sessionConfiguration = $session_configuration;
     $this->requestStack = $request_stack;
     $this->connection = $connection;
 
-    // Register the default session handler.
-    // @todo Extract session storage from session handler into a service.
-    $save_handler = new SessionHandler($this->requestStack, $this->connection);
-    $write_check_handler = new WriteCheckSessionHandler($save_handler);
-    $this->writeSafeHandler = new WriteSafeSessionHandler($write_check_handler);
-
-    parent::__construct($options, $this->writeSafeHandler, $metadata_bag);
+    parent::__construct($options, $handler, $metadata_bag);
 
     // @todo When not using the Symfony Session object, the list of bags in the
     //   NativeSessionStorage will remain uninitialized. This will lead to
@@ -290,6 +284,13 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
   public function enable() {
     $this->writeSafeHandler->setSessionWritable(TRUE);
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setWriteSafeHandler(WriteSafeSessionHandlerInterface $handler) {
+    $this->writeSafeHandler = $handler;
   }
 
   /**
