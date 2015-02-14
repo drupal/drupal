@@ -58,6 +58,7 @@ class MigrationStorage extends BaseMigrationStorage {
       foreach ($entities as $entity_id => $entity) {
         if ($plugin = $entity->getLoadPlugin()) {
           $new_entities = $plugin->loadMultiple($this);
+          $this->postLoad($new_entities);
           $this->getDynamicIds($dynamic_ids, $new_entities);
           $return += $new_entities;
         }
@@ -73,6 +74,7 @@ class MigrationStorage extends BaseMigrationStorage {
         if ($plugin = $entity->getLoadPlugin()) {
           unset($entities[$base_id]);
           $new_entities = $plugin->loadMultiple($this, $sub_ids);
+          $this->postLoad($new_entities);
           if (!isset($sub_ids)) {
             unset($dynamic_ids[$base_id]);
             $this->getDynamicIds($dynamic_ids, $new_entities);
