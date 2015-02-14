@@ -363,13 +363,19 @@ class SystemController extends ControllerBase {
       $pos_current_path = strpos($element['#markup'], $search_key_current_path, $offset);
       $pos_front = strpos($element['#markup'], $search_key_front, $offset);
 
-      // Determine which of the two values matched: the exact path, or the
-      // <front> special case.
+      // Determine which of the two values is the next match: the exact path, or
+      // the <front> special case.
       $pos_match = NULL;
-      if ($pos_current_path !== FALSE) {
+      if ($pos_front === FALSE) {
         $pos_match = $pos_current_path;
       }
-      elseif ($context['front'] && $pos_front !== FALSE) {
+      elseif ($pos_current_path === FALSE) {
+        $pos_match = $pos_front;
+      }
+      elseif ($pos_current_path < $pos_front) {
+        $pos_match = $pos_current_path;
+      }
+      else {
         $pos_match = $pos_front;
       }
 

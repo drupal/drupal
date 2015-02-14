@@ -305,6 +305,25 @@ class SystemControllerTest extends UnitTestCase {
       2 => ['#markup' => '<a data-drupal-link-system-path="&lt;front&gt;" class="active">Once</a> <a data-drupal-link-system-path="&lt;front&gt;" class="active">Twice</a>'],
     ];
 
+    // Test cases to verify that the 'active' class is added when on the front
+    // page, and there are two different kinds of matching links on the page:
+    // - the matching path (the resolved front page path)
+    // - the special matching path ('<front>')
+    $front_special_link = '<a data-drupal-link-system-path="&lt;front&gt;">Front</a>';
+    $front_special_link_active = '<a data-drupal-link-system-path="&lt;front&gt;" class="active">Front</a>';
+    $front_path_link = '<a data-drupal-link-system-path="myfrontpage">Front Path</a>';
+    $front_path_link_active = '<a data-drupal-link-system-path="myfrontpage" class="active">Front Path</a>';
+    $data[] = [
+      0 => ['#markup' => $front_path_link . ' ' . $front_special_link],
+      1 => ['path' => 'myfrontpage', 'front' => TRUE, 'language' => 'en', 'query' => []],
+      2 => ['#markup' => $front_path_link_active . ' ' . $front_special_link_active],
+    ];
+    $data[] = [
+      0 => ['#markup' => $front_special_link . ' ' . $front_path_link],
+      1 => ['path' => 'myfrontpage', 'front' => TRUE, 'language' => 'en', 'query' => []],
+      2 => ['#markup' => $front_special_link_active . ' ' . $front_path_link_active],
+    ];
+
     return $data;
   }
 
