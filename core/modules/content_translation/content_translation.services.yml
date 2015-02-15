@@ -23,7 +23,7 @@ services:
 
   content_translation.manager:
     class: Drupal\content_translation\ContentTranslationManager
-    arguments: ['@entity.manager']
+    arguments: ['@entity.manager', '@content_translation.updates_manager']
 
   content_translation.updates_manager:
     class: Drupal\content_translation\ContentTranslationUpdatesManager

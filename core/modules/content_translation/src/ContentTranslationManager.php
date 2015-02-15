@@ -25,13 +25,23 @@ class ContentTranslationManager implements ContentTranslationManagerInterface {
   protected $entityManager;
 
   /**
+   * The updates manager.
+   *
+   * @var \Drupal\content_translation\ContentTranslationUpdatesManager
+   */
+  protected $updatesManager;
+
+  /**
    * Constructs a ContentTranslationManageAccessCheck object.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $manager
    *   The entity type manager.
+   * @param \Drupal\content_translation\ContentTranslationUpdatesManager $updates_manager
+   *   The updates manager.
    */
-  public function __construct(EntityManagerInterface $manager) {
+  public function __construct(EntityManagerInterface $manager, ContentTranslationUpdatesManager $updates_manager) {
     $this->entityManager = $manager;
+    $this->updatesManager = $updates_manager;
   }
 
   /**
@@ -78,6 +88,8 @@ class ContentTranslationManager implements ContentTranslationManagerInterface {
   public function setEnabled($entity_type_id, $bundle, $value) {
     $config = $this->loadContentLanguageSettings($entity_type_id, $bundle);
     $config->setThirdPartySetting('content_translation', 'enabled', $value)->save();
+    $entity_type = $this->entityManager->getDefinition($entity_type_id);
+    $this->updatesManager->updateDefinitions(array($entity_type_id => $entity_type));
   }
 
   /**
