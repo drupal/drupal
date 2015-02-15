@@ -84,7 +84,9 @@ function field_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Enabling field types, widgets, and formatters') . '</dt>';
-      $output .= '<dd>' . t('The Field module provides the infrastructure for fields; the field types, formatters, and widgets are provided by Drupal core or additional modules. Some of the modules are required; the optional modules can be enabled from the <a href="!modules">Extend administration page</a>. Additional fields, formatters, and widgets may be provided by contributed modules, which you can find in the <a href="!contrib">contributed module section of Drupal.org</a>.', array('!modules' => \Drupal::url('system.modules_list'), '!contrib' => 'https://drupal.org/project/modules'));
+      $output .= '<dd>' . t('The Field module provides the infrastructure for fields; the field types, formatters, and widgets are provided by Drupal core or additional modules. Some of the modules are required; the optional modules can be enabled from the <a href="!modules">Extend administration page</a>. Additional fields, formatters, and widgets may be provided by contributed modules, which you can find in the <a href="!contrib">contributed module section of Drupal.org</a>.', array('!modules' => \Drupal::url('system.modules_list'), '!contrib' => 'https://drupal.org/project/modules')) . '</dd>';
+
+      $output .= '<h3>' . t('Field, widget, and formatter information') . '</h3>';
 
       // Make a list of all widget, formatter, and field modules currently
       // enabled, ordered by displayed module name (module names are not
@@ -114,14 +116,22 @@ function field_help($route_name, RouteMatchInterface $route_match) {
         }
       }
       if ($items) {
-        $output .= ' ' . t('Currently enabled field, formatter, and widget modules:');
+        $output .= '<dt>' . t('Provided by modules') . '</dt>';
+        $output .= '<dd>' . t('Here is a list of the currently enabled field, formatter, and widget modules:');
         $item_list = array(
           '#theme' => 'item_list',
           '#items' => $items,
         );
         $output .= drupal_render($item_list);
+        $output .= '</dd>';
       }
-      $output .= '</dd></dl>';
+
+      $output .= '<dt>' . t('Provided by Drupal core') . '</dt>';
+      $output .= '<dd>' . t('As mentioned previously, some field types, widgets, and formatters are provided by Drupal core. Here are some notes on how to use some of these:');
+      $output .= '<ul>';
+      $output .= '<li>' . t('<strong>Number fields</strong>: When you add a number field you can choose from three types: <em>decimal</em>, <em>float</em>, and <em>integer</em>. The <em>decimal</em> number field type allows users to enter exact decimal values, with fixed numbers of decimal places. The <em>float</em> number field type allows users to enter approximate decimal values. The <em>integer</em> number field type allows users to enter whole numbers, such as years (for example, 2012) or values (for example, 1, 2, 5, 305). It does not allow decimals.') . '</li>';
+      $output .= '</ul></dd>';
+      $output .= '</dl>';
       return $output;
   }
 }
