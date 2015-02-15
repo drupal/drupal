@@ -74,10 +74,12 @@ function entity_test_entity_types($filter = NULL) {
  * Implements hook_entity_type_alter().
  */
 function entity_test_entity_type_alter(array &$entity_types) {
+  $state = \Drupal::state();
+
   /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
   foreach (entity_test_entity_types() as $entity_type) {
     // Optionally specify a translation handler for testing translations.
-    if (\Drupal::state()->get('entity_test.translation')) {
+    if ($state->get('entity_test.translation')) {
       $translation = $entity_types[$entity_type]->get('translation');
       $translation[$entity_type] = TRUE;
       $entity_types[$entity_type]->set('translation', $translation);
@@ -85,7 +87,12 @@ function entity_test_entity_type_alter(array &$entity_types) {
   }
 
   // Allow entity_test_update tests to override the entity type definition.
-  $entity_types['entity_test_update'] = \Drupal::state()->get('entity_test_update.entity_type', $entity_types['entity_test_update']);
+  $entity_types['entity_test_update'] = $state->get('entity_test_update.entity_type', $entity_types['entity_test_update']);
+
+  // Enable the entity_test_new only when needed.
+  if (!$state->get('entity_test_new')) {
+    unset($entity_types['entity_test_new']);
+  }
 }
 
 /**

@@ -35,6 +35,27 @@ namespace Drupal\Core\Entity;
 interface EntityDefinitionUpdateManagerInterface {
 
   /**
+   * Indicates that a definition has just been created.
+   *
+   * @var int
+   */
+  const DEFINITION_CREATED = 1;
+
+  /**
+   * Indicates that a definition has changes.
+   *
+   * @var int
+   */
+  const DEFINITION_UPDATED = 2;
+
+  /**
+   * Indicates that a definition has just been deleted.
+   *
+   * @var int
+   */
+  const DEFINITION_DELETED = 3;
+
+  /**
    * Checks if there are any definition updates that need to be applied.
    *
    * @return bool

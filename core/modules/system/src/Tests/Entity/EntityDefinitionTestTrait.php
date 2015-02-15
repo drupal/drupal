@@ -16,6 +16,15 @@ use Drupal\entity_test\FieldStorageDefinition;
 trait EntityDefinitionTestTrait {
 
   /**
+   * Enables a new entity type definition.
+   */
+  protected function enableNewEntityType() {
+    $this->state->set('entity_test_new', TRUE);
+    $this->entityManager->clearCachedDefinitions();
+    $this->entityDefinitionUpdateManager->applyUpdates();
+  }
+
+  /**
    * Resets the entity type definition.
    */
   protected function resetEntityType() {

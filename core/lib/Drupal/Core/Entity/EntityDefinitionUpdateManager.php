@@ -19,27 +19,6 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
   use StringTranslationTrait;
 
   /**
-   * Indicates that a definition has just been created.
-   *
-   * @var int
-   */
-  const DEFINITION_CREATED = 1;
-
-  /**
-   * Indicates that a definition has changes.
-   *
-   * @var int
-   */
-  const DEFINITION_UPDATED = 2;
-
-  /**
-   * Indicates that a definition has just been deleted.
-   *
-   * @var int
-   */
-  const DEFINITION_DELETED = 3;
-
-  /**
    * The entity manager service.
    *
    * @var \Drupal\Core\Entity\EntityManagerInterface
@@ -70,6 +49,22 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
     $summary = array();
 
     foreach ($this->getChangeList() as $entity_type_id => $change_list) {
+      // Process entity type definition changes.
+      if (!empty($change_list['entity_type'])) {
+        $entity_type = $this->entityManager->getDefinition($entity_type_id);
+        $t_args = array('%entity_type' => $entity_type->getLabel());
+
+        switch ($change_list['entity_type']) {
+          case static::DEFINITION_CREATED:
+            $summary[$entity_type_id][] = $this->t('Create the %entity_type entity type.', $t_args);
+            break;
+
+          case static::DEFINITION_UPDATED:
+            $summary[$entity_type_id][] = $this->t('Update the %entity_type entity type.', $t_args);
+            break;
+        }
+      }
+
       // Process field storage definition changes.
       if (!empty($change_list['field_storage_definitions'])) {
         $storage_definitions = $this->entityManager->getFieldStorageDefinitions($entity_type_id);
@@ -91,11 +86,6 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
           }
         }
       }
-      // Process entity type definition changes.
-      if (!empty($change_list['entity_type']) && $change_list['entity_type'] == static::DEFINITION_UPDATED) {
-        $entity_type = $this->entityManager->getDefinition($entity_type_id);
-        $summary[$entity_type_id][] = $this->t('Update the %entity_type entity type.', array('%entity_type' => $entity_type->getLabel()));
-      }
     }
 
     return $summary;
@@ -110,10 +100,19 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
       // this is necessary when you change an entity type from non-revisionable
       // to revisionable and at the same time add revisionable fields to the
       // entity type.
-      if (!empty($change_list['entity_type']) && $change_list['entity_type'] == static::DEFINITION_UPDATED) {
+      if (!empty($change_list['entity_type'])) {
         $entity_type = $this->entityManager->getDefinition($entity_type_id);
-        $original = $this->entityManager->getLastInstalledDefinition($entity_type_id);
-        $this->entityManager->onEntityTypeUpdate($entity_type, $original);
+
+        switch ($change_list['entity_type']) {
+          case static::DEFINITION_CREATED:
+            $this->entityManager->onEntityTypeCreate($entity_type);
+            break;
+
+          case static::DEFINITION_UPDATED:
+            $original = $this->entityManager->getLastInstalledDefinition($entity_type_id);
+            $this->entityManager->onEntityTypeUpdate($entity_type, $original);
+            break;
+        }
       }
 
       // Process field storage definition changes.
@@ -160,53 +159,54 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
     foreach ($this->entityManager->getDefinitions() as $entity_type_id => $entity_type) {
       $original = $this->entityManager->getLastInstalledDefinition($entity_type_id);
 
-      // Only manage changes to already installed entity types. Entity type
-      // installation is handled elsewhere (e.g.,
-      // \Drupal\Core\Extension\ModuleHandler::install()).
-      if (!$original) {
-        continue;
-      }
-
       // @todo Support non-storage-schema-changing definition updates too:
       //   https://www.drupal.org/node/2336895.
-      if ($this->requiresEntityStorageSchemaChanges($entity_type, $original)) {
-        $change_list[$entity_type_id]['entity_type'] = static::DEFINITION_UPDATED;
+      if (!$original) {
+        $change_list[$entity_type_id]['entity_type'] = static::DEFINITION_CREATED;
       }
-
-      if ($this->entityManager->getStorage($entity_type_id) instanceof DynamicallyFieldableEntityStorageInterface) {
-        $field_changes = array();
-        $storage_definitions = $this->entityManager->getFieldStorageDefinitions($entity_type_id);
-        $original_storage_definitions = $this->entityManager->getLastInstalledFieldStorageDefinitions($entity_type_id);
-
-        // Detect created field storage definitions.
-        foreach (array_diff_key($storage_definitions, $original_storage_definitions) as $field_name => $storage_definition) {
-          $field_changes[$field_name] = static::DEFINITION_CREATED;
+      else {
+        if ($this->requiresEntityStorageSchemaChanges($entity_type, $original)) {
+          $change_list[$entity_type_id]['entity_type'] = static::DEFINITION_UPDATED;
         }
 
-        // Detect deleted field storage definitions.
-        foreach (array_diff_key($original_storage_definitions, $storage_definitions) as $field_name => $original_storage_definition) {
-          $field_changes[$field_name] = static::DEFINITION_DELETED;
-        }
+        if ($this->entityManager->getStorage($entity_type_id) instanceof DynamicallyFieldableEntityStorageInterface) {
+          $field_changes = array();
+          $storage_definitions = $this->entityManager->getFieldStorageDefinitions($entity_type_id);
+          $original_storage_definitions = $this->entityManager->getLastInstalledFieldStorageDefinitions($entity_type_id);
 
-        // Detect updated field storage definitions.
-        foreach (array_intersect_key($storage_definitions, $original_storage_definitions) as $field_name => $storage_definition) {
-          // @todo Support non-storage-schema-changing definition updates too:
-          //   https://www.drupal.org/node/2336895. So long as we're checking
-          //   based on schema change requirements rather than definition
-          //   equality, skip the check if the entity type itself needs to be
-          //   updated, since that can affect the schema of all fields, so we
-          //   want to process that update first without reporting false
-          //   positives here.
-          if (!isset($change_list[$entity_type_id]['entity_type']) && $this->requiresFieldStorageSchemaChanges($storage_definition, $original_storage_definitions[$field_name])) {
-            $field_changes[$field_name] = static::DEFINITION_UPDATED;
+          // Detect created field storage definitions.
+          foreach (array_diff_key($storage_definitions, $original_storage_definitions) as $field_name => $storage_definition) {
+            $field_changes[$field_name] = static::DEFINITION_CREATED;
           }
-        }
 
-        if ($field_changes) {
-          $change_list[$entity_type_id]['field_storage_definitions'] = $field_changes;
+          // Detect deleted field storage definitions.
+          foreach (array_diff_key($original_storage_definitions, $storage_definitions) as $field_name => $original_storage_definition) {
+            $field_changes[$field_name] = static::DEFINITION_DELETED;
+          }
+
+          // Detect updated field storage definitions.
+          foreach (array_intersect_key($storage_definitions, $original_storage_definitions) as $field_name => $storage_definition) {
+            // @todo Support non-storage-schema-changing definition updates too:
+            //   https://www.drupal.org/node/2336895. So long as we're checking
+            //   based on schema change requirements rather than definition
+            //   equality, skip the check if the entity type itself needs to be
+            //   updated, since that can affect the schema of all fields, so we
+            //   want to process that update first without reporting false
+            //   positives here.
+            if (!isset($change_list[$entity_type_id]['entity_type']) && $this->requiresFieldStorageSchemaChanges($storage_definition, $original_storage_definitions[$field_name])) {
+              $field_changes[$field_name] = static::DEFINITION_UPDATED;
+            }
+          }
+
+          if ($field_changes) {
+            $change_list[$entity_type_id]['field_storage_definitions'] = $field_changes;
+          }
         }
       }
     }
+
+    // @todo Support deleting entity definitions when we support base field
+    //   purging. See https://www.drupal.org/node/2282119.
 
     return array_filter($change_list);
   }

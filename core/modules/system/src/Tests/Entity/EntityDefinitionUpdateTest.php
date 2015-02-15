@@ -55,6 +55,26 @@ class EntityDefinitionUpdateTest extends EntityUnitTestBase {
   }
 
   /**
+   * Tests that new entity type definitions are correctly handled.
+   */
+  public function testNewEntityType() {
+    $entity_type_id = 'entity_test_new';
+    $schema = $this->database->schema();
+
+    // Check that the "entity_test_new" is not defined.
+    $entity_types = $this->entityManager->getDefinitions();
+    $this->assertFalse(isset($entity_types[$entity_type_id]), 'The "entity_test_new" entity type does not exist.');
+    $this->assertFalse($schema->tableExists($entity_type_id), 'Schema for the "entity_test_new" entity type does not exist.');
+
+    // Check that the "entity_test_new" is now defined and the related schema
+    // has been created.
+    $this->enableNewEntityType();
+    $entity_types = $this->entityManager->getDefinitions();
+    $this->assertTrue(isset($entity_types[$entity_type_id]), 'The "entity_test_new" entity type exists.');
+    $this->assertTrue($schema->tableExists($entity_type_id), 'Schema for the "entity_test_new" entity type has been created.');
+  }
+
+  /**
    * Tests when no definition update is needed.
    */
   public function testNoUpdates() {

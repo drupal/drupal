@@ -31,6 +31,8 @@ class LocaleTranslatedSchemaDefinitionTest extends WebTestBase {
     parent::setUp();
     ConfigurableLanguage::createFromLangcode('fr')->save();
     $this->config('system.site')->set('langcode', 'fr')->save();
+    // Make sure new entity type definitions are processed.
+    \Drupal::service('entity.definition_update_manager')->applyUpdates();
     // Clear all caches so that the base field definition, its cache in the
     // entity manager, the t() cache, etc. are all cleared.
     drupal_flush_all_caches();

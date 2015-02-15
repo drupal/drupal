@@ -32,6 +32,8 @@ class UpdateScriptTest extends WebTestBase {
     parent::setUp();
     $this->update_url = $GLOBALS['base_url'] . '/update.php';
     $this->update_user = $this->drupalCreateUser(array('administer software updates', 'access site in maintenance mode'));
+    // Make sure updates for new entity type definitions are processed.
+    \Drupal::service('entity.definition_update_manager')->applyUpdates();
   }
 
   /**
