@@ -8,12 +8,16 @@
 namespace Drupal\Core\Entity\Element;
 
 use Drupal\Component\Utility\Tags;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element\Textfield;
 use Drupal\user\EntityOwnerInterface;
 
 /**
  * Provides an entity autocomplete form element.
+ *
+ * The #default_value accepted by this element is either an entity object or an
+ * array of entity objects.
  *
  * @FormElement("entity_autocomplete")
  */
@@ -35,15 +39,40 @@ class EntityAutocomplete extends Textfield {
     // This should only be set to FALSE if proper validation by the selection
     // handler is performed at another level on the extracted form values.
     $info['#validate_reference'] = TRUE;
+    // IMPORTANT! This should only be set to FALSE if the #default_value
+    // property is processed at another level (e.g. by a Field API widget) and
+    // it's value is properly checked for access.
+    $info['#process_default_value'] = TRUE;
 
     $info['#element_validate'] = array(array($class, 'validateEntityAutocomplete'));
     array_unshift($info['#process'], array($class, 'processEntityAutocomplete'));
 
-    // @todo Consider providing better DX for #default_value? Maybe we impose an
-    // array('label' => .., 'value' => ..) structure instead of manually
-    // composing the textfield string?. See https://www.drupal.org/node/2418249.
-
     return $info;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
+    // Process the #default_value property.
+    if ($input === FALSE && isset($element['#default_value']) && $element['#process_default_value']) {
+      if (is_array($element['#default_value']) && $element['#tags'] !== TRUE) {
+        throw new \InvalidArgumentException('The #default_value property is an array but the form element does not allow multiple values.');
+      }
+      elseif (!is_array($element['#default_value'])) {
+        // Convert the default value into an array for easier processing in
+        // static::getEntityLabels().
+        $element['#default_value'] = array($element['#default_value']);
+      }
+
+      if ($element['#default_value'] && !(reset($element['#default_value']) instanceof EntityInterface)) {
+        throw new \InvalidArgumentException('The #default_value property has to be an entity object or an array of entity objects.');
+      }
+
+      // Extract the labels from the passed-in entity objects, taking access
+      // checks into account.
+      return static::getEntityLabels($element['#default_value']);
+    }
   }
 
   /**
@@ -157,6 +186,35 @@ class EntityAutocomplete extends Textfield {
     }
 
     $form_state->setValueForElement($element, $value);
+  }
+
+  /**
+   * Converts an array of entity objects into a string of entity labels.
+   *
+   * This method is also responsible for checking the 'view' access on the
+   * passed-in entities.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface[] $entities
+   *   An array of entity objects.
+   *
+   * @return string
+   *   A string of entity labels separated by commas.
+   */
+  public static function getEntityLabels(array $entities) {
+    $entity_labels = array();
+    foreach ($entities as $entity) {
+      $label = ($entity->access('view')) ? $entity->label() : t('- Restricted access -');
+
+      // Take into account "autocreated" entities.
+      if (!$entity->isNew()) {
+        $label .= ' (' . $entity->id() . ')';
+      }
+
+      // Labels containing commas or quotes must be wrapped in quotes.
+      $entity_labels[] = Tags::encode($label);
+    }
+
+    return implode(', ', $entity_labels);
   }
 
   /**

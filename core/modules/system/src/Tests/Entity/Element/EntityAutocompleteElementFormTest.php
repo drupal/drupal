@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Entity\Element;
 
+use Drupal\Core\Entity\Element\EntityAutocomplete;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
@@ -139,6 +140,18 @@ class EntityAutocompleteElementFormTest extends EntityUnitTestBase implements Fo
       '#autocreate' => array(
         'bundle' => 'entity_test',
       ),
+    );
+
+    $form['single_access'] = array(
+      '#type' => 'entity_autocomplete',
+      '#target_type' => 'entity_test',
+      '#default_value' => $this->referencedEntities[0],
+    );
+    $form['tags_access'] = array(
+      '#type' => 'entity_autocomplete',
+      '#target_type' => 'entity_test',
+      '#tags' => TRUE,
+      '#default_value' => array($this->referencedEntities[0], $this->referencedEntities[1]),
     );
 
     return $form;
@@ -274,6 +287,32 @@ class EntityAutocompleteElementFormTest extends EntityUnitTestBase implements Fo
     $this->assertEqual(count($form_state->getErrors()), 0);
   }
 
+  /**
+   * Tests that access is properly checked by the EntityAutocomplete element.
+   */
+  public function testEntityAutocompleteAccess() {
+    $form_builder = $this->container->get('form_builder');
+    $form = $form_builder->getForm($this);
+
+    // Check that the current user has proper access to view entity labels.
+    $expected = $this->referencedEntities[0]->label() . ' (' . $this->referencedEntities[0]->id() . ')';
+    $this->assertEqual($form['single_access']['#value'], $expected);
+
+    $expected .= ', ' . $this->referencedEntities[1]->label() . ' (' . $this->referencedEntities[1]->id() . ')';
+    $this->assertEqual($form['tags_access']['#value'], $expected);
+
+    // Set up a non-admin user that is *not* allowed to view test entities.
+    \Drupal::currentUser()->setAccount($this->createUser(array(), array()));
+
+    // Rebuild the form.
+    $form = $form_builder->getForm($this);
+
+    $expected = t('- Restricted access -') . ' (' . $this->referencedEntities[0]->id() . ')';
+    $this->assertEqual($form['single_access']['#value'], $expected);
+
+    $expected .= ', ' . t('- Restricted access -') . ' (' . $this->referencedEntities[1]->id() . ')';
+    $this->assertEqual($form['tags_access']['#value'], $expected);
+  }
 
   /**
    * Returns an entity label in the format needed by the EntityAutocomplete
@@ -286,7 +325,7 @@ class EntityAutocompleteElementFormTest extends EntityUnitTestBase implements Fo
    *   A string that can be used as a value for EntityAutocomplete elements.
    */
   protected function getAutocompleteInput(EntityInterface $entity) {
-    return $entity->label() . ' (' . $entity->id() . ')';
+    return EntityAutocomplete::getEntityLabels(array($entity));
   }
 
 }

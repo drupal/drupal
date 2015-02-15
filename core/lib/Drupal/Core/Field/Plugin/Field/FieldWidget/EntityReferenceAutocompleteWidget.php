@@ -7,8 +7,6 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldWidget;
 
-use Drupal\Component\Utility\Tags;
-use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -94,6 +92,7 @@ class EntityReferenceAutocompleteWidget extends WidgetBase {
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $entity = $items->getEntity();
+    $referenced_entities = $items->referencedEntities();
 
     $element += array(
       '#type' => 'entity_autocomplete',
@@ -104,7 +103,7 @@ class EntityReferenceAutocompleteWidget extends WidgetBase {
       // the 'ValidReference' constraint.
       '#validate_reference' => FALSE,
       '#maxlength' => 1024,
-      '#default_value' => implode(', ', $this->getLabels($items, $delta)),
+      '#default_value' => isset($referenced_entities[$delta]) ? $referenced_entities[$delta] : NULL,
       '#size' => $this->getSetting('size'),
       '#placeholder' => $this->getSetting('placeholder'),
     );
@@ -140,35 +139,6 @@ class EntityReferenceAutocompleteWidget extends WidgetBase {
     }
 
     return $values;
-  }
-
-  /**
-   * Gets the entity labels.
-   */
-  protected function getLabels(EntityReferenceFieldItemListInterface $items, $delta) {
-    if ($items->isEmpty()) {
-      return array();
-    }
-
-    $entity_labels = array();
-    $handles_multiple_values = $this->handlesMultipleValues();
-    foreach ($items->referencedEntities() as $referenced_delta => $referenced_entity) {
-      // The autocomplete widget outputs one entity label per form element.
-      if (!$handles_multiple_values && $referenced_delta != $delta) {
-        continue;
-      }
-
-      $key = $referenced_entity->label();
-
-      // Take into account "autocreate" items.
-      if (!$referenced_entity->isNew()) {
-        $key .= ' (' . $referenced_entity->id() . ')';
-      }
-
-      // Labels containing commas or quotes must be wrapped in quotes.
-      $entity_labels[] = Tags::encode($key);
-    }
-    return $entity_labels;
   }
 
   /**

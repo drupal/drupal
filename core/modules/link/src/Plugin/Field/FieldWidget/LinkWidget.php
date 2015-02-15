@@ -7,7 +7,6 @@
 
 namespace Drupal\link\Plugin\Field\FieldWidget;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Entity\Element\EntityAutocomplete;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -17,7 +16,6 @@ use Drupal\Core\Url;
 use Drupal\link\LinkItemInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Validator\ConstraintViolation;
-use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
@@ -81,17 +79,10 @@ class LinkWidget extends WidgetBase {
     }
     elseif ($scheme === 'entity') {
       list($entity_type, $entity_id) = explode('/', substr($uri, 7), 2);
-      // Show the 'entity:' URI as the entity autocomplete would, but only if:
-      // - the entity could be loaded, and;
-      // - the current user is allowed to view the entity (otherwise we have a
-      //   information disclosure security problem).
+      // Show the 'entity:' URI as the entity autocomplete would.
       $entity_manager = \Drupal::entityManager();
-      if ($entity_manager->getDefinition($entity_type, FALSE)) {
-        $entity = \Drupal::entityManager()->getStorage($entity_type)->load($entity_id);
-        if ($entity) {
-          $label = ($entity->access('view')) ? $entity->label() : t('- Restricted access -');
-          $displayable_string = $label . ' (' . $entity_id . ')';
-        }
+      if ($entity_manager->getDefinition($entity_type, FALSE) && $entity = \Drupal::entityManager()->getStorage($entity_type)->load($entity_id)) {
+        $displayable_string = EntityAutocomplete::getEntityLabels(array($entity));
       }
     }
 
@@ -215,6 +206,10 @@ class LinkWidget extends WidgetBase {
       $element['uri']['#target_type'] = 'node';
       // Disable autocompletion when the first character is '/', '#' or '?'.
       $element['uri']['#attributes']['data-autocomplete-first-character-blacklist'] = '/#?';
+
+      // The link widget is doing its own processing in
+      // static::getUriAsDisplayableString().
+      $element['uri']['#process_default_value'] = FALSE;
     }
 
     // If the field is configured to allow only internal links, add a useful

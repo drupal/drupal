@@ -32,6 +32,7 @@ class EntityReferenceAutocompleteTagsWidget extends EntityReferenceAutocompleteW
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
 
     $element['target_id']['#tags'] = TRUE;
+    $element['target_id']['#default_value'] = $items->referencedEntities();
 
     return $element;
   }
