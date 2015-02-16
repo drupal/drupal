@@ -20,7 +20,7 @@ class DiscoverServiceProvidersTest extends UnitTestCase {
   /**
    * Tests discovery with user defined container yaml.
    *
-   * @covers ::discoverServiceProviders()
+   * @covers ::discoverServiceProviders
    */
   public function testDiscoverServiceCustom() {
     new Settings(array(
@@ -47,7 +47,7 @@ class DiscoverServiceProvidersTest extends UnitTestCase {
   /**
    * Tests the exception when container_yamls is not set.
    *
-   * @covers ::discoverServiceProviders()
+   * @covers ::discoverServiceProviders
    * @expectedException \Exception
    */
   public function testDiscoverServiceNoContainerYamls() {

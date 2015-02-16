@@ -30,7 +30,6 @@ class RouteMatchTest extends RouteMatchBaseTest {
   /**
    * @covers ::createFromRequest
    * @covers ::__construct
-   * @covers \Drupal\Core\Routing\NullRouteMatch
    */
   public function testRouteMatchFromRequest() {
     $request = new Request();

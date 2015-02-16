@@ -11,7 +11,7 @@ use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\Core\Datetime\Date
+ * @coversDefaultClass \Drupal\Core\Datetime\DateFormatter
  * @group Datetime
  */
 class DateTest extends UnitTestCase {

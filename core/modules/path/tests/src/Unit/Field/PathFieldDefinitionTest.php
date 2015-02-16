@@ -30,10 +30,8 @@ class PathFieldDefinitionTest extends BaseFieldDefinitionTestBase {
   }
 
   /**
-   * Tests BaseFieldDefinition::getColumns().
-   *
    * @covers ::getColumns
-   * @covers ::schema
+   * @covers ::getSchema
    */
   public function testGetColumns() {
     $this->assertSame(array(), $this->definition->getColumns());

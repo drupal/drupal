@@ -14,7 +14,7 @@ use Drupal\system\Controller\SystemController;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\system\Controller\SystemController::setLinkActiveClass()
+ * @coversDefaultClass \Drupal\system\Controller\SystemController
  * @group system
  */
 class SystemControllerTest extends UnitTestCase {
@@ -345,6 +345,7 @@ class SystemControllerTest extends UnitTestCase {
    *   The returned renderable array.
    *
    * @dataProvider providerTestSetLinkActiveClass
+   * @covers ::setLinkActiveClass
    */
   public function testSetLinkActiveClass(array $element, array $context, $expected_element) {
     $this->assertSame($expected_element, SystemController::setLinkActiveClass($element, $context));

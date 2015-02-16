@@ -18,10 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 class ValidateHostnameTest extends UnitTestCase {
 
   /**
-   * Tests hostname validation.
-   *
-   * @covers ::validateHostname()
-   *
+   * @covers ::validateHostname
    * @dataProvider providerTestValidateHostname
    */
   public function testValidateHostname($hostname, $message, $expected = FALSE) {

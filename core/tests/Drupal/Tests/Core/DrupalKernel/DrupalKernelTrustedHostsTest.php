@@ -20,8 +20,7 @@ class DrupalKernelTrustedHostsTest extends UnitTestCase {
   /**
    * Tests hostname validation with settings.
    *
-   * @covers ::setupTrustedHosts()
-   *
+   * @covers ::setupTrustedHosts
    * @dataProvider providerTestTrustedHosts
    */
   public function testTrustedHosts($host, $server_name, $message, $expected = FALSE) {

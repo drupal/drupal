@@ -29,7 +29,7 @@ class SessionConfigurationTest extends UnitTestCase {
   /**
    * Tests whether the session.cookie_domain ini settings is computed correctly.
    *
-   * @covers ::getOptions()
+   * @covers ::getOptions
    *
    * @dataProvider providerTestGeneratedCookieDomain
    */
@@ -67,8 +67,8 @@ class SessionConfigurationTest extends UnitTestCase {
   /**
    * Tests the constructor injected session.cookie_domain ini setting.
    *
-   * @covers ::__construct()
-   * @covers ::getOptions()
+   * @covers ::__construct
+   * @covers ::getOptions
    *
    * @dataProvider providerTestEnforcedCookieDomain
    */
@@ -106,7 +106,7 @@ class SessionConfigurationTest extends UnitTestCase {
   /**
    * Tests whether the session.cookie_secure ini settings is computed correctly.
    *
-   * @covers ::getOptions()
+   * @covers ::getOptions
    *
    * @dataProvider providerTestCookieSecure
    */
@@ -122,8 +122,8 @@ class SessionConfigurationTest extends UnitTestCase {
   /**
    * Tests that session.cookie_secure ini settings cannot be overridden.
    *
-   * @covers ::__construct()
-   * @covers ::getOptions()
+   * @covers ::__construct
+   * @covers ::getOptions
    *
    * @dataProvider providerTestCookieSecure
    */
@@ -156,7 +156,7 @@ class SessionConfigurationTest extends UnitTestCase {
   /**
    * Tests whether the session.name ini settings is computed correctly.
    *
-   * @covers ::getOptions()
+   * @covers ::getOptions
    *
    * @dataProvider providerTestGeneratedSessionName
    */
@@ -204,7 +204,7 @@ class SessionConfigurationTest extends UnitTestCase {
   /**
    * Tests whether the session.name ini settings is computed correctly.
    *
-   * @covers ::getOptions()
+   * @covers ::getOptions
    *
    * @dataProvider providerTestEnforcedSessionName
    */

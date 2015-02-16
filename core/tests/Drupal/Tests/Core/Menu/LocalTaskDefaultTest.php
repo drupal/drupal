@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
- * @coversDefaultClass \Drupal\Core\Menu\LocalTaskDefaultTest
+ * @coversDefaultClass \Drupal\Core\Menu\LocalTaskDefault
  * @group Menu
  */
 class LocalTaskDefaultTest extends UnitTestCase {
@@ -83,9 +83,7 @@ class LocalTaskDefaultTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getRouteParameters for a static route.
-   *
-   * @see \Drupal\Core\Menu\LocalTaskDefault::getRouteParameters()
+   * @covers ::getRouteParameters
    */
   public function testGetRouteParametersForStaticRoute() {
     $this->pluginDefinition = array(
@@ -104,7 +102,7 @@ class LocalTaskDefaultTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getRouteParameters for a route with the parameters in the plugin definition.
+   * @covers ::getRouteParameters
    */
   public function testGetRouteParametersInPluginDefinitions() {
     $this->pluginDefinition = array(
@@ -124,11 +122,9 @@ class LocalTaskDefaultTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getRouteParameters method for a route with dynamic non upcasted parameters.
-   *
-   * @see \Drupal\Core\Menu\LocalTaskDefault::getRouteParameters()
+   * @covers ::getRouteParameters
    */
-  public function testGetRouteParametersForDynamicRoute() {
+  public function testGetRouteParametersForDynamicRouteWithNonUpcastedParameters() {
     $this->pluginDefinition = array(
       'route_name' => 'test_route'
     );
@@ -149,7 +145,7 @@ class LocalTaskDefaultTest extends UnitTestCase {
   /**
    * Tests the getRouteParameters method for a route with upcasted parameters.
    *
-   * @see \Drupal\Core\Menu\LocalTaskDefault::getRouteParameters()
+   * @covers ::getRouteParameters
    */
   public function testGetRouteParametersForDynamicRouteWithUpcastedParameters() {
     $this->pluginDefinition = array(
@@ -169,9 +165,7 @@ class LocalTaskDefaultTest extends UnitTestCase {
   }
 
   /**
-   * Defines a test provider for getWeight()
-   *
-   * @see self::getWeight()
+   * Defines a data provider for testGetWeight().
    *
    * @return array
    *   A list or test plugin definition and expected weight.
@@ -214,11 +208,8 @@ class LocalTaskDefaultTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getWeight method.
-   *
    * @dataProvider providerTestGetWeight
-   *
-   * @see \Drupal\Core\Menu\LocalTaskDefault::getWeight()
+   * @covers ::getWeight
    */
   public function testGetWeight($plugin_definition, $plugin_id, $expected_weight) {
     $this->pluginDefinition = $plugin_definition;
@@ -229,10 +220,8 @@ class LocalTaskDefaultTest extends UnitTestCase {
   }
 
   /**
-   * Tests getActive/setActive() method.
-   *
-   * @see \Drupal\Core\Menu\LocalTaskDefault::getActive()
-   * @see \Drupal\Core\Menu\LocalTaskDefault::setActive()
+   * @covers ::getActive
+   * @covers ::setActive
    */
   public function testActive() {
     $this->setupLocalTaskDefault();
@@ -243,11 +232,9 @@ class LocalTaskDefaultTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getTitle method without a translation context.
-   *
-   * @see \Drupal\Core\Menu\LocalTaskDefault::getTitle()
+   * @covers ::getTitle
    */
-  public function testGetTitle() {
+  public function testGetTitleWithoutContext() {
     $this->pluginDefinition['title'] = 'Example';
     $this->stringTranslation->expects($this->once())
       ->method('translate')
@@ -259,9 +246,7 @@ class LocalTaskDefaultTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getTitle method with a translation context.
-   *
-   * @see \Drupal\Core\Menu\LocalTaskDefault::getTitle()
+   * @covers ::getTitle
    */
   public function testGetTitleWithContext() {
     $this->pluginDefinition['title'] = 'Example';
@@ -276,7 +261,7 @@ class LocalTaskDefaultTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getTitle method with title arguments.
+   * @covers ::getTitle
    */
   public function testGetTitleWithTitleArguments() {
     $this->pluginDefinition['title'] = 'Example @test';
@@ -292,9 +277,7 @@ class LocalTaskDefaultTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getOption method.
-   *
-   * @see \Drupal\Core\Menu\LocalTaskDefault::getOption()
+   * @covers ::getOptions
    */
   public function testGetOptions() {
     $this->pluginDefinition['options'] = array(

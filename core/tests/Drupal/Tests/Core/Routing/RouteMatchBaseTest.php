@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
- * Base test class for testing the RouteMatch object.
+ * Base test class for testing classes implementing the route match interface.
  */
 abstract class RouteMatchBaseTest extends UnitTestCase {
 
@@ -102,7 +102,7 @@ abstract class RouteMatchBaseTest extends UnitTestCase {
 
   /**
    * @covers ::getParameter
-   * @covers ::getParameterNames
+   * @covers \Drupal\Core\Routing\RouteMatch::getParameterNames
    * @dataProvider routeMatchProvider
    */
   public function testGetParameter(RouteMatchInterface $route_match, Route $route, $parameters, $expected_filtered_parameters) {
@@ -116,7 +116,7 @@ abstract class RouteMatchBaseTest extends UnitTestCase {
 
   /**
    * @covers ::getParameters
-   * @covers ::getParameterNames
+   * @covers \Drupal\Core\Routing\RouteMatch::getParameterNames
    * @dataProvider routeMatchProvider
    */
   public function testGetParameters(RouteMatchInterface $route_match, Route $route, $parameters, $expected_filtered_parameters) {
@@ -125,7 +125,7 @@ abstract class RouteMatchBaseTest extends UnitTestCase {
 
   /**
    * @covers ::getRawParameter
-   * @covers ::getParameterNames
+   * @covers \Drupal\Core\Routing\RouteMatch::getParameterNames
    * @dataProvider routeMatchProvider
    */
   public function testGetRawParameter(RouteMatchInterface $route_match, Route $route, $parameters, $expected_filtered_parameters) {
@@ -139,7 +139,7 @@ abstract class RouteMatchBaseTest extends UnitTestCase {
 
   /**
    * @covers ::getRawParameters
-   * @covers ::getParameterNames
+   * @covers \Drupal\Core\Routing\RouteMatch::getParameterNames
    * @dataProvider routeMatchProvider
    */
   public function testGetRawParameters(RouteMatchInterface $route_match, Route $route, $parameters, $expected_filtered_parameters) {

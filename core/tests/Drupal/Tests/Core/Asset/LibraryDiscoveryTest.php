@@ -71,7 +71,7 @@ class LibraryDiscoveryTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getLibrariesByExtension()
+   * @covers ::getLibrariesByExtension
    */
   public function testGetLibrariesByExtension() {
     $this->libraryDiscoveryCollector->expects($this->once())

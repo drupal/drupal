@@ -21,9 +21,8 @@ class TwigExtensionTest extends UnitTestCase {
 
   /**
    * Tests the escaping
-   * @dataProvider providerTestEscaping
    *
-   * @covers
+   * @dataProvider providerTestEscaping
    */
   public function testEscaping($template, $expected) {
     $twig = new \Twig_Environment(NULL, array(

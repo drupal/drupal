@@ -11,7 +11,7 @@ use Drupal\Core\Batch\Percentage;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\Component\Batch\Batch
+ * @coversDefaultClass \Drupal\Core\Batch\Percentage
  * @group Batch
  *
  * Tests the Batch helper object to make sure that the rounding works properly
@@ -21,11 +21,8 @@ class PercentagesTest extends UnitTestCase {
   protected $testCases = array();
 
   /**
-   * Tests the format() function.
-   *
    * @dataProvider providerTestPercentages
-   *
-   * @see \Drupal\Core\Batch\Percentage::format()
+   * @covers ::format
    */
   public function testPercentages($total, $current, $expected_result) {
     $actual_result = Percentage::format($total, $current);

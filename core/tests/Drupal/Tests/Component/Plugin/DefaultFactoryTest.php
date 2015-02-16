@@ -11,7 +11,7 @@ use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\Component\Plugin\DefaultFactory
+ * @coversDefaultClass \Drupal\Component\Plugin\Factory\DefaultFactory
  * @group Plugin
  */
 class DefaultFactoryTest extends UnitTestCase {

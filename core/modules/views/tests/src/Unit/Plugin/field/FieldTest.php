@@ -111,7 +111,7 @@ class FieldTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::defineOptions()
+   * @covers ::defineOptions
    */
   public function testDefineOptionsWithNoOptions() {
     $definition = [
@@ -138,7 +138,7 @@ class FieldTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::defineOptions()
+   * @covers ::defineOptions
    */
   public function testDefineOptionsWithDefaultFormatter() {
     $definition = [
@@ -165,7 +165,7 @@ class FieldTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::calculateDependencies()
+   * @covers ::calculateDependencies
    */
   public function testCalculateDependenciesWithBaseField() {
     $definition = [
@@ -187,7 +187,7 @@ class FieldTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::calculateDependencies()
+   * @covers ::calculateDependencies
    */
   public function testCalculateDependenciesWithConfiguredField() {
     $definition = [
@@ -213,7 +213,7 @@ class FieldTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::access()
+   * @covers ::access
    */
   public function testAccess() {
     $definition = [

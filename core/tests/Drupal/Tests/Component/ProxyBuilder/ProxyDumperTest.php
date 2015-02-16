@@ -46,7 +46,7 @@ class ProxyDumperTest extends UnitTestCase {
 
   /**
    * @dataProvider providerTestIsProxyCandidate
-   * @covers ::isProxyCandidate()
+   * @covers ::isProxyCandidate
    */
   public function testIsProxyCandidate(Definition $definition, $expected) {
     $this->assertSame($expected, $this->proxyDumper->isProxyCandidate($definition));
@@ -86,7 +86,7 @@ EOS;
   }
 
   /**
-   * @covers ::getProxyCode()
+   * @covers ::getProxyCode
    */
   public function testGetProxyCode() {
     $definition = new Definition('Drupal\Tests\Component\ProxyBuilder\TestService');
@@ -103,7 +103,7 @@ EOS;
   }
 
   /**
-   * @covers ::getProxyCode()
+   * @covers ::getProxyCode
    */
   public function testGetProxyCodeWithSameClassMultipleTimes() {
     $definition = new Definition('Drupal\Tests\Component\ProxyBuilder\TestService');

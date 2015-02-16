@@ -123,7 +123,7 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::id()
+   * @covers ::id
    */
   public function testId() {
     $config = new ContentLanguageSettings(array(
@@ -134,7 +134,7 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getTargetEntityTypeId()
+   * @covers ::getTargetEntityTypeId
    */
   public function testTargetEntityTypeId() {
     $config = new ContentLanguageSettings(array(
@@ -145,7 +145,7 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getTargetBundle()
+   * @covers ::getTargetBundle
    */
   public function testTargetBundle() {
     $config = new ContentLanguageSettings(array(
@@ -156,8 +156,8 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getDefaultLangcode()
-   * @covers ::setDefaultLangcode()
+   * @covers ::getDefaultLangcode
+   * @covers ::setDefaultLangcode
    *
    * @dataProvider providerDefaultLangcode
    */
@@ -185,8 +185,8 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::setLanguageAlterable()
-   * @covers ::isLanguageAlterable()
+   * @covers ::setLanguageAlterable
+   * @covers ::isLanguageAlterable
    *
    * @dataProvider providerLanguageAlterable
    */
@@ -220,7 +220,7 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::isDefaultConfiguration()
+   * @covers ::isDefaultConfiguration
    *
    * @dataProvider providerIsDefaultConfiguration
    */
@@ -254,7 +254,7 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::loadByEntityTypeBundle()
+   * @covers ::loadByEntityTypeBundle
    *
    * @dataProvider providerLoadByEntityTypeBundle
    */

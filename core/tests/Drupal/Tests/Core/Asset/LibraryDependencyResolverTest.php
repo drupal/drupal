@@ -114,7 +114,7 @@ class LibraryDependencyResolverTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getLibrariesWithDependencies()
+   * @covers ::getLibrariesWithDependencies
    *
    * @dataProvider providerTestGetLibrariesWithDependencies
    */
@@ -166,7 +166,7 @@ class LibraryDependencyResolverTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getMinimalRepresentativeSubset()
+   * @covers ::getMinimalRepresentativeSubset
    *
    * @dataProvider providerTestGetMinimalRepresentativeSubset
    */

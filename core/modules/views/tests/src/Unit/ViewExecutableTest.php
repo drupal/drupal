@@ -245,7 +245,7 @@ class ViewExecutableTest extends UnitTestCase {
   }
 
   /**
-   * Tests the buildThemeFunctions() method.
+   * @covers ::buildThemeFunctions
    */
   public function testBuildThemeFunctions() {
     /** @var \Drupal\views\ViewExecutable|\PHPUnit_Framework_MockObject_MockObject $view */
@@ -289,9 +289,7 @@ class ViewExecutableTest extends UnitTestCase {
   }
 
   /**
-   * Tests the generateHandlerId method().
-   *
-   * @covers ::generateHandlerId()
+   * @covers ::generateHandlerId
    */
   public function testGenerateHandlerId() {
     // Test the generateHandlerId() method.
@@ -301,9 +299,7 @@ class ViewExecutableTest extends UnitTestCase {
   }
 
   /**
-   * Tests the addHandler method().
-   *
-   * @covers ::addHandler()
+   * @covers ::addHandler
    */
   public function testAddHandler() {
     /** @var \Drupal\views\ViewExecutable|\PHPUnit_Framework_MockObject_MockObject $view */
@@ -342,9 +338,7 @@ class ViewExecutableTest extends UnitTestCase {
   }
 
   /**
-   * Tests the addHandler method() with an entity field.
-   *
-   * @covers ::addHandler()
+   * @covers ::addHandler
    */
   public function testAddHandlerWithEntityField() {
     /** @var \Drupal\views\ViewExecutable|\PHPUnit_Framework_MockObject_MockObject $view */
@@ -387,9 +381,7 @@ class ViewExecutableTest extends UnitTestCase {
   }
 
   /**
-   * Tests attachDisplays().
-   *
-   * @covers ::attachDisplays()
+   * @covers ::attachDisplays
    */
   public function testAttachDisplays() {
     /** @var \Drupal\views\ViewExecutable|\PHPUnit_Framework_MockObject_MockObject $view */

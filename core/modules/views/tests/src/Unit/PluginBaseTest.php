@@ -11,7 +11,7 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\views\Tests\TestHelperPlugin;
 
 /**
- * @coversDefaultClass \Drupal\views\Plugin\views\PluginBase.
+ * @coversDefaultClass \Drupal\views\Plugin\views\PluginBase
  * @group views
  */
 class PluginBaseTest extends UnitTestCase {
@@ -46,9 +46,8 @@ class PluginBaseTest extends UnitTestCase {
    * @param bool $all
    *   Whether to unpack all options.
    *
-   * @see \Drupal\views\Plugin\views\PluginBase::unpackOptions.
-   *
    * @dataProvider providerTestUnpackOptions
+   * @covers ::unpackOptions
    */
   public function testUnpackOptions($storage, $options, $definition, $expected, $all = FALSE) {
     $this->testHelperPlugin->unpackOptions($storage, $options, $definition, $all);
@@ -65,9 +64,8 @@ class PluginBaseTest extends UnitTestCase {
    * @param array $expected
    *   The expected array after unpacking
    *
-   * @see \Drupal\views\Plugin\views\PluginBase::setOptionDefaults.
-   *
    * @dataProvider providerTestSetOptionDefault
+   * @covers ::setOptionDefaults
    */
   public function testSetOptionDefault($storage, $definition, $expected) {
     $this->testHelperPlugin->testSetOptionDefaults($storage, $definition);
@@ -286,9 +284,8 @@ class PluginBaseTest extends UnitTestCase {
   }
 
   /**
-   * Tests filterByDefinedOptions().
-   *
    * @dataProvider providerTestFilterByDefinedOptions
+   * @covers ::filterByDefinedOptions
    */
   public function testFilterByDefinedOptions($storage, $options, $expected_storage) {
     $this->testHelperPlugin->setDefinedOptions($options);

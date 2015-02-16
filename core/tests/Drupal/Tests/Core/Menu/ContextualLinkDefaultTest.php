@@ -13,9 +13,8 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tests the contextual link default class.
- *
  * @group Menu
+ * @coversDefaultClass \Drupal\Core\Menu\ContextualLinkDefault
  */
 class ContextualLinkDefaultTest extends UnitTestCase {
 
@@ -68,9 +67,7 @@ class ContextualLinkDefaultTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getTitle method without a translation context.
-   *
-   * @see \Drupal\Core\Menu\LocalTaskDefault::getTitle()
+   * @covers ::getTitle
    */
   public function testGetTitle($title = 'Example') {
     $this->pluginDefinition['title'] = $title;
@@ -84,9 +81,7 @@ class ContextualLinkDefaultTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getTitle method with a translation context.
-   *
-   * @see \Drupal\Core\Menu\LocalTaskDefault::getTitle()
+   * @covers ::getTitle
    */
   public function testGetTitleWithContext() {
     $this->pluginDefinition['title'] = 'Example';
@@ -101,7 +96,7 @@ class ContextualLinkDefaultTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getTitle method with title arguments.
+   * @covers ::getTitle
    */
   public function testGetTitleWithTitleArguments() {
     $this->pluginDefinition['title'] = 'Example @test';
@@ -117,8 +112,6 @@ class ContextualLinkDefaultTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getRouteName() method.
-   *
    * @covers ::getRouteName
    */
   public function testGetRouteName($route_name = 'test_route_name') {
@@ -129,8 +122,6 @@ class ContextualLinkDefaultTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getGroup() method.
-   *
    * @covers ::getGroup
    */
   public function testGetGroup($group_name = 'test_group') {
@@ -141,8 +132,6 @@ class ContextualLinkDefaultTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getOptions() method.
-   *
    * @covers ::getOptions
    */
   public function testGetOptions($options = array('key' => 'value')) {
@@ -153,8 +142,6 @@ class ContextualLinkDefaultTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getWeight() method.
-   *
    * @covers ::getWeight
    */
   public function testGetWeight($weight = 5) {

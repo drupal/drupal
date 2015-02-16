@@ -17,11 +17,9 @@ use Drupal\Tests\UnitTestCase;
 class ContainerDerivativeDiscoveryDecoratorTest extends UnitTestCase {
 
   /**
-   * @covers ::getDerivativeFetcher
-   *
-   * @see \Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator::getDerivativeFetcher().
+   * @covers ::getDefinitions
    */
-  public function testGetDerivativeFetcher() {
+  public function testGetDefinitions() {
     $example_service = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
     $example_container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
       ->setMethods(array('get'))

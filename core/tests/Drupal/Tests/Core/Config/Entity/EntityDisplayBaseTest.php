@@ -10,14 +10,14 @@ namespace Drupal\Tests\Core\Config\Entity;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\entity\EntityDisplayBase
+ * @coversDefaultClass \Drupal\Core\Entity\EntityDisplayBase
  *
  * @group Config
  */
 class EntityDisplayBaseTest extends UnitTestCase {
 
   /**
-   * @covers ::getTargetEntityTypeId()
+   * @covers ::getTargetEntityTypeId
    */
   public function testGetTargetEntityTypeId() {
     $mock = $this->getMockForAbstractClass('\Drupal\Core\Entity\EntityDisplayBase', [], '', FALSE);
@@ -28,7 +28,7 @@ class EntityDisplayBaseTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getMode()
+   * @covers ::getMode
    */
   public function testGetMode() {
     $mock = $this->getMockForAbstractClass('\Drupal\Core\Entity\EntityDisplayBase', [], '', FALSE);
@@ -39,7 +39,7 @@ class EntityDisplayBaseTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getOriginalMode()
+   * @covers ::getOriginalMode
    */
   public function testGetOriginalMode() {
     $mock = $this->getMockForAbstractClass('\Drupal\Core\Entity\EntityDisplayBase', [], '', FALSE);
@@ -50,9 +50,9 @@ class EntityDisplayBaseTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getDisplayBundle()
+   * @covers ::getTargetBundle
    */
-  public function testGetDisplayBundle() {
+  public function testGetTargetBundle() {
     $mock = $this->getMockForAbstractClass('\Drupal\Core\Entity\EntityDisplayBase', [], '', FALSE);
     $reflection = new \ReflectionProperty($mock, 'bundle');
     $reflection->setAccessible(TRUE);
@@ -61,9 +61,9 @@ class EntityDisplayBaseTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::setDisplayBundle()
+   * @covers ::setTargetBundle
    */
-  public function testSetDisplayBundle() {
+  public function testSetTargetBundle() {
     $mock = $this->getMockForAbstractClass('\Drupal\Core\Entity\EntityDisplayBase', [], '', FALSE);
     $reflection = new \ReflectionProperty($mock, 'bundle');
     $reflection->setAccessible(TRUE);

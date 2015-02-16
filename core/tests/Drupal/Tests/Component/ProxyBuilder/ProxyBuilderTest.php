@@ -33,7 +33,7 @@ class ProxyBuilderTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::buildProxyClassName()
+   * @covers ::buildProxyClassName
    */
   public function testBuildProxyClassName() {
     $class_name = $this->proxyBuilder->buildProxyClassName('Drupal\Tests\Component\ProxyBuilder\TestServiceNoMethod');
@@ -43,9 +43,9 @@ class ProxyBuilderTest extends UnitTestCase {
   /**
    * Tests the basic methods like the constructor and the lazyLoadItself method.
    *
-   * @covers ::build()
-   * @covers ::buildConstructorMethod()
-   * @covers ::buildLazyLoadItselfMethod()
+   * @covers ::build
+   * @covers ::buildConstructorMethod
+   * @covers ::buildLazyLoadItselfMethod
    */
   public function testBuildNoMethod() {
     $class = 'Drupal\Tests\Component\ProxyBuilder\TestServiceNoMethod';
@@ -55,8 +55,8 @@ class ProxyBuilderTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::buildMethod()
-   * @covers ::buildMethodBody()
+   * @covers ::buildMethod
+   * @covers ::buildMethodBody
    */
   public function testBuildSimpleMethod() {
     $class = 'Drupal\Tests\Component\ProxyBuilder\TestServiceSimpleMethod';
@@ -75,9 +75,9 @@ EOS;
   }
 
   /**
-   * @covers ::buildMethod()
-   * @covers ::buildParameter()
-   * @covers ::buildMethodBody()
+   * @covers ::buildMethod
+   * @covers ::buildParameter
+   * @covers ::buildMethodBody
    */
   public function testBuildMethodWithParameter() {
     $class = 'Drupal\Tests\Component\ProxyBuilder\TestServiceMethodWithParameter';
@@ -96,9 +96,9 @@ EOS;
   }
 
   /**
-   * @covers ::buildMethod()
-   * @covers ::buildParameter()
-   * @covers ::buildMethodBody()
+   * @covers ::buildMethod
+   * @covers ::buildParameter
+   * @covers ::buildMethodBody
    */
   public function testBuildComplexMethod() {
     $class = 'Drupal\Tests\Component\ProxyBuilder\TestServiceComplexMethod';
@@ -120,8 +120,8 @@ EOS;
   }
 
   /**
-   * @covers ::buildMethod()
-   * @covers ::buildMethodBody()
+   * @covers ::buildMethod
+   * @covers ::buildMethodBody
    */
   public function testBuildReturnReference() {
     $class = 'Drupal\Tests\Component\ProxyBuilder\TestServiceReturnReference';
@@ -142,9 +142,9 @@ EOS;
   }
 
   /**
-   * @covers ::buildMethod()
-   * @covers ::buildParameter()
-   * @covers ::buildMethodBody()
+   * @covers ::buildMethod
+   * @covers ::buildParameter
+   * @covers ::buildMethodBody
    */
   public function testBuildWithInterface() {
     $class = 'Drupal\Tests\Component\ProxyBuilder\TestServiceWithInterface';
@@ -165,7 +165,7 @@ EOS;
   }
 
   /**
-   * @covers ::build()
+   * @covers ::build
    */
   public function testBuildWithNestedInterface() {
     $class = 'Drupal\Tests\Component\ProxyBuilder\TestServiceWithChildInterfaces';
@@ -178,9 +178,9 @@ EOS;
   }
 
   /**
-   * @covers ::buildMethod()
-   * @covers ::buildParameter()
-   * @covers ::buildMethodBody()
+   * @covers ::buildMethod
+   * @covers ::buildParameter
+   * @covers ::buildMethodBody
    */
   public function testBuildWithProtectedAndPrivateMethod() {
     $class = 'Drupal\Tests\Component\ProxyBuilder\TestServiceWithProtectedMethods';
@@ -200,9 +200,9 @@ $this->assertEquals($this->buildExpectedClass($class, $method_body), $result);
   }
 
   /**
-   * @covers ::buildMethod()
-   * @covers ::buildParameter()
-   * @covers ::buildMethodBody()
+   * @covers ::buildMethod
+   * @covers ::buildParameter
+   * @covers ::buildMethodBody
    */
   public function testBuildWithPublicStaticMethod() {
     $class = 'Drupal\Tests\Component\ProxyBuilder\TestServiceWithPublicStaticMethod';
