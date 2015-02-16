@@ -895,8 +895,8 @@
  *   where yourmodule is your module's machine name.
  * - The test class file must be named and placed under the yourmodule/tests/src
  *   directory, according to the PSR-4 standard.
- * - Your test class needs a getInfo() method, which gives information about
- *   the test.
+ * - Your test class needs a phpDoc comment block with a description and
+ *   a @group annotation, which gives information about the test.
  * - Methods in your test class whose names start with 'test' are the actual
  *   test cases. Each one should test a logical subset of the functionality.
  * For more details, see:
@@ -928,8 +928,8 @@
  *   where yourmodule is your module's machine name.
  * - The test class file must be named and placed under the yourmodule/src/Tests
  *   directory, according to the PSR-4 standard.
- * - Your test class needs a getInfo() method, which gives information about
- *   the test.
+ * - Your test class needs a phpDoc comment block with a description and
+ *   a @group annotation, which gives information about the test.
  * - You may also override the default setUp() method, which can set be used to
  *   set up content types and similar procedures.
  * - In some cases, you may need to write a test module to support your test;
