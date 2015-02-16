@@ -36,6 +36,13 @@ class CommentNonNodeTest extends WebTestBase {
   protected $adminUser;
 
   /**
+   * The entity to use within tests.
+   *
+   * @var \Drupal\entity_test\Entity\EntityTest
+   */
+  protected $entity;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -261,13 +268,30 @@ class CommentNonNodeTest extends WebTestBase {
 
     $this->drupalLogin($this->adminUser);
 
+    // Test breadcrumb on comment add page.
+    $this->drupalGet('comment/reply/entity_test/' . $this->entity->id() . '/comment');
+    $xpath = '//nav[@class="breadcrumb"]/ol/li[last()]/a';
+    $this->assertEqual(current($this->xpath($xpath)), $this->entity->label(), 'Last breadcrumb item is equal to node title on comment reply page.');
+
     // Post a comment.
+    /** @var \Drupal\comment\CommentInterface $comment1 */
     $comment1 = $this->postComment($this->entity, $this->randomMachineName(), $this->randomMachineName());
     $this->assertTrue($this->commentExists($comment1), 'Comment on test entity exists.');
 
-    // Assert the breadcrumb is valid.
-    $this->drupalGet('comment/reply/entity_test/' . $this->entity->id() . '/comment');
-    $this->assertLink($this->entity->label());
+    // Test breadcrumb on comment reply page.
+    $this->drupalGet('comment/reply/entity_test/' . $this->entity->id() . '/comment/' . $comment1->id());
+    $xpath = '//nav[@class="breadcrumb"]/ol/li[last()]/a';
+    $this->assertEqual(current($this->xpath($xpath)), $comment1->getSubject(), 'Last breadcrumb item is equal to comment title on comment reply page.');
+
+    // Test breadcrumb on comment edit page.
+    $this->drupalGet('comment/' . $comment1->id() . '/edit');
+    $xpath = '//nav[@class="breadcrumb"]/ol/li[last()]/a';
+    $this->assertEqual(current($this->xpath($xpath)), $comment1->getSubject(), 'Last breadcrumb item is equal to comment subject on edit page.');
+
+    // Test breadcrumb on comment delete page.
+    $this->drupalGet('comment/' . $comment1->id() . '/delete');
+    $xpath = '//nav[@class="breadcrumb"]/ol/li[last()]/a';
+    $this->assertEqual(current($this->xpath($xpath)), $comment1->getSubject(), 'Last breadcrumb item is equal to comment subject on delete confirm page.');
 
     // Unpublish the comment.
     $this->performCommentOperation($comment1, 'unpublish');

@@ -1,6 +1,7 @@
 services:
   comment.breadcrumb:
     class: Drupal\comment\CommentBreadcrumbBuilder
+    arguments: ['@entity.manager']
     tags:
       - { name: breadcrumb_builder, priority: 100 }
 

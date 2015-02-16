@@ -142,6 +142,19 @@ class CommentController extends ControllerBase {
   }
 
   /**
+   * The _title_callback for the page that renders the comment permalink.
+   *
+   * @param \Drupal\comment\CommentInterface $comment
+   *   The current comment.
+   *
+   * @return string
+   *   The translated comment subject.
+   */
+  public function commentPermalinkTitle(CommentInterface $comment) {
+    return $this->entityManager()->getTranslationFromContext($comment)->label();
+  }
+
+  /**
    * Redirects legacy node links to the new path.
    *
    * @param \Drupal\Core\Entity\EntityInterface $node

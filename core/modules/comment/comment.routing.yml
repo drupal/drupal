@@ -37,7 +37,7 @@ comment.approve:
 entity.comment.canonical:
   path: '/comment/{comment}'
   defaults:
-    _title: 'Comment permalink'
+    _title_callback: '\Drupal\comment\Controller\CommentController::commentPermalinkTitle'
     _controller: '\Drupal\comment\Controller\CommentController::commentPermalink'
   requirements:
     _entity_access: 'comment.view'
