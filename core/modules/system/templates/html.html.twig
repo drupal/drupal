@@ -29,13 +29,6 @@
  * @ingroup themeable
  */
 #}
-{%
-  set body_classes = [
-    logged_in ? 'user-logged-in',
-    not root_path ? 'path-frontpage' : 'path-' ~ root_path|clean_class,
-    node_type ? 'node--type-' ~ node_type|clean_class,
-  ]
-%}
 <!DOCTYPE html>
 <html{{ html_attributes }}>
   <head>
@@ -44,8 +37,8 @@
     {{ styles }}
     {{ scripts }}
   </head>
-  <body{{ attributes.addClass(body_classes) }}>
-    <a href="#main-content" class="visually-hidden focusable skip-link">
+  <body{{ attributes }}>
+    <a href="#main-content" class="visually-hidden focusable">
       {{ 'Skip to main content'|t }}
     </a>
     {{ page_top }}
