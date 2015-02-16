@@ -628,8 +628,8 @@ $settings['container_yamls'][] = __DIR__ . '/services.yml';
  * $settings['trusted_host_patterns'] = array(
  *   '^example\.com$',
  *   '^.+\.example\.com$',
- *   '^example\.org',
- *   '^.+\.example\.org',
+ *   '^example\.org$',
+ *   '^.+\.example\.org$',
  * );
  * @endcode
  * will allow the site to run off of all variants of example.com and
