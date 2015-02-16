@@ -711,9 +711,17 @@ abstract class WebTestBase extends TestBase {
     if (!isset($account->session_id)) {
       return FALSE;
     }
-    // The session ID is hashed before being stored in the database.
-    // @see \Drupal\Core\Session\SessionHandler::read()
-    return (bool) db_query("SELECT sid FROM {users_field_data} u INNER JOIN {sessions} s ON u.uid = s.uid AND u.default_langcode = 1 WHERE s.sid = :sid", array(':sid' => Crypt::hashBase64($account->session_id)))->fetchField();
+    $session_id = $account->session_id;
+    $request_stack = $this->container->get('request_stack');
+    $request = $request_stack->getCurrentRequest();
+    $cookies = $request->cookies->all();
+    foreach ($this->cookies as $name => $value) {
+      $cookies[$name] = $value['value'];
+    }
+    $request_stack->push($request->duplicate(NULL, NULL, NULL, $cookies));
+    $logged_in = (bool) $this->container->get('session_manager')->getSaveHandler()->read($session_id);
+    $request_stack->pop();
+    return $logged_in;
   }
 
   /**
