@@ -38,15 +38,14 @@ class Tid extends ArgumentDefaultPluginBase implements CacheablePluginInterface 
   protected $routeMatch;
 
   /**
-   * Constructs a new Date instance.
-   * The vocary storage.
+   * The vocabulary storage.
    *
    * @var \Drupal\taxonomy\VocabularyStorageInterface.
    */
   protected $vocabularyStorage;
 
   /**
-   * Constructs a Tid object.
+   * Constructs a new Tid instance.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
