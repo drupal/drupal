@@ -1,3 +1,0 @@
-views.field.bulk_form:
-  type: views_field_bulk_form
-  label: 'Bulk form'

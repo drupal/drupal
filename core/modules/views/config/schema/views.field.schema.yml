@@ -178,3 +178,7 @@ views.field.xss:
 views.field.language:
   type: views_field
   label: 'Language'
+
+views.field.bulk_form:
+  type: views_field_bulk_form
+  label: 'Bulk form'
