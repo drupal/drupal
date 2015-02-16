@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\Tests\UserAccountLinksTests.
+ * Contains of Drupal\user\Tests\UserAccountLinksTest.
  */
 
 namespace Drupal\user\Tests;
@@ -15,7 +15,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @group user
  */
-class UserAccountLinksTests extends WebTestBase {
+class UserAccountLinksTest extends WebTestBase {
 
   /**
    * Modules to enable.
