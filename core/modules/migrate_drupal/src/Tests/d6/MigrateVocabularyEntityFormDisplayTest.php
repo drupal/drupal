@@ -8,14 +8,14 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Vocabulary entity form display migration.
  *
  * @group migrate_drupal
  */
-class MigrateVocabularyEntityFormDisplayTest extends MigrateDrupalTestBase {
+class MigrateVocabularyEntityFormDisplayTest extends MigrateDrupal6TestBase {
 
   /**
    * The modules to be enabled during the test.

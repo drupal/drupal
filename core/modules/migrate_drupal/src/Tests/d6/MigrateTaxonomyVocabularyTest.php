@@ -8,7 +8,7 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
@@ -16,7 +16,7 @@ use Drupal\taxonomy\Entity\Vocabulary;
  *
  * @group migrate_drupal
  */
-class MigrateTaxonomyVocabularyTest extends MigrateDrupalTestBase {
+class MigrateTaxonomyVocabularyTest extends MigrateDrupal6TestBase {
 
   /**
    * Modules to enable.

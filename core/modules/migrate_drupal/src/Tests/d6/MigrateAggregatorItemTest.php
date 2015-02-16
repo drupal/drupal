@@ -10,14 +10,14 @@ namespace Drupal\migrate_drupal\Tests\d6;
 use Drupal\aggregator\Entity\Item;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade aggregator items.
  *
  * @group migrate_drupal
  */
-class MigrateAggregatorItemTest extends MigrateDrupalTestBase {
+class MigrateAggregatorItemTest extends MigrateDrupal6TestBase {
 
   static $modules = array('aggregator');
 

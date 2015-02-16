@@ -8,7 +8,7 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\block\Entity\Block;
 
 /**
@@ -16,7 +16,7 @@ use Drupal\block\Entity\Block;
  *
  * @group migrate_drupal
  */
-class MigrateBlockTest extends MigrateDrupalTestBase {
+class MigrateBlockTest extends MigrateDrupal6TestBase {
 
   /**
    * Modules to enable.

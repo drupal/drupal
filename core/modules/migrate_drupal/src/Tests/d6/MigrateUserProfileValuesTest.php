@@ -9,7 +9,7 @@ namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\migrate\MigrateExecutable;
 use Drupal\Core\Database\Database;
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\user\Entity\User;
 
 /**
@@ -17,7 +17,7 @@ use Drupal\user\Entity\User;
  *
  * @group migrate_drupal
  */
-class MigrateUserProfileValuesTest extends MigrateDrupalTestBase {
+class MigrateUserProfileValuesTest extends MigrateDrupal6TestBase {
 
   /**
    * The modules to be enabled during the test.

@@ -8,14 +8,14 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upload form entity display.
  *
  * @group migrate_drupal
  */
-class MigrateUploadEntityFormDisplayTest extends MigrateDrupalTestBase {
+class MigrateUploadEntityFormDisplayTest extends MigrateDrupal6TestBase {
 
   /**
    * The modules to be enabled during the test.

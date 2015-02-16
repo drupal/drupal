@@ -9,7 +9,7 @@ namespace Drupal\migrate_drupal\Tests\dependencies;
 
 use Drupal\Component\Utility\String;
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Ensure the consistency among the dependencies for migrate.
@@ -18,7 +18,7 @@ use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
  * @group Drupal
  * @group migrate_drupal
  */
-class MigrateDependenciesTest extends MigrateDrupalTestBase {
+class MigrateDependenciesTest extends MigrateDrupal6TestBase {
 
   static $modules = array('aggregator');
 

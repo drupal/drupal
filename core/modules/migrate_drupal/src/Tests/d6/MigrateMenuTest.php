@@ -9,7 +9,7 @@ namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\MigrateMessage;
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\Core\Database\Database;
 use Drupal\system\Entity\Menu;
 
@@ -18,7 +18,7 @@ use Drupal\system\Entity\Menu;
  *
  * @group migrate_drupal
  */
-class MigrateMenuTest extends MigrateDrupalTestBase {
+class MigrateMenuTest extends MigrateDrupal6TestBase {
 
   /**
    * {@inheritdoc}

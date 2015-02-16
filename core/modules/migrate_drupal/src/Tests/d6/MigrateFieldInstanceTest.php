@@ -9,7 +9,7 @@ namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\link\LinkItemInterface;
 
 /**
@@ -17,7 +17,7 @@ use Drupal\link\LinkItemInterface;
  *
  * @group migrate_drupal
  */
-class MigrateFieldInstanceTest extends MigrateDrupalTestBase {
+class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
 
   /**
    * Modules to enable.

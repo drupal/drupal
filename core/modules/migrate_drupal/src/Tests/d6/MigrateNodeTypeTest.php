@@ -9,14 +9,14 @@ namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade node types to node.type.*.yml.
  *
  * @group migrate_drupal
  */
-class MigrateNodeTypeTest extends MigrateDrupalTestBase {
+class MigrateNodeTypeTest extends MigrateDrupal6TestBase {
 
   /**
    * Modules to enable.

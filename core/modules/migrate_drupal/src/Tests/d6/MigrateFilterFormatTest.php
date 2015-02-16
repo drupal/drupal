@@ -8,14 +8,14 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade variables to filter.formats.*.yml.
  *
  * @group migrate_drupal
  */
-class MigrateFilterFormatTest extends MigrateDrupalTestBase {
+class MigrateFilterFormatTest extends MigrateDrupal6TestBase {
 
   /**
    * {@inheritdoc}

@@ -8,7 +8,7 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\node\Entity\Node;
 
 /**
@@ -16,7 +16,7 @@ use Drupal\node\Entity\Node;
  *
  * @group migrate_drupal
  */
-class MigrateBookTest extends MigrateDrupalTestBase {
+class MigrateBookTest extends MigrateDrupal6TestBase {
 
   public static $modules = array('book');
 

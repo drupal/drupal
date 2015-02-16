@@ -11,14 +11,14 @@ use Drupal\user\Entity\User;
 use Drupal\file\Entity\File;
 use Drupal\Core\Database\Database;
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Users migration.
  *
  * @group migrate_drupal
  */
-class MigrateUserTest extends MigrateDrupalTestBase {
+class MigrateUserTest extends MigrateDrupal6TestBase {
 
   /**
    * The modules to be enabled during the test.

@@ -8,7 +8,7 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\user\Entity\Role;
 
 /**
@@ -16,7 +16,7 @@ use Drupal\user\Entity\Role;
  *
  * @group migrate_drupal
  */
-class MigrateUserRoleTest extends MigrateDrupalTestBase {
+class MigrateUserRoleTest extends MigrateDrupal6TestBase {
 
   /**
    * The modules to be enabled during the test.

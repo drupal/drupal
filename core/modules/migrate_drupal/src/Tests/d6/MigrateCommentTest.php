@@ -11,14 +11,14 @@ use Drupal\comment\Entity\Comment;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade comments.
  *
  * @group migrate_drupal
  */
-class MigrateCommentTest extends MigrateDrupalTestBase {
+class MigrateCommentTest extends MigrateDrupal6TestBase {
 
   use CommentTestTrait;
 

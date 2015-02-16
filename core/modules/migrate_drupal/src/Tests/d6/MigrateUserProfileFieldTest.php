@@ -9,14 +9,14 @@ namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Tests the user profile field migration.
  *
  * @group migrate_drupal
  */
-class MigrateUserProfileFieldTest extends MigrateDrupalTestBase {
+class MigrateUserProfileFieldTest extends MigrateDrupal6TestBase {
 
   static $modules = array('link', 'options', 'datetime');
 

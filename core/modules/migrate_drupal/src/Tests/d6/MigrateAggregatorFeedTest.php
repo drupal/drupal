@@ -9,14 +9,14 @@ namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\aggregator\Entity\Feed;
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade variables to aggregator_feed entities.
  *
  * @group migrate_drupal
  */
-class MigrateAggregatorFeedTest extends MigrateDrupalTestBase {
+class MigrateAggregatorFeedTest extends MigrateDrupal6TestBase {
 
   static $modules = array('aggregator');
 

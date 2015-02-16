@@ -9,14 +9,14 @@ namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Migrate view modes.
  *
  * @group migrate_drupal
  */
-class MigrateViewModesTest extends MigrateDrupalTestBase {
+class MigrateViewModesTest extends MigrateDrupal6TestBase {
 
   /**
    * Modules to enable.

@@ -8,14 +8,14 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * User pictures migration.
  *
  * @group migrate_drupal
  */
-class MigrateUserPictureFileTest extends MigrateDrupalTestBase {
+class MigrateUserPictureFileTest extends MigrateDrupal6TestBase {
 
   /**
    * Modules to enable.

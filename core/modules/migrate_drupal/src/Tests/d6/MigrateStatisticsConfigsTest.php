@@ -10,14 +10,14 @@ namespace Drupal\migrate_drupal\Tests\d6;
 use Drupal\config\Tests\SchemaCheckTestTrait;
 use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade variables to statistics.settings.yml.
  *
  * @group migrate_drupal
  */
-class MigrateStatisticsConfigsTest extends MigrateDrupalTestBase {
+class MigrateStatisticsConfigsTest extends MigrateDrupal6TestBase {
 
   use SchemaCheckTestTrait;
 

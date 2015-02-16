@@ -9,14 +9,14 @@ namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Uploads migration.
  *
  * @group migrate_drupal
  */
-class MigrateUploadFieldTest extends MigrateDrupalTestBase {
+class MigrateUploadFieldTest extends MigrateDrupal6TestBase {
 
   /**
    * The modules to be enabled during the test.

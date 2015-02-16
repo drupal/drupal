@@ -8,12 +8,12 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Base class for Drupal 6 comment variables to Drupal 8 entity display tests.
  */
-abstract class MigrateCommentVariableDisplayBase extends MigrateDrupalTestBase {
+abstract class MigrateCommentVariableDisplayBase extends MigrateDrupal6TestBase {
 
   /**
    * The ID of migration to run.

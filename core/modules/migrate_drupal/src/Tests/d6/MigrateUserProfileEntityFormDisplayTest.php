@@ -8,7 +8,7 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\Core\Database\Database;
 
 /**
@@ -16,7 +16,7 @@ use Drupal\Core\Database\Database;
  *
  * @group migrate_drupal
  */
-class MigrateUserProfileEntityFormDisplayTest extends MigrateDrupalTestBase {
+class MigrateUserProfileEntityFormDisplayTest extends MigrateDrupal6TestBase {
 
   static $modules = array('link', 'options', 'datetime');
 

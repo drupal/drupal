@@ -9,14 +9,14 @@ namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade comment variables to field.storage.node.comment.yml.
  *
  * @group migrate_drupal
  */
-class MigrateCommentVariableFieldTest extends MigrateDrupalTestBase {
+class MigrateCommentVariableFieldTest extends MigrateDrupal6TestBase {
 
   static $modules = array('comment', 'node');
 

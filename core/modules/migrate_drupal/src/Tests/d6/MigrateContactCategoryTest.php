@@ -10,14 +10,14 @@ namespace Drupal\migrate_drupal\Tests\d6;
 use Drupal\contact\Entity\ContactForm;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\MigrateMessage;
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Migrate contact categories to contact.form.*.yml.
  *
  * @group migrate_drupal
  */
-class MigrateContactCategoryTest extends MigrateDrupalTestBase {
+class MigrateContactCategoryTest extends MigrateDrupal6TestBase {
 
   /**
    * Modules to enable.

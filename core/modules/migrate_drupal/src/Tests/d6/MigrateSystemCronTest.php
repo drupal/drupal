@@ -9,14 +9,14 @@ namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade cron variable to system.*.yml.
  *
  * @group migrate_drupal
  */
-class MigrateSystemCronTest extends MigrateDrupalTestBase {
+class MigrateSystemCronTest extends MigrateDrupal6TestBase {
 
   /**
    * {@inheritdoc}

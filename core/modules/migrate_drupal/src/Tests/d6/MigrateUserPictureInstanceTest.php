@@ -9,14 +9,14 @@ namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * User picture field instance migration.
  *
  * @group migrate_drupal
  */
-class MigrateUserPictureInstanceTest extends MigrateDrupalTestBase {
+class MigrateUserPictureInstanceTest extends MigrateDrupal6TestBase {
 
   /**
    * Modules to enable.

@@ -9,14 +9,14 @@ namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * User picture field migration.
  *
  * @group migrate_drupal
  */
-class MigrateUserPictureFieldTest extends MigrateDrupalTestBase {
+class MigrateUserPictureFieldTest extends MigrateDrupal6TestBase {
 
   static $modules = array('image');
 

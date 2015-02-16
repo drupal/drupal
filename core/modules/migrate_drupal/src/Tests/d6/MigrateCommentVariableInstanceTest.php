@@ -8,14 +8,14 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade comment variables to field.instance.node.*.comment.yml.
  *
  * @group migrate_drupal
  */
-class MigrateCommentVariableInstanceTest extends MigrateDrupalTestBase {
+class MigrateCommentVariableInstanceTest extends MigrateDrupal6TestBase {
 
   static $modules = array('comment', 'node');
 

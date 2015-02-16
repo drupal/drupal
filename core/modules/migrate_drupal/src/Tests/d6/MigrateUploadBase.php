@@ -7,12 +7,12 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Base class for file/upload migration tests.
  */
-abstract class MigrateUploadBase extends MigrateDrupalTestBase {
+abstract class MigrateUploadBase extends MigrateDrupal6TestBase {
 
   /**
    * {@inheritdoc}

@@ -9,14 +9,14 @@ namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade field formatter settings to entity.display.*.*.yml.
  *
  * @group migrate_drupal
  */
-class MigrateFieldFormatterSettingsTest extends MigrateDrupalTestBase {
+class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
 
   /**
    * Modules to enable.

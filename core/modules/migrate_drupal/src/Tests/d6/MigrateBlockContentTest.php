@@ -12,14 +12,14 @@ use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade custom blocks.
  *
  * @group migrate_drupal
  */
-class MigrateBlockContentTest extends MigrateDrupalTestBase {
+class MigrateBlockContentTest extends MigrateDrupal6TestBase {
 
   static $modules = array('block', 'block_content');
 

@@ -8,14 +8,14 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Menu link migration.
  *
  * @group migrate_drupal
  */
-class MigrateMenuLinkTest extends MigrateDrupalTestBase {
+class MigrateMenuLinkTest extends MigrateDrupal6TestBase {
 
   /**
    * Modules to enable.

@@ -306,4 +306,14 @@ class MigrateDrupal6Test extends MigrateFullDrupalTestBase {
     return $classes;
   }
 
+  /**
+   * Returns the path to the dump directory.
+   *
+   * @return string
+   *   A string that represents the dump directory path.
+   */
+  protected function getDumpDirectory() {
+    return dirname(__DIR__) . '/Table/d6';
+  }
+
 }
