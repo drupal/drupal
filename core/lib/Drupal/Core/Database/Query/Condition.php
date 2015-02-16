@@ -278,8 +278,9 @@ class Condition implements ConditionInterface, \Countable {
    * @param $operator
    *   The condition operator, such as "IN", "BETWEEN", etc. Case-sensitive.
    *
-   * @return
-   *   The extra handling directives for the specified operator, or NULL.
+   * @return array
+   *   The extra handling directives for the specified operator or an empty
+   *   array if there are no extra handling directives.
    */
   protected function mapConditionOperator($operator) {
     // $specials does not use drupal_static as its value never changes.
