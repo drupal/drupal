@@ -31,6 +31,10 @@ use Drupal\Core\Session\AccountInterface;
  * @see plugin_api
  * @see views_display_extender_plugins
  */
+
+/**
+ * Provides an interface for Views display plugins.
+ */
 interface DisplayPluginInterface {
 
   public function initDisplay(ViewExecutable $view, array &$display, array &$options = NULL);
