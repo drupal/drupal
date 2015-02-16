@@ -8,12 +8,11 @@
 namespace Drupal\node;
 
 use Drupal\views\EntityViewsData;
-use Drupal\views\EntityViewsDataInterface;
 
 /**
  * Provides the views data for the node entity type.
  */
-class NodeViewsData extends EntityViewsData implements EntityViewsDataInterface {
+class NodeViewsData extends EntityViewsData {
 
   /**
    * {@inheritdoc}

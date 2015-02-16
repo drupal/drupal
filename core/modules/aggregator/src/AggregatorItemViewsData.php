@@ -8,12 +8,11 @@
 namespace Drupal\aggregator;
 
 use Drupal\views\EntityViewsData;
-use Drupal\views\EntityViewsDataInterface;
 
 /**
  * Provides the views data for the aggregator item entity type.
  */
-class AggregatorItemViewsData extends EntityViewsData implements EntityViewsDataInterface {
+class AggregatorItemViewsData extends EntityViewsData {
 
   /**
    * {@inheritdoc}
