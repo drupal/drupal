@@ -84,15 +84,9 @@ function template_preprocess_ckeditor_settings_toolbar(&$variables) {
       $value = '?';
     }
 
-    // Set additional attribute on the button if it can occur multiple times.
-    if (!empty($button['multiple'])) {
-      $button['attributes']['class'][] = 'ckeditor-multiple-button';
-    }
-
     // Build the button attributes.
     $attributes = array(
       'data-drupal-ckeditor-button-name' => $button['name'],
-      'class' => array('ckeditor-button'),
     );
     if (!empty($button['attributes'])) {
       $attributes = array_merge($attributes, $button['attributes']);
@@ -106,6 +100,11 @@ function template_preprocess_ckeditor_settings_toolbar(&$variables) {
     // If this button has group information, add it to the attributes.
     if (!empty($button['group'])) {
       $button_item['group'] = $button['group'];
+    }
+
+    // Set additional flag on the button if it can occur multiple times.
+    if (!empty($button['multiple'])) {
+      $button_item['multiple'] = true;
     }
 
     return $button_item;

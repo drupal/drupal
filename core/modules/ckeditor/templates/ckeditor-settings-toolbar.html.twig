@@ -28,7 +28,7 @@
           <label for="ckeditor-available-buttons">{{ 'Available buttons'|t }}</label>
           <ul id="ckeditor-available-buttons" class="ckeditor-buttons" role="form" data-drupal-ckeditor-button-sorting="source">
           {% for disabled_button in disabled_buttons %}
-             <li{{ disabled_button.attributes }}>{{ disabled_button.value }}</li>
+             <li{{ disabled_button.attributes.addClass('ckeditor-button') }}>{{ disabled_button.value }}</li>
           {% endfor %}
           </ul>
         </div>
@@ -37,7 +37,7 @@
           <label for="ckeditor-multiple-buttons">{{ 'Button divider'|t }}</label>
           <ul id="ckeditor-multiple-buttons" class="ckeditor-multiple-buttons" role="form" data-drupal-ckeditor-button-sorting="dividers">
           {% for multiple_button in multiple_buttons %}
-            <li{{ multiple_button.attributes }}>{{ multiple_button.value }}</li>
+            <li{{ multiple_button.attributes.addClass('ckeditor-multiple-button') }}>{{ multiple_button.value }}</li>
           {% endfor %}
           </ul>
         </div>
@@ -56,7 +56,7 @@
                 <h3 class="ckeditor-toolbar-group-name" id="ckeditor-toolbar-group-aria-label-for-{{ button_group.group_name_class }}">{{ group_name }}</h3>
                 <ul class="ckeditor-buttons ckeditor-toolbar-group-buttons" role="toolbar" data-drupal-ckeditor-button-sorting="target" aria-labelledby="ckeditor-toolbar-group-aria-label-for-{{ button_group.group_name_class }}">
                 {% for active_button in button_group.buttons %}
-                  <li{{ active_button.attributes }}>{{ active_button.value }}</li>
+                  <li{{ active_button.attributes.addClass(active_button.multiple ? 'ckeditor-multiple-button' : 'ckeditor-button') }}>{{ active_button.value }}</li>
                 {% endfor %}
                 </ul>
               </li>
