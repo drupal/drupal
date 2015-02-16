@@ -7,6 +7,7 @@ CONTENTS OF THIS FILE
  * Installation profiles
  * Appearance
  * Developing for Drupal
+ * More information
 
 ABOUT DRUPAL
 ------------
@@ -118,3 +119,21 @@ More about developing:
    https://api.drupal.org/api/drupal/8
  * Learn from documented Drupal API examples:
    https://www.drupal.org/project/examples
+
+MORE INFORMATION
+----------------
+
+ * See the Drupal.org online documentation:
+   https://www.drupal.org/documentation
+
+ * For a list of security announcements, see the "Security advisories" page at
+   https://www.drupal.org/security (available as an RSS feed). This page also
+   describes how to subscribe to these announcements via email.
+
+ * For information about the Drupal security process, or to find out how to
+   report a potential security issue to the Drupal security team, see the
+   "Security team" page at https://www.drupal.org/security-team
+
+ * For information about the wide range of available support options, visit
+   https://www.drupal.org and click on Community and Support in the top or
+   bottom navigation.
