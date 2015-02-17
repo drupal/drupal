@@ -105,9 +105,13 @@ class SwitchShortcutSet extends FormBase {
       $form['label'] = array(
         '#type' => 'textfield',
         '#title' => $this->t('Label'),
-        '#title_display' => 'invisible',
         '#description' => $this->t('The new set is created by copying items from your default shortcut set.'),
         '#access' => $add_access,
+        '#states' => array(
+          'visible' => array(
+            ':input[name="set"]' => array('value' => 'new'),
+          ),
+        ),
       );
       $form['id'] = array(
         '#type' => 'machine_name',
@@ -130,10 +134,6 @@ class SwitchShortcutSet extends FormBase {
         $default_set = $this->shortcutSetStorage->getDefaultSet($this->user);
         $form['new']['#description'] = $this->t('The new set is created by copying items from the %default set.', array('%default' => $default_set->label()));
       }
-
-      $form['#attached'] = array(
-        'library' => array('shortcut/drupal.shortcut.admin'),
-      );
 
       $form['actions'] = array('#type' => 'actions');
       $form['actions']['submit'] = array(

@@ -1,11 +1,3 @@
-drupal.shortcut.admin:
-  version: VERSION
-  js:
-    shortcut.admin.js: {}
-  dependencies:
-    - core/jquery
-    - core/drupal
-
 drupal.shortcut:
   version: VERSION
   css:
