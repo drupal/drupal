@@ -62,12 +62,7 @@
     <thead>
       <tr>
         {% for cell in header %}
-          {%
-            set cell_classes = [
-              cell.active_table_sort ? 'active',
-            ]
-          %}
-          <{{ cell.tag }}{{ cell.attributes.addClass(cell_classes) }}>
+          <{{ cell.tag }}{{ cell.attributes }}>
             {{- cell.content -}}
           </{{ cell.tag }}>
         {% endfor %}
@@ -78,12 +73,7 @@
   {% if rows %}
     <tbody>
       {% for row in rows %}
-        {%
-          set row_classes = [
-            not no_striping ? cycle(['odd', 'even'], loop.index0),
-          ]
-        %}
-        <tr{{ row.attributes.addClass(row_classes) }}>
+        <tr{{ row.attributes }}>
           {% for cell in row.cells %}
             <{{ cell.tag }}{{ cell.attributes }}>
               {{- cell.content -}}
@@ -94,8 +84,8 @@
     </tbody>
   {% elseif empty %}
     <tbody>
-      <tr class="odd">
-        <td colspan="{{ header_columns }}" class="empty message">{{ empty }}</td>
+      <tr>
+        <td colspan="{{ header_columns }}">{{ empty }}</td>
       </tr>
     </tbody>
   {% endif %}

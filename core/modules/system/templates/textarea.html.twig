@@ -15,13 +15,6 @@
  * @ingroup themeable
  */
 #}
-{%
-  set classes = [
-    'form-textarea',
-    resizable ? 'resize-' ~ resizable,
-    required ? 'required',
-  ]
-%}
-<div{{ wrapper_attributes.addClass('form-textarea-wrapper') }}>
-  <textarea{{ attributes.addClass(classes) }}>{{ value }}</textarea>
+<div{{ wrapper_attributes }}>
+  <textarea{{ attributes }}>{{ value }}</textarea>
 </div>

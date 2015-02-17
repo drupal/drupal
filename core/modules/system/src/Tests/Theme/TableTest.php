@@ -91,6 +91,11 @@ class TableTest extends KernelTestBase {
       '#rows' => array(),
       '#empty' => 'Empty row.',
     );
+
+    // Enable the Classy theme.
+    \Drupal::service('theme_handler')->install(['classy']);
+    $this->config('system.theme')->set('default', 'classy')->save();
+
     $this->render($table);
     $this->removeWhiteSpace();
     $this->assertRaw('<thead><tr><th>Header 1</th><th colspan="2">Header 2</th></tr>', 'Table header found.');
