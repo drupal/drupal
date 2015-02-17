@@ -257,10 +257,16 @@ class Connection extends DatabaseConnection {
   /**
    * SQLite compatibility implementation for the REGEXP SQL operator.
    *
-   * The REGEXP operator is a special syntax for the regexp() user function.
+   * The REGEXP operator is natively known, but not implemented by default.
+   *
+   * @see http://www.sqlite.org/lang_expr.html#regexp
    */
-  public static function sqlFunctionRegexp($string, $pattern) {
-    return preg_match('#' . str_replace('#', '\#', $pattern) . '#i', $string);
+  public static function sqlFunctionRegexp($pattern, $subject) {
+    // preg_quote() cannot be used here, since $pattern may contain reserved
+    // regular expression characters already (such as ^, $, etc). Therefore,
+    // use a rare character as PCRE delimiter.
+    $pattern = '#' . addcslashes($pattern, '#') . '#i';
+    return preg_match($pattern, $subject);
   }
 
   /**
