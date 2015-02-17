@@ -40,6 +40,13 @@ class ViewAjaxControllerTest extends UnitTestCase {
    */
   protected $viewAjaxController;
 
+  /**
+   * The mocked current path.
+   *
+   * @var \Drupal\Core\Path\CurrentPathStack|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $currentPath;
+
   protected function setUp() {
     $this->viewStorage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
     $this->executableFactory = $this->getMockBuilder('Drupal\views\ViewExecutableFactory')
@@ -52,8 +59,11 @@ class ViewAjaxControllerTest extends UnitTestCase {
         $elements['#attached'] = [];
         return isset($elements['#markup']) ? $elements['#markup'] : '';
       }));
+    $this->currentPath = $this->getMockBuilder('Drupal\Core\Path\CurrentPathStack')
+      ->disableOriginalConstructor()
+      ->getMock();
 
-    $this->viewAjaxController = new ViewAjaxController($this->viewStorage, $this->executableFactory, $this->renderer);
+    $this->viewAjaxController = new ViewAjaxController($this->viewStorage, $this->executableFactory, $this->renderer, $this->currentPath);
   }
 
   /**

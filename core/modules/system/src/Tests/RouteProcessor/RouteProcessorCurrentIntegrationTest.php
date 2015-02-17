@@ -96,6 +96,20 @@ class RouteProcessorCurrentIntegrationTest extends KernelTestBase {
     $request_stack->push($request);
     $request_context->fromRequest($request);
     $this->assertEqual('/node/add', \Drupal::url('<current>'));
+
+    // Test request without a found route. This happens for example on an
+    // not found exception page.
+    $server = [
+      'SCRIPT_NAME' => '/index.php',
+      'SCRIPT_FILENAME' => \Drupal::root() . '/index.php',
+      'SERVER_NAME' => 'http://www.example.com',
+    ];
+    $request = Request::create('/invalid-path', 'GET', [], [], [], $server);
+
+    $request_stack->push($request);
+    $request_context->fromRequest($request);
+    // In case we have no routing, the current route should point to the front.
+    $this->assertEqual('/', \Drupal::url('<current>'));
   }
 
 }

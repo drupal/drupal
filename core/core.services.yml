@@ -280,6 +280,9 @@ services:
   path.alias_manager:
     class: Drupal\Core\Path\AliasManager
     arguments: ['@path.alias_storage', '@path.alias_whitelist', '@language_manager', '@cache.data']
+  path.current:
+    class: Drupal\Core\Path\CurrentPathStack
+    arguments: ['@request_stack']
   http_client:
     class: Drupal\Core\Http\Client
     tags:
@@ -537,7 +540,7 @@ services:
     arguments: ['@current_route_match']
   router.route_provider:
     class: Drupal\Core\Routing\RouteProvider
-    arguments: ['@database', '@router.builder', '@state']
+    arguments: ['@database', '@router.builder', '@state', '@path.current']
     tags:
       - { name: event_subscriber }
       - { name: backend_overridable }
@@ -548,6 +551,7 @@ services:
       - { name: 'event_subscriber' }
   router.matcher.final_matcher:
     class: Drupal\Core\Routing\UrlMatcher
+    arguments: ['@path.current']
   router.matcher:
     class: Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher
     arguments: ['@router.route_provider']
@@ -840,7 +844,7 @@ services:
     class: Drupal\Core\EventSubscriber\PathSubscriber
     tags:
       - { name: event_subscriber }
-    arguments: ['@path.alias_manager', '@path_processor_manager']
+    arguments: ['@path.alias_manager', '@path_processor_manager', '@path.current']
   finish_response_subscriber:
     class: Drupal\Core\EventSubscriber\FinishResponseSubscriber
     tags:

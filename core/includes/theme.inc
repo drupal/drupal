@@ -1315,8 +1315,8 @@ function template_preprocess_html(&$variables) {
     $variables['root_path'] = FALSE;
   }
   else {
-    $system_path = \Drupal::request()->attributes->get('_system_path');
-    $variables['root_path'] = explode('/', $system_path)[0];
+    $system_path = \Drupal::service('path.current')->getPath();
+    $variables['root_path'] = explode('/', $system_path)[1];
   }
 
   $site_config = \Drupal::config('system.site');

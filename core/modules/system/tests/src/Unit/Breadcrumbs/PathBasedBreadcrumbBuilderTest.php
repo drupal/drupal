@@ -77,6 +77,13 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
   protected $pathProcessor;
 
   /**
+   * The mocked current path.
+   *
+   * @var \Drupal\Core\Path\CurrentPathStack|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $currentPath;
+
+  /**
    * {@inheritdoc}
    *
    * @covers ::__construct
@@ -94,6 +101,10 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
     $this->accessManager = $this->getMock('\Drupal\Core\Access\AccessManagerInterface');
     $this->titleResolver = $this->getMock('\Drupal\Core\Controller\TitleResolverInterface');
     $this->currentUser = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $this->currentPath = $this->getMockBuilder('Drupal\Core\Path\CurrentPathStack')
+      ->disableOriginalConstructor()
+      ->getMock();
+
     $this->builder = new TestPathBasedBreadcrumbBuilder(
       $this->context,
       $this->accessManager,
@@ -101,7 +112,8 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
       $this->pathProcessor,
       $config_factory,
       $this->titleResolver,
-      $this->currentUser
+      $this->currentUser,
+      $this->currentPath
     );
 
     $this->builder->setStringTranslation($this->getStringTranslationStub());

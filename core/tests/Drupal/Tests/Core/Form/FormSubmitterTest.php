@@ -102,17 +102,20 @@ class FormSubmitterTest extends UnitTestCase {
    */
   public function testRedirectWithNull() {
     $form_submitter = $this->getFormSubmitter();
-    $this->urlGenerator->expects($this->once())
-      ->method('generateFromPath')
-      ->with(NULL, array('query' => array(), 'absolute' => TRUE))
-      ->willReturn('<front>');
 
     $form_state = $this->getMock('Drupal\Core\Form\FormStateInterface');
     $form_state->expects($this->once())
       ->method('getRedirect')
       ->willReturn(NULL);
+
+    $this->urlGenerator->expects($this->once())
+      ->method('generateFromRoute')
+      ->with('<current>', [], ['query' => [], 'absolute' => TRUE])
+      ->willReturn('http://localhost/test-path');
+
     $redirect = $form_submitter->redirectForm($form_state);
-    $this->assertSame('<front>', $redirect->getTargetUrl());
+    // If we have no redirect, we redirect to the current URL.
+    $this->assertSame('http://localhost/test-path', $redirect->getTargetUrl());
     $this->assertSame(303, $redirect->getStatusCode());
   }
 
@@ -234,7 +237,7 @@ class FormSubmitterTest extends UnitTestCase {
    */
   protected function getFormSubmitter() {
     $request_stack = new RequestStack();
-    $request_stack->push(new Request());
+    $request_stack->push(Request::create('/test-path'));
     return $this->getMockBuilder('Drupal\Core\Form\FormSubmitter')
       ->setConstructorArgs(array($request_stack, $this->urlGenerator))
       ->setMethods(array('batchGet', 'drupalInstallationAttempted'))

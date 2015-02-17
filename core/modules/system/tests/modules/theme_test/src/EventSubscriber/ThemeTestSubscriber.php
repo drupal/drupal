@@ -8,6 +8,7 @@
 namespace Drupal\theme_test\EventSubscriber;
 
 use Drupal\Core\Url;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -24,6 +25,21 @@ class ThemeTestSubscriber implements EventSubscriberInterface {
    */
   protected $container;
 
+  /**
+   * The current route match.
+   *
+   * @var \Drupal\Core\Routing\RouteMatchInterface
+   */
+  protected $currentRouteMatch;
+
+  /**
+   * Constructs a new ThemeTestSubscriber.
+   *
+   * @param \Drupal\Core\Routing\RouteMatchInterface $current_route_match
+   */
+  public function __construct(RouteMatchInterface $current_route_match) {
+    $this->currentRouteMatch = $current_route_match;
+  }
 
   /**
    * Generates themed output early in a page request.
@@ -31,9 +47,7 @@ class ThemeTestSubscriber implements EventSubscriberInterface {
    * @see \Drupal\system\Tests\Theme\ThemeEarlyInitializationTest::testRequestListener()
    */
   public function onRequest(GetResponseEvent $event) {
-    $request = $event->getRequest();
-    $current_path = $request->attributes->get('_system_path');
-    if ($current_path == 'theme-test/request-listener') {
+    if ($this->currentRouteMatch->getRouteName() === 'theme_test.request_listener') {
       // First, force the theme registry to be rebuilt on this page request.
       // This allows us to test a full initialization of the theme system in
       // the code below.
@@ -56,9 +70,13 @@ class ThemeTestSubscriber implements EventSubscriberInterface {
    * Ensures that the theme registry was not initialized.
    */
   public function onView(GetResponseEvent $event) {
-    $request = $event->getRequest();
-    $current_path = $request->attributes->get('_system_path');
-    if (strpos($current_path, 'user/autocomplete') === 0) {
+    $current_route = $this->currentRouteMatch->getRouteName();
+    $user_autcomplete_route = array(
+      'user.autocomplete',
+      'user.autocomplete_anonymous',
+    );
+
+    if (in_array($current_route, $user_autcomplete_route)) {
       if ($this->container->initialized('theme.registry')) {
         throw new \Exception('registry initialized');
       }

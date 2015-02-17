@@ -217,6 +217,11 @@ class ElementsTableSelectTest extends WebTestBase {
     $form['#token'] = FALSE;
 
     $edit['form_id'] = $form_id;
+
+    // Disable page redirect for forms submitted programmatically. This is a
+    // solution to skip the redirect step (there are no pages, then the redirect
+    // isn't possible).
+    $form_state->disableRedirect();
     $form_state->setUserInput($edit);
     $form_state->setFormObject(new StubForm($form_id, $form));
 

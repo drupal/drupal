@@ -36,12 +36,18 @@ class RouteProcessorCurrent implements OutboundRouteProcessorInterface {
    * {@inheritdoc}
    */
   public function processOutbound($route_name, Route $route, array &$parameters) {
-    if (($route_name === '<current>') && ($current_route = $this->routeMatch->getRouteObject())) {
-      $route->setPath($current_route->getPath());
-      $route->setRequirements($current_route->getRequirements());
-      $route->setOptions($current_route->getOptions());
-      $route->setDefaults($current_route->getDefaults());
-      $parameters = array_merge($parameters, $this->routeMatch->getRawParameters()->all());
+    if ($route_name === '<current>') {
+      if ($current_route = $this->routeMatch->getRouteObject()) {
+        $route->setPath($current_route->getPath());
+        $route->setRequirements($current_route->getRequirements());
+        $route->setOptions($current_route->getOptions());
+        $route->setDefaults($current_route->getDefaults());
+        $parameters = array_merge($parameters, $this->routeMatch->getRawParameters()->all());
+      }
+      else {
+        // If we have no current route match available, point to the frontpage.
+        $route->setPath('/');
+      }
     }
   }
 

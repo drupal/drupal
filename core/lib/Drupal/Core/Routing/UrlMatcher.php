@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Routing;
 
+use Drupal\Core\Path\CurrentPathStack;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Cmf\Component\Routing\NestedMatcher\UrlMatcher as BaseUrlMatcher;
@@ -17,28 +18,32 @@ use Symfony\Cmf\Component\Routing\NestedMatcher\UrlMatcher as BaseUrlMatcher;
 class UrlMatcher extends BaseUrlMatcher {
 
   /**
+   * The current path.
+   *
+   * @var \Drupal\Core\Path\CurrentPathStack
+   */
+  protected $currentPath;
+
+  /**
    * Constructs a new UrlMatcher.
    *
    * The parent class has a constructor we need to skip, so just override it
    * with a no-op.
+   *
+   * @param \Drupal\Core\Path\CurrentPathStack $current_path
+   *   The current path.
    */
-  public function __construct() {}
+  public function __construct(CurrentPathStack $current_path) {
+    $this->currentPath = $current_path;
+  }
 
   public function finalMatch(RouteCollection $collection, Request $request) {
     $this->routes = $collection;
     $context = new RequestContext();
     $context->fromRequest($request);
     $this->setContext($context);
-    if ($request->attributes->has('_system_path')) {
-      // _system_path never has leading or trailing slashes.
-      $path = '/' . $request->attributes->get('_system_path');
-    }
-    else {
-      // getPathInfo() always has leading slash, and might or might not have a
-      // trailing slash.
-      $path = rtrim($request->getPathInfo(), '/');
-    }
-    return $this->match($path);
+
+    return $this->match($this->currentPath->getPath($request));
   }
 
 }

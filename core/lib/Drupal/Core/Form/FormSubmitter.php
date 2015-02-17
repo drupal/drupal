@@ -137,12 +137,7 @@ class FormSubmitter implements FormSubmitterInterface {
     // If no redirect was specified, redirect to the current path.
     elseif ($redirect === NULL) {
       $request = $this->requestStack->getCurrentRequest();
-      // @todo Remove dependency on the internal _system_path attribute:
-      //   https://www.drupal.org/node/2293521.
-      $url = $this->urlGenerator->generateFromPath($request->attributes->get('_system_path'), array(
-        'query' => $request->query->all(),
-        'absolute' => TRUE,
-      ));
+      $url = $this->urlGenerator->generateFromRoute('<current>', [], ['query' => $request->query->all(), 'absolute' => TRUE]);
     }
 
     if ($url) {

@@ -11,6 +11,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Condition\ConditionPluginBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Path\AliasManagerInterface;
+use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Path\PathMatcherInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -49,6 +50,13 @@ class RequestPath extends ConditionPluginBase implements ContainerFactoryPluginI
   protected $requestStack;
 
   /**
+   * The current path.
+   *
+   * @var \Drupal\Core\Path\CurrentPathStack
+   */
+  protected $currentPath;
+
+  /**
    * Constructs a RequestPath condition plugin.
    *
    * @param \Drupal\Core\Path\AliasManagerInterface $alias_manager
@@ -57,6 +65,8 @@ class RequestPath extends ConditionPluginBase implements ContainerFactoryPluginI
    *   The path matcher service.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
+   * @param \Drupal\Core\Path\CurrentPathStack $current_path
+   *   The current path.
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
    * @param string $plugin_id
@@ -64,11 +74,12 @@ class RequestPath extends ConditionPluginBase implements ContainerFactoryPluginI
    * @param array $plugin_definition
    *   The plugin implementation definition.
    */
-  public function __construct(AliasManagerInterface $alias_manager, PathMatcherInterface $path_matcher, RequestStack $request_stack, array $configuration, $plugin_id, array $plugin_definition) {
+  public function __construct(AliasManagerInterface $alias_manager, PathMatcherInterface $path_matcher, RequestStack $request_stack, CurrentPathStack $current_path, array $configuration, $plugin_id, array $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->aliasManager = $alias_manager;
     $this->pathMatcher = $path_matcher;
     $this->requestStack = $request_stack;
+    $this->currentPath = $current_path;
   }
 
   /**
@@ -79,6 +90,7 @@ class RequestPath extends ConditionPluginBase implements ContainerFactoryPluginI
       $container->get('path.alias_manager'),
       $container->get('path.matcher'),
       $container->get('request_stack'),
+      $container->get('path.current'),
       $configuration,
       $plugin_id,
       $plugin_definition);
@@ -141,9 +153,7 @@ class RequestPath extends ConditionPluginBase implements ContainerFactoryPluginI
 
     $request = $this->requestStack->getCurrentRequest();
     // Compare the lowercase path alias (if any) and internal path.
-    // @todo Remove dependency on the internal _system_path attribute:
-    //   https://www.drupal.org/node/2293581.
-    $path = $request->attributes->get('_system_path');
+    $path = trim($this->currentPath->getPath($request), '/');
     $path_alias = Unicode::strtolower($this->aliasManager->getAliasByPath($path));
 
     return $this->pathMatcher->matchPath($path_alias, $pages) || (($path != $path_alias) && $this->pathMatcher->matchPath($path, $pages));

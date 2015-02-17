@@ -8,6 +8,7 @@
 namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Core\Path\AliasManagerInterface;
+use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -34,9 +35,25 @@ class PathSubscriber implements EventSubscriberInterface {
    */
   protected $pathProcessor;
 
-  public function __construct(AliasManagerInterface $alias_manager, InboundPathProcessorInterface $path_processor) {
+  /**
+   * The current path.
+   *
+   * @var \Drupal\Core\Path\CurrentPathStack
+   */
+  protected $currentPath;
+
+  /**
+   * Constructs a new PathSubscriber instance.
+   *
+   * @param \Drupal\Core\Path\AliasManagerInterface $alias_manager
+   * @param \Drupal\Core\PathProcessor\InboundPathProcessorInterface $path_processor
+   * @param \Drupal\Core\Path\CurrentPathStack $current_path
+   *   The current path.
+   */
+  public function __construct(AliasManagerInterface $alias_manager, InboundPathProcessorInterface $path_processor, CurrentPathStack $current_path) {
     $this->aliasManager = $alias_manager;
     $this->pathProcessor = $path_processor;
+    $this->currentPath = $current_path;
   }
 
   /**
@@ -49,7 +66,7 @@ class PathSubscriber implements EventSubscriberInterface {
     $request = $event->getRequest();
     $path = trim($request->getPathInfo(), '/');
     $path = $this->pathProcessor->processInbound($path, $request);
-    $request->attributes->set('_system_path', $path);
+    $this->currentPath->setPath('/' . $path, $request);
 
     // Set the cache key on the alias manager cache decorator.
     if ($event->getRequestType() == HttpKernelInterface::MASTER_REQUEST) {

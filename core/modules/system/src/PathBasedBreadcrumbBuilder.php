@@ -14,6 +14,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Link;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
+use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\Routing\RequestContext;
 use Drupal\Core\Routing\RouteMatch;
@@ -99,8 +100,10 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    *   The title resolver service.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user object.
+   * @param \Drupal\Core\Path\CurrentPathStack $current_path
+   *   The current path.
    */
-  public function __construct(RequestContext $context, AccessManagerInterface $access_manager, RequestMatcherInterface $router, InboundPathProcessorInterface $path_processor, ConfigFactoryInterface $config_factory, TitleResolverInterface $title_resolver, AccountInterface $current_user) {
+  public function __construct(RequestContext $context, AccessManagerInterface $access_manager, RequestMatcherInterface $router, InboundPathProcessorInterface $path_processor, ConfigFactoryInterface $config_factory, TitleResolverInterface $title_resolver, AccountInterface $current_user, CurrentPathStack $current_path) {
     $this->context = $context;
     $this->accessManager = $access_manager;
     $this->router = $router;
@@ -108,6 +111,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     $this->config = $config_factory->get('system.site');
     $this->titleResolver = $title_resolver;
     $this->currentUser = $current_user;
+    $this->currentPath = $current_path;
   }
 
   /**
@@ -191,7 +195,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       // This resolves to the front page, which we already add.
       return NULL;
     }
-    $request->attributes->set('_system_path', $processed);
+    $this->currentPath->setPath('/' . $processed, $request);
     // Attempt to match this path to provide a fully built request.
     try {
       $request->attributes->add($this->router->matchRequest($request));

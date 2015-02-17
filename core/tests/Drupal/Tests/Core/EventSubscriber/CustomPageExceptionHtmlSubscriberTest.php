@@ -60,7 +60,7 @@ class CustomPageExceptionHtmlSubscriberTest extends UnitTestCase {
   /**
    * The tested custom page exception subscriber.
    *
-   * @var \Drupal\Core\EventSubscriber\CustomPageExceptionHtmlSubscriber
+   * @var \Drupal\Core\EventSubscriber\CustomPageExceptionHtmlSubscriber|\Drupal\Tests\Core\EventSubscriber\TestCustomPageExceptionHtmlSubscriber
    */
   protected $customPageSubscriber;
 
@@ -73,7 +73,7 @@ class CustomPageExceptionHtmlSubscriberTest extends UnitTestCase {
     $this->aliasManager = $this->getMock('Drupal\Core\Path\AliasManagerInterface');
     $this->kernel = $this->getMock('Symfony\Component\HttpKernel\HttpKernelInterface');
     $this->logger = $this->getMock('Psr\Log\LoggerInterface');
-    $this->customPageSubscriber = new CustomPageExceptionHtmlSubscriber($this->configFactory, $this->aliasManager, $this->kernel, $this->logger);
+    $this->customPageSubscriber = new TestCustomPageExceptionHtmlSubscriber($this->configFactory, $this->aliasManager, $this->kernel, $this->logger);
 
     // You can't create an exception in PHP without throwing it. Store the
     // current error_log, and disable it temporarily.
@@ -124,7 +124,6 @@ class CustomPageExceptionHtmlSubscriberTest extends UnitTestCase {
     $this->setupStubAliasManager();
 
     $request = Request::create('/test', 'GET', array('name' => 'druplicon', 'pass' => '12345'));
-    $request->attributes->set('_system_path', 'test');
 
     $this->kernel->expects($this->once())->method('handle')->will($this->returnCallback(function (Request $request) {
       return new Response($request->getMethod() . ' ' . UrlHelper::buildQuery($request->query->all()));
@@ -136,6 +135,17 @@ class CustomPageExceptionHtmlSubscriberTest extends UnitTestCase {
     $response = $event->getResponse();
     $result = $response->getContent() . " " . UrlHelper::buildQuery($request->request->all());
     $this->assertEquals('GET name=druplicon&pass=12345&destination=test&_exception_statuscode=404 ', $result);
+  }
+
+}
+
+class TestCustomPageExceptionHtmlSubscriber extends CustomPageExceptionHtmlSubscriber {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function drupalGetDestination() {
+    return ['destination' => 'test'];
   }
 
 }

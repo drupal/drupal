@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\EventSubscriber;
 
+use Drupal\Core\Url;
 use Drupal\Core\Utility\Error;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -69,7 +70,7 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
    *   The event to process.
    */
   public function on403(GetResponseForExceptionEvent $event) {
-    $this->makeSubrequest($event, 'system/403', Response::HTTP_FORBIDDEN);
+    $this->makeSubrequest($event, Url::fromRoute('system.403')->toString(), Response::HTTP_FORBIDDEN);
   }
 
   /**
@@ -79,7 +80,7 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
    *   The event to process.
    */
   public function on404(GetResponseForExceptionEvent $event) {
-    $this->makeSubrequest($event, 'system/404', Response::HTTP_NOT_FOUND);
+    $this->makeSubrequest($event, Url::fromRoute('system.404')->toString(), Response::HTTP_NOT_FOUND);
   }
 
   /**
@@ -87,24 +88,26 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
    *
    * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
    *   The event to process
-   * @param string $path
-   *   The path to which to make a subrequest for this error message.
+   * @param string $url
+   *   The path/url to which to make a subrequest for this error message.
    * @param int $status_code
    *   The status code for the error being handled.
    */
-  protected function makeSubrequest(GetResponseForExceptionEvent $event, $path, $status_code) {
+  protected function makeSubrequest(GetResponseForExceptionEvent $event, $url, $status_code) {
     $request = $event->getRequest();
 
-    // @todo Remove dependency on the internal _system_path attribute:
-    //   https://www.drupal.org/node/2293523.
-    $system_path = $request->attributes->get('_system_path');
+    if (!($url && $url[0] == '/')) {
+      $url = $request->getBasePath() . '/' . $url;
+    }
 
-    if ($path && $path != $system_path) {
+    $current_url = $request->getBasePath() . $request->getPathInfo();
+
+    if ($url != $request->getBasePath() . '/' && $url != $current_url) {
       if ($request->getMethod() === 'POST') {
-        $sub_request = Request::create($request->getBaseUrl() . '/' . $path, 'POST', ['destination' => $system_path, '_exception_statuscode' => $status_code] + $request->request->all(), $request->cookies->all(), [], $request->server->all());
+        $sub_request = Request::create($url, 'POST', $this->drupalGetDestination() + ['_exception_statuscode' => $status_code] + $request->request->all(), $request->cookies->all(), [], $request->server->all());
       }
       else {
-        $sub_request = Request::create($request->getBaseUrl() . '/' . $path, 'GET', $request->query->all() + ['destination' => $system_path, '_exception_statuscode' => $status_code], $request->cookies->all(), [], $request->server->all());
+        $sub_request = Request::create($url, 'GET', $request->query->all() + $this->drupalGetDestination() + ['_exception_statuscode' => $status_code], $request->cookies->all(), [], $request->server->all());
       }
 
       try {
@@ -128,6 +131,13 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
         $this->logger->log($error['severity_level'], '%type: !message in %function (line %line of %file).', $error);
       }
     }
+  }
+
+  /**
+   * Wraps drupal_get_destination().
+   */
+  protected function drupalGetDestination() {
+    return drupal_get_destination();
   }
 
 }

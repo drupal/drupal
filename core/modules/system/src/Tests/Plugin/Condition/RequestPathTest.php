@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Plugin\Condition;
 
+use Drupal\Core\Path\CurrentPathStack;
 use Drupal\simpletest\KernelTestBase;
 use Drupal\system\Tests\Routing\MockAliasManager;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,6 +50,13 @@ class RequestPathTest extends KernelTestBase {
   public static $modules = array('system', 'user', 'field', 'path');
 
   /**
+   * The current path.
+   *
+   * @var \Drupal\Core\Path\CurrentPathStack|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $currentPath;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -65,6 +73,9 @@ class RequestPathTest extends KernelTestBase {
     // Set the test request stack in the container.
     $this->requestStack = new RequestStack();
     $this->container->set('request_stack', $this->requestStack);
+
+    $this->currentPath = new CurrentPathStack($this->requestStack);
+    $this->container->set('path.current', $this->currentPath);
   }
 
   /**
@@ -78,7 +89,6 @@ class RequestPathTest extends KernelTestBase {
     $pages = "my/pass/page\r\nmy/pass/page2\r\nfoo";
 
     $request = Request::create('/my/pass/page2');
-    $request->attributes->set('_system_path', 'my/pass/page2');
     $this->requestStack->push($request);
 
     /* @var \Drupal\system\Plugin\Condition\RequestPath $condition */
@@ -91,7 +101,7 @@ class RequestPathTest extends KernelTestBase {
     $this->assertEqual($condition->summary(), 'Return true on the following pages: my/pass/page, my/pass/page2, foo', 'The condition summary matches for a standard path');
 
     // Test an aliased path.
-    $request->attributes->set('_system_path', 'my/aliased/page');
+    $this->currentPath->setPath('/my/aliased/page', $request);
     $this->requestStack->pop();
     $this->requestStack->push($request);
 
@@ -102,7 +112,7 @@ class RequestPathTest extends KernelTestBase {
 
     // Test a wildcard path.
     $this->aliasManager->addAlias('my/pass/page3', 'my/pass/page3');
-    $request->attributes->set('_system_path', 'my/pass/page3');
+    $this->currentPath->setPath('/my/pass/page3', $request);
     $this->requestStack->pop();
     $this->requestStack->push($request);
 
@@ -112,9 +122,9 @@ class RequestPathTest extends KernelTestBase {
     $this->assertEqual($condition->summary(), 'Return true on the following pages: my/pass/*', 'The condition summary matches for a wildcard path');
 
     // Test a missing path.
-    $request->attributes->set('_system_path', 'my/fail/page4');
     $this->requestStack->pop();
     $this->requestStack->push($request);
+    $this->currentPath->setPath('/my/fail/page4', $request);
 
     $condition->setConfig('pages', 'my/pass/*');
 
