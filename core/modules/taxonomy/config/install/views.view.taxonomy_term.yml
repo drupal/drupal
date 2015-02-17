@@ -28,8 +28,9 @@ display:
           replica: false
           query_tags: {  }
       access:
-        type: none
-        options: {  }
+        type: perm
+        options:
+          perm: 'access content'
       cache:
         type: none
         options: {  }

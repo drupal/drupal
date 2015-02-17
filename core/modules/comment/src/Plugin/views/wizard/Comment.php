@@ -71,6 +71,7 @@ class Comment extends WizardPluginBase {
 
     // Add permission-based access control.
     $display_options['access']['type'] = 'perm';
+    $display_options['access']['options']['perm'] = 'access comments';
 
     // Add a relationship to nodes.
     $display_options['relationships']['node']['id'] = 'node';

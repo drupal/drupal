@@ -113,7 +113,13 @@ class AggregatorRenderingTest extends AggregatorTestBase {
     $cache_tags = explode(' ', $cache_tags_header);
     $this->assertTrue(in_array('aggregator_feed:' . $feed->id(), $cache_tags));
 
-    // Check the rss aggregator page.
+    // Check the rss aggregator page as anonymous user.
+    $this->drupalLogout();
+    $this->drupalGet('aggregator/rss');
+    $this->assertResponse(403);
+
+    // Check the rss aggregator page as admin.
+    $this->drupalLogin($this->adminUser);
     $this->drupalGet('aggregator/rss');
     $this->assertResponse(200);
     $this->assertEqual($this->drupalGetHeader('Content-type'), 'application/rss+xml; charset=utf-8');

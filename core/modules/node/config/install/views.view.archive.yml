@@ -28,8 +28,9 @@ display:
           query_tags: {  }
       title: 'Monthly archive'
       access:
-        type: none
-        options: {  }
+        type: perm
+        options:
+          perm: 'access content'
       cache:
         type: none
         options: {  }

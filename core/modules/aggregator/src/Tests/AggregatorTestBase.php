@@ -17,6 +17,13 @@ use Drupal\aggregator\FeedInterface;
 abstract class AggregatorTestBase extends WebTestBase {
 
   /**
+   * A user with permission to administer feeds and create content.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+  protected $adminUser;
+
+  /**
    * Modules to install.
    *
    * @var array
@@ -31,8 +38,8 @@ abstract class AggregatorTestBase extends WebTestBase {
       $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
     }
 
-    $web_user = $this->drupalCreateUser(array('access administration pages', 'administer news feeds', 'access news feeds', 'create article content'));
-    $this->drupalLogin($web_user);
+    $this->adminUser = $this->drupalCreateUser(array('access administration pages', 'administer news feeds', 'access news feeds', 'create article content'));
+    $this->drupalLogin($this->adminUser);
   }
 
   /**

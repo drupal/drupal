@@ -19,8 +19,9 @@ display:
     position: 0
     display_options:
       access:
-        type: none
-        options: {  }
+        type: perm
+        options:
+          perm: 'access news feeds'
       cache:
         type: none
         options: {  }

@@ -26,4 +26,17 @@ class Watchdog extends WizardPluginBase {
    */
   protected $createdColumn = 'timestamp';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function defaultDisplayOptions() {
+    $display_options = parent::defaultDisplayOptions();
+
+    // Add permission-based access control.
+    $display_options['access']['type'] = 'perm';
+    $display_options['access']['options']['perm'] = 'access site reports';
+
+    return $display_options;
+  }
+
 }

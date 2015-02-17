@@ -9,7 +9,6 @@ namespace Drupal\taxonomy\Tests\Views;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Core\Language\Language;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\user\Entity\Role;
 use Drupal\views\Views;
@@ -156,6 +155,16 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
     // We only want to check the no. of conditions in the query.
     unset($condition['#conjunction']);
     $this->assertEqual(1, count($condition));
+
+    // Clear permissions for anonymous users to check access for default views.
+    Role::load(DRUPAL_ANONYMOUS_RID)->revokePermission('access content')->save();
+
+    // Test the default views disclose no data by default.
+    $this->drupalLogout();
+    $this->drupalGet('taxonomy/term/' . $term->id());
+    $this->assertResponse(403);
+    $this->drupalGet('taxonomy/term/' . $term->id() . '/feed');
+    $this->assertResponse(403);
   }
 
 }

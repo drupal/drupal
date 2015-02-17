@@ -29,8 +29,9 @@ display:
           query_tags: {  }
       use_ajax: true
       access:
-        type: none
-        options: {  }
+        type: perm
+        options:
+          perm: 'access content'
       cache:
         type: none
         options: {  }
