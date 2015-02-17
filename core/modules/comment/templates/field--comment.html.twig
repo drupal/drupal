@@ -26,14 +26,6 @@
  * @see comment_preprocess_field()
  */
 #}
-{% set field_name_class = field_name|clean_class %}
-
-{%
-  set title_classes = [
-    'title',
-    label_display == 'visually_hidden' ? 'visually-hidden',
-  ]
-%}
 <section{{ attributes }}>
   {% if comments and not label_hidden %}
     {{ title_prefix }}

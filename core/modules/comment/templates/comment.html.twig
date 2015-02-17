@@ -87,7 +87,7 @@
 
   <footer>
     {{ user_picture }}
-    <p class="submitted">{{ submitted }}</p>
+    <p>{{ submitted }}</p>
 
     {#
       Indicate the semantic relationship between parent and child comments
@@ -95,7 +95,7 @@
       reader without this information.
     #}
     {% if parent %}
-      <p class="parent visually-hidden">{{ parent }}</p>
+      <p class="visually-hidden">{{ parent }}</p>
     {% endif %}
 
     {{ permalink }}
@@ -105,7 +105,7 @@
     {{ content|without('links') }}
 
     {% if signature %}
-      <div class="user-signature">
+      <div>
         {{ signature }}
       </div>
     {% endif %}
