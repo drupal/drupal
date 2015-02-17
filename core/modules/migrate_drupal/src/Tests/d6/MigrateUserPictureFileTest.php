@@ -58,12 +58,14 @@ class MigrateUserPictureFileTest extends MigrateDrupal6TestBase {
     $file = array_shift($files);
     $this->assertIdentical($file->getFilename(), 'image-test.jpg');
     $this->assertIdentical($file->getFileUri(), 'public://image-test.jpg');
+    $this->assertIdentical($file->getOwnerId(), '2');
     $this->assertIdentical($file->getSize(), '1901');
     $this->assertIdentical($file->getMimeType(), 'image/jpeg');
 
     $file = array_shift($files);
     $this->assertIdentical($file->getFilename(), 'image-test.png');
     $this->assertIdentical($file->getFileUri(), 'public://image-test.png');
+    $this->assertIdentical($file->getOwnerId(), '8');
     $this->assertFalse($files);
   }
 

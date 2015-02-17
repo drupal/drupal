@@ -8,6 +8,7 @@ source:
     is_public: true
 process:
   filename: filename
+  uid: uid
   uri:
     plugin: file_uri
     source:
