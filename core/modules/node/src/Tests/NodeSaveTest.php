@@ -49,7 +49,11 @@ class NodeSaveTest extends NodeTestBase {
    */
   function testImport() {
     // Node ID must be a number that is not in the database.
-    $max_nid = db_query('SELECT MAX(nid) FROM {node}')->fetchField();
+    $nids = \Drupal::entityManager()->getStorage('node')->getQuery()
+      ->sort('nid', 'DESC')
+      ->range(0, 1)
+      ->execute();
+    $max_nid = reset($nids);
     $test_nid = $max_nid + mt_rand(1000, 1000000);
     $title = $this->randomMachineName(8);
     $node = array(
