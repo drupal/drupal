@@ -207,7 +207,7 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
           $entity_links['comment__' . $field_name]['#post_render_cache']['history_attach_timestamp'] = array(
             array('node_id' => $entity->id()),
           );
-          $entity_links['comment__' . $field_name]['#post_render_cache']['Drupal\comment\CommentViewBuilder::attachNewCommentsLinkMetadata'] = array(
+          $entity_links['comment__' . $field_name]['#post_render_cache']['comment.post_render_cache:attachNewCommentsLinkMetadata'] = array(
             array(
               'entity_type' => $entity->getEntityTypeId(),
               'entity_id' => $entity->id(),
