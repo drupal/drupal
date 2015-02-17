@@ -12,7 +12,6 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\Core\Entity\Entity;
 use Drupal\Core\Config\ConfigDuplicateUUIDException;
-use Drupal\Core\Config\Entity\ThirdPartySettingsTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
