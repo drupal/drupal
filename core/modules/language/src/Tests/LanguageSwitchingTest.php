@@ -161,7 +161,7 @@ class LanguageSwitchingTest extends WebTestBase {
   }
 
   /**
-   * Test languge switcher links for domain based negotiation
+   * Test language switcher links for domain based negotiation.
    */
   function testLanguageBlockWithDomain() {
     // Add the Italian language.

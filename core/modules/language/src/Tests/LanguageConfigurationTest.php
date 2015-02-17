@@ -83,13 +83,16 @@ class LanguageConfigurationTest extends WebTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save configuration'));
     $this->assertFieldByXPath('//input[@name="prefix[fr]"]', 'french', 'French path prefix has changed.');
 
-    // Check that prefix of non default language cannot be changed to
-    // empty string.
+
+    // Change default negotiation language.
+    $this->config('language.negotiation')->set('selected_langcode', 'fr')->save();
+    // Check that the prefix of a language that is not the negotiation one
+    // cannot be changed to empty string.
     $edit = array(
       'prefix[en]' => '',
     );
     $this->drupalPostForm(NULL, $edit, t('Save configuration'));
-    $this->assertText(t('The prefix may only be left blank for the default language.'), 'English prefix cannot be changed to empty string.');
+    $this->assertText(t('The prefix may only be left blank for the selected negotiation fallback language.'));
 
     //  Check that prefix cannot be changed to contain a slash.
     $edit = array(

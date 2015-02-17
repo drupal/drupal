@@ -9,6 +9,7 @@ namespace Drupal\language\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -85,7 +86,7 @@ class NegotiationUrlForm extends ConfigFormBase {
       '#tree' => TRUE,
       '#title' => $this->t('Path prefix configuration'),
       '#open' => TRUE,
-      '#description' => $this->t('Language codes or other custom text to use as a path prefix for URL language detection. For the default language, this value may be left blank. <strong>Modifying this value may break existing URLs. Use with caution in a production environment.</strong> Example: Specifying "deutsch" as the path prefix code for German results in URLs like "example.com/deutsch/contact".'),
+      '#description' => $this->t('Language codes or other custom text to use as a path prefix for URL language detection. For the selected fallback language, this value may be left blank. <strong>Modifying this value may break existing URLs. Use with caution in a production environment.</strong> Example: Specifying "deutsch" as the path prefix code for German results in URLs like "example.com/deutsch/contact".'),
       '#states' => array(
         'visible' => array(
           ':input[name="language_negotiation_url_part"]' => array(
@@ -142,14 +143,17 @@ class NegotiationUrlForm extends ConfigFormBase {
 
     // Count repeated values for uniqueness check.
     $count = array_count_values($form_state->getValue('prefix'));
+    $default_langcode = $this->config('language.negotiation')->get('selected_langcode');
+    if ($default_langcode == LanguageInterface::LANGCODE_SITE_DEFAULT) {
+      $default_langcode = $this->languageManager->getDefaultLanguage()->getId();
+    }
     foreach ($languages as $langcode => $language) {
       $value = $form_state->getValue(array('prefix', $langcode));
-
       if ($value === '') {
-        if (!$language->isDefault() && $form_state->getValue('language_negotiation_url_part') == LanguageNegotiationUrl::CONFIG_PATH_PREFIX) {
+        if (!($default_langcode == $langcode) && $form_state->getValue('language_negotiation_url_part') == LanguageNegotiationUrl::CONFIG_PATH_PREFIX) {
           // Throw a form error if the prefix is blank for a non-default language,
           // although it is required for selected negotiation type.
-          $form_state->setErrorByName("prefix][$langcode", $this->t('The prefix may only be left blank for the default language.'));
+          $form_state->setErrorByName("prefix][$langcode", $this->t('The prefix may only be left blank for the selected negotiation fallback language.'));
         }
       }
       elseif (strpos($value, '/') !== FALSE) {
