@@ -20,7 +20,7 @@ class BasicSyntaxTest extends DatabaseTestBase {
   /**
    * Tests string concatenation.
    */
-  function testBasicConcat() {
+  function testConcatLiterals() {
     $result = db_query('SELECT CONCAT(:a1, CONCAT(:a2, CONCAT(:a3, CONCAT(:a4, :a5))))', array(
       ':a1' => 'This',
       ':a2' => ' ',
@@ -34,7 +34,7 @@ class BasicSyntaxTest extends DatabaseTestBase {
   /**
    * Tests string concatenation with field values.
    */
-  function testFieldConcat() {
+  function testConcatFields() {
     $result = db_query('SELECT CONCAT(:a1, CONCAT(name, CONCAT(:a2, CONCAT(age, :a3)))) FROM {test} WHERE age = :age', array(
       ':a1' => 'The age of ',
       ':a2' => ' is ',
@@ -42,6 +42,31 @@ class BasicSyntaxTest extends DatabaseTestBase {
       ':age' => 25,
     ));
     $this->assertIdentical($result->fetchField(), 'The age of John is 25.', 'Field CONCAT works.');
+  }
+
+  /**
+   * Tests string concatenation with separator.
+   */
+  function testConcatWsLiterals() {
+    $result = db_query("SELECT CONCAT_WS(', ', :a1, NULL, :a2, :a3, :a4)", array(
+      ':a1' => 'Hello',
+      ':a2' => NULL,
+      ':a3' => '',
+      ':a4' => 'world.',
+    ));
+    $this->assertIdentical($result->fetchField(), 'Hello, , world.');
+  }
+
+  /**
+   * Tests string concatenation with separator, with field values.
+   */
+  function testConcatWsFields() {
+    $result = db_query("SELECT CONCAT_WS('-', :a1, name, :a2, age) FROM {test} WHERE age = :age", array(
+      ':a1' => 'name',
+      ':a2' => 'age',
+      ':age' => 25,
+    ));
+    $this->assertIdentical($result->fetchField(), 'name-John-age-25');
   }
 
   /**
