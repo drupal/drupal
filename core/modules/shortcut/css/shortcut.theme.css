@@ -6,9 +6,6 @@
 /**
  * Toolbar.
  */
-.edit-shortcuts {
-  display: block;
-}
 .toolbar .toolbar-tray-vertical .edit-shortcuts {
   text-align: right; /* LTR */
   padding: 1em;
