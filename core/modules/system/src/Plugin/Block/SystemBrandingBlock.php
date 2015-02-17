@@ -196,17 +196,4 @@ class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInt
     return $cache_tags;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function getRequiredCacheContexts() {
-    // The 'Site branding' block must be cached per theme and per language: the
-    // site logo, name and slogan are defined on a per-theme basis, and the name
-    // and slogan may be translated.
-    // We don't need to return 'cache_context.theme' also, because that cache
-    // context is automatically applied to all blocks.
-    // @see \Drupal\block\BlockViewBuilder::viewMultiple()
-    return array('cache_context.language');
-  }
-
 }

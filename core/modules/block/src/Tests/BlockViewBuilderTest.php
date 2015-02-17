@@ -214,7 +214,7 @@ class BlockViewBuilderTest extends KernelTestBase {
     $request_method = $request->server->get('REQUEST_METHOD');
     $request->setMethod('GET');
 
-    $default_keys = array('entity_view', 'block', 'test_block', 'en', 'cache_context.theme');
+    $default_keys = array('entity_view', 'block', 'test_block', 'cache_context.language', 'cache_context.theme');
     $default_tags = array('block_view', 'config:block.block.test_block', 'block_plugin:test_cache');
 
     // Advanced: cached block, but an alter hook adds an additional cache key.

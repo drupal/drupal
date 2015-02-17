@@ -66,6 +66,7 @@ class BlockInterfaceTest extends KernelTestBase {
     $period[\Drupal\Core\Cache\Cache::PERMANENT] = t('Forever');
     $contexts = \Drupal::service("cache_contexts")->getLabels();
     unset($contexts['cache_context.theme']);
+    unset($contexts['cache_context.language']);
     $expected_form = array(
       'provider' => array(
         '#type' => 'value',
@@ -102,7 +103,7 @@ class BlockInterfaceTest extends KernelTestBase {
         'contexts' => array(
           '#type' => 'checkboxes',
           '#title' => t('Vary by context'),
-          '#description' => t('The contexts this cached block must be varied by.'),
+          '#description' => t('The contexts this cached block must be varied by. <em>All</em> blocks are varied by language and theme.'),
           '#default_value' => array(),
           '#options' => $contexts,
           '#states' => array(
