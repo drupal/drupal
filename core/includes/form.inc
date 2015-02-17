@@ -613,7 +613,7 @@ function template_preprocess_form_element_label(&$variables) {
  *
  * Sample callback_batch_finished():
  * @code
- * function batch_test_finished($success, $results, $operations) {
+ * function my_finished_callback($success, $results, $operations) {
  *   // The 'success' parameter means no fatal PHP errors were detected. All
  *   // other error management should be handled using 'results'.
  *   if ($success) {
