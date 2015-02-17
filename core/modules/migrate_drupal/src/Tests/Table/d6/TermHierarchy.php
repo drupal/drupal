@@ -53,11 +53,11 @@ class TermHierarchy extends DrupalDumpBase {
       'tid' => '2',
       'parent' => '0',
     ))->values(array(
-      'tid' => '3',
-      'parent' => '2',
-    ))->values(array(
       'tid' => '4',
       'parent' => '0',
+    ))->values(array(
+      'tid' => '3',
+      'parent' => '2',
     ))->values(array(
       'tid' => '5',
       'parent' => '4',

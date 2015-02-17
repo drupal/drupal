@@ -78,8 +78,22 @@ foreach ($tables as $table) {
   // Generate the class name.
   $class = Inflector::classify($table);
 
+  // Order by primary keys
+  $order = '';
+  $query = "SELECT `COLUMN_NAME` FROM `information_schema`.`COLUMNS`
+  WHERE (`TABLE_SCHEMA` = 'd6_migrate') AND (`TABLE_NAME` = '{$table}') AND (`COLUMN_KEY` = 'PRI')
+  ORDER BY COLUMN_NAME";
+  $results = $connection->query($query);
+  while(($row = $results->fetchAssoc()) !== FALSE) {
+    $order .= '{' . $row['COLUMN_NAME'] . '}, ';
+  }
+  if (!(empty($order))) {
+    $order = rtrim ($order, ", ");
+    $order = ' ORDER BY ' . $order;
+  }
+
   // Generate the field values.
-  $query = $connection->query(_db_get_query($table));
+  $query = $connection->query(_db_get_query($table) . $order);
   $values = '';
   while(($row = $query->fetchAssoc()) !== FALSE) {
     $values .= '->values(' . Variable::export($row, '    ') . ')';

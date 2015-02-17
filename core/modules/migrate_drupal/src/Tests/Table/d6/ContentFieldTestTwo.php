@@ -66,11 +66,6 @@ class ContentFieldTestTwo extends DrupalDumpBase {
       'delta' => '0',
       'field_test_two_value' => '10',
     ))->values(array(
-      'vid' => '1',
-      'nid' => '1',
-      'delta' => '1',
-      'field_test_two_value' => '20',
-    ))->values(array(
       'vid' => '2',
       'nid' => '1',
       'delta' => '0',
@@ -85,6 +80,11 @@ class ContentFieldTestTwo extends DrupalDumpBase {
       'nid' => '2',
       'delta' => '0',
       'field_test_two_value' => NULL,
+    ))->values(array(
+      'vid' => '1',
+      'nid' => '1',
+      'delta' => '1',
+      'field_test_two_value' => '20',
     ))->execute();
   }
 

@@ -59,14 +59,6 @@ class TermNode extends DrupalDumpBase {
       'vid' => '1',
       'tid' => '1',
     ))->values(array(
-      'nid' => '1',
-      'vid' => '2',
-      'tid' => '4',
-    ))->values(array(
-      'nid' => '1',
-      'vid' => '2',
-      'tid' => '5',
-    ))->values(array(
       'nid' => '2',
       'vid' => '3',
       'tid' => '2',
@@ -74,6 +66,14 @@ class TermNode extends DrupalDumpBase {
       'nid' => '2',
       'vid' => '3',
       'tid' => '3',
+    ))->values(array(
+      'nid' => '1',
+      'vid' => '2',
+      'tid' => '4',
+    ))->values(array(
+      'nid' => '1',
+      'vid' => '2',
+      'tid' => '5',
     ))->execute();
   }
 

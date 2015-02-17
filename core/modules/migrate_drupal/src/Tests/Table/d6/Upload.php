@@ -91,19 +91,19 @@ class Upload extends DrupalDumpBase {
       'list' => '1',
       'weight' => '4',
     ))->values(array(
-      'fid' => '3',
-      'nid' => '1',
-      'vid' => '2',
-      'description' => 'file 1-2-3',
-      'list' => '0',
-      'weight' => '3',
-    ))->values(array(
       'fid' => '2',
       'nid' => '2',
       'vid' => '3',
       'description' => 'file 2-3-2',
       'list' => '1',
       'weight' => '2',
+    ))->values(array(
+      'fid' => '3',
+      'nid' => '1',
+      'vid' => '2',
+      'description' => 'file 1-2-3',
+      'list' => '0',
+      'weight' => '3',
     ))->values(array(
       'fid' => '3',
       'nid' => '2',

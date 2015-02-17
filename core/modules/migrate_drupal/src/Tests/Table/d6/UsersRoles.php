@@ -50,29 +50,29 @@ class UsersRoles extends DrupalDumpBase {
       'uid' => '2',
       'rid' => '3',
     ))->values(array(
-      'uid' => '8',
-      'rid' => '4',
-    ))->values(array(
-      'uid' => '8',
-      'rid' => '5',
-    ))->values(array(
       'uid' => '15',
       'rid' => '3',
-    ))->values(array(
-      'uid' => '15',
-      'rid' => '4',
-    ))->values(array(
-      'uid' => '15',
-      'rid' => '5',
     ))->values(array(
       'uid' => '16',
       'rid' => '3',
     ))->values(array(
-      'uid' => '16',
-      'rid' => '5',
+      'uid' => '8',
+      'rid' => '4',
+    ))->values(array(
+      'uid' => '15',
+      'rid' => '4',
     ))->values(array(
       'uid' => '17',
       'rid' => '4',
+    ))->values(array(
+      'uid' => '8',
+      'rid' => '5',
+    ))->values(array(
+      'uid' => '15',
+      'rid' => '5',
+    ))->values(array(
+      'uid' => '16',
+      'rid' => '5',
     ))->execute();
   }
 
