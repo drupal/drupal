@@ -54,8 +54,7 @@ class ListElement implements ElementInterface {
     $build = array();
     foreach ($this->element as $key => $element) {
       $sub_build = array();
-      // Make the specific element key, "$base_key.$key".
-      $element_key = implode('.', array_filter(array($base_key, $key)));
+      $element_key = isset($base_key) ? "$base_key.$key" : $key;
       $definition = $element->getDataDefinition();
 
       if ($form_element = ConfigTranslationFormBase::createFormElement($element)) {
@@ -88,7 +87,7 @@ class ListElement implements ElementInterface {
    */
   public function setConfig(Config $base_config, LanguageConfigOverride $config_translation, $config_values, $base_key = NULL) {
     foreach ($this->element as $key => $element) {
-      $element_key = implode('.', array_filter(array($base_key, $key)));
+      $element_key = isset($base_key) ? "$base_key.$key" : $key;
       if ($form_element = ConfigTranslationFormBase::createFormElement($element)) {
         // Traverse into the next level of the configuration.
         $value = isset($config_values[$key]) ? $config_values[$key] : NULL;
