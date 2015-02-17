@@ -10,7 +10,7 @@ namespace Drupal\Core\Config;
 use Drupal\Component\Diff\Diff;
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Config\Entity\ConfigDependencyManager;
-use Drupal\Core\Config\Entity\ConfigEntityDependency;
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -191,50 +191,16 @@ class ConfigManager implements ConfigManagerInterface {
    * {@inheritdoc}
    */
   public function uninstall($type, $name) {
-    // Remove all dependent configuration entities.
-    $extension_dependent_entities = $this->findConfigEntityDependentsAsEntities($type, array($name));
-
-    // Give config entities a chance to become independent of the entities we
-    // are going to delete.
-    foreach ($extension_dependent_entities as $entity) {
-      $entity_dependencies = $entity->getDependencies();
-      if (empty($entity_dependencies)) {
-        // No dependent entities nothing to do.
-        continue;
-      }
-      // Work out if any of the entity's dependencies are going to be affected
-      // by the uninstall.
-      $affected_dependencies = array(
-        'config' => array(),
-        'module' => array(),
-        'theme' => array(),
-      );
-      if (isset($entity_dependencies['config'])) {
-        foreach ($extension_dependent_entities as $extension_dependent_entity) {
-          if (in_array($extension_dependent_entity->getConfigDependencyName(), $entity_dependencies['config'])) {
-            $affected_dependencies['config'][] = $extension_dependent_entity;
-          }
-        }
-      }
-      // Check if the extension being uninstalled is a dependency of the entity.
-      if (isset($entity_dependencies[$type]) && in_array($name, $entity_dependencies[$type])) {
-        $affected_dependencies[$type] = array($name);
-      }
-      // Inform the entity and, if the entity is changed, re-save it.
-      if ($entity->onDependencyRemoval($affected_dependencies)) {
-        $entity->save();
-      }
+    $entities = $this->getConfigEntitiesToChangeOnDependencyRemoval($type, [$name], FALSE);
+    // Fix all dependent configuration entities.
+    /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface $entity */
+    foreach ($entities['update'] as $entity) {
+      $entity->save();
     }
-
-    // Recalculate the dependencies, some config entities may have fixed their
-    // dependencies on the to-be-removed entities.
-    $extension_dependent_entities = $this->findConfigEntityDependentsAsEntities($type, array($name));
-    // Reverse the array to that entities are removed in the correct order of
-    // dependence. For example, this ensures that fields are removed before
-    // field storages.
-    foreach (array_reverse($extension_dependent_entities) as $extension_dependent_entity) {
-      $extension_dependent_entity->setUninstalling(TRUE);
-      $extension_dependent_entity->delete();
+    // Remove all dependent configuration entities.
+    foreach ($entities['delete'] as $entity) {
+      $entity->setUninstalling(TRUE);
+      $entity->delete();
     }
 
     $config_names = $this->configFactory->listAll($name . '.');
@@ -259,7 +225,7 @@ class ConfigManager implements ConfigManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function findConfigEntityDependents($type, array $names) {
+  public function getConfigDependencyManager() {
     $dependency_manager = new ConfigDependencyManager();
     // This uses the configuration storage directly to avoid blowing the static
     // caches in the configuration factory and the configuration entity system.
@@ -271,6 +237,16 @@ class ConfigManager implements ConfigManagerInterface {
       return isset($config['uuid']);
     });
     $dependency_manager->setData($data);
+    return $dependency_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function findConfigEntityDependents($type, array $names, ConfigDependencyManager $dependency_manager = NULL) {
+    if (!$dependency_manager) {
+      $dependency_manager = $this->getConfigDependencyManager();
+    }
     $dependencies = array();
     foreach ($names as $name) {
       $dependencies = array_merge($dependencies, $dependency_manager->getDependentEntities($type, $name));
@@ -281,8 +257,8 @@ class ConfigManager implements ConfigManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function findConfigEntityDependentsAsEntities($type, array $names) {
-    $dependencies = $this->findConfigEntityDependents($type, $names);
+  public function findConfigEntityDependentsAsEntities($type, array $names, ConfigDependencyManager $dependency_manager = NULL) {
+    $dependencies = $this->findConfigEntityDependents($type, $names, $dependency_manager);
     $entities = array();
     $definitions = $this->entityManager->getDefinitions();
     foreach ($dependencies as $config_name => $dependency) {
@@ -311,6 +287,69 @@ class ConfigManager implements ConfigManagerInterface {
   /**
    * {@inheritdoc}
    */
+  public function getConfigEntitiesToChangeOnDependencyRemoval($type, array $names, $dry_run = TRUE) {
+    // Determine the current list of dependent configuration entities and set up
+    // initial values.
+    $dependency_manager = $this->getConfigDependencyManager();
+    $dependents = $this->findConfigEntityDependentsAsEntities($type, $names, $dependency_manager);
+    $original_dependencies = $dependents;
+    $update_uuids = [];
+
+    $return = [
+      'update' => [],
+      'delete' => [],
+      'unchanged' => [],
+    ];
+
+    // Try to fix any dependencies and find out what will happen to the
+    // dependency graph.
+    foreach ($dependents as $dependent) {
+      /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface $dependent */
+      if ($dry_run) {
+        // Clone the entity so any changes do not change any static caches.
+        $dependent = clone $dependent;
+      }
+      if ($this->callOnDependencyRemoval($dependent, $original_dependencies, $type, $names)) {
+        // Recalculate dependencies and update the dependency graph data.
+        $dependency_manager->updateData($dependent->getConfigDependencyName(), $dependent->calculateDependencies());
+        // Based on the updated data rebuild the list of dependents.
+        $dependents = $this->findConfigEntityDependentsAsEntities($type, $names, $dependency_manager);
+        // Ensure that the dependency has actually been fixed. It is possible
+        // that the dependent has multiple dependencies that cause it to be in
+        // the dependency chain.
+        $fixed = TRUE;
+        foreach ($dependents as $entity) {
+          if ($entity->uuid() == $dependent->uuid()) {
+            $fixed = FALSE;
+            break;
+          }
+        }
+        if ($fixed) {
+          $return['update'][] = $dependent;
+          $update_uuids[] = $dependent->uuid();
+        }
+      }
+    }
+    // Now that we've fixed all the possible dependencies the remaining need to
+    // be deleted. Reverse the deletes so that entities are removed in the
+    // correct order of dependence. For example, this ensures that fields are
+    // removed before field storages.
+    $return['delete'] = array_reverse($dependents);
+    $delete_uuids = array_map(function($dependent) {
+      return $dependent->uuid();
+    }, $return['delete']);
+    // Use the lists of UUIDs to filter the original list to work out which
+    // configuration entities are unchanged.
+    $return['unchanged'] = array_filter($original_dependencies, function ($dependent) use ($delete_uuids, $update_uuids) {
+      return !(in_array($dependent->uuid(), $delete_uuids) || in_array($dependent->uuid(), $update_uuids));
+    });
+
+    return $return;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function supportsConfigurationEntities($collection) {
     return $collection == StorageInterface::DEFAULT_COLLECTION;
   }
@@ -324,6 +363,78 @@ class ConfigManager implements ConfigManagerInterface {
       $this->eventDispatcher->dispatch(ConfigEvents::COLLECTION_INFO, $this->configCollectionInfo);
     }
     return $this->configCollectionInfo;
+  }
+
+  /**
+   * Calls an entity's onDependencyRemoval() method.
+   *
+   * A helper method to call onDependencyRemoval() with the correct list of
+   * affected entities. This list should only contain dependencies on the
+   * entity. Configuration and content entity dependencies will be converted
+   * into entity objects.
+   *
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $entity
+   *   The entity to call onDependencyRemoval() on.
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface[] $dependent_entities
+   *   The list of dependent configuration entities.
+   * @param string $type
+   *   The type of dependency being checked. Either 'module', 'theme', 'config'
+   *   or 'content'.
+   * @param array $names
+   *   The specific names to check. If $type equals 'module' or 'theme' then it
+   *   should be a list of module names or theme names. In the case of 'config'
+   *   or 'content' it should be a list of configuration dependency names.
+   *
+   * @return bool
+   *   TRUE if the entity has changed as a result of calling the
+   *   onDependencyRemoval() method, FALSE if not.
+   */
+  protected function callOnDependencyRemoval(ConfigEntityInterface $entity, array $dependent_entities, $type, array $names) {
+    $entity_dependencies = $entity->getDependencies();
+    if (empty($entity_dependencies)) {
+      // No dependent entities nothing to do.
+      return FALSE;
+    }
+
+    $affected_dependencies = array(
+      'config' => array(),
+      'content' => array(),
+      'module' => array(),
+      'theme' => array(),
+    );
+
+    // Work out if any of the entity's dependencies are going to be affected.
+    if (isset($entity_dependencies[$type])) {
+      // Work out which dependencies the entity has in common with the provided
+      // $type and $names.
+      $affected_dependencies[$type] = array_intersect($entity_dependencies[$type], $names);
+
+      // If the dependencies are entities we need to convert them into objects.
+      if ($type == 'config' || $type == 'content') {
+        $affected_dependencies[$type] = array_map(function ($name) use ($type) {
+          if ($type == 'config') {
+            $entity_type_id = $this->getEntityTypeIdByName($name);
+          }
+          else {
+            list($entity_type_id) = explode(':', $name);
+          }
+          return $this->entityManager->loadEntityByConfigTarget($entity_type_id, $name);
+        }, $affected_dependencies[$type]);
+      }
+    }
+
+    // Merge any other configuration entities into the list of affected
+    // dependencies if necessary.
+    if (isset($entity_dependencies['config'])) {
+      foreach ($dependent_entities as $dependent_entity) {
+        if (in_array($dependent_entity->getConfigDependencyName(), $entity_dependencies['config'])) {
+          $affected_dependencies['config'][] = $dependent_entity;
+        }
+      }
+    }
+
+    // Inform the entity.
+    return $entity->onDependencyRemoval($affected_dependencies);
   }
 
 }

@@ -94,6 +94,16 @@ interface ConfigManagerInterface {
   public function uninstall($type, $name);
 
   /**
+   * Creates and populates a ConfigDependencyManager object.
+   *
+   * The configuration dependency manager is populated with data from the active
+   * store.
+   *
+   * @return \Drupal\Core\Config\Entity\ConfigDependencyManager
+   */
+  public function getConfigDependencyManager();
+
+  /**
    * Finds config entities that are dependent on extensions or entities.
    *
    * @param string $type
@@ -101,8 +111,8 @@ interface ConfigManagerInterface {
    *   or 'content'.
    * @param array $names
    *   The specific names to check. If $type equals 'module' or 'theme' then it
-   *   should be a list of module names or theme names. In the case of entity it
-   *   should be a list of full configuration object names.
+   *   should be a list of module names or theme names. In the case of 'config'
+   *   or 'content' it should be a list of configuration dependency names.
    *
    * @return \Drupal\Core\Config\Entity\ConfigEntityDependency[]
    *   An array of configuration entity dependency objects.
@@ -117,13 +127,37 @@ interface ConfigManagerInterface {
    *   or 'content'.
    * @param array $names
    *   The specific names to check. If $type equals 'module' or 'theme' then it
-   *   should be a list of module names or theme names. In the case of entity it
-   *   should be a list of full configuration object names.
+   *   should be a list of module names or theme names. In the case of 'config'
+   *   or 'content' it should be a list of configuration dependency names.
    *
    * @return \Drupal\Core\Config\Entity\ConfigEntityInterface[]
    *   An array of dependencies as configuration entities.
    */
   public function findConfigEntityDependentsAsEntities($type, array $names);
+
+  /**
+   * Lists which config entities to update and delete on removal of a dependency.
+   *
+   * @param string $type
+   *   The type of dependency being checked. Either 'module', 'theme', 'config'
+   *   or 'content'.
+   * @param array $names
+   *   The specific names to check. If $type equals 'module' or 'theme' then it
+   *   should be a list of module names or theme names. In the case of 'config'
+   *   or 'content' it should be a list of configuration dependency names.
+   * @param bool $dry_run
+   *   If set to FALSE the entities returned in the list of updates will be
+   *   modified. In order to make the changes the caller needs to save them. If
+   *   set to TRUE the entities returned will not be modified.
+   *
+   * @return array
+   *   An array with the keys: 'update', 'delete' and 'unchanged'. The value of
+   *   each is a list of configuration entities that need to have that action
+   *   applied when the supplied dependencies are removed. Updates need to be
+   *   processed before deletes. The order of the deletes is significant and
+   *   must be processed in the returned order.
+   */
+  public function getConfigEntitiesToChangeOnDependencyRemoval($type, array $names, $dry_run = TRUE);
 
   /**
    * Determines if the provided collection supports configuration entities.

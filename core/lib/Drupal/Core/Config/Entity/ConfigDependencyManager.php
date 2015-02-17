@@ -286,4 +286,37 @@ class ConfigDependencyManager {
     return $this;
   }
 
+  /**
+   * Updates one of the lightweight ConfigEntityDependency objects.
+   *
+   * @param $name
+   *   The configuration dependency name.
+   * @param array $dependencies
+   *   The configuration dependencies. The array is structured like this:
+   *   @code
+   *   array(
+   *     'config => array(
+   *       // An array of configuration entity object names.
+   *     ),
+   *     'content => array(
+   *       // An array of content entity configuration dependency names. The default
+   *       // format is "ENTITY_TYPE_ID:BUNDLE:UUID".
+   *     ),
+   *     'module' => array(
+   *       // An array of module names.
+   *     ),
+   *     'theme' => array(
+   *       // An array of theme names.
+   *     ),
+   *   );
+   *   @endcode
+   *
+   * @return $this
+   */
+  public function updateData($name, array $dependencies) {
+    $this->graph = NULL;
+    $this->data[$name] = new ConfigEntityDependency($name, ['dependencies' => $dependencies]);
+    return $this;
+  }
+
 }

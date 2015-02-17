@@ -145,43 +145,83 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase {
       }, $this->modules),
     );
 
-    $form['entities'] = array(
+    // Get the dependent entities.
+    $entity_types = array();
+    $dependent_entities = $this->configManager->getConfigEntitiesToChangeOnDependencyRemoval('module', $this->modules);
+
+    $form['entity_updates'] = array(
       '#type' => 'details',
-      '#title' => $this->t('Affected configuration'),
-      '#description' => $this->t('The listed configuration will be updated if possible, or deleted.'),
+      '#title' => $this->t('Configuration updates'),
+      '#description' => $this->t('The listed configuration will be updated.'),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
       '#access' => FALSE,
     );
 
-    // Get the dependent entities.
-    $entity_types = array();
-    $dependent_entities = $this->configManager->findConfigEntityDependentsAsEntities('module', $this->modules);
-    foreach ($dependent_entities as $entity) {
+    foreach ($dependent_entities['update'] as $entity) {
+      /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface  $entity */
       $entity_type_id = $entity->getEntityTypeId();
-      if (!isset($form['entities'][$entity_type_id])) {
+      if (!isset($form['entity_updates'][$entity_type_id])) {
         $entity_type = $this->entityManager->getDefinition($entity_type_id);
         // Store the ID and label to sort the entity types and entities later.
         $label = $entity_type->getLabel();
         $entity_types[$entity_type_id] = $label;
-        $form['entities'][$entity_type_id] = array(
+        $form['entity_updates'][$entity_type_id] = array(
           '#theme' => 'item_list',
           '#title' => $label,
           '#items' => array(),
         );
       }
-      $form['entities'][$entity_type_id]['#items'][] = $entity->label();
+      $form['entity_updates'][$entity_type_id]['#items'][] = $entity->label() ?: $entity->id();
     }
-    if (!empty($dependent_entities)) {
-      $form['entities']['#access'] = TRUE;
+    if (!empty($dependent_entities['update'])) {
+      $form['entity_updates']['#access'] = TRUE;
 
       // Add a weight key to the entity type sections.
       asort($entity_types, SORT_FLAG_CASE);
       $weight = 0;
       foreach ($entity_types as $entity_type_id => $label) {
-        $form['entities'][$entity_type_id]['#weight'] = $weight;
+        $form['entity_updates'][$entity_type_id]['#weight'] = $weight;
         // Sort the list of entity labels alphabetically.
-        sort($form['entities'][$entity_type_id]['#items'], SORT_FLAG_CASE);
+        sort($form['entity_updates'][$entity_type_id]['#items'], SORT_FLAG_CASE);
+        $weight++;
+      }
+    }
+
+    $form['entity_deletes'] = array(
+      '#type' => 'details',
+      '#title' => $this->t('Configuration deletions'),
+      '#description' => $this->t('The listed configuration will be deleted.'),
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#access' => FALSE,
+    );
+
+    foreach ($dependent_entities['delete'] as $entity) {
+      $entity_type_id = $entity->getEntityTypeId();
+      if (!isset($form['entity_deletes'][$entity_type_id])) {
+        $entity_type = $this->entityManager->getDefinition($entity_type_id);
+        // Store the ID and label to sort the entity types and entities later.
+        $label = $entity_type->getLabel();
+        $entity_types[$entity_type_id] = $label;
+        $form['entity_deletes'][$entity_type_id] = array(
+          '#theme' => 'item_list',
+          '#title' => $label,
+          '#items' => array(),
+        );
+      }
+      $form['entity_deletes'][$entity_type_id]['#items'][] = $entity->label() ?: $entity->id();
+    }
+    if (!empty($dependent_entities['delete'])) {
+      $form['entity_deletes']['#access'] = TRUE;
+
+      // Add a weight key to the entity type sections.
+      asort($entity_types, SORT_FLAG_CASE);
+      $weight = 0;
+      foreach ($entity_types as $entity_type_id => $label) {
+        $form['entity_deletes'][$entity_type_id]['#weight'] = $weight;
+        // Sort the list of entity labels alphabetically.
+        sort($form['entity_deletes'][$entity_type_id]['#items'], SORT_FLAG_CASE);
         $weight++;
       }
     }
