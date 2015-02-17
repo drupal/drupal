@@ -163,10 +163,10 @@ function aggregator_cron() {
 /**
  * Renders the HTML content safely, as allowed.
  *
- * @param $value
+ * @param string $value
  *   The content to be filtered.
  *
- * @return
+ * @return string
  *   The filtered content.
  */
 function aggregator_filter_xss($value) {

@@ -47,7 +47,7 @@ abstract class AggregatorTestBase extends WebTestBase {
    *
    * This method simulates the form submission on path aggregator/sources/add.
    *
-   * @param $feed_url
+   * @param string $feed_url
    *   (optional) If given, feed will be created with this URL, otherwise
    *   /rss.xml will be used. Defaults to NULL.
    * @param array $edit
@@ -82,13 +82,13 @@ abstract class AggregatorTestBase extends WebTestBase {
   /**
    * Returns a randomly generated feed edit array.
    *
-   * @param $feed_url
+   * @param string $feed_url
    *   (optional) If given, feed will be created with this URL, otherwise
    *   /rss.xml will be used. Defaults to NULL.
    * @param array $edit
    *   Array with additional form fields.
    *
-   * @return
+   * @return array
    *   A feed array.
    */
   function getFeedEditArray($feed_url = NULL, array $edit = array()) {
@@ -138,7 +138,7 @@ abstract class AggregatorTestBase extends WebTestBase {
   /**
    * Returns the count of the randomly created feed array.
    *
-   * @return
+   * @return int
    *   Number of feed items on default feed created by createFeed().
    */
   function getDefaultFeedItemCount() {
@@ -215,12 +215,12 @@ abstract class AggregatorTestBase extends WebTestBase {
   /**
    * Checks whether the feed name and URL are unique.
    *
-   * @param $feed_name
+   * @param string $feed_name
    *   String containing the feed name to check.
-   * @param $feed_url
+   * @param string $feed_url
    *   String containing the feed url to check.
    *
-   * @return
+   * @return bool
    *   TRUE if feed is unique.
    */
   function uniqueFeed($feed_name, $feed_url) {
@@ -231,10 +231,10 @@ abstract class AggregatorTestBase extends WebTestBase {
   /**
    * Creates a valid OPML file from an array of feeds.
    *
-   * @param $feeds
+   * @param array $feeds
    *   An array of feeds.
    *
-   * @return
+   * @return string
    *   Path to valid OPML file.
    */
   function getValidOpml($feeds) {
@@ -273,7 +273,7 @@ EOF;
   /**
    * Creates an invalid OPML file.
    *
-   * @return
+   * @return string
    *   Path to invalid OPML file.
    */
   function getInvalidOpml() {
@@ -290,7 +290,7 @@ EOF;
   /**
    * Creates a valid but empty OPML file.
    *
-   * @return
+   * @return string
    *   Path to empty OPML file.
    */
   function getEmptyOpml() {
@@ -326,7 +326,7 @@ EOF;
   /**
    * Creates sample article nodes.
    *
-   * @param $count
+   * @param int $count
    *   (optional) The number of nodes to generate. Defaults to five.
    */
   function createSampleNodes($count = 5) {
