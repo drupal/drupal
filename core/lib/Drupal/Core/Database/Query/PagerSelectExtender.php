@@ -16,6 +16,10 @@ use Drupal\Core\Database\Query\SelectInterface;
  *
  * This is the "default" pager mechanism.  It creates a paged query with a fixed
  * number of entries per page.
+ *
+ * When adding this extender along with other extenders, be sure to add
+ * PagerSelectExtender last, so that its range and count are based on the full
+ * query.
  */
 class PagerSelectExtender extends SelectExtender {
 

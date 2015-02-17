@@ -11,6 +11,7 @@ namespace Drupal\search;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Query\SelectExtender;
+use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Database\StatementEmpty;
 
 /**
@@ -463,6 +464,21 @@ class SearchQuery extends SelectExtender {
   }
 
   /**
+   * {@inhertidoc}
+   */
+  public function preExecute(SelectInterface $query = NULL) {
+    if (!$this->executedPrepare) {
+      $this->prepareAndNormalize();
+    }
+
+    if (!$this->normalize) {
+      return FALSE;
+    }
+
+    return parent::preExecute($query);
+  }
+
+  /**
    * Adds a custom score expression to the search query.
    *
    * Score expressions are used to order search results. If no calls to
@@ -521,9 +537,8 @@ class SearchQuery extends SelectExtender {
   /**
    * Executes the search.
    *
-   * If not already done, this calls prepareAndNormalize() first. Then the
-   * complex conditions are applied to the query including score expressions
-   * and ordering.
+   * The complex conditions are applied to the query including score
+   * expressions and ordering.
    *
    * Error and warning conditions can apply. Call getStatus() after calling
    * this method to retrieve them.
@@ -532,14 +547,8 @@ class SearchQuery extends SelectExtender {
    *   A query result set containing the results of the query.
    */
   public function execute() {
-
-    if (!$this->executedPrepare) {
-      $this->prepareAndNormalize();
-    }
-
-    if (!$this->normalize) {
-      // There were no keyword matches, so return an empty result set.
-      return new StatementEmpty();
+    if (!$this->preExecute($this)) {
+      return NULL;
     }
 
     // Add conditions to the query.
@@ -606,8 +615,6 @@ class SearchQuery extends SelectExtender {
     if (count($this->conditions)) {
       $inner->condition($this->conditions);
     }
-    // PostgreSQL requires a group by condition to prevent a GROUPING ERROR.
-    $inner->groupBy('i.sid');
 
     // Remove existing fields and expressions, they are not needed for a count
     // query.
