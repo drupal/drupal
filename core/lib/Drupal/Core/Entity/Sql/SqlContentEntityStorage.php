@@ -1056,16 +1056,6 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   }
 
   /**
-   * {@inheritdoc}
-   */
-  protected function invokeHook($hook, EntityInterface $entity) {
-    if ($hook == 'presave') {
-      $this->invokeFieldMethod('preSave', $entity);
-    }
-    parent::invokeHook($hook, $entity);
-  }
-
-  /**
    * Maps from an entity object to the storage record.
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity

@@ -180,6 +180,16 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Dyn
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function invokeHook($hook, EntityInterface $entity) {
+    if ($hook == 'presave') {
+      $this->invokeFieldMethod('preSave', $entity);
+    }
+    parent::invokeHook($hook, $entity);
+  }
+
+  /**
    * Invokes a method on the Field objects within an entity.
    *
    * @param string $method
