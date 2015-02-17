@@ -570,17 +570,6 @@ function template_preprocess_username(&$variables) {
 }
 
 /**
- * Implements hook_menu_breadcrumb_alter().
- */
-function user_menu_breadcrumb_alter(&$active_trail, $item) {
-  // Remove "My account" from the breadcrumb when $item is descendant-or-self
-  // of system path user/%.
-  if (isset($active_trail[1]['module']) && $active_trail[1]['machine_name'] == 'user.page' && strpos($item['path'], 'user/%') === 0) {
-    array_splice($active_trail, 1, 1);
-  }
-}
-
-/**
  * Finalizes the login process and logs in a user.
  *
  * The function logs in the user, records a watchdog message about the new
