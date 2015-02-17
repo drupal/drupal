@@ -42,11 +42,22 @@ class FilesystemLoader extends \Twig_Loader_Filesystem {
     }
 
     foreach ($namespaces as $name => $path) {
-      $templatesDirectory = $path . '/templates';
-      if (file_exists($templatesDirectory)) {
-        $this->addPath($templatesDirectory, $name);
-      }
+      $this->addPath($path . '/templates', $name);
     }
+  }
+
+  /**
+   * Adds a path where templates are stored.
+   *
+   * @param string $path
+   *   A path where to look for templates.
+   * @param string $namespace
+   *   (optional) A path name.
+   */
+  public function addPath($path, $namespace = self::MAIN_NAMESPACE) {
+    // Invalidate the cache.
+    $this->cache = array();
+    $this->paths[$namespace][] = rtrim($path, '/\\');
   }
 
 }
