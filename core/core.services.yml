@@ -529,6 +529,8 @@ services:
   lock.persistent:
     class: Drupal\Core\Lock\PersistentDatabaseLockBackend
     arguments: ['@database']
+    tags:
+      - { name: backend_overridable }
   router.request_context:
     class: Drupal\Core\Routing\RequestContext
     tags:
