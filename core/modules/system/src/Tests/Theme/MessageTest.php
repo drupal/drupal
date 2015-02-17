@@ -25,6 +25,10 @@ class MessageTest extends KernelTestBase {
    * Tests setting messages output.
    */
   function testMessages() {
+    // Enable the Classy theme.
+    \Drupal::service('theme_handler')->install(['classy']);
+    $this->config('system.theme')->set('default', 'classy')->save();
+
     drupal_set_message('An error occurred', 'error');
     drupal_set_message('But then something nice happened');
     $messages = array(

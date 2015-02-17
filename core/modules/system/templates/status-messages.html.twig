@@ -26,13 +26,7 @@
  */
 #}
 {% for type, messages in message_list %}
-  {%
-    set classes = [
-      'messages',
-      'messages--' ~ type,
-    ]
-  %}
-  <div class="{{ attributes.addClass(classes).class }}" role="contentinfo" aria-label="{{ status_headings[type] }}">
+  <div class="{{ attributes.class }}" role="contentinfo" aria-label="{{ status_headings[type] }}">
     {% if type == 'error' %}
       <div role="alert">
     {% endif %}
@@ -40,9 +34,9 @@
         <h2 class="visually-hidden">{{ status_headings[type] }}</h2>
       {% endif %}
       {% if messages|length > 1 %}
-        <ul class="messages__list">
+        <ul>
           {% for message in messages %}
-            <li class="messages__item">{{ message }}</li>
+            <li>{{ message }}</li>
           {% endfor %}
         </ul>
       {% else %}
@@ -52,6 +46,4 @@
       </div>
     {% endif %}
   </div>
-  {# Remove type specific classes. #}
-  {{ attributes.removeClass(classes) }}
 {% endfor %}
