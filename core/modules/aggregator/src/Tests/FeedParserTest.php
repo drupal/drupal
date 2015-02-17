@@ -40,6 +40,7 @@ class FeedParserTest extends AggregatorTestBase {
     $this->assertText('First example feed item title');
     $this->assertLinkByHref('http://example.com/example-turns-one');
     $this->assertText('First example feed item description.');
+    $this->assertRaw('<img src="http://example.com/images/druplicon.png"');
 
     // Several additional items that include elements over 255 characters.
     $this->assertRaw("Second example feed item title.");

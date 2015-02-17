@@ -94,7 +94,7 @@ class FeedViewBuilder extends EntityViewBuilder {
         if ($image && $label && $link_href) {
           $link_title = array(
             '#theme' => 'image',
-            '#path' => $image,
+            '#uri' => $image,
             '#alt' => $label,
           );
           $image_link = array(
