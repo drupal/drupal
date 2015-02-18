@@ -31,14 +31,14 @@ use Drupal\Core\Ajax\SetDialogTitleCommand;
 use Drupal\Core\Ajax\RedirectCommand;
 
 /**
- * Tests that each AJAX command object can be created and rendered.
+ * Test coverage for various classes in the \Drupal\Core\Ajax namespace.
  *
  * @group Ajax
  */
 class AjaxCommandsTest extends UnitTestCase {
 
   /**
-   * Tests that AddCssCommand objects can be constructed and rendered.
+   * @covers \Drupal\Core\Ajax\AddCssCommand
    */
   public function testAddCssCommand() {
     $command = new AddCssCommand('p{ text-decoration:blink; }');
@@ -48,11 +48,11 @@ class AjaxCommandsTest extends UnitTestCase {
       'data' => 'p{ text-decoration:blink; }',
     );
 
-    $this->assertEquals($command->render(), $expected, "AddCssCommand::render() didn't return the expected array.");
+    $this->assertEquals($expected, $command->render());
   }
 
   /**
-   * Tests that AfterCommand objects can be constructed and rendered.
+   * @covers \Drupal\Core\Ajax\AfterCommand
    */
   public function testAfterCommand() {
     $command = new AfterCommand('#page-title', '<p>New Text!</p>', array('my-setting' => 'setting'));
@@ -65,11 +65,11 @@ class AjaxCommandsTest extends UnitTestCase {
       'settings' => array('my-setting' => 'setting'),
     );
 
-    $this->assertEquals($command->render(), $expected, "AfterCommand::render() didn't return the expected array.");
+    $this->assertEquals($expected, $command->render());
   }
 
   /**
-   * Tests that AlertCommand objects can be constructed and rendered.
+   * @covers \Drupal\Core\Ajax\AlertCommand
    */
   public function testAlertCommand() {
     $command = new AlertCommand('Set condition 1 throughout the ship!');
@@ -78,11 +78,11 @@ class AjaxCommandsTest extends UnitTestCase {
       'text' => 'Set condition 1 throughout the ship!',
     );
 
-    $this->assertEquals($command->render(), $expected, "AlertCommand::render() didn't return the expected array.");
+    $this->assertEquals($expected, $command->render());
   }
 
   /**
-   * Tests that AppendCommand objects can be constructed and rendered.
+   * @covers \Drupal\Core\Ajax\AppendCommand
    */
   public function testAppendCommand() {
     $command = new AppendCommand('#page-title', '<p>New Text!</p>', array('my-setting' => 'setting'));
@@ -95,11 +95,11 @@ class AjaxCommandsTest extends UnitTestCase {
       'settings' => array('my-setting' => 'setting'),
     );
 
-    $this->assertEquals($command->render(), $expected, "AppendCommand::render() didn't return the expected array.");
+    $this->assertEquals($expected, $command->render());
   }
 
   /**
-   * Tests that BeforeCommand objects can be constructed and rendered.
+   * @covers \Drupal\Core\Ajax\BeforeCommand
    */
   public function testBeforeCommand() {
     $command = new BeforeCommand('#page-title', '<p>New Text!</p>', array('my-setting' => 'setting'));
@@ -112,11 +112,11 @@ class AjaxCommandsTest extends UnitTestCase {
       'settings' => array('my-setting' => 'setting'),
     );
 
-    $this->assertEquals($command->render(), $expected, "BeforeCommand::render() didn't return the expected array.");
+    $this->assertEquals($expected, $command->render());
   }
 
   /**
-   * Tests that ChangedCommand objects can be constructed and rendered.
+   * @covers \Drupal\Core\Ajax\ChangedCommand
    */
   public function testChangedCommand() {
     $command = new ChangedCommand('#page-title', '#page-title-changed');
@@ -127,11 +127,11 @@ class AjaxCommandsTest extends UnitTestCase {
       'asterisk' => '#page-title-changed',
     );
 
-    $this->assertEquals($command->render(), $expected, "ChangedCommand::render() didn't return the expected array.");
+    $this->assertEquals($expected, $command->render());
   }
 
   /**
-   * Tests that CssCommand objects can be constructed and rendered.
+   * @covers \Drupal\Core\Ajax\CssCommand
    */
   public function testCssCommand() {
     $command = new CssCommand('#page-title', array('text-decoration' => 'blink'));
@@ -147,11 +147,11 @@ class AjaxCommandsTest extends UnitTestCase {
       ),
     );
 
-    $this->assertEquals($command->render(), $expected, "CssCommand::render() didn't return the expected array.");
+    $this->assertEquals($expected, $command->render());
   }
 
   /**
-   * Tests that DataCommand objects can be constructed and rendered.
+   * @covers \Drupal\Core\Ajax\DataCommand
    */
   public function testDataCommand() {
     $command = new DataCommand('#page-title', 'my-data', array('key' => 'value'));
@@ -163,11 +163,11 @@ class AjaxCommandsTest extends UnitTestCase {
       'value' => array('key' => 'value'),
     );
 
-    $this->assertEquals($command->render(), $expected, "DataCommand::render() didn't return the expected array.");
+    $this->assertEquals($expected, $command->render());
   }
 
   /**
-   * Tests that HtmlCommand objects can be constructed and rendered.
+   * @covers \Drupal\Core\Ajax\HtmlCommand
    */
   public function testHtmlCommand() {
     $command = new HtmlCommand('#page-title', '<p>New Text!</p>', array('my-setting' => 'setting'));
@@ -180,11 +180,11 @@ class AjaxCommandsTest extends UnitTestCase {
       'settings' => array('my-setting' => 'setting'),
     );
 
-    $this->assertEquals($command->render(), $expected, "HtmlCommand::render() didn't return the expected array.");
+    $this->assertEquals($expected, $command->render());
   }
 
   /**
-   * Tests that InsertCommand objects can be constructed and rendered.
+   * @covers \Drupal\Core\Ajax\InsertCommand
    */
   public function testInsertCommand() {
     $command = new InsertCommand('#page-title', '<p>New Text!</p>', array('my-setting' => 'setting'));
@@ -197,11 +197,11 @@ class AjaxCommandsTest extends UnitTestCase {
       'settings' => array('my-setting' => 'setting'),
     );
 
-    $this->assertEquals($command->render(), $expected, "InsertCommand::render() didn't return the expected array.");
+    $this->assertEquals($expected, $command->render());
   }
 
   /**
-   * Tests that InvokeCommand objects can be constructed and rendered.
+   * @covers \Drupal\Core\Ajax\InvokeCommand
    */
   public function testInvokeCommand() {
     $command = new InvokeCommand('#page-title', 'myMethod', array('var1', 'var2'));
@@ -213,11 +213,11 @@ class AjaxCommandsTest extends UnitTestCase {
       'args' => array('var1', 'var2'),
     );
 
-    $this->assertEquals($command->render(), $expected, "InvokeCommand::render() didn't return the expected array.");
+    $this->assertEquals($expected, $command->render());
   }
 
   /**
-   * Tests that PrependCommand objects can be constructed and rendered.
+   * @covers \Drupal\Core\Ajax\PrependCommand
    */
   public function testPrependCommand() {
     $command = new PrependCommand('#page-title', '<p>New Text!</p>', array('my-setting' => 'setting'));
@@ -230,11 +230,11 @@ class AjaxCommandsTest extends UnitTestCase {
       'settings' => array('my-setting' => 'setting'),
     );
 
-    $this->assertEquals($command->render(), $expected, "PrependCommand::render() didn't return the expected array.");
+    $this->assertEquals($expected, $command->render());
   }
 
   /**
-   * Tests that RemoveCommand objects can be constructed and rendered.
+   * @covers \Drupal\Core\Ajax\RemoveCommand
    */
   public function testRemoveCommand() {
     $command = new RemoveCommand('#page-title');
@@ -244,11 +244,11 @@ class AjaxCommandsTest extends UnitTestCase {
       'selector' => '#page-title',
     );
 
-    $this->assertEquals($command->render(), $expected, "RemoveCommand::render() didn't return the expected array.");
+    $this->assertEquals($expected, $command->render());
   }
 
   /**
-   * Tests that ReplaceCommand objects can be constructed and rendered.
+   * @covers \Drupal\Core\Ajax\ReplaceCommand
    */
   public function testReplaceCommand() {
     $command = new ReplaceCommand('#page-title', '<p>New Text!</p>', array('my-setting' => 'setting'));
@@ -261,11 +261,11 @@ class AjaxCommandsTest extends UnitTestCase {
       'settings' => array('my-setting' => 'setting'),
     );
 
-    $this->assertEquals($command->render(), $expected, "ReplaceCommand::render() didn't return the expected array.");
+    $this->assertEquals($expected, $command->render());
   }
 
   /**
-   * Tests that RestripeCommand objects can be constructed and rendered.
+   * @covers \Drupal\Core\Ajax\RestripeCommand
    */
   public function testRestripeCommand() {
     $command = new RestripeCommand('#page-title');
@@ -275,11 +275,11 @@ class AjaxCommandsTest extends UnitTestCase {
       'selector' => '#page-title',
     );
 
-    $this->assertEquals($command->render(), $expected, "RestripeCommand::render() didn't return the expected array.");
+    $this->assertEquals($expected, $command->render());
   }
 
   /**
-   * Tests that SettingsCommand objects can be constructed and rendered.
+   * @covers \Drupal\Core\Ajax\SettingsCommand
    */
   public function testSettingsCommand() {
     $command = new SettingsCommand(array('key' => 'value'), TRUE);
@@ -290,11 +290,11 @@ class AjaxCommandsTest extends UnitTestCase {
       'merge' => TRUE,
     );
 
-    $this->assertEquals($command->render(), $expected, "SettingsCommand::render() didn't return the expected array.");
+    $this->assertEquals($expected, $command->render());
   }
 
   /**
-   * Tests that OpenDialogCommand objects can be constructed and rendered.
+   * @covers \Drupal\Core\Ajax\OpenDialogCommand
    */
   public function testOpenDialogCommand() {
     $command = $this->getMockBuilder('Drupal\Core\Ajax\OpenDialogCommand')
@@ -302,18 +302,22 @@ class AjaxCommandsTest extends UnitTestCase {
         '#some-dialog', 'Title', '<p>Text!</p>', array(
           'url' => FALSE,
           'width' => 500,
-        )
+        ),
       ))
-      // This method calls drupal_render which isn't available. We want it to do
-      // nothing so we mock it to return null.
-      ->setMethods(array('drupalAttachLibrary'))
+      ->setMethods(array('getRenderedContent'))
       ->getMock();
+
+    // This method calls the render service, which isn't available. We want it
+    // to do nothing so we mock it to return a known value.
+    $command->expects($this->once())
+      ->method('getRenderedContent')
+      ->willReturn('rendered content');
 
     $expected = array(
       'command' => 'openDialog',
       'selector' => '#some-dialog',
       'settings' => NULL,
-      'data' => '<p>Text!</p>',
+      'data' => 'rendered content',
       'dialogOptions' => array(
         'url' => FALSE,
         'width' => 500,
@@ -321,11 +325,11 @@ class AjaxCommandsTest extends UnitTestCase {
         'modal' => FALSE,
       ),
     );
-    $this->assertEquals($command->render(), $expected, "OpenDialogCommand::render() didn't return the expected array.");
+    $this->assertEquals($expected, $command->render());
   }
 
   /**
-   * Tests that OpenModalDialogCommand objects can be constructed and rendered.
+   * @covers \Drupal\Core\Ajax\OpenModalDialogCommand
    */
   public function testOpenModalDialogCommand() {
     $command = $this->getMockBuilder('Drupal\Core\Ajax\OpenModalDialogCommand')
@@ -333,18 +337,22 @@ class AjaxCommandsTest extends UnitTestCase {
         'Title', '<p>Text!</p>', array(
           'url' => 'example',
           'width' => 500,
-        )
+        ),
       ))
-      // This method calls drupal_render which isn't available. We want it to do
-      // nothing so we mock it to return null.
-      ->setMethods(array('drupalAttachLibrary'))
+      ->setMethods(array('getRenderedContent'))
       ->getMock();
+
+    // This method calls the render service, which isn't available. We want it
+    // to do nothing so we mock it to return a known value.
+    $command->expects($this->once())
+      ->method('getRenderedContent')
+      ->willReturn('rendered content');
 
     $expected = array(
       'command' => 'openDialog',
       'selector' => '#drupal-modal',
       'settings' => NULL,
-      'data' => '<p>Text!</p>',
+      'data' => 'rendered content',
       'dialogOptions' => array(
         'url' => 'example',
         'width' => 500,
@@ -352,11 +360,11 @@ class AjaxCommandsTest extends UnitTestCase {
         'modal' => TRUE,
       ),
     );
-    $this->assertEquals($command->render(), $expected, "OpenModalDialogCommand::render() didn't return the expected array.");
+    $this->assertEquals($expected, $command->render());
   }
 
   /**
-   * Tests that CloseModalDialogCommand objects can be constructed and rendered.
+   * @covers \Drupal\Core\Ajax\CloseModalDialogCommand
    */
   public function testCloseModalDialogCommand() {
     $command = new CloseModalDialogCommand();
@@ -366,11 +374,11 @@ class AjaxCommandsTest extends UnitTestCase {
       'persist' => FALSE,
     );
 
-    $this->assertEquals($command->render(), $expected, "CloseModalDialogCommand::render() didn't return the expected array.");
+    $this->assertEquals($expected, $command->render());
   }
 
   /**
-   * Tests that CloseDialogCommand objects can be constructed and rendered.
+   * @covers \Drupal\Core\Ajax\CloseDialogCommand
    */
   public function testCloseDialogCommand() {
     $command = new CloseDialogCommand('#some-dialog', TRUE);
@@ -380,11 +388,11 @@ class AjaxCommandsTest extends UnitTestCase {
       'persist' => TRUE,
     );
 
-    $this->assertEquals($command->render(), $expected, "CloseDialogCommand::render() with a selector and persistence enabled didn't return the expected array.");
+    $this->assertEquals($expected, $command->render());
   }
 
   /**
-   * Tests that SetDialogOptionCommand objects can be constructed and rendered.
+   * @covers \Drupal\Core\Ajax\SetDialogOptionCommand
    */
   public function testSetDialogOptionCommand() {
     $command = new SetDialogOptionCommand('#some-dialog', 'width', '500');
@@ -395,11 +403,11 @@ class AjaxCommandsTest extends UnitTestCase {
       'optionValue' => '500',
     );
 
-    $this->assertEquals($command->render(), $expected, "SetDialogOptionCommand::render() with a selector didn't return the expected array.");
+    $this->assertEquals($expected, $command->render());
   }
 
   /**
-   * Tests that SetDialogTitleCommand objects can be constructed and rendered.
+   * @covers \Drupal\Core\Ajax\SetDialogTitleCommand
    */
   public function testSetDialogTitleCommand() {
     $command = new SetDialogTitleCommand('#some-dialog', 'Example');
@@ -410,11 +418,11 @@ class AjaxCommandsTest extends UnitTestCase {
       'optionValue' => 'Example',
     );
 
-    $this->assertEquals($command->render(), $expected, "SetDialogTitleCommand::render() with a selector didn't return the expected array.");
+    $this->assertEquals($expected, $command->render());
   }
 
   /**
-   * Tests that RedirectCommand objects can be constructed and rendered.
+   * @covers \Drupal\Core\Ajax\RedirectCommand
    */
   public function testRedirectCommand() {
     $command = new RedirectCommand('http://example.com');
@@ -423,7 +431,7 @@ class AjaxCommandsTest extends UnitTestCase {
       'url' => 'http://example.com',
     );
 
-    $this->assertEquals($command->render(), $expected, "RedirectCommand::render() didn't return the expected command array.");
+    $this->assertEquals($expected, $command->render());
   }
 
 }
