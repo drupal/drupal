@@ -36,7 +36,24 @@ class FormTestFormStateValuesCleanForm extends FormBase {
     $form['baz']['foo'] = array('#type' => 'button', '#value' => t('Submit'));
     $form['baz']['baz'] = array('#type' => 'submit', '#value' => t('Submit'));
     $form['baz']['beer'] = array('#type' => 'value', '#value' => 2000);
+
+    // Add an arbitrary element and manually set it to be cleaned.
+    // Using $form_state->addCleanValueKey('wine'); didn't work here.
+    $class = get_class($this);
+    $form['wine'] = [
+      '#type' => 'value',
+      '#value' => 3000,
+      '#process' => [[$class, 'cleanValue']],
+    ];
+
     return $form;
+  }
+
+  /**
+   * Helper function to clean a value on an element.
+   */
+  public static function cleanValue(&$element, FormStateInterface $form_state, &$complete_form) {
+    $form_state->addCleanValueKey('wine');
   }
 
   /**

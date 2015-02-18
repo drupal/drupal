@@ -197,6 +197,24 @@ class FormState implements FormStateInterface {
   protected $values = array();
 
   /**
+   * An associative array of form value keys to be removed by cleanValues().
+   *
+   * Any values that are temporary but must still be displayed as values in
+   * the rendered form should be added to this array using addCleanValueKey().
+   * Initialized with internal Form API values.
+   *
+   * This property is uncacheable.
+   *
+   * @var array
+   */
+  protected $cleanValueKeys = [
+    'form_id',
+    'form_token',
+    'form_build_id',
+    'op',
+  ];
+
+  /**
    * The array of values as they were submitted by the user.
    *
    * These are raw and unvalidated, so should not be used without a thorough
@@ -1163,13 +1181,34 @@ class FormState implements FormStateInterface {
   /**
    * {@inheritdoc}
    */
+  public function getCleanValueKeys() {
+    return $this->cleanValueKeys;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setCleanValueKeys(array $cleanValueKeys) {
+    $this->cleanValueKeys = $cleanValueKeys;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addCleanValueKey($cleanValueKey) {
+    $keys = $this->getCleanValueKeys();
+    $this->setCleanValueKeys(array_merge((array)$keys, [$cleanValueKey]));
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function cleanValues() {
-    // Remove internal Form API values.
-    $this
-      ->unsetValue('form_id')
-      ->unsetValue('form_token')
-      ->unsetValue('form_build_id')
-      ->unsetValue('op');
+    foreach ($this->getCleanValueKeys() as $value) {
+      $this->unsetValue($value);
+    }
 
     // Remove button values.
     // \Drupal::formBuilder()->doBuildForm() collects all button elements in a

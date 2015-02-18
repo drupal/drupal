@@ -100,6 +100,9 @@ class VerticalTabs extends RenderElement {
       '#default_value' => $element['#default_tab'],
       '#attributes' => array('class' => array('vertical-tabs-active-tab')),
     );
+    // Clean up the active tab value so it's not accidentally stored in
+    // settings forms.
+    $form_state->addCleanValueKey($name . '__active_tab');
 
     return $element;
   }

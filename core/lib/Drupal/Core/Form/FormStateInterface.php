@@ -1029,14 +1029,42 @@ interface FormStateInterface {
   public function isValidationComplete();
 
   /**
+   * Gets the keys of the form values that will be cleaned.
+   *
+   * @return array
+   *   An array of form value keys to be cleaned.
+   */
+  public function getCleanValueKeys();
+
+  /**
+   * Sets the keys of the form values that will be cleaned.
+   *
+   * @param array $keys
+   *   An array of form value keys to be cleaned.
+   *
+   * @return $this
+   */
+  public function setCleanValueKeys(array $keys);
+
+  /**
+   * Adds a key to the array of form values that will be cleaned.
+   *
+   * @param string $key
+   *   The form value key to be cleaned.
+   *
+   * @return $this
+   */
+  public function addCleanValueKey($key);
+
+  /**
    * Removes internal Form API elements and buttons from submitted form values.
    *
    * This function can be used when a module wants to store all submitted form
    * values, for example, by serializing them into a single database column. In
    * such cases, all internal Form API values and all form button elements
-   * should not be contained, and this function allows to remove them before the
+   * should not be contained, and this function allows their removal before the
    * module proceeds to storage. Next to button elements, the following internal
-   * values are removed:
+   * values are removed by default.
    * - form_id
    * - form_token
    * - form_build_id

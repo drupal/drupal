@@ -530,6 +530,44 @@ class FormStateTest extends UnitTestCase {
     $this->assertTrue($form_state->hasTemporaryValue(array('rainbow_sparkles', 'magic_ponies')), TRUE);
   }
 
+  /**
+   * @covers ::getCleanValueKeys
+   */
+  public function testGetCleanValueKeys() {
+    $form_state = new FormState();
+    $this->assertSame($form_state->getCleanValueKeys(), ['form_id', 'form_token', 'form_build_id', 'op']);
+  }
+
+  /**
+   * @covers ::setCleanValueKeys
+   */
+  public function testSetCleanValueKeys() {
+    $form_state = new FormState();
+    $form_state->setCleanValueKeys(['key1', 'key2']);
+    $this->assertSame($form_state->getCleanValueKeys(), ['key1', 'key2']);
+  }
+
+  /**
+   * @covers ::addCleanValueKey
+   */
+  public function testAddCleanValueKey() {
+    $form_state = new FormState();
+    $form_state->setValue('value_to_clean', 'rainbow_sprinkles');
+    $form_state->addCleanValueKey('value_to_clean');
+    $this->assertSame($form_state->getCleanValueKeys(), ['form_id', 'form_token', 'form_build_id', 'op', 'value_to_clean']);
+    return $form_state;
+  }
+
+  /**
+   * @depends testAddCleanValueKey
+   *
+   * @covers ::cleanValues
+   */
+  public function testCleanValues($form_state) {
+    $form_state->setValue('value_to_keep', 'magic_ponies');
+    $form_state->cleanValues();
+    $this->assertSame($form_state->getValues(), ['value_to_keep' => 'magic_ponies']);
+  }
 }
 
 /**

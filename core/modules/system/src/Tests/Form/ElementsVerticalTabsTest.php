@@ -7,7 +7,9 @@
 
 namespace Drupal\system\Tests\Form;
 
+use Drupal\Component\Utility\String;
 use Drupal\simpletest\WebTestBase;
+use Drupal\Component\Serialization\Json;
 
 /**
  * Tests the vertical_tabs form element for expected behavior.
@@ -65,5 +67,13 @@ class ElementsVerticalTabsTest extends WebTestBase {
   function testDefaultTab() {
     $this->drupalGet('form_test/vertical-tabs');
     $this->assertFieldByName('vertical_tabs__active_tab', 'edit-tab3', t('The default vertical tab is correctly selected.'));
+  }
+
+  /**
+   * Ensures that vertical tab form values are cleaned.
+   */
+  function testDefaultTabCleaned() {
+    $values = Json::decode($this->drupalPostForm('form_test/form-state-values-clean', [], t('Submit')));
+    $this->assertFalse(isset($values['vertical_tabs__active_tab']), String::format('%element was removed.', ['%element' => 'vertical_tabs__active_tab']));
   }
 }
