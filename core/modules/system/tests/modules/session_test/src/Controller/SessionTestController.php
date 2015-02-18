@@ -85,7 +85,7 @@ class SessionTestController extends ControllerBase {
    *   A notification message.
    */
   public function noSet($test_value) {
-    \Drupal::service('session_manager')->disable();
+    \Drupal::service('session_handler.write_safe')->setSessionWritable(FALSE);
     $this->set($test_value);
     return ['#markup' => $this->t('session saving was disabled, and then %val was set', array('%val' => $test_value))];
   }
@@ -111,7 +111,7 @@ class SessionTestController extends ControllerBase {
    *   A notification message.
    */
   public function setMessageButDontSave() {
-    \Drupal::service('session_manager')->disable();
+    \Drupal::service('session_handler.write_safe')->setSessionWritable(FALSE);
     $this->setMessage();
     return ['#markup' => ''];
   }

@@ -27,19 +27,15 @@ class ArgumentDefaultTest extends UserTestBase {
     // Create a user to test.
     $account = $this->drupalCreateUser();
 
-    // Switch the user, we have to check the global user too, because drupalLogin is only for the simpletest browser.
-    $this->drupalLogin($account);
-    $admin = \Drupal::currentUser();
-    $session_manager = \Drupal::service('session_manager')->disable();
-    \Drupal::currentUser()->setAccount($account);
+    // Switch the user.
+    \Drupal::service('account_switcher')->switchTo($account);
 
     $view = Views::getView('test_plugin_argument_default_current_user');
     $view->initHandlers();
 
     $this->assertEqual($view->argument['null']->getDefaultArgument(), $account->id(), 'Uid of the current user is used.');
     // Switch back.
-    \Drupal::currentUser()->setAccount($admin);
-    $session_manager->enable();
+    \Drupal::service('account_switcher')->switchBack();
   }
 
 }

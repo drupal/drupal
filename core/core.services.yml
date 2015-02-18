@@ -1097,7 +1097,7 @@ services:
     arguments: ['@authentication']
   account_switcher:
     class: Drupal\Core\Session\AccountSwitcher
-    arguments: ['@current_user', '@session_manager']
+    arguments: ['@current_user', '@session_handler.write_safe']
   current_user:
     class: Drupal\Core\Session\AccountProxy
     arguments: ['@authentication', '@request_stack']

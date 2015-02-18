@@ -31,11 +31,11 @@ class AccountSwitcher implements AccountSwitcherInterface {
   protected $currentUser = array();
 
   /**
-   * The session manager.
+   * The write-safe session handler.
    *
-   * @var \Drupal\Core\Session\SessionManagerInterface
+   * @var \Drupal\Core\Session\WriteSafeSessionHandlerInterface
    */
-  protected $sessionManager;
+  protected $writeSafeHandler;
 
   /**
    * The original state of session saving prior to account switching.
@@ -49,12 +49,12 @@ class AccountSwitcher implements AccountSwitcherInterface {
    *
    * @param \Drupal\Core\Session\AccountProxyInterface $current_user
    *   The current user service.
-   * @param \Drupal\Core\Session\SessionManagerInterface $session_manager
-   *   The session manager.
+   * @param \Drupal\Core\Session\WriteSafeSessionHandlerInterface $write_safe_handler
+   *   The write-safe session handler.
    */
-  public function __construct(AccountProxyInterface $current_user, SessionManagerInterface $session_manager) {
+  public function __construct(AccountProxyInterface $current_user, WriteSafeSessionHandlerInterface $write_safe_handler) {
     $this->currentUser = $current_user;
-    $this->sessionManager = $session_manager;
+    $this->writeSafeHandler = $write_safe_handler;
   }
 
   /**
@@ -64,9 +64,9 @@ class AccountSwitcher implements AccountSwitcherInterface {
     // Prevent session information from being saved and push previous account.
     if (!isset($this->originalSessionSaving)) {
       // Ensure that only the first session saving status is saved.
-      $this->originalSessionSaving = $this->sessionManager->isEnabled();
+      $this->originalSessionSaving = $this->writeSafeHandler->isSessionWritable();
     }
-    $this->sessionManager->disable();
+    $this->writeSafeHandler->setSessionWritable(FALSE);
     array_push($this->accountStack, $this->currentUser->getAccount());
     $this->currentUser->setAccount($account);
     return $this;
@@ -87,7 +87,7 @@ class AccountSwitcher implements AccountSwitcherInterface {
     // reverted.
     if (empty($this->accountStack)) {
       if ($this->originalSessionSaving) {
-        $this->sessionManager->enable();
+        $this->writeSafeHandler->setSessionWritable(TRUE);
       }
     }
     return $this;
