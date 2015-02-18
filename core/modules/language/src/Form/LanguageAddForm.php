@@ -159,6 +159,11 @@ class LanguageAddForm extends LanguageFormBase {
     $entity->set('id', $langcode);
     $entity->set('label', $label);
     $entity->set('direction', $direction);
+    // There is no weight on the edit form. Fetch all configurable languages
+    // ordered by weight and set the new language to be placed after them.
+    $languages = \Drupal::languageManager()->getLanguages(ConfigurableLanguage::STATE_CONFIGURABLE);
+    $last_language = end($languages);
+    $entity->setWeight($last_language->getWeight() + 1);
   }
 
 }

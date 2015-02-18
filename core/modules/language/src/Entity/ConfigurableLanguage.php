@@ -131,7 +131,7 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
 
     $language_manager = \Drupal::languageManager();
     $language_manager->reset();
-    if (!$this->isLocked() && $language_manager instanceof ConfigurableLanguageManagerInterface) {
+    if (!$this->isLocked() && $language_manager instanceof ConfigurableLanguageManagerInterface && !$this->isSyncing()) {
       $language_manager->updateLockedLanguageWeights();
     }
 
@@ -173,7 +173,8 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
     parent::postDelete($storage, $entities);
     $language_manager = \Drupal::languageManager();
     $language_manager->reset();
-    if ($language_manager instanceof ConfigurableLanguageManagerInterface) {
+    $entity = reset($entities);
+    if ($language_manager instanceof ConfigurableLanguageManagerInterface && !$entity->isUninstalling() && !$entity->isSyncing()) {
       $language_manager->updateLockedLanguageWeights();
     }
     // If after deleting this language the site will become monolingual, we need

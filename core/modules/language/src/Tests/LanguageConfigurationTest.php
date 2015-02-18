@@ -8,6 +8,7 @@
 namespace Drupal\language\Tests;
 
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -28,6 +29,9 @@ class LanguageConfigurationTest extends WebTestBase {
    * Functional tests for adding, editing and deleting languages.
    */
   function testLanguageConfiguration() {
+    // Ensure the after installing the language module the weight of the English
+    // language is still 0.
+    $this->assertEqual(ConfigurableLanguage::load('en')->getWeight(), 0, 'The English language has a weight of 0.');
 
     // User to add and remove language.
     $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages'));
@@ -106,12 +110,34 @@ class LanguageConfigurationTest extends WebTestBase {
     $this->drupalPostForm('admin/config/regional/language/delete/en', array(), t('Delete'));
     $this->rebuildContainer();
     $this->assertRaw(t('The %language (%langcode) language has been removed.', array('%language' => 'English', '%langcode' => 'en')));
+
+    // Ensure that French language has a weight of 1 after being created through
+    // the UI.
+    $french = ConfigurableLanguage::load('fr');
+    $this->assertEqual($french->getWeight(), 1, 'The French language has a weight of 1.');
+    // Ensure that French language can now have a weight of 0.
+    $french->setWeight(0)->save();
+    $this->assertEqual($french->getWeight(), 0, 'The French language has a weight of 0.');
+    // Ensure that new languages created through the API get a weight of 0.
+    $afrikaans = ConfigurableLanguage::createFromLangcode('af');
+    $afrikaans->save();
+    $this->assertEqual($afrikaans->getWeight(), 0, 'The Afrikaans language has a weight of 0.');
+    // Ensure that a new language can be created with any weight.
+    $arabic = ConfigurableLanguage::createFromLangcode('ar');
+    $arabic->setWeight(4)->save();
+    $this->assertEqual($arabic->getWeight(), 4, 'The Arabic language has a weight of 0.');
+
     $edit = array(
       'predefined_langcode' => 'de',
     );
     $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
     $language = $this->config('language.entity.de')->get();
     $this->assertEqual($language['langcode'], 'en');
+
+    // Ensure that German language has a weight of 5 after being created through
+    // the UI.
+    $french = ConfigurableLanguage::load('de');
+    $this->assertEqual($french->getWeight(), 5, 'The German language has a weight of 5.');
   }
 
   /**

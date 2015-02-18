@@ -35,6 +35,10 @@ class LanguageListTest extends WebTestBase {
     $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages'));
     $this->drupalLogin($admin_user);
 
+    // Get the weight of the last language.
+    $languages = \Drupal::service('language_manager')->getLanguages();
+    $last_language_weight = end($languages)->getWeight();
+
     // Add predefined language.
     $edit = array(
       'predefined_langcode' => 'fr',
@@ -42,6 +46,14 @@ class LanguageListTest extends WebTestBase {
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
     $this->assertText('French', 'Language added successfully.');
     $this->assertUrl(\Drupal::url('entity.configurable_language.collection', [], ['absolute' => TRUE]));
+
+    // Get the weight of the last language and check that the weight is one unit
+    // heavier than the last configurable language.
+    $this->rebuildContainer();
+    $languages = \Drupal::service('language_manager')->getLanguages();
+    $last_language = end($languages);
+    $this->assertEqual($last_language->getWeight(), $last_language_weight + 1);
+    $this->assertEqual($last_language->getId(), $edit['predefined_langcode']);
 
     // Add custom language.
     $langcode = 'xx';
