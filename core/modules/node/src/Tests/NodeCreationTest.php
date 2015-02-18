@@ -105,12 +105,12 @@ class NodeCreationTest extends NodeTestBase {
       $this->assertTrue($node, 'Transactions not supported, and node found in database.');
 
       // Check that the failed rollback was logged.
-      $records = db_query("SELECT wid FROM {watchdog} WHERE message LIKE 'Explicit rollback failed%'")->fetchAll();
+      $records = static::getWatchdogIdsForFailedExplicitRollback();
       $this->assertTrue(count($records) > 0, 'Transactions not supported, and rollback error logged to watchdog.');
     }
 
     // Check that the rollback error was logged.
-    $records = db_query("SELECT wid FROM {watchdog} WHERE variables LIKE '%Test exception for rollback.%'")->fetchAll();
+    $records = static::getWatchdogIdsForTestExceptionRollback();
     $this->assertTrue(count($records) > 0, 'Rollback explanatory error logged to watchdog.');
   }
 
@@ -185,4 +185,23 @@ class NodeCreationTest extends NodeTestBase {
 
     $this->assertLinkByHref('/admin/structure/types/add');
   }
+
+  /**
+   * Returns log records with the rollback exception message.
+   *
+   * @return array
+   */
+  protected static function getWatchdogIdsForTestExceptionRollback() {
+    return db_query("SELECT wid FROM {watchdog} WHERE variables LIKE '%Test exception for rollback.%'")->fetchAll();
+  }
+
+  /**
+   * Returns log records with the explicit rollback failed exception message.
+   *
+   * @return array
+   */
+  protected static function getWatchdogIdsForFailedExplicitRollback() {
+    return db_query("SELECT wid FROM {watchdog} WHERE message LIKE 'Explicit rollback failed%'")->fetchAll();
+  }
+
 }
