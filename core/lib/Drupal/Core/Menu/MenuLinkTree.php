@@ -217,9 +217,6 @@ class MenuLinkTree implements MenuLinkTreeInterface {
       elseif ($data->hasChildren) {
         $class[] = 'collapsed';
       }
-      else {
-        $class[] = 'leaf';
-      }
       // Set a class if the link is in the active trail.
       if ($data->inActiveTrail) {
         $class[] = 'active-trail';

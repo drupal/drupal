@@ -519,9 +519,7 @@ class BookManager implements BookManagerInterface {
       elseif ($data['link']['has_children']) {
         $class[] = 'collapsed';
       }
-      else {
-        $class[] = 'leaf';
-      }
+
       // Set a class if the link is in the active trail.
       if ($data['link']['in_active_trail']) {
         $class[] = 'active-trail';

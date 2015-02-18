@@ -248,7 +248,6 @@ interface BookManagerInterface {
    * The menu item's LI element is given one of the following classes:
    * - expanded: The menu item is showing its submenu.
    * - collapsed: The menu item has a submenu which is not shown.
-   * - leaf: The menu item has no submenu.
    *
    * @param array $tree
    *   A data structure representing the tree as returned from buildBookOutlineData.
