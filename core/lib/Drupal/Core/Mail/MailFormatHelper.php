@@ -327,7 +327,7 @@ class MailFormatHelper {
       $line = wordwrap($line, 77 - $values['length'], $values['soft'] ? " \n" : "\n");
     }
     // Break really long words at the maximum width allowed.
-    $line = wordwrap($line, 996 - $values['length'], $values['soft'] ? " \n" : "\n");
+    $line = wordwrap($line, 996 - $values['length'], $values['soft'] ? " \n" : "\n", TRUE);
   }
 
   /**

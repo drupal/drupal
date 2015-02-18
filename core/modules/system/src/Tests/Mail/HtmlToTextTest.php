@@ -346,7 +346,7 @@ class HtmlToTextTest extends WebTestBase {
    * <CRLF> is 1000 characters."
    */
   public function testVeryLongLineWrap() {
-    $input = 'Drupal<br /><p>' . str_repeat('x', 2100) . '</><br />Drupal';
+    $input = 'Drupal<br /><p>' . str_repeat('x', 2100) . '</p><br />Drupal';
     $output = MailFormatHelper::htmlToText($input);
     $eol = Settings::get('mail_line_endings', PHP_EOL);
 
@@ -357,8 +357,7 @@ class HtmlToTextTest extends WebTestBase {
       $maximum_line_length = max($maximum_line_length, strlen($line . $eol));
     }
     $verbose = 'Maximum line length found was ' . $maximum_line_length . ' octets.';
-    // @todo This should assert that $maximum_line_length <= 1000.
-    $this->pass($verbose);
+    $this->assertTrue($maximum_line_length <= 1000, $verbose);
   }
 
   /**
