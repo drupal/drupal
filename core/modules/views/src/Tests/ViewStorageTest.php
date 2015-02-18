@@ -241,13 +241,28 @@ class ViewStorageTest extends ViewUnitTestBase {
     $this->assertEqual($displays['default']['display_title'], $random_title, 'Default display is defined with the new title');
     $this->assertEqual($displays['default']['position'], 0, 'Default displays are always in position zero');
 
-    // Tests Drupal\views\Entity\View::generateDisplayId().
-    // @todo Sadly this method is not public so it cannot be tested.
-    // $view = $this->controller->create(array());
-    // $this->assertEqual($view->generateDisplayId('default'), 'default', 'The plugin ID for default is always default.');
-    // $this->assertEqual($view->generateDisplayId('feed'), 'feed_1', 'The generated ID for the first instance of a plugin type should have an suffix of _1.');
-    // $view->addDisplay('feed', 'feed title');
-    // $this->assertEqual($view->generateDisplayId('feed'), 'feed_2', 'The generated ID for the first instance of a plugin type should have an suffix of _2.');
+    // Tests Drupal\views\Entity\View::generateDisplayId(). Since
+    // generateDisplayId() is protected, we have to use reflection to unit-test
+    // it.
+    $view = $this->controller->create(array());
+    $ref_generate_display_id = new \ReflectionMethod($view, 'generateDisplayId');
+    $ref_generate_display_id->setAccessible(TRUE);
+    $this->assertEqual(
+      $ref_generate_display_id->invoke($view, 'default'),
+      'default',
+      'The plugin ID for default is always default.'
+    );
+    $this->assertEqual(
+      $ref_generate_display_id->invoke($view, 'feed'),
+      'feed_1',
+      'The generated ID for the first instance of a plugin type should have an suffix of _1.'
+    );
+    $view->addDisplay('feed', 'feed title');
+    $this->assertEqual(
+      $ref_generate_display_id->invoke($view, 'feed'),
+      'feed_2',
+      'The generated ID for the first instance of a plugin type should have an suffix of _2.'
+    );
 
     // Tests item related methods().
     $view = $this->controller->create(array('base_table' => 'views_test_data'));
