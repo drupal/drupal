@@ -103,7 +103,7 @@ class EmailFieldTest extends WebTestBase {
     $entity = entity_load('entity_test', $id);
     $display = entity_get_display($entity->getEntityTypeId(), $entity->bundle(), 'full');
     $content = $display->build($entity);
-    $this->drupalSetContent(drupal_render($content));
+    $this->setRawContent(drupal_render($content));
     $this->assertLinkByHref('mailto:test@example.com');
   }
 

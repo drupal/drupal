@@ -54,9 +54,9 @@ class EditorAdminTest extends WebTestBase {
     $this->drupalGet('admin/config/content/formats/manage/filtered_html');
 
     // Ensure the form field order is correct.
-    $roles_pos = strpos($this->drupalGetContent(), 'Roles');
-    $editor_pos = strpos($this->drupalGetContent(), 'Text editor');
-    $filters_pos = strpos($this->drupalGetContent(), 'Enabled filters');
+    $roles_pos = strpos($this->getRawContent(), 'Roles');
+    $editor_pos = strpos($this->getRawContent(), 'Text editor');
+    $filters_pos = strpos($this->getRawContent(), 'Enabled filters');
     $this->assertTrue($roles_pos < $editor_pos && $editor_pos < $filters_pos, '"Text Editor" select appears in the correct location of the text format configuration UI.');
 
     // Verify the <select>.

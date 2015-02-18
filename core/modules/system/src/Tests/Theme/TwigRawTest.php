@@ -33,7 +33,7 @@ class TwigRawTest extends WebTestBase {
       '#script' => '<script>alert("This alert is real because I will put it through the raw filter!");</script>',
     );
     $rendered = drupal_render($test);
-    $this->drupalSetContent($rendered);
+    $this->setRawContent($rendered);
     $this->assertRaw('<script>alert("This alert is real because I will put it through the raw filter!");</script>');
   }
 

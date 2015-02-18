@@ -39,7 +39,7 @@ class SelectPagerDefaultTest extends DatabaseWebTestBase {
 
     for ($page = 0; $page <= $num_pages; ++$page) {
       $this->drupalGet('database_test/pager_query_even/' . $limit, array('query' => array('page' => $page)));
-      $data = json_decode($this->drupalGetContent());
+      $data = json_decode($this->getRawContent());
 
       if ($page == $num_pages) {
         $correct_number = $count - ($limit * $page);
@@ -73,7 +73,7 @@ class SelectPagerDefaultTest extends DatabaseWebTestBase {
 
     for ($page = 0; $page <= $num_pages; ++$page) {
       $this->drupalGet('database_test/pager_query_odd/' . $limit, array('query' => array('page' => $page)));
-      $data = json_decode($this->drupalGetContent());
+      $data = json_decode($this->getRawContent());
 
       if ($page == $num_pages) {
         $correct_number = $count - ($limit * $page);

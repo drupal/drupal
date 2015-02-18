@@ -131,7 +131,7 @@ class ContentTranslationContextualLinksTest extends WebTestBase {
     $response = $this->renderContextualLinks(array('node:node=1:'), 'node/' . $node->id());
     $this->assertResponse(200);
     $json = Json::decode($response);
-    $this->drupalSetContent($json['node:node=1:']);
+    $this->setRawContent($json['node:node=1:']);
     $this->assertLinkByHref($translate_link, 0, 'The contextual link to translate the node is shown.');
 
     // Check that the link leads to the translate page.

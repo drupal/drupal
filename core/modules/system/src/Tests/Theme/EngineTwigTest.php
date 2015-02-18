@@ -57,7 +57,7 @@ class EngineTwigTest extends WebTestBase {
       'url (as route) absolute with fragment: ' . $url_generator->generateFromRoute('user.register', array(), array('absolute' => TRUE, 'fragment' => 'bottom')),
     );
     // Make sure we got something.
-    $content = $this->drupalGetContent();
+    $content = $this->getRawContent();
     $this->assertFalse(empty($content), 'Page content is not empty');
     foreach ($expected as $string) {
       $this->assertRaw('<div>' . $string . '</div>');

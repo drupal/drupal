@@ -33,7 +33,7 @@ class TemporaryQueryTest extends DatabaseWebTestBase {
    */
   function testTemporaryQuery() {
     $this->drupalGet('database_test/db_query_temporary');
-    $data = json_decode($this->drupalGetContent());
+    $data = json_decode($this->getRawContent());
     if ($data) {
       $this->assertEqual($this->countTableRows('test'), $data->row_count, 'The temporary table contains the correct amount of rows.');
       $this->assertFalse(db_table_exists($data->table_name), 'The temporary table is, indeed, temporary.');

@@ -58,7 +58,7 @@ class ViewAjaxTest extends ViewTestBase {
     $this->assertEqual($data[1]['command'], 'insert');
     $this->assertTrue(strpos($data[1]['selector'], '.view-dom-id-') === 0);
 
-    $this->drupalSetContent($data[1]['data']);
+    $this->setRawContent($data[1]['data']);
     $result = $this->xpath('//div[contains(@class, "views-row")]');
     $this->assertEqual(count($result), 2, 'Ensure that two items are renderd in the HTML.');
   }

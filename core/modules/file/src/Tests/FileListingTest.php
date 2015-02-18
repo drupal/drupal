@@ -101,7 +101,7 @@ class FileListingTest extends FileFieldTestBase {
       $this->assertLinkByHref(file_create_url($file->getFileUri()));
       $this->assertLinkByHref('admin/content/files/usage/' . $file->id());
     }
-    $this->assertFalse(preg_match('/views-field-status priority-low\">\s*' . t('Temporary') . '/', $this->drupalGetContent()), 'All files are stored as permanent.');
+    $this->assertFalse(preg_match('/views-field-status priority-low\">\s*' . t('Temporary') . '/', $this->getRawContent()), 'All files are stored as permanent.');
 
     // Use one file two times and check usage information.
     $orphaned_file = $nodes[1]->file->target_id;

@@ -45,7 +45,7 @@ class NodeContextualLinksTest extends NodeTestBase {
     $response = $this->renderContextualLinks(array('node:node=1:'), 'node');
     $this->assertResponse(200);
     $json = Json::decode($response);
-    $this->drupalSetContent($json['node:node=1:']);
+    $this->setRawContent($json['node:node=1:']);
 
     // @todo Add these back when the functionality for making Views displays
     //   appear in contextual links is working again.

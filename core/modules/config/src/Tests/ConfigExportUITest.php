@@ -47,7 +47,7 @@ class ConfigExportUITest extends WebTestBase {
     $this->assertResponse(200, 'User can access the download callback.');
 
     // Get the archived binary file provided to user for download.
-    $archive_data = $this->drupalGetContent();
+    $archive_data = $this->getRawContent();
 
     // Temporarily save the archive file.
     $uri = file_unmanaged_save_data($archive_data, 'temporary://config.tar.gz');

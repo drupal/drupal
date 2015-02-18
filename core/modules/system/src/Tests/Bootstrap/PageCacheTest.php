@@ -234,14 +234,14 @@ class PageCacheTest extends WebTestBase {
     // Fill the cache and verify that output is compressed.
     $this->drupalGet('', array(), array('Accept-Encoding: gzip,deflate'));
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', 'Page was not cached.');
-    $this->drupalSetContent(gzinflate(substr($this->drupalGetContent(), 10, -8)));
+    $this->setRawContent(gzinflate(substr($this->getRawContent(), 10, -8)));
     $this->assertRaw('</html>', 'Page was gzip compressed.');
 
     // Verify that cached output is compressed.
     $this->drupalGet('', array(), array('Accept-Encoding: gzip,deflate'));
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
     $this->assertEqual($this->drupalGetHeader('Content-Encoding'), 'gzip', 'A Content-Encoding header was sent.');
-    $this->drupalSetContent(gzinflate(substr($this->drupalGetContent(), 10, -8)));
+    $this->setRawContent(gzinflate(substr($this->getRawContent(), 10, -8)));
     $this->assertRaw('</html>', 'Page was gzip compressed.');
 
     // Verify that a client without compression support gets an uncompressed page.
@@ -257,7 +257,7 @@ class PageCacheTest extends WebTestBase {
 
     // Verify if cached page is still available for a client with compression support.
     $this->drupalGet('', array(), array('Accept-Encoding: gzip,deflate'));
-    $this->drupalSetContent(gzinflate(substr($this->drupalGetContent(), 10, -8)));
+    $this->setRawContent(gzinflate(substr($this->getRawContent(), 10, -8)));
     $this->assertRaw('</html>', 'Page was delivered after compression mode is changed (compression support enabled).');
 
     // Verify if cached page is still available for a client without compression support.

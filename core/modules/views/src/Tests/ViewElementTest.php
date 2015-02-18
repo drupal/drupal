@@ -57,7 +57,7 @@ class ViewElementTest extends ViewTestBase {
 
     // Set the content as our rendered array.
     $render = $this->render;
-    $this->drupalSetContent(drupal_render($render));
+    $this->setRawContent(drupal_render($render));
 
     $xpath = $this->xpath('//div[@class="views-element-container"]');
     $this->assertTrue($xpath, 'The view container has been found in the rendered output.');
@@ -102,7 +102,7 @@ class ViewElementTest extends ViewTestBase {
 
     // Test the render array again.
     $render = $this->render;
-    $this->drupalSetContent(drupal_render($render));
+    $this->setRawContent(drupal_render($render));
     // There should be 1 row in the results, 'John' arg 25.
     $xpath = $this->xpath('//div[@class="view-content"]/div');
     $this->assertEqual(count($xpath), 1);
@@ -124,7 +124,7 @@ class ViewElementTest extends ViewTestBase {
     // Set the content as our rendered array.
     $render = $this->render;
     $render['#embed'] = TRUE;
-    $this->drupalSetContent(drupal_render($render));
+    $this->setRawContent(drupal_render($render));
 
     $xpath = $this->xpath('//div[@class="views-element-container"]');
     $this->assertTrue($xpath, 'The view container has been found in the rendered output.');
@@ -170,7 +170,7 @@ class ViewElementTest extends ViewTestBase {
     // Test the render array again.
     $render = $this->render;
     $render['#embed'] = TRUE;
-    $this->drupalSetContent(drupal_render($render));
+    $this->setRawContent(drupal_render($render));
     // There should be 1 row in the results, 'John' arg 25.
     $xpath = $this->xpath('//div[@class="view-content"]/div');
     $this->assertEqual(count($xpath), 1);

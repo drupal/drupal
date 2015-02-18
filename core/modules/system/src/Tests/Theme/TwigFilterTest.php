@@ -42,7 +42,7 @@ class TwigFilterTest extends WebTestBase {
       ),
     );
     $rendered = drupal_render($filter_test);
-    $this->drupalSetContent($rendered);
+    $this->setRawContent($rendered);
 
     $elements = array(
       array(

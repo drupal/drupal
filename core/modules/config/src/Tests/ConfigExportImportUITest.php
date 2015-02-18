@@ -127,7 +127,7 @@ class ConfigExportImportUITest extends WebTestBase {
 
     // Export the configuration.
     $this->drupalPostForm('admin/config/development/configuration/full/export', array(), 'Export');
-    $this->tarball = $this->drupalGetContent();
+    $this->tarball = $this->getRawContent();
 
     $this->config('system.site')
       ->set('slogan', $this->originalSlogan)
@@ -184,7 +184,7 @@ class ConfigExportImportUITest extends WebTestBase {
 
     // Export the configuration.
     $this->drupalPostForm('admin/config/development/configuration/full/export', array(), 'Export');
-    $this->tarball = $this->drupalGetContent();
+    $this->tarball = $this->getRawContent();
     $filename = file_directory_temp() .'/' . $this->randomMachineName();
     file_put_contents($filename, $this->tarball);
 

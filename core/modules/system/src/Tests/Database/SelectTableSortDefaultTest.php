@@ -32,7 +32,7 @@ class SelectTableSortDefaultTest extends DatabaseWebTestBase {
 
     foreach ($sorts as $sort) {
       $this->drupalGet('database_test/tablesort/', array('query' => array('order' => $sort['field'], 'sort' => $sort['sort'])));
-      $data = json_decode($this->drupalGetContent());
+      $data = json_decode($this->getRawContent());
 
       $first = array_shift($data->tasks);
       $last = array_pop($data->tasks);
@@ -60,7 +60,7 @@ class SelectTableSortDefaultTest extends DatabaseWebTestBase {
 
     foreach ($sorts as $sort) {
       $this->drupalGet('database_test/tablesort_first/', array('query' => array('order' => $sort['field'], 'sort' => $sort['sort'])));
-      $data = json_decode($this->drupalGetContent());
+      $data = json_decode($this->getRawContent());
 
       $first = array_shift($data->tasks);
       $last = array_pop($data->tasks);

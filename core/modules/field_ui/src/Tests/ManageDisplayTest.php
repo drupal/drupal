@@ -447,7 +447,7 @@ class ManageDisplayTest extends WebTestBase {
     \Drupal::entityManager()->clearCachedFieldDefinitions();
 
     // Save current content so that we can restore it when we're done.
-    $old_content = $this->drupalGetContent();
+    $old_content = $this->getRawContent();
 
     // Render a cloned node, so that we do not alter the original.
     $clone = clone $node;
@@ -456,12 +456,12 @@ class ManageDisplayTest extends WebTestBase {
     $this->verbose(t('Rendered node - view mode: @view_mode', array('@view_mode' => $view_mode)) . '<hr />'. $output);
 
     // Assign content so that WebTestBase functions can be used.
-    $this->drupalSetContent($output);
+    $this->setRawContent($output);
     $method = ($not_exists ? 'assertNoText' : 'assertText');
     $return = $this->{$method}((string) $text, $message);
 
     // Restore previous content.
-    $this->drupalSetContent($old_content);
+    $this->setRawContent($old_content);
 
     return $return;
   }

@@ -193,7 +193,7 @@ abstract class CommentTestBase extends WebTestBase {
       $regex .= ($reply ? '</article>\s</div>(.*?)' : '');
       $regex .= '!s';
 
-      return (boolean) preg_match($regex, $this->drupalGetContent());
+      return (boolean) preg_match($regex, $this->getRawContent());
     }
     else {
       return FALSE;
@@ -326,7 +326,7 @@ abstract class CommentTestBase extends WebTestBase {
    *   Contact info is available.
    */
   function commentContactInfoAvailable() {
-    return preg_match('/(input).*?(name="name").*?(input).*?(name="mail").*?(input).*?(name="homepage")/s', $this->drupalGetContent());
+    return preg_match('/(input).*?(name="name").*?(input).*?(name="mail").*?(input).*?(name="homepage")/s', $this->getRawContent());
   }
 
   /**
@@ -365,7 +365,7 @@ abstract class CommentTestBase extends WebTestBase {
    */
   function getUnapprovedComment($subject) {
     $this->drupalGet('admin/content/comment/approval');
-    preg_match('/href="(.*?)#comment-([^"]+)"(.*?)>(' . $subject . ')/', $this->drupalGetContent(), $match);
+    preg_match('/href="(.*?)#comment-([^"]+)"(.*?)>(' . $subject . ')/', $this->getRawContent(), $match);
 
     return $match[2];
   }

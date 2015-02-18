@@ -74,10 +74,10 @@ class CommentBlockTest extends CommentTestBase {
       $this->assertText($comments[$i]->getSubject(), String::format('Comment @number found in block.', array('@number' => 10 - $i)));
       if ($i > 1) {
         $previous_position = $position;
-        $position = strpos($this->drupalGetContent(), $comments[$i]->getSubject());
+        $position = strpos($this->getRawContent(), $comments[$i]->getSubject());
         $this->assertTrue($position > $previous_position, String::format('Comment @a appears after comment @b', array('@a' => 10 - $i, '@b' => 11 - $i)));
       }
-      $position = strpos($this->drupalGetContent(), $comments[$i]->getSubject());
+      $position = strpos($this->getRawContent(), $comments[$i]->getSubject());
     }
 
     // Test that links to comments work when comments are across pages.

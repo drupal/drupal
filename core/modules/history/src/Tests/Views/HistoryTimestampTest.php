@@ -70,7 +70,7 @@ class HistoryTimestampTest extends ViewTestBase {
     $this->executeView($view);
     $this->assertEqual(count($view->result), 2);
     $output = $view->preview();
-    $this->drupalSetContent(drupal_render($output));
+    $this->setRawContent(drupal_render($output));
     $result = $this->xpath('//span[@class=:class]', array(':class' => 'marker'));
     $this->assertEqual(count($result), 1, 'Just one node is marked as new');
 

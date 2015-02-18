@@ -176,7 +176,7 @@ class DisplayTest extends PluginTestBase {
     $output = $view->preview();
     $output = drupal_render($output);
 
-    $this->drupalSetContent($output);
+    $this->setRawContent($output);
     $result = $this->xpath('//a[@class=:class]', array(':class' => 'more-link'));
     $this->assertEqual($result[0]->attributes()->href, \Drupal::url('view.test_display_more.page_1'), 'The right more link is shown.');
     $this->assertEqual(trim($result[0][0]), $expected_more_text, 'The right link text is shown.');
@@ -185,7 +185,7 @@ class DisplayTest extends PluginTestBase {
     // tested.
     $more_link = $view->display_handler->renderMoreLink();
     $more_link = drupal_render($more_link);
-    $this->drupalSetContent($more_link);
+    $this->setRawContent($more_link);
     $result = $this->xpath('//a[@class=:class]', array(':class' => 'more-link'));
     $this->assertEqual($result[0]->attributes()->href, \Drupal::url('view.test_display_more.page_1'), 'The right more link is shown.');
     $this->assertEqual(trim($result[0][0]), $expected_more_text, 'The right link text is shown.');
@@ -201,7 +201,7 @@ class DisplayTest extends PluginTestBase {
     $this->executeView($view);
     $output = $view->preview();
     $output = drupal_render($output);
-    $this->drupalSetContent($output);
+    $this->setRawContent($output);
     $result = $this->xpath('//a[@class=:class]', array(':class' => 'more-link'));
     $this->assertTrue(empty($result), 'The more link is not shown.');
 
@@ -219,7 +219,7 @@ class DisplayTest extends PluginTestBase {
     $this->executeView($view);
     $output = $view->preview();
     $output = drupal_render($output);
-    $this->drupalSetContent($output);
+    $this->setRawContent($output);
     $result = $this->xpath('//a[@class=:class]', array(':class' => 'more-link'));
     $this->assertTrue(empty($result), 'The more link is not shown when view has more records.');
 

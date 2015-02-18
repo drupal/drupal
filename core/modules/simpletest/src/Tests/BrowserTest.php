@@ -50,7 +50,7 @@ class BrowserTest extends WebTestBase {
 </body>
 </html>
 EOF;
-    $this->drupalSetContent($testpage);
+    $this->setRawContent($testpage);
 
     // Matches the first link.
     $urls = $this->xpath('//a[text()=:text]', array(':text' => 'A "weird" link, just to bother the dumb "XPath 1.0"'));

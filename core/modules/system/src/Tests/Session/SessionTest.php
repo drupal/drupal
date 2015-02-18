@@ -54,7 +54,7 @@ class SessionTest extends WebTestBase {
     $user->save();
     $this->drupalGet('session-test/id');
     $matches = array();
-    preg_match('/\s*session_id:(.*)\n/', $this->drupalGetContent(), $matches);
+    preg_match('/\s*session_id:(.*)\n/', $this->getRawContent(), $matches);
     $this->assertTrue(!empty($matches[1]) , 'Found session ID before logging in.');
     $original_session = $matches[1];
 
@@ -71,7 +71,7 @@ class SessionTest extends WebTestBase {
 
     $this->drupalGet('session-test/id');
     $matches = array();
-    preg_match('/\s*session_id:(.*)\n/', $this->drupalGetContent(), $matches);
+    preg_match('/\s*session_id:(.*)\n/', $this->getRawContent(), $matches);
     $this->assertTrue(!empty($matches[1]) , 'Found session ID after logging in.');
     $this->assertTrue($matches[1] != $original_session, 'Session ID changed after login.');
   }

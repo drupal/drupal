@@ -88,7 +88,7 @@ class LanguageSelectElementTest extends WebTestBase {
     // field elements.
     $edit = array();
     $this->drupalPostForm(NULL, $edit, t('Submit'));
-    $values = Json::decode($this->drupalGetContent());
+    $values = Json::decode($this->getRawContent());
     $this->assertEqual($values['languages_all'], 'xx');
     $this->assertEqual($values['languages_configurable'], 'en');
     $this->assertEqual($values['languages_locked'], LanguageInterface::LANGCODE_NOT_SPECIFIED);

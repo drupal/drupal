@@ -338,7 +338,7 @@ class FormTest extends WebTestBase {
       'multiple_no_default_required[]' => 'three',
     );
     $this->drupalPostForm(NULL, $edit, 'Submit');
-    $values = Json::decode($this->drupalGetContent());
+    $values = Json::decode($this->getRawContent());
 
     // Verify expected values.
     $expected = array(
