@@ -66,10 +66,6 @@ function aggregator_theme() {
       'render element' => 'elements',
       'file' => 'aggregator.theme.inc',
     ),
-    'aggregator_block_item' => array(
-      'variables' => array('item' => NULL, 'feed' => 0),
-      'file' => 'aggregator.theme.inc',
-    ),
     'aggregator_item' => array(
       'render element' => 'elements',
       'file' => 'aggregator.theme.inc',

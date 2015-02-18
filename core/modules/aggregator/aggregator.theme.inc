@@ -48,20 +48,3 @@ function template_preprocess_aggregator_feed(&$variables) {
   $variables['full'] = $variables['elements']['#view_mode'] == 'full';
   $variables['title'] = String::checkPlain($feed->label());
 }
-
-/**
- * Prepares variables for individual feed item block templates.
- *
- * Default template: aggregator-block-item.html.twig.
- *
- * @param array $variables
- *   An associative array containing:
- *   - item: The item to be displayed.
- *   - feed: Not used.
- */
-function template_preprocess_aggregator_block_item(&$variables) {
-  // Display the external link to the item.
-  $item = $variables['item'];
-  $variables['url'] = check_url($item->getLink());
-  $variables['title'] = String::checkPlain($item->label());
-}
