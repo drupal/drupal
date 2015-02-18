@@ -308,6 +308,56 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
   }
 
   /**
+   * Tests responsive image formatter on node display with an empty media query.
+   */
+  public function testResponsiveImageFieldFormattersEmptyMediaQuery() {
+    $this->responsiveImgStyle
+      // Test the output of an empty media query.
+      ->addImageStyleMapping('responsive_image_test_module.empty', '1x', array(
+        'image_mapping_type' => 'image_style',
+        'image_mapping' => RESPONSIVE_IMAGE_EMPTY_IMAGE,
+      ))
+      // Test the output with a 1.5x multiplier.
+      ->addImageStyleMapping('responsive_image_test_module.mobile', '1x', array(
+        'image_mapping_type' => 'image_style',
+        'image_mapping' => 'thumbnail',
+      ))
+      ->save();
+    $node_storage = $this->container->get('entity.manager')->getStorage('node');
+    $field_name = Unicode::strtolower($this->randomMachineName());
+    $this->createImageField($field_name, 'article', array('uri_scheme' => 'public'));
+    // Create a new node with an image attached.
+    $test_image = current($this->drupalGetTestFiles('image'));
+    $nid = $this->uploadNodeImage($test_image, $field_name, 'article');
+    $node_storage->resetCache(array($nid));
+
+    // Use the responsive image formatter linked to file formatter.
+    $display_options = array(
+      'type' => 'responsive_image',
+      'settings' => array(
+        'image_link' => '',
+        'responsive_image_style' => 'style_one',
+        'fallback_image_style' => 'medium',
+      ),
+    );
+    $display = entity_get_display('node', 'article', 'default');
+    $display->setComponent($field_name, $display_options)
+      ->save();
+
+    // View the node.
+    $this->drupalGet('node/' . $nid);
+
+    // Assert an empty media attribute is not output.
+    $this->assertNoPattern('@srcset="data:image/gif;base64,R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== 1x".+?media="@');
+
+    // Assert the media attribute is present if it has a value.
+    $thumbnail_style = ImageStyle::load('thumbnail');
+    $node = $node_storage->load($nid);
+    $image_uri = File::load($node->{$field_name}->target_id)->getFileUri();
+    $this->assertPattern('/srcset="' . preg_quote($thumbnail_style->buildUrl($image_uri), '/') . ' 1x".+?media="\(min-width: 0px\)"/');
+  }
+
+  /**
    * Tests responsive image formatters linked to the file or node.
    *
    * @param string $link_type

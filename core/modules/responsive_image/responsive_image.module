@@ -401,8 +401,11 @@ function responsive_image_build_source_attributes(ImageInterface $image, array $
   ksort($srcset);
   $source_attributes = new \Drupal\Core\Template\Attribute(array(
     'srcset' => implode(', ', array_unique($srcset)),
-    'media' => $breakpoint->getMediaQuery(),
   ));
+  $media_query = trim($breakpoint->getMediaQuery());
+  if (!empty($media_query)) {
+    $source_attributes->setAttribute('media', $media_query);
+  }
   if (count(array_unique($derivative_mime_types)) == 1) {
     $source_attributes->setAttribute('type', $derivative_mime_types[0]);
   }
