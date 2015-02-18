@@ -2421,26 +2421,6 @@ abstract class WebTestBase extends TestBase {
   }
 
   /**
-   * Gets the current raw HTML of requested page.
-   *
-   * @deprecated 8.x
-   *   Use getRawContent().
-   */
-  protected function drupalGetContent() {
-    return $this->getRawContent();
-  }
-
-  /**
-   * Gets the value of drupalSettings for the currently-loaded page.
-   *
-   * @deprecated 8.x
-   *   Use getDrupalSettings().
-   */
-  protected function drupalGetSettings() {
-    return $this->getDrupalSettings();
-  }
-
-  /**
    * Gets an array containing all emails sent during this test case.
    *
    * @param $filter
@@ -2464,26 +2444,6 @@ abstract class WebTestBase extends TestBase {
     }
 
     return $filtered_emails;
-  }
-
-  /**
-   * Sets the raw HTML content.
-   *
-   * @deprecated 8.x
-   *   Use setRawContent().
-   */
-  protected function drupalSetContent($content) {
-    $this->setRawContent($content);
-  }
-
-  /**
-   * Sets the value of drupalSettings for the currently-loaded page.
-   *
-   * @deprecated 8.x
-   *   Use setDrupalSettings().
-   */
-  protected function drupalSetSettings($settings) {
-    $this->setDrupalSettings($settings);
   }
 
   /**
