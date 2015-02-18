@@ -32,7 +32,12 @@ class FilterBooleanOperatorTest extends ViewUnitTestBase {
    */
   public static $testViews = array('test_view');
 
-  protected $column_map = array(
+  /**
+   * Map column names.
+   *
+   * @var array
+   */
+  protected $columnMap = array(
     'views_test_data_id' => 'id',
   );
 
@@ -66,7 +71,7 @@ class FilterBooleanOperatorTest extends ViewUnitTestBase {
     );
 
     $this->assertEqual(2, count($view->result));
-    $this->assertIdenticalResultset($view, $expected_result, $this->column_map);
+    $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
 
     $view->destroy();
     $view->setDisplay();
@@ -89,7 +94,7 @@ class FilterBooleanOperatorTest extends ViewUnitTestBase {
     );
 
     $this->assertEqual(3, count($view->result));
-    $this->assertIdenticalResultset($view, $expected_result, $this->column_map);
+    $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
   }
 
   /**
@@ -112,7 +117,7 @@ class FilterBooleanOperatorTest extends ViewUnitTestBase {
     );
 
     $this->assertEqual(3, count($view->result));
-    $this->assertIdenticalResultset($view, $expected_result, $this->column_map);
+    $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
     $view->destroy();
 
     $view->setExposedInput(array('status' => 2));
@@ -127,7 +132,7 @@ class FilterBooleanOperatorTest extends ViewUnitTestBase {
     );
 
     $this->assertEqual(2, count($view->result));
-    $this->assertIdenticalResultset($view, $expected_result, $this->column_map);
+    $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
   }
 
   /**

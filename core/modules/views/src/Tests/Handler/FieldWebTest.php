@@ -32,7 +32,12 @@ class FieldWebTest extends HandlerTestBase {
    */
   public static $modules = ['node'];
 
-  protected $column_map = array(
+  /**
+   * Maps between the key in the expected result and the query result.
+   *
+   * @var array
+   */
+  protected $columnMap = array(
     'views_test_data_name' => 'name',
   );
 

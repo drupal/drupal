@@ -24,7 +24,12 @@ class FilterCombineTest extends ViewUnitTestBase {
    */
   public static $testViews = array('test_view');
 
-  protected $column_map = array(
+  /**
+   * Map column names.
+   *
+   * @var array
+   */
+  protected $columnMap = array(
     'views_test_data_name' => 'name',
     'views_test_data_job' => 'job',
   );
@@ -78,7 +83,7 @@ class FilterCombineTest extends ViewUnitTestBase {
         'job' => NULL,
       ),
     );
-    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+    $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
   /**

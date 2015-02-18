@@ -29,7 +29,7 @@ class ViewStorageTest extends ViewUnitTestBase {
    *
    * @var array
    */
-  protected $config_properties = array(
+  protected $configProperties = array(
     'status',
     'module',
     'id',
@@ -92,7 +92,7 @@ class ViewStorageTest extends ViewUnitTestBase {
     // Confirm that an actual view object is loaded and that it returns all of
     // expected properties.
     $this->assertTrue($view instanceof View, 'Single View instance loaded.');
-    foreach ($this->config_properties as $property) {
+    foreach ($this->configProperties as $property) {
       $this->assertTrue($view->get($property) !== NULL, format_string('Property: @property loaded onto View.', array('@property' => $property)));
     }
 
@@ -127,7 +127,7 @@ class ViewStorageTest extends ViewUnitTestBase {
 
     $this->assertTrue($created instanceof View, 'Created object is a View.');
     // Check that the View contains all of the properties.
-    foreach ($this->config_properties as $property) {
+    foreach ($this->configProperties as $property) {
       $this->assertTrue(property_exists($created, $property), format_string('Property: @property created on View.', array('@property' => $property)));
     }
 
@@ -139,7 +139,7 @@ class ViewStorageTest extends ViewUnitTestBase {
 
     $this->assertTrue($created instanceof View, 'Created object is a View.');
     // Check that the View contains all of the properties.
-    $properties = $this->config_properties;
+    $properties = $this->configProperties;
     // Remove display from list.
     array_pop($properties);
 

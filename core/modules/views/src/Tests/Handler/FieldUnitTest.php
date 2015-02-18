@@ -28,7 +28,12 @@ class FieldUnitTest extends ViewUnitTestBase {
    */
   public static $testViews = array('test_view', 'test_field_tokens', 'test_field_output');
 
-  protected $column_map = array(
+  /**
+   * Map column names.
+   *
+   * @var array
+   */
+  protected $columnMap = array(
     'views_test_data_name' => 'name',
   );
 
@@ -265,7 +270,7 @@ class FieldUnitTest extends ViewUnitTestBase {
     $view->initDisplay();
     $this->executeView($view);
 
-    $column_map_reversed = array_flip($this->column_map);
+    $column_map_reversed = array_flip($this->columnMap);
     $view->row_index = 0;
     $random_name = $this->randomMachineName();
     $random_value = $this->randomMachineName();
@@ -483,7 +488,7 @@ class FieldUnitTest extends ViewUnitTestBase {
     $view->initDisplay();
     $this->executeView($view);
 
-    $column_map_reversed = array_flip($this->column_map);
+    $column_map_reversed = array_flip($this->columnMap);
     $view->row_index = 0;
 
     $empty_text = $view->field['name']->options['empty'] = $this->randomMachineName();

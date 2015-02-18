@@ -26,7 +26,12 @@ class FilterEqualityTest extends ViewUnitTestBase {
    */
   public static $testViews = array('test_view');
 
-  protected $column_map = array(
+  /**
+   * Map column names.
+   *
+   * @var array
+   */
+  protected $columnMap = array(
     'views_test_data_name' => 'name',
   );
 
@@ -64,7 +69,7 @@ class FilterEqualityTest extends ViewUnitTestBase {
         'name' => 'Ringo',
       ),
     );
-    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+    $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
   public function testEqualGroupedExposed() {
@@ -85,7 +90,7 @@ class FilterEqualityTest extends ViewUnitTestBase {
         'name' => 'Ringo',
       ),
     );
-    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+    $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
   function testNotEqual() {
@@ -119,7 +124,7 @@ class FilterEqualityTest extends ViewUnitTestBase {
         'name' => 'Meredith',
       ),
     );
-    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+    $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
   public function testEqualGroupedNotExposed() {
@@ -149,7 +154,7 @@ class FilterEqualityTest extends ViewUnitTestBase {
         'name' => 'Meredith',
       ),
     );
-    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+    $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
 

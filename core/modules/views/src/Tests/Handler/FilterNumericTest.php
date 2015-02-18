@@ -26,7 +26,12 @@ class FilterNumericTest extends ViewUnitTestBase {
    */
   public static $testViews = array('test_view');
 
-  protected $column_map = array(
+  /**
+   * Map column names.
+   *
+   * @var array
+   */
+  protected $columnMap = array(
     'views_test_data_name' => 'name',
     'views_test_data_age' => 'age',
   );
@@ -68,7 +73,7 @@ class FilterNumericTest extends ViewUnitTestBase {
         'age' => 28,
       ),
     );
-    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+    $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
   public function testFilterNumericExposedGroupedSimple() {
@@ -90,7 +95,7 @@ class FilterNumericTest extends ViewUnitTestBase {
         'age' => 28,
       ),
     );
-    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+    $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
   public function testFilterNumericBetween() {
@@ -127,7 +132,7 @@ class FilterNumericTest extends ViewUnitTestBase {
         'age' => 26,
       ),
     );
-    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+    $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
 
     // test not between
     $view->destroy();
@@ -163,7 +168,7 @@ class FilterNumericTest extends ViewUnitTestBase {
         'age' => 30,
       ),
     );
-    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+    $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
   public function testFilterNumericExposedGroupedBetween() {
@@ -193,7 +198,7 @@ class FilterNumericTest extends ViewUnitTestBase {
         'age' => 26,
       ),
     );
-    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+    $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
   public function testFilterNumericExposedGroupedNotBetween() {
@@ -223,7 +228,7 @@ class FilterNumericTest extends ViewUnitTestBase {
         'age' => 30,
       ),
     );
-    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+    $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
   public function testFilterNumericEmpty() {
@@ -244,7 +249,7 @@ class FilterNumericTest extends ViewUnitTestBase {
     $this->executeView($view);
     $resultset = array(
     );
-    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+    $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
 
     $view->destroy();
     $view->setDisplay();
@@ -283,7 +288,7 @@ class FilterNumericTest extends ViewUnitTestBase {
         'age' => 30,
       ),
     );
-    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+    $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
   public function testFilterNumericExposedGroupedEmpty() {
@@ -301,7 +306,7 @@ class FilterNumericTest extends ViewUnitTestBase {
     $this->executeView($view);
     $resultset = array(
     );
-    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+    $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
   public function testFilterNumericExposedGroupedNotEmpty() {
@@ -339,7 +344,7 @@ class FilterNumericTest extends ViewUnitTestBase {
         'age' => 30,
       ),
     );
-    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+    $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
   public function testAllowEmpty() {

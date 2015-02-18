@@ -33,6 +33,20 @@ class AccessTest extends PluginTestBase {
    */
   public static $modules = array('node');
 
+  /**
+   * Web user for testing.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $webUser;
+
+  /**
+   * Normal user for testing.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $normalUser;
+
   protected function setUp() {
     parent::setUp();
 
@@ -40,13 +54,11 @@ class AccessTest extends PluginTestBase {
 
     ViewTestData::createTestViews(get_class($this), array('views_test_data'));
 
-    $this->web_user = $this->drupalCreateUser();
-    $roles = $this->web_user->getRoles();
-    $this->web_role = $roles[0];
+    $this->webUser = $this->drupalCreateUser();
 
-    $this->normal_role = $this->drupalCreateRole(array());
-    $this->normal_user = $this->drupalCreateUser(array('views_test_data test permission'));
-    $this->normal_user->addRole($this->normal_role);
+    $normal_role = $this->drupalCreateRole(array());
+    $this->normalUser = $this->drupalCreateUser(array('views_test_data test permission'));
+    $this->normalUser->addRole($normal_role);
     // @todo when all the plugin information is cached make a reset function and
     // call it here.
   }
@@ -58,8 +70,8 @@ class AccessTest extends PluginTestBase {
     $view = Views::getView('test_access_none');
     $view->setDisplay();
 
-    $this->assertTrue($view->display_handler->access($this->web_user));
-    $this->assertTrue($view->display_handler->access($this->normal_user));
+    $this->assertTrue($view->display_handler->access($this->webUser));
+    $this->assertTrue($view->display_handler->access($this->normalUser));
   }
 
   /**
@@ -77,7 +89,7 @@ class AccessTest extends PluginTestBase {
 
     $access_plugin = $view->display_handler->getPlugin('access');
 
-    $this->assertFalse($access_plugin->access($this->normal_user));
+    $this->assertFalse($access_plugin->access($this->normalUser));
     $this->drupalGet('test_access_static');
     $this->assertResponse(403);
 
@@ -89,7 +101,7 @@ class AccessTest extends PluginTestBase {
     // termination event fires. Simulate that here.
     $this->container->get('router.builder')->rebuildIfNeeded();
 
-    $this->assertTrue($access_plugin->access($this->normal_user));
+    $this->assertTrue($access_plugin->access($this->normalUser));
 
     $this->drupalGet('test_access_static');
     $this->assertResponse(200);
