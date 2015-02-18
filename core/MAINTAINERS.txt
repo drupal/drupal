@@ -385,7 +385,8 @@ Serialization module
 - Damian Lee 'damiankloip' http://drupal.org/user/1037976
 
 Shortcut module
-- ?
+- Tobias Stöckler 'tstoeckler' https://www.drupal.org/user/107158
+- Jibran Ijaz 'jibran' https://www.drupal.org/user/1198144
 
 Simpletest module
 - Daniel F. Kudwien 'sun' http://drupal.org/user/54136
