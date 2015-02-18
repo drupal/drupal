@@ -238,7 +238,7 @@ class DatabaseConnectionTestCase extends DatabaseTestCase {
     // Open the default target so we have an object to compare.
     $db1 = Database::getConnection('default', 'default');
 
-    // Try to close the the default connection, then open a new one.
+    // Try to close the default connection, then open a new one.
     Database::closeConnection('default', 'default');
     $db2 = Database::getConnection('default', 'default');
 
@@ -3454,12 +3454,14 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
   }
 
   /**
-   * Helper method for transaction unit test. This "outer layer" transaction
-   * starts and then encapsulates the "inner layer" transaction. This nesting
-   * is used to evaluate whether the the database transaction API properly
-   * supports nesting. By "properly supports," we mean the outer transaction
-   * continues to exist regardless of what functions are called and whether
-   * those functions start their own transactions.
+   * Helper method for transaction unit test.
+   *
+   * This "outer layer" transaction starts and then encapsulates the
+   * "inner layer" transaction. This nesting is used to evaluate whether the
+   * database transaction API properly supports nesting. By "properly supports,"
+   * we mean the outer transaction continues to exist regardless of what
+   * functions are called and whether those functions start their own
+   * transactions.
    *
    * In contrast, a typical database would commit the outer transaction, start
    * a new transaction for the inner layer, commit the inner layer transaction,

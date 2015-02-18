@@ -157,7 +157,7 @@ function ajax_forms_test_ajax_commands_form($form, &$form_state) {
 
   // Shows the Ajax 'css' command.
   $form['css_command_example'] = array(
-    '#value' => t("Set the the '#box' div to be blue."),
+    '#value' => t("Set the '#box' div to be blue."),
     '#type' => 'submit',
     '#ajax' => array(
       'callback' => 'ajax_forms_test_advanced_commands_css_callback',

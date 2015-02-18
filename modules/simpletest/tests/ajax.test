@@ -293,7 +293,7 @@ class AJAXCommandsTestCase extends AJAXTestCase {
     $this->assertCommand($commands, $expected, "'changed' AJAX command (with asterisk) issued with correct selector");
 
     // Tests the 'css' command.
-    $commands = $this->drupalPostAJAX($form_path, $edit, array('op' => t("Set the the '#box' div to be blue.")));
+    $commands = $this->drupalPostAJAX($form_path, $edit, array('op' => t("Set the '#box' div to be blue.")));
     $expected = array(
       'command' => 'css',
       'selector' => '#css_div',
