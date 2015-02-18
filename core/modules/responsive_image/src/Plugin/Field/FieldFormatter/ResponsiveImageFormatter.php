@@ -16,7 +16,6 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
 use Drupal\image\Plugin\Field\FieldFormatter\ImageFormatterBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\responsive_image\Entity\ResponsiveImageStyle;
 use Drupal\image\Entity\ImageStyle;
 
 /**
@@ -179,7 +178,10 @@ class ResponsiveImageFormatter extends ImageFormatterBase implements ContainerFa
     $url = NULL;
     // Check if the formatter involves a link.
     if ($this->getSetting('image_link') == 'content') {
-      $url = $items->getEntity()->urlInfo();
+      $entity = $items->getEntity();
+      if (!$entity->isNew()) {
+        $url = $entity->urlInfo();
+      }
     }
     elseif ($this->getSetting('image_link') == 'file') {
       $link_file = TRUE;
