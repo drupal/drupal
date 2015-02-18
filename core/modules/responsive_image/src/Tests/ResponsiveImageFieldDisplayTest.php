@@ -368,25 +368,6 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     $this->createImageField($field_name, 'article', array('uri_scheme' => 'public'));
     // Create a new node with an image attached.
     $test_image = current($this->drupalGetTestFiles('image'));
-
-    // Test the image linked to file formatter.
-    $display_options = array(
-      'type' => 'responsive_image',
-      'settings' => array(
-        'image_link' => $link_type,
-        'responsive_image_style' => 'style_one',
-        'fallback_image_style' => 'large',
-      ),
-    );
-    entity_get_display('node', 'article', 'default')
-      ->setComponent($field_name, $display_options)
-      ->save();
-    // Ensure that preview works.
-    $this->previewNodeImage($test_image, $field_name, 'article');
-
-    // Look for a picture tag in the preview output
-    $this->assertPattern('/picture/');
-
     $nid = $this->uploadNodeImage($test_image, $field_name, 'article');
     $this->container->get('entity.manager')->getStorage('node')->resetCache(array($nid));
     $node = Node::load($nid);
