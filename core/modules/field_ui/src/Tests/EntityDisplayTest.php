@@ -105,6 +105,25 @@ class EntityDisplayTest extends KernelTestBase {
   }
 
   /**
+   *  Test sorting of components by name on basic CRUD operations
+   */
+  public function testEntityDisplayCRUDSort() {
+    $display = entity_create('entity_view_display', array(
+      'targetEntityType' => 'entity_test',
+      'bundle' => 'entity_test',
+      'mode' => 'default',
+    ));
+    $display->setComponent('component_3');
+    $display->setComponent('component_1');
+    $display->setComponent('component_2');
+    $display->removeComponent('name');
+    $display->save();
+    $components = array_keys($display->getComponents());
+    $expected = array ( 0 => 'component_1', 1 => 'component_2',  2 => 'component_3',);
+    $this->assertIdentical($components, $expected);
+  }
+
+  /**
    * Tests entity_get_display().
    */
   public function testEntityGetDisplay() {

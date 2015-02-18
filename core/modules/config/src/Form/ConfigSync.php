@@ -166,33 +166,34 @@ class ConfigSync extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $snapshot_comparer = new StorageComparer($this->activeStorage, $this->snapshotStorage, $this->configManager);
-    if (!$form_state->getUserInput() && $snapshot_comparer->createChangelist()->hasChanges()) {
-      $change_list = array();
-      foreach ($snapshot_comparer->getAllCollectionNames() as $collection) {
-        foreach ($snapshot_comparer->getChangelist(NULL, $collection) as $config_names) {
-          if (empty($config_names)) {
-            continue;
-          }
-          foreach ($config_names as $config_name) {
-            $change_list[] = $config_name;
+    if ($this->snapshotStorage->exists('core.extension')) {
+      $snapshot_comparer = new StorageComparer($this->activeStorage, $this->snapshotStorage, $this->configManager);
+      if (!$form_state->getUserInput() && $snapshot_comparer->createChangelist()->hasChanges()) {
+        $change_list = array();
+        foreach ($snapshot_comparer->getAllCollectionNames() as $collection) {
+          foreach ($snapshot_comparer->getChangelist(NULL, $collection) as $config_names) {
+            if (empty($config_names)) {
+              continue;
+            }
+            foreach ($config_names as $config_name) {
+              $change_list[] = $config_name;
+            }
           }
         }
+        sort($change_list);
+        $change_list_render = array(
+          '#theme' => 'item_list',
+          '#items' => $change_list,
+        );
+        $change_list_html = drupal_render($change_list_render);
+        drupal_set_message($this->t('Your current configuration has changed. Changes to these configuration items will be lost on the next synchronization: !changes', array('!changes' => $change_list_html)), 'warning');
       }
-      sort($change_list);
-      $change_list_render = array(
-        '#theme' => 'item_list',
-        '#items' => $change_list,
-      );
-      $change_list_html = drupal_render($change_list_render);
-      drupal_set_message($this->t('Your current configuration has changed. Changes to these configuration items will be lost on the next synchronization: !changes', array('!changes' => $change_list_html)), 'warning');
     }
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Import all'),
     );
-
     $source_list = $this->stagingStorage->listAll();
     $storage_comparer = new StorageComparer($this->stagingStorage, $this->activeStorage, $this->configManager);
     if (empty($source_list) || !$storage_comparer->createChangelist()->hasChanges()) {

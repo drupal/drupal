@@ -90,6 +90,11 @@ class ConfigExportImportUITest extends WebTestBase {
    * Tests a simple site export import case.
    */
   public function testExportImport() {
+    // After installation there is no snapshot and nothing to import.
+    $this->drupalGet('admin/config/development/configuration');
+    $this->assertNoText(t('Warning message'));
+    $this->assertText(t('There are no configuration changes to import.'));
+
     $this->originalSlogan = $this->config('system.site')->get('slogan');
     $this->newSlogan = $this->randomString(16);
     $this->assertNotEqual($this->newSlogan, $this->originalSlogan);
@@ -113,6 +118,8 @@ class ConfigExportImportUITest extends WebTestBase {
       'field_storage' => $this->fieldStorage,
       'bundle' => $this->contentType->id(),
     ))->save();
+    // Update the displays so that configuration does not change unexpectedly on
+    // import.
     entity_get_form_display('node', $this->contentType->id(), 'default')
       ->setComponent($this->fieldName, array(
         'type' => 'text_textfield',
@@ -120,6 +127,12 @@ class ConfigExportImportUITest extends WebTestBase {
       ->save();
     entity_get_display('node', $this->contentType->id(), 'full')
       ->setComponent($this->fieldName)
+      ->save();
+    entity_get_display('node', $this->contentType->id(), 'default')
+      ->setComponent($this->fieldName)
+      ->save();
+    entity_get_display('node', $this->contentType->id(), 'teaser')
+      ->removeComponent($this->fieldName)
       ->save();
 
     $this->drupalGet('node/add/' . $this->contentType->id());
@@ -154,7 +167,15 @@ class ConfigExportImportUITest extends WebTestBase {
     $filename = 'temporary://' . $this->randomMachineName();
     file_put_contents($filename, $this->tarball);
     $this->drupalPostForm('admin/config/development/configuration/full/import', array('files[import_tarball]' => $filename), 'Upload');
+    // There is no snapshot yet because an import has never run.
+    $this->assertNoText(t('Warning message'));
+    $this->assertNoText(t('There are no configuration changes to import.'));
+    $this->assertText($this->contentType->label());
+
     $this->drupalPostForm(NULL, array(), 'Import all');
+    // After importing the snapshot has been updated an there are no warnings.
+    $this->assertNoText(t('Warning message'));
+    $this->assertText(t('There are no configuration changes to import.'));
 
     $this->assertEqual($this->config('system.site')->get('slogan'), $this->newSlogan);
 
@@ -165,7 +186,15 @@ class ConfigExportImportUITest extends WebTestBase {
       ->set('slogan', $this->originalSlogan)
       ->save();
     $this->drupalGet('admin/config/development/configuration');
+    $this->assertText(t('Warning message'));
     $this->assertText('Your current configuration has changed. Changes to these configuration items will be lost on the next synchronization: system.site');
+    // Remove everything from staging. The warning about differences between the
+    // active and snapshot should still exist.
+    \Drupal::service('config.storage.staging')->deleteAll();
+    $this->drupalGet('admin/config/development/configuration');
+    $this->assertText(t('Warning message'));
+    $this->assertText('Your current configuration has changed. Changes to these configuration items will be lost on the next synchronization: system.site');
+    $this->assertText(t('There are no configuration changes to import.'));
   }
 
   /**

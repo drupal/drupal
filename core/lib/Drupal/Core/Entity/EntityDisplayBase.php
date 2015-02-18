@@ -237,8 +237,8 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
    * {@inheritdoc}
    */
   public function preSave(EntityStorageInterface $storage, $update = TRUE) {
-    // Sort elements by weight before saving.
-    uasort($this->content, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
+    ksort($this->content);
+    ksort($this->hidden);
     parent::preSave($storage, $update);
   }
 

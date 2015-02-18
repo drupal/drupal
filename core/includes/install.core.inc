@@ -1824,11 +1824,6 @@ function install_finished(&$install_state) {
   // Will also trigger indexing of profile-supplied content or feeds.
   \Drupal::service('cron')->run();
 
-  // Save a snapshot of the initially installed configuration.
-  $active = \Drupal::service('config.storage');
-  $snapshot = \Drupal::service('config.storage.snapshot');
-  \Drupal::service('config.manager')->createSnapshot($active, $snapshot);
-
   if ($install_state['interactive']) {
     // Load current user and perform final login tasks.
     // This has to be done after drupal_flush_all_caches()
