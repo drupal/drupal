@@ -200,21 +200,7 @@ class ResponsiveImageFormatter extends ImageFormatterBase implements ContainerFa
     $cache_tags = [];
     if ($responsive_image_style) {
       $cache_tags = Cache::mergeTags($cache_tags, $responsive_image_style->getCacheTags());
-      foreach ($responsive_image_style->getImageStyleMappings() as $image_style_mapping) {
-        // Only image styles of non-empty mappings should be loaded.
-        if (!$responsive_image_style::isEmptyImageStyleMapping($image_style_mapping)) {
-
-          if ($image_style_mapping['image_mapping_type'] == 'image_style') {
-            // This mapping has one image style, add it.
-            $image_styles_to_load[] = $image_style_mapping['image_mapping'];
-          }
-          else {
-            // This mapping has multiple image styles, merge them.
-            $image_style_mapping['image_mapping']['sizes_image_styles'] = array_filter($image_style_mapping['image_mapping']['sizes_image_styles']);
-            $image_styles_to_load = array_merge($image_styles_to_load, $image_style_mapping['image_mapping']['sizes_image_styles']);
-          }
-        }
-      }
+      $image_styles_to_load = $responsive_image_style->getImageStyleIds();
     }
 
     // If there is a fallback image style, add it to the image styles to load.

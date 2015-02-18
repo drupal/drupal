@@ -65,8 +65,42 @@ class ResponsiveImageStyleConfigEntityUnitTest extends UnitTestCase {
    * @covers ::calculateDependencies
    */
   public function testCalculateDependencies() {
-    $entity = new ResponsiveImageStyle(array('breakpoint_group' => 'test_group'));
+    // Set up image style loading mock.
+    $styles = [];
+    foreach (['small', 'medium', 'large'] as $style) {
+      $mock = $this->getMock('Drupal\Core\Config\Entity\ConfigEntityInterface');
+      $mock->expects($this->any())
+        ->method('getConfigDependencyName')
+        ->willReturn('image.style.' . $style);
+      $styles[$style] = $mock;
+    }
+    $storage = $this->getMock('\Drupal\Core\Config\Entity\ConfigEntityStorageInterface');
+    $storage->expects($this->any())
+      ->method('loadMultiple')
+      ->with(array_keys($styles))
+      ->willReturn($styles);
+    $this->entityManager->expects($this->any())
+      ->method('getStorage')
+      ->with('image_style')
+      ->willReturn($storage);
+    $this->entityManager->expects($this->any())
+      ->method('getEntityTypeFromClass')
+      ->with('Drupal\image\Entity\ImageStyle')
+      ->willReturn('image_style');
+
+    $entity = new ResponsiveImageStyle(['breakpoint_group' => 'test_group']);
     $entity->setBreakpointGroup('test_group');
+    $entity->addImageStyleMapping('test_breakpoint', '1x', ['image_mapping_type' => 'image_style', 'image_mapping' => 'small']);
+    $entity->addImageStyleMapping('test_breakpoint', '2x', [
+      'image_mapping_type' => 'sizes',
+      'image_mapping' => [
+        'sizes' => '(min-width:700px) 700px, 100vw',
+        'sizes_image_styles' => [
+          'medium' => 'medium',
+          'large' => 'large',
+        ],
+      ],
+    ]);
 
     $this->breakpointManager->expects($this->any())
       ->method('getGroupProviders')
@@ -74,8 +108,9 @@ class ResponsiveImageStyleConfigEntityUnitTest extends UnitTestCase {
       ->willReturn(array('bartik' => 'theme', 'toolbar' => 'module'));
 
     $dependencies = $entity->calculateDependencies();
-    $this->assertContains('toolbar', $dependencies['module']);
-    $this->assertContains('bartik', $dependencies['theme']);
+    $this->assertEquals(['toolbar'], $dependencies['module']);
+    $this->assertEquals(['bartik'], $dependencies['theme']);
+    $this->assertEquals(['image.style.large', 'image.style.medium', 'image.style.small'], $dependencies['config']);
   }
 
   /**

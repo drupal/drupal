@@ -8,6 +8,7 @@
 namespace Drupal\responsive_image\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\image\Entity\ImageStyle;
 use Drupal\responsive_image\ResponsiveImageStyleInterface;
 
 /**
@@ -184,6 +185,11 @@ class ResponsiveImageStyle extends ConfigEntityBase implements ResponsiveImageSt
     foreach ($providers as $provider => $type) {
       $this->addDependency($type, $provider);
     }
+    // Extract all the styles from the image style mappings.
+    $styles = ImageStyle::loadMultiple($this->getImageStyleIds());
+    array_walk($styles, function ($style) {
+      $this->addDependency('config', $style->getConfigDependencyName());
+    });
     return $this->dependencies;
   }
 
@@ -219,6 +225,27 @@ class ResponsiveImageStyle extends ConfigEntityBase implements ResponsiveImageSt
     if (isset($map[$breakpoint_id][$multiplier])) {
       return $map[$breakpoint_id][$multiplier];
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getImageStyleIds() {
+    $image_styles = [];
+    foreach ($this->getImageStyleMappings() as $image_style_mapping) {
+      // Only image styles of non-empty mappings should be loaded.
+      if (!$this::isEmptyImageStyleMapping($image_style_mapping)) {
+        switch ($image_style_mapping['image_mapping_type']) {
+          case 'image_style':
+            $image_styles[] = $image_style_mapping['image_mapping'];
+            break;
+          case 'sizes':
+            $image_styles = array_merge($image_styles, $image_style_mapping['image_mapping']['sizes_image_styles']);
+            break;
+        }
+      }
+    }
+    return array_values(array_filter(array_unique($image_styles)));
   }
 
 }

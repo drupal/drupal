@@ -126,4 +126,11 @@ interface ResponsiveImageStyleInterface extends ConfigEntityInterface {
    */
   public function removeImageStyleMappings();
 
+  /**
+   * Gets all the image styles IDs involved in the responsive image mapping.
+   *
+   * @return string[]
+   */
+  public function getImageStyleIds();
+
 }
