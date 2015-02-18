@@ -58,6 +58,7 @@ class UpdateCoreTest extends UpdateTestBase {
           $this->assertText(t('Up to date'));
           $this->assertNoText(t('Update available'));
           $this->assertNoText(t('Security update required!'));
+          $this->assertRaw('check.svg', 'Check icon was found.');
         }
       }
     }
@@ -87,6 +88,7 @@ class UpdateCoreTest extends UpdateTestBase {
               $this->assertText(t('Update available'));
               $this->assertText(t('Recommended version:'));
               $this->assertNoText(t('Latest version:'));
+              $this->assertRaw('warning.svg', 'Warning icon was found.');
             }
             // Only unstable releases are available.
             // An unstable release is the latest.
@@ -95,6 +97,7 @@ class UpdateCoreTest extends UpdateTestBase {
               $this->assertNoText(t('Update available'));
               $this->assertNoText(t('Recommended version:'));
               $this->assertText(t('Latest version:'));
+              $this->assertRaw('check.svg', 'Check icon was found.');
             }
             break;
           case 1:
@@ -105,6 +108,7 @@ class UpdateCoreTest extends UpdateTestBase {
               $this->assertText(t('Update available'));
               $this->assertText(t('Recommended version:'));
               $this->assertNoText(t('Latest version:'));
+              $this->assertRaw('warning.svg', 'Warning icon was found.');
             }
             // Both stable and unstable releases are available.
             // An unstable release is the latest.
@@ -113,6 +117,7 @@ class UpdateCoreTest extends UpdateTestBase {
               $this->assertText(t('Update available'));
               $this->assertText(t('Recommended version:'));
               $this->assertText(t('Latest version:'));
+              $this->assertRaw('warning.svg', 'Warning icon was found.');
             }
             break;
         }
@@ -139,6 +144,7 @@ class UpdateCoreTest extends UpdateTestBase {
           $this->assertText(t('Not supported!'));
           $this->assertText(t('Recommended version:'));
           $this->assertNoText(t('Latest version:'));
+          $this->assertRaw('error.svg', 'Error icon was found.');
         }
       }
     }
@@ -158,6 +164,7 @@ class UpdateCoreTest extends UpdateTestBase {
       $this->assertRaw(\Drupal::l("8.$minor_version.2", Url::fromUri("http://example.com/drupal-8-$minor_version-2-release")), 'Link to release appears.');
       $this->assertRaw(\Drupal::l(t('Download'), Url::fromUri("http://example.com/drupal-8-$minor_version-2.tar.gz")), 'Link to download appears.');
       $this->assertRaw(\Drupal::l(t('Release notes'), Url::fromUri("http://example.com/drupal-8-$minor_version-2-release")), 'Link to release notes appears.');
+      $this->assertRaw('error.svg', 'Error icon was found.');
     }
   }
 
