@@ -680,7 +680,7 @@ function locale_form_system_file_system_settings_alter(&$form, FormStateInterfac
   $form['translation_path'] = array(
     '#type' => 'textfield',
     '#title' => t('Interface translations directory'),
-    '#default_value' => \Drupal::config('locale.settings')->get('translation.path'),
+    '#default_value' => \Drupal::configFactory()->getEditable('locale.settings')->get('translation.path'),
     '#maxlength' => 255,
     '#description' => t('A local file system path where interface translation files will be stored.'),
     '#required' => TRUE,
@@ -705,7 +705,7 @@ function locale_system_file_system_settings_submit(&$form, FormStateInterface $f
     locale_translation_clear_status();
   }
 
-  \Drupal::config('locale.settings')
+  \Drupal::configFactory()->getEditable('locale.settings')
     ->set('translation.path', $form_state->getValue('translation_path'))
     ->save();
 }
