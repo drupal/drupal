@@ -182,7 +182,7 @@ function entity_load_multiple($entity_type, array $ids = NULL, $reset = FALSE) {
  *
  * @return array
  *   An array of entity objects indexed by their IDs. Returns an empty array if
- *   no matching entities found.
+ *   no matching entities are found.
  */
 function entity_load_multiple_by_properties($entity_type, array $values) {
   return \Drupal::entityManager()

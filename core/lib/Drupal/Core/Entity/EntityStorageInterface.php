@@ -47,7 +47,7 @@ interface EntityStorageInterface {
    *
    * @return \Drupal\Core\Entity\EntityInterface[]
    *   An array of entity objects indexed by their IDs. Returns an empty array
-   *   if no matching entities found.
+   *   if no matching entities are found.
    */
   public function loadMultiple(array $ids = NULL);
 

@@ -437,7 +437,7 @@ abstract class Entity implements EntityInterface {
   /**
    * {@inheritdoc}
    *
-   * @return static
+   * @return static|null
    *   The entity object or NULL if there is no entity with the given ID.
    */
   public static function load($id) {
@@ -449,7 +449,8 @@ abstract class Entity implements EntityInterface {
    * {@inheritdoc}
    *
    * @return static[]
-   *   An array of entity objects indexed by their IDs.
+   *   An array of entity objects indexed by their IDs. Returns an empty array
+   *   if no matching entities are found.
    */
   public static function loadMultiple(array $ids = NULL) {
     $entity_manager = \Drupal::entityManager();
