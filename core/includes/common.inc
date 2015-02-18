@@ -1662,10 +1662,10 @@ function _drupal_flush_css_js() {
  *   Label to prefix the data.
  * @param $print_r
  *   Flag to switch between print_r() and var_export() for data conversion to
- *   string. Set $print_r to TRUE when dealing with a recursive data structure
- *   as var_export() will generate an error.
+ *   string. Set $print_r to FALSE to use var_export() instead of print_r().
+ *   Passing recursive data structures to var_export() will generate an error.
  */
-function debug($data, $label = NULL, $print_r = FALSE) {
+function debug($data, $label = NULL, $print_r = TRUE) {
   // Print $data contents to string.
   $string = String::checkPlain($print_r ? print_r($data, TRUE) : var_export($data, TRUE));
 

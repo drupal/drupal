@@ -210,7 +210,7 @@ EOD;
     $this->assertNothing();
 
     // This causes the debug message asserted in confirmStubResults().
-    debug('Foo', 'Debug');
+    debug('Foo', 'Debug', FALSE);
   }
 
   /**
