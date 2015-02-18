@@ -7,8 +7,8 @@
 
 namespace Drupal\views\Tests\Handler;
 
-use Drupal\views\Tests\ViewUnitTestBase;
-use Drupal\views\Views;
+use Drupal\Core\Url;
+use Drupal\entity_test\Entity\EntityTest;
 
 /**
  * Tests the core Drupal\views\Plugin\views\field\EntityOperations handler.
@@ -29,28 +29,30 @@ class FieldEntityOperationsTest extends HandlerTestBase {
    *
    * @var array
    */
-  public static $modules = array('node');
+  public static $modules = array('entity_test');
 
   /**
    * Tests entity operations field.
    */
   public function testEntityOperations() {
-    // Create some test nodes.
-    $nodes = array();
+    // Create some test entities.
     for ($i = 0; $i < 5; $i++) {
-      $nodes[] = $this->drupalCreateNode();
+      EntityTest::create(array(
+        'name' => $this->randomString(),
+      ))->save();
     }
+    $entities = EntityTest::loadMultiple();
 
-    $admin_user = $this->drupalCreateUser(array('access administration pages', 'bypass node access'));
+    $admin_user = $this->drupalCreateUser(array('access administration pages', 'administer entity_test content'));
     $this->drupalLogin($admin_user);
     $this->drupalGet('test-entity-operations');
 
-    /* @var $node \Drupal\node\NodeInterface */
-    foreach ($nodes as $node) {
-      $operations = \Drupal::entityManager()->getListBuilder('node')->getOperations($node);
+    foreach ($entities as $entity) {
+      $operations = \Drupal::entityManager()->getListBuilder('entity_test')->getOperations($entity);
       foreach ($operations as $operation) {
-        $result = $this->xpath('//ul[contains(@class, dropbutton)]/li/a[contains(@href, :path) and text()=:title]', array(':path' => $operation['url']->getInternalPath(), ':title' => $operation['title']));
-        $this->assertEqual(count($result), 1, t('Found node @operation link.', array('@operation' => $operation['title'])));
+        $expected_destination = Url::fromUri('user-path:/test-entity-operations');
+        $result = $this->xpath('//ul[contains(@class, dropbutton)]/li/a[contains(@href, :path) and text()=:title]', array(':path' => $operation['url'] . '?destination=' . $expected_destination, ':title' => $operation['title']));
+        $this->assertEqual(count($result), 1, t('Found entity @operation link with destination parameter.', array('@operation' => $operation['title'])));
       }
     }
   }

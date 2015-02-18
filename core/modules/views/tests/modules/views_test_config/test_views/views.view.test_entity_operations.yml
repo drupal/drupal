@@ -2,15 +2,14 @@ langcode: und
 status: true
 dependencies:
   module:
-    - node
-    - user
+    - entity_test
 id: test_entity_operations
 label: test_entity_operations
 module: views
 description: ''
 tag: ''
-base_table: node
-base_field: nid
+base_table: entity_test
+base_field: id
 core: 8.x
 display:
   default:
@@ -20,7 +19,7 @@ display:
     position: null
     display_options:
       access:
-        type: perm
+        type: none
       cache:
         type: none
       query:
@@ -36,16 +35,15 @@ display:
       row:
         type: fields
       fields:
-        nid:
-          id: nid
-          table: node
-          field: nid
-          plugin_id: node
+        name:
+          id: name
+          table: entity_test
+          field: name
           relationship: none
           group_type: group
           admin_label: ''
-          label: Nid
-          exclude: true
+          label: ''
+          exclude: false
           alter:
             alter_text: false
             text: ''
@@ -77,7 +75,7 @@ display:
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: true
+          element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
           element_default_classes: true
@@ -85,32 +83,12 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          link_to_node: false
-          entity_type: node
-          entity_field: nid
-        title:
-          id: title
-          table: node_field_data
-          field: title
-          plugin_id: node
-          label: ''
-          alter:
-            alter_text: false
-            make_link: false
-            absolute: false
-            trim: false
-            word_boundary: false
-            ellipsis: false
-            strip_tags: false
-            html: false
-          hide_empty: false
-          empty_zero: false
-          link_to_node: true
-          entity_type: node
-          entity_field: title
+          entity_type: entity_test
+          entity_field: name
+          plugin_id: standard
         operations:
           id: operations
-          table: node
+          table: entity_test
           field: operations
           relationship: none
           group_type: group
@@ -158,18 +136,7 @@ display:
           hide_alter_empty: true
           destination: true
           plugin_id: entity_operations
-      filters:
-        status:
-          value: true
-          table: node_field_data
-          field: status
-          id: status
-          plugin_id: boolean
-          expose:
-            operator: '0'
-          group: 1
-          entity_type: node
-          entity_field: status
+      filters: {  }
       sorts:
         created:
           id: created

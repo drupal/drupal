@@ -108,7 +108,7 @@ class EntityOperationsUnitTest extends UnitTestCase {
       '#type' => 'operations',
       '#links' => $operations
     );
-    $expected_build['#links']['foo']['options']['query'] = drupal_get_destination();
+    $expected_build['#links']['foo']['query'] = drupal_get_destination();
     $build = $this->plugin->render($result);
     $this->assertSame($expected_build, $build);
   }

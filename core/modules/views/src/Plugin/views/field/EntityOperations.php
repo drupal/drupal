@@ -99,10 +99,10 @@ class EntityOperations extends FieldPluginBase {
     $operations = $this->entityManager->getListBuilder($entity->getEntityTypeId())->getOperations($entity);
     if ($this->options['destination']) {
       foreach ($operations as &$operation) {
-        if (!isset($operation['options']['query'])) {
-          $operation['options']['query'] = array();
+        if (!isset($operation['query'])) {
+          $operation['query'] = array();
         }
-        $operation['options']['query'] += drupal_get_destination();
+        $operation['query'] += drupal_get_destination();
       }
     }
     $build = array(
