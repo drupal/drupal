@@ -34,7 +34,7 @@ class NumberFieldTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->web_user = $this->drupalCreateUser(array('view test entity', 'administer entity_test content', 'administer content types', 'administer node fields', 'administer node display', 'bypass node access'));
+    $this->web_user = $this->drupalCreateUser(array('view test entity', 'administer entity_test content', 'administer content types', 'administer node fields', 'administer node display', 'bypass node access', 'administer entity_test fields'));
     $this->drupalLogin($this->web_user);
   }
 
@@ -459,4 +459,73 @@ class NumberFieldTest extends WebTestBase {
     $this->assertRaw($integer_formatted, 'Random integer formatted');
   }
 
+  /**
+   * Tests setting the minimum value of a float field through the interface.
+   */
+  function testCreateNumberFloatField() {
+    // Create a float field.
+    $field_name = Unicode::strtolower($this->randomMachineName());
+    entity_create('field_storage_config', array(
+      'field_name' => $field_name,
+      'entity_type' => 'entity_test',
+      'type' => 'float',
+    ))->save();
+
+    $field = entity_create('field_config', array(
+      'field_name' => $field_name,
+      'entity_type' => 'entity_test',
+      'bundle' => 'entity_test',
+    ));
+    $field->save();
+
+    // Set the minimum value to a float value.
+    $this->assertSetMinimumValue($field, 0.0001);
+    // Set the minimum value to an integer value.
+    $this->assertSetMinimumValue($field, 1);
+  }
+
+  /**
+   * Tests setting the minimum value of a decimal field through the interface.
+   */
+  function testCreateNumberDecimalField() {
+    // Create a decimal field.
+    $field_name = Unicode::strtolower($this->randomMachineName());
+    entity_create('field_storage_config', array(
+      'field_name' => $field_name,
+      'entity_type' => 'entity_test',
+      'type' => 'decimal',
+    ))->save();
+
+    $field = entity_create('field_config', array(
+      'field_name' => $field_name,
+      'entity_type' => 'entity_test',
+      'bundle' => 'entity_test',
+    ));
+    $field->save();
+
+    // Set the minimum value to a decimal value.
+    $this->assertSetMinimumValue($field, 0.1);
+    // Set the minimum value to an integer value.
+    $this->assertSetMinimumValue($field, 1);
+  }
+
+  /**
+   * Helper function to set the minimum value of a field.
+   */
+  function assertSetMinimumValue($field, $minimum_value) {
+    $field_configuration_url = 'entity_test/structure/entity_test/fields/entity_test.entity_test.' . $field->getName();
+
+    // Set the minimum value.
+    $edit = array(
+      'field[settings][min]' => $minimum_value,
+    );
+    $this->drupalPostForm($field_configuration_url, $edit, t('Save settings'));
+    // Check if an error message is shown.
+    $this->assertNoRaw(t('%name is not a valid number.', array('%name' => t('Minimum'))), 'Saved ' . gettype($minimum_value) .'  value as minimal value on a ' . $field->getType() . ' field');
+    // Check if a success message is shown.
+    $this->assertRaw(t('Saved %label configuration.', array('%label' => $field->getLabel())));
+    // Check if the minimum value was actually set.
+    $this->drupalGet($field_configuration_url);
+    $this->assertFieldById('edit-field-settings-min', $minimum_value, 'Minimal ' . gettype($minimum_value) .'  value was set on a ' . $field->getType() . ' field.');
+  }
 }

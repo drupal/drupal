@@ -94,6 +94,19 @@ class DecimalItem extends NumericItemBase {
   /**
    * {@inheritdoc}
    */
+  public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
+    $element = parent::fieldSettingsForm($form, $form_state);
+    $settings = $this->getSettings();
+
+    $element['min']['#step'] = pow(0.1, $settings['scale']);
+    $element['max']['#step'] = pow(0.1, $settings['scale']);
+
+    return $element;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function preSave() {
     $this->value = round($this->value, $this->getSetting('scale'));
   }

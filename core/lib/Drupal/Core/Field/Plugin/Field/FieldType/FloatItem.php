@@ -9,6 +9,7 @@ namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
@@ -46,6 +47,18 @@ class FloatItem extends NumericItemBase {
         ),
       ),
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
+    $element = parent::fieldSettingsForm($form, $form_state);
+
+    $element['min']['#step'] = 'any';
+    $element['max']['#step'] = 'any';
+
+    return $element;
   }
 
   /**
