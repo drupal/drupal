@@ -14,18 +14,12 @@ th {
 [dir="rtl"] th {
   text-align: right;
 }
-tr.odd {
+tr:nth-child(odd) {
   background-color: #ddd;
 }
-tr.even {
+tr:nth-child(even){
   background-color: #fff;
 }
 td {
   padding: 5px;
-}
-#menu {
-  visibility: hidden;
-}
-#main {
-  margin: 1em;
 }
