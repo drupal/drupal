@@ -6,30 +6,34 @@
  */
 
 namespace Drupal\Core\Config\Schema;
-use Drupal\Core\TypedData\TraversableTypedDataInterface;
+
+use Drupal\Component\Utility\String;
+use Drupal\Core\Config\TypedConfigManagerInterface;
+use Drupal\Core\TypedData\TypedData;
 
 /**
  * Defines a generic configuration element that contains multiple properties.
  */
-abstract class ArrayElement extends Element implements \IteratorAggregate, TraversableTypedDataInterface, \ArrayAccess, \Countable {
+abstract class ArrayElement extends TypedData implements \IteratorAggregate, TypedConfigInterface {
+
+  /**
+   * The typed config manager.
+   *
+   * @var \Drupal\Core\Config\TypedConfigManagerInterface
+   */
+  protected $typedConfig;
+
+  /**
+   * The configuration value.
+   *
+   * @var mixed
+   */
+  protected $value;
 
   /**
    * Parsed elements.
    */
   protected $elements;
-
-  /**
-   * Gets an array of contained elements.
-   *
-   * @return \Drupal\Core\TypedData\TypedDataInterface[]
-   *   An array of elements contained in this element.
-   */
-  protected function getElements() {
-    if (!isset($this->elements)) {
-      $this->elements = $this->parse();
-    }
-    return $this->elements;
-  }
 
   /**
    * Gets valid configuration data keys.
@@ -47,59 +51,97 @@ abstract class ArrayElement extends Element implements \IteratorAggregate, Trave
    * @return \Drupal\Core\TypedData\TypedDataInterface[]
    *   An array of elements contained in this element.
    */
-  protected abstract function parse();
+  protected function parse() {
+    $elements = array();
+    foreach ($this->getAllKeys() as $key) {
+      $value = isset($this->value[$key]) ? $this->value[$key] : NULL;
+      $definition = $this->getElementDefinition($key);
+      $elements[$key] = $this->createElement($definition, $value, $key);
+    }
+    return $elements;
+  }
 
   /**
-   * Implements TypedDataInterface::validate().
+   * Gets data definition object for contained element.
+   *
+   * @param int|string $key
+   *   Property name or index of the element.
+   *
+   * @return \Drupal\Core\TypedData\DataDefinitionInterface
    */
-  public function validate() {
-    foreach ($this->getElements() as $element) {
-      if (!$element->validate()) {
-        return FALSE;
+  protected abstract function getElementDefinition($key);
+
+  /**
+   * {@inheritdoc}
+   */
+  public function get($name) {
+    $parts = explode('.', $name);
+    $root_key = array_shift($parts);
+    $elements = $this->getElements();
+    if (isset($elements[$root_key])) {
+      $element = $elements[$root_key];
+      // If $property_name contained a dot recurse into the keys.
+      while ($element && ($key = array_shift($parts)) !== NULL) {
+        if ($element instanceof TypedConfigInterface) {
+          $element = $element->get($key);
+        }
+        else {
+          $element = NULL;
+        }
       }
     }
-    return TRUE;
-  }
-
-  /**
-   * Implements ArrayAccess::offsetExists().
-   */
-  public function offsetExists($offset) {
-    return array_key_exists($offset, $this->getElements());
-  }
-
-  /**
-   * Implements ArrayAccess::offsetGet().
-   */
-  public function offsetGet($offset) {
-    $elements = $this->getElements();
-    return $elements[$offset];
-  }
-
-  /**
-   * Implements ArrayAccess::offsetSet().
-   */
-  public function offsetSet($offset, $value) {
-    if ($value instanceof TypedDataInterface) {
-      $value = $value->getValue();
+    if (isset($element)) {
+      return $element;
     }
-    $this->value[$offset] = $value;
-    unset($this->elements);
+    else {
+      throw new \InvalidArgumentException(String::format("The configuration property @key doesn't exist.", array('@key' => $name)));
+    }
   }
 
   /**
-   * Implements ArrayAccess::offsetUnset().
+   * {@inheritdoc}
    */
-  public function offsetUnset($offset) {
-    unset($this->value[$offset]);
+  public function set($key, $value) {
+    $this->value[$key] = $value;
+    // Parsed elements must be rebuilt with new values
     unset($this->elements);
+    // Directly notify ourselves.
+    $this->onChange($key, $value);
+    return $this;
   }
 
   /**
-   * Implements Countable::count().
+   * {@inheritdoc}
    */
-  public function count() {
-    return count($this->getElements());
+  public function getElements() {
+    if (!isset($this->elements)) {
+      $this->elements = $this->parse();
+    }
+    return $this->elements;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isEmpty() {
+    return empty($this->value);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function toArray() {
+    return isset($this->value) ? $this->value : array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onChange($name) {
+    // Notify the parent of changes.
+    if (isset($this->parent)) {
+      $this->parent->onChange($this->name);
+    }
   }
 
   /**
@@ -107,6 +149,54 @@ abstract class ArrayElement extends Element implements \IteratorAggregate, Trave
    */
   public function getIterator() {
     return new \ArrayIterator($this->getElements());
+  }
+
+  /**
+   * Creates a contained typed configuration object.
+   *
+   * @param \Drupal\Core\TypedData\DataDefinitionInterface $definition
+   *   The data definition object.
+   * @param mixed $value
+   *   (optional) The data value. If set, it has to match one of the supported
+   *   data type format as documented for the data type classes.
+   * @param string $key
+   *   The key of the contained element.
+   *
+   * @return \Drupal\Core\TypedData\TypedDataInterface
+   */
+  protected function createElement($definition, $value, $key) {
+    return $this->typedConfig->create($definition, $value, $key, $this);
+  }
+
+  /**
+   * Creates a new data definition object from a type definition array and
+   * actual configuration data.
+   *
+   * @param array $definition
+   *   The base type definition array, for which a data definition should be
+   *   created.
+   * @param $value
+   *   The value of the configuration element.
+   * @param string $key
+   *   The key of the contained element.
+   *
+   * @return \Drupal\Core\TypedData\DataDefinitionInterface
+   */
+  protected function buildDataDefinition($definition, $value, $key) {
+    return $this->typedConfig->buildDataDefinition($definition, $value, $key, $this);
+  }
+
+
+  /**
+   * Sets the typed config manager on the instance.
+   *
+   * This must be called immediately after construction to enable
+   * self::parseElement() and self::buildDataDefinition() to work.
+   *
+   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config
+   */
+  public function setTypedConfig(TypedConfigManagerInterface $typed_config) {
+    $this->typedConfig = $typed_config;
   }
 
 }

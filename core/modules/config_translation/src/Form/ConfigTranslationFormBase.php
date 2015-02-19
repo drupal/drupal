@@ -10,6 +10,7 @@ namespace Drupal\config_translation\Form;
 use Drupal\config_translation\ConfigMapperManagerInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\Core\TypedData\TraversableTypedDataInterface;
 use Drupal\Core\Form\BaseFormIdInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
