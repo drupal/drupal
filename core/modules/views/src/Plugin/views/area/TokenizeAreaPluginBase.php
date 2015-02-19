@@ -13,7 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
  * Tokenized base class for area handlers.
  *
  * This class provides a method tokenizeValue() to tokenize a given value with
- * the tokens of the first view result and additionally apllies global token
+ * the tokens of the first view result and additionally applies global token
  * replacement to the passed value. The form elements to enable the replacement
  * functionality is automatically added to the buildOptionsForm().
  *
@@ -75,7 +75,7 @@ abstract class TokenizeAreaPluginBase extends AreaPluginBase {
         ),
       );
       $form['tokens']['help'] = array(
-        '#markup' => '<p>' . $this->t('The following tokens are available. If you would like to have the characters \'[\' and \']\' use the html entity codes \'%5B\' or  \'%5D\' or they will get replaced with empty space.') . '</p>',
+        '#markup' => '<p>' . $this->t('The following tokens are available. If you would like to have the characters \'[\' and \']\' use the HTML entity codes \'%5B\' or  \'%5D\' or they will get replaced with empty space.') . '</p>',
       );
       foreach (array_keys($options) as $type) {
         if (!empty($options[$type])) {
