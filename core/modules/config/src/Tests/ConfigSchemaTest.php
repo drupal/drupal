@@ -69,21 +69,21 @@ class ConfigSchemaTest extends KernelTestBase {
 
     // Check type detection on elements with undefined types.
     $config = \Drupal::service('config.typed')->get('config_schema_test.someschema');
-    $definition = $config->get('testitem')->getDataDefinition()->toArray();
+    $definition = $config['testitem']->getDataDefinition()->toArray();
     $expected = array();
     $expected['label'] = 'Test item';
     $expected['class'] = '\Drupal\Core\Config\Schema\Undefined';
     $expected['type'] = 'undefined';
     $expected['definition_class'] = '\Drupal\Core\TypedData\DataDefinition';
     $this->assertEqual($definition, $expected, 'Automatic type detected for a scalar is undefined.');
-    $definition = $config->get('testlist')->getDataDefinition()->toArray();
+    $definition = $config['testlist']->getDataDefinition()->toArray();
     $expected = array();
     $expected['label'] = 'Test list';
     $expected['class'] = '\Drupal\Core\Config\Schema\Undefined';
     $expected['type'] = 'undefined';
     $expected['definition_class'] = '\Drupal\Core\TypedData\DataDefinition';
     $this->assertEqual($definition, $expected, 'Automatic type detected for a list is undefined.');
-    $definition = $config->get('testnoschema')->getDataDefinition()->toArray();
+    $definition = $config['testnoschema']->getDataDefinition()->toArray();
     $expected = array();
     $expected['label'] = 'Undefined';
     $expected['class'] = '\Drupal\Core\Config\Schema\Undefined';
@@ -197,7 +197,7 @@ class ConfigSchemaTest extends KernelTestBase {
 
     // Most complex case, get metadata for actual configuration element.
     $effects = \Drupal::service('config.typed')->get('image.style.medium')->get('effects');
-    $definition = $effects->get('bddf0d06-42f9-4c75-a700-a33cafa25ea0')->get('data')->getDataDefinition()->toArray();
+    $definition = $effects['bddf0d06-42f9-4c75-a700-a33cafa25ea0']['data']->getDataDefinition()->toArray();
     // This should be the schema for image.effect.image_scale, reuse previous one.
     $expected['type'] =  'image.effect.image_scale';
 
@@ -244,7 +244,7 @@ class ConfigSchemaTest extends KernelTestBase {
 
     // Test fetching parent one level up.
     $entry = $config_data->get('one_level');
-    $definition = $entry->get('testitem')->getDataDefinition()->toArray();
+    $definition = $entry['testitem']->getDataDefinition()->toArray();
     $expected = array(
       'type' => 'config_schema_test.someschema.with_parents.key_1',
       'label' => 'Test item nested one level',
@@ -255,7 +255,7 @@ class ConfigSchemaTest extends KernelTestBase {
 
     // Test fetching parent two levels up.
     $entry = $config_data->get('two_levels');
-    $definition = $entry->get('wrapper')->get('testitem')->getDataDefinition()->toArray();
+    $definition = $entry['wrapper']['testitem']->getDataDefinition()->toArray();
     $expected = array(
       'type' => 'config_schema_test.someschema.with_parents.key_2',
       'label' => 'Test item nested two levels',
@@ -266,7 +266,7 @@ class ConfigSchemaTest extends KernelTestBase {
 
     // Test fetching parent three levels up.
     $entry = $config_data->get('three_levels');
-    $definition = $entry->get('wrapper_1')->get('wrapper_2')->get('testitem')->getDataDefinition()->toArray();
+    $definition = $entry['wrapper_1']['wrapper_2']['testitem']->getDataDefinition()->toArray();
     $expected = array(
       'type' => 'config_schema_test.someschema.with_parents.key_3',
       'label' => 'Test item nested three levels',
@@ -295,26 +295,28 @@ class ConfigSchemaTest extends KernelTestBase {
     $this->assertTrue(empty($definition['translatable']), 'Got the right translatability setting for page.front data.');
 
     // Check nested array of properties.
-    $list = $meta->get('page')->getElements();
+    $list = $meta->get('page');
     $this->assertEqual(count($list), 3, 'Got a list with the right number of properties for site page data');
     $this->assertTrue(isset($list['front']) && isset($list['403']) && isset($list['404']), 'Got a list with the right properties for site page data.');
     $this->assertEqual($list['front']->getValue(), 'user/login', 'Got the right value for page.front data from the list.');
 
-    // And test some TypedConfigInterface methods.
-    $properties = $list;
+    // And test some ComplexDataInterface methods.
+    $properties = $list->getProperties();
     $this->assertTrue(count($properties) == 3 && $properties['front'] == $list['front'], 'Got the right properties for site page.');
-    $values = $meta->get('page')->toArray();
+    $values = $list->toArray();
     $this->assertTrue(count($values) == 3 && $values['front'] == 'user/login', 'Got the right property values for site page.');
 
     // Now let's try something more complex, with nested objects.
     $wrapper = \Drupal::service('config.typed')->get('image.style.large');
     $effects = $wrapper->get('effects');
-    $this->assertTrue(count($effects->toArray()) == 1, 'Got an array with effects for image.style.large data');
+
+    // The function is_array() doesn't work with ArrayAccess, so we use count().
+    $this->assertTrue(count($effects) == 1, 'Got an array with effects for image.style.large data');
     $uuid = key($effects->getValue());
-    $effect = $effects->get($uuid)->getElements();
-    $this->assertTrue(!$effect['data']->isEmpty() && $effect['id']->getValue() == 'image_scale', 'Got data for the image scale effect from metadata.');
-    $this->assertTrue($effect['data']->get('width') instanceof IntegerInterface, 'Got the right type for the scale effect width.');
-    $this->assertEqual($effect['data']->get('width')->getValue(), 480, 'Got the right value for the scale effect width.' );
+    $effect = $effects[$uuid];
+    $this->assertTrue(count($effect['data']) && $effect['id']->getValue() == 'image_scale', 'Got data for the image scale effect from metadata.');
+    $this->assertTrue($effect['data']['width'] instanceof IntegerInterface, 'Got the right type for the scale effect width.');
+    $this->assertEqual($effect['data']['width']->getValue(), 480, 'Got the right value for the scale effect width.' );
 
     // Finally update some object using a configuration wrapper.
     $new_slogan = 'Site slogan for testing configuration metadata';
@@ -421,7 +423,7 @@ class ConfigSchemaTest extends KernelTestBase {
    * @see \Drupal\Core\Config\TypedConfigManager::getFallbackName()
    */
   function testColonsInSchemaTypeDetermination() {
-    $tests = \Drupal::service('config.typed')->get('config_schema_test.plugin_types')->get('tests')->getElements();
+    $tests = \Drupal::service('config.typed')->get('config_schema_test.plugin_types')->get('tests');
     $definition = $tests[0]->getDataDefinition()->toArray();
     $this->assertEqual($definition['type'], 'test.plugin_types.boolean');
 
@@ -434,17 +436,17 @@ class ConfigSchemaTest extends KernelTestBase {
     $definition = $tests[3]->getDataDefinition()->toArray();
     $this->assertEqual($definition['type'], 'test.plugin_types.*');
 
-    $tests = \Drupal::service('config.typed')->get('config_schema_test.plugin_types')->get('test_with_parents')->getElements();
-    $definition = $tests[0]->get('settings')->getDataDefinition()->toArray();
+    $tests = \Drupal::service('config.typed')->get('config_schema_test.plugin_types')->get('test_with_parents');
+    $definition = $tests[0]['settings']->getDataDefinition()->toArray();
     $this->assertEqual($definition['type'], 'test_with_parents.plugin_types.boolean');
 
-    $definition = $tests[1]->get('settings')->getDataDefinition()->toArray();
+    $definition = $tests[1]['settings']->getDataDefinition()->toArray();
     $this->assertEqual($definition['type'], 'test_with_parents.plugin_types.boolean:*');
 
-    $definition = $tests[2]->get('settings')->getDataDefinition()->toArray();
+    $definition = $tests[2]['settings']->getDataDefinition()->toArray();
     $this->assertEqual($definition['type'], 'test_with_parents.plugin_types.*');
 
-    $definition = $tests[3]->get('settings')->getDataDefinition()->toArray();
+    $definition = $tests[3]['settings']->getDataDefinition()->toArray();
     $this->assertEqual($definition['type'], 'test_with_parents.plugin_types.*');
   }
 

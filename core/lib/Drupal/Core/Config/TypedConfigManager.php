@@ -10,9 +10,9 @@ namespace Drupal\Core\Config;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Config\Schema\ArrayElement;
 use Drupal\Core\Config\Schema\ConfigSchemaAlterException;
 use Drupal\Core\Config\Schema\ConfigSchemaDiscovery;
+use Drupal\Core\Config\Schema\Element;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\TypedData\TypedDataManager;
 
@@ -67,8 +67,8 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    * @param string $name
    *   Configuration object name.
    *
-   * @return \Drupal\Core\Config\Schema\TypedConfigInterface
-   *   Typed configuration data.
+   * @return \Drupal\Core\Config\Schema\Element
+   *   Typed configuration element.
    */
   public function get($name) {
     $data = $this->configStorage->read($name);
@@ -335,7 +335,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
     $instance = parent::createInstance($data_type, $configuration);
     // Enable elements to construct their own definitions using the typed config
     // manager.
-    if ($instance instanceof ArrayElement) {
+    if ($instance instanceof Element) {
       $instance->setTypedConfig($this);
     }
     return $instance;

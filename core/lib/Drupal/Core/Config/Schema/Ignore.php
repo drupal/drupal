@@ -12,4 +12,10 @@ namespace Drupal\Core\Config\Schema;
  */
 class Ignore extends Element {
 
+  /**
+   * {@inheritdoc}.
+   */
+  public function validate() {
+    return TRUE;
+  }
 }

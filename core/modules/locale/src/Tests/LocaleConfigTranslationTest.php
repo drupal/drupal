@@ -83,7 +83,7 @@ class LocaleConfigTranslationTest extends WebTestBase {
 
     // Get translation and check we've only got the site name.
     $translation = $wrapper->getTranslation($langcode);
-    $properties = $translation->getElements();
+    $properties = $translation->getProperties();
     $this->assertEqual(count($properties), 1, 'Got the right number of properties after translation');
 
     // Check the translated site name is displayed.
