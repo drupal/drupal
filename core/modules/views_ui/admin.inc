@@ -208,56 +208,6 @@ function views_ui_nojs_submit($form, FormStateInterface $form_state) {
 }
 
 /**
- * Form element validation handler for a taxonomy autocomplete field.
- *
- * This allows a taxonomy autocomplete field to be validated outside the
- * standard Field API workflow, without passing in a complete field widget.
- * Instead, all that is required is that $element['#field_name'] contain the
- * name of the taxonomy autocomplete field that is being validated.
- *
- * This function is currently not used for validation directly, although it
- * could be. Instead, it is only used to store the term IDs and vocabulary name
- * in the element value, based on the tags that the user typed in.
- *
- * @see taxonomy_autocomplete_validate()
- */
-function views_ui_taxonomy_autocomplete_validate($element, FormStateInterface $form_state) {
-  $value = array();
-  if ($tags = $element['#value']) {
-    // Get the machine names of the vocabularies we will search, keyed by the
-    // vocabulary IDs.
-    $field_storage_definitions = \Drupal::entityManager()->getFieldStorageDefinitions($element['#entity_type']);
-    $field_storage = $field_storage_definitions[$element['#field_name']];
-    $vocabularies = array();
-    $allowed_values = $field_storage->getSetting('allowed_values');
-    if (!empty($allowed_values)) {
-      foreach ($allowed_values as $tree) {
-        if ($vocabulary = Vocabulary::load($tree['vocabulary'])) {
-          $vocabularies[$vocabulary->id()] = $tree['vocabulary'];
-        }
-      }
-    }
-    // Store the term ID of each (valid) tag that the user typed.
-    $typed_terms = Tags::explode($tags);
-    foreach ($typed_terms as $typed_term) {
-      if ($terms = entity_load_multiple_by_properties('taxonomy_term', array('name' => trim($typed_term), 'vid' => array_keys($vocabularies)))) {
-        $term = array_pop($terms);
-        $value['tids'][] = $term->id();
-      }
-    }
-    // Store the term IDs along with the name of the vocabulary. Currently
-    // Views (as well as the Field UI) assumes that there will only be one
-    // vocabulary, although technically the API allows there to be more than
-    // one.
-    if (!empty($value['tids'])) {
-      $value['tids'] = array_unique($value['tids']);
-      $value['vocabulary'] = array_pop($vocabularies);
-    }
-  }
-  $form_state->setValueForElement($element, $value);
-}
-
-/**
  * Add a <select> dropdown for a given section, allowing the user to
  * change whether this info is stored on the default display or on
  * the current display.

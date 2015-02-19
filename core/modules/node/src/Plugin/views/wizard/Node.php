@@ -8,6 +8,7 @@
 namespace Drupal\node\Plugin\views\wizard;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\views\Plugin\views\wizard\WizardPluginBase;
 
 /**
@@ -113,14 +114,20 @@ class Node extends WizardPluginBase {
   protected function defaultDisplayFiltersUser(array $form, FormStateInterface $form_state) {
     $filters = parent::defaultDisplayFiltersUser($form, $form_state);
 
-    $tids = $form_state->getValue(array('show', 'tagged_with', 'tids'));
+    $tids = array();
+    if ($values = $form_state->getValue(array('show', 'tagged_with'))) {
+      foreach ($values as $value) {
+        $tids[] = $value['target_id'];
+      }
+    }
     if (!empty($tids)) {
+      $vid = $form['displays']['show']['tagged_with']['#selection_settings']['target_bundles'][0];
       $filters['tid'] = array(
         'id' => 'tid',
         'table' => 'taxonomy_index',
         'field' => 'tid',
         'value' => $tids,
-        'vid' => $form_state->getValue(array('show', 'tagged_with', 'vocabulary')),
+        'vid' => $vid,
         'plugin_id' => 'taxonomy_index_tid',
       );
       // If the user entered more than one valid term in the autocomplete
@@ -248,19 +255,15 @@ class Node extends WizardPluginBase {
         $tag_field_name = reset($tag_fields);
       }
       // Add the autocomplete textfield to the wizard.
+      $target_bundles = [FieldStorageConfig::loadByName('node', $tag_field_name)->getSetting('allowed_values')[0]['vocabulary']];
       $form['displays']['show']['tagged_with'] = array(
-        '#type' => 'textfield',
+        '#type' => 'entity_autocomplete',
         '#title' => $this->t('tagged with'),
-        '#autocomplete_route_name' => 'taxonomy.autocomplete',
-        '#autocomplete_route_parameters' => array(
-          'entity_type' => $this->entityTypeId,
-          'field_name' => $tag_field_name,
-        ),
+        '#target_type' => 'taxonomy_term',
+        '#selection_settings' => ['target_bundles' => $target_bundles],
+        '#tags' => TRUE,
         '#size' => 30,
         '#maxlength' => 1024,
-        '#entity_type' => $this->entityTypeId,
-        '#field_name' => $tag_field_name,
-        '#element_validate' => array('views_ui_taxonomy_autocomplete_validate'),
       );
     }
   }
