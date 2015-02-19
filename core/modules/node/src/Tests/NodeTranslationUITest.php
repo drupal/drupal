@@ -373,4 +373,29 @@ class NodeTranslationUITest extends ContentTranslationUITest {
     $this->assertEqual($language_count, count(\Drupal::configFactory()->listAll('language.content_settings.')), 'Languages have been fixed rather than deleted during content_translation uninstall.');
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function doTestTranslationEdit() {
+    $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
+    $languages = $this->container->get('language_manager')->getLanguages();
+    $type_name = node_get_type_label($entity);
+
+    foreach ($this->langcodes as $langcode) {
+      // We only want to test the title for non-english translations.
+      if ($langcode != 'en') {
+        $options = array('language' => $languages[$langcode]);
+        $url = $entity->urlInfo('edit-form', $options);
+        $this->drupalGet($url);
+
+        $title = t('<em>Edit @type</em> @title [%language translation]', array(
+          '@type' => $type_name,
+          '@title' => $entity->getTranslation($langcode)->label(),
+          '%language' => $languages[$langcode]->getName(),
+        ));
+        $this->assertRaw($title);
+      }
+    }
+  }
+
 }

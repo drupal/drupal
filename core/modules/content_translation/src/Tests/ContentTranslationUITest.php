@@ -41,6 +41,7 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
     $this->doTestOutdatedStatus();
     $this->doTestPublishedStatus();
     $this->doTestAuthoringInfo();
+    $this->doTestTranslationEdit();
     $this->doTestTranslationDeletion();
   }
 
@@ -362,6 +363,25 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
   protected function getValue(EntityInterface $translation, $property, $langcode) {
     $key = $property == 'user_id' ? 'target_id' : 'value';
     return $translation->get($property)->{$key};
+  }
+
+  /**
+   * Tests edit content translation.
+   */
+  protected function doTestTranslationEdit() {
+    $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
+    $languages = $this->container->get('language_manager')->getLanguages();
+
+    foreach ($this->langcodes as $langcode) {
+      // We only want to test the title for non-english translations.
+      if ($langcode != 'en') {
+        $options = array('language' => $languages[$langcode]);
+        $url = $entity->urlInfo('edit-form', $options);
+        $this->drupalGet($url);
+
+        $this->assertRaw($entity->getTranslation($langcode)->label());
+      }
+    }
   }
 
 }
