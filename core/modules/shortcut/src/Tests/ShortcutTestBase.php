@@ -92,7 +92,7 @@ abstract class ShortcutTestBase extends WebTestBase {
     // Log in as admin and grab the default shortcut set.
     $this->drupalLogin($this->adminUser);
     $this->set = ShortcutSet::load('default');
-    shortcut_set_assign_user($this->set, $this->adminUser);
+    \Drupal::entityManager()->getStorage('shortcut_set')->assignUser($this->set, $this->adminUser);
   }
 
   /**

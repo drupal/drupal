@@ -105,7 +105,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
   function testShortcutSetAssign() {
     $new_set = $this->generateShortcutSet($this->randomMachineName());
 
-    shortcut_set_assign_user($new_set, $this->shortcutUser);
+    \Drupal::entityManager()->getStorage('shortcut_set')->assignUser($new_set, $this->shortcutUser);
     $current_set = shortcut_current_displayed_set($this->shortcutUser);
     $this->assertTrue($new_set->id() == $current_set->id(), "Successfully switched another user's shortcut set.");
   }
@@ -168,8 +168,9 @@ class ShortcutSetsTest extends ShortcutTestBase {
   function testShortcutSetUnassign() {
     $new_set = $this->generateShortcutSet($this->randomMachineName());
 
-    shortcut_set_assign_user($new_set, $this->shortcutUser);
-    shortcut_set_unassign_user($this->shortcutUser);
+    $shortcut_set_storage = \Drupal::entityManager()->getStorage('shortcut_set');
+    $shortcut_set_storage->assignUser($new_set, $this->shortcutUser);
+    $shortcut_set_storage->unassignUser($this->shortcutUser);
     $current_set = shortcut_current_displayed_set($this->shortcutUser);
     $default_set = shortcut_default_set($this->shortcutUser);
     $this->assertTrue($current_set->id() == $default_set->id(), "Successfully unassigned another user's shortcut set.");
