@@ -66,7 +66,7 @@ class BulkFormTest extends WebTestBase {
     // Log in as a user with 'administer nodes' permission to have access to the
     // bulk operation.
     $this->drupalCreateContentType(['type' => 'page']);
-    $admin_user = $this->drupalCreateUser(['administer nodes', 'edit any page content']);
+    $admin_user = $this->drupalCreateUser(['administer nodes', 'edit any page content', 'delete any page content']);
     $this->drupalLogin($admin_user);
 
     $this->drupalGet('test_bulk_form');
@@ -139,6 +139,18 @@ class BulkFormTest extends WebTestBase {
     $this->drupalGet('test_bulk_form');
     $result = $this->xpath('//label[@for="edit-action"]');
     $this->assertEqual('Test title', (string) $result[0]);
+
+    $this->drupalGet('test_bulk_form');
+    // Call the node delete action.
+    $edit = array();
+    for ($i = 0; $i < 5; $i++) {
+      $edit["node_bulk_form[$i]"] = TRUE;
+    }
+    $edit += array('action' => 'node_delete_action');
+    $this->drupalPostForm(NULL, $edit, t('Apply'));
+    $this->drupalPostForm(NULL, array(), t('Delete'));
+    // Check if we got redirected to the original page.
+    $this->assertUrl('test_bulk_form');
   }
 
 }

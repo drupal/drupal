@@ -283,7 +283,10 @@ class BulkForm extends FieldPluginBase {
 
       $operation_definition = $action->getPluginDefinition();
       if (!empty($operation_definition['confirm_form_route_name'])) {
-        $form_state->setRedirect($operation_definition['confirm_form_route_name']);
+        $options = array(
+          'query' => drupal_get_destination(),
+        );
+        $form_state->setRedirect($operation_definition['confirm_form_route_name'], array(), $options);
       }
 
       if ($count) {
