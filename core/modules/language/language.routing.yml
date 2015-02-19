@@ -2,7 +2,7 @@ language.negotiation_url:
   path: '/admin/config/regional/language/detection/url'
   defaults:
     _form: 'Drupal\language\Form\NegotiationUrlForm'
-    _title: 'Configure URL language negotiation'
+    _title: 'URL language detection configuration'
   requirements:
     _permission: 'administer languages'
 
@@ -10,7 +10,7 @@ language.negotiation_session:
   path: '/admin/config/regional/language/detection/session'
   defaults:
     _form: 'Drupal\language\Form\NegotiationSessionForm'
-    _title: 'Configure session language negotiation'
+    _title: 'Session language detection configuration'
   requirements:
     _permission: 'administer languages'
 
@@ -18,7 +18,7 @@ language.negotiation_selected:
   path: '/admin/config/regional/language/detection/selected'
   defaults:
     _form: 'Drupal\language\Form\NegotiationSelectedForm'
-    _title: 'Configure selection language negotiation'
+    _title: 'Selected language configuration'
   requirements:
     _permission: 'administer languages'
 

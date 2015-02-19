@@ -153,7 +153,7 @@ class NegotiationUrlForm extends ConfigFormBase {
         if (!($default_langcode == $langcode) && $form_state->getValue('language_negotiation_url_part') == LanguageNegotiationUrl::CONFIG_PATH_PREFIX) {
           // Throw a form error if the prefix is blank for a non-default language,
           // although it is required for selected negotiation type.
-          $form_state->setErrorByName("prefix][$langcode", $this->t('The prefix may only be left blank for the selected negotiation fallback language.'));
+          $form_state->setErrorByName("prefix][$langcode", $this->t('The prefix may only be left blank for the selected detection fallback language.'));
         }
       }
       elseif (strpos($value, '/') !== FALSE) {

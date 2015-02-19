@@ -96,7 +96,7 @@ class LanguageConfigurationTest extends WebTestBase {
       'prefix[en]' => '',
     );
     $this->drupalPostForm(NULL, $edit, t('Save configuration'));
-    $this->assertText(t('The prefix may only be left blank for the selected negotiation fallback language.'));
+    $this->assertText(t('The prefix may only be left blank for the selected detection fallback language.'));
 
     //  Check that prefix cannot be changed to contain a slash.
     $edit = array(
