@@ -7,6 +7,7 @@
 
 namespace Drupal\taxonomy\Plugin\views\filter;
 
+use Drupal\Core\Entity\Element\EntityAutocomplete;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\taxonomy\Entity\Term;
@@ -159,26 +160,19 @@ class TaxonomyIndexTid extends ManyToOne {
     }
 
     if ($this->options['type'] == 'textfield') {
-      $default = '';
-      if ($this->value) {
-        $terms = Term::loadMultiple(($this->value));
-        foreach ($terms as $term) {
-          if ($default) {
-            $default .= ', ';
-          }
-          $default .= String::checkPlain(\Drupal::entityManager()->getTranslationFromContext($term)->label());
-        }
-      }
-
+      $terms = $this->value ? Term::loadMultiple(($this->value)) : array();
       $form['value'] = array(
         '#title' => $this->options['limit'] ? $this->t('Select terms from vocabulary @voc', array('@voc' => $vocabulary->label())) : $this->t('Select terms'),
         '#type' => 'textfield',
-        '#default_value' => $default,
+        '#default_value' => EntityAutocomplete::getEntityLabels($terms),
       );
 
       if ($this->options['limit']) {
-        $form['value']['#autocomplete_route_name'] = 'taxonomy.autocomplete_vid';
-        $form['value']['#autocomplete_route_parameters'] = array('taxonomy_vocabulary' => $vocabulary->id());
+        $form['value']['#type'] = 'entity_autocomplete';
+        $form['value']['#target_type'] = 'taxonomy_term';
+        $form['value']['#selection_settings']['target_bundles'] = array($vocabulary->id());
+        $form['value']['#tags'] = TRUE;
+        $form['value']['#process_default_value'] = FALSE;
       }
     }
     else {
@@ -270,10 +264,11 @@ class TaxonomyIndexTid extends ManyToOne {
       return;
     }
 
-    $values = Tags::explode($form_state->getValue('options', 'value'));
-    if ($tids = $this->validate_term_strings($form['value'], $values, $form_state)) {
-      $form_state->setValue(array('options', 'value'), $tids);
+    $tids = array();
+    foreach ($form_state->getValue(array('options', 'value')) as $value) {
+      $tids[] = $value['target_id'];
     }
+    $form_state->setValue(array('options', 'value'), $tids);
   }
 
   public function acceptExposedInput($input) {
@@ -322,64 +317,9 @@ class TaxonomyIndexTid extends ManyToOne {
       return;
     }
 
-    $values = Tags::explode($form_state->getValue($identifier));
-
-    $tids = $this->validate_term_strings($form[$identifier], $values, $form_state);
-    if ($tids) {
-      $this->validated_exposed_input = $tids;
+    foreach ($form_state->getValue($identifier) as $value) {
+      $this->validated_exposed_input[] = $value['target_id'];
     }
-  }
-
-  /**
-   * Validate the user string. Since this can come from either the form
-   * or the exposed filter, this is abstracted out a bit so it can
-   * handle the multiple input sources.
-   *
-   * @param $form
-   *   The form which is used, either the views ui or the exposed filters.
-   * @param $values
-   *   The taxonomy names which will be converted to tids.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   *
-   * @return array
-   *   The taxonomy ids fo all validated terms.
-   */
-  function validate_term_strings(&$form, $values, FormStateInterface $form_state) {
-    if (empty($values)) {
-      return array();
-    }
-
-    $tids = array();
-    $names = array();
-    $missing = array();
-    foreach ($values as $value) {
-      $missing[strtolower($value)] = TRUE;
-      $names[] = $value;
-    }
-
-    if (!$names) {
-      return FALSE;
-    }
-
-    $query = \Drupal::entityQuery('taxonomy_term')
-      ->condition('name', $names, 'IN')
-      ->condition('vid', $this->options['vid'])
-      ->addTag('term_access');
-    $terms = Term::loadMultiple($query->execute());
-    foreach ($terms as $term) {
-      unset($missing[strtolower(\Drupal::entityManager()->getTranslationFromContext($term)->label())]);
-      $tids[] = $term->id();
-    }
-
-    if ($missing && !empty($this->options['error_message'])) {
-      $form_state->setError($form, $this->formatPlural(count($missing), 'Unable to find term: @terms', 'Unable to find terms: @terms', array('@terms' => implode(', ', array_keys($missing)))));
-    }
-    elseif ($missing && empty($this->options['error_message'])) {
-      $tids = array(0);
-    }
-
-    return $tids;
   }
 
   protected function valueSubmit($form, FormStateInterface $form_state) {

@@ -128,33 +128,6 @@ class TermAutocompleteController implements ContainerInjectionInterface {
   }
 
   /**
-   * Retrieves suggestions for taxonomy term autocompletion by vocabulary ID.
-   *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
-   * @param \Drupal\taxonomy\VocabularyInterface $taxonomy_vocabulary
-   *   The vocabulary to filter by.
-   *
-   * @return \Symfony\Component\HttpFoundation\JsonResponse
-   *   A JSON response containing the autocomplete suggestions for taxonomy
-   *   terms.
-   */
-  public function autocompletePerVid(Request $request, VocabularyInterface $taxonomy_vocabulary) {
-    // A comma-separated list of term names entered in the autocomplete form
-    // element. Only the last term is used for autocompletion.
-    $tags_typed = $request->query->get('q');
-    $tags_typed = Tags::explode($tags_typed);
-    $tag_last = Unicode::strtolower(array_pop($tags_typed));
-
-    $matches = array();
-    if ($tag_last != '') {
-      $vids = array($taxonomy_vocabulary->id());
-      $matches = $this->getMatchingTerms($tags_typed, $vids, $tag_last);
-    }
-    return new JsonResponse($matches);
-  }
-
-  /**
    * Gets terms which matches some typed terms.
    *
    * @param string $tags_typed
