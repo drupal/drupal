@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests\Entity;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\views\Tests\ViewUnitTestBase;
 use Drupal\views\Views;
 
@@ -74,6 +75,12 @@ class ViewEntityDependenciesTest extends ViewUnitTestBase {
         'comment_type' => $comment_type->id(),
       ),
     ))->save();
+    entity_create('field_config', array(
+      'field_storage' => FieldStorageConfig::loadByName('node', 'body'),
+      'bundle' => $content_type->id(),
+      'label' => $this->randomMachineName() . '_body',
+      'settings' => array('display_summary' => TRUE),
+    ))->save();
     // Force a flush of the in-memory storage.
     $this->container->get('views.views_data')->clear();
 
@@ -107,7 +114,8 @@ class ViewEntityDependenciesTest extends ViewUnitTestBase {
 
     $expected['test_argument_dependency'] = [
       'config' => [
-        'core.entity_view_mode.node.teaser'
+        'core.entity_view_mode.node.teaser',
+        'field.storage.node.body'
       ],
       'content' => [
         'ArgumentDefaultTest',
@@ -117,6 +125,7 @@ class ViewEntityDependenciesTest extends ViewUnitTestBase {
         'node',
         // The argument handler is provided by the search module.
         'search',
+        'text',
         'user'
       ],
     ];
@@ -128,6 +137,40 @@ class ViewEntityDependenciesTest extends ViewUnitTestBase {
       $this->assertEqual($expected[$view_id], $dependencies);
       $config = $this->config('views.view.' . $view_id);
       \Drupal::service('config.storage.staging')->write($view_id, $config->get());
+    }
+
+    // Ensure that dependencies are calculated on the display level.
+    $expected_display['default'] = [
+      'config' => [
+        'core.entity_view_mode.node.teaser',
+      ],
+      'content' => [
+        'ArgumentDefaultTest',
+        'ArgumentValidatorTest'
+      ],
+      'module' => [
+        'node',
+        'search',
+        'user',
+        'views'
+      ],
+    ];
+    $expected_display['page'] = [
+      'config' => [
+        'field.storage.node.body'
+      ],
+      'module' => [
+        'node',
+        'text',
+        'views'
+      ],
+    ];
+
+    $view = Views::getView('test_argument_dependency');
+    $view->initDisplay();
+    foreach ($view->displayHandlers as $display) {
+      // Calculate the dependencies each display has.
+      $this->assertEqual($expected_display[$display->getPluginId()], $display->calculateDependencies());
     }
   }
 

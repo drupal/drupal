@@ -7,11 +7,13 @@
 
 namespace Drupal\views\Plugin\views\display;
 
+use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Plugin\PluginDependencyTrait;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Theme\Registry;
 use Drupal\Core\Url;
@@ -27,7 +29,8 @@ use Symfony\Component\DependencyInjection\Exception\RuntimeException as Dependen
 /**
  * Base class for views display plugins.
  */
-abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInterface {
+abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInterface, DependentPluginInterface {
+  use PluginDependencyTrait;
 
   /**
    * The top object of a view.
@@ -889,6 +892,65 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
 
     return $this->handlers[$type];
   }
+
+  /**
+   * Gets all the handlers used by the display.
+   *
+   * @param bool $only_overrides
+   *   Whether to include only overridden handlers.
+   *
+   * @return \Drupal\views\Plugin\views\ViewsHandlerInterface[]
+   */
+  protected function getAllHandlers($only_overrides = FALSE) {
+    $handler_types = Views::getHandlerTypes();
+    $handlers = [];
+    // Collect all dependencies of all handlers.
+    foreach ($handler_types as $handler_type => $handler_type_info) {
+      if ($only_overrides && $this->isDefaulted($handler_type_info['plural'])) {
+        continue;
+      }
+      $handlers = array_merge($handlers, array_values($this->getHandlers($handler_type)));
+    }
+    return $handlers;
+  }
+
+  /**
+   * Gets all the plugins used by the display.
+   *
+   * @param bool $only_overrides
+   *   Whether to include only overridden plugins.
+   *
+   * @return \Drupal\views\Plugin\views\ViewsPluginInterface[]
+   */
+  protected function getAllPlugins($only_overrides = FALSE) {
+    $plugins = [];
+    // Collect all dependencies of plugins.
+    foreach (Views::getPluginTypes('plugin') as $plugin_type) {
+      $plugin = $this->getPlugin($plugin_type);
+      if (!$plugin) {
+        continue;
+      }
+      if ($only_overrides && $this->isDefaulted($plugin_type)) {
+        continue;
+      }
+      $plugins[] = $plugin;
+    }
+    return $plugins;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    $this->addDependencies(parent::calculateDependencies());
+    // Collect all the dependencies of handlers and plugins. Only calculate
+    // their dependencies if they are configured by this display.
+    $plugins = array_merge($this->getAllHandlers(TRUE), $this->getAllPlugins(TRUE));
+    array_walk($plugins, array($this, 'calculatePluginDependencies'));
+
+    return $this->dependencies;
+  }
+
 
   /**
    * {@inheritdoc}

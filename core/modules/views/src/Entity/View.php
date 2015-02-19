@@ -267,26 +267,10 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
     $executable = $this->getExecutable();
     $executable->initDisplay();
     $executable->initStyle();
-    $handler_types = array_keys(Views::getHandlerTypes());
 
     foreach ($executable->displayHandlers as $display) {
-      // Add dependency for the display itself.
+      // Calculate the dependencies each display has.
       $this->calculatePluginDependencies($display);
-
-      // Collect all dependencies of all handlers.
-      foreach ($handler_types as $handler_type) {
-        foreach ($display->getHandlers($handler_type) as $handler) {
-          $this->calculatePluginDependencies($handler);
-        }
-      }
-
-      // Collect all dependencies of plugins.
-      foreach (Views::getPluginTypes('plugin') as $plugin_type) {
-        if (!$plugin = $display->getPlugin($plugin_type)) {
-          continue;
-        }
-        $this->calculatePluginDependencies($plugin);
-      }
     }
 
     return $this->dependencies;
