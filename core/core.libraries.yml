@@ -62,8 +62,7 @@ drupalSettings:
       currentPathIsAdmin: null
       isFront: null
       currentLanguage: null
-    locale:
-      pluralDelimiter: null
+    pluralDelimiter: null
 
 drupal.active-link:
   version: VERSION

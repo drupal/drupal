@@ -353,8 +353,8 @@ function common_test_page_attachments_alter(array &$page) {
  */
 function common_test_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
   // Modify an existing setting.
-  if (array_key_exists('pluralDelimiter', $settings['locale'])) {
-    $settings['locale']['pluralDelimiter'] = '☃';
+  if (array_key_exists('pluralDelimiter', $settings)) {
+    $settings['pluralDelimiter'] = '☃';
   }
 
   // Add a setting.

@@ -7,6 +7,7 @@
 
 namespace Drupal\locale\Tests;
 
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Component\Utility\String;
 
@@ -93,4 +94,57 @@ class LocaleJavascriptTranslationTest extends WebTestBase {
 
     $this->assertEqual(count($source_strings), count($test_strings), 'Found correct number of source strings.');
   }
+
+  /**
+   * Assert translations JS is added before drupal.js, because it depends on it.
+   */
+  public function testLocaleTranslationJsDependencies() {
+    // User to add and remove language.
+    $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages', 'translate interface'));
+
+    // Add custom language.
+    $this->drupalLogin($admin_user);
+    // Code for the language.
+    $langcode = 'es';
+    // The English name for the language.
+    $name = $this->randomMachineName(16);
+    // The domain prefix.
+    $prefix = $langcode;
+    $edit = array(
+      'predefined_langcode' => 'custom',
+      'langcode' => $langcode,
+      'label' => $name,
+      'direction' => LanguageInterface::DIRECTION_LTR,
+    );
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
+
+    // Set path prefix.
+    $edit = array("prefix[$langcode]" => $prefix);
+    $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
+
+    // This forces locale.admin.js string sources to be imported, which contains
+    // the next translation.
+    $this->drupalGet($prefix . '/admin/config/regional/translate');
+
+    // Translate a string in locale.admin.js to our new language.
+    $strings = \Drupal::service('locale.storage')
+      ->getStrings(array(
+        'source' => 'Show description',
+        'type' => 'javascript',
+        'name' => 'core/modules/locale/locale.admin.js',
+      ));
+    $string = $strings[0];
+
+    $this->drupalPostForm(NULL, ['string' => 'Show description'], t('Filter'));
+    $edit = ['strings[' . $string->lid . '][translations][0]' => $this->randomString(16)];
+    $this->drupalPostForm(NULL, $edit, t('Save translations'));
+
+    // Calculate the filename of the JS including the translations.
+    $js_translation_files = \Drupal::state()->get('locale.translation.javascript');
+    $js_filename = $prefix . '_' . $js_translation_files[$prefix] . '.js';
+
+    // Assert translations JS is included before drupal.js.
+    $this->assertTrue(strpos($this->content, $js_filename) < strpos($this->content, 'core/misc/drupal.js'), 'Translations are included before Drupal.t.');
+  }
+
 }

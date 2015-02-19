@@ -225,7 +225,7 @@ class AttachedAssetsTest extends KernelTestBase {
     // Tests whether altering JavaScript settings via hook_js_settings_alter()
     // is working as expected.
     // @see common_test_js_settings_alter()
-    $this->assertIdentical($parsed_settings['locale']['pluralDelimiter'], '☃');
+    $this->assertIdentical($parsed_settings['pluralDelimiter'], '☃');
     $this->assertIdentical($parsed_settings['foo'], 'bar');
   }
 

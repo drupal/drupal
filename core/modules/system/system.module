@@ -661,8 +661,8 @@ function system_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
       $settings['path'][$key] = $value;
     }
   }
-  if (!isset($settings['locale']['pluralDelimiter'])) {
-    $settings['locale']['pluralDelimiter'] = LOCALE_PLURAL_DELIMITER;
+  if (!isset($settings['pluralDelimiter'])) {
+    $settings['pluralDelimiter'] = LOCALE_PLURAL_DELIMITER;
   }
 
   // Now generate the values for the core/drupal.ajax library.

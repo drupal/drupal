@@ -1,7 +1,7 @@
 /**
  * Base framework for Drupal-specific JavaScript, behaviors, and settings.
  */
-window.Drupal = {behaviors: {}, locale: {}};
+window.Drupal = {behaviors: {}};
 
 // Class indicating that JS is enabled; used for styling purpose.
 document.documentElement.className += ' js';
@@ -13,7 +13,7 @@ if (window.jQuery) {
 
 // JavaScript should be made compatible with libraries other than jQuery by
 // wrapping it in an anonymous closure.
-(function (domready, Drupal, drupalSettings) {
+(function (domready, Drupal, drupalSettings, drupalTranslations) {
 
   "use strict";
 
@@ -312,8 +312,8 @@ if (window.jQuery) {
     options.context = options.context || '';
 
     // Fetch the localized version of the string.
-    if (Drupal.locale.strings && Drupal.locale.strings[options.context] && Drupal.locale.strings[options.context][str]) {
-      str = Drupal.locale.strings[options.context][str];
+    if (typeof drupalTranslations !== 'undefined' && drupalTranslations.strings && drupalTranslations.strings[options.context] && drupalTranslations.strings[options.context][str]) {
+      str = drupalTranslations.strings[options.context][str];
     }
 
     if (args) {
@@ -366,13 +366,13 @@ if (window.jQuery) {
     args = args || {};
     args['@count'] = count;
 
-    var pluralDelimiter = drupalSettings.locale.pluralDelimiter,
+    var pluralDelimiter = drupalSettings.pluralDelimiter,
       translations = Drupal.t(singular + pluralDelimiter + plural, args, options).split(pluralDelimiter),
       index = 0;
 
     // Determine the index of the plural form.
-    if (Drupal.locale.pluralFormula) {
-      index = count in Drupal.locale.pluralFormula ? Drupal.locale.pluralFormula[count] : Drupal.locale.pluralFormula['default'];
+    if (typeof drupalTranslations !== 'undefined' && drupalTranslations.pluralFormula) {
+      index = count in drupalTranslations.pluralFormula ? drupalTranslations.pluralFormula[count] : drupalTranslations.pluralFormula['default'];
     }
     else if (args['@count'] !== 1) {
       index = 1;
@@ -429,4 +429,4 @@ if (window.jQuery) {
     return '<em class="placeholder">' + Drupal.checkPlain(str) + '</em>';
   };
 
-})(domready, Drupal, window.drupalSettings);
+})(domready, Drupal, window.drupalSettings, window.drupalTranslations);

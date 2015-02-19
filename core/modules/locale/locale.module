@@ -447,14 +447,32 @@ function locale_cache_flush() {
  * Implements hook_js_alter().
  */
 function locale_js_alter(&$javascript, AttachedAssetsInterface $assets) {
+  // @todo remove this in https://www.drupal.org/node/2421323
   $files = array();
   foreach ($javascript as $item) {
     if (isset($item['type']) && $item['type'] == 'file') {
+      // Ignore the JS translation placeholder file.
+      if ($item['data'] === 'core/modules/locale/locale.translation.js') {
+        continue;
+      }
       $files[] = $item['data'];
     }
   }
-  if ($translation_file = locale_js_translate($files)) {
-    $javascript[$translation_file] = drupal_js_defaults($translation_file);
+
+  // Replace the placeholder file with the actual JS translation file.
+  $placeholder_file = 'core/modules/locale/locale.translation.js';
+  if (isset($javascript[$placeholder_file])) {
+    if ($translation_file = locale_js_translate($files)) {
+      $js_translation_asset = &$javascript[$placeholder_file];
+      $js_translation_asset['data'] = $translation_file;
+      // @todo Remove this when https://www.drupal.org/node/1945262 lands.
+      // Decrease the weight so that the translation file is loaded first.
+      $js_translation_asset['weight'] = $javascript['core/misc/drupal.js']['weight'] - 0.001;
+    }
+    else {
+      // If no translation file exists, then remove the placeholder JS asset.
+      unset($javascript[$placeholder_file]);
+    }
   }
 }
 
@@ -536,6 +554,15 @@ function locale_library_info_alter(array &$libraries, $module) {
       'isRTL' => NULL,
       'firstDay' => NULL,
     ];
+  }
+
+  // When the locale module is enabled, we update the core/drupal library to
+  // have a dependency on the locale/translations library, which provides
+  // window.drupalTranslations, containing the translations for all strings in
+  // JavaScript assets in the current language.
+  // @see locale_js_alter()
+  if ($module === 'core' && isset($libraries['drupal'])) {
+    $libraries['drupal']['dependencies'][] = 'locale/translations';
   }
 }
 
@@ -1203,7 +1230,7 @@ function _locale_rebuild_js($langcode = NULL) {
       $data['pluralFormula'] = $locale_plurals[$language->getId()]['formula'];
     }
 
-    $data = 'Drupal.locale = ' . Json::encode($data) . ';';
+    $data = 'window.drupalTranslations = ' . Json::encode($data) . ';';
     $data_hash = Crypt::hashBase64($data);
   }
 
