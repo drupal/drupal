@@ -16,7 +16,7 @@ class DeleteFeedItemTest extends AggregatorTestBase {
   /**
    * Tests running "delete items" from 'admin/config/services/aggregator' page.
    */
-  function testDeleteFeedItem() {
+  public function testDeleteFeedItem() {
     // Create a bunch of test feeds.
     $feed_urls = array();
     // No last-modified, no etag.

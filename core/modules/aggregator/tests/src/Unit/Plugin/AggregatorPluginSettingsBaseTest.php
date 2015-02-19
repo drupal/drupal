@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\aggregator\Unit\Plugin\AggregatorPluginSettingsBaseTest
+ * Contains \Drupal\Tests\aggregator\Unit\Plugin\AggregatorPluginSettingsBaseTest.
  */
 
 namespace Drupal\Tests\aggregator\Unit\Plugin {
@@ -39,6 +39,9 @@ class AggregatorPluginSettingsBaseTest extends UnitTestCase {
    */
   protected $managers;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     $this->configFactory = $this->getConfigFactoryStub(
       array(

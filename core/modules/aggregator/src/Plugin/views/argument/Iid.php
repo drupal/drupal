@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Iid extends Numeric {
 
   /**
-   * The entity manager service
+   * The entity manager service.
    *
    * @var \Drupal\Core\Entity\EntityManagerInterface
    */
@@ -55,7 +55,7 @@ class Iid extends Numeric {
   /**
    * {@inheritdoc}
    */
-  function titleQuery() {
+  public function titleQuery() {
     $titles = array();
 
     $items = $this->entityManager->getStorage('aggregator_item')->loadMultiple($this->value);

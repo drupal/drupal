@@ -17,7 +17,7 @@ class UpdateFeedItemTest extends AggregatorTestBase {
   /**
    * Tests running "update items" from 'admin/config/services/aggregator' page.
    */
-  function testUpdateFeedItem() {
+  public function testUpdateFeedItem() {
     $this->createSampleNodes();
 
     // Create a feed and test updating feed items if possible.

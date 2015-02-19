@@ -143,7 +143,7 @@ class AggregatorController extends ControllerBase {
       );
       $links['update'] = array(
         'title' => $this->t('Update items'),
-        'url' => Url::fromRoute('aggregator.feed_refresh', ['aggregator_feed' => $feed->id()])
+        'url' => Url::fromRoute('aggregator.feed_refresh', ['aggregator_feed' => $feed->id()]),
       );
       $row[] = array(
         'data' => array(

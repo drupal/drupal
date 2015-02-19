@@ -34,7 +34,7 @@ interface FetcherInterface {
    *   Download the data at the URL and expose it
    *   to other modules by attaching it to $feed->source_string.
    *
-   * @return
+   * @return bool
    *   TRUE if fetching was successful, FALSE otherwise.
    */
   public function fetch(FeedInterface $feed);

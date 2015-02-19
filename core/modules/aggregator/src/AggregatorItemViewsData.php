@@ -22,7 +22,6 @@ class AggregatorItemViewsData extends EntityViewsData {
 
     $data['aggregator_item']['table']['base']['help'] = $this->t('Aggregator items are imported from external RSS and Atom news feeds.');
 
-
     $data['aggregator_item']['iid']['help'] = $this->t('The unique ID of the aggregator item.');
     $data['aggregator_item']['iid']['argument']['id'] = 'aggregator_iid';
     $data['aggregator_item']['iid']['argument']['name field'] = 'title';
@@ -49,4 +48,3 @@ class AggregatorItemViewsData extends EntityViewsData {
   }
 
 }
-

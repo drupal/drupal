@@ -147,7 +147,7 @@ class Item extends ContentEntityBase implements ItemInterface {
   /**
    * {@inheritdoc}
    */
-  public function  getLink() {
+  public function getLink() {
     return $this->get('link')->value;
   }
 

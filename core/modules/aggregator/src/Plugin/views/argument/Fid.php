@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Fid extends Numeric {
 
   /**
-   * The entity manager service
+   * The entity manager service.
    *
    * @var \Drupal\Core\Entity\EntityManagerInterface
    */
@@ -55,7 +55,7 @@ class Fid extends Numeric {
   /**
    * {@inheritdoc}
    */
-  function titleQuery() {
+  public function titleQuery() {
     $titles = array();
 
     $feeds = $this->entityManager->getStorage('aggregator_feed')->loadMultiple($this->value);

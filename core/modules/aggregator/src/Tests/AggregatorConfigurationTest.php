@@ -16,7 +16,7 @@ class AggregatorConfigurationTest extends AggregatorTestBase {
   /**
    * Tests the settings form to ensure the correct default values are used.
    */
-  function testSettingsPage() {
+  public function testSettingsPage() {
     $this->drupalGet('admin/config');
     $this->clickLink('Feed aggregator');
     $this->clickLink('Settings');

@@ -21,6 +21,9 @@ class ImportOpmlTest extends AggregatorTestBase {
    */
   public static $modules = array('block', 'help');
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
 
@@ -31,7 +34,7 @@ class ImportOpmlTest extends AggregatorTestBase {
   /**
    * Opens OPML import form.
    */
-  function openImportForm() {
+  public function openImportForm() {
     // Enable the help block.
     $this->drupalPlaceBlock('help_block', array('region' => 'help'));
 
@@ -45,7 +48,7 @@ class ImportOpmlTest extends AggregatorTestBase {
   /**
    * Submits form filled with invalid fields.
    */
-  function validateImportFormFields() {
+  public function validateImportFormFields() {
     $before = db_query('SELECT COUNT(*) FROM {aggregator_feed}')->fetchField();
 
     $edit = array();
@@ -71,7 +74,7 @@ class ImportOpmlTest extends AggregatorTestBase {
   /**
    * Submits form with invalid, empty, and valid OPML files.
    */
-  function submitImportForm() {
+  protected function submitImportForm() {
     $before = db_query('SELECT COUNT(*) FROM {aggregator_feed}')->fetchField();
 
     $form['files[upload]'] = $this->getInvalidOpml();
@@ -117,7 +120,7 @@ class ImportOpmlTest extends AggregatorTestBase {
   /**
    * Tests the import of an OPML file.
    */
-  function testOpmlImport() {
+  public function testOpmlImport() {
     $this->openImportForm();
     $this->validateImportFormFields();
     $this->submitImportForm();

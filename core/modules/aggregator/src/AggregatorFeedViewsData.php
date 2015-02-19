@@ -54,4 +54,3 @@ class AggregatorFeedViewsData extends EntityViewsData {
   }
 
 }
-

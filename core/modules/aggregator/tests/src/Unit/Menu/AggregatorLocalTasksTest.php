@@ -16,6 +16,9 @@ use Drupal\Tests\Core\Menu\LocalTaskIntegrationTest;
  */
 class AggregatorLocalTasksTest extends LocalTaskIntegrationTest {
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     $this->directoryList = array('aggregator' => 'core/modules/aggregator');
     parent::setUp();

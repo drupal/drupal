@@ -14,12 +14,13 @@ use Drupal\aggregator\Entity\Item;
  * Tests the processor plugins functionality and discoverability.
  *
  * @group aggregator
+ *
  * @see \Drupal\aggregator_test\Plugin\aggregator\processor\TestProcessor.
  */
 class FeedProcessorPluginTest extends AggregatorTestBase {
 
   /**
-   * Overrides \Drupal\simpletest\WebTestBase::setUp().
+   * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();

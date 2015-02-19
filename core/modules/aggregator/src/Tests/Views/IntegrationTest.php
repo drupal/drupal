@@ -47,6 +47,9 @@ class IntegrationTest extends ViewUnitTestBase {
    */
   protected $feedStorage;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
 

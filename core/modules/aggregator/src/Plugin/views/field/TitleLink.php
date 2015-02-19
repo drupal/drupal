@@ -15,8 +15,9 @@ use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 
 /**
- * Defines a field handler that turns an item's title into a clickable link to
- * the original source article.
+ * Defines a field handler that turns an item's title into a clickable link.
+ *
+ * The link refers to the original source article.
  *
  * @ingroup views_field_handlers
  *

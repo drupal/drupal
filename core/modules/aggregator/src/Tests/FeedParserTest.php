@@ -16,6 +16,10 @@ use Zend\Feed\Reader\Reader;
  * @group aggregator
  */
 class FeedParserTest extends AggregatorTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
     // Do not delete old aggregator items during these tests, since our sample
@@ -32,7 +36,7 @@ class FeedParserTest extends AggregatorTestBase {
   /**
    * Tests a feed that uses the RSS 0.91 format.
    */
-  function testRSS091Sample() {
+  public function testRSS091Sample() {
     $feed = $this->createFeed($this->getRSS091Sample());
     $feed->refreshItems();
     $this->drupalGet('aggregator/sources/' . $feed->id());
@@ -55,7 +59,7 @@ class FeedParserTest extends AggregatorTestBase {
   /**
    * Tests a feed that uses the Atom format.
    */
-  function testAtomSample() {
+  public function testAtomSample() {
     $feed = $this->createFeed($this->getAtomSample());
     $feed->refreshItems();
     $this->drupalGet('aggregator/sources/' . $feed->id());
@@ -69,7 +73,7 @@ class FeedParserTest extends AggregatorTestBase {
   /**
    * Tests a feed that uses HTML entities in item titles.
    */
-  function testHtmlEntitiesSample() {
+  public function testHtmlEntitiesSample() {
     $feed = $this->createFeed($this->getHtmlEntitiesSample());
     $feed->refreshItems();
     $this->drupalGet('aggregator/sources/' . $feed->id());
@@ -80,7 +84,7 @@ class FeedParserTest extends AggregatorTestBase {
   /**
    * Tests that a redirected feed is tracked to its target.
    */
-  function testRedirectFeed() {
+  public function testRedirectFeed() {
     $redirect_url = Url::fromRoute('aggregator_test.redirect')->setAbsolute()->toString();
     $feed = entity_create('aggregator_feed', array('url' => $redirect_url, 'title' => $this->randomMachineName()));
     $feed->save();
@@ -93,7 +97,7 @@ class FeedParserTest extends AggregatorTestBase {
   /**
    * Tests error handling when an invalid feed is added.
    */
-  function testInvalidFeed() {
+  public function testInvalidFeed() {
     // Simulate a typo in the URL to force a curl exception.
     $invalid_url = 'http:/www.drupal.org';
     $feed = entity_create('aggregator_feed', array('url' => $invalid_url, 'title' => $this->randomMachineName()));

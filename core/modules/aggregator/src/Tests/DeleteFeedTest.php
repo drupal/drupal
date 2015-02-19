@@ -24,7 +24,7 @@ class DeleteFeedTest extends AggregatorTestBase {
   /**
    * Deletes a feed and ensures that all of its services are deleted.
    */
-  function testDeleteFeed() {
+  public function testDeleteFeed() {
     $feed1 = $this->createFeed();
     $feed2 = $this->createFeed();
 

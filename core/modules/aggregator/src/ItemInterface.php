@@ -18,7 +18,7 @@ interface ItemInterface extends ContentEntityInterface {
    * Returns the feed id of aggregator item.
    *
    * @return int
-   *  The feed id.
+   *   The feed id.
    */
   public function getFeedId();
 
@@ -26,7 +26,7 @@ interface ItemInterface extends ContentEntityInterface {
    * Sets the feed id of aggregator item.
    *
    * @param int $fid
-   *   The feed id
+   *   The feed id.
    *
    * @return \Drupal\aggregator\ItemInterface
    *   The called feed item entity.
@@ -65,6 +65,7 @@ interface ItemInterface extends ContentEntityInterface {
    *
    * @param string $link
    *   The link to the feed item.
+   *
    * @return \Drupal\aggregator\ItemInterface
    *   The called feed item entity.
    */
@@ -83,6 +84,7 @@ interface ItemInterface extends ContentEntityInterface {
    *
    * @param string $author
    *   The author name of the feed item.
+   *
    * @return \Drupal\aggregator\ItemInterface
    *   The called feed item entity.
    */

@@ -18,8 +18,8 @@ interface FeedStorageInterface extends EntityStorageInterface {
   /**
    * Returns the fids of feeds that need to be refreshed.
    *
-   *  @return array
-   *    A list of feed ids to be refreshed.
+   * @return array
+   *   A list of feed ids to be refreshed.
    */
   public function getFeedIdsToRefresh();
 
