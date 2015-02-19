@@ -12,10 +12,4 @@ namespace Drupal\Core\Config\Schema;
  */
 class Undefined extends Element {
 
-  /**
-   * {@inheritdoc}.
-   */
-  public function validate() {
-    return isset($this->value);
-  }
 }
