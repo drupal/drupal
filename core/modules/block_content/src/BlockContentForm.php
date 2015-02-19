@@ -28,6 +28,13 @@ class BlockContentForm extends ContentEntityForm {
   protected $blockContentStorage;
 
   /**
+   * The custom block type storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $blockContentTypeStorage;
+
+  /**
    * The language manager.
    *
    * @var \Drupal\Core\Language\LanguageManagerInterface
@@ -48,12 +55,15 @@ class BlockContentForm extends ContentEntityForm {
    *   The entity manager.
    * @param \Drupal\Core\Entity\EntityStorageInterface $block_content_storage
    *   The custom block storage.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $block_content_type_storage
+   *   The custom block type storage.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
    */
-  public function __construct(EntityManagerInterface $entity_manager, EntityStorageInterface $block_content_storage, LanguageManagerInterface $language_manager) {
+  public function __construct(EntityManagerInterface $entity_manager, EntityStorageInterface $block_content_storage, EntityStorageInterface $block_content_type_storage, LanguageManagerInterface $language_manager) {
     parent::__construct($entity_manager);
     $this->blockContentStorage = $block_content_storage;
+    $this->blockContentTypeStorage = $block_content_type_storage;
     $this->languageManager = $language_manager;
   }
 
@@ -65,6 +75,7 @@ class BlockContentForm extends ContentEntityForm {
     return new static(
       $entity_manager,
       $entity_manager->getStorage('block_content'),
+      $entity_manager->getStorage('block_content_type'),
       $container->get('language_manager')
     );
   }
@@ -80,7 +91,7 @@ class BlockContentForm extends ContentEntityForm {
   protected function prepareEntity() {
     $block = $this->entity;
     // Set up default values, if required.
-    $block_type = entity_load('block_content_type', $block->bundle());
+    $block_type = $this->blockContentTypeStorage->load($block->bundle());
     if (!$block->isNew()) {
       $block->setRevisionLog(NULL);
     }
@@ -170,7 +181,7 @@ class BlockContentForm extends ContentEntityForm {
     $block->save();
     $context = array('@type' => $block->bundle(), '%info' => $block->label());
     $logger = $this->logger('block_content');
-    $block_type = entity_load('block_content_type', $block->bundle());
+    $block_type = $this->blockContentTypeStorage->load($block->bundle());
     $t_args = array('@type' => $block_type->label(), '%info' => $block->label());
 
     if ($insert) {

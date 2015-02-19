@@ -6,6 +6,8 @@
  */
 
 namespace Drupal\block_content\Tests;
+
+use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 
@@ -58,7 +60,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     // Create a block type programmaticaly.
     $type = $this->createBlockContentType('other');
 
-    $block_type = entity_load('block_content_type', 'other');
+    $block_type = BlockContentType::load('other');
     $this->assertTrue($block_type, 'The new block type has been created.');
 
     $this->drupalGet('block/add/' . $type->id());
@@ -70,7 +72,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
       'label' => 'title for foo',
     );
     $this->drupalPostForm('admin/structure/block/block-content/types/add', $edit, t('Save'));
-    $block_type = entity_load('block_content_type', 'foo');
+    $block_type = BlockContentType::load('foo');
     $this->assertTrue($block_type, 'The new block type has been created.');
 
     $field_definitions = \Drupal::entityManager()->getFieldDefinitions('block_content', 'foo');

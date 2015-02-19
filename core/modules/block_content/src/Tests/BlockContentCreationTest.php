@@ -7,9 +7,9 @@
 
 namespace Drupal\block_content\Tests;
 
+use Drupal\block_content\Entity\BlockContent;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Database;
-use Drupal\block_content\Entity\BlockContent;
 
 /**
  * Create a block and test saving it.
@@ -209,7 +209,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
       'settings[label]' => $edit['info[0][value]'],
       'region' => 'sidebar_first',
     );
-    $block = entity_load('block_content', 1);
+    $block = BlockContent::load(1);
     $url = 'admin/structure/block/add/block_content:' . $block->uuid() . '/' . $this->config('system.theme')->get('default');
     $this->drupalPostForm($url, $instance, t('Save block'));
 
@@ -263,7 +263,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
       'settings[label]' => $block->label(),
       'region' => 'sidebar_first',
     );
-    $block = entity_load('block_content', 1);
+    $block = BlockContent::load(1);
     $url = 'admin/structure/block/add/block_content:' . $block->uuid() . '/' . $this->config('system.theme')->get('default');
     $this->drupalPostForm($url, $instance, t('Save block'));
 

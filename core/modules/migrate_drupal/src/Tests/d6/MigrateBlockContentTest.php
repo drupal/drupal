@@ -55,7 +55,7 @@ class MigrateBlockContentTest extends MigrateDrupal6TestBase {
    */
   public function testBlockMigration() {
     /** @var BlockContent $block */
-    $block = entity_load('block_content', 1);
+    $block = BlockContent::load(1);
     $this->assertIdentical('My block 1', $block->label());
     $this->assertIdentical('1', $block->getRevisionId());
     $this->assertTrue(REQUEST_TIME <= $block->getChangedTime() && $block->getChangedTime() <= time());
@@ -63,7 +63,7 @@ class MigrateBlockContentTest extends MigrateDrupal6TestBase {
     $this->assertIdentical('<h3>My first custom block body</h3>', $block->body->value);
     $this->assertIdentical('full_html', $block->body->format);
 
-    $block = entity_load('block_content', 2);
+    $block = BlockContent::load(2);
     $this->assertIdentical('My block 2', $block->label());
     $this->assertIdentical('2', $block->getRevisionId());
     $this->assertTrue(REQUEST_TIME <= $block->getChangedTime() && $block->getChangedTime() <= time());

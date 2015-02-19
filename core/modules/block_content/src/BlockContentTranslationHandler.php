@@ -7,6 +7,7 @@
 
 namespace Drupal\block_content;
 
+use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\content_translation\ContentTranslationHandler;
 use Drupal\Core\Form\FormStateInterface;
@@ -37,7 +38,7 @@ class BlockContentTranslationHandler extends ContentTranslationHandler {
    * {@inheritdoc}
    */
   protected function entityFormTitle(EntityInterface $entity) {
-    $block_type = entity_load('block_content_type', $entity->bundle());
+    $block_type = BlockContentType::load($entity->bundle());
     return t('<em>Edit @type</em> @title', array('@type' => $block_type->label(), '@title' => $entity->label()));
   }
 
