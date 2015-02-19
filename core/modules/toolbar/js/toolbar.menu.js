@@ -137,7 +137,7 @@
      * On page load, open the active menu item.
      *
      * Marks the trail of the active link in the menu back to the root of the
-     * menu with .active-trail.
+     * menu with .menu-item--active-trail.
      *
      * @param {jQuery} $menu
      *   The root of the menu.
@@ -148,8 +148,8 @@
         activeItem = location.pathname;
       }
       if (activeItem) {
-        var $activeItem = $menu.find('a[href="' + activeItem + '"]').addClass('active');
-        var $activeTrail = $activeItem.parentsUntil('.root', 'li').addClass('active-trail');
+        var $activeItem = $menu.find('a[href="' + activeItem + '"]').addClass('menu-item--active');
+        var $activeTrail = $activeItem.parentsUntil('.root', 'li').addClass('menu-item--active-trail');
         toggleList($activeTrail, true);
       }
     }

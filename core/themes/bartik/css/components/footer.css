@@ -104,36 +104,36 @@
   clear: both;
 }
 #site-footer__bottom .menu ,
-#site-footer__bottom .menu li {
+#site-footer__bottom .menu-item {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-#site-footer__bottom .menu li a {
+#site-footer__bottom .menu-item a {
   float: left; /* LTR */
   padding: 0 12px;
   display: block;
   border-right: 1px solid #555; /* LTR */
   border-color: rgba(255, 255, 255, 0.15);
 }
-[dir="rtl"] #site-footer__bottom .menu li a {
+[dir="rtl"] #site-footer__bottom .menu-item a {
   float: right;
   border-left: 1px solid #555;
   border-color: rgba(255, 255, 255, 0.15);
   border-right: none;
 }
-#site-footer__bottom .menu li:first-child a {
+#site-footer__bottom .menu-item:first-child a {
   padding-left: 0; /* LTR */
 }
-[dir="rtl"] #site-footer__bottom .menu li:first-child a {
+[dir="rtl"] #site-footer__bottom .menu-item:first-child a {
   padding-right: 0;
   padding-left: 12px;
 }
-#site-footer__bottom .menu li:last-child a {
+#site-footer__bottom .menu-item:last-child a {
   padding-right: 0; /* LTR */
   border-right: none; /* LTR */
 }
-[dir="rtl"] #site-footer__bottom .menu li:last-child a {
+[dir="rtl"] #site-footer__bottom .menu-item:last-child a {
   padding-left: 0;
   border-left: none;
 }

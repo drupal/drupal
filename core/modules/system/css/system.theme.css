@@ -346,18 +346,18 @@ ul.menu {
   margin-right: 1em;
   text-align: right;
 }
-.menu .expanded {
+.menu-item--expanded {
   list-style-image: url(../../../misc/menu-expanded.png);
   list-style-type: circle;
 }
-.menu .collapsed {
+.menu-item--collapsed {
   list-style-image: url(../../../misc/menu-collapsed.png); /* LTR */
   list-style-type: disc;
 }
-[dir="rtl"] .menu .collapsed {
+[dir="rtl"] .menu-item--collapsed {
   list-style-image: url(../../../misc/menu-collapsed-rtl.png);
 }
-ul.menu li {
+.menu-item {
   padding-top: 0.2em;
   margin: 0;
 }

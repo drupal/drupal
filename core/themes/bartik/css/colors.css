@@ -8,8 +8,8 @@ body {
 }
 #page,
 #main-wrapper,
-.region-primary-menu .menu li a.active,
-.region-primary-menu .menu li .active-trail a {
+.region-primary-menu .menu-item a.active,
+.region-primary-menu .menu-item .menu-item--active-trail a {
   background: #ffffff;
 }
 .tabs ul.primary li a.active {
@@ -53,7 +53,7 @@ a:active,
 .site-branding-block,
 #name-and-slogan a,
 .site-branding-block a,
-.region-secondary-menu .menu li a {
+.region-secondary-menu .menu-item a {
   color: #fffeff;
 }
 

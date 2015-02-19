@@ -28,7 +28,7 @@
   margin-left: 3em;
   margin-right: 0;
 }
-.toolbar .toolbar-tray .active-trail > .toolbar-box a,
+.toolbar .toolbar-tray .menu-item--active-trail > .toolbar-box a,
 .toolbar .toolbar-tray a.active {
   color: #000;
   font-weight: bold;

@@ -9,7 +9,7 @@
 [dir="rtl"] .region-secondary-menu .menu {
   text-align: left;
 }
-.region-secondary-menu .menu li {
+.region-secondary-menu .menu-item {
   margin: 0;
   padding: 0;
   display: inline;

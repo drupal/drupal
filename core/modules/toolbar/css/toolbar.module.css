@@ -21,18 +21,18 @@
  * Very specific overrides for Drupal system CSS.
  */
 .toolbar li,
-.toolbar .menu li,
 .toolbar .item-list,
 .toolbar .item-list li,
-.toolbar .menu li.expanded {
+.toolbar .menu-item,
+.toolbar .menu-item--expanded {
   list-style-type: none;
   list-style-image: none;
 }
-.toolbar .menu li {
+.toolbar .menu-item {
   padding-top: 0;
 }
 .toolbar .toolbar-bar .toolbar-tab,
-.toolbar .menu li {
+.toolbar .menu-item {
   display: block;
 }
 .toolbar .toolbar-bar .toolbar-tab.hidden {
@@ -169,7 +169,7 @@ body.toolbar-tray-open.toolbar-fixed.toolbar-vertical .toolbar-oriented {
   right: 0;
 }
 /* Hide secondary menus when the tray is horizontal. */
-.toolbar-oriented .toolbar-tray-horizontal .menu li ul {
+.toolbar-oriented .toolbar-tray-horizontal .menu-item ul {
   display: none;
 }
 /* When the configured standard breakpoint is active and the tray is in a

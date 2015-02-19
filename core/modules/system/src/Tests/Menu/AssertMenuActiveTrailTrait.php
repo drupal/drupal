@@ -36,7 +36,7 @@ trait AssertMenuActiveTrailTrait {
         $part_xpath = (!$i ? '//' : '/following-sibling::ul/descendant::');
         $part_xpath .= 'li[contains(@class, :class)]/a[contains(@href, :href) and contains(text(), :title)]';
         $part_args = array(
-          ':class' => 'active-trail',
+          ':class' => 'menu-item--active-trail',
           ':href' => Url::fromUri('base:' . $link_path)->toString(),
           ':title' => $link_title,
         );
@@ -55,7 +55,7 @@ trait AssertMenuActiveTrailTrait {
     $xpath_last_active = ($last_active ? 'and contains(@class, :class-active)' : '');
     $xpath .= 'li[contains(@class, :class-trail)]/a[contains(@href, :href) ' . $xpath_last_active . 'and contains(text(), :title)]';
     $args = array(
-      ':class-trail' => 'active-trail',
+      ':class-trail' => 'menu-item--active-trail',
       ':class-active' => 'active',
       ':href' => Url::fromUri('base:' . $active_link_path)->toString(),
       ':title' => $active_link_title,

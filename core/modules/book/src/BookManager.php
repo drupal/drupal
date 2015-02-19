@@ -503,27 +503,21 @@ class BookManager implements BookManagerInterface {
 
     $num_items = count($items);
     foreach ($items as $i => $data) {
-      $class = array();
-      if ($i == 0) {
-        $class[] = 'first';
-      }
-      if ($i == $num_items - 1) {
-        $class[] = 'last';
-      }
+      $class = ['menu-item'];
       // Set a class for the <li>-tag. Since $data['below'] may contain local
       // tasks, only set 'expanded' class if the link also has children within
       // the current book.
       if ($data['link']['has_children'] && $data['below']) {
-        $class[] = 'expanded';
+        $class[] = 'menu-item--expanded';
       }
       elseif ($data['link']['has_children']) {
-        $class[] = 'collapsed';
+        $class[] = 'menu-item--collapsed';
       }
 
       // Set a class if the link is in the active trail.
       if ($data['link']['in_active_trail']) {
-        $class[] = 'active-trail';
-        $data['link']['localized_options']['attributes']['class'][] = 'active-trail';
+        $class[] = 'menu-item--active-trail';
+        $data['link']['localized_options']['attributes']['class'][] = 'menu-item--active-trail';
       }
 
       // Allow book-specific theme overrides.
