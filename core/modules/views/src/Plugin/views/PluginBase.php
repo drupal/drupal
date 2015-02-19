@@ -104,6 +104,12 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
    */
   protected $usesOptions = FALSE;
 
+  /**
+   * Stores the render API renderer.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
 
   /**
    * Constructs a PluginBase object.
@@ -364,14 +370,14 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
     // Non-Twig tokens are a straight string replacement, Twig tokens get run
     // through an inline template for rendering and replacement.
     $text = strtr($text, $other_tokens);
-    if ($twig_tokens) {
+    if ($twig_tokens && !empty($text)) {
       $build = array(
         '#type' => 'inline_template',
         '#template' => $text,
         '#context' => $twig_tokens,
       );
 
-      return drupal_render($build);
+      return $this->getRenderer()->render($build);
     }
     else {
       return $text;
@@ -576,4 +582,18 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
 
     return $changes;
   }
+
+  /**
+   * Returns the render API renderer.
+   *
+   * @return \Drupal\Core\Render\RendererInterface
+   */
+  protected function getRenderer() {
+    if (!isset($this->renderer)) {
+      $this->renderer = \Drupal::service('renderer');
+    }
+
+    return $this->renderer;
+  }
+
 }

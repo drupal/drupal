@@ -120,6 +120,13 @@ class FieldPluginBaseTest extends UnitTestCase {
   protected $pathProcessor;
 
   /**
+   * The mocked path renderer.
+   *
+   * @var \Drupal\Core\Render\RendererInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $renderer;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -147,11 +154,14 @@ class FieldPluginBaseTest extends UnitTestCase {
     $this->unroutedUrlAssembler = $this->getMock('Drupal\Core\Utility\UnroutedUrlAssemblerInterface');
     $this->linkGenerator = $this->getMock('Drupal\Core\Utility\LinkGeneratorInterface');
 
+    $this->renderer = $this->getMock('Drupal\Core\Render\RendererInterface');
+
     $container_builder = new ContainerBuilder();
     $container_builder->set('url_generator', $this->urlGenerator);
     $container_builder->set('path.validator', $this->pathValidator);
     $container_builder->set('unrouted_url_assembler', $this->unroutedUrlAssembler);
     $container_builder->set('request_stack', $this->requestStack);
+    $container_builder->set('renderer', $this->renderer);
     \Drupal::setContainer($container_builder);
   }
 
@@ -417,6 +427,65 @@ class FieldPluginBaseTest extends UnitTestCase {
     // Test suffix.
     $url = Url::fromRoute('test_route');
     $data[] = [$url, ['suffix' => 'test_suffix'], clone $url, '/test-path', clone $url, '<a href="/test-path">value</a>', '<a href="/test-path">value</a>test_suffix'];
+
+    return $data;
+  }
+
+  /**
+   * Test rendering of a link with a path and options.
+   *
+   * @dataProvider providerTestRenderAsLinkWithPathAndTokens
+   * @covers ::renderAsLink
+   */
+  public function testRenderAsLinkWithPathAndTokens($path, $tokens, $link_html) {
+    $alter = [
+      'make_link' => TRUE,
+      'path' => $path,
+    ];
+
+    $this->setUpUrlIntegrationServices();
+    $this->setupDisplayWithEmptyArgumentsAndFields();
+    $this->executable->build_info['substitutions'] = $tokens;
+    $field = $this->setupTestField(['alter' => $alter]);
+    $field->field_alias = 'key';
+    $row = new ResultRow(['key' => 'value']);
+
+    $build =[
+      '#type' => 'inline_template',
+      '#template' => 'base:test-path/' . explode('/', $path)[1],
+      '#context' => ['foo' => 123],
+    ];
+
+    $this->renderer->expects($this->once())
+      ->method('render')
+      ->with($build, FALSE)
+      ->willReturn('base:test-path/123');
+
+    $result = $field->advancedRender($row);
+    $this->assertEquals($link_html, $result);
+  }
+
+  /**
+   * Data provider for ::testRenderAsLinkWithPathAndTokens().
+   *
+   * @return array
+   *   Test data.
+   */
+  public function providerTestRenderAsLinkWithPathAndTokens() {
+    $tokens = ['{{ foo }}' => 123];
+    $link_html = '<a href="/test-path/123">value</a>';
+
+    $data = [];
+
+    $data[] = ['test-path/{{foo}}', $tokens, $link_html];
+    $data[] = ['test-path/{{ foo}}', $tokens, $link_html];
+    $data[] = ['test-path/{{  foo}}', $tokens, $link_html];
+    $data[] = ['test-path/{{foo }}', $tokens, $link_html];
+    $data[] = ['test-path/{{foo  }}', $tokens, $link_html];
+    $data[] = ['test-path/{{ foo }}', $tokens, $link_html];
+    $data[] = ['test-path/{{  foo }}', $tokens, $link_html];
+    $data[] = ['test-path/{{ foo  }}', $tokens, $link_html];
+    $data[] = ['test-path/{{  foo  }}', $tokens, $link_html];
 
     return $data;
   }
