@@ -7,7 +7,6 @@
 
 namespace Drupal\Tests\Core\Theme;
 
-use Drupal\Core\Extension\Extension;
 use Drupal\Core\Theme\ActiveTheme;
 use Drupal\Core\Theme\Registry;
 use Drupal\Tests\UnitTestCase;
@@ -91,7 +90,6 @@ class RegistryTest extends UnitTestCase {
       'extension' => '.twig',
       'base_themes' => [],
     ]));
-    $this->registry->setBaseThemes(array());
 
     // Include the module so that hook_theme can be called.
     include_once $this->root . '/core/modules/system/tests/modules/theme_test/theme_test.module';
@@ -134,10 +132,6 @@ class TestRegistry extends Registry {
 
   public function setTheme(ActiveTheme $theme) {
     $this->theme = $theme;
-  }
-
-  public function setBaseThemes(array $base_themes) {
-    $this->baseThemes = $base_themes;
   }
 
   protected function init($theme_name = NULL) {

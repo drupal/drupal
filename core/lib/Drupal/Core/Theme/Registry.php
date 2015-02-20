@@ -165,7 +165,7 @@ class Registry implements DestructableInterface {
    * services which holds the current active theme information.
    *
    * @param string $theme_name
-   *   (optional) The name of the theme for which to construct the registry.+
+   *   (optional) The name of the theme for which to construct the registry.
    */
   protected function init($theme_name = NULL) {
     if ($this->initialized) {
@@ -345,7 +345,7 @@ class Registry implements DestructableInterface {
   /**
    * Process a single implementation of hook_theme().
    *
-   * @param $cache
+   * @param array $cache
    *   The theme registry that will eventually be cached; It is an associative
    *   array keyed by theme hooks, whose values are associative arrays
    *   describing the hook:
@@ -378,21 +378,20 @@ class Registry implements DestructableInterface {
    *   called in aforementioned order and new entries override older ones. For
    *   example, if a theme hook is both defined by a module and a theme, then
    *   the definition in the theme will be used.
-   * @param \stdClass $theme
-   *   The loaded $theme object as returned from
-   *   ThemeHandlerInterface::listInfo().
+   * @param string $theme
+   *   The actual name of theme, module, etc. that is being processed.
    * @param string $path
    *   The directory where $name is. For example, modules/system or
    *   themes/bartik.
    *
-   * @see _theme()
+   * @see \Drupal\Core\Theme\ThemeManagerInterface::render()
    * @see hook_theme()
    * @see \Drupal\Core\Extension\ThemeHandler::listInfo()
    * @see twig_render_template()
    *
    * @throws \BadFunctionCallException
    */
-  protected function processExtension(&$cache, $name, $type, $theme, $path) {
+  protected function processExtension(array &$cache, $name, $type, $theme, $path) {
     $result = array();
 
     $hook_defaults = array(
