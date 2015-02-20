@@ -639,13 +639,18 @@ class MenuTest extends MenuWebTestBase {
    * Attempts to add menu link with invalid path or no access permission.
    */
   function addInvalidMenuLink() {
-    foreach (array('/-&-', '/admin/people/permissions') as $link_path) {
+    foreach (array('valid' => '/-&-', 'access' => '/admin/people/permissions') as $type => $link_path) {
       $edit = array(
         'link[0][uri]' => $link_path,
         'title[0][value]' => 'title',
       );
       $this->drupalPostForm("admin/structure/menu/manage/{$this->menu->id()}/add", $edit, t('Save'));
-      $this->assertRaw(t("The path '@link_path' is either invalid or you do not have access to it.", array('@link_path' => $link_path)), 'Menu link was not created');
+      if ($type === 'access') {
+        $this->assertRaw(t("The path '@link_path' is inaccessible.", array('@link_path' => $link_path)), 'Menu link was not created');
+      }
+      else {
+        $this->assertRaw(t("The path '@link_path' is invalid.", array('@link_path' => $link_path)), 'Menu link was not created');
+      }
     }
   }
 

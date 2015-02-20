@@ -22,7 +22,7 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  */
 class LinkTypeConstraint extends Constraint implements ConstraintValidatorInterface {
 
-  public $message = "The path '@uri' is either invalid or you do not have access to it.";
+  public $message = "The path '@uri' is invalid.";
 
   /**
    * @var \Symfony\Component\Validator\ExecutionContextInterface

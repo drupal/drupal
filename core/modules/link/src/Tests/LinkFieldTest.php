@@ -134,7 +134,7 @@ class LinkFieldTest extends WebTestBase {
     );
 
     // Define some invalid URLs.
-    $validation_error_1 = "The path '@link_path' is either invalid or you do not have access to it.";
+    $validation_error_1 = "The path '@link_path' is invalid.";
     $validation_error_2 = 'Manually entered paths should start with /, ? or #.';
     $invalid_external_entries = array(
       // Missing protcol

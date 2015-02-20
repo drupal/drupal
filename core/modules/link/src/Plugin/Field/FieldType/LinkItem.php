@@ -27,7 +27,7 @@ use Drupal\link\LinkItemInterface;
  *   description = @Translation("Stores a URL string, optional varchar link text, and optional blob of attributes to assemble a link."),
  *   default_widget = "link_default",
  *   default_formatter = "link",
- *   constraints = {"LinkType" = {}}
+ *   constraints = {"LinkType" = {}, "LinkAccess" = {}}
  * )
  */
 class LinkItem extends FieldItemBase implements LinkItemInterface {

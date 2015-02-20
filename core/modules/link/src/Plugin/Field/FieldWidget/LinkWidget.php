@@ -156,9 +156,6 @@ class LinkWidget extends WidgetBase {
 
       // Disallow unrouted internal URLs (i.e. disallow 'base:' URIs).
       $disallowed  = !$url->isRouted() && !$url->isExternal();
-      // Disallow URLs if the current user doesn't have the 'link to any page'
-      // permission nor can access this URI.
-      $disallowed = $disallowed || (!\Drupal::currentUser()->hasPermission('link to any page') && !$url->access());
       // Disallow external URLs using untrusted protocols.
       $disallowed = $disallowed || ($url->isExternal() && !in_array(parse_url($uri, PHP_URL_SCHEME), UrlHelper::getAllowedProtocols()));
       // Disallow routed URLs that don't exist.
@@ -172,7 +169,7 @@ class LinkWidget extends WidgetBase {
       }
 
       if ($disallowed) {
-        $form_state->setError($element, t("The path '@link_path' is either invalid or you do not have access to it.", ['@link_path' => static::getUriAsDisplayableString($uri)]));
+        $form_state->setError($element, t("The path '@link_path' is invalid.", ['@link_path' => static::getUriAsDisplayableString($uri)]));
       }
     }
   }
