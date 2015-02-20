@@ -217,10 +217,15 @@ abstract class AccessResult implements AccessResultInterface, CacheableInterface
 
   /**
    * {@inheritdoc}
-   *
-   * AccessResult objects solely return cache context tokens, no static strings.
    */
   public function getCacheKeys() {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
     sort($this->contexts);
     return $this->contexts;
   }
@@ -329,22 +334,22 @@ abstract class AccessResult implements AccessResultInterface, CacheableInterface
   }
 
   /**
-   * Convenience method, adds the "cache_context.user.roles" cache context.
+   * Convenience method, adds the "user.roles" cache context.
    *
    * @return $this
    */
   public function cachePerRole() {
-    $this->addCacheContexts(array('cache_context.user.roles'));
+    $this->addCacheContexts(array('user.roles'));
     return $this;
   }
 
   /**
-   * Convenience method, adds the "cache_context.user" cache context.
+   * Convenience method, adds the "user" cache context.
    *
    * @return $this
    */
   public function cachePerUser() {
-    $this->addCacheContexts(array('cache_context.user'));
+    $this->addCacheContexts(array('user'));
     return $this;
   }
 
@@ -459,7 +464,7 @@ abstract class AccessResult implements AccessResultInterface, CacheableInterface
   public function inheritCacheability(AccessResultInterface $other) {
     if ($other instanceof CacheableInterface) {
       $this->setCacheable($other->isCacheable());
-      $this->addCacheContexts($other->getCacheKeys());
+      $this->addCacheContexts($other->getCacheContexts());
       $this->addCacheTags($other->getCacheTags());
       // Use the lowest max-age.
       if ($this->getCacheMaxAge() === Cache::PERMANENT) {

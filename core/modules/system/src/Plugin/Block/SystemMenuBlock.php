@@ -208,7 +208,7 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
   protected function getRequiredCacheContexts() {
     // Menu blocks must be cached per role: different roles may have access to
     // different menu links.
-    return array('cache_context.user.roles');
+    return array('user.roles');
   }
 
 }

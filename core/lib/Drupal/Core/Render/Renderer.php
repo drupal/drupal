@@ -537,7 +537,8 @@ class Renderer implements RendererInterface {
    * Creates the cache ID for a renderable element.
    *
    * This creates the cache ID string, either by returning the #cache['cid']
-   * property if present or by building the cache ID out of the #cache['keys'].
+   * property if present or by building the cache ID out of the #cache['keys'] +
+   * #cache['contexts'].
    *
    * @param array $elements
    *   A renderable array.
@@ -550,11 +551,12 @@ class Renderer implements RendererInterface {
       return $elements['#cache']['cid'];
     }
     elseif (isset($elements['#cache']['keys'])) {
-      // Cache keys may either be static (just strings) or tokens (placeholders
-      // that are converted to static keys by the @cache_contexts service,
-      // depending on the request).
-      $keys = $this->cacheContexts->convertTokensToKeys($elements['#cache']['keys']);
-      return implode(':', $keys);
+      $cid_parts = $elements['#cache']['keys'];
+      if (isset($elements['#cache']['contexts'])) {
+        $contexts = $this->cacheContexts->convertTokensToKeys($elements['#cache']['contexts']);
+        $cid_parts = array_merge($cid_parts, $contexts);
+      }
+      return implode(':', $cid_parts);
     }
     return FALSE;
   }

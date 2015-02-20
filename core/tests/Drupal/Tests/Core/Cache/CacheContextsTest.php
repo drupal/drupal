@@ -27,17 +27,32 @@ class CacheContextsTest extends UnitTestCase {
     $cache_contexts = new CacheContexts($container, $this->getContextsFixture());
 
     $new_keys = $cache_contexts->convertTokensToKeys(
-      array("non-cache-context", "cache_context.foo")
+      ['foo']
     );
 
-    $expected = array("non-cache-context", "bar");
+    $expected = ['bar'];
     $this->assertEquals($expected, $new_keys);
+  }
+
+  /**
+   * @covers ::convertTokensToKeys
+   *
+   * @expectedException \InvalidArgumentException
+   * @expectedExceptionMessage "non-cache-context" is not a valid cache context ID.
+   */
+  public function testInvalidContext() {
+    $container = $this->getMockContainer();
+    $cache_contexts = new CacheContexts($container, $this->getContextsFixture());
+
+    $cache_contexts->convertTokensToKeys(
+      ["non-cache-context"]
+    );
   }
 
   public function testAvailableContextStrings() {
     $cache_contexts = new CacheContexts($this->getMockContainer(), $this->getContextsFixture());
     $contexts = $cache_contexts->getAll();
-    $this->assertEquals(array("cache_context.foo"), $contexts);
+    $this->assertEquals(array("foo"), $contexts);
   }
 
   public function testAvailableContextLabels() {
@@ -49,12 +64,12 @@ class CacheContextsTest extends UnitTestCase {
 
     $cache_contexts = new CacheContexts($container, $this->getContextsFixture());
     $labels = $cache_contexts->getLabels();
-    $expected = array("cache_context.foo" => "Foo");
+    $expected = array("foo" => "Foo");
     $this->assertEquals($expected, $labels);
   }
 
   protected function getContextsFixture() {
-    return array('cache_context.foo');
+    return array('foo');
   }
 
   protected function getMockContainer() {

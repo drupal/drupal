@@ -201,7 +201,7 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
   protected function getRequiredCacheContexts() {
     // The "Book navigation" block must be cached per role: different roles may
     // have access to different menu links.
-    return array('cache_context.user.roles');
+    return array('user.roles');
   }
 
 }

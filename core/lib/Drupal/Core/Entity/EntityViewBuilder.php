@@ -181,11 +181,13 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
           $this->entityTypeId,
           $entity->id(),
           $view_mode,
-          'cache_context.theme',
-          'cache_context.user.roles',
+        ),
+        'contexts' => array(
+          'theme',
+          'user.roles',
           // @todo Move this out of here and into field formatters that depend
           //       on the timezone. Blocked on https://drupal.org/node/2099137.
-          'cache_context.timezone',
+          'timezone',
         ),
         'bin' => $this->cacheBin,
       );

@@ -214,7 +214,7 @@ class BlockViewBuilderTest extends KernelTestBase {
     $request_method = $request->server->get('REQUEST_METHOD');
     $request->setMethod('GET');
 
-    $default_keys = array('entity_view', 'block', 'test_block', 'cache_context.language', 'cache_context.theme');
+    $default_keys = array('entity_view', 'block', 'test_block');
     $default_tags = array('block_view', 'config:block.block.test_block', 'block_plugin:test_cache');
 
     // Advanced: cached block, but an alter hook adds an additional cache key.
@@ -223,7 +223,7 @@ class BlockViewBuilderTest extends KernelTestBase {
     ));
     $alter_add_key = $this->randomMachineName();
     \Drupal::state()->set('block_test_view_alter_cache_key', $alter_add_key);
-    $cid = 'entity_view:block:test_block:en:core:' . $alter_add_key;
+    $cid = 'entity_view:block:test_block:' . $alter_add_key . ':en:core';
     $expected_keys = array_merge($default_keys, array($alter_add_key));
     $build = $this->getBlockRenderArray();
     $this->assertIdentical($expected_keys, $build['#cache']['keys'], 'An altered cacheable block has the expected cache keys.');
@@ -290,11 +290,12 @@ class BlockViewBuilderTest extends KernelTestBase {
     // Second: the "per URL" cache context.
     $this->setBlockCacheConfig(array(
       'max_age' => 600,
-      'contexts' => array('cache_context.url'),
+      'contexts' => array('url'),
     ));
     $old_cid = $cid;
     $build = $this->getBlockRenderArray();
-    $cid = implode(':', $cache_contexts->convertTokensToKeys($build['#cache']['keys']));
+    $cid_parts = array_merge($build['#cache']['keys'], $cache_contexts->convertTokensToKeys($build['#cache']['contexts']));
+    $cid = implode(':', $cid_parts);
     drupal_render($build);
     $this->assertTrue($this->container->get('cache.render', $cid), 'The block render element has been cached.');
     $this->assertNotEqual($cid, $old_cid, 'The cache ID has changed.');
@@ -307,7 +308,8 @@ class BlockViewBuilderTest extends KernelTestBase {
     $this->container->set('cache_context.url', $temp_context);
     $old_cid = $cid;
     $build = $this->getBlockRenderArray();
-    $cid = implode(':', $cache_contexts->convertTokensToKeys($build['#cache']['keys']));
+    $cid_parts = array_merge($build['#cache']['keys'], $cache_contexts->convertTokensToKeys($build['#cache']['contexts']));
+    $cid = implode(':', $cid_parts);
     drupal_render($build);
     $this->assertTrue($this->container->get('cache.render', $cid), 'The block render element has been cached.');
     $this->assertNotEqual($cid, $old_cid, 'The cache ID has changed.');

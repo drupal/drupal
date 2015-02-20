@@ -78,20 +78,20 @@ class BlockViewBuilder extends EntityViewBuilder {
 
       if ($plugin->isCacheable()) {
         $build[$entity_id]['#pre_render'][] = array($this, 'buildBlock');
-        // Generic cache keys, with the block plugin's custom keys appended
-        // (usually cache context keys like 'cache_context.user.roles').
+        // Generic cache keys, with the block plugin's custom keys appended.
         $default_cache_keys = array(
           'entity_view',
           'block',
           $entity->id(),
-          // Blocks are always rendered in a "per language" cache context.
-          'cache_context.language',
-          // Blocks are always rendered in a "per theme" cache context.
-          'cache_context.theme',
+        );
+        $default_cache_contexts = array(
+          'language',
+          'theme',
         );
         $max_age = $plugin->getCacheMaxAge();
         $build[$entity_id]['#cache'] += array(
           'keys' => array_merge($default_cache_keys, $plugin->getCacheKeys()),
+          'contexts' => array_merge($default_cache_contexts, $plugin->getCacheContexts()),
           'expire' => ($max_age === Cache::PERMANENT) ? Cache::PERMANENT : REQUEST_TIME + $max_age,
         );
       }

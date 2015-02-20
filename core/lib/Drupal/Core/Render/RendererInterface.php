@@ -96,9 +96,9 @@ interface RendererInterface {
    *     associative array with one or several of the following keys:
    *     - 'keys': An array of one or more keys that identify the element. If
    *       'keys' is set, the cache ID is created automatically from these keys.
-   *       Cache keys may either be static (just strings) or tokens
-   *       (placeholders that are converted to static keys by the
-   *       'cache_contexts' service, depending on the request).
+   *     - 'contexts': An array of one or more cache context IDs. These are
+   *       converted to a final value depending on the request. (e.g. 'user' is
+   *       mapped to the current user's ID.)
    *     - 'cid': Specify the cache ID directly. Either 'keys' or 'cid' is
    *       required. If 'cid' is set, 'keys' is ignored. Use only if you have
    *       special requirements.

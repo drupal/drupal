@@ -23,6 +23,7 @@ class AccessResultTest extends UnitTestCase {
   protected function assertDefaultCacheability(AccessResult $access) {
     $this->assertTrue($access->isCacheable());
     $this->assertSame([], $access->getCacheKeys());
+    $this->assertSame([], $access->getCacheContexts());
     $this->assertSame([], $access->getCacheTags());
     $this->assertSame('default', $access->getCacheBin());
     $this->assertSame(Cache::PERMANENT, $access->getCacheMaxAge());
@@ -318,7 +319,7 @@ class AccessResultTest extends UnitTestCase {
   /**
    * @covers ::addCacheContexts
    * @covers ::resetCacheContexts
-   * @covers ::getCacheKeys
+   * @covers ::getCacheContexts
    * @covers ::cachePerRole
    * @covers ::cachePerUser
    * @covers ::allowedIfHasPermission
@@ -331,31 +332,31 @@ class AccessResultTest extends UnitTestCase {
       $this->assertTrue($access->isCacheable());
       $this->assertSame('default', $access->getCacheBin());
       $this->assertSame(Cache::PERMANENT, $access->getCacheMaxAge());
-      $this->assertSame($contexts, $access->getCacheKeys());
+      $this->assertSame($contexts, $access->getCacheContexts());
       $this->assertSame([], $access->getCacheTags());
     };
 
-    $access = AccessResult::neutral()->addCacheContexts(['cache_context.foo']);
-    $verify($access, ['cache_context.foo']);
+    $access = AccessResult::neutral()->addCacheContexts(['foo']);
+    $verify($access, ['foo']);
     // Verify resetting works.
     $access->resetCacheContexts();
     $verify($access, []);
     // Verify idempotency.
-    $access->addCacheContexts(['cache_context.foo'])
-      ->addCacheContexts(['cache_context.foo']);
-    $verify($access, ['cache_context.foo']);
+    $access->addCacheContexts(['foo'])
+      ->addCacheContexts(['foo']);
+    $verify($access, ['foo']);
     // Verify same values in different call order yields the same result.
     $access->resetCacheContexts()
-      ->addCacheContexts(['cache_context.foo'])
-      ->addCacheContexts(['cache_context.bar']);
-    $verify($access, ['cache_context.bar', 'cache_context.foo']);
+      ->addCacheContexts(['foo'])
+      ->addCacheContexts(['bar']);
+    $verify($access, ['bar', 'foo']);
     $access->resetCacheContexts()
-      ->addCacheContexts(['cache_context.bar'])
-      ->addCacheContexts(['cache_context.foo']);
-    $verify($access, ['cache_context.bar', 'cache_context.foo']);
+      ->addCacheContexts(['bar'])
+      ->addCacheContexts(['foo']);
+    $verify($access, ['bar', 'foo']);
 
     // ::cachePerRole() convenience method.
-    $contexts = array('cache_context.user.roles');
+    $contexts = array('user.roles');
     $a = AccessResult::neutral()->addCacheContexts($contexts);
     $verify($a, $contexts);
     $b = AccessResult::neutral()->cachePerRole();
@@ -363,7 +364,7 @@ class AccessResultTest extends UnitTestCase {
     $this->assertEquals($a, $b);
 
     // ::cachePerUser() convenience method.
-    $contexts = array('cache_context.user');
+    $contexts = array('user');
     $a = AccessResult::neutral()->addCacheContexts($contexts);
     $verify($a, $contexts);
     $b = AccessResult::neutral()->cachePerUser();
@@ -371,7 +372,7 @@ class AccessResultTest extends UnitTestCase {
     $this->assertEquals($a, $b);
 
     // Both.
-    $contexts = array('cache_context.user', 'cache_context.user.roles');
+    $contexts = array('user', 'user.roles');
     $a = AccessResult::neutral()->addCacheContexts($contexts);
     $verify($a, $contexts);
     $b = AccessResult::neutral()->cachePerRole()->cachePerUser();
@@ -387,7 +388,7 @@ class AccessResultTest extends UnitTestCase {
       ->method('hasPermission')
       ->with('may herd llamas')
       ->will($this->returnValue(FALSE));
-    $contexts = array('cache_context.user.roles');
+    $contexts = array('user.roles');
 
     // Verify the object when using the ::allowedIfHasPermission() convenience
     // static method.
@@ -410,7 +411,7 @@ class AccessResultTest extends UnitTestCase {
       $this->assertTrue($access->isCacheable());
       $this->assertSame('default', $access->getCacheBin());
       $this->assertSame(Cache::PERMANENT, $access->getCacheMaxAge());
-      $this->assertSame([], $access->getCacheKeys());
+      $this->assertSame([], $access->getCacheContexts());
       $this->assertSame($tags, $access->getCacheTags());
     };
 
@@ -471,7 +472,7 @@ class AccessResultTest extends UnitTestCase {
     $other = AccessResult::allowed()->setCacheMaxAge(1500)->cachePerRole()->addCacheTags(['node:20011988']);
     $this->assertTrue($access->inheritCacheability($other) instanceof AccessResult);
     $this->assertTrue($access->isCacheable());
-    $this->assertSame(['cache_context.user.roles'], $access->getCacheKeys());
+    $this->assertSame(['user.roles'], $access->getCacheContexts());
     $this->assertSame(['node:20011988'], $access->getCacheTags());
     $this->assertSame('default', $access->getCacheBin());
     $this->assertSame(1500, $access->getCacheMaxAge());
@@ -481,7 +482,7 @@ class AccessResultTest extends UnitTestCase {
     $other = AccessResult::forbidden()->addCacheTags(['node:14031991'])->setCacheMaxAge(86400);
     $this->assertTrue($access->inheritCacheability($other) instanceof AccessResult);
     $this->assertTrue($access->isCacheable());
-    $this->assertSame(['cache_context.user'], $access->getCacheKeys());
+    $this->assertSame(['user'], $access->getCacheContexts());
     $this->assertSame(['node:14031991'], $access->getCacheTags());
     $this->assertSame('default', $access->getCacheBin());
     $this->assertSame(43200, $access->getCacheMaxAge());
