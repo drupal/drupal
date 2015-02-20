@@ -90,17 +90,13 @@
 .comment.unpublished {
   margin-right: 5px; /* LTR */
   padding: 5px 2px 5px 5px; /* LTR */
+  background: #fff4f4;
 }
 [dir="rtl"] .comment.unpublished {
   margin-left: 5px;
   margin-right: 0;
   padding: 5px 5px 5px 2px;
 }
-.comment.unpublished .comment-text .comment-arrow {
-  border-left: 1px solid #fff4f4;
-  border-right: 1px solid #fff4f4;
-}
-
 .comment-footer {
   display: table-row;
 }
