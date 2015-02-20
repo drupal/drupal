@@ -8,7 +8,6 @@
 namespace Drupal\Core\Config\Entity\Query;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Query\QueryBase;
@@ -18,13 +17,6 @@ use Drupal\Core\Entity\Query\QueryInterface;
  * Defines the entity query for configuration entities.
  */
 class Query extends QueryBase implements QueryInterface {
-
-  /**
-   * The config storage used by the config entity query.
-   *
-   * @var \Drupal\Core\Config\StorageInterface
-   */
-  protected $configStorage;
 
   /**
    * The config factory used by the config entity query.
@@ -41,16 +33,13 @@ class Query extends QueryBase implements QueryInterface {
    * @param string $conjunction
    *   - AND: all of the conditions on the query need to match.
    *   - OR: at least one of the conditions on the query need to match.
-   * @param \Drupal\Core\Config\StorageInterface $config_storage
-   *   The actual config storage which is used to list all config items.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    * @param array $namespaces
    *   List of potential namespaces of the classes belonging to this query.
    */
-  function __construct(EntityTypeInterface $entity_type, $conjunction, StorageInterface $config_storage, ConfigFactoryInterface $config_factory, array $namespaces) {
+  function __construct(EntityTypeInterface $entity_type, $conjunction, ConfigFactoryInterface $config_factory, array $namespaces) {
     parent::__construct($entity_type, $conjunction, $namespaces);
-    $this->configStorage = $config_storage;
     $this->configFactory = $config_factory;
   }
 
@@ -151,7 +140,7 @@ class Query extends QueryBase implements QueryInterface {
     }
     // If no restrictions on IDs were found, we need to parse all records.
     else {
-      $names = $this->configStorage->listAll($prefix);
+      $names = $this->configFactory->listAll($prefix);
     }
 
     // Load the corresponding records.

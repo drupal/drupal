@@ -8,7 +8,6 @@
 namespace Drupal\Core\Config\Entity\Query;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Query\QueryBase;
@@ -19,13 +18,6 @@ use Drupal\Core\Entity\Query\QueryFactoryInterface;
  * Provides a factory for creating entity query objects for the config backend.
  */
 class QueryFactory implements QueryFactoryInterface {
-
-  /**
-   * The config storage used by the config entity query.
-   *
-   * @var \Drupal\Core\Config\StorageInterface;
-   */
-  protected $configStorage;
 
   /**
    * The config factory used by the config entity query.
@@ -49,8 +41,7 @@ class QueryFactory implements QueryFactoryInterface {
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config storage used by the config entity query.
    */
-  public function __construct(StorageInterface $config_storage, ConfigFactoryInterface $config_factory) {
-    $this->configStorage = $config_storage;
+  public function __construct(ConfigFactoryInterface $config_factory) {
     $this->configFactory = $config_factory;
     $this->namespaces = QueryBase::getNamespaces($this);
   }
@@ -59,7 +50,7 @@ class QueryFactory implements QueryFactoryInterface {
    * {@inheritdoc}
    */
   public function get(EntityTypeInterface $entity_type, $conjunction) {
-    return new Query($entity_type, $conjunction, $this->configStorage, $this->configFactory, $this->namespaces);
+    return new Query($entity_type, $conjunction, $this->configFactory, $this->namespaces);
   }
 
   /**
