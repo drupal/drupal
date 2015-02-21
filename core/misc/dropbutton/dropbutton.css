@@ -24,11 +24,13 @@
 }
 
 /* Splitbuttons */
-.form-actions .dropbutton-wrapper {
-  float: left; /* LTR */
-}
-[dir="rtl"] .form-actions .dropbutton-wrapper {
-  float: right;
+@media screen and (min-width:600px) {
+  .form-actions .dropbutton-wrapper {
+    float: left; /* LTR */
+  }
+  [dir="rtl"] .form-actions .dropbutton-wrapper {
+    float: right;
+  }
 }
 .js .form-actions .dropbutton-widget {
   position: static;

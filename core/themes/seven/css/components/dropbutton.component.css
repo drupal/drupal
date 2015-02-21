@@ -25,17 +25,46 @@
 /**
  * Overwrite Sevens button styling.
  */
-.dropbutton-widget .button {
+.js .dropbutton-widget .button {
   background: transparent;
   border: 0;
   border-radius: 0;
   box-shadow: none;
 }
-.dropbutton-multiple .dropbutton {
+.js .dropbutton-multiple .dropbutton {
   border-right: 0; /* LTR */
 }
-[dir="rtl"] .dropbutton-multiple .dropbutton {
+[dir="rtl"].js .dropbutton-multiple .dropbutton {
   border-left: 0;
+}
+
+/**
+ * Show dropbutton elements as buttons when javascript is disabled
+ */
+.dropbutton {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+.dropbutton li + li {
+  margin-top: 10px;
+}
+.js .dropbutton li {
+  margin-bottom: 0;
+  margin-right: 0;
+}
+.js .dropbutton li + li {
+  margin-top: 0;
+}
+
+@media screen and (min-width: 37.5625em) { /* 601px */
+  .dropbutton li {
+    display: inline-block;
+  }
+  .dropbutton li + li {
+    margin-left: 1em;
+    margin-top: 0;
+  }
 }
 
 /**
