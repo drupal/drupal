@@ -264,16 +264,21 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $this->assertEqual($this->entity_user->getUsername(), $entity->user_id->entity->name->value, format_string('%entity_type: User name can be read.', array('%entity_type' => $entity_type)));
     $this->assertEqual($this->entity_field_text, $entity->field_test_text->value, format_string('%entity_type: Text field can be read.', array('%entity_type' => $entity_type)));
 
-    // Test copying field values.
+    // Tests copying field values by assigning the TypedData objects.
     $entity2 = $this->createTestEntity($entity_type);
     $entity2->name = $entity->name;
     $entity2->user_id = $entity->user_id;
     $entity2->field_test_text = $entity->field_test_text;
-
-    $this->assertTrue($entity->name !== $entity2->name, format_string('%entity_type: Copying properties results in a different field object.', array('%entity_type' => $entity_type)));
+    $this->assertFalse($entity->name === $entity2->name, format_string('%entity_type: Copying properties results in a different field object.', array('%entity_type' => $entity_type)));
     $this->assertEqual($entity->name->value, $entity2->name->value, format_string('%entity_type: Name field copied.', array('%entity_type' => $entity_type)));
     $this->assertEqual($entity->user_id->target_id, $entity2->user_id->target_id, format_string('%entity_type: User id field copied.', array('%entity_type' => $entity_type)));
     $this->assertEqual($entity->field_test_text->value, $entity2->field_test_text->value, format_string('%entity_type: Text field copied.', array('%entity_type' => $entity_type)));
+
+    // Tests that assigning TypedData objects to non-field properties keeps the
+    // assigned value as is.
+    $entity2 = $this->createTestEntity($entity_type);
+    $entity2->_not_a_field = $entity->name;
+    $this->assertTrue($entity2->_not_a_field === $entity->name, format_string('%entity_type: Typed data objects can be copied to non-field properties as is.', array('%entity_type' => $entity_type)));
 
     // Tests adding a value to a field item list.
     $entity->name[] = 'Another name';

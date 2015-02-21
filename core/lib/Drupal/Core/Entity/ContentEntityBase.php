@@ -780,7 +780,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     if (isset($this->fields[$name][$this->activeLangcode])) {
       return $this->fields[$name][$this->activeLangcode];
     }
-    // Inline getFieldDefinition() to speed up things.
+    // Inline getFieldDefinition() to speed things up.
     if (!isset($this->fieldDefinitions)) {
       $this->getFieldDefinitions();
     }
@@ -802,25 +802,31 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
    * Uses default language always.
    */
   public function __set($name, $value) {
-    // Support setting values via property objects.
-    if ($value instanceof TypedDataInterface && !$value instanceof EntityInterface) {
-      $value = $value->getValue();
+    // Inline getFieldDefinition() to speed things up.
+    if (!isset($this->fieldDefinitions)) {
+      $this->getFieldDefinitions();
     }
-    // If this is an entity field, handle it accordingly. We first check whether
-    // a field object has been already created. If not, we create one.
-    if (isset($this->fields[$name][$this->activeLangcode])) {
-      $this->fields[$name][$this->activeLangcode]->setValue($value);
-    }
-    elseif ($this->hasField($name)) {
-      $this->getTranslatedField($name, $this->activeLangcode)->setValue($value);
+    // Handle Field API fields.
+    if (isset($this->fieldDefinitions[$name])) {
+      // Support setting values via property objects.
+      if ($value instanceof TypedDataInterface) {
+        $value = $value->getValue();
+      }
+      // If a FieldItemList object already exists, set its value.
+      if (isset($this->fields[$name][$this->activeLangcode])) {
+        $this->fields[$name][$this->activeLangcode]->setValue($value);
+      }
+      // If not, create one.
+      else {
+        $this->getTranslatedField($name, $this->activeLangcode)->setValue($value);
+      }
     }
     // The translations array is unset when cloning the entity object, we just
     // need to restore it.
     elseif ($name == 'translations') {
       $this->translations = $value;
     }
-    // Else directly read/write plain values. That way, fields not yet converted
-    // to the entity field API can always be directly accessed.
+    // Directly write non-field values.
     else {
       $this->values[$name] = $value;
     }
