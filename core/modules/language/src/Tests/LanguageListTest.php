@@ -179,6 +179,13 @@ class LanguageListTest extends WebTestBase {
     // Ensure we can't delete a locked language.
     $this->drupalGet('admin/config/regional/language/delete/und');
     $this->assertResponse(403, 'Can not delete locked language');
+
+    // Ensure that NL cannot be set default when it's not available.
+    $this->drupalGet('admin/config/regional/language');
+    $extra_values = '&site_default_language=nl';
+    $this->drupalPostForm(NULL, array(), t('Save configuration'), array(), array(), NULL, $extra_values);
+    $this->assertText(t('Selected default language no longer exists.'));
+    $this->assertNoFieldChecked('edit-site-default-language-xx', 'The previous default language got deselected.');
   }
 
   /**

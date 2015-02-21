@@ -7,6 +7,7 @@
 
 namespace Drupal\language;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\Entity\DraggableListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -36,13 +37,21 @@ class LanguageListBuilder extends DraggableListBuilder {
   protected $languageManager;
 
   /**
+   * The configuration factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
    * {@inheritdoc}
    */
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
       $entity_type,
       $container->get('entity.manager')->getStorage($entity_type->id()),
-      $container->get('language_manager')
+      $container->get('language_manager'),
+      $container->get('config.factory')
     );
   }
 
@@ -55,10 +64,13 @@ class LanguageListBuilder extends DraggableListBuilder {
    *   The entity storage controller class.
    * @param \Drupal\Core\Language\LanguageManagerInterface
    *   The language manager.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The factory for configuration objects.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, LanguageManagerInterface $language_manager) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, LanguageManagerInterface $language_manager, ConfigFactoryInterface $config_factory) {
     parent::__construct($entity_type, $storage);
     $this->languageManager = $language_manager;
+    $this->configFactory = $config_factory;
   }
 
   /**
@@ -104,6 +116,10 @@ class LanguageListBuilder extends DraggableListBuilder {
       '#return_value' => $entity->id(),
       '#id' => 'edit-site-default-language-' . $entity->id(),
     );
+    // Mark the right language as default in the form.
+    if ($entity->id() == $this->languageManager->getDefaultLanguage()->getId()) {
+      $row['default']['#default_value'] = $entity->id();
+    }
     return $row + parent::buildRow($entity);
   }
 
@@ -113,14 +129,6 @@ class LanguageListBuilder extends DraggableListBuilder {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
 
-    // Mark the right language as default in the form.
-    $default = \Drupal::languageManager()->getDefaultLanguage();
-    foreach (Element::children($form[$this->entitiesKey]) as $key) {
-      if ($key == $default->getId()) {
-        $form[$this->entitiesKey][$key]['default']['#default_value'] = $default->getId();
-      }
-    }
-
     $form[$this->entitiesKey]['#languages'] = $this->entities;
     $form['actions']['submit']['#value'] = t('Save configuration');
     return $form;
@@ -129,17 +137,25 @@ class LanguageListBuilder extends DraggableListBuilder {
   /**
    * {@inheritdoc}
    */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    if (!isset($this->entities[$form_state->getValue('site_default_language')])) {
+      $form_state->setErrorByName('site_default_language', $this->t('Selected default language no longer exists.'));
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
-    // Save the default language.
-    foreach ($form_state->getValue($this->entitiesKey) as $id => $value) {
-      if (isset($this->entities[$id]) && ($id == $form_state->getValue('site_default_language'))) {
-        \Drupal::configFactory()->getEditable('system.site')->set('langcode', $form_state->getValue('site_default_language'))->save();
-      }
+    // Save the default language if changed.
+    $new_id = $form_state->getValue('site_default_language');
+    if ($new_id != $this->languageManager->getDefaultLanguage()->getId()) {
+      $this->configFactory->getEditable('system.site')->set('langcode', $new_id)->save();
+      $this->languageManager->reset();
     }
 
-    $this->languageManager->reset();
     if ($this->languageManager instanceof ConfigurableLanguageManagerInterface) {
       $this->languageManager->updateLockedLanguageWeights();
     }
@@ -147,7 +163,7 @@ class LanguageListBuilder extends DraggableListBuilder {
     drupal_set_message(t('Configuration saved.'));
     // Force the redirection to the page with the language we have just
     // selected as default.
-    $form_state->setRedirect('entity.configurable_language.collection', array(), array('language' => $this->entities[$form_state->getValue('site_default_language')]));
+    $form_state->setRedirectUrl($this->entities[$new_id]->urlInfo('collection', array('language' => $this->entities[$new_id])));
   }
 
 }
