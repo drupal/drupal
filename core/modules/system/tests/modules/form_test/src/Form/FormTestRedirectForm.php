@@ -55,7 +55,8 @@ class FormTestRedirectForm extends FormBase {
     if (!$form_state->isValueEmpty('redirection')) {
       if (!$form_state->isValueEmpty('destination')) {
         // The destination is a random URL, so we can't use routed URLs.
-        $form_state->setRedirectUrl(Url::fromUri('user-path:/' . $form_state->getValue('destination')));
+        // @todo Revist this in https://www.drupal.org/node/2418219.
+        $form_state->setRedirectUrl(Url::fromUserInput('/' . $form_state->getValue('destination')));
       }
     }
     else {

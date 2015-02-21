@@ -2060,7 +2060,9 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       if ($this->getOption('link_display') == 'custom_url' && $override_path = $this->getOption('link_url')) {
         $tokens = $this->getArgumentsTokens();
         $path = $this->viewsTokenReplace($override_path, $tokens);
-        $url = Url::fromUri('user-path:/' . $path);
+        // @todo Views should expect and store a leading /. See:
+        //   https://www.drupal.org/node/2423913
+        $url = Url::fromUserInput('/' . $path);
       }
       // Otherwise, use the URL for the display.
       else {

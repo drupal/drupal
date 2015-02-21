@@ -1248,7 +1248,9 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
           $more_link_path = Unicode::substr($more_link_path, Unicode::strlen($base_path));
         }
 
-        $more_link = \Drupal::l($more_link_text, CoreUrl::fromUri('user-path:/' . $more_link_path), array('attributes' => array('class' => array('views-more-link'))));
+        // @todo Views should expect and store a leading /. See:
+        //   https://www.drupal.org/node/2423913
+        $more_link = \Drupal::l($more_link_text, CoreUrl::fromUserInput('/' . $more_link_path), array('attributes' => array('class' => array('views-more-link'))));
 
         $suffix .= " " . $more_link;
       }
@@ -1313,7 +1315,9 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     $path = $alter['path'];
     if (empty($alter['url'])) {
       if (!parse_url($path, PHP_URL_SCHEME)) {
-        $alter['url'] = CoreUrl::fromUri('user-path:/' . ltrim($path, '/'));
+        // @todo Views should expect and store a leading /. See:
+        //   https://www.drupal.org/node/2423913
+        $alter['url'] = CoreUrl::fromUserInput('/' . ltrim($path, '/'));
       }
       else {
         $alter['url'] = CoreUrl::fromUri($path);

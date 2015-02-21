@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Routing\RouteMatch;
@@ -168,6 +169,49 @@ class UrlTest extends UnitTestCase {
   public function testFromRouteFront() {
     $url = Url::fromRoute('<front>');
     $this->assertSame('<front>', $url->getRouteName());
+  }
+
+  /**
+   * Tests the fromUserInput method with valid paths.
+   *
+   * @covers ::fromUserInput
+   * @dataProvider providerFromValidUserPathUri
+   */
+  public function testFromUserInput($path) {
+    $url = Url::fromUserInput($path);
+    $uri = $url->getUri();
+
+    $this->assertInstanceOf('Drupal\Core\Url', $url);
+    $this->assertFalse($url->isRouted());
+    $this->assertEquals(0, strpos($uri, 'base:'));
+
+    $parts = UrlHelper::parse($path);
+    $options = $url->getOptions();
+
+    if (!empty($parts['fragment'])) {
+      $this->assertSame($parts['fragment'], $options['fragment']);
+    }
+    else {
+      $this->assertArrayNotHasKey('fragment', $options);
+    }
+
+    if (!empty($parts['query'])) {
+      $this->assertEquals($parts['query'], $options['query']);
+    }
+    else {
+      $this->assertArrayNotHasKey('query', $options);
+    }
+  }
+
+  /**
+   * Tests the fromUserInput method with invalid paths.
+   *
+   * @covers ::fromUserInput
+   * @expectedException \InvalidArgumentException
+   * @dataProvider providerFromInvalidUserPathUri
+   */
+  public function testFromInvalidUserInput($path) {
+    $url = Url::fromUserInput($path);
   }
 
   /**
@@ -663,6 +707,7 @@ class UrlTest extends UnitTestCase {
       ['/kittens?page=1000'],
       ['/?page=1000'],
       ['?page=1000'],
+      ['?breed=bengal&page=1000'],
       // Paths with various token formats but no leading slash.
       ['/[duckies]'],
       ['/%bunnies'],

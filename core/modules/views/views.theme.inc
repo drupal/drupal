@@ -328,7 +328,9 @@ function template_preprocess_views_view_summary(&$variables) {
       $base_path = $argument->options['summary_options']['base_path'];
       $tokens = $this->getArgumentsTokens();
       $base_path = $this->viewsTokenReplace($base_path, $tokens);
-      $url = Url::fromUri('user-path:/' . $base_path);
+      // @todo Views should expect and store a leading /. See:
+      //   https://www.drupal.org/node/2423913
+      $url = Url::fromUserInput('/' . $base_path);
     }
     else {
       $url = $view->getUrl($args)->setOptions($url_options);
@@ -395,7 +397,9 @@ function template_preprocess_views_view_summary_unformatted(&$variables) {
       $base_path = $argument->options['summary_options']['base_path'];
       $tokens = $this->getArgumentsTokens();
       $base_path = $this->viewsTokenReplace($base_path, $tokens);
-      $url = Url::fromUri('user-path:/' . $base_path);
+      // @todo Views should expect and store a leading /. See:
+      //   https://www.drupal.org/node/2423913
+      $url = Url::fromUserInput('/' . $base_path);
     }
     else {
       $url = $view->getUrl($args)->setOptions($url_options);
@@ -876,7 +880,9 @@ function template_preprocess_views_view_rss(&$variables) {
     // Compare the link to the default home page; if it's the default home page,
     // just use $base_url.
     $url_string = $url->setOptions($url_options)->toString();
-    if ($url_string === Url::fromUri('user-path:/' . $config->get('page.front'))->toString()) {
+    // @todo Should page.front be stored with a leading slash? See
+    //   https://www.drupal.org/node/2430595.
+    if ($url_string === Url::fromUserInput('/' . $config->get('page.front'))->toString()) {
       $url_string = Url::fromRoute('<front>')->setAbsolute()->toString();
     }
 

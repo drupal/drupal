@@ -166,7 +166,8 @@ class Url {
    * @return \Drupal\Core\Url
    *   A new Url object for a routed (internal to Drupal) URL.
    *
-   * @see static::fromUri()
+   * @see \Drupal\Core\Url::fromUserInput()
+   * @see \Drupal\Core\Url::fromUri()
    */
   public static function fromRoute($route_name, $route_parameters = array(), $options = array()) {
     return new static($route_name, $route_parameters, $options);
@@ -187,6 +188,56 @@ class Url {
     else {
       throw new \InvalidArgumentException('Route required');
     }
+  }
+
+  /**
+   * Creates a Url object for a relative URI reference submitted by user input.
+   *
+   * Use this method to create a URL for user-entered paths that may or may not
+   * correspond to a valid Drupal route.
+   *
+   * @param string $user_input
+   *   User input for a link or path. The first character must be one of the
+   *   following characters:
+   *   - '/': A path within the current site. This path might be to a Drupal
+   *     route (e.g., '/admin'), to a file (e.g., '/README.txt'), or to
+   *     something processed by a non-Drupal script (e.g.,
+   *     '/not/a/drupal/page'). If the path matches a Drupal route, then the
+   *     URL generation will include Drupal's path processors (e.g.,
+   *     language-prefixing and aliasing). Otherwise, the URL generation will
+   *     just append the passed-in path to Drupal's base path.
+   *   - '?': A query string for the current page or resource.
+   *   - '#': A fragment (jump-link) on the current page or resource.
+   *   This helps reduce ambiguity for user-entered links and paths, and
+   *   supports user interfaces where users may normally use auto-completion
+   *   to search for existing resources, but also may type one of these
+   *   characters to link to (e.g.) a specific path on the site.
+   *   (With regard to the URI specification, the user input is treated as a
+   *   @link https://tools.ietf.org/html/rfc3986#section-4.2 relative URI reference @endlink
+   *   where the relative part is of type
+   *   @link https://tools.ietf.org/html/rfc3986#section-3.3 path-abempty @endlink.)
+   * @param array $options
+   *   (optional) An array of options. See Url::fromUri() for details.
+   *
+   * @return static
+   *   A new Url object based on user input.
+   *
+   * @throws \InvalidArgumentException
+   *   Thrown when the user input does not begin with one of the following
+   *   characters: '/', '?', or '#'.
+   */
+  public static function fromUserInput($user_input, $options = []) {
+    // Ensuring one of these initial characters also enforces that what is
+    // passed is a relative URI reference rather than an absolute URI,
+    // because these are URI reserved characters that a scheme name may not
+    // start with.
+    if ((strpos($user_input, '/') !== 0) && (strpos($user_input, '#') !== 0) && (strpos($user_input, '?') !== 0)) {
+      throw new \InvalidArgumentException(String::format("The user-entered string @user_input must begin with a '/', '?', or '#'.", ['@user_input' => $user_input]));
+    }
+
+    // fromUri() requires an absolute URI, so prepend the appropriate scheme
+    // name.
+    return static::fromUri('user-path:' . $user_input, $options);
   }
 
   /**
@@ -239,7 +290,8 @@ class Url {
    * @throws \InvalidArgumentException
    *   Thrown when the passed in path has no scheme.
    *
-   * @see static::fromRoute()
+   * @see \Drupal\Core\Url::fromRoute()
+   * @see \Drupal\Core\Url::fromUserInput()
    */
   public static function fromUri($uri, $options = []) {
     $uri_parts = parse_url($uri);

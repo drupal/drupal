@@ -49,7 +49,9 @@ class Url extends FieldPluginBase {
   public function render(ResultRow $values) {
     $value = $this->getValue($values);
     if (!empty($this->options['display_as_link'])) {
-      return \Drupal::l($this->sanitizeValue($value), CoreUrl::fromUri('user-path:/' . $value), array('html' => TRUE));
+      // @todo Views should expect and store a leading /. See:
+      //   https://www.drupal.org/node/2423913
+      return \Drupal::l($this->sanitizeValue($value), CoreUrl::fromUserInput('/' . $value), array('html' => TRUE));
     }
     else {
       return $this->sanitizeValue($value, 'url');

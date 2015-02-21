@@ -723,7 +723,9 @@ class ViewUI implements ViewEntityInterface {
               Xss::filterAdmin($this->executable->getTitle()),
             );
             if (isset($path)) {
-              $path = \Drupal::l($path, Url::fromUri('user-path:/' . $path));
+              // @todo Views should expect and store a leading /. See:
+              //   https://www.drupal.org/node/2423913
+              $path = \Drupal::l($path, Url::fromUserInput('/' . $path));
             }
             else {
               $path = t('This display has no path.');

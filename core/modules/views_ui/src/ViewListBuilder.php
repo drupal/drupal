@@ -264,7 +264,9 @@ class ViewListBuilder extends ConfigEntityListBuilder {
       if ($display->hasPath()) {
         $path = $display->getPath();
         if ($view->status() && strpos($path, '%') === FALSE) {
-          $all_paths[] = \Drupal::l('/' . $path, Url::fromUri('user-path:/' . $path));
+          // @todo Views should expect and store a leading /. See:
+          //   https://www.drupal.org/node/2423913
+          $all_paths[] = \Drupal::l('/' . $path, Url::fromUserInput('/' . $path));
         }
         else {
           $all_paths[] = String::checkPlain('/' . $path);

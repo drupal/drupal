@@ -31,7 +31,7 @@ class UrlTest extends WebTestBase {
     // Test \Drupal::l().
     $text = $this->randomMachineName();
     $path = "<SCRIPT>alert('XSS')</SCRIPT>";
-    $link = \Drupal::l($text, Url::fromUri('user-path:/' . $path));
+    $link = \Drupal::l($text, Url::fromUserInput('/' . $path));
     $sanitized_path = check_url(Url::fromUri('base:' . $path)->toString());
     $this->assertTrue(strpos($link, $sanitized_path) !== FALSE, format_string('XSS attack @path was filtered by _l().', array('@path' => $path)));
 
