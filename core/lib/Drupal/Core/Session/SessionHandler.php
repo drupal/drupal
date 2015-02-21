@@ -64,13 +64,14 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
    * {@inheritdoc}
    */
   public function read($sid) {
-    global $user;
+    // @todo Remove global in https://www.drupal.org/node/2286971
+    global $_session_user;
 
     // Handle the case of first time visitors and clients that don't store
     // cookies (eg. web crawlers).
     $cookies = $this->requestStack->getCurrentRequest()->cookies;
     if (empty($sid) || !$cookies->has($this->getName())) {
-      $user = new UserSession();
+      $_session_user = new UserSession();
       return '';
     }
 
@@ -86,29 +87,29 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
         ':uid' => $values['uid'],
       ))->fetchCol();
       $values['roles'] = array_merge(array(DRUPAL_AUTHENTICATED_RID), $rids);
-      $user = new UserSession($values);
+      $_session_user = new UserSession($values);
     }
     elseif ($values) {
       // The user is anonymous or blocked. Only preserve two fields from the
       // {sessions} table.
-      $user = new UserSession(array(
+      $_session_user = new UserSession(array(
         'session' => $values['session'],
         'access' => $values['access'],
       ));
     }
     else {
       // The session has expired.
-      $user = new UserSession();
+      $_session_user = new UserSession();
     }
 
-    return $user->session;
+    return $_session_user->session;
   }
 
   /**
    * {@inheritdoc}
    */
   public function write($sid, $value) {
-    global $user;
+    $user = \Drupal::currentUser();
 
     // The exception handler is not active at this point, so we need to do it
     // manually.
@@ -155,17 +156,17 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
    * {@inheritdoc}
    */
   public function destroy($sid) {
-    global $user;
+
 
     // Delete session data.
     $this->connection->delete('sessions')
       ->condition('sid', Crypt::hashBase64($sid))
       ->execute();
 
-    // Reset $_SESSION and $user to prevent a new session from being started
-    // in \Drupal\Core\Session\SessionManager::save().
+    // Reset $_SESSION and current user to prevent a new session from being
+    // started in \Drupal\Core\Session\SessionManager::save().
     $_SESSION = array();
-    $user = new AnonymousUserSession();
+    \Drupal::currentUser()->setAccount(new AnonymousUserSession());
 
     // Unset the session cookies.
     $this->deleteCookie($this->getName());

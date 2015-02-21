@@ -85,8 +85,6 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
    * {@inheritdoc}
    */
   public function authenticate(Request $request) {
-    global $user;
-
     $account = NULL;
 
     // Iterate the allowed providers.
@@ -113,11 +111,6 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
     // Save the authenticated account and the provider that supplied it
     //  for later access.
     $request->attributes->set('_authentication_provider', $this->triggeredProviderId);
-
-    // The global $user object is included for backward compatibility only and
-    // should be considered deprecated.
-    // @todo Remove this line once global $user is no longer used.
-    $user = $account;
 
     return $account;
   }

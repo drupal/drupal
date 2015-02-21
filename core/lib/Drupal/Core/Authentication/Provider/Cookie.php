@@ -28,11 +28,10 @@ class Cookie implements AuthenticationProviderInterface {
    * {@inheritdoc}
    */
   public function authenticate(Request $request) {
-    // Global $user is deprecated, but the session system is still based on it.
-    global $user;
-
     if ($request->getSession()->start()) {
-      return $user;
+      // @todo Remove global in https://www.drupal.org/node/2286971
+      global $_session_user;
+      return $_session_user;
     }
 
     return NULL;

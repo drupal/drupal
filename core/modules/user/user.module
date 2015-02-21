@@ -232,15 +232,6 @@ function user_load_multiple(array $uids = NULL, $reset = FALSE) {
 /**
  * Loads a user object.
  *
- * Drupal has a global $user object, which represents the currently-logged-in
- * user. So to avoid confusion and to avoid clobbering the global $user object,
- * it is a good idea to assign the result of this function to a different local
- * variable, generally $account. If you actually do want to act as the user you
- * are loading, it is essential to call drupal_save_session(FALSE); first.
- * See
- * @link http://drupal.org/node/218104 Safely impersonating another user @endlink
- * for more information.
- *
  * @param int $uid
  *   Integer specifying the user ID to load.
  * @param bool $reset
@@ -576,7 +567,7 @@ function template_preprocess_username(&$variables) {
  * session, saves the login timestamp, calls hook_user_login(), and generates a
  * new session.
  *
- * The global $user object is replaced with the passed in account.
+ * The current user is replaced with the passed in account.
  *
  * @param \Drupal\user\UserInterface $account
  *   The account to log in.
@@ -584,8 +575,7 @@ function template_preprocess_username(&$variables) {
  * @see hook_user_login()
  */
 function user_login_finalize(UserInterface $account) {
-  global $user;
-  $user = $account;
+  \Drupal::currentUser()->setAccount($account);
   \Drupal::logger('user')->notice('Session opened for %name.', array('%name' => $account->getUsername()));
   // Update the user table timestamp noting user has logged in.
   // This is also used to invalidate one-time login links.
@@ -785,7 +775,6 @@ function user_cancel($edit, $uid, $method) {
  * @see user_cancel()
  */
 function _user_cancel($edit, $account, $method) {
-  global $user;
   $logger = \Drupal::logger('user');
 
   switch ($method) {
@@ -818,8 +807,8 @@ function _user_cancel($edit, $account, $method) {
   // their session though, as we might have information in it, and we can't
   // regenerate it because batch API uses the session ID, we will regenerate it
   // in _user_cancel_session_regenerate().
-  if ($account->id() == $user->id()) {
-    $user = new AnonymousUserSession();
+  if ($account->id() == \Drupal::currentUser()->id()) {
+    \Drupal::currentUser()->setAccount(new AnonymousUserSession());
   }
 }
 

@@ -138,7 +138,7 @@ class BasicAuth implements AuthenticationProviderInterface {
    */
   public function handleException(GetResponseForExceptionEvent $event) {
     $exception = $event->getException();
-    if ($GLOBALS['user']->isAnonymous() && $exception instanceof AccessDeniedHttpException) {
+    if (\Drupal::currentUser()->isAnonymous() && $exception instanceof AccessDeniedHttpException) {
       if (!$this->applies($event->getRequest())) {
         $site_name = $this->configFactory->get('system.site')->get('name');
         global $base_url;

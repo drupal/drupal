@@ -67,6 +67,7 @@ class AccountProxy implements AccountProxyInterface {
       $account = $account->getAccount();
     }
     $this->account = $account;
+    date_default_timezone_set(drupal_get_user_timezone());
   }
 
   /**

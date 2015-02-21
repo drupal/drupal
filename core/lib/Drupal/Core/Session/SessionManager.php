@@ -105,8 +105,6 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
    * {@inheritdoc}
    */
   public function start() {
-    global $user;
-
     if (($this->started || $this->startedLazy) && !$this->closed) {
       return $this->started;
     }
@@ -123,7 +121,9 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
     }
 
     if (empty($result)) {
-      $user = new AnonymousUserSession();
+      // @todo Remove global in https://www.drupal.org/node/2286971
+      global $_session_user;
+      $_session_user = new AnonymousUserSession();
 
       // Randomly generate a session identifier for this request. This is
       // necessary because \Drupal\user\TempStoreFactory::get() wants to know
@@ -146,7 +146,6 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
 
       $result = FALSE;
     }
-    date_default_timezone_set(drupal_get_user_timezone());
 
     return $result;
   }
@@ -181,7 +180,7 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
    * {@inheritdoc}
    */
   public function save() {
-    global $user;
+    $user = \Drupal::currentUser();
 
     if ($this->isCli()) {
       // We don't have anything to do if we are not allowed to save the session.
@@ -212,7 +211,7 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
    * {@inheritdoc}
    */
   public function regenerate($destroy = FALSE, $lifetime = NULL) {
-    global $user;
+    $user = \Drupal::currentUser();
 
     // Nothing to do if we are not allowed to change the session.
     if ($this->isCli()) {
@@ -241,13 +240,8 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
 
     if (!$this->isStarted()) {
       // Start the session when it doesn't exist yet.
-      // Preserve the logged in user, as it will be reset to anonymous
-      // by \Drupal\Core\Session\SessionHandler::read().
-      $account = $user;
       $this->startNow();
-      $user = $account;
     }
-    date_default_timezone_set(drupal_get_user_timezone());
   }
 
   /**

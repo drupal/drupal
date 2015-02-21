@@ -66,11 +66,6 @@ class AuthenticationEnhancer implements RouteEnhancerInterface {
         $anonymous_user = new AnonymousUserSession();
 
         $this->currentUser->setAccount($anonymous_user);
-
-        // The global $user object is included for backward compatibility only
-        // and should be considered deprecated.
-        // @todo Remove this line once global $user is no longer used.
-        $GLOBALS['user'] = $anonymous_user;
       }
     }
     return $defaults;

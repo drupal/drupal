@@ -740,7 +740,7 @@ function drupal_bootstrap($phase = NULL) {
  * Returns the time zone of the current user.
  */
 function drupal_get_user_timezone() {
-  global $user;
+  $user = \Drupal::currentUser();
   $config = \Drupal::config('system.date');
 
   if ($user && $config->get('timezone.user.configurable') && $user->isAuthenticated() && $user->getTimezone()) {
