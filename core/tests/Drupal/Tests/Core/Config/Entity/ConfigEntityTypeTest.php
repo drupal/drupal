@@ -75,4 +75,38 @@ class ConfigEntityTypeTest extends UnitTestCase {
     $this->assertEquals($expected_prefix, $config_entity->getConfigPrefix());
   }
 
+  /**
+   * @covers ::__construct
+   */
+  public function testConstruct() {
+    $config_entity = new ConfigEntityType([
+      'id' => 'example_config_entity_type',
+    ]);
+    $this->assertEquals('Drupal\Core\Config\Entity\ConfigEntityStorage', $config_entity->getStorageClass());
+  }
+
+  /**
+   * @covers ::__construct
+   *
+   * @expectedException \Drupal\Core\Config\Entity\Exception\ConfigEntityStorageClassException
+   * @expectedExceptionMessage \Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage is not \Drupal\Core\Config\Entity\ConfigEntityStorage or it does not extend it
+   */
+  public function testConstructBadStorage() {
+    new ConfigEntityType([
+      'id' => 'example_config_entity_type',
+      'handlers' => ['storage' => '\Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage']
+    ]);
+  }
+
+  /**
+   * @covers ::setStorageClass
+   *
+   * @expectedException \Drupal\Core\Config\Entity\Exception\ConfigEntityStorageClassException
+   * @expectedExceptionMessage \Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage is not \Drupal\Core\Config\Entity\ConfigEntityStorage or it does not extend it
+   */
+  public function testSetStorageClass() {
+    $config_entity = $this->setUpConfigEntityType([]);
+    $config_entity->setStorageClass('\Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage');
+  }
+
 }

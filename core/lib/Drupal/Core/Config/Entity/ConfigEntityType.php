@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Config\Entity;
 
+use Drupal\Core\Config\Entity\Exception\ConfigEntityStorageClassException;
 use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Config\ConfigPrefixLengthException;
 use Drupal\Component\Utility\String;
@@ -62,6 +63,10 @@ class ConfigEntityType extends EntityType {
 
   /**
    * {@inheritdoc}
+   *
+   * @throws \Drupal\Core\Config\Entity\Exception\ConfigEntityStorageClassException
+   *   Exception thrown when the provided class is not an instance of
+   *   \Drupal\Core\Config\Entity\ConfigEntityStorage.
    */
   public function __construct($definition) {
     // Ensure a default list cache tag is set; do this before calling the parent
@@ -74,6 +79,9 @@ class ConfigEntityType extends EntityType {
     // Always add a default 'uuid' key.
     $this->entity_keys['uuid'] = 'uuid';
     $this->entity_keys['langcode'] = 'langcode';
+    if (isset($this->handlers['storage'])) {
+      $this->checkStorageClass($this->handlers['storage']);
+    }
     $this->handlers += array(
       'storage' => 'Drupal\Core\Config\Entity\ConfigEntityStorage',
     );
@@ -137,6 +145,32 @@ class ConfigEntityType extends EntityType {
    */
   public function getConfigDependencyKey() {
     return 'config';
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @throws \Drupal\Core\Config\Entity\Exception\ConfigEntityStorageClassException
+   *   Exception thrown when the provided class is not an instance of
+   *   \Drupal\Core\Config\Entity\ConfigEntityStorage.
+   */
+  public function setStorageClass($class) {
+    $this->checkStorageClass($class);
+    parent::setStorageClass($class);
+  }
+
+  /**
+   * Checks that the provided class is an instance of ConfigEntityStorage.
+   *
+   * @param string $class
+   *   The class to check.
+   *
+   * @see \Drupal\Core\Config\Entity\ConfigEntityStorage.
+   */
+  protected function checkStorageClass($class) {
+    if (!is_a($class, 'Drupal\Core\Config\Entity\ConfigEntityStorage', TRUE)) {
+      throw new ConfigEntityStorageClassException(String::format('@class is not \Drupal\Core\Config\Entity\ConfigEntityStorage or it does not extend it', ['@class' => $class]));
+    }
   }
 
 }

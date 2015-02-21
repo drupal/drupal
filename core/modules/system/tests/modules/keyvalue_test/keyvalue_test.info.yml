@@ -6,5 +6,4 @@ package: Testing
 version: VERSION
 hidden: true
 dependencies:
-  - config_test
   - entity_test
