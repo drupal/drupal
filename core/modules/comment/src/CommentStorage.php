@@ -264,13 +264,6 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
    */
   public function loadThread(EntityInterface $entity, $field_name, $mode, $comments_per_page = 0, $pager_id = 0) {
     $query = $this->database->select('comment_field_data', 'c');
-    if ($comments_per_page) {
-      $query = $query->extend('Drupal\Core\Database\Query\PagerSelectExtender')
-        ->limit($comments_per_page);
-      if ($pager_id) {
-        $query->element($pager_id);
-      }
-    }
     $query->addField('c', 'cid');
     $query
       ->condition('c.entity_id', $entity->id())
@@ -283,22 +276,33 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
       ->addMetaData('entity', $entity)
       ->addMetaData('field_name', $field_name);
 
-    $count_query = $this->database->select('comment_field_data', 'c');
-    $count_query->addExpression('COUNT(*)');
-    $count_query
-      ->condition('c.entity_id', $entity->id())
-      ->condition('c.entity_type', $entity->getEntityTypeId())
-      ->condition('c.field_name', $field_name)
-      ->condition('c.default_langcode', 1)
-      ->addTag('entity_access')
-      ->addTag('comment_filter')
-      ->addMetaData('base_table', 'comment')
-      ->addMetaData('entity', $entity)
-      ->addMetaData('field_name', $field_name);
+    if ($comments_per_page) {
+      $query = $query->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+        ->limit($comments_per_page);
+      if ($pager_id) {
+        $query->element($pager_id);
+      }
+
+      $count_query = $this->database->select('comment_field_data', 'c');
+      $count_query->addExpression('COUNT(*)');
+      $count_query
+        ->condition('c.entity_id', $entity->id())
+        ->condition('c.entity_type', $entity->getEntityTypeId())
+        ->condition('c.field_name', $field_name)
+        ->condition('c.default_langcode', 1)
+        ->addTag('entity_access')
+        ->addTag('comment_filter')
+        ->addMetaData('base_table', 'comment')
+        ->addMetaData('entity', $entity)
+        ->addMetaData('field_name', $field_name);
+      $query->setCountQuery($count_query);
+    }
 
     if (!$this->currentUser->hasPermission('administer comments')) {
       $query->condition('c.status', CommentInterface::PUBLISHED);
-      $count_query->condition('c.status', CommentInterface::PUBLISHED);
+      if ($comments_per_page) {
+        $count_query->condition('c.status', CommentInterface::PUBLISHED);
+      }
     }
     if ($mode == CommentManagerInterface::COMMENT_MODE_FLAT) {
       $query->orderBy('c.cid', 'ASC');
@@ -311,7 +315,6 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
       $query->orderBy('torder', 'ASC');
     }
 
-    $query->setCountQuery($count_query);
     $cids = $query->execute()->fetchCol();
 
     $comments = array();

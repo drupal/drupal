@@ -86,6 +86,12 @@ class CommentPagerTest extends CommentTestBase {
     $this->drupalGet('node/' . $node->id(), array('query' => array('page' => 0)));
     $this->assertFalse($this->commentExists($reply2, TRUE), 'In threaded mode where # replies > # comments per page, the newest reply does not appear on page 1.');
 
+    // Test that the page build process does not somehow generate errors when
+    // # comments per page is set to 0.
+    $this->setCommentsPerPage(0);
+    $this->drupalGet('node/' . $node->id(), array('query' => array('page' => 0)));
+    $this->assertFalse($this->commentExists($reply2, TRUE), 'Threaded mode works correctly when comments per page is 0.');
+
     $this->drupalLogout();
   }
 
