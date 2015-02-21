@@ -456,7 +456,7 @@ function file_save_htaccess($directory, $private = TRUE, $force_overwrite = FALS
     // Short circuit if the .htaccess file already exists.
     return TRUE;
   }
-  $htaccess_lines = file_htaccess_lines($private);
+  $htaccess_lines = FileStorage::htaccessLines($private);
 
   // Write the .htaccess file.
   if (file_exists($directory) && is_writable($directory) && file_put_contents($htaccess_path, $htaccess_lines)) {
@@ -480,7 +480,8 @@ function file_save_htaccess($directory, $private = TRUE, $force_overwrite = FALS
  * @return string
  *   The desired contents of the .htaccess file.
  *
- * @see file_create_htaccess()
+ * @deprecated in Drupal 8.0.x-dev and will be removed before Drupal 9.0.0.
+ *   Use \Drupal\Component\PhpStorage\FileStorage::htaccessLines().
  */
 function file_htaccess_lines($private = TRUE) {
   return FileStorage::htaccessLines($private);

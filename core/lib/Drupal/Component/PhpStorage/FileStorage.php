@@ -66,16 +66,15 @@ class FileStorage implements PhpStorageInterface {
   /**
    * Returns the standard .htaccess lines that Drupal writes to file directories.
    *
-   * This code is located here so this component can be stand-alone, but it is
-   * also called by file_htaccess_lines().
-   *
    * @param bool $private
-   *   (Optional) Set to FALSE to return the .htaccess lines for an open and
+   *   (optional) Set to FALSE to return the .htaccess lines for an open and
    *   public directory. The default is TRUE, which returns the .htaccess lines
    *   for a private and protected directory.
    *
    * @return string
    *   The desired contents of the .htaccess file.
+   *
+   * @see file_create_htaccess()
    */
   public static function htaccessLines($private = TRUE) {
     $lines = <<<EOF
