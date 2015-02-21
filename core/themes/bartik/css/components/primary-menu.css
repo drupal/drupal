@@ -101,7 +101,7 @@ body:not(:target) .region-primary-menu .menu-item {
   height: 0;
   overflow: hidden;
 }
-body:not(:target) .region-primary-menu .menu-toggle-target-show:target ~ .menu-item {
+body:not(:target) .region-primary-menu .menu-toggle-target-show:target ~ .menu .menu-item {
   height: auto;
   overflow: visible;
 }
