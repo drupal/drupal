@@ -266,29 +266,6 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
   /**
    * {@inheritdoc}
    */
-  public function isEnabled() {
-    return $this->writeSafeHandler->isSessionWritable();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function disable() {
-    $this->writeSafeHandler->setSessionWritable(FALSE);
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function enable() {
-    $this->writeSafeHandler->setSessionWritable(TRUE);
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function setWriteSafeHandler(WriteSafeSessionHandlerInterface $handler) {
     $this->writeSafeHandler = $handler;
   }
