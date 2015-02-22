@@ -456,7 +456,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
       $errors[] = $this->t('No query allowed.');
     }
 
-    if (!parse_url('user-path:/' . $path)) {
+    if (!parse_url('internal:/' . $path)) {
       $errors[] = $this->t('Invalid path. Valid characters are alphanumerics as well as "-", ".", "_" and "~".');
     }
 

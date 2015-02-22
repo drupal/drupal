@@ -175,7 +175,7 @@ class UrlTest extends UnitTestCase {
    * Tests the fromUserInput method with valid paths.
    *
    * @covers ::fromUserInput
-   * @dataProvider providerFromValidUserPathUri
+   * @dataProvider providerFromValidInternalUri
    */
   public function testFromUserInput($path) {
     $url = Url::fromUserInput($path);
@@ -208,7 +208,7 @@ class UrlTest extends UnitTestCase {
    *
    * @covers ::fromUserInput
    * @expectedException \InvalidArgumentException
-   * @dataProvider providerFromInvalidUserPathUri
+   * @dataProvider providerFromInvalidInternalUri
    */
   public function testFromInvalidUserInput($path) {
     $url = Url::fromUserInput($path);
@@ -224,7 +224,7 @@ class UrlTest extends UnitTestCase {
       ->method('getUrlIfValidWithoutAccessCheck')
       ->with('invalid-path')
       ->willReturn(FALSE);
-    $url = Url::fromUri('user-path:/invalid-path');
+    $url = Url::fromUri('internal:/invalid-path');
     $this->assertSame(FALSE, $url->isRouted());
     $this->assertSame('base:invalid-path', $url->getUri());
   }
@@ -240,7 +240,7 @@ class UrlTest extends UnitTestCase {
       ->method('getUrlIfValidWithoutAccessCheck')
       ->with('valid-path')
       ->willReturn($url);
-    $result_url = Url::fromUri('user-path:/valid-path');
+    $result_url = Url::fromUri('internal:/valid-path');
     $this->assertSame($url, $result_url);
   }
 
@@ -636,13 +636,13 @@ class UrlTest extends UnitTestCase {
   }
 
   /**
-   * Tests the toUriString() method with user-path: URIs.
+   * Tests the toUriString() method with internal: URIs.
    *
    * @covers ::toUriString
    *
-   * @dataProvider providerTestToUriStringForUserPath
+   * @dataProvider providerTestToUriStringForInternal
    */
-  public function testToUriStringForUserPath($uri, $options, $uri_string) {
+  public function testToUriStringForInternal($uri, $options, $uri_string) {
     $url = Url::fromRoute('entity.test_entity.canonical', ['test_entity' => '1']);
     $this->pathValidator->expects($this->any())
       ->method('getUrlIfValidWithoutAccessCheck')
@@ -656,45 +656,45 @@ class UrlTest extends UnitTestCase {
   }
 
   /**
-   * Data provider for testing user-path URIs
+   * Data provider for testing internal URIs.
    */
-  public function providerTestToUriStringForUserPath() {
+  public function providerTestToUriStringForInternal() {
     return [
       // The four permutations of a regular path.
-      ['user-path:/test-entity/1', [], 'route:entity.test_entity.canonical;test_entity=1'],
-      ['user-path:/test-entity/1', ['fragment' => 'top'], 'route:entity.test_entity.canonical;test_entity=1#top'],
-      ['user-path:/test-entity/1', ['fragment' => 'top', 'query' => ['page' => '2']], 'route:entity.test_entity.canonical;test_entity=1?page=2#top'],
-      ['user-path:/test-entity/1?page=2#top', [], 'route:entity.test_entity.canonical;test_entity=1?page=2#top'],
+      ['internal:/test-entity/1', [], 'route:entity.test_entity.canonical;test_entity=1'],
+      ['internal:/test-entity/1', ['fragment' => 'top'], 'route:entity.test_entity.canonical;test_entity=1#top'],
+      ['internal:/test-entity/1', ['fragment' => 'top', 'query' => ['page' => '2']], 'route:entity.test_entity.canonical;test_entity=1?page=2#top'],
+      ['internal:/test-entity/1?page=2#top', [], 'route:entity.test_entity.canonical;test_entity=1?page=2#top'],
 
       // The four permutations of the special '<front>' path.
-      ['user-path:/', [], 'route:<front>'],
-      ['user-path:/', ['fragment' => 'top'], 'route:<front>#top'],
-      ['user-path:/', ['fragment' => 'top', 'query' => ['page' => '2']], 'route:<front>?page=2#top'],
-      ['user-path:/?page=2#top', [], 'route:<front>?page=2#top'],
+      ['internal:/', [], 'route:<front>'],
+      ['internal:/', ['fragment' => 'top'], 'route:<front>#top'],
+      ['internal:/', ['fragment' => 'top', 'query' => ['page' => '2']], 'route:<front>?page=2#top'],
+      ['internal:/?page=2#top', [], 'route:<front>?page=2#top'],
 
       // The four permutations of the special '<none>' path.
-      ['user-path:', [], 'route:<none>'],
-      ['user-path:', ['fragment' => 'top'], 'route:<none>#top'],
-      ['user-path:', ['fragment' => 'top', 'query' => ['page' => '2']], 'route:<none>?page=2#top'],
-      ['user-path:?page=2#top', [], 'route:<none>?page=2#top'],
+      ['internal:', [], 'route:<none>'],
+      ['internal:', ['fragment' => 'top'], 'route:<none>#top'],
+      ['internal:', ['fragment' => 'top', 'query' => ['page' => '2']], 'route:<none>?page=2#top'],
+      ['internal:?page=2#top', [], 'route:<none>?page=2#top'],
     ];
   }
 
   /**
-   * Tests the fromUri() method with a valid user-path: URI.
+   * Tests the fromUri() method with a valid internal: URI.
    *
    * @covers ::fromUri
-   * @dataProvider providerFromValidUserPathUri
+   * @dataProvider providerFromValidInternalUri
    */
-  public function testFromValidUserPathUri($path) {
-    $url = Url::fromUri('user-path:' . $path);
+  public function testFromValidInternalUri($path) {
+    $url = Url::fromUri('internal:' . $path);
     $this->assertInstanceOf('Drupal\Core\Url', $url);
   }
 
   /**
-   * Data provider for testFromValidUserPathUri().
+   * Data provider for testFromValidInternalUri().
    */
-  public function providerFromValidUserPathUri() {
+  public function providerFromValidInternalUri() {
     return [
       // Normal paths with a leading slash.
       ['/kittens'],
@@ -720,20 +720,20 @@ class UrlTest extends UnitTestCase {
   }
 
   /**
-   * Tests the fromUri() method with an invalid user-path: URI.
+   * Tests the fromUri() method with an invalid internal: URI.
    *
    * @covers ::fromUri
    * @expectedException \InvalidArgumentException
-   * @dataProvider providerFromInvalidUserPathUri
+   * @dataProvider providerFromInvalidInternalUri
    */
-  public function testFromInvalidUserPathUri($path) {
-    Url::fromUri('user-path:' . $path);
+  public function testFromInvalidInternalUri($path) {
+    Url::fromUri('internal:' . $path);
   }
 
   /**
-   * Data provider for testFromInvalidUserPathUri().
+   * Data provider for testFromInvalidInternalUri().
    */
-  public function providerFromInvalidUserPathUri() {
+  public function providerFromInvalidInternalUri() {
     return [
       // Normal paths without a leading slash.
       ['kittens'],
@@ -766,7 +766,7 @@ class UrlTest extends UnitTestCase {
   }
 
   /**
-   * Data provider for testing user-path URIs
+   * Data provider for testing route: URIs.
    */
   public function providerTestToUriStringForRoute() {
     return [

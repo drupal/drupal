@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Plugin\migrate\process\d6\UserPathUri.
+ * Contains \Drupal\migrate_drupal\Plugin\migrate\process\d6\InternalUri.
  */
 
 namespace Drupal\migrate_drupal\Plugin\migrate\process\d6;
@@ -12,13 +12,13 @@ use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 
 /**
- * Process a path into a 'user-path:' URI.
+ * Process a path into an 'internal:' URI.
  *
  * @MigrateProcessPlugin(
- *   id = "userpath_uri"
+ *   id = "internal_uri"
  * )
  */
-class UserPathUri extends ProcessPluginBase {
+class InternalUri extends ProcessPluginBase {
 
   /**
    * {@inheritdoc}
@@ -27,7 +27,7 @@ class UserPathUri extends ProcessPluginBase {
     list($path) = $value;
 
     if (parse_url($path, PHP_URL_SCHEME) === NULL) {
-      return 'user-path:/' . $path;
+      return 'internal:/' . $path;
     }
     return $path;
   }

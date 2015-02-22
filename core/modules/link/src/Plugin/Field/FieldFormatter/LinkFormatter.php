@@ -210,7 +210,7 @@ class LinkFormatter extends FormatterBase implements ContainerFactoryPluginInter
           // attribute.
           // @todo Does RDF need a URL rather than an internal URI here?
           // @see \Drupal\rdf\Tests\Field\LinkFieldRdfaTest.
-          $content = str_replace('user-path:/', '', $item->uri);
+          $content = str_replace('internal:/', '', $item->uri);
           $item->_attributes += array('content' => $content);
         }
       }

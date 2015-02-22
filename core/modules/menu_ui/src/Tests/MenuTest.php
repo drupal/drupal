@@ -105,8 +105,8 @@ class MenuTest extends MenuWebTestBase {
     $this->verifyAccess(403);
 
     foreach ($this->items as $item) {
-      // Menu link URIs are stored as 'user-path:/node/$nid'.
-      $node = Node::load(str_replace('user-path:/node/', '', $item->link->uri));
+      // Menu link URIs are stored as 'internal:/node/$nid'.
+      $node = Node::load(str_replace('internal:/node/', '', $item->link->uri));
       $this->verifyMenuLink($item, $node);
     }
 

@@ -65,7 +65,7 @@ class ShortcutSetController extends ControllerBase {
         'title' => $name,
         'shortcut_set' => $shortcut_set->id(),
         'link' => array(
-          'uri' => 'user-path:/' . $link,
+          'uri' => 'internal:/' . $link,
         ),
       ));
 

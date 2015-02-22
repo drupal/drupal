@@ -23,7 +23,7 @@ process:
     migration: d6_menu
     source: menu_name
   'link/uri':
-    plugin: userpath_uri
+    plugin: internal_uri
     source:
       - link_path
   'link/options': options

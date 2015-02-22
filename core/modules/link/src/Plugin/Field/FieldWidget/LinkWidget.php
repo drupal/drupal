@@ -42,11 +42,11 @@ class LinkWidget extends WidgetBase {
   }
 
   /**
-   * Gets the URI without the 'user-path:' or 'entity:' scheme.
+   * Gets the URI without the 'internal:' or 'entity:' scheme.
    *
    * The following two forms of URIs are transformed:
    * - 'entity:' URIs: to entity autocomplete ("label (entity id)") strings;
-   * - 'user-path:' URIs: the scheme is stripped.
+   * - 'internal:' URIs: the scheme is stripped.
    *
    * This method is the inverse of ::getUserEnteredStringAsUri().
    *
@@ -63,9 +63,9 @@ class LinkWidget extends WidgetBase {
     // By default, the displayable string is the URI.
     $displayable_string = $uri;
 
-    // A different displayable string may be chosen in case of the 'user-path:'
+    // A different displayable string may be chosen in case of the 'internal:'
     // or 'entity:' built-in schemes.
-    if ($scheme === 'user-path') {
+    if ($scheme === 'internal') {
       $uri_reference = explode(':', $uri, 2)[1];
 
       // @todo '<front>' is valid input for BC reasons, may be removed by
@@ -94,7 +94,7 @@ class LinkWidget extends WidgetBase {
    *
    * The following two forms of input are mapped to URIs:
    * - entity autocomplete ("label (entity id)") strings: to 'entity:' URIs;
-   * - strings without a detectable scheme: to 'user-path:' URIs.
+   * - strings without a detectable scheme: to 'internal:' URIs.
    *
    * This method is the inverse of ::getUriAsDisplayableString().
    *
@@ -117,7 +117,7 @@ class LinkWidget extends WidgetBase {
       //    https://www.drupal.org/node/2423093.
       $uri = 'entity:node/' . $entity_id;
     }
-    // Detect a schemeless string, map to 'user-path:' URI.
+    // Detect a schemeless string, map to 'internal:' URI.
     elseif (!empty($string) && parse_url($string, PHP_URL_SCHEME) === NULL) {
       // @todo '<front>' is valid input for BC reasons, may be removed by
       //   https://www.drupal.org/node/2421941
@@ -126,7 +126,7 @@ class LinkWidget extends WidgetBase {
       if (strpos($string, '<front>') === 0) {
         $string = '/' . substr($string, strlen('<front>'));
       }
-      $uri = 'user-path:' . $string;
+      $uri = 'internal:' . $string;
     }
 
     return $uri;
@@ -139,11 +139,11 @@ class LinkWidget extends WidgetBase {
     $uri = static::getUserEnteredStringAsUri($element['#value']);
     $form_state->setValueForElement($element, $uri);
 
-    // If getUserEnteredStringAsUri() mapped the entered value to a 'user-path:'
+    // If getUserEnteredStringAsUri() mapped the entered value to a 'internal:'
     // URI , ensure the raw value begins with '/', '?' or '#'.
     // @todo '<front>' is valid input for BC reasons, may be removed by
     //   https://www.drupal.org/node/2421941
-    if (parse_url($uri, PHP_URL_SCHEME) === 'user-path' && !in_array($element['#value'][0], ['/', '?', '#'], TRUE) && substr($element['#value'], 0, 7) !== '<front>') {
+    if (parse_url($uri, PHP_URL_SCHEME) === 'internal' && !in_array($element['#value'][0], ['/', '?', '#'], TRUE) && substr($element['#value'], 0, 7) !== '<front>') {
       $form_state->setError($element, t('Manually entered paths should start with /, ? or #.'));
       return;
     }
@@ -363,7 +363,7 @@ class LinkWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    *
-   * Override the '%uri' message parameter, to ensure that 'user-path:' URIs
+   * Override the '%uri' message parameter, to ensure that 'internal:' URIs
    * show a validation error message that doesn't mention that scheme.
    */
   public function flagErrors(FieldItemListInterface $items, ConstraintViolationListInterface $violations, array $form, FormStateInterface $form_state) {

@@ -50,7 +50,7 @@ class FieldEntityOperationsTest extends HandlerTestBase {
     foreach ($entities as $entity) {
       $operations = \Drupal::entityManager()->getListBuilder('entity_test')->getOperations($entity);
       foreach ($operations as $operation) {
-        $expected_destination = Url::fromUri('user-path:/test-entity-operations');
+        $expected_destination = Url::fromUri('internal:/test-entity-operations');
         $result = $this->xpath('//ul[contains(@class, dropbutton)]/li/a[contains(@href, :path) and text()=:title]', array(':path' => $operation['url'] . '?destination=' . $expected_destination, ':title' => $operation['title']));
         $this->assertEqual(count($result), 1, t('Found entity @operation link with destination parameter.', array('@operation' => $operation['title'])));
       }

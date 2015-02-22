@@ -64,7 +64,7 @@ class PathAliasMenuLinkContentTest extends KernelTestBase {
 
     $menu_link_content = MenuLinkContent::create([
       'title' => 'Menu title',
-      'link' => ['uri' => 'user-path:/my-blog'],
+      'link' => ['uri' => 'internal:/my-blog'],
       'menu_name' => 'tools',
     ]);
     $menu_link_content->save();

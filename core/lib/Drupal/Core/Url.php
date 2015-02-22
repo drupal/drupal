@@ -237,7 +237,7 @@ class Url {
 
     // fromUri() requires an absolute URI, so prepend the appropriate scheme
     // name.
-    return static::fromUri('user-path:' . $user_input, $options);
+    return static::fromUri('internal:' . $user_input, $options);
   }
 
   /**
@@ -256,7 +256,7 @@ class Url {
    *
    * @param string $uri
    *   The URI of the resource including the scheme. For user input that may
-   *   correspond to a Drupal route, use user-path: for the scheme. For paths
+   *   correspond to a Drupal route, use internal: for the scheme. For paths
    *   that are known not to be handled by the Drupal routing system (such as
    *   static files), use base: for the scheme to get a link relative to the
    *   Drupal base path (like the <base> HTML element). For a link to an entity
@@ -278,7 +278,7 @@ class Url {
    *     defined, the current scheme is used, so the user stays on HTTP or HTTPS
    *     respectively. TRUE enforces HTTPS and FALSE enforces HTTP.
    *
-   * Note: the user-path: scheme should be avoided except when processing actual
+   * Note: the internal: scheme should be avoided except when processing actual
    * user input that may or may not correspond to a Drupal route. Normally use
    * Url::fromRoute() for code linking to any any Drupal page.
    *
@@ -299,7 +299,7 @@ class Url {
       throw new \InvalidArgumentException(String::format('The URI "@uri" is malformed.', ['@uri' => $uri]));
     }
     if (empty($uri_parts['scheme'])) {
-      throw new \InvalidArgumentException(String::format('The URI "@uri" is invalid. You must use a valid URI scheme. Use base: for items like a static file that needs the base path. Use user-path: for user input without a scheme. Use entity: for referencing the canonical route of a content entity. Use route: for directly representing a route name and parameters.', ['@uri' => $uri]));
+      throw new \InvalidArgumentException(String::format('The URI "@uri" is invalid. You must use a valid URI scheme.', ['@uri' => $uri]));
     }
     $uri_parts += ['path' => ''];
     // Discard empty fragment in $options for consistency with parse_url().
@@ -324,8 +324,8 @@ class Url {
     if ($uri_parts['scheme'] === 'entity') {
       $url = static::fromEntityUri($uri_parts, $uri_options, $uri);
     }
-    elseif ($uri_parts['scheme'] === 'user-path') {
-      $url = static::fromUserPathUri($uri_parts, $uri_options);
+    elseif ($uri_parts['scheme'] === 'internal') {
+      $url = static::fromInternalUri($uri_parts, $uri_options);
     }
     elseif ($uri_parts['scheme'] === 'route') {
       $url = static::fromRouteUri($uri_parts, $uri_options, $uri);
@@ -369,49 +369,49 @@ class Url {
   }
 
   /**
-   * Creates a new Url object for 'user-path:' URIs.
+   * Creates a new Url object for 'internal:' URIs.
    *
    * Important note: the URI minus the scheme can NOT simply be validated by a
    * \Drupal\Core\Path\PathValidatorInterface implementation. The semantics of
-   * the 'user-path:' URI scheme are different:
+   * the 'internal:' URI scheme are different:
    * - PathValidatorInterface accepts paths without a leading slash (e.g.
    *   'node/add') as well as 2 special paths: '<front>' and '<none>', which are
    *   mapped to the correspondingly named routes.
-   * - 'user-path:' URIs store paths with a leading slash that represents the
-   *   root — i.e. the front page — (e.g. 'user-path:/node/add'), and doesn't
+   * - 'internal:' URIs store paths with a leading slash that represents the
+   *   root — i.e. the front page — (e.g. 'internal:/node/add'), and doesn't
    *   have any exceptions.
    *
-   * To clarify, a few examples of path plus corresponding 'user-path:' URI:
-   * - 'node/add' -> 'user-path:/node/add'
-   * - 'node/add?foo=bar' -> 'user-path:/node/add?foo=bar'
-   * - 'node/add#kitten' -> 'user-path:/node/add#kitten'
-   * - '<front>' -> 'user-path:/'
-   * - '<front>foo=bar' -> 'user-path:/?foo=bar'
-   * - '<front>#kitten' -> 'user-path:/#kitten'
-   * - '<none>' -> 'user-path:'
-   * - '<none>foo=bar' -> 'user-path:?foo=bar'
-   * - '<none>#kitten' -> 'user-path:#kitten'
+   * To clarify, a few examples of path plus corresponding 'internal:' URI:
+   * - 'node/add' -> 'internal:/node/add'
+   * - 'node/add?foo=bar' -> 'internal:/node/add?foo=bar'
+   * - 'node/add#kitten' -> 'internal:/node/add#kitten'
+   * - '<front>' -> 'internal:/'
+   * - '<front>foo=bar' -> 'internal:/?foo=bar'
+   * - '<front>#kitten' -> 'internal:/#kitten'
+   * - '<none>' -> 'internal:'
+   * - '<none>foo=bar' -> 'internal:?foo=bar'
+   * - '<none>#kitten' -> 'internal:#kitten'
    *
-   * Therefore, when using a PathValidatorInterface to validate 'user-path:'
+   * Therefore, when using a PathValidatorInterface to validate 'internal:'
    * URIs, we must map:
-   * - 'user-path:' (path component is '')  to the special '<none>' path
-   * - 'user-path:/' (path component is '/') to the special '<front>' path
-   * - 'user-path:/some-path' (path component is '/some-path') to 'some-path'
+   * - 'internal:' (path component is '')  to the special '<none>' path
+   * - 'internal:/' (path component is '/') to the special '<front>' path
+   * - 'internal:/some-path' (path component is '/some-path') to 'some-path'
    *
    * @param array $uri_parts
-   *   Parts from an URI of the form user-path:{path} as from parse_url().
+   *   Parts from an URI of the form internal:{path} as from parse_url().
    * @param array $options
    *   An array of options, see static::fromUri() for details.
    *
    * @return \Drupal\Core\Url
-   *   A new Url object for a 'user-path:' URI.
+   *   A new Url object for a 'internal:' URI.
    *
    * @throws \InvalidArgumentException
    *   Thrown when the URI's path component doesn't have a leading slash.
    */
-  protected static function fromUserPathUri(array $uri_parts, array $options) {
+  protected static function fromInternalUri(array $uri_parts, array $options) {
     // Both PathValidator::getUrlIfValidWithoutAccessCheck() and 'base:' URIs
-    // only accept/contain paths without a leading slash, unlike 'user-path:'
+    // only accept/contain paths without a leading slash, unlike 'internal:'
     // URIs, for which the leading slash means "relative to Drupal root" and
     // "relative to Symfony app root" (just like in Symfony/Drupal 8 routes).
     if (empty($uri_parts['path'])) {
@@ -422,7 +422,7 @@ class Url {
     }
     else {
       if ($uri_parts['path'][0] !== '/') {
-        throw new \InvalidArgumentException(String::format('The user-path path component "@path" is invalid. Its path component must have a leading slash, e.g. user-path:/foo.', ['@path' => $uri_parts['path']]));
+        throw new \InvalidArgumentException(String::format('The internal path component "@path" is invalid. Its path component must have a leading slash, e.g. internal:/foo.', ['@path' => $uri_parts['path']]));
       }
       // Remove the leading slash.
       $uri_parts['path'] = substr($uri_parts['path'], 1);
@@ -518,7 +518,7 @@ class Url {
    * Generates a URI string that represents tha data in the Url object.
    *
    * The URI will typically have the scheme of route: even if the object was
-   * constructed using an entity: or user-path: scheme. A user-path: URI that
+   * constructed using an entity: or internal: scheme. A internal: URI that
    * does not match a Drupal route with be returned here with the base: scheme,
    * and external URLs will be returned in their original form.
    *
@@ -723,7 +723,7 @@ class Url {
    * string or fragment specified by the options array.
    *
    * If this Url object was constructed from a Drupal route or from an internal
-   * URI (URIs using the user-path:, base:, or entity: schemes), the returned
+   * URI (URIs using the internal:, base:, or entity: schemes), the returned
    * string will either be a relative URL like /node/1 or an absolute URL like
    * http://example.com/node/1 depending on the options array, plus any
    * specified query string or fragment.
