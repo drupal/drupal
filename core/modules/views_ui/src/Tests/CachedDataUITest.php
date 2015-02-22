@@ -27,7 +27,7 @@ class CachedDataUITest extends UITestBase {
   public function testCacheData() {
     $views_admin_user_uid = $this->fullAdminUser->id();
 
-    $temp_store = $this->container->get('user.tempstore')->get('views');
+    $temp_store = $this->container->get('user.shared_tempstore')->get('views');
     // The view should not be locked.
     $this->assertEqual($temp_store->getMetadata('test_view'), NULL, 'The view is not locked.');
 

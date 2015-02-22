@@ -401,7 +401,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
   public static function postDelete(EntityStorageInterface $storage, array $entities) {
     parent::postDelete($storage, $entities);
 
-    $tempstore = \Drupal::service('user.tempstore')->get('views');
+    $tempstore = \Drupal::service('user.shared_tempstore')->get('views');
     foreach ($entities as $entity) {
       $tempstore->delete($entity->id());
     }

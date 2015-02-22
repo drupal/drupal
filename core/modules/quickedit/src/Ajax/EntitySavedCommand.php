@@ -8,8 +8,8 @@
 namespace Drupal\quickedit\Ajax;
 
 /**
- * AJAX command to indicate the entity was loaded from TempStore and saved into
- * the database.
+ * AJAX command to indicate the entity was loaded from PrivateTempStore and
+ * saved into the database.
  */
 class EntitySavedCommand extends BaseCommand {
 

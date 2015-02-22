@@ -30,7 +30,7 @@ services:
       - { name: event_subscriber }
   node_preview:
     class: Drupal\node\ParamConverter\NodePreviewConverter
-    arguments: ['@user.tempstore']
+    arguments: ['@user.private_tempstore']
     tags:
       - { name: paramconverter }
   node.page_cache_request_policy.deny_node_preview:

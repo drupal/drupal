@@ -170,7 +170,8 @@ class QuickEditAutocompleteTermTest extends WebTestBase {
       $this->assertText('new term');
       $this->assertNoLink('new term');
 
-      // Load the form again, which should now get it back from TempStore.
+      // Load the form again, which should now get it back from
+      // PrivateTempStore.
       $quickedit_uri = 'quickedit/form/node/'. $this->node->id() . '/' . $this->fieldName . '/' . $this->node->language()->getId() . '/full';
       $post = array('nocssjs' => 'true') + $this->getAjaxPageStatePostData();
       $response = $this->drupalPost($quickedit_uri, 'application/vnd.drupal-ajax', $post);

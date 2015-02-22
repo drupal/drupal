@@ -10,7 +10,7 @@ namespace Drupal\node\Plugin\Action;
 use Drupal\Core\Action\ActionBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\user\TempStoreFactory;
+use Drupal\user\PrivateTempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -28,7 +28,7 @@ class DeleteNode extends ActionBase implements ContainerFactoryPluginInterface {
   /**
    * The tempstore object.
    *
-   * @var \Drupal\user\TempStore
+   * @var \Drupal\user\SharedTempStore
    */
   protected $tempStore;
 
@@ -48,12 +48,12 @@ class DeleteNode extends ActionBase implements ContainerFactoryPluginInterface {
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\user\TempStoreFactory $temp_store_factory
+   * @param \Drupal\user\PrivateTempStoreFactory $temp_store_factory
    *   The tempstore factory.
    * @param AccountInterface $current_user
    *   Current user.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, TempStoreFactory $temp_store_factory, AccountInterface $current_user) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, PrivateTempStoreFactory $temp_store_factory, AccountInterface $current_user) {
     $this->currentUser = $current_user;
     $this->tempStore = $temp_store_factory->get('node_multiple_delete_confirm');
 
@@ -68,7 +68,7 @@ class DeleteNode extends ActionBase implements ContainerFactoryPluginInterface {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('user.tempstore'),
+      $container->get('user.private_tempstore'),
       $container->get('current_user')
     );
   }

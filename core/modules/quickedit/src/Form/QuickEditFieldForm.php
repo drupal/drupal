@@ -16,7 +16,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
-use Drupal\user\TempStoreFactory;
+use Drupal\user\PrivateTempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -27,7 +27,7 @@ class QuickEditFieldForm extends FormBase {
   /**
    * Stores the tempstore factory.
    *
-   * @var \Drupal\user\TempStoreFactory
+   * @var \Drupal\user\PrivateTempStoreFactory
    */
   protected $tempStoreFactory;
 
@@ -48,14 +48,14 @@ class QuickEditFieldForm extends FormBase {
   /**
    * Constructs a new EditFieldForm.
    *
-   * @param \Drupal\user\TempStoreFactory $temp_store_factory
+   * @param \Drupal\user\PrivateTempStoreFactory $temp_store_factory
    *   The tempstore factory.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    * @param \Drupal\Core\Entity\EntityStorageInterface $node_type_storage
    *   The node type storage.
    */
-  public function __construct(TempStoreFactory $temp_store_factory, ModuleHandlerInterface $module_handler, EntityStorageInterface $node_type_storage) {
+  public function __construct(PrivateTempStoreFactory $temp_store_factory, ModuleHandlerInterface $module_handler, EntityStorageInterface $node_type_storage) {
     $this->moduleHandler = $module_handler;
     $this->nodeTypeStorage = $node_type_storage;
     $this->tempStoreFactory = $temp_store_factory;
@@ -66,7 +66,7 @@ class QuickEditFieldForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('user.tempstore'),
+      $container->get('user.private_tempstore'),
       $container->get('module_handler'),
       $container->get('entity.manager')->getStorage('node_type')
     );

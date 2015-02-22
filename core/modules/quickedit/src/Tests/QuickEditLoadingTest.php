@@ -214,7 +214,7 @@ class QuickEditLoadingTest extends WebTestBase {
       $post += $edit + $this->getAjaxPageStatePostData();
 
       // Submit field form and check response. This should store the updated
-      // entity in TempStore on the server.
+      // entity in PrivateTempStore on the server.
       $response = $this->drupalPost('quickedit/form/' . 'node/1/body/en/full', 'application/vnd.drupal-ajax', $post);
       $this->assertResponse(200);
       $ajax_commands = Json::decode($response);
@@ -227,7 +227,7 @@ class QuickEditLoadingTest extends WebTestBase {
       $this->drupalGet('node/1');
       $this->assertText('How are you?');
 
-      // Save the entity by moving the TempStore values to entity storage.
+      // Save the entity by moving the PrivateTempStore values to entity storage.
       $post = array('nocssjs' => 'true');
       $response = $this->drupalPost('quickedit/entity/' . 'node/1', 'application/json', $post);
       $this->assertResponse(200);
@@ -249,7 +249,7 @@ class QuickEditLoadingTest extends WebTestBase {
 
       // Now configure this node type to create new revisions automatically,
       // then again retrieve the field form, fill it, submit it (so it ends up
-      // in TempStore) and then save the entity. Now there should be two
+      // in PrivateTempStore) and then save the entity. Now there should be two
       // revisions.
       $node_type = entity_load('node_type', 'article');
       $node_type->setNewRevision(TRUE);
@@ -359,7 +359,7 @@ class QuickEditLoadingTest extends WebTestBase {
       $post += $edit + $this->getAjaxPageStatePostData();
 
       // Submit field form and check response. This should store the
-      // updated entity in TempStore on the server.
+      // updated entity in PrivateTempStore on the server.
       $response = $this->drupalPost('quickedit/form/' . 'node/1/title/en/full', 'application/vnd.drupal-ajax', $post);
       $this->assertResponse(200);
       $ajax_commands = Json::decode($response);
@@ -371,7 +371,7 @@ class QuickEditLoadingTest extends WebTestBase {
       $this->drupalGet('node/1');
       $this->assertNoText('Obligatory question');
 
-      // Save the entity by moving the TempStore values to entity storage.
+      // Save the entity by moving the PrivateTempStore values to entity storage.
       $post = array('nocssjs' => 'true');
       $response = $this->drupalPost('quickedit/entity/' . 'node/1', 'application/json', $post);
       $this->assertResponse(200);

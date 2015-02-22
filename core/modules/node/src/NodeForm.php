@@ -12,7 +12,7 @@ use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\user\Entity\User;
-use Drupal\user\TempStoreFactory;
+use Drupal\user\PrivateTempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -23,7 +23,7 @@ class NodeForm extends ContentEntityForm {
   /**
    * The tempstore factory.
    *
-   * @var \Drupal\user\TempStoreFactory
+   * @var \Drupal\user\PrivateTempStoreFactory
    */
   protected $tempStoreFactory;
 
@@ -37,10 +37,10 @@ class NodeForm extends ContentEntityForm {
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
-   * @param \Drupal\user\TempStoreFactory $temp_store_factory
+   * @param \Drupal\user\PrivateTempStoreFactory $temp_store_factory
    *   The factory for the temp store object.
    */
-  public function __construct(EntityManagerInterface $entity_manager, TempStoreFactory $temp_store_factory) {
+  public function __construct(EntityManagerInterface $entity_manager, PrivateTempStoreFactory $temp_store_factory) {
     parent::__construct($entity_manager);
     $this->tempStoreFactory = $temp_store_factory;
   }
@@ -51,7 +51,7 @@ class NodeForm extends ContentEntityForm {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity.manager'),
-      $container->get('user.tempstore')
+      $container->get('user.private_tempstore')
     );
   }
 
@@ -426,9 +426,7 @@ class NodeForm extends ContentEntityForm {
 
       // Remove the preview entry from the temp store, if any.
       $store = $this->tempStoreFactory->get('node_preview');
-      if ($store->get($node->uuid())) {
-        $store->delete($node->uuid());
-      }
+      $store->delete($node->uuid());
     }
     else {
       // In the unlikely case something went wrong on save, the node will be

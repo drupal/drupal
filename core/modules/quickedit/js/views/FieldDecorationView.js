@@ -99,7 +99,8 @@
     /**
      * Adds a class to the edited element that indicates whether the field has
      * been changed by the user (i.e. locally) or the field has already been
-     * changed and stored before by the user (i.e. remotely, stored in TempStore).
+     * changed and stored before by the user (i.e. remotely, stored in
+     * PrivateTempStore).
      */
     renderChanged: function () {
       this.$el.toggleClass('quickedit-changed', this.model.get('isChanged') || this.model.get('inTempStore'));

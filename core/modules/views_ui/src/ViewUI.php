@@ -70,7 +70,8 @@ class ViewUI implements ViewEntityInterface {
    * If this view is locked for editing.
    *
    * If this view is locked it will contain the result of
-   * \Drupal\user\TempStore::getMetadata(). Which can be a stdClass or NULL.
+   * \Drupal\user\SharedTempStore::getMetadata(). Which can be a stdClass or
+   * NULL.
    *
    * @var stdClass
    */
@@ -879,7 +880,7 @@ class ViewUI implements ViewEntityInterface {
     unset($executable->default_display);
     $executable->query = NULL;
     unset($executable->displayHandlers);
-    \Drupal::service('user.tempstore')->get('views')->set($this->id(), $this);
+    \Drupal::service('user.shared_tempstore')->get('views')->set($this->id(), $this);
   }
 
   /**

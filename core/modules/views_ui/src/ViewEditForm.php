@@ -19,7 +19,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
-use Drupal\user\TempStoreFactory;
+use Drupal\user\SharedTempStoreFactory;
 use Drupal\views\Views;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -33,7 +33,7 @@ class ViewEditForm extends ViewFormBase {
   /**
    * The views temp store.
    *
-   * @var \Drupal\user\TempStore
+   * @var \Drupal\user\SharedTempStore
    */
   protected $tempStore;
 
@@ -54,14 +54,14 @@ class ViewEditForm extends ViewFormBase {
   /**
    * Constructs a new ViewEditForm object.
    *
-   * @param \Drupal\user\TempStoreFactory $temp_store_factory
+   * @param \Drupal\user\SharedTempStoreFactory $temp_store_factory
    *   The factory for the temp store object.
    * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack object.
    * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
    *   The date Formatter service.
    */
-  public function __construct(TempStoreFactory $temp_store_factory, RequestStack $requestStack, DateFormatter $date_formatter) {
+  public function __construct(SharedTempStoreFactory $temp_store_factory, RequestStack $requestStack, DateFormatter $date_formatter) {
     $this->tempStore = $temp_store_factory->get('views');
     $this->requestStack = $requestStack;
     $this->dateFormatter = $date_formatter;
@@ -72,7 +72,7 @@ class ViewEditForm extends ViewFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('user.tempstore'),
+      $container->get('user.shared_tempstore'),
       $container->get('request_stack'),
       $container->get('date.formatter')
     );
@@ -770,7 +770,7 @@ class ViewEditForm extends ViewFormBase {
    * Submit handler for form buttons that do not complete a form workflow.
    *
    * The Edit View form is a multistep form workflow, but with state managed by
-   * the TempStore rather than $form_state->setRebuild(). Without this
+   * the SharedTempStore rather than $form_state->setRebuild(). Without this
    * submit handler, buttons that add or remove displays would redirect to the
    * destination parameter (e.g., when the Edit View form is linked to from a
    * contextual link). This handler can be added to buttons whose form submission

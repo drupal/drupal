@@ -210,14 +210,15 @@
       // - Guarantees: see 'candidate', plus in-place editor is ready for use.
       // - Expected behavior: visual indicator of change.
       'changed',
-      // User is saving changed field data in in-place editor to TempStore. The
-      // save mechanism of the in-place editor is called.
+      // User is saving changed field data in in-place editor to
+      // PrivateTempStore. The save mechanism of the in-place editor is called.
       // - Trigger: user.
       // - Guarantees: see 'candidate' and 'active'.
       // - Expected behavior: saving indicator, in-place editor is saving field
-      //   data into TempStore. Upon successful saving (without validation
-      //   errors), the in-place editor transitions the field's state to 'saved',
-      //   but to 'invalid' upon failed saving (with validation errors).
+      //   data into PrivateTempStore. Upon successful saving (without
+      //   validation errors), the in-place editor transitions the field's state
+      //   to 'saved', but to 'invalid' upon failed saving (with validation
+      //   errors).
       'saving',
       // In-place editor has successfully saved the changed field.
       // - Trigger: in-place editor.

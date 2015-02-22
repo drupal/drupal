@@ -10,7 +10,7 @@ namespace Drupal\user\Tests;
 use Drupal\Component\Serialization\PhpSerialize;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactory;
 use Drupal\simpletest\KernelTestBase;
-use Drupal\user\TempStoreFactory;
+use Drupal\user\SharedTempStoreFactory;
 use Drupal\Core\Lock\DatabaseLockBackend;
 use Drupal\Core\Database\Database;
 
@@ -32,7 +32,7 @@ class TempStoreDatabaseTest extends KernelTestBase {
   /**
    * A key/value store factory.
    *
-   * @var \Drupal\user\TempStoreFactory
+   * @var \Drupal\user\SharedTempStoreFactory
    */
   protected $storeFactory;
 
@@ -76,14 +76,14 @@ class TempStoreDatabaseTest extends KernelTestBase {
    */
   public function testUserTempStore() {
     // Create a key/value collection.
-    $factory = new TempStoreFactory(new KeyValueExpirableFactory(\Drupal::getContainer()), new DatabaseLockBackend(Database::getConnection()));
+    $factory = new SharedTempStoreFactory(new KeyValueExpirableFactory(\Drupal::getContainer()), new DatabaseLockBackend(Database::getConnection()));
     $collection = $this->randomMachineName();
 
     // Create two mock users.
     for ($i = 0; $i <= 1; $i++) {
       $users[$i] = mt_rand(500, 5000000);
 
-      // Storing the TempStore objects in a class member variable causes a
+      // Storing the SharedTempStore objects in a class member variable causes a
       // fatal exception, because in that situation garbage collection is not
       // triggered until the test class itself is destructed, after tearDown()
       // has deleted the database tables. Store the objects locally instead.
@@ -142,7 +142,7 @@ class TempStoreDatabaseTest extends KernelTestBase {
     // assert it is no longer accessible.
     db_update('key_value_expire')
       ->fields(array('expire' => REQUEST_TIME - 1))
-      ->condition('collection', "user.tempstore.$collection")
+      ->condition('collection', "user.shared_tempstore.$collection")
       ->condition('name', $key)
       ->execute();
     $this->assertFalse($stores[0]->get($key));

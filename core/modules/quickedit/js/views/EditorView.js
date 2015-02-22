@@ -197,12 +197,13 @@
         $el: this.$el,
         nocssjs: true,
         other_view_modes: fieldModel.findOtherViewModes(),
-        // Reset an existing entry for this entity in the TempStore (if any) when
-        // saving the field. Logically speaking, this should happen in a separate
-        // request because this is an entity-level operation, not a field-level
-        // operation. But that would require an additional request, that might not
-        // even be necessary: it is only when a user saves a first changed field
-        // for an entity that this needs to happen: precisely now!
+        // Reset an existing entry for this entity in the PrivateTempStore (if
+        // any) when saving the field. Logically speaking, this should happen in
+        // a separate request because this is an entity-level operation, not a
+        // field-level operation. But that would require an additional request,
+        // that might not even be necessary: it is only when a user saves a
+        // first changed field for an entity that this needs to happen:
+        // precisely now!
         reset: !this.fieldModel.get('entity').get('inTempStore')
       };
 

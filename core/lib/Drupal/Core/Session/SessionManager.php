@@ -126,8 +126,8 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
       $_session_user = new AnonymousUserSession();
 
       // Randomly generate a session identifier for this request. This is
-      // necessary because \Drupal\user\TempStoreFactory::get() wants to know
-      // the future session ID of a lazily started session in advance.
+      // necessary because \Drupal\user\SharedTempStoreFactory::get() wants to
+      // know the future session ID of a lazily started session in advance.
       //
       // @todo: With current versions of PHP there is little reason to generate
       //   the session id from within application code. Consider using the

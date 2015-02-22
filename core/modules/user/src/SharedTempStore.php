@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\user\TempStore.
+ * Contains Drupal\user\SharedTempStore.
  */
 
 namespace Drupal\user;
@@ -14,29 +14,33 @@ use Drupal\Core\Lock\LockBackendInterface;
 /**
  * Stores and retrieves temporary data for a given owner.
  *
- * A TempStore can be used to make temporary, non-cache data available across
- * requests. The data for the TempStore is stored in one key/value collection.
- * TempStore data expires automatically after a given timeframe.
+ * A SharedTempStore can be used to make temporary, non-cache data available
+ * across requests. The data for the SharedTempStore is stored in one key/value
+ * collection. SharedTempStore data expires automatically after a given
+ * timeframe.
  *
- * The TempStore is different from a cache, because the data in it is not yet
- * saved permanently and so it cannot be rebuilt. Typically, the TempStore
- * might be used to store work in progress that is later saved permanently
- * elsewhere, e.g. autosave data, multistep forms, or in-progress changes
- * to complex configuration that are not ready to be saved.
+ * The SharedTempStore is different from a cache, because the data in it is not
+ * yet saved permanently and so it cannot be rebuilt. Typically, the
+ * SharedTempStore might be used to store work in progress that is later saved
+ * permanently elsewhere, e.g. autosave data, multistep forms, or in-progress
+ * changes to complex configuration that are not ready to be saved.
  *
- * Each TempStore belongs to a particular owner (e.g. a user, session, or
+ * Each SharedTempStore belongs to a particular owner (e.g. a user, session, or
  * process). Multiple owners may use the same key/value collection, and the
  * owner is stored along with the key/value pair.
  *
- * Every key is unique within the collection, so the TempStore can check
+ * Every key is unique within the collection, so the SharedTempStore can check
  * whether a particular key is already set by a different owner. This is
  * useful for informing one owner that the data is already in use by another;
  * for example, to let one user know that another user is in the process of
  * editing certain data, or even to restrict other users from editing it at
  * the same time. It is the responsibility of the implementation to decide
  * when and whether one owner can use or update another owner's data.
+ *
+ * If you want to be able to ensure that the data belongs to the current user,
+ * use \Drupal\user\PrivateTempStore.
  */
-class TempStore {
+class SharedTempStore {
 
   /**
    * The key/value storage object used for this data.
@@ -90,7 +94,7 @@ class TempStore {
   }
 
   /**
-   * Retrieves a value from this TempStore for a given key.
+   * Retrieves a value from this SharedTempStore for a given key.
    *
    * @param string $key
    *   The key of the data to retrieve.
@@ -105,7 +109,7 @@ class TempStore {
   }
 
   /**
-   * Retrieves a value from this TempStore for a given key.
+   * Retrieves a value from this SharedTempStore for a given key.
    *
    * Only returns the value if the value is owned by $this->owner.
    *
@@ -142,7 +146,7 @@ class TempStore {
   }
 
   /**
-   * Stores a particular key/value pair in this TempStore.
+   * Stores a particular key/value pair in this SharedTempStore.
    *
    * Only stores the given key/value pair if it does not exist yet or is owned
    * by $this->owner.
@@ -170,7 +174,7 @@ class TempStore {
   }
 
   /**
-   * Stores a particular key/value pair in this TempStore.
+   * Stores a particular key/value pair in this SharedTempStore.
    *
    * @param string $key
    *   The key of the data to store.

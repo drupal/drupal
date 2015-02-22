@@ -9,6 +9,7 @@ namespace Drupal\quickedit;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Form\FormState;
+use Drupal\user\PrivateTempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,7 +20,6 @@ use Drupal\quickedit\Ajax\FieldFormCommand;
 use Drupal\quickedit\Ajax\FieldFormSavedCommand;
 use Drupal\quickedit\Ajax\FieldFormValidationErrorsCommand;
 use Drupal\quickedit\Ajax\EntitySavedCommand;
-use Drupal\user\TempStoreFactory;
 
 /**
  * Returns responses for Quick Edit module routes.
@@ -27,9 +27,9 @@ use Drupal\user\TempStoreFactory;
 class QuickEditController extends ControllerBase {
 
   /**
-   * The TempStore factory.
+   * The PrivateTempStore factory.
    *
-   * @var \Drupal\user\TempStoreFactory
+   * @var \Drupal\user\PrivateTempStoreFactory
    */
   protected $tempStoreFactory;
 
@@ -50,14 +50,14 @@ class QuickEditController extends ControllerBase {
   /**
    * Constructs a new QuickEditController.
    *
-   * @param \Drupal\user\TempStoreFactory $temp_store_factory
-   *   The TempStore factory.
+   * @param \Drupal\user\PrivateTempStoreFactory $temp_store_factory
+   *   The PrivateTempStore factory.
    * @param \Drupal\quickedit\MetadataGeneratorInterface $metadata_generator
    *   The in-place editing metadata generator.
    * @param \Drupal\quickedit\EditorSelectorInterface $editor_selector
    *   The in-place editor selector.
    */
-  public function __construct(TempStoreFactory $temp_store_factory, MetadataGeneratorInterface $metadata_generator, EditorSelectorInterface $editor_selector) {
+  public function __construct(PrivateTempStoreFactory $temp_store_factory, MetadataGeneratorInterface $metadata_generator, EditorSelectorInterface $editor_selector) {
     $this->tempStoreFactory = $temp_store_factory;
     $this->metadataGenerator = $metadata_generator;
     $this->editorSelector = $editor_selector;
@@ -68,7 +68,7 @@ class QuickEditController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('user.tempstore'),
+      $container->get('user.private_tempstore'),
       $container->get('quickedit.metadata.generator'),
       $container->get('quickedit.editor.selector')
     );
@@ -167,8 +167,8 @@ class QuickEditController extends ControllerBase {
   public function fieldForm(EntityInterface $entity, $field_name, $langcode, $view_mode_id, Request $request) {
     $response = new AjaxResponse();
 
-    // Replace entity with TempStore copy if available and not resetting, init
-    // TempStore copy otherwise.
+    // Replace entity with PrivateTempStore copy if available and not resetting,
+    // init PrivateTempStore copy otherwise.
     $tempstore_entity = $this->tempStoreFactory->get('quickedit')->get($entity->uuid());
     if ($tempstore_entity && $request->request->get('reset') !== 'true') {
       $entity = $tempstore_entity;
@@ -184,8 +184,8 @@ class QuickEditController extends ControllerBase {
     $form = $this->formBuilder()->buildForm('Drupal\quickedit\Form\QuickEditFieldForm', $form_state);
 
     if ($form_state->isExecuted()) {
-      // The form submission saved the entity in TempStore. Return the
-      // updated view of the field from the TempStore copy.
+      // The form submission saved the entity in PrivateTempStore. Return the
+      // updated view of the field from the PrivateTempStore copy.
       $entity = $this->tempStoreFactory->get('quickedit')->get($entity->uuid());
 
       // Closure to render the field given a view mode.
@@ -267,7 +267,7 @@ class QuickEditController extends ControllerBase {
   }
 
   /**
-   * Saves an entity into the database, from TempStore.
+   * Saves an entity into the database, from PrivateTempStore.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity being edited.
@@ -276,8 +276,8 @@ class QuickEditController extends ControllerBase {
    *   The Ajax response.
    */
   public function entitySave(EntityInterface $entity) {
-    // Take the entity from TempStore and save in entity storage. fieldForm()
-    // ensures that the TempStore copy exists ahead.
+    // Take the entity from PrivateTempStore and save in entity storage.
+    // fieldForm() ensures that the PrivateTempStore copy exists ahead.
     $tempstore = $this->tempStoreFactory->get('quickedit');
     $tempstore->get($entity->uuid())->save();
     $tempstore->delete($entity->uuid());

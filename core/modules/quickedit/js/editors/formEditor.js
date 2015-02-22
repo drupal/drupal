@@ -95,12 +95,13 @@
         fieldID: fieldModel.get('fieldID'),
         $el: this.$el,
         nocssjs: false,
-        // Reset an existing entry for this entity in the TempStore (if any) when
-        // loading the field. Logically speaking, this should happen in a separate
-        // request because this is an entity-level operation, not a field-level
-        // operation. But that would require an additional request, that might not
-        // even be necessary: it is only when a user loads a first changed field
-        // for an entity that this needs to happen: precisely now!
+        // Reset an existing entry for this entity in the PrivateTempStore (if
+        // any) when loading the field. Logically speaking, this should happen
+        // in a separate request because this is an entity-level operation, not
+        // a field-level operation. But that would require an additional
+        // request, that might not even be necessary: it is only when a user
+        // loads a first changed field for an entity that this needs to happen:
+        // precisely now!
         reset: !fieldModel.get('entity').get('inTempStore')
       };
       Drupal.quickedit.util.form.load(formOptions, function (form, ajax) {

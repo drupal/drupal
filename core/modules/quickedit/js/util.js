@@ -82,7 +82,7 @@
      *    - Boolean nocssjs: (required) boolean indicating whether no CSS and JS
      *      should be returned (necessary when the form is invisible to the user).
      *    - Boolean reset: (required) boolean indicating whether the data stored
-     *      for this field's entity in TempStore should be used or reset.
+     *      for this field's entity in PrivateTempStore should be used or reset.
      * @param Function callback
      *   A callback function that will receive the form to be inserted, as well as
      *   the ajax object, necessary if the callback wants to perform other AJAX

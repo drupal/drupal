@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\TempStoreFactory.
+ * Definition of Drupal\user\SharedTempStoreFactory.
  */
 
 namespace Drupal\user;
@@ -12,9 +12,9 @@ use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 
 /**
- * Creates a key/value storage object for the current user or anonymous session.
+ * Creates a shared temporary storage for a collection.
  */
-class TempStoreFactory {
+class SharedTempStoreFactory {
 
   /**
    * The storage factory creating the backend to store the data.
@@ -38,7 +38,7 @@ class TempStoreFactory {
   protected $expire;
 
   /**
-   * Constructs a Drupal\user\TempStoreFactory object.
+   * Constructs a Drupal\user\SharedTempStoreFactory object.
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   The connection object used for this data.
@@ -54,17 +54,17 @@ class TempStoreFactory {
   }
 
   /**
-   * Creates a TempStore for the current user or anonymous session.
+   * Creates a SharedTempStore for the current user or anonymous session.
    *
    * @param string $collection
    *   The collection name to use for this key/value store. This is typically
    *   a shared namespace or module name, e.g. 'views', 'entity', etc.
    * @param mixed $owner
-   *   (optional) The owner of this TempStore. By default, the TempStore is
-   *   owned by the currently authenticated user, or by the active anonymous
-   *   session if no user is logged in.
+   *   (optional) The owner of this SharedTempStore. By default, the
+   *   SharedTempStore is owned by the currently authenticated user, or by the
+   *   active anonymous session if no user is logged in.
    *
-   * @return \Drupal\user\TempStore
+   * @return \Drupal\user\SharedTempStore
    *   An instance of the key/value store.
    */
   function get($collection, $owner = NULL) {
@@ -75,8 +75,8 @@ class TempStoreFactory {
     }
 
     // Store the data for this collection in the database.
-    $storage = $this->storageFactory->get("user.tempstore.$collection");
-    return new TempStore($storage, $this->lockBackend, $owner, $this->expire);
+    $storage = $this->storageFactory->get("user.shared_tempstore.$collection");
+    return new SharedTempStore($storage, $this->lockBackend, $owner, $this->expire);
   }
 
 }

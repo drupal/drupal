@@ -12,10 +12,10 @@
   // Indicates whether the page should be reloaded after in-place editing has
   // shut down. A page reload is necessary to re-instate the original HTML of the
   // edited fields if in-place editing has been canceled and one or more of the
-  // entity's fields were saved to TempStore: one of them may have been changed to
-  // the empty value and hence may have been rerendered as the empty string, which
-  // makes it impossible for Quick Edit to know where to restore the original
-  // HTML.
+  // entity's fields were saved to PrivateTempStore: one of them may have been
+  // changed to the empty value and hence may have been rerendered as the empty
+  // string, which makes it impossible for Quick Edit to know where to restore
+  // the original HTML.
   var reload = false;
 
   Drupal.quickedit.AppView = Backbone.View.extend({
