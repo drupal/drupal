@@ -425,4 +425,12 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
     }
     $this->set('display', $displays);
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isInstallable() {
+    return (bool) \Drupal::service('views.views_data')->get($this->base_table);
+  }
+
 }

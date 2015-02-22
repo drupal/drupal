@@ -1244,4 +1244,12 @@ class ViewUI implements ViewEntityInterface {
   public function getViewExecutable() {
     return $this->storage->getViewExecutable();
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isInstallable() {
+    return $this->storage->isInstallable();
+  }
+
 }

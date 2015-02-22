@@ -192,4 +192,15 @@ interface ConfigEntityInterface extends EntityInterface {
    */
   public function getDependencies();
 
+  /**
+   * Checks whether this entity is installable.
+   *
+   * For example, a default view might not be installable if the base table
+   * doesn't exist.
+   *
+   * @retun bool
+   *   TRUE if the entity is installable, FALSE otherwise.
+   */
+  public function isInstallable();
+
 }

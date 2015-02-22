@@ -218,6 +218,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
         if ($this->isSyncing) {
           continue;
         }
+        /** @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $entity_storage */
         $entity_storage = $this->configManager
           ->getEntityManager()
           ->getStorage($entity_type);
@@ -231,7 +232,9 @@ class ConfigInstaller implements ConfigInstallerInterface {
         else {
           $entity = $entity_storage->createFromStorageRecord($new_config->get());
         }
-        $entity->save();
+        if ($entity->isInstallable()) {
+          $entity->save();
+        }
       }
       else {
         $new_config->save();

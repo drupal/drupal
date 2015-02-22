@@ -517,4 +517,11 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface,
     return array_keys($this->third_party_settings);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function isInstallable() {
+    return TRUE;
+  }
+
 }
