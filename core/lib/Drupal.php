@@ -5,6 +5,7 @@
  * Contains Drupal.
  */
 
+use Drupal\Core\DependencyInjection\ContainerNotInitializedException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Url;
 
@@ -103,23 +104,30 @@ class Drupal {
    * Sets a new global container.
    *
    * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-   *   A new container instance to replace the current. NULL may be passed by
-   *   testing frameworks to ensure that the global state of a previous
-   *   environment does not leak into a test.
+   *   A new container instance to replace the current.
    */
-  public static function setContainer(ContainerInterface $container = NULL) {
+  public static function setContainer(ContainerInterface $container) {
     static::$container = $container;
+  }
+
+  /**
+   * Unsets the global container.
+   */
+  public static function unsetContainer() {
+    static::$container = NULL;
   }
 
   /**
    * Returns the currently active global container.
    *
-   * @deprecated This method is only useful for the testing environment. It
-   * should not be used otherwise.
+   * @throws \Drupal\Core\DependencyInjection\ContainerNotInitializedException
    *
    * @return \Symfony\Component\DependencyInjection\ContainerInterface|null
    */
   public static function getContainer() {
+    if (static::$container === NULL) {
+      throw new ContainerNotInitializedException('\Drupal::$container is not initialized yet. \Drupal::setContainer() must be called with a real container.');
+    }
     return static::$container;
   }
 
@@ -146,7 +154,7 @@ class Drupal {
    *   The specified service.
    */
   public static function service($id) {
-    return static::$container->get($id);
+    return static::getContainer()->get($id);
   }
 
   /**
@@ -169,7 +177,7 @@ class Drupal {
    * @return string
    */
   public static function root() {
-    return static::$container->get('app.root');
+    return static::getContainer()->get('app.root');
   }
 
   /**
@@ -206,7 +214,7 @@ class Drupal {
    *   The currently active request object.
    */
   public static function request() {
-    return static::$container->get('request_stack')->getCurrentRequest();
+    return static::getContainer()->get('request_stack')->getCurrentRequest();
   }
 
   /**
@@ -216,7 +224,7 @@ class Drupal {
    *   The request stack
    */
   public static function requestStack() {
-    return static::$container->get('request_stack');
+    return static::getContainer()->get('request_stack');
   }
 
   /**
@@ -226,7 +234,7 @@ class Drupal {
    *   The currently active route match object.
    */
   public static function routeMatch() {
-    return static::$container->get('current_route_match');
+    return static::getContainer()->get('current_route_match');
   }
 
   /**
@@ -235,7 +243,7 @@ class Drupal {
    * @return \Drupal\Core\Session\AccountProxyInterface
    */
   public static function currentUser() {
-    return static::$container->get('current_user');
+    return static::getContainer()->get('current_user');
   }
 
   /**
@@ -245,7 +253,7 @@ class Drupal {
    *   The entity manager service.
    */
   public static function entityManager() {
-    return static::$container->get('entity.manager');
+    return static::getContainer()->get('entity.manager');
   }
 
   /**
@@ -255,7 +263,7 @@ class Drupal {
    *   The current active database's master connection.
    */
   public static function database() {
-    return static::$container->get('database');
+    return static::getContainer()->get('database');
   }
 
   /**
@@ -271,7 +279,7 @@ class Drupal {
    * @ingroup cache
    */
   public static function cache($bin = 'default') {
-    return static::$container->get('cache.' . $bin);
+    return static::getContainer()->get('cache.' . $bin);
   }
 
   /**
@@ -284,7 +292,7 @@ class Drupal {
    *   An expirable key value store collection.
    */
   public static function keyValueExpirable($collection) {
-    return static::$container->get('keyvalue.expirable')->get($collection);
+    return static::getContainer()->get('keyvalue.expirable')->get($collection);
   }
 
   /**
@@ -295,7 +303,7 @@ class Drupal {
    * @ingroup lock
    */
   public static function lock() {
-    return static::$container->get('lock');
+    return static::getContainer()->get('lock');
   }
 
   /**
@@ -314,7 +322,7 @@ class Drupal {
    *   An immutable configuration object.
    */
   public static function config($name) {
-    return static::$container->get('config.factory')->get($name);
+    return static::getContainer()->get('config.factory')->get($name);
   }
 
   /**
@@ -328,7 +336,7 @@ class Drupal {
    *   The configuration factory service.
    */
   public static function configFactory() {
-    return static::$container->get('config.factory');
+    return static::getContainer()->get('config.factory');
   }
 
   /**
@@ -354,7 +362,7 @@ class Drupal {
    *   The queue object for a given name.
    */
   public static function queue($name, $reliable = FALSE) {
-    return static::$container->get('queue')->get($name, $reliable);
+    return static::getContainer()->get('queue')->get($name, $reliable);
   }
 
   /**
@@ -366,7 +374,7 @@ class Drupal {
    * @return \Drupal\Core\KeyValueStore\KeyValueStoreInterface
    */
   public static function keyValue($collection) {
-    return static::$container->get('keyvalue')->get($collection);
+    return static::getContainer()->get('keyvalue')->get($collection);
   }
 
   /**
@@ -381,7 +389,7 @@ class Drupal {
    * @return \Drupal\Core\State\StateInterface
    */
   public static function state() {
-    return static::$container->get('state');
+    return static::getContainer()->get('state');
   }
 
   /**
@@ -391,7 +399,7 @@ class Drupal {
    *   A guzzle http client instance.
    */
   public static function httpClient() {
-    return static::$container->get('http_client');
+    return static::getContainer()->get('http_client');
   }
 
   /**
@@ -408,7 +416,7 @@ class Drupal {
    *   The query object that can query the given entity type.
    */
   public static function entityQuery($entity_type, $conjunction = 'AND') {
-    return static::$container->get('entity.query')->get($entity_type, $conjunction);
+    return static::getContainer()->get('entity.query')->get($entity_type, $conjunction);
   }
 
   /**
@@ -425,7 +433,7 @@ class Drupal {
    *   The query object that can query the given entity type.
    */
   public static function entityQueryAggregate($entity_type, $conjunction = 'AND') {
-    return static::$container->get('entity.query')->getAggregate($entity_type, $conjunction);
+    return static::getContainer()->get('entity.query')->getAggregate($entity_type, $conjunction);
   }
 
   /**
@@ -434,7 +442,7 @@ class Drupal {
    * @return \Drupal\Core\Flood\FloodInterface
    */
   public static function flood() {
-    return static::$container->get('flood');
+    return static::getContainer()->get('flood');
   }
 
   /**
@@ -443,7 +451,7 @@ class Drupal {
    * @return \Drupal\Core\Extension\ModuleHandlerInterface
    */
   public static function moduleHandler() {
-    return static::$container->get('module_handler');
+    return static::getContainer()->get('module_handler');
   }
 
   /**
@@ -457,7 +465,7 @@ class Drupal {
    * @see \Drupal\Core\TypedData\TypedDataManager::create()
    */
   public static function typedDataManager() {
-    return static::$container->get('typed_data_manager');
+    return static::getContainer()->get('typed_data_manager');
   }
 
   /**
@@ -467,7 +475,7 @@ class Drupal {
    *   The token service.
    */
   public static function token() {
-    return static::$container->get('token');
+    return static::getContainer()->get('token');
   }
 
   /**
@@ -477,7 +485,7 @@ class Drupal {
    *   The url generator service.
    */
   public static function urlGenerator() {
-    return static::$container->get('url_generator');
+    return static::getContainer()->get('url_generator');
   }
 
   /**
@@ -506,7 +514,7 @@ class Drupal {
    * @see \Drupal\Core\Url::fromUri()
    */
   public static function url($route_name, $route_parameters = array(), $options = array()) {
-    return static::$container->get('url_generator')->generateFromRoute($route_name, $route_parameters, $options);
+    return static::getContainer()->get('url_generator')->generateFromRoute($route_name, $route_parameters, $options);
   }
 
   /**
@@ -515,7 +523,7 @@ class Drupal {
    * @return \Drupal\Core\Utility\LinkGeneratorInterface
    */
   public static function linkGenerator() {
-    return static::$container->get('link_generator');
+    return static::getContainer()->get('link_generator');
   }
 
   /**
@@ -537,7 +545,7 @@ class Drupal {
    * @see \Drupal\Core\Url
    */
   public static function l($text, Url $url) {
-    return static::$container->get('link_generator')->generate($text, $url);
+    return static::getContainer()->get('link_generator')->generate($text, $url);
   }
 
   /**
@@ -547,7 +555,7 @@ class Drupal {
    *   The string translation manager.
    */
   public static function translation() {
-    return static::$container->get('string_translation');
+    return static::getContainer()->get('string_translation');
   }
 
   /**
@@ -557,7 +565,7 @@ class Drupal {
    *   The language manager.
    */
   public static function languageManager() {
-    return static::$container->get('language_manager');
+    return static::getContainer()->get('language_manager');
   }
 
   /**
@@ -574,7 +582,7 @@ class Drupal {
    * @see \Drupal\Core\Session\SessionManager::start()
    */
   public static function csrfToken() {
-    return static::$container->get('csrf_token');
+    return static::getContainer()->get('csrf_token');
   }
 
   /**
@@ -584,7 +592,7 @@ class Drupal {
    *   The transliteration manager.
    */
   public static function transliteration() {
-    return static::$container->get('transliteration');
+    return static::getContainer()->get('transliteration');
   }
 
   /**
@@ -594,7 +602,7 @@ class Drupal {
    *   The form builder.
    */
   public static function formBuilder() {
-    return static::$container->get('form_builder');
+    return static::getContainer()->get('form_builder');
   }
 
   /**
@@ -603,7 +611,7 @@ class Drupal {
    * @return \Drupal\Core\Theme\ThemeManagerInterface
    */
   public static function theme() {
-    return static::$container->get('theme.manager');
+    return static::getContainer()->get('theme.manager');
   }
 
   /**
@@ -613,7 +621,7 @@ class Drupal {
    *   Returns TRUE is syncing flag set.
    */
   public static function isConfigSyncing() {
-    return static::$container->get('config.installer')->isSyncing();
+    return static::getContainer()->get('config.installer')->isSyncing();
   }
 
   /**
@@ -627,7 +635,7 @@ class Drupal {
    *   The logger for this channel.
    */
   public static function logger($channel) {
-    return static::$container->get('logger.factory')->get($channel);
+    return static::getContainer()->get('logger.factory')->get($channel);
   }
 
   /**
@@ -637,7 +645,7 @@ class Drupal {
    *   The menu tree.
    */
   public static function menuTree() {
-    return static::$container->get('menu.link_tree');
+    return static::getContainer()->get('menu.link_tree');
   }
 
   /**
@@ -646,7 +654,7 @@ class Drupal {
    * @return \Drupal\Core\Path\PathValidatorInterface
    */
   public static function pathValidator() {
-    return static::$container->get('path.validator');
+    return static::getContainer()->get('path.validator');
   }
 
   /**
@@ -656,7 +664,7 @@ class Drupal {
    *   The access manager service.
    */
   public static function accessManager() {
-    return static::$container->get('access_manager');
+    return static::getContainer()->get('access_manager');
   }
 
 }

@@ -1187,7 +1187,7 @@ abstract class TestBase {
 
     // Ensure there is no service container.
     $this->container = NULL;
-    \Drupal::setContainer(NULL);
+    \Drupal::unsetContainer();
 
     // Unset globals.
     unset($GLOBALS['config_directories']);

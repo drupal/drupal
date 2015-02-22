@@ -26,7 +26,11 @@ class DrupalTest extends UnitTestCase {
    */
   protected $container;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
+    parent::setUp();
     $this->container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
       ->setMethods(array('get'))
       ->getMock();
@@ -40,6 +44,16 @@ class DrupalTest extends UnitTestCase {
   public function testSetContainer() {
     \Drupal::setContainer($this->container);
     $this->assertSame($this->container, \Drupal::getContainer());
+  }
+
+  /**
+   * @covers ::getContainer
+   *
+   * @expectedException \Drupal\Core\DependencyInjection\ContainerNotInitializedException
+   * @expectedExceptionMessage \Drupal::$container is not initialized yet. \Drupal::setContainer() must be called with a real container.
+   */
+  public function testGetContainerException() {
+    \Drupal::getContainer();
   }
 
   /**

@@ -27,7 +27,7 @@ class KernelTestBaseTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    $original_container = \Drupal::getContainer();
+    $original_container = $this->originalContainer;
     parent::setUp();
     $this->assertNotIdentical(\Drupal::getContainer(), $original_container, 'KernelTestBase test creates a new container.');
   }

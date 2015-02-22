@@ -39,7 +39,7 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
     parent::setUp();
     // Ensure that an instantiated container in the global state of \Drupal from
     // a previous test does not leak into this test.
-    \Drupal::setContainer(NULL);
+    \Drupal::unsetContainer();
 
     $this->root = dirname(dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__))));
   }

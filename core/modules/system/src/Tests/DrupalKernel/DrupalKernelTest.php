@@ -41,7 +41,7 @@ class DrupalKernelTest extends KernelTestBase {
   protected function prepareConfigDirectories() {
     \Drupal::setContainer($this->originalContainer);
     parent::prepareConfigDirectories();
-    \Drupal::setContainer(NULL);
+    \Drupal::unsetContainer();
   }
 
   /**

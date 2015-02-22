@@ -1030,7 +1030,7 @@ abstract class WebTestBase extends TestBase {
   protected function getDatabaseTypes() {
     \Drupal::setContainer($this->originalContainer);
     $database_types = drupal_get_database_types();
-    \Drupal::setContainer(NULL);
+    \Drupal::unsetContainer();
     return $database_types;
   }
 

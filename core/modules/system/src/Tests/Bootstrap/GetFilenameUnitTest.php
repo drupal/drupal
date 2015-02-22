@@ -31,7 +31,7 @@ class GetFilenameUnitTest extends KernelTestBase {
     // Store the previous container.
     $this->previousContainer = $this->container;
     $this->container = NULL;
-    \Drupal::setContainer(NULL);
+    \Drupal::unsetContainer();
   }
 
   /**
@@ -55,7 +55,7 @@ class GetFilenameUnitTest extends KernelTestBase {
 
     // Assert that this test is meaningful.
     $this->assertNull($this->container);
-    $this->assertNull(\Drupal::getContainer());
+    $this->assertFalse(\Drupal::hasContainer());
 
     // Retrieving the location of a module.
     $this->assertIdentical(drupal_get_filename('module', 'system'), 'core/modules/system/system.info.yml');
