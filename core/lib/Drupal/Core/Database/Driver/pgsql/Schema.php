@@ -94,7 +94,7 @@ class Schema extends DatabaseSchema {
   public function queryTableInformation($table) {
     // Generate a key to reference this table's information on.
     $key = $this->connection->prefixTables('{' . $table . '}');
-    if (!strpos($key, '.')) {
+    if (strpos($key, '.') === FALSE) {
       $key = 'public.' . $key;
     }
 
@@ -136,6 +136,20 @@ class Schema extends DatabaseSchema {
       $this->tableInformation[$key] = $table_information;
     }
     return $this->tableInformation[$key];
+  }
+
+  /**
+   * Resets information about table blobs, sequences and serial fields.
+   *
+   * @param $table
+   *   The non-prefixed name of the table.
+   */
+  protected function resetTableInformation($table) {
+    $key = $this->connection->prefixTables('{' . $table . '}');
+    if (strpos($key, '.') === FALSE) {
+      $key = 'public.' . $key;
+    }
+    unset($this->tableInformation[$key]);
   }
 
   /**
@@ -197,11 +211,11 @@ class Schema extends DatabaseSchema {
 
     $sql_keys = array();
     if (isset($table['primary key']) && is_array($table['primary key'])) {
-      $sql_keys[] = 'PRIMARY KEY (' . $this->createPrimaryKeySql($table['primary key']) . ')';
+      $sql_keys[] = 'CONSTRAINT "' . $this->ensureIdentifiersLength($name, '', 'pkey') . '" PRIMARY KEY (' . $this->createPrimaryKeySql($table['primary key']) . ')';
     }
     if (isset($table['unique keys']) && is_array($table['unique keys'])) {
       foreach ($table['unique keys'] as $key_name => $key) {
-        $sql_keys[] = 'CONSTRAINT ' . $this->ensureIdentifiersLength($name, $key_name, 'key') . ' UNIQUE (' . implode(', ', $key) . ')';
+        $sql_keys[] = 'CONSTRAINT "' . $this->ensureIdentifiersLength($name, $key_name, 'key') . '" UNIQUE (' . implode(', ', $key) . ')';
       }
     }
 
@@ -420,17 +434,43 @@ class Schema extends DatabaseSchema {
     // Index names and constraint names are global in PostgreSQL, so we need to
     // rename them when renaming the table.
     $indexes = $this->connection->query('SELECT indexname FROM pg_indexes WHERE schemaname = :schema AND tablename = :table', array(':schema' => $old_schema, ':table' => $old_table_name));
+
     foreach ($indexes as $index) {
-      if (preg_match('/^' . preg_quote($old_full_name) . '_(.*)$/', $index->indexname, $matches)) {
+      // Get the index type by suffix, e.g. idx/key/pkey
+      $index_type = substr($index->indexname, strrpos($index->indexname, '_') + 1);
+
+      // If the index is already rewritten by ensureIdentifiersLength() to not
+      // exceed the 63 chars limit of PostgreSQL, we need to take care of that.
+      // Example (drupal_Gk7Su_T1jcBHVuvSPeP22_I3Ni4GrVEgTYlIYnBJkro_idx).
+      if (strpos($index->indexname, 'drupal_') !== FALSE) {
+        preg_match('/^drupal_(.*)_' . preg_quote($index_type) . '/', $index->indexname, $matches);
         $index_name = $matches[1];
-        $this->connection->query('ALTER INDEX ' . $index->indexname . ' RENAME TO ' . $this->ensureIdentifiersLength($new_name, $index_name, 'idx'));
       }
+      else {
+        // Make sure to remove the suffix from index names, because
+        // $this->ensureIdentifiersLength() will add the suffix again and thus
+        // would result in a wrong index name.
+        preg_match('/^' . preg_quote($old_full_name) . '__(.*)__' . preg_quote($index_type) . '/', $index->indexname, $matches);
+        $index_name = $matches[1];
+      }
+      $this->connection->query('ALTER INDEX "' . $index->indexname . '" RENAME TO "' . $this->ensureIdentifiersLength($new_name, $index_name, $index_type) . '"');
     }
 
-    // Now rename the table.
     // Ensure the new table name does not include schema syntax.
     $prefixInfo = $this->getPrefixInfo($new_name);
+
+    // Rename sequences if there's a serial fields.
+    $info = $this->queryTableInformation($table);
+    if (!empty($info->serial_fields)) {
+      foreach ($info->serial_fields as $field) {
+        $old_sequence = $this->prefixNonTable($table, $field, 'seq');
+        $new_sequence = $this->prefixNonTable($new_name, $field, 'seq');
+        $this->connection->query('ALTER SEQUENCE ' . $old_sequence . ' RENAME TO ' . $new_sequence);
+      }
+    }
+    // Now rename the table.
     $this->connection->query('ALTER TABLE {' . $table . '} RENAME TO ' . $prefixInfo['table']);
+    $this->resetTableInformation($table);
   }
 
   public function dropTable($table) {
@@ -439,6 +479,7 @@ class Schema extends DatabaseSchema {
     }
 
     $this->connection->query('DROP TABLE {' . $table . '}');
+    $this->resetTableInformation($table);
     return TRUE;
   }
 
@@ -473,6 +514,7 @@ class Schema extends DatabaseSchema {
     if (!empty($spec['description'])) {
       $this->connection->query('COMMENT ON COLUMN {' . $table . '}.' . $field . ' IS ' . $this->prepareComment($spec['description']));
     }
+    $this->resetTableInformation($table);
   }
 
   public function dropField($table, $field) {
@@ -481,6 +523,7 @@ class Schema extends DatabaseSchema {
     }
 
     $this->connection->query('ALTER TABLE {' . $table . '} DROP COLUMN "' . $field . '"');
+    $this->resetTableInformation($table);
     return TRUE;
   }
 
@@ -516,7 +559,7 @@ class Schema extends DatabaseSchema {
    * @param $name
    *   The name of the constraint (typically 'pkey' or '[constraint]_key').
    */
-  protected function constraintExists($table, $name) {
+  public function constraintExists($table, $name) {
     $constraint_name = $this->ensureIdentifiersLength($table, $name);
     return (bool) $this->connection->query("SELECT 1 FROM pg_constraint WHERE conname = '$constraint_name'")->fetchField();
   }
@@ -529,7 +572,8 @@ class Schema extends DatabaseSchema {
       throw new SchemaObjectExistsException(t("Cannot add primary key to table @table: primary key already exists.", array('@table' => $table)));
     }
 
-    $this->connection->query('ALTER TABLE {' . $table . '} ADD PRIMARY KEY (' . $this->createPrimaryKeySql($fields) . ')');
+    $this->connection->query('ALTER TABLE {' . $table . '} ADD CONSTRAINT "' . $this->ensureIdentifiersLength($table, '', 'pkey') . '" PRIMARY KEY (' . $this->createPrimaryKeySql($fields) . ')');
+    $this->resetTableInformation($table);
   }
 
   public function dropPrimaryKey($table) {
@@ -537,7 +581,8 @@ class Schema extends DatabaseSchema {
       return FALSE;
     }
 
-    $this->connection->query('ALTER TABLE {' . $table . '} DROP CONSTRAINT ' . $this->ensureIdentifiersLength($table, 'pkey'));
+    $this->connection->query('ALTER TABLE {' . $table . '} DROP CONSTRAINT "' . $this->ensureIdentifiersLength($table, '', 'pkey') . '"');
+    $this->resetTableInformation($table);
     return TRUE;
   }
 
@@ -545,19 +590,21 @@ class Schema extends DatabaseSchema {
     if (!$this->tableExists($table)) {
       throw new SchemaObjectDoesNotExistException(t("Cannot add unique key @name to table @table: table doesn't exist.", array('@table' => $table, '@name' => $name)));
     }
-    if ($this->constraintExists($table, $name . '_key')) {
+    if ($this->constraintExists($table, $name . '__key')) {
       throw new SchemaObjectExistsException(t("Cannot add unique key @name to table @table: unique key already exists.", array('@table' => $table, '@name' => $name)));
     }
 
     $this->connection->query('ALTER TABLE {' . $table . '} ADD CONSTRAINT "' . $this->ensureIdentifiersLength($table, $name, 'key') . '" UNIQUE (' . implode(',', $fields) . ')');
+    $this->resetTableInformation($table);
   }
 
   public function dropUniqueKey($table, $name) {
-    if (!$this->constraintExists($table, $name . '_key')) {
+    if (!$this->constraintExists($table, $name . '__key')) {
       return FALSE;
     }
 
     $this->connection->query('ALTER TABLE {' . $table . '} DROP CONSTRAINT "' . $this->ensureIdentifiersLength($table, $name, 'key') . '"');
+    $this->resetTableInformation($table);
     return TRUE;
   }
 
@@ -570,6 +617,7 @@ class Schema extends DatabaseSchema {
     }
 
     $this->connection->query($this->_createIndexSql($table, $name, $fields));
+    $this->resetTableInformation($table);
   }
 
   public function dropIndex($table, $name) {
@@ -578,6 +626,7 @@ class Schema extends DatabaseSchema {
     }
 
     $this->connection->query('DROP INDEX ' . $this->ensureIdentifiersLength($table, $name, 'idx'));
+    $this->resetTableInformation($table);
     return TRUE;
   }
 
@@ -681,6 +730,7 @@ class Schema extends DatabaseSchema {
     if (isset($new_keys)) {
       $this->_createKeys($table, $new_keys);
     }
+    $this->resetTableInformation($table);
   }
 
   protected function _createIndexSql($table, $name, $fields) {
