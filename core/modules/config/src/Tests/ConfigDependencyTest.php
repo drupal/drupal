@@ -273,6 +273,106 @@ class ConfigDependencyTest extends KernelTestBase {
   }
 
   /**
+   * Tests deleting a configuration entity and dependency management.
+   */
+  public function testConfigEntityDelete() {
+    /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
+    $config_manager = \Drupal::service('config.manager');
+    /** @var \Drupal\Core\Config\Entity\ConfigEntityStorage $storage */
+    $storage = $this->container->get('entity.manager')->getStorage('config_test');
+    // Test dependencies between configuration entities.
+    $entity1 = $storage->create(
+      array(
+        'id' => 'entity1'
+      )
+    );
+    $entity1->save();
+    $entity2 = $storage->create(
+      array(
+        'id' => 'entity2',
+        'dependencies' => array(
+          'enforced' => array(
+            'config' => array($entity1->getConfigDependencyName()),
+          ),
+        ),
+      )
+    );
+    $entity2->save();
+
+    // Do a dry run using
+    // \Drupal\Core\Config\ConfigManager::getConfigEntitiesToChangeOnDependencyRemoval().
+    $config_entities = $config_manager->getConfigEntitiesToChangeOnDependencyRemoval('config', [$entity1->getConfigDependencyName()]);
+    $this->assertEqual($entity2->uuid(), reset($config_entities['delete'])->uuid(), 'Entity 2 will be deleted.');
+    $this->assertTrue(empty($config_entities['update']), 'No dependent configuration entities will be updated.');
+    $this->assertTrue(empty($config_entities['unchanged']), 'No dependent configuration entities will be unchanged.');
+
+    // Test that doing a delete of entity1 deletes entity2 since it is dependent
+    // on entity1.
+    $entity1->delete();
+    $this->assertFalse($storage->load('entity1'), 'Entity 1 deleted');
+    $this->assertFalse($storage->load('entity2'), 'Entity 2 deleted');
+
+    // Set a more complicated test where dependencies will be fixed.
+    \Drupal::state()->set('config_test.fix_dependencies', array($entity1->getConfigDependencyName()));
+
+    // Entity1 will be deleted by the test.
+    $entity1 = $storage->create(
+      array(
+        'id' => 'entity1',
+      )
+    );
+    $entity1->save();
+
+    // Entity2 has a dependency on Entity1 but it can be fixed because
+    // \Drupal\config_test\Entity::onDependencyRemoval() will remove the
+    // dependency before config entities are deleted.
+    $entity2 = $storage->create(
+      array(
+        'id' => 'entity2',
+        'dependencies' => array(
+          'enforced' => array(
+            'config' => array($entity1->getConfigDependencyName()),
+          ),
+        ),
+      )
+    );
+    $entity2->save();
+
+    // Entity3 will be unchanged because it is dependent on Entity2 which can
+    // be fixed.
+    $entity3 = $storage->create(
+      array(
+        'id' => 'entity3',
+        'dependencies' => array(
+          'enforced' => array(
+            'config' => array($entity2->getConfigDependencyName()),
+          ),
+        ),
+      )
+    );
+    $entity3->save();
+
+    // Do a dry run using
+    // \Drupal\Core\Config\ConfigManager::getConfigEntitiesToChangeOnDependencyRemoval().
+    $config_entities = $config_manager->getConfigEntitiesToChangeOnDependencyRemoval('config', [$entity1->getConfigDependencyName()]);
+    $this->assertTrue(empty($config_entities['delete']), 'No dependent configuration entities will be deleted.');
+    $this->assertEqual($entity2->uuid(), reset($config_entities['update'])->uuid(), 'Entity 2 will be updated.');
+    $this->assertEqual($entity3->uuid(), reset($config_entities['unchanged'])->uuid(), 'Entity 3 is not changed.');
+
+    // Perform the uninstall.
+    $entity1->delete();
+
+    // Test that expected actions have been performed.
+    $this->assertFalse($storage->load('entity1'), 'Entity 1 deleted');
+    $entity2 = $storage->load('entity2');
+    $this->assertTrue($entity2, 'Entity 2 not deleted');
+    $this->assertEqual($entity2->calculateDependencies()['config'], array(), 'Entity 2 dependencies updated to remove dependency on Entity1.');
+    $entity3 = $storage->load('entity3');
+    $this->assertTrue($entity3, 'Entity 3 not deleted');
+    $this->assertEqual($entity3->calculateDependencies()['config'], [$entity2->getConfigDependencyName()], 'Entity 3 still depends on Entity 2.');
+  }
+
+  /**
    * Tests getConfigEntitiesToChangeOnDependencyRemoval() with content entities.
    *
    * At the moment there is no runtime code that calculates configuration

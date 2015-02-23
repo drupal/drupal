@@ -8,6 +8,7 @@
 namespace Drupal\system\Form;
 
 use Drupal\Core\Config\ConfigManagerInterface;
+use Drupal\Core\Config\Entity\ConfigDependencyDeleteFormTrait;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
@@ -21,6 +22,7 @@ use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
  * Builds a confirmation form to uninstall selected modules.
  */
 class ModulesUninstallConfirmForm extends ConfirmFormBase {
+  use ConfigDependencyDeleteFormTrait;
 
   /**
    * The module installer service.
@@ -145,86 +147,8 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase {
       }, $this->modules),
     );
 
-    // Get the dependent entities.
-    $entity_types = array();
-    $dependent_entities = $this->configManager->getConfigEntitiesToChangeOnDependencyRemoval('module', $this->modules);
-
-    $form['entity_updates'] = array(
-      '#type' => 'details',
-      '#title' => $this->t('Configuration updates'),
-      '#description' => $this->t('The listed configuration will be updated.'),
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
-      '#access' => FALSE,
-    );
-
-    foreach ($dependent_entities['update'] as $entity) {
-      /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface  $entity */
-      $entity_type_id = $entity->getEntityTypeId();
-      if (!isset($form['entity_updates'][$entity_type_id])) {
-        $entity_type = $this->entityManager->getDefinition($entity_type_id);
-        // Store the ID and label to sort the entity types and entities later.
-        $label = $entity_type->getLabel();
-        $entity_types[$entity_type_id] = $label;
-        $form['entity_updates'][$entity_type_id] = array(
-          '#theme' => 'item_list',
-          '#title' => $label,
-          '#items' => array(),
-        );
-      }
-      $form['entity_updates'][$entity_type_id]['#items'][] = $entity->label() ?: $entity->id();
-    }
-    if (!empty($dependent_entities['update'])) {
-      $form['entity_updates']['#access'] = TRUE;
-
-      // Add a weight key to the entity type sections.
-      asort($entity_types, SORT_FLAG_CASE);
-      $weight = 0;
-      foreach ($entity_types as $entity_type_id => $label) {
-        $form['entity_updates'][$entity_type_id]['#weight'] = $weight;
-        // Sort the list of entity labels alphabetically.
-        sort($form['entity_updates'][$entity_type_id]['#items'], SORT_FLAG_CASE);
-        $weight++;
-      }
-    }
-
-    $form['entity_deletes'] = array(
-      '#type' => 'details',
-      '#title' => $this->t('Configuration deletions'),
-      '#description' => $this->t('The listed configuration will be deleted.'),
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
-      '#access' => FALSE,
-    );
-
-    foreach ($dependent_entities['delete'] as $entity) {
-      $entity_type_id = $entity->getEntityTypeId();
-      if (!isset($form['entity_deletes'][$entity_type_id])) {
-        $entity_type = $this->entityManager->getDefinition($entity_type_id);
-        // Store the ID and label to sort the entity types and entities later.
-        $label = $entity_type->getLabel();
-        $entity_types[$entity_type_id] = $label;
-        $form['entity_deletes'][$entity_type_id] = array(
-          '#theme' => 'item_list',
-          '#title' => $label,
-          '#items' => array(),
-        );
-      }
-      $form['entity_deletes'][$entity_type_id]['#items'][] = $entity->label() ?: $entity->id();
-    }
-    if (!empty($dependent_entities['delete'])) {
-      $form['entity_deletes']['#access'] = TRUE;
-
-      // Add a weight key to the entity type sections.
-      asort($entity_types, SORT_FLAG_CASE);
-      $weight = 0;
-      foreach ($entity_types as $entity_type_id => $label) {
-        $form['entity_deletes'][$entity_type_id]['#weight'] = $weight;
-        // Sort the list of entity labels alphabetically.
-        sort($form['entity_deletes'][$entity_type_id]['#items'], SORT_FLAG_CASE);
-        $weight++;
-      }
-    }
+    // List the dependent entities.
+    $this->addDependencyListsToForm($form, 'module', $this->modules ,$this->configManager, $this->entityManager);
 
     return parent::buildForm($form, $form_state);
   }

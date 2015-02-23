@@ -165,10 +165,6 @@ interface ConfigEntityInterface extends EntityInterface {
    * caller for the changes to take effect. Implementations should not save the
    * entity.
    *
-   * @todo https://www.drupal.org/node/2336727 this method is only fired during
-   *   extension uninstallation but it could be used during config entity
-   *   deletion too.
-   *
    * @param array $dependencies
    *   An array of dependencies that will be deleted keyed by dependency type.
    *   Dependency types are, for example, entity, module and theme.
@@ -176,7 +172,11 @@ interface ConfigEntityInterface extends EntityInterface {
    * @return bool
    *   TRUE if the entity has changed, FALSE if not.
    *
+   * @return bool
+   *   TRUE if the entity has been changed as a result, FALSE if not.
+   *
    * @see \Drupal\Core\Config\Entity\ConfigDependencyManager
+   * @see \Drupal\Core\Config\ConfigEntityBase::preDelete()
    * @see \Drupal\Core\Config\ConfigManager::uninstall()
    * @see \Drupal\Core\Entity\EntityDisplayBase::onDependencyRemoval()
    */

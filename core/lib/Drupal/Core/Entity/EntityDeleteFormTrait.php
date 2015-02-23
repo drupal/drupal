@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Core\Config\Entity\ConfigDependencyDeleteFormTrait;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -18,13 +19,7 @@ use Drupal\Core\Form\FormStateInterface;
  * @ingroup entity_api
  */
 trait EntityDeleteFormTrait {
-
-  /**
-   * Translates a string to the current language or to a given language.
-   *
-   * Provided by \Drupal\Core\StringTranslation\StringTranslationTrait.
-   */
-  abstract protected function t($string, array $args = array(), array $options = array());
+  use ConfigDependencyDeleteFormTrait;
 
   /**
    * Returns the entity of this form.

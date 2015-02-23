@@ -198,6 +198,13 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
   protected $propertyDefinitions;
 
   /**
+   * Static flag set to prevent recursion during field deletes.
+   *
+   * @var bool
+   */
+  protected static $inDeletion = FALSE;
+
+  /**
    * Constructs a FieldStorageConfig object.
    *
    * @param array $values
@@ -374,29 +381,13 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    */
   public static function preDelete(EntityStorageInterface $storage, array $field_storages) {
     $state = \Drupal::state();
-    $field_config_storage = \Drupal::entityManager()->getStorage('field_config');
 
-    // Delete fields first. Note: when deleting a field storage through
-    // FieldConfig::postDelete(), the fields have been deleted already, so
-    // no fields will be found here.
-    $field_ids = array();
-    foreach ($field_storages as $field_storage) {
-      if (!$field_storage->deleted) {
-        foreach ($field_storage->getBundles() as $bundle) {
-          $entity_type = $field_storage->getTargetEntityTypeId();
-          $field_name = $field_storage->getName();
-          $field_ids[] = "{$entity_type}.$bundle.{$field_name}";
-        }
-      }
-    }
-    if ($field_ids) {
-      $fields = $field_config_storage->loadMultiple($field_ids);
-      // Tag the objects to preserve recursive deletion of the field.
-      foreach ($fields as $field) {
-        $field->noFieldDelete = TRUE;
-      }
-      $field_config_storage->delete($fields);
-    }
+    // Set the static flag so that we don't delete field storages whilst
+    // deleting fields.
+    static::$inDeletion = TRUE;
+
+    // Delete or fix any configuration that is dependent, for example, fields.
+    parent::preDelete($storage, $field_storages);
 
     // Keep the field definitions in the state storage so we can use them later
     // during field_purge_batch().
@@ -424,6 +415,8 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
         $field->deleted = TRUE;
       }
     }
+    // Unset static flag.
+    static::$inDeletion = FALSE;
   }
 
   /**
@@ -794,8 +787,9 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    */
   public function isDeletable() {
     // The field storage is not deleted, is configured to be removed when there
-    // are no fields and the field storage has no bundles.
-    return !$this->deleted && !$this->persist_with_no_fields && count($this->getBundles()) == 0;
+    // are no fields, the field storage has no bundles, and field storages are
+    // not in the process of being deleted.
+    return !$this->deleted && !$this->persist_with_no_fields && count($this->getBundles()) == 0 && !static::$inDeletion;
   }
 
   /**

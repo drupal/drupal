@@ -97,6 +97,13 @@ class ConfigEntityStorageTest extends UnitTestCase {
   protected $typedConfigManager;
 
   /**
+   * The configuration manager.
+   *
+   * @var \Drupal\Core\Config\ConfigManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $configManager;
+
+  /**
    * {@inheritdoc}
    *
    * @covers ::__construct
@@ -160,10 +167,14 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $this->typedConfigManager->expects($this->any())
       ->method('getDefinition')
       ->will($this->returnValue(array('mapping' => array('id' => '', 'uuid' => '', 'dependencies' => ''))));
+
+    $this->configManager = $this->getMock('Drupal\Core\Config\ConfigManagerInterface');
+
     $container = new ContainerBuilder();
     $container->set('entity.manager', $this->entityManager);
     $container->set('config.typed', $this->typedConfigManager);
     $container->set('cache_tags.invalidator', $this->cacheTagsInvalidator);
+    $container->set('config.manager', $this->configManager);
     \Drupal::setContainer($container);
 
   }
@@ -728,6 +739,10 @@ class ConfigEntityStorageTest extends UnitTestCase {
    * @covers ::doDelete
    */
   public function testDelete() {
+    // Dependencies are tested in \Drupal\config\Tests\ConfigDependencyTest.
+    $this->configManager->expects($this->any())
+      ->method('getConfigEntitiesToChangeOnDependencyRemoval')
+      ->willReturn(['update' => [], 'delete' => [], 'unchanged' => []]);
     $entities = array();
     $configs = array();
     $config_map = array();

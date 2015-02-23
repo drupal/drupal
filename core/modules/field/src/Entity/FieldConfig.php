@@ -182,6 +182,7 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
   public static function preDelete(EntityStorageInterface $storage, array $fields) {
     $state = \Drupal::state();
 
+    parent::preDelete($storage, $fields);
     // Keep the field definitions in the state storage so we can use them
     // later during field_purge_batch().
     $deleted_fields = $state->get('field.field.deleted') ?: array();
@@ -222,36 +223,13 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
     $storages_to_delete = array();
     foreach ($fields as $field) {
       $storage_definition = $field->getFieldStorageDefinition();
-      if (!$field->deleted && empty($field->noFieldDelete) && !$field->isUninstalling() && $storage_definition->isDeletable()) {
+      if (!$field->deleted && !$field->isUninstalling() && $storage_definition->isDeletable()) {
         // Key by field UUID to avoid deleting the same storage twice.
         $storages_to_delete[$storage_definition->uuid()] = $storage_definition;
       }
     }
     if ($storages_to_delete) {
       \Drupal::entityManager()->getStorage('field_storage_config')->delete($storages_to_delete);
-    }
-
-    // Cleanup entity displays.
-    $displays_to_update = array();
-    foreach ($fields as $field) {
-      if (!$field->deleted) {
-        $view_modes = \Drupal::entityManager()->getViewModeOptions($field->entity_type, TRUE);
-        foreach (array_keys($view_modes) as $mode) {
-          $displays_to_update['entity_view_display'][$field->entity_type . '.' . $field->bundle . '.' . $mode][] = $field->getName();
-        }
-        $form_modes = \Drupal::entityManager()->getFormModeOptions($field->entity_type, TRUE);
-        foreach (array_keys($form_modes) as $mode) {
-          $displays_to_update['entity_form_display'][$field->entity_type . '.' . $field->bundle . '.' . $mode][] = $field->getName();
-        }
-      }
-    }
-    foreach ($displays_to_update as $type => $ids) {
-      foreach (entity_load_multiple($type, array_keys($ids)) as $id => $display) {
-        foreach ($ids[$id] as $field_name) {
-          $display->removeComponent($field_name);
-        }
-        $display->save();
-      }
     }
   }
 

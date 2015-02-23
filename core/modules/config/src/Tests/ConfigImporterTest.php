@@ -381,6 +381,10 @@ class ConfigImporterTest extends KernelTestBase {
 
   /**
    * Tests that secondary updates for deleted files work as expected.
+   *
+   * This test is completely hypothetical since we only support full
+   * configuration tree imports. Therefore, any configuration updates that cause
+   * secondary deletes should be reflected already in the staged configuration.
    */
   function testSecondaryUpdateDeletedDeleteeFirst() {
     $name_deleter = 'config_test.dynamic.deleter';
@@ -416,13 +420,10 @@ class ConfigImporterTest extends KernelTestBase {
     $this->configImporter->reset()->import();
 
     $entity_storage = \Drupal::entityManager()->getStorage('config_test');
-    $deleter = $entity_storage->load('deleter');
-    $this->assertEqual($deleter->id(), 'deleter');
-    $this->assertEqual($deleter->uuid(), $values_deleter['uuid']);
-    $this->assertEqual($deleter->label(), $values_deleter['label']);
-    // @todo The deletee entity does not exist as the update worked but the
-    //   entity was deleted after that. There is also no log message as this
-    //   happened outside of the config importer.
+    // Both entities are deleted. ConfigTest::postSave() causes updates of the
+    // deleter entity to delete the deletee entity. Since the deleter depends on
+    // the deletee, removing the deletee causes the deleter to be removed.
+    $this->assertFalse($entity_storage->load('deleter'));
     $this->assertFalse($entity_storage->load('deletee'));
     $logs = $this->configImporter->getErrors();
     $this->assertEqual(count($logs), 0);

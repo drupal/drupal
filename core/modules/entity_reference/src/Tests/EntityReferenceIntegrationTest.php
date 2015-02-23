@@ -9,6 +9,7 @@ namespace Drupal\entity_reference\Tests;
 
 use Drupal\Component\Utility\String;
 use Drupal\config\Tests\AssertConfigEntityImportTrait;
+use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\simpletest\WebTestBase;
 
@@ -152,6 +153,9 @@ class EntityReferenceIntegrationTest extends WebTestBase {
       // Ensure that the field can be imported without change even after the
       // default value deleted.
       $referenced_entities[0]->delete();
+      // Reload the field since deleting the default value can change the field.
+      \Drupal::entityManager()->getStorage($field->getEntityTypeId())->resetCache([$field->id()]);
+      $field = FieldConfig::loadByName($this->entityType, $this->bundle, $this->fieldName);
       $this->assertConfigEntityImport($field);
 
       // Once the default value has been removed after saving the dependency

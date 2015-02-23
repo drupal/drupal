@@ -413,12 +413,13 @@ class ConfigManager implements ConfigManagerInterface {
       if ($type == 'config' || $type == 'content') {
         $affected_dependencies[$type] = array_map(function ($name) use ($type) {
           if ($type == 'config') {
-            $entity_type_id = $this->getEntityTypeIdByName($name);
+            return $this->loadConfigEntityByName($name);
           }
           else {
-            list($entity_type_id) = explode(':', $name);
+            // Ignore the bundle.
+            list($entity_type_id,, $uuid) = explode(':', $name);
+            return $this->entityManager->loadEntityByConfigTarget($entity_type_id, $uuid);
           }
-          return $this->entityManager->loadEntityByConfigTarget($entity_type_id, $name);
         }, $affected_dependencies[$type]);
       }
     }
@@ -431,6 +432,14 @@ class ConfigManager implements ConfigManagerInterface {
           $affected_dependencies['config'][] = $dependent_entity;
         }
       }
+    }
+
+    // Key the entity arrays by config dependency name to make searching easy.
+    foreach (['config', 'content'] as $dependency_type) {
+      $affected_dependencies[$dependency_type] = array_combine(
+        array_map(function ($entity) { return $entity->getConfigDependencyName(); }, $affected_dependencies[$dependency_type]),
+        $affected_dependencies[$dependency_type]
+      );
     }
 
     // Inform the entity.

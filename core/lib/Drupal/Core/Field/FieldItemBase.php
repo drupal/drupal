@@ -273,4 +273,11 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
     return array();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function onDependencyRemoval(FieldDefinitionInterface $field_definition, array $dependencies) {
+    return FALSE;
+  }
+
 }

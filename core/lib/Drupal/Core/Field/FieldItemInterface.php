@@ -405,4 +405,20 @@ interface FieldItemInterface extends ComplexDataInterface {
    */
   public static function calculateDependencies(FieldDefinitionInterface $field_definition);
 
+  /**
+   * Informs the plugin that a dependency of the field will be deleted.
+   *
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The field definition.
+   * @param array $dependencies
+   *   An array of dependencies that will be deleted keyed by dependency type.
+   *   Dependency types are, for example, entity, module and theme.
+   *
+   * @return bool
+   *   TRUE if the field definition has been changed as a result, FALSE if not.
+   *
+   * @see \Drupal\Core\Config\ConfigEntityInterface::onDependencyRemoval()
+   */
+  public static function onDependencyRemoval(FieldDefinitionInterface $field_definition, array $dependencies);
+
 }

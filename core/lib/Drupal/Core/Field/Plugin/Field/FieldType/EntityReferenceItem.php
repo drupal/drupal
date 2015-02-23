@@ -286,4 +286,25 @@ class EntityReferenceItem extends FieldItemBase {
     return $dependencies;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function onDependencyRemoval(FieldDefinitionInterface $field_definition, array $dependencies) {
+    $changed = FALSE;
+    if (!empty($field_definition->default_value)) {
+      $target_entity_type = \Drupal::entityManager()->getDefinition($field_definition->getFieldStorageDefinition()->getSetting('target_type'));
+      foreach ($field_definition->default_value as $key => $default_value) {
+        if (is_array($default_value) && isset($default_value['target_uuid'])) {
+          $entity = \Drupal::entityManager()->loadEntityByUuid($target_entity_type->id(), $default_value['target_uuid']);
+          // @see \Drupal\Core\Field\EntityReferenceFieldItemList::processDefaultValue()
+          if ($entity && isset($dependencies[$entity->getConfigDependencyKey()][$entity->getConfigDependencyName()])) {
+            unset($field_definition->default_value[$key]);
+            $changed = TRUE;
+          }
+        }
+      }
+    }
+    return $changed;
+  }
+
 }

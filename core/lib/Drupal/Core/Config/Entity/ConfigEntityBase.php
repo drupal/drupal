@@ -9,6 +9,7 @@ namespace Drupal\Core\Config\Entity;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Config\ConfigException;
 use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\Core\Entity\Entity;
 use Drupal\Core\Config\ConfigDuplicateUUIDException;
@@ -515,6 +516,40 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface,
    */
   public function getThirdPartyProviders() {
     return array_keys($this->third_party_settings);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function preDelete(EntityStorageInterface $storage, array $entities) {
+    parent::preDelete($storage, $entities);
+
+    foreach ($entities as $entity) {
+      if ($entity->isUninstalling() || $entity->isSyncing()) {
+        // During extension uninstall and configuration synchronization
+        // deletions are already managed.
+        break;
+      }
+      // Fix or remove any dependencies.
+      $config_entities = static::getConfigManager()->getConfigEntitiesToChangeOnDependencyRemoval('config', [$entity->getConfigDependencyName()], FALSE);
+      /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface $dependent_entity */
+      foreach ($config_entities['update'] as $dependent_entity) {
+        $dependent_entity->save();
+      }
+      foreach ($config_entities['delete'] as $dependent_entity) {
+        $dependent_entity->delete();
+      }
+    }
+  }
+
+  /**
+   * Gets the configuration manager.
+   *
+   * @return \Drupal\Core\Config\ConfigManager
+   *   The configuration manager.
+   */
+  protected static function getConfigManager() {
+    return \Drupal::service('config.manager');
   }
 
   /**
