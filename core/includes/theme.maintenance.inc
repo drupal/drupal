@@ -23,7 +23,6 @@ function _drupal_maintenance_theme() {
     return;
   }
 
-  require_once __DIR__ . '/path.inc';
   require_once __DIR__ . '/theme.inc';
   require_once __DIR__ . '/common.inc';
   require_once __DIR__ . '/unicode.inc';

@@ -435,7 +435,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   public function loadLegacyIncludes() {
     require_once $this->root . '/core/includes/common.inc';
     require_once $this->root . '/core/includes/database.inc';
-    require_once $this->root . '/core/includes/path.inc';
     require_once $this->root . '/core/includes/module.inc';
     require_once $this->root . '/core/includes/theme.inc';
     require_once $this->root . '/core/includes/pager.inc';
