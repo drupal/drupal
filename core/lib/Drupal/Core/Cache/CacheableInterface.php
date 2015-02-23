@@ -25,6 +25,8 @@ interface CacheableInterface {
   /**
    * The cache keys associated with this potentially cacheable object.
    *
+   * These identify the object.
+   *
    * @return string[]
    *   An array of strings, used to generate a cache ID.
    */
@@ -32,6 +34,8 @@ interface CacheableInterface {
 
   /**
    * The cache contexts associated with this potentially cacheable object.
+   *
+   * These identify a specific variation/representation of the object.
    *
    * Cache contexts are tokens: placeholders that are converted to cache keys by
    * the @cache_contexts service. The replacement value depends on the request

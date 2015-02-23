@@ -27,17 +27,6 @@ interface MenuActiveTrailInterface {
   public function getActiveTrailIds($menu_name);
 
   /**
-   * Gets the active trail cache key of the specified menu tree.
-   *
-   * @param string $menu_name
-   *   The menu name of the requested tree.
-   *
-   * @return string
-   *   The cache key that uniquely identifies the active trail of the menu tree.
-   */
-  public function getActiveTrailCacheKey($menu_name);
-
-  /**
    * Fetches a menu link which matches the route name, parameters and menu name.
    *
    * @param string|NULL $menu_name

@@ -33,6 +33,12 @@ services:
     class: Drupal\Core\Cache\TimeZoneCacheContext
     tags:
       - { name: cache.context}
+  cache_context.menu.active_trail:
+    class: Drupal\Core\Cache\MenuActiveTrailCacheContext
+    calls:
+      - [setContainer, ['@service_container']]
+    tags:
+      - { name: cache.context}
   cache_tags.invalidator:
     parent: container.trait
     class: Drupal\Core\Cache\CacheTagsInvalidator

@@ -94,28 +94,25 @@ class MenuActiveTrailTest extends UnitTestCase {
     $link_1_parent_ids = array('baby_llama_link_1', 'mama_llama_link', '');
     $empty_active_trail = array('');
 
-    $link_1__active_trail_cache_key = 'menu_trail.baby_llama_link_1|mama_llama_link|';
-    $empty_active_trail_cache_key = 'menu_trail.';
-
     // No active link is returned when zero links match the current route.
-    $data[] = array($request, array(), $this->randomMachineName(), NULL, $empty_active_trail, $empty_active_trail_cache_key);
+    $data[] = array($request, array(), $this->randomMachineName(), NULL, $empty_active_trail);
 
     // The first (and only) matching link is returned when one link matches the
     // current route.
-    $data[] = array($request, array('baby_llama_link_1' => $link_1), $this->randomMachineName(), $link_1, $link_1_parent_ids, $link_1__active_trail_cache_key);
+    $data[] = array($request, array('baby_llama_link_1' => $link_1), $this->randomMachineName(), $link_1, $link_1_parent_ids);
 
     // The first of multiple matching links is returned when multiple links
     // match the current route, where "first" is determined by sorting by key.
-    $data[] = array($request, array('baby_llama_link_1' => $link_1, 'baby_llama_link_2' => $link_2), $this->randomMachineName(), $link_1, $link_1_parent_ids, $link_1__active_trail_cache_key);
+    $data[] = array($request, array('baby_llama_link_1' => $link_1, 'baby_llama_link_2' => $link_2), $this->randomMachineName(), $link_1, $link_1_parent_ids);
 
     // No active link is returned in case of a 403.
     $request = new Request();
     $request->attributes->set('_exception_statuscode', 403);
-    $data[] = array($request, FALSE, $this->randomMachineName(), NULL, $empty_active_trail, $empty_active_trail_cache_key);
+    $data[] = array($request, FALSE, $this->randomMachineName(), NULL, $empty_active_trail);
 
     // No active link is returned when the route name is missing.
     $request = new Request();
-    $data[] = array($request, FALSE, $this->randomMachineName(), NULL, $empty_active_trail, $empty_active_trail_cache_key);
+    $data[] = array($request, FALSE, $this->randomMachineName(), NULL, $empty_active_trail);
 
     return $data;
   }
@@ -144,20 +141,19 @@ class MenuActiveTrailTest extends UnitTestCase {
    * Tests getActiveTrailIds().
    *
    * @covers ::getActiveTrailIds
-   * @covers ::getActiveTrailCacheKey
    * @dataProvider provider
    */
-  public function testGetActiveTrailIds(Request $request, $links, $menu_name, $expected_link, $expected_trail, $expected_cache_key) {
+  public function testGetActiveTrailIds(Request $request, $links, $menu_name, $expected_link, $expected_trail) {
     $expected_trail_ids = array_combine($expected_trail, $expected_trail);
 
     $this->requestStack->push($request);
     if ($links !== FALSE) {
-      $this->menuLinkManager->expects($this->exactly(2))
+      $this->menuLinkManager->expects($this->once())
         ->method('loadLinksbyRoute')
         ->with('baby_llama')
         ->will($this->returnValue($links));
       if ($expected_link !== NULL) {
-        $this->menuLinkManager->expects($this->exactly(2))
+        $this->menuLinkManager->expects($this->once())
           ->method('getParentIds')
           ->will($this->returnValueMap(array(
             array($expected_link->getPluginId(), $expected_trail_ids),
@@ -166,7 +162,6 @@ class MenuActiveTrailTest extends UnitTestCase {
     }
 
     $this->assertSame($expected_trail_ids, $this->menuActiveTrail->getActiveTrailIds($menu_name));
-    $this->assertSame($expected_cache_key, $this->menuActiveTrail->getActiveTrailCacheKey($menu_name));
   }
 
 }

@@ -9,6 +9,7 @@ namespace Drupal\Core\Block;
 
 use Drupal\block\BlockInterface;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Cache\CacheContexts;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContextAwarePluginBase;
 use Drupal\Component\Utility\Unicode;
@@ -223,8 +224,9 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
       // Remove the required cache contexts from the list of contexts a user can
       // choose to modify by: they must always be applied.
       $context_labels = array();
-      foreach ($this->getRequiredCacheContexts() as $context) {
-        $context_labels[] = $form['cache']['contexts']['#options'][$context];
+      $all_contexts = \Drupal::service("cache_contexts")->getLabels(TRUE);
+      foreach (array_keys(CacheContexts::parseTokens($this->getRequiredCacheContexts())) as $context) {
+        $context_labels[] = $all_contexts[$context];
         unset($form['cache']['contexts']['#options'][$context]);
       }
       $required_context_list = implode(', ', $context_labels);

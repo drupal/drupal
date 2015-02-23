@@ -66,13 +66,6 @@ class MenuActiveTrail implements MenuActiveTrailInterface {
   /**
    * {@inheritdoc}
    */
-  public function getActiveTrailCacheKey($menu_name) {
-    return 'menu_trail.' . implode('|', $this->getActiveTrailIds($menu_name));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getActiveLink($menu_name = NULL) {
     // Note: this is a very simple implementation. If you need more control
     // over the return value, such as matching a prioritized list of menu names,

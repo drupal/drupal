@@ -183,15 +183,6 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
   /**
    * {@inheritdoc}
    */
-  public function getCacheKeys() {
-    // Add a key for the active menu trail.
-    $menu = $this->getDerivativeId();
-    return array_merge(parent::getCacheKeys(), array($this->menuActiveTrail->getActiveTrailCacheKey($menu)));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getCacheTags() {
     // Even when the menu block renders to the empty string for a user, we want
     // the cache tag for this menu to be set: whenever the menu is changed, this
@@ -206,9 +197,12 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
    * {@inheritdoc}
    */
   protected function getRequiredCacheContexts() {
-    // Menu blocks must be cached per role: different roles may have access to
-    // different menu links.
-    return array('user.roles');
+    // Menu blocks must be cached per role and per active trail.
+    $menu_name = $this->getDerivativeId();
+    return [
+      'user.roles',
+      'menu.active_trail:' . $menu_name,
+    ];
   }
 
 }
