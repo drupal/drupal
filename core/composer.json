@@ -37,6 +37,22 @@
     },
     "files": [
       "lib/Drupal.php"
+    ],
+    "classmap": [
+      "lib/Drupal/Component/Utility/Timer.php",
+      "lib/Drupal/Component/Utility/Unicode.php",
+      "lib/Drupal/Core/Database/Database.php",
+      "lib/Drupal/Core/DrupalKernel.php",
+      "lib/Drupal/Core/DrupalKernelInterface.php",
+      "lib/Drupal/Core/Site/Settings.php",
+      "vendor/symfony/http-foundation/Symfony/Component/HttpFoundation/Request.php",
+      "vendor/symfony/http-foundation/Symfony/Component/HttpFoundation/ParameterBag.php",
+      "vendor/symfony/http-foundation/Symfony/Component/HttpFoundation/FileBag.php",
+      "vendor/symfony/http-foundation/Symfony/Component/HttpFoundation/ServerBag.php",
+      "vendor/symfony/http-foundation/Symfony/Component/HttpFoundation/HeaderBag.php",
+      "vendor/symfony/http-kernel/Symfony/Component/HttpKernel/HttpKernel.php",
+      "vendor/symfony/http-kernel/Symfony/Component/HttpKernel/HttpKernelInterface.php",
+      "vendor/symfony/http-kernel/Symfony/Component/HttpKernel/TerminableInterface.php"
     ]
   },
   "config": {

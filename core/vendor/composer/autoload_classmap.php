@@ -6,6 +6,12 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Drupal\\Component\\Utility\\Timer' => $baseDir . '/lib/Drupal/Component/Utility/Timer.php',
+    'Drupal\\Component\\Utility\\Unicode' => $baseDir . '/lib/Drupal/Component/Utility/Unicode.php',
+    'Drupal\\Core\\Database\\Database' => $baseDir . '/lib/Drupal/Core/Database/Database.php',
+    'Drupal\\Core\\DrupalKernel' => $baseDir . '/lib/Drupal/Core/DrupalKernel.php',
+    'Drupal\\Core\\DrupalKernelInterface' => $baseDir . '/lib/Drupal/Core/DrupalKernelInterface.php',
+    'Drupal\\Core\\Site\\Settings' => $baseDir . '/lib/Drupal/Core/Site/Settings.php',
     'File_Iterator' => $vendorDir . '/phpunit/php-file-iterator/File/Iterator.php',
     'File_Iterator_Facade' => $vendorDir . '/phpunit/php-file-iterator/File/Iterator/Facade.php',
     'File_Iterator_Factory' => $vendorDir . '/phpunit/php-file-iterator/File/Iterator/Factory.php',
@@ -410,5 +416,13 @@ return array(
     'SebastianBergmann\\GlobalState\\Snapshot' => $vendorDir . '/sebastian/global-state/src/Snapshot.php',
     'SebastianBergmann\\Version' => $vendorDir . '/sebastian/version/src/Version.php',
     'SessionHandlerInterface' => $vendorDir . '/symfony/http-foundation/Symfony/Component/HttpFoundation/Resources/stubs/SessionHandlerInterface.php',
+    'Symfony\\Component\\HttpFoundation\\FileBag' => $vendorDir . '/symfony/http-foundation/Symfony/Component/HttpFoundation/FileBag.php',
+    'Symfony\\Component\\HttpFoundation\\HeaderBag' => $vendorDir . '/symfony/http-foundation/Symfony/Component/HttpFoundation/HeaderBag.php',
+    'Symfony\\Component\\HttpFoundation\\ParameterBag' => $vendorDir . '/symfony/http-foundation/Symfony/Component/HttpFoundation/ParameterBag.php',
+    'Symfony\\Component\\HttpFoundation\\Request' => $vendorDir . '/symfony/http-foundation/Symfony/Component/HttpFoundation/Request.php',
+    'Symfony\\Component\\HttpFoundation\\ServerBag' => $vendorDir . '/symfony/http-foundation/Symfony/Component/HttpFoundation/ServerBag.php',
+    'Symfony\\Component\\HttpKernel\\HttpKernel' => $vendorDir . '/symfony/http-kernel/Symfony/Component/HttpKernel/HttpKernel.php',
+    'Symfony\\Component\\HttpKernel\\HttpKernelInterface' => $vendorDir . '/symfony/http-kernel/Symfony/Component/HttpKernel/HttpKernelInterface.php',
+    'Symfony\\Component\\HttpKernel\\TerminableInterface' => $vendorDir . '/symfony/http-kernel/Symfony/Component/HttpKernel/TerminableInterface.php',
     'Text_Template' => $vendorDir . '/phpunit/php-text-template/Text/Template.php',
 );
