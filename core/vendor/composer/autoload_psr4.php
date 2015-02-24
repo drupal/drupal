@@ -14,5 +14,4 @@ return array(
     'Drupal\\Driver\\' => array($baseDir . '/../drivers/lib/Drupal/Driver'),
     'Drupal\\Core\\' => array($baseDir . '/lib/Drupal/Core'),
     'Drupal\\Component\\' => array($baseDir . '/lib/Drupal/Component'),
-    'Behat\\Mink\\' => array($vendorDir . '/behat/mink/src'),
 );

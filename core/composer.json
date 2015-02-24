@@ -27,9 +27,7 @@
     "zendframework/zend-feed": "2.3.*",
     "mikey179/vfsStream": "1.*",
     "stack/builder": "1.0.*",
-    "egulias/email-validator": "1.2.*",
-    "behat/mink": "~1.6",
-    "behat/mink-goutte-driver": "~1.1"
+    "egulias/email-validator": "1.2.*"
   },
   "autoload": {
     "psr-4": {
