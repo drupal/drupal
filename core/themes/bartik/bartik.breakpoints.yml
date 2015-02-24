@@ -1,6 +1,6 @@
 bartik.mobile:
   label: mobile
-  mediaQuery: '(min-width: 0px)'
+  mediaQuery: ''
   weight: 2
   multipliers:
     - 1x
