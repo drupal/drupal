@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>CSS Mouse Events Testing</title>
+        <style type="text/css">
+            .squares div {
+                width: 100px;
+                height: 100px;
+                border: 1px solid black;
+                margin-right: 4px;
+                float: left;
+            }
+
+            .squares div:hover {
+                height: 200px;
+                background-color: red;
+            }
+        </style>
+
+        <script language="javascript" type="text/javascript" src="js/jquery-1.6.2-min.js"></script>
+    </head>
+
+    <body>
+        <div class="squares">
+            <div id="reset-square">reset</div>
+            <div id="action-square">mouse action</div>
+        </div>
+        <script>
+            $('#action-square').bind('contextmenu', function (e) {
+                // Prevent opening the context menu on right click as the browser might consider the
+                // mouse is in the context menu rather than hovering the element
+                e.preventDefault();
+            });
+        </script>
+    </body>
+</html>

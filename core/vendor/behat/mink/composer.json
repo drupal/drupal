@@ -1,0 +1,46 @@
+{
+    "name":         "behat/mink",
+    "description":  "Browser controller/emulator abstraction for PHP",
+    "keywords":     ["web", "testing", "browser"],
+    "homepage":     "http://mink.behat.org/",
+    "type":         "library",
+    "license":      "MIT",
+
+    "authors": [
+        {
+            "name":      "Konstantin Kudryashov",
+            "email":     "ever.zet@gmail.com",
+            "homepage":  "http://everzet.com"
+        }
+    ],
+
+    "require": {
+        "php":                   ">=5.3.1",
+        "symfony/css-selector":  "~2.0"
+    },
+
+    "suggest": {
+        "behat/mink-browserkit-driver": "extremely fast headless driver for Symfony\\Kernel-based apps (Sf2, Silex)",
+        "behat/mink-goutte-driver":     "fast headless driver for any app without JS emulation",
+        "behat/mink-selenium2-driver":  "slow, but JS-enabled driver for any app (requires Selenium2)",
+        "behat/mink-zombie-driver":     "fast and JS-enabled headless driver for any app (requires node.js)"
+    },
+
+    "autoload": {
+        "psr-4": {
+            "Behat\\Mink\\": "src/"
+        }
+    },
+
+    "autoload-dev": {
+        "psr-4": {
+            "Behat\\Mink\\Tests\\": "tests"
+        }
+    },
+
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.6.x-dev"
+        }
+    }
+}

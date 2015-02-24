@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>HTML5 form attribute test</title>
+</head>
+<body>
+    <form action="advanced_form_post.php" method="POST" id="test-form">
+        <input name="first_name" type="text" value="not set">
+        <input name="other_field" type="text" value="not submitted" form="another">
+        <input type="submit" value="Submit separate form" form="another">
+        <input type="submit" value="Submit in form">
+    </form>
+    <input name="last_name" type="text" form="test-form" value="not set">
+    <button type="submit" form="test-form" name="submit_button" value="test">Submit outside form</button>
+    <form id="another" method="post" action="advanced_form_post.php"></form>
+</body>
+</html>
