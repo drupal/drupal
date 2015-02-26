@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\language\Tests\LanguageBrowserDetectionUnitTest.
+ * Contains \Drupal\language\Tests\LanguageBrowserDetectionTest.
  */
 
 namespace Drupal\language\Tests;
@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @group language
  */
-class LanguageBrowserDetectionUnitTest extends WebTestBase {
+class LanguageBrowserDetectionTest extends WebTestBase {
 
   public static $modules = array('language');
 

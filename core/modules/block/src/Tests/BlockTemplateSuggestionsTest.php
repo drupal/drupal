@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\block\Tests\BlockTemplateSuggestionsUnitTest.
+ * Contains \Drupal\block\Tests\BlockTemplateSuggestionsTest.
  */
 
 namespace Drupal\block\Tests;
@@ -14,7 +14,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @group block
  */
-class BlockTemplateSuggestionsUnitTest extends WebTestBase {
+class BlockTemplateSuggestionsTest extends WebTestBase {
 
   /**
    * Modules to install.
