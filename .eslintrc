@@ -21,6 +21,7 @@
     "comma-style": [2, "last"],
     "eqeqeq": [2, "smart"],
     "guard-for-in": 2,
+    "indent": [2, 2, {"indentSwitchCase": true}],
     "key-spacing": [2, {"beforeColon": false, "afterColon": true}],
     "no-implied-eval": 2,
     "no-mixed-spaces-and-tabs": 2,
