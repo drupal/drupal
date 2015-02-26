@@ -32,7 +32,7 @@ function bartik_preprocess_html(&$variables) {
   }
 
   if (!empty($variables['page']['featured_top'])) {
-    $variables['attributes']['class'][] = 'featured-top';
+    $variables['attributes']['class'][] = 'has-featured-top';
   }
 
 }

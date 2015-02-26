@@ -10,7 +10,7 @@ body,
   min-height: 100%;
 }
 #header div.section,
-#featured-top aside.section,
+.featured-top__inner,
 #messages div.section,
 #main,
 #featured-bottom,
@@ -144,7 +144,7 @@ body,
 @media all and (min-width: 851px) {
 
   #header div.section,
-  #featured-top aside.section,
+  .featured-top__inner,
   #messages div.section,
   #main,
   #featured-bottom,

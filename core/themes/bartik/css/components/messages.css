@@ -5,7 +5,7 @@
   margin: 0 auto;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
-.featured-top #messages {
+.has-featured-top #messages {
   background: #f0f0f0;
   background: rgba(30, 50, 10, 0.08);
 }
