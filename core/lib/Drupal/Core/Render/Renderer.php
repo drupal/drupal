@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Render;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheContexts;
@@ -343,8 +344,9 @@ class Renderer implements RendererInterface {
     // We've rendered this element (and its subtree!), now update the stack.
     $this->updateStack($elements);
 
-    // Cache the processed element if #cache is set.
-    if (isset($elements['#cache'])) {
+    // Cache the processed element if #cache is set, and the metadata necessary
+    // to generate a cache ID is present.
+    if (isset($elements['#cache']) && (isset($elements['#cache']['keys']) || isset($elements['#cache']['cid']))) {
       $this->cacheSet($elements);
     }
 
@@ -491,7 +493,7 @@ class Renderer implements RendererInterface {
     }
     $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'render';
 
-    if (!empty($cid) && $cache = $this->cacheFactory->get($bin)->get($cid)) {
+    if (!empty($cid) && ($cache_bin = $this->cacheFactory->get($bin)) && $cache = $cache_bin->get($cid)) {
       $cached_element = $cache->data;
       // Return the cached element.
       return $cached_element;
@@ -597,6 +599,29 @@ class Renderer implements RendererInterface {
       unset($b['drupalSettings']);
     }
     return NestedArray::mergeDeep($a, $b);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function generateCachePlaceholder($callback, array &$context) {
+    if (is_string($callback) && strpos($callback, '::') === FALSE) {
+      $callable = $this->controllerResolver->getControllerFromDefinition($callback);
+    }
+    else {
+      $callable = $callback;
+    }
+
+    if (!is_callable($callable)) {
+      throw new \InvalidArgumentException('$callable must be a callable function or of the form service_id:method.');
+    }
+
+    // Generate a unique token if one is not already provided.
+    $context += [
+      'token' => Crypt::randomBytesBase64(55),
+    ];
+
+    return '<drupal-render-cache-placeholder callback="' . $callback . '" token="' . $context['token'] . '"></drupal-render-cache-placeholder>';
   }
 
 }

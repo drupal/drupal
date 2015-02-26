@@ -70,7 +70,7 @@ class BubbleableMetadata {
   public function merge(BubbleableMetadata $other) {
     $result = new BubbleableMetadata();
     $result->tags = Cache::mergeTags($this->tags, $other->tags);
-    $result->attached = drupal_merge_attached($this->attached, $other->attached);
+    $result->attached = Renderer::mergeAttachments($this->attached, $other->attached);
     $result->postRenderCache = NestedArray::mergeDeep($this->postRenderCache, $other->postRenderCache);
     return $result;
   }

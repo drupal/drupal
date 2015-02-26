@@ -348,4 +348,27 @@ interface RendererInterface {
    */
   public static function mergeAttachments(array $a, array $b);
 
+  /**
+   * Generates a render cache placeholder.
+   *
+   * This can be used to generate placeholders, and hence should also be used by
+   * #post_render_cache callbacks that want to replace the placeholder with the
+   * final markup.
+   *
+   * @param string $callback
+   *   The #post_render_cache callback that will replace the placeholder with its
+   *   eventual markup.
+   * @param array $context
+   *   An array providing context for the #post_render_cache callback. This array
+   *   will be altered to provide a 'token' key/value pair, if not already
+   *   provided, to uniquely identify the generated placeholder.
+   *
+   * @return string
+   *   The generated placeholder HTML.
+   *
+   * @throws \InvalidArgumentException
+   *   Thrown when no valid callable got passed in.
+   */
+  public function generateCachePlaceholder($callback, array &$context);
+
 }
