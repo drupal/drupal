@@ -134,14 +134,14 @@ a.tabledrag-handle:focus .handle {
 .touch .draggable.drag a.tabledrag-handle .handle {
   background-position: 50% -32px;
 }
-div.indentation {
+div.js-indentation {
   float: left; /* LTR */
   height: 1.7em;
   margin: -0.4em 0.2em -0.4em -0.4em; /* LTR */
   padding: 0.42em 0 0.42em 0.6em; /* LTR */
   width: 20px;
 }
-[dir="rtl"] div.indentation {
+[dir="rtl"] div.js-indentation {
   float: right;
   margin: -0.4em -0.4em -0.4em 0.2em;
   padding: 0.42em 0.6em 0.42em 0;

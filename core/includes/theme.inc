@@ -1137,7 +1137,7 @@ function template_preprocess_feed_icon(&$variables) {
 function theme_indentation($variables) {
   $output = '';
   for ($n = 0; $n < $variables['size']; $n++) {
-    $output .= '<div class="indentation">&nbsp;</div>';
+    $output .= '<div class="js-indentation">&nbsp;</div>';
   }
   return $output;
 }
