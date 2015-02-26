@@ -65,6 +65,9 @@
     margin-left: 1em;
     margin-top: 0;
   }
+  .js .dropbutton li + li {
+    margin-left: 0;
+  }
 }
 
 /**
