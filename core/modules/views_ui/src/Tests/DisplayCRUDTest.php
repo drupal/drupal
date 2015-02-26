@@ -47,7 +47,7 @@ class DisplayCRUDTest extends UITestBase {
     $this->drupalPostForm(NULL, array(), 'Add Page');
     $this->assertLinkByHref($path_prefix . '/page_1', 0, 'Make sure after adding a display the new display appears in the UI');
 
-    $this->assertNoLink('Master*', 0, 'Make sure the master display is not marked as changed.');
+    $this->assertNoLink('Master*', 'Make sure the master display is not marked as changed.');
     $this->assertLink('Page*', 0, 'Make sure the added display is marked as changed.');
 
     $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_1/path", array('path' => 'test/path'), t('Apply'));

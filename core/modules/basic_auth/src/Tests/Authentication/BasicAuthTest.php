@@ -53,7 +53,7 @@ class BasicAuthTest extends WebTestBase {
     $account = $this->drupalCreateUser(array('access administration pages'));
 
     $this->basicAuthGet(Url::fromRoute('system.admin'), $account->getUsername(), $account->pass_raw);
-    $this->assertNoLink('Log out', 0, 'User is not logged in');
+    $this->assertNoLink('Log out', 'User is not logged in');
     $this->assertResponse('403', 'No basic authentication for routes not explicitly defining authentication providers.');
     $this->curlClose();
   }
