@@ -75,6 +75,7 @@ div.tabs {
   border-bottom: none;
   margin: 5px;
   padding: 0.5em 0;
+  overflow: hidden;
 }
 .tabs ul.secondary li {
   border-right: 1px solid #ccc; /* LTR */
