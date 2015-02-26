@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "71958cc676a2780e738e9a7d95a3b78b",
+    "hash": "5aa283d1515900a1d9245a4ea615e3f8",
     "packages": [
         {
             "name": "behat/mink",
@@ -734,7 +734,7 @@
         },
         {
             "name": "fabpot/goutte",
-            "version": "dev-master",
+            "version": "v2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/Goutte.git",
@@ -2970,9 +2970,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "fabpot/goutte": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

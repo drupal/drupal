@@ -30,7 +30,7 @@
     "egulias/email-validator": "1.2.*",
     "behat/mink": "~1.6",
     "behat/mink-goutte-driver": "~1.1",
-    "fabpot/goutte": "dev-master"
+    "fabpot/goutte": "^2.0.3"
   },
   "autoload": {
     "psr-4": {

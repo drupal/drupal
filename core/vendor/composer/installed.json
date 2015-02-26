@@ -2849,57 +2849,6 @@
         "homepage": "http://symfony.com"
     },
     {
-        "name": "fabpot/goutte",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/FriendsOfPHP/Goutte.git",
-            "reference": "65ab61eae03d670b93a9044ad2328eb81aa1bde5"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/FriendsOfPHP/Goutte/zipball/65ab61eae03d670b93a9044ad2328eb81aa1bde5",
-            "reference": "65ab61eae03d670b93a9044ad2328eb81aa1bde5",
-            "shasum": ""
-        },
-        "require": {
-            "guzzlehttp/guzzle": ">=4,<6",
-            "php": ">=5.4.0",
-            "symfony/browser-kit": "~2.1",
-            "symfony/css-selector": "~2.1",
-            "symfony/dom-crawler": "~2.1"
-        },
-        "time": "2014-11-28 09:48:17",
-        "type": "application",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.0-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Goutte\\": "Goutte"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com"
-            }
-        ],
-        "description": "A simple PHP Web Scraper",
-        "homepage": "https://github.com/FriendsOfPHP/Goutte",
-        "keywords": [
-            "scraper"
-        ]
-    },
-    {
         "name": "behat/mink",
         "version": "v1.6.1",
         "version_normalized": "1.6.1.0",
@@ -3065,6 +3014,57 @@
             "goutte",
             "headless",
             "testing"
+        ]
+    },
+    {
+        "name": "fabpot/goutte",
+        "version": "v2.0.3",
+        "version_normalized": "2.0.3.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/FriendsOfPHP/Goutte.git",
+            "reference": "65ab61eae03d670b93a9044ad2328eb81aa1bde5"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/FriendsOfPHP/Goutte/zipball/65ab61eae03d670b93a9044ad2328eb81aa1bde5",
+            "reference": "65ab61eae03d670b93a9044ad2328eb81aa1bde5",
+            "shasum": ""
+        },
+        "require": {
+            "guzzlehttp/guzzle": ">=4,<6",
+            "php": ">=5.4.0",
+            "symfony/browser-kit": "~2.1",
+            "symfony/css-selector": "~2.1",
+            "symfony/dom-crawler": "~2.1"
+        },
+        "time": "2014-11-28 09:48:17",
+        "type": "application",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.0-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Goutte\\": "Goutte"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            }
+        ],
+        "description": "A simple PHP Web Scraper",
+        "homepage": "https://github.com/FriendsOfPHP/Goutte",
+        "keywords": [
+            "scraper"
         ]
     }
 ]
