@@ -18,18 +18,6 @@ function _update_fetch_data() {
 }
 
 /**
- * Clears out all the available update data and initiates re-fetching.
- *
- * @see \Drupal\update\UpdateManager::refreshUpdateData()
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::service('update.manager')->refreshUpdateData().
- */
-function _update_refresh() {
-  \Drupal::service('update.manager')->refreshUpdateData();
-}
-
-/**
  * Performs any notifications that should be done once cron fetches new data.
  *
  * This method checks the status of the site using the new data and, depending
