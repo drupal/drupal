@@ -38,7 +38,7 @@ class Unicode {
    *
    * @see http://unicode.org/glossary
    */
-  const PREG_CLASS_WORD_BOUNDARY = <<< 'EOD'
+  const PREG_CLASS_WORD_BOUNDARY = <<<'EOD'
 \x{0}-\x{2F}\x{3A}-\x{40}\x{5B}-\x{60}\x{7B}-\x{A9}\x{AB}-\x{B1}\x{B4}
 \x{B6}-\x{B8}\x{BB}\x{BF}\x{D7}\x{F7}\x{2C2}-\x{2C5}\x{2D2}-\x{2DF}
 \x{2E5}-\x{2EB}\x{2ED}\x{2EF}-\x{2FF}\x{375}\x{37E}-\x{385}\x{387}\x{3F6}
