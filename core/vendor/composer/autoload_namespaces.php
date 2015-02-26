@@ -20,10 +20,12 @@ return array(
     'Symfony\\Component\\HttpKernel\\' => array($vendorDir . '/symfony/http-kernel'),
     'Symfony\\Component\\HttpFoundation\\' => array($vendorDir . '/symfony/http-foundation'),
     'Symfony\\Component\\EventDispatcher\\' => array($vendorDir . '/symfony/event-dispatcher'),
+    'Symfony\\Component\\DomCrawler\\' => array($vendorDir . '/symfony/dom-crawler'),
     'Symfony\\Component\\DependencyInjection\\' => array($vendorDir . '/symfony/dependency-injection'),
     'Symfony\\Component\\Debug\\' => array($vendorDir . '/symfony/debug'),
     'Symfony\\Component\\CssSelector\\' => array($vendorDir . '/symfony/css-selector'),
     'Symfony\\Component\\ClassLoader\\' => array($vendorDir . '/symfony/class-loader'),
+    'Symfony\\Component\\BrowserKit\\' => array($vendorDir . '/symfony/browser-kit'),
     'Stack' => array($vendorDir . '/stack/builder/src'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log'),
     'Gliph' => array($vendorDir . '/sdboyer/gliph/src'),
@@ -36,4 +38,5 @@ return array(
     'Doctrine\\Common\\Cache\\' => array($vendorDir . '/doctrine/cache/lib'),
     'Doctrine\\Common\\Annotations\\' => array($vendorDir . '/doctrine/annotations/lib'),
     'Doctrine\\Common\\' => array($vendorDir . '/doctrine/common/lib'),
+    'Behat\\Mink\\Driver' => array($vendorDir . '/behat/mink-browserkit-driver/src', $vendorDir . '/behat/mink-goutte-driver/src'),
 );

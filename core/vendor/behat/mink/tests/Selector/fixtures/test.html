@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <div id="test-for-link-selector">
+        <!-- match links with `href` attribute -->
+        <a href="#" id="link-text"></a>
+        <a href="#">link-text</a>
+        <a href="#" title="link-text"></a>
+        <a href="#" rel="link-text"></a>
+        <a href="#">
+            <img src="#" alt="link-text"/>
+        </a>
+        <!-- partial match -->
+        <a href="#">some link-text</a>
+        <a href="#" title="some link-text"></a>
+        <a href="#" rel="some link-text"></a>
+        <a href="#">
+            <img src="#" alt="some link-text"/>
+        </a>
+
+        <!-- don't match links without `href` attribute -->
+        <a id="bad-link-text"></a>
+        <a>bad-link-text</a>
+        <a title="bad-link-text"></a>
+        <a rel="bad-link-text"></a>
+        <a>
+            <img src="#" alt="bad-link-text"/>
+        </a>
+
+        <!-- match links with `role=link` attribute -->
+        <span role="Link" id="link-role-text"></span>
+        <span role="lInk" value="link-role-text"></span>
+        <span role="liNk" title="link-role-text"></span>
+        <span role="linK">link-role-text</span>
+        <!-- partial match -->
+        <span role="link" value="some link-role-text"></span>
+        <span role="link" title="some link-role-text"></span>
+        <span role="link">some link-role-text</span>
+    </div>
+
+    <div id="test-for-fieldset-selector">
+        <!-- match fieldsets -->
+        <fieldset id="fieldset-text"></fieldset>
+
+        <fieldset>
+            <legend>fieldset-text</legend>
+        </fieldset>
+        <!-- partial match -->
+        <fieldset>
+            <legend>fieldset-text sample</legend>
+        </fieldset>
+
+        <!-- don't match fieldsets -->
+        <fieldset>fieldset-text</fieldset>
+        <fieldset></fieldset>
+    </div>
+
+    <div id="test-for-content-selector">
+        content-text
+    </div>
+    <!-- partial match -->
+    <div id="test-for-partial-content-selector">
+        some content-text
+    </div>
+
+    <form>
+        <div id="test-for-field-selector">
+            <!-- match fields by `id` attribute -->
+            <input id="the-field-input"/>
+            <textarea id="the-field-textarea"></textarea>
+            <select id="the-field-select"></select>
+
+            <!-- match fields by `name` attribute -->
+            <input name="the-field"/>
+            <textarea name="the-field"></textarea>
+            <select name="the-field"></select>
+
+            <!-- match fields by `placeholder` attribute -->
+            <input placeholder="the-field"/>
+            <textarea placeholder="the-field"></textarea>
+            <select placeholder="the-field"></select>
+
+            <!-- match fields by associated label -->
+            <label for="label-for-input">the-field</label><input id="label-for-input"/>
+            <label for="label-for-textarea">the-field</label><textarea id="label-for-textarea"></textarea>
+            <label for="label-for-select">the-field</label><select id="label-for-select"></select>
+
+            <!-- match fields, surrounded by matching label -->
+            <label>the-field<input/></label>
+            <label>the-field<textarea></textarea></label>
+            <label>the-field<select></select></label>
+
+            <!-- don't match fields by `id` attribute -->
+            <input type="Submit" id="the-field-submit-button"/>
+            <input type="iMage" id="the-field-image-button"/>
+            <input type="butTon" id="the-field-button-button"/>
+            <input type="resEt" id="the-field-reset-button"/>
+            <input type="hidDen" id="the-field-hidden"/>
+
+            <!-- don't match fields by `name` attribute -->
+            <input type="submit" name="the-field"/>
+            <input type="image" name="the-field"/>
+            <input type="button" name="the-field"/>
+            <input type="reset" name="the-field"/>
+            <input type="hidden" name="the-field"/>
+
+            <!-- don't match fields by `placeholder` attribute -->
+            <input type="submit" placeholder="the-field"/>
+            <input type="image" placeholder="the-field"/>
+            <input type="button" placeholder="the-field"/>
+            <input type="reset" placeholder="the-field"/>
+            <input type="hidden" placeholder="the-field"/>
+
+            <!-- don't match fields by associated label -->
+            <label for="label-for-the-field-submit-button">the-field</label><input type="submit" id="label-for-the-field-submit-button"/>
+            <label for="label-for-the-field-image-button">the-field</label><input type="image" id="label-for-the-field-image-button"/>
+            <label for="label-for-the-field-button-button">the-field</label><input type="button" id="label-for-the-field-button-button"/>
+            <label for="label-for-the-field-reset-button">the-field</label><input type="reset" id="label-for-the-field-reset-button"/>
+            <label for="label-for-the-field-hidden">the-field</label><input type="hidden" id="label-for-the-field-hidden"/>
+
+            <!-- don't match fields, surrounded by matching label -->
+            <label>the-field<input type="submit"/></label>
+            <label>the-field<input type="image"/></label>
+            <label>the-field<input type="button"/></label>
+            <label>the-field<input type="reset"/></label>
+            <label>the-field<input type="hidden"/></label>
+        </div>
+
+        <div id="test-for-button-selector">
+            <!-- match buttons by `id` attribute -->
+            <input type="Submit" id="input-submit-button"/>
+            <input type="iMage" id="input-image-button"/>
+            <input type="butTon" id="input-button-button"/>
+            <input type="resEt" id="input-reset-button"/>
+
+            <button type="submit" id="button-submit-button"></button>
+            <button type="image" id="button-image-button"></button>
+            <button type="button" id="button-button-button"></button>
+            <button type="reset" id="button-reset-button"></button>
+
+            <!-- match buttons by `name` attribute -->
+            <input type="submit" name="button-text"/>
+            <input type="image" name="button-text"/>
+            <input type="button" name="button-text"/>
+            <input type="reset" name="button-text"/>
+            <button type="submit" name="button-text"></button>
+            <button type="image" name="button-text"></button>
+            <button type="button" name="button-text"></button>
+            <button type="reset" name="button-text"></button>
+
+            <!-- match buttons by `value` attribute -->
+            <input type="submit" value="button-text"/>
+            <input type="image" value="button-text"/>
+            <input type="button" value="button-text"/>
+            <input type="reset" value="button-text"/>
+            <button type="submit" value="button-text"></button>
+            <button type="image" value="button-text"></button>
+            <button type="button" value="button-text"></button>
+            <button type="reset" value="button-text"></button>
+            <!-- Partial match -->
+            <input type="submit" value="some button-text"/>
+            <input type="image" value="some button-text"/>
+            <input type="button" value="some button-text"/>
+            <input type="reset" value="some button-text"/>
+            <button type="submit" value="some button-text"></button>
+            <button type="image" value="some button-text"></button>
+            <button type="button" value="some button-text"></button>
+            <button type="reset" value="some button-text"></button>
+
+            <!-- match buttons by `title` attribute -->
+            <input type="submit" title="button-text"/>
+            <input type="image" title="button-text"/>
+            <input type="button" title="button-text"/>
+            <input type="reset" title="button-text"/>
+            <button type="submit" title="button-text"></button>
+            <button type="image" title="button-text"></button>
+            <button type="button" title="button-text"></button>
+            <button type="reset" title="button-text"></button>
+            <!-- partial match -->
+            <input type="submit" title="some button-text"/>
+            <input type="image" title="some button-text"/>
+            <input type="button" title="some button-text"/>
+            <input type="reset" title="some button-text"/>
+            <button type="submit" title="some button-text"></button>
+            <button type="image" title="some button-text"></button>
+            <button type="button" title="some button-text"></button>
+            <button type="reset" title="some button-text"></button>
+
+            <!-- match some buttons by `alt` attribute -->
+            <input type="submit" alt="button-alt-text"/>
+            <input type="imaGe" alt="button-alt-text"/>
+            <input type="button" alt="button-alt-text"/>
+            <input type="reset" alt="button-alt-text"/>
+            <!-- partial match -->
+            <input type="submit" alt="some button-alt-text"/>
+            <input type="image" alt="some button-alt-text"/>
+            <input type="button" alt="some button-alt-text"/>
+            <input type="reset" alt="some button-alt-text"/>
+
+            <!-- match by `button` text -->
+            <button>button-text</button>
+            <!-- partial match -->
+            <button>some button-text</button>
+
+            <!-- match buttons with `role=button` & `id` attribute -->
+            <span role="Button" type="submit" id="role-button-submit-button"></span>
+            <span role="bUtton" type="image" id="role-button-image-button"></span>
+            <span role="buTton" type="button" id="role-button-button-button"></span>
+            <span role="butTon" type="reset" id="role-button-reset-button"></span>
+
+            <!-- match buttons with `role=button` & `name` attribute -->
+            <span role="buttOn" type="submit" name="button-role-text"></span>
+            <span role="buttoN" type="image" name="button-role-text"></span>
+            <span role="button" type="button" name="button-role-text"></span>
+            <span role="button" type="reset" name="button-role-text"></span>
+
+            <!-- match buttons with `role=button` & `value` attribute -->
+            <span role="button" type="submit" value="button-role-text"></span>
+            <span role="button" type="image" value="button-role-text"></span>
+            <span role="button" type="button" value="button-role-text"></span>
+            <span role="button" type="reset" value="button-role-text"></span>
+            <!-- partial match -->
+            <span role="button" type="submit" value="some button-role-text"></span>
+            <span role="button" type="image" value="some button-role-text"></span>
+            <span role="button" type="button" value="some button-role-text"></span>
+            <span role="button" type="reset" value="some button-role-text"></span>
+
+            <!-- match buttons with `role=button` & `title` attribute -->
+            <span role="button" type="submit" title="button-role-text"></span>
+            <span role="button" type="image" title="button-role-text"></span>
+            <span role="button" type="button" title="button-role-text"></span>
+            <span role="button" type="reset" title="button-role-text"></span>
+            <!-- partial match -->
+            <span role="button" type="submit" title="some button-role-text"></span>
+            <span role="button" type="image" title="some button-role-text"></span>
+            <span role="button" type="button" title="some button-role-text"></span>
+            <span role="button" type="reset" title="some button-role-text"></span>
+        </div>
+
+        <div id="test-for-checkbox-selector">
+            <input type="Checkbox" id="the-field-checkbox"/>
+            <input type="checkBox" name="the-field"/>
+            <input type="cheCkbox" placeholder="the-field"/>
+            <label for="label-for-checkbox">the-field</label><input type="checkboX" id="label-for-checkbox"/>
+            <label>the-field<input type="chEckbox"/></label>
+        </div>
+
+        <div id="test-for-radio-selector">
+            <input type="Radio" id="the-field-radio"/>
+            <input type="raDio" name="the-field"/>
+            <input type="radIo" placeholder="the-field"/>
+            <label for="label-for-radio">the-field</label><input type="radiO" id="label-for-radio"/>
+            <label>the-field<input type="radIo"/></label>
+        </div>
+
+        <div id="test-for-file-selector">
+            <input type="File" id="the-field-file"/>
+            <input type="fIle" name="the-field"/>
+            <input type="fiLe" placeholder="the-field"/>
+            <label for="label-for-file">the-field</label><input type="filE" id="label-for-file"/>
+            <label>the-field<input type="fiLe"/></label>
+        </div>
+
+        <div id="test-for-select-related-stuff">
+            <!-- match select stuff -->
+            <select name="the-select-stuff-test">
+                <optgroup label="group-label">
+                    <option value="option-value"></option>
+                </optgroup>
+                <option value="">option-value</option>
+                <!-- partial match -->
+                <optgroup label="some group-label">
+                    <option value="">some option-value</option>
+                </optgroup>
+            </select>
+
+            <!-- don't match select stuff -->
+            <select name="the-select-stuff-test">
+                <optgroup label="">some group-label</optgroup>
+                <option value="some option-value"></option>
+            </select>
+        </div>
+    </form>
+
+    <div id="test-for-table-selector">
+        <!-- match tables -->
+        <table id="the-table"></table>
+        <table>
+            <caption>the-table</caption>
+        </table>
+        <!-- partial match -->
+        <table>
+            <caption>some the-table</caption>
+        </table>
+
+        <!-- don't match tables -->
+        <table>
+            <tr>
+                <th>the-table</th>
+                <td>the-table</td>
+            </tr>
+        </table>
+    </div>
+
+    <input name="the-table"/>
+</body>
+</html>

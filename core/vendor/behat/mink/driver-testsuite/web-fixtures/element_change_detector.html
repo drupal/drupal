@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ADvanced Form</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+    <script src="js/jquery-1.6.2-min.js"></script>
+</head>
+<body>
+    <h1>ADvanced Form Page</h1>
+
+    <form method="POST" enctype="multipart/form-data" action="advanced_form_post.php">
+        <input id="the-input-default" value="" />
+        <input type="text" id="the-input-text" value="" />
+        <input type="email" id="the-email" value="" />
+
+        <select id="the-select">
+            <option value="10">ten</option>
+            <option value="20" selected="selected">twenty</option>
+            <option value="30">thirty</option>
+        </select>
+
+        <label>
+            <span><input type="radio" name="sex" id="the-radio-m" value="m" /> m</span>
+            <span><input type="radio" name="sex" id="the-radio-w" value="w" checked="checked" /> w</span>
+        </label>
+
+        <input type="checkbox" id="the-checked-checkbox" value="cb-val" checked/>
+        <input type="checkbox" id="the-unchecked-checkbox" value="cb-val"/>
+
+        <textarea id="the-textarea"></textarea>
+
+        <input type="file" id="the-file" />
+    </form>
+
+    <ul id="results" style="border: 1px solid red;">
+        <li>for easy element location</li>
+    </ul>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var $change_registry = {},
+                $results = $('#results');
+
+            $(':input').change(function ($e) {
+                var $result_id = this.id + '-result';
+
+                if (!$change_registry[this.id]) {
+                    $change_registry[this.id] = 1;
+                    $results.append('<li id="' + $result_id + '"></li>');
+                }
+                else {
+                    $change_registry[this.id]++;
+                }
+
+                $('#' + $result_id).text($change_registry[this.id]);
+            });
+
+            $results.click(function () {
+                $results.empty();
+                $change_registry = {};
+            });
+        });
+    </script>
+</body>
+</html>
