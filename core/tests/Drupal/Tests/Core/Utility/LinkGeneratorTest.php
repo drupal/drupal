@@ -346,9 +346,6 @@ class LinkGeneratorTest extends UnitTestCase {
    * Tests the active class on the link method.
    *
    * @see \Drupal\Core\Utility\LinkGenerator::generate()
-   *
-   * @todo Test that the active class is added on the front page when generating
-   *   links to the front page in https://www.drupal.org/node/2420967.
    */
   public function testGenerateActive() {
     $this->urlGenerator->expects($this->exactly(5))
