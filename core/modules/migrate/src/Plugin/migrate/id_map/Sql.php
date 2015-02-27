@@ -207,10 +207,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface {
    *   The fully qualified map table name.
    */
   public function getQualifiedMapTableName() {
-    $database = $this->getDatabase();
-    $options = $database->getConnectionOptions();
-    $prefix = $database->tablePrefix($this->mapTableName);
-    return $options['database'] . '.' . $prefix . $this->mapTableName;
+    return $this->getDatabase()->getFullQualifiedTableName($this->mapTableName);
   }
 
   /**

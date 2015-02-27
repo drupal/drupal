@@ -318,6 +318,20 @@ abstract class Connection implements \Serializable {
   }
 
   /**
+   * Get a fully qualified table name.
+   *
+   * @param string $table
+   *   The name of the table in question.
+   *
+   * @return string
+   */
+  public function getFullQualifiedTableName($table) {
+    $options = $this->getConnectionOptions();
+    $prefix = $this->tablePrefix($table);
+    return $options['database'] . '.' . $prefix . $table;
+  }
+
+  /**
    * Prepares a query string and returns the prepared statement.
    *
    * This method caches prepared statements, reusing them when
@@ -922,7 +936,7 @@ abstract class Connection implements \Serializable {
     // in question has already been accidentally committed.
     if (!isset($this->transactionLayers[$savepoint_name])) {
       throw new TransactionNoActiveException();
-     }
+    }
 
     // We need to find the point we're rolling back to, all other savepoints
     // before are no longer needed. If we rolled back other active savepoints,
