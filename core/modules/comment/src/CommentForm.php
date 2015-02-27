@@ -169,7 +169,7 @@ class CommentForm extends ContentEntityForm {
       '#maxlength' => 64,
       '#size' => 30,
       '#description' => $this->t('The content of this field is kept private and will not be shown publicly.'),
-      '#access' => $is_admin || ($this->currentUser->isAnonymous() && $anonymous_contact != COMMENT_ANONYMOUS_MAYNOT_CONTACT),
+      '#access' => ($comment->getOwner()->isAnonymous() && $is_admin) || ($this->currentUser->isAnonymous() && $anonymous_contact != COMMENT_ANONYMOUS_MAYNOT_CONTACT),
     );
 
     $form['author']['homepage'] = array(

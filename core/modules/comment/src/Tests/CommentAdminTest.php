@@ -168,4 +168,45 @@ class CommentAdminTest extends CommentTestBase {
     // Rest from here on in is field_ui.
   }
 
+  /**
+   * Tests editing a comment as an admin.
+   */
+  public function testEditComment() {
+    // Enable anonymous user comments.
+    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array(
+      'access comments',
+      'post comments',
+      'skip comment approval',
+    ));
+
+    // Login as a web user.
+    $this->drupalLogin($this->webUser);
+    // Post a comment.
+    $comment = $this->postComment($this->node, $this->randomMachineName());
+
+    $this->drupalLogout();
+
+    // Post anonymous comment.
+    $this->drupalLogin($this->adminUser);
+    $this->setCommentAnonymous('2'); // Ensure that we need email id before posting comment.
+    $this->drupalLogout();
+
+    // Post comment with contact info (required).
+    $author_name = $this->randomMachineName();
+    $author_mail = $this->randomMachineName() . '@example.com';
+    $anonymous_comment = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName(), array('name' => $author_name, 'mail' => $author_mail));
+
+    // Login as an admin user.
+    $this->drupalLogin($this->adminUser);
+
+    // Make sure the comment field is not visible when
+    // the comment was posted by an authenticated user.
+    $this->drupalGet('comment/' . $comment->id() . '/edit');
+    $this->assertNoFieldById('edit-mail', $comment->getAuthorEmail());
+
+    // Make sure the comment field is visible when
+    // the comment was posted by an anonymous user.
+    $this->drupalGet('comment/' . $anonymous_comment->id() . '/edit');
+    $this->assertFieldById('edit-mail', $anonymous_comment->getAuthorEmail());
+  }
 }
