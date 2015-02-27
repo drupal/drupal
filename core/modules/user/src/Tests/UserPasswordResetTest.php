@@ -95,6 +95,7 @@ class UserPasswordResetTest extends WebTestBase {
     // Check the one-time login page.
     $this->assertText($this->account->getUsername(), 'One-time login page contains the correct username.');
     $this->assertText(t('This login can be used only once.'), 'Found warning about one-time login.');
+    $this->assertTitle(t('Reset password | Drupal'), 'Page title is "Reset password".');
 
     // Check successful login.
     $this->drupalPostForm(NULL, NULL, t('Log in'));
