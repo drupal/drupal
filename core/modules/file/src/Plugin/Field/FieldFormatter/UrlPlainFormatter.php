@@ -28,10 +28,8 @@ class UrlPlainFormatter extends FileFormatterBase {
   public function viewElements(FieldItemListInterface $items) {
     $elements = array();
 
-    foreach ($items as $delta => $item) {
-      if ($item->isDisplayed() && $item->entity) {
-        $elements[$delta] = array('#markup' => empty($item->entity) ? '' : file_create_url($item->entity->getFileUri()));
-      }
+    foreach ($this->getEntitiesToView($items) as $delta => $file) {
+      $elements[$delta] = array('#markup' => file_create_url($file->getFileUri()));
     }
 
     return $elements;

@@ -333,3 +333,14 @@ function file_test_file_scan_callback($filepath = NULL) {
 function file_test_file_scan_callback_reset() {
   drupal_static_reset('file_test_file_scan_callback');
 }
+
+/**
+ * Implements hook_entity_info_alter().
+ */
+function file_test_entity_type_alter(&$entity_types) {
+  if (\Drupal::state()->get('file_test_alternate_access_handler', FALSE)) {
+    /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+    $entity_types['file']
+      ->setAccessClass('Drupal\file_test\FileTestAccessControlHandler');
+  }
+}

@@ -175,6 +175,13 @@ class ResponsiveImageFormatter extends ImageFormatterBase implements ContainerFa
    */
   public function viewElements(FieldItemListInterface $items) {
     $elements = array();
+    $files = $this->getEntitiesToView($items);
+
+    // Early opt-out if the field is empty.
+    if (empty($files)) {
+      return $elements;
+    }
+
     $url = NULL;
     // Check if the formatter involves a link.
     if ($this->getSetting('image_link') == 'content') {
@@ -220,10 +227,10 @@ class ResponsiveImageFormatter extends ImageFormatterBase implements ContainerFa
       $cache_tags = Cache::mergeTags($cache_tags, $image_style->getCacheTags());
     }
 
-    foreach ($items as $delta => $item) {
+    foreach ($files as $delta => $file) {
       // Link the <picture> element to the original file.
       if (isset($link_file)) {
-        $url = Url::fromUri(file_create_url($item->entity->getFileUri()));
+        $url = Url::fromUri(file_create_url($file->getFileUri()));
       }
       $elements[$delta] = array(
         '#theme' => 'responsive_image_formatter',
@@ -232,7 +239,7 @@ class ResponsiveImageFormatter extends ImageFormatterBase implements ContainerFa
             'core/picturefill',
           ),
         ),
-        '#item' => $item,
+        '#item' => $file->_referringItem,
         '#image_style' => $fallback_image_style,
         '#responsive_image_style_id' => $responsive_image_style ? $responsive_image_style->id() : '',
         '#url' => $url,

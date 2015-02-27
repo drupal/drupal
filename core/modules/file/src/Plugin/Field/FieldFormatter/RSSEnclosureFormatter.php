@@ -29,21 +29,16 @@ class RSSEnclosureFormatter extends FileFormatterBase {
     $entity = $items->getEntity();
     // Add the first file as an enclosure to the RSS item. RSS allows only one
     // enclosure per item. See: http://en.wikipedia.org/wiki/RSS_enclosure
-    foreach ($items as $item) {
-      if ($item->isDisplayed() && $item->entity) {
-        $file = $item->entity;
-        $entity->rss_elements[] = array(
-          'key' => 'enclosure',
-          'attributes' => array(
-            'url' => file_create_url($file->getFileUri()),
-            'length' => $file->getSize(),
-            'type' => $file->getMimeType(),
-          ),
-        );
-        break;
-      }
+    foreach ($this->getEntitiesToView($items) as $delta => $file) {
+      $entity->rss_elements[] = array(
+        'key' => 'enclosure',
+        'attributes' => array(
+          'url' => file_create_url($file->getFileUri()),
+          'length' => $file->getSize(),
+          'type' => $file->getMimeType(),
+        ),
+      );
     }
-
   }
 
 }

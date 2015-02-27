@@ -154,7 +154,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     $article = $this->drupalCreateNode(array('type' => 'article'));
     $article_built = $this->drupalBuildEntityView($article);
     $this->assertEqual(
-      $article_built[$field_name]['#items'][0]->target_id,
+      $article_built[$field_name][0]['#item']->target_id,
       $default_images['field']->id(),
       format_string(
         'A new article node without an image has the expected default image file ID of @fid.',
@@ -166,7 +166,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     $page = $this->drupalCreateNode(array('type' => 'page'));
     $page_built = $this->drupalBuildEntityView($page);
     $this->assertEqual(
-      $page_built[$field_name]['#items'][0]->target_id,
+      $page_built[$field_name][0]['#item']->target_id,
       $default_images['field2']->id(),
       format_string(
         'A new page node without an image has the expected default image file ID of @fid.',
@@ -196,7 +196,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     $article_built = $this->drupalBuildEntityView($article = $node_storage->load($article->id()));
     $page_built = $this->drupalBuildEntityView($page = $node_storage->load($page->id()));
     $this->assertEqual(
-      $article_built[$field_name]['#items'][0]->target_id,
+      $article_built[$field_name][0]['#item']->target_id,
       $default_images['field']->id(),
       format_string(
         'An existing article node without an image has the expected default image file ID of @fid.',
@@ -204,7 +204,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
       )
     );
     $this->assertEqual(
-      $page_built[$field_name]['#items'][0]->target_id,
+      $page_built[$field_name][0]['#item']->target_id,
       $default_images['field2']->id(),
       format_string(
         'An existing page node without an image has the expected default image file ID of @fid.',
@@ -235,7 +235,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
 
     // Confirm the article uses the new default.
     $this->assertEqual(
-      $article_built[$field_name]['#items'][0]->target_id,
+      $article_built[$field_name][0]['#item']->target_id,
       $default_images['field_new']->id(),
       format_string(
         'An existing article node without an image has the expected default image file ID of @fid.',
@@ -244,7 +244,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     );
     // Confirm the page remains unchanged.
     $this->assertEqual(
-      $page_built[$field_name]['#items'][0]->target_id,
+      $page_built[$field_name][0]['#item']->target_id,
       $default_images['field2']->id(),
       format_string(
         'An existing page node without an image has the expected default image file ID of @fid.',
@@ -275,7 +275,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     $page_built = $this->drupalBuildEntityView($page = $node_storage->load($page->id()));
     // Confirm the article uses the new field (not field) default.
     $this->assertEqual(
-      $article_built[$field_name]['#items'][0]->target_id,
+      $article_built[$field_name][0]['#item']->target_id,
       $default_images['field_new']->id(),
       format_string(
         'An existing article node without an image has the expected default image file ID of @fid.',
@@ -284,7 +284,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     );
     // Confirm the page remains unchanged.
     $this->assertEqual(
-      $page_built[$field_name]['#items'][0]->target_id,
+      $page_built[$field_name][0]['#item']->target_id,
       $default_images['field2']->id(),
       format_string(
         'An existing page node without an image has the expected default image file ID of @fid.',
