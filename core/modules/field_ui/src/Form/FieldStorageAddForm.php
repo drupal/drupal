@@ -349,7 +349,7 @@ class FieldStorageAddForm extends FormBase {
       }
       catch (\Exception $e) {
         $error = TRUE;
-        drupal_set_message($this->t('There was a problem creating field %label: !message', array('%label' => $values['label'], '!message' => $e->getMessage())), 'error');
+        drupal_set_message($this->t('There was a problem creating field %label: @message', array('%label' => $values['label'], '@message' => $e->getMessage())), 'error');
       }
     }
 
@@ -379,7 +379,7 @@ class FieldStorageAddForm extends FormBase {
       }
       catch (\Exception $e) {
         $error = TRUE;
-        drupal_set_message($this->t('There was a problem creating field %label: !message', array('%label' => $values['label'], '!message' => $e->getMessage())), 'error');
+        drupal_set_message($this->t('There was a problem creating field %label: @message', array('%label' => $values['label'], '@message' => $e->getMessage())), 'error');
       }
     }
 
