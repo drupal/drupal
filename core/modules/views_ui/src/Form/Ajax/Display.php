@@ -64,7 +64,10 @@ class Display extends ViewsFormBase {
     $display_id = $form_state->get('display_id');
 
     $executable = $view->getExecutable();
-    $executable->setDisplay($display_id);
+    if (!$executable->setDisplay($display_id)) {
+      $form['markup'] = array('#markup' => $this->t('Invalid display id @display', array('@display' => $display_id)));
+      return $form;
+    }
 
     // Get form from the handler.
     $form['options'] = array(

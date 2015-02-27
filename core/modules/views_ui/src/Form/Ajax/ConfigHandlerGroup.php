@@ -66,7 +66,8 @@ class ConfigHandlerGroup extends ViewsFormBase {
     );
     $executable = $view->getExecutable();
     if (!$executable->setDisplay($display_id)) {
-      views_ajax_render($this->t('Invalid display id @display', array('@display' => $display_id)));
+      $form['markup'] = array('#markup' => $this->t('Invalid display id @display', array('@display' => $display_id)));
+      return $form;
     }
 
     $executable->initQuery();

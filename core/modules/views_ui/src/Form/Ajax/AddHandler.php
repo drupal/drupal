@@ -62,7 +62,10 @@ class AddHandler extends ViewsFormBase {
     );
 
     $executable = $view->getExecutable();
-    $executable->setDisplay($display_id);
+    if (!$executable->setDisplay($display_id)) {
+      $form['markup'] = array('#markup' => $this->t('Invalid display id @display', array('@display' => $display_id)));
+      return $form;
+    }
     $display = &$executable->displayHandlers->get($display_id);
 
     $types = ViewExecutable::getHandlerTypes();

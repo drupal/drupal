@@ -70,6 +70,10 @@ class ViewEditTest extends UITestBase {
     $machine_name_edit_url = 'admin/structure/views/nojs/display/test_view/test_1/display_id';
     $error_text = t('Display name must be letters, numbers, or underscores only.');
 
+    // Test that potential invalid display ID requests are detected
+    $this->drupalGet('admin/structure/views/ajax/handler/test_view/fake_display_name/filter/title');
+    $this->assertText('Invalid display id fake_display_name');
+
     $edit = array('display_id' => 'test 1');
     $this->drupalPostForm($machine_name_edit_url, $edit, 'Apply');
     $this->assertText($error_text);

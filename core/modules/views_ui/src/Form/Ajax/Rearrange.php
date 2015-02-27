@@ -56,7 +56,10 @@ class Rearrange extends ViewsFormBase {
 
     $types = ViewExecutable::getHandlerTypes();
     $executable = $view->getExecutable();
-    $executable->setDisplay($display_id);
+    if (!$executable->setDisplay($display_id)) {
+      $form['markup'] = array('#markup' => $this->t('Invalid display id @display', array('@display' => $display_id)));
+      return $form;
+    }
     $display = &$executable->displayHandlers->get($display_id);
     $form['#title'] = $this->t('Rearrange @type', array('@type' => $types[$type]['ltitle']));
     $form['#section'] = $display_id . 'rearrange-item';
