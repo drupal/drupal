@@ -106,7 +106,8 @@ class CacheContexts {
    */
   public function convertTokensToKeys(array $context_tokens) {
     $keys = [];
-    foreach (static::parseTokens($context_tokens) as $context_id => $parameter) {
+    foreach (static::parseTokens($context_tokens) as $context) {
+      list($context_id, $parameter) = $context;
       if (!in_array($context_id, $this->contexts)) {
         throw new \InvalidArgumentException(String::format('"@context" is not a valid cache context ID.', ['@context' => $context_id]));
       }
@@ -136,9 +137,11 @@ class CacheContexts {
    *   An array of cache context tokens.
    *
    * @return array
-   *   An array with the parsed results, with the cache context IDs as keys, and
-   *   the associated parameter as value (for a calculated cache context), or
-   *   NULL if there is no parameter.
+   *   An array with the parsed results, with each result being an array
+   *   containing:
+   *   1. the cache context ID
+   *   2. the associated parameter (for a calculated cache context), or NULL if
+   *      there is no parameter.
    */
   public static function parseTokens(array $context_tokens) {
     $contexts_with_parameters = [];
@@ -148,7 +151,7 @@ class CacheContexts {
       if (strpos($context, ':') !== FALSE) {
         list($context_id, $parameter) = explode(':', $context, 2);
       }
-      $contexts_with_parameters[$context_id] = $parameter;
+      $contexts_with_parameters[] = [$context_id, $parameter];
     }
     return $contexts_with_parameters;
   }

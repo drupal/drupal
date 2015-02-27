@@ -225,9 +225,10 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
       // choose to modify by: they must always be applied.
       $context_labels = array();
       $all_contexts = \Drupal::service("cache_contexts")->getLabels(TRUE);
-      foreach (array_keys(CacheContexts::parseTokens($this->getRequiredCacheContexts())) as $context) {
-        $context_labels[] = $all_contexts[$context];
-        unset($form['cache']['contexts']['#options'][$context]);
+      foreach (CacheContexts::parseTokens($this->getRequiredCacheContexts()) as $context) {
+        $context_id = $context[0];
+        $context_labels[] = $all_contexts[$context_id];
+        unset($form['cache']['contexts']['#options'][$context_id]);
       }
       $required_context_list = implode(', ', $context_labels);
       $form['cache']['contexts']['#description'] .= ' ' . t('This block is <em>always</em> varied by the following contexts: %required-context-list.', array('%required-context-list' => $required_context_list));

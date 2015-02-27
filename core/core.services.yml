@@ -19,6 +19,11 @@ services:
     arguments: ['@request_stack']
     tags:
       - { name: cache.context}
+  cache_context.pager:
+    class: Drupal\Core\Cache\PagerCacheContext
+    arguments: ['@request_stack']
+    tags:
+      - { name: cache.context}
   cache_context.language:
     class: Drupal\Core\Cache\LanguageCacheContext
     arguments: ['@language_manager']
