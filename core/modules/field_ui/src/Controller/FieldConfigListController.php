@@ -30,10 +30,6 @@ class FieldConfigListController extends EntityListController {
    *   A render array as expected by drupal_render().
    */
   public function listing($entity_type_id = NULL, $bundle = NULL, RouteMatchInterface $route_match = NULL) {
-    if (!$bundle) {
-      $entity_info = $this->entityManager()->getDefinition($entity_type_id);
-      $bundle = $route_match->getRawParameter($entity_info->getBundleEntityType());
-    }
     return $this->entityManager()->getListBuilder('field_config')->render($entity_type_id, $bundle);
   }
 

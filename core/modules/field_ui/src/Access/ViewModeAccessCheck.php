@@ -64,7 +64,7 @@ class ViewModeAccessCheck implements AccessInterface {
   public function access(Route $route, RouteMatchInterface $route_match, AccountInterface $account, $view_mode_name = 'default', $bundle = NULL) {
     $access = AccessResult::neutral();
     if ($entity_type_id = $route->getDefault('entity_type_id')) {
-      if (!isset($bundle)) {
+      if (empty($bundle)) {
         $entity_type = $this->entityManager->getDefinition($entity_type_id);
         $bundle = $route_match->getRawParameter($entity_type->getBundleEntityType());
       }

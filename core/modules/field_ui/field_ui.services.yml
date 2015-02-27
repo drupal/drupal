@@ -4,6 +4,11 @@ services:
     arguments: ['@entity.manager']
     tags:
      - { name: event_subscriber }
+  field_ui.route_enhancer:
+    class: Drupal\field_ui\Routing\FieldUiRouteEnhancer
+    arguments: ['@entity.manager']
+    tags:
+      - { name: route_enhancer }
   access_check.field_ui.view_mode:
     class: Drupal\field_ui\Access\ViewModeAccessCheck
     arguments: ['@entity.manager']

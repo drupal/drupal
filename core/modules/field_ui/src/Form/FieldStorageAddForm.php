@@ -38,14 +38,6 @@ class FieldStorageAddForm extends FormBase {
   protected $bundle;
 
   /**
-   * The name of the entity type which provides bundles for the entity type
-   * defined above.
-   *
-   * @var string
-   */
-  protected $bundleEntityTypeId;
-
-  /**
    * The entity manager.
    *
    * @var \Drupal\Core\Entity\EntityManager
@@ -115,14 +107,10 @@ class FieldStorageAddForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL, $bundle = NULL) {
-    $entity_type = $this->entityManager->getDefinition($entity_type_id);
-    $this->bundleEntityTypeId = $entity_type->getBundleEntityType();
-
     if (!$form_state->get('entity_type_id')) {
       $form_state->set('entity_type_id', $entity_type_id);
     }
     if (!$form_state->get('bundle')) {
-      $bundle = $bundle ?: $this->getRouteMatch()->getRawParameter($this->bundleEntityTypeId);
       $form_state->set('bundle', $bundle);
     }
 
@@ -323,7 +311,6 @@ class FieldStorageAddForm extends FormBase {
     $values = $form_state->getValues();
     $destinations = array();
     $entity_type = $this->entityManager->getDefinition($this->entityTypeId);
-    $bundle_entity_type = FieldUI::getRouteBundleEntityType($entity_type);
 
     // Create new field.
     if ($values['new_storage_type']) {
@@ -351,12 +338,11 @@ class FieldStorageAddForm extends FormBase {
         // Always show the field settings step, as the cardinality needs to be
         // configured for new fields.
         $route_parameters = array(
-          $this->bundleEntityTypeId => $this->bundle,
           'field_config' => $field->id(),
-        );
+        ) + FieldUI::getRouteBundleParameter($entity_type, $this->bundle);
         $destinations[] = array('route_name' => "entity.field_config.{$this->entityTypeId}_storage_edit_form", 'route_parameters' => $route_parameters);
         $destinations[] = array('route_name' => "entity.field_config.{$this->entityTypeId}_field_edit_form", 'route_parameters' => $route_parameters);
-        $destinations[] = array('route_name' => "entity.{$bundle_entity_type}.field_ui_fields", 'route_parameters' => $route_parameters);
+        $destinations[] = array('route_name' => "entity.{$this->entityTypeId}.field_ui_fields", 'route_parameters' => $route_parameters);
 
         // Store new field information for any additional submit handlers.
         $form_state->set(['fields_added', '_add_new_field'], $values['field_name']);
@@ -383,11 +369,10 @@ class FieldStorageAddForm extends FormBase {
         $this->configureEntityDisplays($field_name);
 
         $route_parameters = array(
-          $this->bundleEntityTypeId => $this->bundle,
           'field_config' => $field->id(),
-        );
+        ) + FieldUI::getRouteBundleParameter($entity_type, $this->bundle);
         $destinations[] = array('route_name' => "entity.field_config.{$this->entityTypeId}_field_edit_form", 'route_parameters' => $route_parameters);
-        $destinations[] = array('route_name' => "entity.{$bundle_entity_type}.field_ui_fields", 'route_parameters' => $route_parameters);
+        $destinations[] = array('route_name' => "entity.{$this->entityTypeId}.field_ui_fields", 'route_parameters' => $route_parameters);
 
         // Store new field information for any additional submit handlers.
         $form_state->set(['fields_added', '_add_existing_field'], $field_name);

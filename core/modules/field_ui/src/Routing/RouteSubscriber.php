@@ -40,7 +40,6 @@ class RouteSubscriber extends RouteSubscriberBase {
    */
   protected function alterRoutes(RouteCollection $collection) {
     foreach ($this->manager->getDefinitions() as $entity_type_id => $entity_type) {
-      $defaults = array();
       if ($route_name = $entity_type->get('field_ui_base_route')) {
         // Try to get the route from the current collection.
         if (!$entity_route = $collection->get($route_name)) {
@@ -50,12 +49,21 @@ class RouteSubscriber extends RouteSubscriberBase {
 
         $options = array();
         if (($bundle_entity_type = $entity_type->getBundleEntityType()) && $bundle_entity_type !== 'bundle') {
-          $options['parameters'][$entity_type->getBundleEntityType()] = array(
-            'type' => 'entity:' . $entity_type->getBundleEntityType(),
+          $options['parameters'][$bundle_entity_type] = array(
+            'type' => 'entity:' . $bundle_entity_type,
           );
+
+          // Special parameter used to easily recognize all Field UI routes.
+          $options['_field_ui'] = TRUE;
         }
-        elseif ($bundle_entity_type == 'bundle') {
-          $bundle_entity_type = $entity_type_id;
+
+        $defaults = array(
+          'entity_type_id' => $entity_type_id,
+        );
+        // If the entity type has no bundles and it doesn't use {bundle} in its
+        // admin path, use the entity type.
+        if (strpos($path, '{bundle}') === FALSE) {
+          $defaults['bundle'] = !$entity_type->hasKey('bundle') ? $entity_type_id : '';
         }
 
         $route = new Route(
@@ -63,7 +71,7 @@ class RouteSubscriber extends RouteSubscriberBase {
           array(
             '_form' => '\Drupal\field_ui\Form\FieldEditForm',
             '_title_callback' => '\Drupal\field_ui\Form\FieldEditForm::getTitle',
-          ),
+          ) + $defaults,
           array('_entity_access' => 'field_config.update'),
           $options
         );
@@ -71,7 +79,7 @@ class RouteSubscriber extends RouteSubscriberBase {
 
         $route = new Route(
           "$path/fields/{field_config}/storage",
-          array('_form' => '\Drupal\field_ui\Form\FieldStorageEditForm'),
+          array('_form' => '\Drupal\field_ui\Form\FieldStorageEditForm') + $defaults,
           array('_entity_access' => 'field_config.update'),
           $options
         );
@@ -79,17 +87,12 @@ class RouteSubscriber extends RouteSubscriberBase {
 
         $route = new Route(
           "$path/fields/{field_config}/delete",
-          array('_entity_form' => 'field_config.delete'),
+          array('_entity_form' => 'field_config.delete') + $defaults,
           array('_entity_access' => 'field_config.delete'),
           $options
         );
         $collection->add("entity.field_config.{$entity_type_id}_field_delete_form", $route);
 
-        // If the entity type has no bundles, use the entity type.
-        $defaults['entity_type_id'] = $entity_type_id;
-        if (!$entity_type->hasKey('bundle')) {
-          $defaults['bundle'] = $entity_type_id;
-        }
         $route = new Route(
           "$path/fields",
           array(
@@ -99,7 +102,7 @@ class RouteSubscriber extends RouteSubscriberBase {
           array('_permission' => 'administer ' . $entity_type_id . ' fields'),
           $options
         );
-        $collection->add("entity.$bundle_entity_type.field_ui_fields", $route);
+        $collection->add("entity.{$entity_type_id}.field_ui_fields", $route);
 
         $route = new Route(
           "$path/fields/add-field",
@@ -107,7 +110,8 @@ class RouteSubscriber extends RouteSubscriberBase {
             '_form' => '\Drupal\field_ui\Form\FieldStorageAddForm',
             '_title' => 'Add field',
           ) + $defaults,
-          array('_permission' => 'administer ' . $entity_type_id . ' fields')
+          array('_permission' => 'administer ' . $entity_type_id . ' fields'),
+          $options
         );
         $collection->add("field_ui.field_storage_config_add_$entity_type_id", $route);
 
@@ -121,7 +125,7 @@ class RouteSubscriber extends RouteSubscriberBase {
           array('_field_ui_form_mode_access' => 'administer ' . $entity_type_id . ' form display'),
           $options
         );
-        $collection->add("entity.entity_form_display.$bundle_entity_type.default", $route);
+        $collection->add("entity.entity_form_display.{$entity_type_id}.default", $route);
 
         $route = new Route(
           "$path/form-display/{form_mode_name}",
@@ -132,7 +136,7 @@ class RouteSubscriber extends RouteSubscriberBase {
           array('_field_ui_form_mode_access' => 'administer ' . $entity_type_id . ' form display'),
           $options
         );
-        $collection->add("entity.entity_form_display.$bundle_entity_type.form_mode", $route);
+        $collection->add("entity.entity_form_display.{$entity_type_id}.form_mode", $route);
 
         $route = new Route(
           "$path/display",
@@ -144,7 +148,7 @@ class RouteSubscriber extends RouteSubscriberBase {
           array('_field_ui_view_mode_access' => 'administer ' . $entity_type_id . ' display'),
           $options
         );
-        $collection->add("entity.entity_view_display.$bundle_entity_type.default", $route);
+        $collection->add("entity.entity_view_display.{$entity_type_id}.default", $route);
 
         $route = new Route(
           "$path/display/{view_mode_name}",
@@ -155,7 +159,7 @@ class RouteSubscriber extends RouteSubscriberBase {
           array('_field_ui_view_mode_access' => 'administer ' . $entity_type_id . ' display'),
           $options
         );
-        $collection->add("entity.entity_view_display.$bundle_entity_type.view_mode", $route);
+        $collection->add("entity.entity_view_display.{$entity_type_id}.view_mode", $route);
       }
     }
   }

@@ -71,17 +71,6 @@ function field_ui_entity_type_build(array &$entity_types) {
   $entity_types['field_storage_config']->setLinkTemplate('collection', '/admin/reports/fields');
   $entity_types['entity_form_display']->setFormClass('edit', 'Drupal\field_ui\Form\EntityFormDisplayEditForm');
   $entity_types['entity_view_display']->setFormClass('edit', 'Drupal\field_ui\Form\EntityViewDisplayEditForm');
-
-  foreach ($entity_types as $entity_type) {
-    if ($bundle = $entity_type->getBundleOf()) {
-      // To generate links in the UI we use the route names, so we don't have to
-      // know the exact required routes.
-      // This allows us to not require route information inside this hook, which
-      // otherwise could result in circular dependencies.
-      $entity_type
-        ->setLinkTemplate('field_ui-fields', "/admin/{$entity_type->id()}/fields");
-    }
-  }
 }
 
 /**
@@ -130,21 +119,22 @@ function field_ui_entity_operation(EntityInterface $entity) {
   $info = $entity->getEntityType();
   // Add manage fields and display links if this entity type is the bundle
   // of another and that type has field UI enabled.
-  $entity_manager = \Drupal::entityManager();
-  if (($bundle_of = $info->getBundleOf()) && $entity_manager->getDefinition($bundle_of)->get('field_ui_base_route')) {
+  if (($bundle_of = $info->getBundleOf()) && \Drupal::entityManager()->getDefinition($bundle_of)->get('field_ui_base_route')) {
     $account = \Drupal::currentUser();
     if ($account->hasPermission('administer '. $bundle_of . ' fields')) {
       $operations['manage-fields'] = array(
         'title' => t('Manage fields'),
         'weight' => 15,
-        'url' => $entity->urlInfo('field_ui-fields'),
+        'url' => Url::fromRoute("entity.{$bundle_of}.field_ui_fields", array(
+          $entity->getEntityTypeId() => $entity->id(),
+        )),
       );
     }
     if ($account->hasPermission('administer '. $bundle_of . ' form display')) {
       $operations['manage-form-display'] = array(
         'title' => t('Manage form display'),
         'weight' => 20,
-        'url' => Url::fromRoute("entity.entity_form_display.{$entity->getEntityTypeId()}.default", array(
+        'url' => Url::fromRoute("entity.entity_form_display.{$bundle_of}.default", array(
           $entity->getEntityTypeId() => $entity->id(),
         )),
       );
@@ -153,7 +143,7 @@ function field_ui_entity_operation(EntityInterface $entity) {
       $operations['manage-display'] = array(
         'title' => t('Manage display'),
         'weight' => 25,
-        'url' => Url::fromRoute("entity.entity_view_display.{$entity->getEntityTypeId()}.default", array(
+        'url' => Url::fromRoute("entity.entity_view_display.{$bundle_of}.default", array(
           $entity->getEntityTypeId() => $entity->id(),
         )),
       );

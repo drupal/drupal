@@ -28,14 +28,6 @@ use Drupal\field_ui\FieldUI;
 abstract class EntityDisplayFormBase extends EntityForm {
 
   /**
-   * The name of the entity type which provides bundles for the entity type
-   * defined above.
-   *
-   * @var string
-   */
-  protected $bundleEntityTypeId;
-
-  /**
    * The display context. Either 'view' or 'form'.
    *
    * @var string
@@ -82,16 +74,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
   public function getEntityFromRouteMatch(RouteMatchInterface $route_match, $entity_type_id) {
     $route_parameters = $route_match->getParameters()->all();
 
-    if (isset($route_parameters['bundle'])) {
-      $bundle = $route_parameters['bundle'];
-    }
-    else {
-      $target_entity_type = $this->entityManager->getDefinition($route_parameters['entity_type_id']);
-      $this->bundleEntityTypeId = $target_entity_type->getBundleEntityType();
-      $bundle = $route_parameters[$this->bundleEntityTypeId]->id();
-    }
-
-    return $this->getEntityDisplay($route_parameters['entity_type_id'], $bundle, $route_parameters[$this->displayContext . '_mode_name']);
+    return $this->getEntityDisplay($route_parameters['entity_type_id'], $route_parameters['bundle'], $route_parameters[$this->displayContext . '_mode_name']);
   }
 
   /**
