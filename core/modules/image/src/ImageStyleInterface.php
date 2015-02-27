@@ -8,12 +8,11 @@
 namespace Drupal\image;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
 
 /**
  * Provides an interface defining an image style entity.
  */
-interface ImageStyleInterface extends ConfigEntityInterface, ThirdPartySettingsInterface {
+interface ImageStyleInterface extends ConfigEntityInterface {
 
   /**
    * Returns the replacement ID.

@@ -15,7 +15,7 @@ use Drupal\Core\Entity\EntityInterface;
  * @ingroup config_api
  * @ingroup entity_api
  */
-interface ConfigEntityInterface extends EntityInterface {
+interface ConfigEntityInterface extends EntityInterface, ThirdPartySettingsInterface {
 
   /**
    * Enables the configuration entity.

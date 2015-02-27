@@ -8,12 +8,11 @@
 namespace Drupal\language;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
 
 /**
  * Provides an interface defining language settings for content entities.
  */
-interface ContentLanguageSettingsInterface extends ConfigEntityInterface, ThirdPartySettingsInterface {
+interface ContentLanguageSettingsInterface extends ConfigEntityInterface {
 
   /**
    * Gets the entity type ID this config applies to.

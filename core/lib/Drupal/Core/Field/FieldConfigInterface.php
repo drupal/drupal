@@ -8,7 +8,6 @@
 namespace Drupal\Core\Field;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
 
 /**
  * Defines an interface for configurable field definitions.
@@ -20,7 +19,7 @@ use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
  * @see \Drupal\Core\Field\Entity\BaseFieldOverride
  * @see \Drupal\field\Entity\FieldConfig
  */
-interface FieldConfigInterface extends FieldDefinitionInterface, ConfigEntityInterface, ThirdPartySettingsInterface {
+interface FieldConfigInterface extends FieldDefinitionInterface, ConfigEntityInterface {
 
   /**
    * Sets the field definition label.

@@ -24,7 +24,7 @@ use Drupal\Core\Plugin\PluginDependencyTrait;
  *
  * @ingroup entity_api
  */
-abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface, ThirdPartySettingsInterface {
+abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface {
 
   use PluginDependencyTrait {
     addDependency as addDependencyTrait;

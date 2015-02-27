@@ -11,6 +11,7 @@ use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Timer;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\views\Views;
@@ -1252,4 +1253,38 @@ class ViewUI implements ViewEntityInterface {
     return $this->storage->isInstallable();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function setThirdPartySetting($module, $key, $value) {
+    return $this->storage->setThirdPartySetting($module, $key, $value);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getThirdPartySetting($module, $key, $default = NULL) {
+    return $this->storage->getThirdPartySetting($module, $key, $default);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getThirdPartySettings($module) {
+    return $this->storage->getThirdPartySettings($module);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function unsetThirdPartySetting($module, $key) {
+    return $this->storage->unsetThirdPartySetting($module, $key);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getThirdPartyProviders() {
+    return $this->storage->getThirdPartyProviders();
+  }
 }
