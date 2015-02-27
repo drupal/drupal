@@ -147,31 +147,6 @@ class LinkWidget extends WidgetBase {
       $form_state->setError($element, t('Manually entered paths should start with /, ? or #.'));
       return;
     }
-
-    // If the URI is empty or not well-formed, the link field type's validation
-    // constraint will detect it.
-    // @see \Drupal\link\Plugin\Validation\Constraint\LinkTypeConstraint::validate()
-    if (!empty($uri) && parse_url($uri)) {
-      $url = Url::fromUri($uri);
-
-      // Disallow unrouted internal URLs (i.e. disallow 'base:' URIs).
-      $disallowed  = !$url->isRouted() && !$url->isExternal();
-      // Disallow external URLs using untrusted protocols.
-      $disallowed = $disallowed || ($url->isExternal() && !in_array(parse_url($uri, PHP_URL_SCHEME), UrlHelper::getAllowedProtocols()));
-      // Disallow routed URLs that don't exist.
-      if (!$disallowed && $url->isRouted()) {
-        try {
-          $url->toString();
-        }
-        catch (RouteNotFoundException $e) {
-          $disallowed = TRUE;
-        }
-      }
-
-      if ($disallowed) {
-        $form_state->setError($element, t("The path '@link_path' is invalid.", ['@link_path' => static::getUriAsDisplayableString($uri)]));
-      }
-    }
   }
 
   /**

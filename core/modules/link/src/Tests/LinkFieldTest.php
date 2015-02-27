@@ -136,16 +136,14 @@ class LinkFieldTest extends WebTestBase {
     // Define some invalid URLs.
     $validation_error_1 = "The path '@link_path' is invalid.";
     $validation_error_2 = 'Manually entered paths should start with /, ? or #.';
+    $validation_error_3 = "The path '@link_path' is inaccessible.";
     $invalid_external_entries = array(
-      // Missing protcol
-      'not-an-url' => $validation_error_2,
       // Invalid protocol
       'invalid://not-a-valid-protocol' => $validation_error_1,
       // Missing host name
       'http://' => $validation_error_1,
     );
     $invalid_internal_entries = array(
-      '/non/existing/path' => $validation_error_1,
       'no-leading-slash' => $validation_error_2,
       'entity:non_existing_entity_type/yar' => $validation_error_1,
     );
@@ -165,6 +163,14 @@ class LinkFieldTest extends WebTestBase {
     $this->field->save();
     $this->assertValidEntries($field_name, $valid_internal_entries);
     $this->assertInvalidEntries($field_name, $valid_external_entries + $invalid_internal_entries);
+
+    // Ensure that users with 'link to any page', don't apply access checking.
+    $this->drupalLogin($this->drupalCreateUser([
+      'view test entity',
+      'administer entity_test content',
+    ]));
+    $this->assertValidEntries($field_name, ['/entity_test/add' => '/entity_test/add']);
+    $this->assertInValidEntries($field_name, ['/admin' => $validation_error_3]);
   }
 
   /**
