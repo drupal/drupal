@@ -19,7 +19,6 @@ quickedit.field_form:
   defaults:
     _controller: '\Drupal\quickedit\QuickEditController::fieldForm'
   options:
-    _access_mode: 'ALL'
     _theme: ajax_base_page
     parameters:
       entity:

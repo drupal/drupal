@@ -253,127 +253,37 @@ class AccessManagerTest extends UnitTestCase {
 
     $access_configurations = array();
     $access_configurations[] = array(
-      'conjunction' => AccessManagerInterface::ACCESS_MODE_ALL,
       'name' => 'test_route_4',
       'condition_one' => 'TRUE',
       'condition_two' => 'FALSE',
       'expected' => $access_kill,
     );
     $access_configurations[] = array(
-      'conjunction' => NULL,
-      'name' => 'test_route_4',
-      'condition_one' => 'TRUE',
-      'condition_two' => 'FALSE',
-      'expected' => $access_kill,
-    );
-    $access_configurations[] = array(
-      'conjunction' => AccessManagerInterface::ACCESS_MODE_ALL,
       'name' => 'test_route_5',
       'condition_one' => 'TRUE',
       'condition_two' => 'NULL',
       'expected' => $access_deny,
     );
     $access_configurations[] = array(
-      'conjunction' => NULL,
-      'name' => 'test_route_5',
-      'condition_one' => 'TRUE',
-      'condition_two' => 'NULL',
-      'expected' => $access_deny,
-    );
-    $access_configurations[] = array(
-      'conjunction' => AccessManagerInterface::ACCESS_MODE_ALL,
       'name' => 'test_route_6',
       'condition_one' => 'FALSE',
       'condition_two' => 'NULL',
       'expected' => $access_kill,
     );
     $access_configurations[] = array(
-      'conjunction' => NULL,
-      'name' => 'test_route_6',
-      'condition_one' => 'FALSE',
-      'condition_two' => 'NULL',
-      'expected' => $access_kill,
-    );
-    $access_configurations[] = array(
-      'conjunction' => AccessManagerInterface::ACCESS_MODE_ALL,
       'name' => 'test_route_7',
       'condition_one' => 'TRUE',
       'condition_two' => 'TRUE',
       'expected' => $access_allow,
     );
     $access_configurations[] = array(
-      'conjunction' => NULL,
-      'name' => 'test_route_7',
-      'condition_one' => 'TRUE',
-      'condition_two' => 'TRUE',
-      'expected' => $access_allow,
-    );
-    $access_configurations[] = array(
-      'conjunction' => AccessManagerInterface::ACCESS_MODE_ALL,
       'name' => 'test_route_8',
       'condition_one' => 'FALSE',
       'condition_two' => 'FALSE',
       'expected' => $access_kill,
     );
     $access_configurations[] = array(
-      'conjunction' => NULL,
-      'name' => 'test_route_8',
-      'condition_one' => 'FALSE',
-      'condition_two' => 'FALSE',
-      'expected' => $access_kill,
-    );
-    $access_configurations[] = array(
-      'conjunction' => AccessManagerInterface::ACCESS_MODE_ALL,
       'name' => 'test_route_9',
-      'condition_one' => 'NULL',
-      'condition_two' => 'NULL',
-      'expected' => $access_deny,
-    );
-    $access_configurations[] = array(
-      'conjunction' => NULL,
-      'name' => 'test_route_9',
-      'condition_one' => 'NULL',
-      'condition_two' => 'NULL',
-      'expected' => $access_deny,
-    );
-    $access_configurations[] = array(
-      'conjunction' => AccessManagerInterface::ACCESS_MODE_ANY,
-      'name' => 'test_route_10',
-      'condition_one' => 'TRUE',
-      'condition_two' => 'FALSE',
-      'expected' => $access_kill,
-    );
-    $access_configurations[] = array(
-      'conjunction' => AccessManagerInterface::ACCESS_MODE_ANY,
-      'name' => 'test_route_11',
-      'condition_one' => 'TRUE',
-      'condition_two' => 'NULL',
-      'expected' => $access_allow,
-    );
-    $access_configurations[] = array(
-      'conjunction' => AccessManagerInterface::ACCESS_MODE_ANY,
-      'name' => 'test_route_12',
-      'condition_one' => 'FALSE',
-      'condition_two' => 'NULL',
-      'expected' => $access_kill,
-    );
-    $access_configurations[] = array(
-      'conjunction' => AccessManagerInterface::ACCESS_MODE_ANY,
-      'name' => 'test_route_13',
-      'condition_one' => 'TRUE',
-      'condition_two' => 'TRUE',
-      'expected' => $access_allow,
-    );
-    $access_configurations[] = array(
-      'conjunction' => AccessManagerInterface::ACCESS_MODE_ANY,
-      'name' => 'test_route_14',
-      'condition_one' => 'FALSE',
-      'condition_two' => 'FALSE',
-      'expected' => $access_kill,
-    );
-    $access_configurations[] = array(
-      'conjunction' => AccessManagerInterface::ACCESS_MODE_ANY,
-      'name' => 'test_route_15',
       'condition_one' => 'NULL',
       'condition_two' => 'NULL',
       'expected' => $access_deny,
@@ -387,7 +297,7 @@ class AccessManagerTest extends UnitTestCase {
    *
    * @dataProvider providerTestCheckConjunctions
    */
-  public function testCheckConjunctions($conjunction, $name, $condition_one, $condition_two, $expected_access) {
+  public function testCheckConjunctions($name, $condition_one, $condition_two, $expected_access) {
     $this->setupAccessChecker();
     $access_check = new DefinedTestAccessCheck();
     $this->container->register('test_access_defined', $access_check);
@@ -399,8 +309,7 @@ class AccessManagerTest extends UnitTestCase {
       '_access' => $condition_one,
       '_test_access' => $condition_two,
     );
-    $options = $conjunction ? array('_access_mode' => $conjunction) : array();
-    $route = new Route($name, array(), $requirements, $options);
+    $route = new Route($name, array(), $requirements);
     $route_collection->add($name, $route);
 
     $this->checkProvider->setChecks($route_collection);
@@ -565,7 +474,7 @@ class AccessManagerTest extends UnitTestCase {
    *
    * @expectedException \Drupal\Core\Access\AccessException
    */
-  public function testCheckException($return_value, $access_mode) {
+  public function testCheckException($return_value) {
     $route_provider = $this->getMock('Drupal\Core\Routing\RouteProviderInterface');
 
     // Setup a test route for each access configuration.
@@ -573,7 +482,6 @@ class AccessManagerTest extends UnitTestCase {
       '_test_incorrect_value' => 'TRUE',
     );
     $options = array(
-      '_access_mode' => $access_mode,
       '_access_checks' => array(
         'test_incorrect_value',
       ),
@@ -614,16 +522,10 @@ class AccessManagerTest extends UnitTestCase {
    */
   public function providerCheckException() {
     return array(
-      array(array(), AccessManagerInterface::ACCESS_MODE_ALL),
-      array(array(), AccessManagerInterface::ACCESS_MODE_ANY),
-      array(array(1), AccessManagerInterface::ACCESS_MODE_ALL),
-      array(array(1), AccessManagerInterface::ACCESS_MODE_ANY),
-      array('string', AccessManagerInterface::ACCESS_MODE_ALL),
-      array('string', AccessManagerInterface::ACCESS_MODE_ANY),
-      array(0, AccessManagerInterface::ACCESS_MODE_ALL),
-      array(0, AccessManagerInterface::ACCESS_MODE_ANY),
-      array(1, AccessManagerInterface::ACCESS_MODE_ALL),
-      array(1, AccessManagerInterface::ACCESS_MODE_ANY),
+      array(array(1)),
+      array('string'),
+      array(0),
+      array(1),
     );
   }
 

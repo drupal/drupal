@@ -27,8 +27,6 @@ update.report_install:
   defaults:
     _form: '\Drupal\update\Form\UpdateManagerInstall'
     _title: 'Install'
-  options:
-    _access_mode: 'ALL'
   requirements:
     _permission: 'administer software updates'
     _access_update_manager: 'TRUE'
@@ -38,8 +36,6 @@ update.report_update:
   defaults:
     _form: '\Drupal\update\Form\UpdateManagerUpdate'
     _title: 'Update'
-  options:
-    _access_mode: 'ALL'
   requirements:
     _permission: 'administer software updates'
     _access_update_manager: 'TRUE'
@@ -49,8 +45,6 @@ update.module_install:
   defaults:
     _form: '\Drupal\update\Form\UpdateManagerInstall'
     _title: 'Install new module'
-  options:
-    _access_mode: 'ALL'
   requirements:
     _permission: 'administer software updates'
     _access_update_manager: 'TRUE'
@@ -60,8 +54,6 @@ update.module_update:
   defaults:
     _form: '\Drupal\update\Form\UpdateManagerUpdate'
     _title: 'Update'
-  options:
-    _access_mode: 'ALL'
   requirements:
     _permission: 'administer software updates'
     _access_update_manager: 'TRUE'
@@ -71,8 +63,6 @@ update.theme_install:
   defaults:
     _form: '\Drupal\update\Form\UpdateManagerInstall'
     _title: 'Install new theme'
-  options:
-    _access_mode: 'ALL'
   requirements:
     _permission: 'administer software updates'
     _access_update_manager: 'TRUE'
@@ -82,8 +72,6 @@ update.theme_update:
   defaults:
     _form: '\Drupal\update\Form\UpdateManagerUpdate'
     _title: 'Update'
-  options:
-    _access_mode: 'ALL'
   requirements:
     _permission: 'administer software updates'
     _access_update_manager: 'TRUE'
@@ -93,8 +81,6 @@ update.confirmation_page:
   defaults:
     _form: '\Drupal\update\Form\UpdateReady'
     _title: 'Ready to update'
-  options:
-    _access_mode: 'ALL'
   requirements:
     _permission: 'administer software updates'
     _access_update_manager: 'TRUE'

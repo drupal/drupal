@@ -11,10 +11,8 @@ node.add_page:
     _title: 'Add content'
     _controller: '\Drupal\node\Controller\NodeController::addPage'
   options:
-    _access_mode: 'ANY'
     _node_operation_route: TRUE
   requirements:
-    _permission: 'administer content types'
     _node_add_access: 'node'
 
 node.add:

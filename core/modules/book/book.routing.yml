@@ -57,7 +57,6 @@ entity.node.book_remove_form:
     _form: '\Drupal\book\Form\BookRemoveForm'
     _title: 'Remove from outline'
   options:
-    _access_mode: 'ALL'
     _node_operation_route: TRUE
   requirements:
     _permission: 'administer book outlines'

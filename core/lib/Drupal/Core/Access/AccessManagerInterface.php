@@ -17,21 +17,6 @@ use Drupal\Core\Routing\RouteMatchInterface;
 interface AccessManagerInterface {
 
   /**
-   * All access checkers must return an AccessResultInterface object where
-   * ::isAllowed() is TRUE.
-   *
-   * self::ACCESS_MODE_ALL is the default behavior.
-   */
-  const ACCESS_MODE_ALL = 'ALL';
-
-  /**
-   * At least one access checker must return an AccessResultInterface object
-   * where ::isAllowed() is TRUE and none may return one where ::isForbidden()
-   * is TRUE.
-   */
-  const ACCESS_MODE_ANY = 'ANY';
-
-  /**
    * Checks a named route with parameters against applicable access check services.
    *
    * Determines whether the route is accessible or not.

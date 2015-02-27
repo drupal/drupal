@@ -46,16 +46,6 @@ router_test.8:
   defaults:
     _controller: '\Drupal\router_test\TestControllers::test8'
 
-router_test.9:
-  path: '/router_test/test9'
-  options:
-    _access_mode: 'ANY'
-  defaults:
-    _controller: '\Drupal\router_test\TestControllers::test8'
-  requirements:
-    _permission: 'access test7'
-    _access_router_test: 'TRUE'
-
 router_test.10:
   path: '/router_test/test10'
   defaults:

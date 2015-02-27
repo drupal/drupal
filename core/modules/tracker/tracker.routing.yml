@@ -11,8 +11,6 @@ tracker.users_recent_content:
   defaults:
     _controller: '\Drupal\tracker\Controller\TrackerUserRecent::getContent'
     _title: 'My recent content'
-  options:
-    _access_mode: 'ALL'
   requirements:
     _permission: 'access content'
     _access_tracker_own_information: 'TRUE'
@@ -22,8 +20,6 @@ tracker.user_tab:
   defaults:
     _controller: '\Drupal\tracker\Controller\TrackerUserTab::getContent'
     _title_callback: '\Drupal\tracker\Controller\TrackerUserTab::getTitle'
-  options:
-    _access_mode: 'ALL'
   requirements:
     _permission: 'access content'
     _entity_access: 'user.view'

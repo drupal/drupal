@@ -126,7 +126,6 @@ class AccessManager implements AccessManagerInterface {
     }
     $route = $route_match->getRouteObject();
     $checks = $route->getOption('_access_checks') ?: array();
-    $conjunction = $route->getOption('_access_mode') ?: static::ACCESS_MODE_ALL;
 
     // Filter out checks which require the incoming request.
     if (!isset($request)) {
@@ -136,63 +135,16 @@ class AccessManager implements AccessManagerInterface {
     $result = AccessResult::neutral();
     if (!empty($checks)) {
       $arguments_resolver = $this->argumentsResolverFactory->getArgumentsResolver($route_match, $account, $request);
-      if ($conjunction == static::ACCESS_MODE_ALL) {
-        $result = $this->checkAll($checks, $arguments_resolver);
+
+      if (!$checks) {
+        return AccessResult::neutral();
       }
-      else {
-        $result = $this->checkAny($checks, $arguments_resolver);
+      $result = AccessResult::allowed();
+      foreach ($checks as $service_id) {
+        $result = $result->andIf($this->performCheck($service_id, $arguments_resolver));
       }
     }
     return $return_as_object ? $result : $result->isAllowed();
-  }
-
-  /**
-   * Checks access so that every checker should allow access.
-   *
-   * @param array $checks
-   *   Contains the list of checks on the route definition.
-   * @param \Drupal\Component\Utility\ArgumentsResolverInterface $arguments_resolver
-   *   The parametrized arguments resolver instance.
-   *
-   * @return \Drupal\Core\Access\AccessResultInterface
-   *   The access result.
-   *
-   * @see \Drupal\Core\Access\AccessResultInterface::andIf()
-   */
-  protected function checkAll(array $checks, ArgumentsResolverInterface $arguments_resolver) {
-    // Without checks no opinion can be formed.
-    if (!$checks) {
-      return AccessResult::neutral();
-    }
-    $result = AccessResult::allowed();
-    foreach ($checks as $service_id) {
-      $result = $result->andIf($this->performCheck($service_id, $arguments_resolver));
-    }
-    return $result;
-  }
-
-  /**
-   * Checks access so that at least one checker should allow access.
-   *
-   * @param array $checks
-   *   Contains the list of checks on the route definition.
-   * @param \Drupal\Component\Utility\ArgumentsResolverInterface $arguments_resolver
-   *   The parametrized arguments resolver instance.
-   *
-   * @return \Drupal\Core\Access\AccessResultInterface
-   *   The access result.
-   *
-   * @see \Drupal\Core\Access\AccessResultInterface::orIf()
-   */
-  protected function checkAny(array $checks, ArgumentsResolverInterface $arguments_resolver) {
-    // No opinion by default.
-    $result = AccessResult::neutral();
-
-    foreach ($checks as $service_id) {
-      $result = $result->orIf($this->performCheck($service_id, $arguments_resolver));
-    }
-
-    return $result;
   }
 
   /**

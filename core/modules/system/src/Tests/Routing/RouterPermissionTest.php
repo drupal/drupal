@@ -42,10 +42,5 @@ class RouterPermissionTest extends WebTestBase {
     $this->assertResponse(200);
     $this->assertNoRaw('Access denied');
     $this->assertRaw('test7text', 'The correct string was returned because the route was successful.');
-
-    $this->drupalGet('router_test/test9');
-    $this->assertResponse(200);
-    $this->assertNoRaw('Access denied');
-    $this->assertRaw('test8', 'The correct string was returned because the route was successful.');
   }
 }

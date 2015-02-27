@@ -74,6 +74,10 @@ class ContentTranslationManageAccessCheck implements AccessInterface {
     /* @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     if ($entity = $route_match->getParameter($entity_type_id)) {
 
+      if ($account->hasPermission('translate any entity')) {
+        return AccessResult::allowed()->cachePerRole();
+      }
+
       $operation = $route->getRequirement('_access_content_translation_manage');
 
       /* @var \Drupal\content_translation\ContentTranslationHandlerInterface $handler */

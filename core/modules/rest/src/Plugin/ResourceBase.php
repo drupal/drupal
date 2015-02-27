@@ -206,12 +206,6 @@ abstract class ResourceBase extends PluginBase implements ContainerFactoryPlugin
       // The HTTP method is a requirement for this route.
       '_method' => $method,
       '_permission' => "restful $lower_method $this->pluginId",
-    ), array(
-      // All access restrictions on this route must grant access because the
-      // permission AND the CSRF protection added in
-      // \Drupal\rest\Routing\ResourceRoutes::alterRoutes() must be taken into
-      // account.
-      '_access_mode' => AccessManagerInterface::ACCESS_MODE_ALL,
     ));
     return $route;
   }
