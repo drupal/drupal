@@ -765,6 +765,7 @@ services:
     arguments: ['@element_info']
     tags:
       - { name: render.main_content_renderer, format: drupal_ajax }
+      - { name: render.main_content_renderer, format: iframeupload }
   main_content_renderer.dialog:
     class: Drupal\Core\Render\MainContent\DialogRenderer
     arguments: ['@title_resolver']

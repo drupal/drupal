@@ -8,7 +8,9 @@
 namespace Drupal\Tests\Core\Ajax;
 
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Render\Element\Ajax;
 use Drupal\Tests\UnitTestCase;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @coversDefaultClass \Drupal\Core\Ajax\AjaxResponse
@@ -66,6 +68,22 @@ class AjaxResponseTest extends UnitTestCase {
     $this->assertSame($commands[1], array('command' => 'one'));
     $this->assertFalse(isset($commands[2]));
     $this->assertSame($commands[0], array('command' => 'three', 'class' => 'test-class'));
+  }
+
+  /**
+   * Tests the support for IE specific headers in file uploads.
+   *
+   * @cover ::prepareResponse
+   */
+  public function testPrepareResponseForIeFormRequestsWithFileUpload() {
+    $request = Request::create('/example', 'POST');
+    $request->headers->set('Accept', 'text/html');
+    $response = new AjaxResponse([]);
+    $response->headers->set('Content-Type', 'application/json; charset=utf-8');
+
+    $response->prepare($request);
+    $this->assertEquals('text/html; charset=utf-8', $response->headers->get('Content-Type'));
+    $this->assertEquals($response->getContent(), '<textarea>[]</textarea>');
   }
 
 

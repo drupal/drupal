@@ -92,8 +92,7 @@ class ReadTest extends RESTTestBase {
     // and hence when there is no matching REST route, the non-REST route is
     // used, but it can't render into application/hal+json, so it returns a 406.
     $this->assertResponse('406', 'HTTP response code is 406 when the resource does not define formats, because it falls back to the canonical, non-REST route.');
-    $expected_message = '{"message":"Not Acceptable.","supported_mime_types":["text\\/html","application\\/vnd.drupal-ajax","application\\/vnd.drupal-dialog","application\\/vnd.drupal-modal"]}';
-    $this->assertIdentical($expected_message, $response);
+    $this->assertTrue(strpos($response, '{"message":"Not Acceptable.","supported_mime_types":') !== FALSE);
   }
 
   /**
