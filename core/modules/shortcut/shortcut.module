@@ -227,6 +227,8 @@ function shortcut_default_set($account = NULL) {
  *
  * @return
  *   TRUE if a shortcut set with that title exists; FALSE otherwise.
+ *
+ * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
  */
 function shortcut_set_title_exists($title) {
   $sets = ShortcutSet::loadMultiple();

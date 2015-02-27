@@ -175,10 +175,6 @@ class SwitchShortcutSet extends FormBase {
       if (trim($form_state->getValue('label')) == '') {
         $form_state->setErrorByName('new', $this->t('The new set label is required.'));
       }
-      // Check to prevent a duplicate title.
-      if (shortcut_set_title_exists($form_state->getValue('label'))) {
-        $form_state->setErrorByName('label', $this->t('The shortcut set %name already exists. Choose another name.', array('%name' => $form_state->getValue('label'))));
-      }
     }
   }
 

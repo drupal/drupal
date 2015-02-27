@@ -151,18 +151,6 @@ class ShortcutSetsTest extends ShortcutTestBase {
   }
 
   /**
-   * Tests renaming a shortcut set to the same name as another set.
-   */
-  function testShortcutSetRenameAlreadyExists() {
-    $set = $this->generateShortcutSet($this->randomMachineName());
-    $existing_label = $this->set->label();
-    $this->drupalPostForm('admin/config/user-interface/shortcut/manage/' . $set->id(), array('label' => $existing_label), t('Save'));
-    $this->assertRaw(t('The shortcut set %name already exists. Choose another name.', array('%name' => $existing_label)));
-    $set = ShortcutSet::load($set->id());
-    $this->assertNotEqual($set->label(), $existing_label, format_string('The shortcut set %title cannot be renamed to %new-title because a shortcut set with that title already exists.', array('%title' => $set->label(), '%new-title' => $existing_label)));
-  }
-
-  /**
    * Tests unassigning a shortcut set.
    */
   function testShortcutSetUnassign() {

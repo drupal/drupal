@@ -51,18 +51,6 @@ class ShortcutSetForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, FormStateInterface $form_state) {
-    parent::validate($form, $form_state);
-    $entity = $this->entity;
-    // Check to prevent a duplicate title.
-    if ($form_state->getValue('label') != $entity->label() && shortcut_set_title_exists($form_state->getValue('label'))) {
-      $form_state->setErrorByName('label', $this->t('The shortcut set %name already exists. Choose another name.', array('%name' => $form_state->getValue('label'))));
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function save(array $form, FormStateInterface $form_state) {
     $entity = $this->entity;
     $is_new = !$entity->getOriginalId();
