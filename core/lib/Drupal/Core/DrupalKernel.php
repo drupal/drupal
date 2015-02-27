@@ -976,9 +976,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // - Entity
     // - Plugin
     foreach (array('Core', 'Component') as $parent_directory) {
-      $path = $this->root . '/core/lib/Drupal/' . $parent_directory;
+      $path = 'core/lib/Drupal/' . $parent_directory;
       $parent_namespace = 'Drupal\\' . $parent_directory;
-      foreach (new \DirectoryIterator($path) as $component) {
+      foreach (new \DirectoryIterator($this->root . '/' . $path) as $component) {
         /** @var $component \DirectoryIterator */
         $pathname = $component->getPathname();
         if (!$component->isDot() && $component->isDir() && (
@@ -1195,7 +1195,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected function getModuleNamespacesPsr4($module_file_names) {
     $namespaces = array();
     foreach ($module_file_names as $module => $filename) {
-      $namespaces["Drupal\\$module"] = $this->root . '/' . dirname($filename) . '/src';
+      $namespaces["Drupal\\$module"] = dirname($filename) . '/src';
     }
     return $namespaces;
   }
@@ -1210,6 +1210,14 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    */
   protected function classLoaderAddMultiplePsr4(array $namespaces = array()) {
     foreach ($namespaces as $prefix => $paths) {
+      if (is_array($paths)) {
+        foreach ($paths as $key => $value) {
+          $paths[$key] = $this->root . '/' . $value;
+        }
+      }
+      elseif (is_string($paths)) {
+        $paths = $this->root . '/' . $paths;
+      }
       $this->classLoader->addPsr4($prefix . '\\', $paths);
     }
   }
