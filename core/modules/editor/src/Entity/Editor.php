@@ -144,6 +144,14 @@ class Editor extends ConfigEntityBase implements EditorInterface {
   /**
    * {@inheritdoc}
    */
+  public function setEditor($editor) {
+    $this->editor = $editor;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getSettings() {
     return $this->settings;
   }

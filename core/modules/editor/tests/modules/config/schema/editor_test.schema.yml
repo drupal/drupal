@@ -7,3 +7,11 @@ editor.settings.unicorn:
     ponies_too:
       type: boolean
       label: 'Ponies too'
+
+editor.settings.trex:
+  type: mapping
+  label: 'T-Rex settings'
+  mapping:
+    stumpy_arms:
+      type: boolean
+      label: 'Stumpy arms'

@@ -35,3 +35,12 @@ function editor_test_editor_xss_filter_alter(&$editor_xss_filter_class, FilterFo
     $editor_xss_filter_class = '\Drupal\editor_test\EditorXssFilter\Insecure';
   }
 }
+
+/**
+ * Implements hook_editor_info_alter().
+ */
+function editor_test_editor_info_alter(&$items) {
+  if (!\Drupal::state()->get('editor_test_give_me_a_trex_thanks', FALSE)) {
+    unset($items['trex']);
+  }
+}

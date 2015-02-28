@@ -53,6 +53,12 @@ class Element {
 
     // Early-return if no text editor is associated with any of the text formats.
     $editors = Editor::loadMultiple($format_ids);
+    foreach ($editors as $key => $editor) {
+      $definition = $this->pluginManager->getDefinition($editor->getEditor());
+      if (!in_array($element['#base_type'], $definition['supported_element_types'])) {
+        unset($editors[$key]);
+      }
+    }
     if (count($editors) === 0) {
       return $element;
     }
