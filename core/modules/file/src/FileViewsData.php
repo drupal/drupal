@@ -105,13 +105,6 @@ class FileViewsData extends EntityViewsData {
         'left_field' => 'tid',
         'extra' => array(array('field' => 'type', 'value' => 'taxonomy_term')),
       ),
-      // Link ourself to the {taxonomy_vocabulary} table
-      // so we can provide taxonomy_vocabulary->file relationships.
-      'taxonomy_vocabulary' => array(
-        'field' => 'id',
-        'left_field' => 'vid',
-        'extra' => array(array('field' => 'type', 'value' => 'taxonomy_vocabulary')),
-      ),
     );
 
     // Provide a relationship between the files table and each entity type,
@@ -126,7 +119,7 @@ class FileViewsData extends EntityViewsData {
       'help' => t('Content that is associated with this file, usually because this file is in a field on the content.'),
       // Only provide this field/relationship/etc.,
       // when the 'file_managed' base table is present.
-      'skip base' => array('node', 'node_field_revision', 'users', 'comment', 'taxonomy_term_data', 'taxonomy_vocabulary'),
+      'skip base' => array('node', 'node_field_revision', 'users', 'comment', 'taxonomy_term_data'),
       'real field' => 'id',
       'relationship' => array(
         'title' => t('Content'),
@@ -142,7 +135,7 @@ class FileViewsData extends EntityViewsData {
       'help' => t('A file that is associated with this node, usually because it is in a field on the node.'),
       // Only provide this field/relationship/etc.,
       // when the 'node' base table is present.
-      'skip base' => array('file_managed', 'users', 'comment', 'taxonomy_term_data', 'taxonomy_vocabulary'),
+      'skip base' => array('file_managed', 'users', 'comment', 'taxonomy_term_data'),
       'real field' => 'fid',
       'relationship' => array(
         'title' => t('File'),
@@ -159,7 +152,7 @@ class FileViewsData extends EntityViewsData {
       'help' => t('A user that is associated with this file, usually because this file is in a field on the user.'),
       // Only provide this field/relationship/etc.,
       // when the 'file_managed' base table is present.
-      'skip base' => array('node', 'node_field_revision', 'users', 'comment', 'taxonomy_term_data', 'taxonomy_vocabulary'),
+      'skip base' => array('node', 'node_field_revision', 'users', 'comment', 'taxonomy_term_data'),
       'real field' => 'id',
       'relationship' => array(
         'title' => t('User'),
@@ -175,7 +168,7 @@ class FileViewsData extends EntityViewsData {
       'help' => t('A file that is associated with this user, usually because it is in a field on the user.'),
       // Only provide this field/relationship/etc.,
       // when the 'users' base table is present.
-      'skip base' => array('file_managed', 'node', 'node_field_revision', 'comment', 'taxonomy_term_data', 'taxonomy_vocabulary'),
+      'skip base' => array('file_managed', 'node', 'node_field_revision', 'comment', 'taxonomy_term_data'),
       'real field' => 'fid',
       'relationship' => array(
         'title' => t('File'),
@@ -192,7 +185,7 @@ class FileViewsData extends EntityViewsData {
       'help' => t('A comment that is associated with this file, usually because this file is in a field on the comment.'),
       // Only provide this field/relationship/etc.,
       // when the 'file_managed' base table is present.
-      'skip base' => array('node', 'node_field_revision', 'users', 'comment', 'taxonomy_term_data', 'taxonomy_vocabulary'),
+      'skip base' => array('node', 'node_field_revision', 'users', 'comment', 'taxonomy_term_data'),
       'real field' => 'id',
       'relationship' => array(
         'title' => t('Comment'),
@@ -208,7 +201,7 @@ class FileViewsData extends EntityViewsData {
       'help' => t('A file that is associated with this comment, usually because it is in a field on the comment.'),
       // Only provide this field/relationship/etc.,
       // when the 'comment' base table is present.
-      'skip base' => array('file_managed', 'node', 'node_field_revision', 'users', 'taxonomy_term_data', 'taxonomy_vocabulary'),
+      'skip base' => array('file_managed', 'node', 'node_field_revision', 'users', 'taxonomy_term_data'),
       'real field' => 'fid',
       'relationship' => array(
         'title' => t('File'),
@@ -225,7 +218,7 @@ class FileViewsData extends EntityViewsData {
       'help' => t('A taxonomy term that is associated with this file, usually because this file is in a field on the taxonomy term.'),
       // Only provide this field/relationship/etc.,
       // when the 'file_managed' base table is present.
-      'skip base' => array('node', 'node_field_revision', 'users', 'comment', 'taxonomy_term_data', 'taxonomy_vocabulary'),
+      'skip base' => array('node', 'node_field_revision', 'users', 'comment', 'taxonomy_term_data'),
       'real field' => 'id',
       'relationship' => array(
         'title' => t('Taxonomy Term'),
@@ -241,40 +234,7 @@ class FileViewsData extends EntityViewsData {
       'help' => t('A file that is associated with this taxonomy term, usually because it is in a field on the taxonomy term.'),
       // Only provide this field/relationship/etc.,
       // when the 'taxonomy_term_data' base table is present.
-      'skip base' => array('file_managed', 'node', 'node_field_revision', 'users', 'comment', 'taxonomy_vocabulary'),
-      'real field' => 'fid',
-      'relationship' => array(
-        'title' => t('File'),
-        'label' => t('File'),
-        'base' => 'file_managed',
-        'base field' => 'fid',
-        'relationship field' => 'fid',
-      ),
-    );
-
-    // Describes relationships between files and taxonomy_vocabulary items.
-    $data['file_usage']['file_to_taxonomy_vocabulary'] = array(
-      'title' => t('Taxonomy Vocabulary'),
-      'help' => t('A taxonomy vocabulary that is associated with this file, usually because this file is in a field on the taxonomy vocabulary.'),
-      // Only provide this field/relationship/etc.,
-      // when the 'file_managed' base table is present.
-      'skip base' => array('node', 'node_field_revision', 'users', 'comment', 'taxonomy_term_data', 'taxonomy_vocabulary'),
-      'real field' => 'id',
-      'relationship' => array(
-        'title' => t('Taxonomy Vocabulary'),
-        'label' => t('Taxonomy Vocabulary'),
-        'base' => 'taxonomy_vocabulary',
-        'base field' => 'vid',
-        'relationship field' => 'id',
-        'extra' => array(array('table' => 'file_usage', 'field' => 'type', 'operator' => '=', 'value' => 'taxonomy_vocabulary')),
-      ),
-    );
-    $data['file_usage']['taxonomy_vocabulary_to_file'] = array(
-      'title' => t('File'),
-      'help' => t('A file that is associated with this taxonomy vocabulary, usually because it is in a field on the taxonomy vocabulary.'),
-      // Only provide this field/relationship/etc.,
-      // when the 'taxonomy_vocabulary' base table is present.
-      'skip base' => array('file_managed', 'node', 'node_field_revision', 'users', 'comment', 'taxonomy_term_data'),
+      'skip base' => array('file_managed', 'node', 'node_field_revision', 'users', 'comment'),
       'real field' => 'fid',
       'relationship' => array(
         'title' => t('File'),
