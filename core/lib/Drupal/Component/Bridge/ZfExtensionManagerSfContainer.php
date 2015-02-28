@@ -39,6 +39,20 @@ class ZfExtensionManagerSfContainer implements ReaderManagerInterface, WriterMan
   protected $prefix = '';
 
   /**
+   * The service container.
+   *
+   * @var \Symfony\Component\DependencyInjection\ContainerInterface
+   */
+  protected $container;
+
+  /**
+   * A local cache of computed canonical names.
+   *
+   * @var string[]
+   */
+  protected $canonicalNames;
+
+  /**
    * Constructs a ZfExtensionManagerSfContainer object.
    *
    * @param string $prefix
