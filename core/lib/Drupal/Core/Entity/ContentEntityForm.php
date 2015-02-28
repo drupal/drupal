@@ -76,6 +76,7 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
     // Execute legacy global validation handlers.
     $form_state->setValidateHandlers([]);
     \Drupal::service('form_validator')->executeValidateHandlers($form, $form_state);
+    return $entity;
   }
 
   /**

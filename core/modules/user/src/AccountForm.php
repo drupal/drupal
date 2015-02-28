@@ -383,10 +383,9 @@ abstract class AccountForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function validate(array $form, FormStateInterface $form_state) {
-    parent::validate($form, $form_state);
-
     /** @var \Drupal\user\UserInterface $account */
-    $account = $this->buildEntity($form, $form_state);
+    $account = parent::validate($form, $form_state);
+
     // Customly trigger validation of manually added fields and add in
     // violations. This is necessary as entity form displays only invoke entity
     // validation for fields contained in the display.
@@ -406,6 +405,8 @@ abstract class AccountForm extends ContentEntityForm {
         $form_state->setErrorByName($field_name, $violation->getMessage());
       }
     }
+
+    return $account;
   }
 
   /**

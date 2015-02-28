@@ -101,6 +101,9 @@ interface EntityFormInterface extends BaseFormIdInterface {
    *   A nested array form elements comprising the form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
+   *
+   * @return \Drupal\Core\Entity\ContentEntityTypeInterface
+   *   The built entity.
    */
   public function validate(array $form, FormStateInterface $form_state);
 

@@ -287,8 +287,7 @@ class CommentForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function validate(array $form, FormStateInterface $form_state) {
-    parent::validate($form, $form_state);
-    $comment = $this->buildEntity($form, $form_state);
+    $comment = parent::validate($form, $form_state);
 
     // Customly trigger validation of manually added fields and add in
     // violations.
@@ -300,6 +299,8 @@ class CommentForm extends ContentEntityForm {
     foreach ($violations as $violation) {
       $form_state->setErrorByName('name', $violation->getMessage());
     }
+
+    return $comment;
   }
 
   /**
