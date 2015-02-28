@@ -686,7 +686,7 @@ abstract class StylePluginBase extends PluginBase {
    * @param $field
    *    The id of the field.
    */
-  protected function getFieldValue($index, $field) {
+  public function getFieldValue($index, $field) {
     $this->view->row_index = $index;
     $value = $this->view->field[$field]->getValue($this->view->result[$index]);
     unset($this->view->row_index);
