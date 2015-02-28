@@ -58,7 +58,7 @@ maintenance_page:
   version: VERSION
   css:
     theme:
-      css/theme/maintenance-page.css: {}
+      css/maintenance-page.css: {}
   dependencies:
     - system/maintenance
     - bartik/global-styling
