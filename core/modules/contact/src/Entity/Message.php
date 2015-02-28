@@ -19,12 +19,14 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *   id = "contact_message",
  *   label = @Translation("Contact message"),
  *   handlers = {
+ *     "access" = "Drupal\contact\ContactMessageAccessControlHandler",
  *     "storage" = "Drupal\Core\Entity\ContentEntityNullStorage",
  *     "view_builder" = "Drupal\contact\MessageViewBuilder",
  *     "form" = {
  *       "default" = "Drupal\contact\MessageForm"
  *     }
  *   },
+ *   admin_permission = "administer contact forms",
  *   entity_keys = {
  *     "bundle" = "contact_form",
  *     "uuid" = "uuid"
