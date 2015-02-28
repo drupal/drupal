@@ -130,7 +130,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Dyn
    * Reads values to be purged for a single field.
    *
    * This method is called during field data purge, on fields for which
-   * onFieldDelete() or onFieldDelete() has previously run.
+   * onFieldDefinitionDelete() has previously run.
    *
    * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
    *   The field definition.
