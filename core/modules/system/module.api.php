@@ -70,8 +70,8 @@ function hook_hook_info() {
  *   The name of the module hook being implemented.
  */
 function hook_module_implements_alter(&$implementations, $hook) {
-  if ($hook == 'rdf_mapping') {
-    // Move my_module_rdf_mapping() to the end of the list.
+  if ($hook == 'form_alter') {
+    // Move my_module_form_alter() to the end of the list.
     // \Drupal::moduleHandler()->getImplementations()
     // iterates through $implementations with a foreach loop which PHP iterates
     // in the order that the items were added, so to move an item to the end of

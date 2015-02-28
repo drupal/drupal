@@ -14,9 +14,9 @@
  * Allow modules to define namespaces for RDF mappings.
  *
  * Many common namespace prefixes are defined in rdf_rdf_namespaces(). However,
- * if a module implements hook_rdf_mapping() and uses a prefix that is not
+ * if a module implements rdf mappings that use prefixes that are not
  * defined in rdf_rdf_namespaces(), this hook should be used to define the new
- * namespace prefix.
+ * namespace prefixes.
  *
  * @return
  *   An associative array of namespaces where the key is the namespace prefix
