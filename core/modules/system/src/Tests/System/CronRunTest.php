@@ -106,4 +106,20 @@ class CronRunTest extends WebTestBase {
     // the time will start at 1 January 1970.
     $this->assertNoText('years');
   }
+
+  /**
+   * Ensure that the manual cron run is working.
+   */
+  public function testManualCron() {
+    $admin_user = $this->drupalCreateUser(array('administer site configuration'));
+    $this->drupalLogin($admin_user);
+
+    $this->drupalGet('admin/reports/status/run-cron');
+    $this->assertResponse(403);
+
+    $this->drupalGet('admin/reports/status');
+    $this->clickLink(t('run cron manually'));
+    $this->assertResponse(200);
+    $this->assertText(t('Cron ran successfully.'));
+  }
 }
