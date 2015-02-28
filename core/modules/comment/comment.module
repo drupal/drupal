@@ -739,7 +739,7 @@ function template_preprocess_comment(&$variables) {
     $variables['permalink'] = \Drupal::l(t('Permalink'), $comment->permalink());
   }
 
-  $variables['submitted'] = t('Submitted by !username on !datetime', array('!username' => $variables['author'], '!datetime' => $variables['created']));
+  $variables['submitted'] = t('Submitted by @username on @datetime', array('@username' => $variables['author'], '@datetime' => $variables['created']));
 
   if ($comment->hasParentComment()) {
     // Fetch and store the parent comment information for use in templates.

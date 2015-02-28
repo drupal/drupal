@@ -89,7 +89,9 @@ class StringTest extends UnitTestCase {
   function providerFormat() {
     $tests[] = array('Simple text', array(), 'Simple text', 'String::format leaves simple text alone.', TRUE);
     $tests[] = array('Escaped text: @value', array('@value' => '<script>'), 'Escaped text: &lt;script&gt;', 'String::format replaces and escapes string.', TRUE);
+    $tests[] = array('Escaped text: @value', array('@value' => SafeMarkup::set('<span>Safe HTML</span>')), 'Escaped text: <span>Safe HTML</span>', 'String::format does not escape an already safe string.', TRUE);
     $tests[] = array('Placeholder text: %value', array('%value' => '<script>'), 'Placeholder text: <em class="placeholder">&lt;script&gt;</em>', 'String::format replaces, escapes and themes string.', TRUE);
+    $tests[] = array('Placeholder text: %value', array('%value' => SafeMarkup::set('<span>Safe HTML</span>')), 'Placeholder text: <em class="placeholder"><span>Safe HTML</span></em>', 'String::format does not escape an already safe string themed as a placeholder.', TRUE);
     $tests[] = array('Verbatim text: !value', array('!value' => '<script>'), 'Verbatim text: <script>', 'String::format replaces verbatim string as-is.', FALSE);
     $tests[] = array('Verbatim text: !value', array('!value' => SafeMarkup::set('<span>Safe HTML</span>')), 'Verbatim text: <span>Safe HTML</span>', 'String::format replaces verbatim string as-is.', TRUE);
 

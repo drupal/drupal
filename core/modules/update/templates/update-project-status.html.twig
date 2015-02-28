@@ -110,10 +110,9 @@
 
   {% if base_themes %}
     {% set basethemes = base_themes|join(', ') %}
-    {# Using passthrough since placeholder is already applied in preprocess. #}
     <div class="basethemes">
       {% trans %}
-        Depends on: {{ basethemes|passthrough }}
+        Depends on: {{ basethemes }}
       {% endtrans %}
     </div>
   {% endif %}
