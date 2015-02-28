@@ -637,27 +637,6 @@ function drupal_html_id($id) {
 }
 
 /**
- * Prepares a string for use as a valid HTML ID.
- *
- * Only use this function when you want to intentionally skip the uniqueness
- * guarantee of drupal_html_id().
- *
- * @param string $id
- *   The ID to clean.
- *
- * @return string
- *   The cleaned ID.
- *
- * @see drupal_html_id()
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.0.
- *   Use \Drupal\Component\Utility\Html::getId()
- */
-function drupal_clean_id_identifier($id) {
-  return Html::getId($id);
-}
-
-/**
  * Constructs an array of the defaults that are used for JavaScript assets.
  *
  * @param $data
