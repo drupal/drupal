@@ -75,11 +75,23 @@ class FieldCrudTest extends FieldUnitTestBase {
     $field = entity_create('field_config', $this->fieldDefinition);
     $field->save();
 
+    $field = FieldConfig::load($field->id());
+    $this->assertTrue($field->getSetting('field_setting_from_config_data'));
+    $this->assertNull($field->getSetting('config_data_from_field_setting'));
+
     // Read the configuration. Check against raw configuration data rather than
     // the loaded ConfigEntity, to be sure we check that the defaults are
     // applied on write.
     $config = $this->config('field.field.' . $field->id())->get();
     $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
+
+    $this->assertTrue($config['settings']['config_data_from_field_setting']);
+    $this->assertTrue(!isset($config['settings']['field_setting_from_config_data']));
+
+    // Since we are working with raw configuration, this needs to be unset
+    // manually.
+    // @see Drupal\field_test\Plugin\Field\FieldType\TestItem::fieldSettingsFromConfigData()
+    unset($config['settings']['config_data_from_field_setting']);
 
     // Check that default values are set.
     $this->assertEqual($config['required'], FALSE, 'Required defaults to false.');

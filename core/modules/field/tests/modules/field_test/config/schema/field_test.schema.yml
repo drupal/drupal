@@ -62,6 +62,9 @@ field.storage_settings.test_field:
     unchangeable:
       type: string
       label: 'An unchangeable field storage setting'
+    config_data_from_storage_setting:
+      type: boolean
+      label: 'Test FieldItemInterface::storageSettingsToConfigData()'
 
 field.storage_settings.test_field_with_dependencies:
   type: field.storage_settings.test_field
@@ -78,6 +81,9 @@ field.field_settings.test_field:
     test_field_setting:
       type: string
       label: 'Test field setting'
+    config_data_from_field_setting:
+      type: boolean
+      label: 'Test FieldItemInterface::fieldSettingsToConfigData()'
 
 field.field_settings.test_field_with_dependencies:
   type: field.field_settings.test_field

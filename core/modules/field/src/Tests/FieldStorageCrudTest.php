@@ -44,6 +44,11 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
     field_test_memorize();
     $field_storage = entity_create('field_storage_config', $field_storage_definition);
     $field_storage->save();
+
+    $field_storage = FieldStorageConfig::load($field_storage->id());
+    $this->assertTrue($field_storage->getSetting('storage_setting_from_config_data'));
+    $this->assertNull($field_storage->getSetting('config_data_from_storage_setting'));
+
     $mem = field_test_memorize();
     $this->assertIdentical($mem['field_test_field_storage_config_create'][0][0]->getName(), $field_storage_definition['field_name'], 'hook_entity_create() called with correct arguments.');
     $this->assertIdentical($mem['field_test_field_storage_config_create'][0][0]->getType(), $field_storage_definition['type'], 'hook_entity_create() called with correct arguments.');
@@ -52,6 +57,14 @@ class FieldStorageCrudTest extends FieldUnitTestBase {
     // the loaded ConfigEntity, to be sure we check that the defaults are
     // applied on write.
     $field_storage_config = $this->config('field.storage.' . $field_storage->id())->get();
+
+    $this->assertTrue($field_storage_config['settings']['config_data_from_storage_setting']);
+    $this->assertTrue(!isset($field_storage_config['settings']['storage_setting_from_config_data']));
+
+    // Since we are working with raw configuration, this needs to be unset
+    // manually.
+    // @see Drupal\field_test\Plugin\Field\FieldType\TestItem::storageSettingsFromConfigData()
+    unset($field_storage_config['settings']['config_data_from_storage_setting']);
 
     // Ensure that basic properties are preserved.
     $this->assertEqual($field_storage_config['field_name'], $field_storage_definition['field_name'], 'The field name is properly saved.');

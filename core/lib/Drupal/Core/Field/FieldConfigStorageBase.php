@@ -39,7 +39,7 @@ abstract class FieldConfigStorageBase extends ConfigEntityStorage {
   protected function mapToStorageRecord(EntityInterface $entity) {
     $record = parent::mapToStorageRecord($entity);
     $class = $this->fieldTypeManager->getPluginClass($record['field_type']);
-    $record['settings'] = $class::fieldSettingsFromConfigData($record['settings']);
+    $record['settings'] = $class::fieldSettingsToConfigData($record['settings']);
     return $record;
   }
 

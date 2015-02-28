@@ -137,4 +137,40 @@ class TestItem extends FieldItemBase {
     return empty($this->value);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function storageSettingsToConfigData(array $settings) {
+    $settings['config_data_from_storage_setting'] = 'TRUE';
+    unset($settings['storage_setting_from_config_data']);
+    return $settings;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function storageSettingsFromConfigData(array $settings) {
+    $settings['storage_setting_from_config_data'] = 'TRUE';
+    unset($settings['config_data_from_storage_setting']);
+    return $settings;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function fieldSettingsToConfigData(array $settings) {
+    $settings['config_data_from_field_setting'] = 'TRUE';
+    unset($settings['field_setting_from_config_data']);
+    return $settings;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function fieldSettingsFromConfigData(array $settings) {
+    $settings['field_setting_from_config_data'] = 'TRUE';
+    unset($settings['config_data_from_field_setting']);
+    return $settings;
+  }
+
 }
