@@ -8,6 +8,7 @@
 namespace Drupal\simpletest;
 
 use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\Variable;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DrupalKernel;
@@ -139,23 +140,52 @@ abstract class KernelTestBase extends TestBase {
     $settings = Settings::getAll();
 
     // Allow for test-specific overrides.
+    $directory = DRUPAL_ROOT . '/' . $this->siteDirectory;
     $settings_services_file = DRUPAL_ROOT . '/' . $this->originalSite . '/testing.services.yml';
+    $container_yamls = [];
     if (file_exists($settings_services_file)) {
       // Copy the testing-specific service overrides in place.
-      $testing_services_file = DRUPAL_ROOT . '/' . $this->siteDirectory . '/services.yml';
+      $testing_services_file = $directory . '/services.yml';
       copy($settings_services_file, $testing_services_file);
-      $this->settingsSet('container_yamls', [$testing_services_file]);
+      $container_yamls[] = $testing_services_file;
+    }
+    $settings_testing_file = DRUPAL_ROOT . '/' . $this->originalSite . '/settings.testing.php';
+    if (file_exists($settings_testing_file)) {
+      // Copy the testing-specific settings.php overrides in place.
+      copy($settings_testing_file, $directory . '/settings.testing.php');
+    }
+
+    if (file_exists($directory . '/settings.testing.php')) {
+      // Add the name of the testing class to settings.php and include the
+      // testing specific overrides
+      $hash_salt = Settings::getHashSalt();
+      $test_class = get_class($this);
+      $container_yamls_export = Variable::export($container_yamls);
+      $php = <<<EOD
+<?php
+
+\$settings['hash_salt'] = '$hash_salt';
+\$settings['container_yamls'] = $container_yamls_export;
+
+\$test_class = '$test_class';
+include DRUPAL_ROOT . '/' . \$site_path . '/settings.testing.php';
+EOD;
+      file_put_contents($directory . '/settings.php', $php);
     }
 
     // Add this test class as a service provider.
     // @todo Remove the indirection; implement ServiceProviderInterface instead.
     $GLOBALS['conf']['container_service_providers']['TestServiceProvider'] = 'Drupal\simpletest\TestServiceProvider';
 
-    // Bootstrap a new kernel. Don't use createFromRequest so we don't mess with settings.
+    // Bootstrap a new kernel.
     $class_loader = require DRUPAL_ROOT . '/core/vendor/autoload.php';
     $this->kernel = new DrupalKernel('testing', $class_loader, FALSE);
     $request = Request::create('/');
-    $this->kernel->setSitePath(DrupalKernel::findSitePath($request));
+    $site_path = DrupalKernel::findSitePath($request);
+    $this->kernel->setSitePath($site_path);
+    if (file_exists($directory . '/settings.testing.php')) {
+      Settings::initialize(DRUPAL_ROOT, $site_path, $class_loader);
+    }
     $this->kernel->boot();
 
     // Save the original site directory path, so that extensions in the

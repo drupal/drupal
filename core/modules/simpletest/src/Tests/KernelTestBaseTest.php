@@ -27,6 +27,21 @@ class KernelTestBaseTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected function setUp() {
+    $php = <<<'EOS'
+# Make sure that the $test_class variable is defined when this file is included.
+if ($test_class) {
+}
+<?php
+# Define a function to be able to check that this file was loaded with
+# function_exists().
+if (!function_exists('simpletest_test_stub_settings_function')) {
+  function simpletest_test_stub_settings_function() {}
+}
+EOS;
+
+    $settings_testing_file = $this->siteDirectory . '/settings.testing.php';
+    file_put_contents($settings_testing_file, $php);
+
     $original_container = $this->originalContainer;
     parent::setUp();
     $this->assertNotIdentical(\Drupal::getContainer(), $original_container, 'KernelTestBase test creates a new container.');
@@ -48,6 +63,9 @@ class KernelTestBaseTest extends KernelTestBase {
 
     // Verify that no modules have been installed.
     $this->assertFalse(db_table_exists($table), "'$table' database table not found.");
+
+    // Verify that the settings.testing.php got taken into account.
+    $this->assertTrue(function_exists('simpletest_test_stub_settings_function'));
   }
 
   /**
