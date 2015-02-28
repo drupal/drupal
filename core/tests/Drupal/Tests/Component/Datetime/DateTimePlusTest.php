@@ -61,6 +61,24 @@ class DateTimePlusTest extends UnitTestCase {
   }
 
   /**
+   * Test creating dates from invalid array input.
+   *
+   * @param mixed $input
+   *   Input argument for DateTimePlus.
+   * @param string $timezone
+   *   Timezone argument for DateTimePlus.
+   *
+   * @dataProvider providerTestInvalidDateArrays
+   * @expectedException \Exception
+   */
+  public function testInvalidDateArrays($input, $timezone) {
+    $this->assertInstanceOf(
+      '\Drupal\Component\DateTimePlus',
+      DateTimePlus::createFromArray($input, $timezone)
+    );
+  }
+
+  /**
    * Test creating dates from timestamps, and manipulating timezones.
    *
    * @param int $input
@@ -336,28 +354,29 @@ class DateTimePlusTest extends UnitTestCase {
   }
 
   /**
-   * Provides data for testInvalidDates.
+   * Data provider for testInvalidDateArrays.
    *
    * @return array
    *   An array of arrays, each containing:
    *   - 'input' - Input for DateTimePlus.
    *   - 'timezone' - Timezone for DateTimePlus.
-   *   - 'format' - Format for DateTimePlus.
-   *   - 'message' - Message to display on failure.
    *
    * @see testInvalidDateArrays
    */
   public function providerTestInvalidDateArrays() {
     return array(
-      // Test for invalid year from date array. 10000 as a year will
-      // create an exception error in the PHP DateTime object.
-      array(array('year' => 10000, 'month' => 7, 'day' => 8, 'hour' => 8, 'minute' => 0, 'second' => 0), 'America/Chicago', NULL, "array('year' => 10000, 'month' => 7, 'day' => 8, 'hour' => 8, 'minute' => 0, 'second' => 0) contains an invalid year and did not produce errors."),
+      // One year larger than the documented upper limit of checkdate().
+      array(array('year' => 32768, 'month' => 1, 'day' => 8, 'hour' => 8, 'minute' => 0, 'second' => 0), 'America/Chicago'),
+      // One year smaller than the documented lower limit of checkdate().
+      array(array('year' => 0, 'month' => 1, 'day' => 8, 'hour' => 8, 'minute' => 0, 'second' => 0), 'America/Chicago'),
       // Test for invalid month from date array.
-      array(array('year' => 2010, 'month' => 27, 'day' => 8, 'hour' => 8, 'minute' => 0, 'second' => 0), 'America/Chicago', NULL, "array('year' => 2010, 'month' => 27, 'day' => 8, 'hour' => 8, 'minute' => 0, 'second' => 0) contains an invalid month and did not produce errors."),
+      array(array('year' => 2010, 'month' => 27, 'day' => 8, 'hour' => 8, 'minute' => 0, 'second' => 0), 'America/Chicago'),
       // Test for invalid hour from date array.
-      array(array('year' => 2010, 'month' => 2, 'day' => 28, 'hour' => 80, 'minute' => 0, 'second' => 0), 'America/Chicago', NULL, "array('year' => 2010, 'month' => 2, 'day' => 28, 'hour' => 80, 'minute' => 0, 'second' => 0) contains an invalid hour and produces errors."),
+      array(array('year' => 2010, 'month' => 2, 'day' => 28, 'hour' => 80, 'minute' => 0, 'second' => 0), 'America/Chicago'),
       // Test for invalid minute from date array.
-      array(array('year' => 2010, 'month' => 7, 'day' => 8, 'hour' => 8, 'minute' => 88, 'second' => 0), 'America/Chicago', NULL, "array('year' => 2010, 'month' => 7, 'day' => 8, 'hour' => 8, 'minute' => 88, 'second' => 0) contains an invalid minute and produces errors."),
+      array(array('year' => 2010, 'month' => 7, 'day' => 8, 'hour' => 8, 'minute' => 88, 'second' => 0), 'America/Chicago'),
+      // Regression test for https://drupal.org/node/2084455
+      array(array('hour' => 59, 'minute' => 1,'second' => 1), 'America/Chicago'),
     );
   }
 

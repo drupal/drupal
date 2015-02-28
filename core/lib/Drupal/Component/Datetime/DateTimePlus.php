@@ -112,9 +112,15 @@ class DateTimePlus extends \DateTime {
    * @param array $date_parts
    *   An array of date parts, like ('year' => 2014, 'month => 4).
    * @param mixed $timezone
-   *   @see __construct()
+   *   (optional) \DateTimeZone object, time zone string or NULL. NULL uses the
+   *   default system time zone. Defaults to NULL.
    * @param array $settings
-   *   @see __construct()
+   *   (optional) A keyed array for settings, suitable for passing on to
+   *   __construct().
+   *
+   * @return static
+   *   A new \Drupal\Component\DateTimePlus object based on the parameters
+   *   passed in.
    */
   public static function createFromArray(array $date_parts, $timezone = NULL, $settings = array()) {
     $date_parts = static::prepareArray($date_parts, TRUE);
@@ -216,11 +222,12 @@ class DateTimePlus extends \DateTime {
    * Constructs a date object set to a requested date and timezone.
    *
    * @param string $time
-   *   A date/time string. Defaults to 'now'.
+   *   (optional) A date/time string. Defaults to 'now'.
    * @param mixed $timezone
-   *   PHP DateTimeZone object, string or NULL allowed.
-   *   Defaults to NULL.
+   *   (optional) \DateTimeZone object, time zone string or NULL. NULL uses the
+   *   default system time zone. Defaults to NULL.
    * @param array $settings
+   *   (optional) Keyed array of settings. Defaults to empty array.
    *   - langcode: (optional) String two letter language code used to control
    *     the result of the format(). Defaults to NULL.
    *   - debug: (optional) Boolean choice to leave debug values in the
@@ -475,7 +482,7 @@ class DateTimePlus extends \DateTime {
     foreach (array('hour', 'minute', 'second') as $key) {
       if (array_key_exists($key, $array)) {
         $value = $array[$key];
-        switch ($value) {
+        switch ($key) {
           case 'hour':
             if (!preg_match('/^([1-2][0-3]|[01]?[0-9])$/', $value)) {
               $valid_time = FALSE;
