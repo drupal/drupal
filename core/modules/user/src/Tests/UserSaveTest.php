@@ -21,7 +21,12 @@ class UserSaveTest extends WebTestBase {
    */
   function testUserImport() {
     // User ID must be a number that is not in the database.
-    $max_uid = db_query('SELECT MAX(uid) FROM {users}')->fetchField();
+
+    $uids = \Drupal::entityManager()->getStorage('user')->getQuery()
+      ->sort('uid', 'DESC')
+      ->range(0, 1)
+      ->execute();
+    $max_uid = reset($uids);
     $test_uid = $max_uid + mt_rand(1000, 1000000);
     $test_name = $this->randomMachineName();
 
