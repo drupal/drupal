@@ -186,6 +186,64 @@ class Connection extends DatabaseConnection {
     return $tablename;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function escapeField($field) {
+    $escaped = parent::escapeField($field);
+
+    // Remove any invalid start character.
+    $escaped = preg_replace('/^[^A-Za-z0-9_]/', '', $escaped);
+
+    // The pgsql database driver does not support field names that contain
+    // periods (supported by PostgreSQL server) because this method may be
+    // called by a field with a table alias as part of SQL conditions or
+    // order by statements. This will consider a period as a table alias
+    // identifier, and split the string at the first period.
+    if (preg_match('/^([A-Za-z0-9_]+)"?[.]"?([A-Za-z0-9_.]+)/', $escaped, $parts)) {
+      $table = $parts[1];
+      $column = $parts[2];
+
+      // Use escape alias because escapeField may contain multiple periods that
+      // need to be escaped.
+      $escaped = $this->escapeTable($table) . '.' . $this->escapeAlias($column);
+    }
+    elseif (preg_match('/[A-Z]/', $escaped)) {
+      // Quote the field name for case-sensitivity.
+      $escaped = '"' . $escaped . '"';
+    }
+
+    return $escaped;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function escapeAlias($field) {
+    $escaped = preg_replace('/[^A-Za-z0-9_]+/', '', $field);
+
+    // Escape the alias in quotes for case-sensitivity.
+    if (preg_match('/[A-Z]/', $escaped)) {
+      $escaped = '"' . $escaped . '"';
+    }
+
+    return $escaped;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function escapeTable($table) {
+    $escaped = parent::escapeTable($table);
+
+    // Quote identifier to make it case-sensitive.
+    if (preg_match('/[A-Z]/', $escaped)) {
+      $escaped = '"' . $escaped . '"';
+    }
+
+    return $escaped;
+  }
+
   public function driver() {
     return 'pgsql';
   }

@@ -82,7 +82,7 @@ class Select extends QuerySelect {
 
     // Also check expression aliases.
     foreach ($this->expressions as $expression) {
-      if ($expression['alias'] == $field) {
+      if ($expression['alias'] == $this->connection->escapeAlias($field)) {
         return $return;
       }
     }
@@ -107,6 +107,31 @@ class Select extends QuerySelect {
     // This is a case that can be handled automatically, add the field.
     $this->addField(NULL, $field);
     return $return;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addExpression($expression, $alias = NULL, $arguments = array()) {
+    if (empty($alias)) {
+      $alias = 'expression';
+    }
+
+    // This implements counting in the same manner as the parent method.
+    $alias_candidate = $alias;
+    $count = 2;
+    while (!empty($this->expressions[$alias_candidate])) {
+      $alias_candidate = $alias . '_' . $count++;
+    }
+    $alias = $alias_candidate;
+
+    $this->expressions[$alias] = array(
+      'expression' => $expression,
+      'alias' => $this->connection->escapeAlias($alias_candidate),
+      'arguments' => $arguments,
+    );
+
+    return $alias;
   }
 
   /**

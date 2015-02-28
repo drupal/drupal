@@ -262,7 +262,8 @@ class Schema extends DatabaseSchema {
    *    The field specification, as per the schema data structure format.
    */
   protected function createFieldSql($name, $spec) {
-    $sql = $name . ' ' . $spec['pgsql_type'];
+    // The PostgreSQL server converts names into lowercase, unless quoted.
+    $sql = '"' . $name . '" ' . $spec['pgsql_type'];
 
     if (isset($spec['type']) && $spec['type'] == 'serial') {
       unset($spec['not null']);

@@ -139,15 +139,12 @@ class UpdateComplexTest extends DatabaseTestBase {
     $query = db_update('test')
       ->expression('age', $subselect)
       ->condition('name', 'Ringo');
-    // Save the query for a __toString test later.
-    $string_test = $query;
-    $query->execute();
+    // Save the number of rows that updated for assertion later.
+    $num_updated = $query->execute();
     $after_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Ringo'))->fetchField();
     $expected_age = $select->execute()->fetchField();
     $this->assertEqual($after_age, $expected_age);
-    // Replace whitespace with a single space.
-    $query_string = preg_replace('/\s+/', ' ', $string_test);
-    $this->assertIdentical('UPDATE {test} SET age= (SELECT MAX(priority) + :increment AS max_priority FROM {test_task} t) WHERE (name = :db_condition_placeholder_0)', trim($query_string));
+    $this->assertEqual(1, $num_updated, t('Expected 1 row to be updated in subselect update query.'));
   }
 
 }
