@@ -9,7 +9,6 @@ field_name: title
 entity_type: node
 bundle: forum
 label: Subject
-description: 'The title of this node, always treated as non-markup plain text.'
 required: true
 translatable: true
 default_value: {  }
