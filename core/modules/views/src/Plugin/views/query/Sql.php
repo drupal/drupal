@@ -203,7 +203,7 @@ class Sql extends QueryPluginBase {
 
     $form['disable_sql_rewrite'] = array(
       '#title' => $this->t('Disable SQL rewriting'),
-      '#description' => $this->t('Disabling SQL rewriting will disable node_access checks as well as other modules that implement hook_query_alter().'),
+      '#description' => $this->t('Disabling SQL rewriting will omit all query tags, i. e. disable node access checks as well as override hook_query_alter() implementations in other modules.'),
       '#type' => 'checkbox',
       '#default_value' => !empty($this->options['disable_sql_rewrite']),
       '#suffix' => '<div class="messages messages--warning sql-rewrite-warning js-hide">' . $this->t('WARNING: Disabling SQL rewriting means that node access security is disabled. This may allow users to see data they should not be able to see if your view is misconfigured. Use this option only if you understand and accept this security risk.') . '</div>',
