@@ -515,7 +515,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
     // without modifying the entity being worked on.
     if (is_subclass_of($this->getFieldItemClass(), '\Drupal\Core\TypedData\OptionsProviderInterface')) {
       $items = $entity->get($this->getName());
-      return \Drupal::typedDataManager()->getPropertyInstance($items, 0);
+      return \Drupal::service('plugin.manager.field.field_type')->createFieldItem($items, 0);
     }
     // @todo: Allow setting custom options provider, see
     // https://www.drupal.org/node/2002138.

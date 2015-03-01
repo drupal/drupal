@@ -9,8 +9,10 @@ namespace Drupal\Core\Field;
 
 use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\Core\TypedData\TypedDataManager;
 
 /**
  * Plugin manager for 'field type' plugins.
@@ -18,6 +20,13 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  * @ingroup field_types
  */
 class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePluginManagerInterface {
+
+  /**
+   * The typed data manager.
+   *
+   * @var \Drupal\Core\TypedData\TypedDataManager
+   */
+  protected $typedDataManager;
 
   /**
    * Constructs the FieldTypePluginManager object
@@ -29,11 +38,50 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
    *   Cache backend instance to use.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface
    *   The module handler.
+   * @param \Drupal\Core\TypedData\TypedDataManager $typed_data_manager
+   *   The typed data manager.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, TypedDataManager $typed_data_manager) {
     parent::__construct('Plugin/Field/FieldType', $namespaces, $module_handler, 'Drupal\Core\Field\FieldItemInterface', 'Drupal\Core\Field\Annotation\FieldType');
     $this->alterInfo('field_info');
     $this->setCacheBackend($cache_backend, 'field_types_plugins');
+    $this->typedDataManager = $typed_data_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * Creates a field item, which is not part of an entity or field item list.
+   *
+   * @param string $field_type
+   *   The field type, for which a field item should be created.
+   * @param array $configuration
+   *   The plugin configuration array, i.e. an array with the following keys:
+   *   - field_definition: The field definition object, i.e. an instance of
+   *     Drupal\Core\Field\FieldDefinitionInterface.
+   *
+   * @return \Drupal\Core\Field\FieldItemInterface
+   *   The instantiated object.
+   */
+  public function createInstance($field_type, array $configuration = array()) {
+    $configuration['data_definition'] = $configuration['field_definition']->getItemDefinition();
+    return $this->typedDataManager->createInstance("field_item:$field_type", $configuration);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createFieldItemList(FieldableEntityInterface $entity, $field_name, $values = NULL) {
+    // Leverage prototyping of the Typed Data API for fast instantiation.
+    return $this->typedDataManager->getPropertyInstance($entity->getTypedData(), $field_name, $values);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createFieldItem(FieldItemListInterface $items, $index, $values = NULL) {
+    // Leverage prototyping of the Typed Data API for fast instantiation.
+    return $this->typedDataManager->getPropertyInstance($items, $index, $values);
   }
 
   /**

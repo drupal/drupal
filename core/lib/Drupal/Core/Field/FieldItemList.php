@@ -43,6 +43,13 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
   /**
    * {@inheritdoc}
    */
+  protected function createItem($offset = 0, $value = NULL) {
+    return \Drupal::service('plugin.manager.field.field_type')->createFieldItem($this, $offset, $value);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getEntity() {
     // The "parent" is the TypedData object for the entity, we need to unwrap
     // the actual entity.

@@ -40,10 +40,14 @@ abstract class BaseFieldDefinitionTestBase extends UnitTestCase {
       ->method('moduleExists')
       ->with($module_name)
       ->will($this->returnValue(TRUE));
+    $typed_data_manager = $this->getMockBuilder('\Drupal\Core\TypedData\TypedDataManager')
+      ->disableOriginalConstructor()
+      ->getMock();
     $plugin_manager = new FieldTypePluginManager(
       $namespaces,
       $this->getMock('Drupal\Core\Cache\CacheBackendInterface'),
-      $module_handler
+      $module_handler,
+      $typed_data_manager
     );
 
     $container = new ContainerBuilder();

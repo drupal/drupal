@@ -229,9 +229,9 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMockForAbstractClass();
 
-    $this->typedDataManager->expects($this->any())
-      ->method('getPropertyInstance')
-      ->with($this->entity->getTypedData(), 'revision_id', NULL)
+    $this->fieldTypePluginManager->expects($this->any())
+      ->method('createFieldItemList')
+      ->with($this->entity, 'revision_id', NULL)
       ->will($this->returnValue($field_item_list));
 
     $this->fieldDefinitions['revision_id']->getItemDefinition()->setClass(get_class($field_item));

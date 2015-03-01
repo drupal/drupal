@@ -78,4 +78,14 @@ class FieldItemDataDefinition extends DataDefinition implements ComplexDataDefin
     return $this->fieldDefinition->getFieldStorageDefinition()->getMainPropertyName();
   }
 
+  /**
+   * Gets the field item's field definition.
+   *
+   * @return \Drupal\Core\Field\FieldDefinitionInterface
+   *   The field definition for this field item.
+   */
+  public function getFieldDefinition() {
+    return $this->fieldDefinition;
+  }
+
 }

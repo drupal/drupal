@@ -185,15 +185,6 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   }
 
   /**
-   * Returns the typed data manager.
-   *
-   * @return \Drupal\Core\TypedData\TypedDataManager
-   */
-  protected function typedDataManager() {
-    return \Drupal::typedDataManager();
-  }
-
-  /**
    * {@inheritdoc}
    */
   protected function getLanguages() {
@@ -378,8 +369,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
         if (isset($this->values[$name][$langcode])) {
           $value = $this->values[$name][$langcode];
         }
-        $entity_adapter = $this->getTypedData();
-        $field = \Drupal::typedDataManager()->getPropertyInstance($entity_adapter, $name, $value);
+        $field = \Drupal::service('plugin.manager.field.field_type')->createFieldItemList($this, $name, $value);
         if ($default) {
           // $this->defaultLangcode might not be set if we are initializing the
           // default language code cache, in which case there is no valid
@@ -894,7 +884,8 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     // Avoid deep-cloning when we are initializing a translation object, since
     // it will represent the same entity, only with a different active language.
     if (!$this->translationInitialize) {
-      // The translation is a different object, and needs its own TypedData object.
+      // The translation is a different object, and needs its own TypedData
+      // adapter object.
       $this->typedData = NULL;
       $definitions = $this->getFieldDefinitions();
       foreach ($this->fields as $name => $values) {
