@@ -11,6 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Entity\EntityViewModeInterface;
+use Drupal\Core\Entity\EntityFormModeInterface;
 use Drupal\Core\Url;
 use Drupal\field_ui\FieldUI;
 use Drupal\field_ui\Plugin\Derivative\FieldUiLocalTask;
@@ -165,16 +166,30 @@ function field_ui_form_node_type_form_submit($form, FormStateInterface $form_sta
 }
 
 /**
- * Implements hook_view_mode_presave().
+ * Implements hook_entity_view_mode_presave().
  */
-function field_ui_view_mode_presave(EntityViewModeInterface $view_mode) {
+function field_ui_entity_view_mode_presave(EntityViewModeInterface $view_mode) {
   \Drupal::service('router.builder_indicator')->setRebuildNeeded();
 }
 
 /**
- * Implements hook_view_mode_delete().
+ * Implements hook_entity_form_mode_presave().
  */
-function field_ui_view_mode_delete(EntityViewModeInterface $view_mode) {
+function field_ui_entity_form_mode_presave(EntityFormModeInterface $form_mode) {
+  \Drupal::service('router.builder_indicator')->setRebuildNeeded();
+}
+
+/**
+ * Implements hook_entity_view_mode_delete().
+ */
+function field_ui_entity_view_mode_delete(EntityViewModeInterface $view_mode) {
+  \Drupal::service('router.builder_indicator')->setRebuildNeeded();
+}
+
+/**
+ * Implements hook_entity_form_mode_delete().
+ */
+function field_ui_entity_form_mode_delete(EntityFormModeInterface $form_mode) {
   \Drupal::service('router.builder_indicator')->setRebuildNeeded();
 }
 

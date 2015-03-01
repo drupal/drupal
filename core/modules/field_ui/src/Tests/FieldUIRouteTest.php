@@ -72,6 +72,28 @@ class FieldUIRouteTest extends WebTestBase {
     $this->assertTitle('Manage form display | Drupal');
     $this->assertLocalTasks();
     $this->assert(count($this->xpath('//ul/li[1]/a[contains(text(), :text)]', array(':text' => 'Default'))) == 1, 'Default secondary tab is in first position.');
+
+    // Create new view mode and verify it's available on the Manage Display
+    // screen after enabling it.
+    entity_create('entity_view_mode' ,array(
+      'id' => 'user.test',
+      'label' => 'Test',
+      'targetEntityType' => 'user',
+    ))->save();
+    $edit = array('display_modes_custom[test]' => TRUE);
+    $this->drupalPostForm('admin/config/people/accounts/display', $edit, t('Save'));
+    $this->assertLink('Test');
+
+    // Create new form mode and verify it's available on the Manage Form
+    // Display screen after enabling it.
+    entity_create('entity_form_mode' ,array(
+      'id' => 'user.test',
+      'label' => 'Test',
+      'targetEntityType' => 'user',
+    ))->save();
+    $edit = array('display_modes_custom[test]' => TRUE);
+    $this->drupalPostForm('admin/config/people/accounts/form-display', $edit, t('Save'));
+    $this->assertLink('Test');
   }
 
   /**
