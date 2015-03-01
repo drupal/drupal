@@ -1227,7 +1227,7 @@ services:
     tags:
       - { name: twig.loader, priority: 0 }
   twig.loader.string:
-    class: Twig_Loader_String
+    class: Drupal\Core\Template\Loader\StringLoader
     tags:
       - { name: twig.loader, priority: -100 }
   element_info:

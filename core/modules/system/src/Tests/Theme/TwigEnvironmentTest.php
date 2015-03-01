@@ -65,5 +65,21 @@ class TwigEnvironmentTest extends KernelTestBase {
     $this->assertEqual(drupal_render($element_copy), 'test-with-context muuh');
   }
 
+  /**
+   * Tests that exceptions are thrown when a template is not found.
+   */
+  public function testTemplateNotFoundException() {
+    /** @var \Drupal\Core\Template\TwigEnvironment $environment */
+    $environment = \Drupal::service('twig');
+
+    try {
+      $environment->loadTemplate('this-template-does-not-exist.html.twig')->render(array());
+      $this->fail('Did not throw an exception as expected.');
+    }
+    catch (\Twig_Error_Loader $e) {
+      $this->assertTrue(strpos($e->getMessage(), 'Template "this-template-does-not-exist.html.twig" is not defined') === 0);
+    }
+  }
+
 }
 
