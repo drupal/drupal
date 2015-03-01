@@ -2,21 +2,43 @@
 
 /**
  * @file
- * Definition of Drupal\taxonomy\Tests\TermUnitTest.
+ * Contains \Drupal\taxonomy\Tests\TermKernelTest.
  */
 
 namespace Drupal\taxonomy\Tests;
 
 use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\Tests\TaxonomyTestTrait;
+use Drupal\simpletest\KernelTestBase;
 
 /**
- * Unit tests for taxonomy term functions.
+ * Kernel tests for taxonomy term functions.
  *
  * @group taxonomy
  */
-class TermUnitTest extends TaxonomyTestBase {
+class TermKernelTest extends KernelTestBase {
 
-  function testTermDelete() {
+  use TaxonomyTestTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static $modules = array( 'filter', 'taxonomy', 'taxonomy_term', 'text', 'user' );
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+    $this->installConfig(array('filter'));
+    $this->installEntitySchema('taxonomy_term');
+  }
+
+  /**
+   * Deleting terms should also remove related vocabulary.
+   * Deleting an invalid term should silently fail.
+   */
+  public function testTermDelete() {
     $vocabulary = $this->createVocabulary();
     $valid_term = $this->createTerm($vocabulary);
     // Delete a valid term.
@@ -31,7 +53,7 @@ class TermUnitTest extends TaxonomyTestBase {
   /**
    * Deleting a parent of a term with multiple parents does not delete the term.
    */
-  function testMultipleParentDelete() {
+  public function testMultipleParentDelete() {
     $vocabulary = $this->createVocabulary();
     $parent_term1 = $this->createTerm($vocabulary);
     $parent_term2 = $this->createTerm($vocabulary);
@@ -55,7 +77,7 @@ class TermUnitTest extends TaxonomyTestBase {
   /**
    * Test a taxonomy with terms that have multiple parents of different depths.
    */
-  function testTaxonomyVocabularyTree() {
+  public function testTaxonomyVocabularyTree() {
     // Create a new vocabulary with 6 terms.
     $vocabulary = $this->createVocabulary();
     $term = array();
