@@ -51,13 +51,14 @@ function twig_init(Extension $theme) {
 function twig_render_template($template_file, array $variables) {
   /** @var \Twig_Environment $twig_service */
   $twig_service = \Drupal::service('twig');
+  $output = [
+    'debug_prefix' => '',
+    'debug_info' => '',
+    'rendered_markup' => '',
+    'debug_suffix' => '',
+  ];
   try {
-    $output = array(
-      'debug_prefix'    => '',
-      'debug_info'      => '',
-      'rendered_markup' => $twig_service->loadTemplate($template_file)->render($variables),
-      'debug_suffix'    => '',
-    );
+    $output['rendered_markup'] = $twig_service->loadTemplate($template_file)->render($variables);
   }
   catch (\Twig_Error_Loader $e) {
     drupal_set_message($e->getMessage(), 'error');
