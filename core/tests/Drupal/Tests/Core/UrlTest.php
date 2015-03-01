@@ -376,24 +376,6 @@ class UrlTest extends UnitTestCase {
   }
 
   /**
-   * Tests the __toString() method.
-   *
-   * @param \Drupal\Core\Url[] $urls
-   *   An array of Url objects.
-   *
-   * @depends testUrlFromRequest
-   *
-   * @covers ::__toString
-   */
-  public function testMagicToString($urls) {
-    foreach ($urls as $index => $url) {
-      $url->setUrlGenerator(\Drupal::urlGenerator());
-      $path = array_pop($this->map[$index]);
-      $this->assertSame($path, (string) $url);
-    }
-  }
-
-  /**
    * Tests the getRouteName() method.
    *
    * @param \Drupal\Core\Url[] $urls

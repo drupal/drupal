@@ -36,7 +36,7 @@ class LocaleConfigTranslationImportTest extends WebTestBase {
 
     // Update module should not go out to d.o to check for updates. We override
     // the url to an invalid update source. No update data will be found.
-    $this->config('update.settings')->set('fetch.url', (string) Url::fromRoute('<front>', array(), array('absolute' => TRUE)))->save();
+    $this->config('update.settings')->set('fetch.url', (string) Url::fromRoute('<front>')->setAbsolute()->toString())->save();
   }
 
   /**

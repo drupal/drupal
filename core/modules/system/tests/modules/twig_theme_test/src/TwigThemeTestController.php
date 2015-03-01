@@ -50,6 +50,16 @@ class TwigThemeTestController {
   }
 
   /**
+   * Renders a URL to a string.
+   */
+  public function urlToStringRender() {
+    return [
+      '#theme' => 'twig_theme_test_url_to_string',
+      '#test_url' => Url::fromRoute('user.register'),
+    ];
+  }
+
+  /**
    * Renders for testing file_url functions in a Twig template.
    */
   public function fileUrlRender() {

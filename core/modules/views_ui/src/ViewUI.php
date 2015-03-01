@@ -727,7 +727,7 @@ class ViewUI implements ViewEntityInterface {
             if (isset($path)) {
               // @todo Views should expect and store a leading /. See:
               //   https://www.drupal.org/node/2423913
-              $path = \Drupal::l($path, Url::fromUserInput('/' . $path));
+              $path = \Drupal::l($path->toString(), $path);
             }
             else {
               $path = t('This display has no path.');

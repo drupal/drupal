@@ -715,7 +715,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
         '#title' => $this->t('Text'),
         '#type' => 'textarea',
         '#default_value' => $this->options['alter']['text'],
-        '#description' => $this->t('The text to display for this field. You may include HTML or <a href="@url">Twig</a>. You may enter data from this view as per the "Replacement patterns" below.', array('@url' => CoreUrl::fromUri('http://twig.sensiolabs.org/documentation'))),
+        '#description' => $this->t('The text to display for this field. You may include HTML or <a href="@url">Twig</a>. You may enter data from this view as per the "Replacement patterns" below.', array('@url' => CoreUrl::fromUri('http://twig.sensiolabs.org/documentation')->toString())),
         '#states' => array(
           'visible' => array(
             ':input[name="options[alter][alter_text]"]' => array('checked' => TRUE),

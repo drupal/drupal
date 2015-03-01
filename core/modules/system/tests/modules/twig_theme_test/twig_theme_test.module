@@ -42,6 +42,10 @@ function twig_theme_test_theme($existing, $type, $theme, $path) {
     'variables' => array('test_url' => NULL),
     'template' => 'twig_theme_test.link_generator',
   );
+  $items['twig_theme_test_url_to_string'] = array(
+    'variables' => array('test_url' => NULL),
+    'template' => 'twig_theme_test.url_to_string',
+  );
   $items['twig_theme_test_file_url'] = array(
     'variables' => array(),
     'template' => 'twig_theme_test.file_url',

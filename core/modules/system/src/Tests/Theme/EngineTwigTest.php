@@ -84,7 +84,26 @@ class EngineTwigTest extends WebTestBase {
   }
 
   /**
-   * Tests the file_url Twig functions.
+   * Tests the magic url to string Twig functions.
+   *
+   * @see \Drupal\Core\Url
+   */
+  public function testTwigUrlToString() {
+    $this->drupalGet('twig-theme-test/url-to-string');
+
+    $expected = [
+      'rendered url: ' . Url::fromRoute('user.register')->toString(),
+    ];
+
+    $content = $this->getRawContent();
+    $this->assertFalse(empty($content), 'Page content is not empty');
+    foreach ($expected as $string) {
+      $this->assertRaw('<div>' . $string . '</div>');
+    }
+  }
+
+  /**
+   * Tests the automatic/magic calling of toString() on objects, if exists.
    */
   public function testTwigFileUrls() {
     $this->drupalGet('/twig-theme-test/file-url');

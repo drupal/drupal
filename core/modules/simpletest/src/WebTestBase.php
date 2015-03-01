@@ -1503,6 +1503,10 @@ abstract class WebTestBase extends TestBase {
       $out = $new;
     }
 
+    if ($path instanceof Url) {
+      $path = $path->toString();
+    }
+
     $verbose = 'GET request to: ' . $path .
                '<hr />Ending URL: ' . $this->getUrl();
     if ($this->dumpHeaders) {
@@ -1694,6 +1698,9 @@ abstract class WebTestBase extends TestBase {
             $out = $new;
           }
 
+          if ($path instanceof Url) {
+            $path = $path->toString();
+          }
           $verbose = 'POST request to: ' . $path;
           $verbose .= '<hr />Ending URL: ' . $this->getUrl();
           if ($this->dumpHeaders) {

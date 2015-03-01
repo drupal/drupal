@@ -26,6 +26,13 @@ twig_theme_test_link_generator:
   requirements:
     _access: 'TRUE'
 
+twig_theme_test_url_to_string:
+  path: '/twig-theme-test/url-to-string'
+  defaults:
+    _controller: '\Drupal\twig_theme_test\TwigThemeTestController::urlToStringRender'
+  requirements:
+    _access: 'TRUE'
+
 twig_theme_test_file_url:
   path: '/twig-theme-test/file-url'
   defaults:
