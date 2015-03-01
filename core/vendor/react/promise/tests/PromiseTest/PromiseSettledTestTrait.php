@@ -46,4 +46,41 @@ trait PromiseSettledTestTrait
 
         $adapter->promise()->cancel();
     }
+
+    /** @test */
+    public function doneShouldReturnNullForSettledPromise()
+    {
+        $adapter = $this->getPromiseTestAdapter();
+
+        $adapter->settle();
+        $this->assertNull($adapter->promise()->done(null, function () {}));
+    }
+
+    /** @test */
+    public function doneShouldReturnAllowNullForSettledPromise()
+    {
+        $adapter = $this->getPromiseTestAdapter();
+
+        $adapter->settle();
+        $this->assertNull($adapter->promise()->done(null, function () {}, null));
+    }
+
+    /** @test */
+    public function progressShouldNotInvokeProgressHandlerForSettledPromise()
+    {
+        $adapter = $this->getPromiseTestAdapter();
+
+        $adapter->settle();
+        $adapter->promise()->progress($this->expectCallableNever());
+        $adapter->notify();
+    }
+
+    /** @test */
+    public function alwaysShouldReturnAPromiseForSettledPromise()
+    {
+        $adapter = $this->getPromiseTestAdapter();
+
+        $adapter->settle();
+        $this->assertInstanceOf('React\\Promise\\PromiseInterface', $adapter->promise()->always(function () {}));
+    }
 }

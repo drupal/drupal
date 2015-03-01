@@ -20,10 +20,10 @@ class LazyPromiseTest extends TestCase
             'promise'  => function () use ($factory) {
                 return new LazyPromise($factory);
             },
-            'resolve'  => [$d, 'resolve'],
-            'reject'   => [$d, 'reject'],
-            'progress' => [$d, 'progress'],
-            'settle'   => [$d, 'resolve'],
+            'resolve' => [$d, 'resolve'],
+            'reject'  => [$d, 'reject'],
+            'notify'  => [$d, 'progress'],
+            'settle'  => [$d, 'resolve'],
         ]);
     }
 

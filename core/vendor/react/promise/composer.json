@@ -12,7 +12,7 @@
         "psr-4": {
             "React\\Promise\\": "src/"
         },
-        "files": ["src/functions.php"]
+        "files": ["src/functions_include.php"]
     },
     "extra": {
         "branch-alias": {

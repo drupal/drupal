@@ -1,6 +1,18 @@
 CHANGELOG
 =========
 
+* 2.2.0 (2014-12-30)
+
+  * Introduce new ExtendedPromiseInterface implemented by all promises
+  * Add new .done() method (part of the ExtendedPromiseInterface)
+  * Add new .otherwise() method (part of the ExtendedPromiseInterface)
+  * Add new .always() method (part of the ExtendedPromiseInterface)
+  * Add new .progress() method (part of the ExtendedPromiseInterface)
+  * Rename Deferred::progress to Deferred::notify to avoid confusion with
+    ExtendedPromiseInterface::progress (a Deferred::progress alias is still
+    available for backward compatibility)
+  * resolve() now always returns a ExtendedPromiseInterface
+
 * 2.1.0 (2014-10-15)
 
   * Introduce new CancellablePromiseInterface implemented by all promises

@@ -2,7 +2,7 @@
 
 namespace React\Promise;
 
-class RejectedPromise implements CancellablePromiseInterface
+class RejectedPromise implements ExtendedPromiseInterface, CancellablePromiseInterface
 {
     private $reason;
 
@@ -26,6 +26,46 @@ class RejectedPromise implements CancellablePromiseInterface
         } catch (\Exception $exception) {
             return new RejectedPromise($exception);
         }
+    }
+
+    public function done(callable $onFulfilled = null, callable $onRejected = null, callable $onProgress = null)
+    {
+        if (null === $onRejected) {
+            throw UnhandledRejectionException::resolve($this->reason);
+        }
+
+        $result = $onRejected($this->reason);
+
+        if ($result instanceof self) {
+            throw UnhandledRejectionException::resolve($result->reason);
+        }
+
+        if ($result instanceof ExtendedPromiseInterface) {
+            $result->done();
+        }
+    }
+
+    public function otherwise(callable $onRejected)
+    {
+        if (!_checkTypehint($onRejected, $this->reason)) {
+            return new RejectedPromise($this->reason);
+        }
+
+        return $this->then(null, $onRejected);
+    }
+
+    public function always(callable $onFulfilledOrRejected)
+    {
+        return $this->then(null, function ($reason) use ($onFulfilledOrRejected) {
+            return resolve($onFulfilledOrRejected())->then(function () use ($reason) {
+                return new RejectedPromise($reason);
+            });
+        });
+    }
+
+    public function progress(callable $onProgress)
+    {
+        return new RejectedPromise($this->reason);
     }
 
     public function cancel()

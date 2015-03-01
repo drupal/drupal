@@ -2,7 +2,7 @@
 
 namespace React\Promise;
 
-class FulfilledPromise implements CancellablePromiseInterface
+class FulfilledPromise implements ExtendedPromiseInterface, CancellablePromiseInterface
 {
     private $value;
 
@@ -28,6 +28,38 @@ class FulfilledPromise implements CancellablePromiseInterface
         } catch (\Exception $exception) {
             return new RejectedPromise($exception);
         }
+    }
+
+    public function done(callable $onFulfilled = null, callable $onRejected = null, callable $onProgress = null)
+    {
+        if (null === $onFulfilled) {
+            return;
+        }
+
+        $result = $onFulfilled($this->value);
+
+        if ($result instanceof ExtendedPromiseInterface) {
+            $result->done();
+        }
+    }
+
+    public function otherwise(callable $onRejected)
+    {
+        return new FulfilledPromise($this->value);
+    }
+
+    public function always(callable $onFulfilledOrRejected)
+    {
+        return $this->then(function ($value) use ($onFulfilledOrRejected) {
+            return resolve($onFulfilledOrRejected())->then(function () use ($value) {
+                return $value;
+            });
+        });
+    }
+
+    public function progress(callable $onProgress)
+    {
+        return new FulfilledPromise($this->value);
     }
 
     public function cancel()
