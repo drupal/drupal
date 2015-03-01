@@ -1138,10 +1138,10 @@ abstract class WebTestBase extends TestBase {
   /**
    * Rebuilds \Drupal::getContainer().
    *
-   * Use this to build a new kernel and service container. For example, when the
-   * list of enabled modules is changed via the internal browser, in which case
-   * the test process still contains an old kernel and service container with an
-   * old module list.
+   * Use this to update the test process's kernel with a new service container.
+   * For example, when the list of enabled modules is changed via the internal
+   * browser the test process's kernel has a service container with an out of
+   * date module list.
    *
    * @see TestBase::prepareEnvironment()
    * @see TestBase::restoreEnvironment()
@@ -1152,8 +1152,6 @@ abstract class WebTestBase extends TestBase {
    *   enabled modules to be immediately available in the same request.
    */
   protected function rebuildContainer() {
-    // Maintain the current global request object.
-    $request = \Drupal::request();
     // Rebuild the kernel and bring it back to a fully bootstrapped state.
     $this->container = $this->kernel->rebuildContainer();
 
