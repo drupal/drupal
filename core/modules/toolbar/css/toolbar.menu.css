@@ -34,6 +34,13 @@
   font-weight: bold;
 }
 
+/* ----- Toolbar menu tray for viewports less than 320px ------ */
+@media screen and (max-width: 319px) {
+  .toolbar .toolbar-tray-vertical.active {
+    width: 100%;
+  }
+}
+
 /**
  * Items.
  */
