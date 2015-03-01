@@ -117,12 +117,12 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
     $form['view_mode'] = array(
       '#type' => 'select',
       '#options' => $options,
-      '#title' => t('View mode'),
-      '#description' => t('Output the block in this view mode.'),
+      '#title' => $this->t('View mode'),
+      '#description' => $this->t('Output the block in this view mode.'),
       '#default_value' => $this->configuration['view_mode'],
       '#access' => (count($options) > 1),
     );
-    $form['title']['#description'] = t('The title of the block as shown to the user.');
+    $form['title']['#description'] = $this->t('The title of the block as shown to the user.');
     return $form;
   }
 
@@ -145,7 +145,7 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
     }
     else {
       return array(
-        '#markup' => t('Block with uuid %uuid does not exist. <a href="!url">Add custom block</a>.', array(
+        '#markup' => $this->t('Block with uuid %uuid does not exist. <a href="!url">Add custom block</a>.', array(
           '%uuid' => $uuid,
           '!url' => $this->urlGenerator->generate('block_content.add_page')
         )),

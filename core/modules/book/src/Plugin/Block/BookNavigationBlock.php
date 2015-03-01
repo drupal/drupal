@@ -99,15 +99,15 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
    */
   function blockForm($form, FormStateInterface $form_state) {
     $options = array(
-      'all pages' => t('Show block on all pages'),
-      'book pages' => t('Show block only on book pages'),
+      'all pages' => $this->t('Show block on all pages'),
+      'book pages' => $this->t('Show block only on book pages'),
     );
     $form['book_block_mode'] = array(
       '#type' => 'radios',
-      '#title' => t('Book navigation block display'),
+      '#title' => $this->t('Book navigation block display'),
       '#options' => $options,
       '#default_value' => $this->configuration['block_mode'],
-      '#description' => t("If <em>Show block on all pages</em> is selected, the block will contain the automatically generated menus for all of the site's books. If <em>Show block only on book pages</em> is selected, the block will contain only the one menu corresponding to the current page's book. In this case, if the current page is not in a book, no block will be displayed. The <em>Page specific visibility settings</em> or other visibility settings can be used in addition to selectively display this block."),
+      '#description' => $this->t("If <em>Show block on all pages</em> is selected, the block will contain the automatically generated menus for all of the site's books. If <em>Show block only on book pages</em> is selected, the block will contain only the one menu corresponding to the current page's book. In this case, if the current page is not in a book, no block will be displayed. The <em>Page specific visibility settings</em> or other visibility settings can be used in addition to selectively display this block."),
       );
 
     return $form;

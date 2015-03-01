@@ -83,7 +83,7 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
     $defaults = $this->defaultConfiguration();
     $form['menu_levels'] = array(
       '#type' => 'details',
-      '#title' => t('Menu levels'),
+      '#title' => $this->t('Menu levels'),
       // Open if not set to defaults.
       '#open' => $defaults['level'] !== $config['level'] || $defaults['depth'] !== $config['depth'],
       '#process' => [[get_class(), 'processMenuLevelParents']],

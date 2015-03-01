@@ -125,14 +125,14 @@ class AggregatorFeedBlock extends BlockBase implements ContainerFactoryPluginInt
     }
     $form['feed'] = array(
       '#type' => 'select',
-      '#title' => t('Select the feed that should be displayed'),
+      '#title' => $this->t('Select the feed that should be displayed'),
       '#default_value' => $this->configuration['feed'],
       '#options' => $options,
     );
     $range = range(2, 20);
     $form['block_count'] = array(
       '#type' => 'select',
-      '#title' => t('Number of news items in block'),
+      '#title' => $this->t('Number of news items in block'),
       '#default_value' => $this->configuration['block_count'],
       '#options' => array_combine($range, $range),
     );

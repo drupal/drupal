@@ -50,7 +50,7 @@ class SystemMainBlock extends BlockBase implements MainContentBlockPluginInterfa
 
     // The main content block is never cacheable, because it may be dynamic.
     $form['cache']['#disabled'] = TRUE;
-    $form['cache']['#description'] = t('This block is never cacheable, it is not configurable.');
+    $form['cache']['#description'] = $this->t('This block is never cacheable, it is not configurable.');
     $form['cache']['max_age']['#value'] = 0;
 
     return $form;

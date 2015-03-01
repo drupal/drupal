@@ -69,7 +69,7 @@ abstract class ForumBlockBase extends BlockBase {
     $range = range(2, 20);
     $form['block_count'] = array(
       '#type' => 'select',
-      '#title' => t('Number of topics'),
+      '#title' => $this->t('Number of topics'),
       '#default_value' => $this->configuration['block_count'],
       '#options' => array_combine($range, $range),
     );

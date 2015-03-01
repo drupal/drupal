@@ -91,16 +91,16 @@ class UserLoginBlock extends BlockBase implements ContainerFactoryPluginInterfac
     // Build action links.
     $items = array();
     if (\Drupal::config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {
-      $items['create_account'] = \Drupal::l(t('Create new account'), new Url('user.register', array(), array(
+      $items['create_account'] = \Drupal::l($this->t('Create new account'), new Url('user.register', array(), array(
         'attributes' => array(
-          'title' => t('Create a new user account.'),
+          'title' => $this->t('Create a new user account.'),
           'class' => array('create-account-link'),
         ),
       )));
     }
-    $items['request_password'] = \Drupal::l(t('Reset your password'), new Url('user.pass', array(), array(
+    $items['request_password'] = \Drupal::l($this->t('Reset your password'), new Url('user.pass', array(), array(
       'attributes' => array(
-        'title' => t('Send password reset instructions via e-mail.'),
+        'title' => $this->t('Send password reset instructions via e-mail.'),
         'class' => array('request-password-link'),
       ),
     )));
