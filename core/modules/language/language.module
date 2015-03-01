@@ -8,6 +8,7 @@
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\ContentEntityFormInterface;
 use Drupal\Core\Entity\EntityFormInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -55,7 +56,7 @@ function language_help($route_name, RouteMatchInterface $route_match) {
       return $output;
 
     case 'entity.configurable_language.collection':
-      $output = '<p>' . t('Reorder the added languages to set their order in the language switcher block and, when editing content, in the list of selectable languages. This ordering does not impact <a href="@detection">detection and selection</a>.', array('@detection' => \Drupal::url('language.negotiation'))) . '</p>';
+      $output = '<p>' . t('Reorder the configured languages to set their order in the language switcher block and, when editing content, in the list of selectable languages. This ordering does not impact <a href="@detection">detection and selection</a>.', array('@detection' => \Drupal::url('language.negotiation'))) . '</p>';
       $output .= '<p>' . t('The site default language can also be set. It is not recommended to change the default language on a working site. <a href="@language-detection">Configure the Selected language</a> setting on the detection and selection page to change the fallback language for language selection.', array('@language-detection' => \Drupal::url('language.negotiation'))) . '</p>';
       return $output;
 
@@ -80,13 +81,13 @@ function language_help($route_name, RouteMatchInterface $route_match) {
 
     case 'entity.block.edit_form':
       if (($block = $route_match->getParameter('block')) && $block->getPluginId() == 'language_block:language_interface') {
-        return '<p>' . t('With multiple languages added, registered users can select their preferred language and authors can assign a specific language to content.') . '</p>';
+        return '<p>' . t('With multiple languages configured, registered users can select their preferred language and authors can assign a specific language to content.') . '</p>';
       }
       break;
 
     case 'block.admin_add':
       if ($route_match->getParameter('plugin_id') == 'language_block:language_interface') {
-        return '<p>' . t('With multiple languages added, registered users can select their preferred language and authors can assign a specific language to content.') . '</p>';
+        return '<p>' . t('With multiple languages configured, registered users can select their preferred language and authors can assign a specific language to content.') . '</p>';
       }
       break;
 
@@ -510,4 +511,42 @@ function language_entity_field_access($operation, FieldDefinitionInterface $fiel
     }
   }
   return AccessResult::neutral();
+}
+
+/**
+ * Implements hook_tour_tips_alter().
+ */
+function language_tour_tips_alter(array &$tour_tips, EntityInterface $entity) {
+  foreach ($tour_tips as $tour_tip) {
+    if ($tour_tip->get('id') == 'language-overview') {
+      $additional_overview = '';
+      if (Drupal::service('module_handler')->moduleExists('locale')) {
+        $additional_overview = t("This page also provides an overview of how much of the site's interface has been translated for each configured language.");
+      }
+      else {
+        $additional_overview = t("If the Interface Translation module is enabled, this page will provide an overview of how much of the site's interface has been translated for each configured language.");
+      }
+      $tour_tip->set('body', $tour_tip->get('body') . '<p>' . $additional_overview . '</p>');
+    }
+    elseif ($tour_tip->get('id') == 'language-continue') {
+      $additional_continue = '';
+      $additional_modules = array();
+      if (!Drupal::service('module_handler')->moduleExists('locale')) {
+        $additional_modules[] = Drupal::service('module_handler')->getName('locale');
+      }
+      if (!Drupal::service('module_handler')->moduleExists('content_translation')) {
+        $additional_modules[] = Drupal::service('module_handler')->getName('content_translation');
+      }
+      if (!empty($additional_modules)) {
+        $additional_continue = t('Depending on your site features, additional modules that you might want to enable are:') . '<ul>';
+        foreach ($additional_modules as $additional_module) {
+          $additional_continue .= '<li>' . $additional_module . '</li>';
+        }
+        $additional_continue .= '</ul>';
+      }
+      if (!empty($additional_continue)) {
+        $tour_tip->set('body', $tour_tip->get('body') . '<p>' . $additional_continue . '</p>');
+      }
+    }
+  }
 }
