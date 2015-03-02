@@ -9,10 +9,12 @@ namespace Drupal\views\Plugin\EntityReferenceSelection;
 
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -37,6 +39,20 @@ class ViewsSelection extends PluginBase implements SelectionInterface, Container
   protected $entityManager;
 
   /**
+   * The module handler service.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
    * The loaded View object.
    *
    * @var \Drupal\views\ViewExecutable;
@@ -54,11 +70,17 @@ class ViewsSelection extends PluginBase implements SelectionInterface, Container
    *   The plugin implementation definition.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager service.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler service.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current user.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, ModuleHandlerInterface $module_handler, AccountInterface $current_user) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->entityManager = $entity_manager;
+    $this->moduleHandler = $module_handler;
+    $this->currentUser = $current_user;
   }
 
   /**
@@ -69,7 +91,9 @@ class ViewsSelection extends PluginBase implements SelectionInterface, Container
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity.manager')
+      $container->get('entity.manager'),
+      $container->get('module_handler'),
+      $container->get('current_user')
     );
   }
 
@@ -120,12 +144,17 @@ class ViewsSelection extends PluginBase implements SelectionInterface, Container
       );
     }
     else {
-      $form['view']['no_view_help'] = array(
-        '#markup' => '<p>' . $this->t('No eligible views were found. <a href="@create">Create a view</a> with an <em>Entity Reference</em> display, or add such a display to an <a href="@existing">existing view</a>.', array(
-          '@create' => Url::fromRoute('views_ui.add'),
-          '@existing' => Url::fromRoute('entity.view.collection'),
-        )) . '</p>',
-      );
+      if ($this->currentUser->hasPermission('administer views') && $this->moduleHandler->moduleExists('views_ui')) {
+        $form['view']['no_view_help'] = array(
+          '#markup' => '<p>' . $this->t('No eligible views were found. <a href="@create">Create a view</a> with an <em>Entity Reference</em> display, or add such a display to an <a href="@existing">existing view</a>.', array(
+            '@create' => Url::fromRoute('views_ui.add'),
+            '@existing' => Url::fromRoute('entity.view.collection'),
+          )) . '</p>',
+        );
+      }
+      else {
+        $form['view']['no_view_help']['#markup'] = '<p>' . $this->t('No eligible views were found.') . '</p>';
+      }
     }
     return $form;
   }
@@ -243,13 +272,13 @@ class ViewsSelection extends PluginBase implements SelectionInterface, Container
   /**
    * Element validate; Check View is valid.
    */
-  public function settingsFormValidate($element, FormStateInterface $form_state, $form) {
+  public static function settingsFormValidate($element, FormStateInterface $form_state, $form) {
     // Split view name and display name from the 'view_and_display' value.
     if (!empty($element['view_and_display']['#value'])) {
       list($view, $display) = explode(':', $element['view_and_display']['#value']);
     }
     else {
-      $form_state->setError($element, $this->t('The views entity selection mode requires a view.'));
+      $form_state->setError($element, t('The views entity selection mode requires a view.'));
       return;
     }
 

@@ -28,7 +28,7 @@ class EntityReferenceAdminTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'field_ui', 'entity_reference', 'path', 'taxonomy', 'block');
+  public static $modules = array('node', 'field_ui', 'entity_reference', 'path', 'taxonomy', 'block', 'views');
 
 
   /**
@@ -142,6 +142,14 @@ class EntityReferenceAdminTest extends WebTestBase {
     $this->drupalPostForm($bundle_path . '/fields/' . $field_name . '/storage', $edit, t('Save field settings'));
     $this->drupalGet($bundle_path . '/fields/' . $field_name);
     $this->assertFieldByName('field[settings][handler_settings][filter][type]', '_none');
+
+    // Try to select the views handler.
+    $edit = array(
+      'field[settings][handler]' => 'views',
+    );
+    $this->drupalPostAjaxForm($bundle_path . '/fields/' . $field_name, $edit, 'field[settings][handler]');
+    $this->drupalPostForm(NULL, $edit, t('Save settings'));
+    $this->assertResponse(200);
   }
 
 
