@@ -105,6 +105,7 @@ class CacheContexts {
    * @throws \InvalidArgumentException
    */
   public function convertTokensToKeys(array $context_tokens) {
+    sort($context_tokens);
     $keys = [];
     foreach (static::parseTokens($context_tokens) as $context) {
       list($context_id, $parameter) = $context;

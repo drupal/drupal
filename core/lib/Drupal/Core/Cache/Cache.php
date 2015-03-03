@@ -22,6 +22,26 @@ class Cache {
   const PERMANENT = CacheBackendInterface::CACHE_PERMANENT;
 
   /**
+   * Merges arrays of cache contexts and removes duplicates.
+   *
+   * @param string[] …
+   *   Arrays of cache contexts to merge.
+   *
+   * @return string[]
+   *   The merged array of cache contexts.
+   */
+  public static function mergeContexts() {
+    $cache_context_arrays = func_get_args();
+    $cache_contexts = [];
+    foreach ($cache_context_arrays as $contexts) {
+      $cache_contexts = array_merge($cache_contexts, $contexts);
+    }
+    $cache_contexts = array_unique($cache_contexts);
+    sort($cache_contexts);
+    return $cache_contexts;
+  }
+
+  /**
    * Merges arrays of cache tags and removes duplicates.
    *
    * The cache tags array is returned in a format that is valid for

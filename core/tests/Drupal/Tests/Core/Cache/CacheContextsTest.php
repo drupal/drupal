@@ -33,9 +33,9 @@ class CacheContextsTest extends UnitTestCase {
     ]);
 
     $expected = [
-      'bar',
       'baz.cnenzrgreN',
       'baz.cnenzrgreO',
+      'bar',
     ];
     $this->assertEquals($expected, $new_keys);
   }

@@ -46,7 +46,14 @@ class DateTimePlainFormatter extends FormatterBase {
         }
         $output = $date->format($format);
       }
-      $elements[$delta] = array('#markup' => $output);
+      $elements[$delta] = [
+        '#cache' => [
+          'contexts' => [
+            'timezone',
+          ],
+        ],
+        '#markup' => $output,
+      ];
     }
 
     return $elements;

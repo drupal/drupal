@@ -17,7 +17,10 @@ use Drupal\Core\Template\Attribute;
 class RendererTest extends RendererTestBase {
 
   protected $defaultThemeVars = [
-    '#cache' => ['tags' => []],
+    '#cache' => [
+      'contexts' => [],
+      'tags' => [],
+    ],
     '#attached' => [],
     '#post_render_cache' => [],
     '#children' => '',

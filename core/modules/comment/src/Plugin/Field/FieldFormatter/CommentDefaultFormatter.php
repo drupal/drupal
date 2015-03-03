@@ -157,6 +157,7 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
       // Unpublished comments are not included in
       // $entity->get($field_name)->comment_count, but unpublished comments
       // should display if the user is an administrator.
+      $elements['#cache']['contexts'][] = 'user.roles';
       if ($this->currentUser->hasPermission('access comments') || $this->currentUser->hasPermission('administer comments')) {
         // This is a listing of Comment entities, so associate its list cache
         // tag for correct invalidation.
@@ -182,6 +183,7 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
       // display below the entity. Do not show the form for the print view mode.
       if ($status == CommentItemInterface::OPEN && $comment_settings['form_location'] == CommentItemInterface::FORM_BELOW && $this->viewMode != 'print') {
         // Only show the add comment form if the user has permission.
+        $elements['#cache']['contexts'][] = 'user.roles';
         if ($this->currentUser->hasPermission('post comments')) {
           // All users in the "anonymous" role can use the same form: it is fine
           // for this form to be stored in the render cache.

@@ -86,6 +86,13 @@ class FilterProcessResult {
   protected $cacheTags;
 
   /**
+   * The associated cache contexts.
+   *
+   * @var string[]
+   */
+  protected $cacheContexts;
+
+  /**
    * The associated #post_render_cache callbacks.
    *
    * @see _drupal_render_process_post_render_cache()
@@ -105,6 +112,7 @@ class FilterProcessResult {
 
     $this->assets = array();
     $this->cacheTags = array();
+    $this->cacheContexts = array();
     $this->postRenderCacheCallbacks = array();
   }
 
@@ -171,6 +179,41 @@ class FilterProcessResult {
    */
   public function setCacheTags(array $cache_tags) {
     $this->cacheTags = $cache_tags;
+    return $this;
+  }
+
+  /**
+   * Gets cache contexts associated with the processed text.
+   *
+   * @return string[]
+   */
+  public function getCacheContexts() {
+    return $this->cacheContexts;
+  }
+
+  /**
+   * Adds cache contexts associated with the processed text.
+   *
+   * @param string[] $cache_contexts
+   *   The cache contexts to be added.
+   *
+   * @return $this
+   */
+  public function addCacheContexts(array $cache_contexts) {
+    $this->cacheContexts = Cache::mergeContexts($this->cacheContexts, $cache_contexts);
+    return $this;
+  }
+
+  /**
+   * Sets cache contexts associated with the processed text.
+   *
+   * @param string[] $cache_contexts
+   *   The cache contexts to be associated.
+   *
+   * @return $this
+   */
+  public function setCacheContexts(array $cache_contexts) {
+    $this->cacheContexts = $cache_contexts;
     return $this;
   }
 
@@ -256,6 +299,7 @@ class FilterProcessResult {
    */
   public function getBubbleableMetadata() {
     return new BubbleableMetadata(
+      $this->getCacheContexts(),
       $this->getCacheTags(),
       $this->getAssets(),
       $this->getPostRenderCacheCallbacks()

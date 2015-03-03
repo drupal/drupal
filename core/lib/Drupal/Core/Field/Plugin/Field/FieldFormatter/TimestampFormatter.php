@@ -31,7 +31,14 @@ class TimestampFormatter extends FormatterBase {
     $elements = array();
 
     foreach ($items as $delta => $item) {
-      $elements[$delta] = array('#markup' => format_date($item->value));
+      $elements[$delta] = [
+        '#cache' => [
+          'contexts' => [
+            'timezone',
+          ],
+        ],
+        '#markup' => format_date($item->value)
+      ];
     }
 
     return $elements;

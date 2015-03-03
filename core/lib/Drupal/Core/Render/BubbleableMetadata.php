@@ -18,6 +18,13 @@ use Drupal\Core\Cache\Cache;
 class BubbleableMetadata {
 
   /**
+   * Cache contexts.
+   *
+   * @var string[]
+   */
+  protected $contexts;
+
+  /**
    * Cache tags.
    *
    * @var string[]
@@ -41,6 +48,8 @@ class BubbleableMetadata {
   /**
    * Constructs a BubbleableMetadata value object.
    *
+   * @param string[] $contexts
+   *   An array of cache contexts.
    * @param string[] $tags
    *   An array of cache tags.
    * @param array $attached
@@ -48,7 +57,8 @@ class BubbleableMetadata {
    * @param array $post_render_cache
    *   An array of #post_render_cache metadata.
    */
-  public function __construct(array $tags = [], array $attached = [], array $post_render_cache = []) {
+  public function __construct(array $contexts = [], array $tags = [], array $attached = [], array $post_render_cache = []) {
+    $this->contexts = $contexts;
     $this->tags = $tags;
     $this->attached = $attached;
     $this->postRenderCache = $post_render_cache;
@@ -69,6 +79,7 @@ class BubbleableMetadata {
    */
   public function merge(BubbleableMetadata $other) {
     $result = new BubbleableMetadata();
+    $result->contexts = Cache::mergeContexts($this->contexts, $other->contexts);
     $result->tags = Cache::mergeTags($this->tags, $other->tags);
     $result->attached = Renderer::mergeAttachments($this->attached, $other->attached);
     $result->postRenderCache = NestedArray::mergeDeep($this->postRenderCache, $other->postRenderCache);
@@ -82,6 +93,7 @@ class BubbleableMetadata {
    *   A render array.
    */
   public function applyTo(array &$build) {
+    $build['#cache']['contexts'] = $this->contexts;
     $build['#cache']['tags'] = $this->tags;
     $build['#attached'] = $this->attached;
     $build['#post_render_cache'] = $this->postRenderCache;
@@ -97,6 +109,7 @@ class BubbleableMetadata {
    */
   public static function createFromRenderArray(array $build) {
     $meta = new static();
+    $meta->contexts = (isset($build['#cache']['contexts'])) ? $build['#cache']['contexts'] : [];
     $meta->tags = (isset($build['#cache']['tags'])) ? $build['#cache']['tags'] : [];
     $meta->attached = (isset($build['#attached'])) ? $build['#attached'] : [];
     $meta->postRenderCache = (isset($build['#post_render_cache'])) ? $build['#post_render_cache'] : [];

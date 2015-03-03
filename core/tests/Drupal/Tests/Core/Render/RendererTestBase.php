@@ -139,6 +139,22 @@ class RendererTestBase extends UnitTestCase {
     $this->requestStack->push($request);
   }
 
+  /**
+   * Asserts a render cache item.
+   *
+   * @param string $cid
+   *   The expected cache ID.
+   * @param mixed $data
+   *   The expected data for that cache ID.
+   */
+  protected function assertRenderCacheItem($cid, $data) {
+    $cached = $this->memoryCache->get($cid);
+    $this->assertNotFalse($cached, sprintf('Expected cache item "%s" exists.', $cid));
+    if ($cached !== FALSE) {
+      $this->assertEquals($data, $cached->data, sprintf('Cache item "%s" has the expected data.', $cid));
+    }
+  }
+
 }
 
 

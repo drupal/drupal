@@ -216,6 +216,10 @@ class FilterAPITest extends EntityUnitTestBase {
           'weight' => 0,
           'status' => TRUE,
         ),
+        'filter_test_cache_contexts' => array(
+          'weight' => 0,
+          'status' => TRUE,
+        ),
         'filter_test_post_render_cache' => array(
           'weight' => 1,
           'status' => TRUE,
@@ -253,6 +257,11 @@ class FilterAPITest extends EntityUnitTestBase {
       'foo:baz',
     );
     $this->assertEqual($expected_cache_tags, $build['#cache']['tags'], 'Expected cache tags present.');
+    $expected_cache_contexts = [
+      // The cache context set by the filter_test_cache_contexts filter.
+      'language',
+    ];
+    $this->assertEqual($expected_cache_contexts, $build['#cache']['contexts'], 'Expected cache contexts present.');
     $expected_markup = '<p>Hello, world!</p><p>This is a dynamic llama.</p>';
     $this->assertEqual($expected_markup, $build['#markup'], 'Expected #post_render_cache callback has been applied.');
   }

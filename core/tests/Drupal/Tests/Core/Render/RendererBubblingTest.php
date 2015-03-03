@@ -34,6 +34,9 @@ class RendererBubblingTest extends RendererTestBase {
     $this->elementInfo->expects($this->any())
       ->method('getInfo')
       ->willReturn([]);
+    $this->cacheContexts->expects($this->any())
+      ->method('convertTokensToKeys')
+      ->willReturnArgument(0);
 
     // Create an element with a child and subchild. Each element loads a
     // different library using #attached.
@@ -68,6 +71,392 @@ class RendererBubblingTest extends RendererTestBase {
   }
 
   /**
+   * Tests cache context bubbling in edge cases, because it affects the CID.
+   *
+   * ::testBubblingWithPrerender() already tests the common case.
+   *
+   * @dataProvider providerTestContextBubblingEdgeCases
+   */
+  public function testContextBubblingEdgeCases(array $element, array $expected_top_level_contexts, array $expected_cache_items) {
+    $this->setUpRequest();
+    $this->setupMemoryCache();
+    $this->cacheContexts->expects($this->any())
+      ->method('convertTokensToKeys')
+      ->willReturnArgument(0);
+
+    $this->renderer->render($element);
+
+    $this->assertEquals($expected_top_level_contexts, $element['#cache']['contexts'], 'Expected cache contexts found.');
+    foreach ($expected_cache_items as $cid => $expected_cache_item) {
+      $this->assertRenderCacheItem($cid, $expected_cache_item);
+    }
+  }
+
+  public function providerTestContextBubblingEdgeCases() {
+    $data = [];
+
+    // Bubbled cache contexts cannot override a cache ID set by #cache['cid'].
+    // But the cache context is bubbled nevertheless.
+    $test_element = [
+      '#cache' => [
+        'cid' => 'parent',
+      ],
+      '#markup' => 'parent',
+      'child' => [
+        '#cache' => [
+          'contexts' => ['foo'],
+        ],
+      ],
+    ];
+    $expected_cache_items = [
+      'parent' => [
+        '#attached' => [],
+        '#cache' => [
+          'contexts' => ['foo'],
+          'tags' => ['rendered'],
+        ],
+        '#post_render_cache' => [],
+        '#markup' => 'parent',
+      ],
+    ];
+    $data[] = [$test_element, ['foo'], $expected_cache_items];
+
+    // Cache contexts of inaccessible children aren't bubbled (because those
+    // children are not rendered at all).
+    $test_element = [
+      '#cache' => [
+        'keys' => ['parent'],
+        'contexts' => [],
+      ],
+      '#markup' => 'parent',
+      'child' => [
+        '#access' => FALSE,
+        '#cache' => [
+          'contexts' => ['foo'],
+        ],
+      ],
+    ];
+    $expected_cache_items = [
+      'parent' => [
+        '#attached' => [],
+        '#cache' => [
+          'contexts' => [],
+          'tags' => ['rendered'],
+        ],
+        '#post_render_cache' => [],
+        '#markup' => 'parent',
+      ],
+    ];
+    $data[] = [$test_element, [], $expected_cache_items];
+
+    // Assert cache contexts are sorted when they are used to generate a CID.
+    // (Necessary to ensure that different render arrays where the same keys +
+    // set of contexts are present point to the same cache item. Regardless of
+    // the contexts' order. A sad necessity because PHP doesn't have sets.)
+    $test_element = [
+     '#cache' => [
+        'keys' => ['set_test'],
+        'contexts' => [],
+      ],
+    ];
+    $expected_cache_items = [
+      'set_test:bar:baz:foo' => [
+        '#attached' => [],
+        '#cache' => [
+          'contexts' => [],
+          'tags' => ['rendered'],
+        ],
+        '#post_render_cache' => [],
+        '#markup' => '',
+      ],
+    ];
+    $context_orders = [
+      ['foo', 'bar', 'baz'],
+      ['foo', 'baz', 'bar'],
+      ['bar', 'foo', 'baz'],
+      ['bar', 'baz', 'foo'],
+      ['baz', 'foo', 'bar'],
+      ['baz', 'bar', 'foo'],
+    ];
+    foreach ($context_orders as $context_order) {
+      $test_element['#cache']['contexts'] = $context_order;
+      sort($context_order);
+      $expected_cache_items['set_test:bar:baz:foo']['#cache']['contexts'] = $context_order;
+      $data[] = [$test_element, $context_order, $expected_cache_items];
+    }
+
+    // A parent with a certain set of cache contexts is unaffected by a child
+    // that has a subset of those contexts.
+    $test_element = [
+      '#cache' => [
+        'keys' => ['parent'],
+        'contexts' => ['foo', 'bar', 'baz'],
+      ],
+      '#markup' => 'parent',
+      'child' => [
+        '#cache' => [
+          'contexts' => ['foo', 'baz'],
+        ],
+      ],
+    ];
+    $expected_cache_items = [
+      'parent:bar:baz:foo' => [
+        '#attached' => [],
+        '#cache' => [
+          'contexts' => ['bar', 'baz', 'foo'],
+          'tags' => ['rendered'],
+        ],
+        '#post_render_cache' => [],
+        '#markup' => 'parent',
+      ],
+    ];
+    $data[] = [$test_element, ['bar', 'baz', 'foo'], $expected_cache_items];
+
+    // A parent with a certain set of cache contexts that is a subset of the
+    // cache contexts of a child gets a redirecting cache item for the cache ID
+    // created pre-bubbling (without the child's additional cache contexts). It
+    // points to a cache item with a post-bubbling cache ID (i.e. with the
+    // child's additional cache contexts).
+    // Furthermore, the redirecting cache item also includes the children's
+    // cache tags, since changes in the children may cause those children to get
+    // different cache contexts and therefore cause different cache contexts to
+    // be stored in the redirecting cache item.
+    $test_element = [
+      '#cache' => [
+        'keys' => ['parent'],
+        'contexts' => ['foo'],
+        'tags' => ['yar', 'har'],
+      ],
+      '#markup' => 'parent',
+      'child' => [
+        '#cache' => [
+          'contexts' => ['bar'],
+          'tags' => ['fiddle', 'dee'],
+        ],
+        '#markup' => '',
+      ],
+    ];
+    $expected_cache_items = [
+      'parent:foo' => [
+        '#cache_redirect' => TRUE,
+        '#cache' => [
+          // The keys + contexts this redirects to.
+          'keys' => ['parent'],
+          'contexts' => ['bar', 'foo'],
+          // The 'rendered' cache tag is also present for the redirecting cache
+          // item, to ensure it is considered to be part of the render cache
+          // and thus invalidated along with everything else.
+          'tags' => ['dee', 'fiddle', 'har', 'rendered', 'yar'],
+        ],
+      ],
+      'parent:bar:foo' => [
+        '#attached' => [],
+        '#cache' => [
+          'contexts' => ['bar', 'foo'],
+          'tags' => ['dee', 'fiddle', 'har', 'yar', 'rendered'],
+        ],
+        '#post_render_cache' => [],
+        '#markup' => 'parent',
+      ],
+    ];
+    $data[] = [$test_element, ['bar', 'foo'], $expected_cache_items];
+
+    return $data;
+  }
+
+  /**
+   * Tests the self-healing of the redirect with conditional cache contexts.
+   */
+  public function testConditionalCacheContextBubblingSelfHealing() {
+    global $current_user_role;
+
+    $this->setUpRequest();
+    $this->setupMemoryCache();
+    $this->cacheContexts->expects($this->any())
+      ->method('convertTokensToKeys')
+      ->willReturnCallback(function($context_tokens) {
+        global $current_user_role;
+        $keys = [];
+        foreach ($context_tokens as $context_id) {
+          if ($context_id === 'user.roles') {
+            $keys[] = 'r.' . $current_user_role;
+          }
+          else {
+            $keys[] = $context_id;
+          }
+        }
+        return $keys;
+      });
+
+    $test_element = [
+      '#cache' => [
+        'keys' => ['parent'],
+        'tags' => ['a'],
+      ],
+      '#markup' => 'parent',
+      'child' => [
+        '#cache' => [
+          'contexts' => ['user.roles'],
+          'tags' => ['b'],
+        ],
+        'grandchild' => [
+          '#access_callback' => function () {
+            global $current_user_role;
+            // Only role A cannot access this subtree.
+            return $current_user_role !== 'A';
+          },
+          '#cache' => [
+            'contexts' => ['foo'],
+            'tags' => ['c'],
+          ],
+          'grandgrandchild' => [
+            '#access_callback' => function () {
+                global $current_user_role;
+                // Only role C can access this subtree.
+                return $current_user_role === 'C';
+              },
+            '#cache' => [
+              'contexts' => ['bar'],
+              'tags' => ['d'],
+            ],
+          ],
+        ],
+      ],
+    ];
+
+    // Request 1: role A, the grandchild isn't accessible => bubbled cache
+    // contexts: user.roles.
+    $element = $test_element;
+    $current_user_role = 'A';
+    $this->renderer->render($element);
+    $this->assertRenderCacheItem('parent', [
+      '#cache_redirect' => TRUE,
+      '#cache' => [
+        'keys' => ['parent'],
+        'contexts' => ['user.roles'],
+        'tags' => ['a', 'b', 'rendered'],
+      ],
+    ]);
+    $this->assertRenderCacheItem('parent:r.A', [
+      '#attached' => [],
+      '#cache' => [
+        'contexts' => ['user.roles'],
+        'tags' => ['a', 'b', 'rendered'],
+      ],
+      '#post_render_cache' => [],
+      '#markup' => 'parent',
+    ]);
+
+    // Request 2: role B, the grandchild is accessible => bubbled cache
+    // contexts: foo, user.roles.
+    $element = $test_element;
+    $current_user_role = 'B';
+    $this->renderer->render($element);
+    $this->assertRenderCacheItem('parent', [
+      '#cache_redirect' => TRUE,
+      '#cache' => [
+        'keys' => ['parent'],
+        'contexts' => ['foo', 'user.roles'],
+        'tags' => ['a', 'b', 'c', 'rendered'],
+      ],
+    ]);
+    $this->assertRenderCacheItem('parent:foo:r.B', [
+      '#attached' => [],
+      '#cache' => [
+        'contexts' => ['foo', 'user.roles'],
+        'tags' => ['a', 'b', 'c', 'rendered'],
+      ],
+      '#post_render_cache' => [],
+      '#markup' => 'parent',
+    ]);
+
+    // Request 3: role A again, the grandchild is inaccessible again => bubbled
+    // cache contexts: user.roles; but that's a subset of the already-bubbled
+    // cache contexts, so nothing is actually changed in the redirecting cache
+    // item. However, the cache item we were looking for in request 1 is
+    // technically the same one we're looking for now (it's the exact same
+    // request), but with one additional cache context. This is necessary to
+    // avoid "cache ping-pong". (Requests 1 and 3 are identical, but without the
+    // right merging logic to handle request 2, the redirecting cache item would
+    // toggle between only the 'user.roles' cache context and both the 'foo'
+    // and 'user.roles' cache contexts, resulting in a cache miss every time.)
+    $element = $test_element;
+    $current_user_role = 'A';
+    $this->renderer->render($element);
+    $this->assertRenderCacheItem('parent', [
+      '#cache_redirect' => TRUE,
+      '#cache' => [
+        'keys' => ['parent'],
+        'contexts' => ['foo', 'user.roles'],
+        'tags' => ['a', 'b', 'c', 'rendered'],
+      ],
+    ]);
+    $this->assertRenderCacheItem('parent:foo:r.A', [
+      '#attached' => [],
+      '#cache' => [
+        'contexts' => ['foo', 'user.roles'],
+        'tags' => ['a', 'b', 'rendered'],
+      ],
+      '#post_render_cache' => [],
+      '#markup' => 'parent',
+    ]);
+
+    // Request 4: role C, both the grandchild and the grandgrandchild are
+    // accessible => bubbled cache contexts: foo, bar, user.roles.
+    $element = $test_element;
+    $current_user_role = 'C';
+    $this->renderer->render($element);
+    $final_parent_cache_item = [
+      '#cache_redirect' => TRUE,
+      '#cache' => [
+        'keys' => ['parent'],
+        'contexts' => ['bar', 'foo', 'user.roles'],
+        'tags' => ['a', 'b', 'c', 'd', 'rendered'],
+      ],
+    ];
+    $this->assertRenderCacheItem('parent', $final_parent_cache_item);
+    $this->assertRenderCacheItem('parent:bar:foo:r.C', [
+      '#attached' => [],
+      '#cache' => [
+        'contexts' => ['bar', 'foo', 'user.roles'],
+        'tags' => ['a', 'b', 'c', 'd', 'rendered'],
+      ],
+      '#post_render_cache' => [],
+      '#markup' => 'parent',
+    ]);
+
+    // Request 5: role A again, verifying the merging like we did for request 3.
+    $element = $test_element;
+    $current_user_role = 'A';
+    $this->renderer->render($element);
+    $this->assertRenderCacheItem('parent', $final_parent_cache_item);
+    $this->assertRenderCacheItem('parent:bar:foo:r.A', [
+      '#attached' => [],
+      '#cache' => [
+        'contexts' => ['bar', 'foo', 'user.roles'],
+        'tags' => ['a', 'b', 'rendered'],
+      ],
+      '#post_render_cache' => [],
+      '#markup' => 'parent',
+    ]);
+
+    // Request 6: role B again, verifying the merging like we did for request 3.
+    $element = $test_element;
+    $current_user_role = 'B';
+    $this->renderer->render($element);
+    $this->assertRenderCacheItem('parent', $final_parent_cache_item);
+    $this->assertRenderCacheItem('parent:bar:foo:r.B', [
+      '#attached' => [],
+      '#cache' => [
+        'contexts' => ['bar', 'foo', 'user.roles'],
+        'tags' => ['a', 'b', 'c', 'rendered'],
+      ],
+      '#post_render_cache' => [],
+      '#markup' => 'parent',
+    ]);
+  }
+
+  /**
    * Tests bubbling of bubbleable metadata added by #pre_render callbacks.
    *
    * @dataProvider providerTestBubblingWithPrerender
@@ -94,13 +483,14 @@ class RendererBubblingTest extends RendererTestBase {
     // - … is not cached DOES get called.
     \Drupal::state()->set('bubbling_nested_pre_render_cached', FALSE);
     \Drupal::state()->set('bubbling_nested_pre_render_uncached', FALSE);
-    $this->memoryCache->set('cached_nested', ['#markup' => 'Cached nested!', '#attached' => [], '#cache' => ['tags' => []], '#post_render_cache' => []]);
+    $this->memoryCache->set('cached_nested', ['#markup' => 'Cached nested!', '#attached' => [], '#cache' => ['contexts' => [], 'tags' => []], '#post_render_cache' => []]);
 
     // Simulate the rendering of an entire response (i.e. a root call).
     $output = $this->renderer->renderRoot($test_element);
 
     // First, assert the render array is of the expected form.
-    $this->assertEquals('Cache tag!Asset!Post-render cache!barquxNested!Cached nested!', trim($output), 'Expected HTML generated.');
+    $this->assertEquals('Cache context!Cache tag!Asset!Post-render cache!barquxNested!Cached nested!', trim($output), 'Expected HTML generated.');
+    $this->assertEquals(['child.cache_context'], $test_element['#cache']['contexts'], 'Expected cache contexts found.');
     $this->assertEquals(['child:cache_tag'], $test_element['#cache']['tags'], 'Expected cache tags found.');
     $expected_attached = [
       'drupalSettings' => ['foo' => 'bar'],
@@ -155,6 +545,12 @@ class BubblingTest {
     ];
     $placeholder = \Drupal::service('renderer')->generateCachePlaceholder($callback, $context);
     $elements += [
+      'child_cache_context' => [
+        '#cache' => [
+          'contexts' => ['child.cache_context'],
+        ],
+        '#markup' => 'Cache context!',
+      ],
       'child_cache_tag' => [
         '#cache' => [
           'tags' => ['child:cache_tag'],

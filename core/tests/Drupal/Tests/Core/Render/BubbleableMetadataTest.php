@@ -35,11 +35,12 @@ class BubbleableMetadataTest extends UnitTestCase {
     $data = [];
 
     $empty_metadata = new BubbleableMetadata();
-    $nonempty_metadata = new BubbleableMetadata(['foo:bar'], ['settings' => ['foo' => 'bar']]);
+    $nonempty_metadata = new BubbleableMetadata(['qux'], ['foo:bar'], ['settings' => ['foo' => 'bar']]);
 
     $empty_render_array = [];
     $nonempty_render_array = [
       '#cache' => [
+        'contexts' => ['qux'],
         'tags' => ['llamas:are:awesome:but:kittens:too'],
       ],
       '#attached' => [
@@ -53,7 +54,8 @@ class BubbleableMetadataTest extends UnitTestCase {
 
     $expected_when_empty_metadata = [
       '#cache' => [
-        'tags' => []
+        'contexts' => [],
+        'tags' => [],
       ],
       '#attached' => [],
       '#post_render_cache' => [],
@@ -61,7 +63,10 @@ class BubbleableMetadataTest extends UnitTestCase {
     $data[] = [$empty_metadata, $empty_render_array, $expected_when_empty_metadata];
     $data[] = [$empty_metadata, $nonempty_render_array, $expected_when_empty_metadata];
     $expected_when_nonempty_metadata = [
-      '#cache' => ['tags' => ['foo:bar']],
+      '#cache' => [
+        'contexts' => ['qux'],
+        'tags' => ['foo:bar'],
+      ],
       '#attached' => [
         'settings' => [
           'foo' => 'bar',
@@ -92,11 +97,12 @@ class BubbleableMetadataTest extends UnitTestCase {
     $data = [];
 
     $empty_metadata = new BubbleableMetadata();
-    $nonempty_metadata = new BubbleableMetadata(['foo:bar'], ['settings' => ['foo' => 'bar']]);
+    $nonempty_metadata = new BubbleableMetadata(['qux'], ['foo:bar'], ['settings' => ['foo' => 'bar']]);
 
     $empty_render_array = [];
     $nonempty_render_array = [
       '#cache' => [
+        'contexts' => ['qux'],
         'tags' => ['foo:bar'],
       ],
       '#attached' => [
