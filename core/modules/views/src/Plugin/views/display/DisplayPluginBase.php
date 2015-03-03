@@ -2280,7 +2280,6 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       '#display_id' => $this->display['id'],
       '#arguments' => $args,
       '#embed' => FALSE,
-      '#pre_render' => [['\Drupal\views\Element\View', 'preRenderViewElement'], [$this, 'elementPreRender']],
       '#view' => $this->view,
     ];
   }

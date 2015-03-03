@@ -24,10 +24,10 @@ views.cache.time:
       type: mapping
       label: 'Cache options'
       mapping:
-        result_lifespan:
+        results_lifespan:
           type: integer
           label: 'The length of time raw query results should be cached.'
-        result_lifespan_custom:
+        results_lifespan_custom:
           type: integer
           label: 'Length of time in seconds raw query results should be cached.'
         output_lifespan:

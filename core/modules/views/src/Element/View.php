@@ -60,7 +60,16 @@ class View extends RenderElement {
         // $title_suffix variable (which we will then render in
         // views-view.html.twig).
         $view->setDisplay($element['#display_id']);
-        $element += $view->executeDisplay($element['#display_id'], $element['#arguments']);
+        // Add the result of the executed view as a child element so any
+        // #pre_render elements for the view will get processed. A #pre_render
+        // element cannot be added to the main element as this is already inside
+        // a #pre_render callback.
+        $element['view_build'] = $view->executeDisplay($element['#display_id'], $element['#arguments']);
+
+        if (isset($element['view_build']['#title'])) {
+          $element['#title'] = &$element['view_build']['#title'];
+        }
+
         views_add_contextual_links($element, 'view', $view, $view->current_display);
       }
     }

@@ -43,7 +43,7 @@ class CacheTest extends PluginTestBase {
    *
    * @see views_plugin_cache_time
    */
-  public function testTimeCaching() {
+  public function testTimeResultCaching() {
     // Create a basic result which just 2 results.
     $view = Views::getView('test_cache');
     $view->setDisplay();
@@ -88,7 +88,7 @@ class CacheTest extends PluginTestBase {
    *
    * @see views_plugin_cache_time
    */
-  function testNoneCaching() {
+  function testNoneResultCaching() {
     // Create a basic result which just 2 results.
     $view = Views::getView('test_cache');
     $view->setDisplay();
@@ -201,6 +201,33 @@ class CacheTest extends PluginTestBase {
       $this->assertIdentical($row->_entity, NULL, 'Cached row "_entity" property is NULL');
       $this->assertIdentical($row->_relationship_entities, [], 'Cached row "_relationship_entities" property is empty');
     }
+  }
+
+  /**
+   * Tests the output caching on an actual page.
+   */
+  public function testCacheOutputOnPage() {
+    $view = Views::getView('test_display');
+    $view->storage->setStatus(TRUE);
+    $view->setDisplay('page_1');
+    $view->display_handler->overrideOption('cache', array(
+      'type' => 'time',
+      'options' => array(
+        'results_lifespan' => '3600',
+        'output_lifespan' => '3600'
+      )
+    ));
+    $view->save();
+    $output_key = $view->getDisplay()->getPlugin('cache')->generateOutputKey();
+    $this->assertFalse(\Drupal::cache('render')->get($output_key));
+
+    $this->drupalGet('test-display');
+    $this->assertResponse(200);
+    $this->assertTrue(\Drupal::cache('render')->get($output_key));
+
+    $this->drupalGet('test-display');
+    $this->assertResponse(200);
+    $this->assertTrue(\Drupal::cache('render')->get($output_key));
   }
 
 }

@@ -48,7 +48,7 @@ class Time extends CachePluginBase {
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\Core\Render\RendererInterface $renderer
-   *   The renderer service.
+   *   The HTML renderer.
    * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
    *   The date formatter service.
    */

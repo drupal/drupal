@@ -74,7 +74,7 @@ abstract class CachePluginBase extends PluginBase {
   protected $outputKey;
 
   /**
-   * The renderer service.
+   * The HTML renderer.
    *
    * @var \Drupal\Core\Render\RendererInterface
    */
@@ -90,7 +90,7 @@ abstract class CachePluginBase extends PluginBase {
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\Core\Render\RendererInterface $renderer
-   *   The renderer service.
+   *   The HTML renderer.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, RendererInterface $renderer) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
@@ -181,8 +181,16 @@ abstract class CachePluginBase extends PluginBase {
         \Drupal::cache($this->resultsBin)->set($this->generateResultsKey(), $data, $this->cacheSetExpire($type), $this->getCacheTags());
         break;
       case 'output':
-        $this->renderer->render($this->view->display_handler->output);
-        $this->storage = $this->renderer->getCacheableRenderArray($this->view->display_handler->output);
+        // Make a copy of the output so it is not modified. If we render the
+        // display output directly an empty string will be returned when the
+        // view is actually rendered. If we try to set '#printed' to FALSE there
+        // are problems with asset bubbling.
+        $output = $this->view->display_handler->output;
+        $this->renderer->render($output);
+        // Also assign the cacheable render array back to the display handler so
+        // that is used to render the view for this request and rendering does
+        // not happen twice.
+        $this->storage = $this->view->display_handler->output = $this->renderer->getCacheableRenderArray($output);
         \Drupal::cache($this->outputBin)->set($this->generateOutputKey(), $this->storage, $this->cacheSetExpire($type), $this->getCacheTags());
         break;
     }
