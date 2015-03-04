@@ -45,8 +45,6 @@ class FieldEntityTest extends ViewTestBase {
     $account->save();
     $this->drupalCreateContentType(array('type' => 'page'));
     $this->addDefaultCommentField('node', 'page');
-    // Force a flush of the in-memory storage.
-    $this->container->get('views.views_data')->clear();
 
     $node = entity_create('node', array('uid' => $account->id(), 'type' => 'page'));
     $node->save();

@@ -60,16 +60,6 @@ function system_list_reset() {
   drupal_static_reset('system_list');
   drupal_static_reset('system_rebuild_module_data');
   \Drupal::cache('bootstrap')->delete('system_list');
-
-  // Clear the library info cache.
-  // Libraries may be provided by all extension types, and may be altered by any
-  // other extensions (types) due to the nature of
-  // \Drupal\Core\Extension\ModuleHandler::alter() and the fact that profiles
-  // are recorded and handled as modules.
-  // @todo Trigger an event upon module install/uninstall and theme
-  //   enable/disable, and move this into an event subscriber.
-  // @see https://drupal.org/node/2206347
-  Cache::invalidateTags(['config:core.extension']);
 }
 
 /**

@@ -200,7 +200,7 @@ class ViewsData {
    *   The data that will be cached.
    */
   protected function cacheSet($cid, $data) {
-    return $this->cacheBackend->set($this->prepareCid($cid), $data, Cache::PERMANENT, array('views_data', 'config:core.extension', 'extension:views'));
+    return $this->cacheBackend->set($this->prepareCid($cid), $data, Cache::PERMANENT, array('views_data', 'config:core.extension'));
   }
 
   /**

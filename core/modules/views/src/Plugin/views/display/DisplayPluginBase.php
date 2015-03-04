@@ -186,7 +186,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         }
         else {
           $this->unpackOptions($this->options, $options);
-          \Drupal::cache('data')->set($cid, $this->options, Cache::PERMANENT, Cache::mergeTags(array('config:core.extension', 'extension:views'), $this->view->storage->getCacheTags()));
+          \Drupal::cache('data')->set($cid, $this->options, Cache::PERMANENT, $this->view->storage->getCacheTags());
         }
         static::$unpackOptions[$cid] = $this->options;
       }

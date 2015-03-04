@@ -87,7 +87,7 @@ class UserUid extends ArgumentPluginBase {
 
     // Use the table definition to correctly add this user ID condition.
     if ($this->table != 'comment') {
-      $subselect = $this->database->select('comment', 'c');
+      $subselect = $this->database->select('comment_field_data', 'c');
       $subselect->addField('c', 'cid');
       $subselect->condition('c.uid', $this->argument);
 

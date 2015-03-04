@@ -61,8 +61,6 @@ class FieldGroupRowsTest extends HandlerTestBase {
       'bundle' => $node_type->id(),
     );
     entity_create('field_config', $field)->save();
-
-    $this->container->get('views.views_data')->clear();
   }
 
   /**

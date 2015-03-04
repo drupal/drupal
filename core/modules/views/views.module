@@ -462,33 +462,27 @@ function views_add_contextual_links(&$render_element, $location, ViewExecutable 
  * Implements hook_ENTITY_TYPE_create() for 'field_config'.
  */
 function views_field_config_create(FieldConfigInterface $field) {
-  // @todo: Is this necessary? Use cache tags to only delete Views' cache data?
-  \Drupal::cache('discovery')->deleteAll();
+  Views::viewsData()->clear();
 }
 
 /**
  * Implements hook_ENTITY_TYPE_update() for 'field_config'.
  */
 function views_field_config_update(FieldConfigInterface $field) {
-  Cache::invalidateTags(['extension:views']);
-  \Drupal::cache('render')->deleteAll();
+  Views::viewsData()->clear();
 }
 
 /**
  * Implements hook_ENTITY_TYPE_delete() for 'field_config'.
  */
 function views_field_config_delete(FieldConfigInterface $field) {
-  Cache::invalidateTags(['extension:views']);
-  \Drupal::cache('render')->deleteAll();
+  Views::viewsData()->clear();
 }
 
 /**
  * Invalidate the views cache, forcing a rebuild on the next grab of table data.
  */
 function views_invalidate_cache() {
-  // Clear Views' info cache entries.
-  Cache::invalidateTags(['extension:views']);
-
   // Set the menu as needed to be rebuilt.
   \Drupal::service('router.builder_indicator')->setRebuildNeeded();
 

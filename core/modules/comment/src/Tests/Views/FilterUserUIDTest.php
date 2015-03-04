@@ -7,6 +7,8 @@
 
 namespace Drupal\comment\Tests\Views;
 
+use Drupal\comment\Entity\Comment;
+use Drupal\user\Entity\User;
 use Drupal\views\Views;
 
 /**
@@ -29,6 +31,19 @@ class FilterUserUIDTest extends CommentTestBase {
     $view = Views::getView('test_comment_user_uid');
     $view->setDisplay();
     $view->removeHandler('default', 'argument', 'uid_touch');
+
+    // Add an additional comment which is not created by the user.
+    $new_user = User::create(['name' => 'new user']);
+    $new_user->save();
+
+    $comment = Comment::create([
+      'uid' => $new_user->uid->value,
+      'entity_id' => $this->nodeUserCommented->id(),
+      'entity_type' => 'node',
+      'field_name' => 'comment',
+      'subject' => 'if a woodchuck could chuck wood.',
+    ]);
+    $comment->save();
 
     $options = array(
       'id' => 'uid_touch',
