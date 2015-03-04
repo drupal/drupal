@@ -74,9 +74,19 @@ class Role extends ConfigEntityBase implements RoleInterface {
   protected $permissions = array();
 
   /**
+   * An indicator whether the role has all permissions.
+   *
+   * @var bool
+   */
+  protected $is_admin;
+
+  /**
    * {@inheritdoc}
    */
   public function getPermissions() {
+    if ($this->isAdmin()) {
+      return [];
+    }
     return $this->permissions;
   }
 
@@ -99,6 +109,9 @@ class Role extends ConfigEntityBase implements RoleInterface {
    * {@inheritdoc}
    */
   public function hasPermission($permission) {
+    if ($this->isAdmin()) {
+      return TRUE;
+    }
     return in_array($permission, $this->permissions);
   }
 
@@ -106,6 +119,9 @@ class Role extends ConfigEntityBase implements RoleInterface {
    * {@inheritdoc}
    */
   public function grantPermission($permission) {
+    if ($this->isAdmin()) {
+      return $this;
+    }
     if (!$this->hasPermission($permission)) {
       $this->permissions[] = $permission;
     }
@@ -116,7 +132,25 @@ class Role extends ConfigEntityBase implements RoleInterface {
    * {@inheritdoc}
    */
   public function revokePermission($permission) {
+    if ($this->isAdmin()) {
+      return $this;
+    }
     $this->permissions = array_diff($this->permissions, array($permission));
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isAdmin() {
+    return (bool) $this->is_admin;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setIsAdmin($is_admin) {
+    $this->is_admin = $is_admin;
     return $this;
   }
 

@@ -3,4 +3,5 @@ label: 'Authenticated user'
 weight: 1
 langcode: en
 status: true
+is_admin: false
 dependencies: {  }

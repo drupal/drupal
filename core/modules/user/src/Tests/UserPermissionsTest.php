@@ -8,6 +8,7 @@
 namespace Drupal\user\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleStorage;
 
 /**
@@ -49,6 +50,12 @@ class UserPermissionsTest extends WebTestBase {
   function testUserPermissionChanges() {
     $permissions_hash_generator = $this->container->get('user.permissions_hash');
 
+    $storage = $this->container->get('entity.manager')->getStorage('user_role');
+
+    // Create an additional role and mark it as admin role.
+    Role::create(['is_admin' => TRUE, 'id' => 'administrator', 'label' => 'Administrator'])->save();
+    $storage->resetCache();
+
     $this->drupalLogin($this->adminUser);
     $rid = $this->rid;
     $account = $this->adminUser;
@@ -61,7 +68,6 @@ class UserPermissionsTest extends WebTestBase {
     $edit[$rid . '[administer users]'] = TRUE;
     $this->drupalPostForm('admin/people/permissions', $edit, t('Save permissions'));
     $this->assertText(t('The changes have been saved.'), 'Successful save message displayed.');
-    $storage = $this->container->get('entity.manager')->getStorage('user_role');
     $storage->resetCache();
     $this->assertTrue($account->hasPermission('administer users'), 'User now has "administer users" permission.');
     $current_permissions_hash = $permissions_hash_generator->generate($account);
@@ -80,6 +86,12 @@ class UserPermissionsTest extends WebTestBase {
     $current_permissions_hash = $permissions_hash_generator->generate($account);
     $this->assertIdentical($current_permissions_hash, $permissions_hash_generator->generate($this->loggedInUser));
     $this->assertNotEqual($previous_permissions_hash, $current_permissions_hash, 'Permissions hash has changed.');
+
+    // Ensure that the admin role doesn't have any checkboxes.
+    $this->drupalGet('admin/people/permissions');
+    foreach (array_keys($this->container->get('user.permissions')->getPermissions()) as $permission) {
+      $this->assertNoFieldByName('administrator[' . $permission . ']');
+    }
   }
 
   /**
@@ -92,16 +104,37 @@ class UserPermissionsTest extends WebTestBase {
     // Verify that the administration role is none by default.
     $this->assertOptionSelected('edit-user-admin-role', '', 'Administration role defaults to none.');
 
+    $this->assertFalse(Role::load($this->rid)->isAdmin());
+
     // Set the user's role to be the administrator role.
     $edit = array();
     $edit['user_admin_role'] = $this->rid;
     $this->drupalPostForm('admin/config/people/accounts', $edit, t('Save configuration'));
+
+    \Drupal::entityManager()->getStorage('user_role')->resetCache();
+    $this->assertTrue(Role::load($this->rid)->isAdmin());
 
     // Enable aggregator module and ensure the 'administer news feeds'
     // permission is assigned by default.
     \Drupal::service('module_installer')->install(array('aggregator'));
 
     $this->assertTrue($this->adminUser->hasPermission('administer news feeds'), 'The permission was automatically assigned to the administrator role');
+
+    // Ensure that selecting '- None -' removes the admin role.
+    $edit = array();
+    $edit['user_admin_role'] = '';
+    $this->drupalPostForm('admin/config/people/accounts', $edit, t('Save configuration'));
+
+    \Drupal::entityManager()->getStorage('user_role')->resetCache();
+    \Drupal::configFactory()->reset();
+    $this->assertFalse(Role::load($this->rid)->isAdmin());
+
+    // Manually create two admin roles, in that case the single select should be
+    // hidden.
+    Role::create(['id' => 'admin_role_0', 'is_admin' => TRUE, 'label' => 'Admin role 0'])->save();
+    Role::create(['id' => 'admin_role_1', 'is_admin' => TRUE, 'label' => 'Admin role 1'])->save();
+    $this->drupalGet('admin/config/people/accounts');
+    $this->assertNoFieldByName('user_admin_role');
   }
 
   /**

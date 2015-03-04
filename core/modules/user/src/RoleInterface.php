@@ -56,6 +56,24 @@ interface RoleInterface extends ConfigEntityInterface {
   public function revokePermission($permission);
 
   /**
+   * Indicates that a role has all available permissions.
+   *
+   * @return bool
+   *   TRUE if the role has all permissions.
+   */
+  public function isAdmin();
+
+  /**
+   * Sets the role to be an admin role.
+   *
+   * @param bool $is_admin
+   *   TRUE, if the role should be an admin role.
+   *
+   * return $this
+   */
+  public function setIsAdmin($is_admin);
+
+  /**
    * Returns the weight.
    *
    * @return int

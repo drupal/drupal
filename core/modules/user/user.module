@@ -1330,25 +1330,6 @@ function user_form_process_password_confirm($element) {
 }
 
 /**
- * Implements hook_modules_installed().
- */
-function user_modules_installed($modules) {
-  // Assign all available permissions to the administrator role.
-  $rid = \Drupal::config('user.settings')->get('admin_role');
-  if ($rid) {
-    // Some permissions call the url generator, so ensure that the routes are
-    // up to date.
-    \Drupal::service('router.builder_indicator')->setRebuildNeeded();
-    /** @var \Drupal\user\PermissionHandlerInterface $permission_handler */
-    $permission_handler = \Drupal::service('user.permissions');
-    $permissions = $permission_handler->getPermissions();
-    if (!empty($permissions)) {
-      user_role_grant_permissions($rid, array_keys($permissions));
-    }
-  }
-}
-
-/**
  * Implements hook_modules_uninstalled().
  */
 function user_modules_uninstalled($modules) {

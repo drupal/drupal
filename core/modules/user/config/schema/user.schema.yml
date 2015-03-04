@@ -4,9 +4,6 @@ user.settings:
   type: mapping
   label: 'User settings'
   mapping:
-    admin_role:
-      type: string
-      label: 'Administrator role'
     anonymous:
       type: label
       label: 'Name'
@@ -128,6 +125,9 @@ user.role.*:
     weight:
       type: integer
       label: 'User role weight'
+    is_admin:
+      type: boolean
+      label: 'User is admin'
     permissions:
       type: sequence
       label: 'Permissions'

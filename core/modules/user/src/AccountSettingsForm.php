@@ -27,16 +27,26 @@ class AccountSettingsForm extends ConfigFormBase {
   protected $moduleHandler;
 
   /**
+   * The role storage used when changing the admin role.
+   *
+   * @var \Drupal\user\RoleStorageInterface
+   */
+  protected $roleStorage;
+
+  /**
    * Constructs a \Drupal\user\AccountSettingsForm object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
    * @param \Drupal\Core\Extension\ModuleHandler $module_handler
    *   The module handler.
+   * @param \Drupal\user\RoleStorageInterface $role_storage
+   *   The role storage.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandler $module_handler) {
+  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandler $module_handler, RoleStorageInterface $role_storage) {
     parent::__construct($config_factory);
     $this->moduleHandler = $module_handler;
+    $this->roleStorage = $role_storage;
   }
 
   /**
@@ -45,7 +55,8 @@ class AccountSettingsForm extends ConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
-      $container->get('module_handler')
+      $container->get('module_handler'),
+      $container->get('entity.manager')->getStorage('user_role')
     );
   }
 
@@ -102,13 +113,22 @@ class AccountSettingsForm extends ConfigFormBase {
     // administrator role.
     $roles = user_role_names(TRUE);
     unset($roles[DRUPAL_AUTHENTICATED_RID]);
+
+    $admin_roles = $this->roleStorage->getQuery()
+      ->condition('is_admin', TRUE)
+      ->execute();
+    $default_value = reset($admin_roles);
+
     $form['admin_role']['user_admin_role'] = array(
       '#type' => 'select',
       '#title' => $this->t('Administrator role'),
       '#empty_value' => '',
-      '#default_value' => $config->get('admin_role'),
+      '#default_value' => $default_value,
       '#options' => $roles,
       '#description' => $this->t('This role will be automatically assigned new permissions whenever a module is enabled. Changing this setting will not affect existing permissions.'),
+      // Don't allow to select a single admin role in case multiple roles got
+      // marked as admin role already.
+      '#access' => count($admin_roles) <= 1,
     );
 
     // @todo Remove this check once language settings are generalized.
@@ -427,7 +447,6 @@ class AccountSettingsForm extends ConfigFormBase {
 
     $this->config('user.settings')
       ->set('anonymous', $form_state->getValue('anonymous'))
-      ->set('admin_role', $form_state->getValue('user_admin_role'))
       ->set('register', $form_state->getValue('user_register'))
       ->set('password_strength', $form_state->getValue('user_password_strength'))
       ->set('verify_mail', $form_state->getValue('user_email_verification'))
@@ -458,6 +477,22 @@ class AccountSettingsForm extends ConfigFormBase {
     $this->config('system.site')
       ->set('mail_notification', $form_state->getValue('mail_notification_address'))
       ->save();
+
+    // Change the admin role.
+    if ($form_state->hasValue('user_admin_role')) {
+      $admin_roles = $this->roleStorage->getQuery()
+        ->condition('is_admin', TRUE)
+        ->execute();
+
+      foreach ($admin_roles as $rid) {
+        $this->roleStorage->load($rid)->setIsAdmin(FALSE)->save();
+      }
+
+      $new_admin_role = $form_state->getValue('user_admin_role');
+      if ($new_admin_role) {
+        $this->roleStorage->load($new_admin_role)->setIsAdmin(TRUE)->save();
+      }
+    }
 
     // Clear field definition cache for signatures.
     \Drupal::entityManager()->clearCachedFieldDefinitions();
