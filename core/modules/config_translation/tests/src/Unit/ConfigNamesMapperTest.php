@@ -446,10 +446,6 @@ class ConfigNamesMapperTest extends UnitTestCase {
     catch (\RuntimeException $e) {}
   }
 
-  // @todo Test ConfigNamesMapper::getLanguageWithFallback() once
-  //   https://drupal.org/node/1862202 lands in core, because then we can
-  //   remove the direct language_load() call.
-
   /**
    * Tests ConfigNamesMapper::getConfigData().
    */

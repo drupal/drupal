@@ -869,58 +869,6 @@ function drupal_get_profile() {
 }
 
 /**
- * Returns a list of languages set up on the site.
- *
- * @param $flags
- *   (optional) Specifies the state of the languages that have to be returned.
- *   It can be: LanguageInterface::STATE_CONFIGURABLE,
- *   LanguageInterface::STATE_LOCKED, or LanguageInterface::STATE_ALL.
- *
- * @return \Drupal\Core\Language\LanguageInterface[]
- *   An associative array of languages, keyed by the language code, ordered by
- *   weight ascending and name ascending.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::languageManager()->getLanguages().
- */
-function language_list($flags = LanguageInterface::STATE_CONFIGURABLE) {
-  return \Drupal::languageManager()->getLanguages($flags);
-}
-
-/**
- * Loads a language object from the database.
- *
- * @param string $langcode
- *   The language code.
- *
- * @return \Drupal\core\Language\LanguageInterface|null
- *   A fully-populated language object or NULL.
- *
- * @see \Drupal\Core\Language\LanguageManager::getLanguage()
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::languageManager()->getLanguage().
- */
-function language_load($langcode) {
-  return \Drupal::languageManager()->getLanguage($langcode);
-}
-
-/**
- * Returns the default language used on the site.
- *
- * @return \Drupal\Core\Language\LanguageInterface
- *   A language object.
- *
- * @see \Drupal\Core\Language\LanguageManager::getLanguage()
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::languageManager()->getDefaultLanguage().
- */
-function language_default() {
-  return \Drupal::languageManager()->getDefaultLanguage();
-}
-
-/**
  * Registers an additional namespace.
  *
  * @param string $name
