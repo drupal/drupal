@@ -7,9 +7,7 @@ id: taxonomy_term.forum_container
 field_name: forum_container
 entity_type: taxonomy_term
 type: boolean
-settings:
-  on_label: Yes
-  off_label: No
+settings: {  }
 module: core
 locked: true
 cardinality: 1

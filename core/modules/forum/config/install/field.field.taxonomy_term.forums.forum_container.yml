@@ -16,6 +16,8 @@ default_value:
   -
     value: 0
 default_value_callback: ''
-settings: {  }
+settings:
+  on_label: Yes
+  off_label: No
 third_party_settings: {  }
 field_type: boolean

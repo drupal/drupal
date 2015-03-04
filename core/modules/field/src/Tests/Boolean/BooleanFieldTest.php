@@ -69,10 +69,6 @@ class BooleanFieldTest extends WebTestBase {
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'boolean',
-      'settings' => array(
-        'on_label' => $on,
-        'off_label' => $off,
-      ),
     ));
     $this->field_storage->save();
     $this->field = FieldConfig::create(array(
@@ -81,6 +77,10 @@ class BooleanFieldTest extends WebTestBase {
       'bundle' => 'entity_test',
       'label' => $label,
       'required' => TRUE,
+      'settings' => array(
+        'on_label' => $on,
+        'off_label' => $off,
+      ),
     ));
     $this->field->save();
 
@@ -117,6 +117,16 @@ class BooleanFieldTest extends WebTestBase {
     $content = $display->build($entity);
     $this->setRawContent(drupal_render($content));
     $this->assertRaw('<div class="field-item">' . $on . '</div>');
+
+    // Test if we can change the on label.
+    $on = $this->randomMachineName();
+    $edit = array(
+      'field[settings][on_label]' => $on,
+    );
+    $this->drupalPostForm('entity_test/structure/entity_test/fields/entity_test.entity_test.' . $field_name, $edit, t('Save settings'));
+    // Check if we see the updated labels in the creation form.
+    $this->drupalGet('entity_test/add');
+    $this->assertRaw($on);
 
     // Test the display_label option.
     entity_get_form_display('entity_test', 'entity_test', 'default')
@@ -168,9 +178,9 @@ class BooleanFieldTest extends WebTestBase {
     );
 
     // Test the boolean field settings.
-    $this->drupalGet('entity_test/structure/entity_test/fields/entity_test.entity_test.' . $field_name . '/storage');
-    $this->assertFieldById('edit-field-storage-settings-on-label', $on);
-    $this->assertFieldById('edit-field-storage-settings-off-label', $off);
+    $this->drupalGet('entity_test/structure/entity_test/fields/entity_test.entity_test.' . $field_name);
+    $this->assertFieldById('edit-field-settings-on-label', $on);
+    $this->assertFieldById('edit-field-settings-off-label', $off);
   }
 
 }

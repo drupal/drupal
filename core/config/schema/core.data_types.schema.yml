@@ -582,9 +582,9 @@ field.value.entity_reference:
 
 # Schema for the configuration of the Boolean field type.
 
-field.storage_settings.boolean:
-  type: mapping
+field.field_settings.boolean:
   label: 'Boolean settings'
+  type: mapping
   mapping:
     on_label:
       type: string
@@ -592,10 +592,6 @@ field.storage_settings.boolean:
     off_label:
       type: string
       label: 'Off label'
-
-field.field_settings.boolean:
-  label: 'Boolean settings'
-  type: mapping
 
 field.value.boolean:
   type: mapping

@@ -31,11 +31,11 @@ class BooleanItem extends FieldItemBase implements OptionsProviderInterface {
   /**
    * {@inheritdoc}
    */
-  public static function defaultStorageSettings() {
+  public static function defaultFieldSettings() {
     return array(
       'on_label' => t('On'),
       'off_label' => t('Off'),
-    ) + parent::defaultStorageSettings();
+    ) + parent::defaultFieldSettings();
   }
 
   /**
@@ -66,7 +66,9 @@ class BooleanItem extends FieldItemBase implements OptionsProviderInterface {
   /**
    * {@inheritdoc}
    */
-  public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
+  public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
+    $element = array();
+
     $element['on_label'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('"On" label'),
