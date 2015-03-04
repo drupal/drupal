@@ -169,6 +169,9 @@ class UserRegistrationTest extends WebTestBase {
     $this->drupalGet('user/register');
     $this->assertNoRaw('<details id="edit-account"><summary>Account information</summary>');
 
+    // Check the presence of expected cache tags.
+    $this->assertCacheTag('config:user.settings');
+
     $edit = array();
     $edit['name'] = $name = $this->randomMachineName();
     $edit['mail'] = $mail = $edit['name'] . '@example.com';

@@ -99,6 +99,7 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
       'config:system.menu.tools',
       'config:system.menu.footer',
       'config:system.menu.main',
+      'config:system.site',
     ));
 
     // Full node page 2.
@@ -132,6 +133,7 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
       'config:system.menu.tools',
       'config:system.menu.footer',
       'config:system.menu.main',
+      'config:system.site',
     ));
   }
 

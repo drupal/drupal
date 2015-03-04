@@ -16,10 +16,16 @@ use Drupal\Core\Password\PhpassHashedPassword;
  * @group user
  */
 class UserLoginTest extends WebTestBase {
+
   /**
    * Tests login with destination.
    */
-  function testLoginDestination() {
+  function testLoginCacheTagsAndDestination() {
+    $this->drupalGet('user/login');
+    // The user login form says "Enter your <site name> username.", hence it
+    // depends on config:system.site, and its cache tags should be present.
+    $this->assertCacheTag('config:system.site');
+
     $user = $this->drupalCreateUser(array());
     $this->drupalGet('user/login', array('query' => array('destination' => 'foo')));
     $edit = array('name' => $user->getUserName(), 'pass' => $user->pass_raw);

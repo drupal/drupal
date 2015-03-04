@@ -2733,4 +2733,16 @@ abstract class WebTestBase extends TestBase {
       return $this->getAbsoluteUrl($path);
     }
   }
+
+  /**
+   * Asserts whether an expected cache tag was present in the last response.
+   *
+   * @param string $expected_cache_tag
+   *   The expected cache tag.
+   */
+  protected function assertCacheTag($expected_cache_tag) {
+    $cache_tags = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Tags'));
+    $this->assertTrue(in_array($expected_cache_tag, $cache_tags));
+  }
+
 }

@@ -74,6 +74,7 @@ abstract class AccountForm extends ContentEntityForm {
     $account = $this->entity;
     $user = $this->currentUser();
     $config = \Drupal::config('user.settings');
+    $form['#cache']['tags'] = $config->getCacheTags();
 
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
     $register = $account->isAnonymous();

@@ -56,6 +56,9 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment');
     $this->assertTrue($this->commentContactInfoAvailable(), 'Contact information available.');
 
+    // Check the presence of expected cache tags.
+    $this->assertCacheTag('config:user.settings');
+
     $anonymous_comment2 = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName());
     $this->assertTrue($this->commentExists($anonymous_comment2), 'Anonymous comment with contact info (optional) found.');
 

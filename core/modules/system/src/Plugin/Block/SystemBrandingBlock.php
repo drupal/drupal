@@ -8,6 +8,7 @@
 namespace Drupal\system\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -189,11 +190,10 @@ class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInt
    * {@inheritdoc}
    */
   public function getCacheTags() {
-    // The theme-specific cache tag is set automatically for each block, but the
-    // output of this block also depends on the global theme settings.
-    $cache_tags = parent::getCacheTags();
-    $cache_tags[] = 'theme_global_setting';
-    return $cache_tags;
+    return Cache::mergeTags(
+      parent::getCacheTags(),
+      $this->configFactory->get('system.site')->getCacheTags()
+    );
   }
 
 }

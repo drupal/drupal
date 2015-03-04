@@ -119,6 +119,12 @@ class ForumTest extends WebTestBase {
     // Look for the "General discussion" default forum
     $this->assertRaw(t('<a href="'. Url::fromRoute('forum.page', ['taxonomy_term' => 1])->toString() .'">General discussion</a>'), "Found the default forum at the /forum listing");
 
+    // Check the presence of expected cache tags.
+    $this->assertCacheTag('config:forum.settings');
+
+    $this->drupalGet(Url::fromRoute('forum.page', ['taxonomy_term' => 1]));
+    $this->assertCacheTag('config:forum.settings');
+
     // Do the admin tests.
     $this->doAdminTests($this->admin_user);
 

@@ -143,6 +143,11 @@ class BookTest extends WebTestBase {
 
     $this->drupalLogout();
     $this->drupalLogin($this->bookAuthor);
+
+    // Check the presence of expected cache tags.
+    $this->drupalGet('node/add/book');
+    $this->assertCacheTag('config:book.settings');
+
     /*
      * Add Node 5 under Node 3.
      * Book
@@ -153,8 +158,6 @@ class BookTest extends WebTestBase {
      *   |- Node 5
      *  |- Node 4
      */
-
-
     $nodes[] = $this->createBookNode($book->id(), $nodes[3]->book['nid']); // Node 5.
     $this->drupalLogout();
     $this->drupalLogin($this->webUser);

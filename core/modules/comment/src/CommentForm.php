@@ -10,6 +10,7 @@ namespace Drupal\comment;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -78,6 +79,7 @@ class CommentForm extends ContentEntityForm {
     $entity = $this->entityManager->getStorage($comment->getCommentedEntityTypeId())->load($comment->getCommentedEntityId());
     $field_name = $comment->getFieldName();
     $field_definition = $this->entityManager->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle())[$comment->getFieldName()];
+    $config = $this->config('user.settings');
 
     // Use #comment-form as unique jump target, regardless of entity type.
     $form['#id'] = drupal_html_id('comment_form');
@@ -147,7 +149,7 @@ class CommentForm extends ContentEntityForm {
     );
     if ($is_admin) {
       $form['author']['name']['#title'] = $this->t('Authored by');
-      $form['author']['name']['#description'] = $this->t('Leave blank for %anonymous.', array('%anonymous' => $this->config('user.settings')->get('anonymous')));
+      $form['author']['name']['#description'] = $this->t('Leave blank for %anonymous.', array('%anonymous' => $config->get('anonymous')));
       $form['author']['name']['#autocomplete_route_name'] = 'user.autocomplete';
     }
     elseif ($this->currentUser->isAuthenticated()) {
@@ -157,7 +159,7 @@ class CommentForm extends ContentEntityForm {
       $form['author']['name']['#account'] = $this->currentUser;
     }
     elseif($this->currentUser->isAnonymous()) {
-      $form['author']['name']['#attributes']['data-drupal-default-value'] = $this->config('user.settings')->get('anonymous');
+      $form['author']['name']['#attributes']['data-drupal-default-value'] = $config->get('anonymous');
     }
 
     // Add author email and homepage fields depending on the current user.
@@ -200,6 +202,8 @@ class CommentForm extends ContentEntityForm {
       ),
       '#access' => $is_admin,
     );
+
+    $form['#cache']['tags'] = Cache::mergeTags(isset($form['#cache']['tags']) ? $form['#cache']['tags'] : [],  $config->getCacheTags());
 
     return parent::form($form, $form_state, $comment);
   }

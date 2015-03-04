@@ -54,6 +54,10 @@ class ContactSitewideTest extends WebTestBase {
     ));
     $this->drupalLogin($admin_user);
 
+    // Check the presence of expected cache tags.
+    $this->drupalGet('contact');
+    $this->assertCacheTag('config:contact.settings');
+
     $flood_limit = 3;
     $this->config('contact.settings')
       ->set('flood.limit', $flood_limit)

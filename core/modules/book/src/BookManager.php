@@ -317,7 +317,8 @@ class BookManager implements BookManagerInterface {
    *   A parent selection form element.
    */
   protected function addParentSelectFormElements(array $book_link) {
-    if ($this->configFactory->get('book.settings')->get('override_parent_selector')) {
+    $config = $this->configFactory->get('book.settings');
+    if ($config->get('override_parent_selector')) {
       return array();
     }
     // Offer a message or a drop-down to choose a different parent page.
@@ -352,6 +353,7 @@ class BookManager implements BookManagerInterface {
         '#suffix' => '</div>',
       );
     }
+    $form['#cache']['tags'] = Cache::mergeTags(isset($form['#cache']['tags']) ? $form['#cache']['tags'] : [],  $config->getCacheTags());
 
     return $form;
   }
