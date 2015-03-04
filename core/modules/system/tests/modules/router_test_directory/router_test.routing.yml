@@ -48,6 +48,8 @@ router_test.8:
 
 router_test.10:
   path: '/router_test/test10'
+  options:
+    _auth: [ 'basic_auth', 'cookie' ]
   defaults:
     _controller: '\Drupal\router_test\TestContent::test1'
   requirements:

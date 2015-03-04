@@ -29,6 +29,12 @@ class BasicAuthTest extends WebTestBase {
    * Test http basic authentication.
    */
   public function testBasicAuth() {
+    // Enable page caching.
+    $config = $this->config('system.performance');
+    $config->set('cache.page.use_internal', 1);
+    $config->set('cache.page.max_age', 300);
+    $config->save();
+
     $account = $this->drupalCreateUser();
     $url = Url::fromRoute('router_test.11');
 
@@ -36,6 +42,8 @@ class BasicAuthTest extends WebTestBase {
     $this->assertText($account->getUsername(), 'Account name is displayed.');
     $this->assertResponse('200', 'HTTP response is OK');
     $this->curlClose();
+    $this->assertFalse($this->drupalGetHeader('X-Drupal-Cache'));
+    $this->assertIdentical(strpos($this->drupalGetHeader('Cache-Control'), 'public'), FALSE, 'Cache-Control is not set to public');
 
     $this->basicAuthGet($url, $account->getUsername(), $this->randomMachineName());
     $this->assertNoText($account->getUsername(), 'Bad basic auth credentials do not authenticate the user.');
@@ -56,6 +64,15 @@ class BasicAuthTest extends WebTestBase {
     $this->assertNoLink('Log out', 'User is not logged in');
     $this->assertResponse('403', 'No basic authentication for routes not explicitly defining authentication providers.');
     $this->curlClose();
+
+    // Ensure that pages already in the page cache aren't returned from page
+    // cache if basic auth credentials are provided.
+    $url = Url::fromRoute('router_test.10');
+    $this->drupalGet($url);
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
+    $this->basicAuthGet($url, $account->getUsername(), $account->pass_raw);
+    $this->assertFalse($this->drupalGetHeader('X-Drupal-Cache'));
+    $this->assertIdentical(strpos($this->drupalGetHeader('Cache-Control'), 'public'), FALSE, 'No page cache response when requesting a cached page with basic auth credentials.');
   }
 
   /**
