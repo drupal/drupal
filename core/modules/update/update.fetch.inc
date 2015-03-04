@@ -6,18 +6,6 @@
  */
 
 /**
- * Attempts to drain the queue of tasks for release history data to fetch.
- *
- * @see \Drupal\update\UpdateFetcher::fetchData()
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::service('update.processor')->fetchData().
- */
-function _update_fetch_data() {
-  \Drupal::service('update.processor')->fetchData();
-}
-
-/**
  * Performs any notifications that should be done once cron fetches new data.
  *
  * This method checks the status of the site using the new data and, depending

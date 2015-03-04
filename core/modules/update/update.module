@@ -396,11 +396,10 @@ function update_refresh() {
 /**
  * Attempts to fetch update data after loading the necessary include file.
  *
- * @see _update_fetch_data()
+ * @see \Drupal\update\UpdateProcessor::fetchData()
  */
 function update_fetch_data() {
-  module_load_include('inc', 'update', 'update.fetch');
-  _update_fetch_data();
+ \Drupal::service('update.processor')->fetchData();
 }
 
 /**
