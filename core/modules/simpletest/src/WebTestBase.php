@@ -859,8 +859,8 @@ abstract class WebTestBase extends TestBase {
       file_put_contents($directory . '/services.yml', $yaml->dump($services));
     }
     // Since Drupal is bootstrapped already, install_begin_request() will not
-    // bootstrap into DRUPAL_BOOTSTRAP_CONFIGURATION (again). Hence, we have to
-    // reload the newly written custom settings.php manually.
+    // bootstrap again. Hence, we have to reload the newly written custom
+    // settings.php manually.
     $class_loader = require DRUPAL_ROOT . '/core/vendor/autoload.php';
     Settings::initialize(DRUPAL_ROOT, $this->siteDirectory, $class_loader);
 

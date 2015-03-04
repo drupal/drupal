@@ -1843,10 +1843,6 @@ function install_finished(&$install_state) {
  * Performs batch installation of modules.
  */
 function _install_module_batch($module, $module_name, &$context) {
-  // Install and enable the module right away, so that the module will be
-  // loaded by drupal_bootstrap in subsequent batch requests, and other
-  // modules possibly depending on it can safely perform their installation
-  // steps.
   \Drupal::service('module_installer')->install(array($module), FALSE);
   $context['results'][] = $module;
   $context['message'] = t('Installed %module module.', array('%module' => $module_name));
