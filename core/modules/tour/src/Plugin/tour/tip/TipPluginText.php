@@ -7,6 +7,7 @@
 
 namespace Drupal\tour\Plugin\tour\tip;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -78,7 +79,7 @@ class TipPluginText extends TipPluginBase implements ContainerFactoryPluginInter
   public function getAriaId() {
     static $id;
     if (!isset($id)) {
-      $id = drupal_html_id($this->get('id'));
+      $id = Html::getUniqueId($this->get('id'));
     }
     return $id;
   }

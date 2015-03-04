@@ -8,6 +8,7 @@
 namespace Drupal\comment;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\Cache;
@@ -82,7 +83,7 @@ class CommentForm extends ContentEntityForm {
     $config = $this->config('user.settings');
 
     // Use #comment-form as unique jump target, regardless of entity type.
-    $form['#id'] = drupal_html_id('comment_form');
+    $form['#id'] = Html::getUniqueId('comment_form');
     $form['#theme'] = array('comment_form__' . $entity->getEntityTypeId() . '__' . $entity->bundle() . '__' . $field_name, 'comment_form');
 
     $anonymous_contact = $field_definition->getSetting('anonymous');

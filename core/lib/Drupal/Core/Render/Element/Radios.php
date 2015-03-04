@@ -8,6 +8,7 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Component\Utility\Html;
 
 /**
  * Provides a form element for a set of radio buttons.
@@ -65,7 +66,7 @@ class Radios extends FormElement {
           '#default_value' => isset($element['#default_value']) ? $element['#default_value'] : FALSE,
           '#attributes' => $element['#attributes'],
           '#parents' => $element['#parents'],
-          '#id' => drupal_html_id('edit-' . implode('-', $parents_for_id)),
+          '#id' => Html::getUniqueId('edit-' . implode('-', $parents_for_id)),
           '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
           '#weight' => $weight,
         );

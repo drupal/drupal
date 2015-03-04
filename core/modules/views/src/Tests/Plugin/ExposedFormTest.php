@@ -154,11 +154,11 @@ class ExposedFormTest extends ViewTestBase {
     $this->drupalGet('test_exposed_block');
 
     // Test there is an exposed form in a block.
-    $xpath = $this->buildXPathQuery('//div[@id=:id]/form/@id', array(':id' => drupal_html_id('block-' . $block->id())));
+    $xpath = $this->buildXPathQuery('//div[@id=:id]/form/@id', array(':id' => Html::getUniqueId('block-' . $block->id())));
     $this->assertFieldByXpath($xpath, $this->getExpectedExposedFormId($view), 'Expected form found in views block.');
 
     // Test there is not an exposed form in the view page content area.
-    $xpath = $this->buildXPathQuery('//div[@class="view-content"]/form/@id', array(':id' => drupal_html_id('block-' . $block->id())));
+    $xpath = $this->buildXPathQuery('//div[@class="view-content"]/form/@id', array(':id' => Html::getUniqueId('block-' . $block->id())));
     $this->assertNoFieldByXpath($xpath, $this->getExpectedExposedFormId($view), 'No exposed form found in views content region.');
 
     // Test there is only one views exposed form on the page.

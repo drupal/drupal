@@ -467,11 +467,11 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       }
       $this->formValidator->validateForm($form_id, $form, $form_state);
 
-      // drupal_html_id() maintains a cache of element IDs it has seen, so it
-      // can prevent duplicates. We want to be sure we reset that cache when a
-      // form is processed, so scenarios that result in the form being built
-      // behind the scenes and again for the browser don't increment all the
-      // element IDs needlessly.
+      // \Drupal\Component\Utility\Html::getUniqueId() maintains a cache of
+      // element IDs it has seen, so it can prevent duplicates. We want to be
+      // sure we reset that cache when a form is processed, so scenarios that
+      // result in the form being built behind the scenes and again for the
+      // browser don't increment all the element IDs needlessly.
       if (!FormState::hasAnyErrors()) {
         // In case of errors, do not break HTML IDs of other forms.
         Html::resetSeenIds();

@@ -337,7 +337,7 @@ class ViewUI implements ViewEntityInterface {
       $form['actions']['submit'] = array(
         '#type' => 'submit',
         '#value' => $name,
-        '#id' => 'edit-submit-' . drupal_html_id($form_id),
+        '#id' => 'edit-submit-' . Html::getUniqueId($form_id),
         // The regular submit handler ($form_id . '_submit') does not apply if
         // we're updating the default display. It does apply if we're updating
         // the current display. Since we have no way of knowing at this point
