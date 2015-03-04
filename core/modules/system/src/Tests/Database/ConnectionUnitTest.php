@@ -7,7 +7,9 @@
 
 namespace Drupal\system\Tests\Database;
 
+use Doctrine\Common\Reflection\StaticReflectionProperty;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Site\Settings;
 use Drupal\simpletest\KernelTestBase;
 
 /**
@@ -268,6 +270,32 @@ class ConnectionUnitTest extends KernelTestBase {
       }
     }
 
+    // By using "key", we ensure that its not a key used in the serialized PHP.
+    $not_serialized_properties = ['"connection"', '"connectionOptions"', '"schema"', '"prefixes"', '"prefixReplace"', '"driverClasses"'];
+    foreach ($not_serialized_properties as $property) {
+      $this->assertIdentical(FALSE, strpos($serialized, $property));
+    }
+
+    // Serialize the DB connection again, but this time change the connection
+    // information under the hood.
+    $serialized = serialize($db);
+    $db_connection_info = Database::getAllConnectionInfo();
+
+    // Use reflection to empty out $databaseInfo.
+    $reflection_class = new \ReflectionClass('Drupal\Core\Database\Database');
+    $database_info_reflection = $reflection_class->getProperty('databaseInfo');
+    $database_info_reflection->setAccessible(TRUE);
+    $database_info_reflection->setValue(NULL, []);
+
+    // Setup a different DB connection which should be picked up after the
+    // unserialize.
+    $db_connection_info['default']['default']['extra'] = 'value';
+
+    Database::setMultipleConnectionInfo($db_connection_info);
+
+    /** @var \Drupal\Core\Database\Connection $db */
+    $db = unserialize($serialized);
+    $this->assertEqual($db->getConnectionOptions()['extra'], 'value');
   }
 
   /**

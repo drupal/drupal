@@ -1273,8 +1273,9 @@ abstract class Connection implements \Serializable {
    */
   public function serialize() {
     $connection = clone $this;
-    // Don't serialize the PDO connection and other lazy-instantiated members.
-    unset($connection->connection, $connection->schema, $connection->driverClasses);
+    // Don't serialize the PDO connection as well as everything else which
+    // depends on settings.php.
+    unset($connection->connection, $connection->connectionOptions, $connection->schema, $connection->prefixes, $connection->prefixReplace, $connection->driverClasses);
     return serialize(get_object_vars($connection));
   }
 
@@ -1286,6 +1287,8 @@ abstract class Connection implements \Serializable {
     foreach ($data as $key => $value) {
       $this->{$key} = $value;
     }
+    $this->connectionOptions = Database::getConnectionInfo($this->key)[$this->target];
+
     // Re-establish the PDO connection using the original options.
     $this->connection = static::open($this->connectionOptions);
 
@@ -1293,6 +1296,8 @@ abstract class Connection implements \Serializable {
     if (!empty($this->statementClass)) {
       $this->connection->setAttribute(\PDO::ATTR_STATEMENT_CLASS, array($this->statementClass, array($this)));
     }
+
+    $this->setPrefix(isset($this->connectionOptions['prefix']) ? $this->connectionOptions['prefix'] : '');
   }
 
 }
