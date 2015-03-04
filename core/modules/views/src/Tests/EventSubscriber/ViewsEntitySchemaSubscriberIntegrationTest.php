@@ -208,6 +208,9 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewUnitTestBase {
    */
   public function testRevisionDataTableRename() {
     $this->updateEntityTypeToRevisionable();
+    // Multiple changes, so we have to invalidate the caches, otherwise
+    // the second update will revert the first.
+    $this->entityManager->clearCachedDefinitions();
     $this->updateEntityTypeToTranslatable();
     $this->entityDefinitionUpdateManager->applyUpdates();
 
@@ -414,6 +417,10 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewUnitTestBase {
   public function testVariousTableUpdatesForRevisionView() {
     // base + revision <-> base + translation + revision
     $this->updateEntityTypeToRevisionable();
+    // Multiple changes, so we have to invalidate the caches, otherwise
+    // the second update will revert the first.
+    $this->entityManager->clearCachedDefinitions();
+
     list($view, $display) = $this->getUpdatedViewAndDisplay(TRUE);
 
     $this->assertEqual('entity_test_update_revision', $view->get('base_table'));

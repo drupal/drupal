@@ -186,6 +186,30 @@ class DefaultPluginManagerTest extends UnitTestCase {
   }
 
   /**
+   * Tests the plugin manager with caching disabled.
+   */
+  public function testDefaultPluginManagerNoCache() {
+    $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions, NULL, NULL, '\Drupal\plugin_test\Plugin\plugin_test\fruit\FruitInterface');
+
+    $cid = $this->randomMachineName();
+    $cache_backend = $this->getMockBuilder('Drupal\Core\Cache\MemoryBackend')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $cache_backend
+      ->expects($this->never())
+      ->method('get');
+    $cache_backend
+      ->expects($this->never())
+      ->method('set');
+    $plugin_manager->setCacheBackend($cache_backend, $cid);
+
+    $plugin_manager->useCaches(FALSE);
+
+    $this->assertEquals($this->expectedDefinitions, $plugin_manager->getDefinitions());
+    $this->assertEquals($this->expectedDefinitions['banana'], $plugin_manager->getDefinition('banana'));
+  }
+
+  /**
    * Tests the plugin manager cache clear with tags.
    */
   public function testCacheClearWithTags() {

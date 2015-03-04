@@ -7,13 +7,14 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Field\FieldStorageDefinitionListenerInterface;
 
 /**
  * Provides an interface for entity type managers.
  */
-interface EntityManagerInterface extends PluginManagerInterface, EntityTypeListenerInterface, EntityBundleListenerInterface, FieldStorageDefinitionListenerInterface {
+interface EntityManagerInterface extends PluginManagerInterface, EntityTypeListenerInterface, EntityBundleListenerInterface, FieldStorageDefinitionListenerInterface, CachedDiscoveryInterface {
 
   /**
    * Builds a list of entity type labels suitable for a Form API options list.

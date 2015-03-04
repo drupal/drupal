@@ -44,7 +44,6 @@ trait EntityDefinitionTestTrait {
     $entity_type->set('entity_keys', $keys);
 
     $this->state->set('entity_test_update.entity_type', $entity_type);
-    $this->entityManager->clearCachedDefinitions();
   }
 
   /**
@@ -58,7 +57,6 @@ trait EntityDefinitionTestTrait {
     $entity_type->set('entity_keys', $keys);
 
     $this->state->set('entity_test_update.entity_type', $entity_type);
-    $this->entityManager->clearCachedDefinitions();
   }
 
   /**
@@ -75,7 +73,6 @@ trait EntityDefinitionTestTrait {
     }
 
     $this->state->set('entity_test_update.entity_type', $entity_type);
-    $this->entityManager->clearCachedDefinitions();
   }
 
   /**
@@ -92,7 +89,6 @@ trait EntityDefinitionTestTrait {
     }
 
     $this->state->set('entity_test_update.entity_type', $entity_type);
-    $this->entityManager->clearCachedDefinitions();
   }
 
   /**
@@ -106,7 +102,6 @@ trait EntityDefinitionTestTrait {
       ->setName('new_base_field')
       ->setLabel(t('A new base field'));
     $this->state->set('entity_test_update.additional_base_field_definitions', $definitions);
-    $this->entityManager->clearCachedDefinitions();
   }
 
   /**
@@ -121,7 +116,6 @@ trait EntityDefinitionTestTrait {
       ->setLabel(t('A new revisionable base field'))
       ->setRevisionable(TRUE);
     $this->state->set('entity_test_update.additional_base_field_definitions', $definitions);
-    $this->entityManager->clearCachedDefinitions();
   }
 
   /**
@@ -136,7 +130,6 @@ trait EntityDefinitionTestTrait {
    */
   protected function removeBaseField() {
     $this->state->delete('entity_test_update.additional_base_field_definitions');
-    $this->entityManager->clearCachedDefinitions();
   }
 
   /**
@@ -144,7 +137,6 @@ trait EntityDefinitionTestTrait {
    */
   protected function addBaseFieldIndex() {
     $this->state->set('entity_test_update.additional_field_index.entity_test_update.new_base_field', TRUE);
-    $this->entityManager->clearCachedDefinitions();
   }
 
   /**
@@ -152,7 +144,6 @@ trait EntityDefinitionTestTrait {
    */
   protected function removeBaseFieldIndex() {
     $this->state->delete('entity_test_update.additional_field_index.entity_test_update.new_base_field');
-    $this->entityManager->clearCachedDefinitions();
   }
 
   /**
@@ -168,7 +159,6 @@ trait EntityDefinitionTestTrait {
       ->setTargetEntityTypeId('entity_test_update');
     $this->state->set('entity_test_update.additional_field_storage_definitions', $definitions);
     $this->state->set('entity_test_update.additional_bundle_field_definitions.test_bundle', $definitions);
-    $this->entityManager->clearCachedDefinitions();
   }
 
   /**
@@ -184,7 +174,6 @@ trait EntityDefinitionTestTrait {
   protected function removeBundleField() {
     $this->state->delete('entity_test_update.additional_field_storage_definitions');
     $this->state->delete('entity_test_update.additional_bundle_field_definitions.test_bundle');
-    $this->entityManager->clearCachedDefinitions();
   }
 
   /**
@@ -215,7 +204,6 @@ trait EntityDefinitionTestTrait {
     $entity_type->set('base_table', 'entity_test_update_new');
 
     $this->state->set('entity_test_update.entity_type', $entity_type);
-    $this->entityManager->clearCachedDefinitions();
   }
 
   /**
@@ -227,7 +215,6 @@ trait EntityDefinitionTestTrait {
     $entity_type->set('data_table', 'entity_test_update_data_new');
 
     $this->state->set('entity_test_update.entity_type', $entity_type);
-    $this->entityManager->clearCachedDefinitions();
   }
 
   /**
@@ -239,7 +226,6 @@ trait EntityDefinitionTestTrait {
     $entity_type->set('revision_table', 'entity_test_update_revision_new');
 
     $this->state->set('entity_test_update.entity_type', $entity_type);
-    $this->entityManager->clearCachedDefinitions();
   }
 
   /**
@@ -251,7 +237,6 @@ trait EntityDefinitionTestTrait {
     $entity_type->set('revision_data_table', 'entity_test_update_revision_data_new');
 
     $this->state->set('entity_test_update.entity_type', $entity_type);
-    $this->entityManager->clearCachedDefinitions();
   }
 
   /**
@@ -259,7 +244,6 @@ trait EntityDefinitionTestTrait {
    */
   protected function deleteEntityType() {
     $this->state->set('entity_test_update.entity_type', 'null');
-    $this->entityManager->clearCachedDefinitions();
   }
 
 }
