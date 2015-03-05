@@ -8,7 +8,6 @@
 namespace Drupal\views\Plugin\views\style;
 
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
-use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\wizard\WizardInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -316,7 +315,7 @@ class Table extends StylePluginBase {
           ),
         );
         // Provide an ID so we can have such things.
-        $radio_id = Html::getUniqueId('edit-default-' . $field);
+        $radio_id = drupal_html_id('edit-default-' . $field);
         $form['default'][$field] = array(
           '#title' => $this->t('Default sort for @field', array('@field' => $field)),
           '#title_display' => 'invisible',

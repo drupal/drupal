@@ -1653,7 +1653,7 @@ function template_preprocess_field_multiple_value_form(&$variables) {
   $variables['multiple'] = $element['#cardinality_multiple'];
 
   if ($variables['multiple']) {
-    $table_id = Html::getUniqueId($element['#field_name'] . '_values');
+    $table_id = drupal_html_id($element['#field_name'] . '_values');
     $order_class = $element['#field_name'] . '-delta-order';
     $header_attributes = new Attribute(array('class' => array('label')));
     if (!empty($element['#required'])) {

@@ -6,7 +6,6 @@
  */
 
 use Drupal\block\BlockInterface;
-use Drupal\Component\Utility\Html;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\language\ConfigurableLanguageInterface;
@@ -247,12 +246,12 @@ function template_preprocess_block(&$variables) {
 
   // Create a valid HTML ID and make sure it is unique.
   if (!empty($variables['elements']['#id'])) {
-    $variables['attributes']['id'] = Html::getUniqueId('block-' . $variables['elements']['#id']);
+    $variables['attributes']['id'] = drupal_html_id('block-' . $variables['elements']['#id']);
   }
 
   // Proactively add aria-describedby if possible to improve accessibility.
   if ($variables['label'] && isset($variables['attributes']['role'])) {
-    $variables['title_attributes']['id'] = Html::getUniqueId($variables['label']);
+    $variables['title_attributes']['id'] = drupal_html_id($variables['label']);
     $variables['attributes']['aria-describedby'] = $variables['title_attributes']['id'];
   }
 

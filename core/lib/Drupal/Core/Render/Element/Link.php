@@ -8,7 +8,6 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\Html;
 
 /**
  * Provides a link render element.
@@ -70,7 +69,7 @@ class Link extends RenderElement {
     if (isset($element['#ajax']) && !isset($element['#ajax_processed'])) {
       // If no HTML ID was found above, automatically create one.
       if (!isset($element['#id'])) {
-        $element['#id'] = $element['#options']['attributes']['id'] = Html::getUniqueId('ajax-link');
+        $element['#id'] = $element['#options']['attributes']['id'] = drupal_html_id('ajax-link');
       }
       $element = static::preRenderAjaxForm($element);
     }

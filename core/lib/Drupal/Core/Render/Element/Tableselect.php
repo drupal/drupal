@@ -9,7 +9,6 @@ namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
-use Drupal\Component\Utility\Html;
 
 /**
  * Provides a form element for a table with radios or checkboxes in left column.
@@ -237,7 +236,7 @@ class Tableselect extends Table {
               '#default_value' => ($element['#default_value'] == $key) ? $key : NULL,
               '#attributes' => $element['#attributes'],
               '#parents' => $element['#parents'],
-              '#id' => Html::getUniqueId('edit-' . implode('-', $parents_for_id)),
+              '#id' => drupal_html_id('edit-' . implode('-', $parents_for_id)),
               '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
             );
           }

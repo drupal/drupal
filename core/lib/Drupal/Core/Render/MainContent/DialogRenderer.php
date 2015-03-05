@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Render\MainContent;
 
-use Drupal\Component\Utility\Html;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\OpenDialogCommand;
 use Drupal\Core\Controller\TitleResolverInterface;
@@ -89,7 +88,7 @@ class DialogRenderer implements MainContentRendererInterface {
     else {
       // Generate a target based on the route id.
       $route_name = $route_match->getRouteName();
-      $target = '#' . Html::getUniqueId("drupal-dialog-$route_name");
+      $target = '#' . drupal_html_id("drupal-dialog-$route_name");
     }
     return $target;
   }

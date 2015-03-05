@@ -95,7 +95,7 @@ class DisplayBlockTest extends ViewTestBase {
     $this->drupalPostForm(NULL, array(), t('Save'));
 
     // Test that the blocks are listed under the correct categories.
-    $category_id = Html::getUniqueId('edit-category-' . String::checkPlain($category));
+    $category_id = drupal_html_id('edit-category-' . String::checkPlain($category));
     $arguments[':id'] = $category_id;
     $this->drupalGet('admin/structure/block');
     $elements = $this->xpath('//details[@id=:id]//li[contains(@class, :li_class)]/a[contains(@href, :href) and text()=:text]', $arguments);
