@@ -51,12 +51,12 @@ function views_ui_add_ajax_trigger(&$wrapping_element, $trigger_key, $refresh_pa
   // Add the AJAX behavior to the triggering element.
   $triggering_element = &$wrapping_element[$trigger_key];
   $triggering_element['#ajax']['callback'] = 'views_ui_ajax_update_form';
-  // We do not use drupal_html_id() to get an ID for the AJAX wrapper, because
-  // it remembers IDs across AJAX requests (and won't reuse them), but in our
-  // case we need to use the same ID from request to request so that the
-  // wrapper can be recognized by the AJAX system and its content can be
-  // dynamically updated. So instead, we will keep track of duplicate IDs
-  // (within a single request) on our own, later in this function.
+  // We do not use \Drupal\Component\Utility\Html::getUniqueId() to get an ID
+  // for the AJAX wrapper, because it remembers IDs across AJAX requests (and
+  // won't reuse them), but in our case we need to use the same ID from request
+  // to request so that the wrapper can be recognized by the AJAX system and
+  // its content can be dynamically updated. So instead, we will keep track of
+  // duplicate IDs (within a single request) on our own, later in this function.
   $triggering_element['#ajax']['wrapper'] = 'edit-view-' . implode('-', $refresh_parents) . '-wrapper';
 
   // Add a submit button for users who do not have JavaScript enabled. It

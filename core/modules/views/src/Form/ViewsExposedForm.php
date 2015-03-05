@@ -113,7 +113,7 @@ class ViewsExposedForm extends FormBase {
       '#name' => '',
       '#type' => 'submit',
       '#value' => $this->t('Apply'),
-      '#id' => drupal_html_id('edit-submit-' . $view->storage->id()),
+      '#id' => Html::getUniqueId('edit-submit-' . $view->storage->id()),
     );
 
     $form['#action'] = $view->hasUrl() ? $view->getUrl()->toString() : Url::fromRoute('<current>')->toString();

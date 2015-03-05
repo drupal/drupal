@@ -217,7 +217,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
       // Add 'add more' button, if not working with a programmed form.
       if ($cardinality == FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED && !$form_state->isProgrammed()) {
         $id_prefix = implode('-', array_merge($parents, array($field_name)));
-        $wrapper_id = drupal_html_id($id_prefix . '-add-more-wrapper');
+        $wrapper_id = Html::getUniqueId($id_prefix . '-add-more-wrapper');
         $elements['#prefix'] = '<div id="' . $wrapper_id . '">';
         $elements['#suffix'] = '</div>';
 

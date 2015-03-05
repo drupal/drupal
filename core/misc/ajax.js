@@ -372,7 +372,7 @@
     }
 
     // Prevent duplicate HTML ids in the returned markup.
-    // @see drupal_html_id()
+    // @see \Drupal\Component\Utility\Html::getUniqueId()
     var ids = document.querySelectorAll('[id]');
     var ajaxHtmlIds = [];
     for (var i = 0, il = ids.length; i < il; i++) {

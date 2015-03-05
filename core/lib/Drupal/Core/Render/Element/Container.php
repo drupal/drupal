@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Component\Utility\Html as HtmlUtility;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -53,7 +54,7 @@ class Container extends RenderElement {
   public static function processContainer(&$element, FormStateInterface $form_state, &$complete_form) {
     // Generate the ID of the element if it's not explicitly given.
     if (!isset($element['#id'])) {
-      $element['#id'] = drupal_html_id(implode('-', $element['#parents']) . '-wrapper');
+      $element['#id'] = HtmlUtility::getUniqueId(implode('-', $element['#parents']) . '-wrapper');
     }
     return $element;
   }
