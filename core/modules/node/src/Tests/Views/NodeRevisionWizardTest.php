@@ -54,13 +54,13 @@ class NodeRevisionWizardTest extends WizardTestBase {
     /** @var \Drupal\views\Entity\View $view */
     $view = $view_storage_controller->load($view['id']);
 
-    $this->assertEqual($view->get('base_table'), 'node_revision');
+    $this->assertEqual($view->get('base_table'), 'node_field_revision');
 
     $executable = Views::executableFactory()->get($view);
     $this->executeView($executable);
 
     $this->assertIdenticalResultset($executable, array(array('vid' => 1), array('vid' => 3), array('vid' => 2), array('vid' => 4)),
-      array('node_field_revision_vid' => 'vid'));
+      array('vid' => 'vid'));
   }
 
 }

@@ -26,7 +26,7 @@ function comment_views_data_alter(&$data) {
       continue;
     }
     $fields = \Drupal::service('comment.manager')->getFields($entity_type_id);
-    $base_table = $entity_type->getBaseTable();
+    $base_table = $entity_type->getDataTable() ?: $entity_type->getBaseTable();
     $args = array('@entity_type' => $entity_type_id);
 
     if ($fields) {

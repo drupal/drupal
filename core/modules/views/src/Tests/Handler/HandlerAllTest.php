@@ -63,8 +63,8 @@ class HandlerAllTest extends HandlerTestBase {
       $view = $view->getExecutable();
 
       // @todo The groupwise relationship is currently broken.
-      $exclude[] = 'taxonomy_term_data:tid_representative';
-      $exclude[] = 'users:uid_representative';
+      $exclude[] = 'taxonomy_term_field_data:tid_representative';
+      $exclude[] = 'users_field_data:uid_representative';
 
       // Go through all fields and there through all handler types.
       foreach ($info as $field => $field_info) {

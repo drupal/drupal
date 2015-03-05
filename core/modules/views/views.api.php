@@ -183,7 +183,7 @@ function hook_views_data() {
     // for the other tables, given in their hook_views_data() implementations.
     // If the table listed here is from another module's hook_views_data()
     // implementation, make sure your module depends on that other module.
-    'node' => array(
+    'node_field_data' => array(
       // Primary key field in node to use in the join.
       'left_field' => 'nid',
       // Foreign key field in example_table to use in the join.

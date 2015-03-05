@@ -33,7 +33,7 @@ class RelationshipTest extends RelationshipJoinTestBase {
    */
   protected $columnMap = array(
     'views_test_data_name' => 'name',
-    'users_views_test_data_uid' => 'uid',
+    'users_field_data_views_test_data_uid' => 'uid',
   );
 
   /**
@@ -58,7 +58,7 @@ class RelationshipTest extends RelationshipJoinTestBase {
     $view->displayHandlers->get('default')->overrideOption('filters', array(
       'uid' => array(
         'id' => 'uid',
-        'table' => 'users',
+        'table' => 'users_field_data',
         'field' => 'uid',
         'relationship' => 'uid',
       ),
@@ -68,7 +68,7 @@ class RelationshipTest extends RelationshipJoinTestBase {
     $view->displayHandlers->get('default')->overrideOption('fields', $fields + array(
       'uid' => array(
         'id' => 'uid',
-        'table' => 'users',
+        'table' => 'users_field_data',
         'field' => 'uid',
         'relationship' => 'uid',
       ),

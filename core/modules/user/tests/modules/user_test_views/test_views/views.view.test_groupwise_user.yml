@@ -9,7 +9,7 @@ label: test_groupwise_user
 module: views
 description: ''
 tag: default
-base_table: users
+base_table: users_field_data
 base_field: uid
 core: 8.0-dev
 display:
@@ -35,7 +35,7 @@ display:
           field: nid
           id: nid
           relationship: uid_representative
-          table: node
+          table: node_field_data
           plugin_id: node
           entity_type: node
           entity_field: nid
@@ -70,7 +70,7 @@ display:
           subquery_regenerate: true
           subquery_sort: node.nid
           subquery_view: ''
-          table: users
+          table: users_field_data
           plugin_id: groupwise_max
       row:
         type: fields

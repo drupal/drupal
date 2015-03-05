@@ -342,8 +342,7 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
   $table_alias = $field_tables[EntityStorageInterface::FIELD_LOAD_CURRENT]['alias'];
   if ($data_table) {
     // Tell Views how to join to the base table, via the data table.
-    $data[$table_alias]['table']['join'][$base_table] = array(
-      'left_table' => $data_table,
+    $data[$table_alias]['table']['join'][$data_table] = array(
       'left_field' => $entity_type->getKey('id'),
       'field' => 'entity_id',
       'extra' => array(
@@ -367,8 +366,7 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
     $table_alias = $field_tables[EntityStorageInterface::FIELD_LOAD_REVISION]['alias'];
     if ($entity_revision_data_table) {
       // Tell Views how to join to the revision table, via the data table.
-      $data[$table_alias]['table']['join'][$entity_revision_table] = array(
-        'left_table' => $entity_revision_data_table,
+      $data[$table_alias]['table']['join'][$entity_revision_data_table] = array(
         'left_field' => $entity_type->getKey('revision'),
         'field' => 'revision_id',
         'extra' => array(

@@ -19,7 +19,7 @@ use Drupal\views\Plugin\views\wizard\WizardPluginBase;
  *
  * @ViewsWizard(
  *   id = "comment",
- *   base_table = "comment",
+ *   base_table = "comment_field_data",
  *   title = @Translation("Comments")
  * )
  */

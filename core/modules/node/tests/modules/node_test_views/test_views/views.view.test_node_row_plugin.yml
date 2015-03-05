@@ -9,7 +9,7 @@ label: test_node_row_plugin
 module: views
 description: ''
 tag: default
-base_table: node
+base_table: node_field_data
 base_field: nid
 core: '8'
 display:
@@ -28,7 +28,7 @@ display:
           field: status
           group: 1
           id: status
-          table: node
+          table: node_field_data
           value: true
           plugin_id: boolean
           entity_type: node

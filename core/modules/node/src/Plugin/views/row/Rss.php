@@ -24,14 +24,14 @@ use Drupal\node\NodeStorageInterface;
  *   help = @Translation("Display the content with standard node view."),
  *   theme = "views_view_row_rss",
  *   register_theme = FALSE,
- *   base = {"node"},
+ *   base = {"node_field_data"},
  *   display_types = {"feed"}
  * )
  */
 class Rss extends RssPluginBase {
 
   // Basic properties that let the row style follow relationships.
-  var $base_table = 'node';
+  var $base_table = 'node_field_data';
 
   var $base_field = 'nid';
 

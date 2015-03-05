@@ -8,7 +8,7 @@ label: ''
 module: views
 description: ''
 tag: ''
-base_table: users
+base_table: users_field_data
 base_field: uid
 core: 8.x
 display:
@@ -39,7 +39,7 @@ display:
       sorts:
         uid:
           id: uid
-          table: users
+          table: users_field_data
           field: uid
           order: ASC
           plugin_id: user

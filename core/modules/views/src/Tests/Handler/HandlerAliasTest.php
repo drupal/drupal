@@ -82,7 +82,7 @@ class HandlerAliasTest extends ViewUnitTestBase {
     $this->assertIdentical($filter->definition['real field'], 'uid');
 
     $this->assertIdentical($filter->field, 'uid_raw');
-    $this->assertIdentical($filter->table, 'users');
+    $this->assertIdentical($filter->table, 'users_field_data');
     $this->assertIdentical($filter->realField, 'uid');
   }
 

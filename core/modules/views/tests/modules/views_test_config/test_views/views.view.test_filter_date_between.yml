@@ -8,7 +8,7 @@ label: ''
 module: views
 description: ''
 tag: ''
-base_table: node
+base_table: node_field_data
 base_field: nid
 core: '8'
 display:
@@ -24,7 +24,7 @@ display:
         nid:
           field: nid
           id: nid
-          table: node
+          table: node_field_data
           plugin_id: node
           entity_type: node
           entity_field: nid

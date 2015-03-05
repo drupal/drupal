@@ -11,13 +11,13 @@ use Drupal\field\FieldStorageConfigInterface;
  * Implements hook_views_data_alter().
  */
 function taxonomy_views_data_alter(&$data) {
-  $data['node']['term_node_tid'] = array(
+  $data['node_field_data']['term_node_tid'] = array(
     'title' => t('Taxonomy terms on node'),
     'help' => t('Relate nodes to taxonomy terms, specifying which vocabulary or vocabularies to use. This relationship will cause duplicated records if there are multiple terms.'),
     'relationship' => array(
       'id' => 'node_term_data',
       'label' => t('term'),
-      'base' => 'taxonomy_term_data',
+      'base' => 'taxonomy_term_field_data',
     ),
     'field' => array(
       'title' => t('All taxonomy terms'),
@@ -28,7 +28,7 @@ function taxonomy_views_data_alter(&$data) {
     ),
   );
 
-  $data['node']['term_node_tid_depth'] = array(
+  $data['node_field_data']['term_node_tid_depth'] = array(
     'help' => t('Display content if it has the selected taxonomy terms, or children of the selected terms. Due to additional complexity, this has fewer options than the versions without depth.'),
     'real field' => 'nid',
     'argument' => array(
@@ -42,7 +42,7 @@ function taxonomy_views_data_alter(&$data) {
     ),
   );
 
-  $data['node']['term_node_tid_depth_modifier'] = array(
+  $data['node_field_data']['term_node_tid_depth_modifier'] = array(
     'title' => t('Has taxonomy term ID depth modifier'),
     'help' => t('Allows the "depth" for Taxonomy: Term ID (with depth) to be modified via an additional contextual filter value.'),
     'argument' => array(

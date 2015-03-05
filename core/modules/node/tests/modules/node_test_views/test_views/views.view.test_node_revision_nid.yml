@@ -8,7 +8,7 @@ label: null
 module: views
 description: ''
 tag: ''
-base_table: node_revision
+base_table: node_field_revision
 base_field: nid
 core: '8'
 display:
@@ -17,28 +17,28 @@ display:
       relationships:
         nid:
           id: nid
-          table: node_revision
+          table: node_field_revision
           field: nid
           required: true
           plugin_id: standard
       fields:
         vid:
           id: vid
-          table: node_revision
+          table: node_field_revision
           field: vid
           plugin_id: standard
           entity_type: node
           entity_field: vid
         nid_1:
           id: nid_1
-          table: node_revision
+          table: node_field_revision
           field: nid
           plugin_id: standard
           entity_type: node
           entity_field: nid
         nid:
           id: nid
-          table: node
+          table: node_field_data
           field: nid
           relationship: nid
           plugin_id: node
@@ -47,7 +47,7 @@ display:
       arguments:
         nid:
           id: nid
-          table: node_revision
+          table: node_field_revision
           field: nid
           plugin_id: node_nid
           entity_type: node

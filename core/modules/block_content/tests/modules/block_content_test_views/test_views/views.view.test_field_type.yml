@@ -8,7 +8,7 @@ label: ''
 module: views
 description: ''
 tag: ''
-base_table: block_content
+base_table: block_content_field_data
 base_field: id
 core: '8'
 display:

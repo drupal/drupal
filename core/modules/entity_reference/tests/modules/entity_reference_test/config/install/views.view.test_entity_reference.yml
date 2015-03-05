@@ -11,7 +11,7 @@ label: 'Entity reference'
 module: entity_reference_test
 description: ''
 tag: ''
-base_table: node
+base_table: node_field_data
 base_field: nid
 core: '8'
 display:

@@ -18,7 +18,7 @@ use Drupal\views\Plugin\views\wizard\WizardPluginBase;
  *
  * @ViewsWizard(
  *   id = "users",
- *   base_table = "users",
+ *   base_table = "users_field_data",
  *   title = @Translation("Users")
  * )
  */

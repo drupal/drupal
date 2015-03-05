@@ -21,7 +21,7 @@ class BlockContentViewsData extends EntityViewsData {
 
     $data = parent::getViewsData();
 
-    $data['block_content']['id']['field']['id'] = 'block_content';
+    $data['block_content_field_data']['id']['field']['id'] = 'block_content';
 
     $data['block_content_field_data']['info']['field']['id'] = 'block_content';
     $data['block_content_field_data']['info']['field']['link_to_entity default'] = TRUE;

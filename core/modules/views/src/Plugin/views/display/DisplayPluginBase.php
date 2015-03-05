@@ -2569,10 +2569,12 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   protected function isBaseTableTranslatable() {
     $view_base_table = $this->view->storage->get('base_table');
     foreach (\Drupal::entityManager()->getDefinitions() as $entity_type) {
-      if ($entity_type->isTranslatable() && $base_table = $entity_type->getBaseTable()) {
-        if ($base_table === $view_base_table) {
-          return TRUE;
-        }
+      if ($entity_type->isTranslatable()) {
+        $base_table = $entity_type->getBaseTable();
+        $data_table = $entity_type->getDataTable();
+        $revision_table = $entity_type->getRevisionTable();
+        $revision_data_table = $entity_type->getRevisionDataTable();
+        return in_array($view_base_table, [$base_table, $data_table, $revision_table, $revision_data_table]);
       }
     }
     return FALSE;

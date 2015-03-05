@@ -20,7 +20,7 @@ use Drupal\views\Plugin\views\wizard\WizardPluginBase;
  *
  * @ViewsWizard(
  *   id = "node",
- *   base_table = "node",
+ *   base_table = "node_field_data",
  *   title = @Translation("Content")
  * )
  */

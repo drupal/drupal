@@ -13,7 +13,7 @@ label: test_plugin_dependencies
 module: views
 description: ''
 tag: default
-base_table: comment
+base_table: comment_field_data
 base_field: nid
 core: 8.0-dev
 display:
@@ -29,7 +29,7 @@ display:
         cid:
           field: cid
           id: cid
-          table: comment
+          table: comment_field_data
           plugin_id: comment
           entity_type: comment
           entity_field: cid

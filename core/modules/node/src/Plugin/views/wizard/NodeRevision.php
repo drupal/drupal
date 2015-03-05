@@ -18,7 +18,7 @@ use Drupal\views\Plugin\views\wizard\WizardPluginBase;
  *
  * @ViewsWizard(
  *   id = "node_revision",
- *   base_table = "node_revision",
+ *   base_table = "node_field_revision",
  *   title = @Translation("Content revisions")
  * )
  */

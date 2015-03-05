@@ -49,7 +49,7 @@ abstract class RelationshipJoinTestBase extends PluginUnitTestBase {
     $schema = parent::schemaDefinition();
 
     $schema['views_test_data']['fields']['uid'] = array(
-      'description' => "The {users}.uid of the author of the beatle entry.",
+      'description' => "The {users_field_data}.uid of the author of the beatle entry.",
       'type' => 'int',
       'unsigned' => TRUE,
       'not null' => TRUE,
@@ -71,7 +71,7 @@ abstract class RelationshipJoinTestBase extends PluginUnitTestBase {
       'help' => t('The test data UID'),
       'relationship' => array(
         'id' => 'standard',
-        'base' => 'users',
+        'base' => 'users_field_data',
         'base field' => 'uid'
       )
     );

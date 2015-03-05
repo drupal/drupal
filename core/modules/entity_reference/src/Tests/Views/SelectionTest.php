@@ -118,7 +118,7 @@ class SelectionTest extends WebTestBase {
     $view->displayHandlers->get('default')->setOption('relationships', array(
       'test_relationship' => array(
         'id' => 'uid',
-        'table' => 'users',
+        'table' => 'node_field_data',
         'field' => 'uid',
       ),
     ));
@@ -127,7 +127,7 @@ class SelectionTest extends WebTestBase {
     $view->displayHandlers->get('default')->setOption('filters', array(
       'uid' => array(
         'id' => 'uid',
-        'table' => 'users',
+        'table' => 'users_field_data',
         'field' => 'uid',
         'relationship' => 'test_relationship',
       )

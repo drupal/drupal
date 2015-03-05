@@ -148,7 +148,7 @@ class ViewEditTest extends UITestBase {
    */
   public function testRelationRepresentativeNode() {
     // Populate and submit the form.
-    $edit["name[taxonomy_term_data.tid_representative]"] = TRUE;
+    $edit["name[taxonomy_term_field_data.tid_representative]"] = TRUE;
     $this->drupalPostForm('admin/structure/views/nojs/add-handler/test_groupwise_term_ui/default/relationship', $edit, 'Add and configure relationships');
     // Apply changes.
     $edit = array();

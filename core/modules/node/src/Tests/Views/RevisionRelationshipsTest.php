@@ -48,8 +48,8 @@ class RevisionRelationshipsTest extends ViewTestBase {
     $node_revision->save();
     $column_map = array(
       'vid' => 'vid',
-      'node_revision_nid' => 'node_revision_nid',
-      'node_node_revision_nid' => 'node_node_revision_nid',
+      'node_field_revision_nid' => 'node_revision_nid',
+      'node_field_data_node_field_revision_nid' => 'node_node_revision_nid',
     );
 
     // Here should be two rows.

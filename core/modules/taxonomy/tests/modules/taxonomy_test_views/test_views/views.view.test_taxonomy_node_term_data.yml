@@ -10,7 +10,7 @@ label: test_taxonomy_node_term_data
 module: views
 description: ''
 tag: ''
-base_table: node
+base_table: node_field_data
 base_field: nid
 core: '8'
 display:
@@ -29,7 +29,7 @@ display:
             number_of_records: 0
           summary_options:
             items_per_page: 25
-          table: taxonomy_term_data
+          table: taxonomy_term_field_data
           plugin_id: taxonomy
           entity_type: taxonomy_term
           entity_field: tid
@@ -43,7 +43,7 @@ display:
             number_of_records: 0
           summary_options:
             items_per_page: 25
-          table: taxonomy_term_data
+          table: taxonomy_term_field_data
           plugin_id: taxonomy
           entity_type: taxonomy_term
           entity_field: tid
@@ -60,14 +60,14 @@ display:
           field: term_node_tid
           id: term_node_tid
           admin_label: 'Term #1'
-          table: node
+          table: node_field_data
           vids: {}
           plugin_id: node_term_data
         term_node_tid_1:
           field: term_node_tid
           id: term_node_tid_1
           admin_label: 'Term #2'
-          table: node
+          table: node_field_data
           vids: {}
           plugin_id: node_term_data
       sorts:
@@ -75,7 +75,7 @@ display:
           field: nid
           id: nid
           order: DESC
-          table: node
+          table: node_field_data
           plugin_id: standard
           entity_type: node
           entity_field: nid

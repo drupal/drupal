@@ -8,7 +8,7 @@ label: test_alias
 module: views
 description: ''
 tag: default
-base_table: users
+base_table: users_field_data
 base_field: nid
 core: 8.0-dev
 display:
@@ -78,7 +78,7 @@ display:
           is_grouped: false
           operator: '>'
           relationship: none
-          table: users
+          table: users_field_data
           value:
             max: ''
             min: ''

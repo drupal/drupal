@@ -9,7 +9,7 @@ label: test_user_relationship
 module: views
 description: ''
 tag: default
-base_table: node
+base_table: node_field_data
 base_field: nid
 core: '8'
 display:
@@ -91,7 +91,7 @@ display:
           hide_empty: false
           id: uid
           link_to_user: true
-          table: users
+          table: users_field_data
           plugin_id: user
           entity_type: user
           entity_field: uid

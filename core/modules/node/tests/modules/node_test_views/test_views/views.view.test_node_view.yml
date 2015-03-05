@@ -9,7 +9,7 @@ label: test_node_view
 module: views
 description: ''
 tag: ''
-base_table: node
+base_table: node_field_data
 base_field: nid
 core: 8.x
 display:
@@ -72,7 +72,7 @@ display:
       fields:
         nid:
           id: nid
-          table: node
+          table: node_field_data
           field: nid
           relationship: none
           group_type: group

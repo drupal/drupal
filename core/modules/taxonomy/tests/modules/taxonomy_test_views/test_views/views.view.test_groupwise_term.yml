@@ -10,7 +10,7 @@ label: test_groupwise
 module: views
 description: ''
 tag: default
-base_table: taxonomy_term_data
+base_table: taxonomy_term_field_data
 base_field: tid
 core: 8.0-dev
 display:
@@ -34,7 +34,7 @@ display:
           field: nid
           id: nid
           relationship: tid_representative
-          table: node
+          table: node_field_data
           plugin_id: node
           entity_type: node
           entity_field: nid
@@ -57,7 +57,7 @@ display:
           subquery_regenerate: true
           subquery_sort: node.nid
           subquery_view: ''
-          table: taxonomy_term_data
+          table: taxonomy_term_field_data
           plugin_id: groupwise_max
       row:
         type: fields
@@ -66,7 +66,7 @@ display:
           field: tid
           id: tid
           order: DESC
-          table: taxonomy_term_data
+          table: taxonomy_term_field_data
           plugin_id: standard
           entity_type: taxonomy_term
           entity_field: tid

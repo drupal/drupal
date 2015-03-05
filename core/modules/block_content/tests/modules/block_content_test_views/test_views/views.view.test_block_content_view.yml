@@ -8,7 +8,7 @@ label: test_block_content_view
 module: views
 description: ''
 tag: ''
-base_table: block_content
+base_table: block_content_field_data
 base_field: id
 core: 8.x
 display:
@@ -70,7 +70,7 @@ display:
       fields:
         id:
           id: id
-          table: block_content
+          table: block_content_field_data
           field: id
           relationship: none
           group_type: group
@@ -123,7 +123,7 @@ display:
       sorts:
         id:
           id: id
-          table: block_content
+          table: block_content_field_data
           field: id
           relationship: none
           group_type: group
@@ -144,7 +144,7 @@ display:
       arguments:
         type:
           id: type
-          table: block_content
+          table: block_content_field_data
           field: type
           relationship: none
           group_type: group

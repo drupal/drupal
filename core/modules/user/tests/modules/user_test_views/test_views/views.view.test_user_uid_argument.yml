@@ -8,7 +8,7 @@ label: null
 module: views
 description: ''
 tag: ''
-base_table: users
+base_table: users_field_data
 base_field: nid
 core: '8'
 display:
@@ -17,7 +17,7 @@ display:
       fields:
         uid:
           id: uid
-          table: users
+          table: users_field_data
           field: uid
           plugin_id: user
           entity_type: user
@@ -25,7 +25,7 @@ display:
       arguments:
         uid:
           id: uid
-          table: users
+          table: users_field_data
           field: uid
           title_enable: true
           title: '%1'

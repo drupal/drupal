@@ -29,7 +29,7 @@ class RelationshipRepresentativeNodeTest extends UserTestBase {
   public function testRelationship() {
     $view = Views::getView('test_groupwise_user');
     $this->executeView($view);
-    $map = array('node_users_nid' => 'nid', 'uid' => 'uid');
+    $map = array('node_field_data_users_field_data_nid' => 'nid', 'uid' => 'uid');
     $expected_result = array(
       array(
         'uid' => $this->users[1]->id(),

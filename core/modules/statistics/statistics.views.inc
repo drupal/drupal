@@ -12,7 +12,7 @@ function statistics_views_data() {
   $data['node_counter']['table']['group']  = t('Content statistics');
 
   $data['node_counter']['table']['join'] = array(
-    'node' => array(
+    'node_field_data' => array(
       'left_field' => 'nid',
       'field' => 'nid',
     ),

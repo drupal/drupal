@@ -9,7 +9,7 @@ label: People
 module: views
 description: ''
 tag: ''
-base_table: users
+base_table: users_field_data
 base_field: uid
 core: 8.x
 display:
@@ -75,7 +75,7 @@ display:
       filters:
         uid_raw:
           id: uid_raw
-          table: users
+          table: users_field_data
           field: uid_raw
           operator: '!='
           value:

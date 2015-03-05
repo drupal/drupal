@@ -72,7 +72,7 @@ class TaxonomyIndexTid extends PrerenderList {
       $this->additional_fields['nid'] = array('table' => 'node_field_revision', 'field' => 'nid');
     }
     else {
-      $this->additional_fields['nid'] = array('table' => 'node', 'field' => 'nid');
+      $this->additional_fields['nid'] = array('table' => 'node_field_data', 'field' => 'nid');
     }
   }
 

@@ -92,7 +92,7 @@ class EntityRow extends RowPluginBase {
 
     $this->entityTypeId = $this->definition['entity_type'];
     $this->entityType = $this->entityManager->getDefinition($this->entityTypeId);
-    $this->base_table = $this->entityType->getBaseTable();
+    $this->base_table = $this->entityType->getDataTable() ?: $this->entityType->getBaseTable();
     $this->base_field = $this->entityType->getKey('id');
   }
 

@@ -8,7 +8,7 @@ label: 'Who''s new'
 module: user
 description: 'Shows a list of the newest user accounts on the site.'
 tag: default
-base_table: users
+base_table: users_field_data
 base_field: uid
 core: 8.x
 display:

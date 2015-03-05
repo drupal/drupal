@@ -9,7 +9,7 @@ label: test_filter_node_uid_revision
 module: views
 description: ''
 tag: default
-base_table: node
+base_table: node_field_data
 base_field: nid
 core: 8.0-dev
 display:
@@ -24,7 +24,7 @@ display:
       fields:
         nid:
           id: nid
-          table: node
+          table: node_field_data
           field: nid
           plugin_id: node
           entity_type: node
@@ -50,7 +50,7 @@ display:
       sorts:
         nid:
           id: nid
-          table: node
+          table: node_field_data
           field: nid
           order: ASC
           plugin_id: standard

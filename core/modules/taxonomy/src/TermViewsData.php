@@ -20,11 +20,11 @@ class TermViewsData extends EntityViewsData {
   public function getViewsData() {
     $data = parent::getViewsData();
 
-    $data['taxonomy_term_data']['table']['base']['help'] = t('Taxonomy terms are attached to nodes.');
-    $data['taxonomy_term_data']['table']['base']['access query tag'] = 'term_access';
-    $data['taxonomy_term_data']['table']['wizard_id'] = 'taxonomy_term';
+    $data['taxonomy_term_field_data']['table']['base']['help'] = t('Taxonomy terms are attached to nodes.');
+    $data['taxonomy_term_field_data']['table']['base']['access query tag'] = 'term_access';
+    $data['taxonomy_term_field_data']['table']['wizard_id'] = 'taxonomy_term';
 
-    $data['taxonomy_term_data']['table']['join'] = array(
+    $data['taxonomy_term_field_data']['table']['join'] = array(
       // This is provided for the many_to_one argument.
       'taxonomy_index' => array(
         'field' => 'tid',
@@ -32,19 +32,19 @@ class TermViewsData extends EntityViewsData {
       ),
     );
 
-    $data['taxonomy_term_data']['tid']['help'] = t('The tid of a taxonomy term.');
+    $data['taxonomy_term_field_data']['tid']['help'] = t('The tid of a taxonomy term.');
 
-    $data['taxonomy_term_data']['tid']['argument']['id'] = 'taxonomy';
-    $data['taxonomy_term_data']['tid']['argument']['name field'] = 'name';
-    $data['taxonomy_term_data']['tid']['argument']['zero is null'] = TRUE;
+    $data['taxonomy_term_field_data']['tid']['argument']['id'] = 'taxonomy';
+    $data['taxonomy_term_field_data']['tid']['argument']['name field'] = 'name';
+    $data['taxonomy_term_field_data']['tid']['argument']['zero is null'] = TRUE;
 
-    $data['taxonomy_term_data']['tid']['filter']['id'] = 'taxonomy_index_tid';
-    $data['taxonomy_term_data']['tid']['filter']['title'] = t('Term');
-    $data['taxonomy_term_data']['tid']['filter']['help'] = t('Taxonomy term chosen from autocomplete or select widget.');
-    $data['taxonomy_term_data']['tid']['filter']['hierarchy table'] = 'taxonomy_term_hierarchy';
-    $data['taxonomy_term_data']['tid']['filter']['numeric'] = TRUE;
+    $data['taxonomy_term_field_data']['tid']['filter']['id'] = 'taxonomy_index_tid';
+    $data['taxonomy_term_field_data']['tid']['filter']['title'] = t('Term');
+    $data['taxonomy_term_field_data']['tid']['filter']['help'] = t('Taxonomy term chosen from autocomplete or select widget.');
+    $data['taxonomy_term_field_data']['tid']['filter']['hierarchy table'] = 'taxonomy_term_hierarchy';
+    $data['taxonomy_term_field_data']['tid']['filter']['numeric'] = TRUE;
 
-    $data['taxonomy_term_data']['tid_raw'] = array(
+    $data['taxonomy_term_field_data']['tid_raw'] = array(
       'title' => t('Term ID'),
       'help' => t('The tid of a taxonomy term.'),
       'real field' => 'tid',
@@ -54,7 +54,7 @@ class TermViewsData extends EntityViewsData {
       ),
     );
 
-    $data['taxonomy_term_data']['tid_representative'] = array(
+    $data['taxonomy_term_field_data']['tid_representative'] = array(
       'relationship' => array(
         'title' => t('Representative node'),
         'label'  => t('Representative node'),
@@ -64,16 +64,16 @@ class TermViewsData extends EntityViewsData {
         'outer field' => 'taxonomy_term_field_data.tid',
         'argument table' => 'taxonomy_term_field_data',
         'argument field' =>  'tid',
-        'base'   => 'node',
+        'base'   => 'node_field_data',
         'field'  => 'nid',
-        'relationship' => 'node:term_node_tid'
+        'relationship' => 'node_field_data:term_node_tid'
       ),
     );
 
-    $data['taxonomy_term_data']['vid']['help'] = t('Filter the results of "Taxonomy: Term" to a particular vocabulary.');
-    unset($data['taxonomy_term_data']['vid']['field']);
-    unset($data['taxonomy_term_data']['vid']['argument']);
-    unset($data['taxonomy_term_data']['vid']['sort']);
+    $data['taxonomy_term_field_data']['vid']['help'] = t('Filter the results of "Taxonomy: Term" to a particular vocabulary.');
+    unset($data['taxonomy_term_field_data']['vid']['field']);
+    unset($data['taxonomy_term_field_data']['vid']['argument']);
+    unset($data['taxonomy_term_field_data']['vid']['sort']);
 
     $data['taxonomy_term_data']['edit_term'] = array(
       'field' => array(
@@ -167,7 +167,7 @@ class TermViewsData extends EntityViewsData {
         'left_field' => 'tid',
         'field' => 'tid',
       ),
-      'node' => array(
+      'node_field_data' => array(
         // links directly to node via nid
         'left_field' => 'nid',
         'field' => 'nid',
@@ -202,14 +202,14 @@ class TermViewsData extends EntityViewsData {
         'name field' => 'name',
         'empty field name' => t('Uncategorized'),
         'numeric' => TRUE,
-        'skip base' => 'taxonomy_term_data',
+        'skip base' => 'taxonomy_term_field_data',
       ),
       'filter' => array(
         'title' => t('Has taxonomy term'),
         'id' => 'taxonomy_index_tid',
         'hierarchy table' => 'taxonomy_term_hierarchy',
         'numeric' => TRUE,
-        'skip base' => 'taxonomy_term_data',
+        'skip base' => 'taxonomy_term_field_data',
         'allow empty' => TRUE,
       ),
     );

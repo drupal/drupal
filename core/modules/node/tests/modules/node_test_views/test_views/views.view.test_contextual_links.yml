@@ -9,7 +9,7 @@ label: 'Contextual links'
 module: node
 description: ''
 tag: default
-base_table: node
+base_table: node_field_data
 base_field: nid
 core: 8.x
 display:
@@ -82,7 +82,7 @@ display:
           field: nid
           id: nid
           relationship: none
-          table: node
+          table: node_field_data
           plugin_id: numeric
           entity_type: node
           entity_field: nid

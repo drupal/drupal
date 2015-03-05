@@ -20,16 +20,16 @@ class CommentViewsData extends EntityViewsData {
   public function getViewsData() {
     $data = parent::getViewsData();
 
-    $data['comment']['table']['base']['help'] = t('Comments are responses to content.');
-    $data['comment']['table']['base']['access query tag'] = 'comment_access';
+    $data['comment_field_data']['table']['base']['help'] = t('Comments are responses to content.');
+    $data['comment_field_data']['table']['base']['access query tag'] = 'comment_access';
 
-    $data['comment']['table']['wizard_id'] = 'comment';
+    $data['comment_field_data']['table']['wizard_id'] = 'comment';
 
     $data['comment_field_data']['subject']['title'] = t('Title');
     $data['comment_field_data']['subject']['help'] = t('The title of the comment.');
     $data['comment_field_data']['subject']['field']['id'] = 'comment';
 
-    $data['comment']['cid']['field']['id'] = 'comment';
+    $data['comment_field_data']['cid']['field']['id'] = 'comment';
 
     $data['comment_field_data']['name']['title'] = t('Author');
     $data['comment_field_data']['name']['help'] = t("The name of the comment's author. Can be rendered as a link to the author's homepage.");
@@ -190,7 +190,7 @@ class CommentViewsData extends EntityViewsData {
           'relationship' => array(
             'title' => $entity_type->getLabel(),
             'help' => t('The @entity_type to which the comment is a reply to.', array('@entity_type' => $entity_type->getLabel())),
-            'base' => $entity_type->getBaseTable(),
+            'base' => $entity_type->getDataTable() ?: $entity_type->getBaseTable(),
             'base field' => $entity_type->getKey('id'),
             'relationship field' => 'entity_id',
             'id' => 'standard',
@@ -245,7 +245,7 @@ class CommentViewsData extends EntityViewsData {
       // {comment_entity_statistics} for each field as multiple joins between
       // the same two tables is not supported.
       if (\Drupal::service('comment.manager')->getFields($type)) {
-        $data['comment_entity_statistics']['table']['join'][$entity_type->getBaseTable()] = array(
+        $data['comment_entity_statistics']['table']['join'][$entity_type->getDataTable() ?: $entity_type->getBaseTable()] = array(
           'type' => 'INNER',
           'left_field' => $entity_type->getKey('id'),
           'field' => 'entity_id',

@@ -19,7 +19,7 @@ function history_views_data() {
   // Explain how this table joins to others.
   $data['history']['table']['join'] = array(
      // Directly links to node table.
-    'node' => array(
+    'node_field_data' => array(
       'table' => 'history',
       'left_field' => 'nid',
       'field' => 'nid',

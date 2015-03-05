@@ -117,7 +117,7 @@ class NodeTermData extends RelationshipPluginBase  {
     $this->ensureMyTable();
 
     $def = $this->definition;
-    $def['table'] = 'taxonomy_term_data';
+    $def['table'] = 'taxonomy_term_field_data';
 
     if (!array_filter($this->options['vids'])) {
       $taxonomy_index = $this->query->addTable('taxonomy_index', $this->relationship);
@@ -134,7 +134,7 @@ class NodeTermData extends RelationshipPluginBase  {
       $def['type'] = empty($this->options['required']) ? 'LEFT' : 'INNER';
       $def['adjusted'] = TRUE;
 
-      $query = db_select('taxonomy_term_data', 'td');
+      $query = db_select('taxonomy_term_field_data', 'td');
       $query->addJoin($def['type'], 'taxonomy_index', 'tn', 'tn.tid = td.tid');
       $query->condition('td.vid', array_filter($this->options['vids']), 'IN');
       $query->addTag('term_access');
@@ -148,7 +148,7 @@ class NodeTermData extends RelationshipPluginBase  {
     // use a short alias for this:
     $alias = $def['table'] . '_' . $this->table;
 
-    $this->alias = $this->query->addRelationship($alias, $join, 'taxonomy_term_data', $this->relationship);
+    $this->alias = $this->query->addRelationship($alias, $join, 'taxonomy_term_field_data', $this->relationship);
   }
 
   /**

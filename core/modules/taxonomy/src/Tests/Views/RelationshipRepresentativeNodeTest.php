@@ -29,7 +29,7 @@ class RelationshipRepresentativeNodeTest extends TaxonomyTestBase {
   public function testRelationship() {
     $view = Views::getView('test_groupwise_term');
     $this->executeView($view);
-    $map = array('node_taxonomy_term_data_nid' => 'nid', 'tid' => 'tid');
+    $map = array('node_field_data_taxonomy_term_field_data_nid' => 'nid', 'tid' => 'tid');
     $expected_result = array(
       array(
         'nid' => $this->nodes[1]->id(),

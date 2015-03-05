@@ -10,7 +10,7 @@ label: test_comment_rss
 module: views
 description: ''
 tag: ''
-base_table: comment
+base_table: comment_field_data
 base_field: cid
 core: 8.x
 display:

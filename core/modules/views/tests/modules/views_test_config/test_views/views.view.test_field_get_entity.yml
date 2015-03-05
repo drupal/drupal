@@ -10,7 +10,7 @@ label: test_field_get_entity
 module: views
 description: ''
 tag: default
-base_table: comment
+base_table: comment_field_data
 base_field: nid
 core: 8.0-dev
 display:
@@ -26,14 +26,14 @@ display:
         cid:
           field: cid
           id: cid
-          table: comment
+          table: comment_field_data
           plugin_id: comment
           entity_type: comment
           entity_field: cid
         nid:
           field: nid
           id: nid
-          table: node
+          table: node_field_data
           relationship: node
           plugin_id: node
           entity_type: node

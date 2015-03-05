@@ -13,7 +13,7 @@ function tracker_views_data() {
 
   $data['tracker_node']['table']['group'] = t('Tracker');
   $data['tracker_node']['table']['join'] = array(
-    'node' => array(
+    'node_field_data' => array(
       'type' => 'INNER',
       'left_field' => 'nid',
       'field' => 'nid',
@@ -71,12 +71,12 @@ function tracker_views_data() {
 
   $data['tracker_user']['table']['group'] = t('Tracker - User');
   $data['tracker_user']['table']['join'] = array(
-    'node' => array(
+    'node_field_data' => array(
       'type' => 'INNER',
       'left_field' => 'nid',
       'field' => 'nid',
     ),
-    'user' => array(
+    'user_field_data' => array(
       'type' => 'INNER',
       'left_field' => 'uid',
       'field' => 'uid',
@@ -158,20 +158,20 @@ function tracker_views_data() {
  */
 function tracker_views_data_alter(&$data) {
   // Provide additional uid_touch handlers which are handled by tracker
-  $data['node']['uid_touch_tracker'] = array(
+  $data['node_field_data']['uid_touch_tracker'] = array(
     'group' => t('Tracker - User'),
     'title' => t('User posted or commented'),
     'help' => t('Display nodes only if a user posted the node or commented on the node.'),
     'argument' => array(
       'field' => 'uid',
-      'name table' => 'users',
+      'name table' => 'users_field_data',
       'name field' => 'name',
       'id' => 'tracker_user_uid',
       'no group by' => TRUE,
     ),
     'filter' => array(
       'field' => 'uid',
-      'name table' => 'users',
+      'name table' => 'users_field_data',
       'name field' => 'name',
       'id' => 'tracker_user_uid'
     ),

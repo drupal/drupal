@@ -9,7 +9,7 @@ label: test_taxonomy_tid_field
 module: views
 description: ''
 tag: ''
-base_table: taxonomy_term_data
+base_table: taxonomy_term_field_data
 base_field: tid
 core: 8.x
 display:
@@ -137,7 +137,7 @@ display:
       sorts:
         tid:
           id: tid
-          table: taxonomy_term_data
+          table: taxonomy_term_field_data
           field: tid
           relationship: none
           group_type: group

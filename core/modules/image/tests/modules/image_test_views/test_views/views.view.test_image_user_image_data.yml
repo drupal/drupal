@@ -9,7 +9,7 @@ label: test_image_user_image_data
 module: views
 description: ''
 tag: ''
-base_table: users
+base_table: users_field_data
 base_field: uid
 core: 8.x
 display:

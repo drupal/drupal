@@ -9,7 +9,7 @@ label: 'Test field filters'
 module: views
 description: ''
 tag: ''
-base_table: taxonomy_term_data
+base_table: taxonomy_term_field_data
 base_field: tid
 core: 8.x
 display:

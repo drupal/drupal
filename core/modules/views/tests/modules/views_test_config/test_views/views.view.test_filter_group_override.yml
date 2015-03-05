@@ -9,7 +9,7 @@ label: test_filter_group_override
 module: views
 description: ''
 tag: default
-base_table: node
+base_table: node_field_data
 base_field: nid
 core: '8'
 display:

@@ -14,7 +14,7 @@ use Drupal\views\Plugin\views\wizard\WizardPluginBase;
  *
  * @ViewsWizard(
  *   id = "taxonomy_term",
- *   base_table = "taxonomy_term_data",
+ *   base_table = "taxonomy_term_field_data",
  *   title = @Translation("Taxonomy terms")
  * )
  */

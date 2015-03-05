@@ -55,7 +55,7 @@ class JoinTest extends RelationshipJoinTestBase {
     $configuration = array(
       'left_table' => 'views_test_data',
       'left_field' => 'uid',
-      'table' => 'users',
+      'table' => 'users_field_data',
       'field' => 'uid',
     );
     $join = $this->manager->createInstance('join_test', $configuration);
@@ -65,11 +65,11 @@ class JoinTest extends RelationshipJoinTestBase {
     $join->setJoinValue($rand_int);
 
     $query = db_select('views_test_data');
-    $table = array('alias' => 'users');
+    $table = array('alias' => 'users_field_data');
     $join->buildJoin($query, $table, $view->query);
 
     $tables = $query->getTables();
-    $join_info = $tables['users'];
+    $join_info = $tables['users_field_data'];
     $this->assertTrue(strpos($join_info['condition'], "views_test_data.uid = $rand_int") !== FALSE, 'Make sure that the custom join plugin can extend the join base and alter the result.');
   }
 
@@ -88,7 +88,7 @@ class JoinTest extends RelationshipJoinTestBase {
     $configuration = array(
       'left_table' => 'views_test_data',
       'left_field' => 'uid',
-      'table' => 'users',
+      'table' => 'users_field_data',
       'field' => 'uid',
       'adjusted' => TRUE,
     );
@@ -100,15 +100,15 @@ class JoinTest extends RelationshipJoinTestBase {
     // Build the actual join values and read them back from the dbtng query
     // object.
     $query = db_select('views_test_data');
-    $table = array('alias' => 'users');
+    $table = array('alias' => 'users_field_data');
     $join->buildJoin($query, $table, $view->query);
 
     $tables = $query->getTables();
-    $join_info = $tables['users'];
+    $join_info = $tables['users_field_data'];
     $this->assertEqual($join_info['join type'], 'LEFT', 'Make sure the default join type is LEFT');
     $this->assertEqual($join_info['table'], $configuration['table']);
-    $this->assertEqual($join_info['alias'], 'users');
-    $this->assertEqual($join_info['condition'], 'views_test_data.uid = users.uid');
+    $this->assertEqual($join_info['alias'], 'users_field_data');
+    $this->assertEqual($join_info['condition'], 'views_test_data.uid = users_field_data.uid');
 
     // Set a different alias and make sure table info is as expected.
     $join = $this->manager->createInstance('standard', $configuration);

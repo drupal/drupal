@@ -9,7 +9,7 @@ label: test_group_rows
 module: views
 description: ''
 tag: ''
-base_table: node
+base_table: node_field_data
 base_field: nid
 core: 8.x
 display:

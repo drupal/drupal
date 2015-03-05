@@ -8,7 +8,7 @@ label: test_http_status_code
 module: views
 description: ''
 tag: ''
-base_table: node
+base_table: node_field_data
 base_field: nid
 core: 8.x
 display:
@@ -56,7 +56,7 @@ display:
       filters:
         status:
           value: true
-          table: node
+          table: node_field_data
           field: status
           id: status
           expose:
@@ -68,7 +68,7 @@ display:
       sorts:
         created:
           id: created
-          table: node
+          table: node_field_data
           field: created
           order: DESC
           entity_type: node
