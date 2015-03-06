@@ -6,7 +6,7 @@ services:
   plugin.manager.image.effect:
     class: Drupal\image\ImageEffectManager
     parent: default_plugin_manager
-  image.page_cache_request_policy.deny_private_image_style_download:
+  image.page_cache_response_policy.deny_private_image_style_download:
     class: Drupal\image\PageCache\DenyPrivateImageStyleDownload
     arguments: ['@current_route_match']
     tags:
