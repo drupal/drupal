@@ -18,6 +18,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
  *   id = "string_long",
  *   label = @Translation("Text (plain, long)"),
  *   description = @Translation("A field containing a long string value."),
+ *   category = @Translation("Text"),
  *   default_widget = "string_textarea",
  *   default_formatter = "basic_string",
  * )

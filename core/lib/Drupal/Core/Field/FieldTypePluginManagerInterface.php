@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Field;
 
+use Drupal\Component\Plugin\CategorizingPluginManagerInterface;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 
@@ -15,7 +16,7 @@ use Drupal\Core\Entity\FieldableEntityInterface;
  *
  * @ingroup field_types
  */
-interface FieldTypePluginManagerInterface extends PluginManagerInterface {
+interface FieldTypePluginManagerInterface extends PluginManagerInterface, CategorizingPluginManagerInterface {
 
   /**
    * Creates a new field item list.

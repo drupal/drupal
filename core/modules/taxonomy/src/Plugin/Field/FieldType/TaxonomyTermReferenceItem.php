@@ -22,6 +22,7 @@ use Drupal\taxonomy\Entity\Vocabulary;
  *   id = "taxonomy_term_reference",
  *   label = @Translation("Term Reference"),
  *   description = @Translation("This field stores a reference to a taxonomy term."),
+ *   category = @Translation("Reference"),
  *   default_widget = "options_select",
  *   default_formatter = "taxonomy_term_reference_link",
  *   list_class = "\Drupal\Core\Field\EntityReferenceFieldItemList",

@@ -19,6 +19,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   id = "string",
  *   label = @Translation("Text (plain)"),
  *   description = @Translation("A field containing a plain string value."),
+ *   category = @Translation("Text"),
  *   default_widget = "string_textfield",
  *   default_formatter = "string"
  * )

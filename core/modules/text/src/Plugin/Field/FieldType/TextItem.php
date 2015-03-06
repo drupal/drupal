@@ -17,6 +17,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   id = "text",
  *   label = @Translation("Text (formatted)"),
  *   description = @Translation("This field stores a text with a text format."),
+ *   category = @Translation("Text"),
  *   default_widget = "text_textfield",
  *   default_formatter = "text_default"
  * )

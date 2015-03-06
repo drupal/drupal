@@ -23,6 +23,7 @@ use Drupal\file\Plugin\Field\FieldType\FileItem;
  *   id = "image",
  *   label = @Translation("Image"),
  *   description = @Translation("This field stores the ID of an image file as an integer value."),
+ *   category = @Translation("Reference"),
  *   default_widget = "image_image",
  *   default_formatter = "image",
  *   column_groups = {

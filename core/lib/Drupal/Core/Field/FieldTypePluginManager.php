@@ -11,6 +11,7 @@ use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Plugin\CategorizingPluginManagerTrait;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\TypedData\TypedDataManager;
 
@@ -20,6 +21,8 @@ use Drupal\Core\TypedData\TypedDataManager;
  * @ingroup field_types
  */
 class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePluginManagerInterface {
+
+  use CategorizingPluginManagerTrait;
 
   /**
    * The typed data manager.
@@ -92,6 +95,11 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
     if (!isset($definition['list_class'])) {
       $definition['list_class'] = '\Drupal\Core\Field\FieldItemList';
     }
+
+    // Ensure that every field type has a category.
+    if (empty($definition['category'])) {
+      $definition['category'] = $this->t('General');
+    }
   }
 
   /**
@@ -124,7 +132,7 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
   public function getUiDefinitions() {
     $definitions = $this->getDefinitions();
     return array_filter($definitions, function ($definition) {
-      return empty($definition['no_ui']) && !empty($definition['default_formatter']) && !empty($definition['default_widget']);
+      return empty($definition['no_ui']);
     });
   }
 

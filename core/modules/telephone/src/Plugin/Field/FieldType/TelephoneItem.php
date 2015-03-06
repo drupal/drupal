@@ -19,6 +19,7 @@ use Drupal\Core\TypedData\DataDefinition;
  *   id = "telephone",
  *   label = @Translation("Telephone number"),
  *   description = @Translation("This field stores a telephone number in the database."),
+ *   category = @Translation("Number"),
  *   default_widget = "telephone_default",
  *   default_formatter = "basic_string"
  * )

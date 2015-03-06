@@ -119,13 +119,11 @@ class FieldStorageAddForm extends FormBase {
 
     // Gather valid field types.
     $field_type_options = array();
-    foreach ($this->fieldTypePluginManager->getDefinitions() as $name => $field_type) {
-      // Skip field types which should not be added via user interface.
-      if (empty($field_type['no_ui'])) {
-        $field_type_options[$name] = $field_type['label'];
+    foreach ($this->fieldTypePluginManager->getGroupedDefinitions($this->fieldTypePluginManager->getUiDefinitions()) as $category => $field_types) {
+      foreach ($field_types as $name => $field_type) {
+        $field_type_options[$category][$name] = $field_type['label'];
       }
     }
-    asort($field_type_options);
 
     $form['add'] = array(
       '#type' => 'container',

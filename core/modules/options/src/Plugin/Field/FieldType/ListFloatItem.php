@@ -17,6 +17,7 @@ use Drupal\Core\TypedData\DataDefinition;
  *   id = "list_float",
  *   label = @Translation("List (float)"),
  *   description = @Translation("This field stores float values from a list of allowed 'value => label' pairs, i.e. 'Fraction': 0 => 0, .25 => 1/4, .75 => 3/4, 1 => 1."),
+ *   category = @Translation("Number"),
  *   default_widget = "options_select",
  *   default_formatter = "list_default",
  * )

@@ -18,6 +18,7 @@ use Drupal\Core\TypedData\DataDefinition;
  *   id = "integer",
  *   label = @Translation("Number (integer)"),
  *   description = @Translation("This field stores a number in the database as an integer."),
+ *   category = @Translation("Number"),
  *   default_widget = "number",
  *   default_formatter = "number_integer"
  * )

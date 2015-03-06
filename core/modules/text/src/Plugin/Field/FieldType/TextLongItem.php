@@ -16,6 +16,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
  *   id = "text_long",
  *   label = @Translation("Text (formatted, long)"),
  *   description = @Translation("This field stores a long text with a text format."),
+ *   category = @Translation("Text"),
  *   default_widget = "text_textarea",
  *   default_formatter = "text_default"
  * )
