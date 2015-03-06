@@ -1232,7 +1232,7 @@ class Sql extends QueryPluginBase {
     if (count($this->having)) {
       $this->hasAggregate = TRUE;
     }
-    elseif ($this->hasAggregate == FALSE) {
+    elseif (!$this->hasAggregate) {
       // Allow 'GROUP BY' even no aggregation function has been set.
       $this->hasAggregate = $this->view->display_handler->getOption('group_by');
     }
