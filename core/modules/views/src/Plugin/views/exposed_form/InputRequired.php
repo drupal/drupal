@@ -26,7 +26,7 @@ class InputRequired extends ExposedFormPluginBase {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['text_input_required'] = array('default' => 'Select any filter and click on Apply to see results', 'translatable' => TRUE);
+    $options['text_input_required'] = array('default' => $this->t('Select any filter and click on Apply to see results'));
     $options['text_input_required_format'] = array('default' => NULL);
     return $options;
   }

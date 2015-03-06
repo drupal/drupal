@@ -33,7 +33,7 @@ class DisplayExtenderTest extends DisplayExtenderPluginBase {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['test_extender_test_option'] = ['default' => 'Empty'];
+    $options['test_extender_test_option'] = ['default' => $this->t('Empty')];
 
     return $options;
   }

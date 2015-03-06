@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests\Plugin;
 
 use Drupal\views\Views;
+use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
  * Tests the pluggable pager system.
@@ -21,7 +22,7 @@ class PagerTest extends PluginTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_store_pager_settings', 'test_pager_none', 'test_pager_some', 'test_pager_full', 'test_view_pager_full_zero_items_per_page', 'test_view');
+  public static $testViews = array('test_store_pager_settings', 'test_pager_none', 'test_pager_some', 'test_pager_full', 'test_view_pager_full_zero_items_per_page', 'test_view', 'content');
 
   /**
    * Modules to enable.
@@ -29,6 +30,13 @@ class PagerTest extends PluginTestBase {
    * @var array
    */
   public static $modules = array('node', 'views_ui');
+
+  /**
+   * String translation storage object.
+   *
+   * @var \Drupal\locale\StringStorageInterface
+   */
+  protected $localeStorage;
 
   /**
    * Pagers was sometimes not stored.
@@ -323,4 +331,115 @@ class PagerTest extends PluginTestBase {
     $this->assertEqual($view->getCurrentPage(), 0, 'Make sure setCurrentPage always sets a valid page number.');
   }
 
+  /**
+   * Tests translating the pager using config_translation.
+   */
+  public function testPagerConfigTranslation() {
+    $view = Views::getView('content');
+    $display = &$view->storage->getDisplay('default');
+    $display['display_options']['pager']['options']['items_per_page'] = 5;
+    $view->save();
+
+    // Enable locale, config_translation and language module.
+    $this->container->get('module_installer')->install(array('locale', 'language', 'config_translation'));
+    $this->resetAll();
+
+    $admin_user = $this->drupalCreateUser(array('access content overview', 'administer nodes', 'bypass node access', 'translate configuration'));
+    $this->drupalLogin($admin_user);
+
+    $langcode = 'nl';
+
+    // Add a default locale storage for this test.
+    $this->localeStorage = $this->container->get('locale.storage');
+
+    // Add Dutch language programmatically.
+    ConfigurableLanguage::createFromLangcode($langcode)->save();
+
+    $edit = array(
+      'translation[config_names][views.view.content][display][default][display_options][pager][options][tags][first]' => '« eerste',
+      'translation[config_names][views.view.content][display][default][display_options][pager][options][tags][previous]' => '‹ vorige',
+      'translation[config_names][views.view.content][display][default][display_options][pager][options][tags][next]' => 'volgende ›',
+      'translation[config_names][views.view.content][display][default][display_options][pager][options][tags][last]' => 'laatste »',
+    );
+    $this->drupalPostForm('admin/structure/views/view/content/translate/nl/edit', $edit, t('Save translation'));
+
+    // We create 11 nodes, this will give us 3 pages.
+    $this->drupalCreateContentType(array('type' => 'page'));
+    for ($i = 0; $i < 11; $i++) {
+      $this->drupalCreateNode();
+    }
+
+    // Go to the second page so we see both previous and next buttons.
+    $this->drupalGet('nl/admin/content', array('query' => array('page' => 1)));
+    // Translation mapping..
+    $labels = array(
+      '« first' => '« eerste',
+      '‹ previous' => '‹ vorige',
+      'next ›' => 'volgende ›',
+      'last »' => 'laatste »',
+    );
+    foreach ($labels as $label => $translation) {
+      // Check if we can find the translation.
+      $this->assertRaw($translation);
+    }
+  }
+
+  /**
+   * Tests translating the pager using locale.
+   */
+  public function testPagerLocale() {
+    // Enable locale and language module.
+    $this->container->get('module_installer')->install(array('locale', 'language'));
+    $this->resetAll();
+    $langcode = 'nl';
+
+    // Add a default locale storage for this test.
+    $this->localeStorage = $this->container->get('locale.storage');
+
+    // Add Dutch language programmatically.
+    ConfigurableLanguage::createFromLangcode($langcode)->save();
+
+    // Labels that need translations.
+    $labels = array(
+      '« first' => '« eerste',
+      '‹ previous' => '‹ vorige',
+      'next ›' => 'volgende ›',
+      'last »' => 'laatste »',
+    );
+    foreach ($labels as $label => $translation) {
+      // Create source string.
+      $source = $this->localeStorage->createString(
+        array(
+          'source' => $label
+        )
+      );
+      $source->save();
+      $this->createTranslation($source, $translation, $langcode);
+    }
+
+    // We create 11 nodes, this will give us 3 pages.
+    $this->drupalCreateContentType(array('type' => 'page'));
+    for ($i = 0; $i < 11; $i++) {
+      $this->drupalCreateNode();
+    }
+
+    // Go to the second page so we see both previous and next buttons.
+    $this->drupalGet('nl/test_pager_full', array('query' => array('page' => 1)));
+    foreach ($labels as $label => $translation) {
+      // Check if we can find the translation.
+      $this->assertRaw($translation);
+    }
+  }
+
+  /**
+   * Creates single translation for source string.
+   */
+  protected function createTranslation($source, $translation, $langcode) {
+    $values = array(
+      'lid' => $source->lid,
+      'language' => $langcode,
+      'translation' => $translation,
+    );
+    return $this->localeStorage->createTranslation($values)->save();
+  }
 }

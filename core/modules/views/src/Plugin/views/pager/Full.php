@@ -34,8 +34,8 @@ class Full extends SqlBase {
     // Use the same default quantity that core uses by default.
     $options['quantity'] = array('default' => 9);
 
-    $options['tags']['contains']['first'] = array('default' => '« first');
-    $options['tags']['contains']['last'] = array('default' => 'last »');
+    $options['tags']['contains']['first'] = array('default' => $this->t('« first'));
+    $options['tags']['contains']['last'] = array('default' => $this->t('last »'));
 
     return $options;
   }

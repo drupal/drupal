@@ -28,7 +28,7 @@ class Result extends AreaPluginBase {
     $options = parent::defineOptions();
 
     $options['content'] = array(
-      'default' => 'Displaying @start - @end of @total',
+      'default' => $this->t('Displaying @start - @end of @total'),
     );
 
     return $options;

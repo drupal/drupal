@@ -23,19 +23,19 @@ abstract class SqlBase extends PagerPluginBase {
     $options['expose'] = array(
       'contains' => array(
         'items_per_page' => array('default' => FALSE),
-        'items_per_page_label' => array('default' => 'Items per page'),
+        'items_per_page_label' => array('default' => $this->t('Items per page')),
         'items_per_page_options' => array('default' => '5, 10, 25, 50'),
         'items_per_page_options_all' => array('default' => FALSE),
-        'items_per_page_options_all_label' => array('default' => '- All -'),
+        'items_per_page_options_all_label' => array('default' => $this->t('- All -')),
 
         'offset' => array('default' => FALSE),
-        'offset_label' => array('default' => 'Offset'),
+        'offset_label' => array('default' => $this->t('Offset')),
       ),
     );
     $options['tags'] = array(
       'contains' => array(
-        'previous' => array('default' => '‹ previous'),
-        'next' => array('default' => 'next ›'),
+        'previous' => array('default' => $this->t('‹ previous')),
+        'next' => array('default' => $this->t('next ›')),
       ),
     );
     return $options;

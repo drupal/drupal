@@ -37,6 +37,11 @@ display:
         type: full
         options:
           items_per_page: 50
+          tags:
+            previous: '‹ previous'
+            next: 'next ›'
+            first: '« first'
+            last: 'last »'
       style:
         type: table
         options:

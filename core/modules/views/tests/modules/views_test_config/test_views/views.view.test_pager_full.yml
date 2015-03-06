@@ -34,3 +34,11 @@ display:
     display_title: Master
     id: default
     position: 0
+  page_1:
+    display_plugin: page
+    id: page_1
+    display_title: Page
+    position: 1
+    display_options:
+      display_extenders: {  }
+      path: test_pager_full
