@@ -34,7 +34,9 @@ class ConditionFormTest extends WebTestBase {
     $this->assertField('bundles[article]', 'There is an article bundle selector.');
     $this->assertField('bundles[page]', 'There is a page bundle selector.');
     $this->drupalPostForm(NULL, array('bundles[page]' => 'page', 'bundles[article]' => 'article'), t('Submit'));
-    $this->assertText('The bundles are article and page', 'The form component appropriately saved the bundles.');
+    // @see \Drupal\condition_test\FormController::submitForm()
+    $this->assertText('Bundle: page');
+    $this->assertText('Bundle: article');
     $this->assertText('Executed successfully.', 'The form configured condition executed properly.');
   }
 
