@@ -71,28 +71,6 @@ const RESPONSIVE_PRIORITY_LOW = 'priority-low';
  */
 
 /**
- * Determines if a theme is available to use.
- *
- * @param string|\Drupal\Core\Extension\Extension $theme
- *   Either the name of a theme or a full theme object.
- *
- * @return bool
- *   Boolean TRUE if the theme is installed or is the site administration theme;
- *   FALSE otherwise.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::service('access_check.theme')->checkAccess().
- *
- * @see \Drupal\Core\Theme\ThemeAccessCheck::checkAccess().
- */
-function drupal_theme_access($theme) {
-  if ($theme instanceof Extension) {
-    $theme = $theme->getName();
-  }
-  return \Drupal::service('access_check.theme')->checkAccess($theme);
-}
-
-/**
  * Gets the theme registry.
  *
  * @param bool $complete

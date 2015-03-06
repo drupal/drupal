@@ -315,13 +315,6 @@ function system_theme_suggestions_field(array $variables) {
 }
 
 /**
- * Menu item access callback - only installed themes can be accessed.
- */
-function _system_themes_access($theme) {
-  return \Drupal::currentUser()->hasPermission('administer themes') && drupal_theme_access($theme);
-}
-
-/**
  * @defgroup authorize Authorized operations
  * @{
  * Functions to run operations with elevated privileges via authorize.php.
