@@ -459,7 +459,18 @@ class ViewExecutable {
   }
 
   /**
-   * @todo.
+   * Returns the identifier.
+   *
+   * @return string|null
+   *   The entity identifier, or NULL if the object does not yet have an
+   *   identifier.
+   */
+  public function id() {
+    return $this->storage->id();
+  }
+
+  /**
+   * Saves the view.
    */
   public function save() {
     $this->storage->save();
