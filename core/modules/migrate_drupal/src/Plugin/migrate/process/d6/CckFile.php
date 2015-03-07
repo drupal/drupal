@@ -8,7 +8,7 @@
 namespace Drupal\migrate_drupal\Plugin\migrate\process\d6;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
 use Drupal\migrate\Plugin\migrate\process\Route;
 
@@ -22,7 +22,7 @@ class CckFile extends Route implements ContainerFactoryPluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function transform($value, MigrateExecutable $migrate_executable, Row $row, $destination_property) {
+  public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     list($fid, $list, $data) = $value;
 
     // If $fid is still an array at this point, that's because we have a file

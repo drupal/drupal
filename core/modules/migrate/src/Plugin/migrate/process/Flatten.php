@@ -6,7 +6,7 @@
  */
 
 namespace Drupal\migrate\Plugin\migrate\process;
-use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 
@@ -31,7 +31,7 @@ class Flatten extends ProcessPluginBase {
    *
    * For example, array(array(1, 2, array(3, 4))) becomes array(1, 2, 3, 4).
    */
-  public function transform($value, MigrateExecutable $migrate_executable, Row $row, $destination_property) {
+  public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     return iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($value)), FALSE);
   }
 }

@@ -7,7 +7,7 @@
 
 namespace Drupal\migrate\Plugin\migrate\process;
 
-use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\MigrateSkipProcessException;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
@@ -26,7 +26,7 @@ class SkipProcessOnEmpty extends ProcessPluginBase {
    *
    * Skip the rest of the processing on 0.
    */
-  public function transform($value, MigrateExecutable $migrate_executable, Row $row, $destination_property) {
+  public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     if (!$value) {
       throw new MigrateSkipProcessException();
     }

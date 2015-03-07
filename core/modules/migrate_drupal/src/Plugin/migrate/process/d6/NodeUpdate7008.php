@@ -7,7 +7,7 @@
 
 namespace Drupal\migrate_drupal\Plugin\migrate\process\d6;
 
-use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 
@@ -25,7 +25,7 @@ class NodeUpdate7008 extends ProcessPluginBase {
    *
    * Split the 'administer nodes' permission from 'access content overview'.
    */
-  public function transform($value, MigrateExecutable $migrate_executable, Row $row, $destination_property) {
+  public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     if ($value === 'administer nodes') {
       return array($value, 'access content overview');
     }

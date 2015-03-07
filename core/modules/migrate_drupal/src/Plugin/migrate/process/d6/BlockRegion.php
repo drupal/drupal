@@ -7,7 +7,7 @@
 namespace Drupal\migrate_drupal\Plugin\migrate\process\d6;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 
@@ -23,7 +23,7 @@ class BlockRegion extends ProcessPluginBase {
    * Set the destination block region, based on the source region and theme as
    * well as the current destination default theme.
    */
-  public function transform($value, MigrateExecutable $migrate_executable, Row $row, $destination_property) {
+  public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     list($region, $source_theme, $destination_theme) = $value;
 
     // Theme is the same on both source and destination, we will assume they

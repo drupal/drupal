@@ -7,7 +7,7 @@
 namespace Drupal\migrate_drupal\Plugin\migrate\process\d6;
 
 use Drupal\migrate\Entity\MigrationInterface;
-use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 use Drupal\Core\Config\Config;
@@ -76,7 +76,7 @@ class BlockTheme extends ProcessPluginBase implements ContainerFactoryPluginInte
    *
    * Set the block theme, based on the current default theme.
    */
-  public function transform($value, MigrateExecutable $migrate_executable, Row $row, $destination_property) {
+  public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     list($theme, $d6_default_theme, $d6_admin_theme) = $value;
 
     // If the source theme exists on the destination, we're good.

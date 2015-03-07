@@ -7,7 +7,7 @@
 
 namespace Drupal\migrate_drupal\Plugin\migrate\process\d6;
 
-use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 
@@ -25,7 +25,7 @@ class FieldSettings extends ProcessPluginBase {
    *
    * Get the field default/mapped settings.
    */
-  public function transform($value, MigrateExecutable $migrate_executable, Row $row, $destination_property) {
+  public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     list($field_type, $global_settings, $widget_settings) = $value;
     return $this->getSettings($field_type, $global_settings, $widget_settings);
   }

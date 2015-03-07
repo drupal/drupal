@@ -8,7 +8,7 @@
 namespace Drupal\migrate_drupal\Plugin\migrate\process\d6;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 use Drupal\migrate\Entity\MigrationInterface;
@@ -55,7 +55,7 @@ class BlockVisibility extends ProcessPluginBase implements ContainerFactoryPlugi
    *
    * Set the block visibility settings.
    */
-  public function transform($value, MigrateExecutable $migrate_executable, Row $row, $destination_property) {
+  public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     list($pages, $roles, $old_visibility) = $value;
     $visibility = array();
 

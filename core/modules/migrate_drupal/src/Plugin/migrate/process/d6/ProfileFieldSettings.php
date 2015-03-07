@@ -7,7 +7,7 @@
 
 namespace Drupal\migrate_drupal\Plugin\migrate\process\d6;
 
-use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 
@@ -23,7 +23,7 @@ class ProfileFieldSettings extends ProcessPluginBase {
    *
    * Set the profile field settings configuration.
    */
-  public function transform($type, MigrateExecutable $migrate_executable, Row $row, $destination_property) {
+  public function transform($type, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     $settings = array();
     switch ($type) {
       case 'date':

@@ -10,7 +10,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\Core\Path\PathValidatorInterface;
-use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 
@@ -52,7 +52,7 @@ class Route extends ProcessPluginBase implements ContainerFactoryPluginInterface
    *
    * Set the destination route information based on the source link_path.
    */
-  public function transform($value, MigrateExecutable $migrate_executable, Row $row, $destination_property) {
+  public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     list($link_path, $options) = $value;
     $extracted = $this->pathValidator->getUrlIfValidWithoutAccessCheck($link_path);
     $route = array();

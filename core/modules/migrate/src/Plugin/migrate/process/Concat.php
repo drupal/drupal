@@ -9,7 +9,7 @@ namespace Drupal\migrate\Plugin\migrate\process;
 
 use Drupal\Component\Utility\String;
 use Drupal\migrate\MigrateException;
-use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 
@@ -28,7 +28,7 @@ class Concat extends ProcessPluginBase {
    *
    * Concatenates the strings in the current value.
    */
-  public function transform($value, MigrateExecutable $migrate_executable, Row $row, $destination_property) {
+  public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     if (is_array($value)) {
       $delimiter = isset($this->configuration['delimiter']) ? $this->configuration['delimiter'] : '';
       return implode($delimiter, $value);

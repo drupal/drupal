@@ -8,7 +8,7 @@
 namespace Drupal\migrate_drupal\Plugin\migrate\process\d6;
 
 use Drupal\migrate\ProcessPluginBase;
-use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
 
 /**
@@ -25,7 +25,7 @@ class SearchConfigurationRankings extends ProcessPluginBase {
    *
    * Generate the configuration rankings.
    */
-  public function transform($value, MigrateExecutable $migrate_executable, Row $row, $destination_property) {
+  public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     $return = array();
     foreach ($row->getSource() as $name => $rank) {
       if (substr($name, 0, 10) == 'node_rank_' && $rank) {

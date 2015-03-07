@@ -8,7 +8,7 @@
 namespace Drupal\migrate\Plugin;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
-use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
 
 /**
@@ -28,7 +28,7 @@ interface MigrateProcessInterface extends PluginInspectionInterface {
    *
    * @param mixed $value
    *   The value to be transformed.
-   * @param \Drupal\migrate\MigrateExecutable $migrate_executable
+   * @param \Drupal\migrate\MigrateExecutableInterface $migrate_executable
    *   The migration in which this process is being executed.
    * @param \Drupal\migrate\Row $row
    *   The row from the source to process. Normally, just transforming the
@@ -41,7 +41,7 @@ interface MigrateProcessInterface extends PluginInspectionInterface {
    * @return string|array
    *   The newly transformed value.
    */
-  public function transform($value, MigrateExecutable $migrate_executable, Row $row, $destination_property);
+  public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property);
 
   /**
    * Indicates whether the returned value requires multiple handling.

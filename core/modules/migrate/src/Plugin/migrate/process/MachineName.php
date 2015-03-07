@@ -9,7 +9,7 @@ namespace Drupal\migrate\Plugin\migrate\process;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\migrate\ProcessPluginBase;
-use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
 
 /**
@@ -33,7 +33,7 @@ class MachineName extends ProcessPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function transform($value, MigrateExecutable $migrate_executable, Row $row, $destination_property) {
+  public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     $new_value = $this->getTransliteration()->transliterate($value, LanguageInterface::LANGCODE_DEFAULT, '_');
     $new_value = strtolower($new_value);
     $new_value = preg_replace('/[^a-z0-9_]+/', '_', $new_value);

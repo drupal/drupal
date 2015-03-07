@@ -10,7 +10,7 @@ namespace Drupal\migrate_drupal\Plugin\migrate\process\d6;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\Entity\MigrationInterface;
-use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Plugin\MigrateProcessInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
@@ -60,7 +60,7 @@ class FilterFormatPermission extends ProcessPluginBase implements ContainerFacto
    *
    * Migrate filter format serial to string id in permission name.
    */
-  public function transform($value, MigrateExecutable $migrate_executable, Row $row, $destination_property) {
+  public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     $rid = $row->getSourceProperty('rid');
     if ($formats = $row->getSourceProperty("filter_permissions:$rid")) {
       foreach ($formats as $format) {

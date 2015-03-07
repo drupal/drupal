@@ -8,7 +8,7 @@
 namespace Drupal\migrate\Plugin\migrate\process;
 
 use Drupal\migrate\ProcessPluginBase;
-use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
 
 /**
@@ -26,7 +26,7 @@ class Iterator extends ProcessPluginBase {
   /**
    * Runs a process pipeline on each destination property per list item.
    */
-  public function transform($value, MigrateExecutable $migrate_executable, Row $row, $destination_property) {
+  public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     $return = array();
     foreach ($value as $key => $new_value) {
       $new_row = new Row($new_value, array());
@@ -45,7 +45,7 @@ class Iterator extends ProcessPluginBase {
    *
    * @param string|int $key
    *   The current key.
-   * @param \Drupal\migrate\MigrateExecutable $migrate_executable
+   * @param \Drupal\migrate\MigrateExecutableInterface $migrate_executable
    *   The migrate executable helper class.
    * @param \Drupal\migrate\Row $row
    *   The current row after processing.
@@ -53,7 +53,7 @@ class Iterator extends ProcessPluginBase {
    * @return mixed
    *   The transformed key.
    */
-  protected function transformKey($key, MigrateExecutable $migrate_executable, Row $row) {
+  protected function transformKey($key, MigrateExecutableInterface $migrate_executable, Row $row) {
     $process = array('key' => $this->configuration['key']);
     $migrate_executable->processRow($row, $process, $key);
     return $row->getDestinationProperty('key');

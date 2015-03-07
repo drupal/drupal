@@ -10,7 +10,7 @@ namespace Drupal\migrate_drupal\Plugin\migrate\process\d6;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\Entity\MigrationInterface;
-use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\Plugin\MigratePluginManager;
 use Drupal\migrate\ProcessPluginBase;
@@ -64,7 +64,7 @@ class BlockPluginId extends ProcessPluginBase implements ContainerFactoryPluginI
    *
    * Set the block plugin id.
    */
-  public function transform($value, MigrateExecutable $migrate_executable, Row $row, $destination_property) {
+  public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     if (is_array($value)) {
       list($module, $delta) = $value;
       switch ($module) {

@@ -8,7 +8,7 @@
 namespace Drupal\migrate\Plugin\migrate\process;
 
 use Drupal\migrate\ProcessPluginBase;
-use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
 use Drupal\migrate\MigrateException;
 use Drupal\Component\Utility\Unicode;
@@ -26,7 +26,7 @@ abstract class DedupeBase extends ProcessPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function transform($value, MigrateExecutable $migrate_executable, Row $row, $destination_property) {
+  public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     $i = 1;
     $postfix = isset($this->configuration['postfix']) ? $this->configuration['postfix'] : '';
     $start = isset($this->configuration['start']) ? $this->configuration['start'] : 0;
