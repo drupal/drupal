@@ -40,7 +40,7 @@ class ThemeController extends ControllerBase {
    *
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    *   The theme handler.
-   * @param \Drupal\Core\Routing\RouteBuilderInterface $route_builder_indicator
+   * @param \Drupal\Core\Routing\RouteBuilderIndicatorInterface $route_builder_indicator
    *   The route builder.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
