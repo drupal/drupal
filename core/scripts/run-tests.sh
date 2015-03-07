@@ -6,9 +6,13 @@
  */
 
 use Drupal\Component\Utility\Timer;
+use Drupal\Component\Uuid\Php;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Form\FormState;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Test\TestRunnerKernel;
+use Drupal\simpletest\Form\SimpletestResultsForm;
 use Symfony\Component\HttpFoundation\Request;
 
 $autoloader = require_once __DIR__ . '/../vendor/autoload.php';
@@ -88,7 +92,12 @@ simpletest_script_execute_batch($tests_to_run);
 simpletest_script_reporter_timer_stop();
 
 // Display results before database is cleared.
-simpletest_script_reporter_display_results();
+if ($args['browser']) {
+  simpletest_script_open_browser();
+}
+else {
+  simpletest_script_reporter_display_results();
+}
 
 if ($args['xml']) {
   simpletest_script_reporter_write_xml_results();
@@ -188,6 +197,10 @@ All arguments are long options.
               test database and configuration directories. Use in combination
               with --repeat for debugging random test failures.
 
+  --browser   Opens the results in the browser. This enforces --keep-results and
+              if you want to also view any pages rendered in the simpletest
+              browser you need to add --verbose to the command line.
+
   <test1>[,<test2>[,<test3> ...]]
 
               One or more tests to be run. By default, these are interpreted
@@ -246,6 +259,7 @@ function simpletest_script_parse_args() {
     'test_names' => array(),
     'repeat' => 1,
     'die-on-fail' => FALSE,
+    'browser' => FALSE,
     // Used internally.
     'test-id' => 0,
     'execute-test' => '',
@@ -291,6 +305,9 @@ function simpletest_script_parse_args() {
     exit;
   }
 
+  if ($args['browser']) {
+    $args['keep-results'] = TRUE;
+  }
   return array($args, $count);
 }
 
@@ -1161,4 +1178,66 @@ function simpletest_script_load_messages_by_test_id($test_ids) {
   }
 
   return $results;
+}
+
+/**
+ * Display test results.
+ */
+function simpletest_script_open_browser() {
+  global $test_ids;
+
+  $connection = Database::getConnection('default', 'test-runner');
+  $results = $connection->select('simpletest')
+    ->fields('simpletest')
+    ->condition('test_id', $test_ids, 'IN')
+    ->orderBy('test_class')
+    ->orderBy('message_id')
+    ->execute()
+    ->fetchAll();
+
+  // Get the results form.
+  $form = array();
+  SimpletestResultsForm::addResultForm($form, $results);
+
+  // Get the assets to make the details element collapsible and theme the result
+  // form.
+  $assets = new \Drupal\Core\Asset\AttachedAssets();
+  $assets->setLibraries(['core/drupal.collapse', 'system/admin', 'simpletest/drupal.simpletest']);
+  $resolver = \Drupal::service('asset.resolver');
+  list($js_assets_header, $js_assets_footer) = $resolver->getJsAssets($assets, FALSE);
+  $js_collection_renderer = \Drupal::service('asset.js.collection_renderer');
+  $js_assets_header = $js_collection_renderer->render($js_assets_header);
+  $js_assets_footer = $js_collection_renderer->render($js_assets_footer);
+  $css_assets = \Drupal::service('asset.css.collection_renderer')->render($resolver->getCssAssets($assets, FALSE));
+
+  // Make the html page to write to disk.
+  $html = '<head>' . drupal_render($js_assets_header) . drupal_render($css_assets) . '</head><body>' . drupal_render($form) . drupal_render($js_assets_footer) .'</body>';
+
+  // Ensure we have assets verbose directory - tests with no verbose output will not
+  // have created one.
+  $directory = PublicStream::basePath() . '/simpletest/verbose';
+  file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+  $uuid = new Php();
+  $filename = $directory .'/results-'. $uuid->generate() .'.html';
+  file_put_contents($filename, $html);
+
+  // See if we can find an OS helper to open URLs in default browser.
+  $browser = FALSE;
+  if (shell_exec('which xdg-open')) {
+    $browser = 'xdg-open';
+  }
+  elseif (shell_exec('which open')) {
+    $browser = 'open';
+  }
+  elseif (substr(PHP_OS, 0, 3) == 'WIN') {
+    $browser = 'start';
+  }
+
+  if ($browser) {
+    shell_exec($browser . ' ' . escapeshellarg($filename));
+  }
+  else {
+    // Can't find assets valid browser.
+    print 'Open file://' . realpath($filename) . ' in your browser to see the verbose output.';
+  }
 }
