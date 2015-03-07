@@ -123,11 +123,6 @@ ul.links {
 .unpublished {
   padding: 20px 15px 0;
 }
-.node--unpublished .comment-text .comment-arrow,
-.unpublished .comment-text .comment-arrow {
-  border-left: 1px solid #fff4f4;
-  border-right: 1px solid #fff4f4;
-}
 .node-preview-container {
   background: #d1e8f5;
   background-image: -webkit-linear-gradient(top, #d1e8f5, #d3e8f4);

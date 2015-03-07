@@ -1,75 +1,94 @@
-/* ----------------- Comments ----------------- */
+/**
+ * @file
+ * Visual styles for comments in Bartik.
+ */
 
-.comment h2.title {
+/* This is required to win over specificity of #content h2 */
+#content .comment-wrapper h2 {
   margin-bottom: 1em;
-}
-.comment .field-name-field-user-picture img {
-  margin-left: 0; /* LTR */
-}
-[dir="rtl"] .comment .field-name-field-user-picture img {
-  margin-right: 0;
 }
 .comment {
   margin-bottom: 20px;
   display: table;
   vertical-align: top;
 }
-.comment .attribution {
+.comment__attribution {
   display: table-cell;
   padding: 0 30px 0 0; /* LTR */
   vertical-align: top;
   overflow: hidden;
 }
-[dir="rtl"] .comment .attribution {
+[dir="rtl"] .comment__attribution {
   float: right;
   padding: 0 0 0 30px;
 }
-.comment .attribution img {
-  margin: 0;
+.comment__attribution img {
   border: 1px solid #d3d7d9;
 }
-.comment .attribution .username {
+/* This is required to win over specificity of .field-type-image img */
+.comment .field-name-user-picture img {
+  margin: 0;
+}
+.comment__author .username {
   white-space: nowrap;
 }
-.comment .submitted p {
+.comment__submitted__data {
   margin: 4px 0;
   font-size: 1.071em;
   line-height: 1.2;
 }
-.comment .submitted .comment-time {
+.comment__time {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 0.786em;
   color: #68696b;
 }
-.comment .submitted .comment-permalink {
+.comment__permalink {
   font-size: 0.786em;
 }
-.comment .content {
+.comment__content {
   font-size: 0.929em;
   line-height: 1.6;
 }
-.comment .comment-arrow {
-  background: url(../../images/comment-arrow.gif) no-repeat 0 center transparent; /* LTR */
-  border-left: 1px solid;
-  border-right: 1px solid;
-  height: 40px;
-  margin-left: -47px; /* LTR */
-  margin-top: 10px;
-  position: absolute;
-  width: 20px;
-}
-[dir="rtl"] .comment .comment-arrow {
-  background-image: url(../../images/comment-arrow-rtl.gif);
-  margin-left: 0;
-  margin-right: -47px;
-}
-.comment .comment-text {
+.comment__text {
   padding: 10px 25px;
   border: 1px solid #d3d7d9;
   display: table-cell;
   vertical-align: top;
   position: relative;
   width: 100%;
+}
+.comment__text:before {
+  content: '';
+  position: absolute;
+  right: 100%; /* LTR */
+  top: 20px;
+  border-top: 20px solid transparent;
+  border-right: 20px solid #d3d7d9; /* LTR */
+  border-bottom: 20px solid transparent;
+}
+[dir="rtl"] .comment__text:before {
+  right: auto;
+  left: 100%;
+  border-right: none;
+  border-left: 20px solid #d3d7d9;
+}
+.comment__text:after {
+  content: '';
+  position: absolute;
+  right: 100%; /* LTR */
+  top: 20px;
+  border-top: 20px solid transparent;
+  border-right: 20px solid #fff; /* LTR */
+  border-bottom: 20px solid transparent;
+  margin-right: -1px; /* LTR */
+}
+[dir="rtl"] .comment__text:after {
+  right: auto;
+  left: 100%;
+  border-right: none;
+  border-left: 20px solid #fff;
+  margin-right: 0;
+  margin-left: -1px;
 }
 .comment .indented {
   margin-left: 40px; /* LTR */
@@ -87,16 +106,24 @@
 [dir="rtl"] .comment ul.links li {
   padding: 0 0 0 0.5em;
 }
-.comment.unpublished {
+.comment--unpublished {
   margin-right: 5px; /* LTR */
   padding: 5px 2px 5px 5px; /* LTR */
   background: #fff4f4;
 }
-[dir="rtl"] .comment.unpublished {
+[dir="rtl"] .comment--unpublished {
   margin-left: 5px;
   margin-right: 0;
   padding: 5px 5px 5px 2px;
 }
 .comment-footer {
   display: table-row;
+}
+.comment--unpublished .comment__text:after,
+.node--unpublished .comment__text:after {
+  border-right-color: #fff4f4; /* LTR */
+}
+[dir="rtl"] .comment--unpublished .comment__text:after,
+[dir="rtl"] .node--unpublished .comment__text:after {
+  border-left-color: #fff4f4;
 }
