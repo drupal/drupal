@@ -99,7 +99,7 @@ class ViewsEntityRow implements ContainerDeriverInterface {
           'provider' => 'views',
           'title' => $entity_type->getLabel(),
           'help' => t('Display the @label', array('@label' => $entity_type->getLabel())),
-          'base' => array($base_table),
+          'base' => array($entity_type->getDataTable() ?: $entity_type->getBaseTable()),
           'entity_type' => $entity_type_id,
           'display_types' => array('normal'),
           'class' => $base_plugin_definition['class'],

@@ -76,6 +76,17 @@ class RowUITest extends UITestBase {
     $this->drupalGet($row_plugin_url);
     $this->assertResponse(200);
     $this->assertFieldByName('row[type]', 'fields', 'Make sure that the fields got saved as used row plugin.');
+
+    // Ensure that entity row plugins appear.
+    $view_name = 'content';
+    $row_plugin_url = "admin/structure/views/nojs/display/$view_name/default/row";
+    $row_options_url = "admin/structure/views/nojs/display/$view_name/default/row_options";
+
+    $this->drupalGet($row_plugin_url);
+    $this->assertFieldByName('row[type]', 'entity:node');
+    $this->drupalPostForm(NULL, ['row[type]' => 'entity:node'], t('Apply'));
+    $this->assertUrl($row_options_url);
+    $this->assertFieldByName('row_options[view_mode]', 'teaser');
   }
 
 }
