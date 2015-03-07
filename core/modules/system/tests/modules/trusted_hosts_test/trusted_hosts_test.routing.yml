@@ -1,0 +1,6 @@
+trusted_hosts_test.fake_request:
+  path: '/trusted-hosts-test/fake-request'
+  defaults:
+    _controller: 'Drupal\trusted_hosts_test\Controller\TrustedHostsTestController::fakeRequestHost'
+  requirements:
+    _access: 'TRUE'

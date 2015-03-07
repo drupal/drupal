@@ -1,0 +1,5 @@
+type: module
+name: 'Trusted hosts test module'
+core: 8.x
+package: Testing
+version: VERSION

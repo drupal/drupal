@@ -20,6 +20,7 @@ use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DependencyInjection\YamlFileLoader;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\File\MimeType\MimeTypeGuesser;
+use Drupal\Core\Http\TrustedHostsRequestFactory;
 use Drupal\Core\Language\Language;
 use Drupal\Core\PageCache\RequestPolicyInterface;
 use Drupal\Core\PhpStorage\PhpStorageFactory;
@@ -1297,13 +1298,24 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *   TRUE if the Host header is trusted, FALSE otherwise.
    *
    * @see https://www.drupal.org/node/1992030
+   * @see \Drupal\Core\Http\TrustedHostsRequestFactory
    */
   protected static function setupTrustedHosts(Request $request, $host_patterns) {
     $request->setTrustedHosts($host_patterns);
 
     // Get the host, which will validate the current request.
     try {
-      $request->getHost();
+      $host = $request->getHost();
+
+      // Fake requests created through Request::create() without passing in the
+      // server variables from the main request have a default host of
+      // 'localhost'. If 'localhost' does not match any of the trusted host
+      // patterns these fake requests would fail the host verification. Instead,
+      // TrustedHostsRequestFactory makes sure to pass in the server variables
+      // from the main request.
+      $request_factory = new TrustedHostsRequestFactory($host);
+      Request::setFactory([$request_factory, 'createRequest']);
+
     }
     catch (\UnexpectedValueException $e) {
       return FALSE;
