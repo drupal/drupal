@@ -180,22 +180,63 @@ interface MigrationInterface extends ConfigEntityInterface {
   public function getMigrationResult();
 
   /**
-   * Get the current configuration describing the process plugins.
+   * Get the normalized process pipeline configuration describing the process
+   * plugins.
+   *
+   * The process configuration is always normalized. All shorthand processing
+   * will be expanded into their full representations.
+   *
+   * @see https://www.drupal.org/node/2129651#get-shorthand
    *
    * @return array
-   *   The configuration describing the process plugins.
+   *   The normalized configuration describing the process plugins.
    */
   public function getProcess();
 
   /**
-   * Set the current configuration describing the process plugins.
+   * Allows you to override the entire process configuration.
    *
    * @param array $process
-   *   The configuration describing the process plugins.
+   *   The entire process pipeline configuration describing the process plugins.
    *
    * @return $this
    */
   public function setProcess(array $process);
+
+  /**
+   * Set the process pipeline configuration for an individual destination field.
+   *
+   * This method allows you to set the process pipeline configuration for a
+   * single property within the full process pipeline configuration.
+   *
+   * @param string $property
+   *   The property of which to set the process pipeline configuration.
+   * @param mixed $process_of_property
+   *   The process pipeline configuration to be set for this property.
+   *
+   * @return $this
+   *   The migration entity.
+   *
+   * @see Drupal\migrate_drupal\Plugin\migrate\load\LoadEntity::processLinkField().
+   */
+  public function setProcessOfProperty($property, $process_of_property);
+
+  /**
+   * Merge the process pipeline configuration for a single property.
+   *
+   * @param string $property
+   *   The property of which to merge the passed in process pipeline
+   * configuration.
+   * @param array $process_of_property
+   *   The process pipeline configuration to be merged with the existing process
+   * pipeline configuration.
+   *
+   * @return $this
+   *   The migration entity.
+   *
+   * @see Drupal\migrate_drupal\Plugin\migrate\load\LoadEntity::processLinkField().
+   */
+  public function mergeProcessOfProperty($property, array $process_of_property);
 
   /**
    * Get the current system of record of the migration.

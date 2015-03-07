@@ -14,6 +14,7 @@ use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\RequirementsInterface;
+use Drupal\Component\Utility\NestedArray;
 
 /**
  * Defines the Migration entity.
@@ -76,6 +77,9 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
 
   /**
    * The configuration describing the process plugins.
+   *
+   * This is a strictly internal property and should not returned to calling
+   * code, use getProcess() instead.
    *
    * @var array
    */
@@ -392,7 +396,7 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
    * {@inheritdoc}
    */
   public function getProcess() {
-    return $this->process;
+    return $this->getProcessNormalized($this->process);
   }
 
   /**
@@ -400,6 +404,31 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
    */
   public function setProcess(array $process) {
     $this->process = $process;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setProcessOfProperty($property, $process_of_property) {
+    $this->process[$property] = $process_of_property;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function mergeProcessOfProperty($property, array $process_of_property) {
+    // If we already have a process value then merge the incoming process array
+    //otherwise simply set it.
+    $current_process = $this->getProcess();
+    if (isset($current_process[$property])) {
+      $this->process = NestedArray::mergeDeepArray([$current_process, $this->getProcessNormalized([$property => $process_of_property])], TRUE);
+    }
+    else {
+      $this->setProcessOfProperty($property, $process_of_property);
+    }
+
     return $this;
   }
 
