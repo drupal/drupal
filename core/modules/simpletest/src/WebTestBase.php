@@ -27,6 +27,7 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\block\Entity\Block;
+use Drupal\node\Entity\NodeType;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\user\Entity\Role;
@@ -277,7 +278,7 @@ abstract class WebTestBase extends TestBase {
     if (!isset($values['type'])) {
       do {
         $id = strtolower($this->randomMachineName(8));
-      } while (node_type_load($id));
+      } while (NodeType::load($id));
     }
     else {
       $id = $values['type'];

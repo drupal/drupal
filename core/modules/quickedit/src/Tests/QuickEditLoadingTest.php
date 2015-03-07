@@ -11,6 +11,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Unicode;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\node\Entity\Node;
+use Drupal\node\Entity\NodeType;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -251,7 +252,7 @@ class QuickEditLoadingTest extends WebTestBase {
       // then again retrieve the field form, fill it, submit it (so it ends up
       // in PrivateTempStore) and then save the entity. Now there should be two
       // revisions.
-      $node_type = entity_load('node_type', 'article');
+      $node_type = NodeType::load('article');
       $node_type->setNewRevision(TRUE);
       $node_type->save();
 

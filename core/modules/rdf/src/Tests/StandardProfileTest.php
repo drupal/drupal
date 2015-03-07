@@ -10,6 +10,7 @@ namespace Drupal\rdf\Tests;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 use Drupal\simpletest\WebTestBase;
+use Drupal\node\Entity\NodeType;
 
 /**
  * Tests the RDF mappings and RDFa markup of the standard profile.
@@ -272,7 +273,7 @@ class StandardProfileTest extends WebTestBase {
     // The standard profile hides the created date on pages. Revert display to
     // true for testing.
     // @todo Clean-up standard profile defaults.
-    $node_type = entity_load('node_type', 'page');
+    $node_type = NodeType::load('page');
     $node_type->setDisplaySubmitted(TRUE);
     $node_type->save();
 

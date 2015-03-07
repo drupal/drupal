@@ -7,6 +7,8 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\node\Entity\NodeType;
+
 /**
  * Tests the UI for controlling node revision behavior.
  *
@@ -39,7 +41,7 @@ class NodeRevisionsUiTest extends NodeTestBase {
 
     // Set page revision setting 'create new revision'. This will mean new
     // revisions are created by default when the node is edited.
-    $type = entity_load('node_type', 'page');
+    $type = NodeType::load('page');
     $type->setNewRevision(TRUE);
     $type->save();
 

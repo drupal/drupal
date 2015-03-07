@@ -240,7 +240,7 @@ function node_mark($nid, $timestamp) {
  * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
  *   Use \Drupal\node\Entity\NodeType::loadMultiple().
  *
- * @see node_type_load()
+ * @see \Drupal\node\Entity\NodeType::load()
  */
 function node_type_get_types() {
   return NodeType::loadMultiple();
@@ -273,7 +273,7 @@ function node_type_get_names() {
  *   entity bundles.
  */
 function node_get_type_label(NodeInterface $node) {
-  $type = entity_load('node_type', $node->bundle());
+  $type = NodeType::load($node->bundle());
   return $type ? $type->label() : FALSE;
 }
 
@@ -366,7 +366,7 @@ function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
 function node_entity_extra_field_info() {
   $extra = array();
   $description = t('Node module element');
-  foreach (node_type_get_types() as $bundle) {
+  foreach (NodeType::loadMultiple() as $bundle) {
     $extra['node'][$bundle->id()]['display']['links'] = array(
       'label' => t('Links'),
       'description' => $description,

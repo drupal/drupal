@@ -10,6 +10,7 @@ namespace Drupal\file\Tests;
 use Drupal\Core\Entity\Plugin\Validation\Constraint\ReferenceAccessConstraint;
 use Drupal\Component\Utility\String;
 use Drupal\file\Entity\File;
+use Drupal\node\Entity\NodeType;
 
 /**
  * Uploads a test to a private node and checks access.
@@ -27,7 +28,7 @@ class FilePrivateTest extends FileFieldTestBase {
 
   protected function setUp() {
     parent::setUp();
-    node_access_test_add_field(entity_load('node_type', 'article'));
+    node_access_test_add_field(NodeType::load('article'));
     node_access_rebuild();
     \Drupal::state()->set('node_access_test.private', TRUE);
   }

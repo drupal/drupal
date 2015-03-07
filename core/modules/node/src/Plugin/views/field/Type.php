@@ -8,8 +8,9 @@
 namespace Drupal\node\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\node\Plugin\views\field\Node;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\views\ResultRow;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Field handler to translate a node type into its readable form.
@@ -20,6 +21,47 @@ use Drupal\views\ResultRow;
  */
 class Type extends Node {
 
+  /**
+   * Database Service Object.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $nodeTypeStorage;
+
+  /**
+   * Constructs a new Node Type object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
+   *   The entity storage class.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityStorageInterface $storage) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->nodeTypeStorage = $storage;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    $entity_manager = $container->get('entity.manager');
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $entity_manager->getStorage('node_type')
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['machine_name'] = array('default' => FALSE);
@@ -46,7 +88,7 @@ class Type extends Node {
    */
   function render_name($data, $values) {
     if ($this->options['machine_name'] != 1 && $data !== NULL && $data !== '') {
-      $type = entity_load('node_type', $data);
+      $type = $this->nodeTypeStorage->load($data);
       return $type ? $this->t($this->sanitizeValue($type->label())) : '';
     }
     return $this->sanitizeValue($data);

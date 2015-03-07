@@ -10,6 +10,7 @@ namespace Drupal\config\Tests;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\StorageComparer;
+use Drupal\node\Entity\NodeType;
 use Drupal\simpletest\KernelTestBase;
 
 /**
@@ -102,7 +103,7 @@ class ConfigImportRecreateTest extends KernelTestBase {
 
     // Verify that there is nothing more to import.
     $this->assertFalse($this->configImporter->reset()->hasUnprocessedConfigurationChanges());
-    $content_type = entity_load('node_type', $type_name);
+    $content_type = NodeType::load($type_name);
     $this->assertEqual('Node type one', $content_type->label());
   }
 

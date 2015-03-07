@@ -12,6 +12,7 @@ use Drupal\Core\Entity\DynamicallyFieldableEntityStorageInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Render\Element;
 use Drupal\language\Entity\ContentLanguageSettings;
+use Drupal\node\Entity\NodeType;
 
 /**
  * @defgroup entity_crud Entity CRUD, editing, and view hooks
@@ -1902,7 +1903,7 @@ function hook_entity_extra_field_info() {
   $module_language_enabled = \Drupal::moduleHandler()->moduleExists('language');
   $description = t('Node module element');
 
-  foreach (node_type_get_types() as $bundle) {
+  foreach (NodeType::loadMultiple() as $bundle) {
 
     // Add also the 'language' select if Language module is enabled and the
     // bundle has multilingual support.
@@ -1940,7 +1941,7 @@ function hook_entity_extra_field_info() {
  */
 function hook_entity_extra_field_info_alter(&$info) {
   // Force node title to always be at the top of the list by default.
-  foreach (node_type_get_types() as $bundle) {
+  foreach (NodeType::loadMultiple() as $bundle) {
     if (isset($info['node'][$bundle->type]['form']['title'])) {
       $info['node'][$bundle->type]['form']['title']['weight'] = -20;
     }

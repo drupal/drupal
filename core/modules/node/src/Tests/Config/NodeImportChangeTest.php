@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Tests\Config;
 
+use Drupal\node\Entity\NodeType;
 use Drupal\simpletest\KernelTestBase;
 
 /**
@@ -56,7 +57,7 @@ class NodeImportChangeTest extends KernelTestBase {
     $this->configImporter()->import();
 
     // Check that the updated config was correctly imported.
-    $node_type = entity_load('node_type', $node_type_id);
+    $node_type = NodeType::load($node_type_id);
     $this->assertEqual($node_type->label(), $new_label, 'Node type name has been updated.');
   }
 

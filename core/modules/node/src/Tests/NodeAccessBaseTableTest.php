@@ -7,6 +7,8 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\node\Entity\NodeType;
+
 /**
  * Tests behavior of the node access subsystem if the base table is not node.
  *
@@ -33,7 +35,7 @@ class NodeAccessBaseTableTest extends NodeTestBase {
   protected function setUp() {
     parent::setUp();
 
-    node_access_test_add_field(entity_load('node_type', 'article'));
+    node_access_test_add_field(NodeType::load('article'));
 
     node_access_rebuild();
     \Drupal::state()->set('node_access_test.private', TRUE);

@@ -9,6 +9,7 @@ namespace Drupal\node\Tests;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\node\Entity\NodeType;
 
 /**
  * Tests node access functionality with multiple languages and two node access
@@ -49,7 +50,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
   protected function setUp() {
     parent::setUp();
 
-    node_access_test_add_field(entity_load('node_type', 'page'));
+    node_access_test_add_field(NodeType::load('page'));
 
     // Create the 'private' field, which allows the node to be marked as private
     // (restricted access) in a given translation.
