@@ -95,6 +95,26 @@ class SearchPageRoutes implements ContainerInjectionInterface {
           ),
         )
       );
+
+      $routes["search.help_$entity_id"] = new Route(
+        '/search/' . $entity->getPath() . '/help',
+        array(
+          '_controller' => 'Drupal\search\Controller\SearchController::searchHelp',
+          '_title' => 'Search help',
+          'entity' => $entity_id,
+        ),
+        array(
+          '_entity_access' => 'entity.view',
+          '_permission' => 'search content',
+        ),
+        array(
+          'parameters' => array(
+            'entity' => array(
+              'type' => 'entity:search_page',
+            ),
+          ),
+        )
+      );
     }
     return $routes;
   }

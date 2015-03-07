@@ -11,7 +11,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 
 /**
- * Tests the bike shed text on no results page, and text on the search page.
+ * Tests the search help text and search page text.
  *
  * @group search
  */
@@ -44,13 +44,17 @@ class SearchPageTextTest extends SearchTestBase {
     $search_terms = 'bike shed ' . $this->randomMachineName();
     $edit['keys'] = $search_terms;
     $this->drupalPostForm('search/node', $edit, t('Search'));
-    $this->assertText(t('Consider loosening your query with OR. bike OR shed will often show more results than bike shed.'), 'Help text is displayed when search returns no results.');
+    $this->assertText('search yielded no results');
     $this->assertText(t('Search'));
     $title_source = 'Search for @keywords | Drupal';
     $this->assertTitle(t($title_source, array('@keywords' => Unicode::truncate($search_terms, 60, TRUE, TRUE))), 'Search page title is correct');
     $this->assertNoText('Node', 'Erroneous tab and breadcrumb text is not present');
     $this->assertNoText(t('Node'), 'Erroneous translated tab and breadcrumb text is not present');
     $this->assertText(t('Content'), 'Tab and breadcrumb text is present');
+
+    $this->clickLink('Search help');
+    $this->assertText('Search help', 'Correct title is on search help page');
+    $this->assertText('Use upper-case OR to get more results', 'Correct text is on content search help page');
 
     // Search for a longer text, and see that it is in the title, truncated.
     $edit = array();
@@ -70,6 +74,10 @@ class SearchPageTextTest extends SearchTestBase {
     $this->drupalPostForm('search/user', $edit, t('Search'));
     $this->assertText(t('Search'));
     $this->assertTitle(t($title_source, array('@keywords' => Unicode::truncate($this->searchingUser->getUsername(), 60, TRUE, TRUE))));
+
+    $this->clickLink('Search help');
+    $this->assertText('Search help', 'Correct title is on search help page');
+    $this->assertText('user names and partial user names', 'Correct text is on user search help page');
 
     // Test that search keywords containing slashes are correctly loaded
     // from the GET params and displayed in the search form.

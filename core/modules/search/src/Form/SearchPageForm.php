@@ -9,6 +9,7 @@ namespace Drupal\search\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Provides a search form for site wide search.
@@ -55,6 +56,7 @@ class SearchPageForm extends EntityForm {
       '#size' => 30,
       '#maxlength' => 255,
     );
+
     // processed_keys is used to coordinate keyword passing between other forms
     // that hook into the basic search form.
     $form['basic']['processed_keys'] = array(
@@ -64,6 +66,13 @@ class SearchPageForm extends EntityForm {
     $form['basic']['submit'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Search'),
+    );
+
+    $form['help_link'] = array(
+      '#type' => 'link',
+      '#url' => new Url('search.help_' . $this->entity->id()),
+      '#title' => $this->t('Search help'),
+      '#options' => array('attributes' => array('class' => 'search-help-link')),
     );
 
     // Allow the plugin to add to or alter the search form.
