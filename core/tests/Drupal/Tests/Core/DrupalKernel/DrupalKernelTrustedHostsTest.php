@@ -47,6 +47,8 @@ class DrupalKernelTrustedHostsTest extends UnitTestCase {
 
     // Reset the trusted hosts because it is statically stored on the request.
     $method->invoke(null, $request, []);
+    // Reset the request factory because it is statically stored on the request.
+    Request::setFactory(NULL);
   }
 
   /**
