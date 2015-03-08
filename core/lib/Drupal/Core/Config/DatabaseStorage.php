@@ -273,6 +273,7 @@ class DatabaseStorage implements StorageInterface {
       $query->fields($this->table, array('name'));
       $query->condition('collection', $this->collection, '=');
       $query->condition('name', $prefix . '%', 'LIKE');
+      $query->orderBy('collection')->orderBy('name');
       return $query->execute()->fetchCol();
     }
     catch (\Exception $e) {
