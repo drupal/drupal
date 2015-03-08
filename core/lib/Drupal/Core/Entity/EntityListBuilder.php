@@ -86,14 +86,16 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
   }
 
   /**
-   * Loads entity IDs using a pager.
+   * Loads entity IDs using a pager sorted by the entity id.
    *
    * @return array
    *   An array of entity IDs.
    */
   protected function getEntityIds() {
     $query = $this->getStorage()->getQuery();
+    $keys = $this->entityType->getKeys();
     return $query
+      ->sort($keys['id'])
       ->pager($this->limit)
       ->execute();
   }
