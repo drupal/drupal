@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests;
 
 use Drupal\comment\Tests\CommentTestTrait;
+use Drupal\views\Entity\View;
 use Drupal\views\Views;
 use Drupal\views\ViewExecutable;
 use Drupal\views\ViewExecutableFactory;
@@ -434,6 +435,25 @@ class ViewExecutableTest extends ViewUnitTestBase {
     $validate_deleted = $view->validate();
 
     $this->assertNotIdentical($validate, $validate_deleted, 'Master display has not been validated.');
+  }
+
+  /**
+   * Tests that nested loops of the display handlers won't break validation.
+   */
+  public function testValidateNestedLoops() {
+    $view = View::create(['id' => 'test_validate_nested_loops']);
+    $executable = $view->getExecutable();
+
+    $executable->newDisplay('display_test');
+    $executable->newDisplay('display_test');
+    $errors = $executable->validate();
+    $total_error_count = array_reduce($errors, function ($carry, $item) {
+      $carry += count($item);
+      return $carry;
+    });
+    // Assert that there were 9 total errors across 3 displays.
+    $this->assertIdentical(9, $total_error_count);
+    $this->assertIdentical(3, count($errors));
   }
 
 }

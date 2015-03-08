@@ -110,7 +110,6 @@ class DefaultLazyPluginCollection extends LazyPluginCollection {
    */
   public function getConfiguration() {
     $instances = array();
-    $this->rewind();
     // Store the current order of the instances.
     $current_order = $this->instanceIDs;
     // Reorder the instances to match the original order, adding new instances
