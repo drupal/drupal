@@ -121,9 +121,6 @@ class EntityDisplayModeListBuilder extends ConfigEntityListBuilder {
           '#type' => 'link',
           '#url' => Url::fromRoute($short_type == 'view' ? 'entity.entity_view_mode.add_form' : 'entity.entity_form_mode.add_form', ['entity_type_id' => $entity_type]),
           '#title' => t('Add new %label @entity-type', array('%label' => $this->entityTypes[$entity_type]->getLabel(), '@entity-type' => $this->entityType->getLowercaseLabel())),
-          '#options' => array(
-            'html' => TRUE,
-          ),
         ),
         'colspan' => count($table['#header']),
       );

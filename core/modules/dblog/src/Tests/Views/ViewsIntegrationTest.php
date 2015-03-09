@@ -7,6 +7,7 @@
 
 namespace Drupal\dblog\Tests\Views;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Logger\RfcLogLevel;
@@ -77,7 +78,7 @@ class ViewsIntegrationTest extends ViewUnitTestBase {
       'variables' => array(
         '@token1' => $this->randomMachineName(),
         '!token2' => $this->randomMachineName(),
-        'link' => \Drupal::l('<object>Link</object>', new Url('<front>')),
+        'link' => \Drupal::l(SafeMarkup::set('<object>Link</object>'), new Url('<front>')),
       ),
     );
     $logger_factory = $this->container->get('logger.factory');

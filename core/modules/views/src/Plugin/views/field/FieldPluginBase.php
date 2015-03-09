@@ -1303,7 +1303,6 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       'entity' => NULL,
       'entity_type' => NULL,
       'fragment' => NULL,
-      'html' => TRUE,
       'language' => NULL,
       'query' => [],
     );

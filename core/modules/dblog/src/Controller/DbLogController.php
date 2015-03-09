@@ -8,8 +8,9 @@
 namespace Drupal\dblog\Controller;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\Unicode;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Connection;
@@ -176,13 +177,14 @@ class DbLogController extends ControllerBase {
       $message = $this->formatMessage($dblog);
       if ($message && isset($dblog->wid)) {
         // Truncate link_text to 56 chars of message.
-        $log_text = Unicode::truncate(Xss::filter($message, array()), 56, TRUE, TRUE);
+        // @todo Reevaluate the SafeMarkup::set() in
+        //   https://www.drupal.org/node/2399261.
+        $log_text = SafeMarkup::set(Unicode::truncate(Xss::filter($message, array()), 56, TRUE, TRUE));
         $message = $this->l($log_text, new Url('dblog.event', array('event_id' => $dblog->wid), array(
           'attributes' => array(
             // Provide a title for the link for useful hover hints.
             'title' => Unicode::truncate(strip_tags($message), 256, TRUE, TRUE),
           ),
-          'html' => TRUE,
         )));
       }
       $username = array(

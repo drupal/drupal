@@ -5,6 +5,7 @@
  * Allows users to manage customizable lists of shortcut links.
  */
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -348,9 +349,9 @@ function shortcut_preprocess_page(&$variables) {
         ),
         '#prefix' => '<div class="add-or-remove-shortcuts ' . $link_mode . '-shortcut">',
         '#type' => 'link',
-        '#title' => '<span class="icon"></span><span class="text">'. $link_text .'</span>',
+        '#title' => String::format('<span class="icon"></span><span class="text">@text</span>', array('@text' => $link_text)),
         '#url' => Url::fromRoute($route_name, $route_parameters),
-        '#options' => array('query' => $query, 'html' => TRUE),
+        '#options' => array('query' => $query),
         '#suffix' => '</div>',
       );
     }

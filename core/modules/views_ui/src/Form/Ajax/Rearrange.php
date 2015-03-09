@@ -7,6 +7,7 @@
 
 namespace Drupal\views_ui\Form\Ajax;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\views\ViewEntityInterface;
@@ -128,7 +129,14 @@ class Rearrange extends ViewsFormBase {
         '#id' => 'views-removed-' . $id,
         '#attributes' => array('class' => array('views-remove-checkbox')),
         '#default_value' => 0,
-        '#suffix' => \Drupal::l('<span>' . $this->t('Remove') . '</span>', Url::fromRoute('<none>', [], array('attributes' => array('id' => 'views-remove-link-' . $id, 'class' => array('views-hidden', 'views-button-remove', 'views-remove-link'), 'alt' => $this->t('Remove this item'), 'title' => $this->t('Remove this item')), 'html' => TRUE))),
+        '#suffix' => \Drupal::l(String::format('<span>@text</span>', array('@text' => $this->t('Remove'))),
+          Url::fromRoute('<none>', array(), array('attributes' => array(
+            'id' => 'views-remove-link-' . $id,
+            'class' => array('views-hidden', 'views-button-remove', 'views-remove-link'),
+            'alt' => $this->t('Remove this item'),
+            'title' => $this->t('Remove this item')),
+          ))
+        ),
       );
     }
 

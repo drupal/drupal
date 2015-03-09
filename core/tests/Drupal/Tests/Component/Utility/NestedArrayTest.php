@@ -157,13 +157,13 @@ class NestedArrayTest extends UnitTestCase {
     $link_options_2 = array(
       'fragment' => 'y',
       'attributes' => array('title' => 'Y', 'class' => array('c', 'd')),
-      'html' => TRUE,
+      'absolute' => TRUE,
     );
     $expected = array(
       'fragment' => 'y',
       'attributes' => array('title' => 'Y', 'class' => array('a', 'b', 'c', 'd')),
       'language' => 'en',
-      'html' => TRUE,
+      'absolute' => TRUE,
     );
     $this->assertSame($expected, NestedArray::mergeDeepArray(array($link_options_1, $link_options_2)), 'NestedArray::mergeDeepArray() returned a properly merged array.');
     // Test wrapper function, NestedArray::mergeDeep().

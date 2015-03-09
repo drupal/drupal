@@ -90,8 +90,9 @@ class String {
    *       String::checkPlain() as part of that.
    *     - Some other special reason for suppressing sanitization.
    *
-   * @return mixed
-   *   The formatted string, or FALSE if no args specified.
+   * @return string
+   *   The formatted string, which is marked as safe unless sanitization of an
+   *   unsafe argument was suppressed (see above).
    *
    * @ingroup sanitization
    *

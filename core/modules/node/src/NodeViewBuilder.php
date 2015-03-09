@@ -149,7 +149,6 @@ class NodeViewBuilder extends EntityViewBuilder {
         )),
         'url' => $entity->urlInfo(),
         'language' => $entity->language(),
-        'html' => TRUE,
         'attributes' => array(
           'rel' => 'tag',
           'title' => $node_title_stripped,

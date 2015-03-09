@@ -103,7 +103,6 @@ class FeedViewBuilder extends EntityViewBuilder {
             '#url' => Url::fromUri($link_href),
             '#options' => array(
               'attributes' => array('class' => array('feed-image')),
-              'html' => TRUE,
             ),
           );
         }
@@ -127,7 +126,6 @@ class FeedViewBuilder extends EntityViewBuilder {
           )),
           '#url' => Url::fromRoute('entity.aggregator_feed.canonical', ['aggregator_feed' => $entity->id()]),
           '#options' => array(
-            'html' => TRUE,
             'attributes' => array(
               'title' => $title_stripped,
             ),

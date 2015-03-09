@@ -120,12 +120,12 @@ class DisplayTest extends PluginTestBase {
 
     $this->clickLink('Test option title');
 
-    $this->randomString = $this->randomString();
-    $this->drupalPostForm(NULL, array('test_option' => $this->randomString), t('Apply'));
+    $test_option = $this->randomString();
+    $this->drupalPostForm(NULL, array('test_option' => $test_option), t('Apply'));
 
     // Check the new value has been saved by checking the UI summary text.
     $this->drupalGet('admin/structure/views/view/test_view/edit/display_test_1');
-    $this->assertRaw($this->randomString);
+    $this->assertLink($test_option);
 
     // Test the enable/disable status of a display.
     $view->display_handler->setOption('enabled', FALSE);

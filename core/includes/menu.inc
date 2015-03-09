@@ -10,9 +10,9 @@
  * @{
  */
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Template\Attribute;
 
 
 /**
@@ -35,18 +35,17 @@ function template_preprocess_menu_local_task(&$variables) {
   $link_text = $link['title'];
 
   if (!empty($variables['element']['#active'])) {
-    // Add text to indicate active tab for non-visual users.
-    $active = '<span class="visually-hidden">' . t('(active tab)') . '</span>';
     $variables['attributes']['class'] = array('active');
 
-    // If the link does not contain HTML already, String::checkPlain() it now.
-    // After we set 'html'=TRUE the link will not be sanitized by l().
-    if (empty($link['localized_options']['html'])) {
-      $link_text = String::checkPlain($link_text);
-    }
-    $link['localized_options']['html'] = TRUE;
-    $link_text = t('!local-task-title!active', array('!local-task-title' => $link_text, '!active' => $active));
+    // Add text to indicate active tab for non-visual users.
+    $active = String::format('<span class="visually-hidden">@label</span>', array('@label' => t('(active tab)')));
+    $link_text = t('@local-task-title@active', array('@local-task-title' => $link_text, '@active' => $active));
   }
+  else {
+    // @todo Remove this once https://www.drupal.org/node/2338081 is fixed.
+    $link_text = String::checkPlain($link_text);
+  }
+
   $link['localized_options']['set_active_class'] = TRUE;
 
   $variables['link'] = array(

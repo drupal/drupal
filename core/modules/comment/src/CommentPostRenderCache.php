@@ -195,7 +195,6 @@ class CommentPostRenderCache {
         $links['comment-delete'] = array(
           'title' => t('Delete'),
           'url' => $entity->urlInfo('delete-form'),
-          'html' => TRUE,
         );
       }
 
@@ -203,7 +202,6 @@ class CommentPostRenderCache {
         $links['comment-edit'] = array(
           'title' => t('Edit'),
           'url' => $entity->urlInfo('edit-form'),
-          'html' => TRUE,
         );
       }
       if ($entity->access('create')) {
@@ -215,19 +213,16 @@ class CommentPostRenderCache {
             'field_name' => $entity->getFieldName(),
             'pid' => $entity->id(),
           ]),
-          'html' => TRUE,
         );
       }
       if (!$entity->isPublished() && $entity->access('approve')) {
         $links['comment-approve'] = array(
           'title' => t('Approve'),
           'url' => Url::fromRoute('comment.approve', ['comment' => $entity->id()]),
-          'html' => TRUE,
         );
       }
       if (empty($links) && $this->currentUser->isAnonymous()) {
         $links['comment-forbidden']['title'] = $this->commentManager->forbiddenMessage($commented_entity, $entity->getFieldName());
-        $links['comment-forbidden']['html'] = TRUE;
       }
     }
 
@@ -236,7 +231,6 @@ class CommentPostRenderCache {
       $links['comment-translations'] = array(
         'title' => t('Translate'),
         'url' => $entity->urlInfo('drupal:content-translation-overview'),
-        'html' => TRUE,
       );
     }
 

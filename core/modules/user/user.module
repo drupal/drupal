@@ -1376,7 +1376,6 @@ function user_toolbar() {
       'account' => array(
         'title' => t('View profile'),
         'url' => Url::fromRoute('user.page'),
-        'html' => TRUE,
         'attributes' => array(
           'title' => t('User account'),
         ),
@@ -1384,7 +1383,6 @@ function user_toolbar() {
       'account_edit' => array(
         'title' => t('Edit profile'),
         'url' => Url::fromRoute('entity.user.edit_form', ['user' => $user->id()]),
-        'html' => TRUE,
         'attributes' => array(
           'title' => t('Edit user account'),
         ),

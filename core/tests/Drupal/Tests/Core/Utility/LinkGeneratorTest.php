@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core\Utility {
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\LinkGenerator;
@@ -51,7 +52,6 @@ class LinkGeneratorTest extends UnitTestCase {
    */
   protected $defaultOptions = array(
     'query' => array(),
-    'html' => FALSE,
     'language' => NULL,
     'set_active_class' => FALSE,
     'absolute' => FALSE,
@@ -312,7 +312,7 @@ class LinkGeneratorTest extends UnitTestCase {
       ));
     $this->urlGenerator->expects($this->at(1))
       ->method('generateFromRoute')
-      ->with('test_route_5', array(), array('html' => TRUE) + $this->defaultOptions)
+      ->with('test_route_5', array(), $this->defaultOptions)
       ->will($this->returnValue(
         '/test-route-5'
       ));
@@ -330,10 +330,10 @@ class LinkGeneratorTest extends UnitTestCase {
       ),
     ), $result);
 
-    // Test that the 'html' option allows unsanitized HTML link text.
-    $url = new Url('test_route_5', array(), array('html' => TRUE));
+    // Test that safe HTML is output inside the anchor tag unescaped.
+    $url = new Url('test_route_5', array());
     $url->setUrlGenerator($this->urlGenerator);
-    $result = $this->linkGenerator->generate('<em>HTML output</em>', $url);
+    $result = $this->linkGenerator->generate(SafeMarkup::set('<em>HTML output</em>'), $url);
     $this->assertLink(array(
       'attributes' => array('href' => '/test-route-5'),
       'child' => array(
