@@ -142,7 +142,6 @@ class ViewsLocalTask extends DeriverBase implements ContainerDeriverInterface {
    *
    * @return array
    *   A list of arrays containing the $view and $display_id.
-   *
    * @code
    * array(
    *   array($view, $display_id),
