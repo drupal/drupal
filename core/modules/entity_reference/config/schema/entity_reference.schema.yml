@@ -8,8 +8,8 @@ entity_reference.default.handler_settings:
       type: sequence
       label: 'types'
       sequence:
-        - type: string
-          label: 'Type'
+        type: string
+        label: 'Type'
     sort:
       type: mapping
       label: 'Sort settings'
@@ -31,8 +31,8 @@ entity_reference.default.handler_settings:
           type: sequence
           label: 'Restrict to the selected roles'
           sequence:
-            - type: string
-              label: 'Role'
+            type: string
+            label: 'Role'
     auto_create:
       type: boolean
       label: 'Create referenced entities if they don''t already exist'

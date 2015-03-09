@@ -14,23 +14,23 @@ responsive_image.styles.*:
       type: sequence
       label: 'Image style mappings'
       sequence:
-        - type: mapping
-          label: 'Image style mapping'
-          mapping:
-            # Image mapping type. Either 'sizes' (using the 'sizes' attribute)
-            # or 'image_style' (using a single image style to map to this
-            # breakpoint).
-            image_mapping_type:
-              type: string
-              label: 'Responsive image mapping type'
-            image_mapping:
-              type: responsive_image.image_mapping_type.[%parent.image_mapping_type]
-            breakpoint_id:
-              type: string
-              label: 'Breakpoint ID'
-            multiplier:
-              type: string
-              label: 'Multiplier'
+        type: mapping
+        label: 'Image style mapping'
+        mapping:
+          # Image mapping type. Either 'sizes' (using the 'sizes' attribute)
+          # or 'image_style' (using a single image style to map to this
+          # breakpoint).
+          image_mapping_type:
+            type: string
+            label: 'Responsive image mapping type'
+          image_mapping:
+            type: responsive_image.image_mapping_type.[%parent.image_mapping_type]
+          breakpoint_id:
+            type: string
+            label: 'Breakpoint ID'
+          multiplier:
+            type: string
+            label: 'Multiplier'
     breakpoint_group:
       type: string
       label: 'Breakpoint group'
@@ -51,8 +51,8 @@ responsive_image.image_mapping_type.sizes:
       type: sequence
       label: 'Image styles to be used when using the ''sizes'' attribute'
       sequence:
-        - type: string
-          label: 'Image style'
+        type: string
+        label: 'Image style'
 
 field.formatter.settings.responsive_image:
   type: mapping

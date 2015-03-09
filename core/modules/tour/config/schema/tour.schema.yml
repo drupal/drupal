@@ -17,14 +17,14 @@ tour.tour.*:
       type: sequence
       label: 'Route settings'
       sequence:
-        - type: route
-          label: 'Route'
+        type: route
+        label: 'Route'
     tips:
       type: sequence
       label: 'Tips'
       sequence:
-        - type: tour.tip.[plugin]
-          label: 'Tour tip'
+        type: tour.tip.[plugin]
+        label: 'Tour tip'
 
 tour.tip:
   type: mapping
@@ -49,8 +49,8 @@ tour.tip:
       type: sequence
       label: 'Attributes'
       sequence:
-        - type: string
-          label: 'Attribute'
+        type: string
+        label: 'Attribute'
 
 tour.tip.text:
   type: tour.tip

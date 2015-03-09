@@ -16,5 +16,5 @@ views.style.entity_reference:
       type: sequence
       label: 'Search fields'
       sequence:
-        - type: string
-          label: 'Search field'
+        type: string
+        label: 'Search field'

@@ -8,8 +8,8 @@ views.settings:
       type: sequence
       label: 'Display extenders'
       sequence:
-        - type: string
-          label: 'Display extender'
+        type: string
+        label: 'Display extender'
     skip_cache:
       type: boolean
       label: 'Disable views data caching'
@@ -62,8 +62,8 @@ views.settings:
       type: sequence
       label: 'Field rewrite elements'
       sequence:
-        - type: string
-          label: 'Element'
+        type: string
+        label: 'Element'
 
 views.view.*:
   type: config_entity
@@ -97,23 +97,23 @@ views.view.*:
       type: sequence
       label: 'Displays'
       sequence:
-        - type: mapping
-          label: 'Display settings'
-          mapping:
-            id:
-              type: string
-              label: 'Machine name'
-            display_title:
-              type: text
-              label: 'Title'
-            display_plugin:
-              type: string
-              label: 'Display plugin'
-            position:
-              type: integer
-              label: 'Position'
-            display_options:
-              type: views.display.[%parent.display_plugin]
+        type: mapping
+        label: 'Display settings'
+        mapping:
+          id:
+            type: string
+            label: 'Machine name'
+          display_title:
+            type: text
+            label: 'Title'
+          display_plugin:
+            type: string
+            label: 'Display plugin'
+          position:
+            type: integer
+            label: 'Position'
+          display_options:
+            type: views.display.[%parent.display_plugin]
 
 views_block:
   type: block_settings

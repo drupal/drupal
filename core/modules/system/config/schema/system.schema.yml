@@ -140,8 +140,8 @@ system.filter:
       type: sequence
       label: 'Allowed protocols'
       sequence:
-        - type: string
-          label: 'Protocol'
+        type: string
+        label: 'Protocol'
 
 system.logging:
   type: mapping
@@ -333,8 +333,8 @@ system.mail:
       type: sequence
       label: 'Interfaces'
       sequence:
-        - type: string
-          label: 'Interface'
+        type: string
+        label: 'Interface'
 
 system.theme.global:
   type: theme_settings

@@ -6,11 +6,11 @@ core.extension:
       type: sequence
       label: 'Enabled modules'
       sequence:
-        - type: integer
-          label: 'Weight'
+        type: integer
+        label: 'Weight'
     theme:
       type: sequence
       label: 'Installed themes'
       sequence:
-        - type: integer
-          label: 'Weight'
+        type: integer
+        label: 'Weight'

@@ -14,8 +14,8 @@ aggregator.settings:
       type: sequence
       label: 'Processors'
       sequence:
-        - type: string
-          label: 'Processor'
+        type: string
+        label: 'Processor'
     items:
       type: mapping
       label: 'Items'

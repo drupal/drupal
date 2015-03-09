@@ -18,8 +18,8 @@ views.style.mapping_test:
           type: sequence
           label: 'Numeric fields'
           sequence:
-            - type: string
-              label: 'Numeric field'
+            type: string
+            label: 'Numeric field'
         toggle_numeric_field:
           type: boolean
           label: 'Toggle numeric field'

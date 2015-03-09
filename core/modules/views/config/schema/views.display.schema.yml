@@ -95,8 +95,8 @@ views.display.feed:
       type: sequence
       label: 'The feed icon will be available only to the selected displays.'
       sequence:
-        - type: string
-          label: 'Display'
+        type: string
+        label: 'Display'
 
 views.display.embed:
   type: views_display
@@ -110,8 +110,8 @@ views.display.attachment:
       type: sequence
       label: 'Attach to'
       sequence:
-        - type: string
-          label: 'Display'
+        type: string
+        label: 'Display'
     attachment_position:
       type: string
       label: 'Attachment position'

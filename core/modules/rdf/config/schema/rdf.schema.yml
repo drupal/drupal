@@ -17,9 +17,9 @@ rdf.mapping.*.*:
       type: sequence
       label: 'Types'
       sequence:
-        - type: string
+        type: string
     fieldMappings:
       type: sequence
       label: 'Field mappings'
       sequence:
-        - type: rdf_field_mapping
+        type: rdf_field_mapping

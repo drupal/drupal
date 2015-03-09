@@ -57,8 +57,8 @@ views.argument_validator.taxonomy_term_name:
       type: sequence
       label: 'Vocabularies'
       sequence:
-        - type: string
-          label: 'Vocabulary'
+        type: string
+        label: 'Vocabulary'
 
 views.argument_default.taxonomy_tid:
   type: mapping
@@ -77,8 +77,8 @@ views.argument_default.taxonomy_tid:
       type: sequence
       label: 'Vocabularies'
       sequence:
-        - type: string
-          label: 'Vocabulary'
+        type: string
+        label: 'Vocabulary'
     anyall:
       type: string
       label: 'Multiple-value handling'
@@ -126,8 +126,8 @@ views.field.taxonomy_index_tid:
       type: sequence
       label: 'Vocabularies'
       sequence:
-        - type: string
-          label: 'Vocabulary'
+        type: string
+        label: 'Vocabulary'
 
 views.filter.taxonomy_index_tid:
   type: views.filter.many_to_one
@@ -152,8 +152,8 @@ views.filter.taxonomy_index_tid:
       type: sequence
       label: 'Values'
       sequence:
-        - type: integer
-          label: 'Value'
+        type: integer
+        label: 'Value'
 
 views.filter.taxonomy_index_tid_depth:
   type: views.filter.taxonomy_index_tid
@@ -171,5 +171,5 @@ views.relationship.node_term_data:
       type: sequence
       label: 'Vocabularies'
       sequence:
-        - type: string
-          label: 'Vocabulary'
+        type: string
+        label: 'Vocabulary'

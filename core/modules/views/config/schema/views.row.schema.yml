@@ -18,8 +18,8 @@ views.row.fields:
       type: sequence
       label: 'Inline'
       sequence:
-        - type: string
-          label: 'Inline'
+        type: string
+        label: 'Inline'
     separator:
       type: string
       label: 'Separator'

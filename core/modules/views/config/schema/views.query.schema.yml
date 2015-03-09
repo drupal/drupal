@@ -20,5 +20,5 @@ views.query.views_query:
       type: sequence
       label: 'Query Tags'
       sequence:
-        - type: string
-          label: 'Tag'
+        type: string
+        label: 'Tag'

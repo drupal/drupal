@@ -20,5 +20,5 @@ config_translation_test.content:
       type: sequence
       label: 'Animals'
       sequence:
-        - type: label
+        type: label
 

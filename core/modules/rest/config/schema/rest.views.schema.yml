@@ -12,15 +12,15 @@ views.row.data_field:
       type: sequence
       label: 'Options'
       sequence:
-        - type: mapping
-          label: 'Row'
-          mapping:
-            alias:
-              type: string
-              label: 'Alias for ID'
-            raw_output:
-              type: boolean
-              label: 'Raw output for ID'
+        type: mapping
+        label: 'Row'
+        mapping:
+          alias:
+            type: string
+            label: 'Alias for ID'
+          raw_output:
+            type: boolean
+            label: 'Raw output for ID'
 
 views.style.serializer:
   type: views_style
@@ -30,5 +30,5 @@ views.style.serializer:
       type: sequence
       label: 'Formats'
       sequence:
-        - type: string
-          label: 'Format'
+        type: string
+        label: 'Format'

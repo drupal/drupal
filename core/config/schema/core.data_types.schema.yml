@@ -118,7 +118,7 @@ action_configuration_default:
   type: sequence
   label: 'Action configuration'
   sequence:
-    - type: string
+    type: string
 
 theme_settings:
   type: mapping
@@ -181,13 +181,13 @@ theme_settings:
       type: sequence
       label: 'Third party settings'
       sequence:
-        - type: theme_settings.third_party.[%key]
+        type: theme_settings.third_party.[%key]
 
 theme_breakpoints_default:
   type: sequence
   sequence:
-    - type: string
-      label: 'Breakpoint value'
+    type: string
+    label: 'Breakpoint value'
 
 views_field_bulk_form:
   type: views_field
@@ -203,8 +203,8 @@ views_field_bulk_form:
       type: sequence
       label: 'Available actions'
       sequence:
-        - type: string
-          label: 'Action'
+        type: string
+        label: 'Action'
 
 # Array of routes with route_name and route_params keys.
 route:
@@ -218,8 +218,8 @@ route:
       type: sequence
       label: 'Route Params'
       sequence:
-        - type: string
-          label: 'Param'
+        type: string
+        label: 'Param'
 
 # Config dependencies.
 config_dependencies_base:
@@ -229,22 +229,22 @@ config_dependencies_base:
       type: sequence
       label: 'Configuration entity dependencies'
       sequence:
-        - type: string
+        type: string
     content:
       type: sequence
       label: 'Content entity dependencies'
       sequence:
-        - type: string
+        type: string
     module:
       type: sequence
       label: 'Module dependencies'
       sequence:
-        - type: string
+        type: string
     theme:
       type: sequence
       label: 'Theme dependencies'
       sequence:
-        - type: string
+        type: string
 
 config_dependencies:
   type: config_dependencies_base
@@ -273,7 +273,7 @@ config_entity:
       type: sequence
       label: 'Third party settings'
       sequence:
-        - type: '[%parent.%parent.%type].third_party.[%key]'
+        type: '[%parent.%parent.%type].third_party.[%key]'
 
 block_settings:
   type: mapping
@@ -299,8 +299,8 @@ block_settings:
           type: sequence
           label: 'Vary by context'
           sequence:
-            - type: string
-              label: 'Context'
+            type: string
+            label: 'Context'
     status:
       type: boolean
       label: 'Status'
@@ -331,7 +331,7 @@ condition.plugin:
       type: sequence
       label: 'Context assignments'
       sequence:
-        - type: string
+        type: string
 
 display_variant.plugin:
   type: mapping
@@ -391,8 +391,8 @@ field_config_base:
       type: sequence
       label: 'Default values'
       sequence:
-        - type: field.value.[%parent.%parent.field_type]
-          label: 'Default value'
+        type: field.value.[%parent.%parent.field_type]
+        label: 'Default value'
     default_value_callback:
       type: string
       label: 'Default value callback'
@@ -610,8 +610,8 @@ field.field_settings.email:
   type: mapping
   label: 'Email settings'
   sequence:
-    - type: string
-      label: 'Setting'
+    type: string
+    label: 'Setting'
 
 field.value.email:
   type: mapping

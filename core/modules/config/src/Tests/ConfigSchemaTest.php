@@ -165,14 +165,14 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['mapping']['label']['type'] = 'label';
     $expected['mapping']['label']['label'] = 'Label';
     $expected['mapping']['effects']['type'] = 'sequence';
-    $expected['mapping']['effects']['sequence'][0]['type'] = 'mapping';
-    $expected['mapping']['effects']['sequence'][0]['mapping']['id']['type'] = 'string';
-    $expected['mapping']['effects']['sequence'][0]['mapping']['data']['type'] = 'image.effect.[%parent.id]';
-    $expected['mapping']['effects']['sequence'][0]['mapping']['weight']['type'] = 'integer';
-    $expected['mapping']['effects']['sequence'][0]['mapping']['uuid']['type'] = 'string';
+    $expected['mapping']['effects']['sequence']['type'] = 'mapping';
+    $expected['mapping']['effects']['sequence']['mapping']['id']['type'] = 'string';
+    $expected['mapping']['effects']['sequence']['mapping']['data']['type'] = 'image.effect.[%parent.id]';
+    $expected['mapping']['effects']['sequence']['mapping']['weight']['type'] = 'integer';
+    $expected['mapping']['effects']['sequence']['mapping']['uuid']['type'] = 'string';
     $expected['mapping']['third_party_settings']['type'] = 'sequence';
     $expected['mapping']['third_party_settings']['label'] = 'Third party settings';
-    $expected['mapping']['third_party_settings']['sequence'][0]['type'] = '[%parent.%parent.%type].third_party.[%key]';
+    $expected['mapping']['third_party_settings']['sequence']['type'] = '[%parent.%parent.%type].third_party.[%key]';
     $expected['type'] = 'image.style.*';
 
     $this->assertEqual($definition, $expected);
@@ -343,6 +343,7 @@ class ConfigSchemaTest extends KernelTestBase {
       'float' => '3.14',
       'null_float' => '',
       'sequence' => array (1, 0, 1),
+      'sequence_bc' => array(1, 0, 1),
       // Not in schema and therefore should be left untouched.
       'not_present_in_schema' => TRUE,
       // Test a custom type.
@@ -365,6 +366,7 @@ class ConfigSchemaTest extends KernelTestBase {
       'float' => 3.14,
       'null_float' => NULL,
       'sequence' => array (TRUE, FALSE, TRUE),
+      'sequence_bc' => array(TRUE, FALSE, TRUE),
       'not_present_in_schema' => TRUE,
       'config_schema_test_integer' => 1,
       'config_schema_test_integer_empty_string' => NULL,

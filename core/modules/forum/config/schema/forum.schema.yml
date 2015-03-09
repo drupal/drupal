@@ -47,7 +47,7 @@ block.settings.forum_active_block:
       type: sequence
       label: 'Properties'
       sequence:
-        - type: string
+        type: string
     block_count:
       type: integer
       label: 'Block count'
@@ -60,7 +60,7 @@ block.settings.forum_new_block:
       type: sequence
       label: 'Properties'
       sequence:
-        - type: string
+        type: string
     block_count:
       type: integer
       label: 'Block count'

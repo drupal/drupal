@@ -14,8 +14,8 @@ contact.form.*:
       type: sequence
       label: 'Recipients'
       sequence:
-        - type: email
-          label: 'Email address'
+        type: email
+        label: 'Email address'
     reply:
       type: text
       label: 'Auto-reply'

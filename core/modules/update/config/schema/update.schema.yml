@@ -35,8 +35,8 @@ update.settings:
           type: sequence
           label: 'Email addresses to notify when updates are available'
           sequence:
-            - type: email
-              label: 'Email'
+            type: email
+            label: 'Email'
         threshold:
           type: string
           label: 'Email notification threshold'

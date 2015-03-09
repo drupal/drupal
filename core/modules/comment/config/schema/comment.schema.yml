@@ -28,8 +28,8 @@ action.configuration.comment_unpublish_by_keyword_action:
       type: sequence
       label: 'Keywords'
       sequence:
-        - type: string
-          label: 'Keyword'
+        type: string
+        label: 'Keyword'
 
 action.configuration.comment_unpublish_action:
   type: action_configuration_default

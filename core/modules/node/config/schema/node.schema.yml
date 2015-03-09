@@ -43,8 +43,8 @@ search.plugin.node_search:
       type: sequence
       label: 'Content ranking'
       sequence:
-        - type: integer
-          label: 'Influence'
+        type: integer
+        label: 'Influence'
 
 action.configuration.node_assign_owner_action:
   type: mapping
@@ -94,8 +94,8 @@ action.configuration.node_unpublish_by_keyword_action:
       type: sequence
       label: 'Keywords'
       sequence:
-        - type: string
-          label: 'Keyword'
+        type: string
+        label: 'Keyword'
 
 block.settings.node_syndicate_block:
   type: block_settings
@@ -111,4 +111,4 @@ condition.plugin.node_type:
     bundles:
       type: sequence
       sequence:
-        - type: string
+        type: string

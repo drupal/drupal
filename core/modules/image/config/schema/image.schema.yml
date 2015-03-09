@@ -12,16 +12,16 @@ image.style.*:
     effects:
       type: sequence
       sequence:
-        - type: mapping
-          mapping:
-            id:
-              type: string
-            data:
-              type: image.effect.[%parent.id]
-            weight:
-              type: integer
-            uuid:
-              type: string
+        type: mapping
+        mapping:
+          id:
+            type: string
+          data:
+            type: image.effect.[%parent.id]
+          weight:
+            type: integer
+          uuid:
+            type: string
 
 image.effect.*:
   type: mapping

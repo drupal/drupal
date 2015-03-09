@@ -8,15 +8,15 @@ field.storage_settings.list_integer:
       type: sequence
       label: 'Allowed values list'
       sequence:
-        - type: mapping
-          label: 'Allowed value with label'
-          mapping:
-            value:
-              type: integer
-              label: 'Value'
-            label:
-              type: label
-              label: 'Label'
+        type: mapping
+        label: 'Allowed value with label'
+        mapping:
+          value:
+            type: integer
+            label: 'Value'
+          label:
+            type: label
+            label: 'Label'
     allowed_values_function:
       type: string
       label: 'Allowed values function'
@@ -41,15 +41,15 @@ field.storage_settings.list_float:
       type: sequence
       label: 'Allowed values list'
       sequence:
-        - type: mapping
-          label: 'Allowed value with label'
-          mapping:
-            value:
-              type: float
-              label: 'Value'
-            label:
-              type: label
-              label: 'Label'
+        type: mapping
+        label: 'Allowed value with label'
+        mapping:
+          value:
+            type: float
+            label: 'Value'
+          label:
+            type: label
+            label: 'Label'
     allowed_values_function:
       type: string
       label: 'Allowed values function'
@@ -74,15 +74,15 @@ field.storage_settings.list_string:
       type: sequence
       label: 'Allowed values list'
       sequence:
-        - type: mapping
-          label: 'Allowed value with label'
-          mapping:
-            value:
-              type: string
-              label: 'Value'
-            label:
-              type: label
-              label: 'Label'
+        type: mapping
+        label: 'Allowed value with label'
+        mapping:
+          value:
+            type: string
+            label: 'Value'
+          label:
+            type: label
+            label: 'Label'
     allowed_values_function:
       type: string
       label: 'Allowed values function'

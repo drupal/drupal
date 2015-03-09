@@ -42,11 +42,11 @@ field.storage.*.*:
       type: sequence
       label: 'Indexes'
       sequence:
-        - type: sequence
-          label: 'Indexes'
-          sequence:
-            - type: ignore
-              label: 'Index'
+        type: sequence
+        label: 'Indexes'
+        sequence:
+          type: ignore
+          label: 'Index'
     persist_with_no_fields:
       type: boolean
       label: 'Persist field storage with no fields'

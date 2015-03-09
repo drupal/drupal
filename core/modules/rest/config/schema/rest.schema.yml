@@ -8,8 +8,8 @@ rest.settings:
       type: sequence
       label: 'Resources'
       sequence:
-        - type: rest_resource
-          label: 'Resource'
+        type: rest_resource
+        label: 'Resource'
 
 rest_resource:
   type: mapping
@@ -34,11 +34,11 @@ rest_request:
       type: sequence
       label: 'Supported format'
       sequence:
-        - type: string
-          label: 'Format'
+        type: string
+        label: 'Format'
     supported_auth:
       type: sequence
       label: 'Supported authentication'
       sequence:
-        - type: string
-          label: 'Authentication'
+        type: string
+        label: 'Authentication'

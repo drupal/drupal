@@ -12,11 +12,11 @@ filter_settings.filter_test_restrict_tags_and_attributes:
           type: sequence
           label: 'Allowed tags and attributes'
           sequence:
-            - type: ignore
-              label: 'Tag and optionally list of attributes'
+            type: ignore
+            label: 'Tag and optionally list of attributes'
         forbidden_tags:
           type: sequence
           label: 'Forbidden tags'
           sequence:
-            - type: boolean
-              label: 'Tag'
+            type: boolean
+            label: 'Tag'

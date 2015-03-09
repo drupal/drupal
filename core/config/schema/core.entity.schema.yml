@@ -55,32 +55,32 @@ core.entity_view_display.*.*.*:
       type: sequence
       label: 'Field formatters'
       sequence:
-        - type: mapping
-          label: 'Field formatter'
-          mapping:
-            type:
-              type: string
-              label: 'Format type machine name'
-            weight:
-              type: integer
-              label: 'Weight'
-            label:
-               type: string
-               label: 'Label setting machine name'
-            settings:
-              type: field.formatter.settings.[%parent.type]
-              label: 'Settings'
-            third_party_settings:
-               type: sequence
-               label: 'Third party settings'
-               sequence:
-                 - type: field.formatter.third_party.[%key]
+        type: mapping
+        label: 'Field formatter'
+        mapping:
+          type:
+            type: string
+            label: 'Format type machine name'
+          weight:
+            type: integer
+            label: 'Weight'
+          label:
+             type: string
+             label: 'Label setting machine name'
+          settings:
+            type: field.formatter.settings.[%parent.type]
+            label: 'Settings'
+          third_party_settings:
+             type: sequence
+             label: 'Third party settings'
+             sequence:
+               type: field.formatter.third_party.[%key]
     hidden:
       type: sequence
       label: 'Field display setting'
       sequence:
-        - type: boolean
-          label: 'Value'
+        type: boolean
+        label: 'Value'
 
 # Overview configuration information for form mode displays.
 core.entity_form_display.*.*.*:
@@ -106,29 +106,29 @@ core.entity_form_display.*.*.*:
       type: sequence
       label: 'Field widgets'
       sequence:
-        - type: mapping
-          label: 'Field widget'
-          mapping:
-            type:
-              type: string
-              label: 'Widget type machine name'
-            weight:
-              type: integer
-              label: 'Weight'
-            settings:
-              type: field.widget.settings.[%parent.type]
-              label: 'Settings'
-            third_party_settings:
-              type: sequence
-              label: 'Third party settings'
-              sequence:
-                - type: field.widget.third_party.[%key]
+        type: mapping
+        label: 'Field widget'
+        mapping:
+          type:
+            type: string
+            label: 'Widget type machine name'
+          weight:
+            type: integer
+            label: 'Weight'
+          settings:
+            type: field.widget.settings.[%parent.type]
+            label: 'Settings'
+          third_party_settings:
+            type: sequence
+            label: 'Third party settings'
+            sequence:
+              type: field.widget.third_party.[%key]
     hidden:
       type: sequence
       label: 'Hidden'
       sequence:
-        - type: boolean
-          label: 'Component'
+        type: boolean
+        label: 'Component'
 
 # Default schema for entity display field with undefined type.
 field.formatter.settings.*:

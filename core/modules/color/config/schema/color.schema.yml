@@ -6,15 +6,15 @@ color.theme.*:
       type: sequence
       label: 'Palette settings'
       sequence:
-        - type: color_hex
+        type: color_hex
     logo:
       type: path
       label: 'Logo path'
     stylesheets:
       type: sequence
       sequence:
-        - type: path
+        type: path
     files:
       type: sequence
       sequence:
-        - type: path
+        type: path

@@ -4,7 +4,7 @@ views.argument_validator.none:
   type: sequence
   label: 'Basic validation'
   sequence:
-    - type: string
+    type: string
 
 views.argument_validator.php:
   type: mapping
@@ -25,8 +25,8 @@ views.argument_validator_entity:
       type: sequence
       label: 'Bundles'
       sequence:
-        - type: string
-          label: 'Bundle'
+        type: string
+        label: 'Bundle'
     access:
       type: boolean
       label: 'Access'

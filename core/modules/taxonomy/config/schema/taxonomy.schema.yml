@@ -45,15 +45,15 @@ field.storage_settings.taxonomy_term_reference:
       type: sequence
       label: 'Allowed values'
       sequence:
-        - type: mapping
-          label: 'Allowed values'
-          mapping:
-            vocabulary:
-              type: string
-              label: 'Vocabulary'
-            parent:
-              type: integer
-              value: 'Parent'
+        type: mapping
+        label: 'Allowed values'
+        mapping:
+          vocabulary:
+            type: string
+            label: 'Vocabulary'
+          parent:
+            type: integer
+            value: 'Parent'
 
 field.field_settings.taxonomy_term_reference:
   type: mapping

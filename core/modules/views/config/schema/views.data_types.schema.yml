@@ -17,7 +17,7 @@ views_display:
       type: sequence
       label: 'Fields'
       sequence:
-        - type: views.field.[plugin_id]
+        type: views.field.[plugin_id]
     pager:
       type: mapping
       label: 'Pager'
@@ -52,22 +52,22 @@ views_display:
       type: sequence
       label: 'No results behavior'
       sequence:
-        - type: views.area.[plugin_id]
+        type: views.area.[plugin_id]
     sorts:
       type: sequence
       label: 'Sorts'
       sequence:
-        - type: views.sort.[plugin_id]
+        type: views.sort.[plugin_id]
     arguments:
       type: sequence
       label: 'Arguments'
       sequence:
-        - type: views.argument.[plugin_id]
+        type: views.argument.[plugin_id]
     filters:
       type: sequence
       label: 'Filters'
       sequence:
-        - type: views.filter.[plugin_id]
+        type: views.filter.[plugin_id]
     filter_groups:
       type: mapping
       label: 'Groups'
@@ -79,8 +79,8 @@ views_display:
           type: sequence
           label: 'Groups'
           sequence:
-            - type: string
-              label: 'Operator'
+            type: string
+            label: 'Operator'
     style:
       type: mapping
       label: 'Format'
@@ -200,7 +200,7 @@ views_display:
       type: sequence
       label: 'Relationships'
       sequence:
-        - type: views.relationship.[plugin_id]
+        type: views.relationship.[plugin_id]
     css_class:
       type: string
       label: 'CSS class'
@@ -235,12 +235,12 @@ views_display:
       type: sequence
       label: 'Header'
       sequence:
-      - type: views.area.[plugin_id]
+        type: views.area.[plugin_id]
     footer:
       type: sequence
       label: 'Footer'
       sequence:
-      - type: views.area.[plugin_id]
+        type: views.area.[plugin_id]
     display_comment:
       type: label
       label: 'Display comment'
@@ -267,7 +267,7 @@ views_display:
       type: sequence
       label: 'Display extenders'
       sequence:
-       - type: views.display_extender.[%key]
+        type: views.display_extender.[%key]
 
 views_sort:
   type: views_handler
@@ -655,18 +655,18 @@ views_style:
       type: sequence
       label: 'Grouping field number %i'
       sequence:
-        - type: mapping
-          label: 'Field'
-          mapping:
-            field:
-              type: string
-              label: 'Field'
-            rendered:
-              type: boolean
-              label: 'Use rendered output to group rows'
-            rendered_strip:
-              type: boolean
-              label: 'Remove tags from rendered output'
+        type: mapping
+        label: 'Field'
+        mapping:
+          field:
+            type: string
+            label: 'Field'
+          rendered:
+            type: boolean
+            label: 'Use rendered output to group rows'
+          rendered_strip:
+            type: boolean
+            label: 'Remove tags from rendered output'
     row_class:
       type: string
       label: 'Row class'
@@ -727,8 +727,8 @@ views_filter:
           type: sequence
           label: 'User roles'
           sequence:
-            - type: string
-              label: 'Role'
+            type: string
+            label: 'Role'
     is_grouped:
       type: boolean
       label: 'Grouped filters'
@@ -764,14 +764,14 @@ views_filter:
           type: sequence
           label: 'Defaults'
           sequence:
-            - type: integer
-              label: 'Default'
+            type: integer
+            label: 'Default'
         group_items:
           type: sequence
           label: 'Group items'
           sequence:
-            - type: views.filter.group_item.[%parent.%parent.%parent.plugin_id]
-              label: 'Group item'
+            type: views.filter.group_item.[%parent.%parent.%parent.plugin_id]
+            label: 'Group item'
     plugin_id:
       type: string
       label: 'Plugin ID'

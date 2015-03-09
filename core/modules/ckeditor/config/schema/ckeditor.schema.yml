@@ -12,26 +12,26 @@ editor.settings.ckeditor:
           type: sequence
           label: 'Rows'
           sequence:
-            - type: sequence
-              label: 'Button groups'
-              sequence:
-                - type: mapping
-                  label: 'Button group'
-                  mapping:
-                    name:
-                      type: string
-                      label: 'Button group name'
-                    items:
-                      type: sequence
-                      label: 'Buttons'
-                      sequence:
-                        - type: string
-                          label: 'Button'
+            type: sequence
+            label: 'Button groups'
+            sequence:
+              type: mapping
+              label: 'Button group'
+              mapping:
+                name:
+                  type: string
+                  label: 'Button group name'
+                items:
+                  type: sequence
+                  label: 'Buttons'
+                  sequence:
+                    type: string
+                    label: 'Button'
     plugins:
       type: sequence
       label: 'Plugins'
       sequence:
-        - type: ckeditor.plugin.[%key]
+        type: ckeditor.plugin.[%key]
 
 # Plugin \Drupal\ckeditor\Plugin\ckeditor\plugin\StylesCombo
 ckeditor.plugin.stylescombo:

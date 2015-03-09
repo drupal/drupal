@@ -119,6 +119,10 @@ config_schema_test.schema_data_types:
     sequence:
       type: sequence
       sequence:
+        type: boolean
+    sequence_bc:
+      type: sequence
+      sequence:
         - type: boolean
 
 config_schema_test.schema_in_install:
@@ -156,16 +160,16 @@ config_schema_test.plugin_types:
     tests:
       type: sequence
       sequence:
-        - type: test.plugin_types.[plugin_id]
+        type: test.plugin_types.[plugin_id]
     test_with_parents:
       type: sequence
       sequence:
-        - type: mapping
-          mapping:
-            plugin_id:
-              type: string
-            settings:
-              type: test_with_parents.plugin_types.[%parent.plugin_id]
+        type: mapping
+        mapping:
+          plugin_id:
+            type: string
+          settings:
+            type: test_with_parents.plugin_types.[%parent.plugin_id]
 
 test.plugin_types:
   type: mapping

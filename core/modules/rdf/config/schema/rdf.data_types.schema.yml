@@ -6,7 +6,7 @@ rdf_field_mapping:
       type: sequence
       label: 'Properties'
       sequence:
-        - type: string
+        type: string
     datatype:
       type: string
       label: 'Data type'

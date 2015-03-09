@@ -70,8 +70,8 @@ views.argument_default.node:
   type: sequence
   label: 'Content ID from URL'
   sequence:
-    - type: string
-      label: 'Nid'
+    type: string
+    label: 'Nid'
 
 views.argument_validator.node:
   type: mapping
@@ -81,8 +81,8 @@ views.argument_validator.node:
       type: sequence
       label: 'Content types'
       sequence:
-        - type: string
-          label: 'Type'
+        type: string
+        label: 'Type'
     access:
       type: boolean
       label: 'Validate user has access to the content'
@@ -204,8 +204,8 @@ views.filter.node_uid_revision:
       type: sequence
       label: 'Values'
       sequence:
-        - type: string
-          label: 'Value'
+        type: string
+        label: 'Value'
     expose:
       type: mapping
       label: 'Expose'

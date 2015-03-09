@@ -132,8 +132,8 @@ user.role.*:
       type: sequence
       label: 'Permissions'
       sequence:
-        - type: string
-          label: 'Permission'
+        type: string
+        label: 'Permission'
 
 action.configuration.user_add_role_action:
   type: mapping
@@ -173,4 +173,4 @@ condition.plugin.user_role:
     roles:
       type: sequence
       sequence:
-        - type: string
+        type: string

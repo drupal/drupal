@@ -8,8 +8,8 @@ migrate.source.variable:
       type: sequence
       label: 'Variables'
       sequence:
-        - type: string
-          label: 'Variable'
+        type: string
+        label: 'Variable'
     constants:
       type: mapping
       label: 'Constants'
@@ -132,8 +132,8 @@ migrate.source.variable_multirow:
       type: sequence
       label: 'Variables'
       sequence:
-        - type: string
-          label: 'Variable'
+        type: string
+        label: 'Variable'
 
 migrate.source.d6_comment_variable:
   type: migrate_source_sql
@@ -151,8 +151,8 @@ migrate.source.d6_contact_settings:
       type: sequence
       label: 'Variables'
       sequence:
-        - type: string
-          label: 'Variable'
+        type: string
+        label: 'Variable'
 
 migrate.source.d6_view_mode:
   type: migrate_source_sql
@@ -303,8 +303,8 @@ migrate_entity_constant:
       type: sequence
       label: 'Empty'
       sequence:
-        - type: string
-          label: 'Empty'
+        type: string
+        label: 'Empty'
     name:
       type: string
       label: 'Name'
@@ -333,14 +333,14 @@ migrate_entity_constant:
       type: sequence
       label: 'Settings'
       sequence:
-        - type: ignore
-          label: 'Settings'
+        type: ignore
+        label: 'Settings'
     settings:
       type: sequence
       label: 'Settings'
       sequence:
-        - type: ignore
-          label: 'Settings'
+        type: ignore
+        label: 'Settings'
     options:
       type: mapping
       label: 'Options'
@@ -358,5 +358,5 @@ migrate_entity_constant:
           type: sequence
           label: 'Settings'
           sequence:
-            - type: string
-              label: 'Settings'
+            type: string
+            label: 'Settings'

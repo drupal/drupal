@@ -18,5 +18,5 @@ entity_reference.views.handler_settings:
           type: sequence
           label: 'View arguments'
           sequence:
-            - type: string
-              label: 'Argument'
+            type: string
+            label: 'Argument'

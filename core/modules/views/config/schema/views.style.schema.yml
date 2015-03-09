@@ -56,8 +56,8 @@ views.style.table:
       type: sequence
       label: 'Columns'
       sequence:
-        - type: string
-          label: 'Columns name'
+        type: string
+        label: 'Columns name'
     default:
       type: string
       label: 'Default sort'
@@ -65,27 +65,27 @@ views.style.table:
       type: sequence
       label: 'Columns info'
       sequence:
-        - type: mapping
-          label:  'Column info'
-          mapping:
-            sortable:
-              type: boolean
-              label: 'Sortable'
-            default_sort_order:
-              type: string
-              label: 'Default order'
-            align:
-              type: string
-              label: 'Align'
-            separator:
-              type: string
-              label: 'Separator'
-            empty_column:
-              type: boolean
-              label: 'Hide empty columns'
-            responsive:
-              type: string
-              label: 'Responsive'
+        type: mapping
+        label:  'Column info'
+        mapping:
+          sortable:
+            type: boolean
+            label: 'Sortable'
+          default_sort_order:
+            type: string
+            label: 'Default order'
+          align:
+            type: string
+            label: 'Align'
+          separator:
+            type: string
+            label: 'Separator'
+          empty_column:
+            type: boolean
+            label: 'Hide empty columns'
+          responsive:
+            type: string
+            label: 'Responsive'
     override:
       type: boolean
       label: 'Override normal sorting if click sorting is used'

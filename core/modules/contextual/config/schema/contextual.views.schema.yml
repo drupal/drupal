@@ -8,8 +8,8 @@ views.field.contextual_links:
       type: sequence
       label: 'Fields'
       sequence:
-        - type: string
-          label: 'Link'
+        type: string
+        label: 'Link'
     destination:
       type: boolean
       label: 'Include destination'

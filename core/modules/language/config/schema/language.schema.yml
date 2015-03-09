@@ -8,14 +8,14 @@ language_type_negotiation:
       type: sequence
       label: 'Enabled negotiators'
       sequence:
-        - type: integer
-          label: Weight
+        type: integer
+        label: Weight
     method_weights:
       type: sequence
       label: 'Negotiator weights'
       sequence:
-        - type: integer
-          label: Weight
+        type: integer
+        label: Weight
 
 language.types:
   type: mapping
@@ -25,20 +25,20 @@ language.types:
       type: sequence
       label: 'All language types'
       sequence:
-        - type: string
-          label: 'Language type'
+        type: string
+        label: 'Language type'
     configurable:
       type: sequence
       label: 'Configurable language types'
       sequence:
-        - type: string
-          label: 'Language type'
+        type: string
+        label: 'Language type'
     negotiation:
       type: sequence
       label: 'Language negotiation per type settings'
       sequence:
-        - type: language_type_negotiation
-          label: 'Language negotiation per type setting'
+        type: language_type_negotiation
+        label: 'Language negotiation per type setting'
 
 language.negotiation:
   type: mapping
@@ -62,14 +62,14 @@ language.negotiation:
           type: sequence
           label: 'Path prefix configuration'
           sequence:
-            - type: string
-              label: 'Path prefix'
+            type: string
+            label: 'Path prefix'
         domains:
           type: sequence
           label: 'Domain configuration'
           sequence:
-            - type: string
-              label: 'Domain'
+            type: string
+            label: 'Domain'
     selected_langcode:
       type: string
       label: 'Selected language'
@@ -78,8 +78,8 @@ language.mappings:
   type: sequence
   label: 'Language mapping'
   sequence:
-    - type: string
-      label: 'Language'
+    type: string
+    label: 'Language'
 
 language.entity.*:
   type: config_entity
@@ -127,4 +127,4 @@ condition.plugin.language:
     langcodes:
       type: sequence
       sequence:
-        - type: string
+        type: string

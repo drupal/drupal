@@ -11,8 +11,8 @@ migrate.migration.*:
       type: sequence
       label: 'Migration Groups'
       sequence:
-        - type: string
-          label: 'Group'
+        type: string
+        label: 'Group'
     label:
       type: label
       label: 'Label'
@@ -36,11 +36,11 @@ migrate.migration.*:
           type: sequence
           label: 'Required dependencies'
           sequence:
-            - type: string
-              label: 'Dependency'
+            type: string
+            label: 'Dependency'
         optional:
           type: sequence
           label: 'Optional dependencies'
           sequence:
-            - type: string
-              label: 'Dependency'
+            type: string
+            label: 'Dependency'
