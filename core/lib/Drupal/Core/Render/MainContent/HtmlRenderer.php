@@ -129,21 +129,25 @@ class HtmlRenderer implements MainContentRendererInterface {
     }
     $content = $this->renderer->render($html);
 
-    // Store the cache tags associated with this page in a X-Drupal-Cache-Tags
-    // header. Also associate the "rendered" cache tag. This allows us to
-    // invalidate the entire render cache, regardless of the cache bin.
-    $cache_tags = Cache::mergeTags(
-      isset($html['page_top']) ? $html['page_top']['#cache']['tags'] : [],
-      $html['page']['#cache']['tags'],
-      isset($html['page_bottom']) ? $html['page_bottom']['#cache']['tags'] : [],
-      ['rendered']
-    );
+    // Expose the cache contexts and cache tags associated with this page in a
+    // X-Drupal-Cache-Contexts and X-Drupal-Cache-Tags header respectively. Also
+    // associate the "rendered" cache tag. This allows us to invalidate the
+    // entire render cache, regardless of the cache bin.
+    $cache_contexts = [];
+    $cache_tags = ['rendered'];
+    foreach (['page_top', 'page', 'page_bottom'] as $region) {
+      if (isset($html[$region])) {
+        $cache_contexts = Cache::mergeContexts($cache_contexts, $html[$region]['#cache']['contexts']);
+        $cache_tags = Cache::mergeTags($cache_tags, $html[$region]['#cache']['tags']);
+      }
+    }
 
     // Set the generator in the HTTP header.
     list($version) = explode('.', \Drupal::VERSION, 2);
 
     return new Response($content, 200,[
       'X-Drupal-Cache-Tags' => implode(' ', $cache_tags),
+      'X-Drupal-Cache-Contexts' => implode(' ', $cache_contexts),
       'X-Generator' => 'Drupal ' . $version . ' (http://drupal.org)'
     ]);
   }
