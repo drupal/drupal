@@ -150,7 +150,6 @@ abstract class ExposedFormPluginBase extends PluginBase {
       $form_state->set('ajax', TRUE);
     }
 
-    $form_state->set('exposed_form_plugin', $this);
     $form = \Drupal::formBuilder()->buildForm('\Drupal\views\Form\ViewsExposedForm', $form_state);
 
     if (!$this->view->display_handler->displaysExposed() || (!$block && $this->view->display_handler->getOption('exposed_block'))) {

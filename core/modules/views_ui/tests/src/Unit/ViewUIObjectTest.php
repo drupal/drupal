@@ -9,6 +9,7 @@ namespace Drupal\Tests\views_ui\Unit;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\UnitTestCase;
+use Drupal\views\Entity\View;
 use Drupal\views\ViewExecutable;
 use Drupal\views_ui\ViewUI;
 use Symfony\Component\DependencyInjection\Container;
@@ -54,8 +55,9 @@ class ViewUIObjectTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->setConstructorArgs(array($storage))
       ->getMock();
+    $storage->set('executable', $executable);
 
-    $view_ui = new ViewUI($storage, $executable);
+    $view_ui = new ViewUI($storage);
 
     foreach ($method_args as $method => $args) {
       $method_mock = $storage->expects($this->once())
@@ -80,6 +82,7 @@ class ViewUIObjectTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->setConstructorArgs(array($storage))
       ->getMock();
+    $storage->set('executable', $executable);
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
     $account->expects($this->exactly(2))
       ->method('id')
@@ -89,7 +92,7 @@ class ViewUIObjectTest extends UnitTestCase {
     $container->set('current_user', $account);
     \Drupal::setContainer($container);
 
-    $view_ui = new ViewUI($storage, $executable);
+    $view_ui = new ViewUI($storage);
 
     // A view_ui without a lock object is not locked.
     $this->assertFalse($view_ui->isLocked());
@@ -111,6 +114,35 @@ class ViewUIObjectTest extends UnitTestCase {
     );
     $view_ui->lock = $lock;
     $this->assertFalse($view_ui->isLocked());
+  }
+
+  /**
+   * Tests serialization of the ViewUI object.
+   */
+  public function testSerialization() {
+    // Set a container so the DependencySerializationTrait has it.
+    $container = new ContainerBuilder();
+    \Drupal::setContainer($container);
+
+    $storage = new View([], 'view');
+    $executable = $this->getMockBuilder('Drupal\views\ViewExecutable')
+      ->disableOriginalConstructor()
+      ->setConstructorArgs([$storage])
+      ->getMock();
+    $storage->set('executable', $executable);
+
+    $view_ui = new ViewUI($storage);
+
+    // Make sure the executable is returned before serializing.
+    $this->assertInstanceOf('Drupal\views\ViewExecutable', $view_ui->getExecutable());
+
+    $serialized = serialize($view_ui);
+
+    // Make sure the ViewExecutable class is not found in the serialized string.
+    $this->assertSame(strpos($serialized, '"Drupal\views\ViewExecutable"'), FALSE);
+
+    $unserialized = unserialize($serialized);
+    $this->assertInstanceOf('Drupal\views_ui\ViewUI', $unserialized);
   }
 
 }

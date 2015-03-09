@@ -449,11 +449,37 @@ class ViewExecutableTest extends ViewUnitTestBase {
     $errors = $executable->validate();
     $total_error_count = array_reduce($errors, function ($carry, $item) {
       $carry += count($item);
+
       return $carry;
     });
     // Assert that there were 9 total errors across 3 displays.
     $this->assertIdentical(9, $total_error_count);
     $this->assertIdentical(3, count($errors));
+  }
+
+  /**
+   * Tests serialization of the ViewExecutable object.
+   */
+  public function testSerialization() {
+    $view = Views::getView('test_executable_displays');
+    $view->setDisplay('page_1');
+    $view->setArguments(['test']);
+    $view->setCurrentPage(2);
+
+    $serialized = serialize($view);
+
+    // Test the view storage object is not present in the actual serialized
+    // string.
+    $this->assertIdentical(strpos($serialized, '"Drupal\views\Entity\View"'), FALSE, 'The Drupal\views\Entity\View class was not found in the serialized string.');
+
+    /** @var \Drupal\views\ViewExecutable $unserialized */
+    $unserialized = unserialize($serialized);
+
+    $this->assertTrue($unserialized instanceof ViewExecutable);
+    $this->assertIdentical($view->storage->id(), $unserialized->storage->id(), 'The expected storage entity was loaded on the unserialized view.');
+    $this->assertIdentical($unserialized->current_display, 'page_1', 'The expected display was set on the unserialized view.');
+    $this->assertIdentical($unserialized->args, ['test'], 'The expected argument was set on the unserialized view.');
+    $this->assertIdentical($unserialized->getCurrentPage(), 2, 'The expected current page was set on the unserialized view.');
   }
 
 }

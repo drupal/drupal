@@ -62,18 +62,15 @@ class BulkFormTest extends NodeTestBase {
     $this->assertTrue($node->isPublished(), 'Node has been published');
 
     // Make sticky action.
-    $node->setPublished(FALSE);
-    $node->save();
     $this->assertFalse($node->isSticky(), 'Node is not sticky');
     $edit = array(
       'node_bulk_form[0]' => TRUE,
       'action' => 'node_make_sticky_action',
     );
     $this->drupalPostForm(NULL, $edit, t('Apply'));
-    // Re-load the node and check the status and sticky flag.
+    // Re-load the node and check the sticky flag.
     $node_storage->resetCache(array($node->id()));
     $node = $node_storage->load($node->id());
-    $this->assertTrue($node->isPublished(), 'Node has been published');
     $this->assertTrue($node->isSticky(), 'Node has been made sticky');
 
     // Make unsticky action.
@@ -88,18 +85,15 @@ class BulkFormTest extends NodeTestBase {
     $this->assertFalse($node->isSticky(), 'Node is not sticky anymore');
 
     // Promote to front page.
-    $node->setPublished(FALSE);
-    $node->save();
     $this->assertFalse($node->isPromoted(), 'Node is not promoted to the front page');
     $edit = array(
       'node_bulk_form[0]' => TRUE,
       'action' => 'node_promote_action',
     );
     $this->drupalPostForm(NULL, $edit, t('Apply'));
-    // Re-load the node and check the status and promoted flag.
+    // Re-load the node and check the promoted flag.
     $node_storage->resetCache(array($node->id()));
     $node = $node_storage->load($node->id());
-    $this->assertTrue($node->isPublished(), 'Node has been published');
     $this->assertTrue($node->isPromoted(), 'Node has been promoted to the front page');
 
     // Demote from front page.

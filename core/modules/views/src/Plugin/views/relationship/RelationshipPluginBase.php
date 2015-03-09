@@ -55,6 +55,13 @@ use Drupal\views\Views;
 abstract class RelationshipPluginBase extends HandlerBase {
 
   /**
+   * The relationship alias.
+   *
+   * @var string
+   */
+  public $alias;
+
+  /**
    * Overrides \Drupal\views\Plugin\views\HandlerBase::init().
    *
    * Init handler to let relationships live on tables other than

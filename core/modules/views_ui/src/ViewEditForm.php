@@ -266,6 +266,7 @@ class ViewEditForm extends ViewFormBase {
   public function save(array $form, FormStateInterface $form_state) {
     $view = $this->entity;
     $executable = $view->getExecutable();
+    $executable->initDisplay();
 
     // Go through and remove displayed scheduled for removal.
     $displays = $view->get('display');

@@ -433,4 +433,13 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
     return (bool) \Drupal::service('views.views_data')->get($this->base_table);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function __sleep() {
+    $keys = parent::__sleep();
+    unset($keys[array_search('executable', $keys)]);
+    return $keys;
+  }
+
 }

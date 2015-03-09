@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
  * An object to contain all of the data to generate a view, plus the member
  * functions to build the view query, execute the query and render the output.
  */
-class ViewExecutable {
+class ViewExecutable implements \Serializable {
   use DependencySerializationTrait;
 
   /**
@@ -2293,6 +2293,51 @@ class ViewExecutable {
    */
   public function calculateDependencies() {
     return $this->storage->calculateDependencies();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function serialize() {
+    return serialize([
+      // Only serialize the storage entity ID.
+      $this->storage->id(),
+      $this->current_display,
+      $this->args,
+      $this->current_page,
+      $this->exposed_input,
+      $this->exposed_raw_input,
+      $this->exposed_data,
+      $this->dom_id,
+      $this->executed,
+    ]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function unserialize($serialized) {
+    list($storage, $current_display, $args, $current_page, $exposed_input, $exposed_raw_input, $exposed_data, $dom_id, $executed) = unserialize($serialized);
+
+    $this->setRequest(\Drupal::request());
+    $this->user = \Drupal::currentUser();
+
+    $this->storage = \Drupal::entityManager()->getStorage('view')->load($storage);
+
+    $this->setDisplay($current_display);
+    $this->setArguments($args);
+    $this->setCurrentPage($current_page);
+    $this->setExposedInput($exposed_input);
+    $this->exposed_data = $exposed_data;
+    $this->exposed_raw_input = $exposed_raw_input;
+    $this->dom_id = $dom_id;
+
+    $this->initHandlers();
+
+    // If the display was previously executed, execute it now.
+    if ($executed) {
+      $this->execute($this->current_display);
+    }
   }
 
 }
