@@ -219,28 +219,14 @@ function drupal_get_html_head($render = TRUE) {
  *     request is returned.
  *
  * @see \Drupal\Core\EventSubscriber\RedirectResponseSubscriber::checkRedirectUrl()
+ *
  * @ingroup form_api
+ *
+ * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
+ *   Use the redirect.destination service.
  */
 function drupal_get_destination() {
-  $destination = &drupal_static(__FUNCTION__);
-
-  if (isset($destination)) {
-    return $destination;
-  }
-
-  $query = \Drupal::request()->query;
-  if ($query->has('destination')) {
-    $destination = array('destination' => $query->get('destination'));
-  }
-  else {
-    $path = \Drupal::url('<current>');
-    $query = UrlHelper::buildQuery(UrlHelper::filterQueryParameters($query->all()));
-    if ($query != '') {
-      $path .= '?' . $query;
-    }
-    $destination = array('destination' => $path);
-  }
-  return $destination;
+  return \Drupal::destination()->getAsArray();
 }
 
 /**
