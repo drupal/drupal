@@ -195,7 +195,17 @@ class NodeCreationTest extends NodeTestBase {
    * @return array
    */
   protected static function getWatchdogIdsForTestExceptionRollback() {
-    return db_query("SELECT wid FROM {watchdog} WHERE variables LIKE '%Test exception for rollback.%'")->fetchAll();
+    // PostgreSQL doesn't support bytea LIKE queries, so we need to unserialize
+    // first to check for the rollback exception message.
+    $matches = array();
+    $query = db_query("SELECT wid, variables FROM {watchdog}");
+    foreach ($query as $row) {
+      $variables = (array) unserialize($row->variables);
+      if (isset($variables['!message']) && $variables['!message'] === 'Test exception for rollback.') {
+        $matches[] = $row->wid;
+      }
+    }
+    return $matches;
   }
 
   /**
