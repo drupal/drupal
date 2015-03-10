@@ -301,9 +301,9 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       $form['#build_id'] = 'form-' . Crypt::randomBytesBase64();
     }
 
-    // #action defaults to request_uri(), but in case of Ajax and other partial
-    // rebuilds, the form is submitted to an alternate URL, and the original
-    // #action needs to be retained.
+    // #action defaults to $request->getRequestUri(), but in case of Ajax and
+    // other partial rebuilds, the form is submitted to an alternate URL, and
+    // the original #action needs to be retained.
     if (isset($old_form['#action']) && !empty($rebuild_info['copy']['#action'])) {
       $form['#action'] = $old_form['#action'];
     }
@@ -534,7 +534,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
 
     // Only update the action if it is not already set.
     if (!isset($form['#action'])) {
-      $form['#action'] = $this->requestUri();
+      $form['#action'] = $this->requestStack->getMasterRequest()->getRequestUri();
     }
 
     // Fix the form method, if it is 'get' in $form_state, but not in $form.
@@ -1097,15 +1097,6 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       $this->currentUser = \Drupal::currentUser();
     }
     return $this->currentUser;
-  }
-
-  /**
-   * Gets the current request URI.
-   *
-   * @return string
-   */
-  protected function requestUri() {
-    return request_uri();
   }
 
 }

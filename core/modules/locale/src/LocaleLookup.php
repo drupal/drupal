@@ -12,6 +12,7 @@ use Drupal\Core\Cache\CacheCollector;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * A cache collector to allow for dynamic building of the locale cache.
@@ -68,6 +69,13 @@ class LocaleLookup extends CacheCollector {
   protected $languageManager;
 
   /**
+   * The request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
    * Constructs a LocaleLookup object.
    *
    * @param string $langcode
@@ -84,8 +92,10 @@ class LocaleLookup extends CacheCollector {
    *   The config factory.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack.
    */
-  public function __construct($langcode, $context, StringStorageInterface $string_storage, CacheBackendInterface $cache, LockBackendInterface $lock, ConfigFactoryInterface $config_factory, LanguageManagerInterface $language_manager) {
+  public function __construct($langcode, $context, StringStorageInterface $string_storage, CacheBackendInterface $cache, LockBackendInterface $lock, ConfigFactoryInterface $config_factory, LanguageManagerInterface $language_manager, RequestStack $request_stack) {
     $this->langcode = $langcode;
     $this->context = (string) $context;
     $this->stringStorage = $string_storage;
@@ -95,6 +105,7 @@ class LocaleLookup extends CacheCollector {
     $this->cache = $cache;
     $this->lock = $lock;
     $this->tags = array('locale');
+    $this->requestStack = $request_stack;
   }
 
   /**
@@ -142,7 +153,7 @@ class LocaleLookup extends CacheCollector {
         'source' => $offset,
         'context' => $this->context,
         'version' => \Drupal::VERSION,
-      ))->addLocation('path', $this->requestUri())->save();
+      ))->addLocation('path', $this->requestStack->getCurrentRequest()->getRequestUri())->save();
       $value = TRUE;
     }
 
@@ -175,13 +186,6 @@ class LocaleLookup extends CacheCollector {
       $this->persist($offset);
     }
     return $value;
-  }
-
-  /**
-   * Wraps request_uri().
-   */
-  protected function requestUri($omit_query_string = FALSE) {
-    return request_uri($omit_query_string);
   }
 
 }

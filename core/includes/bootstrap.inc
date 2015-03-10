@@ -458,35 +458,6 @@ function drupal_validate_utf8($text) {
 }
 
 /**
- * Returns the equivalent of Apache's $_SERVER['REQUEST_URI'] variable.
- *
- * Because $_SERVER['REQUEST_URI'] is only available on Apache, we generate an
- * equivalent using other environment variables.
- *
- * @todo The above comment is incorrect: http://drupal.org/node/1547294.
- */
-function request_uri($omit_query_string = FALSE) {
-  if (isset($_SERVER['REQUEST_URI'])) {
-    $uri = $_SERVER['REQUEST_URI'];
-  }
-  else {
-    if (isset($_SERVER['argv'][0])) {
-      $uri = $_SERVER['SCRIPT_NAME'] . '?' . $_SERVER['argv'][0];
-    }
-    elseif (isset($_SERVER['QUERY_STRING'])) {
-      $uri = $_SERVER['SCRIPT_NAME'] . '?' . $_SERVER['QUERY_STRING'];
-    }
-    else {
-      $uri = $_SERVER['SCRIPT_NAME'];
-    }
-  }
-  // Prevent multiple slashes to avoid cross site requests via the Form API.
-  $uri = '/' . ltrim($uri, '/');
-
-  return $omit_query_string ? strtok($uri, '?') : $uri;
-}
-
-/**
  * Logs an exception.
  *
  * This is a wrapper logging function which automatically decodes an exception.

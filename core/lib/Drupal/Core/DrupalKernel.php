@@ -869,10 +869,10 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
         // are in effect and the script path can be similarly dropped from URL
         // generation. For servers that don't provide $_SERVER['REQUEST_URI'],
         // we do not know the actual URI requested by the client, and
-        // request_uri() returns a URI with the script name, resulting in
-        // non-clean URLs unless
+        // $request->getPathInfo() returns a URI with the script name,
+        // resulting in non-clean URLs unless
         // there's other code that intervenes.
-        if (strpos(request_uri(TRUE) . '/', $base_path . $script_path) !== 0) {
+        if (strpos($request->getPathInfo() . '/', $base_path . $script_path) !== 0) {
           $script_path = '';
         }
         // @todo Temporary BC for install.php, authorize.php, and other scripts.
