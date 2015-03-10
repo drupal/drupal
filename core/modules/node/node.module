@@ -72,7 +72,7 @@ function node_help($route_name, RouteMatchInterface $route_match) {
       $message = t('The content access permissions need to be rebuilt.');
     }
     else {
-      $message = t('The content access permissions need to be rebuilt. <a href="!node_access_rebuild">Rebuild permissions</a>.', array('!node_access_rebuild' => \Drupal::url('node.configure_rebuild_confirm')));
+      $message = t('The content access permissions need to be rebuilt. <a href="@node_access_rebuild">Rebuild permissions</a>.', array('@node_access_rebuild' => \Drupal::url('node.configure_rebuild_confirm')));
     }
     drupal_set_message($message, 'error');
   }
