@@ -863,7 +863,6 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
         'indexes' => array(
           'bundle' => array('bundle'),
           'deleted' => array('deleted'),
-          'entity_id' => array('entity_id'),
           'revision_id' => array('revision_id'),
           'langcode' => array('langcode'),
         ),
@@ -1011,7 +1010,6 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
         'indexes' => array(
           'bundle' => array('bundle'),
           'deleted' => array('deleted'),
-          'entity_id' => array('entity_id'),
           'revision_id' => array('revision_id'),
           'langcode' => array('langcode'),
         ),
