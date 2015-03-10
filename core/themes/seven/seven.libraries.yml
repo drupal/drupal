@@ -12,7 +12,6 @@ global-styling:
       css/components/content-header.css: {}
       css/components/breadcrumb.css: {}
       css/components/buttons.css: {}
-      css/components/buttons.theme.css: {}
       css/components/colors.css: {}
       css/components/messages.css: {}
       css/components/dropbutton.component.css: {}
