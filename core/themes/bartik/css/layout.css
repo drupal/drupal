@@ -65,7 +65,8 @@ body,
 .region-footer-first,
 .region-footer-second,
 .region-footer-third,
-.region-footer-fourth {
+.region-footer-fourth,
+.region-footer-fifth {
   box-sizing: border-box;
   padding: 0 10px;
 }
