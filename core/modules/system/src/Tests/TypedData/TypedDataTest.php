@@ -239,7 +239,8 @@ class TypedDataTest extends KernelTestBase {
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue('invalid');
     $this->assertEqual($typed_data->validate()->count(), 1, 'Validation detected invalid value.');
-
+    $typed_data->setValue('public://field/image/Photo on 4-28-14 at 12.01 PM.jpg');
+    $this->assertEqual($typed_data->validate()->count(), 0, 'Filename with spaces is valid.');
 
     // Generate some files that will be used to test the binary data type.
     $files = array();
