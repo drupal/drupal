@@ -26,7 +26,7 @@ class UserCreateFailMailTest extends WebTestBase {
   /**
    * Tests the create user administration page.
    */
-  protected function testUserAdd() {
+  public function testUserAdd() {
     $user = $this->drupalCreateUser(array('administer users'));
     $this->drupalLogin($user);
 

@@ -44,7 +44,7 @@ class MissingCheckedRequirementsTest extends WebTestBase {
   /**
    * Ensures test will not run when requirements are missing.
    */
-  protected function testCheckRequirements() {
+  public function testCheckRequirements() {
     // If this is the main request, run the web test script and then assert
     // that the child tests did not run.
     if (!$this->isInChildSite()) {

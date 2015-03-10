@@ -65,7 +65,7 @@ class PagerTest extends WebTestBase {
   /**
    * Test proper functioning of the query parameters.
    */
-  protected function testPagerQueryParameters() {
+  public function testPagerQueryParameters() {
     // First page.
     $this->drupalGet('pager-test/query-parameters');
     $this->assertText(t('Pager calls: 0'), 'Initial call to pager shows 0 calls.');

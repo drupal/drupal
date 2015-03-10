@@ -47,7 +47,7 @@ class FilterDateTest extends HandlerTestBase {
   /**
    * Runs other test methods.
    */
-  protected function testDateFilter() {
+  public function testDateFilter() {
     $this->_testOffset();
     $this->_testBetween();
     $this->_testUiValidation();

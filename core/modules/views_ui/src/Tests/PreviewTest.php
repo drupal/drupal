@@ -26,7 +26,7 @@ class PreviewTest extends UITestBase {
   /**
    * Tests contextual links in the preview form.
    */
-  protected function testPreviewContextual() {
+  public function testPreviewContextual() {
     \Drupal::service('module_installer')->install(array('contextual'));
     $this->resetAll();
 

@@ -129,7 +129,7 @@ class DisplayBlockTest extends ViewTestBase {
   /**
    * Tests removing a block display.
    */
-  protected function testDeleteBlockDisplay() {
+  public function testDeleteBlockDisplay() {
     // To test all combinations possible we first place create two instances
     // of the block display of the first view.
     $block_1 = $this->drupalPlaceBlock('views_block:test_view_block-block_1', array('label' => 'test_view_block-block_1:1'));

@@ -32,7 +32,7 @@ class DisplayAttachmentTest extends PluginTestBase {
   /**
    * Tests the attachment plugin.
    */
-  protected function testAttachment() {
+  public function testAttachment() {
     $this->drupalGet('test-display-attachment');
 
     $result = $this->xpath('//div[contains(@class, "view-content")]');

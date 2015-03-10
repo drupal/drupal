@@ -27,7 +27,7 @@ class UserCreateTest extends WebTestBase {
    * Create a user through the administration interface and ensure that it
    * displays in the user list.
    */
-  protected function testUserAdd() {
+  public function testUserAdd() {
     $user = $this->drupalCreateUser(array('administer users'));
     $this->drupalLogin($user);
 

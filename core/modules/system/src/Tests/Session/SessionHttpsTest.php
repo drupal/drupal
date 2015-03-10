@@ -32,7 +32,7 @@ class SessionHttpsTest extends WebTestBase {
     $this->container->get('request_stack')->push($this->request);
   }
 
-  protected function testHttpsSession() {
+  public function testHttpsSession() {
     if ($this->request->isSecure()) {
       $secure_session_name = $this->getSessionName();
       $insecure_session_name = substr($this->getSessionName(), 1);
