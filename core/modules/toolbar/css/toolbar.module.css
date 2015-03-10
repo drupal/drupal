@@ -139,9 +139,6 @@ body.toolbar-tray-open.toolbar-fixed.toolbar-vertical .toolbar-oriented {
   display: none;
   z-index: 501;
 }
-.toolar .toolbar-tray > .toolbar-lining {
-  position: relative;
-}
 .toolbar-oriented .toolbar-tray-vertical {
   left: -100%; /* LTR */
   position: absolute;
