@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit colors="true" bootstrap="vendor/autoload.php">
+    <testsuites>
+        <testsuite name="PHPUnit">
+          <directory>test/HTML5/</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <blacklist>
+            <file>systemlib.phpreflection_hni</file>
+            <file>src/HTML5/Parser/InputStream.php</file>
+            <file>src/HTML5/Serializer/RulesInterface.php</file>
+            <file>src/HTML5/Entities.php</file>
+            <file>src/HTML5/Serializer/HTML5Entities.php</file>
+        </blacklist>
+    </filter>
+    <logging>
+        <log
+            type="coverage-html"
+            target="build/coverage"
+            charset="UTF-8"
+            yui="true"
+            highlight="true"
+            lowUpperBound="35"
+            highLowerBound="70"
+            showUncoveredFiles="true"
+            />
+          <log type="coverage-clover" target="build/logs/clover.xml"/>
+    </logging>
+</phpunit>
