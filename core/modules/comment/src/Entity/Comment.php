@@ -224,6 +224,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
     $fields['langcode'] = BaseFieldDefinition::create('language')
       ->setLabel(t('Language'))
       ->setDescription(t('The comment language code.'))
+      ->setTranslatable(TRUE)
       ->setDisplayOptions('view', array(
         'type' => 'hidden',
       ))

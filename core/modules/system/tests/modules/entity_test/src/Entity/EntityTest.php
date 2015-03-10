@@ -77,7 +77,8 @@ class EntityTest extends ContentEntityBase implements EntityOwnerInterface {
 
     $fields['langcode'] = BaseFieldDefinition::create('language')
       ->setLabel(t('Language code'))
-      ->setDescription(t('The language code of the test entity.'));
+      ->setDescription(t('The language code of the test entity.'))
+      ->setTranslatable(TRUE);
 
     $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Name'))

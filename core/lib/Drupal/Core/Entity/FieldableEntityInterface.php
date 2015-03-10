@@ -192,6 +192,14 @@ interface FieldableEntityInterface extends EntityInterface {
    *
    * @param string $field_name
    *   The name of the field which is changed.
+   *
+   * @throws \InvalidArgumentException
+   *   When trying to assign a value to the language field that matches an
+   *   existing translation.
+   * @throws \LogicException
+   *   When trying to change:
+   *   - The language of a translation.
+   *   - The value of the flag identifying the default translation object.
    */
   public function onChange($field_name);
 

@@ -67,6 +67,13 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   protected $langcodeKey = FALSE;
 
   /**
+   * The default language entity key.
+   *
+   * @var string
+   */
+  protected $defaultLangcodeKey = FALSE;
+
+  /**
    * The base table of the entity.
    *
    * @var string
@@ -200,7 +207,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     if ($translatable) {
       $this->dataTable = $this->entityType->getDataTable() ?: $this->entityTypeId . '_field_data';
       $this->langcodeKey = $this->entityType->getKey('langcode');
-      $this->defaultLangcodeKey = $this->entityType->getKey('default_langcode') ?: 'default_langcode';
+      $this->defaultLangcodeKey = $this->entityType->getKey('default_langcode');
     }
     if ($revisionable && $translatable) {
       $this->revisionDataTable = $this->entityType->getRevisionDataTable() ?: $this->entityTypeId . '_field_revision';
@@ -342,11 +349,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         // the data table.
         $table_mapping
           ->setFieldNames($this->baseTable, $key_fields)
-          ->setFieldNames($this->dataTable, array_values(array_diff($all_fields, array($this->uuidKey))))
-          // Add the denormalized 'default_langcode' field to the mapping. Its
-          // value is identical to the query expression
-          // "base_table.langcode = data_table.langcode"
-          ->setExtraColumns($this->dataTable, array('default_langcode'));
+          ->setFieldNames($this->dataTable, array_values(array_diff($all_fields, array($this->uuidKey))));
       }
       elseif ($revisionable && $translatable) {
         // The revisionable multilingual layout stores key field values in the
@@ -356,31 +359,20 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         // holds the data field values for all non-revisionable fields. The data
         // field values of revisionable fields are denormalized in the data
         // table, as well.
-        $table_mapping->setFieldNames($this->baseTable, array_values(array_diff($key_fields, array($this->langcodeKey))));
+        $table_mapping->setFieldNames($this->baseTable, array_values($key_fields));
 
         // Like in the multilingual, non-revisionable case the UUID is not
         // in the data table. Additionally, do not store revision metadata
         // fields in the data table.
         $data_fields = array_values(array_diff($all_fields, array($this->uuidKey), $revision_metadata_fields));
-        $table_mapping
-          ->setFieldNames($this->dataTable, $data_fields)
-          // Add the denormalized 'default_langcode' field to the mapping. Its
-          // value is identical to the query expression
-          // "base_langcode = data_table.langcode" where "base_langcode" is
-          // the language code of the default revision.
-          ->setExtraColumns($this->dataTable, array('default_langcode'));
+        $table_mapping->setFieldNames($this->dataTable, $data_fields);
 
         $revision_base_fields = array_merge(array($this->idKey, $this->revisionKey, $this->langcodeKey), $revision_metadata_fields);
         $table_mapping->setFieldNames($this->revisionTable, $revision_base_fields);
 
         $revision_data_key_fields = array($this->idKey, $this->revisionKey, $this->langcodeKey);
         $revision_data_fields = array_diff($revisionable_fields, $revision_metadata_fields, array($this->langcodeKey));
-        $table_mapping
-          ->setFieldNames($this->revisionDataTable, array_merge($revision_data_key_fields, $revision_data_fields))
-          // Add the denormalized 'default_langcode' field to the mapping. Its
-          // value is identical to the query expression
-          // "revision_table.langcode = data_table.langcode".
-          ->setExtraColumns($this->revisionDataTable, array('default_langcode'));
+        $table_mapping->setFieldNames($this->revisionDataTable, array_merge($revision_data_key_fields, $revision_data_fields));
       }
 
       // Add dedicated tables.
@@ -673,12 +665,14 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
       $table_mapping = $this->getTableMapping();
       if ($this->revisionDataTable) {
-        // Find revisioned fields that are not entity keys.
-        $fields = array_diff($table_mapping->getFieldNames($this->revisionDataTable), $table_mapping->getFieldNames($this->baseTable));
+        // Find revisioned fields that are not entity keys. Exclude the langcode
+        // key as the base table holds only the default language.
+        $base_fields = array_diff($table_mapping->getFieldNames($this->baseTable), array($this->langcodeKey));
+        $fields = array_diff($table_mapping->getFieldNames($this->revisionDataTable), $base_fields);
 
         // Find fields that are not revisioned or entity keys. Data fields have
         // the same value regardless of entity revision.
-        $data_fields = array_diff($table_mapping->getFieldNames($this->dataTable), $fields, $table_mapping->getFieldNames($this->baseTable));
+        $data_fields = array_diff($table_mapping->getFieldNames($this->dataTable), $fields, $base_fields);
         if ($data_fields) {
           $fields = array_merge($fields, $data_fields);
           $query->leftJoin($this->dataTable, 'data', "(revision.$this->idKey = data.$this->idKey)");
@@ -703,9 +697,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
         // Field values in default language are stored with
         // LanguageInterface::LANGCODE_DEFAULT as key.
-        $langcode = empty($values['default_langcode']) ? $values[$this->langcodeKey] : LanguageInterface::LANGCODE_DEFAULT;
+        $langcode = empty($values[$this->defaultLangcodeKey]) ? $values[$this->langcodeKey] : LanguageInterface::LANGCODE_DEFAULT;
         $translations[$id][$langcode] = TRUE;
-
 
         foreach ($fields as $field_name) {
           $columns = $table_mapping->getColumnNames($field_name);
@@ -776,13 +769,13 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       //   apply to the default language. See http://drupal.org/node/1866330.
       // Default to the original entity language if not explicitly specified
       // otherwise.
-      if (!array_key_exists('default_langcode', $values)) {
-        $values['default_langcode'] = 1;
+      if (!array_key_exists($this->defaultLangcodeKey, $values)) {
+        $values[$this->defaultLangcodeKey] = 1;
       }
       // If the 'default_langcode' flag is explicitly not set, we do not care
       // whether the queried values are in the original entity language or not.
-      elseif ($values['default_langcode'] === NULL) {
-        unset($values['default_langcode']);
+      elseif ($values[$this->defaultLangcodeKey] === NULL) {
+        unset($values[$this->defaultLangcodeKey]);
       }
     }
 
@@ -1156,8 +1149,6 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $table_name = $this->dataTable;
     }
     $record = $this->mapToStorageRecord($entity, $table_name);
-    $record->{$this->langcodeKey} = $entity->language()->getId();
-    $record->default_langcode = intval($record->{$this->langcodeKey} == $entity->getUntranslated()->language()->getId());
     return $record;
   }
 
@@ -1171,7 +1162,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *   The revision id.
    */
   protected function saveRevision(EntityInterface $entity) {
-    $record = $this->mapToStorageRecord($entity, $this->revisionTable);
+    $record = $this->mapToStorageRecord($entity->getUntranslated(), $this->revisionTable);
 
     $entity->preSaveRevision($this, $record);
 

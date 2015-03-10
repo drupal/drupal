@@ -34,6 +34,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *     "bundle" = "type",
  *     "label" = "name",
  *     "langcode" = "custom_langcode_key",
+ *     "default_langcode" = "custom_default_langcode_key",
  *   },
  *   links = {
  *     "canonical" = "/entity_test_mul_langcode_key/manage/{entity_test_mul_langcode_key}",

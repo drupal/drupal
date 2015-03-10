@@ -82,6 +82,13 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   protected $langcodeKey;
 
   /**
+   * The default langcode entity key.
+   *
+   * @var string
+   */
+  protected $defaultLangcodeKey;
+
+  /**
    * Language code identifying the entity active language.
    *
    * This is the language field accessors will use to determine which field
@@ -144,6 +151,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     $this->entityTypeId = $entity_type;
     $this->entityKeys['bundle'] = $bundle ? $bundle : $this->entityTypeId;
     $this->langcodeKey = $this->getEntityType()->getKey('langcode');
+    $this->defaultLangcodeKey = $this->getEntityType()->getKey('default_langcode');
 
     foreach ($values as $key => $value) {
       // If the key matches an existing property set the value to the property
@@ -240,6 +248,13 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
       $this->isDefaultRevision = (bool) $new_value;
     }
     return $return;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isDefaultTranslation() {
+    return $this->activeLangcode === LanguageInterface::LANGCODE_DEFAULT;
   }
 
   /**
@@ -543,14 +558,38 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
       }
     }
 
-    // Update the default internal language cache.
-    if ($name == $this->langcodeKey) {
-      $this->setDefaultLangcode();
-      if (isset($this->translations[$this->defaultLangcode])) {
-        $message = String::format('A translation already exists for the specified language (@langcode).', array('@langcode' => $this->defaultLangcode));
-        throw new \InvalidArgumentException($message);
-      }
-      $this->updateFieldLangcodes($this->defaultLangcode);
+    switch ($name) {
+      case $this->langcodeKey:
+        if ($this->isDefaultTranslation()) {
+          // Update the default internal language cache.
+          $this->setDefaultLangcode();
+          if (isset($this->translations[$this->defaultLangcode])) {
+            $message = String::format('A translation already exists for the specified language (@langcode).', array('@langcode' => $this->defaultLangcode));
+            throw new \InvalidArgumentException($message);
+          }
+          $this->updateFieldLangcodes($this->defaultLangcode);
+        }
+        else {
+          // @todo Allow the translation language to be changed. See
+          //   https://www.drupal.org/node/2443989.
+          $items = $this->get($this->langcodeKey);
+          if ($items->value != $this->activeLangcode) {
+            $items->setValue($this->activeLangcode, FALSE);
+            $message = String::format('The translation language cannot be changed (@langcode).', array('@langcode' => $this->activeLangcode));
+            throw new \LogicException($message);
+          }
+        }
+        break;
+
+      case $this->defaultLangcodeKey:
+        // @todo Use a standard method to make the default_langcode field
+        //   read-only. See https://www.drupal.org/node/2443991.
+        if (isset($this->values[$this->defaultLangcodeKey])) {
+          $this->get($this->defaultLangcodeKey)->setValue($this->isDefaultTranslation(), FALSE);
+          $message = String::format('The default translation flag cannot be changed (@langcode).', array('@langcode' => $this->activeLangcode));
+          throw new \LogicException($message);
+        }
+        break;
     }
   }
 
@@ -684,6 +723,8 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
         $values[$name] = $field->getValue();
       }
     }
+    $values[$this->langcodeKey] = $langcode;
+    $values[$this->defaultLangcodeKey] = FALSE;
 
     $this->translations[$langcode]['status'] = static::TRANSLATION_CREATED;
     $translation = $this->getTranslation($langcode);
@@ -691,7 +732,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
 
     foreach ($values as $name => $value) {
       if (isset($definitions[$name]) && $definitions[$name]->isTranslatable()) {
-        $translation->$name = $value;
+        $translation->values[$name][$langcode] = $value;
       }
     }
 

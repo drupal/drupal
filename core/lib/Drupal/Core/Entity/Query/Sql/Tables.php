@@ -182,8 +182,8 @@ class Tables implements TablesInterface {
 
         $table = $this->ensureEntityTable($index_prefix, $sql_column, $type, $langcode, $base_table, $entity_id_field, $entity_tables);
 
-        // If there is a field storage (some specifiers are not, like
-        // default_langcode), check for case sensitivity.
+        // If there is a field storage (some specifiers are not), check for case
+        // sensitivity.
         if ($field_storage) {
           $column = $field_storage->getMainPropertyName();
           $base_field_property_definitions = $field_storage->getPropertyDefinitions();

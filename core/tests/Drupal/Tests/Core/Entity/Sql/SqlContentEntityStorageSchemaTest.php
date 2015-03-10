@@ -89,7 +89,6 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    * @covers ::getFieldUniqueKeys
    * @covers ::getFieldForeignKeys
    * @covers ::getFieldSchemaData
-   * @covers ::addDefaultLangcodeSchema
    * @covers ::processBaseTable
    * @covers ::processIdentifierSchema
    */
@@ -320,13 +319,6 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
           'long_index_name' => array(
             'type' => 'int',
             'not null' => FALSE,
-          ),
-          'default_langcode' => array(
-            'description' => 'Boolean indicating whether field values are in the default entity language.',
-            'type' => 'int',
-            'size' => 'tiny',
-            'not null' => TRUE,
-            'default' => 1,
           ),
         ),
         'primary key' => array('id'),

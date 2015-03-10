@@ -353,6 +353,7 @@ class Node extends ContentEntityBase implements NodeInterface {
     $fields['langcode'] = BaseFieldDefinition::create('language')
       ->setLabel(t('Language'))
       ->setDescription(t('The node language code.'))
+      ->setTranslatable(TRUE)
       ->setRevisionable(TRUE)
       ->setDisplayOptions('view', array(
         'type' => 'hidden',

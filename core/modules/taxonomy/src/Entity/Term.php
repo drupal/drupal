@@ -121,6 +121,7 @@ class Term extends ContentEntityBase implements TermInterface {
     $fields['langcode'] = BaseFieldDefinition::create('language')
       ->setLabel(t('Language'))
       ->setDescription(t('The term language code.'))
+      ->setTranslatable(TRUE)
       ->setDisplayOptions('view', array(
         'type' => 'hidden',
       ))

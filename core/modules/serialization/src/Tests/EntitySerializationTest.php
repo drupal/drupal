@@ -95,20 +95,23 @@ class EntitySerializationTest extends NormalizerTestBase {
       'type' => array(
         array('value' => 'entity_test_mulrev'),
       ),
+      'created' => array(
+        array('value' => $this->entity->created->value),
+      ),
       'user_id' => array(
         array('target_id' => $this->values['user_id']),
       ),
       'revision_id' => array(
         array('value' => 1),
       ),
+      'default_langcode' => array(
+        array('value' => TRUE),
+      ),
       'field_test_text' => array(
         array(
           'value' => $this->values['field_test_text']['value'],
           'format' => $this->values['field_test_text']['format'],
         ),
-      ),
-      'created' => array(
-        array('value' => $this->entity->created->value),
       ),
     );
 
@@ -175,10 +178,11 @@ class EntitySerializationTest extends NormalizerTestBase {
       'langcode' => '<langcode><value>en</value></langcode>',
       'name' => '<name><value>' . $this->values['name'] . '</value></name>',
       'type' => '<type><value>entity_test_mulrev</value></type>',
+      'created' => '<created><value>' . $this->entity->created->value . '</value></created>',
       'user_id' => '<user_id><target_id>' . $this->values['user_id'] . '</target_id></user_id>',
       'revision_id' => '<revision_id><value>' . $this->entity->getRevisionId() . '</value></revision_id>',
+      'default_langcode' => '<default_langcode><value>1</value></default_langcode>',
       'field_test_text' => '<field_test_text><value>' . $this->values['field_test_text']['value'] . '</value><format>' . $this->values['field_test_text']['format'] . '</format></field_test_text>',
-      'created' => '<created><value>' . $this->entity->created->value . '</value></created>',
     );
     // Sort it in the same order as normalised.
     $expected = array_merge($normalized, $expected);

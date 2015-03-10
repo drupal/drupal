@@ -360,6 +360,7 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
     $fields['langcode'] = BaseFieldDefinition::create('language')
       ->setLabel(t('Language'))
       ->setDescription(t('The menu link language code.'))
+      ->setTranslatable(TRUE)
       ->setDisplayOptions('view', array(
         'type' => 'hidden',
       ))

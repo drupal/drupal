@@ -9,6 +9,7 @@ namespace Drupal\Core\Entity\Sql;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageException;
@@ -163,7 +164,6 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       $storage_definition->hasCustomStorage() != $original->hasCustomStorage() ||
       $storage_definition->getSchema() != $original->getSchema() ||
       $storage_definition->isRevisionable() != $original->isRevisionable() ||
-      $storage_definition->isTranslatable() != $original->isTranslatable() ||
       $table_mapping->allowsSharedTableStorage($storage_definition) != $table_mapping->allowsSharedTableStorage($original) ||
       $table_mapping->requiresDedicatedTableStorage($storage_definition) != $table_mapping->requiresDedicatedTableStorage($original)
     ) {
@@ -386,8 +386,17 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     // Only configurable fields currently support purging, so prevent deletion
     // of ones we can't purge if they have existing data.
     // @todo Add purging to all fields: https://www.drupal.org/node/2282119.
-    if (!($storage_definition instanceof FieldStorageConfigInterface) && $this->storage->countFieldData($storage_definition, TRUE)) {
-      throw new FieldStorageDefinitionUpdateForbiddenException('Unable to delete a field with data that can\'t be purged.');
+    try {
+      if (!($storage_definition instanceof FieldStorageConfigInterface) && $this->storage->countFieldData($storage_definition, TRUE)) {
+        throw new FieldStorageDefinitionUpdateForbiddenException('Unable to delete a field with data that cannot be purged.');
+      }
+    }
+    catch (DatabaseException $e) {
+      // This may happen when changing field storage schema, since we are not
+      // able to use a table mapping matching the passed storage definition.
+      // @todo Revisit this once we are able to instantiate the table mapping
+      //   properly. See https://www.drupal.org/node/2274017.
+      return;
     }
 
     // Retrieve a table mapping which contains the deleted field still.
@@ -504,13 +513,6 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
             $column_names = $table_mapping->getColumnNames($field_name);
             $storage_definition = $storage_definitions[$field_name];
             $schema[$table_name] = array_merge_recursive($schema[$table_name], $this->getSharedTableFieldSchema($storage_definition, $table_name, $column_names));
-          }
-        }
-
-        // Add the schema for extra fields.
-        foreach ($table_mapping->getExtraColumns($table_name) as $column_name) {
-          if ($column_name == 'default_langcode') {
-            $this->addDefaultLangcodeSchema($schema[$table_name]);
           }
         }
       }
@@ -724,25 +726,6 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     }
 
     return $foreign_keys;
-  }
-
-  /**
-   * Returns the schema for the 'default_langcode' metadata field.
-   *
-   * @param array $schema
-   *   The table schema to add the field schema to, passed by reference.
-   *
-   * @return array
-   *   A schema field array for the 'default_langcode' metadata field.
-   */
-  protected function addDefaultLangcodeSchema(&$schema) {
-    $schema['fields']['default_langcode'] =  array(
-      'description' => 'Boolean indicating whether field values are in the default entity language.',
-      'type' => 'int',
-      'size' => 'tiny',
-      'not null' => TRUE,
-      'default' => 1,
-    );
   }
 
   /**

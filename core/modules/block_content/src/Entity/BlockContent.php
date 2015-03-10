@@ -167,6 +167,7 @@ class BlockContent extends ContentEntityBase implements BlockContentInterface {
     $fields['langcode'] = BaseFieldDefinition::create('language')
       ->setLabel(t('Language'))
       ->setDescription(t('The custom block language code.'))
+      ->setTranslatable(TRUE)
       ->setRevisionable(TRUE)
       ->setDisplayOptions('view', array(
         'type' => 'hidden',
