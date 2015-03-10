@@ -58,7 +58,6 @@ class AggregatorRenderingTest extends AggregatorTestBase {
     $this->assert(isset($links[0]), format_string('Link to href %href found.', array('%href' => $href)));
     $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
     $cache_tags = explode(' ', $cache_tags_header);
-    $this->assertTrue(in_array('block_plugin:aggregator_feed_block', $cache_tags));
     $this->assertTrue(in_array('aggregator_feed:' . $feed->id(), $cache_tags));
 
     // Visit that page.

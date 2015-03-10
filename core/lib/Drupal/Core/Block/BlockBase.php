@@ -370,10 +370,7 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
    * {@inheritdoc}
    */
   public function getCacheTags() {
-    // If a block plugin's output changes, then it must be able to invalidate a
-    // cache tag that affects all instances of this block: across themes and
-    // across regions.
-    return array('block_plugin:' . str_replace(':', '__', $this->getPluginID()));
+    return [];
   }
 
   /**

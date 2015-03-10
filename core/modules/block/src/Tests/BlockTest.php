@@ -330,7 +330,6 @@ class BlockTest extends BlockTestBase {
       'config:block_list',
       'block_view',
       'config:block.block.powered',
-      'block_plugin:system_powered_by_block',
       'rendered',
     );
     sort($expected_cache_tags);
@@ -339,7 +338,6 @@ class BlockTest extends BlockTestBase {
     $expected_cache_tags = array(
       'block_view',
       'config:block.block.powered',
-      'block_plugin:system_powered_by_block',
       'rendered',
     );
     sort($expected_cache_tags);
@@ -371,7 +369,6 @@ class BlockTest extends BlockTestBase {
       'block_view',
       'config:block.block.powered',
       'config:block.block.powered-2',
-      'block_plugin:system_powered_by_block',
       'rendered',
     );
     sort($expected_cache_tags);
@@ -379,7 +376,6 @@ class BlockTest extends BlockTestBase {
     $expected_cache_tags = array(
       'block_view',
       'config:block.block.powered',
-      'block_plugin:system_powered_by_block',
       'rendered',
     );
     sort($expected_cache_tags);
@@ -388,18 +384,11 @@ class BlockTest extends BlockTestBase {
     $expected_cache_tags = array(
       'block_view',
       'config:block.block.powered-2',
-      'block_plugin:system_powered_by_block',
       'rendered',
     );
     sort($expected_cache_tags);
     $cache_entry = \Drupal::cache('render')->get('entity_view:block:powered-2:en:classy');
     $this->assertIdentical($cache_entry->tags, $expected_cache_tags);
-
-    // The plugin providing the "Powered by Drupal" block is modified; verify a
-    // cache miss.
-    Cache::invalidateTags(array('block_plugin:system_powered_by_block'));
-    $this->drupalGet('<front>');
-    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
 
     // Now we should have a cache hit again.
     $this->drupalGet('<front>');
