@@ -13,20 +13,6 @@ user.logout:
   requirements:
     _user_is_logged_in: 'TRUE'
 
-user.autocomplete:
-  path: '/user/autocomplete'
-  defaults:
-    _controller: '\Drupal\user\Controller\UserAutocompleteController::autocompleteUser'
-  requirements:
-    _permission: 'access user profiles'
-
-user.autocomplete_anonymous:
-  path: '/user/autocomplete/anonymous'
-  defaults:
-    _controller: '\Drupal\user\Controller\UserAutocompleteController::autocompleteUserAnonymous'
-  requirements:
-    _permission: 'access user profiles'
-
 user.admin_index:
   path: '/admin/config/people'
   defaults:

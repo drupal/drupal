@@ -136,7 +136,8 @@ class EntityAutocomplete extends Textfield {
       $handler = \Drupal::service('plugin.manager.entity_reference_selection')->getInstance($options);
       $autocreate = (bool) $element['#autocreate'];
 
-      foreach (Tags::explode($element['#value']) as $input) {
+      $input_values = $element['#tags'] ? Tags::explode($element['#value']) : array($element['#value']);
+      foreach ($input_values as $input) {
         $match = static::extractEntityIdFromAutocompleteInput($input);
         if ($match === NULL) {
           // Try to get a match from the input string when the user didn't use

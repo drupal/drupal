@@ -390,19 +390,21 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
       }
 
       // Default to the anonymous user.
-      $name = '';
+      $uid = 0;
       if ($new_translation) {
-        $name = \Drupal::currentUser()->getUsername();
+        $uid = \Drupal::currentUser()->getAccount()->id();
       }
       elseif (($account = $metadata->getAuthor()) && $account->id()) {
-        $name = $account->getUsername();
+        $uid = $account->id();
       }
-      $form['content_translation']['name'] = array(
-        '#type' => 'textfield',
+      $form['content_translation']['uid'] = array(
+        '#type' => 'entity_autocomplete',
         '#title' => t('Authored by'),
+        '#target_type' => 'user',
+        '#default_value' => User::load($uid),
+        // Validation is done by static::entityFormValidate().
+        '#validate_reference' => FALSE,
         '#maxlength' => 60,
-        '#autocomplete_route_name' => 'user.autocomplete',
-        '#default_value' => $name,
         '#description' => t('Leave blank for %anonymous.', array('%anonymous' => \Drupal::config('user.settings')->get('anonymous'))),
       );
 
@@ -530,12 +532,8 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
     $form_langcode = $form_object->getFormLangcode($form_state);
     $values = &$form_state->getValue('content_translation', array());
 
-    if ($values['name'] == \Drupal::config('user.settings')->get('anonymous')) {
-      $values['name'] = '';
-    }
-
     $metadata = $this->manager->getTranslationMetadata($entity);
-    $metadata->setAuthor(!empty($values['name']) && ($account = user_load_by_name($values['name'])) ? $account : User::load(0));
+    $metadata->setAuthor(!empty($values['uid']) ? User::load($values['uid']) : User::load(0));
     $metadata->setPublished(!empty($values['status']));
     $metadata->setCreatedTime(!empty($values['created']) ? strtotime($values['created']) : REQUEST_TIME);
     $metadata->setChangedTime(REQUEST_TIME);
@@ -560,8 +558,8 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
     if (!$form_state->isValueEmpty('content_translation')) {
       $translation = $form_state->getValue('content_translation');
       // Validate the "authored by" field.
-      if (!empty($translation['name']) && !($account = user_load_by_name($translation['name']))) {
-        $form_state->setErrorByName('content_translation][name', t('The translation authoring username %name does not exist.', array('%name' => $translation['name'])));
+      if (!empty($translation['uid']) && !($account = User::load($translation['uid']))) {
+        $form_state->setErrorByName('content_translation][uid', t('The translation authoring username %name does not exist.', array('%name' => $account->getUsername())));
       }
       // Validate the "authored on" field.
       if (!empty($translation['created']) && strtotime($translation['created']) === FALSE) {

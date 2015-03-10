@@ -86,6 +86,13 @@ class UserSelection extends SelectionBase {
       'filter' => array(
         'type' => '_none',
       ),
+      'include_anonymous' => TRUE,
+    );
+
+    $form['include_anonymous'] = array(
+      '#type' => 'checkbox',
+      '#title' => $this->t('Include the anonymous user.'),
+      '#default_value' => $selection_handler_settings['include_anonymous'],
     );
 
     // Add user specific filter options.
@@ -156,6 +163,12 @@ class UserSelection extends SelectionBase {
    * {@inheritdoc}
    */
   public function entityQueryAlter(SelectInterface $query) {
+    // Bail out early if we do not need to match the Anonymous user.
+    $handler_settings = $this->configuration['handler_settings'];
+    if (isset($handler_settings['include_anonymous']) && !$handler_settings['include_anonymous']) {
+      return;
+    }
+
     if ($this->currentUser->hasPermission('administer users')) {
       // In addition, if the user is administrator, we need to make sure to
       // match the anonymous user, that doesn't actually have a name in the

@@ -8,7 +8,9 @@
 namespace Drupal\user\Plugin\views\filter;
 
 use Drupal\Component\Utility\Tags;
+use Drupal\Core\Entity\Element\EntityAutocomplete;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\user\Entity\User;
 use Drupal\views\Plugin\views\filter\InOperator;
 
 /**
@@ -23,27 +25,16 @@ class Name extends InOperator {
   protected $alwaysMultiple = TRUE;
 
   protected function valueForm(&$form, FormStateInterface $form_state) {
-    $values = array();
-    if ($this->value) {
-      $result = entity_load_multiple_by_properties('user', array('uid' => $this->value));
-      foreach ($result as $account) {
-        if ($account->id()) {
-          $values[] = $account->getUsername();
-        }
-        else {
-          $values[] = 'Anonymous'; // Intentionally NOT translated.
-        }
-      }
-    }
-
-    sort($values);
-    $default_value = implode(', ', $values);
+    $users = $this->value ? User::loadMultiple($this->value) : array();
+    $default_value = EntityAutocomplete::getEntityLabels($users);
     $form['value'] = array(
-      '#type' => 'textfield',
+      '#type' => 'entity_autocomplete',
       '#title' => $this->t('Usernames'),
       '#description' => $this->t('Enter a comma separated list of user names.'),
+      '#target_type' => 'user',
+      '#tags' => TRUE,
       '#default_value' => $default_value,
-      '#autocomplete_route_name' => 'user.autocomplete_anonymous',
+      '#process_default_value' => FALSE,
     );
 
     $user_input = $form_state->getUserInput();
@@ -54,10 +45,14 @@ class Name extends InOperator {
   }
 
   protected function valueValidate($form, FormStateInterface $form_state) {
-    $values = Tags::explode($form_state->getValue(array('options', 'value')));
-    if ($uids = $this->validate_user_strings($form['value'], $form_state, $values)) {
-      $form_state->setValue(array('options', 'value'), $uids);
+    $uids = [];
+    if ($values = $form_state->getValue(array('options', 'value'))) {
+      foreach ($values as $value) {
+        $uids[] = $value['target_id'];
+      }
+      sort($uids);
     }
+    $form_state->setValue(array('options', 'value'), $uids);
   }
 
   public function acceptExposedInput($input) {
@@ -90,55 +85,17 @@ class Name extends InOperator {
       $input = $this->options['group_info']['group_items'][$input]['value'];
     }
 
-    $values = Tags::explode($input);
-
-    if (!$this->options['is_grouped'] || ($this->options['is_grouped'] && ($input != 'All'))) {
-      $uids = $this->validate_user_strings($form[$identifier], $form_state, $values);
-    }
-    else {
-      $uids = FALSE;
+    $uids = [];
+    $values = $form_state->getValue($identifier);
+    if ($values && (!$this->options['is_grouped'] || ($this->options['is_grouped'] && ($input != 'All')))) {
+      foreach ($values as $value) {
+        $uids[] = $value['target_id'];
+      }
     }
 
     if ($uids) {
       $this->validated_exposed_input = $uids;
     }
-  }
-
-  /**
-   * Validate the user string. Since this can come from either the form
-   * or the exposed filter, this is abstracted out a bit so it can
-   * handle the multiple input sources.
-   */
-  function validate_user_strings(&$form, FormStateInterface $form_state, $values) {
-    $uids = array();
-    $placeholders = array();
-    $args = array();
-    foreach ($values as $value) {
-      if (strtolower($value) == 'anonymous') {
-        $uids[] = 0;
-      }
-      else {
-        $missing[strtolower($value)] = TRUE;
-        $args[] = $value;
-        $placeholders[] = "'%s'";
-      }
-    }
-
-    if (!$args) {
-      return $uids;
-    }
-
-    $result = entity_load_multiple_by_properties('user', array('name' => $args));
-    foreach ($result as $account) {
-      unset($missing[strtolower($account->getUsername())]);
-      $uids[] = $account->id();
-    }
-
-    if ($missing) {
-      $form_state->setError($form, $this->formatPlural(count($missing), 'Unable to find user: @users', 'Unable to find users: @users', array('@users' => implode(', ', array_keys($missing)))));
-    }
-
-    return $uids;
   }
 
   protected function valueSubmit($form, FormStateInterface $form_state) {

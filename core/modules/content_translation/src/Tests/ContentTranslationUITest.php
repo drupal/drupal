@@ -219,7 +219,7 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
         'created' => REQUEST_TIME - mt_rand(0, 1000),
       );
       $edit = array(
-        'content_translation[name]' => $user->getUsername(),
+        'content_translation[uid]' => $user->getUsername(),
         'content_translation[created]' => format_date($values[$langcode]['created'], 'custom', 'Y-m-d H:i:s O'),
       );
       $url = $entity->urlInfo('edit-form', array('language' => ConfigurableLanguage::load($langcode)));
@@ -237,7 +237,7 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
     $langcode = 'en';
     $edit = array(
       // User names have by default length 8.
-      'content_translation[name]' => $this->randomMachineName(12),
+      'content_translation[uid]' => $this->randomMachineName(12),
       'content_translation[created]' => '19/11/1978',
     );
     $this->drupalPostForm($entity->urlInfo('edit-form'), $edit, $this->getFormSubmitAction($entity, $langcode));

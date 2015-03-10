@@ -36,3 +36,6 @@ entity_reference.default.handler_settings:
     auto_create:
       type: boolean
       label: 'Create referenced entities if they don''t already exist'
+    include_anonymous:
+      type: boolean
+      label: 'Include the anonymous user in the matched entities.'

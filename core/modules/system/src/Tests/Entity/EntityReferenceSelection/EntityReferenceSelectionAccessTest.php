@@ -203,6 +203,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
       'handler' => 'default',
       'handler_settings' => array(
         'target_bundles' => array(),
+        'include_anonymous' => TRUE,
       ),
     );
 
@@ -320,6 +321,19 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
       ),
     );
     $this->assertReferenceable($selection_options, $referenceable_tests, 'User handler (admin)');
+
+    // Test the 'include_anonymous' option.
+    $selection_options['handler_settings']['include_anonymous'] = FALSE;
+    $referenceable_tests = array(
+      array(
+        'arguments' => array(
+          array('Anonymous', 'CONTAINS'),
+          array('anonymous', 'CONTAINS'),
+        ),
+        'result' => array(),
+      ),
+    );
+    $this->assertReferenceable($selection_options, $referenceable_tests, 'User handler (does not include anonymous)');
   }
 
   /**

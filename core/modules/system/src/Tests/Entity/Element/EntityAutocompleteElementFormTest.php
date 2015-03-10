@@ -282,7 +282,7 @@ class EntityAutocompleteElementFormTest extends EntityUnitTestBase implements Fo
       ]);
     $form_builder->submitForm($this, $form_state);
 
-    // The input is complete (i.e. contains an entity ID at the ent), no errors
+    // The input is complete (i.e. contains an entity ID at the end), no errors
     // are triggered.
     $this->assertEqual(count($form_state->getErrors()), 0);
   }

@@ -34,9 +34,6 @@ services:
     arguments: ['@database']
     tags:
       - { name: backend_overridable }
-  user.autocomplete:
-    class: Drupal\user\UserAutocomplete
-    arguments: ['@config.factory', '@entity.manager', '@entity.query']
   user_maintenance_mode_subscriber:
     class: Drupal\user\EventSubscriber\MaintenanceModeSubscriber
     arguments: ['@maintenance_mode', '@current_user']

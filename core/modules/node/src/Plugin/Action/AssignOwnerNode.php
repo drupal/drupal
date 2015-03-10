@@ -12,6 +12,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\user\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -63,8 +64,8 @@ class AssignOwnerNode extends ConfigurableActionBase implements ContainerFactory
    * {@inheritdoc}
    */
   public function execute($entity = NULL) {
-    $entity->uid = $this->configuration['owner_uid'];
-    $entity->save();
+    /** @var \Drupal\node\NodeInterface $entity */
+    $entity->setOwnerId($this->configuration['owner_uid'])->save();
   }
 
   /**
@@ -82,32 +83,33 @@ class AssignOwnerNode extends ConfigurableActionBase implements ContainerFactory
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $description = t('The username of the user to which you would like to assign ownership.');
     $count = $this->connection->query("SELECT COUNT(*) FROM {users}")->fetchField();
-    $owner_name = '';
-    if (is_numeric($this->configuration['owner_uid'])) {
-      $owner_name = $this->connection->query("SELECT name FROM {users_field_data} WHERE uid = :uid AND default_langcode = 1", array(':uid' => $this->configuration['owner_uid']))->fetchField();
-    }
 
     // Use dropdown for fewer than 200 users; textbox for more than that.
     if (intval($count) < 200) {
       $options = array();
       $result = $this->connection->query("SELECT uid, name FROM {users_field_data} WHERE uid > 0 AND default_langcode = 1 ORDER BY name");
       foreach ($result as $data) {
-        $options[$data->name] = $data->name;
+        $options[$data->uid] = $data->name;
       }
-      $form['owner_name'] = array(
+      $form['owner_uid'] = array(
         '#type' => 'select',
         '#title' => t('Username'),
-        '#default_value' => $owner_name,
+        '#default_value' => $this->configuration['owner_uid'],
         '#options' => $options,
         '#description' => $description,
       );
     }
     else {
-      $form['owner_name'] = array(
-        '#type' => 'textfield',
+      $form['owner_uid'] = array(
+        '#type' => 'entity_autocomplete',
         '#title' => t('Username'),
-        '#default_value' => $owner_name,
-        '#autocomplete_route_name' => 'user.autocomplete',
+        '#target_type' => 'user',
+        '#selection_setttings' => array(
+          'include_anonymous' => FALSE,
+        ),
+        '#default_value' => User::load($this->configuration['owner_uid']),
+        // Validation is done in static::validateConfigurationForm().
+        '#validate_reference' => FALSE,
         '#size' => '6',
         '#maxlength' => '60',
         '#description' => $description,
@@ -120,9 +122,9 @@ class AssignOwnerNode extends ConfigurableActionBase implements ContainerFactory
    * {@inheritdoc}
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $exists = (bool) $this->connection->queryRange('SELECT 1 FROM {users_field_data} WHERE name = :name AND default_langcode = 1', 0, 1, array(':name' => $form_state->getValue('owner_name')))->fetchField();
+    $exists = (bool) $this->connection->queryRange('SELECT 1 FROM {users_field_data} WHERE uid = :uid AND default_langcode = 1', 0, 1, array(':name' => $form_state->getValue('owner_uid')))->fetchField();
     if (!$exists) {
-      $form_state->setErrorByName('owner_name', t('Enter a valid username.'));
+      $form_state->setErrorByName('owner_uid', t('Enter a valid username.'));
     }
   }
 
@@ -130,7 +132,7 @@ class AssignOwnerNode extends ConfigurableActionBase implements ContainerFactory
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $this->configuration['owner_uid'] = $this->connection->query('SELECT uid from {users_field_data} WHERE name = :name AND default_langcode = 1', array(':name' => $form_state->getValue('owner_name')))->fetchField();
+    $this->configuration['owner_uid'] = $form_state->getValue('owner_uid');
   }
 
   /**
@@ -139,7 +141,7 @@ class AssignOwnerNode extends ConfigurableActionBase implements ContainerFactory
   public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
     /** @var \Drupal\node\NodeInterface $object */
     $result = $object->access('update', $account, TRUE)
-      ->andIf($object->uid->access('edit', $account, TRUE));
+      ->andIf($object->getOwner()->access('edit', $account, TRUE));
 
     return $return_as_object ? $result : $result->isAllowed();
   }
