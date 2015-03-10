@@ -148,7 +148,7 @@ class HtmlRenderer implements MainContentRendererInterface {
     return new Response($content, 200,[
       'X-Drupal-Cache-Tags' => implode(' ', $cache_tags),
       'X-Drupal-Cache-Contexts' => implode(' ', $cache_contexts),
-      'X-Generator' => 'Drupal ' . $version . ' (http://drupal.org)'
+      'X-Generator' => 'Drupal ' . $version . ' (https://www.drupal.org)'
     ]);
   }
 
