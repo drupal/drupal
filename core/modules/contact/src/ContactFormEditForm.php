@@ -8,17 +8,45 @@
 namespace Drupal\contact;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\ConfigFormBaseTrait;
 use Drupal\Core\Form\FormStateInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Egulias\EmailValidator\EmailValidator;
 
 /**
  * Base form for contact form edit forms.
  */
-class ContactFormEditForm extends EntityForm {
+class ContactFormEditForm extends EntityForm implements ContainerInjectionInterface {
   use ConfigFormBaseTrait;
+
+  /**
+   * The email validator.
+   *
+   * @var \Egulias\EmailValidator\EmailValidator
+   */
+  protected $emailValidator;
+
+  /**
+   * Constructs a new ContactFormEditForm.
+   *
+   * @param \Egulias\EmailValidator\EmailValidator $email_validator
+   *   The email validator.
+   */
+  public function __construct(EmailValidator $email_validator) {
+   $this->emailValidator = $email_validator;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('email.validator')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -92,7 +120,7 @@ class ContactFormEditForm extends EntityForm {
 
     foreach ($recipients as &$recipient) {
       $recipient = trim($recipient);
-      if (!valid_email_address($recipient)) {
+      if (!$this->emailValidator->isValid($recipient)) {
         $form_state->setErrorByName('recipients', $this->t('%recipient is an invalid email address.', array('%recipient' => $recipient)));
       }
     }

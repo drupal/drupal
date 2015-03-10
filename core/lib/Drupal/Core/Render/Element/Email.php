@@ -64,7 +64,7 @@ class Email extends FormElement {
     $value = trim($element['#value']);
     $form_state->setValueForElement($element, $value);
 
-    if ($value !== '' && !valid_email_address($value)) {
+    if ($value !== '' && !\Drupal::service('email.validator')->isValid($value)) {
       $form_state->setError($element, t('The email address %mail is not valid.', array('%mail' => $value)));
     }
   }

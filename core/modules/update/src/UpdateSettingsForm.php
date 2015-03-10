@@ -7,13 +7,42 @@
 
 namespace Drupal\update;
 
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Egulias\EmailValidator\EmailValidator;
 
 /**
  * Configure update settings for this site.
  */
-class UpdateSettingsForm extends ConfigFormBase {
+class UpdateSettingsForm extends ConfigFormBase implements ContainerInjectionInterface {
+
+  /**
+   * The email validator.
+   *
+   * @var \Egulias\EmailValidator\EmailValidator
+   */
+  protected $emailValidator;
+
+  /**
+   * Constructs a new UpdateSettingsForm.
+   *
+   * @param \Egulias\EmailValidator\EmailValidator $email_validator
+   *   The email validator.
+   */
+  public function __construct(EmailValidator $email_validator) {
+    $this->emailValidator = $email_validator;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('email.validator')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -86,7 +115,7 @@ class UpdateSettingsForm extends ConfigFormBase {
       foreach (explode("\n", trim($form_state->getValue('update_notify_emails'))) as $email) {
         $email = trim($email);
         if (!empty($email)) {
-          if (valid_email_address($email)) {
+          if ($this->emailValidator->isValid($email)) {
             $valid[] = $email;
           }
           else {

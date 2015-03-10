@@ -17,6 +17,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Utility\Token;
 use Psr\Log\LoggerInterface;
+use Egulias\EmailValidator\EmailValidator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -65,6 +66,13 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
   protected $languageManager;
 
   /**
+   * The email validator.
+   *
+   * @var \Egulias\EmailValidator\EmailValidator
+   */
+  protected $emailValidator;
+
+  /**
    * Constructs a EmailAction object.
    *
    * @param array $configuration
@@ -83,8 +91,10 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
    *   The mail manager.
    * @param \Drupal\Core\Language\LanguageManagerInterface
    *   The language manager.
+   * @param \Egulias\EmailValidator\EmailValidator $email_validator
+   *   The email validator.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Token $token, EntityManagerInterface $entity_manager, LoggerInterface $logger, MailManagerInterface $mail_manager, LanguageManagerInterface $language_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, Token $token, EntityManagerInterface $entity_manager, LoggerInterface $logger, MailManagerInterface $mail_manager, LanguageManagerInterface $language_manager, EmailValidator $email_validator) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->token = $token;
@@ -92,6 +102,7 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
     $this->logger = $logger;
     $this->mailManager = $mail_manager;
     $this->languageManager = $language_manager;
+    $this->emailValidator = $email_validator;
   }
 
   /**
@@ -103,7 +114,8 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
       $container->get('entity.manager'),
       $container->get('logger.factory')->get('action'),
       $container->get('plugin.manager.mail'),
-      $container->get('language_manager')
+      $container->get('language_manager'),
+      $container->get('email.validator')
     );
   }
 
@@ -182,7 +194,7 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
    * {@inheritdoc}
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
-    if (!valid_email_address($form_state->getValue('recipient')) && strpos($form_state->getValue('recipient'), ':mail') === FALSE) {
+    if (!$this->emailValidator->isValid($form_state->getValue('recipient')) && strpos($form_state->getValue('recipient'), ':mail') === FALSE) {
       // We want the literal %author placeholder to be emphasized in the error message.
       $form_state->setErrorByName('recipient', t('Enter a valid email address or use a token email address such as %author.', array('%author' => '[node:author:mail]')));
     }
