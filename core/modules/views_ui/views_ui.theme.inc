@@ -180,8 +180,12 @@ function theme_views_ui_build_group_filter_form($variables) {
       )
     ),
   );
+
+  // Render the "Add another item" button below the table.
+  $add_another = drupal_render($form['add_group']);
   $render_form = drupal_render_children($form);
-  return $output . $render_form . drupal_render($table) . drupal_render($form['add_group']) . $more;
+
+  return $output . $render_form . drupal_render($table) . $add_another . $more;
 }
 
 /**
