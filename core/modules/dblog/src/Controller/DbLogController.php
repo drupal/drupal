@@ -331,7 +331,7 @@ class DbLogController extends ControllerBase {
   /**
    * Formats a database log message.
    *
-   * @param stdClass $row
+   * @param object $row
    *   The record from the watchdog table. The object properties are: wid, uid,
    *   severity, type, timestamp, message, variables, link, name.
    *

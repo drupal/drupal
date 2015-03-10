@@ -30,6 +30,9 @@ class DBLogResource extends ResourceBase {
    *
    * Returns a watchdog log entry for the specified ID.
    *
+   * @param int $id
+   *   The ID of the watchdog log entry.
+   *
    * @return \Drupal\rest\ResourceResponse
    *   The response containing the log entry.
    *

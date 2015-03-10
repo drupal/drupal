@@ -88,6 +88,11 @@ class DblogFilterForm extends FormBase {
 
   /**
    * Resets the filter form.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   public function resetForm(array &$form, FormStateInterface $form_state) {
     $_SESSION['dblog_overview_filter'] = array();
