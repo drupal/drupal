@@ -20,6 +20,16 @@ function test_theme_theme_test__suggestion($variables) {
 }
 
 /**
+ * Implements hook_element_info_alter().
+ */
+function test_theme_element_info_alter(&$info) {
+  // Decrease the default size of textfields.
+  if (isset($info['textfield']['#size'])) {
+    $info['textfield']['#size'] = 40;
+  }
+}
+
+/**
  * Tests a theme implementing an alter hook.
  *
  * The confusing function name here is due to this being an implementation of

@@ -979,7 +979,7 @@ services:
     parent: default_plugin_manager
   plugin.manager.element_info:
     class: Drupal\Core\Render\ElementInfoManager
-    parent: default_plugin_manager
+    arguments: ['@container.namespaces', '@cache.discovery', '@cache_tags.invalidator', '@module_handler', '@theme.manager']
   stream_wrapper_manager:
     class: Drupal\Core\StreamWrapper\StreamWrapperManager
     calls:

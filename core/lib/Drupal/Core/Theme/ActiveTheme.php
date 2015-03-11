@@ -87,6 +87,16 @@ class ActiveTheme {
    *   The properties of the object, keyed by the names.
    */
   public function __construct(array $values) {
+    $values += [
+      'path' => '',
+      'engine' => 'twig',
+      'owner' => 'twig',
+      'stylesheets_remove' => [],
+      'stylesheets_override' => [],
+      'libraries' => [],
+      'extension' => 'html.twig',
+      'base_themes' => [],
+    ];
     $this->name = $values['name'];
     $this->path = $values['path'];
     $this->engine = $values['engine'];
