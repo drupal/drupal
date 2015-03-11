@@ -30,28 +30,28 @@
  * @ingroup themeable
  */
 #}
-<div>
+<div class="image-style-preview preview clearfix">
   {# Preview of the original image. #}
-  <div>
+  <div class="preview-image-wrapper">
       {{ 'original'|t }} (<a href="{{ original.url }}">{{ 'view actual size'|t }}</a>)
-      <div style="width: {{ preview.original.width }}px; height: {{ preview.original.height }}px;">
+      <div class="preview-image original-image" style="width: {{ preview.original.width }}px; height: {{ preview.original.height }}px;">
         <a href="{{ original.url }}">
           {{ original.rendered }}
         </a>
-      <div style="height: {{ preview.original.height }}px"><span>{{ original.height }}px</span></div>
-      <div style="width: {{ preview.original.width }}px"><span>{{ original.width }}px</span></div>
+      <div class="height" style="height: {{ preview.original.height }}px"><span>{{ original.height }}px</span></div>
+      <div class="width" style="width: {{ preview.original.width }}px"><span>{{ original.width }}px</span></div>
     </div>
   </div>
 
   {# Derivative of the image style. #}
-  <div>
+  <div class="preview-image-wrapper">
     {{ style_name }} (<a href="{{ derivative.url }}?{{ cache_bypass }}">{{ 'view actual size'|t }}</a>)
-    <div style="width: {{ preview.derivative.width }}px; height: {{ preview.derivative.height }}px;">
+    <div class="preview-image modified-image" style="width: {{ preview.derivative.width }}px; height: {{ preview.derivative.height }}px;">
       <a href="{{ derivative.url }}?{{ cache_bypass }}">
         {{ derivative.rendered }}
       </a>
-      <div style="height: {{ preview.derivative.height }}px"><span>{{ derivative.height }}px</span></div>
-      <div style="width: {{ preview.derivative.width }}px"><span>{{ derivative.width }}px</span></div>
+      <div class="height" style="height: {{ preview.derivative.height }}px"><span>{{ derivative.height }}px</span></div>
+      <div class="width" style="width: {{ preview.derivative.width }}px"><span>{{ derivative.width }}px</span></div>
     </div>
   </div>
 </div>
