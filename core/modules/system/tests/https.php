@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 chdir('../../../..');
 
-$autoloader = require_once './core/vendor/autoload.php';
+$autoloader = require_once 'autoload.php';
 
 // Set a global variable to indicate a mock HTTPS request.
 $is_https_mock = empty($_SERVER['HTTPS']);

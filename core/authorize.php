@@ -30,7 +30,7 @@ use Drupal\Core\Site\Settings;
 // Change the directory to the Drupal root.
 chdir('..');
 
-$autoloader = require_once __DIR__ . '/vendor/autoload.php';
+$autoloader = require_once 'autoload.php';
 
 /**
  * Global flag to identify update.php and authorize.php runs.

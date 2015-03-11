@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 // Change the directory to the Drupal root.
 chdir('..');
 
-$autoloader = require_once __DIR__ . '/vendor/autoload.php';
+$autoloader = require_once 'autoload.php';
 require_once __DIR__ . '/includes/utility.inc';
 
 $request = Request::createFromGlobals();

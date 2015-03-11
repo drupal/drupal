@@ -15,7 +15,7 @@ use Drupal\Core\Test\TestRunnerKernel;
 use Drupal\simpletest\Form\SimpletestResultsForm;
 use Symfony\Component\HttpFoundation\Request;
 
-$autoloader = require_once __DIR__ . '/../vendor/autoload.php';
+$autoloader = require_once __DIR__ . '/../../autoload.php';
 
 const SIMPLETEST_SCRIPT_COLOR_PASS = 32; // Green.
 const SIMPLETEST_SCRIPT_COLOR_FAIL = 31; // Red.

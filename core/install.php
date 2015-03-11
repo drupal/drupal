@@ -27,6 +27,6 @@ if (version_compare(PHP_VERSION, '5.4.5') < 0) {
 }
 
 // Start the installer.
-$class_loader = require_once __DIR__ . '/vendor/autoload.php';
+$class_loader = require_once 'autoload.php';
 require_once __DIR__ . '/includes/install.core.inc';
 install_drupal($class_loader);
