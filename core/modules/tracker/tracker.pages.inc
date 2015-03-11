@@ -128,7 +128,7 @@ function tracker_page($account = NULL) {
     '#empty' => t('No content available.'),
   );
   $page['pager'] = array(
-    '#theme' => 'pager',
+    '#type' => 'pager',
     '#weight' => 10,
   );
   $page['#sorted'] = TRUE;

@@ -216,7 +216,7 @@ class DbLogController extends ControllerBase {
         'library' => array('dblog/drupal.dblog'),
       ),
     );
-    $build['dblog_pager'] = array('#theme' => 'pager');
+    $build['dblog_pager'] = array('#type' => 'pager');
 
     return $build;
 
@@ -411,7 +411,7 @@ class DbLogController extends ControllerBase {
         'library' => array('dblog/drupal.dblog'),
       ),
     );
-    $build['dblog_top_pager'] = array('#theme' => 'pager');
+    $build['dblog_top_pager'] = array('#type' => 'pager');
 
     return $build;
   }

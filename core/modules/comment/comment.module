@@ -196,26 +196,6 @@ function comment_field_config_delete(FieldConfigInterface $field) {
 }
 
 /**
- * Implements hook_entity_build_defaults_alter().
- *
- * @todo Remove this hook implementation in https://www.drupal.org/node/2433599
- */
-function comment_entity_build_defaults_alter(array &$build, EntityInterface $entity, $view_mode = 'full', $langcode = NULL) {
-  // Get the corresponding display settings.
-  $display = EntityViewDisplay::collectRenderDisplay($entity, $view_mode);
-  // Add the comment page number to the cache key if render caching is enabled.
-  if (isset($build['#cache']) && isset($build['#cache']['keys'])) {
-    foreach ($entity->getFieldDefinitions() as $field_name => $definition) {
-      if ($definition->getType() === 'comment' && ($display_options = $display->getComponent($field_name))) {
-        $pager_id = $display_options['settings']['pager_id'];
-        $build['#cache']['contexts'][] = 'pager:' . $pager_id;
-      }
-    }
-  }
-  return $build;
-}
-
-/**
  * Implements hook_node_links_alter().
  */
 function comment_node_links_alter(array &$node_links, NodeInterface $node, array &$context) {

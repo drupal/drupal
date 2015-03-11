@@ -225,7 +225,7 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
       }
     }
     $build['pager'] = array(
-      '#theme' => 'pager',
+      '#type' => 'pager',
     );
     return $build;
   }

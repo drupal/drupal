@@ -240,7 +240,7 @@ class CommentAdminOverview extends FormBase {
       '#empty' => $this->t('No comments available.'),
     );
 
-    $form['pager'] = array('#theme' => 'pager');
+    $form['pager'] = array('#type' => 'pager');
 
     return $form;
   }

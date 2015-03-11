@@ -73,7 +73,7 @@ function pager_find_page($element = 0) {
  *   );
  *
  *   // Finally, display the pager controls, and return.
- *   $pager = array('#theme' => 'pager');
+ *   $pager = array('#type' => 'pager');
  *   $output .= drupal_render($pager);
  *   return $output;
  * @endcode
@@ -105,7 +105,7 @@ function pager_find_page($element = 0) {
  *   $output = drupal_render($search_results);
  *
  *   // Finally, display the pager controls, and return.
- *   $pager = array('#theme' => 'pager');
+ *   $pager = array('#type' => 'pager');
  *   $output .= drupal_render($pager);
  *   return $output;
  * @endcode
@@ -158,23 +158,24 @@ function pager_get_query_parameters() {
  *
  * Default template: pager.html.twig.
  *
- * Menu callbacks that display paged query results should call _theme('pager')
+ * Menu callbacks that display paged query results should use #type => pager
  * to retrieve a pager control so that users can view other results. Format a
  * list of nearby pages with additional query results.
  *
  * @param array $variables
  *   An associative array containing:
- *   - tags: An array of labels for the controls in the pager.
- *   - element: An optional integer to distinguish between multiple pagers on
- *     one page.
- *   - parameters: An associative array of query string parameters to append to
- *     the pager links.
- *   - quantity: The number of pages in the list.
+ *   - pager: A render element containing:
+ *     - #tags: An array of labels for the controls in the pager.
+ *     - #element: An optional integer to distinguish between multiple pagers on
+ *       one page.
+ *     - #parameters: An associative array of query string parameters to append to
+ *       the pager links.
+ *     - #quantity: The number of pages in the list.
  */
 function template_preprocess_pager(&$variables) {
-  $element = $variables['element'];
-  $parameters = $variables['parameters'];
-  $quantity = $variables['quantity'];
+  $element = $variables['pager']['#element'];
+  $parameters = $variables['pager']['#parameters'];
+  $quantity = $variables['pager']['#quantity'];
   global $pager_page_array, $pager_total;
 
   // Nothing to do if there is only one page.
@@ -182,7 +183,7 @@ function template_preprocess_pager(&$variables) {
     return;
   }
 
-  $tags = $variables['tags'];
+  $tags = $variables['pager']['#tags'];
 
   // Calculate various markers within this pager piece:
   // Middle is used to "center" pages around the current page.

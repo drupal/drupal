@@ -1835,7 +1835,7 @@ function drupal_common_theme() {
     ),
     // From pager.inc.
     'pager' => array(
-      'variables' => array('tags' => array(), 'element' => 0, 'parameters' => array(), 'quantity' => 9),
+      'render element' => 'pager',
     ),
     // From menu.inc.
     'menu' => array(

@@ -84,7 +84,7 @@ class SearchExtraTypeSearch extends ConfigurableSearchPluginBase {
       );
     }
     $pager = array(
-      '#theme' => 'pager',
+      '#type' => 'pager',
     );
     $output['suffix']['#markup'] = '</ol>' . drupal_render($pager);
 

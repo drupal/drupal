@@ -52,13 +52,25 @@ class PagerTestController extends ControllerBase {
 
     // Pager.
     $build['pager_pager_0'] = array(
-      '#theme' => 'pager',
+      '#type' => 'pager',
       '#element' => 0,
       '#parameters' => array(
         'pager_calls' => ++$pager_calls,
       ),
+      '#pre_render' => [
+        'Drupal\pager_test\Controller\PagerTestController::showPagerCacheContext',
+      ]
     );
 
     return $build;
   }
+
+  /**
+   * #pre_render callback for #type => pager that shows the pager cache context.
+   */
+  public static function showPagerCacheContext(array $pager) {
+    drupal_set_message(\Drupal::service('cache_contexts')->convertTokensToKeys(['pager:' . $pager['#element']])[0]);
+    return $pager;
+  }
+
 }

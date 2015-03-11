@@ -73,7 +73,7 @@ class FeedViewBuilder extends EntityViewBuilder {
 
         if ($view_mode == 'full') {
           // Also add the pager.
-          $build[$id]['pager'] = array('#theme' => 'pager');
+          $build[$id]['pager'] = array('#type' => 'pager');
         }
       }
 

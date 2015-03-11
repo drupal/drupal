@@ -170,7 +170,7 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
           if ($comments) {
             comment_prepare_thread($comments);
             $build = $this->viewBuilder->viewMultiple($comments);
-            $build['pager']['#theme'] = 'pager';
+            $build['pager']['#type'] = 'pager';
             if ($this->getSetting('pager_id')) {
               $build['pager']['#element'] = $this->getSetting('pager_id');
             }

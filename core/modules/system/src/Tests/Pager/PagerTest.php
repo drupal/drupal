@@ -63,22 +63,25 @@ class PagerTest extends WebTestBase {
   }
 
   /**
-   * Test proper functioning of the query parameters.
+   * Test proper functioning of the query parameters and the pager cache context.
    */
-  public function testPagerQueryParameters() {
+  protected function testPagerQueryParametersAndCacheContext() {
     // First page.
     $this->drupalGet('pager-test/query-parameters');
     $this->assertText(t('Pager calls: 0'), 'Initial call to pager shows 0 calls.');
+    $this->assertText('pager.0.0');
 
     // Go to last page, the count of pager calls need to go to 1.
     $elements = $this->xpath('//li[contains(@class, :class)]/a', array(':class' => 'pager__item--last'));
     $this->drupalGet($GLOBALS['base_root'] . $elements[0]['href'], array('external' => TRUE));
     $this->assertText(t('Pager calls: 1'), 'First link call to pager shows 1 calls.');
+    $this->assertText('pager.0.60');
 
     // Go back to first page, the count of pager calls need to go to 2.
     $elements = $this->xpath('//li[contains(@class, :class)]/a', array(':class' => 'pager__item--first'));
     $this->drupalGet($GLOBALS['base_root'] . $elements[0]['href'], array('external' => TRUE));
     $this->assertText(t('Pager calls: 2'), 'Second link call to pager shows 2 calls.');
+    $this->assertText('pager.0.0');
   }
 
   /**

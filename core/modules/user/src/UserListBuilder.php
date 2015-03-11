@@ -164,7 +164,7 @@ class UserListBuilder extends EntityListBuilder {
   public function render() {
     $build['accounts'] = parent::render();
     $build['accounts']['#empty'] = $this->t('No people available.');
-    $build['pager']['#theme'] = 'pager';
+    $build['pager']['#type'] = 'pager';
     return $build;
   }
 

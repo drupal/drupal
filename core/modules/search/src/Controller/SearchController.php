@@ -128,7 +128,7 @@ class SearchController extends ControllerBase {
     );
 
     $build['pager'] = array(
-      '#theme' => 'pager',
+      '#type' => 'pager',
     );
 
     $build['#attached']['library'][] = 'search/drupal.search.results';
