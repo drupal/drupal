@@ -188,7 +188,10 @@ abstract class EntityUnitTestBase extends KernelTestBase {
   protected function generateRandomEntityId($string = FALSE) {
     srand(time());
     do {
-      $id = $string ? $this->randomMachineName() : mt_rand(1, 0xFFFFFFFF);
+      // 0x7FFFFFFF is the maximum allowed value for integers that works for all
+      // Drupal supported databases and is known to work for other databases
+      // like SQL Server 2014 and Oracle 10 too.
+      $id = $string ? $this->randomMachineName() : mt_rand(1, 0x7FFFFFFF);
     }
     while (isset($this->generatedIds[$id]));
     $this->generatedIds[$id] = $id;
