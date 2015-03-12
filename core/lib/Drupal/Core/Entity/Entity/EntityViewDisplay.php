@@ -223,32 +223,32 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
     }
 
     // Run field formatters.
-    foreach ($this->getFieldDefinitions() as $field_name => $definition) {
-      if ($formatter = $this->getRenderer($field_name)) {
+    foreach ($this->getComponents() as $name => $options) {
+      if ($formatter = $this->getRenderer($name)) {
         // Group items across all entities and pass them to the formatter's
         // prepareView() method.
         $grouped_items = array();
         foreach ($entities as $id => $entity) {
-          $items = $entity->get($field_name);
+          $items = $entity->get($name);
           $items->filterEmptyItems();
           $grouped_items[$id] = $items;
         }
         $formatter->prepareView($grouped_items);
 
         // Then let the formatter build the output for each entity.
-        foreach ($entities as $key => $entity) {
-          $items = $entity->get($field_name);
-          $build_list[$key][$field_name] = $formatter->view($items);
-          $build_list[$key][$field_name]['#access'] = $items->access('view');
+        foreach ($entities as $id => $entity) {
+          $items = $grouped_items[$id];
+          $build_list[$id][$name] = $formatter->view($items);
+          $build_list[$id][$name]['#access'] = $items->access('view');
         }
       }
     }
 
-    foreach ($entities as $key => $entity) {
+    foreach ($entities as $id => $entity) {
       // Assign the configured weights.
       foreach ($this->getComponents() as $name => $options) {
-        if (isset($build_list[$key][$name])) {
-          $build_list[$key][$name]['#weight'] = $options['weight'];
+        if (isset($build_list[$id][$name])) {
+          $build_list[$id][$name]['#weight'] = $options['weight'];
         }
       }
 
