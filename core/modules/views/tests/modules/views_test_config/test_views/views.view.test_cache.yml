@@ -42,3 +42,15 @@ display:
           table: views_test_data
           field: id
           relationship: none
+
+  page_1:
+    display_plugin: page
+    id: page_1
+    display_options:
+      defaults:
+        pager: false
+      pager:
+        type: full
+        options:
+          items_per_page: 2
+

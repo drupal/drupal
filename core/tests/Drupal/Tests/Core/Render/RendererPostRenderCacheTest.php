@@ -91,7 +91,7 @@ class RendererPostRenderCacheTest extends RendererTestBase {
       '#post_render_cache' => $test_element['#post_render_cache'],
       '#cache' => [
         'contexts' => [],
-        'tags' => ['rendered'],
+        'tags' => [],
       ],
     ];
     $this->assertSame($cached_element, $expected_element, 'The correct data is cached: the stored #markup and #attached properties are not affected by #post_render_cache callbacks.');
@@ -227,7 +227,7 @@ class RendererPostRenderCacheTest extends RendererTestBase {
       ],
       '#cache' => [
         'contexts' => [],
-        'tags' => ['rendered'],
+        'tags' => [],
       ],
     ];
 
@@ -322,7 +322,7 @@ class RendererPostRenderCacheTest extends RendererTestBase {
       ],
       '#cache' => [
         'contexts' => [],
-        'tags' => ['rendered'],
+        'tags' => [],
       ],
     ];
 
@@ -348,7 +348,7 @@ class RendererPostRenderCacheTest extends RendererTestBase {
       ],
       '#cache' => [
         'contexts' => [],
-        'tags' => ['rendered'],
+        'tags' => [],
       ],
     ];
 
@@ -462,7 +462,7 @@ class RendererPostRenderCacheTest extends RendererTestBase {
       ],
       '#cache' => [
         'contexts' => [],
-        'tags' => ['rendered'],
+        'tags' => [],
       ],
     ];
     $this->assertSame($cached_element, $expected_element, 'The correct data is cached: the stored #markup and #attached properties are not affected by #post_render_cache callbacks.');
@@ -560,7 +560,7 @@ class RendererPostRenderCacheTest extends RendererTestBase {
       ],
       '#cache' => [
         'contexts' => [],
-        'tags' => ['rendered'],
+        'tags' => [],
       ],
     ];
     $this->assertSame($cached_element, $expected_element, 'The correct data is cached for the child element: the stored #markup and #attached properties are not affected by #post_render_cache callbacks.');
@@ -588,7 +588,7 @@ class RendererPostRenderCacheTest extends RendererTestBase {
       ],
       '#cache' => [
         'contexts' => [],
-        'tags' => ['rendered'],
+        'tags' => [],
       ],
     ];
     $this->assertSame($cached_element, $expected_element, 'The correct data is cached for the parent element: the stored #markup and #attached properties are not affected by #post_render_cache callbacks.');
@@ -619,7 +619,7 @@ class RendererPostRenderCacheTest extends RendererTestBase {
       ],
       '#cache' => [
         'contexts' => [],
-        'tags' => ['rendered'],
+        'tags' => [],
       ],
     ];
     $this->assertSame($cached_element, $expected_element, 'The correct data is cached for the child element: the stored #markup and #attached properties are not affected by #post_render_cache callbacks.');

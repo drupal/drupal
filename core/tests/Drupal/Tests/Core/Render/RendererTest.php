@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core\Render;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
 
@@ -567,9 +568,12 @@ class RendererTest extends RendererTestBase {
       'render_cache_tag',
       'render_cache_tag_child:1',
       'render_cache_tag_child:2',
-      'rendered',
     ];
     $this->assertEquals($expected_tags, $element['#cache']['tags'], 'Cache tags were collected from the element and its subchild.');
+
+    // The cache item also has a 'rendered' cache tag.
+    $cache_item = $this->cacheFactory->get('render')->get('render_cache_test');
+    $this->assertSame(Cache::mergeTags($expected_tags, ['rendered']), $cache_item->tags);
   }
 
 }

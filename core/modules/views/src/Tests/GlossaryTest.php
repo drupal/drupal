@@ -9,6 +9,7 @@ namespace Drupal\views\Tests;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Url;
+use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\views\Views;
 
 /**
@@ -17,6 +18,9 @@ use Drupal\views\Views;
  * @group views
  */
 class GlossaryTest extends ViewTestBase {
+
+  use AssertPageCacheContextsAndTagsTrait;
+  use AssertViewsCacheTagsTrait;
 
   /**
    * Modules to enable.
@@ -39,6 +43,7 @@ class GlossaryTest extends ViewTestBase {
       'a' => 3,
       'l' => 6,
     );
+    $nodes_by_char = [];
     foreach ($nodes_per_char as $char => $count) {
       $setting = array(
         'type' => $type->id()
@@ -46,7 +51,8 @@ class GlossaryTest extends ViewTestBase {
       for ($i = 0; $i < $count; $i++) {
         $node = $setting;
         $node['title'] = $char . $this->randomString(3);
-        $this->drupalCreateNode($node);
+        $node = $this->drupalCreateNode($node);
+        $nodes_by_char[$char][] = $node;
       }
     }
 
@@ -77,6 +83,16 @@ class GlossaryTest extends ViewTestBase {
       $result_count = trim(str_replace(array('|', '(', ')'), '', (string) $result[0]));
       $this->assertEqual($result_count, $count, 'The expected number got rendered.');
     }
+
+    // Verify cache tags.
+    $this->enablePageCaching();
+    $this->assertPageCacheContextsAndTags(Url::fromRoute('view.glossary.page_1'), [], [
+      'config:views.view.glossary',
+      'node:' . $nodes_by_char['a'][0]->id(), 'node:' . $nodes_by_char['a'][1]->id(), 'node:' . $nodes_by_char['a'][2]->id(),
+      'node_list',
+      'user_list',
+      'rendered',
+    ]);
   }
 
 }

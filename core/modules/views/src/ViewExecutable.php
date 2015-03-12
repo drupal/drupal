@@ -8,6 +8,7 @@
 namespace Drupal\views;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Routing\RouteProviderInterface;
@@ -1398,6 +1399,7 @@ class ViewExecutable implements \Serializable {
       }
 
       $this->display_handler->output = $this->display_handler->render();
+
       if ($cache) {
         $cache->cacheSet('output');
       }
@@ -1421,6 +1423,22 @@ class ViewExecutable implements \Serializable {
     }
 
     return $this->display_handler->output;
+  }
+
+  /**
+   * Gets the cache tags associated with the executed view.
+   *
+   * Note: The cache plugin controls the used tags, so you can override it, if
+   *   needed.
+   *
+   * @return string[]
+   *   An array of cache tags.
+   */
+  public function getCacheTags() {
+    $this->initDisplay();
+    /** @var \Drupal\views\Plugin\views\cache\CachePluginBase $cache */
+    $cache = $this->display_handler->getPlugin('cache');
+    return $cache->getCacheTags();
   }
 
   /**

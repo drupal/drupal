@@ -312,6 +312,13 @@ abstract class QueryPluginBase extends PluginBase {
     return $entity_tables;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags() {
+    return [];
+  }
+
 }
 
 /**

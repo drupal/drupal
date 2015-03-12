@@ -7,9 +7,7 @@
 
 namespace Drupal\system\Tests\Cache;
 
-use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
-use Drupal\Core\Cache\Cache;
 
 /**
  * Enables the page cache and tests its cache tags in various scenarios.
@@ -21,6 +19,8 @@ use Drupal\Core\Cache\Cache;
  */
 class PageCacheTagsIntegrationTest extends WebTestBase {
 
+  use AssertPageCacheContextsAndTagsTrait;
+
   protected $profile = 'standard';
 
   protected $dumpHeaders = TRUE;
@@ -31,10 +31,7 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $config = $this->config('system.performance');
-    $config->set('cache.page.use_internal', 1);
-    $config->set('cache.page.max_age', 300);
-    $config->save();
+    $this->enablePageCaching();
   }
 
   /**
@@ -128,46 +125,10 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
       'config:system.menu.footer',
       'config:system.menu.main',
       'config:system.site',
+      'comment_list',
+      'node_list',
+      'config:views.view.comments_recent',
     ));
-  }
-
-  /**
-   * Asserts page cache miss, then hit for the given URL; checks cache headers.
-   *
-   * @param \Drupal\Core\Url $url
-   *   The URL to test.
-   * @param string[] $expected_contexts
-   *   The expected cache contexts for the given URL.
-   * @param string[] $expected_tags
-   *   The expected cache tags for the given URL.
-   */
-  protected function assertPageCacheContextsAndTags(Url $url, array $expected_contexts, array $expected_tags) {
-    $absolute_url = $url->setAbsolute()->toString();
-    sort($expected_contexts);
-    sort($expected_tags);
-
-    // Assert cache miss + expected cache contexts + tags.
-    $this->drupalGet($absolute_url);
-    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
-    $actual_contexts = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Contexts'));
-    $actual_tags = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Tags'));
-    $this->assertIdentical($actual_contexts, $expected_contexts);
-    $this->assertIdentical($actual_tags, $expected_tags);
-
-    // Assert cache hit + expected cache contexts + tags.
-    $this->drupalGet($absolute_url);
-    $actual_contexts = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Contexts'));
-    $actual_tags = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Tags'));
-    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
-    $this->assertIdentical($actual_contexts, $expected_contexts);
-    $this->assertIdentical($actual_tags, $expected_tags);
-
-    // Assert page cache item + expected cache tags.
-    $cid_parts = array($url->setAbsolute()->toString(), 'html');
-    $cid = implode(':', $cid_parts);
-    $cache_entry = \Drupal::cache('render')->get($cid);
-    sort($cache_entry->tags);
-    $this->assertEqual($cache_entry->tags, $expected_tags);
   }
 
 }

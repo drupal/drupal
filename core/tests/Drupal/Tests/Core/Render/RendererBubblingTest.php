@@ -113,7 +113,7 @@ class RendererBubblingTest extends RendererTestBase {
         '#attached' => [],
         '#cache' => [
           'contexts' => ['foo'],
-          'tags' => ['rendered'],
+          'tags' => [],
         ],
         '#post_render_cache' => [],
         '#markup' => 'parent',
@@ -141,7 +141,7 @@ class RendererBubblingTest extends RendererTestBase {
         '#attached' => [],
         '#cache' => [
           'contexts' => [],
-          'tags' => ['rendered'],
+          'tags' => [],
         ],
         '#post_render_cache' => [],
         '#markup' => 'parent',
@@ -164,7 +164,7 @@ class RendererBubblingTest extends RendererTestBase {
         '#attached' => [],
         '#cache' => [
           'contexts' => [],
-          'tags' => ['rendered'],
+          'tags' => [],
         ],
         '#post_render_cache' => [],
         '#markup' => '',
@@ -204,7 +204,7 @@ class RendererBubblingTest extends RendererTestBase {
         '#attached' => [],
         '#cache' => [
           'contexts' => ['bar', 'baz', 'foo'],
-          'tags' => ['rendered'],
+          'tags' => [],
         ],
         '#post_render_cache' => [],
         '#markup' => 'parent',
@@ -243,17 +243,14 @@ class RendererBubblingTest extends RendererTestBase {
           // The keys + contexts this redirects to.
           'keys' => ['parent'],
           'contexts' => ['bar', 'foo'],
-          // The 'rendered' cache tag is also present for the redirecting cache
-          // item, to ensure it is considered to be part of the render cache
-          // and thus invalidated along with everything else.
-          'tags' => ['dee', 'fiddle', 'har', 'rendered', 'yar'],
+          'tags' => ['dee', 'fiddle', 'har', 'yar'],
         ],
       ],
       'parent:bar:foo' => [
         '#attached' => [],
         '#cache' => [
           'contexts' => ['bar', 'foo'],
-          'tags' => ['dee', 'fiddle', 'har', 'yar', 'rendered'],
+          'tags' => ['dee', 'fiddle', 'har', 'yar'],
         ],
         '#post_render_cache' => [],
         '#markup' => 'parent',
@@ -334,14 +331,14 @@ class RendererBubblingTest extends RendererTestBase {
       '#cache' => [
         'keys' => ['parent'],
         'contexts' => ['user.roles'],
-        'tags' => ['a', 'b', 'rendered'],
+        'tags' => ['a', 'b'],
       ],
     ]);
     $this->assertRenderCacheItem('parent:r.A', [
       '#attached' => [],
       '#cache' => [
         'contexts' => ['user.roles'],
-        'tags' => ['a', 'b', 'rendered'],
+        'tags' => ['a', 'b'],
       ],
       '#post_render_cache' => [],
       '#markup' => 'parent',
@@ -357,14 +354,14 @@ class RendererBubblingTest extends RendererTestBase {
       '#cache' => [
         'keys' => ['parent'],
         'contexts' => ['foo', 'user.roles'],
-        'tags' => ['a', 'b', 'c', 'rendered'],
+        'tags' => ['a', 'b', 'c'],
       ],
     ]);
     $this->assertRenderCacheItem('parent:foo:r.B', [
       '#attached' => [],
       '#cache' => [
         'contexts' => ['foo', 'user.roles'],
-        'tags' => ['a', 'b', 'c', 'rendered'],
+        'tags' => ['a', 'b', 'c'],
       ],
       '#post_render_cache' => [],
       '#markup' => 'parent',
@@ -388,14 +385,14 @@ class RendererBubblingTest extends RendererTestBase {
       '#cache' => [
         'keys' => ['parent'],
         'contexts' => ['foo', 'user.roles'],
-        'tags' => ['a', 'b', 'c', 'rendered'],
+        'tags' => ['a', 'b', 'c'],
       ],
     ]);
     $this->assertRenderCacheItem('parent:foo:r.A', [
       '#attached' => [],
       '#cache' => [
         'contexts' => ['foo', 'user.roles'],
-        'tags' => ['a', 'b', 'rendered'],
+        'tags' => ['a', 'b'],
       ],
       '#post_render_cache' => [],
       '#markup' => 'parent',
@@ -411,7 +408,7 @@ class RendererBubblingTest extends RendererTestBase {
       '#cache' => [
         'keys' => ['parent'],
         'contexts' => ['bar', 'foo', 'user.roles'],
-        'tags' => ['a', 'b', 'c', 'd', 'rendered'],
+        'tags' => ['a', 'b', 'c', 'd'],
       ],
     ];
     $this->assertRenderCacheItem('parent', $final_parent_cache_item);
@@ -419,7 +416,7 @@ class RendererBubblingTest extends RendererTestBase {
       '#attached' => [],
       '#cache' => [
         'contexts' => ['bar', 'foo', 'user.roles'],
-        'tags' => ['a', 'b', 'c', 'd', 'rendered'],
+        'tags' => ['a', 'b', 'c', 'd'],
       ],
       '#post_render_cache' => [],
       '#markup' => 'parent',
@@ -434,7 +431,7 @@ class RendererBubblingTest extends RendererTestBase {
       '#attached' => [],
       '#cache' => [
         'contexts' => ['bar', 'foo', 'user.roles'],
-        'tags' => ['a', 'b', 'rendered'],
+        'tags' => ['a', 'b'],
       ],
       '#post_render_cache' => [],
       '#markup' => 'parent',
@@ -449,7 +446,7 @@ class RendererBubblingTest extends RendererTestBase {
       '#attached' => [],
       '#cache' => [
         'contexts' => ['bar', 'foo', 'user.roles'],
-        'tags' => ['a', 'b', 'c', 'rendered'],
+        'tags' => ['a', 'b', 'c'],
       ],
       '#post_render_cache' => [],
       '#markup' => 'parent',

@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\query;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -1535,6 +1536,23 @@ class Sql extends QueryPluginBase {
         }
       }
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags() {
+    $tags = [];
+    // Add cache tags for each row, if there is an entity associated with it.
+    if (!$this->hasAggregate) {
+      foreach ($this->view->result as $row)  {
+        if ($row->_entity) {
+          $tags = Cache::mergeTags($row->_entity->getCacheTags(), $tags);
+        }
+      }
+    }
+
+    return $tags;
   }
 
   public function addSignature(ViewExecutable $view) {

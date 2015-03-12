@@ -1,0 +1,41 @@
+langcode: und
+status: true
+dependencies: {  }
+id: entity_test_row
+label: ''
+module: views
+description: ''
+tag: ''
+base_table: entity_test
+base_field: nid
+core: '8'
+display:
+  default:
+    display_options:
+      access:
+        type: none
+      cache:
+        type: none
+      exposed_form:
+        type: basic
+      sorts:
+        id:
+          table: entity_test
+          id: id
+          field: id
+          plugin_id: standard
+          entity_type: entity_test
+          entity_field: id
+          order: desc
+      pager:
+        type: full
+        options:
+          items_per_page: 5
+      style:
+        type: default
+      row:
+        type: 'entity:entity_test'
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: 0

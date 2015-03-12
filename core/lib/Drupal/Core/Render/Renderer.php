@@ -544,11 +544,6 @@ class Renderer implements RendererInterface {
 
     $data = $this->getCacheableRenderArray($elements);
 
-    // Cache tags are cached, but we also want to associate the "rendered" cache
-    // tag. This allows us to invalidate the entire render cache, regardless of
-    // the cache bin.
-    $data['#cache']['tags'][] = 'rendered';
-
     $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'render';
     $expire = isset($elements['#cache']['expire']) ? $elements['#cache']['expire'] : Cache::PERMANENT;
     $cache = $this->cacheFactory->get($bin);
@@ -690,7 +685,7 @@ class Renderer implements RendererInterface {
             'tags' => Cache::mergeTags($stored_cache_tags, $data['#cache']['tags']),
           ],
         ];
-        $cache->set($pre_bubbling_cid, $redirect_data, $expire, $redirect_data['#cache']['tags']);
+        $cache->set($pre_bubbling_cid, $redirect_data, $expire, Cache::mergeTags($redirect_data['#cache']['tags'], ['rendered']));
       }
 
       // Current cache contexts incomplete: this request only uses a subset of
@@ -711,7 +706,7 @@ class Renderer implements RendererInterface {
         $data['#cache']['contexts'] = $merged_cache_contexts;
       }
     }
-    $cache->set($cid, $data, $expire, $data['#cache']['tags']);
+    $cache->set($cid, $data, $expire, Cache::mergeTags($data['#cache']['tags'], ['rendered']));
   }
 
   /**

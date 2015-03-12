@@ -2126,6 +2126,15 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       '#post_render_cache' => &$this->view->element['#post_render_cache'],
     );
 
+    if (!isset($element['#cache'])) {
+      $element['#cache'] = [];
+    }
+    $element['#cache'] += ['tags' => []];
+
+    // If the output is a render array, add cache tags, regardless of whether
+    // caching is enabled or not; cache tags must always be set.
+    $element['#cache']['tags'] = Cache::mergeTags($element['#cache']['tags'], $this->view->getCacheTags());
+
     return $element;
   }
 

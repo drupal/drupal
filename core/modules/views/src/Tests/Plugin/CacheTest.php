@@ -44,7 +44,6 @@ class CacheTest extends PluginTestBase {
    * @see views_plugin_cache_time
    */
   public function testTimeResultCaching() {
-    // Create a basic result which just 2 results.
     $view = Views::getView('test_cache');
     $view->setDisplay();
     $view->display_handler->overrideOption('cache', array(
@@ -55,6 +54,7 @@ class CacheTest extends PluginTestBase {
       )
     ));
 
+    // Test the default (non-paged) display.
     $this->executeView($view);
     // Verify the result.
     $this->assertEqual(5, count($view->result), 'The number of returned rows match.');
@@ -67,7 +67,19 @@ class CacheTest extends PluginTestBase {
     );
     db_insert('views_test_data')->fields($record)->execute();
 
-    // The Result should be the same as before, because of the caching.
+    // The result should be the same as before, because of the caching. (Note
+    // that views_test_data records don't have associated cache tags, and hence
+    // the results cache items aren't invalidated.)
+    $view->destroy();
+    $this->executeView($view);
+    // Verify the result.
+    $this->assertEqual(5, count($view->result), 'The number of returned rows match.');
+  }
+
+  /**
+   * Tests result caching with a pager.
+   */
+  public function testTimeResultCachingWithPager() {
     $view = Views::getView('test_cache');
     $view->setDisplay();
     $view->display_handler->overrideOption('cache', array(
@@ -78,9 +90,31 @@ class CacheTest extends PluginTestBase {
       )
     ));
 
+    $mapping = ['views_test_data_name' => 'name'];
+
+    $view->setDisplay('page_1');
+    $view->setCurrentPage(0);
     $this->executeView($view);
-    // Verify the result.
-    $this->assertEqual(5, count($view->result), 'The number of returned rows match.');
+    $this->assertIdenticalResultset($view, [['name' => 'John'], ['name' => 'George']], $mapping);
+    $view->destroy();
+
+    $view->setDisplay('page_1');
+    $view->setCurrentPage(1);
+    $this->executeView($view);
+    $this->assertIdenticalResultset($view, [['name' => 'Ringo'], ['name' => 'Paul']], $mapping);
+    $view->destroy();
+
+    $view->setDisplay('page_1');
+    $view->setCurrentPage(0);
+    $this->executeView($view);
+    $this->assertIdenticalResultset($view, [['name' => 'John'], ['name' => 'George']], $mapping);
+    $view->destroy();
+
+    $view->setDisplay('page_1');
+    $view->setCurrentPage(2);
+    $this->executeView($view);
+    $this->assertIdenticalResultset($view, [['name' => 'Meredith']], $mapping);
+    $view->destroy();
   }
 
   /**
@@ -149,7 +183,8 @@ class CacheTest extends PluginTestBase {
     drupal_render($output);
     $this->assertTrue(in_array('views_test_data/test', $output['#attached']['library']), 'Make sure libraries are added for cached views.');
     $this->assertEqual(['foo' => 'bar'], $output['#attached']['drupalSettings'], 'Make sure drupalSettings are added for cached views.');
-    $this->assertEqual(['views_test_data:1'], $output['#cache']['tags']);
+    // Note: views_test_data_views_pre_render() adds some cache tags.
+    $this->assertEqual(['config:views.view.test_cache_header_storage', 'views_test_data:1'], $output['#cache']['tags']);
     $this->assertEqual(['views_test_data_post_render_cache' => [['foo' => 'bar']]], $output['#post_render_cache']);
     $this->assertFalse(!empty($view->build_info['pre_render_called']), 'Make sure hook_views_pre_render is not called for the cached view.');
   }

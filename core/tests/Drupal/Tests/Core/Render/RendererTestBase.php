@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core\Render;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Renderer;
@@ -152,6 +153,7 @@ class RendererTestBase extends UnitTestCase {
     $this->assertNotFalse($cached, sprintf('Expected cache item "%s" exists.', $cid));
     if ($cached !== FALSE) {
       $this->assertEquals($data, $cached->data, sprintf('Cache item "%s" has the expected data.', $cid));
+      $this->assertSame(Cache::mergeTags($data['#cache']['tags'], ['rendered']), $cached->tags, "The cache item's cache tags also has the 'rendered' cache tag.");
     }
   }
 
