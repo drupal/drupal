@@ -243,6 +243,18 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::setNewRevision
+   */
+  public function testSetNewRevisionException() {
+    $this->entityType->expects($this->once())
+      ->method('hasKey')
+      ->with('revision')
+      ->will($this->returnValue(FALSE));
+    $this->setExpectedException('LogicException', 'Entity type ' . $this->entityTypeId . ' does not support revisions.');
+    $this->entity->setNewRevision();
+  }
+
+  /**
    * @covers ::isDefaultRevision
    */
   public function testIsDefaultRevision() {
