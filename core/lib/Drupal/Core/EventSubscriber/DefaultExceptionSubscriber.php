@@ -136,6 +136,7 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
 
     if ($exception instanceof HttpExceptionInterface) {
       $response->setStatusCode($exception->getStatusCode());
+      $response->headers->add($exception->getHeaders());
     }
     else {
       $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR, '500 Service unavailable (with message)');
@@ -166,6 +167,7 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
     $response = new JsonResponse($data, Response::HTTP_INTERNAL_SERVER_ERROR);
     if ($exception instanceof HttpExceptionInterface) {
       $response->setStatusCode($exception->getStatusCode());
+      $response->headers->add($exception->getHeaders());
     }
 
     $event->setResponse($response);
