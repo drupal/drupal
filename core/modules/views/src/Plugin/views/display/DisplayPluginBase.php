@@ -2362,6 +2362,14 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       }
     }
 
+    // Validate the more link.
+    if ($this->isMoreEnabled() && $this->getOption('link_display') !== 'custom_url') {
+      $routed_display = $this->getRoutedDisplay();
+      if (!$routed_display || !$routed_display->isEnabled()) {
+        $errors[] = $this->t('Display "@display" uses a "more" link but there are no displays it can link to. You need to specify a custom URL.', array('@display' => $this->display['display_title']));
+      }
+    }
+
     if ($this->hasPath() && !$this->getOption('path')) {
       $errors[] = $this->t('Display "@display" uses a path but the path is undefined.', array('@display' => $this->display['display_title']));
     }

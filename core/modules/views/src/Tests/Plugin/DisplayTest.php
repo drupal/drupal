@@ -229,6 +229,32 @@ class DisplayTest extends PluginTestBase {
   }
 
   /**
+   * Tests the readmore validation.
+   */
+  public function testReadMoreNoDisplay() {
+    $view = Views::getView('test_display_more');
+    // Confirm that the view validates when there is a page display.
+    $errors = $view->validate();
+    $this->assertTrue(empty($errors), 'More link validation has no errors.');
+
+    // Confirm that the view does not validate when the page display is disabled.
+    $view->setDisplay('page_1');
+    $view->display_handler->setOption('enabled', FALSE);
+    $view->setDisplay('default');
+    $errors = $view->validate();
+    $this->assertTrue(!empty($errors), 'More link validation has some errors.');
+    $this->assertEqual($errors['default'][0], 'Display "Master" uses a "more" link but there are no displays it can link to. You need to specify a custom URL.', 'More link validation has the right error.');
+
+    // Confirm that the view does not validate when the page display does not exist.
+    $view = Views::getView('test_view');
+    $view->setDisplay('default');
+    $view->display_handler->setOption('use_more', 1);
+    $errors = $view->validate();
+    $this->assertTrue(!empty($errors), 'More link validation has some errors.');
+    $this->assertEqual($errors['default'][0], 'Display "Master" uses a "more" link but there are no displays it can link to. You need to specify a custom URL.', 'More link validation has the right error.');
+  }
+
+  /**
    * Tests invalid display plugins.
    */
   public function testInvalidDisplayPlugins() {
