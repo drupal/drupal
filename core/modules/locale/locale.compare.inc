@@ -126,7 +126,7 @@ function locale_translation_project_list() {
       'interface translation server pattern',
     );
     $module_data = _locale_translation_prepare_project_list(system_rebuild_module_data(), 'module');
-    $theme_data = _locale_translation_prepare_project_list(system_rebuild_theme_data(), 'theme');
+    $theme_data = _locale_translation_prepare_project_list(\Drupal::service('theme_handler')->rebuildThemeData(), 'theme');
     $project_info = new ProjectInfo();
     $project_info->processInfoList($projects, $module_data, 'module', TRUE, $additional_whitelist);
     $project_info->processInfoList($projects, $theme_data, 'theme', TRUE, $additional_whitelist);

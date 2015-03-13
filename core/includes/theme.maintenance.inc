@@ -62,13 +62,6 @@ function _drupal_maintenance_theme() {
     }
   }
 
-  // Ensure that system.module is loaded.
-  if (!function_exists('system_rebuild_theme_data')) {
-    $module_handler = \Drupal::moduleHandler();
-    $module_handler->addModule('system', 'core/modules/system');
-    $module_handler->load('system');
-  }
-
   $themes = \Drupal::service('theme_handler')->listInfo();
 
   // If no themes are installed yet, or if the requested custom theme is not

@@ -76,7 +76,7 @@ class Theme extends Updater implements UpdaterInterface {
   public function postInstall() {
     // Update the theme info.
     clearstatcache();
-    system_rebuild_theme_data();
+    \Drupal::service('theme_handler')->rebuildThemeData();
   }
 
   /**

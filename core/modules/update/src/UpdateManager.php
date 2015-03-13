@@ -9,6 +9,7 @@ namespace Drupal\update;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -64,6 +65,13 @@ class UpdateManager implements UpdateManagerInterface {
   protected $availableReleasesTempStore;
 
   /**
+   * The theme handler.
+   *
+   * @var \Drupal\Core\Extension\ThemeHandlerInterface
+   */
+  protected $themeHandler;
+
+  /**
    * Constructs a UpdateManager.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -76,13 +84,16 @@ class UpdateManager implements UpdateManagerInterface {
    *   The translation service.
    * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_expirable_factory
    *   The expirable key/value factory.
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   *   The theme handler.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, UpdateProcessorInterface $update_processor, TranslationInterface $translation, KeyValueFactoryInterface $key_value_expirable_factory) {
+  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, UpdateProcessorInterface $update_processor, TranslationInterface $translation, KeyValueFactoryInterface $key_value_expirable_factory, ThemeHandlerInterface $theme_handler) {
     $this->updateSettings = $config_factory->get('update.settings');
     $this->moduleHandler = $module_handler;
     $this->updateProcessor = $update_processor;
     $this->stringTranslation = $translation;
     $this->keyValueStore = $key_value_expirable_factory->get('update');
+    $this->themeHandler = $theme_handler;
     $this->availableReleasesTempStore = $key_value_expirable_factory->get('update_available_releases');
     $this->projects = array();
   }
@@ -123,7 +134,7 @@ class UpdateManager implements UpdateManagerInterface {
       if (empty($this->projects)) {
         // Still empty, so we have to rebuild.
         $module_data = system_rebuild_module_data();
-        $theme_data = system_rebuild_theme_data();
+        $theme_data = $this->themeHandler->rebuildThemeData();
         $project_info = new ProjectInfo();
         $project_info->processInfoList($this->projects, $module_data, 'module', TRUE);
         $project_info->processInfoList($this->projects, $theme_data, 'theme', TRUE);
