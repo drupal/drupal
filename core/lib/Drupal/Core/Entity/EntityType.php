@@ -203,18 +203,11 @@ class EntityType implements EntityTypeInterface {
   protected $field_ui_base_route;
 
   /**
-   * The list cache contexts for this entity type.
-   *
-   * @var string[]
-   */
-  protected $list_cache_contexts = [];
-
-  /**
    * The list cache tags for this entity type.
    *
-   * @var string[]
+   * @var array
    */
-  protected $list_cache_tags = [];
+  protected $list_cache_tags = array();
 
   /**
    * Constructs a new EntityType.
@@ -698,13 +691,6 @@ class EntityType implements EntityTypeInterface {
    */
   public function getGroupLabel() {
     return !empty($this->group_label) ? (string) $this->group_label : $this->t('Other', array(), array('context' => 'Entity type group'));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getListCacheContexts() {
-    return $this->list_cache_contexts;
   }
 
   /**

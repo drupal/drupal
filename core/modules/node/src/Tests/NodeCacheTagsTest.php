@@ -58,11 +58,4 @@ class NodeCacheTagsTest extends EntityWithUriCacheTagsTestBase {
     return array('user:' . $node->getOwnerId(), 'user_view');
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function getAdditionalCacheContextsForEntityListing() {
-    return ['node_view_grants'];
-  }
-
 }

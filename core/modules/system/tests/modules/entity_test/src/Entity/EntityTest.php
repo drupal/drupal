@@ -33,7 +33,6 @@ use Drupal\user\UserInterface;
  *   },
  *   base_table = "entity_test",
  *   persistent_cache = FALSE,
- *   list_cache_contexts = { "entity_test_view_grants" },
  *   entity_keys = {
  *     "id" = "id",
  *     "uuid" = "uuid",

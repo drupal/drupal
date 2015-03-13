@@ -137,7 +137,6 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
     $data[$views_base_table]['table']['base'] = [
       'field' => $base_field,
       'title' => $this->entityType->getLabel(),
-      'cache_contexts' => $this->entityType->getListCacheContexts(),
     ];
 
     if ($label_key = $this->entityType->getKey('label')) {

@@ -162,7 +162,6 @@ class EntityTestController extends ControllerBase {
       '#items' => $labels,
       '#title' => $entity_type_id . ' entities',
       '#cache' => [
-        'contexts' => $entity_type_definition->getListCacheContexts(),
         'tags' => $cache_tags,
       ],
     ];
@@ -183,13 +182,11 @@ class EntityTestController extends ControllerBase {
    *   A renderable array.
    */
   public function listEntitiesEmpty($entity_type_id) {
-    $entity_type_definition = $this->entityManager()->getDefinition($entity_type_id);
     return [
       '#theme' => 'item_list',
       '#items' => [],
       '#cache' => [
-        'contexts' => $entity_type_definition->getListCacheContexts(),
-        'tags' => $entity_type_definition->getListCacheTags(),
+        'tags' => $this->entityManager()->getDefinition($entity_type_id)->getListCacheTags(),
       ],
     ];
   }

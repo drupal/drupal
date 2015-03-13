@@ -159,16 +159,6 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
   /**
    * Returns the additional cache tags for the tested entity's listing by type.
    *
-   * @return string[]
-   *   An array of the additional cache contexts.
-   */
-  protected function getAdditionalCacheContextsForEntityListing() {
-    return [];
-  }
-
-  /**
-   * Returns the additional cache tags for the tested entity's listing by type.
-   *
    * Necessary when there are unavoidable default entities of this type, e.g.
    * the anonymous and administrator User entities always exist.
    *
@@ -392,19 +382,13 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     $this->verifyPageCache($empty_entity_listing_url, 'MISS');
     // Verify a cache hit, but also the presence of the correct cache tags.
     $this->verifyPageCache($empty_entity_listing_url, 'HIT', $empty_entity_listing_cache_tags);
-    // Verify the entity type's list cache contexts are present.
-    $contexts_in_header = $this->drupalGetHeader('X-Drupal-Cache-Contexts');
-    $this->assertEqual($this->getAdditionalCacheContextsForEntityListing(), empty($contexts_in_header) ? [] : explode(' ', $contexts_in_header));
 
 
     $this->pass("Test listing containing referenced entity.", 'Debug');
     // Prime the page cache for the listing containing the referenced entity.
-    $this->verifyPageCache($nonempty_entity_listing_url, 'MISS', $nonempty_entity_listing_cache_tags);
+    $this->verifyPageCache($nonempty_entity_listing_url, 'MISS');
     // Verify a cache hit, but also the presence of the correct cache tags.
     $this->verifyPageCache($nonempty_entity_listing_url, 'HIT', $nonempty_entity_listing_cache_tags);
-    // Verify the entity type's list cache contexts are present.
-    $contexts_in_header = $this->drupalGetHeader('X-Drupal-Cache-Contexts');
-    $this->assertEqual($this->getAdditionalCacheContextsForEntityListing(), empty($contexts_in_header) ? [] : explode(' ', $contexts_in_header));
 
 
     // Verify that after modifying the referenced entity, there is a cache miss

@@ -310,14 +310,13 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
 
     $current_display = $executable->current_display;
     $displays = $this->get('display');
-    foreach (array_keys($displays) as $display_id) {
-      $display =& $this->getDisplay($display_id);
+    foreach ($displays as $display_id => $display) {
       $executable->setDisplay($display_id);
 
       list($display['cache_metadata']['cacheable'], $display['cache_metadata']['contexts']) = $executable->getDisplay()->calculateCacheMetadata();
       // Always include at least the language context as there will be most
       // probable translatable strings in the view output.
-      $display['cache_metadata']['contexts'][] = 'language';
+      $display['cache_metadata']['contexts'][] = 'cache.context.language';
       $display['cache_metadata']['contexts'] = array_unique($display['cache_metadata']['contexts']);
     }
     // Restore the previous active display.

@@ -250,6 +250,16 @@ views_display:
     rendering_language:
       type: string
       label: 'Entity language'
+    cache_metadata:
+      type: mapping
+      label: 'Cache metadata'
+      mapping:
+        cacheable:
+          type: boolean
+          label: 'Cacheable'
+        contexts:
+          type: sequence
+          label: 'Cache contexts'
     exposed_block:
       type: boolean
       label: 'Put the exposed form in a block'

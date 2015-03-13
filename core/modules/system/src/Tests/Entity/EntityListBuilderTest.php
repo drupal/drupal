@@ -56,17 +56,4 @@ class EntityListBuilderTest extends WebTestBase {
     $this->assertRaw('Test entity 51', 'Test entity 51 is shown.');
   }
 
-  /**
-   * Tests that the correct cache contexts are set.
-   */
-  public function testCacheContexts() {
-    /** @var \Drupal\Core\Entity\EntityListBuilderInterface $list_builder */
-    $list_builder = $this->container->get('entity.manager')->getListBuilder('entity_test');
-
-    $build = $list_builder->render();
-    $this->container->get('renderer')->render($build);
-
-    $this->assertEqual(['entity_test_view_grants'], $build['#cache']['contexts']);
-  }
-
 }
