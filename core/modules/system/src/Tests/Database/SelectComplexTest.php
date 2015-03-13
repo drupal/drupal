@@ -7,7 +7,8 @@
 
 namespace Drupal\system\Tests\Database;
 
-use \Drupal\Core\Database\RowCountException;
+use Drupal\Core\Database\Database;
+use Drupal\Core\Database\RowCountException;
 
 /**
  * Tests the Select query builder with more complex queries.
@@ -220,7 +221,10 @@ class SelectComplexTest extends DatabaseTestBase {
 
     // Check that the ordering clause is handled properly.
     $orderby = $query->getOrderBy();
-    $this->assertEqual($orderby['name'], 'ASC', 'Query correctly sets ordering clause.');
+    // The orderby string is different for PostgreSQL.
+    // @see Drupal\Core\Database\Driver\pgsql\Select::orderBy()
+    $db_type = Database::getConnection()->databaseType();
+    $this->assertEqual($orderby['name'], ($db_type == 'pgsql' ? 'ASC NULLS FIRST' : 'ASC'), 'Query correctly sets ordering clause.');
     $orderby = $count->getOrderBy();
     $this->assertFalse(isset($orderby['name']), 'Count query correctly unsets ordering caluse.');
 

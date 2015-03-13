@@ -52,11 +52,15 @@ class Select extends QuerySelect {
    * directly in SelectQuery::orderBy().
    */
   public function orderBy($field, $direction = 'ASC') {
-    // Call parent function to order on this.
-    $return = parent::orderBy($field, $direction);
+    // Only allow ASC and DESC, default to ASC.
+    // Emulate MySQL default behavior to sort NULL values first for ascending,
+    // and last for descending.
+    // @see http://www.postgresql.org/docs/9.3/static/queries-order.html
+    $direction = strtoupper($direction) == 'DESC' ? 'DESC NULLS LAST' : 'ASC NULLS FIRST';
+    $this->order[$field] = $direction;
 
     if ($this->hasTag('entity_query')) {
-      return $return;
+      return $this;
     }
 
     // If there is a table alias specified, split it up.
@@ -68,14 +72,14 @@ class Select extends QuerySelect {
       if (!empty($table)) {
         // If table alias is given, check if field and table exists.
         if ($existing_field['table'] == $table && $existing_field['field'] == $table_field) {
-          return $return;
+          return $this;
         }
       }
       else {
         // If there is no table, simply check if the field exists as a field or
         // an aliased field.
         if ($existing_field['alias'] == $field) {
-          return $return;
+          return $this;
         }
       }
     }
@@ -83,7 +87,7 @@ class Select extends QuerySelect {
     // Also check expression aliases.
     foreach ($this->expressions as $expression) {
       if ($expression['alias'] == $this->connection->escapeAlias($field)) {
-        return $return;
+        return $this;
       }
     }
 
@@ -93,7 +97,7 @@ class Select extends QuerySelect {
     // actually belongs to a different table, it must be added manually.
     foreach ($this->tables as $table) {
       if (!empty($table['all_fields'])) {
-        return $return;
+        return $this;
       }
     }
 
@@ -101,12 +105,12 @@ class Select extends QuerySelect {
     // it is considered an expression, these can't be handled automatically
     // either.
     if ($this->connection->escapeField($field) != $field) {
-      return $return;
+      return $this;
     }
 
     // This is a case that can be handled automatically, add the field.
     $this->addField(NULL, $field);
-    return $return;
+    return $this;
   }
 
   /**
