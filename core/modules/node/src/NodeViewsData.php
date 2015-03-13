@@ -39,7 +39,6 @@ class NodeViewsData extends EntityViewsData {
     $data['node_field_data']['type']['argument']['id'] = 'node_type';
 
     $data['node_field_data']['langcode']['help'] = t('The language of the content or translation.');
-    $data['node_field_data']['langcode']['field']['id'] = 'node_language';
 
     $data['node_field_data']['status']['field']['output formats'] = [
       'published-notpublished' => array(t('Published'), t('Not published')),
@@ -289,7 +288,6 @@ class NodeViewsData extends EntityViewsData {
     ) + $data['node_revision']['vid'];
 
     $data['node_field_revision']['langcode']['help'] = t('The language the original content is in.');
-    $data['node_field_revision']['langcode']['field']['id'] = 'node_language';
 
     $data['node_revision']['revision_log']['field']['id'] = 'xss';
 
@@ -311,7 +309,6 @@ class NodeViewsData extends EntityViewsData {
     $data['node_field_revision']['title']['field']['id'] = 'node_revision';
 
     $data['node_field_revision']['langcode']['help'] = t('The language of the content or translation.');
-    $data['node_field_revision']['langcode']['field']['id'] = 'node_language';
 
     $data['node_revision']['link_to_revision'] = array(
       'field' => array(

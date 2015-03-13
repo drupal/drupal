@@ -248,6 +248,13 @@ field.formatter.settings.string:
       type: boolean
       label: 'Link to the entity'
 
+field.formatter.settings.language:
+  type: field.formatter.settings.string
+  mapping:
+    native_language:
+      type: boolean
+      label: 'Display in native language'
+
 field.formatter.settings.number_decimal:
   type: mapping
   label: 'Number decimal display format settings'

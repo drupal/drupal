@@ -497,10 +497,10 @@ function language_field_info_alter(&$info) {
  * Implements hook_entity_field_access()
  */
 function language_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
-  // Only allow access to a langcode field if the entity it is attached to is
-  // configured to have an alterable language.
-  // Without items we can not decide whether or not to allow access.
-  if ($items) {
+  // Only allow edit access on a langcode field if the entity it is attached to
+  // is configured to have an alterable language. Also without items we can not
+  // decide whether or not to allow access.
+  if ($items && $operation == 'edit') {
     // Check if we are dealing with a langcode field.
     $langcode_key = $items->getEntity()->getEntityType()->getKey('langcode');
     if ($field_definition->getName() == $langcode_key) {

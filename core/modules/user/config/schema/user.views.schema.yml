@@ -67,10 +67,6 @@ views_field_user:
       type: boolean
       label: 'Link this field to its user'
 
-views.field.user_language:
-  type: views_field_user
-  label: 'User language'
-
 views.field.user_link:
   type: views_field
   label: 'User link'

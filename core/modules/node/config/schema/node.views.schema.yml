@@ -93,14 +93,6 @@ views.argument_validator.node:
       type: string
       label: 'Filter value format'
 
-views.field.node_language:
-  type: views.field.node
-  label: 'Node language'
-  mapping:
-    native_language:
-      type: boolean
-      label: 'Native language'
-
 views.field.node:
   type: views_field
   label: 'Node'

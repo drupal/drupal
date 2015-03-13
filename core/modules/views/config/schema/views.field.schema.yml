@@ -178,6 +178,10 @@ views.field.xss:
 views.field.language:
   type: views_field
   label: 'Language'
+  mapping:
+    native_language:
+      type: boolean
+      label: 'Display in native language'
 
 views.field.bulk_form:
   type: views_field_bulk_form

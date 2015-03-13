@@ -783,7 +783,7 @@ class EntityViewsDataTest extends UnitTestCase {
    *   The views data to check.
    */
   protected function assertLanguageField($data) {
-    $this->assertEquals('language', $data['field']['id']);
+    $this->assertEquals('field', $data['field']['id']);
     $this->assertEquals('language', $data['filter']['id']);
     $this->assertEquals('language', $data['argument']['id']);
     $this->assertEquals('standard', $data['sort']['id']);

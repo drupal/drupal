@@ -159,11 +159,12 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          link_to_node: false
-          native_language: false
-          plugin_id: node_language
+          plugin_id: field
           entity_type: node
           entity_field: langcode
+          settings:
+            native_language: false
+          type: language
       filters:
         status:
           value: true

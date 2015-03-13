@@ -100,8 +100,6 @@ class TermViewsData extends EntityViewsData {
 
     $data['taxonomy_term_field_data']['description__value']['field']['click sortable'] = FALSE;
 
-    $data['taxonomy_term_field_data']['langcode']['field']['id'] = 'taxonomy_term_language';
-
     $data['taxonomy_term_field_data']['changed']['title'] = t('Updated date');
     $data['taxonomy_term_field_data']['changed']['help'] = t('The date the term was last updated.');
 

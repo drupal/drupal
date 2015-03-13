@@ -35,10 +35,9 @@ class LanguageField extends FieldPluginBase {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     $form['native_language'] = array(
-      '#title' => $this->t('Native language'),
+      '#title' => $this->t('Display in native language'),
       '#type' => 'checkbox',
       '#default_value' => $this->options['native_language'],
-      '#description' => $this->t('If enabled, the native name of the language will be displayed'),
     );
   }
 
@@ -46,11 +45,9 @@ class LanguageField extends FieldPluginBase {
    * {@inheritdoc}
    */
   public function render(ResultRow $values) {
-    // @todo: Drupal Core dropped native language until config translation is
-    // ready, see http://drupal.org/node/1616594.
     $value = $this->getValue($values);
-    $language = \Drupal::languageManager()->getLanguage($value);
-    return $language ? $language->getName() : '';
+    $languages = $this->options['native_language'] ? \Drupal::languageManager()->getNativeLanguages() : \Drupal::languageManager()->getLanguages();
+    return isset($languages[$value]) ? $languages[$value]->getName() : '';
   }
 
 }

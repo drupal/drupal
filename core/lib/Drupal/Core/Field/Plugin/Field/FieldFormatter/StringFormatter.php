@@ -10,6 +10,7 @@ namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -104,12 +105,12 @@ class StringFormatter extends FormatterBase implements ContainerFactoryPluginInt
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    $build = [];
+    $summary = [];
     if ($this->getSetting('link_to_entity')) {
       $entity_type = $this->entityManager->getDefinition($this->fieldDefinition->getTargetEntityTypeId());
-      $build['#markup'] = $this->t('Linked to the @entity_label', ['@entity_label' => $entity_type->getLabel()]);
+      $summary[] = $this->t('Linked to the @entity_label', ['@entity_label' => $entity_type->getLabel()]);
     }
-    return $build;
+    return $summary;
   }
 
   /**
@@ -125,9 +126,7 @@ class StringFormatter extends FormatterBase implements ContainerFactoryPluginInt
     }
 
     foreach ($items as $delta => $item) {
-      // The text value has no text format assigned to it, so the user input
-      // should equal the output, including newlines.
-      $string = nl2br(String::checkPlain($item->value));
+      $string = $this->viewValue($item);
 
       if ($url) {
         $elements[$delta] = [
@@ -142,6 +141,21 @@ class StringFormatter extends FormatterBase implements ContainerFactoryPluginInt
     }
 
     return $elements;
+  }
+
+  /**
+   * Generate the output appropriate for one field item.
+   *
+   * @param \Drupal\Core\Field\FieldItemInterface $item
+   *   One field item.
+   *
+   * @return string
+   *   The textual output generated.
+   */
+  protected function viewValue(FieldItemInterface $item) {
+    // The text value has no text format assigned to it, so the user input
+    // should equal the output, including newlines.
+    return nl2br(String::checkPlain($item->value));
   }
 
 }
