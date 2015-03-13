@@ -406,6 +406,10 @@ class ViewExecutableTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
+    $page_display->expects($this->atLeastOnce())
+      ->method('isEnabled')
+      ->willReturn(TRUE);
+
     $display_collection = $this->getMockBuilder('Drupal\views\DisplayPluginCollection')
       ->disableOriginalConstructor()
       ->getMock();

@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Tests\Plugin;
 
+use Drupal\views\Views;
+
 /**
  * Tests the feed display plugin.
  *
@@ -20,7 +22,7 @@ class DisplayFeedTest extends PluginTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_display_feed');
+  public static $testViews = array('test_display_feed', 'test_attached_disabled');
 
   /**
    * Modules to enable.
@@ -74,4 +76,36 @@ class DisplayFeedTest extends PluginTestBase {
     $this->assertTrue(strpos($feed_icon[0]['href'], 'test-feed-display.xml'), 'The feed icon was found.');
   }
 
+  /**
+   * Tests that nothing is output when the feed display is disabled.
+   */
+  public function testDisabledFeed() {
+    $this->drupalCreateContentType(['type' => 'page']);
+    $this->drupalCreateNode();
+
+    // Ensure that the feed_1 display is attached to the page_1 display.
+    $view = Views::getView('test_attached_disabled');
+    $view->setDisplay('page_1');
+    $attached_displays = $view->display_handler->getAttachedDisplays();
+    $this->assertTrue(in_array('feed_1', $attached_displays), 'The feed display is attached to the page display.');
+
+    // Check that the rss header is output on the page display.
+    $this->drupalGet('/test-attached-disabled');
+    $feed_header = $this->xpath('//link[@rel="alternate"]');
+    $this->assertEqual($feed_header[0]['type'], 'application/rss+xml', 'The feed link has the type application/rss+xml.');
+    $this->assertTrue(strpos($feed_header[0]['href'], 'test-attached-disabled.xml'), 'Page display contains the correct feed URL.');
+
+    // Disable the feed display.
+    $view->displayHandlers->get('feed_1')->setOption('enabled', FALSE);
+    $view->save();
+
+    // Ensure there is no link rel present on the page.
+    $this->drupalGet('/test-attached-disabled');
+    $result = $this->xpath('//link[@rel="alternate"]');
+    $this->assertTrue(empty($result), 'Page display does not contain a feed header.');
+
+    // Ensure the feed attachment returns 'Not found'.
+    $this->drupalGet('/test-attached-disabled.xml');
+    $this->assertResponse(404);
+  }
 }

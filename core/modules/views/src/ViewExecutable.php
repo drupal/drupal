@@ -1578,8 +1578,12 @@ class ViewExecutable implements \Serializable {
     $this->is_attachment = TRUE;
     // Find out which other displays attach to the current one.
     foreach ($this->display_handler->getAttachedDisplays() as $id) {
-      $cloned_view = Views::executableFactory()->get($this->storage);
-      $this->displayHandlers->get($id)->attachTo($cloned_view, $this->current_display, $this->element);
+      $display_handler = $this->displayHandlers->get($id);
+      // Only attach enabled attachments.
+      if ($display_handler->isEnabled()) {
+        $cloned_view = Views::executableFactory()->get($this->storage);
+        $display_handler->attachTo($cloned_view, $this->current_display, $this->element);
+      }
     }
     $this->is_attachment = FALSE;
   }
