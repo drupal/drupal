@@ -80,9 +80,43 @@ display:
           entity_type: node
       filters:
         nid:
-          field: nid
           id: nid
           table: node_field_data
+          field: nid
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value:
+            min: ''
+            max: ''
+            value: '0'
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
           plugin_id: numeric
           entity_type: node
           entity_field: nid
@@ -163,6 +197,7 @@ display:
         type: default
       row:
         type: fields
+      display_extenders: {  }
     display_plugin: default
     display_title: Master
     id: default
@@ -174,6 +209,7 @@ display:
         page_1: page_1
       pager:
         type: some
+      display_extenders: {  }
     display_plugin: attachment
     display_title: Attachment
     id: attachment_1
@@ -185,6 +221,7 @@ display:
         page_1: page_1
       pager:
         type: some
+      display_extenders: {  }
     display_plugin: attachment
     display_title: Attachment
     id: attachment_2
@@ -192,6 +229,7 @@ display:
   page_1:
     display_options:
       path: test_destroy
+      display_extenders: {  }
     display_plugin: page
     display_title: Page
     id: page_1
