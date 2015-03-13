@@ -598,58 +598,6 @@ function views_hook_info() {
 }
 
 /**
- * Returns an array of all enabled views, as fully loaded $view objects.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\views\Views::getEnabledViews().
- */
-function views_get_enabled_views() {
-  return Views::getEnabledViews();
-}
-
-/**
- * Returns an array of all disabled views, as fully loaded $view objects.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\views\Views::getDisabledViews().
- */
-function views_get_disabled_views() {
-  return Views::getDisabledViews();
-}
-
-/**
- * Return an array of view as options array, that can be used by select,
- * checkboxes and radios as #options.
- *
- * @param bool $views_only
- *  If TRUE, only return views, not displays.
- * @param string $filter
- *  Filters the views on status. Can either be 'all' (default), 'enabled' or
- *  'disabled'
- * @param  mixed $exclude_view
- *  view or current display to exclude
- *  either a
- *  - views object (containing $exclude_view->storage->name and $exclude_view->current_display)
- *  - views name as string:  e.g. my_view
- *  - views name and display id (separated by ':'): e.g. my_view:default
- * @param bool $optgroup
- *  If TRUE, returns an array with optgroups for each view (will be ignored for
- *  $views_only = TRUE). Can be used by select
- * @param bool $sort
- *  If TRUE, the list of views is sorted ascending.
- *
- * @return array
- *  an associative array for use in select.
- *  - key: view name and display id separated by ':', or the view name only
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\views\Views::getViewsAsOptions().
- */
-function views_get_views_as_options($views_only = FALSE, $filter = 'all', $exclude_view = NULL, $optgroup = FALSE, $sort = FALSE) {
-  return Views::getViewsAsOptions($views_only, $filter, $exclude_view, $optgroup, $sort);
-}
-
-/**
  * Returns whether the view is enabled.
  *
  * @param \Drupal\views\Entity\View $view
