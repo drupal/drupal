@@ -114,6 +114,18 @@ views.view.*:
             label: 'Position'
           display_options:
             type: views.display.[%parent.display_plugin]
+          cache_metadata:
+            type: mapping
+            label: 'Cache metadata'
+            mapping:
+              cacheable:
+                type: boolean
+                label: 'Cacheable'
+              contexts:
+                type: sequence
+                label: 'Cache contexts'
+                sequence:
+                  type: string
 
 views_block:
   type: block_settings

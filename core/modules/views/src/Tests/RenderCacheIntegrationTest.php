@@ -10,9 +10,10 @@ namespace Drupal\views\Tests;
 use Drupal\Core\Cache\Cache;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\views\Views;
+use Drupal\views\Entity\View;
 
 /**
- * Tests the general integration between Views and the render cache.
+ * Tests the general integration between views and the render cache.
  *
  * @group views
  */
@@ -23,12 +24,12 @@ class RenderCacheIntegrationTest extends ViewUnitTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $testViews = ['entity_test_fields', 'entity_test_row'];
+  public static $testViews = ['test_view', 'test_display', 'entity_test_fields', 'entity_test_row'];
 
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['entity_test', 'user'];
+  public static $modules = ['entity_test', 'user', 'node'];
 
   /**
    * {@inheritdoc}
@@ -198,6 +199,29 @@ class RenderCacheIntegrationTest extends ViewUnitTestBase {
     $result_tags_page_1 = Cache::mergeTags($base_tags, $new_entities_cache_tags);
     $render_tags_page_1 = Cache::mergeTags($base_render_tags, $new_entities_cache_tags, ['entity_test_view']);
     $this->assertViewsCacheTags($view, $result_tags_page_1, $do_assert_views_caches, $render_tags_page_1);
+  }
+
+  /**
+   * Ensure that the view renderable contains the cache contexts.
+   */
+  public function testBuildRenderableWithCacheContexts() {
+    $view = View::load('test_view');
+    $display =& $view->getDisplay('default');
+    $display['cache_metadata']['contexts'] = ['beatles'];
+    $executable = $view->getExecutable();
+
+    $build = $executable->buildRenderable();
+    $this->assertEqual(['beatles'], $build['#cache']['contexts']);
+  }
+
+  /**
+   * Ensures that saving a view calculates the cache contexts.
+   */
+  public function testViewAddCacheMetadata() {
+    $view = View::load('test_display');
+    $view->save();
+
+    $this->assertEqual(['node_view_grants', 'language'], $view->getDisplay('default')['cache_metadata']['contexts']);
   }
 
 }
