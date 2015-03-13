@@ -153,8 +153,8 @@ function callback_batch_finished($success, $results, $operations) {
  */
 function hook_ajax_render_alter(array &$data) {
   // Inject any new status messages into the content area.
-  $status_messages = array('#theme' => 'status_messages');
-  $command = new \Drupal\Core\Ajax\PrependCommand('#block-system-main .content', drupal_render($status_messages));
+  $status_messages = array('#type' => 'status_messages');
+  $command = new \Drupal\Core\Ajax\PrependCommand('#block-system-main .content', \Drupal::service('renderer')->renderRoot($status_messages));
   $data[] = $command->render();
 }
 

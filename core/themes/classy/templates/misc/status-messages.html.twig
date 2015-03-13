@@ -25,6 +25,7 @@
  * @ingroup themeable
  */
 #}
+{% block messages %}
 {% for type, messages in message_list %}
   {%
     set classes = [
@@ -55,3 +56,4 @@
   {# Remove type specific classes. #}
   {{ attributes.removeClass(classes) }}
 {% endfor %}
+{% endblock messages %}

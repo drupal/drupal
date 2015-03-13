@@ -125,12 +125,10 @@ class ElementInfoManagerTest extends UnitTestCase {
       'page',
       array(
         '#type' => 'page',
-        '#show_messages' => TRUE,
         '#theme' => 'page',
         '#defaults_loaded' => TRUE,
       ),
       array('page' => array(
-        '#show_messages' => TRUE,
         '#theme' => 'page',
       )),
     );
@@ -141,7 +139,6 @@ class ElementInfoManagerTest extends UnitTestCase {
         '#defaults_loaded' => TRUE,
       ),
       array('page' => array(
-        '#show_messages' => TRUE,
         '#theme' => 'page',
       )),
     );
@@ -150,13 +147,11 @@ class ElementInfoManagerTest extends UnitTestCase {
       'page',
       array(
         '#type' => 'page',
-        '#show_messages' => TRUE,
         '#theme' => 'page',
         '#number' => 597219,
         '#defaults_loaded' => TRUE,
       ),
       array('page' => array(
-        '#show_messages' => TRUE,
         '#theme' => 'page',
       )),
       function ($alter_name, array &$info) {
@@ -188,7 +183,6 @@ class ElementInfoManagerTest extends UnitTestCase {
     $plugin->expects($this->once())
       ->method('getInfo')
       ->willReturn(array(
-        '#show_messages' => TRUE,
         '#theme' => 'page',
       ));
 
@@ -225,7 +219,6 @@ class ElementInfoManagerTest extends UnitTestCase {
       'Drupal\Core\Render\Element\ElementInterface',
       array(
         '#type' => 'page',
-        '#show_messages' => TRUE,
         '#theme' => 'page',
         '#defaults_loaded' => TRUE,
       ),
@@ -235,7 +228,6 @@ class ElementInfoManagerTest extends UnitTestCase {
       'Drupal\Core\Render\Element\FormElementInterface',
       array(
         '#type' => 'page',
-        '#show_messages' => TRUE,
         '#theme' => 'page',
         '#input' => TRUE,
         '#value_callback' => array('TestElementPlugin', 'valueCallback'),

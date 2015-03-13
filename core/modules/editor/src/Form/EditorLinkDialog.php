@@ -86,7 +86,7 @@ class EditorLinkDialog extends FormBase {
     if ($form_state->getErrors()) {
       unset($form['#prefix'], $form['#suffix']);
       $form['status_messages'] = [
-        '#theme' => 'status_messages',
+        '#type' => 'status_messages',
         '#weight' => -10,
       ];
       $response->addCommand(new HtmlCommand('#editor-link-dialog-form', $form));

@@ -1,0 +1,33 @@
+{% extends "@classy/misc/status-messages.html.twig" %}
+{#
+/**
+ * @file
+ * Default theme implementation for status messages.
+ *
+ * Displays status, error, and warning messages, grouped by type.
+ *
+ * An invisible heading identifies the messages for assistive technology.
+ * Sighted users see a colored box. See http://www.w3.org/TR/WCAG-TECHS/H69.html
+ * for info.
+ *
+ * Add an ARIA label to the contentinfo area so that assistive technology
+ * user agents will better describe this landmark.
+ *
+ * Available variables:
+ * - message_list: List of messages to be displayed, grouped by type.
+ * - status_headings: List of all status types.
+ * - display: (optional) May have a value of 'status' or 'error' when only
+ *   displaying messages of that specific type.
+ *
+ * @see template_preprocess_status_messages()
+ */
+#}
+{% block messages %}
+  {% if message_list is not empty %}
+    <div id="messages">
+      <div class="section clearfix">
+        {{ parent() }}
+      </div>
+    </div>
+  {% endif %}
+{% endblock messages %}

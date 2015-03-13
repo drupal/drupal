@@ -21,7 +21,6 @@ class Page extends RenderElement {
    */
   public function getInfo() {
     return array(
-      '#show_messages' => TRUE,
       '#theme' => 'page',
       '#title' => '',
     );

@@ -168,6 +168,9 @@ function system_theme() {
       'render element' => 'elements',
       'base hook' => 'block',
     ),
+    'block__system_messages_block' => array(
+      'base hook' => 'block',
+    ),
     'block__system_menu_block' => array(
       'render element' => 'elements',
       'base hook' => 'block',

@@ -38,8 +38,8 @@ class FileWidgetAjaxController extends FormAjaxController {
       // Invalid request.
       drupal_set_message(t('An unrecoverable error occurred. The uploaded file likely exceeded the maximum file size (@size) that this server supports.', array('@size' => format_size(file_upload_max_size()))), 'error');
       $response = new AjaxResponse();
-      $status_messages = array('#theme' => 'status_messages');
-      return $response->addCommand(new ReplaceCommand(NULL, drupal_render($status_messages)));
+      $status_messages = array('#type' => 'status_messages');
+      return $response->addCommand(new ReplaceCommand(NULL, $this->renderer->renderRoot($status_messages)));
     }
 
     try {
@@ -53,8 +53,8 @@ class FileWidgetAjaxController extends FormAjaxController {
       // Invalid form_build_id.
       drupal_set_message(t('An unrecoverable error occurred. Use of this form has expired. Try reloading the page and submitting again.'), 'error');
       $response = new AjaxResponse();
-      $status_messages = array('#theme' => 'status_messages');
-      return $response->addCommand(new ReplaceCommand(NULL, drupal_render($status_messages)));
+      $status_messages = array('#type' => 'status_messages');
+      return $response->addCommand(new ReplaceCommand(NULL, $this->renderer->renderRoot($status_messages)));
     }
 
     // Get the current element and count the number of files.
@@ -76,9 +76,9 @@ class FileWidgetAjaxController extends FormAjaxController {
       $form['#suffix'] .= '<span class="ajax-new-content"></span>';
     }
 
-    $status_messages = array('#theme' => 'status_messages');
-    $form['#prefix'] .= drupal_render($status_messages);
-    $output = drupal_render($form);
+    $status_messages = array('#type' => 'status_messages');
+    $form['#prefix'] .= $this->renderer->renderRoot($status_messages);
+    $output = $this->renderer->renderRoot($form);
 
     $response = new AjaxResponse();
     $response->setAttachments($form['#attached']);

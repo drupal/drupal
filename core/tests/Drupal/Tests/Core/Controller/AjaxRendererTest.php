@@ -74,8 +74,8 @@ class TestAjaxRenderer extends AjaxRenderer {
     if (isset($elements['#markup'])) {
       return $elements['#markup'];
     }
-    elseif (isset($elements['#theme'])) {
-      return $elements['#theme'];
+    elseif (isset($elements['#type'])) {
+      return $elements['#type'];
     }
     else {
       return 'Markup';

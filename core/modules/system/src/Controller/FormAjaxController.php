@@ -10,6 +10,7 @@ namespace Drupal\system\Controller;
 use Drupal\Core\Ajax\UpdateBuildIdCommand;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\system\FileAjaxForm;
 use Drupal\Core\Form\FormBuilderInterface;
 use Psr\Log\LoggerInterface;
@@ -38,17 +39,26 @@ class FormAjaxController implements ContainerInjectionInterface {
   protected $formBuilder;
 
   /**
+   * The renderer.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
    * Constructs a FormAjaxController object.
    *
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
-   *
    * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
    *   The form builder.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer.
    */
-  public function __construct(LoggerInterface $logger, FormBuilderInterface $form_builder) {
+  public function __construct(LoggerInterface $logger, FormBuilderInterface $form_builder, RendererInterface $renderer) {
     $this->logger = $logger;
     $this->formBuilder = $form_builder;
+    $this->renderer = $renderer;
   }
 
   /**
@@ -57,7 +67,8 @@ class FormAjaxController implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('logger.factory')->get('ajax'),
-      $container->get('form_builder')
+      $container->get('form_builder'),
+      $container->get('renderer')
     );
   }
 

@@ -1991,7 +1991,7 @@ function hook_display_variant_plugin_alter(array &$definitions) {
  * 'wrapper' method and return HTML markup. This is not the case if you return
  * commands, but if you would like to show status messages, you can add
  * @code
- * array('#theme' => 'status_messages')
+ * array('#type' => 'status_messages')
  * @endcode
  * to a render array, use drupal_render() to render it, and add a command to
  * place the messages in an appropriate location.

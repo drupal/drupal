@@ -191,6 +191,9 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
    *   #markup array.
    */
   protected function ajaxFormWrapper($form_class, FormStateInterface &$form_state) {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = \Drupal::service('renderer');
+
     // This won't override settings already in.
     if (!$form_state->has('rerender')) {
       $form_state->set('rerender', FALSE);
@@ -203,7 +206,7 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
     $form_state->disableCache();
 
     $form = \Drupal::formBuilder()->buildForm($form_class, $form_state);
-    $output = drupal_render($form);
+    $output = $renderer->renderRoot($form);
     drupal_process_attached($form);
 
     // These forms have the title built in, so set the title here:
@@ -220,8 +223,8 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
       $response->setAttachments($form['#attached']);
 
       $display = '';
-      $status_messages = array('#theme' => 'status_messages');
-      if ($messages = drupal_render($status_messages)) {
+      $status_messages = array('#type' => 'status_messages');
+      if ($messages = $renderer->renderRoot($status_messages)) {
         $display = '<div class="views-messages">' . $messages . '</div>';
       }
       $display .= $output;

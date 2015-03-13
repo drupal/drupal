@@ -1,0 +1,17 @@
+id: seven_messages
+theme: seven
+weight: 0
+status: true
+langcode: en
+region: messages
+plugin: system_messages_block
+settings:
+  id: system_messages_block
+  label: 'Status messages'
+  provider: system
+  label_display: '0'
+dependencies:
+  module:
+    - system
+  theme:
+    - seven

@@ -48,13 +48,13 @@ class MessagesTest extends UnitTestCase {
   public function testRender() {
     // The handler is configured to show with empty views by default, so should
     // appear.
-    $this->assertSame(array('#theme' => 'status_messages'), $this->messagesHandler->render());
+    $this->assertSame(array('#type' => 'status_messages'), $this->messagesHandler->render());
 
     // Turn empty off, and make sure it isn't rendered.
     $this->messagesHandler->options['empty'] = FALSE;
     // $empty parameter passed to render will still be FALSE, so should still
     // appear.
-    $this->assertSame(array('#theme' => 'status_messages'), $this->messagesHandler->render());
+    $this->assertSame(array('#type' => 'status_messages'), $this->messagesHandler->render());
     // Should now be empty as both the empty option and parameter are empty.
     $this->assertSame(array(), $this->messagesHandler->render(TRUE));
   }

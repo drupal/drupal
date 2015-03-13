@@ -38,7 +38,6 @@
  * - title: The page title, for use in the actual content.
  * - title_suffix: Additional output populated by modules, intended to be
  *   displayed after the main title tag that appears in the template.
- * - messages: Status and error messages. Should be displayed prominently.
  * - tabs: Tabs linking to any sub-pages beneath the current page (e.g., the
  *   view and edit tabs when displaying a node).
  * - action_links: Actions local to the page, such as "Add menu" on the menu
@@ -50,6 +49,7 @@
  *
  * Regions:
  * - page.header: Items for the header region.
+ * - page.messages: Status and error messages. Should be displayed prominently.
  * - page.primary_menu: Items for the primary menu region.
  * - page.secondary_menu: Items for the secondary menu region.
  * - page.featured_top: Items for the featured top region.
@@ -109,11 +109,7 @@
         {{ page.primary_menu }}
       </div>
     </header>
-    {% if messages %}
-      <div id="messages">
-        <div class="section clearfix">{{ messages }}</div>
-      </div>
-    {% endif %}
+    {{ page.messages }}
     {% if page.featured_top %}
       <div class="featured-top">
         <aside class="featured-top__inner clearfix" role="complementary">
