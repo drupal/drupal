@@ -107,7 +107,7 @@ class BlockContentListTest extends BlockContentTestBase {
     $this->assertNoFieldByXpath('//td', $new_label, 'No label found for deleted custom block.');
 
     // Confirm that the empty text is displayed.
-    $this->assertText(t('There is no Custom Block yet.'));
+    $this->assertText(t('There is no Custom block yet.'));
   }
 
 }
