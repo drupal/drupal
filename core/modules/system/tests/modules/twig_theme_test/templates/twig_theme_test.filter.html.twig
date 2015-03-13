@@ -21,3 +21,4 @@
 <div><span{{ attributes|without('id', 'class') }}>Without id and class attributes.</span></div>
 <div><span{{ attributes }}>All attributes again.</span></div>
 <div id="{{ 'quotes Here!'|clean_id }}"><span class="{{ 'Gray like a bunny!'|clean_class }} {{ 'BEM__ized--Top Feature'|clean_class }}" id="{{ 'quotes Here!'|clean_id }}">ID and class. Having the same ID twice is not valid markup but we want to make sure the filter doesn't use \Drupal\Component\Utility\Html::getUniqueId().</span></div>
+<div><strong>Rendered author string length:</strong> {{ quote.author|render|length }}.</div>
