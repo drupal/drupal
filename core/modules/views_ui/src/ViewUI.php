@@ -570,7 +570,7 @@ class ViewUI implements ViewEntityInterface {
 
     $rows = array('query' => array(), 'statistics' => array());
 
-    $errors = $this->getExecutable()->validate();
+    $errors = $executable->validate();
     $executable->destroy();
     if (empty($errors)) {
       $this->ajax = TRUE;
@@ -733,7 +733,7 @@ class ViewUI implements ViewEntityInterface {
                   '#template' => "<strong>{% trans 'Query build time' %}</strong>",
                 ),
               ),
-              t('@time ms', array('@time' => intval($this->getExecutable()->build_time * 100000) / 100)),
+              t('@time ms', array('@time' => intval($executable->build_time * 100000) / 100)),
             );
 
             $rows['statistics'][] = array(
@@ -743,7 +743,7 @@ class ViewUI implements ViewEntityInterface {
                   '#template' => "<strong>{% trans 'Query execute time' %}</strong>",
                 ),
               ),
-              t('@time ms', array('@time' => intval($this->getExecutable()->execute_time * 100000) / 100)),
+              t('@time ms', array('@time' => intval($executable->execute_time * 100000) / 100)),
             );
 
             $rows['statistics'][] = array(
