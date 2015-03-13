@@ -1192,7 +1192,7 @@ abstract class WebTestBase extends TestBase {
    */
   protected function refreshVariables() {
     // Clear the tag cache.
-    \Drupal::service('cache_tags.invalidator.checksum')->reset();
+    \Drupal::service('cache_tags.invalidator')->resetChecksums();
     foreach (Cache::getBins() as $backend) {
       if (is_callable(array($backend, 'reset'))) {
         $backend->reset();
