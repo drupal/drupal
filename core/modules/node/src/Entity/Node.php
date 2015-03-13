@@ -45,6 +45,7 @@ use Drupal\user\UserInterface;
  *   revision_table = "node_revision",
  *   revision_data_table = "node_field_revision",
  *   translatable = TRUE,
+ *   list_cache_contexts = { "node_view_grants" },
  *   entity_keys = {
  *     "id" = "nid",
  *     "revision" = "vid",

@@ -218,6 +218,9 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
       '#title' => $this->getTitle(),
       '#rows' => array(),
       '#empty' => $this->t('There is no @label yet.', array('@label' => $this->entityType->getLabel())),
+      '#cache' => [
+        'contexts' => $this->entityType->getListCacheContexts(),
+      ],
     );
     foreach ($this->load() as $entity) {
       if ($row = $this->buildRow($entity)) {

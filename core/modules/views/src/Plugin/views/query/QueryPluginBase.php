@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\query;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Plugin\CacheablePluginInterface;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
@@ -35,7 +36,7 @@ use Drupal\views\Views;
 /**
  * Base plugin class for Views queries.
  */
-abstract class QueryPluginBase extends PluginBase {
+abstract class QueryPluginBase extends PluginBase implements CacheablePluginInterface {
 
   /**
    * A pager plugin that should be provided by the display.
@@ -310,6 +311,27 @@ abstract class QueryPluginBase extends PluginBase {
     }
 
     return $entity_tables;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isCacheable() {
+    // This plugin can't really determine that.
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    $contexts = [];
+    if (($views_data = Views::viewsData()->get($this->view->storage->get('base_table'))) && !empty($views_data['table']['entity type'])) {
+      $entity_type_id = $views_data['table']['entity type'];
+      $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
+      $contexts = $entity_type->getListCacheContexts();
+    }
+    return $contexts;
   }
 
   /**

@@ -118,6 +118,17 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   protected static $unpackOptions = array();
 
   /**
+   * The display information coming directly from the view entity.
+   *
+   * @see \Drupal\views\Entity\View::getDisplay()
+   *
+   * @todo \Drupal\views\Entity\View::duplicateDisplayAsType directly access it.
+   *
+   * @var array
+   */
+  public $display;
+
+  /**
    * Constructs a new DisplayPluginBase object.
    *
    * Because DisplayPluginBase::initDisplay() takes the display configuration by
@@ -2302,6 +2313,9 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       '#arguments' => $args,
       '#embed' => FALSE,
       '#view' => $this->view,
+      '#cache' => [
+        'contexts' => isset($this->display['cache_metadata']['contexts']) ?  $this->display['cache_metadata']['contexts'] : [],
+      ],
     ];
   }
 

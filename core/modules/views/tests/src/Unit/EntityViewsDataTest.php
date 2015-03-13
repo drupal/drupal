@@ -89,6 +89,7 @@ class EntityViewsDataTest extends UnitTestCase {
       'label' => 'Entity test',
       'entity_keys' => ['id' => 'id', 'langcode' => 'langcode'],
       'provider' => 'entity_test',
+      'list_cache_contexts' => ['entity_test_list_cache_context'],
     ]);
 
     $this->translationManager = $this->getStringTranslationStub();
@@ -164,6 +165,7 @@ class EntityViewsDataTest extends UnitTestCase {
     $this->assertEquals('entity_test', $data['entity_test']['table']['provider']);
 
     $this->assertEquals('id', $data['entity_test']['table']['base']['field']);
+    $this->assertEquals(['entity_test_list_cache_context'], $data['entity_test']['table']['base']['cache_contexts']);
     $this->assertEquals('Entity test', $data['entity_test']['table']['base']['title']);
 
     $this->assertFalse(isset($data['entity_test']['table']['defaults']));
@@ -172,7 +174,6 @@ class EntityViewsDataTest extends UnitTestCase {
     $this->assertFalse(isset($data['revision_table']));
     $this->assertFalse(isset($data['revision_data_table']));
   }
-
 
   /**
    * Tests data_table support.
