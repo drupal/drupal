@@ -19,6 +19,7 @@ use Drupal\Core\Field\FieldItemListInterface;
  *   field_types = {
  *     "timestamp",
  *     "created",
+ *     "changed",
  *   }
  * )
  */

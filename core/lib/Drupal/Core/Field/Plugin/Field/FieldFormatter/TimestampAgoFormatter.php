@@ -23,7 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   field_types = {
  *     "timestamp",
  *     "created",
- *     "updated",
+ *     "changed",
  *   }
  * )
  */
