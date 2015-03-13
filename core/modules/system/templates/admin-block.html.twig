@@ -14,13 +14,13 @@
  * @ingroup themeable
  */
 #}
-<div class="admin-panel">
+<div class="panel">
   {% if block.title %}
-    <h3>{{ block.title }}</h3>
+    <h3 class="panel__title">{{ block.title }}</h3>
   {% endif %}
   {% if block.content %}
-    <div class="body">{{ block.content }}</div>
+    <div class="panel__content">{{ block.content }}</div>
   {% elseif block.description %}
-    <div class="description">{{ block.description }}</div>
+    <div class="panel__description">{{ block.description }}</div>
   {% endif %}
 </div>

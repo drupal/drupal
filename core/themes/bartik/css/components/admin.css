@@ -31,27 +31,4 @@
   width: 500px;
 }
 
-/* Configuration. */
-div.admin-panel {
-  background: #fbfbfb;
-  border: 1px solid #ccc;
-  margin: 10px 0;
-  padding: 0 5px 5px;
-}
-div.admin-panel h3 {
-  margin: 16px 7px;
-}
-div.admin-panel dt {
-  border-top: 1px solid #ccc;
-  padding: 7px 0 0;
-}
-div.admin-panel dd {
-  margin: 0 0 10px;
-}
-div.admin-panel .description {
-  margin: 0 0 14px 7px; /* LTR */
-}
-[dir="rtl"] div.admin-panel .description {
-  margin-left: 0;
-  margin-right: 7px;
-}
+

@@ -21,9 +21,11 @@ global-styling:
       css/components/header.css: {}
       css/components/region-help.css: {}
       css/components/item-list.css: {}
+      css/components/list-group.css: {}
       css/components/messages.css: {}
       css/components/node-preview.css: {}
       css/components/pager.css: {}
+      css/components/panel.css: {}
       css/components/primary-menu.css: {}
       css/components/search.css: {}
       css/components/search-results.css: {}

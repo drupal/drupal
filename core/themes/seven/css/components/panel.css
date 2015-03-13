@@ -1,18 +1,15 @@
 /**
- * Admin panel.
+ * @file
+ * Panel styling. Panels are used to visually group items together.
  */
-div.admin-panel,
-div.admin-panel .body {
-  padding: 0;
-  clear: left;
-}
-div.admin-panel {
+
+.panel {
   margin: 0 0 20px;
   padding: 9px;
   background: #f8f8f8;
   border: 1px solid #ccc;
 }
-div.admin-panel h3 {
+.panel__title {
   font-size: 0.923em;
   text-transform: uppercase;
   margin: 0;

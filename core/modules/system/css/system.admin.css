@@ -45,13 +45,13 @@
 }
 
 /**
- * Administration blocks.
+ * Panel.
+ * Used to visually group items together.
  */
-.admin-panel {
-  margin: 0;
-  padding: 5px 5px 15px 5px;
+.panel {
+  padding: 5px 5px 15px;
 }
-.admin-panel .description {
+.panel__description {
   margin: 0 0 3px;
   padding: 2px 0 3px 0;
 }
