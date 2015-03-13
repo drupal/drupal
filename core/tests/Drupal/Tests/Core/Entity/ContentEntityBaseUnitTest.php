@@ -166,6 +166,9 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     $this->fieldTypePluginManager->expects($this->any())
       ->method('getDefaultFieldSettings')
       ->will($this->returnValue(array()));
+    $this->fieldTypePluginManager->expects($this->any())
+      ->method('createFieldItemList')
+      ->will($this->returnValue($this->getMock('Drupal\Core\Field\FieldItemListInterface')));
 
     $container = new ContainerBuilder();
     $container->set('entity.manager', $this->entityManager);
@@ -533,6 +536,17 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     $this->assertArrayEquals(
       $expected,
       $mock_base->getFields($include_computed)
+    );
+  }
+
+  /**
+   * @covers ::set
+   */
+  public function testSet() {
+    // Exercise set(), check if it returns $this
+    $this->assertSame(
+      $this->entity,
+      $this->entity->set('id', 0)
     );
   }
 

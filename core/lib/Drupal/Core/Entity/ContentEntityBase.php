@@ -409,6 +409,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     // notified to handle changes afterwards. We can ignore notify as there is
     // no parent to notify anyway.
     $this->get($name)->setValue($value, TRUE);
+    return $this;
   }
 
   /**
