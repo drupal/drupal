@@ -139,8 +139,8 @@ class ConfigEntityStorageTest extends UnitTestCase {
 
     $this->languageManager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
     $this->languageManager->expects($this->any())
-      ->method('getDefaultLanguage')
-      ->will($this->returnValue(new Language(array('langcode' => 'en'))));
+      ->method('getCurrentLanguage')
+      ->willReturn(new Language(array('id' => 'hu')));
 
     $this->configFactory = $this->getMock('Drupal\Core\Config\ConfigFactoryInterface');
 
@@ -175,6 +175,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $container->set('config.typed', $this->typedConfigManager);
     $container->set('cache_tags.invalidator', $this->cacheTagsInvalidator);
     $container->set('config.manager', $this->configManager);
+    $container->set('language_manager', $this->languageManager);
     \Drupal::setContainer($container);
 
   }
@@ -227,6 +228,34 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $this->assertSame('foo', $entity->id());
     $this->assertSame('bar', $entity->uuid());
     return $entity;
+  }
+
+  /**
+   * @covers ::create
+   * @covers ::doCreate
+   */
+  public function testCreateWithCurrentLanguage() {
+    $this->languageManager->expects($this->any())
+      ->method('getLanguage')
+      ->with('hu')
+      ->willReturn(new Language(array('id' => 'hu')));
+
+    $entity = $this->entityStorage->create(array('id' => 'foo'));
+    $this->assertSame('hu', $entity->language()->getId());
+  }
+
+  /**
+   * @covers ::create
+   * @covers ::doCreate
+   */
+  public function testCreateWithExplicitLanguage() {
+    $this->languageManager->expects($this->any())
+      ->method('getLanguage')
+      ->with('en')
+      ->willReturn(new Language(array('id' => 'en')));
+
+    $entity = $this->entityStorage->create(array('id' => 'foo', 'langcode' => 'en'));
+    $this->assertSame('en', $entity->language()->getId());
   }
 
   /**
