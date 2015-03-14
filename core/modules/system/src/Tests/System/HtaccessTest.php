@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\System;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests access restrictions provided by the default .htaccess file.
+ * Tests .htaccess is working correctly.
  *
  * @group system
  */
@@ -66,6 +66,16 @@ class HtaccessTest extends WebTestBase {
     $this->assertTrue(file_exists(\Drupal::root() . '/' . $path));
     $this->drupalGet($path);
     $this->assertResponse(403);
+  }
+
+  /**
+   * Tests that SVGZ files are served with Content-Encoding: gzip.
+   */
+  public function testSvgzContentEncoding() {
+    $this->drupalGet('core/modules/system/tests/logo.svgz');
+    $this->assertResponse(200);
+    $header = $this->drupalGetHeader('Content-Encoding');
+    $this->assertEqual($header, 'gzip');
   }
 
 }
