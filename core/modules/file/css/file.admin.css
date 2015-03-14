@@ -10,10 +10,6 @@
 .form-managed-file .form-submit {
   margin: 0 0.5em;
 }
-.form-managed-file .progress-disabled {
-  display: inline;
-  float: none;
-}
 .form-managed-file div.ajax-progress-bar {
   display: none;
   margin-top: 4px;

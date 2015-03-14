@@ -286,18 +286,6 @@ div.form-item-options-value-all {
 }
 /* @end */
 
-/* @group Drupal overrides */
-
-/* The .progress-disabled class added to the form on submit floats the element
- * left and causes the form width to shrink-wrap to the content. Setting the
- * width to 100% prevents this.
- */
-#views-ajax-body form {
-  width: 100%;
-}
-
-/* @end */
-
 /* @group Javascript dependent styling */
 
 .js-only {

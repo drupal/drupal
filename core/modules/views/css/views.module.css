@@ -8,11 +8,6 @@
 .views-align-center {
   text-align: center;
 }
-
-.view .progress-disabled {
-  float: none;
-}
-
 /* Grid style column align. */
 .views-view-grid .views-col {
   float: left;
