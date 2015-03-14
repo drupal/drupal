@@ -277,7 +277,7 @@ class DbLogController extends ControllerBase {
         ),
         array(
           array('data' => $this->t('Operations'), 'header' => TRUE),
-          $dblog->link,
+          SafeMarkup::checkAdminXss($dblog->link),
         ),
       );
       $build['dblog_table'] = array(
@@ -354,7 +354,7 @@ class DbLogController extends ControllerBase {
     else {
       $message = FALSE;
     }
-    return $message;
+    return ($message) ? Xss::filterAdmin($message) : FALSE;
   }
 
   /**
