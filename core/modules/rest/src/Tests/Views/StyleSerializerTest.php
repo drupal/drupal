@@ -293,6 +293,19 @@ class StyleSerializerTest extends PluginTestBase {
   }
 
   /**
+   * Tests the views interface for rest export displays.
+   */
+  public function testSerializerViewsUI() {
+    $this->drupalLogin($this->adminUser);
+    // Click the "Update preview button".
+    $this->drupalPostForm('admin/structure/views/view/test_serializer_display_field/edit/rest_export_1', $edit = array(), t('Update preview'));
+    $this->assertResponse(200);
+    // Check if we receive the expected result.
+    $result = $this->xpath('//div[@id="views-live-preview"]/pre');
+    $this->assertIdentical($this->drupalGet('test/serialize/field'), (string) $result[0], 'The expected JSON preview output was found.');
+  }
+
+  /**
    * Tests the field row style using fieldapi fields.
    */
   public function testFieldapiField() {

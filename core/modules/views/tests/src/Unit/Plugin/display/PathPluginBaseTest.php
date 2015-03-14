@@ -312,6 +312,24 @@ class PathPluginBaseTest extends UnitTestCase {
   }
 
   /**
+   * Tests the getRouteName method.
+   */
+  public function testGetRouteName() {
+    list($view) = $this->setupViewExecutableAccessPlugin();
+
+    $display = array();
+    $display['display_plugin'] = 'page';
+    $display['id'] = 'page_1';
+    $display['display_options'] = array(
+      'path' => 'test_route',
+    );
+    $this->pathPlugin->initDisplay($view, $display);
+    $route_name = $this->pathPlugin->getRouteName();
+    // Ensure that the expected routename is returned.
+    $this->assertEquals('view.test_id.page_1', $route_name);
+  }
+
+  /**
    * Returns some mocked view entity, view executable, and access plugin.
    */
   protected function setupViewExecutableAccessPlugin() {

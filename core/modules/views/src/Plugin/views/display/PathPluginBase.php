@@ -502,7 +502,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     // Check for overridden route names.
     $view_route_names = $this->getAlteredRouteNames();
 
-    return (isset($view_route_names[$view_route_key]) ? $view_route_names[$view_route_key] : "views.$view_route_key");
+    return (isset($view_route_names[$view_route_key]) ? $view_route_names[$view_route_key] : "view.$view_route_key");
   }
 
   /**
