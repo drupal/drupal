@@ -454,7 +454,7 @@ class DatabaseBackend implements CacheBackendInterface {
           'size' => 'big',
         ),
         'expire' => array(
-          'description' => 'A Unix timestamp indicating when the cache entry should expire, or 0 for never.',
+          'description' => 'A Unix timestamp indicating when the cache entry should expire, or ' . Cache::PERMANENT . ' for never.',
           'type' => 'int',
           'not null' => TRUE,
           'default' => 0,
