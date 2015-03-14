@@ -265,6 +265,15 @@ class TermTest extends TaxonomyTestBase {
       $term_objects[$key] = reset($term_objects[$key]);
     }
 
+    // Get the node.
+    $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
+
+    // Test editing the node.
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
+    foreach ($terms as $term) {
+      $this->assertText($term, 'The term was retained after edit and still appears on the node page.');
+    }
+
     // Delete term 1 from the term edit page.
     $this->drupalGet('taxonomy/term/' . $term_objects['term1']->id() . '/edit');
     $this->clickLink(t('Delete'));
@@ -275,8 +284,6 @@ class TermTest extends TaxonomyTestBase {
     $this->drupalPostForm(NULL, array(), t('Delete'));
     $term_names = array($term_objects['term3']->getName(), $term_objects['term4']->getName());
 
-    // Get the node.
-    $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->drupalGet('node/' . $node->id());
 
     foreach ($term_names as $term_name) {
