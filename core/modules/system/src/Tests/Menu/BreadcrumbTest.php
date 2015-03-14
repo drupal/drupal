@@ -9,6 +9,7 @@ namespace Drupal\system\Tests\Menu;
 
 use Drupal\Core\Url;
 use Drupal\node\Entity\NodeType;
+use Drupal\user\RoleInterface;
 
 /**
  * Tests breadcrumbs functionality.
@@ -291,7 +292,7 @@ class BreadcrumbTest extends MenuTestBase {
     // Verify breadcrumbs on user and user/%.
     // We need to log back in and out below, and cannot simply grant the
     // 'administer users' permission, since user_page() makes your head explode.
-    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array(
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array(
       'access user profiles',
     ));
 

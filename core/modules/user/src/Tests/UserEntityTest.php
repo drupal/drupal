@@ -10,6 +10,7 @@ namespace Drupal\user\Tests;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\simpletest\KernelTestBase;
 use Drupal\user\Entity\User;
+use Drupal\user\RoleInterface;
 
 /**
  * Tests the user entity class.
@@ -47,27 +48,27 @@ class UserEntityTest extends KernelTestBase {
 
     $this->assertTrue($user->hasRole('test_role_one'));
     $this->assertFalse($user->hasRole('test_role_two'));
-    $this->assertEqual(array(DRUPAL_AUTHENTICATED_RID, 'test_role_one'), $user->getRoles());
+    $this->assertEqual(array(RoleInterface::AUTHENTICATED_ID, 'test_role_one'), $user->getRoles());
 
     $user->addRole('test_role_one');
     $this->assertTrue($user->hasRole('test_role_one'));
     $this->assertFalse($user->hasRole('test_role_two'));
-    $this->assertEqual(array(DRUPAL_AUTHENTICATED_RID, 'test_role_one'), $user->getRoles());
+    $this->assertEqual(array(RoleInterface::AUTHENTICATED_ID, 'test_role_one'), $user->getRoles());
 
     $user->addRole('test_role_two');
     $this->assertTrue($user->hasRole('test_role_one'));
     $this->assertTrue($user->hasRole('test_role_two'));
-    $this->assertEqual(array(DRUPAL_AUTHENTICATED_RID, 'test_role_one', 'test_role_two'), $user->getRoles());
+    $this->assertEqual(array(RoleInterface::AUTHENTICATED_ID, 'test_role_one', 'test_role_two'), $user->getRoles());
 
     $user->removeRole('test_role_three');
     $this->assertTrue($user->hasRole('test_role_one'));
     $this->assertTrue($user->hasRole('test_role_two'));
-    $this->assertEqual(array(DRUPAL_AUTHENTICATED_RID, 'test_role_one', 'test_role_two'), $user->getRoles());
+    $this->assertEqual(array(RoleInterface::AUTHENTICATED_ID, 'test_role_one', 'test_role_two'), $user->getRoles());
 
     $user->removeRole('test_role_one');
     $this->assertFalse($user->hasRole('test_role_one'));
     $this->assertTrue($user->hasRole('test_role_two'));
-    $this->assertEqual(array(DRUPAL_AUTHENTICATED_RID, 'test_role_two'), $user->getRoles());
+    $this->assertEqual(array(RoleInterface::AUTHENTICATED_ID, 'test_role_two'), $user->getRoles());
   }
 
 }

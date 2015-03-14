@@ -18,6 +18,16 @@ namespace Drupal\Core\Session;
 interface AccountInterface {
 
   /**
+   * Role ID for anonymous users.
+   */
+  const ANONYMOUS_ROLE = 'anonymous';
+
+  /**
+   * Role ID for authenticated users.
+   */
+  const AUTHENTICATED_ROLE = 'authenticated';
+
+  /**
    * Returns the user ID or 0 for anonymous.
    *
    * @return int

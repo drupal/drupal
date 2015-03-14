@@ -11,6 +11,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
 use Drupal\views\Views;
 
 /**
@@ -157,7 +158,7 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
     $this->assertEqual(1, count($condition));
 
     // Clear permissions for anonymous users to check access for default views.
-    Role::load(DRUPAL_ANONYMOUS_RID)->revokePermission('access content')->save();
+    Role::load(RoleInterface::ANONYMOUS_ID)->revokePermission('access content')->save();
 
     // Test the default views disclose no data by default.
     $this->drupalLogout();

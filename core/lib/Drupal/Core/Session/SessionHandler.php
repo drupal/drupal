@@ -86,7 +86,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
       $rids = $this->connection->query("SELECT ur.roles_target_id as rid FROM {user__roles} ur WHERE ur.entity_id = :uid", array(
         ':uid' => $values['uid'],
       ))->fetchCol();
-      $values['roles'] = array_merge(array(DRUPAL_AUTHENTICATED_RID), $rids);
+      $values['roles'] = array_merge(array(AccountInterface::AUTHENTICATED_ROLE), $rids);
       $_session_user = new UserSession($values);
     }
     elseif ($values) {

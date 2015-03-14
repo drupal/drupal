@@ -15,6 +15,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field_ui\Tests\FieldUiTestTrait;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\user\RoleInterface;
 
 /**
  * Tests commenting on a test entity.
@@ -75,12 +76,12 @@ class CommentNonNodeTest extends WebTestBase {
     ));
 
     // Enable anonymous and authenticated user comments.
-    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array(
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array(
       'access comments',
       'post comments',
       'skip comment approval',
     ));
-    user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array(
+    user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, array(
       'access comments',
       'post comments',
       'skip comment approval',
@@ -328,7 +329,7 @@ class CommentNonNodeTest extends WebTestBase {
     $this->drupalLogout();
 
     // Deny anonymous users access to comments.
-    user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
+    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, array(
       'access comments' => FALSE,
       'post comments' => FALSE,
       'skip comment approval' => FALSE,
@@ -346,7 +347,7 @@ class CommentNonNodeTest extends WebTestBase {
     $this->assertNoFieldByName('subject[0][value]', '', 'Subject field not found.');
     $this->assertNoFieldByName('comment_body[0][value]', '', 'Comment field not found.');
 
-    user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
+    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, array(
       'access comments' => TRUE,
       'post comments' => FALSE,
       'view test entity' => TRUE,
@@ -362,7 +363,7 @@ class CommentNonNodeTest extends WebTestBase {
     // Test the combination of anonymous users being able to post, but not view
     // comments, to ensure that access to post comments doesn't grant access to
     // view them.
-    user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
+    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, array(
       'access comments' => FALSE,
       'post comments' => TRUE,
       'skip comment approval' => TRUE,

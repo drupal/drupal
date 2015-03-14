@@ -11,6 +11,7 @@ use Drupal\Component\Utility\String;
 use Drupal\simpletest\KernelTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
+use Drupal\user\RoleInterface;
 
 /**
  * Tests the user role condition.
@@ -67,11 +68,11 @@ class UserRoleConditionTest extends KernelTestBase {
 
     // Set up the authenticated and anonymous roles.
     Role::create(array(
-      'id' => DRUPAL_ANONYMOUS_RID,
+      'id' => RoleInterface::ANONYMOUS_ID,
       'label' => 'Anonymous user',
     ))->save();
     Role::create(array(
-      'id' => DRUPAL_AUTHENTICATED_RID,
+      'id' => RoleInterface::AUTHENTICATED_ID,
       'label' => 'Authenticated user',
     ))->save();
 
@@ -110,7 +111,7 @@ class UserRoleConditionTest extends KernelTestBase {
     // authenticated user roles.
     /** @var $condition \Drupal\Core\Condition\ConditionInterface */
     $condition = $this->manager->createInstance('user_role')
-      ->setConfig('roles', array(DRUPAL_AUTHENTICATED_RID => DRUPAL_AUTHENTICATED_RID))
+      ->setConfig('roles', array(RoleInterface::AUTHENTICATED_ID => RoleInterface::AUTHENTICATED_ID))
       ->setContextValue('user', $this->anonymous);
     $this->assertFalse($condition->execute(), 'Anonymous users fail role checks for authenticated.');
     // Check for the proper summary.
@@ -118,13 +119,13 @@ class UserRoleConditionTest extends KernelTestBase {
     $this->assertEqual($condition->summary(), 'The user is a member of Authenticated user');
 
     // Set the user role to anonymous.
-    $condition->setConfig('roles', array(DRUPAL_ANONYMOUS_RID => DRUPAL_ANONYMOUS_RID));
+    $condition->setConfig('roles', array(RoleInterface::ANONYMOUS_ID => RoleInterface::ANONYMOUS_ID));
     $this->assertTrue($condition->execute(), 'Anonymous users pass role checks for anonymous.');
     // Check for the proper summary.
     $this->assertEqual($condition->summary(), 'The user is a member of Anonymous user');
 
     // Set the user role to check anonymous or authenticated.
-    $condition->setConfig('roles', array(DRUPAL_ANONYMOUS_RID => DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID => DRUPAL_AUTHENTICATED_RID));
+    $condition->setConfig('roles', array(RoleInterface::ANONYMOUS_ID => RoleInterface::ANONYMOUS_ID, RoleInterface::AUTHENTICATED_ID => RoleInterface::AUTHENTICATED_ID));
     $this->assertTrue($condition->execute(), 'Anonymous users pass role checks for anonymous or authenticated.');
     // Check for the proper summary.
     $this->assertEqual($condition->summary(), 'The user is a member of Anonymous user, Authenticated user');
@@ -135,11 +136,11 @@ class UserRoleConditionTest extends KernelTestBase {
     $this->assertTrue($condition->execute(), 'Authenticated users pass role checks for anonymous or authenticated.');
 
     // Set the role to just authenticated and recheck.
-    $condition->setConfig('roles', array(DRUPAL_AUTHENTICATED_RID => DRUPAL_AUTHENTICATED_RID));
+    $condition->setConfig('roles', array(RoleInterface::AUTHENTICATED_ID => RoleInterface::AUTHENTICATED_ID));
     $this->assertTrue($condition->execute(), 'Authenticated users pass role checks for authenticated.');
 
     // Test Constructor injection.
-    $condition = $this->manager->createInstance('user_role', array('roles' => array(DRUPAL_AUTHENTICATED_RID => DRUPAL_AUTHENTICATED_RID), 'context' => array('user' => $this->authenticated)));
+    $condition = $this->manager->createInstance('user_role', array('roles' => array(RoleInterface::AUTHENTICATED_ID => RoleInterface::AUTHENTICATED_ID), 'context' => array('user' => $this->authenticated)));
     $this->assertTrue($condition->execute(), 'Constructor injection of context and configuration working as anticipated.');
 
     // Check the negated summary.
@@ -147,7 +148,7 @@ class UserRoleConditionTest extends KernelTestBase {
     $this->assertEqual($condition->summary(), 'The user is not a member of Authenticated user');
 
     // Check the complex negated summary.
-    $condition->setConfig('roles', array(DRUPAL_ANONYMOUS_RID => DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID => DRUPAL_AUTHENTICATED_RID));
+    $condition->setConfig('roles', array(RoleInterface::ANONYMOUS_ID => RoleInterface::ANONYMOUS_ID, RoleInterface::AUTHENTICATED_ID => RoleInterface::AUTHENTICATED_ID));
     $this->assertEqual($condition->summary(), 'The user is not a member of Anonymous user, Authenticated user');
 
     // Check a custom role.

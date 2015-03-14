@@ -8,6 +8,7 @@
 namespace Drupal\user\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\user\RoleInterface;
 
 /**
  * Tests user administration page functionality.
@@ -84,7 +85,7 @@ class UserAdminTest extends WebTestBase {
 
     // Filter the users by role. Grab the system-generated role name for User C.
     $roles = $user_c->getRoles();
-    unset($roles[array_search(DRUPAL_AUTHENTICATED_RID, $roles)]);
+    unset($roles[array_search(RoleInterface::AUTHENTICATED_ID, $roles)]);
     $this->drupalGet('admin/people', array('query' => array('role' => reset($roles))));
 
     // Check if the correct users show up when filtered by role.

@@ -9,6 +9,7 @@ namespace Drupal\comment\Tests;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\comment\CommentInterface;
+use Drupal\user\RoleInterface;
 
 /**
  * Tests CSS classes on comments.
@@ -21,7 +22,7 @@ class CommentCSSTest extends CommentTestBase {
     parent::setUp();
 
     // Allow anonymous users to see comments.
-    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array(
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array(
       'access comments',
       'access content'
     ));

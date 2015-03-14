@@ -13,6 +13,7 @@ use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\field_ui\Tests\FieldUiTestTrait;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\user\RoleInterface;
 
 /**
  * Tests site-wide contact form functionality.
@@ -95,7 +96,7 @@ class ContactSitewideTest extends WebTestBase {
     $this->assertNoLinkByHref('admin/structure/contact/manage/feedback');
 
     // Ensure that the contact form won't be shown without forms.
-    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('access site-wide contact form'));
     $this->drupalLogout();
     $this->drupalGet('contact');
     $this->assertResponse(404);
@@ -159,7 +160,7 @@ class ContactSitewideTest extends WebTestBase {
     $this->config('contact.settings')->set('default_form', $id)->save();
 
     // Ensure that the contact form is shown without a form selection input.
-    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('access site-wide contact form'));
     $this->drupalLogout();
     $this->drupalGet('contact');
     $this->assertText(t('Your email address'));
@@ -185,12 +186,12 @@ class ContactSitewideTest extends WebTestBase {
     $this->drupalLogout();
 
     // Check to see that anonymous user cannot see contact page without permission.
-    user_role_revoke_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
+    user_role_revoke_permissions(RoleInterface::ANONYMOUS_ID, array('access site-wide contact form'));
     $this->drupalGet('contact');
     $this->assertResponse(403);
 
     // Give anonymous user permission and see that page is viewable.
-    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('access site-wide contact form'));
     $this->drupalGet('contact');
     $this->assertResponse(200);
 
@@ -305,7 +306,7 @@ class ContactSitewideTest extends WebTestBase {
 
     // Log the current user out in order to test the name and email fields.
     $this->drupalLogout();
-    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('access site-wide contact form'));
 
     // Test the auto-reply for form 'foo'.
     $email = $this->randomMachineName(32) . '@example.com';

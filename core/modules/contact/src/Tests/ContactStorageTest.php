@@ -9,6 +9,7 @@ namespace Drupal\contact\Tests;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\contact\Entity\Message;
+use Drupal\user\RoleInterface;
 
 /**
  * Tests storing contact messages.
@@ -56,7 +57,7 @@ class ContactStorageTest extends ContactSitewideTest {
     $this->assertRaw(t('Contact form %label has been added.', array('%label' => $label)));
 
     // Ensure that anonymous can submit site-wide contact form.
-    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('access site-wide contact form'));
     $this->drupalLogout();
     $this->drupalGet('contact');
     $this->assertText(t('Your email address'));

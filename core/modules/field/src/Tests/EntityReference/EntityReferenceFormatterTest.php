@@ -13,6 +13,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
 use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
 
 /**
  * Tests the formatters functionality.
@@ -69,7 +70,7 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
 
     // Grant the 'view test entity' permission.
     $this->installConfig(array('user'));
-    Role::load(DRUPAL_ANONYMOUS_RID)
+    Role::load(RoleInterface::ANONYMOUS_ID)
       ->grantPermission('view test entity')
       ->save();
 
@@ -126,7 +127,7 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
    */
   public function testAccess() {
     // Revoke the 'view test entity' permission for this test.
-    Role::load(DRUPAL_ANONYMOUS_RID)
+    Role::load(RoleInterface::ANONYMOUS_ID)
       ->revokePermission('view test entity')
       ->save();
 

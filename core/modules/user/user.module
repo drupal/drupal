@@ -1026,7 +1026,7 @@ function user_role_names($membersonly = FALSE, $permission = NULL) {
  */
 function user_user_role_insert(RoleInterface $role) {
   // Ignore the authenticated and anonymous roles or the role is being synced.
-  if (in_array($role->id(), array(DRUPAL_AUTHENTICATED_RID, DRUPAL_ANONYMOUS_RID)) || $role->isSyncing()) {
+  if (in_array($role->id(), array(RoleInterface::AUTHENTICATED_ID, RoleInterface::ANONYMOUS_ID)) || $role->isSyncing()) {
     return;
   }
 
@@ -1067,7 +1067,7 @@ function user_user_role_delete(RoleInterface $role) {
   $user_storage->deleteRoleReferences(array($role->id()));
 
   // Ignore the authenticated and anonymous roles or the role is being synced.
-  if (in_array($role->id(), array(DRUPAL_AUTHENTICATED_RID, DRUPAL_ANONYMOUS_RID)) || $role->isSyncing()) {
+  if (in_array($role->id(), array(RoleInterface::AUTHENTICATED_ID, RoleInterface::ANONYMOUS_ID)) || $role->isSyncing()) {
     return;
   }
 
@@ -1099,7 +1099,7 @@ function user_roles($membersonly = FALSE, $permission = NULL) {
   // Do not cache roles for specific permissions. This data is not requested
   // frequently enough to justify the additional memory use.
   if (empty($permission)) {
-    $cid = $membersonly ? DRUPAL_AUTHENTICATED_RID : DRUPAL_ANONYMOUS_RID;
+    $cid = $membersonly ? RoleInterface::AUTHENTICATED_ID : RoleInterface::ANONYMOUS_ID;
     if (isset($user_roles[$cid])) {
       return $user_roles[$cid];
     }
@@ -1107,7 +1107,7 @@ function user_roles($membersonly = FALSE, $permission = NULL) {
 
   $roles = Role::loadMultiple();
   if ($membersonly) {
-    unset($roles[DRUPAL_ANONYMOUS_RID]);
+    unset($roles[RoleInterface::ANONYMOUS_ID]);
   }
 
   if (!empty($permission)) {

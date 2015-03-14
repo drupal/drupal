@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Url;
+use Drupal\user\RoleInterface;
 
 /**
  * Implements hook_requirements().
@@ -129,8 +130,8 @@ function node_install() {
   // these permissions. Doing so also allows tests to continue to operate as
   // expected without first having to manually grant these default permissions.
   if (\Drupal::moduleHandler()->moduleExists('user')) {
-    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access content'));
-    user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access content'));
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('access content'));
+    user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, array('access content'));
   }
 
   // Populate the node access table.

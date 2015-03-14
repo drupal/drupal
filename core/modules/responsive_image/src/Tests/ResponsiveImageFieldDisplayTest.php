@@ -12,6 +12,7 @@ use Drupal\image\Tests\ImageFieldTestBase;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\node\Entity\Node;
 use Drupal\file\Entity\File;
+use Drupal\user\RoleInterface;
 
 /**
  * Tests responsive image display formatter.
@@ -79,7 +80,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
   public function testResponsiveImageFieldFormattersPrivate() {
     $this->addTestImageStyleMappings();
     // Remove access content permission from anonymous users.
-    user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array('access content' => FALSE));
+    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, array('access content' => FALSE));
     $this->doTestResponsiveImageFieldFormatters('private');
   }
 

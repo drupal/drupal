@@ -10,6 +10,7 @@ namespace Drupal\contact\Tests;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\simpletest\WebTestBase;
+use Drupal\user\RoleInterface;
 
 /**
  * Tests personal contact form functionality.
@@ -144,7 +145,7 @@ class ContactPersonalTest extends WebTestBase {
 
     // Test that anonymous users can access the contact form.
     $this->drupalLogout();
-    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access user contact forms'));
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('access user contact forms'));
     $this->drupalGet('user/' . $this->contactUser->id() . '/contact');
     $this->assertResponse(200);
 
@@ -153,7 +154,7 @@ class ContactPersonalTest extends WebTestBase {
     $this->assertResponse(200);
 
     // Revoke the personal contact permission for the anonymous user.
-    user_role_revoke_permissions(DRUPAL_ANONYMOUS_RID, array('access user contact forms'));
+    user_role_revoke_permissions(RoleInterface::ANONYMOUS_ID, array('access user contact forms'));
     $this->drupalGet('user/' . $this->contactUser->id() . '/contact');
     $this->assertResponse(403);
     $this->drupalGet('user/' . $this->adminUser->id() . '/contact');
@@ -247,7 +248,7 @@ class ContactPersonalTest extends WebTestBase {
    * Tests the personal contact form based access when an admin adds users.
    */
   function testAdminContact() {
-    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access user contact forms'));
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('access user contact forms'));
     $this->checkContactAccess(200);
     $this->checkContactAccess(403, FALSE);
     $config = $this->config('contact.settings');

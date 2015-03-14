@@ -5,13 +5,14 @@
  * Contains \Drupal\Tests\Core\Session\UserSessionTest.
  */
 
-namespace Drupal\Tests\Core\Session {
+namespace Drupal\Tests\Core\Session;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Session\UserSession;
 use Drupal\Tests\UnitTestCase;
+  use Drupal\user\RoleInterface;
 
-/**
+  /**
  * @coversDefaultClass \Drupal\Core\Session\UserSession
  * @group Session
  */
@@ -50,7 +51,7 @@ class UserSessionTest extends UnitTestCase {
    *   The created user session.
    */
   protected function createUserSession(array $rids = array(), $authenticated = FALSE) {
-    array_unshift($rids, $authenticated ? DRUPAL_AUTHENTICATED_RID : DRUPAL_ANONYMOUS_RID);
+    array_unshift($rids, $authenticated ? RoleInterface::AUTHENTICATED_ID : RoleInterface::ANONYMOUS_ID);
     return new UserSession(array('roles' => $rids));
   }
 
@@ -157,28 +158,8 @@ class UserSessionTest extends UnitTestCase {
    * @todo Move roles constants to a class/interface
    */
   public function testUserGetRoles() {
-    $this->assertEquals(array(DRUPAL_AUTHENTICATED_RID, 'role_two'), $this->users['user_three']->getRoles());
+    $this->assertEquals(array(RoleInterface::AUTHENTICATED_ID, 'role_two'), $this->users['user_three']->getRoles());
     $this->assertEquals(array('role_two'), $this->users['user_three']->getRoles(TRUE));
-  }
-
-}
-
-
-}
-
-namespace {
-
-  if (!defined('DRUPAL_ANONYMOUS_RID')) {
-    /**
-     * Stub Role ID for anonymous users since bootstrap.inc isn't available.
-     */
-    define('DRUPAL_ANONYMOUS_RID', 'anonymous');
-  }
-  if (!defined('DRUPAL_AUTHENTICATED_RID')) {
-    /**
-     * Stub Role ID for authenticated users since bootstrap.inc isn't available.
-     */
-    define('DRUPAL_AUTHENTICATED_RID', 'authenticated');
   }
 
 }

@@ -22,6 +22,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\user\RoleInterface;
 
 /**
  * Comment manager contains common functions to manage comment fields.
@@ -45,7 +46,7 @@ class CommentManager implements CommentManagerInterface {
   protected $queryFactory;
 
   /**
-   * Whether the DRUPAL_AUTHENTICATED_RID can post comments.
+   * Whether the \Drupal\user\RoleInterface::AUTHENTICATED_ID can post comments.
    *
    * @var bool
    */
@@ -154,7 +155,7 @@ class CommentManager implements CommentManagerInterface {
       // permission to post comments by logging in.
       $this->authenticatedCanPostComments = $this->entityManager
         ->getStorage('user_role')
-        ->load(DRUPAL_AUTHENTICATED_RID)
+        ->load(RoleInterface::AUTHENTICATED_ID)
         ->hasPermission('post comments');
     }
 

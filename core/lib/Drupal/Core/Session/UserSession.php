@@ -28,7 +28,7 @@ class UserSession implements AccountInterface {
    *
    * @var array
    */
-  protected $roles = array('anonymous');
+  protected $roles = array(AccountInterface::ANONYMOUS_ROLE);
 
   /**
    * Session ID.
@@ -126,7 +126,7 @@ class UserSession implements AccountInterface {
     $roles = $this->roles;
 
     if ($exclude_locked_roles) {
-      $roles = array_values(array_diff($roles, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID)));
+      $roles = array_values(array_diff($roles, array(AccountInterface::ANONYMOUS_ROLE, AccountInterface::AUTHENTICATED_ROLE)));
     }
 
     return $roles;

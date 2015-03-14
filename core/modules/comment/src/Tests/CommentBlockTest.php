@@ -7,6 +7,7 @@
 
 namespace Drupal\comment\Tests;
 use Drupal\Component\Utility\String;
+use Drupal\user\RoleInterface;
 
 /**
  * Tests comment block functionality.
@@ -57,10 +58,10 @@ class CommentBlockTest extends CommentTestBase {
     // Test that a user without the 'access comments' permission cannot see the
     // block.
     $this->drupalLogout();
-    user_role_revoke_permissions(DRUPAL_ANONYMOUS_RID, array('access comments'));
+    user_role_revoke_permissions(RoleInterface::ANONYMOUS_ID, array('access comments'));
     $this->drupalGet('');
     $this->assertNoText(t('Recent comments'));
-    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access comments'));
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('access comments'));
 
     // Test that a user with the 'access comments' permission can see the
     // block.

@@ -9,6 +9,7 @@ namespace Drupal\user\Tests;
 
 use Drupal\simpletest\WebTestBase;
 use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
 
 /**
  * Tests adding, editing and deleting user roles and changing role weights.
@@ -80,10 +81,10 @@ class UserRoleAdminTest extends WebTestBase {
 
     // Make sure that the system-defined roles can be edited via the user
     // interface.
-    $this->drupalGet('admin/people/roles/manage/' . DRUPAL_ANONYMOUS_RID);
+    $this->drupalGet('admin/people/roles/manage/' . RoleInterface::ANONYMOUS_ID);
     $this->assertResponse(200, 'Access granted when trying to edit the built-in anonymous role.');
     $this->assertNoText(t('Delete role'), 'Delete button for the anonymous role is not present.');
-    $this->drupalGet('admin/people/roles/manage/' . DRUPAL_AUTHENTICATED_RID);
+    $this->drupalGet('admin/people/roles/manage/' . RoleInterface::AUTHENTICATED_ID);
     $this->assertResponse(200, 'Access granted when trying to edit the built-in authenticated role.');
     $this->assertNoText(t('Delete role'), 'Delete button for the authenticated role is not present.');
   }

@@ -10,6 +10,7 @@ namespace Drupal\views\Plugin\views\filter;
 use Drupal\Core\Form\FormHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\user\RoleInterface;
 use Drupal\views\Plugin\CacheablePluginInterface;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\Component\Utility\String as UtilityString;
@@ -134,7 +135,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheablePluginIn
         'remember' => array('default' => FALSE),
         'multiple' => array('default' => FALSE),
         'remember_roles' => array('default' => array(
-          DRUPAL_AUTHENTICATED_RID => DRUPAL_AUTHENTICATED_RID,
+          RoleInterface::AUTHENTICATED_ID => RoleInterface::AUTHENTICATED_ID,
         )),
       ),
     );

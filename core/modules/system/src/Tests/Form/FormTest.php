@@ -13,6 +13,7 @@ use Drupal\Core\Form\FormState;
 use Drupal\Core\Render\Element;
 use Drupal\form_test\Form\FormTestDisabledElementsForm;
 use Drupal\simpletest\WebTestBase;
+use Drupal\user\RoleInterface;
 
 /**
  * Tests various form element validation mechanisms.
@@ -38,7 +39,7 @@ class FormTest extends WebTestBase {
     $filtered_html_format->save();
 
     $filtered_html_permission = $filtered_html_format->getPermissionName();
-    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array($filtered_html_permission));
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array($filtered_html_permission));
   }
 
   /**

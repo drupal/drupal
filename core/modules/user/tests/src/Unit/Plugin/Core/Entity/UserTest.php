@@ -5,12 +5,13 @@
  * Contains \Drupal\Tests\user\Unit\Plugin\Core\Entity\UserTest.
  */
 
-namespace Drupal\Tests\user\Unit\Plugin\Core\Entity {
+namespace Drupal\Tests\user\Unit\Plugin\Core\Entity;
 
 use Drupal\Tests\Core\Session\UserSessionTest;
 use Drupal\user\Entity\User;
+  use Drupal\user\RoleInterface;
 
-/**
+  /**
  * @coversDefaultClass \Drupal\user\Entity\User
  * @group user
  */
@@ -46,37 +47,17 @@ class UserTest extends UserSessionTest {
    *
    * @see \Drupal\user\Entity\User::getRoles()
    * @covers ::getRoles
-   * @todo Move roles constants to a class/interface
    */
   public function testUserGetRoles() {
     // Anonymous user.
     $user = $this->createUserSession(array());
-    $this->assertEquals(array(DRUPAL_ANONYMOUS_RID), $user->getRoles());
+    $this->assertEquals(array(RoleInterface::ANONYMOUS_ID), $user->getRoles());
     $this->assertEquals(array(), $user->getRoles(TRUE));
 
     // Authenticated user.
     $user = $this->createUserSession(array(), TRUE);
-    $this->assertEquals(array(DRUPAL_AUTHENTICATED_RID), $user->getRoles());
+    $this->assertEquals(array(RoleInterface::AUTHENTICATED_ID), $user->getRoles());
     $this->assertEquals(array(), $user->getRoles(TRUE));
-  }
-
-}
-
-}
-
-namespace {
-
-  if (!defined('DRUPAL_ANONYMOUS_RID')) {
-    /**
-     * Stub Role ID for anonymous users since bootstrap.inc isn't available.
-     */
-    define('DRUPAL_ANONYMOUS_RID', 'anonymous');
-  }
-  if (!defined('DRUPAL_AUTHENTICATED_RID')) {
-    /**
-     * Stub Role ID for authenticated users since bootstrap.inc isn't available.
-     */
-    define('DRUPAL_AUTHENTICATED_RID', 'authenticated');
   }
 
 }

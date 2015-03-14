@@ -10,6 +10,7 @@ namespace Drupal\book\Tests;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\simpletest\WebTestBase;
+use Drupal\user\RoleInterface;
 
 /**
  * Create a book, add pages, and test book interface.
@@ -367,7 +368,7 @@ class BookTest extends WebTestBase {
     // Now grant anonymous users permission to view the printer-friendly
     // version and verify that node access restrictions still prevent them from
     // seeing it.
-    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access printer-friendly version'));
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('access printer-friendly version'));
     $this->drupalGet('book/export/html/' . $this->book->id());
     $this->assertResponse('403', 'Anonymous user properly forbidden from seeing the printer-friendly version when denied by node access.');
   }
@@ -383,8 +384,8 @@ class BookTest extends WebTestBase {
 
     // Give anonymous users the permission 'node test view'.
     $edit = array();
-    $edit[DRUPAL_ANONYMOUS_RID . '[node test view]'] = TRUE;
-    $this->drupalPostForm('admin/people/permissions/' . DRUPAL_ANONYMOUS_RID, $edit, t('Save permissions'));
+    $edit[RoleInterface::ANONYMOUS_ID . '[node test view]'] = TRUE;
+    $this->drupalPostForm('admin/people/permissions/' . RoleInterface::ANONYMOUS_ID, $edit, t('Save permissions'));
     $this->assertText(t('The changes have been saved.'), "Permission 'node test view' successfully assigned to anonymous users.");
 
     // Test correct display of the block.
@@ -404,8 +405,8 @@ class BookTest extends WebTestBase {
 
     // Give anonymous users the permission 'node test view'.
     $edit = array();
-    $edit[DRUPAL_ANONYMOUS_RID . '[node test view]'] = TRUE;
-    $this->drupalPostForm('admin/people/permissions/' . DRUPAL_ANONYMOUS_RID, $edit, t('Save permissions'));
+    $edit[RoleInterface::ANONYMOUS_ID . '[node test view]'] = TRUE;
+    $this->drupalPostForm('admin/people/permissions/' . RoleInterface::ANONYMOUS_ID, $edit, t('Save permissions'));
     $this->assertText(t('The changes have been saved.'), "Permission 'node test view' successfully assigned to anonymous users.");
 
     // Create a book.

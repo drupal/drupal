@@ -7,6 +7,8 @@
 
 namespace Drupal\taxonomy\Tests;
 
+use Drupal\user\RoleInterface;
+
 /**
  * Tests access checks of private image fields.
  *
@@ -32,7 +34,7 @@ class TaxonomyImageTest extends TaxonomyTestBase {
     parent::setUp();
 
     // Remove access content permission from registered users.
-    user_role_revoke_permissions(DRUPAL_AUTHENTICATED_RID, array('access content'));
+    user_role_revoke_permissions(RoleInterface::AUTHENTICATED_ID, array('access content'));
 
     $this->vocabulary = $this->createVocabulary();
     // Add a field to the vocabulary.

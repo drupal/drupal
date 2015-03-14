@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Entity;
 
 use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
 
 /**
  * Tests the entity view builder.
@@ -31,7 +32,7 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
     $this->installConfig(array('user', 'entity_test'));
 
     // Give anonymous users permission to view test entities.
-    Role::load(DRUPAL_ANONYMOUS_RID)
+    Role::load(RoleInterface::ANONYMOUS_ID)
       ->grantPermission('view test entity')
       ->save();
   }

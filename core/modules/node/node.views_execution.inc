@@ -5,6 +5,7 @@
  * Provide views runtime hooks for node.module.
  */
 
+use Drupal\user\RoleInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\user\Entity\Role;
 
@@ -32,9 +33,9 @@ function node_views_analyze(ViewExecutable $view) {
         // check for no access control
         $access = $display->getOption('access');
         if (empty($access['type']) || $access['type'] == 'none') {
-          $anonymous_role = Role::load(DRUPAL_ANONYMOUS_RID);
+          $anonymous_role = Role::load(RoleInterface::ANONYMOUS_ID);
           $anonymous_has_access = $anonymous_role && $anonymous_role->hasPermission('access content');
-          $authenticated_role = Role::load(DRUPAL_AUTHENTICATED_RID);
+          $authenticated_role = Role::load(RoleInterface::AUTHENTICATED_ID);
           $authenticated_has_access = $authenticated_role && $authenticated_role->hasPermission('access content');
           if (!$anonymous_has_access || !$authenticated_has_access) {
             $ret[] = Analyzer::formatMessage(t('Some roles lack permission to access content, but display %display has no access control.', array('%display' => $display->display['display_title'])), 'warning');

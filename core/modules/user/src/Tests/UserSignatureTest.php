@@ -9,6 +9,7 @@ namespace Drupal\user\Tests;
 
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\simpletest\WebTestBase;
+use Drupal\user\RoleInterface;
 
 /**
  * Tests case for user signatures.
@@ -88,7 +89,7 @@ class UserSignatureTest extends WebTestBase {
     ));
     $this->fullHtmlFormat->save();
 
-    user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array($this->filteredHtmlFormat->getPermissionName()));
+    user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, array($this->filteredHtmlFormat->getPermissionName()));
 
     // Create regular and administrative users.
     $this->webUser = $this->drupalCreateUser(array('post comments'));

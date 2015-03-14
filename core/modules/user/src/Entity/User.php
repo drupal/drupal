@@ -13,6 +13,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
 
 /**
@@ -83,7 +84,7 @@ class User extends ContentEntityBase implements UserInterface {
 
     // Make sure that the authenticated/anonymous roles are not persisted.
     foreach ($this->get('roles') as $index => $item) {
-      if (in_array($item->target_id, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
+      if (in_array($item->target_id, array(RoleInterface::ANONYMOUS_ID, RoleInterface::AUTHENTICATED_ID))) {
         $this->get('roles')->offsetUnset($index);
       }
     }
@@ -164,10 +165,10 @@ class User extends ContentEntityBase implements UserInterface {
     // Users with an ID always have the authenticated user role.
     if (!$exclude_locked_roles) {
       if ($this->isAuthenticated()) {
-        $roles[] = DRUPAL_AUTHENTICATED_RID;
+        $roles[] = RoleInterface::AUTHENTICATED_ID;
       }
       else {
-        $roles[] = DRUPAL_ANONYMOUS_RID;
+        $roles[] = RoleInterface::ANONYMOUS_ID;
       }
     }
 
@@ -223,7 +224,7 @@ class User extends ContentEntityBase implements UserInterface {
    */
   public function addRole($rid) {
 
-    if (in_array($rid, [DRUPAL_AUTHENTICATED_RID, DRUPAL_ANONYMOUS_RID])) {
+    if (in_array($rid, [RoleInterface::AUTHENTICATED_ID, RoleInterface::ANONYMOUS_ID])) {
       throw new \InvalidArgumentException('Anonymous or authenticated role ID must not be assigned manually.');
     }
 

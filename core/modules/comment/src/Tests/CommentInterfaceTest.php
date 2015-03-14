@@ -10,6 +10,7 @@ namespace Drupal\comment\Tests;
 use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Entity\Comment;
+use Drupal\user\RoleInterface;
 
 /**
  * Tests comment user interfaces.
@@ -52,7 +53,7 @@ class CommentInterfaceTest extends CommentTestBase {
 
     // Comment as anonymous with preview required.
     $this->drupalLogout();
-    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access content', 'access comments', 'post comments', 'skip comment approval'));
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('access content', 'access comments', 'post comments', 'skip comment approval'));
     $anonymous_comment = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName(), TRUE);
     $this->assertTrue($this->commentExists($anonymous_comment), 'Comment found.');
     $anonymous_comment->delete();

@@ -6,6 +6,7 @@
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\user\Entity\User;
+use Drupal\user\RoleInterface;
 
 /**
  * Implements hook_install().
@@ -29,8 +30,8 @@ function standard_install() {
   $user_settings->set('register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)->save();
 
   // Enable default permissions for system roles.
-  user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access comments'));
-  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access comments', 'post comments', 'skip comment approval'));
+  user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('access comments'));
+  user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, array('access comments', 'post comments', 'skip comment approval'));
 
   // Assign user 1 the "administrator" role.
   $user = User::load(1);
@@ -42,11 +43,11 @@ function standard_install() {
   $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
   $menu_link_manager->updateDefinition('contact.site_page', array('enabled' => 1));
 
-  user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
-  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access site-wide contact form'));
+  user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('access site-wide contact form'));
+  user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, array('access site-wide contact form'));
 
   // Allow authenticated users to use shortcuts.
-  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access shortcuts'));
+  user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, array('access shortcuts'));
 
   // Populate the default shortcut set.
   $shortcut = entity_create('shortcut', array(

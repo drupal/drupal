@@ -112,7 +112,7 @@ class AccountSettingsForm extends ConfigFormBase {
     // Do not allow users to set the anonymous or authenticated user roles as the
     // administrator role.
     $roles = user_role_names(TRUE);
-    unset($roles[DRUPAL_AUTHENTICATED_RID]);
+    unset($roles[RoleInterface::AUTHENTICATED_ID]);
 
     $admin_roles = $this->roleStorage->getQuery()
       ->condition('is_admin', TRUE)

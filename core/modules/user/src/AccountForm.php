@@ -221,7 +221,7 @@ abstract class AccountForm extends ContentEntityForm {
     );
 
     // Special handling for the inevitable "Authenticated user" role.
-    $form['account']['roles'][DRUPAL_AUTHENTICATED_RID] = array(
+    $form['account']['roles'][RoleInterface::AUTHENTICATED_ID] = array(
       '#default_value' => TRUE,
       '#disabled' => TRUE,
     );

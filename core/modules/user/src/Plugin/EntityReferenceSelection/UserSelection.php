@@ -14,6 +14,7 @@ use Drupal\Core\Entity\Plugin\EntityReferenceSelection\SelectionBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\user\RoleInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -124,7 +125,7 @@ class UserSelection extends SelectionBase {
         '#type' => 'checkboxes',
         '#title' => $this->t('Restrict to the selected roles'),
         '#required' => TRUE,
-        '#options' => array_diff_key(user_role_names(TRUE), array(DRUPAL_AUTHENTICATED_RID => DRUPAL_AUTHENTICATED_RID)),
+        '#options' => array_diff_key(user_role_names(TRUE), array(RoleInterface::AUTHENTICATED_ID => RoleInterface::AUTHENTICATED_ID)),
         '#default_value' => $selection_handler_settings['filter']['role'],
       );
     }

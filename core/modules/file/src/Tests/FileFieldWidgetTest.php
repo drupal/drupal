@@ -12,6 +12,7 @@ use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Component\Utility\Html;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field_ui\Tests\FieldUiTestTrait;
+use Drupal\user\RoleInterface;
 
 /**
  * Tests the file field widget, single and multi-valued, with and without AJAX,
@@ -266,8 +267,8 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     // Revoke access comments permission from anon user, grant post to
     // authenticated.
-    user_role_revoke_permissions(DRUPAL_ANONYMOUS_RID, array('access comments'));
-    user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('post comments', 'skip comment approval'));
+    user_role_revoke_permissions(RoleInterface::ANONYMOUS_ID, array('access comments'));
+    user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, array('post comments', 'skip comment approval'));
 
     // Create a new field.
     $this->addDefaultCommentField('node', 'article');

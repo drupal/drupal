@@ -8,6 +8,7 @@
 namespace Drupal\node\Tests;
 
 use Drupal\block\Entity\Block;
+use Drupal\user\RoleInterface;
 
 /**
  * Tests node block functionality.
@@ -52,7 +53,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->drupalLogin($this->adminUser);
 
     // Disallow anonymous users to view content.
-    user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
+    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, array(
       'access content' => FALSE,
     ));
 

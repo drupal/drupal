@@ -7,6 +7,8 @@
 
 namespace Drupal\comment\Tests;
 
+use Drupal\user\RoleInterface;
+
 /**
  * Tests comment approval functionality.
  *
@@ -18,7 +20,7 @@ class CommentAdminTest extends CommentTestBase {
    */
   function testApprovalAdminInterface() {
     // Set anonymous comments to require approval.
-    user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
+    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, array(
       'access comments' => TRUE,
       'post comments' => TRUE,
       'skip comment approval' => FALSE,
@@ -100,7 +102,7 @@ class CommentAdminTest extends CommentTestBase {
    */
   function testApprovalNodeInterface() {
     // Set anonymous comments to require approval.
-    user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
+    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, array(
       'access comments' => TRUE,
       'post comments' => TRUE,
       'skip comment approval' => FALSE,
@@ -173,7 +175,7 @@ class CommentAdminTest extends CommentTestBase {
    */
   public function testEditComment() {
     // Enable anonymous user comments.
-    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array(
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array(
       'access comments',
       'post comments',
       'skip comment approval',

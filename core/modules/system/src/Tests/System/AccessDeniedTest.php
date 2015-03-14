@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\System;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\user\RoleInterface;
 
 /**
  * Tests page access denied functionality, including custom 403 pages.
@@ -31,8 +32,8 @@ class AccessDeniedTest extends WebTestBase {
     // Create an administrative user.
     $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer site configuration', 'link to any page', 'administer blocks'));
 
-    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access user profiles'));
-    user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access user profiles'));
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('access user profiles'));
+    user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, array('access user profiles'));
   }
 
   function testAccessDenied() {

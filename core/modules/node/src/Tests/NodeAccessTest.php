@@ -7,6 +7,8 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\user\RoleInterface;
+
 /**
  * Tests basic node_access functionality.
  *
@@ -19,7 +21,7 @@ class NodeAccessTest extends NodeTestBase {
   protected function setUp() {
     parent::setUp();
     // Clear permissions for authenticated users.
-    $this->config('user.role.' . DRUPAL_AUTHENTICATED_RID)->set('permissions', array())->save();
+    $this->config('user.role.' . RoleInterface::AUTHENTICATED_ID)->set('permissions', array())->save();
   }
 
   /**

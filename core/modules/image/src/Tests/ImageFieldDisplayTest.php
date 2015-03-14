@@ -9,6 +9,7 @@ namespace Drupal\image\Tests;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\user\RoleInterface;
 
 /**
  * Tests the display of image fields.
@@ -38,7 +39,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
    */
   function testImageFieldFormattersPrivate() {
     // Remove access content permission from anonymous users.
-    user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array('access content' => FALSE));
+    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, array('access content' => FALSE));
     $this->_testImageFieldFormatters('private');
   }
 

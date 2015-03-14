@@ -25,7 +25,7 @@ class RoleAccessControlHandler extends EntityAccessControlHandler {
   protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
     switch ($operation) {
       case 'delete':
-        if ($entity->id() == DRUPAL_ANONYMOUS_RID || $entity->id() == DRUPAL_AUTHENTICATED_RID) {
+        if ($entity->id() == RoleInterface::ANONYMOUS_ID || $entity->id() == RoleInterface::AUTHENTICATED_ID) {
           return AccessResult::forbidden();
         }
 

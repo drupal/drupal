@@ -12,6 +12,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Component\Utility\String;
 use Drupal\block\Entity\Block;
+use Drupal\user\RoleInterface;
 
 /**
  * Tests basic block functionality.
@@ -38,7 +39,7 @@ class BlockTest extends BlockTestBase {
     // authenticated users.
     $edit['visibility[request_path][pages]'] = 'user*';
     $edit['visibility[request_path][negate]'] = TRUE;
-    $edit['visibility[user_role][roles][' . DRUPAL_AUTHENTICATED_RID . ']'] = TRUE;
+    $edit['visibility[user_role][roles][' . RoleInterface::AUTHENTICATED_ID . ']'] = TRUE;
     $this->drupalPostForm('admin/structure/block/add/' . $block_name . '/' . $default_theme, $edit, t('Save block'));
     $this->assertText('The block configuration has been saved.', 'Block was saved');
 
@@ -74,13 +75,13 @@ class BlockTest extends BlockTestBase {
     );
     $block_id = $edit['id'];
     // Set the block to be shown only to authenticated users.
-    $edit['visibility[user_role][roles][' . DRUPAL_AUTHENTICATED_RID . ']'] = TRUE;
+    $edit['visibility[user_role][roles][' . RoleInterface::AUTHENTICATED_ID . ']'] = TRUE;
     $this->drupalPostForm('admin/structure/block/add/' . $block_name . '/' . $default_theme, $edit, t('Save block'));
     $this->clickLink('Configure');
     $this->assertFieldChecked('edit-visibility-user-role-roles-authenticated');
 
     $edit = [
-      'visibility[user_role][roles][' . DRUPAL_AUTHENTICATED_RID . ']' => FALSE,
+      'visibility[user_role][roles][' . RoleInterface::AUTHENTICATED_ID . ']' => FALSE,
     ];
     $this->drupalPostForm(NULL, $edit, 'Save block');
     $this->clickLink('Configure');

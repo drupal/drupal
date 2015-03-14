@@ -10,6 +10,7 @@ namespace Drupal\shortcut\Tests;
 use Drupal\shortcut\Entity\Shortcut;
 use Drupal\system\Tests\Entity\EntityCacheTagsTestBase;
 use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
 
 /**
  * Tests the Shortcut entity's cache tags.
@@ -31,7 +32,7 @@ class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
 
     // Give anonymous users permission to customize shortcut links, so that we
     // can verify the cache tags of cached versions of shortcuts.
-    $user_role = Role::load(DRUPAL_ANONYMOUS_RID);
+    $user_role = Role::load(RoleInterface::ANONYMOUS_ID);
     $user_role->grantPermission('customize shortcut links');
     $user_role->grantPermission('access shortcuts');
     $user_role->save();

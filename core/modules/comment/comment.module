@@ -31,6 +31,7 @@ use Drupal\field\FieldStorageConfigInterface;
 use Drupal\file\FileInterface;
 use Drupal\user\EntityOwnerInterface;
 use Drupal\node\NodeInterface;
+use Drupal\user\RoleInterface;
 
 /**
  * Anonymous posters cannot enter their contact information.
@@ -439,10 +440,10 @@ function comment_node_update_index(EntityInterface $node, $langcode) {
     // comments.
     $index_comments = TRUE;
     $roles = \Drupal::entityManager()->getStorage('user_role')->loadMultiple();
-    $authenticated_can_access = $roles[DRUPAL_AUTHENTICATED_RID]->hasPermission('access comments');
+    $authenticated_can_access = $roles[RoleInterface::AUTHENTICATED_ID]->hasPermission('access comments');
     foreach ($roles as $rid => $role) {
       if ($role->hasPermission('search content') && !$role->hasPermission('access comments')) {
-        if ($rid == DRUPAL_AUTHENTICATED_RID || $rid == DRUPAL_ANONYMOUS_RID || !$authenticated_can_access) {
+        if ($rid == RoleInterface::AUTHENTICATED_ID || $rid == RoleInterface::ANONYMOUS_ID || !$authenticated_can_access) {
           $index_comments = FALSE;
           break;
         }
