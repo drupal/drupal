@@ -53,7 +53,7 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
   protected $bareHtmlPageRenderer;
 
   /**
-   * Constructs a new DefaultExceptionHtmlSubscriber.
+   * Constructs a new DefaultExceptionSubscriber.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory.
