@@ -85,7 +85,7 @@ display:
           hide_alter_empty: true
           entity_type: entity_test
           entity_field: name
-          plugin_id: standard
+          plugin_id: field
         operations:
           id: operations
           table: entity_test

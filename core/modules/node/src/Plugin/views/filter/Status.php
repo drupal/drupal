@@ -36,7 +36,7 @@ class Status extends FilterPluginBase {
   public function getCacheContexts() {
     $contexts = parent::getCacheContexts();
 
-    $contexts[] = 'cache.context.user';
+    $contexts[] = 'user';
 
     return $contexts;
   }

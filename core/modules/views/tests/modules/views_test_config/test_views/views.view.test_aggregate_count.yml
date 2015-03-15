@@ -45,7 +45,8 @@ display:
           hide_empty: false
           id: id
           table: entity_test
-          plugin_id: numeric
+          plugin_id: field
+          type: number_integer
           entity_type: entity_test
           entity_field: id
       group_by: true

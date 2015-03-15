@@ -102,8 +102,7 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          link_to_node: true
-          plugin_id: node
+          plugin_id: field
           entity_type: node
           entity_field: title
       filters:

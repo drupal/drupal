@@ -14,7 +14,7 @@ label: 'Test serializer display field rows for entity fields'
 module: rest_test_views
 description: ''
 tag: ''
-base_table: node
+base_table: node_field_data
 base_field: nid
 core: 8.x
 display:
@@ -43,7 +43,7 @@ display:
           id: nid
           table: node
           field: nid
-          plugin_id: numeric
+          plugin_id: field
           entity_type: node
           entity_field: nid
         body:

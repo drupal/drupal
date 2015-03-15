@@ -118,8 +118,6 @@ display:
             html: false
           hide_empty: false
           empty_zero: false
-          link_to_node: true
-          plugin_id: node
           relationship: none
           group_type: group
           admin_label: ''
@@ -133,6 +131,12 @@ display:
           element_default_classes: true
           empty: ''
           hide_alter_empty: true
+          type: string
+          settings:
+            link_to_entity: true
+          plugin_id: field
+          entity_type: node
+          entity_field: title
         name:
           id: name
           table: users_field_data

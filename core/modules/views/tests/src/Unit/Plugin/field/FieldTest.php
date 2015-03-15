@@ -140,7 +140,35 @@ class FieldTest extends UnitTestCase {
   /**
    * @covers ::defineOptions
    */
-  public function testDefineOptionsWithDefaultFormatter() {
+  public function testDefineOptionsWithDefaultFormatterOnFieldDefinition() {
+    $definition = [
+      'entity_type' => 'test_entity',
+      'field_name' => 'title',
+      'default_formatter' => 'test_example',
+      'default_formatter_settings' => ['link_to_entity' => TRUE]
+    ];
+    $handler = new Field([], 'field', $definition, $this->entityManager, $this->formatterPluginManager, $this->fieldTypePluginManager, $this->languageManager, $this->renderer);
+
+    // Setup the entity manager to allow fetching the storage definitions.
+    $title_storage = $this->getBaseFieldStorage();
+
+    $this->entityManager->expects($this->atLeastOnce())
+      ->method('getFieldStorageDefinitions')
+      ->with('test_entity')
+      ->willReturn([
+        'title' => $title_storage,
+      ]);
+
+    $options = [];
+    $handler->init($this->executable, $this->display, $options);
+
+    $this->assertEquals('test_example', $handler->options['type']);
+  }
+
+  /**
+   * @covers ::defineOptions
+   */
+  public function testDefineOptionsWithDefaultFormatterOnFieldType() {
     $definition = [
       'entity_type' => 'test_entity',
       'field_name' => 'title',
@@ -254,7 +282,7 @@ class FieldTest extends UnitTestCase {
 
     $access_control_handler->expects($this->atLeastOnce())
       ->method('fieldAccess')
-      ->with('view', $this->anything(), $account, NULL, FALSE)
+      ->with('view', $this->anything(), $account, NULL, $this->anything())
       ->willReturn(TRUE);
 
     $this->assertTrue($handler->access($account));
@@ -265,8 +293,6 @@ class FieldTest extends UnitTestCase {
    *
    * @param string $order
    *   The sort order.
-   *
-   * @covers ::clickSort
    */
   public function testClickSortWithOutConfiguredColumn($order) {
     $definition = [

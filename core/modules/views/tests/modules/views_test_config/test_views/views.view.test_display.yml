@@ -26,7 +26,7 @@ display:
           field: title
           id: title
           table: node_field_data
-          plugin_id: node
+          plugin_id: field
           entity_type: node
           entity_field: title
       filters:
@@ -69,7 +69,6 @@ display:
         pager: false
       fields:
         title:
-          link_to_node: true
           plugin_id: node
       pager:
         options:

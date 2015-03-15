@@ -42,7 +42,7 @@ display:
           id: title
           table: node_field_data
           field: title
-          plugin_id: node
+          plugin_id: field
           label: ''
           alter:
             alter_text: false
@@ -55,7 +55,6 @@ display:
             html: false
           hide_empty: false
           empty_zero: false
-          link_to_node: true
           entity_type: node
           entity_field: title
       filters:

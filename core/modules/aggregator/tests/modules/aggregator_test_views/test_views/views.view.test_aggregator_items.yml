@@ -37,7 +37,7 @@ display:
           table: aggregator_item
           field: iid
           id: iid
-          plugin_id: numeric
+          plugin_id: field
           entity_type: aggregator_item
           entity_field: iid
         title:

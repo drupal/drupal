@@ -9,7 +9,7 @@ namespace Drupal\options\Plugin\views\argument;
 
 use Drupal\Core\Field\AllowedTagsXssTrait;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\field\Views\FieldAPIHandlerTrait;
+use Drupal\views\FieldAPIHandlerTrait;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\argument\String;

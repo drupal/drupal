@@ -238,7 +238,7 @@ trait AssertContentTrait {
    * @param string $selector
    *   CSS selector to use in the search.
    *
-   * @return \SimpleXMLElement
+   * @return \SimpleXMLElement[]
    *   The return value of the XPath search performed after converting the CSS
    *   selector to an XPath selector.
    */

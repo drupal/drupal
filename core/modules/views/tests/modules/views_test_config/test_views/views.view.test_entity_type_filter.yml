@@ -24,6 +24,7 @@ display:
           table: node_field_data
           field: nid
           relationship: none
+          plugin_id: field
           entity_type: node
           entity_field: nid
         type:

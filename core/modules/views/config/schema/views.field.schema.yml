@@ -186,3 +186,50 @@ views.field.language:
 views.field.bulk_form:
   type: views_field_bulk_form
   label: 'Bulk form'
+
+views.field.field:
+  type: views_field
+  label: 'Views entity field handler'
+  mapping:
+    click_sort_column:
+      type: string
+      label: 'Column used for click sorting'
+    type:
+      type: string
+      label: 'Formatter'
+    settings:
+      label: 'Settings'
+      type: field.formatter.settings.[%parent.type]
+    group_column:
+      type: string
+      label: 'Group by column'
+    group_columns:
+      type: sequence
+      label: 'Group by columns'
+      sequence:
+        type: string
+        label: 'Column'
+    group_rows:
+      type: boolean
+      label: 'Display all values in the same row'
+    delta_limit:
+      type: integer
+      label: 'Field'
+    delta_offset:
+      type: integer
+      label: 'Offset'
+    delta_reversed:
+      type: boolean
+      label: 'Reversed'
+    delta_first_last:
+      type: boolean
+      label: 'First and last only'
+    multi_type:
+      type: string
+      label: 'Display type'
+    separator:
+      type: label
+      label: 'Separator'
+    field_api_classes:
+      type: boolean
+      label: 'Use field template'

@@ -21,7 +21,7 @@ display:
           id: nid
           table: node_field_data
           field: nid
-          plugin_id: numeric
+          plugin_id: field
           entity_type: node
           entity_field: nid
     display_plugin: default

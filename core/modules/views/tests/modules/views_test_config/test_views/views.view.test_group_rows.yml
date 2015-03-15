@@ -4,6 +4,10 @@ dependencies:
   module:
     - field
     - node
+    - user
+  config:
+    - field.storage.node.field_views_testing_group_rows
+  module:
 id: test_group_rows
 label: test_group_rows
 module: views
@@ -40,6 +44,92 @@ display:
           id: field_group_rows
           table: node__field_group_rows
           field: field_group_rows
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: true
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: true
+            trim: true
+            preserve_tags: ''
+            html: false
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          entity_type: node
+          entity_field: title
+          plugin_id: field
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: true
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: true
+            trim: true
+            preserve_tags: ''
+            html: false
+        field_views_testing_group_:
+          id: field_views_testing_group_rows
+          table: node__field_views_testing_group_rows
+          field: field_views_testing_group_rows
           relationship: none
           group_type: group
           admin_label: ''
@@ -100,3 +190,11 @@ display:
           field_api_classes: false
           plugin_id: field
       display_extenders: {  }
+  page_1:
+    display_options:
+      path: test-group-rows
+      display_extenders: {  }
+    display_plugin: page
+    display_title: 'Page display'
+    id: page_1
+    position: 1

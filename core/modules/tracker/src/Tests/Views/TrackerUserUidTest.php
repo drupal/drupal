@@ -29,7 +29,7 @@ class TrackerUserUidTest extends TrackerTestBase {
   public function testUserUid() {
     $map = array(
       'nid' => 'nid',
-      'node_field_data_title' => 'title',
+      'title' => 'title',
     );
 
     $expected = array(

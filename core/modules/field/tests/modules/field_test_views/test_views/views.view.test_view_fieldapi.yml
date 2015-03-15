@@ -22,7 +22,7 @@ display:
           field: nid
           id: nid
           table: node
-          plugin_id: node
+          plugin_id: field
           entity_type: node
           entity_field: nid
         field_name_0:

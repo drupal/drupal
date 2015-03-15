@@ -23,7 +23,7 @@ display:
           id: id
           relationship: none
           table: entity_test
-          plugin_id: numeric
+          plugin_id: field
           entity_type: entity_test
           entity_field: id
         id_1:
@@ -31,7 +31,7 @@ display:
           id: id_1
           relationship: test_relationship
           table: entity_test
-          plugin_id: numeric
+          plugin_id: field
           entity_type: entity_test
           entity_field: id
       pager:

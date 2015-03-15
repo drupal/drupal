@@ -102,8 +102,8 @@ class Node extends WizardPluginBase {
     $display_options['fields']['title']['alter']['html'] = 0;
     $display_options['fields']['title']['hide_empty'] = 0;
     $display_options['fields']['title']['empty_zero'] = 0;
-    $display_options['fields']['title']['link_to_node'] = 1;
-    $display_options['fields']['title']['plugin_id'] = 'node';
+    $display_options['fields']['title']['settings']['link_to_entity'] = 1;
+    $display_options['fields']['title']['plugin_id'] = 'field';
 
     return $display_options;
   }
@@ -184,8 +184,8 @@ class Node extends WizardPluginBase {
         $display_options['fields']['title']['id'] = 'title';
         $display_options['fields']['title']['table'] = 'node_field_data';
         $display_options['fields']['title']['field'] = 'title';
-        $display_options['fields']['title']['link_to_node'] = ($row_plugin == 'titles_linked');
-        $display_options['fields']['title']['plugin_id'] = 'node';
+        $display_options['fields']['title']['settings']['link_to_entity'] = $row_plugin === 'titles_linked';
+        $display_options['fields']['title']['plugin_id'] = 'field';
         break;
     }
   }

@@ -21,7 +21,7 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\field\Views\FieldAPIHandlerTrait;
+use Drupal\views\FieldAPIHandlerTrait;
 use Drupal\views\Entity\Render\EntityTranslationRenderTrait;
 use Drupal\views\Plugin\CacheablePluginInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -373,9 +373,15 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
       'default' => $default_column,
     );
 
-    $options['type'] = array(
-      'default' => isset($field_type['default_formatter']) ? $field_type['default_formatter'] : '',
-    );
+    if (isset($this->definition['default_formatter'])) {
+      $options['type'] = ['default' => $this->definition['default_formatter']];
+    }
+    elseif (isset($field_type['default_formatter'])) {
+      $options['type'] = ['default' => $field_type['default_formatter']];
+    }
+    else {
+      $options['type'] = ['default' => ''];
+    }
 
     $options['settings'] = array(
       'default' => isset($this->definition['default_formatter_settings']) ? $this->definition['default_formatter_settings'] : [],
@@ -958,7 +964,7 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
     // @todo what to do about field access?
     $contexts = [];
 
-    $contexts[] = 'cache.context.user';
+    $contexts[] = 'user';
 
     return $contexts;
   }

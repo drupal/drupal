@@ -1,25 +1,26 @@
-langcode: en
+langcode: und
 status: true
 dependencies:
+  config:
+    - field.storage.node.field_views_testing_group_rows
   module:
-    - entity_reference
-    - entity_reference_test
+    - field
     - node
     - user
-id: test_entity_reference
-label: 'Entity reference'
-module: entity_reference_test
+id: test_ungroup_rows
+label: test_ungroup_rows
+module: views
 description: ''
 tag: ''
 base_table: node_field_data
 base_field: nid
-core: '8'
+core: 8.x
 display:
   default:
     display_plugin: default
     id: default
     display_title: Master
-    position: null
+    position: 0
     display_options:
       access:
         type: perm
@@ -30,6 +31,8 @@ display:
       exposed_form:
         type: basic
       pager:
+        options:
+          items_per_page: 10
         type: full
       style:
         type: default
@@ -40,6 +43,13 @@ display:
           id: title
           table: node_field_data
           field: title
+          entity_type: node
+          entity_field: title
+          plugin_id: field
+        field_views_testing_group_:
+          id: field_views_testing_group_rows
+          table: node__field_views_testing_group_rows
+          field: field_views_testing_group_rows
           relationship: none
           group_type: group
           admin_label: ''
@@ -54,7 +64,7 @@ display:
             external: false
             replace_spaces: false
             path_case: none
-            trim_whitespace: false
+            trim_whitespace: true
             alt: ''
             rel: ''
             link_class: ''
@@ -63,13 +73,13 @@ display:
             target: ''
             nl2br: false
             max_length: 0
-            word_boundary: false
-            ellipsis: false
+            word_boundary: true
+            ellipsis: true
             more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: false
-            trim: false
+            strip_tags: true
+            trim: true
             preserve_tags: ''
             html: false
           element_type: ''
@@ -84,43 +94,27 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: false
+          group_column: value
+          group_columns: {  }
+          group_rows: false
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
           plugin_id: field
-          entity_type: node
-          entity_field: title
-      filters:
-        status:
-          value: true
-          table: node_field_data
-          field: status
-          id: status
-          expose:
-            operator: ''
-          group: 1
-          plugin_id: boolean
-          entity_type: node
-          entity_field: status
-      sorts:
-        created:
-          id: created
-          table: node_field_data
-          field: created
-          order: DESC
-          plugin_id: date
-          entity_type: node
-          entity_field: created
-  entity_reference_1:
-    display_plugin: entity_reference
-    id: entity_reference_1
-    display_title: EntityReference
-    position: null
+      display_extenders: {  }
+  page_1:
     display_options:
-      style:
-        type: entity_reference
-        options:
-          grouping: {  }
-          search_fields:
-            title: title
-      pager:
-        type: none
-        options:
-          offset: 0
+      path: test-ungroup-rows
+      display_extenders: {  }
+    display_plugin: page
+    display_title: 'Page display'
+    id: page_1
+    position: 1

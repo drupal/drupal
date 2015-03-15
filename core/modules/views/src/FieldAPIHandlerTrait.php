@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\field\Views\FieldAPIHandlerTrait.
+ * Contains \Drupal\views\FieldAPIHandlerTrait.
  */
 
-namespace Drupal\field\Views;
+namespace Drupal\views;
 
 use Drupal\Core\Field\BaseFieldDefinition;
 

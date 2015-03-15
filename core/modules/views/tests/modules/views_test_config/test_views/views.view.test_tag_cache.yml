@@ -36,7 +36,7 @@ display:
           hide_empty: false
           id: nid
           table: node_field_data
-          plugin_id: numeric
+          plugin_id: field
           entity_type: node
           entity_field: nid
         title:
@@ -53,10 +53,54 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          link_to_node: true
-          plugin_id: node
+          plugin_id: field
           entity_type: node
           entity_field: title
+          type: string
+          settings:
+            link_to_entity: true
+          plugin_id: field
+      filters:
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: in
+          value:
+            page: page
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: bundle
+          entity_type: node
+          entity_field: type
       group_by: true
       pager:
         type: some

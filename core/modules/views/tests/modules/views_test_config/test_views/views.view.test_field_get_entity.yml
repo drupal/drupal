@@ -35,7 +35,7 @@ display:
           id: nid
           table: node_field_data
           relationship: node
-          plugin_id: node
+          plugin_id: field
           entity_type: node
           entity_field: nid
         uid:

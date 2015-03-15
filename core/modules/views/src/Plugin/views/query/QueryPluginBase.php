@@ -274,7 +274,7 @@ abstract class QueryPluginBase extends PluginBase implements CacheablePluginInte
         'alias' => $base_table,
         'relationship_id' => 'none',
         'entity_type' => $base_table_data['table']['entity type'],
-        'revision' => FALSE,
+        'revision' => $base_table_data['table']['entity revision'],
       );
 
       // Include the entity provider.
@@ -292,7 +292,7 @@ abstract class QueryPluginBase extends PluginBase implements CacheablePluginInte
           'relationship_id' => $relationship_id,
           'alias' => $relationship->alias,
           'entity_type' => $table_data['table']['entity type'],
-          'revision' => FALSE,
+          'revision' => $table_data['table']['entity revision'],
         );
 
         // Include the entity provider.

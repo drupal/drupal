@@ -147,6 +147,7 @@ class ViewEntityDependenciesTest extends ViewUnitTestBase {
         'ArgumentValidatorTest'
       ],
       'module' => [
+        'core',
         'node',
         'search',
         'user',
@@ -158,7 +159,7 @@ class ViewEntityDependenciesTest extends ViewUnitTestBase {
         'field.storage.node.body'
       ],
       'module' => [
-        'node',
+        'core',
         'text',
         'views'
       ],

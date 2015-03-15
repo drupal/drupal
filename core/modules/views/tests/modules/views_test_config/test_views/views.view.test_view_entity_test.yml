@@ -35,7 +35,7 @@ display:
           table: entity_test_update
           entity_type: entity_test_update
           entity_field: id
-          plugin_id: numeric
+          plugin_id: field
         name:
           alter:
             alter_text: false
@@ -50,7 +50,7 @@ display:
           hide_empty: false
           id: name
           table: entity_test_update
-          plugin_id: standard
+          plugin_id: field
           entity_type: entity_test_update
           entity_field: name
       pager:

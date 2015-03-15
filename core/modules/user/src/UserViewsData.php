@@ -159,9 +159,6 @@ class UserViewsData extends EntityViewsData {
       ),
     );
 
-    $data['users_field_data']['status']['field']['output formats'] = array(
-      'active-blocked' => array(t('Active'), t('Blocked')),
-    );
     $data['users_field_data']['status']['filter']['label'] = t('Active');
     $data['users_field_data']['status']['filter']['type'] = 'yes-no';
 

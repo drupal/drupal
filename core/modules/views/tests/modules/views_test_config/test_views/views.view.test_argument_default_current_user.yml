@@ -43,9 +43,8 @@ display:
           field: title
           hide_empty: false
           id: title
-          link_to_node: false
           table: node_field_data
-          plugin_id: node
+          plugin_id: field
           entity_type: node
           entity_field: title
       pager:

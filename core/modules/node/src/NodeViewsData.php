@@ -24,7 +24,6 @@ class NodeViewsData extends EntityViewsData {
     $data['node_field_data']['table']['base']['access query tag'] = 'node_access';
     $data['node_field_data']['table']['wizard_id'] = 'node';
 
-    $data['node_field_data']['nid']['field']['id'] = 'node';
     $data['node_field_data']['nid']['field']['argument'] = [
       'id' => 'node_nid',
       'name field' => 'title',
@@ -32,7 +31,8 @@ class NodeViewsData extends EntityViewsData {
       'validate type' => 'nid',
     ];
 
-    $data['node_field_data']['title']['field']['id'] = 'node';
+    $data['node_field_data']['title']['field']['default_formatter_settings'] = ['link_to_entity' => TRUE];
+
     $data['node_field_data']['title']['field']['link_to_node default'] = TRUE;
 
     $data['node_field_data']['type']['field']['id'] = 'node_type';
@@ -40,9 +40,6 @@ class NodeViewsData extends EntityViewsData {
 
     $data['node_field_data']['langcode']['help'] = t('The language of the content or translation.');
 
-    $data['node_field_data']['status']['field']['output formats'] = [
-      'published-notpublished' => array(t('Published'), t('Not published')),
-    ];
     $data['node_field_data']['status']['filter']['label'] = t('Published status');
     $data['node_field_data']['status']['filter']['type'] = 'yes-no';
     // Use status = 1 instead of status <> 0 in WHERE statement.
@@ -58,15 +55,9 @@ class NodeViewsData extends EntityViewsData {
       ),
     );
 
-    $data['node_field_data']['promote']['field']['output formats'] = [
-      'promoted-notpromoted' => array(t('Promoted'), t('Not promoted')),
-    ];
     $data['node_field_data']['promote']['filter']['label'] = t('Promoted to front page status');
     $data['node_field_data']['promote']['filter']['type'] = 'yes-no';
 
-    $data['node_field_data']['sticky']['field']['output formats'] = [
-      'sticky' => array(t('Sticky'), t('Not sticky')),
-    ];
     $data['node_field_data']['sticky']['filter']['label'] = t('Sticky status');
     $data['node_field_data']['sticky']['filter']['type'] = 'yes-no';
     $data['node_field_data']['sticky']['sort']['help'] = t('Whether or not the content is sticky. To list sticky content first, set this to descending.');
@@ -299,9 +290,6 @@ class NodeViewsData extends EntityViewsData {
     $data['node_field_revision']['table']['join']['node_field_data']['left_field'] = 'vid';
     $data['node_field_revision']['table']['join']['node_field_data']['field'] = 'vid';
 
-    $data['node_field_revision']['status']['field']['output formats'] = [
-      'published-notpublished' => [t('Published'), t('Not published')],
-    ];
     $data['node_field_revision']['status']['filter']['label'] = t('Published');
     $data['node_field_revision']['status']['filter']['type'] = 'yes-no';
     $data['node_field_revision']['status']['filter']['use_equal'] = TRUE;

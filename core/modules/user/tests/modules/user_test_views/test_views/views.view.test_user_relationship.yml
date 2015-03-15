@@ -64,9 +64,8 @@ display:
           hide_empty: false
           id: title
           label: ''
-          link_to_node: true
           table: node_field_data
-          plugin_id: node
+          plugin_id: field
           entity_type: node
           entity_field: title
         uid:

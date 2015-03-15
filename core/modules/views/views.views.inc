@@ -462,7 +462,6 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
       // Provide a real field for group by.
       'real field' => $field_alias . '_' . $real_field,
       'additional fields' => $add_fields,
-      'entity_tables' => $entity_tables,
       // Default the element type to div, let the UI change it if necessary.
       'element type' => 'div',
       'is revision' => $type == EntityStorageInterface::FIELD_LOAD_REVISION,

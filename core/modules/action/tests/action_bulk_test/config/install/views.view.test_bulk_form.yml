@@ -77,8 +77,7 @@ display:
             html: false
           hide_empty: false
           empty_zero: false
-          link_to_node: true
-          plugin_id: node
+          plugin_id: field
           entity_type: node
           entity_field: title
         node_bulk_form:

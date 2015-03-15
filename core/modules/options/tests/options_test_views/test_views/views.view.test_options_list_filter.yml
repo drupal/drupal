@@ -72,7 +72,6 @@ display:
             html: false
           hide_empty: false
           empty_zero: false
-          link_to_node: true
           relationship: none
           group_type: group
           admin_label: ''
@@ -87,7 +86,7 @@ display:
           element_default_classes: true
           empty: ''
           hide_alter_empty: true
-          plugin_id: node
+          plugin_id: field
       filters:
         status:
           value: true

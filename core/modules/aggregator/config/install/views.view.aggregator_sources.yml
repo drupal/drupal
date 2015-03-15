@@ -77,7 +77,8 @@ display:
           table: aggregator_feed
           field: fid
           id: fid
-          plugin_id: numeric
+          plugin_id: field
+          type: number_integer
           relationship: none
           group_type: group
           admin_label: ''
@@ -122,15 +123,6 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          set_precision: false
-          precision: 0
-          decimal: .
-          separator: ','
-          format_plural: false
-          format_plural_singular: '1'
-          format_plural_plural: '@count'
-          prefix: ''
-          suffix: ''
           entity_type: aggregator_feed
           entity_field: fid
       filters: {  }

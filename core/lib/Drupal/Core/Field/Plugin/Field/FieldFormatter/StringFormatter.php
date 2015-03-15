@@ -25,6 +25,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   label = @Translation("Plain text"),
  *   field_types = {
  *     "string",
+ *     "uri",
  *   },
  *   quickedit = {
  *     "editor" = "plain_text"

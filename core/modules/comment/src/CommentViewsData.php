@@ -102,9 +102,6 @@ class CommentViewsData extends EntityViewsData {
 
     $data['comment_field_data']['status']['title'] = t('Approved status');
     $data['comment_field_data']['status']['help'] = t('Whether the comment is approved (or still in the moderation queue).');
-    $data['comment_field_data']['status']['field']['output formats'] = array(
-      'approved-not-approved' => array(t('Approved'), t('Not Approved')),
-    );
     $data['comment_field_data']['status']['filter']['label'] = t('Approved comment status');
     $data['comment_field_data']['status']['filter']['type'] = 'yes-no';
 

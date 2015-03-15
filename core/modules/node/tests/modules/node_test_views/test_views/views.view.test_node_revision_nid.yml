@@ -20,20 +20,20 @@ display:
           table: node_field_revision
           field: nid
           required: true
-          plugin_id: standard
+          plugin_id: field
       fields:
         vid:
           id: vid
           table: node_field_revision
           field: vid
-          plugin_id: standard
+          plugin_id: field
           entity_type: node
           entity_field: vid
         nid_1:
           id: nid_1
           table: node_field_revision
           field: nid
-          plugin_id: standard
+          plugin_id: field
           entity_type: node
           entity_field: nid
         nid:
@@ -41,7 +41,7 @@ display:
           table: node_field_data
           field: nid
           relationship: nid
-          plugin_id: node
+          plugin_id: field
           entity_type: node
           entity_field: nid
       arguments:

@@ -59,7 +59,7 @@ class RevisionRelationshipsTest extends ViewTestBase {
     $block_content_revision->save();
     $column_map = array(
       'revision_id' => 'revision_id',
-      'block_content_revision_id' => 'block_content_revision_id',
+      'id_1' => 'id_1',
       'block_content_block_content_revision_id' => 'block_content_block_content_revision_id',
     );
 
@@ -69,12 +69,12 @@ class RevisionRelationshipsTest extends ViewTestBase {
     $resultset_id = array(
       array(
         'revision_id' => '1',
-        'block_content_revision_id' => '1',
+        'id_1' => '1',
         'block_content_block_content_revision_id' => '1',
       ),
       array(
         'revision_id' => '2',
-        'block_content_revision_id' => '1',
+        'id_1' => '1',
         'block_content_block_content_revision_id' => '1',
       ),
     );
@@ -86,7 +86,7 @@ class RevisionRelationshipsTest extends ViewTestBase {
     $resultset_revision_id = array(
       array(
         'revision_id' => '2',
-        'block_content_revision_id' => '1',
+        'id_1' => '1',
         'block_content_block_content_revision_id' => '1',
       ),
     );

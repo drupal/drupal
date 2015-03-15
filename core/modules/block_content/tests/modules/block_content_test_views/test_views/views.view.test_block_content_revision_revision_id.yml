@@ -28,14 +28,14 @@ display:
           id: revision_id
           table: block_content_revision
           field: revision_id
-          plugin_id: standard
+          plugin_id: field
           entity_type: block_content
           entity_field: revision_id
         id_1:
           id: id_1
           table: block_content_revision
           field: id
-          plugin_id: standard
+          plugin_id: field
           entity_type: block_content
           entity_field: id
         id:

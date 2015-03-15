@@ -1256,7 +1256,7 @@ class Sql extends QueryPluginBase {
 
       foreach ($entity_information as $entity_type_id => $info) {
         $entity_type = \Drupal::entityManager()->getDefinition($info['entity_type']);
-        $base_field = empty($table['revision']) ? $entity_type->getKey('id') : $entity_type->getKey('revision');
+        $base_field = !$info['revision'] ? $entity_type->getKey('id') : $entity_type->getKey('revision');
         $this->addField($info['alias'], $base_field, '', $params);
       }
     }
@@ -1466,8 +1466,11 @@ class Sql extends QueryPluginBase {
    * If the entity belongs to the base table, then it gets stored in
    * $result->_entity. Otherwise, it gets stored in
    * $result->_relationship_entities[$relationship_id];
+   *
+   * @param \Drupal\views\ResultRow[] $results
+   *   The result of the SQL query.
    */
-  function loadEntities(&$results) {
+  public function loadEntities(&$results) {
     $entity_information = $this->getEntityTableInfo();
     // No entity tables found, nothing else to do here.
     if (empty($entity_information)) {
@@ -1489,7 +1492,7 @@ class Sql extends QueryPluginBase {
       $relationship_id = $info['relationship_id'];
       $entity_type = $info['entity_type'];
       $entity_info = $entity_types[$entity_type];
-      $id_key = empty($table['revision']) ? $entity_info->getKey('id') : $entity_info->getKey('revision');
+      $id_key = !$info['revision'] ? $entity_info->getKey('id') : $entity_info->getKey('revision');
       $id_alias = $this->getFieldAlias($info['alias'], $id_key);
 
       foreach ($results as $index => $result) {
@@ -1505,7 +1508,7 @@ class Sql extends QueryPluginBase {
       $flat_ids = iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($ids)), FALSE);
 
       // Drupal core currently has no way to load multiple revisions. Sad.
-      if (isset($entity_table_info[$entity_type]['revision']) && $entity_table_info[$entity_type]['revision'] == TRUE) {
+      if (isset($entity_information[$entity_type]['revision']) && $entity_information[$entity_type]['revision'] === TRUE) {
         $entities = array();
         foreach ($flat_ids as $revision_id) {
           $entity = entity_revision_load($entity_type, $revision_id);

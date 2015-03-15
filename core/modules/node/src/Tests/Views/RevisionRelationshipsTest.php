@@ -48,8 +48,8 @@ class RevisionRelationshipsTest extends ViewTestBase {
     $node_revision->save();
     $column_map = array(
       'vid' => 'vid',
-      'node_field_revision_nid' => 'node_revision_nid',
       'node_field_data_node_field_revision_nid' => 'node_node_revision_nid',
+      'nid_1' => 'nid_1',
     );
 
     // Here should be two rows.
@@ -58,13 +58,14 @@ class RevisionRelationshipsTest extends ViewTestBase {
     $resultset_nid = array(
       array(
         'vid' => '1',
-        'node_revision_nid' => '1',
         'node_node_revision_nid' => '1',
+        'nid_1' => '1',
       ),
       array(
         'vid' => '2',
         'node_revision_nid' => '1',
         'node_node_revision_nid' => '1',
+        'nid_1' => '1',
       ),
     );
     $this->assertIdenticalResultset($view_nid, $resultset_nid, $column_map);
@@ -75,8 +76,8 @@ class RevisionRelationshipsTest extends ViewTestBase {
     $resultset_vid = array(
       array(
         'vid' => '2',
-        'node_revision_nid' => '1',
         'node_node_revision_nid' => '1',
+        'nid_1' => '1',
       ),
     );
     $this->assertIdenticalResultset($view_vid, $resultset_vid, $column_map);

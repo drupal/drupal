@@ -98,7 +98,7 @@ trait ViewResultAssertionTrait {
         // For entity fields we don't have the raw value. Let's try to fetch it
         // using the entity itself.
         elseif (empty($value->$view_column) && isset($view->field[$expected_column]) && ($field = $view->field[$expected_column]) && $field instanceof Field) {
-          $row[$expected_column] = $field->getEntity($value)->{$field->definition['field_name']}->value;
+          $row[$expected_column] = $field->getValue($value);
         }
       }
       $result[$key] = $row;

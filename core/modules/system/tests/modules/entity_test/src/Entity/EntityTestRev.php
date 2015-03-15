@@ -23,6 +23,7 @@ use Drupal\entity_test\Entity\EntityTest;
  *       "default" = "Drupal\entity_test\EntityTestForm",
  *       "delete" = "Drupal\entity_test\EntityTestDeleteForm"
  *     },
+ *     "view_builder" = "Drupal\entity_test\EntityTestViewBuilder",
  *     "translation" = "Drupal\content_translation\ContentTranslationHandler",
  *     "views_data" = "Drupal\views\EntityViewsData"
  *   },

@@ -92,8 +92,7 @@ display:
             html: false
           hide_empty: false
           empty_zero: false
-          link_to_node: true
-          plugin_id: node
+          plugin_id: field
           relationship: none
           group_type: group
           admin_label: ''

@@ -241,6 +241,19 @@ field.formatter.settings.boolean:
       type: string
       label: 'Custom output for TRUE'
 
+field.formatter.settings.boolean:
+  type: mapping
+  mapping:
+    format:
+      type: string
+      label: 'Output format'
+    format_custom_false:
+      type: string
+      label: 'Custom output for FALSE'
+    format_custom_true:
+      type: string
+      label: 'Custom output for TRUE'
+
 field.formatter.settings.string:
   type: mapping
   mapping:

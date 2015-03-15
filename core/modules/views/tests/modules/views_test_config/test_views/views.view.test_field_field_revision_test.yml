@@ -1,0 +1,60 @@
+langcode: und
+status: true
+dependencies: {  }
+id: test_field_field_revision_test
+module: views
+description: ''
+tag: ''
+base_table: entity_test_rev_revision
+base_field: id
+core: '8'
+display:
+  default:
+    display_options:
+      access:
+        type: none
+      cache:
+        type: none
+      fields:
+        id:
+          id: id
+          table: entity_test_rev_revision
+          field: id
+          plugin_id: field
+          entity_type: entity_test_rev
+          entity_field: id
+        revision_id:
+          id: revision_id
+          table: entity_test_rev_revision
+          field: revision_id
+          plugin_id: field
+          entity_type: entity_test_rev
+          entity_field: revision_id
+        field_test:
+          id: field_test
+          table: entity_test__field_test
+          field: field_test
+          plugin_id: field
+          entity_type: entity_test_rev
+          entity_field: field_test
+        name:
+          id: name
+          table: entity_test_rev_revision
+          field: name
+          plugin_id: field
+          entity_type: entity_test_rev
+          entity_field: name
+      sorts:
+        revision_id:
+          id: revision_id
+          table: entity_test_rev_revision
+          field: revision_id
+          entity_type: entity_test_rev
+          entity_field: revision_id
+          order: ASC
+      style:
+        type: html_list
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: 0
