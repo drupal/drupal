@@ -129,7 +129,7 @@ class TestMigrateExecutable extends MigrateExecutable {
   /**
    * Allows access to set protected source property.
    *
-   * @param \Drupal\migrate\Source $source
+   * @param \Drupal\migrate\Plugin\MigrateSourceInterface $source
    *   The value to set.
    */
   public function setSource($source) {

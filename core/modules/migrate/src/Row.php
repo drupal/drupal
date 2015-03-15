@@ -176,9 +176,12 @@ class Row {
 
   /**
    * Freezes the source.
+   *
+   * @return $this
    */
   public function freezeSource() {
     $this->frozen = TRUE;
+    return $this;
   }
 
   /**

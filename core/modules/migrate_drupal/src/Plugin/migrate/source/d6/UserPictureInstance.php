@@ -23,7 +23,7 @@ class UserPictureInstance extends DrupalSqlBase {
   /**
    * {@inheritdoc}
    */
-  public function runQuery() {
+  public function initializeIterator() {
     return new \ArrayIterator(array(
       array(
         'id' => '',

@@ -46,11 +46,11 @@ class UserPictureFile extends DrupalSqlBase {
   /**
    * {@inheritdoc}
    */
-  public function runQuery() {
+  public function initializeIterator() {
     $conf_path = isset($this->configuration['conf_path']) ? $this->configuration['conf_path'] : 'sites/default';
     $this->filePath = $this->variableGet('file_directory_path', $conf_path . '/files') . '/';
     $this->tempFilePath = $this->variableGet('file_directory_temp', '/tmp') . '/';
-    return parent::runQuery();
+    return parent::initializeIterator();
   }
 
   /**

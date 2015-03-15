@@ -45,10 +45,10 @@ class Block extends DrupalSqlBase {
   /**
    * {@inheritdoc}
    */
-  protected function runQuery() {
+  protected function initializeIterator() {
     $this->defaultTheme = $this->variableGet('theme_default', 'Garland');
     $this->adminTheme = $this->variableGet('admin_theme', null);
-    return parent::runQuery();
+    return parent::initializeIterator();
   }
 
   /**

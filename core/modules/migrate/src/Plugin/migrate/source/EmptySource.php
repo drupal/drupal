@@ -30,7 +30,7 @@ class EmptySource extends SourcePluginBase {
   /**
    * {@inheritdoc}
    */
-  public function getIterator() {
+  public function initializeIterator() {
     return new \ArrayIterator(array(array('id' => '')));
   }
 

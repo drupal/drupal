@@ -62,14 +62,14 @@ class File extends DrupalSqlBase {
   /**
    * {@inheritdoc}
    */
-  protected function runQuery() {
+  protected function initializeIterator() {
     $conf_path = isset($this->configuration['conf_path']) ? $this->configuration['conf_path'] : 'sites/default';
     $this->filePath = $this->variableGet('file_directory_path', $conf_path . '/files') . '/';
     $this->tempFilePath = $this->variableGet('file_directory_temp', '/tmp') . '/';
 
     // FILE_DOWNLOADS_PUBLIC == 1 and FILE_DOWNLOADS_PRIVATE == 2.
     $this->isPublic = $this->variableGet('file_downloads', 1) == 1;
-    return parent::runQuery();
+    return parent::initializeIterator();
   }
 
   /**

@@ -112,7 +112,7 @@ abstract class SqlBase extends SourcePluginBase {
    * We could simply execute the query and be functionally correct, but
    * we will take advantage of the PDO-based API to optimize the query up-front.
    */
-  protected function runQuery() {
+  protected function initializeIterator() {
     $this->prepareQuery();
     $high_water_property = $this->migration->get('highWaterProperty');
 
@@ -201,18 +201,6 @@ abstract class SqlBase extends SourcePluginBase {
    */
   public function count() {
     return $this->query()->countQuery()->execute()->fetchField();
-  }
-
-  /**
-   * Returns the iterator that will yield the row arrays to be processed.
-   *
-   * @return \Iterator
-   */
-  public function getIterator() {
-    if (!isset($this->iterator)) {
-      $this->iterator = $this->runQuery();
-    }
-    return $this->iterator;
   }
 
   /**

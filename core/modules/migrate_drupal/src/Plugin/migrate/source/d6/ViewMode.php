@@ -20,7 +20,7 @@ class ViewMode extends ViewModeBase {
   /**
    * {@inheritdoc}
    */
-  protected function runQuery() {
+  protected function initializeIterator() {
     $rows = array();
     $result = $this->prepareQuery()->execute();
     while ($field_row = $result->fetchAssoc()) {

@@ -19,7 +19,7 @@ use Drupal\migrate\Row;
  *
  * @ingroup migration
  */
-interface MigrateSourceInterface extends \Countable, PluginInspectionInterface {
+interface MigrateSourceInterface extends \Countable, \Iterator, PluginInspectionInterface {
 
   /**
    * Returns available fields on the source.

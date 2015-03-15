@@ -162,7 +162,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
   /**
    * The source.
    *
-   * @var \Drupal\migrate\Source
+   * @var \Drupal\migrate\Plugin\MigrateSourceInterface
    */
   protected $source;
 
@@ -219,12 +219,16 @@ class MigrateExecutable implements MigrateExecutableInterface {
    *
    * Makes sure source is initialized based on migration settings.
    *
-   * @return \Drupal\migrate\Source
+   * @return \Drupal\migrate\Plugin\MigrateSourceInterface
    *   The source.
    */
   protected function getSource() {
     if (!isset($this->source)) {
-      $this->source = new Source($this->migration, $this);
+      $this->source = $this->migration->getSourcePlugin();
+
+      // @TODO, find out how to remove this.
+      // @see https://drupal.org/node/2443617
+      $this->source->migrateExecutable = $this;
     }
     return $this->source;
   }
@@ -256,13 +260,11 @@ class MigrateExecutable implements MigrateExecutableInterface {
     }
     catch (\Exception $e) {
       $this->message->display(
-        $this->t('Migration failed with source plugin exception: !e',
-          array('!e' => $e->getMessage())), 'error');
+        $this->t('Migration failed with source plugin exception: !e', array('!e' => $e->getMessage())), 'error');
       return MigrationInterface::RESULT_FAILED;
     }
 
     $destination = $this->migration->getDestinationPlugin();
-
     while ($source->valid()) {
       $row = $source->current();
       if ($this->sourceIdValues = $row->getSourceIdValues()) {

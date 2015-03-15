@@ -19,7 +19,7 @@ class CommentVariable extends DrupalSqlBase {
   /**
    * {@inheritdoc}
    */
-  protected function runQuery() {
+  protected function initializeIterator() {
     return new \ArrayIterator($this->getCommentVariables());
   }
 

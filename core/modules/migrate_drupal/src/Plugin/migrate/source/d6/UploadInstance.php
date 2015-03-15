@@ -22,7 +22,7 @@ class UploadInstance extends DrupalSqlBase {
   /**
    * {@inheritdoc}
    */
-  protected function runQuery() {
+  protected function initializeIterator() {
     $prefix = 'upload';
     $node_types = $this->getDatabase()->query('SELECT type FROM {node_type}')->fetchCol();
     foreach ($node_types as $node_type) {
