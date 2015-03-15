@@ -94,3 +94,10 @@ function test_theme_theme_test_function_suggestions__theme_override($variables) 
 function test_theme_theme_test_function_suggestions__module_override($variables) {
   return 'Theme function overridden based on new theme suggestion provided by a module.';
 }
+
+/**
+ * Implements hook_theme_registry_alter().
+ */
+function test_theme_theme_registry_alter(&$registry) {
+  $registry['theme_test_template_test']['variables']['additional'] = 'value';
+}

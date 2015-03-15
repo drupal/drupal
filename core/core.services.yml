@@ -1092,7 +1092,9 @@ services:
     class: Zend\Feed\Writer\Extension\WellFormedWeb\Renderer\Entry
   theme.manager:
     class: Drupal\Core\Theme\ThemeManager
-    arguments: ['@app.root', '@theme.registry', '@theme.negotiator', '@theme.initialization', '@request_stack', '@module_handler']
+    arguments: ['@app.root', '@theme.negotiator', '@theme.initialization', '@request_stack', '@module_handler']
+    calls:
+      - [setThemeRegistry, ['@theme.registry']]
   theme.initialization:
     class: Drupal\Core\Theme\ThemeInitialization
     arguments: ['@app.root', '@theme_handler', '@state']
@@ -1101,6 +1103,8 @@ services:
     arguments: ['@app.root', '@cache.default', '@lock', '@module_handler', '@theme_handler', '@theme.initialization']
     tags:
       - { name: needs_destruction }
+    calls:
+      - [setThemeManager, ['@theme.manager']]
   authentication:
     class: Drupal\Core\Authentication\AuthenticationManager
     tags:

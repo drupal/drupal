@@ -23,7 +23,7 @@ class RegistryTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('theme_test');
+  public static $modules = array('theme_test', 'system');
 
   protected $profile = 'testing';
   /**
@@ -72,8 +72,11 @@ class RegistryTest extends KernelTestBase {
     $theme_handler->install(['test_basetheme', 'test_subtheme', 'test_subsubtheme']);
 
     $registry_subsub_theme = new Registry(\Drupal::root(), \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), 'test_subsubtheme');
+    $registry_subsub_theme->setThemeManager(\Drupal::theme());
     $registry_sub_theme = new Registry(\Drupal::root(), \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), 'test_subtheme');
+    $registry_sub_theme->setThemeManager(\Drupal::theme());
     $registry_base_theme = new Registry(\Drupal::root(), \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), 'test_basetheme');
+    $registry_base_theme->setThemeManager(\Drupal::theme());
 
     $preprocess_functions = $registry_subsub_theme->get()['theme_test_template_test']['preprocess functions'];
     $this->assertIdentical([
@@ -96,4 +99,20 @@ class RegistryTest extends KernelTestBase {
       'test_basetheme_preprocess_theme_test_template_test',
     ], $preprocess_functions);
   }
+
+  /**
+   * Tests that the theme registry can be altered by themes.
+   */
+  public function testThemeRegistryAlterByTheme() {
+
+    /** @var \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler */
+    $theme_handler = \Drupal::service('theme_handler');
+    $theme_handler->install(['test_theme']);
+    $theme_handler->setDefault('test_theme');
+
+    $registry = new Registry(\Drupal::root(), \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), 'test_theme');
+    $registry->setThemeManager(\Drupal::theme());
+    $this->assertEqual('value', $registry->get()['theme_test_template_test']['variables']['additional']);
+  }
+
 }

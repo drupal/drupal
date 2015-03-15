@@ -69,6 +69,8 @@ interface ThemeManagerInterface {
   /**
    * Passes alterable variables to specific $theme_TYPE_alter() implementations.
    *
+   * It also invokes alter hooks for all base themes.
+   *
    * $theme specifies the theme name of the active theme and all its base
    * themes.
    *
@@ -121,5 +123,25 @@ interface ThemeManagerInterface {
    * @see \Drupal\Core\Extension\ModuleHandlerInterface
    */
   public function alter($type, &$data, &$context1 = NULL, &$context2 = NULL);
+
+  /**
+   * Provides an alter hook for a specific theme.
+   *
+   * Similar to ::alter, it also invokes the alter hooks for the base themes.
+   *
+   * @param \Drupal\Core\Theme\ActiveTheme $theme
+   *   A manually specified theme.
+   * @param string|array $type
+   *   A string describing the type of the alterable $data.
+   * @param mixed $data
+   *   The variable that will be passed to $theme_TYPE_alter() implementations
+   * @param mixed $context1
+   *   (optional) An additional variable that is passed by reference.
+   * @param mixed $context2
+   *   (optional) An additional variable that is passed by reference.
+   *
+   * @see ::alter
+   */
+  public function alterForTheme(ActiveTheme $theme, $type, &$data, &$context1 = NULL, &$context2 = NULL);
 
 }
