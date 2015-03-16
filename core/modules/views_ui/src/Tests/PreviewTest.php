@@ -93,6 +93,18 @@ class PreviewTest extends UITestBase {
   }
 
   /**
+   * Tests the taxonomy term preview AJAX.
+   *
+   * This tests a specific regression in the taxonomy term view preview.
+   *
+   * @see https://www.drupal.org/node/2452659
+   */
+  public function testTaxonomyAJAX() {
+    \Drupal::service('module_installer')->install(array('taxonomy'));
+    $this->getPreviewAJAX('taxonomy_term', 'page_1', 0);
+  }
+
+  /**
    * Tests pagers in the preview form.
    */
   public function testPreviewWithPagersUI() {
