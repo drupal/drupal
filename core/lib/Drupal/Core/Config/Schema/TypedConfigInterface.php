@@ -54,18 +54,6 @@ interface TypedConfigInterface extends TraversableTypedDataInterface {
   public function get($name);
 
   /**
-   * Replaces the item at the specified position in this list.
-   *
-   * @param int|string $key
-   *   Property name or index of the item to replace.
-   * @param mixed $value
-   *   Value to be stored at the specified position.
-   *
-   * @return $this
-   */
-  public function set($key, $value);
-
-  /**
    * Returns an array of all property values.
    *
    * @return array

@@ -315,13 +315,6 @@ class ConfigSchemaTest extends KernelTestBase {
     $this->assertTrue(!$effect['data']->isEmpty() && $effect['id']->getValue() == 'image_scale', 'Got data for the image scale effect from metadata.');
     $this->assertTrue($effect['data']->get('width') instanceof IntegerInterface, 'Got the right type for the scale effect width.');
     $this->assertEqual($effect['data']->get('width')->getValue(), 480, 'Got the right value for the scale effect width.' );
-
-    // Finally update some object using a configuration wrapper.
-    $new_slogan = 'Site slogan for testing configuration metadata';
-    $wrapper = \Drupal::service('config.typed')->get('system.site');
-    $wrapper->set('slogan', $new_slogan);
-    $site_slogan = $wrapper->get('slogan');
-    $this->assertEqual($site_slogan->getValue(), $new_slogan, 'Successfully updated the contained configuration data');
   }
 
   /**

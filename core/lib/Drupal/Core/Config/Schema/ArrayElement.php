@@ -101,18 +101,6 @@ abstract class ArrayElement extends TypedData implements \IteratorAggregate, Typ
   /**
    * {@inheritdoc}
    */
-  public function set($key, $value) {
-    $this->value[$key] = $value;
-    // Parsed elements must be rebuilt with new values
-    unset($this->elements);
-    // Directly notify ourselves.
-    $this->onChange($key, $value);
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getElements() {
     if (!isset($this->elements)) {
       $this->elements = $this->parse();
