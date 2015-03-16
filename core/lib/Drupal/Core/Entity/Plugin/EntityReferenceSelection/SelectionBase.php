@@ -124,18 +124,9 @@ class SelectionBase extends PluginBase implements SelectionInterface, ContainerF
         $bundle_options[$bundle_name] = $bundle_info['label'];
       }
 
-      $target_bundles_title = $this->t('Bundles');
-      // Default core entity types with sensible labels.
-      if ($entity_type_id == 'node') {
-        $target_bundles_title = $this->t('Content types');
-      }
-      elseif ($entity_type_id == 'taxonomy_term') {
-        $target_bundles_title = $this->t('Vocabularies');
-      }
-
       $form['target_bundles'] = array(
         '#type' => 'checkboxes',
-        '#title' => $target_bundles_title,
+        '#title' => $this->t('Bundles'),
         '#options' => $bundle_options,
         '#default_value' => (!empty($selection_handler_settings['target_bundles'])) ? $selection_handler_settings['target_bundles'] : array(),
         '#required' => TRUE,

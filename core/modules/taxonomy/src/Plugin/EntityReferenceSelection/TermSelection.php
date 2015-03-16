@@ -39,6 +39,7 @@ class TermSelection extends SelectionBase {
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildConfigurationForm($form, $form_state);
 
+    $form['target_bundles']['#title'] = $this->t('Vocabularies');
     // @todo: Currently allow auto-create only on taxonomy terms.
     $form['auto_create'] = array(
       '#type' => 'checkbox',
