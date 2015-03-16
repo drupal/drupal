@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Tests\Plugin;
 
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\views\Views;
 use Drupal\views_test_data\Plugin\views\display\DisplayTest as DisplayTestPlugin;
 
@@ -344,6 +345,54 @@ class DisplayTest extends PluginTestBase {
     $this->executeView($view);
     $this->assertFalse(count($view->result), 'Ensure the result of the view is empty.');
     $this->assertTrue($view->display_handler->outputIsEmpty(), 'Ensure the view output is marked as empty.');
+  }
+
+  /**
+   * Test translation rendering settings based on entity translatability.
+   */
+  public function testTranslationSetting() {
+    \Drupal::service('module_installer')->install(['file']);
+
+    // By default there should be no language settings.
+    $this->checkTranslationSetting();
+    \Drupal::service('module_installer')->install(['language']);
+
+    // Enabling the language module should not make a difference.
+    $this->checkTranslationSetting();
+
+    // Making the site multilingual should let translatable entity types support
+    // translation rendering.
+    ConfigurableLanguage::createFromLangcode('it')->save();
+    $this->checkTranslationSetting(TRUE);
+  }
+
+  /**
+   * Asserts a node and a file based view for the translation setting.
+   *
+   * The file based view should never expose that setting. The node based view
+   * should if the site is multilingual.
+   *
+   * @param bool $expected_node_translatability
+   *   Whether the node based view should be expected to support translation
+   *   settings.
+   */
+  protected function checkTranslationSetting($expected_node_translatability = FALSE) {
+    $not_supported_text = 'The view is not based on a translatable entity type or the site is not multilingual.';
+    $supported_text = 'All content that supports translations will be displayed in the selected language.';
+
+    $this->drupalGet('admin/structure/views/nojs/display/content/page_1/rendering_language');
+    if ($expected_node_translatability) {
+      $this->assertNoText($not_supported_text);
+      $this->assertText($supported_text);
+    }
+    else {
+      $this->assertText($not_supported_text);
+      $this->assertNoText($supported_text);
+    }
+
+    $this->drupalGet('admin/structure/views/nojs/display/files/page_1/rendering_language');
+    $this->assertText($not_supported_text);
+    $this->assertNoText($supported_text);
   }
 
 }

@@ -1619,7 +1619,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         break;
       case 'rendering_language':
         $form['#title'] .= $this->t('Rendering language');
-        if ($this->isBaseTableTranslatable()) {
+        if (\Drupal::languageManager()->isMultilingual() && $this->isBaseTableTranslatable()) {
           $options = $this->buildRenderingLanguageOptions();
           $form['rendering_language'] = array(
             '#type' => 'select',
@@ -1630,7 +1630,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
           );
         }
         else {
-          $form['rendering_language']['#markup'] = $this->t("You don't have translatable entity types.");
+          $form['rendering_language']['#markup'] = $this->t('The view is not based on a translatable entity type or the site is not multilingual.');
         }
         break;
       case 'style':
@@ -2613,13 +2613,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     $views_data = Views::viewsData()->get($view_base_table);
     if (!empty($views_data['table']['entity type'])) {
       $entity_type_id = $views_data['table']['entity type'];
-      $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
-
-      $base_table = $entity_type->getBaseTable();
-      $data_table = $entity_type->getDataTable();
-      $revision_table = $entity_type->getRevisionTable();
-      $revision_data_table = $entity_type->getRevisionDataTable();
-      return $entity_type->isTranslatable() && in_array($view_base_table, [$base_table, $data_table, $revision_table, $revision_data_table]);
+      return \Drupal::entityManager()->getDefinition($entity_type_id)->isTranslatable();
     }
     return FALSE;
   }
