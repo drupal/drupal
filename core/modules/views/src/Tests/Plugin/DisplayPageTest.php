@@ -80,7 +80,7 @@ class DisplayPageTest extends ViewUnitTestBase {
     $view->storage->disable()->save();
     // Router rebuild would occur in a kernel terminate event so we need to
     // simulate that here.
-    \Drupal::service('router.builder')->rebuildIfNeeded();
+    \Drupal::service('router.builder')->rebuild();
 
     $response = $this->container->get('http_kernel')->handle($subrequest, HttpKernelInterface::SUB_REQUEST);
     $this->assertEqual($response->getStatusCode(), 404);

@@ -201,9 +201,6 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
         $children = $cache->data['children'];
       }
       else {
-        // Maybe some code asked to rebuild the routes, so rebuild the router
-        // as we rely on having proper existing routes in dynamic local tasks.
-        $this->routeBuilder->rebuildIfNeeded();
         $definitions = $this->getDefinitions();
         // We build the hierarchy by finding all tabs that should
         // appear on the current route.

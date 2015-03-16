@@ -184,7 +184,7 @@ class SearchPage extends ConfigEntityBase implements SearchPageInterface, Entity
    */
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     parent::postSave($storage, $update);
-    $this->routeBuilderIndicator()->setRebuildNeeded();
+    $this->routeBuilder()->setRebuildNeeded();
   }
 
   /**
@@ -216,11 +216,11 @@ class SearchPage extends ConfigEntityBase implements SearchPageInterface, Entity
   /**
    * Wraps the route builder.
    *
-   * @return \Drupal\Core\Routing\RouteBuilderIndicatorInterface
+   * @return \Drupal\Core\Routing\RouteBuilderInterface
    *   An object for state storage.
    */
-  protected function routeBuilderIndicator() {
-    return \Drupal::service('router.builder_indicator');
+  protected function routeBuilder() {
+    return \Drupal::service('router.builder');
   }
 
   /**

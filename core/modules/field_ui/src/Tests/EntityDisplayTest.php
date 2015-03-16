@@ -26,6 +26,7 @@ class EntityDisplayTest extends KernelTestBase {
 
   protected function setUp() {
     parent::setUp();
+    $this->installSchema('system', array('router'));
     $this->installEntitySchema('node');
     $this->installConfig(array('field'));
   }

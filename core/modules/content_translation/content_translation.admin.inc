@@ -295,7 +295,7 @@ function content_translation_form_language_content_settings_submit(array $form, 
 
   // Ensure entity and menu router information are correctly rebuilt.
   \Drupal::entityManager()->clearCachedDefinitions();
-  \Drupal::service('router.builder_indicator')->setRebuildNeeded();
+  \Drupal::service('router.builder')->setRebuildNeeded();
 
   // If an entity type is not translatable all its bundles and fields must be
   // marked as non-translatable. Similarly, if a bundle is made non-translatable

@@ -20,11 +20,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class MenuRouterRebuildSubscriber implements EventSubscriberInterface {
 
   /**
-   * @var \Drupal\Core\Routing\RouteBuilderInterface
-   */
-  protected $routeBuilder;
-
-  /**
    * @var \Drupal\Core\Lock\LockBackendInterface
    */
   protected $lock;

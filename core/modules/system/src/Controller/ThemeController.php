@@ -11,7 +11,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\PreExistingConfigException;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Extension\ThemeHandlerInterface;
-use Drupal\Core\Routing\RouteBuilderIndicatorInterface;
+use Drupal\Core\Routing\RouteBuilderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -31,24 +31,24 @@ class ThemeController extends ControllerBase {
   /**
    * The route builder service.
    *
-   * @var \Drupal\Core\Routing\RouteBuilderIndicatorInterface
+   * @var \Drupal\Core\Routing\RouteBuilderInterface
    */
-  protected $routeBuilderIndicator;
+  protected $routeBuilder;
 
   /**
    * Constructs a new ThemeController.
    *
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    *   The theme handler.
-   * @param \Drupal\Core\Routing\RouteBuilderIndicatorInterface $route_builder_indicator
+   * @param \Drupal\Core\Routing\RouteBuilderInterface $route_builder
    *   The route builder.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    */
-  public function __construct(ThemeHandlerInterface $theme_handler, RouteBuilderIndicatorInterface $route_builder_indicator, ConfigFactoryInterface $config_factory) {
+  public function __construct(ThemeHandlerInterface $theme_handler, RouteBuilderInterface $route_builder, ConfigFactoryInterface $config_factory) {
     $this->themeHandler = $theme_handler;
-    $this->routeBuilderIndicator = $route_builder_indicator;
     $this->configFactory = $config_factory;
+    $this->routeBuilder = $route_builder;
   }
 
   /**
@@ -57,7 +57,7 @@ class ThemeController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('theme_handler'),
-      $container->get('router.builder_indicator'),
+      $container->get('router.builder'),
       $container->get('config.factory')
     );
   }
@@ -179,7 +179,7 @@ class ThemeController extends ControllerBase {
         // Set the default theme.
         $config->set('default', $theme)->save();
 
-        $this->routeBuilderIndicator->setRebuildNeeded();
+        $this->routeBuilder->setRebuildNeeded();
 
         // The status message depends on whether an admin theme is currently in
         // use: a value of 0 means the admin theme is set to be the default

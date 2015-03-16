@@ -28,6 +28,7 @@ class FilterAPITest extends EntityUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
+    $this->installSchema('system', array('router'));
     $this->installConfig(array('system', 'filter'));
   }
 

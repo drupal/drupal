@@ -73,6 +73,8 @@ class DisabledDisplayTest extends PluginTestBase {
       $this->assertTrue($enabled, 'Display ' . $display_id . ' is now enabled');
     }
 
+    \Drupal::service('router.builder')->rebuildIfNeeded();
+
     // Check that the originally disabled page_2 display is now enabled.
     $this->drupalGet('test-disabled-display-2');
     $result = $this->xpath('//h1');
@@ -85,6 +87,8 @@ class DisabledDisplayTest extends PluginTestBase {
       $enabled = $view->getExecutable()->displayHandlers->get($display_id)->isEnabled();
       $this->assertFalse($enabled, 'Display ' . $display_id . ' is now disabled');
     }
+
+    \Drupal::service('router.builder')->rebuild();
 
     // Check that the page_1 display still works.
     $this->drupalGet('test-disabled-display');

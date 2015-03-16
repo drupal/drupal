@@ -343,7 +343,7 @@ services:
     arguments: ['@entity.manager', '@string_translation']
   theme_handler:
     class: Drupal\Core\Extension\ThemeHandler
-    arguments: ['@app.root', '@config.factory', '@module_handler', '@state', '@info_parser', '@logger.channel.default', '@asset.css.collection_optimizer', '@config.installer', '@config.manager', '@router.builder_indicator']
+    arguments: ['@app.root', '@config.factory', '@module_handler', '@state', '@info_parser', '@logger.channel.default', '@asset.css.collection_optimizer', '@config.installer', '@config.manager', '@router.builder']
   entity.manager:
     class: Drupal\Core\Entity\EntityManager
     arguments: ['@container.namespaces', '@module_handler', '@cache.discovery', '@language_manager', '@string_translation', '@class_resolver', '@typed_data_manager', '@entity.definitions.installed', '@event_dispatcher']
@@ -553,7 +553,7 @@ services:
     arguments: ['@current_route_match']
   router.route_provider:
     class: Drupal\Core\Routing\RouteProvider
-    arguments: ['@database', '@router.builder', '@state', '@path.current']
+    arguments: ['@database', '@state', '@path.current']
     tags:
       - { name: event_subscriber }
       - { name: backend_overridable }
@@ -635,17 +635,11 @@ services:
     arguments: ['@database', '@state']
     tags:
       - { name: backend_overridable }
-  router.builder_indicator:
-    class: Drupal\Core\Routing\RouteBuilderIndicator
-    arguments: ['@state']
   router.builder:
     class: Drupal\Core\Routing\RouteBuilder
-    arguments: ['@router.dumper', '@lock', '@event_dispatcher', '@module_handler', '@controller_resolver', '@access_manager.check_provider', '@router.builder_indicator']
-  router.rebuild_subscriber:
-    class: Drupal\Core\EventSubscriber\RouterRebuildSubscriber
-    arguments: ['@router.builder']
+    arguments: ['@router.dumper', '@lock', '@event_dispatcher', '@module_handler', '@controller_resolver', '@access_manager.check_provider']
     tags:
-      - { name: event_subscriber }
+      - { name: needs_destruction }
   menu.rebuild_subscriber:
     class: Drupal\Core\EventSubscriber\MenuRouterRebuildSubscriber
     arguments: ['@lock', '@plugin.manager.menu.link']

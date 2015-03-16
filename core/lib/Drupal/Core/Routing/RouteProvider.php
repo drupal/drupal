@@ -40,13 +40,6 @@ class RouteProvider implements RouteProviderInterface, PagedRouteProviderInterfa
   protected $tableName;
 
   /**
-   * The route builder.
-   *
-   * @var \Drupal\Core\Routing\RouteBuilderInterface
-   */
-  protected $routeBuilder;
-
-  /**
    * The state.
    *
    * @var \Drupal\Core\State\StateInterface
@@ -72,8 +65,6 @@ class RouteProvider implements RouteProviderInterface, PagedRouteProviderInterfa
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   A database connection object.
-   * @param \Drupal\Core\Routing\RouteBuilderInterface $route_builder
-   *   The route builder.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state.
    * @param \Drupal\Core\Path\CurrentPathStack $current_path
@@ -81,9 +72,8 @@ class RouteProvider implements RouteProviderInterface, PagedRouteProviderInterfa
    * @param string $table
    *   The table in the database to use for matching.
    */
-  public function __construct(Connection $connection, RouteBuilderInterface $route_builder, StateInterface $state, CurrentPathStack $current_path, $table = 'router') {
+  public function __construct(Connection $connection, StateInterface $state, CurrentPathStack $current_path, $table = 'router') {
     $this->connection = $connection;
-    $this->routeBuilder = $route_builder;
     $this->state = $state;
     $this->tableName = $table;
     $this->currentPath = $current_path;
@@ -117,14 +107,7 @@ class RouteProvider implements RouteProviderInterface, PagedRouteProviderInterfa
   public function getRouteCollectionForRequest(Request $request) {
     $path = $this->currentPath->getPath($request);
 
-    $collection = $this->getRoutesByPath(rtrim($path, '/'));
-
-    // Try rebuilding the router if it is necessary.
-    if (!$collection->count() && $this->routeBuilder->rebuildIfNeeded()) {
-      $collection = $this->getRoutesByPath($path);
-    }
-
-    return $collection;
+    return $this->getRoutesByPath(rtrim($path, '/'));
   }
 
   /**
@@ -169,8 +152,6 @@ class RouteProvider implements RouteProviderInterface, PagedRouteProviderInterfa
     if (empty($names)) {
       throw new \InvalidArgumentException('You must specify the route names to load');
     }
-
-    $this->routeBuilder->rebuildIfNeeded();
 
     $routes_to_load = array_diff($names, array_keys($this->routes));
     if ($routes_to_load) {
@@ -257,7 +238,6 @@ class RouteProvider implements RouteProviderInterface, PagedRouteProviderInterfa
    */
   public function getRoutesByPattern($pattern) {
     $path = RouteCompiler::getPatternOutline($pattern);
-    $this->routeBuilder->rebuildIfNeeded();
 
     return $this->getRoutesByPath($path);
   }

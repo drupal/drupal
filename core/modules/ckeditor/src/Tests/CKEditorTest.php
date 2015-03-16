@@ -44,6 +44,7 @@ class CKEditorTest extends KernelTestBase {
 
     // Install the Filter module.
     $this->installSchema('system', 'url_alias');
+    $this->installSchema('system', 'router');
 
     // Create text format, associate CKEditor.
     $filtered_html_format = entity_create('filter_format', array(

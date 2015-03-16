@@ -333,9 +333,9 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
     // @todo Remove if views implements a view_builder controller.
     views_invalidate_cache();
 
-    // Rebuild the router case the view got enabled.
+    // Rebuild the router if this is a new view, or it's status changed.
     if (!isset($this->original) || ($this->status() != $this->original->status())) {
-      \Drupal::service('router.builder_indicator')->setRebuildNeeded();
+      \Drupal::service('router.builder')->setRebuildNeeded();
     }
   }
 

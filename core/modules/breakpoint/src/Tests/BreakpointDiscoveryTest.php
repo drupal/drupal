@@ -20,10 +20,11 @@ class BreakpointDiscoveryTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('breakpoint', 'breakpoint_module_test');
+  public static $modules = array('system', 'breakpoint', 'breakpoint_module_test');
 
   protected function setUp() {
     parent::setUp();
+    $this->installSchema('system', array('router'));
     \Drupal::service('theme_handler')->install(array('breakpoint_theme_test'));
   }
 

@@ -484,7 +484,7 @@ function views_field_config_delete(FieldConfigInterface $field) {
  */
 function views_invalidate_cache() {
   // Set the menu as needed to be rebuilt.
-  \Drupal::service('router.builder_indicator')->setRebuildNeeded();
+  \Drupal::service('router.builder')->setRebuildNeeded();
 
   $module_handler = \Drupal::moduleHandler();
 

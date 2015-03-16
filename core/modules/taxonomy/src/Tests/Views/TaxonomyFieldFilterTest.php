@@ -93,7 +93,7 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
     Views::viewsData()->clear();
 
     ViewTestData::createTestViews(get_class($this), array('taxonomy_test_views'));
-
+    $this->container->get('router.builder')->rebuild();
   }
 
   /**

@@ -36,6 +36,7 @@ abstract class ViewUnitTestBase extends KernelTestBase {
   protected function setUp() {
     parent::setUp();
 
+    $this->installSchema('system', array('router', 'sequences'));
     $this->setUpFixtures();
   }
 
@@ -59,8 +60,6 @@ abstract class ViewUnitTestBase extends KernelTestBase {
       $this->installSchema('views_test_data', $table);
     }
 
-    // The router table is required for router rebuilds.
-    $this->installSchema('system', array('router'));
     \Drupal::service('router.builder')->rebuild();
 
     // Load the test dataset.

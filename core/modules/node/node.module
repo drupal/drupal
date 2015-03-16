@@ -880,7 +880,7 @@ function node_form_system_themes_admin_form_submit($form, FormStateInterface $fo
   \Drupal::configFactory()->getEditable('node.settings')
     ->set('use_admin_theme', $form_state->getValue('use_admin_theme'))
     ->save();
-  \Drupal::service('router.builder_indicator')->setRebuildNeeded();
+  \Drupal::service('router.builder')->setRebuildNeeded();
 }
 
 /**

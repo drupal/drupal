@@ -68,6 +68,7 @@ class GlossaryTest extends ViewTestBase {
 
     // Enable the glossary to be displayed.
     $view->storage->enable()->save();
+    $this->container->get('router.builder')->rebuildIfNeeded();
     // Check the actual page response.
     $this->drupalGet('glossary');
     $this->assertResponse(200);

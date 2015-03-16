@@ -253,6 +253,8 @@ class CacheTest extends PluginTestBase {
       )
     ));
     $view->save();
+    $this->container->get('router.builder')->rebuildIfNeeded();
+
     $output_key = $view->getDisplay()->getPlugin('cache')->generateOutputKey();
     $this->assertFalse(\Drupal::cache('render')->get($output_key));
 

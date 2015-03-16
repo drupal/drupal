@@ -19,6 +19,14 @@ class InfoAlterTest extends KernelTestBase {
   public static $modules = array('system');
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+    $this->installSchema('system', array('router'));
+  }
+
+  /**
    * Tests that theme .info.yml data is rebuild after enabling a module.
    *
    * Tests that info data is rebuilt after a module that implements

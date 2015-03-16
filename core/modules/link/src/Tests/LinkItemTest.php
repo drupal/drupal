@@ -28,7 +28,6 @@ class LinkItemTest extends FieldUnitTestBase {
 
   protected function setUp() {
     parent::setUp();
-    $this->installSchema('system', ['router']);
 
     // Create a link field for validation.
     entity_create('field_storage_config', array(

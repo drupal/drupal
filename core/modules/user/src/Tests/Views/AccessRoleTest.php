@@ -30,13 +30,14 @@ class AccessRoleTest extends AccessTestBase {
    * Tests role access plugin.
    */
   function testAccessRole() {
-    /** @var \Drupal\views\ViewentityInterface $view */
+    /** @var \Drupal\views\ViewEntityInterface $view */
     $view = \Drupal::entityManager()->getStorage('view')->load('test_access_role');
     $display = &$view->getDisplay('default');
     $display['display_options']['access']['options']['role'] = array(
       $this->normalRole => $this->normalRole,
     );
     $view->save();
+    $this->container->get('router.builder')->rebuildIfNeeded();
     $expected = [
       'config' => ['user.role.' . $this->normalRole],
       'module' => ['user'],
@@ -69,6 +70,7 @@ class AccessRoleTest extends AccessTestBase {
       'anonymous' => 'anonymous',
     );
     $view->save();
+    $this->container->get('router.builder')->rebuildIfNeeded();
 
     // Ensure that the list of roles is sorted correctly, if the generated role
     // ID comes before 'anonymous', see https://www.drupal.org/node/2398259.

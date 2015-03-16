@@ -80,6 +80,8 @@ class FieldUIRouteTest extends WebTestBase {
       'label' => 'Test',
       'targetEntityType' => 'user',
     ))->save();
+    $this->container->get('router.builder')->rebuildIfNeeded();
+
     $edit = array('display_modes_custom[test]' => TRUE);
     $this->drupalPostForm('admin/config/people/accounts/display', $edit, t('Save'));
     $this->assertLink('Test');
@@ -91,6 +93,8 @@ class FieldUIRouteTest extends WebTestBase {
       'label' => 'Test',
       'targetEntityType' => 'user',
     ))->save();
+    $this->container->get('router.builder')->rebuildIfNeeded();
+
     $edit = array('display_modes_custom[test]' => TRUE);
     $this->drupalPostForm('admin/config/people/accounts/form-display', $edit, t('Save'));
     $this->assertLink('Test');

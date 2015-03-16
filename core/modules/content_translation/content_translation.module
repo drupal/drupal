@@ -477,7 +477,7 @@ function content_translation_language_configuration_element_submit(array $form, 
   if (\Drupal::service('content_translation.manager')->isEnabled($context['entity_type'], $context['bundle']) != $enabled) {
     \Drupal::service('content_translation.manager')->setEnabled($context['entity_type'], $context['bundle'], $enabled);
     \Drupal::entityManager()->clearCachedDefinitions();
-    \Drupal::service('router.builder_indicator')->setRebuildNeeded();
+    \Drupal::service('router.builder')->setRebuildNeeded();
   }
 }
 
