@@ -92,9 +92,9 @@ class LoadTest extends FileManagedUnitTestBase {
     $file->save();
     file_test_reset();
 
-    $by_uuid_file = entity_load_by_uuid('file', $file->uuid());
+    $by_uuid_file = \Drupal::entityManager()->loadEntityByUuid('file', $file->uuid());
     $this->assertFileHookCalled('load');
-    $this->assertTrue(is_object($by_uuid_file), 'entity_load_by_uuid() returned a file object.');
+    $this->assertTrue(is_object($by_uuid_file), '\Drupal::entityManager()->loadEntityByUuid() returned a file object.');
     if (is_object($by_uuid_file)) {
       $this->assertEqual($by_uuid_file->id(), $file->id(), 'Loading by UUID got the same fid.', 'File');
       $this->assertTrue($by_uuid_file->file_test['loaded'], 'file_test_file_load() was able to modify the file during load.');

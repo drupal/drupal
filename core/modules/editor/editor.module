@@ -411,7 +411,7 @@ function editor_entity_revision_delete(EntityInterface $entity) {
  */
 function _editor_record_file_usage(array $uuids, EntityInterface $entity) {
   foreach ($uuids as $uuid) {
-    if ($file = entity_load_by_uuid('file', $uuid)) {
+    if ($file = \Drupal::entityManager()->loadEntityByUuid('file', $uuid)) {
       if ($file->status !== FILE_STATUS_PERMANENT) {
         $file->status = FILE_STATUS_PERMANENT;
         $file->save();
@@ -436,7 +436,7 @@ function _editor_record_file_usage(array $uuids, EntityInterface $entity) {
  */
 function _editor_delete_file_usage(array $uuids, EntityInterface $entity, $count) {
   foreach ($uuids as $uuid) {
-    if ($file = entity_load_by_uuid('file', $uuid)) {
+    if ($file = \Drupal::entityManager()->loadEntityByUuid('file', $uuid)) {
       \Drupal::service('file.usage')->delete($file, 'editor', $entity->getEntityTypeId(), $entity->id(), $count);
     }
   }

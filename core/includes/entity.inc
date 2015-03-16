@@ -106,30 +106,6 @@ function entity_revision_delete($entity_type, $revision_id) {
 }
 
 /**
- * Loads an entity by UUID.
- *
- * Note that some entity types may not support UUIDs.
- *
- * @param string $entity_type_id
- *   The entity type to load; e.g., 'node' or 'user'.
- * @param string $uuid
- *   The UUID of the entity to load.
- *
- * @return EntityInterface|FALSE
- *   The entity object, or FALSE if there is no entity with the given UUID.
- *
- * @throws \Drupal\Core\Entity\EntityStorageException
- *   Thrown in case the requested entity type does not support UUIDs.
- *
- * @see \Drupal\Core\Entity\EntityManagerInterface
- *
- * @deprecated Use \Drupal::entityManager()->loadEntityByUuid();
- */
-function entity_load_by_uuid($entity_type_id, $uuid) {
-  return \Drupal::entityManager()->loadEntityByUuid($entity_type_id, $uuid);
-}
-
-/**
  * Loads multiple entities from the database.
  *
  * This function should be used whenever you need to load more than one entity
