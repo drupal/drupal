@@ -1007,19 +1007,6 @@ function system_rebuild_module_data() {
 }
 
 /**
- * Rebuild, save, and return data about all currently available themes.
- *
- * @return \Drupal\Core\Extension\Extension[]
- *   Array of all available themes and their data.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::service('theme_handler')->rebuildThemeData().
- */
-function system_rebuild_theme_data() {
-  return \Drupal::service('theme_handler')->rebuildThemeData();
-}
-
-/**
  * Returns an array of default theme features.
  */
 function _system_default_theme_features() {
