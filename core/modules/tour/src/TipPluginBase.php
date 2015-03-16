@@ -66,7 +66,7 @@ abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
    * {@inheritdoc}
    */
   public function getAttributes() {
-    return $this->get('attributes');
+    return $this->get('attributes') ?: [];
   }
 
   /**

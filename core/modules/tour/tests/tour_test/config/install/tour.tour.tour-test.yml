@@ -30,8 +30,6 @@ tips:
     label: 'The awesome image'
     url: 'http://local/image.png'
     weight: 1
-    attributes:
-      data-id: tour-test-3
   tour-test-6:
     id: tour-test-6
     plugin: text
