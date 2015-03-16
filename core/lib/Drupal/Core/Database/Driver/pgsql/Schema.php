@@ -70,7 +70,7 @@ class Schema extends DatabaseSchema {
     $this->maxIdentifierLength = $this->connection->query("SHOW max_identifier_length")->fetchField();
 
     if (strlen($identifierName) > $this->maxIdentifierLength) {
-      $saveIdentifier = 'drupal_' . $this->hashBase64($identifierName) . '_' . $args[2];
+      $saveIdentifier = '"drupal_' . $this->hashBase64($identifierName) . '_' . $args[2] . '"';
     }
     else {
       $saveIdentifier = $identifierName;
@@ -211,11 +211,11 @@ class Schema extends DatabaseSchema {
 
     $sql_keys = array();
     if (isset($table['primary key']) && is_array($table['primary key'])) {
-      $sql_keys[] = 'CONSTRAINT "' . $this->ensureIdentifiersLength($name, '', 'pkey') . '" PRIMARY KEY (' . $this->createPrimaryKeySql($table['primary key']) . ')';
+      $sql_keys[] = 'CONSTRAINT ' . $this->ensureIdentifiersLength($name, '', 'pkey') . ' PRIMARY KEY (' . $this->createPrimaryKeySql($table['primary key']) . ')';
     }
     if (isset($table['unique keys']) && is_array($table['unique keys'])) {
       foreach ($table['unique keys'] as $key_name => $key) {
-        $sql_keys[] = 'CONSTRAINT "' . $this->ensureIdentifiersLength($name, $key_name, 'key') . '" UNIQUE (' . implode(', ', $key) . ')';
+        $sql_keys[] = 'CONSTRAINT ' . $this->ensureIdentifiersLength($name, $key_name, 'key') . ' UNIQUE (' . implode(', ', $key) . ')';
       }
     }
 
@@ -463,7 +463,7 @@ class Schema extends DatabaseSchema {
         preg_match('/^' . preg_quote($old_full_name) . '__(.*)__' . preg_quote($index_type) . '/', $index->indexname, $matches);
         $index_name = $matches[1];
       }
-      $this->connection->query('ALTER INDEX "' . $index->indexname . '" RENAME TO "' . $this->ensureIdentifiersLength($new_name, $index_name, $index_type) . '"');
+      $this->connection->query('ALTER INDEX "' . $index->indexname . '" RENAME TO ' . $this->ensureIdentifiersLength($new_name, $index_name, $index_type) . '');
     }
 
     // Ensure the new table name does not include schema syntax.
@@ -558,6 +558,9 @@ class Schema extends DatabaseSchema {
   public function indexExists($table, $name) {
     // Details http://www.postgresql.org/docs/8.3/interactive/view-pg-indexes.html
     $index_name = $this->ensureIdentifiersLength($table, $name, 'idx');
+    // Remove leading and trailing quotes because the index name is in a WHERE
+    // clause and not used as an identifier.
+    $index_name = str_replace('"', '', $index_name);
     return (bool) $this->connection->query("SELECT 1 FROM pg_indexes WHERE indexname = '$index_name'")->fetchField();
   }
 
@@ -571,6 +574,9 @@ class Schema extends DatabaseSchema {
    */
   public function constraintExists($table, $name) {
     $constraint_name = $this->ensureIdentifiersLength($table, $name);
+    // Remove leading and trailing quotes because the index name is in a WHERE
+    // clause and not used as an identifier.
+    $constraint_name = str_replace('"', '', $constraint_name);
     return (bool) $this->connection->query("SELECT 1 FROM pg_constraint WHERE conname = '$constraint_name'")->fetchField();
   }
 
@@ -582,7 +588,7 @@ class Schema extends DatabaseSchema {
       throw new SchemaObjectExistsException(t("Cannot add primary key to table @table: primary key already exists.", array('@table' => $table)));
     }
 
-    $this->connection->query('ALTER TABLE {' . $table . '} ADD CONSTRAINT "' . $this->ensureIdentifiersLength($table, '', 'pkey') . '" PRIMARY KEY (' . $this->createPrimaryKeySql($fields) . ')');
+    $this->connection->query('ALTER TABLE {' . $table . '} ADD CONSTRAINT ' . $this->ensureIdentifiersLength($table, '', 'pkey') . ' PRIMARY KEY (' . $this->createPrimaryKeySql($fields) . ')');
     $this->resetTableInformation($table);
   }
 
@@ -591,7 +597,7 @@ class Schema extends DatabaseSchema {
       return FALSE;
     }
 
-    $this->connection->query('ALTER TABLE {' . $table . '} DROP CONSTRAINT "' . $this->ensureIdentifiersLength($table, '', 'pkey') . '"');
+    $this->connection->query('ALTER TABLE {' . $table . '} DROP CONSTRAINT ' . $this->ensureIdentifiersLength($table, '', 'pkey'));
     $this->resetTableInformation($table);
     return TRUE;
   }
@@ -604,7 +610,7 @@ class Schema extends DatabaseSchema {
       throw new SchemaObjectExistsException(t("Cannot add unique key @name to table @table: unique key already exists.", array('@table' => $table, '@name' => $name)));
     }
 
-    $this->connection->query('ALTER TABLE {' . $table . '} ADD CONSTRAINT "' . $this->ensureIdentifiersLength($table, $name, 'key') . '" UNIQUE (' . implode(',', $fields) . ')');
+    $this->connection->query('ALTER TABLE {' . $table . '} ADD CONSTRAINT ' . $this->ensureIdentifiersLength($table, $name, 'key') . ' UNIQUE (' . implode(',', $fields) . ')');
     $this->resetTableInformation($table);
   }
 
@@ -613,7 +619,7 @@ class Schema extends DatabaseSchema {
       return FALSE;
     }
 
-    $this->connection->query('ALTER TABLE {' . $table . '} DROP CONSTRAINT "' . $this->ensureIdentifiersLength($table, $name, 'key') . '"');
+    $this->connection->query('ALTER TABLE {' . $table . '} DROP CONSTRAINT ' . $this->ensureIdentifiersLength($table, $name, 'key'));
     $this->resetTableInformation($table);
     return TRUE;
   }
@@ -744,7 +750,7 @@ class Schema extends DatabaseSchema {
   }
 
   protected function _createIndexSql($table, $name, $fields) {
-    $query = 'CREATE INDEX "' . $this->ensureIdentifiersLength($table, $name, 'idx') . '" ON {' . $table . '} (';
+    $query = 'CREATE INDEX ' . $this->ensureIdentifiersLength($table, $name, 'idx') . ' ON {' . $table . '} (';
     $query .= $this->_createKeySql($fields) . ')';
     return $query;
   }
