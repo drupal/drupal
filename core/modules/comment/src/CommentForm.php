@@ -94,6 +94,10 @@ class CommentForm extends ContentEntityForm {
       $form['#attributes']['data-user-info-from-browser'] = TRUE;
     }
 
+    // Vary per role, because we check a permission above and attach an asset
+    // library only for authenticated users.
+    $form['#cache']['contexts'][] = 'user.roles';
+
     // If not replying to a comment, use our dedicated page callback for new
     // Comments on entities.
     if (!$comment->id() && !$comment->hasParentComment()) {
@@ -210,7 +214,12 @@ class CommentForm extends ContentEntityForm {
       '#access' => $is_admin,
     );
 
-    $form['#cache']['tags'] = Cache::mergeTags(isset($form['#cache']['tags']) ? $form['#cache']['tags'] : [],  $config->getCacheTags());
+    $form['#cache']['tags'] = Cache::mergeTags(
+      isset($form['#cache']['tags']) ? $form['#cache']['tags'] : [],
+      $config->getCacheTags(),
+      // The form depends on the field definition.
+      $field_definition->getConfig($entity->bundle())->getCacheTags()
+    );
 
     return parent::form($form, $form_state, $comment);
   }

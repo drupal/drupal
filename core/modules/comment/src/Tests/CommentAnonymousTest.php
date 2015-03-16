@@ -37,7 +37,7 @@ class CommentAnonymousTest extends CommentTestBase {
    */
   function testAnonymous() {
     $this->drupalLogin($this->adminUser);
-    $this->setCommentAnonymous('0'); // Ensure that doesn't require contact info.
+    $this->setCommentAnonymous(COMMENT_ANONYMOUS_MAYNOT_CONTACT);
     $this->drupalLogout();
 
     // Post anonymous comment without contact info.
@@ -46,7 +46,7 @@ class CommentAnonymousTest extends CommentTestBase {
 
     // Allow contact info.
     $this->drupalLogin($this->adminUser);
-    $this->setCommentAnonymous('1');
+    $this->setCommentAnonymous(COMMENT_ANONYMOUS_MAY_CONTACT);
 
     // Attempt to edit anonymous comment.
     $this->drupalGet('comment/' . $anonymous_comment1->id() . '/edit');
@@ -59,6 +59,7 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->assertTrue($this->commentContactInfoAvailable(), 'Contact information available.');
 
     // Check the presence of expected cache tags.
+    $this->assertCacheTag('config:field.field.node.article.comment');
     $this->assertCacheTag('config:user.settings');
 
     $anonymous_comment2 = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName());
@@ -78,7 +79,7 @@ class CommentAnonymousTest extends CommentTestBase {
 
     // Require contact info.
     $this->drupalLogin($this->adminUser);
-    $this->setCommentAnonymous('2');
+    $this->setCommentAnonymous(COMMENT_ANONYMOUS_MUST_CONTACT);
     $this->drupalLogout();
 
     // Try to post comment with contact info (required).
