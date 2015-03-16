@@ -71,6 +71,36 @@ class Cache {
   }
 
   /**
+   * Merges max-age values (expressed in seconds), finds the lowest max-age.
+   *
+   * Ensures infinite max-age (Cache::PERMANENT) is taken into account.
+   *
+   * @param int …
+   *   Max-age values.
+   *
+   * @return int
+   *   The minimum max-age value.
+   */
+  public static function mergeMaxAges() {
+    $max_ages = func_get_args();
+
+    // Filter out all max-age values set to cache permanently.
+    if (in_array(Cache::PERMANENT, $max_ages)) {
+      $max_ages = array_filter($max_ages, function ($max_age) {
+        return $max_age !== Cache::PERMANENT;
+      });
+
+      // If nothing is left, then all max-age values were set to cache
+      // permanently, and then that is the result.
+      if (empty($max_ages)) {
+        return Cache::PERMANENT;
+      }
+    }
+
+    return min($max_ages);
+  }
+
+  /**
    * Validates an array of cache tags.
    *
    * Can be called before using cache tags in operations, to ensure validity.

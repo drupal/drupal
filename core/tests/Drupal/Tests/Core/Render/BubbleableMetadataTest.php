@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core\Render;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Render\Element;
@@ -35,13 +36,17 @@ class BubbleableMetadataTest extends UnitTestCase {
     $data = [];
 
     $empty_metadata = new BubbleableMetadata();
-    $nonempty_metadata = new BubbleableMetadata(['qux'], ['foo:bar'], ['settings' => ['foo' => 'bar']]);
+    $nonempty_metadata = new BubbleableMetadata();
+    $nonempty_metadata->setCacheContexts(['qux'])
+      ->setCacheTags(['foo:bar'])
+      ->setAssets(['settings' => ['foo' => 'bar']]);
 
     $empty_render_array = [];
     $nonempty_render_array = [
       '#cache' => [
         'contexts' => ['qux'],
         'tags' => ['llamas:are:awesome:but:kittens:too'],
+        'max-age' => Cache::PERMANENT,
       ],
       '#attached' => [
         'library' => [
@@ -56,6 +61,7 @@ class BubbleableMetadataTest extends UnitTestCase {
       '#cache' => [
         'contexts' => [],
         'tags' => [],
+        'max-age' => Cache::PERMANENT,
       ],
       '#attached' => [],
       '#post_render_cache' => [],
@@ -66,6 +72,7 @@ class BubbleableMetadataTest extends UnitTestCase {
       '#cache' => [
         'contexts' => ['qux'],
         'tags' => ['foo:bar'],
+        'max-age' => Cache::PERMANENT,
       ],
       '#attached' => [
         'settings' => [
@@ -97,13 +104,17 @@ class BubbleableMetadataTest extends UnitTestCase {
     $data = [];
 
     $empty_metadata = new BubbleableMetadata();
-    $nonempty_metadata = new BubbleableMetadata(['qux'], ['foo:bar'], ['settings' => ['foo' => 'bar']]);
+    $nonempty_metadata = new BubbleableMetadata();
+    $nonempty_metadata->setCacheContexts(['qux'])
+      ->setCacheTags(['foo:bar'])
+      ->setAssets(['settings' => ['foo' => 'bar']]);
 
     $empty_render_array = [];
     $nonempty_render_array = [
       '#cache' => [
         'contexts' => ['qux'],
         'tags' => ['foo:bar'],
+        'max-age' => Cache::PERMANENT,
       ],
       '#attached' => [
         'settings' => [

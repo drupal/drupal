@@ -84,6 +84,38 @@ class CacheTest extends UnitTestCase {
   }
 
   /**
+   * Provides a list of pairs of cache tags arrays to be merged.
+   *
+   * @return array
+   */
+  public function mergeMaxAgesProvider() {
+    return [
+      [Cache::PERMANENT, Cache::PERMANENT, Cache::PERMANENT],
+      [60, 60, 60],
+      [0, 0, 0],
+
+      [60, 0, 0],
+      [0, 60, 0],
+
+      [Cache::PERMANENT, 0, 0],
+      [0, Cache::PERMANENT, 0],
+
+      [Cache::PERMANENT, 60, 60],
+      [60, Cache::PERMANENT, 60],
+    ];
+  }
+
+
+  /**
+   * @covers ::mergeMaxAges
+   *
+   * @dataProvider mergeMaxAgesProvider
+   */
+  public function testMergeMaxAges($a, $b, $expected) {
+    $this->assertSame($expected, Cache::mergeMaxAges($a, $b));
+  }
+
+  /**
    * Provides a list of pairs of (prefix, suffixes) to build cache tags from.
    *
    * @return array

@@ -466,14 +466,7 @@ abstract class AccessResult implements AccessResultInterface, CacheableInterface
       $this->setCacheable($other->isCacheable());
       $this->addCacheContexts($other->getCacheContexts());
       $this->addCacheTags($other->getCacheTags());
-      // Use the lowest max-age.
-      if ($this->getCacheMaxAge() === Cache::PERMANENT) {
-        // The other max-age is either lower or equal.
-        $this->setCacheMaxAge($other->getCacheMaxAge());
-      }
-      else {
-        $this->setCacheMaxAge(min($this->getCacheMaxAge(), $other->getCacheMaxAge()));
-      }
+      $this->setCacheMaxAge(Cache::mergeMaxAges($this->getCacheMaxAge(), $other->getCacheMaxAge()));
     }
     // If any of the access results don't provide cacheability metadata, then
     // we cannot cache the combined access result, for we may not make

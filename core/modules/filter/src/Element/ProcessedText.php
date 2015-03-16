@@ -113,7 +113,7 @@ class ProcessedText extends RenderElement {
     foreach ($filters as $filter) {
       if ($filter_must_be_applied($filter)) {
         $result = $filter->process($text, $langcode);
-        $metadata = $metadata->merge($result->getBubbleableMetadata());
+        $metadata = $metadata->merge($result);
         $text = $result->getProcessedText();
       }
     }

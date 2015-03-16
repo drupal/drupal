@@ -218,6 +218,7 @@ class Renderer implements RendererInterface {
     // Defaults for bubbleable rendering metadata.
     $elements['#cache']['contexts'] = isset($elements['#cache']['contexts']) ? $elements['#cache']['contexts'] : array();
     $elements['#cache']['tags'] = isset($elements['#cache']['tags']) ? $elements['#cache']['tags'] : array();
+    $elements['#cache']['max-age'] = isset($elements['#cache']['max-age']) ? $elements['#cache']['max-age'] : Cache::PERMANENT;
     $elements['#attached'] = isset($elements['#attached']) ? $elements['#attached'] : array();
     $elements['#post_render_cache'] = isset($elements['#post_render_cache']) ? $elements['#post_render_cache'] : array();
 
@@ -723,6 +724,11 @@ class Renderer implements RendererInterface {
    *   The cache ID string, or FALSE if the element may not be cached.
    */
   protected function createCacheID(array $elements) {
+    // If the maximum age is zero, then caching is effectively prohibited.
+    if (isset($elements['#cache']['max-age']) && $elements['#cache']['max-age'] === 0) {
+      return FALSE;
+    }
+
     if (isset($elements['#cache']['cid'])) {
       return $elements['#cache']['cid'];
     }

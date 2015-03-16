@@ -76,6 +76,8 @@ class BlockViewBuilder extends EntityViewBuilder {
         $plugin->getCacheTags() // Block plugin cache tags.
       );
 
+      $build[$entity_id]['#cache']['max-age'] = $plugin->getCacheMaxAge();
+
       if ($plugin->isCacheable()) {
         $build[$entity_id]['#pre_render'][] = array($this, 'buildBlock');
         // Generic cache keys, with the block plugin's custom keys appended.
