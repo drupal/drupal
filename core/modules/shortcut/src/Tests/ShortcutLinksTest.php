@@ -24,7 +24,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
    *
    * @var array
    */
-  public static $modules = array('router_test', 'views');
+  public static $modules = array('router_test', 'views', 'block');
 
   /**
    * Tests that creating a shortcut works properly.
@@ -325,6 +325,29 @@ class ShortcutLinksTest extends ShortcutTestBase {
       $message = format_string('Access is denied on %s', array('%s' => $path));
       $this->assertResponse(403, $message);
     }
+  }
+
+  /**
+   * Tests that the 'access shortcuts' permission is required to access the
+   * shortcut block.
+   */
+  public function testShortcutBlockAccess() {
+    // Creates a block instance and place in a region through api.
+    $block = $this->drupalPlaceBlock('shortcuts');
+
+    // Verify that users with the 'access shortcuts' permission can see the
+    // shortcut block.
+    $this->drupalLogin($this->shortcutUser);
+    $this->drupalGet('');
+    $this->assertBlockAppears($block);
+
+    $this->drupalLogout();
+
+    // Verify that users without the 'access shortcuts' permission can see the
+    // shortcut block.
+    $this->drupalLogin($this->drupalCreateUser(array()));
+    $this->drupalGet('');
+    $this->assertNoBlockAppears($block);
   }
 
 }
