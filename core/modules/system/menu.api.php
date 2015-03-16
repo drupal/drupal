@@ -337,9 +337,9 @@
  *   - title: (required) The untranslated title of the menu link.
  *   - description: The untranslated description of the link.
  *   - route_name: (optional) The route name to be used to build the path.
- *     Either a route_name or a link_path must be provided.
+ *     Either a route_name or a url must be provided.
  *   - route_parameters: (optional) The route parameters to build the path.
- *   - link_path: (optional) If you have an external link use link_path instead
+ *   - url: (optional) If you have an external link use url instead
  *     of providing a route_name.
  *   - parent: (optional) The machine name of the link that is this link's menu
  *     parent.
