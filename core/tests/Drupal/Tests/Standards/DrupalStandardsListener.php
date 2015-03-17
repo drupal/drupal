@@ -55,7 +55,7 @@ class DrupalStandardsListener extends \PHPUnit_Framework_BaseTestListener {
    */
   public function checkValidCoversForTest(\PHPUnit_Framework_TestCase $test) {
     // If we're generating a coverage report already, don't do anything here.
-    if ($test->getTestResultObject()->getCollectCodeCoverageInformation()) {
+    if ($test->getTestResultObject() && $test->getTestResultObject()->getCollectCodeCoverageInformation()) {
       return;
     }
     // Gather our annotations.
