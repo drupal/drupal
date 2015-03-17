@@ -13,6 +13,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\FieldStorageConfigInterface;
+use Drupal\field\FieldConfigInterface;
 
 /**
  * Implements hook_help().
@@ -84,20 +85,33 @@ function entity_reference_field_storage_config_update(FieldStorageConfigInterfac
     return;
   }
 
-  if (empty($field_storage->bundles)) {
-    // Field storage has no fields.
+  foreach ($field_storage->getBundles() as $bundle) {
+    $field = FieldConfig::loadByName($field_storage->getTargetEntityTypeId(), $bundle, $field_storage->getName());
+    $field->settings['handler_settings'] = array();
+    $field->save();
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for 'field_config'.
+ *
+ * Determine the selection handler plugin ID for an entity reference field.
+ */
+function entity_reference_field_config_presave(FieldConfigInterface $field) {
+  if ($field->getType() != 'entity_reference') {
+    // Only act on entity reference fields.
     return;
   }
 
-  $field_name = $field_storage->getName();
-
-  foreach ($field_storage->bundles() as $entity_type => $bundles) {
-    foreach ($bundles as $bundle) {
-      $field = FieldConfig::loadByName($entity_type, $bundle, $field_name);
-      $field->settings['handler_settings'] = array();
-      $field->save();
-    }
+  if ($field->isSyncing()) {
+    // Don't change anything during a configuration sync.
+    return;
   }
+
+  $target_type = $field->getFieldStorageDefinition()->getSetting('target_type');
+  $selection_manager = \Drupal::service('plugin.manager.entity_reference_selection');
+  list($current_handler) = explode(':', $field->getSetting('handler'), 2);
+  $field->settings['handler'] = $selection_manager->getPluginId($target_type, $current_handler);
 }
 
 /**

@@ -552,7 +552,7 @@ field.value.changed:
 
 field.storage_settings.entity_reference:
   type: mapping
-  label: 'Entity reference settings'
+  label: 'Entity reference field storage settings'
   mapping:
     target_type:
       type: string
@@ -560,14 +560,14 @@ field.storage_settings.entity_reference:
 
 field.field_settings.entity_reference:
   type: mapping
-  label: 'Entity reference settings'
+  label: 'Entity reference field settings'
   mapping:
     handler:
       type: string
       label: 'Reference method'
     handler_settings:
-      type: entity_reference.[%parent.handler].handler_settings
-      label: 'Reference method settings'
+      type: entity_reference_selection.[%parent.handler]
+      label: 'Entity reference selection plugin settings'
 
 field.value.entity_reference:
   type: mapping
@@ -750,3 +750,32 @@ text_format:
       label: 'Text format'
       # The text format should not be translated as part of the string
       # translation system, so this is not marked as translatable.
+
+# Schema for the configuration of the Entity reference selection plugins.
+
+entity_reference_selection:
+  type: mapping
+  label: 'Entity reference selection plugin configuration'
+  mapping:
+    target_bundles:
+      type: sequence
+      label: 'types'
+      sequence:
+        type: string
+        label: 'Type'
+    sort:
+      type: mapping
+      label: 'Sort settings'
+      mapping:
+        field:
+          type: string
+          label: 'Sort by'
+        direction:
+          type: string
+          label: 'Sort direction'
+    auto_create:
+      type: boolean
+      label: 'Create referenced entities if they don''t already exist'
+
+entity_reference_selection.*:
+  type: entity_reference_selection

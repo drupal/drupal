@@ -17,6 +17,19 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 interface SelectionPluginManagerInterface extends PluginManagerInterface {
 
   /**
+   * Gets the plugin ID for a given target entity type and base plugin ID.
+   *
+   * @param string $target_type
+   *   The target entity type.
+   * @param string $base_plugin_id
+   *   The base plugin ID (e.g. 'default' or 'views').
+   *
+   * @return string
+   *   The plugin ID.
+   */
+  public function getPluginId($target_type, $base_plugin_id);
+
+  /**
    * Returns selection plugins that can reference a specific entity type.
    *
    * @param string $entity_type_id

@@ -45,15 +45,6 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements Opt
   /**
    * {@inheritdoc}
    */
-  public static function defaultFieldSettings() {
-    return array(
-      'handler_settings' => array(),
-    ) + parent::defaultFieldSettings();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getPossibleValues(AccountInterface $account = NULL) {
     return $this->getSettableValues($account);
   }
@@ -149,7 +140,7 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements Opt
       }
       elseif (array_key_exists($selection_group_id . ':' . $this->getSetting('target_type'), $selection_plugins[$selection_group_id])) {
         $selection_group_plugin = $selection_group_id . ':' . $this->getSetting('target_type');
-        $handlers_options[$selection_group_id] = String::checkPlain($selection_plugins[$selection_group_id][$selection_group_plugin]['base_plugin_label']);
+        $handlers_options[$selection_group_plugin] = String::checkPlain($selection_plugins[$selection_group_id][$selection_group_plugin]['base_plugin_label']);
       }
     }
 

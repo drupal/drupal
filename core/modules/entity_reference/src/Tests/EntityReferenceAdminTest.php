@@ -78,7 +78,7 @@ class EntityReferenceAdminTest extends WebTestBase {
     $this->drupalPostForm(NULL, array(), t('Save field settings'));
 
     // The base handler should be selected by default.
-    $this->assertFieldByName('field[settings][handler]', 'default');
+    $this->assertFieldByName('field[settings][handler]', 'default:node');
 
     // The base handler settings should be displayed.
     $entity_type_id = 'node';

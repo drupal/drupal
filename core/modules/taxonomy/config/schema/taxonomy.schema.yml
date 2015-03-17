@@ -62,6 +62,9 @@ field.field_settings.taxonomy_term_reference:
     handler:
       type: string
       label: 'Reference method'
+    handler_settings:
+      type: entity_reference_selection.[%parent.handler]
+      label: 'Entity reference selection settings'
 
 field.value.taxonomy_term_reference:
   type: mapping

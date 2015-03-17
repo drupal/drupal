@@ -50,6 +50,15 @@ class TaxonomyTermReferenceItem extends EntityReferenceItem implements OptionsPr
   /**
    * {@inheritdoc}
    */
+  public static function defaultFieldSettings() {
+    return array(
+      'handler' => 'default:taxonomy_term',
+    ) + parent::defaultFieldSettings();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getPossibleValues(AccountInterface $account = NULL) {
     // Flatten options firstly, because Possible Options may contain group
     // arrays.

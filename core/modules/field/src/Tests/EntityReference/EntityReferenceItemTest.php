@@ -11,6 +11,8 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Tests\FieldUnitTestBase;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -27,7 +29,7 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity_reference', 'taxonomy', 'text', 'filter');
+  public static $modules = array('entity_reference', 'taxonomy', 'text', 'filter', 'views');
 
   /**
    * The taxonomy vocabulary to test with.
@@ -212,6 +214,38 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     // And then the entity.
     $entity->save();
     $this->assertEqual($entity->field_test_taxonomy_term->entity->id(), $term->id());
+  }
+
+  /**
+   * Tests that the 'handler' field setting stores the proper plugin ID.
+   */
+  public function testSelectionHandlerSettings() {
+    $field_name = Unicode::strtolower($this->randomMachineName());
+    $field_storage = FieldStorageConfig::create(array(
+      'field_name' => $field_name,
+      'entity_type' => 'entity_test',
+      'type' => 'entity_reference',
+      'settings' => array(
+        'target_type' => 'entity_test'
+      ),
+    ));
+    $field_storage->save();
+
+    // Do not specify any value for the 'handler' setting in order to verify
+    // that the default value is properly used.
+    $field = FieldConfig::create(array(
+      'field_storage' => $field_storage,
+      'bundle' => 'entity_test',
+    ));
+    $field->save();
+
+    $field = FieldConfig::load($field->id());
+    $this->assertTrue($field->getSetting('handler') == 'default:entity_test');
+
+    $field->settings['handler'] = 'views';
+    $field->save();
+    $field = FieldConfig::load($field->id());
+    $this->assertTrue($field->getSetting('handler') == 'views');
   }
 
 }

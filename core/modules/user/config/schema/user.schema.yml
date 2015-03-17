@@ -174,3 +174,23 @@ condition.plugin.user_role:
       type: sequence
       sequence:
         type: string
+
+entity_reference_selection.default:user:
+  type: entity_reference_selection
+  mapping:
+    filter:
+      type: mapping
+      label: 'Filter settings'
+      mapping:
+        type:
+          type: string
+          label: 'Filter by'
+        role:
+          type: sequence
+          label: 'Restrict to the selected roles'
+          sequence:
+            type: string
+            label: 'Role'
+    include_anonymous:
+      type: boolean
+      label: 'Include the anonymous user in the matched entities.'

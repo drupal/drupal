@@ -45,19 +45,35 @@ class SelectionPluginManager extends DefaultPluginManager implements SelectionPl
 
     // Initialize default options.
     $options += array(
-      'handler' => 'default',
+      'handler' => $this->getPluginId($options['target_type'], 'default'),
       'handler_settings' => array(),
     );
 
-    // Get all available selection plugins for this entity type.
-    $selection_handler_groups = $this->getSelectionGroups($options['target_type']);
-
-    // Sort the selection plugins by weight and select the best match.
-    uasort($selection_handler_groups[$options['handler']], array('Drupal\Component\Utility\SortArray', 'sortByWeightElement'));
-    end($selection_handler_groups[$options['handler']]);
-    $plugin_id = key($selection_handler_groups[$options['handler']]);
+    // A specific selection plugin ID was already specified.
+    if (strpos($options['handler'], ':') !== FALSE) {
+      $plugin_id = $options['handler'];
+    }
+    // Only a selection group name was specified.
+    else {
+      $plugin_id = $this->getPluginId($options['target_type'], $options['handler']);
+    }
 
     return $this->createInstance($plugin_id, $options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPluginId($target_type, $base_plugin_id) {
+    // Get all available selection plugins for this entity type.
+    $selection_handler_groups = $this->getSelectionGroups($target_type);
+
+    // Sort the selection plugins by weight and select the best match.
+    uasort($selection_handler_groups[$base_plugin_id], array('Drupal\Component\Utility\SortArray', 'sortByWeightElement'));
+    end($selection_handler_groups[$base_plugin_id]);
+    $plugin_id = key($selection_handler_groups[$base_plugin_id]);
+
+    return $plugin_id;
   }
 
   /**
@@ -86,7 +102,7 @@ class SelectionPluginManager extends DefaultPluginManager implements SelectionPl
     $options = array(
       'target_type' => $field_definition->getFieldStorageDefinition()->getSetting('target_type'),
       'handler' => $field_definition->getSetting('handler'),
-      'handler_settings' => $field_definition->getSetting('handler_settings'),
+      'handler_settings' => $field_definition->getSetting('handler_settings') ?: array(),
       'entity' => $entity,
     );
     return $this->getInstance($options);
