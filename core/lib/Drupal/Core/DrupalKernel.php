@@ -815,7 +815,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // Provided by settings.php.
     global $base_url;
     // Set and derived from $base_url by this function.
-    global $base_path, $base_root, $script_path;
+    global $base_path, $base_root;
     global $base_secure_url, $base_insecure_url;
 
     // @todo Refactor with the Symfony Request object.
@@ -856,34 +856,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     }
     $base_secure_url = str_replace('http://', 'https://', $base_url);
     $base_insecure_url = str_replace('https://', 'http://', $base_url);
-
-    // Determine the path of the script relative to the base path, and add a
-    // trailing slash. This is needed for creating URLs to Drupal pages.
-    if (!isset($script_path)) {
-      $script_path = '';
-      // We don't expect scripts outside of the base path, but sanity check
-      // anyway.
-      if (strpos($request->server->get('SCRIPT_NAME'), $base_path) === 0) {
-        $script_path = substr($request->server->get('SCRIPT_NAME'), strlen($base_path)) . '/';
-        // If the request URI does not contain the script name, then clean URLs
-        // are in effect and the script path can be similarly dropped from URL
-        // generation. For servers that don't provide $_SERVER['REQUEST_URI'],
-        // we do not know the actual URI requested by the client, and
-        // $request->getPathInfo() returns a URI with the script name,
-        // resulting in non-clean URLs unless
-        // there's other code that intervenes.
-        if (strpos($request->getPathInfo() . '/', $base_path . $script_path) !== 0) {
-          $script_path = '';
-        }
-        // @todo Temporary BC for install.php, authorize.php, and other scripts.
-        //   - http://drupal.org/node/1547184
-        //   - http://drupal.org/node/1546082
-        if ($script_path !== 'index.php/') {
-          $script_path = '';
-        }
-      }
-    }
-
   }
 
   /**
