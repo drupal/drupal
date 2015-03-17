@@ -130,6 +130,22 @@ class ErrorHandlerTest extends WebTestBase {
     $this->assertTrue(strpos($this->drupalGetHeader(':status'), '500 Service unavailable (with message)'), 'Received expected HTTP status line.');
     $this->assertErrorMessage($error_renderer_exception);
 
+    // Enable the page cache and disable error reporting, ensure that 5xx
+    // responses are not cached.
+    $config = $this->config('system.performance');
+    $config->set('cache.page.use_internal', 1);
+    $config->set('cache.page.max_age', 300);
+    $config->save();
+    $this->config('system.logging')
+      ->set('error_level', ERROR_REPORTING_HIDE)
+      ->save();
+
+    $this->drupalGet('error-test/trigger-exception');
+    $this->assertFalse($this->drupalGetHeader('X-Drupal-Cache'));
+    $this->assertIdentical(strpos($this->drupalGetHeader('Cache-Control'), 'public'), FALSE, 'Received expected HTTP status line.');
+    $this->assertTrue(strpos($this->drupalGetHeader(':status'), '500 Service unavailable (with message)'), 'Received expected HTTP status line.');
+    $this->assertNoErrorMessage($error_exception);
+
     // The exceptions are expected. Do not interpret them as a test failure.
     // Not using File API; a potential error must trigger a PHP warning.
     unlink(\Drupal::root() . '/' . $this->siteDirectory . '/error.log');
