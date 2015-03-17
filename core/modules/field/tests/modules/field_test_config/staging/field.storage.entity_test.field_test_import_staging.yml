@@ -1,6 +1,6 @@
 id: entity_test.field_test_import_staging
 uuid: 0bf654cc-f14a-4881-b94c-76959e47466b
-langcode: und
+langcode: en
 field_name: field_test_import_staging
 entity_type: entity_test
 type: text

@@ -1,0 +1,5 @@
+name: 'Configuration test languages'
+type: module
+package: Testing
+version: VERSION
+core: 8.x

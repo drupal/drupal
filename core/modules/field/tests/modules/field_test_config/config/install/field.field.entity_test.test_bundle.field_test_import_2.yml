@@ -1,5 +1,5 @@
 id: entity_test.test_bundle.field_test_import_2
-langcode: und
+langcode: en
 field_name: field_test_import_2
 entity_type: entity_test
 bundle: test_bundle

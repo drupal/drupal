@@ -1,6 +1,6 @@
 id: entity_test.test_bundle.field_test_import_staging_2
 uuid: f07794a2-d7cc-45b6-b40d-13cf021b5552
-langcode: und
+langcode: en
 field_name: field_test_import_staging_2
 entity_type: entity_test
 bundle: test_bundle

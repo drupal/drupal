@@ -243,7 +243,7 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
       'id' => 'test_entity_type.test_bundle.field_test',
       'uuid' => NULL,
       'status' => TRUE,
-      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
+      'langcode' => 'en',
       'field_name' => 'field_test',
       'entity_type' => 'test_entity_type',
       'bundle' => 'test_bundle',

@@ -83,9 +83,18 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   /**
    * The language code of the entity's default language.
    *
+   * Assumed to be English by default. ConfigEntityStorage will set an
+   * appropriate language when creating new entities. This default applies to
+   * imported default configuration where the language code is missing. Those
+   * should be assumed to be English. All configuration entities support third
+   * party settings, so even configuration entities that do not directly
+   * store settings involving text in a human language may have such third
+   * party settings attached. This means configuration entities should be in one
+   * of the configured languages or the built-in English.
+   *
    * @var string
    */
-  protected $langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED;
+  protected $langcode = 'en';
 
   /**
    * Third party entity settings.
