@@ -39,9 +39,30 @@ class SiteMaintenanceTest extends WebTestBase {
   }
 
   /**
+   * Verify site maintenance mode functionality with page cache disabled.
+   */
+  function testSiteMaintenanceWithoutPageCache() {
+    $config = $this->config('system.performance');
+    $config->set('cache.page.use_internal', 0);
+    $config->save();
+    $this->doTestSiteMaintenance();
+  }
+
+  /**
+   * Verify site maintenance mode functionality with page cache enabled.
+   */
+  function testSiteMaintenanceWithPageCache() {
+    $config = $this->config('system.performance');
+    $config->set('cache.page.use_internal', 1);
+    $config->set('cache.page.max_age', 300);
+    $config->save();
+    $this->doTestSiteMaintenance();
+  }
+
+  /**
    * Verify site maintenance mode functionality.
    */
-  function testSiteMaintenance() {
+  protected function doTestSiteMaintenance() {
     // Turn on maintenance mode.
     $edit = array(
       'maintenance_mode' => 1,
