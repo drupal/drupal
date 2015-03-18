@@ -498,7 +498,7 @@ class UserPasswordResetTestCase extends DrupalWebTestCase {
     // To attempt an expired password reset, create a password reset link as if
     // its request time was 60 seconds older than the allowed limit of timeout.
     $bogus_timestamp = REQUEST_TIME - variable_get('user_password_reset_timeout', 86400) - 60;
-    $this->drupalGet("user/reset/$account->uid/$bogus_timestamp/" . user_pass_rehash($account->pass, $bogus_timestamp, $account->login));
+    $this->drupalGet("user/reset/$account->uid/$bogus_timestamp/" . user_pass_rehash($account->pass, $bogus_timestamp, $account->login, $account->uid));
     $this->assertText(t('You have tried to use a one-time login link that has expired. Please request a new one using the form below.'), 'Expired password reset request rejected.');
   }
 
@@ -517,6 +517,74 @@ class UserPasswordResetTestCase extends DrupalWebTestCase {
     unset($edit['pass']);
     $this->drupalGet('user/password', array('query' => array('name' => $edit['name'])));
     $this->assertFieldByName('name', $edit['name'], 'User name found.');
+  }
+
+  /**
+   * Make sure that users cannot forge password reset URLs of other users.
+   */
+  function testResetImpersonation() {
+    // Make sure user 1 has a valid password, so it does not interfere with the
+    // test user accounts that are created below.
+    $account = user_load(1);
+    user_save($account, array('pass' => user_password()));
+
+    // Create two identical user accounts except for the user name. They must
+    // have the same empty password, so we can't use $this->drupalCreateUser().
+    $edit = array();
+    $edit['name'] = $this->randomName();
+    $edit['mail'] = $edit['name'] . '@example.com';
+    $edit['status'] = 1;
+
+    $user1 = user_save(drupal_anonymous_user(), $edit);
+
+    $edit['name'] = $this->randomName();
+    $user2 = user_save(drupal_anonymous_user(), $edit);
+
+    // The password reset URL must not be valid for the second user when only
+    // the user ID is changed in the URL.
+    $reset_url = user_pass_reset_url($user1);
+    $attack_reset_url = str_replace("user/reset/$user1->uid", "user/reset/$user2->uid", $reset_url);
+    $this->drupalGet($attack_reset_url);
+    $this->assertNoText($user2->name, 'The invalid password reset page does not show the user name.');
+    $this->assertUrl('user/password', array(), 'The user is redirected to the password reset request page.');
+    $this->assertText('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.');
+
+    // When legacy code calls user_pass_rehash() without providing the $uid
+    // parameter, neither password reset URL should be valid since it is
+    // impossible for the system to determine which user account the token was
+    // intended for.
+    $timestamp = REQUEST_TIME;
+    // Pass an explicit NULL for the $uid parameter of user_pass_rehash()
+    // rather than not passing it at all, to avoid triggering PHP warnings in
+    // the test.
+    $reset_url_token = user_pass_rehash($user1->pass, $timestamp, $user1->login, NULL);
+    $reset_url = url("user/reset/$user1->uid/$timestamp/$reset_url_token", array('absolute' => TRUE));
+    $this->drupalGet($reset_url);
+    $this->assertNoText($user1->name, 'The invalid password reset page does not show the user name.');
+    $this->assertUrl('user/password', array(), 'The user is redirected to the password reset request page.');
+    $this->assertText('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.');
+    $attack_reset_url = str_replace("user/reset/$user1->uid", "user/reset/$user2->uid", $reset_url);
+    $this->drupalGet($attack_reset_url);
+    $this->assertNoText($user2->name, 'The invalid password reset page does not show the user name.');
+    $this->assertUrl('user/password', array(), 'The user is redirected to the password reset request page.');
+    $this->assertText('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.');
+
+    // To verify that user_pass_rehash() never returns a valid result in the
+    // above situation (even if legacy code also called it to attempt to
+    // validate the token, rather than just to generate the URL), check that a
+    // second call with the same parameters produces a different result.
+    $new_reset_url_token = user_pass_rehash($user1->pass, $timestamp, $user1->login, NULL);
+    $this->assertNotEqual($reset_url_token, $new_reset_url_token);
+
+    // However, when the duplicate account is removed, the password reset URL
+    // should be valid.
+    user_delete($user2->uid);
+    $reset_url_token = user_pass_rehash($user1->pass, $timestamp, $user1->login, NULL);
+    $reset_url = url("user/reset/$user1->uid/$timestamp/$reset_url_token", array('absolute' => TRUE));
+    $this->drupalGet($reset_url);
+    $this->assertText($user1->name, 'The valid password reset page shows the user name.');
+    $this->assertUrl($reset_url, array(), 'The user remains on the password reset login page.');
+    $this->assertNoText('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.');
   }
 
 }
@@ -558,7 +626,7 @@ class UserCancelTestCase extends DrupalWebTestCase {
 
     // Attempt bogus account cancellation request confirmation.
     $timestamp = $account->login;
-    $this->drupalGet("user/$account->uid/cancel/confirm/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login));
+    $this->drupalGet("user/$account->uid/cancel/confirm/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login, $account->uid));
     $this->assertResponse(403, 'Bogus cancelling request rejected.');
     $account = user_load($account->uid);
     $this->assertTrue($account->status == 1, 'User account was not canceled.');
@@ -631,14 +699,14 @@ class UserCancelTestCase extends DrupalWebTestCase {
 
     // Attempt bogus account cancellation request confirmation.
     $bogus_timestamp = $timestamp + 60;
-    $this->drupalGet("user/$account->uid/cancel/confirm/$bogus_timestamp/" . user_pass_rehash($account->pass, $bogus_timestamp, $account->login));
+    $this->drupalGet("user/$account->uid/cancel/confirm/$bogus_timestamp/" . user_pass_rehash($account->pass, $bogus_timestamp, $account->login, $account->uid));
     $this->assertText(t('You have tried to use an account cancellation link that has expired. Please request a new one using the form below.'), 'Bogus cancelling request rejected.');
     $account = user_load($account->uid);
     $this->assertTrue($account->status == 1, 'User account was not canceled.');
 
     // Attempt expired account cancellation request confirmation.
     $bogus_timestamp = $timestamp - 86400 - 60;
-    $this->drupalGet("user/$account->uid/cancel/confirm/$bogus_timestamp/" . user_pass_rehash($account->pass, $bogus_timestamp, $account->login));
+    $this->drupalGet("user/$account->uid/cancel/confirm/$bogus_timestamp/" . user_pass_rehash($account->pass, $bogus_timestamp, $account->login, $account->uid));
     $this->assertText(t('You have tried to use an account cancellation link that has expired. Please request a new one using the form below.'), 'Expired cancel account request rejected.');
     $accounts = user_load_multiple(array($account->uid), array('status' => 1));
     $this->assertTrue(reset($accounts), 'User account was not canceled.');
@@ -675,7 +743,7 @@ class UserCancelTestCase extends DrupalWebTestCase {
     $this->assertText(t('A confirmation request to cancel your account has been sent to your e-mail address.'), 'Account cancellation request mailed message displayed.');
 
     // Confirm account cancellation request.
-    $this->drupalGet("user/$account->uid/cancel/confirm/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login));
+    $this->drupalGet("user/$account->uid/cancel/confirm/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login, $account->uid));
     $account = user_load($account->uid, TRUE);
     $this->assertTrue($account->status == 0, 'User has been blocked.');
 
@@ -713,7 +781,7 @@ class UserCancelTestCase extends DrupalWebTestCase {
     $this->assertText(t('A confirmation request to cancel your account has been sent to your e-mail address.'), 'Account cancellation request mailed message displayed.');
 
     // Confirm account cancellation request.
-    $this->drupalGet("user/$account->uid/cancel/confirm/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login));
+    $this->drupalGet("user/$account->uid/cancel/confirm/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login, $account->uid));
     $account = user_load($account->uid, TRUE);
     $this->assertTrue($account->status == 0, 'User has been blocked.');
 
@@ -763,7 +831,7 @@ class UserCancelTestCase extends DrupalWebTestCase {
     $this->assertText(t('A confirmation request to cancel your account has been sent to your e-mail address.'), 'Account cancellation request mailed message displayed.');
 
     // Confirm account cancellation request.
-    $this->drupalGet("user/$account->uid/cancel/confirm/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login));
+    $this->drupalGet("user/$account->uid/cancel/confirm/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login, $account->uid));
     $this->assertFalse(user_load($account->uid, TRUE), 'User is not found in the database.');
 
     // Confirm that user's content has been attributed to anonymous user.
@@ -827,7 +895,7 @@ class UserCancelTestCase extends DrupalWebTestCase {
     $this->assertText(t('A confirmation request to cancel your account has been sent to your e-mail address.'), 'Account cancellation request mailed message displayed.');
 
     // Confirm account cancellation request.
-    $this->drupalGet("user/$account->uid/cancel/confirm/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login));
+    $this->drupalGet("user/$account->uid/cancel/confirm/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login, $account->uid));
     $this->assertFalse(user_load($account->uid, TRUE), 'User is not found in the database.');
 
     // Confirm that user's content has been deleted.

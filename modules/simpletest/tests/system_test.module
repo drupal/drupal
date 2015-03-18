@@ -106,6 +106,20 @@ function system_test_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['system-test/get-destination'] = array(
+    'title' => 'Test $_GET[\'destination\']',
+    'page callback' => 'system_test_get_destination',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['system-test/request-destination'] = array(
+    'title' => 'Test $_REQUEST[\'destination\']',
+    'page callback' => 'system_test_request_destination',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
 }
 
@@ -419,4 +433,28 @@ function system_test_authorize_init_page($page_title) {
   $authorize_url = $GLOBALS['base_url'] . '/authorize.php';
   system_authorized_init('system_test_authorize_run', drupal_get_path('module', 'system_test') . '/system_test.module', array(), $page_title);
   drupal_goto($authorize_url);
+}
+
+/**
+ * Page callback to print out $_GET['destination'] for testing.
+ */
+function system_test_get_destination() {
+  if (isset($_GET['destination'])) {
+    print $_GET['destination'];
+  }
+  // No need to render the whole page, we are just interested in this bit of
+  // information.
+  exit;
+}
+
+/**
+ * Page callback to print out $_REQUEST['destination'] for testing.
+ */
+function system_test_request_destination() {
+  if (isset($_REQUEST['destination'])) {
+    print $_REQUEST['destination'];
+  }
+  // No need to render the whole page, we are just interested in this bit of
+  // information.
+  exit;
 }

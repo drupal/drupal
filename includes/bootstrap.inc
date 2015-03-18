@@ -8,7 +8,7 @@
 /**
  * The current system version.
  */
-define('VERSION', '7.34');
+define('VERSION', '7.35');
 
 /**
  * Core API compatibility.
@@ -2497,6 +2497,26 @@ function _drupal_bootstrap_variables() {
   // Load bootstrap modules.
   require_once DRUPAL_ROOT . '/includes/module.inc';
   module_load_all(TRUE);
+
+  // Sanitize the destination parameter (which is often used for redirects) to
+  // prevent open redirect attacks leading to other domains. Sanitize both
+  // $_GET['destination'] and $_REQUEST['destination'] to protect code that
+  // relies on either, but do not sanitize $_POST to avoid interfering with
+  // unrelated form submissions. The sanitization happens here because
+  // url_is_external() requires the variable system to be available.
+  if (isset($_GET['destination']) || isset($_REQUEST['destination'])) {
+    require_once DRUPAL_ROOT . '/includes/common.inc';
+    // If the destination is an external URL, remove it.
+    if (isset($_GET['destination']) && url_is_external($_GET['destination'])) {
+      unset($_GET['destination']);
+      unset($_REQUEST['destination']);
+    }
+    // If there's still something in $_REQUEST['destination'] that didn't come
+    // from $_GET, check it too.
+    if (isset($_REQUEST['destination']) && (!isset($_GET['destination']) || $_REQUEST['destination'] != $_GET['destination']) && url_is_external($_REQUEST['destination'])) {
+      unset($_REQUEST['destination']);
+    }
+  }
 }
 
 /**

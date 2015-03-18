@@ -414,7 +414,7 @@ class StatisticsAdminTestCase extends DrupalWebTestCase {
     $timestamp = time();
     $this->drupalPost(NULL, NULL, t('Cancel account'));
     // Confirm account cancellation request.
-    $this->drupalGet("user/$account->uid/cancel/confirm/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login));
+    $this->drupalGet("user/$account->uid/cancel/confirm/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login, $account->uid));
     $this->assertFalse(user_load($account->uid, TRUE), 'User is not found in the database.');
 
     $this->drupalGet('admin/reports/visitors');
