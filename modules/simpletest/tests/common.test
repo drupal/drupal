@@ -209,7 +209,16 @@ class CommonURLUnitTest extends DrupalWebTestCase {
     // Test that drupal can recognize an absolute URL. Used to prevent attack vectors.
     $this->assertTrue(url_is_external($url), 'Correctly identified an external URL.');
 
+    // External URL without an explicit protocol.
+    $url = '//drupal.org/foo/bar?foo=bar&bar=baz&baz#foo';
+    $this->assertTrue(url_is_external($url), 'Correctly identified an external URL without a protocol part.');
+
+    // Internal URL starting with a slash.
+    $url = '/drupal.org';
+    $this->assertFalse(url_is_external($url), 'Correctly identified an internal URL with a leading slash.');
+
     // Test the parsing of absolute URLs.
+    $url = 'http://drupal.org/foo/bar?foo=bar&bar=baz&baz#foo';
     $result = array(
       'path' => 'http://drupal.org/foo/bar',
       'query' => array('foo' => 'bar', 'bar' => 'baz', 'baz' => ''),
@@ -349,6 +358,17 @@ class CommonURLUnitTest extends DrupalWebTestCase {
     $query = array($this->randomName(5) => $this->randomName(5));
     $result = url($url, array('query' => $query));
     $this->assertEqual($url . '&' . http_build_query($query, '', '&'), $result, 'External URL query string can be extended with a custom query string in $options.');
+
+    // Verify that an internal URL does not result in an external URL without
+    // protocol part.
+    $url = '/drupal.org';
+    $result = url($url);
+    $this->assertTrue(strpos($result, '//') === FALSE, 'Internal URL does not turn into an external URL.');
+
+    // Verify that an external URL without protocol part is recognized as such.
+    $url = '//drupal.org';
+    $result = url($url);
+    $this->assertEqual($url, $result, 'External URL without protocol is not altered.');
   }
 }
 
