@@ -208,6 +208,11 @@ class LinkWidget extends WidgetBase {
     elseif ($this->supportsExternalLinks() && $this->supportsInternalLinks()) {
       $element['uri']['#description'] = $this->t('Start typing the title of a piece of content to select it. You can also enter an internal path such as %add-node or an external URL such as %url. Enter %front to link to the front page.', array('%front' => '<front>', '%add-node' => '/node/add', '%url' => 'http://example.com'));
     }
+    // If the field is configured to allow only external links, show a useful
+    // description.
+    elseif ($this->supportsExternalLinks() && !$this->supportsInternalLinks()) {
+      $element['uri']['#description'] = $this->t('This must be an external URL such as %url.', array('%url' => 'http://example.com'));
+    }
 
     $element['title'] = array(
       '#type' => 'textfield',
