@@ -19,12 +19,6 @@ use Drupal\field\FieldStorageConfigInterface;
 function options_field_views_data(FieldStorageConfigInterface $field) {
   $data = views_field_default_views_data($field);
 
-  $function = $field->getSetting('allowed_values_function');
-  // If this field makes use of dynamic allowed options, we ignore the views
-  // setting.
-  if (!empty($function)) {
-    return $data;
-  }
   foreach ($data as $table_name => $table_data) {
     foreach ($table_data as $field_name => $field_data) {
       if (isset($field_data['filter']) && $field_name != 'delta') {
