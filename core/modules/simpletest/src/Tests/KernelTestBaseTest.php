@@ -28,10 +28,11 @@ class KernelTestBaseTest extends KernelTestBase {
    */
   protected function setUp() {
     $php = <<<'EOS'
+<?php
 # Make sure that the $test_class variable is defined when this file is included.
 if ($test_class) {
 }
-<?php
+
 # Define a function to be able to check that this file was loaded with
 # function_exists().
 if (!function_exists('simpletest_test_stub_settings_function')) {
