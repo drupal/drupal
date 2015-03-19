@@ -150,19 +150,17 @@ function book_form_node_form_alter(&$form, FormStateInterface $form_state, $form
   if ($access) {
     $collapsed = !($node->isNew() && !empty($node->book['pid']));
     $form = \Drupal::service('book.manager')->addFormElements($form, $form_state, $node, $account, $collapsed);
-    // Since the "Book" dropdown can't trigger a form submission when
-    // JavaScript is disabled, add a submit button to do that. book.admin.css hides
-    // this button when JavaScript is enabled.
+    // The "js-hide" class hides submit button when Javascript is enabled.
     $form['book']['pick-book'] = array(
       '#type' => 'submit',
       '#value' => t('Change book (update list of parents)'),
       '#submit' => array('book_pick_book_nojs_submit'),
       '#weight' => 20,
-      '#attached' => [
-        'library' => [
-          'book/admin',
-        ],
-      ],
+      '#attributes' => array(
+        'class' => array(
+          'js-hide',
+        ),
+      ),
     );
     $form['#entity_builders'][] = 'book_node_builder';
   }

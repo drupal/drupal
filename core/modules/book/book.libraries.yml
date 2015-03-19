@@ -12,9 +12,3 @@ navigation:
   css:
     theme:
       css/book.theme.css: {}
-
-admin:
-  version: VERSION
-  css:
-    theme:
-      css/book.admin.css: {}

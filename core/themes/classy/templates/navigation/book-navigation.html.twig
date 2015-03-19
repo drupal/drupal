@@ -35,17 +35,17 @@
       <h2 class="visually-hidden" id="book-label-{{ book_id }}">{{ 'Book traversal links for'|t }} {{ book_title }}</h2>
       <ul class="book-pager">
       {% if prev_url %}
-        <li class="previous">
+        <li class="book-pager__item book-pager__item--previous">
           <a href="{{ prev_url }}" rel="prev" title="{{ 'Go to previous page'|t }}"><b>{{ '‹'|t }}</b> {{ prev_title }}</a>
         </li>
       {% endif %}
       {% if parent_url %}
-        <li class="up">
+        <li class="book-pager__item book-pager__item--center">
           <a href="{{ parent_url }}" title="{{ 'Go to parent page'|t }}">{{ 'Up'|t }}</a>
         </li>
       {% endif %}
       {% if next_url %}
-        <li class="next">
+        <li class="book-pager__item book-pager__item--next">
           <a href="{{ next_url }}" rel="next" title="{{ 'Go to next page'|t }}">{{ next_title }} <b>{{ '›'|t }}</b></a>
         </li>
       {% endif %}
