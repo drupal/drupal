@@ -1,12 +1,8 @@
 /**
+ * @file
  * Page title.
  */
-.content-header .page-title {
-  color: #333;
+.page-title {
   display: inline-block;
-  margin: 0;
-  font-size: 1.625em;
-  line-height: 1.875em;
-  font-weight: 600;
   -webkit-font-smoothing: antialiased;
 }

@@ -38,8 +38,9 @@ summary,
 h1,
 .heading-a {
   font-weight: bold;
-  margin: 10px 0;
-  font-size: 1.538em;
+  margin: 0;
+  font-size: 1.625em;
+  line-height: 1.875em;
 }
 h2,
 .heading-b {
