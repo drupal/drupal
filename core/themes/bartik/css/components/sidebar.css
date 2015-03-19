@@ -1,7 +1,43 @@
 /* ------------------ Sidebar ----------------- */
 
+@media all and (min-width: 560px) {
+  .sidebar {
+    float: left; /* LTR */
+    position: relative;
+    width: 50%;
+  }
+  [dir="rtl"] .sidebar {
+    float: right;
+  }
+  .layout-one-sidebar .sidebar {
+    width: 100%;
+  }
+}
+@media all and (min-width: 851px) {
+  .layout-one-sidebar .sidebar {
+    width: 25%;
+  }
+  #sidebar-first {
+    width: 25%;
+    margin-left: -100%; /* LTR */
+  }
+  [dir="rtl"] #sidebar-first {
+    margin-right: -100%;
+    margin-left: 0;
+  }
+  #sidebar-second {
+    width: 25%;
+    margin-left: -25%; /* LTR */
+    clear: none;
+  }
+  [dir="rtl"] #sidebar-second {
+    margin-right: -25%;
+    margin-left: 0;
+  }
+}
+
 .sidebar .section {
-  padding-top: 10px;
+  padding: 10px 15px 0;
 }
 .sidebar .block {
   border-style: solid;

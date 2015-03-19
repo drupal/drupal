@@ -2,6 +2,7 @@
 
 body {
   color: #3b3b3b;
+  background: #292929;
 }
 #page,
 #main-wrapper,
@@ -39,7 +40,6 @@ a:active,
   background-color: #f6f6f2;
   border-color: #f9f9f9;
 }
-#page-wrapper,
 #site-footer__wrapper {
   background: #292929;
 }

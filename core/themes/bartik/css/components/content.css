@@ -8,6 +8,46 @@ h1#page-title {
   font-size: 2em;
   line-height: 1;
 }
+.main-content .section {
+  padding: 0 15px;
+}
+@media all and (min-width: 851px) {
+  .main-content {
+    float: left; /* LTR */
+    position: relative;
+  }
+  [dir="rtl"] .main-content {
+    float: right;
+  }
+  .layout-two-sidebars .main-content {
+    margin-left: 25%;
+    margin-right: 25%;
+    width: 50%;
+  }
+  .layout-one-sidebar .main-content {
+    width: 75%;
+  }
+  .layout-no-sidebars .main-content {
+    width: 100%;
+  }
+  .layout-sidebar-first .main-content {
+    margin-left: 25%; /* LTR */
+    margin-right: 0; /* LTR */
+  }
+  [dir="rtl"] .layout-sidebar-first .main-content {
+    margin-left: 0;
+    margin-right: 25%;
+  }
+  .layout-sidebar-second .main-content {
+    margin-right: 25%; /* LTR */
+    margin-left: 0; /* LTR */
+  }
+  [dir="rtl"] .layout-sidebar-second .main-content {
+    margin-right: 0;
+    margin-left: 25%;
+  }
+}
+
 #content h2 {
   margin-bottom: 2px;
   font-size: 1.429em;

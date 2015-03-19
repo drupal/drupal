@@ -1,6 +1,9 @@
 /* ---------- Overall Specifications ---------- */
-
+html {
+  height: 100%;
+}
 body {
+  min-height: 100%;
   line-height: 1.5;
   word-wrap: break-word;
   margin: 0;

@@ -74,8 +74,8 @@
 #}
 <div id="page-wrapper">
   <div id="page">
-    <header id="header" role="banner" aria-label="{{ 'Site header'|t}}">
-      <div class="section clearfix">
+    <header id="header" class="header" role="banner" aria-label="{{ 'Site header'|t}}">
+      <div class="section layout-container clearfix">
         {{ page.secondary_menu }}
         {% if logo %}
           <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home" id="logo">
@@ -112,15 +112,15 @@
     {{ page.messages }}
     {% if page.featured_top %}
       <div class="featured-top">
-        <aside class="featured-top__inner clearfix" role="complementary">
+        <aside class="featured-top__inner section layout-container clearfix" role="complementary">
           {{ page.featured_top }}
         </aside>
       </div>
     {% endif %}
-    <div id="main-wrapper" class="clearfix">
-      <div id="main" class="clearfix">
+    <div id="main-wrapper" class="layout-main-wrapper layout-container clearfix">
+      <div id="main" class="layout-main clearfix">
         {{ page.breadcrumb }}
-        <main id="content" class="column" role="main">
+        <main id="content" class="column main-content" role="main">
           <section class="section">
             <a id="main-content" tabindex="-1"></a>
             {{ title_prefix }}
@@ -160,7 +160,7 @@
     </div>
     {% if page.featured_bottom_first or page.featured_bottom_second or page.featured_bottom_third %}
       <div id="featured-bottom-wrapper">
-        <aside id="featured-bottom" class="clearfix" role="complementary">
+        <aside id="featured-bottom" class="section layout-container clearfix" role="complementary">
           {{ page.featured_bottom_first }}
           {{ page.featured_bottom_second }}
           {{ page.featured_bottom_third }}
@@ -168,7 +168,7 @@
       </div>
     {% endif %}
     <div id="site-footer__wrapper">
-      <footer class="site-footer">
+      <footer class="site-footer section layout-container">
         {% if page.footer_first or page.footer_second or page.footer_third or page.footer_fourth %}
           <div id="footer-columns" class="clearfix">
             {{ page.footer_first }}

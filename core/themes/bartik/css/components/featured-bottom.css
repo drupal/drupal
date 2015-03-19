@@ -5,6 +5,38 @@
   background: rgba(30, 50, 10, 0.08);
   border-top: 1px solid #e7e7e7;
 }
+.region-featured-bottom-first,
+.region-featured-bottom-second,
+.region-featured-bottom-third {
+  box-sizing: border-box;
+  padding: 0 20px 0;
+}
+@media all and (min-width: 560px) {
+  .region-featured-bottom-first,
+  .region-featured-bottom-second,
+  .region-featured-bottom-third {
+    float: left; /* LTR */
+    position: relative;
+    box-sizing: border-box;
+    padding: 20px 15px 30px;
+    width: 33%;
+  }
+  [dir="rtl"] .region-featured-bottom-first,
+  [dir="rtl"] .region-featured-bottom-second,
+  [dir="rtl"] .region-featured-bottom-third {
+    float: right;
+  }
+  .region-featured-bottom-second {
+    padding: 20px 5px 30px;
+  }
+}
+@media all and (min-width: 851px) {
+  .region-featured-bottom-first,
+  .region-featured-bottom-second,
+  .region-featured-bottom-third {
+    padding: 0 20px;
+  }
+}
 #featured-bottom h2 {
   color: #000;
   font-size: 1.4em;
