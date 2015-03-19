@@ -67,29 +67,29 @@ class EntityFormTest extends UnitTestCase {
    */
   public function providerTestFormIds() {
     return array(
-      array('article_node_form', array(
-        'bundle' => 'article',
+      array('node_article_form', array(
         'entity_type' => 'node',
+        'bundle' => 'article',
         'operation' => 'default',
       )),
-      array('article_node_delete_form', array(
-        'bundle' => 'article',
+      array('node_article_delete_form', array(
         'entity_type' => 'node',
+        'bundle' => 'article',
         'operation' => 'delete',
       )),
       array('user_user_form', array(
-        'bundle' => 'user',
         'entity_type' => 'user',
+        'bundle' => 'user',
         'operation' => 'default',
       )),
       array('user_form', array(
-        'bundle' => '',
         'entity_type' => 'user',
+        'bundle' => '',
         'operation' => 'default',
       )),
       array('user_delete_form', array(
-        'bundle' => '',
         'entity_type' => 'user',
+        'bundle' => '',
         'operation' => 'delete',
       )),
     );

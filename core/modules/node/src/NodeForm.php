@@ -108,11 +108,6 @@ class NodeForm extends ContentEntityForm {
 
     $current_user = $this->currentUser();
 
-    // Override the default CSS class name, since the user-defined node type
-    // name in 'TYPE-node-form' potentially clashes with third-party class
-    // names.
-    $form['#attributes']['class'][0] = Html::getClass('node-' . $node->getType() . '-form');
-
     // Changed must be sent to the client, for later overwrite error checking.
     $form['changed'] = array(
       '#type' => 'hidden',
