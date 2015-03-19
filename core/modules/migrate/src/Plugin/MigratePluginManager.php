@@ -46,13 +46,6 @@ class MigratePluginManager extends DefaultPluginManager {
    *   The annotation class name.
    */
   public function __construct($type, \Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, $annotation = 'Drupal\Component\Annotation\PluginID') {
-    $plugin_interface_map = array(
-      'destination' => 'Drupal\migrate\Plugin\MigrateDestinationInterface',
-      'process' => 'Drupal\migrate\Plugin\MigrateProcessInterface',
-      'source' => 'Drupal\migrate\Plugin\MigrateSourceInterface',
-      'id_map' => 'Drupal\migrate\Plugin\MigrateIdMapInterface',
-      'entity_field' => 'Drupal\migrate\Plugin\MigrateEntityDestinationFieldInterface',
-    );
     $plugin_interface = isset($plugin_interface_map[$type]) ? $plugin_interface_map[$type] : NULL;
     parent::__construct("Plugin/migrate/$type", $namespaces, $module_handler, $plugin_interface, $annotation);
     $this->alterInfo('migrate_' . $type . '_info');
@@ -75,6 +68,22 @@ class MigratePluginManager extends DefaultPluginManager {
       $plugin = new $plugin_class($configuration, $plugin_id, $plugin_definition, $migration);
     }
     return $plugin;
+  }
+
+  /**
+   * Helper for the plugin type to interface map.
+   *
+   * @return array
+   *   An array map from plugin type to interface.
+   */
+  protected function getPluginInterfaceMap() {
+    return [
+      'destination' => 'Drupal\migrate\Plugin\MigrateDestinationInterface',
+      'process' => 'Drupal\migrate\Plugin\MigrateProcessInterface',
+      'source' => 'Drupal\migrate\Plugin\MigrateSourceInterface',
+      'id_map' => 'Drupal\migrate\Plugin\MigrateIdMapInterface',
+      'entity_field' => 'Drupal\migrate\Plugin\MigrateEntityDestinationFieldInterface',
+    ];
   }
 
 }

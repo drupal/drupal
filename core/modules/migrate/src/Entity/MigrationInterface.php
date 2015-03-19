@@ -216,8 +216,6 @@ interface MigrationInterface extends ConfigEntityInterface {
    *
    * @return $this
    *   The migration entity.
-   *
-   * @see Drupal\migrate_drupal\Plugin\migrate\load\LoadEntity::processLinkField().
    */
   public function setProcessOfProperty($property, $process_of_property);
 

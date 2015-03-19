@@ -10,12 +10,25 @@ namespace Drupal\migrate_drupal;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\migrate_drupal\Plugin\CckFieldMigrateSourceInterface;
 use Drupal\migrate\MigrationStorage as BaseMigrationStorage;
 
 /**
  * Storage for migration entities.
  */
 class MigrationStorage extends BaseMigrationStorage {
+
+  /**
+   * A cached array of cck field plugins.
+   *
+   * @var array
+   */
+  protected $cckFieldPlugins;
+
+  /**
+   * @var \Drupal\migrate_drupal\Plugin\MigratePluginManager
+   */
+  protected $cckPluginManager;
 
   /**
    * {@inheritdoc}
@@ -84,6 +97,10 @@ class MigrationStorage extends BaseMigrationStorage {
       }
     }
 
+    // Allow modules providing cck field plugins to alter the required
+    // migrations to assist with the migration a custom field type.
+    $this->applyCckFieldProcessors($entities);
+
     // Build an array of dependencies and set the order of the migrations.
     return $this->buildDependencyMigration($entities, $dynamic_ids);
   }
@@ -111,6 +128,85 @@ class MigrationStorage extends BaseMigrationStorage {
       throw new EntityStorageException(String::format("Dynamic migration %id can't be saved", array('$%id' => $entity->id())));
     }
     return parent::save($entity);
+  }
+
+  /**
+   * Allow any field type plugins to adjust the migrations as required.
+   *
+   * @param \Drupal\migrate\Entity\Migration[] $entities
+   *   An array of migration entities.
+   */
+  protected function applyCckFieldProcessors(array $entities) {
+    $method_map = $this->getMigrationPluginMethodMap();
+
+    foreach ($entities as $entity_id => $migration) {
+
+      // Allow field plugins to process the required migrations.
+      if (isset($method_map[$entity_id])) {
+        $method = $method_map[$entity_id];
+        $cck_plugins = $this->getCckFieldPlugins();
+
+        array_walk($cck_plugins, function ($plugin) use ($method, $migration) {
+          $plugin->$method($migration);
+        });
+      }
+
+      // If this is a CCK bundle migration, allow the cck field plugins to add
+      // any field type processing.
+      $source_plugin = $migration->getSourcePlugin();
+      if ($source_plugin instanceof CckFieldMigrateSourceInterface && $source_plugin->getDerivativeId()) {
+        $plugins = $this->getCckFieldPlugins();
+        foreach ($source_plugin->fieldData() as $field_name => $data) {
+          if (isset($plugins[$data['type']])) {
+            $plugins[$data['type']]->processCckFieldValues($migration, $field_name, $data);
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Get an array of loaded cck field plugins.
+   *
+   * @return \Drupal\migrate_drupal\Plugin\MigrateCckFieldInterface[]
+   *   An array of cck field process plugins.
+   */
+  protected function getCckFieldPlugins() {
+    if (!isset($this->cckFieldPlugins)) {
+      $this->cckFieldPlugins = [];
+      foreach ($this->getCckPluginManager()->getDefinitions() as $definition) {
+        $this->cckFieldPlugins[$definition['id']] = $this->getCckPluginManager()->createInstance($definition['id']);
+      }
+    }
+    return $this->cckFieldPlugins;
+  }
+
+  /**
+   * Provides a map between migration ids and the cck field plugin method.
+   *
+   * @return array
+   *   The map between migrations and cck field plugin processing methods.
+   */
+  protected function getMigrationPluginMethodMap() {
+    return [
+      'd6_field' => 'processField',
+      'd6_field_instance' => 'processFieldInstance',
+      'd6_field_instance_widget_settings' => 'processFieldWidget',
+      'd6_field_formatter_settings' => 'processFieldFormatter',
+    ];
+  }
+
+  /**
+   * Get the cck field plugin manager.
+   *
+   * @return \Drupal\migrate_drupal\Plugin\MigratePluginManager
+   *   The loaded plugin manager.
+   */
+  protected function getCckPluginManager() {
+    if (!isset($this->cckPluginManager)) {
+      $this->cckPluginManager = \Drupal::service('plugin.manager.migrate.cckfield');
+    }
+    return $this->cckPluginManager;
   }
 
 }

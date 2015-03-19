@@ -395,6 +395,18 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
   /**
    * {@inheritdoc}
    */
+  public function set($property_name, $value) {
+    if ($property_name == 'source') {
+      // Invalidate the source plugin.
+      unset($this->sourcePlugin);
+    }
+    return parent::set($property_name, $value);
+  }
+
+
+  /**
+   * {@inheritdoc}
+   */
   public function getProcess() {
     return $this->getProcessNormalized($this->process);
   }
