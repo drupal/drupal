@@ -4,3 +4,4 @@ services:
     arguments: ['@entity.manager', '@user.shared_tempstore']
     tags:
       - { name: paramconverter, priority: 10 }
+    lazy: true

@@ -33,6 +33,7 @@ services:
     arguments: ['@user.private_tempstore']
     tags:
       - { name: paramconverter }
+    lazy: true
   node.page_cache_response_policy.deny_node_preview:
     class: Drupal\node\PageCache\DenyNodePreview
     arguments: ['@current_route_match']

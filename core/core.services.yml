@@ -157,6 +157,7 @@ services:
   config.installer:
     class: Drupal\Core\Config\ConfigInstaller
     arguments: ['@config.factory', '@config.storage', '@config.typed', '@config.manager', '@event_dispatcher']
+    lazy: true
   config.storage:
     class: Drupal\Core\Config\CachedStorage
     arguments: ['@config.storage.active', '@cache.config']
@@ -336,16 +337,19 @@ services:
     tags:
       - { name: service_collector, tag: 'module_install.uninstall_validator', call: addUninstallValidator }
     arguments: ['@app.root', '@module_handler', '@kernel']
+    lazy: true
   content_uninstall_validator:
     class: Drupal\Core\Entity\ContentUninstallValidator
     tags:
       - { name: module_install.uninstall_validator }
     arguments: ['@entity.manager', '@string_translation']
+    lazy: true
   field_uninstall_validator:
     class: Drupal\Core\Field\FieldModuleUninstallValidator
     tags:
       - { name: module_install.uninstall_validator }
     arguments: ['@entity.manager', '@string_translation']
+    lazy: true
   theme_handler:
     class: Drupal\Core\Extension\ThemeHandler
     arguments: ['@app.root', '@config.factory', '@module_handler', '@state', '@info_parser', '@logger.channel.default', '@asset.css.collection_optimizer', '@config.installer', '@config.manager', '@router.builder']
@@ -438,6 +442,7 @@ services:
     tags:
       - { name: paramconverter }
     arguments: ['@plugin.manager.menu.link']
+    lazy: true
   menu.tree_storage:
     class: Drupal\Core\Menu\MenuTreeStorage
     arguments: ['@database', '@cache.menu', '@cache_tags.invalidator', 'menu_tree']
@@ -542,11 +547,13 @@ services:
     arguments: ['@database']
     tags:
       - { name: backend_overridable }
+    lazy: true
   lock.persistent:
     class: Drupal\Core\Lock\PersistentDatabaseLockBackend
     arguments: ['@database']
     tags:
       - { name: backend_overridable }
+    lazy: true
   router.request_context:
     class: Drupal\Core\Routing\RequestContext
     tags:
@@ -640,9 +647,11 @@ services:
     arguments: ['@database', '@state']
     tags:
       - { name: backend_overridable }
+    lazy: true
   router.builder:
     class: Drupal\Core\Routing\RouteBuilder
     arguments: ['@router.dumper', '@lock', '@event_dispatcher', '@module_handler', '@controller_resolver', '@access_manager.check_provider']
+    lazy: true
     tags:
       - { name: needs_destruction }
   menu.rebuild_subscriber:
@@ -700,6 +709,7 @@ services:
       # Use a higher priority than EntityConverter, see the class for details.
       - { name: paramconverter, priority: 5 }
     arguments: ['@entity.manager', '@config.factory', '@router.admin_context']
+    lazy: true
   route_subscriber.module:
     class: Drupal\Core\EventSubscriber\ModuleRouteSubscriber
     tags:
@@ -799,6 +809,7 @@ services:
   bare_html_page_renderer:
     class: Drupal\Core\Render\BareHtmlPageRenderer
     arguments: ['@renderer']
+    lazy: true
   private_key:
     class: Drupal\Core\PrivateKey
     arguments: ['@state']
@@ -1020,6 +1031,7 @@ services:
     arguments: ['@database', '@session', '@csrf_token']
     tags:
       - { name: backend_overridable }
+    lazy: true
   replica_database_ignore__subscriber:
     class: Drupal\Core\EventSubscriber\ReplicaDatabaseIgnoreSubscriber
     tags:
@@ -1236,11 +1248,13 @@ services:
     class: Drupal\Core\File\MimeType\MimeTypeGuesser
     tags:
       - { name: service_collector, tag: mime_type_guesser, call: addGuesser }
+    lazy: true
   file.mime_type.guesser.extension:
     class: Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser
     arguments: ['@module_handler']
     tags:
       - { name: mime_type_guesser }
+    lazy: true
   renderer:
     class: Drupal\Core\Render\Renderer
     arguments: ['@controller_resolver', '@theme.manager', '@plugin.manager.element_info', '@request_stack', '@cache_factory', '@cache_contexts']
