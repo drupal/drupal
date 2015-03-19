@@ -110,15 +110,15 @@ class MigrateUserProfileEntityDisplayTest extends MigrateDrupal6TestBase {
 
     // Test a text field.
     $component = $display->getComponent('profile_color');
-    $this->assertIdentical($component['type'], 'text_default');
+    $this->assertIdentical('text_default', $component['type']);
 
     // Test a list field.
     $component = $display->getComponent('profile_bands');
-    $this->assertIdentical($component['type'], 'text_default');
+    $this->assertIdentical('text_default', $component['type']);
 
     // Test a date field.
     $component = $display->getComponent('profile_birthdate');
-    $this->assertIdentical($component['type'], 'datetime_default');
+    $this->assertIdentical('datetime_default', $component['type']);
 
     // Test PROFILE_PRIVATE field is hidden.
     $this->assertNull($display->getComponent('profile_sell_address'));

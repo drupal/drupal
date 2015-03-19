@@ -37,7 +37,7 @@ class MigrateSystemFilterTest extends MigrateDrupal6TestBase {
    */
   public function testSystemFilter() {
     $config = $this->config('system.filter');
-    $this->assertIdentical($config->get('protocols'), array('http', 'https', 'ftp', 'news', 'nntp', 'tel', 'telnet', 'mailto', 'irc', 'ssh', 'sftp', 'webcal', 'rtsp'));
+    $this->assertIdentical(array('http', 'https', 'ftp', 'news', 'nntp', 'tel', 'telnet', 'mailto', 'irc', 'ssh', 'sftp', 'webcal', 'rtsp'), $config->get('protocols'));
   }
 
 }

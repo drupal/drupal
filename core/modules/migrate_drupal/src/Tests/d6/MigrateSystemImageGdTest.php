@@ -37,7 +37,7 @@ class MigrateSystemImageGdTest extends MigrateDrupal6TestBase {
    */
   public function testSystemImageGd() {
     $config = $this->config('system.image.gd');
-    $this->assertIdentical($config->get('jpeg_quality'), 75);
+    $this->assertIdentical(75, $config->get('jpeg_quality'));
   }
 
 }

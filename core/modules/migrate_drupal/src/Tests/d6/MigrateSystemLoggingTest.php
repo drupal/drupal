@@ -39,7 +39,7 @@ class MigrateSystemLoggingTest extends MigrateDrupal6TestBase {
    */
   public function testSystemLogging() {
     $config = $this->config('system.logging');
-    $this->assertIdentical($config->get('error_level'), 'some');
+    $this->assertIdentical('some', $config->get('error_level'));
     $this->assertConfigSchema(\Drupal::service('config.typed'), 'system.logging', $config->get());
   }
 

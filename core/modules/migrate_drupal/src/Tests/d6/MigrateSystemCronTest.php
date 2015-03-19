@@ -37,8 +37,8 @@ class MigrateSystemCronTest extends MigrateDrupal6TestBase {
    */
   public function testSystemCron() {
     $config = $this->config('system.cron');
-    $this->assertIdentical($config->get('threshold.requirements_warning'), 172800);
-    $this->assertIdentical($config->get('threshold.requirements_error'), 1209600);
+    $this->assertIdentical(172800, $config->get('threshold.requirements_warning'));
+    $this->assertIdentical(1209600, $config->get('threshold.requirements_error'));
   }
 
 }

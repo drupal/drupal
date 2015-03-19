@@ -30,9 +30,9 @@ class MigrateCommentVariableEntityDisplayTest extends MigrateCommentVariableDisp
   public function testCommentEntityDisplay() {
     foreach ($this->types as $type) {
       $component = entity_get_display('node', $type, 'default')->getComponent('comment');
-      $this->assertIdentical($component['label'], 'hidden');
-      $this->assertIdentical($component['type'], 'comment_default');
-      $this->assertIdentical($component['weight'], 20);
+      $this->assertIdentical('hidden', $component['label']);
+      $this->assertIdentical('comment_default', $component['type']);
+      $this->assertIdentical(20, $component['weight']);
     }
   }
 }

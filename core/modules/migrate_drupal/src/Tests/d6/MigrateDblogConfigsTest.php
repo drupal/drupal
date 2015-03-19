@@ -47,7 +47,7 @@ class MigrateDblogConfigsTest extends MigrateDrupal6TestBase {
    */
   public function testBookSettings() {
     $config = $this->config('dblog.settings');
-    $this->assertIdentical($config->get('row_limit'), 1000);
+    $this->assertIdentical(1000, $config->get('row_limit'));
     $this->assertConfigSchema(\Drupal::service('config.typed'), 'dblog.settings', $config->get());
   }
 

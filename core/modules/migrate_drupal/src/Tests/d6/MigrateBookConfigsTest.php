@@ -47,9 +47,9 @@ class MigrateBookConfigsTest extends MigrateDrupal6TestBase {
    */
   public function testBookSettings() {
     $config = $this->config('book.settings');
-    $this->assertIdentical($config->get('child_type'), 'book');
-    $this->assertIdentical($config->get('block.navigation.mode'), 'all pages');
-    $this->assertIdentical($config->get('allowed_types'), array('book'));
+    $this->assertIdentical('book', $config->get('child_type'));
+    $this->assertIdentical('all pages', $config->get('block.navigation.mode'));
+    $this->assertIdentical(array('book'), $config->get('allowed_types'));
     $this->assertConfigSchema(\Drupal::service('config.typed'), 'book.settings', $config->get());
   }
 

@@ -55,10 +55,10 @@ class MigrateUserPictureInstanceTest extends MigrateDrupal6TestBase {
   public function testUserPictureFieldInstance() {
     $field = FieldConfig::load('user.user.user_picture');
     $settings = $field->getSettings();
-    $this->assertIdentical($settings['file_extensions'], 'png gif jpg jpeg');
-    $this->assertIdentical($settings['file_directory'], 'pictures');
-    $this->assertIdentical($settings['max_filesize'], '30KB');
-    $this->assertIdentical($settings['max_resolution'], '85x85');
+    $this->assertIdentical('png gif jpg jpeg', $settings['file_extensions']);
+    $this->assertIdentical('pictures', $settings['file_directory']);
+    $this->assertIdentical('30KB', $settings['max_filesize']);
+    $this->assertIdentical('85x85', $settings['max_resolution']);
 
     $this->assertIdentical(array('user', 'user', 'user_picture'), entity_load('migration', 'd6_user_picture_field_instance')->getIdMap()->lookupDestinationID(array('')));
   }

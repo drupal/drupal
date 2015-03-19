@@ -46,11 +46,11 @@ class MigrateUpdateConfigsTest extends MigrateDrupal6TestBase {
    */
   public function testUpdateSettings() {
     $config = $this->config('update.settings');
-    $this->assertIdentical($config->get('fetch.max_attempts'), 2);
-    $this->assertIdentical($config->get('fetch.url'), 'http://updates.drupal.org/release-history');
-    $this->assertIdentical($config->get('notification.threshold'), 'all');
-    $this->assertIdentical($config->get('notification.emails'), array());
-    $this->assertIdentical($config->get('check.interval_days'), 7);
+    $this->assertIdentical(2, $config->get('fetch.max_attempts'));
+    $this->assertIdentical('http://updates.drupal.org/release-history', $config->get('fetch.url'));
+    $this->assertIdentical('all', $config->get('notification.threshold'));
+    $this->assertIdentical(array(), $config->get('notification.emails'));
+    $this->assertIdentical(7, $config->get('check.interval_days'));
     $this->assertConfigSchema(\Drupal::service('config.typed'), 'update.settings', $config->get());
   }
 

@@ -61,22 +61,22 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
     $migration = entity_load('migration', 'd6_user_role');
     $rid = 'anonymous';
     $anonymous = Role::load($rid);
-    $this->assertIdentical($anonymous->id(), $rid);
-    $this->assertIdentical($anonymous->getPermissions(), array('migrate test anonymous permission', 'use text format filtered_html'));
+    $this->assertIdentical($rid, $anonymous->id());
+    $this->assertIdentical(array('migrate test anonymous permission', 'use text format filtered_html'), $anonymous->getPermissions());
     $this->assertIdentical(array($rid), $migration->getIdMap()->lookupDestinationId(array(1)));
     $rid = 'authenticated';
     $authenticated = Role::load($rid);
-    $this->assertIdentical($authenticated->id(), $rid);
-    $this->assertIdentical($authenticated->getPermissions(), array('migrate test authenticated permission', 'use text format filtered_html'));
+    $this->assertIdentical($rid, $authenticated->id());
+    $this->assertIdentical(array('migrate test authenticated permission', 'use text format filtered_html'), $authenticated->getPermissions());
     $this->assertIdentical(array($rid), $migration->getIdMap()->lookupDestinationId(array(2)));
     $rid = 'migrate_test_role_1';
     $migrate_test_role_1 = Role::load($rid);
-    $this->assertIdentical($migrate_test_role_1->id(), $rid);
-    $this->assertIdentical($migrate_test_role_1->getPermissions(), array(0 => 'migrate test role 1 test permission', 'use text format full_html'));
+    $this->assertIdentical($rid, $migrate_test_role_1->id());
+    $this->assertIdentical(array(0 => 'migrate test role 1 test permission', 'use text format full_html'), $migrate_test_role_1->getPermissions());
     $this->assertIdentical(array($rid), $migration->getIdMap()->lookupDestinationId(array(3)));
     $rid = 'migrate_test_role_2';
     $migrate_test_role_2 = Role::load($rid);
-    $this->assertIdentical($migrate_test_role_2->getPermissions(), array(
+    $this->assertIdentical(array(
       'migrate test role 2 test permission',
       'use PHP for settings',
       'administer contact forms',
@@ -92,12 +92,12 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
       'edit own forum content',
       'administer nodes',
       'access content overview',
-    ));
-    $this->assertIdentical($migrate_test_role_2->id(), $rid);
+      ), $migrate_test_role_2->getPermissions());
+    $this->assertIdentical($rid, $migrate_test_role_2->id());
     $this->assertIdentical(array($rid), $migration->getIdMap()->lookupDestinationId(array(4)));
     $rid = 'migrate_test_role_3_that_is_long';
     $migrate_test_role_3 = Role::load($rid);
-    $this->assertIdentical($migrate_test_role_3->id(), $rid);
+    $this->assertIdentical($rid, $migrate_test_role_3->id());
     $this->assertIdentical(array($rid), $migration->getIdMap()->lookupDestinationId(array(5)));
   }
 

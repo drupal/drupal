@@ -46,7 +46,7 @@ class MigrateActionConfigsTest extends MigrateDrupal6TestBase {
    */
   public function testActionSettings() {
     $config = $this->config('action.settings');
-    $this->assertIdentical($config->get('recursion_limit'), 35);
+    $this->assertIdentical(35, $config->get('recursion_limit'));
     $this->assertConfigSchema(\Drupal::service('config.typed'), 'action.settings', $config->get());
   }
 

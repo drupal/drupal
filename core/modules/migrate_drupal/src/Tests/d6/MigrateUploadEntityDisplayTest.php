@@ -57,11 +57,11 @@ class MigrateUploadEntityDisplayTest extends MigrateDrupal6TestBase {
   public function testUploadEntityDisplay() {
     $display = entity_get_display('node', 'page', 'default');
     $component = $display->getComponent('upload');
-    $this->assertIdentical($component['type'], 'file_default');
+    $this->assertIdentical('file_default', $component['type']);
 
     $display = entity_get_display('node', 'story', 'default');
     $component = $display->getComponent('upload');
-    $this->assertIdentical($component['type'], 'file_default');
+    $this->assertIdentical('file_default', $component['type']);
 
     // Assure this doesn't exist.
     $display = entity_get_display('node', 'article', 'default');

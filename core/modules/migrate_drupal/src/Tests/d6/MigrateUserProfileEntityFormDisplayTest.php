@@ -107,15 +107,15 @@ class MigrateUserProfileEntityFormDisplayTest extends MigrateDrupal6TestBase {
 
     // Test a text field.
     $component = $display->getComponent('profile_color');
-    $this->assertIdentical($component['type'], 'text_textfield');
+    $this->assertIdentical('text_textfield', $component['type']);
 
     // Test a list field.
     $component = $display->getComponent('profile_bands');
-    $this->assertIdentical($component['type'], 'text_textfield');
+    $this->assertIdentical('text_textfield', $component['type']);
 
     // Test a date field.
     $component = $display->getComponent('profile_birthdate');
-    $this->assertIdentical($component['type'], 'datetime_default');
+    $this->assertIdentical('datetime_default', $component['type']);
 
     // Test PROFILE_PRIVATE field is hidden.
     $this->assertNull($display->getComponent('profile_sell_address'));
@@ -125,8 +125,8 @@ class MigrateUserProfileEntityFormDisplayTest extends MigrateDrupal6TestBase {
 
     // Test that a checkbox field has the proper display label setting.
     $component = $display->getComponent('profile_love_migrations');
-    $this->assertIdentical($component['type'], 'boolean_checkbox');
-    $this->assertIdentical($component['settings']['display_label'], true);
+    $this->assertIdentical('boolean_checkbox', $component['type']);
+    $this->assertIdentical(true, $component['settings']['display_label']);
   }
 
 }

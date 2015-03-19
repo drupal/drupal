@@ -54,45 +54,45 @@ class MigrateUserProfileFieldInstanceTest extends MigrateDrupal6TestBase {
   public function testUserProfileFields() {
     // Migrated a text field.
     $field = FieldConfig::load('user.user.profile_color');
-    $this->assertIdentical($field->label(), 'Favorite color');
-    $this->assertIdentical($field->getDescription(), 'List your favorite color');
+    $this->assertIdentical('Favorite color', $field->label());
+    $this->assertIdentical('List your favorite color', $field->getDescription());
 
     // Migrated a textarea.
     $field = FieldConfig::load('user.user.profile_biography');
-    $this->assertIdentical($field->label(), 'Biography');
-    $this->assertIdentical($field->getDescription(), 'Tell people a little bit about yourself');
+    $this->assertIdentical('Biography', $field->label());
+    $this->assertIdentical('Tell people a little bit about yourself', $field->getDescription());
 
     // Migrated checkbox field.
     $field = FieldConfig::load('user.user.profile_sell_address');
-    $this->assertIdentical($field->label(), 'Sell your email address?');
-    $this->assertIdentical($field->getDescription(), "If you check this box, we'll sell your address to spammers to help line the pockets of our shareholders. Thanks!");
+    $this->assertIdentical('Sell your email address?', $field->label());
+    $this->assertIdentical("If you check this box, we'll sell your address to spammers to help line the pockets of our shareholders. Thanks!", $field->getDescription());
 
     // Migrated selection field.
     $field = FieldConfig::load('user.user.profile_sold_to');
-    $this->assertIdentical($field->label(), 'Sales Category');
-    $this->assertIdentical($field->getDescription(), "Select the sales categories to which this user's address was sold.");
+    $this->assertIdentical('Sales Category', $field->label());
+    $this->assertIdentical("Select the sales categories to which this user's address was sold.", $field->getDescription());
 
     // Migrated list field.
     $field = FieldConfig::load('user.user.profile_bands');
-    $this->assertIdentical($field->label(), 'Favorite bands');
-    $this->assertIdentical($field->getDescription(), "Enter your favorite bands. When you've saved your profile, you'll be able to find other people with the same favorites.");
+    $this->assertIdentical('Favorite bands', $field->label());
+    $this->assertIdentical("Enter your favorite bands. When you've saved your profile, you'll be able to find other people with the same favorites.", $field->getDescription());
 
 /*
     // Migrated URL field.
     $field = FieldConfig::load('user.user.profile_blog');
-    $this->assertIdentical($field->label(), 'Your blog');
-    $this->assertIdentical($field->getDescription(), "Paste the full URL, including http://, of your personal blog.");
+    $this->assertIdentical('Your blog', $field->label());
+    $this->assertIdentical("Paste the full URL, $field->getDescription(), including http://, of your personal blog.");
 */
 
     // Migrated date field.
     $field = FieldConfig::load('user.user.profile_birthdate');
-    $this->assertIdentical($field->label(), 'Birthdate');
-    $this->assertIdentical($field->getDescription(), "Enter your birth date and we'll send you a coupon.");
+    $this->assertIdentical('Birthdate', $field->label());
+    $this->assertIdentical("Enter your birth date and we'll send you a coupon.", $field->getDescription());
 
     // Another migrated checkbox field, with a different source visibility setting.
     $field = FieldConfig::load('user.user.profile_love_migrations');
-    $this->assertIdentical($field->label(), 'I love migrations');
-    $this->assertIdentical($field->getDescription(), "If you check this box, you love migrations.");
+    $this->assertIdentical('I love migrations', $field->label());
+    $this->assertIdentical("If you check this box, you love migrations.", $field->getDescription());
   }
 
   /**

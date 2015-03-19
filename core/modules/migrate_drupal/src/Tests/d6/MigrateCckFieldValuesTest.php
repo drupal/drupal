@@ -169,29 +169,29 @@ class MigrateCckFieldValuesTest extends MigrateNodeTestBase {
   public function testCckFields() {
     $node = Node::load(1);
 
-    $this->assertIdentical($node->field_test->value, 'This is a shared text field');
-    $this->assertIdentical($node->field_test->format, 'filtered_html');
-    $this->assertIdentical($node->field_test_two->value, '10');
-    $this->assertIdentical($node->field_test_two[1]->value, '20');
+    $this->assertIdentical('This is a shared text field', $node->field_test->value);
+    $this->assertIdentical('filtered_html', $node->field_test->format);
+    $this->assertIdentical('10', $node->field_test_two->value);
+    $this->assertIdentical('20', $node->field_test_two[1]->value);
 
-    $this->assertIdentical($node->field_test_three->value, '42.42', 'Single field second value is correct.');
-    $this->assertIdentical($node->field_test_integer_selectlist[0]->value, '3412');
-    $this->assertIdentical($node->field_test_identical1->value, '1', 'Integer value is correct');
-    $this->assertIdentical($node->field_test_identical2->value, '1', 'Integer value is correct');
-    $this->assertIdentical($node->field_test_exclude_unset->value, 'This is a field with exclude unset.', 'Field with exclude unset is correct.');
+    $this->assertIdentical('42.42', $node->field_test_three->value, 'Single field second value is correct.');
+    $this->assertIdentical('3412', $node->field_test_integer_selectlist[0]->value);
+    $this->assertIdentical('1', $node->field_test_identical1->value, 'Integer value is correct');
+    $this->assertIdentical('1', $node->field_test_identical2->value, 'Integer value is correct');
+    $this->assertIdentical('This is a field with exclude unset.', $node->field_test_exclude_unset->value, 'Field with exclude unset is correct.');
 
     // Test that link fields are migrated.
-    $this->assertIdentical($node->field_test_link->uri, 'http://drupal.org/project/drupal');
-    $this->assertIdentical($node->field_test_link->title, 'Drupal project page');
-    $this->assertIdentical($node->field_test_link->options['attributes'], ['target' => '_blank']);
+    $this->assertIdentical('http://drupal.org/project/drupal', $node->field_test_link->uri);
+    $this->assertIdentical('Drupal project page', $node->field_test_link->title);
+    $this->assertIdentical(['target' => '_blank'], $node->field_test_link->options['attributes']);
 
     // Test the file field meta.
-    $this->assertIdentical($node->field_test_filefield->description, 'desc');
-    $this->assertIdentical($node->field_test_filefield->target_id, '5');
+    $this->assertIdentical('desc', $node->field_test_filefield->description);
+    $this->assertIdentical('5', $node->field_test_filefield->target_id);
 
     $planet_node = Node::load(3);
-    $this->assertIdentical($planet_node->field_multivalue->value, '33.00');
-    $this->assertIdentical($planet_node->field_multivalue[1]->value, '44.00');
+    $this->assertIdentical('33.00', $planet_node->field_multivalue->value);
+    $this->assertIdentical('44.00', $planet_node->field_multivalue[1]->value);
   }
 
 }

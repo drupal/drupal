@@ -44,20 +44,20 @@ class MigrateUserProfileFieldTest extends MigrateDrupal6TestBase {
   public function testUserProfileFields() {
     // Migrated a text field.
     $field_storage = FieldStorageConfig::load('user.profile_color');
-    $this->assertIdentical($field_storage->getType(), 'text', 'Field type is text.');
-    $this->assertIdentical($field_storage->getCardinality(), 1, 'Text field has correct cardinality');
+    $this->assertIdentical('text', $field_storage->getType(), 'Field type is text.');
+    $this->assertIdentical(1, $field_storage->getCardinality(), 'Text field has correct cardinality');
 
     // Migrated a textarea.
     $field_storage = FieldStorageConfig::load('user.profile_biography');
-    $this->assertIdentical($field_storage->getType(), 'text_long', 'Field type is text_long.');
+    $this->assertIdentical('text_long', $field_storage->getType(), 'Field type is text_long.');
 
     // Migrated checkbox field.
     $field_storage = FieldStorageConfig::load('user.profile_sell_address');
-    $this->assertIdentical($field_storage->getType(), 'boolean', 'Field type is boolean.');
+    $this->assertIdentical('boolean', $field_storage->getType(), 'Field type is boolean.');
 
     // Migrated selection field.
     $field_storage = FieldStorageConfig::load('user.profile_sold_to');
-    $this->assertIdentical($field_storage->getType(), 'list_string', 'Field type is list_string.');
+    $this->assertIdentical('list_string', $field_storage->getType(), 'Field type is list_string.');
     $settings = $field_storage->getSettings();
     $this->assertIdentical($settings['allowed_values'], array(
       'Pill spammers' => 'Pill spammers',
@@ -68,23 +68,23 @@ class MigrateUserProfileFieldTest extends MigrateDrupal6TestBase {
       'Faithful servant' => 'Faithful servant',
       'Anonymous donor' => 'Anonymous donor',
     ));
-    $this->assertIdentical($field_storage->getType(), 'list_string', 'Field type is list_string.');
+    $this->assertIdentical('list_string', $field_storage->getType(), 'Field type is list_string.');
 
     // Migrated list field.
     $field_storage = FieldStorageConfig::load('user.profile_bands');
-    $this->assertIdentical($field_storage->getType(), 'text', 'Field type is text.');
-    $this->assertIdentical($field_storage->getCardinality(), -1, 'List field has correct cardinality');
+    $this->assertIdentical('text', $field_storage->getType(), 'Field type is text.');
+    $this->assertIdentical(-1, $field_storage->getCardinality(), 'List field has correct cardinality');
 
 /*
     // Migrated URL field.
     $field_storage = FieldStorageConfig::load('user.profile_blog');
-    $this->assertIdentical($field_storage->getType(), 'link', 'Field type is link.');
+    $this->assertIdentical('link', $field_storage->getType(), 'Field type is link.');
 */
 
     // Migrated date field.
     $field_storage = FieldStorageConfig::load('user.profile_birthdate');
-    $this->assertIdentical($field_storage->getType(), 'datetime', 'Field type is datetime.');
-    $this->assertIdentical($field_storage->getSettings()['datetime_type'], 'date');
+    $this->assertIdentical('datetime', $field_storage->getType(), 'Field type is datetime.');
+    $this->assertIdentical('date', $field_storage->getSettings()['datetime_type']);
   }
 
 }

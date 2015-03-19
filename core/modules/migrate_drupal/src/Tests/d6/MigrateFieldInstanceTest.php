@@ -89,14 +89,14 @@ class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
     $entity = entity_create('node', array('type' => 'story'));
     // Test a text field.
     $field = FieldConfig::load('node.story.field_test');
-    $this->assertIdentical($field->label(), 'Text Field');
+    $this->assertIdentical('Text Field', $field->label());
     $expected = array('max_length' => 255);
-    $this->assertIdentical($field->getSettings(), $expected);
+    $this->assertIdentical($expected, $field->getSettings());
     $this->assertIdentical('text for default value', $entity->field_test->value);
 
     // Test a number field.
     $field = FieldConfig::load('node.story.field_test_two');
-    $this->assertIdentical($field->label(), 'Integer Field');
+    $this->assertIdentical('Integer Field', $field->label());
     $expected = array(
       'min' => 10,
       'max' => 100,
@@ -105,26 +105,26 @@ class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
       'unsigned' => FALSE,
       'size' => 'normal',
     );
-    $this->assertIdentical($field->getSettings(), $expected);
+    $this->assertIdentical($expected, $field->getSettings());
 
     $field = FieldConfig::load('node.story.field_test_four');
-    $this->assertIdentical($field->label(), 'Float Field');
+    $this->assertIdentical('Float Field', $field->label());
     $expected = array(
       'min' => 100.0,
       'max' => 200.0,
       'prefix' => 'id-',
       'suffix' => '',
     );
-    $this->assertIdentical($field->getSettings(), $expected);
+    $this->assertIdentical($expected, $field->getSettings());
 
     // Test email field.
     $field = FieldConfig::load('node.story.field_test_email');
-    $this->assertIdentical($field->label(), 'Email Field');
+    $this->assertIdentical('Email Field', $field->label());
     $this->assertIdentical('benjy@example.com', $entity->field_test_email->value);
 
     // Test a filefield.
     $field = FieldConfig::load('node.story.field_test_filefield');
-    $this->assertIdentical($field->label(), 'File Field');
+    $this->assertIdentical('File Field', $field->label());
     $expected = array(
       'file_extensions' => 'txt pdf doc',
       'file_directory' => 'images',
@@ -148,12 +148,12 @@ class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
 
     // Test a link field.
     $field = FieldConfig::load('node.story.field_test_link');
-    $this->assertIdentical($field->label(), 'Link Field');
+    $this->assertIdentical('Link Field', $field->label());
     $expected = array('title' => 2, 'link_type' => LinkItemInterface::LINK_GENERIC);
-    $this->assertIdentical($field->getSettings(), $expected);
+    $this->assertIdentical($expected, $field->getSettings());
     $this->assertIdentical('default link title', $entity->field_test_link->title, 'Field field_test_link default title is correct.');
     $this->assertIdentical('http://drupal.org', $entity->field_test_link->url, 'Field field_test_link default title is correct.');
-    $this->assertIdentical($entity->field_test_link->options['attributes'], []);
+    $this->assertIdentical([], $entity->field_test_link->options['attributes']);
   }
 
   /**

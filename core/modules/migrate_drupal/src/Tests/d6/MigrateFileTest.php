@@ -54,10 +54,10 @@ class MigrateFileTest extends MigrateDrupal6TestBase {
   public function testFiles() {
     /** @var \Drupal\file\FileInterface $file */
     $file = entity_load('file', 1);
-    $this->assertIdentical($file->getFilename(), 'Image1.png');
-    $this->assertIdentical($file->getSize(), '39325');
-    $this->assertIdentical($file->getFileUri(), 'public://image-1.png');
-    $this->assertIdentical($file->getMimeType(), 'image/png');
+    $this->assertIdentical('Image1.png', $file->getFilename());
+    $this->assertIdentical('39325', $file->getSize());
+    $this->assertIdentical('public://image-1.png', $file->getFileUri());
+    $this->assertIdentical('image/png', $file->getMimeType());
     // It is pointless to run the second half from MigrateDrupal6Test.
     if (empty($this->standalone)) {
       return;
@@ -86,11 +86,11 @@ class MigrateFileTest extends MigrateDrupal6TestBase {
     $executable->import();
 
     $file = entity_load('file', 2);
-    $this->assertIdentical($file->getFileUri(), 'public://core/modules/simpletest/files/image-2.jpg');
+    $this->assertIdentical('public://core/modules/simpletest/files/image-2.jpg', $file->getFileUri());
 
     // Ensure that a temporary file has been migrated.
     $file = entity_load('file', 6);
-    $this->assertIdentical($file->getFileUri(), 'temporary://some-temp-file.jpg');
+    $this->assertIdentical('temporary://some-temp-file.jpg', $file->getFileUri());
   }
 
 }

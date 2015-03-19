@@ -49,8 +49,8 @@ class MigrateViewModesTest extends MigrateDrupal6TestBase {
   public function testViewModes() {
     // Test a new view mode.
     $view_mode = EntityViewMode::load('node.preview');
-    $this->assertIdentical(is_null($view_mode), FALSE, 'Preview view mode loaded.');
-    $this->assertIdentical($view_mode->label(), 'Preview', 'View mode has correct label.');
+    $this->assertIdentical(FALSE, is_null($view_mode), 'Preview view mode loaded.');
+    $this->assertIdentical('Preview', $view_mode->label(), 'View mode has correct label.');
     // Test the Id Map.
     $this->assertIdentical(array('node', 'preview'), entity_load('migration', 'd6_view_modes')->getIdMap()->lookupDestinationID(array(1)));
   }

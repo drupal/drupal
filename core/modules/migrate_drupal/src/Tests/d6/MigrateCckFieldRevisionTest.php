@@ -76,8 +76,8 @@ class MigrateCckFieldRevisionTest extends MigrateNodeTestBase {
    */
   public function testCckFieldRevision() {
     $node = \Drupal::entityManager()->getStorage('node')->loadRevision(2);
-    $this->assertIdentical($node->id(), '1', 'Node 1 loaded.');
-    $this->assertIdentical($node->getRevisionId(), '2', 'Node 1 revision 2loaded.');
+    $this->assertIdentical('1', $node->id(), 'Node 1 loaded.');
+    $this->assertIdentical('2', $node->getRevisionId(), 'Node 1 revision 2loaded.');
   }
 
 }

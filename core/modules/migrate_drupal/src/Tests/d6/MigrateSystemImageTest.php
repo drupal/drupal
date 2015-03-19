@@ -37,7 +37,7 @@ class MigrateSystemImageTest extends MigrateDrupal6TestBase {
    */
   public function testSystemImage() {
     $config = $this->config('system.image');
-    $this->assertIdentical($config->get('toolkit'), 'gd');
+    $this->assertIdentical('gd', $config->get('toolkit'));
   }
 
 }

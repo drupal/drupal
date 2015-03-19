@@ -25,8 +25,8 @@ class MigrateCommentVariableEntityFormDisplayTest extends MigrateCommentVariable
   public function testCommentEntityFormDisplay() {
     foreach ($this->types as $type) {
       $component = entity_get_form_display('node', $type, 'default')->getComponent('comment');
-      $this->assertIdentical($component['type'], 'comment_default');
-      $this->assertIdentical($component['weight'], 20);
+      $this->assertIdentical('comment_default', $component['type']);
+      $this->assertIdentical(20, $component['weight']);
     }
   }
 

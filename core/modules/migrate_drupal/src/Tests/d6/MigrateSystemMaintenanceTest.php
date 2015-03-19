@@ -37,7 +37,7 @@ class MigrateSystemMaintenanceTest extends MigrateDrupal6TestBase {
    */
   public function testSystemMaintenance() {
     $config = $this->config('system.maintenance');
-    $this->assertIdentical($config->get('message'), 'Drupal is currently under maintenance. We should be back shortly. Thank you for your patience.');
+    $this->assertIdentical('Drupal is currently under maintenance. We should be back shortly. Thank you for your patience.', $config->get('message'));
   }
 
 }

@@ -48,42 +48,41 @@ class MigrateNodeTypeTest extends MigrateDrupal6TestBase {
     $migration = entity_load('migration', 'd6_node_type');
     // Test the test_page content type.
     $node_type_page = NodeType::load('test_page');
-    $this->assertIdentical($node_type_page->id(), 'test_page', 'Node type test_page loaded');
-
-    $this->assertIdentical($node_type_page->displaySubmitted(), TRUE);
-    $this->assertIdentical($node_type_page->isNewRevision(), FALSE);
-    $this->assertIdentical($node_type_page->getPreviewMode(), DRUPAL_OPTIONAL);
-    $this->assertIdentical(array('test_page'), $migration->getIdMap()->lookupDestinationID(array('test_page')));
+    $this->assertIdentical('test_page', $node_type_page->id(), 'Node type test_page loaded');
+    $this->assertIdentical(TRUE, $node_type_page->displaySubmitted());
+    $this->assertIdentical(FALSE, $node_type_page->isNewRevision());
+    $this->assertIdentical(DRUPAL_OPTIONAL, $node_type_page->getPreviewMode());
+    $this->assertIdentical($migration->getIdMap()->lookupDestinationID(array('test_page')), array('test_page'));
 
     // Test we have a body field.
     $field = FieldConfig::loadByName('node', 'test_page', 'body');
-    $this->assertIdentical($field->getLabel(), 'This is the body field label', 'Body field was found.');
+    $this->assertIdentical('This is the body field label', $field->getLabel(), 'Body field was found.');
 
     // Test the test_story content type.
     $node_type_story = NodeType::load('test_story');
-    $this->assertIdentical($node_type_story->id(), 'test_story', 'Node type test_story loaded');
+    $this->assertIdentical('test_story', $node_type_story->id(), 'Node type test_story loaded');
 
-    $this->assertIdentical($node_type_story->displaySubmitted(), TRUE);
-    $this->assertIdentical($node_type_story->isNewRevision(), FALSE);
-    $this->assertIdentical($node_type_story->getPreviewMode(), DRUPAL_OPTIONAL);
-    $this->assertIdentical(array('test_story'), $migration->getIdMap()->lookupDestinationID(array('test_story')));
+    $this->assertIdentical(TRUE, $node_type_story->displaySubmitted());
+    $this->assertIdentical(FALSE, $node_type_story->isNewRevision());
+    $this->assertIdentical(DRUPAL_OPTIONAL, $node_type_story->getPreviewMode());
+    $this->assertIdentical($migration->getIdMap()->lookupDestinationID(array('test_story')), array('test_story'));
 
     // Test we don't have a body field.
     $field = FieldConfig::loadByName('node', 'test_story', 'body');
-    $this->assertIdentical($field, NULL, 'No body field found');
+    $this->assertIdentical(NULL, $field, 'No body field found');
 
     // Test the test_event content type.
     $node_type_event = NodeType::load('test_event');
-    $this->assertIdentical($node_type_event->id(), 'test_event', 'Node type test_event loaded');
+    $this->assertIdentical('test_event', $node_type_event->id(), 'Node type test_event loaded');
 
-    $this->assertIdentical($node_type_event->displaySubmitted(), TRUE);
-    $this->assertIdentical($node_type_event->isNewRevision(), TRUE);
-    $this->assertIdentical($node_type_event->getPreviewMode(), DRUPAL_OPTIONAL);
-    $this->assertIdentical(array('test_event'), $migration->getIdMap()->lookupDestinationID(array('test_event')));
+    $this->assertIdentical(TRUE, $node_type_event->displaySubmitted());
+    $this->assertIdentical(TRUE, $node_type_event->isNewRevision());
+    $this->assertIdentical(DRUPAL_OPTIONAL, $node_type_event->getPreviewMode());
+    $this->assertIdentical($migration->getIdMap()->lookupDestinationID(array('test_event')), array('test_event'));
 
     // Test we have a body field.
     $field = FieldConfig::loadByName('node', 'test_event', 'body');
-    $this->assertIdentical($field->getLabel(), 'Body', 'Body field was found.');
+    $this->assertIdentical('Body', $field->getLabel(), 'Body field was found.');
   }
 
 }

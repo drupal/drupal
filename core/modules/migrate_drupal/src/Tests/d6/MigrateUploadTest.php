@@ -36,19 +36,19 @@ class MigrateUploadTest extends MigrateUploadBase {
     $node_storage->resetCache(array(1, 2));
     $nodes = Node::loadMultiple(array(1, 2));
     $node = $nodes[1];
-    $this->assertIdentical(count($node->upload), 1);
-    $this->assertIdentical($node->upload[0]->target_id, '1');
-    $this->assertIdentical($node->upload[0]->description, 'file 1-1-1');
-    $this->assertIdentical($node->upload[0]->isDisplayed(), FALSE);
+    $this->assertIdentical(1, count($node->upload));
+    $this->assertIdentical('1', $node->upload[0]->target_id);
+    $this->assertIdentical('file 1-1-1', $node->upload[0]->description);
+    $this->assertIdentical(FALSE, $node->upload[0]->isDisplayed());
 
     $node = $nodes[2];
-    $this->assertIdentical(count($node->upload), 2);
-    $this->assertIdentical($node->upload[0]->target_id, '3');
-    $this->assertIdentical($node->upload[0]->description, 'file 2-3-3');
-    $this->assertIdentical($node->upload[0]->isDisplayed(), FALSE);
-    $this->assertIdentical($node->upload[1]->target_id, '2');
-    $this->assertIdentical($node->upload[1]->isDisplayed(), TRUE);
-    $this->assertIdentical($node->upload[1]->description, 'file 2-3-2');
+    $this->assertIdentical(2, count($node->upload));
+    $this->assertIdentical('3', $node->upload[0]->target_id);
+    $this->assertIdentical('file 2-3-3', $node->upload[0]->description);
+    $this->assertIdentical(FALSE, $node->upload[0]->isDisplayed());
+    $this->assertIdentical('2', $node->upload[1]->target_id);
+    $this->assertIdentical(TRUE, $node->upload[1]->isDisplayed());
+    $this->assertIdentical('file 2-3-2', $node->upload[1]->description);
   }
 
 }

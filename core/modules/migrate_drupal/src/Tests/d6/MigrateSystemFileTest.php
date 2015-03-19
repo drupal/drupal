@@ -37,8 +37,8 @@ class MigrateSystemFileTest extends MigrateDrupal6TestBase {
    */
   public function testSystemFile() {
     $config = \Drupal::configFactory()->getEditable('system.file');
-    $this->assertIdentical($config->get('path.temporary'), 'files/temp');
-    $this->assertIdentical($config->get('allow_insecure_uploads'), TRUE);
+    $this->assertIdentical('files/temp', $config->get('path.temporary'));
+    $this->assertIdentical(TRUE, $config->get('allow_insecure_uploads'));
   }
 
 }
