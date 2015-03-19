@@ -151,11 +151,29 @@ class ManageFieldsTest extends WebTestBase {
     $this->assertLink('Add field');
 
     // Assert entity operations for all fields.
-    $result = $this->xpath('//ul[@class = "dropbutton"]/li/a');
+    $number_of_links = 3;
+    $number_of_links_found = 0;
+    $operation_links = $this->xpath('//ul[@class = "dropbutton"]/li/a');
     $url = base_path() . "admin/structure/types/manage/$type/fields/node.$type.body";
-    $this->assertIdentical($url, (string) $result[0]['href']);
-    $this->assertIdentical("$url/storage", (string) $result[1]['href']);
-    $this->assertIdentical("$url/delete", (string) $result[2]['href']);
+
+    foreach ($operation_links as $link) {
+      switch ($link['title']) {
+        case 'Edit field settings.':
+          $this->assertIdentical($url, (string) $link['href']);
+          $number_of_links_found++;
+          break;
+        case 'Edit storage settings.':
+          $this->assertIdentical("$url/storage", (string) $link['href']);
+          $number_of_links_found++;
+          break;
+        case 'Delete field.':
+          $this->assertIdentical("$url/delete", (string) $link['href']);
+          $number_of_links_found++;
+          break;
+      }
+    }
+
+    $this->assertEqual($number_of_links, $number_of_links_found);
   }
 
   /**
