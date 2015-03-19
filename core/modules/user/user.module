@@ -635,7 +635,7 @@ function user_pass_reset_url($account, $options = array()) {
     array(
       'uid' => $account->id(),
       'timestamp' => $timestamp,
-      'hash' => user_pass_rehash($account->getPassword(), $timestamp, $account->getLastLoginTime()),
+      'hash' => user_pass_rehash($account->getPassword(), $timestamp, $account->getLastLoginTime(), $account->id()),
     ),
     array(
       'absolute' => TRUE,
@@ -672,7 +672,7 @@ function user_cancel_url($account, $options = array()) {
   return \Drupal::url('user.cancel_confirm', [
     'user' => $account->id(),
     'timestamp' => $timestamp,
-    'hashed_pass' => user_pass_rehash($account->getPassword(), $timestamp, $account->getLastLoginTime())
+    'hashed_pass' => user_pass_rehash($account->getPassword(), $timestamp, $account->getLastLoginTime(), $account->id())
   ], $url_options);
 }
 
@@ -694,12 +694,14 @@ function user_cancel_url($account, $options = array()) {
  *   A UNIX timestamp, typically REQUEST_TIME.
  * @param int $login
  *   The UNIX timestamp of the user's last login.
+ * @param int $uid
+ *   The user ID.
  *
- * @return
+ * @return string
  *   A string that is safe for use in URLs and SQL statements.
  */
-function user_pass_rehash($password, $timestamp, $login) {
-  return Crypt::hmacBase64($timestamp . $login, Settings::getHashSalt() . $password);
+function user_pass_rehash($password, $timestamp, $login, $uid) {
+  return Crypt::hmacBase64($timestamp . $login . $uid, Settings::getHashSalt() . $password);
 }
 
 /**

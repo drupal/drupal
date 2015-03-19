@@ -8,6 +8,7 @@
 namespace Drupal\user\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\user\Entity\User;
 
 /**
  * Ensure that password reset methods work as expected.
@@ -137,14 +138,14 @@ class UserPasswordResetTest extends WebTestBase {
     $timeout = $this->config('user.settings')->get('password_reset_timeout');
     $bogus_timestamp = REQUEST_TIME - $timeout - 60;
     $_uid = $this->account->id();
-    $this->drupalGet("user/reset/$_uid/$bogus_timestamp/" . user_pass_rehash($this->account->getPassword(), $bogus_timestamp, $this->account->getLastLoginTime()));
+    $this->drupalGet("user/reset/$_uid/$bogus_timestamp/" . user_pass_rehash($this->account->getPassword(), $bogus_timestamp, $this->account->getLastLoginTime(), $this->account->id()));
     $this->assertText(t('You have tried to use a one-time login link that has expired. Please request a new one using the form below.'), 'Expired password reset request rejected.');
 
     // Create a user, block the account, and verify that a login link is denied.
     $timestamp = REQUEST_TIME - 1;
     $blocked_account = $this->drupalCreateUser()->block();
     $blocked_account->save();
-    $this->drupalGet("user/reset/" . $blocked_account->id() . "/$timestamp/" . user_pass_rehash($blocked_account->getPassword(), $timestamp, $blocked_account->getLastLoginTime()));
+    $this->drupalGet("user/reset/" . $blocked_account->id() . "/$timestamp/" . user_pass_rehash($blocked_account->getPassword(), $timestamp, $blocked_account->getLastLoginTime(), $this->account->id()));
     $this->assertResponse(403);
   }
 
@@ -177,4 +178,44 @@ class UserPasswordResetTest extends WebTestBase {
     $this->drupalGet('user/password', array('query' => array('name' => $edit['name'])));
     $this->assertFieldByName('name', $edit['name'], 'User name found.');
   }
+
+  /**
+   * Make sure that users cannot forge password reset URLs of other users.
+   */
+  function testResetImpersonation() {
+    // Create two identical user accounts except for the user name. They must
+    // have the same empty password, so we can't use $this->drupalCreateUser().
+    $edit = array();
+    $edit['name'] = $this->randomMachineName();
+    $edit['mail'] = $edit['name'] . '@example.com';
+    $edit['status'] = 1;
+    $user1 = User::create($edit);
+    $user1->save();
+
+    $edit['name'] = $this->randomMachineName();
+    $user2 = User::create($edit);
+    $user2->save();
+
+    // Unique password hashes are automatically generated, the only way to
+    // change that is to update it directly in the database.
+    db_update('users_field_data')
+      ->fields(['pass' => NULL])
+      ->condition('uid', [$user1->id(), $user2->id()], 'IN')
+      ->execute();
+    \Drupal::entityManager()->getStorage('user')->resetCache();
+    $user1 = User::load($user1->id());
+    $user2 = User::load($user2->id());
+
+    $this->assertEqual($user1->getPassword(), $user2->getPassword(), 'Both users have the same password hash.');
+
+    // The password reset URL must not be valid for the second user when only
+    // the user ID is changed in the URL.
+    $reset_url = user_pass_reset_url($user1);
+    $attack_reset_url = str_replace("user/reset/{$user1->id()}", "user/reset/{$user2->id()}", $reset_url);
+    $this->drupalGet($attack_reset_url);
+    $this->assertNoText($user2->getUsername(), 'The invalid password reset page does not show the user name.');
+    $this->assertUrl('user/password', array(), 'The user is redirected to the password reset request page.');
+    $this->assertText('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.');
+   }
+
 }
