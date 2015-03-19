@@ -9,6 +9,7 @@ namespace Drupal\field\Tests\EntityReference;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
@@ -21,6 +22,8 @@ use Drupal\user\RoleInterface;
  * @group entity_reference
  */
 class EntityReferenceFormatterTest extends EntityUnitTestBase {
+
+  use EntityReferenceTestTrait;
 
   /**
    * The entity type used in this test.
@@ -78,7 +81,7 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
     $this->installSchema('system', 'router');
     $this->container->get('router.builder')->rebuild();
 
-    entity_reference_create_field($this->entityType, $this->bundle, $this->fieldName, 'Field test', $this->entityType, 'default', array(), FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+    $this->createEntityReferenceField($this->entityType, $this->bundle, $this->fieldName, 'Field test', $this->entityType, 'default', array(), FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
 
     // Set up a field, so that the entity that'll be referenced bubbles up a
     // cache tag when rendering it entirely.

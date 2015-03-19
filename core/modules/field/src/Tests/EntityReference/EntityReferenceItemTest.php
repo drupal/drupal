@@ -11,11 +11,13 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Tests\FieldUnitTestBase;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
+
 
 /**
  * Tests the new entity API for the entity reference field type.
@@ -23,6 +25,8 @@ use Drupal\taxonomy\Entity\Vocabulary;
  * @group entity_reference
  */
 class EntityReferenceItemTest extends FieldUnitTestBase {
+
+  use EntityReferenceTestTrait;
 
   /**
    * Modules to install.
@@ -68,8 +72,8 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     $this->term->save();
 
     // Use the util to create an instance.
-    entity_reference_create_field('entity_test', 'entity_test', 'field_test_taxonomy_term', 'Test content entity reference', 'taxonomy_term');
-    entity_reference_create_field('entity_test', 'entity_test', 'field_test_taxonomy_vocabulary', 'Test config entity reference', 'taxonomy_vocabulary');
+    $this->createEntityReferenceField('entity_test', 'entity_test', 'field_test_taxonomy_term', 'Test content entity reference', 'taxonomy_term');
+    $this->createEntityReferenceField('entity_test', 'entity_test', 'field_test_taxonomy_vocabulary', 'Test config entity reference', 'taxonomy_vocabulary');
   }
 
   /**

@@ -6,6 +6,7 @@
 
 namespace Drupal\rdf\Tests\Field;
 
+use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
@@ -15,6 +16,8 @@ use Drupal\user\RoleInterface;
  * @group rdf
  */
 class EntityReferenceRdfaTest extends FieldRdfaTestBase {
+
+  use EntityReferenceTestTrait;
 
   /**
    * {@inheritdoc}
@@ -58,7 +61,7 @@ class EntityReferenceRdfaTest extends FieldRdfaTestBase {
       ->grantPermission('view test entity')
       ->save();
 
-    entity_reference_create_field($this->entityType, $this->bundle, $this->fieldName, 'Field test', $this->entityType);
+    $this->createEntityReferenceField($this->entityType, $this->bundle, $this->fieldName, 'Field test', $this->entityType);
 
     // Add the mapping.
     $mapping = rdf_get_mapping('entity_test', 'entity_test');

@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Entity;
 
+use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
@@ -16,6 +17,8 @@ use Drupal\user\RoleInterface;
  * @group Entity
  */
 class EntityViewBuilderTest extends EntityUnitTestBase {
+
+  use EntityReferenceTestTrait;
 
   /**
    * Modules to enable.
@@ -98,7 +101,7 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
     $request->setMethod('GET');
 
     // Create an entity reference field and an entity that will be referenced.
-    entity_reference_create_field('entity_test', 'entity_test', 'reference_field', 'Reference', 'entity_test');
+    $this->createEntityReferenceField('entity_test', 'entity_test', 'reference_field', 'Reference', 'entity_test');
     entity_get_display('entity_test', 'entity_test', 'full')->setComponent('reference_field', [
       'type' => 'entity_reference_entity_view',
       'settings' => ['link' => FALSE],
