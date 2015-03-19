@@ -5,6 +5,13 @@ error_test.generate_warnings:
   requirements:
     _access: 'TRUE'
 
+error_test.generate_fatals:
+  path: '/error-test/generate-fatals'
+  defaults:
+    _controller: '\Drupal\error_test\Controller\ErrorTestController::generateFatals'
+  requirements:
+    _access: 'TRUE'
+
 error_test.generate_warnings_with_report:
   path: '/error-test/generate-warnings-with-report'
   defaults:

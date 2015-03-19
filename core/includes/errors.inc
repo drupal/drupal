@@ -125,7 +125,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
     // The installer initializes a maintenance theme at the earliest possible
     // point in time already. Do not unset that.
     if (!$is_installer) {
-      \Drupal::theme()->setActiveTheme(NULL);
+      \Drupal::theme()->resetActiveTheme();
     }
     if (!defined('MAINTENANCE_MODE')) {
       define('MAINTENANCE_MODE', 'error');
