@@ -264,8 +264,8 @@ use Drupal\node\Entity\NodeType;
  * - Choose a unique machine name, or ID, for your entity type. This normally
  *   starts with (or is the same as) your module's machine name. It should be
  *   as short as possible, and may not exceed 32 characters.
- * - Define an interface for your entity's get/set methods, extending either
- *   \Drupal\Core\Config\Entity\ConfigEntityInterface or
+ * - Define an interface for your entity's get/set methods, usually extending
+ *   either \Drupal\Core\Config\Entity\ConfigEntityInterface or
  *   \Drupal\Core\Entity\ContentEntityInterface.
  * - Define a class for your entity, implementing your interface and extending
  *   either \Drupal\Core\Config\Entity\ConfigEntityBase or
