@@ -141,6 +141,11 @@ class BulkDeleteTest extends FieldUnitTestBase {
     }
     $this->entities = entity_load_multiple($this->entity_type);
     foreach ($this->entities as $entity) {
+      // This test relies on the entities having stale field definitions
+      // so that the deleted field can be accessed on them. Access the field
+      // now, so that they are always loaded.
+      $entity->bf_1->value;
+
       // Also keep track of the entities per bundle.
       $this->entities_by_bundles[$entity->bundle()][$entity->id()] = $entity;
     }
