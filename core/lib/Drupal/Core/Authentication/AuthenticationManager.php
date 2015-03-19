@@ -8,28 +8,24 @@
 namespace Drupal\Core\Authentication;
 
 use Drupal\Core\Routing\RouteMatch;
-use Drupal\Core\Session\AnonymousUserSession;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 
 /**
  * Manager for authentication.
  *
  * On each request, let all authentication providers try to authenticate the
  * user. The providers are iterated according to their priority and the first
- * provider detecting credentials for its method will become the triggered
- * provider. No further provider will get triggered.
+ * provider detecting credentials for its method wins. No further provider will
+ * get triggered.
  *
- * If no provider was triggered the lowest-priority provider is assumed to
- * be responsible. If no provider set an active user then the user is set to
- * anonymous.
+ * If no provider set an active user then the user is set to anonymous.
  */
-class AuthenticationManager implements AuthenticationProviderInterface, AuthenticationManagerInterface {
+class AuthenticationManager implements AuthenticationProviderInterface, AuthenticationProviderFilterInterface, AuthenticationProviderChallengeInterface {
 
   /**
    * Array of all registered authentication providers, keyed by ID.
    *
-   * @var array
+   * @var \Drupal\Core\Authentication\AuthenticationProviderInterface[]
    */
   protected $providers;
 
@@ -43,16 +39,45 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
   /**
    * Sorted list of registered providers.
    *
-   * @var array
+   * @var \Drupal\Core\Authentication\AuthenticationProviderInterface[]
    */
   protected $sortedProviders;
 
   /**
-   * Id of the provider that authenticated the user.
+   * List of providers which implement the filter interface.
    *
-   * @var string
+   * @var \Drupal\Core\Authentication\AuthenticationProviderFilterInterface[]
    */
-  protected $triggeredProviderId = '';
+  protected $filters;
+
+  /**
+   * List of providers which implement the challenge interface.
+   *
+   * @var \Drupal\Core\Authentication\AuthenticationProviderChallengeInterface[]
+   */
+  protected $challengers;
+
+  /**
+   * List of providers which are allowed on routes with no _auth option.
+   *
+   * @var string[]
+   */
+  protected $globalProviders;
+
+  /**
+   * Constructs an authentication manager.
+   *
+   * @todo Revisit service construction. Especially write a custom compiler pass
+   *   which is capable of collecting, sorting and injecting all providers
+   *   (including global/vs non global), filters and challengers on compile
+   *   time in https://www.drupal.org/node/2432585.
+   *
+   * @param array $global_providers
+   *   List of global providers, keyed by the provier ID.
+   */
+  public function __construct($global_providers = ['cookie' => TRUE]) {
+    $this->globalProviders = $global_providers;
+  }
 
   /**
    * Adds a provider to the array of registered providers.
@@ -72,70 +97,166 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
     $this->providerOrders[$priority][$id] = $provider;
     // Force the builders to be re-sorted.
     $this->sortedProviders = NULL;
+
+    if ($provider instanceof AuthenticationProviderFilterInterface) {
+      $this->filters[$id] = $provider;
+    }
+    if ($provider instanceof AuthenticationProviderChallengeInterface) {
+      $this->challengers[$id] = $provider;
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function applies(Request $request) {
-    return TRUE;
+    return (bool) $this->getProvider($request);
   }
 
   /**
    * {@inheritdoc}
    */
   public function authenticate(Request $request) {
-    $account = NULL;
-
-    // Iterate the allowed providers.
-    foreach ($this->filterProviders($this->getSortedProviders(), $request) as $provider_id => $provider) {
-      if ($provider->applies($request)) {
-        // Try to authenticate with this provider, skipping all others.
-        $account = $provider->authenticate($request);
-        $this->triggeredProviderId = $provider_id;
-        break;
-      }
-    }
-
-    // No provider returned a valid account, so set the user to anonymous.
-    if (!$account) {
-      $account = new AnonymousUserSession();
-    }
-
-    // No provider was fired, so assume the one with the least priority
-    // should have.
-    if (!$this->triggeredProviderId) {
-      $this->triggeredProviderId = $this->defaultProviderId();
-    }
-
-    // Save the authenticated account and the provider that supplied it
-    //  for later access.
-    $request->attributes->set('_authentication_provider', $this->triggeredProviderId);
-
-    return $account;
+    $provider_id = $this->getProvider($request);
+    return $this->providers[$provider_id]->authenticate($request);
   }
 
   /**
-   * Returns the default provider ID.
-   *
-   * The default provider is the one with the lowest registered priority.
-   *
-   * @return string
-   *   The ID of the default provider.
+   * {@inheritdoc}
    */
-  public function defaultProviderId() {
-    $providers = $this->getSortedProviders();
-    $provider_ids = array_keys($providers);
-    return end($provider_ids);
+  public function appliesToRoutedRequest(Request $request, $authenticated) {
+    $result = FALSE;
+
+    if ($authenticated) {
+      $result = $this->applyFilter($request, $authenticated, $this->getProvider($request));
+    }
+    else {
+      foreach ($this->getSortedProviders() as $provider_id => $provider) {
+        if ($this->applyFilter($request, $authenticated, $provider_id)) {
+          $result = TRUE;
+          break;
+        }
+      }
+    }
+
+    return $result;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function challengeException(Request $request, \Exception $previous) {
+    $provider_id = $this->getChallenger($request);
+    if ($provider_id) {
+      return $this->challengers[$provider_id]->challengeException($request, $previous);
+    }
+  }
+
+  /**
+   * Returns the id of the authentication provider for a request.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The incoming request.
+   *
+   * @return string|NULL
+   *   The id of the first authentication provider which applies to the request.
+   *   If no application detects appropriate credentials, then NULL is returned.
+   */
+  protected function getProvider(Request $request) {
+    foreach ($this->getSortedProviders() as $provider_id => $provider) {
+      if ($provider->applies($request)) {
+        return $provider_id;
+      }
+    }
+  }
+
+  /**
+   * Returns the id of the challenge provider for a request.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The incoming request.
+   *
+   * @return string|NULL
+   *   The id of the first authentication provider which applies to the request.
+   *   If no application detects appropriate credentials, then NULL is returned.
+   */
+  protected function getChallenger(Request $request) {
+    if (!empty($this->challengers)) {
+      foreach ($this->getSortedProviders($request, FALSE) as $provider_id => $provider) {
+        if (isset($this->challengers[$provider_id]) && !$provider->applies($request) && $this->applyFilter($request, FALSE, $provider_id)) {
+          return $provider_id;
+        }
+      }
+    }
+  }
+
+  /**
+   * Checks whether a provider is allowed on the given request.
+   *
+   * If no filter is registered for the given provider id, the default filter
+   * is applied.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The incoming request.
+   * @param bool $authenticated
+   *   Whether or not the request is authenticated.
+   * @param string $provider_id
+   *   The id of the authentication provider to check access for.
+   *
+   * @return bool
+   *   TRUE if provider is allowed, FALSE otherwise.
+   */
+  protected function applyFilter(Request $request, $authenticated, $provider_id) {
+    if (isset($this->filters[$provider_id])) {
+      $result = $this->filters[$provider_id]->appliesToRoutedRequest($request, $authenticated);
+    }
+    else {
+      $result = $this->defaultFilter($request, $provider_id);
+    }
+
+    return $result;
+  }
+
+  /**
+   * Default implementation of the provider filter.
+   *
+   * Checks whether a provider is allowed as per the _auth option on a route. If
+   * the option is not set or if the request did not match any route, only
+   * providers from the global provider set are allowed.
+   *
+   * If no filter is registered for the given provider id, the default filter
+   * is applied.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The incoming request.
+   * @param string $provider_id
+   *   The id of the authentication provider to check access for.
+   *
+   * @return bool
+   *   TRUE if provider is allowed, FALSE otherwise.
+   */
+  protected function defaultFilter(Request $request, $provider_id) {
+    $route = RouteMatch::createFromRequest($request)->getRouteObject();
+    $has_auth_option = isset($route) && $route->hasOption('_auth');
+
+    if ($has_auth_option) {
+      return in_array($provider_id, $route->getOption('_auth'));
+    }
+    else {
+      return isset($this->globalProviders[$provider_id]);
+    }
   }
 
   /**
    * Returns the sorted array of authentication providers.
    *
-   * @return array
+   * @todo Replace with a list of providers sorted during compile time in
+   *   https://www.drupal.org/node/2432585.
+   *
+   * @return \Drupal\Core\Authentication\AuthenticationProviderInterface[]
    *   An array of authentication provider objects.
    */
-  public function getSortedProviders() {
+  protected function getSortedProviders() {
     if (!isset($this->sortedProviders)) {
       // Sort the builders according to priority.
       krsort($this->providerOrders);
@@ -146,65 +267,6 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
       }
     }
     return $this->sortedProviders;
-  }
-
-  /**
-   * Filters a list of providers and only return those allowed on the request.
-   *
-   * @param \Drupal\Core\Authentication\AuthenticationProviderInterface[] $providers
-   *   An array of authentication provider objects.
-   * @param Request $request
-   *   The request object.
-   *
-   * @return \Drupal\Core\Authentication\AuthenticationProviderInterface[]
-   *   The filtered array authentication provider objects.
-   */
-  protected function filterProviders(array $providers, Request $request) {
-    $route = RouteMatch::createFromRequest($request)->getRouteObject();
-    $allowed_providers = array();
-    if ($route && $route->hasOption('_auth')) {
-      $allowed_providers = $route->getOption('_auth');
-    }
-    elseif ($default_provider = $this->defaultProviderId()) {
-      // @todo Mirrors the defective behavior of AuthenticationEnhancer and
-      // restricts the list of allowed providers to the default provider if no
-      // _auth was specified on the current route.
-      //
-      // This restriction will be removed by https://www.drupal.org/node/2286971
-      // See also https://www.drupal.org/node/2283637
-      $allowed_providers = array($default_provider);
-    }
-
-    return array_intersect_key($providers, array_flip($allowed_providers));
-  }
-
-  /**
-   * Cleans up the authentication.
-   *
-   * Allow the triggered provider to clean up before the response is sent, e.g.
-   * trigger a session commit.
-   *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
-   *
-   * @see \Drupal\Core\Authentication\Provider\Cookie::cleanup()
-   */
-  public function cleanup(Request $request) {
-    if (empty($this->providers[$this->triggeredProviderId])) {
-      return;
-    }
-    $this->providers[$this->triggeredProviderId]->cleanup($request);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function handleException(GetResponseForExceptionEvent $event) {
-    foreach ($this->filterProviders($this->getSortedProviders(), $event->getRequest()) as $provider) {
-      if ($provider->handleException($event) === TRUE) {
-        break;
-      }
-    }
   }
 
 }

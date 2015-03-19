@@ -46,7 +46,6 @@ class SpecialAttributesRouteSubscriberTest extends UnitTestCase {
     $routes = array();
     $routes[] = array(new Route('/test/{system_path}'));
     $routes[] = array(new Route('/test/{_legacy}'));
-    $routes[] = array(new Route('/test/{_authentication_provider}'));
     $routes[] = array(new Route('/test/{' . RouteObjectInterface::ROUTE_OBJECT . '}'));
     $routes[] = array(new Route('/test/{' . RouteObjectInterface::ROUTE_NAME . '}'));
     $routes[] = array(new Route('/test/{_content}'));

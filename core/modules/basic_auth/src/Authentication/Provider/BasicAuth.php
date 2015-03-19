@@ -7,21 +7,20 @@
 
 namespace Drupal\basic_auth\Authentication\Provider;
 
-use \Drupal\Component\Utility\String;
+use Drupal\Component\Utility\String;
 use Drupal\Core\Authentication\AuthenticationProviderInterface;
+use Drupal\Core\Authentication\AuthenticationProviderChallengeInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Flood\FloodInterface;
 use Drupal\user\UserAuthInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * HTTP Basic authentication provider.
  */
-class BasicAuth implements AuthenticationProviderInterface {
+class BasicAuth implements AuthenticationProviderInterface, AuthenticationProviderChallengeInterface {
 
   /**
    * The config factory.
@@ -131,25 +130,12 @@ class BasicAuth implements AuthenticationProviderInterface {
   /**
    * {@inheritdoc}
    */
-  public function cleanup(Request $request) {}
-
-  /**
-   * {@inheritdoc}
-   */
-  public function handleException(GetResponseForExceptionEvent $event) {
-    $exception = $event->getException();
-    if (\Drupal::currentUser()->isAnonymous() && $exception instanceof AccessDeniedHttpException) {
-      if (!$this->applies($event->getRequest())) {
-        $site_name = $this->configFactory->get('system.site')->get('name');
-        global $base_url;
-        $challenge = String::format('Basic realm="@realm"', array(
-          '@realm' => !empty($site_name) ? $site_name : $base_url,
-        ));
-        $event->setException(new UnauthorizedHttpException($challenge, 'No authentication credentials provided.', $exception));
-      }
-      return TRUE;
-    }
-    return FALSE;
+  public function challengeException(Request $request, \Exception $previous) {
+    $site_name = $this->configFactory->get('system.site')->get('name');
+    $challenge = String::format('Basic realm="@realm"', array(
+      '@realm' => !empty($site_name) ? $site_name : 'Access restricted',
+    ));
+    return new UnauthorizedHttpException($challenge, 'No authentication credentials provided.', $previous);
   }
 
 }

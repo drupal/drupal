@@ -64,7 +64,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
    * {@inheritdoc}
    */
   public function read($sid) {
-    // @todo Remove global in https://www.drupal.org/node/2286971
+    // @todo Remove global in https://www.drupal.org/node/2228393
     global $_session_user;
 
     // Handle the case of first time visitors and clients that don't store

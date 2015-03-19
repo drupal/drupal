@@ -7,9 +7,6 @@
 
 namespace Drupal\Core\Session;
 
-use Drupal\Core\Authentication\AuthenticationManagerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
-
 /**
  * A proxied implementation of AccountInterface.
  *
@@ -24,20 +21,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class AccountProxy implements AccountProxyInterface {
 
   /**
-   * The current request.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
-   * The authentication manager.
-   *
-   * @var \Drupal\Core\Authentication\AuthenticationManagerInterface
-   */
-  protected $authenticationManager;
-
-  /**
    * The instantiated account.
    *
    * @var \Drupal\Core\Session\AccountInterface
@@ -45,17 +28,11 @@ class AccountProxy implements AccountProxyInterface {
   protected $account;
 
   /**
-   * Constructs a new AccountProxy.
+   * Initial account id.
    *
-   * @param \Drupal\Core\Authentication\AuthenticationManagerInterface $authentication_manager
-   *   The authentication manager.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object used for authenticating.
+   * @var int
    */
-  public function __construct(AuthenticationManagerInterface $authentication_manager, RequestStack $requestStack) {
-    $this->authenticationManager = $authentication_manager;
-    $this->requestStack = $requestStack;
-  }
+  protected $initialAccountId;
 
   /**
    * {@inheritdoc}
@@ -75,10 +52,17 @@ class AccountProxy implements AccountProxyInterface {
    */
   public function getAccount() {
     if (!isset($this->account)) {
-      // Use the master request to prevent subrequests authenticating to a
-      // different user.
-      $this->setAccount($this->authenticationManager->authenticate($this->requestStack->getMasterRequest()));
+      if ($this->initialAccountId) {
+        // After the container is rebuilt, DrupalKernel sets the initial
+        // account to the id of the logged in user. This is necessary in order
+        // to refresh the user account reference here.
+        $this->account = $this->loadUserEntity($this->initialAccountId);
+      }
+      else {
+        $this->account = new AnonymousUserSession();
+      }
     }
+
     return $this->account;
   }
 
@@ -187,5 +171,38 @@ class AccountProxy implements AccountProxyInterface {
     return $this->getAccount()->getLastAccessedTime();
   }
 
-}
+  /**
+   * {@inheritdoc}
+   */
+  public function setInitialAccountId($account_id) {
+    if (isset($this->account)) {
+      throw new \LogicException('AccountProxyInterface::setInitialAccountId() cannot be called after an account was set on the AccountProxy');
+    }
 
+    $this->initialAccountId = $account_id;
+  }
+
+  /**
+   * Load a user entity.
+   *
+   * The entity manager requires additional initialization code and cache
+   * clearing after the list of modules is changed. Therefore it is necessary to
+   * retrieve it as late as possible.
+   *
+   * Because of serialization issues it is currently not possible to inject the
+   * container into the AccountProxy. Thus it is necessary to retrieve the
+   * entity manager statically.
+   *
+   * @see https://www.drupal.org/node/2430447
+   *
+   * @param int $account_id
+   *   The id of an account to load.
+   *
+   * @return \Drupal\Core\Session\AccountInterface|NULL
+   *   An account or NULL if none is found.
+   */
+  protected function loadUserEntity($account_id) {
+    return \Drupal::entityManager()->getStorage('user')->load($account_id);
+  }
+
+}

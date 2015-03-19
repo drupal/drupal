@@ -37,5 +37,15 @@ interface AccountProxyInterface extends AccountInterface {
    */
   public function getAccount();
 
-}
+  /**
+   * Sets the id of the initial account.
+   *
+   * Never use this method, its sole purpose is to work around weird effects
+   * during mid-request container rebuilds.
+   *
+   * @param int $account_id
+   *   The id of the initial account.
+   */
+  public function setInitialAccountId($account_id);
 
+}

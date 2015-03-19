@@ -47,10 +47,17 @@ const MAINTENANCE_MODE = 'update';
  * The killswitch in settings.php overrides all else, otherwise, the user must
  * have access to the 'administer software updates' permission.
  *
+ * @param \Symfony\Component\HttpFoundation\Request $request
+ *  The incoming request.
+ *
  * @return bool
  *   TRUE if the current user can run authorize.php, and FALSE if not.
  */
-function authorize_access_allowed() {
+function authorize_access_allowed(Request $request) {
+  $account = \Drupal::service('authentication')->authenticate($request);
+  if ($account) {
+    \Drupal::currentUser()->setAccount($account);
+  }
   return Settings::get('allow_authorize_operations', TRUE) && \Drupal::currentUser()->hasPermission('administer software updates');
 }
 
@@ -79,7 +86,7 @@ $content = [];
 $show_messages = TRUE;
 
 $response = new Response();
-if (authorize_access_allowed()) {
+if (authorize_access_allowed($request)) {
   // Load both the Form API and Batch API.
   require_once __DIR__ . '/includes/form.inc';
   require_once __DIR__ . '/includes/batch.inc';

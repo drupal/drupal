@@ -61,9 +61,6 @@ class CsrfTest extends RESTTestBase {
    * Tests that CSRF check is not triggered for Basic Auth requests.
    */
   public function testBasicAuth() {
-    // Login so the session cookie is sent in addition to the basic auth header.
-    $this->drupalLogin($this->account);
-
     $curl_options = $this->getCurlOptions();
     $curl_options[CURLOPT_HTTPAUTH] = CURLAUTH_BASIC;
     $curl_options[CURLOPT_USERPWD] = $this->account->getUsername() . ':' . $this->account->pass_raw;

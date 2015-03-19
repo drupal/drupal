@@ -685,6 +685,11 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $this->containerNeedsDumping = FALSE;
     $session_manager_started = FALSE;
     if (isset($this->container)) {
+      // Save the id of the currently logged in user.
+      if ($this->container->initialized('current_user')) {
+        $current_user_id = $this->container->get('current_user')->id();
+      }
+
       // If there is a session manager, close and save the session.
       if ($this->container->initialized('session_manager')) {
         $session_manager = $this->container->get('session_manager');
@@ -731,6 +736,11 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
         }
       }
     }
+
+    if (!empty($current_user_id)) {
+      $this->container->get('current_user')->setInitialAccountId($current_user_id);
+    }
+
     \Drupal::setContainer($this->container);
 
     // If needs dumping flag was set, dump the container.

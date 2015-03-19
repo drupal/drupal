@@ -11,6 +11,7 @@ services:
     arguments: [rest]
   access_check.rest.csrf:
     class: Drupal\rest\Access\CSRFAccessCheck
+    arguments: ['@session_configuration']
     tags:
       - { name: access_check }
   rest.link_manager:

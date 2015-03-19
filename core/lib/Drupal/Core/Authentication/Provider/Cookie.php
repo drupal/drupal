@@ -8,9 +8,8 @@
 namespace Drupal\Core\Authentication\Provider;
 
 use Drupal\Core\Authentication\AuthenticationProviderInterface;
-use Drupal\Core\Session\SessionManagerInterface;
+use Drupal\Core\Session\SessionConfigurationInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 
 /**
  * Cookie based authentication provider.
@@ -18,10 +17,27 @@ use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 class Cookie implements AuthenticationProviderInterface {
 
   /**
+   * The session configuration.
+   *
+   * @var \Drupal\Core\Session\SessionConfigurationInterface
+   */
+  protected $sessionConfiguration;
+
+  /**
+   * Constructs a new cookie authentication provider.
+   *
+   * @param \Drupal\Core\Session\SessionConfigurationInterface $session_configuration
+   *   The session configuration.
+   */
+  public function __construct(SessionConfigurationInterface $session_configuration) {
+    $this->sessionConfiguration = $session_configuration;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function applies(Request $request) {
-    return $request->hasSession();
+    return $request->hasSession() && $this->sessionConfiguration->hasSession($request);
   }
 
   /**
@@ -29,7 +45,7 @@ class Cookie implements AuthenticationProviderInterface {
    */
   public function authenticate(Request $request) {
     if ($request->getSession()->start()) {
-      // @todo Remove global in https://www.drupal.org/node/2286971
+      // @todo Remove global in https://www.drupal.org/node/2228393
       global $_session_user;
       return $_session_user;
     }
@@ -37,16 +53,4 @@ class Cookie implements AuthenticationProviderInterface {
     return NULL;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function cleanup(Request $request) {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function handleException(GetResponseForExceptionEvent $event) {
-    return FALSE;
-  }
 }

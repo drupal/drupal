@@ -733,11 +733,6 @@ services:
     tags:
       - { name: route_enhancer }
       - { name: event_subscriber }
-  route_enhancer.authentication:
-    class: Drupal\Core\Routing\Enhancer\AuthenticationEnhancer
-    tags:
-      - { name: route_enhancer, priority: 1000 }
-    arguments: ['@authentication', '@current_user']
   route_enhancer.entity:
     class: Drupal\Core\Entity\Enhancer\EntityRouteEnhancer
     tags:
@@ -1110,15 +1105,14 @@ services:
       - { name: service_collector, tag: authentication_provider, call: addProvider }
   authentication_subscriber:
     class: Drupal\Core\EventSubscriber\AuthenticationSubscriber
+    arguments: ['@authentication', '@current_user']
     tags:
       - { name: event_subscriber }
-    arguments: ['@authentication']
   account_switcher:
     class: Drupal\Core\Session\AccountSwitcher
     arguments: ['@current_user', '@session_handler.write_safe']
   current_user:
     class: Drupal\Core\Session\AccountProxy
-    arguments: ['@authentication', '@request_stack']
   session_configuration:
     class: Drupal\Core\Session\SessionConfiguration
     arguments: ['%session.storage.options%']

@@ -149,6 +149,10 @@ class BlockLanguageTest extends WebTestBase {
     $this->drupalGet('node', ['query' => ['language' => 'fr']]);
     $this->assertText('Powered by Drupal', 'The body of the block appears on the page.');
 
+    // Re-login in order to clear the interface language stored in the session.
+    $this->drupalLogout();
+    $this->drupalLogin($this->adminUser);
+
     // Content language does not depend on session/request arguments.
     // It will fall back on English (site default) and not display the block.
     $this->drupalGet('en');
