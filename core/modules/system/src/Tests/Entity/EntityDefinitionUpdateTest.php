@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Entity;
 
 use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeEvents;
 use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
@@ -359,14 +360,19 @@ class EntityDefinitionUpdateTest extends EntityUnitTestBase {
         ->execute();
       $this->fail($message);
     }
-    catch (DatabaseExceptionWrapper $e) {
-      // Now provide a value for the 'not null' column. This is expected to
-      // succeed.
-      $values['new_bundle_field_shape'] = $this->randomString();
-      $this->database->insert('entity_test_update__new_bundle_field')
-        ->fields($values)
-        ->execute();
-      $this->pass($message);
+    catch (\RuntimeException $e) {
+      if ($e instanceof DatabaseExceptionWrapper || $e instanceof IntegrityConstraintViolationException) {
+        // Now provide a value for the 'not null' column. This is expected to
+        // succeed.
+        $values['new_bundle_field_shape'] = $this->randomString();
+        $this->database->insert('entity_test_update__new_bundle_field')
+          ->fields($values)
+          ->execute();
+        $this->pass($message);
+      } else {
+        // Keep throwing it.
+        throw $e;
+      }
     }
   }
 
