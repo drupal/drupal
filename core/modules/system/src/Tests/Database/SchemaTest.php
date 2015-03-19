@@ -477,4 +477,64 @@ class SchemaTest extends KernelTestBase {
       $this->assertEqual($field_value, $field_spec['default'], 'Default value registered.');
     }
   }
+
+  /**
+   * Tests changing columns between numeric types.
+   */
+  function testSchemaChangeField() {
+    $field_specs = array(
+      array('type' => 'int', 'size' => 'normal','not null' => FALSE),
+      array('type' => 'int', 'size' => 'normal', 'not null' => TRUE, 'initial' => 1, 'default' => 17),
+      array('type' => 'float', 'size' => 'normal', 'not null' => FALSE),
+      array('type' => 'float', 'size' => 'normal', 'not null' => TRUE, 'initial' => 1, 'default' => 7.3),
+      array('type' => 'numeric', 'scale' => 2, 'precision' => 10, 'not null' => FALSE),
+      array('type' => 'numeric', 'scale' => 2, 'precision' => 10, 'not null' => TRUE, 'initial' => 1, 'default' => 7),
+    );
+
+    foreach ($field_specs as $i => $old_spec) {
+      foreach ($field_specs as $j => $new_spec) {
+        if ($i === $j) {
+          // Do not change a field into itself.
+          continue;
+        }
+        $this->assertFieldChange($old_spec, $new_spec);
+      }
+    }
+  }
+
+  /**
+   * Asserts that a field can be changed from one spec to another.
+   *
+   * @param $old_spec
+   *   The beginning field specification.
+   * @param $new_spec
+   *   The ending field specification.
+   */
+  protected function assertFieldChange($old_spec, $new_spec) {
+    $table_name = 'test_table_' . ($this->counter++);
+    $table_spec = array(
+      'fields' => array(
+        'serial_column' => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
+        'test_field' => $old_spec,
+      ),
+      'primary key' => array('serial_column'),
+    );
+    db_create_table($table_name, $table_spec);
+    $this->pass(format_string('Table %table created.', array('%table' => $table_name)));
+
+    // Check the characteristics of the field.
+    $this->assertFieldCharacteristics($table_name, 'test_field', $old_spec);
+
+    // Remove inserted rows.
+    db_truncate($table_name)->execute();
+
+    // Change the field.
+    db_change_field($table_name, 'test_field', 'test_field', $new_spec);
+
+    // Check the field was changed.
+    $this->assertFieldCharacteristics($table_name, 'test_field', $new_spec);
+
+    // Clean-up.
+    db_drop_table($table_name);
+  }
 }

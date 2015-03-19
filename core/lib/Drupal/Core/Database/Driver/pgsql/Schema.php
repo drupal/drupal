@@ -668,21 +668,21 @@ class Schema extends DatabaseSchema {
 
     $spec = $this->processField($spec);
 
-    // We need to typecast the new column to best be able to transfer the data
-    // Schema_pgsql::getFieldTypeMap() will return possibilities that are not
-    // 'cast-able' such as 'serial' - so they need to be casted int instead.
-    if (in_array($spec['pgsql_type'], array('serial', 'bigserial', 'numeric'))) {
-      $typecast = 'int';
+    // Type 'serial' is known to PostgreSQL, but only during table creation,
+    // not when altering. Because of that, we create it here as an 'int'. After
+    // we create it we manually re-apply the sequence.
+    if (in_array($spec['pgsql_type'], array('serial', 'bigserial'))) {
+      $field_def = 'int';
     }
     else {
-      $typecast = $spec['pgsql_type'];
+      $field_def = $spec['pgsql_type'];
     }
 
     if (in_array($spec['pgsql_type'], array('varchar', 'character', 'text')) && isset($spec['length'])) {
-      $typecast .= '(' . $spec['length'] . ')';
+      $field_def .= '(' . $spec['length'] . ')';
     }
     elseif (isset($spec['precision']) && isset($spec['scale'])) {
-      $typecast .= '(' . $spec['precision'] . ', ' . $spec['scale'] . ')';
+      $field_def .= '(' . $spec['precision'] . ', ' . $spec['scale'] . ')';
     }
 
     // Remove old check constraints.
@@ -700,7 +700,7 @@ class Schema extends DatabaseSchema {
     // the typecast does not work for conversions to bytea.
     // @see http://www.postgresql.org/docs/current/static/datatype-binary.html
     if ($spec['pgsql_type'] != 'bytea') {
-      $this->connection->query('ALTER TABLE {' . $table . '} ALTER "' . $field . '" TYPE ' . $typecast . ' USING "' . $field . '"::' . $typecast);
+      $this->connection->query('ALTER TABLE {' . $table . '} ALTER "' . $field . '" TYPE ' . $field_def . ' USING "' . $field . '"::' . $field_def);
     }
     else {
       // Do not attempt to convert a field that is bytea already.
@@ -709,7 +709,7 @@ class Schema extends DatabaseSchema {
         // Convert to a bytea type by using the SQL replace() function to
         // convert any single backslashes in the field content to double
         // backslashes ('\' to '\\').
-        $this->connection->query('ALTER TABLE {' . $table . '} ALTER "' . $field . '" TYPE ' . $typecast . ' USING decode(replace("' . $field . '"' . ", '\\', '\\\\'), 'escape');");
+        $this->connection->query('ALTER TABLE {' . $table . '} ALTER "' . $field . '" TYPE ' . $field_def . ' USING decode(replace("' . $field . '"' . ", '\\', '\\\\'), 'escape');");
       }
     }
 
