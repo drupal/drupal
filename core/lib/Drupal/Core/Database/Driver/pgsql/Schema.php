@@ -109,11 +109,23 @@ class Schema extends DatabaseSchema {
       $this->connection->addSavepoint();
 
       try {
-        $result = $this->connection->query("SELECT column_name, data_type, column_default FROM information_schema.columns WHERE table_schema = :schema AND table_name = :table AND (data_type = 'bytea' OR (numeric_precision IS NOT NULL AND column_default LIKE :default))", array(
-          ':schema' => $schema,
-          ':table' => $table_name,
-          ':default' => '%nextval%',
-        ));
+        // Check if the table information exists in the PostgreSQL metadata.
+        $table_information_exists = (bool) $this->connection->query("SELECT 1 FROM pg_class WHERE relname = :table", array(':table' => $table_name))->fetchField();
+
+        // If the table information does not yet exist in the PostgreSQL
+        // metadata, then return the default table information here, so that it
+        // will not be cached.
+        if (!$table_information_exists) {
+          $this->connection->releaseSavepoint();
+          return $table_information;
+        }
+        else {
+          $result = $this->connection->query("SELECT column_name, data_type, column_default FROM information_schema.columns WHERE table_schema = :schema AND table_name = :table AND (data_type = 'bytea' OR (numeric_precision IS NOT NULL AND column_default LIKE :default))", array(
+            ':schema' => $schema,
+            ':table' => $table_name,
+            ':default' => '%nextval%',
+          ));
+        }
       }
       catch (\Exception $e) {
         $this->connection->rollbackSavepoint();
