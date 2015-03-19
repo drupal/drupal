@@ -18,6 +18,7 @@ use Drupal\field\FieldStorageConfigInterface;
  */
 function field_test_field_widget_info_alter(&$info) {
   $info['test_field_widget_multiple']['field_types'][] = 'test_field';
+  $info['test_field_widget_multiple']['field_types'][] = 'test_field_with_preconfigured_options';
 }
 
 /**

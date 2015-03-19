@@ -131,9 +131,28 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
    */
   public function getUiDefinitions() {
     $definitions = $this->getDefinitions();
-    return array_filter($definitions, function ($definition) {
+
+    // Filter out definitions that can not be configured in Field UI.
+    $definitions = array_filter($definitions, function ($definition) {
       return empty($definition['no_ui']);
     });
+
+    // Add preconfigured definitions.
+    foreach ($definitions as $id => $definition) {
+      if (is_subclass_of($definition['class'], '\Drupal\Core\Field\PreconfiguredFieldUiOptionsInterface')) {
+        foreach ($definition['class']::getPreconfiguredOptions() as $key => $option) {
+          $definitions['field_ui:' . $id . ':' . $key] = [
+            'label' => $option['label'],
+          ] + $definition;
+
+          if (isset($option['category'])) {
+            $definitions['field_ui:' . $id . ':' . $key]['category'] = $option['category'];
+          }
+        }
+      }
+    }
+
+    return $definitions;
   }
 
   /**

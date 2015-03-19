@@ -115,6 +115,16 @@ function entity_reference_field_config_presave(FieldConfigInterface $field) {
 }
 
 /**
+ * Implements hook_form_FORM_ID_alter() for 'field_ui_field_storage_add_form'.
+ */
+function entity_reference_form_field_ui_field_storage_add_form_alter(array &$form) {
+  // Move the "Entity reference" option to the end of the list and rename it to
+  // "Other".
+  unset($form['add']['new_storage_type']['#options'][t('Reference')]['entity_reference']);
+  $form['add']['new_storage_type']['#options'][t('Reference')]['entity_reference'] = t('Other…');
+}
+
+/**
  * Render API callback: Processes the field settings form and allows access to
  * the form state.
  *

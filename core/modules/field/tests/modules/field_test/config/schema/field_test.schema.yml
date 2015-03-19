@@ -74,6 +74,10 @@ field.storage_settings.hidden_test_field:
   type: field.storage_settings.test_field
   label: 'Hidden test field storage settings'
 
+field.storage_settings.test_field_with_preconfigured_options:
+  type: field.storage_settings.test_field
+  label: 'Test field with preconfigured options storage settings'
+
 field.field_settings.test_field:
   type: mapping
   label: 'Test field field settings'
@@ -92,6 +96,10 @@ field.field_settings.test_field_with_dependencies:
 field.field_settings.hidden_test_field:
   type: field.field_settings.test_field
   label: 'Hidden test field field settings'
+
+field.field_settings.test_field_with_preconfigured_options:
+  type: field.field_settings.test_field
+  label: 'Test field with preconfigured settings'
 
 field.value.test_field:
   type: mapping

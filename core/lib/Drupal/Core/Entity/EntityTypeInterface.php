@@ -685,4 +685,12 @@ interface EntityTypeInterface {
    */
   public function getConfigDependencyKey();
 
+  /**
+   * Indicates whether this entity type is commonly used as a reference target.
+   *
+   * @return bool
+   *   TRUE if the entity type is a common reference; FALSE otherwise.
+   */
+  public function isCommonReferenceTarget();
+
 }

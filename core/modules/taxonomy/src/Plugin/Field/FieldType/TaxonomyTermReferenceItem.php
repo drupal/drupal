@@ -20,7 +20,7 @@ use Drupal\taxonomy\Entity\Vocabulary;
  *
  * @FieldType(
  *   id = "taxonomy_term_reference",
- *   label = @Translation("Term Reference"),
+ *   label = @Translation("Taxonomy term"),
  *   description = @Translation("This field stores a reference to a taxonomy term."),
  *   category = @Translation("Reference"),
  *   default_widget = "options_select",

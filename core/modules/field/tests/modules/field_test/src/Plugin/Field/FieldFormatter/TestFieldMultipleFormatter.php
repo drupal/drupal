@@ -19,7 +19,8 @@ use Drupal\Core\Form\FormStateInterface;
  *   label = @Translation("Multiple"),
  *   description = @Translation("Multiple formatter"),
  *   field_types = {
- *     "test_field"
+ *     "test_field",
+ *     "test_field_with_preconfigured_options"
  *   },
  *   weight = 5
  * )
