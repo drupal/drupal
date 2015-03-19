@@ -147,11 +147,19 @@ class DrupalStandardsListener extends \PHPUnit_Framework_BaseTestListener {
    * {@inheritdoc}
    */
   public function endTest(\PHPUnit_Framework_Test $test, $time) {
-    // \PHPUnit_Framework_TestListener interface passes us a
-    // \PHPUnit_Framework_Test argument in this signature, but we have to assume
-    // that it is a \PHPUnit_Framework_TestCase. Things are not really useful
-    // otherwise.
-    $this->checkValidCoversForTest($test);
+    // \PHPUnit_Framework_Test does not have any useful methods of its own for
+    // our purpose, so we have to distinguish between the different known
+    // subclasses.
+    if ($test instanceof \PHPUnit_Framework_TestCase) {
+      $this->checkValidCoversForTest($test);
+    }
+    elseif ($test instanceof \PHPUnit_Framework_TestSuite) {
+      foreach ($test->getGroupDetails() as $tests) {
+        foreach ($tests as $test) {
+          $this->endTest($test, $time);
+        }
+      }
+    }
   }
 
 }
