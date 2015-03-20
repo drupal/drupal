@@ -9,6 +9,7 @@ namespace Drupal\Tests\Core\Render;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Cache\Cache;
 
 /**
  * @coversDefaultClass \Drupal\Core\Render\Renderer
@@ -92,6 +93,7 @@ class RendererPostRenderCacheTest extends RendererTestBase {
       '#cache' => [
         'contexts' => [],
         'tags' => [],
+        'max-age' => Cache::PERMANENT,
       ],
     ];
     $this->assertSame($cached_element, $expected_element, 'The correct data is cached: the stored #markup and #attached properties are not affected by #post_render_cache callbacks.');
@@ -228,6 +230,7 @@ class RendererPostRenderCacheTest extends RendererTestBase {
       '#cache' => [
         'contexts' => [],
         'tags' => [],
+        'max-age' => Cache::PERMANENT,
       ],
     ];
 
@@ -323,6 +326,7 @@ class RendererPostRenderCacheTest extends RendererTestBase {
       '#cache' => [
         'contexts' => [],
         'tags' => [],
+        'max-age' => Cache::PERMANENT,
       ],
     ];
 
@@ -349,6 +353,7 @@ class RendererPostRenderCacheTest extends RendererTestBase {
       '#cache' => [
         'contexts' => [],
         'tags' => [],
+        'max-age' => Cache::PERMANENT,
       ],
     ];
 
@@ -463,6 +468,7 @@ class RendererPostRenderCacheTest extends RendererTestBase {
       '#cache' => [
         'contexts' => [],
         'tags' => [],
+        'max-age' => Cache::PERMANENT,
       ],
     ];
     $this->assertSame($cached_element, $expected_element, 'The correct data is cached: the stored #markup and #attached properties are not affected by #post_render_cache callbacks.');
@@ -561,6 +567,7 @@ class RendererPostRenderCacheTest extends RendererTestBase {
       '#cache' => [
         'contexts' => [],
         'tags' => [],
+        'max-age' => Cache::PERMANENT,
       ],
     ];
     $this->assertSame($cached_element, $expected_element, 'The correct data is cached for the child element: the stored #markup and #attached properties are not affected by #post_render_cache callbacks.');
@@ -589,6 +596,7 @@ class RendererPostRenderCacheTest extends RendererTestBase {
       '#cache' => [
         'contexts' => [],
         'tags' => [],
+        'max-age' => Cache::PERMANENT,
       ],
     ];
     $this->assertSame($cached_element, $expected_element, 'The correct data is cached for the parent element: the stored #markup and #attached properties are not affected by #post_render_cache callbacks.');
@@ -620,6 +628,7 @@ class RendererPostRenderCacheTest extends RendererTestBase {
       '#cache' => [
         'contexts' => [],
         'tags' => [],
+        'max-age' => Cache::PERMANENT,
       ],
     ];
     $this->assertSame($cached_element, $expected_element, 'The correct data is cached for the child element: the stored #markup and #attached properties are not affected by #post_render_cache callbacks.');

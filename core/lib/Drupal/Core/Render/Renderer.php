@@ -754,6 +754,7 @@ class Renderer implements RendererInterface {
       '#cache' => [
         'contexts' => $elements['#cache']['contexts'],
         'tags' => $elements['#cache']['tags'],
+        'max-age' => $elements['#cache']['max-age'],
       ],
     ];
   }

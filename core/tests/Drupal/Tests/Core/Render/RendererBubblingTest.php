@@ -10,6 +10,7 @@ namespace Drupal\Tests\Core\Render;
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\Core\Render\Element;
 use Drupal\Core\State\State;
+use Drupal\Core\Cache\Cache;
 
 /**
  * @coversDefaultClass \Drupal\Core\Render\Renderer
@@ -114,6 +115,7 @@ class RendererBubblingTest extends RendererTestBase {
         '#cache' => [
           'contexts' => ['foo'],
           'tags' => [],
+          'max-age' => Cache::PERMANENT,
         ],
         '#post_render_cache' => [],
         '#markup' => 'parent',
@@ -142,6 +144,7 @@ class RendererBubblingTest extends RendererTestBase {
         '#cache' => [
           'contexts' => [],
           'tags' => [],
+          'max-age' => Cache::PERMANENT,
         ],
         '#post_render_cache' => [],
         '#markup' => 'parent',
@@ -165,6 +168,7 @@ class RendererBubblingTest extends RendererTestBase {
         '#cache' => [
           'contexts' => [],
           'tags' => [],
+          'max-age' => Cache::PERMANENT,
         ],
         '#post_render_cache' => [],
         '#markup' => '',
@@ -196,6 +200,7 @@ class RendererBubblingTest extends RendererTestBase {
       'child' => [
         '#cache' => [
           'contexts' => ['foo', 'baz'],
+          'max-age' => 3600,
         ],
       ],
     ];
@@ -205,6 +210,7 @@ class RendererBubblingTest extends RendererTestBase {
         '#cache' => [
           'contexts' => ['bar', 'baz', 'foo'],
           'tags' => [],
+          'max-age' => 3600,
         ],
         '#post_render_cache' => [],
         '#markup' => 'parent',
@@ -251,6 +257,7 @@ class RendererBubblingTest extends RendererTestBase {
         '#cache' => [
           'contexts' => ['bar', 'foo'],
           'tags' => ['dee', 'fiddle', 'har', 'yar'],
+          'max-age' => Cache::PERMANENT,
         ],
         '#post_render_cache' => [],
         '#markup' => 'parent',
@@ -339,6 +346,7 @@ class RendererBubblingTest extends RendererTestBase {
       '#cache' => [
         'contexts' => ['user.roles'],
         'tags' => ['a', 'b'],
+        'max-age' => Cache::PERMANENT,
       ],
       '#post_render_cache' => [],
       '#markup' => 'parent',
@@ -362,6 +370,7 @@ class RendererBubblingTest extends RendererTestBase {
       '#cache' => [
         'contexts' => ['foo', 'user.roles'],
         'tags' => ['a', 'b', 'c'],
+        'max-age' => Cache::PERMANENT,
       ],
       '#post_render_cache' => [],
       '#markup' => 'parent',
@@ -393,6 +402,7 @@ class RendererBubblingTest extends RendererTestBase {
       '#cache' => [
         'contexts' => ['foo', 'user.roles'],
         'tags' => ['a', 'b'],
+        'max-age' => Cache::PERMANENT,
       ],
       '#post_render_cache' => [],
       '#markup' => 'parent',
@@ -417,6 +427,7 @@ class RendererBubblingTest extends RendererTestBase {
       '#cache' => [
         'contexts' => ['bar', 'foo', 'user.roles'],
         'tags' => ['a', 'b', 'c', 'd'],
+        'max-age' => Cache::PERMANENT,
       ],
       '#post_render_cache' => [],
       '#markup' => 'parent',
@@ -432,6 +443,7 @@ class RendererBubblingTest extends RendererTestBase {
       '#cache' => [
         'contexts' => ['bar', 'foo', 'user.roles'],
         'tags' => ['a', 'b'],
+        'max-age' => Cache::PERMANENT,
       ],
       '#post_render_cache' => [],
       '#markup' => 'parent',
@@ -447,6 +459,7 @@ class RendererBubblingTest extends RendererTestBase {
       '#cache' => [
         'contexts' => ['bar', 'foo', 'user.roles'],
         'tags' => ['a', 'b', 'c'],
+        'max-age' => Cache::PERMANENT,
       ],
       '#post_render_cache' => [],
       '#markup' => 'parent',
