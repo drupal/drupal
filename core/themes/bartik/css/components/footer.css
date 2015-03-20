@@ -42,6 +42,10 @@
     clear: none;
   }
 }
+#site-footer__wrapper h2 {
+  color: #c0c0c0;
+  color: rgba(255, 255, 255, 0.65);
+}
 #site-footer__wrapper .block .content {
   color: #c0c0c0;
   color: rgba(255, 255, 255, 0.65);
@@ -74,13 +78,6 @@
 #site-footer__bottom .block .content {
   padding: 0.5em 0;
   margin-top: 0;
-}
-#site-footer__bottom .block > h2 {
-  /* @extend .visually-hidden */
-  position: absolute !important;
-  clip: rect(1px, 1px, 1px, 1px);
-  overflow: hidden;
-  height: 1px;
 }
 #site-footer__bottom .block h2 {
   margin: 0;

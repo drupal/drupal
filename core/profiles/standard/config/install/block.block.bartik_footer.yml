@@ -9,7 +9,7 @@ settings:
   id: 'system_menu_block:footer'
   label: 'Footer menu'
   provider: system
-  label_display: visible
+  label_display: '0'
   cache:
     max_age: -1
     contexts: {  }
