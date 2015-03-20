@@ -21,6 +21,58 @@ use Drupal\Tests\UnitTestCase;
 class PhpTransliterationTest extends UnitTestCase {
 
   /**
+   * Tests the PhpTransliteration::removeDiacritics() function.
+   *
+   * @param string $original
+   *   The language code to test.
+   * @param string $expected
+   *   The expected return from PhpTransliteration::removeDiacritics().
+   *
+   * @dataProvider providerTestPhpTransliterationRemoveDiacritics
+   */
+  public function testRemoveDiacritics($original, $expected) {
+    $transliterator_class = new PhpTransliteration();
+    $result = $transliterator_class->removeDiacritics($original);
+    $this->assertEquals($expected, $result);
+  }
+
+  /**
+   * Provides data for self::testRemoveDiacritics().
+   *
+   * @return array
+   *   An array of arrays, each containing the parameters for
+   *   self::testRemoveDiacritics().
+   */
+  public function providerTestPhpTransliterationRemoveDiacritics() {
+    return array(
+      // Test all characters in the Unicode range 0x00bf to 0x017f.
+      array('ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏ', 'AAAAAAÆCEEEEIIII'),
+      array('ÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞß', 'ÐNOOOOO×OUUUUYÞß'),
+      array('àáâãäåæçèéêëìíîï', 'aaaaaaæceeeeiiii'),
+      array('ðñòóôõö÷øùúûüýþÿ', 'ðnooooo÷ouuuuyþy'),
+      array('ĀāĂăĄąĆćĈĉĊċČčĎď', 'AaAaAaCcCcCcCcDd'),
+      array('ĐđĒēĔĕĖėĘęĚěĜĝĞğ', 'DdEeEeEeEeEeGgGg'),
+      array('ĠġĢģĤĥĦħĨĩĪīĬĭĮį', 'GgGgHhHhIiIiIiIi'),
+      array('İıĲĳĴĵĶķĸĹĺĻļĽľĿ', 'IiĲĳJjKkĸLlLlLlL'),
+      array('ŀŁłŃńŅņŇňŉŊŋŌōŎŏ', 'lLlNnNnNnŉŊŋOoOo'),
+      array('ŐőŒœŔŕŖŗŘřŚśŜŝŞş', 'OoŒœRrRrRrSsSsSs'),
+      array('ŠšŢţŤťŦŧŨũŪūŬŭŮů', 'SsTtTtTtUuUuUuUu'),
+      array('ŰűŲųŴŵŶŷŸŹźŻżŽž', 'UuUuWwYyYZzZzZz'),
+
+      // Test all characters in the Unicode range 0x01CD to 0x024F.
+      array('ǍǎǏ', 'AaI'),
+      array('ǐǑǒǓǔǕǖǗǘǙǚǛǜǝǞǟ', 'iOoUuUuUuUuUuǝAa'),
+      array('ǠǡǢǣǤǥǦǧǨǩǪǫǬǭǮǯ', 'AaǢǣGgGgKkOoOoǮǯ'),
+      array('ǰǱǲǳǴǵǶǷǸǹǺǻǼǽǾǿ', 'jǱǲǳGgǶǷNnAaǼǽOo'),
+      array('ȀȁȂȃȄȅȆȇȈȉȊȋȌȍȎȏ', 'AaAaEeEeIiIiOoOo'),
+      array('ȐȑȒȓȔȕȖȗȘșȚțȜȝȞȟ', 'RrRrUuUuSsTtȜȝHh'),
+      array('ȠȡȢȣȤȥȦȧȨȩȪȫȬȭȮȯ', 'ȠȡȢȣZzAaEeOoOoOo'),
+      array('ȰȱȲȳȴȵȶȷȸȹȺȻȼȽȾȿ', 'OoYylntjȸȹACcLTs'),
+      array('ɀɁɂɃɄɅɆɇɈɉɊɋɌɍɎɏ', 'zɁɂBUɅEeJjQqRrYy'),
+    );
+  }
+
+  /**
    * Tests the PhpTransliteration class.
    *
    * @param string $langcode

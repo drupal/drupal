@@ -241,6 +241,9 @@ function search_simplify($text, $langcode = NULL) {
   // Lowercase
   $text = Unicode::strtolower($text);
 
+  // Remove diacitics.
+  $text = \Drupal::service('transliteration')->removeDiacritics($text);
+
   // Call an external processor for word handling.
   search_invoke_preprocess($text, $langcode);
 
