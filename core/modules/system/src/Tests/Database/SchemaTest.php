@@ -365,8 +365,8 @@ class SchemaTest extends KernelTestBase {
     // Test numeric types.
     foreach (array(1, 5, 10, 40, 65) as $precision) {
       foreach (array(0, 2, 10, 30) as $scale) {
+        // Skip combinations where precision is smaller than scale.
         if ($precision <= $scale) {
-          // Precision must be smaller then scale.
           continue;
         }
 
