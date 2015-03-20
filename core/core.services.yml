@@ -486,6 +486,18 @@ services:
   http_kernel.basic:
     class: Symfony\Component\HttpKernel\HttpKernel
     arguments: ['@event_dispatcher', '@controller_resolver', '@request_stack']
+  http_negotiation.format_negotiator:
+    class: Drupal\Core\ContentNegotiation
+    private: true
+  http_middleware.negotiation:
+    class: Drupal\Core\StackMiddleware\NegotiationMiddleware
+    arguments: ['@http_negotiation.format_negotiator']
+    calls:
+      - [registerFormat, ['drupal_ajax', ['application/vnd.drupal-ajax']]]
+      - [registerFormat, ['drupal_dialog', ['application/vnd.drupal-dialog']]]
+      - [registerFormat, ['drupal_modal', ['application/vnd.drupal-modal']]]
+    tags:
+      - { name: http_middleware, priority: 400 }
   http_middleware.reverse_proxy:
     class: Drupal\Core\StackMiddleware\ReverseProxyMiddleware
     arguments: ['@settings']
@@ -493,7 +505,7 @@ services:
       - { name: http_middleware, priority: 300 }
   http_middleware.page_cache:
     class: Drupal\Core\StackMiddleware\PageCache
-    arguments: ['@cache.render', '@page_cache_request_policy', '@page_cache_response_policy', '@content_negotiation']
+    arguments: ['@cache.render', '@page_cache_request_policy', '@page_cache_response_policy']
     tags:
       - { name: http_middleware, priority: 200 }
   http_middleware.kernel_pre_handle:
@@ -571,7 +583,7 @@ services:
       - { name: backend_overridable }
   router.route_preloader:
     class: Drupal\Core\Routing\RoutePreloader
-    arguments: ['@router.route_provider', '@state', '@content_negotiation']
+    arguments: ['@router.route_provider', '@state']
     tags:
       - { name: 'event_subscriber' }
   router.matcher.final_matcher:
@@ -682,7 +694,6 @@ services:
     arguments: [16]
   accept_header_matcher:
     class: Drupal\Core\Routing\AcceptHeaderMatcher
-    arguments: ['@content_negotiation']
     tags:
       - { name: route_filter }
   content_type_header_matcher:
@@ -749,7 +760,6 @@ services:
       - { name: route_enhancer, priority: 20 }
   route_content_controller_subscriber:
     class: Drupal\Core\EventSubscriber\ContentControllerSubscriber
-    arguments: ['@content_negotiation']
     tags:
       - { name: event_subscriber }
   route_special_attributes_subscriber:
@@ -799,13 +809,11 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: ['@router', '@router.request_context', NULL, '@request_stack']
-  content_negotiation:
-    class: Drupal\Core\ContentNegotiation
   view_subscriber:
     class: Drupal\Core\EventSubscriber\ViewSubscriber
+    arguments: ['@title_resolver']
     tags:
       - { name: event_subscriber }
-    arguments: ['@content_negotiation', '@title_resolver']
   bare_html_page_renderer:
     class: Drupal\Core\Render\BareHtmlPageRenderer
     arguments: ['@renderer']
@@ -1003,10 +1011,6 @@ services:
       - { name: event_subscriber }
     calls:
       - [setContainer, ['@service_container']]
-  ajax.subscriber:
-    class: Drupal\Core\Ajax\AjaxSubscriber
-    tags:
-      - { name: event_subscriber }
   image.toolkit.manager:
     class: Drupal\Core\ImageToolkit\ImageToolkitManager
     arguments: ['@config.factory']

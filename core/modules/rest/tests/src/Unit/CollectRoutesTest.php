@@ -40,15 +40,9 @@ class CollectRoutesTest extends UnitTestCase {
 
     $container = new ContainerBuilder();
 
-    $content_negotiation = $this->getMockBuilder('\Drupal\Core\ContentNegotiation')
-      ->disableOriginalConstructor()
-      ->getMock();
-
     $request = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
       ->disableOriginalConstructor()
       ->getMock();
-
-    $container->set('content_negotiation', $content_negotiation);
 
     $this->view = $this->getMock('\Drupal\views\Entity\View', array('initHandlers'), array(
       array('id' => 'test_view'),

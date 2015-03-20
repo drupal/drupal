@@ -10,7 +10,6 @@ namespace Drupal\Core\EventSubscriber;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\ContentNegotiation;
 use Drupal\Core\Render\BareHtmlPageRendererInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Utility\Error;
@@ -206,8 +205,7 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
     // to this code. We therefore use this style for now on the expectation
     // that it will get replaced with better code later. This approach makes
     // that change easier when we get to it.
-    $conneg = new ContentNegotiation();
-    $format = $conneg->getContentType($request);
+    $format = \Drupal::service('http_negotiation.format_negotiator')->getContentType($request);
 
     // These are all JSON errors for our purposes. Any special handling for
     // them can/should happen in earlier listeners if desired.

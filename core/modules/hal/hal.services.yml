@@ -26,7 +26,3 @@ services:
     class: Drupal\hal\Encoder\JsonEncoder
     tags:
       - { name: encoder, priority: 10, format: hal_json }
-  hal.subscriber:
-    class: Drupal\hal\HalSubscriber
-    tags:
-      - { name: event_subscriber }

@@ -8,7 +8,6 @@
 namespace Drupal\Core\Routing;
 
 use Drupal\Component\Utility\String;
-use Drupal\Core\ContentNegotiation;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Symfony\Component\Routing\Route;
@@ -20,23 +19,6 @@ use Symfony\Component\Routing\RouteCollection;
 class AcceptHeaderMatcher implements RouteFilterInterface {
 
   /**
-   * The content negotiation library.
-   *
-   * @var \Drupal\Core\ContentNegotiation
-   */
-  protected $contentNegotiation;
-
-  /**
-   * Constructs a new AcceptHeaderMatcher.
-   *
-   * @param \Drupal\Core\ContentNegotiation $content_negotiation
-   *   The content negotiation library.
-   */
-  public function __construct(ContentNegotiation $content_negotiation) {
-    $this->contentNegotiation = $content_negotiation;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function filter(RouteCollection $collection, Request $request) {
@@ -44,7 +26,7 @@ class AcceptHeaderMatcher implements RouteFilterInterface {
     // @todo replace by proper content negotiation library.
     $acceptable_mime_types = $request->getAcceptableContentTypes();
     $acceptable_formats = array_filter(array_map(array($request, 'getFormat'), $acceptable_mime_types));
-    $primary_format = $this->contentNegotiation->getContentType($request);
+    $primary_format = $request->getRequestFormat();
 
     foreach ($collection as $name => $route) {
       // _format could be a |-delimited list of supported formats.

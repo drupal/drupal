@@ -11,6 +11,7 @@ use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Core\Routing\RequestContext;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Cache\Cache;
+use Drupal\user\Entity\Role;
 
 /**
  * Enables the page cache and tests it with various HTTP requests.
@@ -98,6 +99,50 @@ class PageCacheTest extends WebTestBase {
     $this->drupalGet($accept_header_cache_uri, array(), $json_accept_header);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Json response was cached.');
     $this->assertRaw('{"content":"oh hai this is json"}', 'The correct Json response was returned.');
+
+    // Enable REST support for nodes and hal+json.
+    \Drupal::service('module_installer')->install(['node', 'rest', 'hal']);
+    $this->drupalCreateContentType(['type' => 'article']);
+    $node = $this->drupalCreateNode(['type' => 'article']);
+    $node_uri = 'node/' . $node->id();
+    $hal_json_accept_header = ['Accept: application/hal+json'];
+    /** @var \Drupal\user\RoleInterface $role */
+    $role = Role::load('anonymous');
+    $role->grantPermission('restful get entity:node');
+    $role->save();
+
+    $this->drupalGet($node_uri);
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
+    $this->assertEqual($this->drupalGetHeader('Content-Type'), 'text/html; charset=UTF-8');
+    $this->drupalGet($node_uri);
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
+    $this->assertEqual($this->drupalGetHeader('Content-Type'), 'text/html; charset=UTF-8');
+
+    // Now request a HAL page, we expect that the first request is a cache miss
+    // and it serves HTML.
+    $this->drupalGet($node_uri, [], $hal_json_accept_header);
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
+    $this->assertEqual($this->drupalGetHeader('Content-Type'), 'application/hal+json');
+    $this->drupalGet($node_uri, [], $hal_json_accept_header);
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
+    $this->assertEqual($this->drupalGetHeader('Content-Type'), 'application/hal+json');
+
+    // Clear the page cache. After that request a HAL request, followed by an
+    // ordinary HTML one.
+    \Drupal::cache('render')->deleteAll();
+    $this->drupalGet($node_uri, [], $hal_json_accept_header);
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
+    $this->assertEqual($this->drupalGetHeader('Content-Type'), 'application/hal+json');
+    $this->drupalGet($node_uri, [], $hal_json_accept_header);
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
+    $this->assertEqual($this->drupalGetHeader('Content-Type'), 'application/hal+json');
+
+    $this->drupalGet($node_uri);
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
+    $this->assertEqual($this->drupalGetHeader('Content-Type'), 'text/html; charset=UTF-8');
+    $this->drupalGet($node_uri);
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
+    $this->assertEqual($this->drupalGetHeader('Content-Type'), 'text/html; charset=UTF-8');
   }
 
   /**

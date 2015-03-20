@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\EventSubscriber;
 
-use Drupal\Core\ContentNegotiation;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
@@ -91,16 +90,7 @@ abstract class HttpExceptionSubscriberBase implements EventSubscriberInterface {
 
     $handled_formats = $this->getHandledFormats();
 
-    // @todo Injecting this service would force all implementing classes to also
-    // handle its injection. However, we are trying to switch to a more robust
-    // content negotiation library in https://www.drupal.org/node/1505080 that
-    // will make $request->getRequestFormat() reliable as a better alternative
-    // to this code. We therefore use this style for now on the expectation
-    // that it will get replaced with better code later. That change will NOT
-    // be an API change for any implementing classes.  (Whereas if we injected
-    // this class it would be an API change.  That's why we're not doing it.)
-    $conneg = new ContentNegotiation();
-    $format = $conneg->getContentType($event->getRequest());
+    $format = $event->getRequest()->getRequestFormat();
 
     if ($exception instanceof HttpExceptionInterface && (empty($handled_formats) || in_array($format, $handled_formats))) {
       $method = 'on' . $exception->getStatusCode();
