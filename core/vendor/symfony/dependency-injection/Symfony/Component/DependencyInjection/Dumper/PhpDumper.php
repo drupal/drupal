@@ -1169,7 +1169,7 @@ EOF;
                     $behavior[$id] = $argument->getInvalidBehavior();
                 }
 
-                $calls[$id] += 1;
+                ++$calls[$id];
             }
         }
     }
@@ -1332,7 +1332,9 @@ EOF;
                 if (null !== $value->getFactoryClass()) {
                     return sprintf("call_user_func(array(%s, '%s')%s)", $this->dumpValue($value->getFactoryClass()), $value->getFactoryMethod(), count($arguments) > 0 ? ', '.implode(', ', $arguments) : '');
                 } elseif (null !== $value->getFactoryService()) {
-                    return sprintf("%s->%s(%s)", $this->getServiceCall($value->getFactoryService()), $value->getFactoryMethod(), implode(', ', $arguments));
+                    $service = $this->dumpValue($value->getFactoryService());
+
+                    return sprintf("%s->%s(%s)", 0 === strpos($service, '$') ? sprintf('$this->get(%s)', $service) : $this->getServiceCall($value->getFactoryService()), $value->getFactoryMethod(), implode(', ', $arguments));
                 } else {
                     throw new RuntimeException('Cannot dump definitions which have factory method without factory service or factory class.');
                 }
@@ -1474,16 +1476,16 @@ EOF;
 
             if ('' === $name) {
                 $name .= $firstChars[$i%$firstCharsLength];
-                $i = intval($i/$firstCharsLength);
+                $i = (int) ($i/$firstCharsLength);
             }
 
             while ($i > 0) {
-                $i -= 1;
+                --$i;
                 $name .= $nonFirstChars[$i%$nonFirstCharsLength];
-                $i = intval($i/$nonFirstCharsLength);
+                $i = (int) ($i/$nonFirstCharsLength);
             }
 
-            $this->variableCount += 1;
+            ++$this->variableCount;
 
             // check that the name is not reserved
             if (in_array($name, $this->reservedVariables, true)) {
