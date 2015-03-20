@@ -124,7 +124,7 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
     $info = $this->getPluginDefinition();
     $counts = array(3, 5, 10, 15, 20, 25);
     $items = array_map(function ($count) {
-      return $this->dateFormatter->formatInterval($count, '1 item', '@count items');
+      return $this->formatPlural($count, '1 item', '@count items');
     }, array_combine($counts, $counts));
     $intervals = array(3600, 10800, 21600, 32400, 43200, 86400, 172800, 259200, 604800, 1209600, 2419200, 4838400, 9676800);
     $period = array_map(array($this->dateFormatter, 'formatInterval'), array_combine($intervals, $intervals));

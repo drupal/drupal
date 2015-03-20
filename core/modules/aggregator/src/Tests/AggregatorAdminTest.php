@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Definition of Drupal\aggregator\Tests\AggregatorConfigurationTest.
+ * Contains \Drupal\aggregator\Tests\AggregatorAdminTest.
  */
 
 namespace Drupal\aggregator\Tests;
 
 /**
- * Tests aggregator settings page.
+ * Tests aggregator admin pages.
  *
  * @group aggregator
  */
-class AggregatorConfigurationTest extends AggregatorTestBase {
+class AggregatorAdminTest extends AggregatorTestBase {
+
   /**
    * Tests the settings form to ensure the correct default values are used.
    */
@@ -58,5 +59,30 @@ class AggregatorConfigurationTest extends AggregatorTestBase {
     $this->resetAll();
     $this->drupalGet('admin/config/services/aggregator/settings');
     $this->assertResponse(200);
+  }
+
+  /**
+   * Tests the overview page.
+   */
+  function testOverviewPage() {
+    $feed = $this->createFeed($this->getRSS091Sample());
+    $this->drupalGet('admin/config/services/aggregator');
+
+    $result = $this->xpath('//table/tbody/tr');
+    // Check if the amount of feeds in the overview matches the amount created.
+    $this->assertEqual(1, count($result), 'Created feed is found in the overview');
+    // Check if the fields in the table match with what's expected.
+    $this->assertEqual($feed->label(), (string) $result[0]->td[0]->a);
+    $count = $this->container->get('entity.manager')->getStorage('aggregator_item')->getItemCount($feed);
+    $this->assertEqual(\Drupal::translation()->formatPlural($count, '1 item', '@count items'), (string) $result[0]->td[1]);
+
+    // Update the items of the first feed.
+    $feed->refreshItems();
+    $this->drupalGet('admin/config/services/aggregator');
+    $result = $this->xpath('//table/tbody/tr');
+    // Check if the fields in the table match with what's expected.
+    $this->assertEqual($feed->label(), (string) $result[0]->td[0]->a);
+    $count = $this->container->get('entity.manager')->getStorage('aggregator_item')->getItemCount($feed);
+    $this->assertEqual(\Drupal::translation()->formatPlural($count, '1 item', '@count items'), (string) $result[0]->td[1]);
   }
 }
