@@ -403,11 +403,6 @@ function theme_settings_convert_to_config(array $theme_settings, Config $config)
 }
 
 /**
- * @addtogroup themeable
- * @{
- */
-
-/**
  * Prepares variables for time templates.
  *
  * Default template: time.html.twig.
@@ -1088,6 +1083,8 @@ function template_preprocess_feed_icon(&$variables) {
  * @param $variables
  *   An associative array containing:
  *   - size: Optional. The number of indentations to create.
+ *
+ * @ingroup themeable
  */
 function theme_indentation($variables) {
   $output = '';
@@ -1159,10 +1156,6 @@ function template_preprocess_maintenance_task_list(&$variables) {
     }
   }
 }
-
-/**
- * @} End of "addtogroup themeable".
- */
 
 /**
  * Adds a default set of helper variables for preprocessors and templates.
