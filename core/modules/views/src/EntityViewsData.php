@@ -116,9 +116,6 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
   public function getViewsData() {
     $data = [];
 
-    // @todo In theory we should use the data table as base table, as this would
-    //   save one pointless join (and one more for every relationship).
-    // @see https://drupal.org/node/2337509
     $base_table = $this->entityType->getBaseTable();
     $base_field = $this->entityType->getKey('id');
     $data_table = $this->entityType->getDataTable();
