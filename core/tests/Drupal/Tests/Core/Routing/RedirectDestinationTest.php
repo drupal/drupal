@@ -64,6 +64,13 @@ class RedirectDestinationTest extends UnitTestCase {
   }
 
   /**
+   * Tests destination passed via $_GET.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request to test.
+   * @param string $expected_destination
+   *   The expected destination.
+   *
    * @dataProvider providerGet
    *
    * @covers ::get
@@ -107,6 +114,11 @@ class RedirectDestinationTest extends UnitTestCase {
     $request = Request::create('/');
     $request->query->set('other', 'value');
     $data[] = [$request, '/current-path?other=value'];
+
+    // A request with a dedicated specified external destination.
+    $request = Request::create('/');
+    $request->query->set('destination', 'https://www.drupal.org');
+    $data[] = [$request, '/'];
 
     return $data;
   }

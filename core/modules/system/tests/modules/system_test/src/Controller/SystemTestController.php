@@ -88,6 +88,34 @@ class SystemTestController extends ControllerBase {
   }
 
   /**
+   * Controller to return $_GET['destination'] for testing.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response
+   *   The response.
+   */
+  public function getDestination(Request $request) {
+    $response = new Response($request->query->get('destination'));
+    return $response;
+  }
+
+  /**
+   * Controller to return $_REQUEST['destination'] for testing.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response
+   *   The response.
+   */
+  public function requestDestination(Request $request) {
+    $response = new Response($request->request->get('destination'));
+    return $response;
+  }
+
+  /**
    * Try to acquire a named lock and report the outcome.
    */
   public function lockAcquire() {

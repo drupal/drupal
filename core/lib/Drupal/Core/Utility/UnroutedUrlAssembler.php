@@ -113,6 +113,11 @@ class UnroutedUrlAssembler implements UnroutedUrlAssemblerInterface {
     //   https://www.drupal.org/node/2417459
     $uri = substr($uri, 5);
 
+    // Strip leading slashes from internal paths to prevent them becoming
+    // external URLs without protocol. /example.com should not be turned into
+    // //example.com.
+    $uri = ltrim($uri, '/');
+
     // Allow (outbound) path processing, if needed. A valid use case is the path
     // alias overview form:
     // @see \Drupal\path\Controller\PathController::adminOverview().

@@ -62,7 +62,10 @@ class RedirectDestination implements RedirectDestinationInterface {
   public function get() {
     if (!isset($this->destination)) {
       $query = $this->requestStack->getCurrentRequest()->query;
-      if ($query->has('destination')) {
+      if (UrlHelper::isExternal($query->get('destination'))) {
+        $this->destination = '/';
+      }
+      elseif ($query->has('destination')) {
         $this->destination = $query->get('destination');
       }
       else {

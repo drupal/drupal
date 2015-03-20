@@ -245,15 +245,20 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
       'prefix' => '',
     );
 
+    // A duplicate of the code from
+    // \Drupal\Component\Utility\UrlHelper::isExternal() to avoid needing
+    // another function call, since performance inside url() is critical.
     if (!isset($options['external'])) {
-      // Return an external link if $path contains an allowed absolute URL. Only
-      // call the slow
-      // \Drupal\Component\Utility\UrlHelper::stripDangerousProtocols() if $path
-      // contains a ':' before any / ? or #. Note: we could use
-      // \Drupal\Component\Utility\UrlHelper::isExternal($path) here, but that
-      // would require another function call, and performance here is critical.
       $colonpos = strpos($path, ':');
-      $options['external'] = ($colonpos !== FALSE && !preg_match('![/?#]!', substr($path, 0, $colonpos)) && UrlHelper::stripDangerousProtocols($path) == $path);
+      // Avoid calling drupal_strip_dangerous_protocols() if there is any slash
+      // (/), hash (#) or question_mark (?) before the colon (:) occurrence -
+      // if any - as this would clearly mean it is not a URL. If the path starts
+      // with 2 slashes then it is always considered an external URL without an
+      // explicit protocol part.
+      $options['external'] = (strpos($path, '//') === 0)
+      || ($colonpos !== FALSE
+        && !preg_match('![/?#]!', substr($path, 0, $colonpos))
+        && UrlHelper::stripDangerousProtocols($path) == $path);
     }
 
     if (isset($options['fragment']) && $options['fragment'] !== '') {

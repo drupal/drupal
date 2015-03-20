@@ -68,6 +68,14 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
 
   /**
    * @covers ::assemble
+   * @expectedException \InvalidArgumentException
+   */
+  public function testAssembleWithLeadingSlash() {
+    $this->unroutedUrlAssembler->assemble('/drupal.org');
+  }
+
+  /**
+   * @covers ::assemble
    * @covers ::buildExternalUrl
    *
    * @dataProvider providerTestAssembleWithExternalUrl
@@ -89,6 +97,7 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
       ['http://example.com/test', ['https' => TRUE], 'https://example.com/test'],
       ['https://example.com/test', ['https' => FALSE], 'http://example.com/test'],
       ['https://example.com/test?foo=1#bar', [], 'https://example.com/test?foo=1#bar'],
+      ['//drupal.org', [], '//drupal.org'],
     ];
   }
 
@@ -115,6 +124,7 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
       ['base:example', [], TRUE, '/subdir/example'],
       ['base:example', ['query' => ['foo' => 'bar']], TRUE, '/subdir/example?foo=bar'],
       ['base:example', ['fragment' => 'example', ], TRUE, '/subdir/example#example'],
+      ['base:/drupal.org', [], FALSE, '/drupal.org'],
     ];
   }
 

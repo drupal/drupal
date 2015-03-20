@@ -87,3 +87,19 @@ system_test.configure:
     _title_callback: '\Drupal\system_test\Controller\SystemTestController::configureTitle'
   requirements:
     _access: 'TRUE'
+
+system_test.request_destination:
+  path: '/system-test/request-destination'
+  defaults:
+    _controller: '\Drupal\system_test\Controller\SystemTestController::requestDestination'
+  requirements:
+    _access: 'TRUE'
+
+
+system_test.get_destination:
+  path: '/system-test/get-destination'
+  defaults:
+    _controller: '\Drupal\system_test\Controller\SystemTestController::getDestination'
+  requirements:
+    _access: 'TRUE'
+
