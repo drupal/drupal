@@ -45,7 +45,7 @@ interface CommentInterface extends ContentEntityInterface, EntityChangedInterfac
   /**
    * Returns the entity to which the comment is attached.
    *
-   * @return \Drupal\Core\Entity\EntityInterface
+   * @return \Drupal\Core\Entity\FieldableEntityInterface
    *   The entity on which the comment is attached.
    */
   public function getCommentedEntity();
