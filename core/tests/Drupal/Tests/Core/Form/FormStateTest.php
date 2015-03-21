@@ -565,8 +565,7 @@ class FormStateTest extends UnitTestCase {
    */
   public function testCleanValues($form_state) {
     $form_state->setValue('value_to_keep', 'magic_ponies');
-    $form_state->cleanValues();
-    $this->assertSame($form_state->getValues(), ['value_to_keep' => 'magic_ponies']);
+    $this->assertSame($form_state->cleanValues()->getValues(), ['value_to_keep' => 'magic_ponies']);
   }
 }
 
