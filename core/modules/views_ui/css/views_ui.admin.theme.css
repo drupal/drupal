@@ -820,7 +820,7 @@ td.group-title {
   border-top:  1px solid #ccc;
 }
 
-.views-filterable-options .filterable-option:nth-of-type(even) .form-type-checkbox {
+.views-filterable-options .filterable-option.odd .form-type-checkbox {
   background-color: #f3f4ee;
 }
 

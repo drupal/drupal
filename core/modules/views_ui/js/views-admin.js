@@ -358,13 +358,16 @@
      * Keyup handler for the search box that hides or shows the relevant options.
      */
     handleKeyup: function (event) {
-      var found, i, j, option, search, words, wordsLength;
+      var found, i, j, option, zebraClass;
 
       // Determine the user's search query. The search text has been converted to
       // lowercase.
-      search = this.$searchBox.val().toLowerCase();
-      words = search.split(' ');
-      wordsLength = words.length;
+      var search = this.$searchBox.val().toLowerCase();
+      var words = search.split(' ');
+      var wordsLength = words.length;
+
+      // Start the counter for restriping rows.
+      var zebraCounter = 0;
 
       // Search through the search texts in the form for matching text.
       var length = this.options.length;
@@ -380,9 +383,12 @@
           }
         }
         if (found) {
+          zebraClass = (zebraCounter % 2) ? 'odd' : 'even';
           // Show the checkbox row, and restripe it.
-          option.$div.show();
           option.$div.removeClass('even odd');
+          option.$div.addClass(zebraClass);
+          option.$div.show();
+          zebraCounter++;
         }
         else {
           // The search string wasn't found; hide this item.
