@@ -25,12 +25,6 @@ class ViewPreviewForm extends ViewFormBase {
     $form['#suffix'] = '</div>';
     $form['#id'] = 'views-ui-preview-form';
 
-    // Reset the cache of IDs. Drupal rather aggressively prevents ID
-    // duplication but this causes it to remember IDs that are no longer even
-    // being used.
-    $seen_ids_init = &drupal_static('drupal_html_id:init');
-    $seen_ids_init = array();
-
     $form_state->disableCache();
 
     $form['controls']['#attributes'] = array('class' => array('clearfix'));
