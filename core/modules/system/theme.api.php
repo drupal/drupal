@@ -162,7 +162,6 @@
  * removing them).
  *
  * @section assets Assets
- *
  * We can distinguish between three types of assets:
  * 1. unconditional page-level assets (loaded on all pages where the theme is in
  *    use): these are defined in the theme's *.info.yml file.
@@ -287,9 +286,56 @@
  * properties. Look through implementations of hook_element_info() to discover
  * elements defined this way.
  *
+ * @section sec_caching Caching
+ * The Drupal rendering process has the ability to cache rendered output at any
+ * level in a render array hierarchy. This allows expensive calculations to be
+ * done infrequently, and speeds up page loading. See the
+ * @link cache Cache API topic @endlink for general information about the cache
+ * system.
+ *
+ * In order to make caching possible, the following information needs to be
+ * present:
+ * - Cache keys: Identifiers for cacheable portions of render arrays. These
+ *   should be created and added for portions of a render array that
+ *   involve expensive calculations in the rendering process.
+ * - Cache contexts: Contexts that may affect rendering, such as user role and
+ *   language. When no context is specified, it means that the render array
+ *   does not vary by any context.
+ * - Cache tags: Tags for data that rendering depends on, such as for
+ *   individual nodes or user accounts, so that when these change the cache
+ *   can be automatically invalidated. If the data consists of entities, you
+ *   can use \Drupal\Core\Entity\EntityInterface::getCacheTags() to generate
+ *   appropriate tags; configuration objects have a similar method.
+ * - Cache max-age: The maximum duration for which a render array may be cached.
+ *   Defaults to \Drupal\Core\Cache\Cache::PERMANENT (permanently cacheable).
+ *
+ * Cache information is provided in the #cache property in a render array. In
+ * this property, always supply the cache contexts, tags, and max-age if a
+ * render array varies by context, depends on some modifiable data, or depends
+ * on information that's only valid for a limited time, respectively. Cache keys
+ * should only be set on the portions of a render array that should be cached.
+ * Contexts are automatically replaced with the value for the current request
+ * (e.g. the current language) and combined with the keys to form a cache ID.
+ * The cache contexts, tags, and max-age will be propagated up the render array
+ * hierarchy to determine cacheability for containing render array sections.
+ *
+ * Here's an example of what a #cache property might contain:
+ * @code
+ *   '#cache' => [
+ *     'keys' => ['entity_view', 'node', $node->id()],
+ *     'contexts' => ['language'],
+ *     'tags' => ['node:' . $node->id()],
+ *     'max-age' => Cache::PERMANENT,
+ *   ],
+ * @endcode
+ *
+ * At the response level, you'll see X-Drupal-Cache-Contexts and
+ * X-Drupal-Cache-Tags headers.
+ *
+ * See https://www.drupal.org/developing/api/8/render/arrays/cacheability for
+ * details.
+ *
  * @section sec_attached Attaching libraries in render arrays
- *
- *
  * Libraries, JavaScript settings, feeds, HTML <head> tags and HTML <head> links
  * are attached to elements using the #attached property. The #attached property
  * is an associative array, where the keys are the attachment types and the
@@ -303,14 +349,13 @@
  * values. Example:
  * @code
  * $build['#attached']['library'][] = 'core/jquery';
- * $build['#attached']['drupalSettings']['foo] = 'bar';
+ * $build['#attached']['drupalSettings']['foo'] = 'bar';
  * $build['#attached']['feed'][] = ['aggregator/rss', $this->t('Feed title')];
  * @endcode
  *
  * See drupal_process_attached() for additional information.
  *
  * @section render_pipeline The Render Pipeline (or: how Drupal renders pages)
- *
  * First, you need to know the general routing concepts: please read
  * @ref sec_controller first.
  *
@@ -381,7 +426,6 @@
  * installing or updating Drupal, or when you put it in maintenance mode, or
  * when an error occurs, a simpler HTML page renderer is used for rendering
  * these bare pages: \Drupal\Core\Render\BareHtmlPageRenderer
- *
  *
  * @see themeable
  *
