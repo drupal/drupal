@@ -41,9 +41,10 @@ class VocabularyCrudTest extends TaxonomyTestBase {
     foreach (Vocabulary::loadMultiple() as $vocabulary) {
       $vocabulary->delete();
     }
+    $query = \Drupal::entityQuery('taxonomy_term')->count();
 
     // Assert that there are no terms left.
-    $this->assertEqual(0, db_query('SELECT COUNT(*) FROM {taxonomy_term_data}')->fetchField(), 'There are no terms remaining.');
+    $this->assertEqual(0, $query->execute(), 'There are no terms remaining.');
 
     $terms = array();
     for ($i = 0; $i < 5; $i++) {
@@ -57,12 +58,12 @@ class VocabularyCrudTest extends TaxonomyTestBase {
     $terms[4]->save();
 
     // Assert that there are now 5 terms.
-    $this->assertEqual(5, db_query('SELECT COUNT(*) FROM {taxonomy_term_data}')->fetchField(), 'There are 5 terms found.');
+    $this->assertEqual(5, $query->execute(), 'There are 5 terms found.');
 
     $vocabulary->delete();
 
     // Assert that there are no terms left.
-    $this->assertEqual(0, db_query('SELECT COUNT(*) FROM {taxonomy_term_data}')->fetchField(), 'All terms are deleted.');
+    $this->assertEqual(0, $query->execute(), 'All terms are deleted.');
   }
 
   /**
