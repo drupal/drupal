@@ -23,6 +23,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $field_settings = array(
       'max_resolution' => $max_resolution . 'x' . $max_resolution,
       'min_resolution' => $min_resolution . 'x' . $min_resolution,
+      'alt_field' => 0,
     );
     $this->createImageField($field_name, 'article', array(), $field_settings);
 

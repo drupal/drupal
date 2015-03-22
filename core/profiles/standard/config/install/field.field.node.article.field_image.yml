@@ -15,7 +15,7 @@ settings:
   min_resolution: ''
   alt_field: true
   title_field: false
-  alt_field_required: false
+  alt_field_required: true
   title_field_required: false
   default_image:
     uuid: null

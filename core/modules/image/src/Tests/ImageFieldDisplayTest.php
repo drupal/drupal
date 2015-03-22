@@ -49,7 +49,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
   function _testImageFieldFormatters($scheme) {
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $field_name = strtolower($this->randomMachineName());
-    $this->createImageField($field_name, 'article', array('uri_scheme' => $scheme));
+    $field_settings = array('alt_field_required' => 0);
+    $instance = $this->createImageField($field_name, 'article', array('uri_scheme' => $scheme), $field_settings);
 
     // Go to manage display page.
     $this->drupalGet("admin/structure/types/manage/article/display");
@@ -78,8 +79,16 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // Ensure that preview works.
     $this->previewNodeImage($test_image, $field_name, 'article');
 
+    // After previewing, make the alt field required. It cannot be required
+    // during preview because the form validation will fail.
+    $instance->settings['alt_field_required'] = 1;
+    $instance->save();
+
+    // Create alt text for the image.
+    $alt = $this->randomMachineName();
+
     // Save node.
-    $nid = $this->uploadNodeImage($test_image, $field_name, 'article');
+    $nid = $this->uploadNodeImage($test_image, $field_name, 'article', $alt);
     $node_storage->resetCache(array($nid));
     $node = $node_storage->load($nid);
 
@@ -90,6 +99,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#uri' => $image_uri,
       '#width' => 40,
       '#height' => 20,
+      '#alt' => $alt,
     );
     $default_output = str_replace("\n", NULL, drupal_render($image));
     $this->assertRaw($default_output, 'Default formatter displaying correctly on full node view.');
@@ -108,6 +118,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#uri' => $image_uri,
       '#width' => 40,
       '#height' => 20,
+      '#alt' => $alt,
     );
     $default_output = '<a href="' . file_create_url($image_uri) . '">' . drupal_render($image) . '</a>';
     $this->drupalGet('node/' . $nid);
@@ -145,12 +156,13 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
     $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');
     $elements = $this->xpath(
-      '//a[@href=:path]/img[@src=:url and @alt="" and @width=:width and @height=:height]',
+      '//a[@href=:path]/img[@src=:url and @alt=:alt and @width=:width and @height=:height]',
       array(
         ':path' => $node->url(),
         ':url' => file_create_url($image['#uri']),
         ':width' => $image['#width'],
         ':height' => $image['#height'],
+        ':alt' => $alt,
       )
     );
     $this->assertEqual(count($elements), 1, 'Image linked to content formatter displaying correctly on full node view.');
@@ -170,6 +182,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#width' => 40,
       '#height' => 20,
       '#style_name' => 'thumbnail',
+      '#alt' => $alt,
     );
     $default_output = drupal_render($image_style);
     $this->drupalGet('node/' . $nid);
@@ -221,7 +234,11 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     // We have to create the article first and then edit it because the alt
     // and title fields do not display until the image has been attached.
-    $nid = $this->uploadNodeImage($test_image, $field_name, 'article');
+
+    // Create alt text for the image.
+    $alt = $this->randomMachineName();
+
+    $nid = $this->uploadNodeImage($test_image, $field_name, 'article', $alt);
     $this->drupalGet('node/' . $nid . '/edit');
     $this->assertFieldByName($field_name . '[0][alt]', '', 'Alt field displayed on article form.');
     $this->assertFieldByName($field_name . '[0][title]', '', 'Title field displayed on article form.');
@@ -243,7 +260,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $image = array(
       '#theme' => 'image',
       '#uri' => file_load($node->{$field_name}->target_id)->getFileUri(),
-      '#alt' => $this->randomMachineName(),
+      '#alt' => $alt,
       '#title' => $this->randomMachineName(),
       '#width' => 40,
       '#height' => 20,
@@ -281,15 +298,19 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // providing all settings, even if they are not used.
     // @see FileWidget::formMultipleElements().
     $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.' . $field_name . '/storage', array('field_storage[cardinality]' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED), t('Save field settings'));
-    $edit = array();
-    $edit['files[' . $field_name . '_1][]'] = drupal_realpath($test_image->uri);
+    $edit = array(
+      'files[' . $field_name . '_1][]' => drupal_realpath($test_image->uri),
+    );
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
+    // Add the required alt text.
+    $this->drupalPostForm(NULL, [$field_name . '[1][alt]' => $alt], t('Save and keep published'));
     $this->assertText(format_string('Article @title has been updated.', array('@title' => $node->getTitle())));
 
     // Assert ImageWidget::process() calls FieldWidget::process().
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $edit = array();
-    $edit['files[' . $field_name . '_2][]'] = drupal_realpath($test_image->uri);
+    $edit = array(
+      'files[' . $field_name . '_2][]' => drupal_realpath($test_image->uri),
+    );
     $this->drupalPostAjaxForm(NULL, $edit, $field_name . '_2_upload_button');
     $this->assertNoRaw('<input multiple type="file" id="edit-' . strtr($field_name, '_', '-') . '-2-upload" name="files[' . $field_name . '_2][]" size="22" class="form-file">');
     $this->assertRaw('<input multiple type="file" id="edit-' . strtr($field_name, '_', '-') . '-3-upload" name="files[' . $field_name . '_3][]" size="22" class="form-file">');
@@ -346,7 +367,11 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Create a node with an image attached and ensure that the default image
     // is not displayed.
-    $nid = $this->uploadNodeImage($images[1], $field_name, 'article');
+
+    // Create alt text for the image.
+    $alt = $this->randomMachineName();
+
+    $nid = $this->uploadNodeImage($images[1], $field_name, 'article', $alt);
     $node_storage->resetCache(array($nid));
     $node = $node_storage->load($nid);
     $image = array(
@@ -354,6 +379,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#uri' => file_load($node->{$field_name}->target_id)->getFileUri(),
       '#width' => 40,
       '#height' => 20,
+      '#alt' => $alt,
     );
     $image_output = str_replace("\n", NULL, drupal_render($image));
     $this->drupalGet('node/' . $nid);

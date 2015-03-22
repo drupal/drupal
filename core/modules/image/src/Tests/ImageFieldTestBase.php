@@ -129,13 +129,19 @@ abstract class ImageFieldTestBase extends WebTestBase {
    *   Name of the image field the image should be attached to.
    * @param $type
    *   The type of node to create.
+   * @param $alt
+   *  The alt text for the image. Use if the field settings require alt text.
    */
-  function uploadNodeImage($image, $field_name, $type) {
+  function uploadNodeImage($image, $field_name, $type, $alt = '') {
     $edit = array(
       'title[0][value]' => $this->randomMachineName(),
     );
     $edit['files[' . $field_name . '_0]'] = drupal_realpath($image->uri);
     $this->drupalPostForm('node/add/' . $type, $edit, t('Save and publish'));
+    if ($alt) {
+      // Add alt text.
+      $this->drupalPostForm(NULL, [$field_name . '[0][alt]' => $alt], t('Save and publish'));
+    }
 
     // Retrieve ID of the newly created node from the current URL.
     $matches = array();

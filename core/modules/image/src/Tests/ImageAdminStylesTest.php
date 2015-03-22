@@ -296,7 +296,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Create a new node with an image attached.
     $test_image = current($this->drupalGetTestFiles('image'));
-    $nid = $this->uploadNodeImage($test_image, $field_name, 'article');
+    $nid = $this->uploadNodeImage($test_image, $field_name, 'article', $this->randomMachineName());
     $node = Node::load($nid);
 
     // Get node field original image URI.
@@ -430,7 +430,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Create a new node with an image attached.
     $test_image = current($this->drupalGetTestFiles('image'));
-    $nid = $this->uploadNodeImage($test_image, $field_name, 'article');
+    $nid = $this->uploadNodeImage($test_image, $field_name, 'article', $this->randomMachineName());
     $node = Node::load($nid);
 
     // Get node field original image URI.

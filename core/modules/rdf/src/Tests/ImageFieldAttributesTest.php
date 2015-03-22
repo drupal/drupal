@@ -66,7 +66,7 @@ class ImageFieldAttributesTest extends ImageFieldTestBase {
     $image = current($this->drupalGetTestFiles('image'));
 
     // Save a node with the image.
-    $nid = $this->uploadNodeImage($image, $this->fieldName, 'article');
+    $nid = $this->uploadNodeImage($image, $this->fieldName, 'article', $this->randomMachineName());
     $this->node = Node::load($nid);
     $this->file = file_load($this->node->{$this->fieldName}->target_id);
   }

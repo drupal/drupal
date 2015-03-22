@@ -76,8 +76,8 @@ class ImageItem extends FileItem {
   public static function defaultFieldSettings() {
     $settings = array(
       'file_extensions' => 'png gif jpg jpeg',
-      'alt_field' => 0,
-      'alt_field_required' => 0,
+      'alt_field' => 1,
+      'alt_field_required' => 1,
       'title_field' => 0,
       'title_field_required' => 0,
       'max_resolution' => '',
@@ -263,7 +263,7 @@ class ImageItem extends FileItem {
       '#type' => 'checkbox',
       '#title' => t('Enable <em>Alt</em> field'),
       '#default_value' => $settings['alt_field'],
-      '#description' => t('The alt attribute may be used by search engines, screen readers, and when the image cannot be loaded. Enabling this field is recommended'),
+      '#description' => t('The alt attribute may be used by search engines, screen readers, and when the image cannot be loaded. Enabling this field is recommended.'),
       '#weight' => 9,
     );
     $element['alt_field_required'] = array(
