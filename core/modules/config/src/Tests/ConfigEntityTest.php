@@ -319,6 +319,44 @@ class ConfigEntityTest extends WebTestBase {
     $this->drupalPostForm('admin/structure/config_test/manage/0/delete', array(), 'Delete');
     $this->assertFalse(entity_load('config_test', '0'), 'Test entity deleted');
 
+    // Create a configuration entity with a property that uses AJAX to show
+    // extra form elements.
+    $this->drupalGet('admin/structure/config_test/add');
+
+    // Test that the dependent element is not shown initially.
+    $this->assertFieldByName('size');
+    $this->assertNoFieldByName('size_value');
+
+    $id = strtolower($this->randomMachineName());
+    $edit = [
+      'id' => $id,
+      'label' => $this->randomString(),
+      'size' => 'custom',
+    ];
+    $this->drupalPostAjaxForm(NULL, $edit, 'size');
+
+    // Check that the dependent element is shown after selecting a 'size' value.
+    $this->assertFieldByName('size');
+    $this->assertFieldByName('size_value');
+
+    // Test the same scenario but it in a non-JS case by using a 'js-hidden'
+    // submit button.
+    $this->drupalGet('admin/structure/config_test/add');
+    $this->assertFieldByName('size');
+    $this->assertNoFieldByName('size_value');
+
+    $this->drupalPostForm(NULL, $edit, 'Change size');
+    $this->assertFieldByName('size');
+    $this->assertFieldByName('size_value');
+
+    // Submit the form with the regular 'Save' button and check that the entity
+    // values are correct.
+    $edit += ['size_value' => 'medium'];
+    $this->drupalPostForm(NULL, $edit, 'Save');
+
+    $entity = entity_load('config_test', $id);
+    $this->assertEqual($entity->get('size'), 'custom');
+    $this->assertEqual($entity->get('size_value'), 'medium');
   }
 
 }

@@ -131,13 +131,13 @@ class EntityForm extends FormBase implements EntityFormInterface {
   /**
    * Returns the actual form array to be built.
    *
-   * @see \Drupal\Core\Entity\EntityForm::build()
+   * @see \Drupal\Core\Entity\EntityForm::processForm()
+   * @see \Drupal\Core\Entity\EntityForm::afterBuild()
    */
   public function form(array $form, FormStateInterface $form_state) {
-    $entity = $this->entity;
-
-    // Add a process callback.
+    // Add #process and #after_build callbacks.
     $form['#process'][] = '::processForm';
+    $form['#after_build'][] = '::afterBuild';
 
     return $form;
   }
@@ -151,6 +151,23 @@ class EntityForm extends FormBase implements EntityFormInterface {
     // If the form is cached, process callbacks may not have a valid reference
     // to the entity object, hence we must restore it.
     $this->entity = $form_state->getFormObject()->getEntity();
+
+    return $element;
+  }
+
+  /**
+   * Form element #after_build callback: Updates the entity with submitted data.
+   *
+   * Updates the internal $this->entity object with submitted values when the
+   * form is being rebuilt (e.g. submitted via AJAX), so that subsequent
+   * processing (e.g. AJAX callbacks) can rely on it.
+   */
+  public function afterBuild(array $element, FormStateInterface $form_state) {
+    // Rebuild the entity if #after_build is being called as part of a form
+    // rebuild, i.e. if we are processing input.
+    if ($form_state->isProcessingInput()) {
+      $this->entity = $this->buildEntity($element, $form_state);
+    }
 
     return $element;
   }

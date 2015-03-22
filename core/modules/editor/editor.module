@@ -92,7 +92,8 @@ function editor_form_filter_admin_overview_alter(&$form, FormStateInterface $for
 function editor_form_filter_format_form_alter(&$form, FormStateInterface $form_state) {
   $editor = $form_state->get('editor');
   if ($editor === NULL) {
-    $format_id = $form_state->getFormObject()->getEntity()->id();
+    $format = $form_state->getFormObject()->getEntity();
+    $format_id = $format->isNew() ? NULL : $format->id();
     $editor = editor_load($format_id);
     $form_state->set('editor', $editor);
   }
@@ -175,8 +176,9 @@ function editor_form_filter_admin_format_editor_configure($form, FormStateInterf
       $form_state->set('editor', FALSE);
     }
     elseif (empty($editor) || $editor_value !== $editor->getEditor()) {
+      $format = $form_state->getFormObject()->getEntity();
       $editor = entity_create('editor', array(
-        'format' => $form_state->getFormObject()->getEntity()->id(),
+        'format' => $format->isNew() ? NULL : $format->id(),
         'editor' => $editor_value,
       ));
       $form_state->set('editor', $editor);
@@ -215,7 +217,8 @@ function editor_form_filter_admin_format_validate($form, FormStateInterface $for
  */
 function editor_form_filter_admin_format_submit($form, FormStateInterface $form_state) {
   // Delete the existing editor if disabling or switching between editors.
-  $format_id = $form_state->getFormObject()->getEntity()->id();
+  $format = $form_state->getFormObject()->getEntity();
+  $format_id = $format->isNew() ? NULL : $format->id();
   $original_editor = editor_load($format_id);
   if ($original_editor && $original_editor->getEditor() != $form_state->getValue(array('editor', 'editor'))) {
     $original_editor->delete();

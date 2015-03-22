@@ -54,6 +54,50 @@ class ConfigTestForm extends EntityForm {
       $form['style']['#options'] = image_style_options();
     }
 
+    // The main premise of entity forms is that we get to work with an entity
+    // object at all times instead of checking submitted values from the form
+    // state.
+    $size = $entity->get('size');
+
+    $form['size_wrapper'] = array(
+      '#type' => 'container',
+      '#attributes' => array(
+        'id' => 'size-wrapper',
+      ),
+    );
+    $form['size_wrapper']['size'] = array(
+      '#type' => 'select',
+      '#title' => 'Size',
+      '#options' => array(
+        'custom' => 'Custom',
+      ),
+      '#empty_option' => '- None -',
+      '#default_value' => $size,
+      '#ajax' => array(
+        'callback' => '::updateSize',
+        'wrapper' => 'size-wrapper',
+      ),
+    );
+    $form['size_wrapper']['size_submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Change size'),
+      '#attributes' => array(
+        'class' => array('js-hide'),
+      ),
+      '#submit' => array(array(get_class($this), 'changeSize')),
+    );
+    $form['size_wrapper']['size_value'] = array(
+      '#type' => 'select',
+      '#title' => 'Custom size value',
+      '#options' => array(
+        'small' => 'Small',
+        'medium' => 'Medium',
+        'large' => 'Large',
+      ),
+      '#default_value' => $entity->get('size_value'),
+      '#access' => !empty($size),
+    );
+
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(
       '#type' => 'submit',
@@ -65,6 +109,20 @@ class ConfigTestForm extends EntityForm {
     );
 
     return $form;
+  }
+
+  /**
+   * Ajax callback for the size selection element.
+   */
+  public static function updateSize(array $form, FormStateInterface $form_state) {
+    return $form['size_wrapper'];
+  }
+
+  /**
+   * Element submit handler for non-JS testing.
+   */
+  public static function changeSize(array $form, FormStateInterface $form_state) {
+    $form_state->setRebuild();
   }
 
   /**

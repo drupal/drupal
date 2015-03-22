@@ -50,6 +50,12 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
    */
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
+    // Content entity forms do not use the parent's #after_build callback
+    // because they only need to rebuild the entity in the validation and the
+    // submit handler because Field API uses its own #after_build callback for
+    // its widgets.
+    unset($form['#after_build']);
+
     $this->getFormDisplay($form_state)->buildForm($this->entity, $form, $form_state);
     // Allow modules to act before and after form language is updated.
     $form['#entity_builders']['update_form_langcode'] = [$this, 'updateFormLangcode'];

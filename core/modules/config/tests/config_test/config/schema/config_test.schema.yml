@@ -15,6 +15,12 @@ config_test_dynamic:
     style:
       type: string
       label: 'style'
+    size:
+      type: string
+      label: 'Size'
+    size_value:
+      type: string
+      label: 'Size value'
     protected_property:
       type: string
       label: 'Protected property'
