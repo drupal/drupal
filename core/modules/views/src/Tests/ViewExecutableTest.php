@@ -84,7 +84,7 @@ class ViewExecutableTest extends ViewUnitTestBase {
     $this->installEntitySchema('node');
     $this->installEntitySchema('comment');
     $this->installSchema('comment', array('comment_entity_statistics'));
-    $this->installConfig(array('field'));
+    $this->installConfig(array('system', 'field', 'node', 'comment'));
 
     entity_create('node_type', array(
       'type' => 'page',

@@ -38,6 +38,24 @@ interface ConfigInstallerInterface {
   public function installDefaultConfig($type, $name);
 
   /**
+   * Installs optional configuration.
+   *
+   * Optional configuration is only installed if:
+   * - the configuration does not exist already.
+   * - it's a configuration entity.
+   * - its dependencies can be met.
+   *
+   * @param \Drupal\Core\Config\StorageInterface
+   *   (optional) The configuration storage to search for optional
+   *   configuration. If not provided, all enabled extension's optional
+   *   configuration directories will be searched.
+   * @param string $prefix
+   *   (optional) If set, limits the installed configuration to only
+   *   configuration beginning with the provided value.
+   */
+  public function installOptionalConfig(StorageInterface $storage = NULL, $prefix = '');
+
+  /**
    * Installs all default configuration in the specified collection.
    *
    * The function is useful if the site needs to respond to an event that has
@@ -60,13 +78,6 @@ interface ConfigInstallerInterface {
   public function setSourceStorage(StorageInterface $storage);
 
   /**
-   * Resets the configuration storage that provides the default configuration.
-   *
-   * @return $this
-   */
-  public function resetSourceStorage();
-
-  /**
    * Sets the status of the isSyncing flag.
    *
    * @param bool $status
@@ -85,25 +96,16 @@ interface ConfigInstallerInterface {
   public function isSyncing();
 
   /**
-   * Finds pre-existing configuration objects for the provided extension.
-   *
-   * Extensions can not be installed if configuration objects exist in the
-   * active storage with the same names. This can happen in a number of ways,
-   * commonly:
-   * - if a user has created configuration with the same name as that provided
-   *   by the extension.
-   * - if the extension provides default configuration that does not depend on
-   *   it and the extension has been uninstalled and is about to the
-   *   reinstalled.
+   * Checks the configuration that will be installed for an extension.
    *
    * @param string $type
    *   Type of extension to install.
    * @param string $name
    *   Name of extension to install.
    *
-   * @return array
-   *   Array of configuration objects that already exist keyed by collection.
+   * @throws \Drupal\Core\Config\UnmetDependenciesException
+   * @throws \Drupal\Core\Config\PreExistingConfigException
    */
-  public function findPreExistingConfiguration($type, $name);
+  public function checkConfigurationToInstall($type, $name);
 
 }

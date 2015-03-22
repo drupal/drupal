@@ -6,3 +6,5 @@ version: VERSION
 core: 8.x
 required: true
 configure: user.admin_index
+dependencies:
+  - system

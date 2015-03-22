@@ -52,6 +52,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
     $this->installSchema('file', array('file_usage'));
     $this->installSchema('node', array('node_access'));
     $this->installSchema('comment', array('comment_entity_statistics'));
+    $this->installConfig(['node', 'comment']);
   }
 
   /**

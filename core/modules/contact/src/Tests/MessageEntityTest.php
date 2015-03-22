@@ -32,7 +32,7 @@ class MessageEntityTest extends EntityUnitTestBase {
 
   protected function setUp() {
     parent::setUp();
-    $this->installConfig(array('contact'));
+    $this->installConfig(array('contact', 'contact_test'));
   }
 
   /**

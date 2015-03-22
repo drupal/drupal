@@ -10,6 +10,7 @@ namespace Drupal\system\Form;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\PreExistingConfigException;
+use Drupal\Core\Config\UnmetDependenciesException;
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -532,6 +533,13 @@ class ModulesListForm extends FormBase {
               '%config_names' => implode(', ', $config_objects),
               '@extension' => $modules['install'][$e->getExtension()]
             )),
+          'error'
+        );
+        return;
+      }
+      catch (UnmetDependenciesException $e) {
+        drupal_set_message(
+          $e->getTranslatedMessage($this->getStringTranslation(), $modules['install'][$e->getExtension()]),
           'error'
         );
         return;

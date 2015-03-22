@@ -31,6 +31,15 @@ class InstallerExistingSettingsTest extends InstallerTestBase {
       'required' => TRUE,
     );
 
+    // Actually the install profile should be skipped to because it is written
+    // to settings.php.
+    // @todo https://www.drupal.org/node/2451369 Fix install_profile so that it
+    //   is written to an existing settings.php if possible or if set used.
+    $this->settings['settings']['install_profile'] = (object) array(
+      'value' => 'testing',
+      'required' => TRUE,
+    );
+
     // Pre-configure database credentials.
     $connection_info = Database::getConnectionInfo();
     unset($connection_info['default']['pdo']);

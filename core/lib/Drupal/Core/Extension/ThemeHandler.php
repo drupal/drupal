@@ -258,10 +258,7 @@ class ThemeHandler implements ThemeHandlerInterface {
 
       // Validate default configuration of the theme. If there is existing
       // configuration then stop installing.
-      $existing_configuration = $this->configInstaller->findPreExistingConfiguration('theme', $key);
-      if (!empty($existing_configuration)) {
-        throw PreExistingConfigException::create($key, $existing_configuration);
-      }
+      $this->configInstaller->checkConfigurationToInstall('theme', $key);
 
       // The value is not used; the weight is ignored for themes currently.
       $extension_config
@@ -288,16 +285,6 @@ class ThemeHandler implements ThemeHandlerInterface {
       // Only install default configuration if this theme has not been installed
       // already.
       if (!isset($installed_themes[$key])) {
-        // The default config installation storage only knows about the
-        // currently installed list of themes, so it has to be reset in order to
-        // pick up the default config of the newly installed theme. However, do
-        // not reset the source storage when synchronizing configuration, since
-        // that would needlessly trigger a reload of the whole configuration to
-        // be imported.
-        if (!$this->configInstaller->isSyncing()) {
-          $this->configInstaller->resetSourceStorage();
-        }
-
         // Install default configuration of the theme.
         $this->configInstaller->installDefaultConfig('theme', $key);
       }

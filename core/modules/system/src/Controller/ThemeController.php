@@ -9,6 +9,7 @@ namespace Drupal\system\Controller;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\PreExistingConfigException;
+use Drupal\Core\Config\UnmetDependenciesException;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Routing\RouteBuilderInterface;
@@ -143,6 +144,9 @@ class ThemeController extends ControllerBase {
             )),
           'error'
         );
+      }
+      catch (UnmetDependenciesException $e) {
+        drupal_set_message($e->getTranslatedMessage($this->getStringTranslation(), $theme), 'error');
       }
 
       return $this->redirect('system.themes_page');

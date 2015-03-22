@@ -142,8 +142,8 @@ class ModuleTest extends ViewUnitTestBase {
    * Tests the load wrapper/helper functions.
    */
   public function testLoadFunctions() {
-    $this->enableModules(['text', 'node']);
-    $this->installConfig(['node']);
+    $this->enableModules(array('field', 'text', 'node'));
+    $this->installConfig(array('node'));
     $storage = $this->container->get('entity.manager')->getStorage('view');
 
     // Test views_view_is_enabled/disabled.

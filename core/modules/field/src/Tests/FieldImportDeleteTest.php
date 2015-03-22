@@ -33,6 +33,7 @@ class FieldImportDeleteTest extends FieldUnitTestBase {
    * Tests deleting field storages and fields as part of config import.
    */
   public function testImportDelete() {
+    $this->installConfig(['field_test_config']);
     // At this point there are 5 field configuration objects in the active
     // storage.
     // - field.storage.entity_test.field_test_import

@@ -8,6 +8,7 @@
 namespace Drupal\system\Form;
 
 use Drupal\Core\Config\PreExistingConfigException;
+use Drupal\Core\Config\UnmetDependenciesException;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
@@ -172,6 +173,13 @@ class ModulesListConfirmForm extends ConfirmFormBase {
               '%config_names' => implode(', ', $config_objects),
               '@extension' => $this->modules['install'][$e->getExtension()]
             )),
+          'error'
+        );
+        return;
+      }
+      catch (UnmetDependenciesException $e) {
+        drupal_set_message(
+          $e->getTranslatedMessage($this->getStringTranslation(), $this->modules['install'][$e->getExtension()]),
           'error'
         );
         return;

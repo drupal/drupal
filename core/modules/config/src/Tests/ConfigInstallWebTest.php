@@ -7,12 +7,10 @@
 
 namespace Drupal\config\Tests;
 
-use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Config\PreExistingConfigException;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
-use Drupal\Core\Config\FileStorage;
 
 /**
  * Tests installation and removal of configuration objects in install, disable
@@ -120,43 +118,6 @@ class ConfigInstallWebTest extends WebTestBase {
   }
 
   /**
-   * Tests install profile config changes.
-   */
-  function testInstallProfileConfigOverwrite() {
-    $config_name = 'system.cron';
-    // The expected configuration from the system module.
-    $expected_original_data = array(
-      'threshold' => array(
-        'autorun' => 0,
-        'requirements_warning' => 172800,
-        'requirements_error' => 1209600,
-      ),
-    );
-    // The expected active configuration altered by the install profile.
-    $expected_profile_data = array(
-      'threshold' => array(
-        'autorun' => 0,
-        'requirements_warning' => 259200,
-        'requirements_error' => 1209600,
-      ),
-    );
-
-    // Verify that the original data matches. We have to read the module config
-    // file directly, because the install profile default system.cron.yml
-    // configuration file was used to create the active configuration.
-    $config_dir = drupal_get_path('module', 'system') . '/'. InstallStorage::CONFIG_INSTALL_DIRECTORY;
-    $this->assertTrue(is_dir($config_dir));
-    $source_storage = new FileStorage($config_dir);
-    $data = $source_storage->read($config_name);
-    $this->assertIdentical($data, $expected_original_data);
-
-    // Verify that active configuration matches the expected data, which was
-    // created from the testing install profile's system.cron.yml file.
-    $config = $this->config($config_name);
-    $this->assertIdentical($config->get(), $expected_profile_data);
-  }
-
-  /**
    * Tests pre-existing configuration detection.
    */
   public function testPreExistingConfigInstall() {
@@ -213,5 +174,22 @@ class ConfigInstallWebTest extends WebTestBase {
       $this->assertEqual($e->getConfigObjects(), [StorageInterface::DEFAULT_COLLECTION => ['config_test.dynamic.dotted.default'], 'language.fr' => ['config_test.dynamic.dotted.default']]);
       $this->assertEqual($e->getMessage(), 'Configuration objects (config_test.dynamic.dotted.default, language/fr/config_test.dynamic.dotted.default) provided by config_clash_test_theme already exist in active configuration');
     }
+  }
+
+  /**
+   * Tests unmet dependencies detection.
+   */
+  public function testUnmetDependenciesInstall() {
+    $this->drupalLogin($this->adminUser);
+    // We need to install separately since config_install_dependency_test does
+    // not depend on config_test and order is important.
+    $this->drupalPostForm('admin/modules', array('modules[Testing][config_test][enable]' => TRUE), t('Save configuration'));
+    $this->drupalPostForm('admin/modules', array('modules[Testing][config_install_dependency_test][enable]' => TRUE), t('Save configuration'));
+    $this->assertRaw('Unable to install Config install dependency test, <em class="placeholder">config_test.dynamic.other_module_test_with_dependency</em> has unmet dependencies.');
+
+    $this->drupalPostForm('admin/modules', array('modules[Testing][config_other_module_config_test][enable]' => TRUE), t('Save configuration'));
+    $this->drupalPostForm('admin/modules', array('modules[Testing][config_install_dependency_test][enable]' => TRUE), t('Save configuration'));
+    $this->rebuildContainer();
+    $this->assertTrue(entity_load('config_test', 'other_module_test_with_dependency'), 'The config_test.dynamic.other_module_test_with_dependency configuration has been created during install.');
   }
 }

@@ -151,17 +151,9 @@ class ModuleInstaller implements ModuleInstallerInterface {
           )));
         }
 
-        // Install profiles can not have config clashes. Configuration that
-        // has the same name as a module's configuration will be used instead.
-        if ($module != drupal_get_profile()) {
-          // Validate default configuration of this module. Bail if unable to
-          // install. Should not continue installing more modules because those
-          // may depend on this one.
-          $existing_configuration = $config_installer->findPreExistingConfiguration('module', $module);
-          if (!empty($existing_configuration)) {
-            throw PreExistingConfigException::create($module, $existing_configuration);
-          }
-        }
+        // Check the validity of the default configuration. This will throw
+        // exceptions if the configuration is not valid.
+        $config_installer->checkConfigurationToInstall('module', $module);
 
         $extension_config
           ->set("module.$module", 0)
@@ -248,12 +240,6 @@ class ModuleInstaller implements ModuleInstallerInterface {
           $config_installer
             ->setSyncing(TRUE)
             ->setSourceStorage($source_storage);
-        }
-        else {
-          // If we're not in a config synchronization reset the source storage
-          // so that the extension install storage will pick up the new
-          // configuration.
-          $config_installer->resetSourceStorage();
         }
         \Drupal::service('config.installer')->installDefaultConfig('module', $module);
 

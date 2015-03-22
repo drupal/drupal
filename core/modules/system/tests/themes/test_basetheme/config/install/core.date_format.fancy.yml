@@ -7,3 +7,7 @@ status: true
 langcode: en
 locked: false
 pattern: 'U'
+dependencies:
+  enforced:
+    theme:
+      - test_basetheme

@@ -427,3 +427,5 @@ display:
     id: block_1
     display_title: Block
     position: 1
+    display_options:
+      display_extenders: {  }

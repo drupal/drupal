@@ -28,6 +28,7 @@ class EditorFileUsageTest extends EntityUnitTestBase {
     $this->installEntitySchema('file');
     $this->installSchema('node', array('node_access'));
     $this->installSchema('file', array('file_usage'));
+    $this->installConfig(['node']);
 
     // Add text formats.
     $filtered_html_format = entity_create('filter_format', array(

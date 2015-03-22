@@ -211,6 +211,8 @@ EOS;
    * Tests expected behavior of installConfig().
    */
   function testInstallConfig() {
+    // The user module has configuration that depends on system.
+    $this->enableModules(array('system'));
     $module = 'user';
 
     // Verify that default config can only be installed for enabled modules.

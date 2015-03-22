@@ -19,7 +19,7 @@ class BlockContentPageViewTest extends BlockContentTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'block_content', 'block_content_test');
+  public static $modules = array('block_content_test');
 
   /**
    * Checks block edit and fallback functionality.

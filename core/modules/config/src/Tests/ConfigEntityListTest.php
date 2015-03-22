@@ -26,6 +26,16 @@ class ConfigEntityListTest extends WebTestBase {
   public static $modules = array('config_test');
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+    // Delete the override config_test entity since it is not required by this
+    // test.
+    \Drupal::entityManager()->getStorage('config_test')->load('override')->delete();
+  }
+
+  /**
    * Tests entity list builder methods.
    */
   function testList() {

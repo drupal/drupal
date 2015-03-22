@@ -32,7 +32,7 @@ class ConfigImporterTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('config_test', 'system', 'config_import_test', 'config_test_language');
+  public static $modules = array('config_test', 'system', 'config_import_test');
 
   protected function setUp() {
     parent::setUp();
@@ -541,24 +541,4 @@ class ConfigImporterTest extends KernelTestBase {
     $this->assertTrue($this->container->get('config.storage')->exists($config_name));
   }
 
-  /**
-   * Tests imported configuration entities with and without language information.
-   */
-  function testLanguage() {
-    // Test imported configuration with implicit language code.
-    $data = $this->container->get('config.storage.installer')->read('config_test.dynamic.dotted.english');
-    $this->assertTrue(!isset($data['langcode']));
-    $this->assertEqual(
-      $this->config('config_test.dynamic.dotted.english')->get('langcode'),
-      'en'
-    );
-
-    // Test imported configuration with explicit language code.
-    $data = $this->container->get('config.storage.installer')->read('config_test.dynamic.dotted.french');
-    $this->assertEqual($data['langcode'], 'fr');
-    $this->assertEqual(
-      $this->config('config_test.dynamic.dotted.french')->get('langcode'),
-      'fr'
-    );
-  }
 }

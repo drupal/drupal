@@ -1,0 +1,10 @@
+# See \Drupal\config\Tests\ConfigInstallProfileOverrideTest
+# This configuration entity has dependencies which would be met.
+id: override_unmet
+label: Default
+weight: 0
+protected_property: Default
+status: 1
+dependencies:
+  module:
+    - tour

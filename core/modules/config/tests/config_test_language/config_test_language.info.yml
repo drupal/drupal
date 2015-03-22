@@ -3,3 +3,5 @@ type: module
 package: Testing
 version: VERSION
 core: 8.x
+dependencies:
+  - config_test
