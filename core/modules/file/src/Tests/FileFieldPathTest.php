@@ -57,7 +57,7 @@ class FileFieldPathTest extends FileFieldTestBase {
     $node_file = file_load($node->{$field_name}->target_id);
     // Do token replacement using the same user which uploaded the file, not
     // the user running the test case.
-    $data = array('user' => $this->admin_user);
+    $data = array('user' => $this->adminUser);
     $subdirectory = \Drupal::token()->replace('[user:uid]/[user:name]', $data);
     $this->assertPathMatch('public://' . $subdirectory . '/' . $test_file->getFilename(), $node_file->getFileUri(), format_string('The file %file was uploaded to the correct path with token replacements.', array('%file' => $node_file->getFileUri())));
   }

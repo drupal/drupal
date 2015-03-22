@@ -24,12 +24,17 @@ abstract class FileFieldTestBase extends WebTestBase {
   */
   public static $modules = array('node', 'file', 'file_module_test', 'field_ui');
 
-  protected $admin_user;
+  /**
+   * An user with administration permissions.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $adminUser;
 
   protected function setUp() {
     parent::setUp();
-    $this->admin_user = $this->drupalCreateUser(array('access content', 'access administration pages', 'administer site configuration', 'administer users', 'administer permissions', 'administer content types', 'administer node fields', 'administer node display', 'administer nodes', 'bypass node access'));
-    $this->drupalLogin($this->admin_user);
+    $this->adminUser = $this->drupalCreateUser(array('access content', 'access administration pages', 'administer site configuration', 'administer users', 'administer permissions', 'administer content types', 'administer node fields', 'administer node display', 'administer nodes', 'bypass node access'));
+    $this->drupalLogin($this->adminUser);
     $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
   }
 

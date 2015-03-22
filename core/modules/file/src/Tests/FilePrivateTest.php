@@ -62,7 +62,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $no_access_field_name = 'field_no_view_access';
     $this->createFileField($no_access_field_name, 'node', $type_name, array('uri_scheme' => 'private'));
     // Test with the field that should deny access through field access.
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $nid = $this->uploadNodeFile($test_file, $no_access_field_name, $type_name, TRUE, array('private' => TRUE));
     \Drupal::entityManager()->getStorage('node')->resetCache(array($nid));
     $node = $node_storage->load($nid);

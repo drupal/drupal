@@ -23,11 +23,18 @@ class FileListingTest extends FileFieldTestBase {
    */
   public static $modules = array('views', 'file', 'image');
 
+  /**
+   * An authenticated user.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $baseUser;
+
   protected function setUp() {
     parent::setUp();
 
-    $this->admin_user = $this->drupalCreateUser(array('access files overview', 'bypass node access'));
-    $this->base_user = $this->drupalCreateUser();
+    $this->adminUser = $this->drupalCreateUser(array('access files overview', 'bypass node access'));
+    $this->baseUser = $this->drupalCreateUser();
     $this->createFileField('file', 'node', 'article', array(), array('file_extensions' => 'txt png'));
   }
 
@@ -58,12 +65,12 @@ class FileListingTest extends FileFieldTestBase {
   function testFileListingPages() {
     $file_usage = $this->container->get('file.usage');
     // Users without sufficient permissions should not see file listing.
-    $this->drupalLogin($this->base_user);
+    $this->drupalLogin($this->baseUser);
     $this->drupalGet('admin/content/files');
     $this->assertResponse(403);
 
     // Login with user with right permissions and test listing.
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
 
     for ($i = 0; $i < 5; $i++) {
       $nodes[] = $this->drupalCreateNode(array('type' => 'article'));

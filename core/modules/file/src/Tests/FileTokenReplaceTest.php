@@ -54,7 +54,7 @@ class FileTokenReplaceTest extends FileFieldTestBase {
     $tests['[file:created:short]'] = format_date($file->getCreatedTime(), 'short', '', NULL, $language_interface->getId());
     $tests['[file:changed]'] = format_date($file->getChangedTime(), 'medium', '', NULL, $language_interface->getId());
     $tests['[file:changed:short]'] = format_date($file->getChangedTime(), 'short', '', NULL, $language_interface->getId());
-    $tests['[file:owner]'] = String::checkPlain(user_format_name($this->admin_user));
+    $tests['[file:owner]'] = String::checkPlain(user_format_name($this->adminUser));
     $tests['[file:owner:uid]'] = $file->getOwnerId();
 
     // Test to make sure that we generated something for each token.
