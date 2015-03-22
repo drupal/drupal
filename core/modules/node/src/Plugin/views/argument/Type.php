@@ -9,7 +9,7 @@ namespace Drupal\node\Plugin\views\argument;
 
 use Drupal\Component\Utility\String as UtilityString;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\views\Plugin\views\argument\String;
+use Drupal\views\Plugin\views\argument\StringArgument;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ViewsArgument("node_type")
  */
-class Type extends String {
+class Type extends StringArgument {
 
   /**
    * NodeType storage controller.

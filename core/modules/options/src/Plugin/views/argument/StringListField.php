@@ -12,7 +12,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\FieldAPIHandlerTrait;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
-use Drupal\views\Plugin\views\argument\String;
+use Drupal\views\Plugin\views\argument\StringArgument;
 use Drupal\Component\Utility\String as StringUtility;
 
 /**
@@ -22,7 +22,7 @@ use Drupal\Component\Utility\String as StringUtility;
  *
  * @ViewsArgument("string_list_field")
  */
-class StringListField extends String {
+class StringListField extends StringArgument {
 
   use AllowedTagsXssTrait;
   use FieldAPIHandlerTrait;

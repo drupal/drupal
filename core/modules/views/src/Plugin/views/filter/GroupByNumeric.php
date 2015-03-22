@@ -14,7 +14,7 @@ namespace Drupal\views\Plugin\views\filter;
  *
  * @ViewsFilter("groupby_numeric")
  */
-class GroupByNumeric extends Numeric {
+class GroupByNumeric extends NumericFilter {
 
   public function query() {
     $this->ensureMyTable();

@@ -10,7 +10,7 @@ namespace Drupal\comment\Plugin\views\field;
 use Drupal\Core\Database\Connection;
 use Drupal\comment\CommentInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\views\Plugin\views\field\Numeric;
+use Drupal\views\Plugin\views\field\NumericField;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
@@ -23,7 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ViewsField("node_new_comments")
  */
-class NodeNewComments extends Numeric {
+class NodeNewComments extends NumericField {
 
   /**
    * {@inheritdoc}

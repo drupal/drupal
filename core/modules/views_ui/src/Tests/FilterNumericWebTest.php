@@ -13,7 +13,7 @@ use Drupal\config\Tests\SchemaCheckTestTrait;
  * Tests the numeric filter UI.
  *
  * @group views_ui
- * @see \Drupal\views\Plugin\views\filter\Numeric
+ * @see \Drupal\views\Plugin\views\filter\NumericFilter
  */
 class FilterNumericWebTest extends UITestBase {
   use SchemaCheckTestTrait;

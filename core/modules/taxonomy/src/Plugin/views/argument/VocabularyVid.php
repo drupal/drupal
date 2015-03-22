@@ -7,7 +7,7 @@
 
 namespace Drupal\taxonomy\Plugin\views\argument;
 
-use Drupal\views\Plugin\views\argument\Numeric;
+use Drupal\views\Plugin\views\argument\NumericArgument;
 use Drupal\Component\Utility\String;
 use Drupal\taxonomy\VocabularyStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ViewsArgument("vocabulary_vid")
  */
-class VocabularyVid extends Numeric {
+class VocabularyVid extends NumericArgument {
 
   /**
     * The vocabulary storage.

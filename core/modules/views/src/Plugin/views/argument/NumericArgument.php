@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\argument\Numeric.
+ * Contains \Drupal\views\Plugin\views\argument\NumericArgument.
  */
 
 namespace Drupal\views\Plugin\views\argument;
@@ -17,7 +17,7 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * @ViewsArgument("numeric")
  */
-class Numeric extends ArgumentPluginBase {
+class NumericArgument extends ArgumentPluginBase {
 
   /**
    * The operator used for the query: or|and.

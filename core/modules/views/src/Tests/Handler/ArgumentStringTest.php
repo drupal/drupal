@@ -10,7 +10,7 @@ namespace Drupal\views\Tests\Handler;
 use Drupal\views\Views;
 
 /**
- * Tests the core Drupal\views\Plugin\views\argument\String handler.
+ * Tests the core Drupal\views\Plugin\views\argument\StringArgument handler.
  *
  * @group views
  */

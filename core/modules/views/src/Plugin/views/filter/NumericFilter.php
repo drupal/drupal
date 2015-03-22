@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\filter\Numeric.
+ * Contains \Drupal\views\Plugin\views\filter\NumericFilter.
  */
 
 namespace Drupal\views\Plugin\views\filter;
@@ -18,7 +18,7 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * @ViewsFilter("numeric")
  */
-class Numeric extends FilterPluginBase {
+class NumericFilter extends FilterPluginBase {
 
   protected $alwaysMultiple = TRUE;
 

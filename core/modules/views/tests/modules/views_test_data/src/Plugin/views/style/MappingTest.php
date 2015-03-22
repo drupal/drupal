@@ -8,7 +8,7 @@
 namespace Drupal\views_test_data\Plugin\views\style;
 
 use Drupal\views\Plugin\views\style\Mapping;
-use Drupal\views\Plugin\views\field\Numeric;
+use Drupal\views\Plugin\views\field\NumericField;
 
 /**
  * Provides a test plugin for the mapping style.
@@ -59,7 +59,7 @@ class MappingTest extends Mapping {
    */
   protected function filterNumericFields(&$fields) {
     foreach ($this->view->field as $id => $field) {
-      if (!($field instanceof Numeric)) {
+      if (!($field instanceof NumericField)) {
         unset($fields[$id]);
       }
     }

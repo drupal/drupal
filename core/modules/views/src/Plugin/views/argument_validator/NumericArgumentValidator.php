@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\argument_validator\Numeric.
+ * Contains \Drupal\views\Plugin\views\argument_validator\NumericArgumentValidator.
  */
 
 namespace Drupal\views\Plugin\views\argument_validator;
@@ -17,7 +17,7 @@ namespace Drupal\views\Plugin\views\argument_validator;
  *   title = @Translation("Numeric")
  * )
  */
-class Numeric extends ArgumentValidatorPluginBase {
+class NumericArgumentValidator extends ArgumentValidatorPluginBase {
 
   public function validateArgument($argument) {
     return is_numeric($argument);

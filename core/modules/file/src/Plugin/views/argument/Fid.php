@@ -9,7 +9,7 @@ namespace Drupal\file\Plugin\views\argument;
 
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
-use Drupal\views\Plugin\views\argument\Numeric;
+use Drupal\views\Plugin\views\argument\NumericArgument;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ViewsArgument("file_fid")
  */
-class Fid extends Numeric implements ContainerFactoryPluginInterface {
+class Fid extends NumericArgument implements ContainerFactoryPluginInterface {
 
   /**
    * The entity manager service

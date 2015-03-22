@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\field\Numeric.
+ * Contains \Drupal\views\Plugin\views\field\NumericField.
  */
 
 namespace Drupal\views\Plugin\views\field;
@@ -21,7 +21,7 @@ use Drupal\views\ResultRow;
  *
  * @ViewsField("numeric")
  */
-class Numeric extends FieldPluginBase {
+class NumericField extends FieldPluginBase {
 
   /**
    * {@inheritdoc}

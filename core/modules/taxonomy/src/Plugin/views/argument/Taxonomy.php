@@ -9,7 +9,7 @@ namespace Drupal\taxonomy\Plugin\views\argument;
 
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\views\Plugin\views\argument\Numeric;
+use Drupal\views\Plugin\views\argument\NumericArgument;
 use Drupal\Component\Utility\String;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ViewsArgument("taxonomy")
  */
-class Taxonomy extends Numeric implements ContainerFactoryPluginInterface {
+class Taxonomy extends NumericArgument implements ContainerFactoryPluginInterface {
 
   /**
    * @var EntityStorageInterface

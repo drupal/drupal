@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\filter\String.
+ * Contains \Drupal\views\Plugin\views\filter\StringFilter.
  */
 
 namespace Drupal\views\Plugin\views\filter;
@@ -19,7 +19,7 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * @ViewsFilter("string")
  */
-class String extends FilterPluginBase {
+class StringFilter extends FilterPluginBase {
 
   // exposed filter options
   protected $alwaysMultiple = TRUE;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\argument\String.
+ * Contains \Drupal\views\Plugin\views\argument\StringArgument.
  */
 
 namespace Drupal\views\Plugin\views\argument;
@@ -20,7 +20,7 @@ use Drupal\views\ManyToOneHelper;
  *
  * @ViewsArgument("string")
  */
-class String extends ArgumentPluginBase {
+class StringArgument extends ArgumentPluginBase {
 
   /**
    * Overrides \Drupal\views\Plugin\views\argument\ArgumentPluginBase::init().

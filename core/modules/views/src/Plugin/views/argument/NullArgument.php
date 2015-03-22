@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\argument\Null.
+ * Contains \Drupal\views\Plugin\views\argument\NullArgument.
  */
 
 namespace Drupal\views\Plugin\views\argument;
@@ -16,7 +16,7 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * @ViewsArgument("null")
  */
-class Null extends ArgumentPluginBase {
+class NullArgument extends ArgumentPluginBase {
 
   protected function defineOptions() {
     $options = parent::defineOptions();

@@ -7,7 +7,7 @@
 
 namespace Drupal\search\Plugin\views\field;
 
-use Drupal\views\Plugin\views\field\Numeric;
+use Drupal\views\Plugin\views\field\NumericField;
 use Drupal\views\ResultRow;
 
 /**
@@ -17,7 +17,7 @@ use Drupal\views\ResultRow;
  *
  * @ViewsField("search_score")
  */
-class Score extends Numeric {
+class Score extends NumericField {
 
   /**
    * {@inheritdoc}
