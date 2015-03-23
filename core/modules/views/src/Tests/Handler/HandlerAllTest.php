@@ -79,8 +79,12 @@ class HandlerAllTest extends HandlerTestBase {
               $options = array();
               if ($type == 'filter') {
                 $handler = $this->container->get("plugin.manager.views.$type")->getHandler($item);
+                // Set the value to use for the filter based on the filter type.
                 if ($handler instanceof InOperator) {
                   $options['value'] = array(1);
+                }
+                else {
+                  $options['value'] = 1;
                 }
               }
               $view->addHandler('default', $type, $base_table, $field, $options);
