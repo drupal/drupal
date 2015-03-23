@@ -30,7 +30,7 @@
     this.table = table;
     this.$table = $(table);
     this.showText = Drupal.t('Show all columns');
-    this.hideText = Drupal.t('Hide unimportant columns');
+    this.hideText = Drupal.t('Hide lower priority columns');
     // Store a reference to the header elements of the table so that the DOM is
     // traversed only once to find them.
     this.$headers = this.$table.find('th');
