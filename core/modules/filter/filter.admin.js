@@ -10,7 +10,7 @@
   Drupal.behaviors.filterStatus = {
     attach: function (context, settings) {
       var $context = $(context);
-      $context.find('#filters-status-wrapper input.form-checkbox').once('filter-status', function () {
+      $context.find('#filters-status-wrapper input.form-checkbox').once('filter-status').each(function () {
         var $checkbox = $(this);
         // Retrieve the tabledrag row belonging to this filter.
         var $row = $context.find('#' + $checkbox.attr('id').replace(/-status$/, '-weight')).closest('tr');

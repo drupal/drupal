@@ -140,7 +140,7 @@
         return;
       }
 
-      $(context).find('.editor').once('editor', function () {
+      $(context).find('.editor').once('editor').each(function () {
         var $this = $(this);
         var activeFormatID = $this.val();
         $this.attr('data-editor-active-text-format', activeFormatID);
@@ -188,7 +188,7 @@
       if (trigger === 'serialize') {
         // Removing the editor-processed class guarantees that the editor will
         // be reattached. Only do this if we're planning to destroy the editor.
-        editors = $(context).find('.editor-processed');
+        editors = $(context).find('.editor').findOnce('editor');
       }
       else {
         editors = $(context).find('.editor').removeOnce('editor');

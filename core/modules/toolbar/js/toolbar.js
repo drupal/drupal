@@ -43,7 +43,7 @@
         return;
       }
       // Process the administrative toolbar.
-      $(context).find('#toolbar-administration').once('toolbar', function () {
+      $(context).find('#toolbar-administration').once('toolbar').each(function () {
 
         // Establish the toolbar models and views.
         var model = Drupal.toolbar.models.toolbarModel = new Drupal.toolbar.ToolbarModel({

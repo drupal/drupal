@@ -9,7 +9,7 @@
   Drupal.behaviors.password = {
     attach: function (context, settings) {
       var translate = settings.password;
-      $(context).find('input.password-field').once('password', function () {
+      $(context).find('input.password-field').once('password').each(function () {
         var passwordInput = $(this);
         var innerWrapper = $(this).parent();
         var outerWrapper = $(this).parent().parent();

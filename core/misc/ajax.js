@@ -27,7 +27,7 @@
         if (typeof element_settings.selector === 'undefined') {
           element_settings.selector = '#' + base;
         }
-        $(element_settings.selector).once('drupal-ajax', function () {
+        $(element_settings.selector).once('drupal-ajax').each(function () {
           element_settings.element = this;
           Drupal.ajax[element_settings.selector] = new Drupal.ajax(base, this, element_settings);
         });
@@ -41,7 +41,7 @@
       }
 
       // Bind Ajax behaviors to all items showing the class.
-      $('.use-ajax').once('ajax', function () {
+      $('.use-ajax').once('ajax').each(function () {
         var element_settings = {};
         // Clicked links look better with the throbber than the progress bar.
         element_settings.progress = {'type': 'throbber'};
@@ -59,7 +59,7 @@
       });
 
       // This class means to submit the form to the action using Ajax.
-      $('.use-ajax-submit').once('ajax', function () {
+      $('.use-ajax-submit').once('ajax').each(function () {
         var element_settings = {};
 
         // Ajax submits specified in this manner automatically submit to the

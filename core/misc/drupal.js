@@ -111,10 +111,10 @@ if (window.jQuery) {
    * to be processed, in order to allow special behaviors to detach from the
    * content.
    *
-   * Such implementations should look for the class name that was added in their
-   * corresponding Drupal.behaviors.behaviorName.attach implementation, i.e.
-   * behaviorName-processed, to ensure the behavior is detached only from
-   * previously processed elements.
+   * Such implementations should use .findOnce() and .removeOnce() to find
+   * elements with their corresponding Drupal.behaviors.behaviorName.attach
+   * implementation, i.e. .removeOnce('behaviorName'), to ensure the behavior is
+   * detached only from previously processed elements.
    *
    * @param context
    *   An element to detach behaviors from. If none is given, the document element

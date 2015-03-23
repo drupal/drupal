@@ -225,7 +225,7 @@
     }
     // Trigger an event to allow other scripts to react to this display change.
     // Force the extra parameter as a bool.
-    $('table.tabledrag-processed').trigger('columnschange', !!displayWeight);
+    $('table').findOnce('tabledrag').trigger('columnschange', !!displayWeight);
   };
 
   /**
@@ -250,7 +250,7 @@
    * Undo showColumns().
    */
   Drupal.tableDrag.prototype.hideColumns = function () {
-    var $tables = $('table.tabledrag-processed');
+    var $tables = $('table').findOnce('tabledrag');
     // Hide weight/parent cells and headers.
     $tables.find('.tabledrag-hide').css('display', 'none');
     // Show TableDrag handles.
@@ -268,7 +268,7 @@
    * Undo hideColumns().
    */
   Drupal.tableDrag.prototype.showColumns = function () {
-    var $tables = $('table.tabledrag-processed');
+    var $tables = $('table').findOnce('tabledrag');
     // Show weight/parent cells and headers.
     $tables.find('.tabledrag-hide').css('display', '');
     // Hide TableDrag handles.

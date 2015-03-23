@@ -7,7 +7,7 @@
    */
   Drupal.behaviors.textSummary = {
     attach: function (context, settings) {
-      $(context).find('.text-summary').once('text-summary', function () {
+      $(context).find('.text-summary').once('text-summary').each(function () {
         var $widget = $(this).closest('.text-format-wrapper');
 
         var $summary = $widget.find('.text-summary-wrapper');

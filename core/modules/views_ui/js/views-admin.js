@@ -233,7 +233,7 @@
   Drupal.behaviors.viewsUiRenderAddViewButton = {
     attach: function (context) {
       // Build the add display menu and pull the display input buttons into it.
-      var $menu = $(context).find('#views-display-menu-tabs').once('views-ui-render-add-view-button-processed');
+      var $menu = $(context).find('#views-display-menu-tabs').once('views-ui-render-add-view-button');
       if (!$menu.length) {
         return;
       }
@@ -801,9 +801,7 @@
    */
   Drupal.behaviors.viewsRemoveIconClass = {
     attach: function (context) {
-      $(context).find('.dropbutton').once('dropbutton-icon', function () {
-        $(this).find('.icon').removeClass('icon');
-      });
+      $(context).find('.dropbutton').once('dropbutton-icon').find('.icon').removeClass('icon');
     }
   };
 
@@ -880,7 +878,7 @@
    */
   Drupal.behaviors.viewsUiOverrideSelect = {
     attach: function (context) {
-      $(context).find('#edit-override-dropdown').once('views-ui-override-button-text', function () {
+      $(context).find('#edit-override-dropdown').once('views-ui-override-button-text').each(function () {
         // Closures! :(
         var $context = $(context);
         var $submit = $context.find('[id^=edit-submit]');

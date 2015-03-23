@@ -714,7 +714,7 @@
     attach: function (context, settings) {
       var $context = $(context);
 
-      $context.find('#filters-status-wrapper input.form-checkbox').once('filter-editor-status', function () {
+      $context.find('#filters-status-wrapper input.form-checkbox').once('filter-editor-status').each(function () {
         var $checkbox = $(this);
         var nameAttribute = $checkbox.attr('name');
 

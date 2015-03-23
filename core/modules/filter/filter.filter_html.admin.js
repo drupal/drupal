@@ -55,7 +55,7 @@
 
     attach: function (context, settings) {
       var that = this;
-      $(context).find('[name="filters[filter_html][settings][allowed_html]"]').once('filter-filter_html-updating', function () {
+      $(context).find('[name="filters[filter_html][settings][allowed_html]"]').once('filter-filter_html-updating').each(function () {
         that.$allowedHTMLFormItem = $(this);
         that.$allowedHTMLDescription = that.$allowedHTMLFormItem.closest('.form-item').find('.description');
         that.userTags = that._parseSetting(this.value);

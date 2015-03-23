@@ -11,8 +11,8 @@
   Drupal.behaviors.ckeditorAdmin = {
     attach: function (context) {
       // Process the CKEditor configuration fragment once.
-      var $configurationForm = $(context).find('.ckeditor-toolbar-configuration');
-      if ($configurationForm.once('ckeditor-configuration').length) {
+      var $configurationForm = $(context).find('.ckeditor-toolbar-configuration').once('ckeditor-configuration');
+      if ($configurationForm.length) {
         var $textarea = $configurationForm
           // Hide the textarea that contains the serialized representation of the
           // CKEditor configuration.
@@ -55,7 +55,7 @@
       // really means that all CKEditor toolbar buttons have been removed. Hence,
       // all editor features will be removed, so any reactions from filters will
       // be undone.
-      var $configurationForm = $(context).find('.ckeditor-toolbar-configuration.ckeditor-configuration-processed');
+      var $configurationForm = $(context).find('.ckeditor-toolbar-configuration').findOnce('ckeditor-configuration');
       if ($configurationForm.length && Drupal.ckeditor.models && Drupal.ckeditor.models.Model) {
         var config = Drupal.ckeditor.models.Model.toJSON().activeEditorConfig;
         var buttons = Drupal.ckeditor.views.controller.getButtonList(config);
