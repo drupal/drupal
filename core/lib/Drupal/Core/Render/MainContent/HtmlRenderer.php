@@ -10,6 +10,7 @@ namespace Drupal\Core\Render\MainContent;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheContexts;
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Display\PageVariantInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -64,6 +65,13 @@ class HtmlRenderer implements MainContentRendererInterface {
   protected $renderer;
 
   /**
+   * The cache contexts service.
+   *
+   * @var \Drupal\Core\Cache\CacheContexts
+   */
+  protected $cacheContexts;
+
+  /**
    * Constructs a new HtmlRenderer.
    *
    * @param \Drupal\Core\Controller\TitleResolverInterface $title_resolver
@@ -76,13 +84,16 @@ class HtmlRenderer implements MainContentRendererInterface {
    *   The module handler.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
+   * @param \Drupal\Core\Cache\CacheContexts $cache_contexts
+   *   The cache contexts service.
    */
-  public function __construct(TitleResolverInterface $title_resolver, PluginManagerInterface $display_variant_manager, EventDispatcherInterface $event_dispatcher, ModuleHandlerInterface $module_handler, RendererInterface $renderer) {
+  public function __construct(TitleResolverInterface $title_resolver, PluginManagerInterface $display_variant_manager, EventDispatcherInterface $event_dispatcher, ModuleHandlerInterface $module_handler, RendererInterface $renderer, CacheContexts $cache_contexts) {
     $this->titleResolver = $title_resolver;
     $this->displayVariantManager = $display_variant_manager;
     $this->eventDispatcher = $event_dispatcher;
     $this->moduleHandler = $module_handler;
     $this->renderer = $renderer;
+    $this->cacheContexts = $cache_contexts;
   }
 
   /**
@@ -149,7 +160,7 @@ class HtmlRenderer implements MainContentRendererInterface {
 
     $response = new Response($content, 200,[
       'X-Drupal-Cache-Tags' => implode(' ', $cache_tags),
-      'X-Drupal-Cache-Contexts' => implode(' ', $cache_contexts),
+      'X-Drupal-Cache-Contexts' => implode(' ', $this->cacheContexts->optimizeTokens($cache_contexts)),
       'X-Generator' => 'Drupal ' . $version . ' (https://www.drupal.org)'
     ]);
     // If an explicit non-infinite max-age is specified by a part of the page,

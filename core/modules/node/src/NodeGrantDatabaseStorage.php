@@ -106,12 +106,11 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
     // theoretically cacheable, because we don't have the necessary metadata to
     // know it for a fact.
     $set_cacheability = function (AccessResult $access_result) use ($operation) {
-      if ($operation === 'view') {
-        return $access_result->addCacheContexts(['node_view_grants']);
+      $access_result->addCacheContexts(['user.node_grants:' . $operation]);
+      if ($operation !== 'view') {
+        $access_result->setCacheable(FALSE);
       }
-      else {
-        return $access_result->setCacheable(FALSE);
-      }
+      return $access_result;
     };
 
     if ($query->execute()->fetchField()) {

@@ -95,7 +95,7 @@ class QueryParameter extends ArgumentDefaultPluginBase implements CacheablePlugi
    * {@inheritdoc}
    */
   public function getCacheContexts() {
-    return ['cache.context.url'];
+    return ['url'];
   }
 
 }

@@ -67,7 +67,7 @@ class BlockInterfaceTest extends KernelTestBase {
     $period[\Drupal\Core\Cache\Cache::PERMANENT] = t('Forever');
     $contexts = \Drupal::service("cache_contexts")->getLabels();
     unset($contexts['theme']);
-    unset($contexts['language']);
+    unset($contexts['languages']);
     $expected_form = array(
       'provider' => array(
         '#type' => 'value',

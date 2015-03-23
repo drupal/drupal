@@ -46,7 +46,7 @@ class Pager extends RenderElement{
    * @return array
    */
   public static function preRenderPager(array $pager) {
-    $pager['#cache']['contexts'][] = 'pager:' . $pager['#element'];
+    $pager['#cache']['contexts'][] = 'url.query_args.pagers:' . $pager['#element'];
     return $pager;
   }
 

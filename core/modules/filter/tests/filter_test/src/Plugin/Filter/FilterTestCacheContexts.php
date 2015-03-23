@@ -7,6 +7,7 @@
 
 namespace Drupal\filter_test\Plugin\Filter;
 
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
 
@@ -28,7 +29,7 @@ class FilterTestCacheContexts extends FilterBase {
   public function process($text, $langcode) {
     $result = new FilterProcessResult($text);
     // The changes made by this filter are language-specific.
-    $result->addCacheContexts(['language']);
+    $result->addCacheContexts(['languages:' . LanguageInterface::TYPE_CONTENT]);
     return $result;
   }
 

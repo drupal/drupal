@@ -62,7 +62,7 @@ class NodeCacheTagsTest extends EntityWithUriCacheTagsTestBase {
    * {@inheritdoc}
    */
   protected function getAdditionalCacheContextsForEntityListing() {
-    return ['node_view_grants'];
+    return ['user.node_grants:view'];
   }
 
 }

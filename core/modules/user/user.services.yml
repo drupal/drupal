@@ -20,16 +20,6 @@ services:
     arguments: ['@session_configuration']
     tags:
       - { name: authentication_provider, priority: 0 }
-  cache_context.user:
-    class: Drupal\user\Cache\UserCacheContext
-    arguments: ['@current_user']
-    tags:
-      - { name: cache.context}
-  cache_context.user.roles:
-    class: Drupal\user\Cache\UserRolesCacheContext
-    arguments: ['@current_user']
-    tags:
-      - { name: cache.context}
   user.data:
     class: Drupal\user\UserData
     arguments: ['@database']

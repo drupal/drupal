@@ -1477,7 +1477,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheablePluginIn
     // input from GET parameters, which are part of the URL. Hence a view with
     // an exposed filter is cacheable per URL.
     if ($this->isExposed()) {
-      $cache_contexts[] = 'cache.context.url';
+      $cache_contexts[] = 'url';
     }
     return $cache_contexts;
   }

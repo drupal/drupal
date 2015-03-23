@@ -2,21 +2,20 @@
 
 /**
  * @file
- * Contains \Drupal\user\Cache\UserRolesCacheContext.
+ * Contains \Drupal\Core\Cache\UserCacheContext.
  */
 
-namespace Drupal\user\Cache;
+namespace Drupal\Core\Cache;
 
-use Drupal\Core\Cache\CacheContextInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
- * Defines the UserRolesCacheContext service, for "per role" caching.
+ * Defines the UserCacheContext service, for "per user" caching.
  */
-class UserRolesCacheContext implements CacheContextInterface {
+class UserCacheContext implements CacheContextInterface {
 
   /**
-   * Constructs a new UserRolesCacheContext service.
+   * Constructs a new UserCacheContext service.
    *
    * @param \Drupal\Core\Session\AccountInterface $user
    *   The current user.
@@ -29,14 +28,14 @@ class UserRolesCacheContext implements CacheContextInterface {
    * {@inheritdoc}
    */
   public static function getLabel() {
-    return t("User's roles");
+    return t('User');
   }
 
   /**
    * {@inheritdoc}
    */
   public function getContext() {
-    return 'r.' . implode(',', $this->user->getRoles());
+    return "u." . $this->user->id();
   }
 
 }

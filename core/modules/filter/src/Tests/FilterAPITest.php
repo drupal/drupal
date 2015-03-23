@@ -8,6 +8,7 @@
 namespace Drupal\filter\Tests;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\TypedData\OptionsProviderInterface;
 use Drupal\Core\TypedData\DataDefinition;
@@ -260,7 +261,7 @@ class FilterAPITest extends EntityUnitTestBase {
     $this->assertEqual($expected_cache_tags, $build['#cache']['tags'], 'Expected cache tags present.');
     $expected_cache_contexts = [
       // The cache context set by the filter_test_cache_contexts filter.
-      'language',
+      'languages:' . LanguageInterface::TYPE_CONTENT,
     ];
     $this->assertEqual($expected_cache_contexts, $build['#cache']['contexts'], 'Expected cache contexts present.');
     $expected_markup = '<p>Hello, world!</p><p>This is a dynamic llama.</p>';

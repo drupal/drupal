@@ -241,7 +241,7 @@ class FrontPageTest extends ViewTestBase {
     $view = Views::getView('frontpage');
     $view->setDisplay('page_1');
 
-    $cache_contexts = ['node_view_grants', 'language'];
+    $cache_contexts = ['user.node_grants:view', 'languages'];
 
     // Test before there are any nodes.
     $empty_node_listing_cache_tags = [

@@ -87,7 +87,7 @@ class BlockViewBuilder extends EntityViewBuilder {
           $entity->id(),
         );
         $default_cache_contexts = array(
-          'language',
+          'languages',
           'theme',
         );
         $max_age = $plugin->getCacheMaxAge();

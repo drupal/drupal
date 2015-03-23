@@ -6,26 +6,86 @@ parameters:
   factory.keyvalue.expirable:
     default: keyvalue.expirable.database
 services:
-  cache_factory:
-    class: Drupal\Core\Cache\CacheFactory
-    arguments: ['@settings', '%cache_default_bin_backends%']
-    calls:
-      - [setContainer, ['@service_container']]
-  cache_contexts:
-    class: Drupal\Core\Cache\CacheContexts
-    arguments: ['@service_container', '%cache_contexts%' ]
+  # Simple cache contexts, directly derived from the request context.
+  cache_context.ip:
+    class: Drupal\Core\Cache\IpCacheContext
+    arguments: ['@request_stack']
+    tags:
+      - { name: cache.context }
+  cache_context.headers:
+    class: Drupal\Core\Cache\HeadersCacheContext
+    arguments: ['@request_stack']
+    tags:
+      - { name: cache.context }
+  cache_context.cookies:
+    class: Drupal\Core\Cache\CookiesCacheContext
+    arguments: ['@request_stack']
+    tags:
+      - { name: cache.context }
+  cache_context.request_format:
+    class: Drupal\Core\Cache\RequestFormatCacheContext
+    arguments: ['@request_stack']
+    tags:
+      - { name: cache.context }
   cache_context.url:
     class: Drupal\Core\Cache\UrlCacheContext
     arguments: ['@request_stack']
     tags:
-      - { name: cache.context}
-  cache_context.pager:
-    class: Drupal\Core\Cache\PagerCacheContext
+      - { name: cache.context }
+  cache_context.url.host:
+    class: Drupal\Core\Cache\HostCacheContext
     arguments: ['@request_stack']
     tags:
+      - { name: cache.context }
+  cache_context.url.query_args:
+    class: Drupal\Core\Cache\QueryArgsCacheContext
+    arguments: ['@request_stack']
+    tags:
+      - { name: cache.context }
+  cache_context.url.query_args.pagers:
+    class: Drupal\Core\Cache\PagersCacheContext
+    arguments: ['@request_stack']
+    tags:
+      - { name: cache.context }
+
+  # Complex cache contexts, that depend on the routing system.
+  cache_context.route:
+    class: Drupal\Core\Cache\RouteCacheContext
+    arguments: ['@current_route_match']
+    tags:
+      - { name: cache.context }
+  cache_context.route.name:
+    class: Drupal\Core\Cache\RouteNameCacheContext
+    arguments: ['@current_route_match']
+    tags:
+      - { name: cache.context }
+  cache_context.route.menu_active_trails:
+    class: Drupal\Core\Cache\MenuActiveTrailsCacheContext
+    calls:
+      - [setContainer, ['@service_container']]
+    tags:
+      - { name: cache.context }
+
+  # Complex cache contexts, that may be calculated from a combination of
+  # multiple aspects of the request context plus additional logic. Hence they
+  # are their own roots.
+  cache_context.user:
+    class: Drupal\Core\Cache\UserCacheContext
+    arguments: ['@current_user']
+    tags:
       - { name: cache.context}
-  cache_context.language:
-    class: Drupal\Core\Cache\LanguageCacheContext
+  cache_context.user.roles:
+    class: Drupal\Core\Cache\UserRolesCacheContext
+    arguments: ['@current_user']
+    tags:
+      - { name: cache.context}
+  cache_context.user.is_super_user:
+    class: Drupal\Core\Cache\IsSuperUserCacheContext
+    arguments: ['@current_user']
+    tags:
+      - { name: cache.context}
+  cache_context.languages:
+    class: Drupal\Core\Cache\LanguagesCacheContext
     arguments: ['@language_manager']
     tags:
       - { name: cache.context}
@@ -38,12 +98,15 @@ services:
     class: Drupal\Core\Cache\TimeZoneCacheContext
     tags:
       - { name: cache.context}
-  cache_context.menu.active_trail:
-    class: Drupal\Core\Cache\MenuActiveTrailCacheContext
+
+  cache_factory:
+    class: Drupal\Core\Cache\CacheFactory
+    arguments: ['@settings', '%cache_default_bin_backends%']
     calls:
       - [setContainer, ['@service_container']]
-    tags:
-      - { name: cache.context}
+  cache_contexts:
+    class: Drupal\Core\Cache\CacheContexts
+    arguments: ['@service_container', '%cache_contexts%' ]
   cache_tags.invalidator:
     parent: container.trait
     class: Drupal\Core\Cache\CacheTagsInvalidator
@@ -779,7 +842,7 @@ services:
       - { name: event_subscriber }
   main_content_renderer.html:
     class: Drupal\Core\Render\MainContent\HtmlRenderer
-    arguments: ['@title_resolver', '@plugin.manager.display_variant', '@event_dispatcher', '@module_handler', '@renderer']
+    arguments: ['@title_resolver', '@plugin.manager.display_variant', '@event_dispatcher', '@module_handler', '@renderer', '@cache_contexts']
     tags:
       - { name: render.main_content_renderer, format: html }
   main_content_renderer.ajax:

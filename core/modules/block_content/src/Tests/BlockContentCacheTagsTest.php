@@ -80,7 +80,7 @@ class BlockContentCacheTagsTest extends EntityCacheTagsTestBase {
     // Expected keys, contexts, and tags for the block.
     // @see \Drupal\block\BlockViewBuilder::viewMultiple()
     $expected_block_cache_keys = ['entity_view', 'block', $block->id()];
-    $expected_block_cache_contexts = ['language', 'theme'];
+    $expected_block_cache_contexts = ['languages', 'theme'];
     $expected_block_cache_tags = Cache::mergeTags(['block_view', 'rendered'], $block->getCacheTags(), $block->getPlugin()->getCacheTags());
 
     // Expected contexts and tags for the BlockContent entity.

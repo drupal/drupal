@@ -68,11 +68,11 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
     ));
 
     $cache_contexts = [
-      'language',
-      'menu.active_trail:account',
-      'menu.active_trail:footer',
-      'menu.active_trail:main',
-      'menu.active_trail:tools',
+      'languages',
+      'route.menu_active_trails:account',
+      'route.menu_active_trails:footer',
+      'route.menu_active_trails:main',
+      'route.menu_active_trails:tools',
       'theme',
       'timezone',
       'user.roles',

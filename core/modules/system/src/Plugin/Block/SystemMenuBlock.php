@@ -201,7 +201,7 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
     $menu_name = $this->getDerivativeId();
     return [
       'user.roles',
-      'menu.active_trail:' . $menu_name,
+      'route.menu_active_trails:' . $menu_name,
     ];
   }
 

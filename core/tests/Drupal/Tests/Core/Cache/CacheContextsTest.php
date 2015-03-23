@@ -20,6 +20,63 @@ use Symfony\Component\DependencyInjection\Container;
 class CacheContextsTest extends UnitTestCase {
 
   /**
+   * @covers ::optimizeTokens
+   *
+   * @dataProvider providerTestOptimizeTokens
+   */
+  public function testOptimizeTokens(array $context_tokens, array $optimized_context_tokens) {
+    $container = $this->getMockBuilder('Drupal\Core\DependencyInjection\Container')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $container->expects($this->any())
+      ->method('get')
+      ->will($this->returnValueMap([
+        ['a', Container::EXCEPTION_ON_INVALID_REFERENCE, new FooCacheContext()],
+        ['a.b', Container::EXCEPTION_ON_INVALID_REFERENCE, new FooCacheContext()],
+        ['a.b.c', Container::EXCEPTION_ON_INVALID_REFERENCE, new BazCacheContext()],
+        ['x', Container::EXCEPTION_ON_INVALID_REFERENCE, new BazCacheContext()],
+      ]));
+    $cache_contexts = new CacheContexts($container, $this->getContextsFixture());
+
+    $this->assertSame($optimized_context_tokens, $cache_contexts->optimizeTokens($context_tokens));
+  }
+
+  /**
+   * Provides a list of context token sets.
+   */
+  public function providerTestOptimizeTokens() {
+    return [
+      [['a', 'x'], ['a', 'x']],
+      [['a.b', 'x'], ['a.b', 'x']],
+
+      // Direct ancestor, single-level hierarchy.
+      [['a', 'a.b'], ['a']],
+      [['a.b', 'a'], ['a']],
+
+      // Direct ancestor, multi-level hierarchy.
+      [['a.b', 'a.b.c'], ['a.b']],
+      [['a.b.c', 'a.b'], ['a.b']],
+
+      // Indirect ancestor.
+      [['a', 'a.b.c'], ['a']],
+      [['a.b.c', 'a'], ['a']],
+
+      // Direct & indirect ancestors.
+      [['a', 'a.b', 'a.b.c'], ['a']],
+      [['a', 'a.b.c', 'a.b'], ['a']],
+      [['a.b', 'a', 'a.b.c'], ['a']],
+      [['a.b', 'a.b.c', 'a'], ['a']],
+      [['a.b.c', 'a.b', 'a'], ['a']],
+      [['a.b.c', 'a', 'a.b'], ['a']],
+
+      // Using parameters.
+      [['a', 'a.b.c:foo'], ['a']],
+      [['a.b.c:foo', 'a'], ['a']],
+      [['a.b.c:foo', 'a.b.c'], ['a.b.c']],
+    ];
+  }
+
+  /**
    * @covers ::convertTokensToKeys
    */
   public function testConvertTokensToKeys() {
@@ -146,7 +203,7 @@ class BazCacheContext implements CalculatedCacheContextInterface {
   /**
    * {@inheritdoc}
    */
-  public function getContext($parameter) {
+  public function getContext($parameter = NULL) {
     if (!is_string($parameter) || strlen($parameter) ===  0) {
       throw new \Exception();
     }

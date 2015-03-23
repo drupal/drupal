@@ -117,7 +117,7 @@ class LanguageFormatter extends StringFormatter {
    * {@inheritdoc}
    */
   protected function viewValue(FieldItemInterface $item) {
-    // The language cache context is not necessary because the language is
+    // The 'languages' cache context is not necessary because the language is
     // either displayed in its configured form (loaded directly from config
     // storage by LanguageManager::getLanguages()) or in its native language
     // name. That only depends on formatter settings and no language condition.

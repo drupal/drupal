@@ -23,7 +23,7 @@ services:
     arguments: ['@book.manager']
     tags:
       - { name: access_check, applies_to: _access_book_removable }
-  cache_context.book.navigation:
+  cache_context.route.book_navigation:
     class: Drupal\book\Cache\BookNavigationCacheContext
     arguments: ['@request_stack']
     tags:

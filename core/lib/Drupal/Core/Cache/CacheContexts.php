@@ -105,6 +105,7 @@ class CacheContexts {
    * @throws \InvalidArgumentException
    */
   public function convertTokensToKeys(array $context_tokens) {
+    $context_tokens = $this->optimizeTokens($context_tokens);
     sort($context_tokens);
     $keys = [];
     foreach (static::parseTokens($context_tokens) as $context) {
@@ -115,6 +116,69 @@ class CacheContexts {
       $keys[] = $this->getService($context_id)->getContext($parameter);
     }
     return $keys;
+  }
+
+  /**
+   * Optimizes cache context tokens (the minimal representative subset).
+   *
+   * A minimal representative subset means that any cache context token in the
+   * given set of cache context tokens that is a property of another cache
+   * context cache context token in the set, is removed.
+   *
+   * Hence a minimal representative subset is the most compact representation
+   * possible of a set of cache context tokens, that still captures the entire
+   * universe of variations.
+   *
+   * E.g. when caching per user ('user'), also caching per role ('user.roles')
+   * is meaningless because "per role" is implied by "per user".
+   *
+   * Examples — remember that the period indicates hierarchy and the colon can
+   * be used to get a specific value of a calculated cache context:
+   * - ['a', 'a.b'] -> ['a']
+   * - ['a', 'a.b.c'] -> ['a']
+   * - ['a.b', 'a.b.c'] -> ['a.b']
+   * - ['a', 'a.b', 'a.b.c'] -> ['a']
+   * - ['x', 'x:foo'] -> ['x']
+   * - ['a', 'a.b.c:bar'] -> ['a']
+   *
+   * @param string[] $context_tokens
+   *   A set of cache context tokens.
+   *
+   * @return string[]
+   *   A representative subset of the given set of cache context tokens..
+   */
+  public function optimizeTokens(array $context_tokens) {
+    $optimized_content_tokens = [];
+    foreach ($context_tokens as $context_token) {
+      // Context tokens without:
+      // - a period means they don't have a parent
+      // - a colon means they're not a specific value of a cache context
+      // hence no optimizations are possible.
+      if (strpos($context_token, '.') === FALSE && strpos($context_token, ':') === FALSE) {
+        $optimized_content_tokens[] = $context_token;
+      }
+      // The context token has a period or a colon. Iterate over all ancestor
+      // cache contexts. If one exists, omit the context token.
+      else {
+        $ancestor_found = FALSE;
+        // Treat a colon like a period, that allows us to consider 'a' the
+        // ancestor of 'a:foo', without any additional code for the colon.
+        $ancestor = str_replace(':', '.', $context_token);
+        do {
+          $ancestor = substr($ancestor, 0, strrpos($ancestor, '.'));
+          if (in_array($ancestor, $context_tokens)) {
+            // An ancestor cache context is in $context_tokens, hence this cache
+            // context is implied.
+            $ancestor_found = TRUE;
+          }
+
+        } while(!$ancestor_found && strpos($ancestor, '.') !== FALSE);
+        if (!$ancestor_found) {
+          $optimized_content_tokens[] = $context_token;
+        }
+      }
+    }
+    return $optimized_content_tokens;
   }
 
   /**

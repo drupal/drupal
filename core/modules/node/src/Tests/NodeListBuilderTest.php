@@ -38,7 +38,7 @@ class NodeListBuilderTest extends KernelTestBase {
     $build = $list_builder->render();
     $this->container->get('renderer')->render($build);
 
-    $this->assertEqual(['node_view_grants', 'pager:0'], $build['#cache']['contexts']);
+    $this->assertEqual(['url.query_args.pagers:0', 'user.node_grants:view'], $build['#cache']['contexts']);
   }
 
 }

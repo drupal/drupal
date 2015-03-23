@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Cache\MenuActiveTrailCacheContext.
+ * Contains \Drupal\Core\Cache\MenuActiveTrailsCacheContext.
  */
 
 namespace Drupal\Core\Cache;
@@ -10,12 +10,12 @@ namespace Drupal\Core\Cache;
 use Symfony\Component\DependencyInjection\ContainerAware;
 
 /**
- * Defines the MenuActiveTrailCacheContext service.
+ * Defines the MenuActiveTrailsCacheContext service.
  *
  * This class is container-aware to avoid initializing the 'menu.active_trail'
  * service (and its dependencies) when it is not necessary.
  */
-class MenuActiveTrailCacheContext extends ContainerAware implements CalculatedCacheContextInterface {
+class MenuActiveTrailsCacheContext extends ContainerAware implements CalculatedCacheContextInterface {
 
   /**
    * {@inheritdoc}
@@ -27,7 +27,7 @@ class MenuActiveTrailCacheContext extends ContainerAware implements CalculatedCa
   /**
    * {@inheritdoc}
    */
-  public function getContext($menu_name) {
+  public function getContext($menu_name = NULL) {
     $active_trail = $this->container->get('menu.active_trail')
       ->getActiveTrailIds($menu_name);
     return 'menu_trail.' . $menu_name . '|' . implode('|', $active_trail);

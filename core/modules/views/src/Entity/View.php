@@ -8,6 +8,7 @@
 namespace Drupal\views\Entity;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\views\Views;
@@ -315,10 +316,9 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
       $executable->setDisplay($display_id);
 
       list($display['cache_metadata']['cacheable'], $display['cache_metadata']['contexts']) = $executable->getDisplay()->calculateCacheMetadata();
-      // Always include at least the language context as there will be most
-      // probable translatable strings in the view output.
-      $display['cache_metadata']['contexts'][] = 'language';
-      $display['cache_metadata']['contexts'] = array_unique($display['cache_metadata']['contexts']);
+      // Always include at least the 'languages' context as there will most
+      // probably be translatable strings in the view output.
+      $display['cache_metadata']['contexts'] = Cache::mergeContexts($display['cache_metadata']['contexts'], ['languages']);
     }
     // Restore the previous active display.
     $executable->setDisplay($current_display);

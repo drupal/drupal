@@ -186,7 +186,7 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
     // context.
     return [
       'user.roles',
-      'book.navigation',
+      'route.book_navigation',
     ];
   }
 

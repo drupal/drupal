@@ -207,7 +207,7 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
     $contexts = \Drupal::service("cache_contexts")->getLabels();
     // Blocks are always rendered in the "per language" and "per theme" cache
     // contexts. No need to show those options to the end user.
-    unset($contexts['language']);
+    unset($contexts['languages']);
     unset($contexts['theme']);
     $form['cache']['contexts'] = array(
       '#type' => 'checkboxes',
