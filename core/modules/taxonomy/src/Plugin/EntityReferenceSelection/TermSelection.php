@@ -46,6 +46,11 @@ class TermSelection extends SelectionBase {
       '#title' => $this->t("Create referenced entities if they don't already exist"),
       '#default_value' => isset($this->configuration['handler_settings']['auto_create']) ? $this->configuration['handler_settings']['auto_create'] : FALSE,
     );
+
+    // Sorting is not possible for taxonomy terms because we use
+    // \Drupal\taxonomy\TermStorageInterface::loadTree() to retrieve matches.
+    $form['sort']['#access'] = FALSE;
+
     return $form;
 
   }
