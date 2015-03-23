@@ -15,7 +15,7 @@ namespace Drupal\Component\Utility;
  * provides a store for known safe strings and methods to manage them
  * throughout the page request.
  *
- * Strings sanitized by String::checkPlain() or Xss::filter() are automatically
+ * Strings sanitized by self::checkPlain() or Xss::filter() are automatically
  * marked safe, as are markup strings created from render arrays via
  * drupal_render().
  *
@@ -133,7 +133,7 @@ class SafeMarkup {
    *   self::set(), it won't be escaped again.
    */
   public static function escape($string) {
-    return static::isSafe($string) ? $string : String::checkPlain($string);
+    return static::isSafe($string) ? $string : static::checkPlain($string);
   }
 
   /**
@@ -163,6 +163,123 @@ class SafeMarkup {
   */
   public static function getAll() {
     return static::$safeStrings;
+  }
+
+  /**
+   * Encodes special characters in a plain-text string for display as HTML.
+   *
+   * Also validates strings as UTF-8. All processed strings are also
+   * automatically flagged as safe markup strings for rendering.
+   *
+   * @param string $text
+   *   The text to be checked or processed.
+   *
+   * @return string
+   *   An HTML safe version of $text, or an empty string if $text is not valid
+   *   UTF-8.
+   *
+   * @ingroup sanitization
+   *
+   * @see drupal_validate_utf8()
+   */
+  public static function checkPlain($text) {
+    $string = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+    static::$safeStrings[$string]['html'] = TRUE;
+    return $string;
+  }
+
+  /**
+   * Formats a string for HTML display by replacing variable placeholders.
+   *
+   * This function replaces variable placeholders in a string with the requested
+   * values and escapes the values so they can be safely displayed as HTML. It
+   * should be used on any unknown text that is intended to be printed to an
+   * HTML page (especially text that may have come from untrusted users, since
+   * in that case it prevents cross-site scripting and other security problems).
+   *
+   * In most cases, you should use t() rather than calling this function
+   * directly, since it will translate the text (on non-English-only sites) in
+   * addition to formatting it.
+   *
+   * @param string $string
+   *   A string containing placeholders. The string itself is not escaped, any
+   *   unsafe content must be in $args and inserted via placeholders.
+   * @param array $args
+   *   An associative array of replacements to make. Occurrences in $string of
+   *   any key in $args are replaced with the corresponding value, after
+   *   optional sanitization and formatting. The type of sanitization and
+   *   formatting depends on the first character of the key:
+   *   - @variable: Escaped to HTML using self::escape(). Use this as the
+   *     default choice for anything displayed on a page on the site.
+   *   - %variable: Escaped to HTML and formatted using self::placeholder(),
+   *     which makes the following HTML code:
+   *     @code
+   *       <em class="placeholder">text output here.</em>
+   *     @endcode
+   *   - !variable: Inserted as is, with no sanitization or formatting. Only
+   *     use this when the resulting string is being generated for one of:
+   *     - Non-HTML usage, such as a plain-text email.
+   *     - Non-direct HTML output, such as a plain-text variable that will be
+   *       printed as an HTML attribute value and therefore formatted with
+   *       self::checkPlain() as part of that.
+   *     - Some other special reason for suppressing sanitization.
+   *
+   * @return string
+   *   The formatted string, which is marked as safe unless sanitization of an
+   *   unsafe argument was suppressed (see above).
+   *
+   * @ingroup sanitization
+   *
+   * @see t()
+   */
+  public static function format($string, array $args = array()) {
+    $safe = TRUE;
+
+    // Transform arguments before inserting them.
+    foreach ($args as $key => $value) {
+      switch ($key[0]) {
+        case '@':
+          // Escaped only.
+          $args[$key] = static::escape($value);
+          break;
+
+        case '%':
+        default:
+          // Escaped and placeholder.
+          $args[$key] = static::placeholder($value);
+          break;
+
+        case '!':
+          // Pass-through.
+          if (!static::isSafe($value)) {
+            $safe = FALSE;
+          }
+      }
+    }
+
+    $output = strtr($string, $args);
+    if ($safe) {
+      static::$safeStrings[$output]['html'] = TRUE;
+    }
+
+    return $output;
+  }
+
+  /**
+   * Formats text for emphasized display in a placeholder inside a sentence.
+   *
+   * Used automatically by self::format().
+   *
+   * @param string $text
+   *   The text to format (plain-text).
+   *
+   * @return string
+   *   The formatted text (html).
+   */
+  public static function placeholder($text) {
+    $string = '<em class="placeholder">' . static::escape($text) . '</em>';
+    static::$safeStrings[$string]['html'] = TRUE;
+    return $string;
   }
 
 }

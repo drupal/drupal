@@ -8,7 +8,6 @@
 namespace Drupal\Core\StringTranslation;
 
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\String;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\StringTranslation\Translator\TranslatorInterface;
 
@@ -144,7 +143,7 @@ class TranslationManager implements TranslationInterface, TranslatorInterface {
       return SafeMarkup::set($string);
     }
     else {
-      return String::format($string, $args);
+      return SafeMarkup::format($string, $args);
     }
   }
 

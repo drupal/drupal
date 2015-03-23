@@ -210,4 +210,45 @@ class HtmlTest extends UnitTestCase {
     );
   }
 
+  /**
+   * Tests Html::decodeEntities().
+   *
+   * @dataProvider providerDecodeEntities
+   * @covers ::decodeEntities
+   */
+  public function testDecodeEntities($text, $expected) {
+    $this->assertEquals($expected, Html::decodeEntities($text));
+  }
+
+  /**
+   * Data provider for testDecodeEntities().
+   *
+   * @see testCheckPlain()
+   */
+  public function providerDecodeEntities() {
+    return array(
+      array('Drupal', 'Drupal'),
+      array('<script>', '<script>'),
+      array('&lt;script&gt;', '<script>'),
+      array('&#60;script&#62;', '<script>'),
+      array('&amp;lt;script&amp;gt;', '&lt;script&gt;'),
+      array('"', '"'),
+      array('&#34;', '"'),
+      array('&amp;#34;', '&#34;'),
+      array('&quot;', '"'),
+      array('&amp;quot;', '&quot;'),
+      array("'", "'"),
+      array('&#39;', "'"),
+      array('&amp;#39;', '&#39;'),
+      array('©', '©'),
+      array('&copy;', '©'),
+      array('&#169;', '©'),
+      array('→', '→'),
+      array('&#8594;', '→'),
+      array('➼', '➼'),
+      array('&#10172;', '➼'),
+      array('&euro;', '€'),
+    );
+  }
+
 }

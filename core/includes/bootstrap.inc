@@ -8,7 +8,6 @@ use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\ExtensionDiscovery;
@@ -429,12 +428,12 @@ function t($string, array $args = array(), array $options = array()) {
 /**
  * Formats a string for HTML display by replacing variable placeholders.
  *
- * @see \Drupal\Component\Utility\String::format()
+ * @see \Drupal\Component\Utility\SafeMarkup::format()
  * @see t()
  * @ingroup sanitization
  */
 function format_string($string, array $args = array()) {
-  return String::format($string, $args);
+  return SafeMarkup::format($string, $args);
 }
 
 /**
@@ -495,7 +494,7 @@ function watchdog_exception($type, Exception $exception, $message = NULL, $varia
   // Use a default value if $message is not set.
   if (empty($message)) {
     // The exception message is run through
-    // \Drupal\Component\Utility\String::checkPlain() by
+    // \Drupal\Component\Utility\SafeMarkup::checkPlain() by
     // \Drupal\Core\Utility\Error:decodeException().
     $message = '%type: !message in %function (line %line of %file).';
   }
@@ -1022,10 +1021,10 @@ function drupal_static_reset($name = NULL) {
 /**
  * Formats text for emphasized display in a placeholder inside a sentence.
  *
- * @see \Drupal\Component\Utility\String::placeholder()
+ * @see \Drupal\Component\Utility\SafeMarkup::placeholder()
  */
 function drupal_placeholder($text) {
-  return String::placeholder($text);
+  return SafeMarkup::placeholder($text);
 }
 
 /**
