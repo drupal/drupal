@@ -354,24 +354,6 @@ class FormBuilderTest extends FormTestBase {
   }
 
   /**
-   * Tests the sendResponse() method.
-   *
-   * @expectedException \Exception
-   */
-  public function testSendResponse() {
-    $form_id = 'test_form_id';
-    $expected_form = $this->getMockBuilder('Symfony\Component\HttpFoundation\Response')
-      ->disableOriginalConstructor()
-      ->getMock();
-
-    $form_arg = $this->getMockForm($form_id, $expected_form);
-
-    // Do an initial build of the form and track the build ID.
-    $form_state = new FormState();
-    $this->formBuilder->buildForm($form_arg, $form_state);
-  }
-
-  /**
    * Tests that HTML IDs are unique when rebuilding a form with errors.
    */
   public function testUniqueHtmlId() {

@@ -256,16 +256,6 @@ abstract class FormTestBase extends UnitTestCase {
  * Provides a test form builder class.
  */
 class TestFormBuilder extends FormBuilder {
-  protected static $seenIds = array();
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function sendResponse(Response $response) {
-    parent::sendResponse($response);
-    // Throw an exception instead of exiting.
-    throw new \Exception('exit');
-  }
 
   /**
    * @param \Drupal\Core\Session\AccountInterface $account
@@ -300,41 +290,6 @@ class TestFormBuilder extends FormBuilder {
     }
     return $types[$type];
   }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function drupalHtmlClass($class) {
-    return $class;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function drupalHtmlId($id) {
-    if (isset(static::$seenIds[$id])) {
-      $id = $id . '--' . ++static::$seenIds[$id];
-    }
-    else {
-      static::$seenIds[$id] = 1;
-    }
-    return $id;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function drupalStaticReset($name = NULL) {
-    static::$seenIds = array();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function requestUri() {
-    return '';
-  }
-
 }
 
 }
