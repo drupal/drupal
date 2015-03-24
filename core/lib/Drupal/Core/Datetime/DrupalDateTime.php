@@ -62,9 +62,9 @@ class DrupalDateTime extends DateTimePlus {
    * knowledge of the preferred user timezone.
    */
   protected function prepareTimezone($timezone) {
-    $user_timezone = drupal_get_user_timezone();
-    if (empty($timezone) && !empty($user_timezone)) {
-      $timezone = $user_timezone;
+    if (empty($timezone)) {
+      // Fallback to user or system default timezone.
+      $timezone = drupal_get_user_timezone();
     }
     return parent::prepareTimezone($timezone);
   }
