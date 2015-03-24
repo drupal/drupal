@@ -1679,7 +1679,7 @@ class Sql extends QueryPluginBase {
         break;
       case 'sqlite':
         if (!empty($offset)) {
-          $field = "($field + '$offset_seconds')";
+          $field = "($field + $offset_seconds)";
         }
         break;
     }
@@ -1793,7 +1793,18 @@ class Sql extends QueryPluginBase {
           'A' => '',
         );
         $format = strtr($format, $replace);
-        return "strftime('$format', $field, 'unixepoch')";
+        $expression = "strftime('$format', $field, 'unixepoch')";
+        // The expression yields a string, but the comparison value is an
+        // integer in case the comparison value is a float, integer, or numeric.
+        // All of the above SQLite format tokens only produce integers. However,
+        // the given $format may contain 'Y-m-d', which results in a string.
+        // @see \Drupal\Core\Database\Driver\sqlite\Connection::expandArguments()
+        // @see http://www.sqlite.org/lang_datefunc.html
+        // @see http://www.sqlite.org/lang_expr.html#castexpr
+        if (preg_match('/^(?:%\w)+$/', $format)) {
+          $expression = "CAST($expression AS NUMERIC)";
+        }
+        return $expression;
     }
   }
 

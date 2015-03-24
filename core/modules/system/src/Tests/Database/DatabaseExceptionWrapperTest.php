@@ -18,15 +18,47 @@ use Drupal\simpletest\KernelTestBase;
  */
 class DatabaseExceptionWrapperTest extends KernelTestBase {
 
-  function testDatabaseExceptionWrapper() {
+  /**
+   * Tests the expected database exception thrown for prepared statements.
+   */
+  public function testPreparedStatement() {
     $connection = Database::getConnection();
-    $query = $connection->prepare('bananas');
     try {
+      // SQLite validates the syntax upon preparing a statement already.
+      // @throws \PDOException
+      $query = $connection->prepare('bananas');
+
+      // MySQL only validates the syntax upon trying to execute a query.
+      // @throws \Drupal\Core\Database\DatabaseExceptionWrapper
       $connection->query($query);
-      $this->fail('The expected exception is not thrown.');
+
+      $this->fail('Expected PDOException or DatabaseExceptionWrapper, none was thrown.');
+    }
+    catch (\PDOException $e) {
+      $this->pass('Expected PDOException was thrown.');
     }
     catch (DatabaseExceptionWrapper $e) {
-      $this->pass('The expected exception has been thrown.');
+      $this->pass('Expected DatabaseExceptionWrapper was thrown.');
+    }
+    catch (\Exception $e) {
+      $this->fail("Thrown exception is not a PDOException:\n" . (string) $e);
+    }
+  }
+
+  /**
+   * Tests the expected database exception thrown for inexistent tables.
+   */
+  public function testQueryThrowsDatabaseExceptionWrapperException() {
+    $connection = Database::getConnection();
+    try {
+      $connection->query('SELECT * FROM {does_not_exist}');
+      $this->fail('Expected PDOException, none was thrown.');
+    }
+    catch (DatabaseExceptionWrapper $e) {
+      $this->pass('Expected DatabaseExceptionWrapper was thrown.');
+    }
+    catch (\Exception $e) {
+      $this->fail("Thrown exception is not a DatabaseExceptionWrapper:\n" . (string) $e);
     }
   }
 
