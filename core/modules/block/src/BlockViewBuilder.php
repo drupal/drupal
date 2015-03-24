@@ -36,6 +36,12 @@ class BlockViewBuilder extends EntityViewBuilder {
    * {@inheritdoc}
    */
   public function viewMultiple(array $entities = array(), $view_mode = 'full', $langcode = NULL) {
+    // @todo Remove when https://www.drupal.org/node/2453059 lands.
+    $default_cache_contexts = [
+      'languages',
+      'theme',
+    ];
+
     /** @var \Drupal\block\BlockInterface[] $entities */
     $build = array();
     foreach ($entities as  $entity) {
@@ -63,20 +69,19 @@ class BlockViewBuilder extends EntityViewBuilder {
         '#base_plugin_id' => $base_id,
         '#derivative_plugin_id' => $derivative_id,
         '#id' => $entity->id(),
+        '#cache' => [
+          'contexts' => Cache::mergeContexts($default_cache_contexts, $plugin->getCacheContexts()),
+          'tags' => Cache::mergeTags(
+            $this->getCacheTags(), // Block view builder cache tag.
+            $entity->getCacheTags(), // Block entity cache tag.
+            $plugin->getCacheTags() // Block plugin cache tags.
+          ),
+          'max-age' => $plugin->getCacheMaxAge(),
+        ],
         // Add the entity so that it can be used in the #pre_render method.
         '#block' => $entity,
       );
       $build[$entity_id]['#configuration']['label'] = String::checkPlain($configuration['label']);
-
-      // Set cache tags; these always need to be set, whether the block is
-      // cacheable or not, so that the page cache is correctly informed.
-      $build[$entity_id]['#cache']['tags'] = Cache::mergeTags(
-        $this->getCacheTags(), // Block view builder cache tag.
-        $entity->getCacheTags(), // Block entity cache tag.
-        $plugin->getCacheTags() // Block plugin cache tags.
-      );
-
-      $build[$entity_id]['#cache']['max-age'] = $plugin->getCacheMaxAge();
 
       if ($plugin->isCacheable()) {
         $build[$entity_id]['#pre_render'][] = array($this, 'buildBlock');
@@ -86,14 +91,9 @@ class BlockViewBuilder extends EntityViewBuilder {
           'block',
           $entity->id(),
         );
-        $default_cache_contexts = array(
-          'languages',
-          'theme',
-        );
         $max_age = $plugin->getCacheMaxAge();
         $build[$entity_id]['#cache'] += array(
           'keys' => array_merge($default_cache_keys, $plugin->getCacheKeys()),
-          'contexts' => array_merge($default_cache_contexts, $plugin->getCacheContexts()),
           'expire' => ($max_age === Cache::PERMANENT) ? Cache::PERMANENT : REQUEST_TIME + $max_age,
         );
       }

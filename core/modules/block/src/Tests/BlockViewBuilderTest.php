@@ -151,7 +151,7 @@ class BlockViewBuilderTest extends KernelTestBase {
 
     // Test that entities with caching disabled do not generate a cache entry.
     $build = $this->getBlockRenderArray();
-    $this->assertTrue(isset($build['#cache']) && array_keys($build['#cache']) == array('tags', 'max-age'), 'The render array element of uncacheable blocks is not cached, but does have cache tags & max-age set.');
+    $this->assertTrue(isset($build['#cache']) && array_keys($build['#cache']) == array('contexts', 'tags', 'max-age'), 'The render array element of uncacheable blocks is not cached, but does have cache contexts, tags & max-age set.');
 
     // Enable block caching.
     $this->setBlockCacheConfig(array(
