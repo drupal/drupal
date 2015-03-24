@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\TypedData\Plugin\DataType\Float.
+ * Contains \Drupal\Core\TypedData\Plugin\DataType\FloatData.
  */
 
 namespace Drupal\Core\TypedData\Plugin\DataType;
@@ -21,7 +21,7 @@ use Drupal\Core\TypedData\Type\FloatInterface;
  *   label = @Translation("Float")
  * )
  */
-class Float extends PrimitiveBase implements FloatInterface {
+class FloatData extends PrimitiveBase implements FloatInterface {
 
   /**
    * {@inheritdoc}

@@ -19,7 +19,7 @@ use Drupal\Core\TypedData\Type\DurationInterface;
  *   label = @Translation("Duration")
  * )
  */
-class DurationIso8601 extends String implements DurationInterface {
+class DurationIso8601 extends StringData implements DurationInterface {
 
   /**
    * {@inheritdoc}

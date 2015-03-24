@@ -20,7 +20,7 @@ use Drupal\Core\TypedData\Type\DateTimeInterface;
  *   label = @Translation("Date")
  * )
  */
-class DateTimeIso8601 extends String implements DateTimeInterface {
+class DateTimeIso8601 extends StringData implements DateTimeInterface {
 
   /**
    * {@inheritdoc}

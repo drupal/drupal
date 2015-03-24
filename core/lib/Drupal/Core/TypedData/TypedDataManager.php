@@ -132,14 +132,14 @@ class TypedDataManager extends DefaultPluginManager {
    *
    * @see \Drupal::typedDataManager()
    * @see \Drupal\Core\TypedData\TypedDataManager::getPropertyInstance()
-   * @see \Drupal\Core\TypedData\Plugin\DataType\Integer
-   * @see \Drupal\Core\TypedData\Plugin\DataType\Float
-   * @see \Drupal\Core\TypedData\Plugin\DataType\String
-   * @see \Drupal\Core\TypedData\Plugin\DataType\Boolean
-   * @see \Drupal\Core\TypedData\Plugin\DataType\Duration
+   * @see \Drupal\Core\TypedData\Plugin\DataType\BinaryData
+   * @see \Drupal\Core\TypedData\Plugin\DataType\BooleanData
    * @see \Drupal\Core\TypedData\Plugin\DataType\Date
+   * @see \Drupal\Core\TypedData\Plugin\DataType\Duration
+   * @see \Drupal\Core\TypedData\Plugin\DataType\FloatData
+   * @see \Drupal\Core\TypedData\Plugin\DataType\IntegerData
+   * @see \Drupal\Core\TypedData\Plugin\DataType\StringData
    * @see \Drupal\Core\TypedData\Plugin\DataType\Uri
-   * @see \Drupal\Core\TypedData\Plugin\DataType\Binary
    */
   public function create(DataDefinitionInterface $definition, $value = NULL, $name = NULL, $parent = NULL) {
     $typed_data = $this->createInstance($definition->getDataType(), array(

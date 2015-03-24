@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\TypedData\Plugin\DataType\Binary.
+ * Contains \Drupal\Core\TypedData\Plugin\DataType\BinaryData.
  */
 
 namespace Drupal\Core\TypedData\Plugin\DataType;
@@ -23,7 +23,7 @@ use Drupal\Core\TypedData\TypedData;
  *   label = @Translation("Binary")
  * )
  */
-class Binary extends PrimitiveBase implements BinaryInterface {
+class BinaryData extends PrimitiveBase implements BinaryInterface {
 
   /**
    * The file resource URI.
@@ -63,7 +63,7 @@ class Binary extends PrimitiveBase implements BinaryInterface {
     }
     elseif (is_string($value)) {
       // Note: For performance reasons we store the given URI and access the
-      // resource upon request. See Binary::getValue()
+      // resource upon request. See BinaryData::getValue()
       $this->uri = $value;
       $this->handle = NULL;
     }

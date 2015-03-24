@@ -9,7 +9,7 @@ namespace Drupal\filter\Plugin\DataType;
 
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\OptionsProviderInterface;
-use Drupal\Core\TypedData\Plugin\DataType\String;
+use Drupal\Core\TypedData\Plugin\DataType\StringData;
 
 /**
  * The filter format data type.
@@ -19,7 +19,7 @@ use Drupal\Core\TypedData\Plugin\DataType\String;
  *   label = @Translation("Filter format")
  * )
  */
-class FilterFormat extends String implements OptionsProviderInterface {
+class FilterFormat extends StringData implements OptionsProviderInterface {
 
   /**
    * {@inheritdoc}

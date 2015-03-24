@@ -248,7 +248,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected = array(
       'type' => 'config_schema_test.someschema.with_parents.key_1',
       'label' => 'Test item nested one level',
-      'class' => '\Drupal\Core\TypedData\Plugin\DataType\String',
+      'class' => '\Drupal\Core\TypedData\Plugin\DataType\StringData',
       'definition_class' => '\Drupal\Core\TypedData\DataDefinition',
     );
     $this->assertEqual($definition, $expected);
@@ -259,7 +259,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected = array(
       'type' => 'config_schema_test.someschema.with_parents.key_2',
       'label' => 'Test item nested two levels',
-      'class' => '\Drupal\Core\TypedData\Plugin\DataType\String',
+      'class' => '\Drupal\Core\TypedData\Plugin\DataType\StringData',
       'definition_class' => '\Drupal\Core\TypedData\DataDefinition',
     );
     $this->assertEqual($definition, $expected);
@@ -270,7 +270,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected = array(
       'type' => 'config_schema_test.someschema.with_parents.key_3',
       'label' => 'Test item nested three levels',
-      'class' => '\Drupal\Core\TypedData\Plugin\DataType\String',
+      'class' => '\Drupal\Core\TypedData\Plugin\DataType\StringData',
       'definition_class' => '\Drupal\Core\TypedData\DataDefinition',
     );
     $this->assertEqual($definition, $expected);

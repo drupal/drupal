@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\TypedData\Plugin\DataType\String.
+ * Contains \Drupal\Core\TypedData\Plugin\DataType\StringData.
  */
 
 namespace Drupal\Core\TypedData\Plugin\DataType;
@@ -21,7 +21,7 @@ use Drupal\Core\TypedData\Type\StringInterface;
  *   label = @Translation("String")
  * )
  */
-class String extends PrimitiveBase implements StringInterface {
+class StringData extends PrimitiveBase implements StringInterface {
 
   /**
    * {@inheritdoc}

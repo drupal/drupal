@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\TypedData\Plugin\DataType\Integer.
+ * Contains \Drupal\Core\TypedData\Plugin\DataType\IntegerData.
  */
 
 namespace Drupal\Core\TypedData\Plugin\DataType;
@@ -21,7 +21,7 @@ use Drupal\Core\TypedData\Type\IntegerInterface;
  *   label = @Translation("Integer")
  * )
  */
-class Integer extends PrimitiveBase implements IntegerInterface {
+class IntegerData extends PrimitiveBase implements IntegerInterface {
 
   /**
    * {@inheritdoc}

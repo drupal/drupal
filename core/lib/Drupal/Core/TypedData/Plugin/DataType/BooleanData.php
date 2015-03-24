@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\TypedData\Plugin\DataType\Boolean.
+ * Contains \Drupal\Core\TypedData\Plugin\DataType\BooleanData.
  */
 
 namespace Drupal\Core\TypedData\Plugin\DataType;
@@ -21,7 +21,7 @@ use Drupal\Core\TypedData\Type\BooleanInterface;
  *   label = @Translation("Boolean")
  * )
  */
-class Boolean extends PrimitiveBase implements BooleanInterface {
+class BooleanData extends PrimitiveBase implements BooleanInterface {
 
   /**
    * {@inheritdoc}

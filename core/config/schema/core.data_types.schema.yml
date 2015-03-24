@@ -21,19 +21,19 @@ ignore:
 # Basic scalar data types from typed data.
 boolean:
   label: 'Boolean'
-  class: '\Drupal\Core\TypedData\Plugin\DataType\Boolean'
+  class: '\Drupal\Core\TypedData\Plugin\DataType\BooleanData'
 email:
   label: 'Email'
   class: '\Drupal\Core\TypedData\Plugin\DataType\Email'
 integer:
   label: 'Integer'
-  class: '\Drupal\Core\TypedData\Plugin\DataType\Integer'
+  class: '\Drupal\Core\TypedData\Plugin\DataType\IntegerData'
 float:
   label: 'Float'
-  class: '\Drupal\Core\TypedData\Plugin\DataType\Float'
+  class: '\Drupal\Core\TypedData\Plugin\DataType\FloatData'
 string:
   label: 'String'
-  class: '\Drupal\Core\TypedData\Plugin\DataType\String'
+  class: '\Drupal\Core\TypedData\Plugin\DataType\StringData'
 uri:
   label: 'Uri'
   class: '\Drupal\Core\TypedData\Plugin\DataType\Uri'

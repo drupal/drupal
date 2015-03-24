@@ -20,6 +20,6 @@ use Drupal\Core\TypedData\Type\StringInterface;
  *   constraints = {"Email" = {}}
  * )
  */
-class Email extends String implements StringInterface {
+class Email extends StringData implements StringInterface {
 
 }
