@@ -39,7 +39,7 @@ class ExceptionJsonSubscriber extends HttpExceptionSubscriberBase {
    *   The event to process.
    */
   public function on403(GetResponseForExceptionEvent $event) {
-    $response = new JsonResponse(NULL, Response::HTTP_FORBIDDEN);
+    $response = new JsonResponse(array('message' => $event->getException()->getMessage()), Response::HTTP_FORBIDDEN);
     $event->setResponse($response);
   }
 
@@ -50,7 +50,7 @@ class ExceptionJsonSubscriber extends HttpExceptionSubscriberBase {
    *   The event to process.
    */
   public function on404(GetResponseForExceptionEvent $event) {
-    $response = new JsonResponse(NULL, Response::HTTP_NOT_FOUND);
+    $response = new JsonResponse(array('message' => $event->getException()->getMessage()), Response::HTTP_NOT_FOUND);
     $event->setResponse($response);
   }
 
@@ -61,7 +61,7 @@ class ExceptionJsonSubscriber extends HttpExceptionSubscriberBase {
    *   The event to process.
    */
   public function on405(GetResponseForExceptionEvent $event) {
-    $response = new JsonResponse(NULL, Response::HTTP_METHOD_NOT_ALLOWED);
+    $response = new JsonResponse(array('message' => $event->getException()->getMessage()), Response::HTTP_METHOD_NOT_ALLOWED);
     $event->setResponse($response);
   }
 
