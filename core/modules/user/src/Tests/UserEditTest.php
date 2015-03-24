@@ -17,50 +17,11 @@ use Drupal\simpletest\WebTestBase;
 class UserEditTest extends WebTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('filter');
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-
-    $this->config('user.settings')->set('signatures', TRUE)->save();
-
-    // Prefetch and create text formats.
-    $this->filtered_html_format = entity_create('filter_format', array(
-      'format' => 'filtered_html_format',
-      'name' => 'Filtered HTML',
-      'weight' => -1,
-      'filters' => array(
-        'filter_html' => array(
-          'module' => 'filter',
-          'status' => TRUE,
-          'settings' => array(
-            'allowed_html' => '<a> <em> <strong>',
-          ),
-        ),
-      ),
-    ));
-    $this->filtered_html_format->save();
-
-    $this->full_html_format = entity_create('filter_format', array(
-      'format' => 'full_html',
-      'name' => 'Full HTML',
-    ));
-    $this->full_html_format->save();
-  }
-
-  /**
    * Test user edit page.
    */
   function testUserEdit() {
     // Test user edit functionality.
-    $user1 = $this->drupalCreateUser(array('change own username', $this->full_html_format->getPermissionName(), $this->filtered_html_format->getPermissionName()));
+    $user1 = $this->drupalCreateUser(array('change own username'));
     $user2 = $this->drupalCreateUser(array());
     $this->drupalLogin($user1);
 
@@ -124,11 +85,6 @@ class UserEditTest extends WebTestBase {
     $config->set('password_strength', FALSE)->save();
     $this->drupalPostForm("user/" . $user1->id() . "/edit", $edit, t('Save'));
     $this->assertNoRaw(t('Password strength:'), 'The password strength indicator is not displayed.');
-
-    // Test user signature
-    $edit = array('signature[format]' => $this->full_html_format->id(), 'signature[value]' => $this->randomString(256));
-    $this->drupalPostForm('user/' . $user1->id() . '/edit', $edit, t('Save'));
-    $this->assertRaw(t("%name: may not be longer than @max characters.", array('%name' => t('Signature'), '@max' => 255)));
   }
 
   /**

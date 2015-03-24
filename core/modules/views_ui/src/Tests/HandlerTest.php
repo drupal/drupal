@@ -123,8 +123,8 @@ class HandlerTest extends UITestBase {
 
     $add_handler_url = "admin/structure/views/nojs/add-handler/test_view_empty/default/field";
     $type_info = $handler_types['field'];
-    $this->drupalPostForm($add_handler_url, array('name[users_field_data.signature]' => TRUE), t('Add and configure @handler', array('@handler' => $type_info['ltitle'])));
-    $id = 'signature';
+    $this->drupalPostForm($add_handler_url, array('name[users_field_data.name]' => TRUE), t('Add and configure @handler', array('@handler' => $type_info['ltitle'])));
+    $id = 'name';
     $edit_handler_url = "admin/structure/views/nojs/handler/test_view_empty/default/field/$id";
 
     $this->assertUrl($edit_handler_url, array(), 'The user got redirected to the handler edit form.');

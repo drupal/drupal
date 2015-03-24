@@ -95,8 +95,6 @@ class UserAccessControlHandler extends EntityAccessControlHandler {
 
       case 'preferred_langcode':
       case 'preferred_admin_langcode':
-      case 'signature':
-      case 'signature_format':
       case 'timezone':
       case 'mail':
         // Allow view access to own mail address and other personalization

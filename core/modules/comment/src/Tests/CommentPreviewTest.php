@@ -39,11 +39,8 @@ class CommentPreviewTest extends CommentTestBase {
     $this->setCommentSettings('default_mode', CommentManagerInterface::COMMENT_MODE_THREADED, 'Comment paging changed.');
     $this->drupalLogout();
 
-    // Login as web user and add a signature and a user picture.
+    // Login as web user and add a user picture.
     $this->drupalLogin($this->webUser);
-    $this->config('user.settings')->set('signatures', 1)->save();
-    $test_signature = $this->randomMachineName();
-    $edit['signature[value]'] = '<a href="http://example.com/">' . $test_signature. '</a>';
     $image = current($this->drupalGetTestFiles('image'));
     $edit['files[user_picture_0]'] = drupal_realpath($image->uri);
     $this->drupalPostForm('user/' . $this->webUser->id() . '/edit', $edit, t('Save'));
@@ -62,9 +59,6 @@ class CommentPreviewTest extends CommentTestBase {
     // Check that the title and body fields are displayed with the correct values.
     $this->assertFieldByName('subject[0][value]', $edit['subject[0][value]'], 'Subject field displayed.');
     $this->assertFieldByName('comment_body[0][value]', $edit['comment_body[0][value]'], 'Comment field displayed.');
-
-    // Check that the signature is displaying with the correct text format.
-    $this->assertLink($test_signature);
 
     // Check that the user picture is displayed.
     $this->assertFieldByXPath("//article[contains(@class, 'preview')]//div[contains(@class, 'user-picture')]//img", NULL, 'User picture displayed.');

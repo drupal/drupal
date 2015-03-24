@@ -22,22 +22,6 @@ process:
     plugin: migration
     migration: d6_user_role
     source: roles
-  signature: signature
-  signature_format:
-    -
-# Drupal 6 stores 0 as the signature format when signatures are disabled.
-# Drupal 8 stores a NULL.
-      plugin: static_map
-      bypass: true
-      source: signature_format
-      map:
-        0: NULL
-    -
-# Do not try to migrate the NULL format.
-      plugin: skip_process_on_empty
-    -
-      plugin: migration
-      migration: d6_filter_format
   user_picture:
     plugin: d6_user_picture
     source: uid
@@ -46,7 +30,6 @@ destination:
   md5_passwords: true
 migration_dependencies:
   required:
-    - d6_filter_format
     - d6_user_role
   optional:
     - d6_user_picture_file

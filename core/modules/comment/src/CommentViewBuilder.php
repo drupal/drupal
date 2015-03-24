@@ -102,18 +102,6 @@ class CommentViewBuilder extends EntityViewBuilder {
         );
       }
 
-      $account = comment_prepare_author($entity);
-      $config = \Drupal::config('user.settings');
-      $build['#cache']['tags'] = Cache::mergeTags(isset($build['#cache']['tags']) ? $build['#cache']['tags'] : [],  $config->getCacheTags());
-      if ($config->get('signatures') && $account->getSignature()) {
-        $build[$id]['signature'] = array(
-          '#type' => 'processed_text',
-          '#text' => $account->getSignature(),
-          '#format' => $account->getSignatureFormat(),
-          '#langcode' => $entity->language()->getId(),
-        );
-      }
-
       if (!isset($build[$id]['#attached'])) {
         $build[$id]['#attached'] = array();
       }

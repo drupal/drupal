@@ -22,7 +22,6 @@
  * - submitted: Submission information created from author and created
  *   during template_preprocess_comment().
  * - user_picture: The comment author's profile picture.
- * - signature: The comment author's signature.
  * - status: Comment status. Possible values are:
  *   unpublished, published, or preview.
  * - title: Comment title, linked to the comment.
@@ -103,12 +102,6 @@
 
   <div{{ content_attributes }}>
     {{ content|without('links') }}
-
-    {% if signature %}
-      <div>
-        {{ signature }}
-      </div>
-    {% endif %}
   </div>
   {% if content.links %}
     {{ content.links }}

@@ -286,36 +286,6 @@ class User extends ContentEntityBase implements UserInterface {
   /**
    * {@inheritdoc}
    */
-  public function getSignature() {
-    return $this->get('signature')->value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setSignature($signature) {
-    $this->get('signature')->value = $signature;
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getSignatureFormat() {
-    return $this->get('signature_format')->value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setSignatureFormat($signature_format) {
-    $this->get('signature_format')->value = $signature_format;
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getCreatedTime() {
     return $this->get('created')->value;
   }
@@ -525,20 +495,6 @@ class User extends ContentEntityBase implements UserInterface {
       ->addConstraint('UserMailUnique')
       ->addConstraint('UserMailRequired');
 
-    // @todo Convert to a text field in https://drupal.org/node/1548204.
-    $fields['signature'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Signature'))
-      ->setDescription(t('The signature of this user.'))
-      ->setTranslatable(TRUE);
-    $fields['signature_format'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Signature format'))
-      ->setDescription(t('The signature format of this user.'))
-      // @todo: Define this via an options provider once
-      // https://www.drupal.org/node/2329937 is completed.
-      ->addPropertyConstraints('value', array(
-        'AllowedValues' => array('callback' => __CLASS__ . '::getAllowedSignatureFormats'),
-      ));
-
     $fields['timezone'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Timezone'))
       ->setDescription(t('The timezone of this user.'))
@@ -594,20 +550,6 @@ class User extends ContentEntityBase implements UserInterface {
    */
   protected function getRoleStorage() {
     return \Drupal::entityManager()->getStorage('user_role');
-  }
-
-  /**
-   * Defines allowed signature formats for the field's AllowedValues constraint.
-   *
-   * @return string[]
-   *   The allowed values.
-   */
-  public static function getAllowedSignatureFormats() {
-    if (\Drupal::moduleHandler()->moduleExists('filter')) {
-      return array_keys(filter_formats());
-    }
-    // If filter.module is disabled, no value may be assigned.
-    return array();
   }
 
   /**

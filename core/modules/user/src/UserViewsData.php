@@ -218,24 +218,6 @@ class UserViewsData extends EntityViewsData {
       ),
     );
 
-    unset($data['users_field_data']['signature']);
-    unset($data['users_field_data']['signature_format']);
-
-    if (\Drupal::moduleHandler()->moduleExists('filter')) {
-      $data['users_field_data']['signature'] = array(
-        'title' => t('Signature'),
-        'help' => t("The user's signature."),
-        'field' => array(
-          'id' => 'markup',
-          'format' => filter_fallback_format(),
-          'click sortable' => FALSE,
-        ),
-        'filter' => array(
-          'id' => 'string',
-        ),
-      );
-    }
-
     if (\Drupal::moduleHandler()->moduleExists('content_translation')) {
       $data['users']['translation_link'] = array(
         'title' => t('Translation link'),

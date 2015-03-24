@@ -41,9 +41,6 @@ user.settings:
     register:
       type: string
       label: 'Who can register accounts?'
-    signatures:
-      type: boolean
-      label: 'Enable signatures'
     cancel_method:
       type: string
       label: 'When cancelling a user account'

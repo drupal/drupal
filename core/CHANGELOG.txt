@@ -46,6 +46,7 @@ Drupal 8.0, xxxx-xx-xx (development version)
 - Removed the Garland theme from core.
 - Removed the Statistics module's accesslog functionality and reports from core.
 - Removed XML-RPC functionality from core.
+- Removed user signatures support from core.
 - Removed backwards-compatibility with 'magic_quotes_gpc'/'magic_quotes_runtime'
   PHP configuration settings. Both are required to be disabled.
 - Universally Unique IDentifier (UUID):

@@ -7,14 +7,12 @@ source:
   variables:
     - user_mail_status_blocked_notify
     - user_mail_status_activated_notify
-    - user_signatures
     - user_email_verification
     - user_register
     - anonymous
 process:
   'notify/status_blocked': user_mail_status_blocked_notify
   'notify/status_activated': user_mail_status_activated_notify
-  signatures: user_signatures
   verify_mail: user_email_verification
   register:
     plugin: static_map

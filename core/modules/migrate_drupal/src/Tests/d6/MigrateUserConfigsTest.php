@@ -67,7 +67,6 @@ class MigrateUserConfigsTest extends MigrateDrupal6TestBase {
     $config = $this->config('user.settings');
     $this->assertIdentical(TRUE, $config->get('notify.status_blocked'));
     $this->assertIdentical(FALSE, $config->get('notify.status_activated'));
-    $this->assertIdentical(TRUE, $config->get('signatures'));
     $this->assertIdentical(FALSE, $config->get('verify_mail'));
     $this->assertIdentical('admin_only', $config->get('register'));
     $this->assertIdentical('Guest', $config->get('anonymous'));

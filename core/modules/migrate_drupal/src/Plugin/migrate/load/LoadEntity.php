@@ -134,8 +134,9 @@ class LoadEntity extends PluginBase implements MigrateLoadInterface {
 
     $migration->setProcessOfProperty("$field_name/value", $value_key);
 
-    // See d6_user, signature_format for an example of the YAML that
-    // represents this process array.
+    // See \Drupal\migrate_drupal\Plugin\migrate\source\d6\User::baseFields(),
+    // signature_format for an example of the YAML that represents this
+    // process array.
     $process = [
       [
         'plugin' => 'static_map',

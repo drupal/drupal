@@ -232,29 +232,6 @@ abstract class AccountForm extends ContentEntityForm {
       '#access' => $register && $admin,
     );
 
-    // Signature.
-    $form['signature_settings'] = array(
-      '#type' => 'details',
-      '#title' => $this->t('Signature settings'),
-      '#open' => TRUE,
-      '#weight' => 1,
-      '#access' => (!$register && $config->get('signatures')),
-    );
-    // While the details group will simply not be rendered if empty, the actual
-    // signature element cannot use #access, since #type 'text_format' is not
-    // available when Filter module is not installed. If the user account has an
-    // existing signature value and format, then the existing field values will
-    // just be re-saved to the database in case of an entity update.
-    if ($this->moduleHandler->moduleExists('filter')) {
-      $form['signature_settings']['signature'] = array(
-        '#type' => 'text_format',
-        '#title' => $this->t('Signature'),
-        '#default_value' => $account->getSignature(),
-        '#description' => $this->t('Your signature will be publicly displayed at the end of your comments.'),
-        '#format' => $account->getSignatureFormat(),
-      );
-    }
-
     $user_preferred_langcode = $register ? $language_interface->getId() : $account->getPreferredLangcode();
 
     $user_preferred_admin_langcode = $register ? $language_interface->getId() : $account->getPreferredAdminLangcode(FALSE);
@@ -365,12 +342,6 @@ abstract class AccountForm extends ContentEntityForm {
     /** @var \Drupal\user\UserInterface $account */
     $account = parent::buildEntity($form, $form_state);
 
-    // Take care of mapping signature form element values as their structure
-    // does not directly match the field structure.
-    $signature = $form_state->getValue('signature');
-    $account->setSignature($signature['value']);
-    $account->setSignatureFormat($signature['format']);
-
     // Translate the empty value '' of language selects to an unset field.
     foreach (array('preferred_langcode', 'preferred_admin_langcode') as $field_name) {
       if ($form_state->getValue($field_name) === '') {
@@ -393,8 +364,6 @@ abstract class AccountForm extends ContentEntityForm {
     $field_names = array(
       'name',
       'mail',
-      'signature',
-      'signature_format',
       'timezone',
       'langcode',
       'preferred_langcode',

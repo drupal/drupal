@@ -194,12 +194,6 @@ class AccountSettingsForm extends ConfigFormBase {
       '#open' => TRUE,
       '#access' => $filter_exists,
     );
-    $form['personalization']['user_signatures'] = array(
-      '#type' => 'checkbox',
-      '#title' => $this->t('Enable signatures'),
-      '#default_value' => $filter_exists ? $config->get('signatures') : 0,
-      '#access' => $filter_exists,
-    );
 
     // Default notifications address.
     $form['mail_notification_address'] = array(
@@ -450,7 +444,6 @@ class AccountSettingsForm extends ConfigFormBase {
       ->set('register', $form_state->getValue('user_register'))
       ->set('password_strength', $form_state->getValue('user_password_strength'))
       ->set('verify_mail', $form_state->getValue('user_email_verification'))
-      ->set('signatures', $form_state->getValue('user_signatures'))
       ->set('cancel_method', $form_state->getValue('user_cancel_method'))
       ->set('notify.status_activated', $form_state->getValue('user_mail_status_activated_notify'))
       ->set('notify.status_blocked', $form_state->getValue('user_mail_status_blocked_notify'))
@@ -493,9 +486,6 @@ class AccountSettingsForm extends ConfigFormBase {
         $this->roleStorage->load($new_admin_role)->setIsAdmin(TRUE)->save();
       }
     }
-
-    // Clear field definition cache for signatures.
-    \Drupal::entityManager()->clearCachedFieldDefinitions();
   }
 
 }

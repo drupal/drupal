@@ -699,13 +699,6 @@ function template_preprocess_comment(&$variables) {
     $variables['user_picture'] = array();
   }
 
-  if (isset($variables['elements']['signature'])) {
-    $variables['signature'] = $variables['elements']['signature'];
-    unset($variables['elements']['signature']);
-  }
-  else {
-    $variables['signature'] = '';
-  }
   if (isset($comment->in_preview)) {
     $variables['title'] = \Drupal::l($comment->getSubject(), new Url('<front>'));
     $variables['permalink'] = \Drupal::l(t('Permalink'), new Url('<front>'));

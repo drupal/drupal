@@ -100,11 +100,6 @@ class MigrateUserTest extends MigrateDrupal6TestBase {
     $this->loadDumps($dumps);
 
     $id_mappings = array(
-      'd6_filter_format' => array(
-        array(array(1), array('filtered_html')),
-        array(array(2), array('full_html')),
-        array(array(3), array('escape_html_filter')),
-      ),
       'd6_user_role' => array(
         array(array(1), array('anonymous user')),
         array(array(2), array('authenticated user')),
@@ -156,16 +151,11 @@ class MigrateUserTest extends MigrateDrupal6TestBase {
         $role = $migration_role->getIdMap()->lookupDestinationId(array($rid));
         $roles[] = reset($role);
       }
-      // Get the user signature format.
-      $migration_format = entity_load('migration', 'd6_filter_format');
-      $signature_format = $source->signature_format === '0' ? [NULL] : $migration_format->getIdMap()->lookupDestinationId(array($source->signature_format));
 
       $user = User::load($source->uid);
       $this->assertIdentical($source->uid, $user->id());
       $this->assertIdentical($source->name, $user->label());
       $this->assertIdentical($source->mail, $user->getEmail());
-      $this->assertIdentical($source->signature, $user->getSignature());
-      $this->assertIdentical(reset($signature_format), $user->getSignatureFormat());
       $this->assertIdentical($source->created, $user->getCreatedTime());
       $this->assertIdentical($source->access, $user->getLastAccessedTime());
       $this->assertIdentical($source->login, $user->getLastLoginTime());
