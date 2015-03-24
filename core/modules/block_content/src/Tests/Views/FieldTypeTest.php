@@ -27,11 +27,11 @@ class FieldTypeTest extends BlockContentTestBase {
     $block_content = $this->createBlockContent();
     $expected_result[] = array(
       'id' => $block_content->id(),
-      'block_content_field_data_type' => $block_content->bundle(),
+      'type' => $block_content->bundle(),
     );
     $column_map = array(
       'id' => 'id',
-      'block_content_field_data_type' => 'block_content_field_data_type',
+      'type:target_id' => 'type',
     );
 
     $view = Views::getView('test_field_type');

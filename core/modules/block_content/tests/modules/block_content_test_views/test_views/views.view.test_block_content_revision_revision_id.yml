@@ -43,7 +43,7 @@ display:
           table: block_content
           field: id
           relationship: revision_id
-          plugin_id: block_content
+          plugin_id: field
           entity_type: block_content
           entity_field: id
       arguments:

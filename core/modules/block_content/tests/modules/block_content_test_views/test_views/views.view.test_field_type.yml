@@ -19,7 +19,7 @@ display:
           field: type
           id: type
           table: block_content_field_data
-          plugin_id: block_content_type
+          plugin_id: field
           entity_type: block_content
           entity_field: type
     display_plugin: default
