@@ -49,6 +49,12 @@ class CronRunTest extends WebTestBase {
    * need the exact time when cron is triggered.
    */
   function testAutomaticCron() {
+    // Test with a logged in user; anonymous users likely don't cause Drupal to
+    // fully bootstrap, because of the internal page cache or an external
+    // reverse proxy. Reuse this user for disabling cron later in the test.
+    $admin_user = $this->drupalCreateUser(array('administer site configuration'));
+    $this->drupalLogin($admin_user);
+
     // Ensure cron does not run when the cron threshold is enabled and was
     // not passed.
     $cron_last = time();
@@ -68,8 +74,6 @@ class CronRunTest extends WebTestBase {
     $this->assertTrue($cron_last < \Drupal::state()->get('system.cron_last'), 'Cron runs when the cron threshold is passed.');
 
     // Disable the cron threshold through the interface.
-    $admin_user = $this->drupalCreateUser(array('administer site configuration'));
-    $this->drupalLogin($admin_user);
     $this->drupalPostForm('admin/config/system/cron', array('cron_safe_threshold' => 0), t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'));
     $this->drupalLogout();
