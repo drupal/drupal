@@ -21,8 +21,8 @@
       }
 
       $(context).find('[data-vertical-tabs-panes]').once('vertical-tabs').each(function () {
-        var $this = $(this).addClass('vertical-tabs-panes');
-        var focusID = $this.find(':hidden.vertical-tabs-active-tab').val();
+        var $this = $(this).addClass('vertical-tabs__panes');
+        var focusID = $this.find(':hidden.vertical-tabs__active-tab').val();
         var tab_focus;
 
         // Check if there are some details that can be converted to vertical-tabs
@@ -32,7 +32,7 @@
         }
 
         // Create the tab column.
-        var tab_list = $('<ul class="vertical-tabs-list"></ul>');
+        var tab_list = $('<ul class="vertical-tabs__menu"></ul>');
         $this.wrap('<div class="vertical-tabs clearfix"></div>').before(tab_list);
 
         // Transform each details into a tab.
@@ -48,7 +48,7 @@
             // prop() can't be used on browsers not supporting details element,
             // the style won't apply to them if prop() is used.
             .attr('open', true)
-            .addClass('vertical-tabs-pane')
+            .addClass('vertical-tabs__pane')
             .data('verticalTab', vertical_tab);
           if (this.id === focusID) {
             tab_focus = $that;
@@ -63,10 +63,10 @@
           // element that matches the URL fragment, activate that tab.
           var $locationHash = $this.find(window.location.hash);
           if (window.location.hash && $locationHash.length) {
-            tab_focus = $locationHash.closest('.vertical-tabs-pane');
+            tab_focus = $locationHash.closest('.vertical-tabs__pane');
           }
           else {
-            tab_focus = $this.find('> .vertical-tabs-pane:first');
+            tab_focus = $this.find('> .vertical-tabs__pane:first');
           }
         }
         if (tab_focus.length) {
@@ -102,7 +102,7 @@
       if (event.keyCode === 13) {
         self.focus();
         // Set focus on the first input field of the visible details/tab pane.
-        $(".vertical-tabs-pane :input:visible:enabled:first").trigger('focus');
+        $(".vertical-tabs__pane :input:visible:enabled:first").trigger('focus');
       }
     });
 
@@ -119,17 +119,17 @@
      */
     focus: function () {
       this.details
-        .siblings('.vertical-tabs-pane')
+        .siblings('.vertical-tabs__pane')
         .each(function () {
           var tab = $(this).data('verticalTab');
           tab.details.hide();
-          tab.item.removeClass('selected');
+          tab.item.removeClass('is-selected');
         })
         .end()
         .show()
-        .siblings(':hidden.vertical-tabs-active-tab')
+        .siblings(':hidden.vertical-tabs__active-tab')
         .val(this.details.attr('id'));
-      this.item.addClass('selected');
+      this.item.addClass('is-selected');
       // Mark the active tab for screen readers.
       $('#active-vertical-tab').remove();
       this.link.append('<span id="active-vertical-tab" class="visually-hidden">' + Drupal.t('(active tab)') + '</span>');
@@ -153,10 +153,10 @@
       // Update .first marker for items. We need recurse from parent to retain the
       // actual DOM element order as jQuery implements sortOrder, but not as public
       // method.
-      this.item.parent().children('.vertical-tab-button').removeClass('first')
+      this.item.parent().children('.vertical-tabs__menu-item').removeClass('first')
         .filter(':visible:first').addClass('first');
       // Display the details element.
-      this.details.removeClass('vertical-tab-hidden').show();
+      this.details.removeClass('vertical-tab--hidden').show();
       // Focus this tab.
       this.focus();
       return this;
@@ -171,12 +171,12 @@
       // Update .first marker for items. We need recurse from parent to retain the
       // actual DOM element order as jQuery implements sortOrder, but not as public
       // method.
-      this.item.parent().children('.vertical-tab-button').removeClass('first')
+      this.item.parent().children('.vertical-tabs__menu-item').removeClass('first')
         .filter(':visible:first').addClass('first');
       // Hide the details element.
-      this.details.addClass('vertical-tab-hidden').hide();
+      this.details.addClass('vertical-tab--hidden').hide();
       // Focus the first visible tab (if there is one).
-      var $firstTab = this.details.siblings('.vertical-tabs-pane:not(.vertical-tab-hidden):first');
+      var $firstTab = this.details.siblings('.vertical-tabs__pane:not(.vertical-tab--hidden):first');
       if ($firstTab.length) {
         $firstTab.data('verticalTab').focus();
       }
@@ -203,10 +203,10 @@
    */
   Drupal.theme.verticalTab = function (settings) {
     var tab = {};
-    tab.item = $('<li class="vertical-tab-button" tabindex="-1"></li>')
+    tab.item = $('<li class="vertical-tabs__menu-item" tabindex="-1"></li>')
       .append(tab.link = $('<a href="#"></a>')
-        .append(tab.title = $('<strong></strong>').text(settings.title))
-        .append(tab.summary = $('<span class="summary"></span>')
+        .append(tab.title = $('<strong class="vertical-tabs__menu-item-title"></strong>').text(settings.title))
+        .append(tab.summary = $('<span class="vertical-tabs__menu-item-summary"></span>')
         )
       );
     return tab;

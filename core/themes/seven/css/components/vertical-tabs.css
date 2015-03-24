@@ -1,6 +1,8 @@
 /**
+ * @file
  * Override of misc/vertical-tabs.css.
  */
+
 .vertical-tabs {
   position: relative;
   overflow: hidden;
@@ -9,7 +11,7 @@
   border-radius: 4px;
   background: #e6e5e1;
 }
-.vertical-tabs-list {
+.vertical-tabs__menu {
   float: left; /* LTR */
   width: 240px;
   margin: 0 -100% -1px 0; /* LTR */
@@ -17,32 +19,29 @@
   border-bottom: 1px solid #ccc;
   line-height: 1;
 }
-[dir="rtl"] .vertical-tabs-list {
+[dir="rtl"] .vertical-tabs__menu {
   float: right;
   margin: 0 0 -1px -100%;
 }
-.vertical-tab-button {
+.vertical-tabs__menu-item {
   position: relative;
-  margin: 0;
-  list-style: none;
-  list-style-image: none;
 }
-.vertical-tab-button.selected {
+.vertical-tabs__menu-item.is-selected {
   z-index: 1;
   overflow-x: hidden;
   width: 100%;
   border-right: 1px solid #fcfcfa; /* LTR */
   box-shadow: 0 5px 5px -5px hsla(0, 0%, 0%, 0.3);
 }
-[dir="rtl"] .vertical-tab-button.selected {
+[dir="rtl"] .vertical-tabs__menu-item.is-selected {
   border-left: 1px solid #fcfcfa;
   border-right: none;
 }
-.vertical-tab-button:focus,
-.vertical-tab-button:active {
+.vertical-tabs__menu-item:focus,
+.vertical-tabs__menu-item:active {
   z-index: 2;
 }
-.vertical-tab-button a {
+.vertical-tabs__menu-item a {
   display: block;
   padding: 10px 15px 15px;
   border-bottom: 1px solid #b3b2ad;
@@ -50,60 +49,59 @@
   text-shadow: 0 1px hsla(0, 0%, 100%, 0.6);
   text-decoration: none;
 }
-.vertical-tab-button:last-child a {
+.vertical-tabs__menu-item:last-child a {
   border-bottom: 0;
 }
-.vertical-tab-button.selected a,
-.vertical-tab-button a:hover,
-.vertical-tab-button a:focus {
+.vertical-tabs__menu-item.is-selected a,
+.vertical-tabs__menu-item a:hover,
+.vertical-tabs__menu-item a:focus {
   background: #fcfcfa;
   text-shadow: none;
-  text-decoration: none;
 }
-.vertical-tab-button.selected a {
+.vertical-tabs__menu-item.is-selected a {
   border-bottom-color: #b3b2ad;
   color: #004f80;
 }
-.vertical-tab-button.selected a:hover,
-.vertical-tab-button.selected a:focus {
+.vertical-tabs__menu-item.is-selected a:hover,
+.vertical-tabs__menu-item.is-selected a:focus {
   color: #007ecc;
 }
 [data-vertical-tabs-panes] {
   background-color: #fcfcfa;
 }
-.vertical-tabs-panes {
+.vertical-tabs__panes {
   margin: 0 0 0 240px; /* LTR */
   padding: 10px 15px 10px 15px;
   border-left: 1px solid #a6a5a1; /* LTR */
 }
-[dir="rtl"] .vertical-tabs-panes {
+[dir="rtl"] .vertical-tabs__panes {
   margin: 0 240px 0 0;
   border-left: none;
   border-right: 1px solid #a6a5a1;
 }
-.vertical-tabs-panes:after {
+.vertical-tabs__panes:after {
   content: "";
   display: table;
   clear: both;
 }
-.vertical-tabs-pane {
+.vertical-tabs__pane {
   margin: 0;
   padding: 0;
   border: 0;
   color: #595959;
 }
-.vertical-tab-button strong {
+.vertical-tabs__menu-item-title {
   font-size: 0.923em;
 }
-.vertical-tab-button .summary {
+.vertical-tabs__menu-item-summary {
   display: block;
   padding-top: 0.4em;
   color: #666;
   font-size: 0.846em;
 }
-.vertical-tab-button.selected a:focus strong {
+.vertical-tabs__menu-item.is-selected a:focus .vertical-tabs__menu-item-title {
   text-decoration: underline;
 }
-.vertical-tabs-pane > summary {
+.vertical-tabs__pane > summary {
   display: none;
 }
