@@ -247,6 +247,7 @@ class BlockForm extends EntityForm {
     if (isset($form['request_path'])) {
       $form['request_path']['#title'] = $this->t('Pages');
       $form['request_path']['negate']['#type'] = 'radios';
+      $form['request_path']['negate']['#default_value'] = (int) $form['request_path']['negate']['#default_value'];
       $form['request_path']['negate']['#title_display'] = 'invisible';
       $form['request_path']['negate']['#options'] = [
         $this->t('Show for the listed pages'),
@@ -296,6 +297,13 @@ class BlockForm extends EntityForm {
   protected function validateVisibility(array $form, FormStateInterface $form_state) {
     // Validate visibility condition settings.
     foreach ($form_state->getValue('visibility') as $condition_id => $values) {
+      // All condition plugins use 'negate' as a Boolean in their schema.
+      // However, certain form elements may return it as 0/1. Cast here to
+      // ensure the data is in the expected type.
+      if (array_key_exists('negate', $values)) {
+        $values['negate'] = (bool) $values['negate'];
+      }
+
       // Allow the condition to validate the form.
       $condition = $form_state->get(['conditions', $condition_id]);
       $condition_values = (new FormState())

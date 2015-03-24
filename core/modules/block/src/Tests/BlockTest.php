@@ -40,8 +40,14 @@ class BlockTest extends BlockTestBase {
     $edit['visibility[request_path][pages]'] = 'user*';
     $edit['visibility[request_path][negate]'] = TRUE;
     $edit['visibility[user_role][roles][' . RoleInterface::AUTHENTICATED_ID . ']'] = TRUE;
-    $this->drupalPostForm('admin/structure/block/add/' . $block_name . '/' . $default_theme, $edit, t('Save block'));
+    $this->drupalGet('admin/structure/block/add/' . $block_name . '/' . $default_theme);
+    $this->assertFieldChecked('edit-visibility-request-path-negate-0');
+
+    $this->drupalPostForm(NULL, $edit, t('Save block'));
     $this->assertText('The block configuration has been saved.', 'Block was saved');
+
+    $this->clickLink('Configure');
+    $this->assertFieldChecked('edit-visibility-request-path-negate-1');
 
     $this->drupalGet('');
     $this->assertText($title, 'Block was displayed on the front page.');
