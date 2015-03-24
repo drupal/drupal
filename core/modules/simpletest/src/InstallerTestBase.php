@@ -140,7 +140,7 @@ abstract class InstallerTestBase extends WebTestBase {
 
     // Import new settings.php written by the installer.
     $request = Request::createFromGlobals();
-    $class_loader = require $this->container->get('app.root') . '/core/vendor/autoload.php';
+    $class_loader = require $this->container->get('app.root') . '/autoload.php';
     Settings::initialize($this->container->get('app.root'), DrupalKernel::findSitePath($request), $class_loader);
     foreach ($GLOBALS['config_directories'] as $type => $path) {
       $this->configDirectories[$type] = $path;

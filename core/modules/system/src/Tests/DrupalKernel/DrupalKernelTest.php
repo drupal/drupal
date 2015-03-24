@@ -61,7 +61,7 @@ class DrupalKernelTest extends KernelTestBase {
    */
   protected function getTestKernel(Request $request, array $modules_enabled = NULL, $read_only = FALSE) {
     // Manually create kernel to avoid replacing settings.
-    $class_loader = require DRUPAL_ROOT . '/core/vendor/autoload.php';
+    $class_loader = require DRUPAL_ROOT . '/autoload.php';
     $kernel = DrupalKernel::createFromRequest($request, $class_loader, 'testing');
     $this->settingsSet('container_yamls', []);
     $this->settingsSet('hash_salt', $this->databasePrefix);
@@ -168,7 +168,7 @@ class DrupalKernelTest extends KernelTestBase {
    */
   public function testRepeatedBootWithDifferentEnvironment() {
     $request = Request::createFromGlobals();
-    $class_loader = require DRUPAL_ROOT . '/core/vendor/autoload.php';
+    $class_loader = require DRUPAL_ROOT . '/autoload.php';
 
     $environments = [
       'testing1',

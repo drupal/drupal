@@ -178,7 +178,7 @@ EOD;
     $GLOBALS['conf']['container_service_providers']['TestServiceProvider'] = 'Drupal\simpletest\TestServiceProvider';
 
     // Bootstrap a new kernel.
-    $class_loader = require DRUPAL_ROOT . '/core/vendor/autoload.php';
+    $class_loader = require DRUPAL_ROOT . '/autoload.php';
     $this->kernel = new DrupalKernel('testing', $class_loader, FALSE);
     $request = Request::create('/');
     $site_path = DrupalKernel::findSitePath($request);

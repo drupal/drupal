@@ -68,7 +68,7 @@ function drupal_phpunit_register_extension_dirs(Composer\Autoload\ClassLoader $l
 }
 
 // Start with classes in known locations.
-$loader = require __DIR__ . '/../vendor/autoload.php';
+$loader = require __DIR__ . '/../../autoload.php';
 $loader->add('Drupal\\Tests', __DIR__);
 
 // Scan for arbitrary extension namespaces from core and contrib.

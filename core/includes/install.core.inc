@@ -98,7 +98,7 @@ function install_drupal($class_loader, $settings = array()) {
   //   infrastructure in https://www.drupal.org/node/2389243
   if (is_array($class_loader) && $settings === array()) {
     $settings = $class_loader;
-    $class_loader = require __DIR__ . '/../vendor/autoload.php';
+    $class_loader = require __DIR__ . '/../../autoload.php';
   }
 
   global $install_state;

@@ -16,4 +16,4 @@
  * @see core/modules/statistics/statistics.php
  */
 
-return require_once __DIR__ . '/core/vendor/autoload.php';
+return require __DIR__ . '/core/vendor/autoload.php';

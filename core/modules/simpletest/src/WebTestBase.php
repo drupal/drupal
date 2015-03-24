@@ -862,7 +862,7 @@ abstract class WebTestBase extends TestBase {
     // Since Drupal is bootstrapped already, install_begin_request() will not
     // bootstrap again. Hence, we have to reload the newly written custom
     // settings.php manually.
-    $class_loader = require DRUPAL_ROOT . '/core/vendor/autoload.php';
+    $class_loader = require DRUPAL_ROOT . '/autoload.php';
     Settings::initialize(DRUPAL_ROOT, $this->siteDirectory, $class_loader);
 
     // Execute the non-interactive installer.
