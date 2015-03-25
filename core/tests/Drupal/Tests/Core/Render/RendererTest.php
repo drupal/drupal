@@ -577,6 +577,46 @@ class RendererTest extends RendererTestBase {
     $this->assertSame(Cache::mergeTags($expected_tags, ['rendered']), $cache_item->tags);
   }
 
+  /**
+   * @covers ::render
+   * @covers ::doRender
+   * @covers ::cacheGet
+   * @covers ::cacheSet
+   * @covers ::createCacheID
+   *
+   * @dataProvider providerTestRenderCacheMaxAge
+   */
+  public function testRenderCacheMaxAge($max_age, $is_render_cached, $render_cache_item_expire) {
+    $this->setUpRequest();
+    $this->setupMemoryCache();
+
+    $element = [
+      '#cache' => [
+        'cid' => 'render_cache_test',
+        'max-age' => $max_age,
+      ],
+      '#markup' => '',
+    ];
+    $this->renderer->render($element);
+
+    $cache_item = $this->cacheFactory->get('render')->get('render_cache_test');
+    if (!$is_render_cached) {
+      $this->assertFalse($cache_item);
+    }
+    else {
+      $this->assertNotFalse($cache_item);
+      $this->assertSame($render_cache_item_expire, $cache_item->expire);
+    }
+  }
+
+  public function providerTestRenderCacheMaxAge() {
+    return [
+      [0, FALSE, NULL],
+      [60, TRUE, REQUEST_TIME + 60],
+      [Cache::PERMANENT, TRUE, -1],
+    ];
+  }
+
 }
 
 class TestAccessClass {

@@ -117,10 +117,11 @@ interface RendererInterface {
    *     - 'contexts': An array of one or more cache context IDs. These are
    *       converted to a final value depending on the request. (e.g. 'user' is
    *       mapped to the current user's ID.)
+   *     - 'max-age': A time in seconds. Zero seconds means it is not cacheable.
+   *       \Drupal\Core\Cache\Cache::PERMANENT means it is cacheable forever.
    *     - 'cid': Specify the cache ID directly. Either 'keys' or 'cid' is
    *       required. If 'cid' is set, 'keys' is ignored. Use only if you have
    *       special requirements.
-   *     - 'expire': Set to one of the cache lifetime constants.
    *     - 'bin': Specify a cache bin to cache the element in. Default is
    *       'default'.
    *     When there is a render cache hit, there is no rendering work left to be
