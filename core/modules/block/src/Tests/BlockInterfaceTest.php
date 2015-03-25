@@ -8,6 +8,7 @@
 namespace Drupal\block\Tests;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormState;
 use Drupal\simpletest\KernelTestBase;
 use Drupal\block\BlockInterface;
@@ -45,8 +46,7 @@ class BlockInterfaceTest extends KernelTestBase {
       'provider' => 'block_test',
       'label_display' => BlockInterface::BLOCK_LABEL_VISIBLE,
       'cache' => array(
-        'max_age' => 0,
-        'contexts' => array(),
+        'max_age' => Cache::PERMANENT,
       ),
       'display_message' => 'no message set',
     );
@@ -65,9 +65,6 @@ class BlockInterfaceTest extends KernelTestBase {
     $period = array_map(array(\Drupal::service('date.formatter'), 'formatInterval'), array_combine($period, $period));
     $period[0] = '<' . t('no caching') . '>';
     $period[\Drupal\Core\Cache\Cache::PERMANENT] = t('Forever');
-    $contexts = \Drupal::service("cache_contexts")->getLabels();
-    unset($contexts['theme']);
-    unset($contexts['languages']);
     $expected_form = array(
       'provider' => array(
         '#type' => 'value',
@@ -98,20 +95,8 @@ class BlockInterfaceTest extends KernelTestBase {
           '#type' => 'select',
           '#title' => t('Maximum age'),
           '#description' => t('The maximum time this block may be cached.'),
-          '#default_value' => 0,
+          '#default_value' => Cache::PERMANENT,
           '#options' => $period,
-        ),
-        'contexts' => array(
-          '#type' => 'checkboxes',
-          '#title' => t('Vary by context'),
-          '#description' => t('The contexts this cached block must be varied by. <em>All</em> blocks are varied by language and theme.'),
-          '#default_value' => array(),
-          '#options' => $contexts,
-          '#states' => array(
-            'disabled' => array(
-              ':input[name="settings[cache][max_age]"]' => array('value' => (string) 0),
-            ),
-          ),
         ),
       ),
       'display_message' => array(

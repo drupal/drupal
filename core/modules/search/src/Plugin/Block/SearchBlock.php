@@ -37,4 +37,13 @@ class SearchBlock extends BlockBase {
     return \Drupal::formBuilder()->getForm('Drupal\search\Form\SearchBlockForm');
   }
 
+  /**
+   * {@inheritdoc}
+   *
+   * @todo Make cacheable once https://www.drupal.org/node/2351015 lands.
+   */
+  public function getCacheMaxAge() {
+    return 0;
+  }
+
 }

@@ -8,7 +8,6 @@
 namespace Drupal\block\Tests;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Cache\Cache;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Component\Utility\String;
 use Drupal\block\Entity\Block;
@@ -320,7 +319,7 @@ class BlockTest extends BlockTestBase {
     $config->save();
 
     // Place the "Powered by Drupal" block.
-    $block = $this->drupalPlaceBlock('system_powered_by_block', array('id' => 'powered', 'cache' => array('max_age' => 315360000)));
+    $block = $this->drupalPlaceBlock('system_powered_by_block', array('id' => 'powered'));
 
     // Prime the page cache.
     $this->drupalGet('<front>');
@@ -361,7 +360,7 @@ class BlockTest extends BlockTestBase {
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
 
     // Place the "Powered by Drupal" block another time; verify a cache miss.
-    $block_2 = $this->drupalPlaceBlock('system_powered_by_block', array('id' => 'powered-2', 'cache' => array('max_age' => 315360000)));
+    $block_2 = $this->drupalPlaceBlock('system_powered_by_block', array('id' => 'powered-2'));
     $this->drupalGet('<front>');
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
 

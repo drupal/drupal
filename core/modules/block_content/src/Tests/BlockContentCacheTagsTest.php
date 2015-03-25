@@ -64,7 +64,7 @@ class BlockContentCacheTagsTest extends EntityCacheTagsTestBase {
    * Tests that the block is cached with the correct contexts and tags.
    */
   public function testBlock() {
-    $block = $this->drupalPlaceBlock('block_content:' . $this->entity->uuid(), ['cache' => []]);
+    $block = $this->drupalPlaceBlock('block_content:' . $this->entity->uuid());
     $build = $this->container->get('entity.manager')->getViewBuilder('block')->view($block, 'block');
 
     // Render the block.

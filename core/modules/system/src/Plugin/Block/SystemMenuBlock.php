@@ -8,7 +8,6 @@
 namespace Drupal\system\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Menu\MenuActiveTrailInterface;
 use Drupal\Core\Menu\MenuLinkTreeInterface;
@@ -165,16 +164,7 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    // Modify the default max age for menu blocks: modifications made to menus,
-    // menu links and menu blocks will automatically invalidate corresponding
-    // cache tags, therefore allowing us to cache menu blocks forever. This is
-    // only not the case if there are user-specific or dynamic alterations (e.g.
-    // hook_node_access()), but in that:
-    // 1) it is possible to set a different max age for individual blocks, since
-    //    this is just the default value.
-    // 2) modules can modify caching by implementing hook_block_view_alter()
     return [
-      'cache' => array('max_age' => Cache::PERMANENT),
       'level' => 1,
       'depth' => 0,
     ];
@@ -196,7 +186,7 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
   /**
    * {@inheritdoc}
    */
-  protected function getRequiredCacheContexts() {
+  public function getCacheContexts() {
     // Menu blocks must be cached per role and per active trail.
     $menu_name = $this->getDerivativeId();
     return [

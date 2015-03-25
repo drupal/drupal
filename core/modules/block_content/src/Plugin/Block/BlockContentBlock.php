@@ -98,12 +98,6 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
       'status' => TRUE,
       'info' => '',
       'view_mode' => 'full',
-      // Modify the default max age for custom block blocks: modifications made
-      // to them will automatically invalidate corresponding cache tags, thus
-      // allowing us to cache custom block blocks forever.
-      'cache' => array(
-        'max_age' => \Drupal\Core\Cache\Cache::PERMANENT,
-      ),
     );
   }
 

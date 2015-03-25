@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Tests\Plugin;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\views\Tests\ViewUnitTestBase;
 
 /**
@@ -82,7 +83,7 @@ class BlockDependenciesTest extends ViewUnitTestBase {
    *   - region: 'sidebar_first'.
    *   - theme: The default theme.
    *   - visibility: Empty array.
-   *   - cache: array('max_age' => 0).
+   *   - cache: array('max_age' => Cache::PERMANENT).
    *
    * @return \Drupal\block\Entity\Block
    *   The block entity.
@@ -97,7 +98,7 @@ class BlockDependenciesTest extends ViewUnitTestBase {
       'visibility' => array(),
       'weight' => 0,
       'cache' => array(
-        'max_age' => 0,
+        'max_age' => Cache::PERMANENT,
       ),
     );
     $values = [];

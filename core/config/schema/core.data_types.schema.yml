@@ -295,12 +295,6 @@ block_settings:
         max_age:
           type: integer
           label: 'Maximum age'
-        contexts:
-          type: sequence
-          label: 'Vary by context'
-          sequence:
-            type: string
-            label: 'Context'
     status:
       type: boolean
       label: 'Status'

@@ -10,7 +10,6 @@ namespace Drupal\Core\Block;
 use Drupal\block\BlockInterface;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Cache\CacheContexts;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContextAwarePluginBase;
 use Drupal\Component\Utility\Unicode;
@@ -91,8 +90,8 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
       'provider' => $this->pluginDefinition['provider'],
       'label_display' => BlockInterface::BLOCK_LABEL_VISIBLE,
       'cache' => array(
-        'max_age' => 0,
-        'contexts' => array(),
+        // Blocks are cacheable by default.
+        'max_age' => Cache::PERMANENT,
       ),
     );
   }
@@ -204,36 +203,6 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
       '#default_value' => $this->configuration['cache']['max_age'],
       '#options' => $period,
     );
-    $contexts = \Drupal::service("cache_contexts")->getLabels();
-    // Blocks are always rendered in the "per language" and "per theme" cache
-    // contexts. No need to show those options to the end user.
-    unset($contexts['languages']);
-    unset($contexts['theme']);
-    $form['cache']['contexts'] = array(
-      '#type' => 'checkboxes',
-      '#title' => $this->t('Vary by context'),
-      '#description' => $this->t('The contexts this cached block must be varied by. <em>All</em> blocks are varied by language and theme.'),
-      '#default_value' => $this->configuration['cache']['contexts'],
-      '#options' => $contexts,
-      '#states' => array(
-        'disabled' => array(
-          ':input[name="settings[cache][max_age]"]' => array('value' => (string) 0),
-        ),
-      ),
-    );
-    if (count($this->getRequiredCacheContexts()) > 0) {
-      // Remove the required cache contexts from the list of contexts a user can
-      // choose to modify by: they must always be applied.
-      $context_labels = array();
-      $all_contexts = \Drupal::service("cache_contexts")->getLabels(TRUE);
-      foreach (CacheContexts::parseTokens($this->getRequiredCacheContexts()) as $context) {
-        $context_id = $context[0];
-        $context_labels[] = $all_contexts[$context_id];
-        unset($form['cache']['contexts']['#options'][$context_id]);
-      }
-      $required_context_list = implode(', ', $context_labels);
-      $form['cache']['contexts']['#description'] .= ' ' . $this->t('This block is <em>always</em> varied by the following contexts: %required-context-list.', array('%required-context-list' => $required_context_list));
-    }
 
     // Add plugin-specific settings for this block type.
     $form += $this->blockForm($form, $form_state);
@@ -258,10 +227,6 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
     // Remove the admin_label form item element value so it will not persist.
     $form_state->unsetValue('admin_label');
-
-    // Transform the #type = checkboxes value to a numerically indexed array.
-    $contexts = $form_state->getValue(array('cache', 'contexts'));
-    $form_state->setValue(array('cache', 'contexts'), array_values(array_filter($contexts)));
 
     $this->blockValidate($form, $form_state);
   }
@@ -341,16 +306,6 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
   }
 
   /**
-   * Returns the cache contexts required for this block.
-   *
-   * @return array
-   *   The required cache contexts IDs.
-   */
-  protected function getRequiredCacheContexts() {
-    return array();
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function getCacheKeys() {
@@ -361,9 +316,7 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
    * {@inheritdoc}
    */
   public function getCacheContexts() {
-    // Return the required cache contexts, merged with the user-configured cache
-    // contexts, if any.
-    return array_merge($this->getRequiredCacheContexts(), $this->configuration['cache']['contexts']);
+    return [];
   }
 
   /**

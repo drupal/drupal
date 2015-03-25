@@ -273,7 +273,7 @@ class DisplayBlockTest extends ViewTestBase {
   public function testBlockContextualLinks() {
     $this->drupalLogin($this->drupalCreateUser(array('administer views', 'access contextual links', 'administer blocks')));
     $block = $this->drupalPlaceBlock('views_block:test_view_block-block_1');
-    $cached_block = $this->drupalPlaceBlock('views_block:test_view_block-block_1', array('cache' => array('max_age' => 3600)));
+    $cached_block = $this->drupalPlaceBlock('views_block:test_view_block-block_1');
     $this->drupalGet('test-page');
 
     $id = 'block:block=' . $block->id() . ':|entity.view.edit_form:view=test_view_block:location=block&name=test_view_block&display_id=block_1';

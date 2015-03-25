@@ -71,12 +71,6 @@ class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInt
       'use_site_name' => TRUE,
       'use_site_slogan' => TRUE,
       'label_display' => FALSE,
-      // Modify the default max age for the 'Site branding' block: the site
-      // logo, name and slogan are static for a given language, except when the
-      // theme settings are updated (global theme settings or theme-specific
-      // settings). Cache tags for those cases ensure that a cached version of
-      // this block is invalidated automatically.
-      'cache' => array('max_age' => \Drupal\Core\Cache\Cache::PERMANENT),
     );
   }
 

@@ -107,4 +107,13 @@ class LanguageBlock extends BlockBase implements ContainerFactoryPluginInterface
     return $build;
   }
 
+  /**
+   * {@inheritdoc}
+   *
+   * @todo Make cacheable in https://drupal.org/node/2232375.
+   */
+  public function getCacheMaxAge() {
+    return 0;
+  }
+
 }

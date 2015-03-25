@@ -50,9 +50,6 @@ class SystemMessagesBlock extends BlockBase implements MessagesBlockPluginInterf
     $form['cache']['#description'] = $this->t('This block is cacheable forever, it is not configurable.');
     $form['cache']['max_age']['#value'] = Cache::PERMANENT;
     $form['cache']['max_age']['#disabled'] = TRUE;
-    // Don't allow cache contexts to be configured, this block is globally
-    // cacheable.
-    $form['cache']['contexts']['#access'] = FALSE;
 
     return $form;
   }

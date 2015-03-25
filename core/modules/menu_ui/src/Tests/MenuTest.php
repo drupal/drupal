@@ -578,12 +578,6 @@ class MenuTest extends MenuWebTestBase {
     $this->assertResponse(200);
     $json = Json::decode($response);
     $this->assertIdentical($json[$id], '<ul class="contextual-links"><li class="block-configure"><a href="' . base_path() . 'admin/structure/block/manage/' . $block->id() . '">Configure block</a></li><li class="entitymenuedit-form"><a href="' . base_path() . 'admin/structure/menu/manage/' . $custom_menu->id() . '">Edit menu</a></li></ul>');
-
-    // Test the contextual links are available when block caching is enabled.
-    $this->drupalPostForm('admin/structure/block/manage/' . $block->id(), ['settings[cache][max_age]' => Cache::PERMANENT], t('Save block'));
-    $this->drupalGet('test-page');
-    $id = 'block:block=' . $block->id() . ':|menu:menu=' . $custom_menu->id() . ':';
-    $this->assertRaw('<div data-contextual-id="'. $id . '"></div>', format_string('Contextual link placeholder with id @id exists.', array('@id' => $id)));
   }
 
   /**

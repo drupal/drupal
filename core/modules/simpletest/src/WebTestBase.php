@@ -375,7 +375,7 @@ abstract class WebTestBase extends TestBase {
    *   - region: 'sidebar_first'.
    *   - theme: The default theme.
    *   - visibility: Empty array.
-   *   - cache: array('max_age' => 0).
+   *   - cache: array('max_age' => Cache::PERMANENT).
    *
    * @return \Drupal\block\Entity\Block
    *   The block entity.
@@ -393,7 +393,7 @@ abstract class WebTestBase extends TestBase {
       'visibility' => array(),
       'weight' => 0,
       'cache' => array(
-        'max_age' => 0,
+        'max_age' => Cache::PERMANENT,
       ),
     );
     $values = [];

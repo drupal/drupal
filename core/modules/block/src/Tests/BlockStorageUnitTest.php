@@ -7,6 +7,7 @@
 
 namespace Drupal\block\Tests;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\simpletest\KernelTestBase;
 use Drupal\block_test\Plugin\Block\TestHtmlBlock;
@@ -99,8 +100,7 @@ class BlockStorageUnitTest extends KernelTestBase {
         'provider' => 'block_test',
         'label_display' => BlockInterface::BLOCK_LABEL_VISIBLE,
         'cache' => array(
-          'max_age' => 0,
-          'contexts' => array(),
+          'max_age' => Cache::PERMANENT,
         ),
       ),
       'visibility' => array(),

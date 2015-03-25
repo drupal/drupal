@@ -96,13 +96,6 @@ class AggregatorFeedBlock extends BlockBase implements ContainerFactoryPluginInt
     return array(
       'block_count' => 10,
       'feed' => NULL,
-      // Modify the default max age for the 'Aggregator Feed' blocks:
-      // modifications made to feeds or feed items will automatically invalidate
-      // corresponding cache tags, therefore allowing us to cache these blocks
-      // forever.
-      'cache' => array(
-        'max_age' => \Drupal\Core\Cache\Cache::PERMANENT,
-      ),
     );
   }
 

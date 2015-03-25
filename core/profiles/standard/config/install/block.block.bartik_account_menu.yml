@@ -10,9 +10,6 @@ settings:
   label: 'User account menu'
   provider: system
   label_display: '0'
-  cache:
-    max_age: -1
-    contexts: {  }
   level: 1
   depth: 1
 dependencies:

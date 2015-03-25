@@ -32,4 +32,11 @@ class TestCacheBlock extends BlockBase {
     return $build;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    return \Drupal::state()->get('block_test.cache_contexts', []);
+  }
+
 }

@@ -127,18 +127,7 @@ class HelpBlock extends BlockBase implements ContainerFactoryPluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function defaultConfiguration() {
-    // Modify the default max age for the Help block: help text is
-    // static for a given URL, except when a module is updated, in which case
-    // update.php must be run, which clears all caches. Thus it's safe to cache
-    // the output for this block forever on a per-URL basis.
-    return array('cache' => array('max_age' => \Drupal\Core\Cache\Cache::PERMANENT));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getRequiredCacheContexts() {
+  public function getCacheContexts() {
     // The "Help" block must be cached per URL: help is defined for a
     // given path, and does not come with any access restrictions.
     return array('url');

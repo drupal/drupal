@@ -11,6 +11,7 @@
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Database\StatementInterface;
@@ -188,15 +189,17 @@ function node_entity_view_display_alter(EntityViewDisplayInterface $display, $co
 function node_title_list(StatementInterface $result, $title = NULL) {
   $items = array();
   $num_rows = FALSE;
+  $nids = [];
   foreach ($result as $row) {
     // Do not use $node->label() or $node->urlInfo() here, because we only have
     // database rows, not actual nodes.
+    $nids[] = $row->nid;
     $options = !empty($row->comment_count) ? array('attributes' => array('title' => \Drupal::translation()->formatPlural($row->comment_count, '1 comment', '@count comments'))) : array();
     $items[] = \Drupal::l($row->title, new Url('entity.node.canonical', ['node' => $row->nid], $options));
     $num_rows = TRUE;
   }
 
-  return $num_rows ? array('#theme' => 'item_list__node', '#items' => $items, '#title' => $title) : FALSE;
+  return $num_rows ? array('#theme' => 'item_list__node', '#items' => $items, '#title' => $title, '#cache' => ['tags' => Cache::mergeTags(['node_list'], Cache::buildTags('node', $nids))]) : FALSE;
 }
 
 /**
