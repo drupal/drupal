@@ -131,6 +131,11 @@ class LocalePluralFormatTest extends WebTestBase {
         $expected_plural_index = ($count == 1) ? 0 : $expected_plural_index;
         $expected_plural_string = str_replace('@count', $count, $plural_strings[$langcode][$expected_plural_index]);
         $this->assertIdentical(\Drupal::translation()->formatPlural($count, '1 hour', '@count hours', array(), array('langcode' => $langcode)), $expected_plural_string, 'Plural translation of 1 hours / @count hours for count ' . $count . ' in ' . $langcode . ' is ' . $expected_plural_string);
+        // DO NOT use translation to pass into formatPluralTranslated() this
+        // way. It is designed to be used with *already* translated text like
+        // settings from configuration. We use PHP translation here just because
+        // we have the expected result data in that format.
+        $this->assertIdentical(\Drupal::translation()->formatPluralTranslated($count, \Drupal::translation()->translate('1 hour' . LOCALE_PLURAL_DELIMITER . '@count hours', array(), array('langcode' => $langcode)), array(), array('langcode' => $langcode)), $expected_plural_string, 'Translated plural lookup of 1 hours / @count hours for count ' . $count . ' in ' . $langcode . ' is ' . $expected_plural_string);
       }
     }
   }
