@@ -201,4 +201,11 @@ class MemoryBackend implements CacheBackendInterface, CacheTagsInvalidatorInterf
     $this->cache = [];
   }
 
+  /**
+   * Prevents data stored in memory backends from being serialized.
+   */
+  public function __sleep() {
+    return [];
+  }
+
 }
