@@ -155,7 +155,7 @@ class MenuLanguageTest extends MenuWebTestBase {
 
     // Remove English language. To do that another language has to be set as
     // default.
-    $this->config('system.site')->set('default_langcode', 'cs')->save();
+    $this->config('system.site')->set('langcode', 'cs')->save();
     entity_delete_multiple('configurable_language', array('en'));
 
     // Save the menu again and check if the language is still the same.

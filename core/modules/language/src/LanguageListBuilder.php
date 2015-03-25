@@ -152,7 +152,7 @@ class LanguageListBuilder extends DraggableListBuilder {
     // Save the default language if changed.
     $new_id = $form_state->getValue('site_default_language');
     if ($new_id != $this->languageManager->getDefaultLanguage()->getId()) {
-      $this->configFactory->getEditable('system.site')->set('default_langcode', $new_id)->save();
+      $this->configFactory->getEditable('system.site')->set('langcode', $new_id)->save();
       $this->languageManager->reset();
     }
 

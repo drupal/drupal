@@ -54,8 +54,8 @@ class ConfigSubscriber implements EventSubscriberInterface {
    */
   public function onConfigSave(ConfigCrudEvent $event) {
     $saved_config = $event->getConfig();
-    if ($saved_config->getName() == 'system.site' && $event->isChanged('default_langcode')) {
-      $language = $this->languageManager->getLanguage($saved_config->get('default_langcode'));
+    if ($saved_config->getName() == 'system.site' && $event->isChanged('langcode')) {
+      $language = $this->languageManager->getLanguage($saved_config->get('langcode'));
       // During an import the language might not exist yet.
       if ($language) {
         $this->languageDefault->set($language);

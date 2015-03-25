@@ -116,7 +116,7 @@ class LanguageConfigurationElementTest extends WebTestBase {
     $configurable_language = entity_load('configurable_language', $old_default->getId());
     $this->assertTrue($configurable_language->isDefault(), 'The en language entity is flagged as the default language.');
 
-    $this->config('system.site')->set('default_langcode', 'cc')->save();
+    $this->config('system.site')->set('langcode', 'cc')->save();
     ContentLanguageSettings::loadByEntityTypeBundle('entity_test','custom_bundle')
       ->setLanguageAlterable(TRUE)
       ->setDefaultLangcode(LanguageInterface::LANGCODE_SITE_DEFAULT)
