@@ -145,7 +145,7 @@ class BasicAuthTest extends WebTestBase {
    */
   function testLocale() {
     ConfigurableLanguage::createFromLangcode('de')->save();
-    $this->config('system.site')->set('langcode', 'de')->save();
+    $this->config('system.site')->set('default_langcode', 'de')->save();
 
     $account = $this->drupalCreateUser();
     $url = Url::fromRoute('router_test.11');

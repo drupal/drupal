@@ -37,7 +37,10 @@ system.site:
       label: 'Weight element maximum value'
     langcode:
       type: string
-      label: 'Default language'
+      label: 'Language code'
+    default_langcode:
+      type: string
+      label: 'Site default language code'
     mail_notification:
       type: string
       label: 'Notification email address'

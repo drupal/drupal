@@ -97,7 +97,7 @@ class LanguageServiceProvider extends ServiceProviderBase {
   protected function getDefaultLanguageValues() {
     $config_storage = BootstrapConfigStorageFactory::get();
     $system = $config_storage->read('system.site');
-    $default_language = $config_storage->read(static::CONFIG_PREFIX . $system['langcode']);
+    $default_language = $config_storage->read(static::CONFIG_PREFIX . $system['default_langcode']);
     if (is_array($default_language)) {
       return $default_language;
     }
