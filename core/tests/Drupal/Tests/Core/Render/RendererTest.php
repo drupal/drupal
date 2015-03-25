@@ -538,13 +538,13 @@ class RendererTest extends RendererTestBase {
     // Create an empty element.
     $test_element = [
       '#cache' => [
-        'cid' => 'render_cache_test',
+        'keys' => ['render_cache_test'],
         'tags' => ['render_cache_tag'],
       ],
       '#markup' => '',
       'child' => [
         '#cache' => [
-          'cid' => 'render_cache_test_child',
+          'keys' => ['render_cache_test_child'],
           'tags' => ['render_cache_tag_child:1', 'render_cache_tag_child:2'],
         ],
         '#markup' => '',
@@ -592,7 +592,7 @@ class RendererTest extends RendererTestBase {
 
     $element = [
       '#cache' => [
-        'cid' => 'render_cache_test',
+        'keys' => ['render_cache_test'],
         'max-age' => $max_age,
       ],
       '#markup' => '',

@@ -358,7 +358,7 @@ class Renderer implements RendererInterface {
 
     // Cache the processed element if #cache is set, and the metadata necessary
     // to generate a cache ID is present.
-    if (isset($elements['#cache']) && (isset($elements['#cache']['keys']) || isset($elements['#cache']['cid']))) {
+    if (isset($elements['#cache']) && isset($elements['#cache']['keys'])) {
       $this->cacheSet($elements, $pre_bubbling_cid);
     }
 
@@ -713,9 +713,7 @@ class Renderer implements RendererInterface {
   /**
    * Creates the cache ID for a renderable element.
    *
-   * This creates the cache ID string, either by returning the #cache['cid']
-   * property if present or by building the cache ID out of the #cache['keys'] +
-   * #cache['contexts'].
+   * Creates the cache ID string based on #cache['keys'] + #cache['contexts'].
    *
    * @param array $elements
    *   A renderable array.
@@ -729,12 +727,9 @@ class Renderer implements RendererInterface {
       return FALSE;
     }
 
-    if (isset($elements['#cache']['cid'])) {
-      return $elements['#cache']['cid'];
-    }
-    elseif (isset($elements['#cache']['keys'])) {
+    if (isset($elements['#cache']['keys'])) {
       $cid_parts = $elements['#cache']['keys'];
-      if (isset($elements['#cache']['contexts'])) {
+      if (!empty($elements['#cache']['contexts'])) {
         $contexts = $this->cacheContexts->convertTokensToKeys($elements['#cache']['contexts']);
         $cid_parts = array_merge($cid_parts, $contexts);
       }

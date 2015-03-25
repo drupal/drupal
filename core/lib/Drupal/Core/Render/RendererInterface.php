@@ -119,9 +119,6 @@ interface RendererInterface {
    *       mapped to the current user's ID.)
    *     - 'max-age': A time in seconds. Zero seconds means it is not cacheable.
    *       \Drupal\Core\Cache\Cache::PERMANENT means it is cacheable forever.
-   *     - 'cid': Specify the cache ID directly. Either 'keys' or 'cid' is
-   *       required. If 'cid' is set, 'keys' is ignored. Use only if you have
-   *       special requirements.
    *     - 'bin': Specify a cache bin to cache the element in. Default is
    *       'default'.
    *     When there is a render cache hit, there is no rendering work left to be

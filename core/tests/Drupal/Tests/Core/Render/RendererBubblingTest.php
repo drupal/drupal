@@ -96,33 +96,6 @@ class RendererBubblingTest extends RendererTestBase {
   public function providerTestContextBubblingEdgeCases() {
     $data = [];
 
-    // Bubbled cache contexts cannot override a cache ID set by #cache['cid'].
-    // But the cache context is bubbled nevertheless.
-    $test_element = [
-      '#cache' => [
-        'cid' => 'parent',
-      ],
-      '#markup' => 'parent',
-      'child' => [
-        '#cache' => [
-          'contexts' => ['foo'],
-        ],
-      ],
-    ];
-    $expected_cache_items = [
-      'parent' => [
-        '#attached' => [],
-        '#cache' => [
-          'contexts' => ['foo'],
-          'tags' => [],
-          'max-age' => Cache::PERMANENT,
-        ],
-        '#post_render_cache' => [],
-        '#markup' => 'parent',
-      ],
-    ];
-    $data[] = [$test_element, ['foo'], $expected_cache_items];
-
     // Cache contexts of inaccessible children aren't bubbled (because those
     // children are not rendered at all).
     $test_element = [
@@ -582,11 +555,11 @@ class BubblingTest {
         '#markup' => $placeholder,
       ],
       'child_nested_pre_render_uncached' => [
-        '#cache' => ['cid' => 'uncached_nested'],
+        '#cache' => ['keys' => ['uncached_nested']],
         '#pre_render' => [__CLASS__ . '::bubblingNestedPreRenderUncached'],
       ],
       'child_nested_pre_render_cached' => [
-        '#cache' => ['cid' => 'cached_nested'],
+        '#cache' => ['keys' => ['cached_nested']],
         '#pre_render' => [__CLASS__ . '::bubblingNestedPreRenderCached'],
       ],
     ];
