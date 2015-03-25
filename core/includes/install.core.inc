@@ -1611,21 +1611,13 @@ function install_profile_modules(&$install_state) {
  *   An array of information about the current installation state.
  */
 function install_profile_themes(&$install_state) {
-  $theme_handler = \Drupal::service('theme_handler');
-
-  // ThemeHandler::install() resets the current list of themes. The theme used
-  // in the installer is not necessarily in the list of themes to install, so
-  // retain the current list.
-  // @see _drupal_maintenance_theme()
-  $current_themes = $theme_handler->listInfo();
-
   // Install the themes specified by the installation profile.
   $themes = $install_state['profile_info']['themes'];
-  $theme_handler->install($themes);
+  \Drupal::service('theme_handler')->install($themes);
 
-  foreach ($current_themes as $theme) {
-    $theme_handler->addTheme($theme);
-  }
+  // Ensure that the install profile's theme is used.
+  // @see _drupal_maintenance_theme()
+  \Drupal::service('theme.manager')->resetActiveTheme();
 }
 
 /**
@@ -1644,6 +1636,10 @@ function install_install_profile(&$install_state) {
   // optional configuration whose dependencies can be met at this point removes
   // any disparities that this creates.
   \Drupal::service('config.installer')->installOptionalConfig();
+
+  // Ensure that the install profile's theme is used.
+  // @see _drupal_maintenance_theme()
+  \Drupal::service('theme.manager')->resetActiveTheme();
 }
 
 /**

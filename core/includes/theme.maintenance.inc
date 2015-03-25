@@ -68,11 +68,10 @@ function _drupal_maintenance_theme() {
   // installed, retrieve all available themes.
   /** @var \Drupal\Core\Theme\ThemeInitialization $theme_init */
   $theme_init = \Drupal::service('theme.initialization');
+  $theme_handler = \Drupal::service('theme_handler');
   if (empty($themes) || !isset($themes[$custom_theme])) {
-    $theme_handler = \Drupal::service('theme_handler');
     $themes = $theme_handler->rebuildThemeData();
     $theme_handler->addTheme($themes[$custom_theme]);
-    \Drupal::theme()->setActiveTheme($theme_init->getActiveTheme($themes[$custom_theme], array()));
   }
 
   // \Drupal\Core\Extension\ThemeHandlerInterface::listInfo() triggers a
@@ -86,8 +85,12 @@ function _drupal_maintenance_theme() {
   $base_theme = array();
   $ancestor = $theme;
   while ($ancestor && isset($themes[$ancestor]->base_theme)) {
-    $base_theme[] = $new_base_theme = $themes[$themes[$ancestor]->base_theme];
+    $base_theme[] = $themes[$themes[$ancestor]->base_theme];
     $ancestor = $themes[$ancestor]->base_theme;
+    if ($ancestor) {
+      // Ensure that the base theme is added.
+      $theme_handler->addTheme($themes[$ancestor]);
+    }
   }
   // @todo This is just a workaround. Find a better way how to handle themes
   //   on maintenance pages, see https://www.drupal.org/node/2322619.
