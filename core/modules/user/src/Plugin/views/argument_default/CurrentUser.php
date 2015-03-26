@@ -37,7 +37,7 @@ class CurrentUser extends ArgumentDefaultPluginBase implements CacheablePluginIn
    * {@inheritdoc}
    */
   public function getCacheContexts() {
-    return ['cache.context.user'];
+    return ['user'];
   }
 
 }

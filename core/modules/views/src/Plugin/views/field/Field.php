@@ -961,10 +961,7 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
    * {@inheritdoc}
    */
   public function getCacheContexts() {
-    // @todo what to do about field access?
-    $contexts = [];
-
-    $contexts[] = 'user';
+    $contexts = $this->getEntityTranslationRenderer()->getCacheContexts();
 
     return $contexts;
   }

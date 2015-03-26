@@ -52,8 +52,6 @@ class EntityReferenceRelationshipTest extends ViewUnitTestBase {
     $this->installEntitySchema('user');
     $this->installEntitySchema('entity_test');
 
-    ViewTestData::createTestViews(get_class($this), array('entity_reference_test_views'));
-
     $field_storage = FieldStorageConfig::create(array(
       'entity_type' => 'entity_test',
       'field_name' => 'field_test',
@@ -75,6 +73,8 @@ class EntityReferenceRelationshipTest extends ViewUnitTestBase {
       ),
     ));
     $field->save();
+
+    ViewTestData::createTestViews(get_class($this), array('entity_reference_test_views'));
 
     // Create some test entities which link each other.
     $entity_storage= \Drupal::entityManager()->getStorage('entity_test');

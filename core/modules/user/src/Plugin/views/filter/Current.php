@@ -54,7 +54,7 @@ class Current extends BooleanOperator {
     $contexts = parent::getCacheContexts();
 
     // This filter depends on the current user.
-    $contexts[] = 'cache.context.user';
+    $contexts[] = 'user';
 
     return $contexts;
   }

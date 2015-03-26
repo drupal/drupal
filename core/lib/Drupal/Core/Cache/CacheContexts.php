@@ -221,4 +221,54 @@ class CacheContexts {
     return $contexts_with_parameters;
   }
 
+  /**
+   * Validates an array of cache context tokens.
+   *
+   * Can be called before using cache contexts in operations, to check validity.
+   *
+   * @param string[] $context_tokens
+   *   An array of cache context tokens.
+   *
+   * @throws \LogicException
+   *
+   * @see \Drupal\Core\Cache\CacheContexts::parseTokens()
+   */
+  public function validateTokens(array $context_tokens = []) {
+    if (empty($context_tokens)) {
+      return;
+    }
+
+    // Initialize the set of valid context tokens with the container's contexts.
+    if (!isset($this->validContextTokens)) {
+      $this->validContextTokens = array_flip($this->contexts);
+    }
+
+    foreach ($context_tokens as $context_token) {
+      if (!is_string($context_token)) {
+        throw new \LogicException(sprintf('Cache contexts must be strings, %s given.', gettype($context_token)));
+      }
+
+      if (isset($this->validContextTokens[$context_token])) {
+        continue;
+      }
+
+      // If it's a valid context token, then the ID must be stored in the set
+      // of valid context tokens (since we initialized it with the list of cache
+      // context IDs using the container). In case of an invalid context token,
+      // throw an exception, otherwise cache it, including the parameter, to
+      // minimize the amount of work in future ::validateContexts() calls.
+      $context_id = $context_token;
+      $colon_pos = strpos($context_id, ':');
+      if ($colon_pos !== FALSE) {
+        $context_id = substr($context_id, 0, $colon_pos);
+      }
+      if (isset($this->validContextTokens[$context_id])) {
+        $this->validContextTokens[$context_token] = TRUE;
+      }
+      else {
+        throw new \LogicException(sprintf('"%s" is not a valid cache context ID.', $context_id));
+      }
+    }
+  }
+
 }

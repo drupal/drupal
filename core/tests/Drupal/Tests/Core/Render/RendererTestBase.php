@@ -86,6 +86,7 @@ class RendererTestBase extends UnitTestCase {
     $this->renderer = new Renderer($this->controllerResolver, $this->themeManager, $this->elementInfo, $this->requestStack, $this->cacheFactory, $this->cacheContexts);
 
     $container = new ContainerBuilder();
+    $container->set('cache_contexts', $this->cacheContexts);
     $container->set('renderer', $this->renderer);
     \Drupal::setContainer($container);
   }

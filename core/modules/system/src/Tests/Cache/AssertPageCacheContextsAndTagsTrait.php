@@ -58,11 +58,13 @@ trait AssertPageCacheContextsAndTagsTrait {
     $actual_tags = $get_cache_header_values('X-Drupal-Cache-Tags');
     $this->assertIdentical($actual_contexts, $expected_contexts);
     if ($actual_contexts !== $expected_contexts) {
-      debug(array_diff($actual_contexts, $expected_contexts));
+      debug('Missing cache contexts: ' . implode(',', array_diff($actual_contexts, $expected_contexts)));
+      debug('Unwanted cache contexts: ' . implode(',', array_diff($expected_contexts, $actual_contexts)));
     }
     $this->assertIdentical($actual_tags, $expected_tags);
     if ($actual_tags !== $expected_tags) {
-      debug(array_diff($actual_tags, $expected_tags));
+      debug('Missing cache tags: ' . implode(',', array_diff($actual_tags, $expected_tags)));
+      debug('Unwanted cache tags: ' . implode(',', array_diff($expected_tags, $actual_tags)));
     }
 
     // Assert cache hit + expected cache contexts + tags.
@@ -72,11 +74,13 @@ trait AssertPageCacheContextsAndTagsTrait {
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
     $this->assertIdentical($actual_contexts, $expected_contexts);
     if ($actual_contexts !== $expected_contexts) {
-      debug(array_diff($actual_contexts, $expected_contexts));
+      debug('Missing cache contexts: ' . implode(',', array_diff($actual_contexts, $expected_contexts)));
+      debug('Unwanted cache contexts: ' . implode(',', array_diff($expected_contexts, $actual_contexts)));
     }
     $this->assertIdentical($actual_tags, $expected_tags);
     if ($actual_tags !== $expected_tags) {
-      debug(array_diff($actual_tags, $expected_tags));
+      debug('Missing cache tags: ' . implode(',', array_diff($actual_tags, $expected_tags)));
+      debug('Unwanted cache tags: ' . implode(',', array_diff($expected_tags, $actual_tags)));
     }
 
     // Assert page cache item + expected cache tags.
@@ -86,7 +90,8 @@ trait AssertPageCacheContextsAndTagsTrait {
     sort($cache_entry->tags);
     $this->assertEqual($cache_entry->tags, $expected_tags);
     if ($cache_entry->tags !== $expected_tags) {
-      debug(array_diff($cache_entry->tags, $expected_tags));
+      debug('Missing cache tags: ' . implode(',', array_diff($cache_entry->tags, $expected_tags)));
+      debug('Unwanted cache tags: ' . implode(',', array_diff($expected_tags, $cache_entry->tags)));
     }
   }
 

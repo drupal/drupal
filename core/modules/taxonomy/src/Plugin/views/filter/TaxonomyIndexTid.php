@@ -360,7 +360,7 @@ class TaxonomyIndexTid extends ManyToOne {
     // The result potentially depends on term access and so is just cacheable
     // per user.
     // @todo https://www.drupal.org/node/2352175
-    $contexts[] = 'cache.context.user';
+    $contexts[] = 'user';
 
     return $contexts;
   }

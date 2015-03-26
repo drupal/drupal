@@ -9,6 +9,7 @@ namespace Drupal\Tests\Core\Cache;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Tests\UnitTestCase;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * @coversDefaultClass \Drupal\Core\Cache\Cache
@@ -27,6 +28,7 @@ class CacheTest extends UnitTestCase {
       [['foo'], FALSE],
       [['foo', 'bar'], FALSE],
       [['foo', 'bar', 'llama:2001988', 'baz', 'llama:14031991'], FALSE],
+      // Invalid.
       [[FALSE], 'Cache tags must be strings, boolean given.'],
       [[TRUE], 'Cache tags must be strings, boolean given.'],
       [['foo', FALSE], 'Cache tags must be strings, boolean given.'],

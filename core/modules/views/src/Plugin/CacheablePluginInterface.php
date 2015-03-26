@@ -8,7 +8,9 @@
 namespace Drupal\views\Plugin;
 
 /**
- * Provides information whether and how the specific Views plugin is cacheable.
+ * Provides caching information about the result cacheability of views plugins.
+ *
+ * For caching on the render level, we rely on bubbling of the cache contexts.
  */
 interface CacheablePluginInterface {
 

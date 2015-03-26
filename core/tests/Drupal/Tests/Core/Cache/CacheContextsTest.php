@@ -10,6 +10,7 @@ namespace Drupal\Tests\Core\Cache;
 use Drupal\Core\Cache\CacheContexts;
 use Drupal\Core\Cache\CacheContextInterface;
 use Drupal\Core\Cache\CalculatedCacheContextInterface;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\Container;
 
@@ -163,6 +164,53 @@ class CacheContextsTest extends UnitTestCase {
         ['cache_context.baz', Container::EXCEPTION_ON_INVALID_REFERENCE, new BazCacheContext()],
       ]));
     return $container;
+  }
+
+  /**
+   * Provides a list of cache context token arrays.
+   *
+   * @return array
+   */
+  public function validateTokensProvider() {
+    return [
+      [[], FALSE],
+      [['foo'], FALSE],
+      [['foo', 'foo.bar'], FALSE],
+      [['foo', 'baz:llama'], FALSE],
+      // Invalid.
+      [[FALSE], 'Cache contexts must be strings, boolean given.'],
+      [[TRUE], 'Cache contexts must be strings, boolean given.'],
+      [['foo', FALSE], 'Cache contexts must be strings, boolean given.'],
+      [[NULL], 'Cache contexts must be strings, NULL given.'],
+      [['foo', NULL], 'Cache contexts must be strings, NULL given.'],
+      [[1337], 'Cache contexts must be strings, integer given.'],
+      [['foo', 1337], 'Cache contexts must be strings, integer given.'],
+      [[3.14], 'Cache contexts must be strings, double given.'],
+      [['foo', 3.14], 'Cache contexts must be strings, double given.'],
+      [[[]], 'Cache contexts must be strings, array given.'],
+      [['foo', []], 'Cache contexts must be strings, array given.'],
+      [['foo', ['bar']], 'Cache contexts must be strings, array given.'],
+      [[new \stdClass()], 'Cache contexts must be strings, object given.'],
+      [['foo', new \stdClass()], 'Cache contexts must be strings, object given.'],
+      // Non-existing.
+      [['foo.bar', 'qux'], '"qux" is not a valid cache context ID.'],
+      [['qux', 'baz'], '"qux" is not a valid cache context ID.'],
+    ];
+  }
+
+  /**
+   * @covers ::validateTokens
+   *
+   * @dataProvider validateTokensProvider
+   */
+  public function testValidateContexts(array $contexts, $expected_exception_message) {
+    $container = new ContainerBuilder();
+    $cache_contexts = new CacheContexts($container, ['foo', 'foo.bar', 'baz']);
+    if ($expected_exception_message !== FALSE) {
+      $this->setExpectedException('LogicException', $expected_exception_message);
+    }
+    // If it doesn't throw an exception, validateTokens() returns NULL.
+    $this->assertNull($cache_contexts->validateTokens($contexts));
   }
 
 }

@@ -8,7 +8,9 @@
 namespace Drupal\views\Entity\Render;
 
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\views\Plugin\CacheablePluginInterface;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
@@ -16,7 +18,7 @@ use Drupal\views\ViewExecutable;
 /**
  * Defines a base class for entity row renderers.
  */
-abstract class RendererBase {
+abstract class RendererBase implements CacheablePluginInterface {
 
   /**
    * The view executable wrapping the view storage entity.
@@ -60,6 +62,20 @@ abstract class RendererBase {
     $this->view = $view;
     $this->languageManager = $language_manager;
     $this->entityType = $entity_type;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isCacheable() {
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    return ['languages'];
   }
 
   /**

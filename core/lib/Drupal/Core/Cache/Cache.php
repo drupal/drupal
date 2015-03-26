@@ -37,6 +37,7 @@ class Cache {
       $cache_contexts = array_merge($cache_contexts, $contexts);
     }
     $cache_contexts = array_unique($cache_contexts);
+    \Drupal::service('cache_contexts')->validateTokens($cache_contexts);
     sort($cache_contexts);
     return $cache_contexts;
   }
@@ -62,10 +63,10 @@ class Cache {
     $cache_tag_arrays = func_get_args();
     $cache_tags = [];
     foreach ($cache_tag_arrays as $tags) {
-      static::validateTags($tags);
       $cache_tags = array_merge($cache_tags, $tags);
     }
     $cache_tags = array_unique($cache_tags);
+    static::validateTags($cache_tags);
     sort($cache_tags);
     return $cache_tags;
   }

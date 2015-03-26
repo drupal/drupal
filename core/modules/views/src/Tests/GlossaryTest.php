@@ -87,7 +87,7 @@ class GlossaryTest extends ViewTestBase {
 
     // Verify cache tags.
     $this->enablePageCaching();
-    $this->assertPageCacheContextsAndTags(Url::fromRoute('view.glossary.page_1'), ['languages', 'url', 'user'], [
+    $this->assertPageCacheContextsAndTags(Url::fromRoute('view.glossary.page_1'), ['languages', 'url', 'user.node_grants:view'], [
       'config:views.view.glossary',
       'node:' . $nodes_by_char['a'][0]->id(), 'node:' . $nodes_by_char['a'][1]->id(), 'node:' . $nodes_by_char['a'][2]->id(),
       'node_list',

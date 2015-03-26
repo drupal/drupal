@@ -67,7 +67,7 @@ display:
         test_relationship:
           id: reverse_field_test
           table: entity_test
-          field: reverse_field_test
+          field: reverse__entity_test__field_test
           relationship: none
           plugin_id: standard
     display_plugin: embed
