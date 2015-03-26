@@ -2,21 +2,21 @@
 
 /**
  * @file
- * Contains \Drupal\user\PermissionsHash.
+ * Contains \Drupal\Core\Session\PermissionsHashGenerator.
  */
 
-namespace Drupal\user;
+namespace Drupal\Core\Session;
 
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\PrivateKey;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Site\Settings;
+use Drupal\user\Entity\Role;
 
 /**
  * Generates and caches the permissions hash for a user.
  */
-class PermissionsHash implements PermissionsHashInterface {
+class PermissionsHashGenerator implements PermissionsHashGeneratorInterface {
 
   /**
    * The private key service.
@@ -33,7 +33,7 @@ class PermissionsHash implements PermissionsHashInterface {
   protected $cache;
 
   /**
-   * Constructs a PermissionsHash object.
+   * Constructs a PermissionsHashGenerator object.
    *
    * @param \Drupal\Core\PrivateKey $private_key
    *   The private key service.
@@ -69,7 +69,7 @@ class PermissionsHash implements PermissionsHashInterface {
   /**
    * Generates a hash that uniquely identifies the user's permissions.
    *
-   * @param \Drupal\user\Entity\Role[] $roles
+   * @param string[] $roles
    *   The user's roles.
    *
    * @return string

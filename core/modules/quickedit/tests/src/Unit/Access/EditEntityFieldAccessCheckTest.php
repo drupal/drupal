@@ -44,12 +44,12 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
     $editable_entity = $this->createMockEntity();
     $editable_entity->expects($this->any())
       ->method('access')
-      ->will($this->returnValue(AccessResult::allowed()->cachePerRole()));
+      ->will($this->returnValue(AccessResult::allowed()->cachePerPermissions()));
 
     $non_editable_entity = $this->createMockEntity();
     $non_editable_entity->expects($this->any())
       ->method('access')
-      ->will($this->returnValue(AccessResult::neutral()->cachePerRole()));
+      ->will($this->returnValue(AccessResult::neutral()->cachePerPermissions()));
 
     $field_storage_with_access = $this->getMockBuilder('Drupal\field\Entity\FieldStorageConfig')
       ->disableOriginalConstructor()
@@ -65,10 +65,10 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
       ->will($this->returnValue(AccessResult::neutral()));
 
     $data = array();
-    $data[] = array($editable_entity, $field_storage_with_access, AccessResult::allowed()->cachePerRole());
-    $data[] = array($non_editable_entity, $field_storage_with_access, AccessResult::neutral()->cachePerRole());
-    $data[] = array($editable_entity, $field_storage_without_access, AccessResult::neutral()->cachePerRole());
-    $data[] = array($non_editable_entity, $field_storage_without_access, AccessResult::neutral()->cachePerRole());
+    $data[] = array($editable_entity, $field_storage_with_access, AccessResult::allowed()->cachePerPermissions());
+    $data[] = array($non_editable_entity, $field_storage_with_access, AccessResult::neutral()->cachePerPermissions());
+    $data[] = array($editable_entity, $field_storage_without_access, AccessResult::neutral()->cachePerPermissions());
+    $data[] = array($non_editable_entity, $field_storage_without_access, AccessResult::neutral()->cachePerPermissions());
 
     return $data;
   }

@@ -132,7 +132,7 @@ abstract class AccessResult implements AccessResultInterface, CacheableInterface
   /**
    * Creates an allowed access result if the permission is present, neutral otherwise.
    *
-   * Convenience method, checks the permission and calls ::cachePerRole().
+   * Checks the permission and adds a 'user.permissions' cache context.
    *
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The account for which to check a permission.
@@ -144,13 +144,13 @@ abstract class AccessResult implements AccessResultInterface, CacheableInterface
    *   isNeutral() will be TRUE.
    */
   public static function allowedIfHasPermission(AccountInterface $account, $permission) {
-    return static::allowedIf($account->hasPermission($permission))->cachePerRole();
+    return static::allowedIf($account->hasPermission($permission))->addCacheContexts(['user.permissions']);
   }
 
   /**
    * Creates an allowed access result if the permissions are present, neutral otherwise.
    *
-   * Convenience method, checks the permissions and calls ::cachePerRole().
+   * Checks the permission and adds a 'user.permissions' cache contexts.
    *
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The account for which to check permissions.
@@ -185,7 +185,7 @@ abstract class AccessResult implements AccessResultInterface, CacheableInterface
       }
     }
 
-    return static::allowedIf($access)->cachePerRole();
+    return static::allowedIf($access)->addCacheContexts(empty($permissions) ? [] : ['user.permissions']);
   }
 
   /**
@@ -334,12 +334,12 @@ abstract class AccessResult implements AccessResultInterface, CacheableInterface
   }
 
   /**
-   * Convenience method, adds the "user.roles" cache context.
+   * Convenience method, adds the "user.permissions" cache context.
    *
    * @return $this
    */
-  public function cachePerRole() {
-    $this->addCacheContexts(array('user.roles'));
+  public function cachePerPermissions() {
+    $this->addCacheContexts(array('user.permissions'));
     return $this;
   }
 

@@ -59,13 +59,13 @@ function shortcut_set_edit_access(ShortcutSetInterface $shortcut_set = NULL) {
 
   // Shortcut administrators can edit any set.
   if ($account->hasPermission('administer shortcuts')) {
-    return AccessResult::allowed()->cachePerRole();
+    return AccessResult::allowed()->cachePerPermissions();
   }
 
   // Sufficiently-privileged users can edit their currently displayed shortcut
   // set, but not other sets. They must also be able to access shortcuts.
   $may_edit_current_shortcut_set = $account->hasPermission('customize shortcut links') && (!isset($shortcut_set) || $shortcut_set == shortcut_current_displayed_set()) && $account->hasPermission('access shortcuts');
-  return AccessResult::allowedIf($may_edit_current_shortcut_set)->cachePerRole();
+  return AccessResult::allowedIf($may_edit_current_shortcut_set)->cachePerPermissions();
 }
 
 /**
@@ -84,30 +84,30 @@ function shortcut_set_switch_access($account = NULL) {
 
   if ($user->hasPermission('administer shortcuts')) {
     // Administrators can switch anyone's shortcut set.
-    return AccessResult::allowed()->cachePerRole();
+    return AccessResult::allowed()->cachePerPermissions();
   }
 
   if (!$user->hasPermission('access shortcuts')) {
     // The user has no permission to use shortcuts.
-    return AccessResult::neutral()->cachePerRole();
+    return AccessResult::neutral()->cachePerPermissions();
   }
 
   if (!$user->hasPermission('switch shortcut sets')) {
     // The user has no permission to switch anyone's shortcut set.
-    return AccessResult::neutral()->cachePerRole();
+    return AccessResult::neutral()->cachePerPermissions();
   }
 
   // Users with the 'switch shortcut sets' permission can switch their own
   // shortcuts sets.
   if (!isset($account)) {
-    return AccessResult::allowed()->cachePerRole();
+    return AccessResult::allowed()->cachePerPermissions();
   }
   else if ($user->id() == $account->id()) {
-    return AccessResult::allowed()->cachePerRole()->cachePerUser();
+    return AccessResult::allowed()->cachePerPermissions()->cachePerUser();
   }
 
   // No opinion.
-  return AccessResult::neutral()->cachePerRole();
+  return AccessResult::neutral()->cachePerPermissions();
 }
 
 /**

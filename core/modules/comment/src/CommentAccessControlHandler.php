@@ -28,21 +28,21 @@ class CommentAccessControlHandler extends EntityAccessControlHandler {
     /** @var \Drupal\Core\Entity\EntityInterface|\Drupal\user\EntityOwnerInterface $entity */
 
     if ($account->hasPermission('administer comments')) {
-      $access = AccessResult::allowed()->cachePerRole();
+      $access = AccessResult::allowed()->cachePerPermissions();
       return ($operation != 'view') ? $access : $access->andIf($entity->getCommentedEntity()->access($operation, $account, TRUE));
     }
 
     switch ($operation) {
       case 'view':
-        return AccessResult::allowedIf($account->hasPermission('access comments') && $entity->isPublished())->cachePerRole()->cacheUntilEntityChanges($entity)
+        return AccessResult::allowedIf($account->hasPermission('access comments') && $entity->isPublished())->cachePerPermissions()->cacheUntilEntityChanges($entity)
           ->andIf($entity->getCommentedEntity()->access($operation, $account, TRUE));
 
       case 'update':
-        return AccessResult::allowedIf($account->id() && $account->id() == $entity->getOwnerId() && $entity->isPublished() && $account->hasPermission('edit own comments'))->cachePerRole()->cachePerUser()->cacheUntilEntityChanges($entity);
+        return AccessResult::allowedIf($account->id() && $account->id() == $entity->getOwnerId() && $entity->isPublished() && $account->hasPermission('edit own comments'))->cachePerPermissions()->cachePerUser()->cacheUntilEntityChanges($entity);
 
       default:
         // No opinion.
-        return AccessResult::neutral()->cachePerRole();
+        return AccessResult::neutral()->cachePerPermissions();
     }
   }
 
@@ -103,7 +103,7 @@ class CommentAccessControlHandler extends EntityAccessControlHandler {
         $anonymous_contact = $commented_entity->get($entity->getFieldName())->getFieldDefinition()->getSetting('anonymous');
         $admin_access = AccessResult::allowedIfHasPermission($account, 'administer comments');
         $anonymous_access = AccessResult::allowedIf($entity->isNew() && $account->isAnonymous() && $anonymous_contact != COMMENT_ANONYMOUS_MAYNOT_CONTACT && $account->hasPermission('post comments'))
-          ->cachePerRole()
+          ->cachePerPermissions()
           ->cacheUntilEntityChanges($entity)
           ->cacheUntilEntityChanges($field_definition->getConfig($commented_entity->bundle()))
           ->cacheUntilEntityChanges($commented_entity);
@@ -117,9 +117,9 @@ class CommentAccessControlHandler extends EntityAccessControlHandler {
       // "access comments" permission and for the comment to be published. The
       // mail field is hidden from non-admins.
       $admin_access = AccessResult::allowedIf($account->hasPermission('administer comments') && $field_definition->getName() != 'hostname')
-        ->cachePerRole();
+        ->cachePerPermissions();
       $anonymous_access = AccessResult::allowedIf($account->hasPermission('access comments') && (!$entity || $entity->isPublished()) && !in_array($field_definition->getName(), array('mail', 'hostname'), TRUE))
-        ->cachePerRole();
+        ->cachePerPermissions();
       if ($entity) {
         $anonymous_access->cacheUntilEntityChanges($entity);
       }

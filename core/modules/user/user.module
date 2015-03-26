@@ -113,7 +113,7 @@ function user_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
   // can be reliably cached on the client side.
   $user = \Drupal::currentUser();
   $settings['user']['uid'] = $user->id();
-  $settings['user']['permissionsHash'] = \Drupal::service('user.permissions_hash')->generate($user);
+  $settings['user']['permissionsHash'] = \Drupal::service('user_permissions_hash_generator')->generate($user);
 }
 
 /**

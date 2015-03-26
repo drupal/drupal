@@ -53,7 +53,7 @@ class ToolbarController extends ControllerBase {
    *   The access result.
    */
   public function checkSubTreeAccess($hash, $langcode) {
-    return AccessResult::allowedIf($this->currentUser()->hasPermission('access toolbar') && $hash == _toolbar_get_subtrees_hash($langcode))->cachePerRole();
+    return AccessResult::allowedIf($this->currentUser()->hasPermission('access toolbar') && $hash == _toolbar_get_subtrees_hash($langcode))->cachePerPermissions();
   }
 
 }

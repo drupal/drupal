@@ -40,9 +40,6 @@ services:
     arguments: ['@current_user', '@config.factory', '@entity.manager', '@router.admin_context']
     tags:
       - { name: theme_negotiator, priority: -40 }
-  user.permissions_hash:
-    class: Drupal\user\PermissionsHash
-    arguments: ['@private_key', '@cache.default']
   user.auth:
     class: Drupal\user\UserAuth
     arguments: ['@entity.manager', '@password']

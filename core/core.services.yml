@@ -74,6 +74,11 @@ services:
     arguments: ['@current_user']
     tags:
       - { name: cache.context}
+  cache_context.user.permissions:
+    class: Drupal\Core\Cache\AccountPermissionsCacheContext
+    arguments: ['@current_user', '@user_permissions_hash_generator']
+    tags:
+      - { name: cache.context}
   cache_context.user.roles:
     class: Drupal\Core\Cache\UserRolesCacheContext
     arguments: ['@current_user']
@@ -1190,6 +1195,9 @@ services:
   account_switcher:
     class: Drupal\Core\Session\AccountSwitcher
     arguments: ['@current_user', '@session_handler.write_safe']
+  user_permissions_hash_generator:
+    class: Drupal\Core\Session\PermissionsHashGenerator
+    arguments: ['@private_key', '@cache.default']
   current_user:
     class: Drupal\Core\Session\AccountProxy
   session_configuration:

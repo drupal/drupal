@@ -320,7 +320,7 @@ class AccessResultTest extends UnitTestCase {
    * @covers ::addCacheContexts
    * @covers ::resetCacheContexts
    * @covers ::getCacheContexts
-   * @covers ::cachePerRole
+   * @covers ::cachePerPermissions
    * @covers ::cachePerUser
    * @covers ::allowedIfHasPermission
    */
@@ -355,11 +355,11 @@ class AccessResultTest extends UnitTestCase {
       ->addCacheContexts(['foo']);
     $verify($access, ['bar', 'foo']);
 
-    // ::cachePerRole() convenience method.
-    $contexts = array('user.roles');
+    // ::cachePerPermissions() convenience method.
+    $contexts = array('user.permissions');
     $a = AccessResult::neutral()->addCacheContexts($contexts);
     $verify($a, $contexts);
-    $b = AccessResult::neutral()->cachePerRole();
+    $b = AccessResult::neutral()->cachePerPermissions();
     $verify($b, $contexts);
     $this->assertEquals($a, $b);
 
@@ -372,12 +372,12 @@ class AccessResultTest extends UnitTestCase {
     $this->assertEquals($a, $b);
 
     // Both.
-    $contexts = array('user', 'user.roles');
+    $contexts = array('user', 'user.permissions');
     $a = AccessResult::neutral()->addCacheContexts($contexts);
     $verify($a, $contexts);
-    $b = AccessResult::neutral()->cachePerRole()->cachePerUser();
+    $b = AccessResult::neutral()->cachePerPermissions()->cachePerUser();
     $verify($b, $contexts);
-    $c = AccessResult::neutral()->cachePerUser()->cachePerRole();
+    $c = AccessResult::neutral()->cachePerUser()->cachePerPermissions();
     $verify($c, $contexts);
     $this->assertEquals($a, $b);
     $this->assertEquals($a, $c);
@@ -388,7 +388,7 @@ class AccessResultTest extends UnitTestCase {
       ->method('hasPermission')
       ->with('may herd llamas')
       ->will($this->returnValue(FALSE));
-    $contexts = array('user.roles');
+    $contexts = array('user.permissions');
 
     // Verify the object when using the ::allowedIfHasPermission() convenience
     // static method.
@@ -469,10 +469,10 @@ class AccessResultTest extends UnitTestCase {
   public function testInheritCacheability() {
     // andIf(); 1st has defaults, 2nd has custom tags, contexts and max-age.
     $access = AccessResult::allowed();
-    $other = AccessResult::allowed()->setCacheMaxAge(1500)->cachePerRole()->addCacheTags(['node:20011988']);
+    $other = AccessResult::allowed()->setCacheMaxAge(1500)->cachePerPermissions()->addCacheTags(['node:20011988']);
     $this->assertTrue($access->inheritCacheability($other) instanceof AccessResult);
     $this->assertTrue($access->isCacheable());
-    $this->assertSame(['user.roles'], $access->getCacheContexts());
+    $this->assertSame(['user.permissions'], $access->getCacheContexts());
     $this->assertSame(['node:20011988'], $access->getCacheTags());
     $this->assertSame('default', $access->getCacheBin());
     $this->assertSame(1500, $access->getCacheMaxAge());
@@ -823,7 +823,7 @@ class AccessResultTest extends UnitTestCase {
    *
    * @dataProvider providerTestAllowedIfHasPermissions
    */
-  public function testAllowIfHasPermissions($permissions, $conjunction, $expected_access) {
+  public function testAllowedIfHasPermissions($permissions, $conjunction, $expected_access) {
     $account = $this->getMock('\Drupal\Core\Session\AccountInterface');
     $account->expects($this->any())
       ->method('hasPermission')
@@ -843,15 +843,16 @@ class AccessResultTest extends UnitTestCase {
    */
   public function providerTestAllowedIfHasPermissions() {
     return [
-      [[], 'AND', AccessResult::allowedIf(FALSE)->cachePerRole()],
-      [[], 'OR', AccessResult::allowedIf(FALSE)->cachePerRole()],
-      [['allowed'], 'OR', AccessResult::allowedIf(TRUE)->cachePerRole()],
-      [['allowed'], 'AND', AccessResult::allowedIf(TRUE)->cachePerRole()],
-      [['denied'], 'OR', AccessResult::allowedIf(FALSE)->cachePerRole()],
-      [['denied'], 'AND', AccessResult::allowedIf(FALSE)->cachePerRole()],
-      [['allowed', 'denied'], 'OR', AccessResult::allowedIf(TRUE)->cachePerRole()],
-      [['allowed', 'denied', 'other'], 'OR', AccessResult::allowedIf(TRUE)->cachePerRole()],
-      [['allowed', 'denied'], 'AND', AccessResult::allowedIf(FALSE)->cachePerRole()],
+      [[], 'AND', AccessResult::allowedIf(FALSE)],
+      [[], 'OR', AccessResult::allowedIf(FALSE)],
+      [['allowed'], 'OR', AccessResult::allowedIf(TRUE)->addCacheContexts(['user.permissions'])],
+      [['allowed'], 'AND', AccessResult::allowedIf(TRUE)->addCacheContexts(['user.permissions'])],
+      [['denied'], 'OR', AccessResult::allowedIf(FALSE)->addCacheContexts(['user.permissions'])],
+      [['denied'], 'AND', AccessResult::allowedIf(FALSE)->addCacheContexts(['user.permissions'])],
+      [['allowed', 'denied'], 'OR', AccessResult::allowedIf(TRUE)->addCacheContexts(['user.permissions'])],
+      [['denied', 'allowed'], 'OR', AccessResult::allowedIf(TRUE)->addCacheContexts(['user.permissions'])],
+      [['allowed', 'denied', 'other'], 'OR', AccessResult::allowedIf(TRUE)->addCacheContexts(['user.permissions'])],
+      [['allowed', 'denied'], 'AND', AccessResult::allowedIf(FALSE)->addCacheContexts(['user.permissions'])],
     ];
   }
 

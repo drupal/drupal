@@ -36,12 +36,12 @@ class EntityAccessCheckTest extends UnitTestCase {
       ->getMock();
     $node->expects($this->any())
       ->method('access')
-      ->will($this->returnValue(AccessResult::allowed()->cachePerRole()));
+      ->will($this->returnValue(AccessResult::allowed()->cachePerPermissions()));
     $access_check = new EntityAccessCheck();
     $upcasted_arguments->set('node', $node);
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
     $access = $access_check->access($route, $route_match, $account);
-    $this->assertEquals(AccessResult::allowed()->cachePerRole(), $access);
+    $this->assertEquals(AccessResult::allowed()->cachePerPermissions(), $access);
   }
 
 }

@@ -48,7 +48,7 @@ function field_test_entity_field_access($operation, FieldDefinitionInterface $fi
   // Only grant view access to test_view_field fields when the user has
   // 'view test_view_field content' permission.
   if ($field_definition->getName() == 'test_view_field' && $operation == 'view') {
-    return AccessResult::forbiddenIf(!$account->hasPermission('view test_view_field content'))->cachePerRole();
+    return AccessResult::forbiddenIf(!$account->hasPermission('view test_view_field content'))->cachePerPermissions();
   }
 
   return AccessResult::allowed();

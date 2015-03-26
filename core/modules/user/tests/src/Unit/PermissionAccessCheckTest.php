@@ -41,15 +41,15 @@ class PermissionAccessCheckTest extends UnitTestCase {
    * @return array
    */
   public function providerTestAccess() {
-    $allowed = AccessResult::allowedIf(TRUE)->cachePerRole();
-    $neutral = AccessResult::allowedIf(FALSE)->cachePerRole();
+    $allowed = AccessResult::allowedIf(TRUE)->addCacheContexts(['user.permissions']);
+    $neutral = AccessResult::allowedIf(FALSE)->addCacheContexts(['user.permissions']);
     return [
-      [[], $neutral],
+      [[], AccessResult::allowedIf(FALSE)],
       [['_permission' => 'allowed'], $allowed],
       [['_permission' => 'denied'], $neutral],
       [['_permission' => 'allowed+denied'], $allowed],
       [['_permission' => 'allowed+denied+other'], $allowed],
-      [['_permission' => 'allowed-denied'], $neutral],
+      [['_permission' => 'allowed,denied'], $neutral],
     ];
   }
 

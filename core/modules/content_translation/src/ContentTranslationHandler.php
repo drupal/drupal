@@ -208,7 +208,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
     if (!$current_user->hasPermission('translate any entity') && $permission_granularity = $entity_type->getPermissionGranularity()) {
       $translate_permission = $current_user->hasPermission($permission_granularity == 'bundle' ? "translate {$entity->bundle()} {$entity->getEntityTypeId()}" : "translate {$entity->getEntityTypeId()}");
     }
-    return AccessResult::allowedIf($translate_permission && $current_user->hasPermission("$op content translations"))->cachePerRole();
+    return AccessResult::allowedIf($translate_permission && $current_user->hasPermission("$op content translations"))->cachePerPermissions();
   }
 
   /**

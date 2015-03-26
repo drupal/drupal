@@ -2,20 +2,20 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\user\Unit\PermissionsHashTest.
+ * Contains \Drupal\Tests\Core\Session\PermissionsHashTest.
  */
 
-namespace Drupal\Tests\user\Unit {
+namespace Drupal\Tests\Core\Session {
 
 use Drupal\Component\Utility\Crypt;
+use Drupal\Core\Session\PermissionsHashGenerator;
 use Drupal\Core\Site\Settings;
 use Drupal\Tests\UnitTestCase;
-use Drupal\user\PermissionsHash;
 
 
 /**
- * @coversDefaultClass \Drupal\user\PermissionsHash
- * @group user
+ * @coversDefaultClass \Drupal\Core\Session\PermissionsHashGenerator
+ * @group Session
  */
 class PermissionsHashTest extends UnitTestCase {
 
@@ -57,7 +57,7 @@ class PermissionsHashTest extends UnitTestCase {
   /**
    * The permission hash class being tested.
    *
-   * @var \Drupal\user\PermissionsHashInterface
+   * @var \Drupal\Core\Session\PermissionsHashGeneratorInterface
    */
   protected $permissionsHash;
 
@@ -112,7 +112,7 @@ class PermissionsHashTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $this->permissionsHash = new PermissionsHash($this->private_key, $this->cache);
+    $this->permissionsHash = new PermissionsHashGenerator($this->private_key, $this->cache);
   }
 
   /**

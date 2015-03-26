@@ -40,19 +40,19 @@ class RoleAccessCheck implements AccessInterface {
     if (count($explode_and) > 1) {
       $diff = array_diff($explode_and, $account->getRoles());
       if (empty($diff)) {
-        return AccessResult::allowed()->cachePerRole();
+        return AccessResult::allowed()->addCacheContexts(['user.roles']);
       }
     }
     else {
       $explode_or = array_filter(array_map('trim', explode('+', $rid_string)));
       $intersection = array_intersect($explode_or, $account->getRoles());
       if (!empty($intersection)) {
-        return AccessResult::allowed()->cachePerRole();
+        return AccessResult::allowed()->addCacheContexts(['user.roles']);
       }
     }
 
     // If there is no allowed role, give other access checks a chance.
-    return AccessResult::neutral()->cachePerRole();
+    return AccessResult::neutral()->addCacheContexts(['user.roles']);
   }
 
 }

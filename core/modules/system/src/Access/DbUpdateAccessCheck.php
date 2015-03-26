@@ -33,10 +33,10 @@ class DbUpdateAccessCheck implements AccessInterface {
     }
 
     if ($account->hasPermission('administer software updates')) {
-      return AccessResult::allowed()->cachePerRole();
+      return AccessResult::allowed()->cachePerPermissions();
     }
     else {
-      return AccessResult::forbidden()->cachePerRole();
+      return AccessResult::forbidden()->cachePerPermissions();
     }
   }
 }

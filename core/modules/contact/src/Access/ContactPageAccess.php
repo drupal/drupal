@@ -71,7 +71,7 @@ class ContactPageAccess implements AccessInterface {
     }
 
     // User administrators should always have access to personal contact forms.
-    $access = AccessResult::neutral()->cachePerRole();
+    $access = AccessResult::neutral()->cachePerPermissions();
     $permission_access = AccessResult::allowedIfHasPermission($account, 'administer users');
     if ($permission_access->isAllowed()) {
       return $access->orIf($permission_access);

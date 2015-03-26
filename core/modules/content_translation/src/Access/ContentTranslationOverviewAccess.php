@@ -66,7 +66,7 @@ class ContentTranslationOverviewAccess implements AccessInterface {
 
       // Check "translate any entity" permission.
       if ($account->hasPermission('translate any entity')) {
-        return AccessResult::allowed()->cachePerRole()->inheritCacheability($access);
+        return AccessResult::allowed()->cachePerPermissions()->inheritCacheability($access);
       }
 
       // Check per entity permission.

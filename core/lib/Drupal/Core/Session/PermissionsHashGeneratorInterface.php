@@ -2,17 +2,15 @@
 
 /**
  * @file
- * Contains Drupal\user\PermissionsHashInterface.
+ * Contains Drupal\Core\Session\PermissionsHashGeneratorInterface.
  */
 
-namespace Drupal\user;
-
-use Drupal\Core\Session\AccountInterface;
+namespace Drupal\Core\Session;
 
 /**
- * Defines the user permissions hash interface.
+ * Defines the user permissions hash generator interface.
  */
-interface PermissionsHashInterface {
+interface PermissionsHashGeneratorInterface {
 
   /**
    * Generates a hash that uniquely identifies a user's permissions.

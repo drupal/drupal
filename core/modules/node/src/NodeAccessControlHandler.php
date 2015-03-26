@@ -63,14 +63,14 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
     $account = $this->prepareUser($account);
 
     if ($account->hasPermission('bypass node access')) {
-      $result = AccessResult::allowed()->cachePerRole();
+      $result = AccessResult::allowed()->cachePerPermissions();
       return $return_as_object ? $result : $result->isAllowed();
     }
     if (!$account->hasPermission('access content')) {
-      $result = AccessResult::forbidden()->cachePerRole();
+      $result = AccessResult::forbidden()->cachePerPermissions();
       return $return_as_object ? $result : $result->isAllowed();
     }
-    $result = parent::access($entity, $operation, $langcode, $account, TRUE)->cachePerRole();
+    $result = parent::access($entity, $operation, $langcode, $account, TRUE)->cachePerPermissions();
     return $return_as_object ? $result : $result->isAllowed();
   }
 
@@ -81,15 +81,15 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
     $account = $this->prepareUser($account);
 
     if ($account->hasPermission('bypass node access')) {
-      $result = AccessResult::allowed()->cachePerRole();
+      $result = AccessResult::allowed()->cachePerPermissions();
       return $return_as_object ? $result : $result->isAllowed();
     }
     if (!$account->hasPermission('access content')) {
-      $result = AccessResult::forbidden()->cachePerRole();
+      $result = AccessResult::forbidden()->cachePerPermissions();
       return $return_as_object ? $result : $result->isAllowed();
     }
 
-    $result = parent::createAccess($entity_bundle, $account, $context, TRUE)->cachePerRole();
+    $result = parent::createAccess($entity_bundle, $account, $context, TRUE)->cachePerPermissions();
     return $return_as_object ? $result : $result->isAllowed();
   }
 
@@ -106,7 +106,7 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
 
     // Check if authors can view their own unpublished nodes.
     if ($operation === 'view' && !$status && $account->hasPermission('view own unpublished content') && $account->isAuthenticated() && $account->id() == $uid) {
-      return AccessResult::allowed()->cachePerRole()->cachePerUser()->cacheUntilEntityChanges($node);
+      return AccessResult::allowed()->cachePerPermissions()->cachePerUser()->cacheUntilEntityChanges($node);
     }
 
     // If no module specified either ALLOW or KILL, we fall back to the
@@ -130,7 +130,7 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
    * {@inheritdoc}
    */
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    return AccessResult::allowedIf($account->hasPermission('create ' . $entity_bundle . ' content'))->cachePerRole();
+    return AccessResult::allowedIf($account->hasPermission('create ' . $entity_bundle . ' content'))->cachePerPermissions();
   }
 
   /**
@@ -154,9 +154,9 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
     // administrative permissions or if the new revision option is enabled.
     if ($operation == 'edit' && $field_definition->getName() == 'revision_log') {
       if ($account->hasPermission('administer nodes')) {
-        return AccessResult::allowed()->cachePerRole();
+        return AccessResult::allowed()->cachePerPermissions();
       }
-      return AccessResult::allowedIf($items->getEntity()->type->entity->isNewRevision())->cachePerRole();
+      return AccessResult::allowedIf($items->getEntity()->type->entity->isNewRevision())->cachePerPermissions();
     }
     return parent::checkFieldAccess($operation, $field_definition, $account, $items);
   }

@@ -49,7 +49,7 @@ class UserPermissionsTest extends WebTestBase {
    * Test changing user permissions through the permissions page.
    */
   function testUserPermissionChanges() {
-    $permissions_hash_generator = $this->container->get('user.permissions_hash');
+    $permissions_hash_generator = $this->container->get('user_permissions_hash_generator');
 
     $storage = $this->container->get('entity.manager')->getStorage('user_role');
 
@@ -142,7 +142,7 @@ class UserPermissionsTest extends WebTestBase {
    * Verify proper permission changes by user_role_change_permissions().
    */
   function testUserRoleChangePermissions() {
-    $permissions_hash_generator = $this->container->get('user.permissions_hash');
+    $permissions_hash_generator = $this->container->get('user_permissions_hash_generator');
 
     $rid = $this->rid;
     $account = $this->adminUser;

@@ -77,7 +77,7 @@ class ConfigTranslationOverviewAccess implements AccessInterface {
       $mapper->hasTranslatable() &&
       $source_language_access;
 
-    return AccessResult::allowedIf($access)->cachePerRole();
+    return AccessResult::allowedIf($access)->cachePerPermissions();
   }
 
 }
