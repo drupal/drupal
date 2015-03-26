@@ -28,15 +28,6 @@ class RegistryTest extends KernelTestBase {
   protected $profile = 'testing';
 
   /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-     parent::setUp();
-
-     $this->installSchema('system', ['router']);
-  }
-
-  /**
    * Tests the behavior of the theme registry class.
    */
   function testRaceCondition() {

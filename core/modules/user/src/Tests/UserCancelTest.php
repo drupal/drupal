@@ -72,6 +72,7 @@ class UserCancelTest extends WebTestBase {
    */
   public function testUserCancelChangePermission() {
     \Drupal::service('module_installer')->install(array('user_form_test'));
+    \Drupal::service('router.builder')->rebuild();
     $this->config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
 
     // Create a regular user.
@@ -96,6 +97,7 @@ class UserCancelTest extends WebTestBase {
    */
   function testUserCancelUid1() {
     \Drupal::service('module_installer')->install(array('views'));
+    \Drupal::service('router.builder')->rebuild();
     // Update uid 1's name and password to we know it.
     $password = user_password();
     $account = array(
@@ -453,6 +455,7 @@ class UserCancelTest extends WebTestBase {
    */
   function testMassUserCancelByAdmin() {
     \Drupal::service('module_installer')->install(array('views'));
+    \Drupal::service('router.builder')->rebuild();
     $this->config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
     // Enable account cancellation notification.
     $this->config('user.settings')->set('notify.status_canceled', TRUE)->save();

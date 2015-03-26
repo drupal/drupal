@@ -347,6 +347,7 @@ class TrackerTest extends WebTestBase {
    */
   function testTrackerAdminUnpublish() {
     \Drupal::service('module_installer')->install(array('views'));
+    \Drupal::service('router.builder')->rebuild();
     $admin_user = $this->drupalCreateUser(array('access content overview', 'administer nodes', 'bypass node access'));
     $this->drupalLogin($admin_user);
 

@@ -34,7 +34,6 @@ class ThemeSettingsTest extends KernelTestBase {
 
   protected function setUp() {
     parent::setUp();
-    $this->installSchema('system', array('router'));
     // Theme settings rely on System module's system.theme.global configuration.
     $this->installConfig(array('system'));
 

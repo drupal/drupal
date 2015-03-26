@@ -30,7 +30,6 @@ class BookUninstallTest extends KernelTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->installSchema('system', array('router'));
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
     $this->installSchema('book', array('book'));

@@ -39,11 +39,6 @@ class ConfigCRUDTest extends KernelTestBase {
    */
   public static $modules = array('system');
 
-  protected function setUp() {
-      parent::setUp();
-      $this->installSchema('system', 'router');
-    }
-
   /**
    * Tests CRUD operations.
    */

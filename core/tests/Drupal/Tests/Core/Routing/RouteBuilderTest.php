@@ -290,6 +290,13 @@ class TestRouteBuilder extends RouteBuilder {
     $this->yamlDiscovery = $yaml_discovery;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function getRouteDefinitions() {
+    return $this->yamlDiscovery->findAll();
+  }
+
 }
 
 /**

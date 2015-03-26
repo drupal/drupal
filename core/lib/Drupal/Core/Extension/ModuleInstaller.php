@@ -281,7 +281,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
 
     // If any modules were newly installed, invoke hook_modules_installed().
     if (!empty($modules_installed)) {
-      \Drupal::service('router.builder')->rebuild();
+      \Drupal::service('router.builder')->setRebuildNeeded();
       $this->moduleHandler->invokeAll('modules_installed', array($modules_installed));
     }
 
@@ -423,7 +423,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       $schema_store = \Drupal::keyValue('system.schema');
       $schema_store->delete($module);
     }
-    \Drupal::service('router.builder')->rebuild();
+    \Drupal::service('router.builder')->setRebuildNeeded();
     drupal_get_installed_schema_version(NULL, TRUE);
 
     // Let other modules react.

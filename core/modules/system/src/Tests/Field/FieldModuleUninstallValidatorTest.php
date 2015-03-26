@@ -31,7 +31,6 @@ class FieldModuleUninstallValidatorTest extends EntityUnitTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->installSchema('system', 'router');
     $this->installSchema('user', 'users_data');
     $this->entityDefinitionUpdateManager = $this->container->get('entity.definition_update_manager');
 

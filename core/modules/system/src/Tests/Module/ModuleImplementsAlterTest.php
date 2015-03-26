@@ -16,16 +16,6 @@ use Drupal\simpletest\KernelTestBase;
  */
 class ModuleImplementsAlterTest extends KernelTestBase {
 
-  public static $modules = array('system');
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-    $this->installSchema('system', array('router'));
-  }
-
   /**
    * Tests hook_module_implements_alter() adding an implementation.
    *

@@ -21,7 +21,7 @@ class KernelTestBaseTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity_test', 'system');
+  public static $modules = array('entity_test');
 
   /**
    * {@inheritdoc}
@@ -45,7 +45,6 @@ EOS;
 
     $original_container = $this->originalContainer;
     parent::setUp();
-    $this->installSchema('system', array('router'));
     $this->assertNotIdentical(\Drupal::getContainer(), $original_container, 'KernelTestBase test creates a new container.');
   }
 
@@ -53,7 +52,7 @@ EOS;
    * Tests expected behavior of setUp().
    */
   function testSetUp() {
-    $modules = array('entity_test', 'system');
+    $modules = array('entity_test');
     $table = 'entity_test';
 
     // Verify that specified $modules have been loaded.

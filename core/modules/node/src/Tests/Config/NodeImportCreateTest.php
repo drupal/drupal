@@ -30,7 +30,6 @@ class NodeImportCreateTest extends KernelTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->installSchema('system', array('router'));
     $this->installEntitySchema('user');
 
     // Set default storage backend.
