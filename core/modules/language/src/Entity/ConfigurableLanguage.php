@@ -117,10 +117,6 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
     // rebuild services if necessary during
     // \Drupal\language\Entity\ConfigurableLanguage::postSave().
     $this->preSaveMultilingual = \Drupal::languageManager()->isMultilingual();
-    // Languages are picked from a predefined list which is given in English.
-    // For the uncommon case of custom languages the label should be given in
-    // English.
-    $this->langcode = 'en';
   }
 
   /**

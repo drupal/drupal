@@ -53,7 +53,7 @@ trait SchemaCheckTrait {
     if (!$typed_config->hasConfigSchema($config_name)) {
       return FALSE;
     }
-    $definition = $typed_config->getDefinition($config_name);
+    $definition = $typed_config->getDefinition($config_name, TRUE, TRUE);
     $data_definition = $typed_config->buildDataDefinition($definition, $config_data);
     $this->schema = $typed_config->create($data_definition, $config_data);
     $errors = array();

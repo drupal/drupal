@@ -290,7 +290,7 @@ EOD;
     $this->container = $container;
 
     // Set the default language on the minimal container.
-    $this->container->setParameter('language.default_values', Language::$defaultValues);
+    $this->container->setParameter('language.default_values', $this->defaultLanguageData());
 
     $container->register('lock', 'Drupal\Core\Lock\NullLockBackend');
     $container->register('cache_factory', 'Drupal\Core\Cache\MemoryBackendFactory');
@@ -356,6 +356,16 @@ EOD;
 
     $request = Request::create('/');
     $container->get('request_stack')->push($request);
+  }
+
+  /**
+   * Provides the data for setting the default language on the container.
+   *
+   * @return array
+   *   The data array for the default language.
+   */
+  protected function defaultLanguageData() {
+    return Language::$defaultValues;
   }
 
   /**

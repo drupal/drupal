@@ -127,18 +127,12 @@ class ConfigTranslationController extends ControllerBase {
     $page = array();
     $page['#title'] = $this->t('Translations for %label', array('%label' => $mapper->getTitle()));
 
-    // It is possible the original language this configuration was saved with is
-    // not on the system. For example, the configuration shipped in English but
-    // the site has no English configured. Represent the original language in
-    // the table even if it is not currently configured.
     $languages = $this->languageManager->getLanguages();
     $original_langcode = $mapper->getLangcode();
     if (!isset($languages[$original_langcode])) {
+      // If the language is not configured on the site, create a dummy language
+      // object for this listing only to ensure the user gets useful info.
       $language_name = $this->languageManager->getLanguageName($original_langcode);
-      if ($original_langcode == 'en') {
-        $language_name = $this->t('Built-in English');
-      }
-      // Create a dummy language object for this listing only.
       $languages[$original_langcode] = new Language(array('id' => $original_langcode, 'name' => $language_name));
     }
 

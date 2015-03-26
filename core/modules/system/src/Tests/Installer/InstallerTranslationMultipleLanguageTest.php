@@ -17,7 +17,7 @@ use Drupal\simpletest\InstallerTestBase;
 class InstallerTranslationMultipleLanguageTest extends InstallerTestBase {
 
   /**
-   * Switch to the multilingual testing profile
+   * Switch to the multilingual testing profile.
    *
    * @var string
    */
@@ -29,47 +29,117 @@ class InstallerTranslationMultipleLanguageTest extends InstallerTestBase {
   protected function setUpLanguage() {
     // Place custom local translations in the translations directory.
     mkdir(DRUPAL_ROOT . '/' . $this->siteDirectory . '/files/translations', 0777, TRUE);
-    file_put_contents(DRUPAL_ROOT . '/' . $this->siteDirectory . '/files/translations/drupal-8.0.0.de.po', "msgid \"\"\nmsgstr \"\"\nmsgid \"Save and continue\"\nmsgstr \"Save and continue German\"\nmsgid\"Anonymous\"\nmsgstr\"Anonymous German\"");
-    file_put_contents(DRUPAL_ROOT . '/' . $this->siteDirectory . '/files/translations/drupal-8.0.0.es.po', "msgid \"\"\nmsgstr \"\"\nmsgid \"Save and continue\"\nmsgstr \"Save and continue Spanish\"\nmsgid\"Anonymous\"\nmsgstr\"Anonymous Spanish\"");
+    file_put_contents(DRUPAL_ROOT . '/' . $this->siteDirectory . '/files/translations/drupal-8.0.0.de.po', $this->getPo('de'));
+    file_put_contents(DRUPAL_ROOT . '/' . $this->siteDirectory . '/files/translations/drupal-8.0.0.es.po', $this->getPo('es'));
 
     parent::setUpLanguage();
   }
 
   /**
-   * Tests that translations for each language were loaded.
+   * Returns the string for the test .po file.
+   *
+   * @param string $langcode
+   *   The language code.
+   * @return string
+   *   Contents for the test .po file.
+   */
+  protected function getPo($langcode) {
+    return <<<ENDPO
+msgid ""
+msgstr ""
+
+msgid "Save and continue"
+msgstr "Save and continue $langcode"
+
+msgid "Anonymous"
+msgstr "Anonymous $langcode"
+ENDPO;
+  }
+
+  /**
+   * Tests that translations ended up at the expected places.
    */
   public function testTranslationsLoaded() {
     // Verify German and Spanish were configured.
     $this->drupalGet('admin/config/regional/language');
     $this->assertText('German');
     $this->assertText('Spanish');
-    // If the installer was English, we expect that configured also.
-    if ($this->langcode == 'en') {
+    // If the installer was English or we used a profile that keeps English, we
+    // expect that configured also. Otherwise English should not be configured
+    // on the site.
+    if ($this->langcode == 'en' || $this->profile == 'testing_multilingual_with_english') {
       $this->assertText('English');
+    }
+    else {
+      $this->assertNoText('English');
     }
 
     // Verify the strings from the translation files were imported.
-    $test_samples = array('Save and continue', 'Anonymous');
-    $languages = array(
-      'de' => 'German',
-      'es' => 'Spanish',
-    );
+    $test_samples = ['Save and continue', 'Anonymous'];
+    $langcodes = ['de', 'es'];
 
     foreach($test_samples as $sample) {
-      foreach($languages as $langcode => $name) {
+      foreach($langcodes as $langcode) {
         $edit = array();
         $edit['langcode'] = $langcode;
         $edit['translation'] = 'translated';
         $edit['string'] = $sample;
         $this->drupalPostForm('admin/config/regional/translate', $edit, t('Filter'));
-        $this->assertText($sample . ' ' . $name);
+        $this->assertText($sample . ' ' . $langcode);
       }
     }
 
-    $config = \Drupal::languageManager()->getLanguageConfigOverride('de', 'user.settings');
-    $this->assertEqual($config->get('anonymous'), 'Anonymous German');
-    $config = \Drupal::languageManager()->getLanguageConfigOverride('es', 'user.settings');
-    $this->assertEqual($config->get('anonymous'), 'Anonymous Spanish');
+    /** @var \Drupal\language\ConfigurableLanguageManager $language_manager */
+    $language_manager = \Drupal::languageManager();
+
+    // If the site was installed in a foreign language (only tested with German
+    // in subclasses), then the active configuration should be updated and no
+    // override should exist in German. Otherwise the German translation should
+    // end up in overrides the same way as Spanish (which is not used as a site
+    // installation language). English should be available based on profile
+    // information and should be possible to add if not yet added, making
+    // English overrides available.
+
+    $config = \Drupal::config('user.settings');
+    $override_de = $language_manager->getLanguageConfigOverride('de', 'user.settings');
+    $override_en = $language_manager->getLanguageConfigOverride('en', 'user.settings');
+    $override_es = $language_manager->getLanguageConfigOverride('es', 'user.settings');
+
+    if ($this->langcode == 'de') {
+      // Active configuration should be in German and no German override should
+      // exist.
+      $this->assertEqual($config->get('anonymous'), 'Anonymous de');
+      $this->assertEqual($config->get('langcode'), 'de');
+      $this->assertTrue($override_de->isNew());
+
+      if ($this->profile == 'testing_multilingual_with_english') {
+        // English is already added in this profile. Should make the override
+        // available.
+        $this->assertEqual($override_en->get('anonymous'), 'Anonymous');
+      }
+      else {
+        // English is not yet available.
+        $this->assertTrue($override_en->isNew());
+
+        // Adding English should make the English override available.
+        $edit = ['predefined_langcode' => 'en'];
+        $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
+        $override_en = $language_manager->getLanguageConfigOverride('en', 'user.settings');
+        $this->assertEqual($override_en->get('anonymous'), 'Anonymous');
+      }
+    }
+    else {
+      // Active configuration should be English.
+      $this->assertEqual($config->get('anonymous'), 'Anonymous');
+      $this->assertEqual($config->get('langcode'), 'en');
+      // There should not be an English override.
+      $this->assertTrue($override_en->isNew());
+      // German should be an override.
+      $this->assertEqual($override_de->get('anonymous'), 'Anonymous de');
+    }
+
+    // Spanish is always an override (never used as installation language).
+    $this->assertEqual($override_es->get('anonymous'), 'Anonymous es');
   }
 
 }

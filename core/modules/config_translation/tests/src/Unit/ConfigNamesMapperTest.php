@@ -589,7 +589,7 @@ class ConfigNamesMapperTest extends UnitTestCase {
 
     $map = array();
     foreach ($config_names as $i => $config_name) {
-      $map[] = array($config_name, $language, $mock_return_values[$i]);
+      $map[] = array($config_name, $language->getId(), $mock_return_values[$i]);
     }
     $this->localeConfigManager
       ->expects($this->any())

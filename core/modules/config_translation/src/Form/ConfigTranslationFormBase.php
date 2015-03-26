@@ -144,7 +144,7 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
 
     $this->mapper = $mapper;
     $this->language = $language;
-    $this->sourceLanguage = $this->mapper->getLanguageWithFallback();
+    $this->sourceLanguage = $this->languageManager->getLanguage($this->mapper->getLangcode());
 
     // Get base language configuration to display in the form before setting the
     // language to use for the form. This avoids repetitively settings and

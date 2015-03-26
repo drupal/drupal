@@ -324,7 +324,7 @@ function locale_translate_batch_refresh(array &$context) {
   }
   elseif ($name = array_shift($context['sandbox']['refresh']['names'])) {
     // Refresh all languages for one object at a time.
-    $count = locale_config_update_multiple(array($name), $context['sandbox']['refresh']['languages']);
+    $count = Locale::config()->updateConfigTranslations(array($name), $context['sandbox']['refresh']['languages']);
     $context['results']['stats']['config'] += $count;
     // Inherit finished information from the "parent" string lookup step so
     // visual display of status will make sense.
@@ -532,7 +532,7 @@ function locale_translate_delete_translation_files(array $projects = array(), ar
  *   The batch definition.
  */
 function locale_config_batch_update_components(array $options, array $langcodes = array(), array $components = array()) {
-  $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
+  $langcodes = $langcodes ? $langcodes : array_keys(\Drupal::languageManager()->getLanguages());
   if ($langcodes && $names = \Drupal\locale\Locale::config()->getComponentNames($components)) {
     return locale_config_batch_build($names, $langcodes, $options);
   }
@@ -606,7 +606,7 @@ function locale_config_batch_refresh_name(array $names, array $langcodes, array 
   if (!isset($context['result']['stats']['config'])) {
     $context['result']['stats']['config'] = 0;
   }
-  $context['result']['stats']['config'] += locale_config_update_multiple($names, $langcodes);
+  $context['result']['stats']['config'] += Locale::config()->updateConfigTranslations($names, $langcodes);
   foreach ($names as $name) {
     $context['result']['names'][] = $name;
   }
@@ -638,42 +638,4 @@ function locale_config_batch_finished($success, array $results) {
       \Drupal::logger('locale')->warning('No configuration objects have been updated.');
     }
   }
-}
-
-/**
- * Updates all configuration for names / languages.
- *
- * @param array $names
- *   Array of names of configuration objects to update.
- * @param array $langcodes
- *   (optional) Array of language codes to update. Defaults to all languages.
- *
- * @return int
- *   Number of configuration objects retranslated.
- */
-function locale_config_update_multiple(array $names, array $langcodes = array()) {
-  /** @var \Drupal\language\ConfigurableLanguageManagerInterface $language_manager */
-  $language_manager = \Drupal::languageManager();
-  $locale_config_manager = Locale::config();
-
-  $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
-  $count = 0;
-  foreach ($names as $name) {
-    $wrapper = $locale_config_manager->get($name);
-    foreach ($langcodes as $langcode) {
-      $translation = $wrapper->getValue() ? $wrapper->getTranslation($langcode)->getValue() : NULL;
-      if ($translation) {
-        $locale_config_manager->saveTranslationData($name, $langcode, $translation);
-        $count++;
-      }
-      else {
-        // Do not bother deleting language overrides which do not exist in the
-        // first place.
-        if (!$language_manager->getLanguageConfigOverride($langcode, $name)->isNew()) {
-          $locale_config_manager->deleteTranslationData($name, $langcode);
-        }
-      }
-    }
-  }
-  return $count;
 }

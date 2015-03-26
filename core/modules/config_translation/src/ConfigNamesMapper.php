@@ -150,7 +150,7 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
       $plugin_definition,
       $container->get('config.factory'),
       $container->get('config.typed'),
-      $container->get('locale.config.typed'),
+      $container->get('locale.config_manager'),
       $container->get('plugin.manager.config_translation.mapper'),
       $container->get('router.route_provider'),
       $container->get('string_translation'),
@@ -410,24 +410,6 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
   /**
    * {@inheritdoc}
    */
-  public function getLanguageWithFallback() {
-    $langcode = $this->getLangcode();
-    $language = $this->languageManager->getLanguage($langcode);
-    // If the language of the file is English but English is not a configured
-    // language on the site, create a mock language object to represent this
-    // language run-time. In this case, the title of the language is
-    // 'Built-in English' because we assume such configuration is shipped with
-    // core and the modules and not custom created. (In the later case an
-    // English language configured on the site is assumed.)
-    if (empty($language) && $langcode == 'en') {
-      $language = new Language(array('id' => 'en', 'name' => $this->t('Built-in English')));
-    }
-    return $language;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getConfigData() {
     $config_data = array();
     foreach ($this->getConfigNames() as $name) {
@@ -465,7 +447,7 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
    */
   public function hasTranslation(LanguageInterface $language) {
     foreach ($this->getConfigNames() as $name) {
-      if ($this->localeConfigManager->hasTranslation($name, $language)) {
+      if ($this->localeConfigManager->hasTranslation($name, $language->getId())) {
         return TRUE;
       }
     }

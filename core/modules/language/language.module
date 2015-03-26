@@ -161,21 +161,6 @@ function language_process_language_select($element) {
       $element['#options'][$langcode] = $language->isLocked() ? t('- @name -', array('@name' => $language->getName())) : $language->getName();
     }
   }
-  // Add "Built-in English" language to the select when the default value is
-  // set to English but it does not exist in the options list.
-  //
-  // Drupal core includes configuration shipped in English, including default
-  // views, content types, user roles, filter formats, etc. To keep the Drupal
-  // software update-able, as well as translations update-able, we keep these
-  // configuration files in English even when installed in a foreign language.
-  // However, administrators can remove English, in which case editing such a
-  // configuration would lead to the language settings being changed on it. We
-  // avoid that by including this option and letting administrators keep it
-  // in English.
-  if (isset($element['#default_value']) && $element['#default_value'] == 'en' && !isset($element['#options']['en'])) {
-    // Prepend the default language at the beginning of the list.
-    $element['#options'] = array('en' => t('Built-in English')) + $element['#options'];
-  }
   return $element;
 }
 

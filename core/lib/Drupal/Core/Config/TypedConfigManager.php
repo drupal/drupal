@@ -72,8 +72,8 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    */
   public function get($name) {
     $data = $this->configStorage->read($name);
-    $type_definition = $this->getDefinition($name);
-    $data_definition =  $this->buildDataDefinition($type_definition, $data);
+    $type_definition = $this->getDefinition($name, TRUE, TRUE);
+    $data_definition = $this->buildDataDefinition($type_definition, $data);
     return $this->create($data_definition, $data);
   }
 
@@ -116,7 +116,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
   /**
    * {@inheritdoc}
    */
-  public function getDefinition($base_plugin_id, $exception_on_invalid = TRUE) {
+  public function getDefinition($base_plugin_id, $exception_on_invalid = TRUE, $is_config_name = FALSE) {
     $definitions = $this->getDefinitions();
     if (isset($definitions[$base_plugin_id])) {
       $type = $base_plugin_id;
@@ -141,10 +141,19 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
       $this->definitions[$type] = $definition;
     }
     // Add type and default definition class.
-    return $definition + array(
+    $definition += array(
       'definition_class' => '\Drupal\Core\TypedData\DataDefinition',
       'type' => $type,
     );
+    // If this is definition expected for a config name and it is defined as a
+    // mapping, add a langcode element if not already present.
+    if ($is_config_name && isset($definition['mapping']) && !isset($definition['mapping']['langcode'])) {
+      $definition['mapping']['langcode'] = array(
+        'type' => 'string',
+        'label' => 'Language code',
+      );
+    }
+    return $definition;
   }
 
   /**

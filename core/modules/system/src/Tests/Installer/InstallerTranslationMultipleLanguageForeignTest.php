@@ -26,7 +26,7 @@ class InstallerTranslationMultipleLanguageForeignTest extends InstallerTranslati
    */
   protected function setUpLanguage() {
     parent::setUpLanguage();
-    $this->translations['Save and continue'] = 'Save and continue German';
+    $this->translations['Save and continue'] = 'Save and continue de';
   }
 
 }

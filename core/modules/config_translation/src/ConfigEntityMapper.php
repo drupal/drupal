@@ -98,7 +98,7 @@ class ConfigEntityMapper extends ConfigNamesMapper {
       $plugin_definition,
       $container->get('config.factory'),
       $container->get('config.typed'),
-      $container->get('locale.config.typed'),
+      $container->get('locale.config_manager'),
       $container->get('plugin.manager.config_translation.mapper'),
       $container->get('router.route_provider'),
       $container->get('string_translation'),

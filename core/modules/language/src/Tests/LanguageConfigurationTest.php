@@ -132,7 +132,7 @@ class LanguageConfigurationTest extends WebTestBase {
     );
     $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
     $language = $this->config('language.entity.de')->get();
-    $this->assertEqual($language['langcode'], 'en');
+    $this->assertEqual($language['langcode'], 'fr');
 
     // Ensure that German language has a weight of 5 after being created through
     // the UI.

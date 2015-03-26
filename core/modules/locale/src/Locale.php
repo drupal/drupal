@@ -23,6 +23,6 @@ class Locale {
    * @return \Drupal\locale\LocaleConfigManager
    */
   public static function config() {
-    return \Drupal::service('locale.config.typed');
+    return \Drupal::service('locale.config_manager');
   }
 }

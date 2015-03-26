@@ -79,12 +79,10 @@ class LocaleConfigTranslationTest extends WebTestBase {
     );
     $this->drupalPostForm('admin/config/regional/translate', $edit, t('Save translations'));
 
-    $wrapper = $this->container->get('locale.config.typed')->get('system.site');
-
     // Get translation and check we've only got the site name.
-    $translation = $wrapper->getTranslation($langcode);
-    $properties = $translation->getElements();
-    $this->assertEqual(count($properties), 1, 'Got the right number of properties after translation');
+    $translation = \Drupal::languageManager()->getLanguageConfigOverride($langcode, 'system.site')->get();
+    $this->assertEqual(count($translation), 1, 'Got the right number of properties after translation.');
+    $this->assertEqual($translation['name'], $site_name, 'Got the right translation for the site name.');
 
     // Check the translated site name is displayed.
     $this->drupalGet($langcode);
@@ -109,12 +107,8 @@ class LocaleConfigTranslationTest extends WebTestBase {
     );
     $this->drupalPostForm('admin/config/regional/translate', $edit, t('Save translations'));
 
-    $wrapper = $this->container->get('locale.config.typed')->get('core.date_format.medium');
-
-    // Get translation and check we've only got the site name.
-    $translation = $wrapper->getTranslation($langcode);
-    $format = $translation->get('pattern')->getValue();
-    $this->assertEqual($format, 'D', 'Got the right date format pattern after translation.');
+    $translation = \Drupal::languageManager()->getLanguageConfigOverride($langcode, 'core.date_format.medium')->get();
+    $this->assertEqual($translation['pattern'], 'D', 'Got the right date format pattern after translation.');
 
     // Formatting the date 8 / 27 / 1985 @ 13:37 EST with pattern D should
     // display "Tue".
@@ -162,15 +156,8 @@ class LocaleConfigTranslationTest extends WebTestBase {
     $this->assertTrue(count($translations) == 1 && $translation->source == $string->source && $translation->translation == $image_style_label, 'Got only one translation for image configuration.');
 
     // Try more complex configuration data.
-    $wrapper = $this->container->get('locale.config.typed')->get('image.style.medium');
-
-    $translation = $wrapper->getTranslation($langcode);
-    $property = $translation->get('label');
-    $this->assertEqual($property->getValue(), $image_style_label, 'Got the right translation for image style name after translation');
-
-    // Quick test to ensure translation file exists.
-    $override = \Drupal::languageManager()->getLanguageConfigOverride('xx', 'image.style.medium');
-    $this->assertEqual($override->get('label'), $image_style_label);
+    $translation = \Drupal::languageManager()->getLanguageConfigOverride($langcode, 'image.style.medium')->get();
+    $this->assertEqual($translation['label'], $image_style_label, 'Got the right translation for image style name after translation');
 
     // Uninstall the module.
     $this->drupalPostForm('admin/modules/uninstall', array('uninstall[image]' => "image"), t('Uninstall'));

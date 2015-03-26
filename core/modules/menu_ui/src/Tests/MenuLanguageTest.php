@@ -134,34 +134,4 @@ class MenuLanguageTest extends MenuWebTestBase {
     $this->assertNoField('edit-langcode-0-value', 'The language selector field was hidden the page');
   }
 
-  /**
-   * Tests menu configuration is still English after English has been deleted.
-   */
-  function testMenuLanguageRemovedEnglish() {
-    // Create a test menu to test language settings.
-    // Machine name has to be lowercase.
-    $menu_name = Unicode::strtolower($this->randomMachineName(16));
-    $edit = array(
-      'id' => $menu_name,
-      'description' => '',
-      'label' => $this->randomString(),
-      'langcode' => 'en',
-    );
-    $this->drupalPostForm('admin/structure/menu/add', $edit, t('Save'));
-
-    // Check that the language settings were saved.
-    $menu = Menu::load($menu_name);
-    $this->assertEqual($menu->language()->getId(), 'en');
-
-    // Remove English language. To do that another language has to be set as
-    // default.
-    $this->config('system.site')->set('default_langcode', 'cs')->save();
-    entity_delete_multiple('configurable_language', array('en'));
-
-    // Save the menu again and check if the language is still the same.
-    $this->drupalPostForm("admin/structure/menu/manage/$menu_name", array(), t('Save'));
-    $menu = Menu::load($menu_name);
-    $this->assertEqual($menu->language()->getId(), 'en');
-  }
-
 }

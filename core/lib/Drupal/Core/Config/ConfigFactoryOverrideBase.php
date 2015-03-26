@@ -67,12 +67,12 @@ abstract class ConfigFactoryOverrideBase implements EventSubscriberInterface {
    */
   protected function filterOverride(Config $config, StorableConfigBase $override) {
     $override_data = $override->get();
-    $this->filterNestedArray($config->get(), $override_data);
+    $changed = $this->filterNestedArray($config->get(), $override_data);
     if (empty($override_data)) {
       // If no override values are left that would apply, remove the override.
       $override->delete();
     }
-    else {
+    elseif ($changed) {
       // Otherwise set the filtered override values back.
       $override->setData($override_data)->save();
     }
@@ -85,29 +85,37 @@ abstract class ConfigFactoryOverrideBase implements EventSubscriberInterface {
    *   Original data array to filter against.
    * @param array $override_data
    *   Override data to filter.
+   *
+   * @return bool
+   *   TRUE if $override_data was changed, FALSE otherwise.
    */
   protected function filterNestedArray(array $original_data, array &$override_data) {
+    $changed = FALSE;
     foreach ($override_data as $key => $value) {
       if (!isset($original_data[$key])) {
         // The original data is not there anymore, remove the override.
         unset($override_data[$key]);
+        $changed = TRUE;
       }
       elseif (is_array($override_data[$key])) {
         if (is_array($original_data[$key])) {
           // Do the filtering one level deeper.
-          $this->filterNestedArray($original_data[$key], $override_data[$key]);
+          $changed = $this->filterNestedArray($original_data[$key], $override_data[$key]);
           // If no overrides are left under this level, remove the level.
           if (empty($override_data[$key])) {
             unset($override_data[$key]);
+            $changed = TRUE;
           }
         }
         else {
           // The override is an array but the value is not, this will not go
           // well, remove the override.
           unset($override_data[$key]);
+          $changed = TRUE;
         }
       }
     }
+    return $changed;
   }
 
 }

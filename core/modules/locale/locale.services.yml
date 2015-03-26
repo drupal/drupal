@@ -1,5 +1,5 @@
 services:
-  locale.config.typed:
+  locale.config_manager:
     class: Drupal\locale\LocaleConfigManager
     arguments: ['@config.storage', '@config.storage.installer', '@locale.storage', '@config.factory', '@config.typed', '@language_manager']
   locale.storage:
@@ -22,6 +22,6 @@ services:
       - { name: stream_wrapper, scheme: translations }
   locale.config_subscriber:
     class: Drupal\locale\LocaleConfigSubscriber
-    arguments: ['@locale.storage', '@config.factory', '@locale.config.typed']
+    arguments: ['@config.factory', '@locale.config_manager']
     tags:
       - { name: event_subscriber }

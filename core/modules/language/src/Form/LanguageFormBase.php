@@ -75,7 +75,7 @@ abstract class LanguageFormBase extends EntityForm {
     }
     $form['label'] = array(
       '#type' => 'textfield',
-      '#title' => $this->t('Language name in English'),
+      '#title' => $this->t('Language name'),
       '#maxlength' => 64,
       '#default_value' => $language->label(),
       '#required' => TRUE,

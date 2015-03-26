@@ -9,6 +9,8 @@ locale_test.no_translation:
       label: 'Test'
       # See \Drupal\locale\Tests\LocaleConfigSubscriberTest
       translatable: true
+    langcode:
+      type: string
 
 locale_test.translation:
   type: mapping
@@ -19,3 +21,5 @@ locale_test.translation:
       label: 'Test'
       # See \Drupal\locale\Tests\LocaleConfigSubscriberTest
       translatable: true
+    langcode:
+      type: string

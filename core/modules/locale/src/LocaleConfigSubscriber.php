@@ -6,33 +6,35 @@
 
 namespace Drupal\locale;
 
-use Drupal\Core\Config\Config;
+use Drupal\Core\Config\ConfigCrudEvent;
+use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\TypedData\TraversableTypedDataInterface;
-use Drupal\language\Config\LanguageConfigOverride;
+use Drupal\Core\Config\StorableConfigBase;
 use Drupal\language\Config\LanguageConfigOverrideCrudEvent;
 use Drupal\language\Config\LanguageConfigOverrideEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Updates corresponding string translation when language overrides change.
+ * Updates strings translation when configuration translations change.
  *
- * This reacts to the updating or deleting of configuration language overrides.
- * It checks whether there are string translations associated with the
- * configuration that is being saved and, if so, updates those string
- * translations with the new configuration values and marks them as customized.
- * That way manual updates to configuration will not be inadvertently reverted
- * when updated translations from https://localize.drupal.org are being
- * imported.
+ * This reacts to the updates of translated active configuration and
+ * configuration language overrides. When those updates involve configuration
+ * which was available as default configuration, we need to feed back changes
+ * to any item which was originally part of that configuration to the interface
+ * translation storage. Those updated translations are saved as customized, so
+ * further community translation updates will not undo user changes.
+ *
+ * This subscriber does not respond to deleting active configuration or deleting
+ * configuration translations. The locale storage is additive and we cannot be
+ * sure that only a given configuration translation used a source string. So
+ * we should not remove the translations from locale storage in these cases. The
+ * configuration or override would itself be deleted either way.
+ *
+ * By design locale module only deals with sources in English.
+ *
+ * @see \Drupal\locale\LocaleConfigManager
  */
 class LocaleConfigSubscriber implements EventSubscriberInterface {
-
-  /**
-   * The string storage.
-   *
-   * @var \Drupal\locale\StringStorageInterface;
-   */
-  protected $stringStorage;
 
   /**
    * The configuration factory.
@@ -51,15 +53,12 @@ class LocaleConfigSubscriber implements EventSubscriberInterface {
   /**
    * Constructs a LocaleConfigSubscriber.
    *
-   * @param \Drupal\locale\StringStorageInterface $string_storage
-   *   The string storage.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory.
    * @param \Drupal\locale\LocaleConfigManager $locale_config_manager
    *   The typed configuration manager.
    */
-  public function __construct(StringStorageInterface $string_storage, ConfigFactoryInterface $config_factory, LocaleConfigManager $locale_config_manager) {
-    $this->stringStorage = $string_storage;
+  public function __construct(ConfigFactoryInterface $config_factory, LocaleConfigManager $locale_config_manager) {
     $this->configFactory = $config_factory;
     $this->localeConfigManager = $locale_config_manager;
   }
@@ -68,200 +67,162 @@ class LocaleConfigSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
-    $events[LanguageConfigOverrideEvents::SAVE_OVERRIDE] = 'onSave';
-    $events[LanguageConfigOverrideEvents::DELETE_OVERRIDE] = 'onDelete';
+    $events[LanguageConfigOverrideEvents::SAVE_OVERRIDE] = 'onOverrideChange';
+    $events[LanguageConfigOverrideEvents::DELETE_OVERRIDE] = 'onOverrideChange';
+    $events[ConfigEvents::SAVE] = 'onConfigSave';
     return $events;
   }
 
+  /**
+   * Updates the locale strings when a translated active configuration is saved.
+   *
+   * @param \Drupal\Core\Config\ConfigCrudEvent $event
+   *   The configuration event.
+   */
+  public function onConfigSave(ConfigCrudEvent $event) {
+    // Only attempt to feed back configuration translation changes to locale if
+    // the update itself was not initiated by locale data changes.
+    if (!$this->localeConfigManager->isUpdatingTranslationsFromLocale()) {
+      $config = $event->getConfig();
+      $langcode = $config->get('langcode') ?: 'en';
+      $this->updateLocaleStorage($config, $langcode);
+    }
+  }
 
   /**
-   * Updates the translation strings when shipped configuration is saved.
+   * Updates the locale strings when a configuration override is saved/deleted.
    *
    * @param \Drupal\language\Config\LanguageConfigOverrideCrudEvent $event
    *   The language configuration event.
    */
-  public function onSave(LanguageConfigOverrideCrudEvent $event) {
-    // Do not mark strings as customized when community translations are being
-    // imported.
-    if ($this->localeConfigManager->isUpdatingConfigTranslations()) {
-      $callable = [$this, 'saveTranslation'];
-    }
-    else {
-      $callable = [$this, 'saveCustomizedTranslation'];
-    }
-
-    $this->updateTranslationStrings($event, $callable);
-  }
-
-  /**
-   * Updates the translation strings when shipped configuration is deleted.
-   *
-   * @param \Drupal\language\Config\LanguageConfigOverrideCrudEvent $event
-   *   The language configuration event.
-   */
-  public function onDelete(LanguageConfigOverrideCrudEvent $event) {
-    if ($this->localeConfigManager->isUpdatingConfigTranslations()) {
-      $callable = [$this, 'deleteTranslation'];
-    }
-    else {
-      // Do not delete the string, but save a customized translation with the
-      // source value so that the deletion will not be reverted by importing
-      // community translations.
-      // @see \Drupal\locale\LocaleConfigSubscriber::saveCustomizedTranslation()
-      $callable = [$this, 'saveCustomizedTranslation'];
-    }
-
-    $this->updateTranslationStrings($event, $callable);
-  }
-
-  /**
-   * Updates the translation strings of shipped configuration.
-   *
-   * @param \Drupal\language\Config\LanguageConfigOverrideCrudEvent $event
-   *   The language configuration event.
-   * @param $callable
-   *   A callable to apply to each translatable string of the configuration.
-   */
-  protected function updateTranslationStrings(LanguageConfigOverrideCrudEvent $event, $callable) {
-    $translation_config = $event->getLanguageConfigOverride();
-    $name = $translation_config->getName();
-
-    // Only do anything if the configuration was shipped.
-    if ($this->stringStorage->getLocations(['type' => 'configuration', 'name' => $name])) {
-      $source_config = $this->configFactory->getEditable($name);
-      $schema = $this->localeConfigManager->get($name)->getTypedConfig();
-      $this->traverseSchema($schema, $source_config, $translation_config, $callable);
+  public function onOverrideChange(LanguageConfigOverrideCrudEvent $event) {
+    // Only attempt to feed back configuration override changes to locale if
+    // the update itself was not initiated by locale data changes.
+    if (!$this->localeConfigManager->isUpdatingTranslationsFromLocale()) {
+      $translation_config = $event->getLanguageConfigOverride();
+      $langcode = $translation_config->getLangcode();
+      $reference_config = $this->configFactory->getEditable($translation_config->getName())->get();
+      $this->updateLocaleStorage($translation_config, $langcode, $reference_config);
     }
   }
 
   /**
-   * Traverses configuration schema and applies a callback to each leaf element.
+   * Update locale storage based on configuration translations.
    *
-   * It skips leaf elements that are not translatable.
-   *
-   * @param \Drupal\Core\TypedData\TraversableTypedDataInterface $schema
-   *   The respective configuration schema.
-   * @param callable $callable
-   *   The callable to apply to each leaf element. The callable will be called
-   *   with the leaf element and the element key as arguments.
-   * @param string|null $base_key
-   *   (optional) The base key that the schema belongs to. This should be NULL
-   *   for the top-level schema and be populated consecutively when recursing
-   *   into the schema structure.
-   */
-  protected function traverseSchema(TraversableTypedDataInterface $schema, Config $source_config, LanguageConfigOverride $translation_config, $callable, $base_key = NULL) {
-    foreach ($schema as $key => $element) {
-      $element_key = implode('.', array_filter([$base_key, $key]));
-
-      // We only care for strings here, so traverse the schema further in the
-      // case of traversable elements.
-      if ($element instanceof TraversableTypedDataInterface) {
-        $this->traverseSchema($element, $source_config, $translation_config, $callable, $element_key);
-      }
-      // Skip elements which are not translatable.
-      elseif (!empty($element->getDataDefinition()['translatable'])) {
-        $callable(
-          $source_config->get($element_key),
-          $translation_config->getLangcode(),
-          $translation_config->get($element_key)
-        );
-      }
-    }
-  }
-
-  /**
-   * Saves a translation string.
-   *
-   * @param string $source_value
-   *   The source string value.
+   * @param \Drupal\Core\Config\StorableConfigBase $config
+   *   Active configuration or configuration translation override.
    * @param string $langcode
-   *   The language code of the translation.
-   * @param string|null $translation_value
-   *   (optional) The translation string value. If omitted, no translation will
-   *   be saved.
+   *   The language code of $config.
+   * @param array $reference_config
+   *   (Optional) Reference configuration to check against if $config was an
+   *   override. This allows us to update locale keys for data not in the
+   *   override but still in the active configuration.
    */
-  protected function saveTranslation($source_value, $langcode, $translation_value = NULL) {
-    if ($translation_value && ($translation = $this->getTranslation($source_value, $langcode, TRUE))) {
-      if ($translation->isNew() || $translation->getString() != $translation_value) {
-        $translation
-          ->setString($translation_value)
-          ->save();
+  protected function updateLocaleStorage(StorableConfigBase $config, $langcode, array $reference_config = array()) {
+    $name = $config->getName();
+    if ($this->localeConfigManager->isSupported($name) && locale_is_translatable($langcode)) {
+      $translatables = $this->localeConfigManager->getTranslatableDefaultConfig($name);
+      $this->processTranslatableData($name, $config->get(), $translatables, $langcode, $reference_config);
+    }
+  }
+
+  /**
+   * Process the translatable data array with a given language.
+   *
+   * @param string $name
+   *   The configuration name.
+   * @param array $config
+   *   The active configuration data or override data.
+   * @param array|\Drupal\Core\StringTranslation\TranslationWrapper[] $translatable
+   *   The translatable array structure.
+   *   @see \Drupal\locale\LocaleConfigManager::getTranslatableData()
+   * @param string $langcode
+   *   The language code to process the array with.
+   * @param array $reference_config
+   *   (Optional) Reference configuration to check against if $config was an
+   *   override. This allows us to update locale keys for data not in the
+   *   override but still in the active configuration.
+   */
+  protected function processTranslatableData($name, array $config, array $translatable, $langcode, array $reference_config = array()) {
+    foreach ($translatable as $key => $item) {
+      if (!isset($config[$key])) {
+        if (isset($reference_config[$key])) {
+          $this->resetExistingTranslations($name, $translatable[$key], $reference_config[$key], $langcode);
+        }
+        continue;
       }
+      if (is_array($item)) {
+        $reference_config = isset($reference_config[$key]) ? $reference_config[$key] : array();
+        $this->processTranslatableData($name, $config[$key], $item, $langcode, $reference_config);
+      }
+      else {
+        $this->saveCustomizedTranslation($name, $item->getUntranslatedString(), $item->getOption('context'), $config[$key], $langcode);
+      }
+    }
+  }
+
+  /**
+   * Reset existing locale translations to their source values.
+   *
+   * Goes through $translatable to reset any existing translations to the source
+   * string, so prior translations would not reappear in the configuration.
+   *
+   * @param string $name
+   *   The configuration name.
+   * @param array|\Drupal\Core\StringTranslation\TranslationWrapper $translatable
+   *   Either a possibly nested array with TranslationWrapper objects at the
+   *   leaf items or a TranslationWrapper object directly.
+   * @param array|string $reference_config
+   *   Either a possibly nested array with strings at the leaf items or a string
+   *   directly. Only those $translatable items that are also present in
+   *   $reference_config will get translations reset.
+   * @param string $langcode
+   *   The language code of the translation being processed.
+   */
+  protected function resetExistingTranslations($name, $translatable, $reference_config, $langcode) {
+    if (is_array($translatable)) {
+      foreach ($translatable as $key => $item) {
+        if (isset($reference_config[$key])) {
+          // Process further if the key still exists in the reference active
+          // configuration and the default translation but not the current
+          // configuration override.
+          $this->resetExistingTranslations($name, $item, $reference_config[$key], $langcode);
+        }
+      }
+    }
+    elseif (!is_array($reference_config)) {
+      $this->saveCustomizedTranslation($name, $translatable->getUntranslatedString(), $translatable->getOption('context'), $reference_config, $langcode);
     }
   }
 
   /**
    * Saves a translation string and marks it as customized.
    *
-   * @param string $source_value
+   * @param string $name
+   *   The configuration name.
+   * @param string $source
    *   The source string value.
+   * @param string $context
+   *   The source string context.
+   * @param string $translation
+   *   The translation string.
    * @param string $langcode
    *   The language code of the translation.
-   * @param string|null $translation_value
-   *   (optional) The translation string value. If omitted, a customized string
-   *   with the source value will be saved.
-   *
-   * @see \Drupal\locale\LocaleConfigSubscriber::onDelete()
    */
-  protected function saveCustomizedTranslation($source_value, $langcode, $translation_value = NULL) {
-    if ($translation = $this->getTranslation($source_value, $langcode, TRUE)) {
-      if (!isset($translation_value)) {
-        $translation_value = $source_value;
-      }
-      if ($translation->isNew() || $translation->getString() != $translation_value) {
-        $translation
-          ->setString($translation_value)
+  protected function saveCustomizedTranslation($name, $source, $context, $translation, $langcode) {
+    $locale_translation = $this->localeConfigManager->getStringTranslation($name, $langcode, $source, $context);
+    if (!empty($locale_translation)) {
+      // Save this translation as custom if it was a new translation and not the
+      // same as the source. (The interface prefills translation values with the
+      // source). Or if there was an existing translation and the user changed
+      // it (even if it was changed back to the original value). Otherwise the
+      // translation file would be overwritten with the locale copy again later.
+      if (($locale_translation->isNew() && $source != $translation) ||
+          (!$locale_translation->isNew() && $translation != $locale_translation->getString())) {
+        $locale_translation
+          ->setString($translation)
           ->setCustomized(TRUE)
           ->save();
-      }
-    }
-  }
-
-  /**
-   * Deletes a translation string, if it exists.
-   *
-   * @param string $source_value
-   *   The source string value.
-   * @param string $langcode
-   *   The language code of the translation.
-   *
-   * @see \Drupal\locale\LocaleConfigSubscriber::onDelete()
-   */
-  protected function deleteTranslation($source_value, $langcode) {
-    if ($translation = $this->getTranslation($source_value, $langcode, FALSE)) {
-      $translation->delete();
-    }
-  }
-
-  /**
-   * Gets a translation string.
-   *
-   * @param string $source_value
-   *   The source string value.
-   * @param string $langcode
-   *   The language code of the translation.
-   * @param bool $create_fallback
-   *   (optional) By default if a source string could be found and no
-   *   translation in the given language exists yet, a translation object is
-   *   created. This can be circumvented by passing FALSE.
-   *
-   * @return \Drupal\locale\TranslationString|null
-   *   The translation string if one was found or created.
-   */
-  protected function getTranslation($source_value, $langcode, $create_fallback = TRUE) {
-    // There is no point in creating a translation without a source.
-    if ($source_string = $this->stringStorage->findString(['source' => $source_value])) {
-      // Get the translation for this original source string from locale.
-      $conditions = [
-        'lid' => $source_string->lid,
-        'language' => $langcode,
-      ];
-      $translations = $this->stringStorage->getTranslations($conditions + ['translated' => TRUE]);
-      if ($translations) {
-        return reset($translations);
-      }
-      elseif ($create_fallback) {
-        return $this->stringStorage->createTranslation($conditions);
       }
     }
   }

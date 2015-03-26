@@ -60,6 +60,29 @@ class TranslationWrapper {
   }
 
   /**
+   * Gets the untranslated string value stored in this translation wrapper.
+   *
+   * @return string
+   *   The string stored in this wrapper.
+   */
+  public function getUntranslatedString() {
+    return $this->string;
+  }
+
+  /**
+   * Gets a specific option from this translation wrapper.
+   *
+   * @param $name
+   *   Option name.
+   *
+   * @return mixed
+   *   The value of this option or empty string of option is not set.
+   */
+  public function getOption($name) {
+    return isset($this->options[$name]) ? $this->options[$name] : '';
+  }
+
+  /**
    * Implements the magic __toString() method.
    */
   public function __toString() {
