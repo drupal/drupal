@@ -171,10 +171,6 @@ views.field.url:
       type: boolean
       label: 'Display as link'
 
-views.field.xss:
-  type: views_field
-  label: 'Xss'
-
 views.field.language:
   type: views_field
   label: 'Language'

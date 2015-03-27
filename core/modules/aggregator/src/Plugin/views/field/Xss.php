@@ -7,7 +7,8 @@
 
 namespace Drupal\aggregator\Plugin\views\field;
 
-use Drupal\views\Plugin\views\field\Xss as XssBase;
+use Drupal\views\Plugin\views\field\FieldPluginBase;
+use Drupal\views\ResultRow;
 
 /**
  * Filters htmls tags from item.
@@ -16,13 +17,13 @@ use Drupal\views\Plugin\views\field\Xss as XssBase;
  *
  * @ViewsField("aggregator_xss")
  */
-class Xss extends XssBase {
+class Xss extends FieldPluginBase {
 
   /**
    * {@inheritdoc}
    */
-  public function sanitizeValue($value, $type = NULL) {
-    return aggregator_filter_xss($value);
+  public function render(ResultRow $values) {
+    return aggregator_filter_xss($this->getValue($values));
   }
 
 }

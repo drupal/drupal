@@ -45,7 +45,6 @@ class AggregatorFeedViewsData extends EntityViewsData {
     $data['aggregator_feed']['checked']['help'] = $this->t('The date the feed was last checked for new content.');
 
     $data['aggregator_feed']['description']['help'] = $this->t('The description of the aggregator feed.');
-    $data['aggregator_feed']['description']['field']['id'] = 'xss';
     $data['aggregator_feed']['description']['field']['click sortable'] = FALSE;
 
     $data['aggregator_feed']['modified']['help'] = $this->t('The date of the most recent new content on the feed.');

@@ -280,8 +280,6 @@ class NodeViewsData extends EntityViewsData {
 
     $data['node_field_revision']['langcode']['help'] = t('The language the original content is in.');
 
-    $data['node_revision']['revision_log']['field']['id'] = 'xss';
-
     $data['node_revision']['revision_uid']['help'] = t('Relate a content revision to the user who created the revision.');
     $data['node_revision']['revision_uid']['relationship']['label'] = t('revision user');
 

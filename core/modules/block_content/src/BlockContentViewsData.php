@@ -58,8 +58,6 @@ class BlockContentViewsData extends EntityViewsData {
     $data['block_content_revision']['revision_id']['relationship']['title'] = $this->t('Block Content');
     $data['block_content_revision']['revision_id']['relationship']['label'] = $this->t('Get the actual block content from a block content revision.');
 
-    $data['block_content_revision']['revision_log']['field']['id'] = 'xss';
-
     return $data;
 
   }
