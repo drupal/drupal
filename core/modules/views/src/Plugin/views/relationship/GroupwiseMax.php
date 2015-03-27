@@ -322,10 +322,19 @@ class GroupwiseMax extends RelationshipPluginBase {
   /**
    * Helper function to namespace query pieces.
    *
-   * Turns 'foo.bar' into 'foo_NAMESPACE.bar'.
+   * Turns 'foo.bar' into '"foo_NAMESPACE".bar'.
+   * PostgreSQL doesn't support mixed-cased identifiers unless quoted, so we
+   * need to quote each single part to prevent from query exceptions.
    */
   protected function conditionNamespace($string) {
-    return str_replace('.', $this->subquery_namespace . '.', $string);
+    $parts = explode(' = ', $string);
+    foreach ($parts as &$part) {
+      if (strpos($part, '.') !== FALSE) {
+        $part = '"' . str_replace('.', $this->subquery_namespace . '".', $part);
+      }
+    }
+
+    return implode(' = ', $parts);
   }
 
   /**
