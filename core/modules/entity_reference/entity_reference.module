@@ -33,7 +33,15 @@ function entity_reference_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dt>' . t('Filtering and sorting reference fields') . '</dt>';
       $output .= '<dd>' . t('Depending on the chosen entity type, additional filtering and sorting options are available for the list of entities that can be referred to, in the field settings. For example, the list of users can be filtered by role and sorted by name or ID.') . '</dd>';
       $output .= '<dt>' . t('Displaying a reference') . '</dt>';
-      $output .= '<dd>' . t('An entity reference can be displayed as a simple label with or without a link to the entity. Alternatively, the referenced entity can be displayed as a teaser (or any other available view mode) inside the referencing entity.') . '</dd>';
+      $output .= '<dd>' . t('An entity reference can be displayed as a simple label with or without a link to the entity. Alternatively, the referenced entity can be displayed as a teaser (or any other available view mode) inside the referencing entity. Certain entity types may provide additional display options. You can configure how the entity reference is displayed on the <em>Manage display</em> page for the entity.') . '</dd>';
+      $output .= '<dt>' . t('Configuring form displays') . '</dt>';
+      $output .= '<dd>' . t('Reference fields have several widgets available on the <em>Manage form display</em> page:');
+      $output .= '<ul>';
+      $output .= '<li>' . t('The <em>Check boxes/radio buttons</em> widget displays the existing entities for the entity type as check boxes or radio buttons based on the <em>Allowed number of values</em> set for the field.') . '</li>';
+      $output .= '<li>' . t('The <em>Select list</em> widget displays the existing entities in a drop-down list or scrolling list box based on the <em>Allowed number of values</em> setting for the field.') . '</li>';
+      $output .= '<li>' . t('The <em>Autocomplete</em> widget displays text fields in which users can type entity labels based on the <em>Allowed number of values</em>. The widget can be configured to display all entities that contain the typed characters or restricted to those starting with those characters.') . '</li>';
+      $output .= '<li>' . t('The <em>Autocomplete (Tags style)</em> widget displays a multi-text field in which users can type in a comma-separated list of entity labels.') . '</li>';
+      $output .= '</ul>';
       $output .= '</dl>';
       return $output;
   }

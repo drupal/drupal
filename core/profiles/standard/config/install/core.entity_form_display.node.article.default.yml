@@ -35,7 +35,7 @@ content:
       placeholder: ''
     third_party_settings: {  }
   field_tags:
-    type: taxonomy_autocomplete
+    type: entity_reference_autocomplete_tags
     weight: 3
     settings: {  }
     third_party_settings: {  }

@@ -7,8 +7,8 @@
 
 namespace Drupal\taxonomy\Tests;
 
+use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
 use Drupal\simpletest\WebTestBase;
-use Drupal\taxonomy\Tests\TaxonomyTestTrait;
 
 /**
  * Provides common helper methods for Taxonomy module tests.
@@ -16,6 +16,7 @@ use Drupal\taxonomy\Tests\TaxonomyTestTrait;
 abstract class TaxonomyTestBase extends WebTestBase {
 
   use TaxonomyTestTrait;
+  use EntityReferenceTestTrait;
 
   /**
    * Modules to enable.

@@ -9,6 +9,7 @@ namespace Drupal\taxonomy\Tests\Views;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 
@@ -16,6 +17,8 @@ use Drupal\views\Tests\ViewTestData;
  * Base class for all taxonomy tests.
  */
 abstract class TaxonomyTestBase extends ViewTestBase {
+
+  use EntityReferenceTestTrait;
 
   /**
    * Modules to enable.
@@ -85,44 +88,31 @@ abstract class TaxonomyTestBase extends ViewTestBase {
     ));
     $this->vocabulary->save();
     $field_name = 'field_' . $this->vocabulary->id();
-    entity_create('field_storage_config', array(
-      'field_name' => $field_name,
-      'entity_type' => 'node',
-      'type' => 'taxonomy_term_reference',
-      // Set cardinality to unlimited for tagging.
-      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
-      'settings' => array(
-        'allowed_values' => array(
-          array(
-            'vocabulary' => $this->vocabulary->id(),
-            'parent' => 0,
-          ),
-        ),
+
+    $handler_settings = array(
+      'target_bundles' => array(
+        $this->vocabulary->id() => $this->vocabulary->id(),
       ),
-    ))->save();
-    entity_create('field_config', array(
-      'field_name' => $field_name,
-      'entity_type' => 'node',
-      'label' => 'Tags',
-      'bundle' => 'article',
-    ))->save();
+      'auto_create' => TRUE,
+    );
+    $this->createEntityReferenceField('node', 'article', $field_name, 'Tags', 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
 
     entity_get_form_display('node', 'article', 'default')
       ->setComponent($field_name, array(
-        'type' => 'taxonomy_autocomplete',
+        'type' => 'entity_reference_autocomplete_tags',
         'weight' => -4,
       ))
       ->save();
 
     entity_get_display('node', 'article', 'default')
       ->setComponent($field_name, array(
-        'type' => 'taxonomy_term_reference_link',
+        'type' => 'entity_reference_label',
         'weight' => 10,
       ))
       ->save();
     entity_get_display('node', 'article', 'teaser')
       ->setComponent($field_name, array(
-        'type' => 'taxonomy_term_reference_link',
+        'type' => 'entity_reference_label',
         'weight' => 10,
       ))
       ->save();

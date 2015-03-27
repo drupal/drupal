@@ -8,7 +8,6 @@
 namespace Drupal\node\Plugin\views\wizard;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\views\Plugin\views\wizard\WizardPluginBase;
 
 /**
@@ -121,7 +120,7 @@ class Node extends WizardPluginBase {
       }
     }
     if (!empty($tids)) {
-      $vid = $form['displays']['show']['tagged_with']['#selection_settings']['target_bundles'][0];
+      $vid = reset($form['displays']['show']['tagged_with']['#selection_settings']['target_bundles']);
       $filters['tid'] = array(
         'id' => 'tid',
         'table' => 'taxonomy_index',
@@ -229,18 +228,17 @@ class Node extends WizardPluginBase {
     foreach ($bundles as $bundle) {
       $display = entity_get_form_display($this->entityTypeId, $bundle, 'default');
       $taxonomy_fields = array_filter(\Drupal::entityManager()->getFieldDefinitions($this->entityTypeId, $bundle), function ($field_definition) {
-        return $field_definition->getType() == 'taxonomy_term_reference';
+        return $field_definition->getType() == 'entity_reference' && $field_definition->getSetting('target_type') == 'taxonomy_term';
       });
       foreach ($taxonomy_fields as $field_name => $field) {
         $widget = $display->getComponent($field_name);
         // We define "tag-like" taxonomy fields as ones that use the
-        // "Autocomplete term widget (tagging)" widget.
-        if ($widget['type'] == 'taxonomy_autocomplete') {
-          $tag_fields[] = $field_name;
+        // "Autocomplete (Tags style)" widget.
+        if ($widget['type'] == 'entity_reference_autocomplete_tags') {
+          $tag_fields[$field_name] = $field;
         }
       }
     }
-    $tag_fields = array_unique($tag_fields);
     if (!empty($tag_fields)) {
       // If there is more than one "tag-like" taxonomy field available to
       // the view, we can only make our filter apply to one of them (as
@@ -248,14 +246,14 @@ class Node extends WizardPluginBase {
       // that is created by the Standard install profile in core and also
       // commonly used by contrib modules; thus, it is most likely to be
       // associated with the "main" free-tagging vocabulary on the site.
-      if (in_array('field_tags', $tag_fields)) {
+      if (array_key_exists('field_tags', $tag_fields)) {
         $tag_field_name = 'field_tags';
       }
       else {
-        $tag_field_name = reset($tag_fields);
+        $tag_field_name = key($tag_fields);
       }
       // Add the autocomplete textfield to the wizard.
-      $target_bundles = [FieldStorageConfig::loadByName('node', $tag_field_name)->getSetting('allowed_values')[0]['vocabulary']];
+      $target_bundles = $tag_fields[$tag_field_name]->getSetting('handler_settings')['target_bundles'];
       $form['displays']['show']['tagged_with'] = array(
         '#type' => 'entity_autocomplete',
         '#title' => $this->t('tagged with'),

@@ -10,10 +10,10 @@ namespace Drupal\views\Tests;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
-use Drupal\simpletest\WebTestBase;
-use Drupal\views\ViewExecutable;
+use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
 use Drupal\views\Views;
 
 /**
@@ -24,6 +24,7 @@ use Drupal\views\Views;
 class DefaultViewsTest extends ViewTestBase {
 
   use CommentTestTrait;
+  use EntityReferenceTestTrait;
 
   /**
    * Modules to enable.
@@ -62,24 +63,14 @@ class DefaultViewsTest extends ViewTestBase {
 
     // Create a field.
     $field_name = Unicode::strtolower($this->randomMachineName());
-    entity_create('field_storage_config', array(
-      'field_name' => $field_name,
-      'entity_type' => 'node',
-      'type' => 'taxonomy_term_reference',
-      'settings' => array(
-        'allowed_values' => array(
-          array(
-            'vocabulary' => $vocabulary->id(),
-            'parent' => '0',
-          ),
-        ),
-      )
-    ))->save();
-    entity_create('field_config', array(
-      'field_name' => $field_name,
-      'entity_type' => 'node',
-      'bundle' => 'page',
-    ))->save();
+
+    $handler_settings = array(
+      'target_bundles' => array(
+        $vocabulary->id() => $vocabulary->id(),
+      ),
+      'auto_create' => TRUE,
+    );
+    $this->createEntityReferenceField('node', 'page', $field_name, NULL, 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
 
     // Create a time in the past for the archive.
     $time = REQUEST_TIME - 3600;

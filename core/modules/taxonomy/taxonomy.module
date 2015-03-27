@@ -9,17 +9,13 @@ use Drupal\Component\Utility\Tags;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
-use Drupal\file\FileInterface;
-use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\taxonomy\TermInterface;
 use Drupal\taxonomy\VocabularyInterface;
-use Drupal\Component\Utility\String;
 
 /**
  * Denotes that no term in the vocabulary has a parent.
@@ -35,14 +31,6 @@ const TAXONOMY_HIERARCHY_SINGLE = 1;
  * Denotes that one or more terms in the vocabulary have multiple parents.
  */
 const TAXONOMY_HIERARCHY_MULTIPLE = 2;
-
-/**
- * Users can create new terms in a free-tagging vocabulary when
- * submitting a taxonomy_autocomplete_widget. We store a term object
- * whose tid is 'autocreate' as a field data item during widget
- * validation and then actually create the term if/when that field
- * data item makes it to taxonomy_field_insert/update().
- */
 
 /**
  * Implements hook_help().
@@ -62,25 +50,11 @@ function taxonomy_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dt>' . t('Managing terms') . '</dt>';
       $output .= '<dd>' . t('Users who have the <em>Administer vocabularies and terms</em> permission or the <em>Edit terms</em> permission for a particular vocabulary can add, edit, and organize the terms in a vocabulary from a vocabulary\'s term listing page, which can be accessed by going to the <a href="!taxonomy_admin">Taxonomy administration page</a> and clicking <em>List terms</em> in the <em>Operations</em> column. Users must have the <em>Administer vocabularies and terms</em> permission or the <em>Delete terms</em> permission for a particular vocabulary to delete terms.' , array('!taxonomy_admin' => \Drupal::url('entity.taxonomy_vocabulary.collection'))) . ' </dd>';
       $output .= '<dt>' . t('Classifying entity content') . '</dt>';
-      $output .= '<dd>' . t('A user with the <em>Administer fields</em> permission for a certain entity type may add reference fields to the entity, which will allow entities to be classified using taxonomy terms. See the <a href="!field">Field module help</a> and the <a href="!field_ui">Field UI help</a> pages for general information on fields and how to create and manage them. The reference field can either be a <em>Taxonomy Term reference</em> or an <em>Entity reference</em> field:' , array('!field_ui' => $field_ui_url, '!field' => \Drupal::url('help.page', array('name' => 'field'))));
-      $output .= '<ul>';
-      $output .= '<li>' . t('A <em>Taxonomy Term reference</em> field corresponds to <em>one</em> vocabulary.') . '</li>';
-      $output .= '<li>' . t('An <em>Entity reference</em> field can reference <em>several</em> vocabularies at the same time, and it has more configuration options than a Taxonomy Term Reference field.') . '</li>';
-      $output .= '</ul>';
-      $output .= '</dd>';
+      $output .= '<dd>' . t('A user with the <em>Administer fields</em> permission for a certain entity type may add <em>Taxonomy term</em> reference fields to the entity type, which will allow entities to be classified using taxonomy terms. See the <a href="!entity_reference">Entity Reference help</a> for more information about reference fields. See the <a href="!field">Field module help</a> and the <a href="!field_ui">Field UI help</a> pages for general information on fields and how to create and manage them.' , array('!field_ui' => $field_ui_url, '!field' => \Drupal::url('help.page', array('name' => 'field')), '!entity_reference' => \Drupal::url('help.page', array('name' => 'entity_reference')))) . '</dd>';
       $output .= '<dt>' . t('Adding new terms during content creation') . '</dt>';
-      $output .= '<dd>' . t('Allowing users to add new terms gradually builds a vocabulary as content is added and edited. Users can add new terms if the <em>Autocomplete term widget (tagging)</em> is chosen for a <em>Taxonomy Term reference</em> field, or if either of the two <em>Autocomplete</em> widgets is chosen for an <em>Entity reference</em> field. In this case you need to enable the <em>Create referenced entity</em> option, and restrict the field to one vocabulary.') . '</dd>';
-      $output .= '<dt>' . t('Configuring displays and form displays ') . '</dt>';
-      $output .= '<dd>' . t('The reference fields have several formatters and widgets available on the Manage display and Manage form display pages, respectively:');
-      $output .= '<ul>';
-      $output .= '<li>' . t('The <em>Check boxes/radio buttons</em> widget displays the existing terms of the vocabulary as check boxes or radio buttons based on the <em>Allowed number of values</em> set for the field.') . '</li>';
-      $output .= '<li>' . t('The <em>Select list</em> widget displays the existing terms in a drop-down list or scrolling list box based on the <em>Allowed number of values</em> set for the field.') . '</li>';
-      $output .= '<li>' . t('The <em>Autocomplete term widget (tagging)</em> widget of a <em>Taxonomy Term reference</em> field displays a text field in which users can type a comma-separated list of terms.') . '</li>';
-      $output .= '<li>' . t('The <em>Autocomplete</em> widget of an <em>Entity Reference</em> field displays text fields in which users can type terms based on the <em>Allowed number of values</em>. The display of matching terms can include all terms that contain the typed characters or restricted to those starting with them.') . '</li>';
-      $output .= '<li>' . t('The <em>Autocomplete (Tags style)</em> widget of an <em>Entity Reference</em> field displays a multi-text field in which users can type in a comma-separated list of terms.') . '</li>';
-      $output .= '<li>' . t('The <em>Plain text</em> formatter displays only the name of the term.') . '</li>';
-      $output .= '<li>' . t('The <em>Link</em> formatter displays the name of the term linked to a page that lists all <a href="!node">Node module</a> content items that have been classified with that term.', array('!node' => \Drupal::url('help.page', array('name' => 'node')))) . '</li>';
-      $output .= '<li>' . t('The <em>RSS category</em> formatter displays nothing when the entity item is displayed as HTML, but displays an RSS category instead of a list when the entity item is displayed in an RSS feed.') . '</li>';
+      $output .= '<dd>' . t('Allowing users to add new terms gradually builds a vocabulary as content is added and edited. Users can add new terms if either of the two <em>Autocomplete</em> widgets is chosen for the Taxonomy term reference field in the <em>Manage form display</em> page for the field. You will also need to enable the <em>Create referenced entities if they don\'t already exist</em> option, and restrict the field to one vocabulary.') . '</dd>';
+      $output .= '<dt>' . t('Configuring displays and form displays') . '</dt>';
+      $output .= '<dd>' . t('See the <a href="!entity_reference">Entity Reference help</a> page for the field widgets and formatters that can be configured for any reference field on the <em>Manage display</em> and <em>Manage form display</em> pages. Taxonomy additionally provides an <em>RSS category</em> formatter that displays nothing when the entity item is displayed as HTML, but displays an RSS category instead of a list when the entity item is displayed in an RSS feed.', array('!entity_reference' => \Drupal::url('help.page', array('name' => 'entity_reference')))) . '</li>';
       $output .= '</ul>';
       $output .= '</dd>';
       $output .= '</dl>';
@@ -530,27 +504,6 @@ function taxonomy_implode_tags($tags, $vid = NULL) {
 }
 
 /**
- * Implements hook_field_widget_info_alter().
- */
-function taxonomy_field_widget_info_alter(&$info) {
-  if (isset($info['options_select'])) {
-    $info['options_select']['field_types'][] = 'taxonomy_term_reference';
-  }
-  if (isset($info['options_buttons'])) {
-    $info['options_buttons']['field_types'][] = 'taxonomy_term_reference';
-  }
-}
-
-/**
- * Implements hook_field_formatter_info_alter().
- */
-function taxonomy_field_formatter_info_alter(array &$info) {
-  if (!\Drupal::moduleHandler()->moduleExists('entity_reference')) {
-    unset($info['entity_reference_rss_category']);
-  }
-}
-
-/**
  * Title callback for term pages.
  *
  * @param \Drupal\taxonomy\Entity\Term $term
@@ -561,19 +514,6 @@ function taxonomy_field_formatter_info_alter(array &$info) {
  */
 function taxonomy_term_title(Term $term) {
   return $term->getName();
-}
-
-/**
- * Form element validate handler for taxonomy term autocomplete element.
- */
-function taxonomy_autocomplete_validate($element, FormStateInterface $form_state) {
-  // Split the values into an array.
-  // @see \Drupal\taxonomy\Plugin\Field\FieldWidget\TaxonomyAutocompleteWidget:massageFormValues()
-  $typed_terms = array();
-  if ($tags = $element['#value']) {
-    $typed_terms = Tags::explode($tags);
-  }
-  $form_state->setValueForElement($element, $typed_terms);
 }
 
 /**
@@ -626,7 +566,7 @@ function taxonomy_build_node_index($node) {
     $tid_all = array();
     foreach ($node->getFieldDefinitions() as $field) {
       $field_name = $field->getName();
-      if ($field->getType() == 'taxonomy_term_reference') {
+      if (is_subclass_of($field->getItemDefinition()->getClass(), '\Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem') && $field->getSetting('target_type') == 'taxonomy_term') {
         foreach ($node->getTranslationLanguages() as $language) {
           foreach ($node->getTranslation($language->getId())->$field_name as $item) {
             if (!$item->isEmpty()) {

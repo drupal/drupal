@@ -2,16 +2,25 @@ id: node.article.field_tags
 entity_type: node
 bundle: article
 field_name: field_tags
-field_type: taxonomy_term_reference
+field_type: entity_reference
 label: Tags
 description: 'Enter a comma-separated list. For example: Amsterdam, Mexico City, "Cleveland, Ohio"'
 required: false
 default_value: {  }
 default_value_callback: ''
-settings: {  }
+settings:
+  handler: default
+  handler_settings:
+    target_bundles:
+      tags: tags
+    sort:
+      field: _none
+    auto_create: true
 status: true
 langcode: en
 dependencies:
   config:
     - field.storage.node.field_tags
     - node.type.article
+  module:
+    - entity_reference

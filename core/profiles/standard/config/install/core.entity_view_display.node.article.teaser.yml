@@ -34,9 +34,10 @@ content:
     third_party_settings: {  }
     label: hidden
   field_tags:
-    type: taxonomy_term_reference_link
+    type: entity_reference_label
     weight: 10
-    settings: {  }
+    settings:
+      link: true
     third_party_settings: {  }
     label: above
   links:

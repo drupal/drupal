@@ -216,7 +216,7 @@ class BreadcrumbTest extends MenuTestBase {
       'Breadcrumbs' => array(),
     );
     $edit = array(
-      'field_tags' => implode(',', array_keys($tags)),
+      'field_tags[target_id]' => implode(',', array_keys($tags)),
     );
     $this->drupalPostForm('node/' . $parent->id() . '/edit', $edit, t('Save and keep published'));
 

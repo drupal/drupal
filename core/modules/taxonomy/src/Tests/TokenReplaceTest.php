@@ -38,26 +38,15 @@ class TokenReplaceTest extends TaxonomyTestBase {
     $this->drupalLogin($this->drupalCreateUser(['administer taxonomy', 'bypass node access']));
     $this->vocabulary = $this->createVocabulary();
     $this->fieldName = 'taxonomy_' . $this->vocabulary->id();
-    entity_create('field_storage_config', array(
-      'field_name' => $this->fieldName,
-      'entity_type' => 'node',
-      'type' => 'taxonomy_term_reference',
-      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
-      'settings' => array(
-        'allowed_values' => array(
-          array(
-            'vocabulary' => $this->vocabulary->id(),
-            'parent' => 0,
-          ),
-        ),
-      ),
-    ))->save();
 
-    entity_create('field_config', array(
-      'field_name' => $this->fieldName,
-      'bundle' => 'article',
-      'entity_type' => 'node',
-    ))->save();
+    $handler_settings = array(
+      'target_bundles' => array(
+        $this->vocabulary->id() => $this->vocabulary->id(),
+      ),
+      'auto_create' => TRUE,
+    );
+    $this->createEntityReferenceField('node', 'article', $this->fieldName, NULL, 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+
     entity_get_form_display('node', 'article', 'default')
       ->setComponent($this->fieldName, array(
         'type' => 'options_select',
@@ -65,7 +54,7 @@ class TokenReplaceTest extends TaxonomyTestBase {
       ->save();
     entity_get_display('node', 'article', 'default')
       ->setComponent($this->fieldName, array(
-        'type' => 'taxonomy_term_reference_link',
+        'type' => 'entity_reference_label',
       ))
       ->save();
   }

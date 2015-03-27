@@ -6,8 +6,8 @@ source:
   plugin: d6_taxonomy_vocabulary
   constants:
     entity_type: node
-    type: taxonomy_term_reference
-    parent: 0
+    type: entity_reference
+    target_entity_type: taxonomy_term
     cardinality: -1
 process:
   entity_type: 'constants/entity_type'
@@ -16,8 +16,7 @@ process:
     plugin: migration
     migration: d6_taxonomy_vocabulary
     source: vid
-  'settings/allowed_values/0/vocabulary': @field_name
-  'settings/allowed_values/0/parent': 'constants/parent'
+  'settings/target_type': 'constants/target_entity_type'
   cardinality: 'constants/cardinality'
 destination:
   plugin: entity:field_storage_config

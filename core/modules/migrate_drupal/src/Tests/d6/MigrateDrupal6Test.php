@@ -31,6 +31,7 @@ class MigrateDrupal6Test extends MigrateFullDrupalTestBase {
     'block_content',
     'datetime',
     'dblog',
+    'entity_reference',
     'file',
     'forum',
     'image',

@@ -8,12 +8,16 @@
 namespace Drupal\taxonomy\Tests;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
  * Provides common testing base for translated taxonomy terms.
  */
 trait TaxonomyTranslationTestTrait {
+
+  use EntityReferenceTestTrait;
 
   /**
    * The vocabulary.
@@ -76,36 +80,25 @@ trait TaxonomyTranslationTestTrait {
    * Adds term reference field for the article content type.
    */
   protected function setUpTermReferenceField() {
-    entity_create('field_storage_config', array(
-      'field_name' => $this->termFieldName,
-      'entity_type' => 'node',
-      'type' => 'taxonomy_term_reference',
-      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
-      'settings' => array(
-        'allowed_values' => array(
-          array(
-            'vocabulary' => $this->vocabulary->id(),
-            'parent' => 0,
-          ),
-        ),
+    $handler_settings = array(
+      'target_bundles' => array(
+        $this->vocabulary->id() => $this->vocabulary->id(),
       ),
-    ))->save();
+      'auto_create' => TRUE,
+    );
+    $this->createEntityReferenceField('node', 'article', $this->termFieldName, NULL, 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+    $field_storage = FieldStorageConfig::loadByName('node', $this->termFieldName);
+    $field_storage->setTranslatable(FALSE);
+    $field_storage->save();
 
-    $field = entity_create('field_config', array(
-      'field_name' => $this->termFieldName,
-      'bundle' => 'article',
-      'entity_type' => 'node',
-      'translatable' => FALSE,
-    ));
-    $field->save();
     entity_get_form_display('node', 'article', 'default')
       ->setComponent($this->termFieldName, array(
-        'type' => 'taxonomy_autocomplete',
+        'type' => 'entity_reference_autocomplete_tags',
       ))
       ->save();
     entity_get_display('node', 'article', 'default')
       ->setComponent($this->termFieldName, array(
-        'type' => 'taxonomy_term_reference_link',
+        'type' => 'entity_reference_label',
       ))
       ->save();
   }

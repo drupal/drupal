@@ -18,5 +18,11 @@ default_value: {  }
 default_value_callback: ''
 settings:
   handler: default
+  handler_settings:
+    target_bundles:
+      forums: forums
+    sort:
+      field: _none
+    auto_create: true
 third_party_settings: {  }
-field_type: taxonomy_term_reference
+field_type: entity_reference

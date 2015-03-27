@@ -290,6 +290,9 @@ migrate_entity_constant:
     id:
       type: string
       label: 'ID'
+    target_entity_type:
+      type: string
+      label: 'Target entity type'
     view_mode:
       type: string
       label: 'View mode'
@@ -360,3 +363,9 @@ migrate_entity_constant:
           sequence:
             type: string
             label: 'Settings'
+    selection_handler:
+      type: string
+      label: 'Entity reference selection handler'
+    auto_create:
+      type: boolean
+      label: 'Entity reference selection setting: Auto-create new entities'

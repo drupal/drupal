@@ -29,10 +29,11 @@ class EntityReferenceTaxonomyTermRssFormatter extends EntityReferenceFormatterBa
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items) {
+    $parent_entity = $items->getEntity();
     $elements = array();
 
     foreach ($this->getEntitiesToView($items) as $delta => $entity) {
-      $entity->rss_elements[] = array(
+      $parent_entity->rss_elements[] = array(
         'key' => 'category',
         'value' => $entity->label(),
         'attributes' => array(

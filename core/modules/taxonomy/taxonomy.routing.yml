@@ -66,13 +66,6 @@ entity.taxonomy_vocabulary.reset_form:
   requirements:
     _permission: 'administer taxonomy'
 
-taxonomy.autocomplete:
-  path: '/taxonomy/autocomplete/{entity_type}/{field_name}'
-  defaults:
-    _controller: '\Drupal\taxonomy\Controller\TermAutocompleteController::autocomplete'
-  requirements:
-    _permission: 'access content'
-
 entity.taxonomy_vocabulary.overview_form:
   path: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/overview'
   defaults:

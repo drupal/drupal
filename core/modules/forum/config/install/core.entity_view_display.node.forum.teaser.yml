@@ -17,10 +17,11 @@ bundle: forum
 mode: teaser
 content:
   taxonomy_forums:
-    type: taxonomy_term_reference_link
+    type: entity_reference_label
     weight: 10
     label: above
-    settings: {  }
+    settings:
+      link: true
     third_party_settings: {  }
   body:
     label: hidden

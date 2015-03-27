@@ -75,11 +75,11 @@ class NodeAccessBaseTableTest extends NodeTestBase {
         if ($is_private) {
           $edit['private[0][value]'] = TRUE;
           $edit['body[0][value]'] = 'private node';
-          $edit['field_tags'] = 'private';
+          $edit['field_tags[target_id]'] = 'private';
         }
         else {
           $edit['body[0][value]'] = 'public node';
-          $edit['field_tags'] = 'public';
+          $edit['field_tags[target_id]'] = 'public';
         }
 
         $this->drupalPostForm('node/add/article', $edit, t('Save'));

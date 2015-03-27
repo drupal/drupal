@@ -7,12 +7,10 @@
 
 namespace Drupal\taxonomy\Tests;
 
-use Drupal\Component\Serialization\Json;
-use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Tags;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 
@@ -43,27 +41,16 @@ class TermTest extends TaxonomyTestBase {
     $this->vocabulary = $this->createVocabulary();
 
     $field_name = 'taxonomy_' . $this->vocabulary->id();
-    entity_create('field_storage_config', array(
-      'field_name' => $field_name,
-      'entity_type' => 'node',
-      'type' => 'taxonomy_term_reference',
-      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
-      'settings' => array(
-        'allowed_values' => array(
-          array(
-            'vocabulary' => $this->vocabulary->id(),
-            'parent' => 0,
-          ),
-        ),
-      ),
-    ))->save();
 
-    $this->field = entity_create('field_config', array(
-      'field_name' => $field_name,
-      'bundle' => 'article',
-      'entity_type' => 'node',
-    ));
-    $this->field->save();
+    $handler_settings = array(
+      'target_bundles' => array(
+        $this->vocabulary->id() => $this->vocabulary->id(),
+      ),
+      'auto_create' => TRUE,
+    );
+    $this->createEntityReferenceField('node', 'article', $field_name, NULL, 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+    $this->field = FieldConfig::loadByName('node', 'article', $field_name);
+
     entity_get_form_display('node', 'article', 'default')
       ->setComponent($field_name, array(
         'type' => 'options_select',
@@ -71,7 +58,7 @@ class TermTest extends TaxonomyTestBase {
       ->save();
     entity_get_display('node', 'article', 'default')
       ->setComponent($field_name, array(
-        'type' => 'taxonomy_term_reference_link',
+        'type' => 'entity_reference_label',
       ))
       ->save();
   }
@@ -213,7 +200,7 @@ class TermTest extends TaxonomyTestBase {
     $field = $this->field;
     entity_get_form_display($field->entity_type, $field->bundle, 'default')
       ->setComponent($field->getName(), array(
-        'type' => 'taxonomy_autocomplete',
+        'type' => 'entity_reference_autocomplete_tags',
         'settings' => array(
           'placeholder' => 'Start typing here.',
         ),
@@ -234,7 +221,7 @@ class TermTest extends TaxonomyTestBase {
     $edit['body[0][value]'] = $this->randomMachineName();
     // Insert the terms in a comma separated list. Vocabulary 1 is a
     // free-tagging field created by the default profile.
-    $edit[$field->getName()] = Tags::implode($terms);
+    $edit[$field->getName() . '[target_id]'] = Tags::implode($terms);
 
     // Verify the placeholder is there.
     $this->drupalGet('node/add/article');
@@ -291,82 +278,6 @@ class TermTest extends TaxonomyTestBase {
     }
     $this->assertNoText($term_objects['term1']->getName(), format_string('The deleted term %name does not appear on the node page.', array('%name' => $term_objects['term1']->getName())));
     $this->assertNoText($term_objects['term2']->getName(), format_string('The deleted term %name does not appear on the node page.', array('%name' => $term_objects['term2']->getName())));
-
-    // Test autocomplete on term 3, which contains a comma.
-    // The term will be quoted, and the " will be encoded in unicode (\u0022).
-    $input = substr($term_objects['term3']->getName(), 0, 3);
-    $json = $this->drupalGet('taxonomy/autocomplete/node/taxonomy_' . $this->vocabulary->id(), array('query' => array('q' => $input)));
-    $this->assertEqual($json, '[{"value":"\u0022' . $term_objects['term3']->getName() . '\u0022","label":"' . $term_objects['term3']->getName() . '"}]', format_string('Autocomplete returns term %term_name after typing the first 3 letters.', array('%term_name' => $term_objects['term3']->getName())));
-
-    // Test autocomplete on term 4 - it is alphanumeric only, so no extra
-    // quoting.
-    $input = substr($term_objects['term4']->getName(), 0, 3);
-    $this->drupalGet('taxonomy/autocomplete/node/taxonomy_' . $this->vocabulary->id(), array('query' => array('q' => $input)));
-    $this->assertRaw('[{"value":"' . $term_objects['term4']->getName() . '","label":"' . $term_objects['term4']->getName() . '"}', format_string('Autocomplete returns term %term_name after typing the first 3 letters.', array('%term_name' => $term_objects['term4']->getName())));
-
-    // Test taxonomy autocomplete with a nonexistent field.
-    $field_name = $this->randomMachineName();
-    $tag = $this->randomMachineName();
-    $message = t("Taxonomy field @field_name not found.", array('@field_name' => $field_name));
-    $this->assertFalse(FieldStorageConfig::loadByName('node', $field_name), format_string('Field %field_name does not exist.', array('%field_name' => $field_name)));
-    $this->drupalGet('taxonomy/autocomplete/node/' . $field_name, array('query' => array('q' => $tag)));
-    $this->assertRaw($message, 'Autocomplete returns correct error message when the taxonomy field does not exist.');
-  }
-
-  /**
-   * Tests term autocompletion edge cases with slashes in the names.
-   */
-  function testTermAutocompletion() {
-    // Add a term with a slash in the name.
-    $first_term = $this->createTerm($this->vocabulary);
-    $first_term->setName('10/16/2011');
-    $first_term->save();
-    // Add another term that differs after the slash character.
-    $second_term = $this->createTerm($this->vocabulary);
-    $second_term->setName('10/17/2011');
-    $second_term->save();
-    // Add another term that has both a comma and a slash character.
-    $third_term = $this->createTerm($this->vocabulary);
-    $third_term->setName('term with, a comma and / a slash');
-    $third_term->save();
-
-    // Try to autocomplete a term name that matches both terms.
-    // We should get both terms in a json encoded string.
-    $input = '10/';
-    $path = 'taxonomy/autocomplete/node/taxonomy_' . $this->vocabulary->id();
-    // The result order is not guaranteed, so check each term separately.
-    $result = $this->drupalGet($path, array('query' => array('q' => $input)));
-    // Pull the label properties from the array of arrays.
-    $data = Json::decode($result);
-    $data = array_map(function ($item) {
-      return $item['label'];
-    }, $data);
-
-    $this->assertTrue(in_array(String::checkPlain($first_term->getName()), $data), 'Autocomplete returned the first matching term');
-    $this->assertTrue(in_array(String::checkPlain($second_term->getName()), $data), 'Autocomplete returned the second matching term');
-
-    // Try to autocomplete a term name that matches first term.
-    // We should only get the first term in a json encoded string.
-    $input = '10/16';
-    $path = 'taxonomy/autocomplete/node/taxonomy_' . $this->vocabulary->id();
-    $this->drupalGet($path, array('query' => array('q' => $input)));
-    $target = array(array(
-      'value' => String::checkPlain($first_term->getName()),
-      'label' => $first_term->getName(),
-    ));
-    $this->assertRaw(Json::encode($target), 'Autocomplete returns only the expected matching term.');
-
-    // Try to autocomplete a term name with both a comma and a slash.
-    $input = '"term with, comma and / a';
-    $path = 'taxonomy/autocomplete/node/taxonomy_' . $this->vocabulary->id();
-    $this->drupalGet($path, array('query' => array('q' => $input)));
-    // Term names containing commas or quotes must be wrapped in quotes.
-    $n = Tags::encode($third_term->getName());
-    $target = array(array(
-      'value' => $n,
-      'label' => String::checkPlain($third_term->getName()),
-    ));
-    $this->assertRaw(Json::encode($target), 'Autocomplete returns a term containing a comma and a slash.');
   }
 
   /**
@@ -601,7 +512,7 @@ class TermTest extends TaxonomyTestBase {
     $field = $this->field;
     entity_get_form_display($field->entity_type, $field->bundle, 'default')
       ->setComponent($field->getName(), array(
-        'type' => 'taxonomy_autocomplete',
+        'type' => 'entity_reference_autocomplete_tags',
       ))
       ->save();
 
@@ -610,7 +521,7 @@ class TermTest extends TaxonomyTestBase {
     $edit = array();
     $edit['title[0][value]'] = $this->randomMachineName(8);
     $edit['body[0][value]'] = $this->randomMachineName(16);
-    $edit[$this->field->getName()] = $term->getName();
+    $edit[$this->field->getName() . '[target_id]'] = $term->getName();
     $this->drupalPostForm('node/add/article', $edit, t('Save'));
 
     // Check that the term is displayed when editing and saving the node with no

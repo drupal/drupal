@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\rdf\Tests\TaxonomyTermFieldAttributesTest.
+ * Contains \Drupal\rdf\Tests\EntityReferenceFieldAttributesTest.
  */
 
 namespace Drupal\rdf\Tests;
@@ -15,7 +15,7 @@ use Drupal\taxonomy\Tests\TaxonomyTestBase;
  *
  * @group rdf
  */
-class TaxonomyTermFieldAttributesTest extends TaxonomyTestBase {
+class EntityReferenceFieldAttributesTest extends TaxonomyTestBase {
 
   /**
    * Modules to enable.
@@ -47,7 +47,20 @@ class TaxonomyTermFieldAttributesTest extends TaxonomyTestBase {
 
     // Create the field.
     $this->fieldName = 'field_taxonomy_test';
-    $this->createTaxonomyTermReferenceField($this->fieldName, $this->vocabulary);
+    $handler_settings = array(
+      'target_bundles' => array(
+        $this->vocabulary->id() => $this->vocabulary->id(),
+      ),
+      'auto_create' => TRUE,
+    );
+    $this->createEntityReferenceField('node', 'article', $this->fieldName, 'Tags', 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+
+    entity_get_form_display('node', 'article', 'default')
+      ->setComponent($this->fieldName, array('type' => 'options_select'))
+      ->save();
+    entity_get_display('node', 'article', 'full')
+      ->setComponent($this->fieldName, array('type' => 'entity_reference_label'))
+      ->save();
 
     // Set the RDF mapping for the new field.
     rdf_get_mapping('node', 'article')
@@ -72,7 +85,7 @@ class TaxonomyTermFieldAttributesTest extends TaxonomyTestBase {
   function testNodeTeaser() {
     // Set the teaser display to show this field.
     entity_get_display('node', 'article', 'teaser')
-      ->setComponent($this->fieldName, array('type' => 'taxonomy_term_reference_link'))
+      ->setComponent($this->fieldName, array('type' => 'entity_reference_label'))
       ->save();
 
     // Create a term in each vocabulary.
@@ -134,44 +147,6 @@ class TaxonomyTermFieldAttributesTest extends TaxonomyTestBase {
       'value' => $term2->getName(),
     );
     //$this->assertTrue($graph->hasProperty($taxonomy_term_2_uri, 'http://www.w3.org/2000/01/rdf-schema#label', $expected_value), 'Taxonomy term name found in RDF output (rdfs:label).');
-  }
-
-  /**
-   * Create the taxonomy term reference field for testing.
-   *
-   * @param string $field_name
-   *   The name of the field to create.
-   * @param \Drupal\taxonomy\Entity\Vocabulary $vocabulary
-   *   The vocabulary that the field should use.
-   *
-   * @todo Move this to TaxonomyTestBase, like the other field modules.
-   */
-  protected function createTaxonomyTermReferenceField($field_name, $vocabulary) {
-    entity_create('field_storage_config', array(
-      'field_name' => $field_name,
-      'entity_type' => 'node',
-      'type' => 'taxonomy_term_reference',
-      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
-      'settings' => array(
-        'allowed_values' => array(
-          array(
-            'vocabulary' => $vocabulary->id(),
-            'parent' => '0',
-          ),
-        ),
-      ),
-    ))->save();
-    entity_create('field_config', array(
-      'field_name' => $field_name,
-      'entity_type' => 'node',
-      'bundle' => 'article',
-    ))->save();
-    entity_get_form_display('node', 'article', 'default')
-      ->setComponent($field_name, array('type' => 'options_select'))
-      ->save();
-    entity_get_display('node', 'article', 'full')
-      ->setComponent($field_name, array('type' => 'taxonomy_term_reference_link'))
-      ->save();
   }
 
 }

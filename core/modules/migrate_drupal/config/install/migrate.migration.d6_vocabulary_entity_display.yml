@@ -9,7 +9,7 @@ source:
     view_mode: default
     options:
       label: hidden
-      type: taxonomy_term_reference_link
+      type: entity_reference_label
       weight: 20
 
 process:

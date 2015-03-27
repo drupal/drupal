@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests\Wizard;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
 
 /**
  * Tests the ability of the views wizard to create views filtered by taxonomy.
@@ -15,6 +16,8 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
  * @group views
  */
 class TaggedWithTest extends WizardTestBase {
+
+  use EntityReferenceTestTrait;
 
   /**
    * Modules to enable.
@@ -82,45 +85,30 @@ class TaggedWithTest extends WizardTestBase {
 
     // Create the tag field itself.
     $this->tagFieldName = 'field_views_testing_tags';
-    $this->tagFieldStorage = entity_create('field_storage_config', array(
-      'field_name' => $this->tagFieldName,
-      'entity_type' => 'node',
-      'type' => 'taxonomy_term_reference',
-      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
-      'settings' => array(
-        'allowed_values' => array(
-          array(
-            'vocabulary' => $this->tagVocabulary->id(),
-            'parent' => 0,
-          ),
-        ),
-      ),
-    ));
-    $this->tagFieldStorage->save();
 
-    // Create an instance of the tag field on one of the content types, and
-    // configure it to display an autocomplete widget.
-    $this->tagField = array(
-      'field_storage' => $this->tagFieldStorage,
-      'bundle' => $this->nodeTypeWithTags->id(),
+    $handler_settings = array(
+      'target_bundles' => array(
+        $this->tagVocabulary->id() => $this->tagVocabulary->id(),
+      ),
+      'auto_create' => TRUE,
     );
-    entity_create('field_config', $this->tagField)->save();
+    $this->createEntityReferenceField('node', $this->nodeTypeWithTags->id(), $this->tagFieldName, NULL, 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
 
     entity_get_form_display('node', $this->nodeTypeWithTags->id(), 'default')
-      ->setComponent('field_views_testing_tags', array(
-        'type' => 'taxonomy_autocomplete',
+      ->setComponent($this->tagFieldName, array(
+        'type' => 'entity_reference_autocomplete_tags',
       ))
       ->save();
 
     entity_get_display('node', $this->nodeTypeWithTags->id(), 'default')
-      ->setComponent('field_views_testing_tags', array(
-        'type' => 'taxonomy_term_reference_link',
+      ->setComponent($this->tagFieldName, array(
+        'type' => 'entity_reference_label',
         'weight' => 10,
       ))
       ->save();
     entity_get_display('node', $this->nodeTypeWithTags->id(), 'teaser')
       ->setComponent('field_views_testing_tags', array(
-        'type' => 'taxonomy_term_reference_link',
+        'type' => 'entity_reference_label',
         'weight' => 10,
       ))
       ->save();
@@ -137,11 +125,11 @@ class TaggedWithTest extends WizardTestBase {
     // Create three nodes, with different tags.
     $edit = array();
     $edit['title[0][value]'] = $node_tag1_title = $this->randomMachineName();
-    $edit[$this->tagFieldName] = 'tag1';
+    $edit[$this->tagFieldName . '[target_id]'] = 'tag1';
     $this->drupalPostForm($node_add_path, $edit, t('Save'));
     $edit = array();
     $edit['title[0][value]'] = $node_tag1_tag2_title = $this->randomMachineName();
-    $edit[$this->tagFieldName] = 'tag1, tag2';
+    $edit[$this->tagFieldName . '[target_id]'] = 'tag1, tag2';
     $this->drupalPostForm($node_add_path, $edit, t('Save'));
     $edit = array();
     $edit['title[0][value]'] = $node_no_tags_title = $this->randomMachineName();
@@ -213,12 +201,23 @@ class TaggedWithTest extends WizardTestBase {
 
     // If we add an instance of the tagging field to the second node type, the
     // "tagged with" form element should not appear for it too.
-    $field = $this->tagField;
-    $field['bundle'] = $this->nodeTypeWithoutTags->id();
-    entity_create('field_config', $field)->save();
+    entity_create('field_config', array(
+      'field_name' => $this->tagFieldName,
+      'entity_type' => 'node',
+      'bundle' => $this->nodeTypeWithoutTags->id(),
+      'settings' => array(
+        'handler' => 'default',
+        'handler_settings' => array(
+          'target_bundles' => array(
+            $this->tagVocabulary->id() => $this->tagVocabulary->id(),
+          ),
+          'auto_create' => TRUE,
+        ),
+      ),
+    ))->save();
     entity_get_form_display('node', $this->nodeTypeWithoutTags->id(), 'default')
-      ->setComponent('field_views_testing_tags', array(
-        'type' => 'taxonomy_autocomplete',
+      ->setComponent($this->tagFieldName, array(
+        'type' => 'entity_reference_autocomplete_tags',
       ))
       ->save();
 

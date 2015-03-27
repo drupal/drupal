@@ -52,73 +52,23 @@ function taxonomy_views_data_alter(&$data) {
 }
 
 /**
- * Implements hook_field_views_data().
+ * Implements hook_field_views_data_alter().
  *
- * Views integration for taxonomy_term_reference fields. Adds a term relationship to the default
- * field data.
+ * Views integration for entity reference fields which reference taxonomy terms.
+ * Adds a term relationship to the default field data.
  *
  * @see views_field_default_views_data()
  */
-function taxonomy_field_views_data(FieldStorageConfigInterface $field_storage) {
-  $data = views_field_default_views_data($field_storage);
-  foreach ($data as $table_name => $table_data) {
-    foreach ($table_data as $field_name => $field_data) {
-      if (isset($field_data['filter']) && $field_name != 'delta') {
-        $data[$table_name][$field_name]['filter']['id'] = 'taxonomy_index_tid';
-        $allowed_values = $field_storage->getSetting('allowed_values');
-        $data[$table_name][$field_name]['filter']['vocabulary'] = $allowed_values[0]['vocabulary'];
+function taxonomy_field_views_data_alter(array &$data, FieldStorageConfigInterface $field_storage) {
+  if ($field_storage->getType() == 'entity_reference' && $field_storage->getSetting('target_type') == 'taxonomy_term') {
+    foreach ($data as $table_name => $table_data) {
+      foreach ($table_data as $field_name => $field_data) {
+        if (isset($field_data['filter']) && $field_name != 'delta') {
+          $data[$table_name][$field_name]['filter']['id'] = 'taxonomy_index_tid';
+        }
       }
     }
-
-    // Add the relationship only on the tid field.
-    $field_name = $field_storage->getName();
-    $data[$table_name][$field_name . '_target_id']['relationship'] = array(
-      'id' => 'standard',
-      'base' => 'taxonomy_term_data',
-      'base field' => 'tid',
-      'label' => t('term from !field_name', array('!field_name' => $field_name)),
-    );
-
   }
-
-  return $data;
-}
-
-/**
- * Implements hook_field_views_data_views_data_alter().
- *
- * Views integration to provide reverse relationships on term references.
- */
-function taxonomy_field_views_data_views_data_alter(array &$data, FieldStorageConfigInterface $field_storage) {
-  $field_name = $field_storage->getName();
-  $entity_type_id = $field_storage->getTargetEntityTypeId();
-  $entity_manager = \Drupal::entityManager();
-  $entity_type = $entity_manager->getDefinition($entity_type_id);
-  $pseudo_field_name = 'reverse_' . $field_name . '_' . $entity_type_id;
-  /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
-  $table_mapping = $entity_manager->getStorage($entity_type_id)->getTableMapping();
-
-  list($label) = views_entity_field_label($entity_type_id, $field_name);
-
-  $data['taxonomy_term_data'][$pseudo_field_name]['relationship'] = array(
-    'title' => t('@entity using @field', array('@entity' => $entity_type->getLabel(), '@field' => $label)),
-    'help' => t('Relate each @entity with a @field set to the term.', array('@entity' => $entity_type->getLabel(), '@field' => $label)),
-    'id' => 'entity_reverse',
-    'field_name' => $field_name,
-    'entity_type' => $entity_type_id,
-    'field table' => $table_mapping->getDedicatedDataTableName($field_storage),
-    'field field' => $field_name . '_target_id',
-    'base' => $entity_type->getBaseTable(),
-    'base field' => $entity_type->getKey('id'),
-    'label' => t('!field_name', array('!field_name' => $field_name)),
-    'join_extra' => array(
-      0 => array(
-        'field' => 'deleted',
-        'value' => 0,
-        'numeric' => TRUE,
-      ),
-    ),
-  );
 }
 
 /**

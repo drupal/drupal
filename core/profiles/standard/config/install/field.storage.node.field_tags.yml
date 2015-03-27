@@ -1,19 +1,13 @@
 id: node.field_tags
 field_name: field_tags
 entity_type: node
-type: taxonomy_term_reference
+type: entity_reference
 module: taxonomy
 settings:
-  allowed_values:
-    -
-      vocabulary: tags
-      parent: 0
+  target_type: taxonomy_term
 locked: false
 cardinality: -1
 translatable: true
-indexes:
-  target_id:
-    - target_id
 status: true
 langcode: en
 dependencies:

@@ -187,10 +187,11 @@ class Tid extends ArgumentDefaultPluginBase implements CacheablePluginInterface 
       if (($node = $this->routeMatch->getParameter('node')) && $node instanceof NodeInterface) {
         $taxonomy = array();
         foreach ($node->getFieldDefinitions() as $field) {
-          if ($field->getType() == 'taxonomy_term_reference') {
+          if ($field->getType() == 'entity_reference' && $field->getSetting('target_type') == 'taxonomy_term') {
             foreach ($node->get($field->getName()) as $item) {
-              $allowed_values = $field->getSetting('allowed_values');
-              $taxonomy[$item->target_id] = $allowed_values[0]['vocabulary'];
+              if (($handler_settings = $field->getSetting('handler_settings')) && isset($handler_settings['target_bundles'])) {
+                $taxonomy[$item->target_id] = reset($handler_settings['target_bundles']);
+              }
             }
           }
         }

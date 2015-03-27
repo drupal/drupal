@@ -63,8 +63,10 @@ class MigrateVocabularyFieldTest extends MigrateDrupal6TestBase {
     $field_storage_id = 'node.tags';
     $field_storage = FieldStorageConfig::load($field_storage_id);
     $this->assertIdentical($field_storage_id, $field_storage->id());
+
     $settings = $field_storage->getSettings();
-    $this->assertIdentical($settings['allowed_values'][0]['vocabulary'], 'tags', "Vocabulary has correct settings.");
+    $this->assertIdentical('taxonomy_term', $settings['target_type'], "Target type is correct.");
+
     $this->assertIdentical(array('node', 'tags'), entity_load('migration', 'd6_vocabulary_field')->getIdMap()->lookupDestinationID(array(4)), "Test IdMap");
   }
 

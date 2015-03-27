@@ -46,25 +46,14 @@ class RssTest extends TaxonomyTestBase {
     $this->vocabulary = $this->createVocabulary();
     $this->fieldName = 'taxonomy_' . $this->vocabulary->id();
 
-    $field_storage = entity_create('field_storage_config', array(
-      'field_name' => $this->fieldName,
-      'entity_type' => 'node',
-      'type' => 'taxonomy_term_reference',
-      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
-      'settings' => array(
-        'allowed_values' => array(
-          array(
-            'vocabulary' => $this->vocabulary->id(),
-            'parent' => 0,
-          ),
-        ),
+    $handler_settings = array(
+      'target_bundles' => array(
+        $this->vocabulary->id() => $this->vocabulary->id(),
       ),
-    ));
-    $field_storage->save();
-    entity_create('field_config', array(
-      'field_storage' => $field_storage,
-      'bundle' => 'article',
-    ))->save();
+      'auto_create' => TRUE,
+    );
+    $this->createEntityReferenceField('node', 'article', $this->fieldName, NULL, 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+
     entity_get_form_display('node', 'article', 'default')
       ->setComponent($this->fieldName, array(
         'type' => 'options_select',
@@ -72,7 +61,7 @@ class RssTest extends TaxonomyTestBase {
       ->save();
     entity_get_display('node', 'article', 'default')
       ->setComponent($this->fieldName, array(
-        'type' => 'taxonomy_term_reference_link',
+        'type' => 'entity_reference_label',
       ))
       ->save();
   }
@@ -96,7 +85,7 @@ class RssTest extends TaxonomyTestBase {
     // Change the format to 'RSS category'.
     $this->drupalGet("admin/structure/types/manage/article/display/rss");
     $edit = array(
-      "fields[taxonomy_" . $this->vocabulary->id() . "][type]" => 'taxonomy_term_reference_rss_category',
+      "fields[taxonomy_" . $this->vocabulary->id() . "][type]" => 'entity_reference_rss_category',
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
 

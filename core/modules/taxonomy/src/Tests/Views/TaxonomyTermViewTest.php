@@ -55,25 +55,15 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
     // Create a vocabulary and add two term reference fields to article nodes.
 
     $this->fieldName1 = Unicode::strtolower($this->randomMachineName());
-    entity_create('field_storage_config', array(
-      'field_name' => $this->fieldName1,
-      'entity_type' => 'node',
-      'type' => 'taxonomy_term_reference',
-      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
-      'settings' => array(
-        'allowed_values' => array(
-          array(
-            'vocabulary' => $this->vocabulary->id(),
-            'parent' => 0,
-          ),
-        ),
+
+    $handler_settings = array(
+      'target_bundles' => array(
+        $this->vocabulary->id() => $this->vocabulary->id(),
       ),
-    ))->save();
-    entity_create('field_config', array(
-      'field_name' => $this->fieldName1,
-      'bundle' => 'article',
-      'entity_type' => 'node',
-    ))->save();
+      'auto_create' => TRUE,
+    );
+    $this->createEntityReferenceField('node', 'article', $this->fieldName1, NULL, 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+
     entity_get_form_display('node', 'article', 'default')
       ->setComponent($this->fieldName1, array(
         'type' => 'options_select',
@@ -81,7 +71,7 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
       ->save();
     entity_get_display('node', 'article', 'default')
       ->setComponent($this->fieldName1, array(
-        'type' => 'taxonomy_term_reference_link',
+        'type' => 'entity_reference_label',
       ))
       ->save();
   }

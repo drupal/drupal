@@ -125,7 +125,7 @@ class Vocabulary extends ConfigEntityBundleBase implements VocabularyInterface {
       // Reflect machine name changes in the definitions of existing 'taxonomy'
       // fields.
       $field_ids = array();
-      $field_map = \Drupal::entityManager()->getFieldMapByFieldType('taxonomy_term_reference');
+      $field_map = \Drupal::entityManager()->getFieldMapByFieldType('entity_reference');
       foreach ($field_map as $entity_type => $field_storages) {
         foreach ($field_storages as $field_storage => $info) {
           $field_ids[] = $entity_type . '.' . $field_storage;
@@ -133,8 +133,11 @@ class Vocabulary extends ConfigEntityBundleBase implements VocabularyInterface {
       }
 
       $field_storages = \Drupal::entityManager()->getStorage('field_storage_config')->loadMultiple($field_ids);
+      $taxonomy_fields = array_filter($field_storages, function ($field_storage) {
+        return $field_storage->getType() == 'entity_reference' && $field_storage->getSetting('target_type') == 'taxonomy_term';
+      });
 
-      foreach ($field_storages as $field_storage) {
+      foreach ($taxonomy_fields as $field_storage) {
         $update_storage = FALSE;
 
         $allowed_values = $field_storage->getSetting('allowed_values');

@@ -10,6 +10,7 @@ namespace Drupal\quickedit\Tests;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -18,6 +19,8 @@ use Drupal\simpletest\WebTestBase;
  * @group quickedit
  */
 class QuickEditAutocompleteTermTest extends WebTestBase {
+
+  use EntityReferenceTestTrait;
 
   /**
    * Modules to enable.
@@ -81,44 +84,31 @@ class QuickEditAutocompleteTermTest extends WebTestBase {
     ]);
     $this->vocabulary->save();
     $this->fieldName = 'field_' . $this->vocabulary->id();
-    entity_create('field_storage_config', [
-      'field_name' => $this->fieldName,
-      'entity_type' => 'node',
-      'type' => 'taxonomy_term_reference',
-      // Set cardinality to unlimited for tagging.
-      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
-      'settings' => [
-        'allowed_values' => [
-          [
-            'vocabulary' => $this->vocabulary->id(),
-            'parent' => 0,
-          ],
-        ],
-      ],
-    ])->save();
-    entity_create('field_config', [
-      'field_name' => $this->fieldName,
-      'entity_type' => 'node',
-      'label' => 'Tags',
-      'bundle' => 'article',
-    ])->save();
+
+    $handler_settings = array(
+      'target_bundles' => array(
+        $this->vocabulary->id() => $this->vocabulary->id(),
+      ),
+      'auto_create' => TRUE,
+    );
+    $this->createEntityReferenceField('node', 'article', $this->fieldName, 'Tags', 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
 
     entity_get_form_display('node', 'article', 'default')
       ->setComponent($this->fieldName, [
-        'type' => 'taxonomy_autocomplete',
+        'type' => 'entity_reference_autocomplete_tags',
         'weight' => -4,
       ])
       ->save();
 
     entity_get_display('node', 'article', 'default')
       ->setComponent($this->fieldName, [
-        'type' => 'taxonomy_term_reference_link',
+        'type' => 'entity_reference_label',
         'weight' => 10,
       ])
       ->save();
     entity_get_display('node', 'article', 'teaser')
       ->setComponent($this->fieldName, [
-        'type' => 'taxonomy_term_reference_link',
+        'type' => 'entity_reference_label',
         'weight' => 10,
       ])
       ->save();
@@ -156,7 +146,7 @@ class QuickEditAutocompleteTermTest extends WebTestBase {
         'form_id' => 'quickedit_field_form',
         'form_token' => $token_match[1],
         'form_build_id' => $build_id_match[1],
-        $this->fieldName => implode(', ', array($this->term1->getName(), 'new term', $this->term2->getName())),
+        $this->fieldName . '[target_id]' => implode(', ', array($this->term1->getName(), 'new term', $this->term2->getName())),
         'op' => t('Save'),
       );
 
@@ -182,7 +172,12 @@ class QuickEditAutocompleteTermTest extends WebTestBase {
       // taxonomy terms, including the one that has just been newly created and
       // which is not yet stored.
       $this->setRawContent($ajax_commands[0]['data']);
-      $this->assertFieldByName($this->fieldName, implode(', ', array($this->term1->getName(), 'new term', $this->term2->label())));
+      $expected = array(
+        $this->term1->getName() . ' (' . $this->term1->id() . ')',
+        'new term',
+        $this->term2->getName() . ' (' . $this->term2->id() . ')',
+      );
+      $this->assertFieldByName($this->fieldName . '[target_id]', implode(', ', $expected));
 
       // Save the entity.
       $post = array('nocssjs' => 'true');

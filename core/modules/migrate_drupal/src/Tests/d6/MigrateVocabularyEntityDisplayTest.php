@@ -33,7 +33,10 @@ class MigrateVocabularyEntityDisplayTest extends MigrateDrupal6TestBase {
     entity_create('field_storage_config', array(
       'entity_type' => 'node',
       'field_name' => 'tags',
-      'type' => 'taxonomy_term_reference',
+      'type' => 'entity_reference',
+      'settings' => array(
+        'target_type' => 'taxonomy_term',
+      ),
     ))->save();
 
     foreach (array('page', 'article', 'story') as $type) {
@@ -45,6 +48,15 @@ class MigrateVocabularyEntityDisplayTest extends MigrateDrupal6TestBase {
         'entity_type' => 'node',
         'bundle' => $type,
         'required' => 1,
+          'settings' => array(
+            'handler' => 'default',
+            'handler_settings' => array(
+              'target_bundles' => array(
+                'tags' => 'tags',
+              ),
+              'auto_create' => TRUE,
+            ),
+          ),
       ))->save();
     }
 
@@ -75,7 +87,7 @@ class MigrateVocabularyEntityDisplayTest extends MigrateDrupal6TestBase {
   public function testVocabularyEntityDisplay() {
     // Test that the field exists.
     $component = entity_get_display('node', 'page', 'default')->getComponent('tags');
-    $this->assertIdentical('taxonomy_term_reference_link', $component['type']);
+    $this->assertIdentical('entity_reference_label', $component['type']);
     $this->assertIdentical(20, $component['weight']);
     // Test the Id map.
     $this->assertIdentical(array('node', 'article', 'default', 'tags'), entity_load('migration', 'd6_vocabulary_entity_display')->getIdMap()->lookupDestinationID(array(4, 'article')));

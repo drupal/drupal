@@ -6,7 +6,8 @@ source:
   plugin: d6_taxonomy_vocabulary_per_type
   constants:
     entity_type: node
-    parent: 0
+    auto_create: true
+    selection_handler: 'default:taxonomy_term'
 process:
   entity_type: 'constants/entity_type'
   bundle: type
@@ -14,6 +15,9 @@ process:
     plugin: migration
     migration: d6_taxonomy_vocabulary
     source: vid
+  'settings/handler': 'constants/selection_handler'
+  'settings/handler_settings/target_bundles/0': @field_name
+  'settings/handler_settings/auto_create': 'constants/auto_create'
 destination:
   plugin: entity:field_config
 migration_dependencies:

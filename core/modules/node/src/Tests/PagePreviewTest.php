@@ -7,8 +7,10 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
 use Drupal\node\Entity\NodeType;
 
 /**
@@ -17,6 +19,8 @@ use Drupal\node\Entity\NodeType;
  * @group node
  */
 class PagePreviewTest extends NodeTestBase {
+
+  use EntityReferenceTestTrait;
 
   /**
    * Enable the node and taxonomy modules to test both on the preview.
@@ -63,41 +67,29 @@ class PagePreviewTest extends NodeTestBase {
 
     // Create a field.
     $this->field_name = Unicode::strtolower($this->randomMachineName());
-    entity_create('field_storage_config', array(
-      'field_name' => $this->field_name,
-      'entity_type' => 'node',
-      'type' => 'taxonomy_term_reference',
-      'settings' => array(
-        'allowed_values' => array(
-          array(
-            'vocabulary' => $this->vocabulary->id(),
-            'parent' => '0',
-          ),
-        ),
+    $handler_settings = array(
+      'target_bundles' => array(
+        $this->vocabulary->id() => $this->vocabulary->id(),
       ),
-      'cardinality' => '-1',
-    ))->save();
-    entity_create('field_config', array(
-      'field_name' => $this->field_name,
-      'entity_type' => 'node',
-      'bundle' => 'page',
-    ))->save();
+      'auto_create' => TRUE,
+    );
+    $this->createEntityReferenceField('node', 'page', $this->field_name, 'Tags', 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
 
     entity_get_form_display('node', 'page', 'default')
       ->setComponent($this->field_name, array(
-        'type' => 'taxonomy_autocomplete',
+        'type' => 'entity_reference_autocomplete_tags',
       ))
       ->save();
 
     // Show on default display and teaser.
     entity_get_display('node', 'page', 'default')
       ->setComponent($this->field_name, array(
-        'type' => 'taxonomy_term_reference_link',
+        'type' => 'entity_reference_label',
       ))
       ->save();
     entity_get_display('node', 'page', 'teaser')
       ->setComponent($this->field_name, array(
-        'type' => 'taxonomy_term_reference_link',
+        'type' => 'entity_reference_label',
       ))
       ->save();
   }
@@ -108,7 +100,7 @@ class PagePreviewTest extends NodeTestBase {
   function testPagePreview() {
     $title_key = 'title[0][value]';
     $body_key = 'body[0][value]';
-    $term_key = $this->field_name;
+    $term_key = $this->field_name . '[target_id]';
 
     // Fill in node creation form and preview node.
     $edit = array();
@@ -145,13 +137,13 @@ class PagePreviewTest extends NodeTestBase {
     $this->clickLink(t('Back to content editing'));
     $this->assertFieldByName($title_key, $edit[$title_key], 'Title field displayed.');
     $this->assertFieldByName($body_key, $edit[$body_key], 'Body field displayed.');
-    $this->assertFieldByName($term_key, $edit[$term_key], 'Term field displayed.');
+    $this->assertFieldByName($term_key, $edit[$term_key] . ' (' . $this->term->id() . ')', 'Term field displayed.');
 
     // Assert the content is kept when reloading the page.
     $this->drupalGet('node/add/page', array('query' => array('uuid' => $uuid)));
     $this->assertFieldByName($title_key, $edit[$title_key], 'Title field displayed.');
     $this->assertFieldByName($body_key, $edit[$body_key], 'Body field displayed.');
-    $this->assertFieldByName($term_key, $edit[$term_key], 'Term field displayed.');
+    $this->assertFieldByName($term_key, $edit[$term_key] . ' (' . $this->term->id() . ')', 'Term field displayed.');
 
     // Save the node.
     $this->drupalPostForm('node/add/page', $edit, t('Save'));
@@ -163,7 +155,7 @@ class PagePreviewTest extends NodeTestBase {
 
     // Check the term appears again on the edit form.
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertFieldByName($term_key, $edit[$term_key], 'Term field displayed.');
+    $this->assertFieldByName($term_key, $edit[$term_key] . ' (' . $this->term->id() . ')', 'Term field displayed.');
 
     // Check with two new terms on the edit form, additionally to the existing
     // one.
@@ -227,7 +219,7 @@ class PagePreviewTest extends NodeTestBase {
   function testPagePreviewWithRevisions() {
     $title_key = 'title[0][value]';
     $body_key = 'body[0][value]';
-    $term_key = $this->field_name;
+    $term_key = $this->field_name . '[target_id]';
     // Force revision on "Basic page" content.
     $node_type = NodeType::load('page');
     $node_type->setNewRevision(TRUE);
