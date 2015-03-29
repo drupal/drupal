@@ -124,6 +124,9 @@ class Connection extends DatabaseConnection {
     $pdo->sqliteCreateFunction('rand', array(__CLASS__, 'sqlFunctionRand'));
     $pdo->sqliteCreateFunction('regexp', array(__CLASS__, 'sqlFunctionRegexp'));
 
+    // Create a user-space case-insensitive collation with UTF-8 support.
+    $pdo->sqliteCreateCollation('NOCASE_UTF8', array('Drupal\Component\Utility\Unicode', 'strCaseCmp'));
+
     // Execute sqlite init_commands.
     if (isset($connection_options['init_commands'])) {
       $pdo->exec(implode('; ', $connection_options['init_commands']));

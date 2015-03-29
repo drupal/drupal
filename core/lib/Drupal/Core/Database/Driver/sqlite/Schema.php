@@ -160,8 +160,14 @@ class Schema extends DatabaseSchema {
     else {
       $sql = $name . ' ' . $spec['sqlite_type'];
 
-      if (in_array($spec['sqlite_type'], array('VARCHAR', 'TEXT')) && isset($spec['length'])) {
-        $sql .= '(' . $spec['length'] . ')';
+      if (in_array($spec['sqlite_type'], array('VARCHAR', 'TEXT'))) {
+        if (isset($spec['length'])) {
+          $sql .= '(' . $spec['length'] . ')';
+        }
+
+        if (isset($spec['binary']) && $spec['binary'] === FALSE) {
+          $sql .= ' COLLATE NOCASE_UTF8';
+        }
       }
 
       if (isset($spec['not null'])) {
