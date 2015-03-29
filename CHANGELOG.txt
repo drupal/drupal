@@ -1,6 +1,8 @@
 
 Drupal 7.36, xxxx-xx-xx (development version)
 -----------------------
+- Changed the "lang" attribute on language links to "xml:lang" so it validates
+  as XHTML (minor markup change).
 - Prevented the form API from allowing arrays to be submitted for various form
   elements (such as textfields, textareas, and password fields).
 - Fixed a bug in the Contact module which caused the global user object to have
