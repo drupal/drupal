@@ -539,6 +539,7 @@ services:
   app.root.factory:
     class: Drupal\Core\AppRootFactory
     arguments: ['@kernel']
+    public: false
   controller_resolver:
     class: Drupal\Core\Controller\ControllerResolver
     arguments: ['@class_resolver']
