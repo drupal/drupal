@@ -208,6 +208,8 @@ function template_preprocess_views_view_fields(&$variables) {
  *     - wrapper_suffix: A string added to the end of the fields.
  *
  * @see template_preprocess_views_view_fields()
+ *
+ * @ingroup themeable
  */
 function theme_views_view_fields($variables) {
   $fields = $variables['fields'];
@@ -252,6 +254,8 @@ function template_preprocess_views_view_grouping(&$variables) {
  * Interesting bits of info:
  * $field->field_alias says what the raw value in $row will be. Reach it like
  * this: @code { $row->{$field->field_alias} @endcode
+ *
+ * @ingroup themeable
  */
 function theme_views_view_field($variables) {
   return $variables['output'];

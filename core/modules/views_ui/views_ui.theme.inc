@@ -92,6 +92,8 @@ function template_preprocess_views_ui_view_info(&$variables) {
 
 /**
  * Theme the build group filter form.
+ *
+ * @ingroup themeable
  */
 function theme_views_ui_build_group_filter_form($variables) {
   $form = $variables['form'];

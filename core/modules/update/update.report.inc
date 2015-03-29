@@ -17,8 +17,6 @@ use Drupal\Core\Url;
  * @param array $variables
  *   An associative array containing:
  *   - data: An array of data about each project's status.
- *
- * @ingroup themeable
  */
 function template_preprocess_update_report(&$variables) {
   $data = $variables['data'];
@@ -127,8 +125,6 @@ function template_preprocess_update_report(&$variables) {
  *   - includes_status: An array of sub-project statuses where the keys are the
  *     shortnames of each project and the values are UPDATE_* integer constants
  *     as defined in update.module.
- *
- * @ingroup themeable
  */
 function template_preprocess_update_project_status(&$variables) {
   // Storing by reference because we are sorting the project values.
