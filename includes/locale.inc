@@ -1931,7 +1931,7 @@ function _locale_translate_seek() {
       $groups[$string['group']],
       array('data' => check_plain(truncate_utf8($string['source'], 150, FALSE, TRUE)) . '<br /><small>' . $string['location'] . '</small>'),
       $string['context'],
-      array('data' => _locale_translate_language_list($string['languages'], $limit_language), 'align' => 'center'),
+      array('data' => _locale_translate_language_list($string, $limit_language), 'align' => 'center'),
       array('data' => l(t('edit'), "admin/config/regional/translate/edit/$lid", array('query' => drupal_get_destination())), 'class' => array('nowrap')),
       array('data' => l(t('delete'), "admin/config/regional/translate/delete/$lid", array('query' => drupal_get_destination())), 'class' => array('nowrap')),
     );
@@ -2126,16 +2126,21 @@ function _locale_rebuild_js($langcode = NULL) {
 /**
  * List languages in search result table
  */
-function _locale_translate_language_list($translation, $limit_language) {
+function _locale_translate_language_list($string, $limit_language) {
   // Add CSS.
   drupal_add_css(drupal_get_path('module', 'locale') . '/locale.css');
 
+  // Include both translated and not yet translated target languages in the
+  // list. The source language is English for built-in strings and the default
+  // language for other strings.
   $languages = language_list();
-  unset($languages['en']);
+  $default = language_default();
+  $omit = $string['group'] == 'default' ? 'en' : $default->language;
+  unset($languages[$omit]);
   $output = '';
   foreach ($languages as $langcode => $language) {
     if (!$limit_language || $limit_language == $langcode) {
-      $output .= (!empty($translation[$langcode])) ? $langcode . ' ' : "<em class=\"locale-untranslated\">$langcode</em> ";
+      $output .= (!empty($string['languages'][$langcode])) ? $langcode . ' ' : "<em class=\"locale-untranslated\">$langcode</em> ";
     }
   }
 
