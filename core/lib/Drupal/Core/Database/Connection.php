@@ -520,7 +520,7 @@ abstract class Connection implements \Serializable {
    *   An associative array of options to control how the query is run. See
    *   the documentation for DatabaseConnection::defaultOptions() for details.
    *
-   * @return \Drupal\Core\Database\StatementInterface
+   * @return \Drupal\Core\Database\StatementInterface|int|null
    *   This method will return one of: the executed statement, the number of
    *   rows affected by the query (not the number matched), or the generated
    *   insert ID of the last query, depending on the value of
@@ -529,12 +529,11 @@ abstract class Connection implements \Serializable {
    *   this method will return NULL and may throw an exception if
    *   $options['throw_exception'] is TRUE.
    *
-   * @throws \PDOException
+   * @throws \Drupal\Core\Database\DatabaseExceptionWrapper
    * @throws \Drupal\Core\Database\IntegrityConstraintViolationException
    * @throws \InvalidArgumentException
    */
   public function query($query, array $args = array(), $options = array()) {
-
     // Use default values if not already set.
     $options += $this->defaultOptions();
 
@@ -562,32 +561,61 @@ abstract class Connection implements \Serializable {
           $stmt->allowRowCount = TRUE;
           return $stmt->rowCount();
         case Database::RETURN_INSERT_ID:
-          return $this->connection->lastInsertId();
+          $sequence_name = isset($options['sequence_name']) ? $options['sequence_name'] : NULL;
+          return $this->connection->lastInsertId($sequence_name);
         case Database::RETURN_NULL:
-          return;
+          return NULL;
         default:
           throw new \PDOException('Invalid return directive: ' . $options['return']);
       }
     }
     catch (\PDOException $e) {
-      if ($options['throw_exception']) {
-        // Wrap the exception in another exception, because PHP does not allow
-        // overriding Exception::getMessage(). Its message is the extra database
-        // debug information.
-        $query_string = ($query instanceof StatementInterface) ? $stmt->getQueryString() : $query;
-        $message = $e->getMessage() . ": " . $query_string . "; " . print_r($args, TRUE);
-        // Match all SQLSTATE 23xxx errors.
-        if (substr($e->getCode(), -6, -3) == '23') {
-          $exception = new IntegrityConstraintViolationException($message, $e->getCode(), $e);
-        }
-        else {
-          $exception = new DatabaseExceptionWrapper($message, 0, $e);
-        }
-
-        throw $exception;
-      }
-      return NULL;
+      // Most database drivers will return NULL here, but some of them
+      // (e.g. the SQLite driver) may need to re-run the query, so the return
+      // value will be the same as for static::query().
+      return $this->handleQueryException($e, $query, $args, $options);
     }
+  }
+
+  /**
+   * Wraps and re-throws any PDO exception thrown by static::query().
+   *
+   * @param \PDOException $e
+   *   The exception thrown by static::query().
+   * @param $query
+   *   The query executed by static::query().
+   * @param array $args
+   *   An array of arguments for the prepared statement.
+   * @param array $options
+   *   An associative array of options to control how the query is run.
+   *
+   * @return \Drupal\Core\Database\StatementInterface|int|null
+   *   Most database drivers will return NULL when a PDO exception is thrown for
+   *   a query, but some of them may need to re-run the query, so they can also
+   *   return a \Drupal\Core\Database\StatementInterface object or an integer.
+   *
+   * @throws \Drupal\Core\Database\DatabaseExceptionWrapper
+   * @throws \Drupal\Core\Database\IntegrityConstraintViolationException
+   */
+  protected function handleQueryException(\PDOException $e, $query, array $args = array(), $options = array()) {
+    if ($options['throw_exception']) {
+      // Wrap the exception in another exception, because PHP does not allow
+      // overriding Exception::getMessage(). Its message is the extra database
+      // debug information.
+      $query_string = ($query instanceof StatementInterface) ? $query->getQueryString() : $query;
+      $message = $e->getMessage() . ": " . $query_string . "; " . print_r($args, TRUE);
+      // Match all SQLSTATE 23xxx errors.
+      if (substr($e->getCode(), -6, -3) == '23') {
+        $exception = new IntegrityConstraintViolationException($message, $e->getCode(), $e);
+      }
+      else {
+        $exception = new DatabaseExceptionWrapper($message, 0, $e);
+      }
+
+      throw $exception;
+    }
+
+    return NULL;
   }
 
   /**

@@ -102,67 +102,22 @@ class Connection extends DatabaseConnection {
     return $pdo;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function query($query, array $args = array(), $options = array()) {
-
     $options += $this->defaultOptions();
 
-    // The PDO PostgreSQL driver has a bug which
-    // doesn't type cast booleans correctly when
-    // parameters are bound using associative
-    // arrays.
-    // See http://bugs.php.net/bug.php?id=48383
+    // The PDO PostgreSQL driver has a bug which doesn't type cast booleans
+    // correctly when parameters are bound using associative arrays.
+    // @see http://bugs.php.net/bug.php?id=48383
     foreach ($args as &$value) {
       if (is_bool($value)) {
         $value = (int) $value;
       }
     }
 
-    try {
-      if ($query instanceof StatementInterface) {
-        $stmt = $query;
-        $stmt->execute(NULL, $options);
-      }
-      else {
-        $this->expandArguments($query, $args);
-        $stmt = $this->prepareQuery($query);
-        $stmt->execute($args, $options);
-      }
-
-      switch ($options['return']) {
-        case Database::RETURN_STATEMENT:
-          return $stmt;
-        case Database::RETURN_AFFECTED:
-          $stmt->allowRowCount = TRUE;
-          return $stmt->rowCount();
-        case Database::RETURN_INSERT_ID:
-          return $this->connection->lastInsertId($options['sequence_name']);
-        case Database::RETURN_NULL:
-          return;
-        default:
-          throw new \PDOException('Invalid return directive: ' . $options['return']);
-      }
-    }
-    catch (\PDOException $e) {
-      if ($options['throw_exception']) {
-        // Match all SQLSTATE 23xxx errors.
-        if (substr($e->getCode(), -6, -3) == '23') {
-          $e = new IntegrityConstraintViolationException($e->getMessage(), $e->getCode(), $e);
-        }
-        else {
-          $e = new DatabaseExceptionWrapper($e->getMessage(), 0, $e);
-        }
-        // Add additional debug information.
-        if ($query instanceof StatementInterface) {
-          $e->query_string = $stmt->getQueryString();
-        }
-        else {
-          $e->query_string = $query;
-        }
-        $e->args = $args;
-        throw $e;
-      }
-      return NULL;
-    }
+    return parent::query($query, $args, $options);
   }
 
   public function prepareQuery($query) {
