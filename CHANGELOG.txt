@@ -1,6 +1,8 @@
 
 Drupal 7.36, xxxx-xx-xx (development version)
 -----------------------
+- Fixed missing language code in hook_field_attach_view_alter() when it is
+  invoked from field_view_field().
 - Stopped sending ETag and Last-Modified headers for uncached page requests,
   since they break caching for certain Varnish and Nginx configurations.
 - Changed the Simpletest module to allow PSR-4 test classes to be used in

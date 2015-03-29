@@ -2206,11 +2206,12 @@ class FieldDisplayAPITestCase extends FieldTestCase {
         'alter' => TRUE,
       ),
     );
-    $output = field_view_field('test_entity', $this->entity, $this->field_name, $display);
+    $output = field_view_field('test_entity', $this->entity, $this->field_name, $display, LANGUAGE_NONE);
     $this->drupalSetContent(drupal_render($output));
     $setting = $display['settings']['test_formatter_setting_multiple'];
     $this->assertNoText($this->label, 'Label was not displayed.');
     $this->assertText('field_test_field_attach_view_alter', 'Alter fired, display passed.');
+    $this->assertText('field language is ' . LANGUAGE_NONE, 'Language is placed onto the context.');
     $array = array();
     foreach ($this->values as $delta => $value) {
       $array[] = $delta . ':' . $value['value'];
