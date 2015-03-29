@@ -1897,7 +1897,7 @@ function hook_field_storage_write($entity_type, $entity, $op, $fields) {
       $items = (array) $entity->{$field_name}[$langcode];
       $delta_count = 0;
       foreach ($items as $delta => $item) {
-        // We now know we have someting to insert.
+        // We now know we have something to insert.
         $do_insert = TRUE;
         $record = array(
           'entity_type' => $entity_type,
