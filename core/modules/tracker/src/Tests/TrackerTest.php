@@ -9,6 +9,7 @@ namespace Drupal\tracker\Tests;
 
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Tests\CommentTestTrait;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -25,7 +26,7 @@ class TrackerTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('comment', 'tracker', 'history');
+  public static $modules = array('comment', 'tracker', 'history', 'node_test');
 
   /**
    * The main user for testing.
@@ -76,6 +77,21 @@ class TrackerTest extends WebTestBase {
     $published->delete();
     $this->drupalGet('activity');
     $this->assertNoText($published->label(), 'Deleted node does not show up in the tracker listing.');
+
+    // Test proper display of time on activity page when comments are disabled.
+    // Disable comments.
+    FieldStorageConfig::loadByName('node', 'comment')->delete();
+    $node = $this->drupalCreateNode([
+      // This title is required to trigger the custom changed time set in the
+      // node_test module. This is needed in order to ensure a sufficiently
+      // large 'time ago' interval that isn't numbered in seconds.
+      'title' => 'testing_node_presave',
+      'status' => 1,
+    ]);
+
+    $this->drupalGet('activity');
+    $this->assertText($node->label(), 'Published node shows up in the tracker listing.');
+    $this->assertText(\Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $node->getChangedTime()), 'The changed time was displayed on the tracker listing.');
   }
 
   /**

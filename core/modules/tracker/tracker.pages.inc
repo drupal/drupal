@@ -61,12 +61,14 @@ function tracker_page($account = NULL) {
       else {
         $nodes[$nid]->comment_count += $statistics->comment_count;
       }
-
-      $nodes[$nid]->last_activity = $tracker_data[$nid]->changed;
     }
 
     // Display the data.
     foreach ($nodes as $node) {
+      // Set the last activity time from tracker data. This also takes into
+      // account comment activity, so getChangedTime() is not used.
+      $node->last_activity = $tracker_data[$node->id()]->changed;
+
       // Determine the number of comments.
       $comments = 0;
       if ($node->comment_count) {
