@@ -1,6 +1,8 @@
 
 Drupal 7.36, xxxx-xx-xx (development version)
 -----------------------
+- Changed the Simpletest module to allow PSR-4 test classes to be used in
+  Drupal 7.
 - Fixed a fatal error that occurred when using the Comment module's "Unpublish
   comment containing keyword(s)" action.
 - Changed the "lang" attribute on language links to "xml:lang" so it validates

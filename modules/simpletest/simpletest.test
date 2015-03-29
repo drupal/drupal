@@ -703,7 +703,9 @@ class SimpleTestDiscoveryTestCase extends DrupalWebTestCase {
     $classes_all = simpletest_test_get_all();
     foreach (array(
       'Drupal\\simpletest\\Tests\\PSR0WebTest',
+      'Drupal\\simpletest\\Tests\\PSR4WebTest',
       'Drupal\\psr_0_test\\Tests\\ExampleTest',
+      'Drupal\\psr_4_test\\Tests\\ExampleTest',
     ) as $class) {
       $this->assert(!empty($classes_all['SimpleTest'][$class]), t('Class @class must be discovered by simpletest_test_get_all().', array('@class' => $class)));
     }
@@ -726,15 +728,20 @@ class SimpleTestDiscoveryTestCase extends DrupalWebTestCase {
       // Don't expect PSR-0 tests to be discovered on older PHP versions.
       return;
     }
-    // This one is provided by simpletest itself via PSR-0.
+    // These are provided by simpletest itself via PSR-0 and PSR-4.
     $this->assertText('PSR0 web test');
+    $this->assertText('PSR4 web test');
     $this->assertText('PSR0 example test: PSR-0 in disabled modules.');
+    $this->assertText('PSR4 example test: PSR-4 in disabled modules.');
     $this->assertText('PSR0 example test: PSR-0 in nested subfolders.');
+    $this->assertText('PSR4 example test: PSR-4 in nested subfolders.');
 
     // Test each test individually.
     foreach (array(
       'Drupal\\psr_0_test\\Tests\\ExampleTest',
       'Drupal\\psr_0_test\\Tests\\Nested\\NestedExampleTest',
+      'Drupal\\psr_4_test\\Tests\\ExampleTest',
+      'Drupal\\psr_4_test\\Tests\\Nested\\NestedExampleTest',
     ) as $class) {
       $this->drupalGet('admin/config/development/testing');
       $edit = array($class => TRUE);

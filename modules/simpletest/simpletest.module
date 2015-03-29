@@ -328,25 +328,32 @@ function simpletest_test_get_all() {
       // Also discover PSR-0 test classes, if the PHP version allows it.
       if (version_compare(PHP_VERSION, '5.3') > 0) {
 
-        // Select all PSR-0 classes in the Tests namespace of all modules.
+        // Select all PSR-0 and PSR-4 classes in the Tests namespace of all
+        // modules.
         $system_list = db_query("SELECT name, filename FROM {system}")->fetchAllKeyed();
 
         foreach ($system_list as $name => $filename) {
-          // Build directory in which the test files would reside.
-          $tests_dir = DRUPAL_ROOT . '/' . dirname($filename) . '/lib/Drupal/' . $name . '/Tests';
-          // Scan it for test files if it exists.
-          if (is_dir($tests_dir)) {
-            $files = file_scan_directory($tests_dir, '/.*\.php/');
-            if (!empty($files)) {
-              $basedir = DRUPAL_ROOT . '/' . dirname($filename) . '/lib/';
-              foreach ($files as $file) {
-                // Convert the file name into the namespaced class name.
-                $replacements = array(
-                  '/' => '\\',
-                  $basedir => '',
-                  '.php' => '',
-                );
-                $classes[] = strtr($file->uri, $replacements);
+          $module_dir = DRUPAL_ROOT . '/' . dirname($filename);
+          // Search both the 'lib/Drupal/mymodule' directory (for PSR-0 classes)
+          // and the 'src' directory (for PSR-4 classes).
+          foreach(array('lib/Drupal/' . $name, 'src') as $subdir) {
+            // Build directory in which the test files would reside.
+            $tests_dir = $module_dir . '/' . $subdir . '/Tests';
+            // Scan it for test files if it exists.
+            if (is_dir($tests_dir)) {
+              $files = file_scan_directory($tests_dir, '/.*\.php/');
+              if (!empty($files)) {
+                foreach ($files as $file) {
+                  // Convert the file name into the namespaced class name.
+                  $replacements = array(
+                    '/' => '\\',
+                    $module_dir . '/' => '',
+                    'lib/' => '',
+                    'src/' => 'Drupal\\' . $name . '\\',
+                    '.php' => '',
+                  );
+                  $classes[] = strtr($file->uri, $replacements);
+                }
               }
             }
           }
@@ -406,17 +413,20 @@ function simpletest_classloader_register() {
 
   // Only register PSR-0 class loading if we are on PHP 5.3 or higher.
   if (version_compare(PHP_VERSION, '5.3') > 0) {
-    spl_autoload_register('_simpletest_autoload_psr0');
+    spl_autoload_register('_simpletest_autoload_psr4_psr0');
   }
 }
 
 /**
- * Autoload callback to find PSR-0 test classes.
+ * Autoload callback to find PSR-4 and PSR-0 test classes.
+ *
+ * Looks in the 'src/Tests' and in the 'lib/Drupal/mymodule/Tests' directory of
+ * modules for the class.
  *
  * This will only work on classes where the namespace is of the pattern
  *   "Drupal\$extension\Tests\.."
  */
-function _simpletest_autoload_psr0($class) {
+function _simpletest_autoload_psr4_psr0($class) {
 
   // Static cache for extension paths.
   // This cache is lazily filled as soon as it is needed.
@@ -446,14 +456,26 @@ function _simpletest_autoload_psr0($class) {
         $namespace = substr($class, 0, $nspos);
         $classname = substr($class, $nspos + 1);
 
-        // Build the filepath where we expect the class to be defined.
-        $path = dirname($extensions[$extension]) . '/lib/' .
-          str_replace('\\', '/', $namespace) . '/' .
+        // Try the PSR-4 location first, and the PSR-0 location as a fallback.
+        // Build the PSR-4 filepath where we expect the class to be defined.
+        $psr4_path = dirname($extensions[$extension]) . '/src/' .
+          str_replace('\\', '/', substr($namespace, strlen('Drupal\\' . $extension . '\\'))) . '/' .
           str_replace('_', '/', $classname) . '.php';
 
         // Include the file, if it does exist.
-        if (file_exists($path)) {
-          include $path;
+        if (file_exists($psr4_path)) {
+          include $psr4_path;
+        }
+        else {
+          // Build the PSR-0 filepath where we expect the class to be defined.
+          $psr0_path = dirname($extensions[$extension]) . '/lib/' .
+            str_replace('\\', '/', $namespace) . '/' .
+            str_replace('_', '/', $classname) . '.php';
+
+          // Include the file, if it does exist.
+          if (file_exists($psr0_path)) {
+            include $psr0_path;
+          }
         }
       }
     }
