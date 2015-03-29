@@ -2607,7 +2607,7 @@ function comment_unpublish_action($comment, $context = array()) {
 /**
  * Unpublishes a comment if it contains certain keywords.
  *
- * @param $comment
+ * @param object $comment
  *   Comment object to modify.
  * @param array $context
  *   Array with components:
@@ -2619,10 +2619,13 @@ function comment_unpublish_action($comment, $context = array()) {
  * @see comment_unpublish_by_keyword_action_submit()
  */
 function comment_unpublish_by_keyword_action($comment, $context) {
+  $node = node_load($comment->nid);
+  $build = comment_view($comment, $node);
+  $text = drupal_render($build);
   foreach ($context['keywords'] as $keyword) {
-    $text = drupal_render($comment);
     if (strpos($text, $keyword) !== FALSE) {
       $comment->status = COMMENT_NOT_PUBLISHED;
+      comment_save($comment);
       watchdog('action', 'Unpublished comment %subject.', array('%subject' => $comment->subject));
       break;
     }

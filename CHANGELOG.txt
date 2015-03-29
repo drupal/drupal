@@ -1,6 +1,8 @@
 
 Drupal 7.36, xxxx-xx-xx (development version)
 -----------------------
+- Fixed a fatal error that occurred when using the Comment module's "Unpublish
+  comment containing keyword(s)" action.
 - Changed the "lang" attribute on language links to "xml:lang" so it validates
   as XHTML (minor markup change).
 - Prevented the form API from allowing arrays to be submitted for various form

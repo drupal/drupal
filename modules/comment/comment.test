@@ -13,7 +13,7 @@ class CommentHelperCase extends DrupalWebTestCase {
   function setUp() {
     parent::setUp('comment', 'search');
     // Create users and test node.
-    $this->admin_user = $this->drupalCreateUser(array('administer content types', 'administer comments', 'administer blocks'));
+    $this->admin_user = $this->drupalCreateUser(array('administer content types', 'administer comments', 'administer blocks', 'administer actions'));
     $this->web_user = $this->drupalCreateUser(array('access comments', 'post comments', 'create article content', 'edit own comments'));
     $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'uid' => $this->web_user->uid));
   }
@@ -1970,6 +1970,41 @@ class CommentActionsTestCase extends CommentHelperCase {
     comment_publish_action(NULL, array('cid' => $comment->cid));
     $this->assertEqual(comment_load($comment->cid)->status, COMMENT_PUBLISHED, 'Comment was published');
     $this->assertWatchdogMessage('Published comment %subject.', array('%subject' => $subject), 'Found watchdog message');
+    $this->clearWatchdog();
+  }
+
+  /**
+   * Tests the unpublish comment by keyword action.
+   */
+  public function testCommentUnpublishByKeyword() {
+    $this->drupalLogin($this->admin_user);
+    $callback = 'comment_unpublish_by_keyword_action';
+    $hash = drupal_hash_base64($callback);
+    $comment_text = $keywords = $this->randomName();
+    $edit = array(
+      'actions_label' => $callback,
+      'keywords' => $keywords,
+    );
+
+    $this->drupalPost("admin/config/system/actions/configure/$hash", $edit, t('Save'));
+
+    $action = db_query("SELECT aid, type, callback, parameters, label FROM {actions} WHERE callback = :callback", array(':callback' => $callback))->fetchObject();
+
+    $this->assertTrue($action, 'The action could be loaded.');
+
+    $comment = $this->postComment($this->node, $comment_text, $this->randomName());
+
+    // Load the full comment so that status is available.
+    $comment = comment_load($comment->id);
+
+    $this->assertTrue($comment->status == COMMENT_PUBLISHED, 'The comment status was set to published.');
+
+    comment_unpublish_by_keyword_action($comment, array('keywords' => array($keywords)));
+
+    // We need to make sure that the comment has been saved with status
+    // unpublished.
+    $this->assertEqual(comment_load($comment->cid)->status, COMMENT_NOT_PUBLISHED, 'Comment was unpublished.');
+    $this->assertWatchdogMessage('Unpublished comment %subject.', array('%subject' => $comment->subject), 'Found watchdog message.');
     $this->clearWatchdog();
   }
 
