@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Entity;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\Query\QueryInterface;
 
 /**
@@ -396,7 +396,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
 
     // A new entity should not already exist.
     if ($id_exists && $is_new) {
-      throw new EntityStorageException(String::format('@type entity with ID @id already exists.', array('@type' => $this->entityTypeId, '@id' => $id)));
+      throw new EntityStorageException(SafeMarkup::format('@type entity with ID @id already exists.', array('@type' => $this->entityTypeId, '@id' => $id)));
     }
 
     // Load the original entity, if any.

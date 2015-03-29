@@ -8,7 +8,7 @@
 namespace Drupal\Core\Block;
 
 use Drupal\block\BlockInterface;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContextAwarePluginBase;
@@ -171,7 +171,7 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
     $form['admin_label'] = array(
       '#type' => 'item',
       '#title' => $this->t('Block description'),
-      '#markup' => String::checkPlain($definition['admin_label']),
+      '#markup' => SafeMarkup::checkPlain($definition['admin_label']),
     );
     $form['label'] = array(
       '#type' => 'textfield',

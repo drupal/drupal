@@ -40,7 +40,7 @@ class FilterCaption extends FilterBase {
       $xpath = new \DOMXPath($dom);
       foreach ($xpath->query('//*[@data-caption]') as $node) {
         // Read the data-caption attribute's value, then delete it.
-        $caption = String::checkPlain($node->getAttribute('data-caption'));
+        $caption = SafeMarkup::checkPlain($node->getAttribute('data-caption'));
         $node->removeAttribute('data-caption');
 
         // Sanitize caption: decode HTML encoding, limit allowed HTML tags; only

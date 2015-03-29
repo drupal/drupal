@@ -7,7 +7,7 @@
 
 namespace Drupal\user\Tests\Views;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\user\Tests\Views\UserUnitTestBase;
 use Drupal\views\Views;
 
@@ -87,7 +87,7 @@ class HandlerFilterPermissionTest extends UserUnitTestBase {
     }
     foreach (array('system' => 'System', 'user' => 'User') as $module => $title) {
       $expected = array_map(function ($permission) {
-        return String::checkPlain(strip_tags($permission['title']));
+        return SafeMarkup::checkPlain(strip_tags($permission['title']));
       }, $permission_by_module[$module]);
 
       $this->assertEqual($expected, $value_options[$title], 'Ensure the all permissions are available');

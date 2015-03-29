@@ -10,7 +10,7 @@ namespace Drupal\field_ui\Form;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Field\AllowedTagsXssTrait;
 use Drupal\Core\Form\FormBase;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\field\FieldConfigInterface;
 use Drupal\field_ui\FieldUI;
@@ -243,7 +243,7 @@ class FieldEditForm extends FormBase {
    *   The label of the field.
    */
   public function getTitle(FieldConfigInterface $field_config) {
-    return String::checkPlain($field_config->label());
+    return SafeMarkup::checkPlain($field_config->label());
   }
 
 }

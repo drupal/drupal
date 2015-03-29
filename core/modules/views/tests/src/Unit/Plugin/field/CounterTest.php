@@ -7,7 +7,7 @@
 
 namespace Drupal\Tests\views\Unit\Plugin\field;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Entity\View;
 use Drupal\views\Plugin\views\field\Counter;
@@ -126,12 +126,12 @@ class CounterTest extends UnitTestCase {
     $expected = $i + 1;
 
     $counter = $counter_handler->getValue($this->testData[$i]);
-    $this->assertEquals($expected, $counter, String::format('The expected number (@expected) patches with the rendered number (@counter) failed', array(
+    $this->assertEquals($expected, $counter, SafeMarkup::format('The expected number (@expected) patches with the rendered number (@counter) failed', array(
       '@expected' => $expected,
       '@counter' => $counter
     )));
     $counter = $counter_handler->render($this->testData[$i]);
-    $this->assertEquals($expected, $counter_handler->render($this->testData[$i]), String::format('The expected number (@expected) patches with the rendered number (@counter) failed', array(
+    $this->assertEquals($expected, $counter_handler->render($this->testData[$i]), SafeMarkup::format('The expected number (@expected) patches with the rendered number (@counter) failed', array(
       '@expected' => $expected,
       '@counter' => $counter
     )));
@@ -158,12 +158,12 @@ class CounterTest extends UnitTestCase {
     $expected = $rand_start + $i;
 
     $counter = $counter_handler->getValue($this->testData[$i]);
-    $this->assertEquals($expected, $counter, String::format('The expected number (@expected) patches with the rendered number (@counter) failed', array(
+    $this->assertEquals($expected, $counter, SafeMarkup::format('The expected number (@expected) patches with the rendered number (@counter) failed', array(
       '@expected' => $expected,
       '@counter' => $counter
     )));
     $counter = $counter_handler->render($this->testData[$i]);
-    $this->assertEquals($expected, $counter_handler->render($this->testData[$i]), String::format('The expected number (@expected) patches with the rendered number (@counter) failed', array(
+    $this->assertEquals($expected, $counter_handler->render($this->testData[$i]), SafeMarkup::format('The expected number (@expected) patches with the rendered number (@counter) failed', array(
       '@expected' => $expected,
       '@counter' => $counter
     )));
@@ -193,12 +193,12 @@ class CounterTest extends UnitTestCase {
     $expected = $offset + $rand_start + $i;
 
     $counter = $counter_handler->getValue($this->testData[$i]);
-    $this->assertEquals($expected, $counter, String::format('The expected number (@expected) patches with the rendered number (@counter) failed', array(
+    $this->assertEquals($expected, $counter, SafeMarkup::format('The expected number (@expected) patches with the rendered number (@counter) failed', array(
       '@expected' => $expected,
       '@counter' => $counter
     )));
     $counter = $counter_handler->render($this->testData[$i]);
-    $this->assertEquals($expected, $counter_handler->render($this->testData[$i]), String::format('The expected number (@expected) patches with the rendered number (@counter) failed', array(
+    $this->assertEquals($expected, $counter_handler->render($this->testData[$i]), SafeMarkup::format('The expected number (@expected) patches with the rendered number (@counter) failed', array(
       '@expected' => $expected,
       '@counter' => $counter
     )));
@@ -232,12 +232,12 @@ class CounterTest extends UnitTestCase {
     $expected = $items_per_page + $offset + $rand_start + $i;
 
     $counter = $counter_handler->getValue($this->testData[$i]);
-    $this->assertEquals($expected, $counter, String::format('The expected number (@expected) patches with the rendered number (@counter) failed', array(
+    $this->assertEquals($expected, $counter, SafeMarkup::format('The expected number (@expected) patches with the rendered number (@counter) failed', array(
       '@expected' => $expected,
       '@counter' => $counter
     )));
     $counter = $counter_handler->render($this->testData[$i]);
-    $this->assertEquals($expected, $counter_handler->render($this->testData[$i]), String::format('The expected number (@expected) patches with the rendered number (@counter) failed', array(
+    $this->assertEquals($expected, $counter_handler->render($this->testData[$i]), SafeMarkup::format('The expected number (@expected) patches with the rendered number (@counter) failed', array(
       '@expected' => $expected,
       '@counter' => $counter
     )));

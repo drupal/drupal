@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\Form;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Component\Serialization\Json;
 
@@ -74,6 +74,6 @@ class ElementsVerticalTabsTest extends WebTestBase {
    */
   function testDefaultTabCleaned() {
     $values = Json::decode($this->drupalPostForm('form_test/form-state-values-clean', [], t('Submit')));
-    $this->assertFalse(isset($values['vertical_tabs__active_tab']), String::format('%element was removed.', ['%element' => 'vertical_tabs__active_tab']));
+    $this->assertFalse(isset($values['vertical_tabs__active_tab']), SafeMarkup::format('%element was removed.', ['%element' => 'vertical_tabs__active_tab']));
   }
 }

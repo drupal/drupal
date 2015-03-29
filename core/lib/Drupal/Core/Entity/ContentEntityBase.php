@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Entity;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\Plugin\DataType\EntityReference;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
@@ -221,7 +221,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   public function setNewRevision($value = TRUE) {
 
     if (!$this->getEntityType()->hasKey('revision')) {
-      throw new \LogicException(String::format('Entity type @entity_type does not support revisions.', ['@entity_type' => $this->getEntityTypeId()]));
+      throw new \LogicException(SafeMarkup::format('Entity type @entity_type does not support revisions.', ['@entity_type' => $this->getEntityTypeId()]));
     }
 
     if ($value && !$this->newRevision) {
@@ -360,14 +360,14 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   protected function getTranslatedField($name, $langcode) {
     if ($this->translations[$this->activeLangcode]['status'] == static::TRANSLATION_REMOVED) {
       $message = 'The entity object refers to a removed translation (@langcode) and cannot be manipulated.';
-      throw new \InvalidArgumentException(String::format($message, array('@langcode' => $this->activeLangcode)));
+      throw new \InvalidArgumentException(SafeMarkup::format($message, array('@langcode' => $this->activeLangcode)));
     }
     // Populate $this->fields to speed-up further look-ups and to keep track of
     // fields objects, possibly holding changes to field values.
     if (!isset($this->fields[$name][$langcode])) {
       $definition = $this->getFieldDefinition($name);
       if (!$definition) {
-        throw new \InvalidArgumentException('Field ' . String::checkPlain($name) . ' is unknown.');
+        throw new \InvalidArgumentException('Field ' . SafeMarkup::checkPlain($name) . ' is unknown.');
       }
       // Non-translatable fields are always stored with
       // LanguageInterface::LANGCODE_DEFAULT as key.
@@ -565,7 +565,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
           // Update the default internal language cache.
           $this->setDefaultLangcode();
           if (isset($this->translations[$this->defaultLangcode])) {
-            $message = String::format('A translation already exists for the specified language (@langcode).', array('@langcode' => $this->defaultLangcode));
+            $message = SafeMarkup::format('A translation already exists for the specified language (@langcode).', array('@langcode' => $this->defaultLangcode));
             throw new \InvalidArgumentException($message);
           }
           $this->updateFieldLangcodes($this->defaultLangcode);
@@ -576,7 +576,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
           $items = $this->get($this->langcodeKey);
           if ($items->value != $this->activeLangcode) {
             $items->setValue($this->activeLangcode, FALSE);
-            $message = String::format('The translation language cannot be changed (@langcode).', array('@langcode' => $this->activeLangcode));
+            $message = SafeMarkup::format('The translation language cannot be changed (@langcode).', array('@langcode' => $this->activeLangcode));
             throw new \LogicException($message);
           }
         }
@@ -587,7 +587,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
         //   read-only. See https://www.drupal.org/node/2443991.
         if (isset($this->values[$this->defaultLangcodeKey])) {
           $this->get($this->defaultLangcodeKey)->setValue($this->isDefaultTranslation(), FALSE);
-          $message = String::format('The default translation flag cannot be changed (@langcode).', array('@langcode' => $this->activeLangcode));
+          $message = SafeMarkup::format('The default translation flag cannot be changed (@langcode).', array('@langcode' => $this->activeLangcode));
           throw new \LogicException($message);
         }
         break;
@@ -635,7 +635,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
 
     if (empty($translation)) {
       $message = 'Invalid translation language (@langcode) specified.';
-      throw new \InvalidArgumentException(String::format($message, array('@langcode' => $langcode)));
+      throw new \InvalidArgumentException(SafeMarkup::format($message, array('@langcode' => $langcode)));
     }
 
     return $translation;
@@ -704,7 +704,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     $this->getLanguages();
     if (!isset($this->languages[$langcode]) || $this->hasTranslation($langcode)) {
       $message = 'Invalid translation language (@langcode) specified.';
-      throw new \InvalidArgumentException(String::format($message, array('@langcode' => $langcode)));
+      throw new \InvalidArgumentException(SafeMarkup::format($message, array('@langcode' => $langcode)));
     }
 
     // Instantiate a new empty entity so default values will be populated in the
@@ -755,7 +755,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     }
     else {
       $message = 'The specified translation (@langcode) cannot be removed.';
-      throw new \InvalidArgumentException(String::format($message, array('@langcode' => $langcode)));
+      throw new \InvalidArgumentException(SafeMarkup::format($message, array('@langcode' => $langcode)));
     }
   }
 
@@ -898,7 +898,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   public function createDuplicate() {
     if ($this->translations[$this->activeLangcode]['status'] == static::TRANSLATION_REMOVED) {
       $message = 'The entity object refers to a removed translation (@langcode) and cannot be manipulated.';
-      throw new \InvalidArgumentException(String::format($message, array('@langcode' => $this->activeLangcode)));
+      throw new \InvalidArgumentException(SafeMarkup::format($message, array('@langcode' => $this->activeLangcode)));
     }
 
     $duplicate = clone $this;

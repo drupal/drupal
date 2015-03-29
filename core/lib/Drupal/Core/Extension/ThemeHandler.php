@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Extension;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Asset\AssetCollectionOptimizerInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -199,7 +199,7 @@ class ThemeHandler implements ThemeHandlerInterface {
 
       if ($missing = array_diff_key($theme_list, $theme_data)) {
         // One or more of the given themes doesn't exist.
-        throw new \InvalidArgumentException(String::format('Unknown themes: !themes.', array(
+        throw new \InvalidArgumentException(SafeMarkup::format('Unknown themes: !themes.', array(
           '!themes' => implode(', ', $missing),
         )));
       }
@@ -250,7 +250,7 @@ class ThemeHandler implements ThemeHandlerInterface {
 
       // Throw an exception if the theme name is too long.
       if (strlen($key) > DRUPAL_EXTENSION_NAME_MAX_LENGTH) {
-        throw new ExtensionNameLengthException(String::format('Theme name %name is over the maximum allowed length of @max characters.', array(
+        throw new ExtensionNameLengthException(SafeMarkup::format('Theme name %name is over the maximum allowed length of @max characters.', array(
           '%name' => $key,
           '@max' => DRUPAL_EXTENSION_NAME_MAX_LENGTH,
         )));
@@ -628,9 +628,9 @@ class ThemeHandler implements ThemeHandlerInterface {
   public function getName($theme) {
     $themes = $this->listInfo();
     if (!isset($themes[$theme])) {
-      throw new \InvalidArgumentException(String::format('Requested the name of a non-existing theme @theme', array('@theme' => $theme)));
+      throw new \InvalidArgumentException(SafeMarkup::format('Requested the name of a non-existing theme @theme', array('@theme' => $theme)));
     }
-    return String::checkPlain($themes[$theme]->info['name']);
+    return SafeMarkup::checkPlain($themes[$theme]->info['name']);
   }
 
   /**

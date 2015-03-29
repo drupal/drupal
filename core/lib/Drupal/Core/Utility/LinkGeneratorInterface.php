@@ -41,7 +41,7 @@ interface LinkGeneratorInterface {
    *   Strings will be sanitized automatically. If you need to output HTML in
    *   the link text, use a render array or an already sanitized string such as
    *   the output of \Drupal\Component\Utility\Xss::filter() or
-   *   \Drupal\Component\Utility\String::format().
+   *   \Drupal\Component\Utility\SafeMarkup::format().
    * @param \Drupal\Core\Url $url
    *   The URL object used for the link. Amongst its options, the following may
    *   be set to affect the generated link:

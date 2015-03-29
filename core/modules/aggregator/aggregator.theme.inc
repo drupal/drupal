@@ -5,7 +5,7 @@
  * Preprocessors and theme functions of Aggregator module.
  */
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Render\Element;
 
 /**
@@ -26,7 +26,7 @@ function template_preprocess_aggregator_item(&$variables) {
   }
 
   $variables['url'] = check_url($item->getLink());
-  $variables['title'] = String::checkPlain($item->label());
+  $variables['title'] = SafeMarkup::checkPlain($item->label());
 }
 
 /**
@@ -46,5 +46,5 @@ function template_preprocess_aggregator_feed(&$variables) {
     $variables['content'][$key] = $variables['elements'][$key];
   }
   $variables['full'] = $variables['elements']['#view_mode'] == 'full';
-  $variables['title'] = String::checkPlain($feed->label());
+  $variables['title'] = SafeMarkup::checkPlain($feed->label());
 }

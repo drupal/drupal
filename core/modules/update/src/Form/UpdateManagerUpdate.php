@@ -7,7 +7,7 @@
 
 namespace Drupal\update\Form;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -115,14 +115,14 @@ class UpdateManagerUpdate extends FormBase {
           $project_name = $this->l($project['title'], Url::fromUri($project['link']));
         }
         else {
-          $project_name = String::checkPlain($project['title']);
+          $project_name = SafeMarkup::checkPlain($project['title']);
         }
       }
       elseif (!empty($project['info']['name'])) {
-        $project_name = String::checkPlain($project['info']['name']);
+        $project_name = SafeMarkup::checkPlain($project['info']['name']);
       }
       else {
-        $project_name = String::checkPlain($name);
+        $project_name = SafeMarkup::checkPlain($name);
       }
       if ($project['project_type'] == 'theme' || $project['project_type'] == 'theme-disabled') {
         $project_name .= ' ' . $this->t('(Theme)');

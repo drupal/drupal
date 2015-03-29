@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Config;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Defines the immutable configuration object.
@@ -31,21 +31,21 @@ class ImmutableConfig extends Config {
    * {@inheritdoc}
    */
   public function set($key, $value) {
-    throw new ImmutableConfigException(String::format('Can not set values on immutable configuration !name:!key. Use \Drupal\Core\Config\ConfigFactoryInterface::getEditable() to retrieve a mutable configuration object', ['!name' => $this->getName(), '!key' => $key]));
+    throw new ImmutableConfigException(SafeMarkup::format('Can not set values on immutable configuration !name:!key. Use \Drupal\Core\Config\ConfigFactoryInterface::getEditable() to retrieve a mutable configuration object', ['!name' => $this->getName(), '!key' => $key]));
   }
 
   /**
    * {@inheritdoc}
    */
   public function clear($key) {
-    throw new ImmutableConfigException(String::format('Can not clear !key key in immutable configuration !name. Use \Drupal\Core\Config\ConfigFactoryInterface::getEditable() to retrieve a mutable configuration object', ['!name' => $this->getName(), '!key' => $key]));
+    throw new ImmutableConfigException(SafeMarkup::format('Can not clear !key key in immutable configuration !name. Use \Drupal\Core\Config\ConfigFactoryInterface::getEditable() to retrieve a mutable configuration object', ['!name' => $this->getName(), '!key' => $key]));
   }
 
   /**
    * {@inheritdoc}
    */
   public function save() {
-    throw new ImmutableConfigException(String::format('Can not save immutable configuration !name. Use \Drupal\Core\Config\ConfigFactoryInterface::getEditable() to retrieve a mutable configuration object', ['!name' => $this->getName()]));
+    throw new ImmutableConfigException(SafeMarkup::format('Can not save immutable configuration !name. Use \Drupal\Core\Config\ConfigFactoryInterface::getEditable() to retrieve a mutable configuration object', ['!name' => $this->getName()]));
   }
 
   /**
@@ -55,7 +55,7 @@ class ImmutableConfig extends Config {
    *   The configuration object.
    */
   public function delete() {
-    throw new ImmutableConfigException(String::format('Can not delete immutable configuration !name. Use \Drupal\Core\Config\ConfigFactoryInterface::getEditable() to retrieve a mutable configuration object', ['!name' => $this->getName()]));
+    throw new ImmutableConfigException(SafeMarkup::format('Can not delete immutable configuration !name. Use \Drupal\Core\Config\ConfigFactoryInterface::getEditable() to retrieve a mutable configuration object', ['!name' => $this->getName()]));
   }
 
 }

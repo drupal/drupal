@@ -10,7 +10,7 @@ namespace Drupal\node\Form;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Url;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\user\PrivateTempStoreFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -105,7 +105,7 @@ class DeleteMultiple extends ConfirmFormBase {
     $form['nodes'] = array(
       '#theme' => 'item_list',
       '#items' => array_map(function ($node) {
-        return String::checkPlain($node->label());
+        return SafeMarkup::checkPlain($node->label());
       }, $this->nodes),
     );
     $form = parent::buildForm($form, $form_state);

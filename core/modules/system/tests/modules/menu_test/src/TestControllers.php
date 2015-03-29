@@ -7,7 +7,7 @@
 
 namespace Drupal\menu_test;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
@@ -54,10 +54,10 @@ class TestControllers {
    */
   public function testDefaults($placeholder = NULL) {
     if ($placeholder) {
-      return ['#markup' => String::format("Sometimes there is a placeholder: '@placeholder'.", array('@placeholder' => $placeholder))];
+      return ['#markup' => SafeMarkup::format("Sometimes there is a placeholder: '@placeholder'.", array('@placeholder' => $placeholder))];
     }
     else {
-      return ['#markup' => String::format('Sometimes there is no placeholder.')];
+      return ['#markup' => SafeMarkup::format('Sometimes there is no placeholder.')];
     }
   }
 

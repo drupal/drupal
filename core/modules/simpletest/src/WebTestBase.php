@@ -13,6 +13,7 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\DependencyInjection\YamlFileLoader;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Database\Database;
@@ -292,7 +293,7 @@ abstract class WebTestBase extends TestBase {
     node_add_body_field($type);
     \Drupal::service('router.builder')->rebuild();
 
-    $this->assertEqual($status, SAVED_NEW, String::format('Created content type %type.', array('%type' => $type->id())));
+    $this->assertEqual($status, SAVED_NEW, SafeMarkup::format('Created content type %type.', array('%type' => $type->id())));
 
     return $type;
   }
@@ -554,7 +555,7 @@ abstract class WebTestBase extends TestBase {
     $account = entity_create('user', $edit);
     $account->save();
 
-    $this->assertTrue($account->id(), String::format('User created with name %name and pass %pass', array('%name' => $edit['name'], '%pass' => $edit['pass'])), 'User login');
+    $this->assertTrue($account->id(), SafeMarkup::format('User created with name %name and pass %pass', array('%name' => $edit['name'], '%pass' => $edit['pass'])), 'User login');
     if (!$account->id()) {
       return FALSE;
     }
@@ -607,7 +608,7 @@ abstract class WebTestBase extends TestBase {
     }
     $result = $role->save();
 
-    $this->assertIdentical($result, SAVED_NEW, String::format('Created role ID @rid with name @name.', array(
+    $this->assertIdentical($result, SAVED_NEW, SafeMarkup::format('Created role ID @rid with name @name.', array(
       '@name' => var_export($role->label(), TRUE),
       '@rid' => var_export($role->id(), TRUE),
     )), 'Role');
@@ -619,10 +620,10 @@ abstract class WebTestBase extends TestBase {
         $assigned_permissions = Role::load($role->id())->getPermissions();
         $missing_permissions = array_diff($permissions, $assigned_permissions);
         if (!$missing_permissions) {
-          $this->pass(String::format('Created permissions: @perms', array('@perms' => implode(', ', $permissions))), 'Role');
+          $this->pass(SafeMarkup::format('Created permissions: @perms', array('@perms' => implode(', ', $permissions))), 'Role');
         }
         else {
-          $this->fail(String::format('Failed to create permissions: @perms', array('@perms' => implode(', ', $missing_permissions))), 'Role');
+          $this->fail(SafeMarkup::format('Failed to create permissions: @perms', array('@perms' => implode(', ', $missing_permissions))), 'Role');
         }
       }
       return $role->id();
@@ -646,7 +647,7 @@ abstract class WebTestBase extends TestBase {
     $valid = TRUE;
     foreach ($permissions as $permission) {
       if (!in_array($permission, $available)) {
-        $this->fail(String::format('Invalid permission %permission.', array('%permission' => $permission)), 'Role');
+        $this->fail(SafeMarkup::format('Invalid permission %permission.', array('%permission' => $permission)), 'Role');
         $valid = FALSE;
       }
     }
@@ -939,7 +940,7 @@ abstract class WebTestBase extends TestBase {
       $modules = array_unique($modules);
       try {
         $success = $container->get('module_installer')->install($modules, TRUE);
-        $this->assertTrue($success, String::format('Enabled modules: %modules', array('%modules' => implode(', ', $modules))));
+        $this->assertTrue($success, SafeMarkup::format('Enabled modules: %modules', array('%modules' => implode(', ', $modules))));
       }
       catch (\Drupal\Core\Extension\MissingDependencyException $e) {
         // The exception message has all the details.
@@ -1396,7 +1397,7 @@ abstract class WebTestBase extends TestBase {
       '@status' => $status,
       '!length' => format_size(strlen($this->getRawContent()))
     );
-    $message = String::format('!method @url returned @status (!length).', $message_vars);
+    $message = SafeMarkup::format('!method @url returned @status (!length).', $message_vars);
     $this->assertTrue($this->getRawContent() !== FALSE, $message, 'Browser');
     return $this->getRawContent();
   }
@@ -1511,7 +1512,7 @@ abstract class WebTestBase extends TestBase {
     $verbose = 'GET request to: ' . $path .
                '<hr />Ending URL: ' . $this->getUrl();
     if ($this->dumpHeaders) {
-      $verbose .= '<hr />Headers: <pre>' . String::checkPlain(var_export(array_map('trim', $this->headers), TRUE)) . '</pre>';
+      $verbose .= '<hr />Headers: <pre>' . SafeMarkup::checkPlain(var_export(array_map('trim', $this->headers), TRUE)) . '</pre>';
     }
     $verbose .= '<hr />' . $out;
 
@@ -1705,7 +1706,7 @@ abstract class WebTestBase extends TestBase {
           $verbose = 'POST request to: ' . $path;
           $verbose .= '<hr />Ending URL: ' . $this->getUrl();
           if ($this->dumpHeaders) {
-            $verbose .= '<hr />Headers: <pre>' . String::checkPlain(var_export(array_map('trim', $this->headers), TRUE)) . '</pre>';
+            $verbose .= '<hr />Headers: <pre>' . SafeMarkup::checkPlain(var_export(array_map('trim', $this->headers), TRUE)) . '</pre>';
           }
           $verbose .= '<hr />Fields: ' . highlight_string('<?php ' . var_export($post_array, TRUE), TRUE);
           $verbose .= '<hr />' . $out;
@@ -1716,7 +1717,7 @@ abstract class WebTestBase extends TestBase {
       }
       // We have not found a form which contained all fields of $edit.
       foreach ($edit as $name => $value) {
-        $this->fail(String::format('Failed to set field @name to @value', array('@name' => $name, '@value' => $value)));
+        $this->fail(SafeMarkup::format('Failed to set field @name to @value', array('@name' => $name, '@value' => $value)));
       }
       if (!$ajax && isset($submit)) {
         $this->assertTrue($submit_matches, format_string('Found the @submit button', array('@submit' => $submit)));
@@ -2113,7 +2114,7 @@ abstract class WebTestBase extends TestBase {
     if ($this->dumpHeaders) {
       $this->verbose('GET request to: ' . $path .
                      '<hr />Ending URL: ' . $this->getUrl() .
-                     '<hr />Headers: <pre>' . String::checkPlain(var_export(array_map('trim', $this->headers), TRUE)) . '</pre>');
+                     '<hr />Headers: <pre>' . SafeMarkup::checkPlain(var_export(array_map('trim', $this->headers), TRUE)) . '</pre>');
     }
 
     return $out;
@@ -2302,10 +2303,10 @@ abstract class WebTestBase extends TestBase {
     $urls = $this->xpath('//a[normalize-space()=:label]', array(':label' => $label));
     if (isset($urls[$index])) {
       $url_target = $this->getAbsoluteUrl($urls[$index]['href']);
-      $this->pass(String::format('Clicked link %label (@url_target) from @url_before', array('%label' => $label, '@url_target' => $url_target, '@url_before' => $url_before)), 'Browser');
+      $this->pass(SafeMarkup::format('Clicked link %label (@url_target) from @url_before', array('%label' => $label, '@url_target' => $url_target, '@url_before' => $url_before)), 'Browser');
       return $this->drupalGet($url_target);
     }
-    $this->fail(String::format('Link %label does not exist on @url_before', array('%label' => $label, '@url_before' => $url_before)), 'Browser');
+    $this->fail(SafeMarkup::format('Link %label does not exist on @url_before', array('%label' => $label, '@url_before' => $url_before)), 'Browser');
     return FALSE;
   }
 
@@ -2485,7 +2486,7 @@ abstract class WebTestBase extends TestBase {
       $url = $this->container->get('url_generator')->generateFromPath($path, $options);
     }
     if (!$message) {
-      $message = String::format('Expected @url matches current URL (@current_url).', array(
+      $message = SafeMarkup::format('Expected @url matches current URL (@current_url).', array(
         '@url' => var_export($url, TRUE),
         '@current_url' => $this->getUrl(),
       ));
@@ -2519,7 +2520,7 @@ abstract class WebTestBase extends TestBase {
   protected function assertResponse($code, $message = '', $group = 'Browser') {
     $curl_code = curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE);
     $match = is_array($code) ? in_array($curl_code, $code) : $curl_code == $code;
-    return $this->assertTrue($match, $message ? $message : String::format('HTTP response expected !code, actual !curl_code', array('!code' => $code, '!curl_code' => $curl_code)), $group);
+    return $this->assertTrue($match, $message ? $message : SafeMarkup::format('HTTP response expected !code, actual !curl_code', array('!code' => $code, '!curl_code' => $curl_code)), $group);
   }
 
   /**
@@ -2544,7 +2545,7 @@ abstract class WebTestBase extends TestBase {
   protected function assertNoResponse($code, $message = '', $group = 'Browser') {
     $curl_code = curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE);
     $match = is_array($code) ? in_array($curl_code, $code) : $curl_code == $code;
-    return $this->assertFalse($match, $message ? $message : String::format('HTTP response not expected !code, actual !curl_code', array('!code' => $code, '!curl_code' => $curl_code)), $group);
+    return $this->assertFalse($match, $message ? $message : SafeMarkup::format('HTTP response not expected !code, actual !curl_code', array('!code' => $code, '!curl_code' => $curl_code)), $group);
   }
 
   /**

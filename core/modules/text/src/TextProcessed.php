@@ -8,7 +8,6 @@
 namespace Drupal\text;
 
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\String;
 use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\TypedData;
@@ -51,7 +50,7 @@ class TextProcessed extends TypedData {
     $text = $item->{($this->definition->getSetting('text source'))};
 
     // Avoid running check_markup() or
-    // \Drupal\Component\Utility\String::checkPlain() on empty strings.
+    // \Drupal\Component\Utility\SafeMarkup::checkPlain() on empty strings.
     if (!isset($text) || $text === '') {
       $this->processed = '';
     }

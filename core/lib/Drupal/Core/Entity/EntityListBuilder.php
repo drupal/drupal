@@ -9,7 +9,7 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Defines a generic implementation to build a listing of entities.
@@ -110,7 +110,7 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
    *   The escaped entity label.
    */
   protected function getLabel(EntityInterface $entity) {
-    return String::checkPlain($entity->label());
+    return SafeMarkup::checkPlain($entity->label());
   }
 
   /**

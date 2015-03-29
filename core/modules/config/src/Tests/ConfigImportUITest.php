@@ -7,7 +7,7 @@
 
 namespace Drupal\config\Tests;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\simpletest\WebTestBase;
 
@@ -403,7 +403,7 @@ class ConfigImportUITest extends WebTestBase {
 
     // Attempt to import configuration and verify that an error message appears.
     $this->drupalPostForm(NULL, array(), t('Import all'));
-    $this->assertText(String::format('Deleted and replaced configuration entity "@name"', array('@name' => $name_secondary)));
+    $this->assertText(SafeMarkup::format('Deleted and replaced configuration entity "@name"', array('@name' => $name_secondary)));
     $this->assertText(t('The configuration was imported with errors.'));
     $this->assertNoText(t('The configuration was imported successfully.'));
     $this->assertText(t('There are no configuration changes to import.'));

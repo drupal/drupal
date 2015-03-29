@@ -7,7 +7,7 @@
 
 namespace Drupal\migrate_drupal;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\migrate_drupal\Plugin\CckFieldMigrateSourceInterface;
@@ -125,7 +125,7 @@ class MigrationStorage extends BaseMigrationStorage {
    */
   public function save(EntityInterface $entity) {
     if (strpos($entity->id(), ':') !== FALSE) {
-      throw new EntityStorageException(String::format("Dynamic migration %id can't be saved", array('$%id' => $entity->id())));
+      throw new EntityStorageException(SafeMarkup::format("Dynamic migration %id can't be saved", array('$%id' => $entity->id())));
     }
     return parent::save($entity);
   }

@@ -10,7 +10,7 @@ namespace Drupal\locale\Tests;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Adds a new locale and translates its name. Checks the validation of
@@ -251,13 +251,13 @@ class LocaleTranslationUiTest extends WebTestBase {
 
     $locale_javascripts = \Drupal::state()->get('locale.translation.javascript') ?: array();
     $js_file = 'public://' . $config->get('javascript.directory') . '/' . $langcode . '_' . $locale_javascripts[$langcode] . '.js';
-    $this->assertTrue($result = file_exists($js_file), String::format('JavaScript file created: %file', array('%file' => $result ? $js_file : 'not found')));
+    $this->assertTrue($result = file_exists($js_file), SafeMarkup::format('JavaScript file created: %file', array('%file' => $result ? $js_file : 'not found')));
 
     // Test JavaScript translation rebuilding.
     file_unmanaged_delete($js_file);
-    $this->assertTrue($result = !file_exists($js_file), String::format('JavaScript file deleted: %file', array('%file' => $result ? $js_file : 'found')));
+    $this->assertTrue($result = !file_exists($js_file), SafeMarkup::format('JavaScript file deleted: %file', array('%file' => $result ? $js_file : 'found')));
     _locale_rebuild_js($langcode);
-    $this->assertTrue($result = file_exists($js_file), String::format('JavaScript file rebuilt: %file', array('%file' => $result ? $js_file : 'not found')));
+    $this->assertTrue($result = file_exists($js_file), SafeMarkup::format('JavaScript file rebuilt: %file', array('%file' => $result ? $js_file : 'not found')));
   }
 
   /**

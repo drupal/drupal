@@ -23,7 +23,7 @@ trait AllowedTagsXssTrait {
    *
    * Used for items entered by administrators, like field descriptions, allowed
    * values, where some (mainly inline) mark-up may be desired (so
-   * \Drupal\Component\Utility\String::checkPlain() is not acceptable).
+   * \Drupal\Component\Utility\SafeMarkup::checkPlain() is not acceptable).
    *
    * @param string $string
    *   The string with raw HTML in it.

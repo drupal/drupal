@@ -79,7 +79,7 @@ abstract class FilterFormatFormBase extends EntityForm {
     $form['roles'] = array(
       '#type' => 'checkboxes',
       '#title' => $this->t('Roles'),
-      '#options' => array_map('\Drupal\Component\Utility\String::checkPlain', user_role_names()),
+      '#options' => array_map('\Drupal\Component\Utility\SafeMarkup::checkPlain', user_role_names()),
       '#disabled' => $is_fallback,
       '#weight' => -10,
     );

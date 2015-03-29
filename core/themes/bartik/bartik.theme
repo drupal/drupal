@@ -5,7 +5,7 @@
  * Functions to support theming in the Bartik theme.
  */
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Template\Attribute;
 
@@ -120,7 +120,7 @@ function _bartik_process_page(&$variables) {
   $variables['hide_site_slogan'] = theme_get_setting('features.slogan') ? FALSE : TRUE;
   if ($variables['hide_site_name']) {
     // If toggle_name is FALSE, the site_name will be empty, so we rebuild it.
-    $variables['site_name'] = String::checkPlain($site_config->get('name'));
+    $variables['site_name'] = SafeMarkup::checkPlain($site_config->get('name'));
   }
   if ($variables['hide_site_slogan']) {
     // If toggle_site_slogan is FALSE, the site_slogan will be empty, so we

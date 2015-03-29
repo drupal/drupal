@@ -9,7 +9,7 @@ namespace Drupal\Core\Plugin\Context;
 
 use Drupal\Component\Plugin\Context\Context as ComponentContext;
 use Drupal\Component\Plugin\Exception\ContextException;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\TypedDataTrait;
 
@@ -42,7 +42,7 @@ class Context extends ComponentContext implements ContextInterface {
       $definition = $this->getContextDefinition();
       if ($definition->isRequired()) {
         $type = $definition->getDataType();
-        throw new ContextException(String::format("The @type context is required and not present.", array('@type' => $type)));
+        throw new ContextException(SafeMarkup::format("The @type context is required and not present.", array('@type' => $type)));
       }
       return NULL;
     }

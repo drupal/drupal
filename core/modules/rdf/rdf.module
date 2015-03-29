@@ -6,7 +6,6 @@
  */
 
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\String;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Template\Attribute;
 
@@ -417,7 +416,7 @@ function rdf_preprocess_username(&$variables) {
   // Long usernames are truncated by template_preprocess_username(). Store the
   // full name in the content attribute so it can be extracted in RDFa.
   if ($variables['truncated']) {
-    $variables['attributes']['content'] = String::checkPlain($variables['name_raw']);
+    $variables['attributes']['content'] = SafeMarkup::checkPlain($variables['name_raw']);
   }
 }
 

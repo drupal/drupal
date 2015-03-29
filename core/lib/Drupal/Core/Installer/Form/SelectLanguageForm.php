@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Installer\Form;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\UserAgent;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -70,7 +70,7 @@ class SelectLanguageForm extends FormBase {
     );
     $form['help'] = array(
       '#type' => 'item',
-      '#markup' => String::format('<p>Translations will be downloaded from the <a href="http://localize.drupal.org">Drupal Translation website</a>.
+      '#markup' => SafeMarkup::format('<p>Translations will be downloaded from the <a href="http://localize.drupal.org">Drupal Translation website</a>.
       If you do not want this, select <a href="!english">English</a>.</p>', array(
           '!english' => install_full_redirect_url(array('parameters' => array('langcode' => 'en'))),
         )),

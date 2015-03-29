@@ -7,7 +7,7 @@
 
 namespace Drupal\contact\Tests;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\simpletest\WebTestBase;
 use Drupal\user\RoleInterface;
@@ -93,7 +93,7 @@ class ContactPersonalTest extends WebTestBase {
       '@sender_email' => $this->webUser->getEmail(),
       '@recipient_name' => $this->contactUser->getUsername()
     );
-    $this->assertText(String::format('@sender_name (@sender_email) sent @recipient_name an email.', $placeholders));
+    $this->assertText(SafeMarkup::format('@sender_name (@sender_email) sent @recipient_name an email.', $placeholders));
   }
 
   /**

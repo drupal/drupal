@@ -14,7 +14,7 @@ namespace Drupal\views\Tests;
  */
 use Drupal\views\Plugin\views\filter\Standard;
 use Drupal\views\Views;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 
 class ModuleTest extends ViewUnitTestBase {
 
@@ -258,7 +258,7 @@ class ModuleTest extends ViewUnitTestBase {
       list($plugin_type, $plugin_id) = explode(':', $key);
       $plugin_def = $this->container->get("plugin.manager.views.$plugin_type")->getDefinition($plugin_id);
 
-      $this->assertTrue(isset($plugin_list[$key]), String::format('The expected @key plugin list key was found.', array('@key' => $key)));
+      $this->assertTrue(isset($plugin_list[$key]), SafeMarkup::format('The expected @key plugin list key was found.', array('@key' => $key)));
       $plugin_details = $plugin_list[$key];
 
       $this->assertEqual($plugin_details['type'], $plugin_type, 'The expected plugin type was found.');

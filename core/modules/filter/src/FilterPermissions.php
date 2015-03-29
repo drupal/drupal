@@ -7,7 +7,7 @@
 
 namespace Drupal\filter;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -60,7 +60,7 @@ class FilterPermissions implements ContainerInjectionInterface {
       if ($permission = $format->getPermissionName()) {
         $permissions[$permission] = [
           'title' => $this->t('Use the <a href="@url">@label</a> text format', ['@url' => $format->url(), '@label' => $format->label()]),
-          'description' => String::placeholder($this->t('Warning: This permission may have security implications depending on how the text format is configured.')),
+          'description' => SafeMarkup::placeholder($this->t('Warning: This permission may have security implications depending on how the text format is configured.')),
         ];
       }
     }

@@ -33,7 +33,7 @@ class UserRole extends ConditionPluginBase {
       '#type' => 'checkboxes',
       '#title' => $this->t('When the user has the following roles'),
       '#default_value' => $this->configuration['roles'],
-      '#options' => array_map('\Drupal\Component\Utility\String::checkPlain', user_role_names()),
+      '#options' => array_map('\Drupal\Component\Utility\SafeMarkup::checkPlain', user_role_names()),
       '#description' => $this->t('If you select no roles, the condition will evaluate to TRUE for all users.'),
     );
     return parent::buildConfigurationForm($form, $form_state);

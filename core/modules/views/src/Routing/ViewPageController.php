@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Routing;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -74,7 +74,7 @@ class ViewPageController implements ContainerInjectionInterface {
   public function handle($view_id, $display_id, Request $request, RouteMatchInterface $route_match) {
     $entity = $this->storage->load($view_id);
     if (empty($entity)) {
-      throw new NotFoundHttpException(String::format('Page controller for view %id requested, but view was not found.', array('%id' => $view_id)));
+      throw new NotFoundHttpException(SafeMarkup::format('Page controller for view %id requested, but view was not found.', array('%id' => $view_id)));
     }
     $view = $this->executableFactory->get($entity);
     $view->setRequest($request);

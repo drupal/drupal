@@ -7,7 +7,7 @@
 
 namespace Drupal\views_ui\Tests;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -148,7 +148,7 @@ class HandlerTest extends UITestBase {
       $href = "admin/structure/views/nojs/handler/test_view_broken/default/$type/id_broken";
 
       $result = $this->xpath('//a[contains(@href, :href)]', array(':href' => $href));
-      $this->assertEqual(count($result), 1, String::format('Handler (%type) edit link found.', array('%type' => $type)));
+      $this->assertEqual(count($result), 1, SafeMarkup::format('Handler (%type) edit link found.', array('%type' => $type)));
 
       $text = t('Broken/missing handler');
 
@@ -167,7 +167,7 @@ class HandlerTest extends UITestBase {
       ];
 
       foreach ($original_configuration as $key => $value) {
-        $this->assertText(String::format('@key: @value', array('@key' => $key, '@value' => $value)));
+        $this->assertText(SafeMarkup::format('@key: @value', array('@key' => $key, '@value' => $value)));
       }
     }
   }

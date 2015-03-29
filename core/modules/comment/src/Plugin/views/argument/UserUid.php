@@ -7,7 +7,7 @@
 
 namespace Drupal\comment\Plugin\views\argument;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Database\Connection;
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -65,7 +65,7 @@ class UserUid extends ArgumentPluginBase {
       return $this->t('No user');
     }
 
-    return String::checkPlain($title);
+    return SafeMarkup::checkPlain($title);
   }
 
   protected function defaultActions($which = NULL) {

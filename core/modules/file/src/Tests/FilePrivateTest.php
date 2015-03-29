@@ -8,7 +8,7 @@
 namespace Drupal\file\Tests;
 
 use Drupal\Core\Entity\Plugin\Validation\Constraint\ReferenceAccessConstraint;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\file\Entity\File;
 use Drupal\node\Entity\NodeType;
 
@@ -83,7 +83,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $this->assertUrl('node/' . $new_node->id() .'/edit');
     // Check that we got the expected constraint form error.
     $constraint = new ReferenceAccessConstraint();
-    $this->assertRaw(String::format($constraint->message, array('%type' => 'file', '%id' => $node_file->id())));
+    $this->assertRaw(SafeMarkup::format($constraint->message, array('%type' => 'file', '%id' => $node_file->id())));
     // Attempt to reuse the existing file when creating a new node, and confirm
     // that access is still denied.
     $edit = array();
@@ -93,6 +93,6 @@ class FilePrivateTest extends FileFieldTestBase {
     $new_node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->assertTrue(empty($new_node), 'Node was not created.');
     $this->assertUrl('node/add/' . $type_name);
-    $this->assertRaw(String::format($constraint->message, array('%type' => 'file', '%id' => $node_file->id())));
+    $this->assertRaw(SafeMarkup::format($constraint->message, array('%type' => 'file', '%id' => $node_file->id())));
   }
 }

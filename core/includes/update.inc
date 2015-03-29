@@ -9,7 +9,7 @@
  */
 
 use Drupal\Component\Graph\Graph;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Utility\Error;
 
@@ -189,7 +189,7 @@ function update_do_one($module, $number, $dependency_map, &$context) {
       $variables = Error::decodeException($e);
       unset($variables['backtrace']);
       // The exception message is run through
-      // \Drupal\Component\Utility\String::checkPlain() by
+      // \Drupal\Component\Utility\SafeMarkup::checkPlain() by
       // \Drupal\Core\Utility\Error::decodeException().
       $ret['#abort'] = array('success' => FALSE, 'query' => t('%type: !message in %function (line %line of %file).', $variables));
     }
@@ -218,7 +218,7 @@ function update_do_one($module, $number, $dependency_map, &$context) {
     drupal_set_installed_schema_version($module, $number);
   }
 
-  $context['message'] = 'Updating ' . String::checkPlain($module) . ' module';
+  $context['message'] = 'Updating ' . SafeMarkup::checkPlain($module) . ' module';
 }
 
 /**
@@ -240,7 +240,7 @@ function update_entity_definitions($module, $number, &$context) {
     $variables = Error::decodeException($e);
     unset($variables['backtrace']);
     // The exception message is run through
-    // \Drupal\Component\Utility\String::checkPlain() by
+    // \Drupal\Component\Utility\SafeMarkup::checkPlain() by
     // \Drupal\Core\Utility\Error::decodeException().
     $ret['#abort'] = array('success' => FALSE, 'query' => t('%type: !message in %function (line %line of %file).', $variables));
     $context['results'][$module][$number] = $ret;

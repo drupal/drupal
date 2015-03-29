@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\Theme;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Site\Settings;
 use Drupal\simpletest\KernelTestBase;
 
@@ -42,7 +42,7 @@ class TwigEnvironmentTest extends KernelTestBase {
       '#template' => 'test-with-context {{ unsafe_content }}',
       '#context' => array('unsafe_content' => $unsafe_string),
     );
-    $this->assertEqual(drupal_render($element), 'test-with-context ' . String::checkPlain($unsafe_string));
+    $this->assertEqual(drupal_render($element), 'test-with-context ' . SafeMarkup::checkPlain($unsafe_string));
 
     // Enable twig_auto_reload and twig_debug.
     $settings = Settings::getAll();

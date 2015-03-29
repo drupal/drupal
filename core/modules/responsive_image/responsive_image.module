@@ -13,7 +13,6 @@ use Drupal\image\Entity\ImageStyle;
 use Drupal\Core\Url;
 use Drupal\responsive_image\Entity\ResponsiveImageStyle;
 use Drupal\Core\Image\ImageInterface;
-use Drupal\Component\Utility\String;
 use Drupal\breakpoint\BreakpointInterface;
 
 /**
@@ -374,7 +373,7 @@ function responsive_image_build_source_attributes(ImageInterface $image, array $
           // this breakpoint should be merged into one srcset and the sizes
           // attribute should be merged as well.
           if (is_null($dimensions['width'])) {
-            throw new \LogicException(String::format('Could not determine image width for @file using image style with ID: @image_style_name. This image style can not be used for a responsive image style mapping using the \'sizes\' attribute.', array('@file' => $image->getSource(), '@image_style_name' => $image_style_name)));
+            throw new \LogicException(SafeMarkup::format('Could not determine image width for @file using image style with ID: @image_style_name. This image style can not be used for a responsive image style mapping using the \'sizes\' attribute.', array('@file' => $image->getSource(), '@image_style_name' => $image_style_name)));
           }
           // Use the image width as key so we can sort the array later on.
           // Images within a srcset should be sorted from small to large, since

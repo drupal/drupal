@@ -7,7 +7,7 @@
 
 namespace Drupal\shortcut\Tests;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Url;
 use Drupal\shortcut\Entity\Shortcut;
 use Drupal\shortcut\Entity\ShortcutSet;
@@ -69,10 +69,10 @@ class ShortcutLinksTest extends ShortcutTestBase {
       $this->assertTrue(in_array('internal:' . $test_path, $paths), 'Shortcut created: ' . $test_path);
 
       if (in_array($test_path, $test_cases_non_access)) {
-        $this->assertNoLink($title, String::format('Shortcut link %url not accessible on the page.', ['%url' => $test_path]));
+        $this->assertNoLink($title, SafeMarkup::format('Shortcut link %url not accessible on the page.', ['%url' => $test_path]));
       }
       else {
-        $this->assertLink($title, 0, String::format('Shortcut link %url found on the page.', ['%url' => $test_path]));
+        $this->assertLink($title, 0, SafeMarkup::format('Shortcut link %url found on the page.', ['%url' => $test_path]));
       }
     }
     $saved_set = ShortcutSet::load($set->id());

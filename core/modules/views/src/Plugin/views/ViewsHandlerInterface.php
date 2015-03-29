@@ -72,7 +72,7 @@ interface ViewsHandlerInterface extends ViewsPluginInterface {
    * @param $value
    *   The value being rendered.
    * @param $type
-   *   The type of sanitization needed. If not provided, String::checkPlain() is used.
+   *   The type of sanitization needed. If not provided, SafeMarkup::checkPlain() is used.
    *
    * @return string
    *   Returns the safe value.

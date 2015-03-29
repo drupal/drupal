@@ -8,7 +8,7 @@
 namespace Drupal\field\Tests\Boolean;
 
 use Drupal\Component\Utility\Unicode;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\field\Entity\FieldConfig;
@@ -125,7 +125,7 @@ class BooleanFormatterSettingsTest extends WebTestBase {
       foreach ($options as $string) {
         $this->assertText($string);
       }
-      $this->assertText(String::format($default, array('@on' => $values[0], '@off' => $values[1])));
+      $this->assertText(SafeMarkup::format($default, array('@on' => $values[0], '@off' => $values[1])));
     }
   }
 

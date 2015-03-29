@@ -15,7 +15,7 @@ use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
@@ -492,7 +492,7 @@ class ViewEditForm extends ViewFormBase {
       $build['top']['display_title'] = array(
         '#theme' => 'views_ui_display_tab_setting',
         '#description' => $this->t('Display name'),
-        '#link' => $view->getExecutable()->displayHandlers->get($display['id'])->optionLink(String::checkPlain($display_title), 'display_title'),
+        '#link' => $view->getExecutable()->displayHandlers->get($display['id'])->optionLink(SafeMarkup::checkPlain($display_title), 'display_title'),
       );
     }
 
@@ -1060,7 +1060,7 @@ class ViewEditForm extends ViewFormBase {
         continue;
       }
 
-      $field_name = String::checkPlain($handler->adminLabel(TRUE));
+      $field_name = SafeMarkup::checkPlain($handler->adminLabel(TRUE));
       if (!empty($field['relationship']) && !empty($relationships[$field['relationship']])) {
         $field_name = '(' . $relationships[$field['relationship']] . ') ' . $field_name;
       }
@@ -1083,7 +1083,7 @@ class ViewEditForm extends ViewFormBase {
       $build['fields'][$id]['#class'][] = Html::cleanCssIdentifier($display['id']. '-' . $type . '-' . $id);
 
       if ($executable->display_handler->useGroupBy() && $handler->usesGroupBy()) {
-        $build['fields'][$id]['#settings_links'][] = $this->l(String::format('<span class="label">@text</span>', array('@text' => $this->t('Aggregation settings'))), new Url('views_ui.form_handler_group', array(
+        $build['fields'][$id]['#settings_links'][] = $this->l(SafeMarkup::format('<span class="label">@text</span>', array('@text' => $this->t('Aggregation settings'))), new Url('views_ui.form_handler_group', array(
           'js' => 'nojs',
           'view' => $view->id(),
           'display_id' => $display['id'],
@@ -1093,7 +1093,7 @@ class ViewEditForm extends ViewFormBase {
       }
 
       if ($handler->hasExtraOptions()) {
-        $build['fields'][$id]['#settings_links'][] = $this->l(String::format('<span class="label">@text</span>', array('@text' => $this->t('Settings'))), new Url('views_ui.form_handler_extra', array(
+        $build['fields'][$id]['#settings_links'][] = $this->l(SafeMarkup::format('<span class="label">@text</span>', array('@text' => $this->t('Settings'))), new Url('views_ui.form_handler_extra', array(
           'js' => 'nojs',
           'view' => $view->id(),
           'display_id' => $display['id'],

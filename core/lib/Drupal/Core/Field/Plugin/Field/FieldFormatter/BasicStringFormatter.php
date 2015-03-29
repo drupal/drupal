@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
 
@@ -37,7 +37,7 @@ class BasicStringFormatter extends FormatterBase {
     foreach ($items as $delta => $item) {
       // The text value has no text format assigned to it, so the user input
       // should equal the output, including newlines.
-      $elements[$delta] = array('#markup' => nl2br(String::checkPlain($item->value)));
+      $elements[$delta] = array('#markup' => nl2br(SafeMarkup::checkPlain($item->value)));
     }
 
     return $elements;

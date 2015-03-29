@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\Common;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\simpletest\KernelTestBase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -38,7 +38,7 @@ class TableSortExtenderUnitTest extends KernelTestBase {
     $request->query->replace(array());
     \Drupal::getContainer()->get('request_stack')->push($request);
     $ts = tablesort_init($headers);
-    $this->verbose(strtr('$ts: <pre>!ts</pre>', array('!ts' => String::checkPlain(var_export($ts, TRUE)))));
+    $this->verbose(strtr('$ts: <pre>!ts</pre>', array('!ts' => SafeMarkup::checkPlain(var_export($ts, TRUE)))));
     $this->assertEqual($ts, $expected_ts, 'Simple table headers sorted correctly.');
 
     // Test with simple table headers plus $_GET parameters that should _not_
@@ -51,7 +51,7 @@ class TableSortExtenderUnitTest extends KernelTestBase {
     ));
     \Drupal::getContainer()->get('request_stack')->push($request);
     $ts = tablesort_init($headers);
-    $this->verbose(strtr('$ts: <pre>!ts</pre>', array('!ts' => String::checkPlain(var_export($ts, TRUE)))));
+    $this->verbose(strtr('$ts: <pre>!ts</pre>', array('!ts' => SafeMarkup::checkPlain(var_export($ts, TRUE)))));
     $this->assertEqual($ts, $expected_ts, 'Simple table headers plus non-overriding $_GET parameters sorted correctly.');
 
     // Test with simple table headers plus $_GET parameters that _should_
@@ -67,7 +67,7 @@ class TableSortExtenderUnitTest extends KernelTestBase {
     $expected_ts['sort'] = 'desc';
     $expected_ts['query'] = array('alpha' => 'beta');
     $ts = tablesort_init($headers);
-    $this->verbose(strtr('$ts: <pre>!ts</pre>', array('!ts' => String::checkPlain(var_export($ts, TRUE)))));
+    $this->verbose(strtr('$ts: <pre>!ts</pre>', array('!ts' => SafeMarkup::checkPlain(var_export($ts, TRUE)))));
     $this->assertEqual($ts, $expected_ts, 'Simple table headers plus $_GET parameters sorted correctly.');
 
     // Test complex table headers.
@@ -99,7 +99,7 @@ class TableSortExtenderUnitTest extends KernelTestBase {
       'sort' => 'desc',
       'query' => array(),
     );
-    $this->verbose(strtr('$ts: <pre>!ts</pre>', array('!ts' => String::checkPlain(var_export($ts, TRUE)))));
+    $this->verbose(strtr('$ts: <pre>!ts</pre>', array('!ts' => SafeMarkup::checkPlain(var_export($ts, TRUE)))));
     $this->assertEqual($ts, $expected_ts, 'Complex table headers sorted correctly.');
 
     // Test complex table headers plus $_GET parameters that should _not_
@@ -118,7 +118,7 @@ class TableSortExtenderUnitTest extends KernelTestBase {
       'sort' => 'asc',
       'query' => array(),
     );
-    $this->verbose(strtr('$ts: <pre>!ts</pre>', array('!ts' => String::checkPlain(var_export($ts, TRUE)))));
+    $this->verbose(strtr('$ts: <pre>!ts</pre>', array('!ts' => SafeMarkup::checkPlain(var_export($ts, TRUE)))));
     $this->assertEqual($ts, $expected_ts, 'Complex table headers plus non-overriding $_GET parameters sorted correctly.');
 
     // Test complex table headers plus $_GET parameters that _should_
@@ -139,7 +139,7 @@ class TableSortExtenderUnitTest extends KernelTestBase {
       'query' => array('alpha' => 'beta'),
     );
     $ts = tablesort_init($headers);
-    $this->verbose(strtr('$ts: <pre>!ts</pre>', array('!ts' => String::checkPlain(var_export($ts, TRUE)))));
+    $this->verbose(strtr('$ts: <pre>!ts</pre>', array('!ts' => SafeMarkup::checkPlain(var_export($ts, TRUE)))));
     $this->assertEqual($ts, $expected_ts, 'Complex table headers plus $_GET parameters sorted correctly.');
   }
 }

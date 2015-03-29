@@ -7,7 +7,7 @@
 
 namespace Drupal\language\Form;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -106,7 +106,7 @@ abstract class LanguageFormBase extends EntityForm {
         '@url' => 'http://www.w3.org/International/articles/language-tags/',
       )));
     }
-    if ($form_state->getValue('label') != String::checkPlain($form_state->getValue('label'))) {
+    if ($form_state->getValue('label') != SafeMarkup::checkPlain($form_state->getValue('label'))) {
       $form_state->setErrorByName('label', $this->t('%field cannot contain any markup.', array('%field' => $form['label']['#title'])));
     }
   }

@@ -8,7 +8,6 @@
 namespace Drupal\Core\Database\Install;
 
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\String;
 use Drupal\Core\Database\Database;
 
 /**
@@ -152,7 +151,7 @@ abstract class Tasks {
     $message = '';
     foreach ($this->results as $result => $success) {
       if (!$success) {
-        $message = SafeMarkup::isSafe($result) ? $result : String::checkPlain($result);
+        $message = SafeMarkup::isSafe($result) ? $result : SafeMarkup::checkPlain($result);
       }
     }
     if (!empty($message)) {

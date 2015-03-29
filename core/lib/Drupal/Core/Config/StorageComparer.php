@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Config;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\Entity\ConfigDependencyManager;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 
@@ -189,7 +189,7 @@ class StorageComparer implements StorageComparerInterface {
       // ensure the array is keyed from 0.
       $this->changelist[$collection][$op] = array_values(array_intersect($sort_order, $this->changelist[$collection][$op]));
       if ($count != count($this->changelist[$collection][$op])) {
-        throw new \InvalidArgumentException(String::format('Sorting the @op changelist should not change its length.', array('@op' => $op)));
+        throw new \InvalidArgumentException(SafeMarkup::format('Sorting the @op changelist should not change its length.', array('@op' => $op)));
       }
     }
   }

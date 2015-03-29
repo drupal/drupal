@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Config;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\Schema\Ignore;
 use Drupal\Core\TypedData\PrimitiveInterface;
 use Drupal\Core\TypedData\Type\FloatInterface;
@@ -156,7 +156,7 @@ abstract class StorableConfigBase extends ConfigBase {
       }
     }
     elseif ($value !== NULL && !is_scalar($value)) {
-      throw new UnsupportedDataTypeConfigException(String::format('Invalid data type for config element @name:@key', array(
+      throw new UnsupportedDataTypeConfigException(SafeMarkup::format('Invalid data type for config element @name:@key', array(
         '@name' => $this->getName(),
         '@key' => $key,
       )));
@@ -206,7 +206,7 @@ abstract class StorableConfigBase extends ConfigBase {
     else {
       // Throw exception on any non-scalar or non-array value.
       if (!is_array($value)) {
-        throw new UnsupportedDataTypeConfigException(String::format('Invalid data type for config element @name:@key', array(
+        throw new UnsupportedDataTypeConfigException(SafeMarkup::format('Invalid data type for config element @name:@key', array(
           '@name' => $this->getName(),
           '@key' => $key,
         )));

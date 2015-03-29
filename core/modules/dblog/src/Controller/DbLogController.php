@@ -9,7 +9,6 @@ namespace Drupal\dblog\Controller;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
@@ -273,7 +272,7 @@ class DbLogController extends ControllerBase {
         ),
         array(
           array('data' => $this->t('Hostname'), 'header' => TRUE),
-          String::checkPlain($dblog->hostname),
+          SafeMarkup::checkPlain($dblog->hostname),
         ),
         array(
           array('data' => $this->t('Operations'), 'header' => TRUE),

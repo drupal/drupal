@@ -10,7 +10,7 @@ use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -446,7 +446,7 @@ function template_preprocess_forums(&$variables) {
         // them is a shadow copy.
         if ($variables['tid'] != $topic->forum_tid) {
           $variables['topics'][$id]->moved = TRUE;
-          $variables['topics'][$id]->title = String::checkPlain($topic->getTitle());
+          $variables['topics'][$id]->title = SafeMarkup::checkPlain($topic->getTitle());
           $variables['topics'][$id]->message = \Drupal::l(t('This topic has been moved'), new Url('forum.page', ['taxonomy_term' => $topic->forum_tid]));
         }
         else {
@@ -541,7 +541,7 @@ function template_preprocess_forum_list(&$variables) {
   foreach ($variables['forums'] as $id => $forum) {
     $variables['forums'][$id]->description = Xss::filterAdmin($forum->description->value);
     $variables['forums'][$id]->link = forum_uri($forum);
-    $variables['forums'][$id]->name = String::checkPlain($forum->label());
+    $variables['forums'][$id]->name = SafeMarkup::checkPlain($forum->label());
     $variables['forums'][$id]->is_container = !empty($forum->forum_container->value);
     $variables['forums'][$id]->zebra = $row % 2 == 0 ? 'odd' : 'even';
     $row++;

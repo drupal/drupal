@@ -11,6 +11,7 @@ use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -1023,7 +1024,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     }
 
     if (!empty($class)) {
-      $text = String::format('<span>@text</span>', array('@text' => $text));
+      $text = SafeMarkup::format('<span>@text</span>', array('@text' => $text));
     }
 
     if (empty($title)) {
@@ -1061,7 +1062,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       }
        // Use strip tags as there should never be HTML in the path.
        // However, we need to preserve special characters like " that
-       // were removed by String::checkPlain().
+       // were removed by SafeMarkup::checkPlain().
       $tokens["!$count"] = isset($this->view->args[$count - 1]) ? strip_tags(String::decodeEntities($this->view->args[$count - 1])) : '';
     }
 
@@ -1393,7 +1394,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     if ($this->defaultableSections($section)) {
       views_ui_standard_display_dropdown($form, $form_state, $section);
     }
-    $form['#title'] = String::checkPlain($this->display['display_title']) . ': ';
+    $form['#title'] = SafeMarkup::checkPlain($this->display['display_title']) . ': ';
 
     // Set the 'section' to hilite on the form.
     // If it's the item we're looking at is pulling from the default display,
@@ -2105,7 +2106,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         return array(
           '#theme' => $theme,
           '#more_url' => $url->toString(),
-          '#link_text' => String::checkPlain($this->useMoreText()),
+          '#link_text' => SafeMarkup::checkPlain($this->useMoreText()),
           '#view' => $this->view,
         );
       }

@@ -9,7 +9,7 @@ namespace Drupal\Core\Diff;
 
 use Drupal\Component\Diff\DiffFormatter as DiffFormatterBase;
 use Drupal\Component\Diff\WordLevelDiff;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\ConfigFactoryInterface;
 
 /**
@@ -172,7 +172,7 @@ class DiffFormatter extends DiffFormatterBase {
    */
   protected function _added($lines) {
     foreach ($lines as $line) {
-      $this->rows[] = array_merge($this->emptyLine(), $this->addedLine(String::checkPlain($line)));
+      $this->rows[] = array_merge($this->emptyLine(), $this->addedLine(SafeMarkup::checkPlain($line)));
     }
   }
 
@@ -181,7 +181,7 @@ class DiffFormatter extends DiffFormatterBase {
    */
   protected function _deleted($lines) {
     foreach ($lines as $line) {
-      $this->rows[] = array_merge($this->deletedLine(String::checkPlain($line)), $this->emptyLine());
+      $this->rows[] = array_merge($this->deletedLine(SafeMarkup::checkPlain($line)), $this->emptyLine());
     }
   }
 
@@ -190,7 +190,7 @@ class DiffFormatter extends DiffFormatterBase {
    */
   protected function _context($lines) {
     foreach ($lines as $line) {
-      $this->rows[] = array_merge($this->contextLine(String::checkPlain($line)), $this->contextLine(String::checkPlain($line)));
+      $this->rows[] = array_merge($this->contextLine(SafeMarkup::checkPlain($line)), $this->contextLine(SafeMarkup::checkPlain($line)));
     }
   }
 

@@ -7,7 +7,7 @@
 
 namespace Drupal\common_test\Controller;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -90,7 +90,7 @@ class CommonTestController {
    */
   public function destination() {
     $destination = drupal_get_destination();
-    $output = "The destination: " . String::checkPlain($destination['destination']);
+    $output = "The destination: " . SafeMarkup::checkPlain($destination['destination']);
 
     return new Response($output);
   }

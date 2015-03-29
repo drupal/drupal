@@ -9,7 +9,7 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\Entity\Exception\ConfigEntityIdLengthException;
 use Drupal\Core\Entity\Exception\UndefinedLinkTemplateException;
@@ -186,7 +186,7 @@ abstract class Entity implements EntityInterface {
         $uri = call_user_func($uri_callback, $this);
       }
       else {
-        throw new UndefinedLinkTemplateException(String::format('No link template "@rel" found for the "@entity_type" entity type', array(
+        throw new UndefinedLinkTemplateException(SafeMarkup::format('No link template "@rel" found for the "@entity_type" entity type', array(
           '@rel' => $rel,
           '@entity_type' => $this->getEntityTypeId(),
         )));
@@ -371,7 +371,7 @@ abstract class Entity implements EntityInterface {
     if ($this->getEntityType()->getBundleOf()) {
       // Throw an exception if the bundle ID is longer than 32 characters.
       if (Unicode::strlen($this->id()) > EntityTypeInterface::BUNDLE_MAX_LENGTH) {
-        throw new ConfigEntityIdLengthException(String::format(
+        throw new ConfigEntityIdLengthException(SafeMarkup::format(
           'Attempt to create a bundle with an ID longer than @max characters: @id.', array(
             '@max' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
             '@id' => $this->id(),

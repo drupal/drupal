@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Entity\KeyValueStore;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Config\Entity\Exception\ConfigEntityIdLengthException;
 use Drupal\Core\Entity\FieldableEntityInterface;
@@ -167,7 +167,7 @@ class KeyValueEntityStorage extends EntityStorageBase {
     // @todo This is not config-specific, but serial IDs will likely never hit
     //   this limit. Consider renaming the exception class.
     if (strlen($entity->id()) > static::MAX_ID_LENGTH) {
-      throw new ConfigEntityIdLengthException(String::format('Entity ID @id exceeds maximum allowed length of @length characters.', array(
+      throw new ConfigEntityIdLengthException(SafeMarkup::format('Entity ID @id exceeds maximum allowed length of @length characters.', array(
         '@id' => $entity->id(),
         '@length' => static::MAX_ID_LENGTH,
       )));

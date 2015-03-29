@@ -7,7 +7,7 @@
 
 namespace Drupal\node\Controller;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Controller\EntityViewController;
 
@@ -60,7 +60,7 @@ class NodeViewController extends EntityViewController {
    *   The page title.
    */
   public function title(EntityInterface $node) {
-    return String::checkPlain($this->entityManager->getTranslationFromContext($node)->label());
+    return SafeMarkup::checkPlain($this->entityManager->getTranslationFromContext($node)->label());
   }
 
 }

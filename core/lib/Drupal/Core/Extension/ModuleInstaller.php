@@ -13,7 +13,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\PreExistingConfigException;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\DrupalKernelInterface;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Default implementation of the module installer.
@@ -88,7 +88,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       $module_list = $module_list ? array_combine($module_list, $module_list) : array();
       if ($missing_modules = array_diff_key($module_list, $module_data)) {
         // One or more of the given modules doesn't exist.
-        throw new MissingDependencyException(String::format('Unable to install modules %modules due to missing modules %missing.', array(
+        throw new MissingDependencyException(SafeMarkup::format('Unable to install modules %modules due to missing modules %missing.', array(
           '%modules' => implode(', ', $module_list),
           '%missing' => implode(', ', $missing_modules),
         )));
@@ -107,7 +107,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
         foreach (array_keys($module_data[$module]->requires) as $dependency) {
           if (!isset($module_data[$dependency])) {
             // The dependency does not exist.
-            throw new MissingDependencyException(String::format('Unable to install modules: module %module is missing its dependency module %dependency.', array(
+            throw new MissingDependencyException(SafeMarkup::format('Unable to install modules: module %module is missing its dependency module %dependency.', array(
               '%module' => $module,
               '%dependency' => $dependency,
             )));

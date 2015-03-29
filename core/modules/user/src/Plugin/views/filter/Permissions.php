@@ -7,7 +7,7 @@
 
 namespace Drupal\user\Plugin\views\filter;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\user\PermissionHandlerInterface;
 use Drupal\views\Plugin\views\filter\ManyToOne;
@@ -67,7 +67,7 @@ class Permissions extends ManyToOne {
       foreach ($permissions as $perm => $perm_item) {
         $provider = $perm_item['provider'];
         $display_name = $module_info[$provider]['name'];
-        $this->valueOptions[$display_name][$perm] = String::checkPlain(strip_tags($perm_item['title']));
+        $this->valueOptions[$display_name][$perm] = SafeMarkup::checkPlain(strip_tags($perm_item['title']));
       }
     }
     else {

@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Extension\Extension;
@@ -473,7 +474,7 @@ function template_preprocess_filter_tips(&$variables) {
 
     $variables['tips'][$name] = array(
       'attributes' => new Attribute(),
-      'name' => String::checkPlain($name),
+      'name' => SafeMarkup::checkPlain($name),
       'list' => $tiplist,
     );
   }
@@ -652,8 +653,8 @@ function _filter_url_parse_full_links($match) {
   $i = 1;
 
   $match[$i] = String::decodeEntities($match[$i]);
-  $caption = String::checkPlain(_filter_url_trim($match[$i]));
-  $match[$i] = String::checkPlain($match[$i]);
+  $caption = SafeMarkup::checkPlain(_filter_url_trim($match[$i]));
+  $match[$i] = SafeMarkup::checkPlain($match[$i]);
   return '<a href="' . $match[$i] . '">' . $caption . '</a>';
 }
 
@@ -667,8 +668,8 @@ function _filter_url_parse_email_links($match) {
   $i = 0;
 
   $match[$i] = String::decodeEntities($match[$i]);
-  $caption = String::checkPlain(_filter_url_trim($match[$i]));
-  $match[$i] = String::checkPlain($match[$i]);
+  $caption = SafeMarkup::checkPlain(_filter_url_trim($match[$i]));
+  $match[$i] = SafeMarkup::checkPlain($match[$i]);
   return '<a href="mailto:' . $match[$i] . '">' . $caption . '</a>';
 }
 
@@ -682,8 +683,8 @@ function _filter_url_parse_partial_links($match) {
   $i = 1;
 
   $match[$i] = String::decodeEntities($match[$i]);
-  $caption = String::checkPlain(_filter_url_trim($match[$i]));
-  $match[$i] = String::checkPlain($match[$i]);
+  $caption = SafeMarkup::checkPlain(_filter_url_trim($match[$i]));
+  $match[$i] = SafeMarkup::checkPlain($match[$i]);
   return '<a href="http://' . $match[$i] . '">' . $caption . '</a>';
 }
 
@@ -814,7 +815,7 @@ function _filter_autop($text) {
  * Escapes all HTML tags, so they will be visible instead of being effective.
  */
 function _filter_html_escape($text) {
-  return trim(String::checkPlain($text));
+  return trim(SafeMarkup::checkPlain($text));
 }
 
 /**

@@ -7,7 +7,7 @@
 
 namespace Drupal\basic_auth\Tests\Authentication;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
@@ -54,7 +54,7 @@ class BasicAuthTest extends WebTestBase {
     // @todo Change ->drupalGet() calls to just pass $url when
     //   https://www.drupal.org/node/2350837 gets committed
     $this->drupalGet($url->setAbsolute()->toString());
-    $this->assertEqual($this->drupalGetHeader('WWW-Authenticate'), String::format('Basic realm="@realm"', ['@realm' => \Drupal::config('system.site')->get('name')]));
+    $this->assertEqual($this->drupalGetHeader('WWW-Authenticate'), SafeMarkup::format('Basic realm="@realm"', ['@realm' => \Drupal::config('system.site')->get('name')]));
     $this->assertResponse('401', 'Not authenticated on the route that allows only basic_auth. Prompt to authenticate received.');
 
     $this->drupalGet('admin');

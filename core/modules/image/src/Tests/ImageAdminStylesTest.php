@@ -7,7 +7,7 @@
 
 namespace Drupal\image\Tests;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\image\ImageStyleInterface;
 use Drupal\node\Entity\Node;
 
@@ -148,7 +148,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       $uuids[$effect->getPluginId()] = $uuid;
       $effect_configuration = $effect->getConfiguration();
       foreach ($effect_edits[$effect->getPluginId()] as $field => $value) {
-        $this->assertEqual($value, $effect_configuration['data'][$field], String::format('The %field field in the %effect effect has the correct value of %value.', array('%field' => $field, '%effect' => $effect->getPluginId(), '%value' => $value)));
+        $this->assertEqual($value, $effect_configuration['data'][$field], SafeMarkup::format('The %field field in the %effect effect has the correct value of %value.', array('%field' => $field, '%effect' => $effect->getPluginId(), '%value' => $value)));
       }
     }
 

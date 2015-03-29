@@ -6,7 +6,7 @@
 
 namespace Drupal\Core\Asset;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\State\StateInterface;
 
 /**
@@ -167,7 +167,7 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
                 // control browser-caching. IE7 does not support a media type on
                 // the @import statement, so we instead specify the media for
                 // the group on the STYLE tag.
-                $import[] = '@import url("' . String::checkPlain(file_create_url($next_css_asset['data']) . '?' . $query_string) . '");';
+                $import[] = '@import url("' . SafeMarkup::checkPlain(file_create_url($next_css_asset['data']) . '?' . $query_string) . '");';
                 // Move the outer for loop skip the next item, since we
                 // processed it here.
                 $i = $j;

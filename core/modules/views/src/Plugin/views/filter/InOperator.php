@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\filter;
 
-use Drupal\Component\Utility\String as UtilityString;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -335,7 +335,7 @@ class InOperator extends FilterPluginBase {
       return;
     }
 
-    $operator = UtilityString::checkPlain($info[$this->operator]['short']);
+    $operator = SafeMarkup::checkPlain($info[$this->operator]['short']);
     $values = '';
     if (in_array($this->operator, $this->operatorValues(1))) {
       // Remove every element which is not known.
@@ -351,13 +351,13 @@ class InOperator extends FilterPluginBase {
       else if (count($this->value) == 1) {
         // If any, use the 'single' short name of the operator instead.
         if (isset($info[$this->operator]['short_single'])) {
-          $operator = UtilityString::checkPlain($info[$this->operator]['short_single']);
+          $operator = SafeMarkup::checkPlain($info[$this->operator]['short_single']);
         }
 
         $keys = $this->value;
         $value = array_shift($keys);
         if (isset($this->valueOptions[$value])) {
-          $values = UtilityString::checkPlain($this->valueOptions[$value]);
+          $values = SafeMarkup::checkPlain($this->valueOptions[$value]);
         }
         else {
           $values = '';
@@ -373,7 +373,7 @@ class InOperator extends FilterPluginBase {
             break;
           }
           if (isset($this->valueOptions[$value])) {
-            $values .= UtilityString::checkPlain($this->valueOptions[$value]);
+            $values .= SafeMarkup::checkPlain($this->valueOptions[$value]);
           }
         }
       }

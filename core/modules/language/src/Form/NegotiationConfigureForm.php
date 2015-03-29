@@ -8,7 +8,7 @@
 namespace Drupal\language\Form;
 
 use Drupal\Core\Block\BlockManagerInterface;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -277,7 +277,7 @@ class NegotiationConfigureForm extends ConfigFormBase {
 
       if (isset($types[$type])) {
         $table_form['#language_negotiation_info'][$method_id] = $method;
-        $method_name = String::checkPlain($method['name']);
+        $method_name = SafeMarkup::checkPlain($method['name']);
 
         $table_form['weight'][$method_id] = array(
           '#type' => 'weight',

@@ -8,7 +8,7 @@
 namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -79,7 +79,7 @@ class Fast404ExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
     if ($config->get('fast_404.enabled') && $exclude_paths && !preg_match($exclude_paths, $request->getPathInfo())) {
       $fast_paths = $config->get('fast_404.paths');
       if ($fast_paths && preg_match($fast_paths, $request->getPathInfo())) {
-        $fast_404_html = strtr($config->get('fast_404.html'), ['@path' => String::checkPlain($request->getUri())]);
+        $fast_404_html = strtr($config->get('fast_404.html'), ['@path' => SafeMarkup::checkPlain($request->getUri())]);
         $response = new Response($fast_404_html, Response::HTTP_NOT_FOUND);
         $event->setResponse($response);
       }

@@ -9,7 +9,7 @@ namespace Drupal\editor\Tests;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\simpletest\WebTestBase;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Tests XSS protection for content creators when using text editors.
@@ -388,7 +388,7 @@ class EditorSecurityTest extends WebTestBase {
     // Log in as the privileged user, and for every sample, do the following:
     //  - switch to every other text format/editor
     //  - assert the XSS-filtered values that we get from the server
-    $value_original_attribute = String::checkPlain(self::$sampleContent);
+    $value_original_attribute = SafeMarkup::checkPlain(self::$sampleContent);
     $this->drupalLogin($this->privilegedUser);
     foreach ($expected as $case) {
       $this->drupalGet('node/' . $case['node_id'] . '/edit');

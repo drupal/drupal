@@ -8,7 +8,7 @@
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Random;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -39,7 +39,7 @@ class RandomTest extends UnitTestCase {
     $random = new Random();
     for ($i = 0; $i <= 50; $i++) {
       $str = $random->string(1, TRUE);
-      $this->assertFalse(isset($strings[$str]), String::format('Generated duplicate random string !string', array('!string' => $str)));
+      $this->assertFalse(isset($strings[$str]), SafeMarkup::format('Generated duplicate random string !string', array('!string' => $str)));
       $strings[$str] = TRUE;
     }
   }
@@ -54,7 +54,7 @@ class RandomTest extends UnitTestCase {
     $random = new Random();
     for ($i = 0; $i <= 10; $i++) {
       $str = $random->name(1, TRUE);
-      $this->assertFalse(isset($names[$str]), String::format('Generated duplicate random name !name', array('!name' => $str)));
+      $this->assertFalse(isset($names[$str]), SafeMarkup::format('Generated duplicate random name !name', array('!name' => $str)));
       $names[$str] = TRUE;
     }
   }

@@ -680,7 +680,7 @@ function search_excerpt($keys, $text, $langcode = NULL) {
     // We didn't find any keyword matches, so just return the first part of the
     // text. We also need to re-encode any HTML special characters that we
     // entity-decoded above.
-    return String::checkPlain(Unicode::truncate($text, 256, TRUE, TRUE));
+    return SafeMarkup::checkPlain(Unicode::truncate($text, 256, TRUE, TRUE));
   }
 
   // Sort the text ranges by starting position.
@@ -721,7 +721,7 @@ function search_excerpt($keys, $text, $langcode = NULL) {
   // translated. Let translators have the … separator text as one chunk.
   $ellipses = explode('!excerpt', t('… !excerpt … !excerpt …'));
   $text = (isset($new_ranges[0]) ? '' : $ellipses[0]) . implode($ellipses[1], $out) . (($max_end < strlen($text) - 1) ? $ellipses[2] : '');
-  $text = String::checkPlain($text);
+  $text = SafeMarkup::checkPlain($text);
 
   // Highlight keywords. Must be done at once to prevent conflicts ('strong'
   // and '<strong>').

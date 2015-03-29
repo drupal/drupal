@@ -7,7 +7,7 @@
 
 namespace Drupal\user\Plugin\views\access;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\user\RoleStorageInterface;
 use Drupal\views\Plugin\views\access\AccessPluginBase;
@@ -96,7 +96,7 @@ class Role extends AccessPluginBase {
     else {
       $rids = user_role_names();
       $rid = reset($this->options['role']);
-      return String::checkPlain($rids[$rid]);
+      return SafeMarkup::checkPlain($rids[$rid]);
     }
   }
 
@@ -114,7 +114,7 @@ class Role extends AccessPluginBase {
       '#type' => 'checkboxes',
       '#title' => $this->t('Role'),
       '#default_value' => $this->options['role'],
-      '#options' => array_map('\Drupal\Component\Utility\String::checkPlain', user_role_names()),
+      '#options' => array_map('\Drupal\Component\Utility\SafeMarkup::checkPlain', user_role_names()),
       '#description' => $this->t('Only the checked roles will be able to access this display.'),
     );
   }

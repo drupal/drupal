@@ -5,7 +5,7 @@
  * The content translation administration forms.
  */
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -192,10 +192,10 @@ function _content_translation_preprocess_language_content_settings_table(&$varia
               'bundle' => array(
                 '#prefix' => '<span class="visually-hidden">',
                 '#suffix' => '</span> ',
-                '#markup' => String::checkPlain($element[$bundle]['settings']['#label']),
+                '#markup' => SafeMarkup::checkPlain($element[$bundle]['settings']['#label']),
               ),
               'field' => array(
-                '#markup' => String::checkPlain($field_element['#label']),
+                '#markup' => SafeMarkup::checkPlain($field_element['#label']),
               ),
             ),
             'class' => array('field'),
@@ -226,15 +226,15 @@ function _content_translation_preprocess_language_content_settings_table(&$varia
                   'bundle' => array(
                     '#prefix' => '<span class="visually-hidden">',
                     '#suffix' => '</span> ',
-                    '#markup' => String::checkPlain($element[$bundle]['settings']['#label']),
+                    '#markup' => SafeMarkup::checkPlain($element[$bundle]['settings']['#label']),
                   ),
                   'field' => array(
                     '#prefix' => '<span class="visually-hidden">',
                     '#suffix' => '</span> ',
-                    '#markup' => String::checkPlain($field_element['#label']),
+                    '#markup' => SafeMarkup::checkPlain($field_element['#label']),
                   ),
                   'columns' => array(
-                    '#markup' => String::checkPlain($column_label),
+                    '#markup' => SafeMarkup::checkPlain($column_label),
                   ),
                 ),
                 'class' => array('column'),

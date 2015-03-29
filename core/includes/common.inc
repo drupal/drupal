@@ -15,9 +15,8 @@ use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Number;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\SortArray;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Tags;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Asset\AttachedAssets;
@@ -280,10 +279,10 @@ function valid_email_address($mail) {
  *   \Drupal\Component\Utility\UrlHelper::stripDangerousProtocols() instead.
  *
  * @see \Drupal\Component\Utility\UrlHelper::stripDangerousProtocols()
- * @see \Drupal\Component\Utility\String::checkPlain()
+ * @see \Drupal\Component\Utility\SafeMarkup::checkPlain()
  */
 function check_url($uri) {
-  return String::checkPlain(UrlHelper::stripDangerousProtocols($uri));
+  return SafeMarkup::checkPlain(UrlHelper::stripDangerousProtocols($uri));
 }
 
 /**
@@ -325,7 +324,7 @@ function format_xml_elements($array) {
         }
 
         if (isset($value['value']) && $value['value'] != '') {
-          $output .= '>' . (is_array($value['value']) ? format_xml_elements($value['value']) : String::checkPlain($value['value'])) . '</' . $value['key'] . ">\n";
+          $output .= '>' . (is_array($value['value']) ? format_xml_elements($value['value']) : SafeMarkup::checkPlain($value['value'])) . '</' . $value['key'] . ">\n";
         }
         else {
           $output .= " />\n";
@@ -333,7 +332,7 @@ function format_xml_elements($array) {
       }
     }
     else {
-      $output .= ' <' . $key . '>' . (is_array($value) ? format_xml_elements($value) : String::checkPlain($value)) . "</$key>\n";
+      $output .= ' <' . $key . '>' . (is_array($value) ? format_xml_elements($value) : SafeMarkup::checkPlain($value)) . "</$key>\n";
     }
   }
   // @todo This is marking the output string as safe HTML, but we have only
@@ -570,7 +569,7 @@ function _drupal_add_html_head_link($attributes, $header = FALSE) {
 
   if ($header) {
     // Also add a HTTP header "Link:".
-    $href = '<' . String::checkPlain($attributes['href']) . '>;';
+    $href = '<' . SafeMarkup::checkPlain($attributes['href']) . '>;';
     unset($attributes['href']);
     $element['#attached']['http_header'][] = array('Link',  $href . drupal_http_header_attributes($attributes), TRUE);
   }
@@ -1581,7 +1580,7 @@ function _drupal_flush_css_js() {
  */
 function debug($data, $label = NULL, $print_r = TRUE) {
   // Print $data contents to string.
-  $string = String::checkPlain($print_r ? print_r($data, TRUE) : var_export($data, TRUE));
+  $string = SafeMarkup::checkPlain($print_r ? print_r($data, TRUE) : var_export($data, TRUE));
 
   // Display values with pre-formatting to increase readability.
   $string = '<pre>' . $string . '</pre>';

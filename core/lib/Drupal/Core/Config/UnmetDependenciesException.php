@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Config;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\StringTranslation\TranslationInterface;
 
 /**
@@ -80,7 +80,7 @@ class UnmetDependenciesException extends ConfigException {
    * @return \Drupal\Core\Config\PreExistingConfigException
    */
   public static function create($extension, array $config_objects) {
-    $message = String::format('Configuration objects (@config_names) provided by @extension have unmet dependencies',
+    $message = SafeMarkup::format('Configuration objects (@config_names) provided by @extension have unmet dependencies',
       array(
         '@config_names' => implode(', ', $config_objects),
         '@extension' => $extension

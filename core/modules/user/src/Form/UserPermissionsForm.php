@@ -7,7 +7,7 @@
 
 namespace Drupal\user\Form;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\user\PermissionHandlerInterface;
@@ -82,7 +82,7 @@ class UserPermissionsForm extends FormBase {
     $admin_roles = array();
     foreach ($this->getRoles() as $role_name => $role) {
       // Retrieve role names for columns.
-      $role_names[$role_name] = String::checkPlain($role->label());
+      $role_names[$role_name] = SafeMarkup::checkPlain($role->label());
       // Fetch permissions for the roles.
       $role_permissions[$role_name] = $role->getPermissions();
       $admin_roles[$role_name] = $role->isAdmin();

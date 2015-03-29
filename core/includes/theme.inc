@@ -11,7 +11,6 @@
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
@@ -574,7 +573,7 @@ function template_preprocess_links(&$variables) {
       );
       // Convert the attributes array into an Attribute object.
       $heading['attributes'] = new Attribute($heading['attributes']);
-      $heading['text'] = String::checkPlain($heading['text']);
+      $heading['text'] = SafeMarkup::checkPlain($heading['text']);
     }
 
     $variables['links'] = array();
@@ -1272,7 +1271,7 @@ function template_preprocess_html(&$variables) {
   if (!empty($variables['page']['#title'])) {
     $head_title = array(
       'title' => SafeMarkup::set(trim(strip_tags($variables['page']['#title']))),
-      'name' => String::checkPlain($site_config->get('name')),
+      'name' => SafeMarkup::checkPlain($site_config->get('name')),
     );
   }
   // @todo Remove once views is not bypassing the view subscriber anymore.
@@ -1280,11 +1279,11 @@ function template_preprocess_html(&$variables) {
   elseif ($is_front_page) {
     $head_title = array(
       'title' => t('Home'),
-      'name' => String::checkPlain($site_config->get('name')),
+      'name' => SafeMarkup::checkPlain($site_config->get('name')),
     );
   }
   else {
-    $head_title = array('name' => String::checkPlain($site_config->get('name')));
+    $head_title = array('name' => SafeMarkup::checkPlain($site_config->get('name')));
     if ($site_config->get('slogan')) {
       $head_title['slogan'] = strip_tags(Xss::filterAdmin($site_config->get('slogan')));
     }
@@ -1362,7 +1361,7 @@ function template_preprocess_page(&$variables) {
   $variables['front_page']        = \Drupal::url('<front>');
   $variables['language']          = $language_interface;
   $variables['logo']              = theme_get_setting('logo.url');
-  $variables['site_name']         = (theme_get_setting('features.name') ? String::checkPlain($site_config->get('name')) : '');
+  $variables['site_name']         = (theme_get_setting('features.name') ? SafeMarkup::checkPlain($site_config->get('name')) : '');
   $variables['site_slogan']       = (theme_get_setting('features.slogan') ? Xss::filterAdmin($site_config->get('slogan')) : '');
 
   // An exception might be thrown.
@@ -1495,7 +1494,7 @@ function template_preprocess_install_page(&$variables) {
 
   // Override the site name that is displayed on the page, since Drupal is
   // still in the process of being installed.
-  $distribution_name = String::checkPlain(drupal_install_profile_distribution_name());
+  $distribution_name = SafeMarkup::checkPlain(drupal_install_profile_distribution_name());
   $variables['site_name'] = $distribution_name;
   $variables['head_title_array']['name'] = $distribution_name;
 
@@ -1547,7 +1546,7 @@ function template_preprocess_field(&$variables, $hook) {
   // Always set the field label - allow themes to decide whether to display it.
   // In addition the label should be rendered but hidden to support screen
   // readers.
-  $variables['label'] = String::checkPlain($element['#title']);
+  $variables['label'] = SafeMarkup::checkPlain($element['#title']);
 
   static $default_attributes;
   if (!isset($default_attributes)) {

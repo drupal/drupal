@@ -7,7 +7,7 @@
 
 namespace Drupal\aggregator\Tests;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Tests display of aggregator items on the page.
@@ -107,7 +107,7 @@ class AggregatorRenderingTest extends AggregatorTestBase {
     // Find the expected read_more link on the sources page.
     $href = $feed->url();
     $links = $this->xpath('//a[@href = :href]', array(':href' => $href));
-    $this->assertTrue(isset($links[0]), String::format('Link to href %href found.', array('%href' => $href)));
+    $this->assertTrue(isset($links[0]), SafeMarkup::format('Link to href %href found.', array('%href' => $href)));
     $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
     $cache_tags = explode(' ', $cache_tags_header);
     $this->assertTrue(in_array('aggregator_feed:' . $feed->id(), $cache_tags));

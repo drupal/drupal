@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Cache;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -111,7 +111,7 @@ class CacheContexts {
     foreach (static::parseTokens($context_tokens) as $context) {
       list($context_id, $parameter) = $context;
       if (!in_array($context_id, $this->contexts)) {
-        throw new \InvalidArgumentException(String::format('"@context" is not a valid cache context ID.', ['@context' => $context_id]));
+        throw new \InvalidArgumentException(SafeMarkup::format('"@context" is not a valid cache context ID.', ['@context' => $context_id]));
       }
       $keys[] = $this->getService($context_id)->getContext($parameter);
     }

@@ -7,7 +7,7 @@
 
 namespace Drupal\node\Controller;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Controller\EntityViewController;
 
@@ -64,7 +64,7 @@ class NodePreviewController extends EntityViewController {
    *   The page title.
    */
   public function title(EntityInterface $node_preview) {
-    return String::checkPlain($this->entityManager->getTranslationFromContext($node_preview)->label());
+    return SafeMarkup::checkPlain($this->entityManager->getTranslationFromContext($node_preview)->label());
   }
 
 }

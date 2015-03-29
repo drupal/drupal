@@ -7,7 +7,7 @@
 
 namespace Drupal\book\Tests;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\simpletest\WebTestBase;
 use Drupal\user\RoleInterface;
@@ -227,7 +227,7 @@ class BookTest extends WebTestBase {
       /** @var \Drupal\Core\Url $url */
       $url = $previous->urlInfo();
       $url->setOptions(array('attributes' => array('rel' => array('prev'), 'title' => t('Go to previous page'))));
-      $text = String::format('<b>‹</b> @label', array('@label' => $previous->label()));
+      $text = SafeMarkup::format('<b>‹</b> @label', array('@label' => $previous->label()));
       $this->assertRaw(\Drupal::l($text, $url), 'Previous page link found.');
     }
 
@@ -242,7 +242,7 @@ class BookTest extends WebTestBase {
       /** @var \Drupal\Core\Url $url */
       $url = $next->urlInfo();
       $url->setOptions(array('attributes' => array('rel' => array('next'), 'title' => t('Go to next page'))));
-      $text = String::format('@label <b>›</b>', array('@label' => $next->label()));
+      $text = SafeMarkup::format('@label <b>›</b>', array('@label' => $next->label()));
       $this->assertRaw(\Drupal::l($text, $url), 'Next page link found.');
     }
 

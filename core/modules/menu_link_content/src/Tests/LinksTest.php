@@ -7,7 +7,7 @@
 
 namespace Drupal\menu_link_content\Tests;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\locale\TranslationString;
 use Drupal\simpletest\WebTestBase;
 
@@ -117,7 +117,7 @@ class LinksTest extends WebTestBase {
       $menu_link_plugin = $this->menuLinkManager->createInstance($links[$id]);
       $expected_parent = isset($links[$parent]) ? $links[$parent] : '';
 
-      $this->assertEqual($menu_link_plugin->getParent(), $expected_parent, String::format('Menu link %id has parent of %parent, expected %expected_parent.', array('%id' => $id, '%parent' => $menu_link_plugin->getParent(), '%expected_parent' => $expected_parent)));
+      $this->assertEqual($menu_link_plugin->getParent(), $expected_parent, SafeMarkup::format('Menu link %id has parent of %parent, expected %expected_parent.', array('%id' => $id, '%parent' => $menu_link_plugin->getParent(), '%expected_parent' => $expected_parent)));
     }
   }
 

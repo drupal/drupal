@@ -7,7 +7,7 @@
 
 namespace Drupal\config\Tests;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ConfigImporterException;
 use Drupal\Core\Config\StorageComparer;
@@ -249,7 +249,7 @@ class ConfigImporterTest extends KernelTestBase {
 
     $logs = $this->configImporter->getErrors();
     $this->assertEqual(count($logs), 1);
-    $this->assertEqual($logs[0], String::format('Deleted and replaced configuration entity "@name"', array('@name' => $name_secondary)));
+    $this->assertEqual($logs[0], SafeMarkup::format('Deleted and replaced configuration entity "@name"', array('@name' => $name_secondary)));
   }
 
   /**
@@ -295,8 +295,8 @@ class ConfigImporterTest extends KernelTestBase {
 
     $logs = $this->configImporter->getErrors();
     $this->assertEqual(count($logs), 1);
-    $message = String::format('config_test entity with ID @name already exists', array('@name' => 'secondary'));
-    $this->assertEqual($logs[0], String::format('Unexpected error during import with operation @op for @name: @message.', array('@op' => 'create', '@name' => $name_primary, '@message' => $message)));
+    $message = SafeMarkup::format('config_test entity with ID @name already exists', array('@name' => 'secondary'));
+    $this->assertEqual($logs[0], SafeMarkup::format('Unexpected error during import with operation @op for @name: @message.', array('@op' => 'create', '@name' => $name_primary, '@message' => $message)));
   }
 
   /**
@@ -378,7 +378,7 @@ class ConfigImporterTest extends KernelTestBase {
 
     $logs = $this->configImporter->getErrors();
     $this->assertEqual(count($logs), 1);
-    $this->assertEqual($logs[0], String::format('Update target "@name" is missing.', array('@name' => $name_deletee)));
+    $this->assertEqual($logs[0], SafeMarkup::format('Update target "@name" is missing.', array('@name' => $name_deletee)));
   }
 
   /**

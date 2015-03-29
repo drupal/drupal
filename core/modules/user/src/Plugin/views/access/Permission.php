@@ -7,7 +7,7 @@
 
 namespace Drupal\user\Plugin\views\access;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\user\PermissionHandlerInterface;
@@ -110,7 +110,7 @@ class Permission extends AccessPluginBase {
     foreach ($permissions as $perm => $perm_item) {
       $provider = $perm_item['provider'];
       $display_name = $module_info[$provider]['name'];
-      $perms[$display_name][$perm] = String::checkPlain(strip_tags($perm_item['title']));
+      $perms[$display_name][$perm] = SafeMarkup::checkPlain(strip_tags($perm_item['title']));
     }
 
     $form['perm'] = array(

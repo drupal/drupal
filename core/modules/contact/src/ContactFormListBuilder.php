@@ -7,7 +7,7 @@
 
 namespace Drupal\contact;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 
@@ -39,7 +39,7 @@ class ContactFormListBuilder extends ConfigEntityListBuilder {
       $row['selected'] = t('No');
     }
     else {
-      $row['recipients'] = String::checkPlain(implode(', ', $entity->getRecipients()));
+      $row['recipients'] = SafeMarkup::checkPlain(implode(', ', $entity->getRecipients()));
       $default_form = \Drupal::config('contact.settings')->get('default_form');
       $row['selected'] = ($default_form == $entity->id() ? t('Yes') : t('No'));
     }

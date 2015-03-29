@@ -5,7 +5,7 @@
  * Builds placeholder replacement tokens for comment-related data.
  */
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
 
 /**
@@ -133,12 +133,12 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
 
         // Poster identity information for comments.
         case 'hostname':
-          $replacements[$original] = $sanitize ? String::checkPlain($comment->getHostname()) : $comment->getHostname();
+          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($comment->getHostname()) : $comment->getHostname();
           break;
 
         case 'mail':
           $mail = $comment->getAuthorEmail();
-          $replacements[$original] = $sanitize ? String::checkPlain($mail) : $mail;
+          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($mail) : $mail;
           break;
 
         case 'homepage':
@@ -154,7 +154,7 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
           break;
 
         case 'langcode':
-          $replacements[$original] = $sanitize ? String::checkPlain($comment->language()->getId()) : $comment->language()->getId();
+          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($comment->language()->getId()) : $comment->language()->getId();
           break;
 
         // Comment related URLs.

@@ -7,7 +7,7 @@
 
 namespace Drupal\rest\Tests\Views;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\views\Views;
 use Drupal\views\Tests\Plugin\PluginTestBase;
 use Drupal\views\Tests\ViewTestData;
@@ -283,7 +283,7 @@ class StyleSerializerTest extends PluginTestBase {
       $entities[] = $row->_entity;
     }
 
-    $expected = String::checkPlain($serializer->serialize($entities, 'json'));
+    $expected = SafeMarkup::checkPlain($serializer->serialize($entities, 'json'));
 
     $view->live_preview = TRUE;
 

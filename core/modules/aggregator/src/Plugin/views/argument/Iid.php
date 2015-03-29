@@ -9,7 +9,7 @@ namespace Drupal\aggregator\Plugin\views\argument;
 
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\views\Plugin\views\argument\NumericArgument;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -60,7 +60,7 @@ class Iid extends NumericArgument {
 
     $items = $this->entityManager->getStorage('aggregator_item')->loadMultiple($this->value);
     foreach ($items as $feed) {
-      $titles[] = String::checkPlain($feed->label());
+      $titles[] = SafeMarkup::checkPlain($feed->label());
     }
     return $titles;
   }

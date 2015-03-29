@@ -7,7 +7,7 @@
 
 namespace Drupal\migrate\Entity;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\MigrateException;
@@ -352,7 +352,7 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
       }
     }
     if ($missing_migrations) {
-      throw new RequirementsException(String::format('Missing migrations @requirements.', ['@requirements' => implode(', ', $missing_migrations)]), ['requirements' => $missing_migrations]);
+      throw new RequirementsException(SafeMarkup::format('Missing migrations @requirements.', ['@requirements' => implode(', ', $missing_migrations)]), ['requirements' => $missing_migrations]);
     }
   }
 

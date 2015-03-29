@@ -8,7 +8,6 @@
 namespace Drupal\node\Plugin\Search;
 
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\String;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Database\Connection;
@@ -321,7 +320,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       );
       $results[] = array(
         'link' => $node->url('canonical', array('absolute' => TRUE, 'language' => $language)),
-        'type' => String::checkPlain($this->entityManager->getStorage('node_type')->load($node->bundle())->label()),
+        'type' => SafeMarkup::checkPlain($this->entityManager->getStorage('node_type')->load($node->bundle())->label()),
         'title' => $node->label(),
         'user' => drupal_render($username),
         'date' => $node->getChangedTime(),
@@ -396,7 +395,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       unset($build['#theme']);
       $node->rendered = drupal_render($build);
 
-      $text = '<h1>' . String::checkPlain($node->label($language->getId())) . '</h1>' . $node->rendered;
+      $text = '<h1>' . SafeMarkup::checkPlain($node->label($language->getId())) . '</h1>' . $node->rendered;
 
       // Fetch extra data normally not visible.
       $extra = $this->moduleHandler->invokeAll('node_update_index', array($node, $language->getId()));
@@ -476,7 +475,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
     );
 
     // Add node types.
-    $types = array_map(array('\Drupal\Component\Utility\String', 'checkPlain'), node_type_get_names());
+    $types = array_map(array('\Drupal\Component\Utility\SafeMarkup', 'checkPlain'), node_type_get_names());
     $form['advanced']['types-fieldset'] = array(
       '#type' => 'fieldset',
       '#title' => t('Types'),

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Component\Utility\String.
+ * Contains \Drupal\Component\Utility\SafeMarkup.
  */
 
 namespace Drupal\Component\Utility;
@@ -61,7 +61,7 @@ class String {
    *   - @variable: Escaped to HTML using
    *     \Drupal\Component\Utility\SafeMarkup::escape(). Use this as the
    *     default choice for anything displayed on a page on the site.
-   *   - %variable: Escaped to HTML and formatted using String::placeholder(),
+   *   - %variable: Escaped to HTML and formatted using SafeMarkup::placeholder(),
    *     which makes the following HTML code:
    *     @code
    *       <em class="placeholder">text output here.</em>
@@ -71,7 +71,7 @@ class String {
    *     - Non-HTML usage, such as a plain-text email.
    *     - Non-direct HTML output, such as a plain-text variable that will be
    *       printed as an HTML attribute value and therefore formatted with
-   *       String::checkPlain() as part of that.
+   *       SafeMarkup::checkPlain() as part of that.
    *     - Some other special reason for suppressing sanitization.
    *
    * @return string

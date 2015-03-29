@@ -6,7 +6,6 @@
  */
 
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\String;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
@@ -952,15 +951,15 @@ function file_tokens($type, $tokens, array $data = array(), array $options = arr
 
         // Essential file data
         case 'name':
-          $replacements[$original] = $sanitize ? String::checkPlain($file->getFilename()) : $file->getFilename();
+          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($file->getFilename()) : $file->getFilename();
           break;
 
         case 'path':
-          $replacements[$original] = $sanitize ? String::checkPlain($file->getFileUri()) : $file->getFileUri();
+          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($file->getFileUri()) : $file->getFileUri();
           break;
 
         case 'mime':
-          $replacements[$original] = $sanitize ? String::checkPlain($file->getMimeType()) : $file->getMimeType();
+          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($file->getMimeType()) : $file->getMimeType();
           break;
 
         case 'size':
@@ -968,7 +967,7 @@ function file_tokens($type, $tokens, array $data = array(), array $options = arr
           break;
 
         case 'url':
-          $replacements[$original] = $sanitize ? String::checkPlain(file_create_url($file->getFileUri())) : file_create_url($file->getFileUri());
+          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain(file_create_url($file->getFileUri())) : file_create_url($file->getFileUri());
           break;
 
         // These tokens are default variations on the chained tokens handled below.
@@ -982,7 +981,7 @@ function file_tokens($type, $tokens, array $data = array(), array $options = arr
 
         case 'owner':
           $name = $file->getOwner()->label();
-          $replacements[$original] = $sanitize ? String::checkPlain($name) : $name;
+          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($name) : $name;
           break;
       }
     }
@@ -1227,7 +1226,7 @@ function template_preprocess_file_link(&$variables) {
   }
   else {
     $link_text = $variables['description'];
-    $options['attributes']['title'] = String::checkPlain($file_entity->getFilename());
+    $options['attributes']['title'] = SafeMarkup::checkPlain($file_entity->getFilename());
   }
 
   // Classes to add to the file field for icons.

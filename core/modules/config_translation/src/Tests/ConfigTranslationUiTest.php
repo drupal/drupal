@@ -8,7 +8,7 @@
 namespace Drupal\config_translation\Tests;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Language\Language;
@@ -918,17 +918,17 @@ class ConfigTranslationUiTest extends WebTestBase {
       ':id' => $id,
     ));
     $textarea = reset($textarea);
-    $passed = $this->assertTrue($textarea instanceof \SimpleXMLElement, String::format('Disabled field @id exists.', array(
+    $passed = $this->assertTrue($textarea instanceof \SimpleXMLElement, SafeMarkup::format('Disabled field @id exists.', array(
       '@id' => $id,
     )));
     $expected = 'This field has been disabled because you do not have sufficient permissions to edit it.';
-    $passed = $passed && $this->assertEqual((string) $textarea, $expected, String::format('Disabled textarea @id hides text in an inaccessible text format.', array(
+    $passed = $passed && $this->assertEqual((string) $textarea, $expected, SafeMarkup::format('Disabled textarea @id hides text in an inaccessible text format.', array(
       '@id' => $id,
     )));
     // Make sure the text format select is not shown.
     $select_id = str_replace('value', 'format--2', $id);
     $select = $this->xpath('//select[@id=:id]', array(':id' => $select_id));
-    return $passed && $this->assertFalse($select, String::format('Field @id does not exist.', array(
+    return $passed && $this->assertFalse($select, SafeMarkup::format('Field @id does not exist.', array(
       '@id' => $id,
     )));
   }

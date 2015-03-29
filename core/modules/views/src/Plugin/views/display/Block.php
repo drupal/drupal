@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\display;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\Block\ViewsBlock;
@@ -149,7 +149,7 @@ class Block extends DisplayPluginBase {
     if (empty($block_description)) {
       $block_description = $this->t('None');
     }
-    $block_category = String::checkPlain($this->getOption('block_category'));
+    $block_category = SafeMarkup::checkPlain($this->getOption('block_category'));
 
     $options['block_description'] = array(
       'category' => 'block',

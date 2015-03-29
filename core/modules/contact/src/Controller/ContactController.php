@@ -13,7 +13,7 @@ use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Flood\FloodInterface;
 use Drupal\contact\ContactFormInterface;
 use Drupal\user\UserInterface;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -105,7 +105,7 @@ class ContactController extends ControllerBase {
       ));
 
     $form = $this->entityFormBuilder()->getForm($message);
-    $form['#title'] = String::checkPlain($contact_form->label());
+    $form['#title'] = SafeMarkup::checkPlain($contact_form->label());
     $form['#cache']['tags'] = Cache::mergeTags(isset($form['#cache']['tags']) ? $form['#cache']['tags'] : [],  $config->getCacheTags());
     return $form;
   }

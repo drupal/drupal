@@ -7,7 +7,7 @@
 
 namespace Drupal\file\Tests;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Generates text using placeholders for dummy content to check file token
@@ -45,16 +45,16 @@ class FileTokenReplaceTest extends FileFieldTestBase {
     // Generate and test sanitized tokens.
     $tests = array();
     $tests['[file:fid]'] = $file->id();
-    $tests['[file:name]'] = String::checkPlain($file->getFilename());
-    $tests['[file:path]'] = String::checkPlain($file->getFileUri());
-    $tests['[file:mime]'] = String::checkPlain($file->getMimeType());
+    $tests['[file:name]'] = SafeMarkup::checkPlain($file->getFilename());
+    $tests['[file:path]'] = SafeMarkup::checkPlain($file->getFileUri());
+    $tests['[file:mime]'] = SafeMarkup::checkPlain($file->getMimeType());
     $tests['[file:size]'] = format_size($file->getSize());
-    $tests['[file:url]'] = String::checkPlain(file_create_url($file->getFileUri()));
+    $tests['[file:url]'] = SafeMarkup::checkPlain(file_create_url($file->getFileUri()));
     $tests['[file:created]'] = format_date($file->getCreatedTime(), 'medium', '', NULL, $language_interface->getId());
     $tests['[file:created:short]'] = format_date($file->getCreatedTime(), 'short', '', NULL, $language_interface->getId());
     $tests['[file:changed]'] = format_date($file->getChangedTime(), 'medium', '', NULL, $language_interface->getId());
     $tests['[file:changed:short]'] = format_date($file->getChangedTime(), 'short', '', NULL, $language_interface->getId());
-    $tests['[file:owner]'] = String::checkPlain(user_format_name($this->adminUser));
+    $tests['[file:owner]'] = SafeMarkup::checkPlain(user_format_name($this->adminUser));
     $tests['[file:owner:uid]'] = $file->getOwnerId();
 
     // Test to make sure that we generated something for each token.

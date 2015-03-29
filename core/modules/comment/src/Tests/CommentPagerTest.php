@@ -8,7 +8,7 @@
 namespace Drupal\comment\Tests;
 
 use Drupal\comment\CommentManagerInterface;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\node\Entity\Node;
 
 /**
@@ -378,10 +378,10 @@ class CommentPagerTest extends CommentTestBase {
     $urls = $this->xpath($xpath);
     if (isset($urls[$index])) {
       $url_target = $this->getAbsoluteUrl($urls[$index]['href']);
-      $this->pass(String::format('Clicked link %label (@url_target) from @url_before', array('%label' => $xpath, '@url_target' => $url_target, '@url_before' => $url_before)), 'Browser');
+      $this->pass(SafeMarkup::format('Clicked link %label (@url_target) from @url_before', array('%label' => $xpath, '@url_target' => $url_target, '@url_before' => $url_before)), 'Browser');
       return $this->drupalGet($url_target);
     }
-    $this->fail(String::format('Link %label does not exist on @url_before', array('%label' => $xpath, '@url_before' => $url_before)), 'Browser');
+    $this->fail(SafeMarkup::format('Link %label does not exist on @url_before', array('%label' => $xpath, '@url_before' => $url_before)), 'Browser');
     return FALSE;
   }
 

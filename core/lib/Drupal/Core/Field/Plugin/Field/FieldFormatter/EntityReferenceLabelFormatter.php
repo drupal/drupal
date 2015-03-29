@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\Exception\UndefinedLinkTemplateException;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -98,7 +98,7 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
         }
       }
       else {
-        $elements[$delta] = array('#markup' => String::checkPlain($label));
+        $elements[$delta] = array('#markup' => SafeMarkup::checkPlain($label));
       }
       $elements[$delta]['#cache']['tags'] = $entity->getCacheTags();
     }

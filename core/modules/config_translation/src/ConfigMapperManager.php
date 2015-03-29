@@ -7,7 +7,7 @@
 
 namespace Drupal\config_translation;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
@@ -124,7 +124,7 @@ class ConfigMapperManager extends DefaultPluginManager implements ConfigMapperMa
     parent::processDefinition($definition, $plugin_id);
 
     if (!isset($definition['base_route_name'])) {
-      throw new InvalidPluginDefinitionException($plugin_id, String::format("The plugin definition of the mapper '%plugin_id' does not contain a base_route_name.", array('%plugin_id' => $plugin_id)));
+      throw new InvalidPluginDefinitionException($plugin_id, SafeMarkup::format("The plugin definition of the mapper '%plugin_id' does not contain a base_route_name.", array('%plugin_id' => $plugin_id)));
     }
   }
 

@@ -9,7 +9,7 @@ namespace Drupal\Core\Extension;
 
 use Drupal\Component\Graph\Graph;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 
@@ -581,7 +581,7 @@ class ModuleHandler implements ModuleHandlerInterface {
         }
         // If a new implementation was added, verify that the function exists.
         if (!function_exists($module . '_' . $hook)) {
-          throw new \RuntimeException(String::format('An invalid implementation @function was added by hook_module_implements_alter()', array('@function' => $module . '_' . $hook)));
+          throw new \RuntimeException(SafeMarkup::format('An invalid implementation @function was added by hook_module_implements_alter()', array('@function' => $module . '_' . $hook)));
         }
       }
     }

@@ -150,7 +150,7 @@ class Token {
    *     display to a web browser. Defaults to TRUE. Developers who set this
    *     option to FALSE assume responsibility for running
    *     \Drupal\Component\Utility\Xss::filter(),
-   *     \Drupal\Component\Utility\String::checkPlain() or other appropriate
+   *     \Drupal\Component\Utility\SafeMarkup::checkPlain() or other appropriate
    *     scrubbing functions before displaying data to users.
    *
    * @return string
@@ -243,7 +243,7 @@ class Token {
    *   - sanitize: A boolean flag indicating that tokens should be sanitized for
    *     display to a web browser. Developers who set this option to FALSE assume
    *     responsibility for running \Drupal\Component\Utility\Xss::filter(),
-   *     \Drupal\Component\Utility\String::checkPlain() or other appropriate
+   *     \Drupal\Component\Utility\SafeMarkup::checkPlain() or other appropriate
    *     scrubbing functions before displaying data to users.
    *
    * @return array

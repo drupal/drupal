@@ -8,7 +8,7 @@
 namespace Drupal\Core\TypedData;
 
 use Drupal\Component\Plugin\Exception\PluginException;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -296,7 +296,7 @@ class TypedDataManager extends DefaultPluginManager {
         throw new \InvalidArgumentException("The passed object has to either implement the ComplexDataInterface or the ListInterface.");
       }
       if (!$definition) {
-        throw new \InvalidArgumentException('Property ' . String::checkPlain($property_name) . ' is unknown.');
+        throw new \InvalidArgumentException('Property ' . SafeMarkup::checkPlain($property_name) . ' is unknown.');
       }
       // Create the prototype without any value, but with initial parenting
       // so that constructors can set up the objects correclty.

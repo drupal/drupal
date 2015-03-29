@@ -7,7 +7,7 @@
 
 namespace Drupal\basic_auth\Authentication\Provider;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Authentication\AuthenticationProviderInterface;
 use Drupal\Core\Authentication\AuthenticationProviderChallengeInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -132,7 +132,7 @@ class BasicAuth implements AuthenticationProviderInterface, AuthenticationProvid
    */
   public function challengeException(Request $request, \Exception $previous) {
     $site_name = $this->configFactory->get('system.site')->get('name');
-    $challenge = String::format('Basic realm="@realm"', array(
+    $challenge = SafeMarkup::format('Basic realm="@realm"', array(
       '@realm' => !empty($site_name) ? $site_name : 'Access restricted',
     ));
     return new UnauthorizedHttpException($challenge, 'No authentication credentials provided.', $previous);

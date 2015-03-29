@@ -6,7 +6,6 @@
  */
 
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\String;
 use Drupal\Core\Url;
 use Drupal\Core\Render\Element;
 use Drupal\locale\SourceString;
@@ -61,7 +60,7 @@ function template_preprocess_locale_translation_update_info(array &$variables) {
     if ($variables['updates']) {
       foreach ($variables['updates'] as $update) {
         $modules[] = $update['name'];
-        $releases[] = String::format('@module (@date)', array(
+        $releases[] = SafeMarkup::format('@module (@date)', array(
           '@module' => $update['name'],
           '@date' => format_date($update['timestamp'], 'html_date'),
         ));
@@ -81,7 +80,7 @@ function template_preprocess_locale_translation_update_info(array &$variables) {
     if ($variables['not_found']) {
       foreach ($variables['not_found'] as $update) {
         $version = $update['version'] ? $update['version'] : t('no version');
-        $releases[] = String::format('@module (@version). !info', array(
+        $releases[] = SafeMarkup::format('@module (@version). !info', array(
           '@module' => $update['name'],
           '@version' => $version,
           '!info' => $update['info'],

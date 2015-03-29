@@ -8,7 +8,7 @@
 namespace Drupal\search\Tests;
 
 use Drupal\simpletest\WebTestBase;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Defines the common search test code.
@@ -87,7 +87,7 @@ abstract class SearchTestBase extends WebTestBase {
       // We have not found a form which contained all fields of $edit and
       // the submit button.
       foreach ($edit as $name => $value) {
-        $this->fail(String::format('Failed to set field @name to @value', array('@name' => $name, '@value' => $value)));
+        $this->fail(SafeMarkup::format('Failed to set field @name to @value', array('@name' => $name, '@value' => $value)));
       }
       $this->assertTrue($submit_matches, format_string('Found the @submit button', array('@submit' => $submit)));
       $this->fail(format_string('Found the requested form fields at @path', array('@path' => $path)));

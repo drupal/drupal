@@ -7,7 +7,7 @@
 
 namespace Drupal\filter\Plugin\Filter;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
@@ -102,7 +102,7 @@ class FilterHtml extends FilterBase {
     $output .= '<p>' . $this->t('This site allows HTML content. While learning all of HTML may feel intimidating, learning how to use a very small number of the most basic HTML "tags" is very easy. This table provides examples for each tag that is enabled on this site.') . '</p>';
     $output .= '<p>' . $this->t('For more information see W3C\'s <a href="@html-specifications">HTML Specifications</a> or use your favorite search engine to find other sites that explain HTML.', array('@html-specifications' => 'http://www.w3.org/TR/html/')) . '</p>';
     $tips = array(
-      'a' => array($this->t('Anchors are used to make links to other pages.'), '<a href="' . $base_url . '">' . String::checkPlain(\Drupal::config('system.site')->get('name')) . '</a>'),
+      'a' => array($this->t('Anchors are used to make links to other pages.'), '<a href="' . $base_url . '">' . SafeMarkup::checkPlain(\Drupal::config('system.site')->get('name')) . '</a>'),
       'br' => array($this->t('By default line break tags are automatically added, so use this tag to add additional ones. Use of this tag is different because it is not used with an open/close pair like all the others. Use the extra " /" inside the tag to maintain XHTML 1.0 compatibility'), $this->t('Text with <br />line break')),
       'p' => array($this->t('By default paragraph tags are automatically added, so use this tag to add additional ones.'), '<p>' . $this->t('Paragraph one.') . '</p> <p>' . $this->t('Paragraph two.') . '</p>'),
       'strong' => array($this->t('Strong', array(), array('context' => 'Font weight')), '<strong>' . $this->t('Strong', array(), array('context' => 'Font weight')) . '</strong>'),
@@ -144,7 +144,7 @@ class FilterHtml extends FilterBase {
       if (!empty($tips[$tag])) {
         $rows[] = array(
           array('data' => $tips[$tag][0], 'class' => array('description')),
-          array('data' => '<code>' . String::checkPlain($tips[$tag][1]) . '</code>', 'class' => array('type')),
+          array('data' => '<code>' . SafeMarkup::checkPlain($tips[$tag][1]) . '</code>', 'class' => array('type')),
           array('data' => $tips[$tag][1], 'class' => array('get'))
         );
       }
@@ -175,7 +175,7 @@ class FilterHtml extends FilterBase {
     foreach ($entities as $entity) {
       $rows[] = array(
         array('data' => $entity[0], 'class' => array('description')),
-        array('data' => '<code>' . String::checkPlain($entity[1]) . '</code>', 'class' => array('type')),
+        array('data' => '<code>' . SafeMarkup::checkPlain($entity[1]) . '</code>', 'class' => array('type')),
         array('data' => $entity[1], 'class' => array('get'))
       );
     }

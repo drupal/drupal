@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -60,7 +60,7 @@ trait BrokenHandlerTrait {
 
     foreach ($this->definition['original_configuration'] as $key => $value) {
       if (is_scalar($value)) {
-        $items[] = String::format('@key: @value', array('@key' => $key, '@value' => $value));
+        $items[] = SafeMarkup::format('@key: @value', array('@key' => $key, '@value' => $value));
       }
     }
 

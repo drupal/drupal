@@ -8,7 +8,7 @@
 namespace Drupal\aggregator\Form;
 
 use Drupal\aggregator\Plugin\AggregatorPluginManager;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
@@ -71,7 +71,7 @@ class SettingsForm extends ConfigFormBase {
     // Get all available fetcher, parser and processor definitions.
     foreach (array('fetcher', 'parser', 'processor') as $type) {
       foreach ($this->managers[$type]->getDefinitions() as $id => $definition) {
-        $this->definitions[$type][$id] = String::format('@title <span class="description">@description</span>', array('@title' => $definition['title'], '@description' => $definition['description']));
+        $this->definitions[$type][$id] = SafeMarkup::format('@title <span class="description">@description</span>', array('@title' => $definition['title'], '@description' => $definition['description']));
       }
     }
   }

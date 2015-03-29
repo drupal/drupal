@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Entity\Sql;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
@@ -178,7 +178,7 @@ class DefaultTableMapping implements TableMappingInterface {
     }
 
     if (!isset($result)) {
-      throw new SqlContentEntityStorageException(String::format('Table information not available for the "@field_name" field.', array('@field_name' => $field_name)));
+      throw new SqlContentEntityStorageException(SafeMarkup::format('Table information not available for the "@field_name" field.', array('@field_name' => $field_name)));
     }
 
     return $result;
@@ -211,7 +211,7 @@ class DefaultTableMapping implements TableMappingInterface {
       $column_name = !in_array($property_name, $this->getReservedColumns()) ? $field_name . '_' . $property_name : $property_name;
     }
     else {
-      throw new SqlContentEntityStorageException(String::format('Column information not available for the "@field_name" field.', array('@field_name' => $field_name)));
+      throw new SqlContentEntityStorageException(SafeMarkup::format('Column information not available for the "@field_name" field.', array('@field_name' => $field_name)));
     }
 
     return $column_name;

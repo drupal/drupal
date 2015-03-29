@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\Entity\EntityReferenceSelection;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
@@ -93,7 +93,7 @@ class EntityReferenceSelectionSortTest extends EntityUnitTestBase {
       $node = Node::create($values);
       $node->save();
       $nodes[$key] = $node;
-      $node_labels[$key] = String::checkPlain($node->label());
+      $node_labels[$key] = SafeMarkup::checkPlain($node->label());
     }
 
     $selection_options = array(

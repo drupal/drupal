@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Tests\Wizard;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Url;
 
 /**
@@ -49,7 +49,7 @@ class MenuTest extends WizardTestBase {
     /** @var \Drupal\Core\Menu\MenuLinkInterface $link */
     $link = $menu_link_manager->createInstance('views_view:views.' . $view['id'] . '.page_1');
     $url = $link->getUrlObject();
-    $this->assertEqual($url->getRouteName(), 'view.' . $view['id'] . '.page_1', String::format('Found a link to %path in the main menu', array('%path' => $view['page[path]'])));
+    $this->assertEqual($url->getRouteName(), 'view.' . $view['id'] . '.page_1', SafeMarkup::format('Found a link to %path in the main menu', array('%path' => $view['page[path]'])));
     $metadata = $link->getMetaData();
     $this->assertEqual(array('view_id' => $view['id'], 'display_id' => 'page_1'), $metadata);
   }

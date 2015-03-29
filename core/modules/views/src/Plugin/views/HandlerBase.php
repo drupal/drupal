@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
@@ -181,7 +181,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    */
   public function adminLabel($short = FALSE) {
     if (!empty($this->options['admin_label'])) {
-      $title = String::checkPlain($this->options['admin_label']);
+      $title = SafeMarkup::checkPlain($this->options['admin_label']);
       return $title;
     }
     $title = ($short && isset($this->definition['title short'])) ? $this->definition['title short'] : $this->definition['title'];
@@ -230,10 +230,10 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
         $value = Xss::filterAdmin($value);
         break;
       case 'url':
-        $value = String::checkPlain(UrlHelper::stripDangerousProtocols($value));
+        $value = SafeMarkup::checkPlain(UrlHelper::stripDangerousProtocols($value));
         break;
       default:
-        $value = String::checkPlain($value);
+        $value = SafeMarkup::checkPlain($value);
         break;
     }
     return $value;
@@ -721,7 +721,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
       return $views_data['table']['entity type'];
     }
     else {
-      throw new \Exception(String::format('No entity type for field @field on view @view', array('@field' => $this->options['id'], '@view' => $this->view->storage->id())));
+      throw new \Exception(SafeMarkup::format('No entity type for field @field on view @view', array('@field' => $this->options['id'], '@view' => $this->view->storage->id())));
     }
   }
 

@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\Condition;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\simpletest\KernelTestBase;
 
 /**
@@ -44,8 +44,8 @@ class CurrentThemeConditionTest extends KernelTestBase {
     $condition_negated = $manager->createInstance('current_theme');
     $condition_negated->setConfiguration(array('theme' => 'test_theme', 'negate' => TRUE));
 
-    $this->assertEqual($condition->summary(), String::format('The current theme is @theme', array('@theme' => 'test_theme')));
-    $this->assertEqual($condition_negated->summary(), String::format('The current theme is not @theme', array('@theme' => 'test_theme')));
+    $this->assertEqual($condition->summary(), SafeMarkup::format('The current theme is @theme', array('@theme' => 'test_theme')));
+    $this->assertEqual($condition_negated->summary(), SafeMarkup::format('The current theme is not @theme', array('@theme' => 'test_theme')));
 
     // The expected theme has not been set up yet.
     $this->assertFalse($condition->execute());

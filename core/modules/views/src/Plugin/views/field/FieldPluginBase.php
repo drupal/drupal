@@ -241,7 +241,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       }
     }
     if ($this->options['element_type']) {
-      return String::checkPlain($this->options['element_type']);
+      return SafeMarkup::checkPlain($this->options['element_type']);
     }
 
     if ($default_empty) {
@@ -269,7 +269,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       }
     }
     if ($this->options['element_label_type']) {
-      return String::checkPlain($this->options['element_label_type']);
+      return SafeMarkup::checkPlain($this->options['element_label_type']);
     }
 
     if ($default_empty) {
@@ -289,7 +289,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       }
     }
     if ($this->options['element_wrapper_type']) {
-      return String::checkPlain($this->options['element_wrapper_type']);
+      return SafeMarkup::checkPlain($this->options['element_wrapper_type']);
     }
 
     if ($default_empty) {
@@ -1339,7 +1339,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
       // Use strip tags as there should never be HTML in the path.
       // However, we need to preserve special characters like " that
-      // were removed by String::checkPlain().
+      // were removed by SafeMarkup::checkPlain().
       $path = strip_tags(String::decodeEntities($this->viewsTokenReplace($path, $tokens)));
 
       if (!empty($alter['path_case']) && $alter['path_case'] != 'none' && !$alter['url']->isRouted()) {
@@ -1425,8 +1425,8 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       $options['attributes']['rel'] = $rel;
     }
 
-    // Not sure if this String::checkPlain() is needed here?
-    $target = String::checkPlain(trim($this->viewsTokenReplace($alter['target'], $tokens)));
+    // Not sure if this SafeMarkup::checkPlain() is needed here?
+    $target = SafeMarkup::checkPlain(trim($this->viewsTokenReplace($alter['target'], $tokens)));
     if (!empty($target)) {
       $options['attributes']['target'] = $target;
     }
@@ -1508,7 +1508,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
       // Use strip tags as there should never be HTML in the path.
       // However, we need to preserve special characters like " that
-      // were removed by String::checkPlain().
+      // were removed by SafeMarkup::checkPlain().
       $tokens['!' . $count] = isset($this->view->args[$count - 1]) ? strip_tags(String::decodeEntities($this->view->args[$count - 1])) : '';
     }
 

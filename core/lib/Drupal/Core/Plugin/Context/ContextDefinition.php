@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Plugin\Context;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\TypedData\TypedDataTrait;
 
 /**
@@ -220,7 +220,7 @@ class ContextDefinition implements ContextDefinitionInterface {
     }
 
     if (!$definition) {
-      throw new \Exception(String::format('The data type "@type" is invalid', array('@type' => $this->getDataType())));
+      throw new \Exception(SafeMarkup::format('The data type "@type" is invalid', array('@type' => $this->getDataType())));
     }
     $definition->setLabel($this->getLabel())
       ->setDescription($this->getDescription())

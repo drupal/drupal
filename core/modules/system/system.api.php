@@ -5,7 +5,7 @@
  * Hooks provided by Drupal core and the System module.
  */
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\Core\Url;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -321,7 +321,7 @@ function hook_tokens($type, $tokens, array $data = array(), array $options = arr
           break;
 
         case 'title':
-          $replacements[$original] = $sanitize ? String::checkPlain($node->getTitle()) : $node->getTitle();
+          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($node->getTitle()) : $node->getTitle();
           break;
 
         case 'edit-url':
@@ -331,7 +331,7 @@ function hook_tokens($type, $tokens, array $data = array(), array $options = arr
         // Default values for the chained tokens handled below.
         case 'author':
           $account = $node->getOwner() ? $node->getOwner() : user_load(0);
-          $replacements[$original] = $sanitize ? String::checkPlain($account->label()) : $account->label();
+          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($account->label()) : $account->label();
           break;
 
         case 'created':
@@ -533,7 +533,7 @@ function hook_token_info_alter(&$data) {
  *       Drupal\Core\Template\Attribute($options['attributes']).
  *     - html: Whether or not HTML should be allowed as the link text. If FALSE,
  *       the text will be run through
- *       \Drupal\Component\Utility\String::checkPlain() before being output.
+ *       \Drupal\Component\Utility\SafeMarkup::checkPlain() before being output.
  *
  * @see \Drupal\Core\Routing\UrlGenerator::generateFromPath()
  * @see \Drupal\Core\Routing\UrlGenerator::generateFromRoute()

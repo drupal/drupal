@@ -18,7 +18,7 @@ interface TitleResolverInterface {
    * Returns a static or dynamic title for the route.
    *
    * The returned title string must be safe to output in HTML. For example, an
-   * implementation should call \Drupal\Component\Utility\String::checkPlain()
+   * implementation should call \Drupal\Component\Utility\SafeMarkup::checkPlain()
    * or \Drupal\Component\Utility\Xss::filterAdmin() on the string, or use
    * appropriate placeholders to sanitize dynamic content inside a localized
    * string before returning it. The title may contain HTML such as EM tags.

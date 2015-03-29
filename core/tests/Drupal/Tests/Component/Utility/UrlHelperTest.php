@@ -8,7 +8,7 @@
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -94,7 +94,7 @@ class UrlHelperTest extends UnitTestCase {
   public function testValidAbsolute($url, $scheme) {
     $test_url = $scheme . '://' . $url;
     $valid_url = UrlHelper::isValid($test_url, TRUE);
-    $this->assertTrue($valid_url, String::format('@url is a valid URL.', array('@url' => $test_url)));
+    $this->assertTrue($valid_url, SafeMarkup::format('@url is a valid URL.', array('@url' => $test_url)));
   }
 
   /**
@@ -125,7 +125,7 @@ class UrlHelperTest extends UnitTestCase {
   public function testInvalidAbsolute($url, $scheme) {
     $test_url = $scheme . '://' . $url;
     $valid_url = UrlHelper::isValid($test_url, TRUE);
-    $this->assertFalse($valid_url, String::format('@url is NOT a valid URL.', array('@url' => $test_url)));
+    $this->assertFalse($valid_url, SafeMarkup::format('@url is NOT a valid URL.', array('@url' => $test_url)));
   }
 
   /**
@@ -159,7 +159,7 @@ class UrlHelperTest extends UnitTestCase {
   public function testValidRelative($url, $prefix) {
     $test_url = $prefix . $url;
     $valid_url = UrlHelper::isValid($test_url);
-    $this->assertTrue($valid_url, String::format('@url is a valid URL.', array('@url' => $test_url)));
+    $this->assertTrue($valid_url, SafeMarkup::format('@url is a valid URL.', array('@url' => $test_url)));
   }
 
   /**
@@ -190,7 +190,7 @@ class UrlHelperTest extends UnitTestCase {
   public function testInvalidRelative($url, $prefix) {
     $test_url = $prefix . $url;
     $valid_url = UrlHelper::isValid($test_url);
-    $this->assertFalse($valid_url, String::format('@url is NOT a valid URL.', array('@url' => $test_url)));
+    $this->assertFalse($valid_url, SafeMarkup::format('@url is NOT a valid URL.', array('@url' => $test_url)));
   }
 
   /**

@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\Mail;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\Core\Site\Settings;
@@ -34,7 +34,7 @@ class HtmlToTextTest extends WebTestBase {
       str_replace(
         array("\n", ' '),
         array('\n', '&nbsp;'),
-        String::checkPlain($text)
+        SafeMarkup::checkPlain($text)
       ) . '"';
   }
 
@@ -57,7 +57,7 @@ class HtmlToTextTest extends WebTestBase {
     $tested_tags = implode(', ', array_unique($matches[1]));
     $message .= ' (' . $tested_tags . ')';
     $result = MailFormatHelper::htmlToText($html, $allowed_tags);
-    $pass = $this->assertEqual($result, $text, String::checkPlain($message));
+    $pass = $this->assertEqual($result, $text, SafeMarkup::checkPlain($message));
     $verbose = 'html = <pre>' . $this->stringToHtml($html)
       . '</pre><br />' . 'result = <pre>' . $this->stringToHtml($result)
       . '</pre><br />' . 'expected = <pre>' . $this->stringToHtml($text)

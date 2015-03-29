@@ -7,7 +7,7 @@
 
 namespace Drupal\field\Entity;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldConfigBase;
 use Drupal\Core\Field\FieldException;
@@ -96,12 +96,12 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
         throw new FieldException('Attempt to create a field without a field_name.');
       }
       if (empty($values['entity_type'])) {
-        throw new FieldException(String::format('Attempt to create a field @field_name without an entity_type.', array('@field_name' => $values['field_name'])));
+        throw new FieldException(SafeMarkup::format('Attempt to create a field @field_name without an entity_type.', array('@field_name' => $values['field_name'])));
       }
     }
     // 'bundle' is required in either case.
     if (empty($values['bundle'])) {
-      throw new FieldException(String::format('Attempt to create a field @field_name without a bundle.', array('@field_name' => $values['field_name'])));
+      throw new FieldException(SafeMarkup::format('Attempt to create a field @field_name without a bundle.', array('@field_name' => $values['field_name'])));
     }
 
     parent::__construct($values, $entity_type);
@@ -274,9 +274,9 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
     if (!$this->fieldStorage) {
       $fields = $this->entityManager()->getFieldStorageDefinitions($this->entity_type);
       if (!isset($fields[$this->field_name])) {
-        throw new FieldException(String::format('Attempt to create a field @field_name that does not exist on entity type @entity_type.', array('@field_name' => $this->field_name, '@entity_type' => $this->entity_type)));      }
+        throw new FieldException(SafeMarkup::format('Attempt to create a field @field_name that does not exist on entity type @entity_type.', array('@field_name' => $this->field_name, '@entity_type' => $this->entity_type)));      }
       if (!$fields[$this->field_name] instanceof FieldStorageConfigInterface) {
-        throw new FieldException(String::format('Attempt to create a configurable field of non-configurable field storage @field_name.', array('@field_name' => $this->field_name, '@entity_type' => $this->entity_type)));
+        throw new FieldException(SafeMarkup::format('Attempt to create a configurable field of non-configurable field storage @field_name.', array('@field_name' => $this->field_name, '@entity_type' => $this->entity_type)));
       }
       $this->fieldStorage = $fields[$this->field_name];
     }

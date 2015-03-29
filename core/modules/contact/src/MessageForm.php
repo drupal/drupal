@@ -7,7 +7,7 @@
 
 namespace Drupal\contact;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Flood\FloodInterface;
@@ -118,12 +118,12 @@ class MessageForm extends ContentEntityForm {
       $form['name']['#type'] = 'item';
       $form['name']['#value'] = $user->getUsername();
       $form['name']['#required'] = FALSE;
-      $form['name']['#markup'] = String::checkPlain($user->getUsername());
+      $form['name']['#markup'] = SafeMarkup::checkPlain($user->getUsername());
 
       $form['mail']['#type'] = 'item';
       $form['mail']['#value'] = $user->getEmail();
       $form['mail']['#required'] = FALSE;
-      $form['mail']['#markup'] = String::checkPlain($user->getEmail());
+      $form['mail']['#markup'] = SafeMarkup::checkPlain($user->getEmail());
     }
 
     // The user contact form has a preset recipient.

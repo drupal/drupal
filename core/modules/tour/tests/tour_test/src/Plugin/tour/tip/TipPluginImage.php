@@ -7,7 +7,7 @@
 
 namespace Drupal\tour_test\Plugin\tour\tip;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\tour\TipPluginBase;
 
 /**
@@ -45,7 +45,7 @@ class TipPluginImage extends TipPluginBase {
       '#uri' => $this->get('url'),
       '#alt' => $this->get('alt'),
     );
-    $output = '<h2 class="tour-tip-label" id="tour-tip-' . $this->get('ariaId') . '-label">' . String::checkPlain($this->get('label')) . '</h2>';
+    $output = '<h2 class="tour-tip-label" id="tour-tip-' . $this->get('ariaId') . '-label">' . SafeMarkup::checkPlain($this->get('label')) . '</h2>';
     $output .= '<p class="tour-tip-image" id="tour-tip-' . $this->get('ariaId') . '-contents">' . drupal_render($image) . '</p>';
     return array('#markup' => $output);
   }

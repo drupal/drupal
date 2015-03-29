@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Entity;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Tags;
 use Drupal\system\Controller\EntityAutocompleteController;
 use Symfony\Component\HttpFoundation\Request;
@@ -54,8 +54,8 @@ class EntityAutocompleteTest extends EntityUnitTestBase {
     // We should get both entities in a JSON encoded string.
     $input = '10/';
     $data = $this->getAutocompleteResult($input);
-    $this->assertIdentical($data[0]['label'], String::checkPlain($entity_1->name->value), 'Autocomplete returned the first matching entity');
-    $this->assertIdentical($data[1]['label'], String::checkPlain($entity_2->name->value), 'Autocomplete returned the second matching entity');
+    $this->assertIdentical($data[0]['label'], SafeMarkup::checkPlain($entity_1->name->value), 'Autocomplete returned the first matching entity');
+    $this->assertIdentical($data[1]['label'], SafeMarkup::checkPlain($entity_2->name->value), 'Autocomplete returned the second matching entity');
 
     // Try to autocomplete a entity label that matches the first entity.
     // We should only get the first entity in a JSON encoded string.
@@ -63,7 +63,7 @@ class EntityAutocompleteTest extends EntityUnitTestBase {
     $data = $this->getAutocompleteResult($input);
     $target = array(
       'value' => $entity_1->name->value . ' (1)',
-      'label' => String::checkPlain($entity_1->name->value),
+      'label' => SafeMarkup::checkPlain($entity_1->name->value),
     );
     $this->assertIdentical(reset($data), $target, 'Autocomplete returns only the expected matching entity.');
 
@@ -71,7 +71,7 @@ class EntityAutocompleteTest extends EntityUnitTestBase {
     // the first entity  is already typed in the autocomplete (tags) widget.
     $input = $entity_1->name->value . ' (1), 10/17';
     $data = $this->getAutocompleteResult($input);
-    $this->assertIdentical($data[0]['label'], String::checkPlain($entity_2->name->value), 'Autocomplete returned the second matching entity');
+    $this->assertIdentical($data[0]['label'], SafeMarkup::checkPlain($entity_2->name->value), 'Autocomplete returned the second matching entity');
 
     // Try to autocomplete a entity label with both a comma and a slash.
     $input = '"label with, and / t';
@@ -81,7 +81,7 @@ class EntityAutocompleteTest extends EntityUnitTestBase {
     $n = Tags::encode($n);
     $target = array(
       'value' => $n,
-      'label' => String::checkPlain($entity_3->name->value),
+      'label' => SafeMarkup::checkPlain($entity_3->name->value),
     );
     $this->assertIdentical(reset($data), $target, 'Autocomplete returns an entity label containing a comma and a slash.');
   }

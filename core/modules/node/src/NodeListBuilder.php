@@ -7,7 +7,7 @@
 
 namespace Drupal\node;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
@@ -107,7 +107,7 @@ class NodeListBuilder extends EntityListBuilder {
       '#suffix' => ' ' . drupal_render($mark),
       '#url' => $uri,
     );
-    $row['type'] = String::checkPlain(node_get_type_label($entity));
+    $row['type'] = SafeMarkup::checkPlain(node_get_type_label($entity));
     $row['author']['data'] = array(
       '#theme' => 'username',
       '#account' => $entity->getOwner(),

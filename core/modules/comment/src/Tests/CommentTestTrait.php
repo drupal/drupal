@@ -7,7 +7,7 @@
 
 namespace Drupal\comment\Tests;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 
@@ -42,7 +42,7 @@ trait CommentTestTrait {
     $comment_type_storage = $entity_manager->getStorage('comment_type');
     if ($comment_type = $comment_type_storage->load($comment_type_id)) {
       if ($comment_type->getTargetEntityTypeId() !== $entity_type) {
-        throw new \InvalidArgumentException(String::format('The given comment type id %id can only be used with the %entity_type entity type', array(
+        throw new \InvalidArgumentException(SafeMarkup::format('The given comment type id %id can only be used with the %entity_type entity type', array(
           '%id' => $comment_type_id,
           '%entity_type' => $entity_type,
         )));

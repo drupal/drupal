@@ -9,7 +9,7 @@ namespace Drupal\locale\Tests;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\simpletest\WebTestBase;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Tests parsing js files for translatable strings.
@@ -85,10 +85,10 @@ class LocaleJavascriptTranslationTest extends WebTestBase {
       $args = array('%source' => $str, '%context' => $context);
 
       // Make sure that the string was found in the file.
-      $this->assertTrue(isset($source_strings[$str]), String::format('Found source string: %source', $args));
+      $this->assertTrue(isset($source_strings[$str]), SafeMarkup::format('Found source string: %source', $args));
 
       // Make sure that the proper context was matched.
-      $message = $context ? String::format('Context for %source is %context', $args) : String::format('Context for %source is blank', $args);
+      $message = $context ? SafeMarkup::format('Context for %source is %context', $args) : SafeMarkup::format('Context for %source is blank', $args);
       $this->assertTrue(isset($source_strings[$str]) && $source_strings[$str] === $context, $message);
     }
 

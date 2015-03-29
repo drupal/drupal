@@ -7,7 +7,7 @@
 
 namespace Drupal\link\Plugin\Field\FieldFormatter;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -201,7 +201,7 @@ class LinkFormatter extends FormatterBase implements ContainerFactoryPluginInter
 
       if (!empty($settings['url_only']) && !empty($settings['url_plain'])) {
         $element[$delta] = array(
-          '#markup' => String::checkPlain($link_title),
+          '#markup' => SafeMarkup::checkPlain($link_title),
         );
 
         if (!empty($item->_attributes)) {

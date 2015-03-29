@@ -8,7 +8,6 @@
 namespace Drupal\views_ui;
 
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\String;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
@@ -99,7 +98,7 @@ class ViewListBuilder extends ConfigEntityListBuilder {
         ),
         'description' => array(
           'data' => array(
-            '#markup' => String::checkPlain($view->get('description')),
+            '#markup' => SafeMarkup::checkPlain($view->get('description')),
           ),
           'class' => array('views-table-filter-text-source'),
         ),
@@ -269,7 +268,7 @@ class ViewListBuilder extends ConfigEntityListBuilder {
           $all_paths[] = \Drupal::l('/' . $path, Url::fromUserInput('/' . $path));
         }
         else {
-          $all_paths[] = String::checkPlain('/' . $path);
+          $all_paths[] = SafeMarkup::checkPlain('/' . $path);
         }
       }
     }

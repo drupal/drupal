@@ -7,7 +7,7 @@
 
 namespace Drupal\entity_reference\Tests;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\config\Tests\AssertConfigEntityImportTrait;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
@@ -152,7 +152,7 @@ class EntityReferenceIntegrationTest extends WebTestBase {
       // Ensure the configuration has the expected dependency on the entity that
       // is being used a default value.
       $field = FieldConfig::loadByName($this->entityType, $this->bundle, $this->fieldName);
-      $this->assertTrue(in_array($referenced_entities[0]->getConfigDependencyName(), $field->getDependencies()[$key]), String::format('Expected @type dependency @name found', ['@type' => $key, '@name' => $referenced_entities[0]->getConfigDependencyName()]));
+      $this->assertTrue(in_array($referenced_entities[0]->getConfigDependencyName(), $field->getDependencies()[$key]), SafeMarkup::format('Expected @type dependency @name found', ['@type' => $key, '@name' => $referenced_entities[0]->getConfigDependencyName()]));
       // Ensure that the field can be imported without change even after the
       // default value deleted.
       $referenced_entities[0]->delete();
@@ -166,7 +166,7 @@ class EntityReferenceIntegrationTest extends WebTestBase {
       $field = FieldConfig::loadByName($this->entityType, $this->bundle, $this->fieldName);
       $field->save();
       $dependencies = $field->getDependencies();
-      $this->assertFalse(isset($dependencies[$key]) && in_array($referenced_entities[0]->getConfigDependencyName(), $dependencies[$key]), String::format('@type dependency @name does not exist.', ['@type' => $key, '@name' => $referenced_entities[0]->getConfigDependencyName()]));
+      $this->assertFalse(isset($dependencies[$key]) && in_array($referenced_entities[0]->getConfigDependencyName(), $dependencies[$key]), SafeMarkup::format('@type dependency @name does not exist.', ['@type' => $key, '@name' => $referenced_entities[0]->getConfigDependencyName()]));
     }
   }
 

@@ -8,7 +8,7 @@
 namespace Drupal\serialization\Tests;
 
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\user\Entity\User;
 
 /**
@@ -206,7 +206,7 @@ class EntitySerializationTest extends NormalizerTestBase {
 
     foreach (array('json', 'xml') as $type) {
       $denormalized = $this->serializer->denormalize($normalized, $this->entityClass, $type, array('entity_type' => 'entity_test_mulrev'));
-      $this->assertTrue($denormalized instanceof $this->entityClass, String::format('Denormalized entity is an instance of @class', array('@class' => $this->entityClass)));
+      $this->assertTrue($denormalized instanceof $this->entityClass, SafeMarkup::format('Denormalized entity is an instance of @class', array('@class' => $this->entityClass)));
       $this->assertIdentical($denormalized->getEntityTypeId(), $this->entity->getEntityTypeId(), 'Expected entity type found.');
       $this->assertIdentical($denormalized->bundle(), $this->entity->bundle(), 'Expected entity bundle found.');
       $this->assertIdentical($denormalized->uuid(), $this->entity->uuid(), 'Expected entity UUID found.');

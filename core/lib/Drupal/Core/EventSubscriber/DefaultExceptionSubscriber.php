@@ -8,7 +8,6 @@
 namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\String;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Render\BareHtmlPageRendererInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -107,7 +106,7 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
       }
       // Do not translate the string to avoid errors producing more errors.
       unset($error['backtrace']);
-      $message = String::format('%type: !message in %function (line %line of %file).', $error);
+      $message = SafeMarkup::format('%type: !message in %function (line %line of %file).', $error);
 
       // Check if verbose error reporting is on.
       if ($this->getErrorLevel() == ERROR_REPORTING_DISPLAY_VERBOSE) {

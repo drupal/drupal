@@ -10,7 +10,7 @@ namespace Drupal\file\Plugin\views\argument;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\views\Plugin\views\argument\NumericArgument;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -81,7 +81,7 @@ class Fid extends NumericArgument implements ContainerFactoryPluginInterface {
     $files = $controller->loadMultiple($fids);
     $titles = array();
     foreach ($files as $file) {
-      $titles[] = String::checkPlain($file->getFilename());
+      $titles[] = SafeMarkup::checkPlain($file->getFilename());
     }
     return $titles;
   }

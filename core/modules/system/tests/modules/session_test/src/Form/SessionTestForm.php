@@ -7,7 +7,7 @@
 
 namespace Drupal\session_test\Form;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -46,7 +46,7 @@ class SessionTestForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    drupal_set_message(String::format('Ok: @input', array('@input' => $form_state->getValue('input'))));
+    drupal_set_message(SafeMarkup::format('Ok: @input', array('@input' => $form_state->getValue('input'))));
   }
 
 }

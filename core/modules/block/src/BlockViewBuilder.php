@@ -7,7 +7,7 @@
 
 namespace Drupal\block;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityViewBuilder;
 use Drupal\Core\Entity\EntityViewBuilderInterface;
@@ -81,7 +81,7 @@ class BlockViewBuilder extends EntityViewBuilder {
         // Add the entity so that it can be used in the #pre_render method.
         '#block' => $entity,
       );
-      $build[$entity_id]['#configuration']['label'] = String::checkPlain($configuration['label']);
+      $build[$entity_id]['#configuration']['label'] = SafeMarkup::checkPlain($configuration['label']);
 
       if ($plugin->isCacheable()) {
         $build[$entity_id]['#pre_render'][] = array($this, 'buildBlock');

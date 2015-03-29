@@ -40,7 +40,7 @@ use Drupal\Component\Utility\SafeMarkup;
  * @endcode
  *
  * The attribute keys and values are automatically sanitized for output with
- * \Drupal\Component\Utility\String::checkPlain().
+ * \Drupal\Component\Utility\SafeMarkup::checkPlain().
  */
 class Attribute implements \ArrayAccess, \IteratorAggregate {
 

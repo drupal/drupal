@@ -7,7 +7,7 @@
 
 namespace Drupal\Tests\user\Unit;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\UserAccessControlHandler;
@@ -125,7 +125,7 @@ class UserAccessControlHandlerTest extends UnitTestCase {
       ->will($this->returnValue($this->{$target}));
 
     foreach (array('view' => $view, 'edit' => $edit) as $operation => $result) {
-      $message = String::format("User @field field access returns @result with operation '@op' for @account accessing @target", array(
+      $message = SafeMarkup::format("User @field field access returns @result with operation '@op' for @account accessing @target", array(
         '@field' => $field,
         '@result' => !isset($result) ? 'null' : ($result ? 'true' : 'false'),
         '@op' => $operation,

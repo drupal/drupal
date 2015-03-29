@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Url;
 use Drupal\Component\Utility\UrlHelper;
 
@@ -60,7 +60,7 @@ function tablesort_header(&$cell_content, array &$cell_attributes, array $header
       $ts['sort'] = 'asc';
       $image = '';
     }
-    $cell_content = \Drupal::l(String::format('@cell_content@image', array('@cell_content' => $cell_content, '@image' => $image)), new Url('<current>', [], [
+    $cell_content = \Drupal::l(SafeMarkup::format('@cell_content@image', array('@cell_content' => $cell_content, '@image' => $image)), new Url('<current>', [], [
       'attributes' => array('title' => $title),
       'query' => array_merge($ts['query'], array(
         'sort' => $ts['sort'],

@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\Routing;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\simpletest\KernelTestBase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -119,7 +119,7 @@ class ExceptionHandlingTest extends KernelTestBase {
 
     // Test both that the backtrace is properly escaped, and that the unescaped
     // string is not output at all.
-    $this->assertTrue(strpos($response->getContent(), String::checkPlain('<script>alert(\'xss\')</script>')) !== FALSE);
+    $this->assertTrue(strpos($response->getContent(), SafeMarkup::checkPlain('<script>alert(\'xss\')</script>')) !== FALSE);
     $this->assertTrue(strpos($response->getContent(), '<script>alert(\'xss\')</script>') === FALSE);
   }
 

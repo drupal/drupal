@@ -10,7 +10,7 @@ namespace Drupal\locale\Tests;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Base class for testing updates to string translations.
@@ -98,7 +98,7 @@ abstract class LocaleUpdateBase extends WebTestBase {
     $edit = array('predefined_langcode' => $langcode);
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
     $this->container->get('language_manager')->reset();
-    $this->assertTrue(\Drupal::languageManager()->getLanguage($langcode), String::format('Language %langcode added.', array('%langcode' => $langcode)));
+    $this->assertTrue(\Drupal::languageManager()->getLanguage($langcode), SafeMarkup::format('Language %langcode added.', array('%langcode' => $langcode)));
   }
 
   /**

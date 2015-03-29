@@ -8,7 +8,7 @@
 namespace Drupal\Core\Plugin\Context;
 
 use Drupal\Component\Plugin\Exception\ContextException;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 
 /**
@@ -86,7 +86,7 @@ class ContextHandler implements ContextHandlerInterface {
 
     // If there are any mappings that were not satisfied, throw an exception.
     if (!empty($mappings)) {
-      throw new ContextException(String::format('Assigned contexts were not satisfied: @mappings', ['@mappings' => implode(',', array_keys($mappings))]));
+      throw new ContextException(SafeMarkup::format('Assigned contexts were not satisfied: @mappings', ['@mappings' => implode(',', array_keys($mappings))]));
     }
   }
 

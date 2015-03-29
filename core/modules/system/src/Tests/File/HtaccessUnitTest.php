@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\File;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\simpletest\KernelTestBase;
 
 /**
@@ -89,7 +89,7 @@ class HtaccessUnitTest extends KernelTestBase {
    */
   protected function assertFilePermissions($uri, $expected) {
     $actual = fileperms($uri) & 0777;
-    return $this->assertIdentical($actual, $expected, String::format('@uri file permissions @actual are identical to @expected.', array(
+    return $this->assertIdentical($actual, $expected, SafeMarkup::format('@uri file permissions @actual are identical to @expected.', array(
       '@uri' => $uri,
       '@actual' => 0 . decoct($actual),
       '@expected' => 0 . decoct($expected),

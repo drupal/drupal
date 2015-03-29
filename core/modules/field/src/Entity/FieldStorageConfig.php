@@ -7,7 +7,7 @@
 
 namespace Drupal\field\Entity;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -229,13 +229,13 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
       throw new FieldException('Attempt to create a field storage without a field name.');
     }
     if (!preg_match('/^[_a-z]+[_a-z0-9]*$/', $values['field_name'])) {
-      throw new FieldException(String::format('Attempt to create a field storage @field_name with invalid characters. Only lowercase alphanumeric characters and underscores are allowed, and only lowercase letters and underscore are allowed as the first character', array('@field_name' => $values['field_name'])));
+      throw new FieldException(SafeMarkup::format('Attempt to create a field storage @field_name with invalid characters. Only lowercase alphanumeric characters and underscores are allowed, and only lowercase letters and underscore are allowed as the first character', array('@field_name' => $values['field_name'])));
     }
     if (empty($values['type'])) {
-      throw new FieldException(String::format('Attempt to create a field storage @field_name with no type.', array('@field_name' => $values['field_name'])));
+      throw new FieldException(SafeMarkup::format('Attempt to create a field storage @field_name with no type.', array('@field_name' => $values['field_name'])));
     }
     if (empty($values['entity_type'])) {
-      throw new FieldException(String::format('Attempt to create a field storage @field_name with no entity_type.', array('@field_name' => $values['field_name'])));
+      throw new FieldException(SafeMarkup::format('Attempt to create a field storage @field_name with no entity_type.', array('@field_name' => $values['field_name'])));
     }
 
     parent::__construct($values, $entity_type);
@@ -296,7 +296,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
     // We use Unicode::strlen() because the DB layer assumes that column widths
     // are given in characters rather than bytes.
     if (Unicode::strlen($this->getName()) > static::NAME_MAX_LENGTH) {
-      throw new FieldException(String::format(
+      throw new FieldException(SafeMarkup::format(
         'Attempt to create a field storage with an name longer than @max characters: %name', array(
           '@max' => static::NAME_MAX_LENGTH,
           '%name' => $this->getName(),
@@ -307,13 +307,13 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
     // Disallow reserved field names.
     $disallowed_field_names = array_keys($entity_manager->getBaseFieldDefinitions($this->getTargetEntityTypeId()));
     if (in_array($this->getName(), $disallowed_field_names)) {
-      throw new FieldException(String::format('Attempt to create field storage %name which is reserved by entity type %type.', array('%name' => $this->getName(), '%type' => $this->getTargetEntityTypeId())));
+      throw new FieldException(SafeMarkup::format('Attempt to create field storage %name which is reserved by entity type %type.', array('%name' => $this->getName(), '%type' => $this->getTargetEntityTypeId())));
     }
 
     // Check that the field type is known.
     $field_type = $field_type_manager->getDefinition($this->getType(), FALSE);
     if (!$field_type) {
-      throw new FieldException(String::format('Attempt to create a field storage of unknown type %type.', array('%type' => $this->getType())));
+      throw new FieldException(SafeMarkup::format('Attempt to create a field storage of unknown type %type.', array('%type' => $this->getType())));
     }
     $this->module = $field_type['provider'];
 

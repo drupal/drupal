@@ -1,7 +1,7 @@
 <?php
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
@@ -449,7 +449,7 @@ function user_preprocess_block(&$variables) {
  *
  * @return
  *   An unsanitized string with the username to display. The code receiving
- *   this result must ensure that \Drupal\Component\Utility\String::checkPlain()
+ *   this result must ensure that \Drupal\Component\Utility\SafeMarkup::checkPlain()
  *   is called on it before it is printed to the page.
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
@@ -493,7 +493,7 @@ function user_template_preprocess_default_variables_alter(&$variables) {
  *
  * Modules that make any changes to variables like 'name' or 'extra' must ensure
  * that the final string is safe to include directly in the output by using
- * \Drupal\Component\Utility\String::checkPlain() or
+ * \Drupal\Component\Utility\SafeMarkup::checkPlain() or
  * \Drupal\Component\Utility\Xss::filter().
  */
 function template_preprocess_username(&$variables) {
@@ -520,7 +520,7 @@ function template_preprocess_username(&$variables) {
   else {
     $variables['truncated'] = FALSE;
   }
-  $variables['name'] = String::checkPlain($name);
+  $variables['name'] = SafeMarkup::checkPlain($name);
   $variables['profile_access'] = \Drupal::currentUser()->hasPermission('access user profiles');
 
   $external = FALSE;

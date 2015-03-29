@@ -22,7 +22,7 @@ interface TranslationInterface {
    * @param array $args
    *   An associative array of replacements to make after translation. Based
    *   on the first character of the key, the value is escaped and/or themed.
-   *   See \Drupal\Component\Utility\String::format() for details.
+   *   See \Drupal\Component\Utility\SafeMarkup::format() for details.
    * @param array $options
    *   An associative array of additional options, with the following elements:
    *   - 'langcode': The language code to translate to a language other than
@@ -32,7 +32,7 @@ interface TranslationInterface {
    * @return string
    *   The translated string.
    *
-   * @see \Drupal\Component\Utility\String::format()
+   * @see \Drupal\Component\Utility\SafeMarkup::format()
    */
   public function translate($string, array $args = array(), array $options = array());
 
@@ -70,7 +70,7 @@ interface TranslationInterface {
    *   An associative array of replacements to make after translation. Instances
    *   of any key in this array are replaced with the corresponding value.
    *   Based on the first character of the key, the value is escaped and/or
-   *   themed. See \Drupal\Component\Utility\String::format(). Note that you do
+   *   themed. See \Drupal\Component\Utility\SafeMarkup::format(). Note that you do
    *   not need to include @count in this array; this replacement is done
    *   automatically for the plural cases.
    * @param array $options
@@ -104,7 +104,7 @@ interface TranslationInterface {
    *   Associative array of replacements to make in the translation. Instances
    *   of any key in this array are replaced with the corresponding value.
    *   Based on the first character of the key, the value is escaped and/or
-   *   themed. See \Drupal\Component\Utility\String::format(). Note that you do
+   *   themed. See \Drupal\Component\Utility\SafeMarkup::format(). Note that you do
    *   not need to include @count in this array; this replacement is done
    *   automatically for the plural cases.
    * @param array $options

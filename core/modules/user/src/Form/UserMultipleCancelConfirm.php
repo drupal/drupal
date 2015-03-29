@@ -7,7 +7,7 @@
 
 namespace Drupal\user\Form;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -119,7 +119,7 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
         '#type' => 'hidden',
         '#value' => $uid,
         '#prefix' => '<li>',
-        '#suffix' => String::checkPlain($account->label()) . "</li>\n",
+        '#suffix' => SafeMarkup::checkPlain($account->label()) . "</li>\n",
       );
     }
 

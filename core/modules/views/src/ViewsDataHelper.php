@@ -8,7 +8,7 @@
 namespace Drupal\views;
 
 use Drupal\Component\Utility\Unicode;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Defines a helper class for stuff related to views data.
@@ -116,7 +116,7 @@ class ViewsDataHelper {
                 }
                 else {
                   if ($string != 'base' && $string != 'base') {
-                    $strings[$field][$key][$string] = String::format("Error: missing @component", array('@component' => $string));
+                    $strings[$field][$key][$string] = SafeMarkup::format("Error: missing @component", array('@component' => $string));
                   }
                 }
               }

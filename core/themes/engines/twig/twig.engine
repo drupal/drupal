@@ -6,7 +6,6 @@
  */
 
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\String;
 use Drupal\Core\Extension\Extension;
 
 /**
@@ -65,7 +64,7 @@ function twig_render_template($template_file, array $variables) {
   }
   if ($twig_service->isDebug()) {
     $output['debug_prefix'] .= "\n\n<!-- THEME DEBUG -->";
-    $output['debug_prefix'] .= "\n<!-- THEME HOOK: '" . String::checkPlain($variables['theme_hook_original']) . "' -->";
+    $output['debug_prefix'] .= "\n<!-- THEME HOOK: '" . SafeMarkup::checkPlain($variables['theme_hook_original']) . "' -->";
     // If there are theme suggestions, reverse the array so more specific
     // suggestions are shown first.
     if (!empty($variables['theme_hook_suggestions'])) {
@@ -99,10 +98,10 @@ function twig_render_template($template_file, array $variables) {
         $prefix = ($template == $current_template) ? 'x' : '*';
         $suggestion = $prefix . ' ' . $template;
       }
-      $output['debug_info'] .= "\n<!-- FILE NAME SUGGESTIONS:\n   " . String::checkPlain(implode("\n   ", $suggestions)) . "\n-->";
+      $output['debug_info'] .= "\n<!-- FILE NAME SUGGESTIONS:\n   " . SafeMarkup::checkPlain(implode("\n   ", $suggestions)) . "\n-->";
     }
-    $output['debug_info']   .= "\n<!-- BEGIN OUTPUT from '" . String::checkPlain($template_file) . "' -->\n";
-    $output['debug_suffix'] .= "\n<!-- END OUTPUT from '" . String::checkPlain($template_file) . "' -->\n\n";
+    $output['debug_info']   .= "\n<!-- BEGIN OUTPUT from '" . SafeMarkup::checkPlain($template_file) . "' -->\n";
+    $output['debug_suffix'] .= "\n<!-- END OUTPUT from '" . SafeMarkup::checkPlain($template_file) . "' -->\n\n";
   }
   return SafeMarkup::set(implode('', $output));
 }
@@ -263,7 +262,7 @@ function twig_drupal_escape_filter(\Twig_Environment $env, $string, $strategy = 
     // Drupal only supports the HTML escaping strategy, so provide a
     // fallback for other strategies.
     if ($strategy == 'html') {
-      return String::checkPlain($return);
+      return SafeMarkup::checkPlain($return);
     }
     return twig_escape_filter($env, $return, $strategy, $charset, $autoescape);
   }

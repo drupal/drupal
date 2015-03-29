@@ -10,7 +10,7 @@ namespace Drupal\Core\Form;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
@@ -139,7 +139,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     }
 
     if (!is_object($form_arg) || !($form_arg instanceof FormInterface)) {
-      throw new \InvalidArgumentException(String::format('The form argument @form_arg is not a valid form.', array('@form_arg' => $form_arg)));
+      throw new \InvalidArgumentException(SafeMarkup::format('The form argument @form_arg is not a valid form.', array('@form_arg' => $form_arg)));
     }
 
     // Add the $form_arg as the callback object and determine the form ID.

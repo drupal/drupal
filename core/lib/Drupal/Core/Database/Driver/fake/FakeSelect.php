@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Database\Driver\fake;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\Query\PlaceholderInterface;
@@ -521,7 +521,7 @@ class FakeSelect extends Select {
         $fields = array_keys(reset($this->databaseContents[$table]));
       }
       else {
-        throw new \Exception(String::format('All fields on empty table @table is not supported.', array('@table' => $table)));
+        throw new \Exception(SafeMarkup::format('All fields on empty table @table is not supported.', array('@table' => $table)));
       }
     }
     return parent::fields($table_alias, $fields);

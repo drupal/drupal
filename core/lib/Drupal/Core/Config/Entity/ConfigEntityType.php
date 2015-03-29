@@ -10,7 +10,7 @@ namespace Drupal\Core\Config\Entity;
 use Drupal\Core\Config\Entity\Exception\ConfigEntityStorageClassException;
 use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Config\ConfigPrefixLengthException;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Provides an implementation of a configuration entity type and its metadata.
@@ -104,7 +104,7 @@ class ConfigEntityType extends EntityType {
     }
 
     if (strlen($config_prefix) > static::PREFIX_LENGTH) {
-      throw new ConfigPrefixLengthException(String::format('The configuration file name prefix @config_prefix exceeds the maximum character limit of @max_char.', array(
+      throw new ConfigPrefixLengthException(SafeMarkup::format('The configuration file name prefix @config_prefix exceeds the maximum character limit of @max_char.', array(
         '@config_prefix' => $config_prefix,
         '@max_char' => static::PREFIX_LENGTH,
       )));
@@ -169,7 +169,7 @@ class ConfigEntityType extends EntityType {
    */
   protected function checkStorageClass($class) {
     if (!is_a($class, 'Drupal\Core\Config\Entity\ConfigEntityStorage', TRUE)) {
-      throw new ConfigEntityStorageClassException(String::format('@class is not \Drupal\Core\Config\Entity\ConfigEntityStorage or it does not extend it', ['@class' => $class]));
+      throw new ConfigEntityStorageClassException(SafeMarkup::format('@class is not \Drupal\Core\Config\Entity\ConfigEntityStorage or it does not extend it', ['@class' => $class]));
     }
   }
 

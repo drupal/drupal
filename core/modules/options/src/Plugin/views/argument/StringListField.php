@@ -13,7 +13,7 @@ use Drupal\views\FieldAPIHandlerTrait;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\argument\StringArgument;
-use Drupal\Component\Utility\String as StringUtility;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Argument handler for list field to show the human readable name in summary.
@@ -84,7 +84,7 @@ class StringListField extends StringArgument {
     }
     // Else, fallback to the key.
     else {
-      return $this->caseTransform(StringUtility::checkPlain($value), $this->options['case']);
+      return $this->caseTransform(SafeMarkup::checkPlain($value), $this->options['case']);
     }
   }
 

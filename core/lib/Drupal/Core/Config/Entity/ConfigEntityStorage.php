@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Config\Entity;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ConfigImporterException;
 use Drupal\Core\Entity\EntityInterface;
@@ -229,7 +229,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
     // @todo Consider moving this to a protected method on the parent class, and
     //   abstracting it for all entity types.
     if (strlen($entity->get($this->idKey)) > self::MAX_ID_LENGTH) {
-      throw new ConfigEntityIdLengthException(String::format('Configuration entity ID @id exceeds maximum allowed length of @length characters.', array(
+      throw new ConfigEntityIdLengthException(SafeMarkup::format('Configuration entity ID @id exceeds maximum allowed length of @length characters.', array(
         '@id' => $entity->get($this->idKey),
         '@length' => self::MAX_ID_LENGTH,
       )));
@@ -362,7 +362,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
     $id = static::getIDFromConfigName($name, $this->entityType->getConfigPrefix());
     $entity = $this->load($id);
     if (!$entity) {
-      throw new ConfigImporterException(String::format('Attempt to update non-existing entity "@id".', array('@id' => $id)));
+      throw new ConfigImporterException(SafeMarkup::format('Attempt to update non-existing entity "@id".', array('@id' => $id)));
     }
     $entity->setSyncing(TRUE);
     $entity = $this->updateFromStorageRecord($entity, $new_config->get());

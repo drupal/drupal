@@ -8,7 +8,7 @@
 namespace Drupal\Core\ImageToolkit;
 
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Plugin\PluginBase;
 use Psr\Log\LoggerInterface;
 
@@ -114,7 +114,7 @@ abstract class ImageToolkitOperationBase extends PluginBase implements ImageTool
       if ($argument['required']) {
         if (!array_key_exists($id, $arguments)) {
           // If the argument is required throw an exception.
-          throw new \InvalidArgumentException(String::format("Argument '@argument' expected by plugin '@plugin' but not passed", array('@argument' => $id, '@plugin' => $this->getPluginId())));
+          throw new \InvalidArgumentException(SafeMarkup::format("Argument '@argument' expected by plugin '@plugin' but not passed", array('@argument' => $id, '@plugin' => $this->getPluginId())));
         }
       }
       else {
@@ -124,7 +124,7 @@ abstract class ImageToolkitOperationBase extends PluginBase implements ImageTool
         if (!array_key_exists('default', $argument)) {
           // The plugin did not define a default, so throw a plugin exception,
           // not an invalid argument exception.
-          throw new InvalidPluginDefinitionException(String::format("Default for argument '@argument' expected by plugin '@plugin' but not defined", array('@argument' => $id, '@plugin' => $this->getPluginId())));
+          throw new InvalidPluginDefinitionException(SafeMarkup::format("Default for argument '@argument' expected by plugin '@plugin' but not defined", array('@argument' => $id, '@plugin' => $this->getPluginId())));
         }
 
         // Use the default value if the argument is not passed in.

@@ -5,7 +5,7 @@
  * User page callbacks for tracker.module.
  */
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\node\Entity\Node;
 
 /**
@@ -93,7 +93,7 @@ function tracker_page($account = NULL) {
       );
 
       $row = array(
-        'type' => String::checkPlain(node_get_type_label($node)),
+        'type' => SafeMarkup::checkPlain(node_get_type_label($node)),
         'title' => array(
           'data' => array(
             '#type' => 'link',

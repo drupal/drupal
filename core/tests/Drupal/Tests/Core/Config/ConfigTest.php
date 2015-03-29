@@ -10,7 +10,7 @@ namespace Drupal\Tests\Core\Config;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Config\Config;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Tests the Config.
@@ -413,14 +413,14 @@ class ConfigTest extends UnitTestCase {
       // Name missing namespace (dot).
       array(
         'MissingNamespace',
-        String::format('Missing namespace in Config object name MissingNamespace.', array(
+        SafeMarkup::format('Missing namespace in Config object name MissingNamespace.', array(
           '@name' => 'MissingNamespace',
         )),
       ),
       // Exceeds length (max length plus an extra dot).
       array(
         str_repeat('a', Config::MAX_NAME_LENGTH) . ".",
-        String::format('Config object name @name exceeds maximum allowed length of @length characters.', array(
+        SafeMarkup::format('Config object name @name exceeds maximum allowed length of @length characters.', array(
           '@name' => str_repeat('a', Config::MAX_NAME_LENGTH) . ".",
           '@length' => Config::MAX_NAME_LENGTH,
         )),
@@ -431,7 +431,7 @@ class ConfigTest extends UnitTestCase {
       $name = 'name.' . $char;
       $return[] = array(
         $name,
-        String::format('Invalid character in Config object name @name.', array(
+        SafeMarkup::format('Invalid character in Config object name @name.', array(
           '@name' => $name,
         )),
       );

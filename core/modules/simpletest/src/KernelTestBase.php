@@ -7,7 +7,7 @@
 
 namespace Drupal\simpletest;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Variable;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -458,7 +458,7 @@ EOD;
       $all_tables_exist = TRUE;
       foreach ($tables as $table) {
         if (!$db_schema->tableExists($table)) {
-          $this->fail(String::format('Installed entity type table for the %entity_type entity type: %table', array(
+          $this->fail(SafeMarkup::format('Installed entity type table for the %entity_type entity type: %table', array(
             '%entity_type' => $entity_type_id,
             '%table' => $table,
           )));
@@ -466,7 +466,7 @@ EOD;
         }
       }
       if ($all_tables_exist) {
-        $this->pass(String::format('Installed entity type tables for the %entity_type entity type: %tables', array(
+        $this->pass(SafeMarkup::format('Installed entity type tables for the %entity_type entity type: %tables', array(
           '%entity_type' => $entity_type_id,
           '%tables' => '{' . implode('}, {', $tables) . '}',
         )));
@@ -573,7 +573,7 @@ EOD;
     $content = $this->container->get('renderer')->renderRoot($elements);
     drupal_process_attached($elements);
     $this->setRawContent($content);
-    $this->verbose('<pre style="white-space: pre-wrap">' . String::checkPlain($content));
+    $this->verbose('<pre style="white-space: pre-wrap">' . SafeMarkup::checkPlain($content));
     return $content;
   }
 

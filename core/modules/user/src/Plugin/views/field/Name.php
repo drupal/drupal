@@ -7,7 +7,7 @@
 
 namespace Drupal\user\Plugin\views\field;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\user\Plugin\views\field\User;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -86,7 +86,7 @@ class Name extends User {
       $account->name = $this->getValue($values);
       if (!empty($this->options['overwrite_anonymous']) && !$account->id()) {
         // This is an anonymous user, and we're overriting the text.
-        return String::checkPlain($this->options['anonymous_text']);
+        return SafeMarkup::checkPlain($this->options['anonymous_text']);
       }
       elseif (!empty($this->options['link_to_user'])) {
         $account->name = $this->getValue($values);

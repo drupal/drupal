@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Entity;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\Exception\EntityTypeIdLengthException;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -238,7 +238,7 @@ class EntityType implements EntityTypeInterface {
   public function __construct($definition) {
     // Throw an exception if the entity type ID is longer than 32 characters.
     if (Unicode::strlen($definition['id']) > static::ID_MAX_LENGTH) {
-      throw new EntityTypeIdLengthException(String::format(
+      throw new EntityTypeIdLengthException(SafeMarkup::format(
         'Attempt to create an entity type with an ID longer than @max characters: @id.', array(
           '@max' => static::ID_MAX_LENGTH,
           '@id' => $definition['id'],

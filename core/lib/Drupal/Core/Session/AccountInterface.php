@@ -141,7 +141,7 @@ interface AccountInterface {
    *
    * @return
    *   An unsanitized string with the username to display. The code receiving
-   *   this result must ensure that \Drupal\Component\Utility\String::checkPlain()
+   *   this result must ensure that \Drupal\Component\Utility\SafeMarkup::checkPlain()
    *   is called on it before it is
    *   printed to the page.
    */

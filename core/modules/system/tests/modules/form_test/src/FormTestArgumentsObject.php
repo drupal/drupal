@@ -7,7 +7,7 @@
 
 namespace Drupal\form_test;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -38,7 +38,7 @@ class FormTestArgumentsObject extends ConfigFormBase {
 
     $form['bananas'] = array(
       '#type' => 'textfield',
-      '#default_value' => String::checkPlain($arg),
+      '#default_value' => SafeMarkup::checkPlain($arg),
       '#title' => $this->t('Bananas'),
     );
 

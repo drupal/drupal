@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemInterface;
@@ -156,7 +156,7 @@ class StringFormatter extends FormatterBase implements ContainerFactoryPluginInt
   protected function viewValue(FieldItemInterface $item) {
     // The text value has no text format assigned to it, so the user input
     // should equal the output, including newlines.
-    return nl2br(String::checkPlain($item->value));
+    return nl2br(SafeMarkup::checkPlain($item->value));
   }
 
 }

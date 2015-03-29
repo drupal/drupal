@@ -9,7 +9,7 @@ namespace Drupal\Tests\Core\Config\Entity;
 
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Config\Entity\ConfigEntityType;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * @coversDefaultClass \Drupal\Core\Config\Entity\ConfigEntityType
@@ -50,7 +50,7 @@ class ConfigEntityTypeTest extends UnitTestCase {
       'config_prefix' => $this->randomMachineName(59),
     );
     $config_entity = $this->setUpConfigEntityType($definition);
-    $this->setExpectedException('\Drupal\Core\Config\ConfigPrefixLengthException', String::format($message_text, array(
+    $this->setExpectedException('\Drupal\Core\Config\ConfigPrefixLengthException', SafeMarkup::format($message_text, array(
       '@config_prefix' => $definition['provider'] . '.' . $definition['config_prefix'],
       '@max_char' => ConfigEntityType::PREFIX_LENGTH,
     )));

@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Form;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Render\Element;
 use Drupal\form_test\Form\FormTestDisabledElementsForm;
@@ -534,7 +534,7 @@ class FormTest extends WebTestBase {
     // the disabled container.
     $actual_count = count($disabled_elements);
     $expected_count = 41;
-    $this->assertEqual($actual_count, $expected_count, String::format('Found @actual elements with disabled property (expected @expected).', array(
+    $this->assertEqual($actual_count, $expected_count, SafeMarkup::format('Found @actual elements with disabled property (expected @expected).', array(
       '@actual' => count($disabled_elements),
       '@expected' => $expected_count,
     )));
@@ -616,7 +616,7 @@ class FormTest extends WebTestBase {
       $path = strtr($path, array('!type' => $type));
       // Verify that the element exists.
       $element = $this->xpath($path, array(
-        ':name' => String::checkPlain($name),
+        ':name' => SafeMarkup::checkPlain($name),
         ':div-class' => $class,
         ':value' => isset($item['#value']) ? $item['#value'] : '',
       ));

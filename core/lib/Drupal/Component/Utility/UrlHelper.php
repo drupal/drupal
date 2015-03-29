@@ -244,7 +244,7 @@ class UrlHelper {
     $base_parts = parse_url($base_url);
 
     if (empty($base_parts['host']) || empty($url_parts['host'])) {
-      throw new \InvalidArgumentException(String::format('A path was passed when a fully qualified domain was expected.'));
+      throw new \InvalidArgumentException(SafeMarkup::format('A path was passed when a fully qualified domain was expected.'));
     }
 
     if (!isset($url_parts['path']) || !isset($base_parts['path'])) {
@@ -272,7 +272,7 @@ class UrlHelper {
     // Get the plain text representation of the attribute value (i.e. its
     // meaning).
     $string = String::decodeEntities($string);
-    return String::checkPlain(static::stripDangerousProtocols($string));
+    return SafeMarkup::checkPlain(static::stripDangerousProtocols($string));
   }
 
   /**
@@ -303,7 +303,7 @@ class UrlHelper {
    * check_url() or Drupal\Component\Utility\Xss::filter(), but those functions
    * return an HTML-encoded string, so this function can be called independently
    * when the output needs to be a plain-text string for passing to functions
-   * that will call \Drupal\Component\Utility\String::checkPlain() separately.
+   * that will call \Drupal\Component\Utility\SafeMarkup::checkPlain() separately.
    *
    * @param string $uri
    *   A plain-text URI that might contain dangerous protocols.

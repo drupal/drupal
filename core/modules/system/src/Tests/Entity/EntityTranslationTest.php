@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\Entity;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\entity_test\Entity\EntityTestMulRev;
@@ -738,7 +738,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     foreach ($langcodes as $langcode) {
       $adapter = $entity->getTranslation($langcode)->getTypedData();
       $name = $adapter->get('name')->value;
-      $this->assertEqual($name, $values[$langcode]['name'], String::format('Name correctly retrieved from "@langcode" adapter', array('@langcode' => $langcode)));
+      $this->assertEqual($name, $values[$langcode]['name'], SafeMarkup::format('Name correctly retrieved from "@langcode" adapter', array('@langcode' => $langcode)));
     }
   }
 

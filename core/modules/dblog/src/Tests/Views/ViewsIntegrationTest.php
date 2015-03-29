@@ -8,7 +8,6 @@
 namespace Drupal\dblog\Tests\Views;
 
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Url;
@@ -95,7 +94,7 @@ class ViewsIntegrationTest extends ViewUnitTestBase {
     $view->initStyle();
 
     foreach ($entries as $index => $entry) {
-      $this->assertEqual($view->style_plugin->getField($index, 'message'), String::format($entry['message'], $entry['variables']));
+      $this->assertEqual($view->style_plugin->getField($index, 'message'), SafeMarkup::format($entry['message'], $entry['variables']));
       $this->assertEqual($view->style_plugin->getField($index, 'link'), Xss::filterAdmin($entry['variables']['link']));
     }
 

@@ -9,7 +9,7 @@ namespace Drupal\Core\Extension;
 
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Parses extension .info.yml files.
@@ -36,12 +36,12 @@ class InfoParser implements InfoParserInterface {
           static::$parsedInfos[$filename] = Yaml::decode(file_get_contents($filename));
         }
         catch (InvalidDataTypeException $e) {
-          $message = String::format("Unable to parse !file: !error", array('!file' => $filename, '!error' => $e->getMessage()));
+          $message = SafeMarkup::format("Unable to parse !file: !error", array('!file' => $filename, '!error' => $e->getMessage()));
           throw new InfoParserException($message);
         }
         $missing_keys = array_diff($this->getRequiredKeys(), array_keys(static::$parsedInfos[$filename]));
         if (!empty($missing_keys)) {
-          $message = String::format('Missing required keys (!missing_keys) in !file.', array('!missing_keys' => implode(', ', $missing_keys), '!file' => $filename));
+          $message = SafeMarkup::format('Missing required keys (!missing_keys) in !file.', array('!missing_keys' => implode(', ', $missing_keys), '!file' => $filename));
           throw new InfoParserException($message);
         }
         if (isset(static::$parsedInfos[$filename]['version']) && static::$parsedInfos[$filename]['version'] === 'VERSION') {

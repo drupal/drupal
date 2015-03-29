@@ -8,7 +8,7 @@
 namespace Drupal\block_content\Tests\Views;
 
 use Drupal\block_content\Entity\BlockContentType;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 
@@ -72,7 +72,7 @@ abstract class BlockContentTestBase extends ViewTestBase {
     if ($block_content = entity_create('block_content', $settings)) {
       $status = $block_content->save();
     }
-    $this->assertEqual($status, SAVED_NEW, String::format('Created block content %info.', array('%info' => $block_content->label())));
+    $this->assertEqual($status, SAVED_NEW, SafeMarkup::format('Created block content %info.', array('%info' => $block_content->label())));
     return $block_content;
   }
 
@@ -104,7 +104,7 @@ abstract class BlockContentTestBase extends ViewTestBase {
     $status = $bundle->save();
     block_content_add_body_field($bundle->id());
 
-    $this->assertEqual($status, SAVED_NEW, String::format('Created block content type %bundle.', array('%bundle' => $bundle->id())));
+    $this->assertEqual($status, SAVED_NEW, SafeMarkup::format('Created block content type %bundle.', array('%bundle' => $bundle->id())));
     return $bundle;
   }
 

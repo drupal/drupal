@@ -6,7 +6,7 @@
  */
 
 namespace Drupal\user\Tests\Views;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\user\Entity\User;
 
 /**
@@ -58,7 +58,7 @@ class BulkFormAccessTest extends UserTestBase {
     $this->drupalPostForm('test-user-bulk-form', $edit, t('Apply'));
     $this->assertResponse(200);
 
-    $this->assertRaw(String::format('No access to execute %action on the @entity_type_label %entity_label.', [
+    $this->assertRaw(SafeMarkup::format('No access to execute %action on the @entity_type_label %entity_label.', [
       '%action' => 'Block the selected user(s)',
       '@entity_type_label' => 'User',
       '%entity_label' => $no_edit_user->label(),

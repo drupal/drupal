@@ -14,6 +14,7 @@ use Drupal\user\RoleInterface;
 use Drupal\views\Plugin\CacheablePluginInterface;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\Component\Utility\String as UtilityString;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 
@@ -171,7 +172,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheablePluginIn
    * Display the filter on the administrative summary
    */
   public function adminSummary() {
-    return UtilityString::checkPlain((string) $this->operator) . ' ' . UtilityString::checkPlain((string) $this->value);
+    return SafeMarkup::checkPlain((string) $this->operator) . ' ' . SafeMarkup::checkPlain((string) $this->value);
   }
 
   /**
@@ -594,7 +595,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheablePluginIn
       '#default_value' => $this->options['expose']['remember'],
     );
 
-    $role_options = array_map('\Drupal\Component\Utility\String::checkPlain', user_role_names());
+    $role_options = array_map('\Drupal\Component\Utility\SafeMarkup::checkPlain', user_role_names());
     $form['expose']['remember_roles'] = array(
       '#type' => 'checkboxes',
       '#title' => $this->t('User roles'),
@@ -765,7 +766,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheablePluginIn
       $value = $this->options['group_info']['identifier'];
 
       $form[$value] = array(
-        '#title' => UtilityString::checkPlain($this->options['group_info']['label']),
+        '#title' => SafeMarkup::checkPlain($this->options['group_info']['label']),
         '#type' => $this->options['group_info']['widget'],
         '#default_value' => $this->group_info,
         '#options' => $groups,

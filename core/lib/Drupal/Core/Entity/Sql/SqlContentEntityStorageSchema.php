@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Entity\Sql;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
@@ -262,7 +262,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
 
     // If a migration is required, we can't proceed.
     if ($this->requiresEntityDataMigration($entity_type, $original)) {
-      throw new EntityStorageException(String::format('The SQL storage cannot change the schema for an existing entity type with data.'));
+      throw new EntityStorageException(SafeMarkup::format('The SQL storage cannot change the schema for an existing entity type with data.'));
     }
 
     // If we have no data just recreate the entity schema from scratch.
@@ -443,7 +443,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    */
   protected function checkEntityType(EntityTypeInterface $entity_type) {
     if ($entity_type->id() != $this->entityType->id()) {
-      throw new EntityStorageException(String::format('Unsupported entity type @id', array('@id' => $entity_type->id())));
+      throw new EntityStorageException(SafeMarkup::format('Unsupported entity type @id', array('@id' => $entity_type->id())));
     }
     return TRUE;
   }
@@ -506,7 +506,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
         }
         foreach ($table_mapping->getFieldNames($table_name) as $field_name) {
           if (!isset($storage_definitions[$field_name])) {
-            throw new FieldException(String::format('Field storage definition for "@field_name" could not be found.', array('@field_name' => $field_name)));
+            throw new FieldException(SafeMarkup::format('Field storage definition for "@field_name" could not be found.', array('@field_name' => $field_name)));
           }
           // Add the schema for base field definitions.
           elseif ($table_mapping->allowsSharedTableStorage($storage_definitions[$field_name])) {

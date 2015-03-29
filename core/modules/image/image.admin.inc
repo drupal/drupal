@@ -6,7 +6,6 @@
  */
 
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\String;
 use Drupal\Core\Render\Element;
 
 /**
@@ -21,8 +20,8 @@ use Drupal\Core\Render\Element;
 function template_preprocess_image_style_preview(&$variables) {
   // Style information.
   $style = $variables['style'];
-  $variables['style_id'] = String::checkPlain($style->id());
-  $variables['style_name'] = String::checkPlain($style->label());
+  $variables['style_id'] = SafeMarkup::checkPlain($style->id());
+  $variables['style_name'] = SafeMarkup::checkPlain($style->label());
 
   // Cache bypass token.
   $variables['cache_bypass'] = REQUEST_TIME;

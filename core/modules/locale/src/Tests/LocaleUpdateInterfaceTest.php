@@ -7,7 +7,7 @@
 
 namespace Drupal\locale\Tests;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Tests for the user interface of project interface translations.
@@ -87,7 +87,7 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
     $this->assertRaw(t('Missing translations for: @languages. See the <a href="@updates">Available translation updates</a> page for more information.', array('@languages' => t('German'), '@updates' => \Drupal::url('locale.translate_status'))), 'Missing translations message');
     $this->drupalGet('admin/reports/translations');
     $this->assertText(t('Missing translations for one project'), 'No translations found');
-    $this->assertText(String::format('@module (@version). !info', array('@module' => 'Locale test translate', '@version' => '1.3-dev', '!info' => t('No translation files are provided for development releases.'))), 'Release details');
+    $this->assertText(SafeMarkup::format('@module (@version). !info', array('@module' => 'Locale test translate', '@version' => '1.3-dev', '!info' => t('No translation files are provided for development releases.'))), 'Release details');
     $this->assertText(t('No translation files are provided for development releases.'), 'Release info');
 
     // Override Drupal core translation status as 'no translations found'.
@@ -112,7 +112,7 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
     // Check if translations are available for Drupal core.
     $this->drupalGet('admin/reports/translations');
     $this->assertText(t('Updates for: !project', array('!project' => t('Drupal core'))), 'Translations found');
-    $this->assertText(String::format('@module (@date)', array('@module' => t('Drupal core'), '@date' => format_date(REQUEST_TIME, 'html_date'))), 'Core translation update');
+    $this->assertText(SafeMarkup::format('@module (@date)', array('@module' => t('Drupal core'), '@date' => format_date(REQUEST_TIME, 'html_date'))), 'Core translation update');
     $update_button = $this->xpath('//input[@type="submit"][@value="' . t('Update translations') . '"]');
     $this->assertTrue($update_button, 'Update translations button');
   }

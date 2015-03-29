@@ -7,7 +7,7 @@
 
 namespace Drupal\Tests\views\Unit;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\ViewsDataHelper;
 use Drupal\views\Tests\ViewTestData;
@@ -106,7 +106,7 @@ class ViewsDataHelperTest extends UnitTestCase {
       array_walk($expected_keys, function(&$item) {
         $item = "views_test_data.$item";
       });
-      $this->assertEquals($expected_keys, array_keys($fields), String::format('Handlers of type @handler_type are not listed as expected.', array('@handler_type' => $handler_type)));
+      $this->assertEquals($expected_keys, array_keys($fields), SafeMarkup::format('Handlers of type @handler_type are not listed as expected.', array('@handler_type' => $handler_type)));
     }
 
     // Check for subtype filtering, so header and footer.
@@ -117,7 +117,7 @@ class ViewsDataHelperTest extends UnitTestCase {
       array_walk($expected_keys, function(&$item) {
         $item = "views_test_data.$item";
       });
-      $this->assertEquals($expected_keys, array_keys($fields), String::format('Sub_type @sub_type is not filtered as expected.', array('@sub_type' => $sub_type)));
+      $this->assertEquals($expected_keys, array_keys($fields), SafeMarkup::format('Sub_type @sub_type is not filtered as expected.', array('@sub_type' => $sub_type)));
     }
   }
 

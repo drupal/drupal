@@ -8,7 +8,7 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\Schema\ArrayElement;
 use Drupal\Core\Config\Schema\ConfigSchemaAlterException;
@@ -333,7 +333,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
       else {
         $message = 'Invoking hook_config_schema_info_alter() has removed (@removed) schema definitions';
       }
-      throw new ConfigSchemaAlterException(String::format($message, ['@added' => implode(',', $added_keys), '@removed' => implode(',', $removed_keys)]));
+      throw new ConfigSchemaAlterException(SafeMarkup::format($message, ['@added' => implode(',', $added_keys), '@removed' => implode(',', $removed_keys)]));
     }
   }
 

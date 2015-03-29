@@ -12,7 +12,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Component\Utility\Crypt;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\user\Entity\Role;
 use Drupal\Core\Url;
 
@@ -252,7 +252,7 @@ function toolbar_menu_navigation_links(array $tree) {
     $element->options['attributes']['id'] = 'toolbar-link-' . $id;
     $element->options['attributes']['class'][] = 'toolbar-icon';
     $element->options['attributes']['class'][] = 'toolbar-icon-' . strtolower(str_replace(array('.', ' ', '_'), array('-', '-', '-'), $definition['id']));
-    $element->options['attributes']['title'] = String::checkPlain($link->getDescription());
+    $element->options['attributes']['title'] = SafeMarkup::checkPlain($link->getDescription());
   }
   return $tree;
 }

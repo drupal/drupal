@@ -11,7 +11,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\taxonomy\Entity\Term;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -140,7 +140,7 @@ class IndexTidDepth extends ArgumentPluginBase implements ContainerFactoryPlugin
   function title() {
     $term = $this->termStorage->load($this->argument);
     if (!empty($term)) {
-      return String::checkPlain($term->getName());
+      return SafeMarkup::checkPlain($term->getName());
     }
     // TODO review text
     return $this->t('No name');

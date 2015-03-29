@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\field;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ResultRow;
 
@@ -83,7 +83,7 @@ class MachineName extends FieldPluginBase {
   public function render(ResultRow $values) {
     $value = $values->{$this->field_alias};
     if (!empty($this->options['machine_name']) || !isset($this->valueOptions[$value])) {
-      $result = String::checkPlain($value);
+      $result = SafeMarkup::checkPlain($value);
     }
     else {
       $result = $this->valueOptions[$value];

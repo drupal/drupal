@@ -10,7 +10,7 @@ namespace Drupal\views\Plugin\views\argument;
 use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\String as UtilityString;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\views\Plugin\CacheablePluginInterface;
@@ -882,7 +882,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheablePlugin
     if (empty($value) && !empty($this->definition['empty field name'])) {
       $value = $this->definition['empty field name'];
     }
-    return UtilityString::checkPlain($value);
+    return SafeMarkup::checkPlain($value);
   }
 
   /**
@@ -901,7 +901,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheablePlugin
    * This usually needs to be overridden to provide a proper title.
    */
   function title() {
-    return UtilityString::checkPlain($this->argument);
+    return SafeMarkup::checkPlain($this->argument);
   }
 
   /**

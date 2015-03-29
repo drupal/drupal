@@ -7,7 +7,7 @@
 
 namespace Drupal\filter\Tests;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\simpletest\WebTestBase;
 use Drupal\user\RoleInterface;
@@ -312,7 +312,7 @@ class FilterAdminTest extends WebTestBase {
     $edit['body[0][format]'] = $plain;
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
     $this->drupalGet('node/' . $node->id());
-    $this->assertText(String::checkPlain($text), 'The "Plain text" text format escapes all HTML tags.');
+    $this->assertText(SafeMarkup::checkPlain($text), 'The "Plain text" text format escapes all HTML tags.');
     $this->config('filter.settings')
       ->set('always_show_fallback_choice', FALSE)
       ->save();

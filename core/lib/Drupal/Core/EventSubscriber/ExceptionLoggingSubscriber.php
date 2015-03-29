@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\EventSubscriber;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Utility\Error;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -45,7 +45,7 @@ class ExceptionLoggingSubscriber implements EventSubscriberInterface {
    */
   public function on403(GetResponseForExceptionEvent $event) {
     $request = $event->getRequest();
-    $this->logger->get('access denied')->warning(String::checkPlain($request->getRequestUri()));
+    $this->logger->get('access denied')->warning(SafeMarkup::checkPlain($request->getRequestUri()));
   }
 
   /**
@@ -56,7 +56,7 @@ class ExceptionLoggingSubscriber implements EventSubscriberInterface {
    */
   public function on404(GetResponseForExceptionEvent $event) {
     $request = $event->getRequest();
-    $this->logger->get('page not found')->warning(String::checkPlain($request->getRequestUri()));
+    $this->logger->get('page not found')->warning(SafeMarkup::checkPlain($request->getRequestUri()));
   }
 
   /**

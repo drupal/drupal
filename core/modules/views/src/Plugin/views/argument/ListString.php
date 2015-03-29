@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\argument;
 
-use Drupal\Component\Utility\String as UtilityString;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Field\AllowedTagsXssTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ViewExecutable;
@@ -76,7 +76,7 @@ class ListString extends StringArgument {
     }
     // else fallback to the key.
     else {
-      return $this->caseTransform(UtilityString::checkPlain($value), $this->options['case']);
+      return $this->caseTransform(SafeMarkup::checkPlain($value), $this->options['case']);
     }
   }
 

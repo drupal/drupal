@@ -10,7 +10,7 @@ namespace Drupal\block;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Component\Serialization\Json;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -251,7 +251,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
           }
 
           $form['blocks'][$entity_id]['info'] = array(
-            '#markup' => String::checkPlain($info['label']),
+            '#markup' => SafeMarkup::checkPlain($info['label']),
             '#wrapper_attributes' => array(
               'class' => array('block'),
             ),
@@ -336,7 +336,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
     $definitions = $this->blockManager->getDefinitionsForContexts();
     $sorted_definitions = $this->blockManager->getSortedDefinitions($definitions);
     foreach ($sorted_definitions as $plugin_id => $plugin_definition) {
-      $category = String::checkPlain($plugin_definition['category']);
+      $category = SafeMarkup::checkPlain($plugin_definition['category']);
       $category_key = 'category-' . $category;
       if (!isset($form['place_blocks']['list'][$category_key])) {
         $form['place_blocks']['list'][$category_key] = array(

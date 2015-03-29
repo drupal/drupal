@@ -5,7 +5,7 @@
  * User page callbacks for the Search module.
  */
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
@@ -36,7 +36,7 @@ function template_preprocess_search_result(&$variables) {
 
   $result = $variables['result'];
   $variables['url'] = check_url($result['link']);
-  $variables['title'] = String::checkPlain($result['title']);
+  $variables['title'] = SafeMarkup::checkPlain($result['title']);
   if (isset($result['language']) && $result['language'] != $language_interface->getId() && $result['language'] != LanguageInterface::LANGCODE_NOT_SPECIFIED) {
     $variables['title_attributes']['lang'] = $result['language'];
     $variables['content_attributes']['lang'] = $result['language'];
@@ -44,7 +44,7 @@ function template_preprocess_search_result(&$variables) {
 
   $info = array();
   if (!empty($result['plugin_id'])) {
-    $info['plugin_id'] = String::checkPlain($result['plugin_id']);
+    $info['plugin_id'] = SafeMarkup::checkPlain($result['plugin_id']);
   }
   if (!empty($result['user'])) {
     $info['user'] = $result['user'];

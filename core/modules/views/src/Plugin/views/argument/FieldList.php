@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\argument;
 
-use Drupal\Component\Utility\String as UtilityString;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Field\AllowedTagsXssTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ViewExecutable;
@@ -74,7 +74,7 @@ class FieldList extends NumericArgument {
     }
     // else fallback to the key.
     else {
-      return UtilityString::checkPlain($value);
+      return SafeMarkup::checkPlain($value);
     }
   }
 

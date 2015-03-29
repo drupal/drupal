@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\Menu;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Url;
 
 /**
@@ -83,7 +83,7 @@ trait AssertBreadcrumbTrait {
           $url = $path;
         }
         $part = array_shift($parts);
-        $pass = ($pass && $part['href'] === $url && $part['text'] === String::checkPlain($title));
+        $pass = ($pass && $part['href'] === $url && $part['text'] === SafeMarkup::checkPlain($title));
       }
     }
     // No parts must be left, or an expected "Home" will always pass.

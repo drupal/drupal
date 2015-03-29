@@ -9,7 +9,7 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\Entity\ConfigEntityType;
@@ -405,7 +405,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
 
     // Fail with an exception for non-fieldable entity types.
     if (!$entity_type->isSubclassOf('\Drupal\Core\Entity\FieldableEntityInterface')) {
-      throw new \LogicException(String::format('Getting the base fields is not supported for entity type @type.', array('@type' => $entity_type->getLabel())));
+      throw new \LogicException(SafeMarkup::format('Getting the base fields is not supported for entity type @type.', array('@type' => $entity_type->getLabel())));
     }
 
     // Retrieve base field definitions.
@@ -473,19 +473,19 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
     // translatable values.
     foreach (array_intersect_key($keys, array_flip(['id', 'revision', 'uuid', 'bundle'])) as $key => $field_name) {
       if (!isset($base_field_definitions[$field_name])) {
-        throw new \LogicException(String::format('The @field field definition does not exist and it is used as @key entity key.', array(
+        throw new \LogicException(SafeMarkup::format('The @field field definition does not exist and it is used as @key entity key.', array(
           '@field' => $base_field_definitions[$field_name]->getLabel(),
           '@key' => $key,
         )));
       }
       if ($base_field_definitions[$field_name]->isRevisionable()) {
-        throw new \LogicException(String::format('The @field field cannot be revisionable as it is used as @key entity key.', array(
+        throw new \LogicException(SafeMarkup::format('The @field field cannot be revisionable as it is used as @key entity key.', array(
           '@field' => $base_field_definitions[$field_name]->getLabel(),
           '@key' => $key,
         )));
       }
       if ($base_field_definitions[$field_name]->isTranslatable()) {
-        throw new \LogicException(String::format('The @field field cannot be translatable as it is used as @key entity key.', array(
+        throw new \LogicException(SafeMarkup::format('The @field field cannot be translatable as it is used as @key entity key.', array(
           '@field' => $base_field_definitions[$field_name]->getLabel(),
           '@key' => $key,
         )));
@@ -494,7 +494,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
 
     // Make sure translatable entity types define the "langcode" field properly.
     if ($entity_type->isTranslatable() && (!isset($keys['langcode']) || !isset($base_field_definitions[$keys['langcode']]) || !$base_field_definitions[$keys['langcode']]->isTranslatable())) {
-      throw new \LogicException(String::format('The @entity_type entity type cannot be translatable as it does not define a translatable "langcode" field.', array('@entity_type' => $entity_type->getLabel())));
+      throw new \LogicException(SafeMarkup::format('The @entity_type entity type cannot be translatable as it does not define a translatable "langcode" field.', array('@entity_type' => $entity_type->getLabel())));
     }
 
     return $base_field_definitions;

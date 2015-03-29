@@ -7,7 +7,7 @@
 
 namespace Drupal\migrate_drupal\Tests\dependencies;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
@@ -62,7 +62,7 @@ class MigrateDependenciesTest extends MigrateDrupal6TestBase {
     $executable = new MigrateExecutable($migration, $this);
     $this->startCollectingMessages();
     $executable->import();
-    $this->assertIdentical($this->migrateMessages['error'], array(String::format('Migration @id did not meet the requirements. Missing migrations d6_aggregator_feed. requirements: d6_aggregator_feed.', array('@id' => $migration->id()))));
+    $this->assertIdentical($this->migrateMessages['error'], array(SafeMarkup::format('Migration @id did not meet the requirements. Missing migrations d6_aggregator_feed. requirements: d6_aggregator_feed.', array('@id' => $migration->id()))));
     $this->collectMessages = FALSE;
   }
 

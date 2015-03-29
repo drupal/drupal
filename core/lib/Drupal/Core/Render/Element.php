@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Render;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Provides helper methods for Drupal render elements.
@@ -90,7 +90,7 @@ class Element {
         // Only trigger an error if the value is not null.
         // @see http://drupal.org/node/1283892
         elseif (isset($value)) {
-          trigger_error(String::format('"@key" is an invalid render array key', array('@key' => $key)), E_USER_ERROR);
+          trigger_error(SafeMarkup::format('"@key" is an invalid render array key', array('@key' => $key)), E_USER_ERROR);
         }
       }
     }

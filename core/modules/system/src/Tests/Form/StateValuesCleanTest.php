@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Form;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -51,7 +51,7 @@ class StateValuesCleanTest extends WebTestBase {
     $this->assertFalse(isset($values['baz']['baz']), format_string('%element was removed.', array('%element' => 'baz')));
 
     // Verify values manually added for cleaning were removed.
-    $this->assertFalse(isset($values['wine']), String::format('%element was removed.', ['%element' => 'wine']));
+    $this->assertFalse(isset($values['wine']), SafeMarkup::format('%element was removed.', ['%element' => 'wine']));
 
     // Verify that nested form value still exists.
     $this->assertTrue(isset($values['baz']['beer']), 'Nested form value still exists.');

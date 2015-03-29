@@ -7,7 +7,7 @@
 
 namespace Drupal\locale;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Defines the locale string base class.
@@ -190,7 +190,7 @@ abstract class StringBase implements StringInterface {
       $storage->save($this);
     }
     else {
-      throw new StringStorageException(String::format('The string cannot be saved because its not bound to a storage: @string', array(
+      throw new StringStorageException(SafeMarkup::format('The string cannot be saved because its not bound to a storage: @string', array(
         '@string' => $this->getString(),
       )));
     }
@@ -206,7 +206,7 @@ abstract class StringBase implements StringInterface {
         $storage->delete($this);
       }
       else {
-        throw new StringStorageException(String::format('The string cannot be deleted because its not bound to a storage: @string', array(
+        throw new StringStorageException(SafeMarkup::format('The string cannot be deleted because its not bound to a storage: @string', array(
           '@string' => $this->getString(),
         )));
       }

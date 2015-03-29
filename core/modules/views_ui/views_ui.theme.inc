@@ -6,7 +6,6 @@
  */
 
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
@@ -158,7 +157,7 @@ function theme_views_ui_build_group_filter_form($variables) {
       'value' => drupal_render($form['group_items'][$group_id]['value']),
       'remove' => array(
         'data' => array(
-          '#markup' => drupal_render($form['group_items'][$group_id]['remove']) . \Drupal::l(String::format('<span>@text</span>', array('@text' => t('Remove'))), Url::fromRoute('<none>', [], array('attributes' => array('id' => 'views-remove-link-' . $group_id, 'class' => array('views-hidden', 'views-button-remove', 'views-groups-remove-link', 'views-remove-link'), 'alt' => t('Remove this item'), 'title' => t('Remove this item'))))),
+          '#markup' => drupal_render($form['group_items'][$group_id]['remove']) . \Drupal::l(SafeMarkup::format('<span>@text</span>', array('@text' => t('Remove'))), Url::fromRoute('<none>', [], array('attributes' => array('id' => 'views-remove-link-' . $group_id, 'class' => array('views-hidden', 'views-button-remove', 'views-groups-remove-link', 'views-remove-link'), 'alt' => t('Remove this item'), 'title' => t('Remove this item'))))),
         ),
       ),
     );
@@ -282,7 +281,7 @@ function template_preprocess_views_ui_rearrange_filter_form(&$variables) {
         $remove_link = array(
           '#type' => 'link',
           '#url' => Url::fromRoute('<none>'),
-          '#title' => String::format('<span>@text</span>', array('@text' => t('Remove'))),
+          '#title' => SafeMarkup::format('<span>@text</span>', array('@text' => t('Remove'))),
           '#weight' => '1',
           '#options' => array(
             'attributes' => array(

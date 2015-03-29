@@ -6,7 +6,8 @@
  */
 
 namespace Drupal\comment\Tests;
-use Drupal\Component\Utility\String;
+
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\user\RoleInterface;
 
 /**
@@ -72,11 +73,11 @@ class CommentBlockTest extends CommentTestBase {
     // Test the only the 10 latest comments are shown and in the proper order.
     $this->assertNoText($comments[10]->getSubject(), 'Comment 11 not found in block.');
     for ($i = 0; $i < 10; $i++) {
-      $this->assertText($comments[$i]->getSubject(), String::format('Comment @number found in block.', array('@number' => 10 - $i)));
+      $this->assertText($comments[$i]->getSubject(), SafeMarkup::format('Comment @number found in block.', array('@number' => 10 - $i)));
       if ($i > 1) {
         $previous_position = $position;
         $position = strpos($this->getRawContent(), $comments[$i]->getSubject());
-        $this->assertTrue($position > $previous_position, String::format('Comment @a appears after comment @b', array('@a' => 10 - $i, '@b' => 11 - $i)));
+        $this->assertTrue($position > $previous_position, SafeMarkup::format('Comment @a appears after comment @b', array('@a' => 10 - $i, '@b' => 11 - $i)));
       }
       $position = strpos($this->getRawContent(), $comments[$i]->getSubject());
     }

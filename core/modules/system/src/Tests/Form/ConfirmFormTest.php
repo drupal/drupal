@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\Form;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
 
@@ -79,7 +79,7 @@ class ConfirmFormTest extends WebTestBase {
    */
   public function assertCancelLinkUrl(Url $url, $message = '', $group = 'Other') {
     $links = $this->xpath('//a[@href=:url]', [':url' => $url->toString()]);
-    $message = ($message ? $message : String::format('Cancel link with url %url found.', ['%url' => $url->toString()]));
+    $message = ($message ? $message : SafeMarkup::format('Cancel link with url %url found.', ['%url' => $url->toString()]));
     return $this->assertTrue(isset($links[0]), $message, $group);
   }
 

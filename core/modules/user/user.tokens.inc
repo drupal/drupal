@@ -5,7 +5,7 @@
  * Builds placeholder replacement tokens for user-related data.
  */
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Implements hook_token_info().
@@ -90,11 +90,11 @@ function user_tokens($type, $tokens, array $data = array(), array $options = arr
 
         case 'name':
           $name = user_format_name($account);
-          $replacements[$original] = $sanitize ? String::checkPlain($name) : $name;
+          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($name) : $name;
           break;
 
         case 'mail':
-          $replacements[$original] = $sanitize ? String::checkPlain($account->getEmail()) : $account->getEmail();
+          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($account->getEmail()) : $account->getEmail();
           break;
 
         case 'url':

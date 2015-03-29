@@ -7,7 +7,7 @@
 
 namespace Drupal\comment\Tests;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\comment\Entity\Comment;
 use Drupal\node\Entity\Node;
@@ -51,25 +51,25 @@ class CommentTokenReplaceTest extends CommentTestBase {
     // Generate and test sanitized tokens.
     $tests = array();
     $tests['[comment:cid]'] = $comment->id();
-    $tests['[comment:hostname]'] = String::checkPlain($comment->getHostname());
+    $tests['[comment:hostname]'] = SafeMarkup::checkPlain($comment->getHostname());
     $tests['[comment:author]'] = Xss::filter($comment->getAuthorName());
-    $tests['[comment:mail]'] = String::checkPlain($this->adminUser->getEmail());
+    $tests['[comment:mail]'] = SafeMarkup::checkPlain($this->adminUser->getEmail());
     $tests['[comment:homepage]'] = check_url($comment->getHomepage());
     $tests['[comment:title]'] = Xss::filter($comment->getSubject());
     $tests['[comment:body]'] = $comment->comment_body->processed;
-    $tests['[comment:langcode]'] = String::checkPlain($comment->language()->getId());
+    $tests['[comment:langcode]'] = SafeMarkup::checkPlain($comment->language()->getId());
     $tests['[comment:url]'] = $comment->url('canonical', $url_options + array('fragment' => 'comment-' . $comment->id()));
     $tests['[comment:edit-url]'] = $comment->url('edit-form', $url_options);
     $tests['[comment:created:since]'] = \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $comment->getCreatedTime(), 2, $language_interface->getId());
     $tests['[comment:changed:since]'] = \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $comment->getChangedTime(), 2, $language_interface->getId());
     $tests['[comment:parent:cid]'] = $comment->hasParentComment() ? $comment->getParentComment()->id() : NULL;
-    $tests['[comment:parent:title]'] = String::checkPlain($parent_comment->getSubject());
-    $tests['[comment:entity]'] = String::checkPlain($node->getTitle());
+    $tests['[comment:parent:title]'] = SafeMarkup::checkPlain($parent_comment->getSubject());
+    $tests['[comment:entity]'] = SafeMarkup::checkPlain($node->getTitle());
     // Test node specific tokens.
     $tests['[comment:entity:nid]'] = $comment->getCommentedEntityId();
-    $tests['[comment:entity:title]'] = String::checkPlain($node->getTitle());
+    $tests['[comment:entity:title]'] = SafeMarkup::checkPlain($node->getTitle());
     $tests['[comment:author:uid]'] = $comment->getOwnerId();
-    $tests['[comment:author:name]'] = String::checkPlain($this->adminUser->getUsername());
+    $tests['[comment:author:name]'] = SafeMarkup::checkPlain($this->adminUser->getUsername());
 
     // Test to make sure that we generated something for each token.
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');

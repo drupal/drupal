@@ -5,7 +5,7 @@
  * Builds placeholder replacement tokens for node-related data.
  */
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
@@ -113,16 +113,16 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
           break;
 
         case 'type':
-          $replacements[$original] = $sanitize ? String::checkPlain($node->getType()) : $node->getType();
+          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($node->getType()) : $node->getType();
           break;
 
         case 'type-name':
           $type_name = node_get_type_label($node);
-          $replacements[$original] = $sanitize ? String::checkPlain($type_name) : $type_name;
+          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($type_name) : $type_name;
           break;
 
         case 'title':
-          $replacements[$original] = $sanitize ? String::checkPlain($node->getTitle()) : $node->getTitle();
+          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($node->getTitle()) : $node->getTitle();
           break;
 
         case 'body':
@@ -161,7 +161,7 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
           break;
 
         case 'langcode':
-          $replacements[$original] = $sanitize ? String::checkPlain($node->language()->getId()) : $node->language()->getId();
+          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($node->language()->getId()) : $node->language()->getId();
           break;
 
         case 'url':
@@ -175,7 +175,7 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
         // Default values for the chained tokens handled below.
         case 'author':
           $account = $node->getOwner() ? $node->getOwner() : user_load(0);
-          $replacements[$original] = $sanitize ? String::checkPlain($account->label()) : $account->label();
+          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($account->label()) : $account->label();
           break;
 
         case 'created':

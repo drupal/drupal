@@ -7,7 +7,7 @@
 
 namespace Drupal\Core;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -232,7 +232,7 @@ class Url {
     // because these are URI reserved characters that a scheme name may not
     // start with.
     if ((strpos($user_input, '/') !== 0) && (strpos($user_input, '#') !== 0) && (strpos($user_input, '?') !== 0)) {
-      throw new \InvalidArgumentException(String::format("The user-entered string @user_input must begin with a '/', '?', or '#'.", ['@user_input' => $user_input]));
+      throw new \InvalidArgumentException(SafeMarkup::format("The user-entered string @user_input must begin with a '/', '?', or '#'.", ['@user_input' => $user_input]));
     }
 
     // fromUri() requires an absolute URI, so prepend the appropriate scheme
@@ -296,10 +296,10 @@ class Url {
   public static function fromUri($uri, $options = []) {
     $uri_parts = parse_url($uri);
     if ($uri_parts === FALSE) {
-      throw new \InvalidArgumentException(String::format('The URI "@uri" is malformed.', ['@uri' => $uri]));
+      throw new \InvalidArgumentException(SafeMarkup::format('The URI "@uri" is malformed.', ['@uri' => $uri]));
     }
     if (empty($uri_parts['scheme'])) {
-      throw new \InvalidArgumentException(String::format('The URI "@uri" is invalid. You must use a valid URI scheme.', ['@uri' => $uri]));
+      throw new \InvalidArgumentException(SafeMarkup::format('The URI "@uri" is invalid. You must use a valid URI scheme.', ['@uri' => $uri]));
     }
     $uri_parts += ['path' => ''];
     // Discard empty fragment in $options for consistency with parse_url().
@@ -362,7 +362,7 @@ class Url {
   protected static function fromEntityUri(array $uri_parts, array $options, $uri) {
     list($entity_type_id, $entity_id) = explode('/', $uri_parts['path'], 2);
     if ($uri_parts['scheme'] != 'entity' || $entity_id === '') {
-      throw new \InvalidArgumentException(String::format('The entity URI "@uri" is invalid. You must specify the entity id in the URL. e.g., entity:node/1 for loading the canonical path to node entity with id 1.', ['@uri' => $uri]));
+      throw new \InvalidArgumentException(SafeMarkup::format('The entity URI "@uri" is invalid. You must specify the entity id in the URL. e.g., entity:node/1 for loading the canonical path to node entity with id 1.', ['@uri' => $uri]));
     }
 
     return new static("entity.$entity_type_id.canonical", [$entity_type_id => $entity_id], $options);
@@ -422,7 +422,7 @@ class Url {
     }
     else {
       if ($uri_parts['path'][0] !== '/') {
-        throw new \InvalidArgumentException(String::format('The internal path component "@path" is invalid. Its path component must have a leading slash, e.g. internal:/foo.', ['@path' => $uri_parts['path']]));
+        throw new \InvalidArgumentException(SafeMarkup::format('The internal path component "@path" is invalid. Its path component must have a leading slash, e.g. internal:/foo.', ['@path' => $uri_parts['path']]));
       }
       // Remove the leading slash.
       $uri_parts['path'] = substr($uri_parts['path'], 1);
@@ -458,7 +458,7 @@ class Url {
     $route_parts = explode(';', $uri_parts['path'], 2);
     $route_name = $route_parts[0];
     if ($route_name === '') {
-      throw new \InvalidArgumentException(String::format('The route URI "@uri" is invalid. You must have a route name in the URI. e.g., route:system.admin', ['@uri' => $uri]));
+      throw new \InvalidArgumentException(SafeMarkup::format('The route URI "@uri" is invalid. You must have a route name in the URI. e.g., route:system.admin', ['@uri' => $uri]));
     }
     $route_parameters = [];
     if (!empty($route_parts[1])) {

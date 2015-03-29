@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\area;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\style\DefaultSummary;
@@ -88,7 +88,7 @@ class Result extends AreaPluginBase {
     // @TODO: Maybe use a possible is views empty functionality.
     // Not every view has total_rows set, use view->result instead.
     $total = isset($this->view->total_rows) ? $this->view->total_rows : count($this->view->result);
-    $label = String::checkPlain($this->view->storage->label());
+    $label = SafeMarkup::checkPlain($this->view->storage->label());
     if ($per_page === 0) {
       $page_count = 1;
       $start = 1;

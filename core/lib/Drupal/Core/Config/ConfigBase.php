@@ -8,7 +8,7 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use \Drupal\Core\DependencyInjection\DependencySerializationTrait;
 
 /**
@@ -95,13 +95,13 @@ abstract class ConfigBase {
   public static function validateName($name) {
     // The name must be namespaced by owner.
     if (strpos($name, '.') === FALSE) {
-      throw new ConfigNameException(String::format('Missing namespace in Config object name @name.', array(
+      throw new ConfigNameException(SafeMarkup::format('Missing namespace in Config object name @name.', array(
         '@name' => $name,
       )));
     }
     // The name must be shorter than Config::MAX_NAME_LENGTH characters.
     if (strlen($name) > self::MAX_NAME_LENGTH) {
-      throw new ConfigNameException(String::format('Config object name @name exceeds maximum allowed length of @length characters.', array(
+      throw new ConfigNameException(SafeMarkup::format('Config object name @name exceeds maximum allowed length of @length characters.', array(
         '@name' => $name,
         '@length' => self::MAX_NAME_LENGTH,
       )));
@@ -110,7 +110,7 @@ abstract class ConfigBase {
     // The name must not contain any of the following characters:
     // : ? * < > " ' / \
     if (preg_match('/[:?*<>"\'\/\\\\]/', $name)) {
-      throw new ConfigNameException(String::format('Invalid character in Config object name @name.', array(
+      throw new ConfigNameException(SafeMarkup::format('Invalid character in Config object name @name.', array(
         '@name' => $name,
       )));
     }
@@ -220,7 +220,7 @@ abstract class ConfigBase {
   protected function validateKeys(array $data) {
     foreach ($data as $key => $value) {
       if (strpos($key, '.') !== FALSE) {
-        throw new ConfigValueException(String::format('@key key contains a dot which is not supported.', array('@key' => $key)));
+        throw new ConfigValueException(SafeMarkup::format('@key key contains a dot which is not supported.', array('@key' => $key)));
       }
       if (is_array($value)) {
         $this->validateKeys($value);

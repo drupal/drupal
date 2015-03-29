@@ -7,7 +7,7 @@
 
 namespace Drupal\filter;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\Entity\DraggableListBuilder;
 use Drupal\Core\Entity\EntityInterface;
@@ -95,19 +95,19 @@ class FilterFormatListBuilder extends DraggableListBuilder {
     // Check whether this is the fallback text format. This format is available
     // to all roles and cannot be disabled via the admin interface.
     if ($entity->isFallbackFormat()) {
-      $row['label'] = String::placeholder($entity->label());
+      $row['label'] = SafeMarkup::placeholder($entity->label());
 
       $fallback_choice = $this->configFactory->get('filter.settings')->get('always_show_fallback_choice');
       if ($fallback_choice) {
-        $roles_markup = String::placeholder($this->t('All roles may use this format'));
+        $roles_markup = SafeMarkup::placeholder($this->t('All roles may use this format'));
       }
       else {
-        $roles_markup = String::placeholder($this->t('This format is shown when no other formats are available'));
+        $roles_markup = SafeMarkup::placeholder($this->t('This format is shown when no other formats are available'));
       }
     }
     else {
       $row['label'] = $this->getLabel($entity);
-      $roles = array_map('\Drupal\Component\Utility\String::checkPlain', filter_get_roles_by_format($entity));
+      $roles = array_map('\Drupal\Component\Utility\SafeMarkup::checkPlain', filter_get_roles_by_format($entity));
       $roles_markup = $roles ? implode(', ', $roles) : $this->t('No roles may use this format');
     }
 

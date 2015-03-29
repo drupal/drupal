@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Config\Schema;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\TypedData\TypedData;
 
@@ -94,7 +94,7 @@ abstract class ArrayElement extends TypedData implements \IteratorAggregate, Typ
       return $element;
     }
     else {
-      throw new \InvalidArgumentException(String::format("The configuration property @key doesn't exist.", array('@key' => $name)));
+      throw new \InvalidArgumentException(SafeMarkup::format("The configuration property @key doesn't exist.", array('@key' => $name)));
     }
   }
 

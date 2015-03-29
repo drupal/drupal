@@ -7,7 +7,7 @@
 
 namespace Drupal\Tests\Core\Controller;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Controller\TitleResolver;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -151,7 +151,7 @@ class TitleCallback {
    *   Returns the example string.
    */
   public function example($value) {
-    return String::format('test @value', array('@value' => $value));
+    return SafeMarkup::format('test @value', array('@value' => $value));
   }
 
 }

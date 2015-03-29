@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Language;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\StringTranslation\TranslationWrapper;
@@ -69,7 +69,7 @@ class LanguageManager implements LanguageManagerInterface {
    * @see \Drupal\Core\StringTranslation\TranslationInterface()
    */
   protected function t($string, array $args = array(), array $options = array()) {
-    return $this->translation ? $this->translation->translate($string, $args, $options) : String::format($string, $args);
+    return $this->translation ? $this->translation->translate($string, $args, $options) : SafeMarkup::format($string, $args);
   }
 
   /**

@@ -9,7 +9,7 @@ namespace Drupal\simpletest;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Random;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\StorageComparer;
@@ -371,7 +371,7 @@ abstract class TestBase {
    *   TRUE is a synonym for 'pass', FALSE for 'fail'.
    * @param $message
    *   (optional) A message to display with the assertion. Do not translate
-   *   messages: use \Drupal\Component\Utility\String::format() to embed
+   *   messages: use \Drupal\Component\Utility\SafeMarkup::format() to embed
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
    * @param $group
@@ -555,7 +555,7 @@ abstract class TestBase {
    *   The value on which the assertion is to be done.
    * @param $message
    *   (optional) A message to display with the assertion. Do not translate
-   *   messages: use \Drupal\Component\Utility\String::format() to embed
+   *   messages: use \Drupal\Component\Utility\SafeMarkup::format() to embed
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
    * @param $group
@@ -568,7 +568,7 @@ abstract class TestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertTrue($value, $message = '', $group = 'Other') {
-    return $this->assert((bool) $value, $message ? $message : String::format('Value @value is TRUE.', array('@value' => var_export($value, TRUE))), $group);
+    return $this->assert((bool) $value, $message ? $message : SafeMarkup::format('Value @value is TRUE.', array('@value' => var_export($value, TRUE))), $group);
   }
 
   /**
@@ -580,7 +580,7 @@ abstract class TestBase {
    *   The value on which the assertion is to be done.
    * @param $message
    *   (optional) A message to display with the assertion. Do not translate
-   *   messages: use \Drupal\Component\Utility\String::format() to embed
+   *   messages: use \Drupal\Component\Utility\SafeMarkup::format() to embed
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
    * @param $group
@@ -593,7 +593,7 @@ abstract class TestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertFalse($value, $message = '', $group = 'Other') {
-    return $this->assert(!$value, $message ? $message : String::format('Value @value is FALSE.', array('@value' => var_export($value, TRUE))), $group);
+    return $this->assert(!$value, $message ? $message : SafeMarkup::format('Value @value is FALSE.', array('@value' => var_export($value, TRUE))), $group);
   }
 
   /**
@@ -603,7 +603,7 @@ abstract class TestBase {
    *   The value on which the assertion is to be done.
    * @param $message
    *   (optional) A message to display with the assertion. Do not translate
-   *   messages: use \Drupal\Component\Utility\String::format() to embed
+   *   messages: use \Drupal\Component\Utility\SafeMarkup::format() to embed
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
    * @param $group
@@ -616,7 +616,7 @@ abstract class TestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertNull($value, $message = '', $group = 'Other') {
-    return $this->assert(!isset($value), $message ? $message : String::format('Value @value is NULL.', array('@value' => var_export($value, TRUE))), $group);
+    return $this->assert(!isset($value), $message ? $message : SafeMarkup::format('Value @value is NULL.', array('@value' => var_export($value, TRUE))), $group);
   }
 
   /**
@@ -626,7 +626,7 @@ abstract class TestBase {
    *   The value on which the assertion is to be done.
    * @param $message
    *   (optional) A message to display with the assertion. Do not translate
-   *   messages: use \Drupal\Component\Utility\String::format() to embed
+   *   messages: use \Drupal\Component\Utility\SafeMarkup::format() to embed
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
    * @param $group
@@ -639,7 +639,7 @@ abstract class TestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertNotNull($value, $message = '', $group = 'Other') {
-    return $this->assert(isset($value), $message ? $message : String::format('Value @value is not NULL.', array('@value' => var_export($value, TRUE))), $group);
+    return $this->assert(isset($value), $message ? $message : SafeMarkup::format('Value @value is not NULL.', array('@value' => var_export($value, TRUE))), $group);
   }
 
   /**
@@ -651,7 +651,7 @@ abstract class TestBase {
    *   The second value to check.
    * @param $message
    *   (optional) A message to display with the assertion. Do not translate
-   *   messages: use \Drupal\Component\Utility\String::format() to embed
+   *   messages: use \Drupal\Component\Utility\SafeMarkup::format() to embed
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
    * @param $group
@@ -664,7 +664,7 @@ abstract class TestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertEqual($first, $second, $message = '', $group = 'Other') {
-    return $this->assert($first == $second, $message ? $message : String::format('Value @first is equal to value @second.', array('@first' => var_export($first, TRUE), '@second' => var_export($second, TRUE))), $group);
+    return $this->assert($first == $second, $message ? $message : SafeMarkup::format('Value @first is equal to value @second.', array('@first' => var_export($first, TRUE), '@second' => var_export($second, TRUE))), $group);
   }
 
   /**
@@ -676,7 +676,7 @@ abstract class TestBase {
    *   The second value to check.
    * @param $message
    *   (optional) A message to display with the assertion. Do not translate
-   *   messages: use \Drupal\Component\Utility\String::format() to embed
+   *   messages: use \Drupal\Component\Utility\SafeMarkup::format() to embed
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
    * @param $group
@@ -689,7 +689,7 @@ abstract class TestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertNotEqual($first, $second, $message = '', $group = 'Other') {
-    return $this->assert($first != $second, $message ? $message : String::format('Value @first is not equal to value @second.', array('@first' => var_export($first, TRUE), '@second' => var_export($second, TRUE))), $group);
+    return $this->assert($first != $second, $message ? $message : SafeMarkup::format('Value @first is not equal to value @second.', array('@first' => var_export($first, TRUE), '@second' => var_export($second, TRUE))), $group);
   }
 
   /**
@@ -701,7 +701,7 @@ abstract class TestBase {
    *   The second value to check.
    * @param $message
    *   (optional) A message to display with the assertion. Do not translate
-   *   messages: use \Drupal\Component\Utility\String::format() to embed
+   *   messages: use \Drupal\Component\Utility\SafeMarkup::format() to embed
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
    * @param $group
@@ -714,7 +714,7 @@ abstract class TestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertIdentical($first, $second, $message = '', $group = 'Other') {
-    return $this->assert($first === $second, $message ? $message : String::format('Value @first is identical to value @second.', array('@first' => var_export($first, TRUE), '@second' => var_export($second, TRUE))), $group);
+    return $this->assert($first === $second, $message ? $message : SafeMarkup::format('Value @first is identical to value @second.', array('@first' => var_export($first, TRUE), '@second' => var_export($second, TRUE))), $group);
   }
 
   /**
@@ -726,7 +726,7 @@ abstract class TestBase {
    *   The second value to check.
    * @param $message
    *   (optional) A message to display with the assertion. Do not translate
-   *   messages: use \Drupal\Component\Utility\String::format() to embed
+   *   messages: use \Drupal\Component\Utility\SafeMarkup::format() to embed
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
    * @param $group
@@ -739,7 +739,7 @@ abstract class TestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertNotIdentical($first, $second, $message = '', $group = 'Other') {
-    return $this->assert($first !== $second, $message ? $message : String::format('Value @first is not identical to value @second.', array('@first' => var_export($first, TRUE), '@second' => var_export($second, TRUE))), $group);
+    return $this->assert($first !== $second, $message ? $message : SafeMarkup::format('Value @first is not identical to value @second.', array('@first' => var_export($first, TRUE), '@second' => var_export($second, TRUE))), $group);
   }
 
   /**
@@ -751,7 +751,7 @@ abstract class TestBase {
    *   The second object to check.
    * @param $message
    *   (optional) A message to display with the assertion. Do not translate
-   *   messages: use \Drupal\Component\Utility\String::format() to embed
+   *   messages: use \Drupal\Component\Utility\SafeMarkup::format() to embed
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
    * @param $group
@@ -764,7 +764,7 @@ abstract class TestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertIdenticalObject($object1, $object2, $message = '', $group = 'Other') {
-    $message = $message ?: String::format('!object1 is identical to !object2', array(
+    $message = $message ?: SafeMarkup::format('!object1 is identical to !object2', array(
       '!object1' => var_export($object1, TRUE),
       '!object2' => var_export($object2, TRUE),
     ));
@@ -795,7 +795,7 @@ abstract class TestBase {
    *
    * @param $message
    *   (optional) A message to display with the assertion. Do not translate
-   *   messages: use \Drupal\Component\Utility\String::format() to embed
+   *   messages: use \Drupal\Component\Utility\SafeMarkup::format() to embed
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
    * @param $group
@@ -816,7 +816,7 @@ abstract class TestBase {
    *
    * @param $message
    *   (optional) A message to display with the assertion. Do not translate
-   *   messages: use \Drupal\Component\Utility\String::format() to embed
+   *   messages: use \Drupal\Component\Utility\SafeMarkup::format() to embed
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
    * @param $group
@@ -837,7 +837,7 @@ abstract class TestBase {
    *
    * @param $message
    *   (optional) A message to display with the assertion. Do not translate
-   *   messages: use \Drupal\Component\Utility\String::format() to embed
+   *   messages: use \Drupal\Component\Utility\SafeMarkup::format() to embed
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
    * @param $group
@@ -1397,10 +1397,10 @@ abstract class TestBase {
       'file' => $exception->getFile(),
     ));
     // \Drupal\Core\Utility\Error::decodeException() runs the exception
-    // message through \Drupal\Component\Utility\String::checkPlain().
+    // message through \Drupal\Component\Utility\SafeMarkup::checkPlain().
     $decoded_exception = Error::decodeException($exception);
     unset($decoded_exception['backtrace']);
-    $message = String::format('%type: !message in %function (line %line of %file). <pre class="backtrace">!backtrace</pre>', $decoded_exception + array(
+    $message = SafeMarkup::format('%type: !message in %function (line %line of %file). <pre class="backtrace">!backtrace</pre>', $decoded_exception + array(
       '!backtrace' => Error::formatBacktrace($verbose_backtrace),
     ));
     $this->error($message, 'Uncaught exception', Error::getLastCaller($backtrace));
