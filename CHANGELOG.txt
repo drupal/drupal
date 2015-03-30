@@ -1,6 +1,9 @@
 
 Drupal 7.36, xxxx-xx-xx (development version)
 -----------------------
+- Added an 'image_suppress_itok_output' variable to allow sites already using
+  the existing 'image_allow_insecure_derivatives' variable to also prevent
+  security tokens from appearing in image derivative URLs.
 - Fixed double-escaping of theme names in the Block module administrative
   interface (minor string change).
 - Added basic support for Xdebug when running automated tests.
