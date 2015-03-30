@@ -53,6 +53,11 @@ function theme_test_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
+  $items['theme-test/drupal-add-region-content'] = array(
+    'page callback' => '_theme_test_drupal_add_region_content',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
   return $items;
 }
 
@@ -124,6 +129,14 @@ function _theme_test_alter() {
  */
 function _theme_test_suggestion() {
   return theme(array('theme_test__suggestion', 'theme_test'), array());
+}
+
+/**
+ * Page callback, calls drupal_add_region_content.
+ */
+function _theme_test_drupal_add_region_content() {
+  drupal_add_region_content('content', 'World');
+  return 'Hello';
 }
 
 /**

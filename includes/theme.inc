@@ -2622,6 +2622,9 @@ function template_preprocess_page(&$variables) {
     if (!isset($variables['page'][$region_key])) {
       $variables['page'][$region_key] = array();
     }
+    if ($region_content = drupal_get_region_content($region_key)) {
+      $variables['page'][$region_key][]['#markup'] = $region_content;
+    }
   }
 
   // Set up layout variable.

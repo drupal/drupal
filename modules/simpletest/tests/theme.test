@@ -155,6 +155,15 @@ class ThemeTestCase extends DrupalWebTestCase {
     $this->assertNotEqual(theme_get_setting('subtheme_override', 'test_basetheme'), theme_get_setting('subtheme_override', 'test_subtheme'), 'Base theme\'s default settings values can be overridden by subtheme.');
     $this->assertIdentical(theme_get_setting('basetheme_only', 'test_subtheme'), 'base theme value', 'Base theme\'s default settings values are inherited by subtheme.');
   }
+
+  /**
+   * Test the drupal_add_region_content() function.
+   */
+  function testDrupalAddRegionContent() {
+    $this->drupalGet('theme-test/drupal-add-region-content');
+    $this->assertText('Hello');
+    $this->assertText('World');
+  }
 }
 
 /**

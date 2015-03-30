@@ -1,6 +1,8 @@
 
 Drupal 7.36, xxxx-xx-xx (development version)
 -----------------------
+- Fixed the drupal_add_region_content() function so that it actually adds
+  content to the page.
 - Added an 'image_suppress_itok_output' variable to allow sites already using
   the existing 'image_allow_insecure_derivatives' variable to also prevent
   security tokens from appearing in image derivative URLs.
