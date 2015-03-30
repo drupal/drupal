@@ -877,6 +877,7 @@ class FileFieldDisplayTestCase extends FileFieldTestCase {
     $field_settings = array(
       'display_field' => '1',
       'display_default' => '1',
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
     );
     $instance_settings = array(
       'description_field' => '1',
@@ -917,6 +918,17 @@ class FileFieldDisplayTestCase extends FileFieldTestCase {
 
     $this->assertNoRaw($default_output, 'Field is hidden when "display" option is unchecked.');
 
+    // Test that fields appear as expected during the preview.
+    // Add a second file.
+    $name = 'files[' . $field_name . '_' . LANGUAGE_NONE . '_1]';
+    $edit[$name] = drupal_realpath($test_file->uri);
+
+    // Uncheck the display checkboxes and go to the preview.
+    $edit[$field_name . '[' . LANGUAGE_NONE . '][0][display]'] = FALSE;
+    $edit[$field_name . '[' . LANGUAGE_NONE . '][1][display]'] = FALSE;
+    $this->drupalPost('node/' . $nid . '/edit', $edit, t('Preview'));
+    $this->assertRaw($field_name . '[' . LANGUAGE_NONE . '][0][display]', 'First file appears as expected.');
+    $this->assertRaw($field_name . '[' . LANGUAGE_NONE . '][1][display]', 'Second file appears as expected.');
   }
 }
 

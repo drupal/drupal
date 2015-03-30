@@ -1,6 +1,9 @@
 
 Drupal 7.36, xxxx-xx-xx (development version)
 -----------------------
+- Fixed a bug which caused previewing a node to remove elements from the node
+  being edited. With this fix, calling node_preview() will no longer modify the
+  passed-in node object (minor API change).
 - Added a user_has_role() function to check whether a user has a particular
   role (API addition).
 - Fixed installation failures when an opcode cache is enabled.
