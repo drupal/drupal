@@ -1,6 +1,8 @@
 
 Drupal 7.36, xxxx-xx-xx (development version)
 -----------------------
+- Added a user_has_role() function to check whether a user has a particular
+  role (API addition).
 - Fixed installation failures when an opcode cache is enabled.
 - Fixed a bug in the Drupal 6 to Drupal 7 upgrade path which caused private
   files to be inaccessible.
