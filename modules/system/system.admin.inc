@@ -2646,8 +2646,8 @@ function theme_system_modules_fieldset($variables) {
     }
     $row[] = array('data' => $description, 'class' => array('description'));
     // Display links (such as help or permissions) in their own columns.
-    foreach (array('help', 'permissions', 'configure') as $key) {
-      $row[] = array('data' => drupal_render($module['links'][$key]), 'class' => array($key));
+    foreach (array('help', 'permissions', 'configure') as $link_type) {
+      $row[] = array('data' => drupal_render($module['links'][$link_type]), 'class' => array($link_type));
     }
     $rows[] = $row;
   }
