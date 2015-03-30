@@ -1,6 +1,7 @@
 
 Drupal 7.36, xxxx-xx-xx (development version)
 -----------------------
+- Added basic support for Xdebug when running automated tests.
 - Fixed a bug which caused previewing a node to remove elements from the node
   being edited. With this fix, calling node_preview() will no longer modify the
   passed-in node object (minor API change).
