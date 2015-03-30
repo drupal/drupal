@@ -75,7 +75,7 @@ class BlockTestCase extends DrupalWebTestCase {
     $bid = db_query("SELECT bid FROM {block_custom} WHERE info = :info", array(':info' => $custom_block['info']))->fetchField();
 
     // Check to see if the custom block was created by checking that it's in the database.
-    $this->assertNotNull($bid, 'Custom block found in database');
+    $this->assertTrue($bid, 'Custom block found in database');
 
     // Check that block_block_view() returns the correct title and content.
     $data = block_block_view($bid);
@@ -305,7 +305,7 @@ class BlockTestCase extends DrupalWebTestCase {
     ))->fetchField();
 
     // Check to see if the block was created by checking that it's in the database.
-    $this->assertNotNull($bid, 'Block found in database');
+    $this->assertTrue($bid, 'Block found in database');
 
     // Check whether the block can be moved to all available regions.
     foreach ($this->regions as $region) {
