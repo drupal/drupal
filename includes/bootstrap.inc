@@ -529,9 +529,8 @@ function timer_stop($name) {
  * Returns the appropriate configuration directory.
  *
  * Returns the configuration path based on the site's hostname, port, and
- * pathname. Uses find_conf_path() to find the current configuration directory.
- * See default.settings.php for examples on how the URL is converted to a
- * directory.
+ * pathname. See default.settings.php for examples on how the URL is converted
+ * to a directory.
  *
  * @param bool $require_settings
  *   Only configuration directories with an existing settings.php file
