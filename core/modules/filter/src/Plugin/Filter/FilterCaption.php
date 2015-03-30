@@ -9,7 +9,6 @@ namespace Drupal\filter\Plugin\Filter;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\Xss;
 use Drupal\filter\FilterProcessResult;
@@ -45,7 +44,7 @@ class FilterCaption extends FilterBase {
 
         // Sanitize caption: decode HTML encoding, limit allowed HTML tags; only
         // allow inline tags that are allowed by default, plus <br>.
-        $caption = String::decodeEntities($caption);
+        $caption = Html::decodeEntities($caption);
         $caption = Xss::filter($caption, array('a', 'em', 'strong', 'cite', 'code', 'br'));
 
         // The caption must be non-empty.

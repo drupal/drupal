@@ -7,7 +7,7 @@
 
 namespace Drupal\Tests\Component\Utility;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
 use Drupal\Tests\UnitTestCase;
@@ -550,7 +550,7 @@ class XssTest extends UnitTestCase {
    *   (optional) The group this message belongs to. Defaults to 'Other'.
    */
   protected function assertNormalized($haystack, $needle, $message = '', $group = 'Other') {
-    $this->assertTrue(strpos(strtolower(String::decodeEntities($haystack)), $needle) !== FALSE, $message, $group);
+    $this->assertTrue(strpos(strtolower(Html::decodeEntities($haystack)), $needle) !== FALSE, $message, $group);
   }
 
   /**
@@ -572,7 +572,7 @@ class XssTest extends UnitTestCase {
    *   (optional) The group this message belongs to. Defaults to 'Other'.
    */
   protected function assertNotNormalized($haystack, $needle, $message = '', $group = 'Other') {
-    $this->assertTrue(strpos(strtolower(String::decodeEntities($haystack)), $needle) === FALSE, $message, $group);
+    $this->assertTrue(strpos(strtolower(Html::decodeEntities($haystack)), $needle) === FALSE, $message, $group);
   }
 
 }

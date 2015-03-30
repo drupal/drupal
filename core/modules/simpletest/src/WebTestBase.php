@@ -10,8 +10,8 @@ namespace Drupal\simpletest;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Component\Utility\Crypt;
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\DependencyInjection\YamlFileLoader;
@@ -2083,7 +2083,7 @@ abstract class WebTestBase extends TestBase {
         // Parse the content attribute of the meta tag for the format:
         // "[delay]: URL=[page_to_redirect_to]".
         if (preg_match('/\d+;\s*URL=(?<url>.*)/i', $refresh[0]['content'], $match)) {
-          return $this->drupalGet($this->getAbsoluteUrl(String::decodeEntities($match['url'])));
+          return $this->drupalGet($this->getAbsoluteUrl(Html::decodeEntities($match['url'])));
         }
       }
     }

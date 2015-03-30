@@ -8,7 +8,6 @@
 namespace Drupal\filter\Tests;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\filter\FilterPluginCollection;
 use Drupal\simpletest\KernelTestBase;
@@ -1023,7 +1022,7 @@ body {color:red}
    *   TRUE on pass, FALSE on fail.
    */
   function assertNormalized($haystack, $needle, $message = '', $group = 'Other') {
-    return $this->assertTrue(strpos(strtolower(String::decodeEntities($haystack)), $needle) !== FALSE, $message, $group);
+    return $this->assertTrue(strpos(strtolower(Html::decodeEntities($haystack)), $needle) !== FALSE, $message, $group);
   }
 
   /**
@@ -1047,6 +1046,6 @@ body {color:red}
    *   TRUE on pass, FALSE on fail.
    */
   function assertNoNormalized($haystack, $needle, $message = '', $group = 'Other') {
-    return $this->assertTrue(strpos(strtolower(String::decodeEntities($haystack)), $needle) === FALSE, $message, $group);
+    return $this->assertTrue(strpos(strtolower(Html::decodeEntities($haystack)), $needle) === FALSE, $message, $group);
   }
 }

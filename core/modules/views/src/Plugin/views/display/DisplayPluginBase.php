@@ -9,7 +9,6 @@ namespace Drupal\views\Plugin\views\display;
 
 use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\Cache;
@@ -1063,7 +1062,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
        // Use strip tags as there should never be HTML in the path.
        // However, we need to preserve special characters like " that
        // were removed by SafeMarkup::checkPlain().
-      $tokens["!$count"] = isset($this->view->args[$count - 1]) ? strip_tags(String::decodeEntities($this->view->args[$count - 1])) : '';
+      $tokens["!$count"] = isset($this->view->args[$count - 1]) ? strip_tags(Html::decodeEntities($this->view->args[$count - 1])) : '';
     }
 
     return $tokens;

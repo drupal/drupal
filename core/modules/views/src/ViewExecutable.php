@@ -7,7 +7,7 @@
 
 namespace Drupal\views;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Cache\Cache;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
@@ -994,7 +994,7 @@ class ViewExecutable implements \Serializable {
 
         // Add this argument's substitution
         $substitutions['%' . ($position + 1)] = $arg_title;
-        $substitutions['!' . ($position + 1)] = strip_tags(String::decodeEntities($arg));
+        $substitutions['!' . ($position + 1)] = strip_tags(Html::decodeEntities($arg));
 
         // Test to see if we should use this argument's title
         if (!empty($argument->options['title_enable']) && !empty($argument->options['title'])) {

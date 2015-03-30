@@ -271,7 +271,7 @@ class UrlHelper {
   public static function filterBadProtocol($string) {
     // Get the plain text representation of the attribute value (i.e. its
     // meaning).
-    $string = String::decodeEntities($string);
+    $string = Html::decodeEntities($string);
     return SafeMarkup::checkPlain(static::stripDangerousProtocols($string));
   }
 

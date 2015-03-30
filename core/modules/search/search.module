@@ -6,7 +6,7 @@
  */
 
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -236,7 +236,7 @@ function search_update_totals() {
  */
 function search_simplify($text, $langcode = NULL) {
   // Decode entities to UTF-8
-  $text = String::decodeEntities($text);
+  $text = Html::decodeEntities($text);
 
   // Lowercase
   $text = Unicode::strtolower($text);
@@ -599,7 +599,7 @@ function search_excerpt($keys, $text, $langcode = NULL) {
 
   // Prepare text by stripping HTML tags and decoding HTML entities.
   $text = strip_tags(str_replace(array('<', '>'), array(' <', '> '), $text));
-  $text = String::decodeEntities($text);
+  $text = Html::decodeEntities($text);
   $text_length = strlen($text);
 
   // Make a list of unique keywords that are actually found in the text,

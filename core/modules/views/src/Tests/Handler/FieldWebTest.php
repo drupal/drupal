@@ -7,8 +7,8 @@
 
 namespace Drupal\views\Tests\Handler;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
-use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\views\Views;
 
@@ -232,14 +232,14 @@ class FieldWebTest extends HandlerTestBase {
       $expected_result = \Drupal::url('entity.node.canonical', ['node' => '123'], ['query' => ['foo' => 'bar', 'bar' => 'baz'], 'absolute' => $absolute]);
       $alter['path'] = 'node/123?foo=bar&bar=baz';
       $result = $id_field->theme($row);
-      $this->assertSubString(String::decodeEntities($result), String::decodeEntities($expected_result));
+      $this->assertSubString(Html::decodeEntities($result), Html::decodeEntities($expected_result));
 
       // @todo The route-based URL generator strips out NULL attributes.
       // $expected_result = \Drupal::url('entity.node.canonical', ['node' => '123'], ['query' => ['foo' => NULL], 'fragment' => 'bar', 'absolute' => $absolute]);
       $expected_result = \Drupal::urlGenerator()->generateFromPath('node/123', array('query' => array('foo' => NULL), 'fragment' => 'bar', 'absolute' => $absolute));
       $alter['path'] = 'node/123?foo#bar';
       $result = $id_field->theme($row);
-      $this->assertSubString(String::decodeEntities($result), String::decodeEntities($expected_result));
+      $this->assertSubString(Html::decodeEntities($result), Html::decodeEntities($expected_result));
 
       $expected_result = \Drupal::url('<front>', [], ['absolute' => $absolute]);
       $alter['path'] = '<front>';

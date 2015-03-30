@@ -13,7 +13,7 @@ use Drupal\Core\Render\Element;
 use Drupal\user\RoleInterface;
 use Drupal\views\Plugin\CacheablePluginInterface;
 use Drupal\views\Plugin\views\HandlerBase;
-use Drupal\Component\Utility\String as UtilityString;
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
@@ -1181,7 +1181,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheablePluginIn
       else {
         // Cast the label to a string since it can be an object.
         // @see \Drupal\Core\StringTranslation\TranslationWrapper
-        $options[$value] = strip_tags(UtilityString::decodeEntities((string) $label));
+        $options[$value] = strip_tags(Html::decodeEntities((string) $label));
       }
     }
   }
