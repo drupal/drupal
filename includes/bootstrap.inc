@@ -3167,10 +3167,13 @@ function _registry_check_code($type, $name = NULL) {
   // This function may get called when the default database is not active, but
   // there is no reason we'd ever want to not use the default database for
   // this query.
-  $file = Database::getConnection('default', 'default')->query("SELECT filename FROM {registry} WHERE name = :name AND type = :type", array(
-      ':name' => $name,
-      ':type' => $type,
-    ))
+  $file = Database::getConnection('default', 'default')
+    ->select('registry', 'r', array('target' => 'default'))
+    ->fields('r', array('filename'))
+    // Use LIKE here to make the query case-insensitive.
+    ->condition('r.name', db_like($name), 'LIKE')
+    ->condition('r.type', $type)
+    ->execute()
     ->fetchField();
 
   // Flag that we've run a lookup query and need to update the cache.

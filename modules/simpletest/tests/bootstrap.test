@@ -289,6 +289,35 @@ class BootstrapVariableTestCase extends DrupalWebTestCase {
 }
 
 /**
+ * Tests the auto-loading behavior of the code registry.
+ */
+class BootstrapAutoloadTestCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Code registry',
+      'description' => 'Test that the code registry functions correctly.',
+      'group' => 'Bootstrap',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('drupal_autoload_test');
+  }
+
+  /**
+   * Tests that autoloader name matching is not case sensitive.
+   */
+  function testAutoloadCase() {
+    // Test interface autoloader.
+    $this->assertTrue(drupal_autoload_interface('drupalautoloadtestinterface'), 'drupal_autoload_interface() recognizes <em>DrupalAutoloadTestInterface</em> in lower case.');
+    // Test class autoloader.
+    $this->assertTrue(drupal_autoload_class('drupalautoloadtestclass'), 'drupal_autoload_class() recognizes <em>DrupalAutoloadTestClass</em> in lower case.');
+  }
+
+}
+
+/**
  * Test hook_boot() and hook_exit().
  */
 class HookBootExitTestCase extends DrupalWebTestCase {
