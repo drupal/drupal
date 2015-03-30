@@ -2637,7 +2637,7 @@ function drupal_installation_attempted() {
  *
  * This would include implementations of hook_install(), which could run
  * during the Drupal installation phase, and might also be run during
- * non-installation time, such as while installing the module from the the
+ * non-installation time, such as while installing the module from the
  * module administration page.
  *
  * Example usage:
