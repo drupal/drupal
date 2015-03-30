@@ -170,7 +170,6 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
       '#cache' => array(
         'tags' => Cache::mergeTags($this->getCacheTags(), $entity->getCacheTags()),
         'contexts' => [
-          'theme',
           'user.roles',
         ],
       ),

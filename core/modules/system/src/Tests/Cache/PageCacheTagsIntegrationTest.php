@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Cache;
 
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -68,7 +69,7 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
     ));
 
     $cache_contexts = [
-      'languages',
+      'languages:' . LanguageInterface::TYPE_INTERFACE,
       'route.menu_active_trails:account',
       'route.menu_active_trails:footer',
       'route.menu_active_trails:main',

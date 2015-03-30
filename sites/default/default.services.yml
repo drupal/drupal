@@ -76,6 +76,14 @@ parameters:
     # Not recommended in production environments
     # @default true
     cache: true
+  renderer.config:
+    # Renderer required cache contexts:
+    #
+    # The Renderer will automatically associate these cache contexts with every
+    # render array, hence varying every render array by these cache contexts.
+    #
+    # @default ['languages:language_interface', 'theme']
+    required_cache_contexts: ['languages:language_interface', 'theme']
   factory.keyvalue:
     {}
     # Default key/value storage service to use.

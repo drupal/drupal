@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Entity;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
 
@@ -31,7 +32,7 @@ abstract class EntityWithUriCacheTagsTestBase extends EntityCacheTagsTestBase {
     $view_mode = $this->selectViewMode($entity_type);
 
     // The default cache contexts for rendered entities.
-    $entity_cache_contexts = ['theme', 'user.roles'];
+    $entity_cache_contexts = ['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme', 'user.roles'];
 
     // Generate the standardized entity cache tags.
     $cache_tag = $this->entity->getCacheTags();

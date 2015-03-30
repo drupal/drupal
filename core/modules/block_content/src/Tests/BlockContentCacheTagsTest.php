@@ -9,6 +9,7 @@ namespace Drupal\block_content\Tests;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\system\Tests\Entity\EntityCacheTagsTestBase;
 use Symfony\Component\HttpFoundation\Request;
@@ -80,7 +81,7 @@ class BlockContentCacheTagsTest extends EntityCacheTagsTestBase {
     // Expected keys, contexts, and tags for the block.
     // @see \Drupal\block\BlockViewBuilder::viewMultiple()
     $expected_block_cache_keys = ['entity_view', 'block', $block->id()];
-    $expected_block_cache_contexts = ['languages', 'theme'];
+    $expected_block_cache_contexts = ['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme'];
     $expected_block_cache_tags = Cache::mergeTags(['block_view', 'rendered'], $block->getCacheTags(), $block->getPlugin()->getCacheTags());
 
     // Expected contexts and tags for the BlockContent entity.

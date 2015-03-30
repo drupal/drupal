@@ -19,7 +19,10 @@ class RendererTest extends RendererTestBase {
 
   protected $defaultThemeVars = [
     '#cache' => [
-      'contexts' => [],
+      'contexts' => [
+        'languages:language_interface',
+        'theme',
+      ],
       'tags' => [],
       'max-age' => Cache::PERMANENT,
     ],
@@ -499,7 +502,7 @@ class RendererTest extends RendererTestBase {
       ->willReturn('foobar');
 
     // Test that defaults work.
-    $this->assertEquals($this->renderer->render($element), 'foobar', 'Defaults work');
+    $this->assertEquals($this->renderer->renderRoot($element), 'foobar', 'Defaults work');
   }
 
   /**
@@ -521,7 +524,7 @@ class RendererTest extends RendererTestBase {
       });
 
     // Tests that passing arguments to the theme function works.
-    $this->assertEquals($this->renderer->render($element), $element['#foo'] . $element['#bar'], 'Passing arguments to theme functions works');
+    $this->assertEquals($this->renderer->renderRoot($element), $element['#foo'] . $element['#bar'], 'Passing arguments to theme functions works');
   }
 
   /**
@@ -573,7 +576,7 @@ class RendererTest extends RendererTestBase {
     $this->assertEquals($expected_tags, $element['#cache']['tags'], 'Cache tags were collected from the element and its subchild.');
 
     // The cache item also has a 'rendered' cache tag.
-    $cache_item = $this->cacheFactory->get('render')->get('render_cache_test');
+    $cache_item = $this->cacheFactory->get('render')->get('render_cache_test:en:stark');
     $this->assertSame(Cache::mergeTags($expected_tags, ['rendered']), $cache_item->tags);
   }
 
@@ -599,7 +602,7 @@ class RendererTest extends RendererTestBase {
     ];
     $this->renderer->render($element);
 
-    $cache_item = $this->cacheFactory->get('render')->get('render_cache_test');
+    $cache_item = $this->cacheFactory->get('render')->get('render_cache_test:en:stark');
     if (!$is_render_cached) {
       $this->assertFalse($cache_item);
     }

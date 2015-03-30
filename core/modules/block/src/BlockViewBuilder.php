@@ -36,12 +36,6 @@ class BlockViewBuilder extends EntityViewBuilder {
    * {@inheritdoc}
    */
   public function viewMultiple(array $entities = array(), $view_mode = 'full', $langcode = NULL) {
-    // @todo Remove when https://www.drupal.org/node/2453059 lands.
-    $default_cache_contexts = [
-      'languages',
-      'theme',
-    ];
-
     /** @var \Drupal\block\BlockInterface[] $entities */
     $build = array();
     foreach ($entities as  $entity) {
@@ -70,7 +64,7 @@ class BlockViewBuilder extends EntityViewBuilder {
         '#derivative_plugin_id' => $derivative_id,
         '#id' => $entity->id(),
         '#cache' => [
-          'contexts' => Cache::mergeContexts($default_cache_contexts, $plugin->getCacheContexts()),
+          'contexts' => $plugin->getCacheContexts(),
           'tags' => Cache::mergeTags(
             $this->getCacheTags(), // Block view builder cache tag.
             $entity->getCacheTags(), // Block entity cache tag.

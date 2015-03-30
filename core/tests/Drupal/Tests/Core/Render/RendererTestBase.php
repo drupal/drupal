@@ -9,6 +9,7 @@ namespace Drupal\Tests\Core\Render;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\MemoryBackend;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Renderer;
 use Drupal\Tests\UnitTestCase;
@@ -70,6 +71,18 @@ class RendererTestBase extends UnitTestCase {
   protected $memoryCache;
 
   /**
+   * The mocked renderer configuration.
+   *
+   * @var array
+   */
+  protected $rendererConfig = [
+    'required_cache_contexts' => [
+      'languages:language_interface',
+      'theme',
+    ],
+  ];
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -83,7 +96,29 @@ class RendererTestBase extends UnitTestCase {
     $this->cacheContexts = $this->getMockBuilder('Drupal\Core\Cache\CacheContexts')
       ->disableOriginalConstructor()
       ->getMock();
-    $this->renderer = new Renderer($this->controllerResolver, $this->themeManager, $this->elementInfo, $this->requestStack, $this->cacheFactory, $this->cacheContexts);
+    $this->cacheContexts->expects($this->any())
+      ->method('convertTokensToKeys')
+      ->willReturnCallback(function($context_tokens) {
+        global $current_user_role;
+        $keys = [];
+        foreach ($context_tokens as $context_id) {
+          switch ($context_id) {
+            case 'user.roles':
+              $keys[] = 'r.' . $current_user_role;
+              break;
+            case 'languages:language_interface':
+              $keys[] = 'en';
+              break;
+            case 'theme':
+              $keys[] = 'stark';
+              break;
+            default:
+              $keys[] = $context_id;
+          }
+        }
+        return $keys;
+      });
+    $this->renderer = new Renderer($this->controllerResolver, $this->themeManager, $this->elementInfo, $this->requestStack, $this->cacheFactory, $this->cacheContexts, $this->rendererConfig);
 
     $container = new ContainerBuilder();
     $container->set('cache_contexts', $this->cacheContexts);

@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\views\Views;
 use Drupal\views\Entity\View;
@@ -221,7 +222,7 @@ class RenderCacheIntegrationTest extends ViewUnitTestBase {
     $view = View::load('test_display');
     $view->save();
 
-    $this->assertEqual(['languages', 'user.node_grants:view'], $view->getDisplay('default')['cache_metadata']['contexts']);
+    $this->assertEqual(['languages', 'languages:' . LanguageInterface::TYPE_INTERFACE, 'user.node_grants:view'], $view->getDisplay('default')['cache_metadata']['contexts']);
   }
 
 }

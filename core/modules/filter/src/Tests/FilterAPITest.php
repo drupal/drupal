@@ -261,6 +261,9 @@ class FilterAPITest extends EntityUnitTestBase {
     $expected_cache_contexts = [
       // The cache context set by the filter_test_cache_contexts filter.
       'languages:' . LanguageInterface::TYPE_CONTENT,
+      // The default cache contexts for Renderer.
+      'languages:' . LanguageInterface::TYPE_INTERFACE,
+      'theme',
     ];
     $this->assertEqual($expected_cache_contexts, $build['#cache']['contexts'], 'Expected cache contexts present.');
     $expected_markup = '<p>Hello, world!</p><p>This is a dynamic llama.</p>';

@@ -1,6 +1,8 @@
 parameters:
   session.storage.options: {}
   twig.config: {}
+  renderer.config:
+    required_cache_contexts: ['languages:language_interface', 'theme']
   factory.keyvalue:
     default: keyvalue.database
   factory.keyvalue.expirable:
@@ -1333,6 +1335,6 @@ services:
     lazy: true
   renderer:
     class: Drupal\Core\Render\Renderer
-    arguments: ['@controller_resolver', '@theme.manager', '@plugin.manager.element_info', '@request_stack', '@cache_factory', '@cache_contexts']
+    arguments: ['@controller_resolver', '@theme.manager', '@plugin.manager.element_info', '@request_stack', '@cache_factory', '@cache_contexts', '%renderer.config%']
   email.validator:
     class: Egulias\EmailValidator\EmailValidator

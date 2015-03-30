@@ -18,6 +18,17 @@ use Drupal\Core\Cache\Cache;
 class RendererPostRenderCacheTest extends RendererTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    // Disable the required cache contexts, so that this test can test just the
+    // #post_render_cache behavior.
+    $this->rendererConfig['required_cache_contexts'] = [];
+
+    parent::setUp();
+  }
+
+  /**
    * Generates an element with a #post_render_cache callback.
    *
    * @return array

@@ -65,6 +65,13 @@ class Renderer implements RendererInterface {
   protected $cacheContexts;
 
   /**
+   * The renderer configuration array.
+   *
+   * @var array
+   */
+  protected $rendererConfig;
+
+  /**
    * The stack containing bubbleable rendering metadata.
    *
    * @var \SplStack|null
@@ -86,14 +93,17 @@ class Renderer implements RendererInterface {
    *   The cache factory.
    * @param \Drupal\Core\Cache\CacheContexts $cache_contexts
    *   The cache contexts service.
+   * @param array $renderer_config
+   *   The renderer configuration array.
    */
-  public function __construct(ControllerResolverInterface $controller_resolver, ThemeManagerInterface $theme, ElementInfoManagerInterface $element_info, RequestStack $request_stack, CacheFactoryInterface $cache_factory, CacheContexts $cache_contexts) {
+  public function __construct(ControllerResolverInterface $controller_resolver, ThemeManagerInterface $theme, ElementInfoManagerInterface $element_info, RequestStack $request_stack, CacheFactoryInterface $cache_factory, CacheContexts $cache_contexts, array $renderer_config) {
     $this->controllerResolver = $controller_resolver;
     $this->theme = $theme;
     $this->elementInfo = $element_info;
     $this->requestStack = $request_stack;
     $this->cacheFactory = $cache_factory;
     $this->cacheContexts = $cache_contexts;
+    $this->rendererConfig = $renderer_config;
   }
 
   /**
@@ -164,10 +174,25 @@ class Renderer implements RendererInterface {
     }
     static::$stack->push(new BubbleableMetadata());
 
+    // Set the bubbleable rendering metadata that has configurable defaults, if:
+    // - this is the root call, to ensure that the final render array definitely
+    //   has these configurable defaults, even when no subtree is render cached.
+    // - this is a render cacheable subtree, to ensure that the cached data has
+    //   the configurable defaults (which may affect the ID and invalidation).
+    if ($is_root_call || isset($elements['#cache']['keys'])) {
+      $required_cache_contexts = $this->rendererConfig['required_cache_contexts'];
+      if (isset($elements['#cache']['contexts'])) {
+        $elements['#cache']['contexts'] = Cache::mergeContexts($elements['#cache']['contexts'], $required_cache_contexts);
+      }
+      else {
+        $elements['#cache']['contexts'] = $required_cache_contexts;
+      }
+    }
+
     // Try to fetch the prerendered element from cache, run any
     // #post_render_cache callbacks and return the final markup.
     $pre_bubbling_cid = NULL;
-    if (isset($elements['#cache'])) {
+    if (isset($elements['#cache']['keys'])) {
       $cached_element = $this->cacheGet($elements);
       if ($cached_element !== FALSE) {
         $elements = $cached_element;
@@ -216,7 +241,6 @@ class Renderer implements RendererInterface {
     }
 
     // Defaults for bubbleable rendering metadata.
-    $elements['#cache']['contexts'] = isset($elements['#cache']['contexts']) ? $elements['#cache']['contexts'] : array();
     $elements['#cache']['tags'] = isset($elements['#cache']['tags']) ? $elements['#cache']['tags'] : array();
     $elements['#cache']['max-age'] = isset($elements['#cache']['max-age']) ? $elements['#cache']['max-age'] : Cache::PERMANENT;
     $elements['#attached'] = isset($elements['#attached']) ? $elements['#attached'] : array();

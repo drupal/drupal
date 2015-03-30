@@ -9,6 +9,7 @@ namespace Drupal\Tests\Core\Render;
 
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Renderer;
 use Drupal\Core\State\State;
 use Drupal\Core\Cache\Cache;
 
@@ -22,6 +23,10 @@ class RendererBubblingTest extends RendererTestBase {
    * {@inheritdoc}
    */
   protected function setUp() {
+    // Disable the required cache contexts, so that this test can test just the
+    // bubbling behavior.
+    $this->rendererConfig['required_cache_contexts'] = [];
+
     parent::setUp();
 
     $this->setUpRequest();
@@ -249,21 +254,6 @@ class RendererBubblingTest extends RendererTestBase {
 
     $this->setUpRequest();
     $this->setupMemoryCache();
-    $this->cacheContexts->expects($this->any())
-      ->method('convertTokensToKeys')
-      ->willReturnCallback(function($context_tokens) {
-        global $current_user_role;
-        $keys = [];
-        foreach ($context_tokens as $context_id) {
-          if ($context_id === 'user.roles') {
-            $keys[] = 'r.' . $current_user_role;
-          }
-          else {
-            $keys[] = $context_id;
-          }
-        }
-        return $keys;
-      });
 
     $test_element = [
       '#cache' => [
