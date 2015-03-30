@@ -1,6 +1,7 @@
 
 Drupal 7.36, xxxx-xx-xx (development version)
 -----------------------
+- Fixed installation failures when an opcode cache is enabled.
 - Fixed a bug in the Drupal 6 to Drupal 7 upgrade path which caused private
   files to be inaccessible.
 - Fixed a bug in the Drupal 6 to Drupal 7 upgrade path which caused user
