@@ -456,7 +456,9 @@ function menu_get_item($path = NULL, $router_item = NULL) {
     // Rebuild if we know it's needed, or if the menu masks are missing which
     // occurs rarely, likely due to a race condition of multiple rebuilds.
     if (variable_get('menu_rebuild_needed', FALSE) || !variable_get('menu_masks', array())) {
-      menu_rebuild();
+      if (_menu_check_rebuild()) {
+        menu_rebuild();
+      }
     }
     $original_map = arg(NULL, $path);
 
@@ -2694,6 +2696,21 @@ function menu_reset_static_cache() {
 }
 
 /**
+ * Checks whether a menu_rebuild() is necessary.
+ */
+function _menu_check_rebuild() {
+  // To absolutely ensure that the menu rebuild is required, re-load the
+  // variables in case they were set by another process.
+  $variables = variable_initialize();
+  if (empty($variables['menu_rebuild_needed']) && !empty($variables['menu_masks'])) {
+    unset($GLOBALS['conf']['menu_rebuild_needed']);
+    $GLOBALS['conf']['menu_masks'] = $variables['menu_masks'];
+    return FALSE;
+  }
+  return TRUE;
+}
+
+/**
  * Populates the database tables used by various menu functions.
  *
  * This function will clear and populate the {menu_router} table, add entries
@@ -2713,6 +2730,14 @@ function menu_rebuild() {
     // We choose to block here since otherwise the router item may not
     // be available in menu_execute_active_handler() resulting in a 404.
     lock_wait('menu_rebuild');
+
+    if (_menu_check_rebuild()) {
+      // If we get here and menu_masks was not set, then it is possible a menu
+      // is being reloaded, or that the process rebuilding the menu was unable
+      // to complete successfully. A missing menu_masks variable could result
+      // in a 404, so re-run the function.
+      return menu_rebuild();
+    }
     return FALSE;
   }
 
@@ -2737,6 +2762,12 @@ function menu_rebuild() {
     $transaction->rollback();
     watchdog_exception('menu', $e);
   }
+  // Explicitly commit the transaction now; this ensures that the database
+  // operations during the menu rebuild are committed before the lock is made
+  // available again, since locks may not always reside in the same database
+  // connection. The lock is acquired outside of the transaction so should also
+  // be released outside of it.
+  unset($transaction);
 
   lock_release('menu_rebuild');
   return TRUE;
