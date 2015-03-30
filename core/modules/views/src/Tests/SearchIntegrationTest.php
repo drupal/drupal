@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Tests;
 
+use Drupal\Component\Utility\SafeMarkup;
+
 /**
  * Tests search integration filters.
  *
@@ -35,8 +37,9 @@ class SearchIntegrationTest extends ViewTestBase {
     // Create a content type.
     $type = $this->drupalCreateContentType();
 
-    // Add two nodes, one containing the word "pizza" and the other
-    // with the word "sandwich". Make the second node link to the first.
+    // Add three nodes, one containing the word "pizza", one containing
+    // "sandwich", and one containing "cola is good with pizza". Make the
+    // second node link to the first.
     $node['title'] = 'pizza';
     $node['body'] = array(array('value' => 'pizza'));
     $node['type'] = $type->id();
@@ -49,6 +52,11 @@ class SearchIntegrationTest extends ViewTestBase {
     $node['body'] = array(array('value' => 'sandwich with a <a href="' . $node_url . '">link to first node</a>'));
     $this->drupalCreateNode($node);
 
+    $node['title'] = 'cola';
+    $node['body'] = array(array('value' => 'cola is good with pizza'));
+    $node['type'] = $type->id();
+    $this->drupalCreateNode($node);
+
     // Run cron so that the search index tables are updated.
     $this->cronRun();
 
@@ -58,17 +66,56 @@ class SearchIntegrationTest extends ViewTestBase {
 
     // Page with a keyword filter of 'pizza'.
     $this->drupalGet('test-filter');
-    $this->assertLink('pizza', 0, 'Pizza page is on Filter page');
-    $this->assertNoLink('sandwich', 'Sandwich page is not on Filter page');
+    $this->assertLink('pizza');
+    $this->assertNoLink('sandwich');
+    $this->assertLink('cola');
 
-    // Page with a keyword argument.
+    // Page with a keyword argument, various argument values.
+    // Verify that the correct nodes are shown, and only once.
     $this->drupalGet('test-arg/pizza');
-    $this->assertLink('pizza', 0, 'Pizza page is on argument page');
-    $this->assertNoLink('sandwich', 'Sandwich page is not on argument page');
+    $this->assertOneLink('pizza');
+    $this->assertNoLink('sandwich');
+    $this->assertOneLink('cola');
 
     $this->drupalGet('test-arg/sandwich');
-    $this->assertNoLink('pizza', 'Pizza page is not on argument page');
-    $this->assertLink('sandwich', 0, 'Sandwich page is on argument page');
+    $this->assertNoLink('pizza');
+    $this->assertOneLink('sandwich');
+    $this->assertNoLink('cola');
+
+    $this->drupalGet('test-arg/pizza OR sandwich');
+    $this->assertOneLink('pizza');
+    $this->assertOneLink('sandwich');
+    $this->assertOneLink('cola');
+
+    $this->drupalGet('test-arg/pizza sandwich OR cola');
+    $this->assertNoLink('pizza');
+    $this->assertNoLink('sandwich');
+    $this->assertOneLink('cola');
+
+    $this->drupalGet('test-arg/cola pizza');
+    $this->assertNoLink('pizza');
+    $this->assertNoLink('sandwich');
+    $this->assertOneLink('cola');
+
+    $this->drupalGet('test-arg/"cola is good"');
+    $this->assertNoLink('pizza');
+    $this->assertNoLink('sandwich');
+    $this->assertOneLink('cola');
+  }
+
+  /**
+   * Asserts that exactly one link exists with the given text.
+   *
+   * @param string $label
+   *   Link label to assert.
+   *
+   * @return bool
+   *   TRUE if the assertion succeeded, FALSE otherwise.
+   */
+  protected function assertOneLink($label) {
+    $links = $this->xpath('//a[normalize-space(text())=:label]', array(':label' => $label));
+    $message = SafeMarkup::format('Link with label %label found once.', array('%label' => $label));
+    return $this->assert(isset($links[0]) && !isset($links[1]), $message);
   }
 
 }

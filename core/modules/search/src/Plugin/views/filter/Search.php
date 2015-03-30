@@ -169,32 +169,21 @@ class Search extends FilterPluginBase {
 
       $search_total = $this->query->addRelationship('search_total', $join, $search_index);
 
-      $this->search_score = $this->query->addField('', "SUM($search_index.score * $search_total.count)", 'score', array('aggregate' => TRUE));
+      $this->search_score = $this->query->addField('', "$search_index.score * $search_total.count", 'score', array('function' => 'sum'));
 
       $search_condition->condition("$search_index.type", $this->searchType);
-      if (!$this->searchQuery->simple()) {
-        $search_dataset = $this->query->addTable('search_dataset');
-        $conditions = $this->searchQuery->conditions();
-        $condition_conditions =& $conditions->conditions();
-        foreach ($condition_conditions  as $key => &$condition) {
-          // Make sure we just look at real conditions.
-          if (is_numeric($key)) {
-            // Replace the conditions with the table alias of views.
-            $this->searchQuery->conditionReplaceString('d.', "$search_dataset.", $condition);
-          }
+      $search_dataset = $this->query->addTable('node_search_dataset');
+      $conditions = $this->searchQuery->conditions();
+      $condition_conditions =& $conditions->conditions();
+      foreach ($condition_conditions  as $key => &$condition) {
+        // Make sure we just look at real conditions.
+        if (is_numeric($key)) {
+          // Replace the conditions with the table alias of views.
+          $this->searchQuery->conditionReplaceString('d.', "$search_dataset.", $condition);
         }
-        $search_conditions =& $search_condition->conditions();
-        $search_conditions = array_merge($search_conditions, $condition_conditions);
       }
-      else {
-        // Stores each condition, so and/or on the filter level will still work.
-        $or = db_or();
-        foreach ($words as $word) {
-          $or->condition("$search_index.word", $word);
-        }
-
-        $search_condition->condition($or);
-      }
+      $search_conditions =& $search_condition->conditions();
+      $search_conditions = array_merge($search_conditions, $condition_conditions);
 
       $this->query->addWhere($this->options['group'], $search_condition);
       $this->query->addGroupBy("$search_index.sid");

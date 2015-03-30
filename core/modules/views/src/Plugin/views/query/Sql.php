@@ -722,7 +722,11 @@ class Sql extends QueryPluginBase {
    *   alias be used.
    * @param $params
    *   An array of parameters additional to the field that will control items
-   *   such as aggregation functions and DISTINCT.
+   *   such as aggregation functions and DISTINCT. Some values that are
+   *   recognized:
+   *   - function: An aggregation function to apply, such as SUM.
+   *   - aggregate: Set to TRUE to indicate that this value should be
+   *     aggregated in a GROUP BY.
    *
    * @return $name
    *   The name that this field can be referred to as. Usually this is the alias.
