@@ -1027,7 +1027,15 @@ function image_style_url($style_name, $path) {
   // The token query is added even if the 'image_allow_insecure_derivatives'
   // variable is TRUE, so that the emitted links remain valid if it is changed
   // back to the default FALSE.
-  $token_query = array(IMAGE_DERIVATIVE_TOKEN => image_style_path_token($style_name, $original_uri));
+  // However, sites which need to prevent the token query from being emitted at
+  // all can additionally set the 'image_suppress_itok_output' variable to TRUE
+  // to achieve that (if both are set, the security token will neither be
+  // emitted in the image derivative URL nor checked for in
+  // image_style_deliver()).
+  $token_query = array();
+  if (!variable_get('image_suppress_itok_output', FALSE)) {
+    $token_query = array(IMAGE_DERIVATIVE_TOKEN => image_style_path_token($style_name, $original_uri));
+  }
 
   // If not using clean URLs, the image derivative callback is only available
   // with the query string. If the file does not exist, use url() to ensure
@@ -1039,8 +1047,12 @@ function image_style_url($style_name, $path) {
   }
 
   $file_url = file_create_url($uri);
-  // Append the query string with the token.
-  return $file_url . (strpos($file_url, '?') !== FALSE ? '&' : '?') . drupal_http_build_query($token_query);
+  // Append the query string with the token, if necessary.
+  if ($token_query) {
+    $file_url .= (strpos($file_url, '?') !== FALSE ? '&' : '?') . drupal_http_build_query($token_query);
+  }
+
+  return $file_url;
 }
 
 /**
