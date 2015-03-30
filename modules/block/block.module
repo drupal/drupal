@@ -66,7 +66,7 @@ function block_help($path, $arg) {
     $demo_theme = !empty($arg[4]) ? $arg[4] : variable_get('theme_default', 'bartik');
     $themes = list_themes();
     $output = '<p>' . t('This page provides a drag-and-drop interface for assigning a block to a region, and for controlling the order of blocks within regions. Since not all themes implement the same regions, or display regions in the same way, blocks are positioned on a per-theme basis. Remember that your changes will not be saved until you click the <em>Save blocks</em> button at the bottom of the page. Click the <em>configure</em> link next to each block to configure its specific title and visibility settings.') . '</p>';
-    $output .= '<p>' . l(t('Demonstrate block regions (@theme)', array('@theme' => $themes[$demo_theme]->info['name'])), 'admin/structure/block/demo/' . $demo_theme) . '</p>';
+    $output .= '<p>' . l(t('Demonstrate block regions (!theme)', array('!theme' => $themes[$demo_theme]->info['name'])), 'admin/structure/block/demo/' . $demo_theme) . '</p>';
     return $output;
   }
 }
@@ -143,7 +143,7 @@ function block_menu() {
   );
   foreach (list_themes() as $key => $theme) {
     $items['admin/structure/block/list/' . $key] = array(
-      'title' => check_plain($theme->info['name']),
+      'title' => $theme->info['name'],
       'page arguments' => array($key),
       'type' => $key == $default_theme ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
       'weight' => $key == $default_theme ? -10 : 0,
@@ -162,7 +162,7 @@ function block_menu() {
       );
     }
     $items['admin/structure/block/demo/' . $key] = array(
-      'title' => check_plain($theme->info['name']),
+      'title' => $theme->info['name'],
       'page callback' => 'block_admin_demo',
       'page arguments' => array($key),
       'type' => MENU_CALLBACK,

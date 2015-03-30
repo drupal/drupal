@@ -1,6 +1,8 @@
 
 Drupal 7.36, xxxx-xx-xx (development version)
 -----------------------
+- Fixed double-escaping of theme names in the Block module administrative
+  interface (minor string change).
 - Added basic support for Xdebug when running automated tests.
 - Fixed a bug which caused previewing a node to remove elements from the node
   being edited. With this fix, calling node_preview() will no longer modify the
