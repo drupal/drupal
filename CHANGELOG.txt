@@ -1,6 +1,9 @@
 
 Drupal 7.36, xxxx-xx-xx (development version)
 -----------------------
+- Changed permission descriptions throughout Drupal core to consistently link
+  to relevant administrative pages, regardless of whether the user viewing the
+  Permissions page can view the page being linked to (minor UI change).
 - Fixed the drupal_add_region_content() function so that it actually adds
   content to the page.
 - Added an 'image_suppress_itok_output' variable to allow sites already using
