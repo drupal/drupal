@@ -229,7 +229,24 @@ function image_gd_desaturate(stdClass $image) {
 function image_gd_load(stdClass $image) {
   $extension = str_replace('jpg', 'jpeg', $image->info['extension']);
   $function = 'imagecreatefrom' . $extension;
-  return (function_exists($function) && $image->resource = $function($image->source));
+  if (function_exists($function) && $image->resource = $function($image->source)) {
+    if (imageistruecolor($image->resource)) {
+      return TRUE;
+    }
+    else {
+      // Convert indexed images to truecolor, copying the image to a new
+      // truecolor resource, so that filters work correctly and don't result
+      // in unnecessary dither.
+      $resource = image_gd_create_tmp($image, $image->info['width'], $image->info['height']);
+      if ($resource) {
+        imagecopy($resource, $image->resource, 0, 0, 0, 0, imagesx($resource), imagesy($resource));
+        imagedestroy($image->resource);
+        $image->resource = $resource;
+      }
+    }
+    return (bool) $image->resource;
+  }
+  return FALSE;
 }
 
 /**
@@ -297,17 +314,31 @@ function image_gd_create_tmp(stdClass $image, $width, $height) {
   $res = imagecreatetruecolor($width, $height);
 
   if ($image->info['extension'] == 'gif') {
-    // Grab transparent color index from image resource.
+    // Find out if a transparent color is set, will return -1 if no
+    // transparent color has been defined in the image.
     $transparent = imagecolortransparent($image->resource);
 
     if ($transparent >= 0) {
-      // The original must have a transparent color, allocate to the new image.
-      $transparent_color = imagecolorsforindex($image->resource, $transparent);
-      $transparent = imagecolorallocate($res, $transparent_color['red'], $transparent_color['green'], $transparent_color['blue']);
+      // Find out the number of colors in the image palette. It will be 0 for
+      // truecolor images.
+      $palette_size = imagecolorstotal($image->resource);
+      if ($palette_size == 0 || $transparent < $palette_size) {
+        // Set the transparent color in the new resource, either if it is a
+        // truecolor image or if the transparent color is part of the palette.
+        // Since the index of the transparency color is a property of the
+        // image rather than of the palette, it is possible that an image
+        // could be created with this index set outside the palette size (see
+        // http://stackoverflow.com/a/3898007).
+        $transparent_color = imagecolorsforindex($image->resource, $transparent);
+        $transparent = imagecolorallocate($res, $transparent_color['red'], $transparent_color['green'], $transparent_color['blue']);
 
-      // Flood with our new transparent color.
-      imagefill($res, 0, 0, $transparent);
-      imagecolortransparent($res, $transparent);
+        // Flood with our new transparent color.
+        imagefill($res, 0, 0, $transparent);
+        imagecolortransparent($res, $transparent);
+      }
+      else {
+        imagefill($res, 0, 0, imagecolorallocate($res, 255, 255, 255));
+      }
     }
   }
   elseif ($image->info['extension'] == 'png') {
