@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Database\Driver\mysql;
 
-use Drupal\Component\Utility\String;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\SchemaObjectExistsException;

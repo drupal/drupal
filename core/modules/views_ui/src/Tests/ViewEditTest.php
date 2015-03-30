@@ -7,7 +7,6 @@
 
 namespace Drupal\views_ui\Tests;
 
-use Drupal\Component\Utility\String;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;

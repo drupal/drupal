@@ -9,7 +9,6 @@ namespace Drupal\search\Tests;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Tests\CommentTestTrait;
-use Drupal\Component\Utility\String;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\user\RoleInterface;
 

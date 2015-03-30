@@ -9,7 +9,6 @@ namespace Drupal\forum\Tests;
 
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
-use Drupal\Component\Utility\String;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Session\UserSession;
 use Drupal\Core\Site\Settings;

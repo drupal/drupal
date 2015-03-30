@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Form;
 
-use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Request;

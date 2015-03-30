@@ -7,7 +7,6 @@
 
 namespace Drupal\text\Tests;
 
-use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\field\Tests\String\StringFieldTest;
 

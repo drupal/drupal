@@ -7,7 +7,6 @@
 
 namespace Drupal\system\Tests\Form;
 
-use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;

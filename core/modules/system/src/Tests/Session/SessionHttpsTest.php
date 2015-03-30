@@ -10,7 +10,6 @@ namespace Drupal\system\Tests\Session;
 use Drupal\simpletest\WebTestBase;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Component\Utility\Crypt;
-use Drupal\Component\Utility\String;
 
 /**
  * Ensure that when running under HTTPS two session cookies are generated.

@@ -14,7 +14,6 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Utility\Xss;
-use Drupal\Component\Utility\String;
 
 /**
  * Defines a class to build a listing of node type entities.

@@ -9,7 +9,6 @@ namespace Drupal\block\Tests;
 
 use Drupal\Component\Utility\Html;
 use Drupal\simpletest\WebTestBase;
-use Drupal\Component\Utility\String;
 use Drupal\block\Entity\Block;
 use Drupal\user\RoleInterface;
 

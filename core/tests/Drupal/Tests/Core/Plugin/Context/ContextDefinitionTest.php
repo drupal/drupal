@@ -117,7 +117,6 @@ class ContextDefinitionTest extends UnitTestCase {
    * @dataProvider providerGetDataDefinition
    * @covers ::getDataDefinition
    * @uses \Drupal
-   * @uses Drupal\Component\Utility\String
    * @uses Drupal\Component\Utility\SafeMarkup
    */
   public function testGetDataDefinitionInvalidType($is_multiple) {

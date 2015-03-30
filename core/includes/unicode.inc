@@ -6,7 +6,6 @@
  */
 
 use Drupal\Component\Utility\Unicode;
-use Drupal\Component\Utility\String;
 
 /**
  * Returns Unicode library status and errors.

@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Theme;
 
-use Drupal\Component\Utility\String;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\State\StateInterface;

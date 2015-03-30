@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Routing;
 
-use Drupal\Component\Utility\String;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\State\StateInterface;
 use Symfony\Cmf\Component\Routing\PagedRouteCollection;

@@ -7,7 +7,6 @@
 
 namespace Drupal\user\Tests\Views;
 
-use Drupal\Component\Utility\String;
 use Drupal\user\Entity\Role;
 use Drupal\user\Tests\Views\UserUnitTestBase;
 use Drupal\views\Entity\View;

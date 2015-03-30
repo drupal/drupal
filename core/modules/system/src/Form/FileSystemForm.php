@@ -7,7 +7,6 @@
 
 namespace Drupal\system\Form;
 
-use Drupal\Component\Utility\String;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Form\FormStateInterface;

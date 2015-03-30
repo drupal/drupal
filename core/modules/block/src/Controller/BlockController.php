@@ -7,7 +7,6 @@
 
 namespace Drupal\block\Controller;
 
-use Drupal\Component\Utility\String;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Extension\ThemeHandler;
 use Drupal\Core\Extension\ThemeHandlerInterface;

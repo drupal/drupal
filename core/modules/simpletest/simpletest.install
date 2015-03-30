@@ -6,7 +6,6 @@
  */
 
 use Drupal\Component\Utility\Environment;
-use Drupal\Component\Utility\String;
 
 /**
  * Minimum value of PHP memory_limit for SimpleTest.

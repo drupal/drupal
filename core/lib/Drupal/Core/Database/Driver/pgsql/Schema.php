@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Database\Driver\pgsql;
 
-use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\Condition;

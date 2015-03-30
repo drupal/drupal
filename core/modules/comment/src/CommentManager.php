@@ -8,7 +8,6 @@
 namespace Drupal\comment;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
-use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityInterface;

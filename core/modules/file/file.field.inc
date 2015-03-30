@@ -7,7 +7,6 @@
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\String;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Render\Element;
 

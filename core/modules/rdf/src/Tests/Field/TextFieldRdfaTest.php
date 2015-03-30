@@ -6,7 +6,6 @@
 
 namespace Drupal\rdf\Tests\Field;
 
-use Drupal\Component\Utility\String;
 use Drupal\rdf\Tests\Field\FieldRdfaTestBase;
 
 /**

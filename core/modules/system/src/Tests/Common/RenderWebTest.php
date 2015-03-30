@@ -7,7 +7,6 @@
 
 namespace Drupal\system\Tests\Common;
 
-use Drupal\Component\Utility\String;
 use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
 
