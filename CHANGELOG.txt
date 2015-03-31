@@ -12,7 +12,8 @@ Drupal 7.36, xxxx-xx-xx (development version)
 - Added a 'javascript_always_use_jquery' variable which can be set to FALSE by
   sites that may not need jQuery loaded on all pages, and a 'requires_jquery'
   option to drupal_add_js() which modules can set to FALSE when adding
-  JavaScript files that have no dependency on jQuery.
+  JavaScript files that have no dependency on jQuery (API addition:
+  https://www.drupal.org/node/2462717).
 - Fixed incorrect foreign keys in the User module's role_permission and
   users_roles database tables.
 - Changed permission descriptions throughout Drupal core to consistently link
@@ -30,7 +31,7 @@ Drupal 7.36, xxxx-xx-xx (development version)
   being edited. With this fix, calling node_preview() will no longer modify the
   passed-in node object (minor API change).
 - Added a user_has_role() function to check whether a user has a particular
-  role (API addition).
+  role (API addition: https://www.drupal.org/node/2462411).
 - Fixed installation failures when an opcode cache is enabled.
 - Fixed a bug in the Drupal 6 to Drupal 7 upgrade path which caused private
   files to be inaccessible.
@@ -47,10 +48,14 @@ Drupal 7.36, xxxx-xx-xx (development version)
 - Changed the "lang" attribute on language links to "xml:lang" so it validates
   as XHTML (minor markup change).
 - Prevented the form API from allowing arrays to be submitted for various form
-  elements (such as textfields, textareas, and password fields).
+  elements, such as textfields, textareas, and password fields (API change:
+  https://www.drupal.org/node/2462723).
 - Fixed a bug in the Contact module which caused the global user object to have
   the incorrect name and e-mail address during the remainder of the page
   request after the contact form is submitted.
+- Numerous small bug fixes.
+- Numerous API documentation improvements.
+- Additional automated test coverage.
 
 Drupal 7.35, 2015-03-18
 ----------------------
