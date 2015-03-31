@@ -233,8 +233,9 @@ function hook_uninstall() {
  *
  * Any tasks you define here will be run, in order, after the installer has
  * finished the site configuration step but before it has moved on to the
- * final import of languages and the end of the installation. You can have any
- * number of custom tasks to perform during this phase.
+ * final import of languages and the end of the installation. This is invoked
+ * by install_tasks(). You can have any number of custom tasks to perform
+ * during this phase.
  *
  * Each task you define here corresponds to a callback function which you must
  * separately define and which is called when your task is run. This function
@@ -327,6 +328,8 @@ function hook_uninstall() {
  *
  * @see install_state_defaults()
  * @see batch_set()
+ * @see hook_install_tasks_alter()
+ * @see install_tasks()
  */
 function hook_install_tasks(&$install_state) {
   // Here, we define a variable to allow tasks to indicate that a particular,
@@ -396,12 +399,17 @@ function hook_install_tasks(&$install_state) {
  * You can use this hook to change or replace any part of the Drupal
  * installation process that occurs after the installation profile is selected.
  *
+ * This hook is invoked on the install profile in install_tasks().
+ *
  * @param $tasks
  *   An array of all available installation tasks, including those provided by
  *   Drupal core. You can modify this array to change or replace individual
  *   steps within the installation process.
  * @param $install_state
  *   An array of information about the current installation state.
+ *
+ * @see hook_install_tasks()
+ * @see install_tasks()
  */
 function hook_install_tasks_alter(&$tasks, $install_state) {
   // Replace the entire site configuration form provided by Drupal core

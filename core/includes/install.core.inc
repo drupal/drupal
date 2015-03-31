@@ -545,7 +545,8 @@ function install_run_tasks(&$install_state) {
  * Runs an individual installation task.
  *
  * @param $task
- *   An array of information about the task to be run.
+ *   An array of information about the task array as returned by
+ *   hook_install_tasks().
  * @param $install_state
  *   An array of information about the current installation state. This is
  *   passed in by reference so that it can be modified by the task.
@@ -678,11 +679,15 @@ function install_tasks_to_perform($install_state) {
  * hasn't been selected yet, we don't yet know which profile tasks will be
  * available).
  *
+ * You can override this using hook_install_tasks()
+ * or hook_install_tasks_alter().
+ *
  * @param $install_state
  *   An array of information about the current installation state.
  *
  * @return
- *   A list of tasks, with associated metadata.
+ *   A list of tasks, with associated metadata as returned by
+ *   hook_install_tasks().
  */
 function install_tasks($install_state) {
   // Determine whether a translation file must be imported during the
