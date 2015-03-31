@@ -474,6 +474,15 @@ class FileFieldWidgetTestCase extends FileFieldTestCase {
       $node_file = (object) $node->{$field_name}[LANGUAGE_NONE][0];
       $this->assertFileExists($node_file, 'New file saved to disk on node creation.');
 
+      // Test that running field_attach_update() leaves the file intact.
+      $field = new stdClass();
+      $field->type = $type_name;
+      $field->nid = $nid;
+      field_attach_update('node', $field);
+      $node = node_load($nid);
+      $node_file = (object) $node->{$field_name}[LANGUAGE_NONE][0];
+      $this->assertFileExists($node_file, 'New file still saved to disk on field update.');
+
       // Ensure the file can be downloaded.
       $this->drupalGet(file_create_url($node_file->uri));
       $this->assertResponse(200, 'Confirmed that the generated URL is correct by downloading the shipped file.');
