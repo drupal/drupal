@@ -36,6 +36,10 @@ class DatabaseConnection_mysql extends DatabaseConnection {
       // Default to TCP connection on port 3306.
       $dsn = 'mysql:host=' . $connection_options['host'] . ';port=' . (empty($connection_options['port']) ? 3306 : $connection_options['port']);
     }
+    // Character set is added to dsn to ensure PDO uses the proper character
+    // set when escaping. This has security implications. See
+    // https://www.drupal.org/node/1201452 for further discussion.
+    $dsn .= ';charset=utf8';
     $dsn .= ';dbname=' . $connection_options['database'];
     // Allow PDO options to be overridden.
     $connection_options += array(
