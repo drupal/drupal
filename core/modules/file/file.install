@@ -67,18 +67,34 @@ function file_requirements($phase) {
 
   // Check the server's ability to indicate upload progress.
   if ($phase == 'runtime') {
+    $description = NULL;
     $implementation = file_progress_implementation();
     $server_software = \Drupal::request()->server->get('SERVER_SOFTWARE');
-    $apache = strpos($server_software, 'Apache') !== FALSE;
-    $fastcgi = strpos($server_software, 'mod_fastcgi') !== FALSE || strpos($server_software, 'mod_fcgi') !== FALSE;
-    $description = NULL;
-    if (!$apache) {
+
+    // Test the web server identity.
+    if (preg_match("/Nginx/i", $server_software)) {
+      $is_nginx = TRUE;
+      $is_apache = FALSE;
+      $fastcgi = FALSE;
+    }
+    elseif (preg_match("/Apache/i", $server_software)) {
+      $is_nginx = FALSE;
+      $is_apache = TRUE;
+      $fastcgi = strpos($server_software, 'mod_fastcgi') !== FALSE || strpos($server_software, 'mod_fcgi') !== FALSE;
+    }
+    else {
+      $is_nginx = FALSE;
+      $is_apache = FALSE;
+      $fastcgi = FALSE;
+    }
+
+    if (!$is_apache && !$is_nginx) {
       $value = t('Not enabled');
-      $description = t('Your server is not capable of displaying file upload progress. File upload progress requires an Apache server running PHP with mod_php.');
+      $description = t('Your server is not capable of displaying file upload progress. File upload progress requires an Apache server running PHP with mod_php or Nginx with PHP-FPM.');
     }
     elseif ($fastcgi) {
       $value = t('Not enabled');
-      $description = t('Your server is not capable of displaying file upload progress. File upload progress requires PHP be run with mod_php and not as FastCGI.');
+      $description = t('Your server is not capable of displaying file upload progress. File upload progress requires PHP be run with mod_php or PHP-FPM and not as FastCGI.');
     }
     elseif (!$implementation && extension_loaded('apc')) {
       $value = t('Not enabled');
