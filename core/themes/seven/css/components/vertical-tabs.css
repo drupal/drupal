@@ -57,6 +57,7 @@
 .vertical-tabs__menu-item a:focus {
   background: #fcfcfa;
   text-shadow: none;
+  text-decoration: none;
 }
 .vertical-tabs__menu-item.is-selected a {
   border-bottom-color: #b3b2ad;
@@ -98,9 +99,6 @@
   padding-top: 0.4em;
   color: #666;
   font-size: 0.846em;
-}
-.vertical-tabs__menu-item.is-selected a:focus .vertical-tabs__menu-item-title {
-  text-decoration: underline;
 }
 .vertical-tabs__pane > summary {
   display: none;
