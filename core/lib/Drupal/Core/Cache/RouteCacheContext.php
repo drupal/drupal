@@ -12,7 +12,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 /**
  * Defines the RouteCacheContext service, for "per route" caching.
  */
-class RouteCacheContext {
+class RouteCacheContext implements CacheContextInterface {
 
   /**
    * The route match.

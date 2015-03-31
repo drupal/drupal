@@ -13,7 +13,7 @@ use Drupal\Core\Session\PermissionsHashGeneratorInterface;
 /**
  * Defines the AccountPermissionsCacheContext service, for "per permission" caching.
  */
-class AccountPermissionsCacheContext extends UserCacheContext implements CacheContextInterface{
+class AccountPermissionsCacheContext extends UserCacheContext {
 
   /**
    * The permissions hash generator.
