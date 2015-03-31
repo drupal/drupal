@@ -1,6 +1,10 @@
 
 Drupal 7.36, xxxx-xx-xx (development version)
 -----------------------
+- Added a 'javascript_always_use_jquery' variable which can be set to FALSE by
+  sites that may not need jQuery loaded on all pages, and a 'requires_jquery'
+  option to drupal_add_js() which modules can set to FALSE when adding
+  JavaScript files that have no dependency on jQuery.
 - Fixed incorrect foreign keys in the User module's role_permission and
   users_roles database tables.
 - Changed permission descriptions throughout Drupal core to consistently link
