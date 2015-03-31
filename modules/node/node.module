@@ -506,7 +506,8 @@ function node_type_load($name) {
  *   - custom: TRUE or FALSE indicating whether this type is defined by a module
  *     (FALSE) or by a user (TRUE) via Add Content Type.
  *   - modified: TRUE or FALSE indicating whether this type has been modified by
- *     an administrator. Currently not used in any way.
+ *     an administrator. When modifying an existing node type, set to TRUE, or
+ *     the change will be ignored on node_types_rebuild().
  *   - locked: TRUE or FALSE indicating whether the administrator can change the
  *     machine name of this type.
  *   - disabled: TRUE or FALSE indicating whether this type has been disabled.
