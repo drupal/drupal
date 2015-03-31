@@ -1,7 +1,7 @@
 # Schema for configuration files of the Field module.
 
 field.settings:
-  type: mapping
+  type: config_object
   label: 'Field settings'
   mapping:
     purge_batch_size:

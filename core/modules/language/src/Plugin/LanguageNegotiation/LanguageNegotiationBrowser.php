@@ -39,7 +39,7 @@ class LanguageNegotiationBrowser extends LanguageNegotiationMethodBase {
     if ($this->languageManager && $request && $request->server->get('HTTP_ACCEPT_LANGUAGE')) {
       $http_accept_language = $request->server->get('HTTP_ACCEPT_LANGUAGE');
       $langcodes = array_keys($this->languageManager->getLanguages());
-      $mappings = $this->config->get('language.mappings')->get();
+      $mappings = $this->config->get('language.mappings')->get('map');
       $langcode = UserAgent::getBestMatchingLangcode($http_accept_language, $langcodes, $mappings);
     }
 

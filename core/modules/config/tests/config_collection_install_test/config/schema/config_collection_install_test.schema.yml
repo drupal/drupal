@@ -1,5 +1,5 @@
 config_collection_install_test.test:
-  type: mapping
+  type: config_object
   label: 'Collection test'
   mapping:
     collection:

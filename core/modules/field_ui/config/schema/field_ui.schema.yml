@@ -1,7 +1,7 @@
 # Schema for configuration files of the Field UI module.
 
 field_ui.settings:
-  type: mapping
+  type: config_object
   label: 'Field UI settings'
   mapping:
     field_prefix:

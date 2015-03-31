@@ -1,7 +1,7 @@
 # Schema for the configuration files of the Update Test module.
 
 update_test.settings:
-  type: mapping
+  type: config_object
   label: 'Update test settings'
   mapping:
     system_info:

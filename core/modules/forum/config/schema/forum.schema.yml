@@ -1,7 +1,7 @@
 # Schema for the configuration files of the Forum module.
 
 forum.settings:
-  type: mapping
+  type: config_object
   label: 'Forum settings'
   mapping:
     block:

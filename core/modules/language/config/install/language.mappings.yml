@@ -1,12 +1,13 @@
 # Browsers use different language codes to refer to the same languages,
 # these defaults handles the most common cases.
-no: 'nb' # Norwegian
-pt: 'pt-pt' # Portuguese
-zh: 'zh-hans' # Default Chinese to simplified script
-zh-tw: 'zh-hant' # Taiwan Chinese in traditional script
-zh-hk: 'zh-hant' # Hong Kong Chinese in traditional script
-zh-mo: 'zh-hant' # Macao Chinese in traditional script
-zh-cht: 'zh-hant' # traditional Chinese
-zh-cn: 'zh-hans' # PRC Mainland Chinese in simplified script
-zh-sg: 'zh-hans' # Singapore Chinese in simplified script
-zh-chs: 'zh-hans' # simplified Chinese
+map:
+  no: 'nb' # Norwegian
+  pt: 'pt-pt' # Portuguese
+  zh: 'zh-hans' # Default Chinese to simplified script
+  zh-tw: 'zh-hant' # Taiwan Chinese in traditional script
+  zh-hk: 'zh-hant' # Hong Kong Chinese in traditional script
+  zh-mo: 'zh-hant' # Macao Chinese in traditional script
+  zh-cht: 'zh-hant' # traditional Chinese
+  zh-cn: 'zh-hans' # PRC Mainland Chinese in simplified script
+  zh-sg: 'zh-hans' # Singapore Chinese in simplified script
+  zh-chs: 'zh-hans' # simplified Chinese

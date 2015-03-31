@@ -1,7 +1,7 @@
 # Schema for the configuration files of the Configuration Integration Test module.
 
 config_integration_test.settings:
-  type: mapping
+  type: config_object
   label: 'Configuration integration test settings'
   mapping:
     foo:

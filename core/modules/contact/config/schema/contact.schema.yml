@@ -24,7 +24,7 @@ contact.form.*:
       label: 'Weight'
 
 contact.settings:
-  type: mapping
+  type: config_object
   label: 'Contact settings'
   mapping:
     default_form:

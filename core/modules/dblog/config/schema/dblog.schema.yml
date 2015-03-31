@@ -1,7 +1,7 @@
 # Schema for the configuration files of the dblog module.
 
 dblog.settings:
-  type: mapping
+  type: config_object
   label: 'Database logging settings'
   mapping:
     row_limit:

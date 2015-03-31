@@ -1,7 +1,7 @@
 # Schema for the configuration files of the REST module.
 
 rest.settings:
-  type: mapping
+  type: config_object
   label: 'REST settings'
   mapping:
     resources:

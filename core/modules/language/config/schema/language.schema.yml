@@ -18,7 +18,7 @@ language_type_negotiation:
         label: Weight
 
 language.types:
-  type: mapping
+  type: config_object
   label: 'Language types'
   mapping:
     all:
@@ -41,7 +41,7 @@ language.types:
         label: 'Language negotiation per type setting'
 
 language.negotiation:
-  type: mapping
+  type: config_object
   label: 'Language detection methods'
   mapping:
     session:
@@ -75,11 +75,14 @@ language.negotiation:
       label: 'Selected language'
 
 language.mappings:
-  type: sequence
+  type: config_object
   label: 'Language mapping'
-  sequence:
-    type: string
-    label: 'Language'
+  mapping:
+    map:
+      type: sequence
+      sequence:
+        type: string
+        label: 'Language'
 
 language.entity.*:
   type: config_entity

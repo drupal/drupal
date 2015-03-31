@@ -1,7 +1,7 @@
 # Schema for the configuration files of the Update Script Test module.
 
 update_script_test.settings:
-  type: mapping
+  type: config_object
   label: ''
   mapping:
     requirement_type:

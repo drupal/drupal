@@ -56,7 +56,7 @@ config_test.query.*:
       label: 'number'
 
 config_test.types:
-  type: mapping
+  type: config_object
   label: 'Configuration type'
   mapping:
     array:
@@ -94,7 +94,7 @@ config_test.types:
       label: 'String integer'
 
 config_test.no_status.default:
-  type: mapping
+  type: config_object
   label: 'Configuration no status default'
   mapping:
     id:
@@ -105,7 +105,7 @@ config_test.no_status.default:
       label: 'Label'
 
 config_test.system:
-  type: mapping
+  type: config_object
   label: 'Configuration system'
   mapping:
     foo:
@@ -119,7 +119,7 @@ config_test.system:
       label: '404'
 
 config_test.new:
-  type: mapping
+  type: config_object
   label: 'Configuration test'
   mapping:
      key:
@@ -136,7 +136,7 @@ config_test.old:
   type: config_test.new
 
 config_test.foo:
-  type: mapping
+  type: config_object
   label: 'Configuration test'
   mapping:
      value:

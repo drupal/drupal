@@ -71,7 +71,7 @@ class NegotiationBrowserDeleteForm extends ConfirmFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('language.mappings')
-      ->clear($this->browserLangcode)
+      ->clear('map.' . $this->browserLangcode)
       ->save();
 
     $args = array(

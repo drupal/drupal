@@ -1,7 +1,7 @@
 # Schema for the configuration files of the User module.
 
 user.settings:
-  type: mapping
+  type: config_object
   label: 'User settings'
   mapping:
     anonymous:
@@ -50,12 +50,9 @@ user.settings:
     password_strength:
       type: boolean
       label: 'Enable password strength indicator'
-    langcode:
-      type: string
-      label: 'Default language'
 
 user.mail:
- type: mapping
+ type: config_object
  label: 'Email settings'
  mapping:
   cancel_confirm:
@@ -85,12 +82,9 @@ user.mail:
   status_canceled:
     type: mail
     label: 'Account cancelled'
-  langcode:
-    type: string
-    label: 'Default language'
 
 user.flood:
-  type: mapping
+  type: config_object
   label: 'User flood settings'
   mapping:
     uid_only:

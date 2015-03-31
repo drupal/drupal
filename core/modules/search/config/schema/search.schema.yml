@@ -1,7 +1,7 @@
 # Schema for the configuration files of the search module.
 
 search.settings:
-  type: mapping
+  type: config_object
   label: 'Search settings'
   mapping:
     and_or_limit:

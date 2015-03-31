@@ -448,7 +448,7 @@ function language_get_browser_drupal_langcode_mappings() {
   if ($config->isNew()) {
     return array();
   }
-  return $config->get();
+  return $config->get('map');
 }
 
 /**

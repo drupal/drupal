@@ -1,7 +1,7 @@
 # Schema for the configuration files of the Configuration translation test module.
 
 config_translation_test.content:
-  type: mapping
+  type: config_object
   label: 'Content'
   mapping:
     id:
@@ -10,9 +10,6 @@ config_translation_test.content:
     label:
       type: label
       label: 'Label'
-    langcode:
-      type: string
-      label: 'Default language'
     content:
       type: text_format
       label: 'Content'

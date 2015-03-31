@@ -1,7 +1,7 @@
 # Schema for the configuration files of the Locale module.
 
 locale.settings:
-  type: mapping
+  type: config_object
   label: 'Translate interface settings'
   mapping:
     cache_strings:

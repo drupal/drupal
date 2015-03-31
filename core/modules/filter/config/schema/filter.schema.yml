@@ -1,7 +1,7 @@
 # Schema for the configuration files of the Filter module.
 
 filter.settings:
-  type: mapping
+  type: config_object
   label: 'Filter settings'
   mapping:
     fallback_format:
@@ -35,9 +35,6 @@ filter.format.*:
       label: 'Enabled filters'
       sequence:
         type: filter
-    langcode:
-      type: string
-      label: 'Default language'
     dependencies:
       type: config_dependencies
       label: 'Dependencies'

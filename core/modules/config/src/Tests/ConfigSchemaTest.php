@@ -61,6 +61,8 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected = array();
     $expected['label'] = 'Schema test data';
     $expected['class'] = '\Drupal\Core\Config\Schema\Mapping';
+    $expected['mapping']['langcode']['type'] = 'string';
+    $expected['mapping']['langcode']['label'] = 'Language code';
     $expected['mapping']['testitem'] = array('label' => 'Test item');
     $expected['mapping']['testlist'] = array('label' => 'Test list');
     $expected['type'] = 'config_schema_test.someschema';
@@ -101,7 +103,7 @@ class ConfigSchemaTest extends KernelTestBase {
       'type' => 'text',
     );
     $expected['mapping']['langcode'] = array(
-      'label' => 'Default language',
+      'label' => 'Language code',
       'type' => 'string',
     );
     $expected['type'] = 'system.maintenance';
@@ -114,6 +116,10 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['label'] = 'Ignore test';
     $expected['class'] = '\Drupal\Core\Config\Schema\Mapping';
     $expected['definition_class'] = '\Drupal\Core\TypedData\MapDataDefinition';
+    $expected['mapping']['langcode'] = array(
+      'type' => 'string',
+      'label' => 'Language code',
+    );
     $expected['mapping']['label'] = array(
       'label' =>  'Label',
       'type' => 'label',
@@ -156,7 +162,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['mapping']['uuid']['type'] = 'string';
     $expected['mapping']['uuid']['label'] = 'UUID';
     $expected['mapping']['langcode']['type'] = 'string';
-    $expected['mapping']['langcode']['label'] = 'Default language';
+    $expected['mapping']['langcode']['label'] = 'Language code';
     $expected['mapping']['status']['type'] = 'boolean';
     $expected['mapping']['status']['label'] = 'Status';
     $expected['mapping']['dependencies']['type'] = 'config_dependencies';
@@ -222,6 +228,8 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected = array();
     $expected['label'] = 'Schema multiple filesytem marker test';
     $expected['class'] = '\Drupal\Core\Config\Schema\Mapping';
+    $expected['mapping']['langcode']['type'] = 'string';
+    $expected['mapping']['langcode']['label'] = 'Language code';
     $expected['mapping']['testid']['type'] = 'string';
     $expected['mapping']['testid']['label'] = 'ID';
     $expected['mapping']['testdescription']['type'] = 'text';
@@ -396,6 +404,8 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['label'] = 'Schema wildcard fallback test';
     $expected['class'] = '\Drupal\Core\Config\Schema\Mapping';
     $expected['definition_class'] = '\Drupal\Core\TypedData\MapDataDefinition';
+    $expected['mapping']['langcode']['type'] = 'string';
+    $expected['mapping']['langcode']['label'] = 'Language code';
     $expected['mapping']['testid']['type'] = 'string';
     $expected['mapping']['testid']['label'] = 'ID';
     $expected['mapping']['testdescription']['type'] = 'text';

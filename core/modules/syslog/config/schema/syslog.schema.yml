@@ -1,7 +1,7 @@
 # Schema for the configuration files of the syslog module.
 
 syslog.settings:
-  type: mapping
+  type: config_object
   label: 'Syslog settings'
   mapping:
     identity:

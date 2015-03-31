@@ -180,7 +180,7 @@ class NegotiationBrowserForm extends ConfigFormBase {
     $mappings = $form_state->get('mappings');
     if (!empty($mappings)) {
       $config = $this->config('language.mappings');
-      $config->setData($mappings);
+      $config->setData(['map' => $mappings]);
       $config->save();
     }
 
@@ -198,7 +198,7 @@ class NegotiationBrowserForm extends ConfigFormBase {
     if ($config->isNew()) {
       return array();
     }
-    return $config->get();
+    return $config->get('map');
   }
 }
 

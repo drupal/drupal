@@ -331,7 +331,7 @@ migrate_entity_constant:
       label: 'Parent'
     langcode:
       type: string
-      label: 'Type'
+      label: 'Language code'
     third_party_settings:
       type: sequence
       label: 'Settings'

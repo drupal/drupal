@@ -1,7 +1,7 @@
 # Schema for the configuration files of the Update module.
 
 update.settings:
-  type: mapping
+  type: config_object
   label: 'Update settings'
   mapping:
     check:

@@ -1,7 +1,7 @@
 # Schema for the configuration files of the Taxonomy module.
 
 taxonomy.settings:
-  type: mapping
+  type: config_object
   label: 'Taxonomy settings'
   mapping:
     maintain_index_table:

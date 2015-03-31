@@ -1,5 +1,5 @@
 config_events_test.test:
-  type: mapping
+  type: config_object
   label: 'Configuration events test'
   mapping:
     key:

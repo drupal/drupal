@@ -111,8 +111,8 @@ Interface TypedConfigManagerInterface extends PluginManagerInterface, CachedDisc
    *   Ignored with TypedConfigManagerInterface. Kept for compatibility with
    *   DiscoveryInterface.
    * @param bool $is_config_name
-   *   Set to TRUE if $plugin_id is a configuration name (as opposed to an
-   *   internal configuration schema type).
+   *   (deprecated) Set to TRUE if $plugin_id is a configuration name (as
+   *   opposed to an internal configuration schema type).
    *
    * @return array
    *   A plugin definition array. If the given plugin id does not have typed

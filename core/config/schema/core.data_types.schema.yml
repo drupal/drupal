@@ -81,6 +81,14 @@ color_hex:
 
 # Complex extended data types:
 
+# Root of a configuration object.
+config_object:
+  type: mapping
+  mapping:
+    langcode:
+      type: string
+      label: 'Language code'
+
 # Mail text with subject and body parts.
 mail:
   type: mapping
@@ -121,7 +129,7 @@ action_configuration_default:
     type: string
 
 theme_settings:
-  type: mapping
+  type: config_object
   mapping:
     favicon:
       type: mapping
@@ -182,12 +190,6 @@ theme_settings:
       label: 'Third party settings'
       sequence:
         type: theme_settings.third_party.[%key]
-
-theme_breakpoints_default:
-  type: sequence
-  sequence:
-    type: string
-    label: 'Breakpoint value'
 
 views_field_bulk_form:
   type: views_field
@@ -262,7 +264,7 @@ config_entity:
       label: 'UUID'
     langcode:
       type: string
-      label: 'Default language'
+      label: 'Language code'
     status:
       type: boolean
       label: 'Status'
@@ -416,9 +418,6 @@ core.date_format.*:
     pattern:
       type: date_format
       label: 'PHP date format'
-    langcode:
-      type: string
-      label: 'Default language'
 
 # Generic field settings schemas.
 

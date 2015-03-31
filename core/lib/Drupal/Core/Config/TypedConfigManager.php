@@ -72,7 +72,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    */
   public function get($name) {
     $data = $this->configStorage->read($name);
-    $type_definition = $this->getDefinition($name, TRUE, TRUE);
+    $type_definition = $this->getDefinition($name);
     $data_definition = $this->buildDataDefinition($type_definition, $data);
     return $this->create($data_definition, $data);
   }

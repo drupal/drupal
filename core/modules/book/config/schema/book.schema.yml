@@ -1,7 +1,7 @@
 # Schema for the configuration files of the book module.
 
 book.settings:
-  type: mapping
+  type: config_object
   label: 'Book settings'
   mapping:
     allowed_types:

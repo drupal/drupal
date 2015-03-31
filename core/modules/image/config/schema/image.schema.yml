@@ -70,7 +70,7 @@ image.effect.image_scale_and_crop:
   label: 'Image scale and crop'
 
 image.settings:
-  type: mapping
+  type: config_object
   mapping:
     preview_image:
       type: string

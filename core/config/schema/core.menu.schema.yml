@@ -1,5 +1,5 @@
 core.menu.static_menu_link_overrides:
-  type: mapping
+  type: config_object
   label: 'Static menu link overrides'
   mapping:
     definitions:

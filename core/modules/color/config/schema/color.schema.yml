@@ -1,5 +1,5 @@
 color.theme.*:
-  type: mapping
+  type: config_object
   label: 'Color theme settings'
   mapping:
     palette:

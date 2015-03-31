@@ -1,7 +1,7 @@
 # Schema for the configuration files of the Locale Test module.
 
 locale_test.no_translation:
-  type: mapping
+  type: config_object
   label: 'No traslation settings'
   mapping:
     test:
@@ -9,11 +9,9 @@ locale_test.no_translation:
       label: 'Test'
       # See \Drupal\locale\Tests\LocaleConfigSubscriberTest
       translatable: true
-    langcode:
-      type: string
 
 locale_test.translation:
-  type: mapping
+  type: config_object
   label: 'translation settings'
   mapping:
     test:
@@ -21,5 +19,3 @@ locale_test.translation:
       label: 'Test'
       # See \Drupal\locale\Tests\LocaleConfigSubscriberTest
       translatable: true
-    langcode:
-      type: string

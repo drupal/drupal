@@ -1,7 +1,7 @@
 # Schema for the configuration files of the tracker module.
 
 tracker.settings:
-  type: mapping
+  type: config_object
   label: 'Tracker settings'
   mapping:
     cron_index_limit:

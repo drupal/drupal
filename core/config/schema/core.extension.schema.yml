@@ -1,5 +1,5 @@
 core.extension:
-  type: mapping
+  type: config_object
   label: 'Extension settings'
   mapping:
     module:

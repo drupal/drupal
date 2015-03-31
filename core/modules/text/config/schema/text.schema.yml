@@ -1,7 +1,7 @@
 # Schema for the configuration files of the text module.
 
 text.settings:
-  type: mapping
+  type: config_object
   label: 'Text settings'
   mapping:
     default_summary_length:

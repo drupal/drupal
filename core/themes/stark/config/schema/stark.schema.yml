@@ -3,7 +3,3 @@
 stark.settings:
   type: theme_settings
   label: 'Stark settings'
-
-stark.breakpoints:
-  type: theme_breakpoints_default
-  label: 'Stark breakpoints'

@@ -1,7 +1,7 @@
 # Schema for the configuration files of the System module.
 
 system.site:
-  type: mapping
+  type: config_object
   label: 'Site information'
   mapping:
     uuid:
@@ -35,9 +35,6 @@ system.site:
     weight_select_max:
       type: integer
       label: 'Weight element maximum value'
-    langcode:
-      type: string
-      label: 'Language code'
     default_langcode:
       type: string
       label: 'Site default language code'
@@ -46,18 +43,15 @@ system.site:
       label: 'Notification email address'
 
 system.maintenance:
-  type: mapping
+  type: config_object
   label: 'Maintenance mode'
   mapping:
     message:
       type: text
       label: 'Message to display when in maintenance mode'
-    langcode:
-      type: string
-      label: 'Default language'
 
 system.authorize:
-  type: mapping
+  type: config_object
   label: 'Authorize settings'
   mapping:
     filetransfer_default:
@@ -65,7 +59,7 @@ system.authorize:
       label: 'Default file transfer protocol'
 
 system.cron:
-  type: mapping
+  type: config_object
   label: 'Cron settings'
   mapping:
     threshold:
@@ -83,7 +77,7 @@ system.cron:
           label: 'Requirements error period'
 
 system.date:
-  type: mapping
+  type: config_object
   label: 'Date settings'
   mapping:
     first_day:
@@ -96,9 +90,6 @@ system.date:
         default:
           type: string
           label: 'Default country'
-    langcode:
-      type: string
-      label: 'Default language'
     timezone:
       type: mapping
       label: 'Time zone settings'
@@ -121,7 +112,7 @@ system.date:
               label: 'Remind users at login if their time zone is not set'
 
 system.diff:
-  type: mapping
+  type: config_object
   label: 'Diff settings'
   mapping:
     context:
@@ -136,7 +127,7 @@ system.diff:
           label: 'Number of trailing lines in a diff'
 
 system.filter:
-  type: mapping
+  type: config_object
   label: 'Filter settings'
   mapping:
     protocols:
@@ -147,7 +138,7 @@ system.filter:
         label: 'Protocol'
 
 system.logging:
-  type: mapping
+  type: config_object
   label: 'Logging settings'
   mapping:
     error_level:
@@ -155,7 +146,7 @@ system.logging:
       label: 'Error messages to display'
 
 system.performance:
-  type: mapping
+  type: config_object
   label: 'Performance settings'
   mapping:
     cache:
@@ -220,7 +211,7 @@ system.performance:
       label: 'Stale file threshold'
 
 system.rss:
-  type: mapping
+  type: config_object
   label: 'Feed settings'
   mapping:
     channel:
@@ -240,12 +231,9 @@ system.rss:
         view_mode:
           type: string
           label: 'Feed content'
-    langcode:
-      type: string
-      label: 'Default language'
 
 system.theme:
-  type: mapping
+  type: config_object
   label: 'Theme settings'
   mapping:
     admin:
@@ -292,7 +280,7 @@ system.action.*:
       type: action.configuration.[%parent.plugin]
 
 system.file:
-  type: mapping
+  type: config_object
   label: 'File system'
   mapping:
     allow_insecure_uploads:
@@ -313,7 +301,7 @@ system.file:
       label: 'Maximum age for temporary files'
 
 system.image:
-  type: mapping
+  type: config_object
   label: 'Image settings'
   mapping:
     toolkit:
@@ -321,7 +309,7 @@ system.image:
       label: 'Toolkit'
 
 system.image.gd:
-  type: mapping
+  type: config_object
   label: 'Image settings'
   mapping:
     jpeg_quality:
@@ -329,7 +317,7 @@ system.image.gd:
       label: 'JPEG quality'
 
 system.mail:
-  type: mapping
+  type: config_object
   label: 'Mail system'
   mapping:
     interface:
