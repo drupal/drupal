@@ -25,7 +25,7 @@ class Connection extends DatabaseConnection {
    * Version of sqlite lower then 3.6.8 can't use savepoints.
    * See http://www.sqlite.org/releaselog/3_6_8.html
    *
-   * @var boolean
+   * @var bool
    */
   protected $savepointSupport = FALSE;
 
@@ -37,7 +37,7 @@ class Connection extends DatabaseConnection {
   /**
    * Whether or not the active transaction (if any) will be rolled back.
    *
-   * @var boolean
+   * @var bool
    */
   protected $willRollback;
 
@@ -57,7 +57,7 @@ class Connection extends DatabaseConnection {
    * This variable is set to public because Schema needs to
    * access it. However, it should not be manually set.
    *
-   * @var boolean
+   * @var bool
    */
   var $tableDropped = FALSE;
 

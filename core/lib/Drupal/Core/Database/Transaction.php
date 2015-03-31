@@ -38,7 +38,7 @@ class Transaction {
   /**
    * A boolean value to indicate whether this transaction has been rolled back.
    *
-   * @var Boolean
+   * @var bool
    */
   protected $rolledBack = FALSE;
 

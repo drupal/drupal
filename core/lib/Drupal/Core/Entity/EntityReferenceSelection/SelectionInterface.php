@@ -59,7 +59,7 @@ interface SelectionInterface extends PluginFormInterface {
    *   The current form state.
    * @param array $form
    *   The form.
-   * @param boolean $strict
+   * @param bool $strict
    *   Whether to trigger a form error if an element from $input (eg. an entity)
    *   is not found. Defaults to TRUE.
    *

@@ -36,7 +36,7 @@ class File extends DrupalSqlBase {
   /**
    * Flag for private or public file storage.
    *
-   * @var boolean
+   * @var bool
    */
   protected $isPublic;
 

@@ -44,7 +44,7 @@ class Editor extends Plugin {
   /**
    * Whether the editor supports "allowed content only" filtering.
    *
-   * @var boolean
+   * @var bool
    */
   public $supports_content_filtering;
 

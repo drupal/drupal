@@ -38,7 +38,7 @@ class AliasManager implements AliasManagerInterface, CacheDecoratorInterface {
   /**
    * Whether the cache needs to be written.
    *
-   * @var boolean
+   * @var bool
    */
   protected $cacheNeedsWriting = FALSE;
 

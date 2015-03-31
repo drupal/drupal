@@ -93,7 +93,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   /**
    * Whether this instance should cache the source count.
    *
-   * @var boolean
+   * @var bool
    */
   protected $cacheCounts = FALSE;
 
@@ -107,7 +107,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   /**
    * Whether this instance should not attempt to count the source.
    *
-   * @var boolean
+   * @var bool
    */
   protected $skipCount = FALSE;
 

@@ -466,7 +466,7 @@ class UnicodeTest extends UnitTestCase {
    *
    * @param string $text
    *   The text to validate.
-   * @param boolean $expected
+   * @param bool $expected
    *   The expected return value from Unicode::validateUtf8().
    * @param string $message
    *   The message to display on failure.

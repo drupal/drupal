@@ -32,7 +32,7 @@ interface CommentStatisticsInterface {
    *   Array of entities on which commenting is enabled, keyed by id
    * @param string $entity_type
    *   The entity type of the passed entities.
-   * @param boolean $accurate
+   * @param bool $accurate
    *   (optional) Indicates if results must be completely up to date. If set to
    *   FALSE, a replica database will used if available. Defaults to TRUE.
    *

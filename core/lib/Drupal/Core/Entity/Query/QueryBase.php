@@ -40,7 +40,7 @@ abstract class QueryBase implements QueryInterface {
   /**
    * TRUE if this is a count query, FALSE if it isn't.
    *
-   * @var boolean
+   * @var bool
    */
   protected $count = FALSE;
 

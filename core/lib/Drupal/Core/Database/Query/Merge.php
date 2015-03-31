@@ -119,7 +119,7 @@ class Merge extends Query implements ConditionInterface {
   /**
    * Flag indicating whether an UPDATE is necessary.
    *
-   * @var boolean
+   * @var bool
    */
   protected $needsUpdate = FALSE;
 

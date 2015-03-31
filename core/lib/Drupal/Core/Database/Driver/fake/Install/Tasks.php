@@ -22,7 +22,7 @@ class Tasks extends InstallTasks {
    * @TODO Looks like this is needed only if we define $pdoDriver to something valid e.g. mysql.
    * Not sure we need to do that. We may not need this file at all?
    *
-   * @var boolean
+   * @var bool
    */
   protected $error = TRUE;
 

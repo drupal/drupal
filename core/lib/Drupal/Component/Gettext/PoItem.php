@@ -40,7 +40,7 @@ class PoItem {
   /**
    * Flag indicating if this translation has plurals.
    *
-   * @var boolean
+   * @var bool
    */
   private $_plural;
 
@@ -138,7 +138,7 @@ class PoItem {
   /**
    * Set if the translation has plural values.
    *
-   * @param boolean $plural
+   * @param bool $plural
    */
   function setPlural($plural) {
     $this->_plural = $plural;

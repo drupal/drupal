@@ -94,7 +94,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
   /**
    * Indicator of whether the stream reading is finished.
    *
-   * @var boolean
+   * @var bool
    */
   private $_finished;
 

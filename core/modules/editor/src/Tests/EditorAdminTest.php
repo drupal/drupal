@@ -152,7 +152,7 @@ class EditorAdminTest extends WebTestBase {
    *
    * @param string $format_id
    *   The format machine name.
-   * @param boolean $ponies_too
+   * @param bool $ponies_too
    *   The expected value of the ponies_too setting.
    */
   protected function verifyUnicornEditorConfiguration($format_id, $ponies_too = TRUE) {

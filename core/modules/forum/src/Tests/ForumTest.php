@@ -511,7 +511,7 @@ class ForumTest extends WebTestBase {
    *
    * @param array $forum
    *   A forum array.
-   * @param boolean $container
+   * @param bool $container
    *   TRUE if $forum is a container; FALSE otherwise.
    *
    * @return object

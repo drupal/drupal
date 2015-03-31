@@ -174,7 +174,7 @@ class CommentNonNodeTest extends WebTestBase {
    *
    * @param \Drupal\comment\CommentInterface $comment
    *   The comment object.
-   * @param boolean $reply
+   * @param bool $reply
    *   Boolean indicating whether the comment is a reply to another comment.
    *
    * @return boolean
@@ -212,7 +212,7 @@ class CommentNonNodeTest extends WebTestBase {
    *   Comment to perform operation on.
    * @param string $operation
    *   Operation to perform.
-   * @param boolean $aproval
+   * @param bool $aproval
    *   Operation is found on approval page.
    */
   function performCommentOperation($comment, $operation, $approval = FALSE) {

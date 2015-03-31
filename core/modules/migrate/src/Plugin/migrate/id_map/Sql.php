@@ -84,7 +84,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface {
   /**
    * Whether the plugin is already initialized.
    *
-   * @var boolean
+   * @var bool
    */
   protected $initialized;
 

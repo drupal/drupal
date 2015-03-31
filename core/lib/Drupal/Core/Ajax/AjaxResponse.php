@@ -58,7 +58,7 @@ class AjaxResponse extends JsonResponse {
    *
    * @param \Drupal\Core\Ajax\CommandInterface $command
    *   An AJAX command object implementing CommandInterface.
-   * @param boolean $prepend
+   * @param bool $prepend
    *   A boolean which determines whether the new command should be executed
    *   before previously added commands. Defaults to FALSE.
    *

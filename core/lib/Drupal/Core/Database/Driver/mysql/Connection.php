@@ -30,7 +30,7 @@ class Connection extends DatabaseConnection {
   /**
    * Flag to indicate if the cleanup function in __destruct() should run.
    *
-   * @var boolean
+   * @var bool
    */
   protected $needsCleanup = FALSE;
 

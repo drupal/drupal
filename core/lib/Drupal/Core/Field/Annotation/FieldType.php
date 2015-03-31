@@ -87,7 +87,7 @@ class FieldType extends DataType {
   /**
    * A boolean stating that fields of this type cannot be created through the UI.
    *
-   * @var boolean
+   * @var bool
    */
   public $no_ui = FALSE;
 

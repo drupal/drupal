@@ -28,7 +28,7 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
   /**
    * Whether the behavior of the language selector should be tested.
    *
-   * @var boolean
+   * @var bool
    */
   protected $testLanguageSelector = TRUE;
 

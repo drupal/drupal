@@ -91,7 +91,7 @@ abstract class TestBase {
   /**
    * TRUE if verbose debugging is enabled.
    *
-   * @var boolean
+   * @var bool
    */
   public $verbose;
 
@@ -260,7 +260,7 @@ abstract class TestBase {
   /**
    * Whether to die in case any test assertion fails.
    *
-   * @var boolean
+   * @var bool
    *
    * @see run-tests.sh
    */

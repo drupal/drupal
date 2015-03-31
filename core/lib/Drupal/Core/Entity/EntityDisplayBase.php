@@ -67,7 +67,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
    * Whether this display is enabled or not. If the entity (form) display
    * is disabled, we'll fall back to the 'default' display.
    *
-   * @var boolean
+   * @var bool
    */
   protected $status;
 
