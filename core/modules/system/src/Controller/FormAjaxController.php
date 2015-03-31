@@ -7,10 +7,13 @@
 
 namespace Drupal\system\Controller;
 
+use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\UpdateBuildIdCommand;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Render\MainContent\MainContentRendererInterface;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\system\FileAjaxForm;
 use Drupal\Core\Form\FormBuilderInterface;
 use Psr\Log\LoggerInterface;
@@ -46,6 +49,20 @@ class FormAjaxController implements ContainerInjectionInterface {
   protected $renderer;
 
   /**
+   * The main content to AJAX Response renderer.
+   *
+   * @var \Drupal\Core\Render\MainContent\MainContentRendererInterface
+   */
+  protected $ajaxRenderer;
+
+  /**
+   * The current route match.
+   *
+   * @var \Drupal\Core\Routing\RouteMatchInterface
+   */
+  protected $routeMatch;
+
+  /**
    * Constructs a FormAjaxController object.
    *
    * @param \Psr\Log\LoggerInterface $logger
@@ -54,11 +71,17 @@ class FormAjaxController implements ContainerInjectionInterface {
    *   The form builder.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
+   * @param \Drupal\Core\Render\MainContent\MainContentRendererInterface $ajax_renderer
+   *   The main content to AJAX Response renderer.
+   * @param \Drupal\Core\Routing\RouteMatchInterface
+   *   The current route match.
    */
-  public function __construct(LoggerInterface $logger, FormBuilderInterface $form_builder, RendererInterface $renderer) {
+  public function __construct(LoggerInterface $logger, FormBuilderInterface $form_builder, RendererInterface $renderer, MainContentRendererInterface $ajax_renderer, RouteMatchInterface $route_match) {
     $this->logger = $logger;
     $this->formBuilder = $form_builder;
     $this->renderer = $renderer;
+    $this->ajaxRenderer = $ajax_renderer;
+    $this->routeMatch = $route_match;
   }
 
   /**
@@ -68,7 +91,9 @@ class FormAjaxController implements ContainerInjectionInterface {
     return new static(
       $container->get('logger.factory')->get('ajax'),
       $container->get('form_builder'),
-      $container->get('renderer')
+      $container->get('renderer'),
+      $container->get('main_content_renderer.ajax'),
+      $container->get('current_route_match')
     );
   }
 
@@ -112,8 +137,20 @@ class FormAjaxController implements ContainerInjectionInterface {
     if (empty($callback) || !is_callable($callback)) {
       throw new HttpException(500, 'The specified #ajax callback is empty or not callable.');
     }
-    /** @var \Drupal\Core\Ajax\AjaxResponse $response */
-    $response = call_user_func_array($callback, [&$form, &$form_state]);
+    $result = call_user_func_array($callback, [&$form, &$form_state]);
+
+    // If the callback is an #ajax callback, the result is a render array, and
+    // we need to turn it into an AJAX response, so that we can add any commands
+    // we got earlier; typically the UpdateBuildIdCommand when handling an AJAX
+    // submit from a cached page.
+    if ($result instanceof AjaxResponse) {
+      $response = $result;
+    }
+    else {
+      /** @var \Drupal\Core\Ajax\AjaxResponse $response */
+      $response = $this->ajaxRenderer->renderResponse($result, $request, $this->routeMatch);
+    }
+
     foreach ($commands as $command) {
       $response->addCommand($command, TRUE);
     }
