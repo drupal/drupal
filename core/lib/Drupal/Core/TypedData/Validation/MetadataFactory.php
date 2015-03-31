@@ -10,6 +10,7 @@ namespace Drupal\Core\TypedData\Validation;
 use Drupal\Core\TypedData\ComplexDataInterface;
 use Drupal\Core\TypedData\ListInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\Core\TypedData\TypedDataManager;
 use Symfony\Component\Validator\MetadataFactoryInterface;
 
 /**
@@ -18,7 +19,24 @@ use Symfony\Component\Validator\MetadataFactoryInterface;
 class MetadataFactory implements MetadataFactoryInterface {
 
   /**
-   * Implements MetadataFactoryInterface::getMetadataFor().
+   * The typed data manager.
+   *
+   * @var \Drupal\Core\TypedData\TypedDataManager
+   */
+  protected $typedDataManager;
+
+  /**
+   * Constructs the object.
+   *
+   * @param \Drupal\Core\TypedData\TypedDataManager $typed_data_manager
+   *   The typed data manager.
+   */
+  public function __construct(TypedDataManager $typed_data_manager) {
+    $this->typedDataManager = $typed_data_manager;
+  }
+
+  /**
+   * {@inheritdoc}
    *
    * @param \Drupal\Core\TypedData\TypedDataInterface $typed_data
    *   Some typed data object containing the value to validate.
@@ -32,7 +50,7 @@ class MetadataFactory implements MetadataFactoryInterface {
     }
     $is_container = $typed_data instanceof ComplexDataInterface || $typed_data instanceof ListInterface;
     $class = '\Drupal\Core\TypedData\Validation\\' . ($is_container ? 'PropertyContainerMetadata' : 'Metadata');
-    return new $class($typed_data, $name, $this);
+    return new $class($typed_data, $name, $this, $this->typedDataManager);
   }
 
   /**

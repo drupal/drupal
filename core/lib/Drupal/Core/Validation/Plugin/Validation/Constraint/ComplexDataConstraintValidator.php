@@ -8,6 +8,7 @@
 namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
 use Drupal\Core\TypedData\ComplexDataInterface;
+use Drupal\Core\TypedData\TypedDataInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
@@ -25,6 +26,10 @@ class ComplexDataConstraintValidator extends ConstraintValidator {
       return;
     }
 
+    // If un-wrapped data has been passed, fetch the typed data object first.
+    if (!$value instanceof TypedDataInterface) {
+      $value = $this->context->getMetadata()->getTypedData();
+    }
     if (!$value instanceof ComplexDataInterface) {
       throw new UnexpectedTypeException($value, 'ComplexData');
     }

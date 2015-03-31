@@ -332,7 +332,7 @@ class TypedDataManager extends DefaultPluginManager {
   public function getValidator() {
     if (!isset($this->validator)) {
       $this->validator = Validation::createValidatorBuilder()
-        ->setMetadataFactory(new MetadataFactory())
+        ->setMetadataFactory(new MetadataFactory($this))
         ->setTranslator(new DrupalTranslator())
         ->setConstraintValidatorFactory(new ConstraintValidatorFactory($this->classResolver))
         ->setApiVersion(Validation::API_VERSION_2_4)
@@ -413,6 +413,46 @@ class TypedDataManager extends DefaultPluginManager {
   public function clearCachedDefinitions() {
     parent::clearCachedDefinitions();
     $this->prototypes = array();
+  }
+
+  /**
+   * Gets the canonical representation of a TypedData object.
+   *
+   * The canonical representation is typically used when data is passed on to
+   * other code components. In many use cases, the TypedData object is mostly
+   * unified adapter wrapping a primary value (e.g. a string, an entity...)
+   * which is the canonical representation that consuming code like constraint
+   * validators are really interested in. For some APIs, though, the domain
+   * object (e.g. Field API's FieldItem and FieldItemList) directly implements
+   * TypedDataInterface, and the canonical representation is thus the data
+   * object itself.
+   *
+   * When a TypedData object gets validated, for example, its canonical
+   * representation is passed on to constraint validators, which thus receive
+   * an Entity unwrapped, but a FieldItem as is.
+   *
+   * Data types specify whether their data objects need unwrapping by using the
+   * 'unwrap_for_canonical_representation' property in the data definition
+   * (defaults to TRUE).
+   *
+   * @param \Drupal\Core\TypedData\TypedDataInterface $data
+   *   The data.
+   *
+   * @return mixed
+   *   The canonical representation of the passed data.
+   */
+  public function getCanonicalRepresentation(TypedDataInterface $data) {
+    $data_definition = $data->getDataDefinition();
+    // In case a list is passed, respect the 'wrapped' key of its data type.
+    if ($data_definition instanceof ListDataDefinitionInterface) {
+      $data_definition = $data_definition->getItemDefinition();
+    }
+    // Get the plugin definition of the used data type.
+    $type_definition = $this->getDefinition($data_definition->getDataType());
+    if (!empty($type_definition['unwrap_for_canonical_representation'])) {
+      return $data->getValue();
+    }
+    return $data;
   }
 
 }

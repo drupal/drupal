@@ -106,4 +106,13 @@ class DataType extends Plugin {
    */
   public $constraints;
 
+  /**
+   * Whether the typed object wraps the canonical representation of the data.
+   *
+   * @var bool
+   *
+   * @see \Drupal\Core\TypedData\TypedDataManager::getCanonicalRepresentation()
+   */
+  public $unwrap_for_canonical_representation = TRUE;
+
 }

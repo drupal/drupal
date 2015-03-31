@@ -46,7 +46,7 @@ class Context extends ComponentContext implements ContextInterface {
       }
       return NULL;
     }
-    return $this->contextData->getValue();
+    return $this->typedDataManager->getCanonicalRepresentation($this->contextData);
   }
 
   /**

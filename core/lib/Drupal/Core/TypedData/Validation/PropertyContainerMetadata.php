@@ -25,12 +25,16 @@ class PropertyContainerMetadata extends Metadata implements PropertyMetadataCont
     // if the data structure is empty. That way existing NotNull or NotBlank
     // constraints work as expected.
     if ($typed_data->isEmpty()) {
-      $typed_data = NULL;
+      $data = NULL;
     }
-    $visitor->visit($this, $typed_data, $group, $propertyPath);
+    else {
+      $data = $this->typedDataManager->getCanonicalRepresentation($typed_data);
+    }
+    $visitor->visit($this, $data, $group, $propertyPath);
     $pathPrefix = isset($propertyPath) && $propertyPath !== '' ? $propertyPath . '.' : '';
 
-    if ($typed_data) {
+    // Only continue validating if the data is not empty.
+    if ($data) {
       foreach ($typed_data as $name => $data) {
         $metadata = $this->factory->getMetadataFor($data, $name);
         $metadata->accept($visitor, $data, $group, $pathPrefix . $name);
@@ -56,10 +60,10 @@ class PropertyContainerMetadata extends Metadata implements PropertyMetadataCont
    */
   public function getPropertyMetadata($property_name) {
     if ($this->typedData instanceof ListInterface) {
-      return array(new Metadata($this->typedData[$property_name], $property_name));
+      return array(new Metadata($this->typedData[$property_name], $property_name, $this->factory, $this->typedDataManager));
     }
     elseif ($this->typedData instanceof ComplexDataInterface) {
-      return array(new Metadata($this->typedData->get($property_name), $property_name));
+      return array(new Metadata($this->typedData->get($property_name), $property_name, $this->factory, $this->typedDataManager));
     }
     else {
       throw new \LogicException("There are no known properties.");

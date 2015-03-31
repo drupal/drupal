@@ -8,6 +8,7 @@
 namespace Drupal\Core\TypedData\Validation;
 
 use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\Core\TypedData\TypedDataManager;
 use Symfony\Component\Validator\ValidationVisitorInterface;
 use Symfony\Component\Validator\PropertyMetadataInterface;
 
@@ -38,6 +39,13 @@ class Metadata implements PropertyMetadataInterface {
   protected $factory;
 
   /**
+   * The typed data manager.
+   *
+   * @var \Drupal\Core\TypedData\TypedDataManager
+   */
+  protected $typedDataManager;
+
+  /**
    * Constructs the object.
    *
    * @param \Drupal\Core\TypedData\TypedDataInterface $typed_data
@@ -47,11 +55,14 @@ class Metadata implements PropertyMetadataInterface {
    *   the data is the root of the typed data tree.
    * @param \Drupal\Core\TypedData\Validation\MetadataFactory $factory
    *   The factory to use for instantiating property metadata.
+   * @param \Drupal\Core\TypedData\TypedDataManager $typed_data_manager
+   *   The typed data manager.
    */
-  public function __construct(TypedDataInterface $typed_data, $name = '', MetadataFactory $factory) {
+  public function __construct(TypedDataInterface $typed_data, $name = '', MetadataFactory $factory, TypedDataManager $typed_data_manager) {
     $this->typedData = $typed_data;
     $this->name = $name;
     $this->factory = $factory;
+    $this->typedDataManager = $typed_data_manager;
   }
 
   /**
@@ -62,7 +73,7 @@ class Metadata implements PropertyMetadataInterface {
     // @todo: Do we have to care about groups? Symfony class metadata has
     // $propagatedGroup.
 
-    $visitor->visit($this, $typed_data->getValue(), $group, $propertyPath);
+    $visitor->visit($this, $this->typedDataManager->getCanonicalRepresentation($typed_data), $group, $propertyPath);
   }
 
   /**
@@ -89,7 +100,7 @@ class Metadata implements PropertyMetadataInterface {
    * @return mixed The value of the property.
    */
   public function getPropertyValue($container) {
-    return $this->typedData->getValue();
+    return $this->typedDataManager->getCanonicalRepresentation($this->typedData);
   }
 
   /**
