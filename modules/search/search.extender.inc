@@ -149,6 +149,17 @@ class SearchQuery extends SelectQueryExtender {
     $this->searchExpression = $expression;
     $this->type = $module;
 
+    // Add a search_* tag. This needs to be added before any preExecute methods
+    // for decorated queries are called, as $this->prepared will be set to TRUE
+    // and tags added in the execute method will never get used. For example,
+    // if $query is extended by 'SearchQuery' then 'PagerDefault', the
+    // search-specific tag will be added too late (when preExecute() has
+    // already been called from the PagerDefault extender), and as a
+    // consequence will not be available to hook_query_alter() implementations,
+    // nor will the correct hook_query_TAG_alter() implementations get invoked.
+    // See node_search_execute().
+    $this->addTag('search_' . $module);
+
     return $this;
   }
 
@@ -494,9 +505,8 @@ class SearchQuery extends SelectQueryExtender {
       $this->orderBy('calculated_score', 'DESC');
     }
 
-    // Add tag and useful metadata.
+    // Add useful metadata.
     $this
-      ->addTag('search_' . $this->type)
       ->addMetaData('normalize', $this->normalize)
       ->fields('i', array('type', 'sid'));
 

@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ * Dummy module implementing a node search hooks for search module testing.
+ */
+
+
+/**
+ *  Implements hook_query_alter().
+ */
+function search_node_tags_query_alter(QueryAlterableInterface $query) {
+  if ($query->hasTag('search_node')) {
+    variable_set('search_node_tags_test_query_tag', TRUE);
+  }
+}
+
+/**
+ *  Implements hook_query_TAG_alter().
+ */
+function search_node_tags_query_search_node_alter(QueryAlterableInterface $query) {
+  variable_set('search_node_tags_test_query_tag_hook', TRUE);
+}

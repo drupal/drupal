@@ -2049,6 +2049,47 @@ class SearchNodeAccessTest extends DrupalWebTestCase {
 }
 
 /**
+ * Tests node search with query tags.
+ */
+class SearchNodeTagTest extends DrupalWebTestCase {
+  public $test_user;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Node search query tags',
+      'description' => 'Tests Node search tags functionality.',
+      'group' => 'Search',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('search', 'search_node_tags');
+    node_access_rebuild();
+
+    // Create a test user and log in.
+    $this->test_user = $this->drupalCreateUser(array('search content'));
+    $this->drupalLogin($this->test_user);
+  }
+
+  /**
+   * Tests that the correct tags are available and hooks invoked.
+   */
+  function testNodeSearchQueryTags() {
+    $this->drupalCreateNode(array('body' => array(LANGUAGE_NONE => array(array('value' => 'testing testing testing.')))));
+
+    // Update the search index.
+    module_invoke_all('update_index');
+    search_update_totals();
+
+    $edit = array('keys' => 'testing');
+    $this->drupalPost('search/node', $edit, t('Search'));
+
+    $this->assertTrue(variable_get('search_node_tags_test_query_tag', FALSE), 'hook_query_alter() was invoked and the query contained the "search_node" tag.');
+    $this->assertTrue(variable_get('search_node_tags_test_query_tag_hook', FALSE), 'hook_query_search_node_alter() was invoked.');
+  }
+}
+
+/**
  * Tests searching with locale values set.
  */
 class SearchSetLocaleTest extends DrupalWebTestCase {
