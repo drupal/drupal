@@ -7,6 +7,7 @@
 
 namespace Drupal\locale\Tests;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\simpletest\WebTestBase;
 use Drupal\core\language\languageInterface;
 
@@ -45,7 +46,7 @@ class LocaleConfigTranslationTest extends WebTestBase {
   public function testConfigTranslation() {
     // Add custom language.
     $langcode = 'xx';
-    $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages', 'translate interface', 'administer modules', 'access site-wide contact form', 'administer contact forms'));
+    $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages', 'translate interface', 'administer modules', 'access site-wide contact form', 'administer contact forms', 'administer site configuration'));
     $this->drupalLogin($admin_user);
     $name = $this->randomMachineName(16);
     $edit = array(
@@ -59,12 +60,13 @@ class LocaleConfigTranslationTest extends WebTestBase {
     $edit = array("prefix[$langcode]" => $langcode);
     $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
 
-    // Check site name string exists and create translation for it.
-    $string = $this->storage->findString(array('source' => 'Drupal', 'context' => '', 'type' => 'configuration'));
+    // Check that the maintenance message exists and create translation for it.
+    $source = '@site is currently under maintenance. We should be back shortly. Thank you for your patience.';
+    $string = $this->storage->findString(array('source' => $source, 'context' => '', 'type' => 'configuration'));
     $this->assertTrue($string, 'Configuration strings have been created upon installation.');
 
     // Translate using the UI so configuration is refreshed.
-    $site_name = $this->randomMachineName(20);
+    $message = $this->randomMachineName(20);
     $search = array(
       'string' => $string->source,
       'langcode' => $langcode,
@@ -75,18 +77,14 @@ class LocaleConfigTranslationTest extends WebTestBase {
     $textarea = current($textareas);
     $lid = (string) $textarea[0]['name'];
     $edit = array(
-      $lid => $site_name,
+      $lid => $message,
     );
     $this->drupalPostForm('admin/config/regional/translate', $edit, t('Save translations'));
 
-    // Get translation and check we've only got the site name.
-    $translation = \Drupal::languageManager()->getLanguageConfigOverride($langcode, 'system.site')->get();
+    // Get translation and check we've only got the message.
+    $translation = \Drupal::languageManager()->getLanguageConfigOverride($langcode, 'system.maintenance')->get();
     $this->assertEqual(count($translation), 1, 'Got the right number of properties after translation.');
-    $this->assertEqual($translation['name'], $site_name, 'Got the right translation for the site name.');
-
-    // Check the translated site name is displayed.
-    $this->drupalGet($langcode);
-    $this->assertText($site_name, 'The translated site name is displayed after translations refreshed.');
+    $this->assertEqual($translation['message'], $message);
 
     // Check default medium date format exists and create a translation for it.
     $string = $this->storage->findString(array('source' => 'D, m/d/Y - H:i', 'context' => 'PHP date format', 'type' => 'configuration'));

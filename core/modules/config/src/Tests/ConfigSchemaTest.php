@@ -288,14 +288,8 @@ class ConfigSchemaTest extends KernelTestBase {
    * Tests metadata applied to configuration objects.
    */
   function testSchemaData() {
-    // Try some simple properties.
+    // Try a simple property.
     $meta = \Drupal::service('config.typed')->get('system.site');
-    $property = $meta->get('name');
-    $this->assertTrue($property instanceof StringInterface, 'Got the right wrapper fo the site name property.');
-    $this->assertEqual($property->getValue(), 'Drupal', 'Got the right string value for site name data.');
-    $definition = $property->getDataDefinition();
-    $this->assertTrue($definition['translatable'], 'Got the right translatability setting for site name data.');
-
     $property = $meta->get('page')->get('front');
     $this->assertTrue($property instanceof StringInterface, 'Got the right wrapper fo the page.front property.');
     $this->assertEqual($property->getValue(), 'user/login', 'Got the right value for page.front data.');

@@ -644,10 +644,13 @@ function system_install() {
   $cron_key = Crypt::randomBytesBase64(55);
   \Drupal::state()->set('system.cron_key', $cron_key);
 
-  // Populate the site UUID.
-  \Drupal::configFactory()->getEditable('system.site')
-    ->set('uuid', \Drupal::service('uuid')->generate())
-    ->save();
+  // Populate the site UUID and default name (if not set).
+  $site = \Drupal::configFactory()->getEditable('system.site');
+  $site->set('uuid', \Drupal::service('uuid')->generate());
+  if (!$site->get('name')) {
+    $site->set('name', 'Drupal');
+  }
+  $site->save();
 }
 
 /**

@@ -19,6 +19,15 @@ use Drupal\Component\Utility\Xss;
 class TokenReplaceUnitTest extends TokenReplaceUnitTestBase {
 
   /**
+   * @inheritdoc
+   */
+  protected function setUp() {
+    parent::setUp();
+    // Set the site name to something other than an empty string.
+    $this->config('system.site')->set('name', 'Drupal')->save();
+  }
+
+  /**
    * Test whether token-replacement works in various contexts.
    */
   public function testSystemTokenRecognition() {
