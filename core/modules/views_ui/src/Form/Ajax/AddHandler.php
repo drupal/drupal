@@ -90,7 +90,7 @@ class AddHandler extends ViewsFormBase {
       $form['override']['controls'] = array(
         '#theme_wrappers' => array('container'),
         '#id' => 'views-filterable-options-controls',
-        '#attributes' => array('class' => array('container-inline')),
+        '#attributes' => ['class' => ['form--inline']],
       );
       $form['override']['controls']['options_search'] = array(
         '#type' => 'textfield',

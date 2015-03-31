@@ -222,7 +222,7 @@ function views_ui_standard_display_dropdown(&$form, FormStateInterface $form_sta
   // @todo Move this to a separate function if it's needed on any forms that
   // don't have the display dropdown.
   $form['override'] = array(
-    '#prefix' => '<div class="views-override clearfix container-inline" data-drupal-views-offset="top">',
+    '#prefix' => '<div class="views-override clearfix form--inline" data-drupal-views-offset="top">',
     '#suffix' => '</div>',
     '#weight' => -1000,
     '#tree' => TRUE,

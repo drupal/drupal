@@ -839,17 +839,17 @@ td.group-title {
 }
 
 #views-filterable-options-controls .form-item {
-  width: 45%;
-  margin-right: 2%; /* LTR */
+  width: 30%;
+  margin: 0 0 0 2%; /* LTR */
+}
 }
 [dir="rtl"] #views-filterable-options-controls .form-item {
-  margin-left: 2%;
-  margin-right: 0;
+  margin: 0 2% 0 0;
 }
 
 #views-filterable-options-controls input,
 #views-filterable-options-controls select {
-  width: 200px;
+  width: 100%;
 }
 
 .views-ui-dialog .ui-dialog-content {
