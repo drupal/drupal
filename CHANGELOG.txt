@@ -7,7 +7,7 @@ Drupal 7.36, xxxx-xx-xx (development version)
 - Fixed a bug that caused database query tags not to be added to search-related
   database queries under many circumstances, and which prevented the
   corresponding hook_query_TAG_alter() implementations from being called.
-- Fixed the "for" attributed on managed file upload field labels to improve
+- Fixed the "for" attribute on managed file upload field labels to improve
   accessibility (minor markup change).
 - Added a 'javascript_always_use_jquery' variable which can be set to FALSE by
   sites that may not need jQuery loaded on all pages, and a 'requires_jquery'
