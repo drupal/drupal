@@ -164,4 +164,29 @@ interface UserInterface extends ContentEntityInterface, EntityChangedInterface, 
    */
   public function getInitialEmail();
 
+  /**
+   * Sets the existing plain text password.
+   *
+   * Required for validation when changing the password, name or email fields.
+   *
+   * @param string $password
+   *   The existing plain text password of the user.
+   *
+   * @return $this
+   */
+  public function setExistingPassword($password);
+
+  /**
+   * Checks the existing password if set.
+   *
+   * @param \Drupal\user\UserInterface $account_unchanged
+   *   The unchanged user entity to compare against.
+   *
+   * @return bool
+   *   TRUE if the correct existing password was provided.
+   *
+   * @see UserInterface::setExistingPassword().
+   */
+  public function checkExistingPassword(UserInterface $account_unchanged);
+
 }

@@ -405,30 +405,6 @@ function user_user_view(array &$build, UserInterface $account, EntityViewDisplay
 }
 
 /**
- * Form validation handler for the current password on the user account form.
- *
- * @see AccountForm::form()
- */
-function user_validate_current_pass(&$form, FormStateInterface $form_state) {
-  $account = $form_state->get('user');
-  foreach ($form_state->getValue('current_pass_required_values') as $key => $name) {
-    // This validation only works for required textfields (like mail) or
-    // form values like password_confirm that have their own validation
-    // that prevent them from being empty if they are changed.
-    $current_value = $account->hasField($key) ? $account->get($key)->value : $account->$key;
-    if ((strlen(trim($form_state->getValue($key))) > 0) && ($form_state->getValue($key) != $current_value)) {
-      $current_pass_failed = $form_state->isValueEmpty('current_pass') || !\Drupal::service('password')->check($form_state->getValue('current_pass'), $account);
-      if ($current_pass_failed) {
-        $form_state->setErrorByName('current_pass', t("Your current password is missing or incorrect; it's required to change the %name.", array('%name' => $name)));
-        $form_state->setErrorByName($key);
-      }
-      // We only need to check the password once.
-      break;
-    }
-  }
-}
-
-/**
  * Implements hook_preprocess_HOOK() for block templates.
  */
 function user_preprocess_block(&$variables) {

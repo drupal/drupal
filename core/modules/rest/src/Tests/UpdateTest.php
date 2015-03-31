@@ -89,7 +89,7 @@ class UpdateTest extends RESTTestBase {
 
     // Enable access protection for the text field.
     // @see entity_test_entity_field_access()
-    $entity->field_test_text->value = 'no delete access value';
+    $entity->field_test_text->value = 'no edit access value';
     $entity->field_test_text->format = 'plain_text';
     $entity->save();
 
@@ -99,7 +99,7 @@ class UpdateTest extends RESTTestBase {
 
     // Re-load the entity from the database.
     $entity = entity_load($entity_type, $entity->id(), TRUE);
-    $this->assertEqual($entity->field_test_text->value, 'no delete access value', 'Text field was not deleted.');
+    $this->assertEqual($entity->field_test_text->value, 'no edit access value', 'Text field was not deleted.');
 
     // Try to update an access protected field.
     $normalized = $serializer->normalize($patch_entity, $this->defaultFormat, $context);
@@ -110,9 +110,12 @@ class UpdateTest extends RESTTestBase {
 
     // Re-load the entity from the database.
     $entity = entity_load($entity_type, $entity->id(), TRUE);
-    $this->assertEqual($entity->field_test_text->value, 'no delete access value', 'Text field was not updated.');
+    $this->assertEqual($entity->field_test_text->value, 'no edit access value', 'Text field was not updated.');
 
     // Try to update the field with a text format this user has no access to.
+    // First change the original field value so we're allowed to edit it again.
+    $entity->field_test_text->value = 'test';
+    $entity->save();
     $patch_entity->set('field_test_text', array(
       'value' => 'test',
       'format' => 'full_html',
@@ -123,7 +126,7 @@ class UpdateTest extends RESTTestBase {
 
     // Re-load the entity from the database.
     $entity = entity_load($entity_type, $entity->id(), TRUE);
-    $this->assertEqual($entity->field_test_text->value, 'no delete access value', 'Text field was not updated.');
+    $this->assertEqual($entity->field_test_text->format, 'plain_text', 'Text format was not updated.');
 
     // Restore the valid test value.
     $entity->field_test_text->value = $this->randomString();
@@ -158,6 +161,70 @@ class UpdateTest extends RESTTestBase {
     $this->drupalLogin($account);
     $this->httpRequest($entity->urlInfo(), 'PATCH', $serialized, $this->defaultMimeType);
     $this->assertResponse(405);
+  }
+
+  /**
+   * Tests several valid and invalid update requests for the 'user' entity type.
+   */
+  public function testUpdateUser() {
+    $serializer = $this->container->get('serializer');
+    $entity_type = 'user';
+    // Enables the REST service for 'user' entity type.
+    $this->enableService('entity:' . $entity_type, 'PATCH');
+    $permissions = $this->entityPermissions($entity_type, 'update');
+    $permissions[] = 'restful patch entity:' . $entity_type;
+    $account = $this->drupalCreateUser($permissions);
+    $account->set('mail', 'old-email@example.com');
+    $this->drupalLogin($account);
+
+    // Create an entity and save it to the database.
+    $account->save();
+    $account->set('changed', NULL);
+
+    // Try and set a new email without providing the password.
+    $account->set('mail', 'new-email@example.com');
+    $context = ['account' => $account];
+    $normalized = $serializer->normalize($account, $this->defaultFormat, $context);
+    $serialized = $serializer->serialize($normalized, $this->defaultFormat, $context);
+    $response = $this->httpRequest($account->urlInfo(), 'PATCH', $serialized, $this->defaultMimeType);
+    $this->assertResponse(422);
+    $error = Json::decode($response);
+    $this->assertEqual($error['error'], "Unprocessable Entity: validation failed.\nmail: Your current password is missing or incorrect; it's required to change the <em class=\"placeholder\">Email</em>.\n");
+
+    // Try and send the new email with a password.
+    $normalized['pass'][0]['existing'] = 'wrong';
+    $serialized = $serializer->serialize($normalized, $this->defaultFormat, $context);
+    $response = $this->httpRequest($account->urlInfo(), 'PATCH', $serialized, $this->defaultMimeType);
+    $this->assertResponse(422);
+    $error = Json::decode($response);
+    $this->assertEqual($error['error'], "Unprocessable Entity: validation failed.\nmail: Your current password is missing or incorrect; it's required to change the <em class=\"placeholder\">Email</em>.\n");
+
+    // Try again with the password.
+    $normalized['pass'][0]['existing'] = $account->pass_raw;
+    $serialized = $serializer->serialize($normalized, $this->defaultFormat, $context);
+    $this->httpRequest($account->urlInfo(), 'PATCH', $serialized, $this->defaultMimeType);
+    $this->assertResponse(204);
+
+    // Try to change the password without providing the current password.
+    $new_password = $this->randomString();
+    $normalized = $serializer->normalize($account, $this->defaultFormat, $context);
+    $normalized['pass'][0]['value'] = $new_password;
+    $serialized = $serializer->serialize($normalized, $this->defaultFormat, $context);
+    $response = $this->httpRequest($account->urlInfo(), 'PATCH', $serialized, $this->defaultMimeType);
+    $this->assertResponse(422);
+    $error = Json::decode($response);
+    $this->assertEqual($error['error'], "Unprocessable Entity: validation failed.\npass: Your current password is missing or incorrect; it's required to change the <em class=\"placeholder\">Password</em>.\n");
+
+    // Try again with the password.
+    $normalized['pass'][0]['existing'] = $account->pass_raw;
+    $serialized = $serializer->serialize($normalized, $this->defaultFormat, $context);
+    $this->httpRequest($account->urlInfo(), 'PATCH', $serialized, $this->defaultMimeType);
+    $this->assertResponse(204);
+
+    // Verify that we can log in with the new password.
+    $account->pass_raw = $new_password;
+    $this->drupalLogin($account);
+
   }
 
 }

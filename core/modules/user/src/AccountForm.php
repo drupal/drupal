@@ -154,11 +154,6 @@ abstract class AccountForm extends ContentEntityForm {
 
       // The user must enter their current password to change to a new one.
       if ($user->id() == $account->id()) {
-        $form['account']['current_pass_required_values'] = array(
-          '#type' => 'value',
-          '#value' => $protected_values,
-        );
-
         $form['account']['current_pass'] = array(
           '#type' => 'password',
           '#title' => $this->t('Current password'),
@@ -173,7 +168,6 @@ abstract class AccountForm extends ContentEntityForm {
         );
 
         $form_state->set('user', $account);
-        $form['#validate'][] = 'user_validate_current_pass';
       }
     }
     elseif (!$config->get('verify_mail') || $admin) {
@@ -348,6 +342,12 @@ abstract class AccountForm extends ContentEntityForm {
         $account->$field_name = NULL;
       }
     }
+
+    // Set existing password if set in the form state.
+    if ($current_pass = $form_state->getValue('current_pass')) {
+      $account->setExistingPassword($current_pass);
+    }
+
     return $account;
   }
 
@@ -358,11 +358,16 @@ abstract class AccountForm extends ContentEntityForm {
     /** @var \Drupal\user\UserInterface $account */
     $account = parent::validate($form, $form_state);
 
+    // Skip the protected user field constraint if the user came from the
+    // password recovery page.
+    $account->_skipProtectedUserFieldConstraint = $form_state->get('user_pass_reset');
+
     // Customly trigger validation of manually added fields and add in
     // violations. This is necessary as entity form displays only invoke entity
     // validation for fields contained in the display.
     $field_names = array(
       'name',
+      'pass',
       'mail',
       'timezone',
       'langcode',

@@ -343,7 +343,7 @@ function entity_test_entity_field_access($operation, FieldDefinitionInterface $f
       if ($items->value == 'no access value') {
         return AccessResult::forbidden()->cacheUntilEntityChanges($items->getEntity());
       }
-      elseif ($operation == 'delete' && $items->value == 'no delete access value') {
+      elseif ($operation == 'edit' && $items->value == 'no edit access value') {
         return AccessResult::forbidden()->cacheUntilEntityChanges($items->getEntity());
       }
     }

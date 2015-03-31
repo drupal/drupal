@@ -332,6 +332,16 @@ abstract class RESTTestBase extends WebTestBase {
           case 'delete':
             return array('delete any resttest content');
         }
+
+      case 'user':
+        switch ($operation) {
+          case 'view':
+            return ['access user profiles'];
+
+          default:
+            return ['administer users'];
+
+        }
     }
   }
 

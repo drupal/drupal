@@ -585,7 +585,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
       case $this->defaultLangcodeKey:
         // @todo Use a standard method to make the default_langcode field
         //   read-only. See https://www.drupal.org/node/2443991.
-        if (isset($this->values[$this->defaultLangcodeKey])) {
+        if (isset($this->values[$this->defaultLangcodeKey]) && $this->get($this->defaultLangcodeKey)->value != $this->isDefaultTranslation()) {
           $this->get($this->defaultLangcodeKey)->setValue($this->isDefaultTranslation(), FALSE);
           $message = SafeMarkup::format('The default translation flag cannot be changed (@langcode).', array('@langcode' => $this->activeLangcode));
           throw new \LogicException($message);
