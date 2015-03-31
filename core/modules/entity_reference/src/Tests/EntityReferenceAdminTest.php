@@ -75,10 +75,10 @@ class EntityReferenceAdminTest extends WebTestBase {
     ), t('Save and continue'));
 
     // Node should be selected by default.
-    $this->assertFieldByName('field_storage[settings][target_type]', 'node');
+    $this->assertFieldByName('settings[target_type]', 'node');
 
     // Check that all entity types can be referenced.
-    $this->assertFieldSelectOptions('field_storage[settings][target_type]', array_keys(\Drupal::entityManager()->getDefinitions()));
+    $this->assertFieldSelectOptions('settings[target_type]', array_keys(\Drupal::entityManager()->getDefinitions()));
 
     // Second step: 'Field settings' form.
     $this->drupalPostForm(NULL, array(), t('Save field settings'));
@@ -133,7 +133,7 @@ class EntityReferenceAdminTest extends WebTestBase {
     // specific to its selection handler are displayed.
     $field_name = 'node.' . $this->type . '.field_test';
     $edit = array(
-      'field_storage[settings][target_type]' => 'taxonomy_term',
+      'settings[target_type]' => 'taxonomy_term',
     );
     $this->drupalPostForm($bundle_path . '/fields/' . $field_name . '/storage', $edit, t('Save field settings'));
     $this->drupalGet($bundle_path . '/fields/' . $field_name);
@@ -143,7 +143,7 @@ class EntityReferenceAdminTest extends WebTestBase {
     // its selection handler are displayed.
     $field_name = 'node.' . $this->type . '.field_test';
     $edit = array(
-      'field_storage[settings][target_type]' => 'user',
+      'settings[target_type]' => 'user',
     );
     $this->drupalPostForm($bundle_path . '/fields/' . $field_name . '/storage', $edit, t('Save field settings'));
     $this->drupalGet($bundle_path . '/fields/' . $field_name);
@@ -240,7 +240,7 @@ class EntityReferenceAdminTest extends WebTestBase {
     $field_name = strtolower($this->randomMachineName());
 
     $storage_edit = $field_edit = array();
-    $storage_edit['field_storage[settings][target_type]'] = $target_type;
+    $storage_edit['settings[target_type]'] = $target_type;
     if ($bundle) {
       $field_edit['field[settings][handler_settings][target_bundles][' . $bundle . ']'] = TRUE;
     }

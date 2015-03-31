@@ -128,7 +128,7 @@ class FileItem extends EntityReferenceItem {
       '#description' => t('This setting only has an effect if the display option is enabled.'),
       '#states' => array(
         'visible' => array(
-          ':input[name="field_storage[settings][display_field]"]' => array('checked' => TRUE),
+          ':input[name="settings[display_field]"]' => array('checked' => TRUE),
         ),
       ),
     );

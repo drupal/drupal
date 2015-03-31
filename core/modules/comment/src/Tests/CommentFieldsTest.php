@@ -129,7 +129,7 @@ class CommentFieldsTest extends CommentTestBase {
 
     // Select a comment type and try to save again.
     $edit = array(
-      'field_storage[settings][comment_type]' => 'user_comment_type',
+      'settings[comment_type]' => 'user_comment_type',
     );
     $this->drupalPostForm('admin/config/people/accounts/fields/user.user.field_user_comment/storage', $edit, t('Save field settings'));
     // We shouldn't get an error message.

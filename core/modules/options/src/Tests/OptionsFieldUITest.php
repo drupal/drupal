@@ -296,7 +296,7 @@ class OptionsFieldUITest extends FieldTestBase {
    *   Message to display.
    */
   function assertAllowedValuesInput($input_string, $result, $message) {
-    $edit = array('field_storage[settings][allowed_values]' => $input_string);
+    $edit = array('settings[allowed_values]' => $input_string);
     $this->drupalPostForm($this->adminPath, $edit, t('Save field settings'));
     $this->assertNoRaw('&amp;lt;', 'The page does not have double escaped HTML tags.');
 
@@ -320,7 +320,7 @@ class OptionsFieldUITest extends FieldTestBase {
     $on = $this->randomMachineName();
     $off = $this->randomMachineName();
     $edit = array(
-      'field_storage[settings][allowed_values]' =>
+      'settings[allowed_values]' =>
         "1|$on
         0|$off",
     );

@@ -297,7 +297,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // 1, so we need to make sure the file widget prevents these notices by
     // providing all settings, even if they are not used.
     // @see FileWidget::formMultipleElements().
-    $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.' . $field_name . '/storage', array('field_storage[cardinality]' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED), t('Save field settings'));
+    $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.' . $field_name . '/storage', array('cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED), t('Save field settings'));
     $edit = array(
       'files[' . $field_name . '_1][]' => drupal_realpath($test_image->uri),
     );
@@ -340,9 +340,9 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $alt = $this->randomString(512);
     $title = $this->randomString(1024);
     $edit = array(
-      'files[field_storage_settings_default_image_uuid]' => drupal_realpath($images[0]->uri),
-      'field_storage[settings][default_image][alt]' => $alt,
-      'field_storage[settings][default_image][title]' => $title,
+      'files[settings_default_image_uuid]' => drupal_realpath($images[0]->uri),
+      'settings[default_image][alt]' => $alt,
+      'settings[default_image][title]' => $title,
     );
     $this->drupalPostForm("admin/structure/types/manage/article/fields/node.article.$field_name/storage", $edit, t('Save field settings'));
     // Clear field definition cache so the new default image is detected.
@@ -390,7 +390,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Remove default image from the field and make sure it is no longer used.
     $edit = array(
-      'field_storage[settings][default_image][uuid][fids]' => 0,
+      'settings[default_image][uuid][fids]' => 0,
     );
     $this->drupalPostForm("admin/structure/types/manage/article/fields/node.article.$field_name/storage", $edit, t('Save field settings'));
     // Clear field definition cache so the new default image is detected.
@@ -404,9 +404,9 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->createImageField($private_field_name, 'article', array('uri_scheme' => 'private'));
     // Add a default image to the new field.
     $edit = array(
-      'files[field_storage_settings_default_image_uuid]' => drupal_realpath($images[1]->uri),
-      'field_storage[settings][default_image][alt]' => $alt,
-      'field_storage[settings][default_image][title]' => $title,
+      'files[settings_default_image_uuid]' => drupal_realpath($images[1]->uri),
+      'settings[default_image][alt]' => $alt,
+      'settings[default_image][title]' => $title,
     );
     $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.' . $private_field_name . '/storage', $edit, t('Save field settings'));
     // Clear field definition cache so the new default image is detected.

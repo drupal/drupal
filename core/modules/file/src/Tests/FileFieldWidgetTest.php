@@ -232,7 +232,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $test_file = $this->getTestFile('text');
 
     // Change the field setting to make its files private, and upload a file.
-    $edit = array('field_storage[settings][uri_scheme]' => 'private');
+    $edit = array('settings[uri_scheme]' => 'private');
     $this->drupalPostForm("admin/structure/types/manage/$type_name/fields/$field->id/storage", $edit, t('Save field settings'));
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
     $node_storage->resetCache(array($nid));
@@ -247,12 +247,12 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     // Ensure we can't change 'uri_scheme' field settings while there are some
     // entities with uploaded files.
     $this->drupalGet("admin/structure/types/manage/$type_name/fields/$field->id/storage");
-    $this->assertFieldByXpath('//input[@id="edit-field-storage-settings-uri-scheme-public" and @disabled="disabled"]', 'public', 'Upload destination setting disabled.');
+    $this->assertFieldByXpath('//input[@id="edit-settings-uri-scheme-public" and @disabled="disabled"]', 'public', 'Upload destination setting disabled.');
 
     // Delete node and confirm that setting could be changed.
     $node->delete();
     $this->drupalGet("admin/structure/types/manage/$type_name/fields/$field->id/storage");
-    $this->assertFieldByXpath('//input[@id="edit-field-storage-settings-uri-scheme-public" and not(@disabled)]', 'public', 'Upload destination setting enabled.');
+    $this->assertFieldByXpath('//input[@id="edit-settings-uri-scheme-public" and not(@disabled)]', 'public', 'Upload destination setting enabled.');
   }
 
   /**
@@ -275,7 +275,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     $name = strtolower($this->randomMachineName());
     $label = $this->randomMachineName();
-    $storage_edit = array('field_storage[settings][uri_scheme]' => 'private');
+    $storage_edit = array('settings[uri_scheme]' => 'private');
     $this->fieldUIAddNewField('admin/structure/comment/manage/comment', $name, $label, 'file', $storage_edit);
 
     // Manually clear cache on the tester side.

@@ -68,8 +68,11 @@ function field_ui_entity_type_build(array &$entity_types) {
   /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
   $entity_types['field_config']->setFormClass('delete', 'Drupal\field_ui\Form\FieldConfigDeleteForm');
   $entity_types['field_config']->setListBuilderClass('Drupal\field_ui\FieldConfigListBuilder');
+
+  $entity_types['field_storage_config']->setFormClass('edit', 'Drupal\field_ui\Form\FieldStorageConfigEditForm');
   $entity_types['field_storage_config']->setListBuilderClass('Drupal\field_ui\FieldStorageConfigListBuilder');
   $entity_types['field_storage_config']->setLinkTemplate('collection', '/admin/reports/fields');
+
   $entity_types['entity_form_display']->setFormClass('edit', 'Drupal\field_ui\Form\EntityFormDisplayEditForm');
   $entity_types['entity_view_display']->setFormClass('edit', 'Drupal\field_ui\Form\EntityViewDisplayEditForm');
 }

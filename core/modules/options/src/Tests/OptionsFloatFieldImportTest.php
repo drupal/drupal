@@ -52,7 +52,7 @@ class OptionsFloatFieldImportTest extends FieldTestBase {
     $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.staging'));
 
     // Set the active to not use dots in the allowed values key names.
-    $edit = array('field_storage[settings][allowed_values]' => "0|Zero\n1|One");
+    $edit = array('settings[allowed_values]' => "0|Zero\n1|One");
     $this->drupalPostForm($admin_path, $edit, t('Save field settings'));
     $field_storage = FieldStorageConfig::loadByName('node', $field_name);
     $this->assertIdentical($field_storage->getSetting('allowed_values'), $array = array('0' => 'Zero', '1' => 'One'));

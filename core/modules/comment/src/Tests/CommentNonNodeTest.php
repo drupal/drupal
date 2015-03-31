@@ -265,8 +265,8 @@ class CommentNonNodeTest extends WebTestBase {
     // Test that field to change cardinality is not available.
     $this->drupalGet('entity_test/structure/entity_test/fields/entity_test.entity_test.comment/storage');
     $this->assertResponse(200);
-    $this->assertNoField('field_storage[cardinality_number]');
-    $this->assertNoField('field_storage[cardinality]');
+    $this->assertNoField('cardinality_number');
+    $this->assertNoField('cardinality');
 
     $this->drupalLogin($this->adminUser);
 
@@ -413,7 +413,7 @@ class CommentNonNodeTest extends WebTestBase {
 
     // Add a new comment field.
     $storage_edit = array(
-      'field_storage[settings][comment_type]' => 'foobar',
+      'settings[comment_type]' => 'foobar',
     );
     $this->fieldUIAddNewField('entity_test/structure/entity_test', 'foobar', 'Foobar', 'comment', $storage_edit);
 

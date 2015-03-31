@@ -194,7 +194,7 @@ class ManageFieldsTest extends WebTestBase {
     // Populate the field settings with new settings.
     $string = 'updated dummy test string';
     $edit = array(
-      'field_storage[settings][test_field_storage_setting]' => $string,
+      'settings[test_field_storage_setting]' => $string,
     );
     $this->drupalPostForm(NULL, $edit, t('Save field settings'));
 
@@ -243,22 +243,22 @@ class ManageFieldsTest extends WebTestBase {
     // Assert the cardinality other field cannot be empty when cardinality is
     // set to 'number'.
     $edit = array(
-      'field_storage[cardinality]' => 'number',
-      'field_storage[cardinality_number]' => '',
+      'cardinality' => 'number',
+      'cardinality_number' => '',
     );
     $this->drupalPostForm($field_edit_path, $edit, t('Save field settings'));
     $this->assertText('Number of values is required.');
 
     // Submit a custom number.
     $edit = array(
-      'field_storage[cardinality]' => 'number',
-      'field_storage[cardinality_number]' => 6,
+      'cardinality' => 'number',
+      'cardinality_number' => 6,
     );
     $this->drupalPostForm($field_edit_path, $edit, t('Save field settings'));
     $this->assertText('Updated field Body field settings.');
     $this->drupalGet($field_edit_path);
-    $this->assertFieldByXPath("//select[@name='field_storage[cardinality]']", 'number');
-    $this->assertFieldByXPath("//input[@name='field_storage[cardinality_number]']", 6);
+    $this->assertFieldByXPath("//select[@name='cardinality']", 'number');
+    $this->assertFieldByXPath("//input[@name='cardinality_number']", 6);
 
     // Check that tabs displayed.
     $this->assertLink(t('Edit'));
@@ -268,13 +268,13 @@ class ManageFieldsTest extends WebTestBase {
 
     // Set to unlimited.
     $edit = array(
-      'field_storage[cardinality]' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
+      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     );
     $this->drupalPostForm($field_edit_path, $edit, t('Save field settings'));
     $this->assertText('Updated field Body field settings.');
     $this->drupalGet($field_edit_path);
-    $this->assertFieldByXPath("//select[@name='field_storage[cardinality]']", FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
-    $this->assertFieldByXPath("//input[@name='field_storage[cardinality_number]']", 1);
+    $this->assertFieldByXPath("//select[@name='cardinality']", FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+    $this->assertFieldByXPath("//input[@name='cardinality_number']", 1);
   }
 
   /**

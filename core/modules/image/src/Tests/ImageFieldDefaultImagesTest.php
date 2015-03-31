@@ -110,7 +110,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     $field_id = $field->id();
     $this->drupalGet("admin/structure/types/manage/article/fields/$field_id/storage");
     $this->assertFieldByXpath(
-      '//input[@name="field_storage[settings][default_image][uuid][fids]"]',
+      '//input[@name="settings[default_image][uuid][fids]"]',
       $default_images['field']->id(),
       format_string(
         'Article image field default equals expected file ID of @fid.',
@@ -131,7 +131,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     // Confirm the defaults are present on the page field settings form.
     $this->drupalGet("admin/structure/types/manage/page/fields/$field_id/storage");
     $this->assertFieldByXpath(
-      '//input[@name="field_storage[settings][default_image][uuid][fids]"]',
+      '//input[@name="settings[default_image][uuid][fids]"]',
       $default_images['field']->id(),
       format_string(
         'Page image field default equals expected file ID of @fid.',
@@ -183,7 +183,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     // Confirm that the new default is used on the article field settings form.
     $this->drupalGet("admin/structure/types/manage/article/fields/$field_id/storage");
     $this->assertFieldByXpath(
-      '//input[@name="field_storage[settings][default_image][uuid][fids]"]',
+      '//input[@name="settings[default_image][uuid][fids]"]',
       $default_images['field_new']->id(),
       format_string(
         'Updated image field default equals expected file ID of @fid.',
