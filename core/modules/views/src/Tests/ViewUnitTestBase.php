@@ -58,7 +58,7 @@ abstract class ViewUnitTestBase extends KernelTestBase {
    * Because the schema of views_test_data.module is dependent on the test
    * using it, it cannot be enabled normally.
    */
-  protected function setUpFixtures($import_test_views = TRUE) {
+  protected function setUpFixtures() {
     // First install the system module. Many Views have Page displays have menu
     // links, and for those to work, the system menus must already be present.
     $this->installConfig(array('system'));
