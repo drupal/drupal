@@ -40,4 +40,25 @@ class LocaleConfigManagerTest extends KernelTestBase {
     $result = $locale_config_manager->hasTranslation('locale_test.translation', $language->getId());
     $this->assertTrue($result, 'There is a translation for locale_test.translation configuration.');
   }
+
+  /**
+   * Tests getStringTranslation().
+   */
+  public function testGetStringTranslation() {
+    $this->installSchema('locale', array('locales_location', 'locales_source', 'locales_target'));
+    $this->installConfig(array('locale_test'));
+
+    $locale_config_manager = \Drupal::service('locale.config_manager');
+
+    $language = ConfigurableLanguage::createFromLangcode('de');
+    $language->save();
+
+    $translation_before = $locale_config_manager->getStringTranslation('locale_test.no_translation', $language->getId(), 'Test', '');
+    $this->assertTrue($translation_before->isNew());
+    $translation_before->setString('translation')->save();
+
+    $translation_after = $locale_config_manager->getStringTranslation('locale_test.no_translation', $language->getId(), 'Test', '');
+    $this->assertFalse($translation_after->isNew());
+    $translation_after->setString('updated_translation')->save();
+  }
 }

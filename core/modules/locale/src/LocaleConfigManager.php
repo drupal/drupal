@@ -433,7 +433,9 @@ class LocaleConfigManager {
       if ($string = $this->translations[$name][$langcode][$context][$source]) {
         if (!$string->isTranslation()) {
           $conditions = array('lid' => $string->lid, 'language' => $langcode);
-          return $this->localeStorage->createTranslation($conditions);
+          $translation = $this->localeStorage->createTranslation($conditions);
+          $this->translations[$name][$langcode][$context][$source] = $translation;
+          return $translation;
         }
         else {
           return $string;
