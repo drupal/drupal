@@ -1089,6 +1089,7 @@ function template_preprocess_views_mini_pager(&$variables) {
  * Important! When adding a new template to your theme, be sure to flush the
  * theme registry cache!
  *
+ * @ingroup views_overview
  * @see \Drupal\views\ViewExecutable::buildThemeFunctions()
  * @}
  */

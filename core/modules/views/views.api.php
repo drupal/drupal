@@ -28,20 +28,22 @@ use Drupal\views\Plugin\views\PluginBase;
  *   entity, create a class implementing
  *   \Drupal\views\EntityViewsDataInterface and reference this in the
  *   "views_data" annotation in the entity class. You can autogenerate big parts
- *   of the ingration if you extend the \Drupal\views\EntityViewsData base
+ *   of the integration if you extend the \Drupal\views\EntityViewsData base
  *   class. See the @link entity_api Entity API topic @endlink for more
  *   information about entities.
  * - Implement hooks: A few operations in Views can be influenced by hooks.
- *   See the @link Views hooks topic @endlink for a list.
+ *   See the @link views_hooks Views hooks topic @endlink for a list.
  * - Theming: See the @link views_templates Views templates topic @endlink
  *   for more information.
  *
  * @see \Drupal\views\ViewExecutable
+ * @see \Drupal\views\Views
  * @}
  */
 
 /**
  * @defgroup views_plugins Views plugins
+ * @{
  * Overview of views plugins
  *
  * Views plugins are objects that are used to build and render the view.
@@ -57,16 +59,20 @@ use Drupal\views\Plugin\views\PluginBase;
  * @todo Document specific options on the appropriate plugin base classes.
  * @todo Add examples.
  *
+ * @ingroup views_overview
  * @see \Drupal\views\Plugin\views\PluginBase
  * @see \Drupal\views\Plugin\views\HandlerBase
  * @see plugin_api
  * @see annotation
+ * @}
  */
 
 /**
  * @defgroup views_hooks Views hooks
  * @{
  * Hooks that allow other modules to implement the Views API.
+ * @ingroup views_overview
+ * @}
  */
 
 /**
