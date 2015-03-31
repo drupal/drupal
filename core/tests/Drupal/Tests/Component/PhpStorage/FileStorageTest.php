@@ -11,6 +11,7 @@ use Drupal\Component\PhpStorage\FileStorage;
 
 /**
  * @coversDefaultClass \Drupal\Component\PhpStorage\FileStorage
+ * @group Drupal
  * @group PhpStorage
  */
 class FileStorageTest extends PhpStorageTestBase {
@@ -37,8 +38,10 @@ class FileStorageTest extends PhpStorageTestBase {
   /**
    * Tests basic load/save/delete operations.
    *
-   * @group Drupal
-   * @group PhpStorage
+   * @covers ::load
+   * @covers ::save
+   * @covers ::exists
+   * @covers ::delete
    */
   public function testCRUD() {
     $php = new FileStorage($this->standardSettings);
@@ -46,10 +49,7 @@ class FileStorageTest extends PhpStorageTestBase {
   }
 
   /**
-   * Tests writeable() method.
-   *
-   * @group Drupal
-   * @group PhpStorage
+   * @covers ::writeable
    */
   public function testWriteable() {
     $php = new FileStorage($this->standardSettings);
@@ -57,18 +57,13 @@ class FileStorageTest extends PhpStorageTestBase {
   }
 
   /**
-   * Tests deleteAll() method.
-   *
-   * @group Drupal
-   * @group PhpStorage
+   * @covers ::deleteAll
    */
   public function testDeleteAll() {
 
-    // Make sure directory exists prior to removal.
-    $this->assertTrue(file_exists($this->directory . '/test'), 'File storage directory does not exist.');
-
     // Write out some files.
     $php = new FileStorage($this->standardSettings);
+
     $name = $this->randomMachineName() . '/' . $this->randomMachineName() . '.php';
 
     // Find a global that doesn't exist.
@@ -78,17 +73,19 @@ class FileStorageTest extends PhpStorageTestBase {
 
     // Write out a PHP file and ensure it's successfully loaded.
     $code = "<?php\n\$GLOBALS[$random] = TRUE;";
-    $success = $php->save($name, $code);
-    $this->assertSame($success, TRUE);
+    $this->assertTrue($php->save($name, $code), 'Saved php file');
     $php->load($name);
-    $this->assertTrue($GLOBALS[$random]);
+    $this->assertTrue($GLOBALS[$random], 'File saved correctly with correct value');
 
-    $this->assertTrue($php->deleteAll());
+    // Make sure directory exists prior to removal.
+    $this->assertTrue(file_exists($this->directory . '/test'), 'File storage directory does not exist.');
+
+    $this->assertTrue($php->deleteAll(), 'Delete all reported success');
     $this->assertFalse($php->load($name));
-    $this->assertFalse(file_exists($this->directory . '/test'), 'File storage directory still exists after call to deleteAll().');
+    $this->assertFalse(file_exists($this->directory . '/test'), 'File storage directory does not exist after call to deleteAll()');
 
     // Should still return TRUE if directory has already been deleted.
-    $this->assertTrue($php->deleteAll());
+    $this->assertTrue($php->deleteAll(), 'Delete all succeeds with nothing to delete');
   }
 
 }

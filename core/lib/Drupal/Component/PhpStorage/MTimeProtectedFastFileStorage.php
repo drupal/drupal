@@ -70,7 +70,7 @@ class MTimeProtectedFastFileStorage extends FileStorage {
 
     // Write the file out to a temporary location. Prepend with a '.' to keep it
     // hidden from listings and web servers.
-    $temporary_path = tempnam($this->directory, '.');
+    $temporary_path = $this->tempnam($this->directory, '.');
     if (!$temporary_path || !@file_put_contents($temporary_path, $data)) {
       return FALSE;
     }
@@ -103,7 +103,7 @@ class MTimeProtectedFastFileStorage extends FileStorage {
       // iteration.
       if ($i > 0) {
         $this->unlink($temporary_path);
-        $temporary_path = tempnam($this->directory, '.');
+        $temporary_path = $this->tempnam($this->directory, '.');
         rename($full_path, $temporary_path);
         // Make sure to not loop infinitely on a hopelessly slow filesystem.
         if ($i > 10) {
@@ -184,4 +184,20 @@ class MTimeProtectedFastFileStorage extends FileStorage {
     return filemtime($directory);
   }
 
+  /**
+   * A brute force tempnam implementation supporting streams.
+   *
+   * @param $directory
+   *   The directory where the temporary filename will be created.
+   * @param $prefix
+   *   The prefix of the generated temporary filename.
+   * @return string
+   *   Returns the new temporary filename (with path), or FALSE on failure.
+   */
+  protected function tempnam($directory, $prefix) {
+    do {
+      $path = $directory . '/' . $prefix . substr(str_shuffle(hash('sha256', microtime())), 0, 10);
+    } while (file_exists($path));
+    return $path;
+  }
 }

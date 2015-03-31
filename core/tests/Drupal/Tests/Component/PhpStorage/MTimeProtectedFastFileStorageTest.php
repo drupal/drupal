@@ -10,6 +10,9 @@ namespace Drupal\Tests\Component\PhpStorage;
 /**
  * Tests the MTimeProtectedFastFileStorage implementation.
  *
+ * @coversDefaultClass \Drupal\Component\PhpStorage\MTimeProtectedFastFileStorage
+ *
+ * @group Drupal
  * @group PhpStorage
  */
 class MTimeProtectedFastFileStorageTest extends MTimeProtectedFileStorageBase {

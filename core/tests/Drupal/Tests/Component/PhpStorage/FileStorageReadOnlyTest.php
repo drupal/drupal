@@ -12,6 +12,8 @@ use Drupal\Component\PhpStorage\FileReadOnlyStorage;
 
 /**
  * @coversDefaultClass \Drupal\Component\PhpStorage\FileReadOnlyStorage
+ *
+ * @group Drupal
  * @group PhpStorage
  */
 class FileStorageReadOnlyTest extends PhpStorageTestBase {
@@ -49,9 +51,6 @@ class FileStorageReadOnlyTest extends PhpStorageTestBase {
 
   /**
    * Tests writing with one class and reading with another.
-   *
-   * @group Drupal
-   * @group PhpStorage
    */
   public function testReadOnly() {
     $php = new FileStorage($this->standardSettings);
@@ -79,10 +78,7 @@ class FileStorageReadOnlyTest extends PhpStorageTestBase {
   }
 
   /**
-   * Tests writeable() method.
-   *
-   * @group Drupal
-   * @group PhpStorage
+   * @covers ::writeable
    */
   public function testWriteable() {
     $php_read = new FileReadOnlyStorage($this->readonlyStorage);
@@ -90,12 +86,21 @@ class FileStorageReadOnlyTest extends PhpStorageTestBase {
   }
 
   /**
-   * Tests deleteAll() method.
-   *
-   * @group Drupal
-   * @group PhpStorage
+   * @covers ::deleteAll
    */
   public function testDeleteAll() {
+    $php = new FileStorage($this->standardSettings);
+    $name = $this->randomMachineName() . '/' . $this->randomMachineName() . '.php';
+
+    // Find a global that doesn't exist.
+    do {
+      $random = mt_rand(10000, 100000);
+    } while (isset($GLOBALS[$random]));
+
+    // Write our the file so we can test deleting.
+    $code = "<?php\n\$GLOBALS[$random] = TRUE;";
+    $this->assertTrue($php->save($name, $code));
+
     $php_read = new FileReadOnlyStorage($this->readonlyStorage);
     $this->assertFalse($php_read->deleteAll());
 
