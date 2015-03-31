@@ -1,6 +1,8 @@
 
 Drupal 7.36, xxxx-xx-xx (development version)
 -----------------------
+- Fixed incorrect foreign keys in the User module's role_permission and
+  users_roles database tables.
 - Changed permission descriptions throughout Drupal core to consistently link
   to relevant administrative pages, regardless of whether the user viewing the
   Permissions page can view the page being linked to (minor UI change).

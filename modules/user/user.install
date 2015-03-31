@@ -81,7 +81,7 @@ function user_schema() {
     ),
     'foreign keys' => array(
       'role' => array(
-        'table' => 'roles',
+        'table' => 'role',
         'columns' => array('rid' => 'rid'),
       ),
     ),
@@ -278,7 +278,7 @@ function user_schema() {
         'columns' => array('uid' => 'uid'),
       ),
       'role' => array(
-        'table' => 'roles',
+        'table' => 'role',
         'columns' => array('rid' => 'rid'),
       ),
     ),
