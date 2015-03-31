@@ -167,22 +167,20 @@
         </aside>
       </div>
     {% endif %}
-    <div id="site-footer__wrapper">
-      <footer class="site-footer section layout-container">
-        {% if page.footer_first or page.footer_second or page.footer_third or page.footer_fourth %}
-          <div id="footer-columns" class="clearfix">
-            {{ page.footer_first }}
-            {{ page.footer_second }}
-            {{ page.footer_third }}
-            {{ page.footer_fourth }}
-          </div>
-        {% endif %}
-        {% if page.footer_fifth %}
-          <div id="site-footer__bottom" role="contentinfo">
-            {{ page.footer_fifth }}
-          </div>
-        {% endif %}
-      </footer>
-    </div>
+    <footer class="site-footer">
+      {% if page.footer_first or page.footer_second or page.footer_third or page.footer_fourth %}
+        <div class="site-footer__top layout-container clearfix">
+          {{ page.footer_first }}
+          {{ page.footer_second }}
+          {{ page.footer_third }}
+          {{ page.footer_fourth }}
+        </div>
+      {% endif %}
+      {% if page.footer_fifth %}
+        <div class="site-footer__bottom layout-container" role="contentinfo">
+          {{ page.footer_fifth }}
+        </div>
+      {% endif %}
+    </footer>
   </div>
 </div>

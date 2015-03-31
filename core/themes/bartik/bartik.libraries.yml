@@ -15,7 +15,6 @@ global-styling:
       # @see https://www.drupal.org/node/2389735
       css/components/dropbutton.component.css: {}
       css/components/featured-top.css: {}
-      css/components/footer.css: {}
       css/components/form.css: {}
       css/components/forum.css: {}
       css/components/header.css: {}
@@ -32,6 +31,7 @@ global-styling:
       css/components/shortcut.css: {}
       css/components/skip-link.css: {}
       css/components/sidebar.css: {}
+      css/components/site-footer.css: {}
       css/components/table.css: {}
       css/components/tabs.css: {}
       css/components/tips.css: {}

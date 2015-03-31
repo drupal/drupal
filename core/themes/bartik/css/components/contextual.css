@@ -1,5 +1,5 @@
 #header .contextual .trigger,
-#footer-wrapper .contextual .trigger {
+.site-footer .contextual .trigger {
   border: none;
 }
 .contextual-region .contextual .contextual-links a {
