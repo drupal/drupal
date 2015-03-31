@@ -357,6 +357,10 @@ function file_file_delete($file) {
  * support for a default value.
  */
 function file_managed_file_process($element, &$form_state, $form) {
+  // Append the '-upload' to the #id so the field label's 'for' attribute
+  // corresponds with the file element.
+  $original_id = $element['#id'];
+  $element['#id'] .= '-upload';
   $fid = isset($element['#value']['fid']) ? $element['#value']['fid'] : 0;
 
   // Set some default element properties.
@@ -366,7 +370,7 @@ function file_managed_file_process($element, &$form_state, $form) {
 
   $ajax_settings = array(
     'path' => 'file/ajax/' . implode('/', $element['#array_parents']) . '/' . $form['form_build_id']['#value'],
-    'wrapper' => $element['#id'] . '-ajax-wrapper',
+    'wrapper' => $original_id . '-ajax-wrapper',
     'effect' => 'fade',
     'progress' => array(
       'type' => $element['#progress_indicator'],
@@ -461,13 +465,13 @@ function file_managed_file_process($element, &$form_state, $form) {
     $element['upload']['#attached']['js'] = array(
       array(
         'type' => 'setting',
-        'data' => array('file' => array('elements' => array('#' . $element['#id'] . '-upload' => $extension_list)))
+        'data' => array('file' => array('elements' => array('#' . $element['#id'] => $extension_list)))
       )
     );
   }
 
   // Prefix and suffix used for Ajax replacement.
-  $element['#prefix'] = '<div id="' . $element['#id'] . '-ajax-wrapper">';
+  $element['#prefix'] = '<div id="' . $original_id . '-ajax-wrapper">';
   $element['#suffix'] = '</div>';
 
   return $element;
