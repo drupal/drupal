@@ -500,7 +500,7 @@ Drupal.tableDrag.prototype.dragRow = function (event, self) {
     if (self.indentEnabled) {
       var xDiff = self.currentMouseCoords.x - self.dragObject.indentMousePos.x;
       // Set the number of indentations the mouse has been moved left or right.
-      var indentDiff = Math.round(xDiff / self.indentAmount * self.rtl);
+      var indentDiff = Math.round(xDiff / self.indentAmount);
       // Indent the row with our estimated diff, which may be further
       // restricted according to the rows around this row.
       var indentChange = self.rowObject.indent(indentDiff);
