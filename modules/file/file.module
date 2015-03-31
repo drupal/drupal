@@ -519,7 +519,17 @@ function file_managed_file_value(&$element, $input = FALSE, $form_state = NULL) 
       // public file) to confirm it exists and that the current user has access
       // to it.
       if (isset($input['fid']) && ($file = file_load($input['fid']))) {
-        if (file_uri_scheme($file->uri) == 'public' || file_download_access($file->uri)) {
+        // By default the public:// file scheme provided by Drupal core is the
+        // only one that allows files to be publicly accessible to everyone, so
+        // it is the only one for which the file access checks are bypassed.
+        // Other modules which provide publicly accessible streams of their own
+        // in hook_stream_wrappers() can add the corresponding scheme to the
+        // 'file_public_schema' variable to bypass file access checks for those
+        // as well. This should only be done for schemes that are completely
+        // publicly accessible, with no download restrictions; for security
+        // reasons all other schemes must go through the file_download_access()
+        // check.
+        if (in_array(file_uri_scheme($file->uri), variable_get('file_public_schema', array('public'))) || file_download_access($file->uri)) {
           $fid = $file->fid;
         }
         // If the current user doesn't have access, don't let the file be

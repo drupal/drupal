@@ -1,6 +1,9 @@
 
 Drupal 7.36, xxxx-xx-xx (development version)
 -----------------------
+- Added a 'file_public_schema' variable which allows modules that define
+  publicly-accessible streams in hook_stream_wrappers() to bypass file download
+  access checks when processing managed file upload fields.
 - Fixed a bug that caused database query tags not to be added to search-related
   database queries under many circumstances, and which prevented the
   corresponding hook_query_TAG_alter() implementations from being called.
