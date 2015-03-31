@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\argument;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -176,7 +177,15 @@ class StringArgument extends ArgumentPluginBase {
    * $this->ensureMyTable() MUST have been called prior to this.
    */
   public function getFormula() {
-    return "SUBSTRING($this->tableAlias.$this->realField, 1, " . intval($this->options['limit']) . ")";
+    $formula = "SUBSTRING($this->tableAlias.$this->realField, 1, " . intval($this->options['limit']) . ")";
+
+    // Support case-insensitive substring comparisons for SQLite by using the
+    // 'NOCASE_UTF8' collation.
+    // @see Drupal\Core\Database\Driver\sqlite\Connection::open()
+    if (Database::getConnection()->databaseType() == 'sqlite' && $this->options['case'] != 'none') {
+      $formula .= ' COLLATE NOCASE_UTF8';
+    }
+    return $formula;
   }
 
   /**
