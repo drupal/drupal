@@ -692,6 +692,9 @@ function block_list($region) {
 /**
  * Loads a block object from the database.
  *
+ * This function returns the first block matching the module and delta
+ * parameters, so it should not be used for theme-specific functionality.
+ *
  * @param $module
  *   Name of the module that implements the block to load.
  * @param $delta
