@@ -76,8 +76,10 @@ class MigrateCommentTest extends MigrateDrupal6TestBase {
    * Tests the Drupal 6 to Drupal 8 comment migration.
    */
   public function testComments() {
+    /** @var \Drupal\Core\Entity\EntityStorageInterface $comment_storage */
+    $comment_storage = $this->container->get('entity.manager')->getStorage('comment');
     /** @var \Drupal\comment\CommentInterface $comment */
-    $comment = entity_load('comment', 1);
+    $comment = $comment_storage->load(1);
     $this->assertIdentical('The first comment.', $comment->getSubject());
     $this->assertIdentical('The first comment body.', $comment->comment_body->value);
     $this->assertIdentical('filtered_html', $comment->comment_body->format);
@@ -87,11 +89,11 @@ class MigrateCommentTest extends MigrateDrupal6TestBase {
     $this->assertIdentical('en', $comment->language()->getId());
     $this->assertIdentical('comment_no_subject', $comment->getTypeId());
 
-    $comment = entity_load('comment', 2);
+    $comment = $comment_storage->load(2);
     $this->assertIdentical('The response to the second comment.', $comment->subject->value);
     $this->assertIdentical('3', $comment->pid->target_id);
 
-    $comment = entity_load('comment', 3);
+    $comment = $comment_storage->load(3);
     $this->assertIdentical('The second comment.', $comment->subject->value);
     $this->assertIdentical('0', $comment->pid->target_id);
   }

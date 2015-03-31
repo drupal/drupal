@@ -8,6 +8,7 @@
 namespace Drupal\comment\Tests;
 
 use Drupal\comment\CommentInterface;
+use Drupal\comment\Entity\Comment;
 use Drupal\comment\Entity\CommentType;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\field\Entity\FieldConfig;
@@ -164,7 +165,7 @@ class CommentNonNodeTest extends WebTestBase {
     }
 
     if (isset($match[1])) {
-      return entity_load('comment', $match[1]);
+      return Comment::load($match[1]);
     }
   }
 

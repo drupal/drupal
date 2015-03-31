@@ -7,6 +7,7 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
+use Drupal\comment\Entity\CommentType;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
@@ -41,9 +42,9 @@ class MigrateCommentTypeTest extends MigrateDrupal6TestBase {
    * Tests the Drupal 6 to Drupal 8 comment type migration.
    */
   public function testCommentType() {
-    $comment_type = entity_load('comment_type', 'comment');
+    $comment_type = CommentType::load('comment');
     $this->assertIdentical('node', $comment_type->getTargetEntityTypeId());
-    $comment_type = entity_load('comment_type', 'comment_no_subject');
+    $comment_type = CommentType::load('comment_no_subject');
     $this->assertIdentical('node', $comment_type->getTargetEntityTypeId());
   }
 

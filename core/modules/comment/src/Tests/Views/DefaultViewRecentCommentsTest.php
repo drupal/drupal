@@ -8,6 +8,7 @@
 namespace Drupal\comment\Tests\Views;
 
 use Drupal\comment\CommentInterface;
+use Drupal\comment\Entity\Comment;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\views\Views;
 use Drupal\views\Tests\ViewTestBase;
@@ -103,7 +104,7 @@ class DefaultViewRecentCommentsTest extends ViewTestBase {
     }
 
     // Store all the nodes just created to access their properties on the tests.
-    $this->commentsCreated = entity_load_multiple('comment');
+    $this->commentsCreated = Comment::loadMultiple();
 
     // Sort created comments in descending order.
     ksort($this->commentsCreated, SORT_NUMERIC);
