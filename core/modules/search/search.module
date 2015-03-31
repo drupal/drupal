@@ -224,13 +224,25 @@ function search_update_totals() {
 }
 
 /**
- * Simplifies a string according to indexing rules.
+ * Simplifies and preprocesses text for searching.
  *
- * @param $text
+ * Processing steps:
+ * - Entities are decoded.
+ * - Text is lower-cased and diacritics (accents) are removed.
+ * - hook_search_preprocess() is invoked.
+ * - CJK (Chinese, Japanese, Korean) characters are processed, depending on
+ *   the search settings.
+ * - Punctuation is processed (removed or replaced with spaces, depending on
+ *   where it is; see code for details).
+ * - Words are truncated to 50 characters maximum.
+ *
+ * @param string $text
  *   Text to simplify.
+ * @param string|null $langcode
+ *   Language code for the language of $text, if known.
  *
- * @return
- *   Simplified text.
+ * @return string
+ *   Simplified and processed text.
  *
  * @see hook_search_preprocess()
  */
@@ -292,13 +304,13 @@ function search_simplify($text, $langcode = NULL) {
  * is equal to the 'minimum_word_size' variable. This tokenizing is only done
  * if the 'overlap_cjk' variable is TRUE.
  *
- * @param $matches
+ * @param array $matches
  *   This function is a callback for preg_replace_callback(), which is called
  *   from search_simplify(). So, $matches is an array of regular expression
  *   matches, which means that $matches[0] contains the matched text -- a
  *   string of CJK characters to tokenize.
  *
- * @return
+ * @return string
  *   Tokenized text, starting and ending with a space character.
  */
 function search_expand_cjk($matches) {
@@ -328,7 +340,17 @@ function search_expand_cjk($matches) {
 }
 
 /**
- * Simplifies and splits a string into tokens for indexing.
+ * Simplifies and splits a string into words for indexing.
+ *
+ * @param string $text
+ *   Text to process.
+ * @param string|null $langcode
+ *   Language code for the language of $text, if known.
+ *
+ * @return array
+ *   Array of words in the simplified, preprocessed text.
+ *
+ * @see search_simplify()
  */
 function search_index_split($text, $langcode = NULL) {
   $last = &drupal_static(__FUNCTION__);
@@ -359,7 +381,12 @@ function _search_index_truncate(&$text) {
 }
 
 /**
- * Invokes hook_search_preprocess() in modules.
+ * Invokes hook_search_preprocess() to simplify text.
+ *
+ * @param string $text
+ *   Text to preprocess, passed by reference and altered in place.
+ * @param string|null $langcode
+ *   Language code for the language of $text, if known.
  */
 function search_invoke_preprocess(&$text, $langcode = NULL) {
   foreach (\Drupal::moduleHandler()->getImplementations('search_preprocess') as $module) {
@@ -370,14 +397,14 @@ function search_invoke_preprocess(&$text, $langcode = NULL) {
 /**
  * Updates the full-text search index for a particular item.
  *
- * @param $type
+ * @param string $type
  *   The plugin ID or other machine-readable type of this item,
  *   which should be less than 64 bytes.
- * @param $sid
+ * @param int $sid
  *   An ID number identifying this particular item (e.g., node ID).
- * @param $langcode
- *   Language code for text being indexed.
- * @param $text
+ * @param string $langcode
+ *   Language code for the language of the text being indexed.
+ * @param string $text
  *   The content of this item. Must be a piece of HTML or plain text.
  *
  * @ingroup search
@@ -585,6 +612,8 @@ function search_mark_for_reindex($type = NULL, $sid = NULL, $langcode = NULL) {
  *   A string containing a search query.
  * @param string $text
  *   The text to extract fragments from.
+ * @param string|null $langcode
+ *   Language code for the language of $text, if known.
  *
  * @return string
  *   A string containing HTML for the excerpt.
@@ -736,14 +765,14 @@ function search_excerpt($keys, $text, $langcode = NULL) {
 /**
  * Finds an appropriate keyword in text.
  *
- * @param $key
+ * @param string $key
  *   The keyword to find.
- * @param $text
+ * @param string $text
  *   The text to search for the keyword.
- * @param $boundary
+ * @param string $boundary
  *   Regular expression for boundary characters between words.
- * @param $langcode
- *   Language code.
+ * @param string|null $langcode
+ *   Language code for the language of $text, if known.
  *
  * @return
  *   A segment of $text that is between word boundary characters that either
