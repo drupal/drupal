@@ -78,6 +78,13 @@ function system_test_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['system-test/drupal-set-message'] = array(
+    'title' => 'Set messages with drupal_set_message()',
+    'page callback' => 'system_test_drupal_set_message',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
   $items['system-test/main-content-handling'] = array(
     'title' => 'Test main content handling',
     'page callback' => 'system_test_main_content_fallback',
@@ -433,6 +440,20 @@ function system_test_authorize_init_page($page_title) {
   $authorize_url = $GLOBALS['base_url'] . '/authorize.php';
   system_authorized_init('system_test_authorize_run', drupal_get_path('module', 'system_test') . '/system_test.module', array(), $page_title);
   drupal_goto($authorize_url);
+}
+
+/**
+ * Sets two messages and removes the first one before the messages are displayed.
+ */
+function system_test_drupal_set_message() {
+  // Set two messages.
+  drupal_set_message('First message (removed).');
+  drupal_set_message('Second message (not removed).');
+
+  // Remove the first.
+  unset($_SESSION['messages']['status'][0]);
+
+  return '';
 }
 
 /**

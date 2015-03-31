@@ -1691,7 +1691,7 @@ function theme_status_messages($variables) {
       $output .= " </ul>\n";
     }
     else {
-      $output .= $messages[0];
+      $output .= reset($messages);
     }
     $output .= "</div>\n";
   }
