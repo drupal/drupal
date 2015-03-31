@@ -76,6 +76,7 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
       'route.menu_active_trails:tools',
       'theme',
       'timezone',
+      'user.permissions',
       'user.roles',
     ];
 

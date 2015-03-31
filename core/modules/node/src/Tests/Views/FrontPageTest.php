@@ -246,6 +246,8 @@ class FrontPageTest extends ViewTestBase {
       // Cache contexts associated with the view.
       'user.node_grants:view',
       'languages:' . LanguageInterface::TYPE_INTERFACE,
+      // Cache contexts associated with the route's access checking.
+      'user.permissions',
       // Default cache contexts of the renderer.
       'theme',
     ];

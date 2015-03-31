@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\EventSubscriber;
 
+use Drupal\Core\Routing\AccessAwareRouterInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\Error;
 use Psr\Log\LoggerInterface;
@@ -113,6 +114,9 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
       try {
         // Persist the 'exception' attribute to the subrequest.
         $sub_request->attributes->set('exception', $request->attributes->get('exception'));
+        // Persist the access result attribute to the subrequest, so that the
+        // error page inherits the access result of the master request.
+        $sub_request->attributes->set(AccessAwareRouterInterface::ACCESS_RESULT, $request->attributes->get(AccessAwareRouterInterface::ACCESS_RESULT));
 
         // Carry over the session to the subrequest.
         if ($session = $request->getSession()) {

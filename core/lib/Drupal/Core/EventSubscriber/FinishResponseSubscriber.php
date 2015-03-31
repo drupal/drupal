@@ -8,11 +8,15 @@
 namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Component\Datetime\DateTimePlus;
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableInterface;
+use Drupal\Core\Cache\CacheContexts;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\PageCache\RequestPolicyInterface;
 use Drupal\Core\PageCache\ResponsePolicyInterface;
+use Drupal\Core\Routing\AccessAwareRouterInterface;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,6 +61,13 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
   protected $responsePolicy;
 
   /**
+   * The cache contexts service.
+   *
+   * @var \Drupal\Core\Cache\CacheContexts
+   */
+  protected $cacheContexts;
+
+  /**
    * Constructs a FinishResponseSubscriber object.
    *
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
@@ -67,12 +78,15 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
    *   A policy rule determining the cacheability of a request.
    * @param \Drupal\Core\PageCache\ResponsePolicyInterface $response_policy
    *   A policy rule determining the cacheability of a response.
+   * @param \Drupal\Core\Cache\CacheContexts $cache_contexts
+   *   The cache contexts service.
    */
-  public function __construct(LanguageManagerInterface $language_manager, ConfigFactoryInterface $config_factory, RequestPolicyInterface $request_policy, ResponsePolicyInterface $response_policy) {
+  public function __construct(LanguageManagerInterface $language_manager, ConfigFactoryInterface $config_factory, RequestPolicyInterface $request_policy, ResponsePolicyInterface $response_policy, CacheContexts $cache_contexts) {
     $this->languageManager = $language_manager;
     $this->config = $config_factory->get('system.performance');
     $this->requestPolicy = $request_policy;
     $this->responsePolicy = $response_policy;
+    $this->cacheContexts = $cache_contexts;
   }
 
   /**
@@ -119,6 +133,12 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
       $response->headers->set($name, $value, FALSE);
     }
 
+    // Apply the request's access result cacheability metadata, if it has any.
+    $access_result = $request->attributes->get(AccessAwareRouterInterface::ACCESS_RESULT);
+    if ($access_result instanceof CacheableInterface) {
+      $this->updateDrupalCacheHeaders($response, $access_result);
+    }
+
     $is_cacheable = ($this->requestPolicy->check($request) === RequestPolicyInterface::ALLOW) && ($this->responsePolicy->check($response, $request) !== ResponsePolicyInterface::DENY);
 
     // Add headers necessary to specify whether the response should be cached by
@@ -136,6 +156,30 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
       // header declaring the response as not cacheable.
       $this->setResponseNotCacheable($response, $request);
     }
+  }
+
+  /**
+   * Updates Drupal's cache headers using the route's cacheable access result.
+   *
+   * @param Response $response
+   * @param CacheableInterface $cacheable_access_result
+   */
+  protected function updateDrupalCacheHeaders(Response $response, CacheableInterface $cacheable_access_result) {
+    // X-Drupal-Cache-Tags
+    $cache_tags = $cacheable_access_result->getCacheTags();
+    if ($response->headers->has('X-Drupal-Cache-Tags')) {
+      $existing_cache_tags = explode(' ', $response->headers->get('X-Drupal-Cache-Tags'));
+      $cache_tags = Cache::mergeTags($existing_cache_tags, $cache_tags);
+    }
+    $response->headers->set('X-Drupal-Cache-Tags', implode(' ', $cache_tags));
+
+    // X-Drupal-Cache-Contexts
+    $cache_contexts = $cacheable_access_result->getCacheContexts();
+    if ($response->headers->has('X-Drupal-Cache-Contexts')) {
+      $existing_cache_contexts = explode(' ', $response->headers->get('X-Drupal-Cache-Contexts'));
+      $cache_contexts = Cache::mergeContexts($existing_cache_contexts, $cache_contexts);
+    }
+    $response->headers->set('X-Drupal-Cache-Contexts', implode(' ', $this->cacheContexts->optimizeTokens($cache_contexts)));
   }
 
   /**

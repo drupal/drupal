@@ -84,6 +84,19 @@ class TestControllers {
     $this->throwException('<script>alert(\'xss\')</script>');
   }
 
+  public function test18() {
+    return [
+      '#cache' => [
+        'contexts' => ['url'],
+        'tags' => ['foo'],
+        'max-age' => 60,
+      ],
+      'content' => [
+        '#markup' => 'test18',
+      ],
+    ];
+  }
+
   /**
    * Throws an exception.
    *

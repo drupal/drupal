@@ -101,7 +101,15 @@ class AccessAwareRouter implements AccessAwareRouterInterface {
    *   The request to access check.
    */
   protected function checkAccess(Request $request) {
-    if (!$this->accessManager->checkRequest($request, $this->account)) {
+    // The cacheability (if any) of this request's access check result must be
+    // applied to the response.
+    $access_result = $this->accessManager->checkRequest($request, $this->account, TRUE);
+    // Allow a master request to set the access result for a subrequest: if an
+    // access result attribute is already set, don't overwrite it.
+    if (!$request->attributes->has(AccessAwareRouterInterface::ACCESS_RESULT)) {
+      $request->attributes->set(AccessAwareRouterInterface::ACCESS_RESULT, $access_result);
+    }
+    if (!$access_result->isAllowed()) {
       throw new AccessDeniedHttpException();
     }
   }

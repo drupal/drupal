@@ -16,6 +16,11 @@ use Symfony\Component\Routing\RouterInterface;
 interface AccessAwareRouterInterface extends RouterInterface, RequestMatcherInterface {
 
   /**
+   * Attribute name of the access result for the request..
+   */
+  const ACCESS_RESULT = '_access_result';
+
+  /**
    * {@inheritdoc}
    *
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
