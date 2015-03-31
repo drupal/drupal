@@ -432,7 +432,11 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
    * {@inheritdoc}
    */
   public function isInstallable() {
-    return (bool) \Drupal::service('views.views_data')->get($this->base_table);
+    $table_definition = \Drupal::service('views.views_data')->get($this->base_table);
+    // Check whether the base table definition exists and contains a base table
+    // definition. For example, taxonomy_views_data_alter() defines
+    // node_field_data even if it doesn't exist as a base table.
+    return $table_definition && isset($table_definition['table']['base']);
   }
 
   /**
