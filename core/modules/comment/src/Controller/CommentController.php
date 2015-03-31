@@ -207,11 +207,6 @@ class CommentController extends ControllerBase {
    *     - comment_entity: If the comment is a reply to the entity.
    *     - comment_parent: If the comment is a reply to another comment.
    *   - comment_form: The comment form as a renderable array.
-   *   - An associative array containing:
-   *     - An array for rendering the entity or parent comment.
-   *        - comment_entity: If the comment is a reply to the entity.
-   *        - comment_parent: If the comment is a reply to another comment.
-   *     - comment_form: The comment form as a renderable array.
    *   - A redirect response to current node:
    *     - If user is not authorized to post comments.
    *     - If parent comment doesn't belong to current entity.
