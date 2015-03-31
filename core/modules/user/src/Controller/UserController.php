@@ -10,6 +10,7 @@ namespace Drupal\user\Controller;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DateFormatter;
+use Drupal\Core\PageCache\ResponsePolicy\KillSwitch;
 use Drupal\user\UserDataInterface;
 use Drupal\user\UserInterface;
 use Drupal\user\UserStorageInterface;
@@ -43,6 +44,13 @@ class UserController extends ControllerBase {
   protected $userData;
 
   /**
+   * The page cache killswitch.
+   *
+   * @var \Drupal\Core\PageCache\ResponsePolicy\KillSwitch
+   */
+  protected $pageCacheKillSwitch;
+
+  /**
    * Constructs a UserController object.
    *
    * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
@@ -51,11 +59,14 @@ class UserController extends ControllerBase {
    *   The user storage.
    * @param \Drupal\user\UserDataInterface $user_data
    *   The user data service.
+   * @param \Drupal\Core\PageCache\ResponsePolicy\KillSwitch $page_cache_kill_switch
+   *   The page cache killswitch.
    */
-  public function __construct(DateFormatter $date_formatter, UserStorageInterface $user_storage, UserDataInterface $user_data) {
+  public function __construct(DateFormatter $date_formatter, UserStorageInterface $user_storage, UserDataInterface $user_data, KillSwitch $page_cache_kill_switch) {
     $this->dateFormatter = $date_formatter;
     $this->userStorage = $user_storage;
     $this->userData = $user_data;
+    $this->pageCacheKillSwitch = $page_cache_kill_switch;
   }
 
   /**
@@ -65,7 +76,8 @@ class UserController extends ControllerBase {
     return new static(
       $container->get('date.formatter'),
       $container->get('entity.manager')->getStorage('user'),
-      $container->get('user.data')
+      $container->get('user.data'),
+      $container->get('page_cache_kill_switch')
     );
   }
 
@@ -86,6 +98,9 @@ class UserController extends ControllerBase {
    *   If the login link is for a blocked user or invalid user ID.
    */
   public function resetPass($uid, $timestamp, $hash) {
+    // Don't cache the password reset page.
+    $this->pageCacheKillSwitch->trigger();
+
     $account = $this->currentUser();
     $config = $this->config('user.settings');
     // When processing the one-time login link, we have to make sure that a user
