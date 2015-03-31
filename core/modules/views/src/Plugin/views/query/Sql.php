@@ -1759,7 +1759,7 @@ class Sql extends QueryPluginBase {
           'l' => 'Day',
           // No format for Day of the month without leading zeros.
           'j' => 'DD',
-          'W' => 'WW',
+          'W' => 'IW',
           'H' => 'HH24',
           'h' => 'HH12',
           'i' => 'MI',
