@@ -64,6 +64,17 @@ trait StringTranslationTrait {
   }
 
   /**
+   * Returns the number of plurals supported by a given language.
+   *
+   * See the
+   * \Drupal\Core\StringTranslation\TranslationInterface::getNumberOfPlurals()
+   * documentation for details.
+   */
+  protected function getNumberOfPlurals($langcode = NULL) {
+    return $this->getStringTranslation()->getNumberOfPlurals($langcode);
+  }
+
+  /**
    * Gets the string translation service.
    *
    * @return \Drupal\Core\StringTranslation\TranslationInterface

@@ -58,7 +58,7 @@ class TranslateEditForm extends TranslateFormBase {
     if (isset($langcode)) {
       $strings = $this->translateFilterLoadStrings();
 
-      $plural_formulas = $this->state->get('locale.translation.plurals') ?: array();
+      $plurals = $this->getNumberOfPlurals($langcode);
 
       foreach ($strings as $string) {
         // Cast into source string, will do for our purposes.
@@ -119,37 +119,20 @@ class TranslateEditForm extends TranslateFormBase {
           );
         }
         else {
-          // Dealing with plural strings.
-          if (isset($plural_formulas[$langcode]['plurals']) && $plural_formulas[$langcode]['plurals'] > 2) {
-            // Add a textarea for each plural variant.
-            for ($i = 0; $i < $plural_formulas[$langcode]['plurals']; $i++) {
-              $form['strings'][$string->lid]['translations'][$i] = array(
-                '#type' => 'textarea',
-                '#title' => ($i == 0 ? $this->t('Singular form') : $this->formatPlural($i, 'First plural form', '@count. plural form')),
-                '#rows' => $rows,
-                '#default_value' => isset($translation_array[$i]) ? $translation_array[$i] : '',
-                '#attributes' => array('lang' => $langcode),
-                '#prefix' => $i == 0 ? ('<span class="visually-hidden">' . $this->t('Translated string (@language)', array('@language' => $langname)) . '</span>') : '',
-              );
-            }
+          // Add a textarea for each plural variant.
+          for ($i = 0; $i < $plurals; $i++) {
+            $form['strings'][$string->lid]['translations'][$i] = array(
+              '#type' => 'textarea',
+              '#title' => ($i == 0 ? $this->t('Singular form') : $this->formatPlural($i, 'First plural form', '@count. plural form')),
+              '#rows' => $rows,
+              '#default_value' => isset($translation_array[$i]) ? $translation_array[$i] : '',
+              '#attributes' => array('lang' => $langcode),
+              '#prefix' => $i == 0 ? ('<span class="visually-hidden">' . $this->t('Translated string (@language)', array('@language' => $langname)) . '</span>') : '',
+            );
           }
-          else {
-            // Fallback for unknown number of plurals.
-            $form['strings'][$string->lid]['translations'][0] = array(
-              '#type' => 'textarea',
-              '#title' => $this->t('Singular form'),
-              '#rows' => $rows,
-              '#default_value' => $translation_array[0],
-              '#attributes' => array('lang' => $langcode),
-              '#prefix' => '<span class="visually-hidden">' . $this->t('Translated string (@language)', array('@language' => $langname)) . '</span>',
-            );
-            $form['strings'][$string->lid]['translations'][1] = array(
-              '#type' => 'textarea',
-              '#title' => $this->t('Plural form'),
-              '#rows' => $rows,
-              '#default_value' => isset($translation_array[1]) ? $translation_array[1] : '',
-              '#attributes' => array('lang' => $langcode),
-            );
+          if ($plurals == 2) {
+            // Simplify user interface text for the most common case.
+            $form['strings'][$string->lid]['translations'][1]['#title'] = $this->t('Plural form');
           }
         }
       }

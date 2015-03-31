@@ -9,6 +9,7 @@ namespace Drupal\Core\StringTranslation;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\State\StateInterface;
 use Drupal\Core\StringTranslation\Translator\TranslatorInterface;
 
 /**
@@ -53,14 +54,24 @@ class TranslationManager implements TranslationInterface, TranslatorInterface {
   protected $defaultLangcode;
 
   /**
+   * The state service.
+   *
+   * @var \Drupal\Core\State\StateInterface
+   */
+  protected $state;
+
+  /**
    * Constructs a TranslationManager object.
    *
-   * @param \Drupal\Core\Language\LanguageManagerInterface
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
+   * @param \Drupal\Core\State\StateInterface $state
+   *   (optional) The state service.
    */
-  public function __construct(LanguageManagerInterface $language_manager) {
+  public function __construct(LanguageManagerInterface $language_manager, StateInterface $state = NULL) {
     $this->languageManager = $language_manager;
     $this->defaultLangcode = $language_manager->getDefaultLanguage()->getId();
+    $this->state = $state;
   }
 
   /**
@@ -227,6 +238,23 @@ class TranslationManager implements TranslationInterface, TranslatorInterface {
     foreach ($this->sortedTranslators as $translator) {
       $translator->reset();
     }
+  }
+
+  /**
+   * @inheritdoc.
+   */
+  public function getNumberOfPlurals($langcode = NULL) {
+    // If the state service is not injected, we assume 2 plural variants are
+    // allowed. This may happen in the installer for simplicity. We also assume
+    // 2 plurals if there is no explicit information yet.
+    if (isset($this->state)) {
+      $langcode = $langcode ?: $this->languageManager->getCurrentLanguage()->getId();
+      $plural_formulas = $this->state->get('locale.translation.plurals') ?: array();
+      if (isset($plural_formulas[$langcode]['plurals'])) {
+        return $plural_formulas[$langcode]['plurals'];
+      }
+    }
+    return 2;
   }
 
 }

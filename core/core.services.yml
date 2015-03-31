@@ -603,7 +603,7 @@ services:
       - { name: string_translator, priority: 30 }
   string_translation:
     class: Drupal\Core\StringTranslation\TranslationManager
-    arguments: ['@language_manager']
+    arguments: ['@language_manager', '@state']
     calls:
       - [initLanguageManager]
     tags:

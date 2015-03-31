@@ -34,8 +34,7 @@ class NumericField extends FieldPluginBase {
     $options['decimal'] = array('default' => '.');
     $options['separator'] = array('default' => ',');
     $options['format_plural'] = array('default' => FALSE);
-    $options['format_plural_singular'] = array('default' => '1');
-    $options['format_plural_plural'] = array('default' => '@count');
+    $options['format_plural_string'] = array('default' => '1' . LOCALE_PLURAL_DELIMITER . '@count');
     $options['prefix'] = array('default' => '');
     $options['suffix'] = array('default' => '');
 
@@ -93,28 +92,33 @@ class NumericField extends FieldPluginBase {
       '#description' => $this->t('If checked, special handling will be used for plurality.'),
       '#default_value' => $this->options['format_plural'],
     );
-    $form['format_plural_singular'] = array(
-      '#type' => 'textfield',
-      '#title' => $this->t('Singular form'),
-      '#default_value' => $this->options['format_plural_singular'],
-      '#description' => $this->t('Text to use for the singular form.'),
-      '#states' => array(
-        'visible' => array(
-          ':input[name="options[format_plural]"]' => array('checked' => TRUE),
-        ),
-      ),
+    $form['format_plural_string'] = array(
+      '#type' => 'value',
+      '#default_value' => $this->options['format_plural_string'],
     );
-    $form['format_plural_plural'] = array(
-      '#type' => 'textfield',
-      '#title' => $this->t('Plural form'),
-      '#default_value' => $this->options['format_plural_plural'],
-      '#description' => $this->t('Text to use for the plural form, @count will be replaced with the value.'),
-      '#states' => array(
-        'visible' => array(
-          ':input[name="options[format_plural]"]' => array('checked' => TRUE),
+
+    $plural_array = explode(LOCALE_PLURAL_DELIMITER, $this->options['format_plural_string']);
+    $plurals = $this->getNumberOfPlurals($this->view->storage->get('langcode'));
+    for ($i = 0; $i < $plurals; $i++) {
+      $form['format_plural_values'][$i] = array(
+        '#type' => 'textfield',
+        '#title' => ($i == 0 ? $this->t('Singular form') : $this->formatPlural($i, 'First plural form', '@count. plural form')),
+        '#default_value' => isset($plural_array[$i]) ? $plural_array[$i] : '',
+        '#description' => $this->t('Text to use for this variant, @count will be replaced with the value.'),
+        '#states' => array(
+          'visible' => array(
+            ':input[name="options[format_plural]"]' => array('checked' => TRUE),
+          ),
         ),
-      ),
-    );
+      );
+    }
+    if ($plurals == 2) {
+      // Simplify user interface text for the most common case.
+      $form['format_plural_values'][0]['#description'] = $this->t('Text to use for the singular form, @count will be replaced with the value.');
+      $form['format_plural_values'][1]['#title'] = $this->t('Plural form');
+      $form['format_plural_values'][1]['#description'] = $this->t('Text to use for the plural form, @count will be replaced with the value.');
+    }
+
     $form['prefix'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Prefix'),
@@ -129,6 +133,18 @@ class NumericField extends FieldPluginBase {
     );
 
     parent::buildOptionsForm($form, $form_state);
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function submitOptionsForm(&$form, FormStateInterface $form_state) {
+    // Merge plural format options into one string and drop the individual
+    // option values.
+    $options = &$form_state->getValue('options');
+    $options['format_plural_string'] = implode(LOCALE_PLURAL_DELIMITER, $options['format_plural_values']);
+    unset($options['format_plural_values']);
+    parent::submitOptionsForm($form, $form_state);
   }
 
   /**
@@ -154,9 +170,10 @@ class NumericField extends FieldPluginBase {
       return '';
     }
 
-    // Should we format as a plural.
+    // If we should format as plural, take the (possibly) translated plural
+    // setting and format with the current language.
     if (!empty($this->options['format_plural'])) {
-      $value = $this->formatPlural($value, $this->options['format_plural_singular'], $this->options['format_plural_plural']);
+      $value = $this->formatPluralTranslated($value, $this->options['format_plural_string']);
     }
 
     return $this->sanitizeValue($this->options['prefix'], 'xss')
