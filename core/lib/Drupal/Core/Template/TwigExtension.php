@@ -12,6 +12,7 @@
 
 namespace Drupal\Core\Template;
 
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\LinkGeneratorInterface;
@@ -40,10 +41,29 @@ class TwigExtension extends \Twig_Extension {
   protected $linkGenerator;
 
   /**
+   * The renderer.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
    * Constructs \Drupal\Core\Template\TwigExtension.
+   *
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer.
+   */
+  public function __construct(RendererInterface $renderer) {
+    $this->renderer = $renderer;
+  }
+
+  /**
+   * Sets the URL generator.
    *
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
    *   The URL generator.
+   *
+   * @return $this
    */
   public function setGenerators(UrlGeneratorInterface $url_generator) {
     $this->urlGenerator = $url_generator;
@@ -77,6 +97,7 @@ class TwigExtension extends \Twig_Extension {
       new \Twig_SimpleFunction('url_from_path', array($this, 'getUrlFromPath'), array('is_safe_callback' => array($this, 'isUrlGenerationSafe'))),
       new \Twig_SimpleFunction('link', array($this, 'getLink')),
       new \Twig_SimpleFunction('file_url', 'file_create_url'),
+      new \Twig_SimpleFunction('attach_library', array($this, 'attachLibrary'))
     );
   }
 
@@ -255,6 +276,24 @@ class TwigExtension extends \Twig_Extension {
     }
 
     return array();
+  }
+
+  /**
+   * Attaches an asset library to the template, and hence to the response.
+   *
+   * Allows Twig templates to attach asset libraries using
+   * @code
+   * {{ attach_library('extension/library_name') }}
+   * @endcode
+   *
+   * @param string $library
+   *   An asset library.
+   */
+  public function attachLibrary($library) {
+    // Use Renderer::render() on a temporary render array to get additional
+    // bubbleable metadata on the render stack.
+    $template_attached = ['#attached' => ['library' => [$library]]];
+    $this->renderer->render($template_attached);
   }
 
 }

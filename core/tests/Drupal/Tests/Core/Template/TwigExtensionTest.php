@@ -25,13 +25,14 @@ class TwigExtensionTest extends UnitTestCase {
    * @dataProvider providerTestEscaping
    */
   public function testEscaping($template, $expected) {
+    $renderer = $this->getMock('\Drupal\Core\Render\RendererInterface');
     $twig = new \Twig_Environment(NULL, array(
       'debug' => TRUE,
       'cache' => FALSE,
       'autoescape' => TRUE,
       'optimizations' => 0
     ));
-    $twig->addExtension((new TwigExtension())->setGenerators($this->getMock('Drupal\Core\Routing\UrlGeneratorInterface')));
+    $twig->addExtension((new TwigExtension($renderer))->setGenerators($this->getMock('Drupal\Core\Routing\UrlGeneratorInterface')));
 
     $nodes = $twig->parse($twig->tokenize($template));
 

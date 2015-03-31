@@ -24,6 +24,7 @@
 #}
 {% block messages %}
   {% if message_list is not empty %}
+    {{ attach_library('bartik/messages') }}
     <div id="messages">
       <div class="section clearfix">
         {{ parent() }}

@@ -40,6 +40,13 @@ twig_theme_test_file_url:
   requirements:
     _access: 'TRUE'
 
+twig_theme_test_attach_library:
+  path: '/twig-theme-test/attach-library'
+  defaults:
+    _controller: '\Drupal\twig_theme_test\TwigThemeTestController::attachLibraryRender'
+  requirements:
+    _access: 'TRUE'
+
 twig_theme_test_registry_loader:
   path: '/twig-theme-test/registry-loader'
   defaults:

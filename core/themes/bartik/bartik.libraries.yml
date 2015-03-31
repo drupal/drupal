@@ -22,7 +22,6 @@ global-styling:
       css/components/region-help.css: {}
       css/components/item-list.css: {}
       css/components/list-group.css: {}
-      css/components/messages.css: {}
       css/components/node-preview.css: {}
       css/components/pager.css: {}
       css/components/panel.css: {}
@@ -45,6 +44,12 @@ global-styling:
       css/components/ui-dialog.css: {}
       css/colors.css: {}
       css/print.css: { media: print }
+
+messages:
+  version: VERSION
+  css:
+    theme:
+      css/components/messages.css: { preprocess: false }
 
 color.preview:
   version: VERSION

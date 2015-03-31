@@ -50,6 +50,10 @@ function twig_theme_test_theme($existing, $type, $theme, $path) {
     'variables' => array(),
     'template' => 'twig_theme_test.file_url',
   );
+  $items['twig_theme_test_attach_library'] = array(
+    'variables' => array(),
+    'template' => 'twig_theme_test.attach_library',
+  );
   return $items;
 }
 

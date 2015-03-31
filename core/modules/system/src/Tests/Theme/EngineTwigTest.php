@@ -111,4 +111,12 @@ class EngineTwigTest extends WebTestBase {
     $this->assertRaw('<div>file_url: ' . $filepath . '</div>');
   }
 
+  /**
+   * Tests the attach of asset libraries.
+   */
+  public function testTwigAttachLibrary() {
+    $this->drupalGet('/twig-theme-test/attach-library');
+    $this->assertRaw('ckeditor.js');
+  }
+
 }

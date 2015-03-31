@@ -69,6 +69,15 @@ class TwigThemeTestController {
   }
 
   /**
+   * Renders for testing attach_library functions in a Twig template.
+   */
+  public function attachLibraryRender() {
+    return array(
+      '#theme' => 'twig_theme_test_attach_library',
+    );
+  }
+
+  /**
    * Menu callback for testing the Twig registry loader.
    */
   public function registryLoaderRender() {
