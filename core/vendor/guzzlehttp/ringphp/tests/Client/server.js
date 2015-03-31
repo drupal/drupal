@@ -21,6 +21,15 @@
  *      <
  *      < [{'http_method': 'GET', 'uri': '/', 'headers': {}, 'body': 'string'}]
  *
+ *  - Attempt access to the secure area
+ *      > GET /secure/by-digest/qop-auth/guzzle-server/requests
+ *      > Host: 127.0.0.1:8125
+ *
+ *      < HTTP/1.1 401 Unauthorized
+ *      < WWW-Authenticate: Digest realm="Digest Test", qop="auth", nonce="0796e98e1aeef43141fab2a66bf4521a", algorithm="MD5", stale="false"
+ *      <
+ *      < 401 Unauthorized
+ *
  *  - Shutdown the server
  *      > DELETE /guzzle-server
  *      > Host: 127.0.0.1:8125
@@ -43,6 +52,77 @@ var GuzzleServer = function(port, log) {
     this.responses = [];
     this.requests = [];
     var that = this;
+
+    var md5 = function(input) {
+        var crypto = require('crypto');
+        var hasher = crypto.createHash('md5');
+        hasher.update(input);
+        return hasher.digest('hex');
+    }
+
+    /**
+     * Node.js HTTP server authentication module.
+     *
+     * It is only initialized on demand (by loadAuthentifier). This avoids
+     * requiring the dependency to http-auth on standard operations, and the
+     * performance hit at startup.
+     */
+    var auth;
+
+    /**
+     * Provides authentication handlers (Basic, Digest).
+     */
+    var loadAuthentifier = function(type, options) {
+        var typeId = type;
+        if (type == 'digest') {
+            typeId += '.'+(options && options.qop ? options.qop : 'none');
+        }
+        if (!loadAuthentifier[typeId]) {
+            if (!auth) {
+                try {
+                    auth = require('http-auth');
+                } catch (e) {
+                    if (e.code == 'MODULE_NOT_FOUND') {
+                        return;
+                    }
+                }
+            }
+            switch (type) {
+                case 'digest':
+                    var digestParams = {
+                        realm: 'Digest Test',
+                        login: 'me',
+                        password: 'test'
+                    };
+                    if (options && options.qop) {
+                        digestParams.qop = options.qop;
+                    }
+                    loadAuthentifier[typeId] = auth.digest(digestParams, function(username, callback) {
+                        callback(md5(digestParams.login + ':' + digestParams.realm + ':' + digestParams.password));
+                    });
+                    break
+            }
+        }
+        return loadAuthentifier[typeId];
+    };
+
+    var firewallRequest = function(request, req, res, requestHandlerCallback) {
+        var securedAreaUriParts = request.uri.match(/^\/secure\/by-(digest)(\/qop-([^\/]*))?(\/.*)$/);
+        if (securedAreaUriParts) {
+            var authentifier = loadAuthentifier(securedAreaUriParts[1], { qop: securedAreaUriParts[2] });
+            if (!authentifier) {
+                res.writeHead(501, 'HTTP authentication not implemented', { 'Content-Length': 0 });
+                res.end();
+                return;
+            }
+            authentifier.check(req, res, function(req, res) {
+                req.url = securedAreaUriParts[4];
+                requestHandlerCallback(request, req, res);
+            });
+        } else {
+            requestHandlerCallback(request, req, res);
+        }
+    };
 
     var controlRequest = function(request, req, res) {
         if (req.url == '/guzzle-server/perf') {
@@ -140,7 +220,7 @@ var GuzzleServer = function(port, log) {
 
             // Called when the request completes
             req.addListener('end', function() {
-                receivedRequest(request, req, res);
+                firewallRequest(request, req, res, receivedRequest);
             });
         });
 

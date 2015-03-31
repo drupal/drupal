@@ -154,6 +154,64 @@ class PoolTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($responses[3], $result[2]->getResponse());
     }
 
+    public function testBatchesRequestsWithDynamicPoolSize()
+    {
+        $client = new Client(['handler' => function () {
+            throw new \RuntimeException('No network access');
+        }]);
+
+        $responses = [
+            new Response(301, ['Location' => 'http://foo.com/bar']),
+            new Response(200),
+            new Response(200),
+            new Response(404)
+        ];
+
+        $client->getEmitter()->attach(new Mock($responses));
+        $requests = [
+            $client->createRequest('GET', 'http://foo.com/baz'),
+            $client->createRequest('HEAD', 'http://httpbin.org/get'),
+            $client->createRequest('PUT', 'http://httpbin.org/put'),
+        ];
+
+        $a = $b = $c = $d = 0;
+        $result = Pool::batch($client, $requests, [
+            'before'    => function (BeforeEvent $e) use (&$a) { $a++; },
+            'complete'  => function (CompleteEvent $e) use (&$b) { $b++; },
+            'error'     => function (ErrorEvent $e) use (&$c) { $c++; },
+            'end'       => function (EndEvent $e) use (&$d) { $d++; },
+            'pool_size' => function ($queueSize) {
+                static $options = [1, 2, 1];
+                static $queued  = 0;
+
+                $this->assertEquals(
+                    $queued,
+                    $queueSize,
+                    'The number of queued requests should be equal to the sum of pool sizes so far.'
+                );
+
+                $next    = array_shift($options);
+                $queued += $next;
+
+                return $next;
+            }
+        ]);
+
+        $this->assertEquals(4, $a);
+        $this->assertEquals(2, $b);
+        $this->assertEquals(1, $c);
+        $this->assertEquals(3, $d);
+        $this->assertCount(3, $result);
+        $this->assertInstanceOf('GuzzleHttp\BatchResults', $result);
+
+        // The first result is actually the second (redirect) response.
+        $this->assertSame($responses[1], $result[0]);
+        // The second result is a 1:1 request:response map
+        $this->assertSame($responses[2], $result[1]);
+        // The third entry is the 404 RequestException
+        $this->assertSame($responses[3], $result[2]->getResponse());
+    }
+
     /**
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Each event listener must be a callable or
@@ -227,5 +285,35 @@ class PoolTest extends \PHPUnit_Framework_TestCase
         $requests = [$client->createRequest('GET', 'http://foo.com/baz')];
         Pool::send($client, $requests);
         $this->assertCount(1, $history);
+    }
+
+    public function testDoesNotInfinitelyRecurse()
+    {
+        $client = new Client(['handler' => function () {
+            throw new \RuntimeException('No network access');
+        }]);
+
+        $last = null;
+        $client->getEmitter()->on(
+            'before',
+            function (BeforeEvent $e) use (&$last) {
+                $e->intercept(new Response(200));
+                if (function_exists('xdebug_get_stack_depth')) {
+                    if ($last) {
+                        $this->assertEquals($last, xdebug_get_stack_depth());
+                    } else {
+                        $last = xdebug_get_stack_depth();
+                    }
+                }
+            }
+        );
+
+        $requests = [];
+        for ($i = 0; $i < 100; $i++) {
+            $requests[] = $client->createRequest('GET', 'http://foo.com');
+        }
+
+        $pool = new Pool($client, $requests);
+        $pool->wait();
     }
 }

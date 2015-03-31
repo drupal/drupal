@@ -13,13 +13,14 @@ use React\Promise\Deferred;
  * When using the CurlMultiHandler, custom curl options can be specified as an
  * associative array of curl option constants mapping to values in the
  * **curl** key of the "client" key of the request.
+ *
+ * @property resource $_mh Internal use only. Lazy loaded multi-handle.
  */
 class CurlMultiHandler
 {
     /** @var callable */
     private $factory;
     private $selectTimeout;
-    private $mh;
     private $active;
     private $handles = [];
     private $delays = [];
@@ -42,14 +43,24 @@ class CurlMultiHandler
      */
     public function __construct(array $options = [])
     {
-        $this->mh = isset($options['mh'])
-            ? $options['mh'] : curl_multi_init();
+        if (isset($options['mh'])) {
+            $this->_mh = $options['mh'];
+        }
         $this->factory = isset($options['handle_factory'])
             ? $options['handle_factory'] : new CurlFactory();
         $this->selectTimeout = isset($options['select_timeout'])
             ? $options['select_timeout'] : 1;
         $this->maxHandles = isset($options['max_handles'])
             ? $options['max_handles'] : 100;
+    }
+
+    public function __get($name)
+    {
+        if ($name === '_mh') {
+            return $this->_mh = curl_multi_init();
+        }
+
+        throw new \BadMethodCallException();
     }
 
     public function __destruct()
@@ -59,9 +70,9 @@ class CurlMultiHandler
             $this->execute();
         }
 
-        if ($this->mh) {
-            curl_multi_close($this->mh);
-            $this->mh = null;
+        if (isset($this->_mh)) {
+            curl_multi_close($this->_mh);
+            unset($this->_mh);
         }
     }
 
@@ -106,7 +117,7 @@ class CurlMultiHandler
         do {
 
             if ($this->active &&
-                curl_multi_select($this->mh, $this->selectTimeout) === -1
+                curl_multi_select($this->_mh, $this->selectTimeout) === -1
             ) {
                 // Perform a usleep if a select returns -1.
                 // See: https://bugs.php.net/bug.php?id=61141
@@ -119,7 +130,7 @@ class CurlMultiHandler
             }
 
             do {
-                $mrc = curl_multi_exec($this->mh, $this->active);
+                $mrc = curl_multi_exec($this->_mh, $this->active);
             } while ($mrc === CURLM_CALL_MULTI_PERFORM);
 
             $this->processMessages();
@@ -142,13 +153,13 @@ class CurlMultiHandler
         if (isset($entry['request']['client']['delay'])) {
             $this->delays[$id] = microtime(true) + ($entry['request']['client']['delay'] / 1000);
         } elseif (empty($entry['request']['future'])) {
-            curl_multi_add_handle($this->mh, $entry['handle']);
+            curl_multi_add_handle($this->_mh, $entry['handle']);
         } else {
-            curl_multi_add_handle($this->mh, $entry['handle']);
+            curl_multi_add_handle($this->_mh, $entry['handle']);
             // "lazy" futures are only sent once the pool has many requests.
             if ($entry['request']['future'] !== 'lazy') {
                 do {
-                    $mrc = curl_multi_exec($this->mh, $this->active);
+                    $mrc = curl_multi_exec($this->_mh, $this->active);
                 } while ($mrc === CURLM_CALL_MULTI_PERFORM);
                 $this->processMessages();
             }
@@ -159,7 +170,7 @@ class CurlMultiHandler
     {
         if (isset($this->handles[$id])) {
             curl_multi_remove_handle(
-                $this->mh,
+                $this->_mh,
                 $this->handles[$id]['handle']
             );
             curl_close($this->handles[$id]['handle']);
@@ -183,7 +194,7 @@ class CurlMultiHandler
 
         $handle = $this->handles[$id]['handle'];
         unset($this->delays[$id], $this->handles[$id]);
-        curl_multi_remove_handle($this->mh, $handle);
+        curl_multi_remove_handle($this->_mh, $handle);
         curl_close($handle);
 
         return true;
@@ -197,7 +208,7 @@ class CurlMultiHandler
             if ($currentTime >= $delay) {
                 unset($this->delays[$id]);
                 curl_multi_add_handle(
-                    $this->mh,
+                    $this->_mh,
                     $this->handles[$id]['handle']
                 );
             }
@@ -206,7 +217,7 @@ class CurlMultiHandler
 
     private function processMessages()
     {
-        while ($done = curl_multi_info_read($this->mh)) {
+        while ($done = curl_multi_info_read($this->_mh)) {
             $id = (int) $done['handle'];
 
             if (!isset($this->handles[$id])) {

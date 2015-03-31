@@ -16,7 +16,7 @@ use React\Promise\PromisorInterface;
  * computation has not yet completed when wait() is called, the call to wait()
  * will block until the future has completed.
  */
-interface FutureInterface extends PromisorInterface
+interface FutureInterface extends PromiseInterface, PromisorInterface
 {
     /**
      * Returns the result of the future either from cache or by blocking until
@@ -37,20 +37,4 @@ interface FutureInterface extends PromisorInterface
      * Cancels the future, if possible.
      */
     public function cancel();
-
-    /**
-     * Create and return a promise that invokes the given methods when the
-     * future has a value, exception, or progress events.
-     *
-     * @param callable $onFulfilled Called when the promise is resolved.
-     * @param callable $onRejected  Called when the promise is rejected.
-     * @param callable $onProgress  Called on progress events.
-     *
-     * @return PromiseInterface
-     */
-    public function then(
-        callable $onFulfilled = null,
-        callable $onRejected = null,
-        callable $onProgress = null
-    );
 }

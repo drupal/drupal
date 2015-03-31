@@ -173,6 +173,12 @@ response has completed.
     If an exception occurred while transferring the future response, then the
     exception encountered will be thrown when dereferencing.
 
+.. note::
+
+    It depends on the RingPHP handler used by a client, but you typically need
+    to use the same RingPHP handler in order to utilize asynchronous requests
+    across multiple clients.
+
 Asynchronous Error Handling
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -524,7 +530,7 @@ json
 
 .. code-block:: php
 
-    $request = $client->createRequest('/put', ['json' => ['foo' => 'bar']]);
+    $request = $client->createRequest('PUT', '/put', ['json' => ['foo' => 'bar']]);
     echo $request->getHeader('Content-Type');
     // application/json
     echo $request->getBody();
@@ -701,7 +707,15 @@ allow_redirects
 :Types:
     - bool
     - array
-:Default: ``['max' => 5, 'strict' => false, 'referer' => true]``
+:Default:
+    ::
+
+        [
+            'max'       => 5,
+            'strict'    => false,
+            'referer'   => true,
+            'protocols' => ['http', 'https']
+        ]
 
 Set to ``false`` to disable redirects.
 
@@ -721,19 +735,22 @@ number of 5 redirects.
     // 200
 
 Pass an associative array containing the 'max' key to specify the maximum
-number of redirects, optionally provide a 'strict' key value to specify
-whether or not to use strict RFC compliant redirects (meaning redirect POST
-requests with POST requests vs. doing what most browsers do which is redirect
-POST requests with GET requests), and optionally provide a 'referer' key to
-specify whether or not the "Referer" header should be added when redirecting.
+number of redirects, provide a 'strict' key value to specify whether or not to
+use strict RFC compliant redirects (meaning redirect POST requests with POST
+requests vs. doing what most browsers do which is redirect POST requests with
+GET requests), provide a 'referer' key to specify whether or not the "Referer"
+header should be added when redirecting, and provide a 'protocols' array that
+specifies which protocols are supported for redirects (defaults to
+``['http', 'https']``).
 
 .. code-block:: php
 
     $res = $client->get('/redirect/3', [
         'allow_redirects' => [
-            'max'     => 10,
-            'strict'  => true,
-            'referer' => true
+            'max'       => 10,       // allow at most 10 redirects.
+            'strict'    => true,     // use "strict" RFC compliant redirects.
+            'referer'   => true,     // add a Referer header
+            'protocols' => ['https'] // only allow https URLs
         ]
     ]);
     echo $res->getStatusCode();

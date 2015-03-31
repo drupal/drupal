@@ -406,12 +406,20 @@ class CurlFactory
 
             case 'timeout':
 
-                $options[CURLOPT_TIMEOUT_MS] = $value * 1000;
+                if (defined('CURLOPT_TIMEOUT_MS')) {
+                    $options[CURLOPT_TIMEOUT_MS] = $value * 1000;
+                } else {
+                    $options[CURLOPT_TIMEOUT] = $value;
+                }
                 break;
 
             case 'connect_timeout':
 
-                $options[CURLOPT_CONNECTTIMEOUT_MS] = $value * 1000;
+                if (defined('CURLOPT_CONNECTTIMEOUT_MS')) {
+                    $options[CURLOPT_CONNECTTIMEOUT_MS] = $value * 1000;
+                } else {
+                    $options[CURLOPT_CONNECTTIMEOUT] = $value;
+                }
                 break;
 
             case 'proxy':

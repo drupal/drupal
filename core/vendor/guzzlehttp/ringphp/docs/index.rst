@@ -15,11 +15,11 @@ without tying your application to a specific implementation.
 .. toctree::
    :maxdepth: 2
 
-    spec
-    futures
-    client_middleware
-    client_handlers
-    testing
+   spec
+   futures
+   client_middleware
+   client_handlers
+   testing
 
 .. code-block:: php
 

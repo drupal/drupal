@@ -71,6 +71,7 @@ class CurlHandler
         $response = ['transfer_stats' => curl_getinfo($h)];
         $response['curl']['error'] = curl_error($h);
         $response['curl']['errno'] = curl_errno($h);
+        $response['transfer_stats'] = array_merge($response['transfer_stats'], $response['curl']);
         $this->releaseEasyHandle($h);
 
         return new CompletedFutureArray(

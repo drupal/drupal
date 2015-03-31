@@ -1,5 +1,35 @@
 # CHANGELOG
 
+## 5.2.0 - 2015-01-27
+
+* Added `AppliesHeadersInterface` to make applying headers to a request based
+  on the body more generic and not specific to `PostBodyInterface`.
+* Reduced the number of stack frames needed to send requests.
+* Nested futures are now resolved in the client rather than the RequestFsm
+* Finishing state transitions is now handled in the RequestFsm rather than the
+  RingBridge.
+* Added a guard in the Pool class to not use recursion for request retries.
+
+## 5.1.0 - 2014-12-19
+
+* Pool class no longer uses recursion when a request is intercepted.
+* The size of a Pool can now be dynamically adjusted using a callback.
+  See https://github.com/guzzle/guzzle/pull/943.
+* Setting a request option to `null` when creating a request with a client will
+  ensure that the option is not set. This allows you to overwrite default
+  request options on a per-request basis.
+  See https://github.com/guzzle/guzzle/pull/937.
+* Added the ability to limit which protocols are allowed for redirects by
+  specifying a `protocols` array in the `allow_redirects` request option.
+* Nested futures due to retries are now resolved when waiting for synchronous
+  responses. See https://github.com/guzzle/guzzle/pull/947.
+* `"0"` is now an allowed URI path. See
+  https://github.com/guzzle/guzzle/pull/935.
+* `Query` no longer typehints on the `$query` argument in the constructor,
+  allowing for strings and arrays.
+* Exceptions thrown in the `end` event are now correctly wrapped with Guzzle
+  specific exceptions if necessary.
+
 ## 5.0.3 - 2014-11-03
 
 This change updates query strings so that they are treated as un-encoded values
@@ -71,10 +101,10 @@ The breaking changes in this release are relatively minor. The biggest thing to
 look out for is that request and response objects no longer implement fluent
 interfaces.
 
-* Removed the fluent interfaces (i.e., ``return $this``) from requests,
-  responses, ``GuzzleHttp\Collection``, ``GuzzleHttp\Url``,
-  ``GuzzleHttp\Query``, ``GuzzleHttp\Post\PostBody``, and
-  ``GuzzleHttp\Cookie\SetCookie``. This blog post provides a good outline of
+* Removed the fluent interfaces (i.e., `return $this`) from requests,
+  responses, `GuzzleHttp\Collection`, `GuzzleHttp\Url`,
+  `GuzzleHttp\Query`, `GuzzleHttp\Post\PostBody`, and
+  `GuzzleHttp\Cookie\SetCookie`. This blog post provides a good outline of
   why I did this: http://ocramius.github.io/blog/fluent-interfaces-are-evil/.
   This also makes the Guzzle message interfaces compatible with the current
   PSR-7 message proposal.
@@ -84,7 +114,7 @@ interfaces.
   moved to `GuzzleHttp\Utils::jsonDecode`. `GuzzleHttp\get_path` moved to
   `GuzzleHttp\Utils::getPath`. `GuzzleHttp\set_path` moved to
   `GuzzleHttp\Utils::setPath`. `GuzzleHttp\batch` should now be
-  `GuzzleHttp\Pool::batch`, which returns a bjectStorage`. Using functions.php
+  `GuzzleHttp\Pool::batch`, which returns an `objectStorage`. Using functions.php
   caused problems for many users: they aren't PSR-4 compliant, require an
   explicit include, and needed an if-guard to ensure that the functions are not
   declared multiple times.
@@ -105,10 +135,10 @@ interfaces.
   written to.
 * Removed the `asArray` parameter from
   `GuzzleHttp\Message\MessageInterface::getHeader`. If you want to get a header
-  value as an array, then use the newly added ``getHeaderAsArray()`` method of
-  ``MessageInterface``. This change makes the Guzzle interfaces compatible with
+  value as an array, then use the newly added `getHeaderAsArray()` method of
+  `MessageInterface`. This change makes the Guzzle interfaces compatible with
   the PSR-7 interfaces.
-* ``GuzzleHttp\Message\MessageFactory`` no longer allows subclasses to add
+* `GuzzleHttp\Message\MessageFactory` no longer allows subclasses to add
   custom request options using double-dispatch (this was an implementation
   detail). Instead, you should now provide an associative array to the
   constructor which is a mapping of the request option name mapping to a
@@ -121,9 +151,9 @@ interfaces.
     * `GuzzleHttp\Stream\StreamInterface::getContents()` no longer accepts a
       `maxLen` parameter. This update makes the Guzzle streams project
       compatible with the current PSR-7 proposal.
-    * ``GuzzleHttp\Stream\Stream::__construct``,
-      ``GuzzleHttp\Stream\Stream::factory``, and
-      ``GuzzleHttp\Stream\Utils::create`` no longer accept a size in the second
+    * `GuzzleHttp\Stream\Stream::__construct`,
+      `GuzzleHttp\Stream\Stream::factory`, and
+      `GuzzleHttp\Stream\Utils::create` no longer accept a size in the second
       argument. They now accept an associative array of options, including the
       "size" key and "metadata" key which can be used to provide custom metadata.
 
@@ -359,7 +389,7 @@ interfaces.
 * Bug fix: FilterIterator now relies on `\Iterator` instead of `\Traversable`.
 * Bug fix: Gracefully handling malformed responses in RequestMediator::writeResponseBody()
 * Bug fix: Replaced call to canCache with canCacheRequest in the CallbackCanCacheStrategy of the CachePlugin
-* Bug fix: Visiting XML attributes first before visting XML children when serializing requests
+* Bug fix: Visiting XML attributes first before visiting XML children when serializing requests
 * Bug fix: Properly parsing headers that contain commas contained in quotes
 * Bug fix: mimetype guessing based on a filename is now case-insensitive
 
@@ -502,7 +532,7 @@ interfaces.
   directly via interfaces
 * Removed the injecting of a request object onto a response object. The methods to get and set a request still exist
   but are a no-op until removed.
-* Most classes that used to require a ``Guzzle\Service\Command\CommandInterface` typehint now request a
+* Most classes that used to require a `Guzzle\Service\Command\CommandInterface` typehint now request a
   `Guzzle\Service\Command\ArrayCommandInterface`.
 * Added `Guzzle\Http\Message\RequestInterface::startResponse()` to the RequestInterface to handle injecting a response
   on a request while the request is still being transferred
@@ -517,7 +547,7 @@ interfaces.
 ## 3.5.0 - 2013-05-13
 
 * Bug: Fixed a regression so that request responses are parsed only once per oncomplete event rather than multiple times
-* Bug: Better cleanup of one-time events accross the board (when an event is meant to fire once, it will now remove
+* Bug: Better cleanup of one-time events across the board (when an event is meant to fire once, it will now remove
   itself from the EventDispatcher)
 * Bug: `Guzzle\Log\MessageFormatter` now properly writes "total_time" and "connect_time" values
 * Bug: Cloning an EntityEnclosingRequest now clones the EntityBody too
@@ -833,15 +863,15 @@ interfaces.
 * Bug: Fixed a bug in ExponentialBackoffPlugin that caused fatal errors when retrying an EntityEnclosingRequest that does not have a body
 * Bug: Setting the response body of a request to null after completing a request, not when setting the state of a request to new
 * Added multiple inheritance to service description commands
-* Added an ApiCommandInterface and added ``getParamNames()`` and ``hasParam()``
+* Added an ApiCommandInterface and added `getParamNames()` and `hasParam()`
 * Removed the default 2mb size cutoff from the Md5ValidatorPlugin so that it now defaults to validating everything
 * Changed CurlMulti::perform to pass a smaller timeout to CurlMulti::executeHandles
 
 ## 2.8.2 - 2012-07-24
 
 * Bug: Query string values set to 0 are no longer dropped from the query string
-* Bug: A Collection object is no longer created each time a call is made to ``Guzzle\Service\Command\AbstractCommand::getRequestHeaders()``
-* Bug: ``+`` is now treated as an encoded space when parsing query strings
+* Bug: A Collection object is no longer created each time a call is made to `Guzzle\Service\Command\AbstractCommand::getRequestHeaders()`
+* Bug: `+` is now treated as an encoded space when parsing query strings
 * QueryString and Collection performance improvements
 * Allowing dot notation for class paths in filters attribute of a service descriptions
 
@@ -858,7 +888,7 @@ interfaces.
     * Changed setEncodeValues(bool) and setEncodeFields(bool) to useUrlEncoding(bool)
     * Changed the aggregation functions of QueryString to be static methods
     * Can now use fromString() with querystrings that have a leading ?
-* cURL configuration values can be specified in service descriptions using ``curl.`` prefixed parameters
+* cURL configuration values can be specified in service descriptions using `curl.` prefixed parameters
 * Content-Length is set to 0 before emitting the request.before_send event when sending an empty request body
 * Cookies are no longer URL decoded by default
 * Bug: URI template variables set to null are no longer expanded

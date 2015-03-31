@@ -1,5 +1,6 @@
 {
     "name": "guzzlehttp/ringphp",
+    "description": "Provides a simple API and specification that abstracts away the details of HTTP into a single PHP function.",
     "license": "MIT",
     "authors": [
         {

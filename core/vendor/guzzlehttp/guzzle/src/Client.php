@@ -177,26 +177,14 @@ class Client implements ClientInterface
 
     public function createRequest($method, $url = null, array $options = [])
     {
-        $headers = $this->mergeDefaults($options);
+        $options = $this->mergeDefaults($options);
         // Use a clone of the client's emitter
         $options['config']['emitter'] = clone $this->getEmitter();
+        $url = $url || (is_string($url) && strlen($url))
+            ? $this->buildUrl($url)
+            : (string) $this->baseUrl;
 
-        $request = $this->messageFactory->createRequest(
-            $method,
-            $url ? (string) $this->buildUrl($url) : (string) $this->baseUrl,
-            $options
-        );
-
-        // Merge in default headers
-        if ($headers) {
-            foreach ($headers as $key => $value) {
-                if (!$request->hasHeader($key)) {
-                    $request->setHeader($key, $value);
-                }
-            }
-        }
-
-        return $request;
+        return $this->messageFactory->createRequest($method, $url, $options);
     }
 
     public function get($url = null, $options = [])
@@ -236,30 +224,31 @@ class Client implements ClientInterface
 
     public function send(RequestInterface $request)
     {
-        $trans = new Transaction($this, $request);
+        $isFuture = $request->getConfig()->get('future');
+        $trans = new Transaction($this, $request, $isFuture);
         $fn = $this->fsm;
 
-        // Ensure a future response is returned if one was requested.
-        if ($request->getConfig()->get('future')) {
-            try {
-                $fn($trans);
+        try {
+            $fn($trans);
+            if ($isFuture) {
                 // Turn the normal response into a future if needed.
                 return $trans->response instanceof FutureInterface
                     ? $trans->response
                     : new FutureResponse(new FulfilledPromise($trans->response));
-            } catch (RequestException $e) {
-                // Wrap the exception in a promise if the user asked for a future.
+            }
+            // Resolve deep futures if this is not a future
+            // transaction. This accounts for things like retries
+            // that do not have an immediate side-effect.
+            while ($trans->response instanceof FutureInterface) {
+                $trans->response = $trans->response->wait();
+            }
+            return $trans->response;
+        } catch (\Exception $e) {
+            if ($isFuture) {
+                // Wrap the exception in a promise
                 return new FutureResponse(new RejectedPromise($e));
             }
-        } else {
-            try {
-                $fn($trans);
-                return $trans->response instanceof FutureInterface
-                    ? $trans->response->wait()
-                    : $trans->response;
-            } catch (\Exception $e) {
-                throw RequestException::wrapException($trans->request, $e);
-            }
+            throw RequestException::wrapException($trans->request, $e);
         }
     }
 
@@ -292,9 +281,10 @@ class Client implements ClientInterface
     /**
      * Expand a URI template and inherit from the base URL if it's relative
      *
-     * @param string|array $url URL or URI template to expand
-     *
+     * @param string|array $url URL or an array of the URI template to expand
+     *                          followed by a hash of template varnames.
      * @return string
+     * @throws \InvalidArgumentException
      */
     private function buildUrl($url)
     {
@@ -303,6 +293,11 @@ class Client implements ClientInterface
             return strpos($url, '://')
                 ? (string) $url
                 : (string) $this->baseUrl->combine($url);
+        }
+
+        if (!isset($url[1])) {
+            throw new \InvalidArgumentException('You must provide a hash of '
+                . 'varname options in the second element of a URL array.');
         }
 
         // Absolute URL
@@ -320,7 +315,12 @@ class Client implements ClientInterface
     {
         if (!isset($config['base_url'])) {
             $this->baseUrl = new Url('', '');
-        } elseif (is_array($config['base_url'])) {
+        } elseif (!is_array($config['base_url'])) {
+            $this->baseUrl = Url::fromString($config['base_url']);
+        } elseif (count($config['base_url']) < 2) {
+            throw new \InvalidArgumentException('You must provide a hash of '
+                . 'varname options in the second element of a base_url array.');
+        } else {
             $this->baseUrl = Url::fromString(
                 Utils::uriTemplate(
                     $config['base_url'][0],
@@ -328,8 +328,6 @@ class Client implements ClientInterface
                 )
             );
             $config['base_url'] = (string) $this->baseUrl;
-        } else {
-            $this->baseUrl = Url::fromString($config['base_url']);
         }
     }
 
@@ -356,27 +354,42 @@ class Client implements ClientInterface
     }
 
     /**
-     * Merges default options into the array passed by reference and returns
-     * an array of headers that need to be merged in after the request is
-     * created.
+     * Merges default options into the array passed by reference.
      *
      * @param array $options Options to modify by reference
      *
-     * @return array|null
+     * @return array
      */
-    private function mergeDefaults(&$options)
+    private function mergeDefaults($options)
     {
-        // Merging optimization for when no headers are present
-        if (!isset($options['headers']) || !isset($this->defaults['headers'])) {
-            $options = array_replace_recursive($this->defaults, $options);
-            return null;
+        $defaults = $this->defaults;
+
+        // Case-insensitively merge in default headers if both defaults and
+        // options have headers specified.
+        if (!empty($defaults['headers']) && !empty($options['headers'])) {
+            // Create a set of lowercased keys that are present.
+            $lkeys = [];
+            foreach (array_keys($options['headers']) as $k) {
+                $lkeys[strtolower($k)] = true;
+            }
+            // Merge in lowercase default keys when not present in above set.
+            foreach ($defaults['headers'] as $key => $value) {
+                if (!isset($lkeys[strtolower($key)])) {
+                    $options['headers'][$key] = $value;
+                }
+            }
+            // No longer need to merge in headers.
+            unset($defaults['headers']);
         }
 
-        $defaults = $this->defaults;
-        unset($defaults['headers']);
-        $options = array_replace_recursive($defaults, $options);
+        $result = array_replace_recursive($defaults, $options);
+        foreach ($options as $k => $v) {
+            if ($v === null) {
+                unset($result[$k]);
+            }
+        }
 
-        return $this->defaults['headers'];
+        return $result;
     }
 
     /**
@@ -385,6 +398,6 @@ class Client implements ClientInterface
      */
     public function sendAll($requests, array $options = [])
     {
-        (new Pool($this, $requests, $options))->wait();
+        Pool::send($this, $requests, $options);
     }
 }

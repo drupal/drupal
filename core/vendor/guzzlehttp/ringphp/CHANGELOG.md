@@ -1,5 +1,27 @@
 # CHANGELOG
 
+## 1.0.7 - 2015-03-29
+
+* PHP 7 fixes.
+
+## 1.0.6 - 2015-02-26
+
+* Bug fix: futures now extend from React's PromiseInterface to ensure that they
+  are properly forwarded down the promise chain.
+* The multi handle of the CurlMultiHandler is now created lazily.
+
+## 1.0.5 - 2014-12-10
+
+* Adding more error information to PHP stream wrapper exceptions.
+* Added digest auth integration test support to test server.
+
+## 1.0.4 - 2014-12-01
+
+* Added support for older versions of cURL that do not have CURLOPT_TIMEOUT_MS.
+* Setting debug to `false` does not enable debug output.
+* Added a fix to the StreamHandler to return a `FutureArrayInterface` when an
+  error occurs.
+
 ## 1.0.3 - 2014-11-03
 
 * Setting the `header` stream option as a string to be compatible with GAE.
