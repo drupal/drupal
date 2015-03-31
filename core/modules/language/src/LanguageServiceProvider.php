@@ -91,8 +91,8 @@ class LanguageServiceProvider extends ServiceProviderBase {
    *
    * @return array|bool
    *   Returns the default language values for the language configured in
-   *   system.site:langcode if the corresponding configuration entity exists,
-   *   otherwise FALSE.
+   *   system.site:default_langcode if the corresponding configuration entity
+   *   exists, otherwise FALSE.
    */
   protected function getDefaultLanguageValues() {
     $config_storage = BootstrapConfigStorageFactory::get();
