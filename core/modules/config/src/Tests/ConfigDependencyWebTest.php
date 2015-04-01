@@ -35,6 +35,8 @@ class ConfigDependencyWebTest extends WebTestBase {
    * @see \Drupal\Core\Config\Entity\ConfigDependencyDeleteFormTrait
    */
   function testConfigDependencyDeleteFormTrait() {
+    $this->drupalLogin($this->drupalCreateUser(['administer site configuration']));
+
     /** @var \Drupal\Core\Config\Entity\ConfigEntityStorage $storage */
     $storage = $this->container->get('entity.manager')->getStorage('config_test');
     // Entity1 will be deleted by the test.

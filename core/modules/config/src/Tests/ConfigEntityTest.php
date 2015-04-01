@@ -235,6 +235,8 @@ class ConfigEntityTest extends WebTestBase {
    * Tests CRUD operations through the UI.
    */
   function testCRUDUI() {
+    $this->drupalLogin($this->drupalCreateUser(['administer site configuration']));
+
     $id = strtolower($this->randomMachineName());
     $label1 = $this->randomMachineName();
     $label2 = $this->randomMachineName();

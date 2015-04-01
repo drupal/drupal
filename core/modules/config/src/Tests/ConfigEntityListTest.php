@@ -153,7 +153,7 @@ class ConfigEntityListTest extends WebTestBase {
    */
   function testListUI() {
     // Log in as an administrative user to access the full menu trail.
-    $this->drupalLogin($this->drupalCreateUser(array('access administration pages')));
+    $this->drupalLogin($this->drupalCreateUser(array('access administration pages', 'administer site configuration')));
 
     // Get the list callback page.
     $this->drupalGet('admin/structure/config_test');
@@ -251,6 +251,8 @@ class ConfigEntityListTest extends WebTestBase {
    * Test paging.
    */
   public function testPager() {
+    $this->drupalLogin($this->drupalCreateUser(['administer site configuration']));
+
     $storage = \Drupal::entityManager()->getListBuilder('config_test')->getStorage();
 
     // Create 51 test entities.

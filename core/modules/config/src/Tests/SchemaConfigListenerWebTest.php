@@ -28,6 +28,8 @@ class SchemaConfigListenerWebTest extends WebTestBase {
    * Tests \Drupal\Core\Config\Testing\ConfigSchemaChecker.
    */
   public function testConfigSchemaChecker() {
+    $this->drupalLogin($this->drupalCreateUser(['administer site configuration']));
+
     // Test a non-existing schema.
     $msg = 'Expected SchemaIncompleteException thrown';
     try {
