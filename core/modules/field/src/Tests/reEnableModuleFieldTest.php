@@ -33,8 +33,10 @@ class reEnableModuleFieldTest extends WebTestBase {
     parent::setUp();
 
     $this->drupalCreateContentType(array('type' => 'article'));
-    $this->article_creator = $this->drupalCreateUser(array('create article content', 'edit own article content'));
-    $this->drupalLogin($this->article_creator);
+    $this->drupalLogin($this->drupalCreateUser(array(
+      'create article content',
+      'edit own article content',
+    )));
   }
 
   /**

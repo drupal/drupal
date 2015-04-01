@@ -31,7 +31,7 @@ class BooleanFieldTest extends WebTestBase {
    *
    * @var \Drupal\field\Entity\FieldStorageConfig
    */
-  protected $field_storage;
+  protected $fieldStorage;
 
   /**
    * The field used in this test class.
@@ -46,13 +46,12 @@ class BooleanFieldTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->web_user = $this->drupalCreateUser(array(
+    $this->drupalLogin($this->drupalCreateUser(array(
       'view test entity',
       'administer entity_test content',
       'administer entity_test form display',
       'administer entity_test fields',
-    ));
-    $this->drupalLogin($this->web_user);
+    )));
   }
 
   /**
@@ -65,12 +64,12 @@ class BooleanFieldTest extends WebTestBase {
 
     // Create a field with settings to validate.
     $field_name = Unicode::strtolower($this->randomMachineName());
-    $this->field_storage = FieldStorageConfig::create(array(
+    $this->fieldStorage = FieldStorageConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'boolean',
     ));
-    $this->field_storage->save();
+    $this->fieldStorage->save();
     $this->field = FieldConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',

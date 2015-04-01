@@ -24,18 +24,17 @@ class NumberFieldTest extends WebTestBase {
    */
   public static $modules = array('node', 'entity_test', 'field_ui');
 
-  /**
-   * A user with permission to view and manage entities and content types.
-   *
-   * @var \Drupal\user\UserInterface
-   */
-  protected $web_user;
-
   protected function setUp() {
     parent::setUp();
-
-    $this->web_user = $this->drupalCreateUser(array('view test entity', 'administer entity_test content', 'administer content types', 'administer node fields', 'administer node display', 'bypass node access', 'administer entity_test fields'));
-    $this->drupalLogin($this->web_user);
+    $this->drupalLogin($this->drupalCreateUser(array(
+      'view test entity',
+      'administer entity_test content',
+      'administer content types',
+      'administer node fields',
+      'administer node display',
+      'bypass node access',
+      'administer entity_test fields',
+    )));
   }
 
   /**

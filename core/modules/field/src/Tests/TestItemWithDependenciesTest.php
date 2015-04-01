@@ -26,7 +26,7 @@ class TestItemWithDependenciesTest extends FieldUnitTestBase {
    *
    * @var string
    */
-  protected $field_name = 'field_test';
+  protected $fieldName = 'field_test';
 
   /**
    * Tests that field types can add dependencies to field config entities.
@@ -34,13 +34,13 @@ class TestItemWithDependenciesTest extends FieldUnitTestBase {
   public function testTestItemWithDepenencies() {
     // Create a 'test_field_with_dependencies' field and storage for validation.
     entity_create('field_storage_config', array(
-      'field_name' => $this->field_name,
+      'field_name' => $this->fieldName,
       'entity_type' => 'entity_test',
       'type' => 'test_field_with_dependencies',
     ))->save();
     $field = entity_create('field_config', array(
       'entity_type' => 'entity_test',
-      'field_name' => $this->field_name,
+      'field_name' => $this->fieldName,
       'bundle' => 'entity_test',
     ));
     $field->save();

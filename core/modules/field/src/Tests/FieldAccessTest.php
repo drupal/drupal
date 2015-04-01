@@ -33,7 +33,7 @@ class FieldAccessTest extends FieldTestBase {
    *
    * @var string
    */
-  protected $test_view_field_value;
+  protected $testViewFieldValue;
 
   protected function setUp() {
     parent::setUp();
@@ -66,11 +66,11 @@ class FieldAccessTest extends FieldTestBase {
     }
 
     // Create test node.
-    $this->test_view_field_value = 'This is some text';
+    $this->testViewFieldValue = 'This is some text';
     $settings = array();
     $settings['type'] = $content_type;
     $settings['title'] = 'Field view access test';
-    $settings['test_view_field'] = array(array('value' => $this->test_view_field_value));
+    $settings['test_view_field'] = array(array('value' => $this->testViewFieldValue));
     $this->node = $this->drupalCreateNode($settings);
   }
 
@@ -81,13 +81,13 @@ class FieldAccessTest extends FieldTestBase {
 
     // Assert the text is visible.
     $this->drupalGet('node/' . $this->node->id());
-    $this->assertText($this->test_view_field_value);
+    $this->assertText($this->testViewFieldValue);
 
     // Assert the text is not visible for anonymous users.
     // The field_test module implements hook_entity_field_access() which will
     // specifically target the 'test_view_field' field.
     $this->drupalLogout();
     $this->drupalGet('node/' . $this->node->id());
-    $this->assertNoText($this->test_view_field_value);
+    $this->assertNoText($this->testViewFieldValue);
   }
 }

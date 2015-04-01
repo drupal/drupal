@@ -21,7 +21,7 @@ class DisplayApiTest extends FieldUnitTestBase {
    *
    * @var string
    */
-  protected $field_name;
+  protected $fieldName;
 
   /**
    * The field label to use in this test.
@@ -42,7 +42,7 @@ class DisplayApiTest extends FieldUnitTestBase {
    *
    * @var array
    */
-  protected $display_options;
+  protected $displayOptions;
 
   /**
    * The test entity.
@@ -62,24 +62,24 @@ class DisplayApiTest extends FieldUnitTestBase {
     parent::setUp();
 
     // Create a field and its storage.
-    $this->field_name = 'test_field';
+    $this->fieldName = 'test_field';
     $this->label = $this->randomMachineName();
     $this->cardinality = 4;
 
     $field_storage = array(
-      'field_name' => $this->field_name,
+      'field_name' => $this->fieldName,
       'entity_type' => 'entity_test',
       'type' => 'test_field',
       'cardinality' => $this->cardinality,
     );
     $field = array(
-      'field_name' => $this->field_name,
+      'field_name' => $this->fieldName,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
       'label' => $this->label,
     );
 
-    $this->display_options = array(
+    $this->displayOptions = array(
       'default' => array(
         'type' => 'field_test_default',
         'settings' => array(
@@ -98,18 +98,18 @@ class DisplayApiTest extends FieldUnitTestBase {
     entity_create('field_config', $field)->save();
     // Create a display for the default view mode.
     entity_get_display($field['entity_type'], $field['bundle'], 'default')
-      ->setComponent($this->field_name, $this->display_options['default'])
+      ->setComponent($this->fieldName, $this->displayOptions['default'])
       ->save();
     // Create a display for the teaser view mode.
     EntityViewMode::create(array('id' =>  'entity_test.teaser', 'targetEntityType' => 'entity_test'))->save();
     entity_get_display($field['entity_type'], $field['bundle'], 'teaser')
-      ->setComponent($this->field_name, $this->display_options['teaser'])
+      ->setComponent($this->fieldName, $this->displayOptions['teaser'])
       ->save();
 
     // Create an entity with values.
     $this->values = $this->_generateTestFieldValues($this->cardinality);
     $this->entity = entity_create('entity_test');
-    $this->entity->{$this->field_name}->setValue($this->values);
+    $this->entity->{$this->fieldName}->setValue($this->values);
     $this->entity->save();
   }
 
@@ -117,7 +117,7 @@ class DisplayApiTest extends FieldUnitTestBase {
    * Tests the FieldItemListInterface::view() method.
    */
   function testFieldItemListView() {
-    $items = $this->entity->get($this->field_name);
+    $items = $this->entity->get($this->fieldName);
 
     // No display settings: check that default display settings are used.
     $build = $items->view();
@@ -192,7 +192,7 @@ class DisplayApiTest extends FieldUnitTestBase {
     // are used.
     $build = $items->view('teaser');
     $this->render($build);
-    $setting = $this->display_options['teaser']['settings']['test_formatter_setting'];
+    $setting = $this->displayOptions['teaser']['settings']['test_formatter_setting'];
     $this->assertText($this->label, 'Label was displayed.');
     foreach ($this->values as $delta => $value) {
       $this->assertText($setting . '|' . $value['value'], format_string('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
@@ -202,7 +202,7 @@ class DisplayApiTest extends FieldUnitTestBase {
     // are used.
     $build = $items->view('unknown_view_mode');
     $this->render($build);
-    $setting = $this->display_options['default']['settings']['test_formatter_setting'];
+    $setting = $this->displayOptions['default']['settings']['test_formatter_setting'];
     $this->assertText($this->label, 'Label was displayed.');
     foreach ($this->values as $delta => $value) {
       $this->assertText($setting . '|' . $value['value'], format_string('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
@@ -217,7 +217,7 @@ class DisplayApiTest extends FieldUnitTestBase {
     $settings = \Drupal::service('plugin.manager.field.formatter')->getDefaultSettings('field_test_default');
     $setting = $settings['test_formatter_setting'];
     foreach ($this->values as $delta => $value) {
-      $item = $this->entity->{$this->field_name}[$delta];
+      $item = $this->entity->{$this->fieldName}[$delta];
       $build = $item->view();
       $this->render($build);
       $this->assertText($setting . '|' . $value['value'], format_string('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
@@ -232,7 +232,7 @@ class DisplayApiTest extends FieldUnitTestBase {
     );
     $setting = $display['settings']['test_formatter_setting_multiple'];
     foreach ($this->values as $delta => $value) {
-      $item = $this->entity->{$this->field_name}[$delta];
+      $item = $this->entity->{$this->fieldName}[$delta];
       $build = $item->view($display);
       $this->render($build);
       $this->assertText($setting . '|0:' . $value['value'], format_string('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
@@ -247,16 +247,16 @@ class DisplayApiTest extends FieldUnitTestBase {
     );
     $setting = $display['settings']['test_formatter_setting_additional'];
     foreach ($this->values as $delta => $value) {
-      $item = $this->entity->{$this->field_name}[$delta];
+      $item = $this->entity->{$this->fieldName}[$delta];
       $build = $item->view($display);
       $this->render($build);
       $this->assertText($setting . '|' . $value['value'] . '|' . ($value['value'] + 1), format_string('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
     }
 
     // View mode: check that display settings specified in the field are used.
-    $setting = $this->display_options['teaser']['settings']['test_formatter_setting'];
+    $setting = $this->displayOptions['teaser']['settings']['test_formatter_setting'];
     foreach ($this->values as $delta => $value) {
-      $item = $this->entity->{$this->field_name}[$delta];
+      $item = $this->entity->{$this->fieldName}[$delta];
       $build = $item->view('teaser');
       $this->render($build);
       $this->assertText($setting . '|' . $value['value'], format_string('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
@@ -264,9 +264,9 @@ class DisplayApiTest extends FieldUnitTestBase {
 
     // Unknown view mode: check that display settings for 'default' view mode
     // are used.
-    $setting = $this->display_options['default']['settings']['test_formatter_setting'];
+    $setting = $this->displayOptions['default']['settings']['test_formatter_setting'];
     foreach ($this->values as $delta => $value) {
-      $item = $this->entity->{$this->field_name}[$delta];
+      $item = $this->entity->{$this->fieldName}[$delta];
       $build = $item->view('unknown_view_mode');
       $this->render($build);
       $this->assertText($setting . '|' . $value['value'], format_string('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
@@ -287,16 +287,16 @@ class DisplayApiTest extends FieldUnitTestBase {
     );
     // $this->entity is set by the setUp() method and by default contains 4
     // numeric values.  We only want to test the display of this one field.
-    $build = $this->entity->get($this->field_name)->view($display);
+    $build = $this->entity->get($this->fieldName)->view($display);
     $this->render($build);
     // The test field by default contains values, so should not display the
     // default "empty" text.
     $this->assertNoText($display['settings']['test_empty_string']);
 
     // Now remove the values from the test field and retest.
-    $this->entity->{$this->field_name} = array();
+    $this->entity->{$this->fieldName} = array();
     $this->entity->save();
-    $build = $this->entity->get($this->field_name)->view($display);
+    $build = $this->entity->get($this->fieldName)->view($display);
     $this->render($build);
     // This time, as the field values have been removed, we *should* show the
     // default "empty" text.

@@ -30,20 +30,20 @@ class TestItemTest extends FieldUnitTestBase {
    *
    * @var string
    */
-  protected $field_name = 'field_test';
+  protected $fieldName = 'field_test';
 
   protected function setUp() {
     parent::setUp();
 
     // Create a 'test_field' field and storage for validation.
     entity_create('field_storage_config', array(
-      'field_name' => $this->field_name,
+      'field_name' => $this->fieldName,
       'entity_type' => 'entity_test',
       'type' => 'test_field',
     ))->save();
     entity_create('field_config', array(
       'entity_type' => 'entity_test',
-      'field_name' => $this->field_name,
+      'field_name' => $this->fieldName,
       'bundle' => 'entity_test',
     ))->save();
   }
@@ -62,20 +62,20 @@ class TestItemTest extends FieldUnitTestBase {
     // Verify entity has been created properly.
     $id = $entity->id();
     $entity = entity_load('entity_test', $id);
-    $this->assertTrue($entity->{$this->field_name} instanceof FieldItemListInterface, 'Field implements interface.');
-    $this->assertTrue($entity->{$this->field_name}[0] instanceof FieldItemInterface, 'Field item implements interface.');
-    $this->assertEqual($entity->{$this->field_name}->value, $value);
-    $this->assertEqual($entity->{$this->field_name}[0]->value, $value);
+    $this->assertTrue($entity->{$this->fieldName} instanceof FieldItemListInterface, 'Field implements interface.');
+    $this->assertTrue($entity->{$this->fieldName}[0] instanceof FieldItemInterface, 'Field item implements interface.');
+    $this->assertEqual($entity->{$this->fieldName}->value, $value);
+    $this->assertEqual($entity->{$this->fieldName}[0]->value, $value);
 
     // Verify changing the field value.
     $new_value = rand(1, 10);
     $entity->field_test->value = $new_value;
-    $this->assertEqual($entity->{$this->field_name}->value, $new_value);
+    $this->assertEqual($entity->{$this->fieldName}->value, $new_value);
 
     // Read changed entity and assert changed values.
     $entity->save();
     $entity = entity_load('entity_test', $id);
-    $this->assertEqual($entity->{$this->field_name}->value, $new_value);
+    $this->assertEqual($entity->{$this->fieldName}->value, $new_value);
 
     // Test the schema for this field type.
     $expected_schema = array(

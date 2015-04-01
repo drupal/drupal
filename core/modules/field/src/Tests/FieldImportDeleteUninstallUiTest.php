@@ -28,8 +28,7 @@ class FieldImportDeleteUninstallUiTest extends FieldTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->web_user = $this->drupalCreateUser(array('synchronize configuration'));
-    $this->drupalLogin($this->web_user);
+    $this->drupalLogin($this->drupalCreateUser(array('synchronize configuration')));
   }
 
   /**
