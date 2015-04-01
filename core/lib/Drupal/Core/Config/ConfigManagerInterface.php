@@ -51,7 +51,7 @@ interface ConfigManagerInterface {
   public function getConfigFactory();
 
   /**
-   * Return a formatted diff of a named config between two storages.
+   * Creates a Diff object using the config data from the two storages.
    *
    * @param \Drupal\Core\Config\StorageInterface $source_storage
    *   The storage to diff configuration from.
@@ -66,10 +66,12 @@ interface ConfigManagerInterface {
    *   (optional) The configuration collection name. Defaults to the default
    *   collection.
    *
-   * @return core/lib/Drupal/Component/Diff
-   *   A formatted string showing the difference between the two storages.
+   * @return \Drupal\Component\Diff\Diff
+   *   A Diff object using the config data from the two storages.
    *
    * @todo Make renderer injectable
+   *
+   * @see \Drupal\Core\Diff\DiffFormatter
    */
   public function diff(StorageInterface $source_storage, StorageInterface $target_storage, $source_name, $target_name = NULL, $collection = StorageInterface::DEFAULT_COLLECTION);
 
