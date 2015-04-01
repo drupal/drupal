@@ -148,8 +148,8 @@ function node_access_test_node_access(\Drupal\node\NodeInterface $node, $op, \Dr
   $secret_catalan = \Drupal::state()->get('node_access_test_secret_catalan') ?: 0;
   if ($secret_catalan && $langcode == 'ca') {
     // Make all Catalan content secret.
-    return AccessResult::forbidden()->setCacheable(FALSE);
+    return AccessResult::forbidden()->setCacheMaxAge(0);
   }
   // No opinion.
-  return AccessResult::neutral()->setCacheable(FALSE);
+  return AccessResult::neutral()->setCacheMaxAge(0);
 }

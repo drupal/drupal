@@ -9,7 +9,7 @@ namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Cache\CacheableInterface;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\CacheContexts;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -135,7 +135,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
 
     // Apply the request's access result cacheability metadata, if it has any.
     $access_result = $request->attributes->get(AccessAwareRouterInterface::ACCESS_RESULT);
-    if ($access_result instanceof CacheableInterface) {
+    if ($access_result instanceof CacheableDependencyInterface) {
       $this->updateDrupalCacheHeaders($response, $access_result);
     }
 
@@ -161,10 +161,10 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
   /**
    * Updates Drupal's cache headers using the route's cacheable access result.
    *
-   * @param Response $response
-   * @param CacheableInterface $cacheable_access_result
+   * @param \Symfony\Component\HttpFoundation\Response $response
+   * @param \Drupal\Core\Cache\CacheableDependencyInterface $cacheable_access_result
    */
-  protected function updateDrupalCacheHeaders(Response $response, CacheableInterface $cacheable_access_result) {
+  protected function updateDrupalCacheHeaders(Response $response, CacheableDependencyInterface $cacheable_access_result) {
     // X-Drupal-Cache-Tags
     $cache_tags = $cacheable_access_result->getCacheTags();
     if ($response->headers->has('X-Drupal-Cache-Tags')) {

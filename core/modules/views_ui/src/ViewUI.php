@@ -1211,8 +1211,22 @@ class ViewUI implements ViewEntityInterface {
   /**
    * {@inheritdoc}
    */
+  public function getCacheContexts() {
+    return $this->storage->getCacheContexts();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getCacheTags() {
     return $this->storage->getCacheTags();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheMaxAge() {
+    return $this->storage->getCacheMaxAge();
   }
 
   /**

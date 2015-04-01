@@ -66,7 +66,7 @@ class CsrfAccessCheckTest extends UnitTestCase {
     $route = new Route('/test-path/{node}', array(), array('_csrf_token' => 'TRUE'));
     $request = Request::create('/test-path/42?token=test_query');
 
-    $this->assertEquals(AccessResult::allowed()->setCacheable(FALSE), $this->accessCheck->access($route, $request, $this->routeMatch));
+    $this->assertEquals(AccessResult::allowed()->setCacheMaxAge(0), $this->accessCheck->access($route, $request, $this->routeMatch));
   }
 
   /**
@@ -85,7 +85,7 @@ class CsrfAccessCheckTest extends UnitTestCase {
     $route = new Route('/test-path', array(), array('_csrf_token' => 'TRUE'));
     $request = Request::create('/test-path?token=test_query');
 
-    $this->assertEquals(AccessResult::forbidden()->setCacheable(FALSE), $this->accessCheck->access($route, $request, $this->routeMatch));
+    $this->assertEquals(AccessResult::forbidden()->setCacheMaxAge(0), $this->accessCheck->access($route, $request, $this->routeMatch));
   }
 
 }

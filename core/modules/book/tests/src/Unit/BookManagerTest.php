@@ -38,6 +38,13 @@ class BookManagerTest extends UnitTestCase {
   protected $translation;
 
   /**
+   * The mocked renderer.
+   *
+   * @var \Drupal\Core\Render\RendererInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $renderer;
+
+  /**
    * The tested book manager.
    *
    * @var \Drupal\book\BookManager
@@ -59,7 +66,8 @@ class BookManagerTest extends UnitTestCase {
     $this->translation = $this->getStringTranslationStub();
     $this->configFactory = $this->getConfigFactoryStub(array());
     $this->bookOutlineStorage = $this->getMock('Drupal\book\BookOutlineStorageInterface');
-    $this->bookManager = new BookManager($this->entityManager, $this->translation, $this->configFactory, $this->bookOutlineStorage);
+    $this->renderer = $this->getMock('\Drupal\Core\Render\RendererInterface');
+    $this->bookManager = new BookManager($this->entityManager, $this->translation, $this->configFactory, $this->bookOutlineStorage, $this->renderer);
   }
 
   /**

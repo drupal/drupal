@@ -93,7 +93,7 @@ class BlockAccessControlHandler extends EntityAccessControlHandler implements En
             $this->contextHandler->applyContextMapping($condition, $contexts);
           }
           catch (ContextException $e) {
-            return AccessResult::forbidden()->setCacheable(FALSE);
+            return AccessResult::forbidden()->setCacheMaxAge(0);
           }
         }
         $conditions[$condition_id] = $condition;
@@ -111,7 +111,7 @@ class BlockAccessControlHandler extends EntityAccessControlHandler implements En
       // result should be varied.
       // @todo Change this to use $access->cacheUntilEntityChanges($entity) once
       //   https://www.drupal.org/node/2375695 is resolved.
-      return $access->setCacheable(FALSE);
+      return $access->setCacheMaxAge(0);
     }
   }
 

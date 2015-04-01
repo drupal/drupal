@@ -169,11 +169,15 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
       // Collect cache defaults for this entity.
       '#cache' => array(
         'tags' => Cache::mergeTags($this->getCacheTags(), $entity->getCacheTags()),
-        'contexts' => [
-          'user.roles',
-        ],
+        'contexts' => $entity->getCacheContexts(),
+        'max-age' => $entity->getCacheMaxAge(),
       ),
     );
+
+     // @todo Remove when https://www.drupal.org/node/2099137 lands.
+     $build['#cache']['contexts'] = Cache::mergeContexts($build['#cache']['contexts'], [
+       'user.roles',
+     ]);
 
     // Cache the rendered output if permitted by the view mode and global entity
     // type configuration.

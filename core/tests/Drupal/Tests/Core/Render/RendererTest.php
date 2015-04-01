@@ -8,6 +8,7 @@
 namespace Drupal\Tests\Core\Render;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
 
@@ -617,6 +618,69 @@ class RendererTest extends RendererTestBase {
       [0, FALSE, NULL],
       [60, TRUE, REQUEST_TIME + 60],
       [Cache::PERMANENT, TRUE, -1],
+    ];
+  }
+
+  /**
+   * @covers ::addDependency
+   *
+   * @dataProvider providerTestAddDependency
+   */
+  public function testAddDependency(array $build, CacheableDependencyInterface $object, array $expected) {
+    $this->renderer->addDependency($build, $object);
+    $this->assertEquals($build, $expected);
+  }
+
+  public function providerTestAddDependency() {
+    return [
+      // Empty render array, typical default cacheability.
+      [
+        [],
+        new TestCacheableDependency([], [], Cache::PERMANENT),
+        [
+          '#cache' => [
+            'contexts' => [],
+            'tags' => [],
+            'max-age' => Cache::PERMANENT,
+          ],
+          '#attached' => [],
+          '#post_render_cache' => [],
+        ],
+      ],
+      // Empty render array, some cacheability.
+      [
+        [],
+        new TestCacheableDependency(['user.roles'], ['foo'], Cache::PERMANENT),
+        [
+          '#cache' => [
+            'contexts' => ['user.roles'],
+            'tags' => ['foo'],
+            'max-age' => Cache::PERMANENT,
+          ],
+          '#attached' => [],
+          '#post_render_cache' => [],
+        ],
+      ],
+      // Cacheable render array, some cacheability.
+      [
+        [
+          '#cache' => [
+            'contexts' => ['theme'],
+            'tags' => ['bar'],
+            'max-age' => 600,
+          ]
+        ],
+        new TestCacheableDependency(['user.roles'], ['foo'], Cache::PERMANENT),
+        [
+          '#cache' => [
+            'contexts' => ['theme', 'user.roles'],
+            'tags' => ['bar', 'foo'],
+            'max-age' => 600,
+          ],
+          '#attached' => [],
+          '#post_render_cache' => [],
+        ],
+      ],
     ];
   }
 

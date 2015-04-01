@@ -429,9 +429,23 @@ abstract class Entity implements EntityInterface {
   /**
    * {@inheritdoc}
    */
+  public function getCacheContexts() {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getCacheTags() {
     // @todo Add bundle-specific listing cache tag? https://drupal.org/node/2145751
     return [$this->entityTypeId . ':' . $this->id()];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheMaxAge() {
+    return Cache::PERMANENT;
   }
 
   /**

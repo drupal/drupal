@@ -131,7 +131,7 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
       $access = AccessResult::forbidden();
     }
 
-    $access->setCacheable(FALSE);
+    $access->setCacheMaxAge(0);
     return $return_as_object ? $access : $access->isAllowed();
   }
 

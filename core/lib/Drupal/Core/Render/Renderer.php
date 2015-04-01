@@ -10,6 +10,7 @@ namespace Drupal\Core\Render;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\CacheContexts;
 use Drupal\Core\Cache\CacheFactoryInterface;
 use Drupal\Core\Controller\ControllerResolverInterface;
@@ -786,6 +787,15 @@ class Renderer implements RendererInterface {
     $meta_b = BubbleableMetadata::createFromRenderArray($b);
     $meta_a->merge($meta_b)->applyTo($a);
     return $a;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addDependency(array &$elements, CacheableDependencyInterface $dependency) {
+    $meta_a = BubbleableMetadata::createFromRenderArray($elements);
+    $meta_b = BubbleableMetadata::createFromObject($dependency);
+    $meta_a->merge($meta_b)->applyTo($elements);
   }
 
   /**

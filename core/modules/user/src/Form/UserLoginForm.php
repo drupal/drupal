@@ -11,6 +11,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Flood\FloodInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\user\UserAuthInterface;
 use Drupal\user\UserStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -42,6 +43,13 @@ class UserLoginForm extends FormBase {
   protected $userAuth;
 
   /**
+   * The renderer.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
    * Constructs a new UserLoginForm.
    *
    * @param \Drupal\Core\Flood\FloodInterface $flood
@@ -50,11 +58,14 @@ class UserLoginForm extends FormBase {
    *   The user storage.
    * @param \Drupal\user\UserAuthInterface $user_auth
    *   The user authentication object.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer.
    */
-  public function __construct(FloodInterface $flood, UserStorageInterface $user_storage, UserAuthInterface $user_auth) {
+  public function __construct(FloodInterface $flood, UserStorageInterface $user_storage, UserAuthInterface $user_auth, RendererInterface $renderer) {
     $this->flood = $flood;
     $this->userStorage = $user_storage;
     $this->userAuth = $user_auth;
+    $this->renderer = $renderer;
   }
 
   /**
@@ -64,7 +75,8 @@ class UserLoginForm extends FormBase {
     return new static(
       $container->get('flood'),
       $container->get('entity.manager')->getStorage('user'),
-      $container->get('user.auth')
+      $container->get('user.auth'),
+      $container->get('renderer')
     );
   }
 
@@ -112,7 +124,7 @@ class UserLoginForm extends FormBase {
     $form['#validate'][] = '::validateAuthentication';
     $form['#validate'][] = '::validateFinal';
 
-    $form['#cache']['tags'] = Cache::mergeTags(isset($form['#cache']['tags']) ? $form['#cache']['tags'] : [],  $config->getCacheTags());
+    $this->renderer->addDependency($form, $config);
 
     return $form;
   }

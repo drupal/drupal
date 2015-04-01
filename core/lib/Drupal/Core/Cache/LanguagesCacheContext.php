@@ -66,7 +66,8 @@ class LanguagesCacheContext implements CalculatedCacheContextInterface  {
       return implode(',', $context_parts);
     }
     else {
-      if (!in_array($type, $this->languageManager->getLanguageTypes())) {
+      $language_types = $this->languageManager->getDefinedLanguageTypesInfo();
+      if (!isset($language_types[$type])) {
         throw new \RuntimeException(sprintf('The language type "%s" is invalid.', $type));
       }
       return $this->languageManager->getCurrentLanguage($type)->getId();

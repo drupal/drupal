@@ -83,11 +83,11 @@ class CSRFAccessCheck implements AccessCheckInterface {
     ) {
       $csrf_token = $request->headers->get('X-CSRF-Token');
       if (!\Drupal::csrfToken()->validate($csrf_token, 'rest')) {
-        return AccessResult::forbidden()->setCacheable(FALSE);
+        return AccessResult::forbidden()->setCacheMaxAge(0);
       }
     }
     // Let other access checkers decide if the request is legit.
-    return AccessResult::allowed()->setCacheable(FALSE);
+    return AccessResult::allowed()->setCacheMaxAge(0);
   }
 
 }

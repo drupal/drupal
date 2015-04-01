@@ -66,7 +66,7 @@ class CsrfAccessCheck implements RoutingAccessInterface {
       $result = AccessResult::forbidden();
     }
     // Not cacheable because the CSRF token is highly dynamic.
-    return $result->setCacheable(FALSE);
+    return $result->setCacheMaxAge(0);
   }
 
 }

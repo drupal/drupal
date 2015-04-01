@@ -11,6 +11,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityAccessControlHandlerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\forum\ForumManagerInterface;
@@ -67,6 +68,13 @@ class ForumController extends ControllerBase {
   protected $nodeTypeStorage;
 
   /**
+   * The renderer.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
    * Constructs a ForumController object.
    *
    * @param \Drupal\forum\ForumManagerInterface $forum_manager
@@ -83,8 +91,10 @@ class ForumController extends ControllerBase {
    *   Array of active fields on the site.
    * @param \Drupal\Core\Entity\EntityStorageInterface $node_type_storage
    *   Node type storage handler.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer.
    */
-  public function __construct(ForumManagerInterface $forum_manager, VocabularyStorageInterface $vocabulary_storage, TermStorageInterface $term_storage, AccountInterface $current_user, EntityAccessControlHandlerInterface $node_access, array $field_map, EntityStorageInterface $node_type_storage) {
+  public function __construct(ForumManagerInterface $forum_manager, VocabularyStorageInterface $vocabulary_storage, TermStorageInterface $term_storage, AccountInterface $current_user, EntityAccessControlHandlerInterface $node_access, array $field_map, EntityStorageInterface $node_type_storage, RendererInterface $renderer) {
     $this->forumManager = $forum_manager;
     $this->vocabularyStorage = $vocabulary_storage;
     $this->termStorage = $term_storage;
@@ -92,6 +102,7 @@ class ForumController extends ControllerBase {
     $this->nodeAccess = $node_access;
     $this->fieldMap = $field_map;
     $this->nodeTypeStorage = $node_type_storage;
+    $this->renderer = $renderer;
   }
 
   /**
@@ -107,7 +118,8 @@ class ForumController extends ControllerBase {
       $container->get('current_user'),
       $entity_manager->getAccessControlHandler('node'),
       $entity_manager->getFieldMap(),
-      $entity_manager->getStorage('node_type')
+      $entity_manager->getStorage('node_type'),
+      $container->get('renderer')
     );
   }
 
@@ -191,7 +203,7 @@ class ForumController extends ControllerBase {
     if (empty($term->forum_container->value)) {
       $build['#attached']['feed'][] = array('taxonomy/term/' . $term->id() . '/feed', 'RSS - ' . $term->getName());
     }
-    $build['#cache']['tags'] = Cache::mergeTags(isset($build['#cache']['tags']) ? $build['#cache']['tags'] : [],  $config->getCacheTags());
+    $this->renderer->addDependency($build, $config);
 
     return [
       'action' => $this->buildActionLinks($config->get('vocabulary'), $term),

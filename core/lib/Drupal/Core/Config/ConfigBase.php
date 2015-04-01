@@ -9,6 +9,8 @@ namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use \Drupal\Core\DependencyInjection\DependencySerializationTrait;
 
 /**
@@ -26,7 +28,7 @@ use \Drupal\Core\DependencyInjection\DependencySerializationTrait;
  * @see \Drupal\Core\Config\Config
  * @see \Drupal\Core\Theme\ThemeSettings
  */
-abstract class ConfigBase {
+abstract class ConfigBase implements CacheableDependencyInterface {
   use DependencySerializationTrait;
 
   /**
@@ -264,13 +266,24 @@ abstract class ConfigBase {
   }
 
   /**
-   * The unique cache tag associated with this configuration object.
-   *
-   * @return string[]
-   *   An array of cache tags.
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function getCacheTags() {
     return ['config:' . $this->name];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheMaxAge() {
+    return Cache::PERMANENT;
   }
 
 }

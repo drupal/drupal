@@ -12,6 +12,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Flood\FloodInterface;
 use Drupal\contact\ContactFormInterface;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\user\UserInterface;
 use Drupal\Component\Utility\SafeMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -38,16 +39,26 @@ class ContactController extends ControllerBase {
   protected $dateFormatter;
 
   /**
+   * The renderer.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
    * Constructs a ContactController object.
    *
    * @param \Drupal\Core\Flood\FloodInterface $flood
    *   The flood service.
    * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
    *   The date service.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer.
    */
-  public function __construct(FloodInterface $flood, DateFormatter $date_formatter) {
+  public function __construct(FloodInterface $flood, DateFormatter $date_formatter, RendererInterface $renderer) {
     $this->flood = $flood;
     $this->dateFormatter = $date_formatter;
+    $this->renderer = $renderer;
   }
 
   /**
@@ -56,7 +67,8 @@ class ContactController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('flood'),
-      $container->get('date.formatter')
+      $container->get('date.formatter'),
+      $container->get('renderer')
     );
   }
 
@@ -106,7 +118,7 @@ class ContactController extends ControllerBase {
 
     $form = $this->entityFormBuilder()->getForm($message);
     $form['#title'] = SafeMarkup::checkPlain($contact_form->label());
-    $form['#cache']['tags'] = Cache::mergeTags(isset($form['#cache']['tags']) ? $form['#cache']['tags'] : [],  $config->getCacheTags());
+    $this->renderer->addDependency($form, $config);
     return $form;
   }
 

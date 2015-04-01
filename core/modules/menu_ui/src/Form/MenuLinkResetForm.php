@@ -119,7 +119,7 @@ class MenuLinkResetForm extends ConfirmFormBase {
    *   The access result.
    */
   public function linkIsResettable(MenuLinkInterface $menu_link_plugin) {
-    return AccessResult::allowedIf($menu_link_plugin->isResettable())->setCacheable(FALSE);
+    return AccessResult::allowedIf($menu_link_plugin->isResettable())->setCacheMaxAge(0);
   }
 
 }

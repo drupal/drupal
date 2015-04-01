@@ -9,13 +9,14 @@ namespace Drupal\Core\Render;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 
 /**
  * Value object used for bubbleable rendering metadata.
  *
  * @see \Drupal\Core\Render\RendererInterface::render()
  */
-class BubbleableMetadata {
+class BubbleableMetadata implements CacheableDependencyInterface {
 
   /**
    * Cache contexts.
@@ -104,6 +105,22 @@ class BubbleableMetadata {
     $meta->maxAge = (isset($build['#cache']['max-age'])) ? $build['#cache']['max-age'] : Cache::PERMANENT;
     $meta->attached = (isset($build['#attached'])) ? $build['#attached'] : [];
     $meta->postRenderCache = (isset($build['#post_render_cache'])) ? $build['#post_render_cache'] : [];
+    return $meta;
+  }
+
+  /**
+   * Creates a bubbleable metadata object from a cacheable depended object.
+   *
+   * @param \Drupal\Core\Cache\CacheableDependencyInterface $object
+   *   The object whose cacheability metadata to retrieve.
+   *
+   * @return static
+   */
+  public static function createFromObject(CacheableDependencyInterface $object) {
+    $meta = new static();
+    $meta->contexts = $object->getCacheContexts();
+    $meta->tags = $object->getCacheTags();
+    $meta->maxAge = $object->getCacheMaxAge();
     return $meta;
   }
 

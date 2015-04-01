@@ -104,7 +104,7 @@ class AccessManager implements AccessManagerInterface {
     catch (ParamNotConvertedException $e) {
       // Uncacheable because conversion of the parameter may not have been
       // possible due to dynamic circumstances.
-      $result = AccessResult::forbidden()->setCacheable(FALSE);
+      $result = AccessResult::forbidden()->setCacheMaxAge(0);
       return $return_as_object ? $result : $result->isAllowed();
     }
   }

@@ -552,7 +552,7 @@ function entity_test_entity_access(EntityInterface $entity, $operation, AccountI
   // Uncacheable because the access result depends on a State key-value pair and
   // might therefore change at any time.
   $condition = \Drupal::state()->get("entity_test_entity_access.{$operation}." . $entity->id(), FALSE);
-  return AccessResult::allowedIf($condition)->setCacheable(FALSE);
+  return AccessResult::allowedIf($condition)->setCacheMaxAge(0);
 }
 
 /**

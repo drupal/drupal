@@ -58,7 +58,7 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
     // Test that new entities (before they are saved for the first time) do not
     // generate a cache entry.
     $build = $this->container->get('entity.manager')->getViewBuilder('entity_test')->view($entity_test, 'full');
-    $this->assertTrue(isset($build['#cache']) && array_keys($build['#cache']) == ['tags', 'contexts'], 'The render array element of new (unsaved) entities is not cached, but does have cache tags set.');
+    $this->assertTrue(isset($build['#cache']) && array_keys($build['#cache']) == ['tags', 'contexts', 'max-age'], 'The render array element of new (unsaved) entities is not cached, but does have cache tags set.');
 
     // Get a fully built entity view render array.
     $entity_test->save();
@@ -163,17 +163,17 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
     // Test a view mode in default conditions: render caching is enabled for
     // the entity type and the view mode.
     $build = $this->container->get('entity.manager')->getViewBuilder('entity_test')->view($entity_test, 'full');
-    $this->assertTrue(isset($build['#cache']) && array_keys($build['#cache']) == ['tags', 'contexts', 'keys', 'bin'] , 'A view mode with render cache enabled has the correct output (cache tags, keys, contexts and bin).');
+    $this->assertTrue(isset($build['#cache']) && array_keys($build['#cache']) == ['tags', 'contexts', 'max-age', 'keys', 'bin'] , 'A view mode with render cache enabled has the correct output (cache tags, keys, contexts, max-age and bin).');
 
     // Test that a view mode can opt out of render caching.
     $build = $this->container->get('entity.manager')->getViewBuilder('entity_test')->view($entity_test, 'test');
-    $this->assertTrue(isset($build['#cache']) && array_keys($build['#cache']) == ['tags', 'contexts'], 'A view mode with render cache disabled has the correct output (only cache tags).');
+    $this->assertTrue(isset($build['#cache']) && array_keys($build['#cache']) == ['tags', 'contexts', 'max-age'], 'A view mode with render cache disabled has the correct output (only cache tags, contexts and max-age).');
 
     // Test that an entity type can opt out of render caching completely.
     $entity_test_no_cache = $this->createTestEntity('entity_test_label');
     $entity_test_no_cache->save();
     $build = $this->container->get('entity.manager')->getViewBuilder('entity_test_label')->view($entity_test_no_cache, 'full');
-    $this->assertTrue(isset($build['#cache']) && array_keys($build['#cache']) == ['tags', 'contexts'], 'An entity type can opt out of render caching regardless of view mode configuration, but always has cache tags set.');
+    $this->assertTrue(isset($build['#cache']) && array_keys($build['#cache']) == ['tags', 'contexts', 'max-age'], 'An entity type can opt out of render caching regardless of view mode configuration, but always has cache tags, contexts and max-age set.');
   }
 
   /**

@@ -8,13 +8,14 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Access\AccessibleInterface;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 
 /**
  * Defines a common interface for all entity objects.
  *
  * @ingroup entity_api
  */
-interface EntityInterface extends AccessibleInterface {
+interface EntityInterface extends AccessibleInterface, CacheableDependencyInterface {
 
   /**
    * Returns the entity UUID (Universally Unique Identifier).
@@ -395,14 +396,6 @@ interface EntityInterface extends AccessibleInterface {
    * @see \Drupal\Core\TypedData\TypedDataInterface
    */
   public function getTypedData();
-
-  /**
-   * The unique cache tag associated with this entity.
-   *
-   * @return string[]
-   *   An array of cache tags.
-   */
-  public function getCacheTags();
 
   /**
    * Gets the key that is used to store configuration dependencies.

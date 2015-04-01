@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Render;
 
+use Drupal\Core\Cache\CacheableDependencyInterface;
+
 /**
  * Defines an interface for turning a render array into a string.
  */
@@ -339,6 +341,20 @@ interface RendererInterface {
    * @see \Drupal\Core\Render\BubbleableMetadata
    */
   public static function mergeBubbleableMetadata(array $a, array $b);
+
+  /**
+   * Adds a dependency on an object: merges its cacheability metadata.
+   *
+   * E.g. when a render array depends on some configuration, an entity, or an
+   * access result, we must make sure their cacheability metadata is present on
+   * the render array. This method makes doing that simple.
+   *
+   * @param array &$elements
+   *   The render array to update.
+   * @param \Drupal\Core\Cache\CacheableDependencyInterface $dependency
+   *   The dependency.
+   */
+  public function addDependency(array &$elements, CacheableDependencyInterface $dependency);
 
   /**
    * Merges two attachments arrays (which live under the '#attached' key).

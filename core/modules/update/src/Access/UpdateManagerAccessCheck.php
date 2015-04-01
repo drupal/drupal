@@ -42,7 +42,7 @@ class UpdateManagerAccessCheck implements AccessInterface {
   public function access() {
     // Uncacheable because the access result depends on a Settings key-value
     // pair, and can therefore change at any time.
-    return AccessResult::allowedIf($this->settings->get('allow_authorize_operations', TRUE))->setCacheable(FALSE);
+    return AccessResult::allowedIf($this->settings->get('allow_authorize_operations', TRUE))->setCacheMaxAge(0);
   }
 
 }

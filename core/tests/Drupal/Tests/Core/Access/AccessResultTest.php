@@ -11,7 +11,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Access\AccessResultNeutral;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Cache\CacheableInterface;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -21,11 +21,8 @@ use Drupal\Tests\UnitTestCase;
 class AccessResultTest extends UnitTestCase {
 
   protected function assertDefaultCacheability(AccessResult $access) {
-    $this->assertTrue($access->isCacheable());
-    $this->assertSame([], $access->getCacheKeys());
     $this->assertSame([], $access->getCacheContexts());
     $this->assertSame([], $access->getCacheTags());
-    $this->assertSame('default', $access->getCacheBin());
     $this->assertSame(Cache::PERMANENT, $access->getCacheMaxAge());
   }
 
@@ -34,7 +31,6 @@ class AccessResultTest extends UnitTestCase {
    *
    * @covers ::__construct
    * @covers ::neutral
-   * @covers ::getCacheBin
    */
   public function testConstruction() {
     $verify = function (AccessResult $access) {
@@ -298,16 +294,6 @@ class AccessResultTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::setCacheable
-   * @covers ::isCacheable
-   */
-  public function testCacheable() {
-    $this->assertTrue(AccessResult::neutral()->isCacheable());
-    $this->assertTrue(AccessResult::neutral()->setCacheable(TRUE)->isCacheable());
-    $this->assertFalse(AccessResult::neutral()->setCacheable(FALSE)->isCacheable());
-  }
-
-  /**
    * @covers ::setCacheMaxAge
    * @covers ::getCacheMaxAge
    */
@@ -329,8 +315,6 @@ class AccessResultTest extends UnitTestCase {
       $this->assertFalse($access->isAllowed());
       $this->assertFalse($access->isForbidden());
       $this->assertTrue($access->isNeutral());
-      $this->assertTrue($access->isCacheable());
-      $this->assertSame('default', $access->getCacheBin());
       $this->assertSame(Cache::PERMANENT, $access->getCacheMaxAge());
       $this->assertSame($contexts, $access->getCacheContexts());
       $this->assertSame([], $access->getCacheTags());
@@ -408,8 +392,6 @@ class AccessResultTest extends UnitTestCase {
       $this->assertFalse($access->isAllowed());
       $this->assertFalse($access->isForbidden());
       $this->assertTrue($access->isNeutral());
-      $this->assertTrue($access->isCacheable());
-      $this->assertSame('default', $access->getCacheBin());
       $this->assertSame(Cache::PERMANENT, $access->getCacheMaxAge());
       $this->assertSame([], $access->getCacheContexts());
       $this->assertSame($tags, $access->getCacheTags());
@@ -471,20 +453,16 @@ class AccessResultTest extends UnitTestCase {
     $access = AccessResult::allowed();
     $other = AccessResult::allowed()->setCacheMaxAge(1500)->cachePerPermissions()->addCacheTags(['node:20011988']);
     $this->assertTrue($access->inheritCacheability($other) instanceof AccessResult);
-    $this->assertTrue($access->isCacheable());
     $this->assertSame(['user.permissions'], $access->getCacheContexts());
     $this->assertSame(['node:20011988'], $access->getCacheTags());
-    $this->assertSame('default', $access->getCacheBin());
     $this->assertSame(1500, $access->getCacheMaxAge());
 
     // andIf(); 1st has custom tags, max-age, 2nd has custom contexts and max-age.
     $access = AccessResult::allowed()->cachePerUser()->setCacheMaxAge(43200);
     $other = AccessResult::forbidden()->addCacheTags(['node:14031991'])->setCacheMaxAge(86400);
     $this->assertTrue($access->inheritCacheability($other) instanceof AccessResult);
-    $this->assertTrue($access->isCacheable());
     $this->assertSame(['user'], $access->getCacheContexts());
     $this->assertSame(['node:14031991'], $access->getCacheTags());
-    $this->assertSame('default', $access->getCacheBin());
     $this->assertSame(43200, $access->getCacheMaxAge());
   }
 
@@ -495,15 +473,17 @@ class AccessResultTest extends UnitTestCase {
    * every single bit of cacheability metadata, which would lead to a mind-
    * boggling number of permutations, in this test, we only consider the
    * permutations of all pairs of the following set:
-   * 1. Allowed, implements cacheable interface, is cacheable
-   * 2. Allowed, implements cacheable interface, is not cacheable
-   * 3. Allowed, does not implement cacheable interface (hence not cacheable)
-   * 4. Forbidden, implements cacheable interface, is cacheable
-   * 5. Forbidden, implements cacheable interface, is not cacheable
-   * 6. Forbidden, does not implement cacheable interface (hence not cacheable)
-   * 7. Neutral, implements cacheable interface, is cacheable
-   * 8. Neutral, implements cacheable interface, is not cacheable
-   * 9. Neutral, does not implement cacheable interface (hence not cacheable)
+   * 1. Allowed, implements CDI, is cacheable
+   * 2. Allowed, implements CDI, is not cacheable
+   * 3. Allowed, does not implement CDI (hence not cacheable)
+   * 4. Forbidden, implements CDI, is cacheable
+   * 5. Forbidden, implements CDI, is not cacheable
+   * 6. Forbidden, does not implement CDI (hence not cacheable)
+   * 7. Neutral, implements CDI, is cacheable
+   * 8. Neutral, implements CDI, is not cacheable
+   * 9. Neutral, does not implement CDI (hence not cacheable)
+   *
+   * (Where "CDI" is CacheableDependencyInterface.)
    *
    * This leads to 72 permutations (9!/(9-2)! = 9*8 = 72) per operation. There
    * are two operations to test (AND and OR), so that leads to a grand total of
@@ -517,8 +497,8 @@ class AccessResultTest extends UnitTestCase {
    * 2. Any operation yields an access result object that is of the same class
    *    (implementation) as the first operand. This is because operations are
    *    invoked on the first operand. Therefore, if the first implementation
-   *    does not implement CacheableInterface, then the result won't either.
-   *    This is the case for items 3, 6 and 9 in the set above.
+   *    does not implement CacheableDependencyInterface, then the result won't
+   *    either. This is the case for items 3, 6 and 9 in the set above.
    */
   public function andOrCacheabilityPropagationProvider() {
     // ct: cacheable=true, cf: cacheable=false, un: uncacheable.
@@ -526,23 +506,23 @@ class AccessResultTest extends UnitTestCase {
     // test UncacheableTestAccessResult, not AccessResult. However, we
     // definitely want to verify that AccessResult's orIf() and andIf() methods
     // work correctly when given an AccessResultInterface implementation that
-    // does not implement CacheableInterface, and we want to test the full gamut
-    // of permutations, so that's not a problem.
+    // does not implement CacheableDependencyInterface, and we want to test the
+    // full gamut of permutations, so that's not a problem.
     $allowed_ct = AccessResult::allowed();
-    $allowed_cf = AccessResult::allowed()->setCacheable(FALSE);
+    $allowed_cf = AccessResult::allowed()->setCacheMaxAge(0);
     $allowed_un = new UncacheableTestAccessResult('ALLOWED');
     $forbidden_ct = AccessResult::forbidden();
-    $forbidden_cf = AccessResult::forbidden()->setCacheable(FALSE);
+    $forbidden_cf = AccessResult::forbidden()->setCacheMaxAge(0);
     $forbidden_un = new UncacheableTestAccessResult('FORBIDDEN');
     $neutral_ct = AccessResult::neutral();
-    $neutral_cf = AccessResult::neutral()->setCacheable(FALSE);
+    $neutral_cf = AccessResult::neutral()->setCacheMaxAge(0);
     $neutral_un = new UncacheableTestAccessResult('NEUTRAL');
 
     // Structure:
     // - First column: first access result.
     // - Second column: operator ('OR' or 'AND').
     // - Third column: second access result.
-    // - Fourth column: whether the result implements CacheableInterface
+    // - Fourth column: whether result implements CacheableDependencyInterface
     // - Fifth column: whether the result is cacheable (if column 4 is TRUE)
     return [
       // Allowed (ct) OR allowed (ct,cf,un).
@@ -795,7 +775,7 @@ class AccessResultTest extends UnitTestCase {
    *
    * @dataProvider andOrCacheabilityPropagationProvider
    */
-  public function testAndOrCacheabilityPropagation(AccessResultInterface $first, $op, AccessResultInterface $second, $implements_cacheable_interface, $is_cacheable) {
+  public function testAndOrCacheabilityPropagation(AccessResultInterface $first, $op, AccessResultInterface $second, $implements_cacheable_dependency_interface, $is_cacheable) {
     if ($op === 'OR') {
       $result = $first->orIf($second);
     }
@@ -805,14 +785,14 @@ class AccessResultTest extends UnitTestCase {
     else {
       throw new \LogicException('Invalid operator specified');
     }
-    if ($implements_cacheable_interface) {
-      $this->assertTrue($result instanceof CacheableInterface, 'Result is an instance of CacheableInterface.');
-      if ($result instanceof CacheableInterface) {
-        $this->assertSame($is_cacheable, $result->isCacheable(), 'isCacheable() matches expectations.');
+    if ($implements_cacheable_dependency_interface) {
+      $this->assertTrue($result instanceof CacheableDependencyInterface, 'Result is an instance of CacheableDependencyInterface.');
+      if ($result instanceof CacheableDependencyInterface) {
+        $this->assertSame($is_cacheable, $result->getCacheMaxAge() !== 0, 'getCacheMaxAge() matches expectations.');
       }
     }
     else {
-      $this->assertFalse($result instanceof CacheableInterface, 'Result is not an instance of CacheableInterface.');
+      $this->assertFalse($result instanceof CacheableDependencyInterface, 'Result is not an instance of CacheableDependencyInterface.');
     }
   }
 
