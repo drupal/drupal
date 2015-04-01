@@ -113,7 +113,7 @@ function node_help($route_name, RouteMatchInterface $route_match) {
         '<p>' . t('Here, you can define which fields are shown and hidden when %type content is displayed in each view mode, and define how the fields are displayed in each view mode.', array('%type' => $type->label())) . '</p>';
 
     case 'entity.node.version_history':
-      return '<p>' . t('Revisions allow you to track differences between multiple versions of your content, and revert back to older versions.') . '</p>';
+      return '<p>' . t('Revisions allow you to track differences between multiple versions of your content, and revert to older versions.') . '</p>';
 
     case 'entity.node.edit_form':
       $node = $route_match->getParameter('node');

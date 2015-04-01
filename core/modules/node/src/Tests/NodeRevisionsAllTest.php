@@ -107,7 +107,7 @@ class NodeRevisionsAllTest extends NodeTestBase {
 
     // Confirm that revisions revert properly.
     $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionId() . "/revert", array(), t('Revert'));
-    $this->assertRaw(t('@type %title has been reverted back to the revision from %revision-date.',
+    $this->assertRaw(t('@type %title has been reverted to the revision from %revision-date.',
       array(
         '@type' => 'Basic page',
         '%title' => $nodes[1]->getTitle(),
@@ -145,7 +145,7 @@ class NodeRevisionsAllTest extends NodeTestBase {
       ))
       ->execute();
     $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $nodes[2]->getRevisionId() . "/revert", array(), t('Revert'));
-    $this->assertRaw(t('@type %title has been reverted back to the revision from %revision-date.', array(
+    $this->assertRaw(t('@type %title has been reverted to the revision from %revision-date.', array(
       '@type' => 'Basic page',
       '%title' => $nodes[2]->getTitle(),
       '%revision-date' => format_date($old_revision_date),

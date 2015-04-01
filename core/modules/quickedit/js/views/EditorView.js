@@ -163,8 +163,7 @@
     },
 
     /**
-     * Reverts the modified value back to the original value (before editing
-     * started).
+     * Reverts the modified value to the original, before editing started.
      */
     revert: function () {
       // A no-op by default; each editor should implement reverting itself.

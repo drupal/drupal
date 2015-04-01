@@ -30,7 +30,7 @@ interface AccountSwitcherInterface {
   public function switchTo(AccountInterface $account);
 
   /**
-   * Reverts back to a previous account after switching.
+   * Reverts to a previous account after switching.
    *
    * @return \Drupal\Core\Session\AccountSwitcherInterface
    *   $this.

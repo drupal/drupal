@@ -634,7 +634,7 @@ function _filter_url($text, $filter) {
     }
 
     $text = implode($chunks);
-    // Revert back to the original comment contents
+    // Revert to the original comment contents
     _filter_url_escape_comments('', FALSE);
     $text = preg_replace_callback('`<!--(.*?)-->`', '_filter_url_escape_comments', $text);
   }

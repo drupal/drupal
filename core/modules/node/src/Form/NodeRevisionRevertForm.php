@@ -114,7 +114,7 @@ class NodeRevisionRevertForm extends ConfirmFormBase {
     $this->revision->save();
 
     $this->logger('content')->notice('@type: reverted %title revision %revision.', array('@type' => $this->revision->bundle(), '%title' => $this->revision->label(), '%revision' => $this->revision->getRevisionId()));
-    drupal_set_message(t('@type %title has been reverted back to the revision from %revision-date.', array('@type' => node_get_type_label($this->revision), '%title' => $this->revision->label(), '%revision-date' => format_date($original_revision_timestamp))));
+    drupal_set_message(t('@type %title has been reverted to the revision from %revision-date.', array('@type' => node_get_type_label($this->revision), '%title' => $this->revision->label(), '%revision-date' => format_date($original_revision_timestamp))));
     $form_state->setRedirect(
       'entity.node.version_history',
       array('node' => $this->revision->id())

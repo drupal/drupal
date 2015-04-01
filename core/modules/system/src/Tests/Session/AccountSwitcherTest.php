@@ -42,7 +42,7 @@ class AccountSwitcherTest extends KernelTestBase {
 
     // Since we are still in the account from the first switch, session handling
     // still needs to be disabled.
-    $this->assertEqual($user->id(), 2, 'Reverted back to user 2.');
+    $this->assertEqual($user->id(), 2, 'Reverted to user 2.');
     $this->assertFalse($session_handler->isSessionWritable(), 'Session saving still disabled.');
 
     // Revert to the original account which was active before the first switch.
