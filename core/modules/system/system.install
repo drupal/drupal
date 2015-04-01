@@ -14,6 +14,7 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PrivateStream;
 use Drupal\Core\StreamWrapper\PublicStream;
+use Drupal\system\SystemRequirements;
 
 /**
  * Implements hook_requirements().
@@ -78,6 +79,17 @@ function system_requirements($phase) {
     $requirements['php']['severity'] = REQUIREMENT_ERROR;
     // If PHP is old, it's not safe to continue with the requirements check.
     return $requirements;
+  }
+
+  // Suggest to update to at least 5.5.21 or 5.6.5 for disabling multiple
+  // statements.
+  if (($phase === 'install' || \Drupal::database()->driver() === 'mysql') && !SystemRequirements::phpVersionWithPdoDisallowMultipleStatements($phpversion)) {
+    $requirements['php'] = array(
+      'title' => t('PHP (multiple statement disabling)'),
+      'value' => $phpversion,
+      'description' => t('PHP versions higher than 5.6.5 or 5.5.21 provide built-in SQL injection protection for mysql databases. It is recommended to update.'),
+      'severity' => REQUIREMENT_INFO,
+    );
   }
 
   // Test for PHP extensions.

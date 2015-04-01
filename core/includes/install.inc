@@ -925,6 +925,8 @@ function drupal_check_profile($profile, array $install_state) {
   foreach ($info['dependencies'] as $module) {
     module_load_install($module);
     $function = $module . '_requirements';
+
+    drupal_classloader_register($module, drupal_get_path('module', $module));
     if (function_exists($function)) {
       $requirements = array_merge($requirements, $function('install'));
     }

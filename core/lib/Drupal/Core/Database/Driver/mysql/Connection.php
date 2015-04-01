@@ -83,6 +83,11 @@ class Connection extends DatabaseConnection {
       // Because MySQL's prepared statements skip the query cache, because it's dumb.
       \PDO::ATTR_EMULATE_PREPARES => TRUE,
     );
+    if (defined('\PDO::MYSQL_ATTR_MULTI_STATEMENTS')) {
+      // An added connection option in PHP 5.5.21 to optionally limit SQL to a
+      // single statement like mysqli.
+      $connection_options['pdo'] += [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => FALSE];
+    }
 
     $pdo = new \PDO($dsn, $connection_options['username'], $connection_options['password'], $connection_options['pdo']);
 
@@ -110,8 +115,10 @@ class Connection extends DatabaseConnection {
     $connection_options['init_commands'] += array(
       'sql_mode' => "SET sql_mode = 'ANSI,STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER'",
     );
-    // Set connection options.
-    $pdo->exec(implode('; ', $connection_options['init_commands']));
+    // Execute initial commands.
+    foreach ($connection_options['init_commands'] as $sql) {
+      $pdo->exec($sql);
+    }
 
     return $pdo;
   }
