@@ -38,11 +38,10 @@ class TransactionTest extends DatabaseTestBase {
    * Encapsulates a transaction's "inner layer" with an "outer layer".
    *
    * This "outer layer" transaction starts and then encapsulates the "inner
-   * layer" transaction. This nesting is used to evaluate whether the the
-   * database transaction API properly supports nesting. By "properly supports,"
-   * we mean the outer transaction continues to exist regardless of what
-   * functions are called and whether those functions start their own
-   * transactions.
+   * layer" transaction. This nesting is used to evaluate whether the database
+   * transaction API properly supports nesting. By "properly supports," we mean
+   * the outer transaction continues to exist regardless of what functions are
+   * called and whether those functions start their own transactions.
    *
    * In contrast, a typical database would commit the outer transaction, start
    * a new transaction for the inner layer, commit the inner layer transaction,

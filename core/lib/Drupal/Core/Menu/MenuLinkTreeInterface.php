@@ -110,7 +110,7 @@ interface MenuLinkTreeInterface {
    * Finds the height of a subtree rooted by of the given ID.
    *
    * @param string $id
-   *   The the ID of an item in the storage.
+   *   The ID of an item in the storage.
    *
    * @return int
    *   Returns the height of the subtree. This will be at least 1 if the ID

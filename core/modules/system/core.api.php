@@ -1483,8 +1483,8 @@
  *
  * Alternatively, forms can be built directly via the routing system which will
  * take care of calling \Drupal::formBuilder()->getForm(). The following example
- * demonstrates the use of a routing.yml file to display a form at the the
- * given route.
+ * demonstrates the use of a routing.yml file to display a form at the given
+ * route.
  *
  * @code
  * example.form:

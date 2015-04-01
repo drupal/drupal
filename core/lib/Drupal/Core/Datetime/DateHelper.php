@@ -3,7 +3,7 @@
  * @file
  * Contains \Drupal\Core\Datetime\DateHelper.
  *
- * Lots of helpful functions for use in massaging dates, specific to the the
+ * Lots of helpful functions for use in massaging dates, specific to the
  * Gregorian calendar system. The values include both translated and
  * untranslated values.
  *

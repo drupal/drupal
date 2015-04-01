@@ -203,7 +203,7 @@ function editor_form_filter_admin_format_validate($form, FormStateInterface $for
     return;
   }
 
-  // When using this form with JavaScript disabled in the browser, the the
+  // When using this form with JavaScript disabled in the browser, the
   // 'Configure' button won't be clicked automatically. So, when the user has
   // selected a text editor and has then clicked 'Save configuration', we should
   // point out that the user must still configure the text editor.
