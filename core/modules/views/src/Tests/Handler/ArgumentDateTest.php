@@ -148,6 +148,16 @@ class ArgumentDateTest extends ViewUnitTestBase {
    */
   public function testWeekHandler() {
     $this->container->get('database')->update('views_test_data')
+      ->fields(array('created' => gmmktime(0, 0, 0, 9, 26, 2008)))
+      ->condition('id', 1)
+      ->execute();
+
+    $this->container->get('database')->update('views_test_data')
+      ->fields(array('created' => gmmktime(0, 0, 0, 2, 29, 2004)))
+      ->condition('id', 2)
+      ->execute();
+
+    $this->container->get('database')->update('views_test_data')
       ->fields(array('created' => gmmktime(0, 0, 0, 1, 1, 2000)))
       ->condition('id', 3)
       ->execute();
@@ -164,11 +174,27 @@ class ArgumentDateTest extends ViewUnitTestBase {
 
     $view = Views::getView('test_argument_date');
     $view->setDisplay('embed_3');
-    // The first jan 2000 was still in the last week of the previous year.
-    $this->executeView($view, array(52));
+    // Check the week calculation for a leap year.
+    // @see http://en.wikipedia.org/wiki/ISO_week_date#Calculation
+    $this->executeView($view, array('39'));
     $expected = array();
     $expected[] = array('id' => 1);
+    $this->assertIdenticalResultset($view, $expected, $this->columnMap);
+    $view->destroy();
+
+    $view->setDisplay('embed_3');
+    // Check the week calculation for the 29th of February in a leap year.
+    // @see http://en.wikipedia.org/wiki/ISO_week_date#Calculation
+    $this->executeView($view, array('09'));
+    $expected = array();
     $expected[] = array('id' => 2);
+    $this->assertIdenticalResultset($view, $expected, $this->columnMap);
+    $view->destroy();
+
+    $view->setDisplay('embed_3');
+    // The first jan 2000 was still in the last week of the previous year.
+    $this->executeView($view, array('52'));
+    $expected = array();
     $expected[] = array('id' => 3);
     $this->assertIdenticalResultset($view, $expected, $this->columnMap);
     $view->destroy();
