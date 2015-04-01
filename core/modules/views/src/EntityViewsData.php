@@ -467,8 +467,6 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
     }
 
     if ($field_definition->getName() == $this->entityType->getKey('bundle')) {
-      // @todo Use the other bundle handlers, once
-      //   https://www.drupal.org/node/2322949 is in.
       $views_field['filter']['id'] = 'bundle';
     }
   }

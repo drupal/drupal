@@ -35,7 +35,6 @@ class NodeViewsData extends EntityViewsData {
 
     $data['node_field_data']['title']['field']['link_to_node default'] = TRUE;
 
-    $data['node_field_data']['type']['field']['id'] = 'node_type';
     $data['node_field_data']['type']['argument']['id'] = 'node_type';
 
     $data['node_field_data']['langcode']['help'] = t('The language of the content or translation.');

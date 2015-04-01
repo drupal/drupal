@@ -169,14 +169,6 @@ views.field.node_revision_link_revert:
       type: label
       label: 'Text to display'
 
-views.field.node_type:
-  type: views.field.node
-  label: 'Node type'
-  mapping:
-    machine_name:
-      type: string
-      label: 'Output machine name'
-
 views.filter.node_access:
   type: views_filter
   label: 'Node access'

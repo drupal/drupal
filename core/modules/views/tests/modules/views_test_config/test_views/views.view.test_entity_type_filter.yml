@@ -34,7 +34,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          label: Type
+          label: 'Content Type'
           exclude: false
           alter:
             alter_text: false
@@ -75,9 +75,23 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          plugin_id: node_type
+          click_sort_column: target_id
+          type: entity_reference_label
+          settings:
+            link: false
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
           entity_type: node
           entity_field: type
+          plugin_id: field
       defaults:
         fields: false
         filters: false
