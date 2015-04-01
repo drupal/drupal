@@ -113,8 +113,8 @@ class BooleanFormatterSettingsTest extends WebTestBase {
       // Set up the field settings.
       $this->drupalGet('admin/structure/types/manage/' . $this->bundle . '/fields/node.' . $this->bundle . '.' . $this->fieldName);
       $this->drupalPostForm(NULL, array(
-        'field[settings][on_label]' => $values[0],
-        'field[settings][off_label]' => $values[1],
+        'settings[on_label]' => $values[0],
+        'settings[off_label]' => $values[1],
       ), 'Save settings');
 
       // Open the Manage Display page and trigger the field settings form.

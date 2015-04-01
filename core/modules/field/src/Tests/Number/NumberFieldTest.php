@@ -517,7 +517,7 @@ class NumberFieldTest extends WebTestBase {
 
     // Set the minimum value.
     $edit = array(
-      'field[settings][min]' => $minimum_value,
+      'settings[min]' => $minimum_value,
     );
     $this->drupalPostForm($field_configuration_url, $edit, t('Save settings'));
     // Check if an error message is shown.
@@ -526,6 +526,6 @@ class NumberFieldTest extends WebTestBase {
     $this->assertRaw(t('Saved %label configuration.', array('%label' => $field->getLabel())));
     // Check if the minimum value was actually set.
     $this->drupalGet($field_configuration_url);
-    $this->assertFieldById('edit-field-settings-min', $minimum_value, 'Minimal ' . gettype($minimum_value) .'  value was set on a ' . $field->getType() . ' field.');
+    $this->assertFieldById('edit-settings-min', $minimum_value, 'Minimal ' . gettype($minimum_value) .'  value was set on a ' . $field->getType() . ' field.');
   }
 }

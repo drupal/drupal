@@ -120,7 +120,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     // Confirm the defaults are present on the article field edit form.
     $this->drupalGet("admin/structure/types/manage/article/fields/$field_id");
     $this->assertFieldByXpath(
-      '//input[@name="field[settings][default_image][uuid][fids]"]',
+      '//input[@name="settings[default_image][uuid][fids]"]',
       $default_images['field']->id(),
       format_string(
         'Article image field field default equals expected file ID of @fid.',
@@ -142,7 +142,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     $field2_id = $field2->id();
     $this->drupalGet("admin/structure/types/manage/page/fields/$field2_id");
     $this->assertFieldByXpath(
-      '//input[@name="field[settings][default_image][uuid][fids]"]',
+      '//input[@name="settings[default_image][uuid][fids]"]',
       $default_images['field2']->id(),
       format_string(
         'Page image field field default equals expected file ID of @fid.',
@@ -220,7 +220,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     // admin form.
     $this->drupalGet("admin/structure/types/manage/article/fields/$field_id");
     $this->assertFieldByXpath(
-      '//input[@name="field[settings][default_image][uuid][fids]"]',
+      '//input[@name="settings[default_image][uuid][fids]"]',
       $default_images['field_new']->id(),
       format_string(
         'Updated article image field field default equals expected file ID of @fid.',
@@ -264,7 +264,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     // Confirm the article field field default has been removed.
     $this->drupalGet("admin/structure/types/manage/article/fields/$field_id");
     $this->assertFieldByXpath(
-      '//input[@name="field[settings][default_image][uuid][fids]"]',
+      '//input[@name="settings[default_image][uuid][fids]"]',
       '',
       'Updated article image field field default has been successfully removed.'
     );
@@ -293,7 +293,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     );
 
     $non_image = $this->drupalGetTestFiles('text');
-    $this->drupalPostForm(NULL, array('files[field_settings_default_image_uuid]' => drupal_realpath($non_image[0]->uri)), t("Upload"));
+    $this->drupalPostForm(NULL, array('files[settings_default_image_uuid]' => drupal_realpath($non_image[0]->uri)), t("Upload"));
     $this->assertText(t('The specified file text-0.txt could not be uploaded. Only files with the following extensions are allowed: png gif jpg jpeg.'), 'Non-image file cannot be used as default image.');
 
     // Confirm the default image is shown on the node form.

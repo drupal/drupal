@@ -84,40 +84,40 @@ class EntityReferenceAdminTest extends WebTestBase {
     $this->drupalPostForm(NULL, array(), t('Save field settings'));
 
     // The base handler should be selected by default.
-    $this->assertFieldByName('field[settings][handler]', 'default:node');
+    $this->assertFieldByName('settings[handler]', 'default:node');
 
     // The base handler settings should be displayed.
     $entity_type_id = 'node';
     $bundles = entity_get_bundles($entity_type_id);
     foreach ($bundles as $bundle_name => $bundle_info) {
-      $this->assertFieldByName('field[settings][handler_settings][target_bundles][' . $bundle_name . ']');
+      $this->assertFieldByName('settings[handler_settings][target_bundles][' . $bundle_name . ']');
     }
 
     reset($bundles);
 
     // Test the sort settings.
     // Option 0: no sort.
-    $this->assertFieldByName('field[settings][handler_settings][sort][field]', '_none');
-    $this->assertNoFieldByName('field[settings][handler_settings][sort][direction]');
+    $this->assertFieldByName('settings[handler_settings][sort][field]', '_none');
+    $this->assertNoFieldByName('settings[handler_settings][sort][direction]');
     // Option 1: sort by field.
-    $this->drupalPostAjaxForm(NULL, array('field[settings][handler_settings][sort][field]' => 'nid'), 'field[settings][handler_settings][sort][field]');
-    $this->assertFieldByName('field[settings][handler_settings][sort][direction]', 'ASC');
+    $this->drupalPostAjaxForm(NULL, array('settings[handler_settings][sort][field]' => 'nid'), 'settings[handler_settings][sort][field]');
+    $this->assertFieldByName('settings[handler_settings][sort][direction]', 'ASC');
 
     // Test that a non-translatable base field is a sort option.
-    $this->assertFieldByXPath("//select[@name='field[settings][handler_settings][sort][field]']/option[@value='nid']");
+    $this->assertFieldByXPath("//select[@name='settings[handler_settings][sort][field]']/option[@value='nid']");
     // Test that a translatable base field is a sort option.
-    $this->assertFieldByXPath("//select[@name='field[settings][handler_settings][sort][field]']/option[@value='title']");
+    $this->assertFieldByXPath("//select[@name='settings[handler_settings][sort][field]']/option[@value='title']");
     // Test that a configurable field is a sort option.
-    $this->assertFieldByXPath("//select[@name='field[settings][handler_settings][sort][field]']/option[@value='body.value']");
+    $this->assertFieldByXPath("//select[@name='settings[handler_settings][sort][field]']/option[@value='body.value']");
 
     // Set back to no sort.
-    $this->drupalPostAjaxForm(NULL, array('field[settings][handler_settings][sort][field]' => '_none'), 'field[settings][handler_settings][sort][field]');
-    $this->assertNoFieldByName('field[settings][handler_settings][sort][direction]');
+    $this->drupalPostAjaxForm(NULL, array('settings[handler_settings][sort][field]' => '_none'), 'settings[handler_settings][sort][field]');
+    $this->assertNoFieldByName('settings[handler_settings][sort][direction]');
 
     // Third step: confirm.
     $this->drupalPostForm(NULL, array(
-      'field[required]' => '1',
-      'field[settings][handler_settings][target_bundles][' . key($bundles) . ']' => key($bundles),
+      'required' => '1',
+      'settings[handler_settings][target_bundles][' . key($bundles) . ']' => key($bundles),
     ), t('Save settings'));
 
     // Check that the field appears in the overview form.
@@ -137,7 +137,7 @@ class EntityReferenceAdminTest extends WebTestBase {
     );
     $this->drupalPostForm($bundle_path . '/fields/' . $field_name . '/storage', $edit, t('Save field settings'));
     $this->drupalGet($bundle_path . '/fields/' . $field_name);
-    $this->assertFieldByName('field[settings][handler_settings][auto_create]');
+    $this->assertFieldByName('settings[handler_settings][auto_create]');
 
     // Switch the target type to 'user' and check that the settings specific to
     // its selection handler are displayed.
@@ -147,13 +147,13 @@ class EntityReferenceAdminTest extends WebTestBase {
     );
     $this->drupalPostForm($bundle_path . '/fields/' . $field_name . '/storage', $edit, t('Save field settings'));
     $this->drupalGet($bundle_path . '/fields/' . $field_name);
-    $this->assertFieldByName('field[settings][handler_settings][filter][type]', '_none');
+    $this->assertFieldByName('settings[handler_settings][filter][type]', '_none');
 
     // Try to select the views handler.
     $edit = array(
-      'field[settings][handler]' => 'views',
+      'settings[handler]' => 'views',
     );
-    $this->drupalPostAjaxForm($bundle_path . '/fields/' . $field_name, $edit, 'field[settings][handler]');
+    $this->drupalPostAjaxForm($bundle_path . '/fields/' . $field_name, $edit, 'settings[handler]');
     $this->drupalPostForm(NULL, $edit, t('Save settings'));
     $this->assertResponse(200);
   }
@@ -242,7 +242,7 @@ class EntityReferenceAdminTest extends WebTestBase {
     $storage_edit = $field_edit = array();
     $storage_edit['settings[target_type]'] = $target_type;
     if ($bundle) {
-      $field_edit['field[settings][handler_settings][target_bundles][' . $bundle . ']'] = TRUE;
+      $field_edit['settings[handler_settings][target_bundles][' . $bundle . ']'] = TRUE;
     }
 
     $this->fieldUIAddNewField($bundle_path, $field_name, NULL, 'entity_reference', $storage_edit, $field_edit);

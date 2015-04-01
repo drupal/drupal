@@ -88,11 +88,11 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
     // Check that the alt and title fields are enabled for the image field.
     $this->drupalLogin($this->editor);
     $this->drupalGet('entity_test_mul/structure/' . $this->entityTypeId . '/fields/' . $this->entityTypeId . '.' . $this->entityTypeId . '.' . $this->fieldName);
-    $this->assertFieldChecked('edit-field-third-party-settings-content-translation-translation-sync-alt');
-    $this->assertFieldChecked('edit-field-third-party-settings-content-translation-translation-sync-title');
+    $this->assertFieldChecked('edit-third-party-settings-content-translation-translation-sync-alt');
+    $this->assertFieldChecked('edit-third-party-settings-content-translation-translation-sync-title');
     $edit = array(
-      'field[third_party_settings][content_translation][translation_sync][alt]' => FALSE,
-      'field[third_party_settings][content_translation][translation_sync][title]' => FALSE,
+      'third_party_settings[content_translation][translation_sync][alt]' => FALSE,
+      'third_party_settings[content_translation][translation_sync][title]' => FALSE,
     );
     $this->drupalPostForm(NULL, $edit, t('Save settings'));
 

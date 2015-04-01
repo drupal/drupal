@@ -121,7 +121,7 @@ class BooleanFieldTest extends WebTestBase {
     // Test if we can change the on label.
     $on = $this->randomMachineName();
     $edit = array(
-      'field[settings][on_label]' => $on,
+      'settings[on_label]' => $on,
     );
     $this->drupalPostForm('entity_test/structure/entity_test/fields/entity_test.entity_test.' . $field_name, $edit, t('Save settings'));
     // Check if we see the updated labels in the creation form.
@@ -179,8 +179,8 @@ class BooleanFieldTest extends WebTestBase {
 
     // Test the boolean field settings.
     $this->drupalGet('entity_test/structure/entity_test/fields/entity_test.entity_test.' . $field_name);
-    $this->assertFieldById('edit-field-settings-on-label', $on);
-    $this->assertFieldById('edit-field-settings-off-label', $off);
+    $this->assertFieldById('edit-settings-on-label', $on);
+    $this->assertFieldById('edit-settings-off-label', $off);
   }
 
 }

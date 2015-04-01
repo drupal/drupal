@@ -274,7 +274,7 @@ class ImageItem extends FileItem {
       '#weight' => 10,
       '#states' => array(
         'visible' => array(
-          ':input[name="field[settings][alt_field]"]' => array('checked' => TRUE),
+          ':input[name="settings[alt_field]"]' => array('checked' => TRUE),
         ),
       ),
     );
@@ -292,7 +292,7 @@ class ImageItem extends FileItem {
       '#weight' => 12,
       '#states' => array(
         'visible' => array(
-          ':input[name="field[settings][title_field]"]' => array('checked' => TRUE),
+          ':input[name="settings[title_field]"]' => array('checked' => TRUE),
         ),
       ),
     );

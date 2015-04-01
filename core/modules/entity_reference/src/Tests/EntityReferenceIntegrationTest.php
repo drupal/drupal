@@ -146,7 +146,7 @@ class EntityReferenceIntegrationTest extends WebTestBase {
         'default_value_input[' . $this->fieldName . '][0][target_id]' => $referenced_entities[0]->label() . ' (' . $referenced_entities[0]->id() . ')',
       );
       if ($key == 'content') {
-        $field_edit['field[settings][handler_settings][target_bundles][' . $referenced_entities[0]->getEntityTypeId() . ']'] = TRUE;
+        $field_edit['settings[handler_settings][target_bundles][' . $referenced_entities[0]->getEntityTypeId() . ']'] = TRUE;
       }
       $this->drupalPostForm($this->entityType . '/structure/' . $this->bundle .'/fields/' . $this->entityType . '.' . $this->bundle . '.' . $this->fieldName, $field_edit, t('Save settings'));
       // Ensure the configuration has the expected dependency on the entity that

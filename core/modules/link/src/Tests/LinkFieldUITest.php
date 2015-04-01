@@ -85,7 +85,7 @@ class LinkFieldUITest extends WebTestBase {
     // external only links.
     $label = $this->randomMachineName();
     $field_name = Unicode::strtolower($label);
-    $field_edit = ['field[settings][link_type]' => LinkItemInterface::LINK_EXTERNAL];
+    $field_edit = ['settings[link_type]' => LinkItemInterface::LINK_EXTERNAL];
     $this->fieldUIAddNewField($type_path, $field_name, $label, 'link', array(), $field_edit);
 
     // Test the help text displays when link allows only external links.

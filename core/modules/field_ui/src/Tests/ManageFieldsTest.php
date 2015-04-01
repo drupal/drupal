@@ -201,7 +201,7 @@ class ManageFieldsTest extends WebTestBase {
     // Go to the field edit page.
     $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/' . $field_id);
     $edit = array(
-      'field[settings][test_field_setting]' => $string,
+      'settings[test_field_setting]' => $string,
     );
     $this->assertText(t('Default value'), 'Default value heading is shown');
     $this->drupalPostForm(NULL, $edit, t('Save settings'));
@@ -284,7 +284,7 @@ class ManageFieldsTest extends WebTestBase {
     // Delete the field.
     $field_id = 'node.' . $this->contentType . '.' . $this->fieldName;
     $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/' . $field_id);
-    $this->drupalPostForm(NULL, array(), t('Delete field'));
+    $this->clickLink(t('Delete'));
     $this->assertResponse(200);
   }
 
@@ -298,7 +298,8 @@ class ManageFieldsTest extends WebTestBase {
     // Delete all instances of the field.
     foreach ($field_storage->getBundles() as $node_type) {
       // Delete all the body field instances.
-      $this->drupalPostForm('admin/structure/types/manage/' . $node_type . '/fields/node.' . $node_type . '.' . $this->fieldName, array(), t('Delete field'));
+      $this->drupalGet('admin/structure/types/manage/' . $node_type . '/fields/node.' . $node_type . '.' . $this->fieldName);
+      $this->clickLink(t('Delete'));
       $this->drupalPostForm(NULL, array(), t('Delete'));
     }
     // Check "Re-use existing field" appears.
@@ -415,7 +416,7 @@ class ManageFieldsTest extends WebTestBase {
 
     $this->drupalGet($admin_path);
     $edit = array(
-      'field[required]' => 1,
+      'required' => 1,
     );
     $this->drupalPostForm(NULL, $edit, t('Save settings'));
 
@@ -650,7 +651,7 @@ class ManageFieldsTest extends WebTestBase {
     entity_get_form_display('node', 'article', 'default')->setComponent('field_image')->save();
 
     $edit = array(
-      'field[description]' => '<strong>Test with an upload field.',
+      'description' => '<strong>Test with an upload field.',
     );
     $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.field_image', $edit, t('Save settings'));
 
@@ -660,7 +661,7 @@ class ManageFieldsTest extends WebTestBase {
     $this->assertText('From hook_field_widget_form_alter(): Default form is true.', 'Default value form in hook_field_widget_form_alter().');
 
     $edit = array(
-      'field[description]' => '<em>Test with a non upload field.',
+      'description' => '<em>Test with a non upload field.',
     );
     $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.field_tags', $edit, t('Save settings'));
 

@@ -318,13 +318,13 @@ function content_translation_entity_extra_field_info() {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter() for 'field_ui_field_edit_form'.
+ * Implements hook_form_FORM_ID_alter() for 'field_config_edit_form'.
  */
-function content_translation_form_field_ui_field_edit_form_alter(array &$form, FormStateInterface $form_state) {
-  $field = $form_state->get('field');
+function content_translation_form_field_config_edit_form_alter(array &$form, FormStateInterface $form_state) {
+  $field = $form_state->getFormObject()->getEntity();
   $bundle_is_translatable = \Drupal::service('content_translation.manager')->isEnabled($field->entity_type, $field->bundle);
 
-  $form['field']['translatable'] = array(
+  $form['translatable'] = array(
     '#type' => 'checkbox',
     '#title' => t('Users may translate this field'),
     '#default_value' => $field->isTranslatable(),
@@ -338,7 +338,7 @@ function content_translation_form_field_ui_field_edit_form_alter(array &$form, F
     $toggle_url = \Drupal::url('language.content_settings_page', array(), array(
       'query' => drupal_get_destination(),
     ));
-    $form['field']['translatable']['#description'] = t('To configure translation for this field, <a href="@language-settings-url">enable language support</a> for this type.', array(
+    $form['translatable']['#description'] = t('To configure translation for this field, <a href="@language-settings-url">enable language support</a> for this type.', array(
       '@language-settings-url' => $toggle_url,
     ));
   }
@@ -347,8 +347,8 @@ function content_translation_form_field_ui_field_edit_form_alter(array &$form, F
     module_load_include('inc', 'content_translation', 'content_translation.admin');
     $element = content_translation_field_sync_widget($field);
     if ($element) {
-      $form['field']['third_party_settings']['content_translation']['translation_sync'] = $element;
-      $form['field']['third_party_settings']['content_translation']['translation_sync']['#weight'] = -10;
+      $form['third_party_settings']['content_translation']['translation_sync'] = $element;
+      $form['third_party_settings']['content_translation']['translation_sync']['#weight'] = -10;
     }
   }
 }

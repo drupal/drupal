@@ -9,16 +9,13 @@ namespace Drupal\entity_reference;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Field\PreconfiguredFieldUiOptionsInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\OptGroup;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\OptionsProviderInterface;
-use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\Validation\Plugin\Validation\Constraint\AllowedValuesConstraint;
-use Drupal\field\FieldStorageConfigInterface;
 
 /**
  * Alternative plugin implementation of the 'entity_reference' field type.
@@ -128,7 +125,7 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements Opt
    * {@inheritdoc}
    */
   public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
-    $field = $form_state->get('field');
+    $field = $form_state->getFormObject()->getEntity();
 
     // Get all selection plugins for this entity type.
     $selection_plugins = \Drupal::service('plugin.manager.entity_reference_selection')->getSelectionGroups($this->getSetting('target_type'));
@@ -192,7 +189,7 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements Opt
   }
 
   /**
-   * Form element validation handler; Stores the new values in the form state.
+   * Form element validation handler; Invokes selection plugin's validation.
    *
    * @param array $form
    *   The form where the settings form is being included in.
@@ -200,13 +197,9 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements Opt
    *   The form state of the (entire) configuration form.
    */
   public static function fieldSettingsFormValidate(array $form, FormStateInterface $form_state) {
-    if ($form_state->hasValue('field')) {
-      $form_state->unsetValue(array('field', 'settings', 'handler_submit'));
-      $form_state->get('field')->settings = $form_state->getValue(['field', 'settings']);
-
-      $handler = \Drupal::service('plugin.manager.entity_reference_selection')->getSelectionHandler($form_state->get('field'));
-      $handler->validateConfigurationForm($form, $form_state);
-    }
+    $field = $form_state->getFormObject()->getEntity();
+    $handler = \Drupal::service('plugin.manager.entity_reference_selection')->getSelectionHandler($field);
+    $handler->validateConfigurationForm($form, $form_state);
   }
 
   /**

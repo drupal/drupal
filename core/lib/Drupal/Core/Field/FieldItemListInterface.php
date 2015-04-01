@@ -192,7 +192,7 @@ interface FieldItemListInterface extends ListInterface, AccessibleInterface {
   /**
    * Returns a form for the default value input.
    *
-   * Invoked from \Drupal\field_ui\Form\FieldEditForm to allow
+   * Invoked from \Drupal\field_ui\Form\FieldConfigEditForm to allow
    * administrators to configure instance-level default value.
    *
    * @param array $form
@@ -208,7 +208,7 @@ interface FieldItemListInterface extends ListInterface, AccessibleInterface {
   /**
    * Validates the submitted default value.
    *
-   * Invoked from \Drupal\field_ui\Form\FieldEditForm to allow
+   * Invoked from \Drupal\field_ui\Form\FieldConfigEditForm to allow
    * administrators to configure instance-level default value.
    *
    * @param array $element
@@ -223,7 +223,7 @@ interface FieldItemListInterface extends ListInterface, AccessibleInterface {
   /**
    * Processes the submitted default value.
    *
-   * Invoked from \Drupal\field_ui\Form\FieldEditForm to allow
+   * Invoked from \Drupal\field_ui\Form\FieldConfigEditForm to allow
    * administrators to configure instance-level default value.
    *
    * @param array $element
