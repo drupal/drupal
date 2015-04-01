@@ -31,7 +31,7 @@ class UniqueFieldValueValidator extends ConstraintValidator {
     $value_taken = (bool) \Drupal::entityQuery($entity_type_id)
       // The id could be NULL, so we cast it to 0 in that case.
       ->condition($id_key, (int) $items->getEntity()->id(), '<>')
-      ->condition($field_name, db_like($items->first()->value), 'LIKE')
+      ->condition($field_name, $items->first()->value)
       ->range(0, 1)
       ->count()
       ->execute();
