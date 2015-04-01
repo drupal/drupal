@@ -7,23 +7,15 @@
 
 namespace Drupal\Tests\user\Unit\Plugin\Validation\Constraint;
 
+use Drupal\Tests\UnitTestCase;
 use Drupal\user\Plugin\Validation\Constraint\ProtectedUserFieldConstraint;
 use Drupal\user\Plugin\Validation\Constraint\ProtectedUserFieldConstraintValidator;
-use Symfony\Component\Validator\Tests\Constraints\AbstractConstraintValidatorTest;
-use Symfony\Component\Validator\Validation;
 
 /**
  * @coversDefaultClass \Drupal\user\Plugin\Validation\Constraint\ProtectedUserFieldConstraintValidator
  * @group user
  */
-class ProtectedUserFieldConstraintValidatorTest extends AbstractConstraintValidatorTest {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getApiVersion() {
-    return Validation::API_VERSION_2_4;
-  }
+class ProtectedUserFieldConstraintValidatorTest extends UnitTestCase {
 
   /**
    * {@inheritdoc}
@@ -57,15 +49,24 @@ class ProtectedUserFieldConstraintValidatorTest extends AbstractConstraintValida
    */
   public function testValidate($items, $expected_violation, $name = FALSE) {
     $constraint = new ProtectedUserFieldConstraint();
-    $this->validator->validate($items, $constraint);
+
+    // If a violation is expected, then the context's addViolation method will
+    // be called, otherwise it should not be called.
+    $context = $this->getMock('Symfony\Component\Validator\ExecutionContextInterface');
+
     if ($expected_violation) {
-      $this->buildViolation($constraint->message)
-        ->setParameter('%name', $name)
-        ->assertRaised();
+      $context->expects($this->once())
+        ->method('addViolation')
+        ->with($constraint->message, array('%name' => $name));
     }
     else {
-      $this->assertNoViolation();
+      $context->expects($this->never())
+        ->method('addViolation');
     }
+
+    $validator = $this->createValidator();
+    $validator->initialize($context);
+    $validator->validate($items, $constraint);
   }
 
   /**
