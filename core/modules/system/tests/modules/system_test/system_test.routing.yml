@@ -34,6 +34,8 @@ system_test.lock_acquire:
   defaults:
     _title: 'Lock acquire'
     _controller: '\Drupal\system_test\Controller\SystemTestController::lockAcquire'
+  options:
+    no_cache: TRUE
   requirements:
     _access: 'TRUE'
 
@@ -42,6 +44,8 @@ system_test.lock_exit:
   defaults:
     _title: 'Lock acquire then exit'
     _controller: '\Drupal\system_test\Controller\SystemTestController::lockExit'
+  options:
+    no_cache: TRUE
   requirements:
     _access: 'TRUE'
 
@@ -50,6 +54,8 @@ system_test.lock_persist:
   defaults:
     _title: 'Persistent lock acquire'
     _controller: '\Drupal\system_test\Controller\SystemTestController::lockPersist'
+  options:
+    no_cache: TRUE
   requirements:
     _access: 'TRUE'
 

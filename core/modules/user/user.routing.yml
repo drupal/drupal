@@ -148,3 +148,4 @@ user.reset:
     _access: 'TRUE'
   options:
     _maintenance_access: TRUE
+    no_cache: TRUE

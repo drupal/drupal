@@ -119,9 +119,6 @@ class SystemTestController extends ControllerBase {
    * Try to acquire a named lock and report the outcome.
    */
   public function lockAcquire() {
-    // Don't cache lock-testing pages.
-    \Drupal::service('page_cache_kill_switch')->trigger();
-
     if ($this->lock->acquire('system_test_lock_acquire')) {
       $this->lock->release('system_test_lock_acquire');
       return ['#markup' => 'TRUE: Lock successfully acquired in \Drupal\system_test\Controller\SystemTestController::lockAcquire()'];
@@ -135,9 +132,6 @@ class SystemTestController extends ControllerBase {
    * Try to acquire a specific lock, and then exit.
    */
   public function lockExit() {
-    // Don't cache lock-testing pages.
-    \Drupal::service('page_cache_kill_switch')->trigger();
-
     if ($this->lock->acquire('system_test_lock_exit', 900)) {
       echo 'TRUE: Lock successfully acquired in \Drupal\system_test\Controller\SystemTestController::lockExit()';
       // The shut-down function should release the lock.
@@ -158,9 +152,6 @@ class SystemTestController extends ControllerBase {
    *   The text to display.
    */
   public function lockPersist($lock_name) {
-    // Don't cache lock-testing pages.
-    \Drupal::service('page_cache_kill_switch')->trigger();
-
     if ($this->persistentLock->acquire($lock_name)) {
       return ['#markup' => 'TRUE: Lock successfully acquired in SystemTestController::lockPersist()'];
     }

@@ -210,6 +210,12 @@ services:
     class: Drupal\Core\PageCache\ResponsePolicy\KillSwitch
     tags:
       - { name: page_cache_response_policy }
+  page_cache_no_cache_routes:
+    class: Drupal\Core\PageCache\ResponsePolicy\DenyNoCacheRoutes
+    arguments: ['@current_route_match']
+    public: false
+    tags:
+      - { name: page_cache_response_policy }
   page_cache_no_server_error:
     class: Drupal\Core\PageCache\ResponsePolicy\NoServerError
     public: false

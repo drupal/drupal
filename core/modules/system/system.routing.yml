@@ -123,6 +123,8 @@ system.cron:
   path: '/cron/{key}'
   defaults:
     _controller: '\Drupal\system\CronController::run'
+  options:
+    no_cache: TRUE
   requirements:
     _access_system_cron: 'TRUE'
 
@@ -217,6 +219,8 @@ system.run_cron:
   path: '/admin/reports/status/run-cron'
   defaults:
     _controller: '\Drupal\system\CronController::runManually'
+  options:
+    no_cache: TRUE
   requirements:
     _permission: 'administer site configuration'
     _csrf_token: 'TRUE'
