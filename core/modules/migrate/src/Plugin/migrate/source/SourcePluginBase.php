@@ -303,13 +303,12 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   public function next() {
     $this->currentSourceIds = NULL;
     $this->currentRow = NULL;
-    $source_configuration = $this->migration->get('source');
 
     // In order to find the next row we want to process, we ask the source
     // plugin for the next possible row.
     while (!isset($this->currentRow) && $this->getIterator()->valid()) {
 
-      $row_data = $this->getIterator()->current() + $source_configuration;
+      $row_data = $this->getIterator()->current() + $this->configuration;
       $this->getIterator()->next();
       $row = new Row($row_data, $this->migration->getSourcePlugin()->getIds(), $this->migration->get('destinationIds'));
 
