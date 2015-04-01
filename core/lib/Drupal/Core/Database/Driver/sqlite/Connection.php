@@ -115,6 +115,7 @@ class Connection extends DatabaseConnection {
     $pdo->sqliteCreateFunction('if', array(__CLASS__, 'sqlFunctionIf'));
     $pdo->sqliteCreateFunction('greatest', array(__CLASS__, 'sqlFunctionGreatest'));
     $pdo->sqliteCreateFunction('pow', 'pow', 2);
+    $pdo->sqliteCreateFunction('exp', 'exp', 1);
     $pdo->sqliteCreateFunction('length', 'strlen', 1);
     $pdo->sqliteCreateFunction('md5', 'md5', 1);
     $pdo->sqliteCreateFunction('concat', array(__CLASS__, 'sqlFunctionConcat'));

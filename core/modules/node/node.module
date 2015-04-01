@@ -665,14 +665,8 @@ function node_ranking() {
   if ($node_min_max = \Drupal::state()->get('node.min_max_update_time')) {
     $ranking['recent'] = array(
       'title' => t('Recently created'),
-      'join' => array(
-        'type' => 'LEFT',
-        'table' => 'node_field_data',
-        'alias' => 'nfd',
-        'on' => 'nfd.nid = sid',
-      ),
       // Exponential decay with half life of 14% of the age range of nodes.
-      'score' => 'EXP(-5 * (1 - (nfd.created - :node_oldest) / :node_range))',
+      'score' => 'EXP(-5 * (1 - (n.created - :node_oldest) / :node_range))',
       'arguments' => array(
         ':node_oldest' => $node_min_max['min_created'],
         ':node_range' => max($node_min_max['max_created'] - $node_min_max['min_created'], 1),

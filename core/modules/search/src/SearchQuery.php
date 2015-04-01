@@ -508,8 +508,12 @@ class SearchQuery extends SelectExtender {
     if ($multiply) {
       $i = count($this->multiply);
       // Modify the score expression so it is multiplied by the multiplier,
-      // with a divisor to renormalize.
-      $score = "(CAST (:multiply_$i AS DECIMAL(10,4))) * COALESCE(($score), 0) / (CAST (:total_$i AS DECIMAL(10,4)))";
+      // with a divisor to renormalize. Note that the ROUND here is necessary
+      // for PostgreSQL and SQLite in order to ensure that the :multiply_* and
+      // :total_* arguments are treated as a numeric type, because the
+      // PostgreSQL PDO driver sometimes puts values in as strings instead of
+      // numbers in complex expressions like this.
+      $score = "(ROUND(:multiply_$i, 4)) * COALESCE(($score), 0) / (ROUND(:total_$i, 4))";
       // Add an argument for the multiplier. The :total_$i argument is taken
       // care of in the execute() method, which is when the total divisor is
       // calculated.
@@ -524,7 +528,7 @@ class SearchQuery extends SelectExtender {
     // in the execute() method we can add arguments.
     while (($pos = strpos($score, 'i.relevance')) !== FALSE) {
       $pieces = explode('i.relevance', $score, 2);
-      $score = implode('((CAST (:normalization_' . $this->relevance_count . ' AS DECIMAL(10,4))) * i.score * t.count)', $pieces);
+      $score = implode('((ROUND(:normalization_' . $this->relevance_count . ', 4)) * i.score * t.count)', $pieces);
       $this->relevance_count++;
     }
 
