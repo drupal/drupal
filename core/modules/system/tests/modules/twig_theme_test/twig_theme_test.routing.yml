@@ -51,5 +51,7 @@ twig_theme_test_registry_loader:
   path: '/twig-theme-test/registry-loader'
   defaults:
     _controller: '\Drupal\twig_theme_test\TwigThemeTestController::registryLoaderRender'
+  options:
+    no_cache: TRUE
   requirements:
     _access: 'TRUE'
