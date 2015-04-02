@@ -220,6 +220,8 @@ class UserRegistrationTest extends WebTestBase {
     // Check that the field does not appear on the registration form.
     $this->drupalGet('user/register');
     $this->assertNoText($field->label(), 'The field does not appear on user registration form');
+    $this->assertCacheTag('config:core.entity_form_display.user.user.register');
+    $this->assertCacheTag('config:user.settings');
 
     // Have the field appear on the registration form.
     entity_get_form_display('user', 'user', 'register')
@@ -228,6 +230,7 @@ class UserRegistrationTest extends WebTestBase {
 
     $this->drupalGet('user/register');
     $this->assertText($field->label(), 'The field appears on user registration form');
+    $this->assertRegistrationFormCacheTagsWithUserFields();
 
     // Check that validation errors are correctly reported.
     $edit = array();
@@ -236,10 +239,12 @@ class UserRegistrationTest extends WebTestBase {
     // Missing input in required field.
     $edit['test_user_field[0][value]'] = '';
     $this->drupalPostForm(NULL, $edit, t('Create new account'));
+    $this->assertRegistrationFormCacheTagsWithUserFields();
     $this->assertRaw(t('@name field is required.', array('@name' => $field->label())), 'Field validation error was correctly reported.');
     // Invalid input.
     $edit['test_user_field[0][value]'] = '-1';
     $this->drupalPostForm(NULL, $edit, t('Create new account'));
+    $this->assertRegistrationFormCacheTagsWithUserFields();
     $this->assertRaw(t('%name does not accept the value -1.', array('%name' => $field->label())), 'Field validation error was correctly reported.');
 
     // Submit with valid data.
@@ -256,6 +261,7 @@ class UserRegistrationTest extends WebTestBase {
     $field_storage->save();
     foreach (array('js', 'nojs') as $js) {
       $this->drupalGet('user/register');
+      $this->assertRegistrationFormCacheTagsWithUserFields();
       // Add two inputs.
       $value = rand(1, 255);
       $edit = array();
@@ -281,6 +287,16 @@ class UserRegistrationTest extends WebTestBase {
       $this->assertEqual($new_user->test_user_field[1]->value, $value + 1, format_string('@js : The field value was correclty saved.', array('@js' => $js)));
       $this->assertEqual($new_user->test_user_field[2]->value, $value + 2, format_string('@js : The field value was correclty saved.', array('@js' => $js)));
     }
+  }
+
+  /**
+   * Asserts the presence of cache tags on registration form with user fields.
+   */
+  protected function assertRegistrationFormCacheTagsWithUserFields() {
+    $this->assertCacheTag('config:core.entity_form_display.user.user.register');
+    $this->assertCacheTag('config:field.field.user.user.test_user_field');
+    $this->assertCacheTag('config:field.storage.user.test_user_field');
+    $this->assertCacheTag('config:user.settings');
   }
 
 }

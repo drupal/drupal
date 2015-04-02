@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Entity\Entity;
 
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Entity\EntityDisplayPluginCollection;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
@@ -32,6 +33,13 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
    * {@inheritdoc}
    */
   protected $displayContext = 'form';
+
+  /**
+   * The renderer.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
 
   /**
    * Returns the entity_form_display object used to build an entity form.
@@ -115,6 +123,7 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
    */
   public function __construct(array $values, $entity_type) {
     $this->pluginManager = \Drupal::service('plugin.manager.field.widget');
+    $this->renderer = \Drupal::service('renderer');
 
     parent::__construct($values, $entity_type);
   }
@@ -165,8 +174,22 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
         // processForm(), but is needed for other forms calling this method
         // directly.
         $form[$name]['#weight'] = $options['weight'];
+
+        // Associate the cache tags for the field definition & field storage
+        // definition.
+        $field_definition = $this->getFieldDefinition($name);
+        if ($field_definition instanceof CacheableDependencyInterface) {
+          $this->renderer->addDependency($form[$name], $field_definition);
+        }
+        $field_storage_definition = $field_definition->getFieldStorageDefinition();
+        if ($field_storage_definition instanceof CacheableDependencyInterface) {
+          $this->renderer->addDependency($form[$name], $field_storage_definition);
+        }
       }
     }
+
+    // Associate the cache tags for the form display.
+    $this->renderer->addDependency($form, $this);
 
     // Add a process callback so we can assign weights and hide extra fields.
     $form['#process'][] = array($this, 'processForm');
