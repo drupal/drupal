@@ -236,21 +236,27 @@
  *   to uninstall/reinstall or use a hook_update_N() function.
  * - Exporting and importing configuration.
  *
- * The file storage format for configuration information in Drupal is @link
- * http://en.wikipedia.org/wiki/YAML YAML files. @endlink Configuration is
+ * The file storage format for configuration information in Drupal is
+ * @link http://en.wikipedia.org/wiki/YAML YAML files. @endlink Configuration is
  * divided into files, each containing one configuration object. The file name
  * for a configuration object is equal to the unique name of the configuration,
  * with a '.yml' extension. The default configuration files for each module are
  * placed in the config/install directory under the top-level module directory,
  * so look there in most Core modules for examples.
  *
+ * @section sec_schema Configuration schema and translation
  * Each configuration file has a specific structure, which is expressed as a
  * YAML-based configuration schema. The configuration schema details the
  * structure of the configuration, its data types, and which of its values need
  * to be translatable. Each module needs to define its configuration schema in
  * files in the config/schema directory under the top-level module directory, so
- * look there in most Core modules for examples. Note that data types label,
- * text, and data_format are translatable; string is non-translatable text.
+ * look there in most Core modules for examples.
+ *
+ * Configuration can be internationalized; see the
+ * @link i18n Internationalization topic @endlink for more information. Data
+ * types label, text, and date_format in configuration schema are translatable;
+ * string is non-translatable text (the 'translatable' property on a schema
+ * data type definition indicates that it is translatable).
  *
  * @section sec_simple Simple configuration
  * The simple configuration API should be used for information that will always
