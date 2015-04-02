@@ -26,8 +26,8 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "translation" = "Drupal\content_translation\ContentTranslationHandler",
  *     "views_data" = "Drupal\views\EntityViewsData"
  *   },
- *   base_table = "entity_test_mul",
- *   data_table = "entity_test_mul_property_data",
+ *   base_table = "entity_test_mul_default_value",
+ *   data_table = "entity_test_mul_default_value_property_data",
  *   translatable = TRUE,
  *   entity_keys = {
  *     "id" = "id",
