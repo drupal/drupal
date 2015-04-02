@@ -1,5 +1,5 @@
 
-Drupal 7.36, xxxx-xx-xx (development version)
+Drupal 7.36, 2015-04-01
 -----------------------
 - Added a 'file_public_schema' variable which allows modules that define
   publicly-accessible streams in hook_stream_wrappers() to bypass file download
