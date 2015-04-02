@@ -75,7 +75,7 @@ abstract class RendererBase implements CacheablePluginInterface {
    * {@inheritdoc}
    */
   public function getCacheContexts() {
-    return ['languages'];
+    return [];
   }
 
   /**

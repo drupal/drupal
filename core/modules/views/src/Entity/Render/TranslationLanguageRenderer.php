@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Entity\Render;
 
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\ResultRow;
 
@@ -75,4 +76,10 @@ class TranslationLanguageRenderer extends RendererBase {
     return isset($row->{$this->langcodeAlias}) ? $row->{$this->langcodeAlias} : $this->languageManager->getDefaultLanguage()->getId();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    return ['languages:' . LanguageInterface::TYPE_CONTENT];
+  }
 }

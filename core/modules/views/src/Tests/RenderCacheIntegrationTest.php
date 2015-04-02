@@ -222,7 +222,7 @@ class RenderCacheIntegrationTest extends ViewUnitTestBase {
     $view = View::load('test_display');
     $view->save();
 
-    $this->assertEqual(['languages', 'languages:' . LanguageInterface::TYPE_INTERFACE, 'user.node_grants:view'], $view->getDisplay('default')['cache_metadata']['contexts']);
+    $this->assertEqual(['languages:' . LanguageInterface::TYPE_CONTENT, 'languages:' . LanguageInterface::TYPE_INTERFACE, 'user.node_grants:view'], $view->getDisplay('default')['cache_metadata']['contexts']);
   }
 
 }
