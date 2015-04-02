@@ -251,4 +251,25 @@ class EntityTypeTest extends UnitTestCase {
     $entity_type->setLinkTemplate('test', 'invalid-path');
   }
 
+  /**
+   * Tests the constraint methods.
+   *
+   * @covers ::getConstraints
+   * @covers ::setConstraints
+   * @covers ::addConstraint
+   */
+  public function testConstraintMethods() {
+    $definition = [
+      'constraints' => [
+        'EntityChanged' => [],
+      ],
+    ];
+    $entity_type = $this->setUpEntityType($definition);
+    $this->assertEquals($definition['constraints'], $entity_type->getConstraints());
+    $entity_type->addConstraint('Test');
+    $this->assertEquals($definition['constraints'] + ['Test' => NULL], $entity_type->getConstraints());
+    $entity_type->setConstraints([]);
+    $this->assertEquals([], $entity_type->getConstraints());
+  }
+
 }

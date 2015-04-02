@@ -83,7 +83,7 @@ class EntityDeriver implements ContainerDeriverInterface {
     foreach ($this->entityManager->getDefinitions() as $entity_type_id => $entity_type) {
       $this->derivatives[$entity_type_id] = array(
         'label' => $entity_type->getLabel(),
-        'constraints' => array('EntityType' => $entity_type_id),
+        'constraints' => $entity_type->getConstraints(),
       ) + $base_plugin_definition;
 
       // Incorporate the bundles as entity:$entity_type:$bundle, if any.
@@ -91,10 +91,7 @@ class EntityDeriver implements ContainerDeriverInterface {
         if ($bundle !== $entity_type_id) {
           $this->derivatives[$entity_type_id . ':' . $bundle] = array(
             'label' => $bundle_info['label'],
-            'constraints' => array(
-              'EntityType' => $entity_type_id,
-              'Bundle' => $bundle,
-            ),
+            'constraints' => $this->derivatives[$entity_type_id]['constraints']
           ) + $base_plugin_definition;
         }
       }

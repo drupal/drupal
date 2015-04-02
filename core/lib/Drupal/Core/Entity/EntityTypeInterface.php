@@ -693,4 +693,53 @@ interface EntityTypeInterface {
    */
   public function isCommonReferenceTarget();
 
+  /**
+   * Returns an array of validation constraints.
+   *
+   * See \Drupal\Core\TypedData\DataDefinitionInterface::getConstraints() for
+   * details on how constraints are defined.
+   *
+   * @return array[]
+   *   An array of validation constraint definitions, keyed by constraint name.
+   *   Each constraint definition can be used for instantiating
+   *   \Symfony\Component\Validator\Constraint objects.
+   *
+   * @see \Symfony\Component\Validator\Constraint
+   */
+  public function getConstraints();
+
+  /**
+   * Sets the array of validation constraints for the FieldItemList.
+   *
+   * NOTE: This will overwrite any previously set constraints. In most cases
+   * ContentEntityTypeInterface::addConstraint() should be used instead.
+   * See \Drupal\Core\TypedData\DataDefinitionInterface::getConstraints() for
+   * details on how constraints are defined.
+   *
+   * @param array $constraints
+   *   An array of validation constraint definitions, keyed by constraint name.
+   *   Each constraint definition can be used for instantiating
+   *   \Symfony\Component\Validator\Constraint objects.
+   *
+   * @return $this
+   *
+   * @see \Symfony\Component\Validator\Constraint
+   */
+  public function setConstraints(array $constraints);
+
+  /**
+   * Adds a validation constraint.
+   *
+   * See \Drupal\Core\TypedData\DataDefinitionInterface::getConstraints() for
+   * details on how constraints are defined.
+   *
+   * @param string $constraint_name
+   *   The name of the constraint to add, i.e. its plugin id.
+   * @param array|null $options
+   *   The constraint options as required by the constraint plugin, or NULL.
+   *
+   * @return $this
+   */
+  public function addConstraint($constraint_name, $options = NULL);
+
 }

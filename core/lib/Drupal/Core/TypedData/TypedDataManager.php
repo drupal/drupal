@@ -400,10 +400,6 @@ class TypedDataManager extends DefaultPluginManager {
     if (is_subclass_of($definition->getClass(),'Drupal\Core\TypedData\OptionsProviderInterface')) {
       $constraints['AllowedValues'] = array();
     }
-    // Add any constraints about referenced data.
-    if ($definition instanceof DataReferenceDefinitionInterface) {
-      $constraints += $definition->getTargetDefinition()->getConstraints();
-    }
     return $constraints;
   }
 

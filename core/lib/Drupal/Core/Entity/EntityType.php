@@ -227,6 +227,13 @@ class EntityType implements EntityTypeInterface {
   protected $list_cache_tags = [];
 
   /**
+   * Entity constraint definitions.
+   *
+   * @var array[]
+   */
+  protected $constraints = array();
+
+  /**
    * Constructs a new EntityType.
    *
    * @param array $definition
@@ -260,6 +267,12 @@ class EntityType implements EntityTypeInterface {
     $this->handlers += array(
       'access' => 'Drupal\Core\Entity\EntityAccessControlHandler',
     );
+
+    // Automatically add the EntityChanged constraint if the entity type tracks
+    // the changed time.
+    if ($this->isSubclassOf('Drupal\Core\Entity\EntityChangedInterface') ) {
+      $this->addConstraint('EntityChanged');
+    }
 
     // Ensure a default list cache tag is set.
     if (empty($this->list_cache_tags)) {
@@ -739,6 +752,29 @@ class EntityType implements EntityTypeInterface {
    */
   public function isCommonReferenceTarget() {
     return $this->common_reference_target;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConstraints() {
+    return $this->constraints;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setConstraints(array $constraints) {
+    $this->constraints = $constraints;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addConstraint($constraint_name, $options = NULL) {
+    $this->constraints[$constraint_name] = $options;
+    return $this;
   }
 
 }

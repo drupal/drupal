@@ -12,6 +12,12 @@ namespace Drupal\Core\Entity;
  *
  * This data may be useful for more precise cache invalidation (especially
  * on the client side) and concurrent editing locking.
+ *
+ * The entity system automatically adds in the 'EntityChanged' constraint for
+ * entity types implementing this interface in order to disallow concurrent
+ * editing.
+ *
+ * @see Drupal\Core\Entity\Plugin\Validation\Constraint\EntityChangedConstraint
  */
 interface EntityChangedInterface {
 
