@@ -2762,4 +2762,15 @@ abstract class WebTestBase extends TestBase {
     $this->assertTrue(in_array($expected_cache_tag, $cache_tags), "'" . $expected_cache_tag . "' is present in the X-Drupal-Cache-Tags header.");
   }
 
+  /**
+   * Asserts whether an expected cache tag was absent in the last response.
+   *
+   * @param string $cache_tag
+   *   The cache tag to check.
+   */
+  protected function assertNoCacheTag($cache_tag) {
+    $cache_tags = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Tags'));
+    $this->assertFalse(in_array($cache_tag, $cache_tags), "'" . $cache_tag . "' is absent in the X-Drupal-Cache-Tags header.");
+  }
+
 }

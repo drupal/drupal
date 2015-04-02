@@ -88,6 +88,13 @@ abstract class SearchPluginBase extends PluginBase implements ContainerFactoryPl
   /**
    * {@inheritdoc}
    */
+  public function getType() {
+    return NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildResults() {
     $results = $this->execute();
 

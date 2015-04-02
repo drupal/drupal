@@ -7,6 +7,7 @@
 
 namespace Drupal\search\Controller;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\search\SearchPageInterface;
@@ -126,6 +127,14 @@ class SearchController extends ControllerBase {
         'tags' => $entity->getCacheTags(),
       ),
     );
+
+    // If this plugin uses a search index, then also add the cache tag tracking
+    // that search index, so that cached search result pages are invalidated
+    // when necessary.
+    if ($plugin->getType()) {
+      $build['search_results']['#cache']['tags'][] = 'search_index';
+      $build['search_results']['#cache']['tags'][] = 'search_index:' . $plugin->getType();
+    }
 
     $build['pager'] = array(
       '#type' => 'pager',

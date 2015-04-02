@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 
@@ -152,6 +153,15 @@ function search_index_clear($type = NULL, $sid = NULL, $langcode = NULL) {
 
   $query_index->execute();
   $query_dataset->execute();
+
+  if ($type) {
+    // Invalidate all render cache items that contain data from this index.
+    Cache::invalidateTags(['search_index:' . $type]);
+  }
+  else {
+    // Invalidate all render cache items that contain data from any index.
+    Cache::invalidateTags(['search_index']);
+  }
 }
 
 /**
@@ -499,6 +509,8 @@ function search_index($type, $sid, $langcode, $text) {
     $tag = !$tag;
   }
 
+  // Remove the item $sid from the search index, and invalidate the relevant
+  // cache tags.
   search_index_clear($type, $sid, $langcode);
 
   // Insert cleaned up data into dataset

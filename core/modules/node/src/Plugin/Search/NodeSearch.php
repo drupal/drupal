@@ -177,6 +177,13 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
   /**
    * {@inheritdoc}
    */
+  public function getType() {
+    return $this->getPluginId();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function execute() {
     if ($this->isSearchExecutable()) {
       $results = $this->findResults();

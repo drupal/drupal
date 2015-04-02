@@ -65,6 +65,18 @@ interface SearchInterface extends PluginInspectionInterface {
   public function isSearchExecutable();
 
   /**
+   * Returns the search index type this plugin uses.
+   *
+   * @return string|null
+   *   The type used by this search plugin in the search index, or NULL if this
+   *   plugin does not use the search index.
+   *
+   * @see search_index()
+   * @see search_index_clear()
+   */
+  public function getType();
+
+  /**
    * Executes the search.
    *
    * @return array
