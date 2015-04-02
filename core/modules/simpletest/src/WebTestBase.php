@@ -2741,6 +2741,17 @@ abstract class WebTestBase extends TestBase {
   }
 
   /**
+   * Asserts whether an expected cache context was present in the last response.
+   *
+   * @param string $expected_cache_context
+   *   The expected cache context.
+   */
+  protected function assertCacheContext($expected_cache_context) {
+    $cache_contexts = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Contexts'));
+    $this->assertTrue(in_array($expected_cache_context, $cache_contexts), "'" . $expected_cache_context . "' is present in the X-Drupal-Cache-Contexts header.");
+  }
+
+  /**
    * Asserts whether an expected cache tag was present in the last response.
    *
    * @param string $expected_cache_tag
@@ -2748,7 +2759,7 @@ abstract class WebTestBase extends TestBase {
    */
   protected function assertCacheTag($expected_cache_tag) {
     $cache_tags = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Tags'));
-    $this->assertTrue(in_array($expected_cache_tag, $cache_tags));
+    $this->assertTrue(in_array($expected_cache_tag, $cache_tags), "'" . $expected_cache_tag . "' is present in the X-Drupal-Cache-Tags header.");
   }
 
 }

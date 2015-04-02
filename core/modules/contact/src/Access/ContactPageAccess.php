@@ -62,7 +62,7 @@ class ContactPageAccess implements AccessInterface {
 
     // Anonymous users cannot have contact forms.
     if ($contact_account->isAnonymous()) {
-      return AccessResult::forbidden();
+      return AccessResult::forbidden()->cachePerPermissions();
     }
 
     // Users may not contact themselves.

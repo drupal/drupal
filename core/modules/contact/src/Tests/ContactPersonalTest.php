@@ -152,11 +152,13 @@ class ContactPersonalTest extends WebTestBase {
     // Test that anonymous users can access admin user's contact form.
     $this->drupalGet('user/' . $this->adminUser->id() . '/contact');
     $this->assertResponse(200);
+    $this->assertCacheContext('user.permissions');
 
     // Revoke the personal contact permission for the anonymous user.
     user_role_revoke_permissions(RoleInterface::ANONYMOUS_ID, array('access user contact forms'));
     $this->drupalGet('user/' . $this->contactUser->id() . '/contact');
     $this->assertResponse(403);
+    $this->assertCacheContext('user.permissions');
     $this->drupalGet('user/' . $this->adminUser->id() . '/contact');
     $this->assertResponse(403);
 
@@ -235,7 +237,7 @@ class ContactPersonalTest extends WebTestBase {
     }
 
     // Submit contact form one over limit.
-    $this->drupalGet('user/' . $this->contactUser->id(). '/contact');
+    $this->submitPersonalContact($this->contactUser);
     $this->assertRaw(t('You cannot send more than %number messages in @interval. Try again later.', array('%number' => $flood_limit, '@interval' => \Drupal::service('date.formatter')->formatInterval($this->config('contact.settings')->get('flood.interval')))), 'Normal user denied access to flooded contact form.');
 
     // Test that the admin user can still access the contact form even though
