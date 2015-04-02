@@ -12,8 +12,8 @@ namespace Drupal\system\Tests\FileTransfer;
  */
 class MockTestConnection {
 
-  var $commandsRun = array();
-  var $connectionString;
+  protected $commandsRun = array();
+  public $connectionString;
 
   function run($cmd) {
     $this->commandsRun[] = $cmd;

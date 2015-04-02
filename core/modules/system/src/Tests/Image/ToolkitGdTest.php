@@ -36,7 +36,7 @@ class ToolkitGdTest extends KernelTestBase {
   protected $transparent = array(0, 0, 0, 127);
   // Used as rotate background colors.
   protected $fuchsia            = array(255, 0, 255, 0);
-  protected $rotate_transparent = array(255, 255, 255, 127);
+  protected $rotateTransparent = array(255, 255, 255, 127);
 
   protected $width = 40;
   protected $height = 20;
@@ -219,7 +219,7 @@ class ToolkitGdTest extends KernelTestBase {
           'arguments' => array('degrees' => 5),
           'width' => 42,
           'height' => 24,
-          'corners' => array_fill(0, 4, $this->rotate_transparent),
+          'corners' => array_fill(0, 4, $this->rotateTransparent),
         ),
         'rotate_transparent_90' => array(
           'function' => 'rotate',

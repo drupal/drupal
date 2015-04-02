@@ -17,7 +17,7 @@ class NameMungingTest extends FileTestBase {
   /**
    * @var string
    */
-  protected $bad_extension;
+  protected $badExtension;
 
   /**
    * @var string
@@ -27,13 +27,13 @@ class NameMungingTest extends FileTestBase {
   /**
    * @var string
    */
-  protected $name_with_uc_ext;
+  protected $nameWithUcExt;
 
   protected function setUp() {
     parent::setUp();
-    $this->bad_extension = 'php';
-    $this->name = $this->randomMachineName() . '.' . $this->bad_extension . '.txt';
-    $this->name_with_uc_ext = $this->randomMachineName() . '.' . strtoupper($this->bad_extension) . '.txt';
+    $this->badExtension = 'php';
+    $this->name = $this->randomMachineName() . '.' . $this->badExtension . '.txt';
+    $this->nameWithUcExt = $this->randomMachineName() . '.' . strtoupper($this->badExtension) . '.txt';
   }
 
   /**
@@ -53,8 +53,8 @@ class NameMungingTest extends FileTestBase {
    */
   function testMungeNullByte() {
     $prefix = $this->randomMachineName();
-    $filename = $prefix . '.' . $this->bad_extension . "\0.txt";
-    $this->assertEqual(file_munge_filename($filename, ''), $prefix . '.' . $this->bad_extension . '_.txt', 'A filename with a null byte is correctly munged to remove the null byte.');
+    $filename = $prefix . '.' . $this->badExtension . "\0.txt";
+    $this->assertEqual(file_munge_filename($filename, ''), $prefix . '.' . $this->badExtension . '_.txt', 'A filename with a null byte is correctly munged to remove the null byte.');
   }
 
   /**
@@ -73,10 +73,10 @@ class NameMungingTest extends FileTestBase {
   function testMungeIgnoreWhitelisted() {
     // Declare our extension as whitelisted. The declared extensions should
     // be case insensitive so test using one with a different case.
-    $munged_name = file_munge_filename($this->name_with_uc_ext, $this->bad_extension);
-    $this->assertIdentical($munged_name, $this->name_with_uc_ext, format_string('The new filename (%munged) matches the original (%original) once the extension has been whitelisted.', array('%munged' => $munged_name, '%original' => $this->name_with_uc_ext)));
+    $munged_name = file_munge_filename($this->nameWithUcExt, $this->badExtension);
+    $this->assertIdentical($munged_name, $this->nameWithUcExt, format_string('The new filename (%munged) matches the original (%original) once the extension has been whitelisted.', array('%munged' => $munged_name, '%original' => $this->nameWithUcExt)));
     // The allowed extensions should also be normalized.
-    $munged_name = file_munge_filename($this->name, strtoupper($this->bad_extension));
+    $munged_name = file_munge_filename($this->name, strtoupper($this->badExtension));
     $this->assertIdentical($munged_name, $this->name, format_string('The new filename (%munged) matches the original (%original) also when the whitelisted extension is in uppercase.', array('%munged' => $munged_name, '%original' => $this->name)));
   }
 

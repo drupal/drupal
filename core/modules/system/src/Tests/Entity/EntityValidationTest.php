@@ -24,17 +24,17 @@ class EntityValidationTest extends EntityUnitTestBase {
   /**
    * @var string
    */
-  protected $entity_name;
+  protected $entityName;
 
   /**
    * @var \Drupal\user\Entity\User
    */
-  protected $entity_user;
+  protected $entityUser;
 
   /**
    * @var string
    */
-  protected $entity_field_text;
+  protected $entityFieldText;
 
   /**
    * {@inheritdoc}
@@ -59,18 +59,18 @@ class EntityValidationTest extends EntityUnitTestBase {
    *   The created test entity.
    */
   protected function createTestEntity($entity_type) {
-    $this->entity_name = $this->randomMachineName();
-    $this->entity_user = $this->createUser();
-    $this->entity_field_text = $this->randomMachineName();
+    $this->entityName = $this->randomMachineName();
+    $this->entityUser = $this->createUser();
+    $this->entityFieldText = $this->randomMachineName();
 
     // Pass in the value of the name field when creating. With the user
     // field we test setting a field after creation.
     $entity = entity_create($entity_type);
-    $entity->user_id->target_id = $this->entity_user->id();
-    $entity->name->value = $this->entity_name;
+    $entity->user_id->target_id = $this->entityUser->id();
+    $entity->name->value = $this->entityName;
 
     // Set a value for the test field.
-    $entity->field_test_text->value = $this->entity_field_text;
+    $entity->field_test_text->value = $this->entityFieldText;
 
     return $entity;
   }

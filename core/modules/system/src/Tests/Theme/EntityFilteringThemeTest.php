@@ -76,7 +76,7 @@ class EntityFilteringThemeTest extends WebTestBase {
    *
    * @string
    */
-  protected $xss_label = "string with <em>HTML</em> and <script>alert('JS');</script>";
+  protected $xssLabel = "string with <em>HTML</em> and <script>alert('JS');</script>";
 
   protected function setUp() {
     parent::setUp();
@@ -88,13 +88,13 @@ class EntityFilteringThemeTest extends WebTestBase {
 
     // Create a test user.
     $this->user = $this->drupalCreateUser(array('access content', 'access user profiles'));
-    $this->user->name = $this->xss_label;
+    $this->user->name = $this->xssLabel;
     $this->user->save();
     $this->drupalLogin($this->user);
 
     // Create a test term.
     $this->term = entity_create('taxonomy_term', array(
-      'name' => $this->xss_label,
+      'name' => $this->xssLabel,
       'vid' => 1,
     ));
     $this->term->save();
@@ -103,7 +103,7 @@ class EntityFilteringThemeTest extends WebTestBase {
     $this->addDefaultCommentField('node', 'article', 'comment', CommentItemInterface::OPEN);
     // Create a test node tagged with the test term.
     $this->node = $this->drupalCreateNode(array(
-      'title' => $this->xss_label,
+      'title' => $this->xssLabel,
       'type' => 'article',
       'promote' => NODE_PROMOTED,
       'field_tags' => array(array('target_id' => $this->term->id())),
@@ -115,7 +115,7 @@ class EntityFilteringThemeTest extends WebTestBase {
       'entity_type' => 'node',
       'field_name' => 'comment',
       'status' => CommentInterface::PUBLISHED,
-      'subject' => $this->xss_label,
+      'subject' => $this->xssLabel,
       'comment_body' => array($this->randomMachineName()),
     ));
     $this->comment->save();
@@ -141,7 +141,7 @@ class EntityFilteringThemeTest extends WebTestBase {
       foreach ($paths as $path) {
         $this->drupalGet($path);
         $this->assertResponse(200);
-        $this->assertNoRaw($this->xss_label);
+        $this->assertNoRaw($this->xssLabel);
       }
     }
   }

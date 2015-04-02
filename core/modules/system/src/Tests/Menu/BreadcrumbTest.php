@@ -26,6 +26,20 @@ class BreadcrumbTest extends MenuTestBase {
   public static $modules = array('menu_test', 'block');
 
   /**
+   * An administrative user.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $adminUser;
+
+  /**
+   * A regular user.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $webUser;
+
+  /**
    * Test paths in the Standard profile.
    */
   protected $profile = 'standard';
@@ -34,8 +48,8 @@ class BreadcrumbTest extends MenuTestBase {
     parent::setUp();
 
     $perms = array_keys(\Drupal::service('user.permissions')->getPermissions());
-    $this->admin_user = $this->drupalCreateUser($perms);
-    $this->drupalLogin($this->admin_user);
+    $this->adminUser = $this->drupalCreateUser($perms);
+    $this->drupalLogin($this->adminUser);
 
     // This test puts menu links in the Tools menu and then tests for their
     // presence on the page, so we need to ensure that the Tools block will be
@@ -302,47 +316,47 @@ class BreadcrumbTest extends MenuTestBase {
     // Verify breadcrumb on user pages (without menu link) for anonymous user.
     $trail = $home;
     $this->assertBreadcrumb('user', $trail, t('Log in'));
-    $this->assertBreadcrumb('user/' . $this->admin_user->id(), $trail, $this->admin_user->getUsername());
+    $this->assertBreadcrumb('user/' . $this->adminUser->id(), $trail, $this->adminUser->getUsername());
 
     // Verify breadcrumb on user pages (without menu link) for registered users.
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $trail = $home;
-    $this->assertBreadcrumb('user', $trail, $this->admin_user->getUsername());
-    $this->assertBreadcrumb('user/' . $this->admin_user->id(), $trail, $this->admin_user->getUsername());
+    $this->assertBreadcrumb('user', $trail, $this->adminUser->getUsername());
+    $this->assertBreadcrumb('user/' . $this->adminUser->id(), $trail, $this->adminUser->getUsername());
     $trail += array(
-      'user/' . $this->admin_user->id() => $this->admin_user->getUsername(),
+      'user/' . $this->adminUser->id() => $this->adminUser->getUsername(),
     );
-    $this->assertBreadcrumb('user/' . $this->admin_user->id() . '/edit', $trail, $this->admin_user->getUsername());
+    $this->assertBreadcrumb('user/' . $this->adminUser->id() . '/edit', $trail, $this->adminUser->getUsername());
 
     // Create a second user to verify breadcrumb on user pages again.
-    $this->web_user = $this->drupalCreateUser(array(
+    $this->webUser = $this->drupalCreateUser(array(
       'administer users',
       'access user profiles',
     ));
-    $this->drupalLogin($this->web_user);
+    $this->drupalLogin($this->webUser);
 
     // Verify correct breadcrumb and page title on another user's account pages.
     $trail = $home;
-    $this->assertBreadcrumb('user/' . $this->admin_user->id(), $trail, $this->admin_user->getUsername());
+    $this->assertBreadcrumb('user/' . $this->adminUser->id(), $trail, $this->adminUser->getUsername());
     $trail += array(
-      'user/' . $this->admin_user->id() => $this->admin_user->getUsername(),
+      'user/' . $this->adminUser->id() => $this->adminUser->getUsername(),
     );
-    $this->assertBreadcrumb('user/' . $this->admin_user->id() . '/edit', $trail, $this->admin_user->getUsername());
+    $this->assertBreadcrumb('user/' . $this->adminUser->id() . '/edit', $trail, $this->adminUser->getUsername());
 
     // Verify correct breadcrumb and page title when viewing own user account.
     $trail = $home;
-    $this->assertBreadcrumb('user/' . $this->web_user->id(), $trail, $this->web_user->getUsername());
+    $this->assertBreadcrumb('user/' . $this->webUser->id(), $trail, $this->webUser->getUsername());
     $trail += array(
-      'user/' . $this->web_user->id() => $this->web_user->getUsername(),
+      'user/' . $this->webUser->id() => $this->webUser->getUsername(),
     );
-    $this->assertBreadcrumb('user/' . $this->web_user->id() . '/edit', $trail, $this->web_user->getUsername());
+    $this->assertBreadcrumb('user/' . $this->webUser->id() . '/edit', $trail, $this->webUser->getUsername());
 
     // Create an only slightly privileged user being able to access site reports
     // but not administration pages.
-    $this->web_user = $this->drupalCreateUser(array(
+    $this->webUser = $this->drupalCreateUser(array(
       'access site reports',
     ));
-    $this->drupalLogin($this->web_user);
+    $this->drupalLogin($this->webUser);
 
     // Verify that we can access recent log entries, there is a corresponding
     // page title, and that the breadcrumb is just the Home link (because the

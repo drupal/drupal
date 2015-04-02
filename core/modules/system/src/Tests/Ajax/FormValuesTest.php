@@ -18,8 +18,7 @@ class FormValuesTest extends AjaxTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->web_user = $this->drupalCreateUser(array('access content'));
-    $this->drupalLogin($this->web_user);
+    $this->drupalLogin($this->drupalCreateUser(array('access content')));
   }
 
   /**

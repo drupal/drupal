@@ -18,8 +18,7 @@ class ConfigTest extends WebTestBase {
 
   protected function setUp(){
     parent::setUp();
-    $this->web_user = $this->drupalCreateUser(array('administer site configuration'));
-    $this->drupalLogin($this->web_user);
+    $this->drupalLogin ($this->drupalCreateUser(array('administer site configuration')));
   }
 
   /**

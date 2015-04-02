@@ -35,17 +35,17 @@ class EntityFieldTest extends EntityUnitTestBase  {
   /**
    * @var string
    */
-  protected $entity_name;
+  protected $entityName;
 
   /**
    * @var \Drupal\user\Entity\User
    */
-  protected $entity_user;
+  protected $entityUser;
 
   /**
    * @var string
    */
-  protected $entity_field_text;
+  protected $entityFieldText;
 
   protected function setUp() {
     parent::setUp();
@@ -70,18 +70,18 @@ class EntityFieldTest extends EntityUnitTestBase  {
    * @return \Drupal\Core\Entity\EntityInterface
    */
   protected function createTestEntity($entity_type) {
-    $this->entity_name = $this->randomMachineName();
-    $this->entity_user = $this->createUser();
-    $this->entity_field_text = $this->randomMachineName();
+    $this->entityName = $this->randomMachineName();
+    $this->entityUser = $this->createUser();
+    $this->entityFieldText = $this->randomMachineName();
 
     // Pass in the value of the name field when creating. With the user
     // field we test setting a field after creation.
     $entity = entity_create($entity_type);
-    $entity->user_id->target_id = $this->entity_user->id();
-    $entity->name->value = $this->entity_name;
+    $entity->user_id->target_id = $this->entityUser->id();
+    $entity->name->value = $this->entityName;
 
     // Set a value for the test field.
-    $entity->field_test_text->value = $this->entity_field_text;
+    $entity->field_test_text->value = $this->entityFieldText;
 
     return $entity;
   }
@@ -111,9 +111,9 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $this->assertTrue($entity->name instanceof FieldItemListInterface, format_string('%entity_type: Field implements interface', array('%entity_type' => $entity_type)));
     $this->assertTrue($entity->name[0] instanceof FieldItemInterface, format_string('%entity_type: Field item implements interface', array('%entity_type' => $entity_type)));
 
-    $this->assertEqual($this->entity_name, $entity->name->value, format_string('%entity_type: Name value can be read.', array('%entity_type' => $entity_type)));
-    $this->assertEqual($this->entity_name, $entity->name[0]->value, format_string('%entity_type: Name value can be read through list access.', array('%entity_type' => $entity_type)));
-    $this->assertEqual($entity->name->getValue(), array(0 => array('value' => $this->entity_name)), format_string('%entity_type: Plain field value returned.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($this->entityName, $entity->name->value, format_string('%entity_type: Name value can be read.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($this->entityName, $entity->name[0]->value, format_string('%entity_type: Name value can be read through list access.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($entity->name->getValue(), array(0 => array('value' => $this->entityName)), format_string('%entity_type: Plain field value returned.', array('%entity_type' => $entity_type)));
 
     // Change the name.
     $new_name = $this->randomMachineName();
@@ -129,8 +129,8 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $this->assertTrue($entity->user_id instanceof FieldItemListInterface, format_string('%entity_type: Field implements interface', array('%entity_type' => $entity_type)));
     $this->assertTrue($entity->user_id[0] instanceof FieldItemInterface, format_string('%entity_type: Field item implements interface', array('%entity_type' => $entity_type)));
 
-    $this->assertEqual($this->entity_user->id(), $entity->user_id->target_id, format_string('%entity_type: User id can be read.', array('%entity_type' => $entity_type)));
-    $this->assertEqual($this->entity_user->getUsername(), $entity->user_id->entity->name->value, format_string('%entity_type: User name can be read.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($this->entityUser->id(), $entity->user_id->target_id, format_string('%entity_type: User id can be read.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($this->entityUser->getUsername(), $entity->user_id->entity->name->value, format_string('%entity_type: User name can be read.', array('%entity_type' => $entity_type)));
 
     // Change the assigned user by entity.
     $new_user1 = $this->createUser();
@@ -241,28 +241,28 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $this->assertEqual(\Drupal::languageManager()->getDefaultLanguage(), $entity->{$langcode_key}->language, format_string('%entity_type: Language object can be read.', array('%entity_type' => $entity_type)));
 
     // Access the text field and test updating.
-    $this->assertEqual($entity->field_test_text->value, $this->entity_field_text, format_string('%entity_type: Text field can be read.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($entity->field_test_text->value, $this->entityFieldText, format_string('%entity_type: Text field can be read.', array('%entity_type' => $entity_type)));
     $new_text = $this->randomMachineName();
     $entity->field_test_text->value = $new_text;
     $this->assertEqual($entity->field_test_text->value, $new_text, format_string('%entity_type: Updated text field can be read.', array('%entity_type' => $entity_type)));
 
     // Test creating the entity by passing in plain values.
-    $this->entity_name = $this->randomMachineName();
-    $name_item[0]['value'] = $this->entity_name;
-    $this->entity_user = $this->createUser();
-    $user_item[0]['target_id'] = $this->entity_user->id();
-    $this->entity_field_text = $this->randomMachineName();
-    $text_item[0]['value'] = $this->entity_field_text;
+    $this->entityName = $this->randomMachineName();
+    $name_item[0]['value'] = $this->entityName;
+    $this->entityUser = $this->createUser();
+    $user_item[0]['target_id'] = $this->entityUser->id();
+    $this->entityFieldText = $this->randomMachineName();
+    $text_item[0]['value'] = $this->entityFieldText;
 
     $entity = entity_create($entity_type, array(
       'name' => $name_item,
       'user_id' => $user_item,
       'field_test_text' => $text_item,
     ));
-    $this->assertEqual($this->entity_name, $entity->name->value, format_string('%entity_type: Name value can be read.', array('%entity_type' => $entity_type)));
-    $this->assertEqual($this->entity_user->id(), $entity->user_id->target_id, format_string('%entity_type: User id can be read.', array('%entity_type' => $entity_type)));
-    $this->assertEqual($this->entity_user->getUsername(), $entity->user_id->entity->name->value, format_string('%entity_type: User name can be read.', array('%entity_type' => $entity_type)));
-    $this->assertEqual($this->entity_field_text, $entity->field_test_text->value, format_string('%entity_type: Text field can be read.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($this->entityName, $entity->name->value, format_string('%entity_type: Name value can be read.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($this->entityUser->id(), $entity->user_id->target_id, format_string('%entity_type: User id can be read.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($this->entityUser->getUsername(), $entity->user_id->entity->name->value, format_string('%entity_type: User name can be read.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($this->entityFieldText, $entity->field_test_text->value, format_string('%entity_type: Text field can be read.', array('%entity_type' => $entity_type)));
 
     // Tests copying field values by assigning the TypedData objects.
     $entity2 = $this->createTestEntity($entity_type);
@@ -374,9 +374,9 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $this->assertTrue(is_string($entity->uuid->value), format_string('%entity_type: UUID value can be read.', array('%entity_type' => $entity_type)));
     $this->assertEqual('en', $entity->{$langcode_key}->value, format_string('%entity_type: Language code can be read.', array('%entity_type' => $entity_type)));
     $this->assertEqual(\Drupal::languageManager()->getLanguage('en'), $entity->{$langcode_key}->language, format_string('%entity_type: Language object can be read.', array('%entity_type' => $entity_type)));
-    $this->assertEqual($this->entity_user->id(), $entity->user_id->target_id, format_string('%entity_type: User id can be read.', array('%entity_type' => $entity_type)));
-    $this->assertEqual($this->entity_user->getUsername(), $entity->user_id->entity->name->value, format_string('%entity_type: User name can be read.', array('%entity_type' => $entity_type)));
-    $this->assertEqual($this->entity_field_text, $entity->field_test_text->value, format_string('%entity_type: Text field can be read.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($this->entityUser->id(), $entity->user_id->target_id, format_string('%entity_type: User id can be read.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($this->entityUser->getUsername(), $entity->user_id->entity->name->value, format_string('%entity_type: User name can be read.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($this->entityFieldText, $entity->field_test_text->value, format_string('%entity_type: Text field can be read.', array('%entity_type' => $entity_type)));
   }
 
   /**
@@ -550,10 +550,10 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $target_strings = array(
       $entity->uuid->value,
       'en',
-      $this->entity_name,
+      $this->entityName,
       // Bundle name.
       $entity->bundle(),
-      $this->entity_field_text,
+      $this->entityFieldText,
       // Field format.
       NULL,
     );

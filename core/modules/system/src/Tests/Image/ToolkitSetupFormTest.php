@@ -21,7 +21,7 @@ class ToolkitSetupFormTest extends WebTestBase {
    *
    * @var \Drupal\user\Entity\User
    */
-  protected $admin_user;
+  protected $adminUser;
 
   /**
    * Modules to enable.
@@ -35,10 +35,10 @@ class ToolkitSetupFormTest extends WebTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->admin_user = $this->drupalCreateUser(array(
+    $this->adminUser = $this->drupalCreateUser(array(
       'administer site configuration',
     ));
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
   }
 
   /**

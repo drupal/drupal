@@ -28,8 +28,7 @@ class DateTimeTest extends WebTestBase {
     parent::setUp();
 
     // Create admin user and log in admin user.
-    $this->admin_user = $this->drupalCreateUser(array('administer site configuration'));
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin ($this->drupalCreateUser(array('administer site configuration')));
   }
 
   /**

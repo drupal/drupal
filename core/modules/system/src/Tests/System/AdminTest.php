@@ -22,14 +22,14 @@ class AdminTest extends WebTestBase {
    *
    * @var \Drupal\Core\Session\AccountInterface
    */
-  protected $admin_user;
+  protected $adminUser;
 
   /**
    * User account with limited access to administration pages.
    *
    * @var \Drupal\Core\Session\AccountInterface
    */
-  protected $web_user;
+  protected $webUser;
 
   /**
    * Modules to enable.
@@ -45,12 +45,12 @@ class AdminTest extends WebTestBase {
     // Create an administrator with all permissions, as well as a regular user
     // who can only access administration pages and perform some Locale module
     // administrative tasks, but not all of them.
-    $this->admin_user = $this->drupalCreateUser(array_keys(\Drupal::service('user.permissions')->getPermissions()));
-    $this->web_user = $this->drupalCreateUser(array(
+    $this->adminUser = $this->drupalCreateUser(array_keys(\Drupal::service('user.permissions')->getPermissions()));
+    $this->webUser = $this->drupalCreateUser(array(
       'access administration pages',
       'translate interface',
     ));
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
   }
 
   /**
@@ -84,7 +84,7 @@ class AdminTest extends WebTestBase {
       // For the administrator, verify that there are links to Locale's primary
       // configuration pages, but no links to individual sub-configuration
       // pages.
-      $this->drupalLogin($this->admin_user);
+      $this->drupalLogin($this->adminUser);
       $this->drupalGet($page);
       $this->assertLinkByHref('admin/config');
       $this->assertLinkByHref('admin/config/regional/settings');
@@ -101,7 +101,7 @@ class AdminTest extends WebTestBase {
 
       // For a less privileged user, verify that there are no links to Locale's
       // primary configuration pages, but a link to the translate page exists.
-      $this->drupalLogin($this->web_user);
+      $this->drupalLogin($this->webUser);
       $this->drupalGet($page);
       $this->assertLinkByHref('admin/config');
       $this->assertNoLinkByHref('admin/config/regional/settings');
@@ -152,7 +152,7 @@ class AdminTest extends WebTestBase {
     // The front page defaults to 'user/login', which redirects to 'user/{user}'
     // for authenticated users. We cannot use '<front>', since this does not
     // match the redirected url.
-    $frontpage_url = 'user/' . $this->admin_user->id();
+    $frontpage_url = 'user/' . $this->adminUser->id();
 
     $this->drupalGet('admin/compact/on');
     $this->assertResponse(200, 'A valid page is returned after turning on compact mode.');

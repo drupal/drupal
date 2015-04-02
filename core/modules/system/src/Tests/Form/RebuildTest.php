@@ -26,13 +26,20 @@ class RebuildTest extends WebTestBase {
    */
   public static $modules = array('node', 'form_test');
 
+  /**
+   * A user for testing.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $webUser;
+
   protected function setUp() {
     parent::setUp();
 
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 
-    $this->web_user = $this->drupalCreateUser(array('access content'));
-    $this->drupalLogin($this->web_user);
+    $this->webUser = $this->drupalCreateUser(array('access content'));
+    $this->drupalLogin($this->webUser);
   }
 
   /**
@@ -82,8 +89,8 @@ class RebuildTest extends WebTestBase {
       ->save();
 
     // Log in a user who can create 'page' nodes.
-    $this->web_user = $this->drupalCreateUser(array('create page content'));
-    $this->drupalLogin($this->web_user);
+    $this->webUser = $this->drupalCreateUser(array('create page content'));
+    $this->drupalLogin($this->webUser);
 
     // Get the form for adding a 'page' node. Submit an "add another item" Ajax
     // submission and verify it worked by ensuring the updated page has two text

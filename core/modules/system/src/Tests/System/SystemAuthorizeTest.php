@@ -27,8 +27,7 @@ class SystemAuthorizeTest extends WebTestBase {
     parent::setUp();
 
     // Create an administrator user.
-    $this->admin_user = $this->drupalCreateUser(array('administer software updates'));
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin ($this->drupalCreateUser(array('administer software updates')));
   }
 
   /**

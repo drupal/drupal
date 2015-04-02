@@ -19,6 +19,13 @@ use Drupal\simpletest\WebTestBase;
 class ThemeTest extends WebTestBase {
 
   /**
+   * A user with administrative permissions.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $adminUser;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -30,8 +37,8 @@ class ThemeTest extends WebTestBase {
 
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 
-    $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'view the administration theme', 'administer themes', 'bypass node access', 'administer blocks'));
-    $this->drupalLogin($this->admin_user);
+    $this->adminUser = $this->drupalCreateUser(array('access administration pages', 'view the administration theme', 'administer themes', 'bypass node access', 'administer blocks'));
+    $this->drupalLogin($this->adminUser);
     $this->node = $this->drupalCreateNode();
   }
 
@@ -215,7 +222,7 @@ class ThemeTest extends WebTestBase {
     $this->drupalGet('admin/config');
     $this->assertResponse(403);
     $this->assertRaw('core/themes/seven', 'Administration theme used on an administration page.');
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
 
     $this->drupalGet('node/add');
     $this->assertRaw('core/themes/classy', 'Site default theme used on the add content page.');

@@ -23,22 +23,22 @@ class MainContentFallbackTest extends WebTestBase {
    */
   public static $modules = array('block', 'system_test');
 
-  protected $admin_user;
-  protected $web_user;
+  protected $adminUser;
+  protected $webUser;
 
   protected function setUp() {
     parent::setUp();
 
     // Create and login admin user.
-    $this->admin_user = $this->drupalCreateUser(array(
+    $this->adminUser = $this->drupalCreateUser(array(
       'access administration pages',
       'administer site configuration',
       'administer modules',
     ));
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
 
     // Create a web user.
-    $this->web_user = $this->drupalCreateUser(array('access user profiles'));
+    $this->webUser = $this->drupalCreateUser(array('access user profiles'));
   }
 
   /**
@@ -62,12 +62,12 @@ class MainContentFallbackTest extends WebTestBase {
     $this->drupalGet('system-test/main-content-fallback');
     $this->assertText(t('Content to test main content fallback'), 'Fallback to SimplePageVariant works for front-end theme.');
     // Request a user* page and see if it is displayed.
-    $this->drupalLogin($this->web_user);
-    $this->drupalGet('user/' . $this->web_user->id() . '/edit');
+    $this->drupalLogin($this->webUser);
+    $this->drupalGet('user/' . $this->webUser->id() . '/edit');
     $this->assertField('mail', 'User interface still available.');
 
     // Enable the block module again.
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $edit = array();
     $edit['modules[Core][block][enable]'] = 'block';
     $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));

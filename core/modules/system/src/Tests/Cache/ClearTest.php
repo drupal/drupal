@@ -17,8 +17,8 @@ use Drupal\Core\Cache\Cache;
 class ClearTest extends CacheTestBase {
 
   protected function setUp() {
-    $this->default_bin = 'render';
-    $this->default_value = $this->randomMachineName(10);
+    $this->defaultBin = 'render';
+    $this->defaultValue = $this->randomMachineName(10);
 
     parent::setUp();
   }
@@ -32,7 +32,7 @@ class ClearTest extends CacheTestBase {
     $this->assertTrue($bins, 'Cache::getBins() returned bins to flush.');
     foreach ($bins as $bin => $cache_backend) {
       $cid = 'test_cid_clear' . $bin;
-      $cache_backend->set($cid, $this->default_value);
+      $cache_backend->set($cid, $this->defaultValue);
     }
 
     // Remove all caches then make sure that they are cleared.
@@ -40,7 +40,7 @@ class ClearTest extends CacheTestBase {
 
     foreach ($bins as $bin => $cache_backend) {
       $cid = 'test_cid_clear' . $bin;
-      $this->assertFalse($this->checkCacheExists($cid, $this->default_value, $bin), format_string('All cache entries removed from @bin.', array('@bin' => $bin)));
+      $this->assertFalse($this->checkCacheExists($cid, $this->defaultValue, $bin), format_string('All cache entries removed from @bin.', array('@bin' => $bin)));
     }
   }
 }

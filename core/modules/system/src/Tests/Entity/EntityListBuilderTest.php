@@ -29,10 +29,10 @@ class EntityListBuilderTest extends WebTestBase {
     parent::setUp();
 
     // Create and login user.
-    $this->web_user = $this->drupalCreateUser(array(
+    $this->webUser = $this->drupalCreateUser(array(
       'administer entity_test content',
     ));
-    $this->drupalLogin($this->web_user);
+    $this->drupalLogin($this->webUser);
   }
 
   /**

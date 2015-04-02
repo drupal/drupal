@@ -23,6 +23,13 @@ class PagerTest extends WebTestBase {
    */
   public static $modules = array('dblog', 'pager_test');
 
+  /**
+   * A user with permission to access site reports.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $adminUser;
+
   protected $profile = 'testing';
 
   protected function setUp() {
@@ -34,10 +41,10 @@ class PagerTest extends WebTestBase {
       $logger->debug($this->randomString());
     }
 
-    $this->admin_user = $this->drupalCreateUser(array(
+    $this->adminUser = $this->drupalCreateUser(array(
       'access site reports',
     ));
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
   }
 
   /**

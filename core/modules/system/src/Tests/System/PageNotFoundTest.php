@@ -16,30 +16,30 @@ use Drupal\user\RoleInterface;
  * @group system
  */
 class PageNotFoundTest extends WebTestBase {
-  protected $admin_user;
+  protected $adminUser;
 
   protected function setUp() {
     parent::setUp();
 
     // Create an administrative user.
-    $this->admin_user = $this->drupalCreateUser(array('administer site configuration', 'link to any page'));
+    $this->adminUser = $this->drupalCreateUser(array('administer site configuration', 'link to any page'));
 
     user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('access user profiles'));
     user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, array('access user profiles'));
   }
 
   function testPageNotFound() {
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->drupalGet($this->randomMachineName(10));
     $this->assertText(t('Page not found'), 'Found the default 404 page');
 
     // Use a custom 404 page.
     $edit = array(
-      'site_404' => 'user/' . $this->admin_user->id(),
+      'site_404' => 'user/' . $this->adminUser->id(),
     );
     $this->drupalPostForm('admin/config/system/site-information', $edit, t('Save configuration'));
 
     $this->drupalGet($this->randomMachineName(10));
-    $this->assertText($this->admin_user->getUsername(), 'Found the custom 404 page');
+    $this->assertText($this->adminUser->getUsername(), 'Found the custom 404 page');
   }
 }

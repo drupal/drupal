@@ -22,21 +22,21 @@ class MenuRouterTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'menu_test', 'test_page_test');
+  public static $modules = ['block', 'menu_test', 'test_page_test'];
 
   /**
    * Name of the administrative theme to use for tests.
    *
    * @var string
    */
-  protected $admin_theme;
+  protected $adminTheme;
 
   /**
    * Name of the default theme to use for tests.
    *
    * @var string
    */
-  protected $default_theme;
+  protected $defaultTheme;
 
   protected function setUp() {
     // Enable dummy module that implements hook_menu.
@@ -240,14 +240,14 @@ class MenuRouterTest extends WebTestBase {
    * Tests theme integration.
    */
   public function testThemeIntegration() {
-    $this->default_theme = 'bartik';
-    $this->admin_theme = 'seven';
+    $this->defaultTheme = 'bartik';
+    $this->adminTheme = 'seven';
 
     $theme_handler = $this->container->get('theme_handler');
-    $theme_handler->install(array($this->default_theme, $this->admin_theme));
+    $theme_handler->install([$this->defaultTheme, $this->adminTheme]);
     $this->config('system.theme')
-      ->set('default', $this->default_theme)
-      ->set('admin', $this->admin_theme)
+      ->set('default', $this->defaultTheme)
+      ->set('admin', $this->adminTheme)
       ->save();
 
     $this->doTestThemeCallbackMaintenanceMode();

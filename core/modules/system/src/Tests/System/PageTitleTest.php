@@ -25,8 +25,8 @@ class PageTitleTest extends WebTestBase {
    */
   public static $modules = array('node', 'test_page_test', 'form_test');
 
-  protected $content_user;
-  protected $saved_title;
+  protected $contentUser;
+  protected $savedTitle;
 
   /**
    * Implement setUp().
@@ -36,8 +36,8 @@ class PageTitleTest extends WebTestBase {
 
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 
-    $this->content_user = $this->drupalCreateUser(array('create page content', 'access content', 'administer themes', 'administer site configuration', 'link to any page'));
-    $this->drupalLogin($this->content_user);
+    $this->contentUser = $this->drupalCreateUser(array('create page content', 'access content', 'administer themes', 'administer site configuration', 'link to any page'));
+    $this->drupalLogin($this->contentUser);
   }
 
   /**

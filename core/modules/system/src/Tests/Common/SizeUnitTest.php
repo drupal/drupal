@@ -17,13 +17,13 @@ use Drupal\simpletest\KernelTestBase;
  * @group Common
  */
 class SizeUnitTest extends KernelTestBase {
-  protected $exact_test_cases;
-  protected $rounded_test_cases;
+  protected $exactTestCases;
+  protected $roundedTestCases;
 
   protected function setUp() {
     parent::setUp();
     $kb = Bytes::KILOBYTE;
-    $this->exact_test_cases = array(
+    $this->exactTestCases = array(
       '1 byte' => 1,
       '1 KB'   => $kb,
       '1 MB'   => $kb * $kb,
@@ -34,12 +34,12 @@ class SizeUnitTest extends KernelTestBase {
       '1 ZB'   => $kb * $kb * $kb * $kb * $kb * $kb * $kb,
       '1 YB'   => $kb * $kb * $kb * $kb * $kb * $kb * $kb * $kb,
     );
-    $this->rounded_test_cases = array(
+    $this->roundedTestCases = array(
       '2 bytes' => 2,
       '1 MB' => ($kb * $kb) - 1, // rounded to 1 MB (not 1000 or 1024 kilobyte!)
-      round(3623651 / ($this->exact_test_cases['1 MB']), 2) . ' MB' => 3623651, // megabytes
-      round(67234178751368124 / ($this->exact_test_cases['1 PB']), 2) . ' PB' => 67234178751368124, // petabytes
-      round(235346823821125814962843827 / ($this->exact_test_cases['1 YB']), 2) . ' YB' => 235346823821125814962843827, // yottabytes
+      round(3623651 / ($this->exactTestCases['1 MB']), 2) . ' MB' => 3623651, // megabytes
+      round(67234178751368124 / ($this->exactTestCases['1 PB']), 2) . ' PB' => 67234178751368124, // petabytes
+      round(235346823821125814962843827 / ($this->exactTestCases['1 YB']), 2) . ' YB' => 235346823821125814962843827, // yottabytes
     );
   }
 
@@ -47,7 +47,7 @@ class SizeUnitTest extends KernelTestBase {
    * Checks that format_size() returns the expected string.
    */
   function testCommonFormatSize() {
-    foreach (array($this->exact_test_cases, $this->rounded_test_cases) as $test_cases) {
+    foreach (array($this->exactTestCases, $this->roundedTestCases) as $test_cases) {
       foreach ($test_cases as $expected => $input) {
         $this->assertEqual(
           ($result = format_size($input, NULL)),
@@ -62,7 +62,7 @@ class SizeUnitTest extends KernelTestBase {
    * Cross-tests Bytes::toInt() and format_size().
    */
   function testCommonParseSizeFormatSize() {
-    foreach ($this->exact_test_cases as $size) {
+    foreach ($this->exactTestCases as $size) {
       $this->assertEqual(
         $size,
         ($parsed_size = Bytes::toInt($string = format_size($size, NULL))),

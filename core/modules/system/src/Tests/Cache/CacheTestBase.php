@@ -14,9 +14,9 @@ use Drupal\simpletest\WebTestBase;
  */
 abstract class CacheTestBase extends WebTestBase {
 
-  protected $default_bin = 'render';
-  protected $default_cid = 'test_temporary';
-  protected $default_value = 'CacheTest';
+  protected $defaultBin = 'render';
+  protected $defaultCid = 'test_temporary';
+  protected $defaultValue = 'CacheTest';
 
   /**
    * Checks whether or not a cache entry exists.
@@ -32,7 +32,7 @@ abstract class CacheTestBase extends WebTestBase {
    */
   protected function checkCacheExists($cid, $var, $bin = NULL) {
     if ($bin == NULL) {
-      $bin = $this->default_bin;
+      $bin = $this->defaultBin;
     }
 
     $cached = \Drupal::cache($bin)->get($cid);
@@ -54,13 +54,13 @@ abstract class CacheTestBase extends WebTestBase {
    */
   protected function assertCacheExists($message, $var = NULL, $cid = NULL, $bin = NULL) {
     if ($bin == NULL) {
-      $bin = $this->default_bin;
+      $bin = $this->defaultBin;
     }
     if ($cid == NULL) {
-      $cid = $this->default_cid;
+      $cid = $this->defaultCid;
     }
     if ($var == NULL) {
-      $var = $this->default_value;
+      $var = $this->defaultValue;
     }
 
     $this->assertTrue($this->checkCacheExists($cid, $var, $bin), $message);
@@ -78,10 +78,10 @@ abstract class CacheTestBase extends WebTestBase {
    */
   function assertCacheRemoved($message, $cid = NULL, $bin = NULL) {
     if ($bin == NULL) {
-      $bin = $this->default_bin;
+      $bin = $this->defaultBin;
     }
     if ($cid == NULL) {
-      $cid = $this->default_cid;
+      $cid = $this->defaultCid;
     }
 
     $cached = \Drupal::cache($bin)->get($cid);

@@ -24,14 +24,21 @@ class EntityRevisionsTest extends WebTestBase {
    */
   public static $modules = array('entity_test');
 
+  /**
+   * A user with permission to administer entity_test content.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $webUser;
+
   protected function setUp() {
     parent::setUp();
 
     // Create and login user.
-    $this->web_user = $this->drupalCreateUser(array(
+    $this->webUser = $this->drupalCreateUser(array(
       'administer entity_test content',
     ));
-    $this->drupalLogin($this->web_user);
+    $this->drupalLogin($this->webUser);
   }
 
   /**
@@ -56,7 +63,7 @@ class EntityRevisionsTest extends WebTestBase {
     // Create initial entity.
     $entity = entity_create($entity_type, array(
       'name' => 'foo',
-      'user_id' => $this->web_user->id(),
+      'user_id' => $this->webUser->id(),
     ));
     $entity->field_test_text->value = 'bar';
     $entity->save();

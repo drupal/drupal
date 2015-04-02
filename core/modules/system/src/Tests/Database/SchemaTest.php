@@ -23,7 +23,7 @@ class SchemaTest extends KernelTestBase {
   /**
    * A global counter for table and field creation.
    */
-  var $counter;
+  protected $counter;
 
   /**
    * Tests database interactions.

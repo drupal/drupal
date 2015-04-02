@@ -25,13 +25,13 @@ abstract class ModuleTestBase extends WebTestBase {
    */
   public static $modules = array('system_test');
 
-  protected $admin_user;
+  protected $adminUser;
 
   protected function setUp() {
     parent::setUp();
 
-    $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer modules'));
-    $this->drupalLogin($this->admin_user);
+    $this->adminUser = $this->drupalCreateUser(array('access administration pages', 'administer modules'));
+    $this->drupalLogin($this->adminUser);
   }
 
   /**

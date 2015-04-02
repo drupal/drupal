@@ -23,7 +23,7 @@ class SiteMaintenanceTest extends WebTestBase {
    */
   public static $modules = array('node');
 
-  protected $admin_user;
+  protected $adminUser;
 
   protected function setUp() {
     parent::setUp();
@@ -34,8 +34,8 @@ class SiteMaintenanceTest extends WebTestBase {
     // Create a user allowed to access site in maintenance mode.
     $this->user = $this->drupalCreateUser(array('access site in maintenance mode'));
     // Create an administrative user.
-    $this->admin_user = $this->drupalCreateUser(array('administer site configuration', 'access site in maintenance mode'));
-    $this->drupalLogin($this->admin_user);
+    $this->adminUser = $this->drupalCreateUser(array('administer site configuration', 'access site in maintenance mode'));
+    $this->drupalLogin($this->adminUser);
   }
 
   /**
@@ -102,7 +102,7 @@ class SiteMaintenanceTest extends WebTestBase {
 
     // Log in administrative user and configure a custom site offline message.
     $this->drupalLogout();
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/config/development/maintenance');
     $this->assertNoRaw($admin_message, 'Site maintenance mode message not displayed.');
 

@@ -26,8 +26,8 @@ class FieldTranslationSqlStorageTest extends EntityLanguageTestBase {
 
     $controller = $this->entityManager->getStorage($entity_type);
     $values = array(
-      $this->field_name => $this->randomMachineName(),
-      $this->untranslatable_field_name => $this->randomMachineName(),
+      $this->fieldName => $this->randomMachineName(),
+      $this->untranslatableFieldName => $this->randomMachineName(),
     );
     $entity = $controller->create($values);
     $entity->save();
@@ -50,7 +50,7 @@ class FieldTranslationSqlStorageTest extends EntityLanguageTestBase {
     // before.
     $this->toggleFieldTranslatability($entity_type, $entity_type);
     $entity = $this->reloadEntity($entity);
-    foreach (array($this->field_name, $this->untranslatable_field_name) as $field_name) {
+    foreach (array($this->fieldName, $this->untranslatableFieldName) as $field_name) {
       $this->assertEqual($entity->get($field_name)->value, $values[$field_name], 'Field language works as expected after switching translatability.');
     }
 
@@ -61,11 +61,11 @@ class FieldTranslationSqlStorageTest extends EntityLanguageTestBase {
     $entity->langcode->value = $this->langcodes[0];
     $translation = $entity->addTranslation($this->langcodes[1]);
     $translated_value = $this->randomMachineName();
-    $translation->get($this->field_name)->value = $translated_value;
+    $translation->get($this->fieldName)->value = $translated_value;
     $translation->save();
     $this->toggleFieldTranslatability($entity_type, $entity_type);
     $entity = $this->reloadEntity($entity);
-    $this->assertEqual($entity->getTranslation($this->langcodes[1])->get($this->field_name)->value, $values[$this->field_name], 'Existing field translations are not loaded for untranslatable fields.');
+    $this->assertEqual($entity->getTranslation($this->langcodes[1])->get($this->fieldName)->value, $values[$this->fieldName], 'Existing field translations are not loaded for untranslatable fields.');
   }
 
   /**
@@ -81,7 +81,7 @@ class FieldTranslationSqlStorageTest extends EntityLanguageTestBase {
     $entity_type = $entity->getEntityTypeId();
     $id = $entity->id();
     $langcode = $entity->getUntranslated()->language()->getId();
-    $fields = array($this->field_name, $this->untranslatable_field_name);
+    $fields = array($this->fieldName, $this->untranslatableFieldName);
     /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
     $table_mapping = \Drupal::entityManager()->getStorage($entity_type)->getTableMapping();
 

@@ -27,18 +27,18 @@ class UpdatesWith7xTest extends WebTestBase {
   /**
    * The URL for the update page.
    */
-  private $update_url;
+  private $updateUrl;
 
   /**
    * An administrative user.
    */
-  private $update_user;
+  private $updateUser;
 
   protected function setUp() {
     parent::setUp();
     require_once \Drupal::root() . '/core/includes/update.inc';
-    $this->update_url = $GLOBALS['base_url'] . '/update.php';
-    $this->update_user = $this->drupalCreateUser(array('administer software updates'));
+    $this->updateUrl = $GLOBALS['base_url'] . '/update.php';
+    $this->updateUser = $this->drupalCreateUser(array('administer software updates'));
   }
 
   function testWith7x() {
@@ -51,8 +51,8 @@ class UpdatesWith7xTest extends WebTestBase {
     drupal_set_installed_schema_version('update_test_with_7x', 7110);
 
     // Click through update.php with 'administer software updates' permission.
-    $this->drupalLogin($this->update_user);
-    $this->drupalGet($this->update_url, array('external' => TRUE));
+    $this->drupalLogin($this->updateUser);
+    $this->drupalGet($this->updateUrl, array('external' => TRUE));
     $this->clickLink(t('Continue'));
     $this->assertText(t('Some of the pending updates cannot be applied because their dependencies were not met.'));
   }

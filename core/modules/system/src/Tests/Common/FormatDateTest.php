@@ -56,9 +56,8 @@ class FormatDateTest extends WebTestBase {
    * Tests admin-defined formats in format_date().
    */
   function testAdminDefinedFormatDate() {
-    // Create an admin user.
-    $this->admin_user = $this->drupalCreateUser(array('administer site configuration'));
-    $this->drupalLogin($this->admin_user);
+    // Create and log in an admin user.
+    $this->drupalLogin($this->drupalCreateUser(array('administer site configuration')));
 
     // Add new date format.
     $edit = array(
