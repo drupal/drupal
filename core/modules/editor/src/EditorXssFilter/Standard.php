@@ -41,7 +41,7 @@ class Standard extends Xss implements EditorXssFilterInterface {
     // embedded, hence ensuring the same origin policy always applies.
     $dangerous_tags = array('script', 'style', 'link', 'embed', 'object');
 
-    // Simply blacklisting these five dangerious tags would bring safety, but
+    // Simply blacklisting these five dangerous tags would bring safety, but
     // also user frustration: what if a text format is configured to allow
     // <embed>, for example? Then we would strip that tag, even though it is
     // allowed, thereby causing data loss!

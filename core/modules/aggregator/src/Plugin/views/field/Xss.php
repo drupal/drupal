@@ -11,7 +11,7 @@ use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 
 /**
- * Filters htmls tags from item.
+ * Filters HTML tags from item.
  *
  * @ingroup views_field_handlers
  *

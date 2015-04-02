@@ -17,7 +17,7 @@ use Drupal\views\ManyToOneHelper;
  * such as terms (many terms per node) or roles (many roles per user).
  *
  * The construct method needs to be overridden to provide a list of options;
- * alternately, the valueForm and adminSummary methods need to be overriden
+ * alternately, the valueForm and adminSummary methods need to be overridden
  * to provide something that isn't just a select list.
  *
  * @ingroup views_filter_handlers

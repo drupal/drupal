@@ -77,28 +77,28 @@ class FileViewsData extends EntityViewsData {
         'field' => 'fid',
         'left_field' => 'fid',
       ),
-      // Link ourself to the {node_field_data} table
+      // Link ourselves to the {node_field_data} table
       // so we can provide node->file relationships.
       'node_field_data' => array(
         'field' => 'id',
         'left_field' => 'nid',
         'extra' => array(array('field' => 'type', 'value' => 'node')),
       ),
-      // Link ourself to the {users_field_data} table
+      // Link ourselves to the {users_field_data} table
       // so we can provide user->file relationships.
       'users_field_data' => array(
         'field' => 'id',
         'left_field' => 'uid',
         'extra' => array(array('field' => 'type', 'value' => 'user')),
       ),
-      // Link ourself to the {comment_field_data} table
+      // Link ourselves to the {comment_field_data} table
       // so we can provide comment->file relationships.
       'comment' => array(
         'field' => 'id',
         'left_field' => 'cid',
         'extra' => array(array('field' => 'type', 'value' => 'comment')),
       ),
-      // Link ourself to the {taxonomy_term_field_data} table
+      // Link ourselves to the {taxonomy_term_field_data} table
       // so we can provide taxonomy_term->file relationships.
       'taxonomy_term_data' => array(
         'field' => 'id',

@@ -21,7 +21,7 @@ class SearchSimplifyTest extends SearchTestBase {
     // This test uses a file that was constructed so that the even lines are
     // boundary characters, and the odd lines are valid word characters. (It
     // was generated as a sequence of all the Unicode characters, and then the
-    // boundary chararacters (punctuation, spaces, etc.) were split off into
+    // boundary characters (punctuation, spaces, etc.) were split off into
     // their own lines).  So the even-numbered lines should simplify to nothing,
     // and the odd-numbered lines we need to split into shorter chunks and
     // verify that simplification doesn't lose any characters.

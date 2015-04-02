@@ -227,7 +227,7 @@ function theme_system_modules_details($variables) {
 
     $row[] = array('class' => array('checkbox'), 'data' => drupal_render($module['enable']));
 
-    // Add the module label and expand/collapse functionalty.
+    // Add the module label and expand/collapse functionality.
     $id = Html::getUniqueId('module-' . $key);
     $col2 = '<label id="' . $id . '" for="' . $module['enable']['#id'] . '" class="module-name table-filter-text-source">' . drupal_render($module['name']) . '</label>';
     $row[] = array('class' => array('module'), 'data' => SafeMarkup::set($col2));

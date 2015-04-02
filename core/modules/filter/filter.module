@@ -547,7 +547,7 @@ function _filter_url($text, $filter) {
   // 2. Used in IIS sessions like /S(dfd346)/
   $valid_url_balanced_parens = '\('. $valid_url_path_characters . '+\)';
 
-  // Valid end-of-path chracters (so /foo. does not gobble the period).
+  // Valid end-of-path characters (so /foo. does not gobble the period).
   // 1. Allow =&# for empty URL parameters and other URL-join artifacts
   $valid_url_ending_characters = '[\p{L}\p{M}\p{N}:_+~#=/]|(?:' . $valid_url_balanced_parens . ')';
 
@@ -711,7 +711,7 @@ function _filter_url_escape_comments($match, $escape = NULL) {
     return;
   }
 
-  // Replace all HTML coments with a '<!-- [hash] -->' placeholder.
+  // Replace all HTML comments with a '<!-- [hash] -->' placeholder.
   if ($mode) {
     $content = $match[1];
     $hash = hash('sha256', $content);

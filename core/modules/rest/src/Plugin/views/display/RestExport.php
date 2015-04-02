@@ -244,7 +244,7 @@ class RestExport extends PathPluginBase {
       // REST exports should only respond to get methods.
       $requirements = array('_method' => 'GET');
 
-      // Format as a string using pipes as a delimeter.
+      // Format as a string using pipes as a delimiter.
       $requirements['_format'] = implode('|', $style_plugin->getFormats());
 
       // Add the new requirements to the route.

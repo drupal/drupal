@@ -114,7 +114,7 @@ interface MessageInterface extends ContentEntityInterface {
    * Returns the user this message is being sent to.
    *
    * @return \Drupal\user\UserInterface
-   *   The user entity of the recipent, NULL if this is not a personal message.
+   *   The user entity of the recipient, NULL if this is not a personal message.
    */
   public function getPersonalRecipient();
 

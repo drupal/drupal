@@ -120,7 +120,7 @@ class GroupwiseMax extends RelationshipPluginBase {
     );
 
 
-    // WIP: This stuff doens't work yet: namespacing issues.
+    // WIP: This stuff doesn't work yet: namespacing issues.
     // A list of suitable views to pick one as the subview.
     $views = array('' => '- None -');
     foreach (Views::getAllViews() as $view) {

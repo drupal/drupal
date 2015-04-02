@@ -20,7 +20,7 @@
  *   may contain the following elements:
  *   - name: The human-readable language type identifier.
  *   - description: A description of the language type.
- *   - locked: A boolean indicating if the user can choose wether to configure
+ *   - locked: A boolean indicating if the user can choose whether to configure
  *     the language type or not using the UI.
  *   - fixed: A fixed array of language negotiation method identifiers to use to
  *     initialize this language. If locked is set to TRUE and fixed is set, it

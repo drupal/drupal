@@ -19,7 +19,7 @@ use Drupal\simpletest\KernelTestBase;
 class MergeAttachmentsTest extends KernelTestBase {
 
   /**
-   * Tests justs library asset merging.
+   * Tests library asset merging.
    */
   function testLibraryMerging() {
     $a['#attached'] = array(
@@ -67,7 +67,7 @@ class MergeAttachmentsTest extends KernelTestBase {
   }
 
   /**
-   * Tests justs JavaScript and JavaScript setting asset merging.
+   * Tests JavaScript and JavaScript setting asset merging.
    */
   function testJsSettingMerging() {
     $a['#attached'] = array(

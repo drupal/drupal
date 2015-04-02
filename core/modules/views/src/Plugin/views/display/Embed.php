@@ -12,7 +12,7 @@ namespace Drupal\views\Plugin\views\display;
  *
  * @ingroup views_display_plugins
  *
- * @todo: Wait until annotations/plugins support access mehtods.
+ * @todo: Wait until annotations/plugins support access methods.
  * no_ui => !\Drupal::config('views.settings')->get('ui.show.display_embed'),
  *
  * @ViewsDisplay(

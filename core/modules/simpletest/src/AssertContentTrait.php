@@ -285,7 +285,7 @@ trait AssertContentTrait {
    *   messages: use format_string() to embed variables in the message text, not
    *   t(). If left blank, a default message will be displayed.
    * @param string $group
-   *   (optional) The gorup this message is in, which is displayed in a column
+   *   (optional) The group this message is in, which is displayed in a column
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.

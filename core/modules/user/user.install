@@ -73,7 +73,7 @@ function user_install() {
     ))
     ->save();
 
-  // We need some placeholders here as name and mail are uniques.
+  // We need some placeholders here as name and mail are unique.
   // This will be changed by the settings form in the installer.
   $storage
     ->create(array(

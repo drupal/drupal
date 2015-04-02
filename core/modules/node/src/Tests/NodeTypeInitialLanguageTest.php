@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Tests\NodeTypeInitalLanguageTest.
+ * Definition of Drupal\node\Tests\NodeTypeInitialLanguageTest.
  */
 
 namespace Drupal\node\Tests;

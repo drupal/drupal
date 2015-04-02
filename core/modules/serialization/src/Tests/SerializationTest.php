@@ -11,7 +11,7 @@ use Drupal\simpletest\KernelTestBase;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 
 /**
- * Funtional tests for serialization system.
+ * Functional tests for serialization system.
  *
  * @group serialization
  */

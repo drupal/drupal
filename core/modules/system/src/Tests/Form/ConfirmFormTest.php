@@ -33,7 +33,7 @@ class ConfirmFormTest extends WebTestBase {
     $this->assertText(t('ConfirmFormTestForm::getDescription().'), 'The description was used.');
     $this->assertFieldByXPath('//input[@id="edit-submit"]', t('ConfirmFormTestForm::getConfirmText().'), 'The confirm text was used.');
 
-    // Test canelling the form.
+    // Test cancelling the form.
     $this->clickLink(t('ConfirmFormTestForm::getCancelText().'));
     $this->assertUrl('form-test/autocomplete', array(), "The form's cancel link was followed.");
 

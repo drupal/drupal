@@ -273,7 +273,7 @@ function search_simplify($text, $langcode = NULL) {
   $text = preg_replace('/([' . PREG_CLASS_NUMBERS . ']+)[' . PREG_CLASS_PUNCTUATION . ']+(?=[' . PREG_CLASS_NUMBERS . '])/u', '\1', $text);
 
   // Multiple dot and dash groups are word boundaries and replaced with space.
-  // No need to use the unicode modifer here because 0-127 ASCII characters
+  // No need to use the unicode modifier here because 0-127 ASCII characters
   // can't match higher UTF-8 characters as the leftmost bit of those are 1.
   $text = preg_replace('/[.-]{2,}/', ' ', $text);
 
@@ -796,7 +796,7 @@ function _search_find_match_with_simplify($key, $text, $boundary, $langcode = NU
   $simplified_key = trim(search_simplify($key, $langcode));
   $simplified_text = trim(search_simplify($text, $langcode));
   if ($simplified_key == '' || $simplified_text == '' || strpos($simplified_text, $simplified_key) === FALSE) {
-    // The simplfied keyword and text do not match at all, or are empty.
+    // The simplified keyword and text do not match at all, or are empty.
     return NULL;
   }
 

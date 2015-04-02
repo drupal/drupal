@@ -47,7 +47,7 @@ class NodeTypeTest extends NodeTestBase {
    * Tests creating a content type programmatically and via a form.
    */
   function testNodeTypeCreation() {
-    // Create a content type programmaticaly.
+    // Create a content type programmatically.
     $type = $this->drupalCreateContentType();
 
     $type_exists = (bool) NodeType::load($type->id());

@@ -27,7 +27,7 @@ class HistoryTest extends WebTestBase {
   /**
    * The main user for testing.
    *
-   * @var objec
+   * @var object
    */
   protected $user;
 

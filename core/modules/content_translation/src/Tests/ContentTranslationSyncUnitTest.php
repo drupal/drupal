@@ -25,14 +25,14 @@ class ContentTranslationSyncUnitTest extends KernelTestBase {
   protected $synchronizer;
 
   /**
-   * The colums to be synchronized.
+   * The columns to be synchronized.
    *
    * @var array
    */
   protected $synchronized;
 
   /**
-   * All the field colums.
+   * All the field columns.
    *
    * @var array
    */

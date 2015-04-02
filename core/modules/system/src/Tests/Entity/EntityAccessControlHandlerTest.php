@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\Entity\EntityAccessHControlandlerTest.
+ * Contains \Drupal\system\Tests\Entity\EntityAccessControlHandlerTest.
  */
 
 namespace Drupal\system\Tests\Entity;

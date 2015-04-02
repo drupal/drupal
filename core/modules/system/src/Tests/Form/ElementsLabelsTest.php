@@ -24,7 +24,7 @@ class ElementsLabelsTest extends WebTestBase {
   public static $modules = array('form_test');
 
   /**
-   * Test form elements, labels, title attibutes and required marks output
+   * Test form elements, labels, title attributes and required marks output
    * correctly and have the correct label option class if needed.
    */
   function testFormLabels() {

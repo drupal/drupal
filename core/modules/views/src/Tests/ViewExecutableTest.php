@@ -97,7 +97,7 @@ class ViewExecutableTest extends ViewUnitTestBase {
   }
 
   /**
-   * Tests the views.exectuable container service.
+   * Tests the views.executable container service.
    */
   public function testFactoryService() {
     $factory = $this->container->get('views.executable');

@@ -12,7 +12,7 @@ use Drupal\filter\Plugin\FilterBase;
 use Drupal\Component\Utility\Xss;
 
 /**
- * Provides a test filter to restirct HTML tags and attributes.
+ * Provides a test filter to restrict HTML tags and attributes.
  *
  * @Filter(
  *   id = "filter_test_restrict_tags_and_attributes",

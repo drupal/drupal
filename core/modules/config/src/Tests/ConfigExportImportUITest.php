@@ -243,7 +243,7 @@ class ConfigExportImportUITest extends WebTestBase {
     $this->assertEqual($data, array('foo' => 'baz'), 'The config_test.another_update in collection.test2 exists in the snapshot storage.');
     $this->assertFalse($test2_snapshot->read('config_test.another_create'), 'The config_test.another_create in collection.test2 does not exist in the snapshot storage.');
 
-    // Create the tar contains the expected contect for the collections.
+    // Create the tar that contains the expected content for the collections.
     $tar = new ArchiveTar($filename, 'gz');
     $content_list = $tar->listContent();
     // Convert the list of files into something easy to search.

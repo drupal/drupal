@@ -140,7 +140,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
       $this->table = $options['table'];
     }
 
-    // Allow alliases on both fields and tables.
+    // Allow aliases on both fields and tables.
     if (isset($this->definition['real table'])) {
       $this->table = $this->definition['real table'];
     }
@@ -523,7 +523,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
     // Ensure this gets set to something.
     $this->relationship = NULL;
 
-    // Don't process non-existant relationships.
+    // Don't process non-existent relationships.
     if (empty($this->options['relationship']) || $this->options['relationship'] == 'none') {
       return;
     }

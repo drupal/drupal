@@ -273,7 +273,7 @@ function content_translation_form_alter(array &$form, FormStateInterface $form_s
 /**
  * Implements hook_language_fallback_candidates_OPERATION_alter().
  *
- * Performs language fallback for unaccessible translations.
+ * Performs language fallback for inaccessible translations.
  */
 function content_translation_language_fallback_candidates_entity_view_alter(&$candidates, $context) {
   /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */

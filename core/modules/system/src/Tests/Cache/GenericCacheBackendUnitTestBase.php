@@ -16,7 +16,7 @@ use Drupal\simpletest\KernelTestBase;
  *
  * Full generic unit test suite for any cache backend. In order to use it for a
  * cache backend implementation, extend this class and override the
- * createBackendInstace() method to return an object.
+ * createBackendInstance() method to return an object.
  *
  * @see DatabaseBackendUnitTestCase
  *   For a full working implementation.
@@ -571,7 +571,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
 
     Cache::invalidateTags(array('test_tag:2'));
 
-    // Test that cache entry has been invalidated in multple bins.
+    // Test that the cache entry has been invalidated in multiple bins.
     foreach ($bins as $bin) {
       $this->assertFalse($this->getCacheBackend($bin)->get('test'), 'Tag invalidation affected item in bin.');
     }

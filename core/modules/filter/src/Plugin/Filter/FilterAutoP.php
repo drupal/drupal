@@ -11,7 +11,7 @@ use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
 
 /**
- * Provides a filter to conver line breaks to HTML.
+ * Provides a filter to convert line breaks to HTML.
  *
  * @Filter(
  *   id = "filter_autop",

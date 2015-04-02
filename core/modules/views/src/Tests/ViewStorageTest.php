@@ -272,7 +272,7 @@ class ViewStorageTest extends ViewUnitTestBase {
     $display_id = 'default';
     $expected_items = array();
     // Tests addHandler with getItem.
-    // Therefore add one item without any optioins and one item with some
+    // Therefore add one item without any options and one item with some
     // options.
     $id1 = $view->addHandler($display_id, 'field', 'views_test_data', 'id');
     $item1 = $view->getHandler($display_id, 'field', 'id');

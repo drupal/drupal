@@ -1395,7 +1395,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     }
     $form['#title'] = SafeMarkup::checkPlain($this->display['display_title']) . ': ';
 
-    // Set the 'section' to hilite on the form.
+    // Set the 'section' to highlight on the form.
     // If it's the item we're looking at is pulling from the default display,
     // reflect that. Don't use is_defaulted since we want it to show up even
     // on the default display.

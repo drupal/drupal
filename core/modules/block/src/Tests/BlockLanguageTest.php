@@ -11,7 +11,7 @@ use Drupal\simpletest\WebTestBase;
 use Drupal\block\Entity\Block;
 
 /**
- * Tests if a block can be configure to be only visibile on a particular
+ * Tests if a block can be configured to be only visible on a particular
  * language.
  *
  * @group block

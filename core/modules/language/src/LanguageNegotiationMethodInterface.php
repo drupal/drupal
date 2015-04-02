@@ -50,7 +50,7 @@ interface LanguageNegotiationMethodInterface {
    *   initialized yet.
    *
    * @return string
-   *   A valid language code or FALSE if the negotitation was unsuccessful.
+   *   A valid language code or FALSE if the negotiation was unsuccessful.
    */
   public function getLangcode(Request $request = NULL);
 

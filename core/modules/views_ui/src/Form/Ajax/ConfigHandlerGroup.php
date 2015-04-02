@@ -18,7 +18,7 @@ use Drupal\views\ViewExecutable;
 class ConfigHandlerGroup extends ViewsFormBase {
 
   /**
-   * Constucts a new ConfigHandlerGroup object.
+   * Constructs a new ConfigHandlerGroup object.
    */
   public function __construct($type = NULL, $id = NULL) {
     $this->setType($type);

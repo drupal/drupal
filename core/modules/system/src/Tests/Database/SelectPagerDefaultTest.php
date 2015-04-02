@@ -127,7 +127,7 @@ class SelectPagerDefaultTest extends DatabaseWebTestBase {
   }
 
   /**
-   * Confirms that every pager gets a valid, non-overlaping element ID.
+   * Confirms that every pager gets a valid, non-overlapping element ID.
    */
   function testElementNumbers() {
 

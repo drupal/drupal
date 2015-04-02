@@ -148,7 +148,7 @@ class LanguageUrlRewritingTest extends WebTestBase {
 
     $this->assertEqual($url, $expected, 'The right port is used.');
 
-    // If we set the port explicitly, it should not be overriden.
+    // If we set the port explicitly, it should not be overridden.
     $url = Url::fromRoute('<none>', [], [
       'absolute' => TRUE,
       'language' => $language,

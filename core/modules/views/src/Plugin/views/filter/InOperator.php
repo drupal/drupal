@@ -344,7 +344,7 @@ class InOperator extends FilterPluginBase {
           unset($this->value[$value]);
         }
       }
-      // Choose different kind of ouput for 0, a single and multiple values.
+      // Choose different kind of output for 0, a single and multiple values.
       if (count($this->value) == 0) {
         $values = $this->t('Unknown');
       }
@@ -444,7 +444,7 @@ class InOperator extends FilterPluginBase {
           unset($this->value[$value]);
         }
       }
-      // Choose different kind of ouput for 0, a single and multiple values.
+      // Choose different kind of output for 0, a single and multiple values.
       if (count($this->value) == 0) {
         $errors[] = $this->t('No valid values found on filter: @filter.', array('@filter' => $this->adminLabel(TRUE)));
       }

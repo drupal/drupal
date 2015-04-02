@@ -93,7 +93,8 @@ class HandlerAllTest extends HandlerTestBase {
         }
       }
 
-      // Go through each step invidiually to see whether some parts are failing.
+      // Go through each step individually to see whether some parts are
+      // failing.
       $view->build();
       $view->preExecute();
       $view->execute();

@@ -181,7 +181,7 @@ class StandardTest extends UnitTestCase {
 
     // Escaping JavaScript escapes.
     // @see https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#Escaping_JavaScript_escapes
-    // This one is irrelevent for Drupal; we *never* output any JavaScript code
+    // This one is irrelevant for Drupal; we *never* output any JavaScript code
     // that depends on the URL's query string.
 
     // End title tag.
@@ -200,7 +200,7 @@ class StandardTest extends UnitTestCase {
     // @see https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#IMG_Dynsrc
     $data[] = array('<IMG DYNSRC="javascript:alert(\'XSS\')">', '<IMG dynsrc="alert(&#039;XSS&#039;)">');
 
-    // IMG lowrsc.
+    // IMG lowsrc.
     // @see https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#IMG_lowsrc
     $data[] = array('<IMG LOWSRC="javascript:alert(\'XSS\')">', '<IMG lowsrc="alert(&#039;XSS&#039;)">');
 

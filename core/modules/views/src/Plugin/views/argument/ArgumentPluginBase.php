@@ -651,7 +651,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheablePlugin
   }
 
   /**
-   * How to act if validation failes
+   * How to act if validation fails.
    */
   public function validateFail() {
     $info = $this->defaultActions($this->options['validate']['fail']);
@@ -849,7 +849,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheablePlugin
 
   /**
    * Sorts the summary based upon the user's selection. The base variant of
-   * this is usually adequte.
+   * this is usually adequate.
    *
    * @param $order
    *   The order selected in the UI.
@@ -979,7 +979,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheablePlugin
       return $this->argument;
     }
 
-    // Otherwise, we have to pretend to process ourself to find the value.
+    // Otherwise, we have to pretend to process ourselves to find the value.
     $value = NULL;
     // Find the position of this argument within the view.
     $position = 0;
@@ -1153,10 +1153,10 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheablePlugin
   }
 
   /**
-   * Revert sanititized validator options.
+   * Revert sanitized validator options.
    *
    * @param string $id
-   *   The santitized identifier to be reverted.
+   *   The sanitized identifier to be reverted.
    *
    * @return string
    *   The original identifier.

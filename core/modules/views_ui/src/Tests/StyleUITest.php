@@ -60,7 +60,7 @@ class StyleUITest extends UITestBase {
     $this->assertEqual($style['options']['test_option'], $random_name, 'Make sure that the custom settings field got saved as expected.');
 
     // Test that fields are working correctly in the UI for style plugins when
-    // a field row plguin is selected.
+    // a field row plugin is selected.
     $this->drupalPostForm("admin/structure/views/view/$view_name/edit", array(), 'Add Page');
     $this->drupalPostForm("admin/structure/views/nojs/display/$view_name/page_1/row", array('row[type]' => 'fields'), t('Apply'));
     // If fields are being used this text will not be shown.

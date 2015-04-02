@@ -68,7 +68,7 @@ class TaxonomyTermIndentationTest extends TaxonomyTestBase {
     );
 
     $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->get('vid' ) . '/overview', $edit, t('Save'));
-    // All terms back at the root level, no identation should be present.
+    // All terms back at the root level, no indentation should be present.
     $this->assertNoPattern('|<div class="js-indentation">&nbsp;</div>|');
 
     // Check explicitly that term 2 has no parents.

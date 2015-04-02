@@ -152,7 +152,7 @@ class Sql extends QueryPluginBase {
    * Set the view to be distinct (per base field).
    *
    * @param bool $value
-   *   Should the view by distincted.
+   *   Should the view be distincted.
    */
   protected function setDistinct($value = TRUE) {
     if (!(isset($this->noDistinct) && $value)) {
@@ -604,7 +604,7 @@ class Sql extends QueryPluginBase {
 
     // Have we been this way?
     if (isset($traced[$join->leftTable])) {
-      // we looped. Broked.
+      // We looped. Broken.
       return FALSE;
     }
 

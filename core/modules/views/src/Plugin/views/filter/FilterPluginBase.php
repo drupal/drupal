@@ -61,7 +61,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheablePluginIn
   var $operator = '=';
 
   /**
-   * Contains the information of the selected item in a gruped filter.
+   * Contains the information of the selected item in a grouped filter.
    */
   var $group_info = NULL;
 
@@ -1303,7 +1303,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheablePluginIn
     // know where to look for session stored values.
     $display_id = ($this->view->display_handler->isDefaulted('filters')) ? 'default' : $this->view->current_display;
 
-    // false means that we got a setting that means to recuse ourselves,
+    // False means that we got a setting that means to recurse ourselves,
     // so we should erase whatever happened to be there.
     if ($status === FALSE && isset($_SESSION['views'][$this->view->storage->id()][$display_id])) {
       $session = &$_SESSION['views'][$this->view->storage->id()][$display_id];
@@ -1395,7 +1395,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheablePluginIn
     // shortcut test.
     $operator = !empty($this->options['expose']['use_operator']) && !empty($this->options['expose']['operator_id']);
 
-    // false means that we got a setting that means to recuse ourselves,
+    // False means that we got a setting that means to recurse ourselves,
     // so we should erase whatever happened to be there.
     if (!$status && isset($_SESSION['views'][$this->view->storage->id()][$display_id])) {
       $session = &$_SESSION['views'][$this->view->storage->id()][$display_id];

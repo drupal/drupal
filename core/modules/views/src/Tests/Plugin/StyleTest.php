@@ -43,7 +43,7 @@ class StyleTest extends ViewTestBase {
   }
 
   /**
-   * Tests the general renderering of styles.
+   * Tests the general rendering of styles.
    */
   public function testStyle() {
     // This run use the test row plugin and render with it.

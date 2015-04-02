@@ -60,7 +60,7 @@ class BlockContentSaveTest extends BlockContentTestBase {
   }
 
   /**
-   * Tests determing changes in hook_block_presave().
+   * Tests determining changes in hook_block_presave().
    *
    * Verifies the static block load cache is cleared upon save.
    */
@@ -78,8 +78,8 @@ class BlockContentSaveTest extends BlockContentTestBase {
     $block->save();
 
     // The hook implementations block_content_test_block_content_presave() and
-    // block_content_test_block_content_update() determine changes and change the
-    // title as well as programatically set the 'changed' timestamp.
+    // block_content_test_block_content_update() determine changes and change
+    // the title as well as programmatically set the 'changed' timestamp.
     $this->assertEqual($block->label(), 'updated_presave_update', 'Changes have been determined.');
     $this->assertEqual($block->getChangedTime(), 979534800, 'Saving a custom block uses "changed" timestamp set in presave hook.');
 

@@ -54,7 +54,7 @@ class PerformanceForm extends ConfigFormBase {
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
    * @param \Drupal\Core\Cache\CacheBackendInterface $render_cache
-   * @param \Drupal\Core\Datetime\DateFormatter $date_formater
+   * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
    *   The date formatter service.
    * @param \Drupal\Core\Asset\AssetCollectionOptimizerInterface $css_collection_optimizer
    *   The CSS asset collection optimizer service.

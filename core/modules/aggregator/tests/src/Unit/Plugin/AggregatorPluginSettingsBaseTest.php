@@ -76,7 +76,7 @@ class AggregatorPluginSettingsBaseTest extends UnitTestCase {
    * plugins that extend AggregatorPluginSettingsBase.
    */
   public function testSettingsForm() {
-    // Emulate a form state of a sumbitted form.
+    // Emulate a form state of a submitted form.
     $form_state = (new FormState())->setValues([
       'dummy_length' => '',
       'aggregator_allowed_html_tags' => '',

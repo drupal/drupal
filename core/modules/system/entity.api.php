@@ -429,7 +429,7 @@ use Drupal\node\Entity\NodeType;
  * $query_service = $container->get('entity.query');
  * $query = $query_service->get('your_entity_type');
  * @endcode
- * If you need aggregation, there is an aggregate query avaialable, which
+ * If you need aggregation, there is an aggregate query available, which
  * implements \Drupal\Core\Entity\Query\QueryAggregateInterface:
  * @code
  * $query \Drupal::entityQueryAggregate('your_entity_type');

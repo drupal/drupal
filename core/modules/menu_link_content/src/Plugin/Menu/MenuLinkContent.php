@@ -124,7 +124,7 @@ class MenuLinkContent extends MenuLinkBase implements ContainerFactoryPluginInte
       if (!empty($this->pluginDefinition['metadata']['entity_id'])) {
         $entity_id = $this->pluginDefinition['metadata']['entity_id'];
         // Make sure the current ID is in the list, since each plugin empties
-        // the list after calling loadMultple(). Note that the list may include
+        // the list after calling loadMultiple(). Note that the list may include
         // multiple IDs added earlier in each plugin's constructor.
         static::$entityIdsToLoad[$entity_id] = $entity_id;
         $entities = $storage->loadMultiple(array_values(static::$entityIdsToLoad));

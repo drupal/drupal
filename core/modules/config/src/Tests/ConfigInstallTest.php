@@ -186,7 +186,7 @@ class ConfigInstallTest extends KernelTestBase {
     $this->assertEqual($collections, $active_storage->getAllCollectionNames());
     $collection_storage = $active_storage->createCollection('entity');
 
-    // The config_test.dynamic.dotted.default configuraton object saved in the
+    // The config_test.dynamic.dotted.default configuration object saved in the
     // active store should be a configuration entity complete with UUID. Because
     // the entity collection does not support configuration entities the
     // configuration object stored there with the same name should only contain

@@ -1440,7 +1440,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       }
     }
 
-    // If the query and fragment were programatically assigned overwrite any
+    // If the query and fragment were programmatically assigned overwrite any
     // parsed values.
     if (isset($alter['query'])) {
       // Convert the query to a string, perform token replacement, and then

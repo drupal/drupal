@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Condition;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests that condtion plugins basic form handling is working.
+ * Tests that condition plugins basic form handling is working.
  *
  * Checks condition forms and submission and gives a very cursory check to make
  * sure the configuration that was submitted actually causes the condition to

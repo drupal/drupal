@@ -26,7 +26,7 @@ class SimpleTestErrorCollectorTest extends WebTestBase {
   /**
    * Errors triggered during the test.
    *
-   * Errors are intercepted by the overriden implementation
+   * Errors are intercepted by the overridden implementation
    * of Drupal\simpletest\WebTestBase::error() below.
    *
    * @var Array

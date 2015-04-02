@@ -291,7 +291,7 @@ function locale_translate_batch_import_save(array $context) {
 /**
  * Implements callback_batch_operation().
  *
- * Refreshs translations after importing strings.
+ * Refreshes translations after importing strings.
  *
  * @param array $context
  *   Contains a list of strings updated and information about the progress.
@@ -460,7 +460,7 @@ function locale_translate_file_attach_properties($file, array $options = array()
   // Extract project, version and language code from the file name. Supported:
   // {project}-{version}.{langcode}.po, {prefix}.{langcode}.po or {langcode}.po
   preg_match('!
-    (                       # project OR project and version OR emtpy (group 1)
+    (                       # project OR project and version OR empty (group 1)
       ([a-z_]+)             # project name (group 2)
       \.                    # .
       |                     # OR

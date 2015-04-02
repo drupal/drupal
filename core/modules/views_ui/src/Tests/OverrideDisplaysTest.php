@@ -172,7 +172,7 @@ class OverrideDisplaysTest extends UITestBase {
   function testRevertAllDisplays() {
     // Create a basic view with a page, block.
     // Because there is both a title on page and block we expect the title on
-    // the block be overriden.
+    // the block be overridden.
     $view['label'] = $this->randomMachineName(16);
     $view['id'] = strtolower($this->randomMachineName(16));
     $view['page[create]'] = 1;

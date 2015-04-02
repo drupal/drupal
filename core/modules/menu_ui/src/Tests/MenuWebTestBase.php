@@ -22,7 +22,7 @@ abstract class MenuWebTestBase extends WebTestBase {
   public static $modules = array('menu_ui', 'menu_link_content');
 
   /**
-   * Fetchs the menu item from the database and compares it to expected item.
+   * Fetches the menu item from the database and compares it to expected item.
    *
    * @param int $menu_plugin_id
    *   Menu item id.

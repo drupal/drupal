@@ -57,7 +57,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     ]));
     // Now create an initial block-type.
     $this->createBlockContentType('basic', TRUE);
-    // Create a block type programmaticaly.
+    // Create a block type programmatically.
     $type = $this->createBlockContentType('other');
 
     $block_type = BlockContentType::load('other');

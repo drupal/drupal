@@ -21,7 +21,7 @@
  * - Adding spaces between words of Chinese or Japanese text.
  * - Stemming words down to their root words to allow matches between, for
  *   instance, walk, walked, walking, and walks in searching.
- * - Expanding abbreviations and acronymns that occur in text.
+ * - Expanding abbreviations and acronyms that occur in text.
  *
  * @param string $text
  *   The text to preprocess. This is a single piece of plain text extracted

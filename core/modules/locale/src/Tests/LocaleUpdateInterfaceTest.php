@@ -36,7 +36,7 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
    * Tests the user interfaces of the interface translation update system.
    *
    * Testing the Available updates summary on the side wide status page and the
-   * Avaiable translation updates page.
+   * Available translation updates page.
    */
   public function testInterface() {
     // No language added.

@@ -19,7 +19,7 @@ class SysLog implements LoggerInterface {
   use RfcLoggerTrait;
 
   /**
-   * A configuration object containin syslog settings.
+   * A configuration object containing syslog settings.
    *
    * @var \Drupal\Core\Config\Config
    */

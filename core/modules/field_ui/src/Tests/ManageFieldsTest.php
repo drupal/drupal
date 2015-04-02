@@ -498,7 +498,7 @@ class ManageFieldsTest extends WebTestBase {
    */
   function testLockedField() {
     // Create a locked field and attach it to a bundle. We need to do this
-    // programatically as there's no way to create a locked field through UI.
+    // programmatically as there's no way to create a locked field through UI.
     $field_name = strtolower($this->randomMachineName(8));
     $field_storage = entity_create('field_storage_config', array(
       'field_name' => $field_name,

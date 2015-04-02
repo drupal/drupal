@@ -64,7 +64,7 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
     $this->fieldStorage->setSetting('allowed_values', [10 => 'Update', 20 => 'Twenty']);
     $this->fieldStorage->save();
     // The entity holds an outdated field object with the old allowed values
-    // setting, so we need to reintialize the entity object.
+    // setting, so we need to reinitialize the entity object.
     $entity = entity_create('entity_test');
     $form = \Drupal::service('entity.form_builder')->getForm($entity);
     $this->assertTrue(empty($form[$this->fieldName]['widget'][1]), 'Option 1 does not exist');

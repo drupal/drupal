@@ -181,7 +181,7 @@ class ThemeTest extends WebTestBase {
   }
 
   /**
-   * Ensures a themes template is overrideable based on the 'template' filename.
+   * Ensures a themes template is overridable based on the 'template' filename.
    */
   function testTemplateOverride() {
     $this->config('system.theme')

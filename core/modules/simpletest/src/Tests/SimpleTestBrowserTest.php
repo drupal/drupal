@@ -121,7 +121,7 @@ class SimpleTestBrowserTest extends WebTestBase {
   }
 
   /**
-   * Tests that PHPUnit and KernalTestBase tests work through the UI.
+   * Tests that PHPUnit and KernelTestBase tests work through the UI.
    */
   public function testTestingThroughUI() {
     // We can not test WebTestBase tests here since they require a valid .htkey
@@ -130,7 +130,7 @@ class SimpleTestBrowserTest extends WebTestBase {
 
     $this->drupalGet('admin/config/development/testing');
     $edit = array(
-      // A KernalTestBase test.
+      // A KernelTestBase test.
       'tests[Drupal\field\Tests\String\StringFormatterTest]' => TRUE,
     );
     $this->drupalPostForm(NULL, $edit, t('Run tests'));

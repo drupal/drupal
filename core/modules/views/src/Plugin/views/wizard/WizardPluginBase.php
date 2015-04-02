@@ -978,7 +978,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     // 'none'.
     if (($sort_type = $form_state->getValue(array('show', 'sort'))) && $sort_type != 'none') {
       list($column, $sort) = explode(':', $sort_type);
-      // Column either be a column-name or the table-columnn-ame.
+      // Column either be a column-name or the table-column-name.
       $column = explode('-', $column);
       if (count($column) > 1) {
         $table = $column[0];

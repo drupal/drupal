@@ -256,7 +256,7 @@ class UrlTest extends WebTestBase {
     $result = Url::fromUri($url)->toString();
     $this->assertEqual($url, $result, 'External URL with fragment works without a fragment in $options.');
 
-    // Verify fragment can be overidden in an external URL.
+    // Verify fragment can be overridden in an external URL.
     $url = $test_url . '#drupal';
     $fragment = $this->randomMachineName(10);
     $result = Url::fromUri($url, array('fragment' => $fragment))->toString();

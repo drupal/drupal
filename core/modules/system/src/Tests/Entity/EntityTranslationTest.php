@@ -561,7 +561,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     $entity->addTranslation($langcode, $values[$langcode]);
     $entity->save();
 
-    // Check that retrieveing the current translation works as expected.
+    // Check that retrieving the current translation works as expected.
     $entity = $this->reloadEntity($entity);
     $translation = $this->entityManager->getTranslationFromContext($entity, $langcode2);
     $this->assertEqual($translation->language()->getId(), $default_langcode, 'The current translation language matches the expected one.');

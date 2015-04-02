@@ -270,7 +270,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
     }
     $view->destroy();
 
-    // Test delta limit + custom seperator.
+    // Test delta limit + custom separator.
     $this->prepareView($view);
     $view->displayHandlers->get('default')->options['fields'][$field_name]['delta_first_last'] = FALSE;
     $view->displayHandlers->get('default')->options['fields'][$field_name]['delta_limit'] = 3;

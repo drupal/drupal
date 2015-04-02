@@ -684,7 +684,7 @@ function views_pre_render_views_form_views_form($element) {
 }
 
 /**
- * Implement hook_form_alter for the exposed form.
+ * Implements hook_form_alter() for the exposed form.
  *
  * Since the exposed form is a GET form, we don't want it to send a wide
  * variety of information.
@@ -706,7 +706,7 @@ function views_query_views_alter(AlterableInterface $query) {
   $tables = &$query->getTables();
   $where = &$query->conditions();
 
-  // Replaces substitions in tables.
+  // Replaces substitutions in tables.
   foreach ($tables as $table_name => $table_metadata) {
     foreach ($table_metadata['arguments'] as $replacement_key => $value) {
       if (isset($substitutions[$value])) {
@@ -715,7 +715,7 @@ function views_query_views_alter(AlterableInterface $query) {
     }
   }
 
-  // Replaces substitions in filter criteria.
+  // Replaces substitutions in filter criteria.
   _views_query_tag_alter_condition($query, $where, $substitutions);
 }
 

@@ -337,7 +337,7 @@ abstract class CommentTestBase extends WebTestBase {
    *   Comment to perform operation on.
    * @param string $operation
    *   Operation to perform.
-   * @param bool $aproval
+   * @param bool $approval
    *   Operation is found on approval page.
    */
   function performCommentOperation(CommentInterface $comment, $operation, $approval = FALSE) {

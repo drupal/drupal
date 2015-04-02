@@ -220,7 +220,7 @@ class SelectTest extends DatabaseTestBase {
   /**
    * Tests that we can UNION multiple Select queries together.
    *
-   * This is semantically equal to UNION DISTINCT, so we don't explicity test
+   * This is semantically equal to UNION DISTINCT, so we don't explicitly test
    * that.
    */
   function testUnion() {

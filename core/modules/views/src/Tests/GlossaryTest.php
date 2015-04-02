@@ -34,7 +34,7 @@ class GlossaryTest extends ViewTestBase {
    * Tests the default glossary view.
    */
   public function testGlossaryView() {
-    // create a contentype and add some nodes, with a non random title.
+    // Create a content type and add some nodes, with a non-random title.
     $type = $this->drupalCreateContentType();
     $nodes_per_char = array(
       'd' => 1,

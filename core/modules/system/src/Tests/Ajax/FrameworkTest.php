@@ -60,7 +60,7 @@ class FrameworkTest extends AjaxTestBase {
     // Load any page with at least one CSS file, at least one JavaScript file
     // and at least one #ajax-powered element. The latter is an assumption of
     // drupalPostAjaxForm(), the two former are assumptions of
-    // AjaxReponse::ajaxRender().
+    // AjaxResponse::ajaxRender().
     // @todo refactor AJAX Framework + tests to make less assumptions.
     $this->drupalGet('ajax_forms_test_lazy_load_form');
 

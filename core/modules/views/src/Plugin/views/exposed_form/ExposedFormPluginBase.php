@@ -285,7 +285,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
   }
 
   /**
-   * This function is executed when exposed form is submited.
+   * This function is executed when exposed form is submitted.
    *
    * @param $form
    *   Nested array of form elements that comprise the form.

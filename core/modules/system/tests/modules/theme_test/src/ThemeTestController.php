@@ -44,7 +44,7 @@ class ThemeTestController extends ControllerBase {
   }
 
   /**
-   * Tests template overridding based on filename.
+   * Tests template overriding based on filename.
    *
    * @return array
    *   A render array containing a theme override.

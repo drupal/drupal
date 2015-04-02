@@ -301,7 +301,7 @@
  * section, if your module allows users to create zero or more items (where
  * "items" are things like content type definitions, view definitions, and the
  * like), then you need to define a configuration entity type to store your
- * configuration. Creating an entity type, loading entites, and querying them
+ * configuration. Creating an entity type, loading entities, and querying them
  * are outlined in the @link entity_api Entity API topic. @endlink Here are a
  * few additional steps and notes specific to configuration entities:
  * - For examples, look for classes that implement
@@ -954,7 +954,7 @@
  * @section running Running tests
  * You can run both Simpletest and PHPUnit tests by enabling the core Testing
  * module (core/modules/simpletest). Once that module is enabled, tests can be
- * run usin the core/scripts/run-tests.sh script, using
+ * run using the core/scripts/run-tests.sh script, using
  * @link https://drupal.org/project/drush Drush @endlink, or from the Testing
  * module user interface.
  *
@@ -1134,7 +1134,7 @@
  *   subdirectory. Most Drupal Core plugins use this method of discovery.
  * - Hook: Plugin modules need to implement a hook to tell the manager about
  *   their plugins.
- * - YAML: Plugins are listd in YAML files. Drupal Core uses this method for
+ * - YAML: Plugins are listed in YAML files. Drupal Core uses this method for
  *   discovering local tasks and local actions. This is mainly useful if all
  *   plugins use the same class, so it is kind of like a global derivative.
  * - Static: Plugin classes are registered within the plugin manager class
@@ -1346,7 +1346,7 @@
  * - Copy the function to your module's .module file.
  * - Change the name of the function, substituting your module's short name
  *   (name of the module's directory, and .info.yml file without the extension)
- *   for the "hook" part of the sample function name. For instance, to implemnt
+ *   for the "hook" part of the sample function name. For instance, to implement
  *   hook_batch_alter(), you would rename it to my_module_batch_alter().
  * - Edit the documentation for the function (normally, your implementation
  *   should just have one line saying "Implements hook_batch_alter().").

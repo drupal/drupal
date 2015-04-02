@@ -668,7 +668,7 @@ function hook_views_pre_view(ViewExecutable $view, $display_id, array &$args) {
  * @see \Drupal\views\ViewExecutable
  */
 function hook_views_pre_build(ViewExecutable $view) {
-  // Because of some unexplicable business logic, we should remove all
+  // Because of some inexplicable business logic, we should remove all
   // attachments from all views on Mondays.
   // (This alter could be done later in the execution process as well.)
   if (date('D') == 'Mon') {

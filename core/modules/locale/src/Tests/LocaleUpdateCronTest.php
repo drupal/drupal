@@ -65,7 +65,7 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
     );
     $this->drupalPostForm('admin/config/regional/translate/settings', $edit, t('Save configuration'));
 
-    // Execute locale cron taks to add tasks to the queue.
+    // Execute locale cron tasks to add tasks to the queue.
     locale_cron();
 
     // Check whether no tasks are added to the queue.
@@ -80,7 +80,7 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
     );
     $this->drupalPostForm('admin/config/regional/translate/settings', $edit, t('Save configuration'));
 
-    // Execute locale cron taks to add tasks to the queue.
+    // Execute locale cron tasks to add tasks to the queue.
     locale_cron();
 
     // Check whether tasks are added to the queue.

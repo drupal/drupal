@@ -7,7 +7,7 @@
 namespace Drupal\search\Tests;
 
 /**
- * Tests that the search prepocessing uses the correct language code.
+ * Tests that the search preprocessing uses the correct language code.
  *
  * @group search
  */

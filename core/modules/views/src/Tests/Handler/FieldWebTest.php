@@ -295,7 +295,8 @@ class FieldWebTest extends HandlerTestBase {
     $this->assertSubString($output, UrlHelper::encodePath('Drupal Has A Great Community'));
     unset($id_field->options['alter']['path_case']);
 
-    // Tests the linkclass setting and see whether it actuall exists in the output.
+    // Tests the linkclass setting and see whether it actually exists in the
+    // output.
     $id_field->options['alter']['link_class'] = $class = $this->randomMachineName();
     $output = $id_field->theme($row);
     $elements = $this->xpathContent($output, '//a[contains(@class, :class)]', array(':class' => $class));

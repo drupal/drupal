@@ -40,7 +40,8 @@ class DisplayTest extends DisplayPluginBase {
   }
 
   /**
-   * Overrides Drupal\views\Plugin\views\display\DisplayPluginBase::defineOptions().
+   * Overrides
+   * Drupal\views\Plugin\views\display\DisplayPluginBase::defineOptions().
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
@@ -50,7 +51,7 @@ class DisplayTest extends DisplayPluginBase {
   }
 
   /**
-   * Overrides Drupal\views\Plugin\views\display\DisplayPluginBase::optionsSummaryv().
+   * {@inheritdoc}
    */
   public function optionsSummary(&$categories, &$options) {
     parent::optionsSummary($categories, $options);
@@ -73,7 +74,7 @@ class DisplayTest extends DisplayPluginBase {
   }
 
   /**
-   * Overrides Drupal\views\Plugin\views\display\DisplayPluginBase::buildOptionsForm().
+   * {@inheritdoc}
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
@@ -92,7 +93,7 @@ class DisplayTest extends DisplayPluginBase {
   }
 
   /**
-   * Overrides Drupal\views\Plugin\views\display\DisplayPluginBase::validateOptionsForm().
+   * {@inheritdoc}
    */
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     parent::validateOptionsForm($form, $form_state);
@@ -107,7 +108,7 @@ class DisplayTest extends DisplayPluginBase {
   }
 
   /**
-   * Overrides Drupal\views\Plugin\views\display\DisplayPluginBase::submitOptionsForm().
+   * {@inheritdoc}
    */
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     parent::submitOptionsForm($form, $form_state);
@@ -119,7 +120,7 @@ class DisplayTest extends DisplayPluginBase {
   }
 
   /**
-   * Overrides Drupal\views\Plugin\views\display\DisplayPluginBase::execute().
+   * {@inheritdoc}
    */
   public function execute() {
     $this->view->build();
@@ -132,9 +133,7 @@ class DisplayTest extends DisplayPluginBase {
   }
 
   /**
-   * Overrides Drupal\views\Plugin\views\display\DisplayPluginBase::preview().
-   *
-   * Override so preview and execute are the same output.
+   * {@inheritdoc}
    */
   public function preview() {
     return $this->execute();

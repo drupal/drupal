@@ -85,7 +85,7 @@ class Name extends User {
       $account->uid = $this->getValue($values, 'uid');
       $account->name = $this->getValue($values);
       if (!empty($this->options['overwrite_anonymous']) && !$account->id()) {
-        // This is an anonymous user, and we're overriting the text.
+        // This is an anonymous user, and we're overwriting the text.
         return SafeMarkup::checkPlain($this->options['anonymous_text']);
       }
       elseif (!empty($this->options['link_to_user'])) {

@@ -133,7 +133,8 @@ class NodeRevisionPermissionsTest extends NodeTestBase {
       'account' => $accounts,
     );
 
-    // Test that the accounts have access to the correspoding page revision permissions.
+    // Test that the accounts have access to the corresponding page revision
+    // permissions.
     $revision = $this->node_revisions['page'][1];
 
     $permutations = $this->generatePermutations($parameters);

@@ -56,8 +56,8 @@ interface StringStorageInterface {
    *
    * @param array $conditions
    *   (optional) Array with conditions to filter the locations that may be any
-   *   of the follwing elements:
-   *   - 'sid', The tring identifier.
+   *   of the following elements:
+   *   - 'sid', The string identifier.
    *   - 'type', The location type.
    *   - 'name', The location name.
    *

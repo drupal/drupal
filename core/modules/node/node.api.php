@@ -65,7 +65,7 @@ use Drupal\Core\Access\AccessResult;
  * called.
  *
  * @param \Drupal\Core\Session\AccountInterface $account
- *   The acccount object whose grants are requested.
+ *   The account object whose grants are requested.
  * @param string $op
  *   The node operation to be performed, such as 'view', 'update', or 'delete'.
  *

@@ -173,7 +173,7 @@ class ConfigEntityTest extends WebTestBase {
       $this->fail($e->getMessage());
     }
 
-    // Test with an ID exeeding the maximum allowed length.
+    // Test with an ID exceeding the maximum allowed length.
     $id_length_config_test = entity_create('config_test', array(
       'id' => $this->randomMachineName(static::MAX_ID_LENGTH + 1),
     ));

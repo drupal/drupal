@@ -161,7 +161,7 @@ class LinksTest extends WebTestBase {
     $this->assertMenuLinkParents($links, $expected_hierarchy);
 
     // Start over, and move child-1 under child-2, and check that all the
-    // childs of child-1 have been moved too.
+    // children of child-1 have been moved too.
     $links = $this->createLinkHierarchy($module);
     /* @var \Drupal\Core\Menu\MenuLinkInterface $menu_link_plugin  */
     $this->menuLinkManager->updateDefinition($links['child-1'], array('parent' => $links['child-2']));

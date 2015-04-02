@@ -152,7 +152,7 @@ class DatabaseStorageExpirableTest extends StorageTestBase {
     $stores[0]->setWithExpireIfNotExists('yesterday', "you'd forgiven me", -1 * $day);
     $stores[0]->setWithExpire('still', "'til we say we're sorry", 2 * $day);
 
-    // Ensure only non-expired items are retrived.
+    // Ensure only non-expired items are retrieved.
     $all = $stores[0]->getAll();
     $this->assertIdentical(count($all), 2);
     foreach (array('troubles', 'still') as $key) {

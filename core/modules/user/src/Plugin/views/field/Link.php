@@ -93,7 +93,7 @@ class Link extends FieldPluginBase {
    *   The current row of the views result.
    *
    * @return string
-   *   The acutal rendered text (without the link) of this field.
+   *   The actual rendered text (without the link) of this field.
    */
   protected function renderLink(EntityInterface $entity, ResultRow $values) {
     $text = !empty($this->options['text']) ? $this->options['text'] : $this->t('View');

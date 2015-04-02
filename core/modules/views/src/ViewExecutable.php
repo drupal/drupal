@@ -2058,7 +2058,7 @@ class ViewExecutable implements \Serializable {
    * @param string $requested_id
    *   The requested ID for the handler instance.
    * @param array $existing_items
-   *   An array of existing handler instancess, keyed by their IDs.
+   *   An array of existing handler instances, keyed by their IDs.
    *
    * @return string
    *   A unique ID. This will be equal to $requested_id if no handler instance

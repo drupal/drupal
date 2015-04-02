@@ -42,7 +42,7 @@ class SearchKeywordsConditionsTest extends SearchTestBase {
   }
 
   /**
-   * Verify the kewords are captured and conditions respected.
+   * Verify the keywords are captured and conditions respected.
    */
   function testSearchKeyswordsConditions() {
     // No keys, not conditions - no results.

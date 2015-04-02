@@ -208,7 +208,7 @@ function locale_translation_source_check_file($source) {
  *   - "type": Most recent translation source found. LOCALE_TRANSLATION_REMOTE
  *      and LOCALE_TRANSLATION_LOCAL indicate available new translations,
  *      LOCALE_TRANSLATION_CURRENT indicate that the current translation is them
- *      most recent. "type" sorresponds with a key of the "files" array.
+ *      most recent. "type" corresponds with a key of the "files" array.
  *   - "timestamp": The creation time of the "type" translation (file).
  *   - "last_checked": The time when the "type" translation was last checked.
  *   The "files" array can hold file objects of type:

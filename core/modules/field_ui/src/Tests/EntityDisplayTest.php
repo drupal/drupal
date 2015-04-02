@@ -90,7 +90,7 @@ class EntityDisplayTest extends KernelTestBase {
     $display = entity_load('entity_view_display', $display->id());
     $this->assertNULL($display->getComponent('component_3'));
 
-    // Check that CreateCopy() creates a new component that can be correclty
+    // Check that createCopy() creates a new component that can be correctly
     // saved.
     EntityViewMode::create(array('id' => $display->getTargetEntityTypeId() . '.other_view_mode', 'targetEntityType' => $display->getTargetEntityTypeId()))->save();
     $new_display = $display->createCopy('other_view_mode');

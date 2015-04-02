@@ -93,7 +93,7 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
    * Provides data for the domain test.
    *
    * @return array
-   *   An array of data for checking domain negotation.
+   *   An array of data for checking domain negotiation.
    */
   public function providerTestDomain() {
 

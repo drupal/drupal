@@ -35,12 +35,13 @@
  * The theme system is invoked in drupal_render() by calling the internal
  * _theme() function, which operates on the concept of "theme hooks". Theme
  * hooks define how a particular type of data should be rendered. They are
- * registered by modules by implenting hook_theme(), which specifies the name of
- * the hook, the input "variables" used to provide data and options, and other
- * information. Modules implementing hook_theme() also need to provide a default
- * implementation for each of their theme hooks, normally in a Twig file, and
- * they may also provide preprocessing functions. For example, the core Search
- * module defines a theme hook for a search result item in search_theme():
+ * registered by modules by implementing hook_theme(), which specifies the name
+ * of the hook, the input "variables" used to provide data and options, and
+ * other information. Modules implementing hook_theme() also need to provide a
+ * default implementation for each of their theme hooks, normally in a Twig
+ * file, and they may also provide preprocessing functions. For example, the
+ * core Search module defines a theme hook for a search result item in
+ * search_theme():
  * @code
  * return array(
  *   'search_result' => array(
@@ -80,7 +81,7 @@
  * template file, a module would provide a default implementation function
  * called theme_HOOK, where HOOK is the name of the theme hook (for example,
  * theme_search_result() would be the name of the function for search result
- * theming). In this case, a theme can override the default implentation by
+ * theming). In this case, a theme can override the default implementation by
  * defining a function called THEME_HOOK() in its THEME.theme file, where THEME
  * is the machine name of the theme (for example, 'bartik' is the machine name
  * of the core Bartik theme, and it would define a function called
@@ -584,7 +585,7 @@ function hook_theme_suggestions_alter(array &$suggestions, array $variables, $ho
 /**
  * Alters named suggestions for a specific theme hook.
  *
- * This hook allows any module or theme to provide altenative theme function or
+ * This hook allows any module or theme to provide alternative theme function or
  * template name suggestions and reorder or remove suggestions provided by
  * hook_theme_suggestions_HOOK() or by earlier invocations of this hook.
  *

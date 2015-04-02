@@ -11,7 +11,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Builds a simple form using the FAPI #pattern proterty.
+ * Builds a simple form using the FAPI #pattern property.
  */
 class FormTestPatternForm extends FormBase {
 

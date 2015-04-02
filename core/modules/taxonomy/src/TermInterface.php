@@ -45,7 +45,7 @@ interface TermInterface extends ContentEntityInterface, EntityChangedInterface {
    * Sets the text format name for the term's description.
    *
    * @param string $format
-   *   The term's decription text format.
+   *   The term's description text format.
    *
    * @return $this
    */

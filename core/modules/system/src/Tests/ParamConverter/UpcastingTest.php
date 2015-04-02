@@ -22,8 +22,8 @@ class UpcastingTest extends WebTestBase {
   /**
    * Confirms that all parameters are converted as expected.
    *
-   * All of these requests end up being proccessed by a controller with this
-   * the signature: f($user, $node, $foo) returning either values or labels
+   * All of these requests end up being processed by a controller with the
+   * signature: f($user, $node, $foo) returning either values or labels
    * like "user: Dries, node: First post, foo: bar"
    *
    * The tests shuffle the parameters around an checks if the right thing is

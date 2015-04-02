@@ -456,7 +456,7 @@ class StringDatabaseStorage implements StringStorageInterface {
   }
 
   /**
-   * Createds a database record for a string object.
+   * Creates a database record for a string object.
    *
    * @param \Drupal\locale\StringInterface $string
    *   The string object.
@@ -466,7 +466,7 @@ class StringDatabaseStorage implements StringStorageInterface {
    *   If it succeeded returns the last insert ID of the query, if one exists.
    *
    * @throws \Drupal\locale\StringStorageException
-   *   If the string is not suitable for this storage, an exception ithrown.
+   *   If the string is not suitable for this storage, an exception is thrown.
    */
   protected function dbStringInsert($string) {
     if ($string->isSource()) {

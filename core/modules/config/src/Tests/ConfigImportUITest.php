@@ -310,7 +310,7 @@ class ConfigImportUITest extends WebTestBase {
   }
 
   /**
-   * Tests that mutliple validation errors are listed on the page.
+   * Tests that multiple validation errors are listed on the page.
    */
   public function testImportValidation() {
     // Set state value so that

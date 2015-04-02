@@ -39,7 +39,7 @@ class ConfigLanguageOverrideWebTest extends WebTestBase {
     $adminUser = $this->drupalCreateUser(array('administer site configuration', 'administer languages'));
     $this->drupalLogin($adminUser);
 
-    // Add a custom lanugage.
+    // Add a custom language.
     $langcode = 'xx';
     $name = $this->randomMachineName(16);
     $edit = array(

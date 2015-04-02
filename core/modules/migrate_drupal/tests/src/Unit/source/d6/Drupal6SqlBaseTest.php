@@ -166,7 +166,7 @@ class TestDrupal6SqlBase extends DrupalSqlBase {
    * Tweaks Drupal6SqlBase to set a new database connection for tests.
    *
    * @param \Drupal\Core\Database\Connection
-   *   The new conection to use.
+   *   The new connection to use.
    *
    * @see \Drupal\Tests\migrate\Unit\MigrateSqlTestCase
    */

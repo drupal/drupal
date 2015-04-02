@@ -29,7 +29,7 @@ class EnginePhpTemplateTest extends WebTestBase {
   }
 
   /**
-   * Ensures a theme's template is overrideable based on the 'template' filename.
+   * Ensures a theme's template is overridable based on the 'template' filename.
    */
   function testTemplateOverride() {
     $this->config('system.theme')

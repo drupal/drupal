@@ -59,7 +59,7 @@ use Drupal\Core\Session\AccountInterface;
  * - URL: Determine the language from the URL (path prefix or domain).
  * - Session: Determine the language from a request/session parameter.
  * - User: Follow the user's language preference.
- * - User admin language: Identifie admin language from the user preferences.
+ * - User admin language: Identify admin language from the user preferences.
  * - Browser: Determine the language from the browser's language settings.
  * - Selected language: Use the default site language.
  * Language negotiation methods are simple plugin classes that implement a

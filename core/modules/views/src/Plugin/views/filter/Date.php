@@ -108,7 +108,7 @@ class Date extends NumericFilter {
   protected function buildGroupValidate($form, FormStateInterface $form_state) {
     // Special case to validate grouped date filters, this is because the
     // $group['value'] array contains the type of filter (date or offset)
-    // and therefore the number of items the comparission has to be done
+    // and therefore the number of items the comparison has to be done
     // against 'one' instead of 'zero'.
     foreach ($form_state->getValue(array('options', 'group_info', 'group_items')) as $id => $group) {
       if (empty($group['remove'])) {

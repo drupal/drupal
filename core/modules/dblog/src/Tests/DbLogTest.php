@@ -15,7 +15,7 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Generate events and verify dblog entries; verify user access to log reports
- * based on persmissions.
+ * based on permissions.
  *
  * @group dblog
  */

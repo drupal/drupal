@@ -205,11 +205,11 @@ class ContentTranslationSettingsTest extends WebTestBase {
    * Asserts that translatability has the expected value for the given bundle.
    *
    * @param string $entity_type
-   *   The entity type for which to check translatibility.
+   *   The entity type for which to check translatability.
    * @param string $bundle
-   *   The bundle for which to check translatibility.
+   *   The bundle for which to check translatability.
    * @param bool $enabled
-   *   TRUE if translatibility should be enabled, FALSE otherwise.
+   *   TRUE if translatability should be enabled, FALSE otherwise.
    * @param array $edit
    *   An array of values to submit to the content translation settings page.
    *

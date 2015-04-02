@@ -126,7 +126,7 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
   }
 
   /**
-   * Assert unaccessible items don't change the data of the fields.
+   * Assert inaccessible items don't change the data of the fields.
    */
   public function testAccess() {
     // Revoke the 'view test entity' permission for this test.
