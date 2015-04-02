@@ -187,37 +187,33 @@ small .admin-link:after {
   background: url(../../../misc/icons/787878/cog.svg) 0 50% no-repeat;
 }
 
-/**
- * Status report.
- */
+/* Status report. */
 .system-status-report td {
-  padding: 6px;
   vertical-align: top;
 }
-.system-status-report td:nth-child(-n+2) {
-  background-color: rgba(0, 0, 0, 0.04);
-}
-.system-status-report .status-icon {
+.system-status-report__status-icon {
   width: 16px;
   padding-right: 0; /* LTR */
 }
-[dir="rtl"] .system-status-report .status-icon {
+[dir="rtl"] .system-status-report__status-icon {
   padding-left: 0;
   padding-right: 6px;
 }
-.system-status-report .status-icon div {
+.system-status-report__status-icon:before {
+  content: "";
   background-repeat: no-repeat;
   height: 16px;
   width: 16px;
   margin-top: 2px;
+  display: block;
 }
-.system-status-report .status-icon--error div {
+.system-status-report__status-icon--error:before {
   background-image: url(../../../misc/icons/ea2800/error.svg);
 }
-.system-status-report .status-icon--warning div {
+.system-status-report__status-icon--warning:before {
   background-image: url(../../../misc/icons/e29700/warning.svg);
 }
-.system-status-report .status-title {
+.system-status-report__status-title {
   width: 25%;
 }
 

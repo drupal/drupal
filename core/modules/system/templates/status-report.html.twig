@@ -26,17 +26,17 @@
   <tbody>
   {% for requirement in requirements %}
     {% if requirement.severity_status in ['warning', 'error'] %}
-      <tr class="color-{{ requirement.severity_status }}">
+      <tr class="system-status-report__entry color-{{ requirement.severity_status }}">
     {% else %}
-      <tr>
+      <tr class="system-status-report__entry">
     {% endif %}
-        <td class="status-icon status-icon--{{ requirement.severity_status }}">
+        <td class="system-status-report__status-icon system-status-report__status-icon--{{ requirement.severity_status }}">
           <div title="{{ requirement.severity_title }}">
             <span class="visually-hidden">{{ requirement.severity_title }}</span>
           </div>
         </td>
-        <td class="status-title">{{ requirement.title }}</td>
-        <td class="status-value">
+        <td class="system-status-report__status-title">{{ requirement.title }}</td>
+        <td>
           {{ requirement.value }}
           {% if requirement.description %}
             <div class="description">{{ requirement.description }}</div>

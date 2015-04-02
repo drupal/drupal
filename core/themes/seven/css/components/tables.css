@@ -1,6 +1,8 @@
 /**
- * Tables.
+ * @file
+ * Seven styles for Tables.
  */
+
 table {
   width: 100%;
   margin: 0 0 10px;
@@ -121,26 +123,6 @@ th.select-all {
  */
 .caption {
   margin-bottom: 1.2em;
-}
-
-/**
- * Status report table.
- */
-table.system-status-report tr {
-  border-top: 1px solid #ccc;
-  border-bottom: inherit;
-}
-table.system-status-report tr:first-child {
-  border-top: 1px solid #bebfb9;
-}
-table.system-status-report tr:last-child {
-  border-bottom: 1px solid #bebfb9;
-}
-table.system-status-report td {
-  padding: 12px;
-}
-table.system-status-report td:nth-child(-n+2) {
- background-color: transparent;
 }
 
 /**
