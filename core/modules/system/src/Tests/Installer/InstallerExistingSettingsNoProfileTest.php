@@ -2,39 +2,33 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\Installer\InstallerExistingSettingsTest.
+ * Contains \Drupal\system\Tests\Installer\InstallerExistingSettingsNoProfileTest.
  */
 
 namespace Drupal\system\Tests\Installer;
 
+use Drupal\Core\Site\Settings;
 use Drupal\simpletest\InstallerTestBase;
 use Drupal\Core\Database\Database;
 
 /**
- * Tests the installer with an existing settings file.
+ * Tests the installer with an existing settings file but no install profile.
  *
  * @group Installer
  */
-class InstallerExistingSettingsTest extends InstallerTestBase {
+class InstallerExistingSettingsNoProfileTest extends InstallerTestBase {
 
   /**
    * {@inheritdoc}
    *
-   * Fully configures a preexisting settings.php file before invoking the
-   * interactive installer.
+   * Configures a preexisting settings.php file without an install_profile
+   * setting before invoking the interactive installer.
    */
   protected function setUp() {
     // Pre-configure hash salt.
     // Any string is valid, so simply use the class name of this test.
     $this->settings['settings']['hash_salt'] = (object) array(
       'value' => __CLASS__,
-      'required' => TRUE,
-    );
-
-    // During interactive install we'll change this to a different profile and
-    // this test will ensure that the new value is written to settings.php.
-    $this->settings['settings']['install_profile'] = (object) array(
-      'value' => 'minimal',
       'required' => TRUE,
     );
 
@@ -79,7 +73,7 @@ class InstallerExistingSettingsTest extends InstallerTestBase {
   public function testInstaller() {
     $this->assertUrl('user/1');
     $this->assertResponse(200);
-    $this->assertEqual('testing', drupal_get_profile(), 'Profile was changed from minimal to testing during interactive install.');
+    $this->assertEqual('testing', Settings::get('install_profile'));
   }
 
 }

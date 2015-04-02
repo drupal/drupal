@@ -730,6 +730,8 @@ function install_tasks($install_state) {
       'run' => $install_state['settings_verified'] ? INSTALL_TASK_SKIP : INSTALL_TASK_RUN_IF_NOT_COMPLETED,
       'function' => 'Drupal\Core\Installer\Form\SiteSettingsForm',
     ),
+    'install_write_profile' => array(
+    ),
     'install_verify_database_ready' => array(
       'run' => $install_state['database_ready'] ? INSTALL_TASK_SKIP : INSTALL_TASK_RUN_IF_NOT_COMPLETED,
     ),
@@ -2261,5 +2263,22 @@ function install_display_requirements($install_state, $requirements) {
         throw new InstallerException(implode("\n\n", $failures));
       }
     }
+  }
+}
+
+/**
+ * Installation task; ensures install profile is written to settings.php.
+ *
+ * @param array $install_state
+ *   An array of information about the current installation state.
+ */
+function install_write_profile($install_state) {
+  if (Settings::get('install_profile') !== $install_state['parameters']['profile']) {
+    // Remember the profile which was used.
+    $settings['settings']['install_profile'] = (object) array(
+      'value' => $install_state['parameters']['profile'],
+      'required' => TRUE,
+    );
+    drupal_rewrite_settings($settings);
   }
 }
