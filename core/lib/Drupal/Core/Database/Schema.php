@@ -554,7 +554,14 @@ abstract class Schema implements PlaceholderInterface {
    * @param $name
    *   The name of the index.
    * @param $fields
-   *   An array of field names.
+   *   An array of field names or field information; if field information is
+   *   passed, it's an array whose first element is the field name and whose
+   *   second is the maximum length in the index. For example, the following
+   *   will use the full length of the `foo` field, but limit the `bar` field to
+   *   4 characters:
+   *   @code
+   *     $fields = ['foo', ['bar', 4]];
+   *   @endcode
    *
    * @throws \Drupal\Core\Database\SchemaObjectDoesNotExistException
    *   If the specified table doesn't exist.
