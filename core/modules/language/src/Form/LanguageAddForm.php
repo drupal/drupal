@@ -54,6 +54,7 @@ class LanguageAddForm extends LanguageFormBase {
       ),
       '#validate' => array('::validatePredefined'),
       '#submit' => array('::submitForm', '::save'),
+      '#button_type' => 'primary',
     );
 
     $custom_language_states_conditions = array(
