@@ -558,8 +558,20 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          link_to_user: false
-          plugin_id: user_mail
+          click_sort_column: value
+          type: basic_string
+          settings: {  }
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: 0
+          plugin_id: field
           entity_type: user
           entity_field: mail
       filters:

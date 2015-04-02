@@ -86,7 +86,6 @@ class UserViewsData extends EntityViewsData {
 
     // Note that this field implements field level access control.
     $data['users_field_data']['mail']['help'] = t('Email address for a given user. This field is normally not shown to users, so be cautious when using it.');
-    $data['users_field_data']['mail']['field']['id'] = 'user_mail';
 
     $data['users_field_data']['langcode']['help'] = t('Original language of the user information');
     $data['users_field_data']['langcode']['help'] = t('Language of the translation of user information');
