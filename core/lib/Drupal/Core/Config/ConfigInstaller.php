@@ -9,6 +9,7 @@ namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\Entity\ConfigDependencyManager;
+use Drupal\Core\Config\Entity\ConfigEntityDependency;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -141,16 +142,11 @@ class ConfigInstaller implements ConfigInstallerInterface {
         $storage = new FileStorage($optional_install_path, StorageInterface::DEFAULT_COLLECTION);
         $this->installOptionalConfig($storage, '');
       }
-      // Install any optional configuration entities whose type this extension
-      // provides. This searches all the installed modules config/optional
+      // Install any optional configuration entities whose dependencies can now
+      // be met. This searches all the installed modules config/optional
       // directories.
-      $provides_config_entity_type = array_reduce($this->configManager->getEntityManager()->getDefinitions(), function ($return, EntityTypeInterface $entity_type) use ($name) {
-        return $return ?: $entity_type->getProvider() && $entity_type->getConfigPrefix();
-      }, FALSE);
-      if ($provides_config_entity_type) {
-        $storage = new ExtensionInstallStorage($this->getActiveStorages(StorageInterface::DEFAULT_COLLECTION), InstallStorage::CONFIG_OPTIONAL_DIRECTORY, StorageInterface::DEFAULT_COLLECTION, FALSE);
-        $this->installOptionalConfig($storage, $name . '.');
-      }
+      $storage = new ExtensionInstallStorage($this->getActiveStorages(StorageInterface::DEFAULT_COLLECTION), InstallStorage::CONFIG_OPTIONAL_DIRECTORY, StorageInterface::DEFAULT_COLLECTION, FALSE);
+      $this->installOptionalConfig($storage, [$type => $name]);
     }
 
     // Reset all the static caches and list caches.
@@ -160,7 +156,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
   /**
    * {@inheritdoc}
    */
-  public function installOptionalConfig(StorageInterface $storage = NULL, $prefix = '') {
+  public function installOptionalConfig(StorageInterface $storage = NULL, $dependency = []) {
     if (!$storage) {
       // Search the install profile's optional configuration too.
       $storage = new ExtensionInstallStorage($this->getActiveStorages(StorageInterface::DEFAULT_COLLECTION), InstallStorage::CONFIG_OPTIONAL_DIRECTORY, StorageInterface::DEFAULT_COLLECTION, TRUE);
@@ -180,18 +176,37 @@ class ConfigInstaller implements ConfigInstallerInterface {
       if (!$this->configManager->supportsConfigurationEntities($collection)) {
         continue;
       }
-      $existing_config = $this->getActiveStorages($collection)->listAll($prefix);
-      $config_to_create = $this->getConfigToCreate($storage, $collection, $prefix, $profile_storage);
-      $all_config = array_merge($existing_config, array_keys($config_to_create));
+      $existing_config = $this->getActiveStorages($collection)->listAll();
+
+      $list = array_filter($storage->listAll(), function($config_name) use ($existing_config) {
+        // Only list configuration that:
+        // - does not already exist
+        // - is a configuration entity (this also excludes config that has an
+        //   implicit dependency on modules that are not yet installed)
+        return !in_array($config_name, $existing_config) && $this->configManager->getEntityTypeIdByName($config_name);
+      });
+
+      $all_config = array_merge($existing_config, $list);
+      $config_to_create = $storage->readMultiple($list);
+      // Check to see if the corresponding override storage has any overrides.
+      if ($profile_storage) {
+        if ($profile_storage->getCollectionName() != $collection) {
+          $profile_storage = $profile_storage->createCollection($collection);
+        }
+        $config_to_create = $profile_storage->readMultiple($list) + $config_to_create;
+      }
       foreach ($config_to_create as $config_name => $data) {
-        // Exclude configuration that:
-        // - already exists
-        // - is a not configuration entity
-        // - or its dependencies cannot be met.
-        if (in_array($config_name, $existing_config) ||
-          !$this->configManager->getEntityTypeIdByName($config_name) ||
-          !$this->validateDependencies($config_name, $data, $enabled_extensions, $all_config)) {
+        // Exclude configuration where its dependencies cannot be met.
+        if (!$this->validateDependencies($config_name, $data, $enabled_extensions, $all_config)) {
           unset($config_to_create[$config_name]);
+        }
+        // Exclude configuration that does not have a matching dependency.
+        elseif (!empty($dependency)) {
+          // Create a light weight dependency object to check dependencies.
+          $config_entity = new ConfigEntityDependency($config_name, $data);
+          if (!$config_entity->hasDependency(key($dependency), reset($dependency))) {
+            unset($config_to_create[$config_name]);
+          }
         }
       }
       if (!empty($config_to_create)) {

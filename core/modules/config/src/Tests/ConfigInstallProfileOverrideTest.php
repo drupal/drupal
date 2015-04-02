@@ -106,15 +106,10 @@ class ConfigInstallProfileOverrideTest extends WebTestBase {
     // dependency does not get created.
     $this->assertNull($config_test_storage->load('override_unmet'), 'The optional config_test entity with unmet dependencies is not created.');
 
+    // Installing dblog creates the optional configuration.
     $this->container->get('module_installer')->install(['dblog']);
     $this->rebuildContainer();
-    // Just installing db_log does not create the optional configuration.
-    $this->assertNull($config_test_storage->load('override_unmet'), 'The optional config_test entity with unmet dependencies is not created.');
-    // Install all available optional configuration.
-    $this->container->get('config.installer')->installOptionalConfig();
-    $this->assertEqual($config_test_storage->load('override_unmet')->label(), 'Override', 'The optional config_test entity is overridden by the profile optional configuration.');
-
-
+    $this->assertEqual($config_test_storage->load('override_unmet')->label(), 'Override', 'The optional config_test entity is overridden by the profile optional configuration and is installed when its dependencies are met.');
   }
 
 }

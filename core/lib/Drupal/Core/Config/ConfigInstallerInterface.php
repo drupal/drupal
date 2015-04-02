@@ -49,11 +49,13 @@ interface ConfigInstallerInterface {
    *   (optional) The configuration storage to search for optional
    *   configuration. If not provided, all enabled extension's optional
    *   configuration directories will be searched.
-   * @param string $prefix
-   *   (optional) If set, limits the installed configuration to only
-   *   configuration beginning with the provided value.
+   * @param array $dependency
+   *   (optional) If set, ensures that the configuration being installed has
+   *   this dependency. The format is dependency type as the key ('module',
+   *   'theme', or 'config') and the dependency name as the value
+   *   ('book', 'bartik', 'views.view.frontpage').
    */
-  public function installOptionalConfig(StorageInterface $storage = NULL, $prefix = '');
+  public function installOptionalConfig(StorageInterface $storage = NULL, $dependency = []);
 
   /**
    * Installs all default configuration in the specified collection.

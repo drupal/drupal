@@ -61,6 +61,12 @@ class ConfigOtherModuleTest extends WebTestBase {
     // not throw an error.
     $this->installModule('config_other_module_config_test');
     $this->assertTrue(\Drupal::moduleHandler()->moduleExists('config_other_module_config_test'), 'The config_other_module_config_test module is installed.');
+
+    // Ensure that optional configuration with unmet dependencies is only
+    // installed once all the dependencies are met.
+    $this->assertNull(entity_load('config_test', 'other_module_test_unmet', TRUE), 'The optional configuration whose dependencies are met is not created.');
+    $this->installModule('config_install_dependency_test');
+    $this->assertTrue(entity_load('config_test', 'other_module_test_unmet', TRUE), 'The optional configuration whose dependencies are met is now created.');
   }
 
   /**
