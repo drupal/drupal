@@ -31,13 +31,11 @@ class RequestHandler implements ContainerAwareInterface {
    *   The route match.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The HTTP request object.
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
-   *   The route match.
    *
    * @return \Symfony\Component\HttpFoundation\Response
    *   The response object.
    */
-  public function handle(RouteMatchInterface $route_match, Request $request, RouteMatchInterface $route_match) {
+  public function handle(RouteMatchInterface $route_match, Request $request) {
 
     $plugin = $route_match->getRouteObject()->getDefault('_plugin');
     $method = strtolower($request->getMethod());

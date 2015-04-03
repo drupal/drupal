@@ -1135,7 +1135,7 @@ class Sql extends QueryPluginBase {
       if (!empty($field['function'])) {
         $info = $this->getAggregationInfo();
         if (!empty($info[$field['function']]['method']) && is_callable(array($this, $info[$field['function']]['method']))) {
-          $string = $this::$info[$field['function']]['method']($field['function'], $string);
+          $string = $this::{$info[$field['function']]['method']}($field['function'], $string);
           $placeholders = !empty($field['placeholders']) ? $field['placeholders'] : array();
           $query->addExpression($string, $fieldname, $placeholders);
         }
