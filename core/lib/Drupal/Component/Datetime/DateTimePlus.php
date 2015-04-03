@@ -7,26 +7,26 @@
 namespace Drupal\Component\Datetime;
 
 /**
- * Extends DateTime().
+ * Wraps DateTime().
  *
- * This class extends the PHP DateTime class with more flexible initialization
+ * This class wraps the PHP DateTime class with more flexible initialization
  * parameters, allowing a date to be created from an existing date object,
  * a timestamp, a string with an unknown format, a string with a known
  * format, or an array of date parts. It also adds an errors array
  * and a __toString() method to the date object.
  *
- * This class is less lenient than the parent DateTime class. It changes
+ * This class is less lenient than the DateTime class. It changes
  * the default behavior for handling date values like '2011-00-00'.
- * The parent class would convert that value to '2010-11-30' and report
+ * The DateTime class would convert that value to '2010-11-30' and report
  * a warning but not an error. This extension treats that as an error.
  *
- * As with the base class, a date object may be created even if it has
+ * As with the DateTime class, a date object may be created even if it has
  * errors. It has an errors array attached to it that explains what the
  * errors are. This is less disruptive than allowing datetime exceptions
  * to abort processing. The calling script can decide what to do about
  * errors using hasErrors() and getErrors().
  */
-class DateTimePlus extends \DateTime {
+class DateTimePlus {
 
   const FORMAT   = 'Y-m-d H:i:s';
 
@@ -92,6 +92,13 @@ class DateTimePlus extends \DateTime {
   protected $errors = array();
 
   /**
+   * The DateTime object.
+   *
+   * @var \DateTime
+   */
+  protected $dateTimeObject = NULL;
+
+  /**
    * Creates a date object from an input date object.
    *
    * @param \DateTime $datetime
@@ -126,7 +133,7 @@ class DateTimePlus extends \DateTime {
     $date_parts = static::prepareArray($date_parts, TRUE);
     if (static::checkArray($date_parts)) {
       // Even with validation, we can end up with a value that the
-      // parent class won't handle, like a year outside the range
+      // DateTime class won't handle, like a year outside the range
       // of -9999 to 9999, which will pass checkdate() but
       // fail to construct a date object.
       $iso_date = static::arrayToISO($date_parts);
@@ -251,7 +258,7 @@ class DateTimePlus extends \DateTime {
       }
 
       if (empty($this->errors)) {
-        parent::__construct($prepared_time, $prepared_timezone);
+        $this->dateTimeObject = new \DateTime($prepared_time, $prepared_timezone);
       }
     }
     catch (\Exception $e) {
@@ -266,7 +273,7 @@ class DateTimePlus extends \DateTime {
   /**
    * Implements __toString() for dates.
    *
-   * The base DateTime class does not implement this.
+   * The DateTime class does not implement this.
    *
    * @see https://bugs.php.net/bug.php?id=62911
    * @see http://www.serverphorums.com/read.php?7,555645
@@ -274,6 +281,43 @@ class DateTimePlus extends \DateTime {
   public function __toString() {
     $format = static::FORMAT;
     return $this->format($format) . ' ' . $this->getTimeZone()->getName();
+  }
+
+  /**
+   * Implements the magic __call method.
+   *
+   * Passes through all unknown calls onto the DateTime object.
+   */
+  public function __call($method, $args) {
+    // @todo consider using assert() as per https://www.drupal.org/node/2451793.
+    if (!isset($this->dateTimeObject)) {
+      throw new \Exception('DateTime object not set.');
+    }
+    if (!method_exists($this->dateTimeObject, $method)) {
+      throw new \BadMethodCallException(sprintf('Call to undefined method %s::%s()', get_class($this), $method));
+    }
+    return call_user_func_array(array($this->dateTimeObject, $method), $args);
+  }
+
+  /**
+   * Implements the magic __callStatic method.
+   *
+   * Passes through all unknown static calls onto the DateTime object.
+   */
+  public static function __callStatic($method, $args) {
+    if (!method_exists('\DateTime', $method)) {
+      throw new \BadMethodCallException(sprintf('Call to undefined method %s::%s()', get_called_class(), $method));
+    }
+    return call_user_func_array(array('\DateTime', $method), $args);
+  }
+
+  /**
+   * Implements the magic __clone method.
+   *
+   * Deep-clones the DateTime object we're wrapping.
+   */
+  public function __clone() {
+    $this->dateTimeObject = clone($this->dateTimeObject);
   }
 
   /**
@@ -349,7 +393,7 @@ class DateTimePlus extends \DateTime {
    * @see http://us3.php.net/manual/en/time.getlasterrors.php
    */
   public function checkErrors() {
-    $errors = $this->getLastErrors();
+    $errors = \DateTime::getLastErrors();
     if (!empty($errors['errors'])) {
       $this->errors += $errors['errors'];
     }
@@ -541,7 +585,7 @@ class DateTimePlus extends \DateTime {
 
     // Format the date and catch errors.
     try {
-      $value = parent::format($format);
+      $value = $this->dateTimeObject->format($format);
     }
     catch (\Exception $e) {
       $this->errors[] = $e->getMessage();

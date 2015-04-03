@@ -238,7 +238,7 @@ class DateTimePlusTest extends UnitTestCase {
    */
   public function testDateTimezoneWithDateTimeObject() {
     // Create a date object with another date object.
-    $input = new DateTimePlus('now', 'Pacific/Midway');
+    $input = new \DateTime('now', new \DateTimeZone('Pacific/Midway'));
     $timezone = NULL;
     $expected_timezone = 'Pacific/Midway';
     $message = 'DateTimePlus uses the specified timezone if provided.';

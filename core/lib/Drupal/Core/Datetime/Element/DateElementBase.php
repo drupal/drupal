@@ -35,7 +35,8 @@ abstract class DateElementBase extends FormElement {
    *   described by this pattern.
    */
   protected static function datetimeRangeYears($string, $date = NULL) {
-    $this_year = date_format(new DrupalDateTime(), 'Y');
+    $datetime = new DrupalDateTime();
+    $this_year = $datetime->format('Y');
     list($min_year, $max_year) = explode(':', $string);
 
     // Valid patterns would be -5:+5, 0:+1, 2008:2010.
