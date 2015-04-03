@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\views\Tests\Plugin\views\field\EntityOperationsUnitTest.
+ * Contains \Drupal\Tests\views\Unit\Plugin\views\field\EntityOperationsUnitTest.
  */
 
-namespace Drupal\views\Tests\Plugin\views\field {
+namespace Drupal\Tests\views\Unit\Plugin\views\field {
 
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\views\field\EntityOperations;

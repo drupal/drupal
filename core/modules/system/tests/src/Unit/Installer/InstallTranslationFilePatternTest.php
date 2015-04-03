@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Installer\InstallTranslationFilePatternTest.
+ * Contains \Drupal\Tests\system\Unit\Installer\InstallTranslationFilePatternTest.
  */
 
-namespace Drupal\system\Tests\Installer;
+namespace Drupal\Tests\system\Unit\Installer;
 
 use Drupal\Core\StringTranslation\Translator\FileTranslation;
 use Drupal\Tests\UnitTestCase;

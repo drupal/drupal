@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\ban\Tests\BanMiddlewareTest.
+ * Contains \Drupal\Tests\ban\Unit\BanMiddlewareTest.
  */
 
-namespace Drupal\ban\Tests;
+namespace Drupal\Tests\ban\Unit;
 
 use Drupal\ban\BanMiddleware;
 use Drupal\Tests\UnitTestCase;

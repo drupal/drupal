@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\image\Tests\ImageStyleTest.
+ * Contains \Drupal\Tests\image\Unit\ImageStyleTest.
  */
 
-namespace Drupal\image\Tests;
+namespace Drupal\Tests\image\Unit;
 
 use Drupal\Tests\UnitTestCase;
 use Drupal\Component\Utility\Crypt;
