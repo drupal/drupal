@@ -847,7 +847,7 @@ class Crawler extends \SplObjectStorage
             }
         }
 
-        return sprintf("concat(%s)", implode($parts, ', '));
+        return sprintf('concat(%s)', implode($parts, ', '));
     }
 
     /**
@@ -1027,7 +1027,7 @@ class Crawler extends \SplObjectStorage
      */
     private function findNamespacePrefixes($xpath)
     {
-        if (preg_match_all('/(?P<prefix>[a-z_][a-z_0-9\-\.]*):[^"\/]/i', $xpath, $matches)) {
+        if (preg_match_all('/(?P<prefix>[a-z_][a-z_0-9\-\.]*):[^"\/:]/i', $xpath, $matches)) {
             return array_unique($matches['prefix']);
         }
 
