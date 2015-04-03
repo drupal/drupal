@@ -285,9 +285,6 @@ Email module
 Editor module
 - Wim Leers 'Wim Leers' http://drupal.org/user/99777
 
-Entity module
-- ?
-
 Entity Reference module
 - Amitai Burstein 'Amitaibu' http://drupal.org/user/57511
 - Andrei Mateescu 'amateescu' http://drupal.org/user/729614
