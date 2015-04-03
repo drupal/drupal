@@ -76,6 +76,28 @@ function field_ui_entity_type_build(array &$entity_types) {
 
   $entity_types['entity_form_display']->setFormClass('edit', 'Drupal\field_ui\Form\EntityFormDisplayEditForm');
   $entity_types['entity_view_display']->setFormClass('edit', 'Drupal\field_ui\Form\EntityViewDisplayEditForm');
+
+  $form_mode = $entity_types['entity_form_mode'];
+  $form_mode->setListBuilderClass('Drupal\field_ui\EntityFormModeListBuilder');
+  $form_mode->setFormClass('add', 'Drupal\field_ui\Form\EntityFormModeAddForm');
+  $form_mode->setFormClass('edit', 'Drupal\field_ui\Form\EntityDisplayModeEditForm');
+  $form_mode->setFormClass('delete', 'Drupal\field_ui\Form\EntityDisplayModeDeleteForm');
+  $form_mode->set('admin_permission', 'administer display modes');
+  $form_mode->setLinkTemplate('delete-form', '/admin/structure/display-modes/form/manage/{entity_form_mode}/delete');
+  $form_mode->setLinkTemplate('edit-form', '/admin/structure/display-modes/form/manage/{entity_form_mode}');
+  $form_mode->setLinkTemplate('add-form', '/admin/structure/display-modes/form/add/{entity_type_id}');
+  $form_mode->setLinkTemplate('collection', '/admin/structure/display-modes/form');
+
+  $view_mode = $entity_types['entity_view_mode'];
+  $view_mode->setListBuilderClass('Drupal\field_ui\EntityDisplayModeListBuilder');
+  $view_mode->setFormClass('add', 'Drupal\field_ui\Form\EntityDisplayModeAddForm');
+  $view_mode->setFormClass('edit', 'Drupal\field_ui\Form\EntityDisplayModeEditForm');
+  $view_mode->setFormClass('delete', 'Drupal\field_ui\Form\EntityDisplayModeDeleteForm');
+  $view_mode->set('admin_permission', 'administer display modes');
+  $view_mode->setLinkTemplate('delete-form', '/admin/structure/display-modes/view/manage/{entity_view_mode}/delete');
+  $view_mode->setLinkTemplate('edit-form', '/admin/structure/display-modes/view/manage/{entity_view_mode}');
+  $view_mode->setLinkTemplate('add-form', '/admin/structure/display-modes/view/add/{entity_type_id}');
+  $view_mode->setLinkTemplate('collection', '/admin/structure/display-modes/view');
 }
 
 /**
@@ -285,32 +307,4 @@ function field_ui_local_tasks_alter(&$local_tasks) {
   $container = \Drupal::getContainer();
   $local_task = FieldUiLocalTask::create($container, 'field_ui.fields');
   $local_task->alterLocalTasks($local_tasks);
-}
-
-/**
- * Implements hook_entity_type_alter().
- */
-function field_ui_entity_type_alter(array &$entity_types) {
-  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
-  $form_mode = $entity_types['entity_form_mode'];
-  $form_mode->setListBuilderClass('Drupal\field_ui\EntityFormModeListBuilder');
-  $form_mode->setFormClass('add', 'Drupal\field_ui\Form\EntityFormModeAddForm');
-  $form_mode->setFormClass('edit', 'Drupal\field_ui\Form\EntityDisplayModeEditForm');
-  $form_mode->setFormClass('delete', 'Drupal\field_ui\Form\EntityDisplayModeDeleteForm');
-  $form_mode->set('admin_permission', 'administer display modes');
-  $form_mode->setLinkTemplate('delete-form', '/admin/structure/display-modes/form/manage/{entity_form_mode}/delete');
-  $form_mode->setLinkTemplate('edit-form', '/admin/structure/display-modes/form/manage/{entity_form_mode}');
-  $form_mode->setLinkTemplate('add-form', '/admin/structure/display-modes/form/add/{entity_type_id}');
-  $form_mode->setLinkTemplate('collection', '/admin/structure/display-modes/form');
-
-  $view_mode = $entity_types['entity_view_mode'];
-  $view_mode->setListBuilderClass('Drupal\field_ui\EntityDisplayModeListBuilder');
-  $view_mode->setFormClass('add', 'Drupal\field_ui\Form\EntityDisplayModeAddForm');
-  $view_mode->setFormClass('edit', 'Drupal\field_ui\Form\EntityDisplayModeEditForm');
-  $view_mode->setFormClass('delete', 'Drupal\field_ui\Form\EntityDisplayModeDeleteForm');
-  $view_mode->set('admin_permission', 'administer display modes');
-  $view_mode->setLinkTemplate('delete-form', '/admin/structure/display-modes/view/manage/{entity_view_mode}/delete');
-  $view_mode->setLinkTemplate('edit-form', '/admin/structure/display-modes/view/manage/{entity_view_mode}');
-  $view_mode->setLinkTemplate('add-form', '/admin/structure/display-modes/view/add/{entity_type_id}');
-  $view_mode->setLinkTemplate('collection', '/admin/structure/display-modes/view');
 }
