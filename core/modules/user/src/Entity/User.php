@@ -63,13 +63,6 @@ use Drupal\user\UserInterface;
 class User extends ContentEntityBase implements UserInterface {
 
   /**
-   * Stores a reference for a reusable anonymous user entity.
-   *
-   * @var \Drupal\user\UserInterface
-   */
-  protected static $anonymousUser;
-
-  /**
    * The hostname for this user.
    *
    * @var string
@@ -429,26 +422,6 @@ class User extends ContentEntityBase implements UserInterface {
    */
   public function checkExistingPassword(UserInterface $account_unchanged) {
     return !empty($this->get('pass')->existing) && \Drupal::service('password')->check(trim($this->get('pass')->existing), $account_unchanged);
-  }
-
-  /**
-   * Returns an anonymous user entity.
-   *
-   * @return \Drupal\user\UserInterface
-   *   An anonymous user entity.
-   */
-  public static function getAnonymousUser() {
-    if (!isset(static::$anonymousUser)) {
-
-      // @todo Use the entity factory once available, see
-      //   https://www.drupal.org/node/1867228.
-      $entity_manager = \Drupal::entityManager();
-      $entity_type = $entity_manager->getDefinition('user');
-      $class = $entity_type->getClass();
-
-      static::$anonymousUser = new $class(['uid' => [LanguageInterface::LANGCODE_DEFAULT => 0]], $entity_type->id());
-    }
-    return static::$anonymousUser;
   }
 
   /**

@@ -632,6 +632,31 @@ function comment_preprocess_block(&$variables) {
 }
 
 /**
+ * Prepares a user account object for rendering comment authors.
+ *
+ * This helper handles anonymous authors in addition to registered comment
+ * authors.
+ *
+ * @param \Drupal\comment\CommentInterface $comment
+ *   The comment to which the author replied.
+ *
+ * @return \Drupal\user\UserInterface
+ *   A user account, for use with theme_username() or the user_picture template.
+ */
+function comment_prepare_author(CommentInterface $comment) {
+  // The account has been pre-loaded by CommentViewBuilder::buildComponents().
+  $account = $comment->getOwner();
+  if (empty($account->uid->value)) {
+    // @todo Avoid creating a new entity by just creating a new instance
+    //   directly, see https://drupal.org/node/1867228.
+    $account = entity_create('user', array('uid' => 0, 'name' => $comment->getAuthorName(), 'homepage' => $comment->getHomepage()));
+    // The anonymous user is not a new account, do not treat it as one.
+    $account->enforceIsNew(FALSE);
+  }
+  return $account;
+}
+
+/**
  * Prepares variables for comment templates.
  *
  * Default template: comment.html.twig.
@@ -648,7 +673,7 @@ function template_preprocess_comment(&$variables) {
   $variables['comment'] = $comment;
   $variables['commented_entity'] = $commented_entity;
 
-  $account = $comment->getOwner();
+  $account = comment_prepare_author($comment);
   $username = array(
     '#theme' => 'username',
     '#account' => $account,
@@ -693,7 +718,7 @@ function template_preprocess_comment(&$variables) {
   if ($comment->hasParentComment()) {
     // Fetch and store the parent comment information for use in templates.
     $comment_parent = $comment->getParentComment();
-    $account_parent = $comment_parent->getOwner();
+    $account_parent = comment_prepare_author($comment_parent);
     $variables['parent_comment'] = $comment_parent;
     $username = array(
       '#theme' => 'username',

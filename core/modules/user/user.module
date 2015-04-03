@@ -117,6 +117,36 @@ function user_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
 }
 
 /**
+ * Populates $entity->account for each prepared entity.
+ *
+ * Called by Drupal\Core\Entity\EntityViewBuilderInterface::buildComponents()
+ * implementations.
+ *
+ * @param array &$build
+ *   A renderable array representing the entity content.
+ * @param \Drupal\user\EntityOwnerInterface[] $entities
+ *   The entities keyed by entity ID.
+ */
+function user_attach_accounts(array &$build, array $entities) {
+  $uids = array();
+  foreach ($entities as $entity) {
+    $uids[] = $entity->getOwnerId();
+  }
+  $uids = array_unique($uids);
+  $accounts = user_load_multiple($uids);
+  $anonymous = entity_create('user', array('uid' => 0));
+
+  foreach ($entities as $id => $entity) {
+    if (isset($accounts[$entity->getOwnerId()])) {
+      $entities[$id]->setOwner($accounts[$entity->getOwnerId()]);
+    }
+    else {
+      $entities[$id]->setOwner($anonymous);
+    }
+  }
+}
+
+/**
  * Returns whether this site supports the default user picture feature.
  *
  * This approach preserves compatibility with node/comment templates. Alternate
