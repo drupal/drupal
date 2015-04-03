@@ -492,6 +492,23 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
   }
 
   /**
+   * Processes the views data for a UUID field.
+   *
+   * @param string $table
+   *   The table the field is added to.
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The field definition.
+   * @param array $views_field
+   *   The views field data.
+   * @param string $field_column_name
+   *   The field column being processed.
+   */
+  protected function processViewsDataForUuid($table, FieldDefinitionInterface $field_definition, array &$views_field, $field_column_name) {
+    // It does not make sense for UUID fields to be click sortable.
+    $views_field['field']['click sortable'] = FALSE;
+  }
+
+  /**
    * Gets the table of an entity type to be used as base table in views.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type

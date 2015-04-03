@@ -766,6 +766,7 @@ class EntityViewsDataTest extends UnitTestCase {
   protected function assertUuidField($data) {
     // @todo Can we provide additional support for UUIDs in views?
     $this->assertEquals('field', $data['field']['id']);
+    $this->assertFalse($data['field']['click sortable']);
     $this->assertEquals('string', $data['filter']['id']);
     $this->assertEquals('string', $data['argument']['id']);
     $this->assertEquals('standard', $data['sort']['id']);
