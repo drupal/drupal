@@ -949,7 +949,7 @@ function simpletest_script_reporter_write_xml_results() {
       if ($result->test_class != $test_class) {
         // We've moved onto a new class, so write the last classes results to a file:
         if (isset($xml_files[$test_class])) {
-          file_put_contents($args['xml'] . '/' . $test_class . '.xml', $xml_files[$test_class]['doc']->saveXML());
+          file_put_contents($args['xml'] . '/' . str_replace('\\', '_', $test_class) . '.xml', $xml_files[$test_class]['doc']->saveXML());
           unset($xml_files[$test_class]);
         }
         $test_class = $result->test_class;
@@ -1003,7 +1003,7 @@ function simpletest_script_reporter_write_xml_results() {
   }
   // The last test case hasn't been saved to a file yet, so do that now:
   if (isset($xml_files[$test_class])) {
-    file_put_contents($args['xml'] . '/' . $test_class . '.xml', $xml_files[$test_class]['doc']->saveXML());
+    file_put_contents($args['xml'] . '/' . str_replace('\\', '_', $test_class) . '.xml', $xml_files[$test_class]['doc']->saveXML());
     unset($xml_files[$test_class]);
   }
 }
