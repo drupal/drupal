@@ -54,8 +54,8 @@ class LocalTasksTest extends WebTestBase {
     $this->drupalGet(Url::fromRoute('menu_test.local_task_test_tasks_view'));
     $this->assertLocalTasks([
       ['menu_test.local_task_test_tasks_view', []],
-      ['menu_test.local_task_test_tasks_settings', []],
       ['menu_test.local_task_test_tasks_edit', []],
+      ['menu_test.local_task_test_tasks_settings', []],
     ]);
 
     // Ensure the view tab is active.

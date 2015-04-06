@@ -337,19 +337,19 @@ class CommentPagerTest extends CommentTestBase {
     $this->assertRaw('Comment 1 on field comment');
     $this->assertRaw('Comment 1 on field comment_2');
     // Navigate to next page of field 1.
-    $this->clickLinkWithXPath('//a[@rel="next"]');
+    $this->clickLinkWithXPath('//h3/a[normalize-space(text())=:label]/ancestor::section[1]//a[@rel="next"]', array(':label' => 'Comment 1 on field comment'));
     // Check only one pager updated.
     $this->assertRaw('Comment 2 on field comment');
     $this->assertRaw('Comment 1 on field comment_2');
     // Return to page 1.
     $this->drupalGet('node/' . $node->id());
     // Navigate to next page of field 2.
-    $this->clickLinkWithXPath('//a[@rel="next"]', 1);
+    $this->clickLinkWithXPath('//h3/a[normalize-space(text())=:label]/ancestor::section[1]//a[@rel="next"]', array(':label' => 'Comment 1 on field comment_2'));
     // Check only one pager updated.
     $this->assertRaw('Comment 1 on field comment');
     $this->assertRaw('Comment 2 on field comment_2');
     // Navigate to next page of field 1.
-    $this->clickLinkWithXPath('//a[@rel="next"]');
+    $this->clickLinkWithXPath('//h3/a[normalize-space(text())=:label]/ancestor::section[1]//a[@rel="next"]', array(':label' => 'Comment 1 on field comment'));
     // Check only one pager updated.
     $this->assertRaw('Comment 2 on field comment');
     $this->assertRaw('Comment 2 on field comment_2');
@@ -365,6 +365,10 @@ class CommentPagerTest extends CommentTestBase {
    *
    * @param string $xpath
    *   Xpath query that targets an anchor tag, or set of anchor tags.
+   * @param array $arguments
+   *   An array of arguments with keys in the form ':name' matching the
+   *   placeholders in the query. The values may be either strings or numeric
+   *   values.
    * @param int $index
    *   Link position counting from zero.
    *
@@ -373,9 +377,9 @@ class CommentPagerTest extends CommentTestBase {
    *
    * @see WebTestBase::clickLink()
    */
-  protected function clickLinkWithXPath($xpath, $index = 0) {
+  protected function clickLinkWithXPath($xpath, $arguments = array(), $index = 0) {
     $url_before = $this->getUrl();
-    $urls = $this->xpath($xpath);
+    $urls = $this->xpath($xpath, $arguments);
     if (isset($urls[$index])) {
       $url_target = $this->getAbsoluteUrl($urls[$index]['href']);
       $this->pass(SafeMarkup::format('Clicked link %label (@url_target) from @url_before', array('%label' => $xpath, '@url_target' => $url_target, '@url_before' => $url_before)), 'Browser');

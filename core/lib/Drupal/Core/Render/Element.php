@@ -77,15 +77,23 @@ class Element {
     $sort = isset($elements['#sorted']) ? !$elements['#sorted'] : $sort;
 
     // Filter out properties from the element, leaving only children.
-    $children = array();
+    $count = count($elements);
+    $child_weights = array();
+    $i = 0;
     $sortable = FALSE;
     foreach ($elements as $key => $value) {
       if ($key === '' || $key[0] !== '#') {
         if (is_array($value)) {
-          $children[$key] = $value;
           if (isset($value['#weight'])) {
+            $weight = $value['#weight'];
             $sortable = TRUE;
           }
+          else {
+            $weight = 0;
+          }
+          // Supports weight with up to three digit precision and conserve
+          // the insertion order.
+          $child_weights[$key] = floor($weight * 1000) + $i / $count;
         }
         // Only trigger an error if the value is not null.
         // @see http://drupal.org/node/1283892
@@ -93,21 +101,24 @@ class Element {
           trigger_error(SafeMarkup::format('"@key" is an invalid render array key', array('@key' => $key)), E_USER_ERROR);
         }
       }
+      $i++;
     }
+
     // Sort the children if necessary.
     if ($sort && $sortable) {
-      uasort($children, 'Drupal\Component\Utility\SortArray::sortByWeightProperty');
+      asort($child_weights);
       // Put the sorted children back into $elements in the correct order, to
       // preserve sorting if the same element is passed through
       // \Drupal\Core\Render\Element::children() twice.
-      foreach ($children as $key => $child) {
+      foreach ($child_weights as $key => $weight) {
+        $value = $elements[$key];
         unset($elements[$key]);
-        $elements[$key] = $child;
+        $elements[$key] = $value;
       }
       $elements['#sorted'] = TRUE;
     }
 
-    return array_keys($children);
+    return array_keys($child_weights);
   }
 
   /**
