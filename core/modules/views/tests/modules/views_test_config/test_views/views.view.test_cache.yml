@@ -42,7 +42,6 @@ display:
           table: views_test_data
           field: id
           relationship: none
-
   page_1:
     display_plugin: page
     id: page_1
@@ -54,3 +53,24 @@ display:
         options:
           items_per_page: 2
 
+  page_2:
+    display_plugin: page
+    id: page_2
+    display_options:
+      defaults:
+        filters: false
+        cache: false
+      cache:
+        type: time
+        options:
+          results_lifespan: 3600
+          output_lifespan: 3600
+      filters:
+        test_cache_context:
+          id: test_cache_context
+          table: views_test_data
+          field: test_cache_context
+          relationship: none
+    cache_metadata:
+      contexts:
+        - views_test_cache_context

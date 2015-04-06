@@ -1,0 +1,5 @@
+services:
+  cache_context.views_test_cache_context:
+    class: Drupal\views_test_data\Cache\ViewsTestCacheContext
+    tags:
+      - { name: cache.context }

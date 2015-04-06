@@ -290,25 +290,18 @@ abstract class CachePluginBase extends PluginBase {
           $build_info[$index] = (string)$query;
         }
       }
-      $user = \Drupal::currentUser();
-      $key_data = array(
-        'build_info' => $build_info,
-        'roles' => $user->getRoles(),
-        'super-user' => $user->id() == 1, // special caching for super user.
-        'langcode' => \Drupal::languageManager()->getCurrentLanguage()->getId(),
-        'base_url' => $GLOBALS['base_url'],
-      );
-      foreach (array('exposed_info', 'sort', 'order') as $key) {
-        if ($this->view->getRequest()->query->has($key)) {
-          $key_data[$key] = $this->view->getRequest()->query->get($key);
-        }
-      }
 
+      $key_data = [
+        'build_info' => $build_info,
+      ];
+      // @todo https://www.drupal.org/node/2433591 might solve it to not require
+      //    the pager information here.
       $key_data['pager'] = [
         'page' => $this->view->getCurrentPage(),
         'items_per_page' => $this->view->getItemsPerPage(),
         'offset' => $this->view->getOffset(),
       ];
+      $key_data += \Drupal::service('cache_contexts')->convertTokensToKeys($this->displayHandler->getCacheMetadata()['contexts']);
 
       $this->resultsKey = $this->view->storage->id() . ':' . $this->displayHandler->display['id'] . ':results:' . hash('sha256', serialize($key_data));
     }

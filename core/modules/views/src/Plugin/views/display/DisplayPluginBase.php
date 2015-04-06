@@ -2300,6 +2300,16 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   /**
    * {@inheritdoc}
    */
+  public function getCacheMetadata() {
+    if (!isset($this->display['cache_metadata'])) {
+      $this->display['cache_metadata'] = $this->calculateCacheMetadata();
+    }
+    return $this->display['cache_metadata'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function execute() { }
 
   /**

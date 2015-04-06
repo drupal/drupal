@@ -7,8 +7,9 @@
 
 namespace Drupal\views\Tests\Plugin;
 
+use Drupal\node\Entity\Node;
+use Drupal\views\Tests\ViewUnitTestBase;
 use Drupal\views\Views;
-use Drupal\views\ViewExecutable;
 
 /**
  * Tests pluggable caching for views.
@@ -16,7 +17,7 @@ use Drupal\views\ViewExecutable;
  * @group views
  * @see views_plugin_cache
  */
-class CacheTest extends PluginTestBase {
+class CacheTest extends ViewUnitTestBase {
 
   /**
    * Views used by this test.
@@ -30,13 +31,36 @@ class CacheTest extends PluginTestBase {
    *
    * @var array
    */
-  public static $modules = array('taxonomy');
+  public static $modules = array('taxonomy', 'text', 'user', 'node');
 
-  protected function setUp() {
-    parent::setUp();
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp($import_test_views = TRUE) {
+    parent::setUp($import_test_views);
 
-    $this->enableViewsTestModule();
+    $this->installEntitySchema('node');
+    $this->installEntitySchema('taxonomy_term');
+    $this->installEntitySchema('user');
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function viewsData() {
+    $data = parent::viewsData();
+
+    $data['views_test_data']['test_cache_context'] = [
+      'real field' => 'name',
+      'title' => 'Test cache context',
+      'filter' => [
+        'id' => 'views_test_test_cache_context',
+      ],
+    ];
+
+    return $data;
+  }
+
 
   /**
    * Tests time based caching.
@@ -208,7 +232,10 @@ class CacheTest extends PluginTestBase {
    */
   public function testCacheData() {
     for ($i = 1; $i <= 5; $i++) {
-      $this->drupalCreateNode();
+      Node::create([
+        'title' => $this->randomMachineName(8),
+        'type' => 'page',
+      ])->save();
     }
 
     $view = Views::getView('test_display');
@@ -239,32 +266,35 @@ class CacheTest extends PluginTestBase {
   }
 
   /**
-   * Tests the output caching on an actual page.
+   * Tests the cache context integration for views result cache.
    */
-  public function testCacheOutputOnPage() {
-    $view = Views::getView('test_display');
-    $view->storage->setStatus(TRUE);
-    $view->setDisplay('page_1');
-    $view->display_handler->overrideOption('cache', array(
-      'type' => 'time',
-      'options' => array(
-        'results_lifespan' => '3600',
-        'output_lifespan' => '3600'
-      )
-    ));
-    $view->save();
-    $this->container->get('router.builder')->rebuildIfNeeded();
+  public function testCacheContextIntegration() {
+    $view = Views::getView('test_cache');
+    $view->setDisplay('page_2');
+    \Drupal::state()->set('views_test_cache_context', 'George');
+    $this->executeView($view);
 
-    $output_key = $view->getDisplay()->getPlugin('cache')->generateOutputKey();
-    $this->assertFalse(\Drupal::cache('render')->get($output_key));
+    $map = ['views_test_data_name' => 'name'];
+    $this->assertIdenticalResultset($view, [['name' => 'George']], $map);
 
-    $this->drupalGet('test-display');
-    $this->assertResponse(200);
-    $this->assertTrue(\Drupal::cache('render')->get($output_key));
+    // Update the entry in the DB to ensure that result caching works.
+    \Drupal::database()->update('views_test_data')
+      ->condition('name', 'George')
+      ->fields(['name' => 'egroeG'])
+      ->execute();
 
-    $this->drupalGet('test-display');
-    $this->assertResponse(200);
-    $this->assertTrue(\Drupal::cache('render')->get($output_key));
+    $view = Views::getView('test_cache');
+    $view->setDisplay('page_2');
+    $this->executeView($view);
+    $this->assertIdenticalResultset($view, [['name' => 'George']], $map);
+
+    // Now change the cache context value, a different query should be executed.
+    $view = Views::getView('test_cache');
+    $view->setDisplay('page_2');
+    \Drupal::state()->set('views_test_cache_context', 'Paul');
+    $this->executeView($view);
+
+    $this->assertIdenticalResultset($view, [['name' => 'Paul']], $map);
   }
 
 }

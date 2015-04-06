@@ -447,6 +447,16 @@ interface DisplayPluginInterface {
   public function calculateCacheMetadata();
 
   /**
+   * Gets the cache metadata.
+   *
+   * @return array
+   *   Returns an array:
+   *   - first value: (boolean) Whether the display is cacheable.
+   *   - second value: (string[]) The cache contexts the display varies by.
+   */
+  public function getCacheMetadata();
+
+  /**
    * Executes the view and returns data in the format required.
    *
    * The base class cannot be executed.

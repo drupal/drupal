@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\entity_test\Cache\EntityTestViewViewGrantsCacheContext.
+ * Contains \Drupal\entity_test\Cache\EntityTestViewGrantsCacheContext.
  */
 
 namespace Drupal\entity_test\Cache;
@@ -14,7 +14,7 @@ use Drupal\Core\Cache\CacheContextInterface;
  *
  * @see \Drupal\node\Cache\NodeAccessViewGrantsCacheContext
  */
-class EntityTestViewViewGrantsCacheContext implements CacheContextInterface {
+class EntityTestViewGrantsCacheContext implements CacheContextInterface {
 
   /**
    * {@inheritdoc}
