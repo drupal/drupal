@@ -348,6 +348,17 @@ function entity_test_entity_field_access($operation, FieldDefinitionInterface $f
       }
     }
   }
+  if ($field = \Drupal::state()->get('views_field_access_test-field')) {
+    if ($field_definition->getName() === $field) {
+      $result = AccessResult::allowedIfHasPermission($account, 'view test entity field');
+      // For test purposes we want to actively deny access.
+      if ($result->isNeutral()) {
+        $result = AccessResult::forbidden();
+      }
+      return $result;
+    }
+  }
+
   // No opinion.
   return AccessResult::neutral();
 }

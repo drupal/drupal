@@ -31,6 +31,7 @@ use Drupal\Core\TypedData\DataReferenceDefinition;
  *   description = @Translation("An entity field containing an entity reference."),
  *   category = @Translation("Reference"),
  *   no_ui = TRUE,
+ *   default_formatter = "entity_reference_label",
  *   list_class = "\Drupal\Core\Field\EntityReferenceFieldItemList",
  *   constraints = {"ValidReference" = {}}
  * )

@@ -5,3 +5,5 @@ view test entity:
   title: 'View test entities'
 view test entity translations:
   title: 'View translations of test entities'
+view test entity field:
+  title: 'View test entity field'
