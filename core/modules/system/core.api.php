@@ -472,19 +472,18 @@
  *
  * @section tags Cache Tags
  *
- * The fourth argument of the @code set() @endcode method can be used to specify
- * cache tags, which are used to identify which data is included in each cache
- * item. A cache item can have multiple cache tags (an array of cache tags), and
- * each cache tag is a string. The convention is to generate cache tags of the
- * form @code <prefix>:<suffix> @endcode. Usually, you'll want to associate the
- * cache tags of entities, or entity listings. You won't have to manually
- * construct cache tags for them — just get their cache tags via
+ * The fourth argument of the set() method can be used to specify cache tags,
+ * which are used to identify which data is included in each cache item. A cache
+ * item can have multiple cache tags (an array of cache tags), and each cache
+ * tag is a string. The convention is to generate cache tags of the form
+ * [prefix]:[suffix]. Usually, you'll want to associate the cache tags of
+ * entities, or entity listings. You won't have to manually construct cache tags
+ * for them — just get their cache tags via
  * \Drupal\Core\Entity\EntityInterface::getCacheTags() and
  * \Drupal\Core\Entity\EntityTypeInterface::getListCacheTags().
- * Data that has been tagged can be invalidated as a group: no matter
- * the Cache ID (cid) of the cache item, no matter in which cache bin a cache
- * item lives; as long as it is tagged with a certain cache tag, it will be
- * invalidated.
+ * Data that has been tagged can be invalidated as a group: no matter the Cache
+ * ID (cid) of the cache item, no matter in which cache bin a cache item lives;
+ * as long as it is tagged with a certain cache tag, it will be invalidated.
  *
  * Because of that, cache tags are a solution to the cache invalidation problem:
  * - For caching to be effective, each cache item must only be invalidated when
@@ -722,10 +721,9 @@
  *   arguments, but they all include an argument $container of type
  *   \Symfony\Component\DependencyInjection\ContainerInterface.
  *   If you are defining one of these classes, in the create() or
- *   createInstance() method, call
- *   @code $container->get('myservice.name') @endcode to instantiate a service.
- *   The results of these calls are generally passed to the class constructor
- *   and saved as member variables in the class.
+ *   createInstance() method, call $container->get('myservice.name') to
+ *   instantiate a service. The results of these calls are generally passed to
+ *   the class constructor and saved as member variables in the class.
  * - For functions and class methods that do not have access to either of
  *   the above methods of dependency injection, you can use service location to
  *   access services, via a call to the global \Drupal class. This class has
