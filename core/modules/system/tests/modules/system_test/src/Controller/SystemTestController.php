@@ -7,7 +7,10 @@
 
 namespace Drupal\system_test\Controller;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,23 +38,48 @@ class SystemTestController extends ControllerBase {
   protected $persistentLock;
 
   /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
+   * The renderer.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
    * Constructs the SystemTestController.
    *
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
    *   The lock service.
    * @param \Drupal\Core\Lock\LockBackendInterface $persistent_lock
    *   The persistent lock service.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current user.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer.
    */
-  public function __construct(LockBackendInterface $lock, LockBackendInterface $persistent_lock) {
+  public function __construct(LockBackendInterface $lock, LockBackendInterface $persistent_lock, AccountInterface $current_user, RendererInterface $renderer) {
     $this->lock = $lock;
     $this->persistentLock = $persistent_lock;
+    $this->currentUser = $current_user;
+    $this->renderer = $renderer;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('lock'), $container->get('lock.persistent'));
+    return new static(
+      $container->get('lock'),
+      $container->get('lock.persistent'),
+      $container->get('current_user'),
+      $container->get('renderer')
+    );
   }
 
   /**
@@ -233,6 +261,30 @@ class SystemTestController extends ControllerBase {
    */
   public function configureTitle($foo) {
     return 'Bar.' . $foo;
+  }
+
+  /**
+   * Shows permission-dependent content.
+   *
+   * @return array
+   *   A render array.
+   */
+  public function permissionDependentContent() {
+    $build = [];
+
+    // The content depends on the access result.
+    $access = AccessResult::allowedIfHasPermission($this->currentUser, 'pet llamas');
+    $this->renderer->addDependency($build, $access);
+
+    // Build the content.
+    if ($access->isAllowed()) {
+      $build['allowed'] = ['#markup' => 'Permission to pet llamas: yes!'];
+    }
+    else {
+      $build['forbidden'] = ['#markup' => 'Permission to pet llamas: no!'];
+    }
+
+    return $build;
   }
 
 }

@@ -266,7 +266,7 @@ class FrontPageTest extends ViewTestBase {
     $this->assertPageCacheContextsAndTags(
       Url::fromRoute('view.frontpage.page_1'),
       $cache_contexts,
-      Cache::mergeTags($empty_node_listing_cache_tags, ['rendered'])
+      Cache::mergeTags($empty_node_listing_cache_tags, ['rendered', 'config:user.role.anonymous'])
     );
 
     // Create some nodes on the frontpage view. Add more than 10 nodes in order
@@ -325,7 +325,7 @@ class FrontPageTest extends ViewTestBase {
     $this->assertPageCacheContextsAndTags(
       Url::fromRoute('view.frontpage.page_1'),
       $cache_contexts,
-      Cache::mergeTags($first_page_output_cache_tags, ['rendered'])
+      Cache::mergeTags($first_page_output_cache_tags, ['rendered', 'config:user.role.anonymous'])
     );
 
     // Second page.
@@ -344,6 +344,9 @@ class FrontPageTest extends ViewTestBase {
       'user_view',
       'user:0',
       'rendered',
+      // FinishResponseSubscriber adds this cache tag to responses that have the
+      // 'user.permissions' cache context for anonymous users.
+      'config:user.role.anonymous',
     ]);
 
     // Let's update a node title on the first page and ensure that the page

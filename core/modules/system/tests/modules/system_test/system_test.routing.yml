@@ -109,3 +109,16 @@ system_test.get_destination:
   requirements:
     _access: 'TRUE'
 
+system_test.permission_dependent_content:
+  path: '/system-test/permission-dependent-content'
+  defaults:
+    _controller: '\Drupal\system_test\Controller\SystemTestController::permissionDependentContent'
+  requirements:
+    _access: 'TRUE'
+
+system_test.permission_dependent_route_access:
+  path: '/system-test/permission-dependent-route-access'
+  defaults:
+    _controller: '\Drupal\system_test\Controller\SystemTestController::mainContentFallback'
+  requirements:
+    _permission: 'pet llamas'

@@ -96,7 +96,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
    *   The event to process.
    */
   public function onRespond(FilterResponseEvent $event) {
-    if ($event->getRequestType() !== HttpKernelInterface::MASTER_REQUEST) {
+    if (!$event->isMasterRequest()) {
       return;
     }
 

@@ -103,6 +103,9 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
       'config:system.menu.footer',
       'config:system.menu.main',
       'config:system.site',
+      // FinishResponseSubscriber adds this cache tag to responses that have the
+      // 'user.permissions' cache context for anonymous users.
+      'config:user.role.anonymous',
     ));
 
     // Full node page 2.
@@ -132,6 +135,9 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
       'comment_list',
       'node_list',
       'config:views.view.comments_recent',
+      // FinishResponseSubscriber adds this cache tag to responses that have the
+      // 'user.permissions' cache context for anonymous users.
+      'config:user.role.anonymous',
     ));
   }
 

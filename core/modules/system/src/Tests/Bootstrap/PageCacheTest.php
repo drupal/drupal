@@ -9,9 +9,11 @@ namespace Drupal\system\Tests\Bootstrap;
 
 use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Core\Routing\RequestContext;
+use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Cache\Cache;
 use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
 
 /**
  * Enables the page cache and tests it with various HTTP requests.
@@ -234,6 +236,69 @@ class PageCacheTest extends WebTestBase {
     $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'must-revalidate, no-cache, post-check=0, pre-check=0, private', 'Cache-Control header was sent.');
     $this->assertEqual($this->drupalGetHeader('Expires'), 'Sun, 19 Nov 1978 05:00:00 GMT', 'Expires header was sent.');
     $this->assertEqual($this->drupalGetHeader('Foo'), 'bar', 'Custom header was sent.');
+  }
+
+  /**
+   * Tests the automatic presence of the anonymous role's cache tag.
+   *
+   * The 'user.permissions' cache context ensures that if the permissions for a
+   * role are modified, users are not served stale render cache content. But,
+   * when entire responses are cached in reverse proxies, the value for the
+   * cache context is never calculated, causing the stale response to not be
+   * invalidated. Therefore, when varying by permissions and the current user is
+   * the anonymous user, the cache tag for the 'anonymous' role must be added.
+   *
+   * This test verifies that, and it verifies that it does not happen for other
+   * roles.
+   */
+  function testPageCacheAnonymousRolePermissions() {
+    $config = $this->config('system.performance');
+    $config->set('cache.page.use_internal', 1);
+    $config->set('cache.page.max_age', 300);
+    $config->save();
+
+    $content_url = Url::fromRoute('system_test.permission_dependent_content');
+    $route_access_url = Url::fromRoute('system_test.permission_dependent_route_access');
+
+    // 1. anonymous user, without permission.
+    $this->drupalGet($content_url);
+    $this->assertText('Permission to pet llamas: no!');
+    $this->assertCacheContext('user.permissions');
+    $this->assertCacheTag('config:user.role.anonymous');
+    $this->drupalGet($route_access_url);
+    $this->assertCacheContext('user.permissions');
+    $this->assertCacheTag('config:user.role.anonymous');
+
+    // 2. anonymous user, with permission.
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['pet llamas']);
+    $this->drupalGet($content_url);
+    $this->assertText('Permission to pet llamas: yes!');
+    $this->assertCacheContext('user.permissions');
+    $this->assertCacheTag('config:user.role.anonymous');
+    $this->drupalGet($route_access_url);
+    $this->assertCacheContext('user.permissions');
+    $this->assertCacheTag('config:user.role.anonymous');
+
+    // 3. authenticated user, without permission.
+    $auth_user = $this->drupalCreateUser();
+    $this->drupalLogin($auth_user);
+    $this->drupalGet($content_url);
+    $this->assertText('Permission to pet llamas: no!');
+    $this->assertCacheContext('user.permissions');
+    $this->assertNoCacheTag('config:user.role.authenticated');
+    $this->drupalGet($route_access_url);
+    $this->assertCacheContext('user.permissions');
+    $this->assertNoCacheTag('config:user.role.authenticated');
+
+    // 4. authenticated user, with permission.
+    user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['pet llamas']);
+    $this->drupalGet($content_url);
+    $this->assertText('Permission to pet llamas: yes!');
+    $this->assertCacheContext('user.permissions');
+    $this->assertNoCacheTag('config:user.role.authenticated');
+    $this->drupalGet($route_access_url);
+    $this->assertCacheContext('user.permissions');
+    $this->assertNoCacheTag('config:user.role.authenticated');
   }
 
   /**
