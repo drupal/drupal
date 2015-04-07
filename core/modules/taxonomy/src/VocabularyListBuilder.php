@@ -10,6 +10,7 @@ namespace Drupal\taxonomy;
 use Drupal\Core\Config\Entity\DraggableListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Defines a class to build a listing of taxonomy vocabulary entities.
@@ -48,7 +49,7 @@ class VocabularyListBuilder extends DraggableListBuilder {
     $operations['add'] = array(
       'title' => t('Add terms'),
       'weight' => 10,
-      'url' => $entity->urlInfo('add-form'),
+      'url' => Url::fromRoute('entity.taxonomy_term.add_form', ['taxonomy_vocabulary' => $entity->id()]),
     );
     unset($operations['delete']);
 
