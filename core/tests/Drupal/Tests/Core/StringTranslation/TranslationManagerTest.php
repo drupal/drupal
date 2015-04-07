@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core\StringTranslation {
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\StringTranslation\TranslationManager;
 use Drupal\Tests\UnitTestCase;
 
@@ -33,17 +34,19 @@ class TranslationManagerTest extends UnitTestCase {
    */
   public function providerTestFormatPlural() {
     return array(
-      array(1, 'Singular', '@count plural', array(), array(), 'Singular'),
-      array(2, 'Singular', '@count plural', array(), array(), '2 plural'),
+      array(1, 'Singular', '@count plural', array(), array(), 'Singular', TRUE),
+      array(2, 'Singular', '@count plural', array(), array(), '2 plural', TRUE),
       // @todo support locale_get_plural
-      array(2, 'Singular', '@count plural @arg', array('@arg' => 3), array(), '2 plural 3'),
+      array(2, 'Singular', '@count @arg', array('@arg' => '<script>'), array(), '2 &lt;script&gt;', TRUE),
+      array(2, 'Singular', '@count %arg', array('%arg' => '<script>'), array(), '2 <em class="placeholder">&lt;script&gt;</em>', TRUE),
+      array(2, 'Singular', '@count !arg', array('!arg' => '<script>'), array(), '2 <script>', FALSE),
     );
   }
 
   /**
    * @dataProvider providerTestFormatPlural
    */
-  public function testFormatPlural($count, $singular, $plural, array $args = array(), array $options = array(), $expected) {
+  public function testFormatPlural($count, $singular, $plural, array $args = array(), array $options = array(), $expected, $safe) {
     $translator = $this->getMock('\Drupal\Core\StringTranslation\Translator\TranslatorInterface');
     $translator->expects($this->once())
       ->method('getStringTranslation')
@@ -53,6 +56,7 @@ class TranslationManagerTest extends UnitTestCase {
     $this->translationManager->addTranslator($translator);
     $result = $this->translationManager->formatPlural($count, $singular, $plural, $args, $options);
     $this->assertEquals($expected, $result);
+    $this->assertEquals(SafeMarkup::isSafe($result), $safe);
   }
 
 }
