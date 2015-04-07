@@ -44,8 +44,8 @@ class ChainedFastBackendTest extends UnitTestCase {
   public function testGetDoesntHitConsistentBackend() {
     $consistent_cache = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
     $timestamp_cid = ChainedFastBackend::LAST_WRITE_TIMESTAMP_PREFIX . 'cache_foo';
-    // Use REQUEST_TIME because that is what we will be comparing against.
-    $timestamp_item = (object) array('cid' => $timestamp_cid, 'data' => REQUEST_TIME - 60);
+    // Use the request time because that is what we will be comparing against.
+    $timestamp_item = (object) array('cid' => $timestamp_cid, 'data' => (int) $_SERVER['REQUEST_TIME'] - 60);
     $consistent_cache->expects($this->once())
       ->method('get')->with($timestamp_cid)
       ->will($this->returnValue($timestamp_item));

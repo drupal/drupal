@@ -616,7 +616,7 @@ class RendererTest extends RendererTestBase {
   public function providerTestRenderCacheMaxAge() {
     return [
       [0, FALSE, NULL],
-      [60, TRUE, REQUEST_TIME + 60],
+      [60, TRUE, (int) $_SERVER['REQUEST_TIME'] + 60],
       [Cache::PERMANENT, TRUE, -1],
     ];
   }

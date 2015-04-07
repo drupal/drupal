@@ -571,7 +571,7 @@ class Renderer implements RendererInterface {
     $data = $this->getCacheableRenderArray($elements);
 
     $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'render';
-    $expire = ($elements['#cache']['max-age'] === Cache::PERMANENT) ? Cache::PERMANENT : REQUEST_TIME + $elements['#cache']['max-age'];
+    $expire = ($elements['#cache']['max-age'] === Cache::PERMANENT) ? Cache::PERMANENT : (int) $this->requestStack->getMasterRequest()->server->get('REQUEST_TIME') + $elements['#cache']['max-age'];
     $cache = $this->cacheFactory->get($bin);
 
     // Two-tier caching: detect different CID post-bubbling, create redirect,

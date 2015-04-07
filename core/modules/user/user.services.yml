@@ -50,7 +50,7 @@ services:
       - { name: backend_overridable }
   user.shared_tempstore:
     class: Drupal\user\SharedTempStoreFactory
-    arguments: ['@keyvalue.expirable', '@lock', '%user.tempstore.expire%']
+    arguments: ['@keyvalue.expirable', '@lock', '@request_stack', '%user.tempstore.expire%']
     tags:
       - { name: backend_overridable }
   user.permissions:

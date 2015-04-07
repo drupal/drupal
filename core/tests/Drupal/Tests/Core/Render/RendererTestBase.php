@@ -173,6 +173,8 @@ class RendererTestBase extends UnitTestCase {
    */
   protected function setUpRequest($method = 'GET') {
     $request = Request::create('/', $method);
+    // Ensure that the request time is set as expected.
+    $request->server->set('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
     $this->requestStack->push($request);
   }
 

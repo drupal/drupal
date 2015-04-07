@@ -9,6 +9,7 @@ namespace Drupal\Tests\user\Unit;
 
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\PrivateTempStore;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -80,13 +81,15 @@ class PrivateTempStoreTest extends UnitTestCase {
       ->willReturn(1);
 
     $this->requestStack = new RequestStack();
+    $request = Request::createFromGlobals();
+    $this->requestStack->push($request);
 
     $this->tempStore = new PrivateTempStore($this->keyValue, $this->lock, $this->currentUser, $this->requestStack, 604800);
 
     $this->ownObject = (object) array(
       'data' => 'test_data',
       'owner' => $this->currentUser->id(),
-      'updated' => REQUEST_TIME,
+      'updated' => (int) $request->server->get('REQUEST_TIME'),
     );
 
     // Clone the object but change the owner.

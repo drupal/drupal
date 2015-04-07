@@ -10,6 +10,7 @@ namespace Drupal\user;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
 use Drupal\Core\Lock\LockBackendInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Stores and retrieves temporary data for a given owner.
@@ -57,6 +58,13 @@ class SharedTempStore {
   protected $lockBackend;
 
   /**
+   * The request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
    * The owner key to store along with the data (e.g. a user or session ID).
    *
    * @var mixed
@@ -83,13 +91,16 @@ class SharedTempStore {
    *   The lock object used for this data.
    * @param mixed $owner
    *   The owner key to store along with the data (e.g. a user or session ID).
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack.
    * @param int $expire
    *   The time to live for items, in seconds.
    */
-  public function __construct(KeyValueStoreExpirableInterface $storage, LockBackendInterface $lockBackend, $owner, $expire = 604800) {
+  public function __construct(KeyValueStoreExpirableInterface $storage, LockBackendInterface $lockBackend, $owner, RequestStack $request_stack, $expire = 604800) {
     $this->storage = $storage;
     $this->lockBackend = $lockBackend;
     $this->owner = $owner;
+    $this->requestStack = $request_stack;
     $this->expire = $expire;
   }
 
@@ -140,7 +151,7 @@ class SharedTempStore {
     $value = (object) array(
       'owner' => $this->owner,
       'data' => $value,
-      'updated' => REQUEST_TIME,
+      'updated' => (int) $this->requestStack->getMasterRequest()->server->get('REQUEST_TIME'),
     );
     return $this->storage->setWithExpireIfNotExists($key, $value, $this->expire);
   }
@@ -195,7 +206,7 @@ class SharedTempStore {
     $value = (object) array(
       'owner' => $this->owner,
       'data' => $value,
-      'updated' => REQUEST_TIME,
+      'updated' => (int) $this->requestStack->getMasterRequest()->server->get('REQUEST_TIME'),
     );
     $this->storage->setWithExpire($key, $value, $this->expire);
     $this->lockBackend->release($key);

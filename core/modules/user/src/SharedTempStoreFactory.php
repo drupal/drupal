@@ -10,6 +10,7 @@ namespace Drupal\user;
 use Drupal\Component\Serialization\SerializationInterface;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
 use Drupal\Core\Lock\LockBackendInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Creates a shared temporary storage for a collection.
@@ -31,6 +32,13 @@ class SharedTempStoreFactory {
   protected $lockBackend;
 
   /**
+   * The request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
    * The time to live for items in seconds.
    *
    * @var int
@@ -44,12 +52,15 @@ class SharedTempStoreFactory {
    *   The connection object used for this data.
    * @param \Drupal\Core\Lock\LockBackendInterface $lockBackend
    *   The lock object used for this data.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack.
    * @param int $expire
    *   The time to live for items, in seconds.
    */
-  function __construct(KeyValueExpirableFactoryInterface $storage_factory, LockBackendInterface $lockBackend, $expire = 604800) {
+  function __construct(KeyValueExpirableFactoryInterface $storage_factory, LockBackendInterface $lockBackend, RequestStack $request_stack, $expire = 604800) {
     $this->storageFactory = $storage_factory;
     $this->lockBackend = $lockBackend;
+    $this->requestStack = $request_stack;
     $this->expire = $expire;
   }
 
@@ -76,7 +87,7 @@ class SharedTempStoreFactory {
 
     // Store the data for this collection in the database.
     $storage = $this->storageFactory->get("user.shared_tempstore.$collection");
-    return new SharedTempStore($storage, $this->lockBackend, $owner, $this->expire);
+    return new SharedTempStore($storage, $this->lockBackend, $owner, $this->requestStack, $this->expire);
   }
 
 }

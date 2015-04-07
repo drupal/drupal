@@ -101,7 +101,7 @@ class ViewUIObjectTest extends UnitTestCase {
     $lock = (object) array(
       'owner' => 2,
       'data' => array(),
-      'updated' => REQUEST_TIME,
+      'updated' => (int) $_SERVER['REQUEST_TIME'],
     );
     $view_ui->lock = $lock;
     $this->assertTrue($view_ui->isLocked());
@@ -110,7 +110,7 @@ class ViewUIObjectTest extends UnitTestCase {
     $lock = (object) array(
       'owner' => 1,
       'data' => array(),
-      'updated' => REQUEST_TIME,
+      'updated' => (int) $_SERVER['REQUEST_TIME'],
     );
     $view_ui->lock = $lock;
     $this->assertFalse($view_ui->isLocked());

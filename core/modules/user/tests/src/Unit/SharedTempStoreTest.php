@@ -9,6 +9,8 @@ namespace Drupal\Tests\user\Unit;
 
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\SharedTempStore;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @coversDefaultClass \Drupal\user\SharedTempStore
@@ -45,6 +47,13 @@ class SharedTempStoreTest extends UnitTestCase {
   protected $owner = 1;
 
   /**
+   * The request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
    * A tempstore object belonging to the owner.
    *
    * @var \stdClass
@@ -66,13 +75,16 @@ class SharedTempStoreTest extends UnitTestCase {
 
     $this->keyValue = $this->getMock('Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface');
     $this->lock = $this->getMock('Drupal\Core\Lock\LockBackendInterface');
+    $this->requestStack = new RequestStack();
+    $request = Request::createFromGlobals();
+    $this->requestStack->push($request);
 
-    $this->tempStore = new SharedTempStore($this->keyValue, $this->lock, $this->owner, 604800);
+    $this->tempStore = new SharedTempStore($this->keyValue, $this->lock, $this->owner, $this->requestStack, 604800);
 
     $this->ownObject = (object) array(
       'data' => 'test_data',
       'owner' => $this->owner,
-      'updated' => REQUEST_TIME,
+      'updated' => (int) $request->server->get('REQUEST_TIME'),
     );
 
     // Clone the object but change the owner.

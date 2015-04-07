@@ -354,7 +354,7 @@ class MigrateExecutableTest extends MigrateTestCase {
     $this->executable->setTimeElapsed(1);
     $this->assertTrue($this->executable->timeOptionExceeded());
     // Assert time limit not exceeded.
-    $this->executable->limit = array('unit' => 'seconds', 'value' => (REQUEST_TIME - 3600));
+    $this->executable->limit = array('unit' => 'seconds', 'value' => (int) $_SERVER['REQUEST_TIME'] - 3600);
     $this->assertFalse($this->executable->timeOptionExceeded());
     // Assert no time limit.
     $this->executable->limit = array();

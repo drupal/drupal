@@ -76,7 +76,7 @@ class TempStoreDatabaseTest extends KernelTestBase {
    */
   public function testUserTempStore() {
     // Create a key/value collection.
-    $factory = new SharedTempStoreFactory(new KeyValueExpirableFactory(\Drupal::getContainer()), new DatabaseLockBackend(Database::getConnection()));
+    $factory = new SharedTempStoreFactory(new KeyValueExpirableFactory(\Drupal::getContainer()), new DatabaseLockBackend(Database::getConnection()), $this->container->get('request_stack'));
     $collection = $this->randomMachineName();
 
     // Create two mock users.

@@ -132,7 +132,7 @@ class PrivateTempStore {
     $value = (object) array(
       'owner' => $this->getOwner(),
       'data' => $value,
-      'updated' => REQUEST_TIME,
+      'updated' => (int) $this->requestStack->getMasterRequest()->server->get('REQUEST_TIME'),
     );
     $this->storage->setWithExpire($key, $value, $this->expire);
     $this->lockBackend->release($key);

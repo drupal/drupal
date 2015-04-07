@@ -121,7 +121,7 @@ class CacheCollectorTest extends UnitTestCase {
 
     $cache = (object) array(
       'data' => array($key => $value),
-      'created' => REQUEST_TIME,
+      'created' => (int) $_SERVER['REQUEST_TIME'],
     );
     $this->cacheBackend->expects($this->once())
       ->method('get')
@@ -229,7 +229,7 @@ class CacheCollectorTest extends UnitTestCase {
 
     $cache = (object) array(
       'data' => array($key => $value),
-      'created' => REQUEST_TIME,
+      'created' => (int) $_SERVER['REQUEST_TIME'],
     );
     $this->cacheBackend->expects($this->at(0))
       ->method('get')
@@ -250,7 +250,7 @@ class CacheCollectorTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
     $cache = (object) array(
       'data' => array($key => $value),
-      'created' => REQUEST_TIME + 1,
+      'created' => (int) $_SERVER['REQUEST_TIME'] + 1,
     );
     $this->cacheBackend->expects($this->at(0))
       ->method('get')
@@ -286,7 +286,7 @@ class CacheCollectorTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
     $cache = (object) array(
       'data' => array('other key' => 'other value'),
-      'created' => REQUEST_TIME + 1,
+      'created' => (int) $_SERVER['REQUEST_TIME'] + 1,
     );
     $this->cacheBackend->expects($this->at(0))
       ->method('get')
@@ -312,7 +312,7 @@ class CacheCollectorTest extends UnitTestCase {
 
     $cache = (object) array(
       'data' => array($key => $value),
-      'created' => REQUEST_TIME,
+      'created' => (int) $_SERVER['REQUEST_TIME'],
     );
     $this->cacheBackend->expects($this->at(0))
       ->method('get')

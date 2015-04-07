@@ -207,7 +207,7 @@ class AliasManagerTest extends UnitTestCase {
     // This needs to write out the cache.
     $this->cache->expects($this->once())
       ->method('set')
-      ->with($this->cacheKey, array($language->getId() => array($path)), REQUEST_TIME + (60 * 60 * 24));
+      ->with($this->cacheKey, array($language->getId() => array($path)), (int) $_SERVER['REQUEST_TIME'] + (60 * 60 * 24));
 
     $this->aliasManager->writeCache();
   }
@@ -245,7 +245,7 @@ class AliasManagerTest extends UnitTestCase {
     // This needs to write out the cache.
     $this->cache->expects($this->once())
       ->method('set')
-      ->with($this->cacheKey, array($language->getId() => array($path)), REQUEST_TIME + (60 * 60 * 24));
+      ->with($this->cacheKey, array($language->getId() => array($path)), (int) $_SERVER['REQUEST_TIME'] + (60 * 60 * 24));
 
     $this->aliasManager->writeCache();
   }
@@ -346,7 +346,7 @@ class AliasManagerTest extends UnitTestCase {
     );
     $this->cache->expects($this->once())
       ->method('set')
-      ->with($this->cacheKey, $expected_new_cache, REQUEST_TIME + (60 * 60 * 24));
+      ->with($this->cacheKey, $expected_new_cache, (int) $_SERVER['REQUEST_TIME'] + (60 * 60 * 24));
     $this->aliasManager->writeCache();
   }
 
@@ -447,7 +447,7 @@ class AliasManagerTest extends UnitTestCase {
     );
     $this->cache->expects($this->once())
       ->method('set')
-      ->with($this->cacheKey, $expected_new_cache, REQUEST_TIME + (60 * 60 * 24));
+      ->with($this->cacheKey, $expected_new_cache, (int) $_SERVER['REQUEST_TIME'] + (60 * 60 * 24));
     $this->aliasManager->writeCache();
   }
 
@@ -539,7 +539,7 @@ class AliasManagerTest extends UnitTestCase {
     );
     $this->cache->expects($this->once())
       ->method('set')
-      ->with($this->cacheKey, $expected_new_cache, REQUEST_TIME + (60 * 60 * 24));
+      ->with($this->cacheKey, $expected_new_cache, (int) $_SERVER['REQUEST_TIME'] + (60 * 60 * 24));
     $this->aliasManager->writeCache();
   }
 
