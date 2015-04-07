@@ -845,10 +845,10 @@ picturefill:
 
 underscore:
   remote: https://github.com/jashkenas/underscore
-  version: 1.7.0
+  version: 1.8.3
   license:
     name: MIT
-    url: https://github.com/jashkenas/underscore/blob/1.7.0/LICENSE
+    url: https://github.com/jashkenas/underscore/blob/1.8.3/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/underscore/underscore-min.js: { weight: -20, minified: true }
