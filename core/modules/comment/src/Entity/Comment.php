@@ -14,6 +14,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 
 /**
@@ -534,7 +535,13 @@ class Comment extends ContentEntityBase implements CommentInterface {
    * {@inheritdoc}
    */
   public function getOwner() {
-    return $this->get('uid')->entity;
+    $user = $this->get('uid')->entity;
+    if (!$user || $user->isAnonymous()) {
+      $user = User::getAnonymousUser();
+      $user->name = $this->getAuthorName();
+      $user->homepage = $this->getHomepage();
+    }
+    return $user;
   }
 
   /**

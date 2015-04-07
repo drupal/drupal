@@ -9,7 +9,7 @@ namespace Drupal\user\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Field\FormatterBase;
+use Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceFormatterBase;
 
 /**
  * Plugin implementation of the 'author' formatter.
@@ -23,7 +23,7 @@ use Drupal\Core\Field\FormatterBase;
  *   }
  * )
  */
-class AuthorFormatter extends FormatterBase {
+class AuthorFormatter extends EntityReferenceFormatterBase {
 
   /**
    * {@inheritdoc}
