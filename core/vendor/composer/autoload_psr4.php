@@ -6,6 +6,9 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Zend\\Stdlib\\' => array($vendorDir . '/zendframework/zend-stdlib'),
+    'Zend\\Feed\\' => array($vendorDir . '/zendframework/zend-feed'),
+    'Zend\\Escaper\\' => array($vendorDir . '/zendframework/zend-escaper'),
     'Symfony\\Cmf\\Component\\Routing\\' => array($vendorDir . '/symfony-cmf/routing'),
     'React\\Promise\\' => array($vendorDir . '/react/promise/src'),
     'Masterminds\\' => array($vendorDir . '/masterminds/html5/src'),

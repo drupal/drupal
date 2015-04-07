@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "377cea36943eae1762c885ef742bc320",
+    "hash": "17d7b4a789169d1156ff398b5889b1a2",
     "packages": [
         {
             "name": "behat/mink",
@@ -2907,17 +2907,16 @@
         },
         {
             "name": "zendframework/zend-escaper",
-            "version": "2.3.3",
-            "target-dir": "Zend/Escaper",
+            "version": "2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendEscaper.git",
-                "reference": "c24949840766a544489bfc303714e1f332341010"
+                "reference": "65b3328627362b0be1d5e9067bc846511d1fbc96"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendEscaper/zipball/c24949840766a544489bfc303714e1f332341010",
-                "reference": "c24949840766a544489bfc303714e1f332341010",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendEscaper/zipball/65b3328627362b0be1d5e9067bc846511d1fbc96",
+                "reference": "65b3328627362b0be1d5e9067bc846511d1fbc96",
                 "shasum": ""
             },
             "require": {
@@ -2931,7 +2930,7 @@
                 }
             },
             "autoload": {
-                "psr-0": {
+                "psr-4": {
                     "Zend\\Escaper\\": ""
                 }
             },
@@ -2944,21 +2943,20 @@
                 "escaper",
                 "zf2"
             ],
-            "time": "2014-09-16 22:58:11"
+            "time": "2015-04-01 18:02:07"
         },
         {
             "name": "zendframework/zend-feed",
-            "version": "2.3.3",
-            "target-dir": "Zend/Feed",
+            "version": "2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendFeed.git",
-                "reference": "a89550818b56ae9607a97a63c7d2728a9eb6c6a9"
+                "reference": "aca2b42ecf06d94c621e3c3be8e95d61d3a79bf5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendFeed/zipball/a89550818b56ae9607a97a63c7d2728a9eb6c6a9",
-                "reference": "a89550818b56ae9607a97a63c7d2728a9eb6c6a9",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendFeed/zipball/aca2b42ecf06d94c621e3c3be8e95d61d3a79bf5",
+                "reference": "aca2b42ecf06d94c621e3c3be8e95d61d3a79bf5",
                 "shasum": ""
             },
             "require": {
@@ -2988,7 +2986,7 @@
                 }
             },
             "autoload": {
-                "psr-0": {
+                "psr-4": {
                     "Zend\\Feed\\": ""
                 }
             },
@@ -3002,21 +3000,20 @@
                 "feed",
                 "zf2"
             ],
-            "time": "2014-09-16 22:58:11"
+            "time": "2015-04-01 18:09:25"
         },
         {
             "name": "zendframework/zend-stdlib",
-            "version": "2.3.3",
-            "target-dir": "Zend/Stdlib",
+            "version": "2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendStdlib.git",
-                "reference": "fa33e6647f830d0d2a1cb451efcdfe1bb9a66c33"
+                "reference": "eab586f4c18af3fa63c977611939f1f4a3cf1030"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendStdlib/zipball/fa33e6647f830d0d2a1cb451efcdfe1bb9a66c33",
-                "reference": "fa33e6647f830d0d2a1cb451efcdfe1bb9a66c33",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendStdlib/zipball/eab586f4c18af3fa63c977611939f1f4a3cf1030",
+                "reference": "eab586f4c18af3fa63c977611939f1f4a3cf1030",
                 "shasum": ""
             },
             "require": {
@@ -3024,11 +3021,13 @@
             },
             "require-dev": {
                 "zendframework/zend-eventmanager": "self.version",
+                "zendframework/zend-filter": "self.version",
                 "zendframework/zend-serializer": "self.version",
                 "zendframework/zend-servicemanager": "self.version"
             },
             "suggest": {
                 "zendframework/zend-eventmanager": "To support aggregate hydrator usage",
+                "zendframework/zend-filter": "To support naming strategy hydrator usage",
                 "zendframework/zend-serializer": "Zend\\Serializer component",
                 "zendframework/zend-servicemanager": "To support hydrator plugin manager usage"
             },
@@ -3040,7 +3039,7 @@
                 }
             },
             "autoload": {
-                "psr-0": {
+                "psr-4": {
                     "Zend\\Stdlib\\": ""
                 }
             },
@@ -3053,7 +3052,7 @@
                 "stdlib",
                 "zf2"
             ],
-            "time": "2014-09-16 22:58:11"
+            "time": "2015-04-01 18:09:29"
         }
     ],
     "packages-dev": [],

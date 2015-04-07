@@ -7,9 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'org\\bovigo\\vfs\\' => array($vendorDir . '/mikey179/vfsStream/src/main/php'),
-    'Zend\\Stdlib\\' => array($vendorDir . '/zendframework/zend-stdlib'),
-    'Zend\\Feed\\' => array($vendorDir . '/zendframework/zend-feed'),
-    'Zend\\Escaper\\' => array($vendorDir . '/zendframework/zend-escaper'),
     'Twig_' => array($vendorDir . '/twig/twig/lib'),
     'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
     'Symfony\\Component\\Validator\\' => array($vendorDir . '/symfony/validator'),

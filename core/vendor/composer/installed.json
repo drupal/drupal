@@ -1387,162 +1387,6 @@
         ]
     },
     {
-        "name": "zendframework/zend-stdlib",
-        "version": "2.3.3",
-        "version_normalized": "2.3.3.0",
-        "target-dir": "Zend/Stdlib",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/zendframework/Component_ZendStdlib.git",
-            "reference": "fa33e6647f830d0d2a1cb451efcdfe1bb9a66c33"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/zendframework/Component_ZendStdlib/zipball/fa33e6647f830d0d2a1cb451efcdfe1bb9a66c33",
-            "reference": "fa33e6647f830d0d2a1cb451efcdfe1bb9a66c33",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.23"
-        },
-        "require-dev": {
-            "zendframework/zend-eventmanager": "self.version",
-            "zendframework/zend-serializer": "self.version",
-            "zendframework/zend-servicemanager": "self.version"
-        },
-        "suggest": {
-            "zendframework/zend-eventmanager": "To support aggregate hydrator usage",
-            "zendframework/zend-serializer": "Zend\\Serializer component",
-            "zendframework/zend-servicemanager": "To support hydrator plugin manager usage"
-        },
-        "time": "2014-09-16 22:58:11",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.3-dev",
-                "dev-develop": "2.4-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Zend\\Stdlib\\": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "homepage": "https://github.com/zendframework/zf2",
-        "keywords": [
-            "stdlib",
-            "zf2"
-        ]
-    },
-    {
-        "name": "zendframework/zend-escaper",
-        "version": "2.3.3",
-        "version_normalized": "2.3.3.0",
-        "target-dir": "Zend/Escaper",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/zendframework/Component_ZendEscaper.git",
-            "reference": "c24949840766a544489bfc303714e1f332341010"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/zendframework/Component_ZendEscaper/zipball/c24949840766a544489bfc303714e1f332341010",
-            "reference": "c24949840766a544489bfc303714e1f332341010",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.23"
-        },
-        "time": "2014-09-16 22:58:11",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.3-dev",
-                "dev-develop": "2.4-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Zend\\Escaper\\": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "homepage": "https://github.com/zendframework/zf2",
-        "keywords": [
-            "escaper",
-            "zf2"
-        ]
-    },
-    {
-        "name": "zendframework/zend-feed",
-        "version": "2.3.3",
-        "version_normalized": "2.3.3.0",
-        "target-dir": "Zend/Feed",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/zendframework/Component_ZendFeed.git",
-            "reference": "a89550818b56ae9607a97a63c7d2728a9eb6c6a9"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/zendframework/Component_ZendFeed/zipball/a89550818b56ae9607a97a63c7d2728a9eb6c6a9",
-            "reference": "a89550818b56ae9607a97a63c7d2728a9eb6c6a9",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.23",
-            "zendframework/zend-escaper": "self.version",
-            "zendframework/zend-stdlib": "self.version"
-        },
-        "require-dev": {
-            "zendframework/zend-cache": "self.version",
-            "zendframework/zend-db": "self.version",
-            "zendframework/zend-http": "self.version",
-            "zendframework/zend-servicemanager": "self.version",
-            "zendframework/zend-validator": "self.version"
-        },
-        "suggest": {
-            "zendframework/zend-cache": "Zend\\Cache component",
-            "zendframework/zend-db": "Zend\\Db component",
-            "zendframework/zend-http": "Zend\\Http for PubSubHubbub, and optionally for use with Zend\\Feed\\Reader",
-            "zendframework/zend-servicemanager": "Zend\\ServiceManager component, for default/recommended ExtensionManager implementations",
-            "zendframework/zend-validator": "Zend\\Validator component"
-        },
-        "time": "2014-09-16 22:58:11",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.3-dev",
-                "dev-develop": "2.4-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Zend\\Feed\\": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "description": "provides functionality for consuming RSS and Atom feeds",
-        "homepage": "https://github.com/zendframework/zf2",
-        "keywords": [
-            "feed",
-            "zf2"
-        ]
-    },
-    {
         "name": "sebastian/global-state",
         "version": "1.0.0",
         "version_normalized": "1.0.0.0",
@@ -3157,5 +3001,160 @@
         ],
         "description": "Symfony BrowserKit Component",
         "homepage": "http://symfony.com"
+    },
+    {
+        "name": "zendframework/zend-stdlib",
+        "version": "2.4.0",
+        "version_normalized": "2.4.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zendframework/Component_ZendStdlib.git",
+            "reference": "eab586f4c18af3fa63c977611939f1f4a3cf1030"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zendframework/Component_ZendStdlib/zipball/eab586f4c18af3fa63c977611939f1f4a3cf1030",
+            "reference": "eab586f4c18af3fa63c977611939f1f4a3cf1030",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.23"
+        },
+        "require-dev": {
+            "zendframework/zend-eventmanager": "self.version",
+            "zendframework/zend-filter": "self.version",
+            "zendframework/zend-serializer": "self.version",
+            "zendframework/zend-servicemanager": "self.version"
+        },
+        "suggest": {
+            "zendframework/zend-eventmanager": "To support aggregate hydrator usage",
+            "zendframework/zend-filter": "To support naming strategy hydrator usage",
+            "zendframework/zend-serializer": "Zend\\Serializer component",
+            "zendframework/zend-servicemanager": "To support hydrator plugin manager usage"
+        },
+        "time": "2015-04-01 18:09:29",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.3-dev",
+                "dev-develop": "2.4-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Zend\\Stdlib\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "homepage": "https://github.com/zendframework/zf2",
+        "keywords": [
+            "stdlib",
+            "zf2"
+        ]
+    },
+    {
+        "name": "zendframework/zend-escaper",
+        "version": "2.4.0",
+        "version_normalized": "2.4.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zendframework/Component_ZendEscaper.git",
+            "reference": "65b3328627362b0be1d5e9067bc846511d1fbc96"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zendframework/Component_ZendEscaper/zipball/65b3328627362b0be1d5e9067bc846511d1fbc96",
+            "reference": "65b3328627362b0be1d5e9067bc846511d1fbc96",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.23"
+        },
+        "time": "2015-04-01 18:02:07",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.3-dev",
+                "dev-develop": "2.4-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Zend\\Escaper\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "homepage": "https://github.com/zendframework/zf2",
+        "keywords": [
+            "escaper",
+            "zf2"
+        ]
+    },
+    {
+        "name": "zendframework/zend-feed",
+        "version": "2.4.0",
+        "version_normalized": "2.4.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zendframework/Component_ZendFeed.git",
+            "reference": "aca2b42ecf06d94c621e3c3be8e95d61d3a79bf5"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zendframework/Component_ZendFeed/zipball/aca2b42ecf06d94c621e3c3be8e95d61d3a79bf5",
+            "reference": "aca2b42ecf06d94c621e3c3be8e95d61d3a79bf5",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.23",
+            "zendframework/zend-escaper": "self.version",
+            "zendframework/zend-stdlib": "self.version"
+        },
+        "require-dev": {
+            "zendframework/zend-cache": "self.version",
+            "zendframework/zend-db": "self.version",
+            "zendframework/zend-http": "self.version",
+            "zendframework/zend-servicemanager": "self.version",
+            "zendframework/zend-validator": "self.version"
+        },
+        "suggest": {
+            "zendframework/zend-cache": "Zend\\Cache component",
+            "zendframework/zend-db": "Zend\\Db component",
+            "zendframework/zend-http": "Zend\\Http for PubSubHubbub, and optionally for use with Zend\\Feed\\Reader",
+            "zendframework/zend-servicemanager": "Zend\\ServiceManager component, for default/recommended ExtensionManager implementations",
+            "zendframework/zend-validator": "Zend\\Validator component"
+        },
+        "time": "2015-04-01 18:09:25",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.3-dev",
+                "dev-develop": "2.4-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Zend\\Feed\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "description": "provides functionality for consuming RSS and Atom feeds",
+        "homepage": "https://github.com/zendframework/zf2",
+        "keywords": [
+            "feed",
+            "zf2"
+        ]
     }
 ]
