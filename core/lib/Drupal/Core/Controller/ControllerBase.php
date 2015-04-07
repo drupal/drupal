@@ -26,7 +26,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * refactored to be trivial glue code.
  *
  * The services exposed here are those that it is reasonable for a well-behaved
- * controller to leverage. A controller that needs other other services may
+ * controller to leverage. A controller that needs other services may
  * need to be refactored into a thin controller and a dependent unit-testable
  * service.
  *
