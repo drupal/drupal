@@ -355,9 +355,13 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     ));
     $field_storage->save();
 
-    // Attempt to update the field in a way that would break the storage.
+    // Attempt to update the field in a way that would break the storage. The
+    // parenthesis suffix is needed because SQLite has *very* relaxed rules for
+    // data types, so we actually need to provide an invalid SQL syntax in order
+    // to break it.
+    // @see https://www.sqlite.org/datatype3.html
     $prior_field_storage = $field_storage;
-    $field_storage->setSetting('max_length', -1);
+    $field_storage->setSetting('max_length', '-1)');
     try {
       $field_storage->save();
       $this->fail(t('Update succeeded.'));
