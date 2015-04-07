@@ -97,7 +97,7 @@ class Local extends FileTransfer implements ChmodInterface {
    */
   public function chmodJailed($path, $mode, $recursive) {
     if ($recursive && is_dir($path)) {
-      foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::SKIP_DOTS), RecursiveIteratorIterator::SELF_FIRST) as $filename => $file) {
+      foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::SELF_FIRST) as $filename => $file) {
         if (@!chmod($filename, $mode)) {
           throw new FileTransferException('Cannot chmod %path.', NULL, array('%path' => $filename));
         }
