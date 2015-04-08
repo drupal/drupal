@@ -308,13 +308,6 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
   /**
    * {@inheritdoc}
    */
-  public function getCacheKeys() {
-    return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getCacheContexts() {
     return [];
   }
@@ -331,17 +324,6 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
    */
   public function getCacheMaxAge() {
     return (int)$this->configuration['cache']['max_age'];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isCacheable() {
-    // Similar to the page cache, a block is cacheable if it has a max age.
-    // Blocks that should never be cached can override this method to simply
-    // return FALSE.
-    $max_age = $this->getCacheMaxAge();
-    return $max_age === Cache::PERMANENT || $max_age > 0;
   }
 
 }

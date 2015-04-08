@@ -8,7 +8,7 @@
 namespace Drupal\Core\Block;
 
 use Drupal\Component\Plugin\DerivativeInspectionInterface;
-use Drupal\Core\Cache\CacheableInterface;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -25,7 +25,7 @@ use Drupal\Core\Session\AccountInterface;
  *
  * @ingroup block_api
  */
-interface BlockPluginInterface extends ConfigurablePluginInterface, PluginFormInterface, PluginInspectionInterface, CacheableInterface, DerivativeInspectionInterface {
+interface BlockPluginInterface extends ConfigurablePluginInterface, PluginFormInterface, PluginInspectionInterface, CacheableDependencyInterface, DerivativeInspectionInterface {
 
   /**
    * Returns the user-facing block label.

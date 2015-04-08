@@ -86,10 +86,8 @@ abstract class ForumBlockBase extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function getCacheKeys() {
-    $keys = parent::getCacheKeys();
-    $keys[] = Cache::keyFromQuery($this->buildForumQuery());
-    return $keys;
+  public function getCacheContexts() {
+    return ['user.node_grants:view'];
   }
 
   /**

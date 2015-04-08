@@ -142,6 +142,13 @@ class BlockPageVariant extends VariantBase implements PageVariantInterface, Cont
           $messages_block_displayed = TRUE;
         }
         $build[$region][$key] = $this->blockViewBuilder->view($block);
+
+        // The main content block cannot be cached: it is a placeholder for the
+        // render array returned by the controller. It should be rendered as-is,
+        // with other placed blocks "decorating" it.
+        if ($block_plugin instanceof MainContentBlockPluginInterface) {
+          unset($build[$region][$key]['#cache']['keys']);
+        }
       }
       if (!empty($build[$region])) {
         // \Drupal\block\BlockRepositoryInterface::getVisibleBlocksPerRegion()

@@ -64,6 +64,7 @@ class BlockViewBuilder extends EntityViewBuilder {
         '#derivative_plugin_id' => $derivative_id,
         '#id' => $entity->id(),
         '#cache' => [
+          'keys' => ['entity_view', 'block', $entity->id()],
           'contexts' => $plugin->getCacheContexts(),
           'tags' => Cache::mergeTags(
             $this->getCacheTags(), // Block view builder cache tag.
@@ -72,24 +73,13 @@ class BlockViewBuilder extends EntityViewBuilder {
           ),
           'max-age' => $plugin->getCacheMaxAge(),
         ],
+        '#pre_render' => [
+          [$this, 'buildBlock'],
+        ],
         // Add the entity so that it can be used in the #pre_render method.
         '#block' => $entity,
       );
       $build[$entity_id]['#configuration']['label'] = SafeMarkup::checkPlain($configuration['label']);
-
-      if ($plugin->isCacheable()) {
-        $build[$entity_id]['#pre_render'][] = array($this, 'buildBlock');
-        // Generic cache keys, with the block plugin's custom keys appended.
-        $default_cache_keys = array(
-          'entity_view',
-          'block',
-          $entity->id(),
-        );
-        $build[$entity_id]['#cache']['keys'] = array_merge($default_cache_keys, $plugin->getCacheKeys());
-      }
-      else {
-        $build[$entity_id] = $this->buildBlock($build[$entity_id]);
-      }
 
       // Don't run in ::buildBlock() to ensure cache keys can be altered. If an
       // alter hook wants to modify the block contents, it can append another

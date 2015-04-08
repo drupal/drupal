@@ -8,6 +8,7 @@
 namespace Drupal\block_test\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\State\StateInterface;
@@ -74,8 +75,8 @@ class TestAccessBlock extends BlockBase implements ContainerFactoryPluginInterfa
   /**
    * {@inheritdoc}
    */
-  public function isCacheable() {
-    return TRUE;
+  public function getCacheMaxAge() {
+    return Cache::PERMANENT;
   }
 
 }

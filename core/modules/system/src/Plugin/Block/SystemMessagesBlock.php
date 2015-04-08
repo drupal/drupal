@@ -46,7 +46,7 @@ class SystemMessagesBlock extends BlockBase implements MessagesBlockPluginInterf
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildConfigurationForm($form, $form_state);
 
-    // @see ::isCacheable()
+    // @see ::getCacheMaxAge()
     $form['cache']['#description'] = $this->t('This block is cacheable forever, it is not configurable.');
     $form['cache']['max_age']['#value'] = Cache::PERMANENT;
     $form['cache']['max_age']['#disabled'] = TRUE;
@@ -57,11 +57,11 @@ class SystemMessagesBlock extends BlockBase implements MessagesBlockPluginInterf
   /**
    * {@inheritdoc}
    */
-  public function isCacheable() {
+  public function getCacheMaxAge() {
     // The messages are session-specific and hence aren't cacheable, but the
     // block itself *is* cacheable because it uses a #post_render_cache callback
     // and hence the block has a globally cacheable render array.
-    return TRUE;
+    return Cache::PERMANENT;
   }
 
 }
