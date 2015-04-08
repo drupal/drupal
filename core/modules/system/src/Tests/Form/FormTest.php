@@ -672,12 +672,4 @@ class FormTest extends WebTestBase {
     $this->assertTrue(!empty($element), 'The textarea has the proper required attribute.');
   }
 
-  /**
-   * Tests a form with a form state storing a database connection.
-   */
-  public function testFormStateDatabaseConnection() {
-    $this->assertNoText('Database connection found');
-    $this->drupalPostForm('form-test/form_state-database', array(), t('Submit'));
-    $this->assertText('Database connection found');
-  }
 }

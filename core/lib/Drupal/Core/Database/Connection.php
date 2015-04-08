@@ -7,9 +7,6 @@
 
 namespace Drupal\Core\Database;
 
-use Drupal\Core\Database\TransactionNoActiveException;
-use Drupal\Core\Database\TransactionOutOfOrderException;
-
 /**
  * Base Database API class.
  *
@@ -20,7 +17,7 @@ use Drupal\Core\Database\TransactionOutOfOrderException;
  *
  * @see http://php.net/manual/book.pdo.php
  */
-abstract class Connection implements \Serializable {
+abstract class Connection {
 
   /**
    * The database target this connection is for.
@@ -1297,35 +1294,10 @@ abstract class Connection implements \Serializable {
   }
 
   /**
-   * {@inheritdoc}
+   * Prevents the database connection from being serialized.
    */
-  public function serialize() {
-    $connection = clone $this;
-    // Don't serialize the PDO connection as well as everything else which
-    // depends on settings.php.
-    unset($connection->connection, $connection->connectionOptions, $connection->schema, $connection->prefixes, $connection->prefixReplace, $connection->driverClasses);
-    return serialize(get_object_vars($connection));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function unserialize($serialized) {
-    $data = unserialize($serialized);
-    foreach ($data as $key => $value) {
-      $this->{$key} = $value;
-    }
-    $this->connectionOptions = Database::getConnectionInfo($this->key)[$this->target];
-
-    // Re-establish the PDO connection using the original options.
-    $this->connection = static::open($this->connectionOptions);
-
-    // Re-set a Statement class if necessary.
-    if (!empty($this->statementClass)) {
-      $this->connection->setAttribute(\PDO::ATTR_STATEMENT_CLASS, array($this->statementClass, array($this)));
-    }
-
-    $this->setPrefix(isset($this->connectionOptions['prefix']) ? $this->connectionOptions['prefix'] : '');
+  public function __sleep() {
+    throw new \LogicException('The database connection is not serializable. This probably means you are serializing an object that has an indirect reference to the database connection. Adjust your code so that is not necessary. Alternatively, look at DependencySerializationTrait as a temporary solution.');
   }
 
 }

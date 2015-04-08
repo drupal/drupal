@@ -914,7 +914,7 @@ function _batch_queue($batch_set) {
     $class = $batch_set['queue']['class'];
 
     if (!isset($queues[$class][$name])) {
-      $queues[$class][$name] = new $class($name, Database::getConnection());
+      $queues[$class][$name] = new $class($name, \Drupal::database());
     }
     return $queues[$class][$name];
   }

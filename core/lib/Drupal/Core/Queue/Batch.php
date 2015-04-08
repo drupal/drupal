@@ -30,7 +30,7 @@ class Batch extends DatabaseQueue {
    * to be claimed repeatedly until it is deleted.
    */
   public function claimItem($lease_time = 0) {
-    $item = db_query_range('SELECT data, item_id FROM {queue} q WHERE name = :name ORDER BY item_id ASC', 0, 1, array(':name' => $this->name))->fetchObject();
+    $item = $this->connection->queryRange('SELECT data, item_id FROM {queue} q WHERE name = :name ORDER BY item_id ASC', 0, 1, array(':name' => $this->name))->fetchObject();
     if ($item) {
       $item->data = unserialize($item->data);
       return $item;
@@ -49,7 +49,7 @@ class Batch extends DatabaseQueue {
    */
   public function getAllItems() {
     $result = array();
-    $items = db_query('SELECT data FROM {queue} q WHERE name = :name ORDER BY item_id ASC', array(':name' => $this->name))->fetchAll();
+    $items = $this->connection->query('SELECT data FROM {queue} q WHERE name = :name ORDER BY item_id ASC', array(':name' => $this->name))->fetchAll();
     foreach ($items as $item) {
       $result[] = unserialize($item->data);
     }

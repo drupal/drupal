@@ -9,6 +9,7 @@ namespace Drupal\Core\Session;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Utility\Error;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -18,6 +19,8 @@ use Symfony\Component\HttpFoundation\Session\Storage\Proxy\AbstractProxy;
  * Default session handler.
  */
 class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
+
+  use DependencySerializationTrait;
 
   /**
    * The request stack.

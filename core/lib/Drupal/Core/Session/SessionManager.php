@@ -9,6 +9,7 @@ namespace Drupal\Core\Session;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 
@@ -30,6 +31,8 @@ use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
  *   (e.g. sid-hashing) or relocated to the authentication subsystem.
  */
 class SessionManager extends NativeSessionStorage implements SessionManagerInterface {
+
+  use DependencySerializationTrait;
 
   /**
    * The request stack.

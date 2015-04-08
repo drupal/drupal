@@ -426,14 +426,6 @@ form_test.group_vertical_tabs:
   requirements:
     _access: 'TRUE'
 
-form_test.form_state_database:
-  path: '/form-test/form_state-database'
-  defaults:
-    _form: '\Drupal\form_test\Form\FormTestFormStateDatabaseForm'
-    _title: 'Form state with a database connection'
-  requirements:
-    _access: 'TRUE'
-
 form_test.two_instances:
   path: '/form-test/two-instances-of-same-form'
   defaults:

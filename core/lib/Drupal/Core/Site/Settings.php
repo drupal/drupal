@@ -63,7 +63,7 @@ final class Settings {
    * Prevents settings from being serialized.
    */
   public function __sleep() {
-    throw new \BadMethodCallException('Settings cannot be serialized.');
+    throw new \LogicException('Settings can not be serialized. This probably means you are serializing an object that has an indirect reference to the Settings object. Adjust your code so that is not necessary.');
   }
 
   /**

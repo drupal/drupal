@@ -112,7 +112,7 @@ class SettingsTest extends UnitTestCase {
    *
    * @covers ::__sleep
    *
-   * @expectedException \BadMethodCallException
+   * @expectedException \LogicException
    */
   public function testSerialize() {
     serialize(new Settings([]));
