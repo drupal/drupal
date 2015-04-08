@@ -8,6 +8,7 @@
 namespace Drupal\Tests\Component;
 
 use Drupal\Tests\UnitTestCase;
+use org\bovigo\vfs\vfsStream;
 
 /**
  * General tests for \Drupal\Component that can't go anywhere else.
@@ -66,13 +67,69 @@ class DrupalComponentTest extends UnitTestCase {
    *   The full path to the class that should be checked.
    */
   protected function assertNoCoreUsage($class_path) {
-    foreach (new \SplFileObject($class_path) as $line_number => $line) {
-      // Allow linking to Core files with @see docs. Its harmless and boosts DX
-      // because even outside projects can treat those links as examples.
-      if ($line && (strpos($line, '@see ') === FALSE)) {
-        $this->assertSame(FALSE, strpos($line, 'Drupal\\Core'), "Illegal reference to 'Drupal\\Core' namespace in $class_path at line $line_number");
+    $contents = file_get_contents($class_path);
+    if (preg_match_all('/^.*Drupal\\\Core.*$/m', $contents, $matches)) {
+      foreach ($matches[0] as $line) {
+        if ((strpos($line, '@see ') === FALSE)) {
+          $this->fail(
+            "Illegal reference to 'Drupal\\Core' namespace in $class_path"
+          );
+        }
       }
     }
+  }
+
+  /**
+   * Data provider for testAssertNoCoreUseage().
+   *
+   * @return array
+   *   Data for testAssertNoCoreUseage() in the form:
+   *   - TRUE if the test passes, FALSE otherwise.
+   *   - File data as a string. This will be used as a virtual file.
+   */
+  public function providerAssertNoCoreUseage() {
+    return array(
+      array(
+        TRUE,
+        '@see \\Drupal\\Core\\Something',
+      ),
+      array(
+        FALSE,
+        '\\Drupal\\Core\\Something',
+      ),
+      array(
+        FALSE,
+        "@see \\Drupal\\Core\\Something\n" .
+        '\\Drupal\\Core\\Something',
+      ),
+      array(
+        FALSE,
+        "\\Drupal\\Core\\Something\n" .
+        '@see \\Drupal\\Core\\Something',
+      ),
+    );
+  }
+
+  /**
+   * @covers \Drupal\Tests\Component\DrupalComponentTest::assertNoCoreUsage
+   * @dataProvider providerAssertNoCoreUseage
+   */
+  public function testAssertNoCoreUseage($expected_pass, $file_data) {
+    // Set up a virtual file to read.
+    $vfs_root = vfsStream::setup('root');
+    vfsStream::newFile('Test.php')->at($vfs_root)->setContent($file_data);
+    $file_uri = vfsStream::url('root/Test.php');
+
+    try {
+      $pass = true;
+      $this->assertNoCoreUsage($file_uri);
+    }
+    catch (\PHPUnit_Framework_AssertionFailedError $e) {
+      $pass = false;
+    }
+    $this->assertEquals($expected_pass, $pass, $expected_pass ?
+      'Test caused a false positive' :
+      'Test failed to detect Core usage');
   }
 
 }
