@@ -214,26 +214,29 @@ if (window.jQuery) {
    * @ingroup sanitization
    */
   Drupal.formatString = function (str, args) {
+    // Keep args intact.
+    var processedArgs = {};
     // Transform arguments before inserting them.
     for (var key in args) {
       if (args.hasOwnProperty(key)) {
         switch (key.charAt(0)) {
           // Escaped only.
           case '@':
-            args[key] = Drupal.checkPlain(args[key]);
+            processedArgs[key] = Drupal.checkPlain(args[key]);
             break;
           // Pass-through.
           case '!':
+            processedArgs[key] = args[key];
             break;
           // Escaped and placeholder.
           default:
-            args[key] = Drupal.theme('placeholder', args[key]);
+            processedArgs[key] = Drupal.theme('placeholder', args[key]);
             break;
         }
       }
     }
 
-    return Drupal.stringReplace(str, args, null);
+    return Drupal.stringReplace(str, processedArgs, null);
   };
 
   /**
