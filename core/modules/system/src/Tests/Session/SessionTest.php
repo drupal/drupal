@@ -141,7 +141,11 @@ class SessionTest extends WebTestBase {
    * Test that empty anonymous sessions are destroyed.
    */
   function testEmptyAnonymousSession() {
-    // Verify that no session is automatically created for anonymous user.
+    // Verify that no session is automatically created for anonymous user when
+    // page caching is disabled.
+    $config = $this->config('system.performance');
+    $config->set('cache.page.use_internal', 0);
+    $config->save();
     $this->drupalGet('');
     $this->assertSessionCookie(FALSE);
     $this->assertSessionEmpty(TRUE);

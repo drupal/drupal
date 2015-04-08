@@ -17,7 +17,6 @@ use Symfony\Component\HttpFoundation\Request;
  * @Plugin(
  *   id = \Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationBrowser::METHOD_ID,
  *   weight = -2,
- *   cache = 0,
  *   name = @Translation("Browser"),
  *   description = @Translation("Language from the browser's language settings."),
  *   config_route_name = "language.negotiation_browser"
@@ -35,6 +34,11 @@ class LanguageNegotiationBrowser extends LanguageNegotiationMethodBase {
    */
   public function getLangcode(Request $request = NULL) {
     $langcode = NULL;
+
+    // Whenever browser-based language negotiation is used, the page cannot be
+    // cached by reverse proxies.
+    // @todo Solve more elegantly in https://www.drupal.org/node/2430335.
+    \Drupal::service('page_cache_kill_switch')->trigger();
 
     if ($this->languageManager && $request && $request->server->get('HTTP_ACCEPT_LANGUAGE')) {
       $http_accept_language = $request->server->get('HTTP_ACCEPT_LANGUAGE');

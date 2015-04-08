@@ -28,7 +28,7 @@ $config['system.performance']['css']['preprocess'] = FALSE;
 $config['system.performance']['js']['preprocess'] = FALSE;
 
 /**
- * Disable the render cache.
+ * Disable the render cache (this includes the page cache).
  *
  * This setting disables the render cache by using the Null cache back-end
  * defined by the development.services.yml file above.

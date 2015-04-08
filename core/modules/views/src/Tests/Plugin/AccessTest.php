@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Tests\Plugin;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 
@@ -100,6 +101,14 @@ class AccessTest extends PluginTestBase {
     // Saving a view will cause the router to be rebuilt when the kernel
     // termination event fires. Simulate that here.
     $this->container->get('router.builder')->rebuildIfNeeded();
+
+    // Clear the page cache.
+    // @todo Remove as part of https://www.drupal.org/node/2464657. The root
+    //   cause is that the access plugins alters the route's access
+    //   requirements. That means that the 403 from above does not have any
+    //   cache tags, so modifying the View entity does not cause the cached 403
+    //   page to be invalidated.
+    Cache::invalidateTags(['rendered']);
 
     $this->assertTrue($access_plugin->access($this->normalUser));
 
