@@ -109,18 +109,26 @@ class BubbleableMetadata implements CacheableDependencyInterface {
   }
 
   /**
-   * Creates a bubbleable metadata object from a cacheable depended object.
+   * Creates a bubbleable metadata object from a depended object.
    *
-   * @param \Drupal\Core\Cache\CacheableDependencyInterface $object
+   * @param \Drupal\Core\Cache\CacheableDependencyInterface|mixed $object
    *   The object whose cacheability metadata to retrieve.
    *
    * @return static
    */
-  public static function createFromObject(CacheableDependencyInterface $object) {
+  public static function createFromObject($object) {
+    if ($object instanceof CacheableDependencyInterface) {
+      $meta = new static();
+      $meta->contexts = $object->getCacheContexts();
+      $meta->tags = $object->getCacheTags();
+      $meta->maxAge = $object->getCacheMaxAge();
+      return $meta;
+    }
+
+    // Objects that don't implement CacheableDependencyInterface must be assumed
+    // to be uncacheable, so set max-age 0.
     $meta = new static();
-    $meta->contexts = $object->getCacheContexts();
-    $meta->tags = $object->getCacheTags();
-    $meta->maxAge = $object->getCacheMaxAge();
+    $meta->maxAge = 0;
     return $meta;
   }
 

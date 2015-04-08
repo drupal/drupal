@@ -351,10 +351,10 @@ interface RendererInterface {
    *
    * @param array &$elements
    *   The render array to update.
-   * @param \Drupal\Core\Cache\CacheableDependencyInterface $dependency
+   * @param \Drupal\Core\Cache\CacheableDependencyInterface|mixed $dependency
    *   The dependency.
    */
-  public function addDependency(array &$elements, CacheableDependencyInterface $dependency);
+  public function addDependency(array &$elements, $dependency);
 
   /**
    * Merges two attachments arrays (which live under the '#attached' key).

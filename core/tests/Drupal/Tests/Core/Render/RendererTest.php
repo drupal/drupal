@@ -626,7 +626,7 @@ class RendererTest extends RendererTestBase {
    *
    * @dataProvider providerTestAddDependency
    */
-  public function testAddDependency(array $build, CacheableDependencyInterface $object, array $expected) {
+  public function testAddDependency(array $build, $object, array $expected) {
     $this->renderer->addDependency($build, $object);
     $this->assertEquals($build, $expected);
   }
@@ -676,6 +676,26 @@ class RendererTest extends RendererTestBase {
             'contexts' => ['theme', 'user.roles'],
             'tags' => ['bar', 'foo'],
             'max-age' => 600,
+          ],
+          '#attached' => [],
+          '#post_render_cache' => [],
+        ],
+      ],
+      // Cacheable render array, no cacheability.
+      [
+        [
+          '#cache' => [
+            'contexts' => ['theme'],
+            'tags' => ['bar'],
+            'max-age' => 600,
+          ]
+        ],
+        new \stdClass(),
+        [
+          '#cache' => [
+            'contexts' => ['theme'],
+            'tags' => ['bar'],
+            'max-age' => 0,
           ],
           '#attached' => [],
           '#post_render_cache' => [],

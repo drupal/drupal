@@ -136,7 +136,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    * @covers ::createFromObject
    * @dataProvider providerTestCreateFromObject
    */
-  public function testCreateFromObject(CacheableDependencyInterface $object, BubbleableMetadata $expected) {
+  public function testCreateFromObject($object, BubbleableMetadata $expected) {
     $this->assertEquals($expected, BubbleableMetadata::createFromObject($object));
   }
 
@@ -153,12 +153,16 @@ class BubbleableMetadataTest extends UnitTestCase {
     $nonempty_metadata->setCacheContexts(['qux'])
       ->setCacheTags(['foo:bar'])
       ->setCacheMaxAge(600);
+    $uncacheable_metadata = new BubbleableMetadata();
+    $uncacheable_metadata->setCacheMaxAge(0);
 
     $empty_cacheable_object = new TestCacheableDependency([], [], Cache::PERMANENT);
     $nonempty_cacheable_object = new TestCacheableDependency(['qux'], ['foo:bar'], 600);
+    $uncacheable_object = new \stdClass();
 
     $data[] = [$empty_cacheable_object, $empty_metadata];
     $data[] = [$nonempty_cacheable_object, $nonempty_metadata];
+    $data[] = [$uncacheable_object, $uncacheable_metadata];
 
     return $data;
   }
