@@ -165,7 +165,7 @@ class AggregatorFeedBlock extends BlockBase implements ContainerFactoryPluginInt
       foreach ($items as $item) {
         $aggregator_block_item = array(
           '#type' => 'link',
-          '#href' => $item->getLink(),
+          '#url' => $item->urlInfo(),
           '#title' => $item->label(),
         );
         $rendered_items[] = drupal_render($aggregator_block_item);

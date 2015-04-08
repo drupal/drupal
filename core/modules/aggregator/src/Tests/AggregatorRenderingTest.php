@@ -52,6 +52,11 @@ class AggregatorRenderingTest extends AggregatorTestBase {
     $this->drupalGet('test-page');
     $this->assertText($block->label(), 'Feed block is displayed on the page.');
 
+    // Confirm items appear as links.
+    $items = $this->container->get('entity.manager')->getStorage('aggregator_item')->loadByFeed($feed->id(), 1);
+    $links = $this->xpath('//a[@href = :href]', array(':href' => reset($items)->getLink()));
+    $this->assert(isset($links[0]), 'Item link found.');
+
     // Find the expected read_more link.
     $href = $feed->url();
     $links = $this->xpath('//a[@href = :href]', array(':href' => $href));
