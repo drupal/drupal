@@ -22,9 +22,10 @@ class LocalTasksTest extends WebTestBase {
   /**
    * Asserts local tasks in the page output.
    *
-   * @param array $hrefs
-   *   A list of expected link hrefs of local tasks to assert on the page (in
-   *   the given order).
+   * @param array $routes
+   *   A list of expected local tasks, prepared as an array of route names and
+   *   their associated route parameters, to assert on the page (in the given
+   *   order).
    * @param int $level
    *   (optional) The local tasks level to assert; 0 for primary, 1 for
    *   secondary. Defaults to 0.
