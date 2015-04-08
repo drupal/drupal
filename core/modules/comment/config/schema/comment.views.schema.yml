@@ -78,14 +78,6 @@ views.field.comment_ces_last_updated:
   type: views_field
   label: 'Newer of last comment / node updated'
 
-views.field.comment_username:
-  type: views_field
-  label: 'Node comment status'
-  mapping:
-    link_to_user:
-      type: boolean
-      label: 'Link this field to its user or an author''s homepage'
-
 views.filter.node_comment:
   type: views.filter.in_operator
   label: 'Comment node status'

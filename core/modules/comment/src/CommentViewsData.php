@@ -33,7 +33,7 @@ class CommentViewsData extends EntityViewsData {
 
     $data['comment_field_data']['name']['title'] = t('Author');
     $data['comment_field_data']['name']['help'] = t("The name of the comment's author. Can be rendered as a link to the author's homepage.");
-    $data['comment_field_data']['name']['field']['id'] = 'comment_username';
+    $data['comment_field_data']['name']['field']['default_formatter'] = 'comment_username';
 
     $data['comment_field_data']['homepage']['title'] = t("Author's website");
     $data['comment_field_data']['homepage']['help'] = t("The website address of the comment's author. Can be rendered as a link. Will be empty if the author is a registered user.");
