@@ -157,7 +157,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
         $request->query->replace($request_all + $query_all);
 
         // Overwrite the destination.
-        // @see drupal_get_destination()
+        // @see the redirect.destination service.
         $origin_destination = $path;
         $query = UrlHelper::buildQuery($request->query->all());
         if ($query != '') {

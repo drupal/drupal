@@ -89,9 +89,8 @@ class CommonTestController {
    *   parameter.
    */
   public function destination() {
-    $destination = drupal_get_destination();
+    $destination = \Drupal::destination()->getAsArray();
     $output = "The destination: " . SafeMarkup::checkPlain($destination['destination']);
-
     return new Response($output);
   }
 

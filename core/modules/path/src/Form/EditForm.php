@@ -58,7 +58,7 @@ class EditForm extends PathFormBase {
     ));
 
     if ($this->getRequest()->query->has('destination')) {
-      $url->setOption('query', drupal_get_destination());
+      $url->setOption('query', $this->getDestinationArray());
       $this->getRequest()->query->remove('destination');
     }
 

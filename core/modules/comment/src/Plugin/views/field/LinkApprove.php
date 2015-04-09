@@ -53,7 +53,7 @@ class LinkApprove extends Link {
 
     $this->options['alter']['make_link'] = TRUE;
     $this->options['alter']['url'] = Url::fromRoute('comment.approve', ['comment' => $comment->id()]);
-    $this->options['alter']['query'] = drupal_get_destination() + array('token' => \Drupal::csrfToken()->get($this->options['alter']['url']->toString()));
+    $this->options['alter']['query'] = $this->getDestinationArray() + array('token' => \Drupal::csrfToken()->get($this->options['alter']['url']->toString()));
 
     return $text;
   }

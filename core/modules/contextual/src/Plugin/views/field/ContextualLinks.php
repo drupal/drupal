@@ -11,6 +11,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\Core\Url;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
@@ -23,6 +24,8 @@ use Drupal\views\ResultRow;
  * @ViewsField("contextual_links")
  */
 class ContextualLinks extends FieldPluginBase {
+
+  use RedirectDestinationTrait;
 
   /**
    * {@inheritdoc}
@@ -119,7 +122,7 @@ class ContextualLinks extends FieldPluginBase {
           'title' => $title,
         );
         if (!empty($this->options['destination'])) {
-          $links[$field]['query'] = drupal_get_destination();
+          $links[$field]['query'] = $this->getDestinationArray();
         }
       }
     }

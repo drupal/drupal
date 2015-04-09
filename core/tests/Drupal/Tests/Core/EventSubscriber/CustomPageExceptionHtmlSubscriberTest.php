@@ -65,6 +65,13 @@ class CustomPageExceptionHtmlSubscriberTest extends UnitTestCase {
   protected $customPageSubscriber;
 
   /**
+   * The mocked redirect.destination service.
+   *
+   * @var \Drupal\Core\Routing\RedirectDestinationInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $redirectDestination;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -73,7 +80,13 @@ class CustomPageExceptionHtmlSubscriberTest extends UnitTestCase {
     $this->aliasManager = $this->getMock('Drupal\Core\Path\AliasManagerInterface');
     $this->kernel = $this->getMock('Symfony\Component\HttpKernel\HttpKernelInterface');
     $this->logger = $this->getMock('Psr\Log\LoggerInterface');
-    $this->customPageSubscriber = new TestCustomPageExceptionHtmlSubscriber($this->configFactory, $this->aliasManager, $this->kernel, $this->logger);
+    $this->redirectDestination = $this->getMock('\Drupal\Core\Routing\RedirectDestinationInterface');
+
+    $this->redirectDestination->expects($this->any())
+      ->method('getAsArray')
+      ->willReturn(['destination' => 'test']);
+
+    $this->customPageSubscriber = new CustomPageExceptionHtmlSubscriber($this->configFactory, $this->aliasManager, $this->kernel, $this->logger, $this->redirectDestination);
 
     // You can't create an exception in PHP without throwing it. Store the
     // current error_log, and disable it temporarily.
@@ -139,13 +152,3 @@ class CustomPageExceptionHtmlSubscriberTest extends UnitTestCase {
 
 }
 
-class TestCustomPageExceptionHtmlSubscriber extends CustomPageExceptionHtmlSubscriber {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function drupalGetDestination() {
-    return ['destination' => 'test'];
-  }
-
-}

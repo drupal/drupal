@@ -9,6 +9,7 @@ namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Path\AliasManagerInterface;
+use Drupal\Core\Routing\RedirectDestinationInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
@@ -44,9 +45,11 @@ class CustomPageExceptionHtmlSubscriber extends DefaultExceptionHtmlSubscriber {
    *   The HTTP Kernel service.
    * @param \Psr\Log\LoggerInterface $logger
    *   The logger service.
+   * @param \Drupal\Core\Routing\RedirectDestinationInterface $redirect_destination
+   *   The redirect destination service.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, AliasManagerInterface $alias_manager, HttpKernelInterface $http_kernel, LoggerInterface $logger) {
-    parent::__construct($http_kernel, $logger);
+  public function __construct(ConfigFactoryInterface $config_factory, AliasManagerInterface $alias_manager, HttpKernelInterface $http_kernel, LoggerInterface $logger, RedirectDestinationInterface $redirect_destination) {
+    parent::__construct($http_kernel, $logger, $redirect_destination);
     $this->configFactory = $config_factory;
     $this->aliasManager = $alias_manager;
   }

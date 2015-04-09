@@ -167,7 +167,7 @@ class CommentAdminOverview extends FormBase {
 
     // Build a table listing the appropriate comments.
     $options = array();
-    $destination = drupal_get_destination();
+    $destination = $this->getDestinationArray();
 
     $commented_entity_ids = array();
     $commented_entities = array();

@@ -290,7 +290,7 @@ function update_storage_clear_submit($form, FormStateInterface $form_state) {
  * Returns a warning message when there is no data about available updates.
  */
 function _update_no_data() {
-  $destination = drupal_get_destination();
+  $destination = \Drupal::destination()->getAsArray();
   return t('No update information available. <a href="@run_cron">Run cron</a> or <a href="@check_manually">check manually</a>.', array(
     '@run_cron' => \Drupal::url('system.run_cron', [], ['query' => $destination]),
     '@check_manually' => \Drupal::url('update.manual_status', [], ['query' => $destination]),
@@ -590,7 +590,7 @@ function _update_project_status_sort($a, $b) {
  */
 function template_preprocess_update_last_check(&$variables) {
   $variables['time'] = \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $variables['last']);
-  $variables['link'] = \Drupal::l(t('Check manually'), new Url('update.manual_status', array(), array('query' => drupal_get_destination())));
+  $variables['link'] = \Drupal::l(t('Check manually'), new Url('update.manual_status', array(), array('query' => \Drupal::destination()->getAsArray())));
 }
 
 /**

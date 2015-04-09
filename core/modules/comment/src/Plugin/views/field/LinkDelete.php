@@ -44,7 +44,7 @@ class LinkDelete extends Link {
 
     $this->options['alter']['make_link'] = TRUE;
     $this->options['alter']['url'] = $comment->urlInfo('delete-form');
-    $this->options['alter']['query'] = drupal_get_destination();
+    $this->options['alter']['query'] = $this->getDestinationArray();
 
     return $text;
   }

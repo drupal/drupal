@@ -9,6 +9,7 @@ namespace Drupal\Core\Controller;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Routing\LinkGeneratorTrait;
+use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -35,8 +36,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @ingroup menu
  */
 abstract class ControllerBase implements ContainerInjectionInterface {
-  use StringTranslationTrait;
+
   use LinkGeneratorTrait;
+  use RedirectDestinationTrait;
+  use StringTranslationTrait;
   use UrlGeneratorTrait;
 
   /**

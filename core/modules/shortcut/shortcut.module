@@ -313,7 +313,7 @@ function shortcut_preprocess_page(&$variables) {
       'link' => $link,
       'name' => $variables['title'],
     );
-    $query += drupal_get_destination();
+    $query += \Drupal::destination()->getAsArray();
 
     $shortcut_set = shortcut_current_displayed_set();
 

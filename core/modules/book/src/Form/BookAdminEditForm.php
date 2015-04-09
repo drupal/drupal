@@ -206,7 +206,7 @@ class BookAdminEditForm extends FormBase {
     $delta = ($count < 30) ? 15 : intval($count / 2) + 1;
 
     $access = \Drupal::currentUser()->hasPermission('administer nodes');
-    $destination = drupal_get_destination();
+    $destination = $this->getDestinationArray();
 
     foreach ($tree as $data) {
       $nid = $data['link']['nid'];

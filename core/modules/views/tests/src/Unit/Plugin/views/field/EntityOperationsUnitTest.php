@@ -45,6 +45,13 @@ class EntityOperationsUnitTest extends UnitTestCase {
       'title' => $this->randomMachineName(),
     );
     $this->plugin = new EntityOperations($configuration, $plugin_id, $plugin_definition, $this->entityManager);
+
+    $redirect_service = $this->getMock('Drupal\Core\Routing\RedirectDestinationInterface');
+    $redirect_service->expects($this->any())
+      ->method('getAsArray')
+      ->willReturn(['destination' => 'foobar']);
+    $this->plugin->setRedirectDestination($redirect_service);
+
     $view = $this->getMockBuilder('\Drupal\views\ViewExecutable')
       ->disableOriginalConstructor()
       ->getMock();
@@ -108,7 +115,7 @@ class EntityOperationsUnitTest extends UnitTestCase {
       '#type' => 'operations',
       '#links' => $operations
     );
-    $expected_build['#links']['foo']['query'] = drupal_get_destination();
+    $expected_build['#links']['foo']['query'] = ['destination' => 'foobar'];
     $build = $this->plugin->render($result);
     $this->assertSame($expected_build, $build);
   }
@@ -152,18 +159,6 @@ class EntityOperationsUnitTest extends UnitTestCase {
     );
     $build = $this->plugin->render($result);
     $this->assertSame($expected_build, $build);
-  }
-}
-
-}
-
-namespace {
-
-if (!function_exists('drupal_get_destination')) {
-  function drupal_get_destination() {
-    return array(
-      'destination' => 'foobar',
-    );
   }
 }
 

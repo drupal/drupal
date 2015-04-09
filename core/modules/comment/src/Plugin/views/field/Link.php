@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\Core\Url;
 use Drupal\views\ResultRow;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -23,6 +24,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @ViewsField("comment_link")
  */
 class Link extends FieldPluginBase {
+
+  use RedirectDestinationTrait;
 
   /**
    * Entity Manager service.

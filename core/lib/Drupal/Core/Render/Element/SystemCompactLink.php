@@ -63,7 +63,7 @@ class SystemCompactLink extends Link {
       $element['#url'] = BaseUrl::fromRoute('system.admin_compact_page', array('mode' => 'off'));
       $element['#options'] = array(
         'attributes' => array('title' => t('Expand layout to include descriptions.')),
-        'query' => drupal_get_destination(),
+        'query' => \Drupal::destination()->getAsArray()
       );
     }
     else {
@@ -71,7 +71,7 @@ class SystemCompactLink extends Link {
       $element['#url'] = BaseUrl::fromRoute('system.admin_compact_page', array('mode' => 'on'));
       $element['#options'] = array(
         'attributes' => array('title' => t('Compress layout by hiding descriptions.')),
-        'query' => drupal_get_destination(),
+        'query' => \Drupal::destination()->getAsArray(),
       );
     }
 

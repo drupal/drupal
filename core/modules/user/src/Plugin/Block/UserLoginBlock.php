@@ -8,6 +8,7 @@
 namespace Drupal\user\Plugin\Block;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\Core\Url;
@@ -27,6 +28,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class UserLoginBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   use UrlGeneratorTrait;
+  use RedirectDestinationTrait;
 
   /**
    * The route match.
@@ -87,7 +89,7 @@ class UserLoginBlock extends BlockBase implements ContainerFactoryPluginInterfac
     unset($form['pass']['#description']);
     $form['name']['#size'] = 15;
     $form['pass']['#size'] = 15;
-    $form['#action'] = $this->url('<current>', [], ['query' => drupal_get_destination(), 'external' => FALSE]);
+    $form['#action'] = $this->url('<current>', [], ['query' => $this->getDestinationArray(), 'external' => FALSE]);
     // Build action links.
     $items = array();
     if (\Drupal::config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {

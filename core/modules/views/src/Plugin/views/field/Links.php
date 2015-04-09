@@ -89,7 +89,7 @@ abstract class Links extends FieldPluginBase {
         'title' => $title,
       );
       if (!empty($this->options['destination'])) {
-        $links[$field]['query'] = drupal_get_destination();
+        $links[$field]['query'] = \Drupal::destination()->getAsArray();
       }
     }
 

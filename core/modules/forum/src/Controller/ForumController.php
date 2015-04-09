@@ -290,19 +290,12 @@ class ForumController extends ControllerBase {
           '#theme' => 'menu_local_action',
           '#link' => array(
             'title' => $this->t('Log in to post new content in the forum.'),
-            'url' => Url::fromRoute('user.login', [], ['query' => $this->getDestination()]),
+            'url' => Url::fromRoute('user.login', [], ['query' => $this->getDestinationArray()]),
           ),
         ];
       }
     }
     return $links;
-  }
-
-  /**
-   * Wraps drupal_get_destination().
-   */
-  protected function getDestination() {
-    return drupal_get_destination();
   }
 
 }

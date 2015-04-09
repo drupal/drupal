@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\views\ResultRow;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -20,6 +21,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @ViewsField("entity_operations")
  */
 class EntityOperations extends FieldPluginBase {
+
+  use RedirectDestinationTrait;
 
   /**
    * The entity manager.
@@ -102,7 +105,7 @@ class EntityOperations extends FieldPluginBase {
         if (!isset($operation['query'])) {
           $operation['query'] = array();
         }
-        $operation['query'] += drupal_get_destination();
+        $operation['query'] += $this->getDestinationArray();
       }
     }
     $build = array(

@@ -39,7 +39,7 @@ class LinkEdit extends Link {
 
     $this->options['alter']['make_link'] = TRUE;
     $this->options['alter']['url'] = $node->urlInfo('edit-form');
-    $this->options['alter']['query'] = drupal_get_destination();
+    $this->options['alter']['query'] = $this->getDestinationArray();
 
     $text = !empty($this->options['text']) ? $this->options['text'] : $this->t('Edit');
     return $text;

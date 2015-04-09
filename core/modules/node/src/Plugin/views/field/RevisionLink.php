@@ -66,7 +66,7 @@ class RevisionLink extends Link {
 
     $this->options['alter']['make_link'] = TRUE;
     $this->options['alter']['url'] = $url;
-    $this->options['alter']['query'] = drupal_get_destination();
+    $this->options['alter']['query'] = $this->getDestinationArray();
 
     return !empty($this->options['text']) ? $this->options['text'] : $this->t('View');
   }

@@ -83,7 +83,7 @@ class PathController extends ControllerBase {
     $header[] = $this->t('Operations');
 
     $rows = array();
-    $destination = drupal_get_destination();
+    $destination = $this->getDestinationArray();
     foreach ($this->aliasStorage->getAliasesForAdminListing($header, $keys) as $data) {
       $row = array();
       // @todo Should Path module store leading slashes? See

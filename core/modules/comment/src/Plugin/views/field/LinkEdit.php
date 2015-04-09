@@ -60,7 +60,7 @@ class LinkEdit extends Link {
     unset($this->options['alter']['fragment']);
 
     if (!empty($this->options['destination'])) {
-      $this->options['alter']['query'] = drupal_get_destination();
+      $this->options['alter']['query'] = $this->getDestinationArray();
     }
 
     $this->options['alter']['url'] = $comment->urlInfo('edit-form');

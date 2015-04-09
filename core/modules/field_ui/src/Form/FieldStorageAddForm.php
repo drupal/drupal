@@ -417,7 +417,7 @@ class FieldStorageAddForm extends FormBase {
     }
 
     if ($destinations) {
-      $destination = drupal_get_destination();
+      $destination = $this->getDestinationArray();
       $destinations[] = $destination['destination'];
       $form_state->setRedirectUrl(FieldUI::getNextDestination($destinations, $form_state));
     }

@@ -9,6 +9,7 @@ namespace Drupal\system\Plugin\views\field;
 
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\Plugin\views\style\Table;
@@ -23,6 +24,8 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
  * @ViewsField("bulk_form")
  */
 class BulkForm extends FieldPluginBase {
+
+  use RedirectDestinationTrait;
 
   /**
    * The action storage.
@@ -284,7 +287,7 @@ class BulkForm extends FieldPluginBase {
       $operation_definition = $action->getPluginDefinition();
       if (!empty($operation_definition['confirm_form_route_name'])) {
         $options = array(
-          'query' => drupal_get_destination(),
+          'query' => $this->getDestinationArray(),
         );
         $form_state->setRedirect($operation_definition['confirm_form_route_name'], array(), $options);
       }

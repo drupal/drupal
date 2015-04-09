@@ -8,6 +8,7 @@
 namespace Drupal\node\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 
@@ -19,6 +20,8 @@ use Drupal\views\ResultRow;
  * @ViewsField("node_link")
  */
 class Link extends FieldPluginBase {
+
+  use RedirectDestinationTrait;
 
   /**
    * {@inheritdoc}

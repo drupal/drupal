@@ -120,5 +120,5 @@ function template_preprocess_locale_translation_last_check(array &$variables) {
   $last = $variables['last'];
   $variables['last_checked'] = ($last != NULL);
   $variables['time'] = \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $last);
-  $variables['link'] = \Drupal::l(t('Check manually'), new Url('locale.check_translation', array(), array('query' => drupal_get_destination())));
+  $variables['link'] = \Drupal::l(t('Check manually'), new Url('locale.check_translation', array(), array('query' => \Drupal::destination()->getAsArray())));
 }

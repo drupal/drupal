@@ -8,6 +8,7 @@
 namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Core\Routing\AccessAwareRouterInterface;
+use Drupal\Core\Routing\RedirectDestinationInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\Error;
 use Psr\Log\LoggerInterface;
@@ -36,16 +37,26 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
   protected $logger;
 
   /**
+   * The redirect destination service.
+   *
+   * @var \Drupal\Core\Routing\RedirectDestinationInterface
+   */
+  protected $redirectDestination;
+
+  /**
    * Constructs a new DefaultExceptionHtmlSubscriber.
    *
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
    *   The HTTP kernel.
    * @param \Psr\Log\LoggerInterface $logger
    *   The logger service.
+   * @param \Drupal\Core\Routing\RedirectDestinationInterface $redirect_destination
+   *   The redirect destination service.
    */
-  public function __construct(HttpKernelInterface $http_kernel, LoggerInterface $logger) {
+  public function __construct(HttpKernelInterface $http_kernel, LoggerInterface $logger, RedirectDestinationInterface $redirect_destination) {
     $this->httpKernel = $http_kernel;
     $this->logger = $logger;
+    $this->redirectDestination = $redirect_destination;
   }
 
   /**
@@ -105,10 +116,10 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
 
     if ($url != $request->getBasePath() . '/' && $url != $current_url) {
       if ($request->getMethod() === 'POST') {
-        $sub_request = Request::create($url, 'POST', $this->drupalGetDestination() + ['_exception_statuscode' => $status_code] + $request->request->all(), $request->cookies->all(), [], $request->server->all());
+        $sub_request = Request::create($url, 'POST', $this->redirectDestination->getAsArray() + ['_exception_statuscode' => $status_code] + $request->request->all(), $request->cookies->all(), [], $request->server->all());
       }
       else {
-        $sub_request = Request::create($url, 'GET', $request->query->all() + $this->drupalGetDestination() + ['_exception_statuscode' => $status_code], $request->cookies->all(), [], $request->server->all());
+        $sub_request = Request::create($url, 'GET', $request->query->all() + $this->redirectDestination->getAsArray() + ['_exception_statuscode' => $status_code], $request->cookies->all(), [], $request->server->all());
       }
 
       try {
@@ -135,13 +146,6 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
         $this->logger->log($error['severity_level'], '%type: !message in %function (line %line of %file).', $error);
       }
     }
-  }
-
-  /**
-   * Wraps drupal_get_destination().
-   */
-  protected function drupalGetDestination() {
-    return drupal_get_destination();
   }
 
 }

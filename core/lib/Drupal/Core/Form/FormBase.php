@@ -11,6 +11,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Routing\LinkGeneratorTrait;
+use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -22,9 +23,11 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * @ingroup form_api
  */
 abstract class FormBase implements FormInterface, ContainerInjectionInterface {
-  use StringTranslationTrait;
+
   use DependencySerializationTrait;
   use LinkGeneratorTrait;
+  use RedirectDestinationTrait;
+  use StringTranslationTrait;
   use UrlGeneratorTrait;
 
   /**
