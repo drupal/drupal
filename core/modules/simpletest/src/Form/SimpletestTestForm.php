@@ -144,7 +144,7 @@ class SimpletestTestForm extends FormBase {
         );
         $form['tests'][$class]['title'] = array(
           '#type' => 'label',
-          '#title' => $info['name'],
+          '#title' => '\\' . $info['name'],
           '#wrapper_attributes' => array(
             'class' => array('simpletest-test-label', 'table-filter-text-source'),
           ),
