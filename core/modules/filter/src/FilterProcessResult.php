@@ -17,14 +17,14 @@ use Drupal\Core\Render\BubbleableMetadata;
  * The typical use case for a text filter plugin's processing method is to just
  * apply some filtering to the given text, but for more advanced use cases,
  * it may be necessary to also:
- * 1. declare asset libraries to be loaded;
- * 2. declare cache tags that the filtered text depends upon, so when either of
+ * - Declare asset libraries to be loaded.
+ * - Declare cache tags that the filtered text depends upon, so when either of
  *   those cache tags is invalidated, the filtered text should also be
- *   invalidated;
- * 3. declare cache context to vary by, e.g. 'language' to do language-specific
- *    filtering.
- * 4. declare a maximum age for the filtered text
- * 5. apply uncacheable filtering, for example because it differs per user.
+ *   invalidated.
+ * - Declare cache context to vary by, e.g. 'language' to do language-specific
+ *   filtering.
+ * - Declare a maximum age for the filtered text.
+ * - Apply uncacheable filtering, for example because it differs per user.
  *
  * In case a filter needs one or more of these advanced use cases, it can use
  * the additional methods available.

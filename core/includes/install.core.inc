@@ -1161,15 +1161,13 @@ function install_select_profile(&$install_state) {
  * Determines the installation profile to use in the installer.
  *
  * A profile will be selected in the following order of conditions:
- *
- * 1. Only one profile is available.
- * 2. A specific profile name is requested in installation parameters:
- *    - for interactive installations via request query parameters.
- *    - for non-interactive installations via install_drupal() settings.
- * 3. A discovered profile that is a distribution.
- *    If multiple profiles are distributions, then the first discovered profile
- *    will be selected.
- * 4. Only one visible profile is available.
+ * - Only one profile is available.
+ * - A specific profile name is requested in installation parameters:
+ *   - For interactive installations via request query parameters.
+ *   - For non-interactive installations via install_drupal() settings.
+ * - A discovered profile that is a distribution. If multiple profiles are
+ *   distributions, then the first discovered profile will be selected.
+ * - Only one visible profile is available.
  *
  * @param array $install_state
  *   The current installer state, containing a 'profiles' key, which is an

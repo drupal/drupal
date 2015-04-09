@@ -17,13 +17,13 @@ namespace Drupal\Core\Menu;
  *   plus what their parent is. But they don't know where exactly in a menu link
  *   tree they live.
  * - Instances of this class are complimentary to those objects, they know:
- *   1. all additional metadata from {menu_tree}, which contains "materialized"
- *      metadata about a menu link tree, such as whether a link in the tree has
- *      visible children and the depth relative to the root;
- *   2. plus all additional metadata that's adjusted for the current tree query,
- *      such as whether the link is in the active trail, whether the link is
- *      accessible for the current user, and the link's children (which are only
- *      loaded if the link was marked as "expanded" by the query).
+ *   - All additional metadata from {menu_tree}, which contains "materialized"
+ *     metadata about a menu link tree, such as whether a link in the tree has
+ *     visible children and the depth relative to the root.
+ *   - Plus all additional metadata that's adjusted for the current tree query,
+ *     such as whether the link is in the active trail, whether the link is
+ *     accessible for the current user, and the link's children (which are only
+ *     loaded if the link was marked as "expanded" by the query).
  *
  * @see \Drupal\Core\Menu\MenuTreeStorage::loadTreeData()
  */

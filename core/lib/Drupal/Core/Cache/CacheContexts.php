@@ -204,9 +204,9 @@ class CacheContexts {
    * @return array
    *   An array with the parsed results, with each result being an array
    *   containing:
-   *   1. the cache context ID
-   *   2. the associated parameter (for a calculated cache context), or NULL if
-   *      there is no parameter.
+   *   - The cache context ID.
+   *   - The associated parameter (for a calculated cache context), or NULL if
+   *     there is no parameter.
    */
   public static function parseTokens(array $context_tokens) {
     $contexts_with_parameters = [];

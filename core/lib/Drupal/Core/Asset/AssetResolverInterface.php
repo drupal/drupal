@@ -26,11 +26,11 @@ interface AssetResolverInterface {
    *
    * It returns the CSS assets in order, according to the SMACSS categories
    * specified in the assets' weights:
-   * 1. CSS_BASE
-   * 2. CSS_LAYOUT
-   * 3. CSS_COMPONENT
-   * 4. CSS_STATE
-   * 5. CSS_THEME
+   * - CSS_BASE
+   * - CSS_LAYOUT
+   * - CSS_COMPONENT
+   * - CSS_STATE
+   * - CSS_THEME
    * @see https://www.drupal.org/node/1887918#separate-concerns
    * This ensures proper cascading of styles so themes can easily override
    * module styles through CSS selectors.

@@ -32,9 +32,9 @@ class RendererPostRenderCacheTest extends RendererTestBase {
    * Generates an element with a #post_render_cache callback.
    *
    * @return array
-   *  An array containing:
-   *   1. a render array containing a #post_render_cache callback
-   *   2. the context used for that #post_render_cache callback.
+   *   An array containing:
+   *   - A render array containing a #post_render_cache callback.
+   *   - The context used for that #post_render_cache callback.
    */
   protected function generatePostRenderCacheElement() {
     $context = ['foo' => $this->randomContextValue()];

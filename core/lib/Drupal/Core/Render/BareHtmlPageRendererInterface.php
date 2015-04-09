@@ -38,8 +38,9 @@ namespace Drupal\Core\Render;
  * in a limited environment).
  *
  * Currently, there are two types of bare pages available:
- * 1. install (hook_preprocess_install_page(), install-page.html.twig)
- * 2. maintenance (hook_preprocess_maintenance_page(), maintenance-page.html.twig)
+ * - Install (hook_preprocess_install_page(), install-page.html.twig).
+ * - Maintenance (hook_preprocess_maintenance_page(),
+ *   maintenance-page.html.twig).
  *
  * @see \Drupal\Core\Render\MainContent\HtmlRenderer
  */

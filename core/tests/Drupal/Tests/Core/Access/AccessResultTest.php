@@ -473,15 +473,15 @@ class AccessResultTest extends UnitTestCase {
    * every single bit of cacheability metadata, which would lead to a mind-
    * boggling number of permutations, in this test, we only consider the
    * permutations of all pairs of the following set:
-   * 1. Allowed, implements CDI, is cacheable
-   * 2. Allowed, implements CDI, is not cacheable
-   * 3. Allowed, does not implement CDI (hence not cacheable)
-   * 4. Forbidden, implements CDI, is cacheable
-   * 5. Forbidden, implements CDI, is not cacheable
-   * 6. Forbidden, does not implement CDI (hence not cacheable)
-   * 7. Neutral, implements CDI, is cacheable
-   * 8. Neutral, implements CDI, is not cacheable
-   * 9. Neutral, does not implement CDI (hence not cacheable)
+   * - Allowed, implements CDI and is cacheable.
+   * - Allowed, implements CDI and is not cacheable.
+   * - Allowed, does not implement CDI (hence not cacheable).
+   * - Forbidden, implements CDI and is cacheable.
+   * - Forbidden, implements CDI and is not cacheable.
+   * - Forbidden, does not implement CDI (hence not cacheable).
+   * - Neutral, implements CDI and is cacheable.
+   * - Neutral, implements CDI and is not cacheable.
+   * - Neutral, does not implement CDI (hence not cacheable).
    *
    * (Where "CDI" is CacheableDependencyInterface.)
    *
@@ -490,15 +490,15 @@ class AccessResultTest extends UnitTestCase {
    * 144 permutations, all of which are tested.
    *
    * There are two "contagious" patterns:
-   * 1. Any operation with a forbidden access result yields a forbidden result.
-   *    This therefore also applies to the cacheability metadata associated with
-   *    a forbidden result.
-   *    This is the case for items 4, 5 and 6 in the set above.
-   * 2. Any operation yields an access result object that is of the same class
-   *    (implementation) as the first operand. This is because operations are
-   *    invoked on the first operand. Therefore, if the first implementation
-   *    does not implement CacheableDependencyInterface, then the result won't
-   *    either. This is the case for items 3, 6 and 9 in the set above.
+   * - Any operation with a forbidden access result yields a forbidden result.
+   *   This therefore also applies to the cacheability metadata associated with
+   *   a forbidden result. This is the case for bullets 4, 5 and 6 in the set
+   *   above.
+   * - Any operation yields an access result object that is of the same class
+   *   (implementation) as the first operand. This is because operations are
+   *   invoked on the first operand. Therefore, if the first implementation
+   *   does not implement CacheableDependencyInterface, then the result won't
+   *   either. This is the case for bullets 3, 6 and 9 in the set above.
    */
   public function andOrCacheabilityPropagationProvider() {
     // ct: cacheable=true, cf: cacheable=false, un: uncacheable.

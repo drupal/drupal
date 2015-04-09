@@ -23,30 +23,22 @@ use Drupal\language\LanguageNegotiatorInterface;
 use Drupal\block\Entity\Block;
 
 /**
- * Tests UI language switching.
+ * Tests the language UI for language switching.
  *
- * 1. URL (PATH) > DEFAULT
- *    UI Language base on URL prefix, browser language preference has no
- *    influence:
- *      admin/config
- *        UI in site default language
- *      zh-hans/admin/config
- *        UI in Chinese
- *      blah-blah/admin/config
- *        404
- * 2. URL (PATH) > BROWSER > DEFAULT
- *        admin/config
- *          UI in user's browser language preference if the site has that
- *          language added, if not, the default language
- *        zh-hans/admin/config
- *          UI in Chinese
- *        blah-blah/admin/config
- *          404
- * 3. URL (DOMAIN) > DEFAULT
- *        http://example.com/admin/config
- *          UI language in site default
- *        http://example.cn/admin/config
- *          UI language in Chinese
+ * The uses cases that get tested, are:
+ * - URL (path) > default: Test that the URL prefix setting gets precedence over
+ *   the default language. The browser language preference does not have any
+ *   influence.
+ * - URL (path) > browser > default: Test that the URL prefix setting gets
+ *   precedence over the browser language preference, which in turn gets
+ *   precedence over the default language.
+ * - URL (domain) > default: Tests that the URL domain setting gets precedence
+ *   over the default language.
+ *
+ * The paths that are used for each of these, are:
+ * - admin/config: Tests the UI using the precedence rules.
+ * - zh-hans/admin/config: Tests the UI in Chinese.
+ * - blah-blah/admin/config: Tests the 404 page.
  *
  * @group language
  */
