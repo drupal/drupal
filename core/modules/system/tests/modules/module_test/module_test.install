@@ -28,7 +28,7 @@ function module_test_schema() {
  * Implements hook_install().
  */
 function module_test_install() {
-  $schema = drupal_get_schema('module_test');
+  $schema = drupal_get_schema_unprocessed('module_test', 'module_test');
   db_insert('module_test')
     ->fields(array(
       'data' => $schema['fields']['data']['type'],
