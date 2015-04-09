@@ -1097,10 +1097,14 @@ services:
     class: Drupal\Core\ImageToolkit\ImageToolkitManager
     arguments: ['@config.factory']
     parent: default_plugin_manager
+    tags:
+      - { name: plugin_manager_cache_clear }
   image.toolkit.operation.manager:
     class: Drupal\Core\ImageToolkit\ImageToolkitOperationManager
     arguments: ['@logger.channel.image']
     parent: default_plugin_manager
+    tags:
+      - { name: plugin_manager_cache_clear }
   image.factory:
     class: Drupal\Core\Image\ImageFactory
     arguments: ['@image.toolkit.manager']
