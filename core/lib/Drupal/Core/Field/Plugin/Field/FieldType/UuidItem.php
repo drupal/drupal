@@ -18,7 +18,8 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
  *   id = "uuid",
  *   label = @Translation("UUID"),
  *   description = @Translation("An entity field containing a UUID."),
- *   no_ui = TRUE
+ *   no_ui = TRUE,
+ *   default_formatter = "string"
  * )
  */
 class UuidItem extends StringItem {

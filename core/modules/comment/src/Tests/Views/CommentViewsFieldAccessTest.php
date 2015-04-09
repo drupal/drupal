@@ -66,7 +66,7 @@ class CommentViewsFieldAccessTest extends FieldFieldAccessTestBase {
 
     // $this->assertFieldAccess('comment', 'cid', $comment->id());
     // $this->assertFieldAccess('comment', 'cid', $comment_anonymous->id());
-    // $this->assertFieldAccess('comment', 'uuid', $comment->uuid());
+    $this->assertFieldAccess('comment', 'uuid', $comment->uuid());
     // $this->assertFieldAccess('comment', 'subject', 'My comment title');
     // $this->assertFieldAccess('comment', 'subject', 'Anonymous comment title');
     $this->assertFieldAccess('comment', 'name', 'anonymous');

@@ -59,7 +59,7 @@ class NodeViewsFieldAccessTest extends FieldFieldAccessTestBase {
     // @todo Expand the test coverage in https://www.drupal.org/node/2464635
 
     $this->assertFieldAccess('node', 'nid', $node->id());
-    // $this->assertFieldAccess('node', 'uuid', $node->uuid());
+    $this->assertFieldAccess('node', 'uuid', $node->uuid());
     $this->assertFieldAccess('node', 'vid', $node->id());
     $this->assertFieldAccess('node', 'type', $node->type->entity->label());
     $this->assertFieldAccess('node', 'langcode', $node->language()->getName());

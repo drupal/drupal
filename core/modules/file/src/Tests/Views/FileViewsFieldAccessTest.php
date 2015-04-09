@@ -60,7 +60,7 @@ class FileViewsFieldAccessTest extends FieldFieldAccessTestBase {
     // @todo Expand the test coverage in https://www.drupal.org/node/2464635
 
     $this->assertFieldAccess('file', 'fid', $file->id());
-    // $this->assertFieldAccess('file', 'uuid', $file->uuid());
+    $this->assertFieldAccess('file', 'uuid', $file->uuid());
     $this->assertFieldAccess('file', 'langcode', $file->language()->getName());
     $this->assertFieldAccess('file', 'uid', 'test user');
     $this->assertFieldAccess('file', 'filename', $file->getFilename());

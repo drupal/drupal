@@ -90,7 +90,10 @@ abstract class FieldFieldAccessTestBase extends ViewUnitTestBase {
 
     $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
     $view_id = $this->randomMachineName();
-    $base_table = $entity_type->getDataTable() ?: $entity_type->getBaseTable();
+    $data_table = $entity_type->getDataTable();
+    // Use the data table as long as the field is not 'uuid'. This is the only
+    // column that can only be obtained from the base table.
+    $base_table = ($data_table && ($field_name !== 'uuid')) ? $data_table : $entity_type->getBaseTable();
     $entity = View::create([
       'id' => $view_id,
       'base_table' => $base_table,
