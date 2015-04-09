@@ -340,7 +340,7 @@ interface RendererInterface {
    *
    * @see \Drupal\Core\Render\BubbleableMetadata
    */
-  public static function mergeBubbleableMetadata(array $a, array $b);
+  public function mergeBubbleableMetadata(array $a, array $b);
 
   /**
    * Adds a dependency on an object: merges its cacheability metadata.
@@ -398,7 +398,7 @@ interface RendererInterface {
    * @return array
    *   The merged attachments array.
    */
-  public static function mergeAttachments(array $a, array $b);
+  public function mergeAttachments(array $a, array $b);
 
   /**
    * Generates a render cache placeholder.

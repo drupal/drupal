@@ -121,7 +121,7 @@ class CommentPostRenderCache {
     $callback = 'comment.post_render_cache:renderForm';
     $placeholder = $this->generatePlaceholder($callback, $context);
     $element['#markup'] = str_replace($placeholder, $markup, $element['#markup']);
-    $element = Renderer::mergeBubbleableMetadata($element, $form);
+    $element = $this->renderer->mergeBubbleableMetadata($element, $form);
 
     return $element;
   }

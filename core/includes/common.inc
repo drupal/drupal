@@ -657,7 +657,7 @@ function drupal_js_defaults($data = NULL) {
  *   \Drupal\Core\Render\Renderer::mergeAttachments() instead.
  */
 function drupal_merge_attached(array $a, array $b) {
-  return Renderer::mergeAttachments($a, $b);
+  return \Drupal::service('renderer')->mergeAttachments($a, $b);
 }
 
 /**

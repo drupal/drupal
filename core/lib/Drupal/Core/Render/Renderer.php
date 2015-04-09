@@ -782,7 +782,7 @@ class Renderer implements RendererInterface {
   /**
    * {@inheritdoc}
    */
-  public static function mergeBubbleableMetadata(array $a, array $b) {
+  public function mergeBubbleableMetadata(array $a, array $b) {
     $meta_a = BubbleableMetadata::createFromRenderArray($a);
     $meta_b = BubbleableMetadata::createFromRenderArray($b);
     $meta_a->merge($meta_b)->applyTo($a);
@@ -801,7 +801,7 @@ class Renderer implements RendererInterface {
   /**
    * {@inheritdoc}
    */
-  public static function mergeAttachments(array $a, array $b) {
+  public function mergeAttachments(array $a, array $b) {
     // If both #attached arrays contain drupalSettings, then merge them
     // correctly; adding the same settings multiple times needs to behave
     // idempotently.

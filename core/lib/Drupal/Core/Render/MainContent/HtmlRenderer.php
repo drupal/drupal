@@ -286,7 +286,7 @@ class HtmlRenderer implements MainContentRendererInterface {
     }
 
     // Merge the attachments onto the $page render array.
-    $page = Renderer::mergeBubbleableMetadata($page, $attachments);
+    $page = $this->renderer->mergeBubbleableMetadata($page, $attachments);
   }
 
   /**

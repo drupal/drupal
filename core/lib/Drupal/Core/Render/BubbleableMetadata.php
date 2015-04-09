@@ -71,7 +71,7 @@ class BubbleableMetadata implements CacheableDependencyInterface {
     $result->contexts = Cache::mergeContexts($this->contexts, $other->contexts);
     $result->tags = Cache::mergeTags($this->tags, $other->tags);
     $result->maxAge = Cache::mergeMaxAges($this->maxAge, $other->maxAge);
-    $result->attached = Renderer::mergeAttachments($this->attached, $other->attached);
+    $result->attached = \Drupal::service('renderer')->mergeAttachments($this->attached, $other->attached);
     $result->postRenderCache = NestedArray::mergeDeep($this->postRenderCache, $other->postRenderCache);
     return $result;
   }

@@ -9,6 +9,7 @@ namespace Drupal\Core\Ajax;
 
 use Drupal\Core\Asset\AttachedAssets;
 use Drupal\Core\Render\Renderer;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -78,7 +79,7 @@ class AjaxResponse extends JsonResponse {
         'library' => $assets->getLibraries(),
         'drupalSettings' => $assets->getSettings(),
       ];
-      $attachments = Renderer::mergeAttachments($this->attachments, $attachments);
+      $attachments = $this->getRenderer()->mergeAttachments($this->attachments, $attachments);
       $this->setAttachments($attachments);
     }
 
@@ -193,7 +194,7 @@ class AjaxResponse extends JsonResponse {
 
     // Prepend commands to add the assets, preserving their relative order.
     $resource_commands = array();
-    $renderer = \Drupal::service('renderer');
+    $renderer = $this->getRenderer();
     if (!empty($css_assets)) {
       $css_render_array = \Drupal::service('asset.css.collection_renderer')->render($css_assets);
       $resource_commands[] = new AddCssCommand($renderer->render($css_render_array));
@@ -226,6 +227,16 @@ class AjaxResponse extends JsonResponse {
     \Drupal::moduleHandler()->alter('ajax_render', $commands);
 
     return $commands;
+  }
+
+  /**
+   * The renderer service.
+   *
+   * @return \Drupal\Core\Render\Renderer
+   *   The renderer service.
+   */
+  protected function getRenderer() {
+    return \Drupal::service('renderer');
   }
 
 }
