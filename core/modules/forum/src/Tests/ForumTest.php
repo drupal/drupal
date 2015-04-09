@@ -33,22 +33,27 @@ class ForumTest extends WebTestBase {
   /**
    * A user with various administrative privileges.
    */
-  protected $admin_user;
+  protected $adminUser;
 
   /**
    * A user that can create forum topics and edit its own topics.
    */
-  protected $edit_own_topics_user;
+  protected $editOwnTopicsUser;
 
   /**
    * A user that can create, edit, and delete forum topics.
    */
-  protected $edit_any_topics_user;
+  protected $editAnyTopicsUser;
 
   /**
    * A user with no special privileges.
    */
-  protected $web_user;
+  protected $webUser;
+
+  /**
+   * An administrative user who can bypass comment approval.
+   */
+  protected $postCommentUser;
 
   /**
    * An array representing a forum container.
@@ -63,7 +68,7 @@ class ForumTest extends WebTestBase {
   /**
    * An array representing a root forum.
    */
-  protected $root_forum;
+  protected $rootForum;
 
   /**
    * An array of forum topic node IDs.
@@ -78,7 +83,7 @@ class ForumTest extends WebTestBase {
     $this->drupalPlaceBlock('system_breadcrumb_block');
 
     // Create users.
-    $this->admin_user = $this->drupalCreateUser(array(
+    $this->adminUser = $this->drupalCreateUser(array(
       'access administration pages',
       'administer modules',
       'administer blocks',
@@ -88,19 +93,19 @@ class ForumTest extends WebTestBase {
       'create forum content',
       'access comments',
     ));
-    $this->edit_any_topics_user = $this->drupalCreateUser(array(
+    $this->editAnyTopicsUser = $this->drupalCreateUser(array(
       'access administration pages',
       'create forum content',
       'edit any forum content',
       'delete any forum content',
     ));
-    $this->edit_own_topics_user = $this->drupalCreateUser(array(
+    $this->editOwnTopicsUser = $this->drupalCreateUser(array(
       'create forum content',
       'edit own forum content',
       'delete own forum content',
     ));
-    $this->web_user = $this->drupalCreateUser();
-    $this->post_comment_user = $this->drupalCreateUser(array(
+    $this->webUser = $this->drupalCreateUser();
+    $this->postCommentUser = $this->drupalCreateUser(array(
       'administer content types',
       'create forum content',
       'post comments',
@@ -126,7 +131,7 @@ class ForumTest extends WebTestBase {
     $this->assertCacheTag('config:forum.settings');
 
     // Do the admin tests.
-    $this->doAdminTests($this->admin_user);
+    $this->doAdminTests($this->adminUser);
 
     // Check display order.
     $display = EntityViewDisplay::load('node.forum.default');
@@ -151,20 +156,20 @@ class ForumTest extends WebTestBase {
 
     // Login an unprivileged user to view the forum topics and generate an
     // active forum topics list.
-    $this->drupalLogin($this->web_user);
+    $this->drupalLogin($this->webUser);
     // Verify that this user is shown a message that they may not post content.
     $this->drupalGet('forum/' . $this->forum['tid']);
     $this->assertText(t('You are not allowed to post new content in the forum'), "Authenticated user without permission to post forum content is shown message in local tasks to that effect.");
 
     // Log in, and do basic tests for a user with permission to edit any forum
     // content.
-    $this->doBasicTests($this->edit_any_topics_user, TRUE);
+    $this->doBasicTests($this->editAnyTopicsUser, TRUE);
     // Create a forum node authored by this user.
     $any_topics_user_node = $this->createForumTopic($this->forum, FALSE);
 
     // Log in, and do basic tests for a user with permission to edit only its
     // own forum content.
-    $this->doBasicTests($this->edit_own_topics_user, FALSE);
+    $this->doBasicTests($this->editOwnTopicsUser, FALSE);
     // Create a forum node authored by this user.
     $own_topics_user_node = $this->createForumTopic($this->forum, FALSE);
     // Verify that this user cannot edit forum content authored by another user.
@@ -177,7 +182,7 @@ class ForumTest extends WebTestBase {
     $this->assertLink(t('Add new Forum topic'));
 
     // Login a user with permission to edit any forum content.
-    $this->drupalLogin($this->edit_any_topics_user);
+    $this->drupalLogin($this->editAnyTopicsUser);
     // Verify that this user can edit forum content authored by another user.
     $this->verifyForums($own_topics_user_node, TRUE);
 
@@ -194,7 +199,7 @@ class ForumTest extends WebTestBase {
     $this->assertEqual($topics, '6', 'Number of topics found.');
 
     // Verify the number of unread topics.
-    $unread_topics = $this->container->get('forum_manager')->unreadTopics($this->forum['tid'], $this->edit_any_topics_user->id());
+    $unread_topics = $this->container->get('forum_manager')->unreadTopics($this->forum['tid'], $this->editAnyTopicsUser->id());
     $unread_topics = \Drupal::translation()->formatPlural($unread_topics, '1 new post', '@count new posts');
     $xpath = $this->buildXPathQuery('//tr[@id=:forum]//td[@class="topics"]//a', $forum_arg);
     $this->assertFieldByXPath($xpath, $unread_topics, 'Number of unread topics found.');
@@ -221,7 +226,7 @@ class ForumTest extends WebTestBase {
     $this->assertResponse(200);
 
     // Test editing a forum topic that has a comment.
-    $this->drupalLogin($this->edit_any_topics_user);
+    $this->drupalLogin($this->editAnyTopicsUser);
     $this->drupalGet('forum/' . $this->forum['tid']);
     $this->drupalPostForm('node/' . $node->id() . '/edit', array(), t('Save'));
     $this->assertResponse(200);
@@ -259,7 +264,7 @@ class ForumTest extends WebTestBase {
     $edit = array();
     $edit['title[0][value]'] = $this->randomMachineName(10);
     $edit['body[0][value]'] = $this->randomMachineName(120);
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->drupalPostForm('node/add/forum', $edit, t('Save'));
 
     $nid_count = db_query('SELECT COUNT(nid) FROM {node}')->fetchField();
@@ -306,15 +311,15 @@ class ForumTest extends WebTestBase {
     $this->assertRaw('Edit forum', 'Followed the link to edit the forum');
     // Navigate back to forum structure page.
     $this->drupalGet('admin/structure/forum');
-    // Create second forum in container.
-    $this->delete_forum = $this->createForum('forum', $this->forumContainer['tid']);
+    // Create second forum in container, destined to be deleted below.
+    $delete_forum = $this->createForum('forum', $this->forumContainer['tid']);
     // Save forum overview.
     $this->drupalPostForm('admin/structure/forum/', array(), t('Save'));
     $this->assertRaw(t('The configuration options have been saved.'));
     // Delete this second forum.
-    $this->deleteForum($this->delete_forum['tid']);
+    $this->deleteForum($delete_forum['tid']);
     // Create forum at the top (root) level.
-    $this->root_forum = $this->createForum('forum');
+    $this->rootForum = $this->createForum('forum');
 
     // Test vocabulary form alterations.
     $this->drupalGet('admin/structure/taxonomy/manage/forums');
@@ -477,7 +482,7 @@ class ForumTest extends WebTestBase {
    */
   function testForumWithNewPost() {
     // Login as the first user.
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     // Create a forum container.
     $this->forumContainer = $this->createForum('container');
     // Create a forum.
@@ -486,7 +491,7 @@ class ForumTest extends WebTestBase {
     $node = $this->createForumTopic($this->forum, FALSE);
 
     // Login as a second user.
-    $this->drupalLogin($this->post_comment_user);
+    $this->drupalLogin($this->postCommentUser);
     // Post a reply to the topic.
     $edit = array();
     $edit['subject[0][value]'] = $this->randomMachineName();
@@ -500,7 +505,7 @@ class ForumTest extends WebTestBase {
     $this->assertFieldByName('comment_body[0][value]');
 
     // Login as the first user.
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     // Check that forum renders properly.
     $this->drupalGet("forum/{$this->forum['tid']}");
     $this->assertResponse(200);
@@ -581,7 +586,7 @@ class ForumTest extends WebTestBase {
     // View forum page.
     $this->verifyForumView($this->forum, $this->forumContainer);
     // View root forum page.
-    $this->verifyForumView($this->root_forum);
+    $this->verifyForumView($this->rootForum);
 
     // View forum node.
     $this->drupalGet('node/' . $node->id());
@@ -612,7 +617,7 @@ class ForumTest extends WebTestBase {
       $edit['title[0][value]'] = 'node/' . $node->id();
       $edit['body[0][value]'] = $this->randomMachineName(256);
       // Assume the topic is initially associated with $forum.
-      $edit['taxonomy_forums'] = $this->root_forum['tid'];
+      $edit['taxonomy_forums'] = $this->rootForum['tid'];
       $edit['shadow'] = TRUE;
       $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
       $this->assertRaw(t('Forum topic %title has been updated.', array('%title' => $edit['title[0][value]'])), 'Forum node was edited');
@@ -622,7 +627,7 @@ class ForumTest extends WebTestBase {
         ':nid' => $node->id(),
         ':vid' => $node->getRevisionId(),
       ))->fetchField();
-      $this->assertTrue($forum_tid == $this->root_forum['tid'], 'The forum topic is linked to a different forum');
+      $this->assertTrue($forum_tid == $this->rootForum['tid'], 'The forum topic is linked to a different forum');
 
       // Delete forum node.
       $this->drupalPostForm('node/' . $node->id() . '/delete', array(), t('Delete'));
