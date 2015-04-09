@@ -8,7 +8,6 @@
 namespace Drupal\system\Tests\Entity;
 
 use Drupal\Component\Utility\Unicode;
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -225,11 +224,26 @@ class EntityQueryTest extends EntityUnitTestBase {
       ->sort('id')
       ->execute();
     $entities = entity_load_multiple('entity_test_mulrev', $ids);
+    $first_entity = reset($entities);
+    $old_name = $first_entity->name->value;
     foreach ($entities as $entity) {
       $entity->setNewRevision();
       $entity->getTranslation('tr')->$greetings->value = 'xsiemax';
+      $entity->name->value .= 'x';
       $entity->save();
     }
+    // We changed the entity names, so the current revision should not match.
+    $this->queryResults = $this->factory->get('entity_test_mulrev')
+      ->condition('name.value', $old_name)
+      ->execute();
+    $this->assertResult();
+    // Only if all revisions are queried, we find the old revision.
+    $this->queryResults = $this->factory->get('entity_test_mulrev')
+      ->condition('name.value', $old_name)
+      ->allRevisions()
+      ->sort('revision_id')
+      ->execute();
+    $this->assertRevisionResult(array($first_entity->id()), array($first_entity->id()));
     // When querying current revisions, this string is no longer found.
     $this->queryResults = $this->factory->get('entity_test_mulrev')
       ->condition("$greetings.value", 'merhaba')
@@ -237,21 +251,18 @@ class EntityQueryTest extends EntityUnitTestBase {
     $this->assertResult();
     $this->queryResults = $this->factory->get('entity_test_mulrev')
       ->condition("$greetings.value", 'merhaba')
-      ->age(EntityStorageInterface::FIELD_LOAD_REVISION)
+      ->allRevisions()
       ->sort('revision_id')
       ->execute();
-    // Bit 2 needs to be set.
-    // The keys must be 16-23 because the first batch stopped at 15 so the
-    // second started at 16 and eight entities were saved.
-    $assert = $this->assertRevisionResult(range(16, 23), array(4, 5, 6, 7, 12, 13, 14, 15));
+    // The query only matches the original revisions.
+    $this->assertRevisionResult(array(4, 5, 6, 7, 12, 13, 14, 15), array(4, 5, 6, 7, 12, 13, 14, 15));
     $results = $this->factory->get('entity_test_mulrev')
       ->condition("$greetings.value", 'siema', 'CONTAINS')
       ->sort('id')
       ->execute();
-    // This is the same as the previous one because xsiemax replaced merhaba
-    // but also it contains the entities that siema originally but not
-    // merhaba.
-    $assert = array_slice($assert, 0, 4, TRUE) + array(8 => '8', 9 => '9', 10 => '10', 11 => '11') + array_slice($assert, 4, 4, TRUE);
+    // This matches both the original and new current revisions, multiple
+    // revisions are returned for some entities.
+    $assert = array(16 => '4', 17 => '5', 18 => '6', 19 => '7', 8 => '8', 9 => '9', 10 => '10', 11 => '11', 20 => '12', 21 => '13', 22 => '14', 23 => '15');
     $this->assertIdentical($results, $assert);
     $results = $this->factory->get('entity_test_mulrev')
       ->condition("$greetings.value", 'siema', 'STARTS_WITH')
@@ -269,10 +280,12 @@ class EntityQueryTest extends EntityUnitTestBase {
     $this->assertIdentical($results, array_slice($assert, 4, 8, TRUE));
     $results = $this->factory->get('entity_test_mulrev')
       ->condition("$greetings.value", 'a', 'ENDS_WITH')
-      ->age(EntityStorageInterface::FIELD_LOAD_REVISION)
+      ->allRevisions()
       ->sort('id')
+      ->sort('revision_id')
       ->execute();
     // Now we get everything.
+    $assert = array(4 => '4', 5 => '5', 6 => '6', 7 => '7', 8 => '8', 9 => '9', 10 => '10', 11 => '11', 12 => '12', 20 => '12', 13 => '13', 21 => '13', 14 => '14', 22 => '14', 15 => '15', 23 => '15');
     $this->assertIdentical($results, $assert);
   }
 
@@ -704,6 +717,49 @@ class EntityQueryTest extends EntityUnitTestBase {
 
     $this->assertEqual(count($ids), 1);
     $this->assertEqual($term1->id(), reset($ids));
+  }
+
+  /**
+   * Test forward-revisions.
+   */
+  public function testForwardRevisions() {
+    // Ensure entity 14 is returned.
+    $result = \Drupal::entityQuery('entity_test_mulrev')
+      ->condition('id', [14], 'IN')
+      ->execute();
+    $this->assertEqual(count($result), 1);
+
+    // Set a revision on entity 14 that isn't the current default.
+    $entity = EntityTestMulRev::load(14);
+    $current_values = $entity->{$this->figures}->getValue();
+
+    $entity->setNewRevision(TRUE);
+    $entity->isDefaultRevision(FALSE);
+    $entity->{$this->figures}->setValue([
+      'color' => 'red',
+      'shape' => 'square'
+    ]);
+    $entity->save();
+
+    // Entity query should still return entity 14.
+    $result = \Drupal::entityQuery('entity_test_mulrev')
+      ->condition('id', [14], 'IN')
+      ->execute();
+    $this->assertEqual(count($result), 1);
+
+    // Verify that field conditions on the default and forward revision are
+    // work as expected.
+    $result = \Drupal::entityQuery('entity_test_mulrev')
+      ->condition('id', [14], 'IN')
+      ->condition("$this->figures.color", $current_values[0]['color'])
+      ->execute();
+    $this->assertEqual($result, [14 => '14']);
+    $result = $this->factory->get('entity_test_mulrev')
+      ->condition('id', [14], 'IN')
+      ->condition("$this->figures.color", 'red')
+      ->allRevisions()
+      ->execute();
+    $this->assertEqual($result, [16 => '14']);
   }
 
 }

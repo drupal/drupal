@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Entity\Query;
 
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Database\Query\AlterableInterface;
 
 /**
@@ -166,24 +165,6 @@ interface QueryInterface extends AlterableInterface {
   public function accessCheck($access_check = TRUE);
 
   /**
-   * Queries the current or every revision.
-   *
-   * Note that this only affects field conditions. Property conditions always
-   * apply to the current revision.
-   * @TODO: Once revision tables have been cleaned up, revisit this.
-   *
-   * @param $age
-   *   - EntityStorageInterface::FIELD_LOAD_CURRENT (default): Query
-   *     the most recent revisions only,
-   *   - EntityStorageInterface::FIELD_LOAD_REVISION: Query all
-   *     revisions.
-   *
-   * @return \Drupal\Core\Entity\Query\QueryInterface
-   *   The called object.
-   */
-  public function age($age = EntityStorageInterface::FIELD_LOAD_CURRENT);
-
-  /**
    * Execute the query.
    *
    * @return int|array
@@ -243,5 +224,19 @@ interface QueryInterface extends AlterableInterface {
    * @return \Drupal\Core\Entity\Query\ConditionInterface
    */
   public function orConditionGroup();
+
+  /**
+   * Queries the current revision.
+   *
+   * @return $this
+   */
+  public function currentRevision();
+
+  /**
+   * Queries all the revisions.
+   *
+   * @return $this
+   */
+  public function allRevisions();
 
 }

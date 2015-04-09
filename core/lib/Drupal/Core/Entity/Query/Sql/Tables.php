@@ -8,7 +8,6 @@
 namespace Drupal\Core\Entity\Query\Sql;
 
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\Query\QueryException;
 use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 
@@ -68,7 +67,7 @@ class Tables implements TablesInterface {
    */
   public function addField($field, $type, $langcode) {
     $entity_type_id = $this->sqlQuery->getMetaData('entity_type');
-    $age = $this->sqlQuery->getMetaData('age');
+    $all_revisions = $this->sqlQuery->getMetaData('all_revisions');
     // This variable ensures grouping works correctly. For example:
     // ->condition('tags', 2, '>')
     // ->condition('tags', 20, '<')
@@ -89,7 +88,7 @@ class Tables implements TablesInterface {
     for ($key = 0; $key <= $count; $key ++) {
       // If there is revision support and only the current revision is being
       // queried then use the revision id. Otherwise, the entity id will do.
-      if (($revision_key = $entity_type->getKey('revision')) && $age == EntityStorageInterface::FIELD_LOAD_CURRENT) {
+      if (($revision_key = $entity_type->getKey('revision')) && $all_revisions) {
         // This contains the relevant SQL field to be used when joining entity
         // tables.
         $entity_id_field = $revision_key;
@@ -158,11 +157,11 @@ class Tables implements TablesInterface {
         // finds the property first. The data table is preferred, which is why
         // it gets added before the base table.
         $entity_tables = array();
-        if ($data_table = $entity_type->getDataTable()) {
+        if ($data_table = $all_revisions ? $entity_type->getRevisionDataTable() : $entity_type->getDataTable()) {
           $this->sqlQuery->addMetaData('simple_query', FALSE);
           $entity_tables[$data_table] = $this->getTableMapping($data_table, $entity_type_id);
         }
-        $entity_base_table = $entity_type->getBaseTable();
+        $entity_base_table = $all_revisions ? $entity_type->getRevisionTable() : $entity_type->getBaseTable();
         $entity_tables[$entity_base_table] = $this->getTableMapping($entity_base_table, $entity_type_id);
         $sql_column = $specifier;
 
@@ -265,7 +264,7 @@ class Tables implements TablesInterface {
       $entity_type_id = $this->sqlQuery->getMetaData('entity_type');
       /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
       $table_mapping = $this->entityManager->getStorage($entity_type_id)->getTableMapping();
-      $table = $this->sqlQuery->getMetaData('age') == EntityStorageInterface::FIELD_LOAD_CURRENT ? $table_mapping->getDedicatedDataTableName($field) : $table_mapping->getDedicatedRevisionTableName($field);
+      $table = !$this->sqlQuery->getMetaData('all_revisions') ? $table_mapping->getDedicatedDataTableName($field) : $table_mapping->getDedicatedRevisionTableName($field);
       if ($field->getCardinality() != 1) {
         $this->sqlQuery->addMetaData('simple_query', FALSE);
       }
