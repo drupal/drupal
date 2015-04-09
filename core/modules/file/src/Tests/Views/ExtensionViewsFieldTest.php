@@ -7,6 +7,7 @@
 
 namespace Drupal\file\Tests\Views;
 
+use Drupal\file\Entity\File;
 use Drupal\views\Views;
 use Drupal\views\Tests\ViewUnitTestBase;
 use Drupal\views\Tests\ViewTestData;
@@ -36,30 +37,32 @@ class ExtensionViewsFieldTest extends ViewUnitTestBase {
   protected function setUp() {
     parent::setUp();
     ViewTestData::createTestViews(get_class($this), array('file_test_views'));
-  }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function dataSet() {
-    $data = parent::dataSet();
-    $data[0]['name'] = 'file.png';
-    $data[1]['name'] = 'file.tar';
-    $data[2]['name'] = 'file.tar.gz';
-    $data[3]['name'] = 'file';
+    $this->installEntitySchema('file');
 
-    return $data;
-  }
+    file_put_contents('public://file.png', '');
+    File::create([
+      'uri' => 'public://file.png',
+      'filename' => 'file.png',
+    ])->save();
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function viewsData() {
-    $data = parent::viewsData();
-    $data['views_test_data']['name']['field']['id'] = 'file_extension';
-    $data['views_test_data']['name']['real field'] = 'name';
+    file_put_contents('public://file.tar', '');
+    File::create([
+      'uri' => 'public://file.tar',
+      'filename' => 'file.tar',
+    ])->save();
 
-    return $data;
+    file_put_contents('public://file.tar.gz', '');
+    File::create([
+      'uri' => 'public://file.tar.gz',
+      'filename' => 'file.tar.gz',
+    ])->save();
+
+    file_put_contents('public://file', '');
+    File::create([
+      'uri' => 'public://file',
+      'filename' => 'file',
+    ])->save();
   }
 
   /**
@@ -68,20 +71,26 @@ class ExtensionViewsFieldTest extends ViewUnitTestBase {
   public function testFileExtensionTarOption() {
     $view = Views::getView('file_extension_view');
     $view->setDisplay();
-
     $this->executeView($view);
 
     // Test without the tar option.
-    $this->assertEqual($view->field['name']->advancedRender($view->result[0]), 'png');
-    $this->assertEqual($view->field['name']->advancedRender($view->result[1]), 'tar');
-    $this->assertEqual($view->field['name']->advancedRender($view->result[2]), 'gz');
-    $this->assertEqual($view->field['name']->advancedRender($view->result[3]), '');
+    $this->assertEqual($view->field['extension']->advancedRender($view->result[0]), 'png');
+    $this->assertEqual($view->field['extension']->advancedRender($view->result[1]), 'tar');
+    $this->assertEqual($view->field['extension']->advancedRender($view->result[2]), 'gz');
+    $this->assertEqual($view->field['extension']->advancedRender($view->result[3]), '');
     // Test with the tar option.
-    $view->field['name']->options['extension_detect_tar'] = TRUE;
-    $this->assertEqual($view->field['name']->advancedRender($view->result[0]), 'png');
-    $this->assertEqual($view->field['name']->advancedRender($view->result[1]), 'tar');
-    $this->assertEqual($view->field['name']->advancedRender($view->result[2]), 'tar.gz');
-    $this->assertEqual($view->field['name']->advancedRender($view->result[3]), '');
+
+    $view = Views::getView('file_extension_view');
+    $view->setDisplay();
+    $view->initHandlers();
+
+    $view->field['extension']->options['settings']['extension_detect_tar'] = TRUE;
+    $this->executeView($view);
+
+    $this->assertEqual($view->field['extension']->advancedRender($view->result[0]), 'png');
+    $this->assertEqual($view->field['extension']->advancedRender($view->result[1]), 'tar');
+    $this->assertEqual($view->field['extension']->advancedRender($view->result[2]), 'tar.gz');
+    $this->assertEqual($view->field['extension']->advancedRender($view->result[3]), '');
   }
 
 }

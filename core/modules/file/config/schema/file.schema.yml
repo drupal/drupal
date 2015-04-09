@@ -90,3 +90,34 @@ field.widget.settings.file_generic:
     progress_indicator:
       type: string
       label: 'Progress indicator'
+
+field_formatter_settings_base_file:
+  type: mapping
+  mapping:
+    link_to_file:
+      type: boolean
+      label: 'Link to file'
+
+field.formatter.settings.file_link:
+  type: field_formatter_settings_base_file
+
+field.formatter.settings.file_uri:
+  type: field_formatter_settings_base_file
+  mapping:
+    file_download_path:
+      type: boolean
+      label: 'Display download path'
+
+field.formatter.settings.file_filemime:
+  type: field_formatter_settings_base_file
+  mapping:
+    filemime_image:
+      type: boolean
+      label: 'Display the filemime as icon'
+
+field.formatter.settings.file_extension:
+  type: field_formatter_settings_base_file
+  mapping:
+    extension_detect_tar:
+      type: boolean
+      label: 'Detect tar'

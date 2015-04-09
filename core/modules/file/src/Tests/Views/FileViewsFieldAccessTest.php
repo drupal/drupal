@@ -9,8 +9,6 @@ namespace Drupal\file\Tests\Views;
 
 use Drupal\file\Entity\File;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\node\Entity\Node;
-use Drupal\node\Entity\NodeType;
 use Drupal\user\Entity\User;
 use Drupal\views\Tests\Handler\FieldFieldAccessTestBase;
 
@@ -61,15 +59,15 @@ class FileViewsFieldAccessTest extends FieldFieldAccessTestBase {
 
     // @todo Expand the test coverage in https://www.drupal.org/node/2464635
 
-    // $this->assertFieldAccess('file', 'fid', $file->id());
+    $this->assertFieldAccess('file', 'fid', $file->id());
     // $this->assertFieldAccess('file', 'uuid', $file->uuid());
     $this->assertFieldAccess('file', 'langcode', $file->language()->getName());
     $this->assertFieldAccess('file', 'uid', 'test user');
-    // $this->assertFieldAccess('file', 'filename', $file->getFilename());
-    // $this->assertFieldAccess('file', 'uri', $file->getFileUri());
-    // $this->assertFieldAccess('file', 'filemime', $file->filemime->value);
-    // $this->assertFieldAccess('file', 'size', '4 Bytes');
-    // $this->assertFieldAccess('file', 'status', 'On');
+    $this->assertFieldAccess('file', 'filename', $file->getFilename());
+    $this->assertFieldAccess('file', 'uri', $file->getFileUri());
+    $this->assertFieldAccess('file', 'filemime', $file->filemime->value);
+    $this->assertFieldAccess('file', 'filesize', '4 bytes');
+    $this->assertFieldAccess('file', 'status', t('Permanent'));
     // $this->assertFieldAccess('file', 'created', \Drupal::service('date.formatter')->format(123456));
     // $this->assertFieldAccess('file', 'changed', \Drupal::service('date.formatter')->format(REQUEST_TIME));
   }

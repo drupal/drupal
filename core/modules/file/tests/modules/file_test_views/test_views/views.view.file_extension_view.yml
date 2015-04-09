@@ -6,8 +6,8 @@ label: 'Test view for file extension views field handler'
 module: views
 description: ''
 tag: ''
-base_table: views_test_data
-base_field: nid
+base_table: file_managed
+base_field: fid
 core: '8'
 display:
   default:
@@ -17,36 +17,31 @@ display:
         pager: false
         sorts: false
       fields:
-        age:
-          field: age
-          id: age
+        fid:
+          field: fid
+          id: fid
           relationship: none
-          table: views_test_data
-          plugin_id: numeric
-        id:
-          field: id
-          id: id
+          table: file_managed
+          plugin_id: field
+        extension:
+          field: extension
+          id: extension
           relationship: none
-          table: views_test_data
-          plugin_id: numeric
-        name:
-          field: name
-          id: file_extension
-          relationship: none
-          table: views_test_data
-          plugin_id: string
+          table: file_managed
+          plugin_id: field
+          type: file_extension
       pager:
         options:
           offset: 0
         type: none
       sorts:
-        id:
-          field: id
-          id: id
+        fid:
+          field: fid
+          id: fid
           order: ASC
           relationship: none
-          table: views_test_data
-          plugin_id: numeric
+          table: file_managed
+          plugin_id: standard
     display_plugin: default
     display_title: Master
     id: default

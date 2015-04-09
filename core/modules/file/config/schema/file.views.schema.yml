@@ -29,10 +29,6 @@ views.field.file_filemime:
       type: boolean
       label: 'Display an icon representing the file type, instead of the MIME text (such as "image/jpeg")'
 
-views.field.file_status:
-  type: views_field
-  label: 'File status'
-
 views.field.file_uri:
   type: views.field.file
   label: 'File URI'
