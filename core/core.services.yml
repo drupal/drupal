@@ -287,7 +287,7 @@ services:
     arguments: ['@stream_wrapper_manager', '@settings', '@logger.channel.file']
   form_builder:
     class: Drupal\Core\Form\FormBuilder
-    arguments: ['@form_validator', '@form_submitter', '@form_cache', '@module_handler', '@event_dispatcher', '@request_stack', '@class_resolver', '@theme.manager', '@?csrf_token']
+    arguments: ['@form_validator', '@form_submitter', '@form_cache', '@module_handler', '@event_dispatcher', '@request_stack', '@class_resolver', '@element_info', '@theme.manager', '@?csrf_token']
   form_validator:
     class: Drupal\Core\Form\FormValidator
     arguments: ['@request_stack', '@string_translation', '@csrf_token', '@logger.channel.form']
@@ -856,7 +856,7 @@ services:
       - { name: event_subscriber }
   main_content_renderer.html:
     class: Drupal\Core\Render\MainContent\HtmlRenderer
-    arguments: ['@title_resolver', '@plugin.manager.display_variant', '@event_dispatcher', '@module_handler', '@renderer', '@cache_contexts']
+    arguments: ['@title_resolver', '@plugin.manager.display_variant', '@event_dispatcher', '@element_info', '@module_handler', '@renderer', '@cache_contexts']
     tags:
       - { name: render.main_content_renderer, format: html }
   main_content_renderer.ajax:

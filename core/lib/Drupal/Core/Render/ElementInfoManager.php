@@ -86,6 +86,15 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getInfoProperty($type, $property_name, $default = NULL) {
+    $info = $this->getInfo($type);
+
+    return isset($info[$property_name]) ? $info[$property_name] : $default;
+  }
+
+  /**
    * Builds up all element information.
    *
    * @param string $theme_name

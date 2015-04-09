@@ -23,8 +23,7 @@ interface ElementInfoManagerInterface {
    * http://drupal.org/node/169815.
    *
    * @param string $type
-   *   An element type as defined by hook_element_info() or the machine name
-   *   of an element type plugin.
+   *   The machine name of an element type plugin.
    *
    * @return array
    *   An associative array describing the element types being defined. The
@@ -51,5 +50,22 @@ interface ElementInfoManagerInterface {
    * @see \Drupal\Core\Render\Element\ElementInterface::getInfo()
    */
   public function getInfo($type);
+
+  /**
+   * Retrieves a single property for the defined element type.
+   *
+   * @param string $type
+   *   An element type as defined by hook_element_info().
+   * @param string $property_name
+   *   The property within the element type that should be returned.
+   * @param $default
+   *   (Optional) The value to return if the element type does not specify a
+   *   value for the property. Defaults to NULL.
+   *
+   * @return string
+   *   The property value of the defined element type. Or the provided
+   *   default value, which can be NULL.
+   */
+  public function getInfoProperty($type, $property_name, $default = NULL);
 
 }

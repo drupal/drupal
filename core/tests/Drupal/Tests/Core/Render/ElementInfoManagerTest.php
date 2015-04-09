@@ -18,7 +18,7 @@ use Drupal\Tests\UnitTestCase;
 class ElementInfoManagerTest extends UnitTestCase {
 
   /**
-   * The class under test.
+   * The mocked element_info.
    *
    * @var \Drupal\Core\Render\ElementInfoManagerInterface
    */
@@ -236,5 +236,36 @@ class ElementInfoManagerTest extends UnitTestCase {
     );
     return $data;
   }
+
+  /**
+   * @covers ::getInfoProperty
+   */
+  public function testGetInfoProperty() {
+    $this->themeManager
+      ->method('getActiveTheme')
+      ->willReturn(new ActiveTheme(['name' => 'test']));
+
+    $element_info = new TestElementInfoManager(new \ArrayObject(), $this->cache, $this->cacheTagsInvalidator, $this->moduleHandler, $this->themeManager);
+    $this->assertSame('baz', $element_info->getInfoProperty('foo', '#bar'));
+    $this->assertNull($element_info->getInfoProperty('foo', '#non_existing_property'));
+    $this->assertSame('qux', $element_info->getInfoProperty('foo', '#non_existing_property', 'qux'));
+  }
+}
+
+/**
+ * Provides a test custom element plugin.
+ */
+class TestElementInfoManager extends ElementInfoManager {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $elementInfo = array(
+    'test' => array(
+      'foo' => array(
+        '#bar' => 'baz',
+      ),
+    ),
+  );
 
 }

@@ -1556,7 +1556,7 @@ function template_preprocess_field(&$variables, $hook) {
   // We want other preprocess functions and the theme implementation to have
   // fast access to the field item render arrays. The item render array keys
   // (deltas) should always be numerically indexed starting from 0, and looping
-  // on those keys is faster than calling element_children() or looping on all
+  // on those keys is faster than calling Element::children() or looping on all
   // keys within $element, since that requires traversal of all element
   // properties.
   $variables['items'] = array();

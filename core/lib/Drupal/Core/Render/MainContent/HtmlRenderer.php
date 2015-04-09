@@ -14,6 +14,7 @@ use Drupal\Core\Cache\CacheContexts;
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Display\PageVariantInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\Render\PageDisplayVariantSelectionEvent;
 use Drupal\Core\Render\Renderer;
 use Drupal\Core\Render\RendererInterface;
@@ -51,6 +52,13 @@ class HtmlRenderer implements MainContentRendererInterface {
   protected $eventDispatcher;
 
   /**
+  * The element info manager.
+  *
+  * @var \Drupal\Core\Render\ElementInfoManagerInterface
+  */
+  protected $elementInfoManager;
+
+  /**
    * The module handler.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
@@ -80,6 +88,8 @@ class HtmlRenderer implements MainContentRendererInterface {
    *   The display variant manager.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
+   * @param \Drupal\Core\Render\ElementInfoManagerInterface
+   *   The element info manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    * @param \Drupal\Core\Render\RendererInterface $renderer
@@ -87,10 +97,11 @@ class HtmlRenderer implements MainContentRendererInterface {
    * @param \Drupal\Core\Cache\CacheContexts $cache_contexts
    *   The cache contexts service.
    */
-  public function __construct(TitleResolverInterface $title_resolver, PluginManagerInterface $display_variant_manager, EventDispatcherInterface $event_dispatcher, ModuleHandlerInterface $module_handler, RendererInterface $renderer, CacheContexts $cache_contexts) {
+  public function __construct(TitleResolverInterface $title_resolver, PluginManagerInterface $display_variant_manager, EventDispatcherInterface $event_dispatcher, ElementInfoManagerInterface $element_info_manager, ModuleHandlerInterface $module_handler, RendererInterface $renderer, CacheContexts $cache_contexts) {
     $this->titleResolver = $title_resolver;
     $this->displayVariantManager = $display_variant_manager;
     $this->eventDispatcher = $event_dispatcher;
+    $this->elementInfoManager = $element_info_manager;
     $this->moduleHandler = $module_handler;
     $this->renderer = $renderer;
     $this->cacheContexts = $cache_contexts;
@@ -117,7 +128,7 @@ class HtmlRenderer implements MainContentRendererInterface {
       '#type' => 'html',
       'page' => $page,
     ];
-    $html += element_info('html');
+    $html += $this->elementInfoManager->getInfo('html');
 
     // The special page regions will appear directly in html.html.twig, not in
     // page.html.twig, hence add them here, just before rendering html.html.twig.

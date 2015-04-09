@@ -18,6 +18,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\Url;
 use Drupal\user\SharedTempStoreFactory;
 use Drupal\views\Views;
@@ -52,6 +53,13 @@ class ViewEditForm extends ViewFormBase {
   protected $dateFormatter;
 
   /**
+   * The element info manager.
+   *
+   * @var \Drupal\Core\Render\ElementInfoManagerInterface
+   */
+  protected $elementInfo;
+
+  /**
    * Constructs a new ViewEditForm object.
    *
    * @param \Drupal\user\SharedTempStoreFactory $temp_store_factory
@@ -60,11 +68,14 @@ class ViewEditForm extends ViewFormBase {
    *   The request stack object.
    * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
    *   The date Formatter service.
+   * @param \Drupal\Core\Render\ElementInfoManagerInterface $element_info
+   *   The element info manager.
    */
-  public function __construct(SharedTempStoreFactory $temp_store_factory, RequestStack $requestStack, DateFormatter $date_formatter) {
+  public function __construct(SharedTempStoreFactory $temp_store_factory, RequestStack $requestStack, DateFormatter $date_formatter, ElementInfoManagerInterface $element_info) {
     $this->tempStore = $temp_store_factory->get('views');
     $this->requestStack = $requestStack;
     $this->dateFormatter = $date_formatter;
+    $this->elementInfo = $element_info;
   }
 
   /**
@@ -74,7 +85,8 @@ class ViewEditForm extends ViewFormBase {
     return new static(
       $container->get('user.shared_tempstore'),
       $container->get('request_stack'),
-      $container->get('date.formatter')
+      $container->get('date.formatter'),
+      $container->get('element_info')
     );
   }
 
@@ -759,7 +771,7 @@ class ViewEditForm extends ViewFormBase {
         '#attributes' => array('class' => array('add-display')),
         // Allow JavaScript to remove the 'Add ' prefix from the button label when
         // placing the button in a "Add" dropdown menu.
-        '#process' => array_merge(array('views_ui_form_button_was_clicked'), element_info_property('submit', '#process', array())),
+        '#process' => array_merge(array('views_ui_form_button_was_clicked'), $this->elementInfo->getInfoProperty('submit', '#process', array())),
         '#values' => array($this->t('Add !display', array('!display' => $label)), $label),
       );
     }

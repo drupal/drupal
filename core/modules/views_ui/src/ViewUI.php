@@ -349,7 +349,7 @@ class ViewUI implements ViewEntityInterface {
       // button labels.
       if (isset($names)) {
         $form['actions']['submit']['#values'] = $names;
-        $form['actions']['submit']['#process'] = array_merge(array('views_ui_form_button_was_clicked'), element_info_property($form['actions']['submit']['#type'], '#process', array()));
+        $form['actions']['submit']['#process'] = array_merge(array('views_ui_form_button_was_clicked'), \Drupal::service('element_info')->getInfoProperty($form['actions']['submit']['#type'], '#process', array()));
       }
       // If a validation handler exists for the form, assign it to this button.
       $form['actions']['submit']['#validate'][] = [$form_state->getFormObject(), 'validateForm'];

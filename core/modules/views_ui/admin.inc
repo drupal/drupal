@@ -62,6 +62,7 @@ function views_ui_add_ajax_trigger(&$wrapping_element, $trigger_key, $refresh_pa
   // Add a submit button for users who do not have JavaScript enabled. It
   // should be displayed next to the triggering element on the form.
   $button_key = $trigger_key . '_trigger_update';
+  $element_info = \Drupal::service('element_info');
   $wrapping_element[$button_key] = array(
     '#type' => 'submit',
     // Hide this button when JavaScript is enabled.
@@ -72,14 +73,14 @@ function views_ui_add_ajax_trigger(&$wrapping_element, $trigger_key, $refresh_pa
     // form API has added the #parents property to the triggering element for
     // us, we don't have any (easy) way to find out where its submitted values
     // will eventually appear in $form_state->getValues().
-    '#process' => array_merge(array('views_ui_add_limited_validation'), element_info_property('submit', '#process', array())),
+    '#process' => array_merge(array('views_ui_add_limited_validation'), $element_info->getInfoProperty('submit', '#process', array())),
     // Add an after-build function that inserts a wrapper around the region of
     // the form that needs to be refreshed by AJAX (so that the AJAX system can
     // detect and dynamically update it). This is done in #after_build because
     // it's a convenient place where we have automatic access to the complete
     // form array, but also to minimize the chance that the HTML we add will
     // get clobbered by code that runs after we have added it.
-    '#after_build' => array_merge(element_info_property('submit', '#after_build', array()), array('views_ui_add_ajax_wrapper')),
+    '#after_build' => array_merge($element_info->getInfoProperty('submit', '#after_build', array()), array('views_ui_add_ajax_wrapper')),
   );
   // Copy #weight and #access from the triggering element to the button, so
   // that the two elements will be displayed together.

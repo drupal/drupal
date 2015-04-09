@@ -1306,8 +1306,8 @@ function drupal_render_cache_generate_placeholder($callback, array &$context) {
  * @param $type
  *   An element type as defined by hook_element_info().
  *
- * @deprecated As of Drupal 8.0, use \Drupal::service('element_info')->getInfo()
- *   instead.
+ * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+ *   Use \Drupal::service('element_info')->getInfo() instead.
  */
 function element_info($type) {
   return \Drupal::service('element_info')->getInfo($type);
@@ -1323,9 +1323,12 @@ function element_info($type) {
  * @param $default
  *   (Optional) The value to return if the element type does not specify a
  *   value for the property. Defaults to NULL.
+ *
+ * @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
+ *   Use \Drupal::service('element_info')->getInfoProperty() instead.
  */
 function element_info_property($type, $property_name, $default = NULL) {
-  return (($info = element_info($type)) && array_key_exists($property_name, $info)) ? $info[$property_name] : $default;
+  return \Drupal::service('element_info')->getInfoProperty($type, $property_name, $default);
 }
 
 /**
