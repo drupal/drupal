@@ -33,7 +33,7 @@ class NodeFieldFilterTest extends NodeTestBase {
    *
    * @var array
    */
-  public $node_titles = array();
+  public $nodeTitles = [];
 
   function setUp() {
     parent::setUp();
@@ -48,17 +48,17 @@ class NodeFieldFilterTest extends NodeTestBase {
     ConfigurableLanguage::createFromLangcode('es')->save();
 
     // Set up node titles.
-    $this->node_titles = array(
+    $this->nodeTitles = array(
       'en' => 'Food in Paris',
       'es' => 'Comida en Paris',
       'fr' => 'Nouriture en Paris',
     );
 
     // Create node with translations.
-    $node = $this->drupalCreateNode(array('title' => $this->node_titles['en'], 'langcode' => 'en', 'type' => 'page', 'body' => array(array('value' => $this->node_titles['en']))));
+    $node = $this->drupalCreateNode(['title' => $this->nodeTitles['en'], 'langcode' => 'en', 'type' => 'page', 'body' => [['value' => $this->nodeTitles['en']]]]);
     foreach (array('es', 'fr') as $langcode) {
-      $translation = $node->addTranslation($langcode, array('title' => $this->node_titles[$langcode]));
-      $translation->body->value = $this->node_titles[$langcode];
+      $translation = $node->addTranslation($langcode, ['title' => $this->nodeTitles[$langcode]]);
+      $translation->body->value = $this->nodeTitles[$langcode];
     }
     $node->save();
   }
@@ -107,7 +107,7 @@ class NodeFieldFilterTest extends NodeTestBase {
     // page, and they are the same. So the title/body string should appear on
     // the page twice as many times as the input count.
     foreach ($counts as $langcode => $count) {
-      $this->assertEqual(substr_count($text, $this->node_titles[$langcode]), 2 * $count, 'Translation ' . $langcode . ' has count ' . $count . ' with ' . $message);
+      $this->assertEqual(substr_count($text, $this->nodeTitles[$langcode]), 2 * $count, 'Translation ' . $langcode . ' has count ' . $count . ' with ' . $message);
     }
   }
 }

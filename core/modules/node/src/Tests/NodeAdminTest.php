@@ -23,6 +23,27 @@ class NodeAdminTest extends NodeTestBase {
   protected $adminUser;
 
   /**
+   * A user with the 'access content overview' permission.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $baseUser1;
+
+  /**
+   * A normal user with permission to view own unpublished content.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $baseUser2;
+
+  /**
+   * A normal user with permission to bypass node access content.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $baseUser3;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -38,9 +59,9 @@ class NodeAdminTest extends NodeTestBase {
     user_role_revoke_permissions(RoleInterface::AUTHENTICATED_ID, array('view own unpublished content'));
 
     $this->adminUser = $this->drupalCreateUser(array('access administration pages', 'access content overview', 'administer nodes', 'bypass node access'));
-    $this->base_user_1 = $this->drupalCreateUser(array('access content overview'));
-    $this->base_user_2 = $this->drupalCreateUser(array('access content overview', 'view own unpublished content'));
-    $this->base_user_3 = $this->drupalCreateUser(array('access content overview', 'bypass node access'));
+    $this->baseUser1 = $this->drupalCreateUser(['access content overview']);
+    $this->baseUser2 = $this->drupalCreateUser(['access content overview', 'view own unpublished content']);
+    $this->baseUser3 = $this->drupalCreateUser(['access content overview', 'bypass node access']);
   }
 
   /**
@@ -99,8 +120,8 @@ class NodeAdminTest extends NodeTestBase {
 
     $nodes['published_page'] = $this->drupalCreateNode(array('type' => 'page'));
     $nodes['published_article'] = $this->drupalCreateNode(array('type' => 'article'));
-    $nodes['unpublished_page_1'] = $this->drupalCreateNode(array('type' => 'page', 'uid' => $this->base_user_1->id(), 'status' => 0));
-    $nodes['unpublished_page_2'] = $this->drupalCreateNode(array('type' => 'page', 'uid' => $this->base_user_2->id(), 'status' => 0));
+    $nodes['unpublished_page_1'] = $this->drupalCreateNode(array('type' => 'page', 'uid' => $this->baseUser1->id(), 'status' => 0));
+    $nodes['unpublished_page_2'] = $this->drupalCreateNode(array('type' => 'page', 'uid' => $this->baseUser2->id(), 'status' => 0));
 
     // Verify view, edit, and delete links for any content.
     $this->drupalGet('admin/content');
@@ -126,7 +147,7 @@ class NodeAdminTest extends NodeTestBase {
 
     // Verify no operation links are displayed for regular users.
     $this->drupalLogout();
-    $this->drupalLogin($this->base_user_1);
+    $this->drupalLogin($this->baseUser1);
     $this->drupalGet('admin/content');
     $this->assertResponse(200);
     $this->assertLinkByHref('node/' . $nodes['published_page']->id());
@@ -146,7 +167,7 @@ class NodeAdminTest extends NodeTestBase {
 
     // Verify unpublished content is displayed with permission.
     $this->drupalLogout();
-    $this->drupalLogin($this->base_user_2);
+    $this->drupalLogin($this->baseUser2);
     $this->drupalGet('admin/content');
     $this->assertResponse(200);
     $this->assertLinkByHref('node/' . $nodes['unpublished_page_2']->id());
@@ -164,7 +185,7 @@ class NodeAdminTest extends NodeTestBase {
 
     // Verify node access can be bypassed.
     $this->drupalLogout();
-    $this->drupalLogin($this->base_user_3);
+    $this->drupalLogin($this->baseUser3);
     $this->drupalGet('admin/content');
     $this->assertResponse(200);
     foreach ($nodes as $node) {

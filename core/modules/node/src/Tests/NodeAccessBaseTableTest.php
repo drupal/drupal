@@ -32,6 +32,39 @@ class NodeAccessBaseTableTest extends NodeTestBase {
    */
   protected $profile = 'standard';
 
+  /**
+   * Nodes by user.
+   *
+   * @var array
+   */
+  protected $nodesByUser;
+
+  /**
+   * A public tid.
+   *
+   * @var \Drupal\Core\Database\StatementInterface
+   */
+  protected $publicTid;
+
+  /**
+   * A private tid.
+   *
+   * @var \Drupal\Core\Database\StatementInterface
+   */
+  protected $privateTid;
+
+  /**
+   * A web user.
+   */
+  protected $webUser;
+
+  /**
+   * The nids visible.
+   *
+   * @var array
+   */
+  protected $nidsVisible;
+
   protected function setUp() {
     parent::setUp();
 
@@ -59,10 +92,12 @@ class NodeAccessBaseTableTest extends NodeTestBase {
     $num_simple_users = 2;
     $simple_users = array();
 
-    // nodes keyed by uid and nid: $nodes[$uid][$nid] = $is_private;
+    // Nodes keyed by uid and nid: $nodes[$uid][$nid] = $is_private;
     $this->nodesByUser = array();
-    $titles = array(); // Titles keyed by nid
-    $private_nodes = array(); // Array of nids marked private.
+    // Titles keyed by nid.
+    $titles = [];
+    // Array of nids marked private.
+    $private_nodes = [];
     for ($i = 0; $i < $num_simple_users; $i++) {
       $simple_users[$i] = $this->drupalCreateUser(array('access content', 'create article content'));
     }
@@ -149,11 +184,11 @@ class NodeAccessBaseTableTest extends NodeTestBase {
   protected function assertTaxonomyPage($is_admin) {
     foreach (array($this->publicTid, $this->privateTid) as $tid_is_private => $tid) {
       $this->drupalGet("taxonomy/term/$tid");
-      $this->nids_visible = array();
+      $this->nidsVisible = [];
       foreach ($this->xpath("//a[text()='Read more']") as $link) {
         // See also testTranslationRendering() in NodeTranslationUITest.
         $this->assertTrue(preg_match('|node/(\d+)$|', (string) $link['href'], $matches), 'Read more points to a node');
-        $this->nids_visible[$matches[1]] = TRUE;
+        $this->nidsVisible[$matches[1]] = TRUE;
       }
       foreach ($this->nodesByUser as $uid => $data) {
         foreach ($data as $nid => $is_private) {
@@ -165,10 +200,10 @@ class NodeAccessBaseTableTest extends NodeTestBase {
           if (!$is_admin && $tid_is_private) {
             $should_be_visible = $should_be_visible && $uid == $this->webUser->id();
           }
-          $this->assertIdentical(isset($this->nids_visible[$nid]), $should_be_visible, strtr('A %private node by user %uid is %visible for user %current_uid on the %tid_is_private page.', array(
+          $this->assertIdentical(isset($this->nidsVisible[$nid]), $should_be_visible, strtr('A %private node by user %uid is %visible for user %current_uid on the %tid_is_private page.', array(
             '%private' => $is_private ? 'private' : 'public',
             '%uid' => $uid,
-            '%visible' => isset($this->nids_visible[$nid]) ? 'visible' : 'not visible',
+            '%visible' => isset($this->nidsVisible[$nid]) ? 'visible' : 'not visible',
             '%current_uid' => $this->webUser->id(),
             '%tid_is_private' => $tid_is_private ? 'private' : 'public',
           )));

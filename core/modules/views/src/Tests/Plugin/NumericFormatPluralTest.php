@@ -31,18 +31,11 @@ class NumericFormatPluralTest extends ViewTestBase {
    */
   public static $testViews = array('numeric_test');
 
-  /**
-   * A user with permission to view and manage views and languages.
-   *
-   * @var \Drupal\user\UserInterface
-   */
-  protected $web_user;
-
   protected function setUp() {
     parent::setUp();
 
-    $this->web_user = $this->drupalCreateUser(array('administer views', 'administer languages'));
-    $this->drupalLogin($this->web_user);
+    $web_user = $this->drupalCreateUser(['administer views', 'administer languages']);
+    $this->drupalLogin($web_user);
   }
 
   /**

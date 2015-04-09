@@ -34,7 +34,7 @@ class BlockContentFieldFilterTest extends BlockContentTestBase {
    *
    * @var array
    */
-  public $block_content_infos = array();
+  public $blockContentInfos = [];
 
 
   /**
@@ -54,17 +54,17 @@ class BlockContentFieldFilterTest extends BlockContentTestBase {
     $field_storage->save();
 
     // Set up block_content infos.
-    $this->block_content_infos = array(
+    $this->blockContentInfos = array(
       'en' => 'Food in Paris',
       'es' => 'Comida en Paris',
       'fr' => 'Nouriture en Paris',
     );
 
     // Create block_content with translations.
-    $block_content = $this->createBlockContent(array('info' => $this->block_content_infos['en'], 'langcode' => 'en', 'type' => 'basic', 'body' => array(array('value' => $this->block_content_infos['en']))));
+    $block_content = $this->createBlockContent(['info' => $this->blockContentInfos['en'], 'langcode' => 'en', 'type' => 'basic', 'body' => [['value' => $this->blockContentInfos['en']]]]);
     foreach (array('es', 'fr') as $langcode) {
-      $translation = $block_content->addTranslation($langcode, array('info' => $this->block_content_infos[$langcode]));
-      $translation->body->value = $this->block_content_infos[$langcode];
+      $translation = $block_content->addTranslation($langcode, ['info' => $this->blockContentInfos[$langcode]]);
+      $translation->body->value = $this->blockContentInfos[$langcode];
     }
     $block_content->save();
   }
@@ -107,7 +107,7 @@ class BlockContentFieldFilterTest extends BlockContentTestBase {
     $text = $this->getTextContent();
 
     foreach ($counts as $langcode => $count) {
-      $this->assertEqual(substr_count($text, $this->block_content_infos[$langcode]), $count, 'Translation ' . $langcode . ' has count ' . $count . ' with ' . $message);
+      $this->assertEqual(substr_count($text, $this->blockContentInfos[$langcode]), $count, 'Translation ' . $langcode . ' has count ' . $count . ' with ' . $message);
     }
   }
 }

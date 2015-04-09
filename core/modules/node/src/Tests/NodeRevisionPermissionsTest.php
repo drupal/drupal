@@ -13,7 +13,19 @@ namespace Drupal\node\Tests;
  * @group node
  */
 class NodeRevisionPermissionsTest extends NodeTestBase {
-  protected $node_revisions = array();
+
+  /**
+   * The node revisions.
+   *
+   * @var array
+   */
+  protected $nodeRevisions = [];
+
+  /**
+   * The accounts.
+   *
+   * @var array
+   */
   protected $accounts = array();
 
   // Map revision permission names to node revision access ops.
@@ -24,7 +36,7 @@ class NodeRevisionPermissionsTest extends NodeTestBase {
   );
 
   // Map revision permission names to node type revision access ops.
-  protected $type_map = array(
+  protected $typeMap = array(
     'view' => 'view page revisions',
     'update' => 'revert page revisions',
     'delete' => 'delete page revisions',
@@ -38,7 +50,7 @@ class NodeRevisionPermissionsTest extends NodeTestBase {
     foreach ($types as $type) {
       // Create a node with several revisions.
       $nodes[$type] = $this->drupalCreateNode(array('type' => $type));
-      $this->node_revisions[$type][] = $nodes[$type];
+      $this->nodeRevisions[$type][] = $nodes[$type];
 
       for ($i = 0; $i < 3; $i++) {
         // Create a revision for the same nid and settings with a random log.
@@ -46,7 +58,7 @@ class NodeRevisionPermissionsTest extends NodeTestBase {
         $revision->setNewRevision();
         $revision->revision_log = $this->randomMachineName(32);
         $revision->save();
-        $this->node_revisions[$type][] = $revision;
+        $this->nodeRevisions[$type][] = $revision;
       }
     }
   }
@@ -81,7 +93,7 @@ class NodeRevisionPermissionsTest extends NodeTestBase {
     $normal_account->op = FALSE;
     $this->accounts[] = $normal_account;
     $accounts[] = $normal_account;
-    $revision = $this->node_revisions['page'][1];
+    $revision = $this->nodeRevisions['page'][1];
 
     $parameters = array(
       'op' => array_keys($this->map),
@@ -114,7 +126,7 @@ class NodeRevisionPermissionsTest extends NodeTestBase {
    */
   function testNodeRevisionAccessPerType() {
     // Create three users, one with each revision permission.
-    foreach ($this->type_map as $op => $permission) {
+    foreach ($this->typeMap as $op => $permission) {
       // Create the user.
       $account = $this->drupalCreateUser(
         array(
@@ -129,33 +141,33 @@ class NodeRevisionPermissionsTest extends NodeTestBase {
     }
 
     $parameters = array(
-      'op' => array_keys($this->type_map),
+      'op' => array_keys($this->typeMap),
       'account' => $accounts,
     );
 
     // Test that the accounts have access to the corresponding page revision
     // permissions.
-    $revision = $this->node_revisions['page'][1];
+    $revision = $this->nodeRevisions['page'][1];
 
     $permutations = $this->generatePermutations($parameters);
     $node_revision_access = \Drupal::service('access_check.node.revision');
     foreach ($permutations as $case) {
       // Skip this test if there are no revisions for the node.
       if (!($revision->isDefaultRevision() && (db_query('SELECT COUNT(vid) FROM {node_field_revision} WHERE nid = :nid', array(':nid' => $revision->id()))->fetchField() == 1 || $case['op'] == 'update' || $case['op'] == 'delete'))) {
-        if (!empty($case['account']->is_admin) || $case['account']->hasPermission($this->type_map[$case['op']], $case['account'])) {
-          $this->assertTrue($node_revision_access->checkAccess($revision, $case['account'], $case['op']), "{$this->type_map[$case['op']]} granted.");
+        if (!empty($case['account']->is_admin) || $case['account']->hasPermission($this->typeMap[$case['op']], $case['account'])) {
+          $this->assertTrue($node_revision_access->checkAccess($revision, $case['account'], $case['op']), "{$this->typeMap[$case['op']]} granted.");
         }
         else {
-          $this->assertFalse($node_revision_access->checkAccess($revision, $case['account'], $case['op']), "{$this->type_map[$case['op']]} not granted.");
+          $this->assertFalse($node_revision_access->checkAccess($revision, $case['account'], $case['op']), "{$this->typeMap[$case['op']]} not granted.");
         }
       }
     }
 
     // Test that the accounts have no access to the article revisions.
-    $revision = $this->node_revisions['article'][1];
+    $revision = $this->nodeRevisions['article'][1];
 
     foreach ($permutations as $case) {
-      $this->assertFalse($node_revision_access->checkAccess($revision, $case['account'], $case['op']), "{$this->type_map[$case['op']]} did not grant revision permission for articles.");
+      $this->assertFalse($node_revision_access->checkAccess($revision, $case['account'], $case['op']), "{$this->typeMap[$case['op']]} did not grant revision permission for articles.");
     }
   }
 }

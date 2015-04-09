@@ -34,7 +34,7 @@ class PagePreviewTest extends NodeTestBase {
    *
    * @var string
    */
-  protected $field_name;
+  protected $fieldName;
 
   protected function setUp() {
     parent::setUp();
@@ -66,29 +66,29 @@ class PagePreviewTest extends NodeTestBase {
     $this->term = $term;
 
     // Create a field.
-    $this->field_name = Unicode::strtolower($this->randomMachineName());
+    $this->fieldName = Unicode::strtolower($this->randomMachineName());
     $handler_settings = array(
       'target_bundles' => array(
         $this->vocabulary->id() => $this->vocabulary->id(),
       ),
       'auto_create' => TRUE,
     );
-    $this->createEntityReferenceField('node', 'page', $this->field_name, 'Tags', 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+    $this->createEntityReferenceField('node', 'page', $this->fieldName, 'Tags', 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
 
     entity_get_form_display('node', 'page', 'default')
-      ->setComponent($this->field_name, array(
+      ->setComponent($this->fieldName, array(
         'type' => 'entity_reference_autocomplete_tags',
       ))
       ->save();
 
     // Show on default display and teaser.
     entity_get_display('node', 'page', 'default')
-      ->setComponent($this->field_name, array(
+      ->setComponent($this->fieldName, array(
         'type' => 'entity_reference_label',
       ))
       ->save();
     entity_get_display('node', 'page', 'teaser')
-      ->setComponent($this->field_name, array(
+      ->setComponent($this->fieldName, array(
         'type' => 'entity_reference_label',
       ))
       ->save();
@@ -100,7 +100,7 @@ class PagePreviewTest extends NodeTestBase {
   function testPagePreview() {
     $title_key = 'title[0][value]';
     $body_key = 'body[0][value]';
-    $term_key = $this->field_name . '[target_id]';
+    $term_key = $this->fieldName . '[target_id]';
 
     // Fill in node creation form and preview node.
     $edit = array();
@@ -219,7 +219,7 @@ class PagePreviewTest extends NodeTestBase {
   function testPagePreviewWithRevisions() {
     $title_key = 'title[0][value]';
     $body_key = 'body[0][value]';
-    $term_key = $this->field_name . '[target_id]';
+    $term_key = $this->fieldName . '[target_id]';
     // Force revision on "Basic page" content.
     $node_type = NodeType::load('page');
     $node_type->setNewRevision(TRUE);

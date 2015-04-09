@@ -18,6 +18,20 @@ use Drupal\node\Tests\NodeTestBase;
 class ContentTranslationOperationsTest extends NodeTestBase {
 
   /**
+   * A base user.
+   *
+   * @var \Drupal\user\Entity\User|false
+   */
+  protected $baseUser1;
+
+  /**
+   * A base user.
+   *
+   * @var \Drupal\user\Entity\User|false
+   */
+  protected $baseUser2;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -41,8 +55,8 @@ class ContentTranslationOperationsTest extends NodeTestBase {
     \Drupal::service('router.builder')->rebuild();
     \Drupal::service('entity.definition_update_manager')->applyUpdates();
 
-    $this->base_user_1 = $this->drupalCreateUser(['access content overview']);
-    $this->base_user_2 = $this->drupalCreateUser(['access content overview', 'create content translations', 'update content translations', 'delete content translations']);
+    $this->baseUser1 = $this->drupalCreateUser(['access content overview']);
+    $this->baseUser2 = $this->drupalCreateUser(['access content overview', 'create content translations', 'update content translations', 'delete content translations']);
   }
 
   /**
@@ -52,13 +66,13 @@ class ContentTranslationOperationsTest extends NodeTestBase {
     $node = $this->drupalCreateNode(['type' => 'article', 'langcode' => 'es']);
     // Verify no translation operation links are displayed for users without
     // permission.
-    $this->drupalLogin($this->base_user_1);
+    $this->drupalLogin($this->baseUser1);
     $this->drupalGet('admin/content');
     $this->assertNoLinkByHref('node/' . $node->id() . '/translations');
     $this->drupalLogout();
     // Verify there's a translation operation link for users with enough
     // permissions.
-    $this->drupalLogin($this->base_user_2);
+    $this->drupalLogin($this->baseUser2);
     $this->drupalGet('admin/content');
     $this->assertLinkByHref('node/' . $node->id() . '/translations');
   }
