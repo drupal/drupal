@@ -474,7 +474,7 @@ class DbUpdateController extends ControllerBase {
         }
       }
       if ($all_messages) {
-        $build['query_messsages'] = array(
+        $build['query_messages'] = array(
           '#type' => 'container',
           '#children' => $all_messages,
           '#attributes' => array('class' => array('update-results')),
