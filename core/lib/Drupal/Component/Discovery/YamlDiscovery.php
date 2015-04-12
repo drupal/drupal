@@ -48,7 +48,9 @@ class YamlDiscovery implements DiscoverableInterface {
   public function findAll() {
     $all = array();
     foreach ($this->findFiles() as $provider => $file) {
-      $all[$provider] = Yaml::decode(file_get_contents($file));
+      // If a file is empty or its contents are commented out, return an empty
+      // array instead of NULL for type consistency.
+      $all[$provider] = Yaml::decode(file_get_contents($file)) ?: [];
     }
 
     return $all;
