@@ -27,16 +27,6 @@ use Drupal\Core\Form\OptGroup;
 abstract class OptionsWidgetBase extends WidgetBase {
 
   /**
-   * Identifies a 'None' option.
-   */
-  const OPTIONS_EMPTY_NONE = 'option_none';
-
-  /**
-   * Identifies a 'Select a value' option.
-   */
-  const OPTIONS_EMPTY_SELECT = 'option_select';
-
-  /**
    * Abstract over the actual field columns, to allow different field types to
    * reuse those widgets.
    *
@@ -130,18 +120,8 @@ abstract class OptionsWidgetBase extends WidgetBase {
         ->getSettableOptions(\Drupal::currentUser());
 
       // Add an empty option if the widget needs one.
-      if ($empty_option = $this->getEmptyOption()) {
-        switch ($this->getPluginId()) {
-          case 'options_buttons':
-            $label = t('N/A');
-            break;
-
-          case 'options_select':
-            $label = ($empty_option == static::OPTIONS_EMPTY_NONE ? t('- None -') : t('- Select a value -'));
-            break;
-        }
-
-        $options = array('_none' => $label) + $options;
+      if ($empty_label = $this->getEmptyLabel()) {
+        $options = ['_none' => $empty_label] + $options;
       }
 
       $module_handler = \Drupal::moduleHandler();
@@ -214,11 +194,11 @@ abstract class OptionsWidgetBase extends WidgetBase {
   }
 
   /**
-   * Returns the empty option to add to the list of options, if any.
+   * Returns the empty option label to add to the list of options, if any.
    *
-   * @return string|null
-   *   Either static::OPTIONS_EMPTY_NONE, static::OPTIONS_EMPTY_SELECT, or NULL.
+   * @return string|NULL
+   *   Either a label of the empty option, or NULL.
    */
-  protected function getEmptyOption() { }
+  protected function getEmptyLabel() { }
 
 }

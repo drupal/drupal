@@ -66,9 +66,9 @@ class OptionsButtonsWidget extends OptionsWidgetBase {
   /**
    * {@inheritdoc}
    */
-  protected function getEmptyOption() {
+  protected function getEmptyLabel() {
     if (!$this->required && !$this->multiple) {
-      return static::OPTIONS_EMPTY_NONE;
+      return t('N/A');
     }
   }
 

@@ -450,4 +450,47 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertFieldValues($entity_init, 'card_2', array());
   }
 
+  /**
+   * Tests the 'options_select' and 'options_button' widget for empty value.
+   */
+  function testEmptyValue() {
+    // Create an instance of the 'single value' field.
+    $field = entity_create('field_config', [
+      'field_storage' => $this->card1,
+      'bundle' => 'entity_test',
+    ]);
+    $field->save();
+
+    // Change it to the check boxes/radio buttons widget.
+    entity_get_form_display('entity_test', 'entity_test', 'default')
+      ->setComponent($this->card1->getName(), [
+        'type' => 'options_buttons',
+      ])
+      ->save();
+
+    // Create an entity.
+    $entity = entity_create('entity_test', [
+      'user_id' => 1,
+      'name' => $this->randomMachineName(),
+    ]);
+    $entity->save();
+
+    // Display form: check that _none options are present and has label.
+    $this->drupalGet('entity_test/manage/' . $entity->id());
+    $this->assertTrue($this->xpath('//div[@id=:id]//div[@class=:class]//input[@value=:value]', array(':id' => 'edit-card-1', ':class' => 'form-item form-type-radio form-item-card-1', ':value' => '_none')), 'A test radio button has a "None" choice.');
+    $this->assertTrue($this->xpath('//div[@id=:id]//div[@class=:class]//label[@for=:for and text()=:label]', array(':id' => 'edit-card-1', ':class' => 'form-item form-type-radio form-item-card-1', ':for' => 'edit-card-1-none', ':label' => 'N/A')), 'A test radio button has a "N/A" choice.');
+
+    // Change it to the select widget.
+    entity_get_form_display('entity_test', 'entity_test', 'default')
+      ->setComponent($this->card1->getName(), array(
+        'type' => 'options_select',
+      ))
+      ->save();
+
+    // Display form: check that _none options are present and has label.
+    $this->drupalGet('entity_test/manage/' . $entity->id());
+    // A required field without any value has a "none" option.
+    $this->assertTrue($this->xpath('//select[@id=:id]//option[@value="_none" and text()=:label]', array(':id' => 'edit-card-1', ':label' => t('- None -'))), 'A test select has a "None" choice.');
+  }
+
 }
