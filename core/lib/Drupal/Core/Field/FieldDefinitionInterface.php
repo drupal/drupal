@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Field;
 
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\TypedData\ListDataDefinitionInterface;
 
@@ -52,7 +53,7 @@ use Drupal\Core\TypedData\ListDataDefinitionInterface;
  * based on that abstract definition, even though that abstract definition can
  * differ from the concrete definition of any particular node's body field.
  */
-interface FieldDefinitionInterface extends ListDataDefinitionInterface {
+interface FieldDefinitionInterface extends ListDataDefinitionInterface, CacheableDependencyInterface {
 
   /**
    * Returns the machine name of the field.

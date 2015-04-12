@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Field;
 
+use Drupal\Core\Cache\UnchangingCacheableDependencyTrait;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\Entity\BaseFieldOverride;
 use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
@@ -17,6 +18,8 @@ use Drupal\Core\TypedData\OptionsProviderInterface;
  * A class for defining entity fields.
  */
 class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionInterface, FieldStorageDefinitionInterface {
+
+  use UnchangingCacheableDependencyTrait;
 
   /**
    * The field type.

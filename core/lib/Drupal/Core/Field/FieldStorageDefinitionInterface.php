@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Field;
 
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 
 /**
@@ -27,7 +28,7 @@ use Drupal\Core\Entity\FieldableEntityInterface;
  *
  * @see hook_entity_field_storage_info()
  */
-interface FieldStorageDefinitionInterface {
+interface FieldStorageDefinitionInterface extends CacheableDependencyInterface {
 
   /**
    * Value indicating a field accepts an unlimited number of values.

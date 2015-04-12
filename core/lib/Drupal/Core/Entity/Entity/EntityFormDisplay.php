@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Entity\Entity;
 
-use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Entity\EntityDisplayPluginCollection;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
@@ -178,13 +177,8 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
         // Associate the cache tags for the field definition & field storage
         // definition.
         $field_definition = $this->getFieldDefinition($name);
-        if ($field_definition instanceof CacheableDependencyInterface) {
-          $this->renderer->addDependency($form[$name], $field_definition);
-        }
-        $field_storage_definition = $field_definition->getFieldStorageDefinition();
-        if ($field_storage_definition instanceof CacheableDependencyInterface) {
-          $this->renderer->addDependency($form[$name], $field_storage_definition);
-        }
+        $this->renderer->addDependency($form[$name], $field_definition);
+        $this->renderer->addDependency($form[$name], $field_definition->getFieldStorageDefinition());
       }
     }
 
