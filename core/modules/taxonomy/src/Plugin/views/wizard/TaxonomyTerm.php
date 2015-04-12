@@ -50,8 +50,9 @@ class TaxonomyTerm extends WizardPluginBase {
     $display_options['fields']['name']['alter']['html'] = 0;
     $display_options['fields']['name']['hide_empty'] = 0;
     $display_options['fields']['name']['empty_zero'] = 0;
-    $display_options['fields']['name']['link_to_taxonomy'] = 1;
-    $display_options['fields']['name']['plugin_id'] = 'taxonomy';
+    $display_options['fields']['name']['type'] = 'string';
+    $display_options['fields']['name']['settings']['link_to_entity'] = 1;
+    $display_options['fields']['name']['plugin_id'] = 'term_name';
 
     return $display_options;
   }

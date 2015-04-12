@@ -27,7 +27,11 @@ display:
           field: name
           id: name
           table: taxonomy_term_field_data
-          plugin_id: taxonomy
+          plugin_id: term_name
+          type: string
+          settings:
+            link_to_entity: true
+          convert_spaces: false
           entity_type: taxonomy_term
           entity_field: name
         nid:

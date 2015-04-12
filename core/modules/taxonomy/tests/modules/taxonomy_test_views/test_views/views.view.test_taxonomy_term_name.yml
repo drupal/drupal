@@ -4,8 +4,8 @@ dependencies:
   module:
     - taxonomy
     - user
-id: test_taxonomy_tid_field
-label: test_taxonomy_tid_field
+id: test_taxonomy_term_name
+label: test_taxonomy_term_name
 module: views
 description: ''
 tag: ''
@@ -128,10 +128,11 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          plugin_id: field
+          plugin_id: term_name
           type: string
           settings:
-            link_to_entity: true
+            link_to_entity: false
+          convert_spaces: false
           entity_type: taxonomy_term
           entity_field: name
       filters: {  }

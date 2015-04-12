@@ -94,7 +94,7 @@ class TermViewsData extends EntityViewsData {
       );
     }
 
-    $data['taxonomy_term_field_data']['name']['field']['id'] = 'taxonomy';
+    $data['taxonomy_term_field_data']['name']['field']['id'] = 'term_name';
     $data['taxonomy_term_field_data']['name']['argument']['many to one'] = TRUE;
     $data['taxonomy_term_field_data']['name']['argument']['empty field name'] = t('Uncategorized');
 

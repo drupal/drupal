@@ -96,7 +96,6 @@ display:
             html: false
           hide_empty: false
           empty_zero: false
-          link_to_taxonomy: true
           relationship: none
           group_type: group
           admin_label: ''
@@ -111,8 +110,10 @@ display:
           element_default_classes: true
           empty: ''
           hide_alter_empty: true
-          convert_spaces: false
-          plugin_id: taxonomy
+          plugin_id: field
+          type: string
+          settings:
+            link_to_entity: true
           entity_type: taxonomy_term
           entity_field: name
       filters: {  }

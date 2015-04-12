@@ -91,13 +91,9 @@ views.field.term_link_edit:
       type: label
       label: 'Text to display'
 
-views.field.taxonomy:
-  type: views_field
-  label: 'Taxonomy language'
+views.field.term_name:
+  type: views.field.field
   mapping:
-    link_to_taxonomy:
-      type: boolean
-      label: 'Link this field to its taxonomy term page'
     convert_spaces:
       type: boolean
       label: 'Convert spaces in term names to hyphens'
