@@ -59,9 +59,11 @@
       $('<a class="details-title"></a>')
         .attr('href', '#' + this.$node.attr('id'))
         .prepend($legend.contents())
-        .appendTo($legend)
+        .appendTo($legend);
+
+      $legend
+        .append(this.$summary)
         .on('click', $.proxy(this.onLegendClick, this));
-      $legend.append(this.$summary);
     },
     /**
      * Handle legend clicks
