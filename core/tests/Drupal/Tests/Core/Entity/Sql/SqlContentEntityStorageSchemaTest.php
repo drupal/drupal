@@ -1054,15 +1054,22 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
 
     return [
       // Case 1: same storage class, ::hasData() === TRUE.
-      [$updated_entity_type_definition, $original_entity_type_definition, TRUE, TRUE],
+      [$updated_entity_type_definition, $original_entity_type_definition, TRUE, TRUE, TRUE],
       // Case 2: same storage class, ::hasData() === FALSE.
-      [$updated_entity_type_definition, $original_entity_type_definition, FALSE, FALSE],
+      [$updated_entity_type_definition, $original_entity_type_definition, FALSE, TRUE, FALSE],
       // Case 3: different storage class, original storage class does not exist.
-      [$updated_entity_type_definition, $original_entity_type_definition_other_nonexisting, NULL, TRUE],
-      // Case 4: different storage class, original storage class exists, ::hasData() === TRUE.
-      [$updated_entity_type_definition, $original_entity_type_definition_other_existing, TRUE, TRUE],
-      // Case 5: different storage class, original storage class exists, ::hasData() === FALSE.
-      [$updated_entity_type_definition, $original_entity_type_definition_other_existing, FALSE, FALSE],
+      [$updated_entity_type_definition, $original_entity_type_definition_other_nonexisting, NULL, TRUE, TRUE],
+      // Case 4: different storage class, original storage class exists,
+      // ::hasData() === TRUE.
+      [$updated_entity_type_definition, $original_entity_type_definition_other_existing, TRUE, TRUE, TRUE],
+      // Case 5: different storage class, original storage class exists,
+      // ::hasData() === FALSE.
+      [$updated_entity_type_definition, $original_entity_type_definition_other_existing, FALSE, TRUE, FALSE],
+      // Case 6: same storage class, ::hasData() === TRUE, no structure changes.
+      [$updated_entity_type_definition, $original_entity_type_definition, TRUE, FALSE, FALSE],
+      // Case 7: different storage class, original storage class exists,
+      //::hasData() === TRUE, no structure changes.
+      [$updated_entity_type_definition, $original_entity_type_definition_other_existing, TRUE, FALSE, FALSE],
     ];
   }
 
@@ -1071,7 +1078,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    *
    * @dataProvider providerTestRequiresEntityDataMigration
    */
-  public function testRequiresEntityDataMigration($updated_entity_type_definition, $original_entity_type_definition, $original_storage_has_data, $migration_required) {
+  public function testRequiresEntityDataMigration($updated_entity_type_definition, $original_entity_type_definition, $original_storage_has_data, $shared_table_structure_changed, $migration_required) {
     $this->entityType = new ContentEntityType(array(
       'id' => 'entity_test',
       'entity_keys' => array('id' => 'id'),
@@ -1081,7 +1088,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $original_storage->expects($this->exactly(is_null($original_storage_has_data) ? 0 : 1))
+    $original_storage->expects($this->exactly(is_null($original_storage_has_data) || !$shared_table_structure_changed ? 0 : 1))
       ->method('hasData')
       ->willReturn($original_storage_has_data);
 
@@ -1099,8 +1106,13 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
 
     $this->storageSchema = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema')
       ->setConstructorArgs(array($this->entityManager, $this->entityType, $this->storage, $connection))
-      ->setMethods(array('installedStorageSchema'))
+      ->setMethods(array('installedStorageSchema', 'hasSharedTableStructureChange'))
       ->getMock();
+
+    $this->storageSchema->expects($this->any())
+      ->method('hasSharedTableStructureChange')
+      ->with($updated_entity_type_definition, $original_entity_type_definition)
+      ->willReturn($shared_table_structure_changed);
 
     $this->assertEquals($migration_required, $this->storageSchema->requiresEntityDataMigration($updated_entity_type_definition, $original_entity_type_definition));
   }

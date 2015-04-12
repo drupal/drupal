@@ -128,11 +128,28 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    */
   public function requiresEntityStorageSchemaChanges(EntityTypeInterface $entity_type, EntityTypeInterface $original) {
     return
-      $entity_type->isRevisionable() != $original->isRevisionable() ||
-      $entity_type->isTranslatable() != $original->isTranslatable() ||
-      $this->hasSharedTableNameChanges($entity_type, $original) ||
+      $this->hasSharedTableStructureChange($entity_type, $original) ||
       // Detect changes in key or index definitions.
       $this->getEntitySchemaData($entity_type, $this->getEntitySchema($entity_type, TRUE)) != $this->loadEntitySchemaData($original);
+  }
+
+  /**
+   * Detects whether there is a change in the shared table structure.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The new entity type.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $original
+   *   The origin entity type.
+   *
+   * @return bool
+   *   Returns TRUE if either the revisionable or translatable flag changes or
+   *   a table has been renamed.
+   */
+  protected function hasSharedTableStructureChange(EntityTypeInterface $entity_type, EntityTypeInterface $original) {
+    return
+      $entity_type->isRevisionable() != $original->isRevisionable() ||
+      $entity_type->isTranslatable() != $original->isTranslatable() ||
+      $this->hasSharedTableNameChanges($entity_type, $original);
   }
 
   /**
@@ -203,6 +220,13 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     if (!class_exists($original_storage_class)) {
       return TRUE;
     }
+
+    // Data migration is not needed when only indexes changed, as they can be
+    // applied if there is data.
+    if (!$this->hasSharedTableStructureChange($entity_type, $original)) {
+      return FALSE;
+    }
+
     // Use the original entity type since the storage has not been updated.
     $original_storage = $this->entityManager->createHandlerInstance($original_storage_class, $original);
     return $original_storage->hasData();

@@ -518,19 +518,11 @@ class EntityDefinitionUpdateTest extends EntityUnitTestBase {
     $entity = $this->entityManager->getStorage('entity_test_update')->create(array('name' => $name));
     $entity->save();
 
-    // Add an entity index, run the update. For now, it's expected to throw an
-    // exception.
-    // @todo Improve SqlContentEntityStorageSchema::requiresEntityDataMigration()
-    //   to return FALSE when only index changes are required, so that it can be
-    //   applied on top of existing data: https://www.drupal.org/node/2340993.
+    // Add an entity index, run the update. Ensure that the index is created
+    // despite having data.
     $this->addEntityIndex();
-    try {
-      $this->entityDefinitionUpdateManager->applyUpdates();
-      $this->fail('EntityStorageException thrown when trying to apply an update that requires data migration.');
-    }
-    catch (EntityStorageException $e) {
-      $this->pass('EntityStorageException thrown when trying to apply an update that requires data migration.');
-    }
+    $this->entityDefinitionUpdateManager->applyUpdates();
+    $this->assertTrue($this->database->schema()->indexExists('entity_test_update', 'entity_test_update__new_index'), 'Index added.');
   }
 
   /**
