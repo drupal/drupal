@@ -203,6 +203,9 @@ class ModuleInstaller implements ModuleInstallerInterface {
         // Update the kernel to include it.
         $this->updateKernel($module_filenames);
 
+        // Refresh the schema to include it.
+        drupal_get_schema(NULL, TRUE);
+
         // Allow modules to react prior to the installation of a module.
         $this->moduleHandler->invokeAll('module_preinstall', array($module));
 

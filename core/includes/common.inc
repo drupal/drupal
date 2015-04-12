@@ -1527,6 +1527,14 @@ function drupal_flush_all_caches() {
   // actually loaded.
   $module_handler->loadAll();
 
+  // Rebuild the schema and cache a fully-built schema based on new module data.
+  // This is necessary for any invocation of index.php, because setting cache
+  // table entries requires schema information and that occurs during bootstrap
+  // before any modules are loaded, so if there is no cached schema,
+  // drupal_get_schema() will try to generate one, but with no loaded modules,
+  // it will return nothing.
+  drupal_get_schema(NULL, TRUE);
+
   // Rebuild all information based on new module data.
   $module_handler->invokeAll('rebuild');
 

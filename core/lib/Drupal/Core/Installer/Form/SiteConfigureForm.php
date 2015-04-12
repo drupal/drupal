@@ -136,6 +136,15 @@ class SiteConfigureForm extends ConfigFormBase {
     // work during installation.
     $form['#attached']['drupalSettings']['copyFieldValue']['edit-site-mail'] = ['edit-account-mail'];
 
+    // Cache a fully-built schema. This is necessary for any invocation of
+    // index.php because: (1) setting cache table entries requires schema
+    // information, (2) that occurs during bootstrap before any module are
+    // loaded, so (3) if there is no cached schema, drupal_get_schema() will
+    // try to generate one but with no loaded modules will return nothing.
+    //
+    // @todo Move this to the 'install_finished' task?
+    drupal_get_schema(NULL, TRUE);
+
     $form['site_information'] = array(
       '#type' => 'fieldgroup',
       '#title' => $this->t('Site information'),
