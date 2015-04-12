@@ -177,12 +177,9 @@ class MigrateUserTest extends MigrateDrupal6TestBase {
         $this->assertIdentical(basename($source->picture), $file->getFilename());
       }
 
-      // Use the UI to check if the password has been salted and re-hashed to
+      // Use the API to check if the password has been salted and re-hashed to
       // conform the Drupal >= 7.
-      $credentials = array('name' => $source->name, 'pass' => $source->pass_plain);
-      $this->drupalPostForm('user/login', $credentials, t('Log in'));
-      $this->assertNoRaw(t('Sorry, unrecognized username or password. <a href="@password">Have you forgotten your password?</a>', array('@password' => \Drupal::url('user.pass', [], array('query' => array('name' => $source->name))))));
-      $this->drupalLogout();
+      $this->assertTrue(\Drupal::service('password')->check($source->pass_plain, $user));
     }
   }
 
