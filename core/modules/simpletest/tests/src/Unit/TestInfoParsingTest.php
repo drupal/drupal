@@ -20,6 +20,7 @@ class TestInfoParsingTest extends UnitTestCase {
   }
 
   public function infoParserProvider() {
+    // A module provided unit test.
     $tests[] = [
       // Expected result.
       [
@@ -31,6 +32,32 @@ class TestInfoParsingTest extends UnitTestCase {
       'Drupal\Tests\simpletest\Unit\TestInfoParsingTest',
     ];
 
+    // A core unit test.
+    $tests[] = [
+      // Expected result.
+      [
+        'name' => 'Drupal\Tests\Core\DrupalTest',
+        'group' => 'PHPUnit',
+        'description' => 'Tests \Drupal.',
+      ],
+      // Classname.
+      'Drupal\Tests\Core\DrupalTest',
+    ];
+
+    // Functional PHPUnit test.
+    $tests[] = [
+      // Expected result.
+      [
+        'name' => 'Drupal\Tests\simpletest\Functional\BrowserTestBaseTest',
+        'group' => 'simpletest',
+        'description' => 'Tests BrowserTestBase functionality.',
+      ],
+      // Classname.
+      'Drupal\Tests\simpletest\Functional\BrowserTestBaseTest',
+    ];
+
+    // Simpletest classes can not be autoloaded in a PHPUnit test, therefore
+    // provide a docblock.
     $tests[] = [
       // Expected result.
       [

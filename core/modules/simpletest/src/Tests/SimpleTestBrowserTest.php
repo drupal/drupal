@@ -128,21 +128,23 @@ class SimpleTestBrowserTest extends WebTestBase {
     // to be created. However this scenario is covered by the testception of
     // \Drupal\simpletest\Tests\SimpleTestTest.
 
-    $this->drupalGet('admin/config/development/testing');
-    $edit = array(
+    $tests = array(
       // A KernelTestBase test.
-      'tests[Drupal\field\Tests\String\StringFormatterTest]' => TRUE,
+      'Drupal\field\Tests\String\StringFormatterTest',
+      // A PHPUnit unit test.
+      'Drupal\Tests\action\Unit\Menu\ActionLocalTasksTest',
+      // A PHPUnit functional test.
+      'Drupal\Tests\simpletest\Functional\BrowserTestBaseTest',
     );
-    $this->drupalPostForm(NULL, $edit, t('Run tests'));
-    $this->assertText('0 fails, 0 exceptions');
 
-    $this->drupalGet('admin/config/development/testing');
-    $edit = array(
-      // A PHPUnit test.
-      'tests[Drupal\Tests\action\Unit\Menu\ActionLocalTasksTest]' => TRUE,
-    );
-    $this->drupalPostForm(NULL, $edit, t('Run tests'));
-    $this->assertText('0 fails, 0 exceptions');
+    foreach ($tests as $test) {
+      $this->drupalGet('admin/config/development/testing');
+      $edit = array(
+        "tests[$test]" => TRUE,
+      );
+      $this->drupalPostForm(NULL, $edit, t('Run tests'));
+      $this->assertText('0 fails, 0 exceptions');
+    }
   }
 
 }

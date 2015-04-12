@@ -356,6 +356,17 @@ function simpletest_script_init() {
     }
   }
 
+  if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
+    $base_url = 'https://';
+  }
+  else {
+    $base_url = 'http://';
+  }
+  $base_url .= $host;
+  if ($path !== '') {
+    $base_url .= $path;
+  }
+  putenv('SIMPLETEST_BASE_URL=' . $base_url);
   $_SERVER['HTTP_HOST'] = $host;
   $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
   $_SERVER['SERVER_ADDR'] = '127.0.0.1';
@@ -419,35 +430,12 @@ function simpletest_script_setup_database($new = FALSE) {
   if (!empty($args['dburl'])) {
     // Remove a possibly existing default connection (from settings.php).
     Database::removeConnection('default');
-
-    $info = parse_url($args['dburl']);
-    if (!isset($info['scheme'], $info['host'], $info['path'])) {
-      simpletest_script_print_error('Invalid --dburl. Minimum requirement: driver://host/database');
+    try {
+      $databases['default']['default'] = Database::convertDbUrlToConnectionInfo($args['dburl'], DRUPAL_ROOT);
+    }
+    catch (\InvalidArgumentException $e) {
+      simpletest_script_print_error('Invalid --dburl. Reason: ' . $e->getMessage());
       exit(1);
-    }
-    $info += array(
-      'user' => '',
-      'pass' => '',
-      'fragment' => '',
-    );
-    if ($info['path'][0] === '/') {
-      $info['path'] = substr($info['path'], 1);
-    }
-    if ($info['scheme'] === 'sqlite' && $info['path'][0] !== '/') {
-      $info['path'] = DRUPAL_ROOT . '/' . $info['path'];
-    }
-    $databases['default']['default'] = array(
-      'driver' => $info['scheme'],
-      'username' => $info['user'],
-      'password' => $info['pass'],
-      'host' => $info['host'],
-      'database' => $info['path'],
-      'prefix' => array(
-        'default' => $info['fragment'],
-      ),
-    );
-    if (isset($info['port'])) {
-      $databases['default']['default']['port'] = $info['port'];
     }
   }
   // Otherwise, use the default database connection from settings.php.

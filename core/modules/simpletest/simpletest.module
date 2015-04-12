@@ -238,6 +238,9 @@ function simpletest_phpunit_configuration_filepath() {
  *  The results as returned by exec().
  */
 function simpletest_phpunit_run_command(array $unescaped_test_classnames, $phpunit_file) {
+  // Setup an environment variable containing the database connection so that
+  // functional tests can connect to the database.
+  putenv('SIMPLETEST_DB=' . Database::getConnectionInfoAsUrl());
   $phpunit_bin = simpletest_phpunit_command();
 
   $command = array(
@@ -273,6 +276,7 @@ function simpletest_phpunit_run_command(array $unescaped_test_classnames, $phpun
   // via the simpletest UI.
   $ret = exec(join($command, " "));
   chdir($old_cwd);
+  putenv('SIMPLETEST_DB=');
   return $ret;
 }
 

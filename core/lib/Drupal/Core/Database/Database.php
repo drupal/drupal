@@ -443,4 +443,89 @@ abstract class Database {
   public static function ignoreTarget($key, $target) {
     self::$ignoreTargets[$key][$target] = TRUE;
   }
+
+  /**
+   * Converts a URL to a database connection info array.
+   *
+   * @param string $url
+   *   The URL.
+   * @param string $root
+   *   The root directory of the Drupal installation.
+   *
+   * @return array
+   *   The database connection info.
+   *
+   * @throws \InvalidArgumentException
+   *   Exception thrown when the provided URL does not meet the minimum
+   *   requirements.
+   */
+  public static function convertDbUrlToConnectionInfo($url, $root) {
+    $info = parse_url($url);
+    if (!isset($info['scheme'], $info['host'], $info['path'])) {
+      throw new \InvalidArgumentException('Minimum requirement: driver://host/database');
+    }
+    $info += array(
+      'user' => '',
+      'pass' => '',
+      'fragment' => '',
+    );
+
+    // A SQLite database path with two leading slashes indicates a system path.
+    // Otherwise the path is relative to the Drupal root.
+    if ($info['path'][0] === '/') {
+      $info['path'] = substr($info['path'], 1);
+    }
+    if ($info['scheme'] === 'sqlite' && $info['path'][0] !== '/') {
+      $info['path'] = $root . '/' . $info['path'];
+    }
+
+    $database = array(
+      'driver' => $info['scheme'],
+      'username' => $info['user'],
+      'password' => $info['pass'],
+      'host' => $info['host'],
+      'database' => $info['path'],
+    );
+    if (isset($info['port'])) {
+      $database['port'] = $info['port'];
+    }
+    return $database;
+  }
+
+  /**
+   * Gets database connection info as a URL.
+   *
+   * @param string $key
+   *   (Optional) The database connection key.
+   *
+   * @return string
+   *   The connection info as a URL.
+   */
+  public static function getConnectionInfoAsUrl($key = 'default') {
+    $db_info = static::getConnectionInfo($key);
+    if ($db_info['default']['driver'] == 'sqlite') {
+      $db_url = 'sqlite://localhost/' . $db_info['default']['database'];
+    }
+    else {
+      $user = '';
+      if ($db_info['default']['username']) {
+        $user = $db_info['default']['username'];
+        if ($db_info['default']['password']) {
+          $user .= ':' . $db_info['default']['password'];
+        }
+        $user .= '@';
+      }
+
+      $db_url = $db_info['default']['driver'] . '://' . $user . $db_info['default']['host'];
+      if (isset($db_info['default']['port'])) {
+        $db_url .= ':' . $db_info['default']['port'];
+      }
+      $db_url .= '/' . $db_info['default']['database'];
+    }
+    if ($db_info['default']['prefix']['default']) {
+      $db_url .= '#' . $db_info['default']['prefix']['default'];
+    }
+    return $db_url;
+  }
+
 }

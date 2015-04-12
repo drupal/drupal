@@ -79,8 +79,9 @@ class TestDiscovery {
 
     $existing = $this->classLoader->getPrefixesPsr4();
 
-    // Add PHPUnit test namespace of Drupal core.
+    // Add PHPUnit test namespaces of Drupal core.
     $this->testNamespaces['Drupal\\Tests\\'] = [DRUPAL_ROOT . '/core/tests/Drupal/Tests'];
+    $this->testNamespaces['Drupal\\FunctionalTests\\'] = [DRUPAL_ROOT . '/core/tests/Drupal/FunctionalTests'];
 
     $this->availableExtensions = array();
     foreach ($this->getExtensions() as $name => $extension) {
@@ -95,8 +96,9 @@ class TestDiscovery {
       // Add Simpletest test namespace.
       $this->testNamespaces["Drupal\\$name\\Tests\\"][] = "$base_path/src/Tests";
 
-      // Add PHPUnit test namespace.
-      $this->testNamespaces["Drupal\\Tests\\$name\\"][] = "$base_path/tests/src";
+      // Add PHPUnit test namespaces.
+      $this->testNamespaces["Drupal\\Tests\\$name\\Unit\\"][] = "$base_path/tests/src/Unit";
+      $this->testNamespaces["Drupal\\Tests\\$name\\Functional\\"][] = "$base_path/tests/src/Functional";
     }
 
     foreach ($this->testNamespaces as $prefix => $paths) {
@@ -322,7 +324,7 @@ class TestDiscovery {
       throw new MissingGroupException(sprintf('Missing @group annotation in %s', $classname));
     }
     // Force all PHPUnit tests into the same group.
-    if (strpos($classname, 'Drupal\\Tests\\') === 0) {
+    if (static::isUnitTest($classname)) {
       $info['group'] = 'PHPUnit';
     }
     else {
@@ -405,6 +407,31 @@ class TestDiscovery {
       }
     }
     return $annotations;
+  }
+
+  /**
+   * Determines if the provided classname is a unit test.
+   *
+   * @param $classname
+   *   The test classname.
+   *
+   * @return bool
+   *   TRUE if the class is a unit test. FALSE if not.
+   */
+  public static function isUnitTest($classname) {
+    if (strpos($classname, 'Drupal\\Tests\\') === 0) {
+      $namespace = explode('\\', $classname);
+      $first_letter = Unicode::substr($namespace[2], 0, 1);
+      if (Unicode::strtoupper($first_letter) === $first_letter) {
+        // A core unit test.
+        return TRUE;
+      }
+      elseif ($namespace[3] == 'Unit') {
+        // A module unit test.
+        return TRUE;
+      }
+    }
+    return FALSE;
   }
 
   /**

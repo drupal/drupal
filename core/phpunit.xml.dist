@@ -6,19 +6,31 @@
     <ini name="error_reporting" value="32767"/>
     <!-- Do not limit the amount of memory tests take to run. -->
     <ini name="memory_limit" value="-1"/>
+    <env name="SIMPLETEST_BASE_URL" value=""/>
+    <!-- Example SIMPLETEST_BASE_URL value: http://localhost -->
+    <env name="SIMPLETEST_DB" value=""/>
+    <!-- Example SIMPLETEST_DB value: mysql://username:password@localhost/databasename#table_prefix -->
   </php>
   <testsuites>
-    <testsuite name="Drupal Unit Test Suite">
-      <directory>./tests</directory>
-      <directory>./modules/*/tests</directory>
-      <directory>../modules</directory>
-      <directory>../sites/*/modules</directory>
+    <testsuite name="unit">
+      <directory>./tests/Drupal/Tests</directory>
+      <directory>./modules/*/tests/src/Unit</directory>
+      <directory>../modules/*/tests/src/Unit</directory>
+      <directory>../sites/*/modules/*/tests/src/Unit</directory>
       <!-- Exclude Composer's vendor directory so we don't run tests there. -->
       <exclude>./vendor</exclude>
       <!-- Exclude Drush tests. -->
       <exclude>./drush/tests</exclude>
-      <!-- Exclude special-case files from config's test modules. -->
-      <exclude>./modules/config/tests/config_test/src</exclude>
+    </testsuite>
+    <testsuite name="functional">
+      <directory>./tests/Drupal/FunctionalTests</directory>
+      <directory>./modules/*/tests/src/Functional</directory>
+      <directory>../modules/*/tests/src/Functional</directory>
+      <directory>../sites/*/modules/*/tests/src/Functional</directory>
+      <!-- Exclude Composer's vendor directory so we don't run tests there. -->
+      <exclude>./vendor</exclude>
+      <!-- Exclude Drush tests. -->
+      <exclude>./drush/tests</exclude>
     </testsuite>
   </testsuites>
   <listeners>

@@ -179,6 +179,7 @@ class SimpletestTestForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    global $base_url;
     // Test discovery does not run upon form submission.
     simpletest_classloader_register();
 
@@ -209,6 +210,7 @@ class SimpletestTestForm extends FormBase {
       }
     }
     if (!empty($tests_list)) {
+      putenv('SIMPLETEST_BASE_URL=' . $base_url);
       $test_id = simpletest_run_tests($tests_list, 'drupal');
       $form_state->setRedirect(
         'simpletest.result_form',
