@@ -9,25 +9,12 @@ namespace Drupal\Core\Database\Driver\sqlite;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseNotFoundException;
-use Drupal\Core\Database\TransactionNoActiveException;
-use Drupal\Core\Database\TransactionNameNonUniqueException;
-use Drupal\Core\Database\TransactionCommitFailedException;
 use Drupal\Core\Database\Connection as DatabaseConnection;
 
 /**
  * Specific SQLite implementation of DatabaseConnection.
  */
 class Connection extends DatabaseConnection {
-
-  /**
-   * Whether this database connection supports savepoints.
-   *
-   * Version of sqlite lower then 3.6.8 can't use savepoints.
-   * See http://www.sqlite.org/releaselog/3_6_8.html
-   *
-   * @var bool
-   */
-  protected $savepointSupport = FALSE;
 
   /**
    * Error code for "Unable to open database file" error.
@@ -90,10 +77,6 @@ class Connection extends DatabaseConnection {
     }
     // Regenerate the prefixes replacement table.
     $this->setPrefix($prefixes);
-
-    // Detect support for SAVEPOINT.
-    $version = $this->query('SELECT sqlite_version()')->fetchField();
-    $this->savepointSupport = (version_compare($version, '3.6.8') >= 0);
   }
 
   /**
@@ -424,88 +407,6 @@ class Connection extends DatabaseConnection {
     // The transaction gets committed when the transaction object gets destroyed
     // because it gets out of scope.
     return $this->query('SELECT value FROM {sequences}')->fetchField();
-  }
-
-  public function rollback($savepoint_name = 'drupal_transaction') {
-    if ($this->savepointSupport) {
-      return parent::rollBack($savepoint_name);
-    }
-
-    if (!$this->inTransaction()) {
-      throw new TransactionNoActiveException();
-    }
-    // A previous rollback to an earlier savepoint may mean that the savepoint
-    // in question has already been rolled back.
-    if (!isset($this->transactionLayers[$savepoint_name])) {
-      return;
-    }
-
-    // We need to find the point we're rolling back to, all other savepoints
-    // before are no longer needed.
-    while ($savepoint = array_pop($this->transactionLayers)) {
-      if ($savepoint == $savepoint_name) {
-        // Mark whole stack of transactions as needed roll back.
-        $this->willRollback = TRUE;
-        // If it is the last the transaction in the stack, then it is not a
-        // savepoint, it is the transaction itself so we will need to roll back
-        // the transaction rather than a savepoint.
-        if (empty($this->transactionLayers)) {
-          break;
-        }
-        return;
-      }
-    }
-    if ($this->supportsTransactions()) {
-      $this->connection->rollBack();
-    }
-  }
-
-  public function pushTransaction($name) {
-    if ($this->savepointSupport) {
-      return parent::pushTransaction($name);
-    }
-    if (!$this->supportsTransactions()) {
-      return;
-    }
-    if (isset($this->transactionLayers[$name])) {
-      throw new TransactionNameNonUniqueException($name . " is already in use.");
-    }
-    if (!$this->inTransaction()) {
-      $this->connection->beginTransaction();
-    }
-    $this->transactionLayers[$name] = $name;
-  }
-
-  public function popTransaction($name) {
-    if ($this->savepointSupport) {
-      return parent::popTransaction($name);
-    }
-    if (!$this->supportsTransactions()) {
-      return;
-    }
-    if (!$this->inTransaction()) {
-      throw new TransactionNoActiveException();
-    }
-
-    // Commit everything since SAVEPOINT $name.
-    while($savepoint = array_pop($this->transactionLayers)) {
-      if ($savepoint != $name) continue;
-
-      // If there are no more layers left then we should commit or rollback.
-      if (empty($this->transactionLayers)) {
-        // If there was any rollback() we should roll back whole transaction.
-        if ($this->willRollback) {
-          $this->willRollback = FALSE;
-          $this->connection->rollBack();
-        }
-        elseif (!$this->connection->commit()) {
-          throw new TransactionCommitFailedException();
-        }
-      }
-      else {
-        break;
-      }
-    }
   }
 
 }

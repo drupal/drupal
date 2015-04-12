@@ -33,8 +33,7 @@ class Tasks extends InstallTasks {
    * {@inheritdoc}
    */
   public function minimumVersion() {
-    // @todo Consider upping to 3.6.8 in Drupal 8 to get SAVEPOINT support.
-    return '3.3.7';
+    return '3.6.8';
   }
 
   /**
