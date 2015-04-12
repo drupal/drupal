@@ -48,7 +48,7 @@ class EntityRevisionsTest extends WebTestBase {
 
     // All revisable entity variations have to have the same results.
     foreach (entity_test_entity_types(ENTITY_TEST_TYPES_REVISABLE) as $entity_type) {
-      $this->assertRevisions($entity_type);
+      $this->runRevisionsTests($entity_type);
     }
   }
 
@@ -58,7 +58,7 @@ class EntityRevisionsTest extends WebTestBase {
    * @param string $entity_type
    *   The entity type to run the tests with.
    */
-  protected function assertRevisions($entity_type) {
+  protected function runRevisionsTests($entity_type) {
 
     // Create initial entity.
     $entity = entity_create($entity_type, array(
