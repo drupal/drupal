@@ -59,7 +59,6 @@ abstract class ModuleTestBase extends WebTestBase {
    *   The name of the module.
    */
   function assertModuleTablesExist($module) {
-    $this->rebuildContainer();
     $tables = array_keys(drupal_get_schema_unprocessed($module));
     $tables_exist = TRUE;
     foreach ($tables as $table) {
