@@ -17,11 +17,18 @@ use Drupal\Tests\UnitTestCase;
 class PostgresqlConnectionTest extends UnitTestCase {
 
   /**
+   * Mock PDO object for use in tests.
+   *
+   * @var \PHPUnit_Framework_MockObject_MockObject|\Drupal\Tests\Core\Database\Stub\StubPDO
+   */
+  protected $mockPdo;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-    $this->mock_pdo = $this->getMock('Drupal\Tests\Core\Database\Stub\StubPDO');
+    $this->mockPdo = $this->getMock('Drupal\Tests\Core\Database\Stub\StubPDO');
   }
 
   /**
@@ -84,7 +91,7 @@ class PostgresqlConnectionTest extends UnitTestCase {
    * @dataProvider providerEscapeTables
    */
   public function testEscapeTable($expected, $name) {
-    $pgsql_connection = new Connection($this->mock_pdo, array());
+    $pgsql_connection = new Connection($this->mockPdo, []);
 
     $this->assertEquals($expected, $pgsql_connection->escapeTable($name));
   }
@@ -94,7 +101,7 @@ class PostgresqlConnectionTest extends UnitTestCase {
    * @dataProvider providerEscapeAlias
    */
   public function testEscapeAlias($expected, $name) {
-    $pgsql_connection = new Connection($this->mock_pdo, array());
+    $pgsql_connection = new Connection($this->mockPdo, []);
 
     $this->assertEquals($expected, $pgsql_connection->escapeAlias($name));
   }
@@ -104,7 +111,7 @@ class PostgresqlConnectionTest extends UnitTestCase {
    * @dataProvider providerEscapeFields
    */
   public function testEscapeField($expected, $name) {
-    $pgsql_connection = new Connection($this->mock_pdo, array());
+    $pgsql_connection = new Connection($this->mockPdo, []);
 
     $this->assertEquals($expected, $pgsql_connection->escapeField($name));
   }

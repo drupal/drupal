@@ -54,7 +54,7 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
    *
    * @var array
    */
-  protected $file_css_group;
+  protected $fileCssGroup;
 
   /**
    * The state mock class.
@@ -69,7 +69,7 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
     $this->state = $this->getMock('Drupal\Core\State\StateInterface');
 
     $this->renderer = new CssCollectionRenderer($this->state);
-    $this->file_css_group = array(
+    $this->fileCssGroup = array(
       'group' => -100,
       'every_page' => TRUE,
       'type' => 'file',

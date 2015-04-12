@@ -87,7 +87,7 @@ class ThemeHandlerTest extends UnitTestCase {
   /**
    * The tested theme handler.
    *
-   * @var \Drupal\Core\Extension\ThemeHandler|\Drupal\Tests\Core\Extension\TestThemeHandler
+   * @var \Drupal\Core\Extension\ThemeHandler|\Drupal\Tests\Core\Extension\StubThemeHandler
    */
   protected $themeHandler;
 
@@ -115,11 +115,11 @@ class ThemeHandlerTest extends UnitTestCase {
     $this->extensionDiscovery = $this->getMockBuilder('Drupal\Core\Extension\ExtensionDiscovery')
       ->disableOriginalConstructor()
       ->getMock();
-    $this->cssCollectionOptimizer = $this->getMockBuilder('\Drupal\Core\Asset\CssCollectionOptimizer') //\Drupal\Core\Asset\AssetCollectionOptimizerInterface');
+    $this->cssCollectionOptimizer = $this->getMockBuilder('\Drupal\Core\Asset\CssCollectionOptimizer')
       ->disableOriginalConstructor()
       ->getMock();
     $logger = $this->getMock('Psr\Log\LoggerInterface');
-    $this->themeHandler = new TestThemeHandler($this->root, $this->configFactory, $this->moduleHandler, $this->state, $this->infoParser, $logger, $this->cssCollectionOptimizer, $this->configInstaller, $this->configManager, $this->routeBuilder, $this->extensionDiscovery);
+    $this->themeHandler = new StubThemeHandler($this->root, $this->configFactory, $this->moduleHandler, $this->state, $this->infoParser, $logger, $this->cssCollectionOptimizer, $this->configInstaller, $this->configManager, $this->routeBuilder, $this->extensionDiscovery);
 
     $cache_tags_invalidator = $this->getMock('Drupal\Core\Cache\CacheTagsInvalidatorInterface');
     $this->getContainerWithCacheTagsInvalidator($cache_tags_invalidator);
@@ -330,7 +330,28 @@ class ThemeHandlerTest extends UnitTestCase {
 /**
  * Extends the default theme handler to mock some drupal_ methods.
  */
-class TestThemeHandler extends ThemeHandler {
+class StubThemeHandler extends ThemeHandler {
+
+  /**
+   * Whether the CSS cache was cleared.
+   *
+   * @var bool
+   */
+  protected $clearedCssCache;
+
+  /**
+   * Whether the registry should be rebuilt.
+   *
+   * @var bool
+   */
+  protected $registryRebuild;
+
+  /**
+   * A list of themes keyed by name.
+   *
+   * @var array
+   */
+  protected $systemList;
 
   /**
    * {@inheritdoc}

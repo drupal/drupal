@@ -67,6 +67,13 @@ class ContextualLinkManagerTest extends UnitTestCase {
    */
   protected $accessManager;
 
+  /**
+   * The mocked account.
+   *
+   * @var \Drupal\Core\Session\AccountInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $account;
+
   protected function setUp() {
     $this->contextualLinkManager = $this
       ->getMockBuilder('Drupal\Core\Menu\ContextualLinkManager')

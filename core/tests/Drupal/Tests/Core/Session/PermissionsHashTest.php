@@ -24,28 +24,28 @@ class PermissionsHashTest extends UnitTestCase {
    *
    * @var \Drupal\user\UserInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $account_1;
+  protected $account1;
 
   /**
    * An "updated" mocked account.
    *
    * @var \Drupal\user\UserInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $account_1_updated;
+  protected $account1Updated;
 
   /**
    * A different account.
    *
    * @var \Drupal\user\UserInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $account_2;
+  protected $account2;
 
   /**
    * The mocked private key service.
    *
    * @var \Drupal\Core\PrivateKey|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $private_key;
+  protected $privateKey;
 
   /**
    * The mocked cache backend.
@@ -71,48 +71,48 @@ class PermissionsHashTest extends UnitTestCase {
 
     // Account 1: 'administrator' and 'authenticated' roles.
     $roles_1 = array('administrator', 'authenticated');
-    $this->account_1 = $this->getMockBuilder('Drupal\user\Entity\User')
+    $this->account1 = $this->getMockBuilder('Drupal\user\Entity\User')
       ->disableOriginalConstructor()
       ->setMethods(array('getRoles'))
       ->getMock();
-    $this->account_1->expects($this->any())
+    $this->account1->expects($this->any())
       ->method('getRoles')
       ->will($this->returnValue($roles_1));
 
     // Account 2: 'authenticated' and 'administrator' roles (different order).
     $roles_2 = array('authenticated', 'administrator');
-    $this->account_2 = $this->getMockBuilder('Drupal\user\Entity\User')
+    $this->account2 = $this->getMockBuilder('Drupal\user\Entity\User')
       ->disableOriginalConstructor()
       ->setMethods(array('getRoles'))
       ->getMock();
-    $this->account_2->expects($this->any())
+    $this->account2->expects($this->any())
       ->method('getRoles')
       ->will($this->returnValue($roles_2));
 
     // Updated account 1: now also 'editor' role.
     $roles_1_updated = array('editor', 'administrator', 'authenticated');
-    $this->account_1_updated = $this->getMockBuilder('Drupal\user\Entity\User')
+    $this->account1Updated = $this->getMockBuilder('Drupal\user\Entity\User')
       ->disableOriginalConstructor()
       ->setMethods(array('getRoles'))
       ->getMock();
-    $this->account_1_updated->expects($this->any())
+    $this->account1Updated->expects($this->any())
       ->method('getRoles')
       ->will($this->returnValue($roles_1_updated));
 
     // Mocked private key + cache services.
     $random = Crypt::randomBytesBase64(55);
-    $this->private_key = $this->getMockBuilder('Drupal\Core\PrivateKey')
+    $this->privateKey = $this->getMockBuilder('Drupal\Core\PrivateKey')
       ->disableOriginalConstructor()
       ->setMethods(array('get'))
       ->getMock();
-    $this->private_key->expects($this->any())
+    $this->privateKey->expects($this->any())
       ->method('get')
       ->will($this->returnValue($random));
     $this->cache = $this->getMockBuilder('Drupal\Core\Cache\CacheBackendInterface')
       ->disableOriginalConstructor()
       ->getMock();
 
-    $this->permissionsHash = new PermissionsHashGenerator($this->private_key, $this->cache);
+    $this->permissionsHash = new PermissionsHashGenerator($this->privateKey, $this->cache);
   }
 
   /**
@@ -120,12 +120,12 @@ class PermissionsHashTest extends UnitTestCase {
    */
   public function testGenerate() {
     // Ensure that two user accounts with the same roles generate the same hash.
-    $hash_1 = $this->permissionsHash->generate($this->account_1);
-    $hash_2 = $this->permissionsHash->generate($this->account_2);
+    $hash_1 = $this->permissionsHash->generate($this->account1);
+    $hash_2 = $this->permissionsHash->generate($this->account2);
     $this->assertSame($hash_1, $hash_2, 'Different users with the same roles generate the same permissions hash.');
 
     // Compare with hash for user account 1 with an additional role.
-    $updated_hash_1 = $this->permissionsHash->generate($this->account_1_updated);
+    $updated_hash_1 = $this->permissionsHash->generate($this->account1Updated);
     $this->assertNotSame($hash_1, $updated_hash_1, 'Same user with updated roles generates different permissions hash.');
   }
 
@@ -146,7 +146,7 @@ class PermissionsHashTest extends UnitTestCase {
     $this->cache->expects($this->never())
       ->method('set');
 
-    $this->permissionsHash->generate($this->account_1);
+    $this->permissionsHash->generate($this->account1);
   }
 
   /**
@@ -164,7 +164,7 @@ class PermissionsHashTest extends UnitTestCase {
       ->method('set')
       ->with($expected_cid, $this->isType('string'));
 
-    $this->permissionsHash->generate($this->account_1);
+    $this->permissionsHash->generate($this->account1);
   }
 
 }

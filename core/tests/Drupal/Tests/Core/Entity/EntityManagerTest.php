@@ -128,6 +128,13 @@ class EntityManagerTest extends UnitTestCase {
   protected $eventDispatcher;
 
   /**
+   * The form builder.
+   *
+   * @var \Drupal\Core\Form\FormBuilderInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $formBuilder;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {

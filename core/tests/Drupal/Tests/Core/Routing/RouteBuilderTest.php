@@ -51,7 +51,7 @@ class RouteBuilderTest extends UnitTestCase {
   protected $dispatcher;
 
   /**
-   * The mocked yaml discovery.
+   * The mocked YAML discovery.
    *
    * @var \Drupal\Component\Discovery\YamlDiscovery|\PHPUnit_Framework_MockObject_MockObject
    */
@@ -276,15 +276,22 @@ class RouteBuilderTest extends UnitTestCase {
 }
 
 /**
- * Extends the core route builder with a setter method for the yaml discovery.
+ * Extends the core route builder with a setter method for the YAML discovery.
  */
 class TestRouteBuilder extends RouteBuilder {
 
   /**
-   * Sets the yaml discovery.
+   * The mocked YAML discovery.
+   *
+   * @var \Drupal\Component\Discovery\YamlDiscovery|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $yamlDiscovery;
+
+  /**
+   * Sets the YAML discovery.
    *
    * @param \Drupal\Component\Discovery\YamlDiscovery $yaml_discovery
-   *   The yaml discovery to set.
+   *   The YAML discovery to set.
    */
   public function setYamlDiscovery(YamlDiscovery $yaml_discovery) {
     $this->yamlDiscovery = $yaml_discovery;

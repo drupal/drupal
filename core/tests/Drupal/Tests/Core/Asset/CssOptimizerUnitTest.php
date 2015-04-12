@@ -55,20 +55,6 @@ class CssOptimizerUnitTest extends UnitTestCase {
    */
   protected $optimizer;
 
-  /**
-   * A valid file CSS asset group.
-   *
-   * @var array
-   */
-  protected $file_css_group;
-
-  /**
-   * A valid inline CSS asset group.
-   *
-   * @var array
-   */
-  protected $inline_css_group;
-
   protected function setUp() {
     parent::setUp();
 

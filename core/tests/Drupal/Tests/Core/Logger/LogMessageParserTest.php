@@ -17,13 +17,6 @@ use Drupal\Tests\UnitTestCase;
 class LogMessageParserTest extends UnitTestCase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    $this->parser = new LogMessageParser();
-  }
-
-  /**
    * Test for LogMessageParserTrait::parseMessagePlaceholders()
    *
    * @param array $value
@@ -39,7 +32,8 @@ class LogMessageParserTest extends UnitTestCase {
    * @covers ::parseMessagePlaceholders
    */
   public function testParseMessagePlaceholders(array $value, array $expected) {
-    $message_placeholders = $this->parser->parseMessagePlaceholders($value['message'], $value['context']);
+    $parser = new LogMessageParser();
+    $message_placeholders = $parser->parseMessagePlaceholders($value['message'], $value['context']);
     $this->assertEquals($expected['message'], $value['message']);
     $this->assertEquals($expected['context'], $message_placeholders);
   }
