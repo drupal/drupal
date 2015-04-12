@@ -220,12 +220,12 @@ class CommentInterfaceTest extends CommentTestBase {
     $body_text = 'Lorem ipsum Lorem ipsum Loreming ipsum Lorem ipsum';
     $comment1 = $this->postComment(NULL, $body_text, '', TRUE);
     $this->assertTrue($this->commentExists($comment1), 'Form comment found.');
-    $this->assertEqual('Lorem ipsum Lorem ipsum', $comment1->getSubject());
+    $this->assertEqual('Lorem ipsum Lorem ipsum…', $comment1->getSubject());
 
     // Break at 29 characters where there's no boundary before that.
     $body_text2 = 'LoremipsumloremipsumLoremingipsumLoremipsum';
     $comment2 = $this->postComment(NULL, $body_text2, '', TRUE);
-    $this->assertEqual('LoremipsumloremipsumLoremingi', $comment2->getSubject());
+    $this->assertEqual('LoremipsumloremipsumLoreming…', $comment2->getSubject());
   }
 
   /**

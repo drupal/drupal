@@ -301,7 +301,7 @@ class CommentForm extends ContentEntityForm {
       // 2) Strip out all HTML tags
       // 3) Convert entities back to plain-text.
       $comment_text = $comment->comment_body->processed;
-      $comment->setSubject(Unicode::truncate(trim(Html::decodeEntities(strip_tags($comment_text))), 29, TRUE));
+      $comment->setSubject(Unicode::truncate(trim(Html::decodeEntities(strip_tags($comment_text))), 29, TRUE, TRUE));
       // Edge cases where the comment body is populated only by HTML tags will
       // require a default subject.
       if ($comment->getSubject() == '') {
