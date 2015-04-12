@@ -85,15 +85,12 @@ label[for] {
 
 
 /* Filter */
-.filter-wrapper {
-  font-size: 0.923em;
-}
 ul.tips,
 div.description,
 .form-item .description {
   margin: 0.2em 0 0 0;
   color: #595959;
-  font-size: 0.9em;
+  font-size: 0.95em;
 }
 .form-item .description.error {
   color: #a51b00;

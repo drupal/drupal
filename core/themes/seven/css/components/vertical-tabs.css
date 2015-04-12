@@ -91,14 +91,10 @@
   border: 0;
   color: #595959;
 }
-.vertical-tabs__menu-item-title {
-  font-size: 0.923em;
-}
 .vertical-tabs__menu-item-summary {
   display: block;
   padding-top: 0.4em;
   color: #666;
-  font-size: 0.846em;
 }
 .vertical-tabs__pane > summary {
   display: none;

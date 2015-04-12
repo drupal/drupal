@@ -30,11 +30,6 @@ details.fieldset-no-legend {
   padding: 0;
 }
 
-.views-admin .form-item label.option,
-#views-ui-preview-form .form-item label.option {
-  font-size: 1em;
-}
-
 .views-admin input.form-submit,
 .views-ui-dialog input.form-submit,
 .views-admin a.button,
@@ -214,7 +209,6 @@ details.fieldset-no-legend {
  */
 
 .views-ui-display-tab-bucket h3 {
-  font-size: 12px;
   text-transform: uppercase;
 }
 
