@@ -66,7 +66,7 @@ class SchemaCheckTraitTest extends KernelTestBase {
       'config_test.types:new_array' => 'missing schema',
       'config_test.types:boolean' => 'non-scalar value but not defined as an array (such as mapping or sequence)',
     );
-    $this->assertIdentical($ret, $expected);
+    $this->assertEqual($ret, $expected);
   }
 
 }
