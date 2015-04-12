@@ -108,6 +108,9 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
       'config:user.role.anonymous',
     ));
 
+    // Render the view block adds the languages cache context.
+    $cache_contexts[] = 'languages:' . LanguageInterface::TYPE_CONTENT;
+
     // Full node page 2.
     $this->assertPageCacheContextsAndTags($node_2->urlInfo(), $cache_contexts, array(
       'rendered',

@@ -45,6 +45,9 @@ class CommentRestExportTest extends CommentTestBase {
     );
     $this->comment = entity_create('comment', $comment);
     $this->comment->save();
+
+    $user = $this->drupalCreateUser(['access comments']);
+    $this->drupalLogin($user);
   }
 
 

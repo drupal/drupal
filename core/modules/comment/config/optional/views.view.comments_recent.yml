@@ -65,7 +65,10 @@ display:
           table: comment_field_data
           field: subject
           relationship: none
-          plugin_id: comment
+          type: string
+          settings:
+            link_to_entity: true
+          plugin_id: field
           group_type: group
           admin_label: ''
           label: ''
@@ -109,8 +112,6 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          link_to_comment: true
-          link_to_entity: false
           entity_type: comment
           entity_field: subject
         changed:
@@ -215,9 +216,7 @@ display:
           admin_label: ''
           order: DESC
           exposed: false
-          expose:
-            label: ''
-          plugin_id: standard
+          plugin_id: field
           entity_type: comment
           entity_field: cid
       title: 'Recent comments'

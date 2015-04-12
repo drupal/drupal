@@ -27,9 +27,6 @@ class CommentViewsData extends EntityViewsData {
 
     $data['comment_field_data']['subject']['title'] = t('Title');
     $data['comment_field_data']['subject']['help'] = t('The title of the comment.');
-    $data['comment_field_data']['subject']['field']['id'] = 'comment';
-
-    $data['comment_field_data']['cid']['field']['id'] = 'comment';
 
     $data['comment_field_data']['name']['title'] = t('Author');
     $data['comment_field_data']['name']['help'] = t("The name of the comment's author. Can be rendered as a link to the author's homepage.");

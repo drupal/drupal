@@ -114,19 +114,20 @@ class DefaultViewRecentCommentsTest extends ViewTestBase {
    * Tests the block defined by the comments_recent view.
    */
   public function testBlockDisplay() {
+    $user = $this->drupalCreateUser(['access comments']);
+    $this->drupalLogin($user);
+
     $view = Views::getView('comments_recent');
     $view->setDisplay('block_1');
     $this->executeView($view);
 
     $map = array(
-      'comment_field_data_entity_id' => 'entity_id',
-      'comment_field_data_subject' => 'subject',
+      'subject' => 'subject',
       'cid' => 'cid',
       'comment_field_data_created' => 'created'
     );
     $expected_result = array();
     foreach (array_values($this->commentsCreated) as $key => $comment) {
-      $expected_result[$key]['entity_id'] = $comment->getCommentedEntityId();
       $expected_result[$key]['subject'] = $comment->getSubject();
       $expected_result[$key]['cid'] = $comment->id();
       $expected_result[$key]['created'] = $comment->getCreatedTime();

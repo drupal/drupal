@@ -45,7 +45,7 @@ display:
           id: subject
           table: comment_field_data
           field: subject
-          plugin_id: comment
+          plugin_id: field
           label: ''
           alter:
             alter_text: false
@@ -58,7 +58,9 @@ display:
             html: false
           hide_empty: false
           empty_zero: false
-          link_to_comment: true
+          type: string
+          settings:
+            link_to_entity: true
           entity_type: comment
           entity_field: subject
       filters: {  }

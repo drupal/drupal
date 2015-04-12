@@ -98,7 +98,6 @@ display:
             html: false
           hide_empty: false
           empty_zero: false
-          link_to_comment: true
           relationship: none
           group_type: group
           admin_label: ''
@@ -113,8 +112,10 @@ display:
           element_default_classes: true
           empty: ''
           hide_alter_empty: true
-          link_to_entity: false
-          plugin_id: comment
+          type: string
+          settings:
+            link_to_entity: true
+          plugin_id: field
           entity_type: comment
           entity_field: subject
       filters:

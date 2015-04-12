@@ -64,11 +64,11 @@ class CommentViewsFieldAccessTest extends FieldFieldAccessTestBase {
 
     // @todo Expand the test coverage in https://www.drupal.org/node/2464635
 
-    // $this->assertFieldAccess('comment', 'cid', $comment->id());
-    // $this->assertFieldAccess('comment', 'cid', $comment_anonymous->id());
+    $this->assertFieldAccess('comment', 'cid', $comment->id());
+    $this->assertFieldAccess('comment', 'cid', $comment_anonymous->id());
     $this->assertFieldAccess('comment', 'uuid', $comment->uuid());
-    // $this->assertFieldAccess('comment', 'subject', 'My comment title');
-    // $this->assertFieldAccess('comment', 'subject', 'Anonymous comment title');
+    $this->assertFieldAccess('comment', 'subject', 'My comment title');
+    $this->assertFieldAccess('comment', 'subject', 'Anonymous comment title');
     $this->assertFieldAccess('comment', 'name', 'anonymous');
     $this->assertFieldAccess('comment', 'mail', 'test@example.com');
     $this->assertFieldAccess('comment', 'homepage', 'https://example.com');

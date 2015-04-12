@@ -4,17 +4,6 @@ views.argument.argument_comment_user_uid:
   type: views_argument
   label: 'Commented user ID'
 
-views.field.comment:
-  type: views_field
-  label: 'Comment'
-  mapping:
-    link_to_comment:
-      type: boolean
-      label: 'Link this field to its comment'
-    link_to_entity:
-      type: boolean
-      label: 'Link field to the entity if there is no comment'
-
 views.field.comment_depth:
   type: views_field
   label: 'Comment depth'

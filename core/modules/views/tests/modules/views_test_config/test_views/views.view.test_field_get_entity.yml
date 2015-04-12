@@ -27,7 +27,7 @@ display:
           field: cid
           id: cid
           table: comment_field_data
-          plugin_id: comment
+          plugin_id: field
           entity_type: comment
           entity_field: cid
         nid:

@@ -140,9 +140,10 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          link_to_comment: true
-          link_to_entity: false
-          plugin_id: comment
+          type: string
+          settings:
+            link_to_entity: false
+          plugin_id: field
         name:
           id: name
           table: comment_field_data

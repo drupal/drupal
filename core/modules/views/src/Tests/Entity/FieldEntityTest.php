@@ -67,6 +67,9 @@ class FieldEntityTest extends ViewTestBase {
     ));
     $comment->save();
 
+    $user = $this->drupalCreateUser(['access comments']);
+    $this->drupalLogin($user);
+
     $view = Views::getView('test_field_get_entity');
     $this->executeView($view);
     $row = $view->result[0];

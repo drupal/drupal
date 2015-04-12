@@ -62,7 +62,7 @@ class CommentUserNameTest extends ViewUnitTestBase {
 
     /* @var \Drupal\user\RoleInterface $anonymous_role */
     $anonymous_role = Role::load(Role::ANONYMOUS_ID);
-    $anonymous_role->grantPermission('view comments');
+    $anonymous_role->grantPermission('access comments');
     $anonymous_role->save();
 
     $this->adminUser = User::create([
@@ -121,6 +121,10 @@ class CommentUserNameTest extends ViewUnitTestBase {
                 'field' => 'subject',
                 'id' => 'subject',
                 'plugin_id' => 'field',
+                'type' => 'string',
+                'settings' => [
+                  'link_to_entity' => TRUE,
+                ],
               ],
             ],
           ],
@@ -153,7 +157,8 @@ class CommentUserNameTest extends ViewUnitTestBase {
 
     // No access to user-profiles, so shouldn't be able to see links.
     $this->assertNoLink($this->adminUser->label());
-    $this->assertNoLink('barry (not verified)');
+    // Note: External users aren't pointing to drupal user profiles.
+    $this->assertLink('barry (not verified)');
     $this->verbose($this->getRawContent());
     $this->assertLink('My comment title');
     $this->assertLink('Anonymous comment title');

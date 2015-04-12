@@ -101,8 +101,9 @@ class Comment extends WizardPluginBase {
     $display_options['fields']['subject']['alter']['html'] = 0;
     $display_options['fields']['subject']['hide_empty'] = 0;
     $display_options['fields']['subject']['empty_zero'] = 0;
-    $display_options['fields']['subject']['link_to_comment'] = 1;
-    $display_options['fields']['subject']['plugin_id'] = 'comment';
+    $display_options['fields']['subject']['plugin_id'] = 'field';
+    $display_options['fields']['subject']['type'] = 'string';
+    $display_options['fields']['subject']['settings'] = ['link_to_entity' => TRUE];
 
     return $display_options;
   }

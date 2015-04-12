@@ -7,7 +7,7 @@
 
 namespace Drupal\comment\Plugin\views\field;
 
-use Drupal\views\Plugin\views\field\FieldPluginBase;
+use Drupal\views\Plugin\views\field\Field;
 use Drupal\views\ResultRow;
 
 /**
@@ -17,15 +17,20 @@ use Drupal\views\ResultRow;
  *
  * @ViewsField("comment_depth")
  */
-class Depth extends FieldPluginBase {
+class Depth extends Field {
 
   /**
    * {@inheritdoc}
    */
-  public function render(ResultRow $values) {
-    // Work out the depth of this comment.
-    $comment_thread = $this->getValue($values);
-    return count(explode('.', $comment_thread)) - 1;
+  public function getItems(ResultRow $values) {
+    $items = parent::getItems($values);
+
+    foreach ($items as &$item) {
+      // Work out the depth of this comment.
+      $comment_thread = $item['rendered']['#markup'];
+      $item['rendered']['#markup'] =  count(explode('.', $comment_thread)) - 1;
+    }
+    return $items;
   }
 
 }
