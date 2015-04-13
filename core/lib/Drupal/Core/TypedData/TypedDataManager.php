@@ -81,7 +81,7 @@ class TypedDataManager extends DefaultPluginManager {
    *   The data type, for which a typed object should be instantiated.
    * @param array $configuration
    *   The plugin configuration array, i.e. an array with the following keys:
-   *   - data definition: The data definition object, i.e. an instance of
+   *   - data_definition: The data definition object, i.e. an instance of
    *     \Drupal\Core\TypedData\DataDefinitionInterface.
    *   - name: (optional) If a property or list item is to be created, the name
    *     of the property or the delta of the list item.
