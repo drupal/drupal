@@ -18,18 +18,6 @@ use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
- * Retrieves, populates, and processes a form.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::formBuilder()->submitForm().
- *
- * @see \Drupal\Core\Form\FormBuilderInterface::submitForm().
- */
-function drupal_form_submit($form_arg, FormStateInterface $form_state) {
-  \Drupal::formBuilder()->submitForm($form_arg, $form_state);
-}
-
-/**
  * Prepares variables for select element templates.
  *
  * Default template: select.html.twig.
