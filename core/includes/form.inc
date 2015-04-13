@@ -669,6 +669,20 @@ function template_preprocess_form_element_label(&$variables) {
  *     the batch.
  *   - safe_strings: Internal use only. Used to store and retrieve strings
  *     marked as safe between requests.
+ *   - progressive: A Boolean that indicates whether or not the batch needs to
+ *     run progressively. TRUE indicates that the batch will run in more than
+ *     one run. FALSE (default) indicates that the batch will finish in a single
+ *     run.
+ *   - queue: An override of the default queue (with name and class fields
+ *     optional). An array containing two elements:
+ *     - name: Unique identifier for the queue.
+ *     - class: The name of a class that implements
+ *       \Drupal\Core\Queue\QueueInterface, including the full namespace but not
+ *       starting with a backslash. It must have a constructor with two
+ *       arguments: $name and a \Drupal\Core\Database\Connection object.
+ *       Typically, the class will either be \Drupal\Core\Queue\Batch or
+ *       \Drupal\Core\Queue\BatchMemory. Defaults to Batch if progressive is
+ *       TRUE, or to BatchMemory if progressive is FALSE.
  */
 function batch_set($batch_definition) {
   if ($batch_definition) {
