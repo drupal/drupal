@@ -7,24 +7,26 @@
 
 namespace Drupal\Core\Routing;
 
-use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-
+use Symfony\Component\Routing\RequestContext as SymfonyRequestContext;
 use Symfony\Component\Routing\Route as SymfonyRoute;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
-
-use Symfony\Cmf\Component\Routing\ProviderBasedGenerator;
-
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
 use Drupal\Core\RouteProcessor\OutboundRouteProcessorInterface;
+use Symfony\Component\Routing\Exception\InvalidParameterException;
+use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 
 /**
  * Generates URLs from route names and parameters.
  */
-class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterface {
+class UrlGenerator implements UrlGeneratorInterface {
+
+  /**
+   * @var RequestContext
+   */
+  protected $context;
 
   /**
    * A request stack object.
@@ -70,13 +72,12 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
    *   The route processor.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config
    *    The config factory.
-   * @param \Psr\Log\LoggerInterface $logger
-   *   An optional logger for recording errors.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   A request stack object.
    */
-  public function __construct(RouteProviderInterface $provider, OutboundPathProcessorInterface $path_processor, OutboundRouteProcessorInterface $route_processor, ConfigFactoryInterface $config, LoggerInterface $logger = NULL, RequestStack $request_stack) {
-    parent::__construct($provider, $logger);
+  public function __construct(RouteProviderInterface $provider, OutboundPathProcessorInterface $path_processor, OutboundRouteProcessorInterface $route_processor, ConfigFactoryInterface $config, RequestStack $request_stack) {
+    $this->provider = $provider;
+    $this->context = new RequestContext();
 
     $this->pathProcessor = $path_processor;
     $this->routeProcessor = $route_processor;
@@ -88,10 +89,39 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
   /**
    * {@inheritdoc}
    */
+  public function setContext(SymfonyRequestContext $context) {
+    $this->context = $context;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getContext() {
+    return $this->context;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setStrictRequirements($enabled) {
+    // Ignore changes to this.
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isStrictRequirements() {
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getPathFromRoute($name, $parameters = array()) {
     $route = $this->getRoute($name);
+    $name = $this->getRouteDebugMessage($name);
     $this->processRoute($name, $route, $parameters);
-    $path = $this->getInternalPathFromRoute($route, $parameters);
+    $path = $this->getInternalPathFromRoute($name, $route, $parameters);
     // Router-based paths may have a querystring on them but Drupal paths may
     // not have one, so remove any ? and anything after it. For generate() this
     // is handled in processPath().
@@ -100,39 +130,138 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
   }
 
   /**
+   * Substitute the route parameters into the route path.
+   *
+   * Note: This code was copied from
+   * \Symfony\Component\Routing\Generator\UrlGenerator::doGenerate() and
+   * shortened by removing code that is not relevant to Drupal or that is
+   * handled separately in ::generateFromRoute(). The Symfony version should be
+   * examined for changes in new Symfony releases.
+   *
+   * @param array $variables
+   *   The variables form the compiled route, corresponding to slugs in the
+   *   route path.
+   * @param array $defaults
+   *   The defaults from the route.
+   * @param array $tokens
+   *   The tokens from the compiled route.
+   * @param array $parameters
+   *   The route parameters passed to the generator. Parameters that do not
+   *   match any variables will be added to the result as query parameters.
+   * @param array $query_params
+   *   Query parameters passed to the generator as $options['query'].
+   * @param string $name
+   *   The route name or other identifying string from ::getRouteDebugMessage().
+   *
+   *
+   * @return string
+   *   The url path, without any base path, including possible query string.
+   *
+   * @throws MissingMandatoryParametersException
+   *   When some parameters are missing that are mandatory for the route
+   * @throws InvalidParameterException
+   *   When a parameter value for a placeholder is not correct because it does
+   *   not match the requirement
+   */
+  protected function doGenerate(array $variables, array $defaults, array $tokens, array $parameters, array $query_params, $name) {
+    $variables = array_flip($variables);
+    $mergedParams = array_replace($defaults, $this->context->getParameters(), $parameters);
+
+    // all params must be given
+    if ($diff = array_diff_key($variables, $mergedParams)) {
+      throw new MissingMandatoryParametersException(sprintf('Some mandatory parameters are missing ("%s") to generate a URL for route "%s".', implode('", "', array_keys($diff)), $name));
+    }
+
+    $url = '';
+    // Tokens start from the end of the path and work to the beginning. The
+    // first one or several variable tokens may be optional, but once we find a
+    // supplied token or a static text portion of the path, all remaining
+    // variables up to the start of the path must be supplied to there is no gap.
+    $optional = TRUE;
+    // Structure of $tokens from the compiled route:
+    // If the path is /admin/config/user-interface/shortcut/manage/{shortcut_set}/add-link-inline
+    // [ [ 0 => 'text', 1 => '/add-link-inline' ], [ 0 => 'variable', 1 => '/', 2 => '[^/]++', 3 => 'shortcut_set' ], [ 0 => 'text', 1 => '/admin/config/user-interface/shortcut/manage' ] ]
+    //
+    // For a simple fixed path, there is just one token.
+    // If the path is /admin/config
+    // [ [ 0 => 'text', 1 => '/admin/config' ] ]
+    foreach ($tokens as $token) {
+      if ('variable' === $token[0]) {
+        if (!$optional || !array_key_exists($token[3], $defaults) || (isset($mergedParams[$token[3]]) && (string) $mergedParams[$token[3]] !== (string) $defaults[$token[3]])) {
+          // check requirement
+          if (!preg_match('#^'.$token[2].'$#', $mergedParams[$token[3]])) {
+            $message = sprintf('Parameter "%s" for route "%s" must match "%s" ("%s" given) to generate a corresponding URL.', $token[3], $name, $token[2], $mergedParams[$token[3]]);
+            throw new InvalidParameterException($message);
+          }
+
+          $url = $token[1] . $mergedParams[$token[3]] . $url;
+          $optional = FALSE;
+        }
+      }
+      else {
+        // Static text
+        $url = $token[1] . $url;
+        $optional = FALSE;
+      }
+    }
+
+    if ('' === $url) {
+      $url = '/';
+    }
+
+    // The contexts base URL is already encoded (see Symfony\Component\HttpFoundation\Request)
+    $url = strtr(rawurlencode($url), $this->decodedChars);
+
+    // Drupal paths rarely include dots, so skip this processing if possible.
+    if (strpos($url, '/.') !== FALSE) {
+      // the path segments "." and ".." are interpreted as relative reference when
+      // resolving a URI; see http://tools.ietf.org/html/rfc3986#section-3.3
+      // so we need to encode them as they are not used for this purpose here
+      // otherwise we would generate a URI that, when followed by a user agent
+      // (e.g. browser), does not match this route
+      $url = strtr($url, array('/../' => '/%2E%2E/', '/./' => '/%2E/'));
+      if ('/..' === substr($url, -3)) {
+        $url = substr($url, 0, -2) . '%2E%2E';
+      }
+      elseif ('/.' === substr($url, -2)) {
+        $url = substr($url, 0, -1) . '%2E';
+      }
+    }
+
+    // Add a query string if needed, including extra parameters.
+    $query_params += array_diff_key($parameters, $variables, $defaults);
+    if ($query_params && $query = http_build_query($query_params, '', '&')) {
+      // "/" and "?" can be left decoded for better user experience, see
+      // http://tools.ietf.org/html/rfc3986#section-3.4
+      $url .= '?'.strtr($query, array('%2F' => '/'));
+    }
+
+    return $url;
+  }
+
+  /**
    * Gets the path of a route.
    *
+   * @param $name
+   *   The route name or other debug message.
    * @param \Symfony\Component\Routing\Route $route
    *  The route object.
    * @param array $parameters
    *  An array of parameters as passed to
    *  \Symfony\Component\Routing\Generator\UrlGeneratorInterface::generate().
+   * @param array $query_params
+   *   An array of query string parameter, which will get any extra values from
+   *   $parameters merged in.
    *
    * @return string
    *  The url path corresponding to the route, without the base path.
    */
-  protected function getInternalPathFromRoute(SymfonyRoute $route, $parameters = array()) {
+  protected function getInternalPathFromRoute($name, SymfonyRoute $route, $parameters = array(), $query_params = array()) {
     // The Route has a cache of its own and is not recompiled as long as it does
     // not get modified.
     $compiledRoute = $route->compile();
-    $hostTokens = $compiledRoute->getHostTokens();
 
-    $route_requirements = $route->getRequirements();
-    // We need to bypass the doGenerate() method's handling of absolute URLs as
-    // we handle that ourselves after processing the path.
-    if (isset($route_requirements['_scheme'])) {
-      unset($route_requirements['_scheme']);
-    }
-    $path = $this->doGenerate($compiledRoute->getVariables(), $route->getDefaults(), $route_requirements, $compiledRoute->getTokens(), $parameters, $route->getPath(), FALSE, $hostTokens);
-
-    // The URL returned from doGenerate() will include the base path if there is
-    // one (i.e., if running in a subdirectory) so we need to strip that off
-    // before processing the path.
-    $base_url = $this->context->getBaseUrl();
-    if (!empty($base_url) && strpos($path, $base_url) === 0) {
-      $path = substr($path, strlen($base_url));
-    }
-    return $path;
+    return $this->doGenerate($compiledRoute->getVariables(), $route->getDefaults(), $compiledRoute->getTokens(), $parameters, $query_params, $name);
   }
 
   /**
@@ -149,14 +278,16 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
   public function generateFromRoute($name, $parameters = array(), $options = array()) {
     $options += array('prefix' => '');
     $route = $this->getRoute($name);
+    $name = $this->getRouteDebugMessage($name);
     $this->processRoute($name, $route, $parameters);
 
+    $query_params = [];
     // Symfony adds any parameters that are not path slugs as query strings.
     if (isset($options['query']) && is_array($options['query'])) {
-      $parameters = (array) $parameters + $options['query'];
+      $query_params = $options['query'];
     }
 
-    $path = $this->getInternalPathFromRoute($route, $parameters);
+    $path = $this->getInternalPathFromRoute($name, $route, $parameters, $query_params);
     $path = $this->processPath($path, $options);
 
     if (!empty($options['prefix'])) {
@@ -346,12 +477,12 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
   /**
    * Passes the route to the processor manager for altering before compilation.
    *
+   * @param string $name
+   *   The route name.
    * @param \Symfony\Component\Routing\Route $route
    *   The route object to process.
    * @param array $parameters
    *   An array of parameters to be passed to the route compiler.
-   * @param string $name
-   *   The route name.
    */
   protected function processRoute($name, SymfonyRoute $route, array &$parameters) {
     $this->routeProcessor->processOutbound($name, $route, $parameters);
@@ -381,4 +512,26 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
     return $route;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  public function supports($name) {
+    // Support a route object and any string as route name.
+    return is_string($name) || $name instanceof SymfonyRoute;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getRouteDebugMessage($name, array $parameters = array()) {
+    if (is_scalar($name)) {
+      return $name;
+    }
+
+    if ($name instanceof SymfonyRoute) {
+      return 'Route with pattern ' . $name->getPath();
+    }
+
+    return serialize($name);
+  }
 }

@@ -685,7 +685,7 @@ services:
       - { name: event_subscriber }
   url_generator:
     class: Drupal\Core\Routing\UrlGenerator
-    arguments: ['@router.route_provider', '@path_processor_manager', '@route_processor_manager', '@config.factory', '@logger.channel.default', '@request_stack']
+    arguments: ['@router.route_provider', '@path_processor_manager', '@route_processor_manager', '@config.factory', '@request_stack']
     calls:
       - [setContext, ['@?router.request_context']]
   redirect.destination:

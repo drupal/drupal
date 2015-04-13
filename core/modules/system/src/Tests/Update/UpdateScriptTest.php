@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Update;
 
+use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -44,7 +45,7 @@ class UpdateScriptTest extends WebTestBase {
 
   protected function setUp() {
     parent::setUp();
-    $this->updateUrl = $GLOBALS['base_url'] . '/update.php';
+    $this->updateUrl = Url::fromRoute('system.db_update');
     $this->updateUser = $this->drupalCreateUser(array('administer software updates', 'access site in maintenance mode'));
     \Drupal::service('entity.definition_update_manager')->applyUpdates();
   }

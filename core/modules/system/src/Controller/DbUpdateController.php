@@ -601,7 +601,7 @@ class DbUpdateController extends ControllerBase {
     );
     batch_set($batch);
 
-    return batch_process('update.php/results', Url::fromRoute('system.db_update'));
+    return batch_process('update.php/results', Url::fromRoute('system.db_update', array('op' => 'start')));
   }
 
   /**

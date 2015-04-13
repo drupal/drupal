@@ -129,7 +129,7 @@ class UrlGeneratorTest extends UnitTestCase {
 
     $config_factory_stub = $this->getConfigFactoryStub(array('system.filter' => array('protocols' => array('http', 'https'))));
 
-    $generator = new UrlGenerator($provider, $processor_manager, $this->routeProcessorManager, $config_factory_stub, NULL, $this->requestStack);
+    $generator = new UrlGenerator($provider, $processor_manager, $this->routeProcessorManager, $config_factory_stub, $this->requestStack);
     $generator->setContext($context);
     $this->generator = $generator;
   }

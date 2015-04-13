@@ -91,8 +91,8 @@ interface UrlGeneratorInterface extends VersatileGeneratorInterface {
   /**
    * Gets the internal path (system path) of a route.
    *
-   * @param string $name
-   *  The route name.
+   * @param string|\Symfony\Component\Routing\Route $name
+   *  The route name or a route object.
    * @param array $parameters
    *  An array of parameters as passed to
    *  \Symfony\Component\Routing\Generator\UrlGeneratorInterface::generate().
@@ -112,15 +112,15 @@ interface UrlGeneratorInterface extends VersatileGeneratorInterface {
    * substituted for them in the pattern. Extra params are added as query
    * strings to the URL.
    *
-   * @param string $name
-   *   The name of the route
+   * @param string|\Symfony\Component\Routing\Route $name
+   *   The route name or a route object.
    * @param array  $parameters
    *   An associative array of parameter names and values.
    * @param array $options
    *   (optional) An associative array of additional options, with the following
    *   elements:
    *   - 'query': An array of query key/value-pairs (without any URL-encoding)
-   *     to append to the URL. Merged with the parameters array.
+   *     to append to the URL.
    *   - 'fragment': A fragment identifier (named anchor) to append to the URL.
    *     Do not include the leading '#' character.
    *   - 'absolute': Defaults to FALSE. Whether to force the output to be an
@@ -141,7 +141,7 @@ interface UrlGeneratorInterface extends VersatileGeneratorInterface {
    *   The generated URL for the given route.
    *
    * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException
-   *   Thrown when the named route doesn't exist.
+   *   Thrown when the named route does not exist.
    * @throws \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
    *   Thrown when some parameters are missing that are mandatory for the route.
    * @throws \Symfony\Component\Routing\Exception\InvalidParameterException
