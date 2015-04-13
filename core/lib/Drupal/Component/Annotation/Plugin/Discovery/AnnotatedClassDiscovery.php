@@ -25,7 +25,7 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
   /**
    * The namespaces within which to find plugin classes.
    *
-   * @var array
+   * @var string[]
    */
   protected $pluginNamespaces;
 
@@ -47,9 +47,9 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
   protected $annotationReader;
 
   /**
-   * Constructs an AnnotatedClassDiscovery object.
+   * Constructs a new instance.
    *
-   * @param array $plugin_namespaces
+   * @param string[] $plugin_namespaces
    *   (optional) An array of namespace that may contain plugin implementations.
    *   Defaults to an empty array.
    * @param string $plugin_definition_annotation_name
@@ -79,7 +79,7 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
   }
 
   /**
-   * Implements Drupal\Component\Plugin\Discovery\DiscoveryInterface::getDefinitions().
+   * {@inheritdoc}
    */
   public function getDefinitions() {
     $definitions = array();
@@ -113,8 +113,6 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
               /** @var $annotation \Drupal\Component\Annotation\AnnotationInterface */
               if ($annotation = $reader->getClassAnnotation($parser->getReflectionClass(), $this->pluginDefinitionAnnotationName)) {
                 $this->prepareAnnotationDefinition($annotation, $class);
-                // AnnotationInterface::get() returns the array definition
-                // instead of requiring us to work with the annotation object.
                 $definitions[$annotation->getId()] = $annotation->get();
               }
             }
@@ -143,6 +141,8 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
 
   /**
    * Returns an array of PSR-0 namespaces to search for plugin classes.
+   *
+   * @return string[]
    */
   protected function getPluginNamespaces() {
     return $this->pluginNamespaces;
