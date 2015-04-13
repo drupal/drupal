@@ -680,7 +680,7 @@ function _drupal_error_handler($error_level, $message, $filename, $line, $contex
  * always fatal: the execution of the script will stop as soon as the exception
  * handler exits.
  *
- * @param $exception
+ * @param \Exception|\BaseException $exception
  *   The exception object that was thrown.
  */
 function _drupal_exception_handler($exception) {
@@ -690,14 +690,32 @@ function _drupal_exception_handler($exception) {
     // Log the message to the watchdog and return an error page to the user.
     _drupal_log_error(Error::decodeException($exception), TRUE);
   }
+  // PHP 7 introduces BaseExceptions.
+  catch (BaseException $exception2) {
+    _drupal_exception_handler_additional($exception, $exception2);
+  }
+  // In order to be compatibile with PHP 5 we also catch regular Exceptions.
   catch (Exception $exception2) {
-    // Another uncaught exception was thrown while handling the first one.
-    // If we are displaying errors, then do so with no possibility of a further uncaught exception being thrown.
-    if (error_displayable()) {
-      print '<h1>Additional uncaught exception thrown while handling exception.</h1>';
-      print '<h2>Original</h2><p>' . Error::renderExceptionSafe($exception) . '</p>';
-      print '<h2>Additional</h2><p>' . Error::renderExceptionSafe($exception2) . '</p><hr />';
-    }
+    _drupal_exception_handler_additional($exception, $exception2);
+  }
+}
+
+/**
+ * Displays any additional errors caught while handling an exception.
+ *
+ * @param \Exception|\BaseException $exception
+ *   The first exception object that was thrown.
+ * @param \Exception|\BaseException $exception
+ *   The second exception object that was thrown.
+ */
+function _drupal_exception_handler_additional($exception, $exception2) {
+  // Another uncaught exception was thrown while handling the first one.
+  // If we are displaying errors, then do so with no possibility of a further
+  // uncaught exception being thrown.
+  if (error_displayable()) {
+    print '<h1>Additional uncaught exception thrown while handling exception.</h1>';
+    print '<h2>Original</h2><p>' . Error::renderExceptionSafe($exception) . '</p>';
+    print '<h2>Additional</h2><p>' . Error::renderExceptionSafe($exception2) . '</p><hr />';
   }
 }
 
@@ -1081,18 +1099,35 @@ function _drupal_shutdown_function() {
       call_user_func_array($callback['callback'], $callback['arguments']);
     }
   }
-  catch (Exception $exception) {
-    // If using PHP-FPM then fastcgi_finish_request() will have been fired
-    // preventing further output to the browser.
-    if (!function_exists('fastcgi_finish_request')) {
-      // If we are displaying errors, then do so with no possibility of a
-      // further uncaught exception being thrown.
-      require_once __DIR__ . '/errors.inc';
-      if (error_displayable()) {
-        print '<h1>Uncaught exception thrown in shutdown function.</h1>';
-        print '<p>' . Error::renderExceptionSafe($exception) . '</p><hr />';
-      }
-    }
-    error_log($exception);
+  // PHP 7 introduces BaseExceptions.
+  catch (BaseException $exception) {
+    _drupal_shutdown_function_handle_exception($exception);
   }
+  // In order to be compatibile with PHP 5 we also catch regular Exceptions.
+  catch (Exception $exception) {
+    _drupal_shutdown_function_handle_exception($exception);
+  }
+}
+
+/**
+ * Displays and logs any errors that may happen during shutdown.
+ *
+ * @param \Exception|\BaseException $exception
+ *   The exception object that was thrown.
+ *
+ * @see _drupal_shutdown_function()
+ */
+function _drupal_shutdown_function_handle_exception($exception) {
+  // If using PHP-FPM then fastcgi_finish_request() will have been fired
+  // preventing further output to the browser.
+  if (!function_exists('fastcgi_finish_request')) {
+    // If we are displaying errors, then do so with no possibility of a
+    // further uncaught exception being thrown.
+    require_once __DIR__ . '/errors.inc';
+    if (error_displayable()) {
+      print '<h1>Uncaught exception thrown in shutdown function.</h1>';
+      print '<p>' . Error::renderExceptionSafe($exception) . '</p><hr />';
+    }
+  }
+  error_log($exception);
 }

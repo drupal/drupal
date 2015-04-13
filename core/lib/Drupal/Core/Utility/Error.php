@@ -33,13 +33,13 @@ class Error {
   /**
    * Decodes an exception and retrieves the correct caller.
    *
-   * @param \Exception $exception
+   * @param \Exception|\BaseException $exception
    *   The exception object that was thrown.
    *
    * @return array
    *   An error in the format expected by _drupal_log_error().
    */
-  public static function decodeException(\Exception $exception) {
+  public static function decodeException($exception) {
     $message = $exception->getMessage();
 
     $backtrace = $exception->getTrace();
@@ -82,13 +82,13 @@ class Error {
   /**
    * Renders an exception error message without further exceptions.
    *
-   * @param \Exception $exception
+   * @param \Exception|\BaseException $exception
    *   The exception object that was thrown.
    *
    * @return string
    *   An error message.
    */
-  public static function renderExceptionSafe(\Exception $exception) {
+  public static function renderExceptionSafe($exception) {
     $decode = static::decodeException($exception);
     $backtrace = $decode['backtrace'];
     unset($decode['backtrace']);

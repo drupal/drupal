@@ -51,6 +51,12 @@ class ErrorHandlerTest extends WebTestBase {
       '%function' => 'Drupal\error_test\Controller\ErrorTestController->Drupal\error_test\Controller\{closure}()',
       '!message' => 'Argument 1 passed to Drupal\error_test\Controller\ErrorTestController::Drupal\error_test\Controller\{closure}() must be of the type array, string given, called in ' . \Drupal::root() . '/core/modules/system/tests/modules/error_test/src/Controller/ErrorTestController.php on line 66 and defined',
     );
+    if (version_compare(PHP_VERSION, '7.0.0-dev') >= 0)  {
+      // In PHP 7, instead of a recoverable fatal error we get a TypeException.
+      $fatal_error['%type'] = 'TypeException';
+      // The error message also changes in PHP 7.
+      $fatal_error['!message'] = 'Argument 1 passed to Drupal\error_test\Controller\ErrorTestController::Drupal\error_test\Controller\{closure}() must be of the type array, string given, called in ' . \Drupal::root() . '/core/modules/system/tests/modules/error_test/src/Controller/ErrorTestController.php on line 66';
+    }
 
     // Set error reporting to display verbose notices.
     $this->config('system.logging')->set('error_level', ERROR_REPORTING_DISPLAY_VERBOSE)->save();
@@ -68,10 +74,11 @@ class ErrorHandlerTest extends WebTestBase {
     $this->assertErrorMessage($fatal_error);
     $this->assertRaw('<pre class="backtrace">', 'Found pre element with backtrace class.');
 
-    // Remove the fatal error from the assertions, its wanted here. Ensure
-    // that we just remove the one recoverable fatal error.
+    // Remove the recoverable fatal error from the assertions, it's wanted here.
+    // Ensure that we just remove this one recoverable fatal error (in PHP 7 this
+    // is a TypeException).
     foreach ($this->assertions as $key => $assertion) {
-      if ($assertion['message_group'] == 'Recoverable fatal error' && strpos($assertion['message'], 'Argument 1 passed to Drupal\error_test\Controller\ErrorTestController::Drupal\error_test\Controller\{closure}() must be of the type array, string given, called in') !== FALSE) {
+      if (in_array($assertion['message_group'], ['Recoverable fatal error', 'TypeException']) && strpos($assertion['message'], 'Argument 1 passed to Drupal\error_test\Controller\ErrorTestController::Drupal\error_test\Controller\{closure}() must be of the type array, string given, called in') !== FALSE) {
         unset($this->assertions[$key]);
         $this->deleteAssert($assertion['message_id']);
       }
