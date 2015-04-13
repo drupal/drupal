@@ -504,13 +504,12 @@ function hook_preprocess_HOOK(&$variables) {
 /**
  * Provides alternate named suggestions for a specific theme hook.
  *
- * This hook allows the module implementing hook_theme() for a theme hook to
- * provide alternative theme function or template name suggestions. This hook is
- * only invoked for the first module implementing hook_theme() for a theme hook.
+ * This hook allows modules to provide alternative theme function or template
+ * name suggestions.
  *
  * HOOK is the least-specific version of the hook being called. For example, if
- * '#theme' => 'node__article' is called, then node_theme_suggestions_node()
- * will be invoked, not node_theme_suggestions_node__article(). The specific
+ * '#theme' => 'node__article' is called, then hook_theme_suggestions_node()
+ * will be invoked, not hook_theme_suggestions_node__article(). The specific
  * hook called (in this case 'node__article') is available in
  * $variables['theme_hook_original'].
  *
