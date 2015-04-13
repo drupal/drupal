@@ -10,7 +10,13 @@ namespace Drupal\comment;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityViewBuilder;
+use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Render\Element;
+use Drupal\Core\Session\AccountInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Render controller for comments.
@@ -18,14 +24,55 @@ use Drupal\Core\Entity\EntityViewBuilder;
 class CommentViewBuilder extends EntityViewBuilder {
 
   /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
+   * Constructs a new CommentViewBuilder.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager service.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current user.
+   */
+  public function __construct(EntityTypeInterface $entity_type, EntityManagerInterface $entity_manager, LanguageManagerInterface $language_manager, AccountInterface $current_user) {
+    parent::__construct($entity_type, $entity_manager, $language_manager);
+    $this->currentUser = $current_user;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
+    return new static(
+      $entity_type,
+      $container->get('entity.manager'),
+      $container->get('language_manager'),
+      $container->get('current_user')
+    );
+  }
+
+  /**
    * {@inheritdoc}
    */
   protected function getBuildDefaults(EntityInterface $entity, $view_mode, $langcode) {
     $build = parent::getBuildDefaults($entity, $view_mode, $langcode);
 
+    /** @var \Drupal\comment\CommentInterface $entity */
+    // Store a threading field setting to use later in self::buildComponents().
+    $build['#comment_threaded'] = $entity->getCommentedEntity()
+      ->getFieldDefinition($entity->getFieldName())
+      ->getSetting('default_mode') === CommentManagerInterface::COMMENT_MODE_THREADED;
     // If threading is enabled, don't render cache individual comments, but do
     // keep the cache tags, so they can bubble up.
-    if ($entity->getCommentedEntity()->getFieldDefinition($entity->getFieldName())->getSetting('default_mode') === CommentManagerInterface::COMMENT_MODE_THREADED) {
+    if ($build['#comment_threaded']) {
       $cache_tags = $build['#cache']['tags'];
       $build['#cache'] = [];
       $build['#cache']['tags'] = $cache_tags;
@@ -35,7 +82,7 @@ class CommentViewBuilder extends EntityViewBuilder {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityViewBuilder::buildComponents().
+   * {@inheritdoc}
    *
    * In addition to modifying the content key on entities, this implementation
    * will also set the comment entity key which all comments carry.
@@ -58,25 +105,30 @@ class CommentViewBuilder extends EntityViewBuilder {
 
     parent::buildComponents($build, $entities, $displays, $view_mode, $langcode);
 
-    // Load all the entities that have comments attached.
-    $commented_entity_ids = array();
-    $commented_entities = array();
-    foreach ($entities as $entity) {
-      $commented_entity_ids[$entity->getCommentedEntityTypeId()][] = $entity->getCommentedEntityId();
-    }
-    // Load entities in bulk. This is more performant than using
-    // $comment->getCommentedEntity() as we can load them in bulk per type.
-    foreach ($commented_entity_ids as $entity_type => $entity_ids) {
-      $commented_entities[$entity_type] = $this->entityManager->getStorage($entity_type)->loadMultiple($entity_ids);
-    }
+    // A counter to track the indentation level.
+    $current_indent = 0;
 
     foreach ($entities as $id => $entity) {
-      if (isset($commented_entities[$entity->getCommentedEntityTypeId()][$entity->getCommentedEntityId()])) {
-        $commented_entity = $commented_entities[$entity->getCommentedEntityTypeId()][$entity->getCommentedEntityId()];
+      if ($build[$id]['#comment_threaded']) {
+        $comment_indent = count(explode('.', $entity->getThread())) - 1;
+        if ($comment_indent > $current_indent) {
+          // Set 1 to indent this comment from the previous one (its parent).
+          // Set only one extra level of indenting even if the difference in
+          // depth is higher.
+          $build[$id]['#comment_indent'] = 1;
+          $current_indent++;
+        }
+        else {
+          // Set zero if this comment is on the same level as the previous one
+          // or negative value to point an amount indents to close.
+          $build[$id]['#comment_indent'] = $comment_indent - $current_indent;
+          $current_indent = $comment_indent;
+        }
       }
-      else {
-        throw new \InvalidArgumentException(t('Invalid entity for comment.'));
-      }
+
+      // Commented entities already loaded after self::getBuildDefaults().
+      $commented_entity = $entity->getCommentedEntity();
+
       $build[$id]['#entity'] = $entity;
       $build[$id]['#theme'] = 'comment__' . $entity->getFieldName() . '__' . $commented_entity->bundle();
 
@@ -106,7 +158,7 @@ class CommentViewBuilder extends EntityViewBuilder {
         $build[$id]['#attached'] = array();
       }
       $build[$id]['#attached']['library'][] = 'comment/drupal.comment-by-viewer';
-      if ($this->moduleHandler->moduleExists('history') &&  \Drupal::currentUser()->isAuthenticated()) {
+      if ($this->moduleHandler->moduleExists('history') && $this->currentUser->isAuthenticated()) {
         $build[$id]['#attached']['library'][] = 'comment/drupal.comment-new-indicator';
 
         // Embed the metadata for the comment "new" indicators on this node.
@@ -114,6 +166,10 @@ class CommentViewBuilder extends EntityViewBuilder {
           array('node_id' => $commented_entity->id()),
         );
       }
+    }
+    if ($build[$id]['#comment_threaded']) {
+      // The final comment must close up some hanging divs.
+      $build[$id]['#comment_indent_final'] = $current_indent;
     }
   }
 
@@ -124,15 +180,11 @@ class CommentViewBuilder extends EntityViewBuilder {
     parent::alterBuild($build, $comment, $display, $view_mode, $langcode);
     if (empty($comment->in_preview)) {
       $prefix = '';
-      $commented_entity = $comment->getCommentedEntity();
-      $field_definition = $this->entityManager->getFieldDefinitions($commented_entity->getEntityTypeId(), $commented_entity->bundle())[$comment->getFieldName()];
-      $is_threaded = isset($comment->divs)
-        && $field_definition->getSetting('default_mode') == CommentManagerInterface::COMMENT_MODE_THREADED;
 
       // Add indentation div or close open divs as needed.
-      if ($is_threaded) {
+      if ($build['#comment_threaded']) {
         $build['#attached']['library'][] = 'comment/drupal.comment.threaded';
-        $prefix .= $comment->divs <= 0 ? str_repeat('</div>', abs($comment->divs)) : "\n" . '<div class="indented">';
+        $prefix .= $build['#comment_indent'] <= 0 ? str_repeat('</div>', abs($build['#comment_indent'])) : "\n" . '<div class="indented">';
       }
 
       // Add anchor for each comment.
@@ -140,8 +192,8 @@ class CommentViewBuilder extends EntityViewBuilder {
       $build['#prefix'] = $prefix;
 
       // Close all open divs.
-      if ($is_threaded && !empty($comment->divs_final)) {
-        $build['#suffix'] = str_repeat('</div>', $comment->divs_final);
+      if (!empty($build['#comment_indent_final'])) {
+        $build['#suffix'] = str_repeat('</div>', $build['#comment_indent_final']);
       }
     }
   }

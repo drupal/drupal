@@ -220,40 +220,6 @@ function comment_node_view_alter(array &$build, EntityInterface $node, EntityVie
 }
 
 /**
- * Calculates the indentation level of each comment in a comment thread.
- *
- * This function loops over an array representing a comment thread. For each
- * comment, the function calculates the indentation level and saves it in the
- * 'divs' property of the comment object.
- *
- * @param array $comments
- *   An array of comment objects, keyed by comment ID.
- */
-function comment_prepare_thread(&$comments) {
-  // A counter that helps track how indented we are.
-  $divs = 0;
-
-  foreach ($comments as $key => &$comment) {
-    // The $divs element instructs #prefix whether to add an indent div or
-    // close existing divs (a negative value).
-    $comment->depth = count(explode('.', $comment->getThread())) - 1;
-    if ($comment->depth > $divs) {
-      $comment->divs = 1;
-      $divs++;
-    }
-    else {
-      $comment->divs = $comment->depth - $divs;
-      while ($comment->depth < $divs) {
-        $divs--;
-      }
-    }
-  }
-
-  // The final comment must close up some hanging divs
-  $comments[$key]->divs_final = $divs;
-}
-
-/**
  * Generates an array for rendering a comment.
  *
  * @param \Drupal\comment\CommentInterface $comment
@@ -466,7 +432,6 @@ function comment_node_update_index(EntityInterface $node, $langcode) {
         $comments = \Drupal::entityManager()->getStorage('comment')
           ->loadThread($node, $field_name, $mode, $comments_per_page);
         if ($comments) {
-          comment_prepare_thread($comments);
           $build[] = \Drupal::entityManager()->getViewBuilder('comment')->viewMultiple($comments);
         }
       }

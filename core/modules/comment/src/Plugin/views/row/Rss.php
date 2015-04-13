@@ -52,10 +52,6 @@ class Rss extends RssPluginBase {
     }
 
     $this->comments = $this->entityManager->getStorage('comment')->loadMultiple($cids);
-    foreach ($this->comments as $comment) {
-      $comment->depth = count(explode('.', $comment->getThread())) - 1;
-    }
-
   }
 
   /**

@@ -168,7 +168,6 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
           $comments_per_page = $comment_settings['per_page'];
           $comments = $this->storage->loadThread($entity, $field_name, $mode, $comments_per_page, $this->getSetting('pager_id'));
           if ($comments) {
-            comment_prepare_thread($comments);
             $build = $this->viewBuilder->viewMultiple($comments);
             $build['pager']['#type'] = 'pager';
             if ($this->getSetting('pager_id')) {
