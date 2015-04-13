@@ -12,9 +12,6 @@ chdir('../../../..');
 
 $autoloader = require_once 'autoload.php';
 
-// Set a global variable to indicate a mock HTTP request.
-$is_http_mock = !empty($_SERVER['HTTPS']);
-
 // Change to HTTP.
 $_SERVER['HTTPS'] = NULL;
 ini_set('session.cookie_secure', FALSE);

@@ -15,9 +15,6 @@ chdir('../../../..');
 
 $autoloader = require_once 'autoload.php';
 
-// Set a global variable to indicate a mock HTTPS request.
-$is_https_mock = empty($_SERVER['HTTPS']);
-
 // Change to HTTPS.
 $_SERVER['HTTPS'] = 'on';
 foreach ($_SERVER as &$value) {

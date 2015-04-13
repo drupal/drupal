@@ -8,7 +8,6 @@
 namespace Drupal\session_test\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -43,20 +42,8 @@ class SessionTestSubscriber implements EventSubscriberInterface {
    *   The Event to process.
    */
   public function onKernelResponseSessionTest(FilterResponseEvent $event) {
-    $response = $event->getResponse();
-    if ($response instanceOf RedirectResponse) {
-      // Force the redirection to go to a non-secure page after being on a
-      // secure page through https.php.
-      global $base_insecure_url, $is_https_mock;
-      // Alter the redirect to use HTTP when using a mock HTTPS request through
-      // https.php because form submissions would otherwise redirect to a
-      // non-existent HTTPS site.
-      if (!empty($is_https_mock)) {
-        $path = $base_insecure_url . '/' . $response->getTargetUrl();
-        $response->setTargetUrl($path);
-      }
-    }
     // Set header for session testing.
+    $response = $event->getResponse();
     $response->headers->set('X-Session-Empty', $this->emptySession);
   }
 
@@ -66,9 +53,9 @@ class SessionTestSubscriber implements EventSubscriberInterface {
    * @return array
    *   An array of event listener definitions.
    */
-  static function getSubscribedEvents() {
-    $events[KernelEvents::RESPONSE][] = array('onKernelResponseSessionTest', 300);
-    $events[KernelEvents::REQUEST][] = array('onKernelRequestSessionTest', 100);
+  public static function getSubscribedEvents() {
+    $events[KernelEvents::RESPONSE][] = array('onKernelResponseSessionTest');
+    $events[KernelEvents::REQUEST][] = array('onKernelRequestSessionTest');
     return $events;
   }
 
