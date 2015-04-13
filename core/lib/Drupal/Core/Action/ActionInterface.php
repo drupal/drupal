@@ -27,8 +27,6 @@ use Drupal\Core\Session\AccountInterface;
  *  - Actions will receive a data processing API that allows for token
  *    replacements to happen outside of the action plugin implementations,
  *    see https://www.drupal.org/node/2347023.
- *  - Actions will have to implement access control for checking who is allowed
- *    to configure or perform the action at https://www.drupal.org/node/2172017.
  *
  * @see \Drupal\Core\Annotation\Action
  * @see \Drupal\Core\Action\ActionManager
