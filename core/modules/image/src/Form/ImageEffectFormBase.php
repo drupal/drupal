@@ -97,6 +97,7 @@ abstract class ImageEffectFormBase extends FormBase {
       '#type' => 'link',
       '#title' => $this->t('Cancel'),
       '#url' => $this->imageStyle->urlInfo('edit-form'),
+      '#attributes' => ['class' => ['button']],
     );
     return $form;
   }
