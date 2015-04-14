@@ -63,6 +63,7 @@
   height: 19px;
   background: url(../images/lock.png) no-repeat 50% 0;
   cursor: pointer;
+  text-indent: -9999px;
 }
 [dir="rtl"] #palette .lock {
   float: right;

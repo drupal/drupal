@@ -210,9 +210,10 @@
           i = inputs.length;
           if (inputs.length) {
             var toggleClick = true;
-            var lock = $('<div class="lock"></div>').on('click', function () {
+            var lock = $('<button class="lock link">' + Drupal.t('Unlock') + '</button>').on('click', function (e) {
+              e.preventDefault();
               if (toggleClick) {
-                $(this).addClass('unlocked');
+                $(this).addClass('unlocked').html(Drupal.t('Lock'));
                 $(hooks[i - 1]).attr('class',
                   locks[i - 2] && $(locks[i - 2]).is(':not(.unlocked)') ? 'hook up' : 'hook'
                 );
@@ -221,7 +222,7 @@
                 );
               }
               else {
-                $(this).removeClass('unlocked');
+                $(this).removeClass('unlocked').html(Drupal.t('Unlock'));
                 $(hooks[i - 1]).attr('class',
                   locks[i - 2] && $(locks[i - 2]).is(':not(.unlocked)') ? 'hook both' : 'hook down'
                 );
