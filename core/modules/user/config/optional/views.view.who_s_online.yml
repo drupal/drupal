@@ -65,7 +65,8 @@ display:
           table: users_field_data
           field: name
           label: ''
-          plugin_id: user_name
+          plugin_id: field
+          type: user_name
           alter:
             alter_text: false
             make_link: false
@@ -77,8 +78,6 @@ display:
             html: false
           hide_empty: false
           empty_zero: false
-          link_to_user: true
-          overwrite_anonymous: false
           relationship: none
           group_type: group
           admin_label: ''
@@ -93,8 +92,6 @@ display:
           element_default_classes: true
           empty: ''
           hide_alter_empty: true
-          anonymous_text: ''
-          format_username: true
           entity_type: user
           entity_field: name
       filters:

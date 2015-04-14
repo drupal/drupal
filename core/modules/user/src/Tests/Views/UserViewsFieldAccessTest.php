@@ -61,7 +61,7 @@ class UserViewsFieldAccessTest extends FieldFieldAccessTestBase {
     $this->assertFieldAccess('user', 'langcode', $user->language()->getName());
     $this->assertFieldAccess('user', 'preferred_langcode', 'Spanish');
     $this->assertFieldAccess('user', 'preferred_admin_langcode', 'French');
-    // $this->assertFieldAccess('user', 'name', 'test user');
+    $this->assertFieldAccess('user', 'name', 'test user');
     // $this->assertFieldAccess('user', 'mail', 'druplicon@drop.org');
     $this->assertFieldAccess('user', 'timezone', 'ut1');
     $this->assertFieldAccess('user', 'status', 'On');

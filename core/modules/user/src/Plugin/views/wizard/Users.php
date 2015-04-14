@@ -73,9 +73,7 @@ class Users extends WizardPluginBase {
     $display_options['fields']['name']['alter']['html'] = 0;
     $display_options['fields']['name']['hide_empty'] = 0;
     $display_options['fields']['name']['empty_zero'] = 0;
-    $display_options['fields']['name']['link_to_user'] = 1;
-    $display_options['fields']['name']['overwrite_anonymous'] = 0;
-    $display_options['fields']['name']['plugin_id'] = 'user_name';
+    $display_options['fields']['name']['plugin_id'] = 'field';
 
     return $display_options;
   }

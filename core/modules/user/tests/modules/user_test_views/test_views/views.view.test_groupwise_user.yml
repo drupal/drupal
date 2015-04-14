@@ -28,7 +28,8 @@ display:
           field: name
           id: name
           table: users_field_data
-          plugin_id: user_name
+          plugin_id: field
+          type: user_name
           entity_type: user
           entity_field: name
         nid:

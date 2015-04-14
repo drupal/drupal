@@ -26,7 +26,7 @@ class TranslationLanguageRenderer extends RendererBase {
   /**
    * {@inheritdoc}
    */
-  public function query(QueryPluginBase $query) {
+  public function query(QueryPluginBase $query, $relationship = NULL) {
     // There is no point in getting the language, in case the site is not
     // multilingual.
     if (!$this->languageManager->isMultilingual()) {
@@ -38,7 +38,7 @@ class TranslationLanguageRenderer extends RendererBase {
     $langcode_key = $this->entityType->getKey('langcode');
     foreach (array('data_table', 'revision_table', 'base_table') as $key) {
       if ($table = $this->entityType->get($key)) {
-        $table_alias = $query->ensureTable($table);
+        $table_alias = $query->ensureTable($table, $relationship);
         $this->langcodeAlias = $query->addField($table_alias, $langcode_key);
         break;
       }

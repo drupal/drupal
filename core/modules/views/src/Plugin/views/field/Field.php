@@ -272,7 +272,7 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
     }
 
     // Let the configured entity translation renderer alter the query if needed.
-    $this->getEntityTranslationRenderer()->query($this->query);
+    $this->getEntityTranslationRenderer()->query($this->query, $this->relationship);
   }
 
   /**

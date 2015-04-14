@@ -94,8 +94,10 @@ abstract class RendererBase implements CacheablePluginInterface {
    *
    * @param \Drupal\views\Plugin\views\query\QueryPluginBase $query
    *   The query to alter.
+   * @param string $relationship
+   *   (optional) The relationship, used by a field.
    */
-  public function query(QueryPluginBase $query) {
+  public function query(QueryPluginBase $query, $relationship = NULL) {
   }
 
   /**

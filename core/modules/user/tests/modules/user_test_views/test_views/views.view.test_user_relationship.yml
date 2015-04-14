@@ -43,10 +43,9 @@ display:
           hide_alter_empty: false
           hide_empty: false
           id: name
-          link_to_user: true
-          overwrite_anonymous: false
           table: users_field_data
-          plugin_id: user_name
+          plugin_id: field
+          type: user_name
           entity_type: user
           entity_field: name
         title:
@@ -89,9 +88,9 @@ display:
           hide_alter_empty: false
           hide_empty: false
           id: uid
-          link_to_user: true
           table: users_field_data
-          plugin_id: user
+          plugin_id: field
+          type: user
           entity_type: user
           entity_field: uid
       pager:

@@ -80,7 +80,7 @@ class UserViewsData extends EntityViewsData {
     );
 
     $data['users_field_data']['name']['help'] = t('The user or author name.');
-    $data['users_field_data']['name']['field']['id'] = 'user_name';
+    $data['users_field_data']['name']['field']['default_formatter'] = 'user_name';
     $data['users_field_data']['name']['filter']['title'] = t('Name (raw)');
     $data['users_field_data']['name']['filter']['help'] = t('The user or author name. This filter does not check if the user exists and allows partial matching. Does not use autocomplete.');
 
