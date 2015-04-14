@@ -7,6 +7,7 @@
 
 namespace Drupal\rdf\Tests;
 
+use Drupal\image\Entity\ImageStyle;
 use Drupal\image\Tests\ImageFieldTestBase;
 use Drupal\node\Entity\Node;
 
@@ -96,7 +97,7 @@ class ImageFieldAttributesTest extends ImageFieldTestBase {
 
     // Construct the node and image URIs for testing.
     $node_uri = $this->node->url('canonical', ['absolute' => TRUE]);
-    $image_uri = entity_load('image_style', 'medium')->buildUrl($this->file->getFileUri());
+    $image_uri = ImageStyle::load('medium')->buildUrl($this->file->getFileUri());
 
     // Test relations from node to image.
     $expected_value = array(

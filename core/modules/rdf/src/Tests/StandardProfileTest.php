@@ -8,9 +8,10 @@
 namespace Drupal\rdf\Tests;
 
 use Drupal\Core\Url;
+use Drupal\image\Entity\ImageStyle;
+use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
 use Drupal\simpletest\WebTestBase;
-use Drupal\node\Entity\NodeType;
 
 /**
  * Tests the RDF mappings and RDFa markup of the standard profile.
@@ -165,7 +166,7 @@ class StandardProfileTest extends WebTestBase {
     // Set URIs.
     // Image.
     $image_file = $this->article->get('field_image')->entity;
-    $this->imageUri = entity_load('image_style', 'large')->buildUrl($image_file->getFileUri());
+    $this->imageUri = ImageStyle::load('large')->buildUrl($image_file->getFileUri());
     // Term.
     $this->termUri = $this->term->url('canonical', array('absolute' => TRUE));
     // Article.
@@ -224,7 +225,7 @@ class StandardProfileTest extends WebTestBase {
     // @todo Once the image points to the original instead of the processed
     //   image, move this to testArticleProperties().
     $image_file = $this->article->get('field_image')->entity;
-    $image_uri = entity_load('image_style', 'medium')->buildUrl($image_file->getFileUri());
+    $image_uri = ImageStyle::load('medium')->buildUrl($image_file->getFileUri());
     $expected_value = array(
       'type' => 'uri',
       'value' => $image_uri,

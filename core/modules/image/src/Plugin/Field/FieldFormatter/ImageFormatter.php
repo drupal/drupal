@@ -7,6 +7,7 @@
 
 namespace Drupal\image\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -45,6 +46,13 @@ class ImageFormatter extends ImageFormatterBase implements ContainerFactoryPlugi
   protected $linkGenerator;
 
   /**
+   * The image style entity storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $imageStyleStorage;
+
+  /**
    * Constructs an ImageFormatter object.
    *
    * @param string $plugin_id
@@ -66,10 +74,11 @@ class ImageFormatter extends ImageFormatterBase implements ContainerFactoryPlugi
    * @param \Drupal\Core\Utility\LinkGeneratorInterface $link_generator
    *   The link generator service.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, AccountInterface $current_user, LinkGeneratorInterface $link_generator) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, AccountInterface $current_user, LinkGeneratorInterface $link_generator, EntityStorageInterface $image_style_storage) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
     $this->currentUser = $current_user;
     $this->linkGenerator = $link_generator;
+    $this->imageStyleStorage = $image_style_storage;
   }
 
   /**
@@ -85,7 +94,8 @@ class ImageFormatter extends ImageFormatterBase implements ContainerFactoryPlugi
       $configuration['view_mode'],
       $configuration['third_party_settings'],
       $container->get('current_user'),
-      $container->get('link_generator')
+      $container->get('link_generator'),
+      $container->get('entity.manager')->getStorage('image_style')
     );
   }
 
@@ -192,7 +202,7 @@ class ImageFormatter extends ImageFormatterBase implements ContainerFactoryPlugi
     // Collect cache tags to be added for each item in the field.
     $cache_tags = array();
     if (!empty($image_style_setting)) {
-      $image_style = entity_load('image_style', $image_style_setting);
+      $image_style = $this->imageStyleStorage->load($image_style_setting);
       $cache_tags = $image_style->getCacheTags();
     }
 

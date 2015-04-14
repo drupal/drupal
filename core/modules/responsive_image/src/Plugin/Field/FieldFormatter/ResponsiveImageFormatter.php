@@ -16,7 +16,6 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
 use Drupal\image\Plugin\Field\FieldFormatter\ImageFormatterBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\image\Entity\ImageStyle;
 
 /**
  * Plugin for responsive image formatter.
@@ -35,6 +34,13 @@ class ResponsiveImageFormatter extends ImageFormatterBase implements ContainerFa
    * @var EntityStorageInterface
    */
   protected $responsiveImageStyleStorage;
+
+  /*
+   * The image style entity storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $imageStyleStorage;
 
   /**
    * Constructs a ResponsiveImageFormatter object.
@@ -55,11 +61,14 @@ class ResponsiveImageFormatter extends ImageFormatterBase implements ContainerFa
    *   Any third party settings.
    * @param \Drupal\Core\Entity\EntityStorageInterface $responsive_image_style_storage
    *   The responsive image style storage.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $image_style_storage
+   *   The image style storage.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, EntityStorageInterface $responsive_image_style_storage) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, EntityStorageInterface $responsive_image_style_storage, EntityStorageInterface $image_style_storage) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
 
     $this->responsiveImageStyleStorage = $responsive_image_style_storage;
+    $this->imageStyleStorage = $image_style_storage;
   }
 
   /**
@@ -74,7 +83,8 @@ class ResponsiveImageFormatter extends ImageFormatterBase implements ContainerFa
       $configuration['label'],
       $configuration['view_mode'],
       $configuration['third_party_settings'],
-      $container->get('entity.manager')->getStorage('responsive_image_style')
+      $container->get('entity.manager')->getStorage('responsive_image_style'),
+      $container->get('entity.manager')->getStorage('image_style')
     );
   }
 
@@ -222,7 +232,7 @@ class ResponsiveImageFormatter extends ImageFormatterBase implements ContainerFa
       // selected for the smallest screen.
       $fallback_image_style = end($image_styles_to_load);
     }
-    $image_styles = ImageStyle::loadMultiple($image_styles_to_load);
+    $image_styles = $this->imageStyleStorage->loadMultiple($image_styles_to_load);
     foreach ($image_styles as $image_style) {
       $cache_tags = Cache::mergeTags($cache_tags, $image_style->getCacheTags());
     }

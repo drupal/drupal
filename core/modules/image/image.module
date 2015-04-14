@@ -11,6 +11,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\file\Entity\File;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\field\FieldConfigInterface;
+use Drupal\image\Entity\ImageStyle;
 
 /**
  * Image style constant for user presets in the database.
@@ -213,7 +214,7 @@ function image_file_predelete(File $file) {
  *   The Drupal file path to the original image.
  */
 function image_path_flush($path) {
-  $styles = entity_load_multiple('image_style');
+  $styles = ImageStyle::loadMultiple();
   foreach ($styles as $style) {
     $style->flush($path);
   }
@@ -228,7 +229,7 @@ function image_path_flush($path) {
  *   Array of image styles both key and value are set to style name.
  */
 function image_style_options($include_empty = TRUE) {
-  $styles = entity_load_multiple('image_style');
+  $styles = ImageStyle::loadMultiple();
   $options = array();
   if ($include_empty && !empty($styles)) {
     $options[''] = t('- None -');
@@ -270,7 +271,7 @@ function image_style_options($include_empty = TRUE) {
  *   - attributes: Associative array of attributes to be placed in the img tag.
  */
 function template_preprocess_image_style(&$variables) {
-  $style = entity_load('image_style', $variables['style_name']);
+  $style = ImageStyle::load($variables['style_name']);
 
   // Determine the dimensions of the styled image.
   $dimensions = array(

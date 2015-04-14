@@ -7,6 +7,8 @@
 
 namespace Drupal\image\Tests;
 
+use Drupal\image\Entity\ImageStyle;
+
 /**
  * Tests flushing of image styles.
  *
@@ -79,7 +81,7 @@ class ImageStyleFlushTest extends ImageFieldTestBase {
     }
 
     // Load the saved image style.
-    $style = entity_load('image_style', $style_name);
+    $style = ImageStyle::load($style_name);
 
     // Create an image for the 'public' wrapper.
     $image_path = $this->createSampleImage($style, 'public');

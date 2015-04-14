@@ -8,6 +8,7 @@
 namespace Drupal\image\Tests;
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\image\Entity\ImageStyle;
 use Drupal\image\ImageStyleInterface;
 use Drupal\node\Entity\Node;
 
@@ -129,7 +130,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     }
 
     // Load the saved image style.
-    $style = entity_load('image_style', $style_name);
+    $style = ImageStyle::load($style_name);
 
     // Ensure that third party settings were added to the config entity.
     // These are added by a hook_image_style_presave() implemented in
@@ -211,7 +212,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->assertEqual($this->getImageCount($style), 0, format_string('Image style %style was flushed after renaming the style and updating the order of effects.', array('%style' => $style->label())));
 
     // Load the style by the new name with the new weights.
-    $style = entity_load('image_style', $style_name);
+    $style = ImageStyle::load($style_name);
 
     // Confirm the new style order was saved.
     $effect_edits_order = array_reverse($effect_edits_order);
@@ -269,7 +270,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $directory = file_default_scheme() . '://styles/' . $style_name;
     $this->assertFalse(is_dir($directory), format_string('Image style %style directory removed on style deletion.', array('%style' => $style->label())));
 
-    $this->assertFalse(entity_load('image_style', $style_name), format_string('Image style %style successfully deleted.', array('%style' => $style->label())));
+    $this->assertFalse(ImageStyle::load($style_name), format_string('Image style %style successfully deleted.', array('%style' => $style->label())));
 
   }
 
@@ -319,7 +320,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->drupalGet('node/' . $nid);
 
     // Reload the image style using the new name.
-    $style = entity_load('image_style', $new_style_name);
+    $style = ImageStyle::load($new_style_name);
     $this->assertRaw($style->buildUrl($original_uri), 'Image displayed using style replacement style.');
 
     // Delete the style and choose a replacement style.
@@ -330,7 +331,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $message = t('The image style %name has been deleted.', array('%name' => $new_style_label));
     $this->assertRaw($message);
 
-    $replacement_style = entity_load('image_style', 'thumbnail');
+    $replacement_style = ImageStyle::load('thumbnail');
     $this->drupalGet('node/' . $nid);
     $this->assertRaw($replacement_style->buildUrl($original_uri), 'Image displayed using style replacement style.');
   }
@@ -448,7 +449,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $staging->delete('image.style.' . $style_name);
     $this->configImporter()->import();
 
-    $this->assertFalse(entity_load('image_style', $style_name), 'Style deleted after config import.');
+    $this->assertFalse(ImageStyle::load($style_name), 'Style deleted after config import.');
     $this->assertEqual($this->getImageCount($style), 0, 'Image style was flushed after being deleted by config import.');
   }
 

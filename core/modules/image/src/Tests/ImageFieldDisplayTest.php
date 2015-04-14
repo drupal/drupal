@@ -10,6 +10,7 @@ namespace Drupal\image\Tests;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\user\RoleInterface;
+use Drupal\image\Entity\ImageStyle;
 
 /**
  * Tests the display of image fields.
@@ -175,7 +176,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Ensure the derivative image is generated so we do not have to deal with
     // image style callback paths.
-    $this->drupalGet(entity_load('image_style', 'thumbnail')->buildUrl($image_uri));
+    $this->drupalGet(ImageStyle::load('thumbnail')->buildUrl($image_uri));
     $image_style = array(
       '#theme' => 'image_style',
       '#uri' => $image_uri,
@@ -193,7 +194,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     if ($scheme == 'private') {
       // Log out and try to access the file.
       $this->drupalLogout();
-      $this->drupalGet(entity_load('image_style', 'thumbnail')->buildUrl($image_uri));
+      $this->drupalGet(ImageStyle::load('thumbnail')->buildUrl($image_uri));
       $this->assertResponse('403', 'Access denied to image style thumbnail as anonymous user.');
     }
   }
