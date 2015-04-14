@@ -35,7 +35,7 @@ class SortArrayTest extends UnitTestCase {
    */
   public function testSortByWeightElement($a, $b, $expected) {
     $result = SortArray::sortByWeightElement($a, $b);
-    $this->assertEquals($expected, $result);
+    $this->assertBothNegativePositiveOrZero($expected, $result);
   }
 
   /**
@@ -111,7 +111,7 @@ class SortArrayTest extends UnitTestCase {
    */
   public function testSortByWeightProperty($a, $b, $expected) {
     $result = SortArray::sortByWeightProperty($a, $b);
-    $this->assertEquals($expected, $result);
+    $this->assertBothNegativePositiveOrZero($expected, $result);
   }
 
   /**
@@ -187,7 +187,7 @@ class SortArrayTest extends UnitTestCase {
    */
   public function testSortByTitleElement($a, $b, $expected) {
     $result = SortArray::sortByTitleElement($a, $b);
-    $this->assertEquals($expected, $result);
+    $this->assertBothNegativePositiveOrZero($expected, $result);
   }
 
   /**
@@ -256,7 +256,7 @@ class SortArrayTest extends UnitTestCase {
    */
   public function testSortByTitleProperty($a, $b, $expected) {
     $result = SortArray::sortByTitleProperty($a, $b);
-    $this->assertEquals($expected, $result);
+    $this->assertBothNegativePositiveOrZero($expected, $result);
   }
 
   /**
@@ -307,6 +307,22 @@ class SortArrayTest extends UnitTestCase {
     );
 
     return $tests;
+  }
+
+  /**
+   * Asserts that numbers are either both negative, both positive or both zero.
+   *
+   * The exact values returned by comparison functions differ between PHP
+   * versions and are considered an "implementation detail".
+   *
+   * @param int $expected
+   *   Expected comparison function return value.
+   * @param int $result
+   *   Actual comparison function return value.
+   */
+  protected function assertBothNegativePositiveOrZero($expected, $result) {
+    $this->assertTrue(is_numeric($expected) && is_numeric($result), 'Parameters are numeric.');
+    $this->assertTrue(($expected < 0 && $result < 0) || ($expected > 0 && $result > 0) || ($expected === 0 && $result === 0), 'Numbers are either both negative, both positive or both zero.');
   }
 
 }
