@@ -1106,17 +1106,22 @@ function hook_theme($existing, $type, $theme, $path) {
  *
  * For example:
  * @code
- * $theme_registry['user'] = array(
- *   'variables' => array(
- *     'account' => NULL,
+ * $theme_registry['block_content_add_list'] = array (
+ *   'template' => 'block-content-add-list',
+ *   'path' => 'core/themes/seven/templates',
+ *   'type' => 'theme_engine',
+ *   'theme path' => 'core/themes/seven',
+ *   'includes' => array (
+ *     0 => 'core/modules/block_content/block_content.pages.inc',
  *   ),
- *   'template' => 'core/modules/user/user',
- *   'file' => 'core/modules/user/user.pages.inc',
- *   'type' => 'module',
- *   'theme path' => 'core/modules/user',
- *   'preprocess functions' => array(
+ *   'variables' => array (
+ *     'content' => NULL,
+ *   ),
+ *   'preprocess functions' => array (
  *     0 => 'template_preprocess',
- *     1 => 'template_preprocess_user_profile',
+ *     1 => 'template_preprocess_block_content_add_list',
+ *     2 => 'contextual_preprocess',
+ *     3 => 'seven_preprocess_block_content_add_list',
  *   ),
  * );
  * @endcode
