@@ -116,7 +116,7 @@ interface MailManagerInterface extends PluginManagerInterface {
    *   hook_mail_alter() may cancel sending by setting $message['send'] to
    *   FALSE.
    *
-   * @return string
+   * @return array
    *   The $message array structure containing all details of the message. If
    *   already sent ($send = TRUE), then the 'result' element will contain the
    *   success indicator of the email, failure being already written to the
