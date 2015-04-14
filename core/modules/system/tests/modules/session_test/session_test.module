@@ -9,4 +9,6 @@ function session_test_user_login($account) {
     // before hook_user_login() was called.
     exit;
   }
+  // Add some data in the session for retrieval testing purpose.
+  \Drupal::request()->getSession()->set("session_test_key", "foobar");
 }

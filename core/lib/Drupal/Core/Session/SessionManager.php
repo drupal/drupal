@@ -174,6 +174,7 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
     // Restore session data.
     if ($this->startedLazy) {
       $_SESSION = $session_data;
+      $this->loadSession();
     }
 
     return $result;

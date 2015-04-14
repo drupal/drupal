@@ -31,6 +31,19 @@ class SessionTestController extends ControllerBase {
   }
 
   /**
+   * Prints the stored session value to the screen.
+   *
+   * @return string
+   *   A notification message.
+   */
+  public function getFromSessionObject() {
+    $value = \Drupal::request()->getSession()->get("session_test_key");
+    return empty($value)
+      ? []
+      : ['#markup' => $this->t('The current value of the stored session variable is: %val', array('%val' => $value))];
+  }
+
+  /**
    * Print the current session ID.
    *
    * @return string

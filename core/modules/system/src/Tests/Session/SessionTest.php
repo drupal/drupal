@@ -138,6 +138,18 @@ class SessionTest extends WebTestBase {
   }
 
   /**
+   * Tests storing data in Session() object.
+   */
+  public function testSessionPersistenceOnLogin() {
+    // Store information via hook_user_login().
+    $user = $this->drupalCreateUser();
+    $this->drupalLogin($user);
+    // Test property added to session object form hook_user_login().
+    $this->drupalGet('session-test/get-from-session-object');
+    $this->assertText('foobar', 'Session data is saved in Session() object.', 'Session');
+  }
+
+  /**
    * Test that empty anonymous sessions are destroyed.
    */
   function testEmptyAnonymousSession() {

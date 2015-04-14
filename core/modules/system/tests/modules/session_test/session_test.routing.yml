@@ -5,7 +5,13 @@ session_test.get:
     _controller: '\Drupal\session_test\Controller\SessionTestController::get'
   requirements:
     _access: 'TRUE'
-
+session_test.get_from_session_object:
+  path: '/session-test/get-from-session-object'
+  defaults:
+    _title: 'Session value'
+    _controller: '\Drupal\session_test\Controller\SessionTestController::getFromSessionObject'
+  requirements:
+    _access: 'TRUE'
 session_test.id:
   path: '/session-test/id'
   defaults:
