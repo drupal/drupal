@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Route;
 /**
  * Defines an access check for entity form mode routes.
  *
- * @see \Drupal\entity\Entity\EntityFormMode
+ * @see \Drupal\Core\Entity\Entity\EntityFormMode
  */
 class FormModeAccessCheck implements AccessInterface {
 

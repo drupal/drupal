@@ -8,10 +8,9 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
-use Drupal\field\Entity\FieldConfig;
-use Drupal\field\FieldConfigInterface;
 use Drupal\Component\Utility\SafeMarkup;
 
 /**
@@ -262,14 +261,20 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
       // Depend on the provider of the entity type.
       $this->addDependency('module', $target_entity_type->getProvider());
     }
-    // Create dependencies on both hidden and visible fields.
-    $fields = $this->content + $this->hidden;
-    foreach ($fields as $field_name => $component) {
-      $field = FieldConfig::loadByName($this->targetEntityType, $this->bundle, $field_name);
-      if ($field) {
-        $this->addDependency('config', $field->getConfigDependencyName());
+
+    // If field.module is enabled, add dependencies on 'field_config' entities
+    // for both displayed and hidden fields. We intentionally leave out base
+    // field overrides, since the field still exists without them.
+    if (\Drupal::moduleHandler()->moduleExists('field')) {
+      $components = $this->content + $this->hidden;
+      $field_definitions = $this->entityManager()->getFieldDefinitions($this->targetEntityType, $this->bundle);
+      foreach (array_intersect_key($field_definitions, $components) as $field_name => $field_definition) {
+        if ($field_definition instanceof ConfigEntityInterface && $field_definition->getEntityTypeId() == 'field_config') {
+          $this->addDependency('config', $field_definition->getConfigDependencyName());
+        }
       }
     }
+
     // Depend on configured modes.
     if ($this->mode != 'default') {
       $mode_entity = $this->entityManager()->getStorage('entity_' . $this->displayContext . '_mode')->load($target_entity_type->id() . '.' . $this->mode);
@@ -417,7 +422,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   public function onDependencyRemoval(array $dependencies) {
     $changed = parent::onDependencyRemoval($dependencies);
     foreach ($dependencies['config'] as $entity) {
-      if ($entity instanceof FieldConfigInterface) {
+      if ($entity->getEntityTypeId() == 'field_config') {
         // Remove components for fields that are being deleted.
         $this->removeComponent($entity->getName());
         unset($this->hidden[$entity->getName()]);

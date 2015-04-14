@@ -224,7 +224,7 @@ class EntityFormDisplayTest extends KernelTestBase {
   }
 
   /**
-   * Tests \Drupal\entity\EntityDisplayBase::onDependencyRemoval().
+   * Tests \Drupal\Core\Entity\EntityDisplayBase::onDependencyRemoval().
    */
   public function testOnDependencyRemoval() {
     $this->enableModules(array('field_plugins_test'));

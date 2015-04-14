@@ -27,7 +27,7 @@ namespace Drupal\config_test\Entity;
  *   }
  * )
  *
- * @see \Drupal\entity\Tests\ConfigEntityQueryTest
+ * @see \Drupal\system\Tests\Entity\ConfigEntityQueryTest
  */
 class ConfigQueryTest extends ConfigTest {
 

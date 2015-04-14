@@ -80,10 +80,10 @@ interface FieldItemInterface extends ComplexDataInterface {
    *     Only columns that appear in the 'columns' array are allowed.
    *   - indexes: (optional) An array of Schema API index definitions. Only
    *     columns that appear in the 'columns' array are allowed. Those indexes
-   *     will be used as default indexes. Callers of field_create_field() can
-   *     specify additional indexes or, at their own risk, modify the default
-   *     indexes specified by the field-type module. Some storage engines might
-   *     not support indexes.
+   *     will be used as default indexes. Field definitions can specify
+   *     additional indexes or, at their own risk, modify the default indexes
+   *     specified by the field-type module. Some storage engines might not
+   *     support indexes.
    *   - foreign keys: (optional) An array of Schema API foreign key
    *     definitions. Note, however, that the field data is not necessarily
    *     stored in SQL. Also, the possible usage is limited, as you cannot

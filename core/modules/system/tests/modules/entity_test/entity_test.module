@@ -236,7 +236,7 @@ function entity_test_entity_extra_field_info() {
   $extra['entity_test']['bundle_with_extra_fields'] = array(
     'display' => array(
       // Note: those extra fields do not currently display anything, they are
-      // just used in \Drupal\entity\Tests\EntityDisplayTest to test the
+      // just used in \Drupal\field_ui\Tests\EntityDisplayTest to test the
       // behavior of entity display objects.
       'display_extra_field' => array(
         'label' => t('Display extra field'),

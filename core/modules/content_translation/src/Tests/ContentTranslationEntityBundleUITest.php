@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\entity\Tests\ContentTranslationEntityBundleUITest.
+ * Contains \Drupal\content_translation\Tests\ContentTranslationEntityBundleUITest.
  */
 
 namespace Drupal\content_translation\Tests;

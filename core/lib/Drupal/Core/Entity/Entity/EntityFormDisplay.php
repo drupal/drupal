@@ -192,7 +192,7 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
   /**
    * Process callback: assigns weights and hides extra fields.
    *
-   * @see \Drupal\entity\Entity\EntityFormDisplay::buildForm()
+   * @see \Drupal\Core\Entity\Entity\EntityFormDisplay::buildForm()
    */
   public function processForm($element, FormStateInterface $form_state, $form) {
     // Assign the weights configured in the form display.

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\entity\Tests\ContentTranslationUITest.
+ * Contains \Drupal\content_translation\Tests\ContentTranslationUITest.
  */
 
 namespace Drupal\content_translation\Tests;

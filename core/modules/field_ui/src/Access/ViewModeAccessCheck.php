@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Route;
 /**
  * Defines an access check for entity view mode routes.
  *
- * @see \Drupal\entity\Entity\EntityViewMode
+ * @see \Drupal\Core\Entity\Entity\EntityViewMode
  */
 class ViewModeAccessCheck implements AccessInterface {
 

@@ -10,7 +10,7 @@ namespace Drupal\field_ui;
 /**
  * Defines a class to build a listing of form mode entities.
  *
- * @see \Drupal\entity\Entity\EntityFormMode
+ * @see \Drupal\Core\Entity\Entity\EntityFormMode
  */
 class EntityFormModeListBuilder extends EntityDisplayModeListBuilder {
 

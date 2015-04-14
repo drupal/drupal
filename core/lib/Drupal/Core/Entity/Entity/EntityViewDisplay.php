@@ -152,7 +152,7 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
    * @return \Drupal\Core\Entity\Display\EntityViewDisplayInterface
    *   The display object that should be used to render the entity.
    *
-   * @see \Drupal\entity\Entity\EntityDisplay::collectRenderDisplays()
+   * @see \Drupal\Core\Entity\Entity\EntityViewDisplay::collectRenderDisplays()
    */
   public static function collectRenderDisplay(FieldableEntityInterface $entity, $view_mode) {
     $displays = static::collectRenderDisplays(array($entity), $view_mode);

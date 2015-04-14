@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\field\Annotation\FieldWidget.
+ * Contains \Drupal\Core\Field\Annotation\FieldWidget.
  */
 
 namespace Drupal\Core\Field\Annotation;
