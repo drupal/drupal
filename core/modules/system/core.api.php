@@ -1866,6 +1866,112 @@ function hook_display_variant_plugin_alter(array &$definitions) {
 }
 
 /**
+ * Flush all persistent and static caches.
+ *
+ * This hook asks your module to clear all of its static caches,
+ * in order to ensure a clean environment for subsequently
+ * invoked data rebuilds.
+ *
+ * Do NOT use this hook for rebuilding information. Only use it to flush custom
+ * caches.
+ *
+ * Static caches using drupal_static() do not need to be reset manually.
+ * However, all other static variables that do not use drupal_static() must be
+ * manually reset.
+ *
+ * This hook is invoked by drupal_flush_all_caches(). It runs before module data
+ * is updated and before hook_rebuild().
+ *
+ * @see drupal_flush_all_caches()
+ * @see hook_rebuild()
+ */
+function hook_cache_flush() {
+  if (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update') {
+    _update_cache_clear();
+  }
+}
+
+/**
+ * Rebuild data based upon refreshed caches.
+ *
+ * This hook allows your module to rebuild its data based on the latest/current
+ * module data. It runs after hook_cache_flush() and after all module data has
+ * been updated.
+ *
+ * This hook is only invoked after the system has been completely cleared;
+ * i.e., all previously cached data is known to be gone and every API in the
+ * system is known to return current information, so your module can safely rely
+ * on all available data to rebuild its own.
+ *
+ * @see hook_cache_flush()
+ * @see drupal_flush_all_caches()
+ */
+function hook_rebuild() {
+  $themes = \Drupal::service('theme_handler')->listInfo();
+  foreach ($themes as $theme) {
+    _block_rehash($theme->getName());
+  }
+}
+
+/**
+ * Alter the configuration synchronization steps.
+ *
+ * @param array $sync_steps
+ *   A one-dimensional array of \Drupal\Core\Config\ConfigImporter method names
+ *   or callables that are invoked to complete the import, in the order that
+ *   they will be processed. Each callable item defined in $sync_steps should
+ *   either be a global function or a public static method. The callable should
+ *   accept a $context array by reference. For example:
+ *   <code>
+ *     function _additional_configuration_step(&$context) {
+ *       // Do stuff.
+ *       // If finished set $context['finished'] = 1.
+ *     }
+ *   </code>
+ *   For more information on creating batches, see the
+ *   @link batch Batch operations @endlink documentation.
+ *
+ * @see callback_batch_operation()
+ * @see \Drupal\Core\Config\ConfigImporter::initialize()
+ */
+function hook_config_import_steps_alter(&$sync_steps, \Drupal\Core\Config\ConfigImporter $config_importer) {
+  $deletes = $config_importer->getUnprocessedConfiguration('delete');
+  if (isset($deletes['field.storage.node.body'])) {
+    $sync_steps[] = '_additional_configuration_step';
+  }
+}
+
+/**
+ * Alter config typed data definitions.
+ *
+ * For example you can alter the typed data types representing each
+ * configuration schema type to change default labels or form element renderers
+ * used for configuration translation.
+ *
+ * If implementations of this hook add or remove configuration schema a
+ * ConfigSchemaAlterException will be thrown. Keep in mind that there are tools
+ * that may use the configuration schema for static analysis of configuration
+ * files, like the string extractor for the localization system. Such systems
+ * won't work with dynamically defined configuration schemas.
+ *
+ * For adding new data types use configuration schema YAML files instead.
+ *
+ * @param $definitions
+ *   Associative array of configuration type definitions keyed by schema type
+ *   names. The elements are themselves array with information about the type.
+ *
+ * @see \Drupal\Core\Config\TypedConfigManager
+ * @see \Drupal\Core\Config\Schema\ConfigSchemaAlterException
+ */
+function hook_config_schema_info_alter(&$definitions) {
+  // Enhance the text and date type definitions with classes to generate proper
+  // form elements in ConfigTranslationFormBase. Other translatable types will
+  // appear as a one line textfield.
+  $definitions['text']['form_element_class'] = '\Drupal\config_translation\FormElement\Textarea';
+  $definitions['date_format']['form_element_class'] = '\Drupal\config_translation\FormElement\DateFormat';
+}
+
+/**
  * @} End of "addtogroup hooks".
  */
 
