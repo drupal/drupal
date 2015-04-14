@@ -79,7 +79,7 @@ class UserStorage extends SqlContentEntityStorage implements UserStorageInterfac
       $entity->uid->value = $this->database->nextId($this->database->query('SELECT MAX(uid) FROM {users}')->fetchField());
       $entity->enforceIsNew();
     }
-    parent::save($entity);
+    return parent::save($entity);
   }
 
   /**
