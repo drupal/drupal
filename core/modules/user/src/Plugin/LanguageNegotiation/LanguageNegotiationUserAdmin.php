@@ -26,7 +26,7 @@ use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
  * @Plugin(
  *   id = Drupal\user\Plugin\LanguageNegotiation\LanguageNegotiationUserAdmin::METHOD_ID,
  *   types = {Drupal\Core\Language\LanguageInterface::TYPE_INTERFACE},
- *   weight = 10,
+ *   weight = -10,
  *   name = @Translation("Account administration pages"),
  *   description = @Translation("Account administration pages language setting.")
  * )
