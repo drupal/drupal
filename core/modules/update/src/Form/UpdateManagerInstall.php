@@ -104,6 +104,7 @@ class UpdateManagerInstall extends FormBase {
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(
       '#type' => 'submit',
+      '#button_type' => 'primary',
       '#value' => $this->t('Install'),
     );
 
