@@ -184,6 +184,7 @@ class ConfigHandler extends ViewsFormBase {
         '#ajax' => array(
           'url' => Url::fromRoute('<current>'),
         ),
+        '#button_type' => 'danger',
       );
     }
 
