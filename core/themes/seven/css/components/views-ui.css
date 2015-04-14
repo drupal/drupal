@@ -242,7 +242,11 @@ details.fieldset-no-legend {
 }
 
 .views-ui-rearrange-filter-form tr td:last-child {
-  border-right: medium none;
+  border-right: medium none; /* LTR */
+}
+[dir="rtl"] .views-ui-rearrange-filter-form tr td:last-child {
+  border-left: medium none;
+  border-right: initial;
 }
 
 .views-ui-rearrange-filter-form .filter-group-operator-row {
@@ -277,7 +281,11 @@ details.fieldset-no-legend {
 
 .views-query-info table tr td:last-child {
   /* Fixes a Seven style that bleeds down into this table unnecessarily */
-  border-right: 0 none;
+  border-right: 0 none; /* LTR */
+}
+[dir="rtl"] .views-query-info table tr td:last-child {
+  border-left: 0 none;
+  border-right: initial;
 }
 
 /* @end */

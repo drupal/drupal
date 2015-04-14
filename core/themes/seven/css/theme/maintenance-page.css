@@ -7,8 +7,11 @@
   background-image: -webkit-radial-gradient(hsl(203, 2%, 90%), hsl(203, 2%, 95%));
   background-image: radial-gradient(hsl(203, 2%, 90%), hsl(203, 2%, 95%));
   background-repeat: repeat;
-  background-position: left top, 50% 50%;
+  background-position: left top, 50% 50%; /* LTR */
   min-height: 100%;
+}
+[dir="rtl"] .maintenance-page {
+  background-position: right top, 50% 50%;
 }
 
 .page-title {

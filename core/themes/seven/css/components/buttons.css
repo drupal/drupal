@@ -110,12 +110,18 @@
  * Overrides styling from system.theme.
  */
 .button-action:before {
-  margin-left: -0.2em;
-  padding-right: 0.2em;
+  margin-left: -0.2em; /* LTR */
+  padding-right: 0.2em; /* LTR */
   font-size: 14px;
   font-size: 0.875rem;
   line-height: 16px;
   -webkit-font-smoothing: auto;
+}
+[dir="rtl"] .button-action:before {
+  margin-right: -0.2em;
+  margin-left: 0;
+  padding-right: 0;
+  padding-left: 0.2em;
 }
 
 /**

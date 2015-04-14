@@ -33,12 +33,16 @@
 .ui-dialog .ui-dialog-titlebar-close {
   border: 0;
   background: none;
-  right: 20px;
+  right: 20px; /* LTR */
   top: 20px;
   margin: 0;
   height: 16px;
   width: 16px;
   position: absolute;
+}
+[dir="rtl"] .ui-dialog .ui-dialog-titlebar-close {
+  right: auto;
+  left: 20px;
 }
 .ui-dialog .ui-icon.ui-icon-closethick {
   background: url(../../../../misc/icons/ffffff/ex.svg) 0 0 no-repeat;
@@ -79,7 +83,7 @@
 }
 .ui-dialog .ajax-progress-throbber {
   /* Can't do center:50% middle: 50%, so approximate it for a typical window size. */
-  left: 49%;
+  left: 49%; /* LTR */
   position: fixed;
   top: 48.5%;
   z-index: 1000;
@@ -92,6 +96,10 @@
   opacity: 0.9;
   padding: 4px;
   width: 24px;
+}
+[dir="rtl"] .ui-dialog .ajax-progress-throbber {
+  left: auto;
+  right: 49%;
 }
 .ui-dialog .ajax-progress-throbber .throbber,
 .ui-dialog .ajax-progress-throbber .message {

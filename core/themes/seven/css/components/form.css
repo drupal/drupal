@@ -130,8 +130,8 @@ input.form-file,
 input.form-date,
 input.form-time,
 textarea.form-textarea {
-  box-sizing:         border-box;
-  padding: .3em .4em .3em .5em;
+  box-sizing: border-box;
+  padding: .3em .4em .3em .5em; /* LTR */
   max-width: 100%;
   border: 1px solid #b8b8b8;
   border-top-color: #999;
@@ -144,6 +144,9 @@ textarea.form-textarea {
   color: #595959;
   -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
   transition: border linear 0.2s, box-shadow linear 0.2s;
+}
+[dir="rtl"] textarea.form-textarea {
+  padding: .3em .5em .3em .4em;
 }
 .form-text:focus,
 .form-tel:focus,
@@ -170,11 +173,12 @@ textarea.form-textarea {
 
 .form-item .password-suggestions {
   float: left; /* LTR */
-  clear: left;
+  clear: left; /* LTR */
   width: 100%;
 }
 [dir="rtl"] .form-item .password-suggestions {
   float: right;
+  clear: right;
 }
 .form-item-pass .description {
   clear: both;

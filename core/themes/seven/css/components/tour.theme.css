@@ -34,13 +34,21 @@
 }
 .joyride-tip-guide .joyride-nub.right {
   border-top-color: transparent;
-  border-right-color: transparent;
+  border-right-color: transparent; /* LTR */
   border-bottom-color: transparent;
+}
+[dir="rtl"] .joyride-tip-guide .joyride-nub.right {
+  border-left-color: transparent;
+  border-right-color: rgba(0,0,0, 0.8);
 }
 .joyride-tip-guide .joyride-nub.left {
   border-top-color: transparent;
-  border-left-color: transparent;
+  border-left-color: transparent; /* LTR */
   border-bottom-color: transparent;
+}
+[dir="rtl"] .joyride-tip-guide .joyride-nub.left {
+  border-left-color: rgba(0,0,0, 0.8);
+  border-right-color: transparent;
 }
 .joyride-tip-guide .joyride-nub.top-right {
   border-top-color: transparent;

@@ -47,7 +47,7 @@
   }
   .messages {
     border-width: 1px;
-    border-left-color: #999;
+    border-color: #999;
   }
   .is-collapse-enabled .tabs {
     max-height: 999em;

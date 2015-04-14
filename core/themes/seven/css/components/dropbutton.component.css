@@ -16,10 +16,18 @@
   font-weight: 600;
   line-height: normal;
   -webkit-font-smoothing: antialiased;
-  text-align: left;
+  text-align: left; /* LTR */
+}
+[dir="rtl"] .js .dropbutton .dropbutton-action > input,
+[dir="rtl"] .js .dropbutton .dropbutton-action > a,
+[dir="rtl"] .js .dropbutton .dropbutton-action > button {
+  text-align: right;
 }
 .js .dropbutton-action.last {
-  border-radius: 0 0 0 1em;
+  border-radius: 0 0 0 1em; /* LTR */
+}
+[dir="rtl"] .js .dropbutton-action.last {
+  border-radius: 0 0 1em 0;
 }
 
 /**
@@ -236,8 +244,12 @@
 }
 .dropbutton-arrow {
   border-top-color: #333;
-  right: 35%;
+  right: 35%; /* LTR */
   top: 54%;
+}
+[dir="rtl"] .dropbutton-arrow {
+  left: 35%;
+  right: auto;
 }
 .dropbutton-multiple.open .dropbutton-arrow {
   border-bottom: 0.3333em solid #333;

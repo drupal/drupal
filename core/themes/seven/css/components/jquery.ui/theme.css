@@ -86,9 +86,12 @@
   background-image: url(../../../images/ui-icons-ffffff-256x240.png);
 }
 .ui-widget p .ui-icon {
-  margin: 2px 3px 0 0;
+  margin: 2px 3px 0 0; /* LTR */
 }
 
+[dir="rtl"] .ui-widget p .ui-icon {
+  margin: 2px 0 0 3px;
+}
 /* positioning */
 .ui-icon-carat-1-ne { background-position: -16px 0; }
 .ui-icon-carat-1-e { background-position: -32px 0; }
@@ -307,9 +310,12 @@
   border-bottom-right-radius: 0;
 }
 .ui-tabs .ui-tabs-nav li {
-  padding: 0 1em 0 10px;
+  padding: 0 1em 0 10px; /* LTR */
   margin: 0;
   list-style: none;
+}
+[dir="rtl"] .ui-tabs .ui-tabs-nav li {
+  padding: 0 10px 0 1em;
 }
 .ui-tabs .ui-tabs-nav li a {
   float: none;
