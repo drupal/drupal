@@ -49,6 +49,7 @@ class ThemeAdminForm extends ConfigFormBase {
     $form['admin_theme']['actions']['submit'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Save configuration'),
+      '#button_type' => 'primary',
     );
     return $form;
   }
