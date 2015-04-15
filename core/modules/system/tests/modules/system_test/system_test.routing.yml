@@ -66,6 +66,13 @@ system_test.cache_tags_page:
   requirements:
     _access: 'TRUE'
 
+system_test.cache_maxage_page:
+  path: '/system-test/cache_maxage_page'
+  defaults:
+    _controller: '\Drupal\system_test\Controller\SystemTestController::system_test_cache_maxage_page'
+  requirements:
+    _access: 'TRUE'
+
 system_test.authorize_init:
   path: '/system-test/authorize-init/{page_title}'
   defaults:

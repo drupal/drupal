@@ -236,6 +236,12 @@ class PageCacheTest extends WebTestBase {
     $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'must-revalidate, no-cache, post-check=0, pre-check=0, private', 'Cache-Control header was sent.');
     $this->assertEqual($this->drupalGetHeader('Expires'), 'Sun, 19 Nov 1978 05:00:00 GMT', 'Expires header was sent.');
     $this->assertEqual($this->drupalGetHeader('Foo'), 'bar', 'Custom header was sent.');
+
+    // Until bubbling of max-age up to the response is supported, verify that
+    // a custom #cache max-age set on an element does not affect page max-age.
+    $this->drupalLogout();
+    $this->drupalGet('system-test/cache_maxage_page');
+    $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'max-age=300, public');
   }
 
   /**

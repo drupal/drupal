@@ -157,12 +157,10 @@ class HtmlRenderer implements MainContentRendererInterface {
     // entire render cache, regardless of the cache bin.
     $cache_contexts = [];
     $cache_tags = ['rendered'];
-    $cache_max_age = Cache::PERMANENT;
     foreach (['page_top', 'page', 'page_bottom'] as $region) {
       if (isset($html[$region])) {
         $cache_contexts = Cache::mergeContexts($cache_contexts, $html[$region]['#cache']['contexts']);
         $cache_tags = Cache::mergeTags($cache_tags, $html[$region]['#cache']['tags']);
-        $cache_max_age = Cache::mergeMaxAges($cache_max_age, $html[$region]['#cache']['max-age']);
       }
     }
 
@@ -174,11 +172,6 @@ class HtmlRenderer implements MainContentRendererInterface {
       'X-Drupal-Cache-Contexts' => implode(' ', $this->cacheContexts->optimizeTokens($cache_contexts)),
       'X-Generator' => 'Drupal ' . $version . ' (https://www.drupal.org)'
     ]);
-    // If an explicit non-infinite max-age is specified by a part of the page,
-    // respect that by applying it to the response's headers.
-    if ($cache_max_age !== Cache::PERMANENT) {
-      $response->setMaxAge($cache_max_age);
-    }
     return $response;
   }
 

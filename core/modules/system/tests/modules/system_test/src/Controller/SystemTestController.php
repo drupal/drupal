@@ -205,6 +205,19 @@ class SystemTestController extends ControllerBase {
   }
 
   /**
+   * Set cache max-age on the returned render array.
+   */
+  public function system_test_cache_maxage_page() {
+    $build['main'] = array(
+      '#cache' => array('max-age' => 90),
+      'message' => array(
+        '#markup' => 'Cache max-age page example',
+      ),
+    );
+    return $build;
+  }
+
+  /**
    * Sets a cache tag on an element to help test #pre_render and cache tags.
    */
   public static function preRenderCacheTags($elements) {
