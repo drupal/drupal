@@ -286,7 +286,7 @@ class NodeForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, FormStateInterface $form_state) {
+  public function validate(array &$form, FormStateInterface $form_state) {
     $node = parent::validate($form, $form_state);
 
     if ($node->id() && (node_last_changed($node->id(), $this->getFormLangcode($form_state)) > $node->getChangedTime())) {

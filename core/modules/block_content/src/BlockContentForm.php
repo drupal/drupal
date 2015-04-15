@@ -223,7 +223,7 @@ class BlockContentForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
+  public function validate(array &$form, FormStateInterface $form_state) {
     if ($this->entity->isNew()) {
       $exists = $this->blockContentStorage->loadByProperties(array('info' => $form_state->getValue(['info', 0, 'value'])));
       if (!empty($exists)) {

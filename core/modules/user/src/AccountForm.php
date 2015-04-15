@@ -354,7 +354,7 @@ abstract class AccountForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, FormStateInterface $form_state) {
+  public function validate(array &$form, FormStateInterface $form_state) {
     /** @var \Drupal\user\UserInterface $account */
     $account = parent::validate($form, $form_state);
 
