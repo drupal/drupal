@@ -21,6 +21,8 @@ function link_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dl>';
       $output .= '<dt>' . t('Managing and displaying link fields') . '</dt>';
       $output .= '<dd>' . t('The <em>settings</em> and the <em>display</em> of the link field can be configured separately. See the <a href="!field_ui">Field UI help</a> for more information on how to manage fields and their display.', array('!field_ui' => \Drupal::url('help.page', array('name' => 'field_ui')))) . '</dd>';
+      $output .= '<dt>' . t('Setting the allowed link type') . '</dt>';
+      $output .= '<dd>' . t('In the field settings you can define the allowed link type to be <em>internal links only</em>, <em>external links only</em>, or <em>both internal and external links</em>. <em>Internal links only</em> and <em>both internal and external links</em> options enable an autocomplete widget for internal links, so a user does not have to copy or remember a URL.') . '</dd>';
       $output .= '<dt>' . t('Adding link text') . '</dt>';
       $output .= '<dd>' . t('In the field settings you can define additional link text to be <em>optional</em> or <em>required</em> in any link field.') . '</dd>';
       $output .= '<dt>' . t('Displaying link text') . '</dt>';
