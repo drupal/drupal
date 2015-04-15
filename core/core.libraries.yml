@@ -2,7 +2,7 @@
 
 backbone:
   remote: https://github.com/jashkenas/backbone
-  version: 1.1.2
+  version: "1.1.2"
   license:
     name: MIT
     url: https://github.com/jashkenas/backbone/blob/1.1.2/LICENSE
@@ -14,7 +14,7 @@ backbone:
 
 classList:
   remote: https://github.com/eligrey/classList.js
-  version: 2014-12-13
+  version: "2014-12-13"
   license:
     name: Public Domain
     url: https://github.com/eligrey/classList.js/blob/2014-12-13/LICENSE.md
@@ -24,7 +24,7 @@ classList:
 
 ckeditor:
   remote: https://github.com/ckeditor/ckeditor-dev
-  version: 4.4.7
+  version: "4.4.7"
   license:
     name: GNU-GPL-2.0-or-later
     url: https://github.com/ckeditor/ckeditor-dev/blob/4.4.7/LICENSE.md
@@ -34,7 +34,7 @@ ckeditor:
 
 domready:
   remote: https://github.com/ded/domready
-  version: 1.0.7
+  version: "1.0.7"
   license:
     name: MIT
     url: https://github.com/ded/domready/blob/v1.0.7/LICENSE
@@ -311,7 +311,7 @@ html5shiv:
   # Block the page from being loaded until html5shiv is initialized.
   header: true
   remote: https://github.com/aFarkas/html5shiv
-  version: 3.7.2
+  version: "3.7.2"
   license:
     name: GNU-GPL-2.0-or-later
     url: http://www.gnu.org/licenses/gpl-2.0.html
@@ -321,7 +321,7 @@ html5shiv:
 
 jquery:
   remote: https://github.com/jquery/jquery
-  version: 2.1.3
+  version: "2.1.3"
   license:
     name: MIT
     url: https://github.com/jquery/jquery/blob/2.1.3/MIT-LICENSE.txt
@@ -331,7 +331,7 @@ jquery:
 
 jquery.cookie:
   remote: https://github.com/carhartl/jquery-cookie
-  version: v1.4.1
+  version: "v1.4.1"
   license:
     name: MIT
     url: https://github.com/carhartl/jquery-cookie/blob/v1.4.1/MIT-LICENSE.txt
@@ -344,7 +344,7 @@ jquery.cookie:
 jquery.farbtastic:
   remote: https://github.com/mattfarina/farbtastic
   # @todo Ping @robloach or @mattfarina to retroactively create this release.
-  version: 1.2
+  version: "1.2"
   license:
     name: GNU-GPL-2.0-or-later
     url: https://github.com/mattfarina/farbtastic/blob/master/LICENSE.txt
@@ -359,7 +359,7 @@ jquery.farbtastic:
 
 jquery.form:
   remote: https://github.com/malsup/form
-  version: 3.50
+  version: "3.50"
   license:
     name: GNU-GPL-2.0-or-later
     url: http://malsup.github.com/gpl-license-v2.txt
@@ -378,7 +378,7 @@ jquery.intrinsic:
 
 jquery.joyride:
   remote: https://github.com/zurb/joyride
-  version: v2.1.0
+  version: "v2.1.0"
   license:
     name: MIT
     url: https://github.com/zurb/joyride/blob/v2.1.0/README.markdown
@@ -391,7 +391,7 @@ jquery.joyride:
 
 jquery.once:
   remote: https://github.com/RobLoach/jquery-once
-  version: 2.0.0
+  version: "2.0.0"
   license:
     name: GNU-GPL-2.0-or-later
     url: https://github.com/RobLoach/jquery-once/blob/master/LICENSE.md
@@ -772,7 +772,7 @@ jquery.ui.tooltip:
 
 jquery.ui.touch-punch:
   remote: https://github.com/furf/jquery-ui-touch-punch
-  version: 0.2.3
+  version: "0.2.3"
   license:
     name: GNU-GPL-2.0-or-later
     url: https://github.com/furf/jquery-ui-touch-punch
@@ -816,13 +816,13 @@ modernizr:
     name: MIT
     url: http://modernizr.com/license/
     gpl-compatible: true
-  version: v2.8.3
+  version: "v2.8.3"
   js:
     assets/vendor/modernizr/modernizr.min.js: { every_page: true, preprocess: 0, weight: -21, minified: true }
 
 normalize:
   remote: https://github.com/necolas/normalize.css
-  version: 3.0.2
+  version: "3.0.2"
   license:
     name: MIT
     url: https://github.com/necolas/normalize.css/blob/master/LICENSE.md
@@ -833,7 +833,7 @@ normalize:
 
 picturefill:
   remote: https://github.com/scottjehl/picturefill
-  version: 2.3.0
+  version: "2.3.0"
   license:
     name: MIT
     url: https://github.com/scottjehl/picturefill/blob/2.3/LICENSE
@@ -845,7 +845,7 @@ picturefill:
 
 underscore:
   remote: https://github.com/jashkenas/underscore
-  version: 1.8.3
+  version: "1.8.3"
   license:
     name: MIT
     url: https://github.com/jashkenas/underscore/blob/1.8.3/LICENSE

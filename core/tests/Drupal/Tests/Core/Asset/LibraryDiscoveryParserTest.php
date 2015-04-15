@@ -209,6 +209,35 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
   }
 
   /**
+   * Tests the version property with ISO dates.
+   *
+   * We want to make sure that versions defined in the YAML file are the same
+   * versions that are parsed.
+   *
+   * For example, ISO dates are converted into UNIX time by the YAML parser.
+   *
+   * @covers ::buildByExtension
+   */
+  public function testNonStringVersion() {
+    $this->moduleHandler->expects($this->atLeastOnce())
+      ->method('moduleExists')
+      ->with('versions')
+      ->will($this->returnValue(TRUE));
+
+    $path = __DIR__ . '/library_test_files';
+    $path = substr($path, strlen($this->root) + 1);
+    $this->libraryDiscoveryParser->setPaths('module', 'versions', $path);
+
+    $libraries = $this->libraryDiscoveryParser->buildByExtension('versions');
+
+    // As an example, we defined an ISO date in the YAML file and the YAML
+    // parser converts it into a UNIX timestamp.
+    $this->assertNotEquals('2014-12-13', $libraries['invalid-version']['version']);
+    // An example of an ISO date as a string which parses correctly.
+    $this->assertEquals('2014-12-13', $libraries['valid-version']['version']);
+  }
+
+  /**
    * Tests that the version property of external libraries is handled.
    *
    * @covers ::buildByExtension
