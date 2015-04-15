@@ -192,6 +192,7 @@ class Xss {
     $mode = 0;
     $attribute_name = '';
     $skip = FALSE;
+    $skip_protocol_filtering = FALSE;
 
     while (strlen($attributes) != 0) {
       // Was the last operation successful?
@@ -203,6 +204,20 @@ class Xss {
           if (preg_match('/^([-a-zA-Z]+)/', $attributes, $match)) {
             $attribute_name = strtolower($match[1]);
             $skip = ($attribute_name == 'style' || substr($attribute_name, 0, 2) == 'on');
+
+            // Values for attributes of type URI should be filtered for
+            // potentially malicious protocols (for example, an href-attribute
+            // starting with "javascript:"). However, for some non-URI
+            // attributes performing this filtering causes valid and safe data
+            // to be mangled. We prevent this by skipping protocol filtering on
+            // such attributes.
+            // @see \Drupal\Component\Utility\UrlHelper::filterBadProtocol()
+            // @see http://www.w3.org/TR/html4/index/attributes.html
+            $skip_protocol_filtering = substr($attribute_name, 0, 5) === 'data-' || in_array($attribute_name, array(
+              'title',
+              'alt',
+            ));
+
             $working = $mode = 1;
             $attributes = preg_replace('/^[-a-zA-Z]+/', '', $attributes);
           }
@@ -228,7 +243,7 @@ class Xss {
         case 2:
           // Attribute value, a URL after href= for instance.
           if (preg_match('/^"([^"]*)"(\s+|$)/', $attributes, $match)) {
-            $thisval = UrlHelper::filterBadProtocol($match[1]);
+            $thisval = $skip_protocol_filtering ? $match[1] : UrlHelper::filterBadProtocol($match[1]);
 
             if (!$skip) {
               $attributes_array[] = "$attribute_name=\"$thisval\"";
@@ -240,7 +255,7 @@ class Xss {
           }
 
           if (preg_match("/^'([^']*)'(\s+|$)/", $attributes, $match)) {
-            $thisval = UrlHelper::filterBadProtocol($match[1]);
+            $thisval = $skip_protocol_filtering ? $match[1] : UrlHelper::filterBadProtocol($match[1]);
 
             if (!$skip) {
               $attributes_array[] = "$attribute_name='$thisval'";
@@ -251,7 +266,7 @@ class Xss {
           }
 
           if (preg_match("%^([^\s\"']+)(\s+|$)%", $attributes, $match)) {
-            $thisval = UrlHelper::filterBadProtocol($match[1]);
+            $thisval = $skip_protocol_filtering ? $match[1] : UrlHelper::filterBadProtocol($match[1]);
 
             if (!$skip) {
               $attributes_array[] = "$attribute_name=\"$thisval\"";

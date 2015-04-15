@@ -489,6 +489,37 @@ class XssTest extends UnitTestCase {
   }
 
   /**
+   * Check that strings in HTML attributes are are correctly processed.
+   *
+   * @covers ::attributes
+   * @dataProvider providerTestAttributes
+   */
+  public function testAttribute($value, $expected, $message, $allowed_tags = NULL) {
+    $value = Xss::filter($value, $allowed_tags);
+    $this->assertEquals($expected, $value, $message);
+  }
+
+  /**
+   * Data provider for testFilterXssAdminNotNormalized().
+   */
+  public function providerTestAttributes() {
+    return array(
+      array(
+        '<img src="http://example.com/foo.jpg" title="Example: title" alt="Example: alt">',
+        '<img src="http://example.com/foo.jpg" title="Example: title" alt="Example: alt">',
+        'Image tag with alt and title attribute',
+        array('img')
+      ),
+      array(
+        '<img src="http://example.com/foo.jpg" data-caption="Drupal 8: The best release ever.">',
+        '<img src="http://example.com/foo.jpg" data-caption="Drupal 8: The best release ever.">',
+        'Image tag with data attribute',
+        array('img')
+      ),
+    );
+  }
+
+  /**
    * Checks that \Drupal\Component\Utility\Xss::filterAdmin() correctly strips unallowed tags.
    */
   public function testFilterXSSAdmin() {

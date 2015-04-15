@@ -7,7 +7,9 @@
 
 namespace Drupal\editor\EditorXssFilter;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Xss;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\editor\EditorXssFilterInterface;
 
@@ -85,7 +87,39 @@ class Standard extends Xss implements EditorXssFilterInterface {
     // Also blacklist tags that are explicitly forbidden in either text format.
     $blacklisted_tags = array_merge($blacklisted_tags, $forbidden_tags);
 
-    return static::filter($html, $blacklisted_tags);
+    $output = static::filter($html, $blacklisted_tags);
+
+    // Since data-attributes can contain encoded HTML markup that could be
+    // decoded and interpreted by editors, we need to apply XSS filtering to
+    // their contents.
+    return static::filterXssDataAttributes($output);
+  }
+
+  /**
+   * Applies a very permissive XSS/HTML filter to data-attributes.
+   *
+   * @param string $html
+   *   The string to apply the data-attributes filtering to.
+   *
+   * @return string
+   *   The filtered string.
+   */
+  protected static function filterXssDataAttributes($html) {
+    if (stristr($html, 'data-') !== FALSE) {
+      $dom = Html::load($html);
+      $xpath = new \DOMXPath($dom);
+      foreach ($xpath->query('//@*[starts-with(name(.), "data-")]') as $node) {
+        // The data-attributes contain an HTML-encoded value, so we need to
+        // decode the value, apply XSS filtering and then re-save as encoded
+        // value. There is no need to explicitly decode $node->value, since the
+        // DOMAttr::value getter returns the decoded value.
+        $value = Xss::filterAdmin($node->value);
+        $node->value = SafeMarkup::checkPlain($value);
+      }
+      $html = Html::serialize($dom);
+    }
+
+    return $html;
   }
 
 

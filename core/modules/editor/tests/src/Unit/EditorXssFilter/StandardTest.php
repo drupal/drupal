@@ -512,6 +512,17 @@ xss:ex/*XSS*//*/*/pression(alert("XSS"))\'>', 'exp/*<A>');
     // sites, it only forbids linking to any protocols other than those that are
     // whitelisted.
 
+    // Test XSS filtering on data-attributes.
+    // @see \Drupal\editor\EditorXssFilter::filterXssDataAttributes()
+
+    // The following two test cases verify that XSS attack vectors are filtered.
+    $data[] = array('<img src="butterfly.jpg" data-caption="&lt;script&gt;alert();&lt;/script&gt;" />', '<img src="butterfly.jpg" data-caption="alert();" />');
+    $data[] = array('<img src="butterfly.jpg" data-caption="&lt;EMBED SRC=&quot;http://ha.ckers.org/xss.swf&quot; AllowScriptAccess=&quot;always&quot;&gt;&lt;/EMBED&gt;" />', '<img src="butterfly.jpg" data-caption="" />');
+
+    // When including HTML-tags as visible content, they are double-escaped.
+    // This test case ensures that we leave that content unchanged.
+    $data[] = array('<img src="butterfly.jpg" data-caption="&amp;lt;script&amp;gt;alert();&amp;lt;/script&amp;gt;" />', '<img src="butterfly.jpg" data-caption="&amp;lt;script&amp;gt;alert();&amp;lt;/script&amp;gt;" />');
+
     return $data;
   }
 

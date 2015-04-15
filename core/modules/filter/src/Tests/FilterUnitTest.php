@@ -9,6 +9,8 @@ namespace Drupal\filter\Tests;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\editor\EditorXssFilter\Standard;
+use Drupal\filter\Entity\FilterFormat;
 use Drupal\filter\FilterPluginCollection;
 use Drupal\simpletest\KernelTestBase;
 
@@ -176,6 +178,74 @@ class FilterUnitTest extends KernelTestBase {
     $output = $test($input);
     $this->assertIdentical($expected, $output->getProcessedText());
     $this->assertIdentical($attached_library, $output->getAssets());
+
+    // So far we've tested that the caption filter works correctly. But we also
+    // want to make sure that it works well in tandem with the "Limit allowed
+    // HTML tags" filter, which it is typically used with.
+    $html_filter = $this->filters['filter_html'];
+    $html_filter->setConfiguration(array(
+      'settings' => array(
+        'allowed_html' => '<img>',
+        'filter_html_help' => 1,
+        'filter_html_nofollow' => 0,
+      )
+    ));
+    $test_with_html_filter = function ($input) use ($filter, $html_filter) {
+      // 1. Apply HTML filter's processing step.
+      $output = $html_filter->process($input, 'und');
+      // 2. Apply caption filter's processing step.
+      $output = $filter->process($output, 'und');
+      return $output->getProcessedText();
+    };
+    // Editor XSS filter.
+    $test_editor_xss_filter = function ($input) {
+      $dummy_filter_format = FilterFormat::create();
+      return Standard::filterXss($input, $dummy_filter_format);
+    };
+
+    // All the tricky cases encountered at https://drupal.org/node/2105841.
+    // A plain URL preceded by text.
+    $input = '<img data-caption="See http://drupal.org" src="llama.jpg" />';
+    $expected = '<figure><img src="llama.jpg" /><figcaption>See http://drupal.org</figcaption></figure>';
+    $this->assertIdentical($expected, $test_with_html_filter($input));
+    $this->assertIdentical($input, $test_editor_xss_filter($input));
+
+    // An anchor.
+    $input = '<img data-caption="This is a &lt;a href=&quot;http://drupal.org&quot;&gt;quick&lt;/a&gt; test…" src="llama.jpg" />';
+    $expected = '<figure><img src="llama.jpg" /><figcaption>This is a <a href="http://drupal.org">quick</a> test…</figcaption></figure>';
+    $this->assertIdentical($expected, $test_with_html_filter($input));
+    $this->assertIdentical($input, $test_editor_xss_filter($input));
+
+    // A plain URL surrounded by parentheses.
+    $input = '<img data-caption="(http://drupal.org)" src="llama.jpg" />';
+    $expected = '<figure><img src="llama.jpg" /><figcaption>(http://drupal.org)</figcaption></figure>';
+    $this->assertIdentical($expected, $test_with_html_filter($input));
+    $this->assertIdentical($input, $test_editor_xss_filter($input));
+
+    // A source being credited.
+    $input = '<img data-caption="Source: Wikipedia" src="llama.jpg" />';
+    $expected = '<figure><img src="llama.jpg" /><figcaption>Source: Wikipedia</figcaption></figure>';
+    $this->assertIdentical($expected, $test_with_html_filter($input));
+    $this->assertIdentical($input, $test_editor_xss_filter($input));
+
+    // A source being credited, without a space after the colon.
+    $input = '<img data-caption="Source:Wikipedia" src="llama.jpg" />';
+    $expected = '<figure><img src="llama.jpg" /><figcaption>Source:Wikipedia</figcaption></figure>';
+    $this->assertIdentical($expected, $test_with_html_filter($input));
+    $this->assertIdentical($input, $test_editor_xss_filter($input));
+
+    // A pretty crazy edge case where we have two colons.
+    $input = '<img data-caption="Interesting (Scope resolution operator ::)" src="llama.jpg" />';
+    $expected = '<figure><img src="llama.jpg" /><figcaption>Interesting (Scope resolution operator ::)</figcaption></figure>';
+    $this->assertIdentical($expected, $test_with_html_filter($input));
+    $this->assertIdentical($input, $test_editor_xss_filter($input));
+
+    // An evil anchor (to ensure XSS filtering is applied to the caption also).
+    $input = '<img data-caption="This is an &lt;a href=&quot;javascript:alert();&quot;&gt;evil&lt;/a&gt; test…" src="llama.jpg" />';
+    $expected = '<figure><img src="llama.jpg" /><figcaption>This is an <a href="alert();">evil</a> test…</figcaption></figure>';
+    $this->assertIdentical($expected, $test_with_html_filter($input));
+    $expected_xss_filtered = '<img data-caption="This is an &lt;a href=&quot;alert();&quot;&gt;evil&lt;/a&gt; test…" src="llama.jpg" />';
+    $this->assertIdentical($expected_xss_filtered, $test_editor_xss_filter($input));
   }
 
   /**
