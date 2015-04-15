@@ -108,8 +108,8 @@ function tracker_page($account = NULL) {
             '#account' => $node->getOwner(),
           ),
         ),
-        'replies' => array(
-          'class' => array('replies'),
+        'comments' => array(
+          'class' => array('comments'),
           'data' => $comments,
         ),
         'last updated' => array(
@@ -125,7 +125,7 @@ function tracker_page($account = NULL) {
 
   $page['tracker'] = array(
     '#rows' => $rows,
-    '#header' => array(t('Type'), t('Title'), t('Author'), t('Replies'), t('Last updated')),
+    '#header' => array(t('Type'), t('Title'), t('Author'), t('Comments'), t('Last updated')),
     '#type' => 'table',
     '#empty' => t('No content available.'),
   );
