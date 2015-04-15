@@ -63,4 +63,30 @@ class TwigExtensionTest extends WebTestBase {
     $this->assertNoText('The Quick Brown Fox Jumps Over The Lazy Dog 123.', 'Success: No text left behind.');
   }
 
+  /**
+   * Tests output of integer and double 0 values of TwigExtension::escapeFilter().
+   *
+   * @see https://www.drupal.org/node/2417733
+   */
+  public function testsRenderEscapedZeroValue() {
+    /** @var \Drupal\Core\Template\TwigExtension $extension */
+    $extension = \Drupal::service('twig.extension');
+    /** @var \Drupal\Core\Template\TwigEnvironment $twig */
+    $twig = \Drupal::service('twig');
+    $this->assertIdentical($extension->escapeFilter($twig, 0), 0, 'TwigExtension::escapeFilter() returns zero correctly when provided as an integer.');
+    $this->assertIdentical($extension->escapeFilter($twig, 0.0), 0, 'TwigExtension::escapeFilter() returns zero correctly when provided as a double.');
+  }
+
+  /**
+   * Tests output of integer and double 0 values of TwigExtension->renderVar().
+   *
+   * @see https://www.drupal.org/node/2417733
+   */
+  public function testsRenderZeroValue() {
+    /** @var \Drupal\Core\Template\TwigExtension $extension */
+    $extension = \Drupal::service('twig.extension');
+    $this->assertIdentical($extension->renderVar(0), 0, 'TwigExtension::renderVar() renders zero correctly when provided as an integer.');
+    $this->assertIdentical($extension->renderVar(0.0), 0, 'TwigExtension::renderVar() renders zero correctly when provided as a double.');
+  }
+
 }

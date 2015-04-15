@@ -12,6 +12,7 @@
 
 namespace Drupal\Core\Template;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Url;
@@ -89,7 +90,7 @@ class TwigExtension extends \Twig_Extension {
   public function getFunctions() {
     return array(
       // This function will receive a renderable array, if an array is detected.
-      new \Twig_SimpleFunction('render_var', 'twig_render_var'),
+      new \Twig_SimpleFunction('render_var', array($this, 'renderVar')),
       // The url and path function are defined in close parallel to those found
       // in \Symfony\Bridge\Twig\Extension\RoutingExtension
       new \Twig_SimpleFunction('url', array($this, 'getUrl'), array('is_safe_callback' => array($this, 'isUrlGenerationSafe'))),
@@ -118,7 +119,7 @@ class TwigExtension extends \Twig_Extension {
       new \Twig_SimpleFilter('placeholder', 'twig_raw_filter', array('is_safe' => array('html'))),
 
       // Replace twig's escape filter with our own.
-      new \Twig_SimpleFilter('drupal_escape', 'twig_drupal_escape_filter', array('needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe')),
+      new \Twig_SimpleFilter('drupal_escape', [$this, 'escapeFilter'], array('needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe')),
 
       // Implements safe joining.
       // @todo Make that the default for |join? Upstream issue:
@@ -132,7 +133,7 @@ class TwigExtension extends \Twig_Extension {
       new \Twig_SimpleFilter('clean_class', '\Drupal\Component\Utility\Html::getClass'),
       new \Twig_SimpleFilter('clean_id', '\Drupal\Component\Utility\Html::getId'),
       // This filter will render a renderable array to use the string results.
-      new \Twig_SimpleFilter('render', 'twig_render_var'),
+      new \Twig_SimpleFilter('render', array($this, 'renderVar')),
     );
   }
 
@@ -141,7 +142,7 @@ class TwigExtension extends \Twig_Extension {
    */
   public function getNodeVisitors() {
     // The node visitor is needed to wrap all variables with
-    // render_var -> twig_render_var() function.
+    // render_var -> TwigExtension->renderVar() function.
     return array(
       new TwigNodeVisitor(),
     );
@@ -296,6 +297,150 @@ class TwigExtension extends \Twig_Extension {
     // bubbleable metadata on the render stack.
     $template_attached = ['#attached' => ['library' => [$library]]];
     $this->renderer->render($template_attached);
+  }
+
+  /**
+   * Overrides twig_escape_filter().
+   *
+   * Replacement function for Twig's escape filter.
+   *
+   * @param \Twig_Environment $env
+   *   A Twig_Environment instance.
+   * @param mixed $arg
+   *   The value to be escaped.
+   * @param string $strategy
+   *   The escaping strategy. Defaults to 'html'.
+   * @param string $charset
+   *   The charset.
+   * @param bool $autoescape
+   *   Whether the function is called by the auto-escaping feature (TRUE) or by
+   *   the developer (FALSE).
+   *
+   * @return string|null
+   *   The escaped, rendered output, or NULL if there is no valid output.
+   */
+  public function escapeFilter(\Twig_Environment $env, $arg, $strategy = 'html', $charset = NULL, $autoescape = FALSE) {
+    // Check for a numeric zero int or float.
+    if ($arg === 0 || $arg === 0.0) {
+      return 0;
+    }
+
+    // Return early for NULL and empty arrays.
+    if ($arg == NULL) {
+      return NULL;
+    }
+
+    // Keep Twig_Markup objects intact to support autoescaping.
+    if ($autoescape && $arg instanceOf \Twig_Markup) {
+      return $arg;
+    }
+
+    $return = NULL;
+
+    if (is_scalar($arg)) {
+      $return = (string) $arg;
+    }
+    elseif (is_object($arg)) {
+      if (method_exists($arg, '__toString')) {
+        $return = (string) $arg;
+      }
+      // You can't throw exceptions in the magic PHP __toString methods, see
+      // http://php.net/manual/en/language.oop5.magic.php#object.tostring so
+      // we also support a toString method.
+      elseif (method_exists($arg, 'toString')) {
+        $return = $arg->toString();
+      }
+      else {
+        throw new \Exception(t('Object of type "@class" cannot be printed.', array('@class' => get_class($arg))));
+      }
+    }
+
+    // We have a string or an object converted to a string: Autoescape it!
+    if (isset($return)) {
+      if ($autoescape && SafeMarkup::isSafe($return, $strategy)) {
+        return $return;
+      }
+      // Drupal only supports the HTML escaping strategy, so provide a
+      // fallback for other strategies.
+      if ($strategy == 'html') {
+        return SafeMarkup::checkPlain($return);
+      }
+      return twig_escape_filter($env, $return, $strategy, $charset, $autoescape);
+    }
+
+    // This is a normal render array, which is safe by definition, with
+    // special simple cases already handled.
+
+    // Early return if this element was pre-rendered (no need to re-render).
+    if (isset($arg['#printed']) && $arg['#printed'] == TRUE && isset($arg['#markup']) && strlen($arg['#markup']) > 0) {
+      return $arg['#markup'];
+    }
+    $arg['#printed'] = FALSE;
+    return $this->renderer->render($arg);
+  }
+
+  /**
+   * Wrapper around render() for twig printed output.
+   *
+   * If an object is passed that has no __toString method an exception is thrown;
+   * other objects are casted to string. However in the case that the object is an
+   * instance of a Twig_Markup object it is returned directly to support auto
+   * escaping.
+   *
+   * If an array is passed it is rendered via render() and scalar values are
+   * returned directly.
+   *
+   * @param mixed $arg
+   *   String, Object or Render Array.
+   *
+   * @return mixed
+   *   The rendered output or an Twig_Markup object.
+   *
+   * @see render
+   * @see TwigNodeVisitor
+   */
+  public function renderVar($arg) {
+    // Check for a numeric zero int or float.
+    if ($arg === 0 || $arg === 0.0) {
+      return 0;
+    }
+
+    // Return early for NULL and empty arrays.
+    if ($arg == NULL) {
+      return NULL;
+    }
+
+    // Optimize for strings as it is likely they come from the escape filter.
+    if (is_string($arg)) {
+      return $arg;
+    }
+
+    if (is_scalar($arg)) {
+      return $arg;
+    }
+
+    if (is_object($arg)) {
+      if (method_exists($arg, '__toString')) {
+        return (string) $arg;
+      }
+      // You can't throw exceptions in the magic PHP __toString methods, see
+      // http://php.net/manual/en/language.oop5.magic.php#object.tostring so
+      // we also support a toString method.
+      elseif (method_exists($arg, 'toString')) {
+        return $arg->toString();
+      }
+      else {
+        throw new \Exception(t('Object of type "@class" cannot be printed.', array('@class' => get_class($arg))));
+      }
+    }
+
+    // This is a render array, with special simple cases already handled.
+    // Early return if this element was pre-rendered (no need to re-render).
+    if (isset($arg['#printed']) && $arg['#printed'] == TRUE && isset($arg['#markup']) && strlen($arg['#markup']) > 0) {
+      return $arg['#markup'];
+    }
+    $arg['#printed'] = FALSE;
+    return $this->renderer->render($arg);
   }
 
 }

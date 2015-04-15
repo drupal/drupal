@@ -44,7 +44,7 @@ class TwigEnvironment extends \Twig_Environment {
     $this->cache_object = \Drupal::cache();
 
     // Ensure that twig.engine is loaded, given that it is needed to render a
-    // template because functions like twig_drupal_escape_filter are called.
+    // template because functions like TwigExtension::escapeFilter() are called.
     require_once $root . '/core/themes/engines/twig/twig.engine';
 
     $this->templateClasses = array();

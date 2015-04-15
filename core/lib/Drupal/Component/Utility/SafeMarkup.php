@@ -25,7 +25,7 @@ namespace Drupal\Component\Utility;
  * @link theme_render theme and render systems @endlink so that the output can
  * can be themed, escaped, and altered properly.
  *
- * @see twig_drupal_escape_filter()
+ * @see TwigExtension::escapeFilter()
  * @see twig_render_template()
  * @see sanitization
  * @see theme_render

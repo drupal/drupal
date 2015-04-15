@@ -136,7 +136,7 @@ class TwigNodeTrans extends \Twig_Node {
 
           $args = $n;
 
-          // Support twig_render_var function in chain.
+          // Support TwigExtension->renderVar() function in chain.
           if ($args instanceof \Twig_Node_Expression_Function) {
             $args = $n->getNode('arguments')->getNode(0);
           }

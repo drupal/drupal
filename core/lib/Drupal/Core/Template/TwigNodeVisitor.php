@@ -11,7 +11,7 @@ namespace Drupal\Core\Template;
  * Provides a Twig_NodeVisitor to change the generated parse-tree.
  *
  * This is used to ensure that everything printed is wrapped via the
- * twig_render_var() function in order to just write {{ content }}
+ * TwigExtension->renderVar() function in order to just write {{ content }}
  * in templates instead of having to write {{ render_var(content) }}.
  *
  * @see twig_render
@@ -29,7 +29,7 @@ class TwigNodeVisitor implements \Twig_NodeVisitorInterface {
    * {@inheritdoc}
    */
   function leaveNode(\Twig_NodeInterface $node, \Twig_Environment $env) {
-    // We use this to inject a call to render_var -> twig_render_var()
+    // We use this to inject a call to render_var -> TwigExtension->renderVar()
     // before anything is printed.
     if ($node instanceof \Twig_Node_Print) {
       if (!empty($this->skipRenderVarFunction)) {
