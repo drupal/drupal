@@ -1185,9 +1185,9 @@ function drupal_render_children(&$element, $children_keys = NULL) {
 /**
  * Renders an element.
  *
- * This function renders an element using drupal_render(). The top level
- * element is shown with show() before rendering, so it will always be rendered
- * even if hide() had been previously used on it.
+ * This function renders an element. The top level element is shown with show()
+ * before rendering, so it will always be rendered even if hide() had been
+ * previously used on it.
  *
  * @param $element
  *   The element to be rendered.
@@ -1195,7 +1195,7 @@ function drupal_render_children(&$element, $children_keys = NULL) {
  * @return
  *   The rendered element.
  *
- * @see drupal_render()
+ * @see \Drupal\Core\Render\RendererInterface
  * @see show()
  * @see hide()
  */
@@ -1209,7 +1209,7 @@ function render(&$element) {
       return $element['#markup'];
     }
     show($element);
-    return drupal_render($element);
+    return \Drupal::service('renderer')->render($element);
   }
   else {
     // Safe-guard for inappropriate use of render() on flat variables: return
