@@ -43,9 +43,6 @@ class ConfirmFormHelper {
 
     return [
       '#type' => 'link',
-      '#attributes' => array(
-        'class' => array('button', 'button--danger'),
-      ),
       '#title' => $form->getCancelText(),
       '#url' => $url,
     ];
