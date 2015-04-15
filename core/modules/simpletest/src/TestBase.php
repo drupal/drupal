@@ -1652,4 +1652,24 @@ abstract class TestBase {
     return \Drupal::configFactory()->getEditable($name);
   }
 
+  /**
+   * Gets the database prefix.
+   *
+   * @return string
+   *   The database prefix
+   */
+  public function getDatabasePrefix() {
+    return $this->databasePrefix;
+  }
+
+  /**
+   * Gets the temporary files directory.
+   *
+   * @return string
+   *   The temporary files directory.
+   */
+  public function getTempFilesDirectory() {
+    return $this->tempFilesDirectory;
+  }
+
 }

@@ -79,6 +79,9 @@ abstract class MigrateTestBase extends WebTestBase implements MigrateMessageInte
    */
   protected function prepare(MigrationInterface $migration, array $files = array()) {
     $this->loadDumps($files);
+    if ($this instanceof MigrateDumpAlterInterface) {
+      static::migrateDumpAlter($this);
+    }
   }
 
   /**

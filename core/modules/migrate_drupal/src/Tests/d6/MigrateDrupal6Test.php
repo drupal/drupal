@@ -158,9 +158,6 @@ class MigrateDrupal6Test extends MigrateFullDrupalTestBase {
     $config->set('default', 'bartik');
     $config->set('admin', 'seven');
     $config->save();
-
-    // We need a temp file for testing the MigrateFileTest.
-    file_put_contents('/tmp/some-temp-file.jpg', '');
   }
 
   /**

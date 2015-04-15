@@ -54,6 +54,11 @@ abstract class MigrateFullDrupalTestBase extends MigrateDrupalTestBase {
     $this->loadDumps($dumps);
 
     $classes = $this->getTestClassesList();
+    foreach ($classes as $class) {
+      if (is_subclass_of($class, '\Drupal\migrate\Tests\MigrateDumpAlterInterface')) {
+        $class::migrateDumpAlter($this);
+      }
+    }
 
     // Run every migration in the order specified by the storage controller.
     foreach (entity_load_multiple('migration', static::$migrations) as $migration) {
