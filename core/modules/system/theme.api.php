@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Hooks and documentation related to the theme and render system.
+ */
+
+/**
  * @defgroup themeable Theme system overview
  * @{
  * Functions and templates for the user interface that themes can override.

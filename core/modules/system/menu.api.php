@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Hooks related to the Menu system.
+ * Hooks and documentation related to the menu system, routing, and links.
  */
 
 /**

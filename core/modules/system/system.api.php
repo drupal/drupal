@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Hooks provided by Drupal core and the System module.
+ * Hooks provided by the System module.
  */
 
 use Drupal\Component\Utility\SafeMarkup;

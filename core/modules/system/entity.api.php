@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Hooks provided the Entity module.
+ * Hooks and documentation related to entities.
  */
 
 use Drupal\Core\Entity\FieldableEntityInterface;

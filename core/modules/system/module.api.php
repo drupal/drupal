@@ -1,7 +1,8 @@
 <?php
+
 /**
  * @file
- * Hooks provided by Drupal core and the System module.
+ * Hooks related to module and update systems.
  */
 
 use Drupal\Core\Utility\UpdateException;
