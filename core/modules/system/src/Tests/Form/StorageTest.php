@@ -219,7 +219,7 @@ class StorageTest extends WebTestBase {
     $build_id = (string) $build_id_fields[0]['value'];
 
     // Try to poison the form cache.
-    $original = $this->drupalGetAJAX('form-test/form-storage-legacy/' . $build_id);
+    $original = $this->drupalGetAjax('form-test/form-storage-legacy/' . $build_id);
     $this->assertEqual($original['form']['#build_id_old'], $build_id, 'Original build_id was recorded');
     $this->assertNotEqual($original['form']['#build_id'], $build_id, 'New build_id was generated');
 
@@ -229,7 +229,7 @@ class StorageTest extends WebTestBase {
     $this->assert($status, 'A watchdog message was logged by \Drupal::formBuilder()->setCache');
 
     // Ensure that the form state was not poisoned by the preceding call.
-    $original = $this->drupalGetAJAX('form-test/form-storage-legacy/' . $build_id);
+    $original = $this->drupalGetAjax('form-test/form-storage-legacy/' . $build_id);
     $this->assertEqual($original['form']['#build_id_old'], $build_id, 'Original build_id was recorded');
     $this->assertNotEqual($original['form']['#build_id'], $build_id, 'New build_id was generated');
     $this->assert(empty($original['form']['#poisoned']), 'Original form structure was preserved');

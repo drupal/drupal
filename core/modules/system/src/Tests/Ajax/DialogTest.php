@@ -93,7 +93,7 @@ class DialogTest extends AjaxTestBase {
     $this->assertRaw($dialog_contents, 'Non-JS modal dialog page present.');
 
     // Emulate going to the JS version of the page and check the JSON response.
-    $ajax_result = $this->drupalGetAJAX('ajax-test/dialog-contents', array(), array('Accept: application/vnd.drupal-modal'));
+    $ajax_result = $this->drupalGetAjax('ajax-test/dialog-contents', array(), array('Accept: application/vnd.drupal-modal'));
     $this->assertEqual($modal_expected_response, $ajax_result[3], 'Modal dialog JSON response matches.');
 
     // Check that requesting a "normal" dialog without JS goes to a page.
@@ -127,7 +127,7 @@ class DialogTest extends AjaxTestBase {
 
     // Emulate closing the dialog via an AJAX request. There is no non-JS
     // version of this test.
-    $ajax_result = $this->drupalGetAJAX('ajax-test/dialog-close');
+    $ajax_result = $this->drupalGetAjax('ajax-test/dialog-close');
     $this->assertEqual($close_expected_response, $ajax_result[0], 'Close dialog JSON response matches.');
 
     // Test submitting via a POST request through the button for modals. This
@@ -159,7 +159,7 @@ class DialogTest extends AjaxTestBase {
     $this->assertTrue(!empty($form), 'Non-JS form page present.');
 
     // Emulate going to the JS version of the form and check the JSON response.
-    $ajax_result = $this->drupalGetAJAX('ajax-test/dialog-form', array(), array('Accept: application/vnd.drupal-modal'));
+    $ajax_result = $this->drupalGetAjax('ajax-test/dialog-form', array(), array('Accept: application/vnd.drupal-modal'));
     $expected_ajax_settings = [
       'edit-preview' => [
         'callback' => '::preview',
@@ -188,7 +188,7 @@ class DialogTest extends AjaxTestBase {
     $this->assertTrue(!empty($form), 'Non-JS entity form page present.');
 
     // Emulate going to the JS version of the form and check the JSON response.
-    $ajax_result = $this->drupalGetAJAX('admin/structure/contact/add', array(), array('Accept: application/vnd.drupal-modal'));
+    $ajax_result = $this->drupalGetAjax('admin/structure/contact/add', array(), array('Accept: application/vnd.drupal-modal'));
     $this->setRawContent($ajax_result[3]['data']);
     // Remove the data, the form build id and token will never match.
     unset($ajax_result[3]['data']);

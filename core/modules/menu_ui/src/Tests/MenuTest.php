@@ -864,13 +864,13 @@ class MenuTest extends MenuWebTestBase {
     $admin = $this->drupalCreateUser(array('administer menu'));
     $this->drupalLogin($admin);
     // Just check access to the callback overall, the POST data is irrelevant.
-    $this->drupalGetAJAX('admin/structure/menu/parents');
+    $this->drupalGetAjax('admin/structure/menu/parents');
     $this->assertResponse(200);
 
     // Do standard user tests.
     // Login the user.
     $this->drupalLogin($this->authenticatedUser);
-    $this->drupalGetAJAX('admin/structure/menu/parents');
+    $this->drupalGetAjax('admin/structure/menu/parents');
     $this->assertResponse(403);
   }
 

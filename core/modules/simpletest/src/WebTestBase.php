@@ -1542,7 +1542,7 @@ abstract class WebTestBase extends TestBase {
   /**
    * Requests a Drupal path in drupal_ajax format and JSON-decodes the response.
    */
-  protected function drupalGetAJAX($path, array $options = array(), array $headers = array()) {
+  protected function drupalGetAjax($path, array $options = array(), array $headers = array()) {
     $headers[] = 'Accept: application/vnd.drupal-ajax';
     return Json::decode($this->drupalGet($path, $options, $headers));
   }

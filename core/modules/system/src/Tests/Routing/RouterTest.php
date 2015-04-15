@@ -212,7 +212,7 @@ class RouterTest extends WebTestBase {
   public function testControllerResolutionAjax() {
     // This will fail with a JSON parse error if the request is not routed to
     // The correct controller.
-    $this->drupalGetAJAX('/router_test/test10');
+    $this->drupalGetAjax('/router_test/test10');
 
     $this->assertEqual($this->drupalGetHeader('Content-Type'), 'application/json', 'Correct mime content type was returned');
 

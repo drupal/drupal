@@ -26,7 +26,7 @@ class FrameworkTest extends AjaxTestBase {
    */
   public function testAJAXRender() {
     // Verify that settings command is generated if JavaScript settings exist.
-    $commands = $this->drupalGetAJAX('ajax-test/render');
+    $commands = $this->drupalGetAjax('ajax-test/render');
     $expected = new SettingsCommand(array('ajax' => 'test'), TRUE);
     $this->assertCommand($commands, $expected->render(), '\Drupal\Core\Ajax\AjaxResponse::ajaxRender() loads JavaScript settings.');
   }
@@ -86,7 +86,7 @@ class FrameworkTest extends AjaxTestBase {
     $edit = array(
       'message' => 'Custom error message.',
     );
-    $commands = $this->drupalGetAJAX('ajax-test/render-error', array('query' => $edit));
+    $commands = $this->drupalGetAjax('ajax-test/render-error', array('query' => $edit));
     $expected = new AlertCommand($edit['message']);
     $this->assertCommand($commands, $expected->render(), 'Custom error message is output.');
   }
