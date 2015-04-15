@@ -94,25 +94,26 @@ class AssetResolver implements AssetResolverInterface {
     $theme_info = $this->themeManager->getActiveTheme();
 
     $css = [];
+    $default_options = [
+      'type' => 'file',
+      'group' => CSS_AGGREGATE_DEFAULT,
+      'weight' => 0,
+      'every_page' => FALSE,
+      'media' => 'all',
+      'preprocess' => TRUE,
+      'browsers' => [],
+    ];
 
     foreach ($this->getLibrariesToLoad($assets) as $library) {
       list($extension, $name) = explode('/', $library, 2);
       $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
       if (isset($definition['css'])) {
         foreach ($definition['css'] as $options) {
-          $options += array(
-            'type' => 'file',
-            'group' => CSS_AGGREGATE_DEFAULT,
-            'weight' => 0,
-            'every_page' => FALSE,
-            'media' => 'all',
-            'preprocess' => TRUE,
-            'browsers' => array(),
-          );
-          $options['browsers'] += array(
+          $options += $default_options;
+          $options['browsers'] += [
             'IE' => TRUE,
             '!IE' => TRUE,
-          );
+          ];
 
           // Files with a query string cannot be preprocessed.
           if ($options['type'] === 'file' && $options['preprocess'] && strpos($options['data'], '?') !== FALSE) {
@@ -130,7 +131,7 @@ class AssetResolver implements AssetResolverInterface {
               // basename is added more than once, it gets overridden.
               // By default, take over the filename as basename.
               if (!isset($options['basename'])) {
-                $options['basename'] = drupal_basename($options['data']);
+                $options['basename'] = \Drupal::service('file_system')->basename($options['data']);
               }
               $css[$options['basename']] = $options;
               break;
@@ -214,6 +215,18 @@ class AssetResolver implements AssetResolverInterface {
    */
   public function getJsAssets(AttachedAssetsInterface $assets, $optimize) {
     $javascript = [];
+    $default_options = [
+      'type' => 'file',
+      'group' => JS_DEFAULT,
+      'every_page' => FALSE,
+      'weight' => 0,
+      'cache' => TRUE,
+      'preprocess' => TRUE,
+      'attributes' => [],
+      'version' => NULL,
+      'browsers' => [],
+    ];
+
     $libraries_to_load = $this->getLibrariesToLoad($assets);
 
     // Collect all libraries that contain JS assets and are in the header.
@@ -235,17 +248,7 @@ class AssetResolver implements AssetResolverInterface {
       $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
       if (isset($definition['js'])) {
         foreach ($definition['js'] as $options) {
-          $options += array(
-            'type' => 'file',
-            'group' => JS_DEFAULT,
-            'every_page' => FALSE,
-            'weight' => 0,
-            'cache' => TRUE,
-            'preprocess' => TRUE,
-            'attributes' => array(),
-            'version' => NULL,
-            'browsers' => array(),
-          );
+          $options += $default_options;
 
           // 'scope' is a calculated option, based on which libraries are marked
           // to be loaded from the header (see above).
@@ -305,7 +308,7 @@ class AssetResolver implements AssetResolverInterface {
           'group' => JS_SETTING,
           'every_page' => TRUE,
           'weight' => 0,
-          'browsers' => array(),
+          'browsers' => [],
           'data' => $settings,
         ];
         $settings_js_asset = ['drupalSettings' => $settings_as_inline_javascript];
