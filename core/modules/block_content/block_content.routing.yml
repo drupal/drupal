@@ -2,7 +2,7 @@ entity.block_content_type.collection:
   path: '/admin/structure/block/block-content/types'
   defaults:
     _entity_list: 'block_content_type'
-    _title: 'Edit'
+    _title: 'Custom block library'
   requirements:
     _permission: 'administer blocks'
 
