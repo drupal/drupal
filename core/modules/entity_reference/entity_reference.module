@@ -29,7 +29,7 @@ function entity_reference_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dt>' . t('Managing and displaying entity reference fields') . '</dt>';
       $output .= '<dd>' . t('The <em>settings</em> and the <em>display</em> of the entity reference field can be configured separately. See the <a href="!field_ui">Field UI help</a> for more information on how to manage fields and their display.', array('!field_ui' => \Drupal::url('help.page', array('name' => 'field_ui')))) . '</dd>';
       $output .= '<dt>' . t('Selecting reference type') . '</dt>';
-      $output .= '<dd>' . t('In the field settings you can select which entity type you want to create a reference to.') . '</dd>';
+      $output .= '<dd>' . t('In the field settings you can select which type of item you want to create a reference to.') . '</dd>';
       $output .= '<dt>' . t('Filtering and sorting reference fields') . '</dt>';
       $output .= '<dd>' . t('Depending on the chosen entity type, additional filtering and sorting options are available for the list of entities that can be referred to, in the field settings. For example, the list of users can be filtered by role and sorted by name or ID.') . '</dd>';
       $output .= '<dt>' . t('Displaying a reference') . '</dt>';
