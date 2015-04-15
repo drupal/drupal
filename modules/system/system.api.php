@@ -3715,8 +3715,9 @@ function hook_registry_files_alter(&$files, $modules) {
  *
  * Any tasks you define here will be run, in order, after the installer has
  * finished the site configuration step but before it has moved on to the
- * final import of languages and the end of the installation. You can have any
- * number of custom tasks to perform during this phase.
+ * final import of languages and the end of the installation. This is invoked
+ * by install_tasks().  You can have any number of custom tasks to perform
+ * during this phase.
  *
  * Each task you define here corresponds to a callback function which you must
  * separately define and which is called when your task is run. This function
@@ -3809,6 +3810,8 @@ function hook_registry_files_alter(&$files, $modules) {
  *
  * @see install_state_defaults()
  * @see batch_set()
+ * @see hook_install_tasks_alter()
+ * @see install_tasks()
  */
 function hook_install_tasks(&$install_state) {
   // Here, we define a variable to allow tasks to indicate that a particular,
@@ -3911,6 +3914,8 @@ function hook_html_head_alter(&$head_elements) {
 /**
  * Alter the full list of installation tasks.
  *
+ * This hook is invoked on the install profile in install_tasks().
+ *
  * @param $tasks
  *   An array of all available installation tasks, including those provided by
  *   Drupal core. You can modify this array to change or replace any part of
@@ -3918,6 +3923,9 @@ function hook_html_head_alter(&$head_elements) {
  *   is selected.
  * @param $install_state
  *   An array of information about the current installation state.
+ *
+ * @see hook_install_tasks()
+ * @see install_tasks()
  */
 function hook_install_tasks_alter(&$tasks, $install_state) {
   // Replace the "Choose language" installation task provided by Drupal core
