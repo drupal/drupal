@@ -55,8 +55,8 @@
           }
         });
 
-        $(tab_list).find('> li:first').addClass('first');
-        $(tab_list).find('> li:last').addClass('last');
+        $(tab_list).find('> li').eq(0).addClass('first');
+        $(tab_list).find('> li').eq(-1).addClass('last');
 
         if (!tab_focus) {
           // If the current URL has a fragment and one of the tabs contains an
@@ -66,7 +66,7 @@
             tab_focus = $locationHash.closest('.vertical-tabs__pane');
           }
           else {
-            tab_focus = $this.find('> .vertical-tabs__pane:first');
+            tab_focus = $this.find('> .vertical-tabs__pane').eq(0);
           }
         }
         if (tab_focus.length) {
@@ -102,7 +102,7 @@
       if (event.keyCode === 13) {
         self.focus();
         // Set focus on the first input field of the visible details/tab pane.
-        $(".vertical-tabs__pane :input:visible:enabled:first").trigger('focus');
+        $(".vertical-tabs__pane :input:visible:enabled").eq(0).trigger('focus');
       }
     });
 
@@ -154,7 +154,7 @@
       // actual DOM element order as jQuery implements sortOrder, but not as public
       // method.
       this.item.parent().children('.vertical-tabs__menu-item').removeClass('first')
-        .filter(':visible:first').addClass('first');
+        .filter(':visible').eq(0).addClass('first');
       // Display the details element.
       this.details.removeClass('vertical-tab--hidden').show();
       // Focus this tab.
@@ -172,11 +172,11 @@
       // actual DOM element order as jQuery implements sortOrder, but not as public
       // method.
       this.item.parent().children('.vertical-tabs__menu-item').removeClass('first')
-        .filter(':visible:first').addClass('first');
+        .filter(':visible').eq(0).addClass('first');
       // Hide the details element.
       this.details.addClass('vertical-tab--hidden').hide();
       // Focus the first visible tab (if there is one).
-      var $firstTab = this.details.siblings('.vertical-tabs__pane:not(.vertical-tab--hidden):first');
+      var $firstTab = this.details.siblings('.vertical-tabs__pane:not(.vertical-tab--hidden)').eq(0);
       if ($firstTab.length) {
         $firstTab.data('verticalTab').focus();
       }

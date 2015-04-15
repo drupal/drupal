@@ -158,7 +158,7 @@
       if (this.tableSettings.hasOwnProperty(group)) { // Find the first field in this group.
         for (var d in this.tableSettings[group]) {
           if (this.tableSettings[group].hasOwnProperty(d)) {
-            var field = $table.find('.' + this.tableSettings[group][d].target + ':first');
+            var field = $table.find('.' + this.tableSettings[group][d].target).eq(0);
             if (field.length && this.tableSettings[group][d].hidden) {
               hidden = this.tableSettings[group][d].hidden;
               cell = field.closest('td');
@@ -311,18 +311,18 @@
     var self = this;
     var $item = $(item);
     // Add a class to the title link
-    $item.find('td:first a').addClass('menu-item__link');
+    $item.find('td').eq(0).find('a').addClass('menu-item__link');
     // Create the handle.
     var handle = $('<a href="#" class="tabledrag-handle"><div class="handle">&nbsp;</div></a>').attr('title', Drupal.t('Drag to re-order'));
     // Insert the handle after indentations (if any).
-    var $indentationLast = $item.find('td:first .js-indentation:last');
+    var $indentationLast = $item.find('td').eq(0).find('.js-indentation').eq(-1);
     if ($indentationLast.length) {
       $indentationLast.after(handle);
       // Update the total width of indentation in this entire table.
       self.indentCount = Math.max($item.find('.js-indentation').length, self.indentCount);
     }
     else {
-      $item.find('td:first').prepend(handle);
+      $item.find('td').eq(0).prepend(handle);
     }
 
     if (Modernizr.touch) {
@@ -417,7 +417,7 @@
           break;
         case 40: // Down arrow.
         case 63233: // Safari down arrow.
-          var $nextRow = $(self.rowObject.group).filter(':last').next('tr').eq(0);
+          var $nextRow = $(self.rowObject.group).eq(-1).next('tr').eq(0);
           var nextRow = $nextRow.get(0);
           while (nextRow && $nextRow.is(':hidden')) {
             $nextRow = $(nextRow).next('tr').eq(0);
@@ -436,7 +436,7 @@
                 $(nextGroup.group).each(function () {
                   groupHeight += $(this).is(':hidden') ? 0 : this.offsetHeight;
                 });
-                var nextGroupRow = $(nextGroup.group).filter(':last').get(0);
+                var nextGroupRow = $(nextGroup.group).eq(-1).get(0);
                 self.rowObject.swap('after', nextGroupRow);
                 // No need to check for indentation, 0 is the only valid one.
                 window.scrollBy(0, parseInt(groupHeight, 10));
@@ -808,7 +808,7 @@
         // Use the first row in the table as source, because it's guaranteed to
         // be at the root level. Find the first item, then compare this row
         // against it as a sibling.
-        sourceRow = $(this.table).find('tr.draggable:first').get(0);
+        sourceRow = $(this.table).find('tr.draggable').eq(0).get(0);
         if (sourceRow === this.rowObject.element) {
           sourceRow = $(this.rowObject.group[this.rowObject.group.length - 1]).next('tr.draggable').get(0);
         }
@@ -1147,7 +1147,7 @@
     // Determine the valid indentations interval if not available yet.
     if (!this.interval) {
       var prevRow = $(this.element).prev('tr').get(0);
-      var nextRow = $group.filter(':last').next('tr').get(0);
+      var nextRow = $group.eq(-1).next('tr').get(0);
       this.interval = this.validIndentInterval(prevRow, nextRow);
     }
 
@@ -1160,11 +1160,11 @@
     for (var n = 1; n <= Math.abs(indentDiff); n++) {
       // Add or remove indentations.
       if (indentDiff < 0) {
-        $group.find('.js-indentation:first').remove();
+        $group.find('.js-indentation').eq(0).remove();
         this.indents--;
       }
       else {
-        $group.find('td:first').prepend(Drupal.theme('tableDragIndentation'));
+        $group.find('td').eq(0).prepend(Drupal.theme('tableDragIndentation'));
         this.indents++;
       }
     }
@@ -1244,7 +1244,7 @@
    */
   Drupal.tableDrag.prototype.row.prototype.markChanged = function () {
     var marker = Drupal.theme('tableDragChangedMarker');
-    var cell = $(this.element).find('td:first');
+    var cell = $(this.element).find('td').eq(0);
     if (cell.find('abbr.tabledrag-changed').length === 0) {
       cell.append(marker);
     }

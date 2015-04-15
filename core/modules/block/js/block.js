@@ -99,7 +99,7 @@
           tableDrag.rowObject = new tableDrag.row(row);
 
           // Find the correct region and insert the row as the last in the region.
-          table.find('.region-' + select[0].value + '-message').nextUntil('.region-message').last().before(row);
+          table.find('.region-' + select[0].value + '-message').nextUntil('.region-message').eq(-1).before(row);
 
           // Modify empty regions with added or removed fields.
           checkEmptyRegions(table, row);

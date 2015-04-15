@@ -241,7 +241,7 @@
       var $addDisplayDropdown = $('<li class="add"><a href="#"><span class="icon add"></span>' + Drupal.t('Add') + '</a><ul class="action-list" style="display:none;"></ul></li>');
       var $displayButtons = $menu.nextAll('input.add-display').detach();
       $displayButtons.appendTo($addDisplayDropdown.find('.action-list')).wrap('<li>')
-        .parent().first().addClass('first').end().last().addClass('last');
+        .parent().eq(0).addClass('first').end().eq(-1).addClass('last');
       // Remove the 'Add ' prefix from the button labels since they're being palced
       // in an 'Add' dropdown.
       // @todo This assumes English, but so does $addDisplayDropdown above. Add
@@ -701,7 +701,7 @@
         // Within the row, the operator labels are displayed inside the first table
         // cell (next to the filter name).
         var $draggableRow = $(this.draggableRows[i]);
-        var $firstCell = $draggableRow.find('td:first');
+        var $firstCell = $draggableRow.find('td').eq(0);
         if ($firstCell.length) {
           // The value of the operator label ("And" or "Or") is taken from the
           // first operator dropdown we encounter, going backwards from the current

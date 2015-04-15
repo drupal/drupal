@@ -206,7 +206,7 @@
             $(this).find('.tour-progress').text(progress);
           })
           // Update the last item to have "End tour" as the button.
-          .last()
+          .eq(-1)
           .attr('data-text', Drupal.t('End tour'));
       }
     }

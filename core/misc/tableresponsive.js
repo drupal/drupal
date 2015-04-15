@@ -89,7 +89,7 @@
           var $header = $(this);
           var position = $header.prevAll('th').length;
           self.$table.find('tbody tr').each(function () {
-            var $cells = $(this).find('td:eq(' + position + ')');
+            var $cells = $(this).find('td').eq(position);
             $cells.show();
             // Keep track of the revealed cells, so they can be hidden later.
             self.$revealedCells = $().add(self.$revealedCells).add($cells);

@@ -64,7 +64,7 @@
 
     // Create a model and the appropriate views.
     var model = new contextual.StateModel({
-      title: $region.find('h2:first').text().trim()
+      title: $region.find('h2').eq(0).text().trim()
     });
     var viewOptions = $.extend({el: $contextual, model: model}, options);
     contextual.views.push({
