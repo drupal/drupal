@@ -29,14 +29,26 @@ use Drupal\user\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Test case for functional Drupal tests.
+ * Provides a test case for functional Drupal tests.
  *
- * @ingroup testing
+ * Note that this class does not yet have feature parity with WebTestBase, so
+ * WebTestBase should be used where possible. In particular, this class does
+ * not yet have the following features:
+ * - verbose output - see https://www.drupal.org/node/2469721
+ * - ajax form emulation - see https://www.drupal.org/node/2469713
+ *
+ * Tests extending BrowserTestBase must exist in the
+ * Drupal\Tests\yourmodule\Functional namespace and live in the
+ * modules/yourmodule/Tests/Functional directory.
  *
  * All BrowserTestBase tests must have two annotations to ensure process
  * isolation:
  * - @runTestsInSeparateProcesses
  * - @preserveGlobalState disabled
+ *
+ * @ingroup testing
+ *
+ * @see \Drupal\simpletest\WebTestBase
  */
 abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
 
