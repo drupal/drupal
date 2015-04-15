@@ -204,7 +204,7 @@ abstract class FilterFormatFormBase extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, FormStateInterface $form_state) {
+  public function validate(array &$form, FormStateInterface $form_state) {
     parent::validate($form, $form_state);
 
     // @todo Move trimming upstream.

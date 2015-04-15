@@ -247,7 +247,7 @@ class EntityForm extends FormBase implements EntityFormInterface {
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, FormStateInterface $form_state) {
+  public function validate(array &$form, FormStateInterface $form_state) {
     // @todo Remove this.
     // Execute legacy global validation handlers.
     $form_state->setValidateHandlers([]);
