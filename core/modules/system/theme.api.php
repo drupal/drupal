@@ -362,6 +362,9 @@
  *
  * See drupal_process_attached() for additional information.
  *
+ * See \Drupal\Core\Asset\LibraryDiscoveryParser::parseLibraryInfo() for more
+ * information on how to define libraries.
+ *
  * @section render_pipeline The Render Pipeline
  * The term "render pipeline" refers to the process Drupal uses to take
  * information provided by modules and render it into a response. For more
