@@ -8,10 +8,10 @@
 		"drag",
 		"drop"
 	],
-	"version": "1.11.2",
+	"version": "1.11.4",
 	"author": {
 		"name": "jQuery Foundation and other contributors",
-		"url": "https://github.com/jquery/jquery-ui/blob/1.11.2/AUTHORS.txt"
+		"url": "https://github.com/jquery/jquery-ui/blob/1-11-stable/AUTHORS.txt"
 	},
 	"maintainers": [
 		{
@@ -53,7 +53,7 @@
 	"licenses": [
 		{
 			"type": "MIT",
-			"url": "https://github.com/jquery/jquery-ui/blob/1.11.2/LICENSE.txt"
+			"url": "https://github.com/jquery/jquery-ui/blob/1-11-stable/LICENSE.txt"
 		}
 	],
 	"bugs": "http://bugs.jqueryui.com/",
@@ -63,10 +63,10 @@
 	"download": "http://jqueryui.com/download/",
 	"dependencies": {
 		"jquery": ">=1.6",
-		"ui.core": "1.11.2",
-		"ui.widget": "1.11.2",
-		"ui.mouse": "1.11.2",
-		"ui.draggable": "1.11.2"
+		"ui.core": "1.11.4",
+		"ui.widget": "1.11.4",
+		"ui.mouse": "1.11.4",
+		"ui.draggable": "1.11.4"
 	},
 	"category": "interaction"
 }

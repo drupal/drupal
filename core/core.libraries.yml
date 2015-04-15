@@ -403,10 +403,10 @@ jquery.once:
 
 jquery.ui:
   remote: https://github.com/jquery/jquery-ui
-  version: &jquery_ui_version 1.11.2
+  version: &jquery_ui_version 1.11.4
   license: &jquery_ui_license
-    name: MIT
-    url: https://github.com/jquery/jquery-ui/blob/1.11.2/MIT-LICENSE.txt
+    name: Public Domain
+    url: https://github.com/jquery/jquery-ui/blob/1.11.4/LICENSE.txt
     gpl-compatible: true
   js:
     assets/vendor/jquery.ui/ui/core-min.js: { weight: -11, minified: true }
