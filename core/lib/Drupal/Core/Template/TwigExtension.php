@@ -215,6 +215,8 @@ class TwigExtension extends \Twig_Extension {
    *
    * @return string
    *   The generated absolute URL for the given path.
+   *
+   * @deprecated in Drupal 8.0.x-dev and will be removed before Drupal 8.0.0.
    */
   public function getUrlFromPath($path, $options = array()) {
     $options['absolute'] = TRUE;
