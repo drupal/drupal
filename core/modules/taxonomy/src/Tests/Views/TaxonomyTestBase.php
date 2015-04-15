@@ -121,20 +121,24 @@ abstract class TaxonomyTestBase extends ViewTestBase {
   /**
    * Returns a new term with random properties in vocabulary $vid.
    *
-   * @return \Drupal\taxonomy\Term
+   * @param array $settings
+   *   (Optional) An associative array of settings to pass to `entity_create`.
+   *
+   * @return \Drupal\taxonomy\Entity\Term
    *   The created taxonomy term.
    */
-  protected function createTerm() {
+  protected function createTerm(array $settings = []) {
     $filter_formats = filter_formats();
     $format = array_pop($filter_formats);
-    $term = entity_create('taxonomy_term', array(
+    $settings += [
       'name' => $this->randomMachineName(),
       'description' => $this->randomMachineName(),
       // Use the first available text format.
       'format' => $format->id(),
       'vid' => $this->vocabulary->id(),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-    ));
+    ];
+    $term = entity_create('taxonomy_term', $settings);
     $term->save();
     return $term;
   }

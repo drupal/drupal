@@ -81,7 +81,7 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
    */
   public function testTaxonomyTermView() {
     // Create terms in the vocabulary.
-    $term = $this->createTerm($this->vocabulary);
+    $term = $this->createTerm();
 
     // Post an article.
     $edit = array();

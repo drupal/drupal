@@ -70,12 +70,8 @@ class TaxonomyIndexTidDepth extends TaxonomyIndexTid {
       $this->tableAlias = $this->relationship;
     }
     // If no relationship, then use the alias of the base table.
-    elseif (isset($this->query->table_queue[$this->view->storage->get('base_table')]['alias'])) {
-      $this->tableAlias = $this->query->table_queue[$this->view->storage->get('base_table')]['alias'];
-    }
-    // This should never happen, but if it does, we fail quietly.
     else {
-      return;
+      $this->tableAlias = $this->query->ensureTable($this->view->storage->get('base_table'));
     }
 
     // Now build the subqueries.
