@@ -9,7 +9,6 @@ namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormState;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -122,22 +121,6 @@ class EntityFormTest extends UnitTestCase {
     // collection should not have been set.
     $this->assertSame('foo', $result->get('regular_key'));
     $this->assertNull($result->get('key_controlled_by_plugin_collection'));
-  }
-
-  /**
-   * @covers ::validate
-   */
-  public function testValidate() {
-    $form_object = $this->getMock('Drupal\Core\Entity\EntityFormInterface');
-    $form_object->expects($this->once())
-      ->method('validate')
-      ->willReturnCallback(function (array &$form, FormStateInterface $form_state) {
-        $form['foo'] = 'bar';
-      });
-    $form['baz'] = 'bim';
-    $form_state = new FormState();
-    $form_object->validate($form, $form_state);
-    $this->assertArrayHasKey('foo', $form);
   }
 
 }

@@ -74,7 +74,7 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
    * For more information about entity validation, see
    * https://www.drupal.org/node/2015613.
    */
-  public function validate(array &$form, FormStateInterface $form_state) {
+  public function validate(array $form, FormStateInterface $form_state) {
     $entity = $this->buildEntity($form, $form_state);
     $this->getFormDisplay($form_state)->validateFormValues($entity, $form, $form_state);
 
