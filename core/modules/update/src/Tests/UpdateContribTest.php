@@ -250,23 +250,6 @@ class UpdateContribTest extends UpdateTestBase {
     );
     $base_theme_project_link = \Drupal::l(t('Update test base theme'), Url::fromUri('http://example.com/project/update_test_basetheme'));
     $sub_theme_project_link = \Drupal::l(t('Update test subtheme'), Url::fromUri('http://example.com/project/update_test_subtheme'));
-    foreach (array(TRUE, FALSE) as $check_disabled) {
-      $update_settings->set('check.disabled_extensions', $check_disabled)->save();
-      $this->refreshUpdateStatus($xml_mapping);
-      // In neither case should we see the "Themes" heading for installed
-      // themes.
-      $this->assertNoText(t('Themes'));
-      if ($check_disabled) {
-        $this->assertText(t('Disabled themes'));
-        $this->assertRaw($base_theme_project_link, 'Link to the Update test base theme project appears.');
-        $this->assertRaw($sub_theme_project_link, 'Link to the Update test subtheme project appears.');
-      }
-      else {
-        $this->assertNoText(t('Disabled themes'));
-        $this->assertNoRaw($base_theme_project_link, 'Link to the Update test base theme project does not appear.');
-        $this->assertNoRaw($sub_theme_project_link, 'Link to the Update test subtheme project does not appear.');
-      }
-    }
   }
 
   /**

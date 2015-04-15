@@ -8,9 +8,6 @@ update.settings:
       type: mapping
       label: 'Check settings'
       mapping:
-        disabled_extensions:
-          type: boolean
-          label: 'Check for updates of disabled modules and themes'
         interval_days:
           type: integer
           label: 'Days since last check'

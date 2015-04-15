@@ -138,10 +138,6 @@ class UpdateManager implements UpdateManagerInterface {
         $project_info = new ProjectInfo();
         $project_info->processInfoList($this->projects, $module_data, 'module', TRUE);
         $project_info->processInfoList($this->projects, $theme_data, 'theme', TRUE);
-        if ($this->updateSettings->get('check.disabled_extensions')) {
-          $project_info->processInfoList($this->projects, $module_data, 'module', FALSE);
-          $project_info->processInfoList($this->projects, $theme_data, 'theme', FALSE);
-        }
         // Allow other modules to alter projects before fetching and comparing.
         $this->moduleHandler->alter('update_projects', $this->projects);
         // Store the site's project data for at most 1 hour.

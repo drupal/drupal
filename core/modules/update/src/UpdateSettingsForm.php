@@ -75,12 +75,6 @@ class UpdateSettingsForm extends ConfigFormBase implements ContainerInjectionInt
       '#description' => t('Select how frequently you want to automatically check for new releases of your currently installed modules and themes.'),
     );
 
-    $form['update_check_disabled'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Check for updates of disabled modules and themes'),
-      '#default_value' => $config->get('check.disabled_extensions'),
-    );
-
     $notification_emails = $config->get('notification.emails');
     $form['update_notify_emails'] = array(
       '#type' => 'textarea',
@@ -142,14 +136,8 @@ class UpdateSettingsForm extends ConfigFormBase implements ContainerInjectionInt
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->config('update.settings');
-     // See if the update_check_disabled setting is being changed, and if so,
-    // invalidate all update status data.
-    if ($form_state->getValue('update_check_disabled') != $config->get('check.disabled_extensions')) {
-      update_storage_clear();
-    }
 
     $config
-      ->set('check.disabled_extensions', $form_state->getValue('update_check_disabled'))
       ->set('check.interval_days', $form_state->getValue('update_check_frequency'))
       ->set('notification.emails', $form_state->get('notify_emails'))
       ->set('notification.threshold', $form_state->getValue('update_notification_threshold'))
