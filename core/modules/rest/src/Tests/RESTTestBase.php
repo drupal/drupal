@@ -154,12 +154,15 @@ abstract class RESTTestBase extends WebTestBase {
     }
 
     $response = $this->curlExec($curl_options);
+
+    // Ensure that any changes to variables in the other thread are picked up.
+    $this->refreshVariables();
+
     $headers = $this->drupalGetHeaders();
-    $headers = implode("\n", $headers);
 
     $this->verbose($method . ' request to: ' . $url .
       '<hr />Code: ' . curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE) .
-      '<hr />Response headers: ' . $headers .
+      '<hr />Response headers: ' . nl2br(print_r($headers, TRUE)) .
       '<hr />Response body: ' . $response);
 
     return $response;

@@ -54,7 +54,8 @@ class EntityResource extends ResourceBase {
         unset($entity->{$field_name});
       }
     }
-    return new ResourceResponse($entity);
+
+    return new ResourceResponse($entity, 200, ['X-Drupal-Cache-Tags' => implode(' ', $entity->getCacheTags())]);
   }
 
   /**
