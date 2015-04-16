@@ -17,6 +17,7 @@ use Drupal\Core\Url;
 use Drupal\Core\Utility\LinkGeneratorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Cache\Cache;
 
 /**
  * Plugin implementation of the 'image' formatter.
@@ -211,6 +212,7 @@ class ImageFormatter extends ImageFormatterBase implements ContainerFactoryPlugi
         $image_uri = $file->getFileUri();
         $url = Url::fromUri(file_create_url($image_uri));
       }
+      $cache_tags = Cache::mergeTags($cache_tags, $file->getCacheTags());
 
       // Extract field item attributes for the theme function, and unset them
       // from the $item so that the field template does not re-render them.

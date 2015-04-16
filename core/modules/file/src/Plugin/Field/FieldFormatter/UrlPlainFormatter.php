@@ -29,7 +29,12 @@ class UrlPlainFormatter extends FileFormatterBase {
     $elements = array();
 
     foreach ($this->getEntitiesToView($items) as $delta => $file) {
-      $elements[$delta] = array('#markup' => file_create_url($file->getFileUri()));
+      $elements[$delta] = array(
+        '#markup' => file_create_url($file->getFileUri()),
+        '#cache' => array(
+          'tags' => $file->getCacheTags(),
+        ),
+      );
     }
 
     return $elements;

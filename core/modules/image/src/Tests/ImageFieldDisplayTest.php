@@ -94,7 +94,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $node = $node_storage->load($nid);
 
     // Test that the default formatter is being used.
-    $image_uri = file_load($node->{$field_name}->target_id)->getFileUri();
+    $file = $node->{$field_name}->entity;
+    $image_uri = $file->getFileUri();
     $image = array(
       '#theme' => 'image',
       '#uri' => $image_uri,
@@ -123,6 +124,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     );
     $default_output = '<a href="' . file_create_url($image_uri) . '">' . drupal_render($image) . '</a>';
     $this->drupalGet('node/' . $nid);
+    $this->assertCacheTag($file->getCacheTags()[0]);
     $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
     $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');
     $this->assertRaw($default_output, 'Image linked to file formatter displaying correctly on full node view.');
@@ -154,6 +156,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#height' => 20,
     );
     $this->drupalGet('node/' . $nid);
+    $this->assertCacheTag($file->getCacheTags()[0]);
     $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
     $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');
     $elements = $this->xpath(
@@ -187,8 +190,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     );
     $default_output = drupal_render($image_style);
     $this->drupalGet('node/' . $nid);
-    $cache_tags = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Tags'));
-    $this->assertTrue(in_array('config:image.style.thumbnail', $cache_tags));
+    $image_style = ImageStyle::load('thumbnail');
+    $this->assertCacheTag($image_style->getCacheTags()[0]);
     $this->assertRaw($default_output, 'Image style thumbnail formatter displaying correctly on full node view.');
 
     if ($scheme == 'private') {
@@ -247,9 +250,10 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // style.
     $node_storage->resetCache(array($nid));
     $node = $node_storage->load($nid);
+    $file = $node->{$field_name}->entity;
     $image_style = array(
       '#theme' => 'image_style',
-      '#uri' => file_load($node->{$field_name}->target_id)->getFileUri(),
+      '#uri' => $file->getFileUri(),
       '#width' => 40,
       '#height' => 20,
       '#style_name' => 'medium',
@@ -260,7 +264,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // Add alt/title fields to the image and verify that they are displayed.
     $image = array(
       '#theme' => 'image',
-      '#uri' => file_load($node->{$field_name}->target_id)->getFileUri(),
+      '#uri' => $file->getFileUri(),
       '#alt' => $alt,
       '#title' => $this->randomMachineName(),
       '#width' => 40,
@@ -362,6 +366,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     );
     $default_output = str_replace("\n", NULL, drupal_render($image));
     $this->drupalGet('node/' . $node->id());
+    $this->assertCacheTag($file->getCacheTags()[0]);
     $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
     $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');
     $this->assertRaw($default_output, 'Default image displayed when no user supplied image is present.');
@@ -375,15 +380,17 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $nid = $this->uploadNodeImage($images[1], $field_name, 'article', $alt);
     $node_storage->resetCache(array($nid));
     $node = $node_storage->load($nid);
+    $file = $node->{$field_name}->entity;
     $image = array(
       '#theme' => 'image',
-      '#uri' => file_load($node->{$field_name}->target_id)->getFileUri(),
+      '#uri' => $file->getFileUri(),
       '#width' => 40,
       '#height' => 20,
       '#alt' => $alt,
     );
     $image_output = str_replace("\n", NULL, drupal_render($image));
     $this->drupalGet('node/' . $nid);
+    $this->assertCacheTag($file->getCacheTags()[0]);
     $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
     $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');
     $this->assertNoRaw($default_output, 'Default image is not displayed when user supplied image is present.');
@@ -431,6 +438,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     );
     $default_output = str_replace("\n", NULL, drupal_render($image));
     $this->drupalGet('node/' . $node->id());
+    $this->assertCacheTag($file->getCacheTags()[0]);
     $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
     $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');
     $this->assertRaw($default_output, 'Default private image displayed when no user supplied image is present.');

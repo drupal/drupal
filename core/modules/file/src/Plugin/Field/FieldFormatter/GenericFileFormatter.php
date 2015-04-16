@@ -34,6 +34,9 @@ class GenericFileFormatter extends FileFormatterBase {
         '#theme' => 'file_link',
         '#file' => $file,
         '#description' => $item->description,
+        '#cache' => array(
+          'tags' => $file->getCacheTags(),
+        ),
       );
       // Pass field item attributes to the theme function.
       if (isset($item->_attributes)) {

@@ -37,6 +37,9 @@ class TableFormatter extends FileFormatterBase {
             'data' => array(
               '#theme' => 'file_link',
               '#file' => $file,
+              '#cache' => array(
+                'tags' => $file->getCacheTags(),
+              ),
             ),
           ),
           array('data' => format_size($file->getSize())),
