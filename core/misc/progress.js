@@ -1,6 +1,21 @@
-(function ($) {
+(function ($, Drupal) {
 
   "use strict";
+
+  /**
+   * Theme function for the progress bar.
+   *
+   * @return
+   *   The HTML for the progress bar.
+   */
+  Drupal.theme.progressBar = function (id) {
+    return '<div id="' + id + '" class="progress" aria-live="polite">' +
+      '<div class="progress__label">&nbsp;</div>' +
+      '<div class="progress__track"><div class="progress__bar"></div></div>' +
+      '<div class="progress__percentage"></div>' +
+      '<div class="progress__description">&nbsp;</div>' +
+      '</div>';
+  };
 
   /**
    * A progressbar object. Initialized with the given id. Must be inserted into
@@ -20,11 +35,7 @@
 
     // The WAI-ARIA setting aria-live="polite" will announce changes after users
     // have completed their current activity and not interrupt the screen reader.
-    this.element = $('<div class="progress" aria-live="polite"></div>').attr('id', id);
-    this.element.html('<div class="progress__label">&nbsp;</div>' +
-      '<div class="progress__track"><div class="progress__bar"></div></div>' +
-      '<div class="progress__percentage"></div>' +
-      '<div class="progress__description">&nbsp;</div>');
+    this.element = $(Drupal.theme(id));
   };
 
   $.extend(Drupal.ProgressBar.prototype, {
@@ -109,4 +120,4 @@
     }
   });
 
-})(jQuery);
+})(jQuery, Drupal);
