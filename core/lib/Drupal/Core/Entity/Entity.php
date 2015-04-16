@@ -156,8 +156,8 @@ abstract class Entity implements EntityInterface {
    * {@inheritdoc}
    */
   public function urlInfo($rel = 'canonical', array $options = []) {
-    if ($this->isNew()) {
-      throw new EntityMalformedException(sprintf('The "%s" entity type has not been saved, and cannot have a URI.', $this->getEntityTypeId()));
+    if ($this->id() === NULL) {
+      throw new EntityMalformedException(sprintf('The "%s" entity cannot have a URI as it does have an ID', $this->getEntityTypeId()));
     }
 
     // The links array might contain URI templates set in annotations.

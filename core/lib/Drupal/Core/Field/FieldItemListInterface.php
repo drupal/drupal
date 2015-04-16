@@ -94,6 +94,8 @@ interface FieldItemListInterface extends ListInterface, AccessibleInterface {
 
   /**
    * Filters out empty field items and re-numbers the item deltas.
+   *
+   * @return $this
    */
   public function filterEmptyItems();
 
@@ -257,5 +259,16 @@ interface FieldItemListInterface extends ListInterface, AccessibleInterface {
    *   The return default value for the field.
    */
   public static function processDefaultValue($default_value, FieldableEntityInterface $entity, FieldDefinitionInterface $definition);
+
+  /**
+   * Determines equality to another object implementing FieldItemListInterface.
+   *
+   * @param \Drupal\Core\Field\FieldItemListInterface $list_to_compare
+   *   The field item list to compare to.
+   *
+   * @return bool
+   *   TRUE if the field item lists are equal, FALSE if not.
+   */
+  public function equals(FieldItemListInterface $list_to_compare);
 
 }

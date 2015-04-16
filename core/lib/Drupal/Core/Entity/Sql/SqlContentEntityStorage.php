@@ -22,6 +22,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Entity\Schema\DynamicallyFieldableEntityStorageSchemaInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\FieldStorageConfigInterface;
@@ -960,9 +961,6 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       if ($this->revisionDataTable) {
         $this->saveToSharedTables($entity, $this->revisionDataTable);
       }
-      if ($this->revisionTable) {
-        $entity->setNewRevision(FALSE);
-      }
     }
     else {
       // Ensure the entity is still seen as new after assigning it an id,
@@ -990,17 +988,16 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       if ($this->revisionDataTable) {
         $this->saveToSharedTables($entity, $this->revisionDataTable);
       }
-
-      $entity->enforceIsNew(FALSE);
-      if ($this->revisionTable) {
-        $entity->setNewRevision(FALSE);
-      }
     }
     $this->invokeFieldMethod($is_new ? 'insert' : 'update', $entity);
     $this->saveToDedicatedTables($entity, !$is_new);
 
     if (!$is_new && $this->dataTable) {
       $this->invokeTranslationHooks($entity);
+    }
+    $entity->enforceIsNew(FALSE);
+    if ($this->revisionTable) {
+      $entity->setNewRevision(FALSE);
     }
     return $return;
   }
@@ -1317,11 +1314,20 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $vid = $id;
     }
 
+    $original = !empty($entity->original) ? $entity->original: NULL;
+
     foreach ($this->entityManager->getFieldDefinitions($entity_type, $bundle) as $field_name => $field_definition) {
       $storage_definition = $field_definition->getFieldStorageDefinition();
       if (!$table_mapping->requiresDedicatedTableStorage($storage_definition)) {
         continue;
       }
+
+      // When updating an existing revision, keep the existing records if the
+      // field values did not change.
+      if (!$entity->isNewRevision() && $original && !$this->hasFieldValueChanged($field_definition, $entity, $original)) {
+        continue;
+      }
+
       $table_name = $table_mapping->getDedicatedDataTableName($storage_definition);
       $revision_name = $table_mapping->getDedicatedRevisionTableName($storage_definition);
 

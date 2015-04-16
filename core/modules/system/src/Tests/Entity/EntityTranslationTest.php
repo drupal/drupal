@@ -460,6 +460,19 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     $hooks = $this->getHooksInfo();
     $this->assertFalse($hooks, 'No hooks are run when adding and removing a translation without storing it.');
 
+    // Check that hooks are fired only when actually storing data.
+    $entity = $this->reloadEntity($entity);
+    $entity->addTranslation($langcode2);
+    $entity->save();
+    $entity = $this->reloadEntity($entity);
+    $this->assertTrue($entity->hasTranslation($langcode2), 'Entity has translation after adding one and saving.');
+    $entity->removeTranslation($langcode2);
+    $entity->save();
+    $entity = $this->reloadEntity($entity);
+    $this->assertFalse($entity->hasTranslation($langcode2), 'Entity does not have translation after removing it and saving.');
+    // Reset hook firing information.
+    $this->getHooksInfo();
+
     // Verify that entity serialization does not cause stale references to be
     // left around.
     $entity = $this->reloadEntity($entity);
