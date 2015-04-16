@@ -9,6 +9,7 @@ namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FormatterBase;
@@ -93,6 +94,7 @@ class StringFormatter extends FormatterBase implements ContainerFactoryPluginInt
     $form = parent::settingsForm($form, $form_state);
 
     $entity_type = $this->entityManager->getDefinition($this->fieldDefinition->getTargetEntityTypeId());
+
     $form['link_to_entity'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Link to the @entity_label', ['@entity_label' => $entity_type->getLabel()]),
@@ -119,16 +121,14 @@ class StringFormatter extends FormatterBase implements ContainerFactoryPluginInt
    */
   public function viewElements(FieldItemListInterface $items) {
     $elements = array();
-
     $url = NULL;
-    // Add support to link to the entity itself.
-    if ($this->getSetting('link_to_entity') && ($entity = $items->getEntity()) && $entity->hasLinkTemplate('canonical')) {
-      $url = $entity->urlInfo();
+    if ($this->getSetting('link_to_entity')) {
+      // For the default revision this falls back to 'canonical'
+      $url = $items->getEntity()->urlInfo('revision');
     }
 
     foreach ($items as $delta => $item) {
       $string = $this->viewValue($item);
-
       if ($url) {
         $elements[$delta] = [
           '#type' => 'link',
@@ -140,7 +140,6 @@ class StringFormatter extends FormatterBase implements ContainerFactoryPluginInt
         $elements[$delta] = ['#markup' => $string];
       }
     }
-
     return $elements;
   }
 

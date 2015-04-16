@@ -137,14 +137,6 @@ views.field.node_path:
       type: boolean
       label: 'Use absolute link (begins with "http://")'
 
-views.field.node_revision:
-  type: views.field.node
-  label: 'Node revision'
-  mapping:
-    link_to_node_revision:
-      type: boolean
-      label: 'Link this field to its content revision'
-
 views.field.node_revision_link:
   type: views_field
   label: 'Link to a node revision'

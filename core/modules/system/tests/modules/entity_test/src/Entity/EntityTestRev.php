@@ -40,7 +40,8 @@ use Drupal\entity_test\Entity\EntityTest;
  *   links = {
  *     "canonical" = "/entity_test_rev/manage/{entity_test_rev}",
  *     "delete-form" = "/entity_test/delete/entity_test_rev/{entity_test_rev}",
- *     "edit-form" = "/entity_test_rev/manage/{entity_test_rev}"
+ *     "edit-form" = "/entity_test_rev/manage/{entity_test_rev}",
+ *     "revision" = "/entity_test_rev/{entity_test_rev}/revision/{entity_test_rev_revision}/view",
  *   }
  * )
  */

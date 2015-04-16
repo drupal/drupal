@@ -163,6 +163,12 @@ abstract class Entity implements EntityInterface {
     // The links array might contain URI templates set in annotations.
     $link_templates = $this->linkTemplates();
 
+    // Links pointing to the current revision point to the actual entity. So
+    // instead of using the 'revision' link, use the 'canonical' link.
+    if ($rel === 'revision' && $this instanceof RevisionableInterface && $this->isDefaultRevision()) {
+      $rel = 'canonical';
+    }
+
     if (isset($link_templates[$rel])) {
       $route_parameters = $this->urlRouteParameters($rel);
       $route_name = "entity.{$this->entityTypeId}." . str_replace(array('-', 'drupal:'), array('_', ''), $rel);
@@ -280,6 +286,10 @@ abstract class Entity implements EntityInterface {
       // The entity ID is needed as a route parameter.
       $uri_route_parameters[$this->getEntityTypeId()] = $this->id();
     }
+    if ($rel === 'revision') {
+      $uri_route_parameters[$this->getEntityTypeId() . '_revision'] = $this->getRevisionId();
+    }
+
     return $uri_route_parameters;
   }
 

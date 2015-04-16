@@ -291,8 +291,6 @@ class NodeViewsData extends EntityViewsData {
     $data['node_field_revision']['status']['filter']['type'] = 'yes-no';
     $data['node_field_revision']['status']['filter']['use_equal'] = TRUE;
 
-    $data['node_field_revision']['title']['field']['id'] = 'node_revision';
-
     $data['node_field_revision']['langcode']['help'] = t('The language of the content or translation.');
 
     $data['node_revision']['link_to_revision'] = array(

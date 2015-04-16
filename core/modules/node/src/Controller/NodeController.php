@@ -192,7 +192,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
             '#theme' => 'username',
             '#account' => $revision_author,
           );
-          $row[] = $this->t('!date by !username', array('!date' => $this->l($this->dateFormatter->format($revision->revision_timestamp->value, 'short'), new Url('node.revision_show', array('node' => $node->id(), 'node_revision' => $vid))), '!username' => drupal_render($username)))
+          $row[] = $this->t('!date by !username', array('!date' => $this->l($this->dateFormatter->format($revision->revision_timestamp->value, 'short'), new Url('entity.node.revision', array('node' => $node->id(), 'node_revision' => $vid))), '!username' => drupal_render($username)))
             . (($revision->revision_log->value != '') ? '<p class="revision-log">' . Xss::filter($revision->revision_log->value) . '</p>' : '');
 
           if ($revert_permission) {

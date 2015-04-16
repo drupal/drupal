@@ -55,6 +55,13 @@ entity.entity_test.collection:
   requirements:
     _access: 'TRUE'
 
+entity.entity_test_rev.revision:
+  path: '/entity_test_rev/{entity_test_rev}/revision/{entity_test_rev_revision}/view'
+  defaults:
+    _entity_view: 'entity_test_rev'
+  requirements:
+    _access: 'TRUE'
+
 entity.block.test_operation:
   path: '/admin/structure/block/manage/{block}/test_operation'
   defaults:
