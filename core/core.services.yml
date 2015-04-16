@@ -196,6 +196,10 @@ services:
     factory_method: get
     factory_service: cache_factory
     arguments: [discovery]
+  cache_router_rebuild_subscriber:
+    class: Drupal\Core\EventSubscriber\CacheRouterRebuildSubscriber
+    tags:
+      - { name: event_subscriber }
   page_cache_request_policy:
     class: Drupal\Core\PageCache\DefaultRequestPolicy
     arguments: ['@session_configuration']

@@ -138,6 +138,15 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
     if ($access_result instanceof CacheableDependencyInterface) {
       $this->updateDrupalCacheHeaders($response, $access_result);
     }
+    // Add a cache tag to any 4xx response.
+    if ($response->isClientError()) {
+      $cache_tags = ['4xx-response'];
+      if ($response->headers->has('X-Drupal-Cache-Tags')) {
+        $existing_cache_tags = explode(' ', $response->headers->get('X-Drupal-Cache-Tags'));
+        $cache_tags = Cache::mergeTags($existing_cache_tags, $cache_tags);
+      }
+      $response->headers->set('X-Drupal-Cache-Tags', implode(' ', $cache_tags));
+    }
 
     $is_cacheable = ($this->requestPolicy->check($request) === RequestPolicyInterface::ALLOW) && ($this->responsePolicy->check($response, $request) !== ResponsePolicyInterface::DENY);
 

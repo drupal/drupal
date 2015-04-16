@@ -10,6 +10,7 @@ namespace Drupal\system\Tests\Bootstrap;
 use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Core\Routing\RequestContext;
 use Drupal\Core\Url;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Cache\Cache;
 use Drupal\user\Entity\Role;
@@ -29,7 +30,7 @@ class PageCacheTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('test_page_test', 'system_test');
+  public static $modules = array('test_page_test', 'system_test', 'entity_test');
 
   protected function setUp() {
     parent::setUp();
@@ -305,6 +306,52 @@ class PageCacheTest extends WebTestBase {
     $this->drupalGet($route_access_url);
     $this->assertCacheContext('user.permissions');
     $this->assertNoCacheTag('config:user.role.authenticated');
+  }
+
+  /**
+   * Tests the 4xx-response cache tag is added and invalidated.
+   */
+  function testPageCacheAnonymous403404() {
+    $admin_url = Url::fromRoute('system.admin');
+    $invalid_url = 'foo/' . $this->randomString();
+    $tests = [
+      403 => $admin_url,
+      404 => $invalid_url,
+    ];
+    foreach ($tests as $code => $content_url) {
+      // Anonymous user, without permissions.
+      $this->drupalGet($content_url);
+      $this->assertResponse($code);
+      $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
+      $this->assertCacheTag('4xx-response');
+      $this->drupalGet($content_url);
+      $this->assertResponse($code);
+      $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
+      $entity_values = array(
+        'name' => $this->randomMachineName(),
+        'user_id' => 1,
+        'field_test_text' => array(
+          0 => array(
+            'value' => $this->randomString(),
+            'format' => 'plain_text',
+          )
+        ),
+      );
+      $entity = EntityTest::create($entity_values);
+      $entity->save();
+      // Saving an entity clears 4xx cache tag.
+      $this->drupalGet($content_url);
+      $this->assertResponse($code);
+      $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
+      $this->drupalGet($content_url);
+      $this->assertResponse($code);
+      $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
+      // Rebuilding the router should invalidate the 4xx cache tag.
+      $this->container->get('router.builder')->rebuild();
+      $this->drupalGet($content_url);
+      $this->assertResponse($code);
+      $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
+    }
   }
 
   /**

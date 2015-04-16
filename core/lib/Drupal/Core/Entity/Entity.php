@@ -504,6 +504,10 @@ abstract class Entity implements EntityInterface {
     // listing's filtering requirements. A newly created entity may start to
     // appear in listings because it did not exist before.)
     $tags = $this->getEntityType()->getListCacheTags();
+    if ($this->hasLinkTemplate('canonical')) {
+      // Creating or updating an entity may change a cached 403 or 404 response.
+      $tags = Cache::mergeTags($tags, ['4xx-response']);
+    }
     if ($update) {
       // An existing entity was updated, also invalidate its unique cache tag.
       $tags = Cache::mergeTags($tags, $this->getCacheTags());
