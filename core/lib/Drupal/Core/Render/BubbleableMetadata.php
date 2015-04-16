@@ -10,13 +10,14 @@ namespace Drupal\Core\Render;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
+use Drupal\Core\Cache\CacheableMetadata;
 
 /**
  * Value object used for bubbleable rendering metadata.
  *
  * @see \Drupal\Core\Render\RendererInterface::render()
  */
-class BubbleableMetadata implements CacheableDependencyInterface {
+class BubbleableMetadata extends CacheableMetadata {
 
   /**
    * Cache contexts.
@@ -130,106 +131,6 @@ class BubbleableMetadata implements CacheableDependencyInterface {
     $meta = new static();
     $meta->maxAge = 0;
     return $meta;
-  }
-
-  /**
-   * Gets cache tags.
-   *
-   * @return string[]
-   */
-  public function getCacheTags() {
-    return $this->tags;
-  }
-
-  /**
-   * Adds cache tags.
-   *
-   * @param string[] $cache_tags
-   *   The cache tags to be added.
-   *
-   * @return $this
-   */
-  public function addCacheTags(array $cache_tags) {
-    $this->tags = Cache::mergeTags($this->tags, $cache_tags);
-    return $this;
-  }
-
-  /**
-   * Sets cache tags.
-   *
-   * @param string[] $cache_tags
-   *   The cache tags to be associated.
-   *
-   * @return $this
-   */
-  public function setCacheTags(array $cache_tags) {
-    $this->tags = $cache_tags;
-    return $this;
-  }
-
-  /**
-   * Gets cache contexts.
-   *
-   * @return string[]
-   */
-  public function getCacheContexts() {
-    return $this->contexts;
-  }
-
-  /**
-   * Adds cache contexts.
-   *
-   * @param string[] $cache_contexts
-   *   The cache contexts to be added.
-   *
-   * @return $this
-   */
-  public function addCacheContexts(array $cache_contexts) {
-    $this->contexts = Cache::mergeContexts($this->contexts, $cache_contexts);
-    return $this;
-  }
-
-  /**
-   * Sets cache contexts.
-   *
-   * @param string[] $cache_contexts
-   *   The cache contexts to be associated.
-   *
-   * @return $this
-   */
-  public function setCacheContexts(array $cache_contexts) {
-    $this->contexts = $cache_contexts;
-    return $this;
-  }
-
-  /**
-   * Gets the maximum age (in seconds).
-   *
-   * @return int
-   */
-  public function getCacheMaxAge() {
-    return $this->maxAge;
-  }
-
-  /**
-   * Sets the maximum age (in seconds).
-   *
-   * Defaults to Cache::PERMANENT
-   *
-   * @param int $max_age
-   *   The max age to associate.
-   *
-   * @return $this
-   *
-   * @throws \InvalidArgumentException
-   */
-  public function setCacheMaxAge($max_age) {
-    if (!is_int($max_age)) {
-      throw new \InvalidArgumentException('$max_age must be an integer');
-    }
-
-    $this->maxAge = $max_age;
-    return $this;
   }
 
   /**
