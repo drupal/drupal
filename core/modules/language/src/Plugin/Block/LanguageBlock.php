@@ -7,6 +7,7 @@
 
 namespace Drupal\language\Plugin\Block;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Path\PathMatcherInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -80,7 +81,8 @@ class LanguageBlock extends BlockBase implements ContainerFactoryPluginInterface
    * {@inheritdoc}
    */
   protected function blockAccess(AccountInterface $account) {
-    return $this->languageManager->isMultilingual();
+    $access = $this->languageManager->isMultilingual() ? AccessResult::allowed() : AccessResult::forbidden();
+    return $access->addCacheTags(['config:configurable_language_list']);
   }
 
   /**

@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\Block;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -93,7 +94,13 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
    * {@inheritdoc}
    */
   protected function blockAccess(AccountInterface $account) {
-    return $this->view->access($this->displayID);
+    if ($this->view->access($this->displayID)) {
+      $access = AccessResult::allowed();
+    }
+    else {
+      $access = AccessResult::forbidden();
+    }
+    return $access;
   }
 
   /**

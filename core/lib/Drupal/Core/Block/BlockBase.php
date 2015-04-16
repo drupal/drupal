@@ -121,34 +121,28 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
    * {@inheritdoc}
    */
   public function access(AccountInterface $account, $return_as_object = FALSE) {
-    // @todo Remove self::blockAccess() and force individual plugins to return
-    //   their own AccessResult logic. Until that is done in
-    //   https://www.drupal.org/node/2375689 the access will be set uncacheable.
-    if ($this->blockAccess($account)) {
-      $access = AccessResult::allowed();
-    }
-    else {
-      $access = AccessResult::forbidden();
-    }
-
-    $access->setCacheMaxAge(0);
+    $access = $this->blockAccess($account);
     return $return_as_object ? $access : $access->isAllowed();
   }
 
   /**
    * Indicates whether the block should be shown.
    *
+   * Blocks with specific access checking should override this method rather
+   * than access(), in order to avoid repeating the handling of the
+   * $return_as_object argument.
+   *
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The user session for which to check access.
    *
-   * @return bool
-   *   TRUE if the block should be shown, or FALSE otherwise.
+   * @return \Drupal\Core\Access\AccessResult
+   *   The access result.
    *
    * @see self::access()
    */
   protected function blockAccess(AccountInterface $account) {
     // By default, the block is visible.
-    return TRUE;
+    return AccessResult::allowed();
   }
 
   /**

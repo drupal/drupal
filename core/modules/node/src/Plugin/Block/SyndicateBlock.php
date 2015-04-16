@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Plugin\Block;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
@@ -36,7 +37,7 @@ class SyndicateBlock extends BlockBase {
    * {@inheritdoc}
    */
   protected function blockAccess(AccountInterface $account) {
-    return $account->hasPermission('access content');
+    return AccessResult::allowedIfHasPermission($account, 'access content');
   }
 
   /**

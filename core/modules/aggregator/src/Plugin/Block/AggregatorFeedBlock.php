@@ -9,6 +9,7 @@ namespace Drupal\aggregator\Plugin\Block;
 
 use Drupal\aggregator\FeedStorageInterface;
 use Drupal\aggregator\ItemStorageInterface;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\Query\QueryInterface;
@@ -104,7 +105,7 @@ class AggregatorFeedBlock extends BlockBase implements ContainerFactoryPluginInt
    */
   protected function blockAccess(AccountInterface $account) {
     // Only grant access to users with the 'access news feeds' permission.
-    return $account->hasPermission('access news feeds');
+    return AccessResult::allowedIfHasPermission($account, 'access news feeds');
   }
 
   /**

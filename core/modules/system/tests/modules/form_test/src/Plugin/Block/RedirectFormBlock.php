@@ -10,7 +10,6 @@ namespace Drupal\form_test\Plugin\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -61,13 +60,6 @@ class RedirectFormBlock extends BlockBase implements ContainerFactoryPluginInter
       $plugin_definition,
       $container->get('form_builder')
     );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function blockAccess(AccountInterface $account) {
-    return TRUE;
   }
 
   /**

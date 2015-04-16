@@ -7,6 +7,7 @@
 
 namespace Drupal\help\Plugin\Block;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -96,7 +97,12 @@ class HelpBlock extends BlockBase implements ContainerFactoryPluginInterface {
    */
   protected function blockAccess(AccountInterface $account) {
     $this->help = $this->getActiveHelp($this->request);
-    return (bool) $this->help;
+    if ($this->help) {
+      return AccessResult::allowed();
+    }
+    else {
+      return AccessResult::forbidden();
+    }
   }
 
   /**

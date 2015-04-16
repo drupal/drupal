@@ -7,6 +7,7 @@
 
 namespace Drupal\block_content\Plugin\Block;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -49,6 +50,13 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
    * @var \Drupal\Core\Session\AccountInterface.
    */
   protected $account;
+
+  /**
+   * The block content entity.
+   *
+   * @var \Drupal\block_content\BlockContentInterface
+   */
+  protected $blockContent;
 
   /**
    * Constructs a new BlockContentBlock.
@@ -132,19 +140,43 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
   /**
    * {@inheritdoc}
    */
+  protected function blockAccess(AccountInterface $account) {
+    if ($this->getEntity()) {
+      return $this->getEntity()->access('view', $account, TRUE);
+    }
+    return AccessResult::forbidden();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function build() {
-    $uuid = $this->getDerivativeId();
-    if ($block = $this->entityManager->loadEntityByUuid('block_content', $uuid)) {
+    if ($block = $this->getEntity()) {
       return $this->entityManager->getViewBuilder($block->getEntityTypeId())->view($block, $this->configuration['view_mode']);
     }
     else {
       return array(
         '#markup' => $this->t('Block with uuid %uuid does not exist. <a href="!url">Add custom block</a>.', array(
-          '%uuid' => $uuid,
+          '%uuid' => $this->getDerivativeId(),
           '!url' => $this->urlGenerator->generate('block_content.add_page')
         )),
         '#access' => $this->account->hasPermission('administer blocks')
       );
     }
   }
+
+  /**
+   * Loads the block content entity of the block.
+   *
+   * @return \Drupal\block_content\BlockContentInterface|null
+   *   The block content entity.
+   */
+  protected function getEntity() {
+    $uuid = $this->getDerivativeId();
+    if (!isset($this->blockContent)) {
+      $this->blockContent = $this->entityManager->loadEntityByUuid('block_content', $uuid);
+    }
+    return $this->blockContent;
+  }
+
 }

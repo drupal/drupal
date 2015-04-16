@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Plugin\Block;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -76,7 +77,11 @@ class UserLoginBlock extends BlockBase implements ContainerFactoryPluginInterfac
    */
   protected function blockAccess(AccountInterface $account) {
     $route_name = $this->routeMatch->getRouteName();
-    return ($account->isAnonymous() && !in_array($route_name, array('user.register', 'user.login', 'user.logout')));
+    if ($account->isAnonymous() && !in_array($route_name, array('user.register', 'user.login', 'user.logout'))) {
+      return AccessResult::allowed()
+        ->addCacheContexts(['route', 'user.roles:anonymous']);
+    }
+    return AccessResult::forbidden();
   }
 
   /**

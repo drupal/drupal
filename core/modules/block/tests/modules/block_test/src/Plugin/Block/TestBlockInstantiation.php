@@ -7,6 +7,7 @@
 
 namespace Drupal\block_test\Plugin\Block;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -34,7 +35,7 @@ class TestBlockInstantiation extends BlockBase {
    * {@inheritdoc}
    */
   protected function blockAccess(AccountInterface $account) {
-    return $account->hasPermission('access content');
+    return AccessResult::allowedIfHasPermission($account, 'access content');
   }
 
   /**

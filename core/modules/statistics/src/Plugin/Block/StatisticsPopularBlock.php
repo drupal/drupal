@@ -7,6 +7,7 @@
 
 namespace Drupal\statistics\Plugin\Block;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -57,22 +58,23 @@ class StatisticsPopularBlock extends BlockBase {
    * {@inheritdoc}
    */
   protected function blockAccess(AccountInterface $account) {
+    $access = AccessResult::allowedIfHasPermission($account, 'access content');
     if ($account->hasPermission('access content')) {
       $daytop = $this->configuration['top_day_num'];
       if (!$daytop || !($result = statistics_title_list('daycount', $daytop)) || !($this->day_list = node_title_list($result, $this->t("Today's:")))) {
-        return FALSE;
+        return AccessResult::forbidden()->inheritCacheability($access);
       }
       $alltimetop = $this->configuration['top_all_num'];
       if (!$alltimetop || !($result = statistics_title_list('totalcount', $alltimetop)) || !($this->all_time_list = node_title_list($result, $this->t('All time:')))) {
-        return FALSE;
+        return AccessResult::forbidden()->inheritCacheability($access);
       }
       $lasttop = $this->configuration['top_last_num'];
       if (!$lasttop || !($result = statistics_title_list('timestamp', $lasttop)) || !($this->last_list = node_title_list($result, $this->t('Last viewed:')))) {
-        return FALSE;
+        return AccessResult::forbidden()->inheritCacheability($access);
       }
-      return TRUE;
+      return $access;
     }
-    return FALSE;
+    return AccessResult::forbidden()->inheritCacheability($access);
   }
 
   /**

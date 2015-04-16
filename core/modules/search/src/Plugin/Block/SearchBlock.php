@@ -7,10 +7,10 @@
 
 namespace Drupal\search\Plugin\Block;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Block\BlockBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides a 'Search form' block.
@@ -27,7 +27,7 @@ class SearchBlock extends BlockBase {
    * {@inheritdoc}
    */
   protected function blockAccess(AccountInterface $account) {
-    return $account->hasPermission('search content');
+    return AccessResult::allowedIfHasPermission($account, 'search content');
   }
 
   /**

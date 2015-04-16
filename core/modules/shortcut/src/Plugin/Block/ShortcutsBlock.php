@@ -7,6 +7,7 @@
 
 namespace Drupal\shortcut\Plugin\Block;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Session\AccountInterface;
 
@@ -34,7 +35,7 @@ class ShortcutsBlock extends BlockBase {
    * {@inheritdoc}
    */
   protected function blockAccess(AccountInterface $account) {
-    return $account->hasPermission('access shortcuts');
+    return AccessResult::allowedIfHasPermission($account, 'access shortcuts');
   }
 
 }
