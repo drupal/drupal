@@ -402,7 +402,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     // Check that the language switcher active link matches the given browser
     // language.
     $args = array(':id' => 'block-test-language-block', ':url' => \Drupal::url('<front>') . $langcode_browser_fallback);
-    $fields = $this->xpath('//div[@id=:id]//a[@class="language-link active" and starts-with(@href, :url)]', $args);
+    $fields = $this->xpath('//div[@id=:id]//a[@class="language-link is-active" and starts-with(@href, :url)]', $args);
     $this->assertTrue($fields[0] == $languages[$langcode_browser_fallback]->getName(), 'The browser language is the URL active language');
 
     // Check that URLs are rewritten using the given browser language.

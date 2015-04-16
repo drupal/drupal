@@ -44,7 +44,7 @@
       // Render the visibility.
       this.$el.toggleClass('hidden', !this.model.get('isVisible'));
       // Render the state.
-      this.$el.find('button').toggleClass('active', !this.model.get('isViewing'));
+      this.$el.find('button').toggleClass('is-active', !this.model.get('isViewing'));
 
       return this;
     },

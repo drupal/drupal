@@ -295,7 +295,7 @@ class LocalTaskDefaultTest extends UnitTestCase {
       'attributes' => array(
         'class' => array(
           'example',
-          'active'
+          'is-active'
         )
       )
     ), $this->localTaskBase->getOptions($route_match));

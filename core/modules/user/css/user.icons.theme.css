@@ -10,6 +10,6 @@
   background-image: url(../../../misc/icons/bebebe/person.svg);
 }
 .toolbar-bar .toolbar-icon-user:active:before,
-.toolbar-bar .toolbar-icon-user.active:before {
+.toolbar-bar .toolbar-icon-user.is-active:before {
   background-image: url(../../../misc/icons/ffffff/person.svg);
 }

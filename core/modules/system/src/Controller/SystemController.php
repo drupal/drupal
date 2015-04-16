@@ -329,7 +329,7 @@ class SystemController extends ControllerBase {
   }
 
   /**
-   * #post_render_cache callback; sets the "active" class on relevant links.
+   * #post_render_cache callback; sets the "is-active" class on relevant links.
    *
    * This is a PHP implementation of the drupal.active-link JavaScript library.
    *
@@ -405,7 +405,7 @@ class SystemController extends ControllerBase {
 
       // Ensure we don't set the "active" class twice on the same element.
       $class = $node->getAttribute('class');
-      $add_active = !in_array('active', explode(' ', $class));
+      $add_active = !in_array('is-active', explode(' ', $class));
 
       // The language of an active link is equal to the current language.
       if ($add_active && $context['language']) {
@@ -429,12 +429,12 @@ class SystemController extends ControllerBase {
       }
 
       // Only if the path, the language and the query match, we set the
-      // "active" class.
+      // "is-active" class.
       if ($add_active) {
         if (strlen($class) > 0) {
           $class .= ' ';
         }
-        $class .= 'active';
+        $class .= 'is-active';
         $node->setAttribute('class', $class);
 
         // Get the updated tag.

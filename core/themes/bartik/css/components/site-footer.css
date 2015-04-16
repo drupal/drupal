@@ -57,7 +57,7 @@
   padding-left: 0;
 }
 .site-footer .content a,
-.site-footer .content a.active {
+.site-footer .content a.is-active {
   color: #fcfcfc;
   color: rgba(255, 255, 255, 0.8);
 }

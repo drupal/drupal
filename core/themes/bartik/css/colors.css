@@ -6,14 +6,14 @@ body {
 }
 #page,
 #main-wrapper,
-.region-primary-menu .menu-item a.active,
+.region-primary-menu .menu-item a.is-active,
 .region-primary-menu .menu-item .menu-item--active-trail a {
   background: #ffffff;
 }
-.tabs ul.primary li a.active {
+.tabs ul.primary li a.is-active {
   background-color: #ffffff;
 }
-.tabs ul.primary li.active a {
+.tabs ul.primary li.is-active a {
   background-color: #ffffff;
   border-bottom-color: #ffffff;
 }
@@ -45,7 +45,7 @@ a:active,
 }
 .region-header,
 .region-header a,
-.region-header li a.active,
+.region-header li a.is-active,
 #name-and-slogan,
 .site-branding-block,
 #name-and-slogan a,

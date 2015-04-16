@@ -56,7 +56,7 @@ trait AssertMenuActiveTrailTrait {
     $xpath .= 'li[contains(@class, :class-trail)]/a[contains(@href, :href) ' . $xpath_last_active . 'and contains(text(), :title)]';
     $args = array(
       ':class-trail' => 'menu-item--active-trail',
-      ':class-active' => 'active',
+      ':class-active' => 'is-active',
       ':href' => Url::fromUri('base:' . $active_link_path)->toString(),
       ':title' => $active_link_title,
     );

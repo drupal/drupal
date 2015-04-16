@@ -86,7 +86,7 @@
       // Render the state.
       var isActive = this.model.get('isActive');
       this.$el.find('button')
-        .toggleClass('active', isActive)
+        .toggleClass('is-active', isActive)
         .prop('aria-pressed', isActive);
       return this;
     },

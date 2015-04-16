@@ -8,7 +8,7 @@
   "use strict";
 
   /**
-   * Append active class.
+   * Append is-active class.
    *
    * The link is only active if its path corresponds to the current path, the
    * language of the linked path is equal to the current language, and if the
@@ -16,8 +16,8 @@
    * same request with different query parameters may yield a different page
    * (e.g. pagers, exposed View filters).
    *
-   * Does not discriminate based on element type, so allows you to set the active
-   * class on any element: a, li…
+   * Does not discriminate based on element type, so allows you to set the
+   * is-active class on any element: a, li…
    */
   Drupal.behaviors.activeLinks = {
     attach: function (context) {
@@ -47,14 +47,14 @@
       // Query the DOM.
       var activeLinks = context.querySelectorAll(selectors.join(','));
       for (var i = 0, il = activeLinks.length; i < il; i += 1) {
-        activeLinks[i].classList.add('active');
+        activeLinks[i].classList.add('is-active');
       }
     },
     detach: function (context, settings, trigger) {
       if (trigger === 'unload') {
-        var activeLinks = context.querySelectorAll('[data-drupal-link-system-path].active');
+        var activeLinks = context.querySelectorAll('[data-drupal-link-system-path].is-active');
         for (var i = 0, il = activeLinks.length; i < il; i += 1) {
-          activeLinks[i].classList.remove('active');
+          activeLinks[i].classList.remove('is-active');
         }
       }
     }

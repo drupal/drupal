@@ -77,38 +77,38 @@ th > a:after {
   -webkit-transition: all 0.1s;
   transition: all 0.1s;
 }
-th.active > a {
+th.is-active > a {
   color: #004875;
 }
-th.active img {
+th.is-active img {
   position: absolute;
   right: 0; /* LTR */
   top: 50%;
 }
-[dir="rtl"] th.active img {
+[dir="rtl"] th.is-active img {
   right: auto;
   left: 0;
 }
-th.active > a:after {
+th.is-active > a:after {
   border-bottom-color: #004875;
 }
 th > a:hover,
 th > a:focus,
-th.active > a:hover,
-th.active > a:focus {
+th.is-active > a:hover,
+th.is-active > a:focus {
   color: #008ee6;
   text-decoration: none;
 }
 th > a:hover:after,
 th > a:focus:after,
-th.active > a:hover:after,
-th.active > a:focus:after {
+th.is-active > a:hover:after,
+th.is-active > a:focus:after {
   border-bottom-color: #008ee6;
 }
 td .item-list ul {
   margin: 0;
 }
-td.active {
+td.is-active {
   background: none;
 }
 

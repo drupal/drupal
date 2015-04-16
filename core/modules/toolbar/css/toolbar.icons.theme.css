@@ -75,14 +75,14 @@
   background-image: url(../../../misc/icons/bebebe/hamburger.svg);
 }
 .toolbar-bar .toolbar-icon-menu:active:before,
-.toolbar-bar .toolbar-icon-menu.active:before {
+.toolbar-bar .toolbar-icon-menu.is-active:before {
   background-image: url(../../../misc/icons/ffffff/hamburger.svg);
 }
 .toolbar-bar .toolbar-icon-help:before {
   background-image: url(../../../misc/icons/bebebe/questionmark-disc.svg);
 }
 .toolbar-bar .toolbar-icon-help:active:before,
-.toolbar-bar .toolbar-icon-help.active:before {
+.toolbar-bar .toolbar-icon-help.is-active:before {
   background-image: url(../../../misc/icons/ffffff/questionmark-disc.svg);
 }
 
@@ -93,56 +93,56 @@
   background-image: url(../../../misc/icons/787878/file.svg);
 }
 .toolbar-icon-system-admin-content:active:before,
-.toolbar-icon-system-admin-content.active:before {
+.toolbar-icon-system-admin-content.is-active:before {
   background-image: url(../../../misc/icons/000000/file.svg);
 }
 .toolbar-icon-system-admin-structure:before {
   background-image: url(../../../misc/icons/787878/orgchart.svg);
 }
 .toolbar-icon-system-admin-structure:active:before,
-.toolbar-icon-system-admin-structure.active:before {
+.toolbar-icon-system-admin-structure.is-active:before {
   background-image: url(../../../misc/icons/000000/orgchart.svg);
 }
 .toolbar-icon-system-themes-page:before {
   background-image: url(../../../misc/icons/787878/paintbrush.svg);
 }
 .toolbar-icon-system-themes-page:active:before,
-.toolbar-icon-system-themes-page.active:before {
+.toolbar-icon-system-themes-page.is-active:before {
   background-image: url(../../../misc/icons/000000/paintbrush.svg);
 }
 .toolbar-icon-entity-user-collection:before {
   background-image: url(../../../misc/icons/787878/people.svg);
 }
 .toolbar-icon-entity-user-collection:active:before,
-.toolbar-icon-entity-user-collection.active:before {
+.toolbar-icon-entity-user-collection.is-active:before {
   background-image: url(../../../misc/icons/000000/people.svg);
 }
 .toolbar-icon-system-modules-list:before {
   background-image: url(../../../misc/icons/787878/puzzlepiece.svg);
 }
 .toolbar-icon-system-modules-list:active:before,
-.toolbar-icon-system-modules-list.active:before {
+.toolbar-icon-system-modules-list.is-active:before {
   background-image: url(../../../misc/icons/000000/puzzlepiece.svg);
 }
 .toolbar-icon-system-admin-config:before {
   background-image: url(../../../misc/icons/787878/wrench.svg);
 }
 .toolbar-icon-system-admin-config:active:before,
-.toolbar-icon-system-admin-config.active:before {
+.toolbar-icon-system-admin-config.is-active:before {
   background-image: url(../../../misc/icons/000000/wrench.svg);
 }
 .toolbar-icon-system-admin-reports:before {
   background-image: url(../../../misc/icons/787878/barchart.svg);
 }
 .toolbar-icon-system-admin-reports:active:before,
-.toolbar-icon-system-admin-reports.active:before {
+.toolbar-icon-system-admin-reports.is-active:before {
   background-image: url(../../../misc/icons/000000/barchart.svg);
 }
 .toolbar-icon-help-main:before {
   background-image: url(../../../misc/icons/787878/questionmark-disc.svg);
 }
 .toolbar-icon-help-main:active:before,
-.toolbar-icon-help-main.active:before {
+.toolbar-icon-help-main.is-active:before {
   background-image: url(../../../misc/icons/000000/questionmark-disc.svg);
 }
 .toolbar .toolbar-bar .toolbar-icon:before {

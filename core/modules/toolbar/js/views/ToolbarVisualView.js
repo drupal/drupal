@@ -135,16 +135,16 @@
       var $tab = $(this.model.get('activeTab'));
       // Deactivate the previous tab.
       $(this.model.previous('activeTab'))
-        .removeClass('active')
+        .removeClass('is-active')
         .prop('aria-pressed', false);
       // Deactivate the previous tray.
       $(this.model.previous('activeTray'))
-        .removeClass('active');
+        .removeClass('is-active');
 
       // Activate the selected tab.
       if ($tab.length > 0) {
         $tab
-          .addClass('active')
+          .addClass('is-active')
           // Mark the tab as pressed.
           .prop('aria-pressed', true);
         var name = $tab.attr('data-toolbar-tray');
@@ -156,7 +156,7 @@
         // Activate the associated tray.
         var $tray = this.$el.find('[data-toolbar-tray="' + name + '"].toolbar-tray');
         if ($tray.length) {
-          $tray.addClass('active');
+          $tray.addClass('is-active');
           this.model.set('activeTray', $tray.get(0));
         }
         else {
@@ -218,9 +218,9 @@
       // Remove data-offset attributes from the trays so they can be refreshed.
       $trays.removeAttr('data-offset-left data-offset-right data-offset-top');
       // If an active vertical tray exists, mark it as an offset element.
-      $trays.filter('.toolbar-tray-vertical.active').attr('data-offset-' + edge, '');
+      $trays.filter('.toolbar-tray-vertical.is-active').attr('data-offset-' + edge, '');
       // If an active horizontal tray exists, mark it as an offset element.
-      $trays.filter('.toolbar-tray-horizontal.active').attr('data-offset-top', '');
+      $trays.filter('.toolbar-tray-horizontal.is-active').attr('data-offset-top', '');
     },
 
     /**

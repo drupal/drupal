@@ -549,7 +549,7 @@ function template_preprocess_datetime_wrapper(&$variables) {
  * list items differently when the link is active, since CSS does not yet allow
  * one to style list items only if it contains a certain element with a certain
  * class. I.e. we cannot yet convert this jQuery selector to a CSS selector:
- *   jQuery('li:has("a.active")')
+ *   jQuery('li:has("a.is-active")')
  *
  * @see \Drupal\Core\Utility\LinkGenerator
  * @see \Drupal\Core\Utility\LinkGenerator::generate()
@@ -1143,7 +1143,7 @@ function template_preprocess_maintenance_task_list(&$variables) {
     $variables['tasks'][$k]['item'] = $item;
     $variables['tasks'][$k]['attributes'] = new Attribute();
     if ($active == $k) {
-      $variables['tasks'][$k]['attributes']->addClass('active');
+      $variables['tasks'][$k]['attributes']->addClass('is-active');
       $variables['tasks'][$k]['status'] = t('active');
       $done = FALSE;
     }

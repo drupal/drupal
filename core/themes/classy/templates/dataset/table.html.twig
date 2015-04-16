@@ -62,7 +62,7 @@
         {% for cell in header %}
           {%
             set cell_classes = [
-              cell.active_table_sort ? 'active',
+              cell.active_table_sort ? 'is-active',
             ]
           %}
           <{{ cell.tag }}{{ cell.attributes.addClass(cell_classes) }}>

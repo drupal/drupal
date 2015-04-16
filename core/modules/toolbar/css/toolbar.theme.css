@@ -47,7 +47,7 @@
   background-image: linear-gradient(rgba(255, 255, 255, 0.125) 20%, transparent 200%);
   text-decoration: none;
 }
-.toolbar .toolbar-bar .toolbar-tab > .toolbar-item.active {
+.toolbar .toolbar-bar .toolbar-tab > .toolbar-item.is-active {
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
   background-image: linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
 }
@@ -94,7 +94,7 @@
 .toolbar-tray a:hover,
 .toolbar-tray a:active,
 .toolbar-tray a:focus,
-.toolbar-tray a.active
+.toolbar-tray a.is-active
  {
   color: #000;
   text-decoration: underline;

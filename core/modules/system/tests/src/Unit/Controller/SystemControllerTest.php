@@ -25,10 +25,10 @@ class SystemControllerTest extends UnitTestCase {
    * @see \Drupal\system\Controller\SystemController::setLinkActiveClass()
    */
   public function providerTestSetLinkActiveClass() {
-    // Define all the variations that *don't* affect whether or not an "active"
-    // class is set, but that should remain unchanged:
+    // Define all the variations that *don't* affect whether or not an
+    // "is-active" class is set, but that should remain unchanged:
     // - surrounding HTML
-    // - tags for which to test the setting of the "active" class
+    // - tags for which to test the setting of the "is-active" class
     // - content of said tags
     $edge_case_html5 = '<audio src="foo.ogg">
   <track kind="captions" src="foo.en.vtt" srclang="en" label="English">
@@ -40,7 +40,7 @@ class SystemControllerTest extends UnitTestCase {
       // Tricky HTML5 example that's unsupported by PHP <=5.4's DOMDocument:
       // https://drupal.org/comment/7938201#comment-7938201.
       1 => array('prefix' => '<div><p>', 'suffix' => '</p>' . $edge_case_html5 . '</div>'),
-      // Multi-byte content *before* the HTML that needs the "active" class.
+      // Multi-byte content *before* the HTML that needs the "is-active" class.
       2 => array('prefix' => '<div><p>αβγδεζηθικλμνξοσὠ</p><p>', 'suffix' => '</p></div>'),
     );
     $tags = array(
@@ -63,8 +63,8 @@ class SystemControllerTest extends UnitTestCase {
       'data-drupal-link-system-path=&quot;&lt;front&gt;&quot;',
     );
 
-    // Define all variations that *do* affect whether or not an "active" class
-    // is set: all possible situations that can be encountered.
+    // Define all variations that *do* affect whether or not an "is-active"
+    // class is set: all possible situations that can be encountered.
     $situations = array();
 
     // Situations with context: front page, English, no query.
@@ -275,10 +275,10 @@ class SystemControllerTest extends UnitTestCase {
             // Build the source markup.
             $source_markup = $create_markup(new Attribute($situation['attributes']));
 
-            // Build the target markup. If no "active" class should be set, the
-            // resulting HTML should be identical. Otherwise, it should get an
-            // "active" class, either by extending an existing "class" attribute
-            // or by adding a "class" attribute.
+            // Build the target markup. If no "is-active" class should be set,
+            // the resulting HTML should be identical. Otherwise, it should get
+            // an "is-active" class, either by extending an existing "class"
+            // attribute or by adding a "class" attribute.
             $target_markup = NULL;
             if (!$situation['is active']) {
               $target_markup = $source_markup;
@@ -288,7 +288,7 @@ class SystemControllerTest extends UnitTestCase {
               if (!isset($active_attributes['class'])) {
                 $active_attributes['class'] = array();
               }
-              $active_attributes['class'][] = 'active';
+              $active_attributes['class'][] = 'is-active';
               $target_markup = $create_markup(new Attribute($active_attributes));
             }
 
@@ -298,21 +298,23 @@ class SystemControllerTest extends UnitTestCase {
       }
     }
 
-    // Test case to verify that the 'active' class is not added multiple times.
+    // Test case to verify that the 'is-active' class is not added multiple
+    // times.
     $data[] = [
       0 => ['#markup' => '<a data-drupal-link-system-path="&lt;front&gt;">Once</a> <a data-drupal-link-system-path="&lt;front&gt;">Twice</a>'],
       1 => ['path' => '', 'front' => TRUE, 'language' => 'en', 'query' => []],
-      2 => ['#markup' => '<a data-drupal-link-system-path="&lt;front&gt;" class="active">Once</a> <a data-drupal-link-system-path="&lt;front&gt;" class="active">Twice</a>'],
+      2 => ['#markup' => '<a data-drupal-link-system-path="&lt;front&gt;" class="is-active">Once</a> <a data-drupal-link-system-path="&lt;front&gt;" class="is-active">Twice</a>'],
     ];
 
-    // Test cases to verify that the 'active' class is added when on the front
-    // page, and there are two different kinds of matching links on the page:
+    // Test cases to verify that the 'is-active' class is added when on the
+    // front page, and there are two different kinds of matching links on the
+    // page:
     // - the matching path (the resolved front page path)
     // - the special matching path ('<front>')
     $front_special_link = '<a data-drupal-link-system-path="&lt;front&gt;">Front</a>';
-    $front_special_link_active = '<a data-drupal-link-system-path="&lt;front&gt;" class="active">Front</a>';
+    $front_special_link_active = '<a data-drupal-link-system-path="&lt;front&gt;" class="is-active">Front</a>';
     $front_path_link = '<a data-drupal-link-system-path="myfrontpage">Front Path</a>';
-    $front_path_link_active = '<a data-drupal-link-system-path="myfrontpage" class="active">Front Path</a>';
+    $front_path_link_active = '<a data-drupal-link-system-path="myfrontpage" class="is-active">Front Path</a>';
     $data[] = [
       0 => ['#markup' => $front_path_link . ' ' . $front_special_link],
       1 => ['path' => 'myfrontpage', 'front' => TRUE, 'language' => 'en', 'query' => []],

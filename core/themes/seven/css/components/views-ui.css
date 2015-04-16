@@ -96,8 +96,8 @@ details.fieldset-no-legend {
 }
 
 .views-displays ul.secondary li a,
-.views-displays ul.secondary li.active a,
-.views-displays ul.secondary li.active a.active {
+.views-displays ul.secondary li.is-active a,
+.views-displays ul.secondary li.is-active a.is-active {
   padding: 2px 7px 3px;
 }
 
@@ -105,8 +105,8 @@ details.fieldset-no-legend {
   color: #0074bd;
 }
 
-.views-displays ul.secondary li.active a,
-.views-displays ul.secondary li.active a.active {
+.views-displays ul.secondary li.is-active a,
+.views-displays ul.secondary li.is-active a.is-active {
   border: 1px solid transparent;
 }
 

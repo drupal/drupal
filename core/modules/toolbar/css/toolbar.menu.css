@@ -29,14 +29,14 @@
   margin-right: 0;
 }
 .toolbar .toolbar-tray .menu-item--active-trail > .toolbar-box a,
-.toolbar .toolbar-tray a.active {
+.toolbar .toolbar-tray a.is-active {
   color: #000;
   font-weight: bold;
 }
 
 /* ----- Toolbar menu tray for viewports less than 320px ------ */
 @media screen and (max-width: 319px) {
-  .toolbar .toolbar-tray-vertical.active {
+  .toolbar .toolbar-tray-vertical.is-active {
     width: 100%;
   }
 }

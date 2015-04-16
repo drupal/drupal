@@ -87,7 +87,7 @@ class DisplayPageWebTest extends PluginTestBase {
     $this->assertResponse(200);
     $element = $this->xpath('//ul[contains(@class, :ul_class)]//a[contains(@class, :a_class)]', array(
       ':ul_class' => 'tabs primary',
-      ':a_class' => 'active',
+      ':a_class' => 'is-active',
     ));
     $this->assertEqual((string) $element[0], t('Test default tab'));
     $this->assertTitle(t('Test default page | Drupal'));
@@ -99,7 +99,7 @@ class DisplayPageWebTest extends PluginTestBase {
     $this->assertResponse(200);
     $element = $this->xpath('//ul[contains(@class, :ul_class)]//a[contains(@class, :a_class)]', array(
       ':ul_class' => 'tabs primary',
-      ':a_class' => 'active',
+      ':a_class' => 'is-active',
     ));
     $this->assertEqual((string) $element[0], t('Test local tab'));
     $this->assertTitle(t('Test local page | Drupal'));

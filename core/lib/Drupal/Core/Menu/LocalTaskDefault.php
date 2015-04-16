@@ -113,8 +113,8 @@ class LocalTaskDefault extends PluginBase implements LocalTaskInterface {
   public function getOptions(RouteMatchInterface $route_match) {
     $options = $this->pluginDefinition['options'];
     if ($this->active) {
-      if (empty($options['attributes']['class']) || !in_array('active', $options['attributes']['class'])) {
-        $options['attributes']['class'][] = 'active';
+      if (empty($options['attributes']['class']) || !in_array('is-active', $options['attributes']['class'])) {
+        $options['attributes']['class'][] = 'is-active';
       }
     }
     return (array) $options;

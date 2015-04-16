@@ -10,7 +10,7 @@
   background-image: url(../../../misc/icons/bebebe/pencil.svg);
 }
 .toolbar-bar .toolbar-icon-edit:active:before,
-.toolbar-bar .toolbar-icon-edit.active:before {
+.toolbar-bar .toolbar-icon-edit.is-active:before {
   background-image: url(../../../misc/icons/ffffff/pencil.svg);
 }
 

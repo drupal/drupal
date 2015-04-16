@@ -462,7 +462,7 @@ function template_preprocess_views_view_table(&$variables) {
     // what the CSS classes should be.
     $variables['fields'][$field] = Html::cleanCssIdentifier($field);
     if ($active == $field) {
-      $variables['fields'][$field] .= ' active';
+      $variables['fields'][$field] .= ' is-active';
     }
 
     // Render the header labels.

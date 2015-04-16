@@ -10,7 +10,7 @@
   background-image: url(../../../misc/icons/bebebe/star.svg);
 }
 .toolbar-bar .toolbar-icon-shortcut:active:before,
-.toolbar-bar .toolbar-icon-shortcut.active:before {
+.toolbar-bar .toolbar-icon-shortcut.is-active:before {
   background-image: url(../../../misc/icons/ffffff/star.svg);
 }
 

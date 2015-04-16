@@ -61,7 +61,7 @@
   text-decoration: none;
   cursor: pointer;
 }
-#preview-main-menu-links li a.active {
+#preview-main-menu-links li a.is-active {
   background: #fff;
   border-bottom: none;
 }

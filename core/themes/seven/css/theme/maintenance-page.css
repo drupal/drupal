@@ -66,12 +66,12 @@
   [dir="rtl"] .task-list li {
     padding: 0.5em 3.85em 0.5em 1em;
   }
-  .task-list .active {
+  .task-list .is-active {
     background: #ebeae4;
     position: relative;
     font-weight: normal;
   }
-  .task-list .active:after {
+  .task-list .is-active:after {
     left: 100%; /* LTR */
     border: solid transparent;
     border-color: rgba(235, 234, 228, 0);
@@ -85,7 +85,7 @@
     top: 50%;
     margin-top: -1.32em;
   }
-  [dir="rtl"] .task-list .active:after {
+  [dir="rtl"] .task-list .is-active:after {
     left: auto;
     right: 100%;
     border-left-color: transparent;

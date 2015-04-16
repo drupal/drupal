@@ -479,7 +479,7 @@ td.group-title {
 }
 
 .views-displays .tabs.secondary li,
-.views-displays .tabs.secondary li.active {
+.views-displays .tabs.secondary li.is-active {
   background: transparent;
   margin-bottom: 5px;
   border: 0;
@@ -524,7 +524,7 @@ td.group-title {
 /**
  * Display a red border if the display doesn't validate.
  */
-.views-displays .tabs.secondary li.active a.active.error,
+.views-displays .tabs.secondary li.is-active a.is-active.error,
 .views-displays .tabs.secondary a.error {
   border: 2px solid #ed541d;
   padding: 1px 6px;
@@ -539,8 +539,8 @@ td.group-title {
 }
 
 .views-displays .tabs.secondary li a:hover,
-.views-displays .tabs.secondary li.active a,
-.views-displays .tabs.secondary li.active a.active {
+.views-displays .tabs.secondary li.is-active a,
+.views-displays .tabs.secondary li.is-active a.is-active {
   background-color: #555;
   color: #fff;
 }

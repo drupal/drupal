@@ -44,7 +44,7 @@
   background: #b3b3b3;
   background: rgba(255, 255, 255, 1);
 }
-.region-primary-menu .menu-item a.active {
+.region-primary-menu .menu-item a.is-active {
   border-bottom: none;
 }
 
@@ -182,7 +182,7 @@ body:not(:target) .region-primary-menu .menu-toggle-target-show:target ~ .menu .
     padding: 0.7em 0.8em;
   }
   .featured .region-primary-menu .menu-item a:active,
-  .featured .region-primary-menu .menu-item a.active {
+  .featured .region-primary-menu .menu-item a.is-active {
     background: #f0f0f0;
     background: rgba(240, 240, 240, 1.0);
   }

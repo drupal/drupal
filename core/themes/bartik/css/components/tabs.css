@@ -21,7 +21,7 @@ div.tabs {
   margin: 0;
   text-shadow: 0 1px 0 #fff;
 }
-.tabs ul.primary li.active a {
+.tabs ul.primary li.is-active a {
   background-color: #ffffff;
   border: 1px solid #bbb;
 }
@@ -36,7 +36,7 @@ div.tabs {
   .tabs ul.primary li a {
     padding: 5px 10px;
   }
-  .tabs ul.primary li.active a {
+  .tabs ul.primary li.is-active a {
     border-bottom: none;
   }
 }
@@ -67,7 +67,7 @@ div.tabs {
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
   }
-  .tabs ul.primary li.active a {
+  .tabs ul.primary li.is-active a {
     border-bottom: 1px solid #fff;
   }
 }
@@ -106,7 +106,7 @@ div.tabs {
   padding: 0.25em 0.5em;
   text-decoration: none;
 }
-.tabs ul.secondary li a.active {
+.tabs ul.secondary li a.is-active {
   background: #f2f2f2;
   border-bottom: none;
   border-radius: 5px;
