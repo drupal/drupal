@@ -854,9 +854,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
         'primary key' => array('entity_id', 'deleted', 'delta', 'langcode'),
         'indexes' => array(
           'bundle' => array('bundle'),
-          'deleted' => array('deleted'),
           'revision_id' => array('revision_id'),
-          'langcode' => array('langcode'),
         ),
         'foreign keys' => array(
           $field_name . '_color' => array(
@@ -1001,9 +999,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
         'primary key' => array('entity_id', 'deleted', 'delta', 'langcode'),
         'indexes' => array(
           'bundle' => array('bundle'),
-          'deleted' => array('deleted'),
           'revision_id' => array('revision_id'),
-          'langcode' => array('langcode'),
         ),
         'foreign keys' => array(
           $field_name . '_color' => array(

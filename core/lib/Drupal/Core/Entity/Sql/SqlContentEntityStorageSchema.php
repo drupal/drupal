@@ -1633,9 +1633,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       'primary key' => array('entity_id', 'deleted', 'delta', 'langcode'),
       'indexes' => array(
         'bundle' => array('bundle'),
-        'deleted' => array('deleted'),
         'revision_id' => array('revision_id'),
-        'langcode' => array('langcode'),
       ),
     );
 
