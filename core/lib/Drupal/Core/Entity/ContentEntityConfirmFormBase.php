@@ -121,7 +121,7 @@ abstract class ContentEntityConfirmFormBase extends ContentEntityForm implements
   /**
    * {@inheritdoc}
    */
-  public function validate(array &$form, FormStateInterface $form_state) {
+  public function validate(array $form, FormStateInterface $form_state) {
     // Override the default validation implementation as it is not necessary
     // nor possible to validate an entity in a confirmation form.
   }

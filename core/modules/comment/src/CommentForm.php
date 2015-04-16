@@ -314,7 +314,7 @@ class CommentForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  public function validate(array &$form, FormStateInterface $form_state) {
+  public function validate(array $form, FormStateInterface $form_state) {
     $comment = parent::validate($form, $form_state);
 
     // Customly trigger validation of manually added fields and add in
