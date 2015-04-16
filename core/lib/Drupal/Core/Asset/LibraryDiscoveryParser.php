@@ -11,6 +11,7 @@ use Drupal\Core\Asset\Exception\IncompleteLibraryDefinitionException;
 use Drupal\Core\Asset\Exception\InvalidLibraryFileException;
 use Drupal\Core\Asset\Exception\LibraryDefinitionMissingLicenseException;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Component\Utility\NestedArray;
@@ -28,6 +29,13 @@ class LibraryDiscoveryParser {
   protected $moduleHandler;
 
   /**
+   * The theme manager.
+   *
+   * @var \Drupal\Core\Theme\ThemeManagerInterface
+   */
+  protected $themeManager;
+
+  /**
    * The app root.
    *
    * @var string
@@ -42,9 +50,10 @@ class LibraryDiscoveryParser {
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    */
-  public function __construct($root, ModuleHandlerInterface $module_handler) {
+  public function __construct($root, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager) {
     $this->root = $root;
     $this->moduleHandler = $module_handler;
+    $this->themeManager = $theme_manager;
   }
 
   /**
@@ -299,6 +308,7 @@ class LibraryDiscoveryParser {
 
     // Allow modules to alter the module's registered libraries.
     $this->moduleHandler->alter('library_info', $libraries, $extension);
+    $this->themeManager->alter('library_info', $libraries, $extension);
 
     return $libraries;
   }

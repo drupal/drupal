@@ -10,18 +10,12 @@ namespace Drupal\Core\Asset;
 use Drupal\Core\Cache\CacheCollector;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Lock\LockBackendInterface;
+use Drupal\Core\Theme\ThemeManagerInterface;
 
 /**
  * A CacheCollector implementation for building library extension info.
  */
 class LibraryDiscoveryCollector extends CacheCollector {
-
-  /**
-   * The cache key.
-   *
-   * @var string
-   */
-  protected $cacheKey = 'library_info';
 
   /**
    * The cache backend.
@@ -45,6 +39,13 @@ class LibraryDiscoveryCollector extends CacheCollector {
   protected $discoveryParser;
 
   /**
+   * The theme manager.
+   *
+   * @var \Drupal\Core\Theme\ThemeManagerInterface
+   */
+  protected $themeManager;
+
+  /**
    * Constructs a CacheCollector object.
    *
    * @param string $cid
@@ -56,10 +57,22 @@ class LibraryDiscoveryCollector extends CacheCollector {
    * @param \Drupal\Core\Asset\LibraryDiscoveryParser $discovery_parser
    *   The library discovery parser.
    */
-  public function __construct(CacheBackendInterface $cache, LockBackendInterface $lock, LibraryDiscoveryParser $discovery_parser) {
-    parent::__construct($this->cacheKey, $cache, $lock, array($this->cacheKey));
+  public function __construct(CacheBackendInterface $cache, LockBackendInterface $lock, LibraryDiscoveryParser $discovery_parser, ThemeManagerInterface $theme_manager) {
+    $this->themeManager = $theme_manager;
+    parent::__construct(NULL, $cache, $lock, ['library_info']);
 
     $this->discoveryParser = $discovery_parser;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getCid() {
+    if (!isset($this->cid)) {
+      $this->cid = 'library_info:' . $this->themeManager->getActiveTheme()->getName();
+    }
+
+    return $this->cid;
   }
 
   /**
@@ -71,5 +84,4 @@ class LibraryDiscoveryCollector extends CacheCollector {
 
     return $this->storage[$key];
   }
-
 }

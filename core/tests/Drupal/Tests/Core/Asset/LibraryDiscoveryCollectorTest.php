@@ -41,6 +41,13 @@ class LibraryDiscoveryCollectorTest extends UnitTestCase {
   protected $libraryDiscoveryCollector;
 
   /**
+   * The mocked theme manager.
+   *
+   * @var \Drupal\Core\Theme\ThemeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $themeManager;
+
+  /**
    * Test library data.
    *
    * @var array
@@ -56,17 +63,21 @@ class LibraryDiscoveryCollectorTest extends UnitTestCase {
     ),
   );
 
+  protected $activeTheme;
+
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     $this->cache = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
     $this->lock = $this->getMock('Drupal\Core\Lock\LockBackendInterface');
+    $this->themeManager = $this->getMockBuilder('Drupal\Core\Theme\ThemeManagerInterface')
+      ->disableOriginalConstructor()
+      ->getMock();
     $this->libraryDiscoveryParser = $this->getMockBuilder('Drupal\Core\Asset\LibraryDiscoveryParser')
       ->disableOriginalConstructor()
       ->getMock();
 
-    $this->libraryDiscoveryCollector = new LibraryDiscoveryCollector($this->cache, $this->lock, $this->libraryDiscoveryParser);
   }
 
   /**
@@ -75,10 +86,21 @@ class LibraryDiscoveryCollectorTest extends UnitTestCase {
    * @covers ::resolveCacheMiss
    */
   public function testResolveCacheMiss() {
+    $this->activeTheme = $this->getMockBuilder('Drupal\Core\Theme\ActiveTheme')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $this->themeManager->expects($this->once())
+      ->method('getActiveTheme')
+      ->willReturn($this->activeTheme);
+    $this->activeTheme->expects($this->once())
+      ->method('getName')
+      ->willReturn('kitten_theme');
+    $this->libraryDiscoveryCollector = new LibraryDiscoveryCollector($this->cache, $this->lock, $this->libraryDiscoveryParser, $this->themeManager);
+
     $this->libraryDiscoveryParser->expects($this->once())
       ->method('buildByExtension')
       ->with('test')
-      ->will($this->returnValue($this->libraryData));
+      ->willReturn($this->libraryData);
 
     $this->assertSame($this->libraryData, $this->libraryDiscoveryCollector->get('test'));
     $this->assertSame($this->libraryData, $this->libraryDiscoveryCollector->get('test'));
@@ -90,12 +112,23 @@ class LibraryDiscoveryCollectorTest extends UnitTestCase {
    * @covers ::destruct
    */
   public function testDestruct() {
+    $this->activeTheme = $this->getMockBuilder('Drupal\Core\Theme\ActiveTheme')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $this->themeManager->expects($this->once())
+      ->method('getActiveTheme')
+      ->willReturn($this->activeTheme);
+    $this->activeTheme->expects($this->once())
+      ->method('getName')
+      ->willReturn('kitten_theme');
+    $this->libraryDiscoveryCollector = new LibraryDiscoveryCollector($this->cache, $this->lock, $this->libraryDiscoveryParser, $this->themeManager);
+
     $this->libraryDiscoveryParser->expects($this->once())
       ->method('buildByExtension')
       ->with('test')
-      ->will($this->returnValue($this->libraryData));
+      ->willReturn($this->libraryData);
 
-    $lock_key = 'library_info:Drupal\Core\Cache\CacheCollector';
+    $lock_key = 'library_info:kitten_theme:Drupal\Core\Cache\CacheCollector';
 
     $this->lock->expects($this->once())
       ->method('acquire')
@@ -103,11 +136,11 @@ class LibraryDiscoveryCollectorTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
     $this->cache->expects($this->exactly(2))
       ->method('get')
-      ->with('library_info')
-      ->will($this->returnValue(FALSE));
+      ->with('library_info:kitten_theme')
+      ->willReturn(FALSE);
     $this->cache->expects($this->once())
       ->method('set')
-      ->with('library_info', array('test' => $this->libraryData), Cache::PERMANENT, array('library_info'));
+      ->with('library_info:kitten_theme', array('test' => $this->libraryData), Cache::PERMANENT, ['library_info']);
     $this->lock->expects($this->once())
       ->method('release')
       ->with($lock_key);

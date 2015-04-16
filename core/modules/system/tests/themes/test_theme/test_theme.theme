@@ -29,6 +29,10 @@ function test_theme_element_info_alter(&$info) {
   }
 }
 
+function test_theme_library_info_alter(&$libraries) {
+  $libraries['kitten']['js'][] = 'kittens.js';
+}
+
 /**
  * Tests a theme implementing an alter hook.
  *

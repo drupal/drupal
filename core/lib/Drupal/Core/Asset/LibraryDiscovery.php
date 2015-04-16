@@ -8,7 +8,9 @@
 namespace Drupal\Core\Asset;
 
 use Drupal\Core\Cache\CacheCollectorInterface;
+use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Theme\ThemeManagerInterface;
 
 /**
  * Discovers available asset libraries in Drupal.
@@ -23,11 +25,25 @@ class LibraryDiscovery implements LibraryDiscoveryInterface {
   protected $collector;
 
   /**
+   * The cache tag invalidator.
+   *
+   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
+   */
+  protected $cacheTagInvalidator;
+
+  /**
    * The module handler.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
   protected $moduleHandler;
+
+  /**
+   * The theme manager.
+   *
+   * @var \Drupal\Core\Theme\ThemeManagerInterface
+   */
+  protected $themeManager;
 
   /**
    * The final library definitions, statically cached.
@@ -44,12 +60,18 @@ class LibraryDiscovery implements LibraryDiscoveryInterface {
    *
    * @param \Drupal\Core\Cache\CacheCollectorInterface $library_discovery_collector
    *   The library discovery cache collector.
+   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tag_invalidator
+   *   The cache tag invalidator.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
+   * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
+   *   The theme manager.
    */
-  public function __construct(CacheCollectorInterface $library_discovery_collector, ModuleHandlerInterface $module_handler) {
+  public function __construct(CacheCollectorInterface $library_discovery_collector, CacheTagsInvalidatorInterface $cache_tag_invalidator, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager) {
     $this->collector = $library_discovery_collector;
+    $this->cacheTagInvalidator = $cache_tag_invalidator;
     $this->moduleHandler = $module_handler;
+    $this->themeManager = $theme_manager;
   }
 
   /**
@@ -64,6 +86,7 @@ class LibraryDiscovery implements LibraryDiscoveryInterface {
         // specific data for this library; e.g., localization.
         $library_name = "$extension/$name";
         $this->moduleHandler->alter('library', $definition, $library_name);
+        $this->themeManager->alter('library', $definition, $library_name);
         $this->libraryDefinitions[$extension][$name] = $definition;
       }
     }
@@ -83,7 +106,7 @@ class LibraryDiscovery implements LibraryDiscoveryInterface {
    * {@inheritdoc}
    */
   public function clearCachedDefinitions() {
-    $this->collector->clear();
+    $this->cacheTagInvalidator->invalidateTags(['library_info']);
   }
 
 }

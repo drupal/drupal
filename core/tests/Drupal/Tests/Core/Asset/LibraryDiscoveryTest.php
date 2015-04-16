@@ -38,6 +38,20 @@ class LibraryDiscoveryTest extends UnitTestCase {
   protected $moduleHandler;
 
   /**
+   * The mocked theme manager.
+   *
+   * @var \Drupal\Core\Theme\ThemeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $themeManager;
+
+  /**
+   * The cache tags invalidator.
+   *
+   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $cacheTagsInvalidator;
+
+  /**
    * Test library data.
    *
    * @var array
@@ -63,11 +77,13 @@ class LibraryDiscoveryTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
+    $this->cacheTagsInvalidator = $this->getMock('Drupal\Core\Cache\CacheTagsInvalidatorInterface');
     $this->libraryDiscoveryCollector = $this->getMockBuilder('Drupal\Core\Asset\LibraryDiscoveryCollector')
       ->disableOriginalConstructor()
       ->getMock();
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
-    $this->libraryDiscovery = new LibraryDiscovery($this->libraryDiscoveryCollector, $this->moduleHandler);
+    $this->themeManager = $this->getMock('Drupal\Core\Theme\ThemeManagerInterface');
+    $this->libraryDiscovery = new LibraryDiscovery($this->libraryDiscoveryCollector, $this->cacheTagsInvalidator, $this->moduleHandler, $this->themeManager);
   }
 
   /**
@@ -79,6 +95,13 @@ class LibraryDiscoveryTest extends UnitTestCase {
       ->with('test')
       ->willReturn($this->libraryData);
     $this->moduleHandler->expects($this->exactly(2))
+      ->method('alter')
+      ->with(
+        'library',
+        $this->logicalOr($this->libraryData['test_1'], $this->libraryData['test_2']),
+        $this->logicalOr('test/test_1', 'test/test_2')
+      );
+    $this->themeManager->expects($this->exactly(2))
       ->method('alter')
       ->with(
         'library',

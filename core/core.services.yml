@@ -1281,15 +1281,15 @@ services:
     class: Drupal\Core\Asset\AssetDumper
   library.discovery:
     class: Drupal\Core\Asset\LibraryDiscovery
-    arguments: ['@library.discovery.collector', '@module_handler']
+    arguments: ['@library.discovery.collector', '@cache_tags.invalidator', '@module_handler', '@theme.manager']
   library.discovery.collector:
     class: Drupal\Core\Asset\LibraryDiscoveryCollector
-    arguments: ['@cache.discovery', '@lock', '@library.discovery.parser']
+    arguments: ['@cache.discovery', '@lock', '@library.discovery.parser', '@theme.manager']
     tags:
       - { name: needs_destruction }
   library.discovery.parser:
     class: Drupal\Core\Asset\LibraryDiscoveryParser
-    arguments: ['@app.root', '@module_handler']
+    arguments: ['@app.root', '@module_handler', '@theme.manager']
   library.dependency_resolver:
     class: Drupal\Core\Asset\LibraryDependencyResolver
     arguments: ['@library.discovery']

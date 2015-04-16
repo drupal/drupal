@@ -52,6 +52,13 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
   protected $moduleHandler;
 
   /**
+   * The mocked theme manager.
+   *
+   * @var \Drupal\Core\Theme\ThemeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $themeManager;
+
+  /**
    * The mocked lock backend.
    *
    * @var \Drupal\Core\Lock\LockBackendInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -65,7 +72,8 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     parent::setUp();
 
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
-    $this->libraryDiscoveryParser = new TestLibraryDiscoveryParser($this->root, $this->moduleHandler);
+    $this->themeManager = $this->getMock('Drupal\Core\Theme\ThemeManagerInterface');
+    $this->libraryDiscoveryParser = new TestLibraryDiscoveryParser($this->root, $this->moduleHandler, $this->themeManager);
   }
 
   /**
