@@ -56,7 +56,7 @@ class UserViewsFieldAccessTest extends FieldFieldAccessTestBase {
 
     // @todo Expand the test coverage in https://www.drupal.org/node/2464635
 
-    // $this->assertFieldAccess('user', 'uid', $user->id());
+    $this->assertFieldAccess('user', 'uid', $user->id());
     $this->assertFieldAccess('user', 'uuid', $user->uuid());
     $this->assertFieldAccess('user', 'langcode', $user->language()->getName());
     $this->assertFieldAccess('user', 'preferred_langcode', 'Spanish');

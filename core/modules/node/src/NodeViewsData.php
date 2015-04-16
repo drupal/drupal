@@ -225,7 +225,6 @@ class NodeViewsData extends EntityViewsData {
 
     $data['node_field_data']['uid']['help'] = t('The user authoring the content. If you need more fields than the uid add the content: author relationship');
     $data['node_field_data']['uid']['filter']['id'] = 'user_name';
-    $data['node_field_data']['uid']['field']['id'] = 'user';
     $data['node_field_data']['uid']['relationship']['title'] = t('Content author');
     $data['node_field_data']['uid']['relationship']['help'] = t('Relate content to the user who created it.');
     $data['node_field_data']['uid']['relationship']['label'] = t('author');

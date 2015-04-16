@@ -25,7 +25,6 @@ class UserViewsData extends EntityViewsData {
 
     $data['users_field_data']['table']['wizard_id'] = 'user';
 
-    $data['users_field_data']['uid']['field']['id'] = 'user';
     $data['users_field_data']['uid']['argument']['id'] = 'user_uid';
     $data['users_field_data']['uid']['argument'] += array(
       'name table' => 'users_field_data',

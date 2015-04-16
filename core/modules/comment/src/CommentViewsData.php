@@ -189,7 +189,6 @@ class CommentViewsData extends EntityViewsData {
     $data['comment_field_data']['uid']['relationship']['title'] = t('Author');
     $data['comment_field_data']['uid']['relationship']['help'] = t("The User ID of the comment's author.");
     $data['comment_field_data']['uid']['relationship']['label'] = t('author');
-    $data['comment_field_data']['uid']['field']['id'] = 'user';
 
     $data['comment_field_data']['pid']['title'] = t('Parent CID');
     $data['comment_field_data']['pid']['relationship']['title'] = t('Parent comment');
