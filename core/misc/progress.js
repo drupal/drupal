@@ -35,7 +35,7 @@
 
     // The WAI-ARIA setting aria-live="polite" will announce changes after users
     // have completed their current activity and not interrupt the screen reader.
-    this.element = $(Drupal.theme(id));
+    this.element = $(Drupal.theme('progressBar', id));
   };
 
   $.extend(Drupal.ProgressBar.prototype, {
