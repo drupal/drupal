@@ -122,9 +122,9 @@ class DrupalKernelTest extends KernelTestBase {
     $this->assertEqual(array_values($modules_enabled), $module_list);
 
     // Test that our synthetic services are there.
-    $classloader = $container->get('class_loader');
-    $refClass = new \ReflectionClass($classloader);
-    $this->assertTrue($refClass->hasMethod('loadClass'), 'Container has a classloader');
+    $class_loader = $container->get('class_loader');
+    $refClass = new \ReflectionClass($class_loader);
+    $this->assertTrue($refClass->hasMethod('loadClass'), 'Container has a class loader');
 
     // We make this assertion here purely to show that the new container below
     // is functioning correctly, i.e. we get a brand new ContainerBuilder
@@ -150,9 +150,9 @@ class DrupalKernelTest extends KernelTestBase {
     $this->assertTrue($container->has('service_provider_test_class'), 'Container has test service');
 
     // Test that our synthetic services are there.
-    $classloader = $container->get('class_loader');
-    $refClass = new \ReflectionClass($classloader);
-    $this->assertTrue($refClass->hasMethod('loadClass'), 'Container has a classloader');
+    $class_loader = $container->get('class_loader');
+    $refClass = new \ReflectionClass($class_loader);
+    $this->assertTrue($refClass->hasMethod('loadClass'), 'Container has a class loader');
 
     // Check that the location of the new module is registered.
     $modules = $container->getParameter('container.modules');

@@ -383,18 +383,29 @@ $settings['update_free_access'] = FALSE;
 /**
  * Class Loader.
  *
- * By default, Composer's ClassLoader is used, which is best for development, as
- * it does not break when code is moved in the file system. You can decorate the
- * class loader with a cached solution for better performance, which is
- * recommended for production sites.
+ * If the APC extension is detected, the Symfony APC class loader is used for
+ * performance reasons. Detection can be prevented by setting
+ * class_loader_auto_detect to false, as in the example below.
+ */
+# $settings['class_loader_auto_detect'] = FALSE;
+
+/*
+ * If the APC extension is not detected, either because APC is missing or
+ * because auto-detection has been disabled, auto-loading falls back to
+ * Composer's ClassLoader, which is good for development as it does not break
+ * when code is moved in the file system. You can also decorate the base class
+ * loader with another cached solution than the Symfony APC class loader, as
+ * all production sites should have a cached class loader of some sort enabled.
  *
- * To do so, you may decorate and replace the local $class_loader variable.
- *
- * For example, to use Symfony's APC class loader, uncomment the code below.
+ * To do so, you may decorate and replace the local $class_loader variable. For
+ * example, to use Symfony's APC class loader without automatic detection,
+ * uncomment the code below.
  */
 /*
 if ($settings['hash_salt']) {
-  $apc_loader = new \Symfony\Component\ClassLoader\ApcClassLoader('drupal.' . $settings['hash_salt'], $class_loader);
+  $prefix = 'drupal.' . hash('sha256', 'drupal.' . $settings['hash_salt']);
+  $apc_loader = new \Symfony\Component\ClassLoader\ApcClassLoader($prefix, $class_loader);
+  unset($prefix);
   $class_loader->unregister();
   $apc_loader->register();
   $class_loader = $apc_loader;

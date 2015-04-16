@@ -20,7 +20,12 @@ use Symfony\Component\HttpFoundation\Response;
 // Change the directory to the Drupal root.
 chdir('..');
 
-$autoloader = require_once 'autoload.php';
+// Clear the APC cache to ensure APC class loader is reset.
+if (function_exists('apc_fetch')) {
+  apc_clear_cache('user');
+}
+
+$autoloader = require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/includes/utility.inc';
 
 $request = Request::createFromGlobals();
