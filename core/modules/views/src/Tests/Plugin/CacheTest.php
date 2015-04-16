@@ -10,6 +10,7 @@ namespace Drupal\views\Tests\Plugin;
 use Drupal\node\Entity\Node;
 use Drupal\views\Tests\ViewUnitTestBase;
 use Drupal\views\Views;
+use Drupal\views_test_data\Plugin\views\filter\FilterTest as FilterPlugin;
 
 /**
  * Tests pluggable caching for views.
@@ -24,7 +25,7 @@ class CacheTest extends ViewUnitTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_view', 'test_cache', 'test_groupwise_term_ui', 'test_display');
+  public static $testViews = array('test_view', 'test_cache', 'test_groupwise_term_ui', 'test_display', 'test_filter');
 
   /**
    * Modules to enable.
@@ -74,7 +75,7 @@ class CacheTest extends ViewUnitTestBase {
       'type' => 'time',
       'options' => array(
         'results_lifespan' => '3600',
-        'output_lifespan' => '3600'
+        'output_lifespan' => '3600',
       )
     ));
 
@@ -101,6 +102,84 @@ class CacheTest extends ViewUnitTestBase {
   }
 
   /**
+   * Tests result caching with filters.
+   *
+   * @see views_plugin_cache_time
+   */
+  public function testTimeResultCachingWithFilter() {
+    // Check that we can find the test filter plugin.
+    $plugin = $this->container->get('plugin.manager.views.filter')->createInstance('test_filter');
+    $this->assertTrue($plugin instanceof FilterPlugin, 'Test filter plugin found.');
+
+    $view = Views::getView('test_filter');
+    $view->initDisplay();
+    $view->display_handler->overrideOption('cache', array(
+      'type' => 'time',
+      'options' => array(
+        'results_lifespan' => '3600',
+        'output_lifespan' => '3600',
+      ),
+    ));
+
+    // Change the filtering.
+    $view->displayHandlers->get('default')->overrideOption('filters', array(
+      'test_filter' => array(
+        'id' => 'test_filter',
+        'table' => 'views_test_data',
+        'field' => 'name',
+        'operator' => '=',
+        'value' => 'John',
+        'group' => 0,
+      ),
+    ));
+
+    $this->executeView($view);
+
+    // Get the cache item.
+    $cid1 = $view->display_handler->getPlugin('cache')->generateResultsKey();
+
+    // Build the expected result.
+    $dataset = array(array('name' => 'John'));
+
+    // Verify the result.
+    $this->assertEqual(1, count($view->result), 'The number of returned rows match.');
+    $this->assertIdenticalResultSet($view, $dataset, array(
+      'views_test_data_name' => 'name',
+    ));
+
+    $view->destroy();
+
+    $view->initDisplay();
+
+    // Change the filtering.
+    $view->displayHandlers->get('default')->overrideOption('filters', array(
+      'test_filter' => array(
+        'id' => 'test_filter',
+        'table' => 'views_test_data',
+        'field' => 'name',
+        'operator' => '=',
+        'value' => 'Ringo',
+        'group' => 0,
+      ),
+    ));
+
+    $this->executeView($view);
+
+    // Get the cache item.
+    $cid2 = $view->display_handler->getPlugin('cache')->generateResultsKey();
+    $this->assertNotEqual($cid1, $cid2, "Results keys are different.");
+
+    // Build the expected result.
+    $dataset = array(array('name' => 'Ringo'));
+
+    // Verify the result.
+    $this->assertEqual(1, count($view->result), 'The number of returned rows match.');
+    $this->assertIdenticalResultSet($view, $dataset, array(
+      'views_test_data_name' => 'name',
+    ));
+  }
+
+  /**
    * Tests result caching with a pager.
    */
   public function testTimeResultCachingWithPager() {
@@ -110,7 +189,7 @@ class CacheTest extends ViewUnitTestBase {
       'type' => 'time',
       'options' => array(
         'results_lifespan' => '3600',
-        'output_lifespan' => '3600'
+        'output_lifespan' => '3600',
       )
     ));
 
@@ -152,7 +231,7 @@ class CacheTest extends ViewUnitTestBase {
     $view->setDisplay();
     $view->display_handler->overrideOption('cache', array(
       'type' => 'none',
-      'options' => array()
+      'options' => array(),
     ));
 
     $this->executeView($view);
@@ -172,7 +251,7 @@ class CacheTest extends ViewUnitTestBase {
     $view->setDisplay();
     $view->display_handler->overrideOption('cache', array(
       'type' => 'none',
-      'options' => array()
+      'options' => array(),
     ));
 
     $this->executeView($view);
@@ -193,18 +272,18 @@ class CacheTest extends ViewUnitTestBase {
     $view->display_handler->overrideOption('cache', array(
       'type' => 'time',
       'options' => array(
-        'output_lifespan' => '3600'
+        'output_lifespan' => '3600',
       )
     ));
 
     $output = $view->preview();
-    drupal_render($output);
+    \Drupal::service('renderer')->render($output);
     unset($view->pre_render_called);
     $view->destroy();
 
     $view->setDisplay();
     $output = $view->preview();
-    drupal_render($output);
+    \Drupal::service('renderer')->render($output);
     $this->assertTrue(in_array('views_test_data/test', $output['#attached']['library']), 'Make sure libraries are added for cached views.');
     $this->assertEqual(['foo' => 'bar'], $output['#attached']['drupalSettings'], 'Make sure drupalSettings are added for cached views.');
     // Note: views_test_data_views_pre_render() adds some cache tags.
@@ -244,7 +323,7 @@ class CacheTest extends ViewUnitTestBase {
       'type' => 'time',
       'options' => array(
         'results_lifespan' => '3600',
-        'output_lifespan' => '3600'
+        'output_lifespan' => '3600',
       )
     ));
     $this->executeView($view);

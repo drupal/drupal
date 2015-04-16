@@ -287,7 +287,10 @@ abstract class CachePluginBase extends PluginBase {
         if ($build_info[$index] instanceof Select) {
           $query = clone $build_info[$index];
           $query->preExecute();
-          $build_info[$index] = (string)$query;
+          $build_info[$index] = array(
+            'query' => (string)$query,
+            'arguments' => $query->getArguments(),
+          );
         }
       }
 
