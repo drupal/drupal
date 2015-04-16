@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Cache\CacheContexts.
+ * Contains \Drupal\Core\Cache\CacheContextsManager.
  */
 
 namespace Drupal\Core\Cache;
@@ -25,7 +25,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @see \Drupal\Core\Cache\CalculatedCacheContextInterface
  * @see \Drupal\Core\Cache\CacheContextsPass
  */
-class CacheContexts {
+class CacheContextsManager {
 
   /**
    * The service container.
@@ -42,7 +42,7 @@ class CacheContexts {
   protected $contexts;
 
   /**
-   * Constructs a CacheContexts object.
+   * Constructs a CacheContextsManager object.
    *
    * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
    *   The current service container.
@@ -231,7 +231,7 @@ class CacheContexts {
    *
    * @throws \LogicException
    *
-   * @see \Drupal\Core\Cache\CacheContexts::parseTokens()
+   * @see \Drupal\Core\Cache\CacheContextsManager::parseTokens()
    */
   public function validateTokens(array $context_tokens = []) {
     if (empty($context_tokens)) {

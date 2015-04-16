@@ -301,7 +301,7 @@ abstract class CachePluginBase extends PluginBase {
         'items_per_page' => $this->view->getItemsPerPage(),
         'offset' => $this->view->getOffset(),
       ];
-      $key_data += \Drupal::service('cache_contexts')->convertTokensToKeys($this->displayHandler->getCacheMetadata()['contexts']);
+      $key_data += \Drupal::service('cache_contexts_manager')->convertTokensToKeys($this->displayHandler->getCacheMetadata()['contexts']);
 
       $this->resultsKey = $this->view->storage->id() . ':' . $this->displayHandler->display['id'] . ':results:' . hash('sha256', serialize($key_data));
     }

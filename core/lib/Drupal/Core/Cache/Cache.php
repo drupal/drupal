@@ -37,7 +37,7 @@ class Cache {
       $cache_contexts = array_merge($cache_contexts, $contexts);
     }
     $cache_contexts = array_unique($cache_contexts);
-    \Drupal::service('cache_contexts')->validateTokens($cache_contexts);
+    \Drupal::service('cache_contexts_manager')->validateTokens($cache_contexts);
     sort($cache_contexts);
     return $cache_contexts;
   }

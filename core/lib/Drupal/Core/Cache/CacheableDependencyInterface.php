@@ -24,14 +24,14 @@ interface CacheableDependencyInterface {
    * These identify a specific variation/representation of the object.
    *
    * Cache contexts are tokens: placeholders that are converted to cache keys by
-   * the @cache_contexts service. The replacement value depends on the request
-   * context (the current URL, language, and so on). They're converted before
-   * storing an object in cache.
+   * the @cache_contexts_manager service. The replacement value depends on the
+   * request context (the current URL, language, and so on). They're converted
+   * before storing an object in cache.
    *
    * @return string[]
    *   An array of cache context tokens, used to generate a cache ID.
    *
-   * @see \Drupal\Core\Cache\CacheContexts::convertTokensToKeys()
+   * @see \Drupal\Core\Cache\CacheContextsManager::convertTokensToKeys()
    */
   public function getCacheContexts();
 

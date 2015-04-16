@@ -195,7 +195,7 @@ class RendererPostRenderCacheTest extends RendererTestBase {
   public function testRenderChildrenPostRenderCacheDifferentContexts() {
     $this->setUpRequest();
     $this->setupMemoryCache();
-    $this->cacheContexts->expects($this->any())
+    $this->cacheContextsManager->expects($this->any())
       ->method('convertTokensToKeys')
       ->willReturnArgument(0);
     $this->elementInfo->expects($this->any())
@@ -290,7 +290,7 @@ class RendererPostRenderCacheTest extends RendererTestBase {
   public function testRenderChildrenPostRenderCacheComplex() {
     $this->setUpRequest();
     $this->setupMemoryCache();
-    $this->cacheContexts->expects($this->any())
+    $this->cacheContextsManager->expects($this->any())
       ->method('convertTokensToKeys')
       ->willReturnArgument(0);
     $this->elementInfo->expects($this->any())

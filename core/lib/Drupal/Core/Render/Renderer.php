@@ -11,7 +11,7 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
-use Drupal\Core\Cache\CacheContexts;
+use Drupal\Core\Cache\CacheContextsManager;
 use Drupal\Core\Cache\CacheFactoryInterface;
 use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
@@ -59,9 +59,9 @@ class Renderer implements RendererInterface {
   protected $cacheFactory;
 
   /**
-   * The cache contexts service.
+   * The cache contexts manager service.
    *
-   * @var \Drupal\Core\Cache\CacheContexts
+   * @var \Drupal\Core\Cache\CacheContextsManager
    */
   protected $cacheContexts;
 
@@ -92,18 +92,18 @@ class Renderer implements RendererInterface {
    *   The request stack.
    * @param \Drupal\Core\Cache\CacheFactoryInterface $cache_factory
    *   The cache factory.
-   * @param \Drupal\Core\Cache\CacheContexts $cache_contexts
-   *   The cache contexts service.
+   * @param \Drupal\Core\Cache\CacheContextsManager $cache_contexts_manager
+   *   The cache contexts manager service.
    * @param array $renderer_config
    *   The renderer configuration array.
    */
-  public function __construct(ControllerResolverInterface $controller_resolver, ThemeManagerInterface $theme, ElementInfoManagerInterface $element_info, RequestStack $request_stack, CacheFactoryInterface $cache_factory, CacheContexts $cache_contexts, array $renderer_config) {
+  public function __construct(ControllerResolverInterface $controller_resolver, ThemeManagerInterface $theme, ElementInfoManagerInterface $element_info, RequestStack $request_stack, CacheFactoryInterface $cache_factory, CacheContextsManager $cache_contexts_manager, array $renderer_config) {
     $this->controllerResolver = $controller_resolver;
     $this->theme = $theme;
     $this->elementInfo = $element_info;
     $this->requestStack = $request_stack;
     $this->cacheFactory = $cache_factory;
-    $this->cacheContexts = $cache_contexts;
+    $this->cacheContextsManager = $cache_contexts_manager;
     $this->rendererConfig = $renderer_config;
   }
 
@@ -755,7 +755,7 @@ class Renderer implements RendererInterface {
     if (isset($elements['#cache']['keys'])) {
       $cid_parts = $elements['#cache']['keys'];
       if (!empty($elements['#cache']['contexts'])) {
-        $contexts = $this->cacheContexts->convertTokensToKeys($elements['#cache']['contexts']);
+        $contexts = $this->cacheContextsManager->convertTokensToKeys($elements['#cache']['contexts']);
         $cid_parts = array_merge($cid_parts, $contexts);
       }
       return implode(':', $cid_parts);

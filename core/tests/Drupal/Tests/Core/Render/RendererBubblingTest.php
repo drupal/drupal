@@ -40,7 +40,7 @@ class RendererBubblingTest extends RendererTestBase {
     $this->elementInfo->expects($this->any())
       ->method('getInfo')
       ->willReturn([]);
-    $this->cacheContexts->expects($this->any())
+    $this->cacheContextsManager->expects($this->any())
       ->method('convertTokensToKeys')
       ->willReturnArgument(0);
 
@@ -86,7 +86,7 @@ class RendererBubblingTest extends RendererTestBase {
   public function testContextBubblingEdgeCases(array $element, array $expected_top_level_contexts, array $expected_cache_items) {
     $this->setUpRequest();
     $this->setupMemoryCache();
-    $this->cacheContexts->expects($this->any())
+    $this->cacheContextsManager->expects($this->any())
       ->method('convertTokensToKeys')
       ->willReturnArgument(0);
 

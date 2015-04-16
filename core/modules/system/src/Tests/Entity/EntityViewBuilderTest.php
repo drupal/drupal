@@ -46,7 +46,7 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
    * Tests entity render cache handling.
    */
   public function testEntityViewBuilderCache() {
-    $cache_contexts = \Drupal::service("cache_contexts");
+    $cache_contexts_manager = \Drupal::service("cache_contexts_manager");
 
     // Force a request via GET so we can get drupal_render() cache working.
     $request = \Drupal::request();
@@ -63,7 +63,7 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
     // Get a fully built entity view render array.
     $entity_test->save();
     $build = $this->container->get('entity.manager')->getViewBuilder('entity_test')->view($entity_test, 'full');
-    $cid_parts = array_merge($build['#cache']['keys'], $cache_contexts->convertTokensToKeys(Cache::mergeContexts($build['#cache']['contexts'], ['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme'])));
+    $cid_parts = array_merge($build['#cache']['keys'], $cache_contexts_manager->convertTokensToKeys(Cache::mergeContexts($build['#cache']['contexts'], ['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme'])));
     $cid = implode(':', $cid_parts);
     $bin = $build['#cache']['bin'];
 
@@ -95,7 +95,7 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
    * Tests entity render cache with references.
    */
   public function testEntityViewBuilderCacheWithReferences() {
-    $cache_contexts = \Drupal::service("cache_contexts");
+    $cache_contexts_manager = \Drupal::service("cache_contexts_manager");
 
     // Force a request via GET so we can get drupal_render() cache working.
     $request = \Drupal::request();
@@ -113,7 +113,7 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
 
     // Get a fully built entity view render array for the referenced entity.
     $build = $this->container->get('entity.manager')->getViewBuilder('entity_test')->view($entity_test_reference, 'full');
-    $cid_parts = array_merge($build['#cache']['keys'], $cache_contexts->convertTokensToKeys(Cache::mergeContexts($build['#cache']['contexts'], ['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme'])));
+    $cid_parts = array_merge($build['#cache']['keys'], $cache_contexts_manager->convertTokensToKeys(Cache::mergeContexts($build['#cache']['contexts'], ['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme'])));
     $cid_reference = implode(':', $cid_parts);
     $bin_reference = $build['#cache']['bin'];
 
@@ -132,7 +132,7 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
 
     // Get a fully built entity view render array.
     $build = $this->container->get('entity.manager')->getViewBuilder('entity_test')->view($entity_test, 'full');
-    $cid_parts = array_merge($build['#cache']['keys'], $cache_contexts->convertTokensToKeys(Cache::mergeContexts($build['#cache']['contexts'], ['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme'])));
+    $cid_parts = array_merge($build['#cache']['keys'], $cache_contexts_manager->convertTokensToKeys(Cache::mergeContexts($build['#cache']['contexts'], ['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme'])));
     $cid = implode(':', $cid_parts);
     $bin = $build['#cache']['bin'];
 

@@ -32,7 +32,7 @@ abstract class AccessResult implements AccessResultInterface, CacheableDependenc
    * The cache context IDs (to vary a cache item ID based on active contexts).
    *
    * @see \Drupal\Core\Cache\CacheContextInterface
-   * @see \Drupal\Core\Cache\CacheContexts::convertTokensToKeys()
+   * @see \Drupal\Core\Cache\CacheContextsManager::convertTokensToKeys()
    *
    * @var string[]
    */

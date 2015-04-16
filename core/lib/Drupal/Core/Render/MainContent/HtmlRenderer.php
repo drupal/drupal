@@ -10,7 +10,7 @@ namespace Drupal\Core\Render\MainContent;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Cache\CacheContexts;
+use Drupal\Core\Cache\CacheContextsManager;
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Display\PageVariantInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -73,9 +73,9 @@ class HtmlRenderer implements MainContentRendererInterface {
   protected $renderer;
 
   /**
-   * The cache contexts service.
+   * The cache contexts manager service.
    *
-   * @var \Drupal\Core\Cache\CacheContexts
+   * @var \Drupal\Core\Cache\CacheContextsManager
    */
   protected $cacheContexts;
 
@@ -94,17 +94,17 @@ class HtmlRenderer implements MainContentRendererInterface {
    *   The module handler.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
-   * @param \Drupal\Core\Cache\CacheContexts $cache_contexts
-   *   The cache contexts service.
+   * @param \Drupal\Core\Cache\CacheContextsManager $cache_contexts_manager
+   *   The cache contexts manager service.
    */
-  public function __construct(TitleResolverInterface $title_resolver, PluginManagerInterface $display_variant_manager, EventDispatcherInterface $event_dispatcher, ElementInfoManagerInterface $element_info_manager, ModuleHandlerInterface $module_handler, RendererInterface $renderer, CacheContexts $cache_contexts) {
+  public function __construct(TitleResolverInterface $title_resolver, PluginManagerInterface $display_variant_manager, EventDispatcherInterface $event_dispatcher, ElementInfoManagerInterface $element_info_manager, ModuleHandlerInterface $module_handler, RendererInterface $renderer, CacheContextsManager $cache_contexts_manager) {
     $this->titleResolver = $title_resolver;
     $this->displayVariantManager = $display_variant_manager;
     $this->eventDispatcher = $event_dispatcher;
     $this->elementInfoManager = $element_info_manager;
     $this->moduleHandler = $module_handler;
     $this->renderer = $renderer;
-    $this->cacheContexts = $cache_contexts;
+    $this->cacheContextsManager = $cache_contexts_manager;
   }
 
   /**
@@ -169,7 +169,7 @@ class HtmlRenderer implements MainContentRendererInterface {
 
     $response = new Response($content, 200,[
       'X-Drupal-Cache-Tags' => implode(' ', $cache_tags),
-      'X-Drupal-Cache-Contexts' => implode(' ', $this->cacheContexts->optimizeTokens($cache_contexts)),
+      'X-Drupal-Cache-Contexts' => implode(' ', $this->cacheContextsManager->optimizeTokens($cache_contexts)),
       'X-Generator' => 'Drupal ' . $version . ' (https://www.drupal.org)'
     ]);
     return $response;

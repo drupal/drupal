@@ -7,7 +7,7 @@
 
 namespace Drupal\Tests\Core\Cache;
 
-use Drupal\Core\Cache\CacheContexts;
+use Drupal\Core\Cache\CacheContextsManager;
 use Drupal\Core\Cache\CacheContextInterface;
 use Drupal\Core\Cache\CalculatedCacheContextInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -15,7 +15,7 @@ use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\Container;
 
 /**
- * @coversDefaultClass \Drupal\Core\Cache\CacheContexts
+ * @coversDefaultClass \Drupal\Core\Cache\CacheContextsManager
  * @group Cache
  */
 class CacheContextsTest extends UnitTestCase {
@@ -37,9 +37,9 @@ class CacheContextsTest extends UnitTestCase {
         ['a.b.c', Container::EXCEPTION_ON_INVALID_REFERENCE, new BazCacheContext()],
         ['x', Container::EXCEPTION_ON_INVALID_REFERENCE, new BazCacheContext()],
       ]));
-    $cache_contexts = new CacheContexts($container, $this->getContextsFixture());
+    $cache_contexts_manager = new CacheContextsManager($container, $this->getContextsFixture());
 
-    $this->assertSame($optimized_context_tokens, $cache_contexts->optimizeTokens($context_tokens));
+    $this->assertSame($optimized_context_tokens, $cache_contexts_manager->optimizeTokens($context_tokens));
   }
 
   /**
@@ -82,9 +82,9 @@ class CacheContextsTest extends UnitTestCase {
    */
   public function testConvertTokensToKeys() {
     $container = $this->getMockContainer();
-    $cache_contexts = new CacheContexts($container, $this->getContextsFixture());
+    $cache_contexts_manager = new CacheContextsManager($container, $this->getContextsFixture());
 
-    $new_keys = $cache_contexts->convertTokensToKeys([
+    $new_keys = $cache_contexts_manager->convertTokensToKeys([
       'foo',
       'baz:parameterA',
       'baz:parameterB',
@@ -106,9 +106,9 @@ class CacheContextsTest extends UnitTestCase {
    */
   public function testInvalidContext() {
     $container = $this->getMockContainer();
-    $cache_contexts = new CacheContexts($container, $this->getContextsFixture());
+    $cache_contexts_manager = new CacheContextsManager($container, $this->getContextsFixture());
 
-    $cache_contexts->convertTokensToKeys(["non-cache-context"]);
+    $cache_contexts_manager->convertTokensToKeys(["non-cache-context"]);
   }
 
   /**
@@ -120,9 +120,9 @@ class CacheContextsTest extends UnitTestCase {
    */
   public function testInvalidCalculatedContext($context_token) {
     $container = $this->getMockContainer();
-    $cache_contexts = new CacheContexts($container, $this->getContextsFixture());
+    $cache_contexts_manager = new CacheContextsManager($container, $this->getContextsFixture());
 
-    $cache_contexts->convertTokensToKeys([$context_token]);
+    $cache_contexts_manager->convertTokensToKeys([$context_token]);
   }
 
   /**
@@ -136,15 +136,15 @@ class CacheContextsTest extends UnitTestCase {
   }
 
   public function testAvailableContextStrings() {
-    $cache_contexts = new CacheContexts($this->getMockContainer(), $this->getContextsFixture());
-    $contexts = $cache_contexts->getAll();
+    $cache_contexts_manager = new CacheContextsManager($this->getMockContainer(), $this->getContextsFixture());
+    $contexts = $cache_contexts_manager->getAll();
     $this->assertEquals(array("foo", "baz"), $contexts);
   }
 
   public function testAvailableContextLabels() {
     $container = $this->getMockContainer();
-    $cache_contexts = new CacheContexts($container, $this->getContextsFixture());
-    $labels = $cache_contexts->getLabels();
+    $cache_contexts_manager = new CacheContextsManager($container, $this->getContextsFixture());
+    $labels = $cache_contexts_manager->getLabels();
     $expected = array("foo" => "Foo");
     $this->assertEquals($expected, $labels);
   }
@@ -205,12 +205,12 @@ class CacheContextsTest extends UnitTestCase {
    */
   public function testValidateContexts(array $contexts, $expected_exception_message) {
     $container = new ContainerBuilder();
-    $cache_contexts = new CacheContexts($container, ['foo', 'foo.bar', 'baz']);
+    $cache_contexts_manager = new CacheContextsManager($container, ['foo', 'foo.bar', 'baz']);
     if ($expected_exception_message !== FALSE) {
       $this->setExpectedException('LogicException', $expected_exception_message);
     }
     // If it doesn't throw an exception, validateTokens() returns NULL.
-    $this->assertNull($cache_contexts->validateTokens($contexts));
+    $this->assertNull($cache_contexts_manager->validateTokens($contexts));
   }
 
 }

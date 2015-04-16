@@ -10,7 +10,7 @@ namespace Drupal\Core\EventSubscriber;
 use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
-use Drupal\Core\Cache\CacheContexts;
+use Drupal\Core\Cache\CacheContextsManager;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -61,9 +61,9 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
   protected $responsePolicy;
 
   /**
-   * The cache contexts service.
+   * The cache contexts manager service.
    *
-   * @var \Drupal\Core\Cache\CacheContexts
+   * @var \Drupal\Core\Cache\CacheContextsManager
    */
   protected $cacheContexts;
 
@@ -78,15 +78,15 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
    *   A policy rule determining the cacheability of a request.
    * @param \Drupal\Core\PageCache\ResponsePolicyInterface $response_policy
    *   A policy rule determining the cacheability of a response.
-   * @param \Drupal\Core\Cache\CacheContexts $cache_contexts
-   *   The cache contexts service.
+   * @param \Drupal\Core\Cache\CacheContextsManager $cache_contexts_manager
+   *   The cache contexts manager service.
    */
-  public function __construct(LanguageManagerInterface $language_manager, ConfigFactoryInterface $config_factory, RequestPolicyInterface $request_policy, ResponsePolicyInterface $response_policy, CacheContexts $cache_contexts) {
+  public function __construct(LanguageManagerInterface $language_manager, ConfigFactoryInterface $config_factory, RequestPolicyInterface $request_policy, ResponsePolicyInterface $response_policy, CacheContextsManager $cache_contexts_manager) {
     $this->languageManager = $language_manager;
     $this->config = $config_factory->get('system.performance');
     $this->requestPolicy = $request_policy;
     $this->responsePolicy = $response_policy;
-    $this->cacheContexts = $cache_contexts;
+    $this->cacheContextsManager = $cache_contexts_manager;
   }
 
   /**
@@ -179,7 +179,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
       $existing_cache_contexts = explode(' ', $response->headers->get('X-Drupal-Cache-Contexts'));
       $cache_contexts = Cache::mergeContexts($existing_cache_contexts, $cache_contexts);
     }
-    $response->headers->set('X-Drupal-Cache-Contexts', implode(' ', $this->cacheContexts->optimizeTokens($cache_contexts)));
+    $response->headers->set('X-Drupal-Cache-Contexts', implode(' ', $this->cacheContextsManager->optimizeTokens($cache_contexts)));
   }
 
   /**

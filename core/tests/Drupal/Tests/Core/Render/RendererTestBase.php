@@ -40,7 +40,7 @@ class RendererTestBase extends UnitTestCase {
   protected $cacheFactory;
 
   /**
-   * @var \Drupal\Core\Cache\CacheContexts|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Cache\CacheContextsManager|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $cacheContexts;
 
@@ -93,10 +93,10 @@ class RendererTestBase extends UnitTestCase {
     $this->elementInfo = $this->getMock('Drupal\Core\Render\ElementInfoManagerInterface');
     $this->requestStack = new RequestStack();
     $this->cacheFactory = $this->getMock('Drupal\Core\Cache\CacheFactoryInterface');
-    $this->cacheContexts = $this->getMockBuilder('Drupal\Core\Cache\CacheContexts')
+    $this->cacheContextsManager = $this->getMockBuilder('Drupal\Core\Cache\CacheContextsManager')
       ->disableOriginalConstructor()
       ->getMock();
-    $this->cacheContexts->expects($this->any())
+    $this->cacheContextsManager->expects($this->any())
       ->method('convertTokensToKeys')
       ->willReturnCallback(function($context_tokens) {
         global $current_user_role;
@@ -118,10 +118,10 @@ class RendererTestBase extends UnitTestCase {
         }
         return $keys;
       });
-    $this->renderer = new Renderer($this->controllerResolver, $this->themeManager, $this->elementInfo, $this->requestStack, $this->cacheFactory, $this->cacheContexts, $this->rendererConfig);
+    $this->renderer = new Renderer($this->controllerResolver, $this->themeManager, $this->elementInfo, $this->requestStack, $this->cacheFactory, $this->cacheContextsManager, $this->rendererConfig);
 
     $container = new ContainerBuilder();
-    $container->set('cache_contexts', $this->cacheContexts);
+    $container->set('cache_contexts_manager', $this->cacheContextsManager);
     $container->set('renderer', $this->renderer);
     \Drupal::setContainer($container);
   }
