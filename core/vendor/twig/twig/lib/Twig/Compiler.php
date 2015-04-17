@@ -231,13 +231,15 @@ class Twig_Compiler implements Twig_CompilerInterface
 
     public function getDebugInfo()
     {
+        ksort($this->debugInfo);
+
         return $this->debugInfo;
     }
 
     /**
      * Indents the generated code.
      *
-     * @param int     $step The number of indentation to add
+     * @param int $step The number of indentation to add
      *
      * @return Twig_Compiler The current compiler instance
      */
@@ -251,7 +253,7 @@ class Twig_Compiler implements Twig_CompilerInterface
     /**
      * Outdents the generated code.
      *
-     * @param int     $step The number of indentation to remove
+     * @param int $step The number of indentation to remove
      *
      * @return Twig_Compiler The current compiler instance
      *

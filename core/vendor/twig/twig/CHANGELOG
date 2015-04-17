@@ -1,3 +1,22 @@
+* 1.18.0 (2015-XX-XX)
+
+ * fixed some error messages where the line was wrong (unknown variables or argument names)
+ * added a new way to customize the main Module node (via empty nodes)
+ * added Twig_Environment::createTemplate() to create a template from a string
+ * added a profiler
+ * fixed filesystem loader cache when different file paths are used for the same template
+
+* 1.17.0 (2015-01-14)
+
+ * added a 'filename' autoescaping strategy, which dynamically chooses the
+   autoescaping strategy for a template based on template file extension.
+
+* 1.16.3 (2014-12-25)
+
+ * fixed regression for dynamic parent templates
+ * fixed cache management with statcache
+ * fixed a regression in the slice filter
+
 * 1.16.2 (2014-10-17)
 
  * fixed timezone on dates as strings

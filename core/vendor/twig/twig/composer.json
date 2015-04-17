@@ -14,7 +14,7 @@
         },
         {
             "name": "Twig Team",
-            "homepage": "https://github.com/fabpot/Twig/graphs/contributors",
+            "homepage": "http://twig.sensiolabs.org/contributors",
             "role": "Contributors"
         },
         {
@@ -36,7 +36,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.16-dev"
+            "dev-master": "1.18-dev"
         }
     }
 }

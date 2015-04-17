@@ -164,6 +164,21 @@ class Twig_ExpressionParser
                     $this->parser->getStream()->next();
                     $node = new Twig_Node_Expression_Name($token->getValue(), $token->getLine());
                     break;
+                } elseif (isset($this->unaryOperators[$token->getValue()])) {
+                    $class = $this->unaryOperators[$token->getValue()]['class'];
+
+                    $ref = new ReflectionClass($class);
+                    $negClass = 'Twig_Node_Expression_Unary_Neg';
+                    $posClass = 'Twig_Node_Expression_Unary_Pos';
+                    if (!(in_array($ref->getName(), array($negClass, $posClass)) || $ref->isSubclassOf($negClass) || $ref->isSubclassOf($posClass))) {
+                        throw new Twig_Error_Syntax(sprintf('Unexpected unary operator "%s"', $token->getValue()), $token->getLine(), $this->parser->getFilename());
+                    }
+
+                    $this->parser->getStream()->next();
+                    $expr = $this->parsePrimaryExpression();
+
+                    $node = new $class($expr, $token->getLine());
+                    break;
                 }
 
             default:
@@ -451,8 +466,8 @@ class Twig_ExpressionParser
     /**
      * Parses arguments.
      *
-     * @param bool    $namedArguments Whether to allow named arguments or not
-     * @param bool    $definition     Whether we are parsing arguments for a function definition
+     * @param bool $namedArguments Whether to allow named arguments or not
+     * @param bool $definition     Whether we are parsing arguments for a function definition
      */
     public function parseArguments($namedArguments = false, $definition = false)
     {
@@ -583,7 +598,9 @@ class Twig_ExpressionParser
     // checks that the node only contains "constant" elements
     protected function checkConstantExpression(Twig_NodeInterface $node)
     {
-        if (!($node instanceof Twig_Node_Expression_Constant || $node instanceof Twig_Node_Expression_Array)) {
+        if (!($node instanceof Twig_Node_Expression_Constant || $node instanceof Twig_Node_Expression_Array
+            || $node instanceof Twig_Node_Expression_Unary_Neg || $node instanceof Twig_Node_Expression_Unary_Pos
+        )) {
             return false;
         }
 

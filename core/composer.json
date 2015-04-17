@@ -17,7 +17,7 @@
     "symfony/validator": "2.6.*",
     "symfony/process": "2.6.*",
     "symfony/yaml": "2.6.*",
-    "twig/twig": "1.16.*",
+    "twig/twig": "1.18.*",
     "doctrine/common": "~2.4.2",
     "doctrine/annotations": "1.2.*",
     "guzzlehttp/guzzle": "~5.0",

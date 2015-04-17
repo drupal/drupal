@@ -94,13 +94,19 @@ The following options are available:
   replace them with a ``null`` value. When set to ``true``, Twig throws an
   exception instead (default to ``false``).
 
-* ``autoescape``: If set to ``true``, auto-escaping will be enabled by default
-  for all templates (default to ``true``). As of Twig 1.8, you can set the
-  escaping strategy to use (``html``, ``js``, ``false`` to disable).
-  As of Twig 1.9, you can set the escaping strategy to use (``css``, ``url``, 
-  ``html_attr``, or a PHP callback that takes the template "filename" and must 
+* ``autoescape``: If set to ``true``, HTML auto-escaping will be enabled by
+  default for all templates (default to ``true``).
+
+  As of Twig 1.8, you can set the escaping strategy to use (``html``, ``js``,
+  ``false`` to disable).
+
+  As of Twig 1.9, you can set the escaping strategy to use (``css``, ``url``,
+  ``html_attr``, or a PHP callback that takes the template "filename" and must
   return the escaping strategy to use -- the callback cannot be a function name
   to avoid collision with built-in escaping strategies).
+
+  As of Twig 1.17, the ``filename`` escaping strategy determines the escaping
+  strategy to use for a template based on the template filename extension.
 
 * ``optimizations``: A flag that indicates which optimizations to apply
   (default to ``-1`` -- all optimizations are enabled; set it to ``0`` to
@@ -279,6 +285,9 @@ Twig comes bundled with the following extensions:
 * *Twig_Extension_Sandbox*: Adds a sandbox mode to the default Twig
   environment, making it safe to evaluate untrusted code.
 
+* *Twig_Extension_Profiler*: Enabled the built-in Twig profiler (as of Twig
+  1.18).
+
 * *Twig_Extension_Optimizer*: Optimizes the node tree before compilation.
 
 The core, escaper, and optimizer extensions do not need to be added to the
@@ -446,6 +455,37 @@ You can sandbox all templates by passing ``true`` as the second argument of
 the extension constructor::
 
     $sandbox = new Twig_Extension_Sandbox($policy, true);
+
+Profiler Extension
+~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 1.18
+    The Profile extension was added in Twig 1.18.
+
+The ``profiler`` extension enables a profiler for Twig templates; it should
+only be used on your development machines as it adds some overhead::
+
+    $profile = new Twig_Profiler_Profile();
+    $twig->addExtension(new Twig_Extension_Profiler($profile));
+
+    $dumper = new Twig_Profiler_Dumper_Text();
+    echo $dumper->dump($profile);
+
+A profile contains information about time and memory consumption for template,
+block, and macro executions.
+
+You can also dump the data in a `Blackfire.io <https://blackfire.io/>`_
+compatible format::
+
+    $dumper = new Twig_Profiler_Dumper_Blackfire();
+    file_put_contents('/path/to/profile.prof', $dumper->dump($profile));
+
+Upload the profile to visualize it (create a `free account
+<https://blackfire.io/signup>`_ first):
+
+.. code-block:: sh
+
+    blackfire --slot=7 upload /path/to/profile.prof
 
 Optimizer Extension
 ~~~~~~~~~~~~~~~~~~~

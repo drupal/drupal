@@ -20,7 +20,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
     protected static $cache = array();
 
     protected $parent;
-    protected $parents;
+    protected $parents = array();
     protected $env;
     protected $blocks;
     protected $traits;
@@ -66,15 +66,25 @@ abstract class Twig_Template implements Twig_TemplateInterface
             return $this->parent;
         }
 
-        $parent = $this->doGetParent($context);
-        if (false === $parent) {
-            return false;
-        } elseif ($parent instanceof Twig_Template) {
-            $name = $parent->getTemplateName();
-            $this->parents[$name] = $parent;
-            $parent = $name;
-        } elseif (!isset($this->parents[$parent])) {
-            $this->parents[$parent] = $this->env->loadTemplate($parent);
+        try {
+            $parent = $this->doGetParent($context);
+
+            if (false === $parent) {
+                return false;
+            }
+
+            if ($parent instanceof Twig_Template) {
+                return $this->parents[$parent->getTemplateName()] = $parent;
+            }
+
+            if (!isset($this->parents[$parent])) {
+                $this->parents[$parent] = $this->env->loadTemplate($parent);
+            }
+        } catch (Twig_Error_Loader $e) {
+            $e->setTemplateFile(null);
+            $e->guess();
+
+            throw $e;
         }
 
         return $this->parents[$parent];
@@ -119,10 +129,10 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * This method is for internal use only and should never be called
      * directly.
      *
-     * @param string  $name      The block name to display
-     * @param array   $context   The context
-     * @param array   $blocks    The current set of blocks
-     * @param bool    $useBlocks Whether to use the current set of blocks
+     * @param string $name      The block name to display
+     * @param array  $context   The context
+     * @param array  $blocks    The current set of blocks
+     * @param bool   $useBlocks Whether to use the current set of blocks
      */
     public function displayBlock($name, array $context, array $blocks = array(), $useBlocks = true)
     {
@@ -178,10 +188,10 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * This method is for internal use only and should never be called
      * directly.
      *
-     * @param string  $name      The block name to render
-     * @param array   $context   The context
-     * @param array   $blocks    The current set of blocks
-     * @param bool    $useBlocks Whether to use the current set of blocks
+     * @param string $name      The block name to render
+     * @param array  $context   The context
+     * @param array  $blocks    The current set of blocks
+     * @param bool   $useBlocks Whether to use the current set of blocks
      *
      * @return string The rendered block
      */
@@ -208,7 +218,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
      *
      * @param string $name The block name
      *
-     * @return bool    true if the block exists, false otherwise
+     * @return bool true if the block exists, false otherwise
      */
     public function hasBlock($name)
     {
@@ -314,9 +324,9 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * access for versions of PHP before 5.4. This is not a way to override
      * the way to get a variable value.
      *
-     * @param array   $context           The context
-     * @param string  $item              The variable to return from the context
-     * @param bool    $ignoreStrictCheck Whether to ignore the strict variable check or not
+     * @param array  $context           The context
+     * @param string $item              The variable to return from the context
+     * @param bool   $ignoreStrictCheck Whether to ignore the strict variable check or not
      *
      * @return The content of the context variable
      *
@@ -338,12 +348,12 @@ abstract class Twig_Template implements Twig_TemplateInterface
     /**
      * Returns the attribute value for a given array/object.
      *
-     * @param mixed   $object            The object or array from where to get the item
-     * @param mixed   $item              The item to get from the array or object
-     * @param array   $arguments         An array of arguments to pass if the item is an object method
-     * @param string  $type              The type of attribute (@see Twig_Template constants)
-     * @param bool    $isDefinedTest     Whether this is only a defined check
-     * @param bool    $ignoreStrictCheck Whether to ignore the strict attribute check or not
+     * @param mixed  $object            The object or array from where to get the item
+     * @param mixed  $item              The item to get from the array or object
+     * @param array  $arguments         An array of arguments to pass if the item is an object method
+     * @param string $type              The type of attribute (@see Twig_Template constants)
+     * @param bool   $isDefinedTest     Whether this is only a defined check
+     * @param bool   $ignoreStrictCheck Whether to ignore the strict attribute check or not
      *
      * @return mixed The attribute value, or a Boolean when $isDefinedTest is true, or null when the attribute is not set and $ignoreStrictCheck is true
      *
@@ -477,13 +487,5 @@ abstract class Twig_Template implements Twig_TemplateInterface
         }
 
         return $ret;
-    }
-
-    /**
-     * This method is only useful when testing Twig. Do not use it.
-     */
-    public static function clearCache()
-    {
-        self::$cache = array();
     }
 }
