@@ -160,12 +160,7 @@ class ErrorHandlerTest extends WebTestBase {
     $this->assertTrue(strpos($this->drupalGetHeader(':status'), '500 Service unavailable (with message)'), 'Received expected HTTP status line.');
     $this->assertErrorMessage($error_renderer_exception);
 
-    // Enable the page cache and disable error reporting, ensure that 5xx
-    // responses are not cached.
-    $config = $this->config('system.performance');
-    $config->set('cache.page.use_internal', 1);
-    $config->set('cache.page.max_age', 300);
-    $config->save();
+    // Disable error reporting, ensure that 5xx responses are not cached.
     $this->config('system.logging')
       ->set('error_level', ERROR_REPORTING_HIDE)
       ->save();

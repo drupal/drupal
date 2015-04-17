@@ -188,20 +188,7 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
     $method = $this->negotiatorManager->getDefinition($method_id);
 
     if (!isset($method['types']) || in_array($type, $method['types'])) {
-
-      // Check for a cache mode force from settings.php.
-      if ($this->settings->get('page_cache_without_database')) {
-        $cache_enabled = TRUE;
-      }
-      else {
-        $cache_enabled = $this->configFactory->get('system.performance')->get('cache.page.use_internal');
-      }
-
-      // If the language negotiation method has no cache preference or this is
-      // satisfied we can execute the callback.
-      if ($cache = !isset($method['cache']) || $this->currentUser->isAuthenticated() || $method['cache'] == $cache_enabled) {
-        $langcode = $this->getNegotiationMethodInstance($method_id)->getLangcode($this->requestStack->getCurrentRequest());
-      }
+      $langcode = $this->getNegotiationMethodInstance($method_id)->getLangcode($this->requestStack->getCurrentRequest());
     }
 
     $languages = $this->languageManager->getLanguages();

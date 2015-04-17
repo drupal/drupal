@@ -155,16 +155,14 @@ class SessionTest extends WebTestBase {
   function testEmptyAnonymousSession() {
     // Verify that no session is automatically created for anonymous user when
     // page caching is disabled.
-    $config = $this->config('system.performance');
-    $config->set('cache.page.use_internal', 0);
-    $config->save();
+    $this->container->get('module_installer')->uninstall(['page_cache']);
     $this->drupalGet('');
     $this->assertSessionCookie(FALSE);
     $this->assertSessionEmpty(TRUE);
 
     // The same behavior is expected when caching is enabled.
+    $this->container->get('module_installer')->install(['page_cache']);
     $config = $this->config('system.performance');
-    $config->set('cache.page.use_internal', 1);
     $config->set('cache.page.max_age', 300);
     $config->save();
     $this->drupalGet('');

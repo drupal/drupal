@@ -155,14 +155,11 @@ system.performance:
       mapping:
         page:
           type: mapping
-          label: 'Page cache'
+          label: 'Page caching'
           mapping:
-            use_internal:
-              type: boolean
-              label: 'Use internal page cache'
             max_age:
               type: integer
-              label: 'Max age of page cache'
+              label: 'Max age'
     css:
       type: mapping
       label: 'CSS performance settings'

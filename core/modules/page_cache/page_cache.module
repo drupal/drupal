@@ -1,0 +1,50 @@
+<?php
+
+/**
+ * @file
+ * Caches responses for anonymous users, request and response policies allowing.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\PageCache\RequestPolicyInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function page_cache_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.page_cache':
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Internal page cache module caches pages for anonymous users in the database.') . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Speeding up your site') . '</dt>';
+      $output .= '<dd>';
+      $output .= '<p>' . t('Pages requested by anonymous users are stored the first time they are requested and then reused; depending on your site configuration and the amount of your web traffic tied to anonymous visitors, the caching system may significantly increase the speed of your site.');
+      $output .= '<p>' . t('(For authenticated users, pages need to be assembled for each user individually, but anonymous users all get the exact same version of each page.)') . '</p>';
+      $output .= '</dd>';
+      $output .= '<dt>' . t('Configuring Internal page cache') . '</dt>';
+      $output .= '<dd>';
+      $output .= '<p>' . t('On the <a href="@cache-settings">Performance settings page</a>, you can configure how long browsers and proxies may cache pages, that setting is also respected by the Internal page cache module. There is no other configuration.', array('@cache-settings' => \Drupal::url('system.performance_settings')))  . '</p>';
+      $output .= '</dd>';
+      $output .= '</dl>';
+
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function page_cache_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // If the page that's being built is cacheable, set the 'immutable' flag, to
+  // ensure that when the form is used, a new form build ID is generated when
+  // appropriate, to prevent information disclosure.
+  $request_policy = \Drupal::service('page_cache_request_policy');
+  $request = \Drupal::requestStack()->getCurrentRequest();
+  $request_is_cacheable = $request_policy->check($request) === RequestPolicyInterface::ALLOW;
+  if ($request_is_cacheable) {
+    $form_state->addBuildInfo('immutable', TRUE);
+  }
+}

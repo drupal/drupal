@@ -28,7 +28,6 @@ class FormStoragePageCacheTest extends WebTestBase {
     parent::setUp();
 
     $config = $this->config('system.performance');
-    $config->set('cache.page.use_internal', 1);
     $config->set('cache.page.max_age', 300);
     $config->save();
   }

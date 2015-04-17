@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Provides functionality for testing form caching.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+* Implements hook_form_FORM_ID_alter().
+*/
+function page_cache_form_test_form_page_cache_form_test_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (isset($form_state->getBuildInfo()['immutable']) && $form_state->getBuildInfo()['immutable']) {
+    $form['#suffix'] = 'Immutable: TRUE';
+  }
+  else {
+    $form['#suffix'] = 'Immutable: FALSE';
+  }
+}

@@ -75,13 +75,6 @@ class FormCacheTest extends UnitTestCase {
   protected $logger;
 
   /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $configFactory;
-
-  /**
    * The request stack.
    *
    * @var \Symfony\Component\HttpFoundation\RequestStack|\PHPUnit_Framework_MockObject_MockObject
@@ -121,11 +114,10 @@ class FormCacheTest extends UnitTestCase {
     $this->account = $this->getMock('Drupal\Core\Session\AccountInterface');
 
     $this->logger = $this->getMock('Psr\Log\LoggerInterface');
-    $this->configFactory = $this->getConfigFactoryStub(['system.performance' => ['cache.page.use_internal' => FALSE]]);
     $this->requestStack = $this->getMock('\Symfony\Component\HttpFoundation\RequestStack');
     $this->requestPolicy = $this->getMock('\Drupal\Core\PageCache\RequestPolicyInterface');
 
-    $this->formCache = new FormCache($this->root, $this->keyValueExpirableFactory, $this->moduleHandler, $this->account, $this->csrfToken, $this->logger, $this->configFactory, $this->requestStack, $this->requestPolicy);
+    $this->formCache = new FormCache($this->root, $this->keyValueExpirableFactory, $this->moduleHandler, $this->account, $this->csrfToken, $this->logger, $this->requestStack, $this->requestPolicy);
   }
 
   /**
@@ -483,43 +475,6 @@ class FormCacheTest extends UnitTestCase {
     $this->logger->expects($this->once())
       ->method('error')
       ->with('Form build-id mismatch detected while attempting to store a form in the cache.');
-    $this->formCache->setCache($form_build_id, $form, $form_state);
-  }
-
-  /**
-   * @covers ::setCache
-   */
-  public function testSetCacheImmutableForm() {
-    $form_build_id = 'the_form_build_id';
-    $form = [
-      '#form_id' => 'the_form_id',
-    ];
-    $form_state = new FormState();
-
-    $this->formCacheStore->expects($this->once())
-      ->method('setWithExpire')
-      ->with($form_build_id, $form, $this->isType('int'));
-    $form_state_data = $form_state->getCacheableArray();
-    $form_state_data['build_info']['safe_strings'] = [];
-    // Ensure that the form is marked immutable.
-    $form_state_data['build_info']['immutable'] = TRUE;
-    $this->formStateCacheStore->expects($this->once())
-      ->method('setWithExpire')
-      ->with($form_build_id, $form_state_data, $this->isType('int'));
-
-    // Rebuild the FormCache with a config factory that will return a config
-    // object with the internal page cache enabled.
-    $this->configFactory = $this->getConfigFactoryStub(['system.performance' => ['cache.page.use_internal' => TRUE]]);
-    $root = dirname(dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__))));
-    $this->formCache = $this->getMockBuilder('Drupal\Core\Form\FormCache')
-      ->setConstructorArgs([$root, $this->keyValueExpirableFactory, $this->moduleHandler, $this->account, $this->csrfToken, $this->logger, $this->configFactory, $this->requestStack, $this->requestPolicy])
-      ->setMethods(['isPageCacheable'])
-      ->getMock();
-
-    $this->formCache->expects($this->once())
-      ->method('isPageCacheable')
-      ->willReturn(TRUE);
-
     $this->formCache->setCache($form_build_id, $form, $form_state);
   }
 

@@ -39,13 +39,6 @@ class SearchPageCacheTagsTest extends SearchTestBase {
   protected function setUp() {
     parent::setUp();
 
-    // Enable the page cache.
-    // @todo Remove in https://www.drupal.org/node/606840.
-    $config = $this->config('system.performance');
-    $config->set('cache.page.use_internal', 1);
-    $config->set('cache.page.max_age', 300);
-    $config->save();
-
     // Create user.
     $this->searchingUser = $this->drupalCreateUser(array('search content', 'access user profiles'));
 

@@ -2,13 +2,12 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Bootstrap\PageCacheTest.
+ * Contains \Drupal\page_cache\Tests\PageCacheTest.
  */
 
-namespace Drupal\system\Tests\Bootstrap;
+namespace Drupal\page_cache\Tests;
 
 use Drupal\Component\Datetime\DateTimePlus;
-use Drupal\Core\Routing\RequestContext;
 use Drupal\Core\Url;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\simpletest\WebTestBase;
@@ -19,7 +18,7 @@ use Drupal\user\RoleInterface;
 /**
  * Enables the page cache and tests it with various HTTP requests.
  *
- * @group Bootstrap
+ * @group page_cache
  */
 class PageCacheTest extends WebTestBase {
 
@@ -32,6 +31,9 @@ class PageCacheTest extends WebTestBase {
    */
   public static $modules = array('test_page_test', 'system_test', 'entity_test');
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
 
@@ -49,7 +51,6 @@ class PageCacheTest extends WebTestBase {
    */
   function testPageCacheTags() {
     $config = $this->config('system.performance');
-    $config->set('cache.page.use_internal', 1);
     $config->set('cache.page.max_age', 300);
     $config->save();
 
@@ -82,24 +83,21 @@ class PageCacheTest extends WebTestBase {
    */
   function testAcceptHeaderRequests() {
     $config = $this->config('system.performance');
-    $config->set('cache.page.use_internal', 1);
     $config->set('cache.page.max_age', 300);
     $config->save();
 
-    $url_generator = \Drupal::urlGenerator();
-    $url_generator->setContext(new RequestContext());
-    $accept_header_cache_uri = $url_generator->getPathFromRoute('system_test.page_cache_accept_header');
+    $accept_header_cache_url = Url::fromRoute('system_test.page_cache_accept_header');
     $json_accept_header = array('Accept: application/json');
 
-    $this->drupalGet($accept_header_cache_uri);
+    $this->drupalGet($accept_header_cache_url);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', 'HTML page was not yet cached.');
-    $this->drupalGet($accept_header_cache_uri);
+    $this->drupalGet($accept_header_cache_url);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'HTML page was cached.');
     $this->assertRaw('<p>oh hai this is html.</p>', 'The correct HTML response was returned.');
 
-    $this->drupalGet($accept_header_cache_uri, array(), $json_accept_header);
+    $this->drupalGet($accept_header_cache_url, array(), $json_accept_header);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', 'Json response was not yet cached.');
-    $this->drupalGet($accept_header_cache_uri, array(), $json_accept_header);
+    $this->drupalGet($accept_header_cache_url, array(), $json_accept_header);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Json response was cached.');
     $this->assertRaw('{"content":"oh hai this is json"}', 'The correct Json response was returned.');
 
@@ -153,7 +151,6 @@ class PageCacheTest extends WebTestBase {
    */
   function testConditionalRequests() {
     $config = $this->config('system.performance');
-    $config->set('cache.page.use_internal', 1);
     $config->set('cache.page.max_age', 300);
     $config->save();
 
@@ -198,7 +195,6 @@ class PageCacheTest extends WebTestBase {
    */
   function testPageCache() {
     $config = $this->config('system.performance');
-    $config->set('cache.page.use_internal', 1);
     $config->set('cache.page.max_age', 300);
     $config->set('response.gzip', 1);
     $config->save();
@@ -258,9 +254,8 @@ class PageCacheTest extends WebTestBase {
    * This test verifies that, and it verifies that it does not happen for other
    * roles.
    */
-  function testPageCacheAnonymousRolePermissions() {
+  public function testPageCacheAnonymousRolePermissions() {
     $config = $this->config('system.performance');
-    $config->set('cache.page.use_internal', 1);
     $config->set('cache.page.max_age', 300);
     $config->save();
 
@@ -359,7 +354,6 @@ class PageCacheTest extends WebTestBase {
    */
   public function testPageCacheWithoutVaryCookie() {
     $config = $this->config('system.performance');
-    $config->set('cache.page.use_internal', 1);
     $config->set('cache.page.max_age', 300);
     $config->save();
 
@@ -373,58 +367,33 @@ class PageCacheTest extends WebTestBase {
     $this->drupalGet('');
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', 'Page was not cached.');
     $this->assertTrue(strpos($this->drupalGetHeader('Vary'), 'Cookie') === FALSE, 'Vary: Cookie header was not sent.');
+    $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'max-age=300, public', 'Cache-Control header was sent.');
 
     // Check cache.
     $this->drupalGet('');
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
     $this->assertTrue(strpos($this->drupalGetHeader('Vary'), 'Cookie') === FALSE, 'Vary: Cookie header was not sent.');
+    $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'max-age=300, public', 'Cache-Control header was sent.');
   }
 
   /**
-   * Tests page compression.
-   *
-   * The test should pass even if zlib.output_compression is enabled in php.ini,
-   * .htaccess or similar, or if compression is done outside PHP, e.g. by the
-   * mod_deflate Apache module.
+   * Test the setting of forms to be immutable.
    */
-  function testPageCompression() {
-    $config = $this->config('system.performance');
-    $config->set('cache.page.use_internal', 1);
-    $config->set('cache.page.max_age', 300);
-    $config->set('response.gzip', 1);
-    $config->save();
+  public function testFormImmutability() {
+    // Install the module that provides the test form.
+    $this->container->get('module_installer')
+      ->install(['page_cache_form_test']);
+    \Drupal::service('router.builder')->rebuild();
 
-    // Fill the cache and verify that output is compressed.
-    $this->drupalGet('', array(), array('Accept-Encoding: gzip,deflate'));
-    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', 'Page was not cached.');
-    $this->setRawContent(gzinflate(substr($this->getRawContent(), 10, -8)));
-    $this->assertRaw('</html>', 'Page was gzip compressed.');
+    $this->drupalGet('page_cache_form_test_immutability');
 
-    // Verify that cached output is compressed.
-    $this->drupalGet('', array(), array('Accept-Encoding: gzip,deflate'));
-    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
-    $this->assertEqual($this->drupalGetHeader('Content-Encoding'), 'gzip', 'A Content-Encoding header was sent.');
-    $this->setRawContent(gzinflate(substr($this->getRawContent(), 10, -8)));
-    $this->assertRaw('</html>', 'Page was gzip compressed.');
+    $this->assertText("Immutable: TRUE", "Form is immutable.");
 
-    // Verify that a client without compression support gets an uncompressed page.
-    $this->drupalGet('');
-    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
-    $this->assertFalse($this->drupalGetHeader('Content-Encoding'), 'A Content-Encoding header was not sent.');
-    $this->assertTitle(t('Test page | @site-name', array('@site-name' => $this->config('system.site')->get('name'))), 'Site title matches.');
-    $this->assertRaw('</html>', 'Page was not compressed.');
+    // Uninstall the page_cache module, verify the flag is not set.
+    $this->container->get('module_installer')->uninstall(['page_cache']);
 
-    // Disable compression mode.
-    $config->set('response.gzip', 0);
-    $config->save();
+    $this->drupalGet('page_cache_form_test_immutability');
 
-    // Verify if cached page is still available for a client with compression support.
-    $this->drupalGet('', array(), array('Accept-Encoding: gzip,deflate'));
-    $this->setRawContent(gzinflate(substr($this->getRawContent(), 10, -8)));
-    $this->assertRaw('</html>', 'Page was delivered after compression mode is changed (compression support enabled).');
-
-    // Verify if cached page is still available for a client without compression support.
-    $this->drupalGet('');
-    $this->assertRaw('</html>', 'Page was delivered after compression mode is changed (compression support disabled).');
+    $this->assertText("Immutable: FALSE", "Form is not immutable,");
   }
 }

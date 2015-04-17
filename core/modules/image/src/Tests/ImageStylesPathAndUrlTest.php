@@ -79,22 +79,6 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
   }
 
   /**
-   * Tests an image style URL using the "public://" scheme and page cache.
-   */
-  public function testImageStyleUrlAndPathPublicWithPageCache() {
-    $this->enablePageCache();
-    $this->doImageStyleUrlAndPathTests('public');
-  }
-
-  /**
-   * Tests an image style URL using the "private://" scheme and page cache.
-   */
-  public function testImageStyleUrlAndPathPrivateWithPageCache() {
-    $this->enablePageCache();
-    $this->doImageStyleUrlAndPathTests('private');
-  }
-
-  /**
    * Tests an image style URL with a file URL that has an extra slash in it.
    */
   function testImageStyleUrlExtraSlash() {
@@ -240,17 +224,6 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
     $this->assertIdentical(strpos($generate_url, IMAGE_DERIVATIVE_TOKEN . '='), FALSE, 'The security token does not appear in the image style URL.');
     $this->drupalGet($generate_url);
     $this->assertResponse(200, 'Image was accessible at the URL with a missing token.');
-  }
-
-  /**
-   * Turn on page caching.
-   */
-  protected function enablePageCache() {
-    // Turn on page caching and rerun the test.
-    $config = $this->config('system.performance');
-    $config->set('cache.page.use_internal', 1);
-    $config->set('cache.page.max_age', 300);
-    $config->save();
   }
 
 }

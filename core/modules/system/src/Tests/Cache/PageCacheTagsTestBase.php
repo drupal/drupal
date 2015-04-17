@@ -31,7 +31,6 @@ abstract class PageCacheTagsTestBase extends WebTestBase {
 
     // Enable page caching.
     $config = $this->config('system.performance');
-    $config->set('cache.page.use_internal', 1);
     $config->set('cache.page.max_age', 3600);
     $config->save();
   }

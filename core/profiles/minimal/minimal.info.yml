@@ -7,5 +7,6 @@ dependencies:
   - node
   - block
   - dblog
+  - page_cache
 themes:
   - stark

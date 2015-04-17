@@ -2,11 +2,12 @@
 
 /**
  * @file
- * Contains \Drupal\Core\StackMiddleware\PageCache.
+ * Contains \Drupal\page_cache\StackMiddleware\PageCache.
  */
 
-namespace Drupal\Core\StackMiddleware;
+namespace Drupal\page_cache\StackMiddleware;
 
+use Drupal\Component\Utility\UserAgent;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\PageCache\RequestPolicyInterface;
@@ -52,7 +53,7 @@ class PageCache implements HttpKernelInterface {
   protected $responsePolicy;
 
   /**
-   * Constructs a ReverseProxyMiddleware object.
+   * Constructs a PageCache object.
    *
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
    *   The decorated kernel.
@@ -74,20 +75,8 @@ class PageCache implements HttpKernelInterface {
    * {@inheritdoc}
    */
   public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE) {
-    if ($type !== static::MASTER_REQUEST) {
-      // Only allow page caching on master request.
-      $cache_enabled = FALSE;
-    }
-    elseif (Settings::get('page_cache_without_database')) {
-      // Check for a cache mode force from settings.php.
-      $cache_enabled = TRUE;
-    }
-    else {
-      $config = $this->config('system.performance');
-      $cache_enabled = $config->get('cache.page.use_internal');
-    }
-
-    if ($cache_enabled && $this->requestPolicy->check($request) === RequestPolicyInterface::ALLOW) {
+    // Only allow page caching on master request.
+    if ($type === static::MASTER_REQUEST && $this->requestPolicy->check($request) === RequestPolicyInterface::ALLOW) {
       $response = $this->lookup($request, $type, $catch);
     }
     else {
@@ -232,20 +221,6 @@ class PageCache implements HttpKernelInterface {
       return $response;
     }
 
-    // Check if the current page may be compressed.
-    if (extension_loaded('zlib') && !$response->headers->get('Content-Encoding') && $this->config('system.performance')->get('response.gzip')) {
-      $content = $response->getContent();
-      if ($content) {
-        $response->setContent(gzencode($content, 9, FORCE_GZIP));
-        $response->headers->set('Content-Encoding', 'gzip');
-      }
-
-      // When page compression is enabled, ensure that proxy caches will record
-      // and deliver different versions of a page depending on whether the
-      // client supports gzip or not.
-      $response->setVary('Accept-Encoding', FALSE);
-    }
-
     // Use the actual timestamp from an Expires header, if available.
     $date = $response->getExpires();
     $expire = ($date > (new \DateTime())) ? $date->getTimestamp() : Cache::PERMANENT;
@@ -324,18 +299,6 @@ class PageCache implements HttpKernelInterface {
       $request->getRequestFormat(),
     );
     return implode(':', $cid_parts);
-  }
-
-  /**
-   * Wraps Drupal::config().
-   *
-   * Config factory is not injected into this class in order to prevent
-   * premature initialization of config storage (database).
-   *
-   * @see \Drupal::config()
-   */
-  protected function config($name) {
-    return \Drupal::config($name);
   }
 
 }

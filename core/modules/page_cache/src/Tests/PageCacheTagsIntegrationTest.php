@@ -2,19 +2,20 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\Cache\PageCacheTagsIntegrationTest.
+ * Contains \Drupal\page_cache\Tests\PageCacheTagsIntegrationTest.
  */
 
-namespace Drupal\system\Tests\Cache;
+namespace Drupal\page_cache\Tests;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\simpletest\WebTestBase;
+use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
 
 /**
  * Enables the page cache and tests its cache tags in various scenarios.
  *
  * @group Cache
- * @see \Drupal\system\Tests\Bootstrap\PageCacheTest
+ * @see \Drupal\page_cache\Tests\PageCacheTest
  * @see \Drupal\node\Tests\NodePageCacheTest
  * @see \Drupal\menu_ui\Tests\MenuTest::testMenuBlockPageCacheTags()
  */

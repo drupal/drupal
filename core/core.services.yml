@@ -300,7 +300,7 @@ services:
     arguments: ['@request_stack', '@url_generator']
   form_cache:
     class: Drupal\Core\Form\FormCache
-    arguments: ['@app.root', '@keyvalue.expirable', '@module_handler', '@current_user', '@csrf_token', '@logger.channel.form', '@config.factory', '@request_stack', '@page_cache_request_policy']
+    arguments: ['@app.root', '@keyvalue.expirable', '@module_handler', '@current_user', '@csrf_token', '@logger.channel.form', '@request_stack', '@page_cache_request_policy']
     public: false  # Private to form_builder
   keyvalue:
     class: Drupal\Core\KeyValueStore\KeyValueFactory
@@ -584,11 +584,6 @@ services:
     arguments: ['@settings']
     tags:
       - { name: http_middleware, priority: 300 }
-  http_middleware.page_cache:
-    class: Drupal\Core\StackMiddleware\PageCache
-    arguments: ['@cache.render', '@page_cache_request_policy', '@page_cache_response_policy']
-    tags:
-      - { name: http_middleware, priority: 200 }
   http_middleware.kernel_pre_handle:
     class: Drupal\Core\StackMiddleware\KernelPreHandle
     arguments: ['@kernel']

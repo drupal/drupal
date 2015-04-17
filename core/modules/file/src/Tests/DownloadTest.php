@@ -52,19 +52,6 @@ class DownloadTest extends FileManagedTestBase {
   }
 
   /**
-   * Test the private file transfer system with page cache.
-   */
-  public function testPrivateFileTransferWithPageCache() {
-    // Turn on page caching and rerun the test.
-    $config = $this->config('system.performance');
-    $config->set('cache.page.use_internal', 1);
-    $config->set('cache.page.max_age', 300);
-    $config->save();
-
-    $this->doPrivateFileTransferTest();
-  }
-
-  /**
    * Test the private file transfer system.
    */
   protected function doPrivateFileTransferTest() {

@@ -121,6 +121,7 @@ class PerformanceForm extends ConfigFormBase {
       '#type' => 'details',
       '#title' => t('Caching'),
       '#open' => TRUE,
+      '#description' => $this->t('Note: Drupal provides an internal page cache module that is recommended for small to medium-sized websites.'),
     );
     // Identical options to the ones for block caching.
     // @see \Drupal\Core\Block\BlockBase::buildConfigurationForm()
@@ -132,14 +133,7 @@ class PerformanceForm extends ConfigFormBase {
       '#title' => t('Page cache maximum age'),
       '#default_value' => $config->get('cache.page.max_age'),
       '#options' => $period,
-      '#description' => t('The maximum time a page can be cached. This is used as the value for max-age in Cache-Control headers.'),
-    );
-
-    $form['caching']['cache'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Use internal page cache'),
-      '#description' => t("If a reverse proxy cache isn't available, use Drupal's internal cache system to store cached pages."),
-      '#default_value' => $config->get('cache.page.use_internal'),
+      '#description' => t('The maximum time a page can be cached by browsers and proxies. This is used as the value for max-age in Cache-Control headers.'),
     );
 
     $directory = 'public://';
@@ -157,16 +151,6 @@ class PerformanceForm extends ConfigFormBase {
       '#description' => t('External resources can be optimized automatically, which can reduce both the size and number of requests made to your website.') . $disabled_message,
     );
 
-    $form['bandwidth_optimization']['page_compression'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Compress cached pages'),
-      '#default_value' => $config->get('response.gzip'),
-      '#states' => array(
-        'visible' => array(
-          'input[name="cache"]' => array('checked' => TRUE),
-        ),
-      ),
-    );
     $form['bandwidth_optimization']['preprocess_css'] = array(
       '#type' => 'checkbox',
       '#title' => t('Aggregate CSS files'),
@@ -195,9 +179,7 @@ class PerformanceForm extends ConfigFormBase {
     $this->renderCache->deleteAll();
 
     $this->config('system.performance')
-      ->set('cache.page.use_internal', $form_state->getValue('cache'))
       ->set('cache.page.max_age', $form_state->getValue('page_cache_maximum_age'))
-      ->set('response.gzip', $form_state->getValue('page_compression'))
       ->set('css.preprocess', $form_state->getValue('preprocess_css'))
       ->set('js.preprocess', $form_state->getValue('preprocess_js'))
       ->save();

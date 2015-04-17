@@ -14,7 +14,6 @@ process:
   'css/preprocess': preprocess_css
   'js/preprocess': preprocess_js
   'cache/page/max_age': cache_lifetime
-  'cache/page/use_internal': cache
   'response/gzip': page_compression
 destination:
   plugin: config

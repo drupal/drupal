@@ -4,6 +4,10 @@ description: 'Minimal profile for running tests. Includes absolutely required mo
 version: VERSION
 core: 8.x
 hidden: true
+dependencies:
+  # Enable page_cache in testing, to ensure that as many tests as possible run
+  # with page caching enabled.
+  - page_cache
 # @todo: Remove this in https://www.drupal.org/node/2352949
 themes:
   - classy

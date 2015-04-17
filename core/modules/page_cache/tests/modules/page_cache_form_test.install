@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ *
+ * Install hooks for page_cache_form_test.
+ */
+
+function page_cache_form_test_install() {
+  // Set an explicit module weight, to ensure that the form alter hook is
+  // always called after page_cache_form_alter().
+  module_set_weight('page_cache_form_test', 10);
+}
