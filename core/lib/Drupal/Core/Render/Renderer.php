@@ -192,7 +192,6 @@ class Renderer implements RendererInterface {
 
     // Try to fetch the prerendered element from cache, run any
     // #post_render_cache callbacks and return the final markup.
-    $pre_bubbling_cid = NULL;
     if (isset($elements['#cache']['keys'])) {
       $cached_element = $this->cacheGet($elements);
       if ($cached_element !== FALSE) {
@@ -212,16 +211,13 @@ class Renderer implements RendererInterface {
         $this->bubbleStack();
         return $elements['#markup'];
       }
-      else {
-        // Two-tier caching: set pre-bubbling cache ID, if this element is
-        // cacheable..
-        // @see ::cacheGet()
-        // @see ::cacheSet()
-        if ($this->requestStack->getCurrentRequest()->isMethodSafe() && $cid = $this->createCacheID($elements)) {
-          $pre_bubbling_cid = $cid;
-        }
-      }
     }
+    // Two-tier caching: track pre-bubbling elements' #cache for later
+    // comparison.
+    // @see ::cacheGet()
+    // @see ::cacheSet()
+    $pre_bubbling_elements = [];
+    $pre_bubbling_elements['#cache'] = isset($elements['#cache']) ? $elements['#cache'] : [];
 
     // If the default values for this element have not been loaded yet, populate
     // them.
@@ -381,10 +377,13 @@ class Renderer implements RendererInterface {
     // We've rendered this element (and its subtree!), now update the stack.
     $this->updateStack($elements);
 
-    // Cache the processed element if #cache is set, and the metadata necessary
-    // to generate a cache ID is present.
-    if (isset($elements['#cache']) && isset($elements['#cache']['keys'])) {
-      $this->cacheSet($elements, $pre_bubbling_cid);
+    // Cache the processed element if both $pre_bubbling_elements and $elements
+    // have the metadata necessary to generate a cache ID.
+    if (isset($pre_bubbling_elements['#cache']['keys']) && isset($elements['#cache']['keys'])) {
+      if ($pre_bubbling_elements['#cache']['keys'] !== $elements['#cache']['keys']) {
+        throw new \LogicException('Cache keys may not be changed after initial setup. Use the contexts property instead to bubble additional metadata.');
+      }
+      $this->cacheSet($elements, $pre_bubbling_elements);
     }
 
     // Only when we're in a root (non-recursive) drupal_render() call,
@@ -551,15 +550,20 @@ class Renderer implements RendererInterface {
    *
    * @param array $elements
    *   A renderable array.
-   * @param string|null $pre_bubbling_cid
-   *   The pre-bubbling cache ID.
+   * @param array $pre_bubbling_elements
+   *   A renderable array corresponding to the state (in particular, the
+   *   cacheability metadata) of $elements prior to the beginning of its
+   *   rendering process, and therefore before any bubbling of child
+   *   information has taken place. Only the #cache property is used by this
+   *   function, so the caller may omit all other properties and children from
+   *   this array.
    *
    * @return bool|null
    *  Returns FALSE if no cache item could be created, NULL otherwise.
    *
    * @see ::getFromCache()
    */
-  protected function cacheSet(array &$elements, $pre_bubbling_cid) {
+  protected function cacheSet(array &$elements, array $pre_bubbling_elements) {
     // Form submissions rely on the form being built during the POST request,
     // and render caching of forms prevents this from happening.
     // @todo remove the isMethodSafe() check when
@@ -574,11 +578,14 @@ class Renderer implements RendererInterface {
     $expire = ($elements['#cache']['max-age'] === Cache::PERMANENT) ? Cache::PERMANENT : (int) $this->requestStack->getMasterRequest()->server->get('REQUEST_TIME') + $elements['#cache']['max-age'];
     $cache = $this->cacheFactory->get($bin);
 
+    // Calculate the pre-bubbling CID.
+    $pre_bubbling_cid = $this->createCacheID($pre_bubbling_elements);
+
     // Two-tier caching: detect different CID post-bubbling, create redirect,
     // update redirect if different set of cache contexts.
     // @see ::doRender()
     // @see ::cacheGet()
-    if (isset($pre_bubbling_cid) && $pre_bubbling_cid !== $cid) {
+    if ($pre_bubbling_cid && $pre_bubbling_cid !== $cid) {
       // The cache redirection strategy we're implementing here is pretty
       // simple in concept. Suppose we have the following render structure:
       // - A (pre-bubbling, specifies #cache['keys'] = ['foo'])

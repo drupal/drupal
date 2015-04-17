@@ -502,6 +502,25 @@ class RendererBubblingTest extends RendererTestBase {
     return $data;
   }
 
+  /**
+   * Tests that an element's cache keys cannot be changed during its rendering.
+   *
+   * @expectedException \LogicException
+   * @expectedExceptionMessage Cache keys may not be changed after initial setup. Use the contexts property instead to bubble additional metadata.
+   */
+  public function testOverWriteCacheKeys() {
+    $this->setUpRequest();
+    $this->setupMemoryCache();
+
+    // Ensure a logic exception
+    $data = [
+      '#cache' => [
+        'keys' => ['llama', 'bar'],
+       ],
+      '#pre_render' => [__NAMESPACE__ . '\\BubblingTest::bubblingCacheOverwritePrerender'],
+    ];
+    $this->renderer->render($data);
+  }
 }
 
 
@@ -581,6 +600,18 @@ class BubblingTest {
     $placeholder = \Drupal::service('renderer')->generateCachePlaceholder($callback, $context);
     $element['#markup'] = str_replace($placeholder, 'Post-render cache!' . $context['foo'] . $context['baz'], $element['#markup']);
     return $element;
+  }
+
+  /**
+   * #pre_render callback for testOverWriteCacheKeys().
+   */
+  public static function bubblingCacheOverwritePrerender($elements) {
+    // Overwrite the #cache entry with new data.
+    $elements['#cache'] = [
+      'keys' => ['llama', 'foo'],
+    ];
+    $elements['#markup'] = 'Setting cache keys just now!';
+    return $elements;
   }
 
 }
