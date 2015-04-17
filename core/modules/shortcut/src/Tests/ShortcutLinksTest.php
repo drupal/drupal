@@ -64,6 +64,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
       );
       $this->drupalPostForm('admin/config/user-interface/shortcut/manage/' . $set->id() . '/add-link', $form_data, t('Save'));
       $this->assertResponse(200);
+      $this->assertText(t('Added a shortcut for @title.', array('@title' => $title)));
       $saved_set = ShortcutSet::load($set->id());
       $paths = $this->getShortcutInformation($saved_set, 'link');
       $this->assertTrue(in_array('internal:' . $test_path, $paths), 'Shortcut created: ' . $test_path);
@@ -152,6 +153,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $titles = $this->getShortcutInformation($saved_set, 'title');
     $this->assertTrue(in_array($new_link_name, $titles), 'Shortcut renamed: ' . $new_link_name);
     $this->assertLink($new_link_name, 0, 'Renamed shortcut link appears on the page.');
+    $this->assertText(t('The shortcut @link has been updated.', array('@link' => $new_link_name)));
   }
 
   /**
@@ -170,6 +172,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $paths = $this->getShortcutInformation($saved_set, 'link');
     $this->assertTrue(in_array('internal:' . $new_link_path, $paths), 'Shortcut path changed: ' . $new_link_path);
     $this->assertLinkByHref($new_link_path, 0, 'Shortcut with new path appears on the page.');
+    $this->assertText(t('The shortcut @link has been updated.', array('@link' => $shortcut->getTitle())));
   }
 
   /**

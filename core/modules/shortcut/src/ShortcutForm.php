@@ -27,9 +27,9 @@ class ShortcutForm extends ContentEntityForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     $entity = $this->entity;
-    $entity->save();
+    $status = $entity->save();
 
-    if ($entity->isNew()) {
+    if ($status == SAVED_UPDATED) {
       $message = $this->t('The shortcut %link has been updated.', array('%link' => $entity->getTitle()));
     }
     else {
