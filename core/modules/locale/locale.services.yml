@@ -25,3 +25,8 @@ services:
     arguments: ['@config.factory', '@locale.config_manager']
     tags:
       - { name: event_subscriber }
+  locale.locale_translation_cache_tag:
+    class: Drupal\locale\EventSubscriber\LocaleTranslationCacheTag
+    arguments: ['@cache_tags.invalidator']
+    tags:
+      - { name: event_subscriber }

@@ -81,11 +81,6 @@ class LocaleTranslationUiTest extends WebTestBase {
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
     $this->assertText($name, 'Search found the string as untranslated.');
 
-    // Assume this is the only result, given the random name.
-    // We save the lid from the path.
-    $textarea = current($this->xpath('//textarea'));
-    $lid = (string) $textarea[0]['name'];
-
     // No t() here, it's surely not translated yet.
     $this->assertText($name, 'name found on edit screen.');
     $this->assertNoOption('edit-langcode', 'en', 'No way to translate the string to English.');
@@ -135,10 +130,6 @@ class LocaleTranslationUiTest extends WebTestBase {
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
     $this->assertRaw($translation_to_en, 'English translation properly saved.');
 
-    // Reset the tag cache on the tester side in order to pick up the call to
-    // Cache::invalidateTags() on the tested side.
-    \Drupal::service('cache_tags.invalidator.checksum')->reset();
-
     $this->assertTrue($name != $translation && t($name, array(), array('langcode' => $langcode)) == $translation, 't() works for non-English.');
     // Refresh the locale() cache to get fresh data from t() below. We are in
     // the same HTTP request and therefore t() is not refreshed by saving the
@@ -156,7 +147,28 @@ class LocaleTranslationUiTest extends WebTestBase {
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
     $this->assertText(t('No strings available.'), 'String is translated.');
 
+    // Test invalidation of 'rendered' cache tag after string translation.
     $this->drupalLogout();
+    $this->drupalGet('xx/user/login');
+    $this->assertText('Enter the password that accompanies your username.');
+
+    $this->drupalLogin($translate_user);
+    $search = array(
+      'string' => 'accompanies your username',
+      'langcode' => $langcode,
+      'translation' => 'untranslated',
+    );
+    $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
+    $textarea = current($this->xpath('//textarea'));
+    $lid = (string) $textarea[0]['name'];
+    $edit = array(
+      $lid => 'Please enter your Llama username.',
+    );
+    $this->drupalPostForm('admin/config/regional/translate', $edit, t('Save translations'));
+
+    $this->drupalLogout();
+    $this->drupalGet('xx/user/login');
+    $this->assertText('Please enter your Llama username.');
 
     // Delete the language.
     $this->drupalLogin($admin_user);

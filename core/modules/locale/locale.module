@@ -25,6 +25,8 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\ConfigurableLanguageInterface;
 use Drupal\Component\Utility\Crypt;
 use Drupal\locale\Locale;
+use Drupal\locale\LocaleEvent;
+use Drupal\locale\LocaleEvents;
 
 /**
  * Regular expression pattern used to localize JavaScript strings.
@@ -1037,6 +1039,7 @@ function locale_string_is_safe($string) {
  * The information that will be refreshed includes:
  * - JavaScript translations.
  * - Locale cache.
+ * - Render cache.
  *
  * @param array $langcodes
  *   Language codes for updated translations.
@@ -1052,8 +1055,9 @@ function _locale_refresh_translations($langcodes, $lids = array()) {
       array_map('_locale_invalidate_js', $langcodes);
     }
   }
-  // Clear locale cache.
-  Cache::invalidateTags(array('locale'));
+
+  // Throw locale.save_translation event.
+  \Drupal::service('event_dispatcher')->dispatch(LocaleEvents::SAVE_TRANSLATION, new LocaleEvent($langcodes, $lids));
 }
 
 /**
