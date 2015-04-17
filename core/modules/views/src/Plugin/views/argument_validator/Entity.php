@@ -226,7 +226,6 @@ class Entity extends ArgumentValidatorPluginBase {
     if ($this->entityManager->hasHandler($bundle_entity_type, 'storage')) {
       $bundle_entity_storage = $this->entityManager->getStorage($bundle_entity_type);
 
-      $test = $bundle_entity_storage->loadMultiple(array_keys($this->options['bundles']));
       foreach ($bundle_entity_storage->loadMultiple(array_keys($this->options['bundles'])) as $bundle_entity) {
         $dependencies[$bundle_entity->getConfigDependencyKey()][] = $bundle_entity->getConfigDependencyName();
       }
