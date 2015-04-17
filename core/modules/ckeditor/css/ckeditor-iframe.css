@@ -17,8 +17,6 @@ body {
 }
 
 ol, ul, dl {
-  /* IE7: reset rtl list margin. (CKEditor issue #7334) */
-  *margin-right: 0px;
   /* Preserved spaces for list items with text direction other than the list.
    * (CKEditor issues #6249,#8049) */
   padding: 0 40px;
