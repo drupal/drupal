@@ -1543,7 +1543,9 @@ abstract class WebTestBase extends TestBase {
    * Requests a Drupal path in drupal_ajax format and JSON-decodes the response.
    */
   protected function drupalGetAjax($path, array $options = array(), array $headers = array()) {
-    $headers[] = 'Accept: application/vnd.drupal-ajax';
+    if (!preg_grep('/^Accept:/', $headers)) {
+      $headers[] = 'Accept: application/vnd.drupal-ajax';
+    }
     return Json::decode($this->drupalGet($path, $options, $headers));
   }
 
@@ -1778,7 +1780,9 @@ abstract class WebTestBase extends TestBase {
     $content = $this->content;
     $drupal_settings = $this->drupalSettings;
 
-    $headers[] = 'Accept: application/vnd.drupal-ajax';
+    if (!preg_grep('/^Accept:/', $headers)) {
+      $headers[] = 'Accept: application/vnd.drupal-ajax';
+    }
 
     // Get the Ajax settings bound to the triggering element.
     if (!isset($ajax_settings)) {
