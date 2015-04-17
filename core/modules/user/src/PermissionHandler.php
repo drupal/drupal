@@ -227,9 +227,8 @@ class PermissionHandler implements PermissionHandlerInterface {
    */
   protected function getModuleNames() {
     $modules = array();
-    $module_info = $this->systemRebuildModuleData();
     foreach (array_keys($this->moduleHandler->getModuleList()) as $module) {
-      $modules[$module] = $module_info[$module]->info['name'];
+      $modules[$module] = $this->moduleHandler->getName($module);
     }
     asort($modules);
     return $modules;

@@ -30,6 +30,13 @@ class Permissions extends ManyToOne {
   protected $permissionHandler;
 
   /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * Constructs a Permissions object.
    *
    * @param array $configuration
@@ -40,11 +47,14 @@ class Permissions extends ManyToOne {
    *   The plugin implementation definition.
    * @param \Drupal\user\PermissionHandlerInterface $permission_handler
    *   The permission handler.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, PermissionHandlerInterface $permission_handler) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, PermissionHandlerInterface $permission_handler, ModuleHandlerInterface $module_handler) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->permissionHandler = $permission_handler;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -55,18 +65,17 @@ class Permissions extends ManyToOne {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('user.permissions')
+      $container->get('user.permissions'),
+      $container->get('module_handler')
     );
   }
 
   public function getValueOptions() {
     if (!isset($this->valueOptions)) {
-      $module_info = system_get_info('module');
-
       $permissions = $this->permissionHandler->getPermissions();
       foreach ($permissions as $perm => $perm_item) {
         $provider = $perm_item['provider'];
-        $display_name = $module_info[$provider]['name'];
+        $display_name = $this->moduleHandler->getName($provider);
         $this->valueOptions[$display_name][$perm] = SafeMarkup::checkPlain(strip_tags($perm_item['title']));
       }
     }

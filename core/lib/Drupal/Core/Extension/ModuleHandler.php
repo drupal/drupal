@@ -710,8 +710,8 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function getName($module) {
-    $module_data = system_rebuild_module_data();
-    return $module_data[$module]->info['name'];
+    $info = system_get_info('module', $module);
+    return isset($info['name']) ? $info['name'] : $module;
   }
 
 }

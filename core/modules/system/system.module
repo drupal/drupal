@@ -852,16 +852,29 @@ function system_check_directory($form_element, FormStateInterface $form_state) {
  * @see \Drupal\Core\Extension\ThemeHandlerInterface::rebuildThemeData()
  */
 function system_get_info($type, $name = NULL) {
-  $info = array();
   if ($type == 'module') {
-    $data = system_rebuild_module_data();
-    foreach (\Drupal::moduleHandler()->getModuleList() as $module => $filename) {
-      if (isset($data[$module])) {
-        $info[$module] = $data[$module]->info;
+    $info = &drupal_static(__FUNCTION__);
+    if (!isset($info)) {
+      if ($cache = \Drupal::cache()->get('system.module.info')) {
+        $info = $cache->data;
+      }
+      else {
+        $data = system_rebuild_module_data();
+        foreach (\Drupal::moduleHandler()->getModuleList() as $module => $filename) {
+          if (isset($data[$module])) {
+            $info[$module] = $data[$module]->info;
+          }
+        }
+        // Store the module information in cache. This cache is cleared by
+        // calling system_rebuild_module_data(), for example, when listing
+        // modules, (un)installing modules, importing configuration, updating
+        // the site and when flushing all the caches.
+        \Drupal::cache()->set('system.module.info', $info);
       }
     }
   }
   else {
+    $info = array();
     $list = system_list($type);
     foreach ($list as $shortname => $item) {
       if (!empty($item->status)) {
@@ -999,9 +1012,12 @@ function system_rebuild_module_data() {
     $modules = \Drupal::moduleHandler()->buildModuleDependencies($modules);
     $modules_cache = $modules;
 
-    // Store filenames to allow system_list() and drupal_get_filename() to
-    // retrieve them without having to rebuild or scan the filesystem.
+    // Store filenames to allow drupal_get_filename() to retrieve them without
+    // having to rebuild or scan the filesystem.
     \Drupal::state()->set('system.module.files', $files);
+    // Clear the module info cache.
+    \Drupal::cache()->delete('system.module.info');
+    drupal_static_reset('system_get_info');
   }
   return $modules_cache;
 }

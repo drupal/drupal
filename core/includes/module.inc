@@ -45,7 +45,7 @@ function system_list($type) {
     \Drupal::cache('bootstrap')->set('system_list', $lists);
   }
   // To avoid a separate database lookup for the filepath, prime the
-  // drupal_get_filename() static cache with all enabled modules and themes.
+  // drupal_get_filename() static cache with all enabled themes.
   foreach ($lists['filepaths'] as $item) {
     system_register($item['type'], $item['name'], $item['filepath']);
   }

@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Plugin\views\field;
 
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
@@ -34,19 +35,28 @@ class UserData extends FieldPluginBase {
   protected $userData;
 
   /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($configuration, $plugin_id, $plugin_definition, $container->get('user.data'));
+    return new static($configuration, $plugin_id, $plugin_definition, $container->get('user.data'), $container->get('module_handler'));
   }
 
   /**
    * Constructs a UserData object.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, UserDataInterface $user_data) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, UserDataInterface $user_data, ModuleHandlerInterface $module_handler) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->userData = $user_data;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -67,10 +77,10 @@ class UserData extends FieldPluginBase {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
-    $modules = system_get_info('module');
+    $modules = $this->moduleHandler->getModuleList();
     $names = array();
-    foreach ($modules as $name => $module) {
-      $names[$name] = $module['name'];
+    foreach (array_keys($modules) as $name) {
+      $names[$name] = $this->moduleHandler->getName($name);
     }
 
     $form['data_module'] = array(

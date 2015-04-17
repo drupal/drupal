@@ -92,7 +92,7 @@ function field_help($route_name, RouteMatchInterface $route_match) {
       // enabled, ordered by displayed module name (module names are not
       // translated).
       $items = array();
-      $info = system_get_info('module');
+      $modules = \Drupal::moduleHandler()->getModuleList();
       $widgets = \Drupal::service('plugin.manager.field.widget')->getDefinitions();
       $field_types = \Drupal::service('plugin.manager.field.field_type')->getUiDefinitions();
       $formatters = \Drupal::service('plugin.manager.field.formatter')->getDefinitions();
@@ -105,8 +105,8 @@ function field_help($route_name, RouteMatchInterface $route_match) {
       foreach ($providers as $provider) {
         // Skip plugins provided by core components as they do not implement
         // hook_help().
-        if (isset($info[$provider]['name'])) {
-          $display = $info[$provider]['name'];
+        if (isset($modules[$provider])) {
+          $display = \Drupal::moduleHandler()->getName($provider);
           if (\Drupal::moduleHandler()->implementsHook($provider, 'help')) {
             $items[] = \Drupal::l($display, new Url('help.page', array('name' => $provider)));
           }

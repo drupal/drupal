@@ -307,7 +307,8 @@ interface ModuleHandlerInterface {
    *   The machine name of the module which title should be shown.
    *
    * @return string
-   *   Returns the human readable name of the module.
+   *   Returns the human readable name of the module or the machine name passed
+   *   in if no matching module is found.
    */
   public function getName($module);
 
