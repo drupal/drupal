@@ -186,5 +186,10 @@ class PathLanguageTest extends PathTestBase {
     // Second call should return the same alias.
     $french_node_alias = $this->container->get('path.alias_manager')->getAliasByPath('node/' . $english_node_french_translation->id(), 'fr');
     $this->assertEqual($french_node_alias, $french_alias, 'Alias is the same.');
+
+    // Confirm that the alias is removed if the translation is deleted.
+    $english_node->removeTranslation('fr');
+    $english_node->save();
+    $this->assertFalse($this->container->get('path.alias_storage')->aliasExists($french_alias, 'fr'), 'Alias for French translation is removed when translation is deleted.');
   }
 }

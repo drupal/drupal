@@ -77,14 +77,6 @@ class ContentTranslationDeleteForm extends ConfirmFormBase {
     $this->entity->removeTranslation($this->language->getId());
     $this->entity->save();
 
-    // Remove any existing path alias for the removed translation.
-    // @todo This should be taken care of by the Path module.
-    if (\Drupal::moduleHandler()->moduleExists('path')) {
-      $path = $this->entity->urlInfo()->getInternalPath();
-      $conditions = array('source' => $path, 'langcode' => $this->language->getId());
-      \Drupal::service('path.alias_storage')->delete($conditions);
-    }
-
     $form_state->setRedirectUrl($this->getCancelUrl());
   }
 
