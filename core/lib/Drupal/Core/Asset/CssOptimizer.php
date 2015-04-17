@@ -124,6 +124,7 @@ class CssOptimizer implements AssetOptimizerInterface {
    * @param array $matches
    *   An array of matches by a preg_replace_callback() call that scans for
    *   @import-ed CSS files, except for external CSS files.
+   *
    * @return
    *   The contents of the CSS file at $matches[1], with corrected paths.
    *
@@ -220,6 +221,9 @@ class CssOptimizer implements AssetOptimizerInterface {
    * Note: the only reason this method is public is so color.module can call it;
    * it is not on the AssetOptimizerInterface, so future refactorings can make
    * it protected.
+   *
+   * @return string
+   *   The file path.
    */
   public function rewriteFileURI($matches) {
     // Prefix with base and remove '../' segments where possible.
