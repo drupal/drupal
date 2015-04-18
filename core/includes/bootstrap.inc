@@ -383,31 +383,32 @@ function _drupal_set_preferred_header_name($name = NULL) {
  * break up strings for translation.
  *
  * @section sec_translating_vars Translating Variables
- * You should never use t() to translate variables, such as calling
- * @code t($text); @endcode, unless the text that the variable holds has been
- * passed through t() elsewhere (e.g., $text is one of several translated
- * literal strings in an array). It is especially important never to call
- * @code t($user_text); @endcode, where $user_text is some text that a user
- * entered - doing that can lead to cross-site scripting and other security
- * problems. However, you can use variable substitution in your string, to put
- * variable text such as user names or link URLs into translated text. Variable
- * substitution looks like this:
+ * You should never use t() to translate variables, such as calling t($text)
+ * unless the text that the variable holds has been passed through t()
+ * elsewhere (e.g., $text is one of several translated literal strings in an
+ * array). It is especially important never to call t($user_text) where
+ * $user_text is some text that a user entered - doing that can lead to
+ * cross-site scripting and other security problems. However, you can use
+ * variable substitution in your string, to put variable text such as user
+ * names or link URLs into translated text. Variable substitution looks like
+ * this:
  * @code
  * $text = t("@name's blog", array('@name' => user_format_name($account)));
  * @endcode
  * Basically, you can put variables like @name into your string, and t() will
  * substitute their sanitized values at translation time. (See the
  * Localization API pages referenced above and the documentation of
- * format_string() for details about how to define variables in your string.)
- * Translators can then rearrange the string as necessary for the language
- * (e.g., in Spanish, it might be "blog de @name").
+ * \Drupal\Component\Utility\SafeMarkup::format() for details about how to
+ * define variables in your string.). Translators can then rearrange the string
+ * as necessary for the language (e.g., in Spanish, it might be "blog de
+ * @name").
  *
  * @param $string
  *   A string containing the English string to translate.
  * @param $args
  *   An associative array of replacements to make after translation. Based
  *   on the first character of the key, the value is escaped and/or themed.
- *   See format_string() for details.
+ *   See \Drupal\Component\Utility\SafeMarkup::format() for details.
  * @param $options
  *   An associative array of additional options, with the following elements:
  *   - 'langcode' (defaults to the current language): The language code to
@@ -418,7 +419,7 @@ function _drupal_set_preferred_header_name($name = NULL) {
  * @return
  *   The translated string.
  *
- * @see format_string()
+ * @see \Drupal\Component\Utility\SafeMarkup::format()
  * @ingroup sanitization
  */
 function t($string, array $args = array(), array $options = array()) {
