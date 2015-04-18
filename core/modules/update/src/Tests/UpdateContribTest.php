@@ -157,8 +157,8 @@ class UpdateContribTest extends UpdateTestBase {
     // Instead of just searching for 'BBB Update test' or something, we want
     // to use the full markup that starts the project entry itself, so that
     // we're really testing that the project listings are in the right order.
-    $bbb_project_link = '<div class="project"><a href="http://example.com/project/bbb_update_test">BBB Update test</a>';
-    $ccc_project_link = '<div class="project"><a href="http://example.com/project/ccc_update_test">CCC Update test</a>';
+    $bbb_project_link = '<div class="project-update__title"><a href="http://example.com/project/bbb_update_test">BBB Update test</a>';
+    $ccc_project_link = '<div class="project-update__title"><a href="http://example.com/project/ccc_update_test">CCC Update test</a>';
     $this->assertTrue(strpos($this->getRawContent(), $bbb_project_link) < strpos($this->getRawContent(), $ccc_project_link), "'BBB Update test' project is listed before the 'CCC Update test' project");
   }
 
@@ -327,7 +327,7 @@ class UpdateContribTest extends UpdateTestBase {
     // We need to check that this string is found as part of a project row,
     // not just in the "Failed to get available update data for ..." message
     // at the top of the page.
-    $this->assertRaw('<div class="version-status">' . t('Failed to get available update data'));
+    $this->assertRaw('<div class="project-update__status">' . t('Failed to get available update data'));
 
     // We should see the output messages from fetching manually.
     $this->assertUniqueText(t('Checked available update data for 3 projects.'));

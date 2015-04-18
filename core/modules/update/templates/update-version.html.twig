@@ -17,22 +17,22 @@
  * @ingroup themeable
  */
 #}
-<table class="{{ attributes.class }} version"{{ attributes|without('class') }}>
-  <tr>
-    <td class="version-title">{{ title }}</td>
-    <td class="version-details">
+<div class="{{ attributes.class }} project-update__version"{{ attributes|without('class') }}>
+  <div class="clearfix">
+    <div class="project-update__version-title layout-column quarter">{{ title }}</div>
+    <div class="project-update__version-details layout-column quarter">
       <a href="{{ version.release_link }}">{{ version.version }}</a>
-      <span class="version-date">({{ version.date|date('Y-M-d') }})</span>
-    </td>
-    <td class="version-links">
-      <ul class="links">
-        <li class="download">
+      <span class="project-update__version-date">({{ version.date|date('Y-M-d') }})</span>
+    </div>
+    <div class="layout-column half">
+      <ul class="project-update__version-links">
+        <li class="project-update__download-link">
           <a href="{{ version.download_link }}">{{ 'Download'|t }}</a>
         </li>
-        <li class="release-notes">
+        <li class="project-update__release-notes-link">
           <a href="{{ version.release_link }}">{{ 'Release notes'|t }}</a>
         </li>
       </ul>
-    </td>
-  </tr>
-</table>
+    </div>
+  </div>
+</div>

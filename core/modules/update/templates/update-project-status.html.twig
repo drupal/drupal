@@ -31,23 +31,25 @@
 #}
 {%
   set status_classes = [
-    project.status == constant('UPDATE_NOT_SECURE') ? 'security-error',
-    project.status == constant('UPDATE_REVOKED') ? 'revoked',
-    project.status == constant('UPDATE_NOT_SUPPORTED') ? 'not-supported',
-    project.status == constant('UPDATE_NOT_CURRENT') ? 'not-current',
-    project.status == constant('UPDATE_CURRENT') ? 'current',
+    project.status == constant('UPDATE_NOT_SECURE') ? 'project-update__status--security-error',
+    project.status == constant('UPDATE_REVOKED') ? 'project-update__status--revoked',
+    project.status == constant('UPDATE_NOT_SUPPORTED') ? 'project-update__status--not-supported',
+    project.status == constant('UPDATE_NOT_CURRENT') ? 'project-update__status--not-current',
+    project.status == constant('UPDATE_CURRENT') ? 'project-update__status--current',
   ]
 %}
-<div class="version-status">
+<div{{ status.attributes.addClass('project-update__status', status_classes) }}>
   {%- if status.label -%}
-    <span{{ status.attributes.addClass(status_classes) }}>{{ status.label }}</span>
+    <span>{{ status.label }}</span>
   {%- else -%}
     {{ status.reason }}
   {%- endif %}
-  <span class="icon">{{ status.icon }}</span>
+  <span class="project-update__status-icon">
+    {{ status.icon }}
+  </span>
 </div>
 
-<div class="project">
+<div class="project-update__title">
   {%- if url -%}
     <a href="{{ url }}">{{ title }}</a>
   {%- else -%}
@@ -55,16 +57,14 @@
   {%- endif %}
   {{ existing_version }}
   {% if install_type == 'dev' and datestamp %}
-    <span class="version-date">({{ datestamp }})</span>
+    <span class="project-update__version-date">({{ datestamp }})</span>
   {% endif %}
 </div>
 
 {% if versions %}
-  <div class="versions">
-    {% for version in versions %}
-      {{ version }}
-    {% endfor %}
-  </div>
+  {% for version in versions %}
+    {{ version }}
+  {% endfor %}
 {% endif %}
 
 {%
@@ -74,7 +74,7 @@
     project.status == constant('UPDATE_NOT_SUPPORTED') ? 'project-not-supported',
   ]
 %}
-<div class="info">
+<div class="project-updates__details">
   {% if extras %}
     <div class="extra">
       {% for extra in extras %}
@@ -84,45 +84,39 @@
       {% endfor %}
     </div>
   {% endif %}
-  <div class="includes">
-    {% set includes = includes|join(', ') %}
-    {% if disabled %}
-      {{ 'Includes:'|t }}
-      <ul>
-        <li class="first odd">
-          {% trans %}
-            Enabled: {{ includes|placeholder }}
-          {% endtrans %}
-        </li>
-        <li class="last even">
-          {% set disabled = disabled|join(', ') %}
-          {% trans %}
-            Disabled: {{ disabled|placeholder }}
-          {% endtrans %}
-        </li>
-      </ul>
-    {% else %}
-      {% trans %}
-        Includes: {{ includes|placeholder }}
-      {% endtrans %}
-    {% endif %}
-  </div>
+  {% set includes = includes|join(', ') %}
+  {% if disabled %}
+    {{ 'Includes:'|t }}
+    <ul>
+      <li>
+        {% trans %}
+          Enabled: {{ includes|placeholder }}
+        {% endtrans %}
+      </li>
+      <li>
+        {% set disabled = disabled|join(', ') %}
+        {% trans %}
+          Disabled: {{ disabled|placeholder }}
+        {% endtrans %}
+      </li>
+    </ul>
+  {% else %}
+    {% trans %}
+      Includes: {{ includes|placeholder }}
+    {% endtrans %}
+  {% endif %}
 
   {% if base_themes %}
     {% set basethemes = base_themes|join(', ') %}
-    <div class="basethemes">
-      {% trans %}
-        Depends on: {{ basethemes }}
-      {% endtrans %}
-    </div>
+    {% trans %}
+      Depends on: {{ basethemes }}
+    {% endtrans %}
   {% endif %}
 
   {% if sub_themes %}
     {% set subthemes = sub_themes|join(', ') %}
-    <div class="subthemes">
-      {% trans %}
-        Required by: {{ subthemes|placeholder }}
-      {% endtrans %}
-    </div>
+    {% trans %}
+      Required by: {{ subthemes|placeholder }}
+    {% endtrans %}
   {% endif %}
 </div>

@@ -28,7 +28,6 @@ global-styling:
       css/components/system-status-report.css: {}
       css/components/tabs.css: {}
       css/components/tour.theme.css: {}
-      css/components/update-status.css: {}
       css/components/views-ui.css: {}
     layout:
       css/layout/layout.css: {}

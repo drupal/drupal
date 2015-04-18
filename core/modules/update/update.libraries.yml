@@ -2,4 +2,4 @@ drupal.update.admin:
   version: VERSION
   css:
     theme:
-      css/update.admin.css: {}
+      css/update.admin.theme.css: {}

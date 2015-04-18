@@ -13,11 +13,11 @@
  * @ingroup themeable
  */
 #}
-<div class="update checked">
+<p>
   {% if last %}
     {{ 'Last checked: @time ago'|t({'@time': time}) }}
   {% else %}
     {{ 'Last checked: never'|t }}
   {% endif %}
-  <span class="check-manually">({{ link }})</span>
-</div>
+  ({{ link }})
+</p>
