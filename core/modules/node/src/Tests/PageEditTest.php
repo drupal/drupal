@@ -117,7 +117,11 @@ class PageEditTest extends NodeTestBase {
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
     $node_storage->resetCache(array($node->id()));
     $node = $node_storage->load($node->id());
-    $this->assertIdentical($node->getOwnerId(), '0', 'Node authored by anonymous user.');
+    $uid = $node->getOwnerId();
+    // Most SQL database drivers stringify fetches but entities are not
+    // necessarily stored in a SQL database. At the same time, NULL/FALSE/""
+    // won't do.
+    $this->assertTrue($uid === 0 || $uid === '0', 'Node authored by anonymous user.');
 
     // Change the authored by field to another user's name (that is not
     // logged in).
