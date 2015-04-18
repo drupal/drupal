@@ -123,6 +123,8 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
                 // from running together.
                 $data .= ";\n";
               }
+              // Remove unwanted JS code that cause issues.
+              $data = $this->optimizer->clean($data);
               // Dump the optimized JS for this group into an aggregate file.
               $uri = $this->dumper->dump($data, 'js');
               // Set the URI for this group's aggregate file.

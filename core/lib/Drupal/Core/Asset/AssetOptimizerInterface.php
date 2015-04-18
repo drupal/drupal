@@ -22,4 +22,15 @@ interface AssetOptimizerInterface {
    */
   public function optimize(array $asset);
 
+  /**
+   * Removes unwanted content from an asset.
+   *
+   * @param string $content
+   *   The content of an asset.
+   *
+   * @return string
+   *   The cleaned asset's contents.
+   */
+  public function clean($content);
+
 }

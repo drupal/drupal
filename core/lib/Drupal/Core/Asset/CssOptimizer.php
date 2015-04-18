@@ -40,10 +40,29 @@ class CssOptimizer implements AssetOptimizerInterface {
   }
 
   /**
+   * Processes the contents of a CSS asset for cleanup.
+   *
+   * @param string $contents
+   *   The contents of the CSS asset.
+   *
+   * @return string
+   *   Contents of the CSS asset.
+   */
+  public function clean($contents) {
+    // Remove multiple charset declarations for standards compliance (and fixing
+    // Safari problems).
+    $contents = preg_replace('/^@charset\s+[\'"](\S*?)\b[\'"];/i', '', $contents);
+
+    return $contents;
+  }
+
+  /**
    * Build aggregate CSS file.
    */
   protected function processFile($css_asset) {
     $contents = $this->loadFile($css_asset['data'], TRUE);
+
+    $contents = $this->clean($contents);
 
     // Get the parent directory of this file, relative to the Drupal root.
     $css_base_path = substr($css_asset['data'], 0, strrpos($css_asset['data'], '/'));
@@ -161,8 +180,8 @@ class CssOptimizer implements AssetOptimizerInterface {
    *   Contents of the stylesheet including the imported stylesheets.
    */
   protected function processCss($contents, $optimize = FALSE) {
-    // Remove multiple charset declarations for standards compliance (and fixing Safari problems).
-    $contents = preg_replace('/^@charset\s+[\'"](\S*?)\b[\'"];/i', '', $contents);
+    // Remove unwanted CSS code that cause issues.
+    $contents = $this->clean($contents);
 
     if ($optimize) {
       // Perform some safe CSS optimizations.
