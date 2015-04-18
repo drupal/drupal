@@ -109,21 +109,8 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
       return AccessResult::allowed()->cachePerPermissions()->cachePerUser()->cacheUntilEntityChanges($node);
     }
 
-    // If no module specified either ALLOW or KILL, we fall back to the
-    // node_access table.
-    $grants = $this->grantStorage->access($node, $operation, $langcode, $account);
-    if ($grants->isAllowed() || $grants->isForbidden()) {
-      return $grants;
-    }
-
-    // If no modules implement hook_node_grants(), the default behavior is to
-    // allow all users to view published nodes, so reflect that here.
-    if ($operation === 'view') {
-      return AccessResult::allowedIf($status)->cacheUntilEntityChanges($node);
-    }
-
-    // No opinion.
-    return AccessResult::neutral();
+    // Evaluate node grants.
+    return $this->grantStorage->access($node, $operation, $langcode, $account);
   }
 
   /**

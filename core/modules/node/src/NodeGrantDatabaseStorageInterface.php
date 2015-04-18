@@ -106,7 +106,12 @@ interface NodeGrantDatabaseStorageInterface {
    *   The user for which to check access.
    *
    * @return \Drupal\Core\Access\AccessResultInterface
-   *   The access result.
+   *   The access result, either allowed or neutral. If there are no node
+   *   grants, the default grant defined by writeDefault() is applied.
+   *
+   * @see hook_node_grants()
+   * @see hook_node_access_records()
+   * @see \Drupal\node\NodeGrantDatabaseStorageInterface::writeDefault()
    */
   public function access(NodeInterface $node, $operation, $langcode, AccountInterface $account);
 

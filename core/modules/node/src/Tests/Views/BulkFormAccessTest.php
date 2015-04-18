@@ -105,7 +105,7 @@ class BulkFormAccessTest extends NodeTestBase {
 
     // Create an account that may view the private node, but can update the
     // status.
-    $account = $this->drupalCreateUser(array('administer nodes', 'edit any article content', 'node test view'));
+    $account = $this->drupalCreateUser(array('administer nodes', 'node test view'));
     $this->drupalLogin($account);
 
     // Ensure the node is published.
