@@ -1280,7 +1280,7 @@ services:
     class: Drupal\Core\Asset\AssetDumper
   library.discovery:
     class: Drupal\Core\Asset\LibraryDiscovery
-    arguments: ['@library.discovery.collector', '@cache_tags.invalidator', '@module_handler', '@theme.manager']
+    arguments: ['@library.discovery.collector', '@cache_tags.invalidator']
   library.discovery.collector:
     class: Drupal\Core\Asset\LibraryDiscoveryCollector
     arguments: ['@cache.discovery', '@lock', '@library.discovery.parser', '@theme.manager']

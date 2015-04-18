@@ -32,20 +32,6 @@ class LibraryDiscovery implements LibraryDiscoveryInterface {
   protected $cacheTagInvalidator;
 
   /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The theme manager.
-   *
-   * @var \Drupal\Core\Theme\ThemeManagerInterface
-   */
-  protected $themeManager;
-
-  /**
    * The final library definitions, statically cached.
    *
    * hook_library_info_alter() and hook_js_settings_alter() allows modules
@@ -67,11 +53,9 @@ class LibraryDiscovery implements LibraryDiscoveryInterface {
    * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
    *   The theme manager.
    */
-  public function __construct(CacheCollectorInterface $library_discovery_collector, CacheTagsInvalidatorInterface $cache_tag_invalidator, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager) {
+  public function __construct(CacheCollectorInterface $library_discovery_collector, CacheTagsInvalidatorInterface $cache_tag_invalidator) {
     $this->collector = $library_discovery_collector;
     $this->cacheTagInvalidator = $cache_tag_invalidator;
-    $this->moduleHandler = $module_handler;
-    $this->themeManager = $theme_manager;
   }
 
   /**
@@ -85,8 +69,6 @@ class LibraryDiscovery implements LibraryDiscoveryInterface {
         // Allow modules and themes to dynamically attach request and context
         // specific data for this library; e.g., localization.
         $library_name = "$extension/$name";
-        $this->moduleHandler->alter('library', $definition, $library_name);
-        $this->themeManager->alter('library', $definition, $library_name);
         $this->libraryDefinitions[$extension][$name] = $definition;
       }
     }

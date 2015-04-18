@@ -31,20 +31,6 @@ class LibraryDiscoveryTest extends UnitTestCase {
   protected $libraryDiscoveryCollector;
 
   /**
-   * The mocked module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $moduleHandler;
-
-  /**
-   * The mocked theme manager.
-   *
-   * @var \Drupal\Core\Theme\ThemeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $themeManager;
-
-  /**
    * The cache tags invalidator.
    *
    * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -81,9 +67,7 @@ class LibraryDiscoveryTest extends UnitTestCase {
     $this->libraryDiscoveryCollector = $this->getMockBuilder('Drupal\Core\Asset\LibraryDiscoveryCollector')
       ->disableOriginalConstructor()
       ->getMock();
-    $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
-    $this->themeManager = $this->getMock('Drupal\Core\Theme\ThemeManagerInterface');
-    $this->libraryDiscovery = new LibraryDiscovery($this->libraryDiscoveryCollector, $this->cacheTagsInvalidator, $this->moduleHandler, $this->themeManager);
+    $this->libraryDiscovery = new LibraryDiscovery($this->libraryDiscoveryCollector, $this->cacheTagsInvalidator);
   }
 
   /**
@@ -94,20 +78,6 @@ class LibraryDiscoveryTest extends UnitTestCase {
       ->method('get')
       ->with('test')
       ->willReturn($this->libraryData);
-    $this->moduleHandler->expects($this->exactly(2))
-      ->method('alter')
-      ->with(
-        'library',
-        $this->logicalOr($this->libraryData['test_1'], $this->libraryData['test_2']),
-        $this->logicalOr('test/test_1', 'test/test_2')
-      );
-    $this->themeManager->expects($this->exactly(2))
-      ->method('alter')
-      ->with(
-        'library',
-        $this->logicalOr($this->libraryData['test_1'], $this->libraryData['test_2']),
-        $this->logicalOr('test/test_1', 'test/test_2')
-      );
 
     $this->libraryDiscovery->getLibrariesbyExtension('test');
     // Verify that subsequent calls don't trigger hook_library_info_alter()
