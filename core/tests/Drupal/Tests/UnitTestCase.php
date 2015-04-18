@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests;
 
+use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Utility\Random;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -40,6 +41,10 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
     // Ensure that an instantiated container in the global state of \Drupal from
     // a previous test does not leak into this test.
     \Drupal::unsetContainer();
+
+    // Ensure that the NullFileCache implementation is used for the FileCache as
+    // unit tests should not be relying on caches implicitly.
+    FileCacheFactory::setConfiguration(['default' => ['class' => '\Drupal\Component\FileCache\NullFileCache']]);
 
     $this->root = dirname(dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__))));
   }
