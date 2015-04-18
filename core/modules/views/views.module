@@ -209,10 +209,6 @@ function views_theme($existing, $type, $theme, $path) {
     'render element' => 'form',
   );
 
-  $hooks['views_more'] = $base + array(
-    'variables' => array('more_url' => NULL, 'link_text' => 'more', 'view' => NULL),
-  );
-
   return $hooks;
 }
 
@@ -275,6 +271,15 @@ function views_theme_suggestions_comment_alter(array &$suggestions, array $varia
     if (!empty($comment->view->current_display)) {
       $suggestions[] = 'comment__view__' . $comment->view->storage->id() . '__' . $comment->view->current_display;
     }
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function views_theme_suggestions_container_alter(array &$suggestions, array $variables) {
+  if (!empty($variables['element']['#type']) && $variables['element']['#type'] == 'more_link' && !empty($variables['element']['#view']) && $variables['element']['#view'] instanceof \Drupal\views\ViewExecutable) {
+    $suggestions = array_merge($suggestions, $variables['element']['#view']->buildThemeFunctions('container__more_link'));
   }
 }
 

@@ -2100,12 +2100,11 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
           $url_options['query'] = $this->view->exposed_raw_input;
         }
         $url->setOptions($url_options);
-        $theme = $this->view->buildThemeFunctions('views_more');
 
         return array(
-          '#theme' => $theme,
-          '#more_url' => $url->toString(),
-          '#link_text' => SafeMarkup::checkPlain($this->useMoreText()),
+          '#type' => 'more_link',
+          '#url' => $url,
+          '#title' => $this->useMoreText(),
           '#view' => $this->view,
         );
       }
