@@ -5,8 +5,20 @@ form {
   margin: 0;
   padding: 0;
 }
-fieldset {
+fieldset:not(.fieldgroup) {
+  background-color: #fcfcfa;
+  border-radius: 2px;
   margin: 1em 0;
+  padding: 30px 18px 18px;
+  position: relative;
+}
+fieldset:not(.fieldgroup) legend {
+  font-size: 1em;
+  font-weight: bold;
+  letter-spacing: 0.08em;
+  position: absolute;
+  text-transform: uppercase;
+  top: 10px;
 }
 .fieldgroup {
   min-width: 0;
