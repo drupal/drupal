@@ -114,6 +114,13 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   protected $pluginManager;
 
   /**
+   * The renderer.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(array $values, $entity_type) {
@@ -124,6 +131,8 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
     if (!$this->entityManager()->getDefinition($values['targetEntityType'])->isSubclassOf('\Drupal\Core\Entity\FieldableEntityInterface')) {
       throw new \InvalidArgumentException('EntityDisplay entities can only handle fieldable entity types.');
     }
+
+    $this->renderer = \Drupal::service('renderer');
 
     // A plugin manager and a context type needs to be set by extending classes.
     if (!isset($this->pluginManager)) {

@@ -339,13 +339,24 @@ abstract class AccessResult implements AccessResultInterface, CacheableDependenc
    * {@inheritdoc}
    */
   public function orIf(AccessResultInterface $other) {
+    $merge_other = FALSE;
     // $other's cacheability metadata is merged if $merge_other gets set to TRUE
-    // and this happens in two cases:
+    // and this happens in three cases:
     // 1. $other's access result is the one that determines the combined access
     //    result.
     // 2. This access result is not cacheable and $other's access result is the
     //    same. i.e. attempt to return a cacheable access result.
-    $merge_other = FALSE;
+    // 3. Neither access result is 'forbidden' and both are cacheable: inherit
+    //    the other's cacheability metadata because it may turn into a
+    //    'forbidden' for another value of the cache contexts in the
+    //    cacheability metadata. In other words: this is necessary to respect
+    //    the contagious nature of the 'forbidden' access result.
+    //    e.g. we have two access results A and B. Neither is forbidden. A is
+    //    globally cacheable (no cache contexts). B is cacheable per role. If we
+    //    don't have merging case 3, then A->orIf(B) will be globally cacheable,
+    //    which means that even if a user of a different role logs in, the
+    //    cached access result will be used, even though for that other role, B
+    //    is forbidden!
     if ($this->isForbidden() || $other->isForbidden()) {
       $result = static::forbidden();
       if (!$this->isForbidden() || ($this->getCacheMaxAge() === 0 && $other->isForbidden())) {
@@ -354,13 +365,13 @@ abstract class AccessResult implements AccessResultInterface, CacheableDependenc
     }
     elseif ($this->isAllowed() || $other->isAllowed()) {
       $result = static::allowed();
-      if (!$this->isAllowed() || ($this->getCacheMaxAge() === 0 && $other->isAllowed())) {
+      if (!$this->isAllowed() || ($this->getCacheMaxAge() === 0 && $other->isAllowed()) || ($this->getCacheMaxAge() !== 0 && $other instanceof CacheableDependencyInterface && $other->getCacheMaxAge() !== 0)) {
         $merge_other = TRUE;
       }
     }
     else {
       $result = static::neutral();
-      if (!$this->isNeutral() || ($this->getCacheMaxAge() === 0 && $other->isNeutral())) {
+      if (!$this->isNeutral() || ($this->getCacheMaxAge() === 0 && $other->isNeutral()) || ($this->getCacheMaxAge() !== 0 && $other instanceof CacheableDependencyInterface && $other->getCacheMaxAge() !== 0)) {
         $merge_other = TRUE;
       }
     }

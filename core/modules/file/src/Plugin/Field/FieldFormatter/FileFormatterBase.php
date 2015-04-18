@@ -7,6 +7,8 @@
 
 namespace Drupal\file\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceFormatterBase;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 
@@ -25,11 +27,16 @@ abstract class FileFormatterBase extends EntityReferenceFormatterBase {
   /**
    * {@inheritdoc}
    */
-  protected function needsAccessCheck(EntityReferenceItem $item) {
+  protected function checkAccess(EntityInterface $entity) {
     // Only check access if the current file access control handler explicitly
     // opts in by implementing FileAccessFormatterControlHandlerInterface.
-    $access_handler_class = $item->entity->getEntityType()->getHandlerClass('access');
-    return is_subclass_of($access_handler_class, '\Drupal\file\FileAccessFormatterControlHandlerInterface');
+    $access_handler_class = $entity->getEntityType()->getHandlerClass('access');
+    if (is_subclass_of($access_handler_class, '\Drupal\file\FileAccessFormatterControlHandlerInterface')) {
+      return $entity->access('view', NULL, TRUE);
+    }
+    else {
+      return AccessResult::allowed();
+    }
   }
 
 }

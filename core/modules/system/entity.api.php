@@ -1844,6 +1844,7 @@ function hook_entity_field_access($operation, \Drupal\Core\Field\FieldDefinition
   if ($field_definition->getName() == 'field_of_interest' && $operation == 'edit') {
     return AccessResult::allowedIfHasPermission($account, 'update field of interest');
   }
+  return AccessResult::neutral();
 }
 
 /**

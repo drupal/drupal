@@ -660,7 +660,7 @@ interface EntityTypeInterface {
    *
    * Enables code listing entities of this type to ensure that rendered listings
    * are varied as necessary, typically to ensure users of role A see other
-   * entities listed as users of role B.
+   * entities listed than users of role B.
    *
    * @return string[]
    */

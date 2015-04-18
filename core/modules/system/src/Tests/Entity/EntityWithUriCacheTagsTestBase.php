@@ -32,7 +32,7 @@ abstract class EntityWithUriCacheTagsTestBase extends EntityCacheTagsTestBase {
     $view_mode = $this->selectViewMode($entity_type);
 
     // The default cache contexts for rendered entities.
-    $entity_cache_contexts = ['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme', 'user.roles'];
+    $entity_cache_contexts = ['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme'];
 
     // Generate the standardized entity cache tags.
     $cache_tag = $this->entity->getCacheTags();
@@ -51,7 +51,11 @@ abstract class EntityWithUriCacheTagsTestBase extends EntityCacheTagsTestBase {
     if (\Drupal::entityManager()->getDefinition($entity_type)->isRenderCacheable()) {
       $cache_keys = ['entity_view', $entity_type, $this->entity->id(), $view_mode];
       $cid = $this->createCacheId($cache_keys, $entity_cache_contexts);
-      $redirected_cid = $this->createRedirectedCacheId($cache_keys, $entity_cache_contexts);
+      $redirected_cid = NULL;
+      $additional_cache_contexts = $this->getAdditionalCacheContextsForEntity($this->entity);
+      if (count($additional_cache_contexts)) {
+        $redirected_cid = $this->createCacheId($cache_keys, Cache::mergeContexts($entity_cache_contexts, $additional_cache_contexts));
+      }
       $expected_cache_tags = Cache::mergeTags($cache_tag, $view_cache_tag, $this->getAdditionalCacheTagsForEntity($this->entity), array($render_cache_tag));
       $this->verifyRenderCache($cid, $expected_cache_tags, $redirected_cid);
     }

@@ -218,9 +218,9 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
 
     // Invoke hook_entity_create_access() and hook_ENTITY_TYPE_create_access().
     // Hook results take precedence over overridden implementations of
-    // EntityAccessControlHandler::checkAccess(). Entities that have checks that
-    // need to be done before the hook is invoked should do so by overriding
-    // this method.
+    // EntityAccessControlHandler::checkCreateAccess(). Entities that have
+    // checks that need to be done before the hook is invoked should do so by
+    // overriding this method.
 
     // We grant access to the entity if both of these conditions are met:
     // - No modules say to deny access.

@@ -174,11 +174,6 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
       ),
     );
 
-     // @todo Remove when https://www.drupal.org/node/2099137 lands.
-     $build['#cache']['contexts'] = Cache::mergeContexts($build['#cache']['contexts'], [
-       'user.roles',
-     ]);
-
     // Cache the rendered output if permitted by the view mode and global entity
     // type configuration.
     if ($this->isViewModeCacheable($view_mode) && !$entity->isNew() && $entity->isDefaultRevision() && $this->entityType->isRenderCacheable()) {

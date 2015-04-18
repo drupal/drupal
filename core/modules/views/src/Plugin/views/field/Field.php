@@ -18,6 +18,7 @@ use Drupal\Core\Form\FormHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -731,26 +732,22 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
     );
     $render_array = $entity->get($this->definition['field_name'])->view($display);
 
-    $items = array();
     if ($this->options['field_api_classes']) {
       return array(array('rendered' => $this->renderer->render($render_array)));
     }
 
-    foreach (Element::children($render_array) as $count) {
-      $items[$count]['rendered'] = $render_array[$count];
-      // FieldItemListInterface::view() adds an #access property to the render
-      // array that determines whether or not the current user is allowed to
-      // view the field in the context of the current entity. We need to respect
-      // this parameter when we pull out the children of the field array for
-      // rendering.
-      if (isset($render_array['#access'])) {
-        $items[$count]['rendered']['#access'] = $render_array['#access'];
+    $items = array();
+    foreach (Element::children($render_array) as $delta) {
+      $items[$delta]['rendered'] = $render_array[$delta];
+      // Merge the cacheability metadata of the top-level render array into
+      // each child because they will most likely be rendered individually.
+      if (isset($render_array['#cache'])) {
+        BubbleableMetadata::createFromRenderArray($render_array)
+          ->merge(BubbleableMetadata::createFromRenderArray($items[$delta]['rendered']))
+          ->applyTo($items[$delta]['rendered']);
       }
-      // Only add the raw field items (for use in tokens) if the current user
-      // has access to view the field content.
-      if ((!isset($items[$count]['rendered']['#access']) || $items[$count]['rendered']['#access']) && !empty($render_array['#items'][$count])) {
-        $items[$count]['raw'] = $render_array['#items'][$count];
-      }
+      // Add the raw field items (for use in tokens).
+      $items[$delta]['raw'] = $render_array['#items'][$delta];
     }
     return $items;
   }

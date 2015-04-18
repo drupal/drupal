@@ -34,13 +34,6 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
   protected $displayContext = 'form';
 
   /**
-   * The renderer.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
    * Returns the entity_form_display object used to build an entity form.
    *
    * Depending on the configuration of the form mode for the entity bundle, this
@@ -122,7 +115,6 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
    */
   public function __construct(array $values, $entity_type) {
     $this->pluginManager = \Drupal::service('plugin.manager.field.widget');
-    $this->renderer = \Drupal::service('renderer');
 
     parent::__construct($values, $entity_type);
   }

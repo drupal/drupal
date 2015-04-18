@@ -81,6 +81,18 @@ class CommentCacheTagsTest extends EntityWithUriCacheTagsTestBase {
     return $comment;
   }
 
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getAdditionalCacheContextsForEntity(EntityInterface $entity) {
+    return [
+      // Field access for the user picture rendered as part of the node that
+      // this comment is created on.
+      'user.permissions',
+    ];
+  }
+
   /**
    * {@inheritdoc}
    *

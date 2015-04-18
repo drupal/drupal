@@ -290,7 +290,6 @@ class FrontPageTest extends ViewTestBase {
     }
     $cache_contexts = Cache::mergeContexts($cache_contexts, [
       'timezone',
-      'user.roles'
     ]);
 
     // First page.

@@ -797,6 +797,37 @@ class AccessResultTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::orIf
+   *
+   * Tests the special case of ORing non-forbidden access results that are both
+   * cacheable but have different cacheability metadata.
+   * This is only the case for non-forbidden access results; we still abort the
+   * ORing process as soon as a forbidden access result is encountered. This is
+   * tested in ::testOrIf().
+   */
+  public function testOrIfCacheabilityMerging() {
+    $merge_both_directions = function(AccessResult $a, AccessResult $b) {
+      // A globally cacheable access result.
+      $a->setCacheMaxAge(3600);
+      // Another access result that is cacheable per permissions.
+      $b->setCacheMaxAge(86400)->cachePerPermissions();
+
+      $r1 = $a->orIf($b);
+      $this->assertTrue($r1->getCacheMaxAge() === 3600);
+      $this->assertSame(['user.permissions'], $r1->getCacheContexts());
+      $r2 = $b->orIf($a);
+      $this->assertTrue($r2->getCacheMaxAge() === 3600);
+      $this->assertSame(['user.permissions'], $r2->getCacheContexts());
+    };
+
+    // Merge either direction, get the same result.
+    $merge_both_directions(AccessResult::allowed(), AccessResult::allowed());
+    $merge_both_directions(AccessResult::allowed(), AccessResult::neutral());
+    $merge_both_directions(AccessResult::neutral(), AccessResult::neutral());
+    $merge_both_directions(AccessResult::neutral(), AccessResult::allowed());
+  }
+
+  /**
    * Tests allowedIfHasPermissions().
    *
    * @covers ::allowedIfHasPermissions

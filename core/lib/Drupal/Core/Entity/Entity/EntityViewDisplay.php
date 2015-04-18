@@ -238,8 +238,11 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
         // Then let the formatter build the output for each entity.
         foreach ($entities as $id => $entity) {
           $items = $grouped_items[$id];
-          $build_list[$id][$name] = $formatter->view($items);
-          $build_list[$id][$name]['#access'] = $items->access('view');
+          /** @var \Drupal\Core\Access\AccessResultInterface $field_access */
+          $field_access = $items->access('view', NULL, TRUE);
+          $build_list[$id][$name] = $field_access->isAllowed() ? $formatter->view($items) : [];
+          // Apply the field access cacheability metadata to the render array.
+          $this->renderer->addDependency($build_list[$id][$name], $field_access);
         }
       }
     }

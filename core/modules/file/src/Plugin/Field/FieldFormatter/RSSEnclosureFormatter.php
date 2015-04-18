@@ -39,6 +39,7 @@ class RSSEnclosureFormatter extends FileFormatterBase {
         ),
       );
     }
+    return [];
   }
 
 }

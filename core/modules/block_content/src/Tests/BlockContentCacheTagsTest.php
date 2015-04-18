@@ -55,6 +55,15 @@ class BlockContentCacheTagsTest extends EntityCacheTagsTestBase {
   /**
    * {@inheritdoc}
    *
+   * @see \Drupal\block_content\BlockContentAccessControlHandler::checkAccess()
+   */
+  protected function getAccessCacheContextsForEntity(EntityInterface $entity) {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   *
    * Each comment must have a comment body, which always has a text format.
    */
   protected function getAdditionalCacheTagsForEntity(EntityInterface $entity) {
@@ -86,12 +95,12 @@ class BlockContentCacheTagsTest extends EntityCacheTagsTestBase {
 
     // Expected contexts and tags for the BlockContent entity.
     // @see \Drupal\Core\Entity\EntityViewBuilder::getBuildDefaults().
-    $expected_entity_cache_contexts = ['theme', 'user.roles'];
+    $expected_entity_cache_contexts = ['theme'];
     $expected_entity_cache_tags = Cache::mergeTags(['block_content_view'], $this->entity->getCacheTags(), $this->getAdditionalCacheTagsForEntity($this->entity));
 
     // Verify that what was render cached matches the above expectations.
     $cid = $this->createCacheId($expected_block_cache_keys, $expected_block_cache_contexts);
     $redirected_cid = $this->createCacheId($expected_block_cache_keys, Cache::mergeContexts($expected_block_cache_contexts, $expected_entity_cache_contexts));
-    $this->verifyRenderCache($cid, Cache::mergeTags($expected_block_cache_tags, $expected_entity_cache_tags), $redirected_cid);
+    $this->verifyRenderCache($cid, Cache::mergeTags($expected_block_cache_tags, $expected_entity_cache_tags), ($cid !== $redirected_cid) ? $redirected_cid : NULL);
   }
 }

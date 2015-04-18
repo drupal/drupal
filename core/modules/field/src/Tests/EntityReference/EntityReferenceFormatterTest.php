@@ -10,6 +10,7 @@ namespace Drupal\field\Tests\EntityReference;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
@@ -218,26 +219,44 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
     // The 'link' settings is TRUE by default.
     $build = $this->buildRenderArray([$this->referencedEntity, $this->unsavedReferencedEntity], $formatter);
 
+    $expected_field_cacheability = [
+      'contexts' => [],
+      'tags' => [],
+      'max-age' => Cache::PERMANENT,
+    ];
+    $this->assertEqual($build['#cache'], $expected_field_cacheability, 'The field render array contains the entity access cacheability metadata');
     $expected_item_1 = array(
       '#type' => 'link',
       '#title' => $this->referencedEntity->label(),
       '#url' => $this->referencedEntity->urlInfo(),
       '#options' => $this->referencedEntity->urlInfo()->getOptions(),
       '#cache' => array(
+        'contexts' => [
+          'user.permissions',
+        ],
         'tags' => $this->referencedEntity->getCacheTags(),
       ),
+      '#attached' => [],
+      '#post_render_cache' => [],
     );
     $this->assertEqual(drupal_render($build[0]), drupal_render($expected_item_1), sprintf('The markup returned by the %s formatter is correct for an item with a saved entity.', $formatter));
+    $this->assertEqual(BubbleableMetadata::createFromRenderArray($build[0]), BubbleableMetadata::createFromRenderArray($expected_item_1));
 
     // The second referenced entity is "autocreated", therefore not saved and
     // lacking any URL info.
     $expected_item_2 = array(
       '#markup' => $this->unsavedReferencedEntity->label(),
       '#cache' => array(
+        'contexts' => [
+          'user.permissions',
+        ],
         'tags' => $this->unsavedReferencedEntity->getCacheTags(),
+        'max-age' => Cache::PERMANENT,
       ),
+      '#attached' => [],
+      '#post_render_cache' => [],
     );
-    $this->assertEqual($build[1], $expected_item_2, sprintf('The markup returned by the %s formatter is correct for an item with a unsaved entity.', $formatter));
+    $this->assertEqual($build[1], $expected_item_2, sprintf('The render array returned by the %s formatter is correct for an item with a unsaved entity.', $formatter));
 
     // Test with the 'link' setting set to FALSE.
     $build = $this->buildRenderArray([$this->referencedEntity, $this->unsavedReferencedEntity], $formatter, array('link' => FALSE));
