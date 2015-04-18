@@ -264,8 +264,6 @@ services:
   config.storage.schema:
     class: Drupal\Core\Config\ExtensionInstallStorage
     arguments: ['@config.storage', 'config/schema']
-  config.storage.installer:
-    class: Drupal\Core\Config\InstallStorage
   config.typed:
     class: Drupal\Core\Config\TypedConfigManager
     arguments: ['@config.storage', '@config.storage.schema', '@cache.discovery', '@module_handler']

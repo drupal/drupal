@@ -9,6 +9,7 @@ namespace Drupal\locale;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\StringTranslation\TranslationWrapper;
@@ -43,13 +44,6 @@ class LocaleConfigManager {
    * @var \Drupal\Core\Config\StorageInterface
    */
   protected $configStorage;
-
-  /**
-   * The storage instance for reading default configuration data.
-   *
-   * @var \Drupal\Core\Config\StorageInterface
-   */
-  protected $installStorage;
 
   /**
    * The string storage for reading and writing translations.
@@ -96,13 +90,17 @@ class LocaleConfigManager {
   protected $isUpdatingFromLocale = FALSE;
 
   /**
+   * The locale default config storage instance.
+   *
+   * @var \Drupal\locale\LocaleDefaultConfigStorage
+   */
+  protected $defaultConfigStorage;
+
+  /**
    * Creates a new typed configuration manager.
    *
    * @param \Drupal\Core\Config\StorageInterface $config_storage
    *   The storage object to use for reading configuration data.
-   * @param \Drupal\Core\Config\StorageInterface $install_storage
-   *   The storage object to use for reading default configuration
-   *   data.
    * @param \Drupal\locale\StringStorageInterface $locale_storage
    *   The locale storage to use for reading string translations.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -111,14 +109,16 @@ class LocaleConfigManager {
    *   The typed configuration manager.
    * @param \Drupal\language\ConfigurableLanguageManagerInterface $language_manager
    *   The language manager.
+   * @param \Drupal\locale\LocaleDefaultConfigStorage $default_config_storage
+   *   The locale default configuration storage.
    */
-  public function __construct(StorageInterface $config_storage, StorageInterface $install_storage, StringStorageInterface $locale_storage, ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typed_config, ConfigurableLanguageManagerInterface $language_manager) {
+  public function __construct(StorageInterface $config_storage, StringStorageInterface $locale_storage, ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typed_config, ConfigurableLanguageManagerInterface $language_manager, LocaleDefaultConfigStorage $default_config_storage) {
     $this->configStorage = $config_storage;
-    $this->installStorage = $install_storage;
     $this->localeStorage = $locale_storage;
     $this->configFactory = $config_factory;
     $this->typedConfigManager = $typed_config;
     $this->languageManager = $language_manager;
+    $this->defaultConfigStorage = $default_config_storage;
   }
 
   /**
@@ -133,7 +133,7 @@ class LocaleConfigManager {
   public function getTranslatableDefaultConfig($name) {
     if ($this->isSupported($name)) {
       // Create typed configuration wrapper based on install storage data.
-      $data = $this->installStorageRead($name);
+      $data = $this->defaultConfigStorage->read($name);
       $type_definition = $this->typedConfigManager->getDefinition($name);
       $data_definition = $this->typedConfigManager->buildDataDefinition($type_definition, $data);
       $typed_config = $this->typedConfigManager->create($data_definition, $data);
@@ -293,12 +293,12 @@ class LocaleConfigManager {
       foreach ($components as $type => $list) {
         // InstallStorage::getComponentNames returns a list of folders keyed by
         // config name.
-        $names = array_merge($names, $this->installStorageComponents($type, $list));
+        $names = array_merge($names, $this->defaultConfigStorage->getComponentNames($type, $list));
       }
       return $names;
     }
     else {
-      return $this->installStorageAll();
+      return $this->defaultConfigStorage->listAll();
     }
   }
 
@@ -474,7 +474,7 @@ class LocaleConfigManager {
    *   configuration exists.
    */
   public function getDefaultConfigLangcode($name) {
-    $shipped = $this->installStorageRead($name);
+    $shipped = $this->defaultConfigStorage->read($name);
     if (!empty($shipped)) {
       return !empty($shipped['langcode']) ? $shipped['langcode'] : 'en';
     }
@@ -633,83 +633,6 @@ class LocaleConfigManager {
       }
     }
     return $filtered_data;
-  }
-
-  /**
-   * Read a configuration from install storage or default languages.
-   *
-   * @param string $name
-   *   Configuration object name.
-   *
-   * @return array
-   *   Configuration data from install storage or default language.
-   */
-  protected function installStorageRead($name) {
-    if ($this->installStorage->exists($name)) {
-      return $this->installStorage->read($name);
-    }
-    elseif (strpos($name, 'language.entity.') === 0) {
-      // Simulate default languages as if they were shipped as default
-      // configuration.
-      $langcode = str_replace('language.entity.', '', $name);
-      $predefined_languages = $this->languageManager->getStandardLanguageList();
-      if (isset($predefined_languages[$langcode])) {
-        $data = $this->configStorage->read($name);
-        $data['label'] = $predefined_languages[$langcode][0];
-        return $data;
-      }
-    }
-  }
-
-  /**
-   * Return the list of configuration in install storage and current languages.
-   *
-   * @return array
-   *   List of configuration in install storage and current languages.
-   */
-  protected function installStorageAll() {
-    $languages = $this->predefinedConfiguredLanguages();
-    return array_unique(array_merge($this->installStorage->listAll(), $languages));
-  }
-
-  /**
-   * Get all configuration names and folders for a list of modules or themes.
-   *
-   * @param string $type
-   *   Type of components: 'module' | 'theme' | 'profile'
-   * @param array $list
-   *   Array of theme or module names.
-   *
-   * @return array
-   *   Configuration names provided by that component. In case of language
-   *   module this list is extended with configured languages that have
-   *   predefined names as well.
-   */
-  protected function installStorageComponents($type, array $list) {
-    $names = array_keys($this->installStorage->getComponentNames($type, $list));
-    if ($type == 'module' && in_array('language', $list)) {
-      $languages = $this->predefinedConfiguredLanguages();
-      $names = array_unique(array_merge($names, $languages));
-    }
-    return $names;
-  }
-
-  /**
-   * Compute the list of configuration names that match predefined languages.
-   *
-   * @return array
-   *   The list of configuration names that match predefined languages.
-   */
-  protected function predefinedConfiguredLanguages() {
-    $names = $this->configStorage->listAll('language.entity.');
-    $predefined_languages = $this->languageManager->getStandardLanguageList();
-    foreach ($names as $id => $name) {
-      $langcode = str_replace('language.entity.', '', $name);
-      if (!isset($predefined_languages[$langcode])) {
-        unset($names[$id]);
-      }
-    }
-    return array_values($names);
   }
 
 }

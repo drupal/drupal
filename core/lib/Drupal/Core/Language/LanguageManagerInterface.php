@@ -208,4 +208,19 @@ interface LanguageManagerInterface {
    */
   public function getConfigOverrideLanguage();
 
+  /**
+   * Some common languages with their English and native names.
+   *
+   * Language codes are defined by the W3C language tags document for
+   * interoperability. Language codes typically have a language and, optionally,
+   * a script or regional variant name. See:
+   * http://www.w3.org/International/articles/language-tags/ for more
+   * information.
+   *
+   * @return array
+   *   An array of language code to language name information. Language name
+   *   information itself is an array of English and native names.
+   */
+  public static function getStandardLanguageList();
+
 }

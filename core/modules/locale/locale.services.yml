@@ -1,7 +1,11 @@
 services:
+  locale.default.config.storage:
+    class: Drupal\locale\LocaleDefaultConfigStorage
+    arguments: ['@config.storage', '@language_manager']
+    public: false
   locale.config_manager:
     class: Drupal\locale\LocaleConfigManager
-    arguments: ['@config.storage', '@config.storage.installer', '@locale.storage', '@config.factory', '@config.typed', '@language_manager']
+    arguments: ['@config.storage', '@locale.storage', '@config.factory', '@config.typed', '@language_manager', '@locale.default.config.storage']
   locale.storage:
     class: Drupal\locale\StringDatabaseStorage
     arguments: ['@database']

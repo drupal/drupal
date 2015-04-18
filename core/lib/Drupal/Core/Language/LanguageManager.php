@@ -233,27 +233,16 @@ class LanguageManager implements LanguageManagerInterface {
   }
 
   /**
-   * Some common languages with their English and native names.
-   *
-   * Language codes are defined by the W3C language tags document for
-   * interoperability. Language codes typically have a language and, optionally,
-   * a script or regional variant name. See:
-   * http://www.w3.org/International/articles/language-tags/ for more
-   * information.
-   *
-   * This list is based on languages available from localize.drupal.org. See
-   * http://localize.drupal.org/issues for information on how to add languages
-   * there.
-   *
-   * The "Left-to-right marker" comments and the enclosed UTF-8 markers are to
-   * make otherwise strange looking PHP syntax natural (to not be displayed in
-   * right to left). See http://drupal.org/node/128866#comment-528929.
-   *
-   * @return array
-   *   An array of language code to language name information.
-   *   Language name information itself is an array of English and native names.
+   * @inheritdoc
    */
   public static function getStandardLanguageList() {
+    // This list is based on languages available from localize.drupal.org. See
+    // http://localize.drupal.org/issues for information on how to add languages
+    // there.
+    //
+    // The "Left-to-right marker" comments and the enclosed UTF-8 markers are to
+    // make otherwise strange looking PHP syntax natural (to not be displayed in
+    // right to left). See http://drupal.org/node/128866#comment-528929.
     return array(
       'af' => array('Afrikaans', 'Afrikaans'),
       'am' => array('Amharic', 'አማርኛ'),

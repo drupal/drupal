@@ -407,23 +407,30 @@ function locale_system_update(array $components) {
   // Skip running the translation imports if in the installer,
   // because it would break out of the installer flow. We have
   // built-in support for translation imports in the installer.
-  if (!drupal_installation_attempted() && locale_translatable_language_list() && \Drupal::config('locale.settings')->get('translation.import_enabled')) {
-    module_load_include('compare.inc', 'locale');
+  if (!drupal_installation_attempted() && locale_translatable_language_list()) {
+    if (\Drupal::config('locale.settings')->get('translation.import_enabled')) {
+      module_load_include('compare.inc', 'locale');
 
-    // Update the list of translatable projects and start the import batch.
-    // Only when new projects are added the update batch will be triggered. Not
-    // each enabled module will introduce a new project. E.g. sub modules.
-    $projects = array_keys(locale_translation_build_projects());
-    if ($list = array_intersect($list, $projects)) {
-      module_load_include('fetch.inc', 'locale');
-      // Get translation status of the projects, download and update
-      // translations.
-      $options = _locale_translation_default_update_options();
-      $batch = locale_translation_batch_update_build($list, array(), $options);
-      batch_set($batch);
+      // Update the list of translatable projects and start the import batch.
+      // Only when new projects are added the update batch will be triggered.
+      // Not each enabled module will introduce a new project. E.g. sub modules.
+      $projects = array_keys(locale_translation_build_projects());
+      if ($list = array_intersect($list, $projects)) {
+        module_load_include('fetch.inc', 'locale');
+        // Get translation status of the projects, download and update
+        // translations.
+        $options = _locale_translation_default_update_options();
+        $batch = locale_translation_batch_update_build($list, [], $options);
+        batch_set($batch);
+      }
     }
+
+    // Construct a batch to update configuration for all components. Installing
+    // this component may have installed configuration from any number of other
+    // components. Do this even if import is not enabled because parsing new
+    // configuration may expose new source strings.
     \Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
-    if ($batch = locale_config_batch_update_components(array(), array(), $components)) {
+    if ($batch = locale_config_batch_update_components([])) {
       batch_set($batch);
     }
   }

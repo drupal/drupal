@@ -8,6 +8,7 @@
 namespace Drupal\locale\Tests;
 
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\locale\Locale;
 use Drupal\locale\StringInterface;
 use Drupal\locale\TranslationString;
 use Drupal\simpletest\KernelTestBase;
@@ -22,7 +23,7 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['language', 'locale'];
+  public static $modules = ['language', 'locale', 'system'];
 
   /**
    * The configurable language manager used in this test.
@@ -61,6 +62,7 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
     $this->setUpDefaultLanguage();
 
     $this->installSchema('locale', ['locales_source', 'locales_target', 'locales_location']);
+    $this->installSchema('system', ['queue']);
 
     $this->setupLanguages();
 
@@ -68,7 +70,12 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
     $this->installConfig(['locale_test']);
     // Simulate this hook invoked which would happen if in a non-kernel test
     // or normal environment.
-    locale_modules_installed(array('locale_test'));
+    // @see locale_modules_installed()
+    // @see locale_system_update()
+    locale_system_set_config_langcodes();
+    $langcodes = array_keys(\Drupal::languageManager()->getLanguages());
+    $names = \Drupal\locale\Locale::config()->getComponentNames();
+    Locale::config()->updateConfigTranslations($names, $langcodes);
 
     $this->configFactory = $this->container->get('config.factory');
     $this->stringStorage = $this->container->get('locale.storage');
