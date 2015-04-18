@@ -204,6 +204,7 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
               'entity_type' => $entity->getEntityTypeId(),
               'entity_id' => $entity->id(),
               'field_name' => $field_name,
+              'comment_type' => $this->getFieldSetting('comment_type'),
             );
             $placeholder = drupal_render_cache_generate_placeholder($callback, $context);
             $output['comment_form'] = array(
