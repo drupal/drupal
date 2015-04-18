@@ -294,7 +294,7 @@ function book_node_predelete(EntityInterface $node) {
 }
 
 /**
- * Implements hook_node_prepare_form().
+ * Implements hook_ENTITY_TYPE_prepare_form() for node entities.
  */
 function book_node_prepare_form(NodeInterface $node, $operation, FormStateInterface $form_state) {
   /** @var \Drupal\book\BookManagerInterface $book_manager */
