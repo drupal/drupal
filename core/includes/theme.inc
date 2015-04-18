@@ -1246,11 +1246,8 @@ function template_preprocess_html(&$variables) {
   $variables['html_attributes']['lang'] = $language_interface->getId();
   $variables['html_attributes']['dir'] = $language_interface->getDirection();
 
-  // Compile a list of classes that are going to be applied to the body element.
-  // This allows advanced theming based on context (home page, node of certain
-  // type, etc.).
   if (isset($variables['db_is_active']) && !$variables['db_is_active']) {
-    $variables['attributes']['class'][] = 'db-offline';
+    $variables['db_offline'] = TRUE;
   }
 
   // Add a variable for the root path. This can be used to create a class and

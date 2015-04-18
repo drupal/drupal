@@ -34,7 +34,7 @@ function template_preprocess_menu_local_task(&$variables) {
   $link_text = $link['title'];
 
   if (!empty($variables['element']['#active'])) {
-    $variables['attributes']['class'] = array('is-active');
+    $variables['is_active'] = TRUE;
 
     // Add text to indicate active tab for non-visual users.
     $active = SafeMarkup::format('<span class="visually-hidden">@label</span>', array('@label' => t('(active tab)')));

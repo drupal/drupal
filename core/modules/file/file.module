@@ -1192,7 +1192,6 @@ function template_preprocess_file_managed_file(&$variables) {
   if (!empty($element['#attributes']['class'])) {
     $variables['attributes']['class'] = (array) $element['#attributes']['class'];
   }
-  $variables['attributes']['class'][] = 'form-managed-file';
 }
 
 /**

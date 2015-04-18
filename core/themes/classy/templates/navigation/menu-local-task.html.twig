@@ -5,6 +5,7 @@
  *
  * Available variables:
  * - attributes: HTML attributes for the wrapper element.
+ * - is_active: Whether the task item is an active tab.
  * - link: A rendered link element.
  *
  * Note: This template renders the content for each task item in
@@ -13,4 +14,4 @@
  * @see template_preprocess_menu_local_task()
  */
 #}
-<li{{ attributes }}>{{ link }}</li>
+<li{{ attributes.addClass(is_active ? 'is-active') }}>{{ link }}</li>
