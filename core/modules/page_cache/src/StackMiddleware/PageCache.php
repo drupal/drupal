@@ -255,6 +255,7 @@ class PageCache implements HttpKernelInterface {
     if ($cache = $this->cache->get($cid, $allow_invalid)) {
       return $cache->data;
     }
+    return FALSE;
   }
 
   /**
