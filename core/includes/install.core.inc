@@ -141,6 +141,10 @@ function install_drupal($class_loader, $settings = array()) {
   // installations can send output to the browser or redirect the user to the
   // next page.
   if ($state['interactive']) {
+    // If a session has been initiated in this request, make sure to save it.
+    if ($session = \Drupal::request()->getSession()) {
+      $session->save();
+    }
     if ($state['parameters_changed']) {
       // Redirect to the correct page if the URL parameters have changed.
       install_goto(install_redirect_url($state));
@@ -596,8 +600,9 @@ function install_run_task($task, &$install_state) {
       $url = Url::fromUri('base:install.php', ['query' => $install_state['parameters'], 'script' => '']);
       $response = batch_process($url, clone $url);
       if ($response instanceof Response) {
-        // Save $_SESSION data from batch.
-        \Drupal::service('session')->save();
+        if ($session = \Drupal::request()->getSession()) {
+          $session->save();
+        }
         // Send the response.
         $response->send();
         exit;
@@ -1549,12 +1554,13 @@ function install_load_profile(&$install_state) {
 
 /**
  * Performs a full bootstrap of Drupal during installation.
- *
- * @param $install_state
- *   An array of information about the current installation state.
  */
 function install_bootstrap_full() {
-  \Drupal::service('session')->start();
+  // Store the session on the request object and start it.
+  /** @var \Symfony\Component\HttpFoundation\Session\SessionInterface $session */
+  $session = \Drupal::service('session');
+  \Drupal::request()->setSession($session);
+  $session->start();
 }
 
 /**

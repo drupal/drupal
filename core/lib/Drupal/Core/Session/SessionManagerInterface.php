@@ -23,6 +23,11 @@ interface SessionManagerInterface extends SessionStorageInterface {
   public function delete($uid);
 
   /**
+   * Destroys the current session and removes session cookies.
+   */
+  public function destroy();
+
+  /**
    * Sets the write safe session handler.
    *
    * @todo: This should be removed once all database queries are removed from

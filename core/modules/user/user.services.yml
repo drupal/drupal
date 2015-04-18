@@ -16,8 +16,8 @@ services:
     tags:
       - { name: access_check, applies_to: _user_is_logged_in }
   authentication.cookie:
-    class: Drupal\Core\Authentication\Provider\Cookie
-    arguments: ['@session_configuration']
+    class: Drupal\user\Authentication\Provider\Cookie
+    arguments: ['@session_configuration', '@database']
     tags:
       - { name: authentication_provider, priority: 0 }
   user.data:
@@ -33,6 +33,11 @@ services:
   user_access_denied_subscriber:
     class: Drupal\user\EventSubscriber\AccessDeniedSubscriber
     arguments: ['@current_user', '@url_generator']
+    tags:
+      - { name: event_subscriber }
+  user_last_access_subscriber:
+    class: Drupal\user\EventSubscriber\UserRequestSubscriber
+    arguments: ['@current_user', '@entity.manager']
     tags:
       - { name: event_subscriber }
   theme.negotiator.admin_theme:

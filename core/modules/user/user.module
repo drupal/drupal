@@ -528,7 +528,7 @@ function user_login_finalize(UserInterface $account) {
   // fails or incorrectly does a redirect which would leave the old session
   // in place.
   \Drupal::service('session')->migrate();
-
+  \Drupal::service('session')->set('uid', $account->id());
   \Drupal::moduleHandler()->invokeAll('user_login', array($account));
 }
 
@@ -1386,7 +1386,8 @@ function user_logout() {
   // Session::invalidate(). Regrettably this method is currently broken and may
   // lead to the creation of spurious session records in the database.
   // @see https://github.com/symfony/symfony/issues/12375
-  session_destroy();
+  \Drupal::service('session_manager')->destroy();
+  $user->setAccount(new AnonymousUserSession());
 }
 
 /**

@@ -10,7 +10,6 @@ namespace Drupal\Core\Session;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
-use Drupal\Core\Site\Settings;
 use Drupal\Core\Utility\Error;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Storage\Proxy\AbstractProxy;
@@ -37,13 +36,6 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
   protected $connection;
 
   /**
-   * An associative array of obsolete sessions with session id as key, and db-key as value.
-   *
-   * @var array
-   */
-  protected $obsoleteSessionIds = array();
-
-  /**
    * Constructs a new SessionHandler instance.
    *
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
@@ -67,59 +59,27 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
    * {@inheritdoc}
    */
   public function read($sid) {
-    // @todo Remove global in https://www.drupal.org/node/2228393
-    global $_session_user;
-
-    // Handle the case of first time visitors and clients that don't store
-    // cookies (eg. web crawlers).
-    $cookies = $this->requestStack->getCurrentRequest()->cookies;
-    if (empty($sid) || !$cookies->has($this->getName())) {
-      $_session_user = new UserSession();
-      return '';
+    $data = '';
+    if (!empty($sid)) {
+      // Read the session data from the database.
+      $query = $this->connection
+        ->queryRange('SELECT session FROM {sessions} WHERE sid = :sid', 0, 1, ['sid' => Crypt::hashBase64($sid)]);
+      $data = (string) $query->fetchField();
     }
-
-    $values = $this->connection->query("SELECT u.*, s.* FROM {users_field_data} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE u.default_langcode = 1 AND s.sid = :sid", array(
-      ':sid' => Crypt::hashBase64($sid),
-    ))->fetchAssoc();
-
-    // We found the client's session record and they are an authenticated,
-    // active user.
-    if ($values && $values['uid'] > 0 && $values['status'] == 1) {
-      // Add roles element to $user.
-      $rids = $this->connection->query("SELECT ur.roles_target_id as rid FROM {user__roles} ur WHERE ur.entity_id = :uid", array(
-        ':uid' => $values['uid'],
-      ))->fetchCol();
-      $values['roles'] = array_merge(array(AccountInterface::AUTHENTICATED_ROLE), $rids);
-      $_session_user = new UserSession($values);
-    }
-    elseif ($values) {
-      // The user is anonymous or blocked. Only preserve two fields from the
-      // {sessions} table.
-      $_session_user = new UserSession(array(
-        'session' => $values['session'],
-        'access' => $values['access'],
-      ));
-    }
-    else {
-      // The session has expired.
-      $_session_user = new UserSession();
-    }
-
-    return $_session_user->session;
+    return $data;
   }
 
   /**
    * {@inheritdoc}
    */
   public function write($sid, $value) {
-    $user = \Drupal::currentUser();
-
     // The exception handler is not active at this point, so we need to do it
     // manually.
     try {
+      $request = $this->requestStack->getCurrentRequest();
       $fields = array(
-        'uid' => $user->id(),
-        'hostname' => $this->requestStack->getCurrentRequest()->getClientIP(),
+        'uid' => $request->getSession()->get('uid', 0),
+        'hostname' => $request->getClientIP(),
         'session' => $value,
         'timestamp' => REQUEST_TIME,
       );
@@ -127,13 +87,6 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
         ->keys(array('sid' => Crypt::hashBase64($sid)))
         ->fields($fields)
         ->execute();
-
-      // Likewise, do not update access time more than once per 180 seconds.
-      if ($user->isAuthenticated() && REQUEST_TIME - $user->getLastAccessedTime() > Settings::get('session_write_interval', 180)) {
-        /** @var \Drupal\user\UserStorageInterface $storage */
-        $storage = \Drupal::entityManager()->getStorage('user');
-        $storage->updateLastAccessTimestamp($user, REQUEST_TIME);
-      }
       return TRUE;
     }
     catch (\Exception $exception) {
@@ -159,20 +112,10 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
    * {@inheritdoc}
    */
   public function destroy($sid) {
-
-
     // Delete session data.
     $this->connection->delete('sessions')
       ->condition('sid', Crypt::hashBase64($sid))
       ->execute();
-
-    // Reset $_SESSION and current user to prevent a new session from being
-    // started in \Drupal\Core\Session\SessionManager::save().
-    $_SESSION = array();
-    \Drupal::currentUser()->setAccount(new AnonymousUserSession());
-
-    // Unset the session cookies.
-    $this->deleteCookie($this->getName());
 
     return TRUE;
   }
@@ -190,21 +133,6 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
       ->condition('timestamp', REQUEST_TIME - $lifetime, '<')
       ->execute();
     return TRUE;
-  }
-
-  /**
-   * Deletes a session cookie.
-   *
-   * @param string $name
-   *   Name of session cookie to delete.
-   */
-  protected function deleteCookie($name) {
-    $cookies = $this->requestStack->getCurrentRequest()->cookies;
-    if ($cookies->has($name)) {
-      $params = session_get_cookie_params();
-      setcookie($name, '', REQUEST_TIME - 3600, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
-      $cookies->remove($name);
-    }
   }
 
 }
