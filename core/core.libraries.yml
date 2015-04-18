@@ -397,7 +397,7 @@ jquery.once:
     url: https://github.com/RobLoach/jquery-once/blob/master/LICENSE.md
     gpl-compatible: true
   js:
-    assets/vendor/jquery-once/jquery.once.js: { weight: -19 }
+    assets/vendor/jquery-once/jquery.once.min.js: { weight: -19, minified: true }
   dependencies:
     - core/jquery
 
