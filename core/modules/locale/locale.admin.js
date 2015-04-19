@@ -10,13 +10,13 @@
       var $form = $("#locale-translate-edit-form").once('localetranslatedirty');
       if ($form.length) {
         // Display a notice if any row changed.
-        $form.one('change.localeTranslateDirty', 'table', function () {
+        $form.one('formUpdated.localeTranslateDirty', 'table', function () {
           var $marker = $(Drupal.theme('localeTranslateChangedWarning')).hide();
           $(this).addClass('changed').before($marker);
           $marker.fadeIn('slow');
         });
         // Highlight changed row.
-        $form.on('change.localeTranslateDirty', 'tr', function () {
+        $form.on('formUpdated.localeTranslateDirty', 'tr', function () {
           var
             $row = $(this),
             $rowToMark = $row.once('localemark'),
@@ -34,7 +34,7 @@
       if (trigger === 'unload') {
         var $form = $("#locale-translate-edit-form").removeOnce('localetranslatedirty');
         if ($form.length) {
-          $form.off('change.localeTranslateDirty');
+          $form.off('formUpdated.localeTranslateDirty');
         }
       }
     }

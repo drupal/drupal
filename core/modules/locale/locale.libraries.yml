@@ -8,6 +8,7 @@ drupal.locale.admin:
   dependencies:
     - core/jquery
     - core/drupal
+    - core/drupal.form
     - core/jquery.once
 
 drupal.locale.datepicker:
