@@ -489,6 +489,13 @@ class Schema extends DatabaseSchema {
     $new_schema = $old_schema;
 
     unset($new_schema['fields'][$field]);
+
+    // Handle possible primary key changes.
+    if (isset($new_schema['primary key']) && ($key = array_search($field, $new_schema['primary key'])) !== FALSE) {
+      unset($new_schema['primary key'][$key]);
+    }
+
+    // Handle possible index changes.
     foreach ($new_schema['indexes'] as $index => $fields) {
       foreach ($fields as $key => $field_name) {
         if ($field_name == $field) {

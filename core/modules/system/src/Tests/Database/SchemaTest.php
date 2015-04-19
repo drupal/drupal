@@ -444,6 +444,11 @@ class SchemaTest extends KernelTestBase {
 
     // Clean-up.
     db_drop_field($table_name, 'test_field');
+
+    // Add back the field and then try to delete a field which is also a primary
+    // key.
+    db_add_field($table_name, 'test_field', $field_spec);
+    db_drop_field($table_name, 'serial_column');
     db_drop_table($table_name);
   }
 
