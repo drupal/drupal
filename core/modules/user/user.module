@@ -1136,11 +1136,12 @@ function user_role_change_permissions($rid, array $permissions = array()) {
  */
 function user_role_grant_permissions($rid, array $permissions = array()) {
   // Grant new permissions for the role.
-  $role = Role::load($rid);
-  foreach ($permissions as $permission) {
-    $role->grantPermission($permission);
+  if ($role = Role::load($rid)) {
+    foreach ($permissions as $permission) {
+      $role->grantPermission($permission);
+    }
+    $role->save();
   }
-  $role->save();
 }
 
 /**

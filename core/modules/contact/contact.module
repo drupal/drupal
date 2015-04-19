@@ -13,12 +13,12 @@ use Drupal\user\Entity\User;
  * Implements hook_help().
  */
 function contact_help($route_name, RouteMatchInterface $route_match) {
-  $menu_page = \Drupal::moduleHandler()->moduleExists('menu_ui') ? \Drupal::url('entity.menu.collection') : '#';
-  $block_page = \Drupal::moduleHandler()->moduleExists('block') ? \Drupal::url('block.admin_display') : '#';
-  $contact_page = \Drupal::url('entity.contact_form.collection');
 
   switch ($route_name) {
     case 'help.page.contact':
+      $menu_page = \Drupal::moduleHandler()->moduleExists('menu_ui') ? \Drupal::url('entity.menu.collection') : '#';
+      $block_page = \Drupal::moduleHandler()->moduleExists('block') ? \Drupal::url('block.admin_display') : '#';
+      $contact_page = \Drupal::url('entity.contact_form.collection');
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Contact module allows visitors to contact registered users on your site, using the personal contact form, and also allows you to set up site-wide contact forms. For more information, see the <a href="!contact">online documentation for the Contact module</a>.', array('!contact' => 'https://www.drupal.org/documentation/modules/contact')) . '</p>';
@@ -36,6 +36,8 @@ function contact_help($route_name, RouteMatchInterface $route_match) {
       return $output;
 
     case 'entity.contact_form.collection':
+      $menu_page = \Drupal::moduleHandler()->moduleExists('menu_ui') ? \Drupal::url('entity.menu.collection') : '#';
+      $block_page = \Drupal::moduleHandler()->moduleExists('block') ? \Drupal::url('block.admin_display') : '#';
       $output = '';
       $output .= '<p>' . t('The <em>Personal contact form</em> is the form for site visitors to contact registered users; the name and recipients of this form cannot be edited. Other forms listed here are your configured site-wide contact forms, which site visitors can use to send mail to a centralized email address or addresses. You can edit the name and recipients of site-wide forms by choosing the <em>Edit</em> operation. You can also configure the fields and display of both personal and site-wide forms.') . '</p>';
       $output .= '<p>' . t('If you have configured a default site-wide contact form, a <em>Contact</em> menu link in the <em>Footer</em> menu will link to it. You can modify this link from the <a href="!menu-settings">Menus page</a> if you have the Menu UI module installed. You can also create links to other contact forms; the URL has format contact/machine_name_of_form.', array('!menu-settings' => $menu_page)) . '</p>';

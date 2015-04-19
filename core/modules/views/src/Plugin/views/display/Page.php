@@ -479,8 +479,7 @@ class Page extends PathPluginBase {
     $dependencies = parent::calculateDependencies();
 
     $menu = $this->getOption('menu');
-    if ($menu['type'] === 'normal') {
-      $menu_entity = $this->menuStorage->load($menu['menu_name']);
+    if ($menu['type'] === 'normal' && ($menu_entity = $this->menuStorage->load($menu['menu_name']))) {
       $dependencies[$menu_entity->getConfigDependencyKey()][] = $menu_entity->getConfigDependencyName();
     }
 
