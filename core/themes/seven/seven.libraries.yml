@@ -31,6 +31,8 @@ global-styling:
       css/components/views-ui.css: {}
     layout:
       css/layout/layout.css: {}
+  dependencies:
+    - system/admin
 
 node-form:
   version: VERSION
