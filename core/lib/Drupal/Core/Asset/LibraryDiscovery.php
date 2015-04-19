@@ -66,8 +66,6 @@ class LibraryDiscovery implements LibraryDiscoveryInterface {
       $libraries = $this->collector->get($extension);
       $this->libraryDefinitions[$extension] = [];
       foreach ($libraries as $name => $definition) {
-        // Allow modules and themes to dynamically attach request and context
-        // specific data for this library; e.g., localization.
         $library_name = "$extension/$name";
         $this->libraryDefinitions[$extension][$name] = $definition;
       }
