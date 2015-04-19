@@ -17,10 +17,9 @@
         });
         // Highlight changed row.
         $form.on('formUpdated.localeTranslateDirty', 'tr', function () {
-          var
-            $row = $(this),
-            $rowToMark = $row.once('localemark'),
-            marker = Drupal.theme('localeTranslateChangedMarker');
+          var $row = $(this);
+          var $rowToMark = $row.once('localemark');
+          var marker = Drupal.theme('localeTranslateChangedMarker');
 
           $row.addClass('changed');
           // Add an asterisk only once if row changed.

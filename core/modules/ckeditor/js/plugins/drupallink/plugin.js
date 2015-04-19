@@ -25,7 +25,8 @@
             linkDOMElement = linkElement.$;
 
             // Populate an array with the link's current attributes.
-            var attribute = null, attributeName;
+            var attribute = null;
+            var attributeName;
             for (var attrIndex = 0; attrIndex < linkDOMElement.attributes.length; attrIndex++) {
               attribute = linkDOMElement.attributes.item(attrIndex);
               attributeName = attribute.nodeName.toLowerCase();

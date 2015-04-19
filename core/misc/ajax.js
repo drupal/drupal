@@ -84,7 +84,11 @@
    */
   Drupal.AjaxError = function (xmlhttp, uri) {
 
-    var statusCode, statusText, pathText, responseText, readyStateText;
+    var statusCode;
+    var statusText;
+    var pathText;
+    var responseText;
+    var readyStateText;
     if (xmlhttp.status) {
       statusCode = "\n" + Drupal.t("An AJAX HTTP error occurred.") + "\n" + Drupal.t("HTTP Result Code: !status", {'!status': xmlhttp.status});
     }
@@ -100,7 +104,9 @@
     try {
       statusText = "\n" + Drupal.t("StatusText: !statusText", {'!statusText': $.trim(xmlhttp.statusText)});
     }
-    catch (e) {}
+    catch (e) {
+      // empty
+    }
 
     responseText = '';
     // Again, we don't have a way to know for sure whether accessing
@@ -108,7 +114,9 @@
     try {
       responseText = "\n" + Drupal.t("ResponseText: !responseText", {'!responseText': $.trim(xmlhttp.responseText)});
     }
-    catch (e) {}
+    catch (e) {
+      // empty
+    }
 
     // Make the responseText more readable by stripping HTML tags and newlines.
     responseText = responseText.replace(/<("[^"]*"|'[^']*'|[^'">])*>/gi, "");
@@ -375,7 +383,8 @@
     // @see \Drupal\Component\Utility\Html::getUniqueId()
     var ids = document.querySelectorAll('[id]');
     var ajaxHtmlIds = [];
-    for (var i = 0, il = ids.length; i < il; i++) {
+    var il = ids.length;
+    for (var i = 0; i < il; i++) {
       ajaxHtmlIds.push(ids[i].id);
     }
     // Join IDs to minimize request size.
@@ -727,7 +736,8 @@
       // Add the styles in the normal way.
       $('head').prepend(response.data);
       // Add imports in the styles using the addImport method if available.
-      var match, importMatch = /^@import url\("(.*)"\);$/igm;
+      var match;
+      var importMatch = /^@import url\("(.*)"\);$/igm;
       if (document.styleSheets[0].addImport && importMatch.test(response.data)) {
         importMatch.lastIndex = 0;
         do {

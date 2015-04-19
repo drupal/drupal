@@ -85,7 +85,8 @@
   function calculateOffset(edge) {
     var edgeOffset = 0;
     var displacingElements = document.querySelectorAll('[data-offset-' + edge + ']');
-    for (var i = 0, n = displacingElements.length; i < n; i++) {
+    var n = displacingElements.length;
+    for (var i = 0; i < n; i++) {
       var el = displacingElements[i];
       // If the element is not visible, do consider its dimensions.
       if (el.style.display === 'none') {

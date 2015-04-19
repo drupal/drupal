@@ -18,7 +18,8 @@
   // Select and initialize sticky table headers.
   function tableHeaderInitHandler(e) {
     var $tables = $(e.data.context).find('table.sticky-enabled').once('tableheader');
-    for (var i = 0, il = $tables.length; i < il; i++) {
+    var il = $tables.length;
+    for (var i = 0; i < il; i++) {
       TableHeader.tables.push(new TableHeader($tables[i]));
     }
     forTables('onScroll');
@@ -27,7 +28,8 @@
   // Helper method to loop through tables and execute a method.
   function forTables(method, arg) {
     var tables = TableHeader.tables;
-    for (var i = 0, il = tables.length; i < il; i++) {
+    var il = tables.length;
+    for (var i = 0; i < il; i++) {
       tables[i][method](arg);
     }
   }
@@ -234,7 +236,8 @@
       // Resize header and its cell widths.
       // Only apply width to visible table cells. This prevents the header from
       // displaying incorrectly when the sticky header is no longer visible.
-      for (var i = 0, il = this.$originalHeaderCells.length; i < il; i++) {
+      var il = this.$originalHeaderCells.length;
+      for (var i = 0; i < il; i++) {
         $that = $(this.$originalHeaderCells[i]);
         $stickyCell = this.$stickyHeaderCells.eq($that.index());
         display = $that.css('display');

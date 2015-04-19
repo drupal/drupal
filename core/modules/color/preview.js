@@ -9,7 +9,8 @@
 
   Drupal.color = {
     callback: function (context, settings, form, farb, height, width) {
-      var accum, delta;
+      var accum;
+      var delta;
       // Solid background.
       form.find('#preview').css('backgroundColor', form.find('#palette input[name="palette[base]"]').val());
 
@@ -27,7 +28,8 @@
       }
 
       // Set up gradients if there are some.
-      var color_start, color_end;
+      var color_start;
+      var color_end;
       for (var i in settings.gradients) {
         if (settings.gradients.hasOwnProperty(i)) {
           color_start = farb.unpack(form.find('#palette input[name="palette[' + settings.gradients[i].colors[0] + ']"]').val());

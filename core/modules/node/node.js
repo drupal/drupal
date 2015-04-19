@@ -27,8 +27,8 @@
 
       $context.find('.node-form-author').drupalSetSummary(function (context) {
         var $authorContext = $(context);
-        var name = $authorContext.find('.field-name-uid input').val(),
-          date = $authorContext.find('.field-name-created input').val();
+        var name = $authorContext.find('.field-name-uid input').val();
+        var date = $authorContext.find('.field-name-created input').val();
         return date ?
           Drupal.t('By @name on @date', {'@name': name, '@date': date}) :
           Drupal.t('By @name', {'@name': name});

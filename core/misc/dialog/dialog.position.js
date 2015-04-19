@@ -17,7 +17,9 @@
     var positionOptions = ['width', 'height', 'minWidth', 'minHeight', 'maxHeight', 'maxWidth', 'position'];
     var adjustedOptions = {};
     var windowHeight = $(window).height();
-    var option, optionValue, adjustedValue;
+    var option;
+    var optionValue;
+    var adjustedValue;
     for (var n = 0; n < positionOptions.length; n++) {
       option = positionOptions[n];
       optionValue = event.data.settings[option];

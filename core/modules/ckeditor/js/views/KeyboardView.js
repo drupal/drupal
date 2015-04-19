@@ -216,7 +216,8 @@
         var $group = $(event.currentTarget);
         var $container = $group.parent();
         var $siblings = $container.children();
-        var index, dir;
+        var index;
+        var dir;
         // Move groups between sibling groups.
         if (_.indexOf(leftRightKeys, event.keyCode) > -1) {
           index = $siblings.index($group);

@@ -114,8 +114,8 @@
             editor.fire('saveSnapshot');
 
             // Pass `true` so DocumentFragment will also be returned.
-            var container = widget.wrapper.getParent(true),
-              image = widget.parts.image;
+            var container = widget.wrapper.getParent(true);
+            var image = widget.parts.image;
 
             // Set the updated widget data, after the necessary conversions from
             // the dialog's return values.

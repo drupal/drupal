@@ -175,7 +175,9 @@
       // ignore that padding when positioning the toolbar, to not unnecessarily
       // move the toolbar horizontally, which feels annoying.
       var horizontalPadding = 0;
-      var of, activeField, highlightedField;
+      var of;
+      var activeField;
+      var highlightedField;
       // There are several elements in the page that the entity toolbar might be
       // positioned against. They are considered below in a priority order.
       do {

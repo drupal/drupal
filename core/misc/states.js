@@ -22,8 +22,10 @@
   Drupal.behaviors.states = {
     attach: function (context, settings) {
       var $states = $(context).find('[data-drupal-states]');
-      var config, state;
-      for (var i = 0, il = $states.length; i < il; i += 1) {
+      var config;
+      var state;
+      var il = $states.length;
+      for (var i = 0; i < il; i++) {
         config = JSON.parse($states[i].getAttribute('data-drupal-states'));
         for (state in config) {
           if (config.hasOwnProperty(state)) {
@@ -98,7 +100,8 @@
      *   dependee's compliance status.
      */
     initializeDependee: function (selector, dependeeStates) {
-      var state, self = this;
+      var state;
+      var self = this;
 
       function stateEventHandler(e) {
         self.update(e.data.selector, e.data.state, e.value);
@@ -212,7 +215,8 @@
       if ($.isArray(constraints)) {
         // This constraint is an array (OR or XOR).
         var hasXor = $.inArray('xor', constraints) === -1;
-        for (var i = 0, len = constraints.length; i < len; i++) {
+        var len = constraints.length;
+        for (var i = 0; i < len; i++) {
           if (constraints[i] !== 'xor') {
             var constraint = this.checkConstraints(constraints[i], selector, i);
             // Return if this is OR and we have a satisfied constraint or if this

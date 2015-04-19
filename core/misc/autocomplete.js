@@ -17,9 +17,9 @@
     var quote = false;
     var current = '';
     var valueLength = value.length;
-    var i, character;
+    var character;
 
-    for (i = 0; i < valueLength; i++) {
+    for (var i = 0; i < valueLength; i++) {
       character = value.charAt(i);
       if (character === '"') {
         current += character;
@@ -90,7 +90,8 @@
      */
     function showSuggestions(suggestions) {
       var tagged = autocomplete.splitValues(request.term);
-      for (var i = 0, il = tagged.length; i < il; i++) {
+      var il = tagged.length;
+      for (var i = 0; i < il; i++) {
         var index = suggestions.indexOf(tagged[i]);
         if (index >= 0) {
           suggestions.splice(index, 1);

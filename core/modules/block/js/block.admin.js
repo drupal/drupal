@@ -13,7 +13,8 @@
     attach: function (context, settings) {
       var $input = $('input.block-filter-text').once('block-filter-text');
       var $element = $($input.attr('data-element'));
-      var $blocks, $details;
+      var $blocks;
+      var $details;
 
       /**
        * Hides the <details> element for a category if it has no visible blocks.

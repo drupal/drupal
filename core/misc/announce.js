@@ -49,7 +49,8 @@
 
     // Create an array of announcement strings to be joined and appended to the
     // aria live region.
-    for (var i = 0, il = announcements.length; i < il; i++) {
+    var il = announcements.length;
+    for (var i = 0; i < il; i++) {
       announcement = announcements.pop();
       text.unshift(announcement.text);
       // If any of the announcements has a priority of assertive then the group

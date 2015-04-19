@@ -15,8 +15,9 @@
       var opts = this.options;
       var primaryIndex;
       var $buttons;
-      var index, il;
-      for (index = 0, il = opts.buttons.length; index < il; index += 1) {
+      var index;
+      var il = opts.buttons.length;
+      for (index = 0; index < il; index++) {
         if (opts.buttons[index].primary && opts.buttons[index].primary === true) {
           primaryIndex = index;
           delete opts.buttons[index].primary;

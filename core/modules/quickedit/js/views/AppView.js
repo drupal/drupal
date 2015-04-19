@@ -175,7 +175,8 @@
         // If it's not against the general principle, then here are more
         // disallowed cases to check.
         if (accept) {
-          var activeField, activeFieldState;
+          var activeField;
+          var activeFieldState;
           // Ensure only one field (editor) at a time is active … but allow a user
           // to hop from one field to the next, even if we still have to start
           // saving the field that is currently active: assume it will be valid,

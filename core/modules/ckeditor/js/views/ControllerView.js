@@ -162,7 +162,8 @@
           // First collect all CKEditor allowedContent rules.
           var CKEFeatureRulesMap = {};
           var rules = e.editor.filter.allowedContent;
-          var rule, name;
+          var rule;
+          var name;
           for (var i = 0; i < rules.length; i++) {
             rule = rules[i];
             name = rule.featureName || ':(';
@@ -233,9 +234,11 @@
       var existingButtons = [];
       // Loop through each button group after flattening the groups from the
       // toolbar row arrays.
-      for (var i = 0, buttonGroups = _.flatten(this.model.get('activeEditorConfig')); i < buttonGroups.length; i++) {
+      var buttonGroups = _.flatten(this.model.get('activeEditorConfig'));
+      for (var i = 0; i < buttonGroups.length; i++) {
         // Pull the button names from each toolbar button group.
-        for (var k = 0, buttons = buttonGroups[i].items; k < buttons.length; k++) {
+        var buttons = buttonGroups[i].items;
+        for (var k = 0; k < buttons.length; k++) {
           existingButtons.push(buttons[k]);
         }
       }

@@ -46,14 +46,16 @@
 
       // Query the DOM.
       var activeLinks = context.querySelectorAll(selectors.join(','));
-      for (var i = 0, il = activeLinks.length; i < il; i += 1) {
+      var il = activeLinks.length;
+      for (var i = 0; i < il; i++) {
         activeLinks[i].classList.add('is-active');
       }
     },
     detach: function (context, settings, trigger) {
       if (trigger === 'unload') {
         var activeLinks = context.querySelectorAll('[data-drupal-link-system-path].is-active');
-        for (var i = 0, il = activeLinks.length; i < il; i += 1) {
+        var il = activeLinks.length;
+        for (var i = 0; i < il; i++) {
           activeLinks[i].classList.remove('is-active');
         }
       }

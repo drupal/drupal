@@ -15,7 +15,8 @@
     Drupal.filterConfiguration.liveSettingParsers.filter_html = {
       getRules: function () {
         var currentValue = $('#edit-filters-filter-html-settings-allowed-html').val();
-        var rules = [], rule;
+        var rules = [];
+        var rule;
 
         // Build a FilterHTMLRule that reflects the hard-coded behavior that
         // strips all "style" attribute and all "on*" attributes.

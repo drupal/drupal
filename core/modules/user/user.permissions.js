@@ -15,7 +15,8 @@
         // performed without triggering internal layout and re-rendering processes
         // in the browser.
         var $table = $(this);
-        var $ancestor, method;
+        var $ancestor;
+        var method;
         if ($table.prev().length) {
           $ancestor = $table.prev();
           method = 'after';
@@ -58,7 +59,8 @@
      * checkboxes are shown, the real checkboxes otherwise.
      */
     toggle: function () {
-      var authCheckbox = this, $row = $(this).closest('tr');
+      var authCheckbox = this;
+      var $row = $(this).closest('tr');
       // jQuery performs too many layout calculations for .hide() and .show(),
       // leading to a major page rendering lag on sites with many roles and
       // permissions. Therefore, we toggle visibility directly.

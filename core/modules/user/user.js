@@ -89,7 +89,11 @@
    * Returns the estimated strength and the relevant output message.
    */
   Drupal.evaluatePasswordStrength = function (password, translate) {
-    var indicatorText, indicatorClass, weaknesses = 0, strength = 100, msg = [];
+    var indicatorText;
+    var indicatorClass;
+    var weaknesses = 0;
+    var strength = 100;
+    var msg = [];
 
     var hasLowercase = /[a-z]+/.test(password);
     var hasUppercase = /[A-Z]+/.test(password);

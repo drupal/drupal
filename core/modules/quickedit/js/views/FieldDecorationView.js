@@ -297,13 +297,13 @@
      * @param DOM $e
      */
     _getPositionProperties: function ($e) {
-      var p,
-        r = {},
-        props = [
-          'top', 'left', 'bottom', 'right',
-          'padding-top', 'padding-left', 'padding-right', 'padding-bottom',
-          'margin-bottom'
-        ];
+      var p;
+      var r = {};
+      var props = [
+        'top', 'left', 'bottom', 'right',
+        'padding-top', 'padding-left', 'padding-right', 'padding-bottom',
+        'margin-bottom'
+      ];
 
       var propCount = props.length;
       for (var i = 0; i < propCount; i++) {

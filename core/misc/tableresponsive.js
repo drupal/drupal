@@ -9,7 +9,8 @@
     attach: function (context, settings) {
       var $tables = $(context).find('table.responsive-enabled').once('tableresponsive');
       if ($tables.length) {
-        for (var i = 0, il = $tables.length; i < il; i++) {
+        var il = $tables.length;
+        for (var i = 0; i < il; i++) {
           TableResponsive.tables.push(new TableResponsive($tables[i]));
         }
       }

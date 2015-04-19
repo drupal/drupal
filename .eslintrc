@@ -31,6 +31,7 @@
     "no-undef": 2,
     "no-undefined": 2,
     "no-unused-vars": [2, {"vars": "local", "args": "none"}],
+    "one-var": [2, "never"],
     "semi": [2, "always"],
     "space-after-keywords": [2, "always", {"checkFunctionKeyword": true}],
     "space-before-blocks": [2, "always"],

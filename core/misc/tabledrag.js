@@ -153,7 +153,9 @@
    */
   Drupal.tableDrag.prototype.initColumns = function () {
     var $table = this.$table;
-    var hidden, cell, columnIndex;
+    var hidden;
+    var cell;
+    var columnIndex;
     for (var group in this.tableSettings) {
       if (this.tableSettings.hasOwnProperty(group)) { // Find the first field in this group.
         for (var d in this.tableSettings[group]) {
@@ -586,7 +588,8 @@
    * Pointerup behavior.
    */
   Drupal.tableDrag.prototype.dropRow = function (event, self) {
-    var droppedRow, $droppedRow;
+    var droppedRow;
+    var $droppedRow;
 
     // Drop row functionality.
     if (self.rowObject !== null) {
@@ -1048,7 +1051,8 @@
   Drupal.tableDrag.prototype.row.prototype.isValidSwap = function (row) {
     var $row = $(row);
     if (this.indentEnabled) {
-      var prevRow, nextRow;
+      var prevRow;
+      var nextRow;
       if (this.direction === 'down') {
         prevRow = row;
         nextRow = $row.next('tr').get(0);
@@ -1108,7 +1112,8 @@
    */
   Drupal.tableDrag.prototype.row.prototype.validIndentInterval = function (prevRow, nextRow) {
     var $prevRow = $(prevRow);
-    var minIndent, maxIndent;
+    var minIndent;
+    var maxIndent;
 
     // Minimum indentation:
     // Do not orphan the next row.

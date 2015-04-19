@@ -16,7 +16,9 @@
     attach: function (context, settings) {
       var $input = $('input.table-filter-text').once('table-filter-text');
       var $table = $($input.attr('data-table'));
-      var $rowsAndDetails, $rows, $details;
+      var $rowsAndDetails;
+      var $rows;
+      var $details;
       var searching = false;
 
       function hidePackageDetails(index, element) {

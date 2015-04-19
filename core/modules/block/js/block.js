@@ -17,7 +17,8 @@
       function checkboxesSummary(context) {
         var vals = [];
         var $checkboxes = $(context).find('input[type="checkbox"]:checked + label');
-        for (var i = 0, il = $checkboxes.length; i < il; i += 1) {
+        var il = $checkboxes.length;
+        for (var i = 0; i < il; i++) {
           vals.push($($checkboxes[i]).text());
         }
         if (!vals.length) {

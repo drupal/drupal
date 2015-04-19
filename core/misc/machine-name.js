@@ -75,7 +75,8 @@
       }
 
       Object.keys(settings.machineName).forEach(function (source_id) {
-        var machine, eventData;
+        var machine;
+        var eventData;
         var options = settings.machineName[source_id];
 
         var $source = $context.find(source_id).addClass('machine-name-source').once('machine-name');

@@ -15,7 +15,8 @@
           $body.on('click', '.dropbutton-toggle', dropbuttonClickHandler);
         }
         // Initialize all buttons.
-        for (var i = 0, il = $dropbuttons.length; i < il; i++) {
+        var il = $dropbuttons.length;
+        for (var i = 0; i < il; i++) {
           DropButton.dropbuttons.push(new DropButton($dropbuttons[i], settings.dropbutton));
         }
       }

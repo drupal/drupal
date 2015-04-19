@@ -9,7 +9,8 @@
     attach: function (context) {
       var $context = $(context);
       var options = drupalSettings.contentTranslationDependentOptions;
-      var $fields, dependent_columns;
+      var $fields;
+      var dependent_columns;
 
       function fieldsChangeHandler($fields, dependent_columns) {
         return function (e) {

@@ -39,7 +39,8 @@
       // Deactivate all tabbingContexts to prepare for the new constraint. A
       // tabbingContext instance will only be reactivated if the stack is unwound
       // to it in the _unwindStack() method.
-      for (var i = 0, il = this.stack.length; i < il; i++) {
+      var il = this.stack.length;
+      for (var i = 0; i < il; i++) {
         this.stack[i].deactivate();
       }
 
@@ -110,7 +111,8 @@
       // Set the disabled set on the tabbingContext.
       tabbingContext.$disabledElements = $disabledSet;
       // Record the tabindex for each element, so we can restore it later.
-      for (var i = 0, il = $disabledSet.length; i < il; i++) {
+      var il = $disabledSet.length;
+      for (var i = 0; i < il; i++) {
         this.recordTabindex($disabledSet.eq(i), level);
       }
       // Make all tabbable elements outside of the active tabbing set unreachable.
@@ -142,7 +144,8 @@
     deactivate: function (tabbingContext) {
       var $set = tabbingContext.$disabledElements;
       var level = tabbingContext.level;
-      for (var i = 0, il = $set.length; i < il; i++) {
+      var il = $set.length;
+      for (var i = 0; i < il; i++) {
         this.restoreTabindex($set.eq(i), level);
       }
     },
