@@ -26,7 +26,6 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
  *   - entity: The entity object the field is attached to
  *     (\Drupal\Core\Entity\EntityInterface).
  *
- * @ingroup hooks
  * @see hook_options_list()
  */
 function hook_options_list_alter(array &$options, array $context) {
@@ -43,7 +42,7 @@ function hook_options_list_alter(array &$options, array $context) {
  * Callback for options_allowed_values().
  *
  * 'list_*' fields can specify a callback to define the set of their allowed
- * values using the 'allowed_values_function' storage setting.
+ * values using the 'allowed_values_callback' storage setting.
  *
  * That function will be called:
  *  - either in the context of a specific entity, which is then provided as the
@@ -75,7 +74,6 @@ function hook_options_list_alter(array &$options, array $context) {
  *   any context so that other code (e.g. Views filters) can support the allowed
  *   values for all possible entities and bundles.
  *
- * @ingroup callbacks
  * @see options_allowed_values()
  * @see options_test_allowed_values_callback()
  * @see options_test_dynamic_values_callback()
