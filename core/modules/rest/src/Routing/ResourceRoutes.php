@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\rest\EventSubscriber\RouteSubscriber.
+ * Contains \Drupal\rest\Routing\ResourceRoutes.
  */
 
 namespace Drupal\rest\Routing;

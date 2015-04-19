@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\rest\ResourceResponse.
+ * Contains \Drupal\rest\ResourceResponse.
  */
 
 namespace Drupal\rest;

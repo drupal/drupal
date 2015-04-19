@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\rest\Plugin\ResourceBase.
+ * Contains \Drupal\rest\Plugin\ResourceBase.
  */
 
 namespace Drupal\rest\Plugin;
