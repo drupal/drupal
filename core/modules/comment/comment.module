@@ -499,6 +499,7 @@ function comment_user_cancel($edit, $account, $method) {
       $comments = entity_load_multiple_by_properties('comment', array('uid' => $account->id()));
       foreach ($comments as $comment) {
         $comment->setOwnerId(0);
+        $comment->setAuthorName(\Drupal::config('user.settings')->get('anonymous'));
         $comment->save();
       }
       break;

@@ -11,6 +11,7 @@ use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\simpletest\WebTestBase;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
+use Drupal\user\Entity\User;
 
 /**
  * Ensure that account cancellation methods work as expected.
@@ -281,6 +282,8 @@ class UserCancelTest extends WebTestBase {
   function testUserAnonymize() {
     $node_storage = $this->container->get('entity.manager')->getStorage('node');
     $this->config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
+    // Create comment field on page.
+    $this->addDefaultCommentField('node', 'page');
 
     // Create a user.
     $account = $this->drupalCreateUser(array('cancel account'));
@@ -290,6 +293,20 @@ class UserCancelTest extends WebTestBase {
 
     // Create a simple node.
     $node = $this->drupalCreateNode(array('uid' => $account->id()));
+
+    // Add a comment to the page.
+    $comment_subject = $this->randomMachineName(8);
+    $comment_body = $this->randomMachineName(8);
+    $comment = entity_create('comment', array(
+      'subject' => $comment_subject,
+      'comment_body' => $comment_body,
+      'entity_id' => $node->id(),
+      'entity_type' => 'node',
+      'field_name' => 'comment',
+      'status' => CommentInterface::PUBLISHED,
+      'uid' => $account->id(),
+    ));
+    $comment->save();
 
     // Create a node with two revisions, the initial one belonging to the
     // cancelling user.
@@ -316,6 +333,7 @@ class UserCancelTest extends WebTestBase {
     $this->assertFalse(user_load($account->id(), TRUE), 'User is not found in the database.');
 
     // Confirm that user's content has been attributed to anonymous user.
+    $anonymous_user = User::getAnonymousUser();
     $node_storage->resetCache(array($node->id()));
     $test_node = $node_storage->load($node->id());
     $this->assertTrue(($test_node->getOwnerId() == 0 && $test_node->isPublished()), 'Node of the user has been attributed to anonymous user.');
@@ -324,6 +342,12 @@ class UserCancelTest extends WebTestBase {
     $node_storage->resetCache(array($revision_node->id()));
     $test_node = $node_storage->load($revision_node->id());
     $this->assertTrue(($test_node->getOwnerId() != 0 && $test_node->isPublished()), "Current revision of the user's node was not attributed to anonymous user.");
+
+    $storage = \Drupal::entityManager()->getStorage('comment');
+    $storage->resetCache(array($comment->id()));
+    $test_comment = $storage->load($comment->id());
+    $this->assertTrue(($test_comment->getOwnerId() == 0 && $test_comment->isPublished()), 'Comment of the user has been attributed to anonymous user.');
+    $this->assertEqual($test_comment->getAuthorName(), $anonymous_user->getUsername(), 'Comment of the user has been attributed to anonymous user name.');
 
     // Confirm that the confirmation message made it through to the end user.
     $this->assertRaw(t('%name has been deleted.', array('%name' => $account->getUsername())), "Confirmation message displayed to user.");
