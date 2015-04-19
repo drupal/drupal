@@ -694,7 +694,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
     // Only serialize necessary properties, excluding those that can be
     // recalculated.
     $properties = get_object_vars($this);
-    unset($properties['schema'], $properties['propertyDefinitions']);
+    unset($properties['schema'], $properties['propertyDefinitions'], $properties['original']);
     return array_keys($properties);
   }
 

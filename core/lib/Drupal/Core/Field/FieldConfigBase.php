@@ -398,7 +398,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
     // Only serialize necessary properties, excluding those that can be
     // recalculated.
     $properties = get_object_vars($this);
-    unset($properties['fieldStorage'], $properties['itemDefinition'], $properties['bundleRenameAllowed']);
+    unset($properties['fieldStorage'], $properties['itemDefinition'], $properties['bundleRenameAllowed'], $properties['original']);
     return array_keys($properties);
   }
 
