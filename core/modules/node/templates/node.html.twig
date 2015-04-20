@@ -8,9 +8,8 @@
  *   - id: The node ID.
  *   - bundle: The type of the node, for example, "page" or "article".
  *   - authorid: The user ID of the node author.
- *   - createdtime: Formatted creation date. Preprocess functions can
- *     reformat it by calling format_date() with the desired parameters on
- *     $variables['node']->getCreatedTime().
+ *   - createdtime: Time the node was published formatted in Unix timestamp.
+ *   - changedtime: Time the node was changed formatted in Unix timestamp.
  * - label: The title of the node.
  * - content: All node items. Use {{ content }} to print them all,
  *   or print a subset such as {{ content.field_example }}. Use
