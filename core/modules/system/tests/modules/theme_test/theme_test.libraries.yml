@@ -2,9 +2,6 @@ theme_stylesheets_override_and_remove_test:
   version: VERSION
   css:
     base:
-      css/base-override.css: {}
-      css/base-override.sub-remove.css: {}
       css/base-remove.css: {}
-      css/base-remove.sub-override.css: {}
       css/sub-override.css: {}
       css/sub-remove.css: {}

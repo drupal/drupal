@@ -6,11 +6,6 @@ core: 8.x
 base theme: test_basetheme
 libraries:
   - test_subtheme/global-styling
-stylesheets-override:
-  - css/sub-override.css
-  - css/base-add.sub-override.css
-  - css/base-remove.sub-override.css
 stylesheets-remove:
-  - sub-remove.css
-  - base-add.sub-remove.css
-  - base-override.sub-remove.css
+  - @theme_test/css/sub-remove.css
+  - @test_basetheme/base-add.sub-remove.css

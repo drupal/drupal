@@ -15,7 +15,7 @@ version: VERSION
 base theme: classy
 core: 8.x
 stylesheets-remove:
-  - system.module.css
+  - @system/css/system.module.css
 regions:
   content: Content
   left: Left

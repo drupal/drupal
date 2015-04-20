@@ -56,7 +56,7 @@ class ThemeInfoTest extends WebTestBase {
   }
 
   /**
-   * Tests stylesheets-override and stylesheets-remove.
+   * Tests stylesheets-remove.
    */
   function testStylesheets() {
     $this->themeHandler->install(array('test_basetheme', 'test_subtheme'));
@@ -65,27 +65,22 @@ class ThemeInfoTest extends WebTestBase {
       ->save();
 
     $base = drupal_get_path('theme', 'test_basetheme');
-    // Unlike test_basetheme (and the original module CSS), the subtheme decides
-    // to put all of its CSS into a ./css subdirectory. All overrides and
-    // removals are expected to be based on a file's basename and should work
-    // nevertheless.
     $sub = drupal_get_path('theme', 'test_subtheme') . '/css';
 
+    // All removals are expected to be based on a file's path and name and
+    // should work nevertheless.
     $this->drupalGet('theme-test/info/stylesheets');
 
     $this->assertIdentical(1, count($this->xpath("//link[contains(@href, '$base/base-add.css')]")), "$base/base-add.css found");
-    $this->assertIdentical(1, count($this->xpath("//link[contains(@href, '$base/base-override.css')]")), "$base/base-override.css found");
     $this->assertIdentical(0, count($this->xpath("//link[contains(@href, 'base-remove.css')]")), "base-remove.css not found");
 
     $this->assertIdentical(1, count($this->xpath("//link[contains(@href, '$sub/sub-add.css')]")), "$sub/sub-add.css found");
-
-    $this->assertIdentical(1, count($this->xpath("//link[contains(@href, '$sub/sub-override.css')]")), "$sub/sub-override.css found");
-    $this->assertIdentical(1, count($this->xpath("//link[contains(@href, '$sub/base-add.sub-override.css')]")), "$sub/base-add.sub-override.css found");
-    $this->assertIdentical(1, count($this->xpath("//link[contains(@href, '$sub/base-remove.sub-override.css')]")), "$sub/base-remove.sub-override.css found");
-
     $this->assertIdentical(0, count($this->xpath("//link[contains(@href, 'sub-remove.css')]")), "sub-remove.css not found");
     $this->assertIdentical(0, count($this->xpath("//link[contains(@href, 'base-add.sub-remove.css')]")), "base-add.sub-remove.css not found");
-    $this->assertIdentical(0, count($this->xpath("//link[contains(@href, 'base-override.sub-remove.css')]")), "base-override.sub-remove.css not found");
+
+    // Verify that CSS files with the same name are loaded from both the base theme and subtheme.
+    $this->assertIdentical(1, count($this->xpath("//link[contains(@href, '$base/samename.css')]")), "$base/samename.css found");
+    $this->assertIdentical(1, count($this->xpath("//link[contains(@href, '$sub/samename.css')]")), "$sub/samename.css found");
   }
 
   /**

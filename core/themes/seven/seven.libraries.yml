@@ -73,3 +73,21 @@ drupal.nav-tabs:
     - core/drupal
     - core/jquery.once
     - core/jquery.intrinsic
+
+vertical-tabs:
+  version: VERSION
+  css:
+    component:
+      css/components/vertical-tabs.css: {}
+
+seven.jquery.ui:
+  version: VERSION
+  css:
+    component:
+      css/components/jquery.ui/theme.css: { weight: -1 }
+
+seven.drupal.dialog:
+  version: VERSION
+  css:
+    theme:
+      css/components/dialog.theme.css: {}

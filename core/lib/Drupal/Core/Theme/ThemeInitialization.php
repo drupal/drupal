@@ -8,6 +8,7 @@
 namespace Drupal\Core\Theme;
 
 use Drupal\Core\Extension\Extension;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\State\StateInterface;
 
@@ -38,6 +39,13 @@ class ThemeInitialization implements ThemeInitializationInterface {
   protected $root;
 
   /**
+   * The extensions that might be attaching assets.
+   *
+   * @var array
+   */
+  protected $extensions;
+
+  /**
    * Constructs a new ThemeInitialization object.
    *
    * @param string $root
@@ -46,11 +54,14 @@ class ThemeInitialization implements ThemeInitializationInterface {
    *   The theme handler.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler to use to load modules.
    */
-  public function __construct($root, ThemeHandlerInterface $theme_handler, StateInterface $state) {
+  public function __construct($root, ThemeHandlerInterface $theme_handler, StateInterface $state, ModuleHandlerInterface $module_handler) {
     $this->root = $root;
     $this->themeHandler = $theme_handler;
     $this->state = $state;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -151,47 +162,26 @@ class ThemeInitialization implements ThemeInitializationInterface {
     $values['name'] = $theme->getName();
 
     // Prepare stylesheets from this theme as well as all ancestor themes.
-    // We work it this way so that we can have child themes override parent
-    // theme stylesheets easily.
-    // CSS file basenames to override, pointing to the final, overridden filepath.
-    $values['stylesheets_override'] = array();
-    // CSS file basenames to remove.
+    // We work it this way so that we can have child themes remove CSS files
+    // easily from parent.
     $values['stylesheets_remove'] = array();
 
     // Grab stylesheets from base theme.
     foreach ($base_themes as $base) {
       $base_theme_path = $base->getPath();
       if (!empty($base->info['stylesheets-remove'])) {
-        foreach ($base->info['stylesheets-remove'] as $basename) {
-          $values['stylesheets_remove'][$basename] = $base_theme_path . '/' . $basename;
-        }
-      }
-      if (!empty($base->info['stylesheets-override'])) {
-        foreach ($base->info['stylesheets-override'] as $name) {
-          $basename = drupal_basename($name);
-          $values['stylesheets_override'][$basename] = $base_theme_path . '/' . $name;
+        foreach ($base->info['stylesheets-remove'] as $css_file) {
+          $css_file = $this->resolveStyleSheetPlaceholders($css_file);
+          $values['stylesheets_remove'][$css_file] = $css_file;
         }
       }
     }
 
     // Add stylesheets used by this theme.
     if (!empty($theme->info['stylesheets-remove'])) {
-      foreach ($theme->info['stylesheets-remove'] as $basename) {
-        $values['stylesheets_remove'][$basename] = $theme_path . '/' . $basename;
-
-        if (isset($values['stylesheets_override'][$basename])) {
-          unset($values['stylesheets_override'][$basename]);
-        }
-      }
-    }
-    if (!empty($theme->info['stylesheets-override'])) {
-      foreach ($theme->info['stylesheets-override'] as $name) {
-        $basename = drupal_basename($name);
-        $values['stylesheets_override'][$basename] = $theme_path . '/' . $name;
-
-        if (isset($values['stylesheets_remove'][$basename])) {
-          unset($values['stylesheets_remove'][$basename]);
-        }
+      foreach ($theme->info['stylesheets-remove'] as $css_file) {
+        $css_file = $this->resolveStyleSheetPlaceholders($css_file);
+        $values['stylesheets_remove'][$css_file] = $css_file;
       }
     }
 
@@ -228,4 +218,39 @@ class ThemeInitialization implements ThemeInitializationInterface {
     return new ActiveTheme($values);
   }
 
+  /**
+   * Gets all extensions.
+   *
+   * @return array
+   */
+  protected function getExtensions() {
+    if (!isset($this->extensions)) {
+      $this->extensions = array_merge($this->moduleHandler->getModuleList(),  $this->themeHandler->listInfo());
+    }
+    return $this->extensions;
+  }
+
+  /**
+   * Gets CSS file where tokens have been resolved.
+   *
+   * @param string $css_file
+   *   CSS file which may contain tokens.
+   *
+   * @return string
+   *   CSS file where placeholders are replaced.
+   */
+  protected function resolveStyleSheetPlaceholders($css_file) {
+    $token_candidate = explode('/', $css_file)[0];
+    if (!preg_match('/@[A-z0-9_-]+/', $token_candidate)) {
+      return $css_file;
+    }
+
+    $token = substr($token_candidate, 1);
+
+    // Prime extensions.
+    $extensions = $this->getExtensions();
+    if (isset($extensions[$token])) {
+      return str_replace($token_candidate, $extensions[$token]->getPath(), $css_file);
+    }
+  }
 }

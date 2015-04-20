@@ -197,3 +197,21 @@ function seven_form_node_form_alter(&$form, FormStateInterface $form_state) {
   $form['revision_information']['#type'] = 'container';
   $form['revision_information']['#group'] = 'meta';
 }
+
+/**
+ * Implements hook_library_info_alter().
+ */
+function seven_library_info_alter(&$libraries) {
+  if (isset($libraries['drupal.vertical-tabs'])) {
+    unset($libraries['drupal.vertical-tabs']['css']['component']['misc/vertical-tabs.css']);
+    $libraries['drupal.vertical-tabs']['dependencies'][] = 'seven/vertical-tabs';
+  }
+  if (isset($libraries['jquery.ui'])) {
+    unset($libraries['jquery.ui']['css']['theme']['assets/vendor/jquery.ui/themes/base/theme.css']);
+    $libraries['jquery.ui']['dependencies'][] = 'seven/seven.jquery.ui';
+  }
+  if (isset($libraries['drupal.dialog'])) {
+    unset($libraries['drupal.dialog']['css']['theme']['misc/dialog.theme.css']);
+    $libraries['drupal.dialog']['dependencies'][] = 'seven/seven.drupal.dialog';
+  }
+}

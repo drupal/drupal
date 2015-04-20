@@ -5,9 +5,5 @@ version: VERSION
 core: 8.x
 libraries:
   - test_basetheme/global-styling
-stylesheets-override:
-  - base-override.css
-  - base-override.sub-remove.css
 stylesheets-remove:
-  - base-remove.css
-  - base-remove.sub-override.css
+  - @theme_test/css/base-remove.css

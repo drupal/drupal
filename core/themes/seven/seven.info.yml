@@ -8,12 +8,9 @@ version: VERSION
 core: 8.x
 libraries:
  - seven/global-styling
-stylesheets-override:
-  - css/components/vertical-tabs.css
-  - css/components/jquery.ui/theme.css
-  - css/components/dialog.theme.css
 stylesheets-remove:
-  - dialog.css
+  - core/assets/vendor/jquery.ui/themes/base/dialog.css
+  - @classy/css/layout.css
 quickedit_stylesheets:
   - css/components/quickedit.css
 regions:

@@ -124,23 +124,8 @@ class AssetResolver implements AssetResolverInterface {
           // order.
           $options['weight'] += count($css) / 1000;
 
-          // Add the data to the CSS array depending on the type.
-          switch ($options['type']) {
-            case 'file':
-              // Local CSS files are keyed by basename; if a file with the same
-              // basename is added more than once, it gets overridden.
-              // By default, take over the filename as basename.
-              if (!isset($options['basename'])) {
-                $options['basename'] = \Drupal::service('file_system')->basename($options['data']);
-              }
-              $css[$options['basename']] = $options;
-              break;
-
-            default:
-              // External files are keyed by their full URI, so the same CSS
-              // file is not added twice.
-              $css[$options['data']] = $options;
-          }
+          // CSS files are being keyed by the full path.
+          $css[$options['data']] = $options;
         }
       }
     }
@@ -152,19 +137,11 @@ class AssetResolver implements AssetResolverInterface {
     // Sort CSS items, so that they appear in the correct order.
     uasort($css, 'static::sort');
 
-    // Allow themes to remove CSS files by basename.
+    // Allow themes to remove CSS files by CSS files full path and file name.
     if ($stylesheet_remove = $theme_info->getStyleSheetsRemove()) {
       foreach ($css as $key => $options) {
-        if (isset($options['basename']) && isset($stylesheet_remove[$options['basename']])) {
+        if (isset($stylesheet_remove[$key])) {
           unset($css[$key]);
-        }
-      }
-    }
-    // Allow themes to conditionally override CSS files by basename.
-    if ($stylesheet_override = $theme_info->getStyleSheetsOverride()) {
-      foreach ($css as $key => $options) {
-        if (isset($options['basename']) && isset($stylesheet_override[$options['basename']])) {
-          $css[$key]['data'] = $stylesheet_override[$options['basename']];
         }
       }
     }

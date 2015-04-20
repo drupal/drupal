@@ -3,3 +3,4 @@ global-styling:
   css:
     base:
       css/sub-add.css: {}
+      css/samename.css: {}
