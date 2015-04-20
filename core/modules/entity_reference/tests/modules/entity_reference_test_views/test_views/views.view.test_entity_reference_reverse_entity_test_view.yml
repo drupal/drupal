@@ -102,6 +102,14 @@ display:
           entity_type: entity_test_mul
           entity_field: id
           plugin_id: standard
+        id_1:
+          id: id_1
+          table: entity_test
+          field: id
+          entity_type: entity_test
+          entity_field: id
+          plugin_id: standard
+          relationship: reverse__entity_test__field_test_data
       header: {  }
       footer: {  }
       empty: {  }
