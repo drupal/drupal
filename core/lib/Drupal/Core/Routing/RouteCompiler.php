@@ -46,7 +46,6 @@ class RouteCompiler extends SymfonyRouteCompiler implements RouteCompilerInterfa
     $num_parts = count(explode('/', trim($pattern_outline, '/')));
 
     return new CompiledRoute(
-      $route,
       $fit,
       $pattern_outline,
       $num_parts,

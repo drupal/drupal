@@ -22,7 +22,7 @@ use \Drupal\Core\Database\Connection;
 /**
  * A Route Provider front-end for all Drupal-stored routes.
  */
-class RouteProvider implements RouteProviderInterface, PagedRouteProviderInterface, EventSubscriberInterface {
+class RouteProvider implements PreloadableRouteProviderInterface, PagedRouteProviderInterface, EventSubscriberInterface {
 
   /**
    * The database connection from which to read route information.
@@ -48,9 +48,16 @@ class RouteProvider implements RouteProviderInterface, PagedRouteProviderInterfa
   /**
    * A cache of already-loaded routes, keyed by route name.
    *
-   * @var array
+   * @var \Symfony\Component\Routing\Route[]
    */
   protected $routes = array();
+
+  /**
+   * A cache of already-loaded serialized routes, keyed by route name.
+   *
+   * @var string[]
+   */
+  protected $serializedRoutes = [];
 
   /**
    * The current path.
@@ -131,34 +138,32 @@ class RouteProvider implements RouteProviderInterface, PagedRouteProviderInterfa
   }
 
   /**
-   * Find many routes by their names using the provided list of names.
-   *
-   * Note that this method may not throw an exception if some of the routes
-   * are not found. It will just return the list of those routes it found.
-   *
-   * This method exists in order to allow performance optimizations. The
-   * simple implementation could be to just repeatedly call
-   * $this->getRouteByName().
-   *
-   * @param array $names
-   *   The list of names to retrieve.
-   *
-   * @return \Symfony\Component\Routing\Route[]
-   *   Iterable thing with the keys the names of the $names argument.
+   * {@inheritdoc}
    */
-  public function getRoutesByNames($names) {
-
+  public function preLoadRoutes($names) {
     if (empty($names)) {
       throw new \InvalidArgumentException('You must specify the route names to load');
     }
 
-    $routes_to_load = array_diff($names, array_keys($this->routes));
+    $routes_to_load = array_diff($names, array_keys($this->routes), array_keys($this->serializedRoutes));
     if ($routes_to_load) {
       $result = $this->connection->query('SELECT name, route FROM {' . $this->connection->escapeTable($this->tableName) . '} WHERE name IN ( :names[] )', array(':names[]' => $routes_to_load));
       $routes = $result->fetchAllKeyed();
+      $this->serializedRoutes += $routes;
+    }
+  }
 
-      foreach ($routes as $name => $route) {
-        $this->routes[$name] = unserialize($route);
+  /**
+   * {@inheritdoc}
+   */
+  public function getRoutesByNames($names) {
+    $this->preLoadRoutes($names);
+
+    foreach ($names as $name) {
+      // The specified route name might not exist or might be serialized.
+      if (!isset($this->routes[$name]) && isset($this->serializedRoutes[$name])) {
+        $this->routes[$name] = unserialize($this->serializedRoutes[$name]);
+        unset($this->serializedRoutes[$name]);
       }
     }
 
@@ -291,6 +296,7 @@ class RouteProvider implements RouteProviderInterface, PagedRouteProviderInterfa
    */
   public function reset() {
     $this->routes  = array();
+    $this->serializedRoutes = array();
   }
 
   /**

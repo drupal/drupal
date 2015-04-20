@@ -45,7 +45,7 @@ class RoutePreloaderTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    $this->routeProvider = $this->getMock('Drupal\Core\Routing\RouteProviderInterface');
+    $this->routeProvider = $this->getMock('Drupal\Core\Routing\PreloadableRouteProviderInterface');
     $this->state = $this->getMock('\Drupal\Core\State\StateInterface');
     $this->preloader = new RoutePreloader($this->routeProvider, $this->state);
   }
@@ -153,8 +153,8 @@ class RoutePreloaderTest extends UnitTestCase {
       ->will($this->returnValue($request));
 
     $this->routeProvider->expects($this->once())
-      ->method('getRoutesByNames')
-      ->with(array('test2'));
+      ->method('preLoadRoutes')
+      ->with(['test2']);
     $this->state->expects($this->once())
       ->method('get')
       ->with('routing.non_admin_routes')

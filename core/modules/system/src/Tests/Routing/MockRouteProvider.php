@@ -57,6 +57,13 @@ class MockRouteProvider implements RouteProviderInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function preLoadRoutes($names) {
+    // Nothing to do.
+  }
+
+  /**
    * Implements \Symfony\Cmf\Component\Routing\RouteProviderInterface::getRoutesByName().
    */
   public function getRoutesByNames($names) {

@@ -25,7 +25,7 @@ class RoutePreloader implements EventSubscriberInterface {
   /**
    * The route provider.
    *
-   * @var \Drupal\Core\Routing\RouteProviderInterface
+   * @var \Drupal\Core\Routing\RouteProviderInterface|\Drupal\Core\Routing\PreloadableRouteProviderInterface
    */
   protected $routeProvider;
 
@@ -63,18 +63,12 @@ class RoutePreloader implements EventSubscriberInterface {
    *   The event to process.
    */
   public function onRequest(KernelEvent $event) {
-    // Just preload on normal HTML pages, as they will display menu links.
-    if ($event->getRequest()->getRequestFormat() == 'html') {
-      $this->loadNonAdminRoutes();
-    }
-  }
-
-  /**
-   * Load all the non-admin routes at once.
-   */
-  protected function loadNonAdminRoutes() {
-    if ($routes = $this->state->get('routing.non_admin_routes', array())) {
-      $this->routeProvider->getRoutesByNames($routes);
+    // Only preload on normal HTML pages, as they will display menu links.
+    if ($this->routeProvider instanceof PreloadableRouteProviderInterface && $event->getRequest()->getRequestFormat() == 'html') {
+      if ($routes = $this->state->get('routing.non_admin_routes', [])) {
+        // Preload all the non-admin routes at once.
+        $this->routeProvider->preLoadRoutes($routes);
+      }
     }
   }
 

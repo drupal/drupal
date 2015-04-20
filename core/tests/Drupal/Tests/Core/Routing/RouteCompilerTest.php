@@ -62,7 +62,6 @@ class RouteCompilerTest extends UnitTestCase {
     $route->setOption('compiler_class', 'Drupal\Core\Routing\RouteCompiler');
     $compiled = $route->compile();
 
-    $this->assertEquals($route, $compiled->getRoute(), 'Compiled route has the incorrect route object.');
     $this->assertEquals($compiled->getFit(), 5 /* That's 101 binary*/, 'The fit was incorrect.');
     $this->assertEquals($compiled->getPatternOutline(), '/test/%/more', 'The pattern outline was not correct.');
   }
@@ -79,7 +78,6 @@ class RouteCompilerTest extends UnitTestCase {
     $route->setOption('compiler_class', 'Drupal\Core\Routing\RouteCompiler');
     $compiled = $route->compile();
 
-    $this->assertEquals($route, $compiled->getRoute(), 'Compiled route has an incorrect route object.');
     $this->assertEquals($compiled->getFit(), 5 /* That's 101 binary*/, 'The fit was not correct.');
     $this->assertEquals($compiled->getPatternOutline(), '/test/%/more', 'The pattern outline was not correct.');
   }
