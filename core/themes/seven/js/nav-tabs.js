@@ -35,7 +35,7 @@
     $tab.addClass('position-container is-horizontal-enabled');
 
     $tab.on('click.tabs', '[data-drupal-nav-tabs-trigger]', openMenu);
-    $(window).on('resize.tabs', Drupal.debounce(handleResize)).trigger('resize.tabs');
+    $(window).on('resize.tabs', Drupal.debounce(handleResize, 150)).trigger('resize.tabs');
   }
 
   /**
