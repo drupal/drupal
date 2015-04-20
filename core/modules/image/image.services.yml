@@ -9,5 +9,6 @@ services:
   image.page_cache_response_policy.deny_private_image_style_download:
     class: Drupal\image\PageCache\DenyPrivateImageStyleDownload
     arguments: ['@current_route_match']
+    public: false
     tags:
       - { name: page_cache_response_policy }
