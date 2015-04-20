@@ -134,6 +134,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $this->assertText(t('The new set label is required.'));
     $current_set = shortcut_current_displayed_set($this->adminUser);
     $this->assertEqual($current_set->id(), $this->set->id(), 'Attempting to switch to a new shortcut set without providing a set name does not succeed.');
+    $this->assertFieldByXPath("//input[@name='label' and contains(concat(' ', normalize-space(@class), ' '), ' error ')]", NULL, 'The new set label field has the error class');
   }
 
   /**

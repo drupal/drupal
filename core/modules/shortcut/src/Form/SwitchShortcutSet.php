@@ -100,6 +100,9 @@ class SwitchShortcutSet extends FormBase {
           'visible' => array(
             ':input[name="set"]' => array('value' => 'new'),
           ),
+          'required' => array(
+            ':input[name="set"]' => array('value' => 'new'),
+          ),
         ),
       );
       $form['id'] = array(
@@ -162,7 +165,7 @@ class SwitchShortcutSet extends FormBase {
     if ($form_state->getValue('set') == 'new') {
       // Check to prevent creating a shortcut set with an empty title.
       if (trim($form_state->getValue('label')) == '') {
-        $form_state->setErrorByName('new', $this->t('The new set label is required.'));
+        $form_state->setErrorByName('label', $this->t('The new set label is required.'));
       }
     }
   }
