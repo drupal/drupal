@@ -187,8 +187,7 @@ abstract class FormTestBase extends UnitTestCase {
       ->getMock();
     $this->root = dirname(dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__))));
 
-    $this->formBuilder = new TestFormBuilder($this->formValidator, $this->formSubmitter, $this->formCache, $this->moduleHandler, $this->eventDispatcher, $this->requestStack, $this->classResolver, $this->elementInfo, $this->themeManager, $this->csrfToken, $this->kernel);
-    $this->formBuilder->setCurrentUser($this->account);
+    $this->formBuilder = new FormBuilder($this->formValidator, $this->formSubmitter, $this->formCache, $this->moduleHandler, $this->eventDispatcher, $this->requestStack, $this->classResolver, $this->elementInfo, $this->themeManager, $this->csrfToken, $this->kernel);
   }
 
   /**
@@ -311,63 +310,6 @@ abstract class FormTestBase extends UnitTestCase {
 
 }
 
-/**
- * Provides a test form builder class.
- */
-class TestFormBuilder extends FormBuilder {
-  protected static $seenIds = array();
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function sendResponse(Response $response) {
-    parent::sendResponse($response);
-    // Throw an exception instead of exiting.
-    throw new \Exception('exit');
-  }
-
-  /**
-   * @param \Drupal\Core\Session\AccountInterface $account
-   */
-  public function setCurrentUser(AccountInterface $account) {
-    $this->currentUser = $account;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function drupalHtmlClass($class) {
-    return $class;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function drupalHtmlId($id) {
-    if (isset(static::$seenIds[$id])) {
-      $id = $id . '--' . ++static::$seenIds[$id];
-    }
-    else {
-      static::$seenIds[$id] = 1;
-    }
-    return $id;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function drupalStaticReset($name = NULL) {
-    static::$seenIds = array();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function requestUri() {
-    return '';
-  }
-
-}
 }
 
 namespace {
