@@ -76,14 +76,14 @@ abstract class EntityDisplayModeFormBase extends EntityForm {
   public function form(array $form, FormStateInterface $form_state) {
     $form['label'] = array(
       '#type' => 'textfield',
-      '#title' => t('Name'),
+      '#title' => $this->t('Name'),
       '#maxlength' => 100,
       '#default_value' => $this->entity->label(),
     );
 
     $form['id'] = array(
       '#type' => 'machine_name',
-      '#description' => t('A unique machine-readable name. Can only contain lowercase letters, numbers, and underscores.'),
+      '#description' => $this->t('A unique machine-readable name. Can only contain lowercase letters, numbers, and underscores.'),
       '#disabled' => !$this->entity->isNew(),
       '#default_value' => $this->entity->id(),
       '#field_prefix' => $this->entity->isNew() ? $this->entity->getTargetType() . '.' : '',
@@ -122,7 +122,7 @@ abstract class EntityDisplayModeFormBase extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    drupal_set_message(t('Saved the %label @entity-type.', array('%label' => $this->entity->label(), '@entity-type' => $this->entityType->getLowercaseLabel())));
+    drupal_set_message($this->t('Saved the %label @entity-type.', array('%label' => $this->entity->label(), '@entity-type' => $this->entityType->getLowercaseLabel())));
     $this->entity->save();
     \Drupal::entityManager()->clearCachedFieldDefinitions();
     $form_state->setRedirectUrl($this->entity->urlInfo('collection'));
