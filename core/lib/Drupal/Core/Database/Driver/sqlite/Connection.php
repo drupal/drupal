@@ -52,6 +52,10 @@ class Connection extends DatabaseConnection {
    * Constructs a \Drupal\Core\Database\Driver\sqlite\Connection object.
    */
   public function __construct(\PDO $connection, array $connection_options) {
+    // We don't need a specific PDOStatement class here, we simulate it in
+    // static::prepare().
+    $this->statementClass = NULL;
+
     parent::__construct($connection, $connection_options);
 
     // This driver defaults to transaction support, except if explicitly passed FALSE.
@@ -255,69 +259,8 @@ class Connection extends DatabaseConnection {
   /**
    * {@inheritdoc}
    */
-  protected function expandArguments(&$query, &$args) {
-    $modified = parent::expandArguments($query, $args);
-
-    // The PDO SQLite driver always replaces placeholders with strings, which
-    // breaks numeric expressions (e.g., COUNT(*) >= :count). Replace numeric
-    // placeholders in the query to work around this bug.
-    // @see http://bugs.php.net/bug.php?id=45259
-    if (empty($args)) {
-      return $modified;
-    }
-    // Check if $args is a simple numeric array.
-    if (range(0, count($args) - 1) === array_keys($args)) {
-      // In that case, we have unnamed placeholders.
-      $count = 0;
-      $new_args = array();
-      foreach ($args as $value) {
-        if (is_float($value) || is_int($value) || is_numeric($value)) {
-          if (is_float($value)) {
-            // Force the conversion to float so as not to loose precision
-            // in the automatic cast.
-            $value = sprintf('%F', $value);
-          }
-          $query = substr_replace($query, $value, strpos($query, '?'), 1);
-        }
-        else {
-          $placeholder = ':db_statement_placeholder_' . $count++;
-          $query = substr_replace($query, $placeholder, strpos($query, '?'), 1);
-          $new_args[$placeholder] = $value;
-        }
-      }
-      $args = $new_args;
-      $modified = TRUE;
-    }
-    // Otherwise this is using named placeholders.
-    else {
-      foreach ($args as $placeholder => $value) {
-        if (is_float($value) || is_int($value) || is_numeric($value)) {
-          if (is_float($value)) {
-            // Force the conversion to float so as not to loose precision
-            // in the automatic cast.
-            $value = sprintf('%F', $value);
-          }
-
-          // We will remove this placeholder from the query as PDO throws an
-          // exception if the number of placeholders in the query and the
-          // arguments does not match.
-          unset($args[$placeholder]);
-          // PDO allows placeholders to not be prefixed by a colon. See
-          // http://marc.info/?l=php-internals&m=111234321827149&w=2 for
-          // more.
-          if ($placeholder[0] != ':') {
-            $placeholder = ":$placeholder";
-          }
-          // When replacing the placeholders, make sure we search for the
-          // exact placeholder. For example, if searching for
-          // ':db_placeholder_1', do not replace ':db_placeholder_11'.
-          $query = preg_replace('/' . preg_quote($placeholder, '/') . '\b/', $value, $query);
-
-          $modified = TRUE;
-        }
-      }
-    }
-    return $modified;
+  public function prepare($statement, array $driver_options = array()) {
+    return new Statement($this->connection, $this, $statement, $driver_options);
   }
 
   /**
@@ -384,6 +327,13 @@ class Connection extends DatabaseConnection {
       'NOT LIKE' => array('postfix' => " ESCAPE '\\'"),
     );
     return isset($specials[$operator]) ? $specials[$operator] : NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function prepareQuery($query) {
+    return $this->prepare($this->prefixTables($query));
   }
 
   public function nextId($existing_id = 0) {

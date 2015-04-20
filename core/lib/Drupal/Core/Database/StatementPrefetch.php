@@ -187,8 +187,8 @@ class StatementPrefetch implements \Iterator, StatementInterface {
     // Fetch all the data from the reply, in order to release any lock
     // as soon as possible.
     $this->data = $statement->fetchAll(\PDO::FETCH_ASSOC);
-    // Destroy the statement as soon as possible. See
-    // DatabaseConnection_sqlite::PDOPrepare() for explanation.
+    // Destroy the statement as soon as possible. See the documentation of
+    // \Drupal\Core\Database\Driver\sqlite\Statement for an explanation.
     unset($statement);
 
     $this->resultRowCount = count($this->data);
