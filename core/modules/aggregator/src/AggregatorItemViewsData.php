@@ -34,12 +34,13 @@ class AggregatorItemViewsData extends EntityViewsData {
     $data['aggregator_item']['link']['help'] = $this->t('The link to the original source URL of the item.');
 
     $data['aggregator_item']['author']['help'] = $this->t('The author of the original imported item.');
-    $data['aggregator_item']['author']['field']['id'] = 'aggregator_xss';
+
+    $data['aggregator_item']['author']['field']['default_formatter'] = 'aggregator_xss';
 
     $data['aggregator_item']['guid']['help'] = $this->t('The guid of the original imported item.');
 
     $data['aggregator_item']['description']['help'] = $this->t('The actual content of the imported item.');
-    $data['aggregator_item']['description']['field']['id'] = 'aggregator_xss';
+    $data['aggregator_item']['description']['field']['default_formatter'] = 'aggregator_xss';
     $data['aggregator_item']['description']['field']['click sortable'] = FALSE;
 
     $data['aggregator_item']['timestamp']['help'] = $this->t('The date the original feed item was posted. (With some feeds, this will be the date it was imported.)');

@@ -16,10 +16,6 @@ views.field.aggregator_title_link:
       type: boolean
       label: 'Display as link'
 
-views.field.aggregator_xss:
-  type: views.field.xss
-  label: 'Aggregator XSS'
-
 views.row.aggregator_rss:
   type: views_row
   label: 'Aggregator item row'
