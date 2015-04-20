@@ -12,7 +12,7 @@ use Drupal\simpletest\KernelTestBase;
 /**
  * Tests the merging of attachments.
  *
- * @see drupal_merge_attached()
+ * @see \Drupal::service('renderer')->mergeAttachments()
  *
  * @group Common
  */
@@ -22,16 +22,24 @@ class MergeAttachmentsTest extends KernelTestBase {
    * Tests library asset merging.
    */
   function testLibraryMerging() {
+    $renderer = \Drupal::service('renderer');
+
     $a['#attached'] = array(
       'library' => array(
         'core/drupal',
         'core/drupalSettings',
       ),
+      'drupalSettings' => [
+        'foo' => ['d'],
+      ],
     );
     $b['#attached'] = array(
       'library' => array(
         'core/jquery',
       ),
+      'drupalSettings' => [
+        'bar' => ['a', 'b', 'c'],
+      ],
     );
     $expected['#attached'] = array(
       'library' => array(
@@ -39,8 +47,12 @@ class MergeAttachmentsTest extends KernelTestBase {
         'core/drupalSettings',
         'core/jquery',
       ),
+      'drupalSettings' => [
+        'foo' => ['d'],
+        'bar' => ['a', 'b', 'c'],
+      ],
     );
-    $this->assertIdentical($expected['#attached'], drupal_merge_attached($a['#attached'], $b['#attached']), 'Attachments merged correctly.');
+    $this->assertIdentical($expected['#attached'], $renderer->mergeAttachments($a['#attached'], $b['#attached']), 'Attachments merged correctly.');
 
     // Merging in the opposite direction yields the opposite library order.
     $expected['#attached'] = array(
@@ -49,8 +61,12 @@ class MergeAttachmentsTest extends KernelTestBase {
         'core/drupal',
         'core/drupalSettings',
       ),
+      'drupalSettings' => [
+        'bar' => ['a', 'b', 'c'],
+        'foo' => ['d'],
+      ],
     );
-    $this->assertIdentical($expected['#attached'], drupal_merge_attached($b['#attached'], $a['#attached']), 'Attachments merged correctly; opposite merging yields opposite order.');
+    $this->assertIdentical($expected['#attached'], $renderer->mergeAttachments($b['#attached'], $a['#attached']), 'Attachments merged correctly; opposite merging yields opposite order.');
 
     // Merging with duplicates: duplicates are simply retained, it's up to the
     // rest of the system to handle duplicates.
@@ -62,88 +78,44 @@ class MergeAttachmentsTest extends KernelTestBase {
         'core/jquery',
         'core/drupalSettings',
       ),
-    );
-    $this->assertIdentical($expected['#attached'], drupal_merge_attached($a['#attached'], $b['#attached']), 'Attachments merged correctly; duplicates are retained.');
-  }
-
-  /**
-   * Tests JavaScript and JavaScript setting asset merging.
-   */
-  function testJsSettingMerging() {
-    $a['#attached'] = array(
-      'js' => array(
-        'foo.js' => array(),
-        'bar.js' => array(),
-      ),
-      'drupalSettings' => [
-        'foo' => ['d'],
-      ],
-    );
-    $b['#attached'] = array(
-      'js' => array(
-        'baz.js' => array(),
-      ),
-      'drupalSettings' => [
-        'bar' => ['a', 'b', 'c'],
-      ],
-    );
-    $expected['#attached'] = array(
-      'js' => array(
-        'foo.js' => array(),
-        'bar.js' => array(),
-        'baz.js' => array(),
-      ),
       'drupalSettings' => [
         'foo' => ['d'],
         'bar' => ['a', 'b', 'c'],
       ],
     );
-    $this->assertIdentical($expected['#attached'], drupal_merge_attached($a['#attached'], $b['#attached']), 'Attachments merged correctly.');
-
-    // Merging in the opposite direction yields the opposite JS setting asset
-    // order.
-    $expected['#attached'] = array(
-      'js' => array(
-        'baz.js' => array(),
-        'foo.js' => array(),
-        'bar.js' => array(),
-      ),
-      'drupalSettings' => [
-        'bar' => ['a', 'b', 'c'],
-        'foo' => ['d'],
-      ],
-    );
-    $this->assertIdentical($expected['#attached'], drupal_merge_attached($b['#attached'], $a['#attached']), 'Attachments merged correctly; opposite merging yields opposite order.');
+    $this->assertIdentical($expected['#attached'], $renderer->mergeAttachments($a['#attached'], $b['#attached']), 'Attachments merged correctly; duplicates are retained.');
 
     // Merging with duplicates (simple case).
     $b['#attached']['drupalSettings']['foo'] = ['a', 'b', 'c'];
     $expected['#attached'] = array(
-      'js' => array(
-        'foo.js' => array(),
-        'bar.js' => array(),
-        'baz.js' => array(),
+      'library' => array(
+        'core/drupal',
+        'core/drupalSettings',
+        'core/jquery',
+        'core/drupalSettings',
       ),
       'drupalSettings' => [
         'foo' => ['a', 'b', 'c'],
         'bar' => ['a', 'b', 'c'],
       ],
     );
-    $this->assertIdentical($expected['#attached'], drupal_merge_attached($a['#attached'], $b['#attached']));
+    $this->assertIdentical($expected['#attached'], $renderer->mergeAttachments($a['#attached'], $b['#attached']));
 
     // Merging with duplicates (simple case) in the opposite direction yields
     // the opposite JS setting asset order, but also opposite overriding order.
     $expected['#attached'] = array(
-      'js' => array(
-        'baz.js' => array(),
-        'foo.js' => array(),
-        'bar.js' => array(),
+      'library' => array(
+        'core/jquery',
+        'core/drupalSettings',
+        'core/drupal',
+        'core/drupalSettings',
       ),
       'drupalSettings' => [
         'bar' => ['a', 'b', 'c'],
         'foo' => ['d', 'b', 'c'],
       ],
     );
-    $this->assertIdentical($expected['#attached'], drupal_merge_attached($b['#attached'], $a['#attached']));
+    $this->assertIdentical($expected['#attached'], $renderer->mergeAttachments($b['#attached'], $a['#attached']));
 
     // Merging with duplicates: complex case.
     // Only the second of these two entries should appear in drupalSettings.
@@ -167,7 +139,7 @@ class MergeAttachmentsTest extends KernelTestBase {
     $settings_two_b = array('moduleName' => array('ui' => array('button D', 'button E'), 'magical flag' => 3.14, 'thingiesOnPage' => array('id2' => array())));
     $build['b']['#attached']['drupalSettings']['commonTestRealWorldAlmostIdentical'] = $settings_two_b;
 
-    $merged = drupal_merge_attached($build['a']['#attached'], $build['b']['#attached']);
+    $merged = $renderer->mergeAttachments($build['a']['#attached'], $build['b']['#attached']);
 
     // Test whether #attached can be used to override a previous setting.
     $this->assertIdentical('secondValue', $merged['drupalSettings']['commonTest']);
@@ -193,6 +165,247 @@ class MergeAttachmentsTest extends KernelTestBase {
     $expected_settings_two['moduleName']['magical flag'] = 3.14;
     $expected_settings_two['moduleName']['thingiesOnPage']['id2'] = [];
     $this->assertIdentical($expected_settings_two, $merged['drupalSettings']['commonTestRealWorldAlmostIdentical']);
+  }
+
+  /**
+   * Tests feed asset merging.
+   */
+  function testFeedMerging() {
+    $renderer = \Drupal::service('renderer');
+
+    $a['#attached'] = array(
+      'feed' => array(
+        array(
+          'aggregator/rss',
+          t('Feed title'),
+        ),
+      ),
+    );
+    $b['#attached'] = array(
+      'feed' => array(
+        array(
+          'taxonomy/term/1/feed',
+          'RSS - foo',
+        ),
+      ),
+    );
+    $expected['#attached'] = array(
+      'feed' => array(
+        array(
+          'aggregator/rss',
+          t('Feed title'),
+        ),
+        array(
+          'taxonomy/term/1/feed',
+          'RSS - foo',
+        ),
+      ),
+    );
+    $this->assertIdentical($expected['#attached'], $renderer->mergeAttachments($a['#attached'], $b['#attached']), 'Attachments merged correctly.');
+
+    // Merging in the opposite direction yields the opposite library order.
+    $expected['#attached'] = array(
+      'feed' => array(
+        array(
+          'taxonomy/term/1/feed',
+          'RSS - foo',
+        ),
+        array(
+          'aggregator/rss',
+          t('Feed title'),
+        ),
+      ),
+    );
+    $this->assertIdentical($expected['#attached'], $renderer->mergeAttachments($b['#attached'], $a['#attached']), 'Attachments merged correctly; opposite merging yields opposite order.');
+  }
+
+  /**
+   * Tests html_head asset merging.
+   */
+  function testHtmlHeadMerging() {
+    $renderer = \Drupal::service('renderer');
+
+    $a['#attached'] = array(
+      'html_head' => array(
+        array(
+          '#tag' => 'meta',
+          '#attributes' => array(
+            'charset' => 'utf-8',
+          ),
+          '#weight' => -1000,
+        ),
+        'system_meta_content_type',
+      ),
+    );
+    $b['#attached'] = array(
+      'html_head' => array(
+        array(
+          '#type' => 'html_tag',
+          '#tag' => 'meta',
+          '#attributes' => array(
+            'name' => 'Generator',
+            'content' => 'Kitten 1.0 (https://www.drupal.org/project/kitten)',
+          ),
+        ),
+        'system_meta_generator',
+      ),
+    );
+    $expected['#attached'] = array(
+      'html_head' => array(
+        array(
+          '#tag' => 'meta',
+          '#attributes' => array(
+            'charset' => 'utf-8',
+          ),
+          '#weight' => -1000,
+        ),
+        'system_meta_content_type',
+        array(
+          '#type' => 'html_tag',
+          '#tag' => 'meta',
+          '#attributes' => array(
+            'name' => 'Generator',
+            'content' => 'Kitten 1.0 (https://www.drupal.org/project/kitten)',
+          ),
+        ),
+        'system_meta_generator',
+      ),
+    );
+    $this->assertIdentical($expected['#attached'], $renderer->mergeAttachments($a['#attached'], $b['#attached']), 'Attachments merged correctly.');
+
+    // Merging in the opposite direction yields the opposite library order.
+    $expected['#attached'] = array(
+      'html_head' => array(
+        array(
+          '#type' => 'html_tag',
+          '#tag' => 'meta',
+          '#attributes' => array(
+            'name' => 'Generator',
+            'content' => 'Kitten 1.0 (https://www.drupal.org/project/kitten)',
+          ),
+        ),
+        'system_meta_generator',
+        array(
+          '#tag' => 'meta',
+          '#attributes' => array(
+            'charset' => 'utf-8',
+          ),
+          '#weight' => -1000,
+        ),
+        'system_meta_content_type',
+      ),
+    );
+    $this->assertIdentical($expected['#attached'], $renderer->mergeAttachments($b['#attached'], $a['#attached']), 'Attachments merged correctly; opposite merging yields opposite order.');
+  }
+
+  /**
+   * Tests html_head_link asset merging.
+   */
+  function testHtmlHeadLinkMerging() {
+    $renderer = \Drupal::service('renderer');
+
+    $a['#attached'] = array(
+      'html_head_link' => array(
+        array(
+          'rel' => 'rel',
+          'href' => 'http://rel.example.com',
+        ),
+        TRUE,
+      ),
+    );
+    $b['#attached'] = array(
+      'html_head_link' => array(
+        array(
+          'rel' => 'shortlink',
+          'href' => 'http://shortlink.example.com',
+        ),
+        FALSE,
+      ),
+    );
+    $expected['#attached'] = array(
+      'html_head_link' => array(
+        array(
+          'rel' => 'rel',
+          'href' => 'http://rel.example.com',
+        ),
+        TRUE,
+        array(
+          'rel' => 'shortlink',
+          'href' => 'http://shortlink.example.com',
+        ),
+        FALSE,
+      ),
+    );
+    $this->assertIdentical($expected['#attached'], $renderer->mergeAttachments($a['#attached'], $b['#attached']), 'Attachments merged correctly.');
+
+    // Merging in the opposite direction yields the opposite library order.
+    $expected['#attached'] = array(
+      'html_head_link' => array(
+        array(
+          'rel' => 'shortlink',
+          'href' => 'http://shortlink.example.com',
+        ),
+        FALSE,
+        array(
+          'rel' => 'rel',
+          'href' => 'http://rel.example.com',
+        ),
+        TRUE,
+      ),
+    );
+    $this->assertIdentical($expected['#attached'], $renderer->mergeAttachments($b['#attached'], $a['#attached']), 'Attachments merged correctly; opposite merging yields opposite order.');
+  }
+
+  /**
+   * Tests http_header asset merging.
+   */
+  function testHttpHeaderMerging() {
+    $renderer = \Drupal::service('renderer');
+
+    $a['#attached'] = array(
+      'http_header' => array(
+        array(
+          'Content-Type',
+          'application/rss+xml; charset=utf-8',
+        ),
+      ),
+    );
+    $b['#attached'] = array(
+      'http_header' => array(
+        array(
+          'Expires',
+          'Sun, 19 Nov 1978 05:00:00 GMT',
+        ),
+      ),
+    );
+    $expected['#attached'] = array(
+      'http_header' => array(
+        array(
+          'Content-Type',
+          'application/rss+xml; charset=utf-8',
+        ),
+        array(
+          'Expires',
+          'Sun, 19 Nov 1978 05:00:00 GMT',
+        ),
+      ),
+    );
+    $this->assertIdentical($expected['#attached'], $renderer->mergeAttachments($a['#attached'], $b['#attached']), 'Attachments merged correctly.');
+
+    // Merging in the opposite direction yields the opposite library order.
+    $expected['#attached'] = array(
+      'http_header' => array(
+        array(
+          'Expires',
+          'Sun, 19 Nov 1978 05:00:00 GMT',
+        ),
+        array(
+          'Content-Type',
+          'application/rss+xml; charset=utf-8',
+        ),
+      ),
+    );
+    $this->assertIdentical($expected['#attached'], $renderer->mergeAttachments($b['#attached'], $a['#attached']), 'Attachments merged correctly; opposite merging yields opposite order.');
   }
 
 }

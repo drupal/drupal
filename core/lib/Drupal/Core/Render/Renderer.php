@@ -813,10 +813,18 @@ class Renderer implements RendererInterface {
     // correctly; adding the same settings multiple times needs to behave
     // idempotently.
     if (!empty($a['drupalSettings']) && !empty($b['drupalSettings'])) {
-      $a['drupalSettings'] = NestedArray::mergeDeepArray([$a['drupalSettings'], $b['drupalSettings']], TRUE);
+      $drupalSettings = NestedArray::mergeDeepArray(array($a['drupalSettings'], $b['drupalSettings']), TRUE);
+      // No need for re-merging them.
+      unset($a['drupalSettings']);
       unset($b['drupalSettings']);
     }
-    return NestedArray::mergeDeep($a, $b);
+    // Apply the normal merge.
+    $a = array_merge_recursive($a, $b);
+    if (isset($drupalSettings)) {
+      // Save the custom merge for the drupalSettings.
+      $a['drupalSettings'] = $drupalSettings;
+    }
+    return $a;
   }
 
   /**
