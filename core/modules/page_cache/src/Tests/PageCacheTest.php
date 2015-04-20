@@ -308,7 +308,7 @@ class PageCacheTest extends WebTestBase {
    */
   function testPageCacheAnonymous403404() {
     $admin_url = Url::fromRoute('system.admin');
-    $invalid_url = 'foo/' . $this->randomString();
+    $invalid_url = 'foo/does_not_exist';
     $tests = [
       403 => $admin_url,
       404 => $invalid_url,
