@@ -1,6 +1,8 @@
 
 Drupal 7.37, xxxx-xx-xx (development version)
 -----------------------
+- Added a description to the "Administer text formats and filters" permission
+  on the Permissions page (string change).
 
 Drupal 7.36, 2015-04-01
 -----------------------
