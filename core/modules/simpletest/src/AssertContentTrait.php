@@ -483,11 +483,10 @@ trait AssertContentTrait {
   }
 
   /**
-   * Passes if the text IS found on the text version of the page.
+   * Passes if the page (with HTML stripped) contains the text.
    *
-   * The text version is the equivalent of what a user would see when viewing
-   * through a web browser. In other words the HTML has been filtered out of the
-   * contents.
+   * Note that stripping HTML tags also removes their attributes, such as
+   * the values of text fields.
    *
    * @param string $text
    *   Plain text to look for.
@@ -503,17 +502,18 @@ trait AssertContentTrait {
    *
    * @return bool
    *   TRUE on pass, FALSE on fail.
+   *
+   * @see \Drupal\simpletest\AssertContentTrait::assertRaw()
    */
   protected function assertText($text, $message = '', $group = 'Other') {
     return $this->assertTextHelper($text, $message, $group, FALSE);
   }
 
   /**
-   * Passes if the text is NOT found on the text version of the page.
+   * Passes if the page (with HTML stripped) does not contains the text.
    *
-   * The text version is the equivalent of what a user would see when viewing
-   * through a web browser. In other words the HTML has been filtered out of the
-   * contents.
+   * Note that stripping HTML tags also removes their attributes, such as
+   * the values of text fields.
    *
    * @param string $text
    *   Plain text to look for.
@@ -529,6 +529,8 @@ trait AssertContentTrait {
    *
    * @return bool
    *   TRUE on pass, FALSE on fail.
+   *
+   * @see \Drupal\simpletest\AssertContentTrait::assertNoRaw()
    */
   protected function assertNoText($text, $message = '', $group = 'Other') {
     return $this->assertTextHelper($text, $message, $group, TRUE);
