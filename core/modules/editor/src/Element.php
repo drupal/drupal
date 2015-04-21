@@ -73,7 +73,6 @@ class Element {
         '#name' => $element['format']['format']['#name'],
         '#value' => $format_id,
         '#attributes' => array(
-          'class' => array('editor'),
           'data-editor-for' => $field_id,
         ),
       );
