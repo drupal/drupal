@@ -50,9 +50,7 @@ class BasicAuthTest extends WebTestBase {
     $this->assertResponse('403', 'Access is not granted.');
     $this->curlClose();
 
-    // @todo Change ->drupalGet() calls to just pass $url when
-    //   https://www.drupal.org/node/2350837 gets committed
-    $this->drupalGet($url->setAbsolute()->toString());
+    $this->drupalGet($url);
     $this->assertEqual($this->drupalGetHeader('WWW-Authenticate'), SafeMarkup::format('Basic realm="@realm"', ['@realm' => \Drupal::config('system.site')->get('name')]));
     $this->assertResponse('401', 'Not authenticated on the route that allows only basic_auth. Prompt to authenticate received.');
 
