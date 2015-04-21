@@ -486,10 +486,10 @@ class SearchQuery extends SelectExtender {
    * used. However, if at least one call to addScore() has taken place, the
    * keyword relevance score is not automatically added.
    *
-   * Also note that if you call orderBy() directly on the query, search scores
-   * will not automatically be used to order search results. Your orderBy()
-   * expression can reference 'calculated_score', which will be the total
-   * calculated score value.
+   * Note that you must use this method to add ordering to your searches, and
+   * not call orderBy() directly, when using the SearchQuery extender. This is
+   * because of the two-pass system the SearchQuery class uses to normalize
+   * scores.
    *
    * @param string $score
    *   The score expression, which should evaluate to a number between 0 and 1.
