@@ -8,7 +8,7 @@
 use Drupal\Component\Utility\Random;
 
 /**
- * Implements hook_ENTITY_TYPE_load().
+ * Implements hook_ENTITY_TYPE_load() for 'static_cache_test_config_test'.
  */
 function config_entity_static_cache_test_config_test_load($entities) {
   static $random;

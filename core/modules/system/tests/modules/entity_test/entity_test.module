@@ -324,7 +324,7 @@ function entity_test_mulrev_load($id, $reset = FALSE) {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_insert().
+ * Implements hook_ENTITY_TYPE_insert() for 'entity_test'.
  */
 function entity_test_entity_test_insert($entity) {
   if ($entity->name->value == 'fail_insert') {
@@ -443,42 +443,42 @@ function entity_test_entity_translation_delete(EntityInterface $translation) {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_translation_insert().
+ * Implements hook_ENTITY_TYPE_translation_insert() for 'entity_test_mul'.
  */
 function entity_test_entity_test_mul_translation_insert(EntityInterface $translation) {
   _entity_test_record_hooks('entity_test_mul_translation_insert', $translation->language()->getId());
 }
 
 /**
- * Implements hook_ENTITY_TYPE_translation_delete().
+ * Implements hook_ENTITY_TYPE_translation_delete() for 'entity_test_mul'.
  */
 function entity_test_entity_test_mul_translation_delete(EntityInterface $translation) {
   _entity_test_record_hooks('entity_test_mul_translation_delete', $translation->language()->getId());
 }
 
 /**
- * Implements hook_ENTITY_TYPE_translation_insert().
+ * Implements hook_ENTITY_TYPE_translation_insert() for 'entity_test_mulrev'.
  */
 function entity_test_entity_test_mulrev_translation_insert(EntityInterface $translation) {
   _entity_test_record_hooks('entity_test_mulrev_translation_insert', $translation->language()->getId());
 }
 
 /**
- * Implements hook_ENTITY_TYPE_translation_delete().
+ * Implements hook_ENTITY_TYPE_translation_delete() for 'entity_test_mulrev'.
  */
 function entity_test_entity_test_mulrev_translation_delete(EntityInterface $translation) {
   _entity_test_record_hooks('entity_test_mulrev_translation_delete', $translation->language()->getId());
 }
 
 /**
- * Implements hook_ENTITY_TYPE_translation_insert().
+ * Implements hook_ENTITY_TYPE_translation_insert() for 'entity_test_mul_langcode_key'.
  */
 function entity_test_entity_test_mul_langcode_key_translation_insert(EntityInterface $translation) {
   _entity_test_record_hooks('entity_test_mul_langcode_key_translation_insert', $translation->language()->getId());
 }
 
 /**
- * Implements hook_ENTITY_TYPE_translation_delete().
+ * Implements hook_ENTITY_TYPE_translation_delete() for 'entity_test_mul_langcode_key'.
  */
 function entity_test_entity_test_mul_langcode_key_translation_delete(EntityInterface $translation) {
   _entity_test_record_hooks('entity_test_mul_langcode_key_translation_delete', $translation->language()->getId());
@@ -567,7 +567,7 @@ function entity_test_entity_access(EntityInterface $entity, $operation, AccountI
 }
 
 /**
- * Implements hook_ENTITY_TYPE_access().
+ * Implements hook_ENTITY_TYPE_access() for 'entity_test'.
  */
 function entity_test_entity_test_access(EntityInterface $entity, $operation, AccountInterface $account, $langcode) {
   \Drupal::state()->set('entity_test_entity_test_access', TRUE);
@@ -587,7 +587,7 @@ function entity_test_entity_create_access(AccountInterface $account, $context, $
 }
 
 /**
- * Implements hook_ENTITY_TYPE_create_access().
+ * Implements hook_ENTITY_TYPE_create_access() for 'entity_test'.
  */
 function entity_test_entity_test_create_access(AccountInterface $account, $context, $entity_bundle) {
   \Drupal::state()->set('entity_test_entity_test_create_access', TRUE);

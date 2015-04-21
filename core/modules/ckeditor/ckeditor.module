@@ -98,7 +98,7 @@ function _ckeditor_theme_css($theme = NULL) {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_update().
+ * Implements hook_ENTITY_TYPE_insert() for 'filter_format'.
  *
  * Recalculates the 'format_tags' CKEditor setting when a text format is added.
  *
@@ -110,7 +110,7 @@ function ckeditor_filter_format_insert() {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_update().
+ * Implements hook_ENTITY_TYPE_update() for 'filter_format'.
  *
  * Recalculates the 'format_tags' CKEditor setting when a text format changes.
  *
