@@ -125,4 +125,17 @@ class BasicSyntaxTest extends DatabaseTestBase {
       ->fetchField();
     $this->assertIdentical($num_matches, '1', 'Found 1 record.');
   }
+
+  /**
+   * Tests \Drupal\Core\Database\Connection::getFullQualifiedTableName().
+   */
+  public function testGetFullQualifiedTableName() {
+    $database = \Drupal::database();
+    $num_matches = $database->select($database->getFullQualifiedTableName('test'), 't')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    $this->assertIdentical($num_matches, '4', 'Found 4 records.');
+  }
+
 }

@@ -27,9 +27,10 @@ class ContentFieldMultivalue extends DrupalDumpBase {
       ),
       'fields' => array(
         'vid' => array(
-          'type' => 'serial',
+          'type' => 'int',
           'not null' => TRUE,
           'length' => '10',
+          'default' => '0',
           'unsigned' => TRUE,
         ),
         'nid' => array(

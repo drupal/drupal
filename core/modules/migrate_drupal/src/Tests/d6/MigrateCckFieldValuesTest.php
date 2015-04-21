@@ -7,6 +7,7 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
+use Drupal\Core\Database\Database;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\node\Entity\Node;
 
@@ -190,8 +191,17 @@ class MigrateCckFieldValuesTest extends MigrateNodeTestBase {
     $this->assertIdentical('5', $node->field_test_filefield->target_id);
 
     $planet_node = Node::load(3);
-    $this->assertIdentical('33.00', $planet_node->field_multivalue->value);
-    $this->assertIdentical('44.00', $planet_node->field_multivalue[1]->value);
+    $value_1 = $planet_node->field_multivalue->value;
+    $value_2 = $planet_node->field_multivalue[1]->value;
+
+    // SQLite does not support scales for float data types so we need to convert
+    // the value manually.
+    if ($this->container->get('database')->driver() == 'sqlite') {
+      $value_1 = sprintf('%01.2f', $value_1);
+      $value_2 = sprintf('%01.2f', $value_2);
+    }
+    $this->assertIdentical('33.00', $value_1);
+    $this->assertIdentical('44.00', $value_2);
   }
 
 }

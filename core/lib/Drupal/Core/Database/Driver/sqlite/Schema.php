@@ -130,6 +130,11 @@ class Schema extends DatabaseSchema {
     else {
       $map = $this->getFieldTypeMap();
       $field['sqlite_type'] = $map[$field['type'] . ':' . $field['size']];
+
+      // Numeric fields with a specified scale have to be stored as floats.
+      if ($field['sqlite_type'] === 'NUMERIC' && isset($field['scale'])) {
+        $field['sqlite_type'] = 'FLOAT';
+      }
     }
 
     if (isset($field['type']) && $field['type'] == 'serial') {

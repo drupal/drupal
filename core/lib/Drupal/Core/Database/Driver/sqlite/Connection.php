@@ -359,4 +359,14 @@ class Connection extends DatabaseConnection {
     return $this->query('SELECT value FROM {sequences}')->fetchField();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getFullQualifiedTableName($table) {
+    $prefix = $this->tablePrefix($table);
+
+    // Don't include the SQLite database file name as part of the table name.
+    return $prefix . $table;
+  }
+
 }
