@@ -37,7 +37,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\TerminableInterface;
-use Composer\Autoload\ClassLoader;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -259,6 +258,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $apc_loader->register();
       $class_loader = $apc_loader;
     }
+
+    // Ensure that the class loader reference is up-to-date.
+    $kernel->classLoader = $class_loader;
 
     return $kernel;
   }

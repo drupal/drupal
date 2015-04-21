@@ -7,7 +7,6 @@
 
 namespace Drupal\simpletest;
 
-use Composer\Autoload\ClassLoader;
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
 use Doctrine\Common\Reflection\StaticReflectionParser;
 use Drupal\Component\Annotation\Reflection\MockFileFinder;
@@ -54,12 +53,14 @@ class TestDiscovery {
   /**
    * Constructs a new test discovery.
    *
-   * @param \Composer\Autoload\ClassLoader $class_loader
-   *   The class loader.
+   * @param $class_loader
+   *   The class loader. Normally Composer's ClassLoader, as included by the
+   *   front controller, but may also be decorated; e.g.,
+   *   \Symfony\Component\ClassLoader\ApcClassLoader.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   (optional) Backend for caching discovery results.
    */
-  public function __construct(ClassLoader $class_loader, CacheBackendInterface $cache_backend = NULL) {
+  public function __construct($class_loader, CacheBackendInterface $cache_backend = NULL) {
     $this->classLoader = $class_loader;
     $this->cacheBackend = $cache_backend;
   }
