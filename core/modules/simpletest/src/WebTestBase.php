@@ -981,6 +981,13 @@ abstract class WebTestBase extends TestBase {
     unset($connection_info['default']['namespace']);
     unset($connection_info['default']['pdo']);
     unset($connection_info['default']['init_commands']);
+    // Remove database connection info that is not used by SQLite.
+    if ($driver == 'sqlite') {
+      unset($connection_info['default']['username']);
+      unset($connection_info['default']['password']);
+      unset($connection_info['default']['host']);
+      unset($connection_info['default']['port']);
+    }
     $parameters = array(
       'interactive' => FALSE,
       'parameters' => array(
