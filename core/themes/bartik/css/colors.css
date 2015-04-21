@@ -7,7 +7,7 @@ body {
 #page,
 #main-wrapper,
 .region-primary-menu .menu-item a.is-active,
-.region-primary-menu .menu-item .menu-item--active-trail a {
+.region-primary-menu .menu-item--active-trail a {
   background: #ffffff;
 }
 .tabs ul.primary li a.is-active {
