@@ -154,6 +154,9 @@ h1#page-title {
 .field-name-field-user-picture img {
   margin: 0 0 1em;
 }
+.field-type-image a {
+  border-bottom: none;
+}
 ul.links {
   color: #68696b;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;

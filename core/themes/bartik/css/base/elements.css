@@ -1,4 +1,8 @@
-/* ---------- Overall Specifications ---------- */
+/**
+ * @file
+ * Overall specifications for Bartik.
+ */
+
 html {
   height: 100%;
 }
@@ -6,13 +10,11 @@ body {
   min-height: 100%;
   line-height: 1.5;
   word-wrap: break-word;
-  margin: 0;
-  padding: 0;
-  border: 0;
   font-family: Georgia, "Times New Roman", Times, serif;
   font-size: 87.5%;
 }
-a {
+a,
+a.link {
   text-decoration: none;
   border-bottom: 1px dotted;
 }
@@ -28,19 +30,14 @@ a:focus,
 .link {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
-.field-type-image a,
 h1 a,
-h2 a,
-[role*=banner] a,
-.feed-icon,
-.contextual-links a,
-.toolbar a {
-  border-bottom: none !important;
+h2 a {
+  border-bottom: none;
 }
 
 /**
  * Reusable heading classes are included to help modules change the styling of
- * headings on a page without affecting accessibility
+ * headings on a page without affecting accessibility.
  */
 h1,
 .heading-a {
@@ -90,8 +87,6 @@ del {
   text-decoration: line-through;
 }
 
-/* ------------------ Reset Styles ------------------ */
-
 blockquote {
   background: #f7f7f7;
   border-left: 1px solid #bbb; /* LTR */
@@ -109,7 +104,7 @@ blockquote:before {
   font-size: 3em;
   line-height: 0.1em;
   margin-right: 0.2em; /* LTR */
-  vertical-align: -.4em;
+  vertical-align: -0.4em;
 }
 [dir="rtl"] blockquote:before {
   content: "\201D";
@@ -121,7 +116,7 @@ blockquote:after {
   content: "\201D";
   font-size: 3em;
   line-height: 0.1em;
-  vertical-align: -.45em;
+  vertical-align: -0.45em;
 }
 [dir="rtl"] blockquote:after {
   content: "\201C";
@@ -129,12 +124,7 @@ blockquote:after {
 blockquote > p:first-child {
   display: inline;
 }
-a.feed-icon {
-  display: inline-block;
-  padding: 15px 0 0 0;
-}
 img {
   max-width: 100%;
   height: auto;
-  border: 0;
 }

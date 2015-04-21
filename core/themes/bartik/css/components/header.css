@@ -248,6 +248,9 @@ h1.site-name {
   display: inline;
   padding: 0 0.5em;
 }
+[role*=banner] a {
+  border-bottom: none;
+}
 
 [dir="rtl"] #logo,
 [dir="rtl"] .site-logo,
