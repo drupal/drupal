@@ -477,8 +477,8 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Display form: check that _none options are present and has label.
     $this->drupalGet('entity_test/manage/' . $entity->id());
-    $this->assertTrue($this->xpath('//div[@id=:id]//div[@class=:class]//input[@value=:value]', array(':id' => 'edit-card-1', ':class' => 'form-item form-type-radio form-item-card-1', ':value' => '_none')), 'A test radio button has a "None" choice.');
-    $this->assertTrue($this->xpath('//div[@id=:id]//div[@class=:class]//label[@for=:for and text()=:label]', array(':id' => 'edit-card-1', ':class' => 'form-item form-type-radio form-item-card-1', ':for' => 'edit-card-1-none', ':label' => 'N/A')), 'A test radio button has a "N/A" choice.');
+    $this->assertTrue($this->xpath('//div[@id=:id]//input[@value=:value]', array(':id' => 'edit-card-1', ':value' => '_none')), 'A test radio button has a "None" choice.');
+    $this->assertTrue($this->xpath('//div[@id=:id]//label[@for=:for and text()=:label]', array(':id' => 'edit-card-1', ':for' => 'edit-card-1-none', ':label' => 'N/A')), 'A test radio button has a "N/A" choice.');
 
     // Change it to the select widget.
     entity_get_form_display('entity_test', 'entity_test', 'default')
