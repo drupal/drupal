@@ -51,6 +51,7 @@ class ResponsiveImageAdminUITest extends WebTestBase {
       'label' => 'Style One',
       'id' => 'style_one',
       'breakpoint_group' => 'responsive_image_test_module',
+      'fallback_image_style' => 'thumbnail',
     );
     $this->drupalPostForm('admin/config/media/responsive-image-style/add', $edit, t('Save'));
 
@@ -65,6 +66,7 @@ class ResponsiveImageAdminUITest extends WebTestBase {
     $this->drupalGet('admin/config/media/responsive-image-style/style_one');
     $this->assertFieldByName('label', 'Style One');
     $this->assertFieldByName('breakpoint_group', 'responsive_image_test_module');
+    $this->assertFieldByName('fallback_image_style', 'thumbnail');
 
     $cases = array(
       array('mobile', '1x'),
@@ -84,6 +86,7 @@ class ResponsiveImageAdminUITest extends WebTestBase {
     $edit = array(
       'label' => 'Style One',
       'breakpoint_group' => 'responsive_image_test_module',
+      'fallback_image_style' => 'thumbnail',
       'keyed_styles[responsive_image_test_module.mobile][1x][image_mapping]' => 'thumbnail',
       'keyed_styles[responsive_image_test_module.narrow][1x][image_mapping]' => 'medium',
       'keyed_styles[responsive_image_test_module.wide][1x][image_mapping]' => 'large',

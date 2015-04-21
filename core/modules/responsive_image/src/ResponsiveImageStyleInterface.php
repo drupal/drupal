@@ -72,6 +72,24 @@ interface ResponsiveImageStyleInterface extends ConfigEntityInterface {
   public function getBreakpointGroup();
 
   /**
+   * Sets the fallback image style for the responsive image style.
+   *
+   * @param string $fallback_image_style
+   *   The fallback image style ID.
+   *
+   * @return $this
+   */
+  public function setFallbackImageStyle($fallback_image_style);
+
+  /**
+   * Returns the fallback image style ID for the responsive image style.
+   *
+   * @return string
+   *   The fallback image style ID.
+   */
+  public function getFallbackImageStyle();
+
+  /**
    * Gets the image style mapping for a breakpoint ID and multiplier.
    *
    * @param string $breakpoint_id

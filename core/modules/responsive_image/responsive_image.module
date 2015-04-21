@@ -77,7 +77,6 @@ function responsive_image_theme() {
   return array(
     'responsive_image' => array(
       'variables' => array(
-        'style_name' => NULL,
         'uri' => NULL,
         'width' => NULL,
         'height' => NULL,
@@ -91,7 +90,6 @@ function responsive_image_theme() {
       'variables' => array(
         'item' => NULL,
         'url' => NULL,
-        'image_style' => NULL,
         'responsive_image_style_id' => array(),
       ),
       'function' => 'theme_responsive_image_formatter',
@@ -105,7 +103,6 @@ function responsive_image_theme() {
  * @param array $variables
  *   An associative array containing:
  *   - item: An ImageItem object.
- *   - image_style: An optional image style.
  *   - responsive_image_style_id: The ID of the responsive image style.
  *   - url: An optional \Drupal\Core\Url object.
  *
@@ -117,7 +114,6 @@ function theme_responsive_image_formatter($variables) {
     $image_formatter = array(
       '#theme' => 'image_formatter',
       '#item' => $item,
-      '#image_style' => $variables['image_style'],
       '#url' => $variables['url'],
     );
     return drupal_render($image_formatter);
@@ -127,7 +123,6 @@ function theme_responsive_image_formatter($variables) {
     '#theme' => 'responsive_image',
     '#width' => $item->width,
     '#height' => $item->height,
-    '#style_name' => $variables['image_style'],
     '#responsive_image_style_id' => $variables['responsive_image_style_id'],
   );
   if (isset($item->uri)) {
@@ -163,7 +158,6 @@ function theme_responsive_image_formatter($variables) {
  *   - title: The title text is displayed when the image is hovered in some
  *     popular browsers.
  *   - attributes: Associative array of attributes to be placed in the img tag.
- *   - style_name: The name of the style to be used as a fallback image.
  *   - responsive_image_style_id: The ID of the responsive image style.
  */
 function template_preprocess_responsive_image(&$variables) {
@@ -196,7 +190,7 @@ function template_preprocess_responsive_image(&$variables) {
     '#theme' => 'image',
     '#srcset' => array(
       array(
-        'uri' => _responsive_image_image_style_url($variables['style_name'], $image->getSource()),
+        'uri' => _responsive_image_image_style_url($responsive_image_style->getFallbackImageStyle(), $image->getSource()),
       ),
     ),
   );

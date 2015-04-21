@@ -63,6 +63,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       'id' => 'style_one',
       'label' => 'Style One',
       'breakpoint_group' => 'responsive_image_test_module',
+      'fallback_image_style' => 'large',
     ));
   }
 
@@ -232,8 +233,6 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     // Use the responsive image formatter with a responsive image style.
     $display_options['settings']['responsive_image_style'] = 'style_one';
     $display_options['settings']['image_link'] = '';
-    // Also set the fallback image style.
-    $display_options['settings']['fallback_image_style'] = 'large';
     $display->setComponent($field_name, $display_options)
       ->save();
 
@@ -345,7 +344,6 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       'settings' => array(
         'image_link' => '',
         'responsive_image_style' => 'style_one',
-        'fallback_image_style' => 'medium',
       ),
     );
     $display = entity_get_display('node', 'article', 'default');
@@ -384,7 +382,6 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       'settings' => array(
         'image_link' => $link_type,
         'responsive_image_style' => 'style_one',
-        'fallback_image_style' => 'large',
       ),
     );
     entity_get_display('node', 'article', 'default')
@@ -406,7 +403,6 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       'settings' => array(
         'image_link' => $link_type,
         'responsive_image_style' => 'style_one',
-        'fallback_image_style' => 'large',
       ),
     );
     entity_get_display('node', 'article', 'default')

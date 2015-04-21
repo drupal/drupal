@@ -34,6 +34,9 @@ responsive_image.styles.*:
     breakpoint_group:
       type: string
       label: 'Breakpoint group'
+    fallback_image_style:
+      type: string
+      label: 'Fallback image style'
 
 responsive_image.image_mapping_type.image_style:
   type: string
@@ -61,9 +64,6 @@ field.formatter.settings.responsive_image:
     responsive_image_style:
       type: string
       label: 'Responsive image style'
-    fallback_image_style:
-      type: string
-      label: 'Fallback image style'
     image_link:
       type: string
       label: 'Link image to'

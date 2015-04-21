@@ -100,6 +100,15 @@ class ResponsiveImageStyleForm extends EntityForm {
 
     $image_styles = image_style_options(TRUE);
     $image_styles[RESPONSIVE_IMAGE_EMPTY_IMAGE] = $this->t('- empty image -');
+
+    $form['fallback_image_style'] = array(
+      '#title' => $this->t('Fallback image style'),
+      '#type' => 'select',
+      '#default_value' => $responsive_image_style->getFallbackImageStyle(),
+      '#options' => $image_styles,
+      '#required' => TRUE,
+    );
+
     $breakpoints = $this->breakpointManager->getBreakpointsByGroup($responsive_image_style->getBreakpointGroup());
     foreach ($breakpoints as $breakpoint_id => $breakpoint) {
       foreach ($breakpoint->getMultipliers() as $multiplier) {

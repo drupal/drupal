@@ -69,6 +69,7 @@ class ResponsiveImageFieldUiTest extends WebTestBase {
       'id' => 'style_one',
       'label' => 'Style One',
       'breakpoint_group' => 'responsive_image_test_module',
+      'fallback_image_style' => 'thumbnail',
     ));
     $responsive_image_style
       ->addImageStyleMapping('responsive_image_test_module.mobile', '1x', array(
@@ -97,7 +98,6 @@ class ResponsiveImageFieldUiTest extends WebTestBase {
     // Assert that the correct fields are present.
     $fieldnames = array(
       'fields[field_image][settings_edit_form][settings][responsive_image_style]',
-      'fields[field_image][settings_edit_form][settings][fallback_image_style]',
       'fields[field_image][settings_edit_form][settings][image_link]',
     );
     foreach ($fieldnames as $fieldname) {
@@ -105,7 +105,6 @@ class ResponsiveImageFieldUiTest extends WebTestBase {
     }
     $edit = array(
       'fields[field_image][settings_edit_form][settings][responsive_image_style]' => 'style_one',
-      'fields[field_image][settings_edit_form][settings][fallback_image_style]' => 'thumbnail',
       'fields[field_image][settings_edit_form][settings][image_link]' => 'content',
     );
     $this->drupalPostAjaxForm(NULL, $edit, "field_image_plugin_settings_update");
@@ -113,7 +112,6 @@ class ResponsiveImageFieldUiTest extends WebTestBase {
     // Save the form to save the settings.
     $this->drupalPostForm(NULL, array(), t('Save'));
     $this->assertText('Responsive image style: Style One');
-    $this->assertText('Fallback Image style: Thumbnail (100×100)');
     $this->assertText('Linked to content');
 
     // Click on the formatter settings button to open the formatter settings
@@ -121,7 +119,6 @@ class ResponsiveImageFieldUiTest extends WebTestBase {
     $this->drupalPostAjaxForm(NULL, array(), "field_image_settings_edit");
     $edit = array(
       'fields[field_image][settings_edit_form][settings][responsive_image_style]' => 'style_one',
-      'fields[field_image][settings_edit_form][settings][fallback_image_style]' => '',
       'fields[field_image][settings_edit_form][settings][image_link]' => 'file',
     );
     $this->drupalPostAjaxForm(NULL, $edit, "field_image_plugin_settings_update");
@@ -129,7 +126,6 @@ class ResponsiveImageFieldUiTest extends WebTestBase {
     // Save the form to save the third party settings.
     $this->drupalPostForm(NULL, array(), t('Save'));
     $this->assertText('Responsive image style: Style One');
-    $this->assertText('Automatic fallback');
     $this->assertText('Linked to file');
   }
 

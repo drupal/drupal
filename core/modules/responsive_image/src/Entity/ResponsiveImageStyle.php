@@ -89,6 +89,13 @@ class ResponsiveImageStyle extends ConfigEntityBase implements ResponsiveImageSt
   protected $breakpoint_group = '';
 
   /**
+   * The fallback image style.
+   *
+   * @var string
+   */
+  protected $fallback_image_style = '';
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(array $values, $entity_type_id = 'responsive_image_style') {
@@ -170,6 +177,21 @@ class ResponsiveImageStyle extends ConfigEntityBase implements ResponsiveImageSt
   /**
    * {@inheritdoc}
    */
+  public function setFallbackImageStyle($fallback_image_style) {
+    $this->fallback_image_style = $fallback_image_style;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFallbackImageStyle() {
+    return $this->fallback_image_style;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function removeImageStyleMappings() {
     $this->image_style_mappings = array();
     $this->keyedImageStyleMappings = NULL;
@@ -231,7 +253,7 @@ class ResponsiveImageStyle extends ConfigEntityBase implements ResponsiveImageSt
    * {@inheritdoc}
    */
   public function getImageStyleIds() {
-    $image_styles = [];
+    $image_styles = [$this->getFallbackImageStyle()];
     foreach ($this->getImageStyleMappings() as $image_style_mapping) {
       // Only image styles of non-empty mappings should be loaded.
       if (!$this::isEmptyImageStyleMapping($image_style_mapping)) {
