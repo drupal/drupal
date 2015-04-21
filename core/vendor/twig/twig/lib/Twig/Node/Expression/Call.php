@@ -120,6 +120,8 @@ abstract class Twig_Node_Expression_Call extends Twig_Node_Expression
         } elseif (is_object($callable) && !$callable instanceof Closure) {
             $r = new ReflectionObject($callable);
             $r = $r->getMethod('__invoke');
+        } elseif (is_string($callable) && false !== strpos($callable, '::')) {
+            $r = new ReflectionMethod($callable);
         } else {
             $r = new ReflectionFunction($callable);
         }
