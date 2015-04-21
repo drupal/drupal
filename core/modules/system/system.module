@@ -70,8 +70,6 @@ const REGIONS_ALL = 'all';
  * Implements hook_help().
  */
 function system_help($route_name, RouteMatchInterface $route_match) {
-  global $base_url;
-
   switch ($route_name) {
     case 'help.page.system':
       $output = '';

@@ -24,9 +24,9 @@ const RESPONSIVE_IMAGE_EMPTY_IMAGE = '_empty image_';
  * Implements hook_help().
  */
 function responsive_image_help($route_name, RouteMatchInterface $route_match) {
-  $output = '';
   switch ($route_name) {
     case 'help.page.responsive_image':
+      $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Responsive Image module provides an image formatter and breakpoint mappings to output responsive images using the HTML5 picture tag. For more information, see the <a href="!responsive_image">online documentation for the Responsive Image module</a>.', array( '!responsive_image' => 'https://drupal.org/documentation/modules/responsive_image')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
@@ -36,14 +36,11 @@ function responsive_image_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dt>' . t('Using responsive image styles in Image fields') . '</dt>';
       $output .= '<dd>' . t('After defining responsive image styles, you can use them in the display settings for your Image fields, so that the site displays responsive images using the HTML5 picture tag. Open the Manage display page for the entity type (content type, taxonomy vocabulary, etc.) that the Image field is attached to. Choose the format <em>Responsive image</em>, click the Edit icon, and select one of the responsive image styles that you have created. For general information on how to manage fields and their display see the <a href="!field_ui">Field UI module help page</a>. For background information about entities and fields see the <a href="!field_help">Field module help page</a>.', array('!field_ui' => \Drupal::url('help.page', array('name' => 'field_ui')),'!field_help' => \Drupal::url('help.page', array('name' => 'field')))) . '</dd>';
       $output .= '</dl>';
-      break;
+      return $output;
 
     case 'entity.responsive_image_style.collection':
-      $output .= '<p>' . t('A responsive image style associates an image style with each breakpoint defined by your theme.') . '</p>';
-      break;
-
+      return '<p>' . t('A responsive image style associates an image style with each breakpoint defined by your theme.') . '</p>';
   }
-  return $output;
 }
 
 /**

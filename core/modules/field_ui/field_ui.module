@@ -20,8 +20,6 @@ use Drupal\field_ui\Plugin\Derivative\FieldUiLocalTask;
  * Implements hook_help().
  */
 function field_ui_help($route_name, RouteMatchInterface $route_match) {
-  $module_handler = \Drupal::moduleHandler();
-
   switch ($route_name) {
     case 'help.page.field_ui':
       $output = '';
