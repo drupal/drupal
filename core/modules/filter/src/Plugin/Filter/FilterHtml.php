@@ -144,8 +144,8 @@ class FilterHtml extends FilterBase {
       if (!empty($tips[$tag])) {
         $rows[] = array(
           array('data' => $tips[$tag][0], 'class' => array('description')),
-          array('data' => '<code>' . SafeMarkup::checkPlain($tips[$tag][1]) . '</code>', 'class' => array('type')),
-          array('data' => $tips[$tag][1], 'class' => array('get'))
+          array('data' => SafeMarkup::format('<code>@var</code>', array('@var' => $tips[$tag][1])), 'class' => array('type')),
+          array('data' => SafeMarkup::format($tips[$tag][1]), 'class' => array('get'))
         );
       }
       else {
@@ -175,8 +175,8 @@ class FilterHtml extends FilterBase {
     foreach ($entities as $entity) {
       $rows[] = array(
         array('data' => $entity[0], 'class' => array('description')),
-        array('data' => '<code>' . SafeMarkup::checkPlain($entity[1]) . '</code>', 'class' => array('type')),
-        array('data' => $entity[1], 'class' => array('get'))
+        array('data' => SafeMarkup::format('<code>@var</code>', array('@var' => $entity[1])), 'class' => array('type')),
+        array('data' => SafeMarkup::format($entity[1]), 'class' => array('get'))
       );
     }
     $table = array(

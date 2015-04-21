@@ -469,6 +469,7 @@ function template_preprocess_filter_tips(&$variables) {
   foreach ($variables['tips'] as $name => $tiplist) {
     foreach ($tiplist as $tip_key => $tip) {
       $tiplist[$tip_key]['attributes'] = new Attribute();
+      $tiplist[$tip_key]['tip'] = Xss::filterAdmin($tiplist[$tip_key]['tip']);
     }
 
     $variables['tips'][$name] = array(

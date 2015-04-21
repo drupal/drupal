@@ -361,4 +361,26 @@ class FilterAdminTest extends WebTestBase {
     $this->assertNoRaw(t('The text format %format has been updated.', array('%format' => 'Basic HTML')));
   }
 
+  /**
+   * Tests whether filter tips page is not HTML escaped.
+   */
+  function testFilterTipHtmlEscape() {
+    $this->drupalLogin($this->adminUser);
+    global $base_url;
+
+    // It is not possible to test the whole filter tip page.
+    // Therefore we test only some parts.
+    $link = '<a href="' . $base_url . '">' . SafeMarkup::checkPlain(\Drupal::config('system.site')->get('name')) . '</a>';
+    $ampersand = '&amp;';
+    $link_as_code = '<code>' . $link . '</code>';
+    $ampersand_as_code = '<code>' . $ampersand . '</code>';
+
+    $this->drupalGet('filter/tips');
+
+    $this->assertRaw('<td class="type">' . $link_as_code . '</td>');
+    $this->assertRaw('<td class="get">' . $link . '</td>');
+    $this->assertRaw('<td class="type">' . $ampersand_as_code . '</td>');
+    $this->assertRaw('<td class="get">' . $ampersand . '</td>');
+  }
+
 }
