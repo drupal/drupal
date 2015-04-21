@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss as CoreXss;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -18,7 +19,6 @@ use Drupal\Core\Form\FormHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -742,8 +742,8 @@ class Field extends FieldPluginBase implements CacheablePluginInterface, MultiIt
       // Merge the cacheability metadata of the top-level render array into
       // each child because they will most likely be rendered individually.
       if (isset($render_array['#cache'])) {
-        BubbleableMetadata::createFromRenderArray($render_array)
-          ->merge(BubbleableMetadata::createFromRenderArray($items[$delta]['rendered']))
+        CacheableMetadata::createFromRenderArray($render_array)
+          ->merge(CacheableMetadata::createFromRenderArray($items[$delta]['rendered']))
           ->applyTo($items[$delta]['rendered']);
       }
       // Add the raw field items (for use in tokens).

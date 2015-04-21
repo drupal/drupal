@@ -643,8 +643,6 @@ class RendererTest extends RendererTestBase {
             'tags' => [],
             'max-age' => Cache::PERMANENT,
           ],
-          '#attached' => [],
-          '#post_render_cache' => [],
         ],
       ],
       // Empty render array, some cacheability.
@@ -657,8 +655,6 @@ class RendererTest extends RendererTestBase {
             'tags' => ['foo'],
             'max-age' => Cache::PERMANENT,
           ],
-          '#attached' => [],
-          '#post_render_cache' => [],
         ],
       ],
       // Cacheable render array, some cacheability.
@@ -677,8 +673,6 @@ class RendererTest extends RendererTestBase {
             'tags' => ['bar', 'foo'],
             'max-age' => 600,
           ],
-          '#attached' => [],
-          '#post_render_cache' => [],
         ],
       ],
       // Cacheable render array, no cacheability.
@@ -697,8 +691,6 @@ class RendererTest extends RendererTestBase {
             'tags' => ['bar'],
             'max-age' => 0,
           ],
-          '#attached' => [],
-          '#post_render_cache' => [],
         ],
       ],
     ];

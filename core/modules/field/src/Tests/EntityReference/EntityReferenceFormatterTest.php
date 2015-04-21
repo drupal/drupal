@@ -8,9 +8,9 @@
 namespace Drupal\field\Tests\EntityReference;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
-use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
@@ -236,11 +236,9 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
         ],
         'tags' => $this->referencedEntity->getCacheTags(),
       ),
-      '#attached' => [],
-      '#post_render_cache' => [],
     );
     $this->assertEqual(drupal_render($build[0]), drupal_render($expected_item_1), sprintf('The markup returned by the %s formatter is correct for an item with a saved entity.', $formatter));
-    $this->assertEqual(BubbleableMetadata::createFromRenderArray($build[0]), BubbleableMetadata::createFromRenderArray($expected_item_1));
+    $this->assertEqual(CacheableMetadata::createFromRenderArray($build[0]), CacheableMetadata::createFromRenderArray($expected_item_1));
 
     // The second referenced entity is "autocreated", therefore not saved and
     // lacking any URL info.
@@ -253,8 +251,6 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
         'tags' => $this->unsavedReferencedEntity->getCacheTags(),
         'max-age' => Cache::PERMANENT,
       ),
-      '#attached' => [],
-      '#post_render_cache' => [],
     );
     $this->assertEqual($build[1], $expected_item_2, sprintf('The render array returned by the %s formatter is correct for an item with a unsaved entity.', $formatter));
 

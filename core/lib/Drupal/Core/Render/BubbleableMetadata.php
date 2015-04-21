@@ -8,8 +8,6 @@
 namespace Drupal\Core\Render;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Cache\Cache;
-use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 
 /**
@@ -18,27 +16,6 @@ use Drupal\Core\Cache\CacheableMetadata;
  * @see \Drupal\Core\Render\RendererInterface::render()
  */
 class BubbleableMetadata extends CacheableMetadata {
-
-  /**
-   * Cache contexts.
-   *
-   * @var string[]
-   */
-  protected $contexts = [];
-
-  /**
-   * Cache tags.
-   *
-   * @var string[]
-   */
-  protected $tags = [];
-
-  /**
-   * Cache max-age.
-   *
-   * @var int
-   */
-  protected $maxAge = Cache::PERMANENT;
 
   /**
    * Attached assets.
@@ -57,8 +34,9 @@ class BubbleableMetadata extends CacheableMetadata {
   /**
    * Merges the values of another bubbleable metadata object with this one.
    *
-   * @param \Drupal\Core\Render\BubbleableMetadata $other
+   * @param \Drupal\Core\Cache\CacheableMetadata $other
    *   The other bubbleable metadata object.
+   *
    * @return static
    *   A new bubbleable metadata object, with the merged data.
    *
@@ -67,11 +45,8 @@ class BubbleableMetadata extends CacheableMetadata {
    *       drupal_merge_attached() no longer is a procedural function and remove
    *       the '@codeCoverageIgnore' annotation.
    */
-  public function merge(BubbleableMetadata $other) {
-    $result = new BubbleableMetadata();
-    $result->contexts = Cache::mergeContexts($this->contexts, $other->contexts);
-    $result->tags = Cache::mergeTags($this->tags, $other->tags);
-    $result->maxAge = Cache::mergeMaxAges($this->maxAge, $other->maxAge);
+  public function merge(CacheableMetadata $other) {
+    $result = parent::merge($other);
     $result->attached = \Drupal::service('renderer')->mergeAttachments($this->attached, $other->attached);
     $result->postRenderCache = NestedArray::mergeDeep($this->postRenderCache, $other->postRenderCache);
     return $result;
@@ -84,9 +59,7 @@ class BubbleableMetadata extends CacheableMetadata {
    *   A render array.
    */
   public function applyTo(array &$build) {
-    $build['#cache']['contexts'] = $this->contexts;
-    $build['#cache']['tags'] = $this->tags;
-    $build['#cache']['max-age'] = $this->maxAge;
+    parent::applyTo($build);
     $build['#attached'] = $this->attached;
     $build['#post_render_cache'] = $this->postRenderCache;
   }
@@ -100,36 +73,9 @@ class BubbleableMetadata extends CacheableMetadata {
    * @return static
    */
   public static function createFromRenderArray(array $build) {
-    $meta = new static();
-    $meta->contexts = (isset($build['#cache']['contexts'])) ? $build['#cache']['contexts'] : [];
-    $meta->tags = (isset($build['#cache']['tags'])) ? $build['#cache']['tags'] : [];
-    $meta->maxAge = (isset($build['#cache']['max-age'])) ? $build['#cache']['max-age'] : Cache::PERMANENT;
+    $meta = parent::createFromRenderArray($build);
     $meta->attached = (isset($build['#attached'])) ? $build['#attached'] : [];
     $meta->postRenderCache = (isset($build['#post_render_cache'])) ? $build['#post_render_cache'] : [];
-    return $meta;
-  }
-
-  /**
-   * Creates a bubbleable metadata object from a depended object.
-   *
-   * @param \Drupal\Core\Cache\CacheableDependencyInterface|mixed $object
-   *   The object whose cacheability metadata to retrieve.
-   *
-   * @return static
-   */
-  public static function createFromObject($object) {
-    if ($object instanceof CacheableDependencyInterface) {
-      $meta = new static();
-      $meta->contexts = $object->getCacheContexts();
-      $meta->tags = $object->getCacheTags();
-      $meta->maxAge = $object->getCacheMaxAge();
-      return $meta;
-    }
-
-    // Objects that don't implement CacheableDependencyInterface must be assumed
-    // to be uncacheable, so set max-age 0.
-    $meta = new static();
-    $meta->maxAge = 0;
     return $meta;
   }
 
