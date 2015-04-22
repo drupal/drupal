@@ -433,7 +433,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       }
     }
     FileCacheFactory::setConfiguration($configuration);
-    FileCacheFactory::setPrefix(hash('sha256', 'FileCache' . Settings::get('hash_salt')));
+    FileCacheFactory::setPrefix(hash('sha256', Settings::get('hash_salt')));
 
     // Initialize the container.
     $this->initializeContainer();
