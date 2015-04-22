@@ -7,7 +7,6 @@
 
 namespace Drupal\simpletest;
 
-use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Component\Utility\Crypt;
@@ -1079,9 +1078,8 @@ abstract class WebTestBase extends TestBase {
     $services['parameters'][$name] = $value;
     file_put_contents($filename, Yaml::encode($services));
 
-    // Ensure that the cache is deleted for the yaml file loader.
-    $file_cache = FileCacheFactory::get('container_yaml_loader');
-    $file_cache->delete($filename);
+    // Clear the YML file cache.
+    YamlFileLoader::reset();
   }
 
   /**
