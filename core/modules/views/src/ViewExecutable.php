@@ -21,6 +21,7 @@ use Drupal\views\ViewEntityInterface;
 use Drupal\Component\Utility\Tags;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
  * Represents a view as a whole.
@@ -1760,6 +1761,17 @@ class ViewExecutable implements \Serializable {
     // linked display), then we can provide a URL for it.
     $display_handler = $this->displayHandlers->get($display_id ?: $this->current_display)->getRoutedDisplay();
     if (!$display_handler instanceof DisplayRouterInterface) {
+      return FALSE;
+    }
+
+    // Look up the route name to make sure it exists.  The name may exist, but
+    // not be available yet in some instances when editing a view and doing
+    // a live preview.
+    $provider = \Drupal::service('router.route_provider');
+    try {
+      $provider->getRouteByName($display_handler->getRouteName());
+    }
+    catch (RouteNotFoundException $e) {
       return FALSE;
     }
 

@@ -598,7 +598,7 @@ class ViewUI implements ViewEntityInterface {
       $executable->setArguments($args);
 
       // Store the current view URL for later use:
-      if ($executable->display_handler->getOption('path')) {
+      if ($executable->hasUrl() && $executable->display_handler->getOption('path')) {
         $path = $executable->getUrl();
       }
 
