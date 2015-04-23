@@ -39,16 +39,13 @@ class BubbleableMetadata extends CacheableMetadata {
    *
    * @return static
    *   A new bubbleable metadata object, with the merged data.
-   *
-   * @todo Add unit test for this in
-   *       \Drupal\Tests\Core\Render\BubbleableMetadataTest when
-   *       drupal_merge_attached() no longer is a procedural function and remove
-   *       the '@codeCoverageIgnore' annotation.
    */
   public function merge(CacheableMetadata $other) {
     $result = parent::merge($other);
-    $result->attached = \Drupal::service('renderer')->mergeAttachments($this->attached, $other->attached);
-    $result->postRenderCache = NestedArray::mergeDeep($this->postRenderCache, $other->postRenderCache);
+    if ($other instanceof BubbleableMetadata) {
+      $result->attached = \Drupal::service('renderer')->mergeAttachments($this->attached, $other->attached);
+      $result->postRenderCache = NestedArray::mergeDeep($this->postRenderCache, $other->postRenderCache);
+    }
     return $result;
   }
 

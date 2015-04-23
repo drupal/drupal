@@ -12,12 +12,53 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Tests\Core\Render\TestCacheableDependency;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Render\Element;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * @coversDefaultClass \Drupal\Core\Cache\CacheableMetadata
  * @group Cache
  */
 class CacheableMetadataTest extends UnitTestCase {
+
+  /**
+   * @covers ::merge
+   * @dataProvider providerTestMerge
+   *
+   * This only tests at a high level, because it reuses existing logic. Detailed
+   * tests exist for the existing logic:
+   *
+   * @see \Drupal\Tests\Core\Cache\CacheTest::testMergeTags()
+   * @see \Drupal\Tests\Core\Cache\CacheTest::testMergeMaxAges()
+   * @see \Drupal\Tests\Core\Cache\CacheContextsTest
+   */
+  public function testMerge(CacheableMetadata $a, CacheableMetadata $b, CacheableMetadata $expected) {
+    $cache_contexts_manager = $this->getMockBuilder('Drupal\Core\Cache\CacheContextsManager')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $container = new ContainerBuilder();
+    $container->set('cache_contexts_manager', $cache_contexts_manager);
+    \Drupal::setContainer($container);
+
+    $this->assertEquals($expected, $a->merge($b));
+  }
+
+  /**
+   * Provides test data for testMerge().
+   *
+   * @return array
+   */
+  public function providerTestMerge() {
+    return [
+      // All empty.
+      [(new CacheableMetadata()), (new CacheableMetadata()), (new CacheableMetadata())],
+      // Cache contexts.
+      [(new CacheableMetadata())->setCacheContexts(['foo']), (new CacheableMetadata())->setCacheContexts(['bar']), (new CacheableMetadata())->setCacheContexts(['bar', 'foo'])],
+      // Cache tags.
+      [(new CacheableMetadata())->setCacheTags(['foo']), (new CacheableMetadata())->setCacheTags(['bar']), (new CacheableMetadata())->setCacheTags(['bar', 'foo'])],
+      // Cache max-ages.
+      [(new CacheableMetadata())->setCacheMaxAge(60), (new CacheableMetadata())->setCacheMaxAge(Cache::PERMANENT), (new CacheableMetadata())->setCacheMaxAge(60)],
+    ];
+  }
 
   /**
    * This delegates to Cache::mergeTags(), so just a basic test.
