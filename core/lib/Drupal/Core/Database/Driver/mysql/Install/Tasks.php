@@ -24,6 +24,19 @@ class Tasks extends InstallTasks {
   protected $pdoDriver = 'mysql';
 
   /**
+   * Constructs a \Drupal\Core\Database\Driver\mysql\Install\Tasks object.
+   */
+  public function __construct() {
+    $this->tasks[] = array(
+      'arguments' => array(
+        'SET NAMES utf8mb4',
+        'The %name database server supports utf8mb4 character encoding.',
+        'The %name database server must support utf8mb4 character encoding to work with Drupal. Make sure to use a database server that supports utf8mb4 character encoding, such as MySQL/MariaDB/Percona versions 5.5.3 and up.',
+      ),
+    );
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function name() {
@@ -34,7 +47,7 @@ class Tasks extends InstallTasks {
    * {@inheritdoc}
    */
   public function minimumVersion() {
-    return '5.1.21';
+    return '5.5.3';
   }
 
   /**
