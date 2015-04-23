@@ -216,4 +216,12 @@ class FormCache implements FormCacheInterface {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function deleteCache($form_build_id) {
+    $this->keyValueExpirableFactory->get('form')->delete($form_build_id);
+    $this->keyValueExpirableFactory->get('form_state')->delete($form_build_id);
+  }
+
 }

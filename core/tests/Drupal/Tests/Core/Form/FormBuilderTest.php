@@ -383,6 +383,50 @@ class FormBuilderTest extends FormTestBase {
     $this->assertSame('test-form-id--2', $form['#id']);
   }
 
+  /**
+   * Tests that a cached form is deleted after submit.
+   */
+  public function testFormCacheDeletionCached() {
+    $form_id = 'test_form_id';
+    $form_build_id = $this->randomMachineName();
+
+    $expected_form = $form_id();
+    $expected_form['#build_id'] = $form_build_id;
+    $form_arg = $this->getMockForm($form_id, $expected_form);
+    $form_arg->expects($this->once())
+      ->method('submitForm')
+      ->willReturnCallback(function (array &$form, FormStateInterface $form_state) {
+        // Mimic EntityForm by cleaning the $form_state upon submit.
+        $form_state->cleanValues();
+      });
+
+    $this->formCache->expects($this->once())
+      ->method('deleteCache')
+      ->with($form_build_id);
+
+    $form_state = new FormState();
+    $form_state->setCached();
+    $this->simulateFormSubmission($form_id, $form_arg, $form_state);
+  }
+
+  /**
+   * Tests that an uncached form does not trigger cache set or delete.
+   */
+  public function testFormCacheDeletionUncached() {
+    $form_id = 'test_form_id';
+    $form_build_id = $this->randomMachineName();
+
+    $expected_form = $form_id();
+    $expected_form['#build_id'] = $form_build_id;
+    $form_arg = $this->getMockForm($form_id, $expected_form);
+
+    $this->formCache->expects($this->never())
+      ->method('deleteCache');
+
+    $form_state = new FormState();
+    $this->simulateFormSubmission($form_id, $form_arg, $form_state);
+  }
+
 }
 
 class TestForm implements FormInterface {

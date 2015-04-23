@@ -10,6 +10,7 @@ namespace Drupal\Tests\Core\Form {
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormBuilder;
 use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
@@ -195,6 +196,7 @@ abstract class FormTestBase extends UnitTestCase {
    */
   protected function tearDown() {
     Html::resetSeenIds();
+    (new FormState())->clearErrors();
   }
 
   /**
@@ -285,6 +287,9 @@ abstract class FormTestBase extends UnitTestCase {
    *   array.
    */
   public function getInfo($type) {
+    $types['hidden'] = [
+      '#input' => TRUE,
+    ];
     $types['token'] = array(
       '#input' => TRUE,
     );

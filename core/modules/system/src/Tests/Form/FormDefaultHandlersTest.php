@@ -29,6 +29,14 @@ class FormDefaultHandlersTest extends KernelTestBase implements FormInterface {
   /**
    * {@inheritdoc}
    */
+  protected function setUp() {
+    parent::setUp();
+    $this->installSchema('system', ['key_value_expire']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getFormId() {
     return 'test_form_handlers';
   }

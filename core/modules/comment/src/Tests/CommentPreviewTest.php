@@ -65,6 +65,52 @@ class CommentPreviewTest extends CommentTestBase {
   }
 
   /**
+   * Tests comment preview.
+   */
+  public function testCommentPreviewDuplicateSubmission() {
+    // As admin user, configure comment settings.
+    $this->drupalLogin($this->adminUser);
+    $this->setCommentPreview(DRUPAL_OPTIONAL);
+    $this->setCommentForm(TRUE);
+    $this->setCommentSubject(TRUE);
+    $this->setCommentSettings('default_mode', CommentManagerInterface::COMMENT_MODE_THREADED, 'Comment paging changed.');
+    $this->drupalLogout();
+
+    // Login as web user.
+    $this->drupalLogin($this->webUser);
+
+    // As the web user, fill in the comment form and preview the comment.
+    $edit = array();
+    $edit['subject[0][value]'] = $this->randomMachineName(8);
+    $edit['comment_body[0][value]'] = $this->randomMachineName(16);
+    $this->drupalPostForm('node/' . $this->node->id(), $edit, t('Preview'));
+
+    // Check that the preview is displaying the title and body.
+    $this->assertTitle(t('Preview comment | Drupal'), 'Page title is "Preview comment".');
+    $this->assertText($edit['subject[0][value]'], 'Subject displayed.');
+    $this->assertText($edit['comment_body[0][value]'], 'Comment displayed.');
+
+    // Check that the title and body fields are displayed with the correct values.
+    $this->assertFieldByName('subject[0][value]', $edit['subject[0][value]'], 'Subject field displayed.');
+    $this->assertFieldByName('comment_body[0][value]', $edit['comment_body[0][value]'], 'Comment field displayed.');
+
+    // Store the content of this page.
+    $content = $this->getRawContent();
+    $this->drupalPostForm(NULL, [], 'Save');
+    $this->assertText('Your comment has been posted.');
+    $elements = $this->xpath('//section[contains(@class, "comment-wrapper")]/article');
+    $this->assertEqual(1, count($elements));
+
+    // Reset the content of the page to simulate the browser's back button, and
+    // re-submit the form.
+    $this->setRawContent($content);
+    $this->drupalPostForm(NULL, [], 'Save');
+    $this->assertText('Your comment has been posted.');
+    $elements = $this->xpath('//section[contains(@class, "comment-wrapper")]/article');
+    $this->assertEqual(2, count($elements));
+  }
+
+  /**
    * Tests comment edit, preview, and save.
    */
   function testCommentEditPreviewSave() {

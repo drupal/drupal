@@ -34,4 +34,12 @@ interface FormCacheInterface {
    */
   public function setCache($form_build_id, $form, FormStateInterface $form_state);
 
+  /**
+   * Deletes a form in the cache.
+   *
+   * @param string $form_build_id
+   *   The unique form build ID.
+   */
+  public function deleteCache($form_build_id);
+
 }

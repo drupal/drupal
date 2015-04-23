@@ -478,6 +478,22 @@ class FormCacheTest extends UnitTestCase {
     $this->formCache->setCache($form_build_id, $form, $form_state);
   }
 
+
+  /**
+   * @covers ::deleteCache
+   */
+  public function testDeleteCache() {
+    $form_build_id = 'the_form_build_id';
+
+    $this->formCacheStore->expects($this->once())
+      ->method('delete')
+      ->with($form_build_id);
+    $this->formStateCacheStore->expects($this->once())
+      ->method('delete')
+      ->with($form_build_id);
+    $this->formCache->deleteCache($form_build_id);
+  }
+
   /**
    * Ensures SafeMarkup does not bleed from one test to another.
    */

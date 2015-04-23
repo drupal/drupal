@@ -354,6 +354,13 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * {@inheritdoc}
    */
+  public function deleteCache($form_build_id) {
+    $this->formCache->deleteCache($form_build_id);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function submitForm($form_arg, FormStateInterface &$form_state) {
     $build_info = $form_state->getBuildInfo();
     if (empty($build_info['args'])) {
@@ -488,8 +495,15 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
         Html::resetSeenIds();
       }
 
+      // If there are no errors and the form is not rebuilding, submit the form.
       if (!$form_state->isRebuilding() && !FormState::hasAnyErrors()) {
-        if ($submit_response = $this->formSubmitter->doSubmitForm($form, $form_state)) {
+        $submit_response = $this->formSubmitter->doSubmitForm($form, $form_state);
+        // If this form was cached, delete it from the cache after submission.
+        if ($form_state->isCached()) {
+          $this->deleteCache($form['#build_id']);
+        }
+        // If the form submission directly returned a response, return it now.
+        if ($submit_response) {
           return $submit_response;
         }
       }
