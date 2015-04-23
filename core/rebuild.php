@@ -20,11 +20,6 @@ use Symfony\Component\HttpFoundation\Response;
 // Change the directory to the Drupal root.
 chdir('..');
 
-// Clear the APC cache to ensure APC class loader is reset.
-if (function_exists('apc_fetch')) {
-  apc_clear_cache('user');
-}
-
 $autoloader = require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/includes/utility.inc';
 
@@ -47,7 +42,13 @@ if (Settings::get('rebuild_access', FALSE) ||
     ((REQUEST_TIME - $request->get('timestamp')) < 300) &&
     ($request->get('token') === Crypt::hmacBase64($request->get('timestamp'), Settings::get('hash_salt')))
   )) {
-
+  // Clear the APC cache to ensure APC class loader is reset.
+  if (function_exists('apc_clear_cache')) {
+    apc_clear_cache('user');
+  }
+  if (function_exists('apcu_clear_cache')) {
+    apcu_clear_cache();
+  }
   drupal_rebuild($autoloader, $request);
   drupal_set_message('Cache rebuild complete.');
 }
