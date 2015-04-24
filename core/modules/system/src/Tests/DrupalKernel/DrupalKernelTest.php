@@ -57,7 +57,9 @@ class DrupalKernelTest extends KernelTestBase {
    *   A list of modules to enable on the kernel.
    * @param bool $read_only
    *   Build the kernel in a read only state.
-   * @return DrupalKernel
+   *
+   * @return \Drupal\Core\DrupalKernel
+   *   New kernel for testing.
    */
   protected function getTestKernel(Request $request, array $modules_enabled = NULL, $read_only = FALSE) {
     // Manually create kernel to avoid replacing settings.

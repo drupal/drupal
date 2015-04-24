@@ -28,8 +28,7 @@ interface EntityDisplayModeInterface extends ConfigEntityInterface {
    * @param string $target_entity_type
    *   The target entity type for this display mode.
    *
-   * @return Drupal\Core\Entity\EntityDisplayModeInterface
-   *   The display mode object, for fluent interface.
+   * @return $this
    */
   public function setTargetType($target_entity_type);
 }
