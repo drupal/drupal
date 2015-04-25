@@ -7,6 +7,14 @@ system.ajax:
   requirements:
     _access: 'TRUE'
 
+system.401:
+  path: '/system/401'
+  defaults:
+    _controller: '\Drupal\system\Controller\Http4xxController:on401'
+    _title: 'Unauthorized'
+  requirements:
+    _access: 'TRUE'
+
 system.403:
   path: '/system/403'
   defaults:

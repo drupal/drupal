@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 /**
  * Exception subscriber for handling core default HTML error pages.
@@ -76,6 +77,16 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
   }
 
   /**
+   * Handles a 401 error for HTML.
+   *
+   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
+   *   The event to process.
+   */
+  public function on401(GetResponseForExceptionEvent $event) {
+    $this->makeSubrequest($event, Url::fromRoute('system.401')->toString(), Response::HTTP_UNAUTHORIZED);
+  }
+
+  /**
    * Handles a 403 error for HTML.
    *
    * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
@@ -107,6 +118,7 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
    */
   protected function makeSubrequest(GetResponseForExceptionEvent $event, $url, $status_code) {
     $request = $event->getRequest();
+    $exception = $event->getException();
 
     if (!($url && $url[0] == '/')) {
       $url = $request->getBasePath() . '/' . $url;
@@ -136,6 +148,12 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
 
         $response = $this->httpKernel->handle($sub_request, HttpKernelInterface::SUB_REQUEST);
         $response->setStatusCode($status_code);
+
+        // Persist any special HTTP headers that were set on the exception.
+        if ($exception instanceof HttpExceptionInterface) {
+          $response->headers->add($exception->getHeaders());
+        }
+
         $event->setResponse($response);
       }
       catch (\Exception $e) {

@@ -154,6 +154,30 @@ class BasicAuthTest extends WebTestBase {
   }
 
   /**
+   * Tests if a comprehensive message is displayed when the route is denied.
+   */
+  function testUnauthorizedErrorMessage() {
+    $account = $this->drupalCreateUser();
+    $url = Url::fromRoute('router_test.11');
+
+    // Case when no credentials are passed.
+    $this->drupalGet($url);
+    $this->assertResponse('401', 'The user is blocked when no credentials are passed.');
+    $this->assertNoText('Exception', "No raw exception is displayed on the page.");
+    $this->assertText('Please log in to access this page.', "A user friendly access unauthorized message is displayed.");
+
+    // Case when empty credentials are passed.
+    $this->basicAuthGet($url, NULL, NULL);
+    $this->assertResponse('403', 'The user is blocked when empty credentials are passed.');
+    $this->assertText('Access denied', "A user friendly access denied message is displayed");
+
+    // Case when wrong credentials are passed.
+    $this->basicAuthGet($url, $account->getUsername(), $this->randomMachineName());
+    $this->assertResponse('403', 'The user is blocked when wrong credentials are passed.');
+    $this->assertText('Access denied', "A user friendly access denied message is displayed");
+  }
+
+  /**
    * Does HTTP basic auth request.
    *
    * We do not use \Drupal\simpletest\WebTestBase::drupalGet because we need to

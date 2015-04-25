@@ -15,10 +15,22 @@ use Drupal\Core\Controller\ControllerBase;
 class Http4xxController extends ControllerBase {
 
   /**
+   * The default 401 content.
+   *
+   * @return array
+   *   A render array containing the message to display for 401 pages.
+   */
+  public function on401() {
+    return [
+      '#markup' => $this->t('Please log in to access this page.'),
+    ];
+  }
+
+  /**
    * The default 403 content.
    *
    * @return array
-   *  A render array containing the message to display for 404 pages.
+   *   A render array containing the message to display for 404 pages.
    */
   public function on403() {
     return [
@@ -30,7 +42,7 @@ class Http4xxController extends ControllerBase {
    * The default 404 content.
    *
    * @return array
-   *  A render array containing the message to display for 404 pages.
+   *   A render array containing the message to display for 404 pages.
    */
   public function on404() {
     return [
