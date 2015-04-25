@@ -293,6 +293,19 @@ class Connection extends DatabaseConnection {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getFullQualifiedTableName($table) {
+    $options = $this->getConnectionOptions();
+    $prefix = $this->tablePrefix($table);
+
+    // The fully qualified table name in PostgreSQL is in the form of
+    // <database>.<schema>.<table>, so we have to include the 'public' schema in
+    // the return value.
+    return $options['database'] . '.public.' . $prefix . $table;
+  }
+
+  /**
    * Add a new savepoint with an unique name.
    *
    * The main use for this method is to mimic InnoDB functionality, which
