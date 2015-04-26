@@ -334,7 +334,7 @@ function menu_ui_form_node_form_alter(&$form, FormStateInterface $form_state) {
   );
 
   foreach (array_keys($form['actions']) as $action) {
-    if (isset($form['actions'][$action]['#type']) && $form['actions'][$action]['#type'] === 'submit') {
+    if ($action != 'preview' && isset($form['actions'][$action]['#type']) && $form['actions'][$action]['#type'] === 'submit') {
       $form['actions'][$action]['#submit'][] = 'menu_ui_form_node_form_submit';
     }
   }

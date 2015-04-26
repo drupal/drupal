@@ -91,6 +91,14 @@ class MenuNodeTest extends WebTestBase {
     $this->drupalPostForm('admin/structure/types/manage/page', $edit, t('Save content type'));
     $this->assertRaw(t('The content type %name has been updated.', array('%name' => 'Basic page')));
 
+    // Test that we can preview a node that will create a menu item.
+    $edit = array(
+      'title[0][value]' => $node_title,
+      'menu[enabled]' => 1,
+      'menu[title]' => 'Test preview',
+    );
+    $this->drupalPostForm('node/add/page', $edit, t('Preview'));
+
     // Create a node.
     $node_title = $this->randomMachineName();
     $edit = array(
