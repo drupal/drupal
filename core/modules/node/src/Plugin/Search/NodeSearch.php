@@ -21,6 +21,7 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Database\Query\Condition;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\node\NodeInterface;
 use Drupal\search\Plugin\ConfigurableSearchPluginBase;
 use Drupal\search\Plugin\SearchIndexingInterface;
@@ -80,6 +81,13 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
   protected $account;
 
   /**
+   * The Renderer service to format the username and node.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
    * An array of additional rankings from hook_ranking().
    *
    * @var array
@@ -119,6 +127,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       $container->get('module_handler'),
       $container->get('config.factory')->get('search.settings'),
       $container->get('language_manager'),
+      $container->get('renderer'),
       $container->get('current_user')
     );
   }
@@ -145,12 +154,13 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The $account object to use for checking for access to advanced search.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Connection $database, EntityManagerInterface $entity_manager, ModuleHandlerInterface $module_handler, Config $search_settings, LanguageManagerInterface $language_manager, AccountInterface $account = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, Connection $database, EntityManagerInterface $entity_manager, ModuleHandlerInterface $module_handler, Config $search_settings, LanguageManagerInterface $language_manager, RendererInterface $renderer, AccountInterface $account = NULL) {
     $this->database = $database;
     $this->entityManager = $entity_manager;
     $this->moduleHandler = $module_handler;
     $this->searchSettings = $search_settings;
     $this->languageManager = $language_manager;
+    $this->renderer = $renderer;
     $this->account = $account;
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
@@ -310,11 +320,16 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       /** @var \Drupal\node\NodeInterface $node */
       $node = $node_storage->load($item->sid)->getTranslation($item->langcode);
       $build = $node_render->view($node, 'search_result', $item->langcode);
+
+      /** @var \Drupal\node\NodeTypeInterface $type*/
+      $type = $this->entityManager->getStorage('node_type')->load($node->bundle());
+
       unset($build['#theme']);
+      $build['#pre_render'][] = array($this, 'removeSubmittedInfo');
 
       // Fetch comment count for snippet.
-      $node->rendered = SafeMarkup::set(
-        drupal_render($build) . ' ' .
+      $rendered = SafeMarkup::set(
+        $this->renderer->render($build) . ' ' .
         SafeMarkup::escape($this->moduleHandler->invoke('comment', 'node_update_index', array($node, $item->langcode)))
       );
 
@@ -325,20 +340,48 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
         '#theme' => 'username',
         '#account' => $node->getOwner(),
       );
-      $results[] = array(
+
+      $result = array(
         'link' => $node->url('canonical', array('absolute' => TRUE, 'language' => $language)),
-        'type' => SafeMarkup::checkPlain($this->entityManager->getStorage('node_type')->load($node->bundle())->label()),
+        'type' => SafeMarkup::checkPlain($type->label()),
         'title' => $node->label(),
-        'user' => drupal_render($username),
-        'date' => $node->getChangedTime(),
         'node' => $node,
         'extra' => $extra,
         'score' => $item->calculated_score,
-        'snippet' => search_excerpt($keys, $node->rendered, $item->langcode),
+        'snippet' => search_excerpt($keys, $rendered, $item->langcode),
         'langcode' => $node->language()->getId(),
       );
+
+      if ($type->displaySubmitted()) {
+        $result += array(
+          'user' => $this->renderer->render($username),
+          'date' => $node->getChangedTime(),
+        );
+      }
+
+      $results[] = $result;
+
     }
     return $results;
+  }
+
+  /**
+   * Removes the submitted by information from the build array.
+   *
+   * This information is being removed from the rendered node that is used to
+   * build the search result snippet. It just doesn't make sense to have it
+   * displayed in the snippet.
+   *
+   * @param array $build
+   *   The build array.
+   *
+   * @return array
+   *   The modified build array.
+   */
+  public function removeSubmittedInfo(array $build) {
+    unset($build['created']);
+    unset($build['uid']);
+    return $build;
   }
 
   /**
@@ -400,9 +443,9 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       $build = $node_render->view($node, 'search_index', $language->getId());
 
       unset($build['#theme']);
-      $node->rendered = drupal_render($build);
+      $rendered = $this->renderer->render($build);
 
-      $text = '<h1>' . SafeMarkup::checkPlain($node->label($language->getId())) . '</h1>' . $node->rendered;
+      $text = '<h1>' . SafeMarkup::checkPlain($node->label($language->getId())) . '</h1>' . $rendered;
 
       // Fetch extra data normally not visible.
       $extra = $this->moduleHandler->invokeAll('node_update_index', array($node, $language->getId()));
