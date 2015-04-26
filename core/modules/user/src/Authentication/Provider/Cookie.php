@@ -81,11 +81,6 @@ class Cookie implements AuthenticationProviderInterface {
 
       // Check if the user data was found and the user is active.
       if (!empty($values) && $values['status'] == 1) {
-        // UserSession::getLastAccessedTime() returns session save timestamp,
-        // while User::getLastAccessedTime() returns the user 'access'
-        // timestamp. This ensures they are synchronized.
-        $values['timestamp'] = $values['access'];
-
         // Add the user's roles.
         $rids = $this->connection
           ->query('SELECT roles_target_id FROM {user__roles} WHERE entity_id = :uid', [':uid' => $values['uid']])

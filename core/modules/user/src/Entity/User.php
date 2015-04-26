@@ -70,13 +70,6 @@ class User extends ContentEntityBase implements UserInterface {
   protected static $anonymousUser;
 
   /**
-   * The hostname for this user.
-   *
-   * @var string
-   */
-  protected $hostname;
-
-  /**
    * {@inheritdoc}
    */
   public function isNew() {
@@ -168,37 +161,6 @@ class User extends ContentEntityBase implements UserInterface {
     }
 
     return $roles;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getSecureSessionId() {
-    return NULL;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getSessionData() {
-    return array();
-  }
-  /**
-   * {@inheritdoc}
-   */
-  public function getSessionId() {
-    return NULL;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getHostname() {
-    if (!isset($this->hostname) && \Drupal::hasRequest()) {
-      $this->hostname = \Drupal::request()->getClientIp();
-    }
-
-    return $this->hostname;
   }
 
   /**

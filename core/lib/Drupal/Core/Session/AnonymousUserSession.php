@@ -18,9 +18,6 @@ class AnonymousUserSession extends UserSession {
    * Intentionally don't allow parameters to be passed in like UserSession.
    */
   public function __construct() {
-    if (\Drupal::hasRequest()) {
-      $this->hostname = \Drupal::request()->getClientIp();
-    }
   }
 
 }
