@@ -278,15 +278,15 @@ class HtmlRenderer implements MainContentRendererInterface {
       $function = $module . '_page_attachments';
       $function($attachments);
     }
-    if (array_diff(array_keys($attachments), ['#attached', '#post_render_cache']) !== []) {
-      throw new \LogicException('Only #attached and #post_render_cache may be set in hook_page_attachments().');
+    if (array_diff(array_keys($attachments), ['#attached', '#post_render_cache', '#cache']) !== []) {
+      throw new \LogicException('Only #attached, #post_render_cache and #cache may be set in hook_page_attachments().');
     }
 
     // Modules and themes can alter page attachments.
     $this->moduleHandler->alter('page_attachments', $attachments);
     \Drupal::theme()->alter('page_attachments', $attachments);
-    if (array_diff(array_keys($attachments), ['#attached', '#post_render_cache']) !== []) {
-      throw new \LogicException('Only #attached and #post_render_cache may be set in hook_page_attachments_alter().');
+    if (array_diff(array_keys($attachments), ['#attached', '#post_render_cache', '#cache']) !== []) {
+      throw new \LogicException('Only #attached, #post_render_cache and #cache may be set in hook_page_attachments_alter().');
     }
 
     // Merge the attachments onto the $page render array.

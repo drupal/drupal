@@ -54,6 +54,10 @@ class PageRenderTest extends KernelTestBase {
     $page = [];
     $html_renderer->invokePageAttachmentHooks($page);
 
+    // Assert that hooks can set cache tags.
+    $this->assertEqual($page['#cache']['tags'], ['example']);
+    $this->assertEqual($page['#cache']['contexts'], ['user.permissions']);
+
     // Assert an invalid hook implementation doesn't trigger an exception.
     \Drupal::state()->set($module . '.' . $hook . '.descendant_attached', TRUE);
     $assertion = $hook . '() implementation that sets #attached on a descendant triggers an exception';
@@ -64,7 +68,7 @@ class PageRenderTest extends KernelTestBase {
     }
     catch (\LogicException $e) {
       $this->pass($assertion);
-      $this->assertEqual($e->getMessage(), 'Only #attached and #post_render_cache may be set in ' . $hook . '().');
+      $this->assertEqual($e->getMessage(), 'Only #attached, #post_render_cache and #cache may be set in ' . $hook . '().');
     }
     \Drupal::state()->set('bc_test.' . $hook . '.descendant_attached', FALSE);
 
@@ -78,7 +82,7 @@ class PageRenderTest extends KernelTestBase {
     }
     catch (\LogicException $e) {
       $this->pass($assertion);
-      $this->assertEqual($e->getMessage(), 'Only #attached and #post_render_cache may be set in ' . $hook . '().');
+      $this->assertEqual($e->getMessage(), 'Only #attached, #post_render_cache and #cache may be set in ' . $hook . '().');
     }
     \Drupal::state()->set($module . '.' . $hook . '.render_array', FALSE);
   }

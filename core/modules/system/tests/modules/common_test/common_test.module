@@ -224,6 +224,8 @@ function common_test_cron() {
 function common_test_page_attachments(array &$page) {
   $page['#attached']['library'][] = 'core/foo';
   $page['#attached']['library'][] = 'core/bar';
+  $page['#cache']['tags'] = ['example'];
+  $page['#cache']['contexts'] = ['user.permissions'];
 
   if (\Drupal::state()->get('common_test.hook_page_attachments.descendant_attached', FALSE)) {
     $page['content']['#attached']['library'][] = 'core/jquery';
@@ -248,6 +250,8 @@ function common_test_page_attachments_alter(array &$page) {
     unset($page['#attached']['library'][$index]);
   }
   $page['#attached']['library'][] = 'core/baz';
+  $page['#cache']['tags'] = ['example'];
+  $page['#cache']['contexts'] = ['user.permissions'];
 
   if (\Drupal::state()->get('common_test.hook_page_attachments_alter.descendant_attached', FALSE)) {
     $page['content']['#attached']['library'][] = 'core/jquery';
