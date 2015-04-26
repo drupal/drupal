@@ -369,13 +369,6 @@ jquery.form:
   dependencies:
     - core/jquery
 
-jquery.intrinsic:
-  version: VERSION
-  js:
-    misc/jquery.intrinsic.js: {}
-  dependencies:
-    - core/jquery
-
 jquery.joyride:
   remote: https://github.com/zurb/joyride
   version: "v2.1.0"

@@ -72,7 +72,7 @@ drupal.nav-tabs:
     - core/jquery
     - core/drupal
     - core/jquery.once
-    - core/jquery.intrinsic
+    - core/drupal.debounce
 
 vertical-tabs:
   version: VERSION

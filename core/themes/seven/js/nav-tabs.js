@@ -1,8 +1,6 @@
 /**
  * @file
  * Responsive navigation tabs.
- * Uses jquery.intrinsic.js to calculate if the tabs are larger than their
- * container and toggles the 'is-horizontal' class.
  *
  * This also supports collapsible navigable is the 'is-collapsible' class is
  * added to the main element, and a target element is included.
@@ -22,7 +20,8 @@
 
     function handleResize(e) {
       $tab.addClass('is-horizontal');
-      var isHorizontal = $tab.parent().width() > $tab.intrinsic('width');
+      var $tabs = $tab.find('.tabs');
+      var isHorizontal = $tabs.outerHeight() <= $tabs.find('.tabs__tab').outerHeight();
       $tab.toggleClass('is-horizontal', isHorizontal);
       if (isCollapsible) {
         $tab.toggleClass('is-collapse-enabled', !isHorizontal);
