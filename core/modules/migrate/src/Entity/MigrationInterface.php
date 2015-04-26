@@ -122,10 +122,13 @@ interface MigrationInterface extends ConfigEntityInterface {
   /**
    * Returns the initialized destination plugin.
    *
+   * @param bool $stub_being_requested
+   *  TRUE to indicate that this destination will be asked to construct a stub.
+   *
    * @return \Drupal\migrate\Plugin\MigrateDestinationInterface
    *   The destination plugin.
    */
-  public function getDestinationPlugin($stub = FALSE);
+  public function getDestinationPlugin($stub_being_requested = FALSE);
 
   /**
    * Returns the initialized id_map plugin.

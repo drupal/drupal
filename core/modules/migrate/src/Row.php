@@ -80,7 +80,7 @@ class Row {
    *
    * @var bool
    */
-  protected $stub = FALSE;
+  protected $isStub = FALSE;
 
   /**
    * Constructs a \Drupal\Migrate\Row object.
@@ -90,13 +90,16 @@ class Row {
    * @param array $source_ids
    *   An array containing the IDs of the source using the keys as the field
    *   names.
+   * @param bool $is_stub
+   *   TRUE if the row being created is a stub.
    *
    * @throws \InvalidArgumentException
    *   Thrown when a source ID property does not exist.
    */
-  public function __construct(array $values, array $source_ids) {
+  public function __construct(array $values, array $source_ids, $is_stub = FALSE) {
     $this->source = $values;
     $this->sourceIds = $source_ids;
+    $this->isStub = $is_stub;
     foreach (array_keys($source_ids) as $id) {
       if (!$this->hasSourceProperty($id)) {
         throw new \InvalidArgumentException("$id has no value");
@@ -309,19 +312,12 @@ class Row {
   }
 
   /**
-   * Flags and reports this row as a stub.
+   * Reports whether this row is a stub.
    *
-   * @param bool|null $new_value
-   *   TRUE when the row is a stub. Omit to determine whether the row is a
-   *   stub.
-   *
-   * @return mixed
+   * @return bool
    *   The current stub value.
    */
-  public function stub($new_value = NULL) {
-    if (isset($new_value)) {
-      $this->stub = $new_value;
-    }
-    return $this->stub;
+  public function isStub() {
+    return $this->isStub;
   }
 }

@@ -113,7 +113,7 @@ abstract class Entity extends DestinationBase implements ContainerFactoryPluginI
     else {
       $values = $row->getDestination();
       // Stubs might not have the bundle specified.
-      if ($row->stub()) {
+      if ($row->isStub()) {
         $values = $this->processStubValues($values);
       }
       $entity = $this->storage->create($values);

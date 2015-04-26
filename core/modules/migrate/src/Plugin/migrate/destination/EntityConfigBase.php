@@ -28,7 +28,7 @@ class EntityConfigBase extends Entity {
    * {@inheritdoc}
    */
   public function import(Row $row, array $old_destination_id_values = array()) {
-    if ($row->stub()) {
+    if ($row->isStub()) {
       throw new MigrateException('Config entities can not be stubbed.');
     }
     $ids = $this->getIds();
