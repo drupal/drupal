@@ -358,6 +358,7 @@ class OverviewTerms extends FormBase {
       );
     }
 
+    $form['pager_pager'] = ['#type' => 'pager'];
     return $form;
   }
 
