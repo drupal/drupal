@@ -224,16 +224,19 @@ class DefaultLazyPluginCollectionTest extends LazyPluginCollectionTestBase {
    * @covers ::setConfiguration
    */
   public function testConfigurableSetConfiguration() {
-    $this->setupPluginCollection($this->exactly(3));
-    $this->defaultPluginCollection->getConfiguration();
-    $this->defaultPluginCollection->setInstanceConfiguration('apple', array('value' => 'pineapple'));
+    $this->setupPluginCollection($this->exactly(2));
 
-    $expected = $this->config;
-    $expected['apple'] = array('value' => 'pineapple');
+    $this->defaultPluginCollection->setConfiguration(['apple' => ['value' => 'pineapple', 'id' => 'apple']]);
     $config = $this->defaultPluginCollection->getConfiguration();
-    $this->assertSame($expected, $config);
+    $this->assertSame(['apple' => ['value' => 'pineapple', 'id' => 'apple']], $config);
     $plugin = $this->pluginInstances['apple'];
-    $this->assertSame($expected['apple'], $plugin->getConfiguration());
+    $this->assertSame(['value' => 'pineapple', 'id' => 'apple'], $plugin->getConfiguration());
+
+    $this->defaultPluginCollection->setConfiguration(['cherry' => ['value' => 'kiwi', 'id' => 'cherry']]);
+    $expected['cherry'] = ['value' => 'kiwi', 'id' => 'cherry'];
+    $config = $this->defaultPluginCollection->getConfiguration();
+    $this->assertSame(['cherry' => ['value' => 'kiwi', 'id' => 'cherry']], $config);
+
   }
 
 }
