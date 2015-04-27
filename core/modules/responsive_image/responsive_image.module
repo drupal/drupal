@@ -74,7 +74,6 @@ function responsive_image_theme() {
   return array(
     'responsive_image' => array(
       'variables' => array(
-        'link_path' => NULL,
         'uri' => NULL,
         'attributes' => array(),
         'responsive_image_style_id' => array(),
