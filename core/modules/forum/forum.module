@@ -487,10 +487,10 @@ function template_preprocess_forums(&$variables) {
           'data' => array(
             $topic->icon,
             array(
-              '#markup' => '<div class="title"><div>' . $topic->title_link . '</div><div>' . $topic->submitted . '</div></div>',
+              '#markup' => '<div class="forum__title"><div>' . $topic->title_link . '</div><div>' . $topic->submitted . '</div></div>',
             ),
           ),
-          'class' => array('topic'),
+          'class' => array('forum__topic'),
         );
 
         if ($topic->moved) {
@@ -507,11 +507,11 @@ function template_preprocess_forums(&$variables) {
 
           $row[] = array(
             'data' => $topic->comment_count . $new_replies,
-            'class' => array('replies'),
+            'class' => array('forum__replies'),
           );
           $row[] = array(
             'data' => $topic->last_reply,
-            'class' => array('last-reply'),
+            'class' => array('forum__last-reply'),
           );
         }
         $table['#rows'][] = $row;

@@ -1,6 +1,6 @@
-#forum .name {
+.forum__name {
   font-size: 1.083em;
 }
-#forum .description {
+.forum__description {
   font-size: 1em;
 }

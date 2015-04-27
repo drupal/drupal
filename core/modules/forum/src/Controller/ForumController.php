@@ -260,7 +260,7 @@ class ForumController extends ControllerBase {
     foreach ($this->fieldMap['node']['taxonomy_forums']['bundles'] as $type) {
       if ($this->nodeAccess->createAccess($type)) {
         $links[$type] = [
-          '#attributes' => ['class' => ['action--forum']],
+          '#attributes' => ['class' => ['action-links']],
           '#theme' => 'menu_local_action',
           '#link' => [
             'title' => $this->t('Add new @node_type', [
@@ -286,7 +286,7 @@ class ForumController extends ControllerBase {
       // Anonymous user does not have access to create new topics.
       else {
         $links['login'] = [
-          '#attributes' => ['class' => ['action--forum']],
+          '#attributes' => ['class' => ['action-links']],
           '#theme' => 'menu_local_action',
           '#link' => array(
             'title' => $this->t('Log in to post new content in the forum.'),

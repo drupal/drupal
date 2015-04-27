@@ -3,19 +3,14 @@
  * Styling for the Forum module.
  */
 
-#forum .description {
+.forum__description {
   font-size: 0.9em;
   margin: 0.5em;
 }
-#forum td.created,
-#forum td.posts,
-#forum td.topics,
-#forum td.last-reply,
-#forum td.replies,
-#forum td.pager {
+.forum td {
   white-space: nowrap;
 }
-#forum .icon{
+.forum__icon {
   background-image: url(../icons/forum-icons.png);
   background-repeat: no-repeat;
   float: left; /* LTR */
@@ -23,48 +18,32 @@
   margin: 0 9px 0 0; /* LTR */
   width: 24px;
 }
-[dir="rtl"] #forum .icon {
+[dir="rtl"] .forum__icon {
   float: right;
   margin: 0 0 0 9px;
 }
-#forum .title {
+.forum__title {
   overflow: hidden;
 }
-#forum div.indent {
+.forum .indented {
   margin-left: 20px; /* LTR */
 }
-[dir="rtl"] #forum div.indent {
+[dir="rtl"] .forum .indented {
   margin-left: 0;
   margin-right: 20px;
 }
-
-#forum .topic-status-new {
+.forum__topic-status--new {
   background-position: -24px 0;
 }
-#forum .topic-status-hot {
+.forum__topic-status--hot {
   background-position: -48px 0;
 }
-#forum .topic-status-hot-new {
+.forum__topic-status--hot-new {
   background-position: -72px 0;
 }
-#forum .topic-status-sticky {
+.forum__topic-status--sticky {
   background-position: -96px 0;
 }
-#forum .topic-status-closed {
+.forum__topic-status--closed {
   background-position: -120px 0;
-}
-
-[dir="rtl"] .forum-topic-navigation {
-  padding: 1em 3em 0 0;
-}
-[dir="rtl"] .forum-topic-navigation .topic-previous {
-  text-align: left;
-  float: right;
-}
-[dir="rtl"] .forum-topic-navigation .topic-next {
-  text-align: right;
-  float: left;
-}
-.action--forum {
-  list-style: none;
 }

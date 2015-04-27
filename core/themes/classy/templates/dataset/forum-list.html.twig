@@ -45,33 +45,33 @@
       <td {% if forum.is_container == true -%}
         colspan="4" class="container"
       {%- else -%}
-        class="forum"
+        class="forum-list__forum"
       {%- endif -%}>
         {#
           Enclose the contents of this cell with X divs, where X is the
           depth this forum resides at. This will allow us to use CSS
           left-margin for indenting.
         #}
-        {% for i in 1..forum.depth if forum.depth > 0 %}<div class="indent">{% endfor %}
-          <div class="icon forum-status-{{ forum.icon_class }}" title="{{ forum.icon_title }}">
+        {% for i in 1..forum.depth if forum.depth > 0 %}<div class="indented">{% endfor %}
+          <div class="forum__icon forum-status-{{ forum.icon_class }}" title="{{ forum.icon_title }}">
             <span class="visually-hidden">{{ forum.icon_title }}</span>
           </div>
           <div class="name"><a href="{{ forum.link }}">{{ forum.label }}</a></div>
           {% if forum.description.value %}
-            <div class="description">{{ forum.description.value }}</div>
+            <div class="forum__description">{{ forum.description.value }}</div>
           {% endif %}
         {% for i in 1..forum.depth if forum.depth > 0 %}</div>{% endfor %}
       </td>
       {% if forum.is_container == false %}
-        <td class="topics">
+        <td class="forum__topics">
           {{ forum.num_topics }}
           {% if forum.new_topics == true %}
             <br />
             <a href="{{ forum.new_url }}">{{ forum.new_text }}</a>
           {% endif %}
         </td>
-        <td class="posts">{{ forum.num_posts }}</td>
-        <td class="last-reply">{{ forum.last_reply }}</td>
+        <td class="forum__posts">{{ forum.num_posts }}</td>
+        <td class="forum__last-reply">{{ forum.last_reply }}</td>
       {% endif %}
     </tr>
   {% endfor %}
