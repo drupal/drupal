@@ -80,30 +80,6 @@ abstract class DateFormatFormBase extends EntityForm {
   }
 
   /**
-   * Returns the date for a given format string.
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   *
-   * @return \Drupal\Core\Ajax\AjaxResponse
-   *   An AJAX Response to update the date-time value of the date format.
-   */
-  public static function dateTimeLookup(array $form, FormStateInterface $form_state) {
-    $format = '';
-    if (!$form_state->isValueEmpty('date_format_pattern')) {
-      $format = t('Displayed as %date_format', array('%date_format' => \Drupal::service('date.formatter')->format(REQUEST_TIME, 'custom', $form_state->getValue('date_format_pattern'))));
-    }
-    // Return a command instead of a string, since the Ajax framework
-    // automatically prepends an additional empty DIV element for a string, which
-    // breaks the layout.
-    $response = new AjaxResponse();
-    $response->addCommand(new ReplaceCommand('#edit-date-format-suffix', '<small id="edit-date-format-suffix">' . $format . '</small>'));
-    return $response;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
@@ -126,20 +102,16 @@ abstract class DateFormatFormBase extends EntityForm {
         'error' => $this->t('The machine-readable name must be unique, and can only contain lowercase letters, numbers, and underscores. Additionally, it can not be the reserved word "custom".'),
       ),
     );
-
     $form['date_format_pattern'] = array(
       '#type' => 'textfield',
       '#title' => t('Format string'),
       '#maxlength' => 100,
       '#description' => $this->t('A user-defined date format. See the <a href="@url">PHP manual</a> for available options.', array('@url' => 'http://php.net/manual/function.date.php')),
-      '#default_value' => '',
-      '#field_suffix' => ' <small id="edit-date-format-suffix"></small>',
-      '#ajax' => array(
-        'callback' => '::dateTimeLookup',
-        'event' => 'keyup',
-        'progress' => array('type' => 'throbber', 'message' => NULL),
-      ),
       '#required' => TRUE,
+      '#attributes' => [
+        'data-drupal-date-formatter' => 'source',
+      ],
+      '#field_suffix' => ' <small class="js-hide" data-drupal-date-formatter="preview">' . $this->t('Displayed as %date_format', ['%date_format' => '']) . '</small>',
     );
 
     $form['langcode'] = array(
@@ -148,7 +120,8 @@ abstract class DateFormatFormBase extends EntityForm {
       '#languages' => LanguageInterface::STATE_ALL,
       '#default_value' => $this->entity->language()->getId(),
     );
-
+    $form['#attached']['drupalSettings']['dateFormats'] = $this->dateFormatter->getSampleDateFormats();
+    $form['#attached']['library'][] = 'system/drupal.system.date';
     return parent::form($form, $form_state);
   }
 

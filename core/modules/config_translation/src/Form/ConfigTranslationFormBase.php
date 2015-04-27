@@ -176,6 +176,9 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
       if ($form_element = $this->createFormElement($schema)) {
         $parents = array('config_names', $name);
         $form['config_names'][$name] += $form_element->getTranslationBuild($this->sourceLanguage, $this->language, $source_config, $translation_config, $parents);
+        if ($attributes = $form_element->getFormAttributes()) {
+          $form = array_merge_recursive($form, $attributes);
+        }
       }
     }
 

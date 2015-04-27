@@ -75,6 +75,13 @@ abstract class FormElementBase implements ElementInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getFormAttributes() {
+    return [];
+  }
+
+  /**
    * Returns the source element for a given configuration definition.
    *
    * This can be either a render array that actually outputs the source values

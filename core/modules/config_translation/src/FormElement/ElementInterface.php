@@ -70,4 +70,12 @@ interface ElementInterface {
    */
   public function setConfig(Config $base_config, LanguageConfigOverride $config_translation, $config_values, $base_key = NULL);
 
+  /**
+   * Allows to provide form attributes for the configuration form.
+   *
+   * @return array
+   *   An array of form attributes.
+   */
+  public function getFormAttributes();
+
 }
