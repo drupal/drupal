@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\EventSubscriber;
 
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Session\AccountInterface;

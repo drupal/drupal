@@ -8,9 +8,6 @@
 namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Component\Datetime\DateTimePlus;
-use Drupal\Core\Cache\Cache;
-use Drupal\Core\Cache\CacheableDependencyInterface;
-use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Cache\CacheContextsManager;
 use Drupal\Core\Config\Config;
@@ -18,7 +15,6 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\PageCache\RequestPolicyInterface;
 use Drupal\Core\PageCache\ResponsePolicyInterface;
-use Drupal\Core\Routing\AccessAwareRouterInterface;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
