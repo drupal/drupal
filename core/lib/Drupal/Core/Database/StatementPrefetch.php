@@ -356,10 +356,17 @@ class StatementPrefetch implements \Iterator, StatementInterface {
     return isset($this->currentRow);
   }
 
-  /* Implementations of StatementInterface. */
-
+  /**
+   * {@inheritdoc}
+   */
   public function rowCount() {
-    return $this->rowCount;
+    // SELECT query should not use the method.
+    if ($this->allowRowCount) {
+      return $this->rowCount;
+    }
+    else {
+      throw new RowCountException();
+    }
   }
 
   public function fetch($fetch_style = NULL, $cursor_orientation = \PDO::FETCH_ORI_NEXT, $cursor_offset = NULL) {
