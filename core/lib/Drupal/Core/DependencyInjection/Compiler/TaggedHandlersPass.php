@@ -94,15 +94,19 @@ class TaggedHandlersPass implements CompilerPassInterface {
         $interface_pos = 0;
         $id_pos = NULL;
         $priority_pos = NULL;
+        $extra_params = [];
         foreach ($params as $pos => $param) {
           if ($param->getClass()) {
             $interface = $param->getClass();
           }
-          if ($param->getName() == 'id') {
+          else if ($param->getName() === 'id') {
             $id_pos = $pos;
           }
-          if ($param->getName() == 'priority') {
+          else if ($param->getName() === 'priority') {
             $priority_pos = $pos;
+          }
+          else {
+            $extra_params[$param->getName()] = $pos;
           }
         }
         // Determine the ID.
@@ -118,6 +122,7 @@ class TaggedHandlersPass implements CompilerPassInterface {
 
         // Find all tagged handlers.
         $handlers = array();
+        $extra_arguments = array();
         foreach ($container->findTaggedServiceIds($tag) as $id => $attributes) {
           // Validate the interface.
           $handler = $container->getDefinition($id);
@@ -125,6 +130,10 @@ class TaggedHandlersPass implements CompilerPassInterface {
             throw new LogicException("Service '$id' for consumer '$consumer_id' does not implement $interface.");
           }
           $handlers[$id] = isset($attributes[0]['priority']) ? $attributes[0]['priority'] : 0;
+          // Keep track of other tagged handlers arguments.
+          foreach ($extra_params as $name => $pos) {
+            $extra_arguments[$id][$pos] = isset($attributes[0][$name]) ? $attributes[0][$name] : $params[$pos]->getDefaultValue();
+          }
         }
         if (empty($handlers)) {
           if ($required) {
@@ -145,6 +154,11 @@ class TaggedHandlersPass implements CompilerPassInterface {
           }
           if (isset($id_pos)) {
             $arguments[$id_pos] = $id;
+          }
+          // Add in extra arguments.
+          if (isset($extra_arguments[$id])) {
+            // Place extra arguments in their right positions.
+            $arguments += $extra_arguments[$id];
           }
           // Sort the arguments by position.
           ksort($arguments);

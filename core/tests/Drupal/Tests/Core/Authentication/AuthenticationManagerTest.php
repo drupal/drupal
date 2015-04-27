@@ -27,10 +27,10 @@ class AuthenticationManagerTest extends UnitTestCase {
    *
    * @dataProvider providerTestDefaultFilter
    */
-  public function testDefaultFilter($applies, $has_route, $auth_option, $provider_id, $global_providers = ['cookie' => TRUE]) {
-    $authentication_manager = new AuthenticationManager($global_providers);
+  public function testDefaultFilter($applies, $has_route, $auth_option, $provider_id, $global) {
+    $authentication_manager = new AuthenticationManager();
     $auth_provider = $this->getMock('Drupal\Core\Authentication\AuthenticationProviderInterface');
-    $authentication_manager->addProvider($auth_provider, 'authentication.' . $provider_id);
+    $authentication_manager->addProvider($auth_provider, $provider_id, 0, $global);
 
     $request = new Request();
     if ($has_route) {
@@ -50,7 +50,7 @@ class AuthenticationManagerTest extends UnitTestCase {
   public function testApplyFilterWithFilterprovider() {
     $authentication_manager = new AuthenticationManager();
     $auth_provider = $this->getMock('Drupal\Tests\Core\Authentication\TestAuthenticationProviderInterface');
-    $authentication_manager->addProvider($auth_provider, 'authentication.filtered');
+    $authentication_manager->addProvider($auth_provider, 'filtered', 0);
 
     $auth_provider->expects($this->once())
       ->method('appliesToRoutedRequest')
@@ -66,17 +66,17 @@ class AuthenticationManagerTest extends UnitTestCase {
   public function providerTestDefaultFilter() {
     $data = [];
     // No route, cookie is global, should apply.
-    $data[] = [TRUE, FALSE, [], 'cookie'];
+    $data[] = [TRUE, FALSE, [], 'cookie', TRUE];
     // No route, cookie is not global, should not apply.
-    $data[] = [FALSE, FALSE, [], 'cookie', ['other' => TRUE]];
+    $data[] = [FALSE, FALSE, [], 'cookie', FALSE];
     // Route, no _auth, cookie is global, should apply.
-    $data[] = [TRUE, TRUE, [], 'cookie'];
+    $data[] = [TRUE, TRUE, [], 'cookie', TRUE];
     // Route, no _auth, cookie is not global, should not apply.
-    $data[] = [FALSE, TRUE, [], 'cookie', ['other' => TRUE]];
+    $data[] = [FALSE, TRUE, [], 'cookie', FALSE];
     // Route, with _auth and non-matching provider, should not apply.
-    $data[] = [FALSE, TRUE, ['basic_auth'], 'cookie'];
+    $data[] = [FALSE, TRUE, ['basic_auth'], 'cookie', TRUE];
     // Route, with _auth and matching provider should not apply.
-    $data[] = [TRUE, TRUE, ['basic_auth'], 'basic_auth'];
+    $data[] = [TRUE, TRUE, ['basic_auth'], 'basic_auth', TRUE];
     return $data;
   }
 

@@ -1,9 +1,9 @@
 services:
-  authentication.basic_auth:
+  basic_auth.authentication.basic_auth:
     class: Drupal\basic_auth\Authentication\Provider\BasicAuth
     arguments: ['@config.factory', '@user.auth', '@flood', '@entity.manager']
     tags:
-      - { name: authentication_provider, priority: 100 }
+      - { name: authentication_provider, provider_id: 'basic_auth', priority: 100 }
   basic_auth.page_cache_request_policy.disallow_basic_auth_requests:
       class: Drupal\basic_auth\PageCache\DisallowBasicAuthRequests
       public: false

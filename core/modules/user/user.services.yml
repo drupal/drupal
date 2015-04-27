@@ -15,11 +15,11 @@ services:
     class: Drupal\user\Access\LoginStatusCheck
     tags:
       - { name: access_check, applies_to: _user_is_logged_in }
-  authentication.cookie:
+  user.authentication.cookie:
     class: Drupal\user\Authentication\Provider\Cookie
     arguments: ['@session_configuration', '@database']
     tags:
-      - { name: authentication_provider, priority: 0 }
+      - { name: authentication_provider, provider_id: 'cookie', priority: 0, global: TRUE }
   user.data:
     class: Drupal\user\UserData
     arguments: ['@database']

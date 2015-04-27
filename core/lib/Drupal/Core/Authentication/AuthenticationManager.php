@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * If no provider set an active user then the user is set to anonymous.
  */
-class AuthenticationManager implements AuthenticationProviderInterface, AuthenticationProviderFilterInterface, AuthenticationProviderChallengeInterface {
+class AuthenticationManager implements AuthenticationProviderInterface, AuthenticationProviderFilterInterface, AuthenticationProviderChallengeInterface, AuthenticationManagerInterface {
 
   /**
    * Array of all registered authentication providers, keyed by ID.
@@ -65,44 +65,23 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
   protected $globalProviders;
 
   /**
-   * Constructs an authentication manager.
-   *
-   * @todo Revisit service construction. Especially write a custom compiler pass
-   *   which is capable of collecting, sorting and injecting all providers
-   *   (including global/vs non global), filters and challengers on compile
-   *   time in https://www.drupal.org/node/2432585.
-   *
-   * @param array $global_providers
-   *   List of global providers, keyed by the provier ID.
+   * {@inheritdoc}
    */
-  public function __construct($global_providers = ['cookie' => TRUE]) {
-    $this->globalProviders = $global_providers;
-  }
-
-  /**
-   * Adds a provider to the array of registered providers.
-   *
-   * @param \Drupal\Core\Authentication\AuthenticationProviderInterface $provider
-   *   The provider object.
-   * @param string $id
-   *   Identifier of the provider.
-   * @param int $priority
-   *   The providers priority.
-   */
-  public function addProvider(AuthenticationProviderInterface $provider, $id, $priority = 0) {
-    // Remove the 'authentication.' prefix from the provider ID.
-    $id = substr($id, 15);
-
-    $this->providers[$id] = $provider;
-    $this->providerOrders[$priority][$id] = $provider;
+  public function addProvider(AuthenticationProviderInterface $provider, $provider_id, $priority = 0, $global = FALSE) {
+    $this->providers[$provider_id] = $provider;
+    $this->providerOrders[$priority][$provider_id] = $provider;
     // Force the builders to be re-sorted.
     $this->sortedProviders = NULL;
 
     if ($provider instanceof AuthenticationProviderFilterInterface) {
-      $this->filters[$id] = $provider;
+      $this->filters[$provider_id] = $provider;
     }
     if ($provider instanceof AuthenticationProviderChallengeInterface) {
-      $this->challengers[$id] = $provider;
+      $this->challengers[$provider_id] = $provider;
+    }
+
+    if ($global) {
+      $this->globalProviders[$provider_id] = TRUE;
     }
   }
 
