@@ -949,6 +949,14 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: ['@path.alias_manager', '@path_processor_manager', '@path.current']
+  route_access_response_subscriber:
+    class: Drupal\Core\EventSubscriber\RouteAccessResponseSubscriber
+    tags:
+      - { name: event_subscriber }
+  client_error_response_subscriber:
+    class: Drupal\Core\EventSubscriber\ClientErrorResponseSubscriber
+    tags:
+      - { name: event_subscriber }
   anonymous_user_response_subscriber:
     class: Drupal\Core\EventSubscriber\AnonymousUserResponseSubscriber
     tags:

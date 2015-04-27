@@ -89,7 +89,7 @@ class ContactController extends ControllerBase {
     $form = $this->entityFormBuilder()->getForm($message);
     $form['#title'] = SafeMarkup::checkPlain($contact_form->label());
     $form['#cache']['contexts'][] = 'user.permissions';
-    $this->renderer->addDependency($form, $config);
+    $this->renderer->addCacheableDependency($form, $config);
     return $form;
   }
 

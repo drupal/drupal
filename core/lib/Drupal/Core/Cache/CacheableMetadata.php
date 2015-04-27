@@ -178,7 +178,10 @@ class CacheableMetadata implements CacheableDependencyInterface {
    * Creates a CacheableMetadata object from a depended object.
    *
    * @param \Drupal\Core\Cache\CacheableDependencyInterface|mixed $object
-   *   The object whose cacheability metadata to retrieve.
+   *   The object whose cacheability metadata to retrieve. If it implements
+   *   CacheableDependencyInterface, its cacheability metadata will be used,
+   *   otherwise, the passed in object must be assumed to be uncacheable, so
+   *   max-age 0 is set.
    *
    * @return static
    */

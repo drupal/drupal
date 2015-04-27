@@ -124,7 +124,7 @@ class UserLoginForm extends FormBase {
     $form['#validate'][] = '::validateAuthentication';
     $form['#validate'][] = '::validateFinal';
 
-    $this->renderer->addDependency($form, $config);
+    $this->renderer->addCacheableDependency($form, $config);
 
     return $form;
   }

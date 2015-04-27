@@ -55,7 +55,11 @@ class EntityResource extends ResourceBase {
       }
     }
 
-    return new ResourceResponse($entity, 200, ['X-Drupal-Cache-Tags' => implode(' ', $entity->getCacheTags())]);
+    $response = new ResourceResponse($entity, 200);
+    // Make the response use the entity's cacheability metadata.
+    // @todo include access cacheability metadata, for the access checks above.
+    $response->addCacheableDependency($entity);
+    return $response;
   }
 
   /**

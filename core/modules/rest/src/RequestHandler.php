@@ -109,14 +109,8 @@ class RequestHandler implements ContainerAwareInterface {
       $output = $serializer->serialize($data, $format);
       $response->setContent($output);
       $response->headers->set('Content-Type', $request->getMimeType($format));
-      // Add cache tags, but do not overwrite any that exist already on the
-      // response object.
-      $cache_tags = $this->container->get('config.factory')->get('rest.settings')->getCacheTags();
-      if ($response->headers->has('X-Drupal-Cache-Tags')) {
-        $existing_cache_tags = explode(' ', $response->headers->get('X-Drupal-Cache-Tags'));
-        $cache_tags = Cache::mergeTags($existing_cache_tags, $cache_tags);
-      }
-      $response->headers->set('X-Drupal-Cache-Tags', implode(' ', $cache_tags));
+      // Add rest settings config's cache tags.
+      $response->addCacheableDependency($this->container->get('config.factory')->get('rest.settings'));
     }
     return $response;
   }

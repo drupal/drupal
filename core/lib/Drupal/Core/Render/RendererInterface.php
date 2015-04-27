@@ -334,9 +334,13 @@ interface RendererInterface {
    * @param array &$elements
    *   The render array to update.
    * @param \Drupal\Core\Cache\CacheableDependencyInterface|mixed $dependency
-   *   The dependency.
+   *   The dependency. If the object implements CacheableDependencyInterface,
+   *   then its cacheability metadata will be used. Otherwise, the passed in
+   *   object must be assumed to be uncacheable, so max-age 0 is set.
+   *
+   * @see \Drupal\Core\Cache\CacheableMetadata::createFromObject()
    */
-  public function addDependency(array &$elements, $dependency);
+  public function addCacheableDependency(array &$elements, $dependency);
 
   /**
    * Merges two attachments arrays (which live under the '#attached' key).

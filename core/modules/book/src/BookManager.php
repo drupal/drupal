@@ -362,7 +362,7 @@ class BookManager implements BookManagerInterface {
         '#suffix' => '</div>',
       );
     }
-    $this->renderer->addDependency($form, $config);
+    $this->renderer->addCacheableDependency($form, $config);
 
     return $form;
   }

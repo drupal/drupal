@@ -7,6 +7,8 @@
 
 namespace Drupal\rest;
 
+use Drupal\Core\Cache\CacheableResponseInterface;
+use Drupal\Core\Cache\CacheableResponseTrait;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -17,7 +19,9 @@ use Symfony\Component\HttpFoundation\Response;
  * string or an object with a __toString() method, which is not a requirement
  * for data used here.
  */
-class ResourceResponse extends Response {
+class ResourceResponse extends Response implements CacheableResponseInterface {
+
+  use CacheableResponseTrait;
 
   /**
    * Response data that should be serialized.

@@ -225,9 +225,9 @@ class CommentForm extends ContentEntityForm {
       '#access' => $is_admin,
     );
 
-    $this->renderer->addDependency($form, $config);
+    $this->renderer->addCacheableDependency($form, $config);
     // The form depends on the field definition.
-    $this->renderer->addDependency($form, $field_definition->getConfig($entity->bundle()));
+    $this->renderer->addCacheableDependency($form, $field_definition->getConfig($entity->bundle()));
 
     return parent::form($form, $form_state, $comment);
   }

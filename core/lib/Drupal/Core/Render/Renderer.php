@@ -497,7 +497,7 @@ class Renderer implements RendererInterface {
   /**
    * {@inheritdoc}
    */
-  public function addDependency(array &$elements, $dependency) {
+  public function addCacheableDependency(array &$elements, $dependency) {
     $meta_a = CacheableMetadata::createFromRenderArray($elements);
     $meta_b = CacheableMetadata::createFromObject($dependency);
     $meta_a->merge($meta_b)->applyTo($elements);

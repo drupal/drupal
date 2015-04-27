@@ -169,13 +169,13 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
         // Associate the cache tags for the field definition & field storage
         // definition.
         $field_definition = $this->getFieldDefinition($name);
-        $this->renderer->addDependency($form[$name], $field_definition);
-        $this->renderer->addDependency($form[$name], $field_definition->getFieldStorageDefinition());
+        $this->renderer->addCacheableDependency($form[$name], $field_definition);
+        $this->renderer->addCacheableDependency($form[$name], $field_definition->getFieldStorageDefinition());
       }
     }
 
     // Associate the cache tags for the form display.
-    $this->renderer->addDependency($form, $this);
+    $this->renderer->addCacheableDependency($form, $this);
 
     // Add a process callback so we can assign weights and hide extra fields.
     $form['#process'][] = array($this, 'processForm');

@@ -287,7 +287,7 @@ class SystemTestController extends ControllerBase {
 
     // The content depends on the access result.
     $access = AccessResult::allowedIfHasPermission($this->currentUser, 'pet llamas');
-    $this->renderer->addDependency($build, $access);
+    $this->renderer->addCacheableDependency($build, $access);
 
     // Build the content.
     if ($access->isAllowed()) {

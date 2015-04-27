@@ -8,6 +8,8 @@
 namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -52,6 +54,9 @@ class AnonymousUserResponseSubscriber implements EventSubscriberInterface {
     }
 
     $response = $event->getResponse();
+    if (!$response instanceof CacheableResponseInterface) {
+      return;
+    }
 
     // The 'user.permissions' cache context ensures that if the permissions for
     // a role are modified, users are not served stale render cache content.
@@ -60,14 +65,10 @@ class AnonymousUserResponseSubscriber implements EventSubscriberInterface {
     // be invalidated. Therefore, when varying by permissions and the current
     // user is the anonymous user, also add the cache tag for the 'anonymous'
     // role.
-    $cache_contexts = $response->headers->get('X-Drupal-Cache-Contexts');
-    if ($cache_contexts && in_array('user.permissions', explode(' ', $cache_contexts))) {
-      $cache_tags = ['config:user.role.anonymous'];
-      if ($response->headers->get('X-Drupal-Cache-Tags')) {
-        $existing_cache_tags = explode(' ', $response->headers->get('X-Drupal-Cache-Tags'));
-        $cache_tags = Cache::mergeTags($existing_cache_tags, $cache_tags);
-      }
-      $response->headers->set('X-Drupal-Cache-Tags', implode(' ', $cache_tags));
+    if (in_array('user.permissions', $response->getCacheableMetadata()->getCacheContexts())) {
+      $per_permissions_response_for_anon = new CacheableMetadata();
+      $per_permissions_response_for_anon->setCacheTags(['config:user.role.anonymous']);
+      $response->addCacheableDependency($per_permissions_response_for_anon);
     }
   }
 
@@ -78,7 +79,10 @@ class AnonymousUserResponseSubscriber implements EventSubscriberInterface {
    *   An array of event listener definitions.
    */
   public static function getSubscribedEvents() {
-    $events[KernelEvents::RESPONSE][] = ['onRespond', -5];
+    // Priority 5, so that it runs before FinishResponseSubscriber, but after
+    // event subscribers that add the associated cacheability metadata (which
+    // have priority 10). This one is conditional, so must run after those.
+    $events[KernelEvents::RESPONSE][] = ['onRespond', 5];
     return $events;
   }
 

@@ -622,16 +622,16 @@ class RendererTest extends RendererTestBase {
   }
 
   /**
-   * @covers ::addDependency
+   * @covers ::addCacheableDependency
    *
-   * @dataProvider providerTestAddDependency
+   * @dataProvider providerTestAddCacheableDependency
    */
-  public function testAddDependency(array $build, $object, array $expected) {
-    $this->renderer->addDependency($build, $object);
+  public function testAddCacheableDependency(array $build, $object, array $expected) {
+    $this->renderer->addCacheableDependency($build, $object);
     $this->assertEquals($build, $expected);
   }
 
-  public function providerTestAddDependency() {
+  public function providerTestAddCacheableDependency() {
     return [
       // Empty render array, typical default cacheability.
       [

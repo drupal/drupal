@@ -10,6 +10,8 @@ namespace Drupal\Core\EventSubscriber;
 use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Cache\CacheContextsManager;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -133,19 +135,12 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
       $response->headers->set($name, $value, FALSE);
     }
 
-    // Apply the request's access result cacheability metadata, if it has any.
-    $access_result = $request->attributes->get(AccessAwareRouterInterface::ACCESS_RESULT);
-    if ($access_result instanceof CacheableDependencyInterface) {
-      $this->updateDrupalCacheHeaders($response, $access_result);
-    }
-    // Add a cache tag to any 4xx response.
-    if ($response->isClientError()) {
-      $cache_tags = ['4xx-response'];
-      if ($response->headers->has('X-Drupal-Cache-Tags')) {
-        $existing_cache_tags = explode(' ', $response->headers->get('X-Drupal-Cache-Tags'));
-        $cache_tags = Cache::mergeTags($existing_cache_tags, $cache_tags);
-      }
-      $response->headers->set('X-Drupal-Cache-Tags', implode(' ', $cache_tags));
+    // Expose the cache contexts and cache tags associated with this page in a
+    // X-Drupal-Cache-Contexts and X-Drupal-Cache-Tags header respectively.
+    if ($response instanceof CacheableResponseInterface) {
+      $response_cacheability = $response->getCacheableMetadata();
+      $response->headers->set('X-Drupal-Cache-Tags', implode(' ', $response_cacheability->getCacheTags()));
+      $response->headers->set('X-Drupal-Cache-Contexts', implode(' ', $this->cacheContextsManager->optimizeTokens($response_cacheability->getCacheContexts())));
     }
 
     $is_cacheable = ($this->requestPolicy->check($request) === RequestPolicyInterface::ALLOW) && ($this->responsePolicy->check($response, $request) !== ResponsePolicyInterface::DENY);
@@ -165,30 +160,6 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
       // header declaring the response as not cacheable.
       $this->setResponseNotCacheable($response, $request);
     }
-  }
-
-  /**
-   * Updates Drupal's cache headers using the route's cacheable access result.
-   *
-   * @param \Symfony\Component\HttpFoundation\Response $response
-   * @param \Drupal\Core\Cache\CacheableDependencyInterface $cacheable_access_result
-   */
-  protected function updateDrupalCacheHeaders(Response $response, CacheableDependencyInterface $cacheable_access_result) {
-    // X-Drupal-Cache-Tags
-    $cache_tags = $cacheable_access_result->getCacheTags();
-    if ($response->headers->has('X-Drupal-Cache-Tags')) {
-      $existing_cache_tags = explode(' ', $response->headers->get('X-Drupal-Cache-Tags'));
-      $cache_tags = Cache::mergeTags($existing_cache_tags, $cache_tags);
-    }
-    $response->headers->set('X-Drupal-Cache-Tags', implode(' ', $cache_tags));
-
-    // X-Drupal-Cache-Contexts
-    $cache_contexts = $cacheable_access_result->getCacheContexts();
-    if ($response->headers->has('X-Drupal-Cache-Contexts')) {
-      $existing_cache_contexts = explode(' ', $response->headers->get('X-Drupal-Cache-Contexts'));
-      $cache_contexts = Cache::mergeContexts($existing_cache_contexts, $cache_contexts);
-    }
-    $response->headers->set('X-Drupal-Cache-Contexts', implode(' ', $this->cacheContextsManager->optimizeTokens($cache_contexts)));
   }
 
   /**

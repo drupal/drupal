@@ -71,10 +71,20 @@ class RouterTest extends WebTestBase {
     // 3. controller result: Response object, globally cacheable route access.
     $this->drupalGet('router_test/test1');
     $headers = $this->drupalGetHeaders();
-    $this->assertEqual($headers['x-drupal-cache-contexts'], '');
-    $this->assertEqual($headers['x-drupal-cache-tags'], '');
+    $this->assertFalse(isset($headers['x-drupal-cache-contexts']));
+    $this->assertFalse(isset($headers['x-drupal-cache-tags']));
     // 4. controller result: Response object, per-role cacheable route access.
     $this->drupalGet('router_test/test20');
+    $headers = $this->drupalGetHeaders();
+    $this->assertFalse(isset($headers['x-drupal-cache-contexts']));
+    $this->assertFalse(isset($headers['x-drupal-cache-tags']));
+    // 5. controller result: CacheableResponse object, globally cacheable route access.
+    $this->drupalGet('router_test/test21');
+    $headers = $this->drupalGetHeaders();
+    $this->assertEqual($headers['x-drupal-cache-contexts'], '');
+    $this->assertEqual($headers['x-drupal-cache-tags'], '');
+    // 6. controller result: CacheableResponse object, per-role cacheable route access.
+    $this->drupalGet('router_test/test22');
     $headers = $this->drupalGetHeaders();
     $this->assertEqual($headers['x-drupal-cache-contexts'], 'user.roles');
     $this->assertEqual($headers['x-drupal-cache-tags'], '');

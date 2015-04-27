@@ -127,6 +127,20 @@ router_test.20:
   requirements:
     _role: 'anonymous'
 
+router_test.21:
+  path: '/router_test/test21'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test21'
+  requirements:
+    _access: 'TRUE'
+
+router_test.22:
+  path: '/router_test/test22'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test21'
+  requirements:
+    _role: 'anonymous'
+
 router_test.hierarchy_parent:
   path: '/menu-test/parent'
   defaults:

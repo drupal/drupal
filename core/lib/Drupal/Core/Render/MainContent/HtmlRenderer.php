@@ -10,6 +10,8 @@ namespace Drupal\Core\Render\MainContent;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Cache\CacheableResponse;
 use Drupal\Core\Cache\CacheContextsManager;
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Display\PageVariantInterface;
@@ -161,27 +163,27 @@ class HtmlRenderer implements MainContentRendererInterface {
     }
     $content = $this->renderer->render($html);
 
-    // Expose the cache contexts and cache tags associated with this page in a
-    // X-Drupal-Cache-Contexts and X-Drupal-Cache-Tags header respectively. Also
-    // associate the "rendered" cache tag. This allows us to invalidate the
-    // entire render cache, regardless of the cache bin.
-    $cache_contexts = [];
-    $cache_tags = ['rendered'];
-    foreach (['page_top', 'page', 'page_bottom'] as $region) {
-      if (isset($html[$region])) {
-        $cache_contexts = Cache::mergeContexts($cache_contexts, $html[$region]['#cache']['contexts']);
-        $cache_tags = Cache::mergeTags($cache_tags, $html[$region]['#cache']['tags']);
-      }
-    }
-
     // Set the generator in the HTTP header.
     list($version) = explode('.', \Drupal::VERSION, 2);
 
-    $response = new Response($content, 200,[
-      'X-Drupal-Cache-Tags' => implode(' ', $cache_tags),
-      'X-Drupal-Cache-Contexts' => implode(' ', $this->cacheContextsManager->optimizeTokens($cache_contexts)),
+    $response = new CacheableResponse($content, 200,[
       'X-Generator' => 'Drupal ' . $version . ' (https://www.drupal.org)'
     ]);
+
+    // Bubble the cacheability metadata associated with the rendered render
+    // arrays to the response.
+    foreach (['page_top', 'page', 'page_bottom'] as $region) {
+      if (isset($html[$region])) {
+        $response->addCacheableDependency(CacheableMetadata::createFromRenderArray($html[$region]));
+      }
+    }
+
+    // Also associate the "rendered" cache tag. This allows us to invalidate the
+    // entire render cache, regardless of the cache bin.
+    $default = new CacheableMetadata();
+    $default->setCacheTags(['rendered']);
+    $response->addCacheableDependency($default);
+
     return $response;
   }
 

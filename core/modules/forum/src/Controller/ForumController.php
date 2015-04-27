@@ -203,7 +203,7 @@ class ForumController extends ControllerBase {
     if (empty($term->forum_container->value)) {
       $build['#attached']['feed'][] = array('taxonomy/term/' . $term->id() . '/feed', 'RSS - ' . $term->getName());
     }
-    $this->renderer->addDependency($build, $config);
+    $this->renderer->addCacheableDependency($build, $config);
 
     return [
       'action' => $this->buildActionLinks($config->get('vocabulary'), $term),
