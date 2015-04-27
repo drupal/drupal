@@ -148,7 +148,12 @@ class BulkFormTest extends WebTestBase {
     }
     $edit += array('action' => 'node_delete_action');
     $this->drupalPostForm(NULL, $edit, t('Apply'));
+    // Make sure we don't show an action message while we are still on the
+    // confirmation page.
+    $errors = $this->xpath('//div[contains(@class, "messages--status")]');
+    $this->assertFalse($errors, 'No action message shown.');
     $this->drupalPostForm(NULL, array(), t('Delete'));
+    $this->assertText(t('Deleted 5 posts.'));
     // Check if we got redirected to the original page.
     $this->assertUrl('test_bulk_form');
   }
