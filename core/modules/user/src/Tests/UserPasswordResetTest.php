@@ -56,7 +56,7 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
     // Activate user by logging in.
     $this->drupalLogin($account);
 
-    $this->account = user_load($account->id());
+    $this->account = User::load($account->id());
     $this->drupalLogout();
 
     // Set the last login time that is used to generate the one-time link so

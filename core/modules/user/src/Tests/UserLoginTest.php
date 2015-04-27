@@ -9,6 +9,7 @@ namespace Drupal\user\Tests;
 
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Password\PhpassHashedPassword;
+use Drupal\user\Entity\User;
 
 /**
  * Ensure that login works as expected.
@@ -126,7 +127,8 @@ class UserLoginTest extends WebTestBase {
     $this->drupalLogin($account);
     $this->drupalLogout();
     // Load the stored user. The password hash should reflect $default_count_log2.
-    $account = user_load($account->id());
+    $user_storage = $this->container->get('entity.manager')->getStorage('user');
+    $account = User::load($account->id());
     $this->assertIdentical($password_hasher->getCountLog2($account->getPassword()), $default_count_log2);
 
     // Change the required number of iterations by loading a test-module
@@ -139,7 +141,8 @@ class UserLoginTest extends WebTestBase {
     $account->pass_raw = $password;
     $this->drupalLogin($account);
     // Load the stored user, which should have a different password hash now.
-    $account = user_load($account->id(), TRUE);
+    $user_storage->resetCache(array($account->id()));
+    $account = $user_storage->load($account->id());
     $this->assertIdentical($password_hasher->getCountLog2($account->getPassword()), $overridden_count_log2);
   }
 

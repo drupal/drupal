@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\user\Entity\User;
 
 /**
  * Implements hook_token_info().
@@ -127,7 +128,7 @@ function user_tokens($type, $tokens, array $data = array(), array $options = arr
   }
 
   if ($type == 'current-user') {
-    $account = user_load(\Drupal::currentUser()->id());
+    $account = User::load(\Drupal::currentUser()->id());
     $replacements += $token_service->generate('user', $tokens, array('user' => $account), $options);
   }
 

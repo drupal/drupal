@@ -10,6 +10,7 @@ namespace Drupal\node\Tests;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\NodeType;
+use Drupal\user\Entity\User;
 
 /**
  * Tests node_access and db_select() with node_access tag functionality with
@@ -226,7 +227,7 @@ class NodeAccessLanguageTest extends NodeTestBase {
 
     // Load the user 1 user for later use as an admin user with permission to
     // see everything.
-    $admin_user = user_load(1);
+    $admin_user = User::load(1);
 
     // Creating a private node with langcode Hungarian, will be saved as
     // the fallback in node access table.

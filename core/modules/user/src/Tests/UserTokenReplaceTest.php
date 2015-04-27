@@ -10,6 +10,7 @@ namespace Drupal\user\Tests;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
+use Drupal\user\Entity\User;
 
 /**
  * Generates text using placeholders for dummy content to check user token
@@ -49,8 +50,8 @@ class UserTokenReplaceTest extends WebTestBase {
     $this->drupalLogout();
     $this->drupalLogin($user2);
 
-    $account = user_load($user1->id());
-    $global_account = user_load(\Drupal::currentUser()->id());
+    $account = User::load($user1->id());
+    $global_account = User::load(\Drupal::currentUser()->id());
 
     // Generate and test sanitized tokens.
     $tests = array();

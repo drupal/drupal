@@ -177,7 +177,7 @@ function user_entity_extra_field_info() {
  *   An array of user objects, indexed by uid.
  *
  * @see entity_load_multiple()
- * @see user_load()
+ * @see \Drupal\user\Entity\User::load()
  * @see user_load_by_mail()
  * @see user_load_by_name()
  * @see \Drupal\Core\Entity\Query\QueryInterface
@@ -208,7 +208,7 @@ function user_load_multiple(array $uids = NULL, $reset = FALSE) {
  * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
  *   Use \Drupal\user\Entity\User::load().
  *
- * @see user_load_multiple()
+ * @see \Drupal\user\Entity\User::loadMultiple()
  */
 function user_load($uid, $reset = FALSE) {
   if ($reset) {
@@ -226,7 +226,7 @@ function user_load($uid, $reset = FALSE) {
  *   A fully-loaded $user object upon successful user load or FALSE if user
  *   cannot be loaded.
  *
- * @see user_load_multiple()
+ * @see \Drupal\user\Entity\User::loadMultiple()
  */
 function user_load_by_mail($mail) {
   $users = entity_load_multiple_by_properties('user', array('mail' => $mail));
@@ -242,7 +242,7 @@ function user_load_by_mail($mail) {
  *   A fully-loaded $user object upon successful user load or FALSE if user
  *   cannot be loaded.
  *
- * @see user_load_multiple()
+ * @see \Drupal\user\Entity\User::loadMultiple()
  */
 function user_load_by_name($name) {
   $users = entity_load_multiple_by_properties('user', array('name' => $name));
@@ -660,7 +660,7 @@ function user_pass_rehash($password, $timestamp, $login, $uid) {
  * @see _user_cancel()
  */
 function user_cancel($edit, $uid, $method) {
-  $account = user_load($uid);
+  $account = User::load($uid);
 
   if (!$account) {
     drupal_set_message(t('The user account %id does not exist.', array('%id' => $uid)), 'error');
@@ -877,7 +877,7 @@ function user_view($account, $view_mode = 'full', $langcode = NULL) {
  * Constructs a drupal_render() style array from an array of loaded users.
  *
  * @param $accounts
- *   An array of user accounts as returned by user_load_multiple().
+ *   An array of user accounts as returned by User::loadMultiple().
  * @param $view_mode
  *   (optional) View mode, e.g., 'full', 'teaser'... Defaults to 'teaser.'
  * @param $langcode

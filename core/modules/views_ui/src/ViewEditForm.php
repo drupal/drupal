@@ -143,7 +143,7 @@ class ViewEditForm extends ViewFormBase {
     if ($view->isLocked()) {
       $username = array(
         '#theme' => 'username',
-        '#account' => user_load($view->lock->owner),
+        '#account' => $this->entityManager->getStorage('user')->load($view->lock->owner),
       );
       $lock_message_substitutions = array(
         '!user' => drupal_render($username),

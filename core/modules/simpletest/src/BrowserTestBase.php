@@ -678,7 +678,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    *   $this->drupalLogin($account);
    *   // Load real user object.
    *   $pass_raw = $account->passRaw;
-   *   $account = user_load($account->id());
+   *   $account = User::load($account->id());
    *   $account->passRaw = $pass_raw;
    * @endcode
    *

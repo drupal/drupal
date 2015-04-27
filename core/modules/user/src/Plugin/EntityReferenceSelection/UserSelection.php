@@ -38,6 +38,13 @@ class UserSelection extends SelectionBase {
   protected $connection;
 
   /**
+   * The user storage.
+   *
+   * @var \Drupal\user\UserStorageInterface
+   */
+  protected $userStorage;
+
+  /**
    * Constructs a new UserSelection object.
    *
    * @param array $configuration
@@ -59,6 +66,7 @@ class UserSelection extends SelectionBase {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_manager, $module_handler, $current_user);
 
     $this->connection = $connection;
+    $this->userStorage = $entity_manager->getStorage('user');
   }
 
   /**
@@ -194,7 +202,7 @@ class UserSelection extends SelectionBase {
           $value_part->condition('anonymous_name', $condition['value'], $condition['operator']);
           $value_part->compile($this->connection, $query);
           $or->condition(db_and()
-            ->where(str_replace('anonymous_name', ':anonymous_name', (string) $value_part), $value_part->arguments() + array(':anonymous_name' => user_format_name(user_load(0))))
+            ->where(str_replace('anonymous_name', ':anonymous_name', (string) $value_part), $value_part->arguments() + array(':anonymous_name' => user_format_name($this->userStorage->load(0))))
             ->condition('base_table.uid', 0)
           );
           $query->condition($or);

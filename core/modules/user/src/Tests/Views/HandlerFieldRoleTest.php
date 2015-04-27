@@ -8,6 +8,7 @@
 namespace Drupal\user\Tests\Views;
 
 use Drupal\views\Views;
+use Drupal\user\Entity\User;
 
 /**
  * Tests the handler of the user: role field.
@@ -36,7 +37,7 @@ class HandlerFieldRoleTest extends UserTestBase {
     $this->drupalCreateRole(array('access content'), $rolename_not_assigned, $rolename_not_assigned);
 
     // Add roles to user 1.
-    $user = entity_load('user', 1);
+    $user = User::load(1);
     $user->addRole($rolename_a);
     $user->addRole($rolename_b);
     $user->save();

@@ -26,7 +26,7 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Route;
-
+use Drupal\user\Entity\User;
 use GuzzleHttp\Exception\RequestException;
 
 /**
@@ -1851,7 +1851,7 @@ function install_finished(&$install_state) {
     // Load current user and perform final login tasks.
     // This has to be done after drupal_flush_all_caches()
     // to avoid session regeneration.
-    $account = user_load(1);
+    $account = User::load(1);
     user_login_finalize($account);
   }
 

@@ -10,6 +10,7 @@ namespace Drupal\url_alter_test;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Drupal\user\Entity\User;
 
 /**
  * Path processor for url_alter_test.
@@ -45,7 +46,7 @@ class PathProcessorTest implements InboundPathProcessorInterface, OutboundPathPr
   public function processOutbound($path, &$options = array(), Request $request = NULL) {
     // Rewrite user/uid to user/username.
     if (preg_match('!^user/([0-9]+)(/.*)?!', $path, $matches)) {
-      if ($account = user_load($matches[1])) {
+      if ($account = User::load($matches[1])) {
         $matches += array(2 => '');
         $path = 'user/' . $account->getUsername() . $matches[2];
       }

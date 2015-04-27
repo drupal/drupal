@@ -9,6 +9,7 @@ namespace Drupal\user\Tests\Views;
 
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
+use Drupal\user\Entity\User;
 
 /**
  * @todo.
@@ -42,7 +43,7 @@ abstract class UserTestBase extends ViewTestBase {
     ViewTestData::createTestViews(get_class($this), array('user_test_views'));
 
     $this->users[] = $this->drupalCreateUser();
-    $this->users[] = user_load(1);
+    $this->users[] = User::load(1);
     $this->nodes[] = $this->drupalCreateNode(array('uid' => $this->users[0]->id()));
     $this->nodes[] = $this->drupalCreateNode(array('uid' => 1));
   }

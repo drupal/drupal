@@ -9,6 +9,7 @@ namespace Drupal\contact\Tests\Views;
 
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
+use Drupal\user\Entity\User;
 
 /**
  * Tests the contact link field.
@@ -55,7 +56,7 @@ class ContactLinkTest extends ViewTestBase {
    */
   public function testContactLink() {
     $accounts = array();
-    $accounts['root'] = user_load(1);
+    $accounts['root'] = User::load(1);
     // Create an account with access to all contact pages.
     $admin_account = $this->drupalCreateUser(array('administer users'));
     $accounts['admin'] = $admin_account;

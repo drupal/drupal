@@ -16,6 +16,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Drupal\user\Entity\User;
 
 /**
  * Implements hook_help().
@@ -629,7 +630,7 @@ function template_preprocess_forum_icon(&$variables) {
 function template_preprocess_forum_submitted(&$variables) {
   $variables['author'] = '';
   if (isset($variables['topic']->uid)) {
-    $username = array('#theme' => 'username', '#account' => user_load($variables['topic']->uid));
+    $username = array('#theme' => 'username', '#account' => User::load($variables['topic']->uid));
     $variables['author'] = drupal_render($username);
   }
   $variables['time'] = isset($variables['topic']->created) ? \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $variables['topic']->created) : '';

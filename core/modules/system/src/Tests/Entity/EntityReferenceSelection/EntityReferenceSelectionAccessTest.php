@@ -12,6 +12,7 @@ use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\comment\CommentInterface;
 use Drupal\simpletest\WebTestBase;
+use Drupal\user\Entity\User;
 
 /**
  * Tests for the base handlers provided by Entity Reference.
@@ -209,8 +210,8 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
 
     // Build a set of test data.
     $user_values = array(
-      'anonymous' => user_load(0),
-      'admin' => user_load(1),
+      'anonymous' => User::load(0),
+      'admin' => User::load(1),
       'non_admin' => array(
         'name' => 'non_admin <&>',
         'mail' => 'non_admin@example.com',

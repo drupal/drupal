@@ -40,7 +40,7 @@ use Drupal\Core\Language\LanguageManagerInterface;
  * // Load a node and a user, then replace tokens in the text.
  * $text = 'On [date:short], [user:name] read [node:title].';
  * $node = Node::load(1);
- * $user = user_load(1);
+ * $user = User::load(1);
  *
  * // [date:...] tokens use the current date automatically.
  * $data = array('node' => $node, 'user' => $user);

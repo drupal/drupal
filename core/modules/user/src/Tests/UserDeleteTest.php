@@ -8,6 +8,7 @@
 namespace Drupal\user\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\user\Entity\User;
 
 /**
  * Tests account deleting of users.
@@ -38,7 +39,7 @@ class UserDeleteTest extends WebTestBase {
 
     $this->assertTrue($roles_created > 0, 'Role assignments created for new users and deletion of role assignments can be tested');
     // We should be able to load one of the users.
-    $this->assertTrue(user_load($user_a->id()), 'User is created and deletion of user can be tested');
+    $this->assertTrue(User::load($user_a->id()), 'User is created and deltion of user can be tested');
     // Delete the users.
     user_delete_multiple($uids);
     // Test if the roles assignments are deleted.
@@ -50,9 +51,9 @@ class UserDeleteTest extends WebTestBase {
       ->execute()
       ->fetchField();
     $this->assertTrue($roles_after_deletion == 0, 'Role assignments deleted along with users');
-    // Test if the users are deleted, user_load() will return FALSE.
-    $this->assertFalse(user_load($user_a->id()), format_string('User with id @uid deleted.', array('@uid' => $user_a->id())));
-    $this->assertFalse(user_load($user_b->id()), format_string('User with id @uid deleted.', array('@uid' => $user_b->id())));
-    $this->assertFalse(user_load($user_c->id()), format_string('User with id @uid deleted.', array('@uid' => $user_c->id())));
+    // Test if the users are deleted, User::load() will return NULL.
+    $this->assertNull(User::load($user_a->id()), format_string('User with id @uid deleted.', array('@uid' => $user_a->id())));
+    $this->assertNull(User::load($user_b->id()), format_string('User with id @uid deleted.', array('@uid' => $user_b->id())));
+    $this->assertNull(User::load($user_c->id()), format_string('User with id @uid deleted.', array('@uid' => $user_c->id())));
   }
 }

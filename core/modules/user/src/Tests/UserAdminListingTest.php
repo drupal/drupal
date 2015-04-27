@@ -8,6 +8,7 @@
 namespace Drupal\user\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\user\Entity\User;
 
 /**
  * Tests the user admin listing if views is not enabled.
@@ -57,7 +58,7 @@ class UserAdminListingTest extends WebTestBase {
     $admin_user = $this->drupalCreateUser(array('administer users'));
     $accounts[$admin_user->label()] = $admin_user;
 
-    $accounts['admin'] = entity_load('user', 1);
+    $accounts['admin'] = User::load(1);
 
     $this->drupalLogin($admin_user);
 

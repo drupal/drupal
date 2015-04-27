@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\user\Entity\User;
 
 /**
  * Implements hook_token_info().
@@ -174,7 +175,7 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
 
         // Default values for the chained tokens handled below.
         case 'author':
-          $account = $node->getOwner() ? $node->getOwner() : user_load(0);
+          $account = $node->getOwner() ? $node->getOwner() : User::load(0);
           $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($account->label()) : $account->label();
           break;
 

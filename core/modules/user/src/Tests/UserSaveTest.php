@@ -8,6 +8,7 @@
 namespace Drupal\user\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\user\Entity\User;
 
 /**
  * Tests account saving for arbitrary new uid.
@@ -42,7 +43,7 @@ class UserSaveTest extends WebTestBase {
     $user->save();
 
     // Test if created user exists.
-    $user_by_uid = user_load($test_uid);
+    $user_by_uid = User::load($test_uid);
     $this->assertTrue($user_by_uid, 'Loading user by uid.');
 
     $user_by_name = user_load_by_name($test_name);

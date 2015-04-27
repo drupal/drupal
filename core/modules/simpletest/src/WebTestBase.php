@@ -672,7 +672,7 @@ abstract class WebTestBase extends TestBase {
    *   $this->drupalLogin($account);
    *   // Load real user object.
    *   $pass_raw = $account->pass_raw;
-   *   $account = user_load($account->id());
+   *   $account = User::load($account->id());
    *   $account->pass_raw = $pass_raw;
    * @endcode
    *

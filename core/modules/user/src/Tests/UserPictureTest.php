@@ -7,7 +7,6 @@
 
 namespace Drupal\user\Tests;
 
-use Drupal\Core\Cache\Cache;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -131,7 +130,9 @@ class UserPictureTest extends WebTestBase {
     $this->drupalPostForm('user/' . $this->webUser->id() . '/edit', $edit, t('Save'));
 
     // Load actual user data from database.
-    $account = user_load($this->webUser->id(), TRUE);
+    $user_storage = $this->container->get('entity.manager')->getStorage('user');
+    $user_storage->resetCache(array($this->webUser->id()));
+    $account = $user_storage->load($this->webUser->id());
     return file_load($account->user_picture->target_id, TRUE);
   }
 }

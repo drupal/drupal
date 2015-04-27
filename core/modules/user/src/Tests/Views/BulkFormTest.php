@@ -38,6 +38,7 @@ class BulkFormTest extends UserTestBase {
   public function testBulkForm() {
     // Login as a user without 'administer users'.
     $this->drupalLogin($this->drupalCreateUser(array('administer permissions')));
+    $user_storage = $this->container->get('entity.manager')->getStorage('user');
 
     // Create an user which actually can change users.
     $this->drupalLogin($this->drupalCreateUser(array('administer users')));
@@ -53,7 +54,7 @@ class BulkFormTest extends UserTestBase {
     $this->assertText(t('No users selected.'));
 
     // Assign a role to a user.
-    $account = entity_load('user', $this->users[0]->id());
+    $account = $user_storage->load($this->users[0]->id());
     $roles = user_role_names(TRUE);
     unset($roles[RoleInterface::AUTHENTICATED_ID]);
     $role = key($roles);
@@ -65,7 +66,8 @@ class BulkFormTest extends UserTestBase {
     );
     $this->drupalPostForm(NULL, $edit, t('Apply'));
     // Re-load the user and check their roles.
-    $account = entity_load('user', $account->id(), TRUE);
+    $user_storage->resetCache(array($account->id()));
+    $account = $user_storage->load($account->id());
     $this->assertTrue($account->hasRole($role), 'The user now has the custom role.');
 
     $edit = array(
@@ -74,7 +76,8 @@ class BulkFormTest extends UserTestBase {
     );
     $this->drupalPostForm(NULL, $edit, t('Apply'));
     // Re-load the user and check their roles.
-    $account = entity_load('user', $account->id(), TRUE);
+    $user_storage->resetCache(array($account->id()));
+    $account = $user_storage->load($account->id());
     $this->assertFalse($account->hasRole($role), 'The user no longer has the custom role.');
 
     // Block a user using the bulk form.
@@ -86,7 +89,8 @@ class BulkFormTest extends UserTestBase {
     );
     $this->drupalPostForm(NULL, $edit, t('Apply'));
     // Re-load the user and check their status.
-    $account = entity_load('user', $account->id(), TRUE);
+    $user_storage->resetCache(array($account->id()));
+    $account = $user_storage->load($account->id());
     $this->assertTrue($account->isBlocked(), 'The user is blocked.');
     $this->assertNoRaw($account->label(), 'The user is not found in the table.');
 
@@ -105,7 +109,7 @@ class BulkFormTest extends UserTestBase {
       'action' => 'user_block_user_action',
     );
     $this->drupalPostForm(NULL, $edit, t('Apply'));
-    $anonymous_account = user_load(0);
+    $anonymous_account = $user_storage->load(0);
     $this->assertTrue($anonymous_account->isBlocked(), 'Ensure the anonymous user got blocked.');
 
     // Test the list of available actions with a value that contains a dot.

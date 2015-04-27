@@ -8,7 +8,6 @@
 namespace Drupal\rest\Tests;
 
 use Drupal\Core\Url;
-use Drupal\rest\Tests\RESTTestBase;
 
 /**
  * Tests the deletion of resources.
@@ -72,7 +71,9 @@ class DeleteTest extends RESTTestBase {
     $account = $this->drupalCreateUser();
     $this->drupalLogin($account);
     $this->httpRequest($account->urlInfo(), 'DELETE');
-    $user = entity_load('user', $account->id(), TRUE);
+    $user_storage = $this->container->get('entity.manager')->getStorage('user');
+    $user_storage->resetCache(array($account->id()));
+    $user = $user_storage->load($account->id());
     $this->assertEqual($account->id(), $user->id(), 'User still exists in the database.');
     $this->assertResponse(405);
   }

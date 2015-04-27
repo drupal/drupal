@@ -39,6 +39,8 @@ class UserAdminTest extends WebTestBase {
     $user_c->name = 'User C';
     $user_c->save();
 
+    $user_storage = $this->container->get('entity.manager')->getStorage('user');
+
     // Create admin user to delete registered user.
     $admin_user = $this->drupalCreateUser(array('administer users'));
     // Use a predictable name so that we can reliably order the user admin page
@@ -94,7 +96,7 @@ class UserAdminTest extends WebTestBase {
     $this->assertText($user_c->getUsername(), 'User C on filtered by role on admin users page');
 
     // Test blocking of a user.
-    $account = user_load($user_c->id());
+    $account = $user_storage->load($user_c->id());
     $this->assertTrue($account->isActive(), 'User C not blocked');
     $edit = array();
     $edit['action'] = 'user_block_user_action';
@@ -104,7 +106,8 @@ class UserAdminTest extends WebTestBase {
       // targeted with the blocking action.
       'query' => array('order' => 'name', 'sort' => 'asc')
     ));
-    $account = user_load($user_c->id(), TRUE);
+    $user_storage->resetCache(array($user_c->id()));
+    $account = $user_storage->load($user_c->id());
     $this->assertTrue($account->isBlocked(), 'User C blocked');
 
     // Test filtering on admin page for blocked users
@@ -122,18 +125,22 @@ class UserAdminTest extends WebTestBase {
       // targeted with the blocking action.
       'query' => array('order' => 'name', 'sort' => 'asc')
     ));
-    $account = user_load($user_c->id(), TRUE);
+    $user_storage->resetCache(array($user_c->id()));
+    $account = $user_storage->load($user_c->id());
     $this->assertTrue($account->isActive(), 'User C unblocked');
     $this->assertMail("to", $account->getEmail(), "Activation mail sent to user C");
 
     // Test blocking and unblocking another user from /user/[uid]/edit form and sending of activation mail
     $user_d = $this->drupalCreateUser(array());
-    $account1 = user_load($user_d->id(), TRUE);
+    $user_storage->resetCache(array($user_d->id()));
+    $account1 = $user_storage->load($user_d->id());
     $this->drupalPostForm('user/' . $account1->id() . '/edit', array('status' => 0), t('Save'));
-    $account1 = user_load($user_d->id(), TRUE);
+    $user_storage->resetCache(array($user_d->id()));
+    $account1 = $user_storage->load($user_d->id());
     $this->assertTrue($account1->isBlocked(), 'User D blocked');
     $this->drupalPostForm('user/' . $account1->id() . '/edit', array('status' => TRUE), t('Save'));
-    $account1 = user_load($user_d->id(), TRUE);
+    $user_storage->resetCache(array($user_d->id()));
+    $account1 = $user_storage->load($user_d->id());
     $this->assertTrue($account1->isActive(), 'User D unblocked');
     $this->assertMail("to", $account1->getEmail(), "Activation mail sent to user D");
   }

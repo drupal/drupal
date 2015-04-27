@@ -54,6 +54,13 @@ class DbLogController extends ControllerBase {
   protected $formBuilder;
 
   /**
+   * The user storage.
+   *
+   * @var \Drupal\user\UserStorageInterface
+   */
+  protected $userStorage;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -82,6 +89,7 @@ class DbLogController extends ControllerBase {
     $this->moduleHandler = $module_handler;
     $this->dateFormatter = $date_formatter;
     $this->formBuilder = $form_builder;
+    $this->userStorage = $this->entityManager()->getStorage('user');
   }
 
   /**
@@ -188,7 +196,7 @@ class DbLogController extends ControllerBase {
       }
       $username = array(
         '#theme' => 'username',
-        '#account' => user_load($dblog->uid),
+        '#account' => $this->userStorage->load($dblog->uid),
       );
       $rows[] = array(
         'data' => array(
@@ -239,7 +247,7 @@ class DbLogController extends ControllerBase {
       $message = $this->formatMessage($dblog);
       $username = array(
         '#theme' => 'username',
-        '#account' => user_load($dblog->uid),
+        '#account' => $this->userStorage->load($dblog->uid),
       );
       $rows = array(
         array(
