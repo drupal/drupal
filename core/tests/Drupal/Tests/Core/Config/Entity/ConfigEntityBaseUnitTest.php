@@ -7,9 +7,7 @@
 
 namespace Drupal\Tests\Core\Config\Entity;
 
-use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Language\Language;
 use Drupal\Tests\Core\Plugin\Fixtures\TestConfigurablePlugin;
 use Drupal\Tests\UnitTestCase;
@@ -317,6 +315,15 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     $this->assertSame($this->id, $this->entity->getOriginalId());
     $this->assertSame($this->entity, $this->entity->setOriginalId($new_id));
     $this->assertSame($new_id, $this->entity->getOriginalId());
+
+    // Check that setOriginalId() does not change the entity "isNew" status.
+    $this->assertFalse($this->entity->isNew());
+    $this->entity->setOriginalId($this->randomMachineName());
+    $this->assertFalse($this->entity->isNew());
+    $this->entity->enforceIsNew();
+    $this->assertTrue($this->entity->isNew());
+    $this->entity->setOriginalId($this->randomMachineName());
+    $this->assertTrue($this->entity->isNew());
   }
 
   /**

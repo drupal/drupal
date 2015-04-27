@@ -472,7 +472,6 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
    * {@inheritdoc}
    */
   public function __wakeup() {
-    $is_new = $this->isNew();
     // Determine what were the properties from toArray() that were saved in
     // __sleep().
     $keys = $this->_serializedKeys;
@@ -481,7 +480,6 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
     // Run those values through the __construct(), as if they came from a
     // regular entity load.
     $this->__construct($values, $this->entityTypeId);
-    $this->enforceIsNew($is_new);
   }
 
 }

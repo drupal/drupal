@@ -130,9 +130,13 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    * {@inheritdoc}
    */
   public function setOriginalId($id) {
+    // Do not call the parent method since that would mark this entity as no
+    // longer new. Unlike content entities, new configuration entities have an
+    // ID.
+    // @todo https://www.drupal.org/node/2478811 Document the entity life cycle
+    //   and the differences between config and content.
     $this->originalId = $id;
-
-    return parent::setOriginalId($id);
+    return $this;
   }
 
   /**
