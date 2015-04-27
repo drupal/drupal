@@ -16,7 +16,7 @@ use Drupal\Core\Display\PageVariantInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\Render\PageDisplayVariantSelectionEvent;
-use Drupal\Core\Render\Renderer;
+use Drupal\Core\Render\RenderCacheInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Render\RenderEvents;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -73,6 +73,13 @@ class HtmlRenderer implements MainContentRendererInterface {
   protected $renderer;
 
   /**
+   * The render cache service.
+   *
+   * @var \Drupal\Core\Render\RenderCacheInterface
+   */
+  protected $renderCache;
+
+  /**
    * The cache contexts manager service.
    *
    * @var \Drupal\Core\Cache\CacheContextsManager
@@ -94,16 +101,19 @@ class HtmlRenderer implements MainContentRendererInterface {
    *   The module handler.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
+   * @param \Drupal\Core\Render\RenderCacheInterface $render_cache
+   *   The render cache service.
    * @param \Drupal\Core\Cache\CacheContextsManager $cache_contexts_manager
    *   The cache contexts manager service.
    */
-  public function __construct(TitleResolverInterface $title_resolver, PluginManagerInterface $display_variant_manager, EventDispatcherInterface $event_dispatcher, ElementInfoManagerInterface $element_info_manager, ModuleHandlerInterface $module_handler, RendererInterface $renderer, CacheContextsManager $cache_contexts_manager) {
+  public function __construct(TitleResolverInterface $title_resolver, PluginManagerInterface $display_variant_manager, EventDispatcherInterface $event_dispatcher, ElementInfoManagerInterface $element_info_manager, ModuleHandlerInterface $module_handler, RendererInterface $renderer, RenderCacheInterface $render_cache, CacheContextsManager $cache_contexts_manager) {
     $this->titleResolver = $title_resolver;
     $this->displayVariantManager = $display_variant_manager;
     $this->eventDispatcher = $event_dispatcher;
     $this->elementInfoManager = $element_info_manager;
     $this->moduleHandler = $module_handler;
     $this->renderer = $renderer;
+    $this->renderCache = $render_cache;
     $this->cacheContextsManager = $cache_contexts_manager;
   }
 
@@ -217,7 +227,7 @@ class HtmlRenderer implements MainContentRendererInterface {
       // @todo Remove this once https://www.drupal.org/node/2359901 lands.
       if (!empty($main_content)) {
         $this->renderer->render($main_content, FALSE);
-        $main_content = $this->renderer->getCacheableRenderArray($main_content) + [
+        $main_content = $this->renderCache->getCacheableRenderArray($main_content) + [
           '#title' => isset($main_content['#title']) ? $main_content['#title'] : NULL
         ];
       }

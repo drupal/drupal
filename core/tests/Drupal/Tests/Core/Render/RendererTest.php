@@ -531,9 +531,9 @@ class RendererTest extends RendererTestBase {
   /**
    * @covers ::render
    * @covers ::doRender
-   * @covers ::cacheGet
-   * @covers ::cacheSet
-   * @covers ::createCacheID
+   * @covers \Drupal\Core\Render\RenderCache::get
+   * @covers \Drupal\Core\Render\RenderCache::set
+   * @covers \Drupal\Core\Render\RenderCache::createCacheID
    */
   public function testRenderCache() {
     $this->setUpRequest();
@@ -584,9 +584,9 @@ class RendererTest extends RendererTestBase {
   /**
    * @covers ::render
    * @covers ::doRender
-   * @covers ::cacheGet
-   * @covers ::cacheSet
-   * @covers ::createCacheID
+   * @covers \Drupal\Core\Render\RenderCache::get
+   * @covers \Drupal\Core\Render\RenderCache::set
+   * @covers \Drupal\Core\Render\RenderCache::createCacheID
    *
    * @dataProvider providerTestRenderCacheMaxAge
    */

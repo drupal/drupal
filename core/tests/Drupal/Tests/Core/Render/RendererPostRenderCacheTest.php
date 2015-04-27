@@ -71,9 +71,9 @@ class RendererPostRenderCacheTest extends RendererTestBase {
   /**
    * @covers ::render
    * @covers ::doRender
-   * @covers ::cacheGet
-   * @covers ::cacheSet
-   * @covers ::createCacheID
+   * @covers \Drupal\Core\Render\RenderCache::get
+   * @covers \Drupal\Core\Render\RenderCache::set
+   * @covers \Drupal\Core\Render\RenderCache::createCacheID
    */
   public function testPostRenderCacheWithColdCache() {
     list($test_element, $context) = $this->generatePostRenderCacheElement();
@@ -127,7 +127,7 @@ class RendererPostRenderCacheTest extends RendererTestBase {
   /**
    * @covers ::render
    * @covers ::doRender
-   * @covers ::cacheGet
+   * @covers \Drupal\Core\Render\RenderCache::get
    * @covers ::processPostRenderCache
    */
   public function testPostRenderCacheWithPostRequest() {
@@ -189,7 +189,7 @@ class RendererPostRenderCacheTest extends RendererTestBase {
    *
    * @covers ::render
    * @covers ::doRender
-   * @covers ::cacheGet
+   * @covers \Drupal\Core\Render\RenderCache::get
    * @covers ::processPostRenderCache
    */
   public function testRenderChildrenPostRenderCacheDifferentContexts() {
@@ -284,7 +284,7 @@ class RendererPostRenderCacheTest extends RendererTestBase {
    *
    * @covers ::render
    * @covers ::doRender
-   * @covers ::cacheGet
+   * @covers \Drupal\Core\Render\RenderCache::get
    * @covers ::processPostRenderCache
    */
   public function testRenderChildrenPostRenderCacheComplex() {
@@ -404,7 +404,7 @@ class RendererPostRenderCacheTest extends RendererTestBase {
    *
    * @covers ::render
    * @covers ::doRender
-   * @covers ::cacheGet
+   * @covers \Drupal\Core\Render\RenderCache::get
    * @covers ::processPostRenderCache
    * @covers ::generateCachePlaceholder
    */

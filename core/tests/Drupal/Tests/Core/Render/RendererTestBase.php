@@ -12,6 +12,7 @@ use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Renderer;
+use Drupal\Core\Render\RenderCache;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,6 +29,13 @@ class RendererTestBase extends UnitTestCase {
    * @var \Drupal\Core\Render\Renderer
    */
   protected $renderer;
+
+  /**
+   * The tested render cache.
+   *
+   * @var \Drupal\Core\Render\RenderCache
+   */
+  protected $renderCache;
 
   /**
    * @var \Symfony\Component\HttpFoundation\RequestStack
@@ -118,10 +126,12 @@ class RendererTestBase extends UnitTestCase {
         }
         return $keys;
       });
-    $this->renderer = new Renderer($this->controllerResolver, $this->themeManager, $this->elementInfo, $this->requestStack, $this->cacheFactory, $this->cacheContextsManager, $this->rendererConfig);
+    $this->renderCache = new RenderCache($this->requestStack, $this->cacheFactory, $this->cacheContextsManager);
+    $this->renderer = new Renderer($this->controllerResolver, $this->themeManager, $this->elementInfo, $this->renderCache, $this->rendererConfig);
 
     $container = new ContainerBuilder();
     $container->set('cache_contexts_manager', $this->cacheContextsManager);
+    $container->set('render_cache', $this->renderCache);
     $container->set('renderer', $this->renderer);
     \Drupal::setContainer($container);
   }

@@ -12,12 +12,9 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\CacheableMetadata;
-use Drupal\Core\Cache\CacheContextsManager;
-use Drupal\Core\Cache\CacheFactoryInterface;
 use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Component\Utility\SafeMarkup;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Turns a render array into a HTML string.
@@ -46,25 +43,11 @@ class Renderer implements RendererInterface {
   protected $elementInfo;
 
   /**
-   * The request stack.
+   * The render cache service.
    *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
+   * @var \Drupal\Core\Render\RenderCacheInterface
    */
-  protected $requestStack;
-
-  /**
-   * The cache factory.
-   *
-   * @var \Drupal\Core\Cache\CacheFactoryInterface
-   */
-  protected $cacheFactory;
-
-  /**
-   * The cache contexts manager service.
-   *
-   * @var \Drupal\Core\Cache\CacheContextsManager
-   */
-  protected $cacheContexts;
+  protected $renderCache;
 
   /**
    * The renderer configuration array.
@@ -89,22 +72,16 @@ class Renderer implements RendererInterface {
    *   The theme manager.
    * @param \Drupal\Core\Render\ElementInfoManagerInterface $element_info
    *   The element info.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
-   *   The request stack.
-   * @param \Drupal\Core\Cache\CacheFactoryInterface $cache_factory
-   *   The cache factory.
-   * @param \Drupal\Core\Cache\CacheContextsManager $cache_contexts_manager
-   *   The cache contexts manager service.
+   * @param \Drupal\Core\Render\RenderCacheInterface $render_cache
+   *   The render cache service.
    * @param array $renderer_config
    *   The renderer configuration array.
    */
-  public function __construct(ControllerResolverInterface $controller_resolver, ThemeManagerInterface $theme, ElementInfoManagerInterface $element_info, RequestStack $request_stack, CacheFactoryInterface $cache_factory, CacheContextsManager $cache_contexts_manager, array $renderer_config) {
+  public function __construct(ControllerResolverInterface $controller_resolver, ThemeManagerInterface $theme, ElementInfoManagerInterface $element_info, RenderCacheInterface $render_cache, array $renderer_config) {
     $this->controllerResolver = $controller_resolver;
     $this->theme = $theme;
     $this->elementInfo = $element_info;
-    $this->requestStack = $request_stack;
-    $this->cacheFactory = $cache_factory;
-    $this->cacheContextsManager = $cache_contexts_manager;
+    $this->renderCache = $render_cache;
     $this->rendererConfig = $renderer_config;
   }
 
@@ -194,7 +171,7 @@ class Renderer implements RendererInterface {
     // Try to fetch the prerendered element from cache, run any
     // #post_render_cache callbacks and return the final markup.
     if (isset($elements['#cache']['keys'])) {
-      $cached_element = $this->cacheGet($elements);
+      $cached_element = $this->renderCache->get($elements);
       if ($cached_element !== FALSE) {
         $elements = $cached_element;
         // Only when we're not in a root (non-recursive) drupal_render() call,
@@ -215,8 +192,8 @@ class Renderer implements RendererInterface {
     }
     // Two-tier caching: track pre-bubbling elements' #cache for later
     // comparison.
-    // @see ::cacheGet()
-    // @see ::cacheSet()
+    // @see \Drupal\Core\Render\RenderCacheInterface::get()
+    // @see \Drupal\Core\Render\RenderCacheInterface::set()
     $pre_bubbling_elements = [];
     $pre_bubbling_elements['#cache'] = isset($elements['#cache']) ? $elements['#cache'] : [];
 
@@ -384,7 +361,7 @@ class Renderer implements RendererInterface {
       if ($pre_bubbling_elements['#cache']['keys'] !== $elements['#cache']['keys']) {
         throw new \LogicException('Cache keys may not be changed after initial setup. Use the contexts property instead to bubble additional metadata.');
       }
-      $this->cacheSet($elements, $pre_bubbling_elements);
+      $this->renderCache->set($elements, $pre_bubbling_elements);
     }
 
     // Only when we're in a root (non-recursive) drupal_render() call,
@@ -505,286 +482,6 @@ class Renderer implements RendererInterface {
         }
       }
     }
-  }
-
-  /**
-   * Gets the cached, prerendered element of a renderable element from the cache.
-   *
-   * @param array $elements
-   *   A renderable array.
-   *
-   * @return array
-   *   A renderable array, with the original element and all its children pre-
-   *   rendered, or FALSE if no cached copy of the element is available.
-   *
-   * @see ::render()
-   * @see ::saveToCache()
-   */
-  protected function cacheGet(array $elements) {
-    // Form submissions rely on the form being built during the POST request,
-    // and render caching of forms prevents this from happening.
-    // @todo remove the isMethodSafe() check when
-    //       https://www.drupal.org/node/2367555 lands.
-    if (!$this->requestStack->getCurrentRequest()->isMethodSafe() || !$cid = $this->createCacheID($elements)) {
-      return FALSE;
-    }
-    $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'render';
-
-    if (!empty($cid) && ($cache_bin = $this->cacheFactory->get($bin)) && $cache = $cache_bin->get($cid)) {
-      $cached_element = $cache->data;
-      // Two-tier caching: redirect to actual (post-bubbling) cache item.
-      // @see ::doRender()
-      // @see ::cacheSet()
-      if (isset($cached_element['#cache_redirect'])) {
-        return $this->cacheGet($cached_element);
-      }
-      // Return the cached element.
-      return $cached_element;
-    }
-    return FALSE;
-  }
-
-  /**
-   * Caches the rendered output of a renderable element.
-   *
-   * This is called by ::render() if the #cache property is set on an element.
-   *
-   * @param array $elements
-   *   A renderable array.
-   * @param array $pre_bubbling_elements
-   *   A renderable array corresponding to the state (in particular, the
-   *   cacheability metadata) of $elements prior to the beginning of its
-   *   rendering process, and therefore before any bubbling of child
-   *   information has taken place. Only the #cache property is used by this
-   *   function, so the caller may omit all other properties and children from
-   *   this array.
-   *
-   * @return bool|null
-   *  Returns FALSE if no cache item could be created, NULL otherwise.
-   *
-   * @see ::getFromCache()
-   */
-  protected function cacheSet(array &$elements, array $pre_bubbling_elements) {
-    // Form submissions rely on the form being built during the POST request,
-    // and render caching of forms prevents this from happening.
-    // @todo remove the isMethodSafe() check when
-    //       https://www.drupal.org/node/2367555 lands.
-    if (!$this->requestStack->getCurrentRequest()->isMethodSafe() || !$cid = $this->createCacheID($elements)) {
-      return FALSE;
-    }
-
-    $data = $this->getCacheableRenderArray($elements);
-
-    $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'render';
-    $expire = ($elements['#cache']['max-age'] === Cache::PERMANENT) ? Cache::PERMANENT : (int) $this->requestStack->getMasterRequest()->server->get('REQUEST_TIME') + $elements['#cache']['max-age'];
-    $cache = $this->cacheFactory->get($bin);
-
-    // Calculate the pre-bubbling CID.
-    $pre_bubbling_cid = $this->createCacheID($pre_bubbling_elements);
-
-    // Two-tier caching: detect different CID post-bubbling, create redirect,
-    // update redirect if different set of cache contexts.
-    // @see ::doRender()
-    // @see ::cacheGet()
-    if ($pre_bubbling_cid && $pre_bubbling_cid !== $cid) {
-      // The cache redirection strategy we're implementing here is pretty
-      // simple in concept. Suppose we have the following render structure:
-      // - A (pre-bubbling, specifies #cache['keys'] = ['foo'])
-      // -- B (specifies #cache['contexts'] = ['b'])
-      //
-      // At the time that we're evaluating whether A's rendering can be
-      // retrieved from cache, we won't know the contexts required by its
-      // children (the children might not even be built yet), so cacheGet()
-      // will only be able to get what is cached for a $cid of 'foo'. But at
-      // the time we're writing to that cache, we do know all the contexts that
-      // were specified by all children, so what we need is a way to
-      // persist that information between the cache write and the next cache
-      // read. So, what we can do is store the following into 'foo':
-      // [
-      //   '#cache_redirect' => TRUE,
-      //   '#cache' => [
-      //     ...
-      //     'contexts' => ['b'],
-      //   ],
-      // ]
-      //
-      // This efficiently lets cacheGet() redirect to a $cid that includes all
-      // of the required contexts. The strategy is on-demand: in the case where
-      // there aren't any additional contexts required by children that aren't
-      // already included in the parent's pre-bubbled #cache information, no
-      // cache redirection is needed.
-      //
-      // When implementing this redirection strategy, special care is needed to
-      // resolve potential cache ping-pong problems. For example, consider the
-      // following render structure:
-      // - A (pre-bubbling, specifies #cache['keys'] = ['foo'])
-      // -- B (pre-bubbling, specifies #cache['contexts'] = ['b'])
-      // --- C (pre-bubbling, specifies #cache['contexts'] = ['c'])
-      // --- D (pre-bubbling, specifies #cache['contexts'] = ['d'])
-      //
-      // Additionally, suppose that:
-      // - C only exists for a 'b' context value of 'b1'
-      // - D only exists for a 'b' context value of 'b2'
-      // This is an acceptable variation, since B specifies that its contents
-      // vary on context 'b'.
-      //
-      // A naive implementation of cache redirection would result in the
-      // following:
-      // - When a request is processed where context 'b' = 'b1', what would be
-      //   cached for a $pre_bubbling_cid of 'foo' is:
-      //   [
-      //     '#cache_redirect' => TRUE,
-      //     '#cache' => [
-      //       ...
-      //       'contexts' => ['b', 'c'],
-      //     ],
-      //   ]
-      // - When a request is processed where context 'b' = 'b2', we would
-      //   retrieve the above from cache, but when following that redirection,
-      //   get a cache miss, since we're processing a 'b' context value that
-      //   has not yet been cached. Given the cache miss, we would continue
-      //   with rendering the structure, perform the required context bubbling
-      //   and then overwrite the above item with:
-      //   [
-      //     '#cache_redirect' => TRUE,
-      //     '#cache' => [
-      //       ...
-      //       'contexts' => ['b', 'd'],
-      //     ],
-      //   ]
-      // - Now, if a request comes in where context 'b' = 'b1' again, the above
-      //   would redirect to a cache key that doesn't exist, since we have not
-      //   yet cached an item that includes 'b'='b1' and something for 'd'. So
-      //   we would process this request as a cache miss, at the end of which,
-      //   we would overwrite the above item back to:
-      //   [
-      //     '#cache_redirect' => TRUE,
-      //     '#cache' => [
-      //       ...
-      //       'contexts' => ['b', 'c'],
-      //     ],
-      //   ]
-      // - The above would always result in accurate renderings, but would
-      //   result in poor performance as we keep processing requests as cache
-      //   misses even though the target of the redirection is cached, and
-      //   it's only the redirection element itself that is creating the
-      //   ping-pong problem.
-      //
-      // A way to resolve the ping-pong problem is to eventually reach a cache
-      // state where the redirection element includes all of the contexts used
-      // throughout all requests:
-      // [
-      //   '#cache_redirect' => TRUE,
-      //   '#cache' => [
-      //     ...
-      //     'contexts' => ['b', 'c', 'd'],
-      //   ],
-      // ]
-      //
-      // We can't reach that state right away, since we don't know what the
-      // result of future requests will be, but we can incrementally move
-      // towards that state by progressively merging the 'contexts' value
-      // across requests. That's the strategy employed below and tested in
-      // \Drupal\Tests\Core\Render\RendererBubblingTest::testConditionalCacheContextBubblingSelfHealing().
-
-      // The set of cache contexts for this element, including the bubbled ones,
-      // for which we are handling a cache miss.
-      $cache_contexts = $data['#cache']['contexts'];
-
-      // Get the contexts by which this element should be varied according to
-      // the current redirecting cache item, if any.
-      $stored_cache_contexts = [];
-      $stored_cache_tags = [];
-      if ($stored_cache_redirect = $cache->get($pre_bubbling_cid)) {
-        $stored_cache_contexts = $stored_cache_redirect->data['#cache']['contexts'];
-        $stored_cache_tags = $stored_cache_redirect->data['#cache']['tags'];
-      }
-
-      // Calculate the union of the cache contexts for this request and the
-      // stored cache contexts.
-      $merged_cache_contexts = Cache::mergeContexts($stored_cache_contexts, $cache_contexts);
-
-      // Stored cache contexts incomplete: this request causes cache contexts to
-      // be added to the redirecting cache item.
-      if (array_diff($merged_cache_contexts, $stored_cache_contexts)) {
-        $redirect_data = [
-          '#cache_redirect' => TRUE,
-          '#cache' => [
-            // The cache keys of the current element; this remains the same
-            // across requests.
-            'keys' => $elements['#cache']['keys'],
-            // The union of the current element's and stored cache contexts.
-            'contexts' => $merged_cache_contexts,
-            // The union of the current element's and stored cache tags.
-            'tags' => Cache::mergeTags($stored_cache_tags, $data['#cache']['tags']),
-          ],
-        ];
-        $cache->set($pre_bubbling_cid, $redirect_data, $expire, Cache::mergeTags($redirect_data['#cache']['tags'], ['rendered']));
-      }
-
-      // Current cache contexts incomplete: this request only uses a subset of
-      // the cache contexts stored in the redirecting cache item. Vary by these
-      // additional (conditional) cache contexts as well, otherwise the
-      // redirecting cache item would be pointing to a cache item that can never
-      // exist.
-      if (array_diff($merged_cache_contexts, $cache_contexts)) {
-        // Recalculate the cache ID.
-        $recalculated_cid_pseudo_element = [
-          '#cache' => [
-            'keys' => $elements['#cache']['keys'],
-            'contexts' => $merged_cache_contexts,
-          ]
-        ];
-        $cid = $this->createCacheID($recalculated_cid_pseudo_element);
-        // Ensure the about-to-be-cached data uses the merged cache contexts.
-        $data['#cache']['contexts'] = $merged_cache_contexts;
-      }
-    }
-    $cache->set($cid, $data, $expire, Cache::mergeTags($data['#cache']['tags'], ['rendered']));
-  }
-
-  /**
-   * Creates the cache ID for a renderable element.
-   *
-   * Creates the cache ID string based on #cache['keys'] + #cache['contexts'].
-   *
-   * @param array $elements
-   *   A renderable array.
-   *
-   * @return string
-   *   The cache ID string, or FALSE if the element may not be cached.
-   */
-  protected function createCacheID(array $elements) {
-    // If the maximum age is zero, then caching is effectively prohibited.
-    if (isset($elements['#cache']['max-age']) && $elements['#cache']['max-age'] === 0) {
-      return FALSE;
-    }
-
-    if (isset($elements['#cache']['keys'])) {
-      $cid_parts = $elements['#cache']['keys'];
-      if (!empty($elements['#cache']['contexts'])) {
-        $contexts = $this->cacheContextsManager->convertTokensToKeys($elements['#cache']['contexts']);
-        $cid_parts = array_merge($cid_parts, $contexts);
-      }
-      return implode(':', $cid_parts);
-    }
-    return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getCacheableRenderArray(array $elements) {
-    return [
-      '#markup' => $elements['#markup'],
-      '#attached' => $elements['#attached'],
-      '#post_render_cache' => $elements['#post_render_cache'],
-      '#cache' => [
-        'contexts' => $elements['#cache']['contexts'],
-        'tags' => $elements['#cache']['tags'],
-        'max-age' => $elements['#cache']['max-age'],
-      ],
-    ];
   }
 
   /**

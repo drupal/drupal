@@ -309,25 +309,6 @@ interface RendererInterface {
   public function render(&$elements, $is_root_call = FALSE);
 
   /**
-   * Gets a cacheable render array for a render array and its rendered output.
-   *
-   * Given a render array and its rendered output (HTML string), return an array
-   * data structure that allows the render array and its associated metadata to
-   * be cached reliably (and is serialization-safe).
-   *
-   * If Drupal needs additional rendering metadata to be cached at some point,
-   * consumers of this method will continue to work. Those who only cache
-   * certain parts of a render array will cease to work.
-   *
-   * @param array $elements
-   *   A renderable array, on which ::render() has already been invoked.
-   *
-   * @return array
-   *   An array representing the cacheable data for this render array.
-   */
-  public function getCacheableRenderArray(array $elements);
-
-  /**
    * Merges the bubbleable rendering metadata o/t 2nd render array with the 1st.
    *
    * @param array $a

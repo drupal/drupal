@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\cache;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Render\RenderCacheInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\Core\Database\Query\Select;
@@ -81,6 +82,13 @@ abstract class CachePluginBase extends PluginBase {
   protected $renderer;
 
   /**
+   * The render cache service.
+   *
+   * @var \Drupal\Core\Render\RenderCacheInterface
+   */
+  protected $renderCache;
+
+  /**
    * Constructs a CachePluginBase object.
    *
    * @param array $configuration
@@ -91,11 +99,14 @@ abstract class CachePluginBase extends PluginBase {
    *   The plugin implementation definition.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The HTML renderer.
+   * @param \Drupal\Core\Render\RenderCacheInterface $render_cache
+   *   The render cache service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RendererInterface $renderer) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RendererInterface $renderer, RenderCacheInterface $render_cache) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->renderer = $renderer;
+    $this->renderCache = $render_cache;
   }
 
   /**
@@ -106,7 +117,8 @@ abstract class CachePluginBase extends PluginBase {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('renderer')
+      $container->get('renderer'),
+      $container->get('render_cache')
     );
   }
 
@@ -190,7 +202,7 @@ abstract class CachePluginBase extends PluginBase {
         // Also assign the cacheable render array back to the display handler so
         // that is used to render the view for this request and rendering does
         // not happen twice.
-        $this->storage = $this->view->display_handler->output = $this->renderer->getCacheableRenderArray($output);
+        $this->storage = $this->view->display_handler->output = $this->renderCache->getCacheableRenderArray($output);
         \Drupal::cache($this->outputBin)->set($this->generateOutputKey(), $this->storage, $this->cacheSetExpire($type), Cache::mergeTags($this->storage['#cache']['tags'], ['rendered']));
         break;
     }

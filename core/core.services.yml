@@ -853,7 +853,7 @@ services:
       - { name: event_subscriber }
   main_content_renderer.html:
     class: Drupal\Core\Render\MainContent\HtmlRenderer
-    arguments: ['@title_resolver', '@plugin.manager.display_variant', '@event_dispatcher', '@element_info', '@module_handler', '@renderer', '@cache_contexts_manager']
+    arguments: ['@title_resolver', '@plugin.manager.display_variant', '@event_dispatcher', '@element_info', '@module_handler', '@renderer', '@render_cache', '@cache_contexts_manager']
     tags:
       - { name: render.main_content_renderer, format: html }
   main_content_renderer.ajax:
@@ -1346,8 +1346,11 @@ services:
     tags:
       - { name: mime_type_guesser }
     lazy: true
+  render_cache:
+    class: Drupal\Core\Render\RenderCache
+    arguments: ['@request_stack', '@cache_factory', '@cache_contexts_manager']
   renderer:
     class: Drupal\Core\Render\Renderer
-    arguments: ['@controller_resolver', '@theme.manager', '@plugin.manager.element_info', '@request_stack', '@cache_factory', '@cache_contexts_manager', '%renderer.config%']
+    arguments: ['@controller_resolver', '@theme.manager', '@plugin.manager.element_info', '@render_cache', '%renderer.config%']
   email.validator:
     class: Egulias\EmailValidator\EmailValidator
