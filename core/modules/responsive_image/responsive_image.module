@@ -74,11 +74,8 @@ function responsive_image_theme() {
   return array(
     'responsive_image' => array(
       'variables' => array(
+        'link_path' => NULL,
         'uri' => NULL,
-        'width' => NULL,
-        'height' => NULL,
-        'alt' => '',
-        'title' => NULL,
         'attributes' => array(),
         'responsive_image_style_id' => array(),
       ),
@@ -86,58 +83,51 @@ function responsive_image_theme() {
     'responsive_image_formatter' => array(
       'variables' => array(
         'item' => NULL,
+        'item_attributes' => NULL,
         'url' => NULL,
-        'responsive_image_style_id' => array(),
+        'responsive_image_style_id' => NULL,
       ),
-      'function' => 'theme_responsive_image_formatter',
     ),
   );
 }
 
 /**
- * Returns HTML for a responsive image field formatter.
+ * Prepares variables for responsive image formatter templates.
+ *
+ * Default template: responsive-image-formatter.html.twig.
  *
  * @param array $variables
  *   An associative array containing:
  *   - item: An ImageItem object.
- *   - responsive_image_style_id: The ID of the responsive image style.
+ *   - item_attributes: An optional associative array of HTML attributes to be
+ *     placed in the img tag.
+ *   - responsive_image_style_id: A responsive image style.
  *   - url: An optional \Drupal\Core\Url object.
- *
- * @ingroup themeable
  */
-function theme_responsive_image_formatter($variables) {
-  $item = $variables['item'];
-  if (!isset($variables['responsive_image_style_id']) || empty($variables['responsive_image_style_id'])) {
-    $image_formatter = array(
-      '#theme' => 'image_formatter',
-      '#item' => $item,
-      '#url' => $variables['url'],
-    );
-    return drupal_render($image_formatter);
-  }
-
-  $responsive_image = array(
-    '#theme' => 'responsive_image',
-    '#width' => $item->width,
-    '#height' => $item->height,
+function template_preprocess_responsive_image_formatter(&$variables) {
+  $variables['responsive_image'] = array(
+    '#type' => 'responsive_image',
     '#responsive_image_style_id' => $variables['responsive_image_style_id'],
   );
-  if (isset($item->uri)) {
-    $responsive_image['#uri'] = $item->uri;
-  }
-  elseif ($entity = $item->entity) {
-    $responsive_image['#uri'] = $entity->getFileUri();
-    $responsive_image['#entity'] = $entity;
-  }
-  $responsive_image['#alt'] = $item->alt;
+  $item = $variables['item'];
+  $attributes = array();
+  // Do not output an empty 'title' attribute.
   if (Unicode::strlen($item->title) != 0) {
-    $responsive_image['#title'] = $item->title;
+    $attributes['title'] = $item->title;
   }
-  if (isset($variables['url'])) {
-    return \Drupal::l($responsive_image, $variables['url']);
+  $attributes['alt'] = $item->alt;
+  $attributes += $variables['item_attributes'];
+  if (($entity = $item->entity) && empty($item->uri)) {
+    $variables['responsive_image']['#uri'] = $entity->getFileUri();
+  }
+  else {
+    $variables['responsive_image']['#uri'] = $item->uri;
   }
 
-  return drupal_render($responsive_image);
+  foreach (array('width', 'height') as $key) {
+    $variables['responsive_image']["#$key"] = $item->$key;
+  }
+  $variables['responsive_image']['#attributes'] = $attributes;
 }
 
 /**
@@ -147,13 +137,9 @@ function theme_responsive_image_formatter($variables) {
  *
  * @param $variables
  *   An associative array containing:
- *   - uri: Either the path of the image file (relative to base_path()) or a
- *     full URL.
+ *   - uri: The URI of the image.
  *   - width: The width of the image (if known).
  *   - height: The height of the image (if known).
- *   - alt: The alternative text for text-based browsers.
- *   - title: The title text is displayed when the image is hovered in some
- *     popular browsers.
  *   - attributes: Associative array of attributes to be placed in the img tag.
  *   - responsive_image_style_id: The ID of the responsive image style.
  */
@@ -191,11 +177,16 @@ function template_preprocess_responsive_image(&$variables) {
       ),
     ),
   );
-  foreach (array('alt', 'title', 'attributes') as $key) {
-    if (isset($variables[$key])) {
-      $variables['img_element']["#$key"] = $variables[$key];
-      unset($variables[$key]);
+  if (isset($variables['attributes'])) {
+    if (isset($variables['attributes']['alt'])) {
+      $variables['img_element']['#alt'] = $variables['attributes']['alt'];
+      unset($variables['attributes']['alt']);
     }
+    if (isset($variables['attributes']['title'])) {
+      $variables['img_element']['#title'] = $variables['attributes']['title'];
+      unset($variables['attributes']['title']);
+    }
+    $variables['img_element']['#attributes'] = $variables['attributes'];
   }
 }
 

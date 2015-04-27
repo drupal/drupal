@@ -204,14 +204,16 @@ class ResponsiveImageFormatter extends ImageFormatterBase implements ContainerFa
       if (isset($link_file)) {
         $url = Url::fromUri(file_create_url($file->getFileUri()));
       }
+      // Extract field item attributes for the theme function, and unset them
+      // from the $item so that the field template does not re-render them.
+      $item = $file->_referringItem;
+      $item_attributes = $item->_attributes;
+      unset($item->_attributes);
+
       $elements[$delta] = array(
         '#theme' => 'responsive_image_formatter',
-        '#attached' => array(
-          'library' => array(
-            'core/picturefill',
-          ),
-        ),
-        '#item' => $file->_referringItem,
+        '#item' => $item,
+        '#item_attributes' => $item_attributes,
         '#responsive_image_style_id' => $responsive_image_style ? $responsive_image_style->id() : '',
         '#url' => $url,
         '#cache' => array(
@@ -219,7 +221,6 @@ class ResponsiveImageFormatter extends ImageFormatterBase implements ContainerFa
         ),
       );
     }
-
     return $elements;
   }
 }

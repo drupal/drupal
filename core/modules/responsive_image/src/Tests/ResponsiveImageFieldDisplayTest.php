@@ -193,21 +193,15 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     $display_options = array(
       'type' => 'responsive_image',
       'settings' => array(
-        'image_link' => 'file'
+        'image_link' => 'file',
+        'responsive_image_style' => 'style_one',
       ),
     );
     $display = entity_get_display('node', 'article', 'default');
     $display->setComponent($field_name, $display_options)
       ->save();
 
-    $image = array(
-      '#theme' => 'image',
-      '#uri' => $image_uri,
-      '#width' => 360,
-      '#height' => 240,
-      '#alt' => $alt,
-    );
-    $default_output = '<a href="' . file_create_url($image_uri) . '">' . drupal_render($image) . '</a>';
+    $default_output = '<a href="' . file_create_url($image_uri) . '"><picture';
     $this->drupalGet('node/' . $nid);
     $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
     $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');
@@ -285,7 +279,10 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
         ),
       ),
     );
-    $default_output = drupal_render($fallback_image);
+    // The image.html.twig template has a newline after the <img> tag but
+    // responsive-image.html.twig doesn't have one after the fallback image, so
+    // we remove it here.
+    $default_output = trim(drupal_render($fallback_image));
     $this->assertRaw($default_output, 'Image style large formatter displaying correctly on full node view.');
 
     if ($scheme == 'private') {
@@ -354,7 +351,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     $this->drupalGet('node/' . $nid);
 
     // Assert an empty media attribute is not output.
-    $this->assertNoPattern('@srcset="data:image/gif;base64,R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== 1x".+?media="@');
+    $this->assertNoPattern('@srcset="data:image/gif;base64,R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== 1x".+?media=".+?/><source@');
 
     // Assert the media attribute is present if it has a value.
     $thumbnail_style = ImageStyle::load('thumbnail');
