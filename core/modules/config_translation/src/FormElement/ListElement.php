@@ -97,23 +97,6 @@ class ListElement implements ElementInterface {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function getFormAttributes() {
-    $attributes = [];
-    foreach ($this->element as $key => $element) {
-      if ($form_element = ConfigTranslationFormBase::createFormElement($element)) {
-        $form_attributes = $form_element->getFormAttributes();
-        if (empty($form_attributes)) {
-          continue;
-        }
-        $attributes += $form_attributes;
-      }
-    }
-    return $attributes;
-  }
-
-  /**
    * Returns the title for the 'details' element of a group of schema elements.
    *
    * For some configuration elements the same element structure can be repeated
