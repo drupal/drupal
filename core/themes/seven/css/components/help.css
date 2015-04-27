@@ -1,12 +1,8 @@
 /**
- * Help.
+ * @file
+ * Seven styles for the help component.
  */
+
 .help p {
   margin: 0 0 10px;
-}
-.help div.more-help-link {
-  text-align: right; /* LTR */
-}
-[dir="rtl"] .help div.more-help-link {
-  text-align: left;
 }

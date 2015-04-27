@@ -58,12 +58,15 @@ function forum_help($route_name, RouteMatchInterface $route_match) {
         '#type' => 'link',
         '#url' => Url::fromRoute('help.page', ['name' => 'forum']),
         '#title' => t('More help'),
+        '#attributes' => array(
+          'class' => array('icon-help'),
+        ),
       );
       $container = array(
         '#theme' => 'container',
         '#children' => drupal_render($more_help_link),
         '#attributes' => array(
-          'class' => array('more-help-link'),
+          'class' => array('more-link'),
         ),
       );
       $output .= drupal_render($container);
