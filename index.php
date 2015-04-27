@@ -15,7 +15,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 $autoloader = require_once 'autoload.php';
-require_once 'files.php';
 try {
 
   $request = Request::createFromGlobals();
