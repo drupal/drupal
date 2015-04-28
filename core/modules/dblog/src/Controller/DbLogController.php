@@ -242,12 +242,12 @@ class DbLogController extends ControllerBase {
    */
   public function eventDetails($event_id) {
     $build = array();
-    if ($dblog = $this->database->query('SELECT w.*, u.name, u.uid FROM {watchdog} w INNER JOIN {users_field_data} u ON w.uid = u.uid WHERE w.wid = :id AND u.default_langcode = 1', array(':id' => $event_id))->fetchObject()) {
+    if ($dblog = $this->database->query('SELECT w.*, u.uid FROM {watchdog} w LEFT JOIN {users} u ON u.uid = w.uid WHERE w.wid = :id', array(':id' => $event_id))->fetchObject()) {
       $severity = RfcLogLevel::getLevels();
       $message = $this->formatMessage($dblog);
       $username = array(
         '#theme' => 'username',
-        '#account' => $this->userStorage->load($dblog->uid),
+        '#account' => $this->userStorage->load($dblog->uid ? $dblog->uid : 0),
       );
       $rows = array(
         array(

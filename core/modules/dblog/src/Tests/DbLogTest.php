@@ -698,4 +698,33 @@ class DbLogTest extends WebTestBase {
     // string in xpath() to query the Document Object Model (DOM).
     $this->assertLink(html_entity_decode($message_text), 0, $message);
   }
+
+  /**
+   * Tests that the details page displays correctly for a temporary user.
+   */
+  public function testTemporaryUser() {
+    // Create a temporary user.
+    $tempuser = $this->drupalCreateUser();
+    $tempuser_uid = $tempuser->id();
+
+    // Log in as the admin user.
+    $this->drupalLogin($this->adminUser);
+
+    // Generate a single watchdog entry.
+    $this->generateLogEntries(1, array('user' => $tempuser, 'uid' => $tempuser_uid));
+    $wid = db_query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
+
+    // Check if the full message displays on the details page.
+    $this->drupalGet('admin/reports/dblog/event/' . $wid);
+    $this->assertText('Dblog test log message');
+
+    // Delete the user.
+    user_delete($tempuser->id());
+    $this->drupalGet('user/' . $tempuser_uid);
+    $this->assertResponse(404);
+
+    // Check if the full message displays on the details page.
+    $this->drupalGet('admin/reports/dblog/event/' . $wid);
+    $this->assertText('Dblog test log message');
+  }
 }
