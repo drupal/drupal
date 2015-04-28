@@ -515,7 +515,7 @@ function system_filetransfer_info() {
  * Implements hook_page_attachments().
  *
  * @see template_preprocess_maintenance_page()
- * @see \Drupal\system\Controller\SystemController::setLinkActiveClass()
+ * @see \Drupal\Core\EventSubscriber\ActiveLinkResponseFilter
  */
 function system_page_attachments(array &$page) {
   // Ensure the same CSS is loaded in template_preprocess_maintenance_page().
@@ -596,24 +596,13 @@ function system_page_attachments(array &$page) {
 
   // Handle setting the "active" class on links by:
   // - loading the active-link library if the current user is authenticated;
-  // - applying a post-render cache callback if the current user is anonymous.
+  // - applying a response filter if the current user is anonymous.
   // @see l()
   // @see \Drupal\Core\Utility\LinkGenerator::generate()
   // @see template_preprocess_links()
-  // @see \Drupal\system\Controller\SystemController::setLinkActiveClass
+  // @see \Drupal\Core\EventSubscriber\ActiveLinkResponseFilter
   if (\Drupal::currentUser()->isAuthenticated()) {
     $page['#attached']['library'][] = 'core/drupal.active-link';
-  }
-  else {
-    $page['#post_render_cache']['\Drupal\system\Controller\SystemController::setLinkActiveClass'] = array(
-      // Collect the current state that determines whether a link is active.
-      array(
-        'path' => \Drupal::routeMatch()->getRouteName() ? Url::fromRouteMatch(\Drupal::routeMatch())->getInternalPath() : '',
-        'front' => \Drupal::service('path.matcher')->isFrontPage(),
-        'language' => \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_URL)->getId(),
-        'query' => \Drupal::request()->query->all(),
-      )
-    );
   }
 }
 

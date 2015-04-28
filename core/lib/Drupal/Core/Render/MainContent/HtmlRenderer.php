@@ -165,6 +165,7 @@ class HtmlRenderer implements MainContentRendererInterface {
     list($version) = explode('.', \Drupal::VERSION, 2);
 
     $response = new CacheableResponse($content, 200,[
+      'Content-Type' => 'text/html; charset=UTF-8',
       'X-Generator' => 'Drupal ' . $version . ' (https://www.drupal.org)'
     ]);
 

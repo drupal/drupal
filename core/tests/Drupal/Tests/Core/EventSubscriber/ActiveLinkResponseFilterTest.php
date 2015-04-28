@@ -2,27 +2,26 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\system\Unit\Controller\SystemControllerTest.
+ * Contains \Drupal\Tests\Core\EventSubscriber\ActiveLinkResponseFilterTest.
  */
 
-namespace Drupal\Tests\system\Unit\Controller;
+namespace Drupal\Tests\Core\EventSubscriber;
 
 use Drupal\Component\Serialization\Json;
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\EventSubscriber\ActiveLinkResponseFilter;
 use Drupal\Core\Template\Attribute;
-use Drupal\system\Controller\SystemController;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\system\Controller\SystemController
- * @group system
+ * @coversDefaultClass \Drupal\Core\EventSubscriber\ActiveLinkResponseFilter
+ * @group EventSubscriber
  */
-class SystemControllerTest extends UnitTestCase {
+class ActiveLinkResponseFilterTest extends UnitTestCase {
 
   /**
    * Provides test data for testSetLinkActiveClass().
    *
-   * @see \Drupal\system\Controller\SystemController::setLinkActiveClass()
+   * @see \Drupal\Core\EventSubscriber\ActiveLinkResponseFilter::setLinkActiveClass()
    */
   public function providerTestSetLinkActiveClass() {
     // Define all the variations that *don't* affect whether or not an
@@ -244,14 +243,6 @@ class SystemControllerTest extends UnitTestCase {
     $situations[] = array('context' => $context, 'is active' => FALSE, 'attributes' => $attributes + array('hreflang' => 'en', 'data-drupal-link-query' => ""));
     $situations[] = array('context' => $context, 'is active' => FALSE, 'attributes' => $attributes + array('hreflang' => 'en', 'data-drupal-link-query' => TRUE));
 
-    // Helper function to generate a stubbed renderable array.
-    $create_element = function ($markup) {
-      return array(
-        '#markup' => $markup,
-        '#attached' => array(),
-      );
-    };
-
     // Loop over the surrounding HTML variations.
     $data = array();
     for ($h = 0; $h < count($html); $h++) {
@@ -292,7 +283,7 @@ class SystemControllerTest extends UnitTestCase {
               $target_markup = $create_markup(new Attribute($active_attributes));
             }
 
-            $data[] = array($create_element($source_markup), $situation['context'], $create_element($target_markup));
+            $data[] = array($source_markup, $situation['context']['path'], $situation['context']['front'], $situation['context']['language'], $situation['context']['query'], $target_markup);
           }
         }
       }
@@ -301,9 +292,12 @@ class SystemControllerTest extends UnitTestCase {
     // Test case to verify that the 'is-active' class is not added multiple
     // times.
     $data[] = [
-      0 => ['#markup' => '<a data-drupal-link-system-path="&lt;front&gt;">Once</a> <a data-drupal-link-system-path="&lt;front&gt;">Twice</a>'],
-      1 => ['path' => '', 'front' => TRUE, 'language' => 'en', 'query' => []],
-      2 => ['#markup' => '<a data-drupal-link-system-path="&lt;front&gt;" class="is-active">Once</a> <a data-drupal-link-system-path="&lt;front&gt;" class="is-active">Twice</a>'],
+      0 => '<a data-drupal-link-system-path="&lt;front&gt;">Once</a> <a data-drupal-link-system-path="&lt;front&gt;">Twice</a>',
+      1 => '',
+      2 => TRUE,
+      3 => 'en',
+      4 => [],
+      5 => '<a data-drupal-link-system-path="&lt;front&gt;" class="is-active">Once</a> <a data-drupal-link-system-path="&lt;front&gt;" class="is-active">Twice</a>',
     ];
 
     // Test cases to verify that the 'is-active' class is added when on the
@@ -316,14 +310,20 @@ class SystemControllerTest extends UnitTestCase {
     $front_path_link = '<a data-drupal-link-system-path="myfrontpage">Front Path</a>';
     $front_path_link_active = '<a data-drupal-link-system-path="myfrontpage" class="is-active">Front Path</a>';
     $data[] = [
-      0 => ['#markup' => $front_path_link . ' ' . $front_special_link],
-      1 => ['path' => 'myfrontpage', 'front' => TRUE, 'language' => 'en', 'query' => []],
-      2 => ['#markup' => $front_path_link_active . ' ' . $front_special_link_active],
+      0 => $front_path_link . ' ' . $front_special_link,
+      1 => 'myfrontpage',
+      2 => TRUE,
+      3 => 'en',
+      4 => [],
+      5 => $front_path_link_active . ' ' . $front_special_link_active,
     ];
     $data[] = [
-      0 => ['#markup' => $front_special_link . ' ' . $front_path_link],
-      1 => ['path' => 'myfrontpage', 'front' => TRUE, 'language' => 'en', 'query' => []],
-      2 => ['#markup' => $front_special_link_active . ' ' . $front_path_link_active],
+      0 => $front_special_link . ' ' . $front_path_link,
+      1 => 'myfrontpage',
+      2 => TRUE,
+      3 => 'en',
+      4 => [],
+      5 => $front_special_link_active . ' ' . $front_path_link_active,
     ];
 
     return $data;
@@ -332,25 +332,25 @@ class SystemControllerTest extends UnitTestCase {
   /**
    * Tests setLinkActiveClass().
    *
-   * @param array $element
-   *  A renderable array with the following keys:
-   *    - #markup
-   *    - #attached
-   * @param array $context
-   *   The page context to simulate. An array with the following keys:
-   *   - path: the system path of the currently active page
-   *   - front: whether the current page is the front page (which implies the
-   *     current path might also be <front>)
-   *   - language: the language code of the currently active page
-   *   - query: the query string for the currently active page
-   * @param array $expected_element
-   *   The returned renderable array.
+   * @param string $html_markup
+   *   The original HTML markup.
+   * @param string $current_path
+   *   The system path of the currently active page.
+   * @param bool $is_front
+   *   Whether the current page is the front page (which implies the current
+   *   path might also be <front>).
+   * @param string $url_language
+   *   The language code of the current URL.
+   * @param array $query
+   *   The query string for the current URL.
+   * @param string $expected_html_markup
+   *   The expected updated HTML markup.
    *
    * @dataProvider providerTestSetLinkActiveClass
    * @covers ::setLinkActiveClass
    */
-  public function testSetLinkActiveClass(array $element, array $context, $expected_element) {
-    $this->assertSame($expected_element, SystemController::setLinkActiveClass($element, $context));
+  public function testSetLinkActiveClass($html_markup, $current_path, $is_front, $url_language, array $query, $expected_html_markup) {
+    $this->assertSame($expected_html_markup, ActiveLinkResponseFilter::setLinkActiveClass($html_markup, $current_path, $is_front, $url_language, $query));
   }
 
 }

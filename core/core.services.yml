@@ -1362,3 +1362,9 @@ services:
     arguments: ['@controller_resolver', '@theme.manager', '@plugin.manager.element_info', '@render_cache', '%renderer.config%']
   email.validator:
     class: Egulias\EmailValidator\EmailValidator
+
+  response_filter.active_link:
+    class: Drupal\Core\EventSubscriber\ActiveLinkResponseFilter
+    arguments: ['@current_user', '@path.current', '@path.matcher', '@language_manager']
+    tags:
+      - { name: event_subscriber }
