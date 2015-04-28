@@ -89,3 +89,21 @@ session_test.trace_handler:
     _controller: '\Drupal\session_test\Controller\SessionTestController::traceHandler'
   requirements:
     _access: 'TRUE'
+
+session_test.get_session_basic_auth:
+  path: '/session-test/get-session'
+  defaults:
+    _title: 'Get session information using basic authentication'
+    _controller: '\Drupal\session_test\Controller\SessionTestController::getSession'
+  options:
+    _auth: ['basic_auth']
+  requirements:
+    _permission: 'administer site configuration'
+
+session_test.get_session_no_auth:
+  path: '/session-test/get-session-no-auth'
+  defaults:
+    _title: 'Get session information'
+    _controller: '\Drupal\session_test\Controller\SessionTestController::getSession'
+  requirements:
+    _access: 'TRUE'

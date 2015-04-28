@@ -162,4 +162,17 @@ class SessionTestController extends ControllerBase {
     return new JsonResponse($trace);
   }
 
+  /**
+   * Returns the values stored in the active session and the user ID.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   *
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
+   *   A response object containing the session values and the user ID.
+   */
+  public function getSession(Request $request) {
+    return new JsonResponse(['session' => $request->getSession()->all(), 'user' => $this->currentUser()->id()]);
+  }
+
 }
