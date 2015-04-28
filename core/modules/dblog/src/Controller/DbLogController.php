@@ -18,6 +18,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Url;
+use Drupal\user\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -247,7 +248,7 @@ class DbLogController extends ControllerBase {
       $message = $this->formatMessage($dblog);
       $username = array(
         '#theme' => 'username',
-        '#account' => $this->userStorage->load($dblog->uid ? $dblog->uid : 0),
+        '#account' => $dblog->uid ? $this->userStorage->load($dblog->uid) : User::getAnonymousUser(),
       );
       $rows = array(
         array(
