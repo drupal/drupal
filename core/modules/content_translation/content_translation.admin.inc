@@ -87,13 +87,15 @@ function _content_translation_form_language_content_settings_form_alter(array &$
     $entity_type = $entity_manager->getDefinition($entity_type_id);
     $storage_definitions = $entity_type instanceof ContentEntityTypeInterface ? $entity_manager->getFieldStorageDefinitions($entity_type_id) : array();
 
-    $entity_type_translatable = $entity_type->isTranslatable();
+    $entity_type_translatable = $content_translation_manager->isSupported($entity_type_id);
     foreach (entity_get_bundles($entity_type_id) as $bundle => $bundle_info) {
       // Here we do not want the widget to be altered and hold also the "Enable
       // translation" checkbox, which would be redundant. Hence we add this key
-      // to be able to skip alterations.
+      // to be able to skip alterations. Alter the title and display the message
+      // about UI integration.
       $form['settings'][$entity_type_id][$bundle]['settings']['language']['#content_translation_skip_alter'] = TRUE;
       if (!$entity_type_translatable) {
+        $form['settings'][$entity_type_id]['#title'] = t('@label (Translation is not supported).', array('@label' => $entity_type->getLabel()));
         continue;
       }
 
