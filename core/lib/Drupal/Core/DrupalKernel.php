@@ -249,9 +249,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // loader.
     if ($class_loader_class == get_class($class_loader)
         && Settings::get('class_loader_auto_detect', TRUE)
-        && Settings::get('hash_salt', FALSE)
         && function_exists('apc_fetch')) {
-      $prefix = 'drupal.' . hash('sha256', 'drupal.' . Settings::getHashSalt());
+      $prefix = Settings::getApcuPrefix('class_loader', $core_root);
       $apc_loader = new \Symfony\Component\ClassLoader\ApcClassLoader($prefix, $class_loader);
       $class_loader->unregister();
       $apc_loader->register();

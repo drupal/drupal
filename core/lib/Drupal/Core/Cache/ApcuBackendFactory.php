@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Cache;
 
-use \Drupal\Component\Utility\Crypt;
+use Drupal\Core\Site\Settings;
 
 class ApcuBackendFactory implements CacheFactoryInterface {
 
@@ -34,7 +34,7 @@ class ApcuBackendFactory implements CacheFactoryInterface {
    *   The cache tags checksum provider.
    */
   public function __construct($root, CacheTagsChecksumInterface $checksum_provider) {
-    $this->sitePrefix = Crypt::hashBase64($root . '/' . conf_path());
+    $this->sitePrefix = Settings::getApcuPrefix('apcu_backend', $root, conf_path());
     $this->checksumProvider = $checksum_provider;
   }
 
