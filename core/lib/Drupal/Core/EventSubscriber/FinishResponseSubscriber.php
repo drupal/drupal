@@ -269,7 +269,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
    *   A response object.
    */
   protected function setExpiresNoCache(Response $response) {
-    $response->setExpires(\DateTime::createFromFormat('j-M-Y H:i:s T', '19-Nov-1978 05:00:00 GMT'));
+    $response->setExpires(\DateTime::createFromFormat('j-M-Y H:i:s T', '19-Nov-1978 05:00:00 UTC'));
   }
 
   /**
