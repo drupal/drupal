@@ -9,8 +9,9 @@
   margin: 0 auto;
 }
 .color-form .form-item {
-  overflow: hidden;
   margin: 0.5em 0;
+  height: 2em;
+  padding: 0.5em;
 }
 .color-form label {
   clear: left; /* LTR */
@@ -27,57 +28,68 @@
 [dir="rtl"] .color-form .form-text {
   float: right;
 }
-#palette .hook {
+.color-palette__hook {
   float: left; /* LTR */
   width: 16px;
   height: 16px;
 }
-[dir="rtl"] #palette .hook {
+[dir="rtl"] .color-palette__hook {
   float: right;
 }
-#palette .down,
-#palette .up,
-#palette .both {
+.color-palette__hook.is-down,
+.color-palette__hook.is-up,
+.color-palette__hook.is-both {
   background: url(../images/hook.png) no-repeat 100% 0; /* LTR */
 }
-[dir="rtl"] #palette .down,
-[dir="rtl"] #palette .up,
-[dir="rtl"] #palette .both {
+[dir="rtl"] .color-palette__hook.is-down,
+[dir="rtl"] .color-palette__hook.is-up,
+[dir="rtl"] .color-palette__hook.is-both {
   background: url(../images/hook-rtl.png) no-repeat 0 0;
 }
-#palette .up {
+.color-palette__hook.is-up {
   background-position: 100% -27px; /* LTR */
 }
-[dir="rtl"] #palette .up {
+[dir="rtl"] .color-palette__hook.is-up {
   background-position: 0 -27px;
 }
-#palette .both {
+.color-palette__hook.is-both {
   background-position: 100% -54px; /* LTR */
 }
-[dir="rtl"] #palette .both {
+[dir="rtl"] .color-palette__hook.is-both {
   background-position: 0 -54px;
 }
-#palette .lock {
+/**
+ * The button also inherits from .link, which hides the background. Use a more
+ * specific selector to overwrite.
+ */
+button.color-palette__lock,
+.color-palette__lock {
   float: left; /* LTR */
   width: 20px;
   height: 19px;
   background: url(../images/lock.png) no-repeat 50% 0;
   cursor: pointer;
+  position: relative;
+  top: -1.7em;
+  left: -10px;
+  direction: ltr;
   text-indent: -9999px;
 }
-[dir="rtl"] #palette .lock {
+[dir="rtl"] .color-palette__lock {
   float: right;
 }
-#palette .unlocked {
+/* Same as above .color-palette__lock rule. */
+button.is-unlocked,
+.is-unlocked {
   background-position: 50% -22px;
 }
 
 /* wide viewport. */
 @media screen and (min-width: 37.5625em) { /* 601px */
-  #placeholder {
+  .color-placeholder {
     float: right; /* LTR */
   }
-  [dir="rtl"] #placeholder {
+  [dir="rtl"] .color-placeholder {
     float: left;
   }
   .color-form .form-item {
@@ -104,17 +116,18 @@
   [dir="rtl"] .color-form .form-select {
     float: right;
   }
-  #palette .hook {
+  .color-palette__hook {
     float: left; /* LTR */
     margin-top: 3px;
   }
-  [dir="rtl"] #palette .hook {
+  [dir="rtl"] .color-palette__hook {
     float: right;
   }
-  #palette .lock {
+  button.color-palette__lock,
+  .color-palette__lock {
     float: left; /* LTR */
   }
-  [dir="rtl"] #palette .lock {
+  [dir="rtl"] .color-palette__lock {
     float: right;
   }
 }
@@ -123,20 +136,20 @@
 }
 
 /* Preview */
-#preview {
+.color-preview {
   display: none;
 }
-.js #preview {
+.js .color-preview {
   display: block;
   position: relative;
   float: left; /* LTR */
 }
-.js[dir="rtl"] #preview {
+.js[dir="rtl"] .color-preview {
   float: right;
 }
 @media screen and (max-width: 30em) { /* 480px */
-  .color-form #preview-sidebar,
-  .color-form #preview-content {
+  .color-form .color-preview-sidebar,
+  .color-form .color-preview-content {
     width: auto;
     margin: 0;
   }
