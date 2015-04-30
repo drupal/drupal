@@ -1,0 +1,20 @@
+{#
+/**
+ * @file
+ * Theme override to display an item in a views RSS feed.
+ *
+ * Available variables:
+ * - title: RSS item title.
+ * - link: RSS item link.
+ * - description: RSS body text.
+ * - item_elements: RSS item elements rendered as XML (pubDate, creator, guid).
+ *
+ * @see template_preprocess_views_view_row_rss()
+ */
+#}
+  <item>
+    <title>{{ title }}</title>
+    <link>{{ link }}</link>
+    <description>{{ description }}</description>
+    {{ item_elements }}
+  </item>
