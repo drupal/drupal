@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\RouteProcessor\RouteProcessorIntegrationTest.
+ * Contains \Drupal\system\Tests\RouteProcessor\RouteProcessorCurrentIntegrationTest.
  */
 
 namespace Drupal\system\Tests\RouteProcessor;

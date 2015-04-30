@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\PathProcessor\RouteNoneTest.
+ * Contains \Drupal\system\Tests\RouteProcessor\RouteNoneTest.
  */
 
 namespace Drupal\system\Tests\RouteProcessor;
