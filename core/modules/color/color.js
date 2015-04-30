@@ -23,8 +23,8 @@
       var focused = null;
 
       // Add Farbtastic.
-      $('<div class="color-placeholder"></div>').once('color').prependTo(form);
-      var farb = $.farbtastic('.color-placeholder');
+      $('<div id="placeholder"></div>').once('color').prependTo(form);
+      var farb = $.farbtastic('#placeholder');
 
       // Decode reference colors to HSL.
       var reference = settings.color.reference;
@@ -41,8 +41,8 @@
       for (i in settings.gradients) {
         if (settings.gradients.hasOwnProperty(i)) {
           // Add element to display the gradient.
-          $('.color-preview').once('color').append('<div id="gradient-' + i + '"></div>');
-          var gradient = $('.color-preview #gradient-' + i);
+          $('#preview').once('color').append('<div id="gradient-' + i + '"></div>');
+          var gradient = $('#preview #gradient-' + i);
           // Add height of current gradient to the list (divided by 10).
           height.push(parseInt(gradient.css('height'), 10) / 10);
           // Add width of current gradient to the list (divided by 10).
@@ -146,14 +146,14 @@
           if (propagate) {
             i = input.i;
             for (j = i + 1; ; ++j) {
-              if (!locks[j - 1] || $(locks[j - 1]).is('.is-unlocked')) {
+              if (!locks[j - 1] || $(locks[j - 1]).is('.unlocked')) {
                 break;
               }
               matched = shift_color(color, reference[input.key], reference[inputs[j].key]);
               callback(inputs[j], matched, false);
             }
             for (j = i - 1; ; --j) {
-              if (!locks[j] || $(locks[j]).is('.is-unlocked')) {
+              if (!locks[j] || $(locks[j]).is('.unlocked')) {
                 break;
               }
               matched = shift_color(color, reference[input.key], reference[inputs[j].key]);
@@ -201,7 +201,7 @@
       }
 
       // Initialize color fields.
-      form.find('.js-color-palette input.form-text')
+      form.find('#palette input.form-text')
         .each(function () {
           // Extract palette field name
           this.key = this.id.substring(13);
@@ -213,24 +213,24 @@
           i = inputs.length;
           if (inputs.length) {
             var toggleClick = true;
-            var lock = $('<button class="color-palette__lock link">' + Drupal.t('Unlock') + '</button>').on('click', function (e) {
+            var lock = $('<button class="lock link">' + Drupal.t('Unlock') + '</button>').on('click', function (e) {
               e.preventDefault();
               if (toggleClick) {
-                $(this).addClass('is-unlocked').html(Drupal.t('Lock'));
+                $(this).addClass('unlocked').html(Drupal.t('Lock'));
                 $(hooks[i - 1]).attr('class',
-                  locks[i - 2] && $(locks[i - 2]).is(':not(.is-unlocked)') ? 'color-palette__hook is-up' : 'color-palette__hook'
+                  locks[i - 2] && $(locks[i - 2]).is(':not(.unlocked)') ? 'hook up' : 'hook'
                 );
                 $(hooks[i]).attr('class',
-                  locks[i] && $(locks[i]).is(':not(.is-unlocked)') ? 'color-palette__hook is-down' : 'color-palette__hook'
+                  locks[i] && $(locks[i]).is(':not(.unlocked)') ? 'hook down' : 'hook'
                 );
               }
               else {
-                $(this).removeClass('is-unlocked').html(Drupal.t('Unlock'));
+                $(this).removeClass('unlocked').html(Drupal.t('Unlock'));
                 $(hooks[i - 1]).attr('class',
-                  locks[i - 2] && $(locks[i - 2]).is(':not(.is-unlocked)') ? 'color-palette__hook is-both' : 'color-palette__hook is-down'
+                  locks[i - 2] && $(locks[i - 2]).is(':not(.unlocked)') ? 'hook both' : 'hook down'
                 );
                 $(hooks[i]).attr('class',
-                  locks[i] && $(locks[i]).is(':not(.is-unlocked)') ? 'color-palette__hook is-both' : 'color-palette__hook is-up'
+                  locks[i] && $(locks[i]).is(':not(.unlocked)') ? 'hook both' : 'hook up'
                 );
               }
               toggleClick = !toggleClick;
@@ -240,17 +240,17 @@
           }
 
           // Add hook.
-          var hook = $('<div class="color-palette__hook"></div>');
+          var hook = $('<div class="hook"></div>');
           $(this).after(hook);
           hooks.push(hook);
 
-          $(this).parent().find('.color-palette__lock').trigger('click');
+          $(this).parent().find('.lock').trigger('click');
           this.i = i;
           inputs.push(this);
         })
         .on('focus', focus);
 
-      form.find('.js-color-palette label');
+      form.find('#palette label');
 
       // Focus first color.
       inputs[0].focus();

@@ -17,7 +17,7 @@
 #}
 <div class="color-form clearfix">
   {{ form.scheme }}
-  <div class="clearfix color-palette js-color-palette">
+  <div id="palette" class="clearfix">
     {{ form.palette }}
   </div>
   {{ form|without('scheme', 'palette') }}

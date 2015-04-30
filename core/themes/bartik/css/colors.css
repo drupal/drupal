@@ -56,14 +56,14 @@ a:active,
 
 /* ---------- Color Form ----------- */
 
-[dir="rtl"] .color-form .color-palette {
+[dir="rtl"] .color-form #palette {
   margin-left: 0;
   margin-right: 20px;
 }
 [dir="rtl"] .color-form .form-item label {
   float: right;
 }
-[dir="rtl"] .color-form .color-palette .lock {
+[dir="rtl"] .color-form #palette .lock {
   right: -20px;
   left: 0;
 }

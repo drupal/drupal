@@ -1,9 +1,9 @@
 /* ---------- Preview Styles ----------- */
-.js .color-preview {
+.js #preview {
   clear: both;
   float: none !important;
 }
-.color-preview {
+#preview {
   background-color: #fff;
   font-family: Georgia, "Times New Roman", Times, serif;
   font-size: 14px;
@@ -12,15 +12,15 @@
   word-wrap: break-word;
   margin-bottom: 10px;
 }
-.color-preview-header {
+#preview-header {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   position: relative;
 }
-.color-preview-logo {
+#preview-logo {
   float: left;
   padding: 15px;
 }
-.color-preview-site-name {
+#preview-site-name {
   color: #686868;
   font-weight: normal;
   font-size: 1.821em;
@@ -29,24 +29,24 @@
   margin-left: 15px; /* LTR */
   padding-top: 34px;
 }
-[dir="rtl"] .color-preview-site-name {
+[dir="rtl"] #preview-site-name {
   margin-left: 0;
   margin-right: 15px;
 }
-.color-preview-main-menu {
+#preview-main-menu {
   clear: both;
   padding: 0 15px 3px;
 }
-.color-preview-main-menu-links a {
+#preview-main-menu-links a {
   color: #d9d9d9;
   padding: 0.6em 1em 0.4em;
 }
-.color-preview-main-menu-links {
+#preview-main-menu-links {
   font-size: 0.929em;
   margin: 0;
   padding: 0;
 }
-.color-preview-main-menu-links a {
+#preview-main-menu-links a {
   color: #333;
   background: #ccc;
   background: rgba(255, 255, 255, 0.7);
@@ -54,54 +54,54 @@
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
 }
-.color-preview-main-menu-links a:hover,
-.color-preview-main-menu-links a:focus {
+#preview-main-menu-links a:hover,
+#preview-main-menu-links a:focus {
   background: #eee;
   background: rgba(255, 255, 255, 0.95);
   text-decoration: none;
   cursor: pointer;
 }
-.color-preview-main-menu-links li a.is-active {
+#preview-main-menu-links li a.is-active {
   background: #fff;
   border-bottom: none;
 }
-.color-preview-main-menu-links li {
+#preview-main-menu-links li {
   display: inline;
   list-style-type: none;
   padding: 0.6em 0 0.4em;
 }
-.color-preview-sidebar,
-.color-preview-content {
+#preview-sidebar,
+#preview-content {
   display: inline;
   float: left; /* LTR */
   position: relative;
 }
-[dir="rtl"] .color-preview-sidebar,
-[dir="rtl"] .color-preview-content {
+[dir="rtl"] #preview-sidebar,
+[dir="rtl"] #preview-content {
     float: right;
 }
-.color-preview-sidebar {
+#preview-sidebar {
   margin-left: 15px; /* LTR */
   width: 210px;
 }
-[dir="rtl"] .color-preview-sidebar {
+[dir="rtl"] #preview-sidebar {
   margin-left: 0;
   margin-right: 15px;
 }
-.color-preview-content {
+#preview-content {
   margin-left: 30px; /* LTR */
   width: 26.5em;
 }
-[dir="rtl"] .color-preview-content {
+[dir="rtl"] #preview-content {
   margin-left: 0;
   margin-right: 30px;
 }
-.color-preview-sidebar .preview-block {
+#preview-sidebar .preview-block {
   border: 1px solid;
   margin: 20px 0;
   padding: 15px 20px;
 }
-.color-preview-sidebar h2 {
+#preview-sidebar h2 {
   border-bottom: 1px solid #d6d6d6;
   font-size: 1.071em;
   font-weight: normal;
@@ -110,62 +110,62 @@
   padding-bottom: 5px;
   text-shadow: 0 1px 0 #fff;
 }
-.color-preview .preview-block .preview-content {
+#preview .preview-block .preview-content {
   margin-top: 1em;
 }
-.color-preview .preview-block-menu .preview-content,
-.color-preview .preview-block-menu .preview-content ul {
+#preview .preview-block-menu .preview-content,
+#preview .preview-block-menu .preview-content ul {
   margin-top: 0;
 }
-.color-preview-main {
+#preview-main {
   margin-bottom: 40px;
   margin-top: 20px;
 }
-.color-preview-page-title {
+#preview-page-title {
   font-size: 2em;
   font-weight: normal;
   line-height: 1;
   margin: 1em 0 0.5em;
 }
-.color-preview-footer-wrapper {
+#preview-footer-wrapper {
   color: #c0c0c0;
   color: rgba(255, 255, 255, 0.65);
   display: block !important;
   font-size: 0.857em;
   padding: 20px 20px 25px;
 }
-.color-preview-footer-wrapper a {
+#preview-footer-wrapper a {
   color: #fcfcfc;
   color: rgba(255, 255, 255, 0.8);
 }
-.color-preview-footer-wrapper a:hover,
-.color-preview-footer-wrapper a:focus {
+#preview-footer-wrapper a:hover,
+#preview-footer-wrapper a:focus {
   color: #fefefe;
   color: rgba(255, 255, 255, 0.95);
   text-decoration: underline;
 }
-.color-preview-footer-wrapper .preview-footer-column {
+#preview-footer-wrapper .preview-footer-column {
   display: inline;
   float: left; /* LTR */
   padding: 0 10px;
   position: relative;
   width: 220px;
 }
-[dir="rtl"] .color-preview-footer-wrapper .preview-footer-column {
+[dir="rtl"] #preview-footer-wrapper .preview-footer-column {
   float: right;
 }
-.color-preview-footer-wrapper .preview-block {
+#preview-footer-wrapper .preview-block {
   border: 1px solid #444;
   border-color: rgba(255, 255, 255, 0.1);
   margin: 20px 0;
   padding: 10px;
 }
-.color-preview-footer-columns .preview-block-menu {
+#preview-footer-columns .preview-block-menu {
   border: none;
   margin: 0;
   padding: 0;
 }
-.color-preview-footer-columns h2 {
+#preview-footer-columns h2 {
   border-bottom: 1px solid #555;
   border-color: rgba(255, 255, 255, 0.15);
   font-size: 1em;
@@ -173,24 +173,24 @@
   padding-bottom: 3px;
   text-transform: uppercase;
 }
-.color-preview-footer-columns .preview-content {
+#preview-footer-columns .preview-content {
   margin-top: 0;
 }
-.color-preview-footer-columns .preview-content ul {
+#preview-footer-columns .preview-content ul {
   margin-left: 0; /* LTR */
   padding-left: 0; /* LTR */
 }
-[dir="rtl"] .color-preview-footer-columns .preview-content ul {
+[dir="rtl"] #preview-footer-columns .preview-content ul {
   margin-right: 0;
   padding-right: 0;
 }
-.color-preview-footer-columns .preview-content li {
+#preview-footer-columns .preview-content li {
   list-style: none;
   list-style-image: none;
   margin: 0;
   padding: 0;
 }
-.color-preview-footer-columns .preview-content li a {
+#preview-footer-columns .preview-content li a {
   border-bottom: 1px solid #555;
   border-color: rgba(255, 255, 255, 0.15);
   display: block;
@@ -198,12 +198,12 @@
   padding: 0.8em 2px 0.8em 20px; /* LTR */
   text-indent: -15px;
 }
-[dir="rtl"] .color-preview-footer-columns .preview-content li a {
+[dir="rtl"] #preview-footer-columns .preview-content li a {
   padding-left: 2px;
   padding-right: 20px;
 }
-.color-preview-footer-columns .preview-content li a:hover,
-.color-preview-footer-columns .preview-content li a:focus {
+#preview-footer-columns .preview-content li a:hover,
+#preview-footer-columns .preview-content li a:focus {
   background-color: #1f1f21;
   background-color: rgba(255, 255, 255, 0.05);
   text-decoration: none;
