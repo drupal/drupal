@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\DependencyInjection;
 
+use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Serialization\Yaml;
 use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -34,30 +35,22 @@ class YamlFileLoader
 {
 
     /**
-     * Statically cached yaml files.
-     *
-     * Especially during tests, YAML files are re-parsed often.
-     *
-     * @var array
-     */
-    static protected $yaml = array();
-
-    /**
-     * @param \Drupal\Core\DependencyInjection\ContainerBuilder $container
+     * @var \Drupal\Core\DependencyInjection\ContainerBuilder $container
      */
     protected $container;
 
+    /**
+     * File cache object.
+     *
+     * @var \Drupal\Component\FileCache\FileCacheInterface
+     */
+    protected $fileCache;
+
+
     public function __construct(ContainerBuilder $container)
     {
-      $this->container = $container;
-    }
-
-    /**
-     * Resets the internal cache. This method is mostly useful for tests.
-     */
-    public static function reset()
-    {
-        static::$yaml = array();
+        $this->container = $container;
+        $this->fileCache = FileCacheFactory::get('container_yaml_loader');
     }
 
     /**
@@ -67,10 +60,14 @@ class YamlFileLoader
      */
     public function load($file)
     {
-        if (!isset(static::$yaml[$file])) {
-          static::$yaml[$file] = $this->loadFile($file);
+        // Load from the file cache, fall back to loading the file.
+        // @todo Refactor this to cache parsed definition objects in
+        //   https://www.drupal.org/node/2464053
+        $content = $this->fileCache->get($file);
+        if (!$content) {
+            $content = $this->loadFile($file);
+            $this->fileCache->set($file, $content);
         }
-        $content = static::$yaml[$file];
 
         // Not supported.
         //$this->container->addResource(new FileResource($path));
