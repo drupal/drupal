@@ -9,6 +9,7 @@ namespace Drupal\basic_auth\Tests\Authentication;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Url;
+use Drupal\basic_auth\Tests\BasicAuthTestTrait;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 
@@ -18,6 +19,8 @@ use Drupal\simpletest\WebTestBase;
  * @group basic_auth
  */
 class BasicAuthTest extends WebTestBase {
+
+  use BasicAuthTestTrait;
 
   /**
    * Modules installed for all tests.
@@ -175,43 +178,6 @@ class BasicAuthTest extends WebTestBase {
     $this->basicAuthGet($url, $account->getUsername(), $this->randomMachineName());
     $this->assertResponse('403', 'The user is blocked when wrong credentials are passed.');
     $this->assertText('Access denied', "A user friendly access denied message is displayed");
-  }
-
-  /**
-   * Does HTTP basic auth request.
-   *
-   * We do not use \Drupal\simpletest\WebTestBase::drupalGet because we need to
-   * set curl settings for basic authentication.
-   *
-   * @param \Drupal\Core\Url|string $path
-   *   Drupal path or URL to load into internal browser
-   * @param string $username
-   *   The user name to authenticate with.
-   * @param string $password
-   *   The password.
-   *
-   * @return string
-   *   Curl output.
-   */
-  protected function basicAuthGet($path, $username, $password) {
-    if ($path instanceof Url) {
-      $path = $path->setAbsolute()->toString();
-    }
-
-    $out = $this->curlExec(
-      array(
-        CURLOPT_HTTPGET => TRUE,
-        CURLOPT_URL => $path,
-        CURLOPT_NOBODY => FALSE,
-        CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
-        CURLOPT_USERPWD => $username . ':' . $password,
-      )
-    );
-
-    $this->verbose('GET request to: ' . $path .
-      '<hr />' . $out);
-
-    return $out;
   }
 
 }
