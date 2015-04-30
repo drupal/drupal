@@ -40,8 +40,9 @@ class PHPUnit_TextUI_Command
      * @var array
      */
     protected $longOptions = array(
-      'colors' => null,
+      'colors==' => null,
       'bootstrap=' => null,
+      'columns=' => null,
       'configuration=' => null,
       'coverage-clover=' => null,
       'coverage-crap4j=' => null,
@@ -74,6 +75,7 @@ class PHPUnit_TextUI_Command
       'disallow-test-output' => null,
       'enforce-time-limit' => null,
       'disallow-todo-tests' => null,
+      'strict-global-state' => null,
       'strict' => null,
       'tap' => null,
       'testdox' => null,
@@ -244,13 +246,22 @@ class PHPUnit_TextUI_Command
         foreach ($this->options[0] as $option) {
             switch ($option[0]) {
                 case '--colors': {
-                    $this->arguments['colors'] = true;
+                    $this->arguments['colors'] = $option[1] ?: PHPUnit_TextUI_ResultPrinter::COLOR_AUTO;
                     }
                 break;
 
                 case '--bootstrap': {
                     $this->arguments['bootstrap'] = $option[1];
                     }
+                break;
+
+                case '--columns': {
+                    if (is_numeric($option[1])) {
+                        $this->arguments['columns'] = (int) $option[1];
+                    } elseif ($option[1] == 'max') {
+                        $this->arguments['columns'] = 'max';
+                    }
+                }
                 break;
 
                 case 'c':
@@ -481,6 +492,11 @@ class PHPUnit_TextUI_Command
                     }
                 break;
 
+                case '--strict-global-state': {
+                    $this->arguments['disallowChangesToGlobalState'] = true;
+                }
+                break;
+
                 case '--disallow-test-output': {
                     $this->arguments['disallowTestOutput'] = true;
                     }
@@ -502,6 +518,7 @@ class PHPUnit_TextUI_Command
                     $this->arguments['disallowTestOutput']         = true;
                     $this->arguments['enforceTimeLimit']           = true;
                     $this->arguments['disallowTodoAnnotatedTests'] = true;
+                    $this->arguments['deprecatedStrictModeOption'] = true;
                     }
                 break;
 
@@ -893,16 +910,18 @@ Test Execution Options:
 
   --report-useless-tests    Be strict about tests that do not test anything.
   --strict-coverage         Be strict about unintentionally covered code.
+  --strict-global-state     Be strict about changes to global state
   --disallow-test-output    Be strict about output during tests.
   --enforce-time-limit      Enforce time limit based on test size.
   --disallow-todo-tests     Disallow @todo-annotated tests.
-  --strict                  Run tests in strict mode (enables all of the above).
 
   --process-isolation       Run each test in a separate PHP process.
   --no-globals-backup       Do not backup and restore \$GLOBALS for each test.
   --static-backup           Backup and restore static attributes for each test.
 
-  --colors                  Use colors in output.
+  --colors=<flag>           Use colors in output ("never", "auto" or "always").
+  --columns <n>             Number of columns to use for progress output.
+  --columns max             Use maximum number of columns for progress output.
   --stderr                  Write to STDERR instead of STDOUT.
   --stop-on-error           Stop execution upon first error.
   --stop-on-failure         Stop execution upon first error or failure.

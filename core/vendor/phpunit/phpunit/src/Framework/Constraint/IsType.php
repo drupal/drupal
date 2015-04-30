@@ -129,7 +129,7 @@ class PHPUnit_Framework_Constraint_IsType extends PHPUnit_Framework_Constraint
                 }
 
             case 'resource': {
-                return is_resource($other);
+                return is_resource($other) || is_string(@get_resource_type($other));
                 }
 
             case 'scalar': {

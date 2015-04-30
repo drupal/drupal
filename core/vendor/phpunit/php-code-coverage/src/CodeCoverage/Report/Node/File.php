@@ -1,46 +1,11 @@
 <?php
-/**
- * PHP_CodeCoverage
+/*
+ * This file is part of the PHP_CodeCoverage package.
  *
- * Copyright (c) 2009-2014, Sebastian Bergmann <sebastian@phpunit.de>.
- * All rights reserved.
+ * (c) Sebastian Bergmann <sebastian@phpunit.de>
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- *   * Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *
- *   * Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in
- *     the documentation and/or other materials provided with the
- *     distribution.
- *
- *   * Neither the name of Sebastian Bergmann nor the names of his
- *     contributors may be used to endorse or promote products derived
- *     from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * @category   PHP
- * @package    CodeCoverage
- * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2009-2014 Sebastian Bergmann <sebastian@phpunit.de>
- * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
- * @link       http://github.com/sebastianbergmann/php-code-coverage
- * @since      File available since Release 1.1.0
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 /**
@@ -49,7 +14,7 @@
  * @category   PHP
  * @package    CodeCoverage
  * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @copyright  2009-2014 Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
  * @link       http://github.com/sebastianbergmann/php-code-coverage
  * @since      Class available since Release 1.1.0
@@ -150,7 +115,8 @@ class PHP_CodeCoverage_Report_Node_File extends PHP_CodeCoverage_Report_Node
     {
         if (!is_bool($cacheTokens)) {
             throw PHP_CodeCoverage_Util_InvalidArgumentHelper::factory(
-                1, 'boolean'
+                1,
+                'boolean'
             );
         }
 
@@ -408,20 +374,14 @@ class PHP_CodeCoverage_Report_Node_File extends PHP_CodeCoverage_Report_Node
                 // Start line of a class.
                 if (isset($this->startLines[$lineNumber]['className'])) {
                     $currentClass = &$this->startLines[$lineNumber];
-                }
-
-                // Start line of a trait.
-                else if (isset($this->startLines[$lineNumber]['traitName'])) {
+                } // Start line of a trait.
+                elseif (isset($this->startLines[$lineNumber]['traitName'])) {
                     $currentTrait = &$this->startLines[$lineNumber];
-                }
-
-                // Start line of a method.
-                else if (isset($this->startLines[$lineNumber]['methodName'])) {
+                } // Start line of a method.
+                elseif (isset($this->startLines[$lineNumber]['methodName'])) {
                     $currentMethod = &$this->startLines[$lineNumber];
-                }
-
-                // Start line of a function.
-                else if (isset($this->startLines[$lineNumber]['functionName'])) {
+                } // Start line of a function.
+                elseif (isset($this->startLines[$lineNumber]['functionName'])) {
                     $currentFunction = &$this->startLines[$lineNumber];
                 }
             }
@@ -471,20 +431,14 @@ class PHP_CodeCoverage_Report_Node_File extends PHP_CodeCoverage_Report_Node
                 // End line of a class.
                 if (isset($this->endLines[$lineNumber]['className'])) {
                     unset($currentClass);
-                }
-
-                // End line of a trait.
-                else if (isset($this->endLines[$lineNumber]['traitName'])) {
+                } // End line of a trait.
+                elseif (isset($this->endLines[$lineNumber]['traitName'])) {
                     unset($currentTrait);
-                }
-
-                // End line of a method.
-                else if (isset($this->endLines[$lineNumber]['methodName'])) {
+                } // End line of a method.
+                elseif (isset($this->endLines[$lineNumber]['methodName'])) {
                     unset($currentMethod);
-                }
-
-                // End line of a function.
-                else if (isset($this->endLines[$lineNumber]['functionName'])) {
+                } // End line of a function.
+                elseif (isset($this->endLines[$lineNumber]['functionName'])) {
                     unset($currentFunction);
                 }
             }
@@ -500,7 +454,8 @@ class PHP_CodeCoverage_Report_Node_File extends PHP_CodeCoverage_Report_Node
                 }
 
                 $method['crap'] = $this->crap(
-                    $method['ccn'], $method['coverage']
+                    $method['ccn'],
+                    $method['coverage']
                 );
 
                 $trait['ccn'] += $method['ccn'];
@@ -518,7 +473,8 @@ class PHP_CodeCoverage_Report_Node_File extends PHP_CodeCoverage_Report_Node
             }
 
             $trait['crap'] = $this->crap(
-                $trait['ccn'], $trait['coverage']
+                $trait['ccn'],
+                $trait['coverage']
             );
         }
 
@@ -532,7 +488,8 @@ class PHP_CodeCoverage_Report_Node_File extends PHP_CodeCoverage_Report_Node
                 }
 
                 $method['crap'] = $this->crap(
-                    $method['ccn'], $method['coverage']
+                    $method['ccn'],
+                    $method['coverage']
                 );
 
                 $class['ccn'] += $method['ccn'];
@@ -550,7 +507,8 @@ class PHP_CodeCoverage_Report_Node_File extends PHP_CodeCoverage_Report_Node
             }
 
             $class['crap'] = $this->crap(
-                $class['ccn'], $class['coverage']
+                $class['ccn'],
+                $class['coverage']
             );
         }
     }
@@ -697,7 +655,8 @@ class PHP_CodeCoverage_Report_Node_File extends PHP_CodeCoverage_Report_Node
         }
 
         return sprintf(
-            '%01.2F', pow($ccn, 2) * pow(1 - $coverage/100, 3) + $ccn
+            '%01.2F',
+            pow($ccn, 2) * pow(1 - $coverage/100, 3) + $ccn
         );
     }
 }

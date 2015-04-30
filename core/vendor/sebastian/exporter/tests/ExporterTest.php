@@ -1,59 +1,23 @@
 <?php
-/**
- * Exporter
+/*
+ * This file is part of the Exporter package.
  *
- * Copyright (c) 2001-2014, Sebastian Bergmann <sebastian@phpunit.de>.
- * All rights reserved.
+ * (c) Sebastian Bergmann <sebastian@phpunit.de>
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- *   * Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *
- *   * Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in
- *     the documentation and/or other materials provided with the
- *     distribution.
- *
- *   * Neither the name of Sebastian Bergmann nor the names of his
- *     contributors may be used to endorse or promote products derived
- *     from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * @package    Exporter
- * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @author     Bernhard Schussek <bschussek@2bepublished.at>
- * @copyright  2001-2014 Sebastian Bergmann <sebastian@phpunit.de>
- * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
- * @link       https://github.com/sebastianbergmann/exporter
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace SebastianBergmann\Exporter;
 
 /**
- * @package    Exporter
- * @author     Sebastian Bergmann <sebastian@phpunit.de>
- * @author     Bernhard Schussek <bschussek@2bepublished.at>
- * @copyright  2001-2014 Sebastian Bergmann <sebastian@phpunit.de>
- * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
- * @link       https://github.com/sebastianbergmann/exporter
+ * @covers SebastianBergmann\Exporter\Exporter
  */
 class ExporterTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var Exporter
+     */
     private $exporter;
 
     protected function setUp()
@@ -70,9 +34,9 @@ class ExporterTest extends \PHPUnit_Framework_TestCase
 
         $obj = new \stdClass;
         //@codingStandardsIgnoreStart
-        $obj->null = NULL;
+        $obj->null = null;
         //@codingStandardsIgnoreEnd
-        $obj->boolean = TRUE;
+        $obj->boolean = true;
         $obj->integer = 1;
         $obj->double = 1.2;
         $obj->string = '1';
@@ -87,15 +51,16 @@ class ExporterTest extends \PHPUnit_Framework_TestCase
         $storage->foo = $obj2;
 
         return array(
-            array(NULL, 'null'),
-            array(TRUE, 'true'),
+            array(null, 'null'),
+            array(true, 'true'),
+            array(false, 'false'),
             array(1, '1'),
             array(1.0, '1.0'),
             array(1.2, '1.2'),
             array(fopen('php://memory', 'r'), 'resource(%d) of type (stream)'),
             array('1', "'1'"),
             array(array(array(1,2,3), array(3,4,5)),
-<<<EOF
+        <<<EOF
 Array &0 (
     0 => Array &1 (
         0 => 1
@@ -112,7 +77,7 @@ EOF
             ),
             // \n\r and \r is converted to \n
             array("this\nis\na\nvery\nvery\nvery\nvery\nvery\nvery\rlong\n\rtext",
-<<<EOF
+            <<<EOF
 'this
 is
 a
@@ -128,7 +93,7 @@ EOF
             ),
             array(new \stdClass, 'stdClass Object &%x ()'),
             array($obj,
-<<<EOF
+            <<<EOF
 stdClass Object &%x (
     'null' => null
     'boolean' => true
@@ -159,7 +124,7 @@ EOF
             ),
             array(array(), 'Array &%d ()'),
             array($storage,
-<<<EOF
+            <<<EOF
 SplObjectStorage Object &%x (
     'foo' => stdClass Object &%x (
         'foo' => 'bar'
@@ -172,7 +137,7 @@ SplObjectStorage Object &%x (
 EOF
             ),
             array($obj3,
-<<<EOF
+            <<<EOF
 stdClass Object &%x (
     0 => 1
     1 => 2
@@ -210,7 +175,8 @@ EOF
     public function testExport($value, $expected)
     {
         $this->assertStringMatchesFormat(
-          $expected, $this->trimnl($this->exporter->export($value))
+            $expected,
+            $this->trimNewline($this->exporter->export($value))
         );
     }
 
@@ -225,8 +191,8 @@ EOF
 
         $array = array(
             0 => 0,
-            'null' => NULL,
-            'boolean' => TRUE,
+            'null' => null,
+            'boolean' => true,
             'integer' => 1,
             'double' => 1.2,
             'string' => '1',
@@ -293,7 +259,8 @@ text'
 EOF;
 
         $this->assertStringMatchesFormat(
-            $expected, $this->trimnl($this->exporter->export($array))
+            $expected,
+            $this->trimNewline($this->exporter->export($array))
         );
     }
 
@@ -307,8 +274,8 @@ EOF;
         );
 
         return array(
-            array(NULL, 'null'),
-            array(TRUE, 'true'),
+            array(null, 'null'),
+            array(true, 'true'),
             array(1, '1'),
             array(1.0, '1.0'),
             array(1.2, '1.2'),
@@ -328,8 +295,8 @@ EOF;
     public function testShortenedExport($value, $expected)
     {
         $this->assertSame(
-          $expected,
-          $this->trimnl($this->exporter->shortenedExport($value))
+            $expected,
+            $this->trimNewline($this->exporter->shortenedExport($value))
         );
     }
 
@@ -349,11 +316,17 @@ EOF;
     public function testNonBinaryStringExport($value, $expectedLength)
     {
         $this->assertRegExp(
-          "~'.{{$expectedLength}}'\$~s", $this->exporter->export($value)
+            "~'.{{$expectedLength}}'\$~s",
+            $this->exporter->export($value)
         );
     }
 
-    protected function trimnl($string)
+    public function testNonObjectCanBeReturnedAsArray()
+    {
+        $this->assertEquals(array(true), $this->exporter->toArray(true));
+    }
+
+    private function trimNewline($string)
     {
         return preg_replace('/[ ]*\n/', "\n", $string);
     }

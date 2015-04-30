@@ -28,6 +28,11 @@ class PHPUnit_TextUI_ResultPrinter extends PHPUnit_Util_Printer implements PHPUn
     const EVENT_TESTSUITE_START = 2;
     const EVENT_TESTSUITE_END   = 3;
 
+    const COLOR_NEVER   = 'never';
+    const COLOR_AUTO    = 'auto';
+    const COLOR_ALWAYS  = 'always';
+    const COLOR_DEFAULT = self::COLOR_NEVER;
+
     /**
      * @var array
      */
@@ -94,37 +99,61 @@ class PHPUnit_TextUI_ResultPrinter extends PHPUnit_Util_Printer implements PHPUn
     protected $verbose = false;
 
     /**
+     * @var integer
+     */
+    private $numberOfColumns;
+
+    /**
      * Constructor.
      *
      * @param  mixed                       $out
      * @param  boolean                     $verbose
-     * @param  boolean                     $colors
+     * @param  string                      $colors
      * @param  boolean                     $debug
+     * @param  integer|string              $numberOfColumns
      * @throws PHPUnit_Framework_Exception
      * @since  Method available since Release 3.0.0
      */
-    public function __construct($out = null, $verbose = false, $colors = false, $debug = false)
+    public function __construct($out = null, $verbose = false, $colors = self::COLOR_DEFAULT, $debug = false, $numberOfColumns = 80)
     {
         parent::__construct($out);
 
-        if (is_bool($verbose)) {
-            $this->verbose = $verbose;
-        } else {
+        if (!is_bool($verbose)) {
             throw PHPUnit_Util_InvalidArgumentHelper::factory(2, 'boolean');
         }
 
-        if (is_bool($colors)) {
-            $console = new Console;
-
-            $this->colors = $colors && $console->hasColorSupport();
-        } else {
-            throw PHPUnit_Util_InvalidArgumentHelper::factory(3, 'boolean');
+        $availableColors = array(self::COLOR_NEVER, self::COLOR_AUTO, self::COLOR_ALWAYS);
+        if (!in_array($colors, $availableColors)) {
+            throw PHPUnit_Util_InvalidArgumentHelper::factory(
+                3,
+                vsprintf('value from "%s", "%s" or "%s"', $availableColors)
+            );
         }
 
-        if (is_bool($debug)) {
-            $this->debug = $debug;
-        } else {
+        if (!is_bool($debug)) {
             throw PHPUnit_Util_InvalidArgumentHelper::factory(4, 'boolean');
+        }
+
+        if (!is_int($numberOfColumns) && $numberOfColumns != 'max') {
+            throw PHPUnit_Util_InvalidArgumentHelper::factory(5, 'integer or "max"');
+        }
+
+        $console = new Console;
+
+        $maxNumberOfColumns = $console->getNumberOfColumns();
+
+        if ($numberOfColumns == 'max' || $numberOfColumns > $maxNumberOfColumns) {
+            $numberOfColumns = $maxNumberOfColumns;
+        }
+
+        $this->numberOfColumns = $numberOfColumns;
+        $this->verbose         = $verbose;
+        $this->debug           = $debug;
+
+        if ($colors === self::COLOR_AUTO && $console->hasColorSupport()) {
+            $this->colors = true;
+        } else {
+            $this->colors = (self::COLOR_ALWAYS === $colors);
         }
     }
 
@@ -325,13 +354,16 @@ class PHPUnit_TextUI_ResultPrinter extends PHPUnit_Util_Printer implements PHPUn
                     count($result),
                     $this->numAssertions,
                     $this->getCountString(
-                        $result->notImplementedCount(), 'Incomplete'
+                        $result->notImplementedCount(),
+                        'Incomplete'
                     ),
                     $this->getCountString(
-                        $result->skippedCount(), 'Skipped'
+                        $result->skippedCount(),
+                        'Skipped'
                     ),
                     $this->getCountString(
-                        $result->riskyCount(), 'Risky'
+                        $result->riskyCount(),
+                        'Risky'
                     )
                 )
             );
@@ -346,7 +378,8 @@ class PHPUnit_TextUI_ResultPrinter extends PHPUnit_Util_Printer implements PHPUn
                     $this->getCountString($result->failureCount(), 'Failures'),
                     $this->getCountString($result->errorCount(), 'Errors'),
                     $this->getCountString(
-                        $result->notImplementedCount(), 'Incomplete'
+                        $result->notImplementedCount(),
+                        'Incomplete'
                     ),
                     $this->getCountString($result->skippedCount(), 'Skipped')
                 )
@@ -460,7 +493,7 @@ class PHPUnit_TextUI_ResultPrinter extends PHPUnit_Util_Printer implements PHPUn
         if ($this->numTests == -1) {
             $this->numTests      = count($suite);
             $this->numTestsWidth = strlen((string) $this->numTests);
-            $this->maxColumn     = 69 - (2 * $this->numTestsWidth);
+            $this->maxColumn     = $this->numberOfColumns - strlen('  /  (XXX%)') - (2 * $this->numTestsWidth);
         }
     }
 
@@ -484,7 +517,8 @@ class PHPUnit_TextUI_ResultPrinter extends PHPUnit_Util_Printer implements PHPUn
         if ($this->debug) {
             $this->write(
                 sprintf(
-                    "\nStarting test '%s'.\n", PHPUnit_Util_Test::describe($test)
+                    "\nStarting test '%s'.\n",
+                    PHPUnit_Util_Test::describe($test)
                 )
             );
         }

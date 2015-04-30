@@ -3,8 +3,8 @@
 PHPUnit is a programmer-oriented testing framework for PHP. It is an instance of the xUnit architecture for unit testing frameworks.
 
 [![Latest Stable Version](https://poser.pugx.org/phpunit/phpunit/v/stable.png)](https://packagist.org/packages/phpunit/phpunit)
-[![Build Status](https://travis-ci.org/sebastianbergmann/phpunit.png?branch=master)](https://travis-ci.org/sebastianbergmann/phpunit)
-[![Dependency Status](https://www.versioneye.com/php/phpunit:phpunit/dev-master/badge.png)](https://www.versioneye.com/php/phpunit:phpunit/dev-master)
+[![Build Status](https://travis-ci.org/sebastianbergmann/phpunit.svg?branch=4.6)](https://travis-ci.org/sebastianbergmann/phpunit)
+[![Dependency Status](https://www.versioneye.com/php/phpunit:phpunit/4.6/badge.png)](https://www.versioneye.com/php/phpunit:phpunit/dev-master)
 [![Reference Status](https://www.versioneye.com/php/phpunit:phpunit/reference_badge.svg)](https://www.versioneye.com/php/phpunit:phpunit/references)
 
 ## Installation
@@ -26,8 +26,6 @@ Alternatively, you may use [Composer](http://getcomposer.org/) to download and i
 
 Please refer to [CONTRIBUTING.md](https://github.com/sebastianbergmann/phpunit/blob/master/CONTRIBUTING.md) for information on how to contribute to PHPUnit and its related projects.
 
-The development of PHPUnit is discussed on the [dev@phpunit.de](mailto:dev-subscribe@phpunit.de) mailing list as well as on the [#phpunit channel on the Freenode IRC network](irc://irc.freenode.net/phpunit).
-
 ## List of Contributors
 
 Thanks to everyone who has contributed to PHPUnit! You can find a detailed list of contributors on every PHPUnit related package on GitHub. This list shows only the major components:
@@ -36,7 +34,7 @@ Thanks to everyone who has contributed to PHPUnit! You can find a detailed list 
 * [PHP_CodeCoverage](https://github.com/sebastianbergmann/php-code-coverage/graphs/contributors)
 * [PHPUnit_MockObject](https://github.com/sebastianbergmann/phpunit-mock-objects/graphs/contributors)
 
-A very special thanks to everyone who has contributed to the documentation and helps maintaining the translations:
+A very special thanks to everyone who has contributed to the documentation and helps maintain the translations:
 
 * [PHPUnit Documentation](https://github.com/sebastianbergmann/phpunit-documentation/graphs/contributors)
 

@@ -29,7 +29,7 @@
         "sebastian/version": "~1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.1",
+        "phpunit/phpunit": "~4",
         "ext-xdebug": ">=2.1.4"
     },
     "suggest": {
@@ -46,8 +46,5 @@
         "branch-alias": {
             "dev-master": "2.0.x-dev"
         }
-    },
-    "include-path": [
-        ""
-    ]
+    }
 }

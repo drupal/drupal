@@ -9,7 +9,7 @@ if (defined('HHVM_VERSION'))
 <?php
 
 $_SERVER['argv'][1] = '--no-configuration';
-$_SERVER['argv'][] = '--strict';
+$_SERVER['argv'][] = '--report-useless-tests';
 $_SERVER['argv'][] = '--process-isolation';
 $_SERVER['argv'][] = 'Issue1348Test';
 $_SERVER['argv'][] = __DIR__ . '/1348/Issue1348Test.php';
@@ -18,7 +18,7 @@ require __DIR__ . '/../../bootstrap.php';
 PHPUnit_TextUI_Command::main();
 ?>
 --EXPECTF--
-PHPUnit %s by Sebastian Bergmann.
+PHPUnit %s by Sebastian Bergmann and contributors.
 
 .
 STDOUT does not break test result
