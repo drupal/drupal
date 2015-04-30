@@ -26,16 +26,4 @@ use Drupal\Core\TypedData\TranslatableInterface;
  * @ingroup entity_api
  */
 interface ContentEntityInterface extends \Traversable, FieldableEntityInterface, RevisionableInterface, TranslatableInterface {
-
-  /**
-   * Marks the translation identified by the given language code as existing.
-   *
-   * @param string $langcode
-   *   The language code identifying the translation to be initialized.
-   *
-   * @todo Remove this as soon as translation metadata have been converted to
-   *    regular fields.
-   */
-  public function initTranslation($langcode);
-
 }
