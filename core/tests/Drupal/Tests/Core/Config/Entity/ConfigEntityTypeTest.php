@@ -23,7 +23,7 @@ class ConfigEntityTypeTest extends UnitTestCase {
    * @param array $definition
    *   An array of values to use for the ConfigEntityType.
    *
-   * @return \Drupal\Core\Entity\EntityTypeInterface
+   * @return \Drupal\Core\Config\Entity\ConfigEntityTypeInterface
    */
   protected function setUpConfigEntityType($definition) {
     if (!isset($definition['id'])) {
@@ -107,6 +107,28 @@ class ConfigEntityTypeTest extends UnitTestCase {
   public function testSetStorageClass() {
     $config_entity = $this->setUpConfigEntityType([]);
     $config_entity->setStorageClass('\Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage');
+  }
+
+  /**
+   * Tests the getConfigPrefix() method.
+   *
+   * @dataProvider providerTestGetConfigPrefix
+   *
+   * @covers ::getConfigPrefix
+   */
+  public function testGetConfigPrefix($definition, $expected) {
+    $entity_type = $this->setUpConfigEntityType($definition);
+    $this->assertSame($expected, $entity_type->getConfigPrefix());
+  }
+
+  /**
+   * Provides test data.
+   */
+  public function providerTestGetConfigPrefix() {
+    return array(
+      array(array('provider' => 'node', 'id' => 'node_type', 'config_prefix' => 'type'), 'node.type'),
+      array(array('provider' => 'views', 'id' => 'view'), 'views.view'),
+    );
   }
 
 }

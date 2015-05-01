@@ -100,7 +100,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     );
     $this->entityTypeId = $this->randomMachineName();
     $this->provider = $this->randomMachineName();
-    $this->entityType = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
+    $this->entityType = $this->getMock('\Drupal\Core\Config\Entity\ConfigEntityTypeInterface');
     $this->entityType->expects($this->any())
       ->method('getProvider')
       ->will($this->returnValue($this->provider));

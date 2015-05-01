@@ -26,13 +26,6 @@ class ContentEntityType extends EntityType implements ContentEntityTypeInterface
   /**
    * {@inheritdoc}
    */
-  public function getConfigPrefix() {
-    return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getConfigDependencyKey() {
     return 'content';
   }

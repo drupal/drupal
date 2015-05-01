@@ -578,16 +578,6 @@ interface EntityTypeInterface {
   public function isRevisionable();
 
   /**
-   * Returns the config prefix used by the configuration entity type.
-   *
-   * @todo Used for configuration entities only.
-   *
-   * @return string|bool
-   *   The config prefix, or FALSE if not a configuration entity type.
-   */
-  public function getConfigPrefix();
-
-  /**
    * Returns the name of the entity's revision data table.
    *
    * @todo Used by SqlContentEntityStorage only.

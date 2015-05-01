@@ -108,7 +108,7 @@ class ConfigEntityMapperTest extends UnitTestCase {
       ->with()
       ->will($this->returnValue('entity_id'));
 
-    $entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
+    $entity_type = $this->getMock('Drupal\Core\Config\Entity\ConfigEntityTypeInterface');
     $this->entityManager
       ->expects($this->once())
       ->method('getDefinition')
@@ -127,7 +127,7 @@ class ConfigEntityMapperTest extends UnitTestCase {
    * Tests ConfigEntityMapper::getOverviewRouteParameters().
    */
   public function testGetOverviewRouteParameters() {
-    $entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
+    $entity_type = $this->getMock('Drupal\Core\Config\Entity\ConfigEntityTypeInterface');
     $this->entityManager
       ->expects($this->once())
       ->method('getDefinition')
@@ -158,7 +158,7 @@ class ConfigEntityMapperTest extends UnitTestCase {
    * Tests ConfigEntityMapper::getTypeName().
    */
   public function testGetTypeName() {
-    $entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
+    $entity_type = $this->getMock('Drupal\Core\Config\Entity\ConfigEntityTypeInterface');
     $entity_type->expects($this->once())
       ->method('getLabel')
       ->will($this->returnValue('test'));
@@ -176,7 +176,7 @@ class ConfigEntityMapperTest extends UnitTestCase {
    * Tests ConfigEntityMapper::getTypeLabel().
    */
   public function testGetTypeLabel() {
-    $entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
+    $entity_type = $this->getMock('Drupal\Core\Config\Entity\ConfigEntityTypeInterface');
     $entity_type->expects($this->once())
       ->method('getLabel')
       ->will($this->returnValue('test'));
