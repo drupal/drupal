@@ -125,10 +125,10 @@ function statistics_title_list($dbfield, $dbrows) {
 /**
  * Retrieves a node's "view statistics".
  *
- * @param $nid
+ * @param int $nid
  *   The node ID.
  *
- * @return
+ * @return array
  *   An associative array containing:
  *   - totalcount: Integer for the total number of times the node has been
  *     viewed.
@@ -148,7 +148,7 @@ function statistics_get($nid) {
  * Implements hook_ENTITY_TYPE_predelete() for node entities.
  */
 function statistics_node_predelete(EntityInterface $node) {
-  // clean up statistics table when node is deleted
+  // Clean up statistics table when node is deleted.
   db_delete('node_counter')
     ->condition('nid', $node->id())
     ->execute();
