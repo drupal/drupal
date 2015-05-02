@@ -278,7 +278,7 @@ function views_theme_suggestions_comment_alter(array &$suggestions, array $varia
  * Implements hook_theme_suggestions_HOOK_alter().
  */
 function views_theme_suggestions_container_alter(array &$suggestions, array $variables) {
-  if (!empty($variables['element']['#type']) && $variables['element']['#type'] == 'more_link' && !empty($variables['element']['#view']) && $variables['element']['#view'] instanceof \Drupal\views\ViewExecutable) {
+  if (!empty($variables['element']['#type']) && $variables['element']['#type'] == 'more_link' && !empty($variables['element']['#view']) && $variables['element']['#view'] instanceof ViewExecutable) {
     $suggestions = array_merge($suggestions, $variables['element']['#view']->buildThemeFunctions('container__more_link'));
   }
 }
