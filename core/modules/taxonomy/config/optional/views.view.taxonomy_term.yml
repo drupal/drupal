@@ -246,26 +246,10 @@ display:
         type: views_query
         options: {  }
       pager:
-        type: full
+        type: some
         options:
-          items_per_page: 15
+          items_per_page: 10
           offset: 0
-          id: 0
-          total_pages: 0
-          expose:
-            items_per_page: false
-            items_per_page_label: 'Items per page'
-            items_per_page_options: '5, 10, 25, 50'
-            items_per_page_options_all: false
-            items_per_page_options_all_label: '- All -'
-            offset: false
-            offset_label: Offset
-          tags:
-            previous: '‹ previous'
-            next: 'next ›'
-            first: '« first'
-            last: 'last »'
-          quantity: 9
       path: taxonomy/term/%/feed
       displays:
         page: page
