@@ -6,7 +6,7 @@ package: Core
 version: VERSION
 core: 8.x
 stylesheets-remove:
-  - @classy/css/layout.css
+  - '@classy/css/layout.css'
 libraries:
   - bartik/global-styling
 ckeditor_stylesheets:

@@ -7,5 +7,5 @@ base theme: test_basetheme
 libraries:
   - test_subtheme/global-styling
 stylesheets-remove:
-  - @theme_test/css/sub-remove.css
-  - @test_basetheme/base-add.sub-remove.css
+  - '@theme_test/css/sub-remove.css'
+  - '@test_basetheme/base-add.sub-remove.css'

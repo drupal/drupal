@@ -6,4 +6,4 @@ core: 8.x
 libraries:
   - test_basetheme/global-styling
 stylesheets-remove:
-  - @theme_test/css/base-remove.css
+  - '@theme_test/css/base-remove.css'

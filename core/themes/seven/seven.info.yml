@@ -10,7 +10,7 @@ libraries:
  - seven/global-styling
 stylesheets-remove:
   - core/assets/vendor/jquery.ui/themes/base/dialog.css
-  - @classy/css/layout.css
+  - '@classy/css/layout.css'
 quickedit_stylesheets:
   - css/components/quickedit.css
 regions:
