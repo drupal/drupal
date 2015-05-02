@@ -349,7 +349,7 @@ function _user_role_permissions_update($roles) {
 /**
  * Checks for usernames blocked by user administration.
  *
- * @param $name
+ * @param string $name
  *   A string containing a name of the user.
  *
  * @return bool
@@ -390,10 +390,10 @@ function user_preprocess_block(&$variables) {
 /**
  * Format a username.
  *
- * @param \Drupal\Core\Session\Interface $account
+ * @param \Drupal\Core\Session\AccountInterface $account
  *   The account object for the user whose name is to be formatted.
  *
- * @return
+ * @return string
  *   An unsanitized string with the username to display. The code receiving
  *   this result must ensure that \Drupal\Component\Utility\SafeMarkup::checkPlain()
  *   is called on it before it is printed to the page.
@@ -435,7 +435,7 @@ function user_template_preprocess_default_variables_alter(&$variables) {
  *
  * @param array $variables
  *   An associative array containing:
- *   - account: The user account (Drupal\user\Plugin\Core\Entity\User).
+ *   - account: The user account (\Drupal\Core\Session\AccountInterface).
  *
  * Modules that make any changes to variables like 'name' or 'extra' must ensure
  * that the final string is safe to include directly in the output by using
@@ -553,17 +553,14 @@ function user_user_logout($account) {
 /**
  * Generates a unique URL for a user to login and reset their password.
  *
- * @param object $account
- *   An object containing the user account, which must contain at least the
- *   following properties:
- *   - uid: The user ID number.
- *   - login: The UNIX timestamp of the user's last login.
+ * @param \Drupal\user\UserInterface $account
+ *   An object containing the user account.
  * @param array $options
  *   (optional) A keyed array of settings. Supported options are:
  *   - langcode: A language code to be used when generating locale-sensitive
  *    URLs. If langcode is NULL the users preferred language is used.
  *
- * @return
+ * @return string
  *   A unique URL that provides a one-time log in for the user, from which
  *   they can change their password.
  */
@@ -586,7 +583,7 @@ function user_pass_reset_url($account, $options = array()) {
 /**
  * Generates a URL to confirm an account cancellation request.
  *
- * @param object $account
+ * @param \Drupal\user\UserInterface $account
  *   The user account object, which must contain at least the following
  *   properties:
  *   - uid: The user ID number.
@@ -597,7 +594,7 @@ function user_pass_reset_url($account, $options = array()) {
  *   - langcode: A language code to be used when generating locale-sensitive
  *     URLs. If langcode is NULL the users preferred language is used.
  *
- * @return
+ * @return string
  *   A unique URL that may be used to confirm the cancellation of the user
  *   account.
  *
@@ -650,11 +647,11 @@ function user_pass_rehash($password, $timestamp, $login, $uid) {
  * Form API will invoke it, or batch_process() needs to be invoked after calling
  * this function and should define the path to redirect to.
  *
- * @param $edit
+ * @param array $edit
  *   An array of submitted form values.
- * @param $uid
+ * @param int $uid
  *   The user ID of the user account to cancel.
- * @param $method
+ * @param string $method
  *   The account cancellation method to use.
  *
  * @see _user_cancel()
@@ -712,6 +709,12 @@ function user_cancel($edit, $uid, $method) {
  *
  * Since batch and session API require a valid user account, the actual
  * cancellation of a user account needs to happen last.
+ * @param array $edit
+ *   An array of submitted form values.
+ * @param \Drupal\user\UserInterface $account
+ *   The user ID of the user account to cancel.
+ * @param string $method
+ *   The account cancellation method to use.
  *
  * @see user_cancel()
  */
@@ -825,7 +828,7 @@ function user_cancel_methods() {
 /**
  * Delete a user.
  *
- * @param $uid
+ * @param int $uid
  *   A user ID.
  */
 function user_delete($uid) {
@@ -835,7 +838,7 @@ function user_delete($uid) {
 /**
  * Delete multiple user accounts.
  *
- * @param $uids
+ * @param int[] $uids
  *   An array of user IDs.
  *
  * @see hook_ENTITY_TYPE_predelete()
@@ -858,15 +861,15 @@ function user_delete_multiple(array $uids) {
  * To theme user profiles, copy core/modules/user/templates/user.html.twig
  * to your theme directory, and edit it as instructed in that file's comments.
  *
- * @param $account
+ * @param \Drupal\user\UserInterface $account
  *   A user object.
- * @param $view_mode
+ * @param string $view_mode
  *   View mode, e.g. 'full'.
- * @param $langcode
+ * @param string|null $langcode
  *   (optional) A language code to use for rendering. Defaults to the global
  *   content language of the current request.
  *
- * @return
+ * @return array
  *   An array as expected by drupal_render().
  */
 function user_view($account, $view_mode = 'full', $langcode = NULL) {
@@ -876,15 +879,15 @@ function user_view($account, $view_mode = 'full', $langcode = NULL) {
 /**
  * Constructs a drupal_render() style array from an array of loaded users.
  *
- * @param $accounts
+ * @param \Drupal\user\UserInterface[] $account
  *   An array of user accounts as returned by User::loadMultiple().
- * @param $view_mode
- *   (optional) View mode, e.g., 'full', 'teaser'... Defaults to 'teaser.'
- * @param $langcode
+ * @param string $view_mode
+ *   (optional) View mode, e.g., 'full', 'teaser'... Defaults to 'teaser'.
+ * @param string|null $langcode
  *   (optional) A language code to use for rendering. Defaults to the global
  *   content language of the current request.
  *
- * @return
+ * @return array
  *   An array in the format expected by drupal_render().
  */
 function user_view_multiple($accounts, $view_mode = 'full', $langcode = NULL) {
@@ -922,17 +925,18 @@ function user_mail($key, &$message, $params) {
  * some additional tokens that can be used in email messages generated by
  * user_mail().
  *
- * @param $replacements
+ * @param array $replacements
  *   An associative array variable containing mappings from token names to
  *   values (for use with strtr()).
- * @param $data
+ * @param array $data
  *   An associative array of token replacement values. If the 'user' element
  *   exists, it must contain a user account object with the following
  *   properties:
  *   - login: The UNIX timestamp of the user's last login.
  *   - pass: The hashed account login password.
- * @param $options
- *   Unused parameter required by \Drupal\Core\Utility\Token::replace().
+ * @param array $options
+ *   A keyed array of settings and flags to control the token replacement
+ *   process. See \Drupal\Core\Utility\Token::replace().
  */
 function user_mail_tokens(&$replacements, $data, $options) {
   if (isset($data['user'])) {
@@ -944,15 +948,17 @@ function user_mail_tokens(&$replacements, $data, $options) {
 /*** Administrative features ***********************************************/
 
 /**
- * Retrieve an array of roles matching specified conditions.
+ * Retrieves the names of roles matching specified conditions.
  *
- * @param $membersonly
- *   Set this to TRUE to exclude the 'anonymous' role.
- * @param $permission
- *   A string containing a permission. If set, only roles containing that
- *   permission are returned.
+ * @param bool $membersonly
+ *   (optional) Set this to TRUE to exclude the 'anonymous' role. Defaults to
+ *   FALSE.
+ * @param string|null $permission
+ *   (optional) A string containing a permission. If set, only roles
+ *    containing that permission are returned. Defaults to NULL, which
+ *    returns all roles.
  *
- * @return
+ * @return array
  *   An associative array with the role id as the key and the role name as
  *   value.
  */
@@ -1024,13 +1030,15 @@ function user_user_role_delete(RoleInterface $role) {
 /**
  * Retrieve an array of roles matching specified conditions.
  *
- * @param $membersonly
- *   Set this to TRUE to exclude the 'anonymous' role.
- * @param $permission
- *   A string containing a permission. If set, only roles containing that
- *   permission are returned.
+ * @param bool $membersonly
+ *   (optional) Set this to TRUE to exclude the 'anonymous' role. Defaults to
+ *   FALSE.
+ * @param string|null $permission
+ *   (optional) A string containing a permission. If set, only roles
+ *   containing that permission are returned. Defaults to NULL, which
+ *   returns all roles.
  *
- * @return
+ * @return \Drupal\user\RoleInterface[]
  *   An associative array with the role id as the key and the role object as
  *   value.
  */
@@ -1067,10 +1075,10 @@ function user_roles($membersonly = FALSE, $permission = NULL) {
 /**
  * Fetches a user role by role ID.
  *
- * @param $rid
+ * @param string $rid
  *   A string representing the role ID.
  *
- * @return
+ * @return \Drupal\user\RoleInterface|null
  *   A fully-loaded role object if a role with the given ID exists, or NULL
  *   otherwise.
  *
@@ -1089,13 +1097,14 @@ function user_role_load($rid) {
  * role, the form submit handler may directly pass the submitted values for the
  * checkboxes form element to this function.
  *
- * @param $rid
+ * @param mixed $rid
  *   The ID of a user role to alter.
- * @param $permissions
- *   An associative array, where the key holds the permission name and the value
- *   determines whether to grant or revoke that permission. Any value that
- *   evaluates to TRUE will cause the permission to be granted. Any value that
- *   evaluates to FALSE will cause the permission to be revoked.
+ * @param array $permissions
+ *   (optional) An associative array, where the key holds the permission name
+ *   and the value determines whether to grant or revoke that permission. Any
+ *   value that evaluates to TRUE will cause the permission to be granted.
+ *   Any value that evaluates to FALSE will cause the permission to be
+ *   revoked.
  *   @code
  *     array(
  *       'administer nodes' => 0,                // Revoke 'administer nodes'
@@ -1126,10 +1135,10 @@ function user_role_change_permissions($rid, array $permissions = array()) {
 /**
  * Grant permissions to a user role.
  *
- * @param $rid
+ * @param mixed $rid
  *   The ID of a user role to alter.
- * @param $permissions
- *   A list of permission names to grant.
+ * @param array $permissions
+ *   (optional) A list of permission names to grant.
  *
  * @see user_role_change_permissions()
  * @see user_role_revoke_permissions()
@@ -1147,10 +1156,10 @@ function user_role_grant_permissions($rid, array $permissions = array()) {
 /**
  * Revoke permissions from a user role.
  *
- * @param $rid
+ * @param mixed $rid
  *   The ID of a user role to alter.
- * @param $permissions
- *   A list of permission names to revoke.
+ * @param array $permissions
+ *   (optional) A list of permission names to revoke.
  *
  * @see user_role_change_permissions()
  * @see user_role_grant_permissions()
@@ -1168,10 +1177,7 @@ function user_role_revoke_permissions($rid, array $permissions = array()) {
  * Conditionally create and send a notification email when a certain
  * operation happens on the given user account.
  *
- * @see user_mail_tokens()
- * @see \Drupal\Core\Mail\MailManagerInterface::mail()
- *
- * @param $op
+ * @param string $op
  *   The operation being performed on the account. Possible values:
  *   - 'register_admin_created': Welcome message for user created by the admin.
  *   - 'register_no_approval_required': Welcome message when user
@@ -1184,16 +1190,18 @@ function user_role_revoke_permissions($rid, array $permissions = array()) {
  *   - 'cancel_confirm': Account cancellation request.
  *   - 'status_canceled': Account canceled.
  *
- * @param $account
+ * @param \Drupal\Core\Session\AccountInterface $account
  *   The user object of the account being notified. Must contain at
  *   least the fields 'uid', 'name', and 'mail'.
- * @param $langcode
- *   Optional language code to use for the notification, overriding account
+ * @param string $langcode
+ *   (optional) Language code to use for the notification, overriding account
  *   language.
  *
- * @return
- *   The return value from \Drupal::service('plugin.manager.mail')->mail(), if
- *   ends up being called.
+ * @return array
+ *   An array containint various information about the message.
+ *   See \Drupal\Core\Mail\MailManagerInterface::mail() for details.
+ *
+ * @see user_mail_tokens()
  */
 function _user_mail_notify($op, $account, $langcode = NULL) {
   // By default, we always notify except for canceled and blocked.
@@ -1282,7 +1290,7 @@ function user_modules_uninstalled($modules) {
 /**
  * Saves visitor information as a cookie so it can be reused.
  *
- * @param $values
+ * @param array $values
  *   An array of key/value pairs to be saved into a cookie.
  */
 function user_cookie_save(array $values) {
@@ -1295,7 +1303,7 @@ function user_cookie_save(array $values) {
 /**
  * Delete a visitor information cookie.
  *
- * @param $cookie_name
+ * @param string $cookie_name
  *   A cookie name such as 'homepage'.
  */
 function user_cookie_delete($cookie_name) {

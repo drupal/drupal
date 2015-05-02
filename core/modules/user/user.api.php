@@ -28,11 +28,11 @@ use Drupal\Core\Entity\EntityInterface;
  * Expensive operations should be added to the global account cancellation batch
  * by using batch_set().
  *
- * @param $edit
+ * @param array $edit
  *   The array of form values submitted by the user.
- * @param $account
+ * @param \Drupal\Core\Session\AccountInterface $account
  *   The user object on which the operation is being performed.
- * @param $method
+ * @param string $method
  *   The account cancellation method.
  *
  * @see user_cancel_methods()
@@ -81,7 +81,7 @@ function hook_user_cancel($edit, $account, $method) {
  *   a method. If 'access' is defined, the method cannot be configured as
  *   default method.
  *
- * @param $methods
+ * @param array $methods
  *   An array containing user account cancellation methods, keyed by method id.
  *
  * @see user_cancel_methods()
@@ -111,10 +111,10 @@ function hook_user_cancel_methods_alter(&$methods) {
  * displayed. Can be used to ensure user privacy in situations where
  * $account->name is too revealing.
  *
- * @param $name
+ * @param string $name
  *   The string that user_format_name() will return.
  *
- * @param $account
+ * @param object $account
  *   The account object passed to user_format_name().
  *
  * @see user_format_name()
@@ -129,7 +129,7 @@ function hook_user_format_name_alter(&$name, $account) {
 /**
  * The user just logged in.
  *
- * @param $account
+ * @param object $account
  *   The user object on which the operation was just performed.
  */
 function hook_user_login($account) {
