@@ -449,9 +449,9 @@ function menu_ui_form_node_type_form_builder($entity_type, NodeTypeInterface $ty
 /**
  * Return an associative array of the custom menus names.
  *
- * @param $all
- *   If FALSE return only user-added menus, or if TRUE also include
- *   the menus defined by the system.
+ * @param bool $all
+ *   (optional) If FALSE return only user-added menus, or if TRUE also include
+ *   the menus defined by the system. Defaults to TRUE.
  *
  * @return array
  *   An array with the machine-readable names as the keys, and human-readable

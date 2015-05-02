@@ -327,9 +327,9 @@ class MenuForm extends EntityForm {
   /**
    * Recursive helper function for buildOverviewForm().
    *
-   * @param $tree
+   * @param \Drupal\Core\Menu\MenuLinkTreeElement[] $tree
    *   The tree retrieved by \Drupal\Core\Menu\MenuLinkTreeInterface::load().
-   * @param $delta
+   * @param int $delta
    *   The default number of menu items used in the menu weight selector is 50.
    *
    * @return array
