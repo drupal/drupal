@@ -47,3 +47,11 @@ block.settings.aggregator_feed_block:
     feed:
       type: string
       label: 'Feed'
+
+field.formatter.settings.aggregator_title:
+  type: mapping
+  label: 'Formatter settings'
+  mapping:
+    display_as_link:
+      type: boolean
+      label: 'Display as link'

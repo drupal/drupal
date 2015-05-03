@@ -35,7 +35,8 @@ class AggregatorFeedViewsData extends EntityViewsData {
     $data['aggregator_feed']['fid']['filter']['id'] = 'numeric';
 
     $data['aggregator_feed']['title']['help'] = $this->t('The title of the aggregator feed.');
-    $data['aggregator_feed']['title']['field']['id'] = 'aggregator_title_link';
+    $data['aggregator_feed']['title']['field']['default_formatter'] = 'aggregator_title';
+
     $data['aggregator_feed']['argument']['id'] = 'string';
 
     $data['aggregator_feed']['url']['help'] = $this->t('The fully-qualified URL of the feed.');

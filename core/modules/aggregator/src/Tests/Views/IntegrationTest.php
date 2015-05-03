@@ -101,9 +101,9 @@ class IntegrationTest extends ViewUnitTestBase {
 
     $column_map = array(
       'iid' => 'iid',
-      'aggregator_item_title' => 'title',
+      'title' => 'title',
       'aggregator_item_timestamp' => 'timestamp',
-      'aggregator_item_description' => 'description',
+      'description' => 'description',
       'aggregator_item_author' => 'author',
     );
     $this->assertIdenticalResultset($view, $expected, $column_map);

@@ -14,7 +14,6 @@ views.field.aggregator_title_link:
   mapping:
     display_as_link:
       type: boolean
-      label: 'Display as link'
 
 views.row.aggregator_rss:
   type: views_row

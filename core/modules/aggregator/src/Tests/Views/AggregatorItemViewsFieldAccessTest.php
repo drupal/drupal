@@ -52,9 +52,9 @@ class AggregatorItemViewsFieldAccessTest extends FieldFieldAccessTestBase {
 
     // @todo Expand the test coverage in https://www.drupal.org/node/2464635
 
-    // $this->assertFieldAccess('aggregator_item', 'title', $item->getTitle());
+    $this->assertFieldAccess('aggregator_item', 'title', $item->getTitle());
     $this->assertFieldAccess('aggregator_item', 'langcode', $item->language()->getName());
-    // $this->assertFieldAccess('aggregator_item', 'description', $item->getDescription());
+    $this->assertFieldAccess('aggregator_item', 'description', $item->getDescription());
   }
 
 }
