@@ -136,9 +136,10 @@ class ContextualDynamicContextTest extends WebTestBase {
    *   A contextual link id.
    *
    * @return bool
+   *   The result of the assertion.
    */
   protected function assertContextualLinkPlaceHolder($id) {
-    $this->assertRaw('<div' . new Attribute(array('data-contextual-id' => $id)) . '></div>', format_string('Contextual link placeholder with id @id exists.', array('@id' => $id)));
+    return $this->assertRaw('<div' . new Attribute(array('data-contextual-id' => $id)) . '></div>', format_string('Contextual link placeholder with id @id exists.', array('@id' => $id)));
   }
 
   /**
@@ -148,9 +149,10 @@ class ContextualDynamicContextTest extends WebTestBase {
    *   A contextual link id.
    *
    * @return bool
+   *   The result of the assertion.
    */
   protected function assertNoContextualLinkPlaceHolder($id) {
-    $this->assertNoRaw('<div' . new Attribute(array('data-contextual-id' => $id)) . '></div>', format_string('Contextual link placeholder with id @id does not exist.', array('@id' => $id)));
+    return $this->assertNoRaw('<div' . new Attribute(array('data-contextual-id' => $id)) . '></div>', format_string('Contextual link placeholder with id @id does not exist.', array('@id' => $id)));
   }
 
   /**
