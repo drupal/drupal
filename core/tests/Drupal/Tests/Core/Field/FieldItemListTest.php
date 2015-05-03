@@ -89,6 +89,14 @@ class FieldItemListTest extends UnitTestCase {
     // Tests field item lists where both have the differently ordered values.
     $datasets[] = [TRUE, $field_item_c, $field_item_d];
 
+    /** @var \Drupal\Core\Field\FieldItemBase  $field_item_e */
+    $field_item_e = $this->getMockForAbstractClass('Drupal\Core\Field\FieldItemBase', [], '', FALSE);
+    $field_item_e->setValue(['2']);
+
+    // Tests field item lists where both have same values but different data
+    // types.
+    $datasets[] = [TRUE, $field_item_b, $field_item_e];
+
     return $datasets;
   }
 

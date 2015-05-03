@@ -402,7 +402,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
     array_walk($value1, $callback);
     array_walk($value2, $callback);
 
-    return $value1 === $value2;
+    return $value1 == $value2;
   }
 
 }
