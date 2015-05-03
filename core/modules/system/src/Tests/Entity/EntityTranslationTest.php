@@ -383,10 +383,20 @@ class EntityTranslationTest extends EntityLanguageTestBase {
 
     // Verify that changing the default translation flag causes an exception to
     // be thrown.
-    $message = 'The default translation flag cannot be changed.';
     foreach ($entity->getTranslationLanguages() as $t_langcode => $language) {
       $translation = $entity->getTranslation($t_langcode);
       $default = $translation->isDefaultTranslation();
+
+      $message = 'The default translation flag can be reassigned the same value.';
+      try {
+        $translation->{$default_langcode_key}->value = $default;
+        $this->pass($message);
+      }
+      catch (\LogicException $e) {
+        $this->fail($message);
+      }
+
+      $message = 'The default translation flag cannot be changed.';
       try {
         $translation->{$default_langcode_key}->value = !$default;
         $this->fail($message);
@@ -394,6 +404,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
       catch (\LogicException $e) {
         $this->pass($message);
       }
+
       $this->assertEqual($translation->{$default_langcode_key}->value, $default);
     }
 

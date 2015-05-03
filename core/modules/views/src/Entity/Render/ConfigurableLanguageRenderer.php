@@ -15,7 +15,7 @@ use Drupal\views\ViewExecutable;
 /**
  * Renders entities in a configured language.
  */
-class ConfigurableLanguageRenderer extends RendererBase {
+class ConfigurableLanguageRenderer extends EntityTranslationRendererBase {
 
   /**
    * A specific language code for rendering if available.

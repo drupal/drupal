@@ -113,7 +113,18 @@ trait ViewResultAssertionTrait {
       $row = array();
       foreach ($column_map as $expected_column) {
         // The comparison will be done on the string representation of the value.
-        $row[$expected_column] = (string) (is_object($value) ? $value->$expected_column : $value[$expected_column]);
+        if (is_object($value)) {
+          $row[$expected_column] = (string) $value->$expected_column;
+        }
+        // This case is about fields with multiple values.
+        elseif (is_array($value[$expected_column])) {
+          foreach (array_keys($value[$expected_column]) as $delta) {
+            $row[$expected_column][$delta] = (string) $value[$expected_column][$delta];
+          }
+        }
+        else {
+          $row[$expected_column] = (string) $value[$expected_column];
+        }
       }
       $expected_result[$key] = $row;
     }
@@ -140,4 +151,3 @@ trait ViewResultAssertionTrait {
   }
 
 }
-

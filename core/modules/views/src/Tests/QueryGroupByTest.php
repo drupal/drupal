@@ -7,6 +7,10 @@
 
 namespace Drupal\views\Tests;
 
+use Drupal\entity_test\Entity\EntityTestMul;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\views\Views;
 
 /**
@@ -21,14 +25,14 @@ class QueryGroupByTest extends ViewUnitTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_group_by_in_filters', 'test_aggregate_count', 'test_group_by_count');
+  public static $testViews = array('test_group_by_in_filters', 'test_aggregate_count', 'test_group_by_count', 'test_group_by_count_multicardinality');
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('entity_test', 'system', 'field', 'user');
+  public static $modules = array('entity_test', 'system', 'field', 'user', 'language');
 
   /**
    * The storage for the test entity type.
@@ -45,8 +49,11 @@ class QueryGroupByTest extends ViewUnitTestBase {
 
     $this->installEntitySchema('user');
     $this->installEntitySchema('entity_test');
+    $this->installEntitySchema('entity_test_mul');
 
     $this->storage = $this->container->get('entity.manager')->getStorage('entity_test');
+
+    ConfigurableLanguage::createFromLangcode('it')->save();
   }
 
 
@@ -203,6 +210,86 @@ class QueryGroupByTest extends ViewUnitTestBase {
     unset($view->displayHandlers->get('default')->options['fields']['id']['group_type']);
     $this->executeView($view);
     $this->assertTrue(strpos($view->build_info['query'], 'GROUP BY entity_test.id'), 'GROUP BY field includes the base table name when grouping on the base field.');
+  }
+
+  /**
+   * Tests grouping a field with cardinality > 1.
+   */
+  public function testGroupByFieldWithCardinality() {
+    $field_storage = FieldStorageConfig::create([
+      'type' => 'integer',
+      'field_name' => 'field_test',
+      'cardinality' => 4,
+      'entity_type' => 'entity_test_mul',
+    ]);
+    $field_storage->save();
+    $field = FieldConfig::create([
+      'field_name' => 'field_test',
+      'entity_type' => 'entity_test_mul',
+      'bundle' => 'entity_test_mul',
+    ]);
+    $field->save();
+
+    $entities = [];
+    $entity = EntityTestMul::create([
+      'field_test' => [1, 1, 1],
+    ]);
+    $entity->save();
+    $entities[] = $entity;
+
+    $entity = EntityTestMul::create([
+      'field_test' => [2, 2, 2],
+    ]);
+    $entity->save();
+    $entities[] = $entity;
+
+    $entity = EntityTestMul::create([
+      'field_test' => [2, 2, 2],
+    ]);
+    $entity->save();
+    $entities[] = $entity;
+
+    $view = Views::getView('test_group_by_count_multicardinality');
+    $this->executeView($view);
+    $this->assertEqual(2, count($view->result));
+
+    $this->assertEqual(3, $view->getStyle()->getField(0, 'id'));
+    $this->assertEqual('1', $view->getStyle()->getField(0, 'field_test'));
+    $this->assertEqual(6, $view->getStyle()->getField(1, 'id'));
+    $this->assertEqual('2', $view->getStyle()->getField(1, 'field_test'));
+
+    $entities[2]->field_test[0]->value = 3;
+    $entities[2]->field_test[1]->value = 4;
+    $entities[2]->field_test[2]->value = 5;
+    $entities[2]->save();
+
+    $view = Views::getView('test_group_by_count_multicardinality');
+    $this->executeView($view);
+    $this->assertEqual(5, count($view->result));
+
+    $this->assertEqual(3, $view->getStyle()->getField(0, 'id'));
+    $this->assertEqual('1', $view->getStyle()->getField(0, 'field_test'));
+    $this->assertEqual(3, $view->getStyle()->getField(1, 'id'));
+    $this->assertEqual('2', $view->getStyle()->getField(1, 'field_test'));
+    $this->assertEqual(1, $view->getStyle()->getField(2, 'id'));
+    $this->assertEqual('3', $view->getStyle()->getField(2, 'field_test'));
+    $this->assertEqual(1, $view->getStyle()->getField(3, 'id'));
+    $this->assertEqual('4', $view->getStyle()->getField(3, 'field_test'));
+    $this->assertEqual(1, $view->getStyle()->getField(4, 'id'));
+    $this->assertEqual('5', $view->getStyle()->getField(4, 'field_test'));
+
+    // Check that translated values are correctly retrieved and are not grouped
+    // into the original entity.
+    $translation = $entity->addTranslation('it');
+    $translation->field_test = [6, 6, 6];
+    $translation->save();
+
+    $view = Views::getView('test_group_by_count_multicardinality');
+    $this->executeView($view);
+
+    $this->assertEqual(6, count($view->result));
+    $this->assertEqual(3, $view->getStyle()->getField(5, 'id'));
+    $this->assertEqual('6', $view->getStyle()->getField(5, 'field_test'));
   }
 
 }

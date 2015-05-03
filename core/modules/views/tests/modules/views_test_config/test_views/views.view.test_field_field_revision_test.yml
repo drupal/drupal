@@ -32,7 +32,7 @@ display:
           entity_field: revision_id
         field_test:
           id: field_test
-          table: entity_test__field_test
+          table: entity_test_rev__field_test
           field: field_test
           plugin_id: field
           entity_type: entity_test_rev

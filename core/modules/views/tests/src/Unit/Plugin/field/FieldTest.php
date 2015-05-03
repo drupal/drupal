@@ -7,9 +7,11 @@
 
 namespace Drupal\Tests\views\Unit\Plugin\field;
 
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Tests\views\Unit\Plugin\HandlerTestTrait;
 use Drupal\views\Plugin\views\field\Field;
+use Drupal\views\ResultRow;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -438,6 +440,7 @@ class FieldTest extends UnitTestCase {
     ];
     $handler = new Field([], 'field', $definition, $this->entityManager, $this->formatterPluginManager, $this->fieldTypePluginManager, $this->languageManager, $this->renderer);
     $handler->view = $this->executable;
+    $handler->view->field = [$handler];
 
     $this->setupLanguageRenderer($handler, $definition);
 
@@ -499,6 +502,7 @@ class FieldTest extends UnitTestCase {
     ];
     $handler = new Field([], 'field', $definition, $this->entityManager, $this->formatterPluginManager, $this->fieldTypePluginManager, $this->languageManager, $this->renderer);
     $handler->view = $this->executable;
+    $handler->view->field = [$handler];
 
     $this->setupLanguageRenderer($handler, $definition);
 
@@ -548,6 +552,85 @@ class FieldTest extends UnitTestCase {
     $this->executable->query = $query;
 
     $handler->query(TRUE);
+  }
+
+  /**
+   * @covers ::prepareItemsByDelta
+   *
+   * @dataProvider providerTestPrepareItemsByDelta
+   */
+  public function testPrepareItemsByDelta(array $options, array $expected_values) {
+    $definition = [
+      'entity_type' => 'test_entity',
+      'field_name' => 'integer',
+    ];
+    $handler = new FieldTestField([], 'field', $definition, $this->entityManager, $this->formatterPluginManager, $this->fieldTypePluginManager, $this->languageManager, $this->renderer);
+    $handler->view = $this->executable;
+    $handler->view->field = [$handler];
+
+    $this->setupLanguageRenderer($handler, $definition);
+
+    $field_storage = $this->getConfigFieldStorage();
+    $field_storage->expects($this->any())
+      ->method('getCardinality')
+      ->willReturn(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+
+    $this->entityManager->expects($this->any())
+      ->method('getFieldStorageDefinitions')
+      ->with('test_entity')
+      ->willReturn([
+        'integer' => $field_storage,
+      ]);
+
+    $table_mapping = $this->getMock('Drupal\Core\Entity\Sql\TableMappingInterface');
+    $table_mapping
+      ->expects($this->any())
+      ->method('getFieldColumnName')
+      ->with($field_storage, 'value')
+      ->willReturn('integer_value');
+    $entity_storage = $this->getMock('Drupal\Core\Entity\Sql\SqlEntityStorageInterface');
+    $entity_storage->expects($this->any())
+      ->method('getTableMapping')
+      ->willReturn($table_mapping);
+    $this->entityManager->expects($this->any())
+      ->method('getStorage')
+      ->with('test_entity')
+      ->willReturn($entity_storage);
+
+    $options = [
+      'group_column' => 'value',
+      'group_columns' => [],
+      'table' => 'test_entity__integer',
+    ] + $options;
+    $handler->init($this->executable, $this->display, $options);
+
+    $this->executable->row_index = 0;
+    $this->executable->result = [0 => new ResultRow([])];
+
+    $items = [3, 1, 4, 1, 5, 9];
+    $this->assertEquals($expected_values, $handler->executePrepareItemsByDelta($items));
+  }
+
+  /**
+   * Provides test data for testPrepareItemsByDelta().
+   */
+  public function providerTestPrepareItemsByDelta() {
+    $data = [];
+
+    // Let's display all values.
+    $data[] = [[], [3, 1, 4, 1, 5, 9]];
+    // Test just reversed deltas.
+    $data[] = [['delta_reversed' => TRUE], [9, 5, 1, 4, 1, 3]];
+
+    // Test combinations of delta limit, offset and first_last.
+    $data[] = [['group_rows' => TRUE, 'delta_limit' => 3], [3, 1, 4]];
+    $data[] = [['group_rows' => TRUE, 'delta_limit' => 3, 'delta_offset' => 2], [4, 1, 5]];
+    $data[] = [['group_rows' => TRUE, 'delta_reversed' => TRUE, 'delta_limit' => 3, 'delta_offset' => 2], [1, 4, 1]];
+    $data[] = [['group_rows' => TRUE, 'delta_first_last' => TRUE], [3, 9]];
+    $data[] = [['group_rows' => TRUE, 'delta_limit' => 1, 'delta_first_last' => TRUE], [3]];
+    $data[] = [['group_rows' => TRUE, 'delta_offset' => 1, 'delta_first_last' => TRUE], [1, 9]];
+
+    return $data;
   }
 
   /**
@@ -637,6 +720,14 @@ class FieldTest extends UnitTestCase {
     $this->entityManager->expects($this->any())
       ->method('getDefinition')
       ->willReturn($entity_type);
+  }
+
+}
+
+class FieldTestField extends Field {
+
+  public function executePrepareItemsByDelta(array $all_values) {
+    return $this->prepareItemsByDelta($all_values);
   }
 
 }

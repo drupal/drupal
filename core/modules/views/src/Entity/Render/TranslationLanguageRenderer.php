@@ -12,9 +12,9 @@ use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\ResultRow;
 
 /**
- * Renders entity translations in their active language.
+ * Renders entity translations in their row language.
  */
-class TranslationLanguageRenderer extends RendererBase {
+class TranslationLanguageRenderer extends EntityTranslationRendererBase {
 
   /**
    * Stores the field alias of the langcode column.

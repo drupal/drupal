@@ -1,0 +1,64 @@
+langcode: und
+status: true
+dependencies: {  }
+id: test_field_alias_test
+module: views
+description: ''
+tag: ''
+base_table: entity_test
+base_field: id
+core: '8'
+display:
+  default:
+    display_options:
+      access:
+        type: none
+      cache:
+        type: none
+      fields:
+        id:
+          id: id
+          table: entity_test
+          field: id
+          plugin_id: field
+          entity_type: entity_test
+          entity_field: id
+        name:
+          id: name
+          table: entity_test
+          field: name
+          plugin_id: field
+          entity_type: entity_test
+          entity_field: name
+          type: string
+          settings:
+            link_to_entity: false
+        name_alias:
+          id: name_alias
+          table: entity_test
+          field: name_alias
+          plugin_id: field
+          entity_type: entity_test
+          entity_field: name
+          type: string
+          settings:
+            link_to_entity: true
+      relationships:
+        user_id:
+          table: entity_test
+          field: user_id
+          id: user_id
+          plugin_id: standard
+      sorts:
+        id:
+          id: id
+          table: entity_test
+          field: id
+          plugin_id: standard
+          order: asc
+      style:
+        type: html_list
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: 0

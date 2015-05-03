@@ -492,12 +492,12 @@ class FieldPluginBaseTest extends UnitTestCase {
   /**
    * Sets up a test field.
    *
-   * @return \Drupal\Tests\views\Unit\Plugin\field\TestField|\PHPUnit_Framework_MockObject_MockObject
+   * @return \Drupal\Tests\views\Unit\Plugin\field\FieldPluginBaseTestField|\PHPUnit_Framework_MockObject_MockObject
    *   The test field.
    */
   protected function setupTestField(array $options = []) {
-    /** @var \Drupal\Tests\views\Unit\Plugin\field\TestField $field */
-    $field = $this->getMock('Drupal\Tests\views\Unit\Plugin\field\TestField', ['l'], [$this->configuration, $this->pluginId, $this->pluginDefinition]);
+    /** @var \Drupal\Tests\views\Unit\Plugin\field\FieldPluginBaseTestField $field */
+    $field = $this->getMock('Drupal\Tests\views\Unit\Plugin\field\FieldPluginBaseTestField', ['l'], [$this->configuration, $this->pluginId, $this->pluginDefinition]);
     $field->init($this->executable, $this->display, $options);
     $field->setLinkGenerator($this->linkGenerator);
 
@@ -506,7 +506,7 @@ class FieldPluginBaseTest extends UnitTestCase {
 
 }
 
-class TestField extends FieldPluginBase {
+class FieldPluginBaseTestField extends FieldPluginBase {
 
   public function setLinkGenerator(LinkGeneratorInterface $link_generator) {
     $this->linkGenerator = $link_generator;

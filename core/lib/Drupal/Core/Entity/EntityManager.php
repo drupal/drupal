@@ -857,7 +857,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
   public function getTranslationFromContext(EntityInterface $entity, $langcode = NULL, $context = array()) {
     $translation = $entity;
 
-    if ($entity instanceof TranslatableInterface) {
+    if ($entity instanceof TranslatableInterface && count($entity->getTranslationLanguages()) > 1) {
       if (empty($langcode)) {
         $langcode = $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
       }

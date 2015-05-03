@@ -1139,6 +1139,9 @@ class EntityManagerTest extends UnitTestCase {
       ->method('getTranslation')
       ->with('custom_langcode')
       ->will($this->returnValue($translated_entity));
+    $entity->expects($this->any())
+      ->method('getTranslationLanguages')
+      ->will($this->returnValue([new Language(['id' => 'en']), new Language(['id' => 'custom_langcode'])]));
 
     $this->assertSame($entity, $this->entityManager->getTranslationFromContext($entity));
     $this->assertSame($translated_entity, $this->entityManager->getTranslationFromContext($entity, 'custom_langcode'));
