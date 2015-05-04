@@ -239,6 +239,12 @@ class SystemMenuBlockTest extends KernelTestBase {
     $request->attributes->set(RouteObjectInterface::ROUTE_NAME, 'example3');
     $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, $route);
     $this->container->get('request_stack')->push($request);
+    // \Drupal\Core\Menu\MenuActiveTrail uses the cache collector pattern, which
+    // includes static caching. Since this second scenario simulates a second
+    // request, we must also simulate it for the MenuActiveTrail service, by
+    // clearing the cache collector's static cache.
+    \Drupal::service('menu.active_trail')->clear();
+
     $active_trail_expectations = [];
     $active_trail_expectations['all'] = [
       'test.example1' => [],

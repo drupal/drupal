@@ -487,13 +487,15 @@ services:
     arguments: ['@menu.tree_storage', '@menu_link.static.overrides', '@module_handler']
   menu.link_tree:
     class: Drupal\Core\Menu\MenuLinkTree
-    arguments: ['@menu.tree_storage', '@plugin.manager.menu.link', '@router.route_provider', '@menu.active_trail', '@controller_resolver', '@cache.menu', '@current_route_match']
+    arguments: ['@menu.tree_storage', '@plugin.manager.menu.link', '@router.route_provider', '@menu.active_trail', '@controller_resolver']
   menu.default_tree_manipulators:
     class: Drupal\Core\Menu\DefaultMenuLinkTreeManipulators
     arguments: ['@access_manager', '@current_user', '@entity.query']
   menu.active_trail:
     class: Drupal\Core\Menu\MenuActiveTrail
-    arguments: ['@plugin.manager.menu.link', '@current_route_match']
+    arguments: ['@plugin.manager.menu.link', '@current_route_match', '@cache.menu', '@lock']
+    tags:
+      - { name: needs_destruction }
   menu.parent_form_selector:
     class: Drupal\Core\Menu\MenuParentFormSelector
     arguments: ['@menu.link_tree', '@entity.manager', '@string_translation']

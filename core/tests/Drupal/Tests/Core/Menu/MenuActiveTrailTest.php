@@ -11,6 +11,7 @@ use Drupal\Core\Menu\MenuActiveTrail;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -54,6 +55,20 @@ class MenuActiveTrailTest extends UnitTestCase {
   protected $menuLinkManager;
 
   /**
+   * The mocked cache backend.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $cache;
+
+  /**
+   * The mocked lock.
+   *
+   * @var \Drupal\Core\Lock\LockBackendInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $lock;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -62,8 +77,14 @@ class MenuActiveTrailTest extends UnitTestCase {
     $this->requestStack = new RequestStack();
     $this->currentRouteMatch = new CurrentRouteMatch($this->requestStack);
     $this->menuLinkManager = $this->getMock('Drupal\Core\Menu\MenuLinkManagerInterface');
+    $this->cache = $this->getMock('\Drupal\Core\Cache\CacheBackendInterface');
+    $this->lock = $this->getMock('\Drupal\Core\Lock\LockBackendInterface');
 
-    $this->menuActiveTrail = new MenuActiveTrail($this->menuLinkManager, $this->currentRouteMatch);
+    $this->menuActiveTrail = new MenuActiveTrail($this->menuLinkManager, $this->currentRouteMatch, $this->cache, $this->lock);
+
+    $container = new Container();
+    $container->set('cache_tags.invalidator', $this->getMock('\Drupal\Core\Cache\CacheTagsInvalidatorInterface'));
+    \Drupal::setContainer($container);
   }
 
   /**
@@ -148,12 +169,14 @@ class MenuActiveTrailTest extends UnitTestCase {
 
     $this->requestStack->push($request);
     if ($links !== FALSE) {
-      $this->menuLinkManager->expects($this->once())
+      // We expect exactly two calls, one for the first call, and one after the
+      // cache clearing below.
+      $this->menuLinkManager->expects($this->exactly(2))
         ->method('loadLinksbyRoute')
         ->with('baby_llama')
         ->will($this->returnValue($links));
       if ($expected_link !== NULL) {
-        $this->menuLinkManager->expects($this->once())
+        $this->menuLinkManager->expects($this->exactly(2))
           ->method('getParentIds')
           ->will($this->returnValueMap(array(
             array($expected_link->getPluginId(), $expected_trail_ids),
@@ -161,7 +184,54 @@ class MenuActiveTrailTest extends UnitTestCase {
       }
     }
 
+    // Call out the same twice in order to ensure that static caching works.
     $this->assertSame($expected_trail_ids, $this->menuActiveTrail->getActiveTrailIds($menu_name));
+    $this->assertSame($expected_trail_ids, $this->menuActiveTrail->getActiveTrailIds($menu_name));
+
+    $this->menuActiveTrail->clear();
+    $this->assertSame($expected_trail_ids, $this->menuActiveTrail->getActiveTrailIds($menu_name));
+  }
+
+  /**
+   * Tests getCid()
+   *
+   * @covers ::getCid
+   */
+  public function testGetCid() {
+    $data = $this->provider()[1];
+    /** @var \Symfony\Component\HttpFoundation\Request $request */
+    $request = $data[0];
+    /** @var \Symfony\Component\Routing\Route $route */
+    $route = $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT);
+    $route->setPath('/test/{b}/{a}');
+    $request->attributes->get('_raw_variables')->add(['b' => 1, 'a' => 0]);
+    $this->requestStack->push($request);
+
+    $this->menuLinkManager->expects($this->any())
+      ->method('loadLinksbyRoute')
+      ->with('baby_llama')
+      ->will($this->returnValue($data[1]));
+
+    $expected_link = $data[3];
+    $expected_trail = $data[4];
+    $expected_trail_ids = array_combine($expected_trail, $expected_trail);
+
+    $this->menuLinkManager->expects($this->any())
+      ->method('getParentIds')
+      ->will($this->returnValueMap(array(
+        array($expected_link->getPluginId(), $expected_trail_ids),
+      )));
+
+    $this->assertSame($expected_trail_ids, $this->menuActiveTrail->getActiveTrailIds($data[2]));
+
+    $this->cache->expects($this->once())
+      ->method('set')
+      // Ensure we normalize the serialized data by sorting them.
+      ->with('active-trail:route:baby_llama:route_parameters:' . serialize(['a' => 0, 'b' => 1]));
+    $this->lock->expects($this->any())
+      ->method('acquire')
+      ->willReturn(TRUE);
+    $this->menuActiveTrail->destruct();
   }
 
 }

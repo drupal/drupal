@@ -48,30 +48,6 @@ class MenuLinkTree implements MenuLinkTreeInterface {
   protected $controllerResolver;
 
   /**
-   * The cache backend.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cache;
-
-  /**
-   * The current route match.
-   *
-   * @var \Drupal\Core\Routing\RouteMatchInterface
-   */
-  protected $routeMatch;
-
-  /**
-   * Stores the cached current route parameters by menu and current route match.
-   *
-   * @todo Remove this non-static caching in
-   *   https://www.drupal.org/node/1805054.
-   *
-   * @var \Drupal\Core\Menu\MenuTreeParameters[]
-   */
-  protected $cachedCurrentRouteParameters;
-
-  /**
    * Constructs a \Drupal\Core\Menu\MenuLinkTree object.
    *
    * @param \Drupal\Core\Menu\MenuTreeStorageInterface $tree_storage
@@ -84,53 +60,31 @@ class MenuLinkTree implements MenuLinkTreeInterface {
    *   The active menu trail service.
    * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
    *   The controller resolver.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
-   *   The cache backend.
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
-   *   The current route match.
    */
-  public function __construct(MenuTreeStorageInterface $tree_storage, MenuLinkManagerInterface $menu_link_manager, RouteProviderInterface $route_provider, MenuActiveTrailInterface $menu_active_trail, ControllerResolverInterface $controller_resolver, CacheBackendInterface $cache, RouteMatchInterface $route_match) {
+  public function __construct(MenuTreeStorageInterface $tree_storage, MenuLinkManagerInterface $menu_link_manager, RouteProviderInterface $route_provider, MenuActiveTrailInterface $menu_active_trail, ControllerResolverInterface $controller_resolver) {
     $this->treeStorage = $tree_storage;
     $this->menuLinkManager = $menu_link_manager;
     $this->routeProvider = $route_provider;
     $this->menuActiveTrail = $menu_active_trail;
     $this->controllerResolver = $controller_resolver;
-    // @todo Remove these two in https://www.drupal.org/node/1805054.
-    $this->cache = $cache;
-    $this->routeMatch = $route_match;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getCurrentRouteMenuTreeParameters($menu_name) {
-    $route_parameters = $this->routeMatch->getRawParameters()->all();
-    ksort($route_parameters);
-    $cid = 'current-route-parameters:' . $menu_name . ':route:' . $this->routeMatch->getRouteName() . ':route_parameters:' . serialize($route_parameters);
+    $active_trail = $this->menuActiveTrail->getActiveTrailIds($menu_name);
 
-    if (!isset($this->cachedCurrentRouteParameters[$cid])) {
-      $cache = $this->cache->get($cid);
-      if ($cache && $cache->data) {
-        $parameters = $cache->data;
-      }
-      else {
-        $active_trail = $this->menuActiveTrail->getActiveTrailIds($menu_name);
+    $parameters = new MenuTreeParameters();
+    $parameters->setActiveTrail($active_trail)
+      // We want links in the active trail to be expanded.
+      ->addExpandedParents($active_trail)
+      // We marked the links in the active trail to be expanded, but we also
+      // want their descendants that have the "expanded" flag enabled to be
+      // expanded.
+      ->addExpandedParents($this->treeStorage->getExpanded($menu_name, $active_trail));
 
-        $parameters = new MenuTreeParameters();
-        $parameters->setActiveTrail($active_trail)
-          // We want links in the active trail to be expanded.
-          ->addExpandedParents($active_trail)
-          // We marked the links in the active trail to be expanded, but we also
-          // want their descendants that have the "expanded" flag enabled to be
-          // expanded.
-          ->addExpandedParents($this->treeStorage->getExpanded($menu_name, $active_trail));
-
-        $this->cache->set($cid, $parameters, CacheBackendInterface::CACHE_PERMANENT, array('config:system.menu.' . $menu_name));
-      }
-      $this->cachedCurrentRouteParameters[$menu_name] = $parameters;
-    }
-
-    return $this->cachedCurrentRouteParameters[$menu_name];
+    return $parameters;
   }
 
   /**

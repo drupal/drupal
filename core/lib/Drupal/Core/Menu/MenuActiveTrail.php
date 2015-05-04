@@ -7,6 +7,9 @@
 
 namespace Drupal\Core\Menu;
 
+use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\CacheCollector;
+use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -15,7 +18,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
  * It uses the current route name and route parameters to compare with the ones
  * of the menu links.
  */
-class MenuActiveTrail implements MenuActiveTrailInterface {
+class MenuActiveTrail extends CacheCollector implements MenuActiveTrailInterface {
 
   /**
    * The menu link plugin manager.
@@ -38,16 +41,66 @@ class MenuActiveTrail implements MenuActiveTrailInterface {
    *   The menu link plugin manager.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   A route match object for finding the active link.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
+   *   The cache backend.
+   * @param \Drupal\Core\Lock\LockBackendInterface $lock
+   *   The lock backend.
    */
-  public function __construct(MenuLinkManagerInterface $menu_link_manager, RouteMatchInterface $route_match) {
+  public function __construct(MenuLinkManagerInterface $menu_link_manager, RouteMatchInterface $route_match, CacheBackendInterface $cache, LockBackendInterface $lock) {
+    parent::__construct(NULL, $cache, $lock);
     $this->menuLinkManager = $menu_link_manager;
     $this->routeMatch = $route_match;
   }
 
   /**
    * {@inheritdoc}
+   *
+   * @see ::getActiveTrailIds()
+   */
+  protected function getCid() {
+    if (!isset($this->cid)) {
+      $route_parameters = $this->routeMatch->getRawParameters()->all();
+      ksort($route_parameters);
+      return 'active-trail:route:' . $this->routeMatch->getRouteName() . ':route_parameters:' . serialize($route_parameters);
+    }
+
+    return $this->cid;
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @see ::getActiveTrailIds()
+   */
+  protected function resolveCacheMiss($menu_name) {
+    $this->storage[$menu_name] = $this->doGetActiveTrailIds($menu_name);
+    $this->tags[] = 'config:system.menu.' . $menu_name;
+    $this->persist($menu_name);
+
+    return $this->storage[$menu_name];
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * This implementation caches all active trail IDs per route match for *all*
+   * menus whose active trails are calculated on that page. This ensures 1 cache
+   * get for all active trails per page load, rather than N.
+   *
+   * It uses the cache collector pattern to do this.
+   *
+   * @see ::get()
+   * @see \Drupal\Core\Cache\CacheCollectorInterface
+   * @see \Drupal\Core\Cache\CacheCollector
    */
   public function getActiveTrailIds($menu_name) {
+    return $this->get($menu_name);
+  }
+
+  /**
+   * Helper method for ::getActiveTrailIds().
+   */
+  protected function doGetActiveTrailIds($menu_name) {
     // Parent ids; used both as key and value to ensure uniqueness.
     // We always want all the top-level links with parent == ''.
     $active_trail = array('' => '');
