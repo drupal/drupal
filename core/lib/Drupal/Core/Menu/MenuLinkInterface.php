@@ -9,11 +9,12 @@ namespace Drupal\Core\Menu;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Component\Plugin\DerivativeInspectionInterface;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 
 /**
  * Defines an interface for classes providing a type of menu link.
  */
-interface MenuLinkInterface extends PluginInspectionInterface, DerivativeInspectionInterface {
+interface MenuLinkInterface extends PluginInspectionInterface, DerivativeInspectionInterface, CacheableDependencyInterface {
 
   /**
    * Returns the weight of the menu link.
@@ -149,20 +150,6 @@ interface MenuLinkInterface extends PluginInspectionInterface, DerivativeInspect
    *   The metadata for the menu link.
    */
   public function getMetaData();
-
-  /**
-   * Returns whether the rendered link can be cached.
-   *
-   * The plugin class may make some or all of the data used in the Url object
-   * and build array dynamic. For example, it could include the current user
-   * name in the title, the current time in the description, or a destination
-   * query string. In addition the route parameters may be dynamic so an access
-   * check should be performed for each user.
-   *
-   * @return bool
-   *   TRUE if the link can be cached, FALSE otherwise.
-   */
-  public function isCacheable();
 
   /**
    * Updates the definition values for a menu link.
