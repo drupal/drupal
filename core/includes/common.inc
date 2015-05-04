@@ -1030,7 +1030,8 @@ function drupal_clear_js_cache() {
 /**
  * Pre-render callback: Renders a link into #markup.
  *
- * @deprecated Use \Drupal\Core\Render\Element\Link::preRenderLink().
+ * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
+ *   Use \Drupal\Core\Render\Element\Link::preRenderLink().
  */
 function drupal_pre_render_link($element) {
   return Element\Link::preRenderLink($element);
