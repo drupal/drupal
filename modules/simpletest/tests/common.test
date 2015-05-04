@@ -942,6 +942,7 @@ class CascadingStylesheetsUnitTest extends DrupalUnitTestCase {
    * - Proper URLs in imported files. (https://drupal.org/node/265719)
    * - Retain pseudo-selectors. (https://drupal.org/node/460448)
    * - Don't adjust data URIs. (https://drupal.org/node/2142441)
+   * - Files imported from external URLs. (https://drupal.org/node/2014851)
    */
   function testLoadCssBasic() {
     // Array of files to test living in 'simpletest/files/css_test_files/'.

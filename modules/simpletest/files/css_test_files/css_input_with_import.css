@@ -1,5 +1,7 @@
 
 
+@import url("http://example.com/style.css");
+@import url("//example.com/style.css");
 @import "import1.css";
 @import "import2.css";
 
