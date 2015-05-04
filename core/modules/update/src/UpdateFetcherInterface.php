@@ -15,7 +15,8 @@ interface UpdateFetcherInterface {
    * Returns the base of the URL to fetch available update data for a project.
    *
    * @param array $project
-   *   The array of project information from update_get_projects().
+   *   The array of project information from
+   *   \Drupal\Update\UpdateManager::getProjects().
    *
    * @return string
    *   The base of the URL used for fetching available update data. This does
@@ -28,7 +29,8 @@ interface UpdateFetcherInterface {
    * Retrieves the project information.
    *
    * @param array $project
-   *   The array of project information from update_get_projects().
+   *   The array of project information from
+   *   \Drupal\Update\UpdateManager::getProjects().
    * @param string $site_key
    *   (optional) The anonymous site key hash. Defaults to an empty string.
    *
@@ -45,7 +47,8 @@ interface UpdateFetcherInterface {
    * site is configured to report usage stats.
    *
    * @param array $project
-   *   The array of project information from update_get_projects().
+   *   The array of project information from
+   *   \Drupal\Update\UpdateManager::getProjects().
    * @param string $site_key
    *   (optional) The anonymous site key hash. Defaults to an empty string.
    *

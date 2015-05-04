@@ -107,8 +107,8 @@ class UpdateManager implements UpdateManagerInterface {
     // of both the projects we care about, and the current update status of the
     // site. We do *not* want to clear the cache of available releases just yet,
     // since that data (even if it's stale) can be useful during
-    // update_get_projects(); for example, to modules that implement
-    // hook_system_info_alter() such as cvs_deploy.
+    // \Drupal\Update\UpdateManager::getProjects(); for example, to modules
+    // that implement hook_system_info_alter() such as cvs_deploy.
     $this->keyValueStore->delete('update_project_projects');
     $this->keyValueStore->delete('update_project_data');
 

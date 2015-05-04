@@ -27,11 +27,11 @@
  *   Reference to an array of the projects installed on the system. This
  *   includes all the metadata documented in the comments below for each project
  *   (either module or theme) that is currently enabled. The array is initially
- *   populated inside update_get_projects() with the help of
- *   \Drupal\Core\Utility\ProjectInfo->processInfoList(), so look there for
+ *   populated inside \Drupal\Update\UpdateManager::getProjects() with the help
+ *   of \Drupal\Core\Utility\ProjectInfo->processInfoList(), so look there for
  *   examples of how to populate the array with real values.
  *
- * @see update_get_projects()
+ * @see \Drupal\Update\UpdateManager::getProjects()
  * @see \Drupal\Core\Utility\ProjectInfo->processInfoList()
  */
 function hook_update_projects_alter(&$projects) {

@@ -65,7 +65,8 @@ function update_get_projects() {
  * compare against the available releases to produce the status report.
  *
  * @param $projects
- *   Array of project information from update_get_projects().
+ *   Array of project information from
+ *   \Drupal\Update\UpdateManager::getProjects().
  */
 function update_process_project_info(&$projects) {
   foreach ($projects as $key => $project) {
@@ -127,7 +128,7 @@ function update_process_project_info(&$projects) {
  *   An array of installed projects with current update status information.
  *
  * @see update_get_available()
- * @see update_get_projects()
+ * @see \Drupal\Update\UpdateManager::getProjects()
  * @see update_process_project_info()
  * @see \Drupal\update\UpdateManagerInterface::projectStorage()
  */
@@ -139,7 +140,7 @@ function update_calculate_project_data($available) {
   if (!empty($projects)) {
     return $projects;
   }
-  $projects = update_get_projects();
+  $projects = \Drupal::service('update.manager')->getProjects();
   update_process_project_info($projects);
   foreach ($projects as $project => $project_info) {
     if (isset($available[$project])) {

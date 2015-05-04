@@ -300,7 +300,7 @@ function _update_no_data() {
  *   Array of data about available releases, keyed by project shortname.
  *
  * @see update_refresh()
- * @see update_get_projects()
+ * @see \Drupal\Update\UpdateManager::getProjects()
  */
 function update_get_available($refresh = FALSE) {
   module_load_include('inc', 'update', 'update.compare');
@@ -360,8 +360,9 @@ function update_get_available($refresh = FALSE) {
  *
  * @param $project
  *   Associative array of information about a project as created by
- *   update_get_projects(), including keys such as 'name' (short name), and the
- *   'info' array with data from a .info.yml file for the project.
+ *   \Drupal\Update\UpdateManager::getProjects(), including keys such as 'name'
+ *   (short name), and the 'info' array with data from a .info.yml file for the
+ *   project.
  *
  * @see \Drupal\update\UpdateFetcher::createFetchTask()
  *
