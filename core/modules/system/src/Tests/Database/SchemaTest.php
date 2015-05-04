@@ -49,6 +49,11 @@ class SchemaTest extends KernelTestBase {
           'default' => "'\"funky default'\"",
           'description' => 'Schema column description for string.',
         ),
+        'test_field_string_ascii'  => array(
+          'type' => 'varchar_ascii',
+          'length' => 255,
+          'description' => 'Schema column description for ASCII string.',
+        ),
       ),
     );
     db_create_table('test_table', $table_specification);
@@ -61,6 +66,19 @@ class SchemaTest extends KernelTestBase {
 
     // Assert that the column comment has been set.
     $this->checkSchemaComment($table_specification['fields']['test_field']['description'], 'test_table', 'test_field');
+
+    // Make sure that varchar fields have the correct collation.
+    $columns = db_query('SHOW FULL COLUMNS FROM {test_table}');
+    foreach ($columns as $column) {
+      if ($column->Field == 'test_field_string') {
+        $string_check = ($column->Collation == 'utf8_general_ci');
+      }
+      if ($column->Field == 'test_field_string_ascii') {
+        $string_ascii_check = ($column->Collation == 'ascii_general_ci');
+      }
+    }
+    $this->assertTrue(!empty($string_check), 'string field has the right collation.');
+    $this->assertTrue(!empty($string_ascii_check), 'ASCII string field has the right collation.');
 
     // An insert without a value for the column 'test_table' should fail.
     $this->assertFalse($this->tryInsert(), 'Insert without a default failed.');

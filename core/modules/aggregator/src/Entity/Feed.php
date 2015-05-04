@@ -226,6 +226,7 @@ class Feed extends ContentEntityBase implements FeedInterface {
 
     $fields['hash'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Hash'))
+      ->setSetting('is_ascii', TRUE)
       ->setDescription(t('Calculated hash of the feed data, used for validating cache.'));
 
     $fields['etag'] = BaseFieldDefinition::create('string')

@@ -46,14 +46,14 @@ function comment_schema() {
         'description' => 'The entity_id of the entity for which the statistics are compiled.',
       ),
       'entity_type' => array(
-        'type' => 'varchar',
+        'type' => 'varchar_ascii',
         'not null' => TRUE,
         'default' => 'node',
         'length' => EntityTypeInterface::ID_MAX_LENGTH,
         'description' => 'The entity_type of the entity to which this comment is a reply.',
       ),
       'field_name' => array(
-        'type' => 'varchar',
+        'type' => 'varchar_ascii',
         'not null' => TRUE,
         'default' => '',
         'length' => FieldStorageConfig::NAME_MAX_LENGTH,

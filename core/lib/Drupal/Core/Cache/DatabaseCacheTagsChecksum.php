@@ -175,7 +175,7 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
       'fields' => array(
         'tag' => array(
           'description' => 'Namespace-prefixed tag string.',
-          'type' => 'varchar',
+          'type' => 'varchar_ascii',
           'length' => 255,
           'not null' => TRUE,
           'default' => '',

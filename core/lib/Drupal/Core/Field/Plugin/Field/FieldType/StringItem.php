@@ -32,6 +32,7 @@ class StringItem extends StringItemBase {
   public static function defaultStorageSettings() {
     return array(
       'max_length' => 255,
+      'is_ascii' => FALSE,
     ) + parent::defaultStorageSettings();
   }
 
@@ -42,7 +43,7 @@ class StringItem extends StringItemBase {
     return array(
       'columns' => array(
         'value' => array(
-          'type' => 'varchar',
+          'type' => $field_definition->getSetting('is_ascii') === TRUE ? 'varchar_ascii' : 'varchar',
           'length' => (int) $field_definition->getSetting('max_length'),
           'binary' => $field_definition->getSetting('case_sensitive'),
         ),

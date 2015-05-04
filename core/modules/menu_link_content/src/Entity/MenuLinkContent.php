@@ -250,6 +250,7 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
       ->setLabel(t('Bundle'))
       ->setDescription(t('The content menu link bundle.'))
       ->setSetting('max_length', EntityTypeInterface::BUNDLE_MAX_LENGTH)
+      ->setSetting('is_ascii', TRUE)
       ->setReadOnly(TRUE);
 
     $fields['title'] = BaseFieldDefinition::create('string')
@@ -291,7 +292,8 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
     $fields['menu_name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Menu name'))
       ->setDescription(t('The menu name. All links with the same menu name (such as "tools") are part of the same menu.'))
-      ->setDefaultValue('tools');
+      ->setDefaultValue('tools')
+      ->setSetting('is_ascii', TRUE);
 
     $fields['link'] = BaseFieldDefinition::create('link')
       ->setLabel(t('Link'))
