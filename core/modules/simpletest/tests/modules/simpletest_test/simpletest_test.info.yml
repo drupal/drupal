@@ -1,0 +1,8 @@
+name: 'Simpletest test'
+type: module
+description: 'Support module for Simpletest tests.'
+package: Testing
+version: VERSION
+core: 8.x
+dependencies:
+  - entity_test

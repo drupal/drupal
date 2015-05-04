@@ -928,10 +928,6 @@ abstract class WebTestBase extends TestBase {
       ->set('js.preprocess', FALSE)
       ->save();
 
-    // Restore the original Simpletest batch.
-    $batch = &batch_get();
-    $batch = $this->originalBatch;
-
     // Collect modules to install.
     $class = get_class($this);
     $modules = array();
@@ -954,6 +950,10 @@ abstract class WebTestBase extends TestBase {
 
       $this->rebuildContainer();
     }
+
+    // Restore the original Simpletest batch.
+    $batch = &batch_get();
+    $batch = $this->originalBatch;
 
     // Reset/rebuild all data structures after enabling the modules, primarily
     // to synchronize all data structures and caches between the test runner and
