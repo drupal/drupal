@@ -1148,7 +1148,7 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
     // Setup dummy filter object.
     $filter = new stdClass();
     $filter->settings = array(
-      'allowed_html' => '<a> <em> <strong> <cite> <blockquote> <code> <ul> <ol> <li> <dl> <dt> <dd>',
+      'allowed_html' => '<a> <em> <strong> <cite> <blockquote> <code> <ul> <ol> <li> <dl> <dt> <dd> <test-element>',
       'filter_html_help' => 1,
       'filter_html_nofollow' => 0,
     );
@@ -1184,6 +1184,10 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
 
     $f = _filter_html('<code onerror>&nbsp;</code>', $filter);
     $this->assertNoNormalized($f, 'onerror', 'HTML filter should remove empty on* attributes on default.');
+
+    // Custom tags are supported and should be allowed through.
+    $f = _filter_html('<test-element></test-element>', $filter);
+    $this->assertNormalized($f, 'test-element', 'HTML filter should allow custom elements.');
   }
 
   /**
