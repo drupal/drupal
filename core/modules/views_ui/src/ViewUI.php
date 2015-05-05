@@ -1285,4 +1285,18 @@ class ViewUI implements ViewEntityInterface {
     return $this->storage->getThirdPartyProviders();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function trustData() {
+    return $this->storage->trustData();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasTrustedData() {
+    return $this->storage->hasTrustedData();
+  }
+
 }

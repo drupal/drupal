@@ -48,6 +48,11 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
  *     "edit-form" = "/admin/config/media/image-styles/manage/{image_style}",
  *     "delete-form" = "/admin/config/media/image-styles/manage/{image_style}/delete",
  *     "collection" = "/admin/config/media/image-styles",
+ *   },
+ *   config_export = {
+ *     "name",
+ *     "label",
+ *     "effects",
  *   }
  * )
  */

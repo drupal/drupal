@@ -41,6 +41,13 @@ use Drupal\taxonomy\VocabularyInterface;
  *     "overview-form" = "/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/overview",
  *     "edit-form" = "/admin/structure/taxonomy/manage/{taxonomy_vocabulary}",
  *     "collection" = "/admin/structure/taxonomy",
+ *   },
+ *   config_export = {
+ *     "name",
+ *     "vid",
+ *     "description",
+ *     "hierarchy",
+ *     "weight",
  *   }
  * )
  */

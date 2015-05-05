@@ -23,11 +23,11 @@ function standard_install() {
   \Drupal::service('entity.definition_update_manager')->applyUpdates();
 
   // Set front page to "node".
-  \Drupal::configFactory()->getEditable('system.site')->set('page.front', 'node')->save();
+  \Drupal::configFactory()->getEditable('system.site')->set('page.front', 'node')->save(TRUE);
 
   // Allow visitor account creation with administrative approval.
   $user_settings = \Drupal::configFactory()->getEditable('user.settings');
-  $user_settings->set('register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)->save();
+  $user_settings->set('register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)->save(TRUE);
 
   // Enable default permissions for system roles.
   user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('access comments'));
@@ -41,7 +41,7 @@ function standard_install() {
   // Enable the Contact link in the footer menu.
   /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
   $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
-  $menu_link_manager->updateDefinition('contact.site_page', array('enabled' => 1));
+  $menu_link_manager->updateDefinition('contact.site_page', array('enabled' => TRUE));
 
   user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('access site-wide contact form'));
   user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, array('access site-wide contact form'));
@@ -67,5 +67,5 @@ function standard_install() {
   $shortcut->save();
 
   // Enable the admin theme.
-  \Drupal::configFactory()->getEditable('node.settings')->set('use_admin_theme', '1')->save();
+  \Drupal::configFactory()->getEditable('node.settings')->set('use_admin_theme', TRUE)->save(TRUE);
 }

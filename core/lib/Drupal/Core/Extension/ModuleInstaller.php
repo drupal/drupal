@@ -155,10 +155,12 @@ class ModuleInstaller implements ModuleInstallerInterface {
         // exceptions if the configuration is not valid.
         $config_installer->checkConfigurationToInstall('module', $module);
 
+        // Save this data without checking schema. This is a performance
+        // improvement for module installation.
         $extension_config
           ->set("module.$module", 0)
           ->set('module', module_config_sort($extension_config->get('module')))
-          ->save();
+          ->save(TRUE);
 
         // Prepare the new module list, sorted by weight, including filenames.
         // This list is used for both the ModuleHandler and DrupalKernel. It
@@ -385,8 +387,9 @@ class ModuleInstaller implements ModuleInstallerInterface {
       // Remove the schema.
       drupal_uninstall_schema($module);
 
-      // Remove the module's entry from the config.
-      \Drupal::configFactory()->getEditable('core.extension')->clear("module.$module")->save();
+      // Remove the module's entry from the config. Don't check schema when
+      // uninstalling a module since we are only clearing a key.
+      \Drupal::configFactory()->getEditable('core.extension')->clear("module.$module")->save(TRUE);
 
       // Update the module handler to remove the module.
       // The current ModuleHandler instance is obsolete with the kernel rebuild

@@ -8,6 +8,8 @@ langcode: en
 locked: false
 pattern: 'U'
 dependencies:
+  theme:
+    - test_basetheme
   enforced:
     theme:
       - test_basetheme

@@ -665,7 +665,7 @@ function system_install() {
   if (!$site->get('name')) {
     $site->set('name', 'Drupal');
   }
-  $site->save();
+  $site->save(TRUE);
 }
 
 /**

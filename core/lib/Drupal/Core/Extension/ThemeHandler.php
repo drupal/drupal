@@ -260,10 +260,11 @@ class ThemeHandler implements ThemeHandlerInterface {
       // configuration then stop installing.
       $this->configInstaller->checkConfigurationToInstall('theme', $key);
 
-      // The value is not used; the weight is ignored for themes currently.
+      // The value is not used; the weight is ignored for themes currently. Do
+      // not check schema when saving the configuration.
       $extension_config
         ->set("theme.$key", 0)
-        ->save();
+        ->save(TRUE);
 
       // Add the theme to the current list.
       // @todo Remove all code that relies on $status property.
@@ -358,7 +359,9 @@ class ThemeHandler implements ThemeHandlerInterface {
       $this->configManager->uninstall('theme', $key);
 
     }
-    $extension_config->save();
+    // Don't check schema when uninstalling a theme since we are only clearing
+    // keys.
+    $extension_config->save(TRUE);
     $this->state->set('system.theme.data', $current_theme_data);
 
     $this->resetSystem();

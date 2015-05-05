@@ -25,7 +25,13 @@ use Drupal\Core\Datetime\DateFormatInterface;
  *     "label" = "label"
  *   },
  *   admin_permission = "administer site configuration",
- *   list_cache_tags = { "rendered" }
+ *   list_cache_tags = { "rendered" },
+ *   config_export = {
+ *     "id",
+ *     "label",
+ *     "locked",
+ *     "pattern",
+ *   }
  * )
  */
 class DateFormat extends ConfigEntityBase implements DateFormatInterface {

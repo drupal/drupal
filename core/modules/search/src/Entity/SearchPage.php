@@ -47,6 +47,14 @@ use Drupal\search\SearchPageInterface;
  *     "label" = "label",
  *     "weight" = "weight",
  *     "status" = "status"
+ *   },
+ *   config_export = {
+ *     "id",
+ *     "label",
+ *     "path",
+ *     "weight",
+ *     "plugin",
+ *     "configuration",
  *   }
  * )
  */

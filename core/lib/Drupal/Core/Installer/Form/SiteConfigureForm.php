@@ -260,14 +260,14 @@ class SiteConfigureForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('system.site')
-      ->set('name', $form_state->getValue('site_name'))
-      ->set('mail', $form_state->getValue('site_mail'))
-      ->save();
+      ->set('name', (string) $form_state->getValue('site_name'))
+      ->set('mail', (string) $form_state->getValue('site_mail'))
+      ->save(TRUE);
 
     $this->config('system.date')
-      ->set('timezone.default', $form_state->getValue('date_default_timezone'))
-      ->set('country.default', $form_state->getValue('site_default_country'))
-      ->save();
+      ->set('timezone.default', (string) $form_state->getValue('date_default_timezone'))
+      ->set('country.default', (string) $form_state->getValue('site_default_country'))
+      ->save(TRUE);
 
     $account_values = $form_state->getValue('account');
 
@@ -281,7 +281,7 @@ class SiteConfigureForm extends ConfigFormBase {
       if ($update_status_module[2]) {
         // Reset the configuration factory so it is updated with the new module.
         $this->resetConfigFactory();
-        $this->config('update.settings')->set('notification.emails', array($account_values['mail']))->save();
+        $this->config('update.settings')->set('notification.emails', array($account_values['mail']))->save(TRUE);
       }
     }
 

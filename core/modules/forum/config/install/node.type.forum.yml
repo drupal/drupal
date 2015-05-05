@@ -1,6 +1,8 @@
 langcode: en
 status: true
 dependencies:
+  module:
+    - forum
   enforced:
     module:
       - forum

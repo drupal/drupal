@@ -75,4 +75,11 @@ class ListStringItem extends ListItemBase {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected static function castAllowedValue($value) {
+    return (string) $value;
+  }
+
 }

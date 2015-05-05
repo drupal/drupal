@@ -415,7 +415,7 @@ function shortcut_themes_installed($theme_list) {
     // Theme settings are not configuration entities and cannot depend on modules
     // so to set a module-specific setting, we need to set it with logic.
     if (\Drupal::moduleHandler()->moduleExists('shortcut')) {
-      \Drupal::configFactory()->getEditable('seven.settings')->set('third_party_settings.shortcut.module_link', TRUE)->save();
+      \Drupal::configFactory()->getEditable('seven.settings')->set('third_party_settings.shortcut.module_link', TRUE)->save(TRUE);
     }
   }
 }

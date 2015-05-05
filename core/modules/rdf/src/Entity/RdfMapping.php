@@ -20,6 +20,13 @@ use Drupal\rdf\RdfMappingInterface;
  *   config_prefix = "mapping",
  *   entity_keys = {
  *     "id" = "id"
+ *   },
+ *   config_export = {
+ *     "id",
+ *     "targetEntityType",
+ *     "bundle",
+ *     "types",
+ *     "fieldMappings",
  *   }
  * )
  */

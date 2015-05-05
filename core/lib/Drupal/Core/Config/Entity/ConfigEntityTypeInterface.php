@@ -61,4 +61,13 @@ interface ConfigEntityTypeInterface extends EntityTypeInterface {
    */
   public function getConfigPrefix();
 
+  /**
+   * Gets the config entity properties to export if declared on the annotation.
+   *
+   * @return array|NULL
+   *   The properties to export or NULL if they can not be determine from the
+   *   config entity type annotation.
+   */
+  public function getPropertiesToExport();
+
 }

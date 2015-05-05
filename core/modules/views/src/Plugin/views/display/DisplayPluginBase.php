@@ -2293,7 +2293,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       $cache_plugin->alterCacheMetadata($is_cacheable, $cache_contexts);
     }
 
-    return [$is_cacheable, $cache_contexts];
+    return [(bool) $is_cacheable, $cache_contexts];
   }
 
   /**

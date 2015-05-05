@@ -19,13 +19,6 @@ use Drupal\Tests\UnitTestCase;
 class FieldStorageConfigEntityUnitTest extends UnitTestCase {
 
   /**
-   * The entity type used for testing.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeInterface|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $entityType;
-
-  /**
    * The entity manager used for testing.
    *
    * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -64,7 +57,7 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
    */
   public function testCalculateDependencies() {
     // Create a mock entity type for FieldStorageConfig.
-    $fieldStorageConfigentityType = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
+    $fieldStorageConfigentityType = $this->getMock('\Drupal\Core\Config\Entity\ConfigEntityTypeInterface');
     $fieldStorageConfigentityType->expects($this->any())
       ->method('getProvider')
       ->will($this->returnValue('field'));

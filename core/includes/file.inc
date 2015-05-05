@@ -1215,8 +1215,9 @@ function file_directory_temp() {
       // everything to use slash which is supported on all platforms.
       $temporary_directory = str_replace('\\', '/', $temporary_directory);
     }
-    // Save the path of the discovered directory.
-    $config->set('path.temporary', $temporary_directory)->save();
+    // Save the path of the discovered directory. Do not check config schema on
+    // save.
+    $config->set('path.temporary', (string) $temporary_directory)->save(TRUE);
   }
 
   return $temporary_directory;

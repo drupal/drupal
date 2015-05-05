@@ -4,3 +4,6 @@ status: true
 langcode: en
 type: node
 plugin: node_publish_action
+dependencies:
+  module:
+    - node

@@ -203,22 +203,24 @@ class Config extends StorableConfigBase {
   /**
    * {@inheritdoc}
    */
-  public function save() {
+  public function save($has_trusted_data = FALSE) {
     // Validate the configuration object name before saving.
     static::validateName($this->name);
 
     // If there is a schema for this configuration object, cast all values to
     // conform to the schema.
-    if ($this->typedConfigManager->hasConfigSchema($this->name)) {
-      // Ensure that the schema wrapper has the latest data.
-      $this->schemaWrapper = NULL;
-      foreach ($this->data as $key => $value) {
-        $this->data[$key] = $this->castValue($key, $value);
+    if (!$has_trusted_data) {
+      if ($this->typedConfigManager->hasConfigSchema($this->name)) {
+        // Ensure that the schema wrapper has the latest data.
+        $this->schemaWrapper = NULL;
+        foreach ($this->data as $key => $value) {
+          $this->data[$key] = $this->castValue($key, $value);
+        }
       }
-    }
-    else {
-      foreach ($this->data as $key => $value) {
-        $this->validateValue($key, $value);
+      else {
+        foreach ($this->data as $key => $value) {
+          $this->validateValue($key, $value);
+        }
       }
     }
 
@@ -229,6 +231,9 @@ class Config extends StorableConfigBase {
     $this->isNew = FALSE;
     $this->eventDispatcher->dispatch(ConfigEvents::SAVE, new ConfigCrudEvent($this));
     $this->originalData = $this->data;
+    // Potentially configuration schema could have changed the underlying data's
+    // types.
+    $this->resetOverriddenData();
     return $this;
   }
 
@@ -302,4 +307,5 @@ class Config extends StorableConfigBase {
       }
     }
   }
+
 }

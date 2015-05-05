@@ -30,6 +30,19 @@ use Drupal\field\FieldStorageConfigInterface;
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "id"
+ *   },
+ *   config_export = {
+ *     "id",
+ *     "field_name",
+ *     "entity_type",
+ *     "type",
+ *     "settings",
+ *     "module",
+ *     "locked",
+ *     "cardinality",
+ *     "translatable",
+ *     "indexes",
+ *     "persist_with_no_fields",
  *   }
  * )
  */

@@ -3,4 +3,4 @@ id: override
 label: Default
 weight: 0
 protected_property: Default
-status: 1
+status: true

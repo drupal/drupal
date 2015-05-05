@@ -236,7 +236,7 @@ display:
           delta_first_last: false
           multi_type: separator
           separator: ', '
-          field_api_classes: 0
+          field_api_classes: false
           plugin_id: field
           entity_type: file
           entity_field: filename

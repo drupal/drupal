@@ -36,6 +36,13 @@ use Drupal\contact\ContactFormInterface;
  *     "delete-form" = "/admin/structure/contact/manage/{contact_form}/delete",
  *     "edit-form" = "/admin/structure/contact/manage/{contact_form}",
  *     "collection" = "/admin/structure/contact",
+ *   },
+ *   config_export = {
+ *     "id",
+ *     "label",
+ *     "recipients",
+ *     "reply",
+ *     "weight",
  *   }
  * )
  */

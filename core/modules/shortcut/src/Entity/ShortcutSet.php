@@ -40,6 +40,10 @@ use Drupal\shortcut\ShortcutSetInterface;
  *     "delete-form" = "/admin/config/user-interface/shortcut/manage/{shortcut_set}/delete",
  *     "edit-form" = "/admin/config/user-interface/shortcut/manage/{shortcut_set}",
  *     "collection" = "/admin/config/user-interface/shortcut",
+ *   },
+ *   config_export = {
+ *     "id",
+ *     "label",
  *   }
  * )
  */

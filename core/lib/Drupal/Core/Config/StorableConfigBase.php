@@ -66,11 +66,18 @@ abstract class StorableConfigBase extends ConfigBase {
   /**
    * Saves the configuration object.
    *
+   * @param bool $has_trusted_data
+   *   Set to TRUE is the configuration data has already been checked to ensure
+   *   it conforms to schema. Generally this is only used during module and
+   *   theme installation.
+   *
    * Must invalidate the cache tags associated with the configuration object.
    *
    * @return $this
+   *
+   * @see \Drupal\Core\Config\ConfigInstaller::createConfiguration()
    */
-  abstract public function save();
+  abstract public function save($has_trusted_data = FALSE);
 
   /**
    * Deletes the configuration object.

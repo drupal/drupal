@@ -314,11 +314,24 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
         $label = static::structureAllowedValues($label);
       }
       $structured_values[] = array(
-        'value' => $value,
+        'value' => static::castAllowedValue($value),
         'label' => $label,
       );
     }
     return $structured_values;
+  }
+
+  /**
+   * Converts a value to the correct type.
+   *
+   * @param mixed $value
+   *   The value to cast.
+   *
+   * @return mixed
+   *   The casted value.
+   */
+  protected static function castAllowedValue($value) {
+    return $value;
   }
 
 }

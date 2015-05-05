@@ -988,7 +988,7 @@ function user_user_role_insert(RoleInterface $role) {
       ),
       'plugin' => 'user_add_role_action',
     ));
-    $action->save();
+    $action->trustData()->save();
   }
   $remove_id = 'user_remove_role_action.' . $role->id();
   if (!entity_load('action', $remove_id)) {
@@ -1001,7 +1001,7 @@ function user_user_role_insert(RoleInterface $role) {
       ),
       'plugin' => 'user_remove_role_action',
     ));
-    $action->save();
+    $action->trustData()->save();
   }
 }
 
@@ -1149,7 +1149,7 @@ function user_role_grant_permissions($rid, array $permissions = array()) {
     foreach ($permissions as $permission) {
       $role->grantPermission($permission);
     }
-    $role->save();
+    $role->trustData()->save();
   }
 }
 
@@ -1170,7 +1170,7 @@ function user_role_revoke_permissions($rid, array $permissions = array()) {
   foreach ($permissions as $permission) {
     $role->revokePermission($permission);
   }
-  $role->save();
+  $role->trustData()->save();
 }
 
 /**

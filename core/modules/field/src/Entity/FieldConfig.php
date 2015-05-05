@@ -28,6 +28,20 @@ use Drupal\field\FieldConfigInterface;
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label"
+ *   },
+ *   config_export = {
+ *     "id",
+ *     "field_name",
+ *     "entity_type",
+ *     "bundle",
+ *     "label",
+ *     "description",
+ *     "required",
+ *     "translatable",
+ *     "default_value",
+ *     "default_value_callback",
+ *     "settings",
+ *     "field_type",
  *   }
  * )
  */

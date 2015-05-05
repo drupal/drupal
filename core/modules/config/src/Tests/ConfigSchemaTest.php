@@ -209,6 +209,7 @@ class ConfigSchemaTest extends KernelTestBase {
 
     $this->assertEqual($definition, $expected, 'Retrieved the right metadata for the first effect of image.style.medium');
 
+    $a = \Drupal::config('config_test.dynamic.third_party');
     $test = \Drupal::service('config.typed')->get('config_test.dynamic.third_party')->get('third_party_settings.config_schema_test');
     $definition = $test->getDataDefinition()->toArray();
     $expected = array();

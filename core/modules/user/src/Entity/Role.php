@@ -40,6 +40,13 @@ use Drupal\user\RoleInterface;
  *     "edit-form" = "/admin/people/roles/manage/{user_role}",
  *     "edit-permissions-form" = "/admin/people/permissions/{user_role}",
  *     "collection" = "/admin/people/roles",
+ *   },
+ *   config_export = {
+ *     "id",
+ *     "label",
+ *     "weight",
+ *     "is_admin",
+ *     "permissions",
  *   }
  * )
  */

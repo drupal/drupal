@@ -2,7 +2,7 @@ id: override
 label: Override
 weight: 0
 protected_property: Default
-status: 1
+status: true
 dependencies:
   module:
     - tour

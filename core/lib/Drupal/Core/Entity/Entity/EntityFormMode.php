@@ -33,6 +33,12 @@ use Drupal\Core\Entity\EntityFormModeInterface;
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label"
+ *   },
+ *   config_export = {
+ *     "id",
+ *     "label",
+ *     "targetEntityType",
+ *     "cache",
  *   }
  * )
  */

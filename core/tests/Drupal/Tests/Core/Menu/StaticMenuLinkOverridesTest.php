@@ -114,11 +114,15 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
       ->with('definitions')
       ->will($this->returnValue(array()));
 
-    $definition_save_1 = array('definitions' => array('test1' => array('parent' => 'test0')));
+    $definition_save_1 = array(
+      'definitions' => array(
+        'test1' => array('parent' => 'test0', 'menu_name' => '', 'weight' => 0, 'expanded' => FALSE, 'enabled' => FALSE)
+      )
+    );
     $definitions_save_2 = array(
       'definitions' => array(
-        'test1' => array('parent' => 'test0'),
-        'test1__la___ma' => array('parent' => 'test1')
+        'test1' => array('parent' => 'test0', 'menu_name' => '', 'weight' => 0, 'expanded' => FALSE, 'enabled' => FALSE),
+        'test1__la___ma' => array('parent' => 'test1', 'menu_name' => '', 'weight' => 0, 'expanded' => FALSE, 'enabled' => FALSE)
       )
     );
     $config->expects($this->at(2))

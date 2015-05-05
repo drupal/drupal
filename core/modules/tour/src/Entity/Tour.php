@@ -24,6 +24,13 @@ use Drupal\tour\TourInterface;
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label"
+ *   },
+ *   config_export = {
+ *     "id",
+ *     "label",
+ *     "module",
+ *     "routes",
+ *     "tips",
  *   }
  * )
  */

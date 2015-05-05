@@ -28,7 +28,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
   /**
    * The entity type used for testing.
    *
-   * @var \Drupal\Core\Entity\EntityTypeInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Config\Entity\ConfigEntityTypeInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $entityType;
 
@@ -463,9 +463,52 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    * @covers ::toArray
    */
   public function testToArray() {
+    $this->typedConfigManager->expects($this->never())
+      ->method('getDefinition');
+    $this->entityType->expects($this->any())
+      ->method('getPropertiesToExport')
+      ->willReturn(['id' => 'configId', 'dependencies' => 'dependencies']);
+    $properties = $this->entity->toArray();
+    $this->assertInternalType('array', $properties);
+    $this->assertEquals(array('configId' => $this->entity->id(), 'dependencies' => array()), $properties);
+  }
+
+  /**
+   * @covers ::toArray
+   */
+  public function testToArrayIdKey() {
+    $entity = $this->getMockForAbstractClass('\Drupal\Core\Config\Entity\ConfigEntityBase', [[], $this->entityTypeId], '', TRUE, TRUE, TRUE, ['id', 'get']);
+    $entity->expects($this->atLeastOnce())
+      ->method('id')
+      ->willReturn($this->id);
+    $entity->expects($this->once())
+      ->method('get')
+      ->with('dependencies')
+      ->willReturn([]);
+    $this->typedConfigManager->expects($this->never())
+      ->method('getDefinition');
+    $this->entityType->expects($this->any())
+      ->method('getPropertiesToExport')
+      ->willReturn(['id' => 'configId', 'dependencies' => 'dependencies']);
+    $this->entityType->expects($this->once())
+      ->method('getKey')
+      ->with('id')
+      ->willReturn('id');
+    $properties = $entity->toArray();
+    $this->assertInternalType('array', $properties);
+    $this->assertEquals(['configId' => $entity->id(), 'dependencies' => []], $properties);
+  }
+
+  /**
+   * @covers ::toArray
+   */
+  public function testToArraySchemaFallback() {
     $this->typedConfigManager->expects($this->once())
       ->method('getDefinition')
       ->will($this->returnValue(array('mapping' => array('id' => '', 'dependencies' => ''))));
+    $this->entityType->expects($this->any())
+      ->method('getPropertiesToExport')
+      ->willReturn([]);
     $properties = $this->entity->toArray();
     $this->assertInternalType('array', $properties);
     $this->assertEquals(array('id' => $this->entity->id(), 'dependencies' => array()), $properties);
@@ -477,6 +520,9 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    * @expectedException \Drupal\Core\Config\Schema\SchemaIncompleteException
    */
   public function testToArrayFallback() {
+    $this->entityType->expects($this->any())
+      ->method('getPropertiesToExport')
+      ->willReturn([]);
     $this->entity->toArray();
   }
 

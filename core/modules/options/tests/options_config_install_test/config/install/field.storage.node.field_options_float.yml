@@ -11,7 +11,7 @@ type: list_float
 settings:
   allowed_values:
     -
-      value: 0
+      value: !!float 0
       label: Zero
     -
       value: 0.5

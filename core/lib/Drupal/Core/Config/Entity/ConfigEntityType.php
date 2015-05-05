@@ -35,6 +35,22 @@ class ConfigEntityType extends EntityType implements ConfigEntityTypeInterface {
   protected $static_cache = FALSE;
 
   /**
+   * The list of configuration entity properties to export from the annotation.
+   *
+   * @var array
+   */
+  protected $config_export = [];
+
+  /**
+   * The result of merging config_export annotation with the defaults.
+   *
+   * This is stored on the class so that it does not have to be recalculated.
+   *
+   * @var array
+   */
+  protected $mergedConfigExport = [];
+
+  /**
    * {@inheritdoc}
    *
    * @throws \Drupal\Core\Config\Entity\Exception\ConfigEntityStorageClassException
@@ -144,6 +160,34 @@ class ConfigEntityType extends EntityType implements ConfigEntityTypeInterface {
     if (!is_a($class, 'Drupal\Core\Config\Entity\ConfigEntityStorage', TRUE)) {
       throw new ConfigEntityStorageClassException(SafeMarkup::format('@class is not \Drupal\Core\Config\Entity\ConfigEntityStorage or it does not extend it', ['@class' => $class]));
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPropertiesToExport() {
+    if (!empty($this->config_export)) {
+      if (empty($this->mergedConfigExport)) {
+        // Always add default properties to be exported.
+        $this->mergedConfigExport = [
+          'uuid' => 'uuid',
+          'langcode' => 'langcode',
+          'status' => 'status',
+          'dependencies' => 'dependencies',
+          'third_party_settings' => 'third_party_settings',
+        ];
+        foreach ($this->config_export as $property => $name) {
+          if (is_numeric($property)) {
+            $this->mergedConfigExport[$name] = $name;
+          }
+          else {
+            $this->mergedConfigExport[$property] = $name;
+          }
+        }
+      }
+      return $this->mergedConfigExport;
+    }
+    return NULL;
   }
 
 }

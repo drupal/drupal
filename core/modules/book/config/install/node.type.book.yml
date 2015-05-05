@@ -1,6 +1,8 @@
 langcode: en
 status: true
 dependencies:
+  module:
+    - book
   enforced:
     module:
       - book

@@ -22,7 +22,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
   /**
    * The entity type.
    *
-   * @var \Drupal\Core\Entity\EntityTypeInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Config\Entity\ConfigEntityTypeInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $entityType;
 
@@ -279,6 +279,9 @@ class ConfigEntityStorageTest extends UnitTestCase {
       ->method('setData');
     $config_object->expects($this->once())
       ->method('save');
+    $config_object->expects($this->atLeastOnce())
+      ->method('get')
+      ->willReturn([]);
 
     $this->cacheTagsInvalidator->expects($this->once())
       ->method('invalidateTags')
@@ -343,6 +346,9 @@ class ConfigEntityStorageTest extends UnitTestCase {
       ->method('setData');
     $config_object->expects($this->once())
       ->method('save');
+    $config_object->expects($this->atLeastOnce())
+      ->method('get')
+      ->willReturn([]);
 
     $this->cacheTagsInvalidator->expects($this->once())
       ->method('invalidateTags')
@@ -408,6 +414,9 @@ class ConfigEntityStorageTest extends UnitTestCase {
       ->method('setData');
     $config_object->expects($this->once())
       ->method('save');
+    $config_object->expects($this->atLeastOnce())
+      ->method('get')
+      ->willReturn([]);
 
     $this->cacheTagsInvalidator->expects($this->once())
       ->method('invalidateTags')
@@ -546,6 +555,9 @@ class ConfigEntityStorageTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
     $config_object->expects($this->once())
       ->method('save');
+    $config_object->expects($this->atLeastOnce())
+      ->method('get')
+      ->willReturn([]);
 
     $this->cacheTagsInvalidator->expects($this->once())
       ->method('invalidateTags')

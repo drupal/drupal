@@ -24,6 +24,14 @@ use Drupal\Core\Entity\EntityDisplayBase;
  *   entity_keys = {
  *     "id" = "id",
  *     "status" = "status"
+ *   },
+ *   config_export = {
+ *     "id",
+ *     "targetEntityType",
+ *     "bundle",
+ *     "mode",
+ *     "content",
+ *     "hidden",
  *   }
  * )
  */

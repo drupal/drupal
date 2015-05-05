@@ -29,6 +29,17 @@ use Drupal\views\ViewEntityInterface;
  *     "id" = "id",
  *     "label" = "label",
  *     "status" = "status"
+ *   },
+ *   config_export = {
+ *     "id",
+ *     "label",
+ *     "module",
+ *     "description",
+ *     "tag",
+ *     "base_table",
+ *     "base_field",
+ *     "core",
+ *     "display",
  *   }
  * )
  */

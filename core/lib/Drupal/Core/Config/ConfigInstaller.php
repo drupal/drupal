@@ -304,11 +304,11 @@ class ConfigInstaller implements ConfigInstallerInterface {
           $entity = $entity_storage->createFromStorageRecord($new_config->get());
         }
         if ($entity->isInstallable()) {
-          $entity->save();
+          $entity->trustData()->save();
         }
       }
       else {
-        $new_config->save();
+        $new_config->save(TRUE);
       }
     }
   }

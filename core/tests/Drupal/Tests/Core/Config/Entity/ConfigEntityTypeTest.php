@@ -131,4 +131,60 @@ class ConfigEntityTypeTest extends UnitTestCase {
     );
   }
 
+  /**
+   * @covers ::getPropertiesToExport
+   *
+   * @dataProvider providerGetPropertiesToExport
+   */
+  public function testGetPropertiesToExport($definition, $expected) {
+    $entity_type = $this->setUpConfigEntityType($definition);
+    $properties_to_export = $entity_type->getPropertiesToExport();
+    $this->assertSame($expected, $properties_to_export);
+
+    // Ensure the method is idempotent.
+    $properties_to_export = $entity_type->getPropertiesToExport();
+    $this->assertSame($expected, $properties_to_export);
+  }
+
+  public function providerGetPropertiesToExport() {
+    $data = [];
+    $data[] = [
+      [],
+      NULL,
+    ];
+
+    $data[] = [
+      [
+        'config_export' => [
+          'id',
+          'custom_property' => 'customProperty',
+        ],
+      ],
+      [
+        'uuid' => 'uuid',
+        'langcode' => 'langcode',
+        'status' => 'status',
+        'dependencies' => 'dependencies',
+        'third_party_settings' => 'third_party_settings',
+        'id' => 'id',
+        'custom_property' => 'customProperty',
+      ],
+    ];
+
+    $data[] = [
+      [
+        'config_export' => [
+          'id',
+        ],
+        'mergedConfigExport' => [
+          'random_key' => 'random_key',
+        ],
+      ],
+      [
+        'random_key' => 'random_key',
+      ],
+    ];
+    return $data;
+  }
+
 }

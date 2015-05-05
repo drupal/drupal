@@ -38,6 +38,12 @@ use Drupal\comment\CommentTypeInterface;
  *     "edit-form" = "/admin/structure/comment/manage/{comment_type}",
  *     "add-form" = "/admin/structure/comment/types/add",
  *     "collection" = "/admin/structure/comment/types",
+ *   },
+ *   config_export = {
+ *     "id",
+ *     "label",
+ *     "target_entity_type_id",
+ *     "description",
  *   }
  * )
  */
