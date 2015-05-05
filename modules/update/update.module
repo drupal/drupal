@@ -278,12 +278,15 @@ function update_theme() {
     ),
     'update_report' => array(
       'variables' => array('data' => NULL),
+      'file' => 'update.report.inc',
     ),
     'update_version' => array(
       'variables' => array('version' => NULL, 'tag' => NULL, 'class' => array()),
+      'file' => 'update.report.inc',
     ),
     'update_status_label' => array(
       'variables' => array('status' => NULL),
+      'file' => 'update.report.inc',
     ),
   );
 }
