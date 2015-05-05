@@ -1,6 +1,8 @@
 
 Drupal 7.37, xxxx-xx-xx (development version)
 -----------------------
+- Fixed a regression in Drupal 7.36 which caused certain kinds of content types
+  to become disabled if they were defined by a no-longer-enabled module.
 - Removed a confusing description regarding automatic time zone detection from
   the user account form (minor UI and data structure change).
 - Allowed custom HTML tags with a dash in the name to pass through filter_xss()

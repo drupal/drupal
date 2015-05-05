@@ -934,5 +934,15 @@ function node_update_7014() {
 }
 
 /**
+ * Enable node types that may have been erroneously disabled in Drupal 7.36.
+ */
+function node_update_7015() {
+  db_update('node_type')
+    ->fields(array('disabled' => 0))
+    ->condition('base', 'node_content')
+    ->execute();
+}
+
+/**
  * @} End of "addtogroup updates-7.x-extra".
  */
