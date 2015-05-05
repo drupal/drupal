@@ -1,6 +1,8 @@
 
 Drupal 7.37, xxxx-xx-xx (development version)
 -----------------------
+- Removed a confusing description regarding automatic time zone detection from
+  the user account form (minor UI and data structure change).
 - Allowed custom HTML tags with a dash in the name to pass through filter_xss()
   when specified in the list of allowed tags.
 - Allowed hook_field_schema() implementations to specify indexes for fields
