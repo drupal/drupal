@@ -7,6 +7,12 @@
 
 namespace Drupal\Tests\Core\Validation\Plugin\Validation\Constraint;
 
+use Drupal\Core\TypedData\DataDefinition;
+use Drupal\Core\TypedData\Plugin\DataType\BooleanData;
+use Drupal\Core\TypedData\Plugin\DataType\FloatData;
+use Drupal\Core\TypedData\Plugin\DataType\IntegerData;
+use Drupal\Core\TypedData\Plugin\DataType\StringData;
+use Drupal\Core\TypedData\Plugin\DataType\Uri;
 use Drupal\Core\TypedData\PrimitiveInterface;
 use Drupal\Core\Validation\Plugin\Validation\Constraint\PrimitiveTypeConstraint;
 use Drupal\Core\Validation\Plugin\Validation\Constraint\PrimitiveTypeConstraintValidator;
@@ -24,17 +30,10 @@ class PrimitiveTypeConstraintValidatorTest extends UnitTestCase {
    * @dataProvider provideTestValidate
    */
   public function testValidate(PrimitiveInterface $typed_data, $value, $valid) {
-    $metadata = $this->getMockBuilder('Drupal\Core\TypedData\Validation\Metadata')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $metadata->expects($this->any())
-      ->method('getTypedData')
-      ->willReturn($typed_data);
-
-    $context = $this->getMock('Symfony\Component\Validator\ExecutionContextInterface');
+    $context = $this->getMock('\Symfony\Component\Validator\Context\ExecutionContextInterface');
     $context->expects($this->any())
-      ->method('getMetadata')
-      ->willReturn($metadata);
+      ->method('getObject')
+      ->willReturn($typed_data);
 
     if ($valid) {
       $context->expects($this->never())
@@ -54,31 +53,31 @@ class PrimitiveTypeConstraintValidatorTest extends UnitTestCase {
 
   public function provideTestValidate() {
     $data = [];
-    $data[] = [$this->getMock('Drupal\Core\TypedData\Type\BooleanInterface'), NULL, TRUE];
+    $data[] = [new BooleanData(DataDefinition::create('boolean')), NULL, TRUE];
 
-    $data[] = [$this->getMock('Drupal\Core\TypedData\Type\BooleanInterface'), 1, TRUE];
-    $data[] = [$this->getMock('Drupal\Core\TypedData\Type\BooleanInterface'), 'test', FALSE];
-    $data[] = [$this->getMock('Drupal\Core\TypedData\Type\FloatInterface'), 1.5, TRUE];
-    $data[] = [$this->getMock('Drupal\Core\TypedData\Type\FloatInterface'), 'test', FALSE];
-    $data[] = [$this->getMock('Drupal\Core\TypedData\Type\IntegerInterface'), 1, TRUE];
-    $data[] = [$this->getMock('Drupal\Core\TypedData\Type\IntegerInterface'), 1.5, FALSE];
-    $data[] = [$this->getMock('Drupal\Core\TypedData\Type\IntegerInterface'), 'test', FALSE];
-    $data[] = [$this->getMock('Drupal\Core\TypedData\Type\StringInterface'), 'test', TRUE];
+    $data[] = [new BooleanData(DataDefinition::create('boolean')), 1, TRUE];
+    $data[] = [new BooleanData(DataDefinition::create('boolean')), 'test', FALSE];
+    $data[] = [new FloatData(DataDefinition::create('float')), 1.5, TRUE];
+    $data[] = [new FloatData(DataDefinition::create('float')), 'test', FALSE];
+    $data[] = [new IntegerData(DataDefinition::create('integer')), 1, TRUE];
+    $data[] = [new IntegerData(DataDefinition::create('integer')), 1.5, FALSE];
+    $data[] = [new IntegerData(DataDefinition::create('integer')), 'test', FALSE];
+    $data[] = [new StringData(DataDefinition::create('string')), 'test', TRUE];
     // It is odd that 1 is a valid string.
     // $data[] = [$this->getMock('Drupal\Core\TypedData\Type\StringInterface'), 1, FALSE];
-    $data[] = [$this->getMock('Drupal\Core\TypedData\Type\StringInterface'), [], FALSE];
-    $data[] = [$this->getMock('Drupal\Core\TypedData\Type\UriInterface'), 'http://www.drupal.org', TRUE];
-    $data[] = [$this->getMock('Drupal\Core\TypedData\Type\UriInterface'), 'https://www.drupal.org', TRUE];
-    $data[] = [$this->getMock('Drupal\Core\TypedData\Type\UriInterface'), 'Invalid', FALSE];
-    $data[] = [$this->getMock('Drupal\Core\TypedData\Type\UriInterface'), 'entity:node/1', TRUE];
-    $data[] = [$this->getMock('Drupal\Core\TypedData\Type\UriInterface'), 'base:', TRUE];
-    $data[] = [$this->getMock('Drupal\Core\TypedData\Type\UriInterface'), 'base:node', TRUE];
-    $data[] = [$this->getMock('Drupal\Core\TypedData\Type\UriInterface'), 'internal:', TRUE];
-    $data[] = [$this->getMock('Drupal\Core\TypedData\Type\UriInterface'), 'public://', FALSE];
-    $data[] = [$this->getMock('Drupal\Core\TypedData\Type\UriInterface'), 'public://foo.png', TRUE];
-    $data[] = [$this->getMock('Drupal\Core\TypedData\Type\UriInterface'), 'private://', FALSE];
-    $data[] = [$this->getMock('Drupal\Core\TypedData\Type\UriInterface'), 'private://foo.png', TRUE];
-    $data[] = [$this->getMock('Drupal\Core\TypedData\Type\UriInterface'), 'drupal.org', FALSE];
+    $data[] = [new StringData(DataDefinition::create('string')), [], FALSE];
+    $data[] = [new Uri(DataDefinition::create('uri')), 'http://www.drupal.org', TRUE];
+    $data[] = [new Uri(DataDefinition::create('uri')), 'https://www.drupal.org', TRUE];
+    $data[] = [new Uri(DataDefinition::create('uri')), 'Invalid', FALSE];
+    $data[] = [new Uri(DataDefinition::create('uri')), 'entity:node/1', TRUE];
+    $data[] = [new Uri(DataDefinition::create('uri')), 'base:', TRUE];
+    $data[] = [new Uri(DataDefinition::create('uri')), 'base:node', TRUE];
+    $data[] = [new Uri(DataDefinition::create('uri')), 'internal:', TRUE];
+    $data[] = [new Uri(DataDefinition::create('uri')), 'public://', FALSE];
+    $data[] = [new Uri(DataDefinition::create('uri')), 'public://foo.png', TRUE];
+    $data[] = [new Uri(DataDefinition::create('uri')), 'private://', FALSE];
+    $data[] = [new Uri(DataDefinition::create('uri')), 'private://foo.png', TRUE];
+    $data[] = [new Uri(DataDefinition::create('uri')), 'drupal.org', FALSE];
 
     return $data;
   }

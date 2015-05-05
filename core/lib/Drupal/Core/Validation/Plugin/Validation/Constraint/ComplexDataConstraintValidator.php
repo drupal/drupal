@@ -9,6 +9,7 @@ namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
 use Drupal\Core\TypedData\ComplexDataInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\Core\TypedData\Validation\TypedDataAwareValidatorTrait;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
@@ -18,35 +19,28 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  */
 class ComplexDataConstraintValidator extends ConstraintValidator {
 
+  use TypedDataAwareValidatorTrait;
+
   /**
    * {@inheritdoc}
    */
-  public function validate($value, Constraint $constraint) {
-    if (!isset($value)) {
-      return;
-    }
+  public function validate($data, Constraint $constraint) {
 
     // If un-wrapped data has been passed, fetch the typed data object first.
-    if (!$value instanceof TypedDataInterface) {
-      $value = $this->context->getMetadata()->getTypedData();
+    if (!$data instanceof TypedDataInterface) {
+      $data = $this->getTypedData();
     }
-    if (!$value instanceof ComplexDataInterface) {
-      throw new UnexpectedTypeException($value, 'ComplexData');
+    if (!$data instanceof ComplexDataInterface) {
+      throw new UnexpectedTypeException($data, 'ComplexData');
     }
-
-    $group = $this->context->getGroup();
 
     foreach ($constraint->properties as $name => $constraints) {
-      $property = $value->get($name);
-      $is_container = $property instanceof ComplexDataInterface || $property instanceof ListInterface;
-      if (!$is_container) {
-        $property = $property->getValue();
-      }
-      elseif ($property->isEmpty()) {
-        // @see \Drupal\Core\TypedData\Validation\PropertyContainerMetadata::accept();
-        $property = NULL;
-      }
-      $this->context->validateValue($property, $constraints, $name, $group);
+      $this->context->getValidator()
+        ->inContext($this->context)
+        // Specifically pass along FALSE as $root_call, as we validate the data
+        // as part of the typed data tree.
+        ->validate($data->get($name), $constraints, NULL, FALSE);
     }
   }
+
 }

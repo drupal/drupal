@@ -79,14 +79,9 @@ class ConstraintManager extends DefaultPluginManager {
    * @see ConstraintManager::__construct()
    */
   public function registerDefinitions() {
-    $this->discovery->setDefinition('Null', array(
-      'label' => new TranslationWrapper('Null'),
-      'class' => '\Symfony\Component\Validator\Constraints\Null',
-      'type' => FALSE,
-    ));
-    $this->discovery->setDefinition('NotNull', array(
-      'label' => new TranslationWrapper('Not null'),
-      'class' => '\Symfony\Component\Validator\Constraints\NotNull',
+    $this->discovery->setDefinition('Callback', array(
+      'label' => new TranslationWrapper('Callback'),
+      'class' => '\Symfony\Component\Validator\Constraints\Callback',
       'type' => FALSE,
     ));
     $this->discovery->setDefinition('Blank', array(

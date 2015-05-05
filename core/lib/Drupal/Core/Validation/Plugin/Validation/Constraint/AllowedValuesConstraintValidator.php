@@ -7,25 +7,53 @@
 
 namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\OptionsProviderInterface;
 use Drupal\Core\TypedData\ComplexDataInterface;
+use Drupal\Core\TypedData\Validation\TypedDataAwareValidatorTrait;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\ChoiceValidator;
 
 /**
  * Validates the AllowedValues constraint.
  */
-class AllowedValuesConstraintValidator extends ChoiceValidator {
+class AllowedValuesConstraintValidator extends ChoiceValidator implements ContainerInjectionInterface {
+
+  use TypedDataAwareValidatorTrait;
+
+  /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static($container->get('current_user'));
+  }
+
+  /**
+   * Constructs a new AllowedValuesConstraintValidator.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current user.
+   */
+  public function __construct(AccountInterface $current_user) {
+    $this->currentUser = $current_user;
+  }
 
   /**
    * {@inheritdoc}
    */
   public function validate($value, Constraint $constraint) {
-    $typed_data = $this->context->getMetadata()->getTypedData();
-
+    $typed_data = $this->getTypedData();
     if ($typed_data instanceof OptionsProviderInterface) {
-      $account = \Drupal::currentUser();
-      $allowed_values = $typed_data->getSettableValues($account);
+      $allowed_values = $typed_data->getSettableValues($this->currentUser);
       $constraint->choices = $allowed_values;
 
       // If the data is complex, we have to validate its main property.

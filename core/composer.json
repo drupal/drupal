@@ -14,7 +14,7 @@
     "symfony/http-kernel": "2.6.*",
     "symfony/routing": "2.6.*",
     "symfony/serializer": "2.6.*",
-    "symfony/validator": "2.6.*",
+    "symfony/validator": "2.6.*@dev",
     "symfony/process": "2.6.*",
     "symfony/yaml": "2.6.*",
     "twig/twig": "1.18.*",

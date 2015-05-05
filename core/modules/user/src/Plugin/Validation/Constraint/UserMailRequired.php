@@ -58,7 +58,7 @@ class UserMailRequired extends Constraint implements ConstraintValidatorInterfac
   public function validate($items, Constraint $constraint) {
     /** @var \Drupal\Core\Field\FieldItemListInterface $items */
     /** @var \Drupal\user\UserInterface $account */
-    $account = $this->context->getMetadata()->getTypedData()->getEntity();
+    $account = $items->getEntity();
     $existing_value = NULL;
     if ($account->id()) {
       $account_unchanged = \Drupal::entityManager()

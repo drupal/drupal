@@ -19,7 +19,7 @@ class UniqueFieldValueValidator extends ConstraintValidator {
    * {@inheritdoc}
    */
   public function validate($items, Constraint $constraint) {
-    if (!isset($items)) {
+    if (!$item = $items->first()) {
       return;
     }
     $field_name = $items->getFieldDefinition()->getName();
@@ -31,13 +31,13 @@ class UniqueFieldValueValidator extends ConstraintValidator {
     $value_taken = (bool) \Drupal::entityQuery($entity_type_id)
       // The id could be NULL, so we cast it to 0 in that case.
       ->condition($id_key, (int) $items->getEntity()->id(), '<>')
-      ->condition($field_name, $items->first()->value)
+      ->condition($field_name, $item->value)
       ->range(0, 1)
       ->count()
       ->execute();
 
     if ($value_taken) {
-      $this->context->addViolation($constraint->message, array("%value" => $items->value));
+      $this->context->addViolation($constraint->message, array("%value" => $item->value));
     }
   }
 }

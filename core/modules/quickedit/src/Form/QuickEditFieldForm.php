@@ -17,7 +17,7 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\user\PrivateTempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Validator\ValidatorInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Builds and process a form for editing a single entity field.
@@ -48,7 +48,7 @@ class QuickEditFieldForm extends FormBase {
   /**
    * The typed data validator.
    *
-   * @var \Symfony\Component\Validator\ValidatorInterface
+   * @var \Symfony\Component\Validator\Validator\ValidatorInterface
    */
   protected $validator;
 
@@ -61,7 +61,7 @@ class QuickEditFieldForm extends FormBase {
    *   The module handler.
    * @param \Drupal\Core\Entity\EntityStorageInterface $node_type_storage
    *   The node type storage.
-   * @param \Symfony\Component\Validator\ValidatorInterface $validator
+   * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator
    *   The typed data validator service.
    */
   public function __construct(PrivateTempStoreFactory $temp_store_factory, ModuleHandlerInterface $module_handler, EntityStorageInterface $node_type_storage, ValidatorInterface $validator) {
@@ -165,7 +165,7 @@ class QuickEditFieldForm extends FormBase {
     // @todo: Improve this in https://www.drupal.org/node/2395831.
     $typed_entity = $entity->getTypedData();
     $violations = $this->validator
-      ->validateValue($entity, $typed_entity->getConstraints());
+      ->validate($typed_entity, $typed_entity->getConstraints());
 
     foreach ($violations as $violation) {
       $form_state->setErrorByName($violation->getPropertyPath(), $violation->getMessage());
