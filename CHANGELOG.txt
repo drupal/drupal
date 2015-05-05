@@ -1,6 +1,9 @@
 
 Drupal 7.37, xxxx-xx-xx (development version)
 -----------------------
+- Allowed hook_field_schema() implementations to specify indexes for fields
+  based on a fixed-length column prefix (rather than the entire column), as was
+  already allowed in hook_schema() implementations.
 - Fixed PDO exceptions on PostgreSQL when accessing invalid entity URLs.
 - Added a sites/all/libraries folder to the codebase, with instructions for
   using it.

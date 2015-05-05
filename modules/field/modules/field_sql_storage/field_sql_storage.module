@@ -223,7 +223,17 @@ function _field_sql_storage_schema($field) {
   foreach ($field['indexes'] as $index_name => $columns) {
     $real_name = _field_sql_storage_indexname($field['field_name'], $index_name);
     foreach ($columns as $column_name) {
-      $current['indexes'][$real_name][] = _field_sql_storage_columnname($field['field_name'], $column_name);
+      // Indexes can be specified as either a column name or an array with
+      // column name and length. Allow for either case.
+      if (is_array($column_name)) {
+        $current['indexes'][$real_name][] = array(
+          _field_sql_storage_columnname($field['field_name'], $column_name[0]),
+          $column_name[1],
+        );
+      }
+      else {
+        $current['indexes'][$real_name][] = _field_sql_storage_columnname($field['field_name'], $column_name);
+      }
     }
   }
 
@@ -332,7 +342,17 @@ function field_sql_storage_field_storage_update_field($field, $prior_field, $has
         $real_name = _field_sql_storage_indexname($field['field_name'], $name);
         $real_columns = array();
         foreach ($columns as $column_name) {
-          $real_columns[] = _field_sql_storage_columnname($field['field_name'], $column_name);
+          // Indexes can be specified as either a column name or an array with
+          // column name and length. Allow for either case.
+          if (is_array($column_name)) {
+            $real_columns[] = array(
+              _field_sql_storage_columnname($field['field_name'], $column_name[0]),
+              $column_name[1],
+            );
+          }
+          else {
+            $real_columns[] = _field_sql_storage_columnname($field['field_name'], $column_name);
+          }
         }
         db_add_index($table, $real_name, $real_columns);
         db_add_index($revision_table, $real_name, $real_columns);
