@@ -37,7 +37,6 @@ process:
       map:
         text_textfield: text_textfield
         number: number
-        link: link_default
         email_textfield: email_default
         date_select: datetime_default
         date_text: datetime_default

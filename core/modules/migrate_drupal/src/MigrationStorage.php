@@ -8,10 +8,17 @@
 namespace Drupal\migrate_drupal;
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Uuid\UuidInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\migrate\Plugin\migrate\source\SourcePluginBase;
 use Drupal\migrate_drupal\Plugin\CckFieldMigrateSourceInterface;
 use Drupal\migrate\MigrationStorage as BaseMigrationStorage;
+use Drupal\migrate_drupal\Plugin\MigratePluginManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Storage for migration entities.
@@ -29,6 +36,38 @@ class MigrationStorage extends BaseMigrationStorage {
    * @var \Drupal\migrate_drupal\Plugin\MigratePluginManager
    */
   protected $cckPluginManager;
+
+  /**
+   * Constructs a MigrationStorage object.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory service.
+   * @param \Drupal\Component\Uuid\UuidInterface $uuid_service
+   *   The UUID service.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
+   * @param \Drupal\migrate_drupal\Plugin\MigratePluginManager
+   *  The cckfield plugin manager.
+   */
+  public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, UuidInterface $uuid_service, LanguageManagerInterface $language_manager, MigratePluginManager $cck_plugin_manager) {
+    parent::__construct($entity_type, $config_factory, $uuid_service, $language_manager);
+    $this->cckPluginManager = $cck_plugin_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
+    return new static(
+      $entity_type,
+      $container->get('config.factory'),
+      $container->get('uuid'),
+      $container->get('language_manager'),
+      $container->get('plugin.manager.migrate.cckfield')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -140,7 +179,6 @@ class MigrationStorage extends BaseMigrationStorage {
     $method_map = $this->getMigrationPluginMethodMap();
 
     foreach ($entities as $entity_id => $migration) {
-
       // Allow field plugins to process the required migrations.
       if (isset($method_map[$entity_id])) {
         $method = $method_map[$entity_id];
@@ -154,7 +192,7 @@ class MigrationStorage extends BaseMigrationStorage {
       // If this is a CCK bundle migration, allow the cck field plugins to add
       // any field type processing.
       $source_plugin = $migration->getSourcePlugin();
-      if ($source_plugin instanceof CckFieldMigrateSourceInterface && $source_plugin->getDerivativeId()) {
+      if ($source_plugin instanceof CckFieldMigrateSourceInterface && strpos($entity_id, SourcePluginBase::DERIVATIVE_SEPARATOR)) {
         $plugins = $this->getCckFieldPlugins();
         foreach ($source_plugin->fieldData() as $field_name => $data) {
           if (isset($plugins[$data['type']])) {
@@ -174,8 +212,8 @@ class MigrationStorage extends BaseMigrationStorage {
   protected function getCckFieldPlugins() {
     if (!isset($this->cckFieldPlugins)) {
       $this->cckFieldPlugins = [];
-      foreach ($this->getCckPluginManager()->getDefinitions() as $definition) {
-        $this->cckFieldPlugins[$definition['id']] = $this->getCckPluginManager()->createInstance($definition['id']);
+      foreach ($this->cckPluginManager->getDefinitions() as $definition) {
+        $this->cckFieldPlugins[$definition['id']] = $this->cckPluginManager->createInstance($definition['id']);
       }
     }
     return $this->cckFieldPlugins;
@@ -194,19 +232,6 @@ class MigrationStorage extends BaseMigrationStorage {
       'd6_field_instance_widget_settings' => 'processFieldWidget',
       'd6_field_formatter_settings' => 'processFieldFormatter',
     ];
-  }
-
-  /**
-   * Get the cck field plugin manager.
-   *
-   * @return \Drupal\migrate_drupal\Plugin\MigratePluginManager
-   *   The loaded plugin manager.
-   */
-  protected function getCckPluginManager() {
-    if (!isset($this->cckPluginManager)) {
-      $this->cckPluginManager = \Drupal::service('plugin.manager.migrate.cckfield');
-    }
-    return $this->cckPluginManager;
   }
 
 }

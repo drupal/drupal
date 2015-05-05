@@ -42,8 +42,6 @@ process:
           text_textarea: text_long
         email:
           email_textfield: email
-        link:
-          link: link
         filefield:
           imagefield_widget: image
           filefield_widget: file

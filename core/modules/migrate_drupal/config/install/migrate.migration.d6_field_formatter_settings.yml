@@ -90,15 +90,6 @@ process:
             spamspan: email_mailto
             contact: email_mailto
             plain: basic_string
-          link:
-            default: link
-            plain: link
-            absolute: link
-            title_plain: link
-            url: link
-            short: link
-            label: link
-            separate: link_separate
           filefield:
             default: file_default
             url_plain: file_url_plain

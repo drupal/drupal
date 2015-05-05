@@ -88,9 +88,6 @@ class LoadEntity extends PluginBase implements MigrateLoadInterface {
         if ($source_plugin instanceof CckFieldMigrateSourceInterface) {
           foreach ($source_plugin->fieldData() as $field_name => $data) {
             switch ($data['type']) {
-              case 'link':
-                $this->processLinkField($field_name, $data, $migration);
-                break;
               case 'filefield':
                 $this->processFileField($field_name, $data, $migration);
                 break;
@@ -171,30 +168,6 @@ class LoadEntity extends PluginBase implements MigrateLoadInterface {
         $field_name,
         $field_name . '_list',
         $field_name . '_data',
-      ],
-    ];
-    $migration->mergeProcessOfProperty($field_name, $process);
-  }
-
-  /**
-   * Manipulate link fields with any per field type processing.
-   *
-   * @param string $field_name
-   *   The field we're processing.
-   * @param array $field_data
-   *   The an array of field type data from the source.
-   * @param \Drupal\migrate\Entity\MigrationInterface $migration
-   *   The migration entity.
-   */
-  protected function processLinkField($field_name, $field_data, MigrationInterface $migration) {
-    // Specifically process the link field until core is fixed.
-    // @see https://www.drupal.org/node/2235457
-    $process = [
-      'plugin' => 'd6_cck_link',
-      'source' => [
-        $field_name,
-        $field_name . '_title',
-        $field_name . '_attributes',
       ],
     ];
     $migration->mergeProcessOfProperty($field_name, $process);
