@@ -133,7 +133,7 @@ abstract class FileFieldTestBase extends WebTestBase {
    */
   function updateFileField($name, $type_name, $field_settings = array(), $widget_settings = array()) {
     $field = FieldConfig::loadByName('node', $type_name, $name);
-    $field->settings = array_merge($field->settings, $field_settings);
+    $field->setSettings(array_merge($field->getSettings(), $field_settings));
     $field->save();
 
     entity_get_form_display('node', $type_name, 'default')

@@ -28,14 +28,14 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    *
    * @var string
    */
-  public $id;
+  protected $id;
 
   /**
    * The field name.
    *
    * @var string
    */
-  public $field_name;
+  protected $field_name;
 
   /**
    * The field type.
@@ -48,21 +48,21 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    *
    * @var string
    */
-  public $field_type;
+  protected $field_type;
 
   /**
    * The name of the entity type the field is attached to.
    *
    * @var string
    */
-  public $entity_type;
+  protected $entity_type;
 
   /**
    * The name of the bundle the field is attached to.
    *
    * @var string
    */
-  public $bundle;
+  protected $bundle;
 
   /**
    * The human-readable label for the field.
@@ -75,7 +75,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    *
    * @var string
    */
-  public $label;
+  protected $label;
 
   /**
    * The field description.
@@ -86,7 +86,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    *
    * @var string
    */
-  public $description = '';
+  protected $description = '';
 
   /**
    * Field-type specific settings.
@@ -96,7 +96,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    *
    * @var array
    */
-  public $settings = array();
+  protected $settings = array();
 
   /**
    * Flag indicating whether the field is required.
@@ -107,7 +107,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    *
    * @var bool
    */
-  public $required = FALSE;
+  protected $required = FALSE;
 
   /**
    * Flag indicating whether the field is translatable.
@@ -116,7 +116,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    *
    * @var bool
    */
-  public $translatable = TRUE;
+  protected $translatable = TRUE;
 
   /**
    * Default field value.
@@ -164,7 +164,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    *
    * @var string
    */
-  public $default_value_callback = '';
+  protected $default_value_callback = '';
 
   /**
    * The field storage object.
@@ -302,20 +302,31 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
   /**
    * {@inheritdoc}
    */
-  public function getSettings() {
-    return $this->settings + $this->getFieldStorageDefinition()->getSettings();
+  public function getLabel() {
+    return $this->label();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getSetting($setting_name) {
-    if (array_key_exists($setting_name, $this->settings)) {
-      return $this->settings[$setting_name];
-    }
-    else {
-      return $this->getFieldStorageDefinition()->getSetting($setting_name);
-    }
+  public function setLabel($label) {
+    $this->label = $label;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDescription() {
+    return $this->description;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setDescription($description) {
+    $this->description = $description;
+    return $this;
   }
 
   /**
@@ -337,23 +348,35 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
   /**
    * {@inheritdoc}
    */
-  public function setLabel($label) {
-    $this->label = $label;
+  public function getSettings() {
+    return $this->settings + $this->getFieldStorageDefinition()->getSettings();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setSettings(array $settings) {
+    $this->settings = $settings;
     return $this;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getLabel() {
-    return $this->label();
+  public function getSetting($setting_name) {
+    if (array_key_exists($setting_name, $this->settings)) {
+      return $this->settings[$setting_name];
+    }
+    else {
+      return $this->getFieldStorageDefinition()->getSetting($setting_name);
+    }
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getDescription() {
-    return $this->description;
+  public function setSetting($setting_name, $value) {
+    $this->settings[$setting_name] = $value;
   }
 
   /**
@@ -361,6 +384,14 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    */
   public function isRequired() {
     return $this->required;
+  }
+
+  /**
+   * [@inheritdoc}
+   */
+  public function setRequired($required) {
+    $this->required = $required;
+    return $this;
   }
 
   /**
@@ -420,6 +451,9 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
     return BaseFieldDefinition::createFromDataType($type);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getDataType() {
     return 'list';
   }

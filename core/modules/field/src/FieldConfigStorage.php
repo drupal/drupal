@@ -158,8 +158,12 @@ class FieldConfigStorage extends FieldConfigStorageBase {
             $checked_value = $field->uuid();
             break;
 
+          case 'deleted';
+            $checked_value = $field->isDeleted();
+            break;
+
           default:
-            $checked_value = $field->$key;
+            $checked_value = $field->get($key);
             break;
         }
 

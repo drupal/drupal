@@ -150,7 +150,7 @@ class ConfigExportImportUITest extends WebTestBase {
     // Delete the custom field.
     $fields = FieldConfig::loadMultiple();
     foreach ($fields as $field) {
-      if ($field->field_name == $this->fieldName) {
+      if ($field->getName() == $this->fieldName) {
         $field->delete();
       }
     }

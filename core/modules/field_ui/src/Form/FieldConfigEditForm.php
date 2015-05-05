@@ -40,7 +40,7 @@ class FieldConfigEditForm extends EntityForm {
 
     $form_title = $this->t('%field settings for %bundle', array(
       '%field' => $this->entity->getLabel(),
-      '%bundle' => $bundles[$this->entity->bundle]['label'],
+      '%bundle' => $bundles[$this->entity->getTargetBundle()]['label'],
     ));
     $form['#title'] = $form_title;
 
@@ -79,7 +79,7 @@ class FieldConfigEditForm extends EntityForm {
     // Create an arbitrary entity object (used by the 'default value' widget).
     $ids = (object) array(
       'entity_type' => $this->entity->getTargetEntityTypeId(),
-      'bundle' => $this->entity->bundle,
+      'bundle' => $this->entity->getTargetBundle(),
       'entity_id' => NULL
     );
     $form['#entity'] = _field_create_entity_from_ids($ids);
@@ -125,7 +125,7 @@ class FieldConfigEditForm extends EntityForm {
       $target_entity_type = $this->entityManager->getDefinition($this->entity->getTargetEntityTypeId());
       $route_parameters = [
         'field_config' => $this->entity->id(),
-      ] + FieldUI::getRouteBundleParameter($target_entity_type, $this->entity->bundle);
+      ] + FieldUI::getRouteBundleParameter($target_entity_type, $this->entity->getTargetBundle());
       $url = new Url('entity.field_config.' . $target_entity_type->id() . '_field_delete_form', $route_parameters);
 
       if ($this->getRequest()->query->has('destination')) {
@@ -188,7 +188,7 @@ class FieldConfigEditForm extends EntityForm {
       $form_state->setRedirectUrl($next_destination);
     }
     else {
-      $form_state->setRedirectUrl(FieldUI::getOverviewRouteInfo($this->entity->getTargetEntityTypeId(), $this->entity->bundle));
+      $form_state->setRedirectUrl(FieldUI::getOverviewRouteInfo($this->entity->getTargetEntityTypeId(), $this->entity->getTargetBundle()));
     }
   }
 

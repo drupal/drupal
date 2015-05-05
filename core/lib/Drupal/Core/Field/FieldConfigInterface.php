@@ -32,6 +32,19 @@ interface FieldConfigInterface extends FieldDefinitionInterface, ConfigEntityInt
   public function setLabel($label);
 
   /**
+   * Sets a human readable description.
+   *
+   * Descriptions are usually used on user interfaces where the data is edited
+   * or displayed.
+   *
+   * @param string $description
+   *   The description for this field.
+   *
+   * @return $this
+   */
+  public function setDescription($description);
+
+  /**
    * Sets whether the field is translatable.
    *
    * @param bool $translatable
@@ -42,13 +55,43 @@ interface FieldConfigInterface extends FieldDefinitionInterface, ConfigEntityInt
   public function setTranslatable($translatable);
 
   /**
-   * Allows a bundle to be renamed.
+   * Sets field settings (overwrites existing settings).
    *
-   * Renaming a bundle on the instance is allowed when an entity's bundle
-   * is renamed and when field_entity_bundle_rename() does internal
-   * housekeeping.
+   * @param array $settings
+   *   The array of field settings.
+   *
+   * @return $this
    */
-  public function allowBundleRename();
+  public function setSettings(array $settings);
+
+  /**
+   * Sets the value for a field setting by name.
+   *
+   * @param string $setting_name
+   *   The name of the setting.
+   * @param mixed $value
+   *   The value of the setting.
+   *
+   * @return $this
+   */
+  public function setSetting($setting_name, $value);
+
+  /**
+   * Sets whether the field can be empty.
+   *
+   * If a field is required, an entity needs to have at least a valid,
+   * non-empty item in that field's FieldItemList in order to pass validation.
+   *
+   * An item is considered empty if its isEmpty() method returns TRUE.
+   * Typically, that is if at least one of its required properties is empty.
+   *
+   * @param bool $required
+   *   TRUE if the field is required. FALSE otherwise.
+   *
+   * @return $this
+   *   The current object, for a fluent interface.
+   */
+  public function setRequired($required);
 
   /**
    * Sets a default value.
@@ -190,5 +233,14 @@ interface FieldConfigInterface extends FieldDefinitionInterface, ConfigEntityInt
    * @see hook_entity_bundle_field_info_alter()
    */
   public function setConstraints(array $constraints);
+
+  /**
+   * Allows a bundle to be renamed.
+   *
+   * Renaming a bundle on the instance is allowed when an entity's bundle
+   * is renamed and when field_entity_bundle_rename() does internal
+   * housekeeping.
+   */
+  public function allowBundleRename();
 
 }

@@ -1213,8 +1213,8 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
     // Rename existing base field bundle overrides.
     $overrides = $this->getStorage('base_field_override')->loadByProperties(array('entity_type' => $entity_type_id, 'bundle' => $bundle_old));
     foreach ($overrides as $override) {
-      $override->set('id', $entity_type_id . '.' . $bundle_new . '.' . $override->field_name);
-      $override->bundle = $bundle_new;
+      $override->set('id', $entity_type_id . '.' . $bundle_new . '.' . $override->getName());
+      $override->set('bundle', $bundle_new);
       $override->allowBundleRename();
       $override->save();
     }

@@ -80,8 +80,8 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $this->assertText(t('Alternative text field is required.'));
     $this->assertText(t('Title field is required.'));
 
-    $instance->settings['alt_field_required'] = 0;
-    $instance->settings['title_field_required'] = 0;
+    $instance->setSetting('alt_field_required', 0);
+    $instance->setSetting('title_field_required', 0);
     $instance->save();
 
     $edit = array(
@@ -92,9 +92,9 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $this->assertNoText(t('Alternative text field is required.'));
     $this->assertNoText(t('Title field is required.'));
 
-    $instance->settings['required'] = 0;
-    $instance->settings['alt_field_required'] = 1;
-    $instance->settings['title_field_required'] = 1;
+    $instance->setSetting('required', 0);
+    $instance->setSetting('alt_field_required', 1);
+    $instance->setSetting('title_field_required', 1);
     $instance->save();
 
     $edit = array(

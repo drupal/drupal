@@ -314,7 +314,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
     $widget->extractFormValues($this, $element, $form_state);
     // Force a non-required field definition.
     // @see self::defaultValueWidget().
-    $this->definition->required = FALSE;
+    $this->getFieldDefinition()->setRequired(FALSE);
     $violations = $this->validate();
 
     // Assign reported errors to the correct form element.
@@ -354,8 +354,9 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
       $entity = $this->getEntity();
 
       // Force a non-required widget.
-      $this->getFieldDefinition()->required = FALSE;
-      $this->getFieldDefinition()->description = '';
+      $definition = $this->getFieldDefinition();
+      $definition->setRequired(FALSE);
+      $definition->setDescription('');
 
       // Use the widget currently configured for the 'default' form mode, or
       // fallback to the default widget for the field type.

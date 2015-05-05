@@ -146,8 +146,8 @@ class FieldCrudTest extends FieldUnitTestBase {
     // Read the field back.
     $field = FieldConfig::load('entity_test.' . $this->fieldDefinition['bundle'] . '.' . $this->fieldDefinition['field_name']);
     $this->assertTrue($this->fieldDefinition['field_name'] == $field->getName(), 'The field was properly read.');
-    $this->assertTrue($this->fieldDefinition['entity_type'] == $field->entity_type, 'The field was properly read.');
-    $this->assertTrue($this->fieldDefinition['bundle'] == $field->bundle, 'The field was properly read.');
+    $this->assertTrue($this->fieldDefinition['entity_type'] == $field->getTargetEntityTypeId(), 'The field was properly read.');
+    $this->assertTrue($this->fieldDefinition['bundle'] == $field->getTargetBundle(), 'The field was properly read.');
   }
 
   /**
@@ -158,10 +158,10 @@ class FieldCrudTest extends FieldUnitTestBase {
 
     // Check that basic changes are saved.
     $field = FieldConfig::load('entity_test.' . $this->fieldDefinition['bundle'] . '.' . $this->fieldDefinition['field_name']);
-    $field->required = !$field->isRequired();
-    $field->label = $this->randomMachineName();
-    $field->description = $this->randomMachineName();
-    $field->settings['test_field_setting'] = $this->randomMachineName();
+    $field->setRequired(!$field->isRequired());
+    $field->setLabel($this->randomMachineName());
+    $field->set('description', $this->randomMachineName());
+    $field->setSetting('test_field_setting', $this->randomMachineName());
     $field->save();
 
     $field_new = FieldConfig::load('entity_test.' . $this->fieldDefinition['bundle'] . '.' . $this->fieldDefinition['field_name']);
@@ -195,7 +195,7 @@ class FieldCrudTest extends FieldUnitTestBase {
 
     // Make sure the field is marked as deleted when it is specifically loaded.
     $field = current(entity_load_multiple_by_properties('field_config', array('entity_type' => 'entity_test', 'field_name' => $this->fieldDefinition['field_name'], 'bundle' => $this->fieldDefinition['bundle'], 'include_deleted' => TRUE)));
-    $this->assertTrue(!empty($field->deleted), 'A deleted field is marked for deletion.');
+    $this->assertTrue($field->isDeleted(), 'A deleted field is marked for deletion.');
 
     // Try to load the field normally and make sure it does not show up.
     $field = FieldConfig::load('entity_test.' . '.' . $this->fieldDefinition['bundle'] . '.' . $this->fieldDefinition['field_name']);

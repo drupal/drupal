@@ -165,7 +165,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
    */
   function testEntityCache() {
     // Initialize random values and a test entity.
-    $entity_init = entity_create('entity_test', array('type' => $this->fieldTestData->field->bundle));
+    $entity_init = entity_create('entity_test', array('type' => $this->fieldTestData->field->getTargetBundle()));
     $values = $this->_generateTestFieldValues($this->fieldTestData->field_storage->getCardinality());
 
     // Non-cacheable entity type.
@@ -248,10 +248,10 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     $this->createFieldWithStorage('_2');
 
     $entity_type = 'entity_test';
-    $entity = entity_create($entity_type, array('id' => 1, 'revision_id' => 1, 'type' => $this->fieldTestData->field->bundle));
+    $entity = entity_create($entity_type, array('id' => 1, 'revision_id' => 1, 'type' => $this->fieldTestData->field->getTargetBundle()));
 
     // Test generating widgets for all fields.
-    $display = entity_get_form_display($entity_type, $this->fieldTestData->field->bundle, 'default');
+    $display = entity_get_form_display($entity_type, $this->fieldTestData->field->getTargetBundle(), 'default');
     $form = array();
     $form_state = new FormState();
     $display->buildForm($entity, $form, $form_state);
@@ -268,7 +268,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     }
 
     // Test generating widgets for all fields.
-    $display = entity_get_form_display($entity_type, $this->fieldTestData->field->bundle, 'default');
+    $display = entity_get_form_display($entity_type, $this->fieldTestData->field->getTargetBundle(), 'default');
     foreach ($display->getComponents() as $name => $options) {
       if ($name != $this->fieldTestData->field_name_2) {
         $display->removeComponent($name);
@@ -293,10 +293,10 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     $this->createFieldWithStorage('_2');
 
     $entity_type = 'entity_test';
-    $entity_init = entity_create($entity_type, array('id' => 1, 'revision_id' => 1, 'type' => $this->fieldTestData->field->bundle));
+    $entity_init = entity_create($entity_type, array('id' => 1, 'revision_id' => 1, 'type' => $this->fieldTestData->field->getTargetBundle()));
 
     // Build the form for all fields.
-    $display = entity_get_form_display($entity_type, $this->fieldTestData->field->bundle, 'default');
+    $display = entity_get_form_display($entity_type, $this->fieldTestData->field->getTargetBundle(), 'default');
     $form = array();
     $form_state = new FormState();
     $display->buildForm($entity_init, $form, $form_state);

@@ -95,7 +95,7 @@ function entity_reference_field_storage_config_update(FieldStorageConfigInterfac
 
   foreach ($field_storage->getBundles() as $bundle) {
     $field = FieldConfig::loadByName($field_storage->getTargetEntityTypeId(), $bundle, $field_storage->getName());
-    $field->settings['handler_settings'] = array();
+    $field->setSetting('handler_settings', []);
     $field->save();
   }
 }
@@ -119,7 +119,7 @@ function entity_reference_field_config_presave(FieldConfigInterface $field) {
   $target_type = $field->getFieldStorageDefinition()->getSetting('target_type');
   $selection_manager = \Drupal::service('plugin.manager.entity_reference_selection');
   list($current_handler) = explode(':', $field->getSetting('handler'), 2);
-  $field->settings['handler'] = $selection_manager->getPluginId($target_type, $current_handler);
+  $field->setSetting('handler', $selection_manager->getPluginId($target_type, $current_handler));
 }
 
 /**

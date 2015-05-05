@@ -134,7 +134,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Check that required radios with one option is auto-selected.
     $this->card1->setSetting('allowed_values', [99 => 'Only allowed value']);
     $this->card1->save();
-    $field->required = TRUE;
+    $field->setRequired(TRUE);
     $field->save();
     $this->drupalGet('entity_test/manage/' . $entity->id());
     $this->assertFieldChecked('edit-card-1-99');
@@ -223,7 +223,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Required checkbox with one option is auto-selected.
     $this->card2->setSetting('allowed_values', [99 => 'Only allowed value']);
     $this->card2->save();
-    $field->required = TRUE;
+    $field->setRequired(TRUE);
     $field->save();
     $this->drupalGet('entity_test/manage/' . $entity->id());
     $this->assertFieldChecked('edit-card-2-99');
@@ -285,7 +285,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertNoOptionSelected('edit-card-1', 2);
 
     // Make the field non required.
-    $field->required = FALSE;
+    $field->setRequired(FALSE);
     $field->save();
 
     // Display form.
@@ -407,7 +407,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertFieldValues($entity_init, 'card_2', array());
 
     // A required select list does not have an empty key.
-    $field->required = TRUE;
+    $field->setRequired(TRUE);
     $field->save();
     $this->drupalGet('entity_test/manage/' . $entity->id());
     $this->assertFalse($this->xpath('//select[@id=:id]//option[@value=""]', array(':id' => 'edit-card-2')), 'A required select list does not have an empty key.');
@@ -421,7 +421,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->card2->setSetting('allowed_values', []);
     $this->card2->setSetting('allowed_values_function', 'options_test_allowed_values_callback');
     $this->card2->save();
-    $field->required = FALSE;
+    $field->setRequired(FALSE);
     $field->save();
 
     // Display form: with no field data, nothing is selected.

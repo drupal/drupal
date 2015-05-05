@@ -46,7 +46,7 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
    *
    * @var bool
    */
-  public $deleted = FALSE;
+  protected $deleted = FALSE;
 
   /**
    * The associated FieldStorageConfig entity.

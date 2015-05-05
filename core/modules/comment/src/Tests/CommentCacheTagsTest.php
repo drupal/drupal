@@ -54,7 +54,7 @@ class CommentCacheTagsTest extends EntityWithUriCacheTagsTestBase {
 
     // Display comments in a flat list; threaded comments are not render cached.
     $field = FieldConfig::loadByName('entity_test', 'bar', 'comment');
-    $field->settings['default_mode'] = CommentManagerInterface::COMMENT_MODE_FLAT;
+    $field->setSetting('default_mode', CommentManagerInterface::COMMENT_MODE_FLAT);
     $field->save();
 
     // Create a "Camelids" test entity.

@@ -7,7 +7,6 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\field\Entity\FieldConfig;
 use Drupal\file\Entity\File;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\field\FieldConfigInterface;
@@ -330,6 +329,7 @@ function image_filter_keyword($value, $current_pixels, $new_pixels) {
 function image_entity_presave(EntityInterface $entity) {
   // Get the default image settings, return if not saving an image field storage
   // or image field entity.
+  $default_image = [];
   if (($entity instanceof FieldStorageConfigInterface || $entity instanceof FieldConfigInterface) && $entity->getType() == 'image') {
     $default_image = $entity->getSetting('default_image');
   }
@@ -356,16 +356,9 @@ function image_entity_presave(EntityInterface $entity) {
       }
     }
   }
-
-  // @todo Simplify this in https://www.drupal.org/node/2030637, when both
-  //   interfaces have a setSetting() method.
-  if ($entity instanceof FieldStorageConfigInterface) {
-    $entity->setSetting('default_image', $default_image);
-  }
-  elseif ($entity instanceof FieldConfig) {
-    $entity->settings['default_image'] = $default_image;
-  }
-
+  // Both FieldStorageConfigInterface and FieldConfigInterface have a
+  // setSetting() method.
+  $entity->setSetting('default_image', $default_image);
 }
 
 /**
@@ -421,7 +414,7 @@ function image_field_config_update(FieldConfigInterface $field) {
   $prior_instance = $field->original;
 
   $uuid_new = $field->getSetting('default_image')['uuid'];
-  $uuid_old = $prior_instance->settings['default_image']['uuid'];
+  $uuid_old = $prior_instance->getSetting('default_image')['uuid'];
 
   // If the old and new files do not match, update the default accordingly.
   $file_new = $uuid_new ? \Drupal::entityManager()->loadEntityByUuid('file', $uuid_new) : FALSE;
@@ -473,7 +466,7 @@ function image_field_config_delete(FieldConfigInterface $field) {
   }
 
   // The value of a managed_file element can be an array if #extended == TRUE.
-  $uuid = $field->settings['default_image']['uuid'];
+  $uuid = $field->getSetting('default_image')['uuid'];
 
   // Remove the default image when the instance is deleted.
   if ($uuid && ($file = \Drupal::entityManager()->loadEntityByUuid('file', $uuid))) {

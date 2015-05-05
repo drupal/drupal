@@ -144,7 +144,7 @@ function comment_field_config_create(FieldConfigInterface $field) {
   if ($field->getType() == 'comment' && !$field->isSyncing()) {
     // Assign default values for the field.
     if (!isset($field->default_value)) {
-      $field->default_value = array();
+      $field->setDefaultValue(array());
     }
     $field->default_value += array(array());
     $field->default_value[0] += array(

@@ -330,7 +330,7 @@ function content_translation_entity_extra_field_info() {
  */
 function content_translation_form_field_config_edit_form_alter(array &$form, FormStateInterface $form_state) {
   $field = $form_state->getFormObject()->getEntity();
-  $bundle_is_translatable = \Drupal::service('content_translation.manager')->isEnabled($field->entity_type, $field->bundle);
+  $bundle_is_translatable = \Drupal::service('content_translation.manager')->isEnabled($field->getTargetEntityTypeId(), $field->getTargetBundle());
 
   $form['translatable'] = array(
     '#type' => 'checkbox',

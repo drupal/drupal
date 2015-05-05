@@ -48,7 +48,7 @@ class FieldConfigDeleteForm extends EntityDeleteForm {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return FieldUI::getOverviewRouteInfo($this->entity->entity_type, $this->entity->bundle);
+    return FieldUI::getOverviewRouteInfo($this->entity->getTargetEntityTypeId(), $this->entity->getTargetBundle());
   }
 
   /**
@@ -56,8 +56,8 @@ class FieldConfigDeleteForm extends EntityDeleteForm {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $field_storage = $this->entity->getFieldStorageDefinition();
-    $bundles = $this->entityManager->getBundleInfo($this->entity->entity_type);
-    $bundle_label = $bundles[$this->entity->bundle]['label'];
+    $bundles = $this->entityManager->getBundleInfo($this->entity->getTargetEntityTypeId());
+    $bundle_label = $bundles[$this->entity->getTargetBundle()]['label'];
 
     if ($field_storage && !$field_storage->isLocked()) {
       $this->entity->delete();

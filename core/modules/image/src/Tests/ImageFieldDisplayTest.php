@@ -82,7 +82,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     // After previewing, make the alt field required. It cannot be required
     // during preview because the form validation will fail.
-    $instance->settings['alt_field_required'] = 1;
+    $instance->setSetting('alt_field_required', 1);
     $instance->save();
 
     // Create alt text for the image.

@@ -67,11 +67,13 @@ class UserEntityReferenceTest extends EntityUnitTestBase {
    */
   function testUserSelectionByRole() {
     $field_definition = FieldConfig::loadByName('user', 'user', 'user_reference');
-    $field_definition->settings['handler_settings']['filter']['role'] = array(
+    $handler_settings = $field_definition->getSetting('handler_settings');
+    $handler_settings['filter']['role'] = array(
       $this->role1->id() => $this->role1->id(),
       $this->role2->id() => 0,
     );
-    $field_definition->settings['handler_settings']['filter']['type'] = 'role';
+    $handler_settings['filter']['type'] = 'role';
+    $field_definition->setSetting('handler_settings', $handler_settings);
     $field_definition->save();
 
     $user1 = $this->createUser(array('name' => 'aabb'));

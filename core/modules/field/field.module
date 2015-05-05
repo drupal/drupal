@@ -227,9 +227,9 @@ function field_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundl
 function field_entity_bundle_rename($entity_type, $bundle_old, $bundle_new) {
   $fields = entity_load_multiple_by_properties('field_config', array('entity_type' => $entity_type, 'bundle' => $bundle_old, 'include_deleted' => TRUE));
   foreach ($fields as $field) {
-    $id_new = $field->entity_type . '.' . $bundle_new . '.' . $field->field_name;
+    $id_new = $field->getTargetEntityTypeId() . '.' . $bundle_new . '.' . $field->getName();
     $field->set('id', $id_new);
-    $field->bundle = $bundle_new;
+    $field->set('bundle', $bundle_new);
     // Save non-deleted fields.
     if (!$field->isDeleted()) {
       $field->allowBundleRename();

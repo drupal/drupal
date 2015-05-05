@@ -427,7 +427,7 @@ class ManageFieldsTest extends WebTestBase {
     $this->assertEqual($field->default_value, NULL, 'The default value was correctly saved.');
 
     // Check that the default widget is used when the field is hidden.
-    entity_get_form_display($field->entity_type, $field->bundle, 'default')
+    entity_get_form_display($field->getTargetEntityTypeId(), $field->getTargetBundle(), 'default')
       ->removeComponent($field_name)->save();
     $this->drupalGet($admin_path);
     $this->assertFieldById($element_id, '', 'The default value widget was displayed when field is hidden.');

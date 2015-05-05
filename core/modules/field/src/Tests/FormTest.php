@@ -589,7 +589,7 @@ class FormTest extends FieldTestBase {
     // widget.
     $this->field->default_value = array();
     $this->field->save();
-    entity_get_form_display($entity_type, $this->field->bundle, 'default')
+    entity_get_form_display($entity_type, $this->field->getTargetBundle(), 'default')
       ->setComponent($this->field->getName(), array(
         'type' => 'test_field_widget',
       ))
@@ -609,7 +609,7 @@ class FormTest extends FieldTestBase {
     $this->assertEqual($entity->{$field_name}->value, $value, 'Field value was updated');
 
     // Set the field back to hidden.
-    entity_get_form_display($entity_type, $this->field->bundle, 'default')
+    entity_get_form_display($entity_type, $this->field->getTargetBundle(), 'default')
       ->removeComponent($this->field->getName())
       ->save();
 

@@ -29,10 +29,10 @@ class FieldConfigAccessControlHandler extends EntityAccessControlHandler {
         return AccessResult::forbidden()->cacheUntilEntityChanges($field_storage_entity);
       }
       else {
-        return AccessResult::allowedIfHasPermission($account, 'administer ' . $entity->entity_type . ' fields')->cacheUntilEntityChanges($field_storage_entity);
+        return AccessResult::allowedIfHasPermission($account, 'administer ' . $entity->getTargetEntityTypeId() . ' fields')->cacheUntilEntityChanges($field_storage_entity);
       }
     }
-    return AccessResult::allowedIfHasPermission($account, 'administer ' . $entity->entity_type . ' fields');
+    return AccessResult::allowedIfHasPermission($account, 'administer ' . $entity->getTargetEntityTypeId() . ' fields');
   }
 
 }

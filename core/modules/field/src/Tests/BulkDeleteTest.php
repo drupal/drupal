@@ -179,7 +179,7 @@ class BulkDeleteTest extends FieldUnitTestBase {
     $fields = entity_load_multiple_by_properties('field_config', array('field_storage_uuid' => $field_storage->uuid(), 'deleted' => TRUE, 'include_deleted' => TRUE));
     $this->assertEqual(count($fields), 1, 'There is one deleted field');
     $field = $fields[$field->uuid()];
-    $this->assertEqual($field->bundle, $bundle, 'The deleted field is for the correct bundle');
+    $this->assertEqual($field->getTargetBundle(), $bundle, 'The deleted field is for the correct bundle');
 
     // Check that the actual stored content did not change during delete.
     $storage = \Drupal::entityManager()->getStorage($this->entityTypeId);
@@ -309,7 +309,7 @@ class BulkDeleteTest extends FieldUnitTestBase {
 
     // The field still exists, deleted.
     $fields = entity_load_multiple_by_properties('field_config', array('uuid' => $field->uuid(), 'include_deleted' => TRUE));
-    $this->assertTrue(isset($fields[$field->uuid()]) && $fields[$field->uuid()]->deleted, 'The field exists and is deleted');
+    $this->assertTrue(isset($fields[$field->uuid()]) && $fields[$field->uuid()]->isDeleted(), 'The field exists and is deleted');
 
     // Purge again to purge the field.
     field_purge_batch(0);
@@ -344,7 +344,7 @@ class BulkDeleteTest extends FieldUnitTestBase {
 
     // The field and the storage still exist, deleted.
     $fields = entity_load_multiple_by_properties('field_config', array('uuid' => $field->uuid(), 'include_deleted' => TRUE));
-    $this->assertTrue(isset($fields[$field->uuid()]) && $fields[$field->uuid()]->deleted, 'The field exists and is deleted');
+    $this->assertTrue(isset($fields[$field->uuid()]) && $fields[$field->uuid()]->isDeleted(), 'The field exists and is deleted');
     $storages = entity_load_multiple_by_properties('field_storage_config', array('uuid' => $field_storage->uuid(), 'include_deleted' => TRUE));
     $this->assertTrue(isset($storages[$field_storage->uuid()]) && $storages[$field_storage->uuid()]->isDeleted(), 'The field storage exists and is deleted');
 

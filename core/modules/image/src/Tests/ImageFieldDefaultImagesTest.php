@@ -69,7 +69,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     // The field default image id should be 2.
     $this->assertEqual($field->getSetting('default_image')['uuid'], $default_images['field']->uuid());
 
-    // Also test \Drupal\field\Entity\FieldConfig::getSetting().
+    // Also test \Drupal\field\Entity\FieldConfig::getSettings().
     $this->assertEqual($field->getSettings()['default_image']['uuid'], $default_images['field']->uuid());
 
     $field_storage = $field->getFieldStorageDefinition();
@@ -85,7 +85,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
       'field_storage' => $field_storage,
       'bundle' => 'page',
       'label' => $field->label(),
-      'required' => $field->required,
+      'required' => $field->isRequired(),
       'settings' => array(
         'default_image' => array(
           'uuid' => $default_images['field2']->uuid(),
@@ -98,7 +98,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     ));
     $field2->save();
 
-    $widget_settings = entity_get_form_display('node', $field->bundle, 'default')->getComponent($field_name);
+    $widget_settings = entity_get_form_display('node', $field->getTargetBundle(), 'default')->getComponent($field_name);
     entity_get_form_display('node', 'page', 'default')
       ->setComponent($field_name, $widget_settings)
       ->save();
@@ -213,7 +213,9 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     );
 
     // Upload a new default for the article's field field.
-    $field->settings['default_image']['uuid'] = $default_images['field_new']->uuid();
+    $default_image_settings = $field->getSetting('default_image');
+    $default_image_settings['uuid'] = $default_images['field_new']->uuid();
+    $field->setSetting('default_image', $default_image_settings);
     $field->save();
 
     // Confirm the new field field default is used on the article field
@@ -258,7 +260,9 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     $this->assertRaw($file->getFilename());
 
     // Remove the instance default from articles.
-    $field->settings['default_image']['uuid'] = 0;
+    $default_image_settings = $field->getSetting('default_image');
+    $default_image_settings['uuid'] = 0;
+    $field->setSetting('default_image', $default_image_settings);
     $field->save();
 
     // Confirm the article field field default has been removed.

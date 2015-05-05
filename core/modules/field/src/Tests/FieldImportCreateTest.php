@@ -53,8 +53,8 @@ class FieldImportCreateTest extends FieldUnitTestBase {
     // A field storage with two fields.
     $field_storage_2 = FieldStorageConfig::load($field_storage_id_2);
     $this->assertTrue($field_storage_2, 'The second field was created.');
-    $this->assertTrue($field->bundle, 'test_bundle', 'The second field was created on bundle test_bundle.');
-    $this->assertTrue($field->bundle, 'test_bundle_2', 'The second field was created on bundle test_bundle_2.');
+    $this->assertTrue($field->getTargetBundle(), 'test_bundle', 'The second field was created on bundle test_bundle.');
+    $this->assertTrue($field->getTargetBundle(), 'test_bundle_2', 'The second field was created on bundle test_bundle_2.');
 
     // Tests fields.
     $ids = \Drupal::entityQuery('field_config')

@@ -136,7 +136,7 @@ class CommentFieldAccessTest extends EntityUnitTestBase {
     // Change the second field's anonymous contact setting.
     $instance = FieldConfig::loadByName('entity_test', 'entity_test', 'comment_other');
     // Default is 'May not contact', for this field - they may contact.
-    $instance->settings['anonymous'] = COMMENT_ANONYMOUS_MAY_CONTACT;
+    $instance->setSetting('anonymous', COMMENT_ANONYMOUS_MAY_CONTACT);
     $instance->save();
 
     // Create three "Comments". One is owned by our edit-enabled user.

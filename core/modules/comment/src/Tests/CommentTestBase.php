@@ -117,7 +117,7 @@ abstract class CommentTestBase extends WebTestBase {
     else {
       $field = FieldConfig::loadByName('node', 'article', $field_name);
     }
-    $preview_mode = $field->settings['preview'];
+    $preview_mode = $field->getSetting('preview');
 
     // Must get the page before we test for fields.
     if ($entity !== NULL) {
@@ -314,7 +314,7 @@ abstract class CommentTestBase extends WebTestBase {
    */
   public function setCommentSettings($name, $value, $message, $field_name = 'comment') {
     $field = FieldConfig::loadByName('node', 'article', $field_name);
-    $field->settings[$name] = $value;
+    $field->setSetting($name, $value);
     $field->save();
     // Display status message.
     $this->pass($message);

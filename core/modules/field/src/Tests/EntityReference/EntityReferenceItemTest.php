@@ -246,7 +246,7 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     $field = FieldConfig::load($field->id());
     $this->assertTrue($field->getSetting('handler') == 'default:entity_test');
 
-    $field->settings['handler'] = 'views';
+    $field->setSetting('handler', 'views');
     $field->save();
     $field = FieldConfig::load($field->id());
     $this->assertTrue($field->getSetting('handler') == 'views');

@@ -153,13 +153,13 @@ class LinkFieldTest extends WebTestBase {
     $this->assertInvalidEntries($field_name, $invalid_external_entries + $invalid_internal_entries);
 
     // Test external URLs for 'link_type' = LinkItemInterface::LINK_EXTERNAL.
-    $this->field->settings['link_type'] = LinkItemInterface::LINK_EXTERNAL;
+    $this->field->setSetting('link_type', LinkItemInterface::LINK_EXTERNAL);
     $this->field->save();
     $this->assertValidEntries($field_name, $valid_external_entries);
     $this->assertInvalidEntries($field_name, $valid_internal_entries + $invalid_external_entries);
 
     // Test external URLs for 'link_type' = LinkItemInterface::LINK_INTERNAL.
-    $this->field->settings['link_type'] = LinkItemInterface::LINK_INTERNAL;
+    $this->field->setSetting('link_type', LinkItemInterface::LINK_INTERNAL);
     $this->field->save();
     $this->assertValidEntries($field_name, $valid_internal_entries);
     $this->assertInvalidEntries($field_name, $valid_external_entries + $invalid_internal_entries);
@@ -253,7 +253,7 @@ class LinkFieldTest extends WebTestBase {
     // Verify that the link text field works according to the field setting.
     foreach (array(DRUPAL_DISABLED, DRUPAL_REQUIRED, DRUPAL_OPTIONAL) as $title_setting) {
       // Update the link title field setting.
-      $this->field->settings['title'] = $title_setting;
+      $this->field->setSetting('title', $title_setting);
       $this->field->save();
 
       // Display creation form.

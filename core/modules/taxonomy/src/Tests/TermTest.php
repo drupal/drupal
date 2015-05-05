@@ -198,7 +198,7 @@ class TermTest extends TaxonomyTestBase {
   function testNodeTermCreationAndDeletion() {
     // Enable tags in the vocabulary.
     $field = $this->field;
-    entity_get_form_display($field->entity_type, $field->bundle, 'default')
+    entity_get_form_display($field->getTargetEntityTypeId(), $field->getTargetBundle(), 'default')
       ->setComponent($field->getName(), array(
         'type' => 'entity_reference_autocomplete_tags',
         'settings' => array(
@@ -510,7 +510,7 @@ class TermTest extends TaxonomyTestBase {
   function testReSavingTags() {
     // Enable tags in the vocabulary.
     $field = $this->field;
-    entity_get_form_display($field->entity_type, $field->bundle, 'default')
+    entity_get_form_display($field->getTargetEntityTypeId(), $field->getTargetBundle(), 'default')
       ->setComponent($field->getName(), array(
         'type' => 'entity_reference_autocomplete_tags',
       ))
