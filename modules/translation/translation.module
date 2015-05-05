@@ -428,7 +428,7 @@ function translation_node_delete($node) {
  *   A node object.
  */
 function translation_remove_from_set($node) {
-  if (isset($node->tnid)) {
+  if (isset($node->tnid) && $node->tnid) {
     $query = db_update('node')
       ->fields(array(
         'tnid' => 0,
