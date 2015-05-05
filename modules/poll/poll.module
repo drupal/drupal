@@ -191,7 +191,6 @@ function poll_node_info() {
       'base' => 'poll',
       'description' => t('A <em>poll</em> is a question with a set of possible responses. A <em>poll</em>, once created, automatically provides a simple running count of the number of votes received for each response.'),
       'title_label' => t('Question'),
-      'has_body' => FALSE,
     )
   );
 }
