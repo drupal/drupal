@@ -23,15 +23,15 @@
 .ui-state-active {
   outline: 0;
 }
-.ui-state-active {
+.ui-state-highlight {
   font-weight: bold;
 }
 
 /**
  * Interaction cues
  */
-.ui-state-highlight,
-.ui-widget-content .ui-state-highlight {
+.ui-state-active,
+.ui-widget-content .ui-state-active {
   color: #840;
   background: #fe6;
   border: solid 1px #ed5;
@@ -75,10 +75,10 @@
 }
 .ui-state-hover .ui-icon,
 .ui-state-focus .ui-icon,
-.ui-state-active .ui-icon {
+.ui-state-highlight .ui-icon {
   background-image: url(../../../images/ui-icons-454545-256x240.png);
 }
-.ui-state-highlight .ui-icon {
+.ui-state-active .ui-icon {
   background-image: url(../../../images/ui-icons-800000-256x240.png);
 }
 .ui-state-error .ui-icon,
@@ -377,15 +377,54 @@
  * Date Picker
  */
 .ui-datepicker {
-  border: none;
+  border: 1px solid #A6A6A6;
+  background: #FFF;
+  /* Override datepicker.css */
+  padding: 0;
 }
-.ui-datepicker td span, .ui-datepicker td a {
+
+/* Override tables.css */
+.ui-datepicker-calendar thead tr {
+  border-bottom: 1px solid #A6A6A6;
+  border-top: 1px solid #A6A6A6;
+}
+.ui-datepicker-calendar tr:hover {
+  background: transparent;
+}
+
+/* Override datepicker.css */
+.ui-datepicker td {
+  padding: 0;
+}
+.ui-datepicker td span,
+.ui-datepicker td a {
+  color: inherit;
+  /* Override datepicker.css */
   text-align: center;
 }
+.ui-datepicker .ui-datepicker-header .ui-datepicker-next-hover {
+  cursor: pointer;
+  /* Override datepicker.css - keep icons still on hover */
+  right: 2px;
+  top: 2px;
+}
+.ui-datepicker .ui-datepicker-header .ui-datepicker-prev-hover {
+  cursor: pointer;
+  /* Override datepicker.css - keep icons still on hover */
+  left: 2px;
+  top: 2px;
+}
+.ui-datepicker td a.ui-state-hover {
+  background-color: #f7fcff;
+}
+.ui-datepicker .ui-state-active {
+  background: #ebeae4;
+  border: none;
+}
 .ui-datepicker .ui-state-highlight {
-  background: #E4E4E4;
-  border-color: #D2D2D2;
-  color: #000;
+  font-weight: bold;
+  /* Override datepicker.css */
+  color: inherit;
 }
 
 /**
