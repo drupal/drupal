@@ -30,7 +30,6 @@ class UuidItem extends StringItem {
   public static function defaultStorageSettings() {
     return array(
       'max_length' => 128,
-      'is_ascii' => TRUE,
     ) + parent::defaultStorageSettings();
   }
 

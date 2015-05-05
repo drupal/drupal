@@ -20,14 +20,14 @@ function search_schema() {
         'description' => 'Search item ID, e.g. node ID for nodes.',
       ),
       'langcode' => array(
-        'type' => 'varchar_ascii',
+        'type' => 'varchar',
         'length' => '12',
         'not null' => TRUE,
         'description' => 'The {languages}.langcode of the item variant.',
         'default' => '',
       ),
       'type' => array(
-        'type' => 'varchar_ascii',
+        'type' => 'varchar',
         'length' => 64,
         'not null' => TRUE,
         'description' => 'Type of item, e.g. node.',
@@ -67,14 +67,14 @@ function search_schema() {
         'description' => 'The {search_dataset}.sid of the searchable item to which the word belongs.',
       ),
       'langcode' => array(
-        'type' => 'varchar_ascii',
+        'type' => 'varchar',
         'length' => '12',
         'not null' => TRUE,
         'description' => 'The {languages}.langcode of the item variant.',
         'default' => '',
       ),
       'type' => array(
-        'type' => 'varchar_ascii',
+        'type' => 'varchar',
         'length' => 64,
         'not null' => TRUE,
         'description' => 'The {search_dataset}.type of the searchable item to which the word belongs.',

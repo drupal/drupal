@@ -20,7 +20,7 @@ function ban_schema() {
       ),
       'ip' => array(
         'description' => 'IP address',
-        'type' => 'varchar_ascii',
+        'type' => 'varchar',
         'length' => 40,
         'not null' => TRUE,
         'default' => '',

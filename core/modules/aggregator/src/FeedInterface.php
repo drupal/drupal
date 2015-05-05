@@ -170,8 +170,7 @@ interface FeedInterface extends ContentEntityInterface {
    * Sets the calculated hash of the feed data, used for validating cache.
    *
    * @param string $hash
-   *   A string containing the calculated hash of the feed. Must contain
-   *   US ASCII characters only.
+   *   A string containing the calculated hash of the feed.
    *
    * @return \Drupal\aggregator\FeedInterface
    *   The class instance that this method is called on.

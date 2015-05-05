@@ -422,26 +422,22 @@ class DatabaseBackend implements CacheBackendInterface {
   }
 
   /**
-   * Normalizes a cache ID in order to comply with database limitations.
+   * Ensures that cache IDs have a maximum length of 255 characters.
    *
    * @param string $cid
    *   The passed in cache ID.
    *
    * @return string
-   *   An ASCII-encoded cache ID that is at most 255 characters long.
+   *   A cache ID that is at most 255 characters long.
    */
   protected function normalizeCid($cid) {
-    // Nothing to do if the ID is a US ASCII string of 255 characters or less.
-    $cid_is_ascii = mb_check_encoding($cid, 'ASCII');
-    if (strlen($cid) <= 255 && $cid_is_ascii) {
+    // Nothing to do if the ID length is 255 characters or less.
+    if (strlen($cid) <= 255) {
       return $cid;
     }
     // Return a string that uses as much as possible of the original cache ID
     // with the hash appended.
     $hash = Crypt::hashBase64($cid);
-    if (!$cid_is_ascii) {
-      return $hash;
-    }
     return substr($cid, 0, 255 - strlen($hash)) . $hash;
   }
 
@@ -454,7 +450,7 @@ class DatabaseBackend implements CacheBackendInterface {
       'fields' => array(
         'cid' => array(
           'description' => 'Primary Key: Unique cache ID.',
-          'type' => 'varchar_ascii',
+          'type' => 'varchar',
           'length' => 255,
           'not null' => TRUE,
           'default' => '',
@@ -495,7 +491,7 @@ class DatabaseBackend implements CacheBackendInterface {
         ),
         'checksum' => array(
           'description' => 'The tag invalidation checksum when this entry was saved.',
-          'type' => 'varchar_ascii',
+          'type' => 'varchar',
           'length' => 255,
           'not null' => TRUE,
         ),

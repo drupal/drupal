@@ -303,7 +303,6 @@ class Comment extends ContentEntityBase implements CommentInterface {
     $fields['entity_type'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Entity type'))
       ->setDescription(t('The entity type to which this comment is attached.'))
-      ->setSetting('is_ascii', TRUE)
       ->setSetting('max_length', EntityTypeInterface::ID_MAX_LENGTH);
 
     $fields['comment_type'] = BaseFieldDefinition::create('entity_reference')
@@ -314,7 +313,6 @@ class Comment extends ContentEntityBase implements CommentInterface {
     $fields['field_name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Comment field name'))
       ->setDescription(t('The field name through which this comment was added.'))
-      ->setSetting('is_ascii', TRUE)
       ->setSetting('max_length', FieldStorageConfig::NAME_MAX_LENGTH);
 
     return $fields;

@@ -34,7 +34,7 @@ class TextLongItem extends TextItemBase {
           'size' => 'big',
         ),
         'format' => array(
-          'type' => 'varchar_ascii',
+          'type' => 'varchar',
           'length' => 255,
         ),
       ),

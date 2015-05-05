@@ -212,8 +212,6 @@ class Schema extends DatabaseSchema {
     // database types back into schema types.
     // $map does not use drupal_static as its value never changes.
     static $map = array(
-      'varchar_ascii:normal' => 'VARCHAR',
-
       'varchar:normal'  => 'VARCHAR',
       'char:normal'     => 'CHAR',
 

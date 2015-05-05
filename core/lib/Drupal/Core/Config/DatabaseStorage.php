@@ -192,14 +192,14 @@ class DatabaseStorage implements StorageInterface {
       'fields' => array(
         'collection' => array(
           'description' => 'Primary Key: Config object collection.',
-          'type' => 'varchar_ascii',
+          'type' => 'varchar',
           'length' => 255,
           'not null' => TRUE,
           'default' => '',
         ),
         'name' => array(
           'description' => 'Primary Key: Config object name.',
-          'type' => 'varchar_ascii',
+          'type' => 'varchar',
           'length' => 255,
           'not null' => TRUE,
           'default' => '',

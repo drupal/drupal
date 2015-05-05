@@ -25,7 +25,7 @@ function dblog_schema() {
         'description' => 'The {users}.uid of the user who triggered the event.',
       ),
       'type' => array(
-        'type' => 'varchar_ascii',
+        'type' => 'varchar',
         'length' => 64,
         'not null' => TRUE,
         'default' => '',
@@ -69,7 +69,7 @@ function dblog_schema() {
         'description' => 'URL of referring page.',
       ),
       'hostname' => array(
-        'type' => 'varchar_ascii',
+        'type' => 'varchar',
         'length' => 128,
         'not null' => TRUE,
         'default' => '',

@@ -133,7 +133,7 @@ class EntityReferenceItem extends FieldItemBase {
       $columns = array(
         'target_id' => array(
           'description' => 'The ID of the target entity.',
-          'type' => 'varchar_ascii',
+          'type' => 'varchar',
           // If the target entities act as bundles for another entity type,
           // their IDs should not exceed the maximum length for bundles.
           'length' => $target_type_info->getBundleOf() ? EntityTypeInterface::BUNDLE_MAX_LENGTH : 255,

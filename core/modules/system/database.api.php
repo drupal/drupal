@@ -256,8 +256,6 @@
  *       'float', 'numeric', or 'serial'. Most types just map to the according
  *       database engine specific datatypes. Use 'serial' for auto incrementing
  *       fields. This will expand to 'INT auto_increment' on MySQL.
- *       A special 'varchar_ascii' type is also available for limiting machine
- *       name field to US ASCII characters.
  *     - 'mysql_type', 'pgsql_type', 'sqlite_type', etc.: If you need to
  *       use a record type not included in the officially supported list
  *       of types above, you can specify a type for each database

@@ -54,7 +54,7 @@ function node_schema() {
       ),
       'langcode' => array(
         'description' => 'The {language}.langcode of this node.',
-        'type' => 'varchar_ascii',
+        'type' => 'varchar',
         'length' => 12,
         'not null' => TRUE,
         'default' => '',
@@ -75,7 +75,7 @@ function node_schema() {
       ),
       'realm' => array(
         'description' => 'The realm in which the user must possess the grant ID. Each node access node can define one or more realms.',
-        'type' => 'varchar_ascii',
+        'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',

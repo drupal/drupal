@@ -67,14 +67,14 @@ function locale_schema() {
         'description' => 'The original string in English.',
       ),
       'context' => array(
-        'type' => 'varchar_ascii',
+        'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
         'description' => 'The context this string applies to.',
       ),
       'version' => array(
-        'type' => 'varchar_ascii',
+        'type' => 'varchar',
         'length' => 20,
         'not null' => TRUE,
         'default' => 'none',
@@ -103,7 +103,7 @@ function locale_schema() {
         'description' => 'Translation string value in this language.',
       ),
       'language' => array(
-        'type' => 'varchar_ascii',
+        'type' => 'varchar',
         'length' => 12,
         'not null' => TRUE,
         'default' => '',
@@ -142,7 +142,7 @@ function locale_schema() {
         'description' => 'Unique identifier of this string.',
       ),
       'type' => array(
-        'type' => 'varchar_ascii',
+        'type' => 'varchar',
         'length' => 50,
         'not null' => TRUE,
         'default' => '',
@@ -156,7 +156,7 @@ function locale_schema() {
         'description' => 'Type dependent location information (file name, path, etc).',
       ),
       'version' => array(
-        'type' => 'varchar_ascii',
+        'type' => 'varchar',
         'length' => 20,
         'not null' => TRUE,
         'default' => 'none',
@@ -180,14 +180,14 @@ function locale_schema() {
     'description' => 'File import status information for interface translation files.',
     'fields' => array(
       'project' => array(
-        'type' => 'varchar_ascii',
+        'type' => 'varchar',
         'length' => '255',
         'not null' => TRUE,
         'default' => '',
         'description' => 'A unique short name to identify the project the file belongs to.',
       ),
       'langcode' => array(
-        'type' => 'varchar_ascii',
+        'type' => 'varchar',
         'length' => '12',
         'not null' => TRUE,
         'default' => '',
