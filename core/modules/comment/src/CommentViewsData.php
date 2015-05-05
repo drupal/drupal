@@ -102,30 +102,6 @@ class CommentViewsData extends EntityViewsData {
     $data['comment_field_data']['status']['filter']['label'] = t('Approved comment status');
     $data['comment_field_data']['status']['filter']['type'] = 'yes-no';
 
-    $data['comment']['view_comment'] = array(
-      'field' => array(
-        'title' => t('Link to comment'),
-        'help' => t('Provide a simple link to view the comment.'),
-        'id' => 'comment_link',
-      ),
-    );
-
-    $data['comment']['edit_comment'] = array(
-      'field' => array(
-        'title' => t('Link to edit comment'),
-        'help' => t('Provide a simple link to edit the comment.'),
-        'id' => 'comment_link_edit',
-      ),
-    );
-
-    $data['comment']['delete_comment'] = array(
-      'field' => array(
-        'title' => t('Link to delete comment'),
-        'help' => t('Provide a simple link to delete the comment.'),
-        'id' => 'comment_link_delete',
-      ),
-    );
-
     $data['comment']['approve_comment'] = array(
       'field' => array(
         'title' => t('Link to approve comment'),
@@ -194,16 +170,6 @@ class CommentViewsData extends EntityViewsData {
     $data['comment_field_data']['pid']['relationship']['title'] = t('Parent comment');
     $data['comment_field_data']['pid']['relationship']['help'] = t('The parent comment');
     $data['comment_field_data']['pid']['relationship']['label'] = t('parent');
-
-    if (\Drupal::moduleHandler()->moduleExists('content_translation')) {
-      $data['comment']['translation_link'] = array(
-        'title' => t('Translation link'),
-        'help' => t('Provide a link to the translations overview for comments.'),
-        'field' => array(
-          'id' => 'content_translation_link',
-        ),
-      );
-    }
 
     // Define the base group of this table. Fields that don't have a group defined
     // will go into this field by default.

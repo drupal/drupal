@@ -94,15 +94,6 @@ class UserViewsData extends EntityViewsData {
     $data['users_field_data']['preferred_admin_langcode']['title'] = t('Preferred admin language');
     $data['users_field_data']['preferred_admin_langcode']['help'] = t('Preferred administrative language of the user');
 
-    $data['users']['view_user'] = array(
-      'field' => array(
-        'title' => t('Link to user'),
-        'help' => t('Provide a simple link to the user.'),
-        'id' => 'user_link',
-        'click sortable' => FALSE,
-      ),
-    );
-
     $data['users_field_data']['created_fulldate'] = array(
       'title' => t('Created date'),
       'help' => t('Date in the form of CCYYMMDD.'),
@@ -213,34 +204,6 @@ class UserViewsData extends EntityViewsData {
       'argument' => array(
         'field' => 'changed',
         'id' => 'date_week',
-      ),
-    );
-
-    if (\Drupal::moduleHandler()->moduleExists('content_translation')) {
-      $data['users']['translation_link'] = array(
-        'title' => t('Translation link'),
-        'help' => t('Provide a link to the translations overview for users.'),
-        'field' => array(
-          'id' => 'content_translation_link',
-        ),
-      );
-    }
-
-    $data['users']['edit_node'] = array(
-      'field' => array(
-        'title' => t('Link to edit user'),
-        'help' => t('Provide a simple link to edit the user.'),
-        'id' => 'user_link_edit',
-        'click sortable' => FALSE,
-      ),
-    );
-
-    $data['users']['cancel_node'] = array(
-      'field' => array(
-        'title' => t('Link to cancel user'),
-        'help' => t('Provide a simple link to cancel the user.'),
-        'id' => 'user_link_cancel',
-        'click sortable' => FALSE,
       ),
     );
 

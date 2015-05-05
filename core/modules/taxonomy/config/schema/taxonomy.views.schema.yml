@@ -83,14 +83,6 @@ views.argument_default.taxonomy_tid:
       type: string
       label: 'Multiple-value handling'
 
-views.field.term_link_edit:
-  type: views_field
-  label: 'Taxonomy language'
-  mapping:
-    text:
-      type: label
-      label: 'Text to display'
-
 views.field.term_name:
   type: views.field.field
   mapping:

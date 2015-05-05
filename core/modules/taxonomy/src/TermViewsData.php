@@ -75,25 +75,6 @@ class TermViewsData extends EntityViewsData {
     unset($data['taxonomy_term_field_data']['vid']['argument']);
     unset($data['taxonomy_term_field_data']['vid']['sort']);
 
-    $data['taxonomy_term_data']['edit_term'] = array(
-      'field' => array(
-        'title' => t('Term edit link'),
-        'help' => t('Provide a simple link to edit the term.'),
-        'id' => 'term_link_edit',
-        'click sortable' => FALSE,
-      ),
-    );
-
-    if (\Drupal::moduleHandler()->moduleExists('content_translation')) {
-      $data['taxonomy_term_data']['translation_link'] = array(
-        'title' => t('Translation link'),
-        'help' => t('Provide a link to the translations overview for taxonomy terms.'),
-        'field' => array(
-          'id' => 'content_translation_link',
-        ),
-      );
-    }
-
     $data['taxonomy_term_field_data']['name']['field']['id'] = 'term_name';
     $data['taxonomy_term_field_data']['name']['argument']['many to one'] = TRUE;
     $data['taxonomy_term_field_data']['name']['argument']['empty field name'] = t('Uncategorized');

@@ -67,22 +67,6 @@ views_field_user:
       type: boolean
       label: 'Link this field to its user'
 
-views.field.user_link:
-  type: views_field
-  label: 'User link'
-  mapping:
-    text:
-      type: text
-      label: 'Text to display'
-
-views.field.user_link_cancel:
-  type: views.field.user_link
-  label: 'User cancel link'
-
-views.field.user_link_edit:
-  type: views.field.user_link
-  label: 'User edit link'
-
 views.field.user_permissions:
   type: views.field.prerender_list
   label: 'List of permission'

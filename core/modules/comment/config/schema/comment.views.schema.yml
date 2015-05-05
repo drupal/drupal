@@ -20,32 +20,9 @@ views.field.comment_last_timestamp:
   type: views.field.date
   label: 'Last comment date'
 
-views.field.comment_link:
-  type: views_field
-  label: 'Comment link'
-  mapping:
-    text:
-      type: views_field
-      label: 'Text to display'
-    link_to_entity:
-      type: views_field
-      label: 'Link field to the entity if there is no comment'
-
 views.field.comment_link_approve:
   type: views.field.comment_link
   label: 'Comment approve link'
-
-views.field.comment_link_delete:
-  type: views.field.comment_link
-  label: 'Comment delete link'
-
-views.field.comment_link_edit:
-  type: views.field.comment_link
-  label: 'Comment edit link'
-  mapping:
-    destination:
-      type: boolean
-      label: 'Use destination'
 
 views.field.comment_link_reply:
   type: views.field.comment_link

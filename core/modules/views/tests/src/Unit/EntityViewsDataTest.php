@@ -712,6 +712,33 @@ class EntityViewsDataTest extends UnitTestCase {
   }
 
   /**
+   * Tests add link types.
+   */
+  public function testEntityLinks() {
+    $this->baseEntityType->setLinkTemplate('canonical', '/entity_test/{entity_test}');
+    $this->baseEntityType->setLinkTemplate('edit-form', '/entity_test/{entity_test}/edit');
+    $this->baseEntityType->setLinkTemplate('delete-form', '/entity_test/{entity_test}/delete');
+
+    $data = $this->viewsData->getViewsData();
+    $this->assertEquals('entity_link', $data['entity_test']['view_entity_test']['field']['id']);
+    $this->assertEquals('entity_link_edit', $data['entity_test']['edit_entity_test']['field']['id']);
+    $this->assertEquals('entity_link_delete', $data['entity_test']['delete_entity_test']['field']['id']);
+  }
+
+  /**
+   * Tests additional edit links.
+   */
+  public function testEntityLinksJustEditForm() {
+    $this->baseEntityType->setLinkTemplate('edit-form', '/entity_test/{entity_test}/edit');
+
+    $data = $this->viewsData->getViewsData();
+    $this->assertFalse(isset($data['entity_test']['view_entity_test']));
+    $this->assertFalse(isset($data['entity_test']['delete_entity_test']));
+
+    $this->assertEquals('entity_link_edit', $data['entity_test']['edit_entity_test']['field']['id']);
+  }
+
+  /**
    * Tests views data for a string field.
    *
    * @param $data

@@ -176,6 +176,23 @@ views.field.language:
       type: boolean
       label: 'Display in native language'
 
+
+views.field.entity_link:
+  type: views_field
+  label: 'Entity link'
+  mapping:
+    text:
+      type: label
+      label: 'Text to display'
+
+views.field.entity_link_delete:
+  type: views.field.entity_link
+  label: 'Entity delete link'
+
+views.field.entity_link_edit:
+  type: views.field.entity_link
+  label: 'Entity edit link'
+
 views.field.bulk_form:
   type: views_field_bulk_form
   label: 'Bulk form'

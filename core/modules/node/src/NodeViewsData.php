@@ -61,40 +61,6 @@ class NodeViewsData extends EntityViewsData {
     $data['node_field_data']['sticky']['filter']['type'] = 'yes-no';
     $data['node_field_data']['sticky']['sort']['help'] = t('Whether or not the content is sticky. To list sticky content first, set this to descending.');
 
-    if (\Drupal::moduleHandler()->moduleExists('content_translation')) {
-      $data['node']['translation_link'] = array(
-        'title' => t('Translation link'),
-        'help' => t('Provide a link to the translations overview for nodes.'),
-        'field' => array(
-          'id' => 'content_translation_link',
-        ),
-      );
-    }
-
-    $data['node']['view_node'] = array(
-      'field' => array(
-        'title' => t('Link to content'),
-        'help' => t('Provide a simple link to the content.'),
-        'id' => 'node_link',
-      ),
-    );
-
-    $data['node']['edit_node'] = array(
-      'field' => array(
-        'title' => t('Link to edit content'),
-        'help' => t('Provide a simple link to edit the content.'),
-        'id' => 'node_link_edit',
-      ),
-    );
-
-    $data['node']['delete_node'] = array(
-      'field' => array(
-        'title' => t('Link to delete content'),
-        'help' => t('Provide a simple link to delete the content.'),
-        'id' => 'node_link_delete',
-      ),
-    );
-
     $data['node']['path'] = array(
       'field' => array(
         'title' => t('Path'),
@@ -292,7 +258,7 @@ class NodeViewsData extends EntityViewsData {
 
     $data['node_field_revision']['langcode']['help'] = t('The language of the content or translation.');
 
-    $data['node_revision']['link_to_revision'] = array(
+    $data['node_field_revision']['link_to_revision'] = array(
       'field' => array(
         'title' => t('Link to revision'),
         'help' => t('Provide a simple link to the revision.'),
@@ -301,7 +267,7 @@ class NodeViewsData extends EntityViewsData {
       ),
     );
 
-    $data['node_revision']['revert_revision'] = array(
+    $data['node_field_revision']['revert_revision'] = array(
       'field' => array(
         'title' => t('Link to revert revision'),
         'help' => t('Provide a simple link to revert to the revision.'),
@@ -310,7 +276,7 @@ class NodeViewsData extends EntityViewsData {
       ),
     );
 
-    $data['node_revision']['delete_revision'] = array(
+    $data['node_field_revision']['delete_revision'] = array(
       'field' => array(
         'title' => t('Link to delete revision'),
         'help' => t('Provide a simple link to delete the content revision.'),

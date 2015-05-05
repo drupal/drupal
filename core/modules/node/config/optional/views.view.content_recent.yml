@@ -239,7 +239,7 @@ display:
           hide_alter_empty: true
           text: Edit
           entity_type: node
-          plugin_id: node_link_edit
+          plugin_id: entity_link_edit
         delete_node:
           id: delete_node
           table: node
@@ -290,7 +290,7 @@ display:
           hide_alter_empty: true
           text: Delete
           entity_type: node
-          plugin_id: node_link_delete
+          plugin_id: entity_link_delete
       filters:
         status_extra:
           id: status_extra

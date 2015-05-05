@@ -203,6 +203,8 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
       }
     }
 
+    $this->addEntityLinks($data[$base_table]);
+
     // Load all typed data definitions of all fields. This should cover each of
     // the entity base, revision, data tables.
     $field_definitions = $this->entityManager->getBaseFieldDefinitions($this->entityType->id());
@@ -227,6 +229,44 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
     });
 
     return $data;
+  }
+
+  /**
+   * Sets the entity links in case corresponding link templates exist.
+   *
+   * @param array $data
+   *   The views data of the base table.
+   */
+  protected function addEntityLinks(array &$data) {
+    $entity_type_id = $this->entityType->id();
+    $t_arguments = ['@entity_type_label' => $this->entityType->getLabel()];
+    if ($this->entityType->hasLinkTemplate('canonical')) {
+      $data['view_' . $entity_type_id] = [
+        'field' => [
+          'title' => $this->t('Link to @entity_type_label', $t_arguments),
+          'help' => $this->t('Provide a view link to the @entity_type_label.', $t_arguments),
+          'id' => 'entity_link',
+        ],
+      ];
+    }
+    if ($this->entityType->hasLinkTemplate('edit-form')) {
+      $data['edit_' . $entity_type_id] = [
+        'field' => [
+          'title' => $this->t('Link to edit @entity_type_label', $t_arguments),
+          'help' => $this->t('Provide an edit link to the @entity_type_label.', $t_arguments),
+          'id' => 'entity_link_edit',
+        ],
+      ];
+    }
+    if ($this->entityType->hasLinkTemplate('delete-form')) {
+      $data['delete_' . $entity_type_id] = [
+        'field' => [
+          'title' => $this->t('Link to delete @entity_type_label', $t_arguments),
+          'help' => $this->t('Provide a delete link to the @entity_type_label.', $t_arguments),
+          'id' => 'entity_link_delete',
+        ],
+      ];
+    }
   }
 
   /**
