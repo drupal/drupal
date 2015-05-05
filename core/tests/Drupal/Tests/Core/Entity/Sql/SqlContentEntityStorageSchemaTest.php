@@ -802,7 +802,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
         'description' => "Data storage for $entity_type_id field $field_name.",
         'fields' => array(
           'bundle' => array(
-            'type' => 'varchar',
+            'type' => 'varchar_ascii',
             'length' => 128,
             'not null' => true,
             'default' => '',
@@ -828,7 +828,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
             'description' => 'The entity revision id this data is attached to, which for an unversioned entity type is the same as the entity id',
           ),
           'langcode' => array(
-            'type' => 'varchar',
+            'type' => 'varchar_ascii',
             'length' => 32,
             'not null' => true,
             'default' => '',
@@ -947,7 +947,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
         'description' => "Data storage for $entity_type_id field $field_name.",
         'fields' => array(
           'bundle' => array(
-            'type' => 'varchar',
+            'type' => 'varchar_ascii',
             'length' => 128,
             'not null' => true,
             'default' => '',
@@ -961,19 +961,19 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
             'description' => 'A boolean indicating whether this data item has been deleted',
           ),
           'entity_id' => array(
-            'type' => 'varchar',
+            'type' => 'varchar_ascii',
             'length' => 128,
             'not null' => true,
             'description' => 'The entity id this data is attached to',
           ),
           'revision_id' => array(
-            'type' => 'varchar',
+            'type' => 'varchar_ascii',
             'length' => 128,
             'not null' => true,
             'description' => 'The entity revision id this data is attached to, which for an unversioned entity type is the same as the entity id',
           ),
           'langcode' => array(
-            'type' => 'varchar',
+            'type' => 'varchar_ascii',
             'length' => 32,
             'not null' => true,
             'default' => '',

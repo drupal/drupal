@@ -20,7 +20,7 @@ function shortcut_schema() {
         'description' => 'The {users}.uid for this set.',
       ),
       'set_name' => array(
-        'type' => 'varchar',
+        'type' => 'varchar_ascii',
         'length' => 32,
         'not null' => TRUE,
         'default' => '',

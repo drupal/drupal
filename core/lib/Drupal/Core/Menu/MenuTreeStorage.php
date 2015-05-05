@@ -1193,7 +1193,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       'fields' => array(
         'menu_name' => array(
           'description' => "The menu name. All links with the same menu name (such as 'tools') are part of the same menu.",
-          'type' => 'varchar',
+          'type' => 'varchar_ascii',
           'length' => 32,
           'not null' => TRUE,
           'default' => '',
@@ -1206,20 +1206,20 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
         ),
         'id' => array(
           'description' => 'Unique machine name: the plugin ID.',
-          'type' => 'varchar',
+          'type' => 'varchar_ascii',
           'length' => 255,
           'not null' => TRUE,
         ),
         'parent' => array(
           'description' => 'The plugin ID for the parent of this link.',
-          'type' => 'varchar',
+          'type' => 'varchar_ascii',
           'length' => 255,
           'not null' => TRUE,
           'default' => '',
         ),
         'route_name' => array(
           'description' => 'The machine name of a defined Symfony Route this menu item represents.',
-          'type' => 'varchar',
+          'type' => 'varchar_ascii',
           'length' => 255,
         ),
         'route_param_key' => array(
@@ -1281,7 +1281,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
         ),
         'provider' => array(
           'description' => 'The name of the module that generated this link.',
-          'type' => 'varchar',
+          'type' => 'varchar_ascii',
           'length' => DRUPAL_EXTENSION_NAME_MAX_LENGTH,
           'not null' => TRUE,
           'default' => 'system',

@@ -411,6 +411,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
           case 'char':
           case 'string':
           case 'varchar':
+          case 'varchar_ascii':
           case 'tinytext':
           case 'text':
           case 'mediumtext':

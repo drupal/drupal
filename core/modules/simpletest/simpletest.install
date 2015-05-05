@@ -108,7 +108,7 @@ function simpletest_schema() {
         'description' => 'Test ID, messages belonging to the same ID are reported together',
       ),
       'test_class' => array(
-        'type' => 'varchar',
+        'type' => 'varchar_ascii',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
@@ -127,14 +127,14 @@ function simpletest_schema() {
         'description' => 'The message itself.',
       ),
       'message_group' => array(
-        'type' => 'varchar',
+        'type' => 'varchar_ascii',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
         'description' => 'The message group this message belongs to. For example: warning, browser, user.',
       ),
       'function' => array(
-        'type' => 'varchar',
+        'type' => 'varchar_ascii',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',

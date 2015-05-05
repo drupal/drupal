@@ -1568,7 +1568,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     }
     else {
       $id_schema = array(
-        'type' => 'varchar',
+        'type' => 'varchar_ascii',
         'length' => 128,
         'not null' => TRUE,
         'description' => 'The entity id this data is attached to',
@@ -1601,7 +1601,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       'description' => $description_current,
       'fields' => array(
         'bundle' => array(
-          'type' => 'varchar',
+          'type' => 'varchar_ascii',
           'length' => 128,
           'not null' => TRUE,
           'default' => '',
@@ -1617,7 +1617,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
         'entity_id' => $id_schema,
         'revision_id' => $revision_id_schema,
         'langcode' => array(
-          'type' => 'varchar',
+          'type' => 'varchar_ascii',
           'length' => 32,
           'not null' => TRUE,
           'default' => '',

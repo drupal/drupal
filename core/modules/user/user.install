@@ -21,14 +21,14 @@ function user_schema() {
       ),
       'module' => array(
         'description' => 'The name of the module declaring the variable.',
-        'type' => 'varchar',
+        'type' => 'varchar_ascii',
         'length' => DRUPAL_EXTENSION_NAME_MAX_LENGTH,
         'not null' => TRUE,
         'default' => '',
       ),
       'name' => array(
         'description' => 'The identifier of the data.',
-        'type' => 'varchar',
+        'type' => 'varchar_ascii',
         'length' => 128,
         'not null' => TRUE,
         'default' => '',

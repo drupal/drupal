@@ -445,6 +445,9 @@ field.storage_settings.string:
     case_sensitive:
       type: boolean
       label: 'Case sensitive'
+    is_ascii:
+      type: boolean
+      label: 'Contains US ASCII characters only'
 
 field.field_settings.string:
   type: mapping

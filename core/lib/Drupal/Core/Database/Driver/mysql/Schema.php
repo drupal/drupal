@@ -144,6 +144,10 @@ class Schema extends DatabaseSchema {
       if (!empty($spec['binary'])) {
         $sql .= ' BINARY';
       }
+      // Note we check for the "type" key here. "mysql_type" is VARCHAR:
+      if (isset($spec['type']) && $spec['type'] == 'varchar_ascii') {
+        $sql .= ' CHARACTER SET ascii COLLATE ascii_general_ci';
+      }
     }
     elseif (isset($spec['precision']) && isset($spec['scale'])) {
       $sql .= '(' . $spec['precision'] . ', ' . $spec['scale'] . ')';
@@ -218,6 +222,8 @@ class Schema extends DatabaseSchema {
     // database types back into schema types.
     // $map does not use drupal_static as its value never changes.
     static $map = array(
+      'varchar_ascii:normal' => 'VARCHAR',
+
       'varchar:normal'  => 'VARCHAR',
       'char:normal'     => 'CHAR',
 
