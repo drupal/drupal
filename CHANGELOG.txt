@@ -1,6 +1,7 @@
 
 Drupal 7.37, xxxx-xx-xx (development version)
 -----------------------
+- Fixed PDO exceptions on PostgreSQL when accessing invalid entity URLs.
 - Added a sites/all/libraries folder to the codebase, with instructions for
   using it.
 - Added a description to the "Administer text formats and filters" permission
