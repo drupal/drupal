@@ -9,6 +9,7 @@ namespace Drupal\dblog\Logger;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Logger\LogMessageParserInterface;
 use Drupal\Core\Logger\RfcLoggerTrait;
 use Psr\Log\LoggerInterface;
@@ -18,6 +19,7 @@ use Psr\Log\LoggerInterface;
  */
 class DbLog implements LoggerInterface {
   use RfcLoggerTrait;
+  use DependencySerializationTrait;
 
   /**
    * The database connection object.
