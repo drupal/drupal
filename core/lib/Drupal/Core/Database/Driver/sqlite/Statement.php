@@ -39,7 +39,10 @@ class Statement extends StatementPrefetch implements StatementInterface {
         $count = 0;
         $new_args = array();
         foreach ($args as $value) {
-          if (is_float($value) || is_int($value)) {
+          // Integers expressed as strings (e.g. '5') have to treated as numeric
+          // values. Sadly, PHP has an upper limit on integers, PHP_INT_MAX, so
+          // we can not support numbers higher than that.
+          if (is_float($value) || is_int($value) || (is_numeric($value) && $value <= PHP_INT_MAX)) {
             if (is_float($value)) {
               // Force the conversion to float so as not to loose precision
               // in the automatic cast.
@@ -58,7 +61,10 @@ class Statement extends StatementPrefetch implements StatementInterface {
       else {
         // Else, this is using named placeholders.
         foreach ($args as $placeholder => $value) {
-          if (is_float($value) || is_int($value)) {
+          // Integers expressed as strings (e.g. '5') have to treated as numeric
+          // values. Sadly, PHP has an upper limit on integers, PHP_INT_MAX, so
+          // we can not support numbers higher than that.
+          if (is_float($value) || is_int($value) || (is_numeric($value) && $value <= PHP_INT_MAX)) {
             if (is_float($value)) {
               // Force the conversion to float so as not to loose precision
               // in the automatic cast.

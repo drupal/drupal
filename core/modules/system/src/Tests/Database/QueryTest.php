@@ -69,7 +69,7 @@ class QueryTest extends DatabaseTestBase {
   /**
    * Tests numeric query parameter expansion in expressions.
    *
-   * @see \Drupal\Core\Database\Driver\sqlite\Connection::expandArguments()
+   * @see \Drupal\Core\Database\Driver\sqlite\Statement::getStatement()
    * @see http://bugs.php.net/bug.php?id=45259
    */
   public function testNumericExpressionSubstitution() {
@@ -78,6 +78,12 @@ class QueryTest extends DatabaseTestBase {
 
     $count = db_query('SELECT COUNT(*) >= :count FROM {test}', array(
       ':count' => 3,
+    ))->fetchField();
+    $this->assertEqual((bool) $count, TRUE);
+
+    // Test that numeric arguments expressed as strings also work properly.
+    $count = db_query('SELECT COUNT(*) >= :count FROM {test}', array(
+      ':count' => (string) 3,
     ))->fetchField();
     $this->assertEqual((bool) $count, TRUE);
   }
