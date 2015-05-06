@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Tests\Plugin;
 
+use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\views\Views;
 
 /**
@@ -16,6 +17,8 @@ use Drupal\views\Views;
  * @see views_plugin_cache
  */
 class CacheWebTest extends PluginTestBase {
+
+  use AssertPageCacheContextsAndTagsTrait;
 
   /**
    * Views used by this test.
@@ -63,10 +66,18 @@ class CacheWebTest extends PluginTestBase {
     $this->drupalGet('test-display');
     $this->assertResponse(200);
     $this->assertTrue(\Drupal::cache('render')->get($output_key));
+    $cache_tags = [
+      'config:user.role.anonymous',
+      'config:views.view.test_display',
+      'node_list',
+      'rendered'
+    ];
+    $this->assertCacheTags($cache_tags);
 
     $this->drupalGet('test-display');
     $this->assertResponse(200);
     $this->assertTrue(\Drupal::cache('render')->get($output_key));
+    $this->assertCacheTags($cache_tags);
   }
 
 }

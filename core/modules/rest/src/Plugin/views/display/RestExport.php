@@ -8,12 +8,15 @@
 namespace Drupal\rest\Plugin\views\display;
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Cache\CacheableResponse;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\PathPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -72,6 +75,13 @@ class RestExport extends PathPluginBase {
   protected $mimeType;
 
   /**
+   * The renderer
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
    * Constructs a Drupal\rest\Plugin\ResourceBase object.
    *
    * @param array $configuration
@@ -84,9 +94,13 @@ class RestExport extends PathPluginBase {
    *   The route provider
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key value store.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteProviderInterface $route_provider, StateInterface $state) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteProviderInterface $route_provider, StateInterface $state, RendererInterface $renderer) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $route_provider, $state);
+
+    $this->renderer = $renderer;
   }
 
   /**
@@ -98,7 +112,8 @@ class RestExport extends PathPluginBase {
       $plugin_id,
       $plugin_definition,
       $container->get('router.route_provider'),
-      $container->get('state')
+      $container->get('state'),
+      $container->get('renderer')
     );
   }
 
@@ -259,7 +274,16 @@ class RestExport extends PathPluginBase {
     parent::execute();
 
     $output = $this->view->render();
-    return new Response(drupal_render_root($output), 200, array('Content-type' => $this->getMimeType()));
+
+    $header = [];
+    $header['Content-type'] = $this->getMimeType();
+
+    $response = new CacheableResponse($this->renderer->renderRoot($output), 200);
+    $cache_metadata = CacheableMetadata::createFromRenderArray($output);
+
+    $response->addCacheableDependency($cache_metadata);
+
+    return $response;
   }
 
   /**
@@ -275,6 +299,16 @@ class RestExport extends PathPluginBase {
       $build['#markup'] = SafeMarkup::checkPlain($build['#markup']);
       $build['#suffix'] = '</pre>';
     }
+
+    // Defaults for bubbleable rendering metadata.
+    $build['#cache']['tags'] = isset($build['#cache']['tags']) ? $build['#cache']['tags'] : array();
+    $build['#cache']['max-age'] = isset($build['#cache']['max-age']) ? $build['#cache']['max-age'] : Cache::PERMANENT;
+
+    /** @var \Drupal\views\Plugin\views\cache\CachePluginBase $cache */
+    $cache = $this->getPlugin('cache');
+
+    $build['#cache']['tags'] = Cache::mergeTags($build['#cache']['tags'], $cache->getCacheTags());
+    $build['#cache']['max-age'] = Cache::mergeMaxAges($build['#cache']['max-age'], $cache->getCacheMaxAge());
 
     return $build;
   }

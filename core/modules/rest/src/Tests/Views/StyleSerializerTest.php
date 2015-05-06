@@ -8,6 +8,8 @@
 namespace Drupal\rest\Tests\Views;
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Cache\Cache;
+use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\views\Views;
 use Drupal\views\Tests\Plugin\PluginTestBase;
 use Drupal\views\Tests\ViewTestData;
@@ -23,6 +25,13 @@ use Symfony\Component\HttpFoundation\Request;
  * @see \Drupal\rest\Plugin\views\row\DataFieldRow
  */
 class StyleSerializerTest extends PluginTestBase {
+
+  use AssertPageCacheContextsAndTagsTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $dumpHeaders = TRUE;
 
   /**
    * Modules to install.
@@ -69,6 +78,9 @@ class StyleSerializerTest extends PluginTestBase {
 
     $actual_json = $this->drupalGet('test/serialize/field', array(), array('Accept: application/json'));
     $this->assertResponse(200);
+    $this->assertCacheTags($view->getCacheTags());
+    // @todo Due to https://www.drupal.org/node/2352009 we can't yet test the
+    // propagation of cache max-age.
 
     // Test the http Content-type.
     $headers = $this->drupalGetHeaders();
@@ -117,10 +129,18 @@ class StyleSerializerTest extends PluginTestBase {
     $actual_json = $this->drupalGet('test/serialize/entity', array(), array('Accept: application/json'));
     $this->assertResponse(200);
     $this->assertIdentical($actual_json, $expected, 'The expected JSON output was found.');
+    $expected_cache_tags = $view->getCacheTags();
+    $expected_cache_tags[] = 'entity_test_list';
+    /** @var \Drupal\Core\Entity\EntityInterface $entity */
+    foreach ($entities as $entity) {
+      $expected_cache_tags = Cache::mergeTags($expected_cache_tags, $entity->getCacheTags());
+    }
+    $this->assertCacheTags($expected_cache_tags);
 
     $expected = $serializer->serialize($entities, 'hal_json');
     $actual_json = $this->drupalGet('test/serialize/entity', array(), array('Accept: application/hal+json'));
     $this->assertIdentical($actual_json, $expected, 'The expected HAL output was found.');
+    $this->assertCacheTags($expected_cache_tags);
   }
 
   /**

@@ -373,6 +373,25 @@ abstract class CachePluginBase extends PluginBase {
   }
 
   /**
+   * Gets the max age for the current view.
+   *
+   * @return int
+   */
+  public function getCacheMaxAge() {
+    $max_age = $this->getDefaultCacheMaxAge();
+    $max_age = Cache::mergeMaxAges($max_age, $this->view->getQuery()->getCacheMaxAge());
+    return $max_age;
+  }
+
+  /**
+   * Returns the default cache max age.
+   */
+  protected function getDefaultCacheMaxAge() {
+    // The default cache backend is not caching anything.
+    return 0;
+  }
+
+  /**
    * Prepares the view result before putting it into cache.
    *
    * @param \Drupal\views\ResultRow[] $result
