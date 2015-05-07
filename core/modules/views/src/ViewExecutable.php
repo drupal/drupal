@@ -483,8 +483,10 @@ class ViewExecutable implements \Serializable {
    * Set the arguments that come to this view. Usually from the URL
    * but possibly from elsewhere.
    */
-  public function setArguments($args) {
-    $this->args = $args;
+  public function setArguments(array $args) {
+    // The array keys of the arguments will be incorrect if set by
+    // views_embed_view() or \Drupal\views\ViewExecutable:preview().
+    $this->args = array_values($args);
   }
 
   /**

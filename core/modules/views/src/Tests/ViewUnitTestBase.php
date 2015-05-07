@@ -118,7 +118,7 @@ abstract class ViewUnitTestBase extends KernelTestBase {
    * @param array $args
    *   (optional) An array of the view arguments to use for the view.
    */
-  protected function executeView($view, $args = array()) {
+  protected function executeView($view, array $args = array()) {
     $view->setDisplay();
     $view->preExecute($args);
     $view->execute();

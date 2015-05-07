@@ -23,7 +23,7 @@ class ModuleTest extends ViewUnitTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_view_status', 'test_view');
+  public static $testViews = array('test_view_status', 'test_view', 'test_argument');
 
   /**
    * Modules to enable.
@@ -266,6 +266,71 @@ class ModuleTest extends ViewUnitTestBase {
       $this->assertEqual($plugin_details['provider'], $plugin_def['provider'], 'The expected plugin provider was found.');
       $this->assertTrue(in_array('test_view', $plugin_details['views']), 'The test_view View was found in the list of views using this plugin.');
     }
+  }
+
+  /**
+   * Tests views.module: views_embed_view().
+   */
+  public function testViewsEmbedView() {
+    $this->enableModules(array('user'));
+
+    $result = views_embed_view('test_argument');
+    $this->assertEqual(count($result['#view']->result), 5);
+
+    $result = views_embed_view('test_argument', 'default', 1);
+    $this->assertEqual(count($result['#view']->result), 1);
+
+    $result = views_embed_view('test_argument', 'default', '1,2');
+    $this->assertEqual(count($result['#view']->result), 2);
+
+    $result = views_embed_view('test_argument', 'default', '1,2', 'John');
+    $this->assertEqual(count($result['#view']->result), 1);
+
+    $result = views_embed_view('test_argument', 'default', '1,2', 'John,George');
+    $this->assertEqual(count($result['#view']->result), 2);
+  }
+
+  /**
+   * Tests the \Drupal\views\ViewsExecutable::preview() method.
+   */
+  public function testViewsPreview() {
+    $this->enableModules(array('user'));
+
+    $view = Views::getView('test_argument');
+    $result = $view->preview('default');
+    $this->assertEqual(count($result['#view']->result), 5);
+
+    $view = Views::getView('test_argument');
+    $result = $view->preview('default', array('0' => 1));
+    $this->assertEqual(count($result['#view']->result), 1);
+
+    $view = Views::getView('test_argument');
+    $result = $view->preview('default', array('3' => 1));
+    $this->assertEqual(count($result['#view']->result), 1);
+
+    $view = Views::getView('test_argument');
+    $result = $view->preview('default', array('0' => '1,2'));
+    $this->assertEqual(count($result['#view']->result), 2);
+
+    $view = Views::getView('test_argument');
+    $result = $view->preview('default', array('3' => '1,2'));
+    $this->assertEqual(count($result['#view']->result), 2);
+
+    $view = Views::getView('test_argument');
+    $result = $view->preview('default', array('0' => '1,2', '1' => 'John'));
+    $this->assertEqual(count($result['#view']->result), 1);
+
+    $view = Views::getView('test_argument');
+    $result = $view->preview('default', array('3' => '1,2', '4' => 'John'));
+    $this->assertEqual(count($result['#view']->result), 1);
+
+    $view = Views::getView('test_argument');
+    $result = $view->preview('default', array('0' => '1,2', '1' => 'John,George'));
+    $this->assertEqual(count($result['#view']->result), 2);
+
+    $view = Views::getView('test_argument');
+    $result = $view->preview('default', array('3' => '1,2', '4' => 'John,George'));
+    $this->assertEqual(count($result['#view']->result), 2);
   }
 
   /**
