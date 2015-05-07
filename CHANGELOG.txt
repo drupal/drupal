@@ -1,4 +1,7 @@
 
+Drupal 7.38, xxxx-xx-xx (development version)
+-----------------------
+
 Drupal 7.37, 2015-05-07
 -----------------------
 - Fixed a regression in Drupal 7.36 which caused certain kinds of content types
