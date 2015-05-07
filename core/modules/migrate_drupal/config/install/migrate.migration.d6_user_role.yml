@@ -41,3 +41,6 @@ process:
     - plugin: filter_format_permission
 destination:
   plugin: entity:user_role
+migration_dependencies:
+  required:
+    - d6_filter_format
