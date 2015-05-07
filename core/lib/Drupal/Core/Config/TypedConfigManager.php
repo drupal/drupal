@@ -116,7 +116,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
   /**
    * {@inheritdoc}
    */
-  public function getDefinition($base_plugin_id, $exception_on_invalid = TRUE, $is_config_name = FALSE) {
+  public function getDefinition($base_plugin_id, $exception_on_invalid = TRUE) {
     $definitions = $this->getDefinitions();
     if (isset($definitions[$base_plugin_id])) {
       $type = $base_plugin_id;
@@ -145,14 +145,6 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
       'definition_class' => '\Drupal\Core\TypedData\DataDefinition',
       'type' => $type,
     );
-    // If this is definition expected for a config name and it is defined as a
-    // mapping, add a langcode element if not already present.
-    if ($is_config_name && isset($definition['mapping']) && !isset($definition['mapping']['langcode'])) {
-      $definition['mapping']['langcode'] = array(
-        'type' => 'string',
-        'label' => 'Language code',
-      );
-    }
     return $definition;
   }
 
