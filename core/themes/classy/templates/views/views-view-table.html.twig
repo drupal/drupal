@@ -71,7 +71,7 @@
               ]
             %}
           {% endif %}
-          <th{{ column.attributes.addClass(column_classes) }} scope="col">
+          <th{{ column.attributes.addClass(column_classes).setAttribute('scope', 'col') }}>
             {{ column.content }}
           </th>
         {% endfor %}

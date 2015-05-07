@@ -36,7 +36,7 @@
       {# Print first item if we are not on the first page. #}
       {% if items.first %}
         <li class="pager__item pager__item--first">
-          <a href="{{ items.first.href }}" title="{{ 'Go to first page'|t }}"{{ items.first.attributes }}>
+          <a href="{{ items.first.href }}" title="{{ 'Go to first page'|t }}"{{ items.first.attributes|without('href', 'title') }}>
             <span class="visually-hidden">{{ 'First page'|t }}</span>
             <span aria-hidden="true">{{ items.first.text|default('« first'|t) }}</span>
           </a>
@@ -45,7 +45,7 @@
       {# Print previous item if we are not on the first page. #}
       {% if items.previous %}
         <li class="pager__item pager__item--previous">
-          <a href="{{ items.previous.href }}" title="{{ 'Go to previous page'|t }}" rel="prev"{{ items.previous.attributes }}>
+          <a href="{{ items.previous.href }}" title="{{ 'Go to previous page'|t }}" rel="prev"{{ items.previous.attributes|without('href', 'title', 'rel') }}>
             <span class="visually-hidden">{{ 'Previous page'|t }}</span>
             <span aria-hidden="true">{{ items.previous.text|default('‹ previous'|t) }}</span>
           </a>
@@ -63,7 +63,7 @@
           {% else %}
             {% set title = 'Go to page @key'|t({'@key': key}) %}
           {% endif %}
-          <a href="{{ item.href }}" title="{{ title }}"{{ item.attributes }}>
+          <a href="{{ item.href }}" title="{{ title }}"{{ item.attributes|without('href', 'title') }}>
             <span class="visually-hidden">
               {{ current == key ? 'Current page'|t : 'Page'|t }}
             </span>
@@ -78,7 +78,7 @@
       {# Print next item if we are not on the last page. #}
       {% if items.next %}
         <li class="pager__item pager__item--next">
-          <a href="{{ items.next.href }}" title="{{ 'Go to next page'|t }}" rel="next"{{ items.next.attributes }}>
+          <a href="{{ items.next.href }}" title="{{ 'Go to next page'|t }}" rel="next"{{ items.next.attributes|without('href', 'title', 'rel') }}>
             <span class="visually-hidden">{{ 'Next page'|t }}</span>
             <span aria-hidden="true">{{ items.next.text|default('next ›'|t) }}</span>
           </a>
@@ -87,7 +87,7 @@
       {# Print last item if we are not on the last page. #}
       {% if items.last %}
         <li class="pager__item pager__item--last">
-          <a href="{{ items.last.href }}" title="{{ 'Go to last page'|t }}"{{ items.last.attributes }}>
+          <a href="{{ items.last.href }}" title="{{ 'Go to last page'|t }}"{{ items.last.attributes|without('href', 'title') }}>
             <span class="visually-hidden">{{ 'Last page'|t }}</span>
             <span aria-hidden="true">{{ items.last.text|default('last »'|t) }}</span>
           </a>

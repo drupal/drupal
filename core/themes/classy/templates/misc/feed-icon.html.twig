@@ -13,4 +13,4 @@
  * @see template_preprocess_feed_icon()
  */
 #}
-<a href="{{ url }}"{{ attributes.addClass('feed-icon') }}>{{ icon }}</a>
+<a href="{{ url }}"{{ attributes.addClass('feed-icon')|without('href') }}>{{ icon }}</a>

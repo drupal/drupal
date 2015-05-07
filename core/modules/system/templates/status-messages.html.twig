@@ -26,7 +26,7 @@
  */
 #}
 {% for type, messages in message_list %}
-  <div class="{{ attributes.class }}" role="contentinfo" aria-label="{{ status_headings[type] }}">
+  <div role="contentinfo" aria-label="{{ status_headings[type] }}"{{ attributes|without('role', 'aria-label') }}>
     {% if type == 'error' %}
       <div role="alert">
     {% endif %}

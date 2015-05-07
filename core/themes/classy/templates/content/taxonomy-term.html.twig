@@ -29,7 +29,7 @@
     'vocabulary-' ~ term.bundle|clean_class,
   ]
 %}
-<div id="taxonomy-term-{{ term.id }}"{{ attributes.addClass(classes)|without('id') }}>
+<div{{ attributes.setAttribute('id', 'taxonomy-term-' ~ term.id).addClass(classes) }}>
   {{ title_prefix }}
   {% if not page %}
     <h2><a href="{{ url }}">{{ name }}</a></h2>
