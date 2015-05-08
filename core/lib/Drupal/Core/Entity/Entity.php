@@ -204,8 +204,15 @@ abstract class Entity implements EntityInterface {
     $uri
       ->setOption('entity_type', $this->getEntityTypeId())
       ->setOption('entity', $this);
+
+    // Display links by default based on the current language.
+    if ($rel !== 'collection') {
+      $options += ['language' => $this->language()];
+    }
+
     $uri_options = $uri->getOptions();
     $uri_options += $options;
+
     return $uri->setOptions($uri_options);
   }
 
@@ -323,13 +330,16 @@ abstract class Entity implements EntityInterface {
    * {@inheritdoc}
    */
   public function language() {
-    $langcode = $this->{$this->getEntityType()->getKey('langcode')};
-    $language = $this->languageManager()->getLanguage($langcode);
-    if (!$language) {
-      // Make sure we return a proper language object.
-      $langcode = $this->langcode ?: LanguageInterface::LANGCODE_NOT_SPECIFIED;
-      $language = new Language(array('id' => $langcode));
+    if ($key = $this->getEntityType()->getKey('langcode')) {
+      $langcode = $this->$key;
+      $language = $this->languageManager()->getLanguage($langcode);
+      if ($language) {
+        return $language;
+      }
     }
+    // Make sure we return a proper language object.
+    $langcode = !empty($this->langcode) ? $this->langcode : LanguageInterface::LANGCODE_NOT_SPECIFIED;
+    $language = new Language(array('id' => $langcode));
     return $language;
   }
 

@@ -302,7 +302,8 @@ class FieldFieldTest extends ViewUnitTestBase {
     for ($i = 0; $i < 5; $i++) {
       $this->assertEqual($i + 1, $executable->getStyle()->getField($i, 'id'));
       $this->assertEqual('test ' . $i, $executable->getStyle()->getField($i, 'name'));
-      $this->assertEqual('<a href="' . EntityTest::load($i + 1)->url() . '">test ' . $i . '</a>', $executable->getStyle()->getField($i, 'name_alias'));
+      $entity = EntityTest::load($i + 1);
+      $this->assertEqual('<a href="' . $entity->url() . '" hreflang="' . $entity->language()->getId() . '">test ' . $i . '</a>', $executable->getStyle()->getField($i, 'name_alias'));
     }
   }
 

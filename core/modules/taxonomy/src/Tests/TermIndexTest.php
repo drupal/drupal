@@ -211,6 +211,8 @@ class TermIndexTest extends TaxonomyTestBase {
 
     // Verify that the page breadcrumbs include a link to the parent term.
     $this->drupalGet('taxonomy/term/' . $term1->id());
-    $this->assertRaw(\Drupal::l($term2->getName(), $term2->urlInfo()), 'Parent term link is displayed when viewing the node.');
+    // Breadcrumbs are not rendered with a language, prevent the term
+    // language from being added to the options.
+    $this->assertRaw(\Drupal::l($term2->getName(), $term2->urlInfo('canonical', ['language' => NULL])), 'Parent term link is displayed when viewing the node.');
   }
 }

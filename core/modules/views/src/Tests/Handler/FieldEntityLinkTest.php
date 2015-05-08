@@ -122,10 +122,10 @@ class FieldEntityLinkTest extends ViewUnitTestBase {
         if ($expected_result) {
           $path = $entity->url($template);
           $destination = $info[$template]['destination'] ? '?destination=/' : '';
-          $expected_link = '<a href="' . $path . $destination . '">' . $info[$template]['label'] . '</a>';
+          $expected_link = '<a href="' . $path . $destination . '" hreflang="en">' . $info[$template]['label'] . '</a>';
         }
         $link = $view->style_plugin->getField($index, $info[$template]['field_id']);
-        $this->assertEqual($link, $expected_link, SafeMarkup::format('@template entity link behaves as expected.', ['@template' => $template]));
+        $this->assertEqual($link, $expected_link);
       }
       $index++;
     }

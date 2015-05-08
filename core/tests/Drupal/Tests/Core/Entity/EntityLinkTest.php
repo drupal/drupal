@@ -8,6 +8,7 @@
 namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Language\Language;
 use Drupal\Core\Link;
 use Drupal\Tests\UnitTestCase;
 
@@ -32,6 +33,13 @@ class EntityLinkTest extends UnitTestCase {
   protected $linkGenerator;
 
   /**
+   * The mocked language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $languageManager;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -39,10 +47,12 @@ class EntityLinkTest extends UnitTestCase {
 
     $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
     $this->linkGenerator = $this->getMock('Drupal\Core\Utility\LinkGeneratorInterface');
+    $this->languageManager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
 
     $container = new ContainerBuilder();
     $container->set('entity.manager', $this->entityManager);
     $container->set('link_generator', $this->linkGenerator);
+    $container->set('language_manager', $this->languageManager);
     \Drupal::setContainer($container);
   }
 
@@ -52,6 +62,13 @@ class EntityLinkTest extends UnitTestCase {
    * @dataProvider providerTestLink
    */
   public function testLink($entity_label, $link_text, $expected_text, $link_rel = 'canonical', array $link_options = []) {
+    $language = new Language(['id' => 'es']);
+    $link_options += ['language' => $language];
+    $this->languageManager->expects($this->any())
+      ->method('getLanguage')
+      ->with('es')
+      ->willReturn($language);
+
     $route_name_map = [
       'canonical' => 'entity.test_entity_type.canonical',
       'edit-form' => 'entity.test_entity_type.edit_form',
@@ -67,8 +84,10 @@ class EntityLinkTest extends UnitTestCase {
       ->willReturn($route_name_map);
     $entity_type->expects($this->any())
       ->method('getKey')
-      ->with('label')
-      ->willReturn('label');
+      ->willReturnMap([
+        ['label', 'label'],
+        ['langcode', 'langcode'],
+      ]);
 
     $this->entityManager
       ->expects($this->any())
@@ -78,7 +97,7 @@ class EntityLinkTest extends UnitTestCase {
 
     /** @var \Drupal\Core\Entity\Entity $entity */
     $entity = $this->getMockForAbstractClass('Drupal\Core\Entity\Entity', [
-      ['id' => $entity_id, 'label' => $entity_label],
+      ['id' => $entity_id, 'label' => $entity_label, 'langcode' => 'es'],
       $entity_type_id
     ]);
 
