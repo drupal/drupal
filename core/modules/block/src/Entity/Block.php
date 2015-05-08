@@ -48,6 +48,9 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *     "plugin",
  *     "settings",
  *     "visibility",
+ *   },
+ *   lookup_keys = {
+ *     "theme"
  *   }
  * )
  */

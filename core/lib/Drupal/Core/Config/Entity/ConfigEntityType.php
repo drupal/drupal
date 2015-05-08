@@ -35,6 +35,13 @@ class ConfigEntityType extends EntityType implements ConfigEntityTypeInterface {
   protected $static_cache = FALSE;
 
   /**
+   * Keys that are stored key value store for fast lookup.
+   *
+   * @var array
+   */
+  protected $lookup_keys = [];
+
+  /**
    * The list of configuration entity properties to export from the annotation.
    *
    * @var array
@@ -74,6 +81,7 @@ class ConfigEntityType extends EntityType implements ConfigEntityTypeInterface {
     $this->handlers += array(
       'storage' => 'Drupal\Core\Config\Entity\ConfigEntityStorage',
     );
+    $this->lookup_keys[] = 'uuid';
   }
 
   /**
@@ -188,6 +196,13 @@ class ConfigEntityType extends EntityType implements ConfigEntityTypeInterface {
       return $this->mergedConfigExport;
     }
     return NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLookupKeys() {
+    return $this->lookup_keys;
   }
 
 }

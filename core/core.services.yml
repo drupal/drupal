@@ -721,7 +721,9 @@ services:
       - [setContainer, ['@service_container']]
   entity.query.config:
     class: Drupal\Core\Config\Entity\Query\QueryFactory
-    arguments: ['@config.factory']
+    arguments: ['@config.factory', '@keyvalue', '@config.manager']
+    tags:
+      - { name: event_subscriber }
   entity.query.sql:
     class: Drupal\Core\Entity\Query\Sql\QueryFactory
     arguments: ['@database']

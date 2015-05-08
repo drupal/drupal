@@ -31,6 +31,9 @@ use Drupal\tour\TourInterface;
  *     "module",
  *     "routes",
  *     "tips",
+ *   },
+ *   lookup_keys = {
+ *     "routes.*.route_name"
  *   }
  * )
  */

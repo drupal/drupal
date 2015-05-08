@@ -11,6 +11,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Query\QueryBase;
 use Drupal\Core\Entity\Query\QueryInterface;
+use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 
 /**
  * Defines the entity query for configuration entities.
@@ -18,11 +19,25 @@ use Drupal\Core\Entity\Query\QueryInterface;
 class Query extends QueryBase implements QueryInterface {
 
   /**
+   * Information about the entity type.
+   *
+   * @var \Drupal\Core\Config\Entity\ConfigEntityTypeInterface
+   */
+  protected $entityType;
+
+  /**
    * The config factory used by the config entity query.
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
+
+  /**
+   * The key value factory.
+   *
+   * @var \Drupal\Core\KeyValueStore\KeyValueFactoryInterface
+   */
+  protected $keyValueFactory;
 
   /**
    * Constructs a Query object.
@@ -34,12 +49,15 @@ class Query extends QueryBase implements QueryInterface {
    *   - OR: at least one of the conditions on the query need to match.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
+   * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_factory
+   *   The key value factory.
    * @param array $namespaces
    *   List of potential namespaces of the classes belonging to this query.
    */
-  function __construct(EntityTypeInterface $entity_type, $conjunction, ConfigFactoryInterface $config_factory, array $namespaces) {
+  function __construct(EntityTypeInterface $entity_type, $conjunction, ConfigFactoryInterface $config_factory, KeyValueFactoryInterface $key_value_factory, array $namespaces) {
     parent::__construct($entity_type, $conjunction, $namespaces);
     $this->configFactory = $config_factory;
+    $this->keyValueFactory = $key_value_factory;
   }
 
   /**
@@ -108,37 +126,47 @@ class Query extends QueryBase implements QueryInterface {
     $prefix = $this->entityType->getConfigPrefix() . '.';
     $prefix_length = strlen($prefix);
 
-    // Search the conditions for restrictions on entity IDs.
-    $ids = array();
+    // Search the conditions for restrictions on configuration object names.
+    $names = FALSE;
     if ($this->condition->getConjunction() == 'AND') {
-      foreach ($this->condition->conditions() as $condition) {
-        if (is_string($condition['field']) && $condition['field'] == $this->entityType->getKey('id')) {
-          $operator = $condition['operator'] ?: (is_array($condition['value']) ? 'IN' : '=');
-          if ($operator == '=') {
-            $ids = array($condition['value']);
+      $lookup_keys = $this->entityType->getLookupKeys();
+      $conditions = $this->condition->conditions();
+      foreach ($conditions as $condition_key => $condition) {
+        $operator = $condition['operator'] ?: (is_array($condition['value']) ? 'IN' : '=');
+        if (is_string($condition['field']) && ($operator == 'IN' || $operator == '=')) {
+          // Special case ID lookups.
+          if ($condition['field'] == $this->entityType->getKey('id')) {
+            $ids = (array) $condition['value'];
+            $names = array_map(function ($id) use ($prefix) {
+              return $prefix . $id;
+            }, $ids);
           }
-          elseif ($operator == 'IN') {
-            $ids = $condition['value'];
+          elseif (in_array($condition['field'], $lookup_keys)) {
+            // If we don't find anything then there are no matches. No point in
+            // listing anything.
+            $names = array();
+            $keys = (array) $condition['value'];
+            $keys = array_map(function ($value) use ($condition) {
+              return $condition['field'] . ':' . $value;
+            }, $keys);
+            foreach ($this->getConfigKeyStore()->getMultiple($keys) as $list) {
+              $names = array_merge($names, $list);
+            }
           }
-          // We stop at the first restricting condition on ID. In the (weird)
-          // case where there are additional restricting conditions, results
-          // will be eliminated when the conditions are checked on the loaded
-          // records.
-          if ($ids) {
-            break;
-          }
+        }
+        // We stop at the first restricting condition on name. In the case where
+        // there are additional restricting conditions, results will be
+        // eliminated when the conditions are checked on the loaded records.
+        if ($names !== FALSE) {
+          // If the condition has been responsible for narrowing the list of
+          // configuration to check there is no point in checking it further.
+          unset($conditions[$condition_key]);
+          break;
         }
       }
     }
-    // If there are conditions restricting config ID, we can narrow the list of
-    // records to load and parse.
-    if ($ids) {
-      $names = array_map(function ($id) use ($prefix) {
-        return $prefix . $id;
-      }, $ids);
-    }
     // If no restrictions on IDs were found, we need to parse all records.
-    else {
+    if ($names === FALSE) {
       $names = $this->configFactory->listAll($prefix);
     }
 
@@ -148,6 +176,16 @@ class Query extends QueryBase implements QueryInterface {
       $records[substr($config->getName(), $prefix_length)] = $config->get();
     }
     return $records;
+  }
+
+  /**
+   * Gets the key value store used to store fast lookups.
+   *
+   * @return \Drupal\Core\KeyValueStore\KeyValueStoreInterface
+   *   The key value store used to store fast lookups.
+   */
+  protected function getConfigKeyStore() {
+    return $this->keyValueFactory->get(QueryFactory::CONFIG_LOOKUP_PREFIX . $this->entityTypeId);
   }
 
 }

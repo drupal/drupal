@@ -70,4 +70,12 @@ interface ConfigEntityTypeInterface extends EntityTypeInterface {
    */
   public function getPropertiesToExport();
 
+  /**
+   * Gets the keys that are available for fast lookup.
+   *
+   * @return string[]
+   *   The list of lookup keys.
+   */
+  public function getLookupKeys();
+
 }
