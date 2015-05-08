@@ -371,6 +371,7 @@ REST module
 Responsive Image module
 - Peter Droogmans 'attiks' http://drupal.org/user/105002
 - Marc Drummond 'mdrummond' http://www.drupal.org/user/360968/
+- Jelle Sebreghts 'Jelle_S' https://www.drupal.org/user/829198
 
 Search module
 - Jennifer Hodgdon 'jhodgdon' https://drupal.org/user/155601
