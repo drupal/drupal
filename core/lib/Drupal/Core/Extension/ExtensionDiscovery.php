@@ -134,8 +134,9 @@ class ExtensionDiscovery {
    */
   public function scan($type, $include_tests = NULL) {
     // Determine the installation profile directories to scan for extensions,
-    // unless explicit profile directories have been set.
-    if (!isset($this->profileDirectories)) {
+    // unless explicit profile directories have been set. Exclude profiles as we
+    // cannot have profiles within profiles.
+    if (!isset($this->profileDirectories) && $type != 'profile') {
       $this->setProfileDirectoriesFromSettings();
     }
 

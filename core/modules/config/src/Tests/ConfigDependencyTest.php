@@ -184,6 +184,10 @@ class ConfigDependencyTest extends KernelTestBase {
       )
     );
     $entity2->save();
+    // Perform a module rebuild so we can know where the node module is located
+    // and uninstall it.
+    // @todo Remove as part of https://www.drupal.org/node/2186491
+    system_rebuild_module_data();
     // Test that doing a config uninstall of the node module deletes entity2
     // since it is dependent on entity1 which is dependent on the node module.
     $config_manager->uninstall('module', 'node');

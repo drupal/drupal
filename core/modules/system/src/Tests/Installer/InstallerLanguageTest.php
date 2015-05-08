@@ -30,7 +30,9 @@ class InstallerLanguageTest extends KernelTestBase {
       'it' => array(),
     );
 
-    $file_translation = new FileTranslation(drupal_get_path('module', 'simpletest') . '/files/translations');
+    // Hardcode the simpletest module location as we don't yet know where it is.
+    // @todo Remove as part of https://www.drupal.org/node/2186491
+    $file_translation = new FileTranslation('core/modules/simpletest/files/translations');
     foreach ($expected_translation_files as $langcode => $files_expected) {
       $files_found = $file_translation->findTranslationFiles($langcode);
       $this->assertTrue(count($files_found) == count($files_expected), format_string('@count installer languages found.', array('@count' => count($files_expected))));

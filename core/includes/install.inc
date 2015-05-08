@@ -556,7 +556,7 @@ function drupal_verify_profile($install_state) {
   $info = $install_state['profile_info'];
 
   // Get the list of available modules for the selected installation profile.
-  $listing = new ExtensionDiscovery(DRUPAL_ROOT);
+  $listing = new ExtensionDiscovery(\Drupal::root());
   $present_modules = array();
   foreach ($listing->scan('module') as $present_module) {
     $present_modules[] = $present_module->getName();
@@ -922,11 +922,20 @@ function drupal_check_profile($profile, array $install_state) {
 
   // Collect requirement testing results.
   $requirements = array();
+
+  // Performs an ExtensionDiscovery scan as the system module is unavailable and
+  // we don't yet know where all the modules are located.
+  // @todo Remove as part of https://www.drupal.org/node/2186491
+  $listing = new ExtensionDiscovery(\Drupal::root());
+  $module_list = $listing->scan('module');
   foreach ($info['dependencies'] as $module) {
-    module_load_install($module);
+    $file = \Drupal::root() . '/' . $module_list[$module]->getPath() . "/$module.install";
+    if (is_file($file)) {
+      require_once $file;
+    }
     $function = $module . '_requirements';
 
-    drupal_classloader_register($module, drupal_get_path('module', $module));
+    drupal_classloader_register($module, $module_list[$module]->getPath());
     if (function_exists($function)) {
       $requirements = array_merge($requirements, $function('install'));
     }

@@ -18,7 +18,7 @@ use Drupal\Component\Utility\SafeMarkup;
 /**
  * Default implementation of the module installer.
  *
- * It registers the module in config, install its own configuration,
+ * It registers the module in config, installs its own configuration,
  * installs the schema, updates the Drupal kernel and more.
  */
 class ModuleInstaller implements ModuleInstallerInterface {

@@ -23,7 +23,7 @@ class TermKernelTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array( 'filter', 'taxonomy', 'taxonomy_term', 'text', 'user' );
+  public static $modules = array( 'filter', 'taxonomy', 'text', 'user' );
 
   /**
    * {@inheritdoc}

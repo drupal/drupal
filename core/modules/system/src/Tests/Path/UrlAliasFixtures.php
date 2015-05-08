@@ -80,6 +80,10 @@ class UrlAliasFixtures {
   public function tableDefinition() {
     $tables = array();
 
+    // Prime the drupal_get_filename() cache with the location of the system
+    // module as its location is known and shouldn't change.
+    // @todo Remove as part of https://www.drupal.org/node/2186491
+    drupal_get_filename('module', 'system', 'core/modules/system/system.info.yml');
     module_load_install('system');
     $schema = system_schema();
 

@@ -74,7 +74,7 @@ class AttachedAssetsTest extends KernelTestBase {
    * Tests non-existing libraries.
    */
   function testLibraryUnknown() {
-    $build['#attached']['library'][] = 'unknown/unknown';
+    $build['#attached']['library'][] = 'core/unknown';
     $assets = AttachedAssets::createFromRenderArray($build);
 
     $this->assertIdentical([], $this->assetResolver->getJsAssets($assets, FALSE)[0], 'Unknown library was not added to the page.');

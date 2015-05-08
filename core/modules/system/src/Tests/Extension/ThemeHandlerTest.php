@@ -316,6 +316,9 @@ class ThemeHandlerTest extends KernelTestBase {
     $themes = $this->themeHandler()->listInfo();
     $this->assertFalse(isset($themes[$name]->info['regions']['test_region']));
 
+    // Rebuild module data so we know where module_test is located.
+    // @todo Remove as part of https://www.drupal.org/node/2186491
+    system_rebuild_module_data();
     $this->moduleInstaller()->install(array('module_test'), FALSE);
     $this->assertTrue($this->moduleHandler()->moduleExists('module_test'));
 

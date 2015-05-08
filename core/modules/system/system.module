@@ -883,14 +883,24 @@ function system_get_info($type, $name = NULL) {
  */
 function _system_rebuild_module_data() {
   $listing = new ExtensionDiscovery(\Drupal::root());
-  // Find modules
-  $modules = $listing->scan('module');
 
-  // Find installation profiles.
+  // Find installation profiles. This needs to happen before performing a
+  // module scan as the module scan requires knowing what the active profile is.
+  // @todo Remove as part of https://www.drupal.org/node/2186491
   $profiles = $listing->scan('profile');
+  $profile = drupal_get_profile();
+  if ($profile && isset($profiles[$profile])) {
+    // Prime the drupal_get_filename() static cache with the profile info file
+    // location so we can use drupal_get_path() on the active profile during
+    // the module scan.
+    // @todo Remove as part of https://www.drupal.org/node/2186491
+    drupal_get_filename('profile', $profile, $profiles[$profile]->getPathname());
+  }
 
+  // Find modules.
+  $modules = $listing->scan('module');
   // Include the installation profile in modules that are loaded.
-  if ($profile = drupal_get_profile()) {
+  if ($profile) {
     $modules[$profile] = $profiles[$profile];
     // Installation profile hooks are always executed last.
     $modules[$profile]->weight = 1000;

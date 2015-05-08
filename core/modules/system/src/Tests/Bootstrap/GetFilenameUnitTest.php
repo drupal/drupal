@@ -17,34 +17,6 @@ use Drupal\simpletest\KernelTestBase;
 class GetFilenameUnitTest extends KernelTestBase {
 
   /**
-   * The container used by the test, moved out of the way.
-   *
-   * @var \Symfony\Component\DependencyInjection\ContainerInterface
-   */
-  protected $previousContainer;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-    // Store the previous container.
-    $this->previousContainer = $this->container;
-    $this->container = NULL;
-    \Drupal::unsetContainer();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function tearDown() {
-    parent::tearDown();
-    // Restore the previous container.
-    $this->container = $this->previousContainer;
-    \Drupal::setContainer($this->previousContainer);
-  }
-
-  /**
    * Tests that drupal_get_filename() works when the file is not in database.
    */
   function testDrupalGetFilename() {
@@ -53,24 +25,41 @@ class GetFilenameUnitTest extends KernelTestBase {
     global $install_state;
     $install_state['parameters']['profile'] = 'testing';
 
-    // Assert that this test is meaningful.
-    $this->assertNull($this->container);
-    $this->assertFalse(\Drupal::hasContainer());
+    // Rebuild system.module.files state data.
+    // @todo Remove as part of https://www.drupal.org/node/2186491
+    drupal_static_reset('system_rebuild_module_data');
+    system_rebuild_module_data();
 
     // Retrieving the location of a module.
     $this->assertIdentical(drupal_get_filename('module', 'system'), 'core/modules/system/system.info.yml');
 
     // Retrieving the location of a theme.
+    \Drupal::service('theme_handler')->install(array('stark'));
     $this->assertIdentical(drupal_get_filename('theme', 'stark'), 'core/themes/stark/stark.info.yml');
 
     // Retrieving the location of a theme engine.
-    $this->assertIdentical(drupal_get_filename('theme_engine', 'phptemplate'), 'core/themes/engines/phptemplate/phptemplate.info.yml');
+    $this->assertIdentical(drupal_get_filename('theme_engine', 'twig'), 'core/themes/engines/twig/twig.info.yml');
 
     // Retrieving the location of a profile. Profiles are a special case with
     // a fixed location and naming.
-    $this->assertIdentical(drupal_get_filename('profile', 'standard'), 'core/profiles/standard/standard.info.yml');
+    $this->assertIdentical(drupal_get_filename('profile', 'testing'), 'core/profiles/testing/testing.info.yml');
 
-    // Searching for an item that does not exist returns NULL.
-    $this->assertNull(drupal_get_filename('module', uniqid("", TRUE)), 'Searching for an item that does not exist returns NULL.');
+
+    // Generate a non-existing module name.
+    $non_existing_module = uniqid("", TRUE);
+
+    // Set a custom error handler so we can ignore the file not found error.
+    set_error_handler(function($severity, $message, $file, $line) {
+      // Skip error handling if this is a "file not found" error.
+      if (strstr($message, 'is missing from the file system:')) {
+        \Drupal::state()->set('get_filename_test_triggered_error', TRUE);
+        return;
+      }
+      throw new \ErrorException($message, 0, $severity, $file, $line);
+    });
+    $this->assertNull(drupal_get_filename('module', $non_existing_module), 'Searching for an item that does not exist returns NULL.');
+    $this->assertTrue(\Drupal::state()->get('get_filename_test_triggered_error'), 'Searching for an item that does not exist triggers an error.');
+    // Restore the original error handler.
+    restore_error_handler();
   }
 }

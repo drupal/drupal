@@ -469,7 +469,8 @@ class ThemeHandler implements ThemeHandlerInterface {
     );
 
     $sub_themes = array();
-    $files = array();
+    $files_theme = array();
+    $files_theme_engine = array();
     // Read info files for each theme.
     foreach ($themes as $key => $theme) {
       // @todo Remove all code that relies on the $status property.
@@ -498,6 +499,7 @@ class ThemeHandler implements ThemeHandlerInterface {
       if (isset($engines[$engine])) {
         $theme->owner = $engines[$engine]->getExtensionPathname();
         $theme->prefix = $engines[$engine]->getName();
+        $files_theme_engine[$engine] = $engines[$engine]->getPathname();
       }
 
       // Prefix screenshot with theme path.
@@ -505,7 +507,7 @@ class ThemeHandler implements ThemeHandlerInterface {
         $theme->info['screenshot'] = $theme->getPath() . '/' . $theme->info['screenshot'];
       }
 
-      $files[$key] = $theme->getPathname();
+      $files_theme[$key] = $theme->getPathname();
     }
     // Build dependencies.
     // @todo Move into a generic ExtensionHandler base class.
@@ -513,8 +515,10 @@ class ThemeHandler implements ThemeHandlerInterface {
     $themes = $this->moduleHandler->buildModuleDependencies($themes);
 
     // Store filenames to allow system_list() and drupal_get_filename() to
-    // retrieve them without having to scan the filesystem.
-    $this->state->set('system.theme.files', $files);
+    // retrieve them for themes and theme engines without having to scan the
+    // filesystem.
+    $this->state->set('system.theme.files', $files_theme);
+    $this->state->set('system.theme_engine.files', $files_theme_engine);
 
     // After establishing the full list of available themes, fill in data for
     // sub-themes.

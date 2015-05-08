@@ -28,7 +28,11 @@ class ScanDirectoryTest extends FileTestBase {
 
   protected function setUp() {
     parent::setUp();
-    $this->path = drupal_get_path('module', 'simpletest') . '/files';
+    // Hardcode the location of the simpletest files as it is already known
+    // and shouldn't change, and we don't yet have a way to retreive their
+    // location from drupal_get_filename() in a cached way.
+    // @todo Remove as part of https://www.drupal.org/node/2186491
+    $this->path = 'core/modules/simpletest/files';
   }
 
   /**
@@ -123,10 +127,10 @@ class ScanDirectoryTest extends FileTestBase {
    * Check that the recurse option descends into subdirectories.
    */
   function testOptionRecurse() {
-    $files = file_scan_directory(drupal_get_path('module', 'simpletest'), '/^javascript-/', array('recurse' => FALSE));
+    $files = file_scan_directory($this->path . '/..', '/^javascript-/', array('recurse' => FALSE));
     $this->assertTrue(empty($files), "Without recursion couldn't find javascript files.");
 
-    $files = file_scan_directory(drupal_get_path('module', 'simpletest'), '/^javascript-/', array('recurse' => TRUE));
+    $files = file_scan_directory($this->path . '/..', '/^javascript-/', array('recurse' => TRUE));
     $this->assertEqual(2, count($files), 'With recursion we found the expected javascript files.');
   }
 

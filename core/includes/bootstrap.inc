@@ -249,16 +249,9 @@ function drupal_get_filename($type, $name, $filename = NULL) {
     if (!isset($files[$type][$name]) && \Drupal::hasService('state')) {
       $files[$type] += \Drupal::state()->get('system.' . $type . '.files', array());
     }
-    // If still unknown, perform a filesystem scan.
+    // If still unknown, create a user-level error message.
     if (!isset($files[$type][$name])) {
-      $listing = new ExtensionDiscovery(DRUPAL_ROOT);
-      // Prevent an infinite recursion by this legacy function.
-      if ($original_type == 'profile') {
-        $listing->setProfileDirectories(array());
-      }
-      foreach ($listing->scan($original_type) as $extension_name => $file) {
-        $files[$type][$extension_name] = $file->getPathname();
-      }
+      trigger_error(SafeMarkup::format('The following @type is missing from the file system: @name', array('@type' => $type, '@name' => $name)), E_USER_WARNING);
     }
   }
 

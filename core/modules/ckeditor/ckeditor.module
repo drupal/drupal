@@ -82,7 +82,7 @@ function _ckeditor_theme_css($theme = NULL) {
   if (!isset($theme)) {
     $theme = \Drupal::config('system.theme')->get('default');
   }
-  if ($theme_path = drupal_get_path('theme', $theme)) {
+  if (isset($theme) && $theme_path = drupal_get_path('theme', $theme)) {
     $info = system_get_info('theme', $theme);
     if (isset($info['ckeditor_stylesheets'])) {
       $css = $info['ckeditor_stylesheets'];
