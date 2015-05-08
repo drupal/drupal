@@ -85,7 +85,7 @@ class EntityReferenceItemNormalizer extends FieldItemNormalizer implements UuidR
     // objects.
     $field_name = $field_item->getParent()->getName();
     $entity = $field_item->getEntity();
-    $field_uri = $this->linkManager->getRelationUri($entity->getEntityTypeId(), $entity->bundle(), $field_name);
+    $field_uri = $this->linkManager->getRelationUri($entity->getEntityTypeId(), $entity->bundle(), $field_name, $context);
     return array(
       '_links' => array(
         $field_uri => array($link),

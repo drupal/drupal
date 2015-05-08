@@ -10,6 +10,9 @@ rest.settings:
       sequence:
         type: rest_resource
         label: 'Resource'
+    link_domain:
+      type: string
+      label: 'Domain of the relation'
 
 rest_resource:
   type: mapping

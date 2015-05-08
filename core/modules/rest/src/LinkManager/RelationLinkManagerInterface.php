@@ -7,7 +7,7 @@
 
 namespace Drupal\rest\LinkManager;
 
-interface RelationLinkManagerInterface {
+interface RelationLinkManagerInterface extends ConfigurableLinkManagerInterface {
 
   /**
    * Gets the URI that corresponds to a field.
@@ -18,11 +18,13 @@ interface RelationLinkManagerInterface {
    *   The bundle name.
    * @param string $field_name
    *   The field name.
+   * @param array $context
+   *   (optional) Optional serializer/normalizer context.
    *
    * @return string
    *   The corresponding URI for the field.
    */
-  public function getRelationUri($entity_type, $bundle, $field_name);
+  public function getRelationUri($entity_type, $bundle, $field_name, $context = array());
 
   /**
    * Translates a REST URI into internal IDs.

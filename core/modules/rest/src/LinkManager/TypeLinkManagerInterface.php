@@ -7,7 +7,7 @@
 
 namespace Drupal\rest\LinkManager;
 
-interface TypeLinkManagerInterface {
+interface TypeLinkManagerInterface extends ConfigurableLinkManagerInterface {
 
   /**
    * Gets the URI that corresponds to a bundle.
@@ -20,21 +20,25 @@ interface TypeLinkManagerInterface {
    *   The bundle's entity type.
    * @param $bundle
    *   The bundle name.
+   * @param array $context
+   *   (optional) Optional serializer/normalizer context.
    *
    * @return string
    *   The corresponding URI for the bundle.
    */
-  public function getTypeUri($entity_type, $bundle);
+  public function getTypeUri($entity_type, $bundle, $context = array());
 
   /**
    * Get a bundle's Typed Data IDs based on a URI.
    *
    * @param string $type_uri
    *   The type URI.
+   * @param array $context
+   *   Context from the normalizer/serializer operation.
    *
    * @return array | boolean
    *   If the URI matches a bundle, returns an array containing entity_type and
    *   bundle. Otherwise, returns false.
    */
-  public function getTypeInternalIds($type_uri);
+  public function getTypeInternalIds($type_uri, $context = array());
 }

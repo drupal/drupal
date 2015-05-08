@@ -38,22 +38,22 @@ class LinkManager implements LinkManagerInterface {
   /**
    * Implements \Drupal\rest\LinkManager\TypeLinkManagerInterface::getTypeUri().
    */
-  public function getTypeUri($entity_type, $bundle) {
-    return $this->typeLinkManager->getTypeUri($entity_type, $bundle);
+  public function getTypeUri($entity_type, $bundle, $context = array()) {
+    return $this->typeLinkManager->getTypeUri($entity_type, $bundle, $context);
   }
 
   /**
    * Implements \Drupal\rest\LinkManager\TypeLinkManagerInterface::getTypeInternalIds().
    */
-  public function getTypeInternalIds($type_uri) {
-    return $this->typeLinkManager->getTypeInternalIds($type_uri);
+  public function getTypeInternalIds($type_uri, $context = array()) {
+    return $this->typeLinkManager->getTypeInternalIds($type_uri, $context);
   }
 
   /**
    * Implements \Drupal\rest\LinkManager\RelationLinkManagerInterface::getRelationUri().
    */
-  public function getRelationUri($entity_type, $bundle, $field_name) {
-    return $this->relationLinkManager->getRelationUri($entity_type, $bundle, $field_name);
+  public function getRelationUri($entity_type, $bundle, $field_name, $context = array()) {
+    return $this->relationLinkManager->getRelationUri($entity_type, $bundle, $field_name, $context);
   }
 
   /**
@@ -61,6 +61,15 @@ class LinkManager implements LinkManagerInterface {
    */
   public function getRelationInternalIds($relation_uri) {
     return $this->relationLinkManager->getRelationInternalIds($relation_uri);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setLinkDomain($domain) {
+    $this->relationLinkManager->setLinkDomain($domain);
+    $this->typeLinkManager->setLinkDomain($domain);
+    return $this;
   }
 
 }

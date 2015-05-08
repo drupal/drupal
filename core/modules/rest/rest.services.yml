@@ -19,10 +19,10 @@ services:
     arguments: ['@rest.link_manager.type', '@rest.link_manager.relation']
   rest.link_manager.type:
     class: Drupal\rest\LinkManager\TypeLinkManager
-    arguments: ['@cache.default', '@unrouted_url_assembler']
+    arguments: ['@cache.default', '@module_handler', '@config.factory', '@request_stack']
   rest.link_manager.relation:
     class: Drupal\rest\LinkManager\RelationLinkManager
-    arguments: ['@cache.default', '@entity.manager', '@unrouted_url_assembler']
+    arguments: ['@cache.default', '@entity.manager', '@module_handler', '@config.factory', '@request_stack']
   rest.resource_routes:
     class: Drupal\rest\Routing\ResourceRoutes
     arguments: ['@plugin.manager.rest', '@config.factory', '@logger.channel.rest']

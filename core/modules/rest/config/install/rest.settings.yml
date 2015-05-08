@@ -44,3 +44,7 @@ resources:
 #
 # The full documentation is located at
 # https://drupal.org/documentation/modules/rest
+
+# Set the domain for REST type and relation links.
+# If left blank, the site's domain will be used
+link_domain: ~

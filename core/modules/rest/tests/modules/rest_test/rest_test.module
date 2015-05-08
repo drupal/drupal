@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains hook implementations for testing REST module.
+ */
+
+/**
+ * Implements hook_rest_type_uri_alter().
+ */
+function rest_test_rest_type_uri_alter(&$uri, $context = array()) {
+  if (!empty($context['rest_test'])) {
+    $uri = 'rest_test_type';
+  }
+}
+
+/**
+ * Implements hook_rest_relation_uri_alter().
+ */
+function rest_test_rest_relation_uri_alter(&$uri, $context = array()) {
+  if (!empty($context['rest_test'])) {
+    $uri = 'rest_test_relation';
+  }
+}
