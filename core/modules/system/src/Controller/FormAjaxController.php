@@ -2,20 +2,20 @@
 
 /**
  * @file
- * Contains \Drupal\system\FormAjaxController.
+ * Contains \Drupal\system\Controller\FormAjaxController.
  */
 
 namespace Drupal\system\Controller;
 
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\UpdateBuildIdCommand;
-use Drupal\Core\Form\FormState;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Form\FormState;
+use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Render\MainContent\MainContentRendererInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\system\FileAjaxForm;
-use Drupal\Core\Form\FormBuilderInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,7 +37,7 @@ class FormAjaxController implements ContainerInjectionInterface {
   /**
    * The form builder.
    *
-   * @var \Drupal\Core\Form\FormBuilderInterface
+   * @var \Drupal\Core\Form\FormBuilderInterface|\Drupal\Core\Form\FormCacheInterface
    */
   protected $formBuilder;
 
@@ -114,11 +114,10 @@ class FormAjaxController implements ContainerInjectionInterface {
    * @throws \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface
    */
   public function content(Request $request) {
-    /** @var $ajaxForm \Drupal\system\FileAjaxForm */
-    $ajaxForm = $this->getForm($request);
-    $form = $ajaxForm->getForm();
-    $form_state = $ajaxForm->getFormState();
-    $commands = $ajaxForm->getCommands();
+    $ajax_form = $this->getForm($request);
+    $form = $ajax_form->getForm();
+    $form_state = $ajax_form->getFormState();
+    $commands = $ajax_form->getCommands();
 
     $this->formBuilder->processForm($form['#form_id'], $form, $form_state);
 
@@ -129,7 +128,6 @@ class FormAjaxController implements ContainerInjectionInterface {
     // button) that triggered the Ajax request to determine what needs to be
     // rendered.
     $callback = NULL;
-    /** @var $form_state \Drupal\Core\Form\FormStateInterface */
     if ($triggering_element = $form_state->getTriggeringElement()) {
       $callback = $triggering_element['#ajax']['callback'];
     }
