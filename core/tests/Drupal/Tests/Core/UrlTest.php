@@ -10,6 +10,7 @@ namespace Drupal\Tests\Core;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\GeneratedUrl;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
@@ -73,25 +74,32 @@ class UrlTest extends UnitTestCase {
     parent::setUp();
 
     $map = array();
-    $map[] = array('view.frontpage.page_1', array(), array(), '/node');
-    $map[] = array('node_view', array('node' => '1'), array(), '/node/1');
-    $map[] = array('node_edit', array('node' => '2'), array(), '/node/2/edit');
+    $map[] = array('view.frontpage.page_1', array(), array(), FALSE, '/node');
+    $map[] = array('node_view', array('node' => '1'), array(), FALSE, '/node/1');
+    $map[] = array('node_edit', array('node' => '2'), array(), FALSE, '/node/2/edit');
     $this->map = $map;
 
     $alias_map = array(
       // Set up one proper alias that can be resolved to a system path.
-      array('node-alias-test', NULL, 'node'),
+      array('node-alias-test', NULL, FALSE, 'node'),
       // Passing in anything else should return the same string.
-      array('node', NULL, 'node'),
-      array('node/1', NULL, 'node/1'),
-      array('node/2/edit', NULL, 'node/2/edit'),
-      array('non-existent', NULL, 'non-existent'),
+      array('node', NULL, FALSE, 'node'),
+      array('node/1', NULL, FALSE, 'node/1'),
+      array('node/2/edit', NULL, FALSE, 'node/2/edit'),
+      array('non-existent', NULL, FALSE, 'non-existent'),
     );
 
+    // $this->map has $collect_cacheability_metadata = FALSE; also generate the
+    // $collect_cacheability_metadata = TRUE case for ::generateFromRoute().
+    $generate_from_route_map = [];
+    foreach ($this->map as $values) {
+      $generate_from_route_map[] = $values;
+      $generate_from_route_map[] = [$values[0], $values[1], $values[2], TRUE, (new GeneratedUrl())->setGeneratedUrl($values[4])];
+    }
     $this->urlGenerator = $this->getMock('Drupal\Core\Routing\UrlGeneratorInterface');
     $this->urlGenerator->expects($this->any())
       ->method('generateFromRoute')
-      ->will($this->returnValueMap($this->map));
+      ->will($this->returnValueMap($generate_from_route_map));
 
     $this->pathAliasManager = $this->getMock('Drupal\Core\Path\AliasManagerInterface');
     $this->pathAliasManager->expects($this->any())
@@ -372,6 +380,9 @@ class UrlTest extends UnitTestCase {
     foreach ($urls as $index => $url) {
       $path = array_pop($this->map[$index]);
       $this->assertSame($path, $url->toString());
+      $generated_url = $url->toString(TRUE);
+      $this->assertSame($path, $generated_url->getGeneratedUrl());
+      $this->assertInstanceOf('\Drupal\Core\Cache\CacheableMetadata', $generated_url);
     }
   }
 

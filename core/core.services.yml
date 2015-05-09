@@ -34,8 +34,8 @@ services:
     arguments: ['@request_stack']
     tags:
       - { name: cache.context }
-  cache_context.url.host:
-    class: Drupal\Core\Cache\HostCacheContext
+  cache_context.url.site:
+    class: Drupal\Core\Cache\SiteCacheContext
     arguments: ['@request_stack']
     tags:
       - { name: cache.context }
@@ -1319,7 +1319,6 @@ services:
       - { name: twig.extension, priority: 100 }
     calls:
       - [setGenerators, ['@url_generator']]
-      - [setLinkGenerator, ['@link_generator']]
   # @todo Figure out what to do about debugging functions.
   # @see http://drupal.org/node/1804998
   twig.extension.debug:

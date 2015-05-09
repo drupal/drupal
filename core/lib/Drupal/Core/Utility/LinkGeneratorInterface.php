@@ -60,9 +60,14 @@ interface LinkGeneratorInterface {
    *     class will be applied to the link. It is important to use this
    *     sparingly since it is usually unnecessary and requires extra
    *     processing.
+   * @param bool $collect_cacheability_metadata
+   *   (optional) Defaults to FALSE. When TRUE, both the generated link and its
+   *   associated cacheability metadata are returned.
    *
-   * @return string
+   * @return string|\Drupal\Core\GeneratedLink
    *   An HTML string containing a link to the given route and parameters.
+   *   When $collect_cacheability_metadata is TRUE, a GeneratedLink object is
+   *   returned, containing the generated link plus cacheability metadata.
    *
    * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException
    *   Thrown when the named route doesn't exist.
@@ -72,17 +77,22 @@ interface LinkGeneratorInterface {
    *   Thrown when a parameter value for a placeholder is not correct because it
    *   does not match the requirement.
    */
-  public function generate($text, Url $url);
+  public function generate($text, Url $url, $collect_cacheability_metadata = FALSE);
 
   /**
    * Renders a link from a link object.
    *
    * @param \Drupal\Core\Link $link
    *   A link object to convert to a string.
+   * @param bool $collect_cacheability_metadata
+   *   (optional) Defaults to FALSE. When TRUE, both the generated link and its
+   *   associated cacheability metadata are returned.
    *
-   * @return string
-   *   An HTML string containing a link to the given link.
+   * @return string|\Drupal\Core\GeneratedLink
+   *   An HTML string containing a link to the given route and parameters.
+   *   When $collect_cacheability_metadata is TRUE, a GeneratedLink object is
+   *   returned, containing the generated link plus cacheability metadata.
    */
-  public function generateFromLink(Link $link);
+  public function generateFromLink(Link $link, $collect_cacheability_metadata = FALSE);
 
 }

@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Routing;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RequestContext as SymfonyRequestContext;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -50,7 +51,7 @@ class NullGenerator extends UrlGenerator {
   /**
    * {@inheritdoc}
    */
-  protected function processRoute($name, Route $route, array &$parameters) {
+  protected function processRoute($name, Route $route, array &$parameters, CacheableMetadata $cacheable_metadata = NULL) {
   }
 
   /**
@@ -75,7 +76,7 @@ class NullGenerator extends UrlGenerator {
   /**
    * Overrides Drupal\Core\Routing\UrlGenerator::processPath().
    */
-  protected function processPath($path, &$options = array()) {
+  protected function processPath($path, &$options = array(), CacheableMetadata $cacheable_metadata = NULL) {
     return $path;
   }
 }

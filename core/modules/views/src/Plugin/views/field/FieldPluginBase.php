@@ -1249,7 +1249,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
         // @todo Views should expect and store a leading /. See:
         //   https://www.drupal.org/node/2423913
-        $more_link = \Drupal::l($more_link_text, CoreUrl::fromUserInput('/' . $more_link_path), array('attributes' => array('class' => array('views-more-link'))));
+        $more_link = \Drupal::l($more_link_text, CoreUrl::fromUserInput('/' . $more_link_path, array('attributes' => array('class' => array('views-more-link')))));
 
         $suffix .= " " . $more_link;
       }

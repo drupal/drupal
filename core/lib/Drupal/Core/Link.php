@@ -121,9 +121,18 @@ class Link {
 
   /**
    * Generates the HTML for this Link object.
+   *
+   * @param bool $collect_cacheability_metadata
+   *   (optional) Defaults to FALSE. When TRUE, both the generated link and its
+   *   associated cacheability metadata are returned.
+   *
+   * @return string|\Drupal\Core\GeneratedLink
+   *   The link HTML markup.
+   *   When $collect_cacheability_metadata is TRUE, a GeneratedLink object is
+   *   returned, containing the generated link plus cacheability metadata.
    */
-  public function toString() {
-    return $this->getLinkGenerator()->generateFromLink($this);
+  public function toString($collect_cacheability_metadata = FALSE) {
+    return $this->getLinkGenerator()->generateFromLink($this, $collect_cacheability_metadata);
   }
 
 }

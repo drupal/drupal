@@ -7,6 +7,7 @@
 
 namespace Drupal\language\Plugin\LanguageNegotiation;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
@@ -122,7 +123,7 @@ class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements In
   /**
    * Implements Drupal\Core\PathProcessor\InboundPathProcessorInterface::processOutbound().
    */
-  public function processOutbound($path, &$options = array(), Request $request = NULL) {
+  public function processOutbound($path, &$options = array(), Request $request = NULL, CacheableMetadata $cacheable_metadata = NULL) {
     $url_scheme = 'http';
     $port = 80;
     if ($request) {
@@ -143,6 +144,9 @@ class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements In
     if ($config['source'] == LanguageNegotiationUrl::CONFIG_PATH_PREFIX) {
       if (is_object($options['language']) && !empty($config['prefixes'][$options['language']->getId()])) {
         $options['prefix'] = $config['prefixes'][$options['language']->getId()] . '/';
+        if ($cacheable_metadata) {
+          $cacheable_metadata->addCacheContexts(['languages:' . LanguageInterface::TYPE_URL]);
+        }
       }
     }
     elseif ($config['source'] ==  LanguageNegotiationUrl::CONFIG_DOMAIN) {
@@ -180,6 +184,9 @@ class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements In
 
         // Add Drupal's subfolder from the base_path if there is one.
         $options['base_url'] .= rtrim(base_path(), '/');
+        if ($cacheable_metadata) {
+          $cacheable_metadata->addCacheContexts(['languages:' . LanguageInterface::TYPE_URL, 'url.site']);
+        }
       }
     }
     return $path;

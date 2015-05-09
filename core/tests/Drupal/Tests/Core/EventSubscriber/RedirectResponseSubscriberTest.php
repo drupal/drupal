@@ -49,11 +49,11 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
         ->expects($this->any())
         ->method('generateFromPath')
           ->willReturnMap([
-            ['test', ['query' => [], 'fragment' => '', 'absolute' => TRUE], 'http://example.com/drupal/test'],
-            ['example.com', ['query' => [], 'fragment' => '', 'absolute' => TRUE], 'http://example.com/drupal/example.com'],
-            ['example:com', ['query' => [], 'fragment' => '', 'absolute' => TRUE], 'http://example.com/drupal/example:com'],
-            ['javascript:alert(0)', ['query' => [], 'fragment' => '', 'absolute' => TRUE], 'http://example.com/drupal/javascript:alert(0)'],
-            ['/test', ['query' => [], 'fragment' => '', 'absolute' => TRUE], 'http://example.com/test'],
+            ['test', ['query' => [], 'fragment' => '', 'absolute' => TRUE], FALSE, 'http://example.com/drupal/test'],
+            ['example.com', ['query' => [], 'fragment' => '', 'absolute' => TRUE], FALSE, 'http://example.com/drupal/example.com'],
+            ['example:com', ['query' => [], 'fragment' => '', 'absolute' => TRUE], FALSE, 'http://example.com/drupal/example:com'],
+            ['javascript:alert(0)', ['query' => [], 'fragment' => '', 'absolute' => TRUE], FALSE, 'http://example.com/drupal/javascript:alert(0)'],
+            ['/test', ['query' => [], 'fragment' => '', 'absolute' => TRUE], FALSE, 'http://example.com/test'],
           ]);
     }
 

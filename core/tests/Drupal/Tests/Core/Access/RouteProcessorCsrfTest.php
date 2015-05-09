@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core\Access;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Access\RouteProcessorCsrf;
 use Symfony\Component\Routing\Route;
@@ -49,9 +50,13 @@ class RouteProcessorCsrfTest extends UnitTestCase {
     $route = new Route('/test-path');
     $parameters = array();
 
-    $this->processor->processOutbound('test', $route, $parameters);
+    $cacheable_metadata = new CacheableMetadata();
+    $this->processor->processOutbound('test', $route, $parameters, $cacheable_metadata);
     // No parameters should be added to the parameters array.
     $this->assertEmpty($parameters);
+    // Cacheability of routes without a _csrf_token route requirement is
+    // unaffected.
+    $this->assertEquals((new CacheableMetadata()), $cacheable_metadata);
   }
 
   /**
@@ -67,10 +72,13 @@ class RouteProcessorCsrfTest extends UnitTestCase {
     $route = new Route('/test-path', array(), array('_csrf_token' => 'TRUE'));
     $parameters = array();
 
-    $this->processor->processOutbound('test', $route, $parameters);
+    $cacheable_metadata = new CacheableMetadata();
+    $this->processor->processOutbound('test', $route, $parameters, $cacheable_metadata);
     // 'token' should be added to the parameters array.
     $this->assertArrayHasKey('token', $parameters);
     $this->assertSame($parameters['token'], 'test_token');
+    // Cacheability of routes with a _csrf_token route requirement is max-age=0.
+    $this->assertEquals((new CacheableMetadata())->setCacheMaxAge(0), $cacheable_metadata);
   }
 
   /**
@@ -85,7 +93,10 @@ class RouteProcessorCsrfTest extends UnitTestCase {
     $route = new Route('/test-path/{slug}', array(), array('_csrf_token' => 'TRUE'));
     $parameters = array('slug' => 100);
 
-    $this->assertNull($this->processor->processOutbound('test', $route, $parameters));
+    $cacheable_metadata = new CacheableMetadata();
+    $this->processor->processOutbound('test', $route, $parameters, $cacheable_metadata);
+    // Cacheability of routes with a _csrf_token route requirement is max-age=0.
+    $this->assertEquals((new CacheableMetadata())->setCacheMaxAge(0), $cacheable_metadata);
   }
 
   /**
@@ -100,7 +111,10 @@ class RouteProcessorCsrfTest extends UnitTestCase {
     $route = new Route('{slug_1}/test-path/{slug_2}', array(), array('_csrf_token' => 'TRUE'));
     $parameters = array('slug_1' => 100, 'slug_2' => 'test');
 
-    $this->assertNull($this->processor->processOutbound('test', $route, $parameters));
+    $cacheable_metadata = new CacheableMetadata();
+    $this->processor->processOutbound('test', $route, $parameters, $cacheable_metadata);
+    // Cacheability of routes with a _csrf_token route requirement is max-age=0.
+    $this->assertEquals((new CacheableMetadata())->setCacheMaxAge(0), $cacheable_metadata);
   }
 
 }

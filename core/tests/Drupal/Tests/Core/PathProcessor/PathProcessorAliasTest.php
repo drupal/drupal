@@ -7,6 +7,8 @@
 
 namespace Drupal\Tests\Core\PathProcessor;
 
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\PathProcessor\PathProcessorAlias;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,23 +58,34 @@ class PathProcessorAliasTest extends UnitTestCase {
   }
 
   /**
-   * Tests the processOutbound method.
+   * @covers ::processOutbound
    *
-   * @see \Drupal\Core\PathProcessor\PathProcessorAlias::processOutbound
+   * @dataProvider providerTestProcessOutbound
    */
-  public function testProcessOutbound() {
-    $this->aliasManager->expects($this->exactly(2))
+  public function testProcessOutbound($path, array $options, $expected_path) {
+    $this->aliasManager->expects($this->any())
       ->method('getAliasByPath')
       ->will($this->returnValueMap(array(
         array('internal-url', NULL, 'urlalias'),
         array('url', NULL, 'url'),
       )));
 
-    $this->assertEquals('urlalias', $this->pathProcessor->processOutbound('internal-url'));
-    $options = array('alias' => TRUE);
-    $this->assertEquals('internal-url', $this->pathProcessor->processOutbound('internal-url', $options));
+    $cacheable_metadata = new CacheableMetadata();
+    $this->assertEquals($expected_path, $this->pathProcessor->processOutbound($path, $options, NULL, $cacheable_metadata));
+    // Cacheability of paths replaced with path aliases is permanent.
+    // @todo https://www.drupal.org/node/2480077
+    $this->assertEquals((new CacheableMetadata())->setCacheMaxAge(Cache::PERMANENT), $cacheable_metadata);
+  }
 
-    $this->assertEquals('url', $this->pathProcessor->processOutbound('url'));
+  /**
+   * @return array
+   */
+  public function providerTestProcessOutbound() {
+    return [
+      ['internal-url', [], 'urlalias'],
+      ['internal-url', ['alias' => TRUE], 'internal-url'],
+      ['url', [], 'url'],
+    ];
   }
 
 }

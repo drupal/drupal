@@ -10,6 +10,7 @@ namespace Drupal\Core\Utility;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\GeneratedUrl;
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -57,16 +58,16 @@ class UnroutedUrlAssembler implements UnroutedUrlAssemblerInterface {
    * This is a helper function that calls buildExternalUrl() or buildLocalUrl()
    * based on a check of whether the path is a valid external URL.
    */
-  public function assemble($uri, array $options = []) {
+  public function assemble($uri, array $options = [], $collect_cacheability_metadata = FALSE) {
     // Note that UrlHelper::isExternal will return FALSE if the $uri has a
     // disallowed protocol.  This is later made safe since we always add at
     // least a leading slash.
     if (parse_url($uri, PHP_URL_SCHEME) === 'base') {
-      return $this->buildLocalUrl($uri, $options);
+      return $this->buildLocalUrl($uri, $options, $collect_cacheability_metadata);
     }
     elseif (UrlHelper::isExternal($uri)) {
       // UrlHelper::isExternal() only returns true for safe protocols.
-      return $this->buildExternalUrl($uri, $options);
+      return $this->buildExternalUrl($uri, $options, $collect_cacheability_metadata);
     }
     throw new \InvalidArgumentException(SafeMarkup::format('The URI "@uri" is invalid. You must use a valid URI scheme. Use base: for a path, e.g., to a Drupal file that needs the base path. Do not use this for internal paths controlled by Drupal.', ['@uri' => $uri]));
   }
@@ -74,7 +75,7 @@ class UnroutedUrlAssembler implements UnroutedUrlAssemblerInterface {
   /**
    * {@inheritdoc}
    */
-  protected function buildExternalUrl($uri, array $options = []) {
+  protected function buildExternalUrl($uri, array $options = [], $collect_cacheability_metadata = FALSE) {
     $this->addOptionDefaults($options);
     // Split off the fragment.
     if (strpos($uri, '#') !== FALSE) {
@@ -98,13 +99,16 @@ class UnroutedUrlAssembler implements UnroutedUrlAssemblerInterface {
       $uri .= (strpos($uri, '?') !== FALSE ? '&' : '?') . UrlHelper::buildQuery($options['query']);
     }
     // Reassemble.
-    return $uri . $options['fragment'];
+    $url = $uri . $options['fragment'];
+    return $collect_cacheability_metadata ? (new GeneratedUrl())->setGeneratedUrl($url) : $url;
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function buildLocalUrl($uri, array $options = []) {
+  protected function buildLocalUrl($uri, array $options = [], $collect_cacheability_metadata = FALSE) {
+    $generated_url = $collect_cacheability_metadata ? new GeneratedUrl() : NULL;
+
     $this->addOptionDefaults($options);
     $request = $this->requestStack->getCurrentRequest();
 
@@ -122,7 +126,9 @@ class UnroutedUrlAssembler implements UnroutedUrlAssemblerInterface {
     // alias overview form:
     // @see \Drupal\path\Controller\PathController::adminOverview().
     if (!empty($options['path_processing'])) {
-      $uri = $this->pathProcessor->processOutbound($uri, $options);
+      // Do not pass the request, since this is a special case and we do not
+      // want to include e.g. the request language in the processing.
+      $uri = $this->pathProcessor->processOutbound($uri, $options, NULL, $generated_url);
     }
 
     // Add any subdirectory where Drupal is installed.
@@ -143,6 +149,9 @@ class UnroutedUrlAssembler implements UnroutedUrlAssemblerInterface {
       else {
         $base = $current_base_url;
       }
+      if ($collect_cacheability_metadata) {
+        $generated_url->addCacheContexts(['url.site']);
+      }
     }
     else {
       $base = $current_base_path;
@@ -152,7 +161,8 @@ class UnroutedUrlAssembler implements UnroutedUrlAssemblerInterface {
 
     $uri = str_replace('%2F', '/', rawurlencode($prefix . $uri));
     $query = $options['query'] ? ('?' . UrlHelper::buildQuery($options['query'])) : '';
-    return $base . $options['script'] . $uri . $query . $options['fragment'];
+    $url = $base . $options['script'] . $uri . $query . $options['fragment'];
+    return $collect_cacheability_metadata ? $generated_url->setGeneratedUrl($url) : $url;
   }
 
   /**

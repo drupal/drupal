@@ -7,6 +7,7 @@
 
 namespace Drupal\language\Plugin\LanguageNegotiation;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
 use Drupal\Core\Url;
@@ -85,7 +86,7 @@ class LanguageNegotiationSession extends LanguageNegotiationMethodBase implement
   /**
    * {@inheritdoc}
    */
-  public function processOutbound($path, &$options = array(), Request $request = NULL) {
+  public function processOutbound($path, &$options = array(), Request $request = NULL, CacheableMetadata $cacheable_metadata = NULL) {
     if ($request) {
       // The following values are not supposed to change during a single page
       // request processing.
@@ -113,6 +114,16 @@ class LanguageNegotiationSession extends LanguageNegotiationMethodBase implement
         }
         if (!isset($options['query'][$this->queryParam])) {
           $options['query'][$this->queryParam] = $this->queryValue;
+        }
+        if ($cacheable_metadata) {
+          // Cached URLs that have been processed by this outbound path
+          // processor must be:
+          $cacheable_metadata
+            // - invalidated when the language negotiation config changes, since
+            //   another query parameter may be used to determine the language.
+            ->addCacheTags($this->config->get('language.negotiation')->getCacheTags())
+            // - varied by the configured query parameter.
+            ->addCacheContexts(['url.query_args:' . $this->queryParam]);
         }
       }
     }

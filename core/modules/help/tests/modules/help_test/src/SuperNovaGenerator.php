@@ -39,7 +39,7 @@ class SuperNovaGenerator implements UrlGeneratorInterface {
   /**
    * {@inheritdoc}
    */
-  public function generateFromPath($path = NULL, $options = array()) {
+  public function generateFromPath($path = NULL, $options = array(), $collect_cacheability_metadata = FALSE) {
     throw new \Exception();
   }
 
@@ -53,7 +53,7 @@ class SuperNovaGenerator implements UrlGeneratorInterface {
   /**
    * {@inheritdoc}
    */
-  public function generateFromRoute($name, $parameters = array(), $options = array()) {
+  public function generateFromRoute($name, $parameters = array(), $options = array(), $collect_cacheability_metadata = FALSE) {
     throw new \Exception();
   }
 

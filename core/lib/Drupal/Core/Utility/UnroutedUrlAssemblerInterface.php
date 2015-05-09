@@ -31,7 +31,6 @@ interface UnroutedUrlAssemblerInterface {
    *     then you can either URL encode the query keys and values yourself and
    *     include them in $uri, or use $options['query'] to let this method
    *     URL encode them.
-   *
    * @param array $options
    *   (optional) An associative array of additional options, with the following
    *   elements:
@@ -45,13 +44,18 @@ interface UnroutedUrlAssemblerInterface {
    *   - 'https': Whether this URL should point to a secure location. If not
    *     defined, the current scheme is used, so the user stays on HTTP or HTTPS
    *     respectively. TRUE enforces HTTPS and FALSE enforces HTTP.
+   * @param bool $collect_cacheability_metadata
+   *   (optional) Defaults to FALSE. When TRUE, both the generated URL and its
+   *   associated cacheability metadata are returned.
    *
-   * @return
+   * @return string|\Drupal\Core\GeneratedUrl
    *   A string containing a relative or absolute URL.
+   *   When $collect_cacheability_metadata is TRUE, a GeneratedUrl object is
+   *   returned, containing the generated URL plus cacheability metadata.
    *
    * @throws \InvalidArgumentException
    *   Thrown when the passed in path has no scheme.
    */
-  public function assemble($uri, array $options = array());
+  public function assemble($uri, array $options = array(), $collect_cacheability_metadata = FALSE);
 
 }

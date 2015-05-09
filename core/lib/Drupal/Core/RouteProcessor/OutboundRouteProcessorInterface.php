@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\RouteProcessor;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -24,10 +25,12 @@ interface OutboundRouteProcessorInterface {
    * @param array $parameters
    *   An array of parameters to be passed to the route compiler. Passed by
    *   reference.
+   * @param \Drupal\Core\Cache\CacheableMetadata $cacheable_metadata
+   *   (optional) Object to collect route processors' cacheability.
    *
    * @return
    *   The processed path.
    */
-  public function processOutbound($route_name, Route $route, array &$parameters);
+  public function processOutbound($route_name, Route $route, array &$parameters, CacheableMetadata $cacheable_metadata = NULL);
 
 }

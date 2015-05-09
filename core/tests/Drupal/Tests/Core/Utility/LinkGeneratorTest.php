@@ -8,7 +8,9 @@
 namespace Drupal\Tests\Core\Utility {
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\GeneratedUrl;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\LinkGenerator;
 use Drupal\Tests\UnitTestCase;
@@ -422,6 +424,39 @@ class LinkGeneratorTest extends UnitTestCase {
         'data-drupal-link-query' => '{"value":"example_1"}',
       ),
     ), $result);
+  }
+
+  /**
+   * Tests the LinkGenerator's support for collecting cacheability metadata.
+   *
+   * @see \Drupal\Core\Utility\LinkGenerator::generate()
+   * @see \Drupal\Core\Utility\LinkGenerator::generateFromLink()
+   */
+  public function testGenerateCacheability() {
+    $options = ['query' => [], 'language' => NULL, 'set_active_class' => FALSE, 'absolute' => FALSE];
+    $this->urlGenerator->expects($this->any())
+      ->method('generateFromRoute')
+      ->will($this->returnValueMap([
+        ['test_route_1', [], $options, FALSE, '/test-route-1'],
+        ['test_route_1', [], $options, TRUE, (new GeneratedUrl())->setGeneratedUrl('/test-route-1')],
+      ]));
+
+    $url = new Url('test_route_1');
+    $url->setUrlGenerator($this->urlGenerator);
+    $expected_link_markup = '<a href="/test-route-1">Test</a>';
+
+    // Test ::generate().
+    $this->assertSame($expected_link_markup, $this->linkGenerator->generate('Test', $url));
+    $generated_link = $this->linkGenerator->generate('Test', $url, TRUE);
+    $this->assertSame($expected_link_markup, $generated_link->getGeneratedLink());
+    $this->assertInstanceOf('\Drupal\Core\Cache\CacheableMetadata', $generated_link);
+
+    // Test ::generateFromLink().
+    $link = new Link('Test', $url);
+    $this->assertSame($expected_link_markup, $this->linkGenerator->generateFromLink($link));
+    $generated_link = $this->linkGenerator->generateFromLink($link, TRUE);
+    $this->assertSame($expected_link_markup, $generated_link->getGeneratedLink());
+    $this->assertInstanceOf('\Drupal\Core\Cache\CacheableMetadata', $generated_link);
   }
 
   /**

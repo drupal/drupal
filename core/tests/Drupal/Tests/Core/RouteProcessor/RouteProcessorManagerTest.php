@@ -7,6 +7,8 @@
 
 namespace Drupal\Tests\Core\RouteProcessor;
 
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\RouteProcessor\RouteProcessorManager;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\Routing\Route;
@@ -47,7 +49,10 @@ class RouteProcessorManagerTest extends UnitTestCase {
       $this->processorManager->addOutbound($processor, $priority);
     }
 
-    $this->processorManager->processOutbound($route_name, $route, $parameters);
+    $cacheable_metadata = new CacheableMetadata();
+    $this->processorManager->processOutbound($route_name, $route, $parameters, $cacheable_metadata);
+    // Default cacheability is: permanently cacheable, no cache tags/contexts.
+    $this->assertEquals((new CacheableMetadata())->setCacheMaxAge(Cache::PERMANENT), $cacheable_metadata);
   }
 
   /**

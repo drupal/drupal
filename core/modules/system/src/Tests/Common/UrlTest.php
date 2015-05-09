@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Common;
 
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
@@ -22,7 +23,7 @@ use Drupal\simpletest\WebTestBase;
  */
 class UrlTest extends WebTestBase {
 
-  public static $modules = array('common_test');
+  public static $modules = array('common_test', 'url_alter_test');
 
   /**
    * Confirms that invalid URLs are filtered in link generating functions.
@@ -39,6 +40,33 @@ class UrlTest extends WebTestBase {
     $link = Url::fromUri('base:' . $path)->toString();
     $sanitized_path = check_url(Url::fromUri('base:' . $path)->toString());
     $this->assertTrue(strpos($link, $sanitized_path) !== FALSE, format_string('XSS attack @path was filtered by #theme', ['@path' => $path]));
+  }
+
+  /**
+   * Tests that #type=link bubbles outbound route/path processors' cacheability.
+   */
+  function testLinkCacheability() {
+    $cases = [
+      ['Regular link', 'internal:/user', [], ['contexts' => [], 'tags' => [], 'max-age' => Cache::PERMANENT]],
+      ['Regular link, absolute', 'internal:/user', ['absolute' => TRUE], ['contexts' => ['url.site'], 'tags' => [], 'max-age' => Cache::PERMANENT]],
+      ['Route processor link', 'route:system.run_cron', [], ['contexts' => [], 'tags' => [], 'max-age' => 0]],
+      ['Route processor link, absolute', 'route:system.run_cron', ['absolute' => TRUE], ['contexts' => ['url.site'], 'tags' => [], 'max-age' => 0]],
+      ['Path processor link', 'internal:/user/1', [], ['contexts' => [], 'tags' => ['user:1'], 'max-age' => Cache::PERMANENT]],
+      ['Path processor link, absolute', 'internal:/user/1', ['absolute' => TRUE], ['contexts' => ['url.site'], 'tags' => ['user:1'], 'max-age' => Cache::PERMANENT]],
+    ];
+
+    foreach ($cases as $case) {
+      list($title, $uri, $options, $expected_cacheability) = $case;
+      $link = [
+        '#type' => 'link',
+        '#title' => $title,
+        '#options' => $options,
+        '#url' => Url::fromUri($uri),
+      ];
+      drupal_render($link);
+      $this->pass($title);
+      $this->assertEqual($expected_cacheability, $link['#cache']);
+    }
   }
 
   /**

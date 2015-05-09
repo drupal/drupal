@@ -10,6 +10,7 @@ namespace Drupal\Core\Utility;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\GeneratedLink;
 use Drupal\Core\Link;
 use Drupal\Core\Path\AliasManagerInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
@@ -51,8 +52,8 @@ class LinkGenerator implements LinkGeneratorInterface {
   /**
    * {@inheritdoc}
    */
-  public function generateFromLink(Link $link) {
-    return $this->generate($link->getText(), $link->getUrl());
+  public function generateFromLink(Link $link, $collect_cacheability_metadata = FALSE) {
+    return $this->generate($link->getText(), $link->getUrl(), $collect_cacheability_metadata);
   }
 
   /**
@@ -67,7 +68,7 @@ class LinkGenerator implements LinkGeneratorInterface {
    *
    * @see system_page_attachments()
    */
-  public function generate($text, Url $url) {
+  public function generate($text, Url $url, $collect_cacheability_metadata = FALSE) {
     // Performance: avoid Url::toString() needing to retrieve the URL generator
     // service from the container.
     $url->setUrlGenerator($this->urlGenerator);
@@ -131,12 +132,20 @@ class LinkGenerator implements LinkGeneratorInterface {
 
     // The result of the url generator is a plain-text URL. Because we are using
     // it here in an HTML argument context, we need to encode it properly.
-    $url = SafeMarkup::checkPlain($url->toString());
+    if (!$collect_cacheability_metadata) {
+      $url = SafeMarkup::checkPlain($url->toString($collect_cacheability_metadata));
+    }
+    else {
+      $generated_url = $url->toString($collect_cacheability_metadata);
+      $url = SafeMarkup::checkPlain($generated_url->getGeneratedUrl());
+      $generated_link = GeneratedLink::createFromObject($generated_url);
+    }
 
     // Make sure the link text is sanitized.
     $safe_text = SafeMarkup::escape($variables['text']);
 
-    return SafeMarkup::set('<a href="' . $url . '"' . $attributes . '>' . $safe_text . '</a>');
+    $result = SafeMarkup::set('<a href="' . $url . '"' . $attributes . '>' . $safe_text . '</a>');
+    return $collect_cacheability_metadata ? $generated_link->setGeneratedLink($result) : $result;
   }
 
 }
