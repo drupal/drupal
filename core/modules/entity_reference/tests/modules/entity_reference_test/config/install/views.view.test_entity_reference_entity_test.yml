@@ -1,0 +1,121 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - entity_reference
+    - entity_reference_test
+    - entity_test
+id: test_entity_reference_entity_test
+label: 'Entity reference'
+module: views
+description: ''
+tag: ''
+base_table: entity_test
+base_field: id
+core: 8.x
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: 0
+    display_options:
+      access:
+        type: none
+      cache:
+        type: none
+      query:
+        type: views_query
+      exposed_form:
+        type: basic
+      pager:
+        type: full
+      style:
+        type: default
+      row:
+        type: fields
+      fields:
+        name:
+          table: entity_test
+          field: name
+          id: name
+          entity_type: null
+          entity_field: name
+          plugin_id: field
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings: {  }
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+      filters: {  }
+      sorts: {  }
+      header: {  }
+      footer: {  }
+      empty: {  }
+      relationships: {  }
+      arguments: {  }
+      display_extenders: {  }
+  entity_reference_1:
+    display_plugin: entity_reference
+    id: entity_reference_1
+    display_title: EntityReference
+    position: null
+    display_options:
+      display_extenders: {  }
+      style:
+        type: entity_reference
+        options:
+          search_fields:
+            name: name

@@ -110,7 +110,7 @@ class ViewsSelection extends PluginBase implements SelectionInterface, Container
     $options = array();
     foreach ($displays as $data) {
       list($view, $display_id) = $data;
-      if ($view->storage->get('base_table') == $entity_type->getBaseTable()) {
+      if (in_array($view->storage->get('base_table'), [$entity_type->getBaseTable(), $entity_type->getDataTable()])) {
         $name = $view->storage->get('id');
         $display = $view->storage->get('display');
         $options[$name . ':' . $display_id] = $name . ' - ' . $display[$display_id]['display_title'];
@@ -147,8 +147,8 @@ class ViewsSelection extends PluginBase implements SelectionInterface, Container
       if ($this->currentUser->hasPermission('administer views') && $this->moduleHandler->moduleExists('views_ui')) {
         $form['view']['no_view_help'] = array(
           '#markup' => '<p>' . $this->t('No eligible views were found. <a href="@create">Create a view</a> with an <em>Entity Reference</em> display, or add such a display to an <a href="@existing">existing view</a>.', array(
-            '@create' => Url::fromRoute('views_ui.add'),
-            '@existing' => Url::fromRoute('entity.view.collection'),
+            '@create' => Url::fromRoute('views_ui.add')->toString(),
+            '@existing' => Url::fromRoute('entity.view.collection')->toString(),
           )) . '</p>',
         );
       }

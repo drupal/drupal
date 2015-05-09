@@ -25,11 +25,11 @@ class EntityReferenceAdminTest extends WebTestBase {
    *
    * Enable path module to ensure that the selection handler does not fail for
    * entities with a path field.
+   * Enable views_ui module to see the no_view_help text.
    *
    * @var array
    */
-  public static $modules = array('node', 'field_ui', 'entity_reference', 'path', 'taxonomy', 'block', 'views');
-
+  public static $modules = array('node', 'field_ui', 'entity_reference', 'path', 'taxonomy', 'block', 'views', 'views_ui', 'entity_test');
 
   /**
    * The name of the content type created for testing purposes.
@@ -46,7 +46,7 @@ class EntityReferenceAdminTest extends WebTestBase {
     $this->drupalPlaceBlock('system_breadcrumb_block');
 
     // Create test user.
-    $admin_user = $this->drupalCreateUser(array('access content', 'administer node fields', 'administer node display'));
+    $admin_user = $this->drupalCreateUser(array('access content', 'administer node fields', 'administer node display', 'administer views'));
     $this->drupalLogin($admin_user);
 
     // Create a content type, with underscores.
@@ -149,15 +149,53 @@ class EntityReferenceAdminTest extends WebTestBase {
     $this->drupalGet($bundle_path . '/fields/' . $field_name);
     $this->assertFieldByName('settings[handler_settings][filter][type]', '_none');
 
+    // Switch the target type to 'node'.
+    $field_name = 'node.' . $this->type . '.field_test';
+    $edit = array(
+      'settings[target_type]' => 'node',
+    );
+    $this->drupalPostForm($bundle_path . '/fields/' . $field_name . '/storage', $edit, t('Save field settings'));
+
     // Try to select the views handler.
     $edit = array(
       'settings[handler]' => 'views',
     );
     $this->drupalPostAjaxForm($bundle_path . '/fields/' . $field_name, $edit, 'settings[handler]');
+    $this->assertRaw(t('No eligible views were found. <a href="@create">Create a view</a> with an <em>Entity Reference</em> display, or add such a display to an <a href="@existing">existing view</a>.', array(
+      '@create' => \Drupal::url('views_ui.add'),
+      '@existing' => \Drupal::url('entity.view.collection'),
+    )));
+    $this->drupalPostForm(NULL, $edit, t('Save settings'));
+    // If no eligible view is available we should see a message.
+    $this->assertText('The views entity selection mode requires a view.');
+
+    // Enable the entity_reference_test module which creates an eligible view.
+    $this->container->get('module_installer')->install(array('entity_reference_test'));
+    $this->resetAll();
+    $this->drupalGet($bundle_path . '/fields/' . $field_name);
+    $this->drupalPostAjaxForm($bundle_path . '/fields/' . $field_name, $edit, 'settings[handler]');
+    $edit = array(
+      'settings[handler_settings][view][view_and_display]' => 'test_entity_reference:entity_reference_1',
+    );
+    $this->drupalPostForm(NULL, $edit, t('Save settings'));
+    $this->assertResponse(200);
+
+    // Switch the target type to 'entity_test'.
+    $edit = array(
+      'settings[target_type]' => 'entity_test',
+    );
+    $this->drupalPostForm($bundle_path . '/fields/' . $field_name . '/storage', $edit, t('Save field settings'));
+    $this->drupalGet($bundle_path . '/fields/' . $field_name);
+    $edit = array(
+      'settings[handler]' => 'views',
+    );
+    $this->drupalPostAjaxForm($bundle_path . '/fields/' . $field_name, $edit, 'settings[handler]');
+    $edit = array(
+      'settings[handler_settings][view][view_and_display]' => 'test_entity_reference_entity_test:entity_reference_1',
+    );
     $this->drupalPostForm(NULL, $edit, t('Save settings'));
     $this->assertResponse(200);
   }
-
 
   /**
    * Tests the formatters for the Entity References

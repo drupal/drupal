@@ -9,3 +9,4 @@ dependencies:
   - node
   - user
   - views
+  - entity_test
