@@ -54,6 +54,9 @@ use Drupal\user\UserInterface;
  *   },
  *   bundle_entity_type = "comment_type",
  *   field_ui_base_route  = "entity.comment_type.edit_form",
+ *   constraints = {
+ *     "CommentName" = {}
+ *   }
  * )
  */
 class Comment extends ContentEntityBase implements CommentInterface {
@@ -257,8 +260,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
       ->setDescription(t("The comment author's name."))
       ->setTranslatable(TRUE)
       ->setSetting('max_length', 60)
-      ->setDefaultValue('')
-      ->addConstraint('CommentName', array());
+      ->setDefaultValue('');
 
     $fields['mail'] = BaseFieldDefinition::create('email')
       ->setLabel(t('Email'))
