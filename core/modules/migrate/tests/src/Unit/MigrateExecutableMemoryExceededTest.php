@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\migrate\Unit\MigrateExecuteableMemoryExceeded.
+ * Contains \Drupal\Tests\migrate\Unit\MigrateExecutableMemoryExceededTest.
  */
 
 namespace Drupal\Tests\migrate\Unit;
@@ -12,7 +12,7 @@ namespace Drupal\Tests\migrate\Unit;
  *
  * @group migrate
  */
-class MigrateExecuteableMemoryExceededTest extends MigrateTestCase {
+class MigrateExecutableMemoryExceededTest extends MigrateTestCase {
 
   /**
    * The mocked migration entity.
