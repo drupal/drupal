@@ -61,7 +61,7 @@ class ToolbarItem extends RenderElement {
       // Provide attributes necessary for trays.
       $attributes += array(
         'data-toolbar-tray' => $id . '-tray',
-        'aria-owns' => $id,
+        'aria-owns' => $id . '-tray',
         'role' => 'button',
         'aria-pressed' => 'false',
       );
@@ -75,7 +75,6 @@ class ToolbarItem extends RenderElement {
       $attributes = array(
         'id' => $id . '-tray',
         'data-toolbar-tray' => $id . '-tray',
-        'aria-owned-by' => $id,
       );
       // Merge in module-provided attributes.
       if (!isset($element['tray']['#wrapper_attributes'])) {
