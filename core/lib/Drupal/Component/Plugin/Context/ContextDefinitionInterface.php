@@ -110,6 +110,24 @@ interface ContextDefinitionInterface {
   public function setRequired($required = TRUE);
 
   /**
+   * Provides the default value for this context definition.
+   *
+   * @return mixed
+   *   The default value or NULL if no default value is set.
+   */
+  public function getDefaultValue();
+
+  /**
+   * Sets the default data value.
+   *
+   * @param mixed $default_value
+   *   The default value to be set or NULL to remove any default value.
+   *
+   * @return $this
+   */
+  public function setDefaultValue($default_value);
+
+  /**
    * Returns an array of validation constraints.
    *
    * @return array

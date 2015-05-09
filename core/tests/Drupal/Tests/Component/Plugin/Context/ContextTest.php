@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Component\Plugin\Context;
 
+use Drupal\Component\Plugin\Context\Context;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -84,6 +85,22 @@ class ContextTest extends UnitTestCase {
       // Exercise getContextValue().
       $this->assertEquals($context_value, $mock_context->getContextValue());
     }
+  }
+
+  /**
+   * @covers ::getContextValue
+   */
+  public function testDefaultValue() {
+    $mock_definition = $this->getMockBuilder('Drupal\Component\Plugin\Context\ContextDefinitionInterface')
+      ->setMethods(array('getDefaultValue'))
+      ->getMockForAbstractClass();
+
+    $mock_definition->expects($this->once())
+      ->method('getDefaultValue')
+      ->willReturn('test');
+
+    $context = new Context($mock_definition);
+    $this->assertEquals('test', $context->getContextValue());
   }
 
 }
