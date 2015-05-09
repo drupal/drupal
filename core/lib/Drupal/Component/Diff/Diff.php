@@ -88,7 +88,7 @@ class Diff {
   }
 
   /**
-   * Get the original set of lines.
+   * Gets the original set of lines.
    *
    * This reconstructs the $from_lines parameter passed to the
    * constructor.
@@ -107,7 +107,7 @@ class Diff {
   }
 
   /**
-   * Get the closing set of lines.
+   * Gets the closing set of lines.
    *
    * This reconstructs the $to_lines parameter passed to the
    * constructor.

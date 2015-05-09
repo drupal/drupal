@@ -13,7 +13,7 @@ namespace Drupal\Component\Plugin;
 interface DerivativeInspectionInterface {
 
   /**
-   * Returns the base_plugin_id of the plugin instance.
+   * Gets the base_plugin_id of the plugin instance.
    *
    * @return string
    *   The base_plugin_id of the plugin instance.
@@ -21,7 +21,7 @@ interface DerivativeInspectionInterface {
   public function getBaseId();
 
   /**
-   * Returns the derivative_id of the plugin instance.
+   * Gets the derivative_id of the plugin instance.
    *
    * @return string|null
    *   The derivative_id of the plugin instance NULL otherwise.

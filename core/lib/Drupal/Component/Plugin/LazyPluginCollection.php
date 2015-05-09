@@ -37,7 +37,7 @@ abstract class LazyPluginCollection implements \IteratorAggregate, \Countable {
   abstract protected function initializePlugin($instance_id);
 
   /**
-   * Returns the current configuration of all plugins in this collection.
+   * Gets the current configuration of all plugins in this collection.
    *
    * @return array
    *   An array of up-to-date plugin configuration.
@@ -75,7 +75,7 @@ abstract class LazyPluginCollection implements \IteratorAggregate, \Countable {
   }
 
   /**
-   * Retrieves a plugin instance, initializing it if necessary.
+   * Gets a plugin instance, initializing it if necessary.
    *
    * @param string $instance_id
    *   The ID of the plugin instance being retrieved.
@@ -127,7 +127,7 @@ abstract class LazyPluginCollection implements \IteratorAggregate, \Countable {
   }
 
   /**
-   * Returns all instance IDs.
+   * Gets all instance IDs.
    *
    * @return array
    *   An array of all available instance IDs.

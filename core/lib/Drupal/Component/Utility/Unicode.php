@@ -100,7 +100,7 @@ EOD;
   protected static $status = 0;
 
   /**
-   * Get the current status of unicode/multibyte support on this environment.
+   * Gets the current status of unicode/multibyte support on this environment.
    *
    * @return int
    *   The status of multibyte support. It can be one of:

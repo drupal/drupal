@@ -40,7 +40,7 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
   private $_fd;
 
   /**
-   * Get the PO header of the current stream.
+   * Gets the PO header of the current stream.
    *
    * @return \Drupal\Component\Gettext\PoHeader
    *   The Gettext PO header.
@@ -60,7 +60,7 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
   }
 
   /**
-   * Get the current language code used.
+   * Gets the current language code used.
    *
    * @return string
    *   The language code.

@@ -15,7 +15,7 @@ namespace Drupal\Component\Plugin\Derivative;
 interface DeriverInterface {
 
   /**
-   * Returns the definition of a derivative plugin.
+   * Gets the definition of a derivative plugin.
    *
    * @param string $derivative_id
    *   The derivative id. The id must uniquely identify the derivative within a
@@ -33,7 +33,7 @@ interface DeriverInterface {
   public function getDerivativeDefinition($derivative_id, $base_plugin_definition);
 
   /**
-   * Returns the definition of all derivatives of a base plugin.
+   * Gets the definition of all derivatives of a base plugin.
    *
    * @param array $base_plugin_definition
    *   The definition array of the base plugin.

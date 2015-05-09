@@ -12,7 +12,7 @@ namespace Drupal\Component\Plugin\Factory;
 interface FactoryInterface {
 
   /**
-   * Returns a pre-configured instance of a plugin.
+   * Creates a pre-configured instance of a plugin.
    *
    * @param string $plugin_id
    *   The ID of the plugin being instantiated.

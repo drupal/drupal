@@ -13,7 +13,7 @@ namespace Drupal\Component\Utility;
 interface ArgumentsResolverInterface {
 
   /**
-   * Returns arguments suitable for passing to the given callable.
+   * Gets arguments suitable for passing to the given callable.
    *
    * @return array
    *   An array of arguments to pass to the callable.

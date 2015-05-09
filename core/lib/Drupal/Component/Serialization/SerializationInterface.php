@@ -35,7 +35,7 @@ interface SerializationInterface {
   public static function decode($raw);
 
   /**
-   * Returns the file extension for this serialization format.
+   * Gets the file extension for this serialization format.
    *
    * @return string
    *   The file extension, without leading dot.

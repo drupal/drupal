@@ -119,7 +119,7 @@ class MTimeProtectedFastFileStorage extends FileStorage {
   }
 
   /**
-   * Returns the full path where the file is or should be stored.
+   * Gets the full path where the file is or should be stored.
    *
    * This function creates a file path that includes a unique containing
    * directory for the file and a file name that is a hash of the virtual file
@@ -162,7 +162,15 @@ class MTimeProtectedFastFileStorage extends FileStorage {
   }
 
   /**
-   * Returns the full path of the containing directory where the file is or should be stored.
+   * Gets the full path of the containing directory where the file is or should
+   * be stored.
+   *
+   * @param string $name
+   *   The virtual file name. Can be a relative path.
+   *
+   * @return string
+   *   The full path of the containing directory where the file is or should be
+   *   stored.
    */
   protected function getContainingDirectoryFullPath($name) {
     // Remove the .php file extension from the directory name.

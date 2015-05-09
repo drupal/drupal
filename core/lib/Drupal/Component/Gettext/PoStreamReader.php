@@ -208,7 +208,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
   }
 
   /**
-   * Returns the pointer position of the current PO stream.
+   * Gets the pointer position of the current PO stream.
    */
   public function getSeek() {
     return ftell($this->_fd);

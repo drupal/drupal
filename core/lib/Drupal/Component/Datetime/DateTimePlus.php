@@ -414,7 +414,7 @@ class DateTimePlus {
   }
 
   /**
-   * Retrieves error messages.
+   * Gets error messages.
    *
    * Public function to return the error messages.
    */

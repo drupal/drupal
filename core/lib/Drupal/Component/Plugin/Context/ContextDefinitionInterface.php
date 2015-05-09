@@ -16,7 +16,7 @@ namespace Drupal\Component\Plugin\Context;
 interface ContextDefinitionInterface {
 
   /**
-   * Returns a human readable label.
+   * Gets a human readable label.
    *
    * @return string
    *   The label.
@@ -34,7 +34,7 @@ interface ContextDefinitionInterface {
   public function setLabel($label);
 
   /**
-   * Returns a human readable description.
+   * Gets a human readable description.
    *
    * @return string|null
    *   The description, or NULL if no description is available.
@@ -52,7 +52,7 @@ interface ContextDefinitionInterface {
   public function setDescription($description);
 
   /**
-   * Returns the data type needed by the context.
+   * Gets the data type needed by the context.
    *
    * If the context is multiple-valued, this represents the type of each value.
    *
@@ -72,7 +72,7 @@ interface ContextDefinitionInterface {
   public function setDataType($data_type);
 
   /**
-   * Returns whether the data is multi-valued, i.e. a list of data items.
+   * Determines whether the data is multi-valued, i.e. a list of data items.
    *
    * @return bool
    *   Whether the data is multi-valued; i.e. a list of data items.
@@ -110,7 +110,7 @@ interface ContextDefinitionInterface {
   public function setRequired($required = TRUE);
 
   /**
-   * Provides the default value for this context definition.
+   * Gets the default value for this context definition.
    *
    * @return mixed
    *   The default value or NULL if no default value is set.
@@ -128,7 +128,7 @@ interface ContextDefinitionInterface {
   public function setDefaultValue($default_value);
 
   /**
-   * Returns an array of validation constraints.
+   * Gets an array of validation constraints.
    *
    * @return array
    *   An array of validation constraint definitions, keyed by constraint name.
@@ -165,7 +165,7 @@ interface ContextDefinitionInterface {
   public function addConstraint($constraint_name, $options = NULL);
 
   /**
-   * Returns a validation constraint.
+   * Gets a validation constraint.
    *
    * @param string $constraint_name
    *   The name of the constraint, i.e. its plugin id.

@@ -200,7 +200,7 @@ class UrlHelper {
   }
 
   /**
-   * Returns whether a path is external to Drupal (e.g. http://example.com).
+   * Determines whether a path is external to Drupal (e.g. http://example.com).
    *
    * If a path cannot be assessed by Drupal's menu handler, then we must
    * treat it as potentially insecure.

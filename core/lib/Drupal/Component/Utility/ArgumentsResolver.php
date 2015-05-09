@@ -62,7 +62,7 @@ class ArgumentsResolver implements ArgumentsResolverInterface {
   }
 
   /**
-   * Returns the argument value for a parameter.
+   * Gets the argument value for a parameter.
    *
    * @param \ReflectionParameter $parameter
    *   The parameter of a callable to get the value for.
@@ -110,7 +110,7 @@ class ArgumentsResolver implements ArgumentsResolverInterface {
   }
 
   /**
-   * Returns a reflector for the access check callable.
+   * Gets a reflector for the access check callable.
    *
    * The access checker may be either a procedural function (in which case the
    * callable is the function name) or a method (in which case the callable is

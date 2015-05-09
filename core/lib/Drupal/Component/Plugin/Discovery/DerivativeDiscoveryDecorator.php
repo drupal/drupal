@@ -192,7 +192,7 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
   }
 
   /**
-   * Get the deriver class name from the base plugin definition.
+   * Gets the deriver class name from the base plugin definition.
    *
    * @param array $base_definition
    *   The base plugin definition to build derivatives.

@@ -33,7 +33,7 @@ class InvalidPluginDefinitionException extends PluginException {
   }
 
   /**
-   * Returns the plugin ID of the mapper that raised the exception.
+   * Gets the plugin ID of the mapper that raised the exception.
    *
    * @return string
    *   The plugin ID.
