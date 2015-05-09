@@ -111,7 +111,6 @@ class StyleSerializerTest extends PluginTestBase {
     $this->assertResponse(403);
 
     // Test the entity rows.
-
     $view = Views::getView('test_serializer_display_entity');
     $view->initDisplay();
     $this->executeView($view);
@@ -141,12 +140,48 @@ class StyleSerializerTest extends PluginTestBase {
     $actual_json = $this->drupalGet('test/serialize/entity', array(), array('Accept: application/hal+json'));
     $this->assertIdentical($actual_json, $expected, 'The expected HAL output was found.');
     $this->assertCacheTags($expected_cache_tags);
+
+    // Change the default format to xml.
+    $view->setDisplay('rest_export_1');
+    $view->getDisplay()->setOption('style', array(
+      'type' => 'serializer',
+      'options' => array(
+        'uses_fields' => FALSE,
+        'formats' => array(
+          'xml' => 'xml',
+        ),
+      ),
+    ));
+    $view->save();
+    $expected = $serializer->serialize($entities, 'xml');
+    $actual_xml = $this->drupalGet('test/serialize/entity');
+    $this->assertIdentical($actual_xml, $expected, 'The expected XML output was found.');
+
+    // Allow multiple formats.
+    $view->setDisplay('rest_export_1');
+    $view->getDisplay()->setOption('style', array(
+      'type' => 'serializer',
+      'options' => array(
+        'uses_fields' => FALSE,
+        'formats' => array(
+          'xml' => 'xml',
+          'json' => 'json',
+        ),
+      ),
+    ));
+    $view->save();
+    $expected = $serializer->serialize($entities, 'json');
+    $actual_json = $this->drupalGet('test/serialize/entity', array(), array('Accept: application/json'));
+    $this->assertIdentical($actual_json, $expected, 'The expected JSON output was found.');
+    $expected = $serializer->serialize($entities, 'xml');
+    $actual_xml = $this->drupalGet('test/serialize/entity', array(), array('Accept: application/xml'));
+    $this->assertIdentical($actual_xml, $expected, 'The expected XML output was found.');
   }
 
   /**
    * Tests the response format configuration.
    */
-  public function testReponseFormatConfiguration() {
+  public function testResponseFormatConfiguration() {
     $this->drupalLogin($this->adminUser);
 
     $style_options = 'admin/structure/views/nojs/display/test_serializer_display_field/rest_export_1/style_options';
@@ -310,6 +345,26 @@ class StyleSerializerTest extends PluginTestBase {
     $build = $view->preview();
     $rendered_json = $build['#markup'];
     $this->assertEqual($rendered_json, $expected, 'Ensure the previewed json is escaped.');
+    $view->destroy();
+
+    $expected = SafeMarkup::checkPlain($serializer->serialize($entities, 'xml'));
+
+    // Change the request format to xml.
+    $view->setDisplay('rest_export_1');
+    $view->getDisplay()->setOption('style', array(
+      'type' => 'serializer',
+      'options' => array(
+        'uses_fields' => FALSE,
+        'formats' => array(
+          'xml' => 'xml',
+        ),
+      ),
+    ));
+
+    $this->executeView($view);
+    $build = $view->preview();
+    $rendered_xml = $build['#markup'];
+    $this->assertEqual($rendered_xml, $expected, 'Ensure we preview xml when we change the request format.');
   }
 
   /**

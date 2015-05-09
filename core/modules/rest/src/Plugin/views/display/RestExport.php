@@ -130,6 +130,12 @@ class RestExport extends PathPluginBase {
     if ($request_content_type != 'html') {
       $this->setContentType($request_content_type);
     }
+    // If the requested content type is 'html' and the default 'json' is not
+    // selected as a format option in the view display, fallback to the first
+    // format in the array.
+    elseif (!empty($options['style']['options']['formats']) && !isset($options['style']['options']['formats'][$this->getContentType()])) {
+      $this->setContentType(reset($options['style']['options']['formats']));
+    }
 
     $this->setMimeType($this->view->getRequest()->getMimeType($this->contentType));
   }
