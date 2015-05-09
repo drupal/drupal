@@ -648,6 +648,22 @@ function system_requirements($phase) {
     }
   }
 
+  // Check if the Twig C extension is available.
+  if ($phase == 'runtime') {
+    $url = 'http://twig.sensiolabs.org/doc/installation.html#installing-the-c-extension';
+    $requirements['twig_c_extension'] = [
+      'title' => t('Twig C extension'),
+      'severity' => REQUIREMENT_INFO,
+    ];
+    if (!function_exists('twig_template_get_attributes')) {
+      $requirements['twig_c_extension']['value'] = t('Not available');
+      $requirements['twig_c_extension']['description'] = t('Enabling the Twig C extension can greatly increase rendering performance. See <a href="@url">the installation instructions</a> for more detail.', ['@url' => $url]);
+    }
+    else {
+      $requirements['twig_c_extension']['description'] = t('The <a href="@url">Twig C extension</a> is available', ['@url' => $url]);
+    }
+  }
+
   return $requirements;
 }
 
