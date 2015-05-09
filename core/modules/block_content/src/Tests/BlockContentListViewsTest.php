@@ -2,28 +2,26 @@
 
 /**
  * @file
- * Contains \Drupal\block_content\Tests\BlockContentListTest.
+ * Contains \Drupal\block_content\Tests\BlockContentListViewsTest.
  */
 
 namespace Drupal\block_content\Tests;
 
 /**
- * Tests the listing of custom blocks.
- *
- * Tests the fallback block content list when Views is disabled.
+ * Tests the Views-powered listing of custom blocks.
  *
  * @group block_content
  * @see \Drupal\block\BlockContentListBuilder
- * @see \Drupal\block_content\Tests\BlockContentListViewsTest
+ * @see \Drupal\block_content\Tests\BlockContentListTest
  */
-class BlockContentListTest extends BlockContentTestBase {
+class BlockContentListViewsTest extends BlockContentTestBase {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('block', 'block_content', 'config_translation');
+  public static $modules = ['block', 'block_content', 'config_translation', 'views'];
 
   /**
    * Tests the custom block listing page.
@@ -37,16 +35,21 @@ class BlockContentListTest extends BlockContentTestBase {
 
     // Test for the table.
     $element = $this->xpath('//div[@class="layout-content"]//table');
-    $this->assertTrue($element, 'Configuration entity list table found.');
+    $this->assertTrue($element, 'Views table found.');
 
     // Test the table header.
     $elements = $this->xpath('//div[@class="layout-content"]//table/thead/tr/th');
-    $this->assertEqual(count($elements), 2, 'Correct number of table header cells found.');
+    $this->assertEqual(count($elements), 4, 'Correct number of table header cells found.');
 
     // Test the contents of each th cell.
-    $expected_items = array(t('Block description'), t('Operations'));
+    $expected_items = [t('Block description'), t('Block type'), t('Updated'), t('Operations')];
     foreach ($elements as $key => $element) {
-      $this->assertIdentical((string) $element[0], $expected_items[$key]);
+      if ($element->xpath('a')) {
+        $this->assertIdentical(trim((string) $element->xpath('a')[0]), $expected_items[$key]);
+      }
+      else {
+        $this->assertIdentical(trim((string) $element[0]), $expected_items[$key]);
+      }
     }
 
     $label = 'Antelope';
@@ -63,15 +66,15 @@ class BlockContentListTest extends BlockContentTestBase {
 
     // Confirm that once the user returns to the listing, the text of the label
     // (versus elsewhere on the page).
-    $this->assertFieldByXpath('//td', $label, 'Label found for added block.');
+    $this->assertFieldByXpath('//td/a', $label, 'Label found for added block.');
 
     // Check the number of table row cells.
-    $elements = $this->xpath('//div[@class="layout-content"]//table/tbody/tr[@class="odd"]/td');
-    $this->assertEqual(count($elements), 2, 'Correct number of table row cells found.');
+    $elements = $this->xpath('//div[@class="layout-content"]//table/tbody/tr/td');
+    $this->assertEqual(count($elements), 4, 'Correct number of table row cells found.');
     // Check the contents of each row cell. The first cell contains the label,
     // the second contains the machine name, and the third contains the
     // operations list.
-    $this->assertIdentical((string) $elements[0], $label);
+    $this->assertIdentical((string) $elements[0]->xpath('a')[0], $label);
 
     // Edit the entity using the operations link.
     $blocks = $this->container
@@ -93,7 +96,7 @@ class BlockContentListTest extends BlockContentTestBase {
 
     // Confirm that once the user returns to the listing, the text of the label
     // (versus elsewhere on the page).
-    $this->assertFieldByXpath('//td', $new_label, 'Label found for updated custom block.');
+    $this->assertFieldByXpath('//td/a', $new_label, 'Label found for updated custom block.');
 
     // Delete the added entity using the operations link.
     $this->assertLinkByHref('block/' . $block->id() . '/delete');
@@ -108,7 +111,8 @@ class BlockContentListTest extends BlockContentTestBase {
     $this->assertNoFieldByXpath('//td', $new_label, 'No label found for deleted custom block.');
 
     // Confirm that the empty text is displayed.
-    $this->assertText(t('There is no Custom block yet.'));
+    $this->assertText('There are no custom blocks available.');
+    $this->assertLink('custom block');
   }
 
 }

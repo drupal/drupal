@@ -28,6 +28,13 @@ class BlockContentViewsData extends EntityViewsData {
 
     $data['block_content_field_data']['type']['field']['id'] = 'field';
 
+    $data['block_content']['block_content_listing_empty'] = array(
+      'title' => t('Empty block library behavior'),
+      'help' => t('Provides a link to add a new block.'),
+      'area' => array(
+        'id' => 'block_content_listing_empty',
+      ),
+    );
     // Advertise this table as a possible base table.
     $data['block_content_revision']['table']['base']['help'] = $this->t('Block Content revision is a history of changes to block content.');
     $data['block_content_revision']['table']['base']['defaults']['title'] = 'info';
