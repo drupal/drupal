@@ -166,6 +166,11 @@ class InstallStorage extends FileStorage {
       if ($profile = drupal_get_profile()) {
         $profile_list = $listing->scan('profile');
         if (isset($profile_list[$profile])) {
+          // Prime the drupal_get_filename() static cache with the profile info
+          // file location so we can use drupal_get_path() on the active profile
+          // during the module scan.
+          // @todo Remove as part of https://www.drupal.org/node/2186491
+          drupal_get_filename('profile', $profile, $profile_list[$profile]->getPathname());
           $this->folders += $this->getComponentNames(array($profile_list[$profile]));
         }
       }
