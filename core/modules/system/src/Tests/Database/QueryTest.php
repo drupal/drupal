@@ -80,12 +80,6 @@ class QueryTest extends DatabaseTestBase {
       ':count' => 3,
     ))->fetchField();
     $this->assertEqual((bool) $count, TRUE);
-
-    // Test that numeric arguments expressed as strings also work properly.
-    $count = db_query('SELECT COUNT(*) >= :count FROM {test}', array(
-      ':count' => (string) 3,
-    ))->fetchField();
-    $this->assertEqual((bool) $count, TRUE);
   }
 
 }

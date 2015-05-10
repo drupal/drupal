@@ -745,7 +745,18 @@ function _views_query_tag_alter_condition(AlterableInterface $query, &$condition
         views_query_views_alter($condition['value']);
       }
       elseif (isset($condition['value'])) {
-        $condition['value'] = str_replace(array_keys($substitutions), array_values($substitutions), $condition['value']);
+        // We can not use a simple str_replace() here because it always returns
+        // a string and we have to keep the type of the condition value intact.
+        if (is_array($condition['value'])) {
+          foreach ($condition['value'] as &$value) {
+            if (is_string($value)) {
+              $value = str_replace(array_keys($substitutions), array_values($substitutions), $value);
+            }
+          }
+        }
+        elseif (is_string($condition['value'])) {
+          $condition['value'] = str_replace(array_keys($substitutions), array_values($substitutions), $condition['value']);
+        }
       }
     }
   }

@@ -320,12 +320,16 @@ class StringFilter extends FilterPluginBase {
 
   protected function opShorterThan($field) {
     $placeholder = $this->placeholder();
-    $this->query->addWhereExpression($this->options['group'], "LENGTH($field) < $placeholder", array($placeholder => $this->value));
+    // Type cast the argument to an integer because the SQLite database driver
+    // has to do some specific alterations to the query base on that data type.
+    $this->query->addWhereExpression($this->options['group'], "LENGTH($field) < $placeholder", array($placeholder => (int) $this->value));
   }
 
   protected function opLongerThan($field) {
     $placeholder = $this->placeholder();
-    $this->query->addWhereExpression($this->options['group'], "LENGTH($field) > $placeholder", array($placeholder => $this->value));
+    // Type cast the argument to an integer because the SQLite database driver
+    // has to do some specific alterations to the query base on that data type.
+    $this->query->addWhereExpression($this->options['group'], "LENGTH($field) > $placeholder", array($placeholder => (int) $this->value));
   }
 
   /**
