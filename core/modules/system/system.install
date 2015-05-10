@@ -664,6 +664,24 @@ function system_requirements($phase) {
     }
   }
 
+  // Check xdebug.max_nesting_level, as some pages will not work if it is too
+  // low.
+  if (extension_loaded('xdebug')) {
+    // Setting this value to 256 was considered adequate on Xdebug 2.3
+    // (see http://bugs.xdebug.org/bug_view_page.php?bug_id=00001100)
+    $minimum_nesting_level = 256;
+    $current_nesting_level = ini_get('xdebug.max_nesting_level');
+
+    if ($current_nesting_level < $minimum_nesting_level) {
+      $requirements['xdebug_max_nesting_level'] = [
+        'title' => t('Xdebug settings'),
+        'value' => t('xdebug.max_nesting_level is set to %value.', ['%value' => $current_nesting_level]),
+        'description' => t('Set <code>xdebug.max_nesting_level=@level</code> in your PHP configuration as some pages in your Drupal site will not work when this setting is too low.', ['@level' => $minimum_nesting_level]),
+        'severity' => REQUIREMENT_ERROR,
+      ];
+    }
+  }
+
   return $requirements;
 }
 
