@@ -23,10 +23,11 @@ trait DependencyTrait {
    * Adds a dependency.
    *
    * @param string $type
-   *   The type of dependency being added: 'module', 'theme', or 'entity'.
+   *   Type of dependency being added: 'module', 'theme', 'config', 'content'.
    * @param string $name
    *   If $type is 'module' or 'theme', the name of the module or theme. If
-   *   $type is 'entity', the full configuration object name.
+   *   $type is 'config' or 'content', the result of
+   *   EntityInterface::getConfigDependencyName().
    *
    * @see \Drupal\Core\Entity\EntityInterface::getConfigDependencyName()
    *
