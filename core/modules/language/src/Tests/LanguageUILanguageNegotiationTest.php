@@ -450,6 +450,15 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     $this->assertText('The configuration options have been saved', 'Domain configuration is saved.');
     $this->rebuildContainer();
 
+    // Try to use an invalid domain.
+    $edit = [
+      'language_negotiation_url_part' => LanguageNegotiationUrl::CONFIG_DOMAIN,
+      'domain[en]' => $base_url_host,
+      'domain[it]' => 'it.example.com/',
+    ];
+    $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
+    $this->assertRaw(t('The domain for %language may only contain the domain name, not a trailing slash, protocol and/or port.', ['%language' => 'Italian']));
+
     // Build the link we're going to test.
     $link = 'it.example.com' . rtrim(base_path(), '/') . '/admin';
 

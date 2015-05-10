@@ -188,13 +188,13 @@ class NegotiationUrlForm extends ConfigFormBase {
     }
 
     // Domain names should not contain protocol and/or ports.
-    foreach ($languages as $langcode => $name) {
+    foreach ($languages as $langcode => $language) {
       $value = $form_state->getValue(array('domain', $langcode));
       if (!empty($value)) {
         // Ensure we have exactly one protocol when checking the hostname.
         $host = 'http://' . str_replace(array('http://', 'https://'), '', $value);
         if (parse_url($host, PHP_URL_HOST) != $value) {
-          $form_state->setErrorByName("domain][$langcode", $this->t('The domain for %language may only contain the domain name, not a protocol and/or port.', array('%language' => $name)));
+          $form_state->setErrorByName("domain][$langcode", $this->t('The domain for %language may only contain the domain name, not a trailing slash, protocol and/or port.', ['%language' => $language->getName()]));
         }
       }
     }
