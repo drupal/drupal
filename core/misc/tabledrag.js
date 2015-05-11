@@ -1274,7 +1274,7 @@
       return '<abbr class="warning tabledrag-changed" title="' + Drupal.t('Changed') + '">*</abbr>';
     },
     tableDragIndentation: function () {
-      return '<div class="js-indentation">&nbsp;</div>';
+      return '<div class="js-indentation indentation">&nbsp;</div>';
     },
     tableDragChangedWarning: function () {
       return '<div class="tabledrag-changed-warning messages messages--warning" role="alert">' + Drupal.theme('tableDragChangedMarker') + ' ' + Drupal.t('You have unsaved changes.') + '</div>';
