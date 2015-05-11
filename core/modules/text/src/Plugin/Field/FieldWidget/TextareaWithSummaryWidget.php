@@ -78,8 +78,8 @@ class TextareaWithSummaryWidget extends TextareaWidget {
       '#attached' => array(
         'library' => array('text/drupal.text'),
       ),
-      '#attributes' => array('class' => array('text-summary')),
-      '#prefix' => '<div class="text-summary-wrapper">',
+      '#attributes' => array('class' => array('js-text-summary', 'text-summary')),
+      '#prefix' => '<div class="js-text-summary-wrapper text-summary-wrapper">',
       '#suffix' => '</div>',
       '#weight' => -10,
     );

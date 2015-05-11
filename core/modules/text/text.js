@@ -7,12 +7,12 @@
    */
   Drupal.behaviors.textSummary = {
     attach: function (context, settings) {
-      $(context).find('.text-summary').once('text-summary').each(function () {
-        var $widget = $(this).closest('.text-format-wrapper');
+      $(context).find('.js-text-summary').once('text-summary').each(function () {
+        var $widget = $(this).closest('.js-text-format-wrapper');
 
-        var $summary = $widget.find('.text-summary-wrapper');
+        var $summary = $widget.find('.js-text-summary-wrapper');
         var $summaryLabel = $summary.find('label').eq(0);
-        var $full = $widget.find('.text-full').closest('.form-item');
+        var $full = $widget.find('.js-text-full').closest('.form-item');
         var $fullLabel = $full.find('label').eq(0);
 
         // Create a placeholder label when the field cardinality is greater
@@ -41,7 +41,7 @@
         }).appendTo($summaryLabel);
 
         // If no summary is set, hide the summary field.
-        if ($widget.find('.text-summary').val() === '') {
+        if ($widget.find('.js-text-summary').val() === '') {
           $link.trigger('click');
         }
       });

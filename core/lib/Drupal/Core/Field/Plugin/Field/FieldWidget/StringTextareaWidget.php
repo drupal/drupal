@@ -78,7 +78,7 @@ class StringTextareaWidget extends WidgetBase {
       '#default_value' => $items[$delta]->value,
       '#rows' => $this->getSetting('rows'),
       '#placeholder' => $this->getSetting('placeholder'),
-      '#attributes' => array('class' => array('text-full')),
+      '#attributes' => array('class' => array('js-text-full', 'text-full')),
     );
 
     return $element;

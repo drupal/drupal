@@ -79,7 +79,7 @@ class StringTextfieldWidget extends WidgetBase {
       '#size' => $this->getSetting('size'),
       '#placeholder' => $this->getSetting('placeholder'),
       '#maxlength' => $this->getFieldSetting('max_length'),
-      '#attributes' => array('class' => array('text-full')),
+      '#attributes' => array('class' => array('js-text-full', 'text-full')),
     );
 
     return $element;
