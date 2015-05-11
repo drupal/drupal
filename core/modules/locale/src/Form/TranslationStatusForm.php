@@ -59,7 +59,7 @@ class TranslationStatusForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'locale_translation_status_form';
   }
 

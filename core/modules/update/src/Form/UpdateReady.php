@@ -60,7 +60,7 @@ class UpdateReady extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'update_manager_update_ready_form';
   }
 

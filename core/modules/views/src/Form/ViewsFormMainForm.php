@@ -16,7 +16,7 @@ class ViewsFormMainForm implements FormInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
   }
 
   /**

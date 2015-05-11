@@ -46,7 +46,7 @@ class DblogClearLogForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'dblog_clear_log_form';
   }
 

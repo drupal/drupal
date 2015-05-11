@@ -103,7 +103,7 @@ class ViewsForm implements FormInterface, ContainerInjectionInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     $parts = array(
       'views_form',
       $this->viewId,

@@ -65,7 +65,7 @@ class ImportForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'locale_translate_import_form';
   }
 

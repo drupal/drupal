@@ -32,7 +32,7 @@ class SearchPageForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'search_form';
   }
 

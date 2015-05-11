@@ -85,7 +85,7 @@ class CommentAdminOverview extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'comment_admin_overview';
   }
 

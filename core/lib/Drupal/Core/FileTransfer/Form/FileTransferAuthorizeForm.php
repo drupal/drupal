@@ -44,7 +44,7 @@ class FileTransferAuthorizeForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'authorize_filetransfer_form';
   }
 

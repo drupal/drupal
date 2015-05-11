@@ -114,7 +114,7 @@ class NegotiationConfigureForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'language_negotiation_configure_form';
   }
 
