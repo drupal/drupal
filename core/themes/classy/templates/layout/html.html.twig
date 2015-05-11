@@ -10,8 +10,9 @@
  * - css: A list of CSS files for the current page.
  * - head: Markup for the HEAD element (including meta tags, keyword tags, and
  *   so on).
- * - head_title: List of text elements that make up the head_title variable.
- *   May contain or more of the following:
+ * - head_title: A modified version of the page title, for use in the TITLE tag.
+ * - head_title_array: List of text elements that make up the head_title
+ *   variable. May contain or more of the following:
  *   - title: The title of the page.
  *   - name: The name of the site.
  *   - slogan: The slogan of the site.
@@ -39,7 +40,7 @@
 <html{{ html_attributes }}>
   <head>
     {{ head }}
-    <title>{{ head_title|safe_join(' | ') }}</title>
+    <title>{{ head_title }}</title>
     {{ styles }}
     {{ scripts }}
   </head>
