@@ -48,7 +48,7 @@ interface EntityListBuilderInterface {
   public function getOperations(EntityInterface $entity);
 
   /**
-   * Returns a listing of entities for the given entity type.
+   * Builds a listing of entities for the given entity type.
    *
    * @return array
    *   A render array as expected by drupal_render().

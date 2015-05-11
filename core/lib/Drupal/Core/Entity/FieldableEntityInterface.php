@@ -99,7 +99,7 @@ interface FieldableEntityInterface extends EntityInterface {
   public static function bundleFieldDefinitions(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions);
 
   /**
-   * Returns whether the entity has a field with the given name.
+   * Determines whether the entity has a field with the given name.
    *
    * @param string $field_name
    *   The field name.
@@ -131,7 +131,7 @@ interface FieldableEntityInterface extends EntityInterface {
   public function getFieldDefinitions();
 
   /**
-   * Returns an array of all field values.
+   * Gets an array of all field values.
    *
    * Gets an array of plain field values, including only non-computed values.
    * Note that the structure varies by entity type and bundle.

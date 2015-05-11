@@ -27,7 +27,7 @@ interface QueryFactoryInterface {
   public function get(EntityTypeInterface $entity_type, $conjunction);
 
   /**
-   * Returns a aggregation query object for a given entity type.
+   * Instantiates an aggregation query object for a given entity type.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.

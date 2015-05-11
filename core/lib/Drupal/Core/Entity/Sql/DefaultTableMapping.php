@@ -288,7 +288,7 @@ class DefaultTableMapping implements TableMappingInterface {
   }
 
   /**
-   * Returns a list of dedicated table names for this mapping.
+   * Gets a list of dedicated table names for this mapping.
    *
    * @return string[]
    *   An array of table names.

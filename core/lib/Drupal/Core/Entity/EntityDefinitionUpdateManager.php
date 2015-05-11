@@ -146,7 +146,7 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
   }
 
   /**
-   * Returns a list of changes to entity type and field storage definitions.
+   * Gets a list of changes to entity type and field storage definitions.
    *
    * @return array
    *   An associative array keyed by entity type id of change descriptors. Every

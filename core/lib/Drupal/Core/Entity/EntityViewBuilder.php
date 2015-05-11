@@ -378,7 +378,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
   }
 
   /**
-   * Returns TRUE if the view mode is cacheable.
+   * Determines whether the view mode is cacheable.
    *
    * @param string $view_mode
    *   Name of the view mode that should be rendered.
@@ -437,7 +437,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
   }
 
   /**
-   * Returns an EntityViewDisplay for rendering an individual field.
+   * Gets an EntityViewDisplay for rendering an individual field.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity.

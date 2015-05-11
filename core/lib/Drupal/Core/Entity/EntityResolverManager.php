@@ -217,7 +217,7 @@ class EntityResolverManager {
   }
 
   /**
-   * Returns a list of all entity types.
+   * Gets the list of all entity types.
    *
    * @return \Drupal\Core\Entity\EntityTypeInterface[]
    */

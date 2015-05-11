@@ -51,7 +51,7 @@ interface EntityTypeInterface {
   public function set($property, $value);
 
   /**
-   * Returns the unique identifier of the entity type.
+   * Gets the unique identifier of the entity type.
    *
    * @return string
    *   The unique identifier of the entity type.
@@ -59,7 +59,7 @@ interface EntityTypeInterface {
   public function id();
 
   /**
-   * Returns the name of the provider of this entity type.
+   * Gets the name of the provider of this entity type.
    *
    * @return string
    *   The name of the provider of this entity type.
@@ -67,7 +67,7 @@ interface EntityTypeInterface {
   public function getProvider();
 
   /**
-   * Returns the name of the entity type class.
+   * Gets the name of the entity type class.
    *
    * @return string
    *   The name of the entity type class.
@@ -75,7 +75,7 @@ interface EntityTypeInterface {
   public function getClass();
 
   /**
-   * Returns the name of the original entity type class.
+   * Gets the name of the original entity type class.
    *
    * In case the class name was changed with setClass(), this will return
    * the initial value. Useful when trying to identify the entity type ID based
@@ -87,7 +87,7 @@ interface EntityTypeInterface {
   public function getOriginalClass();
 
   /**
-   * Returns an array of entity keys.
+   * Gets an array of entity keys.
    *
    * @return array
    *   An array describing how the Field API can extract certain information
@@ -120,7 +120,7 @@ interface EntityTypeInterface {
   public function getKeys();
 
   /**
-   * Returns a specific entity key.
+   * Gets a specific entity key.
    *
    * @param string $key
    *   The name of the entity key to return.
@@ -203,7 +203,7 @@ interface EntityTypeInterface {
   public function getHandlerClass($handler_type);
 
   /**
-   * Returns an array of handlers.
+   * Gets an array of handlers.
    *
    * @return array
    *   An associative array where the keys are the names of different handler
@@ -233,7 +233,7 @@ interface EntityTypeInterface {
   public function getHandlerClasses();
 
   /**
-   * Returns the storage class.
+   * Gets the storage class.
    *
    * @return string
    *   The class for this entity type's storage.
@@ -251,7 +251,7 @@ interface EntityTypeInterface {
   public function setStorageClass($class);
 
   /**
-   * Returns the form class for a specific operation.
+   * Gets the form class for a specific operation.
    *
    * @param string $operation
    *   The name of the operation to use, e.g., 'default'.
@@ -303,7 +303,7 @@ interface EntityTypeInterface {
   public function getRouteProviderClasses();
 
   /**
-   * Returns the list class.
+   * Gets the list class.
    *
    * @return string
    *   The class for this entity type's list.
@@ -329,7 +329,7 @@ interface EntityTypeInterface {
   public function hasListBuilderClass();
 
   /**
-   * Returns the view builder class.
+   * Gets the view builder class.
    *
    * @return string
    *   The class for this entity type's view builder.
@@ -337,7 +337,7 @@ interface EntityTypeInterface {
   public function getViewBuilderClass();
 
   /**
-   * Returns the view builder class.
+   * Gets the view builder class.
    *
    * @param string $class
    *   The class for this entity type's view builder.
@@ -355,7 +355,7 @@ interface EntityTypeInterface {
   public function hasViewBuilderClass();
 
   /**
-   * Returns the access control class.
+   * Gets the access control class.
    *
    * @return string
    *   The class for this entity type's access control.
@@ -363,7 +363,7 @@ interface EntityTypeInterface {
   public function getAccessControlClass();
 
   /**
-   * Returns the access class.
+   * Gets the access class.
    *
    * @param string $class
    *   The class for this entity type's access.
@@ -396,7 +396,7 @@ interface EntityTypeInterface {
   public function setHandlerClass($handler_type, $value);
 
   /**
-   * Returns the name of the default administrative permission.
+   * Gets the name of the default administrative permission.
    *
    * The default \Drupal\Core\Entity\EntityAccessControlHandler class checks this
    * permission for all operations in its checkAccess() method. Entities with
@@ -408,7 +408,7 @@ interface EntityTypeInterface {
   public function getAdminPermission();
 
   /**
-   * Returns the permission granularity level.
+   * Gets the permission granularity level.
    *
    * The allowed values are respectively "entity_type" or "bundle".
    *
@@ -419,7 +419,7 @@ interface EntityTypeInterface {
   public function getPermissionGranularity();
 
   /**
-   * Returns link templates using the URI template syntax.
+   * Gets the link templates using the URI template syntax.
    *
    * Links are an array of standard link relations to the URI template that
    * should be used for them. Where possible, link relationships should use
@@ -449,7 +449,7 @@ interface EntityTypeInterface {
   public function getLinkTemplates();
 
   /**
-   * Returns the link template for a given key.
+   * Gets the link template for a given key.
    *
    * @param string $key
    *   The link type.
@@ -523,14 +523,14 @@ interface EntityTypeInterface {
   public function hasLabelCallback();
 
   /**
-   * Returns the name of the entity type which provides bundles.
+   * Gets the name of the entity type which provides bundles.
    *
    * @return string
    */
   public function getBundleEntityType();
 
   /**
-   * Returns the entity type for which this entity provides bundles.
+   * Gets the entity type for which this entity provides bundles.
    *
    * It can be used by other modules to act accordingly; for example,
    * the Field UI module uses it to add operation links to manage fields and
@@ -543,7 +543,7 @@ interface EntityTypeInterface {
   public function getBundleOf();
 
   /**
-   * Returns the label for the bundle.
+   * Gets the label for the bundle.
    *
    * @return string|null
    *   The bundle label, or NULL if none exists.
@@ -551,7 +551,7 @@ interface EntityTypeInterface {
   public function getBundleLabel();
 
   /**
-   * Returns the name of the entity's base table.
+   * Gets the name of the entity's base table.
    *
    * @todo Used by SqlContentEntityStorage only.
    *
@@ -578,7 +578,7 @@ interface EntityTypeInterface {
   public function isRevisionable();
 
   /**
-   * Returns the name of the entity's revision data table.
+   * Gets the name of the entity's revision data table.
    *
    * @todo Used by SqlContentEntityStorage only.
    *
@@ -589,7 +589,7 @@ interface EntityTypeInterface {
   public function getRevisionDataTable();
 
   /**
-   * Returns the name of the entity's revision table.
+   * Gets the name of the entity's revision table.
    *
    * @todo Used by SqlContentEntityStorage only.
    *
@@ -599,7 +599,7 @@ interface EntityTypeInterface {
   public function getRevisionTable();
 
   /**
-   * Returns the name of the entity's data table.
+   * Gets the name of the entity's data table.
    *
    * @todo Used by SqlContentEntityStorage only.
    *
@@ -609,7 +609,7 @@ interface EntityTypeInterface {
   public function getDataTable();
 
   /**
-   * Returns the human-readable name of the entity type.
+   * Gets the human-readable name of the entity type.
    *
    * @return string
    *   The human-readable name of the entity type.
@@ -617,7 +617,7 @@ interface EntityTypeInterface {
   public function getLabel();
 
   /**
-   * Returns the lowercase form of the human-readable entity type name.
+   * Gets the lowercase form of the human-readable entity type name.
    *
    * @return string
    *   The lowercase form of the human-readable entity type name.
@@ -625,7 +625,7 @@ interface EntityTypeInterface {
   public function getLowercaseLabel();
 
   /**
-   * Returns a callable that can be used to provide the entity URI.
+   * Gets a callable that can be used to provide the entity URI.
    *
    * This is only called if there is no matching link template for the link
    * relationship type, and there is no bundle-specific callback provided.
@@ -684,7 +684,7 @@ interface EntityTypeInterface {
   public function isCommonReferenceTarget();
 
   /**
-   * Returns an array of validation constraints.
+   * Gets an array of validation constraints.
    *
    * See \Drupal\Core\TypedData\DataDefinitionInterface::getConstraints() for
    * details on how constraints are defined.

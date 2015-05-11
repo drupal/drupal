@@ -15,7 +15,7 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 interface EntityDisplayModeInterface extends ConfigEntityInterface {
 
   /**
-   * Returns the entity type this display mode is used for.
+   * Gets the entity type this display mode is used for.
    *
    * @return string
    *   The entity type name.

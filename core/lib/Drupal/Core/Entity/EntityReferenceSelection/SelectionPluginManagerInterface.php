@@ -30,7 +30,7 @@ interface SelectionPluginManagerInterface extends PluginManagerInterface {
   public function getPluginId($target_type, $base_plugin_id);
 
   /**
-   * Returns selection plugins that can reference a specific entity type.
+   * Gets the selection plugins that can reference a specific entity type.
    *
    * @param string $entity_type_id
    *   A Drupal entity type ID.

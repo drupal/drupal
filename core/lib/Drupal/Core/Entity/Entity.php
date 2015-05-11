@@ -67,7 +67,7 @@ abstract class Entity implements EntityInterface {
   }
 
   /**
-   * Returns the entity manager.
+   * Gets the entity manager.
    *
    * @return \Drupal\Core\Entity\EntityManagerInterface
    */
@@ -76,7 +76,7 @@ abstract class Entity implements EntityInterface {
   }
 
   /**
-   * Returns the language manager.
+   * Gets the language manager.
    *
    * @return \Drupal\Core\Language\LanguageManagerInterface
    */
@@ -85,7 +85,7 @@ abstract class Entity implements EntityInterface {
   }
 
   /**
-   * Returns the UUID generator.
+   * Gets the UUID generator.
    *
    * @return \Drupal\Component\Uuid\UuidInterface
    */
@@ -235,7 +235,7 @@ abstract class Entity implements EntityInterface {
   }
 
   /**
-   * Returns an array link templates.
+   * Gets an array link templates.
    *
    * @return array
    *   An array of link templates containing paths.
@@ -274,7 +274,7 @@ abstract class Entity implements EntityInterface {
   }
 
   /**
-   * Returns an array of placeholders for this entity.
+   * Gets an array of placeholders for this entity.
    *
    * Individual entity classes may override this method to add additional
    * placeholders if desired. If so, they should be sure to replicate the

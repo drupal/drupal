@@ -16,7 +16,7 @@ use Drupal\Core\Form\FormStateInterface;
 interface ContentEntityFormInterface extends EntityFormInterface {
 
   /**
-   * Returns the form display.
+   * Gets the form display.
    *
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
@@ -40,7 +40,7 @@ interface ContentEntityFormInterface extends EntityFormInterface {
   public function setFormDisplay(EntityFormDisplayInterface $form_display, FormStateInterface $form_state);
 
   /**
-   * Returns the code identifying the active form language.
+   * Gets the code identifying the active form language.
    *
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.

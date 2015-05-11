@@ -108,7 +108,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
   }
 
   /**
-   * Returns the keyvalue collection for tracking the installed schema.
+   * Gets the keyvalue collection for tracking the installed schema.
    *
    * @return \Drupal\Core\KeyValueStore\KeyValueStoreInterface
    *
@@ -473,7 +473,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
   }
 
   /**
-   * Returns the entity schema for the specified entity type.
+   * Gets the entity schema for the specified entity type.
    *
    * Entity types may override this method in order to optimize the generated
    * schema of the entity tables. However, only cross-field optimizations should
@@ -578,7 +578,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
   }
 
   /**
-   * Returns entity schema definitions for index and key definitions.
+   * Gets entity schema definitions for index and key definitions.
    *
    * @param \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type
    *   The entity type definition.
@@ -616,7 +616,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
   }
 
   /**
-   * Returns an index schema array for a given field.
+   * Gets an index schema array for a given field.
    *
    * @param string $field_name
    *   The name of the field.
@@ -633,7 +633,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
   }
 
   /**
-   * Returns a unique key schema array for a given field.
+   * Gets a unique key schema array for a given field.
    *
    * @param string $field_name
    *   The name of the field.
@@ -650,7 +650,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
   }
 
   /**
-   * Returns field schema data for the given key.
+   * Gets field schema data for the given key.
    *
    * @param string $field_name
    *   The name of the field.
@@ -720,7 +720,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
   }
 
   /**
-   * Returns field foreign keys.
+   * Gets field foreign keys.
    *
    * @param string $field_name
    *   The name of the field.
@@ -1389,7 +1389,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
   }
 
   /**
-   * Returns the schema for a single field definition.
+   * Gets the schema for a single field definition.
    *
    * Entity types may override this method in order to optimize the generated
    * schema for given field. While all optimizations that apply to a single
@@ -1533,7 +1533,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
   }
 
   /**
-   * Returns the SQL schema for a dedicated table.
+   * Gets the SQL schema for a dedicated table.
    *
    * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition
    *   The field storage definition.
@@ -1700,7 +1700,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
   }
 
   /**
-   * Returns the name to be used for the given entity index.
+   * Gets the name to be used for the given entity index.
    *
    * @param \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type
    *   The entity type.

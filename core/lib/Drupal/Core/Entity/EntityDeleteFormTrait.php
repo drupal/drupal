@@ -22,7 +22,7 @@ trait EntityDeleteFormTrait {
   use ConfigDependencyDeleteFormTrait;
 
   /**
-   * Returns the entity of this form.
+   * Gets the entity of this form.
    *
    * Provided by \Drupal\Core\Entity\EntityForm.
    *
@@ -62,7 +62,7 @@ trait EntityDeleteFormTrait {
   }
 
   /**
-   * Returns the message to display to the user after deleting the entity.
+   * Gets the message to display to the user after deleting the entity.
    *
    * @return string
    *   The translated string of the deletion message.

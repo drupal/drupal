@@ -913,7 +913,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
   }
 
   /**
-   * Returns the entity display mode info for all entity types.
+   * Gets the entity display mode info for all entity types.
    *
    * @param string $display_type
    *   The display type to be retrieved. It can be "view_mode" or "form_mode".
@@ -944,7 +944,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
   }
 
   /**
-   * Returns the entity display mode info for a specific entity type.
+   * Gets the entity display mode info for a specific entity type.
    *
    * @param string $display_type
    *   The display type to be retrieved. It can be "view_mode" or "form_mode".
@@ -982,7 +982,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
   }
 
   /**
-   * Returns an array of display mode options.
+   * Gets an array of display mode options.
    *
    * @param string $display_type
    *   The display type to be retrieved. It can be "view_mode" or "form_mode".

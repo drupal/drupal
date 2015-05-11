@@ -118,7 +118,7 @@ interface EntityManagerInterface extends PluginManagerInterface, EntityTypeListe
   public function getLastInstalledFieldStorageDefinitions($entity_type_id);
 
   /**
-   * Returns a lightweight map of fields across bundles.
+   * Gets a lightweight map of fields across bundles.
    *
    * @return array
    *   An array keyed by entity type. Each value is an array which keys are
@@ -129,7 +129,7 @@ interface EntityManagerInterface extends PluginManagerInterface, EntityTypeListe
   public function getFieldMap();
 
   /**
-   * Returns a lightweight map of fields across bundles filtered by field type.
+   * Gets a lightweight map of fields across bundles filtered by field type.
    *
    * @param string $field_type
    *   The field type to filter by.
@@ -280,7 +280,7 @@ interface EntityManagerInterface extends PluginManagerInterface, EntityTypeListe
   public function createHandlerInstance($class, EntityTypeInterface $definition = null);
 
   /**
-   * Get the bundle info of an entity type.
+   * Gets the bundle info of an entity type.
    *
    * @param string $entity_type
    *   The entity type.
@@ -291,7 +291,7 @@ interface EntityManagerInterface extends PluginManagerInterface, EntityTypeListe
   public function getBundleInfo($entity_type);
 
   /**
-   * Retrieves the "extra fields" for a bundle.
+   * Gets the "extra fields" for a bundle.
    *
    * @param string $entity_type_id
    *   The entity type ID.
@@ -320,7 +320,7 @@ interface EntityManagerInterface extends PluginManagerInterface, EntityTypeListe
   public function getExtraFields($entity_type_id, $bundle);
 
   /**
-   * Returns the entity translation to be used in the given context.
+   * Gets the entity translation to be used in the given context.
    *
    * This will check whether a translation for the desired language is available
    * and if not, it will fall back to the most appropriate translation based on
@@ -350,7 +350,7 @@ interface EntityManagerInterface extends PluginManagerInterface, EntityTypeListe
   public function getDefinition($entity_type_id, $exception_on_invalid = TRUE);
 
   /**
-   * Returns the entity type definition in its most recently installed state.
+   * Gets the entity type definition in its most recently installed state.
    *
    * During the application lifetime, entity type definitions can change. For
    * example, updated code can be deployed. The getDefinition() method will
@@ -389,7 +389,7 @@ interface EntityManagerInterface extends PluginManagerInterface, EntityTypeListe
   public function getDefinitions();
 
   /**
-   * Returns the entity view mode info for all entity types.
+   * Gets the entity view mode info for all entity types.
    *
    * @return array
    *   The view mode info for all entity types.
@@ -397,7 +397,7 @@ interface EntityManagerInterface extends PluginManagerInterface, EntityTypeListe
   public function getAllViewModes();
 
   /**
-   * Returns the entity view mode info for a specific entity type.
+   * Gets the entity view mode info for a specific entity type.
    *
    * @param string $entity_type_id
    *   The entity type whose view mode info should be returned.
@@ -408,7 +408,7 @@ interface EntityManagerInterface extends PluginManagerInterface, EntityTypeListe
   public function getViewModes($entity_type_id);
 
   /**
-   * Returns the entity form mode info for all entity types.
+   * Gets the entity form mode info for all entity types.
    *
    * @return array
    *   The form mode info for all entity types.
@@ -416,7 +416,7 @@ interface EntityManagerInterface extends PluginManagerInterface, EntityTypeListe
   public function getAllFormModes();
 
   /**
-   * Returns the entity form mode info for a specific entity type.
+   * Gets the entity form mode info for a specific entity type.
    *
    * @param string $entity_type_id
    *   The entity type whose form mode info should be returned.
@@ -427,7 +427,7 @@ interface EntityManagerInterface extends PluginManagerInterface, EntityTypeListe
   public function getFormModes($entity_type_id);
 
   /**
-   * Returns an array of view mode options.
+   * Gets an array of view mode options.
    *
    * @param string $entity_type_id
    *   The entity type whose view mode options should be returned.
@@ -440,7 +440,7 @@ interface EntityManagerInterface extends PluginManagerInterface, EntityTypeListe
   public function getViewModeOptions($entity_type_id, $include_disabled = FALSE);
 
   /**
-   * Returns an array of form mode options.
+   * Gets an array of form mode options.
    *
    * @param string $entity_type_id
    *   The entity type whose form mode options should be returned.
@@ -492,7 +492,7 @@ interface EntityManagerInterface extends PluginManagerInterface, EntityTypeListe
   public function loadEntityByConfigTarget($entity_type_id, $target);
 
   /**
-   * Returns the entity type ID based on the class that is called on.
+   * Gets the entity type ID based on the class that is called on.
    *
    * Compares the class this is called on against the known entity classes
    * and returns the entity type ID of a direct match or a subclass as fallback,

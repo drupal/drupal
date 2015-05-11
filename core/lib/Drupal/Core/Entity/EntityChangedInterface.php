@@ -22,7 +22,7 @@ namespace Drupal\Core\Entity;
 interface EntityChangedInterface {
 
   /**
-   * Returns the timestamp of the last entity change.
+   * Gets the timestamp of the last entity change.
    *
    * @return int
    *   The timestamp of the last entity save operation.

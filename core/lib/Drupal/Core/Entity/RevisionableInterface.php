@@ -13,7 +13,7 @@ namespace Drupal\Core\Entity;
 interface RevisionableInterface {
 
   /**
-   * Returns whether a new revision should be created on save.
+   * Determines whether a new revision should be created on save.
    *
    * @return bool
    *   TRUE if a new revision should be created.
@@ -36,7 +36,7 @@ interface RevisionableInterface {
   public function setNewRevision($value = TRUE);
 
   /**
-   * Returns the revision identifier of the entity.
+   * Gets the revision identifier of the entity.
    *
    * @return
    *   The revision identifier of the entity, or NULL if the entity does not

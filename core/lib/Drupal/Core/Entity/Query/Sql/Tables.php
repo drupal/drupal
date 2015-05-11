@@ -289,7 +289,7 @@ class Tables implements TablesInterface {
   }
 
   /**
-   * Returns the schema for the given table.
+   * Gets the schema for the given table.
    *
    * @param string $table
    *   The table name.

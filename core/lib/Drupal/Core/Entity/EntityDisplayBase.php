@@ -388,7 +388,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   }
 
   /**
-   * Returns the field definition of a field.
+   * Gets the field definition of a field.
    */
   protected function getFieldDefinition($field_name) {
     $definitions = $this->getFieldDefinitions();
@@ -396,7 +396,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   }
 
   /**
-   * Returns the definitions of the fields that are candidate for display.
+   * Gets the definitions of the fields that are candidate for display.
    */
   protected function getFieldDefinitions() {
     if (!isset($this->fieldDefinitions)) {

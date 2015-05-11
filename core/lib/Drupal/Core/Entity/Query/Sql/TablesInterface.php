@@ -34,7 +34,7 @@ interface TablesInterface {
   public function addField($field, $type, $langcode);
 
   /**
-   * Returns whether the given field is case sensitive.
+   * Determines whether the given field is case sensitive.
    *
    * This information can only be provided after it was added with addField().
    *

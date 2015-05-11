@@ -288,7 +288,7 @@ class Query extends QueryBase implements QueryInterface {
   }
 
   /**
-   * Returns whether the query requires GROUP BY and ORDER BY MIN/MAX.
+   * Determines whether the query requires GROUP BY and ORDER BY MIN/MAX.
    *
    * @return bool
    */

@@ -148,7 +148,7 @@ interface EntityStorageInterface {
   public function save(EntityInterface $entity);
 
   /**
-   * Returns an entity query instance.
+   * Gets an entity query instance.
    *
    * @param string $conjunction
    *   (optional) The logical operator for the query, either:
@@ -163,7 +163,7 @@ interface EntityStorageInterface {
   public function getQuery($conjunction = 'AND');
 
   /**
-   * Returns an aggregated query instance.
+   * Gets an aggregated query instance.
    *
    * @param string $conjunction
    *   (optional) The logical operator for the query, either:
@@ -178,7 +178,7 @@ interface EntityStorageInterface {
   public function getAggregateQuery($conjunction = 'AND');
 
   /**
-   * Returns the entity type ID.
+   * Gets the entity type ID.
    *
    * @return string
    *   The entity type ID.
@@ -186,7 +186,7 @@ interface EntityStorageInterface {
   public function getEntityTypeId();
 
   /**
-   * Returns the entity type definition.
+   * Gets the entity type definition.
    *
    * @return \Drupal\Core\Entity\EntityTypeInterface
    *   Entity type definition.

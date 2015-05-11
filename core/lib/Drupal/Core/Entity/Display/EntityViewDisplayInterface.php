@@ -15,7 +15,7 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 interface EntityViewDisplayInterface extends EntityDisplayInterface {
 
   /**
-   * Returns a renderable array for the components of an entity.
+   * Builds a renderable array for the components of an entity.
    *
    * See the buildMultiple() method for details.
    *
@@ -30,7 +30,7 @@ interface EntityViewDisplayInterface extends EntityDisplayInterface {
   public function build(FieldableEntityInterface $entity);
 
   /**
-   * Returns a renderable array for the components of a set of entities.
+   * Builds a renderable array for the components of a set of entities.
    *
    * This only includes the components handled by the Display object, but
    * excludes 'extra fields', that are typically rendered through specific,

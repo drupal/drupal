@@ -13,7 +13,7 @@ namespace Drupal\Core\Entity;
 interface EntityFormBuilderInterface {
 
   /**
-   * Returns the built and processed entity form for the given entity.
+   * Gets the built and processed entity form for the given entity.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity to be created or edited.

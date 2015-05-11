@@ -981,7 +981,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   }
 
   /**
-   * Returns the value of the given entity key, if defined.
+   * Gets the value of the given entity key, if defined.
    *
    * @param string $key
    *   Name of the entity key, for example id, revision or bundle.

@@ -64,7 +64,7 @@ interface EntityDefinitionUpdateManagerInterface {
   public function needsUpdates();
 
   /**
-   * Returns a human readable summary of the detected changes.
+   * Gets a human readable summary of the detected changes.
    *
    * @return array
    *   An associative array keyed by entity type id. Each entry is an array of

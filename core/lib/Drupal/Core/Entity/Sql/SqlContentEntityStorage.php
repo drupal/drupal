@@ -216,7 +216,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   }
 
   /**
-   * Returns the base table name.
+   * Gets the base table name.
    *
    * @return string
    *   The table name.
@@ -226,7 +226,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   }
 
   /**
-   * Returns the revision table name.
+   * Gets the revision table name.
    *
    * @return string|false
    *   The table name or FALSE if it is not available.
@@ -236,7 +236,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   }
 
   /**
-   * Returns the data table name.
+   * Gets the data table name.
    *
    * @return string|false
    *   The table name or FALSE if it is not available.
@@ -246,7 +246,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   }
 
   /**
-   * Returns the revision data table name.
+   * Gets the revision data table name.
    *
    * @return string|false
    *   The table name or FALSE if it is not available.
@@ -256,7 +256,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   }
 
   /**
-   * Returns the entity type's storage schema object.
+   * Gets the entity type's storage schema object.
    *
    * @return \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema
    *   The schema object.
@@ -586,7 +586,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   }
 
   /**
-   * Returns the cache ID for the passed in entity ID.
+   * Builds the cache ID for the passed in entity ID.
    *
    * @param int $id
    *   Entity ID for which the cache ID should be built.
@@ -1781,7 +1781,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   }
 
   /**
-   * Returns whether the passed field has been already deleted.
+   * Determines whether the passed field has been already deleted.
    *
    * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition
    *   The field storage definition.
