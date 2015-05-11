@@ -20,12 +20,7 @@ class ConfigEntityType extends EntityType implements ConfigEntityTypeInterface {
   /**
    * The config prefix set in the configuration entity type annotation.
    *
-   * The default configuration prefix is constructed from the name of the module
-   * that provides the entity type and the ID of the entity type. If a
-   * config_prefix annotation is present it will be used in place of the entity
-   * type ID.
-   *
-   * @see \Drupal\Core\Config\Entity\ConfigEntityType::getConfigPrefix()
+   * @see \Drupal\Core\Config\Entity\ConfigEntityTypeInterface::getConfigPrefix()
    */
   protected $config_prefix;
 
@@ -89,10 +84,7 @@ class ConfigEntityType extends EntityType implements ConfigEntityTypeInterface {
    */
   public function getConfigPrefix() {
     // Ensure that all configuration entities are prefixed by the name of the
-    // module that provides the configuration entity type. This ensures that
-    // default configuration will be created as expected during module
-    // installation and dependencies can be calculated without the modules that
-    // provide the entity types being installed.
+    // module that provides the configuration entity type.
     if (isset($this->config_prefix)) {
       $config_prefix = $this->provider . '.' . $this->config_prefix;
     }

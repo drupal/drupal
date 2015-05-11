@@ -49,15 +49,21 @@ interface ConfigEntityTypeInterface extends EntityTypeInterface {
   /**
    * Gets the config prefix used by the configuration entity type.
    *
-   * Ensures that all configuration entities are prefixed by the module that
-   * provides the configuration entity type. This ensures that if a
-   * configuration entity is contained in a extension's default configuration,
-   * it will be created during extension installation. Additionally, it allows
-   * dependencies to be calculated without the modules that provide
-   * configuration entity types being installed.
+   * The config prefix is used to prefix configuration entity IDs when they are
+   * stored in the configuration system. The default config prefix is
+   * constructed from the name of the module that provides the entity type and
+   * the ID of the entity type. If a config_prefix annotation is present it will
+   * be used in place of the entity type ID.
    *
-   * @return string|bool
-   *   The config prefix, or FALSE if not a configuration entity type.
+   * Prefixing with the module that provides the configuration entity type
+   * ensures that configuration entities depend on the module that provides the
+   * configuration entity type.
+   *
+   * @return string
+   *   The config prefix.
+   *
+   * @throws \Drupal\Core\Config\ConfigPrefixLengthException
+   *   Exception thrown when the length of the prefix exceeds PREFIX_LENGTH.
    */
   public function getConfigPrefix();
 
