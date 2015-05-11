@@ -288,7 +288,7 @@ class AttachedAssetsTest extends KernelTestBase {
     $js = $this->assetResolver->getJsAssets($assets, FALSE)[1];
     $js_render_array = \Drupal::service('asset.js.collection_renderer')->render($js);
     $rendered_js = $this->renderer->render($js_render_array);
-    $this->assertTrue(strpos($rendered_js, 'core/assets/vendor/backbone/backbone-min.js?v=1.1.2') > 0 && strpos($rendered_js, 'core/assets/vendor/domready/ready.min.js?v=1.0.7') > 0 , 'JavaScript version identifiers correctly appended to URLs');
+    $this->assertTrue(strpos($rendered_js, 'core/assets/vendor/backbone/backbone-min.js?v=1.1.2') > 0 && strpos($rendered_js, 'core/assets/vendor/domready/ready.min.js?v=1.0.8') > 0 , 'JavaScript version identifiers correctly appended to URLs');
   }
 
   /**

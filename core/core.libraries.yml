@@ -34,10 +34,10 @@ ckeditor:
 
 domready:
   remote: https://github.com/ded/domready
-  version: "1.0.7"
+  version: "1.0.8"
   license:
     name: MIT
-    url: https://github.com/ded/domready/blob/v1.0.7/LICENSE
+    url: https://github.com/ded/domready/blob/v1.0.8/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/domready/ready.min.js: { weight: -21, minified: true }
