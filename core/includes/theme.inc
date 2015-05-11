@@ -1267,8 +1267,8 @@ function template_preprocess_html(&$variables) {
   // Construct page title.
   if (!empty($variables['page']['#title'])) {
     $head_title = array(
-      'title' => SafeMarkup::set(trim(strip_tags($variables['page']['#title']))),
-      'name' => SafeMarkup::checkPlain($site_config->get('name')),
+      'title' => trim(strip_tags($variables['page']['#title'])),
+      'name' => $site_config->get('name'),
     );
   }
   // @todo Remove once views is not bypassing the view subscriber anymore.
@@ -1276,24 +1276,19 @@ function template_preprocess_html(&$variables) {
   elseif ($is_front_page) {
     $head_title = array(
       'title' => t('Home'),
-      'name' => SafeMarkup::checkPlain($site_config->get('name')),
+      'name' => $site_config->get('name'),
     );
   }
   else {
-    $head_title = array('name' => SafeMarkup::checkPlain($site_config->get('name')));
+    $head_title = ['name' => $site_config->get('name')];
     if ($site_config->get('slogan')) {
-      $head_title['slogan'] = strip_tags(Xss::filterAdmin($site_config->get('slogan')));
+      $head_title['slogan'] = strip_tags($site_config->get('slogan'));
     }
   }
 
+  $variables['head_title'] = $head_title;
+  // @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
   $variables['head_title_array'] = $head_title;
-  $output = '';
-  $separator = '';
-  foreach ($head_title as $item) {
-    $output .= $separator . SafeMarkup::escape($item);
-    $separator = ' | ';
-  }
-  $variables['head_title'] = SafeMarkup::set($output);
 
   // Collect all attachments. This must happen in the preprocess function for
   // #type => html, to ensure that attachments added in #pre_render callbacks
@@ -1491,11 +1486,8 @@ function template_preprocess_install_page(&$variables) {
 
   // Override the site name that is displayed on the page, since Drupal is
   // still in the process of being installed.
-  $distribution_name = SafeMarkup::checkPlain(drupal_install_profile_distribution_name());
+  $distribution_name = drupal_install_profile_distribution_name();
   $variables['site_name'] = $distribution_name;
-  $variables['head_title_array']['name'] = $distribution_name;
-
-  $variables['head_title'] = implode(' | ', $variables['head_title_array']);
 }
 
 /**
