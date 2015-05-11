@@ -1,7 +1,7 @@
 name: Tour module tests
 type: module
 description: Tests module for tour module.
-package: Core
+package: Testing
 version: VERSION
 core: 8.x
 dependencies:
