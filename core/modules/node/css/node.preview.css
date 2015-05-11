@@ -8,6 +8,7 @@
   z-index: 499;
   width: 100%;
   padding: 10px;
+  box-sizing: border-box;
 }
 
 @media only screen and (min-width: 36em) {
@@ -16,6 +17,6 @@
   }
   [dir="rtl"] .node-preview-container .form-type-select {
     margin-right: 25%;
-    margin-left: 0%;
+    margin-left: 0;
   }
 }

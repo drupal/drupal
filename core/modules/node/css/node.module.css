@@ -22,6 +22,7 @@
     float: left; /* LTR */
     width: 65%;
     padding-right: 2em; /* LTR */
+    box-sizing: border-box;
   }
 
   [dir="rtl"] .layout-region-node-main,
