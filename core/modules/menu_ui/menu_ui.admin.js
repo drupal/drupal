@@ -37,7 +37,7 @@
         var $select = $('#edit-menu-parent');
         // Save key of last selected element.
         var selected = $select.val();
-        // Remove all exisiting options from dropdown.
+        // Remove all existing options from dropdown.
         $select.children().remove();
         // Add new options to dropdown. Keep a count of options for testing later.
         var totalOptions = 0;

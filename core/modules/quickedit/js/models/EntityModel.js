@@ -16,7 +16,7 @@
       el: null,
       // An entity ID, of the form "<entity type>/<entity ID>", e.g. "node/1".
       entityID: null,
-      // An entity instance ID. The first intance of a specific entity (i.e. with
+      // An entity instance ID. The first instance of a specific entity (i.e. with
       // a given entity ID) is assigned 0, the second 1, and so on.
       entityInstanceID: null,
       // The unique ID of this entity instance on the page, of the form "<entity
@@ -450,7 +450,7 @@
         }
       }
       else if (currentIsCommitting === true && nextIsCommitting === true) {
-        return "isCommiting is a mutex, hence only changes are allowed";
+        return "isCommitting is a mutex, hence only changes are allowed";
       }
     },
 

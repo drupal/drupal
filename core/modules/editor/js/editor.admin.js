@@ -379,8 +379,9 @@
 
       /**
        * Checks whether the current status of a filter allows a specific feature
-       * by building the universe of potential values from the feature's require-
-       * ments and then checking whether anything in the filter prevents that.
+       * by building the universe of potential values from the feature's
+       * requirements and then checking whether anything in the filter prevents
+       * that.
        *
        * @see generateUniverseFromFeatureRequirements()
        */

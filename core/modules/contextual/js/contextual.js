@@ -159,7 +159,7 @@
       var uncachedIDs = _.filter(ids, function initIfCached(contextualID) {
         var html = storage.getItem('Drupal.contextual.' + contextualID);
         if (html !== null) {
-          // Initialize after the current executation cycle, to make the AJAX
+          // Initialize after the current execution cycle, to make the AJAX
           // request for retrieving the uncached contextual links as soon as
           // possible, but also to ensure that other Drupal behaviors have had the
           // chance to set up an event listener on the Backbone collection

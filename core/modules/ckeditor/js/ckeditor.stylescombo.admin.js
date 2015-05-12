@@ -46,7 +46,7 @@
      * parsing works identically, but instead of failing on invalid styles, we
      * just ignore those.
      *
-     * @param String sstyles
+     * @param String styles
      *   The "styles" setting.
      *
      * @return array

@@ -130,7 +130,7 @@
     /**
      * Repositions the entity toolbar on window scroll and resize.
      *
-     * @param jQuery.Eevent event
+     * @param jQuery.Event event
      */
     windowChangeHandler: function (event) {
       this.position();

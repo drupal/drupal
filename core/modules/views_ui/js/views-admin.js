@@ -242,7 +242,7 @@
       var $displayButtons = $menu.nextAll('input.add-display').detach();
       $displayButtons.appendTo($addDisplayDropdown.find('.action-list')).wrap('<li>')
         .parent().eq(0).addClass('first').end().eq(-1).addClass('last');
-      // Remove the 'Add ' prefix from the button labels since they're being palced
+      // Remove the 'Add ' prefix from the button labels since they're being placed
       // in an 'Add' dropdown.
       // @todo This assumes English, but so does $addDisplayDropdown above. Add
       //   support for translation.

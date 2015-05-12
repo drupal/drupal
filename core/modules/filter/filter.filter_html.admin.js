@@ -39,7 +39,7 @@
 
   Drupal.behaviors.filterFilterHtmlUpdating = {
 
-    // The form item containg the "Allowed HTML tags" setting.
+    // The form item contains the "Allowed HTML tags" setting.
     $allowedHTMLFormItem: null,
 
     // The description for the "Allowed HTML tags" field.

@@ -189,7 +189,7 @@
               // Allow the state change. If the state of the active field is:
               // - 'activating' or 'active': change it to 'candidate'
               // - 'changed' or 'invalid': change it to 'saving'
-              // - 'saving'or 'saved': don't do anything.
+              // - 'saving' or 'saved': don't do anything.
               if (this.activeFieldStates.indexOf(activeFieldState) !== -1) {
                 activeField.set('state', 'candidate');
               }

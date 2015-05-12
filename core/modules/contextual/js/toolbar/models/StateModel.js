@@ -38,7 +38,7 @@
     initialize: function (attrs, options) {
       // Respond to new/removed contextual links.
       this.listenTo(options.contextualCollection, {
-        'reset remove add': this.countCountextualLinks,
+        'reset remove add': this.countContextualLinks,
         'add': this.lockNewContextualLinks
       });
 
@@ -62,7 +62,7 @@
      * @param Backbone.Collection contextualCollection
      *    The collection of contextual link models.
      */
-    countCountextualLinks: function (contextualModel, contextualCollection) {
+    countContextualLinks: function (contextualModel, contextualCollection) {
       this.set('contextualCount', contextualCollection.length);
     },
 
