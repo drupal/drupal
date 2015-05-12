@@ -303,6 +303,7 @@ th.checkbox {
   margin-top: -1px;
   margin-left: -1px;
   padding: 0 1px;
+  width: 3%;
   height: 16px;
   border-radius: 10em;
   -webkit-animation: animate-stripes 3s linear infinite;
