@@ -344,6 +344,62 @@ class ConfigEntityQueryTest extends KernelTestBase {
   }
 
   /**
+   * Tests ID conditions.
+   */
+  public function testStringIdConditions() {
+    // We need an entity with a non-numeric ID.
+    $entity = entity_create('config_query_test', array(
+      'label' => $this->randomMachineName(),
+      'id' => 'foo.bar',
+    ));
+    $this->entities[] = $entity;
+    $entity->enforceIsNew();
+    $entity->save();
+
+    // Test 'STARTS_WITH' condition.
+    $this->queryResults = $this->factory->get('config_query_test')
+      ->condition('id', 'foo.bar', 'STARTS_WITH')
+      ->execute();
+    $this->assertResults(array('foo.bar'));
+    $this->queryResults = $this->factory->get('config_query_test')
+      ->condition('id', 'f', 'STARTS_WITH')
+      ->execute();
+    $this->assertResults(array('foo.bar'));
+    $this->queryResults = $this->factory->get('config_query_test')
+      ->condition('id', 'miss', 'STARTS_WITH')
+      ->execute();
+    $this->assertResults(array());
+
+    // Test 'CONTAINS' condition.
+    $this->queryResults = $this->factory->get('config_query_test')
+      ->condition('id', 'foo.bar', 'CONTAINS')
+      ->execute();
+    $this->assertResults(array('foo.bar'));
+    $this->queryResults = $this->factory->get('config_query_test')
+      ->condition('id', 'oo.ba', 'CONTAINS')
+      ->execute();
+    $this->assertResults(array('foo.bar'));
+    $this->queryResults = $this->factory->get('config_query_test')
+      ->condition('id', 'miss', 'CONTAINS')
+      ->execute();
+    $this->assertResults(array());
+
+    // Test 'ENDS_WITH' condition.
+    $this->queryResults = $this->factory->get('config_query_test')
+      ->condition('id', 'foo.bar', 'ENDS_WITH')
+      ->execute();
+    $this->assertResults(array('foo.bar'));
+    $this->queryResults = $this->factory->get('config_query_test')
+      ->condition('id', 'r', 'ENDS_WITH')
+      ->execute();
+    $this->assertResults(array('foo.bar'));
+    $this->queryResults = $this->factory->get('config_query_test')
+      ->condition('id', 'miss', 'ENDS_WITH')
+      ->execute();
+    $this->assertResults(array());
+  }
+
+  /**
    * Tests count query.
    */
   public function testCount() {

@@ -128,6 +128,8 @@ class Query extends QueryBase implements QueryInterface {
 
     // Search the conditions for restrictions on configuration object names.
     $names = FALSE;
+    $id_condition = NULL;
+    $id_key = $this->entityType->getKey('id');
     if ($this->condition->getConjunction() == 'AND') {
       $lookup_keys = $this->entityType->getLookupKeys();
       $conditions = $this->condition->conditions();
@@ -135,7 +137,7 @@ class Query extends QueryBase implements QueryInterface {
         $operator = $condition['operator'] ?: (is_array($condition['value']) ? 'IN' : '=');
         if (is_string($condition['field']) && ($operator == 'IN' || $operator == '=')) {
           // Special case ID lookups.
-          if ($condition['field'] == $this->entityType->getKey('id')) {
+          if ($condition['field'] == $id_key) {
             $ids = (array) $condition['value'];
             $names = array_map(function ($id) use ($prefix) {
               return $prefix . $id;
@@ -154,6 +156,11 @@ class Query extends QueryBase implements QueryInterface {
             }
           }
         }
+        // Save the first ID condition that is not an 'IN' or '=' for narrowing
+        // down later.
+        elseif (!$id_condition && $condition['field'] == $id_key) {
+          $id_condition = $condition;
+        }
         // We stop at the first restricting condition on name. In the case where
         // there are additional restricting conditions, results will be
         // eliminated when the conditions are checked on the loaded records.
@@ -168,6 +175,41 @@ class Query extends QueryBase implements QueryInterface {
     // If no restrictions on IDs were found, we need to parse all records.
     if ($names === FALSE) {
       $names = $this->configFactory->listAll($prefix);
+    }
+    // In case we have an ID condition, try to narrow down the list of config
+    // objects to load.
+    if ($id_condition && !empty($names)) {
+      $value = $id_condition['value'];
+      $filter = NULL;
+      switch ($id_condition['operator']) {
+        case '<>':
+          $filter = function ($name) use ($value, $prefix_length) {
+            $id = substr($name, $prefix_length);
+            return $id !== $value;
+          };
+          break;
+        case 'STARTS_WITH':
+          $filter = function ($name) use ($value, $prefix_length) {
+            $id = substr($name, $prefix_length);
+            return strpos($id, $value) === 0;
+          };
+          break;
+        case 'CONTAINS':
+          $filter = function ($name) use ($value, $prefix_length) {
+            $id = substr($name, $prefix_length);
+            return strpos($id, $value) !== FALSE;
+          };
+          break;
+        case 'ENDS_WITH':
+          $filter = function ($name) use ($value, $prefix_length) {
+            $id = substr($name, $prefix_length);
+            return strrpos($id, $value) === strlen($id) - strlen($value);
+          };
+          break;
+      }
+      if ($filter) {
+        $names = array_filter($names, $filter);
+      }
     }
 
     // Load the corresponding records.
