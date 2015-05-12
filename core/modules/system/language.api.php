@@ -142,7 +142,7 @@ use Drupal\Core\Language\LanguageInterface;
  * {% trans with {'context': 'Long month name'} %}
  *  May
  * {% endtrans %}
- *
+ * @endcode
  *
  * @see transliteration
  * @see t()
