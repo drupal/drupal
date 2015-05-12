@@ -16,6 +16,7 @@ use Drupal\Core\Cache\UserCacheContext;
  * This allows for node access grants-sensitive caching when listing nodes.
  *
  * @see node_query_node_access_alter()
+ * @ingroup node_access
  */
 class NodeAccessGrantsCacheContext extends UserCacheContext implements CalculatedCacheContextInterface {
 

@@ -22,6 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Defines the access control handler for the node entity type.
  *
  * @see \Drupal\node\Entity\Node
+ * @ingroup node_access
  */
 class NodeAccessControlHandler extends EntityAccessControlHandler implements NodeAccessControlHandlerInterface, EntityHandlerInterface {
 

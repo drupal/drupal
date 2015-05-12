@@ -10,6 +10,8 @@ use Drupal\Core\Session\AccountInterface;
 
 /**
  * Node specific entity access control methods.
+ *
+ * @ingroup node_access
  */
 interface NodeAccessControlHandlerInterface {
 

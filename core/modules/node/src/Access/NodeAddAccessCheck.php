@@ -15,6 +15,8 @@ use Drupal\node\NodeTypeInterface;
 
 /**
  * Determines access to for node add pages.
+ *
+ * @ingroup node_access
  */
 class NodeAddAccessCheck implements AccessInterface {
 
