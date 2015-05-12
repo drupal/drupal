@@ -45,7 +45,7 @@ class BookSettingsForm extends ConfigFormBase {
     );
     $form['book_child_type'] = array(
       '#type' => 'radios',
-      '#title' => $this->t('Content type for child pages'),
+      '#title' => $this->t('Content type for the <em>Add child page</em> link'),
       '#default_value' => $config->get('child_type'),
       '#options' => $types,
       '#required' => TRUE,
