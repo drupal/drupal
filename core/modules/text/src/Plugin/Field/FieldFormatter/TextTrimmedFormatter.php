@@ -47,9 +47,11 @@ class TextTrimmedFormatter extends FormatterBase {
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $element['trim_length'] = array(
-      '#title' => t('Trim length'),
+      '#title' => t('Trimmed limit'),
       '#type' => 'number',
+      '#field_suffix' => t('characters'),
       '#default_value' => $this->getSetting('trim_length'),
+      '#description' => t('If the summary is not set, the trimmed %label field will end at the last full sentence before this character limit.', array('%label' => $this->fieldDefinition->getLabel())),
       '#min' => 1,
       '#required' => TRUE,
     );
@@ -61,7 +63,7 @@ class TextTrimmedFormatter extends FormatterBase {
    */
   public function settingsSummary() {
     $summary = array();
-    $summary[] = t('Trim length: @trim_length', array('@trim_length' => $this->getSetting('trim_length')));
+    $summary[] = t('Trimmed limit: @trim_length characters', array('@trim_length' => $this->getSetting('trim_length')));
     return $summary;
   }
 
