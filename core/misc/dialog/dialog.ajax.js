@@ -37,7 +37,7 @@
 
       var originalClose = settings.dialog.close;
       // Overwrite the close method to remove the dialog on closing.
-      settings.dialog.close = function(event) {
+      settings.dialog.close = function (event) {
         originalClose.apply(settings.dialog, arguments);
         $(event.target).remove();
       };
