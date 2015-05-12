@@ -478,7 +478,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
     foreach (array_intersect_key($keys, array_flip(['id', 'revision', 'uuid', 'bundle'])) as $key => $field_name) {
       if (!isset($base_field_definitions[$field_name])) {
         throw new \LogicException(SafeMarkup::format('The @field field definition does not exist and it is used as @key entity key.', array(
-          '@field' => $base_field_definitions[$field_name]->getLabel(),
+          '@field' => $field_name,
           '@key' => $key,
         )));
       }
