@@ -68,6 +68,21 @@ function entity_schema_test_entity_bundle_field_info(EntityTypeInterface $entity
 }
 
 /**
+ * Implements hook_entity_bundle_create().
+ */
+function entity_schema_test_entity_bundle_create($entity_type_id, $bundle) {
+  if ($entity_type_id == 'entity_test' && $bundle == 'custom') {
+    $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
+    $field_definitions = entity_schema_test_entity_bundle_field_info($entity_type, $bundle);
+    $field_definitions['custom_bundle_field']
+      ->setTargetEntityTypeId($entity_type_id)
+      ->setTargetBundle($bundle);
+    // Notify the entity storage that we just created a new field.
+    \Drupal::entityManager()->onFieldDefinitionCreate($field_definitions['custom_bundle_field']);
+  }
+}
+
+/**
  * Implements hook_entity_bundle_delete().
  */
 function entity_schema_test_entity_bundle_delete($entity_type_id, $bundle) {
@@ -78,7 +93,6 @@ function entity_schema_test_entity_bundle_delete($entity_type_id, $bundle) {
       ->setTargetEntityTypeId($entity_type_id)
       ->setTargetBundle($bundle);
     // Notify the entity storage that our field is gone.
-    \Drupal::entityManager()->getStorage($entity_type_id)
-      ->onFieldDefinitionDelete($field_definitions['custom_bundle_field']);
+    \Drupal::entityManager()->onFieldDefinitionDelete($field_definitions['custom_bundle_field']);
   }
 }

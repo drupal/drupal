@@ -66,6 +66,11 @@ class EntityBundleFieldTest extends EntityUnitTestBase  {
       'type' => 'custom',
     ]);
     $this->assertTrue($entity->hasField('custom_bundle_field'));
+
+    // Ensure that the field exists in the field map.
+    $field_map = \Drupal::entityManager()->getFieldMap();
+    $this->assertEqual($field_map['entity_test']['custom_bundle_field'], ['type' => 'string', 'bundles' => ['custom' => 'custom']]);
+
     $entity->custom_bundle_field->value = 'swanky';
     $entity->save();
     $storage->resetCache();
@@ -101,6 +106,10 @@ class EntityBundleFieldTest extends EntityUnitTestBase  {
       ->countQuery()
       ->execute();
     $this->assertEqual(1, $result->fetchField(), 'Field data has been deleted');
+
+    // Ensure that the field no longer exists in the field map.
+    $field_map = \Drupal::entityManager()->getFieldMap();
+    $this->assertFalse(isset($field_map['entity_test']['custom_bundle_field']));
 
     // @todo Test field purge and table deletion once supported. See
     //   https://www.drupal.org/node/2282119.

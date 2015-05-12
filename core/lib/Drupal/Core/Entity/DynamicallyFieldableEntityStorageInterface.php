@@ -8,6 +8,7 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldDefinitionListenerInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionListenerInterface;
 
@@ -20,7 +21,7 @@ use Drupal\Core\Field\FieldStorageDefinitionListenerInterface;
  *
  * For example, configurable fields defined and exposed by field.module.
  */
-interface DynamicallyFieldableEntityStorageInterface extends FieldableEntityStorageInterface, FieldStorageDefinitionListenerInterface {
+interface DynamicallyFieldableEntityStorageInterface extends FieldableEntityStorageInterface, FieldStorageDefinitionListenerInterface, FieldDefinitionListenerInterface {
 
   /**
    * Determines if the storage contains any data.
@@ -29,37 +30,6 @@ interface DynamicallyFieldableEntityStorageInterface extends FieldableEntityStor
    *   TRUE if the storage contains data, FALSE if not.
    */
   public function hasData();
-
-  /**
-   * Reacts to the creation of a field.
-   *
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
-   *   The field definition created.
-   */
-  public function onFieldDefinitionCreate(FieldDefinitionInterface $field_definition);
-
-  /**
-   * Reacts to the update of a field.
-   *
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
-   *   The field definition being updated.
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $original
-   *   The original field definition; i.e., the definition before the update.
-   */
-  public function onFieldDefinitionUpdate(FieldDefinitionInterface $field_definition, FieldDefinitionInterface $original);
-
-  /**
-   * Reacts to the deletion of a field.
-   *
-   * Stored values should not be wiped at once, but marked as 'deleted' so that
-   * they can go through a proper purge process later on.
-   *
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
-   *   The field definition being deleted.
-   *
-   * @see purgeFieldData()
-   */
-  public function onFieldDefinitionDelete(FieldDefinitionInterface $field_definition);
 
   /**
    * Purges a batch of field data.

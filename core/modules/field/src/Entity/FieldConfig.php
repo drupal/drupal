@@ -160,7 +160,7 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
 
     if ($this->isNew()) {
       // Notify the entity storage.
-      $entity_manager->getStorage($this->entity_type)->onFieldDefinitionCreate($this);
+      $entity_manager->onFieldDefinitionCreate($this);
     }
     else {
       // Some updates are always disallowed.
@@ -174,7 +174,7 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
         throw new FieldException("Cannot change an existing field's storage.");
       }
       // Notify the entity storage.
-      $entity_manager->getStorage($this->entity_type)->onFieldDefinitionUpdate($this, $this->original);
+      $entity_manager->onFieldDefinitionUpdate($this, $this->original);
     }
 
     parent::preSave($storage);
@@ -221,7 +221,7 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
     // Notify the entity storage.
     foreach ($fields as $field) {
       if (!$field->deleted) {
-        \Drupal::entityManager()->getStorage($field->entity_type)->onFieldDefinitionDelete($field);
+        \Drupal::entityManager()->onFieldDefinitionDelete($field);
       }
     }
 

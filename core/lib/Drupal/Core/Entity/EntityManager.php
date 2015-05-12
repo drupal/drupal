@@ -18,10 +18,12 @@ use Drupal\Core\Entity\Exception\AmbiguousEntityClassException;
 use Drupal\Core\Entity\Exception\NoCorrespondingEntityClassException;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionEvent;
 use Drupal\Core\Field\FieldStorageDefinitionEvents;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionListenerInterface;
+use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -121,11 +123,11 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
   protected $languageManager;
 
   /**
-   * The keyvalue collection for tracking installed definitions.
+   * The keyvalue factory.
    *
-   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
+   * @var \Drupal\Core\KeyValueStore\KeyValueFactoryInterface
    */
-  protected $installedDefinitions;
+  protected $keyValueFactory;
 
   /**
    * The event dispatcher.
@@ -193,12 +195,12 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
    *   The class resolver.
    * @param \Drupal\Core\TypedData\TypedDataManager $typed_data_manager
    *   The typed data manager.
-   * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface $installed_definitions
-   *   The keyvalue collection for tracking installed definitions.
+   * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_factory
+   *   The keyvalue factory.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
    */
-  public function __construct(\Traversable $namespaces, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, TranslationInterface $translation_manager, ClassResolverInterface $class_resolver, TypedDataManager $typed_data_manager, KeyValueStoreInterface $installed_definitions, EventDispatcherInterface $event_dispatcher) {
+  public function __construct(\Traversable $namespaces, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, TranslationInterface $translation_manager, ClassResolverInterface $class_resolver, TypedDataManager $typed_data_manager, KeyValueFactoryInterface $key_value_factory, EventDispatcherInterface $event_dispatcher) {
     parent::__construct('Entity', $namespaces, $module_handler, 'Drupal\Core\Entity\EntityInterface');
 
     $this->setCacheBackend($cache, 'entity_type', array('entity_types'));
@@ -209,7 +211,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
     $this->translationManager = $translation_manager;
     $this->classResolver = $class_resolver;
     $this->typedDataManager = $typed_data_manager;
-    $this->installedDefinitions = $installed_definitions;
+    $this->keyValueFactory = $key_value_factory;
     $this->eventDispatcher = $event_dispatcher;
   }
 
@@ -642,19 +644,43 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
         $this->fieldMap = $cache->data;
       }
       else {
-        // Rebuild the definitions and put it into the cache.
+        // The field map is built in two steps. First, add all base fields, by
+        // looping over all fieldable entity types. They always exist for all
+        // bundles, and we do not expect to have so many different entity
+        // types for this to become a bottleneck.
         foreach ($this->getDefinitions() as $entity_type_id => $entity_type) {
           if ($entity_type->isSubclassOf('\Drupal\Core\Entity\FieldableEntityInterface')) {
-            foreach ($this->getBundleInfo($entity_type_id) as $bundle => $bundle_info) {
-              foreach ($this->getFieldDefinitions($entity_type_id, $bundle) as $field_name => $field_definition) {
-                $this->fieldMap[$entity_type_id][$field_name]['type'] = $field_definition->getType();
-                $this->fieldMap[$entity_type_id][$field_name]['bundles'][] = $bundle;
-              }
+            $bundles = array_keys($this->getBundleInfo($entity_type_id));
+            foreach ($this->getBaseFieldDefinitions($entity_type_id) as $field_name => $base_field_definition) {
+              $this->fieldMap[$entity_type_id][$field_name] = [
+                'type' => $base_field_definition->getType(),
+                'bundles' => array_combine($bundles, $bundles),
+              ];
             }
           }
         }
 
-        $this->cacheSet($cid, $this->fieldMap, Cache::PERMANENT, array('entity_types', 'entity_field_info'));
+        // In the second step, the per-bundle fields are added, based on the
+        // persistent bundle field map stored in a key value collection. This
+        // data is managed in the EntityManager::onFieldDefinitionCreate()
+        // and EntityManager::onFieldDefinitionDelete() methods. Rebuilding this
+        // information in the same way as base fields would not scale, as the
+        // time to query would grow exponentially with more fields and bundles.
+        // A cache would be deleted during cache clears, which is the only time
+        // it is needed, so a key value collection is used.
+        $bundle_field_maps = $this->keyValueFactory->get('entity.definitions.bundle_field_map')->getAll();
+        foreach ($bundle_field_maps as $entity_type_id => $bundle_field_map) {
+          foreach ($bundle_field_map as $field_name => $map_entry) {
+            if (!isset($this->fieldMap[$entity_type_id][$field_name])) {
+              $this->fieldMap[$entity_type_id][$field_name] = $map_entry;
+            }
+            else {
+              $this->fieldMap[$entity_type_id][$field_name]['bundles'] += $map_entry['bundles'];
+            }
+          }
+        }
+
+        $this->cacheSet($cid, $this->fieldMap, Cache::PERMANENT, array('entity_types'));
       }
     }
     return $this->fieldMap;
@@ -677,6 +703,89 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
       $this->fieldMapByFieldType[$field_type] = $filtered_map;
     }
     return $this->fieldMapByFieldType[$field_type];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onFieldDefinitionCreate(FieldDefinitionInterface $field_definition) {
+    $entity_type_id = $field_definition->getTargetEntityTypeId();
+    $bundle = $field_definition->getTargetBundle();
+    $field_name = $field_definition->getName();
+
+    // Notify the storage about the new field.
+    $this->getStorage($entity_type_id)->onFieldDefinitionCreate($field_definition);
+
+    // Update the bundle field map key value collection, add the new field.
+    $bundle_field_map = $this->keyValueFactory->get('entity.definitions.bundle_field_map')->get($entity_type_id);
+    if (!isset($bundle_field_map[$field_name])) {
+      // This field did not exist yet, initialize it with the type and empty
+      // bundle list.
+      $bundle_field_map[$field_name] = [
+        'type' => $field_definition->getType(),
+        'bundles' => [],
+      ];
+    }
+    $bundle_field_map[$field_name]['bundles'][$bundle] = $bundle;
+    $this->keyValueFactory->get('entity.definitions.bundle_field_map')->set($entity_type_id, $bundle_field_map);
+
+    // Delete the cache entry.
+    $this->cacheBackend->delete('entity_field_map');
+
+    // If the field map is initialized, update it as well, so that calls to it
+    // do not have to rebuild it again.
+    if ($this->fieldMap) {
+      if (!isset($this->fieldMap[$entity_type_id][$field_name])) {
+        // This field did not exist yet, initialize it with the type and empty
+        // bundle list.
+        $this->fieldMap[$entity_type_id][$field_name] = [
+          'type' => $field_definition->getType(),
+          'bundles' => [],
+        ];
+      }
+      $this->fieldMap[$entity_type_id][$field_name]['bundles'][$bundle] = $bundle;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onFieldDefinitionUpdate(FieldDefinitionInterface $field_definition, FieldDefinitionInterface $original) {
+    // Notify the storage about the updated field.
+    $this->getStorage($field_definition->getTargetEntityTypeId())->onFieldDefinitionUpdate($field_definition, $original);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onFieldDefinitionDelete(FieldDefinitionInterface $field_definition) {
+    $entity_type_id = $field_definition->getTargetEntityTypeId();
+    $bundle = $field_definition->getTargetBundle();
+    $field_name = $field_definition->getName();
+
+    // Notify the storage about the field deletion.
+    $this->getStorage($entity_type_id)->onFieldDefinitionDelete($field_definition);
+
+    // Unset the bundle from the bundle field map key value collection.
+    $bundle_field_map = $this->keyValueFactory->get('entity.definitions.bundle_field_map')->get($entity_type_id);
+    unset($bundle_field_map[$field_name]['bundles'][$bundle]);
+    if (empty($bundle_field_map[$field_name]['bundles'])) {
+      // If there are no bundles left, remove the field from the map.
+      unset($bundle_field_map[$field_name]);
+    }
+    $this->keyValueFactory->get('entity.definitions.bundle_field_map')->set($entity_type_id, $bundle_field_map);
+
+    // Delete the cache entry.
+    $this->cacheBackend->delete('entity_field_map');
+
+    // If the field map is initialized, update it as well, so that calls to it
+    // do not have to rebuild it again.
+    if ($this->fieldMap) {
+      unset($this->fieldMap[$entity_type_id][$field_name]['bundles'][$bundle]);
+      if (empty($this->fieldMap[$entity_type_id][$field_name]['bundles'])) {
+        unset($this->fieldMap[$entity_type_id][$field_name]);
+      }
+    }
   }
 
   /**
@@ -1243,7 +1352,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
    * {@inheritdoc}
    */
   public function getLastInstalledDefinition($entity_type_id) {
-    return $this->installedDefinitions->get($entity_type_id . '.entity_type');
+    return $this->keyValueFactory->get('entity.definitions.installed')->get($entity_type_id . '.entity_type');
   }
 
   /**
@@ -1267,7 +1376,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
    */
   protected function setLastInstalledDefinition(EntityTypeInterface $entity_type) {
     $entity_type_id = $entity_type->id();
-    $this->installedDefinitions->set($entity_type_id . '.entity_type', $entity_type);
+    $this->keyValueFactory->get('entity.definitions.installed')->set($entity_type_id . '.entity_type', $entity_type);
   }
 
   /**
@@ -1277,18 +1386,18 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
    *   The entity type definition identifier.
    */
   protected function deleteLastInstalledDefinition($entity_type_id) {
-    $this->installedDefinitions->delete($entity_type_id . '.entity_type');
+    $this->keyValueFactory->get('entity.definitions.installed')->delete($entity_type_id . '.entity_type');
     // Clean up field storage definitions as well. Even if the entity type
     // isn't currently fieldable, there might be legacy definitions or an
     // empty array stored from when it was.
-    $this->installedDefinitions->delete($entity_type_id . '.field_storage_definitions');
+    $this->keyValueFactory->get('entity.definitions.installed')->delete($entity_type_id . '.field_storage_definitions');
   }
 
   /**
    * {@inheritdoc}
    */
   public function getLastInstalledFieldStorageDefinitions($entity_type_id) {
-    return $this->installedDefinitions->get($entity_type_id . '.field_storage_definitions', array());
+    return $this->keyValueFactory->get('entity.definitions.installed')->get($entity_type_id . '.field_storage_definitions', array());
   }
 
   /**
@@ -1300,7 +1409,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
    *   An array of field storage definitions.
    */
   protected function setLastInstalledFieldStorageDefinitions($entity_type_id, array $storage_definitions) {
-    $this->installedDefinitions->set($entity_type_id . '.field_storage_definitions', $storage_definitions);
+    $this->keyValueFactory->get('entity.definitions.installed')->set($entity_type_id . '.field_storage_definitions', $storage_definitions);
   }
 
   /**
