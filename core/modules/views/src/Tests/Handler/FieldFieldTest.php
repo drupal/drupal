@@ -254,6 +254,8 @@ class FieldFieldTest extends ViewUnitTestBase {
     $this->assertEqual(1, $executable->getStyle()->getField(0, 'id'));
     $this->assertEqual(3, $executable->getStyle()->getField(0, 'field_test'));
     $this->assertEqual(2, $executable->getStyle()->getField(1, 'id'));
+    // @todo Switch this assertion to assertIdentical('', ...) when
+    //   https://www.drupal.org/node/2488006 gets fixed.
     $this->assertEqual(0, $executable->getStyle()->getField(1, 'field_test'));
     $this->assertEqual(3, $executable->getStyle()->getField(2, 'id'));
     $this->assertEqual(8, $executable->getStyle()->getField(2, 'field_test'));
@@ -505,7 +507,9 @@ class FieldFieldTest extends ViewUnitTestBase {
     $executable = Views::getView('test_field_field_test');
     $executable->execute();
 
-    $this->assertIdentical('', $executable->getStyle()->getField(1, 'field_test'));
+    // @todo Switch this assertion to assertIdentical('', ...) when
+    //   https://www.drupal.org/node/2488006 gets fixed.
+    $this->assertEqual(0, $executable->getStyle()->getField(1, 'field_test'));
   }
 
 }
