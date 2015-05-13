@@ -84,7 +84,7 @@ class Statement extends StatementPrefetch implements StatementInterface {
       }
     }
 
-    return $this->dbh->prepare($query);
+    return $this->pdoConnection->prepare($query);
   }
 
   public function execute($args = array(), $options = array()) {

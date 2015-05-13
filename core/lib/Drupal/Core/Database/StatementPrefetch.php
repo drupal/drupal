@@ -7,8 +7,6 @@
 
 namespace Drupal\Core\Database;
 
-use Drupal\Core\Database\Connection;
-
 /**
  * An implementation of StatementInterface that prefetches all data.
  *
@@ -32,20 +30,18 @@ class StatementPrefetch implements \Iterator, StatementInterface {
   protected $driverOptions;
 
   /**
-   * Reference to the database connection object for this statement.
-   *
-   * This is part of the public interface of \PDOStatement.
-   *
-   * @var \PDO
-   */
-  public $dbh;
-
-  /**
    * Reference to the Drupal database connection object for this statement.
    *
    * @var \Drupal\Core\Database\Connection
    */
-  protected $connection;
+  public $dbh;
+
+  /**
+   * Reference to the PDO connection object for this statement.
+   *
+   * @var \PDO
+   */
+  protected $pdoConnection;
 
   /**
    * Main data store.
@@ -135,9 +131,9 @@ class StatementPrefetch implements \Iterator, StatementInterface {
    */
   public $allowRowCount = FALSE;
 
-  public function __construct(\PDO $dbh, Connection $connection, $query, array $driver_options = array()) {
-    $this->dbh = $dbh;
-    $this->connection = $connection;
+  public function __construct(\PDO $pdo_connection, Connection $connection, $query, array $driver_options = array()) {
+    $this->pdoConnection = $pdo_connection;
+    $this->dbh = $connection;
     $this->queryString = $query;
     $this->driverOptions = $driver_options;
   }
@@ -165,7 +161,7 @@ class StatementPrefetch implements \Iterator, StatementInterface {
       }
     }
 
-    $logger = $this->connection->getLogger();
+    $logger = $this->dbh->getLogger();
     if (!empty($logger)) {
       $query_start = microtime(TRUE);
     }
