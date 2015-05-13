@@ -8,7 +8,10 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Core\Access\AccessManagerInterface;
+use Drupal\Core\Access\AccessResultInterface;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\views\ResultRow;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -102,6 +105,7 @@ abstract class LinkBase extends FieldPluginBase {
     parent::buildOptionsForm($form, $form_state);
 
     // The path is set by ::renderLink() so we do not allow to set it.
+    $form['alter'] += ['path' => [], 'query' => [], 'external' => []];
     $form['alter']['path'] += ['#access' => FALSE];
     $form['alter']['query'] += ['#access' => FALSE];
     $form['alter']['external'] += ['#access' => FALSE];
@@ -124,8 +128,11 @@ abstract class LinkBase extends FieldPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function render(ResultRow $values) {
-    return $this->checkUrlAccess($values)->isAllowed() ? $this->renderLink($values) : '';
+  public function render(ResultRow $row) {
+    $access = $this->checkUrlAccess($row);
+    $build = ['#markup' => $access->isAllowed() ? $this->renderLink($row) : ''];
+    BubbleableMetadata::createFromObject($access)->applyTo($build);
+    return $build;
   }
 
   /**

@@ -57,6 +57,7 @@ class FieldCounterTest extends ViewUnitTestBase {
     $counter = $view->style_plugin->getField(2, 'counter');
     $this->assertEqual($counter, 3, format_string('Make sure the expected number (@expected) patches with the rendered number (@counter)', array('@expected' => 3, '@counter' => $counter)));
     $view->destroy();
+    $view->storage->invalidateCaches();
 
     $view->setDisplay();
     $rand_start = rand(5, 10);

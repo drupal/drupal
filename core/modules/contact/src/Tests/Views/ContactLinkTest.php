@@ -7,6 +7,7 @@
 
 namespace Drupal\contact\Tests\Views;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\user\Entity\User;
@@ -84,6 +85,8 @@ class ContactLinkTest extends ViewTestBase {
 
     // Disable contact link for no_contact.
     $this->userData->set('contact', $no_contact_account->id(), 'enabled', FALSE);
+    // @todo Remove cache invalidation in https://www.drupal.org/node/2477903.
+    Cache::invalidateTags($no_contact_account->getCacheTags());
     $this->drupalGet('test-contact-link');
     $this->assertContactLinks($accounts, array('root', 'admin'));
   }

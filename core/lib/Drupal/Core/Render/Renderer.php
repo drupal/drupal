@@ -9,12 +9,11 @@ namespace Drupal\Core\Render;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
-use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Turns a render array into a HTML string.
@@ -180,7 +179,16 @@ class Renderer implements RendererInterface {
         if ($is_root_call) {
           $this->processPostRenderCache($elements);
         }
+        // Mark the element markup as safe. If we have cached children, we need
+        // to mark them as safe too. The parent markup contains the child
+        // markup, so if the parent markup is safe, then the markup of the
+        // individual children must be safe as well.
         $elements['#markup'] = SafeMarkup::set($elements['#markup']);
+        if (!empty($elements['#cache_properties'])) {
+          foreach (Element::children($cached_element) as $key) {
+            SafeMarkup::set($cached_element[$key]['#markup']);
+          }
+        }
         // The render cache item contains all the bubbleable rendering metadata
         // for the subtree.
         $this->updateStack($elements);

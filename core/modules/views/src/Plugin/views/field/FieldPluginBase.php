@@ -1110,6 +1110,16 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
   /**
    * {@inheritdoc}
    */
+  public function postRender(ResultRow $row, $output) {
+    // Make sure the last rendered value is available also when this is
+    // retrieved from cache.
+    $this->last_render = $output;
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function advancedRender(ResultRow $values) {
     if ($this->allowAdvancedRender() && $this instanceof MultiItemsFieldHandlerInterface) {
       $raw_items = $this->getItems($values);
@@ -1518,11 +1528,14 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
     // Now add replacements for our fields.
     foreach ($this->displayHandler->getHandlers('field') as $field => $handler) {
+      /** @var static $handler */
+      $placeholder = $handler->getFieldTokenPlaceholder();
+
       if (isset($handler->last_render)) {
-        $tokens["{{ $field }}"] = $handler->last_render;
+        $tokens[$placeholder] = $handler->last_render;
       }
       else {
-        $tokens["{{ $field }}"] = '';
+        $tokens[$placeholder] = '';
       }
 
       // We only use fields up to (and including) this one.
@@ -1539,6 +1552,16 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     }
 
     return $tokens;
+  }
+
+  /**
+   * Returns a token placeholder for the current field.
+   *
+   * @return string
+   *   A token placeholder.
+   */
+  protected function getFieldTokenPlaceholder() {
+    return '{{ ' . $this->options['id'] . ' }}';
   }
 
   /**

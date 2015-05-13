@@ -3,12 +3,13 @@ status: true
 dependencies:
   module:
     - contact
+    - user
 id: test_contact_link
 label: test_contact_link
 module: views
 description: ''
 tag: ''
-base_table: users
+base_table: users_field_data
 base_field: uid
 core: 8.x
 display:
@@ -69,7 +70,7 @@ display:
       fields:
         name:
           id: name
-          table: users
+          table: users_field_data
           field: name
           label: ''
           alter:
@@ -111,7 +112,7 @@ display:
       filters:
         status:
           value: true
-          table: users
+          table: users_field_data
           field: status
           id: status
           expose:
@@ -127,10 +128,22 @@ display:
       empty: {  }
       relationships: {  }
       arguments: {  }
+      display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+      cacheable: false
   page_1:
     display_plugin: page
     id: page_1
     display_title: Page
     position: 1
     display_options:
+      display_extenders: {  }
       path: test-contact-link
+    cache_metadata:
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+      cacheable: false

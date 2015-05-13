@@ -43,12 +43,11 @@ class TermNameFieldTest extends TaxonomyTestBase {
     $view = Views::getView('test_taxonomy_term_name');
     $display =& $view->storage->getDisplay('default');
     $display['display_options']['fields']['name']['convert_spaces'] = TRUE;
-
+    $view->storage->invalidateCaches();
     $this->executeView($view);
 
     $this->assertEqual(str_replace(' ', '-', $this->term1->getName()), $view->getStyle()->getField(0, 'name'));
     $this->assertEqual($this->term2->getName(), $view->getStyle()->getField(1, 'name'));
-
   }
 
 }

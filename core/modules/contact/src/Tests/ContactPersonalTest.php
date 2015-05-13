@@ -152,13 +152,13 @@ class ContactPersonalTest extends WebTestBase {
     // Test that anonymous users can access admin user's contact form.
     $this->drupalGet('user/' . $this->adminUser->id() . '/contact');
     $this->assertResponse(200);
-    $this->assertCacheContext('user.permissions');
+    $this->assertCacheContext('user');
 
     // Revoke the personal contact permission for the anonymous user.
     user_role_revoke_permissions(RoleInterface::ANONYMOUS_ID, array('access user contact forms'));
     $this->drupalGet('user/' . $this->contactUser->id() . '/contact');
     $this->assertResponse(403);
-    $this->assertCacheContext('user.permissions');
+    $this->assertCacheContext('user');
     $this->drupalGet('user/' . $this->adminUser->id() . '/contact');
     $this->assertResponse(403);
 

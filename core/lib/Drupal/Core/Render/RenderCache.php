@@ -295,7 +295,7 @@ class RenderCache implements RenderCacheInterface {
    * {@inheritdoc}
    */
   public function getCacheableRenderArray(array $elements) {
-    return [
+    $data = [
       '#markup' => $elements['#markup'],
       '#attached' => $elements['#attached'],
       '#post_render_cache' => $elements['#post_render_cache'],
@@ -305,6 +305,28 @@ class RenderCache implements RenderCacheInterface {
         'max-age' => $elements['#cache']['max-age'],
       ],
     ];
+
+    // Preserve cacheable items if specified. If we are preserving any cacheable
+    // children of the element, we assume we are only interested in their
+    // individual markup and not the parent's one, thus we empty it to minimize
+    // the cache entry size.
+    if (!empty($elements['#cache_properties']) && is_array($elements['#cache_properties'])) {
+      $data['#cache_properties'] = $elements['#cache_properties'];
+      // Extract all the cacheable items from the element using cache
+      // properties.
+      $cacheable_items = array_intersect_key($elements, array_flip($elements['#cache_properties']));
+      $cacheable_children = Element::children($cacheable_items);
+      if ($cacheable_children) {
+        $data['#markup'] = '';
+        // Cache only cacheable children's markup.
+        foreach ($cacheable_children as $key) {
+          $cacheable_items[$key] = ['#markup' => $cacheable_items[$key]['#markup']];
+        }
+      }
+      $data += $cacheable_items;
+    }
+
+    return $data;
   }
 
 }

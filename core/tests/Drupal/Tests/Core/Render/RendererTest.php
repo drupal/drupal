@@ -622,6 +622,75 @@ class RendererTest extends RendererTestBase {
   }
 
   /**
+   * Tests that #cache_properties are properly handled.
+   *
+   * @param array $expected_results
+   *   An associative array of expected results keyed by property name.
+   *
+   * @covers ::render
+   * @covers ::doRender
+   * @covers \Drupal\Core\Render\RenderCache::get
+   * @covers \Drupal\Core\Render\RenderCache::set
+   * @covers \Drupal\Core\Render\RenderCache::createCacheID
+   * @covers \Drupal\Core\Render\RenderCache::getCacheableRenderArray
+   *
+   * @dataProvider providerTestRenderCacheProperties
+   */
+  public function testRenderCacheProperties(array $expected_results) {
+    $this->setUpRequest();
+    $this->setupMemoryCache();
+
+    $element = $original = [
+      '#cache' => [
+        'keys' => ['render_cache_test'],
+      ],
+      // Collect expected property names.
+      '#cache_properties' => array_keys(array_filter($expected_results)),
+      'child1' => ['#markup' => 1],
+      'child2' => ['#markup' => 2],
+      '#custom_property' => ['custom_value'],
+    ];
+    $this->renderer->render($element);
+
+    $cache = $this->cacheFactory->get('render');
+    $data = $cache->get('render_cache_test:en:stark')->data;
+
+    // Check that parent markup is ignored when caching children's markup.
+    $this->assertEquals($data['#markup'] === '', (bool) Element::children($data));
+
+    // Check that the element properties are cached as specified.
+    foreach ($expected_results as $property => $expected) {
+      $cached = !empty($data[$property]);
+      $this->assertEquals($cached, (bool) $expected);
+      // Check that only the #markup key is preserved for children.
+      if ($cached) {
+        $this->assertArrayEquals($data[$property], $original[$property]);
+      }
+    }
+  }
+
+  /**
+   * Data provider for ::testRenderCacheProperties().
+   *
+   * @return array
+   *   An array of associative arrays of expected results keyed by property
+   *   name.
+   */
+  public function providerTestRenderCacheProperties() {
+    return [
+      [[]],
+      [['child1' => 0, 'child2' => 0, '#custom_property' => 0]],
+      [['child1' => 0, 'child2' => 0, '#custom_property' => 1]],
+      [['child1' => 0, 'child2' => 1, '#custom_property' => 0]],
+      [['child1' => 0, 'child2' => 1, '#custom_property' => 1]],
+      [['child1' => 1, 'child2' => 0, '#custom_property' => 0]],
+      [['child1' => 1, 'child2' => 0, '#custom_property' => 1]],
+      [['child1' => 1, 'child2' => 1, '#custom_property' => 0]],
+      [['child1' => 1, 'child2' => 1, '#custom_property' => 1]],
+    ];
+  }
+
+  /**
    * @covers ::addCacheableDependency
    *
    * @dataProvider providerTestAddCacheableDependency

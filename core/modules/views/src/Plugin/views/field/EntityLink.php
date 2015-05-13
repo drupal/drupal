@@ -21,8 +21,8 @@ class EntityLink extends LinkBase {
   /**
    * {@inheritdoc}
    */
-  public function render(ResultRow $values) {
-    return $this->getEntity($values) ? parent::render($values) : '';
+  public function render(ResultRow $row) {
+    return $this->getEntity($row) ? parent::render($row) : [];
   }
 
   /**

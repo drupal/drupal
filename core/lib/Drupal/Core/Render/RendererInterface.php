@@ -7,8 +7,6 @@
 
 namespace Drupal\Core\Render;
 
-use Drupal\Core\Cache\CacheableDependencyInterface;
-
 /**
  * Defines an interface for turning a render array into a string.
  */
@@ -249,6 +247,12 @@ interface RendererInterface {
    *     and written to cache using the value of $pre_bubbling_cid as the cache
    *     ID. This ensures the pre-bubbling ("wrong") cache ID redirects to the
    *     post-bubbling ("right") cache ID.
+   *   - If this element also has #cache_properties defined, all the array items
+   *     matching the specified property names will be cached along with the
+   *     element markup. If properties include children names, the system
+   *     assumes only children's individual markup is relevant and ignores the
+   *     parent markup. This approach is normally not needed and should be
+   *     adopted only when dealing with very advanced use cases.
    *   - If this element has an array of #post_render_cache functions defined,
    *     or any of its children has (which we would know thanks to the stack
    *     having been updated just before the render caching step), they are

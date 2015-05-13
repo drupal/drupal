@@ -19,6 +19,8 @@ use Drupal\views\ResultRow;
  */
 class Counter extends FieldPluginBase {
 
+  use UncacheableFieldHandlerTrait;
+
   /**
    * {@inheritdoc}
    */

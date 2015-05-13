@@ -152,6 +152,8 @@ class CommentUserNameTest extends ViewUnitTestBase {
 
     $account_switcher->switchTo(new AnonymousUserSession());
     $executable = Views::getView($view_id);
+    $executable->storage->invalidateCaches();
+
     $build = $executable->preview();
     $this->setRawContent($renderer->render($build));
 

@@ -7,32 +7,26 @@
 
 namespace Drupal\simpletest;
 
+use Drupal\block\Entity\Block;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Serialization\Yaml;
-use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Cache\Cache;
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Core\DependencyInjection\YamlFileLoader;
-use Drupal\Core\DrupalKernel;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Database;
-use Drupal\Core\Database\ConnectionNotDefinedException;
+use Drupal\Core\DrupalKernel;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Session\UserSession;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PublicStream;
-use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\block\Entity\Block;
-use Drupal\node\Entity\NodeType;
 use Drupal\Core\Url;
+use Drupal\node\Entity\NodeType;
 use Symfony\Component\HttpFoundation\Request;
-use Drupal\user\Entity\Role;
 
 /**
  * Test case for typical Drupal tests.
@@ -42,6 +36,12 @@ use Drupal\user\Entity\Role;
 abstract class WebTestBase extends TestBase {
 
   use AssertContentTrait;
+
+  use UserCreationTrait {
+    createUser as drupalCreateUser;
+    createRole as drupalCreateRole;
+    createAdminRole as drupalCreateAdminRole;
+  }
 
   /**
    * The profile to install as a basis for testing.
@@ -518,141 +518,6 @@ abstract class WebTestBase extends TestBase {
       // The files were the same size, so sort alphabetically.
       return strnatcmp($file1->name, $file2->name);
     }
-  }
-
-  /**
-   * Create a user with a given set of permissions.
-   *
-   * @param array $permissions
-   *   Array of permission names to assign to user. Note that the user always
-   *   has the default permissions derived from the "authenticated users" role.
-   * @param string $name
-   *   The user name.
-   *
-   * @return \Drupal\user\Entity\User|false
-   *   A fully loaded user object with pass_raw property, or FALSE if account
-   *   creation fails.
-   */
-  protected function drupalCreateUser(array $permissions = array(), $name = NULL) {
-    // Create a role with the given permission set, if any.
-    $rid = FALSE;
-    if ($permissions) {
-      $rid = $this->drupalCreateRole($permissions);
-      if (!$rid) {
-        return FALSE;
-      }
-    }
-
-    // Create a user assigned to that role.
-    $edit = array();
-    $edit['name']   = !empty($name) ? $name : $this->randomMachineName();
-    $edit['mail']   = $edit['name'] . '@example.com';
-    $edit['pass']   = user_password();
-    $edit['status'] = 1;
-    if ($rid) {
-      $edit['roles'] = array($rid);
-    }
-
-    $account = entity_create('user', $edit);
-    $account->save();
-
-    $this->assertTrue($account->id(), SafeMarkup::format('User created with name %name and pass %pass', array('%name' => $edit['name'], '%pass' => $edit['pass'])), 'User login');
-    if (!$account->id()) {
-      return FALSE;
-    }
-
-    // Add the raw password so that we can log in as this user.
-    $account->pass_raw = $edit['pass'];
-    return $account;
-  }
-
-  /**
-   * Creates a role with specified permissions.
-   *
-   * @param array $permissions
-   *   Array of permission names to assign to role.
-   * @param string $rid
-   *   (optional) The role ID (machine name). Defaults to a random name.
-   * @param string $name
-   *   (optional) The label for the role. Defaults to a random string.
-   * @param integer $weight
-   *   (optional) The weight for the role. Defaults NULL so that entity_create()
-   *   sets the weight to maximum + 1.
-   *
-   * @return string
-   *   Role ID of newly created role, or FALSE if role creation failed.
-   */
-  protected function drupalCreateRole(array $permissions, $rid = NULL, $name = NULL, $weight = NULL) {
-    // Generate a random, lowercase machine name if none was passed.
-    if (!isset($rid)) {
-      $rid = strtolower($this->randomMachineName(8));
-    }
-    // Generate a random label.
-    if (!isset($name)) {
-      // In the role UI role names are trimmed and random string can start or
-      // end with a space.
-      $name = trim($this->randomString(8));
-    }
-
-    // Check the all the permissions strings are valid.
-    if (!$this->checkPermissions($permissions)) {
-      return FALSE;
-    }
-
-    // Create new role.
-    $role = entity_create('user_role', array(
-      'id' => $rid,
-      'label' => $name,
-    ));
-    if (!is_null($weight)) {
-      $role->set('weight', $weight);
-    }
-    $result = $role->save();
-
-    $this->assertIdentical($result, SAVED_NEW, SafeMarkup::format('Created role ID @rid with name @name.', array(
-      '@name' => var_export($role->label(), TRUE),
-      '@rid' => var_export($role->id(), TRUE),
-    )), 'Role');
-
-    if ($result === SAVED_NEW) {
-      // Grant the specified permissions to the role, if any.
-      if (!empty($permissions)) {
-        user_role_grant_permissions($role->id(), $permissions);
-        $assigned_permissions = Role::load($role->id())->getPermissions();
-        $missing_permissions = array_diff($permissions, $assigned_permissions);
-        if (!$missing_permissions) {
-          $this->pass(SafeMarkup::format('Created permissions: @perms', array('@perms' => implode(', ', $permissions))), 'Role');
-        }
-        else {
-          $this->fail(SafeMarkup::format('Failed to create permissions: @perms', array('@perms' => implode(', ', $missing_permissions))), 'Role');
-        }
-      }
-      return $role->id();
-    }
-    else {
-      return FALSE;
-    }
-  }
-
-  /**
-   * Checks whether a given list of permission names is valid.
-   *
-   * @param array $permissions
-   *   The permission names to check.
-   *
-   * @return bool
-   *   TRUE if the permissions are valid, FALSE otherwise.
-   */
-  protected function checkPermissions(array $permissions) {
-    $available = array_keys(\Drupal::service('user.permissions')->getPermissions());
-    $valid = TRUE;
-    foreach ($permissions as $permission) {
-      if (!in_array($permission, $available)) {
-        $this->fail(SafeMarkup::format('Invalid permission %permission.', array('%permission' => $permission)), 'Role');
-        $valid = FALSE;
-      }
-    }
-    return $valid;
   }
 
   /**

@@ -12,6 +12,7 @@ use Drupal\Core\Render\RenderCacheInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\Core\Database\Query\Select;
+use Drupal\views\ResultRow;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -423,6 +424,74 @@ abstract class CachePluginBase extends PluginBase {
    *   The cache contexts the display varies by.
    */
   public function alterCacheMetadata(&$is_cacheable, array &$cache_contexts) {
+  }
+
+  /**
+   * Returns the row cache tags.
+   *
+   * @param ResultRow $row
+   *   A result row.
+   *
+   * @return string[]
+   *   The row cache tags.
+   */
+  public function getRowCacheTags(ResultRow $row) {
+    $tags = !empty($row->_entity) ? $row->_entity->getCacheTags() : [];
+
+    if (!empty($row->_relationship_entities)) {
+      foreach ($row->_relationship_entities as $entity) {
+        $tags = Cache::mergeTags($tags, $entity->getCacheTags());
+      }
+    }
+
+    return $tags;
+  }
+
+  /**
+   * Returns the row cache keys.
+   *
+   * @param \Drupal\views\ResultRow $row
+   *   A result row.
+   *
+   * @return string[]
+   *   The row cache keys.
+   */
+  public function getRowCacheKeys(ResultRow $row) {
+    return [
+      'views',
+      'fields',
+      $this->view->id(),
+      $this->view->current_display,
+      $this->getRowId($row),
+    ];
+  }
+
+  /**
+   * Returns a unique identifier for the specified row.
+   *
+   * @param \Drupal\views\ResultRow $row
+   *   A result row.
+   *
+   * @return string
+   *   The row identifier.
+   */
+  public function getRowId(ResultRow $row) {
+    // Here we compute a unique identifier for the row by computing the hash of
+    // its data. We exclude the current index, since the same row could have a
+    // different result index depending on the user permissions. We exclude also
+    // entity data, since serializing entity objects is very expensive. Instead
+    // we include entity cache tags, which are enough to identify all the
+    // entities associated with the row.
+    $row_data = array_diff_key((array) $row, array_flip(['index', '_entity', '_relationship_entities'])) + $this->getRowCacheTags($row);
+
+    // This ensures that we get a unique identifier taking field handler access
+    // into account: users having access to different sets of fields will get
+    // different row identifiers.
+    $field_ids = array_keys($this->view->field);
+    $row_data += array_flip($field_ids);
+
+    // Finally we compute a hash of row data and return it as row identifier.
+    return hash('sha256', serialize($row_data));
   }
 
 }

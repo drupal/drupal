@@ -62,16 +62,17 @@ class ContactPageAccess implements AccessInterface {
 
     // Anonymous users cannot have contact forms.
     if ($contact_account->isAnonymous()) {
-      return AccessResult::forbidden()->cachePerPermissions();
+      return AccessResult::forbidden();
     }
 
-    // Users may not contact themselves.
+    // Users may not contact themselves by default, hence this requires user
+    // granularity for caching.
+    $access = AccessResult::neutral()->cachePerUser();
     if ($account->id() == $contact_account->id()) {
-      return AccessResult::forbidden()->cachePerUser();
+      return $access;
     }
 
     // User administrators should always have access to personal contact forms.
-    $access = AccessResult::neutral()->cachePerPermissions();
     $permission_access = AccessResult::allowedIfHasPermission($account, 'administer users');
     if ($permission_access->isAllowed()) {
       return $access->orIf($permission_access);
@@ -83,14 +84,12 @@ class ContactPageAccess implements AccessInterface {
       return $access;
     }
 
-    // Load preference of the requested user.
+    // Forbid access if the requested user has disabled their contact form.
     $account_data = $this->userData->get('contact', $contact_account->id(), 'enabled');
-    if (isset($account_data)) {
-      // Forbid access if the requested user has disabled their contact form.
-      if (empty($account_data)) {
-        return $access;
-      }
+    if (isset($account_data) && !$account_data) {
+      return $access;
     }
+
     // If the requested user did not save a preference yet, deny access if the
     // configured default is disabled.
     $contact_settings = $this->configFactory->get('contact.settings');

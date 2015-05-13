@@ -117,6 +117,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
    *   The view to add field data to.
    */
   protected function prepareView(ViewExecutable $view) {
+    $view->storage->invalidateCaches();
     $view->initDisplay();
     foreach ($this->fieldStorages as $field_storage) {
       $field_name = $field_storage->getName();
