@@ -305,8 +305,11 @@ class ManageFieldsTest extends WebTestBase {
     // Check "Re-use existing field" appears.
     $this->drupalGet('admin/structure/types/manage/page/fields/add-field');
     $this->assertRaw(t('Re-use an existing field'), '"Re-use existing field" was found.');
+
+    // Ensure that we test with a label that contains HTML.
+    $label = $this->randomString(4) . '<br/>' . $this->randomString(4);
     // Add a new field for the orphaned storage.
-    $this->fieldUIAddExistingField("admin/structure/types/manage/page", $this->fieldName);
+    $this->fieldUIAddExistingField("admin/structure/types/manage/page", $this->fieldName, $label);
   }
 
   /**

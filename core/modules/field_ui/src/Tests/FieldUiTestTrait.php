@@ -86,6 +86,11 @@ trait FieldUiTestTrait {
 
     // First step: 'Re-use existing field' on the 'Add field' page.
     $this->drupalPostForm("$bundle_path/fields/add-field", $initial_edit, t('Save and continue'));
+    // Set the main content to only the content region because the label can
+    // contain HTML which will be auto-escaped by Twig.
+    $main_content = $this->cssSelect('.region-content');
+    $this->setRawContent(reset($main_content)->asXml());
+    $this->assertRaw('field-config-edit-form', 'The field config edit form is present.');
     $this->assertNoRaw('&amp;lt;', 'The page does not have double escaped HTML tags.');
 
     // Second step: 'Field settings' form.
