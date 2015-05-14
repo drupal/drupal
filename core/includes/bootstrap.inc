@@ -28,8 +28,9 @@ const DRUPAL_MINIMUM_PHP = '5.4.5';
 /**
  * Minimum recommended value of PHP memory_limit.
  *
- * @todo Reduce the memory required to install on some environments in
- *   https://www.drupal.org/node/2289201 and then decrease this limit.
+ * 64M was chosen as a minimum requirement in order to allow for additional
+ * contributed modules to be installed prior to hitting the limit. However,
+ * 40M is the target for the Standard installation profile.
  */
 const DRUPAL_MINIMUM_PHP_MEMORY_LIMIT = '64M';
 
