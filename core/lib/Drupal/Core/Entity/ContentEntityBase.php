@@ -329,7 +329,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   }
 
   /**
-   * {inheritdoc}
+   * {@inheritdoc}
    */
   public function uuid() {
     return $this->getEntityKey('uuid');

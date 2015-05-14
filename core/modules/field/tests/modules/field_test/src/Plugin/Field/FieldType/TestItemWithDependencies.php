@@ -30,7 +30,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 class TestItemWithDependencies extends TestItem {
 
   /**
-   * {inheritdoc}
+   * {@inheritdoc}
    */
   public static function calculateDependencies(FieldDefinitionInterface $field_definition) {
     return ['content' => ['node:article:uuid']];

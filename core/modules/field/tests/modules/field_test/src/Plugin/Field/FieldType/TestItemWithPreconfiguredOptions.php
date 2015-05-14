@@ -24,7 +24,7 @@ use Drupal\Core\Field\PreconfiguredFieldUiOptionsInterface;
 class TestItemWithPreconfiguredOptions extends TestItem implements PreconfiguredFieldUiOptionsInterface {
 
   /**
-   * {inheritdoc}
+   * {@inheritdoc}
    */
   public static function getPreconfiguredOptions() {
     return [
