@@ -18,7 +18,7 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
  */
 class MigrateUserProfileFieldTest extends MigrateDrupal6TestBase {
 
-  static $modules = array('link', 'options', 'datetime');
+  static $modules = array('link', 'options', 'datetime', 'text');
 
   /**
    * {@inheritdoc}
@@ -59,7 +59,7 @@ class MigrateUserProfileFieldTest extends MigrateDrupal6TestBase {
     $field_storage = FieldStorageConfig::load('user.profile_sold_to');
     $this->assertIdentical('list_string', $field_storage->getType(), 'Field type is list_string.');
     $settings = $field_storage->getSettings();
-    $this->assertIdentical($settings['allowed_values'], array(
+    $this->assertEqual($settings['allowed_values'], array(
       'Pill spammers' => 'Pill spammers',
       'Fitness spammers' => 'Fitness spammers',
       'Back\slash' => 'Back\slash',

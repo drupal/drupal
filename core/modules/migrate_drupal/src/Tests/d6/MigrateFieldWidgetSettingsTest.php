@@ -30,6 +30,7 @@ class MigrateFieldWidgetSettingsTest extends MigrateDrupal6TestBase {
     'image',
     'datetime',
     'node',
+    'text',
   );
 
   /**

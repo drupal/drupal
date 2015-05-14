@@ -40,6 +40,10 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
    */
   protected function setUp() {
     parent::setUp();
+
+    $this->installEntitySchema('file');
+    $this->installConfig(['file']);
+
     $dumps = array(
       $this->getDumpDirectory() . '/Files.php',
     );
@@ -114,6 +118,7 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
     // Creates a random filename and updates the source database.
     $random = new Random();
     $temp_directory = $test->getTempFilesDirectory();
+    file_prepare_directory($temp_directory, FILE_CREATE_DIRECTORY);
     static::$tempFilename = $test->getDatabasePrefix() . $random->name() . '.jpg';
     $file_path = $temp_directory . '/' . static::$tempFilename;
     file_put_contents($file_path, '');

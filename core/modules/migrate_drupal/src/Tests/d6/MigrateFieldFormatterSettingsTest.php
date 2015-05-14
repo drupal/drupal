@@ -31,6 +31,8 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
   protected function setUp() {
     parent::setUp();
 
+    $this->installConfig(['node']);
+
     entity_create('node_type', array('type' => 'test_page'))->save();
     entity_create('node_type', array('type' => 'story'))->save();
     // Create the node preview view mode.

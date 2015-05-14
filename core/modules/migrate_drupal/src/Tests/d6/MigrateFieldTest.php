@@ -23,7 +23,7 @@ class MigrateFieldTest extends MigrateDrupal6TestBase {
    *
    * @var array
    */
-  public static $modules = array('field', 'telephone', 'link', 'file', 'image', 'datetime', 'node', 'options');
+  public static $modules = array('field', 'telephone', 'link', 'file', 'image', 'datetime', 'node', 'options', 'text');
 
   /**
    * {@inheritdoc}

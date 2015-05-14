@@ -22,13 +22,18 @@ class MigrateCommentTest extends MigrateDrupal6TestBase {
 
   use CommentTestTrait;
 
-  static $modules = array('node', 'comment');
+  static $modules = array('node', 'comment', 'text', 'filter');
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
+
+    $this->installEntitySchema('node');
+    $this->installEntitySchema('comment');
+    $this->installConfig(['node', 'comment']);
+
     entity_create('node_type', array('type' => 'page'))->save();
     entity_create('node_type', array('type' => 'story'))->save();
     $this->addDefaultCommentField('node', 'story');

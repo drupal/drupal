@@ -18,13 +18,18 @@ use Drupal\node\Entity\Node;
  */
 class MigrateBookTest extends MigrateDrupal6TestBase {
 
-  public static $modules = array('book');
+  public static $modules = array('book', 'system', 'node', 'field', 'text', 'entity_reference', 'user');
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
+
+    $this->installEntitySchema('node');
+    $this->installSchema('book', array('book'));
+    $this->installSchema('node', array('node_access'));
+
     $id_mappings = array();
     for ($i = 4; $i <= 8; $i++) {
       $entity = entity_create('node', array(

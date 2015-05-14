@@ -29,6 +29,9 @@ class MigrateUserPictureFileTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
+
+    $this->installEntitySchema('file');
+
     $dumps = array(
       $this->getDumpDirectory() . '/Users.php',
       $this->getDumpDirectory() . '/ProfileValues.php',

@@ -22,7 +22,7 @@ class MigrateVocabularyEntityDisplayTest extends MigrateDrupal6TestBase {
    *
    * @var array
    */
-  static $modules = array('field', 'node', 'taxonomy');
+  static $modules = array('field', 'node', 'taxonomy', 'text', 'entity_reference');
 
   /**
    * {@inheritdoc}

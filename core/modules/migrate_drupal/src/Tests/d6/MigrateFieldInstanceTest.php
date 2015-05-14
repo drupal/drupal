@@ -32,6 +32,7 @@ class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
     'datetime',
     'node',
     'field',
+    'text',
   );
 
   /**

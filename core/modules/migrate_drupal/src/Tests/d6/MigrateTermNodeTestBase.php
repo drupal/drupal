@@ -20,13 +20,18 @@ abstract class MigrateTermNodeTestBase extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  static $modules = array('node', 'taxonomy');
+  static $modules = array('node', 'taxonomy', 'text', 'filter', 'entity_reference');
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
+
+    $this->installEntitySchema('node');
+    $this->installEntitySchema('taxonomy_term');
+    $this->installSchema('node', array('node_access'));
+
     $vocabulary = entity_create('taxonomy_vocabulary', array(
       'vid' => 'test',
     ));

@@ -18,7 +18,7 @@ use Drupal\Core\Database\Database;
  */
 class MigrateUserProfileEntityFormDisplayTest extends MigrateDrupal6TestBase {
 
-  static $modules = array('link', 'options', 'datetime');
+  static $modules = array('link', 'options', 'datetime', 'text');
 
   /**
    * {@inheritdoc}

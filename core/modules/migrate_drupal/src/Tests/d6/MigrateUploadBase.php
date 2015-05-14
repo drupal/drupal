@@ -24,6 +24,12 @@ abstract class MigrateUploadBase extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
+
+    $this->installEntitySchema('file');
+    $this->installEntitySchema('node');
+    $this->installSchema('file', ['file_usage']);
+    $this->installSchema('node', ['node_access']);
+
     // Create new file entities.
     for ($i = 1; $i <= 3; $i++) {
       $file = entity_create('file', array(

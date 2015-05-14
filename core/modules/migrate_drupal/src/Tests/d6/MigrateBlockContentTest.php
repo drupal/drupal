@@ -21,13 +21,16 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
  */
 class MigrateBlockContentTest extends MigrateDrupal6TestBase {
 
-  static $modules = array('block', 'block_content');
+  static $modules = array('block', 'block_content', 'filter', 'text');
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
+    $this->installConfig(array('block_content'));
+    $this->installEntitySchema('block_content');
+
     $migration = entity_load('migration', 'd6_block_content_type');
     $executable = new MigrateExecutable($migration, $this);
     $executable->import();

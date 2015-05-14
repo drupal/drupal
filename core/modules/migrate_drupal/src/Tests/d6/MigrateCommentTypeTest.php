@@ -18,13 +18,17 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
  */
 class MigrateCommentTypeTest extends MigrateDrupal6TestBase {
 
-  static $modules = array('node', 'comment');
+  static $modules = array('node', 'comment', 'text', 'filter');
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
+
+    $this->installEntitySchema('node');
+    $this->installEntitySchema('comment');
+    $this->installConfig(['node', 'comment']);
 
     /** @var \Drupal\migrate\entity\Migration $migration */
     $migration = entity_load('migration', 'd6_comment_type');

@@ -112,9 +112,13 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
     $table_schema['indexes']['sourcekey'] = array('sourceid1');
 
     $schema->expects($this->at(2))
+      ->method('tableExists')
+      ->with('migrate_message_sql_idmap_test')
+      ->will($this->returnValue(FALSE));
+    $schema->expects($this->at(3))
       ->method('createTable')
       ->with('migrate_message_sql_idmap_test', $table_schema);
-    $schema->expects($this->exactly(3))
+    $schema->expects($this->any())
       ->method($this->anything());
     $this->runEnsureTablesTest($schema);
   }

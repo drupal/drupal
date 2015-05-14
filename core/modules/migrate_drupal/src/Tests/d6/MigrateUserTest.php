@@ -40,6 +40,10 @@ class MigrateUserTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
+
+    $this->installEntitySchema('file');
+    $this->installSchema('file', ['file_usage']);
+
     // Create the user profile field and instance.
     entity_create('field_storage_config', array(
       'entity_type' => 'user',

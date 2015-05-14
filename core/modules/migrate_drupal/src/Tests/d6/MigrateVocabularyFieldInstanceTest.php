@@ -24,7 +24,7 @@ class MigrateVocabularyFieldInstanceTest extends MigrateDrupal6TestBase {
    *
    * @var array
    */
-  static $modules = array('node', 'field', 'taxonomy');
+  static $modules = array('node', 'field', 'taxonomy', 'text', 'entity_reference');
 
   /**
    * {@inheritdoc}

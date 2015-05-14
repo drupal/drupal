@@ -33,6 +33,9 @@ class MigrateSimpletestConfigsTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
+
+    $this->installConfig(['simpletest']);
+
     $migration = entity_load('migration', 'd6_simpletest_settings');
     $dumps = array(
       $this->getDumpDirectory() . '/Variable.php',

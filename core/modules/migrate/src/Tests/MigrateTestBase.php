@@ -11,12 +11,12 @@ use Drupal\Core\Database\Database;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\MigrateMessageInterface;
 use Drupal\migrate\Row;
-use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Base class for migration tests.
  */
-abstract class MigrateTestBase extends WebTestBase implements MigrateMessageInterface {
+abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageInterface {
 
   /**
    * The file path(s) to the dumped database(s) to load into the child site.
@@ -50,16 +50,17 @@ abstract class MigrateTestBase extends WebTestBase implements MigrateMessageInte
    */
   protected function setUp() {
     parent::setUp();
+
     $connection_info = Database::getConnectionInfo('default');
     foreach ($connection_info as $target => $value) {
-      $connection_info[$target]['prefix'] = array(
-        // Simpletest uses 7 character prefixes at most so this can't cause
-        // collisions.
-        'default' => $value['prefix']['default'] . '0',
-        // Add the original simpletest prefix so SQLite can attach its database.
-        // @see \Drupal\Core\Database\Driver\sqlite\Connection::init()
-        $value['prefix']['default'] => $value['prefix']['default'],
-      );
+      $prefix = is_array($value['prefix']) ? $value['prefix']['default'] : $value['prefix'];
+      // Simpletest uses 7 character prefixes at most so this can't cause
+      // collisions.
+      $connection_info[$target]['prefix']['default'] = $prefix . '0';
+
+      // Add the original simpletest prefix so SQLite can attach its database.
+      // @see \Drupal\Core\Database\Driver\sqlite\Connection::init()
+      $connection_info[$target]['prefix'][$value['prefix']['default']] = $value['prefix']['default'];
     }
     Database::addConnectionInfo('migrate', 'default', $connection_info['default']);
   }

@@ -23,7 +23,7 @@ class MigrateUserProfileEntityDisplayTest extends MigrateDrupal6TestBase {
    *
    * @var array
    */
-  static $modules = array('link', 'options', 'datetime');
+  static $modules = array('link', 'options', 'datetime', 'text');
 
   /**
    * {@inheritdoc}

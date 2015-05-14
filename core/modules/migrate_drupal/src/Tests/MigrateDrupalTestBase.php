@@ -15,19 +15,22 @@ use Drupal\migrate\Tests\MigrateTestBase;
 abstract class MigrateDrupalTestBase extends MigrateTestBase {
 
   /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('system', 'user', 'field', 'migrate_drupal', 'options');
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
     $this->loadDumps([$this->getDumpDirectory() . '/System.php']);
-  }
 
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('migrate_drupal');
+    $this->installEntitySchema('user');
+    $this->installConfig(['migrate_drupal', 'system']);
+  }
 
   /**
    * Returns the path to the dump directory.

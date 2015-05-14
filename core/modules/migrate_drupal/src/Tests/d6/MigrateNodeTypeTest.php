@@ -24,13 +24,16 @@ class MigrateNodeTypeTest extends MigrateDrupal6TestBase {
    *
    * @var array
    */
-  public static $modules = array('node');
+  public static $modules = array('node', 'text', 'filter');
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
+
+    $this->installConfig(array('node'));
+
     $migration = entity_load('migration', 'd6_node_type');
     $dumps = array(
       $this->getDumpDirectory() . '/NodeType.php',

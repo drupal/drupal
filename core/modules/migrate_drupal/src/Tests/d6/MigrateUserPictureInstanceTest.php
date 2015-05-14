@@ -23,7 +23,7 @@ class MigrateUserPictureInstanceTest extends MigrateDrupal6TestBase {
    *
    * @var array
    */
-  static $modules = array('image');
+  static $modules = array('image', 'file');
 
   /**
    * {@inheritdoc}

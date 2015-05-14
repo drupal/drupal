@@ -24,6 +24,8 @@ class MigrateUserContactSettingsTest extends MigrateDrupal6TestBase {
   protected function setUp() {
     parent::setUp();
 
+    $this->installSchema('user', array('users_data'));
+
     $dumps = array(
       $this->getDumpDirectory() . '/Users.php',
       $this->getDumpDirectory() . '/ProfileValues.php',

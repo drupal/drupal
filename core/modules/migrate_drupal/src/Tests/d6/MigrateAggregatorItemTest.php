@@ -26,6 +26,9 @@ class MigrateAggregatorItemTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
+    $this->installEntitySchema('aggregator_feed');
+    $this->installEntitySchema('aggregator_item');
+
     // Add some id mappings for the dependant migrations.
     $id_mappings = array(
       'd6_aggregator_feed' => array(

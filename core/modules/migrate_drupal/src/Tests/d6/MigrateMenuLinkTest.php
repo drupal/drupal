@@ -22,13 +22,16 @@ class MigrateMenuLinkTest extends MigrateDrupal6TestBase {
    *
    * @var array
    */
-  public static $modules = array('menu_ui');
+  public static $modules = array('link', 'menu_ui', 'menu_link_content');
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
+
+    $this->installSchema('system', ['router']);
+    $this->installEntitySchema('menu_link_content');
 
     $menu = entity_create('menu', array('id' => 'secondary-links'));
     $menu->enforceIsNew(TRUE);
