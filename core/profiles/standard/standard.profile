@@ -13,8 +13,8 @@ use Drupal\Core\Form\FormStateInterface;
  * Allows the profile to alter the site configuration form.
  */
 function standard_form_install_configure_form_alter(&$form, FormStateInterface $form_state) {
-  // Pre-populate the site name with the server name.
-  $form['site_information']['site_name']['#default_value'] = \Drupal::request()->server->get('SERVER_NAME');
+  // Add a placeholder as example that one can choose an arbitrary site name.
+  $form['site_information']['site_name']['#attributes']['placeholder'] = t('My site');
   $form['#submit'][] = 'standard_form_install_configure_submit';
 }
 
