@@ -120,7 +120,7 @@ class AjaxTestController {
       '#url' => Url::fromRoute('ajax_test.dialog_contents'),
       '#attributes' => array(
         'class' => array('use-ajax'),
-        'data-accepts' => 'application/vnd.drupal-modal',
+        'data-dialog-type' => 'modal',
       ),
     );
 
@@ -133,7 +133,7 @@ class AjaxTestController {
           'url' => Url::fromRoute('ajax_test.dialog_contents'),
           'attributes' => array(
             'class' => array('use-ajax'),
-            'data-accepts' => 'application/vnd.drupal-modal',
+            'data-dialog-type' => 'modal',
             'data-dialog-options' => json_encode(array(
               'width' => 400,
             ))
@@ -144,7 +144,7 @@ class AjaxTestController {
           'url' => Url::fromRoute('ajax_test.dialog_contents'),
           'attributes' => array(
             'class' => array('use-ajax'),
-            'data-accepts' => 'application/vnd.drupal-dialog',
+            'data-dialog-type' => 'dialog',
             'data-dialog-options' => json_encode(array(
               'target' => 'ajax-test-dialog-wrapper-1',
               'width' => 800,
@@ -156,6 +156,7 @@ class AjaxTestController {
           'url' => Url::fromRoute('ajax_test.dialog_close'),
           'attributes' => array(
             'class' => array('use-ajax'),
+            'data-dialog-type' => 'modal',
           ),
         ),
         'link5' => array(
@@ -163,7 +164,7 @@ class AjaxTestController {
           'url' => Url::fromRoute('ajax_test.dialog_form'),
           'attributes' => array(
             'class' => array('use-ajax'),
-            'data-accepts' => 'application/vnd.drupal-modal',
+            'data-dialog-type' => 'modal',
           ),
         ),
         'link6' => array(
@@ -171,7 +172,7 @@ class AjaxTestController {
           'url' => Url::fromRoute('contact.form_add'),
           'attributes' => array(
             'class' => array('use-ajax'),
-            'data-accepts' => 'application/vnd.drupal-modal',
+            'data-dialog-type' => 'modal',
             'data-dialog-options' => json_encode(array(
               'width' => 800,
               'height' => 500,
@@ -183,7 +184,7 @@ class AjaxTestController {
           'url' => Url::fromRoute('ajax_test.dialog_contents'),
           'attributes' => array(
             'class' => array('use-ajax'),
-            'data-accepts' => 'application/vnd.drupal-dialog',
+            'data-dialog-type' => 'dialog',
             'data-dialog-options' => json_encode(array(
               'width' => 800,
             ))

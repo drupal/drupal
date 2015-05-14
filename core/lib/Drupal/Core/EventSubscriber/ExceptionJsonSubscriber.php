@@ -65,4 +65,15 @@ class ExceptionJsonSubscriber extends HttpExceptionSubscriberBase {
     $event->setResponse($response);
   }
 
+  /**
+   * Handles a 406 error for JSON.
+   *
+   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
+   *   The event to process.
+   */
+  public function on406(GetResponseForExceptionEvent $event) {
+    $response = new JsonResponse(['message' => $event->getException()->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
+    $event->setResponse($response);
+  }
+
 }

@@ -362,7 +362,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
         ]),
         'attributes' => array(
           'class' => array('use-ajax', 'block-filter-text-source'),
-          'data-accepts' => 'application/vnd.drupal-modal',
+          'data-dialog-type' => 'modal',
           'data-dialog-options' => Json::encode(array(
             'width' => 700,
           )),

@@ -54,7 +54,7 @@ class ResourceTest extends RESTTestBase {
     $this->config->save();
     $this->rebuildCache();
 
-    // Verify that accessing the resource returns 401.
+    // Verify that accessing the resource returns 406.
     $response = $this->httpRequest($this->entity->urlInfo(), 'GET', NULL, $this->defaultMimeType);
     // AcceptHeaderMatcher considers the canonical, non-REST route a match, but
     // a lower quality one: no format restrictions means there's always a match,

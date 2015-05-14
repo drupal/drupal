@@ -160,9 +160,10 @@
       // a Drupal.ajax instance to load the dialog and trigger it.
       var $content = $('<div class="ckeditor-dialog-loading"><span style="top: -40px;" class="ckeditor-dialog-loading-link"><a>' + Drupal.t('Loading...') + '</a></span></div>');
       $content.appendTo($target);
+
       new Drupal.ajax('ckeditor-dialog', $content.find('a').get(0), {
-        accepts: 'application/vnd.drupal-modal',
         dialog: dialogSettings,
+        dialogType: 'modal',
         selector: '.ckeditor-dialog-loading-link',
         url: url,
         event: 'ckeditor-internal.ckeditor',

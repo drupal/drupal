@@ -13,11 +13,13 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AnonymousUserSession;
@@ -1421,8 +1423,8 @@ abstract class WebTestBase extends TestBase {
    * Requests a Drupal path in drupal_ajax format and JSON-decodes the response.
    */
   protected function drupalGetAjax($path, array $options = array(), array $headers = array()) {
-    if (!preg_grep('/^Accept:/', $headers)) {
-      $headers[] = 'Accept: application/vnd.drupal-ajax';
+    if (!isset($options['query'][MainContentViewSubscriber::WRAPPER_FORMAT])) {
+      $options['query'][MainContentViewSubscriber::WRAPPER_FORMAT] = 'drupal_ajax';
     }
     return Json::decode($this->drupalGet($path, $options, $headers));
   }
@@ -1650,17 +1652,24 @@ abstract class WebTestBase extends TestBase {
    * @see ajax.js
    */
   protected function drupalPostAjaxForm($path, $edit, $triggering_element, $ajax_path = NULL, array $options = array(), array $headers = array(), $form_html_id = NULL, $ajax_settings = NULL) {
+
     // Get the content of the initial page prior to calling drupalPostForm(),
     // since drupalPostForm() replaces $this->content.
     if (isset($path)) {
-      $this->drupalGet($path, $options);
+      // Avoid sending the wrapper query argument to drupalGet so we can fetch
+      // the form and populate the internal WebTest values.
+      $get_options = $options;
+      unset($get_options['query'][MainContentViewSubscriber::WRAPPER_FORMAT]);
+      $this->drupalGet($path, $get_options);
     }
     $content = $this->content;
     $drupal_settings = $this->drupalSettings;
 
-    if (!preg_grep('/^Accept:/', $headers)) {
-      $headers[] = 'Accept: application/vnd.drupal-ajax';
-    }
+    // Provide a default value for the wrapper envelope.
+    $options['query'][MainContentViewSubscriber::WRAPPER_FORMAT] =
+      isset($options['query'][MainContentViewSubscriber::WRAPPER_FORMAT]) ?
+        $options['query'][MainContentViewSubscriber::WRAPPER_FORMAT] :
+        'drupal_ajax';
 
     // Get the Ajax settings bound to the triggering element.
     if (!isset($ajax_settings)) {
@@ -1699,8 +1708,26 @@ abstract class WebTestBase extends TestBase {
     // Unless a particular path is specified, use the one specified by the
     // Ajax settings, or else 'system/ajax'.
     if (!isset($ajax_path)) {
-      $ajax_path = isset($ajax_settings['url']) ? $ajax_settings['url'] : 'system/ajax';
+      if (isset($ajax_settings['url'])) {
+        // In order to allow to set for example the wrapper envelope query
+        // parameter we need to get the system path again.
+        $parsed_url = UrlHelper::parse($ajax_settings['url']);
+        $options['query'] = $parsed_url['query'] + $options['query'];
+        $options += ['fragment' => $parsed_url['fragment']];
+
+        // We know that $parsed_url['path'] is already with the base path
+        // attached.
+        $ajax_path = preg_replace(
+          '/^' . preg_quote(base_path(), '/') . '/',
+          '',
+          $parsed_url['path']
+        );
+      }
+      else {
+        $ajax_path = 'system/ajax';
+      }
     }
+    $ajax_path = $this->container->get('unrouted_url_assembler')->assemble('base://' . $ajax_path, $options);
 
     // Submit the POST request.
     $return = Json::decode($this->drupalPostForm(NULL, $edit, array('path' => $ajax_path, 'triggering_element' => $triggering_element), $options, $headers, $form_html_id, $extra_post));

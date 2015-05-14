@@ -52,7 +52,7 @@
           element_settings.url = $(this).attr('href');
           element_settings.event = 'click';
         }
-        element_settings.accepts = $(this).data('accepts');
+        element_settings.dialogType = $(this).data('dialog-type');
         element_settings.dialog = $(this).data('dialog-options');
         var baseUseAjax = $(this).attr('id');
         Drupal.ajax[baseUseAjax] = new Drupal.ajax(baseUseAjax, this, element_settings);
@@ -256,15 +256,22 @@
         }
       },
       dataType: 'json',
-      accepts: {
-        json: element_settings.accepts || 'application/vnd.drupal-ajax'
-      },
       type: 'POST'
     };
 
     if (element_settings.dialog) {
       ajax.options.data.dialogOptions = element_settings.dialog;
     }
+
+    // Ensure that we have a valid URL by adding ? when no query parameter is
+    // yet available, otherwise append using &.
+    if (ajax.options.url.indexOf('?') === -1) {
+      ajax.options.url += '?';
+    }
+    else {
+      ajax.options.url += '&';
+    }
+    ajax.options.url += Drupal.ajax.WRAPPER_FORMAT + '=drupal_' + (element_settings.dialogType || 'ajax');
 
     // Bind the ajaxSubmit function to the element event.
     $(ajax.element).on(element_settings.event, function (event) {
@@ -287,6 +294,14 @@
       $(ajax.element).on(element_settings.prevent, false);
     }
   };
+
+  /**
+   * URL query attribute to indicate the wrapper used to render a request.
+   *
+   * The wrapper format determines how the HTML is wrapped, for example in a
+   * modal dialog.
+   */
+  Drupal.ajax.WRAPPER_FORMAT = '_wrapper_format';
 
   /**
    * Handle a key press.

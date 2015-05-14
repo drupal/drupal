@@ -240,7 +240,7 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
       $settings += array(
         'url' => isset($settings['callback']) ? Url::fromRoute('system.ajax') : NULL,
         'options' => array(),
-        'accepts' => 'application/vnd.drupal-ajax'
+        'dialogType' => 'ajax',
       );
 
       // @todo Legacy support. Remove in Drupal 8.

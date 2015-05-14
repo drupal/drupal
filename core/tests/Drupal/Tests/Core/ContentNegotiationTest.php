@@ -60,9 +60,6 @@ class ContentNegotiationTest extends UnitTestCase {
   public function priorityFormatProvider()
   {
     return [
-      ['drupal_dialog', ['format' => 'drupal_dialog', 'mime_type' => 'application/vnd.drupal-dialog']],
-      ['drupal_modal', ['format' => 'drupal_modal', 'mime_type' => 'application/vnd.drupal-modal']],
-      ['drupal_ajax', ['format' => 'drupal_ajax', 'mime_type' => 'application/vnd.drupal-ajax']],
       ['html', ['format' => 'html', 'mime_type' => 'text/html']],
     ];
   }

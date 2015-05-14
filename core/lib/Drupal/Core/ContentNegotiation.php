@@ -38,10 +38,9 @@ class ContentNegotiation {
 
     // Check all formats, if priority format is found return it.
     $first_found_format = FALSE;
-    $priority = array('html', 'drupal_ajax', 'drupal_modal', 'drupal_dialog');
     foreach ($request->getAcceptableContentTypes() as $mime_type) {
       $format = $request->getFormat($mime_type);
-      if (in_array($format, $priority, TRUE)) {
+      if ($format === 'html') {
         return $format;
       }
       if (!is_null($format) && !$first_found_format) {

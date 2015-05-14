@@ -850,6 +850,10 @@ services:
     arguments: ['@class_resolver', '@current_route_match', '%main_content_renderers%']
     tags:
       - { name: event_subscriber }
+  accept_negotiation_406:
+    class: Drupal\Core\EventSubscriber\AcceptNegotiation406
+    tags:
+      - { name: event_subscriber }
   main_content_renderer.html:
     class: Drupal\Core\Render\MainContent\HtmlRenderer
     arguments: ['@title_resolver', '@plugin.manager.display_variant', '@event_dispatcher', '@element_info', '@module_handler', '@renderer', '@render_cache', '@cache_contexts_manager']
@@ -882,11 +886,6 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: ['@router', '@router.request_context', NULL, '@request_stack']
-  view_subscriber:
-    class: Drupal\Core\EventSubscriber\ViewSubscriber
-    arguments: ['@title_resolver']
-    tags:
-      - { name: event_subscriber }
   bare_html_page_renderer:
     class: Drupal\Core\Render\BareHtmlPageRenderer
     arguments: ['@renderer']

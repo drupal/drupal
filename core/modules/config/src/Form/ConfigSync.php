@@ -281,7 +281,7 @@ class ConfigSync extends FormBase {
             'url' => Url::fromRoute($route_name, $route_options),
             'attributes' => array(
               'class' => array('use-ajax'),
-              'data-accepts' => 'application/vnd.drupal-modal',
+              'data-dialog-type' => 'modal',
               'data-dialog-options' => json_encode(array(
                 'width' => 700
               )),
