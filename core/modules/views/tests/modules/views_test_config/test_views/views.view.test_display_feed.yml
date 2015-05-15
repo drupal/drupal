@@ -94,6 +94,31 @@ display:
     display_title: Feed
     id: feed_1
     position: 0
+  feed_2:
+    display_options:
+      displays: {  }
+      pager:
+        type: some
+      path: test-feed-display-fields.xml
+      row:
+        type: rss_fields
+        options:
+          title_field: title
+          link_field: title
+          description_field: title
+          creator_field: title
+          date_field: title
+          guid_field_options:
+            guid_field: title
+            guid_field_is_permalink: true
+      style:
+        type: rss
+      sitename_title: true
+      display_description: ''
+    display_plugin: feed
+    display_title: 'Feed with Fields'
+    id: feed_2
+    position: 0
   page:
     display_options:
       path: test-feed-display

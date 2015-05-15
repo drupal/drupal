@@ -68,15 +68,12 @@ class FileFieldRSSContentTest extends FileFieldTestBase {
     // Check that the RSS enclosure appears in the RSS feed.
     $this->drupalGet('rss.xml');
     $uploaded_filename = str_replace('public://', '', $node_file->getFileUri());
-    $test_element = array(
-      'key' => 'enclosure',
-      'value' => "",
-      'attributes' => array(
-        'url' => file_create_url("public://$uploaded_filename", array('absolute' => TRUE)),
-        'length' => $node_file->getSize(),
-        'type' => $node_file->getMimeType()
-      ),
+    $test_element = sprintf(
+      '<enclosure url="%s" length="%s" type="%s" />',
+      file_create_url("public://$uploaded_filename", array('absolute' => TRUE)),
+      $node_file->getSize(),
+      $node_file->getMimeType()
     );
-    $this->assertRaw(format_xml_elements(array($test_element)), 'File field RSS enclosure is displayed when viewing the RSS feed.');
+    $this->assertRaw($test_element, 'File field RSS enclosure is displayed when viewing the RSS feed.');
   }
 }

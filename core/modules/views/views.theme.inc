@@ -895,7 +895,7 @@ function template_preprocess_views_view_rss(&$variables) {
   $variables['langcode'] = SafeMarkup::checkPlain(\Drupal::languageManager()->getCurrentLanguage()->getId());
   $variables['namespaces'] = new Attribute($style->namespaces);
   $variables['items'] = $items;
-  $variables['channel_elements'] = format_xml_elements($style->channel_elements);
+  $variables['channel_elements'] = \Drupal::service('renderer')->render($style->channel_elements);
 
   // During live preview we don't want to output the header since the contents
   // of the feed are being displayed inside a normal HTML page.
@@ -915,11 +915,16 @@ function template_preprocess_views_view_rss(&$variables) {
  */
 function template_preprocess_views_view_row_rss(&$variables) {
   $item = $variables['row'];
-
-  $variables['title'] = SafeMarkup::checkPlain($item->title);
+  $variables['title'] = $item->title;
   $variables['link'] = $item->link;
-  $variables['description'] = SafeMarkup::checkPlain($item->description);
-  $variables['item_elements'] = empty($item->elements) ? '' : format_xml_elements($item->elements);
+  $variables['description'] = $item->description;
+  $variables['item_elements'] = array();
+  foreach ($item->elements as $element) {
+    if (isset($element['attributes']) && is_array($element['attributes'])) {
+      $element['attributes'] = new Attribute($element['attributes']);
+    }
+    $variables['item_elements'][] = $element;
+  }
 }
 
 /**

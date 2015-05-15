@@ -296,53 +296,6 @@ function check_url($uri) {
  */
 
 /**
- * Formats XML elements.
- *
- * Note: It is the caller's responsibility to sanitize any input parameters.
- * This function does not perform sanitization.
- *
- * @param $array
- *   An array where each item represents an element and is either a:
- *   - (key => value) pair (<key>value</key>)
- *   - Associative array with fields:
- *     - 'key': The element name. Element names are not sanitized, so do not
- *       pass user input.
- *     - 'value': element contents
- *     - 'attributes': associative array of element attributes
- *
- * In both cases, 'value' can be a simple string, or it can be another array
- * with the same format as $array itself for nesting.
- */
-function format_xml_elements($array) {
-  $output = '';
-  foreach ($array as $key => $value) {
-    if (is_numeric($key)) {
-      if ($value['key']) {
-        $output .= ' <' . $value['key'];
-        if (isset($value['attributes']) && is_array($value['attributes'])) {
-          $output .= new Attribute($value['attributes']);
-        }
-
-        if (isset($value['value']) && $value['value'] != '') {
-          $output .= '>' . (is_array($value['value']) ? format_xml_elements($value['value']) : SafeMarkup::checkPlain($value['value'])) . '</' . $value['key'] . ">\n";
-        }
-        else {
-          $output .= " />\n";
-        }
-      }
-    }
-    else {
-      $output .= ' <' . $key . '>' . (is_array($value) ? format_xml_elements($value) : SafeMarkup::checkPlain($value)) . "</$key>\n";
-    }
-  }
-  // @todo This is marking the output string as safe HTML, but we have only
-  //   sanitized the attributes and tag values, not the tag names, and we
-  //   cannot guarantee the assembled markup is safe. Consider a fix in:
-  //   https://www.drupal.org/node/2296885
-  return SafeMarkup::set($output);
-}
-
-/**
  * Generates a string representation for the given byte count.
  *
  * @param $size

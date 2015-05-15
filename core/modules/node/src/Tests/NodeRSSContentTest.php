@@ -54,12 +54,9 @@ class NodeRSSContentTest extends NodeTestBase {
     $this->assertNoText($non_rss_content, 'Node content not designed for RSS does not appear in RSS feed.');
 
     // Check that extra RSS elements and namespaces are added to RSS feed.
-    $test_element = array(
-      'key' => 'testElement',
-      'value' => t('Value of testElement RSS element for node !nid.', array('!nid' => $node->id())),
-    );
+    $test_element = '<testElement>' . t('Value of testElement RSS element for node !nid.', array('!nid' => $node->id())) . '</testElement>';
     $test_ns = 'xmlns:drupaltest="http://example.com/test-namespace"';
-    $this->assertRaw(format_xml_elements(array($test_element)), 'Extra RSS elements appear in RSS feed.');
+    $this->assertRaw($test_element, 'Extra RSS elements appear in RSS feed.');
     $this->assertRaw($test_ns, 'Extra namespaces appear in RSS feed.');
 
     // Check that content added in 'rss' view mode doesn't appear when
