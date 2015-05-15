@@ -743,8 +743,8 @@ function node_page_title(NodeInterface $node) {
  * @param $nid
  *   The ID of a node.
  * @param string $langcode
- *   (optional) The language the node has been last modified in. Defaults to the
- *   node language.
+ *   (optional) The language to get the last changed time for. If omitted, the
+ *   last changed time across all translations will be returned.
  *
  * @return string
  *   A unix timestamp indicating the last time the node was changed.
@@ -753,8 +753,9 @@ function node_page_title(NodeInterface $node) {
  *       for validation, which will be done by EntityChangedConstraintValidator.
  */
 function node_last_changed($nid, $langcode = NULL) {
-  $changed = \Drupal::entityManager()->getStorage('node')->loadUnchanged($nid)->getChangedTime();
-  return $changed ? $changed : FALSE;
+  $node = \Drupal::entityManager()->getStorage('node')->loadUnchanged($nid);
+  $changed = $langcode ? $node->getTranslation($langcode)->getChangedTime() : $node->getChangedTimeAcrossTranslations();
+  return $changed ?: FALSE;
 }
 
 /**

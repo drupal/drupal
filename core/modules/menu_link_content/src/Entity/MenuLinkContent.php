@@ -8,6 +8,7 @@
 namespace Drupal\menu_link_content\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
+use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -51,6 +52,8 @@ use Drupal\menu_link_content\MenuLinkContentInterface;
  * )
  */
 class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterface {
+
+  use EntityChangedTrait;
 
   /**
    * A flag for whether this entity is wrapped in a plugin instance.
@@ -377,7 +380,8 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
 
     $fields['changed'] = BaseFieldDefinition::create('changed')
       ->setLabel(t('Changed'))
-      ->setDescription(t('The time that the menu link was last edited.'));
+      ->setDescription(t('The time that the menu link was last edited.'))
+      ->setTranslatable(TRUE);
 
     return $fields;
   }

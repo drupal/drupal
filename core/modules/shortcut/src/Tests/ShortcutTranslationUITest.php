@@ -8,6 +8,7 @@
 namespace Drupal\shortcut\Tests;
 
 use Drupal\content_translation\Tests\ContentTranslationUITest;
+use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Language\Language;
 
 /**
@@ -100,6 +101,18 @@ class ShortcutTranslationUITest extends ContentTranslationUITest {
         $this->assertRaw($title);
       }
     }
+  }
+
+  /**
+   * Tests the basic translation workflow.
+   */
+  protected function doTestTranslationChanged() {
+    $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
+
+    $this->assertFalse(
+      $entity instanceof EntityChangedInterface,
+      format_string('%entity is not implementing EntityChangedInterface.' , array('%entity' => $this->entityTypeId))
+    );
   }
 
 }

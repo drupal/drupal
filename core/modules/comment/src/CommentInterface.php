@@ -197,14 +197,6 @@ interface CommentInterface extends ContentEntityInterface, EntityChangedInterfac
   public function setCreatedTime($created);
 
   /**
-   * Returns the timestamp of when the comment was updated.
-   *
-   * @return int
-   *   The timestamp of when the comment was updated.
-   */
-  public function getChangedTime();
-
-  /**
    * Checks if the comment is published.
    *
    * @return bool

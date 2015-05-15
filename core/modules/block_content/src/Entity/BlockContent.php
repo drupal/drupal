@@ -8,6 +8,7 @@
 namespace Drupal\block_content\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
+use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -65,6 +66,8 @@ use Drupal\block_content\BlockContentInterface;
  * See https://www.drupal.org/node/2284917#comment-9132521 for more information.
  */
 class BlockContent extends ContentEntityBase implements BlockContentInterface {
+
+  use EntityChangedTrait;
 
   /**
    * The theme the block is being created in.
@@ -202,6 +205,7 @@ class BlockContent extends ContentEntityBase implements BlockContentInterface {
     $fields['changed'] = BaseFieldDefinition::create('changed')
       ->setLabel(t('Changed'))
       ->setDescription(t('The time that the custom block was last edited.'))
+      ->setTranslatable(TRUE)
       ->setRevisionable(TRUE);
 
     return $fields;

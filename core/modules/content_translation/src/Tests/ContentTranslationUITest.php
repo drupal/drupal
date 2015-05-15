@@ -42,6 +42,7 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
     $this->doTestPublishedStatus();
     $this->doTestAuthoringInfo();
     $this->doTestTranslationEdit();
+    $this->doTestTranslationChanged();
     $this->doTestTranslationDeletion();
   }
 
@@ -366,6 +367,19 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
   }
 
   /**
+   * Returns the name of the field that implements the changed timestamp.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity being tested.
+   *
+   * @return string
+   *   The the field name.
+   */
+  protected function getChangedFieldName($entity) {
+    return $entity->hasField('content_translation_changed') ? 'content_translation_changed' : 'changed';
+  }
+
+  /**
    * Tests edit content translation.
    */
   protected function doTestTranslationEdit() {
@@ -380,6 +394,73 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
         $this->drupalGet($url);
 
         $this->assertRaw($entity->getTranslation($langcode)->label());
+      }
+    }
+  }
+
+  /**
+   * Tests the basic translation workflow.
+   */
+  protected function doTestTranslationChanged() {
+    $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
+    $changed_field_name = $this->getChangedFieldName($entity);
+    $definition = $entity->getFieldDefinition($changed_field_name);
+    $config = $definition->getConfig($entity->bundle());
+
+    foreach ([FALSE, TRUE] as $translatable_changed_field) {
+      if ($definition->isTranslatable()) {
+        // For entities defining a translatable changed field we want to test
+        // the correct behavior of that field even if the translatability is
+        // revoked. In that case the changed timestamp should be synchronized
+        // across all translations.
+        $config->setTranslatable($translatable_changed_field);
+        $config->save();
+      }
+      elseif ($translatable_changed_field) {
+        // For entities defining a non-translatable changed field we cannot
+        // declare the field as translatable on the fly by modifying its config
+        // because the schema doesn't support this.
+        break;
+      }
+
+      foreach ($entity->getTranslationLanguages() as $language) {
+        // Ensure different timestamps.
+        sleep(1);
+
+        $langcode = $language->getId();
+
+        $edit = array(
+          $this->fieldName . '[0][value]' => $this->randomString(),
+        );
+        $edit_path = $entity->urlInfo('edit-form', array('language' => $language));
+        $this->drupalPostForm($edit_path, $edit, $this->getFormSubmitAction($entity, $langcode));
+
+        $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
+        $this->assertEqual(
+          $entity->getChangedTimeAcrossTranslations(), $entity->getTranslation($langcode)->getChangedTime(),
+          format_string('Changed time for language %language is the latest change over all languages.', array('%language' => $language->getName()))
+        );
+      }
+
+      $timestamps = array();
+      foreach ($entity->getTranslationLanguages() as $language) {
+        $next_timestamp = $entity->getTranslation($language->getId())->getChangedTime();
+        if (!in_array($next_timestamp, $timestamps)) {
+          $timestamps[] = $next_timestamp;
+        }
+      }
+
+      if ($translatable_changed_field) {
+        $this->assertEqual(
+          count($timestamps), count($entity->getTranslationLanguages()),
+          'All timestamps from all languages are different.'
+        );
+      }
+      else {
+        $this->assertEqual(
+          count($timestamps), 1,
+          'All timestamps from all languages are identical.'
+        );
       }
     }
   }

@@ -120,8 +120,8 @@ class NodeSaveTest extends NodeTestBase {
 
     entity_create('node', $edit)->save();
     $node = $this->drupalGetNodeByTitle($edit['title']);
-    $this->assertEqual($node->getCreatedTime(), 280299600, 'Creating a node uses user-set "created" timestamp.');
-    $this->assertNotEqual($node->getChangedTime(), 979534800, 'Creating a node does not use user-set "changed" timestamp.');
+    $this->assertEqual($node->getCreatedTime(), 280299600, 'Creating a node programmatically uses programmatically set "created" timestamp.');
+    $this->assertEqual($node->getChangedTime(), 979534800, 'Creating a node programmatically uses programmatically set "changed" timestamp.');
 
     // Update the timestamps.
     $node->setCreatedTime(979534800);
@@ -130,7 +130,10 @@ class NodeSaveTest extends NodeTestBase {
     $node->save();
     $node = $this->drupalGetNodeByTitle($edit['title'], TRUE);
     $this->assertEqual($node->getCreatedTime(), 979534800, 'Updating a node uses user-set "created" timestamp.');
-    $this->assertNotEqual($node->getChangedTime(), 280299600, 'Updating a node does not use user-set "changed" timestamp.');
+    // Allowing setting changed timestamps is required, see
+    // Drupal\content_translation\ContentTranslationMetadataWrapper::setChangedTime($timestamp)
+    // for example.
+    $this->assertEqual($node->getChangedTime(), 280299600, 'Updating a node uses user-set "changed" timestamp.');
   }
 
   /**

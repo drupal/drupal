@@ -213,7 +213,7 @@ class CommentAdminOverview extends FormBase {
             '#url' => $commented_entity->urlInfo(),
           ),
         ),
-        'changed' => $this->dateFormatter->format($comment->getChangedTime(), 'short'),
+        'changed' => $this->dateFormatter->format($comment->getChangedTimeAcrossTranslations(), 'short'),
       );
       $comment_uri_options = $comment->urlInfo()->getOptions();
       $links = array();

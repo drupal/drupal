@@ -10,6 +10,7 @@ namespace Drupal\comment\Entity;
 use Drupal\Component\Utility\Number;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\comment\CommentInterface;
+use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -60,6 +61,8 @@ use Drupal\user\UserInterface;
  * )
  */
 class Comment extends ContentEntityBase implements CommentInterface {
+
+  use EntityChangedTrait;
 
   /**
    * The thread for which a lock was acquired.

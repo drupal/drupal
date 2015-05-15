@@ -22,8 +22,6 @@ class SaveTest extends FileManagedUnitTestBase {
       'filename' => 'druplicon.txt',
       'uri' => 'public://druplicon.txt',
       'filemime' => 'text/plain',
-      'created' => 1,
-      'changed' => 1,
       'status' => FILE_STATUS_PERMANENT,
     ));
     file_put_contents($file->getFileUri(), 'hello world');
@@ -64,8 +62,6 @@ class SaveTest extends FileManagedUnitTestBase {
       'filename' => 'DRUPLICON.txt',
       'uri' => 'public://DRUPLICON.txt',
       'filemime' => 'text/plain',
-      'created' => 1,
-      'changed' => 1,
       'status' => FILE_STATUS_PERMANENT,
     ));
     file_put_contents($uppercase_file->getFileUri(), 'hello world');

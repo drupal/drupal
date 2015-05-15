@@ -138,7 +138,7 @@ class LinksTest extends WebTestBase {
       'title' => 'Test Link',
     );
     $link->link->options = $options;
-    $link->changed->value = REQUEST_TIME - 5;
+    $link->changed->value = 0;
     $link->save();
     // Make sure the changed timestamp is updated.
     $this->assertEqual($link->getChangedTime(), REQUEST_TIME, 'Changing a menu link sets "changed" timestamp.');

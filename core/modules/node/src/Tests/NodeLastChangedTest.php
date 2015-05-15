@@ -38,7 +38,7 @@ class NodeLastChangedTest extends KernelTestBase {
 
     // Test node last changed timestamp.
     $changed_timestamp = node_last_changed($node->id());
-    $this->assertEqual($changed_timestamp, $node->getChangedTime(), 'Expected last changed timestamp returned.');
+    $this->assertEqual($changed_timestamp, $node->getChangedTimeAcrossTranslations(), 'Expected last changed timestamp returned.');
 
     $changed_timestamp = node_last_changed($node->id(), $node->language()->getId());
     $this->assertEqual($changed_timestamp, $node->getChangedTime(), 'Expected last changed timestamp returned.');

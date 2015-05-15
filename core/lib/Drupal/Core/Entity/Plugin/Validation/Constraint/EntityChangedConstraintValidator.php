@@ -23,8 +23,9 @@ class EntityChangedConstraintValidator extends ConstraintValidator {
       /** @var \Drupal\Core\Entity\EntityInterface $entity */
       if (!$entity->isNew()) {
         $saved_entity = \Drupal::entityManager()->getStorage($entity->getEntityTypeId())->loadUnchanged($entity->id());
-
-        if ($saved_entity && $saved_entity->getChangedTime() > $entity->getChangedTime()) {
+        // A change to any other translation must add a violation to the current
+        // translation because there might be untranslatable shared fields.
+        if ($saved_entity && $saved_entity->getChangedTimeAcrossTranslations() > $entity->getChangedTime()) {
           $this->context->addViolation($constraint->message);
         }
       }
