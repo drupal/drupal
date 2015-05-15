@@ -619,12 +619,16 @@ function hook_ENTITY_TYPE_create_access(\Drupal\Core\Session\AccountInterface $a
  * Modules may implement this hook to add information to defined entity types,
  * as defined in \Drupal\Core\Entity\EntityTypeInterface.
  *
+ * To alter existing information or to add information dynamically, use
+ * hook_entity_type_alter().
+ *
  * @param \Drupal\Core\Entity\EntityTypeInterface[] $entity_types
  *   An associative array of all entity type definitions, keyed by the entity
  *   type name. Passed by reference.
  *
  * @see \Drupal\Core\Entity\Entity
  * @see \Drupal\Core\Entity\EntityTypeInterface
+ * @see hook_entity_type_alter()
  */
 function hook_entity_type_build(array &$entity_types) {
   /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
@@ -641,8 +645,12 @@ function hook_entity_type_build(array &$entity_types) {
  * \Drupal\Core\Entity\Annotation\EntityType and all the ones additionally
  * provided by modules can be altered here.
  *
- * Do not use this hook to add information to entity types, unless you are just
- * filling-in default values. Use hook_entity_type_build() instead.
+ * Do not use this hook to add information to entity types, unless one of the
+ * following is true:
+ * - You are filling in default values.
+ * - You need to dynamically add information only in certain circumstances.
+ * - Your hook needs to run after hook_entity_type_build() implementations.
+ * Use hook_entity_type_build() instead in all other cases.
  *
  * @param \Drupal\Core\Entity\EntityTypeInterface[] $entity_types
  *   An associative array of all entity type definitions, keyed by the entity
