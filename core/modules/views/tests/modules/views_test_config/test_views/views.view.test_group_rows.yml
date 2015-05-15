@@ -191,10 +191,10 @@ display:
           plugin_id: field
       display_extenders: {  }
       sorts:
-        created:
-          id: created
-          table: node_field_data
-          field: created
+        delta:
+          id: delta
+          table: node__field_group_rows
+          field: delta
           relationship: none
           group_type: group
           admin_label: ''
@@ -202,10 +202,7 @@ display:
           exposed: false
           expose:
             label: ''
-          granularity: second
-          entity_type: node
-          entity_field: created
-          plugin_id: date
+          plugin_id: standard
   page_1:
     display_options:
       path: test-group-rows
