@@ -7,7 +7,7 @@ module: views
 description: ''
 tag: ''
 base_table: entity_test_mul_property_data
-base_field: nid
+base_field: id
 core: '8'
 display:
   default:
@@ -34,7 +34,6 @@ display:
           hide_empty: false
           id: id
           table: entity_test_mul_property_data
-          plugin_id: field
           entity_type: entity_test_mul
           entity_field: id
           plugin_id: field
@@ -59,11 +58,29 @@ display:
           plugin_id: field
       sorts:
         field_test_value:
-          table: entity_test__field_test
-          field: field_test
-          id: field_ttest_value
+          table: entity_test_mul__field_test
+          field: field_test_value
+          id: field_test_value
           entity_type: entity_test_mul
           entity_field: field_test
+          group_type: group
+          order: ASC
+          plugin_id: standard
+        id:
+          table: entity_test_mul_property_data
+          field: id
+          id: id
+          entity_type: entity_test_mul
+          entity_field: id
+          group_type: count
+          order: ASC
+          plugin_id: standard
+        langcode:
+          table: entity_test_mul_property_data
+          field: langcode
+          id: langcode
+          entity_type: entity_test_mul
+          entity_field: langcode
           group_type: group
           order: ASC
           plugin_id: standard
