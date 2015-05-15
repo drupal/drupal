@@ -4,3 +4,4 @@ description: 'Logs and records system events to the database.'
 package: Core
 version: VERSION
 core: 8.x
+configure: system.logging_settings
