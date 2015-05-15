@@ -55,7 +55,7 @@ tips:
     body: 'You can write your own translation in the text fields of the right column. Try to figure out in which context the text will be used in order to translate it in the appropriate way.'
     weight: 6
     attributes:
-      data-class: form-type-textarea
+      data-class: js-form-type-textarea
 
   locale-validate:
     id: locale-validate

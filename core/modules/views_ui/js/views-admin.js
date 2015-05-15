@@ -795,7 +795,7 @@
           });
         });
       // Uncheck the select all checkbox if any of the others are unchecked.
-      $('#views-ui-handler-form').find('div.form-type-checkbox').not($('.form-item-options-value-all'))
+      $('#views-ui-handler-form').find('div.js-form-type-checkbox').not($('.form-item-options-value-all'))
         .find('input[type=checkbox]')
         .on('click', function () {
           if ($(this).is('checked') === false) {

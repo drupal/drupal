@@ -91,7 +91,7 @@ class RenderWebTest extends WebTestBase {
       '#markup' => $this->randomMachineName(),
     );
     $this->assertRenderedElement($element, '//div[contains(@class, :class) and contains(., :markup)]/label[contains(., :label)]', array(
-      ':class' => 'form-type-item',
+      ':class' => 'js-form-type-item',
       ':markup' => $element['#markup'],
       ':label' => $element['#title'],
     ));
@@ -138,7 +138,7 @@ class RenderWebTest extends WebTestBase {
       '#markup' => $this->randomMachineName(),
     );
     $this->assertRenderedElement($element, '//details/div/div[contains(@class, :class) and contains(., :markup)]', array(
-      ':class' => 'form-type-item',
+      ':class' => 'js-form-type-item',
       ':markup' => $element['item']['#markup'],
     ));
   }
