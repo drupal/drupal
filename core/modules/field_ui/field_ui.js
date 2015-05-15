@@ -101,7 +101,7 @@
       var region = rowHandler.getRegion();
       if (region !== rowHandler.region) {
         // Remove parenting.
-        $row.find('select.field-parent').val('');
+        $row.find('select.js-field-parent').val('');
         // Let the row handler deal with the region change.
         $.extend(refreshRows, rowHandler.regionChange(region));
         // Update the row region.

@@ -307,7 +307,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
           '#title_display' => 'invisible',
           '#options' => array_combine($regions, $regions),
           '#empty_value' => '',
-          '#attributes' => array('class' => array('field-parent')),
+          '#attributes' => array('class' => array('js-field-parent', 'field-parent')),
           '#parents' => array('fields', $field_name, 'parent'),
         ),
         'hidden_name' => array(
@@ -486,7 +486,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
           '#title_display' => 'invisible',
           '#options' => array_combine($regions, $regions),
           '#empty_value' => '',
-          '#attributes' => array('class' => array('field-parent')),
+          '#attributes' => array('class' => array('js-field-parent', 'field-parent')),
           '#parents' => array('fields', $field_id, 'parent'),
         ),
         'hidden_name' => array(
