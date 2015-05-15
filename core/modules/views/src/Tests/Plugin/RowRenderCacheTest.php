@@ -78,7 +78,7 @@ class RowRenderCacheTest extends ViewUnitTestBase {
 
     // Create some test entities.
     for ($i = 0; $i < 5; $i++) {
-      Node::create(['title' => 'b' . $this->randomMachineName(), 'type' => 'test'])->save();
+      Node::create(['title' => 'b' . $i . $this->randomMachineName(), 'type' => 'test'])->save();
     }
 
     // Create a power user node.
