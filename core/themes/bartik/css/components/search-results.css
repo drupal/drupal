@@ -1,4 +1,7 @@
-/* --------------- Search Results ---------------- */
+/**
+ * @file
+ * Visual styles for Bartik's search results.
+ */
 
 ol.search-results {
   padding-left: 0; /* LTR */
