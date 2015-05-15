@@ -105,6 +105,8 @@ trait AssertPageCacheContextsAndTagsTrait {
    */
   protected function assertCacheContexts(array $expected_contexts) {
     $actual_contexts = $this->getCacheHeaderValues('X-Drupal-Cache-Contexts');
+    sort($expected_contexts);
+    sort($actual_contexts);
     $this->assertIdentical($actual_contexts, $expected_contexts);
     if ($actual_contexts !== $expected_contexts) {
       debug('Missing cache contexts: ' . implode(',', array_diff($actual_contexts, $expected_contexts)));

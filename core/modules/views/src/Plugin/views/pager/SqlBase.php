@@ -8,11 +8,12 @@
 namespace Drupal\views\Plugin\views\pager;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Plugin\CacheablePluginInterface;
 
 /**
  * A common base class for sql based pager.
  */
-abstract class SqlBase extends PagerPluginBase {
+abstract class SqlBase extends PagerPluginBase implements CacheablePluginInterface {
 
   protected function defineOptions() {
     $options = parent::defineOptions();
@@ -374,6 +375,27 @@ abstract class SqlBase extends PagerPluginBase {
         $form_state->setErrorByName('offset', $this->t('Offset must be an number greather or equal than 0.'));
       }
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isCacheable() {
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    $contexts = [];
+    if ($this->options['expose']['items_per_page']) {
+      $contexts[] = 'url.query_args:items_per_page';
+    }
+    if ($this->options['expose']['offset']) {
+      $contexts[] = 'url.query_args:offset';
+    }
+    return $contexts;
   }
 
 }
