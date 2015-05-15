@@ -271,7 +271,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
       if (is_object($plugin_definition) && !($plugin_definition = (array) $plugin_definition)) {
         continue;
       }
-      if (isset($plugin_definition['provider']) && !in_array($plugin_definition['provider'], array('core', 'component')) && !$this->moduleHandler->moduleExists($plugin_definition['provider'])) {
+      if (isset($plugin_definition['provider']) && !in_array($plugin_definition['provider'], array('core', 'component')) && !$this->providerExists($plugin_definition['provider'])) {
         unset($definitions[$plugin_id]);
       }
     }
@@ -288,6 +288,16 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
     if ($this->alterHook) {
       $this->moduleHandler->alter($this->alterHook, $definitions);
     }
+  }
+
+  /**
+   * Determines if the provider of a definition exists.
+   *
+   * @return boolean
+   *   TRUE if provider exists, FALSE otherwise.
+   */
+  protected function providerExists($provider) {
+    return $this->moduleHandler->moduleExists($provider);
   }
 
 }

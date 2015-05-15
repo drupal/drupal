@@ -136,28 +136,8 @@ class BreakpointManager extends DefaultPluginManager implements BreakpointManage
   /**
    * {@inheritdoc}
    */
-  protected function findDefinitions() {
-    $definitions = $this->discovery->getDefinitions();
-    foreach ($definitions as $plugin_id => &$definition) {
-      $this->processDefinition($definition, $plugin_id);
-    }
-    if ($this->alterHook) {
-      $this->moduleHandler->alter($this->alterHook, $definitions);
-    }
-    // If this plugin was provided by a module that does not exist, remove the
-    // plugin definition.
-    foreach ($definitions as $plugin_id => $plugin_definition) {
-      // If the plugin definition is an object, attempt to convert it to an
-      // array, if that is not possible, skip further processing.
-      if (is_object($plugin_definition) && !($plugin_definition = (array) $plugin_definition)) {
-        continue;
-      }
-      // Allow themes to provide breakpoints.
-      if (isset($plugin_definition['provider']) && !in_array($plugin_definition['provider'], array('core', 'component')) && !$this->moduleHandler->moduleExists($plugin_definition['provider']) && !$this->themeHandler->themeExists($plugin_definition['provider'])) {
-        unset($definitions[$plugin_id]);
-      }
-    }
-    return $definitions;
+  protected function providerExists($provider) {
+    return $this->moduleHandler->moduleExists($provider) || $this->themeHandler->themeExists($provider);
   }
 
   /**
