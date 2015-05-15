@@ -53,6 +53,9 @@ msgstr "Save and continue $langcode"
 
 msgid "Anonymous"
 msgstr "Anonymous $langcode"
+
+msgid "Language"
+msgstr "Language $langcode"
 ENDPO;
   }
 
@@ -75,19 +78,7 @@ ENDPO;
     }
 
     // Verify the strings from the translation files were imported.
-    $test_samples = ['Save and continue', 'Anonymous'];
-    $langcodes = ['de', 'es'];
-
-    foreach($test_samples as $sample) {
-      foreach($langcodes as $langcode) {
-        $edit = array();
-        $edit['langcode'] = $langcode;
-        $edit['translation'] = 'translated';
-        $edit['string'] = $sample;
-        $this->drupalPostForm('admin/config/regional/translate', $edit, t('Filter'));
-        $this->assertText($sample . ' ' . $langcode);
-      }
-    }
+    $this->verifyImportedStringsTranslated();
 
     /** @var \Drupal\language\ConfigurableLanguageManager $language_manager */
     $language_manager = \Drupal::languageManager();
@@ -127,6 +118,17 @@ ENDPO;
         $override_en = $language_manager->getLanguageConfigOverride('en', 'user.settings');
         $this->assertEqual($override_en->get('anonymous'), 'Anonymous');
       }
+
+      // Activate a module, to make sure that config is not overridden by module
+      // installation.
+      $edit = array(
+        'modules[Core][views][enable]' => TRUE,
+        'modules[Core][filter][enable]' => TRUE,
+      );
+      $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
+
+      // Verify the strings from the translation are still as expected.
+      $this->verifyImportedStringsTranslated();
     }
     else {
       // Active configuration should be English.
@@ -140,6 +142,26 @@ ENDPO;
 
     // Spanish is always an override (never used as installation language).
     $this->assertEqual($override_es->get('anonymous'), 'Anonymous es');
+
+  }
+
+  /**
+   * Helper function to verify that the expected strings are translated.
+   */
+  protected function verifyImportedStringsTranslated() {
+    $test_samples = ['Save and continue', 'Anonymous', 'Language'];
+    $langcodes = ['de', 'es'];
+
+    foreach($test_samples as $sample) {
+      foreach($langcodes as $langcode) {
+        $edit = array();
+        $edit['langcode'] = $langcode;
+        $edit['translation'] = 'translated';
+        $edit['string'] = $sample;
+        $this->drupalPostForm('admin/config/regional/translate', $edit, t('Filter'));
+        $this->assertText($sample . ' ' . $langcode);
+      }
+    }
   }
 
 }

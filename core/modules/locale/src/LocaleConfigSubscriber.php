@@ -82,7 +82,7 @@ class LocaleConfigSubscriber implements EventSubscriberInterface {
   public function onConfigSave(ConfigCrudEvent $event) {
     // Only attempt to feed back configuration translation changes to locale if
     // the update itself was not initiated by locale data changes.
-    if (!$this->localeConfigManager->isUpdatingTranslationsFromLocale()) {
+    if (!drupal_installation_attempted() && !$this->localeConfigManager->isUpdatingTranslationsFromLocale()) {
       $config = $event->getConfig();
       $langcode = $config->get('langcode') ?: 'en';
       $this->updateLocaleStorage($config, $langcode);
@@ -98,7 +98,7 @@ class LocaleConfigSubscriber implements EventSubscriberInterface {
   public function onOverrideChange(LanguageConfigOverrideCrudEvent $event) {
     // Only attempt to feed back configuration override changes to locale if
     // the update itself was not initiated by locale data changes.
-    if (!$this->localeConfigManager->isUpdatingTranslationsFromLocale()) {
+    if (!drupal_installation_attempted() && !$this->localeConfigManager->isUpdatingTranslationsFromLocale()) {
       $translation_config = $event->getLanguageConfigOverride();
       $langcode = $translation_config->getLangcode();
       $reference_config = $this->configFactory->getEditable($translation_config->getName())->get();
@@ -204,23 +204,25 @@ class LocaleConfigSubscriber implements EventSubscriberInterface {
    *   The source string value.
    * @param string $context
    *   The source string context.
-   * @param string $translation
+   * @param string $new_translation
    *   The translation string.
    * @param string $langcode
    *   The language code of the translation.
    */
-  protected function saveCustomizedTranslation($name, $source, $context, $translation, $langcode) {
+  protected function saveCustomizedTranslation($name, $source, $context, $new_translation, $langcode) {
     $locale_translation = $this->localeConfigManager->getStringTranslation($name, $langcode, $source, $context);
     if (!empty($locale_translation)) {
       // Save this translation as custom if it was a new translation and not the
       // same as the source. (The interface prefills translation values with the
-      // source). Or if there was an existing translation and the user changed
-      // it (even if it was changed back to the original value). Otherwise the
-      // translation file would be overwritten with the locale copy again later.
-      if (($locale_translation->isNew() && $source != $translation) ||
-          (!$locale_translation->isNew() && $translation != $locale_translation->getString())) {
+      // source). Or if there was an existing (non-empty) translation and the
+      // user changed it (even if it was changed back to the original value).
+      // Otherwise the translation file would be overwritten with the locale
+      // copy again later.
+      $existing_translation = $locale_translation->getString();
+      if (($locale_translation->isNew() && $source != $new_translation) ||
+        (!$locale_translation->isNew() && ((empty($existing_translation) && $source != $new_translation) || ((!empty($existing_translation) && $new_translation != $existing_translation))))) {
         $locale_translation
-          ->setString($translation)
+          ->setString($new_translation)
           ->setCustomized(TRUE)
           ->save();
       }
