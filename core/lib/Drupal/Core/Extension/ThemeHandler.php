@@ -455,7 +455,6 @@ class ThemeHandler implements ThemeHandlerInterface {
         'secondary_menu' => 'Secondary menu',
         'footer' => 'Footer',
         'highlighted' => 'Highlighted',
-        'messages' => 'Messages',
         'help' => 'Help',
         'page_top' => 'Page top',
         'page_bottom' => 'Page bottom',

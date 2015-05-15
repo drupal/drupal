@@ -15,7 +15,7 @@ quickedit_stylesheets:
   - css/components/quickedit.css
 regions:
   content: Content
-  messages: Messages
+  highlighted: Highlighted
   help: Help
   page_top: 'Page top'
   page_bottom: 'Page bottom'

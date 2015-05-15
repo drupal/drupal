@@ -46,7 +46,6 @@
  * - page.primary_menu: Items for the primary menu region.
  * - page.secondary_menu: Items for the secondary menu region.
  * - page.highlighted: Items for the highlighted content region.
- * - page.messages: Status messages block can be placed in messages region.
  * - page.help: Dynamic help text, mostly for admin pages.
  * - page.content: The main content of the current page.
  * - page.sidebar_first: Items for the first sidebar.
@@ -97,7 +96,7 @@
 
   {{ page.breadcrumb }}
 
-  {{ page.messages }}
+  {{ page.highlighted }}
 
   {{ page.help }}
 
@@ -105,7 +104,6 @@
     <a id="main-content" tabindex="-1"></a>{# link is in html.html.twig #}
 
     <div class="layout-content">
-      {{ page.highlighted }}
 
       {{ title_prefix }}
       {% if title %}

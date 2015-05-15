@@ -49,7 +49,7 @@
  *
  * Regions:
  * - page.header: Items for the header region.
- * - page.messages: Status and error messages. Should be displayed prominently.
+ * - page.highlighted: Items for the highlighted region.
  * - page.primary_menu: Items for the primary menu region.
  * - page.secondary_menu: Items for the secondary menu region.
  * - page.featured_top: Items for the featured top region.
@@ -109,7 +109,7 @@
         {{ page.primary_menu }}
       </div>
     </header>
-    {{ page.messages }}
+    {{ page.highlighted }}
     {% if page.featured_top %}
       <div class="featured-top">
         <aside class="featured-top__inner section layout-container clearfix" role="complementary">
