@@ -52,7 +52,7 @@ class BareHtmlPageRenderer implements BareHtmlPageRendererInterface {
     // For backwards compatibility.
     // @todo In Drupal 9, add a $show_messages function parameter.
     if (!isset($page_additions['#show_messages']) || $page_additions['#show_messages'] === TRUE) {
-      $html['page']['highlighted'] = ['#type' => 'status_messages'];
+      $html['page']['messages'] = ['#type' => 'status_messages'];
     }
 
     // We must first render the contents of the html.html.twig template, see

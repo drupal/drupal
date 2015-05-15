@@ -3,7 +3,7 @@ theme: seven
 weight: 0
 status: true
 langcode: en
-region: highlighted
+region: messages
 plugin: system_messages_block
 settings:
   id: system_messages_block

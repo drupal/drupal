@@ -43,7 +43,8 @@
  *
  * Regions:
  * - page.page_top: Items for the header region.
- * - page.highlighted: Items for the highlighted region.
+ * - page.highlighted: Items for the highlighted content region.
+ * - page.messages: Status and error messages. Should be displayed prominently.
  * - page.help: Dynamic help text, mostly for admin pages.
  * - page.content: The main content of the current page.
  * - page.sidebar_first: Items for the first sidebar.
@@ -78,7 +79,7 @@
 
     <main class="page-content clearfix" role="main">
       <div class="visually-hidden"><a id="main-content" tabindex="-1"></a></div>
-      {{ page.highlighted }}
+      {{ page.messages }}
       {% if page.help %}
         <div class="help">
           {{ page.help }}

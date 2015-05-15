@@ -21,7 +21,7 @@ regions:
   help: Help
   page_top: 'Page top'
   page_bottom: 'Page bottom'
-  highlighted: Highlighted
+  messages: Messages
   featured_top: 'Featured top'
   breadcrumb: Breadcrumb
   content: Content
