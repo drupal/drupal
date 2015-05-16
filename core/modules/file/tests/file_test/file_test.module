@@ -150,6 +150,11 @@ function file_test_file_validate(File $file) {
  * Implements hook_file_download().
  */
 function file_test_file_download($uri) {
+  if (\Drupal::state()->get('file_test.allow_all', FALSE)) {
+    $files = entity_load_multiple_by_properties('file', array('uri' => $uri));
+    $file = reset($files);
+    return file_get_content_headers($file);
+  }
   _file_test_log_call('download', array($uri));
   return _file_test_get_return('download');
 }

@@ -60,6 +60,13 @@ class DownloadTest extends FileManagedTestBase {
     // Create a file.
     $contents = $this->randomMachineName(8);
     $file = $this->createFile(NULL, $contents, 'private');
+    // Created private files without usage are by default not accessible
+    // for a user different from the owner, but createFile always uses uid 1
+    // as the owner of the files. Therefore make it permanent to allow access
+    // if a module allows it.
+    $file->setPermanent();
+    $file->save();
+
     $url  = file_create_url($file->getFileUri());
 
     // Set file_test access header to allow the download.
