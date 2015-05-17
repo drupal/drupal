@@ -1,12 +1,10 @@
-
 /**
  * @file
  * Default style for file module.
  */
 
-/**
- * File icons.
- */
+/* File icons.*/
+
 .file {
   padding-left: 20px; /* LTR */
   display: inline-block;
@@ -14,14 +12,13 @@
   background-repeat: no-repeat;
   background-position: left center; /* LTR */
 }
-
 [dir="rtl"] .file {
   padding-left: inherit;
   padding-right: 20px;
   background-position: right center;
 }
-
-.file--general {
+.file--general,
+.file--application-octet-stream {
   background-image: url(../icons/application-octet-stream.png);
 }
 .file--package-x-generic {
@@ -48,9 +45,6 @@
 .file--application-pdf {
   background-image: url(../icons/application-pdf.png);
 }
-.file--application-octet-stream {
-  background-image: url(../icons/application-octet-stream.png);
-}
 .file--application-x-executable {
   background-image: url(../icons/application-x-executable.png);
 }
@@ -66,4 +60,3 @@
 .file--image {
   background-image: url(../icons/image-x-generic.png);
 }
-
