@@ -340,7 +340,7 @@ class ConfigSync extends FormBase {
       }
       catch (ConfigImporterException $e) {
         // There are validation errors.
-        drupal_set_message($this->t('The configuration synchronization failed validation.'));
+        drupal_set_message($this->t('The configuration cannot be imported because it failed validation for the following reasons:'), 'error');
         foreach ($config_importer->getErrors() as $message) {
           drupal_set_message($message, 'error');
         }

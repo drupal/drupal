@@ -105,7 +105,7 @@ class ConfigImporterTest extends KernelTestBase {
     $staging->write('system.site', $config_data);
     try {
       $this->configImporter->reset()->import();
-      $this->assertFalse(FALSE, 'ConfigImporterException not thrown, invalid import was not stopped due to mis-matching site UUID.');
+      $this->fail('ConfigImporterException not thrown, invalid import was not stopped due to mis-matching site UUID.');
     }
     catch (ConfigImporterException $e) {
       $this->assertEqual($e->getMessage(), 'There were errors validating the config synchronization.');
@@ -539,6 +539,113 @@ class ConfigImporterTest extends KernelTestBase {
     \Drupal::state()->set('config_test.isinstallable', TRUE);
     $this->installConfig(array('config_test'));
     $this->assertTrue($this->container->get('config.storage')->exists($config_name));
+  }
+
+  /**
+   * Tests dependency validation during configuration import.
+   *
+   * @see \Drupal\Core\EventSubscriber\ConfigImportSubscriber
+   * @see \Drupal\Core\Config\ConfigImporter::createExtensionChangelist()
+   */
+  public function testUnmetDependency() {
+    $storage = $this->container->get('config.storage');
+    $staging = $this->container->get('config.storage.staging');
+
+    // Test an unknown configuration owner.
+    $staging->write('unknown.config', ['test' => 'test']);
+
+    // Make a config entity have unmet dependencies.
+    $config_entity_data = $staging->read('config_test.dynamic.dotted.default');
+    $config_entity_data['dependencies'] = ['module' => ['unknown']];
+    $staging->write('config_test.dynamic.dotted.module', $config_entity_data);
+    $config_entity_data['dependencies'] = ['theme' => ['unknown']];
+    $staging->write('config_test.dynamic.dotted.theme', $config_entity_data);
+    $config_entity_data['dependencies'] = ['config' => ['unknown']];
+    $staging->write('config_test.dynamic.dotted.config', $config_entity_data);
+
+    // Make an active config depend on something that is missing in staging.
+    // The whole configuration needs to be consistent, not only the updated one.
+    $config_entity_data['dependencies'] = [];
+    $storage->write('config_test.dynamic.dotted.deleted', $config_entity_data);
+    $config_entity_data['dependencies'] = ['config' => ['config_test.dynamic.dotted.deleted']];
+    $storage->write('config_test.dynamic.dotted.existing', $config_entity_data);
+    $staging->write('config_test.dynamic.dotted.existing', $config_entity_data);
+
+    $extensions = $staging->read('core.extension');
+    // Add a module and a theme that do not exist.
+    $extensions['module']['unknown_module'] = 0;
+    $extensions['theme']['unknown_theme'] = 0;
+    // Add a module and a theme that depend on uninstalled extensions.
+    $extensions['module']['book'] = 0;
+    $extensions['theme']['bartik'] = 0;
+
+    $staging->write('core.extension', $extensions);
+    try {
+      $this->configImporter->reset()->import();
+      $this->fail('ConfigImporterException not thrown; an invalid import was not stopped due to missing dependencies.');
+    }
+    catch (ConfigImporterException $e) {
+      $this->assertEqual($e->getMessage(), 'There were errors validating the config synchronization.');
+      $error_log = $this->configImporter->getErrors();
+      $expected = [
+        'Unable to install the <em class="placeholder">unknown_module</em> module since it does not exist.',
+        'Unable to install the <em class="placeholder">Book</em> module since it requires the <em class="placeholder">Node, Text, Field, Filter, User, Entity Reference</em> modules.',
+        'Unable to install the <em class="placeholder">unknown_theme</em> theme since it does not exist.',
+        'Unable to install the <em class="placeholder">Bartik</em> theme since it requires the <em class="placeholder">Classy</em> theme.',
+        'Configuration <em class="placeholder">config_test.dynamic.dotted.config</em> depends on the <em class="placeholder">unknown</em> configuration that will not exist after import.',
+        'Configuration <em class="placeholder">config_test.dynamic.dotted.existing</em> depends on the <em class="placeholder">config_test.dynamic.dotted.deleted</em> configuration that will not exist after import.',
+        'Configuration <em class="placeholder">config_test.dynamic.dotted.module</em> depends on the <em class="placeholder">unknown</em> module that will not be installed after import.',
+        'Configuration <em class="placeholder">config_test.dynamic.dotted.theme</em> depends on the <em class="placeholder">unknown</em> theme that will not be installed after import.',
+        'Configuration <em class="placeholder">unknown.config</em> depends on the <em class="placeholder">unknown</em> extension that will not be installed after import.',
+      ];
+      foreach ($expected as $expected_message) {
+        $this->assertTrue(in_array($expected_message, $error_log), $expected_message);
+      }
+    }
+
+    // Make a config entity have mulitple unmet dependencies.
+    $config_entity_data = $staging->read('config_test.dynamic.dotted.default');
+    $config_entity_data['dependencies'] = ['module' => ['unknown', 'dblog']];
+    $staging->write('config_test.dynamic.dotted.module', $config_entity_data);
+    $config_entity_data['dependencies'] = ['theme' => ['unknown', 'seven']];
+    $staging->write('config_test.dynamic.dotted.theme', $config_entity_data);
+    $config_entity_data['dependencies'] = ['config' => ['unknown', 'unknown2']];
+    $staging->write('config_test.dynamic.dotted.config', $config_entity_data);
+    try {
+      $this->configImporter->reset()->import();
+      $this->fail('ConfigImporterException not thrown, invalid import was not stopped due to missing dependencies.');
+    }
+    catch (ConfigImporterException $e) {
+      $this->assertEqual($e->getMessage(), 'There were errors validating the config synchronization.');
+      $error_log = $this->configImporter->getErrors();
+      $expected = [
+        'Configuration <em class="placeholder">config_test.dynamic.dotted.config</em> depends on configuration (<em class="placeholder">unknown, unknown2</em>) that will not exist after import.',
+        'Configuration <em class="placeholder">config_test.dynamic.dotted.module</em> depends on modules (<em class="placeholder">unknown, Database Logging</em>) that will not be installed after import.',
+        'Configuration <em class="placeholder">config_test.dynamic.dotted.theme</em> depends on themes (<em class="placeholder">unknown, Seven</em>) that will not be installed after import.',
+      ];
+      foreach ($expected as $expected_message) {
+        $this->assertTrue(in_array($expected_message, $error_log), $expected_message);
+      }
+    }
+  }
+
+  /**
+   * Tests missing core.extension during configuration import.
+   *
+   * @see \Drupal\Core\EventSubscriber\ConfigImportSubscriber
+   */
+  public function testMissingCoreExtension() {
+    $staging = $this->container->get('config.storage.staging');
+    $staging->delete('core.extension');
+    try {
+      $this->configImporter->reset()->import();
+      $this->fail('ConfigImporterException not thrown, invalid import was not stopped due to missing dependencies.');
+    }
+    catch (ConfigImporterException $e) {
+      $this->assertEqual($e->getMessage(), 'There were errors validating the config synchronization.');
+      $error_log = $this->configImporter->getErrors();
+      $this->assertEqual(['The core.extension configuration does not exist.'], $error_log);
+    }
   }
 
 }

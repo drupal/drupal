@@ -326,7 +326,7 @@ class ConfigImportUITest extends WebTestBase {
     $this->drupalPostForm(NULL, array(), t('Import all'));
 
     // Verify that the validation messages appear.
-    $this->assertText('The configuration synchronization failed validation.');
+    $this->assertText('The configuration cannot be imported because it failed validation for the following reasons:');
     $this->assertText('Config import validate error 1.');
     $this->assertText('Config import validate error 2.');
 
@@ -451,6 +451,41 @@ class ConfigImportUITest extends WebTestBase {
     $this->assertNoText(format_string('core.entity_view_display.node.@type.teaser', array('@type' => $node_type->id())));
     $this->assertNoText(format_string('core.entity_view_display.node.@type.default', array('@type' => $node_type->id())));
     $this->assertNoText(format_string('core.entity_form_display.node.@type.default', array('@type' => $node_type->id())));
+  }
+
+  /**
+   * Tests config importer cannot uninstall extensions which are depended on.
+   *
+   * @see \Drupal\Core\EventSubscriber\ConfigImportSubscriber
+   */
+  public function testExtensionValidation() {
+    \Drupal::service('module_installer')->install(['node']);
+    \Drupal::service('theme_handler')->install(['bartik']);
+    $this->rebuildContainer();
+
+    $staging = $this->container->get('config.storage.staging');
+    $this->copyConfig($this->container->get('config.storage'), $staging);
+    $core = $staging->read('core.extension');
+    // Node depends on text.
+    unset($core['module']['text']);
+    $module_data = system_rebuild_module_data();
+    $this->assertTrue(isset($module_data['node']->requires['text']), 'The Node module depends on the Text module.');
+    // Bartik depends on classy.
+    unset($core['theme']['classy']);
+    $theme_data = \Drupal::service('theme_handler')->rebuildThemeData();
+    $this->assertTrue(isset($theme_data['bartik']->requires['classy']), 'The Bartik theme depends on the Classy theme.');
+    // This module does not exist.
+    $core['module']['does_not_exist'] = 0;
+    // This theme does not exist.
+    $core['theme']['does_not_exist'] = 0;
+    $staging->write('core.extension', $core);
+
+    $this->drupalPostForm('admin/config/development/configuration', array(), t('Import all'));
+    $this->assertText('The configuration cannot be imported because it failed validation for the following reasons:');
+    $this->assertText('Unable to uninstall the Text module since the Node module is installed.');
+    $this->assertText('Unable to uninstall the Classy theme since the Bartik theme is installed.');
+    $this->assertText('Unable to install the does_not_exist module since it does not exist.');
+    $this->assertText('Unable to install the does_not_exist theme since it does not exist.');
   }
 
 }

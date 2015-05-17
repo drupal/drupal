@@ -240,11 +240,12 @@ class ConfigImporter {
    */
   public function reset() {
     $this->storageComparer->reset();
+    // Empty all the lists.
     foreach ($this->storageComparer->getAllCollectionNames() as $collection) {
       $this->processedConfiguration[$collection] = $this->storageComparer->getEmptyChangelist();
     }
-    $this->processedExtensions = $this->getEmptyExtensionsProcessedList();
-    $this->createExtensionChangelist();
+    $this->extensionChangelist = $this->processedExtensions = $this->getEmptyExtensionsProcessedList();
+
     $this->validated = FALSE;
     $this->processedSystemTheme = FALSE;
     return $this;
@@ -359,6 +360,9 @@ class ConfigImporter {
    * Populates the extension change list.
    */
   protected function createExtensionChangelist() {
+    // Create an empty changelist.
+    $this->extensionChangelist = $this->getEmptyExtensionsProcessedList();
+
     // Read the extensions information to determine changes.
     $current_extensions = $this->storageComparer->getTargetStorage()->read('core.extension');
     $new_extensions = $this->storageComparer->getSourceStorage()->read('core.extension');
@@ -396,7 +400,7 @@ class ConfigImporter {
     //  0 1 actions
     // @todo Move this sorting functionality to the extension system.
     array_multisort(array_values($module_list), SORT_ASC, array_keys($module_list), SORT_DESC, $module_list);
-    $uninstall = array_intersect(array_keys($module_list), $uninstall);
+    $this->extensionChangelist['module']['uninstall'] = array_intersect(array_keys($module_list), $uninstall);
 
     // Determine which modules to install.
     $install = array_keys(array_diff_key($new_extensions['module'], $current_extensions['module']));
@@ -404,22 +408,11 @@ class ConfigImporter {
     // (with dependencies installed first, and modules of the same weight sorted
     // in alphabetical order).
     $module_list = array_reverse($module_list);
-    $install = array_intersect(array_keys($module_list), $install);
+    $this->extensionChangelist['module']['install'] = array_intersect(array_keys($module_list), $install);
 
     // Work out what themes to install and to uninstall.
-    $theme_install = array_keys(array_diff_key($new_extensions['theme'], $current_extensions['theme']));
-    $theme_uninstall = array_keys(array_diff_key($current_extensions['theme'], $new_extensions['theme']));
-
-    $this->extensionChangelist = array(
-      'module' => array(
-        'uninstall' => $uninstall,
-        'install' => $install,
-      ),
-      'theme' => array(
-        'install' => $theme_install,
-        'uninstall' => $theme_uninstall,
-      ),
-    );
+    $this->extensionChangelist['theme']['install'] = array_keys(array_diff_key($new_extensions['theme'], $current_extensions['theme']));
+    $this->extensionChangelist['theme']['uninstall'] = array_keys(array_diff_key($current_extensions['theme'], $new_extensions['theme']));
   }
 
   /**
@@ -434,7 +427,7 @@ class ConfigImporter {
    * @return array
    *   An array of extension names.
    */
-  protected function getExtensionChangelist($type, $op = NULL) {
+  public function getExtensionChangelist($type, $op = NULL) {
     if ($op) {
       return $this->extensionChangelist[$type][$op];
     }
