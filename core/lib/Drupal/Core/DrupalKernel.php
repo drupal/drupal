@@ -10,7 +10,6 @@ namespace Drupal\Core;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\ProxyBuilder\ProxyDumper;
 use Drupal\Component\Utility\Crypt;
-use Drupal\Component\Utility\Timer;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Config\BootstrapConfigStorageFactory;
@@ -404,9 +403,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     if ($this->booted) {
       return $this;
     }
-
-    // Start a page timer:
-    Timer::start('page');
 
     // Ensure that findSitePath is set.
     if (!$this->sitePath) {
