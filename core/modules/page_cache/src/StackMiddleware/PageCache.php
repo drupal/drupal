@@ -222,8 +222,8 @@ class PageCache implements HttpKernelInterface {
     }
 
     // Use the actual timestamp from an Expires header, if available.
-    $date = $response->getExpires();
-    $expire = ($date > (new \DateTime())) ? $date->getTimestamp() : Cache::PERMANENT;
+    $date = $response->getExpires()->getTimestamp();
+    $expire = ($date > time()) ? $date : Cache::PERMANENT;
 
     $tags = explode(' ', $response->headers->get('X-Drupal-Cache-Tags'));
     $this->set($request, $response, $expire, $tags);
