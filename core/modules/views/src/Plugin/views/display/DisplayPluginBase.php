@@ -1812,7 +1812,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         }
         break;
       case 'pager':
-        $form['#title'] .= $this->t('Select which pager, if any, to use for this view');
+        $form['#title'] .= $this->t('Select pager');
         $form['pager'] = array(
           '#prefix' => '<div class="clearfix">',
           '#suffix' => '</div>',
