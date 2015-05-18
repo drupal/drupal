@@ -6,7 +6,7 @@
 
 namespace Drupal\Tests\migrate\Unit\process;
 
-use Drupal\migrate\Plugin\migrate\process\TestMachineName;
+use Drupal\migrate\Plugin\migrate\process\MachineName;
 
 /**
  * Tests the machine name process plugin.
@@ -57,20 +57,9 @@ class MachineNameTest extends MigrateProcessTestCase {
       ->with($human_name)
       ->will($this->returnValue($human_name_ascii . 'aeo'));
 
-    $plugin = new TestMachineName(array(), 'machine_name', array());
-    $plugin->setTransliteration($this->transliteration);
+    $plugin = new MachineName(array(), 'machine_name', array(), $this->transliteration);
     $value = $plugin->transform($human_name, $this->migrateExecutable, $this->row, 'destinationproperty');
     $this->assertEquals($expected_result, $value);
   }
 
-}
-
-namespace Drupal\migrate\Plugin\migrate\process;
-
-use Drupal\Component\Transliteration\TransliterationInterface;
-
-class TestMachineName extends MachineName {
-  public function setTransliteration(TransliterationInterface $transliteration) {
-    $this->transliteration = $transliteration;
-  }
 }
