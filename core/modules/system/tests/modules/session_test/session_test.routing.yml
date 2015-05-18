@@ -107,3 +107,15 @@ session_test.get_session_no_auth:
     _controller: '\Drupal\session_test\Controller\SessionTestController::getSession'
   requirements:
     _access: 'TRUE'
+
+session_test.set_session:
+  path: '/session-test/set-session/{test_value}'
+  defaults:
+    _title: 'Set a session value using basic authentication'
+    _controller: '\Drupal\session_test\Controller\SessionTestController::setSession'
+  options:
+    _auth: ['basic_auth']
+    converters:
+      test_value: '\s+'
+  requirements:
+    _permission: 'administer site configuration'

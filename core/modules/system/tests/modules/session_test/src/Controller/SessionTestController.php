@@ -175,4 +175,21 @@ class SessionTestController extends ControllerBase {
     return new JsonResponse(['session' => $request->getSession()->all(), 'user' => $this->currentUser()->id()]);
   }
 
+  /**
+   * Sets a test value on the session.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   * @param string $test_value
+   *   A value to set on the session.
+   *
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
+   *   A response object containing the session values and the user ID.
+   */
+  public function setSession(Request $request, $test_value) {
+    $session = $request->getSession();
+    $session->set('test_value', $test_value);
+    return new JsonResponse(['session' => $session->all(), 'user' => $this->currentUser()->id()]);
+  }
+
 }

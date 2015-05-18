@@ -78,4 +78,36 @@ class SessionAuthenticationTest extends WebTestBase {
     $this->assertResponse(401, 'A subsequent request to the same route without basic authentication is not authorized.');
   }
 
+  /**
+   * Tests if a session can be initiated through basic authentication.
+   */
+  public function testBasicAuthSession() {
+    // Set a session value on a request through basic auth.
+    $test_value = 'alpaca';
+    $response = $this->basicAuthGet('session-test/set-session/' . $test_value, $this->user->getUsername(), $this->user->pass_raw);
+    $this->assertSessionData($response, $test_value);
+    $this->assertResponse(200, 'The request to set a session value was successful.');
+
+    // Test that on a subsequent request the session value is still present.
+    $response = $this->basicAuthGet('session-test/get-session', $this->user->getUsername(), $this->user->pass_raw);
+    $this->assertSessionData($response, $test_value);
+    $this->assertResponse(200, 'The request to get a session value was successful.');
+  }
+
+  /**
+   * Checks the session data returned by the session test routes.
+   *
+   * @param string $response
+   *   A response object containing the session values and the user ID.
+   * @param string $expected
+   *   The expected session value.
+   */
+  protected function assertSessionData($response, $expected) {
+    $response = json_decode($response, TRUE);
+    $this->assertEqual(['test_value' => $expected], $response['session'], 'The session data matches the expected value.');
+
+    // Check that we are logged in as the correct user.
+    $this->assertEqual($this->user->id(), $response['user'], 'The correct user is logged in.');
+  }
+
 }

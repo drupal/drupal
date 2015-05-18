@@ -1369,7 +1369,7 @@ abstract class WebTestBase extends TestBase {
    *   An array containing additional HTTP request headers, each formatted as
    *   "name: value".
    *
-   * @return
+   * @return string
    *   The retrieved HTML string, also available as $this->getRawContent()
    */
   protected function drupalGet($path, array $options = array(), array $headers = array()) {
