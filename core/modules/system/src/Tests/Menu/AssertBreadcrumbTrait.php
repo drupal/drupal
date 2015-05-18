@@ -70,8 +70,8 @@ trait AssertBreadcrumbTrait {
     while ($trail && !empty($parts)) {
       foreach ($trail as $path => $title) {
         // If the path is empty, generate the path from the <front> route.  If
-        // the path does not start with a leading, then run it through
-        // Url::fromUri('base:')->toString() to get correct the base
+        // the path does not start with a leading slash, then run it through
+        // Url::fromUri('base:')->toString() to get the correct base
         // prepended.
         if ($path == '') {
           $url = Url::fromRoute('<front>')->toString();
