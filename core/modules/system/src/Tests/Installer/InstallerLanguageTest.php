@@ -42,4 +42,22 @@ class InstallerLanguageTest extends KernelTestBase {
     }
   }
 
+  /**
+   * Tests profile info caching in non-English languages.
+   */
+  function testInstallerTranslationCache() {
+    require_once 'core/includes/install.inc';
+
+    // Prime the drupal_get_filename() static cache with the location of the
+    // testing profile as it is not the currently active profile and we don't
+    // yet have any cached way to retrieve its location.
+    // @todo Remove as part of https://www.drupal.org/node/2186491
+    drupal_get_filename('profile', 'testing', 'core/profiles/testing/testing.info.yml');
+
+    $info_en = install_profile_info('testing', 'en');
+    $info_nl = install_profile_info('testing', 'nl');
+
+    $this->assertFalse(in_array('locale', $info_en['dependencies']), 'Locale is not set when installing in English.');
+    $this->assertTrue(in_array('locale', $info_nl['dependencies']), 'Locale is set when installing in Dutch.');
+  }
 }

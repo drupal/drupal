@@ -1045,7 +1045,7 @@ function drupal_check_module($module) {
 function install_profile_info($profile, $langcode = 'en') {
   $cache = &drupal_static(__FUNCTION__, array());
 
-  if (!isset($cache[$profile])) {
+  if (!isset($cache[$profile][$langcode])) {
     // Set defaults for module info.
     $defaults = array(
       'dependencies' => array(),
@@ -1067,9 +1067,9 @@ function install_profile_info($profile, $langcode = 'en') {
 
     $info['dependencies'] = array_unique(array_merge($required, $info['dependencies'], $locale));
 
-    $cache[$profile] = $info;
+    $cache[$profile][$langcode] = $info;
   }
-  return $cache[$profile];
+  return $cache[$profile][$langcode];
 }
 
 /**
