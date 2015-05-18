@@ -75,7 +75,7 @@
       }
 
       Object.keys(settings.machineName).forEach(function (source_id) {
-        var machine;
+        var machine = '';
         var eventData;
         var options = settings.machineName[source_id];
 
@@ -101,7 +101,7 @@
         if ($target.is(':disabled') || $target.val() !== '') {
           machine = $target.val();
         }
-        else {
+        else if ($source.val() !== '') {
           machine = self.transliterate($source.val(), options);
         }
         // Append the machine name preview to the source field.
