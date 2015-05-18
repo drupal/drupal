@@ -9,10 +9,9 @@ namespace Drupal\Tests\Core\DependencyInjection;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
+use Drupal\Tests\Core\DependencyInjection\Fixture\BazClass;
+use Drupal\Tests\Core\DependencyInjection\Fixture\BarClass;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\Routing\Tests\Fixtures\AnnotatedClasses\BarClass;
-
-require_once __DIR__ . '../../../../../../vendor/symfony/dependency-injection/Symfony/Component/DependencyInjection/Tests/Fixtures/includes/classes.php';
 
 /**
  * @coversDefaultClass \Drupal\Core\DependencyInjection\ContainerBuilder
@@ -22,40 +21,38 @@ class ContainerBuilderTest extends UnitTestCase {
 
   /**
    * Tests set with a synchronized service.
+   *
+   * @covers ::set
    */
   public function testSetOnSynchronizedService() {
     $container = new ContainerBuilder();
-    $container->register('baz', 'BazClass')
+    $container->register('baz', '\Drupal\Tests\Core\DependencyInjection\Fixture\BazClass')
       ->setSynchronized(TRUE);
-    $container->register('bar', 'BarClass')
+    $container->register('bar', '\Drupal\Tests\Core\DependencyInjection\Fixture\BarClass')
       ->addMethodCall('setBaz', array(new Reference('baz')));
 
     // Ensure that we can set services on a compiled container.
     $container->compile();
 
-    $container->set('baz', $baz = new \BazClass());
+    $container->set('baz', $baz = new BazClass());
     $this->assertSame($baz, $container->get('bar')->getBaz());
 
-    $container->set('baz', $baz = new \BazClass());
+    $container->set('baz', $baz = new BazClass());
     $this->assertSame($baz, $container->get('bar')->getBaz());
   }
 
   /**
-   * Tests the get method.
-   *
-   * @see \Drupal\Core\DependencyInjection\Container::get()
+   * @covers ::get
    */
   public function testGet() {
     $container = new ContainerBuilder();
-    $container->register('bar', 'BarClass');
+    $container->register('bar', 'Drupal\Tests\Core\DependencyInjection\Fixture\BarClass');
 
     $result = $container->get('bar');
-    $this->assertTrue($result instanceof \BarClass);
+    $this->assertTrue($result instanceof BarClass);
   }
 
   /**
-   * Tests the set() method.
-   *
    * @covers ::set
    */
   public function testSet() {

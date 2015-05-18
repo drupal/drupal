@@ -9,7 +9,7 @@ namespace Drupal\Tests\Core\DependencyInjection;
 
 use Drupal\Core\DependencyInjection\Container;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Component\Routing\Tests\Fixtures\AnnotatedClasses\BarClass;
+use Drupal\Tests\Core\DependencyInjection\Fixture\BarClass;
 
 /**
  * @coversDefaultClass \Drupal\Core\DependencyInjection\Container
@@ -18,36 +18,23 @@ use Symfony\Component\Routing\Tests\Fixtures\AnnotatedClasses\BarClass;
 class ContainerTest extends UnitTestCase {
 
   /**
-   * The tested container.
-   *
-   * @var \Drupal\Core\DependencyInjection\Container
-   */
-  public $container;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    $this->container = new Container();
-  }
-
-  /**
    * Tests serialization.
    *
    * @expectedException \PHPUnit_Framework_Error
    */
   public function testSerialize() {
-    serialize($this->container);
+    $container = new Container();
+    serialize($container);
   }
 
   /**
-   * Tests the set() method.
-   *
    * @covers ::set
    */
   public function testSet() {
+    $container = new Container();
     $class = new BarClass();
-    $this->container->set('bar', $class);
+    $container->set('bar', $class);
+    // Ensure that _serviceId is set on the object.
     $this->assertEquals('bar', $class->_serviceId);
   }
 
