@@ -522,7 +522,14 @@ use Drupal\node\Entity\NodeType;
  *    The code of the language $entity is accessed in.
  *
  * @return \Drupal\Core\Access\AccessResultInterface
- *    The access result.
+ *    The access result. The final result is calculated by using
+ *    \Drupal\Core\Access\AccessResultInterface::orIf() on the result of every
+ *    hook_entity_access() and hook_ENTITY_TYPE_access() implementation, and the
+ *    result of the entity-specific checkAccess() method in the entity access
+ *    control handler. Be careful when writing generalized access checks shared
+ *    between routing and entity checks: routing uses the andIf() operator. So
+ *    returning an isNeutral() does not determine entity access at all but it
+ *    always ends up denying access while routing.
  *
  * @see \Drupal\Core\Entity\EntityAccessControlHandler
  * @see hook_entity_create_access()
@@ -548,7 +555,7 @@ function hook_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operat
  *    The code of the language $entity is accessed in.
  *
  * @return \Drupal\Core\Access\AccessResultInterface
- *    The access result.
+ *    The access result. hook_entity_access() has detailed documentation.
  *
  * @see \Drupal\Core\Entity\EntityAccessControlHandler
  * @see hook_ENTITY_TYPE_create_access()
