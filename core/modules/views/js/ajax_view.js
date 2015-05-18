@@ -121,10 +121,6 @@
       Drupal.Views.parseViewArgs(href, this.settings.view_base_path)
     );
 
-    // For anchor tags, these will go to the target of the anchor rather
-    // than the usual location.
-    $.extend(viewData, Drupal.Views.parseViewArgs(href, this.settings.view_base_path));
-
     this.element_settings.submit = viewData;
     this.pagerAjax = new Drupal.ajax(false, $link, this.element_settings);
   };
