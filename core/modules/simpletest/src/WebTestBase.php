@@ -143,11 +143,6 @@ abstract class WebTestBase extends TestBase {
   protected $originalShutdownCallbacks = array();
 
   /**
-   * The current session name, if available.
-   */
-  protected $sessionName = NULL;
-
-  /**
    * The current session ID, if available.
    */
   protected $sessionId = NULL;
@@ -617,16 +612,6 @@ abstract class WebTestBase extends TestBase {
   }
 
   /**
-   * Returns the session name in use on the child site.
-   *
-   * @return string
-   *   The name of the session cookie.
-   */
-  public function getSessionName() {
-    return $this->sessionName;
-  }
-
-  /**
    * Sets up a Drupal site for running functional and integration tests.
    *
    * Installs Drupal with the installation profile specified in
@@ -659,8 +644,7 @@ abstract class WebTestBase extends TestBase {
 
     // The child site derives its session name from the database prefix when
     // running web tests.
-    $prefix = (Request::createFromGlobals()->isSecure() ? 'SSESS' : 'SESS');
-    $this->sessionName = $prefix . substr(hash('sha256', $this->databasePrefix), 0, 32);
+    $this->generateSessionName($this->databasePrefix);
 
     // Reset the static batch to remove Simpletest's batch operations.
     $batch = &batch_get();
@@ -1319,7 +1303,7 @@ abstract class WebTestBase extends TestBase {
       $parts = array_map('trim', explode(';', $matches[2]));
       $value = array_shift($parts);
       $this->cookies[$name] = array('value' => $value, 'secure' => in_array('secure', $parts));
-      if ($name == $this->sessionName) {
+      if ($name === $this->getSessionName()) {
         if ($value != 'deleted') {
           $this->sessionId = $value;
         }
