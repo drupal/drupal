@@ -22,7 +22,7 @@ abstract class MigrateProcessTestCase extends MigrateTestCase {
   protected $row;
 
   /**
-   * @var \Drupal\migrate\MigrateExecutable
+   * @var \Drupal\migrate\MigrateExecutable|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $migrateExecutable;
 
