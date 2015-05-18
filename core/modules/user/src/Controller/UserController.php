@@ -93,7 +93,7 @@ class UserController extends ControllerBase {
     if ($account->isAuthenticated()) {
       // The current user is already logged in.
       if ($account->id() == $uid) {
-        drupal_set_message($this->t('You are logged in as %user. <a href="@user_edit">Change your password.</a>', array('%user' => $account->getUsername(), '@user_edit' => $this->url('entity.user.edit_form', array('user' => $account->id())))));
+        user_logout();
       }
       // A different user is already logged in on the computer.
       else {
@@ -105,31 +105,31 @@ class UserController extends ControllerBase {
           // Invalid one-time link specifies an unknown user.
           drupal_set_message($this->t('The one-time login link you clicked is invalid.'));
         }
+        return $this->redirect('<front>');
       }
-      return $this->redirect('<front>');
     }
-    else {
-      // The current user is not logged in, so check the parameters.
-      // Time out, in seconds, until login URL expires.
-      $timeout = $config->get('password_reset_timeout');
-      $current = REQUEST_TIME;
-      /* @var \Drupal\user\UserInterface $user */
-      $user = $this->userStorage->load($uid);
-      // Verify that the user exists and is active.
-      if ($user && $user->isActive()) {
-        // No time out for first time login.
-        if ($user->getLastLoginTime() && $current - $timestamp > $timeout) {
-          drupal_set_message($this->t('You have tried to use a one-time login link that has expired. Please request a new one using the form below.'));
-          return $this->redirect('user.pass');
-        }
-        elseif ($user->isAuthenticated() && ($timestamp >= $user->getLastLoginTime()) && ($timestamp <= $current) && ($hash === user_pass_rehash($user->getPassword(), $timestamp, $user->getLastLoginTime(), $user->id()))) {
-          $expiration_date = $user->getLastLoginTime() ? $this->dateFormatter->format($timestamp + $timeout) : NULL;
-          return $this->formBuilder()->getForm('Drupal\user\Form\UserPasswordResetForm', $user, $expiration_date, $timestamp, $hash);
-        }
-        else {
-          drupal_set_message($this->t('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.'));
-          return $this->redirect('user.pass');
-        }
+    // The current user is not logged in, so check the parameters.
+    // Time out, in seconds, until login URL expires.
+    $timeout = $config->get('password_reset_timeout');
+    $current = REQUEST_TIME;
+
+    /* @var \Drupal\user\UserInterface $user */
+    $user = $this->userStorage->load($uid);
+
+    // Verify that the user exists and is active.
+    if ($user && $user->isActive()) {
+      // No time out for first time login.
+      if ($user->getLastLoginTime() && $current - $timestamp > $timeout) {
+        drupal_set_message($this->t('You have tried to use a one-time login link that has expired. Please request a new one using the form below.'));
+        return $this->redirect('user.pass');
+      }
+      elseif ($user->isAuthenticated() && ($timestamp >= $user->getLastLoginTime()) && ($timestamp <= $current) && ($hash === user_pass_rehash($user->getPassword(), $timestamp, $user->getLastLoginTime(), $user->id()))) {
+        $expiration_date = $user->getLastLoginTime() ? $this->dateFormatter->format($timestamp + $timeout) : NULL;
+        return $this->formBuilder()->getForm('Drupal\user\Form\UserPasswordResetForm', $user, $expiration_date, $timestamp, $hash);
+      }
+      else {
+        drupal_set_message($this->t('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.'));
+        return $this->redirect('user.pass');
       }
     }
     // Blocked or invalid user ID, so deny access. The parameters will be in the
