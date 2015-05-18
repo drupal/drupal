@@ -1148,7 +1148,7 @@ div.messages {
 .dropbutton-widget {
   position: relative;
 }
-.js .dropbutton-wrapper .dropbutton .dropbutton-action > * {
+.js .views-edit-view .dropbutton-wrapper .dropbutton .dropbutton-action > * {
   font-size: 10px;
 }
 .js .dropbutton-wrapper .dropbutton .dropbutton-action > .ajax-progress-throbber {
