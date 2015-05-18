@@ -2152,7 +2152,8 @@ function hook_config_schema_info_alter(&$definitions) {
  *   for more information.
  * - needs_destruction: Indicates that a destruct() method needs to be called
  *   at the end of a request to finalize operations, if this service was
- *   instantiated.
+ *   instantiated. Services should implement \Drupal\Core\DestructableInterface
+ *   in this case.
  *
  * Creating a tag for a service does not do anything on its own, but tags
  * can be discovered or queried in a compiler pass when the container is built,

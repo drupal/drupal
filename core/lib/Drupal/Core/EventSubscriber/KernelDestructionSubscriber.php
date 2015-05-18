@@ -14,6 +14,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * Destructs services that are initiated and tagged with "needs_destruction".
+ *
+ * @see \Drupal\Core\DestructableInterface
  */
 class KernelDestructionSubscriber implements EventSubscriberInterface, ContainerAwareInterface {
 
