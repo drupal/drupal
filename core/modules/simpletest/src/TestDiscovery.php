@@ -160,9 +160,13 @@ class TestDiscovery {
       try {
         $info = static::getTestInfo($classname, $parser->getDocComment());
       }
-      catch (\LogicException $e) {
-        // If the class is missing a summary line or an @group annotation just
-        // skip it. Most likely it is an abstract class, trait or test fixture.
+      catch (MissingGroupException $e) {
+        // If the class name ends in Test and is not a migrate table dump.
+        if (preg_match('/Test$/', $classname) && strpos($classname, 'migrate_drupal\Tests\Table') === FALSE) {
+          throw $e;
+        }
+        // If the class is @group annotation just skip it. Most likely it is an
+        // abstract class, trait or test fixture.
         continue;
       }
       // Skip this test class if it requires unavailable modules.

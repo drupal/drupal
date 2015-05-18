@@ -7,14 +7,14 @@
 
 namespace Drupal\Tests\aggregator\Unit\Menu;
 
-use Drupal\Tests\Core\Menu\LocalTaskIntegrationTest;
+use Drupal\Tests\Core\Menu\LocalTaskIntegrationTestBase;
 
 /**
  * Tests existence of aggregator local tasks.
  *
  * @group aggregator
  */
-class AggregatorLocalTasksTest extends LocalTaskIntegrationTest {
+class AggregatorLocalTasksTest extends LocalTaskIntegrationTestBase {
 
   /**
    * {@inheritdoc}

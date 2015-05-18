@@ -7,14 +7,14 @@
 
 namespace Drupal\Tests\language\Unit\Menu;
 
-use Drupal\Tests\Core\Menu\LocalTaskIntegrationTest;
+use Drupal\Tests\Core\Menu\LocalTaskIntegrationTestBase;
 
 /**
  * Tests existence of language local tasks.
  *
  * @group language
  */
-class LanguageLocalTasksTest extends LocalTaskIntegrationTest {
+class LanguageLocalTasksTest extends LocalTaskIntegrationTestBase {
 
   protected function setUp() {
     $this->directoryList = array(

@@ -8,6 +8,8 @@
 namespace Drupal\views_ui\Tests;
 
 /**
+ * Tests the Xss vulnerability.
+ *
  * @group views_ui
  */
 class XssTest extends UITestBase {

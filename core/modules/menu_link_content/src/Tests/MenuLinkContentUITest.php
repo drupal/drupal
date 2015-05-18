@@ -7,7 +7,7 @@
 
 namespace Drupal\menu_link_content\Tests;
 
-use Drupal\content_translation\Tests\ContentTranslationUITest;
+use Drupal\content_translation\Tests\ContentTranslationUITestBase;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 
 /**
@@ -15,7 +15,7 @@ use Drupal\menu_link_content\Entity\MenuLinkContent;
  *
  * @group Menu
  */
-class MenuLinkContentUITest extends ContentTranslationUITest {
+class MenuLinkContentUITest extends ContentTranslationUITestBase {
 
   /**
    * Modules to enable.

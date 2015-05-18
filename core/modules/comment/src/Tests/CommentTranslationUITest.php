@@ -8,7 +8,7 @@
 namespace Drupal\comment\Tests;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
-use Drupal\content_translation\Tests\ContentTranslationUITest;
+use Drupal\content_translation\Tests\ContentTranslationUITestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
@@ -16,7 +16,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
  *
  * @group comment
  */
-class CommentTranslationUITest extends ContentTranslationUITest {
+class CommentTranslationUITest extends ContentTranslationUITestBase {
 
   use CommentTestTrait;
 
@@ -49,7 +49,7 @@ class CommentTranslationUITest extends ContentTranslationUITest {
   }
 
   /**
-   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::setupBundle().
+   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITestBase::setupBundle().
    */
   function setupBundle() {
     parent::setupBundle();
@@ -66,14 +66,14 @@ class CommentTranslationUITest extends ContentTranslationUITest {
   }
 
   /**
-   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::getTranslatorPermission().
+   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITestBase::getTranslatorPermission().
    */
   protected function getTranslatorPermissions() {
     return array_merge(parent::getTranslatorPermissions(), array('post comments', 'administer comments', 'access comments'));
   }
 
   /**
-   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::createEntity().
+   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITestBase::createEntity().
    */
   protected function createEntity($values, $langcode, $comment_type = 'comment_article') {
     if ($comment_type == 'comment_article') {
@@ -100,7 +100,7 @@ class CommentTranslationUITest extends ContentTranslationUITest {
   }
 
   /**
-   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::getNewEntityValues().
+   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITestBase::getNewEntityValues().
    */
   protected function getNewEntityValues($langcode) {
     // Comment subject is not translatable hence we use a fixed value.

@@ -7,14 +7,14 @@
 
 namespace Drupal\Tests\content_translation\Unit\Menu;
 
-use Drupal\Tests\Core\Menu\LocalTaskIntegrationTest;
+use Drupal\Tests\Core\Menu\LocalTaskIntegrationTestBase;
 
 /**
  * Tests content translation local tasks.
  *
  * @group content_translation
  */
-class ContentTranslationLocalTasksTest extends LocalTaskIntegrationTest {
+class ContentTranslationLocalTasksTest extends LocalTaskIntegrationTestBase {
 
   protected function setUp() {
     $this->directoryList = array(

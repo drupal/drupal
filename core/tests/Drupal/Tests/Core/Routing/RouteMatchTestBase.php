@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Route;
 /**
  * Base test class for testing classes implementing the route match interface.
  */
-abstract class RouteMatchBaseTest extends UnitTestCase {
+abstract class RouteMatchTestBase extends UnitTestCase {
 
   /**
    * Build a test route match object for the given implementation.

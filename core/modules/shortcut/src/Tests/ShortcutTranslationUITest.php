@@ -7,7 +7,7 @@
 
 namespace Drupal\shortcut\Tests;
 
-use Drupal\content_translation\Tests\ContentTranslationUITest;
+use Drupal\content_translation\Tests\ContentTranslationUITestBase;
 use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Language\Language;
 
@@ -16,7 +16,7 @@ use Drupal\Core\Language\Language;
  *
  * @group Shortcut
  */
-class ShortcutTranslationUITest extends ContentTranslationUITest {
+class ShortcutTranslationUITest extends ContentTranslationUITestBase {
 
   /**
    * Modules to enable.

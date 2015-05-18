@@ -9,12 +9,15 @@ namespace Drupal\system\Tests\RouteProcessor;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\GeneratedUrl;
 use Drupal\simpletest\KernelTestBase;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
+ * Tests the <none> route processor.
+ *
  * @see system.routing.yml
  * @see \Drupal\Core\Routing\UrlGenerator
  * @group route_processor
@@ -67,8 +70,10 @@ class RouteNoneTest extends KernelTestBase {
 
     $request_stack->push($request);
     $request_context->fromRequest($request);
-    $this->assertEqual(['', $expected_cacheability], $this->urlGenerator->generateFromRoute('<none>', [], [], TRUE, TRUE));
-    $this->assertEqual(['#test-fragment', $expected_cacheability], $this->urlGenerator->generateFromRoute('<none>', [], ['fragment' => 'test-fragment'], TRUE));
+    $url = GeneratedUrl::createFromObject($expected_cacheability)->setGeneratedUrl('');
+    $this->assertEqual($url, $this->urlGenerator->generateFromRoute('<none>', [], [], TRUE, TRUE));
+    $url = GeneratedUrl::createFromObject($expected_cacheability)->setGeneratedUrl('#test-fragment');
+    $this->assertEqual($url, $this->urlGenerator->generateFromRoute('<none>', [], ['fragment' => 'test-fragment'], TRUE));
 
     // Test request with subdir on other page.
     $server = [
@@ -82,8 +87,10 @@ class RouteNoneTest extends KernelTestBase {
 
     $request_stack->push($request);
     $request_context->fromRequest($request);
-    $this->assertEqual(['', $expected_cacheability], $this->urlGenerator->generateFromRoute('<none>', [], [], TRUE, TRUE));
-    $this->assertEqual(['#test-fragment', $expected_cacheability], $this->urlGenerator->generateFromRoute('<none>', [], ['fragment' => 'test-fragment'], TRUE));
+    $url = GeneratedUrl::createFromObject($expected_cacheability)->setGeneratedUrl('');
+    $this->assertEqual($url, $this->urlGenerator->generateFromRoute('<none>', [], [], TRUE, TRUE));
+    $url = GeneratedUrl::createFromObject($expected_cacheability)->setGeneratedUrl('#test-fragment');
+    $this->assertEqual($url, $this->urlGenerator->generateFromRoute('<none>', [], ['fragment' => 'test-fragment'], TRUE));
 
     // Test request without subdir on the homepage.
     $server = [
@@ -97,8 +104,10 @@ class RouteNoneTest extends KernelTestBase {
 
     $request_stack->push($request);
     $request_context->fromRequest($request);
-    $this->assertEqual(['', $expected_cacheability], $this->urlGenerator->generateFromRoute('<none>', [], [], TRUE, TRUE));
-    $this->assertEqual(['#test-fragment', $expected_cacheability], $this->urlGenerator->generateFromRoute('<none>', [], ['fragment' => 'test-fragment'], TRUE));
+    $url = GeneratedUrl::createFromObject($expected_cacheability)->setGeneratedUrl('');
+    $this->assertEqual($url, $this->urlGenerator->generateFromRoute('<none>', [], [], TRUE, TRUE));
+    $url = GeneratedUrl::createFromObject($expected_cacheability)->setGeneratedUrl('#test-fragment');
+    $this->assertEqual($url, $this->urlGenerator->generateFromRoute('<none>', [], ['fragment' => 'test-fragment'], TRUE));
 
     // Test request without subdir on other page.
     $server = [
@@ -112,8 +121,10 @@ class RouteNoneTest extends KernelTestBase {
 
     $request_stack->push($request);
     $request_context->fromRequest($request);
-    $this->assertEqual(['', $expected_cacheability], $this->urlGenerator->generateFromRoute('<none>', [], [], TRUE, TRUE));
-    $this->assertEqual(['#test-fragment', $expected_cacheability], $this->urlGenerator->generateFromRoute('<none>', [], ['fragment' => 'test-fragment'], TRUE));
+    $url = GeneratedUrl::createFromObject($expected_cacheability)->setGeneratedUrl('');
+    $this->assertEqual($url, $this->urlGenerator->generateFromRoute('<none>', [], [], TRUE, TRUE));
+    $url = GeneratedUrl::createFromObject($expected_cacheability)->setGeneratedUrl('#test-fragment');
+    $this->assertEqual($url, $this->urlGenerator->generateFromRoute('<none>', [], ['fragment' => 'test-fragment'], TRUE));
   }
 
 }

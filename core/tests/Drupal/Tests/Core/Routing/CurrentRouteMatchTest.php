@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Route;
  * @coversDefaultClass \Drupal\Core\Routing\CurrentRouteMatch
  * @group Routing
  */
-class CurrentRouteMatchTest extends RouteMatchBaseTest {
+class CurrentRouteMatchTest extends RouteMatchTestBase {
 
   /**
    * {@inheritdoc}

@@ -7,14 +7,14 @@
 
 namespace Drupal\Tests\locale\Unit\Menu;
 
-use Drupal\Tests\Core\Menu\LocalTaskIntegrationTest;
+use Drupal\Tests\Core\Menu\LocalTaskIntegrationTestBase;
 
 /**
  * Tests locale local tasks.
  *
  * @group locale
  */
-class LocaleLocalTasksTest extends LocalTaskIntegrationTest {
+class LocaleLocalTasksTest extends LocalTaskIntegrationTestBase {
 
   /**
    * {@inheritdoc}

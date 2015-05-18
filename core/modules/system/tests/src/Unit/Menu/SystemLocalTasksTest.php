@@ -8,14 +8,14 @@
 namespace Drupal\Tests\system\Unit\Menu;
 
 use Drupal\Core\Extension\Extension;
-use Drupal\Tests\Core\Menu\LocalTaskIntegrationTest;
+use Drupal\Tests\Core\Menu\LocalTaskIntegrationTestBase;
 
 /**
  * Tests existence of system local tasks.
  *
  * @group system
  */
-class SystemLocalTasksTest extends LocalTaskIntegrationTest {
+class SystemLocalTasksTest extends LocalTaskIntegrationTestBase {
 
   /**
    * The mocked theme handler.

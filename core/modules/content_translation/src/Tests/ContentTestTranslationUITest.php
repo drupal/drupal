@@ -12,7 +12,7 @@ namespace Drupal\content_translation\Tests;
  *
  * @group content_translation
  */
-class ContentTestTranslationUITest extends ContentTranslationUITest {
+class ContentTestTranslationUITest extends ContentTranslationUITestBase {
 
   /**
    * Modules to enable.
@@ -31,7 +31,7 @@ class ContentTestTranslationUITest extends ContentTranslationUITest {
   }
 
   /**
-   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::getTranslatorPermission().
+   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITestBase::getTranslatorPermission().
    */
   protected function getTranslatorPermissions() {
     return array_merge(parent::getTranslatorPermissions(), array('administer entity_test content'));

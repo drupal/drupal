@@ -7,14 +7,14 @@
 
 namespace Drupal\Tests\book\Unit\Menu;
 
-use Drupal\Tests\Core\Menu\LocalTaskIntegrationTest;
+use Drupal\Tests\Core\Menu\LocalTaskIntegrationTestBase;
 
 /**
  * Tests existence of book local tasks.
  *
  * @group book
  */
-class BookLocalTasksTest extends LocalTaskIntegrationTest {
+class BookLocalTasksTest extends LocalTaskIntegrationTestBase {
 
   protected function setUp() {
     $this->directoryList = array(

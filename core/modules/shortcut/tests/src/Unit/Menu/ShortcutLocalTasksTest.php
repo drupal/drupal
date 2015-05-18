@@ -7,14 +7,14 @@
 
 namespace Drupal\Tests\shortcut\Unit\Menu;
 
-use Drupal\Tests\Core\Menu\LocalTaskIntegrationTest;
+use Drupal\Tests\Core\Menu\LocalTaskIntegrationTestBase;
 
 /**
  * Tests existence of shortcut local tasks.
  *
  * @group shortcut
  */
-class ShortcutLocalTasksTest extends LocalTaskIntegrationTest {
+class ShortcutLocalTasksTest extends LocalTaskIntegrationTestBase {
 
   protected function setUp() {
     $this->directoryList = array(

@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * @todo Add tests for access checking and url building,
  *   https://drupal.org/node/2112245.
  */
-abstract class LocalTaskIntegrationTest extends UnitTestCase {
+abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
 
   /**
    * A list of module directories used for YAML searching.

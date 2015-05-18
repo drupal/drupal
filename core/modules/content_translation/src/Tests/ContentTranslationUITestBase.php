@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\content_translation\Tests\ContentTranslationUITest.
+ * Contains \Drupal\content_translation\Tests\ContentTranslationUITestBase.
  */
 
 namespace Drupal\content_translation\Tests;
@@ -16,7 +16,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 /**
  * Tests the Content Translation UI.
  */
-abstract class ContentTranslationUITest extends ContentTranslationTestBase {
+abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
 
   /**
    * The id of the entity being translated.
