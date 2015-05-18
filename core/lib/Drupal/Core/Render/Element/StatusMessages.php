@@ -47,7 +47,7 @@ class StatusMessages extends RenderElement {
    * ensuring the callback is only invoked once.
    *
    * @see ::renderMessages()
-
+   *
    * @param array $element
    *   A renderable array.
    *
