@@ -181,7 +181,7 @@ class DisplayTest extends UITestBase {
     $this->container->get('router.builder')->rebuildIfNeeded();
 
     $this->drupalGet('test-display');
-    $id = 'entity.view.edit_form:view=test_display:location=page&name=test_display&display_id=page_1';
+    $id = 'entity.view.edit_form:view=test_display:location=page&name=test_display&display_id=page_1&langcode=en';
     // @see \Drupal\contextual\Tests\ContextualDynamicContextTest:assertContextualLinkPlaceHolder()
     $this->assertRaw('<div' . new Attribute(array('data-contextual-id' => $id)) . '></div>', format_string('Contextual link placeholder with id @id exists.', array('@id' => $id)));
 

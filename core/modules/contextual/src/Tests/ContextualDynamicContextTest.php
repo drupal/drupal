@@ -8,6 +8,7 @@
 namespace Drupal\contextual\Tests;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Template\Attribute;
 
@@ -45,13 +46,16 @@ class ContextualDynamicContextTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('contextual', 'node', 'views', 'views_ui');
+  public static $modules = array('contextual', 'node', 'views', 'views_ui', 'language');
 
   protected function setUp() {
     parent::setUp();
 
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
     $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
+
+    ConfigurableLanguage::createFromLangcode('it')->save();
+    $this->rebuildContainer();
 
     $this->editorUser = $this->drupalCreateUser(array('access content', 'access contextual links', 'edit any article content'));
     $this->authenticatedUser = $this->drupalCreateUser(array('access content', 'access contextual links'));
@@ -77,12 +81,12 @@ class ContextualDynamicContextTest extends WebTestBase {
 
     // Now, on the front page, all article nodes should have contextual links
     // placeholders, as should the view that contains them.
-    $ids = array(
-      'node:node=' . $node1->id() . ':changed=' . $node1->getChangedTime(),
-      'node:node=' . $node2->id() . ':changed=' . $node2->getChangedTime(),
-      'node:node=' . $node3->id() . ':changed=' . $node3->getChangedTime(),
-      'entity.view.edit_form:view=frontpage:location=page&name=frontpage&display_id=page_1',
-    );
+    $ids = [
+      'node:node=' . $node1->id() . ':changed=' . $node1->getChangedTime() . '&langcode=en',
+      'node:node=' . $node2->id() . ':changed=' . $node2->getChangedTime() . '&langcode=en',
+      'node:node=' . $node3->id() . ':changed=' . $node3->getChangedTime() . '&langcode=en',
+      'entity.view.edit_form:view=frontpage:location=page&name=frontpage&display_id=page_1&langcode=en',
+    ];
 
     // Editor user: can access contextual links and can edit articles.
     $this->drupalGet('node');
@@ -127,6 +131,12 @@ class ContextualDynamicContextTest extends WebTestBase {
     $this->assertResponse(403);
     $this->renderContextualLinks($ids, 'node');
     $this->assertResponse(403);
+
+    // Verify that link language is properly handled.
+    $node3->addTranslation('it')->save();
+    $id = 'node:node=' . $node3->id() . ':changed=' . $node3->getChangedTime() . '&langcode=it';
+    $this->drupalGet('node', ['language' => ConfigurableLanguage::createFromLangcode('it')]);
+    $this->assertContextualLinkPlaceHolder($id);
   }
 
   /**

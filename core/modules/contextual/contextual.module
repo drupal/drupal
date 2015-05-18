@@ -7,6 +7,7 @@
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -137,9 +138,9 @@ function contextual_contextual_links_view_alter(&$element, $items) {
  * Serializes #contextual_links property value array to a string.
  *
  * Examples:
- *  - node:node=1:
- *  - views_ui_edit:view=frontpage:location=page&view_name=frontpage&view_display_id=page_1
- *  - menu:menu=tools:|block:block=bartik.tools:
+ *  - node:node=1:langcode=en
+ *  - views_ui_edit:view=frontpage:location=page&view_name=frontpage&view_display_id=page_1&langcode=en
+ *  - menu:menu=tools:langcode=en|block:block=bartik.tools:langcode=en
  *
  * So, expressed in a pattern:
  *  <group>:<route parameters>:<metadata>
@@ -155,9 +156,15 @@ function contextual_contextual_links_view_alter(&$element, $items) {
  */
 function _contextual_links_to_id($contextual_links) {
   $ids = array();
+  $langcode = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_URL)->getId();
   foreach ($contextual_links as $group => $args) {
     $route_parameters = UrlHelper::buildQuery($args['route_parameters']);
-    $metadata = UrlHelper::buildQuery((isset($args['metadata'])) ? $args['metadata'] : array());
+    $args += ['metadata' => []];
+    // Add the current URL language to metadata so a different ID will be
+    // computed when URLs vary by language. This allows to store different
+    // language-aware contextual links on the client side.
+    $args['metadata'] += ['langcode' => $langcode];
+    $metadata = UrlHelper::buildQuery($args['metadata']);
     $ids[] = "{$group}:{$route_parameters}:{$metadata}";
   }
   return implode('|', $ids);

@@ -276,8 +276,8 @@ class DisplayBlockTest extends ViewTestBase {
     $cached_block = $this->drupalPlaceBlock('views_block:test_view_block-block_1');
     $this->drupalGet('test-page');
 
-    $id = 'block:block=' . $block->id() . ':|entity.view.edit_form:view=test_view_block:location=block&name=test_view_block&display_id=block_1';
-    $cached_id = 'block:block=' . $cached_block->id() . ':|entity.view.edit_form:view=test_view_block:location=block&name=test_view_block&display_id=block_1';
+    $id = 'block:block=' . $block->id() . ':langcode=en|entity.view.edit_form:view=test_view_block:location=block&name=test_view_block&display_id=block_1&langcode=en';
+    $cached_id = 'block:block=' . $cached_block->id() . ':langcode=en|entity.view.edit_form:view=test_view_block:location=block&name=test_view_block&display_id=block_1&langcode=en';
     // @see \Drupal\contextual\Tests\ContextualDynamicContextTest:assertContextualLinkPlaceHolder()
     $this->assertRaw('<div' . new Attribute(array('data-contextual-id' => $id)) . '></div>', format_string('Contextual link placeholder with id @id exists.', array('@id' => $id)));
     $this->assertRaw('<div' . new Attribute(array('data-contextual-id' => $cached_id)) . '></div>', format_string('Contextual link placeholder with id @id exists.', array('@id' => $cached_id)));
