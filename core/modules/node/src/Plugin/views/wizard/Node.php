@@ -48,6 +48,8 @@ class Node extends WizardPluginBase {
    * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::getAvailableSorts().
    *
    * @return array
+   *   An array whose keys are the available sort options and whose
+   *   corresponding values are human readable labels.
    */
   public function getAvailableSorts() {
     // You can't execute functions in properties, so override the method

@@ -92,7 +92,7 @@ abstract class NodeTestBase extends WebTestBase {
   }
 
   /**
-   * Constructs an assert message for checking node access.
+   * Constructs an assert message to display which node access was tested.
    *
    * @param string $operation
    *   The operation to check access for.
@@ -103,6 +103,8 @@ abstract class NodeTestBase extends WebTestBase {
    *   to check. If NULL, the untranslated (fallback) access is checked.
    *
    * @return string
+   *   An assert message string which contains information in plain English
+   *   about the node access permission test that was performed.
    */
   function nodeAccessAssertMessage($operation, $result, $langcode = NULL) {
     return format_string(

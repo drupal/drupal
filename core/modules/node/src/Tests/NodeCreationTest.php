@@ -190,9 +190,11 @@ class NodeCreationTest extends NodeTestBase {
   }
 
   /**
-   * Returns log records with the rollback exception message.
+   * Gets the watchdog IDs of the records with the rollback exception message.
    *
-   * @return array
+   * @return int[]
+   *   Array containing the IDs of the log records with the rollback exception
+   *   message.
    */
   protected static function getWatchdogIdsForTestExceptionRollback() {
     // PostgreSQL doesn't support bytea LIKE queries, so we need to unserialize
@@ -209,9 +211,11 @@ class NodeCreationTest extends NodeTestBase {
   }
 
   /**
-   * Returns log records with the explicit rollback failed exception message.
+   * Gets the log records with the explicit rollback failed exception message.
    *
-   * @return array
+   * @return \Drupal\Core\Database\StatementInterface
+   *   A prepared statement object (already executed), which contains the log
+   *   records with the explicit rollback failed exception message.
    */
   protected static function getWatchdogIdsForFailedExplicitRollback() {
     return db_query("SELECT wid FROM {watchdog} WHERE message LIKE 'Explicit rollback failed%'")->fetchAll();

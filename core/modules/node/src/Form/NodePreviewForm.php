@@ -125,7 +125,7 @@ class NodePreviewForm extends FormBase implements ContainerInjectionInterface {
   }
 
   /**
-   * Retrieves the list of available view modes for the current node.
+   * Gets the list of available view modes for the current node.
    *
    * @param EntityInterface $node
    *   The node being previewed.

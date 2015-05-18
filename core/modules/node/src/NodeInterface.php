@@ -18,7 +18,7 @@ use Drupal\user\UserInterface;
 interface NodeInterface extends ContentEntityInterface, EntityChangedInterface, EntityOwnerInterface {
 
   /**
-   * Returns the node type.
+   * Gets the node type.
    *
    * @return string
    *   The node type.
@@ -26,7 +26,7 @@ interface NodeInterface extends ContentEntityInterface, EntityChangedInterface, 
   public function getType();
 
   /**
-   * Returns the node title.
+   * Gets the node title.
    *
    * @return string
    *   Title of the node.
@@ -45,7 +45,7 @@ interface NodeInterface extends ContentEntityInterface, EntityChangedInterface, 
   public function setTitle($title);
 
   /**
-   * Returns the node creation timestamp.
+   * Gets the node creation timestamp.
    *
    * @return int
    *   Creation timestamp of the node.
@@ -123,7 +123,7 @@ interface NodeInterface extends ContentEntityInterface, EntityChangedInterface, 
   public function setPublished($published);
 
   /**
-   * Returns the node revision creation timestamp.
+   * Gets the node revision creation timestamp.
    *
    * @return int
    *   The UNIX timestamp of when this revision was created.
@@ -142,7 +142,7 @@ interface NodeInterface extends ContentEntityInterface, EntityChangedInterface, 
   public function setRevisionCreationTime($timestamp);
 
   /**
-   * Returns the node revision author.
+   * Gets the node revision author.
    *
    * @return \Drupal\user\UserInterface
    *   The user entity for the revision author.
