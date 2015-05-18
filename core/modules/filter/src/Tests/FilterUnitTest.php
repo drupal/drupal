@@ -205,20 +205,20 @@ class FilterUnitTest extends KernelTestBase {
 
     // All the tricky cases encountered at https://drupal.org/node/2105841.
     // A plain URL preceded by text.
-    $input = '<img data-caption="See http://drupal.org" src="llama.jpg" />';
-    $expected = '<figure><img src="llama.jpg" /><figcaption>See http://drupal.org</figcaption></figure>';
+    $input = '<img data-caption="See https://www.drupal.org" src="llama.jpg" />';
+    $expected = '<figure><img src="llama.jpg" /><figcaption>See https://www.drupal.org</figcaption></figure>';
     $this->assertIdentical($expected, $test_with_html_filter($input));
     $this->assertIdentical($input, $test_editor_xss_filter($input));
 
     // An anchor.
-    $input = '<img data-caption="This is a &lt;a href=&quot;http://drupal.org&quot;&gt;quick&lt;/a&gt; test…" src="llama.jpg" />';
-    $expected = '<figure><img src="llama.jpg" /><figcaption>This is a <a href="http://drupal.org">quick</a> test…</figcaption></figure>';
+    $input = '<img data-caption="This is a &lt;a href=&quot;https://www.drupal.org&quot;&gt;quick&lt;/a&gt; test…" src="llama.jpg" />';
+    $expected = '<figure><img src="llama.jpg" /><figcaption>This is a <a href="https://www.drupal.org">quick</a> test…</figcaption></figure>';
     $this->assertIdentical($expected, $test_with_html_filter($input));
     $this->assertIdentical($input, $test_editor_xss_filter($input));
 
     // A plain URL surrounded by parentheses.
-    $input = '<img data-caption="(http://drupal.org)" src="llama.jpg" />';
-    $expected = '<figure><img src="llama.jpg" /><figcaption>(http://drupal.org)</figcaption></figure>';
+    $input = '<img data-caption="(https://www.drupal.org)" src="llama.jpg" />';
+    $expected = '<figure><img src="llama.jpg" /><figcaption>(https://www.drupal.org)</figcaption></figure>';
     $this->assertIdentical($expected, $test_with_html_filter($input));
     $this->assertIdentical($input, $test_editor_xss_filter($input));
 

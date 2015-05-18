@@ -80,7 +80,7 @@ class UrlTest extends WebTestBase {
       '#options' => array(
         'language' => $language,
       ),
-      '#url' => Url::fromUri('http://drupal.org'),
+      '#url' => Url::fromUri('https://www.drupal.org'),
       '#title' => 'bar',
     );
     $langcode = $language->getId();
@@ -158,18 +158,18 @@ class UrlTest extends WebTestBase {
    */
   function testLinkRenderArrayText() {
     // Build a link with _l() for reference.
-    $l = \Drupal::l('foo', Url::fromUri('http://drupal.org'));
+    $l = \Drupal::l('foo', Url::fromUri('https://www.drupal.org'));
 
     // Test a renderable array passed to _l().
     $renderable_text = array('#markup' => 'foo');
-    $l_renderable_text = \Drupal::l($renderable_text, Url::fromUri('http://drupal.org'));
+    $l_renderable_text = \Drupal::l($renderable_text, Url::fromUri('https://www.drupal.org'));
     $this->assertEqual($l_renderable_text, $l);
 
     // Test a themed link with plain text 'text'.
     $type_link_plain_array = array(
       '#type' => 'link',
       '#title' => 'foo',
-      '#url' => Url::fromUri('http://drupal.org'),
+      '#url' => Url::fromUri('https://www.drupal.org'),
     );
     $type_link_plain = drupal_render($type_link_plain_array);
     $this->assertEqual($type_link_plain, $l);
@@ -178,7 +178,7 @@ class UrlTest extends WebTestBase {
     $type_link_nested_array = array(
       '#type' => 'link',
       '#title' => array('#markup' => 'foo'),
-      '#url' => Url::fromUri('http://drupal.org'),
+      '#url' => Url::fromUri('https://www.drupal.org'),
     );
     $type_link_nested = drupal_render($type_link_nested_array);
     $this->assertEqual($type_link_nested, $l);
@@ -241,7 +241,7 @@ class UrlTest extends WebTestBase {
   function testDrupalParseUrl() {
     // Relative, absolute, and external URLs, without/with explicit script path,
     // without/with Drupal path.
-    foreach (array('', '/', 'http://drupal.org/') as $absolute) {
+    foreach (array('', '/', 'https://www.drupal.org/') as $absolute) {
       foreach (array('', 'index.php/') as $script) {
         foreach (array('', 'foo/bar') as $path) {
           $url = $absolute . $script . $path . '?foo=bar&bar=baz&baz#foo';
@@ -265,7 +265,7 @@ class UrlTest extends WebTestBase {
     $this->assertEqual(UrlHelper::parse($url), $result, 'Relative URL parsed correctly.');
 
     // Test that drupal can recognize an absolute URL. Used to prevent attack vectors.
-    $url = 'http://drupal.org/foo/bar?foo=bar&bar=baz&baz#foo';
+    $url = 'https://www.drupal.org/foo/bar?foo=bar&bar=baz&baz#foo';
     $this->assertTrue(UrlHelper::isExternal($url), 'Correctly identified an external URL.');
 
     // Test that UrlHelper::parse() does not allow spoofing a URL to force a malicious redirect.
@@ -277,7 +277,7 @@ class UrlTest extends WebTestBase {
    * Tests external URL handling.
    */
   function testExternalUrls() {
-    $test_url = 'http://drupal.org/';
+    $test_url = 'https://www.drupal.org/';
 
     // Verify external URL can contain a fragment.
     $url = $test_url . '#drupal';

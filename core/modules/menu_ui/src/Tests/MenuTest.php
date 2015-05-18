@@ -450,8 +450,8 @@ class MenuTest extends MenuWebTestBase {
     $this->assertMenuLink($item1->getPluginId(), array('enabled' => 1));
 
     // Add an external link.
-    $item7 = $this->addMenuLink('', 'http://drupal.org', $menu_name);
-    $this->assertMenuLink($item7->getPluginId(), array('url' => 'http://drupal.org'));
+    $item7 = $this->addMenuLink('', 'https://www.drupal.org', $menu_name);
+    $this->assertMenuLink($item7->getPluginId(), array('url' => 'https://www.drupal.org'));
 
     // Add <front> menu item.
     $item8 = $this->addMenuLink('', '/', $menu_name);

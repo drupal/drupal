@@ -399,7 +399,7 @@ class MenuLinks extends DrupalDumpBase {
       'menu_name' => 'secondary-links',
       'mlid' => '140',
       'plid' => '0',
-      'link_path' => 'http://drupal.org',
+      'link_path' => 'https://www.drupal.org',
       'router_path' => '',
       'link_title' => 'Drupal.org',
       'options' => 'a:1:{s:10:"attributes";a:1:{s:5:"title";s:0:"";}}',

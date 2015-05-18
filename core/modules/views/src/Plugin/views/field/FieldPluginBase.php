@@ -984,7 +984,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
         '#type' => 'textfield',
         '#title' => $this->t('More link path'),
         '#default_value' => $this->options['alter']['more_link_path'],
-        '#description' => $this->t('This can be an internal Drupal path such as node/add or an external URL such as "http://drupal.org". You may use the "Replacement patterns" above.'),
+        '#description' => $this->t('This can be an internal Drupal path such as node/add or an external URL such as "https://www.drupal.org". You may use the "Replacement patterns" above.'),
         '#states' => array(
           'visible' => array(
             ':input[name="options[alter][trim]"]' => array('checked' => TRUE),
@@ -1178,7 +1178,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
         $this->last_render = $this->renderText($alter);
       }
     }
-    // @todo Fix this in https://www.drupal.org/node/2280961
+    // @todo Fix this in https://www.drupal.org/node/2280961.
     $this->last_render = SafeMarkup::set($this->last_render);
 
 
@@ -1257,8 +1257,8 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
           $more_link_path = Unicode::substr($more_link_path, Unicode::strlen($base_path));
         }
 
-        // @todo Views should expect and store a leading /. See:
-        //   https://www.drupal.org/node/2423913
+        // @todo Views should expect and store a leading /. See
+        //   https://www.drupal.org/node/2423913.
         $more_link = \Drupal::l($more_link_text, CoreUrl::fromUserInput('/' . $more_link_path, array('attributes' => array('class' => array('views-more-link')))));
 
         $suffix .= " " . $more_link;
@@ -1323,8 +1323,8 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     $path = $alter['path'];
     if (empty($alter['url'])) {
       if (!parse_url($path, PHP_URL_SCHEME)) {
-        // @todo Views should expect and store a leading /. See:
-        //   https://www.drupal.org/node/2423913
+        // @todo Views should expect and store a leading /. See
+        //   https://www.drupal.org/node/2423913.
         $alter['url'] = CoreUrl::fromUserInput('/' . ltrim($path, '/'));
       }
       else {

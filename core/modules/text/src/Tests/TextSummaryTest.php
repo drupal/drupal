@@ -28,7 +28,7 @@ class TextSummaryTest extends KernelTestBase {
   /**
    * Tests an edge case where the first sentence is a question and
    * subsequent sentences are not. This edge case is documented at
-   * http://drupal.org/node/180425.
+   * https://www.drupal.org/node/180425.
    */
   function testFirstSentenceQuestion() {
     $text = 'A question? A sentence. Another sentence.';

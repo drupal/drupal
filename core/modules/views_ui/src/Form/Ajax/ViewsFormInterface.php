@@ -52,7 +52,7 @@ interface ViewsFormInterface extends FormInterface {
    *   An form for a specific operation in the Views UI, or an array of AJAX
    *   commands to render a form.
    *
-   * @todo When http://drupal.org/node/1843224 is in, this will return
+   * @todo When https://www.drupal.org/node/1843224 is in, this will return
    *   \Drupal\Core\Ajax\AjaxResponse instead of the array of AJAX commands.
    */
   public function getForm(ViewEntityInterface $view, $display_id, $js);

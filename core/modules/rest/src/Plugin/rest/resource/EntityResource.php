@@ -26,7 +26,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  *   deriver = "Drupal\rest\Plugin\Deriver\EntityDeriver",
  *   uri_paths = {
  *     "canonical" = "/entity/{entity_type}/{entity}",
- *     "http://drupal.org/link-relations/create" = "/entity/{entity_type}"
+ *     "https://www.drupal.org/link-relations/create" = "/entity/{entity_type}"
  *   }
  * )
  *

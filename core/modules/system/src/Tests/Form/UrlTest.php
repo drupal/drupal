@@ -46,7 +46,7 @@ class UrlTest extends WebTestBase {
 
     $edit = array();
     $edit['url'] = 'http://foo.bar.example.com/';
-    $edit['url_required'] = 'http://drupal.org/node/1174630?page=0&foo=bar#new';
+    $edit['url_required'] = 'https://www.drupal.org/node/1174630?page=0&foo=bar#new';
     $values = Json::decode($this->drupalPostForm('form-test/url', $edit, 'Submit'));
     $this->assertEqual($values['url'], $edit['url']);
     $this->assertEqual($values['url_required'], $edit['url_required']);

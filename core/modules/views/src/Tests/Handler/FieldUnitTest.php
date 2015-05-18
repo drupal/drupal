@@ -566,7 +566,7 @@ class FieldUnitTest extends ViewUnitTestBase {
    * Tests the trimText method.
    */
   public function testTrimText() {
-    // Test unicode, @see http://drupal.org/node/513396#comment-2839416
+    // Test unicode. See https://www.drupal.org/node/513396#comment-2839416.
     $text = array(
       'Tuy nhiên, những hi vọng',
       'Giả sử chúng tôi có 3 Apple',

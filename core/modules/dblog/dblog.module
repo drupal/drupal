@@ -20,7 +20,7 @@ function dblog_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.dblog':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Database Logging module logs system events in the Drupal database. For more information, see the online handbook entry for the <a href="!dblog">Database Logging module</a>.', array('!dblog' => 'http://drupal.org/documentation/modules/dblog')) . '</p>';
+      $output .= '<p>' . t('The Database Logging module logs system events in the Drupal database. For more information, see the online handbook entry for the <a href="!dblog">Database Logging module</a>.', array('!dblog' => 'https://www.drupal.org/documentation/modules/dblog')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Monitoring your site') . '</dt>';

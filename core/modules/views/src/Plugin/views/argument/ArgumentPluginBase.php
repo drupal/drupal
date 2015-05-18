@@ -1138,7 +1138,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheablePlugin
   /**
    * Sanitize validator options including derivatives with : for js.
    *
-   * Reason and alternative: http://drupal.org/node/2035345
+   * Reason and alternative: https://www.drupal.org/node/2035345.
    *
    * @param string $id
    *   The identifier to be sanitized.

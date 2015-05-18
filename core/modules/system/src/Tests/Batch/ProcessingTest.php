@@ -142,7 +142,7 @@ class ProcessingTest extends WebTestBase {
   /**
    * Tests batches that return $context['finished'] > 1 do in fact complete.
    *
-   * @see http://drupal.org/node/600836
+   * @see https://www.drupal.org/node/600836
    */
   function testBatchLargePercentage() {
     // Displaying the page triggers batch 5.

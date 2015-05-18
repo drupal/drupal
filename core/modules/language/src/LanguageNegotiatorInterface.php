@@ -100,7 +100,7 @@ use Drupal\Core\Session\AccountInterface;
  * @endcode
  *
  * For more information, see
- * @link http://drupal.org/node/1497272 Language Negotiation API @endlink
+ * @link https://www.drupal.org/node/1497272 Language Negotiation API @endlink
  */
 interface LanguageNegotiatorInterface {
 

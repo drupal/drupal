@@ -73,7 +73,7 @@ function update_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.update':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Update Manager module periodically checks for new versions of your site\'s software (including contributed modules and themes), and alerts administrators to available updates. The Update Manager system is also used by some other modules to manage updates and downloads; for example, the Interface Translation module uses the Update Manager to download translations from the localization server. Note that whenever the Update Manager system is used, anonymous usage statistics are sent to Drupal.org. If desired, you may disable the Update Manager module from the <a href="!modules">Extend page</a>; if you do so, functionality that depends on the Update Manager system will not work. For more information, see <a href="!update">the online documentation for the Update Manager module</a>.', array('!update' => 'http://drupal.org/documentation/modules/update', '!modules' => \Drupal::url('system.modules_list'))) . '</p>';
+      $output .= '<p>' . t('The Update Manager module periodically checks for new versions of your site\'s software (including contributed modules and themes), and alerts administrators to available updates. The Update Manager system is also used by some other modules to manage updates and downloads; for example, the Interface Translation module uses the Update Manager to download translations from the localization server. Note that whenever the Update Manager system is used, anonymous usage statistics are sent to Drupal.org. If desired, you may disable the Update Manager module from the <a href="!modules">Extend page</a>; if you do so, functionality that depends on the Update Manager system will not work. For more information, see <a href="!update">the online documentation for the Update Manager module</a>.', array('!update' => 'https://www.drupal.org/documentation/modules/update', '!modules' => \Drupal::url('system.modules_list'))) . '</p>';
       // Only explain the Update manager if it has not been disabled.
       if (update_manager_access()) {
         $output .= '<p>' . t('The Update Manager also allows administrators to update and install modules and themes through the administration interface.') . '</p>';
@@ -582,7 +582,7 @@ function template_preprocess_update_last_check(&$variables) {
  * Implements hook_verify_update_archive().
  *
  * First, we ensure that the archive isn't a copy of Drupal core, which the
- * update manager does not yet support. See http://drupal.org/node/606592
+ * update manager does not yet support. See https://www.drupal.org/node/606592.
  *
  * Then, we make sure that at least one module included in the archive file has
  * an .info.yml file which claims that the code is compatible with the current
@@ -603,7 +603,7 @@ function update_verify_update_archive($project, $archive_file, $directory) {
     && file_exists("$directory/$project/core/modules/system/system.module")
   ) {
     return array(
-      'no-core' => t('Automatic updating of Drupal core is not supported. See the <a href="@upgrade-guide">upgrade guide</a> for information on how to update Drupal core manually.', array('@upgrade-guide' => 'http://drupal.org/upgrade')),
+      'no-core' => t('Automatic updating of Drupal core is not supported. See the <a href="@upgrade-guide">upgrade guide</a> for information on how to update Drupal core manually.', array('@upgrade-guide' => 'https://www.drupal.org/upgrade')),
     );
   }
 

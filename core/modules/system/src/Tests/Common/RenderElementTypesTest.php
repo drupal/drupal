@@ -133,24 +133,24 @@ class RenderElementTypesTest extends KernelTestBase {
         'name' => "#type 'more_link' anchor tag generation without extra classes",
         'value' => array(
           '#type' => 'more_link',
-          '#url' => Url::fromUri('http://drupal.org'),
+          '#url' => Url::fromUri('https://www.drupal.org'),
         ),
-        'expected' => '//div[@class="more-link"]/a[@href="http://drupal.org" and text()="More"]',
+        'expected' => '//div[@class="more-link"]/a[@href="https://www.drupal.org" and text()="More"]',
       ),
       array(
         'name' => "#type 'more_link' anchor tag generation with different link text",
         'value' => array(
           '#type' => 'more_link',
-          '#url' => Url::fromUri('http://drupal.org'),
+          '#url' => Url::fromUri('https://www.drupal.org'),
           '#title' => 'More Titles',
         ),
-        'expected' => '//div[@class="more-link"]/a[@href="http://drupal.org" and text()="More Titles"]',
+        'expected' => '//div[@class="more-link"]/a[@href="https://www.drupal.org" and text()="More Titles"]',
       ),
       array(
         'name' => "#type 'more_link' anchor tag generation with attributes on wrapper",
         'value' => array(
           '#type' => 'more_link',
-          '#url' => Url::fromUri('http://drupal.org'),
+          '#url' => Url::fromUri('https://www.drupal.org'),
           '#theme_wrappers' => array(
             'container' => array(
               '#attributes' => array(
@@ -160,7 +160,7 @@ class RenderElementTypesTest extends KernelTestBase {
             ),
           ),
         ),
-        'expected' => '//div[@title="description" and contains(@class, "more-link") and contains(@class, "drupal") and contains(@class, "test")]/a[@href="http://drupal.org" and text()="More"]',
+        'expected' => '//div[@title="description" and contains(@class, "more-link") and contains(@class, "drupal") and contains(@class, "test")]/a[@href="https://www.drupal.org" and text()="More"]',
       ),
       array(
         'name' => "#type 'more_link' anchor tag with a relative path",

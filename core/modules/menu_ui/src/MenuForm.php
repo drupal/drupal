@@ -442,7 +442,7 @@ class MenuForm extends EntityForm {
     // the child item could be saved with an invalid path past its immediate
     // parent. To prevent this, save items in the form in the same order they
     // are sent, ensuring parents are saved first, then their children.
-    // See http://drupal.org/node/181126#comment-632270
+    // See https://www.drupal.org/node/181126#comment-632270.
     $order = is_array($input) ? array_flip(array_keys($input)) : array();
     // Update our original form with the new order.
     $form = array_intersect_key(array_merge($order, $form), $form);

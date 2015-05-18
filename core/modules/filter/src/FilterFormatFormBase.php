@@ -111,7 +111,7 @@ abstract class FilterFormatFormBase extends EntityForm {
       '#suffix' => '</div>',
       // This item is used as a pure wrapping container with heading. Ignore its
       // value, since 'filters' should only contain filter definitions.
-      // @see http://drupal.org/node/1829202
+      // See https://www.drupal.org/node/1829202.
       '#input' => FALSE,
     );
     // Filter order (tabledrag).

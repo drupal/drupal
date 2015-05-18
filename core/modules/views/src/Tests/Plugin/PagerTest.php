@@ -41,12 +41,13 @@ class PagerTest extends PluginTestBase {
   /**
    * Pagers was sometimes not stored.
    *
-   * @see http://drupal.org/node/652712
+   * @see https://www.drupal.org/node/652712
    */
   public function testStorePagerSettings() {
     $admin_user = $this->drupalCreateUser(array('administer views', 'administer site configuration'));
     $this->drupalLogin($admin_user);
-    // Test behavior described in http://drupal.org/node/652712#comment-2354918.
+    // Test behavior described in
+    //   https://www.drupal.org/node/652712#comment-2354918.
 
     $this->drupalGet('admin/structure/views/view/test_view/edit');
 
@@ -68,7 +69,8 @@ class PagerTest extends PluginTestBase {
     $this->drupalGet('admin/structure/views/view/test_view/edit');
     $this->assertText('Mini', 'Changed pager plugin, should change some text');
 
-    // Test behavior described in http://drupal.org/node/652712#comment-2354400
+    // Test behavior described in
+    //   https://www.drupal.org/node/652712#comment-2354400.
     $view = Views::getView('test_store_pager_settings');
     // Make it editable in the admin interface.
     $view->save();

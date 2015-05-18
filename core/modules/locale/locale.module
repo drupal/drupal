@@ -199,7 +199,8 @@ function locale_theme() {
  * Implements hook_ENTITY_TYPE_insert() for 'configurable_language'.
  */
 function locale_configurable_language_insert(ConfigurableLanguageInterface $language) {
-  // @todo move these two cache clears out. See http://drupal.org/node/1293252
+  // @todo move these two cache clears out. See
+  //   https://www.drupal.org/node/1293252.
   // Changing the language settings impacts the interface: clear render cache.
   \Drupal::cache('render')->deleteAll();
   // Force JavaScript translation file re-creation for the new language.
@@ -210,7 +211,8 @@ function locale_configurable_language_insert(ConfigurableLanguageInterface $lang
  * Implements hook_ENTITY_TYPE_update() for 'configurable_language'.
  */
 function locale_configurable_language_update(ConfigurableLanguageInterface $language) {
-  // @todo move these two cache clears out. See http://drupal.org/node/1293252
+  // @todo move these two cache clears out. See
+  //   https://www.drupal.org/node/1293252.
   // Changing the language settings impacts the interface: clear render cache.
   \Drupal::cache('render')->deleteAll();
   // Force JavaScript translation file re-creation for the modified language.
@@ -465,7 +467,7 @@ function locale_system_remove($components) {
       locale_translate_delete_translation_files($list, array());
 
       // Remove translatable projects.
-      // Followup issue http://drupal.org/node/1842362 to replace the
+      // Follow-up issue https://www.drupal.org/node/1842362 to replace the
       // {locale_project} table. Then change this to a function call.
       \Drupal::service('locale.project')->deleteMultiple($list);
 
@@ -487,7 +489,7 @@ function locale_cache_flush() {
  * Implements hook_js_alter().
  */
 function locale_js_alter(&$javascript, AttachedAssetsInterface $assets) {
-  // @todo remove this in https://www.drupal.org/node/2421323
+  // @todo Remove this in https://www.drupal.org/node/2421323.
   $files = array();
   foreach ($javascript as $item) {
     if (isset($item['type']) && $item['type'] == 'file') {
@@ -919,7 +921,7 @@ function locale_translation_get_status($projects = NULL, $langcodes = NULL) {
  *   File object also containing timestamp when the translation is last updated.
  */
 function locale_translation_status_save($project, $langcode, $type, $data) {
-  // Followup issue: http://drupal.org/node/1842362
+  // Follow-up issue: https://www.drupal.org/node/1842362.
   // Split status storage per module/language and expire individually. This will
   // improve performance for large sites.
 

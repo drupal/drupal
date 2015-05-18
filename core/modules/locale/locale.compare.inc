@@ -12,7 +12,7 @@ use Drupal\Core\Utility\ProjectInfo;
  * Load common APIs.
  */
 // @todo Combine functions differently in files to avoid unnecessary includes.
-// Follow-up issue http://drupal.org/node/1834298
+// Follow-up issue: https://www.drupal.org/node/1834298.
 require_once __DIR__ . '/locale.translation.inc';
 
 /**
@@ -70,7 +70,7 @@ function locale_translation_build_projects() {
           // dev release is the one. Releases are sorted the most recent first.
           // For example the major release number for a contrib module
           // 8.x-2.x-dev is "2", for core 8.1.0-dev is "8".
-          // @todo http://drupal.org/node/1774024 Make a helper function.
+          // @todo https://www.drupal.org/node/1774024 Make a helper function.
           if ($project_release['version_major'] == $matches[1] &&
               (!isset($project_release['version_extra']) || $project_release['version_extra'] != 'dev')) {
             $release = $project_release;

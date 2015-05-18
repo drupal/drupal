@@ -62,7 +62,7 @@ class TermDeleteForm extends ContentEntityDeleteForm {
     $storage = $this->entityManager->getStorage('taxonomy_vocabulary');
     $vocabulary = $storage->load($this->entity->bundle());
 
-    // @todo Move to storage http://drupal.org/node/1988712
+    // @todo Move to storage https://www.drupal.org/node/1988712.
     taxonomy_check_vocabulary_hierarchy($vocabulary, array('tid' => $this->entity->id()));
 
   }

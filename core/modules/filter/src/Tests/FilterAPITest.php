@@ -67,9 +67,9 @@ class FilterAPITest extends EntityUnitTestBase {
    * Tests the ability to apply only a subset of filters.
    */
   function testCheckMarkupFilterSubset() {
-    $text = "Text with <marquee>evil content and</marquee> a URL: http://drupal.org!";
-    $expected_filtered_text = "Text with evil content and a URL: <a href=\"http://drupal.org\">http://drupal.org</a>!";
-    $expected_filter_text_without_html_generators = "Text with evil content and a URL: http://drupal.org!";
+    $text = "Text with <marquee>evil content and</marquee> a URL: https://www.drupal.org!";
+    $expected_filtered_text = "Text with evil content and a URL: <a href=\"https://www.drupal.org\">https://www.drupal.org</a>!";
+    $expected_filter_text_without_html_generators = "Text with evil content and a URL: https://www.drupal.org!";
 
     $actual_filtered_text = check_markup($text, 'filtered_html', '', array());
     $this->verbose("Actual:<pre>$actual_filtered_text</pre>Expected:<pre>$expected_filtered_text</pre>");

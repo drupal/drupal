@@ -193,8 +193,9 @@ class TranslationStatusForm extends FormBase {
     $updates = array();
 
     // @todo Calling locale_translation_build_projects() is an expensive way to
-    //   get a module name. In follow-up issue http://drupal.org/node/1842362
-    //   the project name will be stored to display use, like here.
+    //   get a module name. In follow-up issue
+    //   https://www.drupal.org/node/1842362 the project name will be stored to
+    //   display use, like here.
     $this->moduleHandler->loadInclude('locale', 'compare.inc');
     $project_data = locale_translation_build_projects();
 

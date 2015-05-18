@@ -150,8 +150,8 @@ function hook_modules_installed($modules) {
  * this, any time a hook_update_N() is added to the module, this function needs
  * to be updated to reflect the current version of the database schema.
  *
- * See the @link http://drupal.org/node/146843 Schema API documentation @endlink
- * for details on hook_schema and how database tables are defined.
+ * See the @link https://www.drupal.org/node/146843 Schema API documentation
+ * @endlink for details on hook_schema and how database tables are defined.
  *
  * Note that since this function is called from a full bootstrap, all functions
  * (including those in modules enabled by the current page request) are
@@ -426,7 +426,7 @@ function hook_install_tasks_alter(&$tasks, $install_state) {
  * update.php. The documentation block preceding this function is stripped of
  * newlines and used as the description for the update on the pending updates
  * task list. Schema updates should adhere to the
- * @link http://drupal.org/node/150215 Schema API. @endlink
+ * @link https://www.drupal.org/node/150215 Schema API. @endlink
  *
  * Implementations of hook_update_N() are named (module name)_update_(number).
  * The numbers are composed of three parts:
@@ -451,7 +451,8 @@ function hook_install_tasks_alter(&$tasks, $install_state) {
  * migrate data from an earlier major version of Drupal.
  *
  * For further information about releases and release numbers see:
- * @link http://drupal.org/node/711070 Maintaining a drupal.org project with Git @endlink
+ * @link https://www.drupal.org/node/711070 Maintaining a drupal.org project
+ * with Git @endlink
  *
  * Never renumber update functions.
  *
@@ -764,7 +765,7 @@ function hook_requirements($phase) {
     }
     else {
       $requirements['cron'] = array(
-        'description' => t('Cron has not run. It appears cron jobs have not been setup on your system. Check the help pages for <a href="@url">configuring cron jobs</a>.', array('@url' => 'http://drupal.org/cron')),
+        'description' => t('Cron has not run. It appears cron jobs have not been setup on your system. Check the help pages for <a href="@url">configuring cron jobs</a>.', array('@url' => 'https://www.drupal.org/cron')),
         'severity' => REQUIREMENT_ERROR,
         'value' => t('Never run'),
       );

@@ -56,7 +56,8 @@ class Subquery extends JoinPluginBase {
     $arguments = array();
 
     // Tack on the extra.
-    // This is just copied verbatim from the parent class, which itself has a bug: http://drupal.org/node/1118100
+    // This is just copied verbatim from the parent class, which itself has a
+    //   bug: https://www.drupal.org/node/1118100.
     if (isset($this->extra)) {
       if (is_array($this->extra)) {
         $extras = array();

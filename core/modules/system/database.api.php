@@ -213,7 +213,7 @@
  * if you had a connection object variable $connection available to use. See
  * also the @link container Services and Dependency Injection topic. @endlink
  *
- * @see http://drupal.org/developing/api/database
+ * @see https://www.drupal.org/developing/api/database
  * @see entity_api
  * @see schemaapi
  *
@@ -466,8 +466,8 @@ function hook_query_TAG_alter(Drupal\Core\Database\Query\AlterableInterface $que
  * engines. You don't have to deal with the different SQL dialects for table
  * creation and alteration of the supported database engines.
  *
- * See the Schema API Handbook at http://drupal.org/node/146843 for details on
- * schema definition structures.
+ * See the Schema API Handbook at https://www.drupal.org/node/146843 for details
+ * on schema definition structures.
  *
  * @return array
  *   A schema definition structure array. For each element of the

@@ -136,7 +136,7 @@ class Comments extends DrupalDumpBase {
       'thread' => '01/',
       'name' => '1st comment author name',
       'mail' => 'comment1@example.com',
-      'homepage' => 'http://drupal.org',
+      'homepage' => 'https://www.drupal.org',
     ))->values(array(
       'cid' => '2',
       'pid' => '3',
@@ -151,7 +151,7 @@ class Comments extends DrupalDumpBase {
       'thread' => '02/01',
       'name' => '3rd comment author name',
       'mail' => 'comment3@example.com',
-      'homepage' => 'http://drupal.org',
+      'homepage' => 'https://www.drupal.org',
     ))->values(array(
       'cid' => '3',
       'pid' => '0',
@@ -166,7 +166,7 @@ class Comments extends DrupalDumpBase {
       'thread' => '02/',
       'name' => '3rd comment author name',
       'mail' => 'comment3@example.com',
-      'homepage' => 'http://drupal.org',
+      'homepage' => 'https://www.drupal.org',
     ))->execute();
   }
 

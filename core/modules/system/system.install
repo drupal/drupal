@@ -72,7 +72,7 @@ function system_requirements($phase) {
     $requirements['php'] = array(
       'title' => t('PHP'),
       'value' => $phpversion_label,
-      'description' => t('The phpinfo() function has been disabled for security reasons. To see your server\'s phpinfo() information, change your PHP settings or contact your server administrator. For more information, <a href="@phpinfo">Enabling and disabling phpinfo()</a> handbook page.', array('@phpinfo' => 'http://drupal.org/node/243993')),
+      'description' => t('The phpinfo() function has been disabled for security reasons. To see your server\'s phpinfo() information, change your PHP settings or contact your server administrator. For more information, <a href="@phpinfo">Enabling and disabling phpinfo()</a> handbook page.', array('@phpinfo' => 'https://www.drupal.org/node/243993')),
       'severity' => REQUIREMENT_INFO,
     );
   }
@@ -124,7 +124,7 @@ function system_requirements($phase) {
 
   if (!empty($missing_extensions)) {
     $description = t('Drupal requires you to enable the PHP extensions in the following list (see the <a href="@system_requirements">system requirements page</a> for more information):', array(
-      '@system_requirements' => 'http://drupal.org/requirements',
+      '@system_requirements' => 'https://www.drupal.org/requirements',
     ));
 
     // We use twig inline_template to avoid twig's autoescape.
@@ -158,7 +158,7 @@ function system_requirements($phase) {
     $database_ok = extension_loaded('pdo');
     if (!$database_ok) {
       $pdo_message = t('Your web server does not appear to support PDO (PHP Data Objects). Ask your hosting provider if they support the native PDO extension. See the <a href="@link">system requirements</a> page for more information.', array(
-        '@link' => 'http://drupal.org/requirements/pdo',
+        '@link' => 'https://www.drupal.org/requirements/pdo',
       ));
     }
     else {
@@ -167,7 +167,7 @@ function system_requirements($phase) {
       if (empty($drivers)) {
         $database_ok = FALSE;
         $pdo_message = t('Your web server does not appear to support any common PDO database extensions. Check with your hosting provider to see if they support PDO (PHP Data Objects) and offer any databases that <a href="@drupal-databases">Drupal supports</a>.', array(
-          '@drupal-databases' => 'http://drupal.org/node/270#database',
+          '@drupal-databases' => 'https://www.drupal.org/node/270#database',
         ));
       }
       // Make sure the native PDO extension is available, not the older PEAR
@@ -175,7 +175,7 @@ function system_requirements($phase) {
       if (!defined('PDO::ATTR_DEFAULT_FETCH_MODE')) {
         $database_ok = FALSE;
         $pdo_message = t('Your web server seems to have the wrong version of PDO installed. Drupal requires the PDO extension from PHP core. This system has the older PECL version. See the <a href="@link">system requirements</a> page for more information.', array(
-          '@link' => 'http://drupal.org/requirements/pdo#pecl',
+          '@link' => 'https://www.drupal.org/requirements/pdo#pecl',
         ));
       }
     }
@@ -230,7 +230,7 @@ function system_requirements($phase) {
         $description['memory'] = t('Contact your system administrator or hosting provider for assistance with increasing your PHP memory limit.');
       }
 
-      $handbook_link = t('For more information, see the online handbook entry for <a href="@memory-limit">increasing the PHP memory limit</a>.', array('@memory-limit' => 'http://drupal.org/node/207036'));
+      $handbook_link = t('For more information, see the online handbook entry for <a href="@memory-limit">increasing the PHP memory limit</a>.', array('@memory-limit' => 'https://www.drupal.org/node/207036'));
 
       $description = array(
         '#type' => 'inline_template',
@@ -318,7 +318,7 @@ function system_requirements($phase) {
           'title' => $info['title'],
           'value' => t('Not fully protected'),
           'severity' => REQUIREMENT_ERROR,
-          'description' => t('See <a href="@url">@url</a> for information about the recommended .htaccess file which should be added to the %directory directory to help protect against arbitrary code execution.', array('@url' => 'http://drupal.org/SA-CORE-2013-003', '%directory' => $info['directory'])),
+          'description' => t('See <a href="@url">@url</a> for information about the recommended .htaccess file which should be added to the %directory directory to help protect against arbitrary code execution.', array('@url' => 'https://www.drupal.org/SA-CORE-2013-003', '%directory' => $info['directory'])),
         );
       }
     }
@@ -332,7 +332,7 @@ function system_requirements($phase) {
     // Cron error threshold defaults to two weeks.
     $threshold_error = $cron_config->get('threshold.requirements_error');
     // Cron configuration help text.
-    $help = t('For more information, see the online handbook entry for <a href="@cron-handbook">configuring cron jobs</a>.', array('@cron-handbook' => 'http://drupal.org/cron'));
+    $help = t('For more information, see the online handbook entry for <a href="@cron-handbook">configuring cron jobs</a>.', array('@cron-handbook' => 'https://www.drupal.org/cron'));
 
     // Determine when cron last ran.
     $cron_last = \Drupal::state()->get('system.cron_last');
@@ -366,7 +366,7 @@ function system_requirements($phase) {
       // @todo This string is concatenated from t() calls, safe drupal_render()
       //   output, whitespace, and <br /> tags, so is safe. However, as a best
       //   practice, we should not use SafeMarkup::set() around a variable. Fix
-      //   in: https://www.drupal.org/node/2296929
+      //   in: https://www.drupal.org/node/2296929.
       'description' => SafeMarkup::set($description),
     );
   }
@@ -454,7 +454,7 @@ function system_requirements($phase) {
       elseif ($phase == 'install') {
         // For the installer UI, we need different wording. 'value' will
         // be treated as version, so provide none there.
-        $description = t('An automated attempt to create this directory failed, possibly due to a permissions problem. To proceed with the installation, either create the directory and modify its permissions manually or ensure that the installer has the permissions to create it automatically. For more information, see INSTALL.txt or the <a href="@handbook_url">online handbook</a>.', array('@handbook_url' => 'http://drupal.org/server-permissions'));
+        $description = t('An automated attempt to create this directory failed, possibly due to a permissions problem. To proceed with the installation, either create the directory and modify its permissions manually or ensure that the installer has the permissions to create it automatically. For more information, see INSTALL.txt or the <a href="@handbook_url">online handbook</a>.', array('@handbook_url' => 'https://www.drupal.org/server-permissions'));
         $requirements['file system']['value'] = '';
       }
       if (!empty($description)) {
@@ -585,7 +585,7 @@ function system_requirements($phase) {
         'value' => t('Not enabled'),
         'severity' => REQUIREMENT_WARNING,
         'description' => t('Update notifications are not enabled. It is <strong>highly recommended</strong> that you enable the Update Manager module from the <a href="@module">module administration page</a> in order to stay up-to-date on new releases. For more information, <a href="@update">Update status handbook page</a>.', array(
-          '@update' => 'http://drupal.org/documentation/modules/update',
+          '@update' => 'https://www.drupal.org/documentation/modules/update',
           '@module' => \Drupal::url('system.modules_list'),
         )),
       );

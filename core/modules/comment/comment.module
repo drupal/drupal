@@ -55,7 +55,7 @@ const COMMENT_ANONYMOUS_MUST_CONTACT = 2;
  * Comments changed after this time may be marked new, updated, or read,
  * depending on their state for the current user. Defaults to 30 days ago.
  *
- * @todo Remove when http://drupal.org/node/1029708 lands.
+ * @todo Remove when https://www.drupal.org/node/1029708 lands.
  */
 define('COMMENT_NEW_LIMIT', REQUEST_TIME - 30 * 24 * 60 * 60);
 
@@ -203,8 +203,8 @@ function comment_node_links_alter(array &$node_links, NodeInterface $node, array
   // Comment links are only added to node entity type for backwards
   // compatibility. Should you require comment links for other entity types you
   // can do so by implementing a new field formatter.
-  // @todo Make this configurable from the formatter see
-  //   http://drupal.org/node/1901110
+  // @todo Make this configurable from the formatter. See
+  //   https://www.drupal.org/node/1901110.
 
   $links = \Drupal::service('comment.link_builder')->buildCommentedEntityLinks($node, $context);
   $node_links += $links;

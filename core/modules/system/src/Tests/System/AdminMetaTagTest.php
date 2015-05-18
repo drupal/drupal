@@ -20,7 +20,7 @@ class AdminMetaTagTest extends WebTestBase {
    */
   public function testMetaTag() {
     list($version, ) = explode('.', \Drupal::VERSION);
-    $string = '<meta name="Generator" content="Drupal ' . $version . ' (http://drupal.org)" />';
+    $string = '<meta name="Generator" content="Drupal ' . $version . ' (https://www.drupal.org)" />';
     $this->drupalGet('node');
     $this->assertRaw($string, 'Fingerprinting meta tag generated correctly.', 'System');
   }

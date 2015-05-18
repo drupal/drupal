@@ -7,7 +7,7 @@
  * @todo
  * Merge into 'link' formatter once there is a #type like 'item' that
  * can render a compound label and content outside of a form context.
- * http://drupal.org/node/1829202
+ * @see https://www.drupal.org/node/1829202
  */
 
 namespace Drupal\link\Plugin\Field\FieldFormatter;

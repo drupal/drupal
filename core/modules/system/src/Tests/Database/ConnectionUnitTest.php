@@ -35,7 +35,7 @@ class ConnectionUnitTest extends KernelTestBase {
     // Determine whether the database driver is MySQL. If it is not, the test
     // methods will not be executed.
     // @todo Make this test driver-agnostic, or find a proper way to skip it.
-    // @see http://drupal.org/node/1273478
+    //   See https://www.drupal.org/node/1273478.
     $connection_info = Database::getConnectionInfo('default');
     $this->skipTest = (bool) ($connection_info['default']['driver'] != 'mysql');
     if ($this->skipTest) {

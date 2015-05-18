@@ -83,7 +83,7 @@ class VocabularyForm extends EntityForm {
     // $form['langcode'] is not wrapped in an
     // if ($this->moduleHandler->moduleExists('language')) check because the
     // language_select form element works also without the language module being
-    // installed. http://drupal.org/node/1749954 documents the new element.
+    // installed. https://www.drupal.org/node/1749954 documents the new element.
     $form['langcode'] = array(
       '#type' => 'language_select',
       '#title' => $this->t('Vocabulary language'),

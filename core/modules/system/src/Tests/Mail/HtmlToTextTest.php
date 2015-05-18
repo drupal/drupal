@@ -75,7 +75,7 @@ class HtmlToTextTest extends WebTestBase {
     global $base_path, $base_url;
     $tests = array(
       // @todo Trailing linefeeds should be trimmed.
-      '<a href = "http://drupal.org">Drupal.org</a>' => "Drupal.org [1]\n\n[1] http://drupal.org\n",
+      '<a href = "https://www.drupal.org">Drupal.org</a>' => "Drupal.org [1]\n\n[1] https://www.drupal.org\n",
       // @todo Footer URLs should be absolute.
       "<a href = \"$base_path\">Homepage</a>" => "Homepage [1]\n\n[1] $base_url/\n",
       '<address>Drupal</address>' => "Drupal\n",

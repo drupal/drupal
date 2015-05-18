@@ -153,7 +153,7 @@ class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
     $expected = array('title' => 2, 'link_type' => LinkItemInterface::LINK_GENERIC);
     $this->assertIdentical($expected, $field->getSettings());
     $this->assertIdentical('default link title', $entity->field_test_link->title, 'Field field_test_link default title is correct.');
-    $this->assertIdentical('http://drupal.org', $entity->field_test_link->url, 'Field field_test_link default title is correct.');
+    $this->assertIdentical('https://www.drupal.org', $entity->field_test_link->url, 'Field field_test_link default title is correct.');
     $this->assertIdentical([], $entity->field_test_link->options['attributes']);
   }
 

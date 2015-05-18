@@ -82,7 +82,7 @@ class EntityDeriver implements ContainerDeriverInterface {
 
         $default_uris = array(
           'canonical' => "/entity/$entity_type_id/" . '{' . $entity_type_id . '}',
-          'http://drupal.org/link-relations/create' => "/entity/$entity_type_id",
+          'https://www.drupal.org/link-relations/create' => "/entity/$entity_type_id",
         );
 
         foreach ($default_uris as $link_relation => $default_uri) {

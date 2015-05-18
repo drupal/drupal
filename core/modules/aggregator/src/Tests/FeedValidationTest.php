@@ -39,7 +39,7 @@ class FeedValidationTest extends EntityUnitTestBase {
     // Add feed.
     $feed = Feed::create([
       'title' => 'Feed 1',
-      'url' => 'http://drupal.org/planet/rss',
+      'url' => 'https://www.drupal.org/planet/rss.xml',
       'refresh' => 900,
     ]);
 
@@ -52,7 +52,7 @@ class FeedValidationTest extends EntityUnitTestBase {
     /* @var \Drupal\aggregator\FeedInterface $feed */
     $feed = Feed::create([
       'title' => 'Feed 1',
-      'url' => 'http://drupal.org/planet/rss',
+      'url' => 'https://www.drupal.org/planet/rss.xml',
       'refresh' => 900,
     ]);
 

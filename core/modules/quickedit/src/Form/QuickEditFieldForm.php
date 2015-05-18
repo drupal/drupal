@@ -130,7 +130,7 @@ class QuickEditFieldForm extends FormBase {
    */
   protected function init(FormStateInterface $form_state, EntityInterface $entity, $field_name) {
     // @todo Rather than special-casing $node->revision, invoke prepareEdit()
-    //   once http://drupal.org/node/1863258 lands.
+    //   once https://www.drupal.org/node/1863258 lands.
     if ($entity->getEntityTypeId() == 'node') {
       $node_type = $this->nodeTypeStorage->load($entity->bundle());
       $entity->setNewRevision($node_type->isNewRevision());
@@ -199,7 +199,7 @@ class QuickEditFieldForm extends FormBase {
     $form_state->get('form_display')->extractFormValues($entity, $form, $form_state);
 
     // @todo Refine automated log messages and abstract them to all entity
-    //   types: http://drupal.org/node/1678002.
+    //   types: https://www.drupal.org/node/1678002.
     if ($entity->getEntityTypeId() == 'node' && $entity->isNewRevision() && $entity->revision_log->isEmpty()) {
       $entity->revision_log = t('Updated the %field-name field through in-place editing.', array('%field-name' => $entity->get($field_name)->getFieldDefinition()->getLabel()));
     }

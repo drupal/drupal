@@ -120,7 +120,7 @@ class CronForm extends ConfigFormBase {
     $form['cron']['cron_safe_threshold'] = array(
       '#type' => 'select',
       '#title' => t('Run cron every'),
-      '#description' => t('More information about setting up scheduled tasks can be found by <a href="@url">reading the cron tutorial on drupal.org</a>.', array('@url' => 'http://drupal.org/cron')),
+      '#description' => t('More information about setting up scheduled tasks can be found by <a href="@url">reading the cron tutorial on drupal.org</a>.', array('@url' => 'https://www.drupal.org/cron')),
       '#default_value' => $config->get('threshold.autorun'),
       '#options' => array(0 => t('Never')) + array_map(array($this->dateFormatter, 'formatInterval'), array_combine($options, $options)),
     );

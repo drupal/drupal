@@ -748,7 +748,8 @@ class Sql extends QueryPluginBase {
     // Make sure an alias is assigned
     $alias = $alias ? $alias : $field;
 
-    // PostgreSQL truncates aliases to 63 characters: http://drupal.org/node/571548
+    // PostgreSQL truncates aliases to 63 characters:
+    //   https://www.drupal.org/node/571548.
 
     // We limit the length of the original alias up to 60 characters
     // to get a unique alias later if its have duplicates
@@ -1400,7 +1401,7 @@ class Sql extends QueryPluginBase {
       // (e.g. COUNT DISTINCT(1) ...) and no pager will return.
       // See pager.inc > PagerDefault::execute()
       // http://api.drupal.org/api/drupal/includes--pager.inc/function/PagerDefault::execute/7
-      // See http://drupal.org/node/1046170.
+      // See https://www.drupal.org/node/1046170.
       $count_query->preExecute();
 
       // Build the count query.

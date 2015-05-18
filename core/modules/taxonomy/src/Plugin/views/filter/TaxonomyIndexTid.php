@@ -191,7 +191,8 @@ class TaxonomyIndexTid extends ManyToOne {
       else {
         $options = array();
         $query = \Drupal::entityQuery('taxonomy_term')
-          // @todo Sorting on vocabulary properties http://drupal.org/node/1821274
+          // @todo Sorting on vocabulary properties -
+          //   https://www.drupal.org/node/1821274.
           ->sort('weight')
           ->sort('name')
           ->addTag('term_access');
@@ -359,7 +360,7 @@ class TaxonomyIndexTid extends ManyToOne {
     $contexts = parent::getCacheContexts();
     // The result potentially depends on term access and so is just cacheable
     // per user.
-    // @todo https://www.drupal.org/node/2352175
+    // @todo See https://www.drupal.org/node/2352175.
     $contexts[] = 'user';
 
     return $contexts;

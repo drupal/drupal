@@ -273,15 +273,15 @@ class FieldWebTest extends HandlerTestBase {
     // Tests the external flag.
     // Switch on the external flag should output an external url as well.
     $id_field->options['alter']['external'] = TRUE;
-    $id_field->options['alter']['path'] = $path = 'drupal.org';
+    $id_field->options['alter']['path'] = $path = 'www.drupal.org';
     $output = $id_field->theme($row);
-    $this->assertSubString($output, 'http://drupal.org');
+    $this->assertSubString($output, 'http://www.drupal.org');
 
     // Setup a not external url, which shouldn't lead to an external url.
     $id_field->options['alter']['external'] = FALSE;
-    $id_field->options['alter']['path'] = $path = 'drupal.org';
+    $id_field->options['alter']['path'] = $path = 'www.drupal.org';
     $output = $id_field->theme($row);
-    $this->assertNotSubString($output, 'http://drupal.org');
+    $this->assertNotSubString($output, 'http://www.drupal.org');
 
     // Tests the transforming of the case setting.
     $id_field->options['alter']['path'] = $path = $this->randomMachineName();

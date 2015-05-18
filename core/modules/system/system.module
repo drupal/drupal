@@ -114,7 +114,7 @@ function system_help($route_name, RouteMatchInterface $route_match) {
       return '<p>' . t('These options control the default display settings for your entire site, across all themes. Unless they have been overridden by a specific theme, these settings will be used.') . '</p>';
 
     case 'system.modules_list':
-      $output = '<p>' . t('Download additional <a href="!modules">contributed modules</a> to extend your site\'s functionality.', array('!modules' => 'http://drupal.org/project/modules')) . '</p>';
+      $output = '<p>' . t('Download additional <a href="!modules">contributed modules</a> to extend your site\'s functionality.', array('!modules' => 'https://www.drupal.org/project/modules')) . '</p>';
       if (\Drupal::moduleHandler()->moduleExists('update')) {
         if (update_manager_access()) {
           $output .= '<p>' . t('Regularly review and install <a href="!updates">available updates</a> to maintain a secure and current site. Always run the <a href="!update-php">update script</a> each time a module is updated.', array('!update-php' => \Drupal::url('system.db_update'), '!updates' => \Drupal::url('update.status'))) . '</p>';
@@ -564,7 +564,7 @@ function system_page_attachments(array &$page) {
       '#tag' => 'meta',
       '#attributes' => array(
         'name' => 'Generator',
-        'content' => 'Drupal ' . $version . ' (http://drupal.org)',
+        'content' => 'Drupal ' . $version . ' (https://www.drupal.org)',
       ),
     ),
     // Attach default mobile meta tags for responsive design.
@@ -615,7 +615,7 @@ function system_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
   // url() generates the script and prefix using hook_url_outbound_alter().
   // Instead of running the hook_url_outbound_alter() again here, extract
   // them from url().
-  // @todo Make this less hacky: http://drupal.org/node/1547376.
+  // @todo Make this less hacky: https://www.drupal.org/node/1547376.
   $request = \Drupal::request();
   $scriptPath = $request->getScriptName();
 
@@ -886,14 +886,14 @@ function _system_rebuild_module_data() {
 
   // Find installation profiles. This needs to happen before performing a
   // module scan as the module scan requires knowing what the active profile is.
-  // @todo Remove as part of https://www.drupal.org/node/2186491
+  // @todo Remove as part of https://www.drupal.org/node/2186491.
   $profiles = $listing->scan('profile');
   $profile = drupal_get_profile();
   if ($profile && isset($profiles[$profile])) {
     // Prime the drupal_get_filename() static cache with the profile info file
     // location so we can use drupal_get_path() on the active profile during
     // the module scan.
-    // @todo Remove as part of https://www.drupal.org/node/2186491
+    // @todo Remove as part of https://www.drupal.org/node/2186491.
     drupal_get_filename('profile', $profile, $profiles[$profile]->getPathname());
   }
 

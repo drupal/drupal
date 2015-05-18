@@ -68,7 +68,7 @@ class IntegrationTest extends ViewUnitTestBase {
   public function testAggregatorItemView() {
     $feed = $this->feedStorage->create(array(
       'title' => $this->randomMachineName(),
-      'url' => 'http://drupal.org/',
+      'url' => 'https://www.drupal.org/',
       'refresh' => 900,
       'checked' => 123543535,
       'description' => $this->randomMachineName(),
@@ -85,7 +85,7 @@ class IntegrationTest extends ViewUnitTestBase {
       $values['description'] = $this->randomMachineName();
       // Add a image to ensure that the sanitizing can be tested below.
       $values['author'] = $this->randomMachineName() . '<img src="http://example.com/example.png" \>"';
-      $values['link'] = 'http://drupal.org/node/' . mt_rand(1000, 10000);
+      $values['link'] = 'https://www.drupal.org/node/' . mt_rand(1000, 10000);
       $values['guid'] = $this->randomString();
 
       $aggregator_item = $this->itemStorage->create($values);

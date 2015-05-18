@@ -82,7 +82,7 @@ class LinkItemTest extends FieldUnitTestBase {
     $this->assertEqual($entity->field_test->options['query'], $parsed_url['query']);
 
     // Verify changing the field value.
-    $new_url = 'http://drupal.org';
+    $new_url = 'https://www.drupal.org';
     $new_title = $this->randomMachineName();
     $new_class = $this->randomMachineName();
     $entity->field_test->uri = $new_url;

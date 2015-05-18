@@ -42,7 +42,7 @@ function simpletest_requirements($phase) {
 
   // SimpleTest currently needs 2 cURL options which are incompatible with
   // having PHP's open_basedir restriction set.
-  // See http://drupal.org/node/674304.
+  // See https://www.drupal.org/node/674304.
   $requirements['php_open_basedir'] = array(
     'title' => t('PHP open_basedir restriction'),
     'value' => $open_basedir ? t('Enabled') : t('Disabled'),
@@ -57,7 +57,7 @@ function simpletest_requirements($phase) {
   $memory_limit = ini_get('memory_limit');
   if (!Environment::checkMemoryLimit(SIMPLETEST_MINIMUM_PHP_MEMORY_LIMIT, $memory_limit)) {
     $requirements['php_memory_limit']['severity'] = REQUIREMENT_WARNING;
-    $requirements['php_memory_limit']['description'] = t('The testing framework requires the PHP memory limit to be at least %memory_minimum_limit. The current value is %memory_limit. <a href="@url">Follow these steps to continue</a>.', array('%memory_limit' => $memory_limit, '%memory_minimum_limit' => SIMPLETEST_MINIMUM_PHP_MEMORY_LIMIT, '@url' => 'http://drupal.org/node/207036'));
+    $requirements['php_memory_limit']['description'] = t('The testing framework requires the PHP memory limit to be at least %memory_minimum_limit. The current value is %memory_limit. <a href="@url">Follow these steps to continue</a>.', array('%memory_limit' => $memory_limit, '%memory_minimum_limit' => SIMPLETEST_MINIMUM_PHP_MEMORY_LIMIT, '@url' => 'https://www.drupal.org/node/207036'));
   }
 
   $site_directory = 'sites/simpletest';

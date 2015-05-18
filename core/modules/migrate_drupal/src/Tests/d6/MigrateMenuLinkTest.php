@@ -80,7 +80,7 @@ class MigrateMenuLinkTest extends MigrateDrupal6TestBase {
     $this->assertIdentical(TRUE, $menu_link->isEnabled());
     $this->assertIdentical(FALSE, $menu_link->isExpanded());
     $this->assertIdentical(['attributes' => ['title' => '']], $menu_link->link->options);
-    $this->assertIdentical('http://drupal.org', $menu_link->link->uri);
+    $this->assertIdentical('https://www.drupal.org', $menu_link->link->uri);
     $this->assertIdentical(0, $menu_link->getWeight());
   }
 

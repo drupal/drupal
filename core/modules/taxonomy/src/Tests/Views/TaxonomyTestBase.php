@@ -75,7 +75,7 @@ abstract class TaxonomyTestBase extends ViewTestBase {
   /**
    * Provides a workaround for the inability to use the standard profile.
    *
-   * @see http://drupal.org/node/1708692
+   * @see https://www.drupal.org/node/1708692
    */
   protected function mockStandardInstall() {
     $this->drupalCreateContentType(array(

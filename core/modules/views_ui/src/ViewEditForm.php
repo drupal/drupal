@@ -309,7 +309,7 @@ class ViewEditForm extends ViewFormBase {
     }
     $view->set('display', $displays);
 
-    // @todo: Revisit this when http://drupal.org/node/1668866 is in.
+    // @todo: Revisit this when https://www.drupal.org/node/1668866 is in.
     $query = $this->requestStack->getCurrentRequest()->query;
     $destination = $query->get('destination');
 
