@@ -10,6 +10,7 @@ namespace Drupal\views\Plugin\views\style;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Plugin\CacheablePluginInterface;
 use Drupal\views\Plugin\views\wizard\WizardInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,7 +28,7 @@ use Symfony\Component\HttpFoundation\Request;
  *   display_types = {"normal"}
  * )
  */
-class Table extends StylePluginBase {
+class Table extends StylePluginBase implements CacheablePluginInterface {
 
   /**
    * Does the style plugin for itself support to add fields to it's output.
@@ -428,5 +429,28 @@ class Table extends StylePluginBase {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function isCacheable() {
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    $contexts = [];
+
+    foreach ($this->options['info'] as $field_id => $info) {
+      if (!empty($info['sortable'])) {
+        $contexts[] = 'url.query_args:order';
+        $contexts[] = 'url.query_args:sort';
+        break;
+      }
+    }
+
+    return $contexts;
+  }
 
 }

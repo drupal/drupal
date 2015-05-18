@@ -10,6 +10,7 @@ namespace Drupal\views\Tests\Handler;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\views\Views;
 
 /**
@@ -19,6 +20,8 @@ use Drupal\views\Views;
  * @see \Drupal\views\Plugin\views\field\FieldPluginBase
  */
 class FieldWebTest extends HandlerTestBase {
+
+  use AssertPageCacheContextsAndTagsTrait;
 
   /**
    * Views used by this test.
@@ -62,10 +65,20 @@ class FieldWebTest extends HandlerTestBase {
   public function testClickSorting() {
     $this->drupalGet('test_click_sort');
     $this->assertResponse(200);
+
     // Only the id and name should be click sortable, but not the name.
     $this->assertLinkByHref(\Drupal::url('view.test_click_sort.page_1', [], ['query' => ['order' => 'id', 'sort' => 'asc']]));
     $this->assertLinkByHref(\Drupal::url('view.test_click_sort.page_1', [], ['query' => ['order' => 'name', 'sort' => 'desc']]));
     $this->assertNoLinkByHref(\Drupal::url('view.test_click_sort.page_1', [], ['query' => ['order' => 'created']]));
+
+    // Check that the view returns the click sorting cache contexts.
+    $expected_contexts = [
+      'languages:language_interface',
+      'theme',
+      'url.query_args:order',
+      'url.query_args:sort',
+    ];
+    $this->assertCacheContexts($expected_contexts);
 
     // Clicking a click sort should change the order.
     $this->clickLink(t('ID'));
