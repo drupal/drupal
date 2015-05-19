@@ -89,7 +89,7 @@ class Url {
   protected $uri;
 
   /**
-   * Stores the internal path, if already requested by getInternalPath().
+   * Stores the internal path, if already requested by getInternalPath
    *
    * @var string
    */
