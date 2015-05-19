@@ -52,10 +52,8 @@ function dblog_schema() {
         'description' => 'The severity level of the event; ranges from 0 (Emergency) to 7 (Debug)',
       ),
       'link' => array(
-        'type' => 'varchar',
-        'length' => 255,
+        'type' => 'text',
         'not null' => FALSE,
-        'default' => '',
         'description' => 'Link to view the result of the event.',
       ),
       'location'  => array(
