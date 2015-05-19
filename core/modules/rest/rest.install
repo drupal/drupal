@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the rest module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function rest_requirements($phase) {
+  $requirements = array();
+
+  if (version_compare(PHP_VERSION, '5.6.0') >= 0 && ini_get('always_populate_raw_post_data') != -1) {
+    $requirements['always_populate_raw_post_data'] = array(
+      'title' => t('always_populate_raw_post_data PHP setting'),
+      'value' => t('Not set to -1.'),
+      'severity' => REQUIREMENT_ERROR,
+      'description' => t('The always_populate_raw_post_data PHP setting should be set to -1 in PHP versions 5.6 and up. Please check the <a href="https://php.net/manual/en/ini.core.php#ini.always-populate-raw-post-data">PHP manual</a> for information on how to correct this.'),
+    );
+  }
+  return $requirements;
+}
