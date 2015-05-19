@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\help_test\SuperNovaGenerator.
+ * Contains \Drupal\help_test\SupernovaGenerator.
  */
 
 namespace Drupal\help_test;
@@ -13,7 +13,7 @@ use Symfony\Component\Routing\RequestContext;
 /**
  * Implements a URL generator which always thrown an exception.
  */
-class SuperNovaGenerator implements UrlGeneratorInterface {
+class SupernovaGenerator implements UrlGeneratorInterface {
 
   /**
    * {@inheritdoc}
