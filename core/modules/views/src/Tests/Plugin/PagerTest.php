@@ -7,7 +7,6 @@
 
 namespace Drupal\views\Tests\Plugin;
 
-use Drupal\system\Tests\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\views\Views;
 use Drupal\language\Entity\ConfigurableLanguage;
 
@@ -17,8 +16,6 @@ use Drupal\language\Entity\ConfigurableLanguage;
  * @group views
  */
 class PagerTest extends PluginTestBase {
-
-  use AssertPageCacheContextsAndTagsTrait;
 
   /**
    * Views used by this test.
@@ -258,10 +255,6 @@ class PagerTest extends PluginTestBase {
     $this->executeView($view);
     $this->assertEqual($view->pager->getItemsPerPage(), 0);
     $this->assertEqual(count($view->result), 11);
-
-    // Test pager cache contexts.
-    $this->drupalGet('test_pager_full');
-    $this->assertCacheContexts(['languages:language_interface', 'theme', 'timezone', 'url.query_args.pagers:0', 'user.node_grants:view']);
   }
 
   /**

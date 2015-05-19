@@ -250,7 +250,6 @@ class FrontPageTest extends ViewTestBase {
       'user.permissions',
       // Default cache contexts of the renderer.
       'theme',
-      'url.query_args.pagers:0',
     ];
 
     // Test before there are any nodes.

@@ -388,7 +388,7 @@ abstract class SqlBase extends PagerPluginBase implements CacheablePluginInterfa
    * {@inheritdoc}
    */
   public function getCacheContexts() {
-    $contexts = ['url.query_args.pagers:' . $this->options['id']];
+    $contexts = [];
     if ($this->options['expose']['items_per_page']) {
       $contexts[] = 'url.query_args:items_per_page';
     }

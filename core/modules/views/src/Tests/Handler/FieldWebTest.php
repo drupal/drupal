@@ -75,7 +75,6 @@ class FieldWebTest extends HandlerTestBase {
     $expected_contexts = [
       'languages:language_interface',
       'theme',
-      'url.query_args.pagers:0',
       'url.query_args:order',
       'url.query_args:sort',
     ];
