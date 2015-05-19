@@ -9,7 +9,6 @@ namespace Drupal\views_ui\Form\Ajax;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\views_ui\ViewUI;
 use Drupal\views\ViewExecutable;
 
 /**
