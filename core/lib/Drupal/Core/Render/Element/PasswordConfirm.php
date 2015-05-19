@@ -52,14 +52,14 @@ class PasswordConfirm extends FormElement {
       '#title' => t('Password'),
       '#value' => empty($element['#value']) ? NULL : $element['#value']['pass1'],
       '#required' => $element['#required'],
-      '#attributes' => array('class' => array('password-field')),
+      '#attributes' => array('class' => array('password-field', 'js-password-field')),
     );
     $element['pass2'] =  array(
       '#type' => 'password',
       '#title' => t('Confirm password'),
       '#value' => empty($element['#value']) ? NULL : $element['#value']['pass2'],
       '#required' => $element['#required'],
-      '#attributes' => array('class' => array('password-confirm')),
+      '#attributes' => array('class' => array('password-confirm', 'js-password-confirm')),
     );
     $element['#element_validate'] = array(array(get_called_class(), 'validatePasswordConfirm'));
     $element['#tree'] = TRUE;

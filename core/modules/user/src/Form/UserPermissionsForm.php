@@ -107,7 +107,7 @@ class UserPermissionsForm extends FormBase {
       '#type' => 'table',
       '#header' => array($this->t('Permission')),
       '#id' => 'permissions',
-      '#attributes' => ['class' => ['permissions']],
+      '#attributes' => ['class' => ['permissions', 'js-permissions']],
       '#sticky' => TRUE,
     );
     foreach ($role_names as $name) {
@@ -163,7 +163,7 @@ class UserPermissionsForm extends FormBase {
             ),
             '#type' => 'checkbox',
             '#default_value' => in_array($perm, $role_permissions[$rid]) ? 1 : 0,
-            '#attributes' => array('class' => array('rid-' . $rid)),
+            '#attributes' => array('class' => array('rid-' . $rid, 'js-rid-' . $rid)),
             '#parents' => array($rid, $perm),
           );
           // Show a column of disabled but checked checkboxes.
