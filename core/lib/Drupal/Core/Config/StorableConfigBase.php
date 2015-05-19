@@ -67,7 +67,7 @@ abstract class StorableConfigBase extends ConfigBase {
    * Saves the configuration object.
    *
    * @param bool $has_trusted_data
-   *   Set to TRUE is the configuration data has already been checked to ensure
+   *   Set to TRUE if the configuration data has already been checked to ensure
    *   it conforms to schema. Generally this is only used during module and
    *   theme installation.
    *

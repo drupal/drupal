@@ -35,7 +35,7 @@ interface ConfigFactoryOverrideInterface {
   /**
    * Creates a configuration object for use during install and synchronization.
    *
-   * If the overrider stores it's overrides in configuration collections then
+   * If the overrider stores its overrides in configuration collections then
    * it can have its own implementation of
    * \Drupal\Core\Config\StorableConfigBase. Configuration overriders can link
    * themselves to a configuration collection by listening to the
