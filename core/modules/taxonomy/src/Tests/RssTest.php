@@ -104,6 +104,10 @@ class RssTest extends TaxonomyTestBase {
     );
     $this->assertRaw($test_element, 'Term is displayed when viewing the rss feed.');
 
+    // Test that the feed icon exists for the term.
+    $this->drupalGet("taxonomy/term/{$term1->id()}");
+    $this->assertLinkByHref("taxonomy/term/{$term1->id()}/feed");
+
     // Test that the feed page exists for the term.
     $this->drupalGet("taxonomy/term/{$term1->id()}/feed");
     $this->assertRaw('<rss version="2.0"', "Feed page is RSS.");

@@ -1,9 +1,12 @@
 langcode: en
 status: true
 dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
   module:
     - node
     - taxonomy
+    - user
 id: taxonomy_term
 label: 'Taxonomy term'
 module: taxonomy
@@ -236,6 +239,15 @@ display:
       empty: {  }
       relationships: {  }
       fields: {  }
+      display_extenders: {  }
+      link_url: ''
+      link_display: page_1
+    cache_metadata:
+      contexts:
+        - 'languages:language_interface'
+        - url
+        - 'user.node_grants:view'
+      cacheable: false
   feed_1:
     id: feed_1
     display_title: Feed
@@ -252,7 +264,7 @@ display:
           offset: 0
       path: taxonomy/term/%/feed
       displays:
-        page: page
+        page_1: page_1
         default: '0'
       style:
         type: rss
@@ -265,6 +277,13 @@ display:
         options:
           relationship: none
           view_mode: default
+      display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - 'languages:language_interface'
+        - url
+        - 'user.node_grants:view'
+      cacheable: false
   page_1:
     id: page_1
     display_title: Page
@@ -275,3 +294,10 @@ display:
         type: views_query
         options: {  }
       path: taxonomy/term/%
+      display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - 'languages:language_interface'
+        - url
+        - 'user.node_grants:view'
+      cacheable: false
