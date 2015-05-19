@@ -1459,9 +1459,9 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         );
         break;
       case 'use_ajax':
-        $form['#title'] .= $this->t('Use AJAX when available to load this view');
+        $form['#title'] .= $this->t('AJAX');
         $form['use_ajax'] = array(
-          '#description' => $this->t('When viewing a view, things like paging, table sorting, and exposed filters will not trigger a page refresh.'),
+          '#description' => $this->t('Options such as paging, table sorting, and exposed filters will not initiate a page refresh.'),
           '#type' => 'checkbox',
           '#title' => $this->t('Use AJAX'),
           '#default_value' => $this->getOption('use_ajax') ? 1 : 0,
