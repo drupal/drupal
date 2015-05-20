@@ -231,7 +231,7 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
 
       $options = array(
         'dialogClass' => 'views-ui-dialog',
-        'width' => '50%',
+        'width' => '75%',
       );
 
       $response->addCommand(new OpenModalDialogCommand($title, $display, $options));
