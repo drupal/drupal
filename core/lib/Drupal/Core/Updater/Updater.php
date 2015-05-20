@@ -112,6 +112,28 @@ class Updater {
   }
 
   /**
+   * Get Extension information from directory.
+   *
+   * @param string $directory
+   *   Directory to search in.
+   *
+   * @return array
+   *   Extension info.
+   *
+   * @throws \Drupal\Core\Updater\UpdaterException
+   *   If the info parser does not provide any info.
+   */
+  protected static function getExtensionInfo($directory) {
+    $info_file = static::findInfoFile($directory);
+    $info = \Drupal::service('info_parser')->parse($info_file);
+    if (empty($info)) {
+      throw new UpdaterException(t('Unable to parse info file: %info_file.', ['%info_file' => $info_file]));
+    }
+
+    return $info;
+  }
+
+  /**
    * Gets the name of the project directory (basename).
    *
    * @todo It would be nice, if projects contained an info file which could
