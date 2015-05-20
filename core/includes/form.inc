@@ -403,15 +403,9 @@ function template_preprocess_form_element(&$variables) {
   // \Drupal::formBuilder()->doBuildForm().
   $element += array(
     '#title_display' => 'before',
+    '#wrapper_attributes' => array(),
   );
-
-  // Take over any #wrapper_attributes defined by the element.
-  // @todo Temporary hack for #type 'item'.
-  // @see http://drupal.org/node/1829202
-  $variables['attributes'] = array();
-  if (isset($element['#wrapper_attributes'])) {
-    $variables['attributes'] = $element['#wrapper_attributes'];
-  }
+  $variables['attributes'] = $element['#wrapper_attributes'];
 
   // Add element #id for #type 'item'.
   if (isset($element['#markup']) && !empty($element['#id'])) {
