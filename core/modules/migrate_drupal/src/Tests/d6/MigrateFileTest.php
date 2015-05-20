@@ -68,6 +68,7 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
     $this->assertIdentical('39325', $file->getSize());
     $this->assertIdentical('public://image-1.png', $file->getFileUri());
     $this->assertIdentical('image/png', $file->getMimeType());
+    $this->assertIdentical("1", $file->getOwnerId());
     // It is pointless to run the second half from MigrateDrupal6Test.
     if (empty($this->standalone)) {
       return;
