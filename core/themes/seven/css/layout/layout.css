@@ -4,10 +4,3 @@
 .page-content {
   margin-bottom: 80px;
 }
-
-@media all and (min-width: 75em) {
-  .layout-container {
-    width: 1170px;
-    margin: 0 auto;
-  }
-}

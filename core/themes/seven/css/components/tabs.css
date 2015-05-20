@@ -21,8 +21,8 @@
 /* Span the full width of the viewport */
 .content-header .is-horizontal .tabs:before,
 .content-header .is-collapse-enabled .tabs:before {
-  left: -99em;
-  right: -99em;
+  left: -2.5em;
+  right: -2.5em;
 }
 
 /**
