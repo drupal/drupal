@@ -32,7 +32,7 @@ function views_ui_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dt>' . t('Enabling and disabling views.') . '<dt>';
       $output .= '<dd>' . t('Views can be enabled or disabled from the <a href="@list">Views list page</a>. To enable a view, find the view within the "Disabled" list and select the "Enable" operation. To disable a view find the view within the "Enabled" list and select the "Disable" operation.', array('@list' => \Drupal::url('entity.view.collection', array('name' => 'views_ui')))) . '</dd>';
       $output .= '<dt>' . t('Exporting and importing views.') . '</dt>';
-      $output .= '<dd>' . t('Views can be exported and imported as configuration files by using the <a href="@config">Configuration Manager module</a>.', array('@config' => \Drupal::url('help.page', array('name' => 'config')))) . '</dd>';
+      $output .= '<dd>' . t('Views can be exported and imported as configuration files by using the <a href="@config">Configuration Manager module</a>.', array('@config' => (\Drupal::moduleHandler()->moduleExists('config')) ? \Drupal::url('help.page', array('name' => 'config')) : '#')) . '</dd>';
       $output .= '<dt>' . t('Theming views.') . '</dt>';
       $output .= '<dd>' . t('The template files used by views can be overridden from a custom theme. When editing a view, you can see the templates that are used and alternatives for overriding them by clicking on the "Templates" link, found in the Advanced &gt; Other section under "Output".') . '</dd>';
       $output .= '</dl>';

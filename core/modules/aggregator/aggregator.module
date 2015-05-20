@@ -29,7 +29,7 @@ function aggregator_help($route_name, RouteMatchInterface $route_match) {
       // Check if the aggregator sources View is enabled.
       if ($url = $path_validator->getUrlIfValid('aggregator/sources')) {
         $output .= '<dt>' . t('Viewing feeds') . '</dt>';
-        $output .= '<dd>' . t('Users view feed content in the <a href="!aggregator">main aggregator display</a>, or by <a href="!aggregator-sources">their source</a> (usually via an RSS feed reader). The most recent content in a feed can be displayed as a block through the <a href="!admin-block">Blocks administration page</a>.', array('!aggregator' => \Drupal::url('aggregator.page_last'), '!aggregator-sources' => $url->toString(), '!admin-block' => \Drupal::url('block.admin_display'))) . '</dd>';
+        $output .= '<dd>' . t('Users view feed content in the <a href="!aggregator">main aggregator display</a>, or by <a href="!aggregator-sources">their source</a> (usually via an RSS feed reader). The most recent content in a feed can be displayed as a block through the <a href="!admin-block">Blocks administration page</a>.', array('!aggregator' => \Drupal::url('aggregator.page_last'), '!aggregator-sources' => $url->toString(), '!admin-block' => (\Drupal::moduleHandler()->moduleExists('block')) ? \Drupal::url('block.admin_display') : '#')) . '</dd>';
       }
       $output .= '<dt>' . t('Adding, editing, and deleting feeds') . '</dt>';
       $output .= '<dd>' . t('Administrators can add, edit, and delete feeds, and choose how often to check each feed for newly updated items on the <a href="!feededit">Feed aggregator administration page</a>.', array('!feededit' => \Drupal::url('aggregator.admin_overview'))) . '</dd>';
@@ -46,7 +46,7 @@ function aggregator_help($route_name, RouteMatchInterface $route_match) {
     case 'aggregator.admin_overview':
       // Don't use placeholders for possibility to change URLs for translators.
       $output = '<p>' . t('Many sites publish their headlines and posts in feeds, using a number of standardized XML-based formats. The aggregator supports <a href="http://en.wikipedia.org/wiki/Rss">RSS</a>, <a href="http://en.wikipedia.org/wiki/Resource_Description_Framework">RDF</a>, and <a href="http://en.wikipedia.org/wiki/Atom_%28standard%29">Atom</a>.') . '</p>';
-      $output .= '<p>' . t('Current feeds are listed below, and <a href="!addfeed">new feeds may be added</a>. For each feed, the <em>latest items</em> block may be enabled at the <a href="!block">blocks administration page</a>.', array('!addfeed' =>  \Drupal::url('aggregator.feed_add'), '!block' => \Drupal::url('block.admin_display'))) . '</p>';
+      $output .= '<p>' . t('Current feeds are listed below, and <a href="!addfeed">new feeds may be added</a>. For each feed, the <em>latest items</em> block may be enabled at the <a href="!block">blocks administration page</a>.', array('!addfeed' =>  \Drupal::url('aggregator.feed_add'), '!block' => (\Drupal::moduleHandler()->moduleExists('block')) ? \Drupal::url('block.admin_display') : '#')) . '</p>';
       return $output;
 
     case 'aggregator.feed_add':

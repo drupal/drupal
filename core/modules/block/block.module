@@ -30,7 +30,7 @@ function block_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dt>' . t('Toggling between different themes') . '</dt>';
       $output .= '<dd>' . t('Blocks are placed and configured specifically for each theme. The Block layout page opens with the default theme, but you can toggle to other installed themes.') . '</dd>';
       $output .= '<dt>' . t('Demonstrating block regions for a theme') . '</dt>';
-      $output .= '<dd>' . t('You can see where the regions are for the current theme by clicking the <em>Demonstrate block regions</em> link on the Block layout page. Regions are specific to each theme.', array('!blocks' => \Drupal::url('block.admin_display'))) . '</dd>';
+      $output .= '<dd>' . t('You can see where the regions are for the current theme by clicking the <em>Demonstrate block regions</em> link on the <a href="!blocks">Block layout page</a>. Regions are specific to each theme.', array('!blocks' => \Drupal::url('block.admin_display'))) . '</dd>';
       $output .= '<dt>' . t('Configuring block settings') . '</dt>';
       $output .= '<dd>' . t('To change the settings of an individual block click on the <em>Configure</em> link on the <a href="!blocks">Block layout page</a>. The available options vary depending on the module that provides the block. For all blocks you can change the block title and toggle whether to display it.', array('!blocks' => Drupal::url('block.admin_display'))) . '</dd>';
       $output .= '<dt>' . t('Controlling visibility') . '</dt>';

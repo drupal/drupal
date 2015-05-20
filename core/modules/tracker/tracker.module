@@ -19,7 +19,7 @@ function tracker_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.tracker':
       $output = '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Tracker module displays the most recently added and updated content on your site, and allows you to follow new content created by each user. This module has no configuration options. For more information, see the <a href="!tracker">online documentation for the Tracker module</a>.', array('!tracker' => 'https://drupal.org/documentation/modules/tracker')) . '</p>';
+      $output .= '<p>' . t('The Activity Tracker module displays the most recently added and updated content on your site, and allows you to follow new content created by each user. This module has no configuration options. For more information, see the <a href="!tracker">online documentation for the Tracker module</a>.', array('!tracker' => 'https://drupal.org/documentation/modules/tracker')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Tracking new and updated site content') . '</dt>';
