@@ -1183,10 +1183,10 @@ function template_preprocess_maintenance_task_list(&$variables) {
  * This function is called for theme hooks implemented as templates only, not
  * for theme hooks implemented as functions. This preprocess function is the
  * first in the sequence of preprocessing functions that are called when
- * preparing variables for a template. See _theme() for more details about the
- * full sequence.
+ * preparing variables for a template.
  *
- * @see _theme()
+ * See the @link themeable Default theme implementations topic @endlink for
+ * details.
  */
 function template_preprocess(&$variables, $hook, $info) {
   // Tell all templates where they are located.

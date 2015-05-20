@@ -970,12 +970,8 @@ function hook_page_bottom(array &$page_bottom) {
 /**
  * Register a module or theme's theme implementations.
  *
- * The implementations declared by this hook have several purposes:
- * - They can specify how a particular render array is to be rendered as HTML.
- *   This is usually the case if the theme function is assigned to the render
- *   array's #theme property.
- * - They can return HTML for default calls to _theme().
- * - They can return HTML for calls to _theme() for a theme suggestion.
+ * The implementations declared by this hook specify how a particular render
+ * array is to be rendered as HTML.
  *
  * @param array $existing
  *   An array of existing implementations that may be used for override
@@ -1001,19 +997,18 @@ function hook_page_bottom(array &$page_bottom) {
  *
  * @return array
  *   An associative array of information about theme implementations. The keys
- *   on the outer array are known as "theme hooks". For simple theme
- *   implementations for regular calls to _theme(), the theme hook is the first
- *   argument. For theme suggestions, instead of the array key being the base
- *   theme hook, the key is a theme suggestion name with the format
- *   'base_hook_name__sub_hook_name'. For render elements, the key is the
- *   machine name of the render element. The array values are themselves arrays
- *   containing information about the theme hook and its implementation. Each
- *   information array must contain either a 'variables' element (for _theme()
- *   calls) or a 'render element' element (for render elements), but not both.
+ *   on the outer array are known as "theme hooks". For theme suggestions,
+ *   instead of the array key being the base theme hook, the key is a theme
+ *   suggestion name with the format 'base_hook_name__sub_hook_name'.
+ *   For render elements, the key is the machine name of the render element.
+ *   The array values are themselves arrays containing information about the
+ *   theme hook and its implementation. Each information array must contain
+ *   either a 'variables' element (for using a #theme element) or a
+ *   'render element' element (for render elements), but not both.
  *   The following elements may be part of each information array:
- *   - variables: Used for _theme() call items only: an array of variables,
+ *   - variables: Only used for #theme in render array: an array of variables,
  *     where the array keys are the names of the variables, and the array
- *     values are the default values if they are not passed into _theme().
+ *     values are the default values if they are not given in the render array.
  *     Template implementations receive each array key as a variable in the
  *     template file (so they must be legal PHP/Twig variable names). Function
  *     implementations are passed the variables in a single $variables function
@@ -1041,7 +1036,7 @@ function hook_page_bottom(array &$page_bottom) {
  *   - function: If specified, this will be the function name to invoke for
  *     this implementation. If neither 'template' nor 'function' are specified,
  *     a default template name will be assumed. See above for more details.
- *   - base hook: Used for _theme() suggestions only: the base theme hook name.
+ *   - base hook: Used for theme suggestions only: the base theme hook name.
  *     Instead of this suggestion's implementation being used directly, the base
  *     hook will be invoked with this implementation as its first suggestion.
  *     The base hook's files will be included and the base hook's preprocess
@@ -1051,14 +1046,17 @@ function hook_page_bottom(array &$page_bottom) {
  *     suggestion may be used in place of this suggestion. If after
  *     hook_theme_suggestions_HOOK() this suggestion remains the first
  *     suggestion, then this suggestion's function or template will be used to
- *     generate the output for _theme().
+ *     generate the rendered output.
  *   - pattern: A regular expression pattern to be used to allow this theme
  *     implementation to have a dynamic name. The convention is to use __ to
  *     differentiate the dynamic portion of the theme. For example, to allow
  *     forums to be themed individually, the pattern might be: 'forum__'. Then,
- *     when the forum is themed, call:
+ *     when the forum is rendered, following render array can be used:
  *     @code
- *     _theme(array('forum__' . $tid, 'forum'), $forum)
+ *     $render_array = array(
+ *       '#theme' => array('forum__' . $tid, 'forum'),
+ *       '#forum' => $forum,
+ *     );
  *     @endcode
  *   - preprocess functions: A list of functions used to preprocess this data.
  *     Ordinarily this won't be used; it's automatically filled in. By default,
@@ -1078,6 +1076,7 @@ function hook_page_bottom(array &$page_bottom) {
  *   - theme path: (automatically derived) The directory path of the theme or
  *     module, so that it doesn't need to be looked up.
  *
+ * @see themeable
  * @see hook_theme_registry_alter()
  */
 function hook_theme($existing, $type, $theme, $path) {

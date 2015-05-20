@@ -298,11 +298,13 @@ class Registry implements DestructableInterface {
    * for base hooks (e.g., 'block__node' for the base hook 'block') need to be
    * determined based on the full registry and classified as 'base hook'.
    *
-   * @see _theme()
-   * @see hook_theme_registry_alter()
+   * See the @link themeable Default theme implementations topic @endlink for
+   * details.
    *
    * @return \Drupal\Core\Utility\ThemeRegistry
    *   The build theme registry.
+   *
+   * @see hook_theme_registry_alter()
    */
   protected function build() {
     $cache = array();

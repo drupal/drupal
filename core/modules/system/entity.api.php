@@ -1327,7 +1327,9 @@ function hook_ENTITY_TYPE_view(array &$build, \Drupal\Core\Entity\EntityInterfac
  * structured content array, it may use this hook to add a #post_render
  * callback. Alternatively, it could also implement hook_preprocess_HOOK() for
  * the particular entity type template, if there is one (e.g., node.html.twig).
- * See drupal_render() and _theme() for details.
+ *
+ * See the @link themeable Default theme implementations topic @endlink and
+ * drupal_render() for details.
  *
  * @param array &$build
  *   A renderable array representing the entity content.
@@ -1337,10 +1339,10 @@ function hook_ENTITY_TYPE_view(array &$build, \Drupal\Core\Entity\EntityInterfac
  *   The entity view display holding the display options configured for the
  *   entity components.
  *
+ * @ingroup entity_crud
+ *
  * @see hook_entity_view()
  * @see hook_ENTITY_TYPE_view_alter()
- *
- * @ingroup entity_crud
  */
 function hook_entity_view_alter(array &$build, Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
   if ($build['#view_mode'] == 'full' && isset($build['an_additional_field'])) {
@@ -1363,7 +1365,9 @@ function hook_entity_view_alter(array &$build, Drupal\Core\Entity\EntityInterfac
  * structured content array, it may use this hook to add a #post_render
  * callback. Alternatively, it could also implement hook_preprocess_HOOK() for
  * the particular entity type template, if there is one (e.g., node.html.twig).
- * See drupal_render() and _theme() for details.
+ *
+ * See the @link themeable Default theme implementations topic @endlink and
+ * drupal_render() for details.
  *
  * @param array &$build
  *   A renderable array representing the entity content.
@@ -1373,10 +1377,10 @@ function hook_entity_view_alter(array &$build, Drupal\Core\Entity\EntityInterfac
  *   The entity view display holding the display options configured for the
  *   entity components.
  *
+ * @ingroup entity_crud
+ *
  * @see hook_ENTITY_TYPE_view()
  * @see hook_entity_view_alter()
- *
- * @ingroup entity_crud
  */
 function hook_ENTITY_TYPE_view_alter(array &$build, Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
   if ($build['#view_mode'] == 'full' && isset($build['an_additional_field'])) {
