@@ -78,16 +78,23 @@
     // @code
     // jQuery('.view-name').trigger('RefreshView');
     // @endcode
-    var self_settings = this.element_settings;
-    self_settings.event = 'RefreshView';
-    this.refreshViewAjax = new Drupal.ajax(this.selector, this.$view, self_settings);
+    var self_settings = $.extend({}, this.element_settings, {
+      event: 'RefreshView',
+      base: this.selector,
+      element: this.$view
+    });
+    this.refreshViewAjax = Drupal.ajax(self_settings);
   };
 
   Drupal.views.ajaxView.prototype.attachExposedFormAjax = function () {
     var button = $('input[type=submit], input[type=image]', this.$exposed_form);
     button = button[0];
 
-    this.exposedFormAjax = new Drupal.ajax($(button).attr('id'), button, this.element_settings);
+    var self_settings = $.extend({}, this.element_settings, {
+      base: $(button).attr('id'),
+      element: button
+    });
+    this.exposedFormAjax = Drupal.ajax(self_settings);
   };
 
   Drupal.views.ajaxView.prototype.filterNestedViews = function () {
@@ -121,8 +128,12 @@
       Drupal.Views.parseViewArgs(href, this.settings.view_base_path)
     );
 
-    this.element_settings.submit = viewData;
-    this.pagerAjax = new Drupal.ajax(false, $link, this.element_settings);
+    var self_settings = $.extend({}, this.element_settings, {
+      submit: viewData,
+      base: false,
+      element: $link
+    });
+    this.pagerAjax = Drupal.ajax(self_settings);
   };
 
   Drupal.AjaxCommands.prototype.viewsScrollTop = function (ajax, response) {

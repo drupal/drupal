@@ -408,18 +408,11 @@
       return;
     }
 
-    // @todo Simplify this once https://drupal.org/node/1533366 lands.
     // @see https://drupal.org/node/2029999.
-    var id = 'quickedit-load-editors';
-    // Create a temporary element to be able to use Drupal.ajax.
-    var $el = $('<div id="' + id + '" class="hidden"></div>').appendTo('body');
-    // Create a Drupal.ajax instance to load the form.
-    var loadEditorsAjax = new Drupal.ajax(id, $el, {
+    // Create a Drupal.Ajax instance to load the form.
+    var loadEditorsAjax = Drupal.ajax({
       url: Drupal.url('quickedit/attachments'),
-      event: 'quickedit-internal.quickedit',
-      submit: {'editors[]': missingEditors},
-      // No progress indicator.
-      progress: {type: null}
+      submit: {'editors[]': missingEditors}
     });
     // Implement a scoped insert AJAX command: calls the callback after all AJAX
     // command functions have been executed (hence the deferred calling).
@@ -427,12 +420,10 @@
     loadEditorsAjax.commands.insert = function (ajax, response, status) {
       _.defer(callback);
       realInsert(ajax, response, status);
-      $el.off('quickedit-internal.quickedit');
-      $el.remove();
     };
     // Trigger the AJAX request, which will should return AJAX commands to insert
     // any missing attachments.
-    $el.trigger('quickedit-internal.quickedit');
+    loadEditorsAjax.execute();
   }
 
   /**

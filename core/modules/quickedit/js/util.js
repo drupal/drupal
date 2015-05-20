@@ -89,21 +89,16 @@
      *   commands.
      */
     load: function (options, callback) {
-      var $el = options.$el;
       var fieldID = options.fieldID;
 
       // Create a Drupal.ajax instance to load the form.
-      var formLoaderAjax = new Drupal.ajax(fieldID, $el, {
+      var formLoaderAjax = Drupal.ajax({
         url: Drupal.quickedit.util.buildUrl(fieldID, Drupal.url('quickedit/form/!entity_type/!id/!field_name/!langcode/!view_mode')),
-        event: 'quickedit-internal.quickedit',
         submit: {
           nocssjs: options.nocssjs,
           reset: options.reset
         },
-        progress: {type: null}, // No progress indicator.
         error: function (xhr, url) {
-          $el.off('quickedit-internal.quickedit');
-
           // Show a modal to inform the user of the network error.
           var fieldLabel = Drupal.quickedit.metadata.get(fieldID, 'label');
           var message = Drupal.t('Could not load the form for <q>@field-label</q>, either due to a website problem or a network connection problem.<br>Please try again.', {'@field-label': fieldLabel});
@@ -118,11 +113,10 @@
       // Implement a scoped quickeditFieldForm AJAX command: calls the callback.
       formLoaderAjax.commands.quickeditFieldForm = function (ajax, response, status) {
         callback(response.data, ajax);
-        $el.off('quickedit-internal.quickedit');
-        formLoaderAjax = null;
+        Drupal.ajax.instances[this.instanceIndex] = null;
       };
       // This will ensure our scoped quickeditFieldForm AJAX command gets called.
-      $el.trigger('quickedit-internal.quickedit');
+      formLoaderAjax.execute();
     },
 
     /**
@@ -143,7 +137,7 @@
         url: $submit.closest('form').attr('action'),
         setClick: true,
         event: 'click.quickedit',
-        progress: {type: null},
+        progress: false,
         submit: {
           nocssjs: options.nocssjs,
           other_view_modes: options.other_view_modes
@@ -156,10 +150,12 @@
               this.commands[response[i].command](this, response[i], status);
             }
           }
-        }
+        },
+        base: $submit.attr('id'),
+        element: $submit[0]
       };
 
-      return new Drupal.ajax($submit.attr('id'), $submit[0], settings);
+      return Drupal.ajax(settings);
     },
 
     /**

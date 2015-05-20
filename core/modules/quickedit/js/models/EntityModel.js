@@ -362,18 +362,10 @@
     save: function (options) {
       var entityModel = this;
 
-      // @todo Simplify this once https://drupal.org/node/1533366 lands.
-      // @see https://drupal.org/node/2029999.
-      var id = 'quickedit-save-entity';
-      // Create a temporary element to be able to use Drupal.ajax.
-      var $el = $('#quickedit-entity-toolbar').find('.action-save'); // This is the span element inside the button.
       // Create a Drupal.ajax instance to save the entity.
-      var entitySaverAjax = new Drupal.ajax(id, $el, {
+      var entitySaverAjax = Drupal.ajax({
         url: Drupal.url('quickedit/entity/' + entityModel.get('entityID')),
-        event: 'quickedit-save.quickedit',
-        progress: {type: 'none'},
         error: function () {
-          $el.off('quickedit-save.quickedit');
           // Let the Drupal.quickedit.EntityModel Backbone model's error()=
           // method handle errors.
           options.error.call(entityModel);
@@ -381,8 +373,6 @@
       });
       // Entity saved successfully.
       entitySaverAjax.commands.quickeditEntitySaved = function (ajax, response, status) {
-        // Clean up.
-        $(ajax.element).off('quickedit-save.quickedit');
         // All fields have been moved from PrivateTempStore to permanent
         // storage, update the "inTempStore" attribute on FieldModels, on the
         // EntityModel and clear EntityModel's "fieldInTempStore" attribute.
@@ -399,7 +389,7 @@
       };
       // Trigger the AJAX request, which will will return the
       // quickeditEntitySaved AJAX command to which we then react.
-      $el.trigger('quickedit-save.quickedit');
+      entitySaverAjax.execute();
     },
 
     /**
