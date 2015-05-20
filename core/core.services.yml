@@ -724,6 +724,8 @@ services:
     arguments: ['@database']
     tags:
       - { name: backend_overridable }
+  entity.query.null:
+    class: Drupal\Core\Entity\Query\Null\QueryFactory
   entity.query.keyvalue:
     class: Drupal\Core\Entity\KeyValueStore\Query\QueryFactory
     arguments: ['@keyvalue']
