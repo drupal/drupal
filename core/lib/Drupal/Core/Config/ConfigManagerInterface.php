@@ -180,4 +180,14 @@ interface ConfigManagerInterface {
    */
   public function getConfigCollectionInfo();
 
+  /**
+   * Finds missing content dependencies declared in configuration entities.
+   *
+   * @return array
+   *   A list of missing content dependencies. The array is keyed by UUID. Each
+   *   value is an array with the following keys: 'entity_type', 'bundle' and
+   *   'uuid'.
+   */
+  public function findMissingContentDependencies();
+
 }

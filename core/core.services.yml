@@ -234,6 +234,10 @@ services:
       - { name: event_subscriber }
       - { name: service_collector, tag: 'config.factory.override', call: addOverride }
     arguments: ['@config.storage', '@event_dispatcher', '@config.typed']
+  config.importer_subscriber:
+    class: Drupal\Core\Config\Importer\FinalMissingContentSubscriber
+    tags:
+      - { name: event_subscriber }
   config.installer:
     class: Drupal\Core\Config\ConfigInstaller
     arguments: ['@config.factory', '@config.storage', '@config.typed', '@config.manager', '@event_dispatcher']

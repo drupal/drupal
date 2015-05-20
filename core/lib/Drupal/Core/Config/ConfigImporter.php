@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Config;
 
+use Drupal\Core\Config\Importer\MissingContentEvent;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
@@ -536,7 +537,7 @@ class ConfigImporter {
       $sync_steps[] = 'processExtensions';
     }
     $sync_steps[] = 'processConfigurations';
-
+    $sync_steps[] = 'processMissingContent';
     // Allow modules to add new steps to configuration synchronization.
     $this->moduleHandler->alter('config_import_steps', $sync_steps, $this);
     $sync_steps[] = 'finish';
@@ -600,6 +601,38 @@ class ConfigImporter {
         }
       }
       $context['finished'] = $processed_count / $this->totalConfigurationToProcess;
+    }
+    else {
+      $context['finished'] = 1;
+    }
+  }
+
+  /**
+   * Handles processing of missing content.
+   *
+   * @param array $context
+   *   Standard batch context.
+   */
+  protected function processMissingContent(array &$context) {
+    $sandbox = &$context['sandbox']['config'];
+    if (!isset($sandbox['missing_content'])) {
+      $missing_content = $this->configManager->findMissingContentDependencies();
+      $sandbox['missing_content']['data'] = $missing_content;
+      $sandbox['missing_content']['total'] = count($missing_content);
+    }
+    else {
+      $missing_content = $sandbox['missing_content']['data'];
+    }
+    if (!empty($missing_content)) {
+      $event = new MissingContentEvent($missing_content);
+      // Fire an event to allow listeners to create the missing content.
+      $this->eventDispatcher->dispatch(ConfigEvents::IMPORT_MISSING_CONTENT, $event);
+      $sandbox['missing_content']['data'] = $event->getMissingContent();
+    }
+    $current_count = count($sandbox['missing_content']['data']);
+    if ($current_count) {
+      $context['message'] = $this->t('Resolving missing content');
+      $context['finished'] = ($sandbox['missing_content']['total'] - $current_count) / $sandbox['missing_content']['total'];
     }
     else {
       $context['finished'] = 1;

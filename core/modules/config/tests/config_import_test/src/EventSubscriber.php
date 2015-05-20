@@ -10,6 +10,7 @@ namespace Drupal\config_import_test;
 use Drupal\Core\Config\ConfigCrudEvent;
 use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\Config\ConfigImporterEvent;
+use Drupal\Core\Config\Importer\MissingContentEvent;
 use Drupal\Core\State\StateInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -48,6 +49,39 @@ class EventSubscriber implements EventSubscriberInterface {
       // Log more than one error to test multiple validation errors.
       $event->getConfigImporter()->logError('Config import validate error 1.');
       $event->getConfigImporter()->logError('Config import validate error 2.');
+    }
+  }
+
+  /**
+   * Handles the missing content event.
+   *
+   * @param \Drupal\Core\Config\Importer\MissingContentEvent $event
+   *   The missing content event.
+   */
+  public function onConfigImporterMissingContentOne(MissingContentEvent $event) {
+    if ($this->state->get('config_import_test.config_import_missing_content', FALSE) && $this->state->get('config_import_test.config_import_missing_content_one', FALSE) === FALSE) {
+      $missing = $event->getMissingContent();
+      $uuid = key($missing);
+      $this->state->set('config_import_test.config_import_missing_content_one', key($missing));
+      $event->resolveMissingContent($uuid);
+      // Stopping propagation ensures that onConfigImporterMissingContentTwo
+      // will be fired on the next batch step.
+      $event->stopPropagation();
+    }
+  }
+
+  /**
+   * Handles the missing content event.
+   *
+   * @param \Drupal\Core\Config\Importer\MissingContentEvent $event
+   *   The missing content event.
+   */
+  public function onConfigImporterMissingContentTwo(MissingContentEvent $event) {
+    if ($this->state->get('config_import_test.config_import_missing_content', FALSE) && $this->state->get('config_import_test.config_import_missing_content_two', FALSE) === FALSE) {
+      $missing = $event->getMissingContent();
+      $uuid = key($missing);
+      $this->state->set('config_import_test.config_import_missing_content_two', key($missing));
+      $event->resolveMissingContent($uuid);
     }
   }
 
@@ -106,6 +140,7 @@ class EventSubscriber implements EventSubscriberInterface {
     $events[ConfigEvents::SAVE][] = array('onConfigSave', 40);
     $events[ConfigEvents::DELETE][] = array('onConfigDelete', 40);
     $events[ConfigEvents::IMPORT_VALIDATE] = array('onConfigImporterValidate');
+    $events[ConfigEvents::IMPORT_MISSING_CONTENT] = array(array('onConfigImporterMissingContentOne'), array('onConfigImporterMissingContentTwo', -100));
     return $events;
   }
 

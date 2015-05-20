@@ -99,6 +99,23 @@ final class ConfigEvents {
   const IMPORT = 'config.importer.import';
 
   /**
+   * Name of event fired when missing content dependencies are detected.
+   *
+   * Events subscribers are fired as part of the configuration import batch.
+   * Each subscribe should call
+   * \Drupal\Core\Config\MissingContentEvent::resolveMissingContent() when they
+   * address a missing dependency. To address large amounts of dependencies
+   * subscribers can call
+   * \Drupal\Core\Config\MissingContentEvent::stopPropagation() which will stop
+   * calling other events and guarantee that the configuration import batch will
+   * fire the event again to continue processing missing content dependencies.
+   *
+   * @see \Drupal\Core\Config\ConfigImporter::processMissingContent()
+   * @see \Drupal\Core\Config\MissingContentEvent
+   */
+  const IMPORT_MISSING_CONTENT = 'config.importer.missing_content';
+
+  /**
    * Name of event fired to collect information on all config collections.
    *
    * This event allows modules to add to the list of configuration collections

@@ -447,4 +447,29 @@ class ConfigManager implements ConfigManagerInterface {
     return $entity->onDependencyRemoval($affected_dependencies);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function findMissingContentDependencies() {
+    $content_dependencies = array();
+    $missing_dependencies = array();
+    foreach ($this->activeStorage->readMultiple($this->activeStorage->listAll()) as $config_data) {
+      if (isset($config_data['dependencies']['content'])) {
+        $content_dependencies = array_merge($content_dependencies, $config_data['dependencies']['content']);
+      }
+    }
+    foreach (array_unique($content_dependencies) as $content_dependency) {
+      // Format of the dependency is entity_type:bundle:uuid.
+      list($entity_type, $bundle, $uuid) = explode(':', $content_dependency, 3);
+      if (!$this->entityManager->loadEntityByUuid($entity_type, $uuid)) {
+        $missing_dependencies[$uuid] = array(
+          'entity_type' => $entity_type,
+          'bundle' => $bundle,
+          'uuid' => $uuid,
+        );
+      }
+    }
+    return $missing_dependencies;
+  }
+
 }
