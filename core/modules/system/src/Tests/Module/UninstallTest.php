@@ -106,5 +106,10 @@ class UninstallTest extends WebTestBase {
     // Make sure our unique cache entry is gone.
     $cached = \Drupal::cache()->get('uninstall_test');
     $this->assertFalse($cached, 'Cache entry not found');
+
+    // Make sure confirmation page is accessible only during uninstall process.
+    $this->drupalGet('admin/modules/uninstall/confirm');
+    $this->assertUrl('admin/modules/uninstall');
+    $this->assertTitle(t('Uninstall') . ' | Drupal');
   }
 }
