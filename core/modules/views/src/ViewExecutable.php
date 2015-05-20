@@ -491,9 +491,21 @@ class ViewExecutable implements \Serializable {
 
   /**
    * Change/Set the current page for the pager.
+   *
+   * @param int $page
+   *   The current page.
+   * @param bool $keep_cacheability
+   *   (optional) Keep the cacheability. By default we mark the view as not
+   *   cacheable. The reason for this parameter is that we do not know what the
+   *   passed in value varies by. For example, it could be per role. Defaults to
+   *   FALSE.
    */
-  public function setCurrentPage($page) {
+  public function setCurrentPage($page, $keep_cacheability = FALSE) {
     $this->current_page = $page;
+
+    if (!$keep_cacheability) {
+      $this->element['#cache']['max-age'] = 0;
+    }
 
     // If the pager is already initialized, pass it through to the pager.
     if (!empty($this->pager)) {
@@ -531,13 +543,25 @@ class ViewExecutable implements \Serializable {
 
   /**
    * Set the items per page on the pager.
+   *
+   * @param int $items_per_page
+   *   The items per page.
+   * @param bool $keep_cacheability
+   *   (optional) Keep the cacheability. By default we mark the view as not
+   *   cacheable. The reason for this parameter is that we do not know what the
+   *   passed in value varies by. For example, it could be per role. Defaults to
+   *   FALSE.
    */
-  public function setItemsPerPage($items_per_page) {
+  public function setItemsPerPage($items_per_page, $keep_cacheability = FALSE) {
     $this->items_per_page = $items_per_page;
 
     // If the pager is already initialized, pass it through to the pager.
     if (!empty($this->pager)) {
       $this->pager->setItemsPerPage($items_per_page);
+    }
+
+    if (!$keep_cacheability) {
+      $this->element['#cache']['max-age'] = 0;
     }
   }
 
@@ -557,13 +581,25 @@ class ViewExecutable implements \Serializable {
 
   /**
    * Set the offset on the pager.
+   *
+   * @param int $offset
+   *   The pager offset.
+   * @param bool $keep_cacheability
+   *   (optional) Keep the cacheability. By default we mark the view as not
+   *   cacheable. The reason for this parameter is that we do not know what the
+   *   passed in value varies by. For example, it could be per role. Defaults to
+   *   FALSE.
    */
-  public function setOffset($offset) {
+  public function setOffset($offset, $keep_cacheability = FALSE) {
     $this->offset = $offset;
 
     // If the pager is already initialized, pass it through to the pager.
     if (!empty($this->pager)) {
       $this->pager->setOffset($offset);
+    }
+
+    if (!$keep_cacheability) {
+      $this->element['#cache']['max-age'] = 0;
     }
   }
 
@@ -2363,7 +2399,7 @@ class ViewExecutable implements \Serializable {
 
     $this->setDisplay($current_display);
     $this->setArguments($args);
-    $this->setCurrentPage($current_page);
+    $this->setCurrentPage($current_page, TRUE);
     $this->setExposedInput($exposed_input);
     $this->exposed_data = $exposed_data;
     $this->exposed_raw_input = $exposed_raw_input;
