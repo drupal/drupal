@@ -205,7 +205,8 @@ class SiteConfigureForm extends ConfigFormBase {
     $form['regional_settings']['date_default_timezone'] = array(
       '#type' => 'select',
       '#title' => $this->t('Default time zone'),
-      '#default_value' => date_default_timezone_get(),
+      // Use system timezone if set, but avoid throwing a warning in PHP >=5.4
+      '#default_value' => @date_default_timezone_get(),
       '#options' => system_time_zones(),
       '#description' => $this->t('By default, dates in this site will be displayed in the chosen time zone.'),
       '#weight' => 5,
