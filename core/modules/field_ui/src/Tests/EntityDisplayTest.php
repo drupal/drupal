@@ -7,7 +7,11 @@
 
 namespace Drupal\field_ui\Tests;
 
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\Entity\EntityViewMode;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\node\Entity\NodeType;
 use Drupal\simpletest\KernelTestBase;
 
 /**
@@ -34,7 +38,7 @@ class EntityDisplayTest extends KernelTestBase {
    * Tests basic CRUD operations on entity display objects.
    */
   public function testEntityDisplayCRUD() {
-    $display = entity_create('entity_view_display', array(
+    $display = EntityViewDisplay::create(array(
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',
       'mode' => 'default',
@@ -108,7 +112,7 @@ class EntityDisplayTest extends KernelTestBase {
    *  Test sorting of components by name on basic CRUD operations
    */
   public function testEntityDisplayCRUDSort() {
-    $display = entity_create('entity_view_display', array(
+    $display = EntityViewDisplay::create(array(
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',
       'mode' => 'default',
@@ -148,7 +152,7 @@ class EntityDisplayTest extends KernelTestBase {
    */
   public function testExtraFieldComponent() {
     entity_test_create_bundle('bundle_with_extra_fields');
-    $display = entity_create('entity_view_display', array(
+    $display = EntityViewDisplay::create(array(
       'targetEntityType' => 'entity_test',
       'bundle' => 'bundle_with_extra_fields',
       'mode' => 'default',
@@ -172,19 +176,19 @@ class EntityDisplayTest extends KernelTestBase {
   public function testFieldComponent() {
     $field_name = 'test_field';
     // Create a field storage and a field.
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'test_field'
     ));
     $field_storage->save();
-    $field = entity_create('field_config', array(
+    $field = FieldConfig::create(array(
       'field_storage' => $field_storage,
       'bundle' => 'entity_test',
     ));
     $field->save();
 
-    $display = entity_create('entity_view_display', array(
+    $display = EntityViewDisplay::create(array(
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',
       'mode' => 'default',
@@ -234,7 +238,7 @@ class EntityDisplayTest extends KernelTestBase {
    * Tests the behavior of a field component for a base field.
    */
   public function testBaseFieldComponent() {
-    $display = entity_create('entity_view_display', array(
+    $display = EntityViewDisplay::create(array(
       'targetEntityType' => 'entity_test_base_field_display',
       'bundle' => 'entity_test_base_field_display',
       'mode' => 'default',
@@ -296,7 +300,7 @@ class EntityDisplayTest extends KernelTestBase {
    */
   public function testRenameDeleteBundle() {
     // Create a node bundle, display and form display object.
-    $type = entity_create('node_type', array('type' => 'article'));
+    $type = NodeType::create(array('type' => 'article'));
     $type->save();
     node_add_body_field($type);
     entity_get_display('node', 'article', 'default')->save();
@@ -349,13 +353,13 @@ class EntityDisplayTest extends KernelTestBase {
   public function testDeleteField() {
     $field_name = 'test_field';
     // Create a field storage and a field.
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'test_field'
     ));
     $field_storage->save();
-    $field = entity_create('field_config', array(
+    $field = FieldConfig::create(array(
       'field_storage' => $field_storage,
       'bundle' => 'entity_test',
     ));
@@ -363,12 +367,12 @@ class EntityDisplayTest extends KernelTestBase {
 
     // Create default and teaser entity display.
     EntityViewMode::create(array('id' =>  'entity_test.teaser', 'targetEntityType' => 'entity_test'))->save();
-    entity_create('entity_view_display', array(
+    EntityViewDisplay::create(array(
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',
       'mode' => 'default',
     ))->setComponent($field_name)->save();
-    entity_create('entity_view_display', array(
+    EntityViewDisplay::create(array(
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',
       'mode' => 'teaser',
@@ -398,19 +402,19 @@ class EntityDisplayTest extends KernelTestBase {
 
     $field_name = 'test_field';
     // Create a field.
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'text'
     ));
     $field_storage->save();
-    $field = entity_create('field_config', array(
+    $field = FieldConfig::create(array(
       'field_storage' => $field_storage,
       'bundle' => 'entity_test',
     ));
     $field->save();
 
-    entity_create('entity_view_display', array(
+    EntityViewDisplay::create(array(
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',
       'mode' => 'default',

@@ -10,7 +10,9 @@ namespace Drupal\field_ui\Tests;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\node\Entity\NodeType;
 use Drupal\simpletest\WebTestBase;
+use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Tests the Field UI "Manage display" and "Manage form display" screens.
@@ -45,7 +47,7 @@ class ManageDisplayTest extends WebTestBase {
     $this->type = $type->id();
 
     // Create a default vocabulary.
-    $vocabulary = entity_create('taxonomy_vocabulary', array(
+    $vocabulary = Vocabulary::create(array(
       'name' => $this->randomMachineName(),
       'description' => $this->randomMachineName(),
       'vid' => Unicode::strtolower($this->randomMachineName()),
@@ -375,7 +377,7 @@ class ManageDisplayTest extends WebTestBase {
    */
   function testNoFieldsDisplayOverview() {
     // Create a fresh content type without any fields.
-    entity_create('node_type', array(
+    NodeType::create(array(
       'type' => 'no_fields',
       'name' => 'No fields',
     ))->save();

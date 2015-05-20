@@ -14,6 +14,7 @@ use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\simpletest\WebTestBase;
+use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Tests the Field UI "Manage fields" screen.
@@ -86,7 +87,7 @@ class ManageFieldsTest extends WebTestBase {
     $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
 
     // Create a vocabulary named "Tags".
-    $vocabulary = entity_create('taxonomy_vocabulary', array(
+    $vocabulary = Vocabulary::create(array(
       'name' => 'Tags',
       'vid' => 'tags',
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
@@ -366,12 +367,12 @@ class ManageFieldsTest extends WebTestBase {
   function testDefaultValue() {
     // Create a test field storage and field.
     $field_name = 'test';
-    entity_create('field_storage_config', array(
+    FieldStorageConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'node',
       'type' => 'test_field'
     ))->save();
-    $field = entity_create('field_config', array(
+    $field = FieldConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'node',
       'bundle' => $this->contentType,
@@ -503,7 +504,7 @@ class ManageFieldsTest extends WebTestBase {
     // Create a locked field and attach it to a bundle. We need to do this
     // programmatically as there's no way to create a locked field through UI.
     $field_name = strtolower($this->randomMachineName(8));
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'node',
       'type' => 'test_field',
@@ -511,7 +512,7 @@ class ManageFieldsTest extends WebTestBase {
       'locked' => TRUE
     ));
     $field_storage->save();
-    entity_create('field_config', array(
+    FieldConfig::create(array(
       'field_storage' => $field_storage,
       'bundle' => $this->contentType,
     ))->save();
@@ -544,7 +545,7 @@ class ManageFieldsTest extends WebTestBase {
 
     // Create a field storage and a field programmatically.
     $field_name = 'hidden_test_field';
-    entity_create('field_storage_config', array(
+    FieldStorageConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'node',
       'type' => $field_name,
@@ -555,7 +556,7 @@ class ManageFieldsTest extends WebTestBase {
       'entity_type' => 'node',
       'label' => t('Hidden field'),
     );
-    entity_create('field_config', $field)->save();
+    FieldConfig::create($field)->save();
     entity_get_form_display('node', $this->contentType, 'default')
       ->setComponent($field_name)
       ->save();
@@ -638,13 +639,13 @@ class ManageFieldsTest extends WebTestBase {
    */
   function testHelpDescriptions() {
     // Create an image field
-    entity_create('field_storage_config', array(
+    FieldStorageConfig::create(array(
       'field_name' => 'field_image',
       'entity_type' => 'node',
       'type' => 'image',
     ))->save();
 
-    entity_create('field_config', array(
+    FieldConfig::create(array(
       'field_name' => 'field_image',
       'entity_type' => 'node',
       'label' => 'Image',

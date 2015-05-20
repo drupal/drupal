@@ -7,7 +7,10 @@
 
 namespace Drupal\field_ui\Tests;
 
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityFormMode;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\simpletest\KernelTestBase;
 
 /**
@@ -54,19 +57,19 @@ class EntityFormDisplayTest extends KernelTestBase {
   public function testFieldComponent() {
     // Create a field storage and a field.
     $field_name = 'test_field';
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'test_field'
     ));
     $field_storage->save();
-    $field = entity_create('field_config', array(
+    $field = FieldConfig::create(array(
       'field_storage' => $field_storage,
       'bundle' => 'entity_test',
     ));
     $field->save();
 
-    $form_display = entity_create('entity_form_display', array(
+    $form_display = EntityFormDisplay::create(array(
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',
       'mode' => 'default',
@@ -121,7 +124,7 @@ class EntityFormDisplayTest extends KernelTestBase {
    * Tests the behavior of a field component for a base field.
    */
   public function testBaseFieldComponent() {
-    $display = entity_create('entity_form_display', array(
+    $display = EntityFormDisplay::create(array(
       'targetEntityType' => 'entity_test_base_field_display',
       'bundle' => 'entity_test_base_field_display',
       'mode' => 'default',
@@ -182,13 +185,13 @@ class EntityFormDisplayTest extends KernelTestBase {
   public function testDeleteField() {
     $field_name = 'test_field';
     // Create a field storage and a field.
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'test_field'
     ));
     $field_storage->save();
-    $field = entity_create('field_config', array(
+    $field = FieldConfig::create(array(
       'field_storage' => $field_storage,
       'bundle' => 'entity_test',
     ));
@@ -196,12 +199,12 @@ class EntityFormDisplayTest extends KernelTestBase {
 
     // Create default and compact entity display.
     EntityFormMode::create(array('id' =>  'entity_test.compact', 'targetEntityType' => 'entity_test'))->save();
-    entity_create('entity_form_display', array(
+    EntityFormDisplay::create(array(
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',
       'mode' => 'default',
     ))->setComponent($field_name)->save();
-    entity_create('entity_form_display', array(
+    EntityFormDisplay::create(array(
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',
       'mode' => 'compact',
@@ -231,19 +234,19 @@ class EntityFormDisplayTest extends KernelTestBase {
 
     $field_name = 'test_field';
     // Create a field.
-    $field_storage = entity_create('field_storage_config', array(
+    $field_storage = FieldStorageConfig::create(array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'text'
     ));
     $field_storage->save();
-    $field = entity_create('field_config', array(
+    $field = FieldConfig::create(array(
       'field_storage' => $field_storage,
       'bundle' => 'entity_test',
     ));
     $field->save();
 
-    entity_create('entity_form_display', array(
+    EntityFormDisplay::create(array(
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',
       'mode' => 'default',
