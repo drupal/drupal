@@ -67,13 +67,13 @@
   Drupal.behaviors.fileButtons = {
     attach: function (context) {
       var $context = $(context);
-      $context.find('.form-submit').on('mousedown', Drupal.file.disableFields);
-      $context.find('.form-managed-file .form-submit').on('mousedown', Drupal.file.progressBar);
+      $context.find('.js-form-submit').on('mousedown', Drupal.file.disableFields);
+      $context.find('.form-managed-file .js-form-submit').on('mousedown', Drupal.file.progressBar);
     },
     detach: function (context) {
       var $context = $(context);
-      $context.find('.form-submit').off('mousedown', Drupal.file.disableFields);
-      $context.find('.form-managed-file .form-submit').off('mousedown', Drupal.file.progressBar);
+      $context.find('.js-form-submit').off('mousedown', Drupal.file.disableFields);
+      $context.find('.form-managed-file .js-form-submit').off('mousedown', Drupal.file.progressBar);
     }
   };
 
@@ -128,7 +128,7 @@
      * Trigger the upload_button mouse event to auto-upload as a managed file.
      */
     triggerUploadButton: function (event) {
-      $(event.target).closest('.form-managed-file').find('.form-submit').trigger('mousedown');
+      $(event.target).closest('.form-managed-file').find('.js-form-submit').trigger('mousedown');
     },
     /**
      * Prevent file uploads when using buttons not intended to upload.

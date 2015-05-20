@@ -76,7 +76,7 @@ class Button extends FormElement {
     if (!empty($element['#button_type'])) {
       $element['#attributes']['class'][] = 'button--' . $element['#button_type'];
     }
-    // @todo Various JavaScript depends on this button class.
+    $element['#attributes']['class'][] = 'js-form-submit';
     $element['#attributes']['class'][] = 'form-submit';
 
     if (!empty($element['#attributes']['disabled'])) {

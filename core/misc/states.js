@@ -513,7 +513,7 @@
     if (e.trigger) {
       $(e.target)
         .prop('disabled', e.value)
-        .closest('.form-item, .form-submit, .form-wrapper').toggleClass('form-disabled', e.value)
+        .closest('.form-item, .js-form-submit, .form-wrapper').toggleClass('form-disabled', e.value)
         .find('select, input, textarea').prop('disabled', e.value);
 
       // Note: WebKit nightlies don't reflect that change correctly.
@@ -538,7 +538,7 @@
 
   $(document).on('state:visible', function (e) {
     if (e.trigger) {
-      $(e.target).closest('.form-item, .form-submit, .form-wrapper').toggle(e.value);
+      $(e.target).closest('.form-item, .js-form-submit, .form-wrapper').toggle(e.value);
     }
   });
 
