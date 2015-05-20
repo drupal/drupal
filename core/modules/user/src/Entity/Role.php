@@ -186,14 +186,4 @@ class Role extends ConfigEntityBase implements RoleInterface {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
-    parent::postSave($storage, $update);
-
-    // Clear render cache.
-    entity_render_cache_clear();
-  }
-
 }

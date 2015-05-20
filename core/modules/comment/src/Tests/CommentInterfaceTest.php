@@ -155,20 +155,20 @@ class CommentInterfaceTest extends CommentTestBase {
     $reply_loaded->setPublished(FALSE);
     $reply_loaded->save();
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment/' . $reply_loaded->id());
-    $this->assertText(t('The comment you are replying to does not exist.'), 'Replying to an unpublished comment');
+    $this->assertResponse(403);
 
     // Attempt to post to node with comments disabled.
     $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => array(array('status' => CommentItemInterface::HIDDEN))));
     $this->assertTrue($this->node, 'Article node created.');
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment');
-    $this->assertText('This discussion is closed', 'Posting to node with comments disabled');
+    $this->assertResponse(403);
     $this->assertNoField('edit-comment', 'Comment body field found.');
 
     // Attempt to post to node with read-only comments.
     $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => array(array('status' => CommentItemInterface::CLOSED))));
     $this->assertTrue($this->node, 'Article node created.');
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment');
-    $this->assertText('This discussion is closed', 'Posting to node with comments read-only');
+    $this->assertResponse(403);
     $this->assertNoField('edit-comment', 'Comment body field found.');
 
     // Attempt to post to node with comments enabled (check field names etc).

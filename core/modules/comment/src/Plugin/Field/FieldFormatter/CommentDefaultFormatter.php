@@ -157,7 +157,7 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
       // Unpublished comments are not included in
       // $entity->get($field_name)->comment_count, but unpublished comments
       // should display if the user is an administrator.
-      $elements['#cache']['contexts'][] = 'user.roles';
+      $elements['#cache']['contexts'][] = 'user.permissions';
       if ($this->currentUser->hasPermission('access comments') || $this->currentUser->hasPermission('administer comments')) {
         // This is a listing of Comment entities, so associate its list cache
         // tag for correct invalidation.

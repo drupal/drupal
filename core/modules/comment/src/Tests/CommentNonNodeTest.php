@@ -344,7 +344,7 @@ class CommentNonNodeTest extends WebTestBase {
 
     // Attempt to view test entity comment form while disallowed.
     $this->drupalGet('comment/reply/entity_test/' . $this->entity->id() . '/comment');
-    $this->assertText('You are not authorized to post comments', 'Error attempting to post comment.');
+    $this->assertResponse(403);
     $this->assertNoFieldByName('subject[0][value]', '', 'Subject field not found.');
     $this->assertNoFieldByName('comment_body[0][value]', '', 'Comment field not found.');
 
@@ -376,7 +376,7 @@ class CommentNonNodeTest extends WebTestBase {
     $this->assertFieldByName('comment_body[0][value]', '', 'Comment field found.');
 
     $this->drupalGet('comment/reply/entity_test/' . $this->entity->id() . '/comment/' . $comment1->id());
-    $this->assertText('You are not authorized to view comments');
+    $this->assertResponse(403);
     $this->assertNoText($comment1->getSubject(), 'Comment not displayed.');
 
     // Test comment field widget changes.
