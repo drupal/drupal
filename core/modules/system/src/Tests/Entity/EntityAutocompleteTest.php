@@ -8,10 +8,13 @@
 namespace Drupal\system\Tests\Entity;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Tags;
+use Drupal\Core\Site\Settings;
 use Drupal\system\Controller\EntityAutocompleteController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Tests the autocomplete functionality.
@@ -33,6 +36,14 @@ class EntityAutocompleteTest extends EntityUnitTestBase {
    * @var string
    */
   protected $bundle = 'entity_test';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+    $this->installSchema('system', ['key_value']);
+  }
 
   /**
    * Tests autocompletion edge cases with slashes in the names.
@@ -87,6 +98,47 @@ class EntityAutocompleteTest extends EntityUnitTestBase {
   }
 
   /**
+   * Tests that missing or invalid selection setting key are handled correctly.
+   */
+  public function testSelectionSettingsHandling() {
+    $entity_reference_controller = EntityAutocompleteController::create($this->container);
+    $request = Request::create('entity_reference_autocomplete/' . $this->entityType . '/default');
+    $request->query->set('q', $this->randomString());
+
+    try {
+      // Pass an invalid selection settings key (i.e. one that does not exist
+      // in the key/value store).
+      $selection_settings_key = $this->randomString();
+      $entity_reference_controller->handleAutocomplete($request, $this->entityType, 'default', $selection_settings_key);
+
+      $this->fail('Non-existent selection settings key throws an exception.');
+    }
+    catch (AccessDeniedHttpException $e) {
+      $this->pass('Non-existent selection settings key throws an exception.');
+    }
+
+    try {
+      // Generate a valid hash key but store a modified settings array.
+      $selection_settings = [];
+      $selection_settings_key = Crypt::hmacBase64(serialize($selection_settings) . $this->entityType . 'default', Settings::getHashSalt());
+
+      $selection_settings[$this->randomMachineName()] = $this->randomString();
+      \Drupal::keyValue('entity_autocomplete')->set($selection_settings_key, $selection_settings);
+
+      $entity_reference_controller->handleAutocomplete($request, $this->entityType, 'default', $selection_settings_key);
+    }
+    catch (AccessDeniedHttpException $e) {
+      if ($e->getMessage() == 'Invalid selection settings key.') {
+        $this->pass('Invalid selection settings key throws an exception.');
+      }
+      else {
+        $this->fail('Invalid selection settings key throws an exception.');
+      }
+    }
+
+  }
+
+  /**
    * Returns the result of an Entity reference autocomplete request.
    *
    * @param string $input
@@ -99,8 +151,12 @@ class EntityAutocompleteTest extends EntityUnitTestBase {
     $request = Request::create('entity_reference_autocomplete/' . $this->entityType . '/default');
     $request->query->set('q', $input);
 
+    $selection_settings = [];
+    $selection_settings_key = Crypt::hmacBase64(serialize($selection_settings) . $this->entityType . 'default', Settings::getHashSalt());
+    \Drupal::keyValue('entity_autocomplete')->set($selection_settings_key, $selection_settings);
+
     $entity_reference_controller = EntityAutocompleteController::create($this->container);
-    $result = $entity_reference_controller->handleAutocomplete($request, $this->entityType, 'default')->getContent();
+    $result = $entity_reference_controller->handleAutocomplete($request, $this->entityType, 'default', $selection_settings_key)->getContent();
 
     return Json::decode($result);
   }

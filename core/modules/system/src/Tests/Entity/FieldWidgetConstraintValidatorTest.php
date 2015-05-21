@@ -26,7 +26,7 @@ class FieldWidgetConstraintValidatorTest extends KernelTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installSchema('system', 'router');
+    $this->installSchema('system', ['router', 'key_value']);
     $this->container->get('router.builder')->rebuild();
 
     $this->installEntitySchema('user');

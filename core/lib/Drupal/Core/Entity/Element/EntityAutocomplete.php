@@ -7,10 +7,12 @@
 
 namespace Drupal\Core\Entity\Element;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Tags;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element\Textfield;
+use Drupal\Core\Site\Settings;
 use Drupal\user\EntityOwnerInterface;
 
 /**
@@ -112,11 +114,22 @@ class EntityAutocomplete extends Textfield {
       $element['#autocreate']['uid'] = isset($element['#autocreate']['uid']) ? $element['#autocreate']['uid'] : \Drupal::currentUser()->id();
     }
 
+    // Store the selection settings in the key/value store and pass a hashed key
+    // in the route parameters.
+    $selection_settings = isset($element['#selection_settings']) ? $element['#selection_settings'] : [];
+    $data = serialize($selection_settings) . $element['#target_type'] . $element['#selection_handler'];
+    $selection_settings_key = Crypt::hmacBase64($data, Settings::getHashSalt());
+
+    $key_value_storage = \Drupal::keyValue('entity_autocomplete');
+    if (!$key_value_storage->has($selection_settings_key)) {
+      $key_value_storage->set($selection_settings_key, $selection_settings);
+    }
+
     $element['#autocomplete_route_name'] = 'system.entity_autocomplete';
     $element['#autocomplete_route_parameters'] = array(
       'target_type' => $element['#target_type'],
       'selection_handler' => $element['#selection_handler'],
-      'selection_settings' => $element['#selection_settings'] ? base64_encode(serialize($element['#selection_settings'])) : '',
+      'selection_settings_key' => $selection_settings_key,
     );
 
     return $element;
