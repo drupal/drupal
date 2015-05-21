@@ -76,6 +76,45 @@ class TestInfoParsingTest extends UnitTestCase {
  ",
     ];
 
+    // Test with a different amount of leading spaces.
+    $tests[] = [
+      // Expected result.
+      [
+        'name' => 'Drupal\field\Tests\BulkDeleteTest',
+        'group' => 'field',
+        'description' => 'Bulk delete storages and fields, and clean up afterwards.',
+      ],
+      // Classname.
+      'Drupal\field\Tests\BulkDeleteTest',
+      // Doc block.
+      "/**
+   * Bulk delete storages and fields, and clean up afterwards.
+   *
+   * @group field
+   */
+ ",
+    ];
+
+    // Make sure that a "* @" inside a string does not get parsed as an
+    // annotation.
+    $tests[] = [
+      // Expected result.
+      [
+        'name' => 'Drupal\field\Tests\BulkDeleteTest',
+        'group' => 'field',
+        'description' => 'Bulk delete storages and fields, and clean up afterwards. * @',
+      ],
+      // Classname.
+      'Drupal\field\Tests\BulkDeleteTest',
+      // Doc block.
+      "/**
+   * Bulk delete storages and fields, and clean up afterwards. * @
+   *
+   * @group field
+   */
+ ",
+    ];
+
     // Multiple @group annotations.
     $tests[] = [
       // Expected result.

@@ -312,7 +312,9 @@ class TestDiscovery {
       'name' => $classname,
     );
     $annotations = array();
-    preg_match_all('/^ \* \@([^\s]*) (.*$)/m', $doc_comment, $matches);
+    // Look for annotations, allow an arbitrary amount of spaces before the
+    // * but nothing else.
+    preg_match_all('/^[ ]*\* \@([^\s]*) (.*$)/m', $doc_comment, $matches);
     if (isset($matches[1])) {
       foreach ($matches[1] as $key => $annotation) {
         if (!empty($annotations[$annotation])) {
@@ -369,8 +371,10 @@ class TestDiscovery {
 
     $lines = explode("\n", $doc_comment);
     $summary = [];
+    // Add every line to the summary until the first empty line or annotation
+    // is found.
     foreach ($lines as $line) {
-      if ($line == ' *' || preg_match('/^ \* \@/', $line)) {
+      if (preg_match('/^[ ]*\*$/', $line) || preg_match('/^[ ]*\* \@/', $line)) {
         break;
       }
       $summary[] = trim($line, ' *');
