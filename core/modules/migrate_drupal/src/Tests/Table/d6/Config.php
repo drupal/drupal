@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\Dump\Config.
+ * Contains \Drupal\migrate_drupal\Tests\Table\d6\Config.
  *
  * THIS IS A GENERATED FILE. DO NOT EDIT.
  *
- * @see cores/scripts/dump-database-d6.sh
+ * @see core/scripts/migrate-db.sh
  * @see https://www.drupal.org/sandbox/benjy/2405029
  */
 
@@ -58,3 +58,4 @@ class Config extends DrupalDumpBase {
   }
 
 }
+#c4098c1fa12512d761fcb57f8d540a69

@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\Dump\Flood.
+ * Contains \Drupal\migrate_drupal\Tests\Table\d6\Flood.
  *
  * THIS IS A GENERATED FILE. DO NOT EDIT.
  *
- * @see cores/scripts/dump-database-d6.sh
+ * @see core/scripts/migrate-db.sh
  * @see https://www.drupal.org/sandbox/benjy/2405029
  */
 
@@ -60,3 +60,4 @@ class Flood extends DrupalDumpBase {
   }
 
 }
+#d2c30c15c28a1c63666a476c2e790efd

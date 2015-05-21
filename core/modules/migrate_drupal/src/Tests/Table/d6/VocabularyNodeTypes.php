@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\Dump\VocabularyNodeTypes.
+ * Contains \Drupal\migrate_drupal\Tests\Table\d6\VocabularyNodeTypes.
  *
  * THIS IS A GENERATED FILE. DO NOT EDIT.
  *
- * @see cores/scripts/dump-database-d6.sh
+ * @see core/scripts/migrate-db.sh
  * @see https://www.drupal.org/sandbox/benjy/2405029
  */
 
@@ -64,3 +64,4 @@ class VocabularyNodeTypes extends DrupalDumpBase {
   }
 
 }
+#b427f4114483acbc05cf2e6dff8bfe0f

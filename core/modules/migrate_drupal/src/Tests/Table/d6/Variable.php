@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\Dump\Variable.
+ * Contains \Drupal\migrate_drupal\Tests\Table\d6\Variable.
  *
  * THIS IS A GENERATED FILE. DO NOT EDIT.
  *
- * @see cores/scripts/dump-database-d6.sh
+ * @see core/scripts/migrate-db.sh
  * @see https://www.drupal.org/sandbox/benjy/2405029
  */
 
@@ -730,3 +730,4 @@ class Variable extends DrupalDumpBase {
   }
 
 }
+#c932701ffe15d70ac72d453e975fee38

@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\Dump\Authmap.
+ * Contains \Drupal\migrate_drupal\Tests\Table\d6\Authmap.
  *
  * THIS IS A GENERATED FILE. DO NOT EDIT.
  *
- * @see cores/scripts/dump-database-d6.sh
+ * @see core/scripts/migrate-db.sh
  * @see https://www.drupal.org/sandbox/benjy/2405029
  */
 
@@ -61,3 +61,4 @@ class Authmap extends DrupalDumpBase {
   }
 
 }
+#291a74a5eac3448929eccb583ec5b6bb

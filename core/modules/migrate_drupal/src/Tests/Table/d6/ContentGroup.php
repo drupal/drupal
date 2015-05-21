@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\Dump\ContentGroup.
+ * Contains \Drupal\migrate_drupal\Tests\Table\d6\ContentGroup.
  *
  * THIS IS A GENERATED FILE. DO NOT EDIT.
  *
- * @see cores/scripts/dump-database-d6.sh
+ * @see core/scripts/migrate-db.sh
  * @see https://www.drupal.org/sandbox/benjy/2405029
  */
 
@@ -75,3 +75,4 @@ class ContentGroup extends DrupalDumpBase {
   }
 
 }
+#b47ad3b4a122b061a21b30afde0d1a7d

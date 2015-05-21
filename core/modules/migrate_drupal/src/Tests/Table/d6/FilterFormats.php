@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\Dump\FilterFormats.
+ * Contains \Drupal\migrate_drupal\Tests\Table\d6\FilterFormats.
  *
  * THIS IS A GENERATED FILE. DO NOT EDIT.
  *
- * @see cores/scripts/dump-database-d6.sh
+ * @see core/scripts/migrate-db.sh
  * @see https://www.drupal.org/sandbox/benjy/2405029
  */
 
@@ -45,7 +45,7 @@ class FilterFormats extends DrupalDumpBase {
         'cache' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
       ),
@@ -75,3 +75,4 @@ class FilterFormats extends DrupalDumpBase {
   }
 
 }
+#bc3c85fe411e79820e50f12d39e1e938

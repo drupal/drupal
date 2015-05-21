@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\Dump\AggregatorFeed.
+ * Contains \Drupal\migrate_drupal\Tests\Table\d6\AggregatorFeed.
  *
  * THIS IS A GENERATED FILE. DO NOT EDIT.
  *
- * @see cores/scripts/dump-database-d6.sh
+ * @see core/scripts/migrate-db.sh
  * @see https://www.drupal.org/sandbox/benjy/2405029
  */
 
@@ -85,7 +85,7 @@ class AggregatorFeed extends DrupalDumpBase {
         'block' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
       ),
@@ -119,3 +119,4 @@ class AggregatorFeed extends DrupalDumpBase {
   }
 
 }
+#57eeb4c900631cda398a543689a156cb

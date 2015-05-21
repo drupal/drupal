@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\Dump\Book.
+ * Contains \Drupal\migrate_drupal\Tests\Table\d6\Book.
  *
  * THIS IS A GENERATED FILE. DO NOT EDIT.
  *
- * @see cores/scripts/dump-database-d6.sh
+ * @see core/scripts/migrate-db.sh
  * @see https://www.drupal.org/sandbox/benjy/2405029
  */
 
@@ -77,3 +77,4 @@ class Book extends DrupalDumpBase {
   }
 
 }
+#a91ece4a284d1ba43d247d623edd7a74

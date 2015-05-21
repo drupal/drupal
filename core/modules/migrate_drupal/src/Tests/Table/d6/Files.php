@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\Dump\Files.
+ * Contains \Drupal\migrate_drupal\Tests\Table\d6\Files.
  *
  * THIS IS A GENERATED FILE. DO NOT EDIT.
  *
- * @see cores/scripts/dump-database-d6.sh
+ * @see core/scripts/migrate-db.sh
  * @see https://www.drupal.org/sandbox/benjy/2405029
  */
 
@@ -137,3 +137,4 @@ class Files extends DrupalDumpBase {
   }
 
 }
+#8f1133f1395422b45b92652531e2456e

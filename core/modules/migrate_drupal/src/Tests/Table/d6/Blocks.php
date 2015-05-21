@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\Dump\Blocks.
+ * Contains \Drupal\migrate_drupal\Tests\Table\d6\Blocks.
  *
  * THIS IS A GENERATED FILE. DO NOT EDIT.
  *
- * @see cores/scripts/dump-database-d6.sh
+ * @see core/scripts/migrate-db.sh
  * @see https://www.drupal.org/sandbox/benjy/2405029
  */
 
@@ -51,13 +51,13 @@ class Blocks extends DrupalDumpBase {
         'status' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'weight' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'region' => array(
@@ -69,19 +69,19 @@ class Blocks extends DrupalDumpBase {
         'custom' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'throttle' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'visibility' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'pages' => array(
@@ -98,7 +98,7 @@ class Blocks extends DrupalDumpBase {
         'cache' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '1',
         ),
       ),
@@ -402,3 +402,4 @@ class Blocks extends DrupalDumpBase {
   }
 
 }
+#1f4dbdf6b524a1b4ddea8cbb306caf19

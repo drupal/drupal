@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\Dump\EventTimezones.
+ * Contains \Drupal\migrate_drupal\Tests\Table\d6\EventTimezones.
  *
  * THIS IS A GENERATED FILE. DO NOT EDIT.
  *
- * @see cores/scripts/dump-database-d6.sh
+ * @see core/scripts/migrate-db.sh
  * @see https://www.drupal.org/sandbox/benjy/2405029
  */
 
@@ -3302,3 +3302,4 @@ class EventTimezones extends DrupalDumpBase {
   }
 
 }
+#6b7541b69fbd9ffb83e93348c4ba479e

@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\Dump\Comments.
+ * Contains \Drupal\migrate_drupal\Tests\Table\d6\Comments.
  *
  * THIS IS A GENERATED FILE. DO NOT EDIT.
  *
- * @see cores/scripts/dump-database-d6.sh
+ * @see core/scripts/migrate-db.sh
  * @see https://www.drupal.org/sandbox/benjy/2405029
  */
 
@@ -74,14 +74,14 @@ class Comments extends DrupalDumpBase {
         'status' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '3',
+          'length' => '10',
           'default' => '0',
           'unsigned' => TRUE,
         ),
         'format' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '6',
+          'length' => '11',
           'default' => '0',
         ),
         'thread' => array(
@@ -171,3 +171,4 @@ class Comments extends DrupalDumpBase {
   }
 
 }
+#8c1753bf890ededa04bcc9ca759d0d01

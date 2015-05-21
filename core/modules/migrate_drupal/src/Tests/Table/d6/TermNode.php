@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\Dump\TermNode.
+ * Contains \Drupal\migrate_drupal\Tests\Table\d6\TermNode.
  *
  * THIS IS A GENERATED FILE. DO NOT EDIT.
  *
- * @see cores/scripts/dump-database-d6.sh
+ * @see core/scripts/migrate-db.sh
  * @see https://www.drupal.org/sandbox/benjy/2405029
  */
 
@@ -78,3 +78,4 @@ class TermNode extends DrupalDumpBase {
   }
 
 }
+#73e5dd147f084c8ff3cf2bcd17ce5f97

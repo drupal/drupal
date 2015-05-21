@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\Dump\UsersRoles.
+ * Contains \Drupal\migrate_drupal\Tests\Table\d6\UsersRoles.
  *
  * THIS IS A GENERATED FILE. DO NOT EDIT.
  *
- * @see cores/scripts/dump-database-d6.sh
+ * @see core/scripts/migrate-db.sh
  * @see https://www.drupal.org/sandbox/benjy/2405029
  */
 
@@ -77,3 +77,4 @@ class UsersRoles extends DrupalDumpBase {
   }
 
 }
+#160988416b8b1403cc0ad78c4c1e944b

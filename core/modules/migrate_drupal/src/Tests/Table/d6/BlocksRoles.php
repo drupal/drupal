@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\Dump\BlocksRoles.
+ * Contains \Drupal\migrate_drupal\Tests\Table\d6\BlocksRoles.
  *
  * THIS IS A GENERATED FILE. DO NOT EDIT.
  *
- * @see cores/scripts/dump-database-d6.sh
+ * @see core/scripts/migrate-db.sh
  * @see https://www.drupal.org/sandbox/benjy/2405029
  */
 
@@ -62,3 +62,4 @@ class BlocksRoles extends DrupalDumpBase {
   }
 
 }
+#29243885f79abad280834034dca71856

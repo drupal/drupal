@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\Dump\TermHierarchy.
+ * Contains \Drupal\migrate_drupal\Tests\Table\d6\TermHierarchy.
  *
  * THIS IS A GENERATED FILE. DO NOT EDIT.
  *
- * @see cores/scripts/dump-database-d6.sh
+ * @see core/scripts/migrate-db.sh
  * @see https://www.drupal.org/sandbox/benjy/2405029
  */
 
@@ -71,3 +71,4 @@ class TermHierarchy extends DrupalDumpBase {
   }
 
 }
+#fe08d615c3ac3c59bd3242c55498dba2

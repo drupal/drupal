@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\Dump\Boxes.
+ * Contains \Drupal\migrate_drupal\Tests\Table\d6\Boxes.
  *
  * THIS IS A GENERATED FILE. DO NOT EDIT.
  *
- * @see cores/scripts/dump-database-d6.sh
+ * @see core/scripts/migrate-db.sh
  * @see https://www.drupal.org/sandbox/benjy/2405029
  */
 
@@ -45,7 +45,7 @@ class Boxes extends DrupalDumpBase {
         'format' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '6',
+          'length' => '11',
           'default' => '0',
         ),
       ),
@@ -70,3 +70,4 @@ class Boxes extends DrupalDumpBase {
   }
 
 }
+#fc7fbf9ec57c0c76fceab84ab55b9da8

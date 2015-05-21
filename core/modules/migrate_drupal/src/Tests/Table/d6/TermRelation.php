@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\Dump\TermRelation.
+ * Contains \Drupal\migrate_drupal\Tests\Table\d6\TermRelation.
  *
  * THIS IS A GENERATED FILE. DO NOT EDIT.
  *
- * @see cores/scripts/dump-database-d6.sh
+ * @see core/scripts/migrate-db.sh
  * @see https://www.drupal.org/sandbox/benjy/2405029
  */
 
@@ -55,3 +55,4 @@ class TermRelation extends DrupalDumpBase {
   }
 
 }
+#008e1b937f330389e84d1b5604ed3b95

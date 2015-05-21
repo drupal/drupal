@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\Dump\ContentNodeFieldInstance.
+ * Contains \Drupal\migrate_drupal\Tests\Table\d6\ContentNodeFieldInstance.
  *
  * THIS IS A GENERATED FILE. DO NOT EDIT.
  *
- * @see cores/scripts/dump-database-d6.sh
+ * @see core/scripts/migrate-db.sh
  * @see https://www.drupal.org/sandbox/benjy/2405029
  */
 
@@ -80,7 +80,7 @@ class ContentNodeFieldInstance extends DrupalDumpBase {
         'widget_active' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
       ),
@@ -332,3 +332,4 @@ class ContentNodeFieldInstance extends DrupalDumpBase {
   }
 
 }
+#017d067779f912426f8b1c61a06736d7

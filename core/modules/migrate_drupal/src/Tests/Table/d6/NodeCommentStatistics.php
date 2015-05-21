@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\Dump\NodeCommentStatistics.
+ * Contains \Drupal\migrate_drupal\Tests\Table\d6\NodeCommentStatistics.
  *
  * THIS IS A GENERATED FILE. DO NOT EDIT.
  *
- * @see cores/scripts/dump-database-d6.sh
+ * @see core/scripts/migrate-db.sh
  * @see https://www.drupal.org/sandbox/benjy/2405029
  */
 
@@ -81,3 +81,4 @@ class NodeCommentStatistics extends DrupalDumpBase {
   }
 
 }
+#ef7d3494e2e6e8244b4642db7a6fd80b

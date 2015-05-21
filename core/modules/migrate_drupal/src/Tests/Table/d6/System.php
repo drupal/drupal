@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\Dump\System.
+ * Contains \Drupal\migrate_drupal\Tests\Table\d6\System.
  *
  * THIS IS A GENERATED FILE. DO NOT EDIT.
  *
- * @see cores/scripts/dump-database-d6.sh
+ * @see core/scripts/migrate-db.sh
  * @see https://www.drupal.org/sandbox/benjy/2405029
  */
 
@@ -58,7 +58,7 @@ class System extends DrupalDumpBase {
         'throttle' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'bootstrap' => array(
@@ -70,7 +70,7 @@ class System extends DrupalDumpBase {
         'schema_version' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '6',
+          'length' => '11',
           'default' => '-1',
         ),
         'weight' => array(
@@ -916,3 +916,4 @@ class System extends DrupalDumpBase {
   }
 
 }
+#8867fc0eccc6c8439bff0a269ec597ae
