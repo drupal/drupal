@@ -112,6 +112,12 @@ class Connection extends DatabaseConnection {
     $pdo->sqliteCreateFunction('rand', array(__CLASS__, 'sqlFunctionRand'));
     $pdo->sqliteCreateFunction('regexp', array(__CLASS__, 'sqlFunctionRegexp'));
 
+    // SQLite does not support the LIKE BINARY operator, so we overload the
+    // non-standard GLOB operator for case-sensitive matching. Another option
+    // would have been to override another non-standard operator, MATCH, but
+    // that does not support the NOT keyword prefix.
+    $pdo->sqliteCreateFunction('glob', array(__CLASS__, 'sqlFunctionLikeBinary'));
+
     // Create a user-space case-insensitive collation with UTF-8 support.
     $pdo->sqliteCreateCollation('NOCASE_UTF8', array('Drupal\Component\Utility\Unicode', 'strcasecmp'));
 
@@ -257,6 +263,24 @@ class Connection extends DatabaseConnection {
   }
 
   /**
+   * SQLite compatibility implementation for the LIKE BINARY SQL operator.
+   *
+   * SQLite supports case-sensitive LIKE operations through the
+   * 'case_sensitive_like' PRAGMA statement, but only for ASCII characters, so
+   * we have to provide our own implementation with UTF-8 support.
+   *
+   * @see https://sqlite.org/pragma.html#pragma_case_sensitive_like
+   * @see https://sqlite.org/lang_expr.html#like
+   */
+  public static function sqlFunctionLikeBinary($pattern, $subject) {
+    // Replace the SQL LIKE wildcard meta-characters with the equivalent regular
+    // expression meta-characters and escape the delimiter that will be used for
+    // matching.
+    $pattern = str_replace(array('%', '_'), array('.*?', '.'), preg_quote($pattern, '/'));
+    return preg_match('/^' . $pattern . '$/', $subject);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function prepare($statement, array $driver_options = array()) {
@@ -325,6 +349,8 @@ class Connection extends DatabaseConnection {
     static $specials = array(
       'LIKE' => array('postfix' => " ESCAPE '\\'"),
       'NOT LIKE' => array('postfix' => " ESCAPE '\\'"),
+      'LIKE BINARY' => array('postfix' => " ESCAPE '\\'", 'operator' => 'GLOB'),
+      'NOT LIKE BINARY' => array('postfix' => " ESCAPE '\\'", 'operator' => 'NOT GLOB'),
     );
     return isset($specials[$operator]) ? $specials[$operator] : NULL;
   }
