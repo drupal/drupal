@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Core\Extension\ThemeHandlerTest.
+ * Contains \Drupal\Tests\Core\Extension\ThemeInstallerTest.
  */
 
 namespace Drupal\Tests\Core\Extension;
@@ -10,7 +10,6 @@ namespace Drupal\Tests\Core\Extension;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\InfoParser;
 use Drupal\Core\Extension\ThemeHandler;
-use Drupal\Core\Config\ConfigInstaller;
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\Core\State\State;
 use Drupal\Tests\UnitTestCase;
@@ -20,13 +19,6 @@ use Drupal\Tests\UnitTestCase;
  * @group Extension
  */
 class ThemeHandlerTest extends UnitTestCase {
-
-  /**
-   * The mocked route builder.
-   *
-   * @var \Drupal\Core\Routing\RouteBuilderInterface|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $routeBuilder;
 
   /**
    * The mocked info parser.
@@ -57,32 +49,11 @@ class ThemeHandlerTest extends UnitTestCase {
   protected $moduleHandler;
 
   /**
-   * The mocked config installer.
-   *
-   * @var \Drupal\Core\Config\ConfigInstaller|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $configInstaller;
-
-  /**
-   * The mocked config manager.
-   *
-   * @var \Drupal\Core\Config\ConfigManagerInterface|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $configManager;
-
-  /**
    * The extension discovery.
    *
    * @var \Drupal\Core\Extension\ExtensionDiscovery|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $extensionDiscovery;
-
-  /**
-   * The CSS asset collection optimizer service.
-   *
-   * @var \Drupal\Core\Asset\AssetCollectionOptimizerInterface|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $cssCollectionOptimizer;
 
   /**
    * The tested theme handler.
@@ -109,17 +80,10 @@ class ThemeHandlerTest extends UnitTestCase {
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->state = new State(new KeyValueMemoryFactory());
     $this->infoParser = $this->getMock('Drupal\Core\Extension\InfoParserInterface');
-    $this->configInstaller = $this->getMock('Drupal\Core\Config\ConfigInstallerInterface');
-    $this->configManager = $this->getMock('Drupal\Core\Config\ConfigManagerInterface');
-    $this->routeBuilder = $this->getMock('Drupal\Core\Routing\RouteBuilderInterface');
     $this->extensionDiscovery = $this->getMockBuilder('Drupal\Core\Extension\ExtensionDiscovery')
       ->disableOriginalConstructor()
       ->getMock();
-    $this->cssCollectionOptimizer = $this->getMockBuilder('\Drupal\Core\Asset\CssCollectionOptimizer')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $logger = $this->getMock('Psr\Log\LoggerInterface');
-    $this->themeHandler = new StubThemeHandler($this->root, $this->configFactory, $this->moduleHandler, $this->state, $this->infoParser, $logger, $this->cssCollectionOptimizer, $this->configInstaller, $this->configManager, $this->routeBuilder, $this->extensionDiscovery);
+    $this->themeHandler = new StubThemeHandler($this->root, $this->configFactory, $this->moduleHandler, $this->state, $this->infoParser, $this->extensionDiscovery);
 
     $cache_tags_invalidator = $this->getMock('Drupal\Core\Cache\CacheTagsInvalidatorInterface');
     $this->getContainerWithCacheTagsInvalidator($cache_tags_invalidator);

@@ -434,7 +434,10 @@ services:
     lazy: true
   theme_handler:
     class: Drupal\Core\Extension\ThemeHandler
-    arguments: ['@app.root', '@config.factory', '@module_handler', '@state', '@info_parser', '@logger.channel.default', '@asset.css.collection_optimizer', '@config.installer', '@config.manager', '@router.builder']
+    arguments: ['@app.root', '@config.factory', '@module_handler', '@state', '@info_parser']
+  theme_installer:
+    class: Drupal\Core\Extension\ThemeInstaller
+    arguments: ['@theme_handler', '@config.factory', '@config.installer', '@module_handler', '@config.manager', '@asset.css.collection_optimizer', '@router.builder', '@logger.channel.default', '@state']
   entity.manager:
     class: Drupal\Core\Entity\EntityManager
     arguments: ['@container.namespaces', '@module_handler', '@cache.discovery', '@language_manager', '@string_translation', '@class_resolver', '@typed_data_manager', '@keyvalue', '@event_dispatcher']

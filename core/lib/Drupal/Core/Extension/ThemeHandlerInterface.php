@@ -8,7 +8,7 @@
 namespace Drupal\Core\Extension;
 
 /**
- * Manages the list of available themes as well as install/uninstall them.
+ * Manages the list of available themes.
  */
 interface ThemeHandlerInterface {
 
@@ -27,6 +27,11 @@ interface ThemeHandlerInterface {
    *
    * @throws \Drupal\Core\Extension\ExtensionNameLengthException
    *   Thrown when the theme name is to long
+   *
+   * @deprecated in Drupal 8.0.x-dev and will be removed before Drupal 9.0.0.
+   *   Use the theme_installer service instead.
+   *
+   * @see \Drupal\Core\Extension\ThemeInstallerInterface::install
    */
   public function install(array $theme_list, $install_dependencies = TRUE);
 
@@ -43,6 +48,11 @@ interface ThemeHandlerInterface {
    *   Thrown when you uninstall an not installed theme.
    *
    * @see hook_themes_uninstalled()
+   *
+   * @deprecated in Drupal 8.0.x-dev and will be removed before Drupal 9.0.0.
+   *   Use the theme_installer service instead.
+   *
+   * @see \Drupal\Core\Extension\ThemeInstallerInterface::install
    */
   public function uninstall(array $theme_list);
 
@@ -86,6 +96,15 @@ interface ThemeHandlerInterface {
    *     the system that declare this theme as their base theme.
    */
   public function listInfo();
+
+
+  /**
+   * Adds a theme extension to the internal listing.
+   *
+   * @param \Drupal\Core\Extension\Extension $theme
+   *   The theme extension.
+   */
+  public function addTheme(Extension $theme);
 
   /**
    * Refreshes the theme info data of currently installed themes.

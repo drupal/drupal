@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\Extension\ThemeHandlerTest.
+ * Contains \Drupal\system\Tests\Extension\ThemeInstallerTest.
  */
 
 namespace Drupal\system\Tests\Extension;
@@ -16,7 +16,7 @@ use Drupal\simpletest\KernelTestBase;
  *
  * @group Extension
  */
-class ThemeHandlerTest extends KernelTestBase {
+class ThemeInstallerTest extends KernelTestBase {
 
   /**
    * Modules to enable.
@@ -63,7 +63,7 @@ class ThemeHandlerTest extends KernelTestBase {
     $themes = $this->themeHandler()->listInfo();
     $this->assertFalse(isset($themes[$name]));
 
-    $this->themeHandler()->install(array($name));
+    $this->themeInstaller()->install(array($name));
 
     $this->assertIdentical($this->extensionConfig()->get("theme.$name"), 0);
 
@@ -89,13 +89,13 @@ class ThemeHandlerTest extends KernelTestBase {
     $themes = $this->themeHandler()->listInfo();
     $this->assertFalse(array_keys($themes));
 
-    $this->themeHandler()->install(array($name));
+    $this->themeInstaller()->install(array($name));
 
     $themes = $this->themeHandler()->listInfo();
     $this->assertTrue(isset($themes[$name]));
     $this->assertTrue(isset($themes[$base_name]));
 
-    $this->themeHandler()->uninstall(array($name));
+    $this->themeInstaller()->uninstall(array($name));
 
     $themes = $this->themeHandler()->listInfo();
     $this->assertFalse(isset($themes[$name]));
@@ -113,7 +113,7 @@ class ThemeHandlerTest extends KernelTestBase {
 
     try {
       $message = 'ThemeHandler::install() throws InvalidArgumentException upon installing a non-existing theme.';
-      $this->themeHandler()->install(array($name));
+      $this->themeInstaller()->install(array($name));
       $this->fail($message);
     }
     catch (\InvalidArgumentException $e) {
@@ -132,7 +132,7 @@ class ThemeHandlerTest extends KernelTestBase {
 
     try {
       $message = 'ThemeHandler::install() throws ExtensionNameLengthException upon installing a theme with a too long name.';
-      $this->themeHandler()->install(array($name));
+      $this->themeInstaller()->install(array($name));
       $this->fail($message);
     }
     catch (ExtensionNameLengthException $e) {
@@ -146,7 +146,7 @@ class ThemeHandlerTest extends KernelTestBase {
   function testUninstallDefault() {
     $name = 'stark';
     $other_name = 'bartik';
-    $this->themeHandler()->install(array($name, $other_name));
+    $this->themeInstaller()->install(array($name, $other_name));
     $this->themeHandler()->setDefault($name);
 
     $themes = $this->themeHandler()->listInfo();
@@ -173,7 +173,7 @@ class ThemeHandlerTest extends KernelTestBase {
   function testUninstallAdmin() {
     $name = 'stark';
     $other_name = 'bartik';
-    $this->themeHandler()->install(array($name, $other_name));
+    $this->themeInstaller()->install(array($name, $other_name));
     $this->config('system.theme')->set('admin', $name)->save();
 
     $themes = $this->themeHandler()->listInfo();
@@ -201,8 +201,8 @@ class ThemeHandlerTest extends KernelTestBase {
     $name = 'test_subtheme';
     $base_name = 'test_basetheme';
 
-    $this->themeHandler()->install(array($name));
-    $this->themeHandler()->uninstall(array($name));
+    $this->themeInstaller()->install(array($name));
+    $this->themeInstaller()->uninstall(array($name));
 
     $themes = $this->themeHandler()->listInfo();
     $this->assertFalse(isset($themes[$name]));
@@ -216,11 +216,11 @@ class ThemeHandlerTest extends KernelTestBase {
     $name = 'test_basetheme';
     $sub_name = 'test_subtheme';
 
-    $this->themeHandler()->install(array($sub_name));
+    $this->themeInstaller()->install(array($sub_name));
 
     try {
       $message = 'ThemeHandler::install() throws InvalidArgumentException upon uninstalling base theme before sub theme.';
-      $this->themeHandler()->uninstall(array($name));
+      $this->themeInstaller()->uninstall(array($name));
       $this->fail($message);
     }
     catch (\InvalidArgumentException $e) {
@@ -232,7 +232,7 @@ class ThemeHandlerTest extends KernelTestBase {
     $this->assertTrue(isset($themes[$sub_name]));
 
     // Verify that uninstalling both at the same time works.
-    $this->themeHandler()->uninstall(array($name, $sub_name));
+    $this->themeInstaller()->uninstall(array($name, $sub_name));
 
     $themes = $this->themeHandler()->listInfo();
     $this->assertFalse(isset($themes[$name]));
@@ -250,7 +250,7 @@ class ThemeHandlerTest extends KernelTestBase {
 
     try {
       $message = 'ThemeHandler::uninstall() throws InvalidArgumentException upon uninstalling a non-existing theme.';
-      $this->themeHandler()->uninstall(array($name));
+      $this->themeInstaller()->uninstall(array($name));
       $this->fail($message);
     }
     catch (\InvalidArgumentException $e) {
@@ -267,10 +267,10 @@ class ThemeHandlerTest extends KernelTestBase {
   function testUninstall() {
     $name = 'test_basetheme';
 
-    $this->themeHandler()->install(array($name));
+    $this->themeInstaller()->install(array($name));
     $this->assertTrue($this->config("$name.settings")->get());
 
-    $this->themeHandler()->uninstall(array($name));
+    $this->themeInstaller()->uninstall(array($name));
 
     $this->assertFalse(array_keys($this->themeHandler()->listInfo()));
     $this->assertFalse(array_keys(system_list('theme')));
@@ -278,7 +278,7 @@ class ThemeHandlerTest extends KernelTestBase {
     $this->assertFalse($this->config("$name.settings")->get());
 
     // Ensure that the uninstalled theme can be installed again.
-    $this->themeHandler()->install(array($name));
+    $this->themeInstaller()->install(array($name));
     $themes = $this->themeHandler()->listInfo();
     $this->assertTrue(isset($themes[$name]));
     $this->assertEqual($themes[$name]->getName(), $name);
@@ -294,7 +294,7 @@ class ThemeHandlerTest extends KernelTestBase {
 
     try {
       $message = 'ThemeHandler::uninstall() throws InvalidArgumentException upon uninstalling a theme that is not installed.';
-      $this->themeHandler()->uninstall(array($name));
+      $this->themeInstaller()->uninstall(array($name));
       $this->fail($message);
     }
     catch (\InvalidArgumentException $e) {
@@ -311,7 +311,7 @@ class ThemeHandlerTest extends KernelTestBase {
     $name = 'seven';
     $this->container->get('state')->set('module_test.hook_system_info_alter', TRUE);
 
-    $this->themeHandler()->install(array($name));
+    $this->themeInstaller()->install(array($name));
 
     $themes = $this->themeHandler()->listInfo();
     $this->assertFalse(isset($themes[$name]->info['regions']['test_region']));
@@ -362,21 +362,21 @@ class ThemeHandlerTest extends KernelTestBase {
   }
 
   /**
+   * Returns the theme installer service.
+   *
+   * @return \Drupal\Core\Extension\ThemeInstallerInterface
+   */
+  protected function themeInstaller() {
+    return $this->container->get('theme_installer');
+  }
+
+  /**
    * Returns the system.theme config object.
    *
    * @return \Drupal\Core\Config\Config
    */
   protected function extensionConfig() {
     return $this->config('core.extension');
-  }
-
-  /**
-   * Returns the active configuration storage.
-   *
-   * @return \Drupal\Core\Config\ConfigStorageInterface
-   */
-  protected function configStorage() {
-    return $this->container->get('config.storage');
   }
 
   /**

@@ -1,6 +1,6 @@
 # Themes are not supposed to provide/install this kind of config normally.
 # This exists for testing purposes only.
-# @see \Drupal\system\Tests\Extension\ThemeHandlerTest
+# @see \Drupal\system\Tests\Extension\ThemeInstallerTest
 id: fancy
 label: 'Fancy date'
 status: true
