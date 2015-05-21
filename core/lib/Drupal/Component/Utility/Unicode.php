@@ -184,6 +184,38 @@ EOD;
   }
 
   /**
+   * Decodes UTF byte-order mark (BOM) into the encoding's name.
+   *
+   * @param string $data
+   *   The data possibly containing a BOM. This can be the entire contents of
+   *   a file, or just a fragment containing at least the first five bytes.
+   *
+   * @return string|bool
+   *   The name of the encoding, or FALSE if no byte order mark was present.
+   */
+  public static function encodingFromBOM($data) {
+    static $bomMap = array(
+      "\xEF\xBB\xBF" => 'UTF-8',
+      "\xFE\xFF" => 'UTF-16BE',
+      "\xFF\xFE" => 'UTF-16LE',
+      "\x00\x00\xFE\xFF" => 'UTF-32BE',
+      "\xFF\xFE\x00\x00" => 'UTF-32LE',
+      "\x2B\x2F\x76\x38" => 'UTF-7',
+      "\x2B\x2F\x76\x39" => 'UTF-7',
+      "\x2B\x2F\x76\x2B" => 'UTF-7',
+      "\x2B\x2F\x76\x2F" => 'UTF-7',
+      "\x2B\x2F\x76\x38\x2D" => 'UTF-7',
+    );
+
+    foreach ($bomMap as $bom => $encoding) {
+      if (strpos($data, $bom) === 0) {
+        return $encoding;
+      }
+    }
+    return FALSE;
+  }
+
+  /**
    * Converts data to UTF-8.
    *
    * Requires the iconv, GNU recode or mbstring PHP extension.

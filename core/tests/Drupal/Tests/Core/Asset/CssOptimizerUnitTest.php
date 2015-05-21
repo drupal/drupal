@@ -170,6 +170,62 @@ class CssOptimizerUnitTest extends UnitTestCase {
         ),
         file_get_contents($path . 'charset.css.optimized.css'),
       ),
+      6 => array(
+        array(
+          'group' => -100,
+          'every_page' => TRUE,
+          'type' => 'file',
+          'weight' => 0.013,
+          'media' => 'all',
+          'preprocess' => TRUE,
+          'data' => $path . 'css_input_with_bom.css',
+          'browsers' => array('IE' => TRUE, '!IE' => TRUE),
+          'basename' => 'css_input_with_bom.css',
+        ),
+        '.byte-order-mark-test{content:"☃";}'. "\n",
+      ),
+      7 => array(
+        array(
+          'group' => -100,
+          'every_page' => TRUE,
+          'type' => 'file',
+          'weight' => 0.013,
+          'media' => 'all',
+          'preprocess' => TRUE,
+          'data' => $path . 'css_input_with_charset.css',
+          'browsers' => array('IE' => TRUE, '!IE' => TRUE),
+          'basename' => 'css_input_with_charset.css',
+        ),
+        '.charset-test{content:"€";}' . "\n",
+      ),
+      8 => array(
+        array(
+          'group' => -100,
+          'every_page' => TRUE,
+          'type' => 'file',
+          'weight' => 0.013,
+          'media' => 'all',
+          'preprocess' => TRUE,
+          'data' => $path . 'css_input_with_bom_and_charset.css',
+          'browsers' => array('IE' => TRUE, '!IE' => TRUE),
+          'basename' => 'css_input_with_bom_and_charset.css',
+        ),
+        '.byte-order-mark-charset-test{content:"☃";}' . "\n",
+      ),
+      9 => array(
+        array(
+          'group' => -100,
+          'every_page' => TRUE,
+          'type' => 'file',
+          'weight' => 0.013,
+          'media' => 'all',
+          'preprocess' => TRUE,
+          'data' => $path . 'css_input_with_utf16_bom.css',
+          'browsers' => array('IE' => TRUE, '!IE' => TRUE),
+          'basename' => 'css_input_with_utf16_bom.css',
+        ),
+        '.utf16-byte-order-mark-test{content:"☃";}' . "\n",
+      ),
     );
   }
 
