@@ -137,6 +137,7 @@ Install system
 
 JavaScript
 - Théodore Biadala 'nod_' http://drupal.org/user/598310
+- Kay Leung 'droplet' http://drupal.org/user/591932
 
 Language system
 - Francesco Placella 'plach' http://drupal.org/user/183211
