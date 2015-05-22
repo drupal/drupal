@@ -351,7 +351,7 @@ Language module
 - Gábor Hojtsy 'Gábor Hojtsy' http://drupal.org/user/4166
 
 Link module
-- ?
+- Weber Macedo 'Mac_Weber' https://www.drupal.org/user/789986
 
 Menu UI module
 - ?
