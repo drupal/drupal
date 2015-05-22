@@ -3,25 +3,47 @@ encouraged to submit issues and changes (patches) to improve Drupal, and to
 contribute in other ways -- see http://drupal.org/contribute to find out how.
 
 
-Branch maintainers
-------------------
+Core committers
+---------------
 
-The Drupal Core branch maintainers oversee the development of Drupal as a
-whole. The branch maintainers for Drupal 8 are:
+The Drupal Core committers oversee the development of Drupal as a whole. The
+core committers for Drupal are (per major version, in alphabetical order):
 
+Drupal 8
+- Alex Bronstein 'effulgentsia' https://www.drupal.org/user/78040
+  (Framework Manager)
 - Dries Buytaert 'dries' http://drupal.org/user/1
-- Nathaniel Catchpole 'catch' http://drupal.org/user/35733
+  (BDFL, Product Manager)
 - Angela Byron 'webchick' http://drupal.org/user/24967
+  (Product Manager)
+- Nathaniel Catchpole 'catch' http://drupal.org/user/35733
+  (Framework Manager, Release Manager)
+- Jess Myrbo 'xjm' http://drupal.org/user/65776
+  (Release Manager)
 - Alex Pott 'alexpott' http://drupal.org/user/157725
+  (Framework Manager)
 
+Provisional membership: None at this time.
 
-Component maintainers
+Drupal 7
+- David Rothstein 'David_Rothstein' https://www.drupal.org/user/124982
+  (Release Manager, Framework Manager, Product Manager)
+
+Provisional membership: None at this time.
+
+Drupal 6
+- Gábor Hojtsy 'Gábor Hojtsy' http://drupal.org/user/4166
+  (Release Manager, Framework Manager, Product Manager)
+
+Provisional membership: None at this time.
+
+Subsystem maintainers
 ---------------------
 
-The Drupal Core component maintainers oversee the development of Drupal
+The Drupal Core subsystem maintainers oversee the development of Drupal
 subsystems. See http://drupal.org/contribute/core-maintainers for more
-information on their responsibilities, and to find out how to become a component
-maintainer. Current component maintainers for Drupal 8:
+information on their responsibilities, and to find out how to become a subsystem
+maintainer. Current subsystem maintainers for Drupal 8:
 
 Ajax system
 - Alex Bronstein 'effulgentsia' http://drupal.org/user/78040
@@ -136,6 +158,11 @@ Migrate
 
 Menu system
 
+Node Access
+- Moshe Weitzman 'moshe weitzman' http://drupal.org/user/23
+- Ken Rickard 'agentrickard' http://drupal.org/user/20975
+- Jess Myrbo 'xjm' http://drupal.org/user/65776
+
 Path system
 - Nathaniel Catchpole 'catch' http://drupal.org/user/35733
 
@@ -171,15 +198,17 @@ Theme system
 Token system
 - Dave Reid 'davereid' http://drupal.org/user/53892
 
+Translations
+- ?
+
 Transliteration system
 - Andrei Mateescu 'amateescu' http://drupal.org/user/729614
 - Damien Tournoud 'DamZ' http://drupal.org/user/22211
 - Daniel F. Kudwien 'sun' http://drupal.org/user/54136
 - Jennifer Hodgdon 'jhodgdon' http://drupal.org/user/155601
 
-
-Topic coordinators
-------------------
+Topic maintainers
+-----------------
 
 Accessibility
 - Mike Gifford 'mgifford' http://drupal.org/user/27930
@@ -188,18 +217,17 @@ Accessibility
 Documentation
 - Jennifer Hodgdon 'jhodgdon' http://drupal.org/user/155601
 
-Translations
+Performance
+- Nathaniel Catchpole 'catch' http://drupal.org/user/35733
+
+Testing
 - ?
 
-User experience and usability
+Usability
 - Roy Scholten 'yoroy' http://drupal.org/user/41502
 - Bojhan Somers 'Bojhan' http://drupal.org/user/87969
 
-Node Access
-- Moshe Weitzman 'moshe weitzman' http://drupal.org/user/23
-- Ken Rickard 'agentrickard' http://drupal.org/user/20975
-- Jess Myrbo 'xjm' http://drupal.org/user/65776
-
+Provisional membership: None at this time.
 
 Security team
 -----------------
@@ -448,13 +476,13 @@ Stark theme
 - John Albin Wilkins 'JohnAlbin' http://drupal.org/user/32095
 
 
-Initiative owners
------------------
+Initiative coordinators
+-----------------------
 
-The Drupal Core Initiatives owners oversee approved projects that re-architect
-or otherwise improve large areas of Drupal core. See
+The Drupal Core Initiative coordinators oversee approved projects that
+re-architect or otherwise improve large areas of Drupal core. See
 http://drupal.org/community-initiatives/drupal-core for more information on
-their responsibilities. The initiative owners for Drupal 8 are:
+their responsibilities. The initiative coordinators for Drupal 8 are:
 
 Configuration management
 - Greg Dunlap 'heyrocker' http://drupal.org/user/128537
@@ -470,6 +498,8 @@ Multi-lingual
 
 Web services
 - Larry Garfield 'Crell' http://drupal.org/user/26398
+
+Provisional membership: None at this time.
 
 Core mentoring leads
 ---------------------
