@@ -22,7 +22,7 @@ function quickedit_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.quickedit':
       $output = '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Quick Edit module allows users with the <a href="!quickedit_permission">Access in-place editing</a> and <a href="!contextual_permission">Use contextual links</a> permissions to edit field content without visiting a separate page. For more information, see the <a href="!handbook_url">online documentation for the Quick Edit module</a>.', array('!handbook_url' => 'https://drupal.org/documentation/modules/edit', '!quickedit_permission' => \Drupal::url('user.admin_permissions', array(), array('fragment' => 'module-quickedit')), '!contextual_permission' => \Drupal::url('user.admin_permissions', array(), array('fragment' => 'module-contextual')))) . '</p>';
+      $output .= '<p>' . t('The Quick Edit module allows users with the <a href="!quickedit_permission">Access in-place editing</a> and <a href="!contextual_permission">Use contextual links</a> permissions to edit field content without visiting a separate page. For more information, see the <a href="!handbook_url">online documentation for the Quick Edit module</a>.', array('!handbook_url' => 'https://www.drupal.org/documentation/modules/edit', '!quickedit_permission' => \Drupal::url('user.admin_permissions', array(), array('fragment' => 'module-quickedit')), '!contextual_permission' => \Drupal::url('user.admin_permissions', array(), array('fragment' => 'module-contextual')))) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Editing content in-place') . '</dt>';
@@ -125,7 +125,7 @@ function quickedit_preprocess_field(&$variables) {
   // "display options" (which \Drupal\Core\Field\FieldItemListInterface::view()
   // always names the "_custom" view mode).
   // @see \Drupal\Core\Field\FieldItemListInterface::view()
-  // @see https://drupal.org/node/2120335
+  // @see https://www.drupal.org/node/2120335
   if ($element['#view_mode'] === '_custom') {
     return;
   }

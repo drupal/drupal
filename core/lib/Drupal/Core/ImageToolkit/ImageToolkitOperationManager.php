@@ -82,7 +82,7 @@ class ImageToolkitOperationManager extends DefaultPluginManager implements Image
     }
     else {
       // Pickup the first plugin found.
-      // @todo In https://drupal.org/node/2110591 we'll return here the UI
+      // @todo In https://www.drupal.org/node/2110591 we'll return here the UI
       //   selected plugin or the first found if missed.
       $definition = reset($definitions);
       return $definition['id'];

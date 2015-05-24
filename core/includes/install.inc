@@ -497,7 +497,7 @@ function drupal_install_config_directories() {
     if (!install_ensure_config_directory($config_type)) {
       throw new Exception(t('The directory %directory could not be created or could not be made writable. To proceed with the installation, either create the directory and modify its permissions manually or ensure that the installer has the permissions to create it automatically. For more information, see the <a href="@handbook_url">online handbook</a>.', array(
         '%directory' => config_get_config_directory($config_type),
-        '@handbook_url' => 'http://drupal.org/server-permissions',
+        '@handbook_url' => 'https://www.drupal.org/server-permissions',
       )));
     }
 
@@ -513,7 +513,7 @@ function drupal_install_config_directories() {
         $text = 'This directory contains configuration to be imported into your Drupal site. To make this configuration active, visit admin/config/development/configuration/sync.';
         break;
     }
-    $text .=  ' For information about deploying configuration between servers, see http://drupal.org/documentation/administer/config';
+    $text .=  ' For information about deploying configuration between servers, see https://www.drupal.org/documentation/administer/config';
     file_put_contents(config_get_config_directory($config_type) . '/README.txt', $text);
   }
 }

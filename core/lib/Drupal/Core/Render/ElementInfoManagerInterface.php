@@ -20,7 +20,7 @@ interface ElementInfoManagerInterface {
    * normal.
    *
    * For more information about custom element types see the explanation at
-   * http://drupal.org/node/169815.
+   * https://www.drupal.org/node/169815.
    *
    * @param string $type
    *   The machine name of an element type plugin.

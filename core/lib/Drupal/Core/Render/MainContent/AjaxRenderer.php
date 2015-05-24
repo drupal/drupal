@@ -82,7 +82,7 @@ class AjaxRenderer implements MainContentRendererInterface {
   /**
    * Wraps drupal_render_root().
    *
-   * @todo: Remove as part of https://drupal.org/node/2182149
+   * @todo Remove as part of https://www.drupal.org/node/2182149.
    */
   protected function drupalRenderRoot(&$elements) {
     return drupal_render_root($elements);

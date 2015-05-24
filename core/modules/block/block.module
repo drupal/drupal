@@ -100,7 +100,7 @@ function _block_rehash($theme = NULL) {
   $blocks = entity_load_multiple_by_properties('block', array('theme' => $theme));
   foreach ($blocks as $block_id => $block) {
     // Remove any invalid block from the list.
-    // @todo Remove this check as part of https://drupal.org/node/1776830.
+    // @todo Remove this check as part of https://www.drupal.org/node/1776830.
     if (!$block->getPlugin()) {
       unset($blocks[$block_id]);
       continue;

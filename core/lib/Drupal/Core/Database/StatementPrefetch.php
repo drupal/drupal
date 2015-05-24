@@ -153,7 +153,7 @@ class StatementPrefetch implements \Iterator, StatementInterface {
       if (is_string($options['fetch'])) {
         // Default to an object. Note: db fields will be added to the object
         // before the constructor is run. If you need to assign fields after
-        // the constructor is run, see http://drupal.org/node/315092.
+        // the constructor is run. See https://www.drupal.org/node/315092.
         $this->setFetchMode(\PDO::FETCH_CLASS, $options['fetch']);
       }
       else {

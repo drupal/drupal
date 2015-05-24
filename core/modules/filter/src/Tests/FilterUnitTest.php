@@ -203,7 +203,7 @@ class FilterUnitTest extends KernelTestBase {
       return Standard::filterXss($input, $dummy_filter_format);
     };
 
-    // All the tricky cases encountered at https://drupal.org/node/2105841.
+    // All the tricky cases encountered at https://www.drupal.org/node/2105841.
     // A plain URL preceded by text.
     $input = '<img data-caption="See https://www.drupal.org" src="llama.jpg" />';
     $expected = '<figure><img src="llama.jpg" /><figcaption>See https://www.drupal.org</figcaption></figure>';
@@ -621,8 +621,8 @@ Partial URL with 3 trailing www.partial.periods...
 Email with 3 trailing exclamations@example.com!!!
 Absolute URL and query string with 2 different punctuation characters (http://www.example.com/q=abc).
 Partial URL with brackets in the URL as well as surrounded brackets (www.foo.com/more_(than)_one_(parens)).
-Absolute URL with square brackets in the URL as well as surrounded brackets [http://www.drupal.org/?class[]=1]
-Absolute URL with quotes "http://www.drupal.org/sample"
+Absolute URL with square brackets in the URL as well as surrounded brackets [https://www.drupal.org/?class[]=1]
+Absolute URL with quotes "https://www.drupal.org/sample"
 
 ' => array(
         'period <a href="http://www.partial.com">www.partial.com</a>.' => TRUE,
@@ -633,8 +633,8 @@ Absolute URL with quotes "http://www.drupal.org/sample"
         'trailing <a href="mailto:exclamations@example.com">exclamations@example.com</a>!!!' => TRUE,
         'characters (<a href="http://www.example.com/q=abc">http://www.example.com/q=abc</a>).' => TRUE,
         'brackets (<a href="http://www.foo.com/more_(than)_one_(parens)">www.foo.com/more_(than)_one_(parens)</a>).' => TRUE,
-        'brackets [<a href="http://www.drupal.org/?class[]=1">http://www.drupal.org/?class[]=1</a>]' => TRUE,
-        'quotes "<a href="http://www.drupal.org/sample">http://www.drupal.org/sample</a>"' => TRUE,
+        'brackets [<a href="https://www.drupal.org/?class[]=1">https://www.drupal.org/?class[]=1</a>]' => TRUE,
+        'quotes "<a href="https://www.drupal.org/sample">https://www.drupal.org/sample</a>"' => TRUE,
       ),
       '
 (www.parenthesis.com/dir?a=1&b=2#a)

@@ -154,7 +154,7 @@ class LinkGeneratorTest extends UnitTestCase {
   public function testGenerateExternal() {
     $this->urlAssembler->expects($this->once())
       ->method('assemble')
-      ->with('http://drupal.org', array('set_active_class' => TRUE, 'external' => TRUE) + $this->defaultOptions)
+      ->with('https://www.drupal.org', array('set_active_class' => TRUE, 'external' => TRUE) + $this->defaultOptions)
       ->will($this->returnArgument(0));
 
     $this->moduleHandler->expects($this->once())
@@ -163,10 +163,10 @@ class LinkGeneratorTest extends UnitTestCase {
 
     $this->urlAssembler->expects($this->once())
       ->method('assemble')
-      ->with('http://drupal.org', array('set_active_class' => TRUE, 'external' => TRUE) + $this->defaultOptions)
+      ->with('https://www.drupal.org', array('set_active_class' => TRUE, 'external' => TRUE) + $this->defaultOptions)
       ->willReturnArgument(0);
 
-    $url = Url::fromUri('http://drupal.org');
+    $url = Url::fromUri('https://www.drupal.org');
     $url->setUrlGenerator($this->urlGenerator);
     $url->setUnroutedUrlAssembler($this->urlAssembler);
     $url->setOption('set_active_class', TRUE);
@@ -174,7 +174,7 @@ class LinkGeneratorTest extends UnitTestCase {
     $result = $this->linkGenerator->generate('Drupal', $url);
     $this->assertLink(array(
       'attributes' => array(
-        'href' => 'http://drupal.org',
+        'href' => 'https://www.drupal.org',
       ),
       'content' => 'Drupal',
     ), $result);

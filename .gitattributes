@@ -1,6 +1,6 @@
 # Drupal git normalization
-# @see http://www.kernel.org/pub/software/scm/git/docs/gitattributes.html
-# @see http://drupal.org/node/1542048
+# @see https://www.kernel.org/pub/software/scm/git/docs/gitattributes.html
+# @see https://www.drupal.org/node/1542048
 
 # Normally these settings would be done with macro attributes for improved
 # readability and easier maintenance. However macros can only be defined at the

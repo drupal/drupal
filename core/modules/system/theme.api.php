@@ -214,11 +214,11 @@
  * same, which gives users fewer user interface patterns to learn.
  *
  * For further information on the Theme and Render APIs, see:
- * - https://drupal.org/documentation/theme
+ * - https://www.drupal.org/documentation/theme
  * - https://www.drupal.org/developing/api/8/render
- * - https://drupal.org/node/722174
- * - https://drupal.org/node/933976
- * - https://drupal.org/node/930760
+ * - https://www.drupal.org/node/722174
+ * - https://www.drupal.org/node/933976
+ * - https://www.drupal.org/node/930760
  *
  * @todo Check these links. Some are for Drupal 7, and might need updates for
  *   Drupal 8.

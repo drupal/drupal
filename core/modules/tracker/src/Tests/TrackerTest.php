@@ -162,7 +162,8 @@ class TrackerTest extends WebTestBase {
 
     $this->drupalGet('node/' . $node->id());
     // Simulate the JavaScript on the node page to mark the node as read.
-    // @todo Get rid of curlExec() once https://drupal.org/node/2074037 lands.
+    // @todo Get rid of curlExec() once https://www.drupal.org/node/2074037
+    //   lands.
     $this->curlExec(array(
       CURLOPT_URL => \Drupal::url('history.read_node', ['node' => $node->id()], array('absolute' => TRUE)),
       CURLOPT_HTTPHEADER => array(
@@ -178,7 +179,8 @@ class TrackerTest extends WebTestBase {
 
     $this->drupalGet('node/' . $node->id());
     // Simulate the JavaScript on the node page to mark the node as read.
-    // @todo Get rid of curlExec() once https://drupal.org/node/2074037 lands.
+    // @todo Get rid of curlExec() once https://www.drupal.org/node/2074037
+    //   lands.
     $this->curlExec(array(
       CURLOPT_URL => \Drupal::url('history.read_node', ['node' => $node->id()], array('absolute' => TRUE)),
       CURLOPT_HTTPHEADER => array(
@@ -207,7 +209,8 @@ class TrackerTest extends WebTestBase {
     $this->drupalPostForm('comment/reply/node/' . $node->id() . '/comment', $comment, t('Save'));
     // The new comment is automatically viewed by the current user. Simulate the
     // JavaScript that does this.
-    // @todo Get rid of curlExec() once https://drupal.org/node/2074037 lands.
+    // @todo Get rid of curlExec() once https://www.drupal.org/node/2074037
+    //   lands.
     $this->curlExec(array(
       CURLOPT_URL => \Drupal::url('history.read_node', ['node' => $node->id()], array('absolute' => TRUE)),
       CURLOPT_HTTPHEADER => array(

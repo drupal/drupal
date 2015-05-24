@@ -53,7 +53,7 @@ class LanguageConfigOverride extends StorableConfigBase {
   public function save($has_trusted_data = FALSE) {
     if (!$has_trusted_data) {
       // @todo Use configuration schema to validate.
-      //   https://drupal.org/node/2270399
+      //   https://www.drupal.org/node/2270399
       // Perform basic data validation.
       foreach ($this->data as $key => $value) {
         $this->validateValue($key, $value);

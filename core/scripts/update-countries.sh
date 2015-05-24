@@ -42,7 +42,7 @@ if (!function_exists('t')) {
 
 // Read in existing codes.
 // @todo Allow to remove previously existing country codes.
-// @see http://drupal.org/node/1436754
+// @see https://www.drupal.org/node/1436754
 require_once DRUPAL_ROOT . '/core/lib/Drupal/Core/Locale/CountryManagerInterface.php';
 require_once DRUPAL_ROOT . '/core/lib/Drupal/Core/Locale/CountryManager.php';
 $existing_countries = \Drupal\Core\Locale\CountryManager::getStandardList();

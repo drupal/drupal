@@ -183,7 +183,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     if (!empty($exclude[$path])) {
       return NULL;
     }
-    // @todo Use the RequestHelper once https://drupal.org/node/2090293 is
+    // @todo Use the RequestHelper once https://www.drupal.org/node/2090293 is
     //   fixed.
     $request = Request::create($this->context->getCompleteBaseUrl() . '/' . $path);
     // Performance optimization: set a short accept header to reduce overhead in

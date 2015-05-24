@@ -106,7 +106,7 @@ class EntityReferenceFieldTest extends EntityUnitTestBase {
     $this->assertEqual($violations[0]->getMessage(), t('The referenced entity (%type: %id) does not exist.', array('%type' => $this->referencedEntityType, '%id' => 9999)));
 
     // @todo Implement a test case for invalid bundle references after
-    // https://drupal.org/node/2064191 is fixed
+    //   https://www.drupal.org/node/2064191 is fixed.
   }
 
   /**

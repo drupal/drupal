@@ -23,7 +23,7 @@ function aggregator_help($route_name, RouteMatchInterface $route_match) {
       $path_validator = \Drupal::pathValidator();
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Aggregator module is an on-site syndicator and news reader that gathers and displays fresh content from RSS-, RDF-, and Atom-based feeds made available across the web. Thousands of sites (particularly news sites and blogs) publish their latest headlines in feeds, using a number of standardized XML-based formats. For more information, see the <a href="!aggregator-module">online documentation for the Aggregator module</a>.', array('!aggregator-module' => 'https://drupal.org/documentation/modules/aggregator')) . '</p>';
+      $output .= '<p>' . t('The Aggregator module is an on-site syndicator and news reader that gathers and displays fresh content from RSS-, RDF-, and Atom-based feeds made available across the web. Thousands of sites (particularly news sites and blogs) publish their latest headlines in feeds, using a number of standardized XML-based formats. For more information, see the <a href="!aggregator-module">online documentation for the Aggregator module</a>.', array('!aggregator-module' => 'https://www.drupal.org/documentation/modules/aggregator')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       // Check if the aggregator sources View is enabled.
@@ -92,7 +92,7 @@ function aggregator_entity_extra_field_info() {
         'description' => t('The feed image'),
         'weight' => 2,
       ),
-      // @todo Move to a formatter at https://drupal.org/node/2149845.
+      // @todo Move to a formatter at https://www.drupal.org/node/2149845.
       'description' => array(
         'label' => t('Description'),
         'description' => t('The description of this feed'),
@@ -113,7 +113,7 @@ function aggregator_entity_extra_field_info() {
 
   $extra['aggregator_item']['aggregator_item'] = array(
     'display' => array(
-      // @todo Move to a formatter at https://drupal.org/node/2149845.
+      // @todo Move to a formatter at https://www.drupal.org/node/2149845.
       'description' => array(
         'label' => t('Description'),
         'description' => t('The description of this feed item'),

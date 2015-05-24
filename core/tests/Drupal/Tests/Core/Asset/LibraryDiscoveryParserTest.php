@@ -478,7 +478,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     $this->assertTrue(isset($library['license']));
     $default_license = array(
       'name' => 'GNU-GPL-2.0-or-later',
-      'url' => 'https://drupal.org/licensing/faq',
+      'url' => 'https://www.drupal.org/licensing/faq',
       'gpl-compatible' => TRUE,
     );
     $this->assertEquals($library['license'], $default_license);

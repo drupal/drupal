@@ -16,7 +16,7 @@ function ckeditor_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.ckeditor':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The CKEditor module provides a visual text editor and adds a toolbar to text fields. Users can use buttons to format content and to create semantically correct and valid HTML. The CKEditor module uses the framework provided by the <a href="!text_editor">Text Editor module</a>. It requires JavaScript to be enabled in the browser. For more information, see <a href="!doc_url">the online documentation for the CKEditor module</a> and the <a href="!cke_url">CKEditor website</a>.', array( '!doc_url' => 'https://drupal.org/documentation/modules/ckeditor', '!cke_url' => 'http://ckeditor.com', '!text_editor' => \Drupal::url('help.page', array('name' => 'editor')))) . '</p>';
+      $output .= '<p>' . t('The CKEditor module provides a visual text editor and adds a toolbar to text fields. Users can use buttons to format content and to create semantically correct and valid HTML. The CKEditor module uses the framework provided by the <a href="!text_editor">Text Editor module</a>. It requires JavaScript to be enabled in the browser. For more information, see <a href="!doc_url">the online documentation for the CKEditor module</a> and the <a href="!cke_url">CKEditor website</a>.', array( '!doc_url' => 'https://www.drupal.org/documentation/modules/ckeditor', '!cke_url' => 'http://ckeditor.com', '!text_editor' => \Drupal::url('help.page', array('name' => 'editor')))) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Enabling CKEditor for individual text formats') . '</dt>';

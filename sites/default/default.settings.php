@@ -22,7 +22,7 @@
  * 'sites/default' will be used.
  *
  * For example, for a fictitious site installed at
- * http://www.drupal.org:8080/mysite/test/, the 'settings.php' file is searched
+ * https://www.drupal.org:8080/mysite/test/, the 'settings.php' file is searched
  * for in the following directories:
  *
  * - sites/8080.www.drupal.org.mysite.test
@@ -44,7 +44,7 @@
  *
  * Note that if you are installing on a non-standard port number, prefix the
  * hostname with that number. For example,
- * http://www.drupal.org:8080/mysite/test/ could be loaded from
+ * https://www.drupal.org:8080/mysite/test/ could be loaded from
  * sites/8080.www.drupal.org.mysite.test/.
  *
  * @see example.sites.php
@@ -430,7 +430,7 @@ if ($settings['hash_salt']) {
  * the code directly via SSH or FTP themselves. This setting completely
  * disables all functionality related to these authorized file operations.
  *
- * @see http://drupal.org/node/244924
+ * @see https://www.drupal.org/node/244924
  *
  * Remove the leading hash signs to disable.
  */
@@ -463,8 +463,8 @@ if ($settings['hash_salt']) {
  * Note: Caches need to be cleared when this value is changed to make the
  * private:// stream wrapper available to the system.
  *
- * See http://drupal.org/documentation/modules/file for more information about
- * securing private files.
+ * See https://www.drupal.org/documentation/modules/file for more information
+ * about securing private files.
  */
 # $settings['file_private_path'] = '';
 

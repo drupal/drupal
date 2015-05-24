@@ -13,7 +13,7 @@ namespace Drupal\Core\Config\Schema;
  * This object may contain any number and type of nested elements that share
  * a common definition in the 'sequence' property of the configuration schema.
  *
- * Read https://drupal.org/node/1905070 for more details about configuration
+ * Read https://www.drupal.org/node/1905070 for more details about configuration
  * schema, types and type resolution.
  */
 class Sequence extends ArrayElement {

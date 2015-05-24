@@ -241,8 +241,9 @@ Drupal 7.0, 2011-01-05
       allowing Drupal to lazy-load classes and interfaces as needed.
 - Theme system:
     * Removed the Bluemarine, Chameleon and Pushbutton themes. These themes live
-      on as contributed themes (http://drupal.org/project/bluemarine,
-      http://drupal.org/project/chameleon and http://drupal.org/project/pushbutton).
+      on as contributed themes (https://www.drupal.org/project/bluemarine,
+      https://www.drupal.org/project/chameleon and
+      https://www.drupal.org/project/pushbutton).
     * Added Stark theme to make analyzing Drupal's default HTML and CSS easier.
     * Added Seven as the default administration theme.
     * Variable preprocessing of theme hooks prior to template rendering now goes
@@ -441,13 +442,13 @@ Drupal 6.0, 2008-02-13
 - Added support for triggering configurable actions.
 - Added the Update status module to automatically check for available updates
   and warn sites if they are missing security updates or newer versions.
-  Sites deploying from CVS should use http://drupal.org/project/cvs_deploy.
-  Advanced settings provided by http://drupal.org/project/update_advanced.
+  Sites deploying from CVS should use https://www.drupal.org/project/cvs_deploy.
+  Advanced settings provided by https://www.drupal.org/project/update_advanced.
 - Upgraded the core JavaScript library to jQuery version 1.2.3.
 - Added a new Schema API, which provides built-in support for core and
   contributed modules to work with databases other than MySQL.
 - Removed drupal.module. The functionality lives on as the Site network
-  contributed module (http://drupal.org/project/site_network).
+  contributed module (https://www.drupal.org/project/site_network).
 - Removed old system updates. Updates from Drupal versions prior to 5.x will
   require upgrading to 5.x before upgrading to 6.x.
 

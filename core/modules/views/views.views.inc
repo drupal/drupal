@@ -323,7 +323,7 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
 
   // Description of the field tables.
   // @todo Generalize this code to make it work with any table layout. See
-  //   https://drupal.org/node/2079019.
+  //   https://www.drupal.org/node/2079019.
   $table_mapping = $storage->getTableMapping();
   $field_tables = array(
     EntityStorageInterface::FIELD_LOAD_CURRENT => array(

@@ -242,7 +242,7 @@ class LanguageManager implements LanguageManagerInterface {
     //
     // The "Left-to-right marker" comments and the enclosed UTF-8 markers are to
     // make otherwise strange looking PHP syntax natural (to not be displayed in
-    // right to left). See http://drupal.org/node/128866#comment-528929.
+    // right to left). See https://www.drupal.org/node/128866#comment-528929.
     return array(
       'af' => array('Afrikaans', 'Afrikaans'),
       'am' => array('Amharic', 'አማርኛ'),

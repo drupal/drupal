@@ -15,7 +15,7 @@ function action_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.action':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Actions module provides tasks that can be executed by the site such as unpublishing content, sending email messages, or blocking a user. Other modules can trigger these actions when specific system events happen; for example, when new content is posted or when a user logs in. Modules can also provide additional actions. For more information, see the <a href="!documentation">online documentation for the Action module</a>.', array('!documentation' => 'https://drupal.org/documentation/modules/action')) . '</p>';
+      $output .= '<p>' . t('The Actions module provides tasks that can be executed by the site such as unpublishing content, sending email messages, or blocking a user. Other modules can trigger these actions when specific system events happen; for example, when new content is posted or when a user logs in. Modules can also provide additional actions. For more information, see the <a href="!documentation">online documentation for the Action module</a>.', array('!documentation' => 'https://www.drupal.org/documentation/modules/action')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Using simple actions') . '</dt>';

@@ -32,7 +32,7 @@ class EditEntityFieldAccessCheck implements AccessInterface, EditEntityFieldAcce
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    *
-   * @todo Use the $account argument: https://drupal.org/node/2266809.
+   * @todo Use the $account argument: https://www.drupal.org/node/2266809.
    */
   public function access(EntityInterface $entity, $field_name, $langcode, AccountInterface $account) {
     if (!$this->validateRequestAttributes($entity, $field_name, $langcode)) {

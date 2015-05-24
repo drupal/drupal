@@ -19,7 +19,7 @@ function statistics_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.statistics':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Statistics module shows you how often content is viewed. This is useful in determining which pages of your site are most popular. For more information, see <a href="!statistics_do">the online documentation for the Statistics module</a>.', array('!statistics_do' => 'https://drupal.org/documentation/modules/statistics/')) . '</p>';
+      $output .= '<p>' . t('The Statistics module shows you how often content is viewed. This is useful in determining which pages of your site are most popular. For more information, see <a href="!statistics_do">the online documentation for the Statistics module</a>.', array('!statistics_do' => 'https://www.drupal.org/documentation/modules/statistics/')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Displaying popular content') . '</dt>';

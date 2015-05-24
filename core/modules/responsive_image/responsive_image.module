@@ -28,7 +28,7 @@ function responsive_image_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.responsive_image':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Responsive Image module provides an image formatter and breakpoint mappings to output responsive images using the HTML5 picture tag. For more information, see the <a href="!responsive_image">online documentation for the Responsive Image module</a>.', array( '!responsive_image' => 'https://drupal.org/documentation/modules/responsive_image')) . '</p>';
+      $output .= '<p>' . t('The Responsive Image module provides an image formatter and breakpoint mappings to output responsive images using the HTML5 picture tag. For more information, see the <a href="!responsive_image">online documentation for the Responsive Image module</a>.', array( '!responsive_image' => 'https://www.drupal.org/documentation/modules/responsive_image')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Defining responsive image styles') . '</dt>';

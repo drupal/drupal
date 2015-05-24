@@ -61,7 +61,7 @@ class HelpTest extends WebTestBase {
     // Verify that introductory help text exists, goes for 100% module coverage.
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/help');
-    $this->assertRaw(t('For more information, refer to the subjects listed in the Help Topics section or to the <a href="!docs">online documentation</a> and <a href="!support">support</a> pages at <a href="!drupal">drupal.org</a>.', array('!docs' => 'https://drupal.org/documentation', '!support' => 'https://drupal.org/support', '!drupal' => 'https://drupal.org')), 'Help intro text correctly appears.');
+    $this->assertRaw(t('For more information, refer to the subjects listed in the Help Topics section or to the <a href="!docs">online documentation</a> and <a href="!support">support</a> pages at <a href="!drupal">drupal.org</a>.', array('!docs' => 'https://www.drupal.org/documentation', '!support' => 'https://www.drupal.org/support', '!drupal' => 'https://www.drupal.org')), 'Help intro text correctly appears.');
 
     // Verify that help topics text appears.
     $this->assertRaw('<h2>' . t('Help topics') . '</h2><p>' . t('Help is available on the following items:') . '</p>', 'Help topics text correctly appears.');

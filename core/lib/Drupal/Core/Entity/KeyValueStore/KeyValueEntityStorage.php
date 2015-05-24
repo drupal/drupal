@@ -99,7 +99,7 @@ class KeyValueEntityStorage extends EntityStorageBase {
 
     // @todo This is handled by ContentEntityStorageBase, which assumes
     //   FieldableEntityInterface. The current approach in
-    //   https://drupal.org/node/1867228 improves this but does not solve it
+    //   https://www.drupal.org/node/1867228 improves this but does not solve it
     //   completely.
     if ($entity instanceof FieldableEntityInterface) {
       foreach ($entity as $name => $field) {

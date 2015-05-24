@@ -193,7 +193,7 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
   /**
    * {@inheritdoc}
    *
-   * @todo Make cacheable as part of https://drupal.org/node/1805054
+   * @todo Make cacheable as part of https://www.drupal.org/node/1805054.
    */
   public function getCacheMaxAge() {
     return 0;

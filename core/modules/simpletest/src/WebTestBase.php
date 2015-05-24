@@ -770,7 +770,7 @@ abstract class WebTestBase extends TestBase {
     // By default, verbosely display all errors and disable all production
     // environment optimizations for all tests to avoid needless overhead and
     // ensure a sane default experience for test authors.
-    // @see https://drupal.org/node/2259167
+    // @see https://www.drupal.org/node/2259167
     $config->getEditable('system.logging')
       ->set('error_level', 'verbose')
       ->save();

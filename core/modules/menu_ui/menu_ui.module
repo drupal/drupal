@@ -35,7 +35,7 @@ function menu_ui_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.menu_ui':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Menu UI module provides an interface for managing menus. A menu is a hierarchical collection of links, which can be within or external to the site, generally used for navigation. For more information, see the <a href="!menu">online documentation for the Menu UI module</a>.', array('!menu' => 'https://drupal.org/documentation/modules/menu/')) . '</p>';
+      $output .= '<p>' . t('The Menu UI module provides an interface for managing menus. A menu is a hierarchical collection of links, which can be within or external to the site, generally used for navigation. For more information, see the <a href="!menu">online documentation for the Menu UI module</a>.', array('!menu' => 'https://www.drupal.org/documentation/modules/menu/')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Managing menus') . '</dt>';

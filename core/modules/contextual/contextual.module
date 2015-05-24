@@ -68,7 +68,7 @@ function contextual_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.contextual':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Contextual links module gives users with the <em>Use contextual links</em> permission quick access to tasks associated with certain areas of pages on your site. For example, a menu displayed as a block has links to edit the menu and configure the block. For more information, see <a href="!contextual">the online documentation for the Contextual Links module</a>.', array('!contextual' => 'https://drupal.org/documentation/modules/contextual')) . '</p>';
+      $output .= '<p>' . t('The Contextual links module gives users with the <em>Use contextual links</em> permission quick access to tasks associated with certain areas of pages on your site. For example, a menu displayed as a block has links to edit the menu and configure the block. For more information, see <a href="!contextual">the online documentation for the Contextual Links module</a>.', array('!contextual' => 'https://www.drupal.org/documentation/modules/contextual')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Displaying contextual links') . '</dt>';

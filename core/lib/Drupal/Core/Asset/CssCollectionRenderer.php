@@ -17,7 +17,7 @@ use Drupal\Core\State\StateInterface;
  * - They are the standard tag intended for linking to a resource.
  * - On Firefox 2 and perhaps other browsers, CSS files included with @import
  *   statements don't get saved when saving the complete web page for offline
- *   use: http://drupal.org/node/145218.
+ *   use: https://www.drupal.org/node/145218.
  * - On IE, if only LINK tags and no @import statements are used, all the CSS
  *   files are downloaded in parallel, resulting in faster page load, but if
  *   @import statements are used and span across multiple STYLE tags, all the
@@ -29,8 +29,8 @@ use Drupal\Core\State\StateInterface;
  *   http://www.stevesouders.com/blog/2009/04/09/dont-use-import/.
  *
  * However, IE has an annoying limit of 31 total CSS inclusion tags
- * (http://drupal.org/node/228818) and LINK tags are limited to one file per
- * tag, whereas STYLE tags can contain multiple @import statements allowing
+ * (https://www.drupal.org/node/228818) and LINK tags are limited to one file
+ * per tag, whereas STYLE tags can contain multiple @import statements allowing
  * multiple files to be loaded per tag. When CSS aggregation is disabled, a
  * Drupal site can easily have more than 31 CSS files that need to be loaded, so
  * using LINK tags exclusively would result in a site that would display

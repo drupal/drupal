@@ -48,7 +48,7 @@ class Comment extends DrupalSqlBase {
       $row->setSourceProperty('comment_type', 'comment_no_subject');
     }
     // In D6, status=0 means published, while in D8 means the opposite.
-    // See https://drupal.org/node/237636
+    // See https://www.drupal.org/node/237636.
     $row->setSourceProperty('status', !$row->getSourceProperty('status'));
     return parent::prepareRow($row);
   }

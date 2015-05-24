@@ -28,7 +28,7 @@ function book_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.book':
       $output = '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Book module is used for creating structured, multi-page content, such as site resource guides, manuals, and wikis. It allows you to create content that has chapters, sections, subsections, or any similarly-tiered structure. Enabling the module creates a new content type <em>Book page</em>. For more information, see the <a href="!book">online documentation for the Book module</a>.', array('!book' => 'https://drupal.org/documentation/modules/book')) . '</p>';
+      $output .= '<p>' . t('The Book module is used for creating structured, multi-page content, such as site resource guides, manuals, and wikis. It allows you to create content that has chapters, sections, subsections, or any similarly-tiered structure. Enabling the module creates a new content type <em>Book page</em>. For more information, see the <a href="!book">online documentation for the Book module</a>.', array('!book' => 'https://www.drupal.org/documentation/modules/book')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Adding and managing book content') . '</dt>';

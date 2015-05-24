@@ -13,6 +13,6 @@ namespace Drupal\Core\Routing\Access;
 interface AccessInterface {
 
   // @todo Remove this interface since it no longer defines any methods?
-  // @see https://drupal.org/node/2266817.
+  // @see https://www.drupal.org/node/2266817.
 
 }

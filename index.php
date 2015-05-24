@@ -30,7 +30,7 @@ catch (HttpExceptionInterface $e) {
   $response->prepare($request)->send();
 }
 catch (Exception $e) {
-  $message = 'If you have just changed code (for example deployed a new module or moved an existing one) read <a href="http://drupal.org/documentation/rebuild">http://drupal.org/documentation/rebuild</a>';
+  $message = 'If you have just changed code (for example deployed a new module or moved an existing one) read <a href="https://www.drupal.org/documentation/rebuild">https://www.drupal.org/documentation/rebuild</a>';
   if (Settings::get('rebuild_access', FALSE)) {
     $rebuild_path = $GLOBALS['base_url'] . '/rebuild.php';
     $message .= " or run the <a href=\"$rebuild_path\">rebuild script</a>";

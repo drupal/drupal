@@ -15,7 +15,7 @@ function telephone_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.telephone':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Telephone module allows you to create fields that contain telephone numbers. See the <a href="!field">Field module help</a> and the <a href="!field_ui">Field UI help</a> pages for general information on fields and how to create and manage them. For more information, see the <a href="!telephone_documentation">online documentation for the Telephone module</a>.', array('!field' => \Drupal::url('help.page', array('name' => 'field')), '!field_ui' => (\Drupal::moduleHandler()->moduleExists('field_ui')) ? \Drupal::url('help.page', array('name' => 'field_ui')) : '#', '!telephone_documentation' => 'https://drupal.org/documentation/modules/telephone')) . '</p>';
+      $output .= '<p>' . t('The Telephone module allows you to create fields that contain telephone numbers. See the <a href="!field">Field module help</a> and the <a href="!field_ui">Field UI help</a> pages for general information on fields and how to create and manage them. For more information, see the <a href="!telephone_documentation">online documentation for the Telephone module</a>.', array('!field' => \Drupal::url('help.page', array('name' => 'field')), '!field_ui' => (\Drupal::moduleHandler()->moduleExists('field_ui')) ? \Drupal::url('help.page', array('name' => 'field_ui')) : '#', '!telephone_documentation' => 'https://www.drupal.org/documentation/modules/telephone')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Managing and displaying telephone fields') . '</dt>';

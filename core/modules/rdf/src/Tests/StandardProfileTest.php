@@ -329,7 +329,7 @@ class StandardProfileTest extends WebTestBase {
     $this->assertTrue($graph->hasProperty($this->termUri, 'http://schema.org/name', $expected_value), "Term name was found (schema:name) on term page.");
 
     // @todo Add test for term description once it is a field:
-    //   https://drupal.org/node/569434
+    //   https://www.drupal.org/node/569434.
   }
 
   /**
@@ -404,7 +404,7 @@ class StandardProfileTest extends WebTestBase {
     $this->assertTrue($graph->hasProperty($this->articleUri, 'http://schema.org/about', $expected_value), "$message_prefix tag was found (schema:about).");
 
     // Tag type.
-    // @todo enable with https://drupal.org/node/2072791
+    // @todo Enable with https://www.drupal.org/node/2072791.
     //$this->assertEqual($graph->type($this->termUri), 'schema:Thing', 'Tag type was found (schema:Thing).');
 
     // Tag name.
@@ -413,7 +413,7 @@ class StandardProfileTest extends WebTestBase {
       'value' => $this->term->getName(),
       'lang' => 'en',
     );
-    // @todo enable with https://drupal.org/node/2072791
+    // @todo Enable with https://www.drupal.org/node/2072791.
     //$this->assertTrue($graph->hasProperty($this->termUri, 'http://schema.org/name', $expected_value), "$message_prefix name was found (schema:name).");
   }
 

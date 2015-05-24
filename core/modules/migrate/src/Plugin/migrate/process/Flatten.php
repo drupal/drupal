@@ -17,7 +17,7 @@ use Drupal\migrate\Row;
  * once a single value gets transformed into multiple values. This plugin will
  * flatten them back down to single values again.
  *
- * @see https://drupal.org/node/2154215
+ * @see https://www.drupal.org/node/2154215
  *
  * @MigrateProcessPlugin(
  *   id = "flatten",

@@ -30,7 +30,7 @@ function file_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.file':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The File module allows you to create fields that contain files. See the <a href="!field">Field module help</a> and the <a href="!field_ui">Field UI help</a> pages for general information on fields and how to create and manage them. For more information, see the <a href="!file_documentation">online documentation for the File module</a>.', array('!field' => \Drupal::url('help.page', array('name' => 'field')), '!field_ui' => (\Drupal::moduleHandler()->moduleExists('field_ui')) ? \Drupal::url('help.page', array('name' => 'field_ui')) :'#', '!file_documentation' => 'https://drupal.org/documentation/modules/file')) . '</p>';
+      $output .= '<p>' . t('The File module allows you to create fields that contain files. See the <a href="!field">Field module help</a> and the <a href="!field_ui">Field UI help</a> pages for general information on fields and how to create and manage them. For more information, see the <a href="!file_documentation">online documentation for the File module</a>.', array('!field' => \Drupal::url('help.page', array('name' => 'field')), '!field_ui' => (\Drupal::moduleHandler()->moduleExists('field_ui')) ? \Drupal::url('help.page', array('name' => 'field_ui')) :'#', '!file_documentation' => 'https://www.drupal.org/documentation/modules/file')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Managing and displaying file fields') . '</dt>';
@@ -151,8 +151,8 @@ function file_copy(FileInterface $source, $destination = NULL, $replace = FILE_E
     $file->setFileUri($uri);
     $file->setFilename(drupal_basename($uri));
     // If we are replacing an existing file re-use its database record.
-    // @todo Do not create a new entity in order to update it, see
-    //   https://drupal.org/node/2241865
+    // @todo Do not create a new entity in order to update it. See
+    //   https://www.drupal.org/node/2241865.
     if ($replace == FILE_EXISTS_REPLACE) {
       $existing_files = entity_load_multiple_by_properties('file', array('uri' => $uri));
       if (count($existing_files)) {
@@ -498,8 +498,8 @@ function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAM
       'status' => FILE_STATUS_PERMANENT,
     ));
     // If we are replacing an existing file re-use its database record.
-    // @todo Do not create a new entity in order to update it, see
-    //   https://drupal.org/node/2241865
+    // @todo Do not create a new entity in order to update it. See
+    //   https://www.drupal.org/node/2241865.
     if ($replace == FILE_EXISTS_REPLACE) {
       $existing_files = entity_load_multiple_by_properties('file', array('uri' => $uri));
       if (count($existing_files)) {
@@ -881,8 +881,8 @@ function file_save_upload($form_field_name, $validators = array(), $destination 
     drupal_chmod($file->getFileUri());
 
     // If we are replacing an existing file re-use its database record.
-    // @todo Do not create a new entity in order to update it, see
-    //   https://drupal.org/node/2241865
+    // @todo Do not create a new entity in order to update it. See
+    //   https://www.drupal.org/node/2241865.
     if ($replace == FILE_EXISTS_REPLACE) {
       $existing_files = entity_load_multiple_by_properties('file', array('uri' => $file->getFileUri()));
       if (count($existing_files)) {

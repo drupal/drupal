@@ -234,7 +234,7 @@ class ConfigEntityMapper extends ConfigNamesMapper {
    */
   public function getContextualLinkGroup() {
     // @todo Contextual groups do not map to entity types in a predictable
-    //   way. See https://drupal.org/node/2134841 to make them predictable.
+    //   way. See https://www.drupal.org/node/2134841 to make them predictable.
     switch ($this->entityType) {
       case 'menu':
       case 'block':

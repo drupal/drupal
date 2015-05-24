@@ -140,7 +140,7 @@ class BreadcrumbTest extends MenuTestBase {
     $this->assertBreadcrumb('admin/config/content/formats/add', $trail);
     $this->assertBreadcrumb("admin/config/content/formats/manage/$format_id", $trail);
     // @todo Remove this part once we have a _title_callback, see
-    //   https://drupal.org/node/2076085.
+    //   https://www.drupal.org/node/2076085.
     $trail += array(
       "admin/config/content/formats/manage/$format_id" => $format->label(),
     );

@@ -31,7 +31,7 @@ class Client extends GuzzleClient {
       'verify' => TRUE,
       'timeout' => 30,
       'headers' => array(
-        'User-Agent' => 'Drupal/' . \Drupal::VERSION . ' (+https://drupal.org/) ' . static::getDefaultUserAgent(),
+        'User-Agent' => 'Drupal/' . \Drupal::VERSION . ' (+https://www.drupal.org/) ' . static::getDefaultUserAgent(),
       ),
     );
 

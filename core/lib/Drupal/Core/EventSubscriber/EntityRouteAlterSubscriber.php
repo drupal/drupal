@@ -21,7 +21,7 @@ use Drupal\Core\Routing\RouteBuildEvent;
  *   types might exist across all modules in order to pick names that don't
  *   conflict. Instead, the 'type' should be determined from introspecting what
  *   kind of PHP variable (e.g., a type hinted interface) the controller
- *   requires: https://drupal.org/node/2041907.
+ *   requires: https://www.drupal.org/node/2041907.
  */
 class EntityRouteAlterSubscriber implements EventSubscriberInterface {
 

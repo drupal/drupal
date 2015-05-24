@@ -138,7 +138,7 @@ class FilterAdminTest extends WebTestBase {
     // Cannot use the assertNoLinkByHref method as it does partial url matching
     // and 'admin/config/content/formats/manage/' . $format_id . '/disable'
     // exists.
-    // @todo: See https://drupal.org/node/2031223 for the above
+    // @todo: See https://www.drupal.org/node/2031223 for the above.
     $edit_link = $this->xpath('//a[@href=:href]', array(
       ':href' => \Drupal::url('entity.filter_format.edit_form', ['filter_format' => $format_id])
     ));

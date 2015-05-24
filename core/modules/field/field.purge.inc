@@ -88,7 +88,7 @@ function field_purge_batch($batch_size, $field_storage_uuid = NULL) {
 
     // We cannot purge anything if the entity type is unknown (e.g. the
     // providing module was uninstalled).
-    // @todo Revisit after https://drupal.org/node/2080823.
+    // @todo Revisit after https://www.drupal.org/node/2080823.
     if (!isset($info[$entity_type])) {
       continue;
     }
@@ -116,7 +116,7 @@ function field_purge_batch($batch_size, $field_storage_uuid = NULL) {
 
     // We cannot purge anything if the entity type is unknown (e.g. the
     // providing module was uninstalled).
-    // @todo Revisit after https://drupal.org/node/2080823.
+    // @todo Revisit after https://www.drupal.org/node/2080823.
     if (!isset($info[$field_storage->getTargetEntityTypeId()])) {
       continue;
     }

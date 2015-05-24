@@ -457,7 +457,8 @@ abstract class Entity implements EntityInterface {
    * {@inheritdoc}
    */
   public function getCacheTags() {
-    // @todo Add bundle-specific listing cache tag? https://drupal.org/node/2145751
+    // @todo Add bundle-specific listing cache tag?
+    //   https://www.drupal.org/node/2145751
     return [$this->entityTypeId . ':' . $this->id()];
   }
 

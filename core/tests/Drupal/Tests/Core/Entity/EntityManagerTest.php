@@ -835,7 +835,7 @@ class EntityManagerTest extends UnitTestCase {
     $module = 'entity_manager_test_module';
 
     // @todo Mock FieldDefinitionInterface once it exposes a proper provider
-    //   setter. See https://drupal.org/node/2225961.
+    //   setter. See https://www.drupal.org/node/2225961.
     $field_definition = $this->getMockBuilder('Drupal\Core\Field\BaseFieldDefinition')
       ->disableOriginalConstructor()
       ->getMock();

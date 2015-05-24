@@ -149,7 +149,7 @@ class RendererTestBase extends UnitTestCase {
    *
    * @see PostRenderCache::callback()
    * @see PostRenderCache::placeholder()
-   * @see https://drupal.org/node/2151609
+   * @see https://www.drupal.org/node/2151609
    */
   protected function randomContextValue() {
     $tokens = ['llama', 'alpaca', 'camel', 'moose', 'elk'];

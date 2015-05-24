@@ -41,7 +41,7 @@ use Drupal\migrate\Row;
  * @ref sec_entity below for details. To migrate an entire site, you'll need to
  * create a migration manifest; see @ref sec_manifest for details.
  *
- * https://drupal.org/node/2127611 has more complete information on the
+ * https://www.drupal.org/node/2127611 has more complete information on the
  * Migration API, including information on load plugins, which are only used
  * in Drupal 6 migration.
  *

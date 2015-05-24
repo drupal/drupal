@@ -96,7 +96,7 @@ class Element {
           $child_weights[$key] = floor($weight * 1000) + $i / $count;
         }
         // Only trigger an error if the value is not null.
-        // @see http://drupal.org/node/1283892
+        // @see https://www.drupal.org/node/1283892
         elseif (isset($value)) {
           trigger_error(SafeMarkup::format('"@key" is an invalid render array key', array('@key' => $key)), E_USER_ERROR);
         }

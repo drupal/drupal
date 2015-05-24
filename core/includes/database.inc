@@ -743,7 +743,7 @@ function db_change_field($table, $field, $field_new, $spec, $keys_new = array())
  * Sets a session variable specifying the lag time for ignoring a replica
  * server (A replica server is traditionally referred to as
  * a "slave" in database server documentation).
- * @see http://drupal.org/node/2275877
+ * @see https://www.drupal.org/node/2275877
  */
 function db_ignore_replica() {
   $connection_info = Database::getConnectionInfo();

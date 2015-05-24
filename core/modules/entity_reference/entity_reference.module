@@ -23,7 +23,7 @@ function entity_reference_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.entity_reference':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Entity Reference module allows you to create fields that contain links to other entities (such as content items, taxonomy terms, etc.) within the site. This allows you, for example, to include a link to a user within a content item. For more information, see <a href="!er_do">the online documentation for the Entity Reference module</a> and the <a href="!field_help">Field module help page</a>.', array('!field_help' => \Drupal::url('help.page', array('name' => 'field')), '!er_do' => 'https://drupal.org/documentation/modules/entityreference')) . '</p>';
+      $output .= '<p>' . t('The Entity Reference module allows you to create fields that contain links to other entities (such as content items, taxonomy terms, etc.) within the site. This allows you, for example, to include a link to a user within a content item. For more information, see <a href="!er_do">the online documentation for the Entity Reference module</a> and the <a href="!field_help">Field module help page</a>.', array('!field_help' => \Drupal::url('help.page', array('name' => 'field')), '!er_do' => 'https://www.drupal.org/documentation/modules/entityreference')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Managing and displaying entity reference fields') . '</dt>';

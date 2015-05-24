@@ -51,7 +51,7 @@ parameters:
     #   changes (see auto_reload below).
     #
     # For more information about debugging Twig templates, see
-    # http://drupal.org/node/1906392.
+    # https://www.drupal.org/node/1906392.
     #
     # Not recommended in production environments
     # @default false

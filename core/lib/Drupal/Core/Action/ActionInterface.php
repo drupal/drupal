@@ -19,7 +19,7 @@ use Drupal\Core\Session\AccountInterface;
  *  - The way configuration is handled and configuration forms are built is
  *    likely to change in order for the plugin to be of use for Rules.
  *  - Actions are going to become context-aware in
- *    https://drupal.org/node/2011038, what will deprecated the 'type'
+ *    https://www.drupal.org/node/2011038, what will deprecated the 'type'
  *    annotation.
  *  - Instead of action implementations saving entities, support for marking
  *    required context as to be saved by the execution manager will be added as

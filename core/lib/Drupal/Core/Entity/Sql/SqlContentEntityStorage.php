@@ -197,7 +197,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     $this->revisionDataTable = NULL;
 
     // @todo Remove table names from the entity type definition in
-    //   https://drupal.org/node/2232465
+    //   https://www.drupal.org/node/2232465.
     $this->baseTable = $this->entityType->getBaseTable() ?: $this->entityTypeId;
     $revisionable = $this->entityType->isRevisionable();
     if ($revisionable) {
@@ -319,7 +319,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       // Nodes have all three of these fields, while custom blocks only have
       // log.
       // @todo Provide automatic definitions for revision metadata fields in
-      //   https://drupal.org/node/2248983.
+      //   https://www.drupal.org/node/2248983.
       $revision_metadata_fields = array_intersect(array(
         'revision_timestamp',
         'revision_uid',
@@ -768,7 +768,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   protected function buildPropertyQuery(QueryInterface $entity_query, array $values) {
     if ($this->dataTable) {
       // @todo We should not be using a condition to specify whether conditions
-      //   apply to the default language. See http://drupal.org/node/1866330.
+      //   apply to the default language. See
+      //   https://www.drupal.org/node/1866330.
       // Default to the original entity language if not explicitly specified
       // otherwise.
       if (!array_key_exists($this->defaultLangcodeKey, $values)) {
@@ -1077,7 +1078,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         // properties from the first field item and assume that they will be
         // stored serialized.
         // @todo Give field types more control over this behavior in
-        //   https://drupal.org/node/2232427.
+        //   https://www.drupal.org/node/2232427.
         if (!$definition->getMainPropertyName() && count($columns) == 1) {
           $value = ($item = $entity->$field_name->first()) ? $item->getValue() : array();
         }
@@ -1668,7 +1669,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           // Create entity with the right revision id and entity id combination.
           $item_row['entity_type'] = $this->entityTypeId;
           // @todo: Replace this by an entity object created via an entity
-          // factory, see https://drupal.org/node/1867228.
+          // factory, see https://www.drupal.org/node/1867228.
           $entities[$item_row['revision_id']] = _field_create_entity_from_ids((object) $item_row);
         }
         $item = array();

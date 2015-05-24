@@ -1023,7 +1023,7 @@ function template_preprocess_tablesort_indicator(&$variables) {
  *   - title: A title to be prepended to the list.
  *   - list_type: The type of list to return (e.g. "ul", "ol").
  *
- * @see http://drupal.org/node/1842756
+ * @see https://www.drupal.org/node/1842756
  */
 function template_preprocess_item_list(&$variables) {
   foreach ($variables['items'] as &$item) {
@@ -1293,7 +1293,7 @@ function template_preprocess_html(&$variables) {
     );
   }
   // @todo Remove once views is not bypassing the view subscriber anymore.
-  //   @see http://drupal.org/node/2068471
+  //   @see https://www.drupal.org/node/2068471
   elseif ($is_front_page) {
     $head_title = array(
       'title' => t('Home'),

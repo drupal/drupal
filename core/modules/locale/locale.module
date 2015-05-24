@@ -149,7 +149,7 @@ function locale_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.locale':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Interface Translation module allows you to translate interface text (<em>strings</em>) into different languages, and to switch between them for the display of interface text. It uses the functionality provided by the <a href="!language">Language module</a>. For more information, see the <a href="!doc-url">online documentation for the Interface Translation module</a>.', array('!doc-url' => 'https://drupal.org/documentation/modules/locale/', '!language' => \Drupal::url('help.page', array('name' => 'language')))) . '</p>';
+      $output .= '<p>' . t('The Interface Translation module allows you to translate interface text (<em>strings</em>) into different languages, and to switch between them for the display of interface text. It uses the functionality provided by the <a href="!language">Language module</a>. For more information, see the <a href="!doc-url">online documentation for the Interface Translation module</a>.', array('!doc-url' => 'https://www.drupal.org/documentation/modules/locale/', '!language' => \Drupal::url('help.page', array('name' => 'language')))) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Importing translation files') . '</dt>';

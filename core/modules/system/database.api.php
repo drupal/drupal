@@ -20,7 +20,7 @@
  * practices.
  *
  * For more detailed information on the database abstraction layer, see
- * https://drupal.org/developing/api/database
+ * https://www.drupal.org/developing/api/database.
  *
  * @section sec_entity Querying entities
  * Any query on Drupal entities or fields should use the Entity Query API. See
@@ -108,7 +108,7 @@
  *
  * There are also methods to join to other tables, add fields with aliases,
  * isNull() to have a @code WHERE e.foo IS NULL @endcode condition, etc. See
- * https://drupal.org/developing/api/database for many more details.
+ * https://www.drupal.org/developing/api/database for many more details.
  *
  * One note on chaining: It is common in the dynamic database API to chain
  * method calls (as illustrated here), because most of the query methods modify

@@ -126,7 +126,7 @@ class MailFormatHelper {
     $string = preg_replace('!</?(strong|b)((?> +)[^>]*)?>!i', '*', $string);
 
     // Replace inline <a> tags with the text of link and a footnote.
-    // 'See <a href="http://drupal.org">the Drupal site</a>' becomes
+    // 'See <a href="https://www.drupal.org">the Drupal site</a>' becomes
     // 'See the Drupal site [1]' with the URL included as a footnote.
     static::htmlToMailUrls(NULL, TRUE);
     $pattern = '@(<a[^>]+?href="([^"]*)"[^>]*?>(.+?)</a>)@i';

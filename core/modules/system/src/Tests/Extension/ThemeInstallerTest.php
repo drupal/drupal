@@ -327,7 +327,7 @@ class ThemeInstallerTest extends KernelTestBase {
 
     // Legacy assertions.
     // @todo Remove once theme initialization/info has been modernized.
-    // @see https://drupal.org/node/2228093
+    // @see https://www.drupal.org/node/2228093
     $info = system_get_info('theme', $name);
     $this->assertTrue(isset($info['regions']['test_region']));
     $regions = system_region_list($name);
@@ -343,7 +343,7 @@ class ThemeInstallerTest extends KernelTestBase {
 
     // Legacy assertions.
     // @todo Remove once theme initialization/info has been modernized.
-    // @see https://drupal.org/node/2228093
+    // @see https://www.drupal.org/node/2228093
     $info = system_get_info('theme', $name);
     $this->assertFalse(isset($info['regions']['test_region']));
     $regions = system_region_list($name);

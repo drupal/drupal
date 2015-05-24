@@ -29,7 +29,7 @@ interface FileSystemInterface {
    *   TRUE on success, or FALSE on failure.
    *
    * @see move_uploaded_file()
-   * @see http://drupal.org/node/515192
+   * @see https://www.drupal.org/node/515192
    * @ingroup php_wrappers
    */
   public function moveUploadedFile($filename, $uri);
@@ -120,7 +120,7 @@ interface FileSystemInterface {
    *   A string containing the directory name.
    *
    * @see dirname()
-   * @see http://drupal.org/node/515192
+   * @see https://www.drupal.org/node/515192
    * @ingroup php_wrappers
    */
   public function dirname($uri);
@@ -161,7 +161,7 @@ interface FileSystemInterface {
    *   Boolean TRUE on success, or FALSE on failure.
    *
    * @see mkdir()
-   * @see http://drupal.org/node/515192
+   * @see https://www.drupal.org/node/515192
    * @ingroup php_wrappers
    *
    * @todo Update with open_basedir compatible recursion logic from
@@ -207,7 +207,7 @@ interface FileSystemInterface {
    *   The new temporary filename, or FALSE on failure.
    *
    * @see tempnam()
-   * @see http://drupal.org/node/515192
+   * @see https://www.drupal.org/node/515192
    * @ingroup php_wrappers
    */
   public function tempnam($directory, $prefix);

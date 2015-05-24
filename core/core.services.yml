@@ -1324,7 +1324,7 @@ services:
     calls:
       - [setGenerators, ['@url_generator']]
   # @todo Figure out what to do about debugging functions.
-  # @see http://drupal.org/node/1804998
+  # @see https://www.drupal.org/node/1804998
   twig.extension.debug:
     class: Twig_Extension_Debug
     tags:

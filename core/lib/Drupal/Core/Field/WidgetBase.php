@@ -394,7 +394,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
       // Do not report entity-level validation errors if Form API errors have
       // already been reported for the field.
       // @todo Field validation should not be run on fields with FAPI errors to
-      //   begin with. See https://drupal.org/node/2070429.
+      //   begin with. See https://www.drupal.org/node/2070429.
       $element_path = implode('][', $element['#parents']);
       if ($reported_errors = $form_state->getErrors()) {
         foreach (array_keys($reported_errors) as $error_path) {

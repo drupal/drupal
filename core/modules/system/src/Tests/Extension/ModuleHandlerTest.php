@@ -112,7 +112,7 @@ class ModuleHandlerTest extends KernelTestBase {
    * purely UI-facing or live at the "bottom" of all dependency chains.
    *
    * @see module_test_system_info_alter()
-   * @see https://drupal.org/files/issues/dep.gv__0.png
+   * @see https://www.drupal.org/files/issues/dep.gv__0.png
    */
   function testDependencyResolution() {
     $this->enableModules(array('module_test'));

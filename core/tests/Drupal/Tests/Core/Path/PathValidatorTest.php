@@ -101,7 +101,7 @@ class PathValidatorTest extends UnitTestCase {
     $this->accessAwareRouter->expects($this->never())
       ->method('match');
 
-    $this->assertTrue($this->pathValidator->isValid('https://drupal.org'));
+    $this->assertTrue($this->pathValidator->isValid('https://www.drupal.org'));
   }
 
   /**

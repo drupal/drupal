@@ -64,7 +64,7 @@ class EntityDataDefinition extends ComplexDataDefinitionBase implements EntityDa
         }
         else {
           // @todo: Add support for handling multiple bundles.
-          // See https://drupal.org/node/2169813.
+          // See https://www.drupal.org/node/2169813.
           $bundles = $this->getBundles();
           if (is_array($bundles) && count($bundles) == 1) {
             $this->propertyDefinitions = \Drupal::entityManager()->getFieldDefinitions($entity_type_id, reset($bundles));

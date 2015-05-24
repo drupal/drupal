@@ -214,7 +214,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
       // entity manager.
       // @todo We should better just rely on information coming from the entity
       //   storage.
-      // @todo https://drupal.org/node/2337511
+      // @todo https://www.drupal.org/node/2337511
       foreach ($table_mapping->getTableNames() as $table) {
         foreach ($table_mapping->getFieldNames($table) as $field_name) {
           $this->mapFieldDefinition($table, $field_name, $field_definitions[$field_name], $table_mapping, $data[$table]);

@@ -80,7 +80,7 @@ class NodeViewsData extends EntityViewsData {
     // Bogus fields for aliasing purposes.
 
     // @todo Add similar support to any date field
-    // @see https://drupal.org/node/2337507
+    // @see https://www.drupal.org/node/2337507
     $data['node_field_data']['created_fulldate'] = array(
       'title' => t('Created date'),
       'help' => t('Date in the form of CCYYMMDD.'),

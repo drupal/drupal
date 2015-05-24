@@ -22,7 +22,7 @@ function content_translation_help($route_name, RouteMatchInterface $route_match)
     case 'help.page.content_translation':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Content Translation module allows you to translate content, comments, custom blocks, taxonomy terms, users and other <a href="!field_help" title="Field module help, with background on content entities">content entities</a>. Together with the modules <a href="!language">Language</a>, <a href="!config-trans">Configuration Translation</a>, and <a href="!locale">Interface Translation</a>, it allows you to build multilingual websites. For more information, see <a href="!translation-entity">the online documentation for the Content Translation module</a>.', array('!locale' => (\Drupal::moduleHandler()->moduleExists('locale')) ? \Drupal::url('help.page', array('name' => 'locale')) : '#', '!config-trans' => (\Drupal::moduleHandler()->moduleExists('config_translation')) ? \Drupal::url('help.page', array('name' => 'config_translation')) : '#', '!language' => \Drupal::url('help.page', array('name' => 'language')), '!translation-entity' => 'https://drupal.org/documentation/modules/translation', '!field_help' => \Drupal::url('help.page', array('name' => 'field')))) . '</p>';
+      $output .= '<p>' . t('The Content Translation module allows you to translate content, comments, custom blocks, taxonomy terms, users and other <a href="!field_help" title="Field module help, with background on content entities">content entities</a>. Together with the modules <a href="!language">Language</a>, <a href="!config-trans">Configuration Translation</a>, and <a href="!locale">Interface Translation</a>, it allows you to build multilingual websites. For more information, see <a href="!translation-entity">the online documentation for the Content Translation module</a>.', array('!locale' => (\Drupal::moduleHandler()->moduleExists('locale')) ? \Drupal::url('help.page', array('name' => 'locale')) : '#', '!config-trans' => (\Drupal::moduleHandler()->moduleExists('config_translation')) ? \Drupal::url('help.page', array('name' => 'config_translation')) : '#', '!language' => \Drupal::url('help.page', array('name' => 'language')), '!translation-entity' => 'https://www.drupal.org/documentation/modules/translation', '!field_help' => \Drupal::url('help.page', array('name' => 'field')))) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Enabling translation') . '</dt>';
@@ -142,7 +142,7 @@ function content_translation_entity_type_alter(array &$entity_types) {
           $entity_type->setLinkTemplate('drupal:content-translation-overview', $entity_type->getLinkTemplate('canonical') . '/translations');
         }
         // @todo Remove this as soon as menu access checks rely on the
-        //   controller. See https://drupal.org/node/2155787.
+        //   controller. See https://www.drupal.org/node/2155787.
         $translation['content_translation'] += array(
           'access_callback' => 'content_translation_translate_access',
         );

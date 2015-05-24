@@ -119,7 +119,7 @@ class LibraryDiscoveryParser {
       if (!isset($library['license'])) {
         $library['license'] = array(
           'name' => 'GNU-GPL-2.0-or-later',
-          'url' => 'https://drupal.org/licensing/faq',
+          'url' => 'https://www.drupal.org/licensing/faq',
           'gpl-compatible' => TRUE,
         );
       }

@@ -48,7 +48,7 @@ class LinkItemTest extends FieldUnitTestBase {
   public function testLinkItem() {
     // Create entity.
     $entity = entity_create('entity_test');
-    $url = 'http://www.drupal.org?test_param=test_value';
+    $url = 'https://www.drupal.org?test_param=test_value';
     $parsed_url = UrlHelper::parse($url);
     $title = $this->randomMachineName();
     $class = $this->randomMachineName();

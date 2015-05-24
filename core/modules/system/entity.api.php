@@ -255,7 +255,8 @@ use Drupal\node\Entity\NodeType;
  * user accounts, has only one bundle.
  *
  * The sections below have more information about entities and the Entity API;
- * for more detailed information, see https://drupal.org/developing/api/entity
+ * for more detailed information, see
+ * https://www.drupal.org/developing/api/entity.
  *
  * @section define Defining an entity type
  * Entity types are defined by modules, using Drupal's Plugin API (see the

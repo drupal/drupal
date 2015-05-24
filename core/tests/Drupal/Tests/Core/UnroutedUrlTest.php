@@ -38,7 +38,7 @@ class UnroutedUrlTest extends UnitTestCase {
    *
    * @var string
    */
-  protected $unroutedExternal = 'http://drupal.org';
+  protected $unroutedExternal = 'https://www.drupal.org';
 
   /**
    * An unrouted, internal URL to test.
@@ -86,7 +86,7 @@ class UnroutedUrlTest extends UnitTestCase {
     return [
       // [$uri, $is_external]
       // An external URI.
-      ['http://drupal.org', TRUE],
+      ['https://www.drupal.org', TRUE],
       // An internal, unrouted, base-relative URI.
       ['base:robots.txt', FALSE],
       // Base-relative URIs with special characters.

@@ -26,7 +26,7 @@ use Drupal\Core\Plugin\PluginFormInterface;
  *   the configuration option. Check the typed data definition docs for details.
  *
  * @todo Replace the dependency on \Drupal\Core\Form\FormInterface with a new
- *   interface from https://drupal.org/node/2006248.
+ *   interface from https://www.drupal.org/node/2006248.
  * @todo WARNING: The condition API is going to receive some additions before release.
  * The following additions are likely to happen:
  *  - The way configuration is handled and configuration forms are built is

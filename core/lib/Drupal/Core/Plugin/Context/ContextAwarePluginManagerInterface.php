@@ -17,7 +17,8 @@ interface ContextAwarePluginManagerInterface extends PluginManagerInterface {
   /**
    * Determines plugins whose constraints are satisfied by a set of contexts.
    *
-   * @todo Use context definition objects after https://drupal.org/node/2281635.
+   * @todo Use context definition objects after
+   *   https://www.drupal.org/node/2281635.
    *
    * @param \Drupal\Component\Plugin\Context\ContextInterface[] $contexts
    *   An array of contexts.

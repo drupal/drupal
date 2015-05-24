@@ -27,7 +27,7 @@
  * For detailed usage examples of:
  * - Module overview help, see content_translation_help(). Module overview
  *   help should follow
- *   @link https://drupal.org/node/632280 the standard help template. @endlink
+ *   @link https://www.drupal.org/node/632280 the standard help template. @endlink
  * - Page-specific help using only routes, see book_help().
  * - Page-specific help using routes and $request, see block_help().
  *

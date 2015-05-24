@@ -34,7 +34,7 @@ class Auth implements AuthenticationProviderInterface {
     // Getting the user storage used to result in a circular reference since
     // translation involves a call to \Drupal\locale\LocaleLookup that tries to
     // get the user roles.
-    // @see https://drupal.org/node/2241461
+    // @see https://www.drupal.org/node/2241461
     $this->userStorage = $entity_manager->getStorage('user');
   }
 

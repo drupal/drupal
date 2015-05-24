@@ -210,7 +210,7 @@ class BlockForm extends EntityForm {
       ],
     ];
     // @todo Allow list of conditions to be configured in
-    //   https://drupal.org/node/2284687.
+    //   https://www.drupal.org/node/2284687.
     $visibility = $this->entity->getVisibility();
     foreach ($this->manager->getDefinitions() as $condition_id => $definition) {
       // Don't display the current theme condition.

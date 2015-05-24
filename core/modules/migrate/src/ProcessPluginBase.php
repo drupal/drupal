@@ -17,7 +17,7 @@ use Drupal\migrate\Plugin\MigrateProcessInterface;
  * transform a human provided name into a machine name, look up an identifier
  * in a previous migration and so on.
  *
- * @see https://drupal.org/node/2129651
+ * @see https://www.drupal.org/node/2129651
  * @see \Drupal\migrate\Plugin\MigratePluginManager
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
  * @see \Drupal\migrate\Annotation\MigrateProcessPlugin

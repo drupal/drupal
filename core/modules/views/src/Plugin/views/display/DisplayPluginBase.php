@@ -2607,7 +2607,8 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
    *   An array of available entity row renderers keyed by renderer identifiers.
    */
   protected function buildRenderingLanguageOptions() {
-    // @todo Consider making these plugins. See https://drupal.org/node/2173811.
+    // @todo Consider making these plugins. See
+    //   https://www.drupal.org/node/2173811.
     return $this->listLanguages(LanguageInterface::STATE_CONFIGURABLE | LanguageInterface::STATE_SITE_DEFAULT | PluginBase::INCLUDE_NEGOTIATED | PluginBase::INCLUDE_ENTITY);
   }
 

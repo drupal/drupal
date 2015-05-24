@@ -259,7 +259,7 @@ function valid_email_address($mail) {
  * @{
  * Functions to sanitize values.
  *
- * See http://drupal.org/writing-secure-code for information
+ * See https://www.drupal.org/writing-secure-code for information
  * on writing secure code.
  */
 

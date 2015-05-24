@@ -21,17 +21,17 @@
  *
  * Aliases are defined in an associative array named $sites. The array is
  * written in the format: '<port>.<domain>.<path>' => 'directory'. As an
- * example, to map http://www.drupal.org:8080/mysite/test to the configuration
+ * example, to map https://www.drupal.org:8080/mysite/test to the configuration
  * directory sites/example.com, the array should be defined as:
  * @code
  * $sites = array(
  *   '8080.www.drupal.org.mysite.test' => 'example.com',
  * );
  * @endcode
- * The URL, http://www.drupal.org:8080/mysite/test/, could be a symbolic link or
- * an Apache Alias directive that points to the Drupal root containing
+ * The URL, https://www.drupal.org:8080/mysite/test/, could be a symbolic link
+ * or an Apache Alias directive that points to the Drupal root containing
  * index.php. An alias could also be created for a subdomain. See the
- * @link http://drupal.org/documentation/install online Drupal installation guide @endlink
+ * @link https://www.drupal.org/documentation/install online Drupal installation guide @endlink
  * for more information on setting up domains, subdomains, and subdirectories.
  *
  * The following examples look for a site configuration in sites/example.com:
@@ -45,11 +45,11 @@
  * URL: http://localhost:8080/example
  * $sites['8080.localhost.example'] = 'example.com';
  *
- * URL: http://www.drupal.org:8080/mysite/test/
+ * URL: https://www.drupal.org:8080/mysite/test/
  * $sites['8080.www.drupal.org.mysite.test'] = 'example.com';
  * @endcode
  *
  * @see default.settings.php
  * @see conf_path()
- * @see http://drupal.org/documentation/install/multi-site
+ * @see https://www.drupal.org/documentation/install/multi-site
  */

@@ -722,7 +722,7 @@
       // allowed (e.g., within TABLE, TR, and SPAN parents), we check if the new
       // content satisfies the requirement of a single top-level element, and
       // only use the container DIV created above when it doesn't. For more
-      // information, please see http://drupal.org/node/736066.
+      // information, please see https://www.drupal.org/node/736066.
       if (new_content.length !== 1 || new_content.get(0).nodeType !== 1) {
         new_content = new_content_wrapped;
       }

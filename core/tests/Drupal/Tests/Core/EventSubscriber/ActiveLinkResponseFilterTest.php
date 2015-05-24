@@ -37,7 +37,7 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
       // Simple HTML.
       0 => array('prefix' => '<div><p>', 'suffix' => '</p></div>'),
       // Tricky HTML5 example that's unsupported by PHP <=5.4's DOMDocument:
-      // https://drupal.org/comment/7938201#comment-7938201.
+      // https://www.drupal.org/comment/7938201#comment-7938201.
       1 => array('prefix' => '<div><p>', 'suffix' => '</p>' . $edge_case_html5 . '</div>'),
       // Multi-byte content *before* the HTML that needs the "is-active" class.
       2 => array('prefix' => '<div><p>αβγδεζηθικλμνξοσὠ</p><p>', 'suffix' => '</p></div>'),

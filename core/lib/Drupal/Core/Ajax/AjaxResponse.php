@@ -136,8 +136,8 @@ class AjaxResponse extends JsonResponse {
     // this browser workaround is implemented via a GET or POST parameter.
     //
     // @see http://malsup.com/jquery/form/#file-upload
-    // @see https://drupal.org/node/1009382
-    // @see https://drupal.org/node/2339491
+    // @see https://www.drupal.org/node/1009382
+    // @see https://www.drupal.org/node/2339491
     // @see Drupal.ajax.prototype.beforeSend()
     $accept = $request->headers->get('accept');
 
@@ -149,7 +149,7 @@ class AjaxResponse extends JsonResponse {
       // links. This corrupts the JSON response. Protect the integrity of the
       // JSON data by making it the value of a textarea.
       // @see http://malsup.com/jquery/form/#file-upload
-      // @see http://drupal.org/node/1009382
+      // @see https://www.drupal.org/node/1009382
       $this->setContent('<textarea>' . $this->data  . '</textarea>');
     }
   }

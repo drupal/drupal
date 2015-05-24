@@ -270,7 +270,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
         // Modules can alter theme info, so refresh theme data.
         // @todo ThemeHandler cannot be injected into ModuleHandler, since that
         //   causes a circular service dependency.
-        // @see https://drupal.org/node/2208429
+        // @see https://www.drupal.org/node/2208429
         \Drupal::service('theme_handler')->refreshInfo();
 
         // Allow the module to perform install tasks.
@@ -418,7 +418,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       // Modules can alter theme info, so refresh theme data.
       // @todo ThemeHandler cannot be injected into ModuleHandler, since that
       //   causes a circular service dependency.
-      // @see https://drupal.org/node/2208429
+      // @see https://www.drupal.org/node/2208429
       \Drupal::service('theme_handler')->refreshInfo();
 
       \Drupal::logger('system')->info('%module module uninstalled.', array('%module' => $module));

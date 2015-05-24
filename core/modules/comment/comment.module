@@ -66,7 +66,7 @@ function comment_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.comment':
       $output = '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Comment module allows users to comment on site content, set commenting defaults and permissions, and moderate comments. For more information, see the <a href="!comment">online documentation for the Comment module</a>.', array('!comment' => 'https://drupal.org/documentation/modules/comment')) . '</p>';
+      $output .= '<p>' . t('The Comment module allows users to comment on site content, set commenting defaults and permissions, and moderate comments. For more information, see the <a href="!comment">online documentation for the Comment module</a>.', array('!comment' => 'https://www.drupal.org/documentation/modules/comment')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Enabling commenting and configuring defaults') . '</dt>';

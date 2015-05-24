@@ -64,7 +64,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
     $field_definition->itemDefinition = FieldItemDataDefinition::create($field_definition);
     // Create a definition for the items, and initialize it with the default
     // settings for the field type.
-    // @todo Cleanup in https://drupal.org/node/2116341.
+    // @todo Cleanup in https://www.drupal.org/node/2116341.
     $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
     $default_settings = $field_type_manager->getDefaultStorageSettings($type) + $field_type_manager->getDefaultFieldSettings($type);
     $field_definition->itemDefinition->setSettings($default_settings);
@@ -566,7 +566,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    * Helper to retrieve the field item class.
    *
    * @todo: Remove once getClass() adds in defaults. See
-   * https://drupal.org/node/2116341.
+   * https://www.drupal.org/node/2116341.
    */
   protected function getFieldItemClass() {
     if ($class = $this->getItemDefinition()->getClass()) {

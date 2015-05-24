@@ -155,7 +155,7 @@ abstract class Tasks {
       }
     }
     if (!empty($message)) {
-      $message = SafeMarkup::set('Resolve all issues below to continue the installation. For help configuring your database server, see the <a href="http://drupal.org/getting-started/install">installation handbook</a>, or contact your hosting provider.' . $message);
+      $message = SafeMarkup::set('Resolve all issues below to continue the installation. For help configuring your database server, see the <a href="https://www.drupal.org/getting-started/install">installation handbook</a>, or contact your hosting provider.' . $message);
       throw new TaskException($message);
     }
   }

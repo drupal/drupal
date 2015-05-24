@@ -87,7 +87,7 @@ abstract class ExecutablePluginBase extends ContextAwarePluginBase implements Ex
    *   The value to set.
    *
    * @todo This doesn't belong here. Move this into a new base class in
-   *   http://drupal.org/node/1764380.
+   *   https://www.drupal.org/node/1764380.
    * @todo This does not set a value in \Drupal::config(), so the name is confusing.
    *
    * @return \Drupal\Core\Executable\ExecutablePluginBase.

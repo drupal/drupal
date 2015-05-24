@@ -285,7 +285,7 @@ function file_stream_wrapper_get_instance_by_scheme($scheme) {
  *   '/', nothing is done and the same string is returned. If a stream wrapper
  *   could not be found to generate an external URL, then FALSE is returned.
  *
- * @see http://drupal.org/node/515192
+ * @see https://www.drupal.org/node/515192
  * @see file_url_transform_relative()
  */
 function file_create_url($uri) {

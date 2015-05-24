@@ -447,7 +447,7 @@ function hook_install_tasks_alter(&$tasks, $install_state) {
  * 8.x. Therefore, only update hooks numbered 8001 or later will run for
  * Drupal 8. 8000 is reserved for the minimum core schema version and defining
  * mymodule_update_8000() will result in an exception. Use the
- * @link https://drupal.org/node/2127611 Migration API @endlink instead to
+ * @link https://www.drupal.org/node/2127611 Migration API @endlink instead to
  * migrate data from an earlier major version of Drupal.
  *
  * For further information about releases and release numbers see:

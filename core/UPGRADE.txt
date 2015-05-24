@@ -18,7 +18,8 @@ First steps and definitions:
 
   * Make a full backup of all files, directories, and your database(s) before
     starting, and save it outside your Drupal installation directory.
-    Instructions may be found at http://drupal.org/upgrade/backing-up-the-db
+    Instructions may be found at
+    https://www.drupal.org/upgrade/backing-up-the-db
 
   * It is wise to try an update or upgrade on a test copy of your site before
     applying it to your live site. Even minor updates can cause your site's
@@ -28,7 +29,7 @@ First steps and definitions:
     since the previous version and any special instructions needed to update or
     upgrade to the new version. You can find a link to the release notes for the
     version you are upgrading or updating to on the Drupal project page
-    (http://drupal.org/project/drupal).
+    (https://www.drupal.org/project/drupal).
 
 UPGRADE PROBLEMS
 ----------------
@@ -40,9 +41,10 @@ If you encounter errors during this process,
     you created before you started the upgrade process. Do not attempt to do
     further upgrades on a site that had update problems.
 
-  * Consult one of the support options listed on http://drupal.org/support
+  * Consult one of the support options listed on https://www.drupal.org/support
 
-More in-depth information on upgrading can be found at http://drupal.org/upgrade
+More in-depth information on upgrading can be found at
+https://www.drupal.org/upgrade
 
 MINOR VERSION UPDATES
 ---------------------
@@ -75,14 +77,14 @@ following the instructions in the INTRODUCTION section at the top of this file:
      database information, and you will also want to copy in any other
      customizations you have added.
 
-4. Download the latest Drupal 8.x release from http://drupal.org to a
+4. Download the latest Drupal 8.x release from https://www.drupal.org to a
    directory outside of your web root. Extract the archive and copy the files
    into your Drupal directory.
 
    On a typical Unix/Linux command line, use the following commands to download
    and extract:
 
-     wget http://drupal.org/files/projects/drupal-x.y.tar.gz
+     wget https://www.drupal.org/files/projects/drupal-x.y.tar.gz
      tar -zxvf drupal-x.y.tar.gz
 
    This creates a new directory drupal-x.y/ containing all Drupal files and
@@ -91,8 +93,8 @@ following the instructions in the INTRODUCTION section at the top of this file:
      cp -R drupal-x.y/* drupal-x.y/.htaccess /path/to/your/installation
 
    If you do not have command line access to your server, download the archive
-   from http://drupal.org using your web browser, extract it, and then use an
-   FTP client to upload the files to your web root.
+   from https://www.drupal.org using your web browser, extract it, and then use
+   an FTP client to upload the files to your web root.
 
 5. Re-apply any modifications to files such as .htaccess, composer.json, or
    robots.txt.

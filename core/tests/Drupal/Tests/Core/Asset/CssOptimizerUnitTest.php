@@ -69,8 +69,8 @@ class CssOptimizerUnitTest extends UnitTestCase {
     return array(
       // File. Tests:
       // - Stripped comments and white-space.
-      // - Retain white-space in selectors. (http://drupal.org/node/472820)
-      // - Retain pseudo-selectors. (http://drupal.org/node/460448)
+      // - Retain white-space in selectors. (https://www.drupal.org/node/472820)
+      // - Retain pseudo-selectors. (https://www.drupal.org/node/460448)
       0 => array(
         array(
           'group' => -100,
@@ -86,12 +86,12 @@ class CssOptimizerUnitTest extends UnitTestCase {
         file_get_contents($path . 'css_input_without_import.css.optimized.css'),
       ),
       // File. Tests:
-      // - Proper URLs in imported files. (http://drupal.org/node/265719)
+      // - Proper URLs in imported files. (https://www.drupal.org/node/265719)
       // - A background image with relative paths, which must be rewritten.
       // - The rewritten background image path must also be passed through
-      //   file_create_url(). (https://drupal.org/node/1961340)
+      //   file_create_url(). (https://www.drupal.org/node/1961340)
       // - Imported files that are external (protocol-relative URL or not)
-      //   should not be expanded. (https://drupal.org/node/2014851)
+      //   should not be expanded. (https://www.drupal.org/node/2014851)
       1 => array(
         array(
           'group' => -100,
@@ -123,8 +123,9 @@ class CssOptimizerUnitTest extends UnitTestCase {
         file_get_contents($path . 'comment_hacks.css.optimized.css'),
       ),
       // File in subfolder. Tests:
-      // - CSS import path is properly interpreted. (https://drupal.org/node/1198904)
-      // - Don't adjust data URIs (https://drupal.org/node/2142441)
+      // - CSS import path is properly interpreted.
+      //   (https://www.drupal.org/node/1198904)
+      // - Don't adjust data URIs (https://www.drupal.org/node/2142441)
       5 => array(
         array(
           'group' => -100,

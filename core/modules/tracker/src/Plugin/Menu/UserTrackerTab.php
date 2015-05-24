@@ -25,7 +25,7 @@ class UserTrackerTab extends LocalTaskDefault {
   /**
    * Gets the current active user.
    *
-   * @todo: https://drupal.org/node/2105123 put this method in
+   * @todo: https://www.drupal.org/node/2105123 put this method in
    *   \Drupal\Core\Plugin\PluginBase instead.
    *
    * @return \Drupal\Core\Session\AccountInterface

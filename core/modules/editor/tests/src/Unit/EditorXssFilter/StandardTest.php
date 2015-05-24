@@ -146,7 +146,7 @@ class StandardTest extends UnitTestCase {
     // Spaces and meta chars before the JavaScript in images for XSS.
     // @see https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#Spaces_and_meta_chars_before_the_JavaScript_in_images_for_XSS
     // @fixme This dataset currently fails under 5.4 because of
-    //   https://drupal.org/node/1210798. Restore after it's fixed.
+    //   https://www.drupal.org/node/1210798. Restore after it's fixed.
     if (version_compare(PHP_VERSION, '5.4.0', '<')) {
       $data[] = array('<IMG SRC=" &#14;  javascript:alert(\'XSS\');">', '<IMG src="alert(&#039;XSS&#039;);">');
     }
@@ -486,7 +486,7 @@ xss:ex/*XSS*//*/*/pression(alert("XSS"))\'>', 'exp/*<A>');
     // IMG Embedded commands.
     // @see https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#IMG_Embedded_commands
     // This one is irrelevant for Drupal; this is actually a CSRF, for which
-    // Drupal has CSRF protection, see https://drupal.org/node/178896.
+    // Drupal has CSRF protection. See https://www.drupal.org/node/178896.
 
     // Cookie manipulation.
     // @see https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#Cookie_manipulation

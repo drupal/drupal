@@ -19,7 +19,7 @@ function config_translation_help($route_name, RouteMatchInterface $route_match) 
     case 'help.page.config_translation':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Configuration Translation module allows you to translate configuration text; for example, the site name, vocabularies, menus, or date formats. Together with the modules <a href="!language">Language</a>, <a href="!content-translation">Content Translation</a>, and <a href="!locale">Interface Translation</a>, it allows you to build multilingual websites. For more information, see the <a href="!doc_url">online documentation for the Configuration Translation module</a>.', array('!doc_url' => 'https://drupal.org/documentation/modules/config_translation', '!config' => \Drupal::url('help.page', array('name' => 'config')), '!language' => \Drupal::url('help.page', array('name' => 'language')), '!locale' => \Drupal::url('help.page', array('name' => 'locale')), '!content-translation' => (\Drupal::moduleHandler()->moduleExists('content_translation')) ? \Drupal::url('help.page', array('name' => 'content_translation')) : '#')) . '</p>';
+      $output .= '<p>' . t('The Configuration Translation module allows you to translate configuration text; for example, the site name, vocabularies, menus, or date formats. Together with the modules <a href="!language">Language</a>, <a href="!content-translation">Content Translation</a>, and <a href="!locale">Interface Translation</a>, it allows you to build multilingual websites. For more information, see the <a href="!doc_url">online documentation for the Configuration Translation module</a>.', array('!doc_url' => 'https://www.drupal.org/documentation/modules/config_translation', '!config' => \Drupal::url('help.page', array('name' => 'config')), '!language' => \Drupal::url('help.page', array('name' => 'language')), '!locale' => \Drupal::url('help.page', array('name' => 'locale')), '!content-translation' => (\Drupal::moduleHandler()->moduleExists('content_translation')) ? \Drupal::url('help.page', array('name' => 'content_translation')) : '#')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Enabling translation') . '</dt>';
@@ -56,7 +56,7 @@ function config_translation_themes_installed() {
   // Themes can provide *.config_translation.yml declarations.
   // @todo Make ThemeHandler trigger an event instead and make
   //   ConfigMapperManager plugin manager subscribe to it.
-  // @see https://drupal.org/node/2206347
+  // @see https://www.drupal.org/node/2206347
   \Drupal::service('plugin.manager.config_translation.mapper')->clearCachedDefinitions();
 }
 
@@ -67,7 +67,7 @@ function config_translation_themes_uninstalled() {
   // Themes can provide *.config_translation.yml declarations.
   // @todo Make ThemeHandler trigger an event instead and make
   //   ConfigMapperManager plugin manager subscribe to it.
-  // @see https://drupal.org/node/2206347
+  // @see https://www.drupal.org/node/2206347
   \Drupal::service('plugin.manager.config_translation.mapper')->clearCachedDefinitions();
 }
 

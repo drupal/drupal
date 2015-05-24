@@ -1,7 +1,7 @@
 Place downloaded and custom modules that extend your site functionality beyond
 Drupal core in this directory to ensure clean separation from core modules and
 to facilitate safe, self-contained code updates. Contributed modules from the
-Drupal community may be downloaded at http://drupal.org/project/modules.
+Drupal community may be downloaded at https://www.drupal.org/project/modules.
 
 It is safe to organize modules into subdirectories, such as "contrib" for
 contributed modules, and "custom" for custom modules. Note that if you move a

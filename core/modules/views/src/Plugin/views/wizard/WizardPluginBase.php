@@ -828,8 +828,8 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
         }
       }
     }
-    // @todo refactor the code to use ViewExecutable::addHandler, see
-    //   https://drupal.org/node/2383157
+    // @todo Refactor the code to use ViewExecutable::addHandler. See
+    //   https://www.drupal.org/node/2383157.
     $display_options['fields'][$default_field] = array(
       'table' => $default_table,
       'field' => $default_field,

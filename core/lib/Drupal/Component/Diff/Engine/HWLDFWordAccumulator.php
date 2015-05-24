@@ -47,7 +47,7 @@ class HWLDFWordAccumulator {
     $this->_flushGroup($new_tag);
     if ($this->line != '') {
       // @todo This is probably not the right place to do this. To be
-      //   addressed in https://drupal.org/node/2280963
+      //   addressed in https://www.drupal.org/node/2280963.
       array_push($this->lines, SafeMarkup::set($this->line));
     }
     else {

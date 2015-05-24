@@ -24,7 +24,7 @@ function editor_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.editor':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Text Editor module provides a framework that other modules (such as <a href="!ckeditor">CKEditor module</a>) can use to provide toolbars and other functionality that allow users to format text more easily than typing HTML tags directly. For more information, see the <a href="!documentation">online documentation for the Text Editor module</a>.', array('!documentation' => 'https://drupal.org/documentation/modules/editor', '!ckeditor' => (\Drupal::moduleHandler()->moduleExists('ckeditor')) ? \Drupal::url('help.page', array('name' => 'ckeditor')) : '#')) . '</p>';
+      $output .= '<p>' . t('The Text Editor module provides a framework that other modules (such as <a href="!ckeditor">CKEditor module</a>) can use to provide toolbars and other functionality that allow users to format text more easily than typing HTML tags directly. For more information, see the <a href="!documentation">online documentation for the Text Editor module</a>.', array('!documentation' => 'https://www.drupal.org/documentation/modules/editor', '!ckeditor' => (\Drupal::moduleHandler()->moduleExists('ckeditor')) ? \Drupal::url('help.page', array('name' => 'ckeditor')) : '#')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Installing text editors') . '</dt>';
@@ -268,7 +268,7 @@ function editor_load($format_id) {
  *   safe from XSS attacks, or because the text format does not use any XSS
  *   protection filters), otherwise the XSS filtered string.
  *
- * @see https://drupal.org/node/2099741
+ * @see https://www.drupal.org/node/2099741
  */
 function editor_filter_xss($html, FilterFormatInterface $format, FilterFormatInterface $original_format = NULL) {
   $editor = editor_load($format->id());

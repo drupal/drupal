@@ -145,7 +145,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   protected $iterator;
 
   // @TODO, find out how to remove this.
-  // @see https://drupal.org/node/2443617
+  // @see https://www.drupal.org/node/2443617
   public $migrateExecutable;
 
   /**

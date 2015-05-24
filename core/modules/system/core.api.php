@@ -11,7 +11,7 @@
  *
  * This site is an API reference for Drupal, generated from comments embedded
  * in the source code. More in-depth documentation can be found at
- * https://drupal.org/developing/api.
+ * https://www.drupal.org/developing/api.
  *
  * Here are some topics to help you get started developing with Drupal.
  *
@@ -62,9 +62,9 @@
  * @section more_info Further information
  *
  * - @link https://api.drupal.org/api/drupal/groups/8 All topics @endlink
- * - @link https://drupal.org/project/examples Examples project (sample modules) @endlink
- * - @link https://drupal.org/list-changes API change notices @endlink
- * - @link https://drupal.org/developing/api/8 Drupal 8 API longer references @endlink
+ * - @link https://www.drupal.org/project/examples Examples project (sample modules) @endlink
+ * - @link https://www.drupal.org/list-changes API change notices @endlink
+ * - @link https://www.drupal.org/developing/api/8 Drupal 8 API longer references @endlink
  */
 
 /**
@@ -190,7 +190,7 @@
  * $state->set('system.cron_last', REQUEST_TIME);
  * @endcode
  *
- * For more on the State API, see https://drupal.org/developing/api/8/state
+ * For more on the State API, see https://www.drupal.org/developing/api/8/state
  * @}
  */
 
@@ -203,7 +203,7 @@
  * information. See the @link info_types Information types topic @endlink for
  * an overview of the different types of information. The sections below have
  * more information about the configuration API; see
- * https://drupal.org/developing/api/8/configuration for more details.
+ * https://www.drupal.org/developing/api/8/configuration for more details.
  *
  * @section sec_storage Configuration storage
  * In Drupal, there is a concept of the "active" configuration, which is the
@@ -545,7 +545,7 @@
  *  $settings['cache']['default'] = 'cache.custom';
  * @endcode
  *
- * @see https://drupal.org/node/1884796
+ * @see https://www.drupal.org/node/1884796
  * @}
  */
 
@@ -660,7 +660,7 @@
  * provider class directly, so that they get the correct class (default or
  * overridden).
  *
- * See https://drupal.org/node/2133171 for more detailed information on
+ * See https://www.drupal.org/node/2133171 for more detailed information on
  * services and the dependency injection container.
  *
  * @section sec_discover Discovering existing services
@@ -700,13 +700,13 @@
  * names of the dependencies (preceded by '@'); objects for each of these
  * services are instantiated from the container and passed to the class
  * constructor when the service class is instantiated. Other arguments can also
- * be passed in; see the section at https://drupal.org/node/2133171 for more
+ * be passed in; see the section at https://www.drupal.org/node/2133171 for more
  * detailed information.
  *
  * Services using factories can be defined as shown in the above example, if the
  * factory is itself a service. The factory can also be a class; details of how
  * to use service factories can be found in the section at
- * https://drupal.org/node/2133171.
+ * https://www.drupal.org/node/2133171.
  *
  * @section sec_container Accessing a service through the container
  * As noted above, if you need to use a service in your code, you should always
@@ -794,7 +794,7 @@
  *   Note that $container here is an instance of
  *   \Drupal\Core\DependencyInjection\ContainerBuilder.
  *
- * @see https://drupal.org/node/2133171
+ * @see https://www.drupal.org/node/2133171
  * @see core.services.yml
  * @see \Drupal
  * @see \Symfony\Component\DependencyInjection\ContainerInterface
@@ -814,7 +814,7 @@
  * translatable, and who can access it). The Typed Data API is used in several
  * Drupal sub-systems, such as the Entity Field API and Configuration API.
  *
- * See https://drupal.org/node/1794140 for more information about the Typed
+ * See https://www.drupal.org/node/1794140 for more information about the Typed
  * Data API.
  *
  * @section interfaces Interfaces and classes in the Typed Data API
@@ -904,8 +904,8 @@
  * - Methods in your test class whose names start with 'test' are the actual
  *   test cases. Each one should test a logical subset of the functionality.
  * For more details, see:
- * - https://drupal.org/phpunit for full documentation on how to write PHPUnit
- *   tests for Drupal.
+ * - https://www.drupal.org/phpunit for full documentation on how to write
+ *   PHPUnit tests for Drupal.
  * - http://phpunit.de for general information on the PHPUnit framework.
  * - @link oo_conventions Object-oriented programming topic @endlink for more
  *   on PSR-4, namespaces, and where to place classes.
@@ -944,7 +944,7 @@
  *   environment, so it can only rely on the setUp() method, not what has
  *   been set up by other test methods.
  * For more details, see:
- * - https://drupal.org/simpletest for full documentation on how to write
+ * - https://www.drupal.org/simpletest for full documentation on how to write
  *   functional tests for Drupal.
  * - @link oo_conventions Object-oriented programming topic @endlink for more
  *   on PSR-4, namespaces, and where to place classes.
@@ -953,11 +953,11 @@
  * You can run both Simpletest and PHPUnit tests by enabling the core Testing
  * module (core/modules/simpletest). Once that module is enabled, tests can be
  * run using the core/scripts/run-tests.sh script, using
- * @link https://drupal.org/project/drush Drush @endlink, or from the Testing
- * module user interface.
+ * @link https://www.drupal.org/project/drush Drush @endlink, or from the
+ *   Testing module user interface.
  *
  * PHPUnit tests can also be run from the command line, using the PHPUnit
- * framework. See https://drupal.org/node/2116263 for more information.
+ * framework. See https://www.drupal.org/node/2116263 for more information.
  * @}
  */
 
@@ -1006,10 +1006,10 @@
  *   site; CSS files, which alter the styling applied to the HTML; and
  *   JavaScript, Flash, images, and other files. For more information, see the
  *   @link theme_render Theme system and render API topic @endlink and
- *   https://drupal.org/theme-guide/8
+ *   https://www.drupal.org/theme-guide/8
  * - Modules: Modules add to or alter the behavior and functionality of Drupal,
  *   by using one or more of the methods listed below. For more information
- *   about creating modules, see https://drupal.org/developing/modules/8
+ *   about creating modules, see https://www.drupal.org/developing/modules/8
  * - Installation profiles: Installation profiles can be used to
  *   create distributions, which are complete specific-purpose packages of
  *   Drupal including additional modules, themes, and data. For more
@@ -1087,7 +1087,7 @@
  * - Create a plugin of an existing plugin type: see @ref sec_create below.
  * - Perform tasks that involve plugins: see @ref sec_use below.
  *
- * See https://drupal.org/developing/api/8/plugins for more detailed
+ * See https://www.drupal.org/developing/api/8/plugins for more detailed
  * documentation on the plugin system. There are also topics for a few
  * of the many existing types of plugins:
  * - @link block_api Block API @endlink
@@ -1142,7 +1142,7 @@
  * It is also possible to define your own custom discovery mechanism or mix
  * methods together. And there are many more details, such as annotation
  * decorators, that apply to some of the discovery methods. See
- * https://drupal.org/developing/api/8/plugins for more details.
+ * https://www.drupal.org/developing/api/8/plugins for more details.
  *
  * The remainder of this documentation will assume Annotation-based discovery,
  * since this is the most common method.
@@ -1266,7 +1266,7 @@
  *   for most plugin classes. See the
  *   @link plugin_api Plugin API topic @endlink for more information.
  * - There are project-wide coding standards for OO code, including naming:
- *   https://drupal.org/node/608152
+ *   https://www.drupal.org/node/608152
  * - Documentation standards for classes are covered on:
  *   https://www.drupal.org/coding-standards/docs#classes
  * @}
@@ -1282,16 +1282,16 @@
  * and efficient. In order to facilitate this, the Drupal community has
  * developed a set of guidelines and standards for developers to follow. Most of
  * these standards can be found under
- * @link https://drupal.org/developing/best-practices Best practices on Drupal.org @endlink
+ * @link https://www.drupal.org/developing/best-practices Best practices on Drupal.org @endlink
  *
  * Standards and best practices that developers should be aware of include:
- * - Security: https://drupal.org/writing-secure-code and the
+ * - Security: https://www.drupal.org/writing-secure-code and the
  *   @link sanitization Sanitization functions topic @endlink
- * - Coding standards: https://drupal.org/coding-standards
- *   and https://drupal.org/coding-standards/docs
- * - Accessibility: https://drupal.org/node/1637990 (modules) and
- *   https://drupal.org/node/464472 (themes)
- * - Usability: https://drupal.org/ui-standards
+ * - Coding standards: https://www.drupal.org/coding-standards
+ *   and https://www.drupal.org/coding-standards/docs
+ * - Accessibility: https://www.drupal.org/node/1637990 (modules) and
+ *   https://www.drupal.org/node/464472 (themes)
+ * - Usability: https://www.drupal.org/ui-standards
  * - Internationalization: @link i18n Internationalization topic @endlink
  * - Automated testing: @link testing Automated tests topic @endlink
  * @}
@@ -1504,7 +1504,7 @@
  * workflow, see the
  * @link forms_api_reference.html Form API reference @endlink
  * and the
- * @link https://drupal.org/node/2117411 Form API documentation section. @endlink
+ * @link https://www.drupal.org/node/2117411 Form API documentation section. @endlink
  * In addition, there is a set of Form API tutorials in
  * @link form_example_tutorial.inc the Form Example Tutorial @endlink which
  * provide basics all the way up through multistep forms.

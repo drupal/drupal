@@ -408,7 +408,7 @@
       return;
     }
 
-    // @see https://drupal.org/node/2029999.
+    // @see https://www.drupal.org/node/2029999.
     // Create a Drupal.Ajax instance to load the form.
     var loadEditorsAjax = Drupal.ajax({
       url: Drupal.url('quickedit/attachments'),

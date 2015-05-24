@@ -127,7 +127,7 @@ class RendererTest extends RendererTestBase {
         ],
       ],
       '#attributes' => ['id' => 'foo'],
-      '#url' => 'http://drupal.org',
+      '#url' => 'https://www.drupal.org',
       '#title' => 'bar',
     ];
     $setup_code_type_link = function() {
@@ -144,13 +144,13 @@ class RendererTest extends RendererTestBase {
         ->with('link')
         ->willReturn(['#theme' => 'link']);
     };
-    $data[] = [$build, '<div class="baz"><a href="http://drupal.org" id="foo">bar</a></div>' . "\n", $setup_code_type_link];
+    $data[] = [$build, '<div class="baz"><a href="https://www.drupal.org" id="foo">bar</a></div>' . "\n", $setup_code_type_link];
 
     // Tests that #theme_wrappers can disambiguate element attributes when the
     // "base" attribute is not set for #theme.
     $build = [
       '#type' => 'link',
-      '#url' => 'http://drupal.org',
+      '#url' => 'https://www.drupal.org',
       '#title' => 'foo',
       '#theme_wrappers' => [
         'container' => [
@@ -158,7 +158,7 @@ class RendererTest extends RendererTestBase {
         ],
       ],
     ];
-    $data[] = [$build, '<div class="baz"><a href="http://drupal.org">foo</a></div>' . "\n", $setup_code_type_link];
+    $data[] = [$build, '<div class="baz"><a href="https://www.drupal.org">foo</a></div>' . "\n", $setup_code_type_link];
 
     // Tests two 'container' #theme_wrappers, one using the "base" attributes
     // and one using an override.

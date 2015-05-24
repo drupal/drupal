@@ -94,8 +94,8 @@ class CommentDefaultFormatterCacheTagsTest extends EntityUnitTestBase {
     $comment->save();
 
     // Load commented entity so comment_count gets computed.
-    // @todo remove the $reset = TRUE parameter after
-    //   https://drupal.org/node/597236 lands, it's a temporary work-around.
+    // @todo Remove the $reset = TRUE parameter after
+    //   https://www.drupal.org/node/597236 lands. It's a temporary work-around.
     $commented_entity = entity_load('entity_test', $commented_entity->id(), TRUE);
 
     // Verify cache tags on the rendered entity when it has comments.

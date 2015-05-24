@@ -13,7 +13,7 @@ function menu_ui_install() {
   // @todo - remove this when we understand why removing it breaks the
   // standard install profile, possibly need to be handled in
   // \Drupal\Core\Extension\ModuleHandler::install().
-  // @see https://drupal.org/node/2181151
+  // @see https://www.drupal.org/node/2181151
   \Drupal::service('router.builder')->rebuild();
 }
 

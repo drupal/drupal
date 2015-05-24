@@ -18,7 +18,7 @@
  * 6. Prevent fat text in WebKit.
  *
  * @todo Consider moving box-sizing into base.css under a universal selector.
- * See https://drupal.org/node/2124251
+ * See https://www.drupal.org/node/2124251
  *
  */
 .button {
@@ -173,7 +173,7 @@
  * We've temporarily added the danger button here, bit of a harsh reset but we
  * need it.
  * @todo replace with link--danger.
- * See https://drupal.org/node/2123731
+ * See https://www.drupal.org/node/2123731
  */
 .button--danger {
   display: inline;

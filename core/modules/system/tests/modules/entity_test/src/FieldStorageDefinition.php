@@ -16,7 +16,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  * implement FieldDefinitionInterface.
  *
  * @todo Provide and make use of a proper FieldStorageDefinition class instead:
- *   https://drupal.org/node/2280639.
+ *   https://www.drupal.org/node/2280639.
  */
 class FieldStorageDefinition extends BaseFieldDefinition {
 

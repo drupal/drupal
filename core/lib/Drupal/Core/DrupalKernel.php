@@ -307,7 +307,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * loaded prior to scanning for directories. That file can define aliases in
    * an associative array named $sites. The array is written in the format
    * '<port>.<domain>.<path>' => 'directory'. As an example, to create a
-   * directory alias for http://www.drupal.org:8080/mysite/test whose
+   * directory alias for https://www.drupal.org:8080/mysite/test whose
    * configuration file is in sites/example.com, the array should be defined as:
    * @code
    * $sites = array(

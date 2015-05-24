@@ -17,7 +17,7 @@ namespace Drupal\Core\Config\Schema;
  * Properties in the configuration value that are not defined in the mapping
  * will get the 'undefined' data type.
  *
- * Read https://drupal.org/node/1905070 for more details about configuration
+ * Read https://www.drupal.org/node/1905070 for more details about configuration
  * schema, types and type resolution.
  */
 class Mapping extends ArrayElement {

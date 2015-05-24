@@ -32,7 +32,7 @@ interface TypedDataInterface {
    *
    * @todo When \Drupal\Core\Config\TypedConfigManager has been fixed to use
    *   class-based definitions, type-hint $definition to
-   *   DataDefinitionInterface. https://drupal.org/node/1928868
+   *   DataDefinitionInterface. https://www.drupal.org/node/1928868
    *
    * @see \Drupal\Core\TypedData\TypedDataManager::create()
    */

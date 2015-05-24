@@ -24,7 +24,7 @@ function field_ui_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.field_ui':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Field UI module provides an administrative user interface (UI) for managing and displaying fields. Fields can be attached to most content entity sub-types. Different field types, widgets, and formatters are provided by the modules enabled on your site, and managed by the Field module. For background information and terminology related to fields and entities, see the <a href="!field">Field module help page</a>. For more information about the Field UI, see <a href="!field_ui_docs">the online documentation for the Field UI module</a>.', array('!field' => \Drupal::url('help.page', array('name' => 'field')), '!field_ui_docs' => 'https://drupal.org/documentation/modules/field-ui')) . '</p>';
+      $output .= '<p>' . t('The Field UI module provides an administrative user interface (UI) for managing and displaying fields. Fields can be attached to most content entity sub-types. Different field types, widgets, and formatters are provided by the modules enabled on your site, and managed by the Field module. For background information and terminology related to fields and entities, see the <a href="!field">Field module help page</a>. For more information about the Field UI, see <a href="!field_ui_docs">the online documentation for the Field UI module</a>.', array('!field' => \Drupal::url('help.page', array('name' => 'field')), '!field_ui_docs' => 'https://www.drupal.org/documentation/modules/field-ui')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Creating a field') . '</dt>';

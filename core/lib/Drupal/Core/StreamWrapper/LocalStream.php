@@ -52,7 +52,7 @@ abstract class LocalStream implements StreamWrapperInterface {
   /**
    * Gets the path that the wrapper is responsible for.
    *
-   * @todo Review this method name in D8 per http://drupal.org/node/701358.
+   * @todo Review this method name in D8 per https://www.drupal.org/node/701358.
    *
    * @return string
    *   String specifying the path.

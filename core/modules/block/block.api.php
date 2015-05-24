@@ -50,10 +50,10 @@ use Drupal\Core\Access\AccessResult;
  *   block placement condition plugin.
  * - \Drupal\book\Plugin\Block\BookNavigationBlock is an example of a block with
  *   a custom configuration form.
- * - For a more in-depth discussion of the Block API see
- *   https://drupal.org/developing/api/8/block_api
+ * - For a more in-depth discussion of the Block API, see
+ *   https://www.drupal.org/developing/api/8/block_api.
  * - The Examples for Developers project also provides a Block example in
- *   https://drupal.org/project/examples.
+ *   https://www.drupal.org/project/examples.
  * @}
  */
 

@@ -253,7 +253,7 @@ class Renderer implements RendererInterface {
       $elements['#children'] = '';
     }
 
-    // @todo Simplify after https://drupal.org/node/2273925
+    // @todo Simplify after https://www.drupal.org/node/2273925.
     if (isset($elements['#markup'])) {
       $elements['#markup'] = SafeMarkup::set($elements['#markup']);
     }

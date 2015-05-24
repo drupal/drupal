@@ -74,7 +74,7 @@ class EntityReferenceItem extends FieldItemBase {
 
     if ($target_type_info->isSubclassOf('\Drupal\Core\Entity\FieldableEntityInterface')) {
       // @todo: Lookup the entity type's ID data type and use it here.
-      // https://drupal.org/node/2107249
+      // https://www.drupal.org/node/2107249
       $target_id_definition = DataDefinition::create('integer')
         ->setLabel(t('@label ID', array($target_type_info->getLabel())))
         ->setSetting('unsigned', TRUE);

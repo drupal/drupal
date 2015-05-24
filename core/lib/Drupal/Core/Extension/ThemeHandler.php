@@ -320,7 +320,7 @@ class ThemeHandler implements ThemeHandlerInterface {
     }
     // Build dependencies.
     // @todo Move into a generic ExtensionHandler base class.
-    // @see https://drupal.org/node/2208429
+    // @see https://www.drupal.org/node/2208429
     $themes = $this->moduleHandler->buildModuleDependencies($themes);
 
     // Store filenames to allow system_list() and drupal_get_filename() to

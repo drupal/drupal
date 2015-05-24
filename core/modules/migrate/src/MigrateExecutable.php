@@ -227,7 +227,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
       $this->source = $this->migration->getSourcePlugin();
 
       // @TODO, find out how to remove this.
-      // @see https://drupal.org/node/2443617
+      // @see https://www.drupal.org/node/2443617
       $this->source->migrateExecutable = $this;
     }
     return $this->source;

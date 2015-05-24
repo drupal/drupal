@@ -126,8 +126,9 @@ class ActiveLinkResponseFilter implements EventSubscriberInterface {
    *   The updated HTML markup.
    *
    * @todo Once a future version of PHP supports parsing HTML5 properly
-   *   (i.e. doesn't fail on https://drupal.org/comment/7938201#comment-7938201)
-   *   then we can get rid of this manual parsing and use DOMDocument instead.
+   *   (i.e. doesn't fail on
+   *   https://www.drupal.org/comment/7938201#comment-7938201) then we can get
+   *   rid of this manual parsing and use DOMDocument instead.
    */
   public static function setLinkActiveClass($html_markup, $current_path, $is_front, $url_language, array $query) {
     $search_key_current_path = 'data-drupal-link-system-path="' . $current_path . '"';

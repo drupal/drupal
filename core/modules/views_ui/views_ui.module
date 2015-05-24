@@ -24,7 +24,7 @@ function views_ui_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.views_ui':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Views UI module provides an interface for managing views for the <a href="@views">Views module</a>. For more information, see the <a href="@handbook">online documentation for the Views UI module</a>.', array('@views' => \Drupal::url('help.page', array('name' => 'views')), '@handbook' => 'https://drupal.org/documentation/modules/views_ui')) . '</p>';
+      $output .= '<p>' . t('The Views UI module provides an interface for managing views for the <a href="@views">Views module</a>. For more information, see the <a href="@handbook">online documentation for the Views UI module</a>.', array('@views' => \Drupal::url('help.page', array('name' => 'views')), '@handbook' => 'https://www.drupal.org/documentation/modules/views_ui')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Creating and managing views.') . '</dt>';

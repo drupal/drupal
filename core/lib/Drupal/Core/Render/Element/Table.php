@@ -309,7 +309,7 @@ class Table extends FormElement {
       }
       // Turn second-level elements into table row columns.
       // @todo Do not render a cell for children of #type 'value'.
-      // @see http://drupal.org/node/1248940
+      // @see https://www.drupal.org/node/1248940
       foreach (Element::children($element[$first]) as $second) {
         // Assign the element by reference, so any potential changes to the
         // original element are taken over.

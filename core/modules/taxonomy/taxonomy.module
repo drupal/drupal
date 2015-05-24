@@ -42,7 +42,7 @@ function taxonomy_help($route_name, RouteMatchInterface $route_match) {
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Taxonomy module allows users who have permission to create and edit content to categorize (tag) content of that type. Users who have the <em>Administer vocabularies and terms</em> <a href="!permissions" title="Taxonomy module permissions">permission</a> can add <em>vocabularies</em> that contain a set of related <em>terms</em>. The terms in a vocabulary can either be pre-set by an administrator or built gradually as content is added and edited. Terms may be organized hierarchically if desired.', array('!permissions' => \Drupal::url('user.admin_permissions', array(), array('fragment' => 'module-taxonomy')))) . '</p>';
-      $output .= '<p>' . t('For more information, see the <a href="!taxonomy">online documentation for the Taxonomy module</a>.', array('!taxonomy' => 'https://drupal.org/documentation/modules/taxonomy/')) . '</p>';
+      $output .= '<p>' . t('For more information, see the <a href="!taxonomy">online documentation for the Taxonomy module</a>.', array('!taxonomy' => 'https://www.drupal.org/documentation/modules/taxonomy/')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Managing vocabularies') . '</dt>';

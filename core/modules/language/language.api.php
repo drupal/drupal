@@ -29,7 +29,7 @@
  *     used.
  *
  *  @todo Rename the 'fixed' key to something more meaningful, for instance
- *     'negotiation settings'. See https://drupal.org/node/2166879.
+ *     'negotiation settings'. See https://www.drupal.org/node/2166879.
  *
  * @see hook_language_types_info_alter()
  * @ingroup language_negotiation
