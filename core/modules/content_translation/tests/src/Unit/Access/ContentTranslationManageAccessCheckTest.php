@@ -47,13 +47,17 @@ class ContentTranslationManageAccessCheckTest extends UnitTestCase {
     // Set the mock language manager.
     $language_manager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
     $language_manager->expects($this->at(0))
-      ->method('getLanguages')
-      ->will($this->returnValue(array('en' => array(), 'it' => array())));
-    $language_manager->expects($this->at(1))
       ->method('getLanguage')
       ->with($this->equalTo($source))
       ->will($this->returnValue(new Language(array('id' => 'en'))));
+    $language_manager->expects($this->at(1))
+      ->method('getLanguages')
+      ->will($this->returnValue(array('en' => array(), 'it' => array())));
     $language_manager->expects($this->at(2))
+      ->method('getLanguage')
+      ->with($this->equalTo($source))
+      ->will($this->returnValue(new Language(array('id' => 'en'))));
+    $language_manager->expects($this->at(3))
       ->method('getLanguage')
       ->with($this->equalTo($target))
       ->will($this->returnValue(new Language(array('id' => 'it'))));

@@ -73,12 +73,27 @@ class ContentTranslationManageAccessCheck implements AccessInterface {
   public function access(Route $route, RouteMatchInterface $route_match, AccountInterface $account, $source = NULL, $target = NULL, $language = NULL, $entity_type_id = NULL) {
     /* @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     if ($entity = $route_match->getParameter($entity_type_id)) {
+      $operation = $route->getRequirement('_access_content_translation_manage');
+      $language = $this->languageManager->getLanguage($language) ?: $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT);
+      $entity_type = $this->entityManager->getDefinition($entity_type_id);
+
+      if (in_array($operation, ['update', 'delete'])) {
+        // Translation operations cannot be performed on the default
+        // translation.
+        if ($language->getId() == $entity->getUntranslated()->language()->getId()) {
+          return AccessResult::forbidden()->cacheUntilEntityChanges($entity);
+        }
+        // Editors have no access to the translation operations, as entity
+        // access already grants them an equal or greater access level.
+        $templates = ['update' => 'edit-form', 'delete' => 'delete-form'];
+        if ($entity->access($operation) && $entity_type->hasLinkTemplate($templates[$operation])) {
+          return AccessResult::forbidden()->cachePerPermissions();
+        }
+      }
 
       if ($account->hasPermission('translate any entity')) {
         return AccessResult::allowed()->cachePerPermissions();
       }
-
-      $operation = $route->getRequirement('_access_content_translation_manage');
 
       /* @var \Drupal\content_translation\ContentTranslationHandlerInterface $handler */
       $handler = $this->entityManager->getHandler($entity->getEntityTypeId(), 'translation');
@@ -98,9 +113,8 @@ class ContentTranslationManageAccessCheck implements AccessInterface {
           return AccessResult::allowedIf($is_new_translation)->cachePerPermissions()->cacheUntilEntityChanges($entity)
             ->andIf($handler->getTranslationAccess($entity, $operation));
 
-        case 'update':
         case 'delete':
-          $language = $this->languageManager->getLanguage($language) ?: $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT);
+        case 'update':
           $has_translation = isset($languages[$language->getId()])
             && $language->getId() != $entity->getUntranslated()->language()->getId()
             && isset($translations[$language->getId()]);

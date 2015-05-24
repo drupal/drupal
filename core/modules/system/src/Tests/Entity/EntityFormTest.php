@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Entity;
 
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -27,6 +28,9 @@ class EntityFormTest extends WebTestBase {
     parent::setUp();
     $web_user = $this->drupalCreateUser(array('administer entity_test content'));
     $this->drupalLogin($web_user);
+
+    // Add a language.
+    ConfigurableLanguage::createFromLangcode('ro')->save();
   }
 
   /**
@@ -36,6 +40,16 @@ class EntityFormTest extends WebTestBase {
     // All entity variations have to have the same results.
     foreach (entity_test_entity_types() as $entity_type) {
       $this->doTestFormCRUD($entity_type);
+    }
+  }
+
+  /**
+   * Tests basic multilingual form CRUD functionality.
+   */
+  public function testMultilingualFormCRUD() {
+    // All entity variations have to have the same results.
+    foreach (entity_test_entity_types(ENTITY_TEST_TYPES_MULTILINGUAL) as $entity_type) {
+      $this->doTestMultilingualFormCRUD($entity_type);
     }
   }
 
@@ -85,12 +99,54 @@ class EntityFormTest extends WebTestBase {
   }
 
   /**
+   * Executes the multilingual form CRUD tests for the given entity type ID.
+   *
+   * @param string $entity_type_id
+   *   The ID of entity type to run the tests with.
+   */
+  protected function doTestMultilingualFormCRUD($entity_type_id) {
+    $name1 = $this->randomMachineName(8);
+    $name1_ro = $this->randomMachineName(9);
+    $name2_ro = $this->randomMachineName(11);
+
+    $edit = array(
+      'name[0][value]' => $name1,
+      'field_test_text[0][value]' => $this->randomMachineName(16),
+    );
+
+    $this->drupalPostForm($entity_type_id . '/add', $edit, t('Save'));
+    $entity = $this->loadEntityByName($entity_type_id, $name1);
+    $this->assertTrue($entity, format_string('%entity_type: Entity found in the database.', array('%entity_type' => $entity_type_id)));
+
+    // Add a translation to the newly created entity without using the Content
+    // translation module.
+    $entity->addTranslation('ro', ['name' => $name1_ro])->save();
+    $translated_entity = $this->loadEntityByName($entity_type_id, $name1)->getTranslation('ro');
+    $this->assertEqual($translated_entity->name->value, $name1_ro, format_string('%entity_type: The translation has been added.', array('%entity_type' => $entity_type_id)));
+
+    $edit['name[0][value]'] = $name2_ro;
+    $this->drupalPostForm('ro/' . $entity_type_id . '/manage/' . $entity->id(), $edit, t('Save'));
+    $translated_entity = $this->loadEntityByName($entity_type_id, $name1)->getTranslation('ro');
+    $this->assertTrue($translated_entity, format_string('%entity_type: Modified translation found in the database.', array('%entity_type' => $entity_type_id)));
+    $this->assertEqual($translated_entity->name->value, $name2_ro, format_string('%entity_type: The name of the translation has been modified.', array('%entity_type' => $entity_type_id)));
+
+    $this->drupalGet('ro/' . $entity_type_id . '/manage/' . $entity->id());
+    $this->clickLink(t('Delete'));
+    $this->drupalPostForm(NULL, array(), t('Delete Romanian translation'));
+    $entity = $this->loadEntityByName($entity_type_id, $name1);
+    $this->assertNotNull($entity, format_string('%entity_type: The original entity still exists.', array('%entity_type' => $entity_type_id)));
+    $this->assertFalse($entity->hasTranslation('ro'), format_string('%entity_type: Entity translation does not exist anymore.', array('%entity_type' => $entity_type_id)));
+  }
+
+  /**
    * Loads a test entity by name always resetting the storage cache.
    */
   protected function loadEntityByName($entity_type, $name) {
     // Always load the entity from the database to ensure that changes are
     // correctly picked up.
-    $this->container->get('entity.manager')->getStorage($entity_type)->resetCache();
-    return current(entity_load_multiple_by_properties($entity_type, array('name' => $name)));
+    $entity_storage = $this->container->get('entity.manager')->getStorage($entity_type);
+    $entity_storage->resetCache();
+    $entities = $entity_storage->loadByProperties(array('name' => $name));
+    return $entities ? current($entities) : NULL;
   }
 }

@@ -127,6 +127,9 @@ function content_translation_entity_type_alter(array &$entity_types) {
       if (!$entity_type->get('content_translation_metadata')) {
         $entity_type->set('content_translation_metadata', 'Drupal\content_translation\ContentTranslationMetadataWrapper');
       }
+      if (!$entity_type->getFormClass('content_translation_deletion')) {
+        $entity_type->setFormClass('content_translation_deletion', '\Drupal\content_translation\Form\ContentTranslationDeleteForm');
+      }
 
       $translation = $entity_type->get('translation');
       if (!$translation || !isset($translation['content_translation'])) {
@@ -277,8 +280,10 @@ function content_translation_form_alter(array &$form, FormStateInterface $form_s
     return;
   }
   $entity = $form_object->getEntity();
+  $op = $form_object->getOperation();
 
-  if ($entity instanceof ContentEntityInterface && $entity->isTranslatable() && count($entity->getTranslationLanguages()) > 1) {
+  // Let the content translation handler alter the content entity edit form.
+  if ($entity instanceof ContentEntityInterface && $entity->isTranslatable() && count($entity->getTranslationLanguages()) > 1 && ($op == 'edit' || $op == 'default')) {
     $controller = \Drupal::entityManager()->getHandler($entity->getEntityTypeId(), 'translation');
     $controller->entityFormAlter($form, $form_state, $entity);
 

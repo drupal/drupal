@@ -319,12 +319,13 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
             break;
           }
         }
+        $access = $this->getTranslationAccess($entity, 'delete')->isAllowed() || ($entity->access('delete') && $this->entityType->hasLinkTemplate('delete-form'));
         $form['actions']['delete_translation'] = array(
           '#type' => 'submit',
           '#value' => t('Delete translation'),
           '#weight' => $weight,
           '#submit' => array(array($this, 'entityFormDeleteTranslation')),
-          '#access' => $this->getTranslationAccess($entity, 'delete')->isAllowed(),
+          '#access' => $access,
         );
       }
 
@@ -607,13 +608,20 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    * Takes care of content translation deletion.
    */
   function entityFormDeleteTranslation($form, FormStateInterface $form_state) {
+    /** @var \Drupal\Core\Entity\ContentEntityFormInterface $form_object */
     $form_object = $form_state->getFormObject();
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $form_object->getEntity();
     $entity_type_id = $entity->getEntityTypeId();
-    $form_state->setRedirect('content_translation.translation_delete_' . $entity_type_id, array(
-      $entity_type_id => $entity->id(),
-      'language' => $form_object->getFormLangcode($form_state),
-    ));
+    if ($entity->access('delete') && $this->entityType->hasLinkTemplate('delete-form')) {
+      $form_state->setRedirectUrl($entity->urlInfo('delete-form'));
+    }
+    else {
+      $form_state->setRedirect('content_translation.translation_delete_' . $entity_type_id, [
+        $entity_type_id => $entity->id(),
+        'language' => $form_object->getFormLangcode($form_state),
+      ]);
+    }
   }
 
   /**

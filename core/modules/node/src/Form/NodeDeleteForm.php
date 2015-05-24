@@ -8,7 +8,6 @@
 namespace Drupal\node\Form;
 
 use Drupal\Core\Entity\ContentEntityDeleteForm;
-use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides a form for deleting a node.
@@ -18,13 +17,34 @@ class NodeDeleteForm extends ContentEntityDeleteForm {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->entity->delete();
-    $this->logger('content')->notice('@type: deleted %title.', array('@type' => $this->entity->bundle(), '%title' => $this->entity->label()));
+  protected function getDeletionMessage() {
+    /** @var \Drupal\node\NodeInterface $entity */
+    $entity = $this->getEntity();
+
     $node_type_storage = $this->entityManager->getStorage('node_type');
-    $node_type = $node_type_storage->load($this->entity->bundle())->label();
-    drupal_set_message(t('@type %title has been deleted.', array('@type' => $node_type, '%title' => $this->entity->label())));
-    $form_state->setRedirect('<front>');
+    $node_type = $node_type_storage->load($entity->bundle())->label();
+
+    if (!$entity->isDefaultTranslation()) {
+      return $this->t('@language translation of the @type %label has been deleted.', [
+        '@language' => $entity->language()->getName(),
+        '@type' => $node_type,
+        '%label' => $entity->label(),
+      ]);
+    }
+
+    return $this->t('The @type %title has been deleted.', array(
+      '@type' => $node_type,
+      '%title' => $this->getEntity()->label(),
+    ));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function logDeletionMessage() {
+    /** @var \Drupal\node\NodeInterface $entity */
+    $entity = $this->getEntity();
+    $this->logger('content')->notice('@type: deleted %title.', ['@type' => $entity->getType(), '%title' => $entity->label()]);
   }
 
 }

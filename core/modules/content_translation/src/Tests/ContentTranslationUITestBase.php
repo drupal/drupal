@@ -253,16 +253,23 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
    */
   protected function doTestTranslationDeletion() {
     // Confirm and delete a translation.
+    $this->drupalLogin($this->translator);
     $langcode = 'fr';
     $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
-    $url = $entity->urlInfo('edit-form', array('language' => ConfigurableLanguage::load($langcode)));
+    $language = ConfigurableLanguage::load($langcode);
+    $url = $entity->urlInfo('edit-form', array('language' => $language));
     $this->drupalPostForm($url, array(), t('Delete translation'));
-    $this->drupalPostForm(NULL, array(), t('Delete'));
+    $this->drupalPostForm(NULL, array(), t('Delete @language translation', array('@language' => $language->getName())));
     $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
     if ($this->assertTrue(is_object($entity), 'Entity found')) {
       $translations = $entity->getTranslationLanguages();
       $this->assertTrue(count($translations) == 2 && empty($translations[$langcode]), 'Translation successfully deleted.');
     }
+
+    // Check that the translator cannot delete the original translation.
+    $args = [$this->entityTypeId => $entity->id(), 'language' => 'en'];
+    $this->drupalGet(Url::fromRoute('content_translation.translation_delete_' . $this->entityTypeId, $args));
+    $this->assertResponse(403);
   }
 
   /**

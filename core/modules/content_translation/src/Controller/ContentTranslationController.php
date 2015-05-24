@@ -71,10 +71,12 @@ class ContentTranslationController extends ControllerBase {
    * Array of page elements to render.
    */
   public function overview(RouteMatchInterface $route_match, $entity_type_id = NULL) {
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $route_match->getParameter($entity_type_id);
     $account = $this->currentUser();
     $handler = $this->entityManager()->getHandler($entity_type_id, 'translation');
     $manager = $this->manager;
+    $entity_type = $entity->getEntityType();
 
     $languages = $this->languageManager()->getLanguages();
     $original = $entity->getUntranslated()->language()->getId();
@@ -164,7 +166,7 @@ class ContentTranslationController extends ControllerBase {
           // If the user is allowed to edit the entity we point the edit link to
           // the entity form, otherwise if we are not dealing with the original
           // language we point the link to the translation form.
-          if ($entity->access('update')) {
+          if ($entity->access('update') && $entity_type->hasLinkTemplate('edit-form')) {
             $links['edit']['url'] = $entity->urlInfo('edit-form');
             $links['edit']['language'] = $language;
           }
@@ -190,7 +192,14 @@ class ContentTranslationController extends ControllerBase {
           }
           else {
             $source_name = isset($languages[$source]) ? $languages[$source]->getName() : $this->t('n/a');
-            if ($handler->getTranslationAccess($entity, 'delete')->isAllowed()) {
+            if ($entity->access('delete') && $entity_type->hasLinkTemplate('delete-form')) {
+              $links['delete'] = array(
+                'title' => $this->t('Delete'),
+                'url' => $entity->urlInfo('delete-form'),
+                'language' => $language,
+              );
+            }
+            elseif ($handler->getTranslationAccess($entity, 'delete')->isAllowed()) {
               $links['delete'] = array(
                 'title' => $this->t('Delete'),
                 'url' => $delete_url,

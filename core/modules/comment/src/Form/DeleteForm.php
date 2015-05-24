@@ -8,7 +8,6 @@
 namespace Drupal\comment\Form;
 
 use Drupal\Core\Entity\ContentEntityDeleteForm;
-use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides the comment delete confirmation form.
@@ -21,6 +20,13 @@ class DeleteForm extends ContentEntityDeleteForm {
   public function getCancelUrl() {
     // Point to the entity of which this comment is a reply.
     return $this->entity->get('entity_id')->entity->urlInfo();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getRedirectUrl() {
+    return $this->getCancelUrl();
   }
 
   /**

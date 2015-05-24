@@ -31,4 +31,11 @@ class ShortcutDeleteForm extends ContentEntityDeleteForm {
     ));
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function getRedirectUrl() {
+    return $this->getCancelUrl();
+  }
+
 }

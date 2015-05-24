@@ -141,7 +141,7 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
       $route = new Route(
         $path . '/delete/{language}',
         array(
-          '_form' => '\Drupal\content_translation\Form\ContentTranslationDeleteForm',
+          '_entity_form' => $entity_type_id . '.content_translation_deletion',
           'language' => NULL,
           '_title' => 'Delete',
           'entity_type_id' => $entity_type_id,
