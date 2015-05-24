@@ -38,7 +38,7 @@ function toolbar_test_toolbar() {
           \Drupal::l(t('link 3'), new Url('<front>', [], array('attributes' => array('title' => 'Test link 3 title')))),
         ),
         '#attributes' => array(
-          'class' => array('menu'),
+          'class' => array('toolbar-menu'),
         ),
       ),
     ),

@@ -1365,7 +1365,7 @@ function user_toolbar() {
         '#theme' => 'links__toolbar_user',
         '#links' => $links,
         '#attributes' => array(
-          'class' => array('menu'),
+          'class' => array('toolbar-menu'),
         ),
       ),
     ),

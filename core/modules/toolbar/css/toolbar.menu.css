@@ -1,8 +1,8 @@
 /**
  * @file toolbar.menu.css
  */
-.toolbar .menu,
-[dir="rtl"] .toolbar .menu {
+.toolbar .toolbar-menu,
+[dir="rtl"] .toolbar .toolbar-menu {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -13,9 +13,9 @@
   position: relative;
   width: auto;
 }
-.toolbar .toolbar-tray-horizontal .menu .toolbar-handle,
-.toolbar .toolbar-tray-horizontal .menu ul,
-.toolbar .toolbar-tray-vertical .menu ul {
+.toolbar .toolbar-tray-horizontal .toolbar-menu .toolbar-handle,
+.toolbar .toolbar-tray-horizontal .toolbar-menu ul,
+.toolbar .toolbar-tray-vertical .toolbar-menu ul {
   display: none;
 }
 .toolbar .toolbar-tray-vertical li.open > ul {

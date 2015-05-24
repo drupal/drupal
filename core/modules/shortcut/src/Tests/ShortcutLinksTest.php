@@ -307,14 +307,14 @@ class ShortcutLinksTest extends ShortcutTestBase {
     // Ensure to give permissions to access the shortcuts.
     $this->drupalLogin($this->drupalCreateUser(array('access toolbar', 'access shortcuts', 'access content overview', 'administer content types')));
     $this->drupalGet(Url::fromRoute('<front>'));
-    $shortcuts = $this->cssSelect('#toolbar-item-shortcuts-tray .menu a');
+    $shortcuts = $this->cssSelect('#toolbar-item-shortcuts-tray .toolbar-menu a');
     $this->assertEqual((string) $shortcuts[0], 'Add content');
     $this->assertEqual((string) $shortcuts[1], 'All content');
     foreach($this->set->getShortcuts() as $shortcut) {
       $shortcut->setWeight($shortcut->getWeight() * -1)->save();
     }
     $this->drupalGet(Url::fromRoute('<front>'));
-    $shortcuts = $this->cssSelect('#toolbar-item-shortcuts-tray .menu a');
+    $shortcuts = $this->cssSelect('#toolbar-item-shortcuts-tray .toolbar-menu a');
     $this->assertEqual((string) $shortcuts[0], 'All content');
     $this->assertEqual((string) $shortcuts[1], 'Add content');
   }

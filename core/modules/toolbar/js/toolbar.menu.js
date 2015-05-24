@@ -2,7 +2,7 @@
  * Builds a nested accordion widget.
  *
  * Invoke on an HTML list element with the jQuery plugin pattern.
- * - For example, $('.menu').drupalToolbarMenu();
+ * - For example, $('.toolbar-menu').drupalToolbarMenu();
  */
 
 (function ($, Drupal, drupalSettings) {
@@ -103,7 +103,7 @@
       // Add a handle to each list item if it has a menu.
       $menu.find('li').each(function (index, element) {
         var $item = $(element);
-        if ($item.children('ul.menu').length) {
+        if ($item.children('ul.toolbar-menu').length) {
           var $box = $item.children('.toolbar-box');
           options.text = Drupal.t('@label', {'@label': $box.find('a').text()});
           $item.children('.toolbar-box')

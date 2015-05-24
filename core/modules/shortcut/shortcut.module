@@ -277,7 +277,7 @@ function shortcut_renderable_links($shortcut_set = NULL) {
       '#theme' => 'links__toolbar_shortcuts',
       '#links' => $links,
       '#attributes' => array(
-        'class' => array('menu'),
+        'class' => array('toolbar-menu'),
       ),
       '#cache' => array(
         'tags' => $cache_tags,

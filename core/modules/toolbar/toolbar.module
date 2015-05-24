@@ -42,6 +42,10 @@ function toolbar_theme($existing, $type, $theme, $path) {
   $items['toolbar'] = array(
     'render element' => 'element',
   );
+  $items['menu__toolbar'] = array(
+    'base hook' => 'menu',
+    'variables' => array('items' => array(), 'attributes' => array()),
+  );
 
   return $items;
 }
@@ -204,7 +208,7 @@ function toolbar_toolbar() {
  * @see drupal_render()
  */
 function toolbar_prerender_toolbar_administration_tray(array $element) {
-  $menu_tree = \Drupal::menuTree();
+  $menu_tree = \Drupal::service('toolbar.menu_tree');
   // Render the top-level administration menu links.
   $parameters = new MenuTreeParameters();
   $parameters->setRoot('system.admin')->excludeRoot()->setTopLevelOnly()->onlyEnabledLinks();
@@ -261,7 +265,7 @@ function toolbar_menu_navigation_links(array $tree) {
  * Returns the rendered subtree of each top-level toolbar link.
  */
 function toolbar_get_rendered_subtrees() {
-  $menu_tree = \Drupal::menuTree();
+  $menu_tree = \Drupal::service('toolbar.menu_tree');
   $parameters = new MenuTreeParameters();
   $parameters->setRoot('system.admin')->excludeRoot()->setMaxDepth(3)->onlyEnabledLinks();
   $tree = $menu_tree->load(NULL, $parameters);
