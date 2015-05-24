@@ -550,15 +550,9 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
   }
 
   /**
-   * Gets the table of an entity type to be used as base table in views.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
-   *   The entity type.
-   *
-   * @return string
-   *   The name of the base table in views.
+   * {@inheritdoc}
    */
-  protected function getViewsTableForEntityType(EntityTypeInterface $entity_type) {
+  public function getViewsTableForEntityType(EntityTypeInterface $entity_type) {
     return $entity_type->getDataTable() ?: $entity_type->getBaseTable();
   }
 
