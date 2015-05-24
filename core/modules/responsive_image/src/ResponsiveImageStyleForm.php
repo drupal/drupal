@@ -114,53 +114,22 @@ class ResponsiveImageStyleForm extends EntityForm {
       foreach ($breakpoint->getMultipliers() as $multiplier) {
         $label = $multiplier . ' ' . $breakpoint->getLabel() . ' [' . $breakpoint->getMediaQuery() . ']';
         $form['keyed_styles'][$breakpoint_id][$multiplier] = array(
-          '#type' => 'details',
-          '#title' => $label,
+          '#type' => 'container',
         );
         $image_style_mapping = $responsive_image_style->getImageStyleMapping($breakpoint_id, $multiplier);
+        // @todo The image_mapping_type is only temporarily hardcoded, until
+        // support for the other responsive image mapping type ('sizes') is
+        // added in https://www.drupal.org/node/2334387.
         $form['keyed_styles'][$breakpoint_id][$multiplier]['image_mapping_type'] = array(
-          '#title' => $this->t('Type'),
-          '#type' => 'radios',
-          '#options' => array(
-            '_none' => $this->t('Do not use this breakpoint'),
-            'image_style' => $this->t('Use image styles'),
-            'sizes' => $this->t('Use the sizes attribute'),
-          ),
-          '#default_value' => isset($image_style_mapping['image_mapping_type']) ? $image_style_mapping['image_mapping_type'] : '_none',
+          '#type' => 'value',
+          '#value' => 'image_style',
         );
-        $form['keyed_styles'][$breakpoint_id][$multiplier]['image_style'] = array(
+        $form['keyed_styles'][$breakpoint_id][$multiplier]['image_mapping'] = array(
           '#type' => 'select',
-          '#title' => $this->t('Image style'),
+          '#title' => $label,
           '#options' => $image_styles,
-          '#default_value' => isset($image_style_mapping['image_mapping']) && is_string($image_style_mapping['image_mapping']) ? $image_style_mapping['image_mapping'] : '',
+          '#default_value' => isset($image_style_mapping['image_mapping']) ? $image_style_mapping['image_mapping'] : array(),
           '#description' => $this->t('Select an image style for this breakpoint.'),
-          '#states' => array(
-            'visible' => array(
-              ':input[name="keyed_styles[' . $breakpoint_id . '][' . $multiplier . '][image_mapping_type]"]' => array('value' => 'image_style'),
-            ),
-          ),
-        );
-        $form['keyed_styles'][$breakpoint_id][$multiplier]['sizes'] = array(
-          '#type' => 'textfield',
-          '#title' => $this->t('Sizes'),
-          '#default_value' => isset($image_style_mapping['image_mapping']['sizes']) ? $image_style_mapping['image_mapping']['sizes'] : '',
-          '#description' => $this->t('Enter the value for the sizes attribute (e.g. "(min-width:700px) 700px, 100vw").'),
-          '#states' => array(
-            'visible' => array(
-              ':input[name="keyed_styles[' . $breakpoint_id . '][' . $multiplier . '][image_mapping_type]"]' => array('value' => 'sizes'),
-            ),
-          ),
-        );
-        $form['keyed_styles'][$breakpoint_id][$multiplier]['sizes_image_styles'] = array(
-          '#title' => $this->t('Image styles'),
-          '#type' => 'checkboxes',
-          '#options' => array_diff_key($image_styles, array('' => '')),
-          '#default_value' => isset($image_style_mapping['image_mapping']['sizes_image_styles']) ? $image_style_mapping['image_mapping']['sizes_image_styles'] : array(),
-          '#states' => array(
-            'visible' => array(
-              ':input[name="keyed_styles[' . $breakpoint_id . '][' . $multiplier . '][image_mapping_type]"]' => array('value' => 'sizes'),
-            ),
-          ),
         );
       }
     }
@@ -181,6 +150,9 @@ class ResponsiveImageStyleForm extends EntityForm {
         // Remove the image style mappings since the breakpoint ID has changed.
         $form_state->unsetValue('keyed_styles');
       }
+      // @todo Filter 'sizes_image_styles' to a normal array in
+      // https://www.drupal.org/node/2334387. For an example see
+      // \Drupal\Core\Block\BlockBase::validateConfigurationForm().
     }
   }
 
@@ -195,23 +167,7 @@ class ResponsiveImageStyleForm extends EntityForm {
     if ($form_state->hasValue('keyed_styles')) {
       foreach ($form_state->getValue('keyed_styles') as $breakpoint_id => $multipliers) {
         foreach ($multipliers as $multiplier => $image_style_mapping) {
-          if ($image_style_mapping['image_mapping_type'] === 'sizes') {
-            $mapping = array(
-              'image_mapping_type' => 'sizes',
-              'image_mapping' => array(
-                'sizes' => $image_style_mapping['sizes'],
-                'sizes_image_styles' => array_keys(array_filter($image_style_mapping['sizes_image_styles'])),
-              )
-            );
-            $responsive_image_style->addImageStyleMapping($breakpoint_id, $multiplier, $mapping);
-          }
-          elseif ($image_style_mapping['image_mapping_type'] === 'image_style') {
-            $mapping = array(
-              'image_mapping_type' => 'image_style',
-              'image_mapping' => $image_style_mapping['image_style'],
-            );
-            $responsive_image_style->addImageStyleMapping($breakpoint_id, $multiplier, $mapping);
-          }
+          $responsive_image_style->addImageStyleMapping($breakpoint_id, $multiplier, $image_style_mapping);
         }
       }
     }
