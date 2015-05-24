@@ -128,7 +128,7 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
       drupal_set_message(SafeMarkup::set($message), $class, TRUE);
     }
 
-    $content = $this->t('The website has encountered an error. Please try again later.');
+    $content = $this->t('The website encountered an unexpected error. Please try again later.');
     $output = $this->bareHtmlPageRenderer->renderBarePage(['#markup' => $content], $this->t('Error'), 'maintenance_page');
     $response = new Response($output);
 

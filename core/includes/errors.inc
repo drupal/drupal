@@ -233,7 +233,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
       // We fallback to a maintenance page at this point, because the page generation
       // itself can generate errors.
       // Should not translate the string to avoid errors producing more errors.
-      $message = 'The website has encountered an error. Please try again later.';
+      $message = 'The website encountered an unexpected error. Please try again later.';
       if ($is_installer) {
         // install_display_output() prints the output and ends script execution.
         $output = array(
