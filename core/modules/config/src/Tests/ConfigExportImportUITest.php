@@ -187,14 +187,25 @@ class ConfigExportImportUITest extends WebTestBase {
       ->save();
     $this->drupalGet('admin/config/development/configuration');
     $this->assertText(t('Warning message'));
-    $this->assertText('Your current configuration has changed. Changes to these configuration items will be lost on the next synchronization: system.site');
+    $this->assertText('The following items in your active configuration have changes since the last import that may be lost on the next import. system.site');
     // Remove everything from staging. The warning about differences between the
-    // active and snapshot should still exist.
+    // active and snapshot should no longer exist.
     \Drupal::service('config.storage.staging')->deleteAll();
     $this->drupalGet('admin/config/development/configuration');
-    $this->assertText(t('Warning message'));
-    $this->assertText('Your current configuration has changed. Changes to these configuration items will be lost on the next synchronization: system.site');
+    $this->assertNoText(t('Warning message'));
+    $this->assertNoText('The following items in your active configuration have changes since the last import that may be lost on the next import. system.site');
     $this->assertText(t('There are no configuration changes to import.'));
+    // Write a file to staging. The warning about differences between the
+    // active and snapshot should now exist.
+    /** @var \Drupal\Core\Config\StorageInterface $staging */
+    $staging = $this->container->get('config.storage.staging');
+    $data = $this->config('system.site')->get();
+    $data['slogan'] = 'in the face';
+    $this->copyConfig($this->container->get('config.storage'), $staging);
+    $staging->write('system.site', $data);
+    $this->drupalGet('admin/config/development/configuration');
+    $this->assertText(t('Warning message'));
+    $this->assertText('The following items in your active configuration have changes since the last import that may be lost on the next import. system.site');
   }
 
   /**
