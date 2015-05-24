@@ -1636,7 +1636,7 @@ abstract class TestBase {
   }
 
   /**
-   * Configuration accessor for tests. Returns non-overriden configuration.
+   * Configuration accessor for tests. Returns non-overridden configuration.
    *
    * @param $name
    *   Configuration name.

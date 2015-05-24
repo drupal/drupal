@@ -409,7 +409,7 @@ class Table extends StylePluginBase implements CacheablePluginInterface {
       '#type' => 'checkbox',
       '#title' => $this->t('Show the empty text in the table'),
       '#default_value' => $this->options['empty_table'],
-      '#description' => $this->t('Per default the table is hidden for an empty view. With this option it is posible to show an empty table with the text in it.'),
+      '#description' => $this->t('Per default the table is hidden for an empty view. With this option it is possible to show an empty table with the text in it.'),
     );
 
     $form['description_markup'] = array(

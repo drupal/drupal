@@ -35,7 +35,7 @@ class NodeTitleXSSTest extends NodeTestBase {
 
     $this->drupalGet('node/' . $node->id());
     // assertTitle() decodes HTML-entities inside the <title> element.
-    $this->assertTitle($title . ' | Drupal', 'Title is diplayed when viewing a node.');
+    $this->assertTitle($title . ' | Drupal', 'Title is displayed when viewing a node.');
     $this->assertNoRaw($xss, 'Harmful tags are escaped when viewing a node.');
 
     $this->drupalGet('node/' . $node->id() . '/edit');

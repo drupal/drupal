@@ -65,7 +65,7 @@ config_schema_test.someschema.with_parents.key_3:
 
 config_schema_test.someschema.somemodule.*.*:
   type: config_object
-  label: 'Schema multiple filesytem marker test'
+  label: 'Schema multiple filesystem marker test'
   mapping:
     testid:
       type: string

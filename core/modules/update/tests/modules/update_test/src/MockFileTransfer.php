@@ -27,7 +27,7 @@ class MockFileTransfer {
    */
   public function getSettingsForm() {
     $form = array();
-    $form['udpate_test_username'] = array(
+    $form['update_test_username'] = array(
       '#type' => 'textfield',
       '#title' => t('Update Test Username'),
     );

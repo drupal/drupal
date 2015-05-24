@@ -518,7 +518,7 @@ class FieldWebTest extends HandlerTestBase {
     $random_text_2 = $this->randomMachineName(2);
     $random_text_4 = $this->randomMachineName(4);
     $random_text_8 = $this->randomMachineName(8);
-    $touples = array(
+    $tuples = array(
       // Create one string which doesn't fit at all into the limit.
       array(
         'value' => $random_text_8,
@@ -547,15 +547,15 @@ class FieldWebTest extends HandlerTestBase {
       )
     );
 
-    foreach ($touples as $touple) {
-      $row->views_test_data_name = $touple['value'];
+    foreach ($tuples as $tuple) {
+      $row->views_test_data_name = $tuple['value'];
       $output = $name_field->advancedRender($row);
 
-      if ($touple['trimmed']) {
-        $this->assertNotSubString($output, $touple['value'], format_string('The untrimmed value (!untrimmed) should not appear in the trimmed output (!output).', array('!untrimmed' => $touple['value'], '!output' => $output)));
+      if ($tuple['trimmed']) {
+        $this->assertNotSubString($output, $tuple['value'], format_string('The untrimmed value (!untrimmed) should not appear in the trimmed output (!output).', array('!untrimmed' => $tuple['value'], '!output' => $output)));
       }
-      if (!empty($touble['trimmed_value'])) {
-        $this->assertSubString($output, $touple['trimmed_value'], format_string('The trimmed value (!trimmed) should appear in the trimmed output (!output).', array('!trimmed' => $touple['trimmed_value'], '!output' => $output)));
+      if (!empty($tuple['trimmed_value'])) {
+        $this->assertSubString($output, $tuple['trimmed_value'], format_string('The trimmed value (!trimmed) should appear in the trimmed output (!output).', array('!trimmed' => $tuple['trimmed_value'], '!output' => $output)));
       }
     }
 

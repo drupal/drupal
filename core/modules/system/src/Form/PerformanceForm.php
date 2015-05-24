@@ -61,11 +61,11 @@ class PerformanceForm extends ConfigFormBase {
    * @param \Drupal\Core\Asset\AssetCollectionOptimizerInterface $js_collection_optimizer
    *   The JavaScript asset collection optimizer service.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, CacheBackendInterface $render_cache, DateFormatter $date_formater, AssetCollectionOptimizerInterface $css_collection_optimizer, AssetCollectionOptimizerInterface $js_collection_optimizer) {
+  public function __construct(ConfigFactoryInterface $config_factory, CacheBackendInterface $render_cache, DateFormatter $date_formatter, AssetCollectionOptimizerInterface $css_collection_optimizer, AssetCollectionOptimizerInterface $js_collection_optimizer) {
     parent::__construct($config_factory);
 
     $this->renderCache = $render_cache;
-    $this->dateFormatter = $date_formater;
+    $this->dateFormatter = $date_formatter;
     $this->cssCollectionOptimizer = $css_collection_optimizer;
     $this->jsCollectionOptimizer = $js_collection_optimizer;
   }

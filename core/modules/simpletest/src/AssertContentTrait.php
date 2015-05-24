@@ -645,13 +645,13 @@ trait AssertContentTrait {
     if (!$message) {
       $message = '"' . $text . '"' . ($be_unique ? ' found only once' : ' found more than once');
     }
-    $first_occurance = strpos($this->getTextContent(), $text);
-    if ($first_occurance === FALSE) {
+    $first_occurrence = strpos($this->getTextContent(), $text);
+    if ($first_occurrence === FALSE) {
       return $this->assert(FALSE, $message, $group);
     }
-    $offset = $first_occurance + strlen($text);
-    $second_occurance = strpos($this->getTextContent(), $text, $offset);
-    return $this->assert($be_unique == ($second_occurance === FALSE), $message, $group);
+    $offset = $first_occurrence + strlen($text);
+    $second_occurrence = strpos($this->getTextContent(), $text, $offset);
+    return $this->assert($be_unique == ($second_occurrence === FALSE), $message, $group);
   }
 
   /**

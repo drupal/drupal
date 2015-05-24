@@ -52,7 +52,7 @@ interface NodeTypeInterface extends ConfigEntityInterface {
    * @param bool $display_submitted
    *   TRUE if the submitted by information should be shown.
    */
-  public function setDisplaySubmitted($display_submtited);
+  public function setDisplaySubmitted($display_submitted);
 
   /**
    * Gets the preview mode.

@@ -72,7 +72,7 @@ class ConfigOtherModuleTest extends WebTestBase {
   /**
    * Tests enabling the provider of the config entity type first.
    */
-  public function testInstallConfigEnityModuleFirst() {
+  public function testInstallConfigEntityModuleFirst() {
     $this->installModule('config_test');
     $this->assertFalse(entity_load('config_test', 'other_module_test', TRUE), 'Default configuration provided by config_other_module_config_test does not exist.');
 

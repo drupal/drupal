@@ -288,7 +288,7 @@ class UrlTest extends WebTestBase {
     $url = $test_url . '#drupal';
     $fragment = $this->randomMachineName(10);
     $result = Url::fromUri($url, array('fragment' => $fragment))->toString();
-    $this->assertEqual($test_url . '#' . $fragment, $result, 'External URL fragment is overidden with a custom fragment in $options.');
+    $this->assertEqual($test_url . '#' . $fragment, $result, 'External URL fragment is overridden with a custom fragment in $options.');
 
     // Verify external URL can contain a query string.
     $url = $test_url . '?drupal=awesome';

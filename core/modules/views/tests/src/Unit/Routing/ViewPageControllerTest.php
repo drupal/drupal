@@ -167,7 +167,7 @@ class ViewPageControllerTest extends UnitTestCase {
    *
    * Note: This test does not care about upcasting for now.
    */
-  public function testHandleWithArgumentsOnOveriddenRoute() {
+  public function testHandleWithArgumentsOnOverriddenRoute() {
     $view = $this->getMock('Drupal\views\ViewEntityInterface');
 
     $this->storage->expects($this->once())
@@ -226,7 +226,7 @@ class ViewPageControllerTest extends UnitTestCase {
    * This test care about upcasted values and ensures that the raw variables
    * are pulled in.
    */
-  public function testHandleWithArgumentsOnOveriddenRouteWithUpcasting() {
+  public function testHandleWithArgumentsOnOverriddenRouteWithUpcasting() {
     $view = $this->getMock('Drupal\views\ViewEntityInterface');
 
     $this->storage->expects($this->once())

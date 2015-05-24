@@ -53,7 +53,7 @@ class StorageTest extends WebTestBase {
     // Reset the form to the values of the storage, using a form rebuild
     // triggered by button of type button.
     $this->drupalPostForm(NULL, array('title' => 'changed'), 'Reset');
-    $this->assertFieldByName('title', 'new', 'Values have been resetted.');
+    $this->assertFieldByName('title', 'new', 'Values have been reset.');
     // After rebuilding, the form has been cached.
     $this->assertText('Form constructions: 4');
 
@@ -78,7 +78,7 @@ class StorageTest extends WebTestBase {
     // Reset the form to the values of the storage, using a form rebuild
     // triggered by button of type button.
     $this->drupalPostForm(NULL, array('title' => 'changed'), 'Reset');
-    $this->assertFieldByName('title', 'new', 'Values have been resetted.');
+    $this->assertFieldByName('title', 'new', 'Values have been reset.');
     $this->assertText('Form constructions: 3');
 
     $this->drupalPostForm(NULL, $edit, 'Save');

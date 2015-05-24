@@ -157,7 +157,7 @@ class LanguageUrlRewritingTest extends WebTestBase {
 
     $expected = $index_php ? 'http://example.fr:90/index.php' : 'http://example.fr:90' . rtrim(base_path(), '/') . '/';
 
-    $this->assertEqual($url, $expected, 'A given port is not overriden.');
+    $this->assertEqual($url, $expected, 'A given port is not overridden.');
 
   }
 

@@ -143,8 +143,8 @@ class NodeType extends ConfigEntityBundleBase implements NodeTypeInterface {
   /**
    * {@inheritdoc}
    */
-  public function setDisplaySubmitted($display_submtited) {
-    $this->display_submitted = $display_submtited;
+  public function setDisplaySubmitted($display_submitted) {
+    $this->display_submitted = $display_submitted;
   }
 
   /**

@@ -188,7 +188,7 @@ class DenormalizeTest extends NormalizerTestBase {
   /**
    * Verifies that the denormalized entity is correct in the PATCH context.
    */
-  public function testPatchDenormailzation() {
+  public function testPatchDenormalization() {
     $data = array(
       '_links' => array(
         'type' => array(

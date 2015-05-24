@@ -128,7 +128,7 @@ class FetchTest extends DatabaseTestBase {
     $result = db_query('SELECT name FROM {test} WHERE age > :age', array(':age' => 25));
     $i = 0;
     foreach ($result as $record) {
-      $this->assertIdentical($record->name, $column[$i++], 'Column matches direct accesss.');
+      $this->assertIdentical($record->name, $column[$i++], 'Column matches direct access.');
     }
   }
 

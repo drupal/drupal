@@ -392,7 +392,7 @@ class ManageFieldsTest extends WebTestBase {
     // Check that invalid default values are rejected.
     $edit = array($element_name => '-1');
     $this->drupalPostForm($admin_path, $edit, t('Save settings'));
-    $this->assertText("$field_name does not accept the value -1", 'Form vaildation failed.');
+    $this->assertText("$field_name does not accept the value -1", 'Form validation failed.');
 
     // Check that the default value is saved.
     $edit = array($element_name => '1');

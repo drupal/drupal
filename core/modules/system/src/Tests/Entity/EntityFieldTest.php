@@ -593,12 +593,12 @@ class EntityFieldTest extends EntityUnitTestBase  {
   public function testDataTypes() {
     $types = \Drupal::typedDataManager()->getDefinitions();
     foreach (entity_test_entity_types() as $entity_type) {
-      $this->assertTrue($types['entity:' . $entity_type]['class'], 'Entity data type registed.');
+      $this->assertTrue($types['entity:' . $entity_type]['class'], 'Entity data type registered.');
     }
     // Check bundle types are provided as well.
     entity_test_create_bundle('bundle');
     $types = \Drupal::typedDataManager()->getDefinitions();
-    $this->assertTrue($types['entity:entity_test:bundle']['class'], 'Entity bundle data type registed.');
+    $this->assertTrue($types['entity:entity_test:bundle']['class'], 'Entity bundle data type registered.');
   }
 
   /**

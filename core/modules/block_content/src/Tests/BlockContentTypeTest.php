@@ -64,7 +64,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $this->assertTrue($block_type, 'The new block type has been created.');
 
     $this->drupalGet('block/add/' . $type->id());
-    $this->assertResponse(200, 'The new block type can be accessed at bloack/add.');
+    $this->assertResponse(200, 'The new block type can be accessed at block/add.');
 
     // Create a block type via the user interface.
     $edit = array(

@@ -227,7 +227,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $definition = \Drupal::service('config.typed')->getDefinition('config_schema_test.someschema.somemodule.section_one.subsection');
     // This should be the schema of config_schema_test.someschema.somemodule.*.*.
     $expected = array();
-    $expected['label'] = 'Schema multiple filesytem marker test';
+    $expected['label'] = 'Schema multiple filesystem marker test';
     $expected['class'] = '\Drupal\Core\Config\Schema\Mapping';
     $expected['mapping']['langcode']['type'] = 'string';
     $expected['mapping']['langcode']['label'] = 'Language code';

@@ -72,7 +72,7 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
     $this->assertText(t('Translation update status'), 'Status message');
     $this->assertRaw(t('Updates available for: @languages. See the <a href="@updates">Available translation updates</a> page for more information.', array('@languages' => t('German'), '@updates' => \Drupal::url('locale.translate_status'))), 'Updates available message');
     $this->drupalGet('admin/reports/translations');
-    $this->assertText(t('Updates for: @modules', array('@modules' => 'Locale test translate')), 'Translations avaiable');
+    $this->assertText(t('Updates for: @modules', array('@modules' => 'Locale test translate')), 'Translations available');
 
     // Set locale_test_translate module to have a dev release and no
     // translation found.

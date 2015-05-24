@@ -39,7 +39,7 @@ class UserDeleteTest extends WebTestBase {
 
     $this->assertTrue($roles_created > 0, 'Role assignments created for new users and deletion of role assignments can be tested');
     // We should be able to load one of the users.
-    $this->assertTrue(User::load($user_a->id()), 'User is created and deltion of user can be tested');
+    $this->assertTrue(User::load($user_a->id()), 'User is created and deletion of user can be tested');
     // Delete the users.
     user_delete_multiple($uids);
     // Test if the roles assignments are deleted.

@@ -372,7 +372,7 @@ abstract class SqlBase extends PagerPluginBase implements CacheablePluginInterfa
   public function exposedFormValidate(&$form, FormStateInterface $form_state) {
     if (!$form_state->isValueEmpty('offset') && trim($form_state->getValue('offset'))) {
       if (!is_numeric($form_state->getValue('offset')) || $form_state->getValue('offset') < 0) {
-        $form_state->setErrorByName('offset', $this->t('Offset must be an number greather or equal than 0.'));
+        $form_state->setErrorByName('offset', $this->t('Offset must be an number greater or equal than 0.'));
       }
     }
   }

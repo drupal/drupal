@@ -156,7 +156,7 @@ function simpletest_schema() {
     ),
   );
   $schema['simpletest_test_id'] = array(
-    'description' => 'Stores simpletest test IDs, used to auto-incrament the test ID so that a fresh test ID is used.',
+    'description' => 'Stores simpletest test IDs, used to auto-increment the test ID so that a fresh test ID is used.',
     'fields' => array(
       'test_id'  => array(
         'type' => 'serial',

@@ -29,8 +29,8 @@ class GroupByTest extends UITestBase {
   function testGroupBySave() {
     $this->drupalGet('admin/structure/views/view/test_views_groupby_save/edit');
 
-    $edit_groubpy_url = 'admin/structure/views/nojs/handler-group/test_views_groupby_save/default/field/id';
-    $this->assertNoLinkByHref($edit_groubpy_url, 0, 'No aggregation link found.');
+    $edit_groupby_url = 'admin/structure/views/nojs/handler-group/test_views_groupby_save/default/field/id';
+    $this->assertNoLinkByHref($edit_groupby_url, 0, 'No aggregation link found.');
 
     // Enable aggregation on the view.
     $edit = array(
@@ -38,10 +38,10 @@ class GroupByTest extends UITestBase {
     );
     $this->drupalPostForm('admin/structure/views/nojs/display/test_views_groupby_save/default/group_by', $edit, t('Apply'));
 
-    $this->assertLinkByHref($edit_groubpy_url, 0, 'Aggregation link found.');
+    $this->assertLinkByHref($edit_groupby_url, 0, 'Aggregation link found.');
 
     // Change the groupby type in the UI.
-    $this->drupalPostForm($edit_groubpy_url, array('options[group_type]' => 'count'), t('Apply'));
+    $this->drupalPostForm($edit_groupby_url, array('options[group_type]' => 'count'), t('Apply'));
     $this->assertLink('COUNT(Views test: ID)', 0, 'The count setting is displayed in the UI');
 
     $this->drupalPostForm(NULL, array(), t('Save'));

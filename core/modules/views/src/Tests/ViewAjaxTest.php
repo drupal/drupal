@@ -60,7 +60,7 @@ class ViewAjaxTest extends ViewTestBase {
 
     $this->setRawContent($data[1]['data']);
     $result = $this->xpath('//div[contains(@class, "views-row")]');
-    $this->assertEqual(count($result), 2, 'Ensure that two items are renderd in the HTML.');
+    $this->assertEqual(count($result), 2, 'Ensure that two items are rendered in the HTML.');
   }
 
 }

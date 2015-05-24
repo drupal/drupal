@@ -155,7 +155,7 @@ class FilterDateTest extends HandlerTestBase {
     // Generate a definitive wrong value, which should be checked by validation.
     $edit['options[value][value]'] = $this->randomString() . '-------';
     $this->drupalPostForm(NULL, $edit, t('Apply'));
-    $this->assertText(t('Invalid date format.'), 'Make sure that validation is runned and the invalidate date format is identified.');
+    $this->assertText(t('Invalid date format.'), 'Make sure that validation is run and the invalidate date format is identified.');
   }
 
 }
