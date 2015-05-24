@@ -2609,7 +2609,9 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   protected function buildRenderingLanguageOptions() {
     // @todo Consider making these plugins. See
     //   https://www.drupal.org/node/2173811.
-    return $this->listLanguages(LanguageInterface::STATE_CONFIGURABLE | LanguageInterface::STATE_SITE_DEFAULT | PluginBase::INCLUDE_NEGOTIATED | PluginBase::INCLUDE_ENTITY);
+    // Pass the current rendering language (in this case a one element array) so
+    // is not lost when there are language configuration changes.
+    return $this->listLanguages(LanguageInterface::STATE_CONFIGURABLE | LanguageInterface::STATE_SITE_DEFAULT | PluginBase::INCLUDE_NEGOTIATED | PluginBase::INCLUDE_ENTITY, array($this->getOption('rendering_language')));
   }
 
   /**

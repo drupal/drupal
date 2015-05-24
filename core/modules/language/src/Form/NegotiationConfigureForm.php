@@ -236,7 +236,7 @@ class NegotiationConfigureForm extends ConfigFormBase {
       $configurable = $this->languageTypes->get('configurable');
       $table_form['configurable'] = array(
         '#type' => 'checkbox',
-        '#title' => $this->t('Customize %language_name language detection to differ from User interface text language detection settings', array('%language_name' => $info['name'])),
+        '#title' => $this->t('Customize %language_name language detection to differ from Interface text language detection settings', array('%language_name' => $info['name'])),
         '#default_value' => in_array($type, $configurable),
         '#attributes' => array('class' => array('language-customization-checkbox')),
         '#attached' => array(

@@ -35,6 +35,9 @@ abstract class UITestBase extends ViewTestBase {
    */
   public static $modules = array('node', 'views_ui', 'block', 'taxonomy');
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
 
@@ -42,7 +45,13 @@ abstract class UITestBase extends ViewTestBase {
 
     $this->adminUser = $this->drupalCreateUser(array('administer views'));
 
-    $this->fullAdminUser = $this->drupalCreateUser(array('administer views', 'administer blocks', 'bypass node access', 'access user profiles', 'view all revisions'));
+    $this->fullAdminUser = $this->drupalCreateUser(array('administer views',
+      'administer blocks',
+      'bypass node access',
+      'access user profiles',
+      'view all revisions',
+      'administer permissions',
+    ));
     $this->drupalLogin($this->fullAdminUser);
   }
 

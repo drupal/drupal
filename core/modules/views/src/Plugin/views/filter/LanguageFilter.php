@@ -65,7 +65,9 @@ class LanguageFilter extends InOperator implements ContainerFactoryPluginInterfa
   public function getValueOptions() {
     if (!isset($this->valueOptions)) {
       $this->valueTitle = $this->t('Language');
-      $this->valueOptions = $this->listLanguages(LanguageInterface::STATE_ALL |LanguageInterface::STATE_SITE_DEFAULT | PluginBase::INCLUDE_NEGOTIATED);
+      // Pass the current values so options that are already selected do not get
+      // lost when there are changes in the language configuration.
+      $this->valueOptions = $this->listLanguages(LanguageInterface::STATE_ALL | LanguageInterface::STATE_SITE_DEFAULT | PluginBase::INCLUDE_NEGOTIATED, array_keys($this->value));
     }
   }
 

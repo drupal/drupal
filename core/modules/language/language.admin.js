@@ -12,7 +12,7 @@
       // Given a customization checkbox derive the language type being changed.
       function toggleTable(checkbox) {
         var $checkbox = $(checkbox);
-        // Get the language detection type such as User interface text language
+        // Get the language detection type such as Interface text language
         // detection or Content language detection.
         $checkbox.closest('.table-language-group')
           .find('table, .tabledrag-toggle-weight')

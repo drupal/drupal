@@ -113,7 +113,7 @@ class NumericField extends FieldPluginBase {
       );
     }
     if ($plurals == 2) {
-      // Simplify user interface text for the most common case.
+      // Simplify interface text for the most common case.
       $form['format_plural_values'][0]['#description'] = $this->t('Text to use for the singular form, @count will be replaced with the value.');
       $form['format_plural_values'][1]['#title'] = $this->t('Plural form');
       $form['format_plural_values'][1]['#description'] = $this->t('Text to use for the plural form, @count will be replaced with the value.');

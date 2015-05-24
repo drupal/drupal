@@ -170,7 +170,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
    *   An array which describes the options of a plugin. Each element is an
    *   associative array containing:
    *   - default: The default value of one option. Should be translated to the
-   *     current interface language if translatable.
+   *     interface text language selected for page if translatable.
    *   - (optional) contains: An array which describes the available options
    *     under the key. If contains is set, the default will be ignored and
    *     assumed to be an empty array.
@@ -507,14 +507,19 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
    *   - \Drupal\views\Plugin\views\PluginBase::INCLUDE_ENTITY: Add
    *     entity row language types. Note that these are only supported for
    *     display options, not substituted in queries.
+   * @param array|null $current_values
+   *   The currently-selected options in the list, if available.
    *
    * @return array
    *   An array of language names, keyed by the language code. Negotiated and
    *   special languages have special codes that are substituted in queries by
    *   PluginBase::queryLanguageSubstitutions().
+   *   Only configurable languages and languages that are in $current_values are
+   *   included in the list.
    */
-  protected function listLanguages($flags = LanguageInterface::STATE_ALL) {
+  protected function listLanguages($flags = LanguageInterface::STATE_ALL, array $current_values = NULL) {
     $manager = \Drupal::languageManager();
+    $languages = $manager->getLanguages($flags);
     $list = array();
 
     // The entity languages should come first, if requested.
@@ -523,30 +528,46 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
       $list['***LANGUAGE_entity_default***'] = $this->t('Original language of content in view row');
     }
 
-    // The Language Manager class takes care of the STATE_SITE_DEFAULT case.
-    // It comes in with ID set to LanguageInterface::LANGCODE_SITE_DEFAULT.
+    // STATE_SITE_DEFAULT comes in with ID set
+    // to LanguageInterface::LANGCODE_SITE_DEFAULT.
     // Since this is not a real language, surround it by '***LANGUAGE_...***',
     // like the negotiated languages below.
-    $languages = $manager->getLanguages($flags);
-    foreach ($languages as $id => $language) {
-      if ($id == LanguageInterface::LANGCODE_SITE_DEFAULT) {
-        $id = PluginBase::VIEWS_QUERY_LANGUAGE_SITE_DEFAULT;
-      }
-      $list[$id] = $this->t($language->getName());
+    if ($flags & LanguageInterface::STATE_SITE_DEFAULT) {
+      $list[PluginBase::VIEWS_QUERY_LANGUAGE_SITE_DEFAULT] = $this->t($languages[LanguageInterface::LANGCODE_SITE_DEFAULT]->getName());
+      // Remove site default language from $languages so it's not added
+      // twice with the real languages below.
+      unset($languages[LanguageInterface::LANGCODE_SITE_DEFAULT]);
     }
 
     // Add in negotiated languages, if requested.
     if ($flags & PluginBase::INCLUDE_NEGOTIATED) {
-      $types = $manager->getDefinedLanguageTypesInfo();
-      foreach ($types as $id => $type) {
-        // Omit unnamed types. These are things like language_url, which are
-        // not configurable and do not need to be in this list. And surround
-        // IDs by '***LANGUAGE_...***', to avoid query collisions.
-        if (isset($type['name'])) {
+      $types_info = $manager->getDefinedLanguageTypesInfo();
+      $types = $manager->getLanguageTypes();
+      // We only go through the configured types.
+      foreach ($types as $id) {
+        if (isset($types_info[$id]['name'])) {
+          $name = $types_info[$id]['name'];
+          // Surround IDs by '***LANGUAGE_...***', to avoid query collisions.
           $id = '***LANGUAGE_' . $id . '***';
-          $list[$id] = $this->t('!type language selected for page', array('!type' => $type['name']));
+          $list[$id] = $this->t('!type language selected for page', array('!type' => $name));
         }
       }
+      if (!empty($current_values)) {
+        foreach ($types_info as $id => $type) {
+          $id = '***LANGUAGE_' . $id . '***';
+          // If this (non-configurable) type is among the current values,
+          // add that option too, so it is not lost. If not among the current
+          // values, skip displaying it to avoid user confusion.
+          if (isset($type['name']) && !isset($list[$id]) && in_array($id, $current_values)) {
+            $list[$id] = $this->t('!type language selected for page', array('!type' => $type['name']));
+          }
+        }
+      }
+    }
+
+    // Add real languages.
+    foreach ($languages as $id => $language) {
+      $list[$id] = $this->t($language->getName());
     }
 
     return $list;

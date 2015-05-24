@@ -133,7 +133,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
 
     // Test that language settings are correctly stored.
     $language_configuration = ContentLanguageSettings::loadByEntityTypeBundle('comment', 'comment_article');
-    $this->assertEqual($language_configuration->getDefaultLangcode(), 'current_interface', 'The default language for article comments is set to the current interface language.');
+    $this->assertEqual($language_configuration->getDefaultLangcode(), 'current_interface', 'The default language for article comments is set to the interface text language selected for page.');
     $this->assertTrue($language_configuration->isLanguageAlterable(), 'The language selector for article comments is shown.');
 
     // Verify language widget appears on comment type form.
@@ -181,6 +181,24 @@ class ContentTranslationSettingsTest extends WebTestBase {
       $definitions = \Drupal::entityManager()->getFieldDefinitions('node', 'article');
       $this->assertEqual($definitions['body']->isTranslatable(), $translatable, 'Field translatability correctly switched.');
       $this->assertEqual($field->isTranslatable(), $definitions['body']->isTranslatable(), 'Configurable field translatability correctly switched.');
+    }
+
+    // Test that the order of the language list is similar to other language
+    // lists, such as in Views UI.
+    $this->drupalGet('admin/config/regional/content-language');
+
+    $expected_elements = array(
+      'site_default',
+      'current_interface',
+      'authors_default',
+      'en',
+      'und',
+      'zxx',
+    );
+    $elements = $this->xpath('//select[@id="edit-settings-node-article-settings-language-langcode"]/option');
+    // Compare values inside the option elements with expected values.
+    for ($i = 0; $i < count($elements); $i++) {
+      $this->assertEqual($elements[$i]->attributes()->{'value'}, $expected_elements[$i]);
     }
   }
 

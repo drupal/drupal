@@ -384,7 +384,7 @@
  * - Define a Cache ID (cid) value for your data. A cid is a string, which must
  *   contain enough information to uniquely identify the data. For example, if
  *   your data contains translated strings, then your cid value must include the
- *   current interface language.
+ *   interface text language selected for page.
  * - Call the get() method to attempt a cache read, to see if the cache already
  *   contains your data.
  * - If your data is not already in the cache, compute it and add it to the

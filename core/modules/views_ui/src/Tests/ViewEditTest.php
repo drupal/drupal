@@ -110,7 +110,7 @@ class ViewEditTest extends UITestBase {
     }
 
     // Make the site multilingual and test the options again.
-    $this->container->get('module_installer')->install(array('language'));
+    $this->container->get('module_installer')->install(array('language', 'content_translation'));
     ConfigurableLanguage::createFromLangcode('hu')->save();
     $this->resetAll();
     $this->rebuildContainer();
@@ -138,6 +138,73 @@ class ViewEditTest extends UITestBase {
       }
       else {
         $this->assertFieldByName('rendering_language', '***LANGUAGE_entity_translation***');
+        // Test that the order of the language list is similar to other language
+        // lists, such as in Views UI.
+        $expected_elements = array(
+          '***LANGUAGE_entity_translation***',
+          '***LANGUAGE_entity_default***',
+          '***LANGUAGE_site_default***',
+          '***LANGUAGE_language_interface***',
+          'en',
+          'hu',
+        );
+        $elements = $this->xpath('//select[@id="edit-rendering-language"]/option');
+        // Compare values inside the option elements with expected values.
+        for ($i = 0; $i < count($elements); $i++) {
+          $this->assertEqual($elements[$i]->attributes()->{'value'}, $expected_elements[$i]);
+        }
+
+        // Check that the selected values are respected even we they are not
+        // supposed to be listed.
+        // Give permission to edit languages to authenticated users.
+        $edit = [
+          'authenticated[administer languages]' => TRUE,
+        ];
+        $this->drupalPostForm('/admin/people/permissions', $edit, t('Save permissions'));
+        // Enable Content language negotiation so we have one more item
+        // to select.
+        $edit = [
+          'language_content[configurable]' => TRUE,
+        ];
+        $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
+
+        // Choose the new negotiation as the rendering language.
+        $edit = [
+          'rendering_language' => '***LANGUAGE_language_content***',
+        ];
+        $this->drupalPostForm('/admin/structure/views/nojs/display/' . $view_name . '/' . $display . '/rendering_language', $edit, t('Apply'));
+
+        // Disable language content negotiation.
+        $edit = [
+          'language_content[configurable]' => FALSE,
+        ];
+        $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
+
+        // Check that the previous selection is listed and selected.
+        $this->drupalGet($langcode_url);
+        $element = $this->xpath('//select[@id="edit-rendering-language"]/option[@value="***LANGUAGE_language_content***" and @selected="selected"]');
+        $this->assertFalse(empty($element), 'Current selection is not lost');
+
+        // Check the order for the langcode filter.
+        $langcode_url = 'admin/structure/views/nojs/handler/' . $view_name . '/' . $display . '/filter/langcode';
+        $this->drupalGet($langcode_url);
+        $this->assertResponse(200);
+
+        $expected_elements = array(
+          'all',
+          '***LANGUAGE_site_default***',
+          '***LANGUAGE_language_interface***',
+          '***LANGUAGE_language_content***',
+          'en',
+          'hu',
+          'und',
+          'zxx',
+        );
+        $elements = $this->xpath('//div[@id="edit-options-value"]//input');
+        // Compare values inside the option elements with expected values.
+        for ($i = 0; $i < count($elements); $i++) {
+          $this->assertEqual($elements[$i]->attributes()->{'value'}, $expected_elements[$i]);
+        }
       }
     }
   }

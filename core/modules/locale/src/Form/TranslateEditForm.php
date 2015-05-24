@@ -131,7 +131,7 @@ class TranslateEditForm extends TranslateFormBase {
             );
           }
           if ($plurals == 2) {
-            // Simplify user interface text for the most common case.
+            // Simplify interface text for the most common case.
             $form['strings'][$string->lid]['translations'][1]['#title'] = $this->t('Plural form');
           }
         }

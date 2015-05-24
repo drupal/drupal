@@ -296,8 +296,8 @@ function language_get_default_langcode($entity_type, $bundle) {
 function language_language_types_info() {
   return array(
     LanguageInterface::TYPE_INTERFACE => array(
-      'name' => t('User interface text'),
-      'description' => t('Order of language detection methods for user interface text. If a translation of user interface text is available in the detected language, it will be displayed.'),
+      'name' => t('Interface text'),
+      'description' => t('Order of language detection methods for interface text. If a translation of interface text is available in the detected language, it will be displayed.'),
       'locked' => TRUE,
     ),
     LanguageInterface::TYPE_CONTENT => array(

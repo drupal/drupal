@@ -29,5 +29,5 @@ language_test.entity_using_current_language:
     parameters:
       configurable_language:
         type: entity:configurable_language
-        # Force load in current interface language.
+        # Force load in the interface text language selected for page.
         with_config_overrides: TRUE

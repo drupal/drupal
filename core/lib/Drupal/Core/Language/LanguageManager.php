@@ -96,8 +96,8 @@ class LanguageManager implements LanguageManagerInterface {
     // access names and descriptions of the default language types.
     return array(
       LanguageInterface::TYPE_INTERFACE => array(
-        'name' => $this->t('User interface text'),
-        'description' => $this->t('Order of language detection methods for user interface text. If a translation of user interface text is available in the detected language, it will be displayed.'),
+        'name' => $this->t('Interface text'),
+        'description' => $this->t('Order of language detection methods for interface text. If a translation of interface text is available in the detected language, it will be displayed.'),
         'locked' => TRUE,
       ),
       LanguageInterface::TYPE_CONTENT => array(

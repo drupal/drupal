@@ -97,7 +97,7 @@ class LanguageConfiguration extends FormElement {
   protected static function getDefaultOptions() {
     $language_options = array(
       LanguageInterface::LANGCODE_SITE_DEFAULT => t("Site's default language (!language)", array('!language' => static::languageManager()->getDefaultLanguage()->getName())),
-      'current_interface' => t('Current interface language'),
+      'current_interface' => t('Interface text language selected for page'),
       'authors_default' => t("Author's preferred language"),
     );
 
