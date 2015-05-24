@@ -99,7 +99,7 @@ class UserController extends ControllerBase {
       else {
         if ($reset_link_user = $this->userStorage->load($uid)) {
           drupal_set_message($this->t('Another user (%other_user) is already logged into the site on this computer, but you tried to use a one-time link for user %resetting_user. Please <a href="@logout">logout</a> and try using the link again.',
-            array('%other_user' => $account->getUsername(), '%resetting_user' => $reset_link_user->getUsername(), '@logout' => $this->url('user.logout'))));
+            array('%other_user' => $account->getUsername(), '%resetting_user' => $reset_link_user->getUsername(), '@logout' => $this->url('user.logout'))), 'warning');
         }
         else {
           // Invalid one-time link specifies an unknown user.
@@ -120,7 +120,7 @@ class UserController extends ControllerBase {
     if ($user && $user->isActive()) {
       // No time out for first time login.
       if ($user->getLastLoginTime() && $current - $timestamp > $timeout) {
-        drupal_set_message($this->t('You have tried to use a one-time login link that has expired. Please request a new one using the form below.'));
+        drupal_set_message($this->t('You have tried to use a one-time login link that has expired. Please request a new one using the form below.'), 'error');
         return $this->redirect('user.pass');
       }
       elseif ($user->isAuthenticated() && ($timestamp >= $user->getLastLoginTime()) && ($timestamp <= $current) && ($hash === user_pass_rehash($user->getPassword(), $timestamp, $user->getLastLoginTime(), $user->id()))) {
@@ -128,7 +128,7 @@ class UserController extends ControllerBase {
         return $this->formBuilder()->getForm('Drupal\user\Form\UserPasswordResetForm', $user, $expiration_date, $timestamp, $hash);
       }
       else {
-        drupal_set_message($this->t('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.'));
+        drupal_set_message($this->t('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.'), 'error');
         return $this->redirect('user.pass');
       }
     }
