@@ -171,4 +171,5 @@ details summary:focus {
   outline: none;
   color: #0074bd;
   margin-top: -3px;
+  text-decoration: underline;
 }
