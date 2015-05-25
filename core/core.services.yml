@@ -865,7 +865,7 @@ services:
       - { name: event_subscriber }
   main_content_renderer.html:
     class: Drupal\Core\Render\MainContent\HtmlRenderer
-    arguments: ['@title_resolver', '@plugin.manager.display_variant', '@event_dispatcher', '@element_info', '@module_handler', '@renderer', '@render_cache', '@cache_contexts_manager']
+    arguments: ['@title_resolver', '@plugin.manager.display_variant', '@event_dispatcher', '@module_handler', '@renderer', '@render_cache']
     tags:
       - { name: render.main_content_renderer, format: html }
   main_content_renderer.ajax:

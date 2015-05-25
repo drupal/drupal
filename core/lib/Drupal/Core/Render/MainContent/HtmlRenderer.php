@@ -8,14 +8,11 @@
 namespace Drupal\Core\Render\MainContent;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheableResponse;
-use Drupal\Core\Cache\CacheContextsManager;
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Display\PageVariantInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\Render\PageDisplayVariantSelectionEvent;
 use Drupal\Core\Render\RenderCacheInterface;
 use Drupal\Core\Render\RendererInterface;
@@ -50,14 +47,6 @@ class HtmlRenderer implements MainContentRendererInterface {
    * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
    */
   protected $eventDispatcher;
-
-  /**
-  * The element info manager.
-  *
-  * @var \Drupal\Core\Render\ElementInfoManagerInterface
-  */
-  protected $elementInfoManager;
-
   /**
    * The module handler.
    *
@@ -80,13 +69,6 @@ class HtmlRenderer implements MainContentRendererInterface {
   protected $renderCache;
 
   /**
-   * The cache contexts manager service.
-   *
-   * @var \Drupal\Core\Cache\CacheContextsManager
-   */
-  protected $cacheContexts;
-
-  /**
    * Constructs a new HtmlRenderer.
    *
    * @param \Drupal\Core\Controller\TitleResolverInterface $title_resolver
@@ -95,26 +77,20 @@ class HtmlRenderer implements MainContentRendererInterface {
    *   The display variant manager.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
-   * @param \Drupal\Core\Render\ElementInfoManagerInterface
-   *   The element info manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
    * @param \Drupal\Core\Render\RenderCacheInterface $render_cache
    *   The render cache service.
-   * @param \Drupal\Core\Cache\CacheContextsManager $cache_contexts_manager
-   *   The cache contexts manager service.
    */
-  public function __construct(TitleResolverInterface $title_resolver, PluginManagerInterface $display_variant_manager, EventDispatcherInterface $event_dispatcher, ElementInfoManagerInterface $element_info_manager, ModuleHandlerInterface $module_handler, RendererInterface $renderer, RenderCacheInterface $render_cache, CacheContextsManager $cache_contexts_manager) {
+  public function __construct(TitleResolverInterface $title_resolver, PluginManagerInterface $display_variant_manager, EventDispatcherInterface $event_dispatcher, ModuleHandlerInterface $module_handler, RendererInterface $renderer, RenderCacheInterface $render_cache) {
     $this->titleResolver = $title_resolver;
     $this->displayVariantManager = $display_variant_manager;
     $this->eventDispatcher = $event_dispatcher;
-    $this->elementInfoManager = $element_info_manager;
     $this->moduleHandler = $module_handler;
     $this->renderer = $renderer;
     $this->renderCache = $render_cache;
-    $this->cacheContextsManager = $cache_contexts_manager;
   }
 
   /**
@@ -138,7 +114,6 @@ class HtmlRenderer implements MainContentRendererInterface {
       '#type' => 'html',
       'page' => $page,
     ];
-    $html += $this->elementInfoManager->getInfo('html');
 
     // The special page regions will appear directly in html.html.twig, not in
     // page.html.twig, hence add them here, just before rendering html.html.twig.
