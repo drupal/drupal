@@ -57,15 +57,15 @@
  */
 #}
 {{ title_prefix }}
-<h3{{ title_attributes.addClass('title') }}>
+<h3{{ title_attributes.addClass('search-result__title') }}>
   <a href="{{ url }}">{{ title }}</a>
 </h3>
 {{ title_suffix }}
-<div class="search-snippet-info">
+<div class="search-result__snippet-info">
   {% if snippet %}
-    <p{{ content_attributes.addClass('search-snippet') }}>{{ snippet }}</p>
+    <p{{ content_attributes.addClass('search-result__snippet') }}>{{ snippet }}</p>
   {% endif %}
   {% if info %}
-    <p class="search-info">{{ info }}</p>
+    <p class="search-result__info">{{ info }}</p>
   {% endif %}
 </div>

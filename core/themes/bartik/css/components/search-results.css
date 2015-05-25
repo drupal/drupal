@@ -20,9 +20,12 @@ ol.search-results {
   padding-bottom: 0;
   margin-bottom: 1em;
 }
-.search-results .search-snippet-info {
+.search-result__title {
+  font-weight: bold;
+}
+.search-result__snippet-info {
   padding-left: 0; /* LTR */
 }
-[dir="rtl"] .search-results .search-snippet-info {
+[dir="rtl"] .search-result__snippet-info {
   padding-right: 0;
 }
