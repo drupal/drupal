@@ -7,12 +7,16 @@
 
 namespace Drupal\migrate\Plugin\migrate\destination;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\StreamWrapper\LocalStream;
+use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\migrate\Entity\MigrationInterface;
-use Drupal\migrate\Plugin\MigratePluginManager;
 use Drupal\migrate\Row;
 use Drupal\migrate\MigrateException;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Every migration that uses this destination must have an optional
@@ -25,9 +29,19 @@ use Drupal\migrate\MigrateException;
 class EntityFile extends EntityContentBase {
 
   /**
+   * @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface
+   */
+  protected $streamWrapperManager;
+
+  /**
+   * @var \Drupal\Core\File\FileSystemInterface
+   */
+  protected $fileSystem;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, EntityManagerInterface $entity_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, EntityManagerInterface $entity_manager, StreamWrapperManagerInterface $stream_wrappers, FileSystemInterface $file_system) {
     $configuration += array(
       'source_base_path' => '',
       'source_path_property' => 'filepath',
@@ -36,6 +50,27 @@ class EntityFile extends EntityContentBase {
       'urlencode' => FALSE,
     );
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $storage, $bundles, $entity_manager);
+
+    $this->streamWrapperManager = $stream_wrappers;
+    $this->fileSystem = $file_system;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration = NULL) {
+    $entity_type = static::getEntityTypeId($plugin_id);
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $migration,
+      $container->get('entity.manager')->getStorage($entity_type),
+      array_keys($container->get('entity.manager')->getBundleInfo($entity_type)),
+      $container->get('entity.manager'),
+      $container->get('stream_wrapper_manager'),
+      $container->get('file_system')
+    );
   }
 
   /**
@@ -44,49 +79,142 @@ class EntityFile extends EntityContentBase {
   public function import(Row $row, array $old_destination_id_values = array()) {
     $file = $row->getSourceProperty($this->configuration['source_path_property']);
     $destination = $row->getDestinationProperty($this->configuration['destination_path_property']);
+    $source = $this->configuration['source_base_path'] . $file;
 
-    // We check the destination to see if this is a temporary file. If it is
-    // then we do not prepend the source_base_path because temporary files are
-    // already absolute.
-    $source = $this->isTempFile($destination) ? $file : $this->configuration['source_base_path'] . $file;
-
-    $dirname = drupal_dirname($destination);
-    if (!file_prepare_directory($dirname, FILE_CREATE_DIRECTORY)) {
-      throw new MigrateException(t('Could not create directory %dirname', array('%dirname' => $dirname)));
+    // Ensure the source file exists, if it's a local URI or path.
+    if ($this->isLocalUri($source) && !file_exists($source)) {
+      throw new MigrateException(SafeMarkup::format('File @source does not exist.', ['@source' => $source]));
     }
 
     // If the start and end file is exactly the same, there is nothing to do.
-    if (drupal_realpath($source) === drupal_realpath($destination)) {
+    if ($this->isLocationUnchanged($source, $destination)) {
       return parent::import($row, $old_destination_id_values);
     }
 
-    $replace = FILE_EXISTS_REPLACE;
+    $replace = $this->getOverwriteMode($row);
+    $success = $this->writeFile($source, $destination, $replace);
+    if (!$success) {
+      $dir = $this->getDirectory($destination);
+      if (file_prepare_directory($dir, FILE_CREATE_DIRECTORY)) {
+        $success = $this->writeFile($source, $destination, $replace);
+      }
+      else {
+        throw new MigrateException(SafeMarkup::format('Could not create directory @dir', ['@dir' => $dir]));
+      }
+    }
+
+    if ($success) {
+      return parent::import($row, $old_destination_id_values);
+    }
+    else {
+      throw new MigrateException(SafeMarkup::format('File %source could not be copied to %destination.', ['%source' => $source, '%destination' => $destination]));
+    }
+  }
+
+  /**
+   * Tries to move or copy a file.
+   *
+   * @param string $source
+   *  The source path or URI.
+   * @param string $destination
+   *  The destination path or URI.
+   * @param integer $replace
+   *  FILE_EXISTS_REPLACE (default) or FILE_EXISTS_RENAME.
+   *
+   * @return boolean
+   *  TRUE on success, FALSE on failure.
+   */
+  protected function writeFile($source, $destination, $replace = FILE_EXISTS_REPLACE) {
+    if ($this->configuration['move']) {
+      return (boolean) file_unmanaged_move($source, $destination, $replace);
+    }
+    else {
+      $destination = file_destination($destination, $replace);
+      $source = $this->urlencode($source);
+      return @copy($source, $destination);
+    }
+  }
+
+  /**
+   * Determines how to handle file conflicts.
+   *
+   * @param \Drupal\migrate\Row $row
+   *
+   * @return integer
+   *  Either FILE_EXISTS_REPLACE (default) or FILE_EXISTS_RENAME, depending
+   *  on the current configuration.
+   */
+  protected function getOverwriteMode(Row $row) {
     if (!empty($this->configuration['rename'])) {
       $entity_id = $row->getDestinationProperty($this->getKey('id'));
-      if (!empty($entity_id) && ($entity = $this->storage->load($entity_id))) {
-        $replace = FILE_EXISTS_RENAME;
+      if ($entity_id && ($entity = $this->storage->load($entity_id))) {
+        return FILE_EXISTS_RENAME;
       }
     }
+    return FILE_EXISTS_REPLACE;
+  }
 
-    if ($this->configuration['move']) {
-      $copied = file_unmanaged_move($source, $destination, $replace);
+  /**
+   * Returns the directory component of a URI or path.
+   *
+   * For URIs like public://foo.txt, the full physical path of public://
+   * will be returned, since a scheme by itself will trip up certain file
+   * API functions (such as file_prepare_directory()).
+   *
+   * @param string $uri
+   *  The URI or path.
+   *
+   * @return boolean|string
+   *  The directory component of the path or URI, or FALSE if it could not
+   *  be determined.
+   */
+  protected function getDirectory($uri) {
+    $dir = $this->fileSystem->dirname($uri);
+    if (substr($dir, -3) == '://') {
+      return $this->fileSystem->realpath($dir);
     }
     else {
-      // Determine whether we can perform this operation based on overwrite rules.
-      $original_destination = $destination;
-      $destination = file_destination($destination, $replace);
-      if ($destination === FALSE) {
-        throw new MigrateException(t('File %file could not be copied because a file by that name already exists in the destination directory (%destination)', array('%file' => $source, '%destination' => $original_destination)));
-      }
-      $source = $this->urlencode($source);
-      $copied = @copy($source, $destination);
+      return $dir;
     }
-    if ($copied) {
-      return parent::import($row, $old_destination_id_values);
+  }
+
+  /**
+   * Returns if the source and destination URIs represent identical paths.
+   * If either URI is a remote stream, will return FALSE.
+   *
+   * @param string $source
+   *  The source URI.
+   * @param string $destination
+   *  The destination URI.
+   *
+   * @return boolean
+   *  TRUE if the source and destination URIs refer to the same physical path,
+   *  otherwise FALSE.
+   */
+  protected function isLocationUnchanged($source, $destination) {
+    if ($this->isLocalUri($source) && $this->isLocalUri($destination)) {
+      return $this->fileSystem->realpath($source) === $this->fileSystem->realpath($destination);
     }
     else {
-      throw new MigrateException(t('File %source could not be copied to %destination.', array('%source' => $source, '%destination' => $destination)));
+      return FALSE;
     }
+  }
+
+  /**
+   * Returns if the given URI or path is considered local.
+   *
+   * A URI or path is considered local if it either has no scheme component,
+   * or the scheme is implemented by a stream wrapper which extends
+   * \Drupal\Core\StreamWrapper\LocalStream.
+   *
+   * @param string $uri
+   *  The URI or path to test.
+   *
+   * @return boolean
+   */
+  protected function isLocalUri($uri) {
+    $scheme = $this->fileSystem->uriScheme($uri);
+    return $scheme === FALSE || $this->streamWrapperManager->getViaScheme($scheme) instanceof LocalStream;
   }
 
   /**
@@ -112,20 +240,6 @@ class EntityFile extends EntityContentBase {
       $filename = str_replace('%26', '&', $filename);
     }
     return $filename;
-  }
-
-  /**
-   * Check if a file is a temp file.
-   *
-   * @param string $file
-   *   The destination file path.
-   *
-   * @return bool
-   *   TRUE if the file is temporary otherwise FALSE.
-   */
-  protected function isTempFile($file) {
-    $tmp = 'temporary://';
-    return substr($file, 0, strlen($tmp)) === $tmp;
   }
 
 }

@@ -10,7 +10,6 @@ namespace Drupal\migrate_drupal\Tests\d6;
 use Drupal\Component\Utility\Random;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\Tests\MigrateDumpAlterInterface;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 use Drupal\Core\Database\Database;
 use Drupal\simpletest\TestBase;
 
@@ -69,6 +68,7 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
     $this->assertIdentical('public://image-1.png', $file->getFileUri());
     $this->assertIdentical('image/png', $file->getMimeType());
     $this->assertIdentical("1", $file->getOwnerId());
+
     // It is pointless to run the second half from MigrateDrupal6Test.
     if (empty($this->standalone)) {
       return;
