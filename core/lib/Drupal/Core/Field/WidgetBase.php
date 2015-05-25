@@ -176,10 +176,21 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
 
       // For multiple fields, title and description are handled by the wrapping
       // table.
-      $element = array(
-        '#title' => $is_multiple ? '' : $title,
-        '#description' => $is_multiple ? '' : $description,
-      );
+      if ($is_multiple) {
+        $element = [
+          '#title' => $title . ' ' . $this->t('(value @number)', ['@number' => $delta + 1]),
+          '#title_display' => 'invisible',
+          '#description' => '',
+        ];
+      }
+      else {
+        $element = [
+          '#title' => $title,
+          '#title_display' => 'before',
+          '#description' => $description,
+        ];
+      }
+
       $element = $this->formSingleElement($items, $delta, $element, $form, $form_state);
 
       if ($element) {
@@ -189,7 +200,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
           // defined by widget.
           $element['_weight'] = array(
             '#type' => 'weight',
-            '#title' => t('Weight for row @number', array('@number' => $delta + 1)),
+            '#title' => $this->t('Weight for row @number', array('@number' => $delta + 1)),
             '#title_display' => 'invisible',
             // Note: this 'delta' is the FAPI #type 'weight' element's property.
             '#delta' => $max,
