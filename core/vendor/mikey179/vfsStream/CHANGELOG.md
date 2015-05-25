@@ -1,3 +1,13 @@
+1.5.0 (2015-03-29)
+------------------
+
+   * implemented #91: `vfsStream::copyFromFileSystem()` should create large file instances
+   * implemented #92: `vfsStream::copyFromFileSystem()` should respect block devices
+   * fixed #107: `touch()` does not respect file permissions
+   * fixed #105: vfs directory structure is not reset after each test
+   * fixed #104: vfsStream can't handle url encoded pathes
+
+
 1.4.0 (2014-09-14)
 ------------------
 
