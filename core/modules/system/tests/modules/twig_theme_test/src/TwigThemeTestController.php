@@ -46,6 +46,7 @@ class TwigThemeTestController {
     return array(
       '#theme' => 'twig_theme_test_link_generator',
       '#test_url' => new Url('user.register', [], ['absolute' => TRUE]),
+      '#test_url_attribute' => new Url('user.register', [], ['attributes' => ['foo' => 'bar']]),
     );
   }
 

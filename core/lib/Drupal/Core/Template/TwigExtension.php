@@ -222,13 +222,21 @@ class TwigExtension extends \Twig_Extension {
    *   The link text for the anchor tag as a translated string.
    * @param \Drupal\Core\Url|string $url
    *   The URL object or string used for the link.
+   * @param array $attributes
+   *   An optional array of link attributes.
    *
    * @return array
    *   A render array representing a link to the given URL.
    */
-  public function getLink($text, $url) {
+  public function getLink($text, $url, array $attributes = []) {
     if (!$url instanceof Url) {
       $url = Url::fromUri($url);
+    }
+    if ($attributes) {
+      if ($existing_attributes = $url->getOption('attributes')) {
+        $attributes = array_merge($existing_attributes, $attributes);
+      }
+      $url->setOption('attributes', $attributes);
     }
     $build = [
       '#type' => 'link',
