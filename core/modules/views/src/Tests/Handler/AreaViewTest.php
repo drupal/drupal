@@ -44,7 +44,7 @@ class AreaViewTest extends ViewUnitTestBase {
     $this->executeView($view);
     $output = $view->render();
     $output = drupal_render($output);
-    $this->assertTrue(strpos($output, 'view-test-simple-argument') !== FALSE, 'The test view is correctly embedded.');
+    $this->assertTrue(strpos($output, 'js-view-dom-id-' . $view->dom_id) !== FALSE, 'The test view is correctly embedded.');
     $view->destroy();
 
     $view->setArguments(array(27));

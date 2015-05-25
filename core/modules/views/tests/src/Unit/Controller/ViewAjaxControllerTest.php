@@ -264,7 +264,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
 
     $commands = $this->getCommands($response);
     $this->assertEquals('viewsScrollTop', $commands[0]['command']);
-    $this->assertEquals('.view-dom-id-' . $dom_id, $commands[0]['selector']);
+    $this->assertEquals('.js-view-dom-id-' . $dom_id, $commands[0]['selector']);
 
     $this->assertViewResultCommand($response, 1);
   }

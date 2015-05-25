@@ -28,7 +28,7 @@
    * Javascript object for a certain view.
    */
   Drupal.views.ajaxView = function (settings) {
-    var selector = '.view-dom-id-' + settings.view_dom_id;
+    var selector = '.js-view-dom-id-' + settings.view_dom_id;
     this.$view = $(selector);
 
     // Retrieve the path to use for views' ajax.
@@ -107,7 +107,7 @@
    * Attach the ajax behavior to each link.
    */
   Drupal.views.ajaxView.prototype.attachPagerAjax = function () {
-    this.$view.find('ul.pager__items > li > a, th.views-field a, .attachment .views-summary a')
+    this.$view.find('ul.js-pager__items > li > a, th.views-field a, .attachment .views-summary a')
       .each(jQuery.proxy(this.attachPagerLinkAjax, this));
   };
 

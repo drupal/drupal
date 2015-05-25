@@ -98,7 +98,7 @@ class PagerTest extends WebTestBase {
    *   The current pager page the internal browser is on.
    */
   protected function assertPagerItems($current_page) {
-    $elements = $this->xpath('//ul[@class=:class]/li', array(':class' => 'pager__items'));
+    $elements = $this->xpath('//ul[contains(@class, :class)]/li', array(':class' => 'pager__items'));
     $this->assertTrue(!empty($elements), 'Pager found.');
 
     // Make current page 1-based.

@@ -167,14 +167,14 @@ class ViewAjaxController implements ContainerInjectionInterface {
 
         // Override the display's pager_element with the one actually used.
         if (isset($pager_element)) {
-          $response->addCommand(new ScrollTopCommand(".view-dom-id-$dom_id"));
+          $response->addCommand(new ScrollTopCommand(".js-view-dom-id-$dom_id"));
           $view->displayHandlers->get($display_id)->setOption('pager_element', $pager_element);
         }
         // Reuse the same DOM id so it matches that in drupalSettings.
         $view->dom_id = $dom_id;
 
         if ($preview = $view->preview($display_id, $args)) {
-          $response->addCommand(new ReplaceCommand(".view-dom-id-$dom_id", $this->renderer->render($preview)));
+          $response->addCommand(new ReplaceCommand(".js-view-dom-id-$dom_id", $this->renderer->render($preview)));
           $response->setAttachments($preview['#attached']);
         }
         return $response;

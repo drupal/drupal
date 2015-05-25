@@ -56,7 +56,7 @@ class ViewAjaxTest extends ViewTestBase {
 
     // Ensure that the view insert command is part of the result.
     $this->assertEqual($data[1]['command'], 'insert');
-    $this->assertTrue(strpos($data[1]['selector'], '.view-dom-id-') === 0);
+    $this->assertTrue(strpos($data[1]['selector'], '.js-view-dom-id-') === 0);
 
     $this->setRawContent($data[1]['data']);
     $result = $this->xpath('//div[contains(@class, "views-row")]');
