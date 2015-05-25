@@ -15,6 +15,14 @@ use Drupal\simpletest\WebTestBase;
  * @group simpletest
  */
 class BrowserTest extends WebTestBase {
+
+  /**
+   * A flag indicating whether a cookie has been set in a test.
+   *
+   * @var bool
+   */
+  protected static $cookieSet = FALSE;
+
   /**
    * Test \Drupal\simpletest\WebTestBase::getAbsoluteUrl().
    */
@@ -65,4 +73,44 @@ EOF;
     $urls = $this->xpath('//a[text()=:text]', array(':text' => 'A fourth link, containing alternative \\1 regex backreferences \\2'));
     $this->assertEqual($urls[0]['href'], 'link4', 'Match with another regular expression back reference symbol (double backslash).');
   }
+
+  /**
+   * Tests that cookies set during a request are available for testing.
+   */
+  public function testCookies() {
+    // Check that the $this->cookies property is populated when a user logs in.
+    $user = $this->drupalCreateUser();
+    $edit = ['name' => $user->getUsername(), 'pass' => $user->pass_raw];
+    $this->drupalPostForm('<front>', $edit, t('Log in'));
+    $this->assertEqual(count($this->cookies), 1, 'A cookie is set when the user logs in.');
+
+    // Check that the name and value of the cookie match the request data.
+    $cookie_header = $this->drupalGetHeader('set-cookie', TRUE);
+
+    // The name and value are located at the start of the string, separated by
+    // an equals sign and ending in a semicolon.
+    preg_match('/^([^=]+)=([^;]+)/', $cookie_header, $matches);
+    $name = $matches[1];
+    $value = $matches[2];
+
+    $this->assertTrue(array_key_exists($name, $this->cookies), 'The cookie name is correct.');
+    $this->assertEqual($value, $this->cookies[$name]['value'], 'The cookie value is correct.');
+
+    // Set a flag indicating that a cookie has been set in this test.
+    // @see testCookieDoesNotBleed()
+    static::$cookieSet = TRUE;
+  }
+
+  /**
+   * Tests that the cookies from a previous test do not bleed into a new test.
+   *
+   * @see static::testCookies()
+   */
+  public function testCookieDoesNotBleed() {
+    // In order for this test to be effective it should always run after the
+    // testCookies() test.
+    $this->assertTrue(static::$cookieSet, 'Tests have been executed in the expected order.');
+    $this->assertEqual(count($this->cookies), 0, 'No cookies are present at the start of a new test.');
+  }
+
 }

@@ -78,7 +78,7 @@ abstract class WebTestBase extends TestBase {
    *
    * @var array
    */
-  protected $cookies;
+  protected $cookies = array();
 
   /**
    * Indicates that headers should be dumped if verbose output is enabled.
@@ -1089,6 +1089,7 @@ abstract class WebTestBase extends TestBase {
     // testing so test classes containing multiple tests are not polluted.
     $this->curlClose();
     $this->curlCookies = array();
+    $this->cookies = array();
   }
 
   /**
