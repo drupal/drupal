@@ -62,8 +62,8 @@ interface WidgetBaseInterface extends PluginSettingsInterface {
    *
    * @param \Drupal\Core\Field\FieldItemListInterface $items
    *   The field values.
-   * @param \Symfony\Component\Validator\ConstraintViolationListInterface|\Symfony\Component\Validator\ConstraintViolationInterface[] $violations
-   *   The constraint violations that were detected.
+   * @param \Symfony\Component\Validator\ConstraintViolationListInterface $violations
+   *   A list of constraint violations to flag.
    * @param array $form
    *   The form structure where field elements are attached to. This might be a
    *   full form structure, or a sub-element of a larger form.
