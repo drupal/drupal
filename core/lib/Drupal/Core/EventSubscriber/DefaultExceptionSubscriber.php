@@ -159,7 +159,7 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
     // of message to be displayed,
     $data = NULL;
     if (error_displayable($error) && $message = $exception->getMessage()) {
-      $data = ['error' => sprintf('A fatal error occurred: %s', $message)];
+      $data = ['message' => sprintf('A fatal error occurred: %s', $message)];
     }
 
     $response = new JsonResponse($data, Response::HTTP_INTERNAL_SERVER_ERROR);
