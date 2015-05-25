@@ -316,8 +316,7 @@ use Drupal\node\Entity\NodeType;
  * - For content entities, the annotation will refer to a number of database
  *   tables and their fields. These annotation properties, such as 'base_table',
  *   'data_table', 'entity_keys', etc., are documented on
- *   \Drupal\Core\Entity\EntityType. Your module will also need to set up its
- *   database tables using hook_schema().
+ *   \Drupal\Core\Entity\EntityType.
  * - For content entities that are displayed on their own pages, the annotation
  *   will refer to a 'uri_callback' function, which takes an object of the
  *   entity interface you have defined as its parameter, and returns routing
