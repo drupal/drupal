@@ -8,10 +8,7 @@
 namespace Drupal\node;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
-use Drupal\Core\Entity\EntityTypeInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Routing\UrlGeneratorInterface;
+use Drupal\Core\Url;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Utility\Xss;
 
@@ -21,39 +18,6 @@ use Drupal\Component\Utility\Xss;
  * @see \Drupal\node\Entity\NodeType
  */
 class NodeTypeListBuilder extends ConfigEntityListBuilder {
-
-  /**
-   * The url generator service.
-   *
-   * @var \Drupal\Core\Routing\UrlGeneratorInterface
-   */
-  protected $urlGenerator;
-
-  /**
-   * Constructs a NodeTypeListBuilder object.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
-   *   The entity type definition.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
-   *   The entity storage class.
-   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
-   *   The url generator service.
-   */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, UrlGeneratorInterface $url_generator) {
-    parent::__construct($entity_type, $storage);
-    $this->urlGenerator = $url_generator;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
-    return new static(
-      $entity_type,
-      $container->get('entity.manager')->getStorage($entity_type->id()),
-      $container->get('url_generator')
-    );
-  }
 
   /**
    * {@inheritdoc}
@@ -97,9 +61,9 @@ class NodeTypeListBuilder extends ConfigEntityListBuilder {
    */
   public function render() {
     $build = parent::render();
-    $build['#empty'] = t('No content types available. <a href="@link">Add content type</a>.', array(
-      '@link' => $this->urlGenerator->generateFromPath('admin/structure/types/add'),
-    ));
+    $build['table']['#empty'] = $this->t('No content types available. <a href="@link">Add content type</a>.', [
+        '@link' => Url::fromRoute('node.type_add')->toString()
+      ]);
     return $build;
   }
 

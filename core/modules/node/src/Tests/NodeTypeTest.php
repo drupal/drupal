@@ -9,6 +9,7 @@ namespace Drupal\node\Tests;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\node\Entity\NodeType;
+use Drupal\Core\Url;
 
 /**
  * Ensures that node type functions work correctly.
@@ -22,7 +23,7 @@ class NodeTypeTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = array('field_ui');
+  public static $modules = ['field_ui'];
 
   /**
    * Ensures that node type functions (node_type_get_*) work correctly.
@@ -202,6 +203,25 @@ class NodeTypeTest extends NodeTestBase {
     $this->drupalGet('admin/structure/types');
     $this->assertNoLinkByHref('admin/structure/types/manage/article/fields');
     $this->assertLinkByHref('admin/structure/types/manage/article/display');
+  }
+
+  /**
+   * Tests for when there are no content types defined.
+   */
+  public function testNodeTypeNoContentType() {
+    $web_user = $this->drupalCreateUser(['administer content types']);
+    $this->drupalLogin($web_user);
+
+    // Delete 'article' bundle.
+    $this->drupalPostForm('admin/structure/types/manage/article/delete', [], t('Delete'));
+    // Delete 'page' bundle.
+    $this->drupalPostForm('admin/structure/types/manage/page/delete', [], t('Delete'));
+
+    // Navigate to content type administration screen
+    $this->drupalGet('admin/structure/types');
+    $this->assertRaw(t('No content types available. <a href="@link">Add content type</a>.', [
+        '@link' => Url::fromRoute('node.type_add')->toString()
+      ]), 'Empty text when there are no content types in the system is correct.');
   }
 
 }
