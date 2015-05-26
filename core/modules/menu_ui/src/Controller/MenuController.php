@@ -60,6 +60,8 @@ class MenuController extends ControllerBase {
         $available_menus[$menu] = $menu;
       }
     }
+    // @todo Update this to use the optional $cacheability parameter, so that
+    //   a cacheable JSON response can be sent.
     $options = $this->menuParentSelector->getParentSelectOptions('', $available_menus);
 
     return new JsonResponse($options);

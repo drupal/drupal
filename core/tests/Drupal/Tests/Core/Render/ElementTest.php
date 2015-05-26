@@ -179,4 +179,28 @@ class ElementTest extends UnitTestCase {
     );
   }
 
+  /**
+   * @covers ::isEmpty
+   *
+   * @dataProvider providerTestIsEmpty
+   */
+  public function testIsEmpty(array $element, $expected) {
+    $this->assertSame(Element::isEmpty($element), $expected);
+  }
+
+  public function providerTestIsEmpty() {
+    return [
+      [[], TRUE],
+      [['#cache' => []], TRUE],
+      [['#cache' => ['tags' => ['foo']]], TRUE],
+      [['#cache' => ['contexts' => ['bar']]], TRUE],
+
+      [['#cache' => [], '#markup' => 'llamas are awesome'], FALSE],
+      [['#markup' => 'llamas are the most awesome ever'], FALSE],
+
+      [['#cache' => [], '#any_other_property' => TRUE], FALSE],
+      [['#any_other_property' => TRUE], FALSE],
+    ];
+  }
+
 }

@@ -555,6 +555,9 @@ class MenuTest extends MenuWebTestBase {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/structure/menu/manage/' . $item->getMenuName());
     $this->assertNoText($item->getTitle(), "Menu link pointing to unpublished node is only visible to users with 'bypass node access' permission");
+    // The cache contexts associated with the (in)accessible menu links are
+    // bubbled. See DefaultMenuLinkTreeManipulators::menuLinkCheckAccess().
+    $this->assertCacheContext('user.permissions');
   }
 
   /**

@@ -187,10 +187,14 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
    * {@inheritdoc}
    */
   public function getCacheContexts() {
-    // Menu blocks must be cached per role and per active trail.
+    // ::build() uses MenuLinkTreeInterface::getCurrentRouteMenuTreeParameters()
+    // to generate menu tree parameters, and those take the active menu trail
+    // into account. Therefore, we must vary the rendered menu by the active
+    // trail of the rendered menu.
+    // Additional cache contexts, e.g. those that determine link text or
+    // accessibility of a menu, will be bubbled automatically.
     $menu_name = $this->getDerivativeId();
     return [
-      'user.roles',
       'route.menu_active_trails:' . $menu_name,
     ];
   }

@@ -70,10 +70,10 @@ class MenuLinkTreeElement {
   /**
    * Whether this link is accessible by the current user.
    *
-   * If the value is NULL the access was not determined yet, if Boolean it was
-   * determined already.
+   * If the value is NULL the access was not determined yet, if an access result
+   * object, it was determined already.
    *
-   * @var bool|NULL
+   * @var \Drupal\Core\Access\AccessResultInterface|NULL
    */
   public $access;
 

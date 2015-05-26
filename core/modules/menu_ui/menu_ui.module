@@ -8,6 +8,7 @@
  * used for navigation.
  */
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Link;
@@ -402,7 +403,8 @@ function menu_ui_form_node_type_form_alter(&$form, FormStateInterface $form_stat
   //   To avoid an 'illegal option' error after saving the form we have to load
   //   all available menu parents. Otherwise, it is not possible to dynamically
   //   add options to the list using ajax.
-  $options = $menu_parent_selector->getParentSelectOptions('');
+  $options_cacheability = new CacheableMetadata();
+  $options = $menu_parent_selector->getParentSelectOptions('', NULL, $options_cacheability);
   $form['menu']['menu_parent'] = array(
     '#type' => 'select',
     '#title' => t('Default parent item'),
@@ -411,6 +413,7 @@ function menu_ui_form_node_type_form_alter(&$form, FormStateInterface $form_stat
     '#description' => t('Choose the menu item to be the default parent for a new link in the content authoring form.'),
     '#attributes' => array('class' => array('menu-title-select')),
   );
+  $options_cacheability->applyTo($form['menu']['menu_parent']);
 
   $form['actions']['submit']['#validate'][] = 'menu_ui_form_node_type_form_validate';
   $form['#entity_builders'][] = 'menu_ui_form_node_type_form_builder';

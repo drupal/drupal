@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Menu;
 
+use Drupal\Core\Cache\CacheableMetadata;
+
 /**
  * Defines an interface for menu selector form elements and menu link options.
  */
@@ -21,12 +23,15 @@ interface MenuParentFormSelectorInterface {
    * @param array $menus
    *   Optional array of menu names as keys and titles as values to limit
    *   the select options.  If NULL, all menus will be included.
+   * @param \Drupal\Core\Cache\CacheableMetadata|NULL &$cacheability
+   *   Optional cacheability metadata object, which will be populated based on
+   *   the accessibility of the links and the cacheability of the links.
    *
    * @return array
    *   Keyed array where the keys are contain a menu name and parent ID and
    *   the values are a menu name or link title indented by depth.
    */
-  public function getParentSelectOptions($id = '', array $menus = NULL);
+  public function getParentSelectOptions($id = '', array $menus = NULL, CacheableMetadata &$cacheability = NULL);
 
   /**
    * Gets a form element to choose a menu and parent.

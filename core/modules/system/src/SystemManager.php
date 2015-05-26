@@ -200,6 +200,14 @@ class SystemManager {
     );
     $tree = $this->menuTree->transform($tree, $manipulators);
     foreach ($tree as $key => $element) {
+      // Only render accessible links.
+      if (!$element->access->isAllowed()) {
+        // @todo Bubble cacheability metadata of both accessible and
+        //   inaccessible links. Currently made impossible by the way admin
+        //   blocks are rendered.
+        continue;
+      }
+
       /** @var $link \Drupal\Core\Menu\MenuLinkInterface */
       $link = $element->link;
       $content[$key]['title'] = $link->getTitle();

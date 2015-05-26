@@ -8,6 +8,7 @@
 namespace Drupal\menu_ui;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Form\FormStateInterface;
@@ -337,7 +338,15 @@ class MenuForm extends EntityForm {
    */
   protected function buildOverviewTreeForm($tree, $delta) {
     $form = &$this->overviewTreeForm;
+    $tree_access_cacheability = new CacheableMetadata();
     foreach ($tree as $element) {
+      $tree_access_cacheability = $tree_access_cacheability->merge(CacheableMetadata::createFromObject($element->access));
+
+      // Only render accessible links.
+      if (!$element->access->isAllowed()) {
+        continue;
+      }
+
       /** @var \Drupal\Core\Menu\MenuLinkInterface $link */
       $link = $element->link;
       if ($link) {
@@ -419,6 +428,11 @@ class MenuForm extends EntityForm {
         $this->buildOverviewTreeForm($element->subtree, $delta);
       }
     }
+
+    $tree_access_cacheability
+      ->merge(CacheableMetadata::createFromRenderArray($form))
+      ->applyTo($form);
+
     return $form;
   }
 

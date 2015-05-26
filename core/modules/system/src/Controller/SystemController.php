@@ -8,6 +8,7 @@
 namespace Drupal\system\Controller;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Extension\ThemeHandlerInterface;
@@ -128,8 +129,16 @@ class SystemController extends ControllerBase {
       array('callable' => 'menu.default_tree_manipulators:generateIndexAndSort'),
     );
     $tree = $this->menuLinkTree->transform($tree, $manipulators);
+    $tree_access_cacheability = new CacheableMetadata();
     $blocks = array();
     foreach ($tree as $key => $element) {
+      $tree_access_cacheability = $tree_access_cacheability->merge(CacheableMetadata::createFromObject($element->access));
+
+      // Only render accessible links.
+      if (!$element->access->isAllowed()) {
+        continue;
+      }
+
       $link = $element->link;
       $block['title'] = $link->getTitle();
       $block['description'] = $link->getDescription();
@@ -145,15 +154,19 @@ class SystemController extends ControllerBase {
 
     if ($blocks) {
       ksort($blocks);
-      return array(
+      $build = [
         '#theme' => 'admin_page',
         '#blocks' => $blocks,
-      );
+      ];
+      $tree_access_cacheability->applyTo($build);
+      return $build;
     }
     else {
-      return array(
+      $build = [
         '#markup' => $this->t('You do not have any administrative items.'),
-      );
+      ];
+      $tree_access_cacheability->applyTo($build);
+      return $build;
     }
   }
 

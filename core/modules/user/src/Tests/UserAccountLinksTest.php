@@ -66,13 +66,10 @@ class UserAccountLinksTest extends WebTestBase {
     $this->drupalGet('<front>');
 
     // For a logged-out user, expect no secondary links.
-    $menu_tree = \Drupal::menuTree();
-    $tree = $menu_tree->load('account', new MenuTreeParameters());
-    $manipulators = array(
-      array('callable' => 'menu.default_tree_manipulators:checkAccess'),
-    );
-    $tree = $menu_tree->transform($tree, $manipulators);
-    $this->assertEqual(count($tree), 0, 'The secondary links menu contains no menu link.');
+    $menu = $this->xpath('//ul[@class=:menu_class]', array(
+      ':menu_class' => 'menu',
+    ));
+    $this->assertEqual(count($menu), 0, 'The secondary links menu is not rendered, because none of its menu links are accessible for the anonymous user.');
   }
 
   /**

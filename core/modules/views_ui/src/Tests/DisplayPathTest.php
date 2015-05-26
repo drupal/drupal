@@ -143,6 +143,10 @@ class DisplayPathTest extends UITestBase {
       '-- Compose tips (disabled)',
       '-- Test menu link',
     ], $menu_options);
+
+    // The cache contexts associated with the (in)accessible menu links are
+    // bubbled.
+    $this->assertCacheContext('user.permissions');
   }
 
 }

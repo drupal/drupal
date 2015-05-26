@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core\Menu;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Menu\MenuLinkBase;
 
 /**
@@ -27,9 +28,13 @@ class MenuLinkMock extends MenuLinkBase {
     'weight' => '0',
     'options' => array(),
     'expanded' => '0',
-    'hidden' => '0',
+    'enabled' => '1',
     'provider' => 'simpletest',
-    'metadata' => array(),
+    'metadata' => [
+      'cache_contexts' => [],
+      'cache_tags' => [],
+      'cache_max_age' => Cache::PERMANENT,
+    ],
     'class' => 'Drupal\\Tests\\Core\Menu\\MenuLinkMock',
     'form_class' => 'Drupal\\Core\\Menu\\Form\\MenuLinkDefaultForm',
     'id' => 'MUST BE PROVIDED',
@@ -65,6 +70,27 @@ class MenuLinkMock extends MenuLinkBase {
   public function updateLink(array $new_definition_values, $persist) {
     // No-op.
     return $this->pluginDefinition;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    return $this->pluginDefinition['metadata']['cache_contexts'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags() {
+    return $this->pluginDefinition['metadata']['cache_tags'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheMaxAge() {
+    return $this->pluginDefinition['metadata']['cache_max_age'];
   }
 
 }

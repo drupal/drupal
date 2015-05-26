@@ -8,6 +8,7 @@
 namespace Drupal\Core\Menu;
 
 use Drupal\Core\Access\AccessManagerInterface;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Session\AccountInterface;
 
@@ -15,11 +16,10 @@ use Drupal\Core\Session\AccountInterface;
  * Provides a couple of menu link tree manipulators.
  *
  * This class provides menu link tree manipulators to:
- * - perform access checking
+ * - perform render cached menu-optimized access checking
  * - optimized node access checking
  * - generate a unique index for the elements in a tree and sorting by it
  * - flatten a tree (i.e. a 1-dimensional tree)
- * - extract a subtree of the given tree according to the active trail
  */
 class DefaultMenuLinkTreeManipulators {
 
@@ -63,12 +63,24 @@ class DefaultMenuLinkTreeManipulators {
   /**
    * Performs access checks of a menu tree.
    *
-   * Removes menu links from the given menu tree whose links are inaccessible
-   * for the current user, sets the 'access' property to TRUE on tree elements
-   * that are accessible for the current user.
+   * Sets the 'access' property to AccessResultInterface objects on menu link
+   * tree elements. Descends into subtrees if the root of the subtree is
+   * accessible. Inaccessible subtrees are deleted, except the top-level
+   * inaccessible link, to be compatible with render caching.
    *
-   * Makes the resulting menu tree impossible to render cache, unless render
-   * caching per user is acceptable.
+   * (This means that top-level inaccessible links are *not* removed; it is up
+   * to the code doing something with the tree to exclude inaccessible links,
+   * just like MenuLinkTree::build() does. This allows those things to specify
+   * the necessary cacheability metadata.)
+   *
+   * This is compatible with render caching, because of cache context bubbling:
+   * conditionally defined cache contexts (i.e. subtrees that are only
+   * accessible to some users) will bubble just like they do for render arrays.
+   * This is why inaccessible subtrees are deleted, except at the top-level
+   * inaccessible link: if we didn't keep the first (depth-wise) inaccessible
+   * link, we wouldn't be able to know which cache contexts would cause those
+   * subtrees to become accessible again, thus forcing us to conclude that that
+   * subtree is unconditionally inaccessible.
    *
    * @param \Drupal\Core\Menu\MenuLinkTreeElement[] $tree
    *   The menu link tree to manipulate.
@@ -83,13 +95,27 @@ class DefaultMenuLinkTreeManipulators {
       if (!isset($element->access)) {
         $tree[$key]->access = $this->menuLinkCheckAccess($element->link);
       }
-      if ($tree[$key]->access) {
+      if ($tree[$key]->access->isAllowed()) {
         if ($tree[$key]->subtree) {
           $tree[$key]->subtree = $this->checkAccess($tree[$key]->subtree);
         }
       }
       else {
-        unset($tree[$key]);
+        // Replace the link with an InaccessibleMenuLink object, so that if it
+        // is accidentally rendered, no sensitive information is divulged.
+        $tree[$key]->link = new InaccessibleMenuLink($tree[$key]->link);
+        // Always keep top-level inaccessible links: their cacheability metadata
+        // that indicates why they're not accessible by the current user must be
+        // bubbled. Otherwise, those subtrees will not be varied by any cache
+        // contexts at all, therefore forcing them to remain empty for all users
+        // unless some other part of the menu link tree accidentally varies by
+        // the same cache contexts.
+        // For deeper levels, we *can* remove the subtrees and therefore also
+        // not perform access checking on the subtree, thanks to bubbling/cache
+        // redirects. This therefore allows us to still do significantly less
+        // work in case of inaccessible subtrees, which is the entire reason why
+        // this deletes subtrees in the first place.
+        $tree[$key]->subtree = [];
       }
     }
     return $tree;
@@ -120,17 +146,19 @@ class DefaultMenuLinkTreeManipulators {
       // query rewrite as well as not checking for the node status. The
       // 'view own unpublished nodes' permission is ignored to not require cache
       // entries per user.
+      $access_result = AccessResult::allowed()->cachePerPermissions();
       if ($this->account->hasPermission('bypass node access')) {
         $query->accessCheck(FALSE);
       }
       else {
+        $access_result->addCacheContexts(['user.node_grants:view']);
         $query->condition('status', NODE_PUBLISHED);
       }
 
       $nids = $query->execute();
       foreach ($nids as $nid) {
         foreach ($node_links[$nid] as $key => $link) {
-          $node_links[$nid][$key]->access = TRUE;
+          $node_links[$nid][$key]->access = $access_result;
         }
       }
     }
@@ -155,7 +183,7 @@ class DefaultMenuLinkTreeManipulators {
         $nid = $element->link->getRouteParameters()['node'];
         $node_links[$nid][$key] = $element;
         // Deny access by default. checkNodeAccess() will re-add it.
-        $element->access = FALSE;
+        $element->access = AccessResult::neutral();
       }
       if ($element->hasChildren) {
         $this->collectNodeLinks($element->subtree, $node_links);
@@ -169,24 +197,27 @@ class DefaultMenuLinkTreeManipulators {
    * @param \Drupal\Core\Menu\MenuLinkInterface $instance
    *   The menu link instance.
    *
-   * @return bool
-   *   TRUE if the current user can access the link, FALSE otherwise.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
   protected function menuLinkCheckAccess(MenuLinkInterface $instance) {
+    $access_result = NULL;
     if ($this->account->hasPermission('link to any page')) {
-      return TRUE;
-    }
-    // Use the definition here since that's a lot faster than creating a Url
-    // object that we don't need.
-    $definition = $instance->getPluginDefinition();
-    // 'url' should only be populated for external links.
-    if (!empty($definition['url']) && empty($definition['route_name'])) {
-      $access = TRUE;
+      $access_result = AccessResult::allowed();
     }
     else {
-      $access = $this->accessManager->checkNamedRoute($definition['route_name'], $definition['route_parameters'], $this->account);
+      // Use the definition here since that's a lot faster than creating a Url
+      // object that we don't need.
+      $definition = $instance->getPluginDefinition();
+      // 'url' should only be populated for external links.
+      if (!empty($definition['url']) && empty($definition['route_name'])) {
+        $access_result = AccessResult::allowed();
+      }
+      else {
+        $access_result = $this->accessManager->checkNamedRoute($definition['route_name'], $definition['route_parameters'], $this->account, TRUE);
+      }
     }
-    return $access;
+    return $access_result->cachePerPermissions();
   }
 
   /**

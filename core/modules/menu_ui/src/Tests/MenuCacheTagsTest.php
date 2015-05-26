@@ -54,6 +54,9 @@ class MenuCacheTagsTest extends PageCacheTagsTestBase {
       'config:block_list',
       'config:block.block.' . $block->id(),
       'config:system.menu.llama',
+      // The cache contexts associated with the (in)accessible menu links are
+      // bubbled.
+      'config:user.role.anonymous',
     );
     $this->verifyPageCache($url, 'HIT', $expected_tags);
 

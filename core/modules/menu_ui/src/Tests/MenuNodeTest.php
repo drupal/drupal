@@ -53,6 +53,13 @@ class MenuNodeTest extends WebTestBase {
    * Test creating, editing, deleting menu links via node form widget.
    */
   function testMenuNodeFormWidget() {
+    // Verify that cacheability metadata is bubbled from the menu link tree
+    // access checking that is performed when determining the "default parent
+    // item" options in menu_ui_form_node_type_form_alter(). The "log out" link
+    // adds the "user.roles:authenticated" cache context.
+    $this->drupalGet('admin/structure/types/manage/page');
+    $this->assertCacheContext('user.roles:authenticated');
+
     // Disable the default main menu, so that no menus are enabled.
     $edit = array(
       'menu_options[main]' => FALSE,
