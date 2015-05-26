@@ -209,7 +209,7 @@ function hook_node_access_records(\Drupal\node\NodeInterface $node) {
  *
  * A module may deny all access to a node by setting $grants to an empty array.
  *
- * @param $grants
+ * @param array $grants
  *   The $grants array returned by hook_node_access_records().
  * @param \Drupal\node\NodeInterface $node
  *   The node for which the grants were acquired.
@@ -319,7 +319,7 @@ function hook_node_grants_alter(&$grants, \Drupal\Core\Session\AccountInterface 
  *   - "view"
  * @param \Drupal\Core\Session\AccountInterface $account
  *   The user object to perform the access check operation on.
- * @param object $langcode
+ * @param string $langcode
  *   The language code to perform the access check operation on.
  *
  * @return \Drupal\Core\Access\AccessResultInterface
@@ -364,7 +364,7 @@ function hook_node_access(\Drupal\node\NodeInterface $node, $op, \Drupal\Core\Se
  *
  * @param \Drupal\node\NodeInterface $node
  *   The node being displayed in a search result.
- * @param $langcode
+ * @param string $langcode
  *   Language code of result being displayed.
  *
  * @return array
@@ -391,7 +391,7 @@ function hook_node_search_result(\Drupal\node\NodeInterface $node, $langcode) {
  *
  * @param \Drupal\node\NodeInterface $node
  *   The node being indexed.
- * @param $langcode
+ * @param string $langcode
  *   Language code of the variant of the node being indexed.
  *
  * @return string
@@ -429,7 +429,7 @@ function hook_node_update_index(\Drupal\node\NodeInterface $node, $langcode) {
  * and then the weighted scores from all ranking mechanisms are added, which
  * brings about the same result as a weighted average.
  *
- * @return
+ * @return array
  *   An associative array of ranking data. The keys should be strings,
  *   corresponding to the internal name of the ranking mechanism, such as
  *   'recent', or 'comments'. The values should be arrays themselves, with the
@@ -485,8 +485,8 @@ function hook_ranking() {
  * @param array &$context
  *   Various aspects of the context in which the node links are going to be
  *   displayed, with the following keys:
- *   - 'view_mode': the view mode in which the comment is being viewed
- *   - 'langcode': the language in which the comment is being viewed
+ *   - 'view_mode': the view mode in which the node is being viewed
+ *   - 'langcode': the language in which the node is being viewed
  *
  * @see \Drupal\node\NodeViewBuilder::renderLinks()
  * @see \Drupal\node\NodeViewBuilder::buildLinks()
