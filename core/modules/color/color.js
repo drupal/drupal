@@ -210,7 +210,7 @@
           farb.linkTo(function () {}).setColor('#000').linkTo(this);
 
           // Add lock.
-          i = inputs.length;
+          var i = inputs.length;
           if (inputs.length) {
             var toggleClick = true;
             var lock = $('<button class="color-palette__lock link">' + Drupal.t('Unlock') + '</button>').on('click', function (e) {
