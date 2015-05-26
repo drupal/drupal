@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
  * Implements the class resolver interface supporting class names and services.
  */
 class ClassResolver implements ClassResolverInterface, ContainerAwareInterface {
-
+  use DependencySerializationTrait;
   use ContainerAwareTrait;
 
   /**

@@ -11,6 +11,7 @@ use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\TypedData\Validation\ExecutionContextFactory;
@@ -24,6 +25,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  * Manages data type plugins.
  */
 class TypedDataManager extends DefaultPluginManager {
+  use DependencySerializationTrait;
 
   /**
    * The validator used for validating typed data.
