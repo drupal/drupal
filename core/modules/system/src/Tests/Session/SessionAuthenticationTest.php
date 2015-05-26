@@ -110,4 +110,28 @@ class SessionAuthenticationTest extends WebTestBase {
     $this->assertEqual($this->user->id(), $response['user'], 'The correct user is logged in.');
   }
 
+  /**
+   * Tests that a session is not started automatically by basic authentication.
+   */
+  public function testBasicAuthNoSession() {
+    // A route that is authorized through basic_auth only, not cookie.
+    $no_cookie_url = Url::fromRoute('session_test.get_session_basic_auth');
+
+    // A route that is authorized with standard cookie authentication.
+    $cookie_url = '<front>';
+
+    // If we authenticate with a third party authentication system then no
+    // session cookie should be set, the third party system is responsible for
+    // sustaining the session.
+    $this->basicAuthGet($no_cookie_url, $this->user->getUsername(), $this->user->pass_raw);
+    $this->assertResponse(200, 'The user is successfully authenticated using basic authentication.');
+    $this->assertFalse($this->drupalGetHeader('set-cookie', TRUE), 'No cookie is set on a route protected with basic authentication.');
+
+    // On the other hand, authenticating using Cookie sets a cookie.
+    $edit = ['name' => $this->user->getUsername(), 'pass' => $this->user->pass_raw];
+    $this->drupalPostForm($cookie_url, $edit, t('Log in'));
+    $this->assertResponse(200, 'The user is successfully authenticated using cookie authentication.');
+    $this->assertTrue($this->drupalGetHeader('set-cookie', TRUE), 'A cookie is set on a route protected with cookie authentication.');
+  }
+
 }
