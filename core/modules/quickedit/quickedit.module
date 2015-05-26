@@ -144,4 +144,3 @@ function quickedit_preprocess_field(&$variables) {
 function quickedit_entity_view_alter(&$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
   $build['#attributes']['data-quickedit-entity-id'] = $entity->getEntityTypeId() . '/' . $entity->id();
 }
-
