@@ -7,6 +7,7 @@
 
 use Drupal\block\BlockInterface;
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\language\ConfigurableLanguageInterface;
@@ -305,4 +306,14 @@ function block_configurable_language_delete(ConfigurableLanguageInterface $langu
       $block->save();
     }
   }
+}
+
+/**
+ * Implements hook_install().
+ */
+function block_install() {
+  // Because the Block module upon installation unconditionally overrides all
+  // HTML output by selecting a different page display variant, we must
+  // invalidate all cached HTML output.
+  Cache::invalidateTags(['rendered']);
 }
