@@ -1748,9 +1748,9 @@ class Sql extends QueryPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\query\QueryPluginBase::getDateFormat().
+   * {@inheritdoc}
    */
-  public function getDateFormat($field, $format) {
+  public function getDateFormat($field, $format, $string_date = FALSE) {
     $db_type = Database::getConnection()->databaseType();
     switch ($db_type) {
       case 'mysql':
@@ -1797,7 +1797,13 @@ class Sql extends QueryPluginBase {
           'A' => 'AM',
         );
         $format = strtr($format, $replace);
-        return "TO_CHAR($field, '$format')";
+        if (!$string_date) {
+          return "TO_CHAR($field, '$format')";
+        }
+        // In order to allow for partials (eg, only the year), transform to a
+        // date, back to a string again.
+        // @todo this is very messy, and EXTRACT should probably be used.
+        return "TO_CHAR(TO_TIMESTAMP($field, 'YYYY-MM-DD HH24:MI:SS'), '$format')";
       case 'sqlite':
         $replace = array(
           'Y' => '%Y',
