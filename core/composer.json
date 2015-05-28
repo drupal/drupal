@@ -7,6 +7,7 @@
     "php": ">=5.4.5",
     "sdboyer/gliph": "0.1.*",
     "symfony/class-loader": "2.6.*",
+    "symfony/console": "2.6.*",
     "symfony/css-selector": "2.6.*",
     "symfony/dependency-injection": "2.6.*",
     "symfony/event-dispatcher": "2.6.*",
