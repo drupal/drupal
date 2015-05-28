@@ -139,7 +139,7 @@ class ViewEditTest extends UITestBase {
       else {
         $this->assertFieldByName('rendering_language', '***LANGUAGE_entity_translation***');
         // Test that the order of the language list is similar to other language
-        // lists, such as in Views UI.
+        // lists, such as in the content translation settings.
         $expected_elements = array(
           '***LANGUAGE_entity_translation***',
           '***LANGUAGE_entity_default***',
