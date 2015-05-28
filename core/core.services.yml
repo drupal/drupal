@@ -1323,6 +1323,7 @@ services:
       - { name: twig.extension, priority: 100 }
     calls:
       - [setGenerators, ['@url_generator']]
+      - [setThemeManager, ['@theme.manager']]
   # @todo Figure out what to do about debugging functions.
   # @see https://www.drupal.org/node/1804998
   twig.extension.debug:

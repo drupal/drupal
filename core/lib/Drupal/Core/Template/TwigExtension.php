@@ -15,6 +15,7 @@ namespace Drupal\Core\Template;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
+use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Core\Url;
 
 /**
@@ -41,6 +42,13 @@ class TwigExtension extends \Twig_Extension {
   protected $renderer;
 
   /**
+   * The theme manager.
+   *
+   * @var \Drupal\Core\Theme\ThemeManagerInterface
+   */
+  protected $themeManager;
+
+  /**
    * Constructs \Drupal\Core\Template\TwigExtension.
    *
    * @param \Drupal\Core\Render\RendererInterface $renderer
@@ -64,10 +72,23 @@ class TwigExtension extends \Twig_Extension {
   }
 
   /**
+   * Sets the theme manager.
+   *
+   * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
+   *   The theme manager.
+   *
+   * @return $this
+   */
+  public function setThemeManager(ThemeManagerInterface $theme_manager) {
+    $this->themeManager = $theme_manager;
+    return $this;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getFunctions() {
-    return array(
+    return [
       // This function will receive a renderable array, if an array is detected.
       new \Twig_SimpleFunction('render_var', array($this, 'renderVar')),
       // The url and path function are defined in close parallel to those found
@@ -77,8 +98,9 @@ class TwigExtension extends \Twig_Extension {
       new \Twig_SimpleFunction('url_from_path', array($this, 'getUrlFromPath'), array('is_safe_callback' => array($this, 'isUrlGenerationSafe'))),
       new \Twig_SimpleFunction('link', array($this, 'getLink')),
       new \Twig_SimpleFunction('file_url', 'file_create_url'),
-      new \Twig_SimpleFunction('attach_library', array($this, 'attachLibrary'))
-    );
+      new \Twig_SimpleFunction('attach_library', [$this, 'attachLibrary']),
+      new \Twig_SimpleFunction('active_theme', [$this, 'getActiveTheme']),
+    ];
   }
 
   /**
@@ -244,6 +266,16 @@ class TwigExtension extends \Twig_Extension {
       '#url' => $url,
     ];
     return $build;
+  }
+
+  /**
+   * Gets the name of the active theme.
+   *
+   * @return string
+   *   The name of the active theme.
+   */
+  public function getActiveTheme() {
+    return $this->themeManager->getActiveTheme()->getName();
   }
 
   /**
