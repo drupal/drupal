@@ -50,8 +50,9 @@ class HelpTest extends WebTestBase {
    * Logs in users, creates dblog events, and tests dblog functionality.
    */
   public function testHelp() {
-    // Login the admin user.
-    $this->drupalLogin($this->adminUser);
+    // Login the root user to ensure as many admin links appear as possible on
+    // the module overview pages.
+    $this->drupalLogin($this->rootUser);
     $this->verifyHelp();
 
     // Login the regular user.
@@ -95,6 +96,13 @@ class HelpTest extends WebTestBase {
       if ($response == 200) {
         $this->assertTitle($name . ' | Drupal', format_string('%module title was displayed', array('%module' => $module)));
         $this->assertRaw('<h1 class="page-title">' . t($name) . '</h1>', format_string('%module heading was displayed', array('%module' => $module)));
+        $admin_tasks = system_get_module_admin_tasks($module, system_get_info('module', $module));
+        if (!empty($admin_tasks)) {
+          $this->assertText(t('@module administration pages', array('@module' => $name)));
+        }
+        foreach ($admin_tasks as $task) {
+          $this->assertLink($task['title']);
+        }
       }
     }
   }
