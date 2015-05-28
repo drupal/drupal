@@ -27,4 +27,3 @@ delete all revisions:
 
 permission_callbacks:
   - \Drupal\node\NodePermissions::nodeTypePermissions
-  - \Drupal\node\NodePermissions::contentPermissions
