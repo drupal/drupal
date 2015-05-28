@@ -1,9 +1,9 @@
 global-styling:
   version: VERSION
   css:
-    theme:
+    base:
       css/base/elements.css: {}
-      css/layout.css: {}
+    component:
       css/components/admin.css: {}
       css/components/block.css: {}
       css/components/book.css: {}
@@ -44,13 +44,16 @@ global-styling:
       css/components/views.css: {}
       css/components/buttons.css: {}
       css/components/ui-dialog.css: {}
+    layout:
+      css/layout.css: {}
+    theme:
       css/colors.css: {}
       css/print.css: { media: print }
 
 messages:
   version: VERSION
   css:
-    theme:
+    component:
       css/components/messages.css: { preprocess: false }
 
 color.preview:
