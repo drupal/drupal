@@ -146,8 +146,8 @@ function _menu_ui_node_save(NodeInterface $node, array $values) {
       'link' => ['uri' => 'entity:node/' . $node->id()],
       'langcode' => $node->getUntranslated()->language()->getId(),
     ));
+    $entity->enabled->value = 1;
   }
-  $entity->enabled->value = 1;
   $entity->title->value = trim($values['title']);
   $entity->description->value = trim($values['description']);
   $entity->menu_name->value = $values['menu_name'];

@@ -171,6 +171,16 @@ class MenuNodeTest extends WebTestBase {
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertFieldById('edit-menu-weight', 17, 'Menu weight correct in edit form');
 
+    // Disable the menu link, then edit the node--the link should stay disabled.
+    $link_id = menu_ui_get_menu_link_defaults($node)['entity_id'];
+    /** @var \Drupal\menu_link_content\Entity\MenuLinkContent $link */
+    $link = MenuLinkContent::load($link_id);
+    $link->set('enabled', FALSE);
+    $link->save();
+    $this->drupalPostForm($node->urlInfo('edit-form'), $edit, t('Save'));
+    $link = MenuLinkContent::load($link_id);
+    $this->assertFalse($link->isEnabled(), 'Saving a node with a disabled menu link keeps the menu link disabled.');
+
     // Edit the node and remove the menu link.
     $edit = array(
       'menu[enabled]' => FALSE,
