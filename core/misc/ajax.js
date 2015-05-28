@@ -567,7 +567,6 @@
     var progressIndicatorMethod = 'setProgressIndicator' + this.progress.type.slice(0, 1).toUpperCase() + this.progress.type.slice(1).toLowerCase();
     if (progressIndicatorMethod in this && typeof this[progressIndicatorMethod] === 'function') {
       this[progressIndicatorMethod].call(this);
-      $(this.element).after(this.progress.element);
     }
   };
 
