@@ -468,9 +468,9 @@ function views_add_contextual_links(&$render_element, $location, ViewExecutable 
 }
 
 /**
- * Implements hook_ENTITY_TYPE_create() for 'field_config'.
+ * Implements hook_ENTITY_TYPE_insert() for 'field_config'.
  */
-function views_field_config_create(FieldConfigInterface $field) {
+function views_field_config_insert(FieldConfigInterface $field) {
   Views::viewsData()->clear();
 }
 
