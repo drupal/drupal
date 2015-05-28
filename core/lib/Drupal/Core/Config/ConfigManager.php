@@ -228,16 +228,20 @@ class ConfigManager implements ConfigManagerInterface {
    */
   public function getConfigDependencyManager() {
     $dependency_manager = new ConfigDependencyManager();
-    // This uses the configuration storage directly to avoid blowing the static
-    // caches in the configuration factory and the configuration entity system.
-    // Additionally this ensures that configuration entity dependency discovery
-    // has no dependencies on the config entity classes. Assume data with UUID
-    // is a config entity. Only configuration entities can be depended on so we
-    // can ignore everything else.
-    $data = array_filter($this->activeStorage->readMultiple($this->activeStorage->listAll()), function($config) {
-      return isset($config['uuid']);
-    });
-    $dependency_manager->setData($data);
+    // Read all configuration using the factory. This ensures that multiple
+    // deletes during the same request benefit from the static cache. Using the
+    // factory also ensures configuration entity dependency discovery has no
+    // dependencies on the config entity classes. Assume data with UUID is a
+    // config entity. Only configuration entities can be depended on so we can
+    // ignore everything else.
+    $data = array_map(function($config) {
+      $data = $config->get();
+      if (isset($data['uuid'])) {
+        return $data;
+      }
+      return FALSE;
+    }, $this->configFactory->loadMultiple($this->activeStorage->listAll()));
+    $dependency_manager->setData(array_filter($data));
     return $dependency_manager;
   }
 
