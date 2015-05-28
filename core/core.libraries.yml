@@ -212,6 +212,7 @@ drupal.machine-name:
     - core/jquery.once
     - core/drupal
     - core/drupalSettings
+    - core/drupal.form
 
 drupal.progress:
   version: VERSION

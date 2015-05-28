@@ -134,7 +134,7 @@
         // Initialize form behaviors, use $.makeArray to be able to use native
         // forEach array method and have the callback parameters in the right order.
         $.makeArray($forms).forEach(function (form) {
-          var events = 'change.formUpdated keypress.formUpdated';
+          var events = 'change.formUpdated input.formUpdated ';
           var eventHandler = debounce(function (event) { triggerFormUpdated(event.target); }, 300);
           formFields = fieldsList(form).join(',');
 
