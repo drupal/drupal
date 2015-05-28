@@ -237,6 +237,8 @@ class RenderCache implements RenderCacheInterface {
             'contexts' => $merged_cache_contexts,
             // The union of the current element's and stored cache tags.
             'tags' => Cache::mergeTags($stored_cache_tags, $data['#cache']['tags']),
+            // The same cache bin as the one for the actual render cache items.
+            'bin' => $bin,
           ],
         ];
         $cache->set($pre_bubbling_cid, $redirect_data, $expire, Cache::mergeTags($redirect_data['#cache']['tags'], ['rendered']));

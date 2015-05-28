@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core\Render;
 
+use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Renderer;
@@ -28,15 +29,15 @@ class RendererBubblingTest extends RendererTestBase {
     $this->rendererConfig['required_cache_contexts'] = [];
 
     parent::setUp();
-
-    $this->setUpRequest();
-    $this->setupMemoryCache();
   }
 
   /**
    * Tests bubbling of assets when NOT using #pre_render callbacks.
    */
   public function testBubblingWithoutPreRender() {
+    $this->setUpRequest();
+    $this->setupMemoryCache();
+
     $this->elementInfo->expects($this->any())
       ->method('getInfo')
       ->willReturn([]);
@@ -74,6 +75,58 @@ class RendererBubblingTest extends RendererTestBase {
     $element = ['#cache' => ['keys' => ['simpletest', 'drupal_render', 'children_attached']]];
     $this->assertTrue(strlen($this->renderer->render($element)) > 0, 'The element was retrieved from cache.');
     $this->assertEquals($element['#attached']['library'], $expected_libraries, 'The element, child and subchild #attached libraries are included.');
+  }
+
+  /**
+   * Tests cache context bubbling with a custom cache bin.
+   */
+  public function testContextBubblingCustomCacheBin() {
+    $bin = $this->randomMachineName();
+
+    $this->setUpRequest();
+    $this->memoryCache = new MemoryBackend('render');
+    $custom_cache = new MemoryBackend($bin);
+
+    $this->cacheFactory->expects($this->atLeastOnce())
+      ->method('get')
+      ->with($bin)
+      ->willReturnCallback(function($requested_bin) use ($bin, $custom_cache) {
+        if ($requested_bin === $bin) {
+          return $custom_cache;
+        }
+        else {
+          throw new \Exception();
+        }
+      });
+    $this->cacheContextsManager->expects($this->any())
+      ->method('convertTokensToKeys')
+      ->willReturnArgument(0);
+
+    $build = [
+      '#cache' => [
+        'keys' => ['parent'],
+        'contexts' => ['foo'],
+        'bin' => $bin,
+      ],
+      '#markup' => 'parent',
+      'child' => [
+        '#cache' => [
+          'contexts' => ['bar'],
+          'max-age' => 3600,
+        ],
+      ],
+    ];
+    $this->renderer->render($build);
+
+    $this->assertRenderCacheItem('parent:foo', [
+      '#cache_redirect' => TRUE,
+      '#cache' => [
+        'keys' => ['parent'],
+        'contexts' => ['bar', 'foo'],
+        'tags' => [],
+        'bin' => $bin,
+      ],
+    ], $bin);
   }
 
   /**
@@ -228,6 +281,7 @@ class RendererBubblingTest extends RendererTestBase {
           'keys' => ['parent'],
           'contexts' => ['bar', 'foo'],
           'tags' => ['dee', 'fiddle', 'har', 'yar'],
+          'bin' => 'render',
         ],
       ],
       'parent:bar:foo' => [
@@ -302,6 +356,7 @@ class RendererBubblingTest extends RendererTestBase {
         'keys' => ['parent'],
         'contexts' => ['user.roles'],
         'tags' => ['a', 'b'],
+        'bin' => 'render',
       ],
     ]);
     $this->assertRenderCacheItem('parent:r.A', [
@@ -326,6 +381,7 @@ class RendererBubblingTest extends RendererTestBase {
         'keys' => ['parent'],
         'contexts' => ['foo', 'user.roles'],
         'tags' => ['a', 'b', 'c'],
+        'bin' => 'render',
       ],
     ]);
     $this->assertRenderCacheItem('parent:foo:r.B', [
@@ -358,6 +414,7 @@ class RendererBubblingTest extends RendererTestBase {
         'keys' => ['parent'],
         'contexts' => ['foo', 'user.roles'],
         'tags' => ['a', 'b', 'c'],
+        'bin' => 'render',
       ],
     ]);
     $this->assertRenderCacheItem('parent:foo:r.A', [
@@ -382,6 +439,7 @@ class RendererBubblingTest extends RendererTestBase {
         'keys' => ['parent'],
         'contexts' => ['bar', 'foo', 'user.roles'],
         'tags' => ['a', 'b', 'c', 'd'],
+        'bin' => 'render',
       ],
     ];
     $this->assertRenderCacheItem('parent', $final_parent_cache_item);
@@ -435,6 +493,9 @@ class RendererBubblingTest extends RendererTestBase {
    * @dataProvider providerTestBubblingWithPrerender
    */
   public function testBubblingWithPrerender($test_element) {
+    $this->setUpRequest();
+    $this->setupMemoryCache();
+
     // Mock the State service.
     $memory_state = new State(new KeyValueMemoryFactory());;
     \Drupal::getContainer()->set('state', $memory_state);

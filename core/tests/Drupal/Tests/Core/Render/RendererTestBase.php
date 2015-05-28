@@ -172,6 +172,7 @@ class RendererTestBase extends UnitTestCase {
 
     $this->cacheFactory->expects($this->atLeastOnce())
       ->method('get')
+      ->with('render')
       ->willReturn($this->memoryCache);
   }
 
@@ -195,9 +196,12 @@ class RendererTestBase extends UnitTestCase {
    *   The expected cache ID.
    * @param mixed $data
    *   The expected data for that cache ID.
+   * @param string $bin
+   *   The expected cache bin.
    */
-  protected function assertRenderCacheItem($cid, $data) {
-    $cached = $this->memoryCache->get($cid);
+  protected function assertRenderCacheItem($cid, $data, $bin = 'render') {
+    $cache_backend = $this->cacheFactory->get($bin);
+    $cached = $cache_backend->get($cid);
     $this->assertNotFalse($cached, sprintf('Expected cache item "%s" exists.', $cid));
     if ($cached !== FALSE) {
       $this->assertEquals($data, $cached->data, sprintf('Cache item "%s" has the expected data.', $cid));
