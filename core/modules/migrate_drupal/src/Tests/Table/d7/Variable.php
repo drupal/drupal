@@ -49,6 +49,9 @@ class Variable extends DrupalDumpBase {
       'name' => 'admin_theme',
       'value' => 's:5:"seven";',
     ))->values(array(
+      'name' => 'allow_insecure_derivatives',
+      'value' => 'b:1;',
+    ))->values(array(
       'name' => 'anonymous',
       'value' => 's:9:"Anonymous";',
     ))->values(array(
@@ -60,36 +63,6 @@ class Variable extends DrupalDumpBase {
     ))->values(array(
       'name' => 'book_child_type',
       'value' => 's:4:"book";',
-    ))->values(array(
-      'name' => 'cache',
-      'value' => 'i:0;',
-    ))->values(array(
-      'name' => 'cache_flush_cache',
-      'value' => 'i:0;',
-    ))->values(array(
-      'name' => 'cache_flush_cache_block',
-      'value' => 'i:0;',
-    ))->values(array(
-      'name' => 'cache_flush_cache_field',
-      'value' => 'i:0;',
-    ))->values(array(
-      'name' => 'cache_flush_cache_filter',
-      'value' => 'i:1421843462;',
-    ))->values(array(
-      'name' => 'cache_flush_cache_form',
-      'value' => 'i:1421843462;',
-    ))->values(array(
-      'name' => 'cache_flush_cache_image',
-      'value' => 'i:1421843462;',
-    ))->values(array(
-      'name' => 'cache_flush_cache_menu',
-      'value' => 'i:1421843462;',
-    ))->values(array(
-      'name' => 'cache_flush_cache_page',
-      'value' => 'i:0;',
-    ))->values(array(
-      'name' => 'cache_flush_cache_path',
-      'value' => 'i:0;',
     ))->values(array(
       'name' => 'cache_lifetime',
       'value' => 's:3:"300";',
@@ -128,7 +101,7 @@ class Variable extends DrupalDumpBase {
       'value' => 's:43:"_vWFj-dRR2rNoHDwl7N__J9uZNutDcLz3w4tlPJzRAM";',
     ))->values(array(
       'name' => 'cron_last',
-      'value' => 'i:1421843462;',
+      'value' => 'i:1432653550;',
     ))->values(array(
       'name' => 'css_js_query_string',
       'value' => 's:6:"nihmmw";',
@@ -147,9 +120,6 @@ class Variable extends DrupalDumpBase {
     ))->values(array(
       'name' => 'default_nodes_main',
       'value' => 's:2:"10";',
-    ))->values(array(
-      'name' => 'drupal_css_cache_files',
-      'value' => 'a:5:{s:64:"823ba1006db72809515d2221cd02ec1075d7b49b0c07f49307b3a7930bfdd9e4";s:64:"public://css/css_ZqMP7mpzReokCjp7_3nWfyPem159-v68J-vfMGVas2w.css";s:64:"592db66916e1dd3416cbe95bcb34a5a68775eb0b7cf95e4c858671de35290cc9";s:64:"public://css/css_MDANkHLYJvjX2FyAHswY7Q5LhFulXrzWS9UlBgtPsJ0.css";s:64:"039ba69b25efd672767c5ee21b686a2cdaa496c5fb210693b88f81cc556db518";s:64:"public://css/css_oIa9U_KgNkG1oZtrBlUQXkQD27Q9DnOPjxdUoeW2M18.css";s:64:"fe9fca5a618e55058e69458a65b2edb4e958c16c13e1d1526c4dc0c0e782b483";s:64:"public://css/css_Bu-6cpTSVOo002uMmkBducgoPZC14OlHrT6_cQz6mqI.css";s:64:"ebb3f433ad4107b1ac31e9d7de0f9a5d399040e9f82b6364211dcfaadea158c0";s:64:"public://css/css_G0NpxSejThecBV_u5WJM_qLmdv5lUfPdHTwLKSBmcjU.css";}',
     ))->values(array(
       'name' => 'drupal_http_request_fails',
       'value' => 'b:0;',
@@ -189,9 +159,6 @@ class Variable extends DrupalDumpBase {
     ))->values(array(
       'name' => 'install_time',
       'value' => 'i:1421694923;',
-    ))->values(array(
-      'name' => 'javascript_parsed',
-      'value' => 'a:8:{i:0;s:14:"misc/drupal.js";i:1;s:14:"misc/jquery.js";i:2;s:19:"misc/jquery.once.js";i:3;s:12:"misc/form.js";i:4;s:21:"misc/jquery.cookie.js";i:5;s:26:"modules/toolbar/toolbar.js";i:6;s:19:"misc/tableheader.js";i:7;s:16:"misc/collapse.js";}',
     ))->values(array(
       'name' => 'language_content_type_test_content_type',
       'value' => 's:1:"0";',
@@ -328,20 +295,17 @@ class Variable extends DrupalDumpBase {
       'name' => 'statistics_count_content_views_ajax',
       'value' => 'i:0;',
     ))->values(array(
-      'name' => 'statistics_day_timestamp',
-      'value' => 'i:1421843462;',
-    ))->values(array(
       'name' => 'statistics_enable_access_log',
       'value' => 'i:1;',
     ))->values(array(
       'name' => 'statistics_flush_accesslog_timer',
       'value' => 's:4:"3600";',
     ))->values(array(
+      'name' => 'suppress_itok_output',
+      'value' => 'b:1;',
+    ))->values(array(
       'name' => 'theme_default',
       'value' => 's:6:"bartik";',
-    ))->values(array(
-      'name' => 'update_last_check',
-      'value' => 'i:1421843491;',
     ))->values(array(
       'name' => 'user_admin_role',
       'value' => 's:1:"3";',
@@ -351,6 +315,21 @@ class Variable extends DrupalDumpBase {
     ))->values(array(
       'name' => 'user_email_verification',
       'value' => 'i:1;',
+    ))->values(array(
+      'name' => 'user_failed_login_identifier_uid_only',
+      'value' => 'b:1;',
+    ))->values(array(
+      'name' => 'user_failed_login_ip_limit',
+      'value' => 'i:30;',
+    ))->values(array(
+      'name' => 'user_failed_login_ip_window',
+      'value' => 'i:7200;',
+    ))->values(array(
+      'name' => 'user_failed_login_user_limit',
+      'value' => 'i:22;',
+    ))->values(array(
+      'name' => 'user_failed_login_user_window',
+      'value' => 'i:86400;',
     ))->values(array(
       'name' => 'user_mail_cancel_confirm_body',
       'value' => "s:381:\"[user:name],\r\n\r\nA request to cancel your account has been made at [site:name].\r\n\r\nYou may now cancel your account on [site:url-brief] by clicking this link or copying and pasting it into your browser:\r\n\r\n[user:cancel-url]\r\n\r\nNOTE: The cancellation of your account is not reversible.\r\n\r\nThis link expires in one day and nothing will happen if it is not used.\r\n\r\n--  [site:name] team\";",
@@ -439,4 +418,4 @@ class Variable extends DrupalDumpBase {
   }
 
 }
-#05fbb0b522145f38cd9fe5545ad0a6e6
+#d17f3e6a80f5f51c105acf809f1b4851

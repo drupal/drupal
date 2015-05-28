@@ -385,6 +385,10 @@ function _db_field_type_map($sql_type) {
 function _db_get_query($table) {
   $queries = array(
     'users' => 'SELECT * FROM {users} WHERE uid NOT IN (0,1)',
+    // Volatile state variables should always be ignored. We don't want to
+    // exclude all cache_* variables, since that would exclude cache_lifetime,
+    // which is configuration, not state.
+    'variable' => "SELECT * FROM {variable} WHERE name NOT LIKE 'cache_flush_%' AND name NOT IN ('cache', 'drupal_css_cache_files', 'javascript_parsed', 'statistics_day_timestamp', 'update_last_check')",
   );
   return isset($queries[$table]) ? $queries[$table] : 'SELECT * FROM {' . $table .'}';
 }
