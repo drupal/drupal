@@ -237,15 +237,12 @@ abstract class QueryPluginBase extends PluginBase implements CacheablePluginInte
    *   An appropriate query expression pointing to the date field.
    * @param string $format
    *   A format string for the result, like 'Y-m-d H:i:s'.
-   * @param boolean $string_date
-   *   For certain databases, date format functions vary depending on string or
-   *   numeric storage.
    *
    * @return string
    *   A string representing the field formatted as a date in the format
    *   specified by $format.
    */
-  public function getDateFormat($field, $format, $string_date = FALSE) {
+  public function getDateFormat($field, $format) {
     return $field;
   }
 
