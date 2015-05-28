@@ -1,6 +1,6 @@
 id: d6_vocabulary_field_instance
 label: Drupal 6 vocabulary field instance configuration
-migration_groups:
+migration_tags:
   - Drupal 6
 source:
   plugin: d6_taxonomy_vocabulary_per_type

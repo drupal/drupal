@@ -1,6 +1,6 @@
 id: d6_menu
 label: Drupal 6 menus
-migration_groups:
+migration_tags:
   - Drupal 6
 source:
   plugin: d6_menu

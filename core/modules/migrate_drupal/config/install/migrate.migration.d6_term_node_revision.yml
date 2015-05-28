@@ -1,6 +1,6 @@
 id: d6_term_node_revision
 label: Drupal 6 term/node relationship revisions
-migration_groups:
+migration_tags:
   - Drupal 6
 load:
   plugin: d6_term_node

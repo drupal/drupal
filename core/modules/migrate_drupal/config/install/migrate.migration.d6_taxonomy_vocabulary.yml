@@ -1,6 +1,6 @@
 id: d6_taxonomy_vocabulary
 label: Drupal 6 taxonomy vocabularies
-migration_groups:
+migration_tags:
   - Drupal 6
 source:
   plugin: d6_taxonomy_vocabulary

@@ -1,6 +1,6 @@
 id: d6_comment_field
 label: Drupal 6 comment field configuration
-migration_groups:
+migration_tags:
   - Drupal 6
 source:
   plugin: d6_comment_variable_per_comment_type

@@ -1,6 +1,6 @@
 id: d6_profile_values
 label: Drupal 6 profile values
-migration_groups:
+migration_tags:
   - Drupal 6
 source:
   plugin: d6_profile_field_values

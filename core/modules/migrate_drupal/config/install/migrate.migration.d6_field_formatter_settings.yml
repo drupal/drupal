@@ -1,6 +1,6 @@
 id: d6_field_formatter_settings
 label: Drupal 6 field formatter configuration
-migration_groups:
+migration_tags:
   - Drupal 6
 source:
   plugin: d6_field_instance_per_view_mode

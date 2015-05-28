@@ -1,6 +1,6 @@
 id: d6_menu_settings
 label: Drupal 6 menu configuration
-migration_groups:
+migration_tags:
   - Drupal 6
 source:
   plugin: variable

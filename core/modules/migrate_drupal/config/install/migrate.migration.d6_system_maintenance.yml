@@ -1,6 +1,6 @@
 id: d6_system_maintenance
 label: Drupal 6 maintainence page configuration
-migration_groups:
+migration_tags:
   - Drupal 6
 source:
   plugin: variable

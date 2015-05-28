@@ -1,6 +1,6 @@
 id: d6_block_content_body_field
 label: Drupal 6 block content body field configuration
-migration_groups:
+migration_tags:
   - Drupal 6
 source:
   # We do an empty source and a proper destination to have an idmap for

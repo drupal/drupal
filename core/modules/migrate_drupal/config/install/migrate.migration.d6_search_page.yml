@@ -1,6 +1,6 @@
 id: d6_search_page
 label: Drupal 6 search page configuration
-migration_groups:
+migration_tags:
   - Drupal 6
 source:
   plugin: variable

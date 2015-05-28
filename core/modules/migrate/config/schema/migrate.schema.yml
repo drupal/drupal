@@ -7,12 +7,12 @@ migrate.migration.*:
     id:
       type: string
       label: 'ID'
-    migration_groups:
+    migration_tags:
       type: sequence
-      label: 'Migration Groups'
+      label: 'Migration Tags'
       sequence:
         type: string
-        label: 'Group'
+        label: 'Tag'
     label:
       type: label
       label: 'Label'

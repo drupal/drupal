@@ -1,6 +1,6 @@
 id: d6_cck_field_values
 label: Drupal 6 field values
-migration_groups:
+migration_tags:
   - Drupal 6
 load:
   plugin: drupal_entity
