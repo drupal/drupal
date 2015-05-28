@@ -7,8 +7,3 @@ drupal.book:
     - core/drupal
     - core/drupal.form
 
-navigation:
-  version: VERSION
-  css:
-    theme:
-      css/book.theme.css: {}

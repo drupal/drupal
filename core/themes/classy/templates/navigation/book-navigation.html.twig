@@ -28,6 +28,7 @@
  * @see template_preprocess_book_navigation()
  */
 #}
+{{ attach_library('classy/book-navigation') }}
 {% if tree or has_links %}
   <nav id="book-navigation-{{ book_id }}" class="book-navigation" role="navigation" aria-labelledby="book-label-{{ book_id }}">
     {{ tree }}

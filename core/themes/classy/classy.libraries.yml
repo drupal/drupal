@@ -3,3 +3,9 @@ base:
   css:
     theme:
       css/layout.css: {}
+
+book-navigation:
+  version: VERSION
+  css:
+    theme:
+      css/navigation/book.theme.css: {}

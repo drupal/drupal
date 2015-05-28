@@ -243,11 +243,6 @@ function book_node_view(array &$build, EntityInterface $node, EntityViewDisplayI
       $build['book_navigation'] = array(
         '#markup' => drupal_render($book_navigation),
         '#weight' => 100,
-        '#attached' => [
-          'library' => [
-            'book/navigation',
-          ],
-        ],
         // The book navigation is a listing of Node entities, so associate its
         // list cache tag for correct invalidation.
         '#cache' => [
