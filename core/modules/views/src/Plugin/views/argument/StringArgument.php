@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\argument;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ViewExecutable;
@@ -179,11 +180,19 @@ class StringArgument extends ArgumentPluginBase {
   public function getFormula() {
     $formula = "SUBSTRING($this->tableAlias.$this->realField, 1, " . intval($this->options['limit']) . ")";
 
-    // Support case-insensitive substring comparisons for SQLite by using the
-    // 'NOCASE_UTF8' collation.
-    // @see Drupal\Core\Database\Driver\sqlite\Connection::open()
-    if (Database::getConnection()->databaseType() == 'sqlite' && $this->options['case'] != 'none') {
-      $formula .= ' COLLATE NOCASE_UTF8';
+    if ($this->options['case'] != 'none') {
+      // Support case-insensitive substring comparisons for SQLite by using the
+      // 'NOCASE_UTF8' collation.
+      // @see Drupal\Core\Database\Driver\sqlite\Connection::open()
+      if (Database::getConnection()->databaseType() == 'sqlite') {
+        $formula .= ' COLLATE NOCASE_UTF8';
+      }
+
+      // Support case-insensitive substring comparisons for PostgreSQL by
+      // converting the formula to lowercase.
+      if (Database::getConnection()->databaseType() == 'pgsql') {
+        $formula = 'LOWER(' . $formula . ')';
+      }
     }
     return $formula;
   }
@@ -203,6 +212,14 @@ class StringArgument extends ArgumentPluginBase {
     else {
       $this->value = array($argument);
       $this->operator = 'or';
+    }
+
+    // Support case-insensitive substring comparisons for PostgreSQL by
+    // converting the arguments to lowercase.
+    if ($this->options['case'] != 'none' && Database::getConnection()->databaseType() == 'pgsql') {
+      foreach ($this->value as $key => $value) {
+        $this->value[$key] = Unicode::strtolower($value);
+      }
     }
 
     if (!empty($this->definition['many to one'])) {
@@ -266,6 +283,12 @@ class StringArgument extends ArgumentPluginBase {
   }
 
   function title() {
+    // Support case-insensitive title comparisons for PostgreSQL by converting
+    // the title to lowercase.
+    if ($this->options['case'] != 'none' && Database::getConnection()->databaseType() == 'pgsql') {
+      $this->options['case'] = 'lower';
+    }
+
     $this->argument = $this->caseTransform($this->argument, $this->options['case']);
     if (!empty($this->options['transform_dash'])) {
       $this->argument = strtr($this->argument, '-', ' ');
