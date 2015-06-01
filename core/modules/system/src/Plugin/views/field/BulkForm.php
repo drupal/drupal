@@ -7,9 +7,12 @@
 
 namespace Drupal\system\Plugin\views\field;
 
-use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RedirectDestinationTrait;
+use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\Plugin\views\field\UncacheableFieldHandlerTrait;
@@ -27,6 +30,13 @@ class BulkForm extends FieldPluginBase {
 
   use RedirectDestinationTrait;
   use UncacheableFieldHandlerTrait;
+
+  /**
+   * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityManagerInterface
+   */
+  protected $entityManager;
 
   /**
    * The action storage.
@@ -51,20 +61,21 @@ class BulkForm extends FieldPluginBase {
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
-   *   The action storage.
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityStorageInterface $storage) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-    $this->actionStorage = $storage;
+    $this->entityManager = $entity_manager;
+    $this->actionStorage = $entity_manager->getStorage('action');
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($configuration, $plugin_id, $plugin_definition, $container->get('entity.manager')->getStorage('action'));
+    return new static($configuration, $plugin_id, $plugin_definition, $container->get('entity.manager'));
   }
 
   /**
@@ -175,6 +186,8 @@ class BulkForm extends FieldPluginBase {
       // Render checkboxes for all rows.
       $form[$this->options['id']]['#tree'] = TRUE;
       foreach ($this->view->result as $row_index => $row) {
+        $entity = $this->getEntity($row);
+
         $form[$this->options['id']][$row_index] = array(
           '#type' => 'checkbox',
           // We are not able to determine a main "title" for each row, so we can
@@ -182,6 +195,7 @@ class BulkForm extends FieldPluginBase {
           '#title' => $this->t('Update this item'),
           '#title_display' => 'invisible',
           '#default_value' => !empty($form_state->getValue($this->options['id'])[$row_index]) ? 1 : NULL,
+          '#return_value' => $this->calculateEntityBulkFormKey($entity),
         );
       }
 
@@ -264,8 +278,9 @@ class BulkForm extends FieldPluginBase {
       $entities = array();
       $action = $this->actions[$form_state->getValue('action')];
       $count = 0;
-      foreach (array_intersect_key($this->view->result, $selected) as $row) {
-        $entity = $this->getEntity($row);
+
+      foreach ($selected as $bulk_form_key) {
+        $entity = $this->loadEntityFromBulkFormKey($bulk_form_key);
 
         // Skip execution if the user did not have access.
         if (!$action->getPlugin()->access($entity, $this->view->getUser())) {
@@ -342,6 +357,70 @@ class BulkForm extends FieldPluginBase {
    */
   protected function drupalSetMessage($message = NULL, $type = 'status', $repeat = FALSE) {
     drupal_set_message($message, $type, $repeat);
+  }
+
+  /**
+   * Calculates a bulk form key.
+   *
+   * This generates a key that is used as the checkbox return value when
+   * submitting a bulk form. This key allows the entity for the row to be loaded
+   * totally independently of the executed view row.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to calculate a bulk form key for.
+   *
+   * @return string
+   *   The bulk form key representing the entity's id, language and revision (if
+   *   applicable) as one string.
+   *
+   * @see self::loadEntityFromBulkFormKey()
+   */
+  protected function calculateEntityBulkFormKey(EntityInterface $entity) {
+    $key_parts = [$entity->language()->getId(), $entity->id()];
+
+    if ($entity instanceof RevisionableInterface) {
+      $key_parts[] = $entity->getRevisionId();
+    }
+
+    return implode('-', $key_parts);
+  }
+
+  /**
+   * Loads an entity based on a bulk form key.
+   *
+   * @param string $bulk_form_key
+   *   The bulk form key representing the entity's id, language and revision (if
+   *   applicable) as one string.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
+   *   The entity loaded in the state (language, optionally revision) specified
+   *   as part of the bulk form key.
+   */
+  protected function loadEntityFromBulkFormKey($bulk_form_key) {
+    $key_parts = explode('-', $bulk_form_key);
+    $vid = NULL;
+
+    // If there are 3 items, vid will be last.
+    if (count($key_parts) === 3) {
+      $vid = array_pop($key_parts);
+    }
+
+    // The first two items will always be langcode and ID.
+    $id = array_pop($key_parts);
+    $langcode = array_pop($key_parts);
+
+    if ($vid) {
+      $entity = $this->entityManager->getStorage($this->getEntityType())->loadRevision($vid);
+    }
+    else {
+      $entity = $this->entityManager->getStorage($this->getEntityType())->load($id);
+    }
+
+    if ($entity instanceof TranslatableInterface) {
+      $entity = $entity->getTranslation($langcode);
+    }
+
+    return $entity;
   }
 
 }

@@ -51,6 +51,12 @@ class UserBulkFormTest extends UnitTestCase {
       ->method('loadMultiple')
       ->will($this->returnValue($actions));
 
+    $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
+    $entity_manager->expects($this->once())
+      ->method('getStorage')
+      ->with('action')
+      ->will($this->returnValue($entity_storage));
+
     $views_data = $this->getMockBuilder('Drupal\views\ViewsData')
       ->disableOriginalConstructor()
       ->getMock();
@@ -81,7 +87,7 @@ class UserBulkFormTest extends UnitTestCase {
     $definition['title'] = '';
     $options = array();
 
-    $user_bulk_form = new UserBulkForm(array(), 'user_bulk_form', $definition, $entity_storage);
+    $user_bulk_form = new UserBulkForm(array(), 'user_bulk_form', $definition, $entity_manager);
     $user_bulk_form->init($executable, $display, $options);
 
     $this->assertAttributeEquals(array_slice($actions, 0, -1, TRUE), 'actions', $user_bulk_form);

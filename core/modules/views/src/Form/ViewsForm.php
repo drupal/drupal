@@ -123,12 +123,6 @@ class ViewsForm implements FormInterface, ContainerInjectionInterface {
     }
     $form_state->set(['step_controller', 'views_form_views_form'], 'Drupal\views\Form\ViewsFormMainForm');
 
-    // Cache the built form to prevent it from being rebuilt prior to validation
-    // and submission, which could lead to data being processed incorrectly,
-    // because the views rows (and thus, the form elements as well) have changed
-    // in the meantime.
-    $form_state->setCached();
-
     $form = array();
 
     $query = $this->requestStack->getCurrentRequest()->query->all();
