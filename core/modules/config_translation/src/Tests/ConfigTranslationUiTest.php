@@ -446,6 +446,9 @@ class ConfigTranslationUiTest extends WebTestBase {
       $this->drupalGet($translation_page_url);
       $this->assertText($label);
 
+      // Make sure that the date library is added.
+      $this->assertRaw('core/modules/system/js/system.date.js');
+
       // Update translatable fields.
       $edit = array(
         'translation[config_names][core.date_format.' . $id . '][label]' => $id . ' - FR',

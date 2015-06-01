@@ -7,6 +7,7 @@
 namespace Drupal\Core\Datetime;
 
 use Drupal\Component\Datetime\DateTimePlus;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Extends DateTimePlus().
@@ -22,6 +23,14 @@ use Drupal\Component\Datetime\DateTimePlus;
  * @see \Drupal/Component/Datetime/DateTimePlus.php
  */
 class DrupalDateTime extends DateTimePlus {
+
+  use StringTranslationTrait;
+
+  /**
+   * Format string translation cache.
+   *
+   */
+  protected $formatTranslationCache;
 
   /**
    * Constructs a date object.
@@ -84,7 +93,8 @@ class DrupalDateTime extends DateTimePlus {
    *   The formatted value of the date.
    */
   public function format($format, $settings = array()) {
-    $settings['langcode'] = !empty($settings['langcode']) ? $settings['langcode'] : $this->langcode;
+    $langcode = !empty($settings['langcode']) ? $settings['langcode'] : $this->langcode;
+    $value = '';
     // Format the date and catch errors.
     try {
       // Encode markers that should be translated. 'A' becomes
@@ -98,15 +108,33 @@ class DrupalDateTime extends DateTimePlus {
       // Call date_format().
       $format = parent::format($format);
 
-      // Pass the langcode to _format_date_callback().
-      _format_date_callback(NULL, $settings['langcode']);
+      // Translates a formatted date string.
+      $translation_callback = function($matches) use ($langcode) {
+        $code = $matches[1];
+        $string = $matches[2];
+        if (!isset($this->formatTranslationCache[$langcode][$code][$string])) {
+          $options = array('langcode' => $langcode);
+          if ($code == 'F') {
+            $options['context'] = 'Long month name';
+          }
+
+          if ($code == '') {
+            $this->formatTranslationCache[$langcode][$code][$string] = $string;
+          }
+          else {
+            $this->formatTranslationCache[$langcode][$code][$string] = $this->t($string, array(), $options);
+          }
+        }
+        return $this->formatTranslationCache[$langcode][$code][$string];
+      };
 
       // Translate the marked sequences.
-      $value = preg_replace_callback('/\xEF([AaeDlMTF]?)(.*?)\xFF/', '_format_date_callback', $format);
+      $value = preg_replace_callback('/\xEF([AaeDlMTF]?)(.*?)\xFF/', $translation_callback, $format);
     }
     catch (\Exception $e) {
       $this->errors[] = $e->getMessage();
     }
     return $value;
   }
+
 }

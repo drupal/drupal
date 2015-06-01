@@ -8,6 +8,7 @@
 namespace Drupal\Tests\Core\Datetime;
 
 use Drupal\Core\Datetime\DateFormatter;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -45,9 +46,21 @@ class DateTest extends UnitTestCase {
   protected $dateFormatter;
 
   protected function setUp() {
+    parent::setUp();
+
+    $entity_storage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
+
     $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
+    $this->entityManager->expects($this->once())->method('getStorage')->with('date_format')->willReturn($entity_storage);
+
     $this->languageManager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
     $this->stringTranslation = $this->getMock('Drupal\Core\StringTranslation\TranslationInterface');
+
+    $config_factory = $this->getConfigFactoryStub(['system.date' => ['country' => ['default' => 'GB']]]);
+    $container = new ContainerBuilder();
+    $container->set('config.factory', $config_factory);
+    $container->set('string_translation', $this->getStringTranslationStub());
+    \Drupal::setContainer($container);
 
     $this->dateFormatter = new DateFormatter($this->entityManager, $this->languageManager, $this->stringTranslation, $this->getConfigFactoryStub());
   }
@@ -57,7 +70,7 @@ class DateTest extends UnitTestCase {
    *
    * @dataProvider providerTestFormatInterval
    *
-   * @see \Drupal\Core\Datetime\DateFormatter::formatInterval()
+   * @covers \Drupal\Core\Datetime\DateFormatter::formatInterval
    */
   public function testFormatInterval($interval, $granularity, $expected, $langcode = NULL) {
     // Mocks a simple formatPlural implementation.
@@ -126,6 +139,25 @@ class DateTest extends UnitTestCase {
     $result = $this->dateFormatter->formatInterval(0, 1, 'xxx-lolspeak');
 
     $this->assertEquals('0 sec', $result);
+  }
+
+  /**
+   * Tests the getSampleDateFormats method.
+   *
+   * @covers \Drupal\Core\Datetime\DateFormatter::getSampleDateFormats
+   */
+  public function testGetSampleDateFormats() {
+    $timestamp = strtotime('2015-03-22 14:23:00');
+    $expected = $this->dateFormatter->getSampleDateFormats('en', $timestamp, 'Europe/London');
+
+    // Removed characters related to timezone 'e' and 'T', as test does not have
+    // timezone set.
+    $date_characters = 'dDjlNSwzWFmMntLoYyaABgGhHisuIOPZcrU';
+    $date_chars = str_split($date_characters);
+
+    foreach ($date_chars as $val) {
+      $this->assertEquals($expected[$val], date($val, $timestamp));
+    }
   }
 
 }

@@ -193,6 +193,33 @@ class DateFormatter {
   }
 
   /**
+   * Provides values for all date formatting characters for a given timestamp.
+   *
+   * @param string|null $langcode
+   *   (optional) Language code of the date format, if different from the site
+   *   default language.
+   * @param int|null $timestamp
+   *   (optional) The Unix timestamp to format, defaults to current time.
+   * @param string|null $timezone
+   *   (optional) The timezone to use, if different from the site's default
+   *   timezone.
+   *
+   * @return array
+   *   An array of formatted date values, indexed by the date format character.
+   *
+   * @see date()
+   */
+  public function getSampleDateFormats($langcode = NULL, $timestamp = NULL, $timezone = NULL) {
+    $timestamp = $timestamp ?: time();
+    // All date format characters for the PHP date() function.
+    $date_chars = str_split('dDjlNSwzWFmMntLoYyaABgGhHisueIOPTZcrU');
+    $date_elements = array_combine($date_chars, $date_chars);
+    return array_map(function($character) use ($timestamp, $timezone, $langcode) {
+      return $this->format($timestamp, 'custom', $character, $timezone, $langcode);
+    }, $date_elements);
+  }
+
+  /**
    * Loads the given format pattern for the given langcode.
    *
    * @param string $format
@@ -200,8 +227,9 @@ class DateFormatter {
    * @param string $langcode
    *   The langcode of the language to use.
    *
-   * @return string
-   *   The pattern for the date format in the given language.
+   * @return string|null
+   *   The pattern for the date format in the given language for non-custom
+   *   formats, NULL otherwise.
    */
   protected function dateFormat($format, $langcode) {
     if (!isset($this->dateFormats[$format][$langcode])) {
