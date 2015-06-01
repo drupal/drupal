@@ -32,11 +32,20 @@ function tour_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_toolbar().
  */
 function tour_toolbar() {
+  $items = [];
+  $items['tour'] = [
+    '#cache' => [
+      'contexts' => [
+        'user.permissions',
+      ],
+    ],
+  ];
+
   if (!\Drupal::currentUser()->hasPermission('access tour')) {
-    return;
+    return $items;
   }
 
-  $tab['tour'] = array(
+  $items['tour'] += array(
     '#type' => 'toolbar_item',
     'tab' => array(
       '#type' => 'html_tag',
@@ -59,7 +68,7 @@ function tour_toolbar() {
     ),
   );
 
-  return $tab;
+  return $items;
 }
 
 /**

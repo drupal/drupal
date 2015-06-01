@@ -364,10 +364,22 @@ function shortcut_preprocess_page(&$variables) {
 function shortcut_toolbar() {
   $user = \Drupal::currentUser();
 
-  $items = array();
+  $items = [];
+  $items['shortcuts'] = [
+    '#cache' => [
+      'contexts' => [
+        // Cacheable per user, because each user can have their own shortcut
+        // set, even if they cannot create or select a shortcut set, because
+        // an administrator may have assigned a non-default shortcut set.
+        'user',
+      ],
+    ],
+  ];
+
   if ($user->hasPermission('access shortcuts')) {
     $links = shortcut_renderable_links();
     $shortcut_set = shortcut_current_displayed_set();
+    \Drupal::service('renderer')->addCacheableDependency($items['shortcuts'], $shortcut_set);
     $configure_link = NULL;
     if (shortcut_set_edit_access($shortcut_set)->isAllowed()) {
       $configure_link = array(
@@ -378,7 +390,7 @@ function shortcut_toolbar() {
       );
     }
     if (!empty($links) || !empty($configure_link)) {
-      $items['shortcuts'] = array(
+      $items['shortcuts'] += array(
         '#type' => 'toolbar_item',
         'tab' => array(
           '#type' => 'link',

@@ -4,6 +4,7 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Asset\AttachedAssetsInterface;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
@@ -1317,6 +1318,7 @@ function user_toolbar() {
   $user = \Drupal::currentUser();
 
   // Add logout & user account links or login link.
+  $links_cache_contexts = [];
   if ($user->isAuthenticated()) {
     $links = array(
       'account' => array(
@@ -1338,6 +1340,8 @@ function user_toolbar() {
         'url' => Url::fromRoute('user.logout'),
       ),
     );
+    // The "Edit user account" link is per-user.
+    $links_cache_contexts[] = 'user';
   }
   else {
      $links = array(
@@ -1358,10 +1362,21 @@ function user_toolbar() {
         'title' => t('My account'),
         'class' => array('toolbar-icon', 'toolbar-icon-user'),
       ),
+      '#cache' => [
+        'contexts' => [
+          // Cacheable per user, because the current user's name is shown.
+          'user',
+        ],
+      ],
     ),
     'tray' => array(
       '#heading' => t('User account actions'),
       'user_links' => array(
+        '#cache' => [
+          // Cacheable per "authenticated or not", because the links to
+          // display depend on that.
+          'contexts' => Cache::mergeContexts(array('user.roles:authenticated'), $links_cache_contexts),
+        ],
         '#theme' => 'links__toolbar_user',
         '#links' => $links,
         '#attributes' => array(

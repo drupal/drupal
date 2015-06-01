@@ -102,16 +102,22 @@ trait AssertPageCacheContextsAndTagsTrait {
    *
    * @param string[] $expected_contexts
    *   The expected cache contexts.
+   * @param string $message
+   *   (optional) A verbose message to output.
+   *
+   * @return
+   *   TRUE if the assertion succeeded, FALSE otherwise.
    */
-  protected function assertCacheContexts(array $expected_contexts) {
+  protected function assertCacheContexts(array $expected_contexts, $message = NULL) {
     $actual_contexts = $this->getCacheHeaderValues('X-Drupal-Cache-Contexts');
     sort($expected_contexts);
     sort($actual_contexts);
-    $this->assertIdentical($actual_contexts, $expected_contexts);
-    if ($actual_contexts !== $expected_contexts) {
+    $return = $this->assertIdentical($actual_contexts, $expected_contexts, $message);
+    if (!$return) {
       debug('Missing cache contexts: ' . implode(',', array_diff($actual_contexts, $expected_contexts)));
       debug('Unwanted cache contexts: ' . implode(',', array_diff($expected_contexts, $actual_contexts)));
     }
+    return $return;
   }
 
   /**

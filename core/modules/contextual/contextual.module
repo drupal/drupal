@@ -14,12 +14,20 @@ use Drupal\Core\Routing\RouteMatchInterface;
  * Implements hook_toolbar().
  */
 function contextual_toolbar() {
+  $items = [];
+  $items['contextual'] = [
+    '#cache' => [
+      'contexts' => [
+        'user.permissions',
+      ],
+    ],
+  ];
 
   if (!\Drupal::currentUser()->hasPermission('access contextual links')) {
-    return;
+    return $items;
   }
 
-  $tab['contextual'] = array(
+  $items['contextual'] += array(
     '#type' => 'toolbar_item',
     'tab' => array(
       '#type' => 'html_tag',
@@ -41,7 +49,7 @@ function contextual_toolbar() {
     ),
   );
 
-  return $tab;
+  return $items;
 }
 
 /**

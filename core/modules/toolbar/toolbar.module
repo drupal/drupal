@@ -59,6 +59,10 @@ function toolbar_page_top(array &$page_top) {
   $page_top['toolbar'] = array(
     '#type' => 'toolbar',
     '#access' => \Drupal::currentUser()->hasPermission('access toolbar'),
+    '#cache' => [
+      'keys' => ['toolbar'],
+      'contexts' => ['user.permissions'],
+    ],
   );
 }
 
@@ -97,17 +101,19 @@ function template_preprocess_toolbar(&$variables) {
       }
     }
 
-    $attributes = array();
-    // Pass the wrapper attributes along.
-    if (array_key_exists('#wrapper_attributes', $element[$key])) {
-      $attributes = $element[$key]['#wrapper_attributes'];
-    }
-
     // Add the tab.
-    $variables['tabs'][$key] = array(
-      'link' => $element[$key]['tab'],
-      'attributes' => new Attribute($attributes),
-    );
+    if (isset($element[$key]['tray'])) {
+      $attributes = array();
+      // Pass the wrapper attributes along.
+      if (array_key_exists('#wrapper_attributes', $element[$key])) {
+        $attributes = $element[$key]['#wrapper_attributes'];
+      }
+
+      $variables['tabs'][$key] = array(
+        'link' => $element[$key]['tab'],
+        'attributes' => new Attribute($attributes),
+      );
+    }
 
     // Add other non-tray, non-tab child elements to the remainder variable for
     // later rendering.
