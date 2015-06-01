@@ -7,8 +7,10 @@
 
 namespace Drupal\search\Form;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\search\SearchPageRepositoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -25,13 +27,33 @@ class SearchBlockForm extends FormBase {
   protected $searchPageRepository;
 
   /**
+   * The config factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
+   * The renderer.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
    * Constructs a new SearchBlockForm.
    *
    * @param \Drupal\search\SearchPageRepositoryInterface $search_page_repository
    *   The search page repository.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
+   * @param \Drupal\Core\Render\RendererInterface
+   *   The renderer.
    */
-  public function __construct(SearchPageRepositoryInterface $search_page_repository) {
+  public function __construct(SearchPageRepositoryInterface $search_page_repository, ConfigFactoryInterface $config_factory, RendererInterface $renderer) {
     $this->searchPageRepository = $search_page_repository;
+    $this->configFactory = $config_factory;
+    $this->renderer = $renderer;
   }
 
   /**
@@ -39,7 +61,9 @@ class SearchBlockForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('search.search_page_repository')
+      $container->get('search.search_page_repository'),
+      $container->get('config.factory'),
+      $container->get('renderer')
     );
   }
 
@@ -84,6 +108,9 @@ class SearchBlockForm extends FormBase {
       // Prevent op from showing up in the query string.
       '#name' => '',
     );
+
+    // SearchPageRepository::getDefaultSearchPage() depends on search.settings.
+    $this->renderer->addCacheableDependency($form, $this->configFactory->get('search.settings'));
 
     return $form;
   }
