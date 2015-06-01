@@ -313,18 +313,18 @@
     var self = this;
     var $item = $(item);
     // Add a class to the title link
-    $item.find('td').eq(0).find('a').addClass('menu-item__link');
+    $item.find('td:first-of-type').find('a').addClass('menu-item__link');
     // Create the handle.
     var handle = $('<a href="#" class="tabledrag-handle"><div class="handle">&nbsp;</div></a>').attr('title', Drupal.t('Drag to re-order'));
     // Insert the handle after indentations (if any).
-    var $indentationLast = $item.find('td').eq(0).find('.js-indentation').eq(-1);
+    var $indentationLast = $item.find('td:first-of-type').find('.js-indentation').eq(-1);
     if ($indentationLast.length) {
       $indentationLast.after(handle);
       // Update the total width of indentation in this entire table.
       self.indentCount = Math.max($item.find('.js-indentation').length, self.indentCount);
     }
     else {
-      $item.find('td').eq(0).prepend(handle);
+      $item.find('td:first-of-type').prepend(handle);
     }
 
     if (Modernizr.touch) {
@@ -376,10 +376,10 @@
           break;
         case 38: // Up arrow.
         case 63232: // Safari up arrow.
-          var $previousRow = $(self.rowObject.element).prev('tr').eq(0);
+          var $previousRow = $(self.rowObject.element).prev('tr:first-of-type');
           var previousRow = $previousRow.get(0);
           while (previousRow && $previousRow.is(':hidden')) {
-            $previousRow = $(previousRow).prev('tr').eq(0);
+            $previousRow = $(previousRow).prev('tr:first-of-type');
             previousRow = $previousRow.get(0);
           }
           if (previousRow) {
@@ -391,7 +391,7 @@
               // Swap with the previous top-level row.
               groupHeight = 0;
               while (previousRow && $previousRow.find('.js-indentation').length) {
-                $previousRow = $(previousRow).prev('tr').eq(0);
+                $previousRow = $(previousRow).prev('tr:first-of-type');
                 previousRow = $previousRow.get(0);
                 groupHeight += $previousRow.is(':hidden') ? 0 : previousRow.offsetHeight;
               }
@@ -419,10 +419,10 @@
           break;
         case 40: // Down arrow.
         case 63233: // Safari down arrow.
-          var $nextRow = $(self.rowObject.group).eq(-1).next('tr').eq(0);
+          var $nextRow = $(self.rowObject.group).eq(-1).next('tr:first-of-type');
           var nextRow = $nextRow.get(0);
           while (nextRow && $nextRow.is(':hidden')) {
-            $nextRow = $(nextRow).next('tr').eq(0);
+            $nextRow = $(nextRow).next('tr:first-of-type');
             nextRow = $nextRow.get(0);
           }
           if (nextRow) {
@@ -718,7 +718,7 @@
         // take into account hidden rows. Skip backwards until we find a draggable
         // row.
         while ($row.is(':hidden') && $row.prev('tr').is(':hidden')) {
-          $row = $row.prev('tr').eq(0);
+          $row = $row.prev('tr:first-of-type');
           row = $row.get(0);
         }
         return row;
@@ -766,9 +766,9 @@
     }
     // Siblings are easy, check previous and next rows.
     else if (rowSettings.relationship === 'sibling') {
-      $previousRow = $changedRow.prev('tr').eq(0);
+      $previousRow = $changedRow.prev('tr:first-of-type');
       previousRow = $previousRow.get(0);
-      var $nextRow = $changedRow.next('tr').eq(0);
+      var $nextRow = $changedRow.next('tr:first-of-type');
       var nextRow = $nextRow.get(0);
       sourceRow = changedRow;
       if ($previousRow.is('.draggable') && $previousRow.find('.' + group).length) {
@@ -811,7 +811,7 @@
         // Use the first row in the table as source, because it's guaranteed to
         // be at the root level. Find the first item, then compare this row
         // against it as a sibling.
-        sourceRow = $(this.table).find('tr.draggable').eq(0).get(0);
+        sourceRow = $(this.table).find('tr.draggable:first-of-type').get(0);
         if (sourceRow === this.rowObject.element) {
           sourceRow = $(this.rowObject.group[this.rowObject.group.length - 1]).next('tr.draggable').get(0);
         }
@@ -1165,11 +1165,11 @@
     for (var n = 1; n <= Math.abs(indentDiff); n++) {
       // Add or remove indentations.
       if (indentDiff < 0) {
-        $group.find('.js-indentation').eq(0).remove();
+        $group.find('.js-indentation:first-of-type').remove();
         this.indents--;
       }
       else {
-        $group.find('td').eq(0).prepend(Drupal.theme('tableDragIndentation'));
+        $group.find('td:first-of-type').prepend(Drupal.theme('tableDragIndentation'));
         this.indents++;
       }
     }
@@ -1249,7 +1249,7 @@
    */
   Drupal.tableDrag.prototype.row.prototype.markChanged = function () {
     var marker = Drupal.theme('tableDragChangedMarker');
-    var cell = $(this.element).find('td').eq(0);
+    var cell = $(this.element).find('td:first-of-type');
     if (cell.find('abbr.tabledrag-changed').length === 0) {
       cell.append(marker);
     }
