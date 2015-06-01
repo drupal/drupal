@@ -74,9 +74,10 @@ class ResourceRoutes extends RouteSubscriberBase {
       $plugin = $this->manager->getInstance(array('id' => $id));
 
       foreach ($plugin->routes() as $name => $route) {
-        $method = $route->getRequirement('_method');
+        // @todo: Are multiple methods possible here?
+        $methods = $route->getMethods();
         // Only expose routes where the method is enabled in the configuration.
-        if ($method && isset($enabled_methods[$method])) {
+        if ($methods && ($method = $methods[0]) && $method && isset($enabled_methods[$method])) {
           $route->setRequirement('_access_rest_csrf',  'TRUE');
 
           // Check that authentication providers are defined.

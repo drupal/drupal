@@ -9,6 +9,5 @@ services:
     arguments: ['@plugin.manager.mail', '@language_manager', '@logger.channel.contact', '@string_translation', '@entity.manager']
   logger.channel.contact:
     class: Drupal\Core\Logger\LoggerChannel
-    factory_method: get
-    factory_service: logger.factory
+    factory: logger.factory:get
     arguments: ['contact']

@@ -385,10 +385,10 @@ class RouteProviderTest extends KernelTestBase {
 
     $route = $provider->getRouteByName('route_a');
     $this->assertEqual($route->getPath(), '/path/one', 'The right route pattern was found.');
-    $this->assertEqual($route->getRequirement('_method'), 'GET', 'The right route method was found.');
+    $this->assertEqual($route->getMethods(), ['GET'], 'The right route method was found.');
     $route = $provider->getRouteByName('route_b');
     $this->assertEqual($route->getPath(), '/path/one', 'The right route pattern was found.');
-    $this->assertEqual($route->getRequirement('_method'), 'PUT', 'The right route method was found.');
+    $this->assertEqual($route->getMethods(), ['PUT'], 'The right route method was found.');
 
     $exception_thrown = FALSE;
     try {

@@ -708,7 +708,8 @@ abstract class WebTestBase extends TestBase {
     if ($this->strictConfigSchema) {
       // Add a listener to validate configuration schema on save.
       $yaml = new \Symfony\Component\Yaml\Yaml();
-      $services = $yaml->parse($directory . '/services.yml');
+      $content = file_get_contents($directory . '/services.yml');
+      $services = $yaml->parse($content);
       $services['services']['simpletest.config_schema_checker'] = [
         'class' => 'Drupal\Core\Config\Testing\ConfigSchemaChecker',
         'arguments' => ['@config.typed'],

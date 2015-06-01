@@ -70,7 +70,7 @@ class UrlGeneratorTest extends UnitTestCase {
     $first_route = new Route('/test/one');
     $second_route = new Route('/test/two/{narf}');
     $third_route = new Route('/test/two/');
-    $fourth_route = new Route('/test/four', array(), array('_scheme' => 'https'));
+    $fourth_route = new Route('/test/four', array(), array(), array(), '', ['https']);
     $routes->add('test_1', $first_route);
     $routes->add('test_2', $second_route);
     $routes->add('test_3', $third_route);

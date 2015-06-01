@@ -43,10 +43,6 @@ class ContainerBuilder extends SymfonyContainerBuilder {
   public function set($id, $service, $scope = self::SCOPE_CONTAINER) {
     SymfonyContainer::set($id, $service, $scope);
 
-    if ($this->hasDefinition($id) && ($definition = $this->getDefinition($id)) && $definition->isSynchronized()) {
-      $this->synchronize($id);
-    }
-
     // Ensure that the _serviceId property is set on synthetic services as well.
     if (isset($this->services[$id]) && is_object($this->services[$id]) && !isset($this->services[$id]->_serviceId)) {
       $this->services[$id]->_serviceId = $id;

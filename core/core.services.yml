@@ -144,57 +144,49 @@ services:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
       - { name: cache.bin, default_backend: cache.backend.chainedfast }
-    factory_method: get
-    factory_service: cache_factory
+    factory: cache_factory:get
     arguments: [bootstrap]
   cache.config:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
       - { name: cache.bin, default_backend: cache.backend.chainedfast }
-    factory_method: get
-    factory_service: cache_factory
+    factory: cache_factory:get
     arguments: [config]
   cache.default:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
       - { name: cache.bin }
-    factory_method: get
-    factory_service: cache_factory
+    factory: cache_factory:get
     arguments: [default]
   cache.entity:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
       - { name: cache.bin }
-    factory_method: get
-    factory_service: cache_factory
+    factory: cache_factory:get
     arguments: [entity]
   cache.menu:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
       - { name: cache.bin }
-    factory_method: get
-    factory_service: cache_factory
+    factory: cache_factory:get
     arguments: [menu]
   cache.render:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
       - { name: cache.bin }
-    factory_method: get
-    factory_service: cache_factory
+    factory: cache_factory:get
     arguments: [render]
   cache.data:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
       - { name: cache.bin }
-    factory_method: get
-    factory_service: cache_factory
+    factory: cache_factory:get
     arguments: [data]
   cache.discovery:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
       - { name: cache.bin, default_backend: cache.backend.chainedfast }
-    factory_method: get
-    factory_service: cache_factory
+    factory: cache_factory:get
     arguments: [discovery]
   cache_router_rebuild_subscriber:
     class: Drupal\Core\EventSubscriber\CacheRouterRebuildSubscriber
@@ -253,13 +245,11 @@ services:
       - { name: backend_overridable }
   config.storage.file:
     class: Drupal\Core\Config\FileStorage
-    factory_class: Drupal\Core\Config\FileStorageFactory
-    factory_method: getActive
+    factory: Drupal\Core\Config\FileStorageFactory::getActive
     public: false
   config.storage.staging:
     class: Drupal\Core\Config\FileStorage
-    factory_class: Drupal\Core\Config\FileStorageFactory
-    factory_method: getStaging
+    factory: Drupal\Core\Config\FileStorageFactory::getStaging
   config.storage.snapshot:
     class: Drupal\Core\Config\DatabaseStorage
     arguments: ['@database', config_snapshot]
@@ -285,8 +275,7 @@ services:
     arguments: ['@config.factory']
   database:
     class: Drupal\Core\Database\Connection
-    factory_class: Drupal\Core\Database\Database
-    factory_method: getConnection
+    factory: Drupal\Core\Database\Database::getConnection
     arguments: [default]
   file_system:
     class: Drupal\Core\File\FileSystem
@@ -324,8 +313,7 @@ services:
   logger.channel_base:
     abstract: true
     class: Drupal\Core\Logger\LoggerChannel
-    factory_method: get
-    factory_service: logger.factory
+    factory: logger.factory:get
   logger.channel.default:
     parent: logger.channel_base
     arguments: ['system']
@@ -340,8 +328,7 @@ services:
     arguments: ['cron']
   logger.channel.file:
     class: Drupal\Core\Logger\LoggerChannel
-    factory_method: get
-    factory_service: logger.factory
+    factory: logger.factory:get
     arguments: ['file']
   logger.channel.form:
     parent: logger.channel_base
@@ -358,8 +345,7 @@ services:
 
   settings:
     class: Drupal\Core\Site\Settings
-    factory_class: Drupal\Core\Site\Settings
-    factory_method: getInstance
+    factory: Drupal\Core\Site\Settings::getInstance
   state:
     class: Drupal\Core\State\State
     arguments: ['@keyvalue']
@@ -546,8 +532,7 @@ services:
     arguments: ['@service_container']
   app.root:
     class: SplString
-    factory_service: 'app.root.factory'
-    factory_method: 'get'
+    factory: app.root.factory:get
     tags:
       - { name: parameter_service }
   app.root.factory:
@@ -617,8 +602,7 @@ services:
       - { name: service_collector, tag: string_translator, call: addTranslator }
   database.replica:
     class: Drupal\Core\Database\Connection
-    factory_class: Drupal\Core\Database\Database
-    factory_method: getConnection
+    factory: Drupal\Core\Database\Database::getConnection
     arguments: [replica]
   typed_data_manager:
     class: Drupal\Core\TypedData\TypedDataManager

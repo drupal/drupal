@@ -24,14 +24,14 @@ class Composer {
     $package = $composer->getPackage();
     $autoload = $package->getAutoload();
     $autoload['classmap'] = array_merge($autoload['classmap'], array(
-      'vendor/symfony/http-foundation/Symfony/Component/HttpFoundation/Request.php',
-      'vendor/symfony/http-foundation/Symfony/Component/HttpFoundation/ParameterBag.php',
-      'vendor/symfony/http-foundation/Symfony/Component/HttpFoundation/FileBag.php',
-      'vendor/symfony/http-foundation/Symfony/Component/HttpFoundation/ServerBag.php',
-      'vendor/symfony/http-foundation/Symfony/Component/HttpFoundation/HeaderBag.php',
-      'vendor/symfony/http-kernel/Symfony/Component/HttpKernel/HttpKernel.php',
-      'vendor/symfony/http-kernel/Symfony/Component/HttpKernel/HttpKernelInterface.php',
-      'vendor/symfony/http-kernel/Symfony/Component/HttpKernel/TerminableInterface.php'
+      'vendor/symfony/http-foundation/Request.php',
+      'vendor/symfony/http-foundation/ParameterBag.php',
+      'vendor/symfony/http-foundation/FileBag.php',
+      'vendor/symfony/http-foundation/ServerBag.php',
+      'vendor/symfony/http-foundation/HeaderBag.php',
+      'vendor/symfony/http-kernel/HttpKernel.php',
+      'vendor/symfony/http-kernel/HttpKernelInterface.php',
+      'vendor/symfony/http-kernel/TerminableInterface.php',
     ));
     $package->setAutoload($autoload);
   }

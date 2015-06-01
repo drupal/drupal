@@ -351,7 +351,7 @@ class LinkWidget extends WidgetBase {
   public function flagErrors(FieldItemListInterface $items, ConstraintViolationListInterface $violations, array $form, FormStateInterface $form_state) {
     /** @var \Symfony\Component\Validator\ConstraintViolationInterface $violation */
     foreach ($violations as $offset => $violation) {
-      $parameters = $violation->getMessageParameters();
+      $parameters = $violation->getParameters();
       if (isset($parameters['@uri'])) {
         $parameters['@uri'] = static::getUriAsDisplayableString($parameters['@uri']);
         $violations->set($offset, new ConstraintViolation(
@@ -361,7 +361,7 @@ class LinkWidget extends WidgetBase {
           $violation->getRoot(),
           $violation->getPropertyPath(),
           $violation->getInvalidValue(),
-          $violation->getMessagePluralization(),
+          $violation->getPlural(),
           $violation->getCode()
         ));
       }

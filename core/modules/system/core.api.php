@@ -438,8 +438,7 @@
  *   class: Drupal\Core\Cache\CacheBackendInterface
  *   tags:
  *     - { name: cache.bin }
- *   factory_method: get
- *   factory_service: cache_factory
+ *   factory: cache_factory:get
  *   arguments: [nameofbin]
  * @endcode
  * See the @link container Services topic @endlink for more on defining
@@ -683,8 +682,7 @@
  *     class: Drupal\Core\Cache\CacheBackendInterface
  *     tags:
  *       - { name: cache.bin }
- *     factory_method: get
- *     factory_service: cache_factory
+ *     factory: cache_factory:get
  *     arguments: [entity]
  * @endcode
  *

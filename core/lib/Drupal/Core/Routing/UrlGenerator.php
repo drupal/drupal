@@ -345,8 +345,8 @@ class UrlGenerator implements UrlGeneratorInterface {
     else {
       $scheme = $this->context->getScheme();
     }
-    $scheme_req = $route->getRequirement('_scheme');
-    if (isset($scheme_req) && ($req = strtolower($scheme_req)) && $scheme !== $req) {
+    $scheme_req = $route->getSchemes();
+    if ($scheme_req && ($req = $scheme_req[0]) && $scheme !== $req) {
       $scheme = $req;
     }
     $port = '';

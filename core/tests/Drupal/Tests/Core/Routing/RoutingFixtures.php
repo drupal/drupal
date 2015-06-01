@@ -50,20 +50,16 @@ class RoutingFixtures {
     $routes = array();
     $routes['route_a'] = array(
       'path' => '/path/one',
-      'requirements' => array(
-        '_method' => 'GET',
-      ),
+      'methods' => array('GET'),
     );
     $routes['route_b'] = array(
       'path' => '/path/one',
-      'requirements' => array(
-        '_method' => 'PUT',
-      ),
+      'methods' => array('PUT'),
     );
     $routes['route_c'] = array(
       'path' => '/path/two',
+      'methods' => array('GET'),
       'requirements' => array(
-        '_method' => 'GET',
         '_format' => 'json'
       ),
     );
@@ -72,8 +68,8 @@ class RoutingFixtures {
     );
     $routes['route_e'] = array(
       'path' => '/path/two',
+      'methods' => array('GET', 'HEAD'),
       'requirements' => array(
-        '_method' => 'GET|HEAD',
         '_format' => 'html'
       ),
     );
@@ -90,15 +86,15 @@ class RoutingFixtures {
     $collection = new RouteCollection();
 
     $route = new Route('path/one');
-    $route->setRequirement('_method', 'GET');
+    $route->setMethods(['GET']);
     $collection->add('route_a', $route);
 
     $route = new Route('path/one');
-    $route->setRequirement('_method', 'PUT');
+    $route->setMethods(['PUT']);
     $collection->add('route_b', $route);
 
     $route = new Route('path/two');
-    $route->setRequirement('_method', 'GET');
+    $route->setMethods(['GET']);
     $route->setRequirement('_format', 'json');
     $collection->add('route_c', $route);
 
@@ -106,7 +102,7 @@ class RoutingFixtures {
     $collection->add('route_d', $route);
 
     $route = new Route('path/two');
-    $route->setRequirement('_method', 'GET|HEAD');
+    $route->setMethods(['GET', 'HEAD']);
     $route->setRequirement('_format', 'html');
     $collection->add('route_e', $route);
 
@@ -122,22 +118,22 @@ class RoutingFixtures {
     $collection = new RouteCollection();
 
     $route = new Route('/path/{thing}/one');
-    $route->setRequirement('_method', 'GET');
+    $route->setMethods(['GET']);
     $collection->add('route_a', $route);
 
     $route = new Route('/path/{thing}/one');
-    $route->setRequirement('_method', 'PUT');
+    $route->setMethods(['PUT']);
     $collection->add('route_b', $route);
 
     $route = new Route('/somewhere/{item}/over/the/rainbow');
-    $route->setRequirement('_method', 'GET');
+    $route->setMethods(['GET']);
     $collection->add('route_c', $route);
 
     $route = new Route('/another/{thing}/about/{item}');
     $collection->add('route_d', $route);
 
     $route = new Route('/path/add/one');
-    $route->setRequirement('_method', 'GET|HEAD');
+    $route->setMethods(['GET', 'HEAD']);
     $collection->add('route_e', $route);
 
     return $collection;
@@ -152,12 +148,12 @@ class RoutingFixtures {
     $collection = new RouteCollection();
 
     $route = new Route('path/three');
-    $route->setRequirement('_method', 'POST');
+    $route->setMethods(['POST']);
     $route->setRequirement('_content_type_format', 'json');
     $collection->add('route_f', $route);
 
     $route = new Route('path/three');
-    $route->setRequirement('_method', 'PATCH');
+    $route->setMethods(['PATCH']);
     $route->setRequirement('_content_type_format', 'xml');
     $collection->add('route_g', $route);
     return $collection;
