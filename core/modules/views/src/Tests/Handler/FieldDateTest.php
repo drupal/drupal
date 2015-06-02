@@ -24,12 +24,52 @@ class FieldDateTest extends ViewUnitTestBase {
    */
   public static $testViews = array('test_view');
 
-  function viewsData() {
+  /**
+   * {@inheritdoc}
+   */
+  public function schemaDefinition() {
+    $schema = parent::schemaDefinition();
+    $schema['views_test_data']['fields']['destroyed'] = array(
+      'description' => "The destruction date of this record",
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => FALSE,
+      'default' => 0,
+    );
+    return $schema;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function viewsData() {
     $data = parent::viewsData();
     $data['views_test_data']['created']['field']['id'] = 'date';
+    $data['views_test_data']['destroyed'] = array(
+      'title' => 'Destroyed',
+      'help' => 'Date in future this will be destroyed.',
+      'field' => array('id' => 'date'),
+      'argument' => array('id' => 'date'),
+      'filter' => array('id' => 'date'),
+      'sort' => array('id' => 'date'),
+    );
     return $data;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function dataSet() {
+    $datas = parent::dataSet();
+    foreach ($datas as $i => $data) {
+      $datas[$i]['destroyed'] = gmmktime(0, 0, 0, 1, 1, 2050);
+    }
+    return $datas;
+  }
+
+  /**
+   * Sets up functional test of the views date field.
+   */
   public function testFieldDate() {
     $view = Views::getView('test_view');
     $view->setDisplay();
@@ -40,7 +80,14 @@ class FieldDateTest extends ViewUnitTestBase {
         'table' => 'views_test_data',
         'field' => 'created',
         'relationship' => 'none',
-        // c is iso 8601 date format @see http://php.net/manual/en/function.date.php
+        // ISO 8601 format @see http://php.net/manual/en/function.date.php
+        'custom_date_format' => 'c',
+      ),
+      'destroyed' => array(
+        'id' => 'destroyed',
+        'table' => 'views_test_data',
+        'field' => 'destroyed',
+        'relationship' => 'none',
         'custom_date_format' => 'c',
       ),
     ));
@@ -53,26 +100,59 @@ class FieldDateTest extends ViewUnitTestBase {
       'UTC',
       'America/New_York',
     );
+
+    // Check each date/time in various timezones.
     foreach ($timezones as $timezone) {
       $dates = array(
         'short' => format_date($time, 'short', '', $timezone),
         'medium' => format_date($time, 'medium', '', $timezone),
         'long' => format_date($time, 'long', '', $timezone),
         'custom' => format_date($time, 'custom', 'c', $timezone),
+        'fallback' => format_date($time, 'fallback', '', $timezone),
+        'html_date' => format_date($time, 'html_date', '', $timezone),
+        'html_datetime' => format_date($time, 'html_datetime', '', $timezone),
+        'html_month' => format_date($time, 'html_month', '', $timezone),
+        'html_time' => format_date($time, 'html_time', '', $timezone),
+        'html_week' => format_date($time, 'html_week', '', $timezone),
+        'html_year' => format_date($time, 'html_year', '', $timezone),
+        'html_yearless_date' => format_date($time, 'html_yearless_date', '', $timezone),
       );
       $this->assertRenderedDatesEqual($view, $dates, $timezone);
     }
 
+    // Check times in the past.
+    $test = $this->container->get('date.formatter')->formatInterval(REQUEST_TIME - $time, 2);
     $intervals = array(
-      'raw time ago' => $this->container->get('date.formatter')->formatInterval(REQUEST_TIME - $time, 2),
-      'time ago' => t('%time ago', array('%time' => $this->container->get('date.formatter')->formatInterval(REQUEST_TIME - $time, 2))),
-      // TODO write tests for them
-//       'raw time span' => $this->container->get('date.formatter')->formatInterval(REQUEST_TIME - $time, 2),
-//       'time span' => t('%time hence', array('%time' => $this->container->get('date.formatter')->formatInterval(REQUEST_TIME - $time, 2))),
+      'raw time ago' => $test,
+      'time ago' => t('%time ago', array('%time' => $test)),
+      'raw time span' => $test,
+      'inverse time span' => -$test,
+      'time span' => t('%time ago', array('%time' => $test)),
     );
     $this->assertRenderedDatesEqual($view, $intervals);
+
+    // Check times in the future.
+    $time = gmmktime(0, 0, 0, 1, 1, 2050);
+    $formatted = $this->container->get('date.formatter')->formatInterval($time - REQUEST_TIME, 2);
+    $intervals = array(
+      'raw time span' => -$formatted,
+      'time span' => t('%time hence', array(
+        '%time' => $formatted,
+      )),
+    );
+    $this->assertRenderedFutureDatesEqual($view, $intervals);
   }
 
+  /**
+   * Asserts properly formatted display against 'created' field in view.
+   *
+   * @param mixed $view
+   *   View to be tested.
+   * @param array $map
+   *   Data map.
+   * @param null $timezone
+   *   Optional timezone.
+   */
   protected function assertRenderedDatesEqual($view, $map, $timezone = NULL) {
     foreach ($map as $date_format => $expected_result) {
       $view->field['created']->options['date_format'] = $date_format;
@@ -90,6 +170,28 @@ class FieldDateTest extends ViewUnitTestBase {
       }
       $actual_result = $view->field['created']->advancedRender($view->result[0]);
       $this->assertEqual($expected_result, $actual_result, $message);
+    }
+  }
+
+  /**
+   * Asserts properly formatted display against 'destroyed' field in view.
+   *
+   * @param mixed $view
+   *   View to be tested.
+   * @param array $map
+   *   Data map.
+   */
+  protected function assertRenderedFutureDatesEqual($view, $map) {
+    foreach ($map as $format => $result) {
+      $view->field['destroyed']->options['date_format'] = $format;
+      $view_result = $view->field['destroyed']->advancedRender($view->result[0]);
+      $t_args = array(
+        '%value' => $result,
+        '%format' => $format,
+        '%actual' => $view_result,
+      );
+      $message = t('Value %value in %format matches %actual', $t_args);
+      $this->assertEqual($view_result, $result, $message);
     }
   }
 
