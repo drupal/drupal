@@ -53,11 +53,6 @@ $output .= " */\n\n";
 $schema = drupal_get_schema();
 ksort($schema);
 
-// Override the field type of the filename primary key to bypass the
-// InnoDB 191 character limitation.
-if (isset($schema['system']['primary key']) && $schema['system']['primary key'] == 'filename' && isset($schema['system']['fields']['filename']['type']) && $schema['system']['fields']['filename']['type'] == 'varchar') {
-  $schema['system']['fields']['filename']['type'] = 'varchar_ascii';
-}
 // Export all the tables in the schema.
 foreach ($schema as $table => $data) {
   // Remove descriptions to save time and code.

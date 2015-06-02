@@ -261,12 +261,6 @@ class Sql extends PluginBase implements MigrateIdMapInterface {
       foreach ($this->migration->getSourcePlugin()->getIds() as $id_definition) {
         $mapkey = 'sourceid' . $count++;
         $source_id_schema[$mapkey] = $this->getFieldSchema($id_definition);
-
-        // With InnoDB, utf8mb4-based primary keys can't be over 191 characters.
-        // Use ASCII-based primary keys instead.
-        if (isset($source_id_schema[$mapkey]['type']) && $source_id_schema[$mapkey]['type'] == 'varchar') {
-          $source_id_schema[$mapkey]['type'] = 'varchar_ascii';
-        }
         $pks[] = $mapkey;
       }
 

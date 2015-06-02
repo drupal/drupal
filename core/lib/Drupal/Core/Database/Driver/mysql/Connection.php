@@ -64,7 +64,7 @@ class Connection extends DatabaseConnection {
     // Character set is added to dsn to ensure PDO uses the proper character
     // set when escaping. This has security implications. See
     // https://www.drupal.org/node/1201452 for further discussion.
-    $dsn .= ';charset=utf8mb4';
+    $dsn .= ';charset=utf8';
     if (!empty($connection_options['database'])) {
       $dsn .= ';dbname=' . $connection_options['database'];
     }
@@ -92,13 +92,13 @@ class Connection extends DatabaseConnection {
     $pdo = new \PDO($dsn, $connection_options['username'], $connection_options['password'], $connection_options['pdo']);
 
     // Force MySQL to use the UTF-8 character set. Also set the collation, if a
-    // certain one has been set; otherwise, MySQL defaults to
-    // 'utf8mb4_general_ci' for utf8mb4.
+    // certain one has been set; otherwise, MySQL defaults to 'utf8_general_ci'
+    // for UTF-8.
     if (!empty($connection_options['collation'])) {
-      $pdo->exec('SET NAMES utf8mb4 COLLATE ' . $connection_options['collation']);
+      $pdo->exec('SET NAMES utf8 COLLATE ' . $connection_options['collation']);
     }
     else {
-      $pdo->exec('SET NAMES utf8mb4');
+      $pdo->exec('SET NAMES utf8');
     }
 
     // Set MySQL init_commands if not already defined.  Default Drupal's MySQL

@@ -75,7 +75,7 @@ class ViewTestData {
         ),
         'name' => array(
           'description' => "A person's name",
-          'type' => 'varchar_ascii',
+          'type' => 'varchar',
           'length' => 255,
           'not null' => TRUE,
           'default' => '',

@@ -26,16 +26,16 @@ class RegressionTest extends DatabaseTestBase {
    */
   function testRegression_310447() {
     // That's a 255 character UTF-8 string.
-    $job = str_repeat("é", 255);
+    $name = str_repeat("é", 255);
     db_insert('test')
       ->fields(array(
-        'name' => $this->randomMachineName(),
+        'name' => $name,
         'age' => 20,
-        'job' => $job,
+        'job' => 'Dancer',
       ))->execute();
 
-    $from_database = db_query('SELECT job FROM {test} WHERE job = :job', array(':job' => $job))->fetchField();
-    $this->assertIdentical($job, $from_database, 'The database handles UTF-8 characters cleanly.');
+    $from_database = db_query('SELECT name FROM {test} WHERE name = :name', array(':name' => $name))->fetchField();
+    $this->assertIdentical($name, $from_database, 'The database handles UTF-8 characters cleanly.');
   }
 
   /**

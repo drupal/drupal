@@ -24,7 +24,7 @@ function database_test_schema() {
       ),
       'name' => array(
         'description' => "A person's name",
-        'type' => 'varchar_ascii',
+        'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
@@ -75,7 +75,7 @@ function database_test_schema() {
       ),
       'job' => array(
         'description' => "The person's job",
-        'type' => 'varchar_ascii',
+        'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
@@ -106,7 +106,7 @@ function database_test_schema() {
       ),
       'job' => array(
         'description' => "The person's job",
-        'type' => 'varchar_ascii',
+        'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
@@ -197,7 +197,7 @@ function database_test_schema() {
       ),
       'name' => array(
         'description' => "A person's name.",
-        'type' => 'varchar_ascii',
+        'type' => 'varchar',
         'length' => 255,
         'not null' => FALSE,
         'default' => '',
@@ -228,7 +228,7 @@ function database_test_schema() {
       ),
       'name' => array(
         'description' => "A person's name.",
-        'type' => 'varchar_ascii',
+        'type' => 'varchar',
         'length' => 255,
         'not null' => FALSE,
         'default' => '',

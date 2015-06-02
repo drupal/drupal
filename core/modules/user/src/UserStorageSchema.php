@@ -52,9 +52,6 @@ class UserStorageSchema extends SqlContentEntityStorageSchema {
           // Improves the performance of the user__name index defined
           // in getEntitySchema().
           $schema['fields'][$field_name]['not null'] = TRUE;
-          // Make sure the field is no longer than 191 characters so we can
-          // add a unique constraint in MySQL.
-          $schema['fields'][$field_name]['length'] = USERNAME_MAX_LENGTH;
           break;
 
         case 'mail':

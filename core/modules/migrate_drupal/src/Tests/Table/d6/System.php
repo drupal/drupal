@@ -26,7 +26,7 @@ class System extends DrupalDumpBase {
       ),
       'fields' => array(
         'filename' => array(
-          'type' => 'varchar_ascii',
+          'type' => 'varchar',
           'not null' => TRUE,
           'length' => '255',
           'default' => '',
@@ -916,4 +916,4 @@ class System extends DrupalDumpBase {
   }
 
 }
-#e15f00f5d9b1c571ee015c40f8fc7b00
+#8867fc0eccc6c8439bff0a269ec597ae

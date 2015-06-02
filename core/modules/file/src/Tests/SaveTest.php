@@ -8,9 +8,6 @@
 namespace Drupal\file\Tests;
 
 use Drupal\file\Entity\File;
-use Drupal\Core\Entity\EntityStorageException;
-use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 
 /**
  * File saving tests.
@@ -60,27 +57,16 @@ class SaveTest extends FileManagedUnitTestBase {
 
     // Try to insert a second file with the same name apart from case insensitivity
     // to ensure the 'uri' index allows for filenames with different cases.
-    $uppercase_values = array(
+    $uppercase_file = File::create(array(
       'uid' => 1,
       'filename' => 'DRUPLICON.txt',
       'uri' => 'public://DRUPLICON.txt',
       'filemime' => 'text/plain',
       'status' => FILE_STATUS_PERMANENT,
-    );
-    $uppercase_file = File::create($uppercase_values);
+    ));
     file_put_contents($uppercase_file->getFileUri(), 'hello world');
-    $violations = $uppercase_file->validate();
-    $this->assertEqual(count($violations), 0, 'No violations when adding an URI with an existing filename in upper case.');
     $uppercase_file->save();
 
-    // Ensure the database URI uniqueness constraint is triggered.
-    $uppercase_file_duplicate = File::create($uppercase_values);
-    file_put_contents($uppercase_file_duplicate->getFileUri(), 'hello world');
-    $violations = $uppercase_file_duplicate->validate();
-    $this->assertEqual(count($violations), 1);
-    $this->assertEqual($violations[0]->getMessage(), t('The file %value already exists. Enter a unique file URI.', [
-      '%value' => $uppercase_file_duplicate->getFileUri(),
-    ]));
     // Ensure that file URI entity queries are case sensitive.
     $fids = \Drupal::entityQuery('file')
       ->condition('uri', $uppercase_file->getFileUri())

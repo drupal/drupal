@@ -26,8 +26,6 @@ use Drupal\user\UserInterface;
 
 /**
  * Maximum length of username text field.
- *
- * Keep this under 191 characters so we can use a unique constraint in MySQL.
  */
 const USERNAME_MAX_LENGTH = 60;
 

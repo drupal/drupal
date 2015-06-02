@@ -75,7 +75,7 @@
  *   'host' => 'localhost',
  *   'port' => 3306,
  *   'prefix' => 'myprefix_',
- *   'collation' => 'utf8mb4_general_ci',
+ *   'collation' => 'utf8_general_ci',
  * );
  * @endcode
  *
@@ -127,7 +127,7 @@
  *   'password' => 'password',
  *   'host' => 'localhost',
  *   'prefix' => 'main_',
- *   'collation' => 'utf8mb4_general_ci',
+ *   'collation' => 'utf8_general_ci',
  * );
  * @endcode
  *
