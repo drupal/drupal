@@ -20,7 +20,7 @@ body {
 #toolbar,
 .site-footer,
 .tabs,
-.add-or-remove-shortcuts {
+.shortcut-action {
   display: none;
 }
 .one-sidebar #content,

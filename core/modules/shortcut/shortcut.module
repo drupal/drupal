@@ -347,12 +347,16 @@ function shortcut_preprocess_page(&$variables) {
             'shortcut/drupal.shortcut',
           ),
         ),
-        '#prefix' => '<div class="add-or-remove-shortcuts ' . $link_mode . '-shortcut">',
         '#type' => 'link',
-        '#title' => SafeMarkup::format('<span class="icon"></span><span class="text">@text</span>', array('@text' => $link_text)),
+        '#title' => SafeMarkup::format('<span class="shortcut-action__icon"></span><span class="shortcut-action__message">@text</span>', array('@text' => $link_text)),
         '#url' => Url::fromRoute($route_name, $route_parameters),
         '#options' => array('query' => $query),
-        '#suffix' => '</div>',
+        '#attributes' => array(
+          'class' => array(
+            'shortcut-action',
+            'shortcut-action--' . $link_mode,
+          ),
+        ),
       );
     }
   }

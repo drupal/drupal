@@ -23,15 +23,15 @@
 /**
  * Add/remove links.
  */
-.add-or-remove-shortcuts {
+.shortcut-action {
   display: inline-block;
   margin-left: 0.3em; /* LTR */
 }
-[dir="rtl"] .add-or-remove-shortcuts {
+[dir="rtl"] .shortcut-action {
   margin-left: 0;
   margin-right: 0.3em;
 }
-.add-or-remove-shortcuts .text {
+.shortcut-action__message {
   background: #000000;
   background: rgba(0, 0, 0, 0.5);
   border-radius: 5px;
@@ -49,12 +49,12 @@
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
 }
-[dir="rtl"] .add-or-remove-shortcuts .text {
+[dir="rtl"] .shortcut-action__message {
   margin-left: 0;
   margin-right: 0.3em;
 }
-.add-or-remove-shortcuts a:hover .text,
-.add-or-remove-shortcuts a:focus .text {
+.shortcut-action:hover .shortcut-action__message,
+.shortcut-action:focus .shortcut-action__message {
   opacity: 1;
   -ms-transform: translateY(-2px);
   -webkit-transform: translateY(-2px);

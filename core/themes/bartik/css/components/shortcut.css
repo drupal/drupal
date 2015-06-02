@@ -10,6 +10,6 @@
 [dir="rtl"] .shortcut-wrapper h1#page-title {
   float: right;
 }
-div.add-or-remove-shortcuts {
+.shortcut-action {
   padding-top: 0.9em;
 }
