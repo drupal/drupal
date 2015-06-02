@@ -142,7 +142,7 @@ interface LanguageNegotiatorInterface {
    *   (optional) The language type. If no type is specified all the method
    *   definitions are returned.
    *
-   * @return array
+   * @return array[]
    *   An array of language negotiation method definitions keyed by method id.
    */
   public function getNegotiationMethods($type = NULL);
@@ -163,7 +163,7 @@ interface LanguageNegotiatorInterface {
    * @param $type
    *   The language type.
    *
-   * @return
+   * @return string
    *   The identifier of the primary language negotiation method for the given
    *   language type, or the default method if none exists.
    */
@@ -178,7 +178,7 @@ interface LanguageNegotiatorInterface {
    *   (optional) The language type. If none is passed, all the configurable
    *   language types will be inspected.
    *
-   * @return
+   * @return bool
    *   TRUE if the method is enabled for at least one of the given language
    *   types, or FALSE otherwise.
    */
@@ -189,7 +189,7 @@ interface LanguageNegotiatorInterface {
    *
    * @param string $type
    *   The language type.
-   * @param array $enabled_methods
+   * @param int[] $enabled_methods
    *   An array of language negotiation method weights keyed by method ID.
    */
   function saveConfiguration($type, $enabled_methods);
@@ -206,7 +206,7 @@ interface LanguageNegotiatorInterface {
    * configurable state. Stores the default settings if the language type is
    * not configurable.
    *
-   * @param array $types
+   * @param string[] $types
    *   An array of configurable language types.
    */
   function updateConfiguration(array $types);
