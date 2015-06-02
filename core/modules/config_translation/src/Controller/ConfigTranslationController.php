@@ -128,6 +128,9 @@ class ConfigTranslationController extends ControllerBase {
     $page['#title'] = $this->t('Translations for %label', array('%label' => $mapper->getTitle()));
 
     $languages = $this->languageManager->getLanguages();
+    if (count($languages) == 1) {
+      drupal_set_message($this->t('In order to translate configuration, the website must have at least two <a href="@url">languages</a>.', array('@url' => $this->url('entity.configurable_language.collection'))), 'warning');
+    }
     $original_langcode = $mapper->getLangcode();
     if (!isset($languages[$original_langcode])) {
       // If the language is not configured on the site, create a dummy language
