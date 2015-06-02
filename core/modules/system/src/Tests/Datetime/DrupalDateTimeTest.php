@@ -7,8 +7,8 @@
 
 namespace Drupal\system\Tests\Datetime;
 
-use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\simpletest\WebTestBase;
 use Drupal\user\Entity\User;
 
 /**
@@ -101,6 +101,24 @@ class DrupalDateTimeTest extends WebTestBase {
     $date = new DrupalDateTime($date_string);
     $timezone = $date->getTimezone()->getName();
     $this->assertTrue($timezone == 'Asia/Manila', 'DrupalDateTime uses the user timezone, if configurable timezones are used and it is set.');
+  }
+
+  /**
+   * Tests the ability to override the time zone in the format method.
+   */
+  function testTimezoneFormat() {
+    // Create a date in UTC
+    $date = DrupalDateTime::createFromTimestamp(87654321, 'UTC');
+
+    // Verify that the date format method displays the default time zone.
+    $this->assertEqual($date->format('Y/m/d H:i:s e'), '1972/10/11 12:25:21 UTC', 'Date has default UTC time zone and correct date/time.');
+
+    // Verify that the format method can override the time zone.
+    $this->assertEqual($date->format('Y/m/d H:i:s e', array('timezone' => 'America/New_York')), '1972/10/11 08:25:21 America/New_York', 'Date displayed overidden time zone and correct date/time');
+
+    // Verify that the date format method still displays the default time zone
+    // for the date object.
+    $this->assertEqual($date->format('Y/m/d H:i:s e'), '1972/10/11 12:25:21 UTC', 'Date still has default UTC time zone and correct date/time');
   }
 
 }

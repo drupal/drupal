@@ -106,7 +106,7 @@ class DrupalDateTime extends DateTimePlus {
       $format = preg_replace(array('/\\\\\\\\/', '/(?<!\\\\)([AaeDlMTF])/'), array("\xEF\\\\\\\\\xFF", "\xEF\\\\\$1\$1\xFF"), $format);
 
       // Call date_format().
-      $format = parent::format($format);
+      $format = parent::format($format, $settings);
 
       // Translates a formatted date string.
       $translation_callback = function($matches) use ($langcode) {
