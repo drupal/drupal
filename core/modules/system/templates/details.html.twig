@@ -19,15 +19,8 @@
   {%- if title -%}
     <summary{{ summary_attributes }}>{{ title }}</summary>
   {%- endif -%}
-  <div>
-    {%- if description -%}
-      <div>{{ description }}</div>
-    {%- endif -%}
-    {%- if children -%}
-      {{ children }}
-    {%- endif -%}
-    {%- if value -%}
-      {{ value }}
-    {%- endif -%}
-  </div>
+
+  {{ description }}
+  {{ children }}
+  {{ value }}
 </details>

@@ -63,11 +63,9 @@
   <a href="{{ url }}">{{ title }}</a>
 </h3>
 {{ title_suffix }}
-<div>
-  {% if snippet %}
-    <p{{ content_attributes }}>{{ snippet }}</p>
-  {% endif %}
-  {% if info %}
-    <p>{{ info }}</p>
-  {% endif %}
-</div>
+{% if snippet %}
+  <p{{ content_attributes }}>{{ snippet }}</p>
+{% endif %}
+{% if info %}
+  <p>{{ info }}</p>
+{% endif %}

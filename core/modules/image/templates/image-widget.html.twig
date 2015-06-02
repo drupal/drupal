@@ -13,13 +13,7 @@
  */
 #}
 <div{{ attributes }}>
-  {% if data.preview %}
-    <div>
-      {{ data.preview }}
-    </div>
-  {% endif %}
-  <div>
-    {# Render widget data without the image preview that was output already. #}
-    {{ data|without('preview') }}
-  </div>
+  {{ data.preview }}
+  {# Render widget data without the image preview that was output already. #}
+  {{ data|without('preview') }}
 </div>

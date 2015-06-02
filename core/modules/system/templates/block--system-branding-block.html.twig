@@ -22,11 +22,7 @@
     </a>
   {% endif %}
   {% if site_name %}
-    <div>
-      <a href="{{ url('<front>') }}" title="{{ 'Home'|t }}" rel="home">{{ site_name }}</a>
-    </div>
+    <a href="{{ url('<front>') }}" title="{{ 'Home'|t }}" rel="home">{{ site_name }}</a>
   {% endif %}
-  {% if site_slogan %}
-    <div>{{ site_slogan }}</div>
-  {% endif %}
+  {{ site_slogan }}
 {% endblock %}
