@@ -137,7 +137,19 @@ function views_theme($existing, $type, $theme, $path) {
     'variables' => array('view' => NULL, 'grouping' => NULL, 'grouping_level' => NULL, 'rows' => NULL, 'title' => NULL),
   );
 
-  $plugins = Views::getPluginDefinitions();
+  // Only display, pager, row, and style plugins can provide theme hooks.
+  $plugin_types = [
+    'display',
+    'pager',
+    'row',
+    'style',
+    'exposed_form',
+  ];
+  $plugins = array();
+  foreach ($plugin_types as $plugin_type) {
+    $plugins[$plugin_type] = Views::pluginManager($plugin_type)->getDefinitions();
+  }
+
   $module_handler = \Drupal::moduleHandler();
 
   // Register theme functions for all style plugins. It provides a basic auto
