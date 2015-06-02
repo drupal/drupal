@@ -613,6 +613,7 @@ function template_preprocess_comment(&$variables) {
   $commented_entity = $comment->getCommentedEntity();
   $variables['comment'] = $comment;
   $variables['commented_entity'] = $commented_entity;
+  $variables['threaded'] = $variables['elements']['#comment_threaded'];
 
   $account = $comment->getOwner();
   $username = array(

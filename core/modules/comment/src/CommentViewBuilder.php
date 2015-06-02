@@ -183,7 +183,6 @@ class CommentViewBuilder extends EntityViewBuilder {
 
       // Add indentation div or close open divs as needed.
       if ($build['#comment_threaded']) {
-        $build['#attached']['library'][] = 'comment/drupal.comment.threaded';
         $prefix .= $build['#comment_indent'] <= 0 ? str_repeat('</div>', abs($build['#comment_indent'])) : "\n" . '<div class="indented">';
       }
 

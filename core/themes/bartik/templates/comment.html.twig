@@ -41,6 +41,7 @@
  * - title_attributes: Same as attributes, except applied to the main title
  *   tag that appears in the template.
  * - content_attributes: List of classes for the styling of the comment content.
+ * - threaded: A flag indicating whether the comments are threaded or not.
  *
  * These variables are provided to give context about the parent comment (if
  * any):
@@ -63,6 +64,9 @@
  * @see template_preprocess_comment()
  */
 #}
+{% if threaded %}
+  {{ attach_library('classy/drupal.comment.threaded') }}
+{% endif %}
 {%
   set classes = [
     'comment',
