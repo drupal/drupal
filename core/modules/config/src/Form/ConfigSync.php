@@ -118,11 +118,11 @@ class ConfigSync extends FormBase {
    * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config
    *   The typed configuration manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler
+   *   The module handler.
    * @param \Drupal\Core\Extension\ModuleInstallerInterface $module_installer
    *   The module installer.
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
-   *   The theme handler
+   *   The theme handler.
    */
   public function __construct(StorageInterface $staging_storage, StorageInterface $active_storage, StorageInterface $snapshot_storage, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler) {
     $this->stagingStorage = $staging_storage;
@@ -356,7 +356,7 @@ class ConfigSync extends FormBase {
    *   The batch config importer object to persist.
    * @param string $sync_step
    *   The synchronization step to do.
-   * @param $context
+   * @param array $context
    *   The batch context.
    */
   public static function processBatch(ConfigImporter $config_importer, $sync_step, &$context) {
