@@ -50,3 +50,4 @@
 *.jpg     -text diff
 *.png     -text diff
 *.phar    -text diff
+*.exe     -text diff

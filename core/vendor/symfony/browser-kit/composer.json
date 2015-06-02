@@ -1,0 +1,39 @@
+{
+    "name": "symfony/browser-kit",
+    "type": "library",
+    "description": "Symfony BrowserKit Component",
+    "keywords": [],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Fabien Potencier",
+            "email": "fabien@symfony.com"
+        },
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.9",
+        "symfony/dom-crawler": "~2.0,>=2.0.5"
+    },
+    "require-dev": {
+        "symfony/phpunit-bridge": "~2.7",
+        "symfony/process": "~2.0,>=2.0.5",
+        "symfony/css-selector": "~2.0,>=2.0.5"
+    },
+    "suggest": {
+        "symfony/process": ""
+    },
+    "autoload": {
+        "psr-4": { "Symfony\\Component\\BrowserKit\\": "" }
+    },
+    "minimum-stability": "dev",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.7-dev"
+        }
+    }
+}
